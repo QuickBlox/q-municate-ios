@@ -1,0 +1,6 @@
+platform :ios, '6.0'
+pod 'UIDevice-Hardware', '~> 0.1.3'
+pod 'Reachability', '~> 3.1.1'
+pod 'MBProgressHUD', '~> 0.8'
+pod 'AsyncImageView', '~> 1.5.1'
+pod 'FPPopover', '~> 1.4.1'

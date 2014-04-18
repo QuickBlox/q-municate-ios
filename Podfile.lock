@@ -1,0 +1,22 @@
+PODS:
+  - AsyncImageView (1.5.1)
+  - FPPopover (1.4.1)
+  - MBProgressHUD (0.8)
+  - Reachability (3.1.1)
+  - UIDevice-Hardware (0.1.3)
+
+DEPENDENCIES:
+  - AsyncImageView (~> 1.5.1)
+  - FPPopover (~> 1.4.1)
+  - MBProgressHUD (~> 0.8)
+  - Reachability (~> 3.1.1)
+  - UIDevice-Hardware (~> 0.1.3)
+
+SPEC CHECKSUMS:
+  AsyncImageView: 686febb2b2a923353ede67c529d257498059852d
+  FPPopover: 0289b796c031d8f27bd221d93d282ffe23619893
+  MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
+  Reachability: be4883bb93f31e38266ae3365e5600a317aae735
+  UIDevice-Hardware: 32832a484ef6d7cf5be9c8cc48d307c82c8e4713
+
+COCOAPODS: 0.29.0
