@@ -17,13 +17,17 @@
 {
     self = [super init];
     if (self) {
-        _users = [NSMutableArray new];
-        _checkedABContacts = [NSMutableArray new];
-        _checkedFacebookUsers = [NSMutableArray new];
-    }
+		[self _initDataSources];
+	}
     return self;
 }
 
+- (void)_initDataSources
+{
+	_users = [NSMutableArray new];
+	_checkedABContacts = [NSMutableArray new];
+	_checkedFacebookUsers = [NSMutableArray new];
+}
 
 #pragma mark - Updating Sources
 - (void)updateFacebookDataSource:(void(^)(NSError *error))completionBlock
@@ -136,6 +140,9 @@
 	user.checked = !user.checked;
 	//TODO:adding to checked array as well.
 	if ([user.status isEqualToString:kFacebookFriendStatus]) {
+		if (!self.checkedFacebookUsers) {
+			self.checkedFacebookUsers = [NSMutableArray new];
+		}
 		if (user.checked) {
 			[self.checkedFacebookUsers addObject:user];
 		} else {
@@ -143,6 +150,9 @@
 		}
 	}
 	else if ([user.status isEqualToString:kAddressBookUserStatus]) {
+		if (!self.checkedABContacts) {
+		    self.checkedABContacts = [NSMutableArray new];
+		}
 		if (user.checked) {
 			[self.checkedABContacts addObject:user];
 		} else {
