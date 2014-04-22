@@ -90,7 +90,6 @@
         }
         
         // load image and update user with blob ID:
-
         if (self.cachedPicture != nil) {
             [self loginWithUser:user afterLoadingImage:self.cachedPicture];
             return;

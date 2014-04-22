@@ -23,13 +23,6 @@ static double_t const kUptimeInterval = 300;
     [super setSelected:selected animated:animated];
 }
 
-- (void)layoutSubviews
-{
-	[super layoutSubviews];
-//	self.userImageView.imageURL = nil;
-}
-
-
 - (void)configureCellWithParams:(QMPerson *)user
 {
     self.user = user;

@@ -52,7 +52,14 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    if (!self.root) {
+
+	/*
+	* there was a bug when choosing user's ava on sigh up page
+	* -> switching to login view at once!
+	* https://jira-injoit.quickblox.com/browse/QMUN-90
+	* */
+	NSUInteger childControllersCount = [[self childViewControllers] count];
+    if (!self.root && !childControllersCount) {
         [self logInToQuickblox];
     }
 }

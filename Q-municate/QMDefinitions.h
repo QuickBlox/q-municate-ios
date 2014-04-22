@@ -78,11 +78,11 @@ static NSString *const kCallDidStartedByUserNotification = @"Call was started";
 
 
 //******************** USER DEFAULTS KEYS *****************
-static NSString *const kEmail       = @"email";
-static NSString *const kPassword    = @"password";
-static NSString *const kRememberMe  = @"remember_me";
-static NSString *const kDidLogout   = @"didLogout";
-static NSString *const kUserStatusText   = @"userStatusText";
+static NSString *const kEmail       		= @"email";
+static NSString *const kPassword    		= @"password";
+static NSString *const kRememberMe  		= @"remember_me";
+static NSString *const kDidLogout   		= @"didLogout";
+static NSString *const kUserStatusText   	= @"userStatusText";
 
 static NSString *const kId          = @"id";
 static NSString *const kData        = @"data";

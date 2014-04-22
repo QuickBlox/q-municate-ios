@@ -54,6 +54,7 @@
 {
     [super viewDidAppear:NO];
 
+	// if to be more correct, 'isLoggedIn' means the 'remember me' opt is on
     BOOL isLoggedIn = [[[NSUserDefaults standardUserDefaults] objectForKey:kRememberMe] boolValue];
     BOOL isLoggedOut = [[[NSUserDefaults standardUserDefaults] objectForKey:kDidLogout] boolValue];
     if (isLoggedIn && !isLoggedOut) {

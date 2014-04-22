@@ -63,9 +63,10 @@ typedef NS_ENUM(NSUInteger, QMPasswordCheckState) {
     [[FBSession activeSession] closeAndClearTokenInformation];          // close fb session
     [[QMChatService shared] logOut];                                      // close chat
     [[QMContactList shared] clearData];                                   // clear all information about me and my data
-    [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:kDidLogout];
-    [[NSUserDefaults standardUserDefaults] setObject:kEmptyString forKey:kUserStatusText];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	[userDefaults setObject:@(YES) forKey:kDidLogout];
+    [userDefaults setObject:kEmptyString forKey:kUserStatusText];
+    [userDefaults synchronize];
     [[QMAuthService shared] destroySessionWithCompletion:^(BOOL success) {
         if (success) {
             self.tabBarController.selectedIndex = 0;
