@@ -181,7 +181,7 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    CGSize imgViewSize = self.userImage.frame.size;
+    CGSize imgViewSize = CGSizeMake(self.userImage.frame.size.width * 2, self.userImage.frame.size.height * 2);
     UIImage *image =  info[UIImagePickerControllerOriginalImage];
     UIImage *scaledImage = [image imageByScalingProportionallyToMinimumSize:imgViewSize];
     [self.userImage setImage:scaledImage];

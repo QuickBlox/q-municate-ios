@@ -39,6 +39,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
     self.dataSource = [QMFriendsListDataSource new];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fillTableView) name:kFriendsLoadedNotification object:nil];
 }

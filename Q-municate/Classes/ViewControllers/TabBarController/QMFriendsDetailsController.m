@@ -68,8 +68,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row == 1 || indexPath.row == 2) {
+    if (indexPath.row == 1) {
         [self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:indexPath];
+    } else if (indexPath.row == 2) {
+        [self showAlertWithMessage:@"Comming soon"];
     }
 }
 
