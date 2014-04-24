@@ -39,11 +39,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
     user.password = [[NSUserDefaults standardUserDefaults] objectForKey:kPassword];
     [[QBChat instance] loginWithUser:user];
 
-	/*
-	* for peer-to-peer
-	*
-	* [self configureNavBarButtons];
-	* */
+	[self configureNavBarButtons];
 }
 
 - (void)configureNavBarButtons
