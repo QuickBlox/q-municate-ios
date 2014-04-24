@@ -74,7 +74,7 @@
     return [FBAppCall handleOpenURL:url
                   sourceApplication:sourceApplication
                     fallbackHandler:^(FBAppCall *call) {
-                        NSLog(@"In fallback handler");
+                        ILog(@"In fallback handler");
                     }];
 }
 

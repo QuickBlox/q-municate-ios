@@ -87,6 +87,7 @@
     
 #ifdef FP_DEBUG
     NSLog(@"FPPopoverController dealloc");
+    
 #endif
 
     SAFE_ARC_RELEASE(_contentView);

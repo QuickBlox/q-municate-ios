@@ -35,7 +35,7 @@
         [[QMAuthService shared] startSessionWithBlock:^(BOOL success, NSError *error) {
             [QMUtilities removeIndicatorView];
             if (success) {
-                NSLog(@"Session created");
+                ILog(@"Session created");
             } else {
                 [[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:[NSString stringWithFormat:@"%@", error] delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
             }

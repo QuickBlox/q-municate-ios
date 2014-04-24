@@ -261,7 +261,7 @@
         }
     }
     if (_resultBlock == nil) {
-        NSLog(@"block == nil, result: %@", result);
+        ILog(@"block == nil, result: %@", result);
         return;
     }
     _resultBlock(result);

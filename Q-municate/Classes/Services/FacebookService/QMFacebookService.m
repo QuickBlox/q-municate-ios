@@ -83,7 +83,7 @@
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
     if (data.length) {
-        NSLog(@"data.length: %lu", (unsigned long)data.length);
+        ILog(@"data.length: %lu", (unsigned long)data.length);
         if (!self.receivedMData) {
             self.receivedMData = [NSMutableData new];
         }

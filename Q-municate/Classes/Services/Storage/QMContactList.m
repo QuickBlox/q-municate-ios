@@ -196,7 +196,7 @@
 {
     NSString *userID = [NSString stringWithFormat:@"%lu", (unsigned long)user.ID];
     NSString *baseID = self.baseUserIDs[userID];
-//     NSLog(@"%@",[[[self.baseUserIDs allKeys] lastObject] class]);
+
     [self deleteUserWithID:baseID completion:^(Result *result) {
         if (result.success) {
             // delete user from CO:
@@ -298,7 +298,6 @@
 
 - (void)completedWithResult:(Result *)result
 {
-//    NSLog(@"%i",[((QBUUserPagedResult *)result).users count]);
     _resultBlock(result);
 }
 

@@ -130,7 +130,7 @@
 
 - (void)saveChanges
 {
-    NSLog(@"saving data");
+    ILog(@"saving data");
     [QMUtilities createIndicatorView];
     if (self.isUserPhotoChanged) {
         QMContent *content = [[QMContent alloc] init];
