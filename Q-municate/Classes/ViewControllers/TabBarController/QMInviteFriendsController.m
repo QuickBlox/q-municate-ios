@@ -168,14 +168,24 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 0) {
-        if (indexPath.row == 0) {
+		if (indexPath.row == 0) {
 			[self loadFriendsFromFacebook];
-        } else {
+		} else {
 			[self loadFriendsFromAddressBook];
 		}
-    }
+	} else {
+		QMInviteFriendsCell *cell = (QMInviteFriendsCell *) [tableView cellForRowAtIndexPath:indexPath];
+		[self makeChangesForCell:cell];
+	}
+	[tableView deselectRowAtIndexPath:indexPath animated:YES];
+	[self performSelector:@selector(deselectCellForIndexPath:) withObject:indexPath afterDelay:0.3f];
+}
+
+- (void)deselectCellForIndexPath:(NSIndexPath *)indexPath
+{
+//	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+	[self.tableView reloadData];
 }
 
 - (IBAction)markFacebookUsersList:(UIButton *)sender
@@ -195,14 +205,23 @@
 - (IBAction)markUser:(UIButton *)sender
 {
 	QMInviteFriendsCell *cell = (QMInviteFriendsCell *) [[[sender superview]  superview] superview];
+	[self makeChangesForCell:cell];
+	[self.tableView reloadData];
+}
+
+- (void)makeChangesForCell:(QMInviteFriendsCell *)cell
+{
 	[self.dataSource changeUserState:cell.user];
+	[self checkForFriendsSetCompletenessForCell:cell];
+}
+
+- (void)checkForFriendsSetCompletenessForCell:(QMInviteFriendsCell *)cell
+{
 	if (cell.user.isFacebookPerson) {
 		[self checkForFacebookSetCompleteness];
 	} else {
 		[self checkForContactsSetCompleteness];
 	}
-	[self.tableView reloadData];
-
 }
 
 - (void)checkForFacebookSetCompleteness
