@@ -44,6 +44,7 @@
 		6943849418E42691001E08A9 /* UIImage+Cropper.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943849018E42691001E08A9 /* UIImage+Cropper.m */; };
 		6943849518E42691001E08A9 /* UIImageView+ImageWithBlobID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943849218E42691001E08A9 /* UIImageView+ImageWithBlobID.m */; };
 		6972022F18EB04280003A4CC /* QMChatViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6972022E18EB04280003A4CC /* QMChatViewCell.m */; };
+		69B1893E190950A70049C6F9 /* QMDefinitions.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B1893D190950A70049C6F9 /* QMDefinitions.m */; };
 		69C34DAD190023D600F21A24 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69C34DAC190023D600F21A24 /* Quickblox.framework */; };
 		69CF189518AE1C3C003262EF /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CF189418AE1C3C003262EF /* CFNetwork.framework */; };
 		69CF189718AE1C49003262EF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CF189618AE1C48003262EF /* SystemConfiguration.framework */; };
@@ -167,6 +168,7 @@
 		6943849218E42691001E08A9 /* UIImageView+ImageWithBlobID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+ImageWithBlobID.m"; sourceTree = "<group>"; };
 		6972022D18EB04280003A4CC /* QMChatViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatViewCell.h; sourceTree = "<group>"; };
 		6972022E18EB04280003A4CC /* QMChatViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatViewCell.m; sourceTree = "<group>"; };
+		69B1893D190950A70049C6F9 /* QMDefinitions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDefinitions.m; sourceTree = "<group>"; };
 		69C34DAC190023D600F21A24 /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quickblox.framework; path = External/Quickblox.framework; sourceTree = "<group>"; };
 		69CF189418AE1C3C003262EF /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		69CF189618AE1C48003262EF /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -558,6 +560,7 @@
 				69D57E6118ACC11C00A9900A /* main.m */,
 				69D57E6318ACC11C00A9900A /* Q-municate-Prefix.pch */,
 				69CF18AA18AE3788003262EF /* QMDefinitions.h */,
+				69B1893D190950A70049C6F9 /* QMDefinitions.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -791,6 +794,7 @@
 				6943848318E42678001E08A9 /* QMMainTabBarController.m in Sources */,
 				6943847318E42678001E08A9 /* QMPerson.m in Sources */,
 				6943847B18E42678001E08A9 /* QMLogInController.m in Sources */,
+				69B1893E190950A70049C6F9 /* QMDefinitions.m in Sources */,
 				6943849518E42691001E08A9 /* UIImageView+ImageWithBlobID.m in Sources */,
 				69D57E6618ACC11C00A9900A /* AppDelegate.m in Sources */,
 				6943848118E42678001E08A9 /* QMFriendsDetailsController.m in Sources */,
@@ -961,7 +965,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "F1F89A13-C185-4B01-86A7-26654F9EF6C2";
+				PROVISIONING_PROFILE = "9B760ED8-4A86-4CDF-A85B-4D7AE610B04B";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;
@@ -997,7 +1001,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "F1F89A13-C185-4B01-86A7-26654F9EF6C2";
+				PROVISIONING_PROFILE = "9B760ED8-4A86-4CDF-A85B-4D7AE610B04B";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;

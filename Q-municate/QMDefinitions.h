@@ -24,6 +24,14 @@ typedef enum {
     SettingsViewControllerModeCustom
 } SettingsViewControllerMode;
 
+typedef NS_ENUM(NSUInteger, QMLogLevel)
+{
+    QMLogLevelNothing,
+    QMLogLevelError,
+    QMLogLevelInfo,
+    QMLogLevelVerbose
+};
+
 
 //****************** Blocks *********************************
 typedef void (^QBResultBlock)(Result *result);
@@ -144,6 +152,6 @@ static NSString *const kAlertButtonTitleCancelString    = @"Cancel";
 static NSString *const kAlertButtonTitleLogOutString    = @"Log Out";
 
 
-
+extern QMLogLevel kLoggingLevel;
 
 #endif

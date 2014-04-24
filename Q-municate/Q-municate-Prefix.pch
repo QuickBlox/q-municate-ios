@@ -18,4 +18,30 @@
     #import <FacebookSDK/FacebookSDK.h>
 
     #import "QMDefinitions.h"
-#endif
+
+
+    #ifndef _EXTRACTS
+        #define _EXTRACTS
+    #endif
+
+    #ifdef DEBUG
+        #define ELog(...) do { if(kLoggingLevel >= BGLogLevelError) NSLog(@"%s %@", __PRETTY_FUNCTION__, [NSString stringWithFormat:__VA_ARGS__]); } while(0)
+        #define ILog(...) do { if(kLoggingLevel >= BGLogLevelInfo) NSLog(@"%s %@", __PRETTY_FUNCTION__, [NSString stringWithFormat:__VA_ARGS__]); } while(0)
+        #define VLog(...) do { if(kLoggingLevel >= BGLogLevelVerbose) NSLog(@"%s %@", __PRETTY_FUNCTION__, [NSString stringWithFormat:__VA_ARGS__]); } while(0)
+        #define ALog(...) [[NSAssertionHandler currentHandler] handleFailureInFunction:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding] file:[NSString stringWithCString:__FILE__ encoding:NSUTF8StringEncoding] lineNumber:__LINE__ description:__VA_ARGS__]
+    #else
+        #define ELog(...) NSLog(@"%s %@", __PRETTY_FUNCTION__, [NSString stringWithFormat:__VA_ARGS__])
+        #define ILog(...) do { } while (0)
+        #define VLog(...) do { } while (0)
+
+        #ifndef NS_BLOCK_ASSERTIONS
+        #define NS_BLOCK_ASSERTIONS
+    #endif
+
+    #define ALog(...) NSLog(@"%s %@", __PRETTY_FUNCTION__, [NSString stringWithFormat:__VA_ARGS__])
+    #endif
+
+    #define PLog(...) [[NSNotificationCenter defaultCenter] postNotificationName:UFAppLogInfoNotification object:[NSString stringWithFormat:__VA_ARGS__]]
+    #endif
+
+//#endif
