@@ -42,7 +42,8 @@
     UIWindow *window = [[UIApplication sharedApplication].delegate window];
     
     UIView *backgroundView = [[UIView alloc] initWithFrame:[window bounds]];
-    backgroundView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
+    backgroundView.backgroundColor = [UIColor blackColor];
+	backgroundView.alpha = 0.0f;
     backgroundView.tag = 1304;
     
     UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
@@ -50,15 +51,26 @@
     [backgroundView addSubview:indicator];
     
     [indicator startAnimating];
-    
-    [window addSubview:backgroundView];
+	[window addSubview:backgroundView];
+    [UIView animateWithDuration:0.2f
+					 animations:^{
+		[backgroundView setAlpha:0.5f];
+					 }
+	];
 }
 
 + (void)removeIndicatorView
 {
-    UIWindow *window = [[UIApplication sharedApplication].delegate window];
+	UIWindow *window = [[UIApplication sharedApplication].delegate window];
     UIView *indicatorView = [window viewWithTag:1304];
-    [indicatorView removeFromSuperview];
+	[UIView animateWithDuration:0.2f
+					 animations:^{
+						 [indicatorView setAlpha:0.0f];
+					 }
+					 completion:^(BOOL finished) {
+						 [indicatorView removeFromSuperview];
+					 }
+	];
 }
 
 
