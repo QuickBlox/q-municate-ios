@@ -1,0 +1,10 @@
+//
+//  Config.xcconfig
+//  Q-municate
+//
+//  Created by Andrey Moskvin on 4/25/14.
+//  Copyright (c) 2014 Quickblox. All rights reserved.
+//
+
+CODE_SIGN_IDENTITY = iPhone Distribution: Injoit LTD (8885H5G2YX)
+PROVISIONING_PROFILE = 37DAFD2D-B337-4E9F-A36B-D964C0330754

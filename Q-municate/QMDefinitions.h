@@ -24,6 +24,14 @@ typedef enum {
     SettingsViewControllerModeCustom
 } SettingsViewControllerMode;
 
+typedef NS_ENUM(NSUInteger, QMLogLevel)
+{
+    QMLogLevelNothing,
+    QMLogLevelError,
+    QMLogLevelInfo,
+    QMLogLevelVerbose
+};
+
 
 //****************** Blocks *********************************
 typedef void (^QBResultBlock)(Result *result);
@@ -149,6 +157,6 @@ static NSString *const kButtonTitleCreateGroupChatString 	= @"Create Group Chat"
 static NSString *const kSettingsProfileDefaultStatusString	= @"Add Status";
 
 
-
+extern QMLogLevel kLoggingLevel;
 
 #endif

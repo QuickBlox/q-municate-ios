@@ -100,7 +100,7 @@
         [mailController setSubject:kMailSubjectString];
         [mailController setMessageBody:kMailBodyString isHTML:NO];
         [self presentViewController:mailController animated:YES completion:^{
-            NSLog(@"Mail Controller presented");
+            ILog(@"Mail Controller presented");
         }];
     }
 }
@@ -306,7 +306,7 @@
         return;
     }
     [self dismissViewControllerAnimated:YES completion:^{
-        NSLog(@"Email Controller Dismissed");
+        ILog(@"Email Controller Dismissed");
     }];
 }
 

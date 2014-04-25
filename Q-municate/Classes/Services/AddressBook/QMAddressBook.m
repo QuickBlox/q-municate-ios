@@ -20,7 +20,7 @@
         CFErrorRef error = nil;
         addressBook = ABAddressBookCreateWithOptions(NULL,&error);
     if (addressBook == NULL) {
-        NSLog(@"%@",error);
+        ILog(@"%@",error);
         return;
     }
         ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {

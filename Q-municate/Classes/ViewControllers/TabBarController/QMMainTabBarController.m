@@ -62,12 +62,12 @@
             [QMUtilities createIndicatorView];
             [[QMAuthService shared] startSessionWithBlock:^(BOOL success, NSError *error) {
                 if (success) {
-                    NSLog(@"Session created");
+                    ILog(@"Session created");
                     NSString *email = [[NSUserDefaults standardUserDefaults] objectForKey:kEmail];
                     NSString *password = [[NSUserDefaults standardUserDefaults] objectForKey:kPassword];
                     [[QMAuthService shared] logInWithEmail:email password:password completion:^(QBUUser *user, BOOL success, NSError *error) {
                         if (!success) {
-                            NSLog(@"error while logging in: %@", error);
+                            ILog(@"error while logging in: %@", error);
                             [QMUtilities removeIndicatorView];
                             [self showAlertWithMessage:[NSString stringWithFormat:@"%@", error] actionSuccess:NO];
                             return;
