@@ -211,6 +211,7 @@
 		69F1177E18F403C900805932 /* QMIncomingCallController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncomingCallController.h; sourceTree = "<group>"; };
 		69F1177F18F403C900805932 /* QMIncomingCallController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMIncomingCallController.m; sourceTree = "<group>"; };
 		869075CA2A3446469130768E /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		86E57190190AA396000241DE /* AdHoc.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = AdHoc.xcconfig; path = "build-scripts/AdHoc.xcconfig"; sourceTree = "<group>"; };
 		8DE8913509D76C20DFF282A4 /* QMChatRoomListDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMChatRoomListDataSource.m; path = Classes/DataSources/QMChatsControllerDataSource/QMChatRoomListDataSource.m; sourceTree = "<group>"; };
 		8DE891AC48A8796625A26943 /* QMInviteFriendsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMInviteFriendsDataSource.m; path = Classes/DataSources/QMInviteFriendsDataSource/QMInviteFriendsDataSource.m; sourceTree = "<group>"; };
 		8DE891ACA31AEBBB205B2F58 /* QMChatRoomListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatRoomListController.m; sourceTree = "<group>"; };
@@ -487,6 +488,7 @@
 		69D57E4918ACC11C00A9900A = {
 			isa = PBXGroup;
 			children = (
+				86E57190190AA396000241DE /* AdHoc.xcconfig */,
 				69D57E5B18ACC11C00A9900A /* Q-municate */,
 				69845B0018B501F3001037B7 /* External */,
 				69D57E7418ACC11C00A9900A /* Q-municateTests */,
@@ -691,6 +693,9 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = Quickblox;
 				TargetAttributes = {
+					69D57E5118ACC11C00A9900A = {
+						DevelopmentTeam = 8885H5G2YX;
+					};
 					69D57E6C18ACC11C00A9900A = {
 						TestTargetID = 69D57E5118ACC11C00A9900A;
 					};
@@ -879,7 +884,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Khomenko Igor (67859YS754)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -897,7 +903,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "F1F89A13-C185-4B01-86A7-26654F9EF6C2";
+				PROVISIONING_PROFILE = "BF6DA726-B1A9-45B7-B503-663A47DB8B10";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -919,7 +925,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Khomenko Igor (67859YS754)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -930,7 +937,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PROVISIONING_PROFILE = "F1F89A13-C185-4B01-86A7-26654F9EF6C2";
+				PROVISIONING_PROFILE = "BF6DA726-B1A9-45B7-B503-663A47DB8B10";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -943,7 +950,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Khomenko Igor (67859YS754)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/External",
@@ -965,7 +972,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9B760ED8-4A86-4CDF-A85B-4D7AE610B04B";
+				PROVISIONING_PROFILE = "BF6DA726-B1A9-45B7-B503-663A47DB8B10";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;
@@ -979,7 +986,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Khomenko Igor (67859YS754)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/External",
@@ -1001,7 +1008,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9B760ED8-4A86-4CDF-A85B-4D7AE610B04B";
+				PROVISIONING_PROFILE = "BF6DA726-B1A9-45B7-B503-663A47DB8B10";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;
