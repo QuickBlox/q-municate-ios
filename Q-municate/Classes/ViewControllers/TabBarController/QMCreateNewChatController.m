@@ -12,6 +12,8 @@
 #import "UIImageView+ImageWithBlobID.h"
 
 #import "QMContactList.h"
+#import "QMNewChatDataSource.h"
+
 static CGFloat const rowHeight = 60.0;
 
 
@@ -20,8 +22,11 @@ static CGFloat const rowHeight = 60.0;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIButton *createGroupButton;
 
-@property (strong, nonatomic) NSArray *friendList;
-@property (strong, nonatomic) NSMutableArray *friendsSelected;
+@property (strong, nonatomic) QMNewChatDataSource *dataSource;
+
+@property (strong, nonatomic) UISearchBar *searchBar;
+@property (assign, nonatomic) BOOL searchBarIsShowed;
+@property (assign, nonatomic) BOOL searchIsActive;
 
 @end
 
@@ -32,10 +37,9 @@ static CGFloat const rowHeight = 60.0;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self configureCreateButtonWithShadow];
-    self.friendList = [[QMContactList shared].friends mutableCopy];
-    
-    self.friendsSelected = [[NSMutableArray alloc] init];
+    self.dataSource = [QMNewChatDataSource new];
+	[self configureCreateButtonWithShadow];
+	[self configureCreateChatButton];
 }
 
 - (void)didReceiveMemoryWarning
@@ -52,9 +56,9 @@ static CGFloat const rowHeight = 60.0;
 
 - (IBAction)cancelSelection:(id)sender
 {
-    if ([self.friendsSelected count] > 0) {
-        [self.friendsSelected removeAllObjects];
-        self.title = [NSString stringWithFormat:@"%li Selected", (unsigned long)[self.friendsSelected count]];
+    if ([self.dataSource.friendsSelectedMArray count] > 0) {
+        [self.dataSource.friendsSelectedMArray removeAllObjects];
+        self.title = [NSString stringWithFormat:@"%li Selected", (unsigned long)[self.dataSource.friendsSelectedMArray count]];
         [self.tableView reloadData];
     }
 }
@@ -65,7 +69,7 @@ static CGFloat const rowHeight = 60.0;
 
 - (IBAction)createGroupChat:(id)sender
 {
-    NSString *chatName = [self chatNameFromUserNames:self.friendsSelected];
+    NSString *chatName = [self chatNameFromUserNames:self.dataSource.friendsSelectedMArray];
     [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatName];
 }
 
@@ -73,13 +77,13 @@ static CGFloat const rowHeight = 60.0;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.friendList count];
+    return [self.dataSource.friendListArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QMInviteFriendsCell *cell = (QMInviteFriendsCell *) [tableView dequeueReusableCellWithIdentifier:kCreateChatCellIdentifier];
-    QBUUser *person = self.friendList[indexPath.row];
+    QBUUser *person = self.dataSource.friendListArray[indexPath.row];
     
     BOOL checked = [self isChecked:person];
     [cell configureCellWithParamsForQBUser:person checked:checked];
@@ -98,21 +102,51 @@ static CGFloat const rowHeight = 60.0;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    QBUUser *checkedUser = self.friendList[indexPath.row];
+    QBUUser *checkedUser = self.dataSource.friendListArray[indexPath.row];
     
     BOOL checked = [self isChecked:checkedUser];
     if (checked) {
-        [self.friendsSelected removeObject:checkedUser];
+        [self.dataSource.friendsSelectedMArray removeObject:checkedUser];
     } else {
-        [self.friendsSelected addObject:checkedUser];
+        [self.dataSource.friendsSelectedMArray addObject:checkedUser];
     }
     
-    self.title  = [NSString stringWithFormat:@"%li Selected", (unsigned long)[self.friendsSelected count]];
-    [self.tableView reloadData];
+    self.title  = [NSString stringWithFormat:@"%li Selected", (unsigned long)[self.dataSource.friendsSelectedMArray count]];
+	[self configureCreateChatButton];
+	[self.tableView reloadData];
 }
 
 
 #pragma mark - Options
+
+- (void)configureCreateChatButton
+{
+	if (![self.dataSource.friendsSelectedMArray count]) {
+		[self.createGroupButton setEnabled:NO];
+		[self.createGroupButton setAlpha:0.5f];
+		[self setPrivateChatTitle];
+	} else {
+		[self.createGroupButton setEnabled:YES];
+		[self.createGroupButton setAlpha:1.0f];
+		if ([self.dataSource.friendsSelectedMArray count] == 1) {
+			[self setPrivateChatTitle];
+		} else if ([self.dataSource.friendsSelectedMArray count] > 1) {
+			[self setGroupChatTitle];
+		}
+	}
+}
+
+- (void)setPrivateChatTitle
+{
+	[self.createGroupButton setTitle:kButtonTitleCreatePrivateChatString forState:UIControlStateNormal];
+	[self.createGroupButton setTitle:kButtonTitleCreatePrivateChatString forState:UIControlStateHighlighted];
+}
+
+- (void)setGroupChatTitle
+{
+	[self.createGroupButton setTitle:kButtonTitleCreateGroupChatString forState:UIControlStateNormal];
+	[self.createGroupButton setTitle:kButtonTitleCreateGroupChatString forState:UIControlStateHighlighted];
+}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -122,7 +156,7 @@ static CGFloat const rowHeight = 60.0;
 
 - (BOOL)isChecked:(QBUUser *)user
 {
-    for (QBUUser *person in self.friendsSelected) {
+    for (QBUUser *person in self.dataSource.friendsSelectedMArray) {
         if ([person isEqual:user]) {
             return YES;
         }
@@ -144,5 +178,33 @@ static CGFloat const rowHeight = 60.0;
     }
     return chatName;
 }
+
+#pragma mark - UISearchBarDelegate
+
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
+{
+	return YES;
+}
+
+- (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar
+{
+	[searchBar setShowsCancelButton:NO animated:YES];
+	return YES;
+}
+
+// search bar find text
+//- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+//{
+//	[self.dataSource emptyOtherUsersArray];
+//	self.searchIsActive = YES;
+//
+//	if ([searchText isEqualToString:kEmptyString]) {
+//		self.searchIsActive = NO;
+//		[self reloadFriendsList];
+//		return;
+//	}
+//	[self.dataSource updateFriendsArrayForSearchPhrase:searchText];
+//	[self.tableView reloadData];
+//}
 
 @end
