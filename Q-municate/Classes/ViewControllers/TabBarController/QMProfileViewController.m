@@ -39,8 +39,16 @@
     self.userNameTextField.text = self.localUser.fullName;
     self.userMailTextField.text = self.localUser.email;
 
-    self.userStatusTextView.text = self.oldUserStatusString;
-    self.isUserPhotoChanged = NO;
+	if (!self.oldUserStatusString && ![self.oldUserStatusString isEqualToString:kEmptyString]) {
+		self.oldUserStatusString = kSettingsProfileDefaultStatusString;
+	}
+	if ([self.oldUserStatusString isEqualToString:kSettingsProfileDefaultStatusString]) {
+		[self.userStatusTextView setTextColor:[UIColor colorWithRed:148/255.0f green:148/255.0f blue:148/255.0f alpha:1.0f]];
+	} else {
+		[self.userStatusTextView setTextColor:[UIColor blackColor]];
+	}
+	self.userStatusTextView.text = self.oldUserStatusString;
+	self.isUserPhotoChanged = NO;
     
     [self loadUserAvatarToImageView];
 
@@ -116,6 +124,33 @@
     return YES;
 }
 
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
+{
+	NSString *statusString = textView.text;
+	if ([statusString isEqualToString:kSettingsProfileDefaultStatusString]) {
+	    self.userStatusTextView.text = kEmptyString;
+		[self.userStatusTextView setTextColor:[UIColor blackColor]];
+	}
+	return YES;
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+	NSString *statusString = textView.text;
+	self.userStatusTextView.text = [self verifyResultStatusWithString:statusString];
+}
+
+- (NSString *)verifyResultStatusWithString:(NSString *)resultTextViewString
+{
+	if ([resultTextViewString isEqualToString:kEmptyString]) {
+		resultTextViewString = kSettingsProfileDefaultStatusString;
+	}
+	if ([resultTextViewString isEqualToString:kSettingsProfileDefaultStatusString]) {
+		[self.userStatusTextView setTextColor:[UIColor colorWithRed:148/255.0f green:148/255.0f blue:148/255.0f alpha:1.0f]];
+	}
+	return resultTextViewString;
+}
+https://jira-injoit.quickblox.com/browse/QMUN-126
 - (void)checkForDoneButton
 {
     if (self.isUserDataChanged || self.isUserPhotoChanged) {
@@ -189,7 +224,8 @@
 {
     if ([text isEqualToString:@"\n"]) {
         NSString *userStatusString = textView.text;
-        if (![userStatusString isEqualToString:self.oldUserStatusString]) {
+		userStatusString = [self verifyResultStatusWithString:userStatusString];
+		if (![userStatusString isEqualToString:self.oldUserStatusString]) {
             self.isUserDataChanged = YES;
         } else {
             self.isUserDataChanged = NO;
