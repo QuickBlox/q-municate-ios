@@ -211,7 +211,6 @@
 		69F1177E18F403C900805932 /* QMIncomingCallController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncomingCallController.h; sourceTree = "<group>"; };
 		69F1177F18F403C900805932 /* QMIncomingCallController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMIncomingCallController.m; sourceTree = "<group>"; };
 		869075CA2A3446469130768E /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
-		86E57190190AA396000241DE /* AdHoc.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = AdHoc.xcconfig; path = "build-scripts/AdHoc.xcconfig"; sourceTree = "<group>"; };
 		8DE8913509D76C20DFF282A4 /* QMChatRoomListDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMChatRoomListDataSource.m; path = Classes/DataSources/QMChatsControllerDataSource/QMChatRoomListDataSource.m; sourceTree = "<group>"; };
 		8DE891AC48A8796625A26943 /* QMInviteFriendsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMInviteFriendsDataSource.m; path = Classes/DataSources/QMInviteFriendsDataSource/QMInviteFriendsDataSource.m; sourceTree = "<group>"; };
 		8DE891ACA31AEBBB205B2F58 /* QMChatRoomListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatRoomListController.m; sourceTree = "<group>"; };
@@ -488,7 +487,6 @@
 		69D57E4918ACC11C00A9900A = {
 			isa = PBXGroup;
 			children = (
-				86E57190190AA396000241DE /* AdHoc.xcconfig */,
 				69D57E5B18ACC11C00A9900A /* Q-municate */,
 				69845B0018B501F3001037B7 /* External */,
 				69D57E7418ACC11C00A9900A /* Q-municateTests */,
