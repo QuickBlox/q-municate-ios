@@ -38,9 +38,18 @@
     
     self.userNameTextField.text = self.localUser.fullName;
     self.userMailTextField.text = self.localUser.email;
+    self.userPhoneTextField.text = self.localUser.phone;
 
-    self.userStatusTextView.text = self.oldUserStatusString;
-    self.isUserPhotoChanged = NO;
+	if (!self.oldUserStatusString && ![self.oldUserStatusString isEqualToString:kEmptyString]) {
+		self.oldUserStatusString = kSettingsProfileDefaultStatusString;
+	}
+	if ([self.oldUserStatusString isEqualToString:kSettingsProfileDefaultStatusString]) {
+		[self.userStatusTextView setTextColor:[UIColor colorWithRed:148/255.0f green:148/255.0f blue:148/255.0f alpha:1.0f]];
+	} else {
+		[self.userStatusTextView setTextColor:[UIColor blackColor]];
+	}
+	self.userStatusTextView.text = self.oldUserStatusString;
+	self.isUserPhotoChanged = NO;
     
     [self loadUserAvatarToImageView];
 
@@ -110,10 +119,43 @@
         } else {
             self.isUserDataChanged = NO;
         }
-    }
+    } else if (textField == self.userPhoneTextField) {
+		if (![textString isEqualToString:self.localUser.phone]) {
+			self.isUserDataChanged = YES;
+		} else {
+			self.isUserDataChanged = NO;
+		}
+	}
     [self checkForDoneButton];
     [textField resignFirstResponder];
     return YES;
+}
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
+{
+	NSString *statusString = textView.text;
+	if ([statusString isEqualToString:kSettingsProfileDefaultStatusString]) {
+	    self.userStatusTextView.text = kEmptyString;
+		[self.userStatusTextView setTextColor:[UIColor blackColor]];
+	}
+	return YES;
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+	NSString *statusString = textView.text;
+	self.userStatusTextView.text = [self verifyResultStatusWithString:statusString];
+}
+
+- (NSString *)verifyResultStatusWithString:(NSString *)resultTextViewString
+{
+	if ([resultTextViewString isEqualToString:kEmptyString]) {
+		resultTextViewString = kSettingsProfileDefaultStatusString;
+	}
+	if ([resultTextViewString isEqualToString:kSettingsProfileDefaultStatusString]) {
+		[self.userStatusTextView setTextColor:[UIColor colorWithRed:148/255.0f green:148/255.0f blue:148/255.0f alpha:1.0f]];
+	}
+	return resultTextViewString;
 }
 
 - (void)checkForDoneButton
@@ -145,16 +187,8 @@
 
 - (void)updateOtherDataForBlob:(QBCBlob *)blob
 {
-    NSString *userNameString = self.userNameTextField.text;
-    if (![userNameString isEqualToString:self.localUser.fullName]) {
-        self.localUser.fullName = userNameString;
-    }
-    NSString *userMailString = self.userMailTextField.text;
-    if (![userMailString isEqualToString:self.localUser.email]) {
-        self.localUser.email = userMailString;
-    }
-    
-    [[QMAuthService shared] updateUser:self.localUser withBlob:blob completion:^(QBUUser *user, BOOL success, NSError *error) {
+	[self prepareUserData];
+	[[QMAuthService shared] updateUser:self.localUser withBlob:blob completion:^(QBUUser *user, BOOL success, NSError *error) {
         if (success) {
             [QMContactList shared].me = user;
 			[self resetChanges];
@@ -167,6 +201,22 @@
     // hard code till there will be a field in QBUUser where to save to
     [[NSUserDefaults standardUserDefaults] setObject:self.userStatusTextView.text forKey:kUserStatusText];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)prepareUserData
+{
+	NSString *userNameString = self.userNameTextField.text;
+	if (![userNameString isEqualToString:self.localUser.fullName]) {
+		self.localUser.fullName = userNameString;
+	}
+	NSString *userMailString = self.userMailTextField.text;
+	if (![userMailString isEqualToString:self.localUser.email]) {
+		self.localUser.email = userMailString;
+	}
+	NSString *userPhoneString = self.userPhoneTextField.text;
+	if (![userPhoneString isEqualToString:self.localUser.phone]) {
+		self.localUser.phone = userPhoneString;
+	}
 }
 
 - (void)resetChanges
@@ -189,7 +239,8 @@
 {
     if ([text isEqualToString:@"\n"]) {
         NSString *userStatusString = textView.text;
-        if (![userStatusString isEqualToString:self.oldUserStatusString]) {
+		userStatusString = [self verifyResultStatusWithString:userStatusString];
+		if (![userStatusString isEqualToString:self.oldUserStatusString]) {
             self.isUserDataChanged = YES;
         } else {
             self.isUserDataChanged = NO;
@@ -201,6 +252,8 @@
         [UIView animateWithDuration:0.3f animations:^{
             [self.containerView setFrame:r];
         }];
+    } else if (textView.text.length == 64 && !range.length) {
+		return NO;
     }
     return YES;
 }

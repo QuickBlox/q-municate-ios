@@ -151,6 +151,11 @@ static NSString *const kAlertButtonTitleHackItString    = @"Hack it!";
 static NSString *const kAlertButtonTitleCancelString    = @"Cancel";
 static NSString *const kAlertButtonTitleLogOutString    = @"Log Out";
 
+static NSString *const kButtonTitleCreatePrivateChatString 	= @"Create Private Chat";
+static NSString *const kButtonTitleCreateGroupChatString 	= @"Create Group Chat";
+
+static NSString *const kSettingsProfileDefaultStatusString	= @"Add Status";
+
 
 extern QMLogLevel kLoggingLevel;
 
