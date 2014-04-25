@@ -582,7 +582,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uDA-WP-07o">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="346"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="upic-placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="SfV-j5-OGF" customClass="AsyncImageView">
@@ -628,7 +628,7 @@
                                         </connections>
                                     </textField>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="ldB-jI-l6y">
-                                        <rect key="frame" x="20" y="239" width="280" height="67"/>
+                                        <rect key="frame" x="20" y="289" width="280" height="45"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud</string>
@@ -638,6 +638,15 @@
                                             <outlet property="delegate" destination="WQB-nP-0pB" id="bud-4x-kBY"/>
                                         </connections>
                                     </textView>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Phone" minimumFontSize="17" background="underline" translatesAutoresizingMaskIntoConstraints="NO" id="1Gk-Ic-EBj" customClass="SKDigitField">
+                                        <rect key="frame" x="20" y="248" width="280" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="WQB-nP-0pB" id="YHF-HQ-1Vt"/>
+                                        </connections>
+                                    </textField>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
@@ -650,6 +659,7 @@
                         <outlet property="containerView" destination="uDA-WP-07o" id="k6B-bs-929"/>
                         <outlet property="userMailTextField" destination="qr5-Tz-BID" id="9Vw-ol-hUp"/>
                         <outlet property="userNameTextField" destination="UrH-vR-lp8" id="Pef-TP-46R"/>
+                        <outlet property="userPhoneTextField" destination="1Gk-Ic-EBj" id="39P-KY-YCT"/>
                         <outlet property="userPhotoImageView" destination="SfV-j5-OGF" id="aDh-Uj-9Tb"/>
                         <outlet property="userStatusTextView" destination="ldB-jI-l6y" id="sQJ-Ky-0tR"/>
                     </connections>

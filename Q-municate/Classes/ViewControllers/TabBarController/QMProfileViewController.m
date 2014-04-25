@@ -38,6 +38,7 @@
     
     self.userNameTextField.text = self.localUser.fullName;
     self.userMailTextField.text = self.localUser.email;
+    self.userPhoneTextField.text = self.localUser.phone;
 
 	if (!self.oldUserStatusString && ![self.oldUserStatusString isEqualToString:kEmptyString]) {
 		self.oldUserStatusString = kSettingsProfileDefaultStatusString;
@@ -118,7 +119,13 @@
         } else {
             self.isUserDataChanged = NO;
         }
-    }
+    } else if (textField == self.userPhoneTextField) {
+		if (![textString isEqualToString:self.localUser.phone]) {
+			self.isUserDataChanged = YES;
+		} else {
+			self.isUserDataChanged = NO;
+		}
+	}
     [self checkForDoneButton];
     [textField resignFirstResponder];
     return YES;
@@ -180,16 +187,8 @@
 
 - (void)updateOtherDataForBlob:(QBCBlob *)blob
 {
-    NSString *userNameString = self.userNameTextField.text;
-    if (![userNameString isEqualToString:self.localUser.fullName]) {
-        self.localUser.fullName = userNameString;
-    }
-    NSString *userMailString = self.userMailTextField.text;
-    if (![userMailString isEqualToString:self.localUser.email]) {
-        self.localUser.email = userMailString;
-    }
-    
-    [[QMAuthService shared] updateUser:self.localUser withBlob:blob completion:^(QBUUser *user, BOOL success, NSError *error) {
+	[self prepareUserData];
+	[[QMAuthService shared] updateUser:self.localUser withBlob:blob completion:^(QBUUser *user, BOOL success, NSError *error) {
         if (success) {
             [QMContactList shared].me = user;
 			[self resetChanges];
@@ -202,6 +201,22 @@
     // hard code till there will be a field in QBUUser where to save to
     [[NSUserDefaults standardUserDefaults] setObject:self.userStatusTextView.text forKey:kUserStatusText];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)prepareUserData
+{
+	NSString *userNameString = self.userNameTextField.text;
+	if (![userNameString isEqualToString:self.localUser.fullName]) {
+		self.localUser.fullName = userNameString;
+	}
+	NSString *userMailString = self.userMailTextField.text;
+	if (![userMailString isEqualToString:self.localUser.email]) {
+		self.localUser.email = userMailString;
+	}
+	NSString *userPhoneString = self.userPhoneTextField.text;
+	if (![userPhoneString isEqualToString:self.localUser.phone]) {
+		self.localUser.phone = userPhoneString;
+	}
 }
 
 - (void)resetChanges

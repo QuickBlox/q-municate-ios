@@ -14,6 +14,7 @@
 @property (nonatomic, weak) IBOutlet AsyncImageView *userPhotoImageView;
 @property (nonatomic, weak) IBOutlet UITextField *userNameTextField;
 @property (nonatomic, weak) IBOutlet UITextField *userMailTextField;
+@property (nonatomic, weak) IBOutlet UITextField *userPhoneTextField;
 @property (nonatomic, weak) IBOutlet UIButton *chooseUserPhotoButton;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (weak, nonatomic) IBOutlet UITextView *userStatusTextView;
