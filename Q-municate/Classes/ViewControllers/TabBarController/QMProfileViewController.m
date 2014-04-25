@@ -150,7 +150,7 @@
 	}
 	return resultTextViewString;
 }
-https://jira-injoit.quickblox.com/browse/QMUN-126
+
 - (void)checkForDoneButton
 {
     if (self.isUserDataChanged || self.isUserPhotoChanged) {
