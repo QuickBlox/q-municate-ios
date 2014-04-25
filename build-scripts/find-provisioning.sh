@@ -5,7 +5,7 @@
 #  Created by Andrey Moskvin on 12/5/13.
 #  Copyright (c) 2013 QuickBlox. All rights reserved.
 
-PROVISIONING_NAME="Videu_AdHoc_Provision_Profile"
+PROVISIONING_NAME="Qmunicate Adhoc"
 FILES=/Users/macbook/Library/MobileDevice/Provisioning\ Profiles
 
 find "$FILES" -print0 | while read -d $'\0' file
