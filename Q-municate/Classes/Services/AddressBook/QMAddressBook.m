@@ -42,12 +42,16 @@
                 ABRecordRef contactPerson = (__bridge ABRecordRef)allContacts[i];
                 NSString *firstName = (__bridge_transfer NSString *)ABRecordCopyValue(contactPerson, kABPersonFirstNameProperty);
                 NSString *lastName =  (__bridge_transfer NSString *)ABRecordCopyValue(contactPerson, kABPersonLastNameProperty);
-    
                 NSData  *imgData = (__bridge NSData *)ABPersonCopyImageData(contactPerson);
                 UIImage *avatar = [UIImage imageWithData:imgData];
-                
-                NSString *fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-                
+
+				NSString *fullName;
+                if (lastName && ![lastName isEqualToString:kEmptyString]) {
+					fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+				} else {
+					fullName = firstName;
+				}
+
                 person.firstName = firstName;
                 person.lastName = lastName;
                 person.fullName = fullName;

@@ -54,7 +54,7 @@
 
 - (IBAction)sendButtonClicked:(id)sender
 {
-    //share to Facebook:
+	//share to Facebook:
     if ([self.dataSource.checkedFacebookUsers count] > 0) {
         NSString *tags = [self.dataSource emailsFromFacebookPersons];
         [QMUtilities createIndicatorView];
@@ -71,8 +71,12 @@
     }
     // share via Email:
     if ([self.dataSource.checkedABContacts count] > 0) {
-        [self showEmailController];
-    }
+		if ([MFMailComposeViewController canSendMail]) {
+			[self showEmailController];
+		} else {
+			[[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:kAlertBodySetUpYourEmailClientString delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
+		}
+	}
 }
 
 - (void)shareApplicationToFriends:(NSString *)friendsListString
@@ -184,7 +188,6 @@
 
 - (void)deselectCellForIndexPath:(NSIndexPath *)indexPath
 {
-//	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 	[self.tableView reloadData];
 }
 

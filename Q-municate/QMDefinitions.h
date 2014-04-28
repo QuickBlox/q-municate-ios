@@ -146,6 +146,7 @@ static NSString *const kAlertBodyMessageWasSentToMailString     = @"Message was 
 static NSString *const kAlertBodyRecordPostedString             = @"Record was posted to wall.";
 static NSString *const kAlertBodyRecordSentViaMailString        = @"Record was sent via email.";
 static NSString *const kAlertBodyNoContactsWithEmailsString     = @"No contacts with emails";
+static NSString *const kAlertBodySetUpYourEmailClientString     = @"Please, set up your email client";
 static NSString *const kAlertButtonTitleOkString        = @"OK";
 static NSString *const kAlertButtonTitleHackItString    = @"Hack it!";
 static NSString *const kAlertButtonTitleCancelString    = @"Cancel";
