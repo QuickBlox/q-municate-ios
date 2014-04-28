@@ -68,7 +68,7 @@ static NSString *const kSettingsVCCellIdentifier      = @"SettingsCellIdentifier
 static NSString *const kSettingsCellTitleProfile            = @"Profile";
 static NSString *const kSettingsCellTitlePushNotifications  = @"Push Notifications";
 static NSString *const kSettingsCellTitleChangePassword     = @"Change Password";
-static NSString *const kSettingsCellTitleVersion            = @"Version: 1.0.2a";
+static NSString *const kSettingsCellBundleVersion           = @"CFBundleVersion";
 
 //****************** Notifications  ***********************
 static NSString *const kFriendsLoadedNotification     = @"Friends Loaded";

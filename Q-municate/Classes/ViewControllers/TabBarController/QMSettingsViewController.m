@@ -155,7 +155,7 @@ typedef NS_ENUM(NSUInteger, QMPasswordCheckState) {
 
 - (UITableViewCell *)configureVersionCell:(UITableViewCell *)cell
 {
-	cell.textLabel.text = kSettingsCellTitleVersion;
+	cell.textLabel.text = [[NSBundle mainBundle] objectForInfoDictionaryKey:kSettingsCellBundleVersion];
 	cell.textLabel.textColor = [UIColor grayColor];
 	cell.userInteractionEnabled = NO;
 
