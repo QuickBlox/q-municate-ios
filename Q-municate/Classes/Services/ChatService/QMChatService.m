@@ -41,7 +41,6 @@
 
 #pragma mark - LogIn & LogOut
 
-// LOG IN  &  LOG OUT
 - (void)loginWithUser:(QBUUser *)user completion:(QBChatResultBlock)block
 {
     _chatBlock = block;
@@ -203,5 +202,25 @@
                
     [[NSNotificationCenter defaultCenter] postNotificationName:kCallWasStoppedNotification object:nil userInfo:@{@"reason":stopCallReason}];
 }
+
+#pragma mark - Chat Messages
+- (void)chatDidNotSendMessage:(QBChatMessage *)message
+{
+	// post notification to Chat Controller
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"" object:nil userInfo:@{@"message" : message}];
+}
+
+- (void)chatDidReceiveMessage:(QBChatMessage *)message
+{
+	// post notification to Chat Controller
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"" object:nil userInfo:@{@"message" : message}];
+}
+
+- (void)chatDidFailWithError:(NSInteger)code
+{
+	// post notification to Chat Controller
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"" object:nil userInfo:@{@"errorCode" : [NSNumber numberWithInteger:code]}];
+}
+
 
 @end

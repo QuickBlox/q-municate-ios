@@ -10,6 +10,7 @@
 #import "QMChatViewCell.h"
 #import "QMChatDataSource.h"
 #import "QMContactList.h"
+#import "QMChatService.h"
 
 static CGFloat const kCellHeightOffset = 33.0f;
 
@@ -34,10 +35,13 @@ static CGFloat const kCellHeightOffset = 33.0f;
     [self configureInputMessageViewShadow];
     [self addKeyboardObserver];
 
-    [QBChat instance].delegate = self;
     QBUUser *user = [QMContactList shared].me;
     user.password = [[NSUserDefaults standardUserDefaults] objectForKey:kPassword];
-    [[QBChat instance] loginWithUser:user];
+	[[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
+		if (success) {
+			NSLog(@"success");
+		}
+	}];
 
 	[self configureNavBarButtons];
 }
