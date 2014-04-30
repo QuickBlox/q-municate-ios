@@ -206,20 +206,23 @@
 #pragma mark - Chat Messages
 - (void)chatDidNotSendMessage:(QBChatMessage *)message
 {
-	// post notification to Chat Controller
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"" object:nil userInfo:@{@"message" : message}];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidNotSendMessage object:nil userInfo:@{@"message" : message}];
 }
 
 - (void)chatDidReceiveMessage:(QBChatMessage *)message
 {
-	// post notification to Chat Controller
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"" object:nil userInfo:@{@"message" : message}];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidReceiveMessage object:nil userInfo:@{@"message" : message}];
 }
 
 - (void)chatDidFailWithError:(NSInteger)code
 {
-	// post notification to Chat Controller
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"" object:nil userInfo:@{@"errorCode" : [NSNumber numberWithInteger:code]}];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidFailWithError object:nil userInfo:@{@"errorCode" : [NSNumber numberWithInteger:code]}];
+}
+
+- (void)postMessage:(QBChatMessage *)message
+{
+	BOOL didSendMessage = [[QBChat instance] sendMessage:message];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidSendMessage object:nil userInfo:@{@"didSendMessage" : [NSNumber numberWithBool:didSendMessage]}];
 }
 
 

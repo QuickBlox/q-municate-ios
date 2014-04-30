@@ -75,6 +75,11 @@ static NSString *const kFriendsLoadedNotification     = @"Friends Loaded";
 static NSString *const kAllUsersLoadedNotification    = @"All users loaded";
 static NSString *const kLoggedInNotification          = @"LoggedInNotification";
 
+static NSString *const kChatDidNotSendMessage			= @"kChatDidNotSendMessage";
+static NSString *const kChatDidReceiveMessage			= @"kChatDidReceiveMessage";
+static NSString *const kChatDidFailWithError			= @"kChatDidFailWithError";
+static NSString *const kChatDidSendMessage				= @"kChatDidSendMessage";
+
 
 //****************** Calls Notifications  ***********************
 static NSString *const kIncomingCallNotification = @"Incomming Call";

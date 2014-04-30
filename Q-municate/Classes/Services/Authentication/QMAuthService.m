@@ -90,7 +90,7 @@
             block(user, YES, nil);
             return;
         }
-        block(nil, NO, result.errors[0]);
+        block(nil, NO, result.errors[0]);//TODO:fix for crash
     }];
 }
 

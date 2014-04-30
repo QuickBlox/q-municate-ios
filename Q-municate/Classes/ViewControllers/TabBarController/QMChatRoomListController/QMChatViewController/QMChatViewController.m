@@ -34,16 +34,25 @@ static CGFloat const kCellHeightOffset = 33.0f;
     self.dataSource = [[QMChatDataSource alloc] init];
     [self configureInputMessageViewShadow];
     [self addKeyboardObserver];
+	[self addChatObserver];
 
-    QBUUser *user = [QMContactList shared].me;
+	QBUUser *user = [QMContactList shared].me;
     user.password = [[NSUserDefaults standardUserDefaults] objectForKey:kPassword];
-	[[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-		if (success) {
-			NSLog(@"success");
-		}
-	}];
 
 	[self configureNavBarButtons];
+}
+
+- (void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)addChatObserver
+{
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDidNotSendMessage:) name:kChatDidNotSendMessage object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDidFailWithError:) name:kChatDidFailWithError object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDidSendMessage:) name:kChatDidSendMessage object:nil];
 }
 
 - (void)configureNavBarButtons
@@ -180,5 +189,44 @@ static CGFloat const kCellHeightOffset = 33.0f;
 {
 	//
 }
+
+#pragma mark - Chat Notifications
+- (void)chatDidNotSendMessage:(NSNotification *)notification
+{
+	//
+}
+
+- (void)chatDidReceiveMessage:(NSNotification *)notification
+{
+
+}
+
+- (void)chatDidFailWithError:(NSNotification *)notification
+{
+	//
+}
+
+- (void)chatDidSendMessage:(NSNotification *)notification
+{
+	[self addMessageToHistory];
+}
+
+#pragma mark -
+- (IBAction)sendMessageButtonClicked:(UIButton *)sender
+{
+	if (self.inputMessageTextField.text.length) {
+		QBChatMessage *chatMessage = [QBChatMessage new];
+		chatMessage.text = self.inputMessageTextField.text;
+		chatMessage.senderID = [QMContactList shared].me.ID;
+		chatMessage.recipientID = [self.usersRecipientsIdArray[0] unsignedIntegerValue];
+		[[QMChatService shared] postMessage:chatMessage];
+	}
+}
+
+- (void)addMessageToHistory
+{
+	//
+}
+
 
 @end
