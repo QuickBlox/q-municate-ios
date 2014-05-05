@@ -90,7 +90,13 @@
             block(user, YES, nil);
             return;
         }
-        block(nil, NO, result.errors[0]);//TODO:fix for crash
+		NSError *completionError = nil;
+		if (![result.errors count]) {
+		    completionError = [NSError errorWithDomain:NSNetServicesErrorDomain code:701 userInfo:@{NSLocalizedDescriptionKey : @"Logging in with FBAccessToken. result.errors[0] is empty. Refer to [QMAuthService logInWithFacebookAccessToken:completion:]"}];
+		} else {
+			completionError = result.errors[0];
+		}
+        block(nil, NO, completionError);//TODO:fix for crash
     }];
 }
 
