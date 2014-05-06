@@ -18,5 +18,6 @@
 @property (nonatomic, weak) IBOutlet UIButton *chooseUserPhotoButton;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (weak, nonatomic) IBOutlet UITextView *userStatusTextView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *doneBarButton;
 
 @end

@@ -76,8 +76,6 @@
 		8DE8996F36A717BC50F4E17F /* QMSettingsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE899FED9CFF5FD437561DF /* QMSettingsDataSource.m */; };
 		8DE89B505F36868CDBF5970C /* QMFriendsListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE89B0BBDA2AC0837B4496B /* QMFriendsListDataSource.m */; };
 		8DE89F7AACAF85490A5EB431 /* QMChatRoomListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE8913509D76C20DFF282A4 /* QMChatRoomListDataSource.m */; };
-		B70CD649190AAE670002F4A8 /* SKDigitField.m in Sources */ = {isa = PBXBuildFile; fileRef = B70CD646190AAE670002F4A8 /* SKDigitField.m */; };
-		B70CD64A190AAE670002F4A8 /* SKDotField.m in Sources */ = {isa = PBXBuildFile; fileRef = B70CD648190AAE670002F4A8 /* SKDotField.m */; };
 		B71E055E190FAAF900DD6D34 /* QMIncomingCallController.m in Sources */ = {isa = PBXBuildFile; fileRef = B71E0542190FAAF900DD6D34 /* QMIncomingCallController.m */; };
 		B71E055F190FAAF900DD6D34 /* QMVideoCallController.m in Sources */ = {isa = PBXBuildFile; fileRef = B71E0545190FAAF900DD6D34 /* QMVideoCallController.m */; };
 		B71E0560190FAAF900DD6D34 /* QMChatRoomListController.m in Sources */ = {isa = PBXBuildFile; fileRef = B71E0548190FAAF900DD6D34 /* QMChatRoomListController.m */; };
@@ -209,11 +207,6 @@
 		8DE89B7BB9FD146179D7262D /* QMSettingsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMSettingsDataSource.h; path = Classes/DataSources/QMSettingsDataSource/QMSettingsDataSource.h; sourceTree = "<group>"; };
 		8DE89E678171D28A1CC3E0CA /* QMChatDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMChatDataSource.m; path = Classes/DataSources/QMChatDataSource/QMChatDataSource.m; sourceTree = "<group>"; };
 		8DE89F0E1E6AC0060A32D5A4 /* QMInviteFriendsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMInviteFriendsDataSource.h; path = Classes/DataSources/QMInviteFriendsDataSource/QMInviteFriendsDataSource.h; sourceTree = "<group>"; };
-		B70CD644190AAE670002F4A8 /* SKConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKConstant.h; sourceTree = "<group>"; };
-		B70CD645190AAE670002F4A8 /* SKDigitField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKDigitField.h; sourceTree = "<group>"; };
-		B70CD646190AAE670002F4A8 /* SKDigitField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKDigitField.m; sourceTree = "<group>"; };
-		B70CD647190AAE670002F4A8 /* SKDotField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKDotField.h; sourceTree = "<group>"; };
-		B70CD648190AAE670002F4A8 /* SKDotField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKDotField.m; sourceTree = "<group>"; };
 		B71E0541190FAAF900DD6D34 /* QMIncomingCallController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncomingCallController.h; sourceTree = "<group>"; };
 		B71E0542190FAAF900DD6D34 /* QMIncomingCallController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMIncomingCallController.m; sourceTree = "<group>"; };
 		B71E0544190FAAF900DD6D34 /* QMVideoCallController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMVideoCallController.h; sourceTree = "<group>"; };
@@ -474,7 +467,6 @@
 		69845B0018B501F3001037B7 /* External */ = {
 			isa = PBXGroup;
 			children = (
-				B70CD643190AAE670002F4A8 /* SKInput */,
 			);
 			name = External;
 			sourceTree = "<group>";
@@ -644,19 +636,6 @@
 			);
 			name = QMFriendsListDataSource;
 			path = Classes/DataSources/QMFriendsListDataSource;
-			sourceTree = "<group>";
-		};
-		B70CD643190AAE670002F4A8 /* SKInput */ = {
-			isa = PBXGroup;
-			children = (
-				B70CD644190AAE670002F4A8 /* SKConstant.h */,
-				B70CD645190AAE670002F4A8 /* SKDigitField.h */,
-				B70CD646190AAE670002F4A8 /* SKDigitField.m */,
-				B70CD647190AAE670002F4A8 /* SKDotField.h */,
-				B70CD648190AAE670002F4A8 /* SKDotField.m */,
-			);
-			name = SKInput;
-			path = External/SKInput;
 			sourceTree = "<group>";
 		};
 		B71E053F190FAAF900DD6D34 /* CallControllers */ = {
@@ -922,7 +901,6 @@
 				6943849318E42691001E08A9 /* NSDateFormatter+SinceDateFormat.m in Sources */,
 				6943848718E42678001E08A9 /* QMFriendListCell.m in Sources */,
 				6943848918E42678001E08A9 /* QMInviteFriendsStaticCell.m in Sources */,
-				B70CD64A190AAE670002F4A8 /* SKDotField.m in Sources */,
 				6943847618E42678001E08A9 /* QMAuthService.m in Sources */,
 				69EB283B18E9692D00620A01 /* QMChatListCell.m in Sources */,
 				693F347B18F554240032891F /* QMIncommingCallSegue.m in Sources */,
@@ -939,7 +917,6 @@
 				8DE89B505F36868CDBF5970C /* QMFriendsListDataSource.m in Sources */,
 				8DE8961214595987DBFCA807 /* QMInviteFriendsDataSource.m in Sources */,
 				B71E0567190FAAF900DD6D34 /* QMSettingsViewController.m in Sources */,
-				B70CD649190AAE670002F4A8 /* SKDigitField.m in Sources */,
 				8DE89F7AACAF85490A5EB431 /* QMChatRoomListDataSource.m in Sources */,
 				B71E055E190FAAF900DD6D34 /* QMIncomingCallController.m in Sources */,
 				B71E0560190FAAF900DD6D34 /* QMChatRoomListController.m in Sources */,

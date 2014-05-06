@@ -638,7 +638,7 @@
                                             <outlet property="delegate" destination="WQB-nP-0pB" id="bud-4x-kBY"/>
                                         </connections>
                                     </textView>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Phone" minimumFontSize="17" background="underline" translatesAutoresizingMaskIntoConstraints="NO" id="1Gk-Ic-EBj" customClass="SKDigitField">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Phone" minimumFontSize="17" background="underline" translatesAutoresizingMaskIntoConstraints="NO" id="1Gk-Ic-EBj">
                                         <rect key="frame" x="20" y="248" width="280" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
