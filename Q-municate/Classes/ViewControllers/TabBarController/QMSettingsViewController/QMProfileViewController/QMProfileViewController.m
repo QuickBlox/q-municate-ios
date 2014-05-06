@@ -108,6 +108,10 @@
 {
 	if (textField == self.userPhoneTextField) {
 		[self showNavDoneButton];
+	} else {
+		if (self.navigationItem.rightBarButtonItems) {
+			[self.navigationItem setRightBarButtonItems:nil];
+		}
 	}
 }
 
