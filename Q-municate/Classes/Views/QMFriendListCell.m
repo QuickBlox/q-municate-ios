@@ -31,6 +31,7 @@
     
     // cancel previous user's avatar loading
     [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget:self.userImage];
+    [self.userImage setImage:[UIImage imageNamed:@"upic-placeholder"]];
 
     // load avatar:
     if (user.website != nil) {
