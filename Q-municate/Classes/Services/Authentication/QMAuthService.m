@@ -150,6 +150,11 @@
                     return;
                 }
                 NSDictionary *me = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+				if ([me count] == 1) {
+					if ([((NSString *)[me allKeys][0]) isEqualToString:kErrorKeyFromDictionaryString]) {
+					    return;
+					}
+				}
                 [QMContactList shared].facebookMe = [me mutableCopy];
                 
                 NSString *token = [FBSession activeSession].accessTokenData.accessToken;

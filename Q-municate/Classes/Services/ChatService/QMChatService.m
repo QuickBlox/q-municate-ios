@@ -50,6 +50,7 @@
 - (void)logOut
 {
     [[QBChat instance] logout];
+	[self.presenceTimer invalidate];
     self.presenceTimer = nil;
 }
 

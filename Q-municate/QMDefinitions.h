@@ -132,6 +132,8 @@ static NSString *const kMailSubjectString               = @"Q-municate";
 static NSString *const kMailBodyString                  = @"Join us in Q-municate!";
 static NSString *const kButtonTitleDoneString           = @"Done";
 
+static NSString *const kErrorKeyFromDictionaryString    	= @"error";
+
 static NSString *const kAlertTitleErrorString               = @"Error";
 static NSString *const kAlertTitleSuccessString             = @"Success";
 static NSString *const kAlertTitleInProgressString          = @"In Progress";
