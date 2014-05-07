@@ -28,8 +28,6 @@
 - (void)initActiveStreamWithOpponentView:(UIView *)opponentView ownView:(UIView *)ownView;          // for video calls
 - (void)releaseActiveStream;
 
-- (void)postMessage:(QBChatMessage *)message;
-
 - (void)callUser:(NSUInteger)userID withVideo:(BOOL)videoEnabled;
 
 - (void)acceptCallFromUser:(NSUInteger)userID withVideo:(BOOL)videoEnabled customParams:(NSDictionary *)customParameters;

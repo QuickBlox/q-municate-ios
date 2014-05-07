@@ -34,7 +34,6 @@ static CGFloat const kCellHeightOffset = 33.0f;
     self.dataSource = [[QMChatDataSource alloc] init];
     [self configureInputMessageViewShadow];
     [self addKeyboardObserver];
-	[self addChatObserver];
 
 	QBUUser *user = [QMContactList shared].me;
     user.password = [[NSUserDefaults standardUserDefaults] objectForKey:kPassword];
@@ -47,45 +46,16 @@ static CGFloat const kCellHeightOffset = 33.0f;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)addChatObserver
-{
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDidNotSendMessage:) name:kChatDidNotSendMessage object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDidFailWithError:) name:kChatDidFailWithError object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDidSendMessage:) name:kChatDidSendMessage object:nil];
-}
-
 - (void)configureNavBarButtons
 {
-	BOOL isGroupChat = YES;
+	UIButton *groupInfoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	[groupInfoButton setFrame:CGRectMake(0, 0, 30, 40)];
 
-	if (isGroupChat) {
-		UIButton *groupInfoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		[groupInfoButton setFrame:CGRectMake(0, 0, 30, 40)];
-
-		[groupInfoButton setImage:[UIImage imageNamed:@"ic_info_top"] forState:UIControlStateNormal];
-		[groupInfoButton setImage:[UIImage imageNamed:@"ic_info_top"] forState:UIControlStateHighlighted];
-		[groupInfoButton addTarget:self action:@selector(groupInfoNavButtonAction) forControlEvents:UIControlEventTouchUpInside];
-		UIBarButtonItem *groupInfoBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:groupInfoButton];
-		self.navigationItem.rightBarButtonItems = @[groupInfoBarButtonItem];
-	} else {
-		UIButton *videoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		UIButton *audioButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		[videoButton setFrame:CGRectMake(0, 0, 30, 40)];
-		[audioButton setFrame:CGRectMake(0, 0, 30, 40)];
-
-		[videoButton setImage:[UIImage imageNamed:@"ic_camera_top"] forState:UIControlStateNormal];
-		[videoButton setImage:[UIImage imageNamed:@"ic_camera_top"] forState:UIControlStateHighlighted];
-		[videoButton addTarget:self action:@selector(videoCallAction) forControlEvents:UIControlEventTouchUpInside];
-
-		[audioButton setImage:[UIImage imageNamed:@"ic_phone_top"] forState:UIControlStateNormal];
-		[audioButton setImage:[UIImage imageNamed:@"ic_phone_top"] forState:UIControlStateHighlighted];
-		[audioButton addTarget:self action:@selector(audioCallAction) forControlEvents:UIControlEventTouchUpInside];
-
-		UIBarButtonItem *videoCallBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:videoButton];
-		UIBarButtonItem *audioCallBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:audioButton];
-		self.navigationItem.rightBarButtonItems = @[audioCallBarButtonItem, videoCallBarButtonItem];
-	}
+	[groupInfoButton setImage:[UIImage imageNamed:@"ic_info_top"] forState:UIControlStateNormal];
+	[groupInfoButton setImage:[UIImage imageNamed:@"ic_info_top"] forState:UIControlStateHighlighted];
+	[groupInfoButton addTarget:self action:@selector(groupInfoNavButtonAction) forControlEvents:UIControlEventTouchUpInside];
+	UIBarButtonItem *groupInfoBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:groupInfoButton];
+	self.navigationItem.rightBarButtonItems = @[groupInfoBarButtonItem];
 }
 
 
@@ -169,61 +139,14 @@ static CGFloat const kCellHeightOffset = 33.0f;
      } completion:nil];
 }
 
-- (IBAction)keyboardWillHide:(id)sender
+- (IBAction)hideKeyboard
 {
-    [sender resignFirstResponder];
+	[self.inputMessageTextField resignFirstResponder];
+	self.inputMessageTextField.text = kEmptyString;
 }
 
 #pragma mark - Nav Bar Buttons Actions
-- (void)videoCallAction
-{
-	//
-}
-
-- (void)audioCallAction
-{
-	//
-}
-
 - (void)groupInfoNavButtonAction
-{
-	//
-}
-
-#pragma mark - Chat Notifications
-- (void)chatDidNotSendMessage:(NSNotification *)notification
-{
-	//
-}
-
-- (void)chatDidReceiveMessage:(NSNotification *)notification
-{
-
-}
-
-- (void)chatDidFailWithError:(NSNotification *)notification
-{
-	//
-}
-
-- (void)chatDidSendMessage:(NSNotification *)notification
-{
-	[self addMessageToHistory];
-}
-
-#pragma mark -
-- (IBAction)sendMessageButtonClicked:(UIButton *)sender
-{
-	if (self.inputMessageTextField.text.length) {
-		QBChatMessage *chatMessage = [QBChatMessage new];
-		chatMessage.text = self.inputMessageTextField.text;
-		chatMessage.senderID = [QMContactList shared].me.ID;
-		chatMessage.recipientID = [self.usersRecipientsIdArray[0] unsignedIntegerValue];
-		[[QMChatService shared] postMessage:chatMessage];
-	}
-}
-
-- (void)addMessageToHistory
 {
 	//
 }

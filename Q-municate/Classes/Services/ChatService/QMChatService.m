@@ -204,27 +204,5 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:kCallWasStoppedNotification object:nil userInfo:@{@"reason":stopCallReason}];
 }
 
-#pragma mark - Chat Messages
-- (void)chatDidNotSendMessage:(QBChatMessage *)message
-{
-	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidNotSendMessage object:nil userInfo:@{@"message" : message}];
-}
-
-- (void)chatDidReceiveMessage:(QBChatMessage *)message
-{
-	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidReceiveMessage object:nil userInfo:@{@"message" : message}];
-}
-
-- (void)chatDidFailWithError:(NSInteger)code
-{
-	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidFailWithError object:nil userInfo:@{@"errorCode" : [NSNumber numberWithInteger:code]}];
-}
-
-- (void)postMessage:(QBChatMessage *)message
-{
-	BOOL didSendMessage = [[QBChat instance] sendMessage:message];
-	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidSendMessage object:nil userInfo:@{@"didSendMessage" : [NSNumber numberWithBool:didSendMessage]}];
-}
-
 
 @end

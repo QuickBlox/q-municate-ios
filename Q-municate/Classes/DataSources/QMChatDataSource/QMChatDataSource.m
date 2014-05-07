@@ -17,7 +17,7 @@
 {
     self = [super init];
     if (self) {
-        NSArray *chatHistory = @[
+        NSArray *chatHistoryArray = @[
 				@{
 						@"name":@"Oleg Svarovski",
                 		@"text":@"Hi there!",
@@ -49,8 +49,7 @@
                         @"date":@"17:39"
 				}
 		];
-//		self.chatHistory = [chatHistory mutableCopy];
-		self.chatHistory = [NSMutableArray new];
+		self.chatHistory = [chatHistoryArray mutableCopy];
     }
     return self;
 }
