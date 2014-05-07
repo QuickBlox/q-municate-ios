@@ -46,7 +46,7 @@
 - (void)loadAvatarImageFromFacebookWithCompletion:(FBContentBlock)handler
 {
     _contentBlock = [handler copy];
-    NSString *urlString = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?access_token=%@", [QMContactList shared].facebookMe[@"id"],[FBSession activeSession].accessTokenData.accessToken];
+    NSString *urlString = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?height=200&width=200&access_token=%@", [QMContactList shared].facebookMe[@"id"],[FBSession activeSession].accessTokenData.accessToken];
     NSURLRequest *avatarRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
     NSURLConnection *connection = [NSURLConnection connectionWithRequest:avatarRequest delegate:self];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

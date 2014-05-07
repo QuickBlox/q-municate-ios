@@ -210,15 +210,14 @@
 {
     // login to Quickblox chat:
     [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-        if (!success) {
-            return;
-        }
-        [[QMContactList shared] findAndAddAllFriendsForFacebookUserWithCompletion:^(BOOL success) {
-            [QMUtilities removeIndicatorView];
-            [self dismissViewControllerAnimated:NO completion:nil];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kFriendsLoadedNotification object:nil];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kLoggedInNotification object:nil];
-        }];
+        if (success) {
+			[[QMContactList shared] findAndAddAllFriendsForFacebookUserWithCompletion:^(BOOL success) {
+				[QMUtilities removeIndicatorView];
+				[self dismissViewControllerAnimated:NO completion:nil];
+				[[NSNotificationCenter defaultCenter] postNotificationName:kFriendsLoadedNotification object:nil];
+				[[NSNotificationCenter defaultCenter] postNotificationName:kLoggedInNotification object:nil];
+			}];
+		}
     }];
 }
 

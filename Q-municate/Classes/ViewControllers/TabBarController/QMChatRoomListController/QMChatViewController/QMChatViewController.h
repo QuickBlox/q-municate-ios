@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface QMChatViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, QBChatDelegate>
+@interface QMChatViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) NSString *chatName;
+@property (nonatomic, strong) NSArray  *usersRecipientsIdArray;
 
 @end

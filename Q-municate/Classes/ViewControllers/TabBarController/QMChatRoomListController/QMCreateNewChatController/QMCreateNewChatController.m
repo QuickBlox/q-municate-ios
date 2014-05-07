@@ -69,8 +69,14 @@ static CGFloat const rowHeight = 60.0;
 
 - (IBAction)createGroupChat:(id)sender
 {
-    NSString *chatName = [self chatNameFromUserNames:self.dataSource.friendsSelectedMArray];
-    [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatName];
+	NSMutableArray *selectedUsersMArray = self.dataSource.friendsSelectedMArray;
+    NSString *chatName = [self chatNameFromUserNames:selectedUsersMArray];
+	NSArray *usersIdArray = [self usersIDFromSelectedUsers:selectedUsersMArray];
+	NSDictionary *sourceDictionary = @{
+			@"chatNames" 	: chatName,
+			@"usersId"		: usersIdArray
+	};
+	[self performSegueWithIdentifier:kChatViewSegueIdentifier sender:sourceDictionary];
 }
 
 #pragma mark - UITableViewDataSource
@@ -151,7 +157,8 @@ static CGFloat const rowHeight = 60.0;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     QMChatViewController *childController = (QMChatViewController *)segue.destinationViewController;
-    childController.chatName = (NSString *)sender;
+    childController.chatName = (NSString *)sender[@"chatNames"];
+	childController.usersRecipientsIdArray = (NSArray *)sender[@"usersId"];
 }
 
 - (BOOL)isChecked:(QBUUser *)user
@@ -177,6 +184,15 @@ static CGFloat const rowHeight = 60.0;
         [chatName appendString:user.fullName];
     }
     return chatName;
+}
+
+- (NSArray *)usersIDFromSelectedUsers:(NSMutableArray *)users
+{
+	NSMutableArray *usersIDMArray = [NSMutableArray new];
+	for (QBUUser *user in users) {
+		[usersIDMArray addObject:[NSNumber numberWithLong:user.ID]];
+	}
+	return usersIDMArray;
 }
 
 #pragma mark - UISearchBarDelegate

@@ -41,7 +41,6 @@
 
 #pragma mark - LogIn & LogOut
 
-// LOG IN  &  LOG OUT
 - (void)loginWithUser:(QBUUser *)user completion:(QBChatResultBlock)block
 {
     _chatBlock = block;
@@ -51,6 +50,7 @@
 - (void)logOut
 {
     [[QBChat instance] logout];
+	[self.presenceTimer invalidate];
     self.presenceTimer = nil;
 }
 
@@ -203,5 +203,6 @@
                
     [[NSNotificationCenter defaultCenter] postNotificationName:kCallWasStoppedNotification object:nil userInfo:@{@"reason":stopCallReason}];
 }
+
 
 @end

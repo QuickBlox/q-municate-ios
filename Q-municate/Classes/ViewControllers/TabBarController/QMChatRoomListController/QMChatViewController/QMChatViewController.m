@@ -10,6 +10,7 @@
 #import "QMChatViewCell.h"
 #import "QMChatDataSource.h"
 #import "QMContactList.h"
+#import "QMChatService.h"
 
 static CGFloat const kCellHeightOffset = 33.0f;
 
@@ -34,45 +35,27 @@ static CGFloat const kCellHeightOffset = 33.0f;
     [self configureInputMessageViewShadow];
     [self addKeyboardObserver];
 
-    [QBChat instance].delegate = self;
-    QBUUser *user = [QMContactList shared].me;
+	QBUUser *user = [QMContactList shared].me;
     user.password = [[NSUserDefaults standardUserDefaults] objectForKey:kPassword];
-    [[QBChat instance] loginWithUser:user];
 
 	[self configureNavBarButtons];
 }
 
+- (void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)configureNavBarButtons
 {
-	BOOL isGroupChat = YES;
+	UIButton *groupInfoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	[groupInfoButton setFrame:CGRectMake(0, 0, 30, 40)];
 
-	if (isGroupChat) {
-		UIButton *groupInfoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		[groupInfoButton setFrame:CGRectMake(0, 0, 30, 40)];
-
-		[groupInfoButton setImage:[UIImage imageNamed:@"ic_info_top"] forState:UIControlStateNormal];
-		[groupInfoButton setImage:[UIImage imageNamed:@"ic_info_top"] forState:UIControlStateHighlighted];
-		[groupInfoButton addTarget:self action:@selector(groupInfoNavButtonAction) forControlEvents:UIControlEventTouchUpInside];
-		UIBarButtonItem *groupInfoBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:groupInfoButton];
-		self.navigationItem.rightBarButtonItems = @[groupInfoBarButtonItem];
-	} else {
-		UIButton *videoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		UIButton *audioButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		[videoButton setFrame:CGRectMake(0, 0, 30, 40)];
-		[audioButton setFrame:CGRectMake(0, 0, 30, 40)];
-
-		[videoButton setImage:[UIImage imageNamed:@"ic_camera_top"] forState:UIControlStateNormal];
-		[videoButton setImage:[UIImage imageNamed:@"ic_camera_top"] forState:UIControlStateHighlighted];
-		[videoButton addTarget:self action:@selector(videoCallAction) forControlEvents:UIControlEventTouchUpInside];
-
-		[audioButton setImage:[UIImage imageNamed:@"ic_phone_top"] forState:UIControlStateNormal];
-		[audioButton setImage:[UIImage imageNamed:@"ic_phone_top"] forState:UIControlStateHighlighted];
-		[audioButton addTarget:self action:@selector(audioCallAction) forControlEvents:UIControlEventTouchUpInside];
-
-		UIBarButtonItem *videoCallBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:videoButton];
-		UIBarButtonItem *audioCallBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:audioButton];
-		self.navigationItem.rightBarButtonItems = @[audioCallBarButtonItem, videoCallBarButtonItem];
-	}
+	[groupInfoButton setImage:[UIImage imageNamed:@"ic_info_top"] forState:UIControlStateNormal];
+	[groupInfoButton setImage:[UIImage imageNamed:@"ic_info_top"] forState:UIControlStateHighlighted];
+	[groupInfoButton addTarget:self action:@selector(groupInfoNavButtonAction) forControlEvents:UIControlEventTouchUpInside];
+	UIBarButtonItem *groupInfoBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:groupInfoButton];
+	self.navigationItem.rightBarButtonItems = @[groupInfoBarButtonItem];
 }
 
 
@@ -156,25 +139,17 @@ static CGFloat const kCellHeightOffset = 33.0f;
      } completion:nil];
 }
 
-- (IBAction)keyboardWillHide:(id)sender
+- (IBAction)hideKeyboard
 {
-    [sender resignFirstResponder];
+	[self.inputMessageTextField resignFirstResponder];
+	self.inputMessageTextField.text = kEmptyString;
 }
 
 #pragma mark - Nav Bar Buttons Actions
-- (void)videoCallAction
-{
-	//
-}
-
-- (void)audioCallAction
-{
-	//
-}
-
 - (void)groupInfoNavButtonAction
 {
 	//
 }
+
 
 @end

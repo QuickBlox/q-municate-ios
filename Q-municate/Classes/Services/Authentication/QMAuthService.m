@@ -90,7 +90,13 @@
             block(user, YES, nil);
             return;
         }
-        block(nil, NO, result.errors[0]);
+		NSError *completionError = nil;
+		if (![result.errors count]) {
+		    completionError = [NSError errorWithDomain:NSNetServicesErrorDomain code:701 userInfo:@{NSLocalizedDescriptionKey : @"Logging in with FBAccessToken. result.errors[0] is empty. Refer to [QMAuthService logInWithFacebookAccessToken:completion:]"}];
+		} else {
+			completionError = result.errors[0];
+		}
+        block(nil, NO, completionError);//TODO:fix for crash
     }];
 }
 
@@ -144,6 +150,11 @@
                     return;
                 }
                 NSDictionary *me = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+				if ([me count] == 1) {
+					if ([((NSString *)[me allKeys][0]) isEqualToString:kErrorKeyFromDictionaryString]) {
+					    return;
+					}
+				}
                 [QMContactList shared].facebookMe = [me mutableCopy];
                 
                 NSString *token = [FBSession activeSession].accessTokenData.accessToken;

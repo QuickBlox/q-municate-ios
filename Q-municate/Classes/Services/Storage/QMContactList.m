@@ -317,7 +317,7 @@
         person.fullName = dict[@"name"];
         person.ID = dict[@"id"];
         person.status = kFacebookFriendStatus;
-        person.imageURL = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?access_token=%@", dict[@"id"], token];
+        person.imageURL = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?height=200&width=200&access_token=%@", dict[@"id"], token];
         [persons addObject:person];
     }
     return persons;

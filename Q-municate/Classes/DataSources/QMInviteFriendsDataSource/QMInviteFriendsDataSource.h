@@ -28,6 +28,8 @@
 
 - (void)emptyCheckedFBUsersArray;
 
+- (void)emptyCheckedABUsersArray;
+
 - (NSArray *)emailsFromContactListPersons;
 - (NSString *)emailsFromFacebookPersons;
 - (void)fetchAndSaveFacebookFriendsWithBlock:(void(^)(NSError *error))block;
