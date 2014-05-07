@@ -39,38 +39,51 @@
 
 + (void)createIndicatorView
 {
-    UIWindow *window = [[UIApplication sharedApplication].delegate window];
-    
-    UIView *backgroundView = [[UIView alloc] initWithFrame:[window bounds]];
-    backgroundView.backgroundColor = [UIColor blackColor];
-	backgroundView.alpha = 0.0f;
-    backgroundView.tag = 1304;
-    
-    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    indicator.center = CGPointMake(backgroundView.frame.size.width/2, backgroundView.frame.size.height/2);
-    [backgroundView addSubview:indicator];
-    
-    [indicator startAnimating];
-	[window addSubview:backgroundView];
-    [UIView animateWithDuration:0.2f
-					 animations:^{
-		[backgroundView setAlpha:0.5f];
-					 }
-	];
+	if (![[QMUtilities shared] getIndicatorViewIfExists]) {
+		UIWindow *window = [[UIApplication sharedApplication].delegate window];
+
+		UIView *backgroundView = [[UIView alloc] initWithFrame:[window bounds]];
+		backgroundView.backgroundColor = [UIColor blackColor];
+		backgroundView.alpha = 0.0f;
+		backgroundView.tag = 1304;
+
+		UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+		indicator.center = CGPointMake(backgroundView.frame.size.width/2, backgroundView.frame.size.height/2);
+		[backgroundView addSubview:indicator];
+
+		[indicator startAnimating];
+		[window addSubview:backgroundView];
+		[UIView animateWithDuration:0.2f
+						 animations:^{
+							 [backgroundView setAlpha:0.5f];
+						 }
+		];
+	}
 }
 
 + (void)removeIndicatorView
 {
+    UIView *indicatorView = [[QMUtilities shared] getIndicatorViewIfExists];
+	if ([indicatorView superview]) {
+		[UIView animateWithDuration:0.2f
+						 animations:^{
+							 [indicatorView setAlpha:0.0f];
+						 }
+						 completion:^(BOOL finished) {
+							 [indicatorView removeFromSuperview];
+						 }
+		];
+	}
+}
+
+- (UIView *)getIndicatorViewIfExists
+{
 	UIWindow *window = [[UIApplication sharedApplication].delegate window];
-    UIView *indicatorView = [window viewWithTag:1304];
-	[UIView animateWithDuration:0.2f
-					 animations:^{
-						 [indicatorView setAlpha:0.0f];
-					 }
-					 completion:^(BOOL finished) {
-						 [indicatorView removeFromSuperview];
-					 }
-	];
+	UIView *indicatorView = [window viewWithTag:1304];
+	if (indicatorView) {
+		return indicatorView;
+	}
+	return nil;
 }
 
 

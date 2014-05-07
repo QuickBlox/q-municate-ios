@@ -28,6 +28,7 @@ static double_t const kUptimeInterval = 300;
     self.user = user;
     // cancel previous user's avatar loading
     [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget:self.userImageView];
+    [self.userImageView setImage:[UIImage imageNamed:@"upic-placeholder"]];
     
     self.userImageView.layer.cornerRadius = self.userImageView.frame.size.width / 2;
     self.userImageView.layer.borderWidth = 2.0f;

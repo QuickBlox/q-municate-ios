@@ -104,6 +104,17 @@
 }
 
 #pragma mark - TextFieldDelegate
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+	if (textField == self.userPhoneTextField) {
+		[self showNavDoneButton];
+	} else {
+		if (self.navigationItem.rightBarButtonItems) {
+			[self.navigationItem setRightBarButtonItems:nil];
+		}
+	}
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     NSString *textString = textField.text;
@@ -131,6 +142,7 @@
     return YES;
 }
 
+#pragma mark - TextViewDelegate
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
 	NSString *statusString = textView.text;
@@ -156,6 +168,23 @@
 		[self.userStatusTextView setTextColor:[UIColor colorWithRed:148/255.0f green:148/255.0f blue:148/255.0f alpha:1.0f]];
 	}
 	return resultTextViewString;
+}
+
+#pragma mark -
+- (void)showNavDoneButton
+{
+	UIButton *doneButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 36)];
+	[doneButton setTitle:kButtonTitleDoneString forState:UIControlStateNormal];
+	[doneButton setTitle:kButtonTitleDoneString forState:UIControlStateHighlighted];
+	[doneButton addTarget:self action:@selector(hideNumKeyboard) forControlEvents:UIControlEventTouchUpInside];
+	UIBarButtonItem *doneBarButton = [[UIBarButtonItem alloc] initWithCustomView:doneButton];
+	[self.navigationItem setRightBarButtonItems:@[doneBarButton]];
+}
+
+- (IBAction)hideNumKeyboard
+{
+	[self.userPhoneTextField resignFirstResponder];
+	[self.navigationItem setRightBarButtonItems:nil];
 }
 
 - (void)checkForDoneButton

@@ -166,6 +166,11 @@
     [self.checkedFacebookUsers removeAllObjects];
 }
 
+- (void)emptyCheckedABUsersArray
+{
+	[self.checkedABContacts removeAllObjects];
+}
+
 - (NSArray *)emailsFromContactListPersons
 {
     NSMutableArray *emails = [[NSMutableArray alloc] init];

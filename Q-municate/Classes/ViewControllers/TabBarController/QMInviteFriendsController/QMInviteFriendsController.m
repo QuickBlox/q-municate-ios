@@ -258,6 +258,8 @@
 - (void)loadFriendsFromFacebook
 {
 	[QMUtilities createIndicatorView];
+	self.facebookCellChecked = NO;
+	[self.dataSource emptyCheckedFBUsersArray];
 	[self.dataSource updateFacebookDataSource:^(NSError *error) {
 		if (error) {
 			[self showAlertWithError:error];
@@ -271,6 +273,8 @@
 - (void)loadFriendsFromAddressBook
 {
 	[QMUtilities createIndicatorView];
+	self.contactsCellChecked = NO;
+	[self.dataSource emptyCheckedABUsersArray];
 	[self.dataSource updateContactListDataSource:^(NSError *error) {
 		if (error) {
 			[self showAlertWithError:error];

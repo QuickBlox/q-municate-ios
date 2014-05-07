@@ -10,6 +10,6 @@
 
 @interface QMChatDataSource : NSObject
 
-@property (nonatomic, strong) NSArray *chatHistory;
+@property (nonatomic, strong) NSMutableArray *chatHistory;
 
 @end
