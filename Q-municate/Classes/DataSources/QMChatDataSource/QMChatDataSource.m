@@ -55,4 +55,9 @@
     return self;
 }
 
+- (void)addMessageToHistory:(QBChatMessage *)chatMessage
+{
+	[self.chatHistory addObject:chatMessage];
+}
+
 @end

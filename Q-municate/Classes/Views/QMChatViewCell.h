@@ -15,7 +15,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *messageTextLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateTimeLabel;
 
-- (void)configureCellWithMessage:(NSDictionary *)messageDictionary fromUser:(QBUUser *)user;
-+ (CGFloat)cellHeightForMessage:(NSDictionary *)messageDictionary;
++ (CGFloat)cellHeightForMessage:(NSString *)messageString;
+
+- (void)configureCellWithMessage:(QBChatMessage *)messageDictionary fromUser:(QBUUser *)user;
 
 @end

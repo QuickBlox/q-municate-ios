@@ -223,7 +223,7 @@
 - (void)postMessage:(QBChatMessage *)message
 {
 	BOOL didSendMessage = [[QBChat instance] sendMessage:message];
-	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidSendMessage object:nil userInfo:@{@"didSendMessage" : [NSNumber numberWithBool:didSendMessage]}];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidSendMessage object:nil userInfo:@{@"message" : message}];
 }
 
 

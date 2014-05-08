@@ -51,9 +51,9 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)addChatObserver
 {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDidNotSendMessage:) name:kChatDidNotSendMessage object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDidFailWithError:) name:kChatDidFailWithError object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidNotSendMessage:) name:kChatDidNotSendMessage object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidFailWithError:) name:kChatDidFailWithError object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDidSendMessage:) name:kChatDidSendMessage object:nil];
 }
 
@@ -127,9 +127,10 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QMChatViewCell *cell = (QMChatViewCell *)[tableView dequeueReusableCellWithIdentifier:kChatViewCellIdentifier];
-    NSDictionary *messageDictionary = self.dataSource.chatHistory[indexPath.row];
+	QBChatMessage *chatMessage = self.dataSource.chatHistory[indexPath.row];
 
-    [cell configureCellWithMessage:messageDictionary fromUser:nil];
+    [cell configureCellWithMessage:chatMessage fromUser:nil];
+	[self clearMessageInputTextField];
 
     return cell;
 }
@@ -137,20 +138,20 @@ static CGFloat const kCellHeightOffset = 33.0f;
 // height for cell:
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary *message = self.dataSource.chatHistory[indexPath.row];
-    if (kMessageString == nil) {
-        return 0;
-    }
-    return [QMChatViewCell cellHeightForMessage:message] + kCellHeightOffset;
+    QBChatMessage *chatMessage = self.dataSource.chatHistory[indexPath.row];
+    return [QMChatViewCell cellHeightForMessage:chatMessage.text] + kCellHeightOffset;
 }
 
 
 #pragma mark - Keyboard
-
+- (void)clearMessageInputTextField
+{
+	[self.inputMessageTextField resignFirstResponder];
+}
 - (void)resizeViewWithKeyboardNotification:(NSNotification *)notification
 {
 	if (self.isBackButtonClicked) {
-		[self.inputMessageTextField resignFirstResponder];
+		[self clearMessageInputTextField];
 	} else {
 		/*
 		* below code is to follow animation of keyboard
@@ -203,24 +204,27 @@ static CGFloat const kCellHeightOffset = 33.0f;
 }
 
 #pragma mark - Chat Notifications
-- (void)chatDidNotSendMessage:(NSNotification *)notification
+- (void)localChatDidNotSendMessage:(NSNotification *)notification
 {
-	//
+	NSLog(@"userInfo: %@", notification.userInfo);
+	[self showAlertWithErrorMessage:notification.userInfo];
 }
 
-- (void)chatDidReceiveMessage:(NSNotification *)notification
+- (void)localChatDidReceiveMessage:(NSNotification *)notification
 {
-
+	NSLog(@"userInfo: %@", notification.userInfo);
+	[self addMessageToHistory:notification.userInfo[@"message"]];
 }
 
-- (void)chatDidFailWithError:(NSNotification *)notification
+- (void)localChatDidFailWithError:(NSNotification *)notification
 {
-	//
+	NSLog(@"userInfo: %@", notification.userInfo);
+	[self showAlertWithErrorMessage:notification.userInfo];
 }
 
 - (void)chatDidSendMessage:(NSNotification *)notification
 {
-	[self addMessageToHistory];
+	[self addMessageToHistory:notification.userInfo[@"message"]];
 }
 
 #pragma mark -
@@ -231,14 +235,21 @@ static CGFloat const kCellHeightOffset = 33.0f;
 		chatMessage.text = self.inputMessageTextField.text;
 		chatMessage.senderID = [QMContactList shared].me.ID;
 		chatMessage.recipientID = [self.usersRecipientsIdArray[0] unsignedIntegerValue];
+		chatMessage.senderNick = [QMContactList shared].me.fullName;
 		[[QMChatService shared] postMessage:chatMessage];
 	}
 }
 
-- (void)addMessageToHistory
+- (void)addMessageToHistory:(QBChatMessage *)chatMessage
 {
-	//
+	[self.dataSource addMessageToHistory:chatMessage];
+	[self.tableView reloadData];
 }
 
+#pragma mark -
+- (void)showAlertWithErrorMessage:(NSDictionary *)messageDictionary
+{
+	[[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:[NSString stringWithFormat:@"%@", messageDictionary] delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
+}
 
 @end

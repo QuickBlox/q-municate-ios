@@ -12,4 +12,5 @@
 
 @property (nonatomic, strong) NSMutableArray *chatHistory;
 
+- (void)addMessageToHistory:(QBChatMessage *)chatMessage;
 @end

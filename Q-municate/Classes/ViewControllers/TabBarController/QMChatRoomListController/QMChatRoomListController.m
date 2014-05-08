@@ -28,6 +28,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.dataSource = [QMChatRoomListDataSource new];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -76,5 +77,19 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
         childController.chatName = (NSString *)sender;
     }
 }
+
+#pragma mark -
+- (void)localChatDidReceiveMessage:(NSNotification *)notification
+{
+	NSLog(@"userInfo: %@", notification.userInfo);
+	/*
+	* checking for room existence
+	*  creating room for peer-to-peer
+	* key(id) -> value(historyArray)
+	* ну или как-то так
+	* */
+}
+
+//- (BOOL)isRoomCreatedWith
 
 @end

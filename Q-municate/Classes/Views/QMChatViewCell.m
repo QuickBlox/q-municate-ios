@@ -18,24 +18,23 @@
     // Configure the view for the selected state
 }
 
-- (void)configureCellWithMessage:(NSDictionary *)messageDictionary fromUser:(QBUUser *)user
+- (void)configureCellWithMessage:(QBChatMessage *)chatMessage fromUser:(QBUUser *)user
 {
-    self.fullNameLabel.text = messageDictionary[@"name"];
-    self.messageTextLabel.text = messageDictionary[@"date"];
-    
-    NSString *messageText = self.messageTextLabel.text = messageDictionary[@"text"];
-    self.messageTextLabel.text = messageText;
-    
-    //changing height
-    CGSize size = [QMChatViewCell getSizeForMessage:messageText];
-    CGRect updatedFrame = CGRectMake(self.messageTextLabel.frame.origin.x, self.messageTextLabel.frame.origin.y, size.width, size.height);
-    self.messageTextLabel.frame = updatedFrame;
+	self.fullNameLabel.text = chatMessage.senderNick;
+	self.messageTextLabel.text = [NSString stringWithFormat:@"%@", chatMessage.datetime];
+
+	NSString *messageText = self.messageTextLabel.text = chatMessage.text;
+	self.messageTextLabel.text = messageText;
+
+	//changing height
+	CGSize size = [QMChatViewCell getSizeForMessage:messageText];
+	CGRect updatedFrame = CGRectMake(self.messageTextLabel.frame.origin.x, self.messageTextLabel.frame.origin.y, size.width, size.height);
+	self.messageTextLabel.frame = updatedFrame;
 }
 
-+ (CGFloat)cellHeightForMessage:(NSDictionary *)messageDictionary
++ (CGFloat)cellHeightForMessage:(NSString *)messageString
 {
-    NSString *messageText = messageDictionary[@"text"];
-    CGSize size = [QMChatViewCell getSizeForMessage:messageText];
+    CGSize size = [QMChatViewCell getSizeForMessage:messageString];
     return size.height + 5.0;
 }
 
