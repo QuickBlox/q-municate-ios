@@ -20,6 +20,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 @property (weak, nonatomic) IBOutlet UIView *inputMessageView;
 @property (weak, nonatomic) IBOutlet UITextField *inputMessageTextField;
 @property (nonatomic, strong) QMChatDataSource *dataSource;
+@property (assign) BOOL isBackButtonClicked;
 
 @end
 
@@ -35,6 +36,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
     [self configureInputMessageViewShadow];
     [self addKeyboardObserver];
 	[self addChatObserver];
+	self.isBackButtonClicked = NO;
 
 	QBUUser *user = [QMContactList shared].me;
     user.password = [[NSUserDefaults standardUserDefaults] objectForKey:kPassword];
@@ -111,7 +113,8 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (IBAction)back:(id)sender
 {
-    [self.navigationController popViewControllerAnimated:YES];
+	self.isBackButtonClicked = YES;
+	[self.navigationController popViewControllerAnimated:YES];
 }
 
 
@@ -146,27 +149,36 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)resizeViewWithKeyboardNotification:(NSNotification *)notification
 {
-    NSDictionary * userInfo = notification.userInfo;
-    NSTimeInterval animationDuration;
-    UIViewAnimationCurve animationCurve;
-    CGRect keyboardFrame;
-    [[userInfo valueForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
-    [[userInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
-    [[userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardFrame];
-    
-    BOOL isKeyboardShow = !(keyboardFrame.origin.y == [[UIScreen mainScreen] bounds].size.height);
-    
-    NSInteger keyboardHeight = isKeyboardShow ? - keyboardFrame.size.height +49.0f: keyboardFrame.size.height -49.0f;
-    
-    [UIView animateWithDuration:animationDuration delay:0.0f options:animationCurve << 16 animations:^
-     {
-         CGRect frame = self.view.frame;
-         frame.size.height += keyboardHeight;
-         self.view.frame = frame;
-         
-         [self.view layoutIfNeeded];
-         
-     } completion:nil];
+	if (self.isBackButtonClicked) {
+		[self.inputMessageTextField resignFirstResponder];
+	} else {
+		/*
+		* below code is to follow animation of keyboard
+		* for view with textField and buttons('send', 'transfer')
+		* but still need to count tabBar height and time for animation
+		* */
+		NSDictionary * userInfo = notification.userInfo;
+		NSTimeInterval animationDuration;
+		UIViewAnimationCurve animationCurve;
+		CGRect keyboardFrame;
+		[[userInfo valueForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
+		[[userInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
+		[[userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardFrame];
+
+		BOOL isKeyboardShow = !(keyboardFrame.origin.y == [[UIScreen mainScreen] bounds].size.height);
+
+		NSInteger keyboardHeight = isKeyboardShow ? - keyboardFrame.size.height +49.0f: keyboardFrame.size.height -49.0f;
+
+		[UIView animateWithDuration:animationDuration delay:0.0f options:animationCurve << 16 animations:^
+		{
+			CGRect frame = self.view.frame;
+			frame.size.height += keyboardHeight;
+			self.view.frame = frame;
+
+			[self.view layoutIfNeeded];
+
+		} completion:nil];
+	}
 }
 
 - (IBAction)keyboardWillHide:(id)sender

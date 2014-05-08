@@ -295,18 +295,16 @@
         // load image to Quickblox:
         QMContent *contentStorage = [[QMContent alloc] init];
         [contentStorage loadImageForBlob:avatarImage named:[QMContactList shared].facebookMe[kId] completion:^(QBCBlob *blob) {
-            if (blob != nil) {
-                // check user email field:
-                if (user.email == nil || [user.email isEqualToString:kEmptyString]) {
-                    NSString *email = [QMContactList shared].facebookMe[kEmail];
-                    user.email = email;
-                }
-                
+            if (blob) {
                 // update user with new blob:
                 NSString *userPassword = user.password;
                 [[QMAuthService shared] updateUser:user withBlob:blob completion:^(QBUUser *user, BOOL success, NSError *error) {
                     if (success) {
                         user.password = userPassword;
+						if (user.email == nil || [user.email isEqualToString:kEmptyString]) {
+							NSString *email = [QMContactList shared].facebookMe[kEmail];
+							user.email = email;
+						}
                         [[QMContactList shared] setMe:user];
                         handler(YES);
                     }
