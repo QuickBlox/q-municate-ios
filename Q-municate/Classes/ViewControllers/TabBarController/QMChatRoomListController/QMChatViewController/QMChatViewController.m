@@ -11,6 +11,7 @@
 #import "QMChatDataSource.h"
 #import "QMContactList.h"
 #import "QMChatService.h"
+#import "QMUtilities.h"
 
 static CGFloat const kCellHeightOffset = 33.0f;
 
@@ -130,7 +131,6 @@ static CGFloat const kCellHeightOffset = 33.0f;
 	QBChatMessage *chatMessage = self.dataSource.chatHistory[indexPath.row];
 
     [cell configureCellWithMessage:chatMessage fromUser:nil];
-	[self clearMessageInputTextField];
 
     return cell;
 }
@@ -146,6 +146,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 #pragma mark - Keyboard
 - (void)clearMessageInputTextField
 {
+	self.inputMessageTextField.text = kEmptyString;
 	[self.inputMessageTextField resignFirstResponder];
 }
 - (void)resizeViewWithKeyboardNotification:(NSNotification *)notification
@@ -208,6 +209,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 {
 	NSLog(@"userInfo: %@", notification.userInfo);
 	[self showAlertWithErrorMessage:notification.userInfo];
+	[QMUtilities removeIndicatorView];
 }
 
 - (void)localChatDidReceiveMessage:(NSNotification *)notification
@@ -225,12 +227,14 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (void)chatDidSendMessage:(NSNotification *)notification
 {
 	[self addMessageToHistory:notification.userInfo[@"message"]];
+	[QMUtilities removeIndicatorView];
 }
 
 #pragma mark -
 - (IBAction)sendMessageButtonClicked:(UIButton *)sender
 {
 	if (self.inputMessageTextField.text.length) {
+		[QMUtilities createIndicatorView];
 		QBChatMessage *chatMessage = [QBChatMessage new];
 		chatMessage.text = self.inputMessageTextField.text;
 		chatMessage.senderID = [QMContactList shared].me.ID;
@@ -243,6 +247,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (void)addMessageToHistory:(QBChatMessage *)chatMessage
 {
 	[self.dataSource addMessageToHistory:chatMessage];
+	[self clearMessageInputTextField];
 	[self.tableView reloadData];
 }
 

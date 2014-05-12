@@ -26,6 +26,12 @@
 	NSString *messageText = self.messageTextLabel.text = chatMessage.text;
 	self.messageTextLabel.text = messageText;
 
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	[dateFormatter setLocale:[NSLocale currentLocale]];
+	[dateFormatter setDateFormat:@"HH':'mm"];
+	[dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
+	self.dateTimeLabel.text = [dateFormatter stringFromDate:chatMessage.datetime];
+
 	//changing height
 	CGSize size = [QMChatViewCell getSizeForMessage:messageText];
 	CGRect updatedFrame = CGRectMake(self.messageTextLabel.frame.origin.x, self.messageTextLabel.frame.origin.y, size.width, size.height);
