@@ -19,6 +19,10 @@
     [QBSettings setAuthorizationKey:@"MpOecRZy-5WsFva"];
     [QBSettings setAuthorizationSecret:@"dTSLaxDsFKqegD7"];
     
+    // STAGE PARAMS
+    [QBSettings setServerChatDomain:@"chatstage.quickblox.com"];
+    [QBSettings setServerApiDomain:@"http://api.stage.quickblox.com"];
+    
     [self setCallQuality];
 
     return YES;
