@@ -12,5 +12,6 @@
 
 @property (nonatomic, strong) NSString *chatName;
 @property (nonatomic, strong) NSArray  *usersRecipientsIdArray;
+@property (nonatomic, strong) NSDictionary *opponentDictionary;
 
 @end

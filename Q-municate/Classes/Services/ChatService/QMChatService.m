@@ -204,7 +204,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:kCallWasStoppedNotification object:nil userInfo:@{@"reason":stopCallReason}];
 }
 
-#pragma mark - Chat Messages
+#pragma mark - Chat Messages Delegates
 - (void)chatDidNotSendMessage:(QBChatMessage *)message
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidNotSendMessage object:nil userInfo:@{@"message" : message}];
@@ -226,5 +226,10 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidSendMessage object:nil userInfo:@{@"message" : message}];
 }
 
+#pragma mark - Local History
+- (void)saveMessageToLocalHistory:(QBChatMessage *)chatMessage
+{
+	//
+}
 
 @end

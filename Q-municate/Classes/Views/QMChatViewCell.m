@@ -18,19 +18,19 @@
     // Configure the view for the selected state
 }
 
-- (void)configureCellWithMessage:(QBChatMessage *)chatMessage fromUser:(QBUUser *)user
+- (void)configureCellWithMessage:(NSDictionary *)chatMessageDictionary fromUser:(QBUUser *)user
 {
-	self.fullNameLabel.text = chatMessage.senderNick;
-	self.messageTextLabel.text = [NSString stringWithFormat:@"%@", chatMessage.datetime];
+	self.fullNameLabel.text = chatMessageDictionary[@"senderNick"];
+	self.messageTextLabel.text = [NSString stringWithFormat:@"%@", chatMessageDictionary[@"datetime"]];
 
-	NSString *messageText = self.messageTextLabel.text = chatMessage.text;
+	NSString *messageText = self.messageTextLabel.text = chatMessageDictionary[@"text"];
 	self.messageTextLabel.text = messageText;
 
 	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 	[dateFormatter setLocale:[NSLocale currentLocale]];
 	[dateFormatter setDateFormat:@"HH':'mm"];
 	[dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
-	self.dateTimeLabel.text = [dateFormatter stringFromDate:chatMessage.datetime];
+	self.dateTimeLabel.text = [dateFormatter stringFromDate:chatMessageDictionary[@"datetime"]];
 
 	//changing height
 	CGSize size = [QMChatViewCell getSizeForMessage:messageText];

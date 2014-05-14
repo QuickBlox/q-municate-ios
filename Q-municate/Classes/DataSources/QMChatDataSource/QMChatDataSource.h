@@ -11,6 +11,10 @@
 @interface QMChatDataSource : NSObject
 
 @property (nonatomic, strong) NSMutableArray *chatHistory;
+@property (nonatomic, copy) NSString *chatNameString;
+@property (nonatomic, copy) NSString *chatIDString;
+
+- (id)initWithOpponentDictionary:(NSDictionary *)opponentDictionary;
 
 - (void)addMessageToHistory:(QBChatMessage *)chatMessage;
 @end

@@ -97,6 +97,11 @@ static NSString *const kRememberMe  		= @"remember_me";
 static NSString *const kDidLogout   		= @"didLogout";
 static NSString *const kUserStatusText   	= @"userStatusText";
 
+static NSString *const kChatLocalHistory	= @"chatLocalHistory";
+static NSString *const kChatOpponentHistory	= @"opponentHistory";
+static NSString *const kChatOpponentName	= @"chatOpponentName";
+static NSString *const kChatOpponentIDString	= @"chatOpponentIDString";
+
 static NSString *const kId          = @"id";
 static NSString *const kData        = @"data";
 static NSString *const kClassName   = @"Friend";

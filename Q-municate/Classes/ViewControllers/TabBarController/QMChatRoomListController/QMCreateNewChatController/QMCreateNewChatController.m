@@ -72,11 +72,14 @@ static CGFloat const rowHeight = 60.0;
 	NSMutableArray *selectedUsersMArray = self.dataSource.friendsSelectedMArray;
     NSString *chatName = [self chatNameFromUserNames:selectedUsersMArray];
 	NSArray *usersIdArray = [self usersIDFromSelectedUsers:selectedUsersMArray];
-	NSDictionary *sourceDictionary = @{
-			@"chatNames" 	: chatName,
-			@"usersId"		: usersIdArray
+	NSDictionary *dialogDictionary = @{
+			kChatOpponentName 		: chatName,
+			kChatOpponentHistory	:[@[] mutableCopy]
 	};
-	[self performSegueWithIdentifier:kChatViewSegueIdentifier sender:sourceDictionary];
+	NSDictionary *opponentDictionary = @{
+			usersIdArray[0]			: dialogDictionary
+	};
+	[self performSegueWithIdentifier:kChatViewSegueIdentifier sender:opponentDictionary];
 }
 
 #pragma mark - UITableViewDataSource
@@ -157,8 +160,7 @@ static CGFloat const rowHeight = 60.0;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     QMChatViewController *childController = (QMChatViewController *)segue.destinationViewController;
-    childController.chatName = (NSString *)sender[@"chatNames"];
-	childController.usersRecipientsIdArray = (NSArray *)sender[@"usersId"];
+    childController.opponentDictionary = sender;
 }
 
 - (BOOL)isChecked:(QBUUser *)user

@@ -10,6 +10,7 @@
 
 @interface QMChatRoomListDataSource : NSObject
 
-@property (nonatomic, strong) NSArray *roomsListArray;
+@property (nonatomic, strong) NSMutableArray *roomsListArray;
 
+- (void)updateDialogList;
 @end

@@ -32,8 +32,12 @@ static CGFloat const kCellHeightOffset = 33.0f;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = self.chatName;
-    self.dataSource = [[QMChatDataSource alloc] init];
+	NSArray *opponentKeyArray = [self.opponentDictionary allKeys];
+	NSDictionary *opponentDictionary = self.opponentDictionary[opponentKeyArray[0]];
+	self.chatName = opponentDictionary[kChatOpponentName];
+	self.title = self.chatName;
+	
+    self.dataSource = [[QMChatDataSource alloc] initWithOpponentDictionary:self.opponentDictionary];
     [self configureInputMessageViewShadow];
     [self addKeyboardObserver];
 	[self addChatObserver];
@@ -128,9 +132,9 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QMChatViewCell *cell = (QMChatViewCell *)[tableView dequeueReusableCellWithIdentifier:kChatViewCellIdentifier];
-	QBChatMessage *chatMessage = self.dataSource.chatHistory[indexPath.row];
+	NSDictionary *chatMessageDictionary = self.dataSource.chatHistory[indexPath.row];
 
-    [cell configureCellWithMessage:chatMessage fromUser:nil];
+    [cell configureCellWithMessage:chatMessageDictionary fromUser:nil];
 
     return cell;
 }
@@ -138,8 +142,8 @@ static CGFloat const kCellHeightOffset = 33.0f;
 // height for cell:
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    QBChatMessage *chatMessage = self.dataSource.chatHistory[indexPath.row];
-    return [QMChatViewCell cellHeightForMessage:chatMessage.text] + kCellHeightOffset;
+    NSDictionary *chatMessageDictionary = self.dataSource.chatHistory[indexPath.row];
+    return [QMChatViewCell cellHeightForMessage:chatMessageDictionary[@"text"]] + kCellHeightOffset;
 }
 
 
@@ -221,7 +225,16 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (void)localChatDidFailWithError:(NSNotification *)notification
 {
 	NSLog(@"userInfo: %@", notification.userInfo);
-	[self showAlertWithErrorMessage:notification.userInfo];
+	NSString *errorMessage;
+	int errorCode = [notification.userInfo[@"errorCode"] integerValue];
+	if (!errorCode) {
+		errorMessage = @"QBChatServiceErrorConnectionRefused";
+	} else if (errorCode == 1) {
+		errorMessage = @"QBChatServiceErrorConnectionClosed";
+	} else if (errorCode == 2) {
+		errorMessage = @"QBChatServiceErrorConnectionTimeout";
+	}
+	[self showAlertWithErrorMessage:[NSString stringWithFormat:@"error: %@", errorMessage]];
 }
 
 - (void)chatDidSendMessage:(NSNotification *)notification
@@ -252,9 +265,9 @@ static CGFloat const kCellHeightOffset = 33.0f;
 }
 
 #pragma mark -
-- (void)showAlertWithErrorMessage:(NSDictionary *)messageDictionary
+- (void)showAlertWithErrorMessage:(NSString *)messageString
 {
-	[[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:[NSString stringWithFormat:@"%@", messageDictionary] delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
+	[[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:messageString delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
 }
 
 @end
