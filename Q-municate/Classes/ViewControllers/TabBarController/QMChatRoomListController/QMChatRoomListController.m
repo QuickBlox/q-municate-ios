@@ -9,11 +9,12 @@
 #import "QMChatRoomListController.h"
 #import "QMChatViewController.h"
 #import "QMChatListCell.h"
+#import "QMContactList.h"
 #import "QMChatRoomListDataSource.h"
 
 static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
-@interface QMChatRoomListController ()
+@interface QMChatRoomListController () <QBActionStatusDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *chatsTableView;
 @property (strong, nonatomic) QMChatRoomListDataSource *dataSource;
@@ -34,6 +35,31 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)createNewDialog:(id)sender
+{
+    QBChatDialog *newDialog = [[QBChatDialog alloc] init];
+    newDialog.type = QBChatDialogTypeGroup;
+    newDialog.name = @"Igor & Igor";
+    newDialog.occupantIDs = @[[@([QMContactList shared].me.ID) stringValue], @"921692"];
+    
+//    [QBChat createDialog:newDialog delegate:self];
+    [[QBChat instance] createDialog:newDialog delegate:self];
+}
+
+#pragma mark - QBActionStatusDelegate
+
+- (void)completedWithResult:(Result *)result
+{
+//    if (result.success && [result isKindOfClass:[QBChatDialogResult class]]) {
+//        QBChatDialogResult *dialogResult = (QBChatDialogResult *)result;
+//        QBChatDialog *returnedDialog = dialogResult.dialog;
+//        NSLog(@"Returned dialog: %@", [returnedDialog description]);
+//    }
+    if (result.success) {
+        NSLog(@"ho-ho");
+    }
 }
 
 
