@@ -37,31 +37,27 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     // Dispose of any resources that can be recreated.
 }
 
-#warning Testing!
-- (IBAction)createNewDialog:(id)sender
-{
-    QBChatDialog *newDialog = [[QBChatDialog alloc] init];
-    newDialog.type = QBChatDialogTypeGroup;
-    newDialog.name = @"Igor & Igor";
-    newDialog.occupantIDs = @[[@([QMContactList shared].me.ID) stringValue], @"921692"];
-    
-//    [QBChat createDialog:newDialog delegate:self];
-    [[QBChat instance] createDialog:newDialog delegate:self];
-}
-
-#pragma mark - QBActionStatusDelegate
-
-- (void)completedWithResult:(Result *)result
-{
+//#warning Testing!
+//- (IBAction)createNewDialog:(id)sender
+//{
+//    QBChatDialog *newDialog = [[QBChatDialog alloc] init];
+//    newDialog.type = QBChatDialogTypeGroup;
+//    newDialog.name = @"LALLIPOP";
+//    newDialog.occupantIDs = @[[@([QMContactList shared].me.ID) stringValue], @"921692"];
+//    
+//    [[QBChat instance] createDialog:newDialog delegate:self];
+//}
+//
+//#pragma mark - QBActionStatusDelegate
+//
+//- (void)completedWithResult:(Result *)result
+//{
 //    if (result.success && [result isKindOfClass:[QBChatDialogResult class]]) {
 //        QBChatDialogResult *dialogResult = (QBChatDialogResult *)result;
 //        QBChatDialog *returnedDialog = dialogResult.dialog;
 //        NSLog(@"Returned dialog: %@", [returnedDialog description]);
 //    }
-    if (result.success) {
-        NSLog(@"ho-ho");
-    }
-}
+//}
 
 
 #pragma mark - UITableViewDataSource
