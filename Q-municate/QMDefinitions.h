@@ -80,6 +80,8 @@ static NSString *const kChatDidReceiveMessage			= @"kChatDidReceiveMessage";
 static NSString *const kChatDidFailWithError			= @"kChatDidFailWithError";
 static NSString *const kChatDidSendMessage				= @"kChatDidSendMessage";
 
+static NSString *const kChatRoomListUpdateNotification	= @"kChatRoomListUpdateNotification";
+
 
 //****************** Calls Notifications  ***********************
 static NSString *const kIncomingCallNotification = @"Incomming Call";

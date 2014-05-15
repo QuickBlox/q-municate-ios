@@ -251,7 +251,10 @@ static CGFloat const kCellHeightOffset = 33.0f;
 		QBChatMessage *chatMessage = [QBChatMessage new];
 		chatMessage.text = self.inputMessageTextField.text;
 		chatMessage.senderID = [QMContactList shared].me.ID;
-		chatMessage.recipientID = [self.usersRecipientsIdArray[0] unsignedIntegerValue];
+//		chatMessage.recipientID = [self.usersRecipientsIdArray[0] unsignedIntegerValue];
+		NSArray *idArray = [self.opponentDictionary allKeys];
+		NSString *idString = [NSString stringWithFormat:@"%@", idArray[0]];
+		chatMessage.recipientID = (NSUInteger) [idString longLongValue];
 		chatMessage.senderNick = [QMContactList shared].me.fullName;
 		[[QMChatService shared] postMessage:chatMessage];
 	}

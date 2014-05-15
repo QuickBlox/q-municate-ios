@@ -29,6 +29,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     // Do any additional setup after loading the view.
     self.dataSource = [QMChatRoomListDataSource new];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatAddedNewRoom:) name:kChatRoomListUpdateNotification object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -52,8 +53,8 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     NSDictionary *chatInfo = self.dataSource.roomsListArray[indexPath.row];
 	NSArray *opponentsArray = [chatInfo allKeys];
 
-    cell.name.text = chatInfo[opponentsArray[indexPath.row]][kChatOpponentName];
-	NSDictionary *lastMessage = [chatInfo[opponentsArray[indexPath.row]][kChatOpponentHistory]lastObject];
+    cell.name.text = chatInfo[opponentsArray[0]][kChatOpponentName];
+	NSDictionary *lastMessage = [chatInfo[opponentsArray[0]][kChatOpponentHistory]lastObject];
     cell.lastMessage.text = lastMessage[@"text"];
 
     return cell;
@@ -88,6 +89,13 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 	* key(id) -> value(historyArray)
 	* ну или как-то так
 	* */
+}
+
+- (void)localChatAddedNewRoom:(NSNotification *)notification
+{
+	NSLog(@"userInfo: %@", notification.userInfo);
+	[self.dataSource updateDialogList];
+	[self.chatsTableView reloadData];
 }
 
 //- (BOOL)isRoomCreatedWith
