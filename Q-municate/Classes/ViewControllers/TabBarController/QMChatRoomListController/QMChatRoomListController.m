@@ -37,6 +37,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     // Dispose of any resources that can be recreated.
 }
 
+#warning Testing!
 - (IBAction)createNewDialog:(id)sender
 {
     QBChatDialog *newDialog = [[QBChatDialog alloc] init];
