@@ -35,26 +35,20 @@
 {
 	// getting history
 	NSMutableArray *chatLocalHistoryMArray;
-	if (![self.chatHistory count]) {
-		id json = [[NSUserDefaults standardUserDefaults] objectForKey:kChatLocalHistory];
-		if (json) {
-			NSError *error = nil;
-			NSArray *array = nil;
-			array = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:&error];
-			chatLocalHistoryMArray = [[NSMutableArray alloc] initWithArray:array];
-		} else {
-			chatLocalHistoryMArray = [NSMutableArray new];
-		}
+	id json = [[NSUserDefaults standardUserDefaults] objectForKey:kChatLocalHistory];
+	if (json) {
+		NSError *error = nil;
+		NSArray *array = nil;
+		array = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:&error];
+		chatLocalHistoryMArray = [[NSMutableArray alloc] initWithArray:array];
+	} else {
+		chatLocalHistoryMArray = [NSMutableArray new];
 	}
-	if (!chatLocalHistoryMArray) {
-	    chatLocalHistoryMArray = [NSMutableArray new];
-	}
-	if (![self.chatHistory count]) {
-		for (NSDictionary *dialogItemDictionary in chatLocalHistoryMArray) {
-			NSArray *opponentsArray = [dialogItemDictionary allKeys];
-			if ([opponentsArray[0] isEqualToString:self.chatIDString]) {
-				self.chatHistory = [dialogItemDictionary[opponentsArray[0]][kChatOpponentHistory] mutableCopy];
-			}
+	for (NSDictionary *dialogItemDictionary in chatLocalHistoryMArray) {
+		NSArray *opponentsArray = [dialogItemDictionary allKeys];
+		if ([opponentsArray[0] isEqualToString:self.chatIDString]) {
+			self.chatHistory = [dialogItemDictionary[opponentsArray[0]][kChatOpponentHistory] mutableCopy];
+			break;
 		}
 	}
 	NSDictionary *messageDictionary = [self dictionaryFromMessage:chatMessage];
@@ -66,19 +60,23 @@
 
 	NSMutableArray *tempArray = [NSMutableArray new];
 	for (NSDictionary *dialogItemDictionary in chatLocalHistoryMArray) {
+		NSArray *opponentsArray = [dialogItemDictionary allKeys];
+		if ([opponentsArray[0] isEqualToString:self.chatIDString]) {
+			[tempArray addObject:opponentDictionary];
+			continue;
+		}
 		[tempArray addObject:dialogItemDictionary];
 	}
-	[tempArray addObject:opponentDictionary];
 	[chatLocalHistoryMArray setArray:tempArray];
 
 	NSArray *resultArray = [chatLocalHistoryMArray copy];
-	id json;
+	id jsonToSave;
 	NSError *error = nil;
 	if ([NSJSONSerialization isValidJSONObject:resultArray]) {
-		json = [NSJSONSerialization dataWithJSONObject:resultArray options:NSJSONWritingPrettyPrinted error:&error];
+		jsonToSave = [NSJSONSerialization dataWithJSONObject:resultArray options:NSJSONWritingPrettyPrinted error:&error];
 	}
 
-	[[NSUserDefaults standardUserDefaults] setObject:json forKey:kChatLocalHistory];
+	[[NSUserDefaults standardUserDefaults] setObject:jsonToSave forKey:kChatLocalHistory];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	/*
 	* we have to update roomList page
