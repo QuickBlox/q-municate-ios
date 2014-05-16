@@ -13,6 +13,7 @@
 
 #import "QMContactList.h"
 #import "QMNewChatDataSource.h"
+#import "QMChatService.h"
 
 static CGFloat const rowHeight = 60.0;
 
@@ -72,14 +73,22 @@ static CGFloat const rowHeight = 60.0;
 	NSMutableArray *selectedUsersMArray = self.dataSource.friendsSelectedMArray;
     NSString *chatName = [self chatNameFromUserNames:selectedUsersMArray];
 	NSArray *usersIdArray = [self usersIDFromSelectedUsers:selectedUsersMArray];
-	NSDictionary *dialogDictionary = @{
-			kChatOpponentName 		: chatName,
-			kChatOpponentHistory	:[@[] mutableCopy]
-	};
-	NSDictionary *opponentDictionary = @{
-			usersIdArray[0]			: dialogDictionary
-	};
+	if ([usersIdArray count] > 1) {
+		[[QMChatService shared] createRoomWithName:chatName withCompletion:^(QBChatRoom *room, NSError *error) {
+			if (!error) {
+				[[QMChatService shared] addMembersArray:usersIdArray toRoom:room];
+			}
+		}];
+	} else {
+		NSDictionary *dialogDictionary = @{
+				kChatOpponentName 		: chatName,
+				kChatOpponentHistory	:[@[] mutableCopy]
+		};
+		NSDictionary *opponentDictionary = @{
+				usersIdArray[0]			: dialogDictionary
+		};
 	[self performSegueWithIdentifier:kChatViewSegueIdentifier sender:opponentDictionary];
+	}
 }
 
 #pragma mark - UITableViewDataSource

@@ -42,14 +42,14 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 #pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.dataSource.roomsListArray count];
+    return [self.dataSource.roomsListMArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QMChatListCell *cell = [tableView dequeueReusableCellWithIdentifier:ChatListCellIdentifier];
 
-    NSDictionary *chatInfo = self.dataSource.roomsListArray[indexPath.row];
+    NSDictionary *chatInfo = self.dataSource.roomsListMArray[indexPath.row];
 	NSArray *opponentsArray = [chatInfo allKeys];
 
     cell.name.text = chatInfo[opponentsArray[0]][kChatOpponentName];
@@ -66,7 +66,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-	NSDictionary *chatInfo = self.dataSource.roomsListArray[indexPath.row];
+	NSDictionary *chatInfo = self.dataSource.roomsListMArray[indexPath.row];
     [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatInfo];
 }
 

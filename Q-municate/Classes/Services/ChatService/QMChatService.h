@@ -30,6 +30,10 @@
 
 - (void)postMessage:(QBChatMessage *)message;
 
+- (void)createRoomWithName:(NSString *)groupChatNameString withCompletion:(QBChatRoomResultBlock)block;
+
+- (void)addMembersArray:(NSArray *)membersArray toRoom:(QBChatRoom *)chatRoom;
+
 - (void)callUser:(NSUInteger)userID withVideo:(BOOL)videoEnabled;
 
 - (void)acceptCallFromUser:(NSUInteger)userID withVideo:(BOOL)videoEnabled customParams:(NSDictionary *)customParameters;
