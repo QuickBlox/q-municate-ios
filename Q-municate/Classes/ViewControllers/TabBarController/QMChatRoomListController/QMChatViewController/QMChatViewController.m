@@ -200,7 +200,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 }
 
 #pragma mark -
-- (IBAction)sendMessageButtonClicked:(UIButton *)sender
+- (IBAction)sendMessageButtonClicked:(id)sender
 {
 	if (self.inputMessageTextField.text.length) {
 		[QMUtilities createIndicatorView];
