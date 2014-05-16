@@ -56,9 +56,9 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)addChatObserver
 {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDidNotSendMessage:) name:kChatDidNotSendMessage object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDidFailWithError:) name:kChatDidFailWithError object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidNotSendMessage:) name:kChatDidNotSendMessage object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidFailWithError:) name:kChatDidFailWithError object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDidSendMessage:) name:kChatDidSendMessage object:nil];
 }
 
@@ -167,9 +167,11 @@ static CGFloat const kCellHeightOffset = 33.0f;
 }
 
 #pragma mark - Chat Notifications
-- (void)chatDidNotSendMessage:(NSNotification *)notification
+- (void)localChatDidNotSendMessage:(NSNotification *)notification
 {
-	//
+	NSLog(@"userInfo: %@", notification.userInfo);
+	[self showAlertWithErrorMessage:notification.userInfo];
+	[QMUtilities removeIndicatorView];
 }
 
 - (void)localChatDidReceiveMessage:(NSNotification *)notification
@@ -200,7 +202,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 }
 
 #pragma mark -
-- (IBAction)sendMessageButtonClicked:(id)sender
+- (IBAction)sendMessageButtonClicked:(UIButton *)sender
 {
 	if (self.inputMessageTextField.text.length) {
 		[QMUtilities createIndicatorView];
