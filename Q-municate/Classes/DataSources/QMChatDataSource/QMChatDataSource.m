@@ -41,17 +41,13 @@
 	if (!chatLocalHistoryMArray) {
 	    chatLocalHistoryMArray = [NSMutableArray new];
 	}
-	BOOL isDialogNew = YES;
 	if (![self.chatHistory count]) {
 		for (NSDictionary *dialogItemDictionary in chatLocalHistoryMArray) {
 			NSArray *opponentsArray = [dialogItemDictionary allKeys];
 			if ([opponentsArray[0] isEqualToString:self.chatIDString]) {
 				self.chatHistory = dialogItemDictionary[opponentsArray[0]][kChatOpponentHistory];
-				isDialogNew = NO;
 			}
 		}
-	} else {
-		isDialogNew = NO;
 	}
 	NSDictionary *messageDictionary = [self dictionaryFromMessage:chatMessage];
 	[self.chatHistory addObject:messageDictionary];

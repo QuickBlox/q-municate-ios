@@ -64,14 +64,35 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)configureNavBarButtons
 {
-	UIButton *groupInfoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	[groupInfoButton setFrame:CGRectMake(0, 0, 30, 40)];
+	BOOL isGroupChat = YES;
 
-	[groupInfoButton setImage:[UIImage imageNamed:@"ic_info_top"] forState:UIControlStateNormal];
-	[groupInfoButton setImage:[UIImage imageNamed:@"ic_info_top"] forState:UIControlStateHighlighted];
-	[groupInfoButton addTarget:self action:@selector(groupInfoNavButtonAction) forControlEvents:UIControlEventTouchUpInside];
-	UIBarButtonItem *groupInfoBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:groupInfoButton];
-	self.navigationItem.rightBarButtonItems = @[groupInfoBarButtonItem];
+	if (isGroupChat) {
+		UIButton *groupInfoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[groupInfoButton setFrame:CGRectMake(0, 0, 30, 40)];
+
+		[groupInfoButton setImage:[UIImage imageNamed:@"ic_info_top"] forState:UIControlStateNormal];
+		[groupInfoButton setImage:[UIImage imageNamed:@"ic_info_top"] forState:UIControlStateHighlighted];
+		[groupInfoButton addTarget:self action:@selector(groupInfoNavButtonAction) forControlEvents:UIControlEventTouchUpInside];
+		UIBarButtonItem *groupInfoBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:groupInfoButton];
+		self.navigationItem.rightBarButtonItems = @[groupInfoBarButtonItem];
+	} else {
+		UIButton *videoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		UIButton *audioButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[videoButton setFrame:CGRectMake(0, 0, 30, 40)];
+		[audioButton setFrame:CGRectMake(0, 0, 30, 40)];
+
+		[videoButton setImage:[UIImage imageNamed:@"ic_camera_top"] forState:UIControlStateNormal];
+		[videoButton setImage:[UIImage imageNamed:@"ic_camera_top"] forState:UIControlStateHighlighted];
+		[videoButton addTarget:self action:@selector(videoCallAction) forControlEvents:UIControlEventTouchUpInside];
+
+		[audioButton setImage:[UIImage imageNamed:@"ic_phone_top"] forState:UIControlStateNormal];
+		[audioButton setImage:[UIImage imageNamed:@"ic_phone_top"] forState:UIControlStateHighlighted];
+		[audioButton addTarget:self action:@selector(audioCallAction) forControlEvents:UIControlEventTouchUpInside];
+
+		UIBarButtonItem *videoCallBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:videoButton];
+		UIBarButtonItem *audioCallBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:audioButton];
+		self.navigationItem.rightBarButtonItems = @[audioCallBarButtonItem, videoCallBarButtonItem];
+	}
 }
 
 
@@ -164,6 +185,22 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 		} completion:nil];
 	}
+}
+
+#pragma mark - Nav Buttons Actions
+- (void)audioCallAction
+{
+	//
+}
+
+- (void)videoCallAction
+{
+	//
+}
+
+- (void)groupInfoNavButtonAction
+{
+	//
 }
 
 #pragma mark - Chat Notifications
