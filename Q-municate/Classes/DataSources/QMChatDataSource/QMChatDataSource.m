@@ -19,7 +19,7 @@
     if (self) {
 		NSArray *opponentKeyArray = [incomingOpponentDictionary allKeys];
 		NSDictionary *opponentDictionary = incomingOpponentDictionary[opponentKeyArray[0]];
-		self.chatHistory = opponentDictionary[kChatOpponentHistory];
+		self.chatHistory = [opponentDictionary[kChatOpponentHistory] mutableCopy];
 		self.chatNameString = opponentDictionary[kChatOpponentName];
 		self.chatIDString = [NSString stringWithFormat:@"%@", opponentKeyArray[0]];
     }
@@ -36,7 +36,15 @@
 	// getting history
 	NSMutableArray *chatLocalHistoryMArray;
 	if (![self.chatHistory count]) {
-		chatLocalHistoryMArray = [[NSUserDefaults standardUserDefaults] objectForKey:kChatLocalHistory];
+		id json = [[NSUserDefaults standardUserDefaults] objectForKey:kChatLocalHistory];
+		if (json) {
+			NSError *error = nil;
+			NSArray *array = nil;
+			array = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:&error];
+			chatLocalHistoryMArray = [[NSMutableArray alloc] initWithArray:array];
+		} else {
+			chatLocalHistoryMArray = [NSMutableArray new];
+		}
 	}
 	if (!chatLocalHistoryMArray) {
 	    chatLocalHistoryMArray = [NSMutableArray new];
@@ -45,7 +53,7 @@
 		for (NSDictionary *dialogItemDictionary in chatLocalHistoryMArray) {
 			NSArray *opponentsArray = [dialogItemDictionary allKeys];
 			if ([opponentsArray[0] isEqualToString:self.chatIDString]) {
-				self.chatHistory = dialogItemDictionary[opponentsArray[0]][kChatOpponentHistory];
+				self.chatHistory = [dialogItemDictionary[opponentsArray[0]][kChatOpponentHistory] mutableCopy];
 			}
 		}
 	}
@@ -66,22 +74,11 @@
 	NSArray *resultArray = [chatLocalHistoryMArray copy];
 	id json;
 	NSError *error = nil;
-	// Dictionary convertable to JSON ?
-	if ([NSJSONSerialization isValidJSONObject:resultArray])
-	{
-//		Serialize the dictionary
+	if ([NSJSONSerialization isValidJSONObject:resultArray]) {
 		json = [NSJSONSerialization dataWithJSONObject:resultArray options:NSJSONWritingPrettyPrinted error:&error];
-
-		// If no errors, let's view the JSON
-		if (json != nil && error == nil)
-		{
-			NSString *jsonString = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
-			NSLog(@"JSON: %@", jsonString);
-			NSArray *array = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:&error];
-		}
 	}
 
-	[[NSUserDefaults standardUserDefaults] setObject:resultArray forKey:kChatLocalHistory];
+	[[NSUserDefaults standardUserDefaults] setObject:json forKey:kChatLocalHistory];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	/*
 	* we have to update roomList page
@@ -94,12 +91,13 @@
 
 - (NSDictionary *)dictionaryFromMessage:(QBChatMessage *)chatMessage
 {
+	NSString *timestampString = [NSString stringWithFormat:@"%lu", (unsigned long) [chatMessage.datetime timeIntervalSince1970]];
 	NSDictionary *chatMessageDictionary = @{
 			@"ID" 			: chatMessage.ID,
 			@"senderID" 	: [NSNumber numberWithUnsignedInteger:chatMessage.senderID],
 			@"senderNick" 	: chatMessage.senderNick,
 			@"recipientID" 	: [NSNumber numberWithUnsignedInteger:chatMessage.recipientID],
-//			@"datetime" 	: chatMessage.datetime,
+			@"datetime" 	: timestampString,
 			@"delayed" 		: [NSNumber numberWithBool:chatMessage.delayed],
 			@"text" 		: chatMessage.text
 	};
