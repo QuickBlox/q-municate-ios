@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="ExU-yY-FRH">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="ExU-yY-FRH">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -137,7 +137,7 @@
         <!--Friends Details Controller - Details-->
         <scene sceneID="hb9-Nb-dND">
             <objects>
-                <tableViewController storyboardIdentifier="test" id="B6O-m1-ZGo" customClass="QMFriendsDetailsController" sceneMemberID="viewController">
+                <tableViewController id="B6O-m1-ZGo" customClass="QMFriendsDetailsController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="EcG-xN-W1h">
                         <rect key="frame" x="0.0" y="64" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1092,9 +1092,6 @@
                     <navigationItem key="navigationItem" title="Chats" id="qn1-eN-Cyh">
                         <barButtonItem key="rightBarButtonItem" image="new_chat" id="WFc-BS-gtu">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="createNewDialog:" destination="A9E-Ua-uL1" id="jqd-y7-X0n"/>
-                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
@@ -1780,7 +1777,6 @@
     <inferredMetricsTieBreakers>
         <segue reference="bAk-xe-kWS"/>
         <segue reference="cwy-pn-aAV"/>
-        <segue reference="IAo-qy-uHQ"/>
-        <segue reference="aeV-0O-de3"/>
+        <segue reference="gq5-5p-RwI"/>
     </inferredMetricsTieBreakers>
 </document>
