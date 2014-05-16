@@ -13,6 +13,7 @@
 @interface QMChatService () <QBChatDelegate, QBActionStatusDelegate>
 
 @property (copy, nonatomic) QBChatResultBlock chatBlock;
+@property (copy, nonatomic) QBChatRoomResultBlock chatRoomBlock;
 
 @property (strong, nonatomic) NSTimer *presenceTimer;
 
@@ -231,5 +232,76 @@
 {
 	//
 }
+
+#pragma mark - Group Chat
+
+- (void)createRoomWithName:(NSString *)groupChatNameString withCompletion:(QBChatRoomResultBlock)block
+{
+	_chatRoomBlock = block;
+	[[QBChat instance] createOrJoinRoomWithName:groupChatNameString membersOnly:YES persistent:NO];
+}
+
+- (void)addMembersArray:(NSArray *)membersArray toRoom:(QBChatRoom *)chatRoom
+{
+	[[QBChat instance] addUsers:membersArray toRoom:chatRoom];
+}
+
+- (void)chatRoomDidReceiveMessage:(QBChatMessage *)message fromRoom:(NSString *)roomName
+{
+
+}
+
+- (void)chatRoomDidReceiveInformation:(NSDictionary *)information room:(NSString *)roomName
+{
+
+}
+
+- (void)chatRoomDidCreate:(NSString *)roomName
+{
+
+}
+
+- (void)chatRoomDidEnter:(QBChatRoom *)room
+{
+	//1
+	if (_chatRoomBlock) {
+		_chatRoomBlock(room, nil);
+		_chatRoomBlock = nil;
+	}
+}
+
+- (void)chatRoomDidNotEnter:(NSString *)roomName error:(NSError *)error
+{
+	if (_chatRoomBlock) {
+		_chatRoomBlock(nil, error);
+		_chatRoomBlock = nil;
+	}
+}
+
+- (void)chatRoomDidLeave:(NSString *)roomName
+{
+	//3
+}
+
+- (void)chatRoomDidDestroy:(NSString *)roomName
+{
+
+}
+
+- (void)chatRoomDidChangeOnlineUsers:(NSArray *)onlineUsers room:(NSString *)roomName
+{
+	//2
+}
+
+- (void)chatRoomDidReceiveListOfUsers:(NSArray *)users room:(NSString *)roomName
+{
+
+}
+
+- (void)chatRoomDidReceiveListOfOnlineUsers:(NSArray *)users room:(NSString *)roomName
+{
+
+}
+
 
 @end
