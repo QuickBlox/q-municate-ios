@@ -22,7 +22,6 @@
     // STAGE PARAMS
     [QBSettings setServerChatDomain:@"chatstage.quickblox.com"];
     [QBSettings setServerApiDomain:@"http://api.stage.quickblox.com"];
-    
     [self setCallQuality];
 
     return YES;
