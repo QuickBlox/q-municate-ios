@@ -177,6 +177,7 @@
 - (void)confirmCall
 {
     [self activeStreamInit];
+    
     [[QMChatService shared] acceptCallFromUser:self.opponentID withVideo:self.videoEnabled customParams:[QMChatService shared].customParams];
     
     //UI:
