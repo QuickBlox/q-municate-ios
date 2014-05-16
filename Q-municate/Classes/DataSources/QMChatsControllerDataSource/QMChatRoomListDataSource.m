@@ -14,20 +14,18 @@
 {
     self = [super init];
     if (self) {
-        self.roomsListArray = @[
-                @{@"name":@"Stieve Bosh, Luke McLeight, Jessika Alba",
-                @"last_msg":@"I love u Jessicaaaa!",
-                @"group_count":@"3",
-                @"unread_count":@"7"
-        },
-
-                @{@"name":@"Colin Pharrel, Stieve Querk, Jack Default",
-                        @"last_msg":@"What's the next show?",
-                        @"group_count":@"5",
-                        @"unread_count":@"2"
-                }];
+		[self updateDialogList];
     }
     return self;
+}
+
+- (void)updateDialogList
+{
+	NSArray *chatLocalHistoryArray = [[NSUserDefaults standardUserDefaults] objectForKey:kChatLocalHistory];
+	if (!self.roomsListArray) {
+		self.roomsListArray = [NSMutableArray new];
+	}
+	[self.roomsListArray setArray:chatLocalHistoryArray];
 }
 
 @end

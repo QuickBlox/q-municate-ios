@@ -34,7 +34,7 @@
     
     [self.userAvatar loadImageWithBlobID:self.currentFriend.blobID];
     self.fullName.text = self.currentFriend.fullName;
-    
+
     // online status
     // activity
     NSDate *currentDate = [NSDate date];

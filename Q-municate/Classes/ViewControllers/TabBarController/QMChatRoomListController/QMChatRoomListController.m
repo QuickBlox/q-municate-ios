@@ -29,6 +29,8 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.dataSource = [QMChatRoomListDataSource new];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatAddedNewRoom:) name:kChatRoomListUpdateNotification object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -70,13 +72,14 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QMChatListCell *cell = [tableView dequeueReusableCellWithIdentifier:ChatListCellIdentifier];
-    
+
     NSDictionary *chatInfo = self.dataSource.roomsListArray[indexPath.row];
-    cell.name.text = chatInfo[@"name"];
-    cell.lastMessage.text = chatInfo[@"last_msg"];
-    cell.groupMembersNumb.text = chatInfo[@"group_count"];
-    cell.unreadMsgNumb.text = chatInfo[@"unread_count"];
-    
+	NSArray *opponentsArray = [chatInfo allKeys];
+
+    cell.name.text = chatInfo[opponentsArray[0]][kChatOpponentName];
+	NSDictionary *lastMessage = [chatInfo[opponentsArray[0]][kChatOpponentHistory]lastObject];
+    cell.lastMessage.text = lastMessage[@"text"];
+
     return cell;
 }
 
@@ -86,18 +89,38 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
-    NSDictionary *chat = self.dataSource.roomsListArray[indexPath.row];
-    NSString *chatName = chat[@"name"];
-    [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatName];
+
+	NSDictionary *chatInfo = self.dataSource.roomsListArray[indexPath.row];
+    [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatInfo];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.destinationViewController isKindOfClass:[QMChatViewController class]]) {
+	if ([segue.destinationViewController isKindOfClass:[QMChatViewController class]]) {
         QMChatViewController *childController = (QMChatViewController *)segue.destinationViewController;
-        childController.chatName = (NSString *)sender;
+        childController.opponentDictionary = (NSDictionary *)sender;
     }
 }
+
+#pragma mark -
+- (void)localChatDidReceiveMessage:(NSNotification *)notification
+{
+	NSLog(@"userInfo: %@", notification.userInfo);
+	/*
+	* checking for room existence
+	*  creating room for peer-to-peer
+	* key(id) -> value(historyArray)
+	* ну или как-то так
+	* */
+}
+
+- (void)localChatAddedNewRoom:(NSNotification *)notification
+{
+	NSLog(@"userInfo: %@", notification.userInfo);
+	[self.dataSource updateDialogList];
+	[self.chatsTableView reloadData];
+}
+
+//- (BOOL)isRoomCreatedWith
 
 @end

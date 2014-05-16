@@ -18,24 +18,29 @@
     // Configure the view for the selected state
 }
 
-- (void)configureCellWithMessage:(NSDictionary *)messageDictionary fromUser:(QBUUser *)user
+- (void)configureCellWithMessage:(NSDictionary *)chatMessageDictionary fromUser:(QBUUser *)user
 {
-    self.fullNameLabel.text = messageDictionary[@"name"];
-    self.messageTextLabel.text = messageDictionary[@"date"];
-    
-    NSString *messageText = self.messageTextLabel.text = messageDictionary[@"text"];
-    self.messageTextLabel.text = messageText;
-    
-    //changing height
-    CGSize size = [QMChatViewCell getSizeForMessage:messageText];
-    CGRect updatedFrame = CGRectMake(self.messageTextLabel.frame.origin.x, self.messageTextLabel.frame.origin.y, size.width, size.height);
-    self.messageTextLabel.frame = updatedFrame;
+	self.fullNameLabel.text = chatMessageDictionary[@"senderNick"];
+	self.messageTextLabel.text = [NSString stringWithFormat:@"%@", chatMessageDictionary[@"datetime"]];
+
+	NSString *messageText = self.messageTextLabel.text = chatMessageDictionary[@"text"];
+	self.messageTextLabel.text = messageText;
+
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	[dateFormatter setLocale:[NSLocale currentLocale]];
+	[dateFormatter setDateFormat:@"HH':'mm"];
+	[dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
+	self.dateTimeLabel.text = [dateFormatter stringFromDate:chatMessageDictionary[@"datetime"]];
+
+	//changing height
+	CGSize size = [QMChatViewCell getSizeForMessage:messageText];
+	CGRect updatedFrame = CGRectMake(self.messageTextLabel.frame.origin.x, self.messageTextLabel.frame.origin.y, size.width, size.height);
+	self.messageTextLabel.frame = updatedFrame;
 }
 
-+ (CGFloat)cellHeightForMessage:(NSDictionary *)messageDictionary
++ (CGFloat)cellHeightForMessage:(NSString *)messageString
 {
-    NSString *messageText = messageDictionary[@"text"];
-    CGSize size = [QMChatViewCell getSizeForMessage:messageText];
+    CGSize size = [QMChatViewCell getSizeForMessage:messageString];
     return size.height + 5.0;
 }
 

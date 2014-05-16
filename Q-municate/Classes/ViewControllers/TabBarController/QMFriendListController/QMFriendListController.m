@@ -327,8 +327,12 @@
             [self removeSearchBarAnimated:NO];
         }
         _searchBarIsShowed = !_searchBarIsShowed;
-        [self performSegueWithIdentifier:kDetailsSegueIdentifier sender:currentUser];
-    }
+//        [self performSegueWithIdentifier:kDetailsSegueIdentifier sender:currentUser];
+		UIStoryboard *uiStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+		QMFriendsDetailsController *controller = [uiStoryboard instantiateViewControllerWithIdentifier:@"test"];
+		controller.currentFriend = currentUser;
+		[self.navigationController pushViewController:controller animated:YES];
+	}
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
