@@ -1809,7 +1809,6 @@
                                 </state>
                                 <connections>
                                     <action selector="createGroupChat:" destination="Rlv-IY-Rq7" eventType="touchUpInside" id="vRS-yq-weN"/>
-                                    <segue destination="zpv-I5-i7g" kind="push" identifier="ChatViewSegue" id="ceq-RY-MiW"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -2296,7 +2295,7 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="cwy-pn-aAV"/>
-        <segue reference="ceq-RY-MiW"/>
+        <segue reference="gq5-5p-RwI"/>
         <segue reference="bAk-xe-kWS"/>
     </inferredMetricsTieBreakers>
 </document>
