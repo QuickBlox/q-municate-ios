@@ -29,6 +29,9 @@
 
 #pragma mark - Chat
 
+// ****************************** Dialogs **************************************
+- (void)fetchAllDialogs;
+
 - (void)sendMessage:(QBChatMessage *)message;
 - (void)createRoomWithName:(NSString *)groupChatNameString withCompletion:(QBChatRoomResultBlock)block;
 

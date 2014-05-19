@@ -209,6 +209,12 @@
 
 #pragma mark - Chat
 
+// ******************* GETTING DIALOGS ***************************
+- (void)fetchAllDialogs
+{
+    [[QBChat instance] dialogsWithDelegate:self];
+}
+
 - (void)chatDidNotSendMessage:(QBChatMessage *)message
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidNotSendMessage object:nil userInfo:@{@"message" : message}];
@@ -340,6 +346,9 @@
 
 }
 
+
+#pragma mark - QBActionStatusDelegate
+
 - (void)completedWithResult:(Result *)result
 {
 	if (result.success && [result isKindOfClass:[QBChatDialogResult class]]) {
@@ -358,7 +367,14 @@
 				_chatDialogHistoryBlock = nil;
 			}
 		}
-	}
+	} else if (result.success && [result isKindOfClass:[QBDialogsPagedResult class]]) {
+        QBDialogsPagedResult *dialogsResult = (QBDialogsPagedResult *)result;
+        NSArray *dialogs = dialogsResult.dialogs;
+        self.allDialogs = [dialogs mutableCopy];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ChatDialogsLoaded" object:nil];
+        
+    }
 }
 
 

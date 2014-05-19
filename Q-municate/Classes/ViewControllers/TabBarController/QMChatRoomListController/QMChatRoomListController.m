@@ -10,6 +10,7 @@
 #import "QMChatViewController.h"
 #import "QMChatListCell.h"
 #import "QMContactList.h"
+#import "QMChatService.h"
 #import "QMChatRoomListDataSource.h"
 
 static NSString *const ChatListCellIdentifier = @"ChatListCell";
@@ -19,6 +20,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 @property (strong, nonatomic) IBOutlet UITableView *chatsTableView;
 @property (strong, nonatomic) QMChatRoomListDataSource *dataSource;
 
+@property (strong, nonatomic) NSArray *chatDialogs;
 @end
 
 @implementation QMChatRoomListController
@@ -28,9 +30,19 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.dataSource = [QMChatRoomListDataSource new];
+//    self.dataSource = [QMChatRoomListDataSource new];
+    
+    [self loadDilogs];
+    
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatAddedNewRoom:) name:kChatRoomListUpdateNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dialogsLoaded) name:@"ChatDialogsLoaded" object:nil];
+}
+
+- (void)loadDilogs
+{
+    [[QMChatService shared] fetchAllDialogs];
 }
 
 - (void)didReceiveMemoryWarning
@@ -39,26 +51,33 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     // Dispose of any resources that can be recreated.
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 #pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.dataSource.roomsListMArray count];
+    return [self.chatDialogs count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QMChatListCell *cell = [tableView dequeueReusableCellWithIdentifier:ChatListCellIdentifier];
 
-    NSDictionary *chatInfo = self.dataSource.roomsListMArray[indexPath.row];
-	NSArray *opponentsArray = [chatInfo allKeys];
-
-    cell.name.text = chatInfo[opponentsArray[0]][kChatOpponentName];
-	NSDictionary *lastMessage = [chatInfo[opponentsArray[0]][kChatOpponentHistory]lastObject];
-    cell.lastMessage.text = lastMessage[@"text"];
+    QBChatDialog *dialog = self.chatDialogs[indexPath.row];
+    
+    [cell configureCellWithDialog:dialog];
 
     return cell;
 }
 
+- (void)reloadTableView
+{
+    self.chatDialogs = [[QMChatService shared].allDialogs mutableCopy];
+    [self.chatsTableView reloadData];
+}
 
 #pragma mark - UITableViewDelegate
 
@@ -66,7 +85,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-	QBChatDialog *chatDialog = self.dataSource.roomsListMArray[indexPath.row];
+	QBChatDialog *chatDialog = self.chatDialogs[indexPath.row];
     [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatDialog];
 }
 
@@ -78,7 +97,9 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     }
 }
 
-#pragma mark -
+
+#pragma mark - Notifications
+
 - (void)localChatDidReceiveMessage:(NSNotification *)notification
 {
 	NSLog(@"userInfo: %@", notification.userInfo);
@@ -97,6 +118,9 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 	[self.chatsTableView reloadData];
 }
 
-//- (BOOL)isRoomCreatedWith
+- (void)dialogsLoaded
+{
+    [self reloadTableView];
+}
 
 @end

@@ -20,4 +20,7 @@
 @property (strong, nonatomic) IBOutlet UIImageView *groupNumbBackground;
 @property (strong, nonatomic) IBOutlet UIImageView *unreadMsgBackground;
 
+
+- (void)configureCellWithDialog:(QBChatDialog *)chatDialog;
+
 @end
