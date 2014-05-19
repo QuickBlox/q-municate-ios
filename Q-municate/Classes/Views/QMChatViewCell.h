@@ -17,6 +17,6 @@
 
 + (CGFloat)cellHeightForMessage:(NSString *)messageString;
 
-- (void)configureCellWithMessage:(NSDictionary *)messageDictionary fromUser:(QBUUser *)user;
+- (void)configureCellWithMessage:(QBChatAbstractMessage *)message fromUser:(QBUUser *)user;
 
 @end

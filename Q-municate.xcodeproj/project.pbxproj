@@ -622,8 +622,8 @@
 		8DE89C2A54B6D7C4A9964D32 /* QMChatDataSource */ = {
 			isa = PBXGroup;
 			children = (
-				8DE89E678171D28A1CC3E0CA /* QMChatDataSource.m */,
 				8DE8986E0FD890D5D4EE4D31 /* QMChatDataSource.h */,
+				8DE89E678171D28A1CC3E0CA /* QMChatDataSource.m */,
 			);
 			name = QMChatDataSource;
 			sourceTree = "<group>";

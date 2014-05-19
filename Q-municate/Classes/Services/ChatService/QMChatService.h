@@ -10,6 +10,10 @@
 
 @interface QMChatService : NSObject
 
+
+@property (strong, nonatomic) NSMutableDictionary *allConversations;
+@property (strong, nonatomic) NSMutableArray *allDialogs;
+
 @property (strong, nonatomic) QBWebRTCVideoChat *activeStream;
 
 @property (strong, nonatomic) NSString *currentSessionID;
@@ -23,21 +27,22 @@
 - (void)logOut;
 
 
-#pragma mark - Audio/Video Chat
+#pragma mark - Chat
 
-- (void)initActiveStream;                                                                           // for audio calls
-- (void)initActiveStreamWithOpponentView:(UIView *)opponentView ownView:(UIView *)ownView;          // for video calls
-- (void)releaseActiveStream;
-
-- (void)postMessage:(QBChatMessage *)message;
-
+- (void)sendMessage:(QBChatMessage *)message;
 - (void)createRoomWithName:(NSString *)groupChatNameString withCompletion:(QBChatRoomResultBlock)block;
+
+#pragma mark - Audio/Video Calls
 
 - (void)createNewDialog:(QBChatDialog *)chatDialog withCompletion:(QBChatDialogResultBlock)block;
 
 - (void)getMessageHistoryWithDialogID:(NSString *)dialogIDString withCompletion:(QBChatDialogHistoryBlock)block;
 
 - (void)postMessage:(QBChatMessage *)chatMessage withRoom:(QBChatRoom *)chatRoom withCompletion:(QBChatDialogResultBlock)block;
+
+- (void)initActiveStream;                                                                           // for audio calls
+- (void)initActiveStreamWithOpponentView:(UIView *)opponentView ownView:(UIView *)ownView;          // for video calls
+- (void)releaseActiveStream;
 
 - (void)callUser:(NSUInteger)userID withVideo:(BOOL)videoEnabled;
 

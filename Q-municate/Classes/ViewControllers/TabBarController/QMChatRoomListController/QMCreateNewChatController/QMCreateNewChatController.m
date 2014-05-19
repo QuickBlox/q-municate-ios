@@ -100,7 +100,7 @@ static CGFloat const rowHeight = 60.0;
 		NSDictionary *opponentDictionary = @{
 				usersIdArray[0]			: dialogDictionary
 		};
-	[self performSegueWithIdentifier:kChatViewSegueIdentifier sender:opponentDictionary];
+	[self performSegueWithIdentifier:kChatViewSegueIdentifier sender:self.dataSource.friendsSelectedMArray[0]];
 	}
 }
 
@@ -182,7 +182,11 @@ static CGFloat const rowHeight = 60.0;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     QMChatViewController *childController = (QMChatViewController *)segue.destinationViewController;
-    childController.chatDialog = sender;
+    if ([self.dataSource.friendsSelectedMArray count] > 1) {
+		childController.chatDialog = sender;
+	} else {
+		childController.opponent = sender;
+	}
 
 }
 
