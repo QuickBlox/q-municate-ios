@@ -32,12 +32,13 @@ static CGFloat const kCellHeightOffset = 33.0f;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-	NSArray *opponentKeyArray = [self.opponentDictionary allKeys];
-	NSDictionary *opponentDictionary = self.opponentDictionary[opponentKeyArray[0]];
-	self.chatName = opponentDictionary[kChatOpponentName];
+	self.chatName = self.chatDialog.name;
 	self.title = self.chatName;
-	
-    self.dataSource = [[QMChatDataSource alloc] initWithOpponentDictionary:self.opponentDictionary];
+
+	[[QMChatService shared] getMessageHistoryWithDialogID:self.chatDialog.ID withCompletion:^(NSArray *chatDialogHistoryArray, NSError *error) {
+		self.dataSource = [[QMChatDataSource alloc] initWithHistoryArray:chatDialogHistoryArray];
+		[self.tableView reloadData];
+	}];
     [self configureInputMessageViewShadow];
     [self addKeyboardObserver];
 	[self addChatObserver];
@@ -247,10 +248,15 @@ static CGFloat const kCellHeightOffset = 33.0f;
 		chatMessage.text = self.inputMessageTextField.text;
 		chatMessage.senderID = [QMContactList shared].me.ID;
 //		chatMessage.recipientID = [self.usersRecipientsIdArray[0] unsignedIntegerValue];
-		NSArray *idArray = [self.opponentDictionary allKeys];
-		NSString *idString = [NSString stringWithFormat:@"%@", idArray[0]];
-		chatMessage.recipientID = (NSUInteger) [idString longLongValue];
+//		NSArray *idArray = [self.opponentDictionary allKeys];
+//		NSString *idString = [NSString stringWithFormat:@"%@", idArray[0]];
+//		chatMessage.recipientID = (NSUInteger) [idString longLongValue];
 		chatMessage.senderNick = [QMContactList shared].me.fullName;
+		if ([self.chatDialog.occupantIDs count] > 1) {
+		    [[QMChatService shared] postMessage:chatMessage withRoom:[QMChatService shared].chatRoom withCompletion:^(QBChatDialog *dialog, NSError *error) {
+				//
+			}];
+		}
 		[[QMChatService shared] postMessage:chatMessage];
 	}
 }

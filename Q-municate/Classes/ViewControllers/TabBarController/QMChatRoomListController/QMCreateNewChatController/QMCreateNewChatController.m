@@ -74,11 +74,24 @@ static CGFloat const rowHeight = 60.0;
     NSString *chatName = [self chatNameFromUserNames:selectedUsersMArray];
 	NSArray *usersIdArray = [self usersIDFromSelectedUsers:selectedUsersMArray];
 	if ([usersIdArray count] > 1) {
-		[[QMChatService shared] createRoomWithName:chatName withCompletion:^(QBChatRoom *room, NSError *error) {
-			if (!error) {
-				[[QMChatService shared] addMembersArray:usersIdArray toRoom:room];
-			}
+		QBChatDialog *chatDialog = [QBChatDialog new];
+		chatDialog.name = chatName;
+		chatDialog.occupantIDs = usersIdArray;
+		chatDialog.type = QBChatDialogTypeGroup;
+		[[QMChatService shared] createNewDialog:chatDialog withCompletion:^(QBChatDialog *dialog, NSError *error) {
+			[[QMChatService shared] createRoomWithName:dialog.name withCompletion:^(QBChatRoom *chatRoom, NSError *roomCreationError) {
+				//
+			}];
+
+			[self performSegueWithIdentifier:kChatViewSegueIdentifier sender:dialog];
 		}];
+
+
+//		[[QMChatService shared] createRoomWithName:chatName withCompletion:^(QBChatRoom *room, NSError *error) {
+//			if (!error) {
+//				[[QMChatService shared] addMembersArray:usersIdArray toRoom:room];
+//			}
+//		}];
 	} else {
 		NSDictionary *dialogDictionary = @{
 				kChatOpponentName 		: chatName,
@@ -169,7 +182,8 @@ static CGFloat const rowHeight = 60.0;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     QMChatViewController *childController = (QMChatViewController *)segue.destinationViewController;
-    childController.opponentDictionary = sender;
+    childController.chatDialog = sender;
+
 }
 
 - (BOOL)isChecked:(QBUUser *)user

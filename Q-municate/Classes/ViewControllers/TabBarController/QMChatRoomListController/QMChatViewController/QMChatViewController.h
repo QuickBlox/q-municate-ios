@@ -11,7 +11,7 @@
 @interface QMChatViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) NSString *chatName;
-@property (nonatomic, strong) NSArray  *usersRecipientsIdArray;
-@property (nonatomic, strong) NSDictionary *opponentDictionary;
+@property (nonatomic, strong) QBChatDialog *chatDialog;
+@property (nonatomic, strong) QBChatRoom *chatRoom;
 
 @end

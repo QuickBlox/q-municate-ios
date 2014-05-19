@@ -14,6 +14,7 @@
 
 @property (strong, nonatomic) NSString *currentSessionID;
 @property (nonatomic, strong) NSDictionary *customParams;
+@property (nonatomic, strong) QBChatRoom *chatRoom;
 
 + (instancetype)shared;
 
@@ -32,7 +33,11 @@
 
 - (void)createRoomWithName:(NSString *)groupChatNameString withCompletion:(QBChatRoomResultBlock)block;
 
-- (void)addMembersArray:(NSArray *)membersArray toRoom:(QBChatRoom *)chatRoom;
+- (void)createNewDialog:(QBChatDialog *)chatDialog withCompletion:(QBChatDialogResultBlock)block;
+
+- (void)getMessageHistoryWithDialogID:(NSString *)dialogIDString withCompletion:(QBChatDialogHistoryBlock)block;
+
+- (void)postMessage:(QBChatMessage *)chatMessage withRoom:(QBChatRoom *)chatRoom withCompletion:(QBChatDialogResultBlock)block;
 
 - (void)callUser:(NSUInteger)userID withVideo:(BOOL)videoEnabled;
 

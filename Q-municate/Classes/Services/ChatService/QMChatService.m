@@ -13,7 +13,9 @@
 @interface QMChatService () <QBChatDelegate, QBActionStatusDelegate>
 
 @property (copy, nonatomic) QBChatResultBlock chatBlock;
-@property (copy, nonatomic) QBChatRoomResultBlock chatRoomBlock;
+@property (copy, nonatomic) QBChatRoomResultBlock chatRoomResultBlock;
+@property (copy, nonatomic) QBChatDialogResultBlock chatDialogResultBlock;
+@property (copy, nonatomic) QBChatDialogHistoryBlock chatDialogHistoryBlock;
 
 @property (strong, nonatomic) NSTimer *presenceTimer;
 
@@ -240,13 +242,26 @@
 
 - (void)createRoomWithName:(NSString *)groupChatNameString withCompletion:(QBChatRoomResultBlock)block
 {
-	_chatRoomBlock = block;
+	_chatRoomResultBlock = block;
 	[[QBChat instance] createOrJoinRoomWithName:groupChatNameString membersOnly:YES persistent:NO];
 }
 
-- (void)addMembersArray:(NSArray *)membersArray toRoom:(QBChatRoom *)chatRoom
+- (void)createNewDialog:(QBChatDialog *)chatDialog withCompletion:(QBChatDialogResultBlock)block
 {
-	[[QBChat instance] addUsers:membersArray toRoom:chatRoom];
+	_chatDialogResultBlock = block;
+	[[QBChat instance] createDialog:chatDialog delegate:self];
+}
+
+- (void)getMessageHistoryWithDialogID:(NSString *)dialogIDString withCompletion:(QBChatDialogHistoryBlock)block
+{
+	_chatDialogHistoryBlock = block;
+	[[QBChat instance] messagesWithDialogID:dialogIDString delegate:self];
+}
+
+- (void)postMessage:(QBChatMessage *)chatMessage withRoom:(QBChatRoom *)chatRoom withCompletion:(QBChatDialogResultBlock)block
+{
+	_chatDialogResultBlock = block;
+	[[QBChat instance] sendMessage:chatMessage.text toRoom:chatRoom];
 }
 
 - (void)chatRoomDidReceiveMessage:(QBChatMessage *)message fromRoom:(NSString *)roomName
@@ -267,17 +282,19 @@
 - (void)chatRoomDidEnter:(QBChatRoom *)room
 {
 	//1
-	if (_chatRoomBlock) {
-		_chatRoomBlock(room, nil);
-		_chatRoomBlock = nil;
+	if (_chatRoomResultBlock) {
+		[QMChatService shared].chatRoom = room;
+		_chatRoomResultBlock(room, nil);
+		_chatRoomResultBlock = nil;
 	}
 }
 
 - (void)chatRoomDidNotEnter:(NSString *)roomName error:(NSError *)error
 {
-	if (_chatRoomBlock) {
-		_chatRoomBlock(nil, error);
-		_chatRoomBlock = nil;
+	if (_chatRoomResultBlock) {
+		[QMChatService shared].chatRoom = nil;
+		_chatRoomResultBlock(nil, error);
+		_chatRoomResultBlock = nil;
 	}
 }
 
@@ -304,6 +321,27 @@
 - (void)chatRoomDidReceiveListOfOnlineUsers:(NSArray *)users room:(NSString *)roomName
 {
 
+}
+
+- (void)completedWithResult:(Result *)result
+{
+	if (result.success && [result isKindOfClass:[QBChatDialogResult class]]) {
+		if (_chatDialogResultBlock) {
+			QBChatDialog *chatDialog = ((QBChatDialogResult *)result).dialog;
+			if (chatDialog) {
+				_chatDialogResultBlock(chatDialog, nil);
+				_chatDialogResultBlock = nil;
+			}
+		}
+	} else if (result.success && [result isKindOfClass:[QBChatHistoryMessageResult class]]) {
+		if (_chatDialogHistoryBlock) {
+			NSMutableArray *messagesMArray = ((QBChatHistoryMessageResult *)result).messages;
+			if (messagesMArray) {
+				_chatDialogHistoryBlock(messagesMArray, nil);
+				_chatDialogHistoryBlock = nil;
+			}
+		}
+	}
 }
 
 

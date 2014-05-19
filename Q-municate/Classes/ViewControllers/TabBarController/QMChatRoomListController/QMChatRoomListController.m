@@ -66,15 +66,15 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-	NSDictionary *chatInfo = self.dataSource.roomsListMArray[indexPath.row];
-    [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatInfo];
+	QBChatDialog *chatDialog = self.dataSource.roomsListMArray[indexPath.row];
+    [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatDialog];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
 	if ([segue.destinationViewController isKindOfClass:[QMChatViewController class]]) {
         QMChatViewController *childController = (QMChatViewController *)segue.destinationViewController;
-        childController.opponentDictionary = (NSDictionary *)sender;
+        childController.chatDialog = sender;
     }
 }
 

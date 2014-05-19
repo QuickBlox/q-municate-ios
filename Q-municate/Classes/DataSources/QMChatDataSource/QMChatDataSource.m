@@ -8,22 +8,20 @@
 
 #import "QMChatDataSource.h"
 #import "QMChatViewCell.h"
+#import "QMChatService.h"
 
 
 @implementation QMChatDataSource
 @synthesize chatHistory;
 
-- (id)initWithOpponentDictionary:(NSDictionary *)incomingOpponentDictionary
+
+- (id)initWithHistoryArray:(NSArray *)chatDialogHistoryArray
 {
-    self = [super init];
-    if (self) {
-		NSArray *opponentKeyArray = [incomingOpponentDictionary allKeys];
-		NSDictionary *opponentDictionary = incomingOpponentDictionary[opponentKeyArray[0]];
-		self.chatHistory = [opponentDictionary[kChatOpponentHistory] mutableCopy];
-		self.chatNameString = opponentDictionary[kChatOpponentName];
-		self.chatIDString = [NSString stringWithFormat:@"%@", opponentKeyArray[0]];
-    }
-    return self;
+	self = [super init];
+	if (self) {
+		self.chatHistory = [chatDialogHistoryArray mutableCopy];
+	}
+	return self;
 }
 
 - (void)addMessageToHistory:(QBChatMessage *)chatMessage
@@ -33,58 +31,64 @@
 
 - (void)saveMessageLocally:(QBChatMessage *)chatMessage
 {
-	// getting history
-	NSMutableArray *chatLocalHistoryMArray;
-	id json = [[NSUserDefaults standardUserDefaults] objectForKey:kChatLocalHistory];
-	if (json) {
-		NSError *error = nil;
-		NSArray *array = nil;
-		array = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:&error];
-		chatLocalHistoryMArray = [[NSMutableArray alloc] initWithArray:array];
-	} else {
-		chatLocalHistoryMArray = [NSMutableArray new];
-	}
-	for (NSDictionary *dialogItemDictionary in chatLocalHistoryMArray) {
-		NSArray *opponentsArray = [dialogItemDictionary allKeys];
-		if ([opponentsArray[0] isEqualToString:self.chatIDString]) {
-			self.chatHistory = [dialogItemDictionary[opponentsArray[0]][kChatOpponentHistory] mutableCopy];
-			break;
+	[[QMChatService shared] postMessage:chatMessage withRoom:[QMChatService shared].chatRoom withCompletion:^(QBChatDialog *dialog, NSError *error) {
+		if (!error) {
+		    //
 		}
-	}
-	NSDictionary *messageDictionary = [self dictionaryFromMessage:chatMessage];
-	[self.chatHistory addObject:messageDictionary];
-	NSMutableDictionary *opponentHistoryDictionary = [NSMutableDictionary new];
-	[opponentHistoryDictionary setObject:self.chatNameString forKey:kChatOpponentName];
-	[opponentHistoryDictionary setObject:[self.chatHistory copy] forKey:kChatOpponentHistory];
-	NSDictionary *opponentDictionary = @{self.chatIDString : [opponentHistoryDictionary copy]};
+	}];
 
-	NSMutableArray *tempArray = [NSMutableArray new];
-	for (NSDictionary *dialogItemDictionary in chatLocalHistoryMArray) {
-		NSArray *opponentsArray = [dialogItemDictionary allKeys];
-		if ([opponentsArray[0] isEqualToString:self.chatIDString]) {
-			[tempArray addObject:opponentDictionary];
-			continue;
-		}
-		[tempArray addObject:dialogItemDictionary];
-	}
-	[chatLocalHistoryMArray setArray:tempArray];
-
-	NSArray *resultArray = [chatLocalHistoryMArray copy];
-	id jsonToSave;
-	NSError *error = nil;
-	if ([NSJSONSerialization isValidJSONObject:resultArray]) {
-		jsonToSave = [NSJSONSerialization dataWithJSONObject:resultArray options:NSJSONWritingPrettyPrinted error:&error];
-	}
-
-	[[NSUserDefaults standardUserDefaults] setObject:jsonToSave forKey:kChatLocalHistory];
-	[[NSUserDefaults standardUserDefaults] synchronize];
-	/*
-	* we have to update roomList page
-	* after each message post
-	* to catch not only new dialogs
-	* but to refresh last message as well
-	* */
-	[[NSNotificationCenter defaultCenter] postNotificationName:kChatRoomListUpdateNotification object:nil];
+//	// getting history
+//	NSMutableArray *chatLocalHistoryMArray;
+//	id json = [[NSUserDefaults standardUserDefaults] objectForKey:kChatLocalHistory];
+//	if (json) {
+//		NSError *error = nil;
+//		NSArray *array = nil;
+//		array = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:&error];
+//		chatLocalHistoryMArray = [[NSMutableArray alloc] initWithArray:array];
+//	} else {
+//		chatLocalHistoryMArray = [NSMutableArray new];
+//	}
+//	for (NSDictionary *dialogItemDictionary in chatLocalHistoryMArray) {
+//		NSArray *opponentsArray = [dialogItemDictionary allKeys];
+//		if ([opponentsArray[0] isEqualToString:self.chatIDString]) {
+//			self.chatHistory = [dialogItemDictionary[opponentsArray[0]][kChatOpponentHistory] mutableCopy];
+//			break;
+//		}
+//	}
+//	NSDictionary *messageDictionary = [self dictionaryFromMessage:chatMessage];
+//	[self.chatHistory addObject:messageDictionary];
+//	NSMutableDictionary *opponentHistoryDictionary = [NSMutableDictionary new];
+//	[opponentHistoryDictionary setObject:self.chatNameString forKey:kChatOpponentName];
+//	[opponentHistoryDictionary setObject:[self.chatHistory copy] forKey:kChatOpponentHistory];
+//	NSDictionary *opponentDictionary = @{self.chatIDString : [opponentHistoryDictionary copy]};
+//
+//	NSMutableArray *tempArray = [NSMutableArray new];
+//	for (NSDictionary *dialogItemDictionary in chatLocalHistoryMArray) {
+//		NSArray *opponentsArray = [dialogItemDictionary allKeys];
+//		if ([opponentsArray[0] isEqualToString:self.chatIDString]) {
+//			[tempArray addObject:opponentDictionary];
+//			continue;
+//		}
+//		[tempArray addObject:dialogItemDictionary];
+//	}
+//	[chatLocalHistoryMArray setArray:tempArray];
+//
+//	NSArray *resultArray = [chatLocalHistoryMArray copy];
+//	id jsonToSave;
+//	NSError *error = nil;
+//	if ([NSJSONSerialization isValidJSONObject:resultArray]) {
+//		jsonToSave = [NSJSONSerialization dataWithJSONObject:resultArray options:NSJSONWritingPrettyPrinted error:&error];
+//	}
+//
+//	[[NSUserDefaults standardUserDefaults] setObject:jsonToSave forKey:kChatLocalHistory];
+//	[[NSUserDefaults standardUserDefaults] synchronize];
+//	/*
+//	* we have to update roomList page
+//	* after each message post
+//	* to catch not only new dialogs
+//	* but to refresh last message as well
+//	* */
+//	[[NSNotificationCenter defaultCenter] postNotificationName:kChatRoomListUpdateNotification object:nil];
 }
 
 - (NSDictionary *)dictionaryFromMessage:(QBChatMessage *)chatMessage
