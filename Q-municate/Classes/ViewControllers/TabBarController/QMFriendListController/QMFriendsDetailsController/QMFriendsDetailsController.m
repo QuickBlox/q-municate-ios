@@ -9,6 +9,7 @@
 #import "QMFriendsDetailsController.h"
 #import "UIImageView+ImageWithBlobID.h"
 #import "QMVideoCallController.h"
+#import "QMChatViewController.h"
 #import "QMContactList.h"
 #import "QMUtilities.h"
 
@@ -72,12 +73,23 @@
         [self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:indexPath];
     } else if (indexPath.row == 2) {
         [self showAlertWithMessage:@"Comming soon"];
+    } else if (indexPath.row == 3) {
+        [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:indexPath];
     }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     NSIndexPath *currentPath = (NSIndexPath *)sender;
+    
+    // if chat
+    if (currentPath.row == 3) {
+        QMChatViewController *chatController = (QMChatViewController *)segue.destinationViewController;
+        chatController.chatName = self.currentFriend.fullName;
+        chatController.opponent = self.currentFriend;
+        return;
+    }
+    
     if (currentPath.row == 1) {
         ((QMVideoCallController *)segue.destinationViewController).videoEnabled = YES;
     } else if (currentPath.row == 2) {

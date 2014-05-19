@@ -27,6 +27,10 @@
 {
     if (self= [super init]) {
         self.dateFormatter = [[NSDateFormatter alloc] init];
+        [self.dateFormatter setLocale:[NSLocale currentLocale]];
+        [self.dateFormatter setDateFormat:@"HH':'mm"];
+        [self.dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
+        
         self.incomingCallController = nil;
     }
     return self;

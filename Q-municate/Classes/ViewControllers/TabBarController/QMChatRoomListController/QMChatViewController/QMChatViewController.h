@@ -11,6 +11,8 @@
 @interface QMChatViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) NSString *chatName;
+@property (nonatomic, strong) QBUUser *opponent;  // If not p2p chat, opponent will be nil.
+
 @property (nonatomic, strong) NSArray  *usersRecipientsIdArray;
 @property (nonatomic, strong) NSDictionary *opponentDictionary;
 

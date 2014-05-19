@@ -35,6 +35,7 @@
 - (id)init
 {
     if (self = [super init]) {
+        self.allConversations = [NSMutableDictionary new];
         [QBChat instance].delegate = self;
     }
     return self;
@@ -56,7 +57,7 @@
 }
 
 
-#pragma mark - Audio/Video Chat
+#pragma mark - Audio/Video Calls
 
 - (void)callUser:(NSUInteger)userID withVideo:(BOOL)videoEnabled
 {
@@ -69,7 +70,6 @@
 
 - (void)acceptCallFromUser:(NSUInteger)userID withVideo:(BOOL)videoEnabled customParams:(NSDictionary *)customParameters
 {
-    
     self.activeStream.viewToRenderOpponentVideoStream.remotePlatform = self.customParams[qbvideochat_platform];
     self.activeStream.viewToRenderOpponentVideoStream.remoteVideoOrientation = [QBChatUtils interfaceOrientationFromString:self.customParams[qbvideochat_device_orientation]];
     if (videoEnabled) {
@@ -86,10 +86,6 @@
 
 - (void)cancelCall
 {
-//    if (self.customParams) {
-//        [self.activeStream finishCallWithCustomParameters:self.customParams];
-//        return;
-//    }
     [self.activeStream finishCall];
 }
 
@@ -208,7 +204,9 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:kCallWasStoppedNotification object:nil userInfo:@{@"reason":stopCallReason}];
 }
 
-#pragma mark - Chat Messages Delegates
+
+#pragma mark - Chat
+
 - (void)chatDidNotSendMessage:(QBChatMessage *)message
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidNotSendMessage object:nil userInfo:@{@"message" : message}];
@@ -216,7 +214,18 @@
 
 - (void)chatDidReceiveMessage:(QBChatMessage *)message
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidReceiveMessage object:nil userInfo:@{@"message" : message}];
+    // message history for current user by userID:
+    NSString *key = [@(message.senderID) stringValue];
+    NSMutableArray *messageHistory = self.allConversations[key];
+    
+    if (messageHistory == nil) {
+        messageHistory = [@[message] mutableCopy];
+        self.allConversations[key] = messageHistory;
+    } else {
+        [messageHistory addObject:message];
+    }
+    
+	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidReceiveMessage object:nil];
 }
 
 - (void)chatDidFailWithError:(NSInteger)code
@@ -224,13 +233,21 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidFailWithError object:nil userInfo:@{@"errorCode" : [NSNumber numberWithInteger:code]}];
 }
 
-- (void)postMessage:(QBChatMessage *)message
+- (void)sendMessage:(QBChatMessage *)message
 {
-	BOOL didSendMessage = [[QBChat instance] sendMessage:message];
-	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidSendMessage object:nil userInfo:@{@"message" : message}];
+	[[QBChat instance] sendMessage:message];
+    
+    NSString *key = [@(message.recipientID) stringValue];
+    NSMutableArray *messageHistory = self.allConversations[key];
+    
+    if (messageHistory == nil) {
+        messageHistory = [@[message] mutableCopy];
+        self.allConversations[key] = messageHistory;
+    } else {
+        [messageHistory addObject:message];
+    }
 }
 
-#pragma mark - Local History
 - (void)saveMessageToLocalHistory:(QBChatMessage *)chatMessage
 {
 	//

@@ -23,6 +23,8 @@ static CGFloat const kCellHeightOffset = 33.0f;
 @property (nonatomic, strong) QMChatDataSource *dataSource;
 @property (assign) BOOL isBackButtonClicked;
 
+@property (nonatomic, strong) NSMutableArray *chatHistory;
+
 @end
 
 @implementation QMChatViewController
@@ -32,10 +34,16 @@ static CGFloat const kCellHeightOffset = 33.0f;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-	NSArray *opponentKeyArray = [self.opponentDictionary allKeys];
-	NSDictionary *opponentDictionary = self.opponentDictionary[opponentKeyArray[0]];
-	self.chatName = opponentDictionary[kChatOpponentName];
+    
+    // title for nav controller
 	self.title = self.chatName;
+    
+    // retrieve chat history:
+    NSString *kUserID = [@(self.opponent.ID) stringValue];
+    self.chatHistory = [QMChatService shared].allConversations[kUserID];
+    if (self.chatHistory == nil) {
+        self.chatHistory = [NSMutableArray new];
+    }
 	
     self.dataSource = [[QMChatDataSource alloc] initWithOpponentDictionary:self.opponentDictionary];
     [self configureInputMessageViewShadow];
@@ -126,15 +134,26 @@ static CGFloat const kCellHeightOffset = 33.0f;
 #pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.dataSource.chatHistory count];
+    return [self.chatHistory count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QMChatViewCell *cell = (QMChatViewCell *)[tableView dequeueReusableCellWithIdentifier:kChatViewCellIdentifier];
-	NSDictionary *chatMessageDictionary = self.dataSource.chatHistory[indexPath.row];
-
-    [cell configureCellWithMessage:chatMessageDictionary fromUser:nil];
+    QBChatAbstractMessage *message = self.chatHistory[indexPath.row];
+    
+    QBUUser *currentUser = nil;
+    if ([QMContactList shared].me.ID == message.senderID) {
+        currentUser = [QMContactList shared].me;
+    } else {
+        for (QBUUser *user in [QMContactList shared].friends) {
+            if (user.ID == message.senderID) {
+                currentUser = user;
+                break;
+            }
+        }
+    }
+    [cell configureCellWithMessage:message fromUser:currentUser];
 
     return cell;
 }
@@ -142,8 +161,8 @@ static CGFloat const kCellHeightOffset = 33.0f;
 // height for cell:
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary *chatMessageDictionary = self.dataSource.chatHistory[indexPath.row];
-    return [QMChatViewCell cellHeightForMessage:chatMessageDictionary[@"text"]] + kCellHeightOffset;
+    QBChatAbstractMessage *chatMessage = self.chatHistory[indexPath.row];
+    return [QMChatViewCell cellHeightForMessage:chatMessage.text] + kCellHeightOffset;
 }
 
 
@@ -213,8 +232,10 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)localChatDidReceiveMessage:(NSNotification *)notification
 {
-	NSLog(@"userInfo: %@", notification.userInfo);
-	[self addMessageToHistory:notification.userInfo[@"message"]];
+    NSString *kUserID = [@(self.opponent.ID) stringValue];
+    self.chatHistory = [[QMChatService shared].allConversations[kUserID] mutableCopy];
+    
+    [self reloadTableView];
 }
 
 - (void)localChatDidFailWithError:(NSNotification *)notification
@@ -232,26 +253,25 @@ static CGFloat const kCellHeightOffset = 33.0f;
 	[self showAlertWithErrorMessage:[NSString stringWithFormat:@"error: %@", errorMessage]];
 }
 
-- (void)chatDidSendMessage:(NSNotification *)notification
-{
-	[self addMessageToHistory:notification.userInfo[@"message"]];
-	[QMUtilities removeIndicatorView];
-}
 
 #pragma mark -
 - (IBAction)sendMessageButtonClicked:(UIButton *)sender
 {
 	if (self.inputMessageTextField.text.length) {
-		[QMUtilities createIndicatorView];
+
 		QBChatMessage *chatMessage = [QBChatMessage new];
 		chatMessage.text = self.inputMessageTextField.text;
-		chatMessage.senderID = [QMContactList shared].me.ID;
-//		chatMessage.recipientID = [self.usersRecipientsIdArray[0] unsignedIntegerValue];
-		NSArray *idArray = [self.opponentDictionary allKeys];
-		NSString *idString = [NSString stringWithFormat:@"%@", idArray[0]];
-		chatMessage.recipientID = (NSUInteger) [idString longLongValue];
-		chatMessage.senderNick = [QMContactList shared].me.fullName;
-		[[QMChatService shared] postMessage:chatMessage];
+        chatMessage.senderID = [QMContactList shared].me.ID;
+		chatMessage.recipientID = self.opponent.ID;
+        
+		[[QMChatService shared] sendMessage:chatMessage];
+
+        // update chat history:
+        NSString *kUserID = [@(self.opponent.ID) stringValue];
+        self.chatHistory = [[QMChatService shared].allConversations[kUserID] mutableCopy];
+        
+        self.inputMessageTextField.text = @"";
+        [self reloadTableView];
 	}
 }
 
@@ -266,6 +286,11 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (void)showAlertWithErrorMessage:(NSString *)messageString
 {
 	[[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:messageString delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
+}
+
+- (void)reloadTableView
+{
+    [self.tableView reloadData];
 }
 
 @end
