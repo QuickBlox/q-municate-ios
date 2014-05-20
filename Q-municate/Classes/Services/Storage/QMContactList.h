@@ -51,5 +51,7 @@
 - (BOOL)isFriend:(QBUUser *)user;
 - (QBUUser *)findFriendWithID:(NSUInteger)userID;
 
+- (QBUUser *)searchFriendFromChatDialog:(QBChatDialog *)chatDialog;
+- (NSArray *)searchFriendsFromChatDialog:(QBChatDialog *)chatDialog;
 
 @end

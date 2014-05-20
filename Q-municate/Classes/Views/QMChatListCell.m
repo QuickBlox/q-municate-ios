@@ -30,21 +30,6 @@
     if (chatDialog.type != QBChatDialogTypePrivate) {
         [self.avatar setImage:[UIImage imageNamed:@"group_placeholder"]];
         
-        if (chatDialog.name != nil) {
-            [self.name setText:chatDialog.name];
-        } else {
-            [self.name setText:@"Group Dialog"];
-            
-//            NSMutableString *nameString = [NSMutableString new];
-//            for (QBUUser *user in [QMContactList shared].friends) {
-//                for (int i = 0; i<[chatDialog.occupantIDs count]; i++) {
-//                    if (<#condition#>) {
-//                        <#statements#>
-//                    }
-//                }
-//            }
-        }
-        
         self.groupMembersNumb.hidden = NO;
         self.groupNumbBackground.hidden = NO;
         self.groupMembersNumb.text = [@(chatDialog.unreadMessageCount) stringValue];
@@ -54,19 +39,10 @@
         [self.avatar setImage:[UIImage imageNamed:@"upic_placeholderr"]];
         self.groupMembersNumb.hidden = YES;
         self.groupNumbBackground.hidden = YES;
-        
-        // name:
-        
-        [self.name setText:@"Private Chat"];
-//        for (QBUUser *user in [QMContactList shared].friends) {
-//            for (int i = 0; i< [chatDialog.occupantIDs count]; i++) {
-//                if (chatDialog.occupantIDs[i]) {
-//#error lol
-//
-//                }
-//            }
-//        }
     }
+    
+    // name:
+    [self.name setText:[self chatNameForChatDialog:chatDialog]];
     
     // unread messages:
     if (chatDialog.unreadMessageCount > 0) {
@@ -82,35 +58,39 @@
     [self.lastMessage setText:chatDialog.lastMessageText];
 }
 
+- (NSString *)chatNameForChatDialog:(QBChatDialog *)chatDialog
+{
+    if (chatDialog.type == QBChatDialogTypePrivate) {
+        QBUUser *friend = nil;
+        for (int i = 0; i< [chatDialog.occupantIDs count]; i++) {
+            NSString *ID = chatDialog.occupantIDs[i];
+            friend = [QMContactList shared].friendsAsDictionary[ID];
+            if (friend != nil) {
+                return friend.fullName;
+            }
+        }
+        return @"Unknown user";
+    }
+    
+    if (chatDialog.name != nil) {
+        return chatDialog.name;
+    }
+    
+    NSMutableString *chatName = [NSMutableString new];
+    
+    for (int i = 0; i< [chatDialog.occupantIDs count]; i++) {
+        NSString *ID = chatDialog.occupantIDs[i];
+        QBUUser *friend = [QMContactList shared].friendsAsDictionary[ID];
+        if (friend != nil) {
+            [chatName appendString:friend.fullName];
+            [chatName appendString:@", "];
+        }
+    }
+    NSRange stringRange = NSRangeFromString(chatName);
+    [chatName deleteCharactersInRange:NSMakeRange(stringRange.location-2, 2)];
+    
+    return chatName;
+}
+
 @end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -34,36 +34,43 @@ static CGFloat const kCellHeightOffset = 33.0f;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.title = self.chatName;
     
-    // title for nav controller
-
-
-
-	if (self.opponent) {
-		self.chatName = self.opponent.fullName;
-		// retrieve chat history:
-		NSString *kUserID = [@(self.opponent.ID) stringValue];
-		self.chatHistory = [QMChatService shared].allConversations[kUserID];
-		if (self.chatHistory == nil) {
-			self.chatHistory = [NSMutableArray new];
-		}
-	} else {
-		self.chatName = self.chatDialog.name;
-		[[QMChatService shared] getMessageHistoryWithDialogID:self.chatDialog.ID withCompletion:^(NSArray *chatDialogHistoryArray, NSError *error) {
-			self.dataSource = [[QMChatDataSource alloc] initWithHistoryArray:chatDialogHistoryArray];
-			[self.tableView reloadData];
-		}];
-	}
-	self.title = self.chatName;
     [self configureInputMessageViewShadow];
     [self addKeyboardObserver];
 	[self addChatObserver];
 	self.isBackButtonClicked = NO;
+    
+    // update unread message count:
+    [self updateChatDialog];
 
-	QBUUser *user = [QMContactList shared].me;
-    user.password = [[NSUserDefaults standardUserDefaults] objectForKey:kPassword];
+    // retrieve chat history:
+    self.chatHistory = [QMChatService shared].allConversations[self.chatDialog.ID];
+    if (self.chatHistory == nil) {
+        
+#warning fix it!
+        if ([self.chatDialog.occupantIDs count] == 1) {    // created now:
+            NSMutableArray *emptyHistory = [NSMutableArray new];
+            [QMChatService shared].allConversations[self.chatDialog.ID] = emptyHistory;
+            [self resetTableView];
+            return;
+        }
+        
+        // fetch chat history from server:
+        [QMUtilities createIndicatorView];
+        [[QMChatService shared] getMessageHistoryWithDialogID:self.chatDialog.ID withCompletion:^(NSArray *chatDialogHistoryArray, NSError *error) {
+            [QMUtilities removeIndicatorView];
+            if (chatDialogHistoryArray != nil) {
+                [QMChatService shared].allConversations[self.chatDialog.ID] = chatDialogHistoryArray;
+            }
+            [self resetTableView];
+        }];
+    }
+}
 
-	[self configureNavBarButtons];
+- (void)updateChatDialog
+{
+    self.chatDialog.unreadMessageCount = 0;
 }
 
 - (void)dealloc
@@ -76,7 +83,6 @@ static CGFloat const kCellHeightOffset = 33.0f;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidNotSendMessage:) name:kChatDidNotSendMessage object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidFailWithError:) name:kChatDidFailWithError object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDidSendMessage:) name:kChatDidSendMessage object:nil];
 }
 
 - (void)configureNavBarButtons
@@ -169,6 +175,11 @@ static CGFloat const kCellHeightOffset = 33.0f;
     return [QMChatViewCell cellHeightForMessage:chatMessage.text] + kCellHeightOffset;
 }
 
+- (void)resetTableView
+{
+    self.chatHistory = [QMChatService shared].allConversations[self.chatDialog.ID];
+    [self.tableView reloadData];
+}
 
 #pragma mark - Keyboard
 - (void)clearMessageInputTextField
@@ -230,16 +241,13 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (void)localChatDidNotSendMessage:(NSNotification *)notification
 {
 	NSLog(@"userInfo: %@", notification.userInfo);
-	[self showAlertWithErrorMessage:notification.userInfo];
+//	[self showAlertWithErrorMessage:notification.userInfo];
 	[QMUtilities removeIndicatorView];
 }
 
 - (void)localChatDidReceiveMessage:(NSNotification *)notification
 {
-    NSString *kUserID = [@(self.opponent.ID) stringValue];
-    self.chatHistory = [[QMChatService shared].allConversations[kUserID] mutableCopy];
-    
-    [self reloadTableView];
+    [self resetTableView];
 }
 
 - (void)localChatDidFailWithError:(NSNotification *)notification
@@ -265,16 +273,11 @@ static CGFloat const kCellHeightOffset = 33.0f;
 		QBChatMessage *chatMessage = [QBChatMessage new];
 		chatMessage.text = self.inputMessageTextField.text;
 		chatMessage.senderID = [QMContactList shared].me.ID;
-		if (self.opponent) { // private chat
+        
+		if (self.chatDialog.type == QBChatDialogTypePrivate) { // private chat
+            chatMessage.recipientID = self.opponent.ID;
 			[[QMChatService shared] sendMessage:chatMessage];
 
-			// update chat history:
-			NSString *kUserID = [@(self.opponent.ID) stringValue];
-			chatMessage.recipientID = self.opponent.ID;
-			self.chatHistory = [[QMChatService shared].allConversations[kUserID] mutableCopy];
-
-			self.inputMessageTextField.text = @"";
-			[self reloadTableView];
 		} else { // group chat
 			chatMessage.senderID = [QMContactList shared].me.ID;
 			chatMessage.senderNick = [QMContactList shared].me.fullName;
@@ -284,6 +287,8 @@ static CGFloat const kCellHeightOffset = 33.0f;
 				}];
 			}
 		}
+        self.inputMessageTextField.text = @"";
+        [self resetTableView];
 	}
 }
 
@@ -298,11 +303,6 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (void)showAlertWithErrorMessage:(NSString *)messageString
 {
 	[[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:messageString delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
-}
-
-- (void)reloadTableView
-{
-    [self.tableView reloadData];
 }
 
 @end

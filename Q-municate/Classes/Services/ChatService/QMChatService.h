@@ -12,7 +12,7 @@
 
 
 @property (strong, nonatomic) NSMutableDictionary *allConversations;
-@property (strong, nonatomic) NSMutableArray *allDialogs;
+@property (strong, nonatomic) NSMutableDictionary *allDialogsAsDictionary;
 
 @property (strong, nonatomic) QBWebRTCVideoChat *activeStream;
 
@@ -34,6 +34,10 @@
 
 - (void)sendMessage:(QBChatMessage *)message;
 - (void)createRoomWithName:(NSString *)groupChatNameString withCompletion:(QBChatRoomResultBlock)block;
+
+#pragma mark - Chat Utils
+
+- (QBChatDialog *)chatDialogForFriendWithID:(NSUInteger)ID;
 
 #pragma mark - Audio/Video Calls
 
