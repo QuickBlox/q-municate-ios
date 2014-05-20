@@ -173,6 +173,8 @@ static NSString *const kButtonTitleCreatePrivateChatString 	= @"Create Private C
 static NSString *const kButtonTitleCreateGroupChatString 	= @"Create Group Chat";
 
 static NSString *const kSettingsProfileDefaultStatusString	= @"Add Status";
+static NSString *const kSettingsProfileMessageWarningString	= @"This field could not be empty!";
+
 
 
 extern QMLogLevel kLoggingLevel;

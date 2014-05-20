@@ -118,25 +118,11 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     NSString *textString = textField.text;
-    if (textField == self.userNameTextField) {
-        if (![textString isEqualToString:self.localUser.fullName]) {
-            self.isUserDataChanged = YES;
-        } else {
-            self.isUserDataChanged = NO;
-        }
-    } else if (textField == self.userMailTextField) {
-        if (![textString isEqualToString:self.localUser.email]) {
-            self.isUserDataChanged = YES;
-        } else {
-            self.isUserDataChanged = NO;
-        }
-    } else if (textField == self.userPhoneTextField) {
-		if (![textString isEqualToString:self.localUser.phone]) {
-			self.isUserDataChanged = YES;
-		} else {
-			self.isUserDataChanged = NO;
-		}
+	if (!textString.length && (textField == self.userNameTextField || textField == self.userMailTextField)) {
+		[self showAlertWithMessage:kSettingsProfileMessageWarningString];
+		return NO;
 	}
+	[self verifyInputFields];
     [self checkForDoneButton];
     [textField resignFirstResponder];
     return YES;
@@ -185,6 +171,20 @@
 {
 	[self.userPhoneTextField resignFirstResponder];
 	[self.navigationItem setRightBarButtonItems:nil];
+	[self verifyInputFields];
+	[self checkForDoneButton];
+}
+
+- (void)verifyInputFields
+{
+	if (![self.userPhoneTextField.text isEqualToString:self.localUser.phone] ||
+			![self.userNameTextField.text isEqualToString:self.localUser.fullName] ||
+			![self.userMailTextField.text isEqualToString:self.localUser.email] ||
+			![self.userStatusTextView.text isEqualToString:self.oldUserStatusString]) {
+		self.isUserDataChanged = YES;
+	} else {
+		self.isUserDataChanged = NO;
+	}
 }
 
 - (void)checkForDoneButton
@@ -285,6 +285,12 @@
 		return NO;
     }
     return YES;
+}
+
+#pragma mark - Alert
+- (void)showAlertWithMessage:(NSString *)messageString
+{
+	[[[UIAlertView alloc] initWithTitle:kEmptyString message:messageString delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
 }
 
 
