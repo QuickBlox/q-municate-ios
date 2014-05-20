@@ -56,7 +56,16 @@
         self.groupNumbBackground.hidden = YES;
         
         // name:
+        
         [self.name setText:@"Private Chat"];
+//        for (QBUUser *user in [QMContactList shared].friends) {
+//            for (int i = 0; i< [chatDialog.occupantIDs count]; i++) {
+//                if (chatDialog.occupantIDs[i]) {
+//#error lol
+//
+//                }
+//            }
+//        }
     }
     
     // unread messages:

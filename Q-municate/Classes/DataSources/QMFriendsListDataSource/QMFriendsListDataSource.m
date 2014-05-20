@@ -23,9 +23,9 @@
 
 - (void)updateFriendsArray:(void (^)(BOOL isEmpty))block
 {
-    self.friendsArray = [[QMContactList shared].friends mutableCopy];
+    self.friendsArray = [[[QMContactList shared].friendsAsDictionary allValues] mutableCopy];
     if ([self.friendsArray count] == 0) {
-        [QMContactList shared].friends = [NSMutableArray new];
+        [QMContactList shared].friendsAsDictionary = [NSMutableDictionary new];
         block(YES);
     } else {
         block(NO);
@@ -46,7 +46,7 @@
 - (void)updateFriendsArrayForSearchPhrase:(NSString *)searchPhraseString
 {
     //TODO: try setArray - that is more optimised
-    NSMutableArray *searchedUsers = [self searchText:searchPhraseString inArray:[QMContactList shared].friends];
+    NSMutableArray *searchedUsers = [self searchText:searchPhraseString inArray:[[QMContactList shared].friendsAsDictionary allValues]];
     [self.friendsArray setArray:searchedUsers];
 }
 
@@ -55,7 +55,7 @@
     [self.otherUsersArray setArray:[@[] mutableCopy]];
 }
 
-- (NSMutableArray *)searchText:(NSString *)text  inArray:(NSMutableArray *)array
+- (NSMutableArray *)searchText:(NSString *)text  inArray:(NSArray *)array
 {
     NSMutableArray *foundMArray = [[NSMutableArray alloc] init];
     for (QBUUser *user in array) {

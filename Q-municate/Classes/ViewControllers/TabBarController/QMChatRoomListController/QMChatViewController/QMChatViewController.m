@@ -155,12 +155,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
     if ([QMContactList shared].me.ID == message.senderID) {
         currentUser = [QMContactList shared].me;
     } else {
-        for (QBUUser *user in [QMContactList shared].friends) {
-            if (user.ID == message.senderID) {
-                currentUser = user;
-                break;
-            }
-        }
+        currentUser = [[QMContactList shared] findFriendWithID:message.senderID];
     }
     [cell configureCellWithMessage:message fromUser:currentUser];
 
