@@ -74,6 +74,12 @@
             return;
         }
         // save me:
+		if (!user.email) {
+			NSString *emailString = [QMContactList shared].facebookMe[@"email"];
+			if (emailString && ![emailString isEqualToString:@""]) {
+			    user.email = emailString;
+			}
+		}
         [[QMContactList shared] setMe:user];
         if (user.blobID == 0) {
             [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {

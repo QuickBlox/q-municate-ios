@@ -279,8 +279,6 @@ static CGFloat const kCellHeightOffset = 33.0f;
 			[[QMChatService shared] sendMessage:chatMessage];
 
 		} else { // group chat
-			chatMessage.senderID = [QMContactList shared].me.ID;
-			chatMessage.senderNick = [QMContactList shared].me.fullName;
 			if ([self.chatDialog.occupantIDs count] > 1) {
 				[[QMChatService shared] postMessage:chatMessage withRoom:[QMChatService shared].chatRoom withCompletion:^(QBChatDialog *dialog, NSError *error) {
 					//

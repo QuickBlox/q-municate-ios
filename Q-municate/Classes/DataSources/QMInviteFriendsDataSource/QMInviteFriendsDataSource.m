@@ -46,6 +46,10 @@
 						completionBlock(nil);
 					}
 				}];
+			} else if (status == FBSessionStateClosedLoginFailed) {
+			    if (error) {
+			        completionBlock(error);
+			    }
 			}
 		}];
 		return;
