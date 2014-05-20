@@ -40,7 +40,7 @@
     self.userMailTextField.text = self.localUser.email;
     self.userPhoneTextField.text = self.localUser.phone;
 
-	if (!self.oldUserStatusString && ![self.oldUserStatusString isEqualToString:kEmptyString]) {
+	if (!self.oldUserStatusString || [self.oldUserStatusString isEqualToString:kEmptyString]) {
 		self.oldUserStatusString = kSettingsProfileDefaultStatusString;
 	}
 	if ([self.oldUserStatusString isEqualToString:kSettingsProfileDefaultStatusString]) {
