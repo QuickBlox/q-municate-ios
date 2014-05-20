@@ -40,15 +40,26 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.dataSource = [QMInviteFriendsDataSource new];
+	[self _initialize];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_initialize) name:kInviteFriendsDataSourceShouldRefreshNotification object:nil];
 }
 
+- (void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
+- (void)_initialize
+{
+	self.dataSource = nil;
+	self.dataSource = [QMInviteFriendsDataSource new];
+	[self.tableView reloadData];
+}
 
 #pragma mark - Actions
 
@@ -263,7 +274,6 @@
 	[self.dataSource updateFacebookDataSource:^(NSError *error) {
 		if (error) {
 			ILog(@"%@",error);
-			[self showAlertWithError:error];
 		} else {
 			[self.tableView reloadData];
 		}
@@ -279,7 +289,6 @@
 	[self.dataSource updateContactListDataSource:^(NSError *error) {
 		if (error) {
 			ILog(@"%@",error);
-			[self showAlertWithError:error];
 		} else {
 			if (![[QMContactList shared].contactsToInvite count]) {
 				[self showAlertWithMessage:kAlertBodyNoContactsWithEmailsString];

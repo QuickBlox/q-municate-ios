@@ -67,6 +67,7 @@ typedef NS_ENUM(NSUInteger, QMPasswordCheckState) {
 	[userDefaults setObject:@(YES) forKey:kDidLogout];
     [userDefaults setObject:kEmptyString forKey:kUserStatusText];
     [userDefaults synchronize];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kInviteFriendsDataSourceShouldRefreshNotification object:nil];
     [[QMAuthService shared] destroySessionWithCompletion:^(BOOL success) {
         if (success) {
             self.tabBarController.selectedIndex = 0;
