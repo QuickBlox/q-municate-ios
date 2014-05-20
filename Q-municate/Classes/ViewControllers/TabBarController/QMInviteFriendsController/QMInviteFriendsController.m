@@ -262,6 +262,7 @@
 	[self.dataSource emptyCheckedFBUsersArray];
 	[self.dataSource updateFacebookDataSource:^(NSError *error) {
 		if (error) {
+			ILog(@"%@",error);
 			[self showAlertWithError:error];
 		} else {
 			[self.tableView reloadData];
@@ -277,6 +278,7 @@
 	[self.dataSource emptyCheckedABUsersArray];
 	[self.dataSource updateContactListDataSource:^(NSError *error) {
 		if (error) {
+			ILog(@"%@",error);
 			[self showAlertWithError:error];
 		} else {
 			if (![[QMContactList shared].contactsToInvite count]) {

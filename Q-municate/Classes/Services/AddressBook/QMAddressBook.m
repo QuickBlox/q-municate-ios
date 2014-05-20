@@ -21,6 +21,7 @@
         addressBook = ABAddressBookCreateWithOptions(NULL,&error);
     if (addressBook == NULL) {
         ILog(@"%@",error);
+		block(nil, NO, (__bridge NSError *)error);
         return;
     }
         ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
