@@ -68,10 +68,10 @@
 
 - (void)loadUserAvatarToImageView
 {
-    if (self.localUser.website != nil) {
-        [self.userPhotoImageView setImageURL:[NSURL URLWithString:self.localUser.website]];
-        return;
-    }
+//    if (self.localUser.website != nil) {
+//        [self.userPhotoImageView setImageURL:[NSURL URLWithString:self.localUser.website]];
+//        return;
+//    }
     [self.userPhotoImageView loadImageWithBlobID:self.localUser.blobID];
 }
 
