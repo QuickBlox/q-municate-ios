@@ -270,6 +270,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 		QBChatMessage *chatMessage = [QBChatMessage new];
 		chatMessage.text = self.inputMessageTextField.text;
 		chatMessage.senderID = [QMContactList shared].me.ID;
+		chatMessage.senderNick = [QMContactList shared].me.fullName;
 		if (self.opponent) { // private chat
 			[[QMChatService shared] sendMessage:chatMessage];
 
@@ -281,8 +282,6 @@ static CGFloat const kCellHeightOffset = 33.0f;
 			self.inputMessageTextField.text = @"";
 			[self reloadTableView];
 		} else { // group chat
-			chatMessage.senderID = [QMContactList shared].me.ID;
-			chatMessage.senderNick = [QMContactList shared].me.fullName;
 			if ([self.chatDialog.occupantIDs count] > 1) {
 				[[QMChatService shared] postMessage:chatMessage withRoom:[QMChatService shared].chatRoom withCompletion:^(QBChatDialog *dialog, NSError *error) {
 					//
