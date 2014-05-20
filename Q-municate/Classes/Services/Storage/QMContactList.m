@@ -28,6 +28,14 @@
     return storageInstance;
 }
 
+//- (id)init
+//{
+//    if (self = [super init]) {
+//        self.friendsAsDictionary = [NSMutableDictionary new];
+//    }
+//    return self;
+//}
+
 
 #pragma mark -
 #pragma mark - TERMINATE LOGIC
@@ -64,7 +72,7 @@
                     resultBlock(NO);
                     return;
                 }
-                self.friends = [facebookFriends mutableCopy];
+                self.friendsAsDictionary = [self arrayToDictionary:facebookFriends];
                 resultBlock(YES);
                 [self addUsersToFriends:facebookFriends];  // include hardcode
             }
@@ -88,12 +96,21 @@
             [self retrieveUsersWithIDs:friendsIDs usingBlock:^(Result *result) {
                 if (result.success && [result isKindOfClass:[QBUUserPagedResult class]]) {
                     NSArray *friends = ((QBUUserPagedResult *)result).users;
-                    self.friends = [friends mutableCopy];
+                    self.friendsAsDictionary = [self arrayToDictionary:friends];
                     block(YES);
                 }
             }];
         }
     }];
+}
+
+- (NSMutableDictionary *)arrayToDictionary:(NSArray *)array
+{
+    NSMutableDictionary *dictionaryOfUsers = [NSMutableDictionary new];
+    for (QBUUser *user in array) {
+        dictionaryOfUsers[[@(user.ID) stringValue]] = user;
+    }
+    return dictionaryOfUsers;
 }
 
 - (NSMutableArray *)friendsIDsAndBaseIDsFromObjects:(NSArray *)objects
@@ -137,7 +154,7 @@
                 [self retrieveUsersWithIDs:friendsIDs usingBlock:^(Result *result) {
                     if (result.success && [result isKindOfClass:[QBUUserPagedResult class]]) {
                         NSArray *users = ((QBUUserPagedResult *)result).users;
-                        self.friends = [users mutableCopy];
+                        self.friendsAsDictionary = [self arrayToDictionary:users];
                         block(YES);
                         return;
                     }
@@ -167,7 +184,7 @@
             QBCOCustomObject *object = ((QBCOCustomObjectResult *)result).object;
             
             // add user to friends list
-            [weakSelf.friends addObject:user];
+            weakSelf.friendsAsDictionary[[@(user.ID) stringValue]] = user;
             // add baseID to baseIDs
             weakSelf.baseUserIDs[object.fields[kFriendId]] = object.ID;
             
@@ -202,7 +219,7 @@
             // delete user from CO:
             [self.baseUserIDs removeObjectForKey:userID];
             // delete user from friends:
-            [self.friends removeObject:user];
+            [self.friendsAsDictionary removeObjectForKey:[@(user.ID) stringValue]];
             block(YES);
             return;
         }
@@ -325,22 +342,20 @@
 
 - (BOOL)isFriend:(QBUUser *)user
 {
-    for (QBUUser *currentUser in self.friends) {
-        if ([currentUser isEqual:user]) {
-            return YES;
-        }
+    QBUUser *friend = self.friendsAsDictionary[[@(user.ID) stringValue]];
+    if (friend == nil) {
+        return NO;
     }
-    return NO;
+    return YES;
 }
 
 - (QBUUser *)findFriendWithID:(NSUInteger)userID
 {
-    for (QBUUser *currentUser in self.friends) {
-        if (currentUser.ID == userID) {
-            return currentUser;
-        }
+    QBUUser *friend = self.friendsAsDictionary[[@(userID) stringValue]];
+    if (friend == nil) {
+        return nil;
     }
-    return nil;
+    return friend;
 }
 
 - (NSMutableArray *)IDsOfFacebookUsers:(NSArray *)facebookUsers
@@ -355,7 +370,7 @@
 - (void)clearData
 {
     self.me = nil;
-    self.friends = nil;
+    self.friendsAsDictionary = nil;
     self.baseUserIDs = nil;
     self.allUsers = nil;
     self.facebookFriendsToInvite = nil;

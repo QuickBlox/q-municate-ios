@@ -14,7 +14,8 @@
 
 @property (strong, nonatomic) QBUUser *me;
 @property (strong, nonatomic) NSMutableDictionary *facebookMe;
-@property (strong, nonatomic) NSMutableArray *friends;
+//@property (strong, nonatomic) NSMutableArray *friends;
+@property (strong, nonatomic) NSMutableDictionary *friendsAsDictionary;
 //@property (strong, nonatomic) NSMutableArray *pendingApproveUsers;
 @property (strong, nonatomic) NSArray *facebookFriendsToInvite;
 
@@ -37,8 +38,6 @@
 
 - (void)removeUserFromFriendList:(QBUUser *)user completion:(QBChatResultBlock)block;
 
-- (BOOL)isFriend:(QBUUser *)user;
-- (QBUUser *)findFriendWithID:(NSUInteger)userID;
 
 // REQUEST FOR FRIENDS TO FACEBOOK:
 - (void)fetchFriendsFromFacebookWithCompletion:(FBResultBlock)handler;
@@ -49,5 +48,8 @@
 #pragma mark - Configurations
 
 - (NSArray *)personsFromDictionaries:(NSArray *)dictionaries;
+- (BOOL)isFriend:(QBUUser *)user;
+- (QBUUser *)findFriendWithID:(NSUInteger)userID;
+
 
 @end

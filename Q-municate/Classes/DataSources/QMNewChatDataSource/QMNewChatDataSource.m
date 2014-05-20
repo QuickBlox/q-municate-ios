@@ -15,7 +15,7 @@
 {
 	self = [super init];
 	if (self) {
-		self.friendListArray = [[QMContactList shared].friends mutableCopy];
+		self.friendListArray = [[[QMContactList shared].friendsAsDictionary allValues] mutableCopy];
 		self.friendsSelectedMArray = [[NSMutableArray alloc] init];
 	}
 	return self;
