@@ -115,6 +115,7 @@
 #pragma mark - TextFieldDelegate
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
+	[self checkForChanges];
 	if (textField == self.userPhoneTextField) {
 		[self showNavDoneButton];
 		[self setFrameOffset:kUserPhoneContainerYOffset];
@@ -137,8 +138,7 @@
 		[self showAlertWithMessage:kSettingsProfileMessageWarningString];
 		return NO;
 	}
-	[self verifyInputFields];
-    [self checkForDoneButton];
+	[self checkForChanges];
     [textField resignFirstResponder];
 	[self setFrameOffset:kDefaultContainerYOffset];
     return YES;
@@ -187,8 +187,13 @@
 {
 	[self.userPhoneTextField resignFirstResponder];
 	[self.navigationItem setRightBarButtonItems:nil];
-	[self verifyInputFields];
 	[self setFrameOffset:kDefaultContainerYOffset];
+	[self checkForChanges];
+}
+
+- (void)checkForChanges
+{
+	[self verifyInputFields];
 	[self checkForDoneButton];
 }
 
@@ -197,7 +202,8 @@
 	if (![self.userPhoneTextField.text isEqualToString:self.localUser.phone] ||
 			![self.userNameTextField.text isEqualToString:self.localUser.fullName] ||
 			![self.userMailTextField.text isEqualToString:self.localUser.email] ||
-			![self.userStatusTextView.text isEqualToString:self.oldUserStatusString]) {
+			(![self.userStatusTextView.text isEqualToString:self.oldUserStatusString] &&
+					![self.userStatusTextView.text isEqualToString:kEmptyString])) {
 		self.isUserDataChanged = YES;
 	} else {
 		self.isUserDataChanged = NO;
@@ -274,6 +280,7 @@
 
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
+	[self checkForChanges];
 	[self setFrameOffset:kUserStatusContainerYOffset];
 	if (self.navigationItem.rightBarButtonItems) {
 		[self.navigationItem setRightBarButtonItems:nil];
@@ -299,7 +306,7 @@
         } else {
             self.isUserDataChanged = NO;
         }
-        [self checkForDoneButton];
+		[self checkForChanges];
         [textView resignFirstResponder];
         CGRect r = self.containerView.frame;
         r.origin.y = 0;
