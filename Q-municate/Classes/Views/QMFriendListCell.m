@@ -41,8 +41,13 @@
     }
     self.userImage.layer.masksToBounds = YES;
     // full name
-    self.fullName.attributedText = [[NSAttributedString alloc] initWithString:user.fullName];
-    
+	if (!user.fullName || !user.fullName.length) {
+		NSLog(@"%@", user);
+		self.fullName.text = kEmptyString;
+	} else {
+		self.fullName.text = user.fullName;
+	}
+
     self.addToFriendsButton.tag = indexPath.row;
     self.addToFriendsButton.hidden =YES;
     

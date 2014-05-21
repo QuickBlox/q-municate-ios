@@ -67,6 +67,7 @@ typedef NS_ENUM(NSUInteger, QMPasswordCheckState) {
 	[userDefaults setObject:@(YES) forKey:kDidLogout];
     [userDefaults setObject:kEmptyString forKey:kUserStatusText];
     [userDefaults synchronize];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kInviteFriendsDataSourceShouldRefreshNotification object:nil];
     [[QMAuthService shared] destroySessionWithCompletion:^(BOOL success) {
         if (success) {
             self.tabBarController.selectedIndex = 0;
@@ -264,6 +265,8 @@ typedef NS_ENUM(NSUInteger, QMPasswordCheckState) {
             [self showErrorAlertWithMessage:kAlertBodyPasswordIsShortString];
         } else {
             [QMUtilities createIndicatorView];
+			[[NSUserDefaults standardUserDefaults] setObject:password forKey:kPassword];
+			[[NSUserDefaults standardUserDefaults] synchronize];
             // update user's password:
             QBUUser *me = [QMContactList shared].me;
             NSString *passwordToChange = me.password;
@@ -276,6 +279,9 @@ typedef NS_ENUM(NSUInteger, QMPasswordCheckState) {
                     [[QMContactList shared] setMe:user];
                     
                     [QMUtilities removeIndicatorView];
+					[[NSUserDefaults standardUserDefaults] removeObjectForKey:kPassword];
+					[[NSUserDefaults standardUserDefaults] synchronize];
+					[self logOut];
                     [[[UIAlertView alloc] initWithTitle:kAlertTitleSuccessString message:kAlertBodyPasswordChangedString delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
                 }
             }];

@@ -85,6 +85,7 @@ static NSString *const kChatDidFailWithError			= @"kChatDidFailWithError";
 static NSString *const kChatDidSendMessage				= @"kChatDidSendMessage";
 
 static NSString *const kChatRoomListUpdateNotification	= @"kChatRoomListUpdateNotification";
+static NSString *const kInviteFriendsDataSourceShouldRefreshNotification 	 = @"kInviteFriendsDataSourceShouldRefreshNotification";
 
 
 //****************** Calls Notifications  ***********************
@@ -140,7 +141,7 @@ static NSString *const kStatusOnlineString              = @"Online";
 static NSString *const kStatusOfflineString             = @"Offline";
 
 static NSString *const kMailSubjectString               = @"Q-municate";
-static NSString *const kMailBodyString                  = @"Join us in Q-municate!";
+static NSString *const kMailBodyString                  = @"<a href='http://quickblox.com/'>Join us in Q-municate!</a>";
 static NSString *const kButtonTitleDoneString           = @"Done";
 
 static NSString *const kErrorKeyFromDictionaryString    	= @"error";

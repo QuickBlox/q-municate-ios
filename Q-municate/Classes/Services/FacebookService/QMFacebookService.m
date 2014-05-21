@@ -29,7 +29,7 @@
                                          @"caption" : @"By QuickBlox",
                                          @"description" : @"Join to new world of audio & video calls",
                                          @"place":@"155021662189",
-                                         @"message": @"Weeery Nice!"
+                                         @"message": @"Very Nice!"
                                          } mutableCopy];
     
     postParams[@"tags"] = facebookIDs;

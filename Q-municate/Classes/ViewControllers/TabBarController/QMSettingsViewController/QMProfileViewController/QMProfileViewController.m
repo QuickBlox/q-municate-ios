@@ -14,6 +14,13 @@
 #import "QMAuthService.h"
 #import "QMUtilities.h"
 
+#define kHintColor [UIColor colorWithRed:187/255.0f green:192/255.0f blue:202/255.0f alpha:1.0f]
+#define kDefaultContainerYOffset	0.0f
+#define kUserNameContainerYOffset	-40.0f
+#define kUserMailContainerYOffset	-90.0f
+#define kUserPhoneContainerYOffset	-150.0f
+#define kUserStatusContainerYOffset	-170.0f
+
 @interface QMProfileViewController ()
 
 @property (nonatomic) BOOL isUserDataChanged;
@@ -35,7 +42,9 @@
     self.oldUserDataDictionary = [[NSUserDefaults standardUserDefaults] objectForKey:kUserDataInfoDictionary];
     self.oldUserStatusString = [[NSUserDefaults standardUserDefaults] objectForKey:kUserStatusText];
     self.localUser = [QMContactList shared].me;
-    
+    if (!self.localUser.phone) {
+		self.localUser.phone = kEmptyString;
+    }
     self.userNameTextField.text = self.localUser.fullName;
     self.userMailTextField.text = self.localUser.email;
     self.userPhoneTextField.text = self.localUser.phone;
@@ -44,7 +53,7 @@
 		self.oldUserStatusString = kSettingsProfileDefaultStatusString;
 	}
 	if ([self.oldUserStatusString isEqualToString:kSettingsProfileDefaultStatusString]) {
-		[self.userStatusTextView setTextColor:[UIColor colorWithRed:148/255.0f green:148/255.0f blue:148/255.0f alpha:1.0f]];
+		[self.userStatusTextView setTextColor:kHintColor];
 	} else {
 		[self.userStatusTextView setTextColor:[UIColor blackColor]];
 	}
@@ -106,12 +115,19 @@
 #pragma mark - TextFieldDelegate
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
+	[self checkForChanges];
 	if (textField == self.userPhoneTextField) {
 		[self showNavDoneButton];
+		[self setFrameOffset:kUserPhoneContainerYOffset];
 	} else {
 		if (self.navigationItem.rightBarButtonItems) {
 			[self.navigationItem setRightBarButtonItems:nil];
 		}
+	}
+	if (textField == self.userNameTextField) {
+		[self setFrameOffset:kUserNameContainerYOffset];
+	} else if (textField == self.userMailTextField) {
+		[self setFrameOffset:kUserMailContainerYOffset];
 	}
 }
 
@@ -122,9 +138,9 @@
 		[self showAlertWithMessage:kSettingsProfileMessageWarningString];
 		return NO;
 	}
-	[self verifyInputFields];
-    [self checkForDoneButton];
+	[self checkForChanges];
     [textField resignFirstResponder];
+	[self setFrameOffset:kDefaultContainerYOffset];
     return YES;
 }
 
@@ -151,7 +167,7 @@
 		resultTextViewString = kSettingsProfileDefaultStatusString;
 	}
 	if ([resultTextViewString isEqualToString:kSettingsProfileDefaultStatusString]) {
-		[self.userStatusTextView setTextColor:[UIColor colorWithRed:148/255.0f green:148/255.0f blue:148/255.0f alpha:1.0f]];
+		[self.userStatusTextView setTextColor:kHintColor];
 	}
 	return resultTextViewString;
 }
@@ -171,6 +187,12 @@
 {
 	[self.userPhoneTextField resignFirstResponder];
 	[self.navigationItem setRightBarButtonItems:nil];
+	[self setFrameOffset:kDefaultContainerYOffset];
+	[self checkForChanges];
+}
+
+- (void)checkForChanges
+{
 	[self verifyInputFields];
 	[self checkForDoneButton];
 }
@@ -180,7 +202,8 @@
 	if (![self.userPhoneTextField.text isEqualToString:self.localUser.phone] ||
 			![self.userNameTextField.text isEqualToString:self.localUser.fullName] ||
 			![self.userMailTextField.text isEqualToString:self.localUser.email] ||
-			![self.userStatusTextView.text isEqualToString:self.oldUserStatusString]) {
+			(![self.userStatusTextView.text isEqualToString:self.oldUserStatusString] &&
+					![self.userStatusTextView.text isEqualToString:kEmptyString])) {
 		self.isUserDataChanged = YES;
 	} else {
 		self.isUserDataChanged = NO;
@@ -257,11 +280,20 @@
 
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
-    CGRect r = self.containerView.frame;
-    r.origin.y = r.origin.y - 80;
-    [UIView animateWithDuration:0.3f animations:^{
-        [self.containerView setFrame:r];
-    }];
+	[self checkForChanges];
+	[self setFrameOffset:kUserStatusContainerYOffset];
+	if (self.navigationItem.rightBarButtonItems) {
+		[self.navigationItem setRightBarButtonItems:nil];
+	}
+}
+
+- (void)setFrameOffset:(CGFloat)yOffset
+{
+	CGRect r = self.containerView.frame;
+	r.origin.y = yOffset;
+	[UIView animateWithDuration:0.3f animations:^{
+		[self.containerView setFrame:r];
+	}];
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
@@ -274,7 +306,7 @@
         } else {
             self.isUserDataChanged = NO;
         }
-        [self checkForDoneButton];
+		[self checkForChanges];
         [textView resignFirstResponder];
         CGRect r = self.containerView.frame;
         r.origin.y = 0;
