@@ -12,6 +12,7 @@
 #import "QMContactList.h"
 #import "QMChatService.h"
 #import "QMChatRoomListDataSource.h"
+#import "QMCreateNewChatController.h"
 #import "QMUtilities.h"
 
 static NSString *const ChatListCellIdentifier = @"ChatListCell";
@@ -33,8 +34,10 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     // Do any additional setup after loading the view.
 //    self.dataSource = [QMChatRoomListDataSource new];
     
-    [self loadDilogs];
-    [QMUtilities createIndicatorView];
+    if ([QMChatService shared].allDialogsAsDictionary == nil || [[QMChatService shared].allDialogsAsDictionary count] == 0) {
+        [self loadDilogs];
+        [QMUtilities createIndicatorView];
+    }
     
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatAddedNewRoom:) name:kChatRoomListUpdateNotification object:nil];
@@ -100,13 +103,17 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    QMChatViewController *childController = (QMChatViewController *)segue.destinationViewController;
-    QBChatDialog *dialog = (QBChatDialog *)sender;
-    childController.chatDialog = dialog;
-    if (dialog.type == QBChatDialogTypePrivate) {
-        QBUUser *opponent = [[QMContactList shared] searchFriendFromChatDialog:dialog];
-        childController.opponent = opponent;
-        childController.chatName = opponent.fullName;
+    if ([segue.destinationViewController isKindOfClass:[QMChatViewController class]]) {
+        QMChatViewController *childController = (QMChatViewController *)segue.destinationViewController;
+        QBChatDialog *dialog = (QBChatDialog *)sender;
+        childController.chatDialog = dialog;
+        if (dialog.type == QBChatDialogTypePrivate) {
+            QBUUser *opponent = [[QMContactList shared] searchFriendFromChatDialog:dialog];
+            childController.opponent = opponent;
+            childController.chatName = opponent.fullName;
+        }
+    } else if ([segue.destinationViewController isKindOfClass:[QMCreateNewChatController class]]) {
+        
     }
 }
 
@@ -135,6 +142,14 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 {
     [QMUtilities removeIndicatorView];
     [self reloadTableView];
+}
+
+
+#pragma mark - Actions
+
+- (IBAction)createNewDialog:(id)sender
+{
+    [self performSegueWithIdentifier:@"CreateNewChatSegue" sender:nil];
 }
 
 @end

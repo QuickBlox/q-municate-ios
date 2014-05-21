@@ -55,9 +55,9 @@
     [super viewDidAppear:NO];
 
 	// if to be more correct, 'isLoggedIn' means the 'remember me' opt is on
-    BOOL isLoggedIn = [[[NSUserDefaults standardUserDefaults] objectForKey:kRememberMe] boolValue];
+    BOOL isRememberMeOn = [[[NSUserDefaults standardUserDefaults] objectForKey:kRememberMe] boolValue];
     BOOL isLoggedOut = [[[NSUserDefaults standardUserDefaults] objectForKey:kDidLogout] boolValue];
-    if (isLoggedIn && !isLoggedOut) {
+    if (isRememberMeOn && !isLoggedOut) {
         if (![QMAuthService shared].isSessionCreated) {
             [QMUtilities createIndicatorView];
             [[QMAuthService shared] startSessionWithBlock:^(BOOL success, NSError *error) {
@@ -76,6 +76,8 @@
 						if (!user.password) {
 						    user.password = password;
 						}
+                        
+                        [[QMChatService shared] fetchAllDialogs];
                         [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
                             if (success) {
                                 [[QMContactList shared] retrieveFriendsUsingBlock:^(BOOL success) {

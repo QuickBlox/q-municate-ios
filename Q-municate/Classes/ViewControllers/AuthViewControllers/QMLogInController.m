@@ -83,6 +83,10 @@
         user.password = self.passwordField.text;
         [QMContactList shared].me = user;
         
+        // fetch dialogs:
+        [[QMChatService shared] fetchAllDialogs];
+        
+        // login to chat:
         [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
             if (success) {
                 [[QMContactList shared] retrieveFriendsUsingBlock:^(BOOL success) {
@@ -106,6 +110,10 @@
         }
         // save me:
         [[QMContactList shared] setMe:user];
+        
+        // fetch dialogs:
+        [[QMChatService shared] fetchAllDialogs];
+        
         if (user.blobID == 0) {
             [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
                 if (success) {

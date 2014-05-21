@@ -247,7 +247,7 @@
 
 - (void)sendMessage:(QBChatMessage *)message
 {
-	[[QBChat instance] sendMessage:message];
+	[[QBChat instance] sendMessage:message]; 
     
     // get dialog entity with current user:
     NSString *kRecipientID = [@(message.recipientID) stringValue];
@@ -371,6 +371,8 @@
     dialog.type = QBChatDialogTypePrivate;
     dialog.occupantIDs = @[[@(ID) stringValue]];
     dialog.ID = kUserID;
+    
+    self.allDialogsAsDictionary[kUserID] = dialog;
     
     return dialog;
 }

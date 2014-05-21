@@ -73,7 +73,7 @@ static CGFloat const rowHeight = 60.0;
 	NSMutableArray *selectedUsersMArray = self.dataSource.friendsSelectedMArray;
     NSString *chatName = [self chatNameFromUserNames:selectedUsersMArray];
 	NSArray *usersIdArray = [self usersIDFromSelectedUsers:selectedUsersMArray];
-	if ([usersIdArray count] > 1) {
+	if ([usersIdArray count] > 2) {
 		QBChatDialog *chatDialog = [QBChatDialog new];
 		chatDialog.name = chatName;
 		chatDialog.occupantIDs = usersIdArray;
