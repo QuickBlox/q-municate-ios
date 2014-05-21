@@ -81,6 +81,10 @@
 			}
 		}
         [[QMContactList shared] setMe:user];
+        
+        // fetch dialogs:
+        [[QMChatService shared] fetchAllDialogs];
+        
         if (user.blobID == 0) {
             [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
                 if (success) {

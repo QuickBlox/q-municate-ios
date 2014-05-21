@@ -4,7 +4,6 @@
 //
 //  Copyright (c) 2012 QuickBlox. All rights reserved.
 //
-
 // frameworkVersion 1.8.5
 
 #import "Core/BaseServiceFramework.h"

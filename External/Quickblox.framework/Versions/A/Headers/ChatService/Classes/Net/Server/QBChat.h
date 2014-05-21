@@ -161,17 +161,32 @@ typedef enum QBChatServiceError {
  If room name contains ("),(\),(&),('),(/),(:),(<),(>),(@),((),()),(:),(;)  characters - they will be removed.
  As user room nickname we will use user ID
  
+ @warning *Deprecated in QB iOS SDK 1.8.6:* Use method with JID instead
+ 
  @param name Room name
  @param isMembersOnly YES if you want to create room that users cannot enter without being on the member list. If set NO - room will be opened for all users
  @param isPersistent YES if you want to create room that is not destroyed if the last user exits. If set NO - room will be destroyed if the last user exits.
  @return YES if the request was sent successfully. If not - see log.
  */
-- (BOOL)createOrJoinRoomWithName:(NSString *)name membersOnly:(BOOL)isMembersOnly persistent:(BOOL)isPersistent;
+- (BOOL)createOrJoinRoomWithName:(NSString *)name membersOnly:(BOOL)isMembersOnly persistent:(BOOL)isPersistent __attribute__((deprecated("Use method with JID instead")));
+
+/**
+ Create room or join if room with this JID already exist. QBChatDelegate's method 'chatRoomDidEnter:' will be called.
+ As user room nickname we will use user ID
+ 
+ @param roomJID Room JID
+ @param isMembersOnly YES if you want to create room that users cannot enter without being on the member list. If set NO - room will be opened for all users
+ @param isPersistent YES if you want to create room that is not destroyed if the last user exits. If set NO - room will be destroyed if the last user exits.
+ @return YES if the request was sent successfully. If not - see log.
+ */
+- (BOOL)createOrJoinRoomWithJID:(NSString *)roomJID membersOnly:(BOOL)isMembersOnly persistent:(BOOL)isPersistent;
 
 /**
  Create room or join if room with this name already exist. QBChatDelegate's method 'chatRoomDidEnter:' will be called.
  If room name contains (" ") (space) character - it will be replaceed with "_" (underscore) character.
  If room name contains ("),(\),(&),('),(/),(:),(<),(>),(@),((),()),(:),(;)  characters - they will be removed.
+ 
+ @warning *Deprecated in QB iOS SDK 1.8.6:* Use method with JID instead
  
  @param name Room name
  @param nickname User nickname wich will be used in room 
@@ -179,7 +194,19 @@ typedef enum QBChatServiceError {
  @param isPersistent YES if you want to create room that is not destroyed if the last user exits. If set NO - room will be destroyed if the last user exits.
  @return YES if the request was sent successfully. If not - see log.
  */
-- (BOOL)createOrJoinRoomWithName:(NSString *)name nickname:(NSString *)nickname membersOnly:(BOOL)isMembersOnly persistent:(BOOL)isPersistent;
+- (BOOL)createOrJoinRoomWithName:(NSString *)name nickname:(NSString *)nickname membersOnly:(BOOL)isMembersOnly persistent:(BOOL)isPersistent __attribute__((deprecated("Use method with JID instead")));
+
+
+/**
+ Create room or join if room with this JID already exist. QBChatDelegate's method 'chatRoomDidEnter:' will be called.
+ 
+ @param roomJID Room JID
+ @param nickname User nickname wich will be used in room
+ @param isMembersOnly YES if you want to create room that users cannot enter without being on the member list. If set NO - room will be opened for all users
+ @param isPersistent YES if you want to create room that is not destroyed if the last user exits. If set NO - room will be destroyed if the last user exits.
+ @return YES if the request was sent successfully. If not - see log.
+ */
+- (BOOL)createOrJoinRoomWithJID:(NSString *)roomJID nickname:(NSString *)nickname membersOnly:(BOOL)isMembersOnly persistent:(BOOL)isPersistent;
 
 /**
  Join room. QBChatDelegate's method 'chatRoomDidEnter:' will be called

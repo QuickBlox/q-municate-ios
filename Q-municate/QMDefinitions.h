@@ -63,6 +63,7 @@ static NSString *const kStartCallSegueIdentifier      = @"StartCallSegue";
 static NSString *const kChatViewSegueIdentifier       = @"ChatViewSegue";
 static NSString *const kIncomingCallIdentifier        = @"IncomingCallIdentifier";
 static NSString *const kProfileSegueIdentifier        = @"ProfileSegue";
+static NSString *const kCreateNewChatSegueIdentifier  = @"CreateNewChatSegue";
 
 //****************** Cell Identifiers  ********************
 static NSString *const kSettingsVCCellIdentifier      = @"SettingsCellIdentifier";

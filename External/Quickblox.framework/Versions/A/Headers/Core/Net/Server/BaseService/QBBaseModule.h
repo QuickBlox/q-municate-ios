@@ -17,6 +17,7 @@
 @property (nonatomic, retain) QBASessionCreationRequest *sessionCreationRequest;
 
 + (void) createSharedModule;
++ (void) setupEndpoints;
 + (QBBaseModule *) sharedModule;
 
 - (void)reset;

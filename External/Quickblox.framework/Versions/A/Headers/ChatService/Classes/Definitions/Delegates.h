@@ -104,18 +104,38 @@
 /**
  Called when room received message. It will be fired each time when room received message from any user
  
+ @warning *Deprecated in QB iOS SDK 1.8.6:* Use method with JID instead
+ 
  @param message Received message
  @param roomName Name of room which reeived message
  */
-- (void)chatRoomDidReceiveMessage:(QBChatMessage *)message fromRoom:(NSString *)roomName;
+- (void)chatRoomDidReceiveMessage:(QBChatMessage *)message fromRoom:(NSString *)roomName __attribute__((deprecated("Use method with JID instead")));
+
+/**
+ Called when room receives a message.
+ 
+ @param message Received message
+ @param roomJID Room JID
+ */
+- (void)chatRoomDidReceiveMessage:(QBChatMessage *)message fromRoomJID:(NSString *)roomJID;
 
 /**
  Called when received room information. 
  
+ @warning *Deprecated in QB iOS SDK 1.8.6:* Use method with JID instead
+ 
  @param information Room information
  @param roomName Name of room 
  */
-- (void)chatRoomDidReceiveInformation:(NSDictionary *)information room:(NSString *)roomName;
+- (void)chatRoomDidReceiveInformation:(NSDictionary *)information room:(NSString *)roomName __attribute__((deprecated("Use method with JID instead")));
+
+/**
+ Called when received room information.
+ 
+ @param information Room information
+ @param roomJID JID of room
+ */
+- (void)chatRoomDidReceiveInformation:(NSDictionary *)information roomJID:(NSString *)roomJID;
 
 /**
  Fired when room was successfully created

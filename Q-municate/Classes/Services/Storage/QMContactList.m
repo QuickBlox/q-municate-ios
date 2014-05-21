@@ -378,4 +378,28 @@
 	self.contactsToInvite = nil;
 }
 
+- (QBUUser *)searchFriendFromChatDialog:(QBChatDialog *)chatDialog
+{
+    QBUUser *currentUser = nil;
+    for (NSString *ID in chatDialog.occupantIDs) {
+        currentUser = self.friendsAsDictionary[ID];
+        if (currentUser != nil) {
+            return currentUser;
+        }
+    }
+    return nil;
+}
+
+- (NSArray *)searchFriendsFromChatDialog:(QBChatDialog *)chatDialog
+{
+    NSMutableArray *friends = [NSMutableArray new];
+    for (NSString *ID in chatDialog.occupantIDs) {
+        QBUUser *currentUser = self.friendsAsDictionary[ID];
+        if (currentUser != nil) {
+            [friends addObject:currentUser];
+        }
+    }
+    return friends;
+}
+
 @end

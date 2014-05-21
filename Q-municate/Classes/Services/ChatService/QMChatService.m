@@ -222,15 +222,19 @@
 
 - (void)chatDidReceiveMessage:(QBChatMessage *)message
 {
-    // message history for current user by userID:
-    NSString *key = [@(message.senderID) stringValue];
-    NSMutableArray *messageHistory = self.allConversations[key];
-    
-    if (messageHistory == nil) {
-        messageHistory = [@[message] mutableCopy];
-        self.allConversations[key] = messageHistory;
-    } else {
-        [messageHistory addObject:message];
+    // get dialog entity with current user:
+    NSString *kRecipientID = [@(message.senderID) stringValue];
+    QBChatDialog *currentDialog = self.allDialogsAsDictionary[kRecipientID];
+    if (currentDialog != nil) {
+        
+        // get chat history with current dialog id:
+        NSMutableArray *currentHistory = self.allConversations[currentDialog.ID];
+        if (currentHistory != nil) {
+            [currentHistory addObject:message];
+        } else {
+            currentHistory = [@[message] mutableCopy];
+            self.allConversations[currentDialog.ID] = currentHistory;
+        }
     }
     
 	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidReceiveMessage object:nil];
@@ -243,16 +247,21 @@
 
 - (void)sendMessage:(QBChatMessage *)message
 {
-	[[QBChat instance] sendMessage:message];
+	[[QBChat instance] sendMessage:message]; 
     
-    NSString *key = [@(message.recipientID) stringValue];
-    NSMutableArray *messageHistory = self.allConversations[key];
-    
-    if (messageHistory == nil) {
-        messageHistory = [@[message] mutableCopy];
-        self.allConversations[key] = messageHistory;
-    } else {
-        [messageHistory addObject:message];
+    // get dialog entity with current user:
+    NSString *kRecipientID = [@(message.recipientID) stringValue];
+    QBChatDialog *currentDialog = self.allDialogsAsDictionary[kRecipientID];
+    if (currentDialog != nil) {
+        
+        // get chat history with current dialog id:
+        NSMutableArray *currentHistory = self.allConversations[currentDialog.ID];
+        if (currentHistory != nil) {
+            [currentHistory addObject:message];
+        } else {
+            currentHistory = [@[message] mutableCopy];
+            self.allConversations[currentDialog.ID] = currentHistory;
+        }
     }
 }
 
@@ -347,6 +356,28 @@
 }
 
 
+#pragma mark - Chat Utils
+
+- (QBChatDialog *)chatDialogForFriendWithID:(NSUInteger)ID
+{
+    NSString *kUserID = [@(ID) stringValue];
+    QBChatDialog *dialog= self.allDialogsAsDictionary[kUserID];
+    if (dialog != nil) {
+        return dialog;
+        
+    }
+    // create fake dialog:
+    dialog = [[QBChatDialog alloc] init];
+    dialog.type = QBChatDialogTypePrivate;
+    dialog.occupantIDs = @[[@(ID) stringValue]];
+    dialog.ID = kUserID;
+    
+    self.allDialogsAsDictionary[kUserID] = dialog;
+    
+    return dialog;
+}
+
+
 #pragma mark - QBActionStatusDelegate
 
 - (void)completedWithResult:(Result *)result
@@ -370,12 +401,36 @@
 	} else if (result.success && [result isKindOfClass:[QBDialogsPagedResult class]]) {
         QBDialogsPagedResult *dialogsResult = (QBDialogsPagedResult *)result;
         NSArray *dialogs = dialogsResult.dialogs;
-        self.allDialogs = [dialogs mutableCopy];
+        self.allDialogsAsDictionary = [self arrayToDictionary:dialogs];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"ChatDialogsLoaded" object:nil];
         
     }
 }
 
+- (NSMutableDictionary *)arrayToDictionary:(NSArray *)array
+{
+    NSMutableDictionary *dictionaryOfDialogs = [NSMutableDictionary new];
+    for (QBChatDialog *dialog in array) {
+        
+        if (dialog.type != QBChatDialogTypePrivate) {
+            
+            // save group dialogs by roomJID:
+            dictionaryOfDialogs[dialog.roomJID] = dialog;
+            continue;
+        }
+        
+        for (NSString *ID in dialog.occupantIDs) {
+            NSString *meID = [NSString stringWithFormat:@"%lu", (unsigned long)[QMContactList shared].me.ID];
+            
+            // if my ID
+            if (![meID isEqualToString:ID]) {
+                dictionaryOfDialogs[ID] = dialog;
+                break;
+            }
+        }
+    }
+    return dictionaryOfDialogs;
+}
 
 @end

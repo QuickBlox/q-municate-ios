@@ -12,6 +12,7 @@
 #import "QMChatViewController.h"
 #import "QMContactList.h"
 #import "QMUtilities.h"
+#import "QMChatService.h"
 
 @interface QMFriendsDetailsController ()
 
@@ -85,6 +86,9 @@
     // if chat
     if (currentPath.row == 3) {
         QMChatViewController *chatController = (QMChatViewController *)segue.destinationViewController;
+        QBChatDialog *dialog = [[QMChatService shared] chatDialogForFriendWithID:self.currentFriend.ID];
+        chatController.chatDialog = dialog;
+        
         chatController.chatName = self.currentFriend.fullName;
         chatController.opponent = self.currentFriend;
         return;

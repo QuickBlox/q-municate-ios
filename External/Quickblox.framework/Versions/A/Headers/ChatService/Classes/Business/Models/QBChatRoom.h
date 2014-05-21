@@ -36,21 +36,42 @@
  If room name contains ("),(\),(&),('),(/),(:),(<),(>),(@),((),()),(:),(;)  characters - they will be removed.
  As user room nickname we will use user ID
  
+ @warning *Deprecated in QB iOS SDK 1.8.6:* Use method with JID instead
+ 
  @param roomName Room name
  @return QBChatRoom instance
  */
-- (id)initWithRoomName:(NSString *)roomName;
+- (id)initWithRoomName:(NSString *)roomName __attribute__((deprecated("Use method with JID instead")));;
 
 /**
  Init QBChatRoom instance with name & user nickname
  If room name contains (" ") (space) character - it will be replaceed with "_" (underscore) character.
  If room name contains ("),(\),(&),('),(/),(:),(<),(>),(@),((),()),(:),(;)  characters - they will be removed.
  
+ @warning *Deprecated in QB iOS SDK 1.8.6:* Use method with JID instead
+ 
  @param roomName Room name
  @param nickname User nickname wich will be used in room
  @return QBChatRoom instance
  */
-- (id)initWithRoomName:(NSString *)roomName nickname:(NSString *)nickname;
+- (id)initWithRoomName:(NSString *)roomName nickname:(NSString *)nickname __attribute__((deprecated("Use method with JID instead")));
+
+/**
+ Init QBChatRoom instance with JID
+ 
+ @param roomJID Room JID
+ @return QBChatRoom instance
+ */
+- (id)initWithRoomJID:(NSString *)roomJID;
+
+/**
+ Init QBChatRoom instance with JID & user nickname
+ 
+ @param roomJID Room JID
+ @param nickname User nickname wich will be used in room
+ @return QBChatRoom instance
+ */
+- (id)initWithRoomJID:(NSString *)roomJID nickname:(NSString *)nickname;
 
 /**
  Add users to current room. Array users contains users' ids
