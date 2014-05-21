@@ -14,7 +14,7 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
-//    #import <Quickblox/Quickblox.h>
+    #import <Quickblox/Quickblox.h>
     #import <FacebookSDK/FacebookSDK.h>
 
     #import "QMDefinitions.h"
