@@ -113,7 +113,7 @@
         mailController.mailComposeDelegate = self;
         [mailController setToRecipients:emails];
         [mailController setSubject:kMailSubjectString];
-        [mailController setMessageBody:kMailBodyString isHTML:NO];
+        [mailController setMessageBody:kMailBodyString isHTML:YES];
         [self presentViewController:mailController animated:YES completion:^{
             ILog(@"Mail Controller presented");
         }];
