@@ -52,7 +52,6 @@ static CGFloat const kCellHeightOffset = 33.0f;
         if ([self.chatDialog.occupantIDs count] == 1) {    // created now:
             NSMutableArray *emptyHistory = [NSMutableArray new];
             [QMChatService shared].allConversations[self.chatDialog.ID] = emptyHistory;
-            [self resetTableView];
             return;
         }
         
@@ -66,6 +65,13 @@ static CGFloat const kCellHeightOffset = 33.0f;
             [self resetTableView];
         }];
     }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self resetTableView];
+    
+    [super viewWillAppear:NO];
 }
 
 - (void)updateChatDialog
@@ -178,7 +184,11 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (void)resetTableView
 {
     self.chatHistory = [QMChatService shared].allConversations[self.chatDialog.ID];
+    
     [self.tableView reloadData];
+    if ([self.chatHistory count] >2) {
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.chatHistory count]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    }
 }
 
 #pragma mark - Keyboard
@@ -208,7 +218,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 		BOOL isKeyboardShow = !(keyboardFrame.origin.y == [[UIScreen mainScreen] bounds].size.height);
 
 		NSInteger keyboardHeight = isKeyboardShow ? - keyboardFrame.size.height +49.0f: keyboardFrame.size.height -49.0f;
-
+        
 		[UIView animateWithDuration:animationDuration delay:0.0f options:animationCurve << 16 animations:^
 		{
 			CGRect frame = self.view.frame;
@@ -217,7 +227,11 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 			[self.view layoutIfNeeded];
 
-		} completion:nil];
+		} completion:^(BOOL finished) {
+            if ([self.chatHistory count] >2) {
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.chatHistory count]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+            }
+        }];
 	}
 }
 

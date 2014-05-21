@@ -74,24 +74,18 @@ static CGFloat const rowHeight = 60.0;
     NSString *chatName = [self chatNameFromUserNames:selectedUsersMArray];
 	NSArray *usersIdArray = [self usersIDFromSelectedUsers:selectedUsersMArray];
 	if ([usersIdArray count] > 2) {
+        
+        // create new dialog entity:
 		QBChatDialog *chatDialog = [QBChatDialog new];
 		chatDialog.name = chatName;
 		chatDialog.occupantIDs = usersIdArray;
 		chatDialog.type = QBChatDialogTypeGroup;
 		[[QMChatService shared] createNewDialog:chatDialog withCompletion:^(QBChatDialog *dialog, NSError *error) {
-			[[QMChatService shared] createRoomWithName:dialog.name withCompletion:^(QBChatRoom *chatRoom, NSError *roomCreationError) {
-				//
-			}];
+			// save to dialogs dictionary:
+            [QMChatService shared].allDialogsAsDictionary[dialog.roomJID] = dialog;
 
 			[self performSegueWithIdentifier:kChatViewSegueIdentifier sender:dialog];
 		}];
-
-
-//		[[QMChatService shared] createRoomWithName:chatName withCompletion:^(QBChatRoom *room, NSError *error) {
-//			if (!error) {
-//				[[QMChatService shared] addMembersArray:usersIdArray toRoom:room];
-//			}
-//		}];
 	} else {
 		NSDictionary *dialogDictionary = @{
 				kChatOpponentName 		: chatName,
@@ -182,12 +176,11 @@ static CGFloat const rowHeight = 60.0;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     QMChatViewController *childController = (QMChatViewController *)segue.destinationViewController;
-    if ([self.dataSource.friendsSelectedMArray count] > 1) {
-		childController.chatDialog = sender;
-	} else {
-		childController.opponent = sender;
+    if ([self.dataSource.friendsSelectedMArray count] > 2) {
+        QBChatDialog *dialog = (QBChatDialog *)sender;
+		childController.chatDialog = dialog;
+        childController.chatName = dialog.name;
 	}
-
 }
 
 - (BOOL)isChecked:(QBUUser *)user
@@ -221,6 +214,10 @@ static CGFloat const rowHeight = 60.0;
 	for (QBUUser *user in users) {
 		[usersIDMArray addObject:[NSNumber numberWithLong:user.ID]];
 	}
+    // also add me:
+    NSNumber *myID = @([QMContactList shared].me.ID);
+    [usersIDMArray addObject:myID];
+    
 	return usersIDMArray;
 }
 

@@ -111,6 +111,8 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
             QBUUser *opponent = [[QMContactList shared] searchFriendFromChatDialog:dialog];
             childController.opponent = opponent;
             childController.chatName = opponent.fullName;
+        } else {
+            childController.chatName = dialog.name;
         }
     } else if ([segue.destinationViewController isKindOfClass:[QMCreateNewChatController class]]) {
         
@@ -122,13 +124,8 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
 - (void)localChatDidReceiveMessage:(NSNotification *)notification
 {
-	NSLog(@"userInfo: %@", notification.userInfo);
-	/*
-	* checking for room existence
-	*  creating room for peer-to-peer
-	* key(id) -> value(historyArray)
-	* ну или как-то так
-	* */
+    //
+    
 }
 
 - (void)localChatAddedNewRoom:(NSNotification *)notification

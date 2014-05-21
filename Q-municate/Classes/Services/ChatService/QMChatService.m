@@ -272,10 +272,10 @@
 
 #pragma mark - Group Chat
 
-- (void)createRoomWithName:(NSString *)groupChatNameString withCompletion:(QBChatRoomResultBlock)block
+- (void)createRoomWithRoomJID:(NSString *)roomJID withCompletion:(QBChatRoomResultBlock)block
 {
 	_chatRoomResultBlock = block;
-	[[QBChat instance] createOrJoinRoomWithName:groupChatNameString membersOnly:YES persistent:NO];
+	[[QBChat instance] createOrJoinRoomWithJID:roomJID membersOnly:YES persistent:NO];
 }
 
 - (void)createNewDialog:(QBChatDialog *)chatDialog withCompletion:(QBChatDialogResultBlock)block
@@ -390,14 +390,22 @@
 				_chatDialogResultBlock = nil;
 			}
 		}
-	} else if (result.success && [result isKindOfClass:[QBChatHistoryMessageResult class]]) {
-		if (_chatDialogHistoryBlock) {
-			NSMutableArray *messagesMArray = ((QBChatHistoryMessageResult *)result).messages;
-			if (messagesMArray) {
-				_chatDialogHistoryBlock(messagesMArray, nil);
-				_chatDialogHistoryBlock = nil;
-			}
-		}
+	} else if ([result isKindOfClass:[QBChatHistoryMessageResult class]]) {
+        
+        if (result.success) {
+            if (_chatDialogHistoryBlock) {
+                NSMutableArray *messagesMArray = ((QBChatHistoryMessageResult *)result).messages;
+                if (messagesMArray) {
+                    _chatDialogHistoryBlock(messagesMArray, nil);
+                    _chatDialogHistoryBlock = nil;
+                } else {
+                    messagesMArray = [NSMutableArray new];
+                    _chatDialogHistoryBlock(messagesMArray, nil);
+                    _chatDialogHistoryBlock = nil;
+                }
+            }
+        }
+        
 	} else if (result.success && [result isKindOfClass:[QBDialogsPagedResult class]]) {
         QBDialogsPagedResult *dialogsResult = (QBDialogsPagedResult *)result;
         NSArray *dialogs = dialogsResult.dialogs;

@@ -32,7 +32,7 @@
         
         self.groupMembersNumb.hidden = NO;
         self.groupNumbBackground.hidden = NO;
-        self.groupMembersNumb.text = [@(chatDialog.unreadMessageCount) stringValue];
+        self.groupMembersNumb.text = [@([chatDialog.occupantIDs count]) stringValue];
         
     } else{
         //Private:

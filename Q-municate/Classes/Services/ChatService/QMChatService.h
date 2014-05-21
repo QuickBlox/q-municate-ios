@@ -33,7 +33,7 @@
 - (void)fetchAllDialogs;
 
 - (void)sendMessage:(QBChatMessage *)message;
-- (void)createRoomWithName:(NSString *)groupChatNameString withCompletion:(QBChatRoomResultBlock)block;
+- (void)createRoomWithRoomJID:(NSString *)roomJID withCompletion:(QBChatRoomResultBlock)block;
 
 #pragma mark - Chat Utils
 
