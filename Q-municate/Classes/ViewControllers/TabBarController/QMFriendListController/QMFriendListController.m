@@ -327,13 +327,21 @@
             [self removeSearchBarAnimated:NO];
         }
         _searchBarIsShowed = !_searchBarIsShowed;
-        [self performSegueWithIdentifier:kDetailsSegueIdentifier sender:currentUser];
+		QMFriendListCell *cell = (QMFriendListCell *) [tableView cellForRowAtIndexPath:indexPath];
+		NSDictionary *userDetailsDictionary = @{
+				@"user" : currentUser,
+				@"userPhoto" : cell.userImage.image
+		};
+		[self performSegueWithIdentifier:kDetailsSegueIdentifier sender:userDetailsDictionary];
 	}
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     ((QMFriendsDetailsController *)segue.destinationViewController).currentFriend = sender;
+	QMFriendsDetailsController *vc = segue.destinationViewController;
+	vc.currentFriend = sender[@"user"];
+	vc.userPhotoImage = sender[@"userPhoto"];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
