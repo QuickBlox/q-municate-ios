@@ -36,6 +36,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
     // Do any additional setup after loading the view.
     self.title = self.chatName;
     
+    // UI & observers:
     [self configureInputMessageViewShadow];
     [self addKeyboardObserver];
 	[self addChatObserver];
@@ -43,19 +44,36 @@ static CGFloat const kCellHeightOffset = 33.0f;
     
     // update unread message count:
     [self updateChatDialog];
+    
+    // if dialog is group chat:
+    if (self.chatDialog.type != QBChatDialogTypePrivate) {
+        
+        // if user is joined, return
+        if ([self userIsJoinedRoomForDialog:self.chatDialog]) {
+            
+            self.chatRoom = [QMChatService shared].allChatRoomsAsDictionary[self.chatDialog.roomJID];
+            return;
+        }
+        
+        // enter chat room:
+        [QMUtilities createIndicatorView];
+        [[QMChatService shared] joinRoomWithRoomJID:self.chatDialog.roomJID];
+        return;
+    }
 
+    // for private chat:
     // retrieve chat history:
     self.chatHistory = [QMChatService shared].allConversations[self.chatDialog.ID];
     if (self.chatHistory == nil) {
         
-#warning fix it!
+        // if new chat dialog (not from server):
         if ([self.chatDialog.occupantIDs count] == 1) {    // created now:
             NSMutableArray *emptyHistory = [NSMutableArray new];
             [QMChatService shared].allConversations[self.chatDialog.ID] = emptyHistory;
             return;
         }
         
-        // fetch chat history from server:
+        // fetch chat history from server for p2p chat:
         [QMUtilities createIndicatorView];
         [[QMChatService shared] getMessageHistoryWithDialogID:self.chatDialog.ID withCompletion:^(NSArray *chatDialogHistoryArray, NSError *error) {
             [QMUtilities removeIndicatorView];
@@ -89,6 +107,10 @@ static CGFloat const kCellHeightOffset = 33.0f;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidNotSendMessage:) name:kChatDidNotSendMessage object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidFailWithError:) name:kChatDidFailWithError object:nil];
+    
+    // chat room:
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatRoomDidEnterNotification) name:kChatRoomDidEnterNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatRoomDidReveiveMessage) name:kChatRoomDidReceiveMessageNotification object:nil];
 }
 
 - (void)configureNavBarButtons
@@ -280,6 +302,31 @@ static CGFloat const kCellHeightOffset = 33.0f;
 }
 
 
+// ************************** CHAT ROOM **********************************
+- (void)chatRoomDidEnterNotification
+{
+    self.chatRoom = [QMChatService shared].allChatRoomsAsDictionary[self.chatDialog.roomJID];
+    
+    if (self.chatHistory != nil) {
+        return;
+    }
+    
+    // load history:
+    [[QMChatService shared] getMessageHistoryWithDialogID:self.chatDialog.ID withCompletion:^(NSArray *chatDialogHistoryArray, NSError *error) {
+        [QMUtilities removeIndicatorView];
+        if (chatDialogHistoryArray != nil) {
+            [QMChatService shared].allConversations[self.chatDialog.ID] = chatDialogHistoryArray;
+        }
+        [self resetTableView];
+    }];
+}
+
+- (void)chatRoomDidReveiveMessage
+{
+    [self resetTableView];
+}
+
+
 #pragma mark -
 - (IBAction)sendMessageButtonClicked:(UIButton *)sender
 {
@@ -293,11 +340,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 			[[QMChatService shared] sendMessage:chatMessage];
 
 		} else { // group chat
-			if ([self.chatDialog.occupantIDs count] > 1) {
-				[[QMChatService shared] postMessage:chatMessage withRoom:[QMChatService shared].chatRoom withCompletion:^(QBChatDialog *dialog, NSError *error) {
-					//
-				}];
-			}
+            [[QMChatService shared] sendMessage:chatMessage.text toRoom:self.chatRoom];
 		}
         self.inputMessageTextField.text = @"";
         [self resetTableView];
@@ -309,6 +352,15 @@ static CGFloat const kCellHeightOffset = 33.0f;
 	[self.dataSource addMessageToHistory:chatMessage];
 	[self clearMessageInputTextField];
 	[self.tableView reloadData];
+}
+
+- (BOOL)userIsJoinedRoomForDialog:(QBChatDialog *)dialog
+{
+    QBChatRoom *currentRoom = [QMChatService shared].allChatRoomsAsDictionary[dialog.roomJID];
+    if (currentRoom == nil || !currentRoom.isJoined) {
+        return NO;
+    }
+    return YES;
 }
 
 #pragma mark -

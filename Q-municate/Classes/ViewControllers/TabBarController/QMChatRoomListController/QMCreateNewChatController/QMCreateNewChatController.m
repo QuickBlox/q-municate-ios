@@ -73,29 +73,18 @@ static CGFloat const rowHeight = 60.0;
 	NSMutableArray *selectedUsersMArray = self.dataSource.friendsSelectedMArray;
     NSString *chatName = [self chatNameFromUserNames:selectedUsersMArray];
 	NSArray *usersIdArray = [self usersIDFromSelectedUsers:selectedUsersMArray];
-	if ([usersIdArray count] > 2) {
         
-        // create new dialog entity:
-		QBChatDialog *chatDialog = [QBChatDialog new];
-		chatDialog.name = chatName;
-		chatDialog.occupantIDs = usersIdArray;
-		chatDialog.type = QBChatDialogTypeGroup;
-		[[QMChatService shared] createNewDialog:chatDialog withCompletion:^(QBChatDialog *dialog, NSError *error) {
-			// save to dialogs dictionary:
-            [QMChatService shared].allDialogsAsDictionary[dialog.roomJID] = dialog;
+    // create new dialog entity:
+    QBChatDialog *chatDialog = [QBChatDialog new];
+    chatDialog.name = chatName;
+    chatDialog.occupantIDs = usersIdArray;
+    chatDialog.type = QBChatDialogTypeGroup;
+    [[QMChatService shared] createNewDialog:chatDialog withCompletion:^(QBChatDialog *dialog, NSError *error) {
+        // save to dialogs dictionary:
+        [QMChatService shared].allDialogsAsDictionary[dialog.roomJID] = dialog;
 
-			[self performSegueWithIdentifier:kChatViewSegueIdentifier sender:dialog];
-		}];
-	} else {
-		NSDictionary *dialogDictionary = @{
-				kChatOpponentName 		: chatName,
-				kChatOpponentHistory	:[@[] mutableCopy]
-		};
-		NSDictionary *opponentDictionary = @{
-				usersIdArray[0]			: dialogDictionary
-		};
-	[self performSegueWithIdentifier:kChatViewSegueIdentifier sender:self.dataSource.friendsSelectedMArray[0]];
-	}
+        [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:dialog];
+    }];
 }
 
 #pragma mark - UITableViewDataSource
@@ -146,25 +135,13 @@ static CGFloat const rowHeight = 60.0;
 
 - (void)configureCreateChatButton
 {
-	if (![self.dataSource.friendsSelectedMArray count]) {
+	if ([self.dataSource.friendsSelectedMArray count] <=2) {
 		[self.createGroupButton setEnabled:NO];
 		[self.createGroupButton setAlpha:0.5f];
-		[self setPrivateChatTitle];
-	} else {
-		[self.createGroupButton setEnabled:YES];
-		[self.createGroupButton setAlpha:1.0f];
-		if ([self.dataSource.friendsSelectedMArray count] == 1) {
-			[self setPrivateChatTitle];
-		} else if ([self.dataSource.friendsSelectedMArray count] > 1) {
-			[self setGroupChatTitle];
-		}
+        return;
 	}
-}
-
-- (void)setPrivateChatTitle
-{
-	[self.createGroupButton setTitle:kButtonTitleCreatePrivateChatString forState:UIControlStateNormal];
-	[self.createGroupButton setTitle:kButtonTitleCreatePrivateChatString forState:UIControlStateHighlighted];
+    [self.createGroupButton setEnabled:YES];
+    [self.createGroupButton setAlpha:1.0f];
 }
 
 - (void)setGroupChatTitle

@@ -24,18 +24,18 @@
 	return self;
 }
 
-- (void)addMessageToHistory:(QBChatMessage *)chatMessage
-{
-	[self saveMessageLocally:chatMessage];
-}
+//- (void)addMessageToHistory:(QBChatMessage *)chatMessage
+//{
+//	[self saveMessageLocally:chatMessage];
+//}
 
-- (void)saveMessageLocally:(QBChatMessage *)chatMessage
-{
-	[[QMChatService shared] postMessage:chatMessage withRoom:[QMChatService shared].chatRoom withCompletion:^(QBChatDialog *dialog, NSError *error) {
-		if (!error) {
-		    //
-		}
-	}];
+//- (void)saveMessageLocally:(QBChatMessage *)chatMessage
+//{
+//	[[QMChatService shared] postMessage:chatMessage withRoom:[QMChatService shared].chatRoom withCompletion:^(QBChatDialog *dialog, NSError *error) {
+//		if (!error) {
+//		    //
+//		}
+//	}];
 
 //	// getting history
 //	NSMutableArray *chatLocalHistoryMArray;
@@ -89,7 +89,7 @@
 //	* but to refresh last message as well
 //	* */
 //	[[NSNotificationCenter defaultCenter] postNotificationName:kChatRoomListUpdateNotification object:nil];
-}
+//}
 
 - (NSDictionary *)dictionaryFromMessage:(QBChatMessage *)chatMessage
 {
