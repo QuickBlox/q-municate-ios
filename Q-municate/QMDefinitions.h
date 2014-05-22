@@ -89,7 +89,7 @@ static NSString *const kInviteFriendsDataSourceShouldRefreshNotification 	 = @"k
 
 
 //****************** Calls Notifications  ***********************
-static NSString *const kIncomingCallNotification = @"Incomming Call";
+static NSString *const kIncomingCallNotification = @"Incoming Call";
 static NSString *const kCallWasStoppedNotification = @"Call was stopped";
 static NSString *const kCallWasRejectedNotification = @"Call Was Rejected";
 static NSString *const kCallUserDidNotAnswerNotification = @"User didn't answer";

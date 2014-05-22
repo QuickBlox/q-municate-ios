@@ -43,10 +43,10 @@
         self.userNameLabel.text = @"Unknown caller";
     }
     if (isVideoCall) {
-        self.incomingCallLabel.text = @"Incomming video call";
+        self.incomingCallLabel.text = @"Incoming video call";
         [self.acceptButton setImage:[ UIImage imageNamed:@"answer-video"] forState:UIControlStateNormal];
     } else {
-        self.incomingCallLabel.text = @"Incomming call";
+        self.incomingCallLabel.text = @"Incoming call";
         [self.acceptButton setImage:[ UIImage imageNamed:@"answer"] forState:UIControlStateNormal];
     }
     
@@ -100,10 +100,10 @@
     
     [[QMUtilities shared] playSoundOfType:QMSoundPlayTypeEndOfCall];
     
-    [self performSelector:@selector(dismissIncommingCallController) withObject:self afterDelay:1.0f];
+    [self performSelector:@selector(dismissIncomingCallController) withObject:self afterDelay:1.0f];
 }
 
-- (void)dismissIncommingCallController
+- (void)dismissIncomingCallController
 {
     [[QMUtilities shared] stopPlaying];
     [QMUtilities dismissIncomingCallController:nil];
