@@ -34,14 +34,14 @@
 	// Do any additional setup after loading the view.
     [self configureUserAvatarView];
     
-    [self.userAvatar loadImageWithBlobID:self.currentFriend.blobID];
+	self.userAvatar.image = self.userPhotoImage;
     self.fullName.text = self.currentFriend.fullName;
 
     // online status
     // activity
     NSDate *currentDate = [NSDate date];
     double timeInterval = [currentDate timeIntervalSinceDate:self.currentFriend.lastRequestAt];
-    if (timeInterval <300) {
+    if (timeInterval < 300) {
         self.status.text = kStatusOnlineString;
         self.onlineCircle.hidden = NO;
     } else {

@@ -11,5 +11,6 @@
 @interface QMFriendsDetailsController : UITableViewController
 
 @property (strong, nonatomic) QBUUser *currentFriend;
+@property (strong, nonatomic) UIImage *userPhotoImage;
 
 @end

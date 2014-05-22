@@ -95,7 +95,7 @@
 #pragma mark - UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    CGSize imgViewSize = self.userPhotoImageView.frame.size;
+    CGSize imgViewSize = CGSizeMake(200, 200);
     UIImage *image =  info[UIImagePickerControllerOriginalImage];
     UIImage *scaledImage = [image imageByScalingProportionallyToMinimumSize:imgViewSize];
     [self.userPhotoImageView setImage:scaledImage];
