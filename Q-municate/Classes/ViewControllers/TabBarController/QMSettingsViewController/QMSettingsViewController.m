@@ -65,6 +65,7 @@ typedef NS_ENUM(NSUInteger, QMPasswordCheckState) {
     [[QMContactList shared] clearData];                                   // clear all information about me and my data
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	[userDefaults setObject:@(YES) forKey:kDidLogout];
+	[userDefaults setObject:@(NO) forKey:kSettingsPushNotificationsState];
     [userDefaults setObject:kEmptyString forKey:kUserStatusText];
     [userDefaults synchronize];
 	[[NSNotificationCenter defaultCenter] postNotificationName:kInviteFriendsDataSourceShouldRefreshNotification object:nil];
