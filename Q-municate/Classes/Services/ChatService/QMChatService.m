@@ -272,9 +272,8 @@
 
 #pragma mark - Group Chat
 
-- (void)createRoomWithRoomJID:(NSString *)roomJID withCompletion:(QBChatRoomResultBlock)block
+- (void)joinRoomWithRoomJID:(NSString *)roomJID;
 {
-	_chatRoomResultBlock = block;
 	[[QBChat instance] createOrJoinRoomWithJID:roomJID membersOnly:YES persistent:NO];
 }
 
@@ -290,15 +289,32 @@
 	[[QBChat instance] messagesWithDialogID:dialogIDString delegate:self];
 }
 
-- (void)postMessage:(QBChatMessage *)chatMessage withRoom:(QBChatRoom *)chatRoom withCompletion:(QBChatDialogResultBlock)block
+- (void)sendMessage:(NSString *)message toRoom:(QBChatRoom *)chatRoom
 {
-	_chatDialogResultBlock = block;
-	[[QBChat instance] sendMessage:chatMessage.text toRoom:chatRoom];
+	[[QBChat instance] sendMessage:message toRoom:chatRoom];
 }
 
-- (void)chatRoomDidReceiveMessage:(QBChatMessage *)message fromRoom:(NSString *)roomName
+- (void)chatRoomDidReceiveMessage:(QBChatMessage *)message fromRoomJID:(NSString *)roomJID
 {
-
+    if (message.delayed) {
+        
+        // ignore chat room history:
+        return;
+    }
+    
+    QBChatDialog *currentDialog = self.allDialogsAsDictionary[roomJID];
+    if (currentDialog != nil) {
+        
+        // get chat history with current dialog id:
+        NSMutableArray *currentHistory = self.allConversations[currentDialog.ID];
+        if (currentHistory != nil) {
+            [currentHistory addObject:message];
+        } else {
+            currentHistory = [@[message] mutableCopy];
+            self.allConversations[currentDialog.ID] = currentHistory;
+        }
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:kChatRoomDidReceiveMessageNotification object:nil];
 }
 
 - (void)chatRoomDidReceiveInformation:(NSDictionary *)information room:(NSString *)roomName
@@ -313,12 +329,12 @@
 
 - (void)chatRoomDidEnter:(QBChatRoom *)room
 {
-	//1
-	if (_chatRoomResultBlock) {
-		[QMChatService shared].chatRoom = room;
-		_chatRoomResultBlock(room, nil);
-		_chatRoomResultBlock = nil;
-	}
+    if (self.allChatRoomsAsDictionary == nil) {
+        self.allChatRoomsAsDictionary = [NSMutableDictionary new];
+    }
+    self.allChatRoomsAsDictionary[room.JID] = room;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kChatRoomDidEnterNotification object:nil];
 }
 
 - (void)chatRoomDidNotEnter:(NSString *)roomName error:(NSError *)error

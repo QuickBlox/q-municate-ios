@@ -13,6 +13,7 @@
 
 @property (strong, nonatomic) NSMutableDictionary *allConversations;
 @property (strong, nonatomic) NSMutableDictionary *allDialogsAsDictionary;
+@property (strong, nonatomic) NSMutableDictionary *allChatRoomsAsDictionary;
 
 @property (strong, nonatomic) QBWebRTCVideoChat *activeStream;
 
@@ -31,21 +32,22 @@
 
 // ****************************** Dialogs **************************************
 - (void)fetchAllDialogs;
+- (void)createNewDialog:(QBChatDialog *)chatDialog withCompletion:(QBChatDialogResultBlock)block;
 
 - (void)sendMessage:(QBChatMessage *)message;
-- (void)createRoomWithRoomJID:(NSString *)roomJID withCompletion:(QBChatRoomResultBlock)block;
+- (void)sendMessage:(NSString *)message toRoom:(QBChatRoom *)chatRoom;
+
+- (void)joinRoomWithRoomJID:(NSString *)roomJID;
+
+- (void)getMessageHistoryWithDialogID:(NSString *)dialogIDString withCompletion:(QBChatDialogHistoryBlock)block;
+
 
 #pragma mark - Chat Utils
 
 - (QBChatDialog *)chatDialogForFriendWithID:(NSUInteger)ID;
 
+
 #pragma mark - Audio/Video Calls
-
-- (void)createNewDialog:(QBChatDialog *)chatDialog withCompletion:(QBChatDialogResultBlock)block;
-
-- (void)getMessageHistoryWithDialogID:(NSString *)dialogIDString withCompletion:(QBChatDialogHistoryBlock)block;
-
-- (void)postMessage:(QBChatMessage *)chatMessage withRoom:(QBChatRoom *)chatRoom withCompletion:(QBChatDialogResultBlock)block;
 
 - (void)initActiveStream;                                                                           // for audio calls
 - (void)initActiveStreamWithOpponentView:(UIView *)opponentView ownView:(UIView *)ownView;          // for video calls
