@@ -16,4 +16,8 @@
 @property (nonatomic, strong) NSArray  *usersRecipientsIdArray;
 @property (nonatomic, strong) QBChatDialog *chatDialog;
 @property (nonatomic, strong) QBChatRoom *chatRoom;
+
+/** Flag for create new chat controller. If you create new dialog - set YES. */
+@property (nonatomic, assign) BOOL createdJustNow;
+
 @end

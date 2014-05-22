@@ -222,10 +222,21 @@
 
 - (void)chatDidReceiveMessage:(QBChatMessage *)message
 {
+    // handling invitations to chat:
+    if (message.customParameters[@"room_jid"] != nil) {
+        NSString *roomJID = message.customParameters[@"room_jid"];
+        
+//        [self joinRoomWithRoomJID:roomJID];
+        [self fetchAllDialogs];
+    }
+    
     // get dialog entity with current user:
     NSString *kRecipientID = [@(message.senderID) stringValue];
     QBChatDialog *currentDialog = self.allDialogsAsDictionary[kRecipientID];
     if (currentDialog != nil) {
+        
+        // update dialog:
+        [self updateDialog:currentDialog forLastMessage:message];
         
         // get chat history with current dialog id:
         NSMutableArray *currentHistory = self.allConversations[currentDialog.ID];
@@ -254,6 +265,9 @@
     QBChatDialog *currentDialog = self.allDialogsAsDictionary[kRecipientID];
     if (currentDialog != nil) {
         
+        // update dialog:
+        [self updateDialog:currentDialog forLastMessage:message];
+        
         // get chat history with current dialog id:
         NSMutableArray *currentHistory = self.allConversations[currentDialog.ID];
         if (currentHistory != nil) {
@@ -263,6 +277,32 @@
             self.allConversations[currentDialog.ID] = currentHistory;
         }
     }
+}
+
+- (void)sendInviteMessageToUsers:(NSArray *)users withRoomJID:(NSString *)roomJID
+{
+    QBUUser *me = [QMContactList shared].me;
+    for (QBUUser *user in users) {
+        
+        // create message:
+        QBChatMessage *inviteMessage = [QBChatMessage message];
+        inviteMessage.senderID = me.ID;
+        inviteMessage.recipientID = user.ID;
+        inviteMessage.text = [NSString stringWithFormat:@"%@ created a group conversation", me.fullName];
+        
+        NSMutableDictionary *customParams = [NSMutableDictionary new];
+        customParams[@"room_jid"] = roomJID;
+        inviteMessage.customParameters = customParams;
+        
+        [[QBChat instance] sendMessage:inviteMessage];
+    }
+}
+
+- (void)updateDialog:(QBChatDialog *)dialog forLastMessage:(QBChatMessage *)message
+{
+    dialog.lastMessageDate = message.datetime;
+    dialog.lastMessageText = message.text;
+    dialog.lastMessageUserID = message.senderID;
 }
 
 - (void)saveMessageToLocalHistory:(QBChatMessage *)chatMessage
@@ -297,13 +337,15 @@
 - (void)chatRoomDidReceiveMessage:(QBChatMessage *)message fromRoomJID:(NSString *)roomJID
 {
     if (message.delayed) {
-        
         // ignore chat room history:
         return;
     }
     
     QBChatDialog *currentDialog = self.allDialogsAsDictionary[roomJID];
     if (currentDialog != nil) {
+        
+        // update dialog:
+        [self updateDialog:currentDialog forLastMessage:message];
         
         // get chat history with current dialog id:
         NSMutableArray *currentHistory = self.allConversations[currentDialog.ID];
