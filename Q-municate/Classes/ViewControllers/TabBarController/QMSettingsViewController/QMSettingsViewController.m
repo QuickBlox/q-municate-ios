@@ -142,6 +142,8 @@ typedef NS_ENUM(NSUInteger, QMPasswordCheckState) {
 		cell.textLabel.text = kSettingsCellTitlePushNotifications;
 		self.notificationsSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(256, 9, 0, 0)];
 		[self.notificationsSwitch addTarget:self action:@selector(triggerNotificationsState) forControlEvents:UIControlEventValueChanged];
+		BOOL pushNotificationsStateBool = [[[NSUserDefaults standardUserDefaults] objectForKey: kSettingsPushNotificationsState] boolValue];
+		self.notificationsSwitch.on = pushNotificationsStateBool;
 		[cell.contentView addSubview:self.notificationsSwitch];
 	} else {
 		if (self.cellViewMode == SettingsViewControllerModeNormal) {
@@ -195,6 +197,8 @@ typedef NS_ENUM(NSUInteger, QMPasswordCheckState) {
     } else {
         [[QMAuthService shared] unSubscribeFromPushNotifications];
     }
+	[[NSUserDefaults standardUserDefaults] setObject:@(self.notificationsSwitch.on) forKey:kSettingsPushNotificationsState];
+	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)showLogoutActionSheet

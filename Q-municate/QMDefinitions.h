@@ -108,6 +108,7 @@ static NSString *const kChatLocalHistory	= @"chatLocalHistory";
 static NSString *const kChatOpponentHistory	= @"opponentHistory";
 static NSString *const kChatOpponentName	= @"chatOpponentName";
 static NSString *const kChatOpponentIDString	= @"chatOpponentIDString";
+static NSString *const kSettingsPushNotificationsState	= @"kSettingsPushNotificationsState";
 
 static NSString *const kId          = @"id";
 static NSString *const kData        = @"data";
