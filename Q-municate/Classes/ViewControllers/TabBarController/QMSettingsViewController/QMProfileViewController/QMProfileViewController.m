@@ -313,7 +313,7 @@
         [UIView animateWithDuration:0.3f animations:^{
             [self.containerView setFrame:r];
         }];
-    } else if (textView.text.length == 64 && !range.length) {
+    } else if (textView.text.length == 43 && !range.length) {
 		return NO;
     }
     return YES;
