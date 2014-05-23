@@ -298,6 +298,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)localChatDidReceiveMessage:(NSNotification *)notification
 {
+    [self updateChatDialog];
     [self resetTableView];
 }
 

@@ -30,6 +30,7 @@
 - (void)retrieveFriendsFromFacebookWithCompletion:(QBChatResultBlock)resultBlock;
 - (void)retrieveUsersWithFullName:(NSString *)fullName completion:(QBChatResultBlock)block;
 - (void)retrieveUsersWithEmails:(NSArray *)emails usingBlock:(QBResultBlock)block;
+- (void)retrieveUserWithID:(NSUInteger)userID completion:(void(^)(QBUUser *user, NSError *error))completion;
 - (void)findAndAddAllFriendsForFacebookUserWithCompletion:(QBChatResultBlock)block;
 
 // ADD / REMOVE FRIENDS

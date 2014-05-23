@@ -88,6 +88,7 @@ static NSString *const kChatDidFailWithError			= @"kChatDidFailWithError";
 static NSString *const kChatDidSendMessage				= @"kChatDidSendMessage";
 static NSString *const kChatRoomDidEnterNotification	= @"ChatRoomDidEnter";
 static NSString *const kChatRoomDidReceiveMessageNotification = @"ChatRoomDidReceiveMessage";
+static NSString *const kChatDialogsDidLoadedNotification = @"ChatDialogsLoaded";
 
 static NSString *const kChatRoomListUpdateNotification	= @"kChatRoomListUpdateNotification";
 static NSString *const kInviteFriendsDataSourceShouldRefreshNotification 	 = @"kInviteFriendsDataSourceShouldRefreshNotification";

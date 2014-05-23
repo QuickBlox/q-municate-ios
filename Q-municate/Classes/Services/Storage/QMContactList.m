@@ -129,6 +129,21 @@
     return IDs;
 }
 
+- (void)retrieveUserWithID:(NSUInteger)userID completion:(void(^)(QBUUser *user, NSError *error))completion
+{
+    QBResultBlock block = ^(Result *result){
+        if (result.success && [result isKindOfClass:[QBUUserResult class]]) {
+            QBUUser *user = ((QBUUserResult *)result).user;
+            self.friendsAsDictionary[[@(user.ID) stringValue]] = user;
+            completion(user, nil);
+            return;
+        }
+        completion(nil, result.errors[0]);
+    };
+    
+    [QBUsers userWithID:userID delegate:self context:Block_copy((__bridge void *)(block))];
+}
+
 - (void)retrieveUsersWithFullName:(NSString *)fullName completion:(QBChatResultBlock)block
 {
     [self retrieveUsersWithFullName:fullName usingBlock:^(Result *result) {
@@ -316,6 +331,12 @@
 - (void)completedWithResult:(Result *)result
 {
     _resultBlock(result);
+}
+
+- (void)completedWithResult:(Result *)result context:(void *)contextInfo
+{
+    ((__bridge void (^)(Result * result))(contextInfo))(result);
+    Block_release(contextInfo);
 }
 
 

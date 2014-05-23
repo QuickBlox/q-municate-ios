@@ -270,13 +270,21 @@
             }
             
             // say to controllers:
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"ChatDialogsLoaded" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kChatDialogsDidLoadedNotification object:nil];
+        }];
+    }
+    NSString *kUserID = [@(message.senderID) stringValue];
+    
+    // find user:
+    QBUUser *opponent = [QMContactList shared].friendsAsDictionary[kUserID];
+    if (opponent == nil) {
+        [[QMContactList shared] retrieveUserWithID:message.senderID completion:^(QBUUser *user, NSError *error) {
+            //
         }];
     }
     
     // get dialog entity with current user:
-    NSString *kRecipientID = [@(message.senderID) stringValue];
-    QBChatDialog *currentDialog = self.allDialogsAsDictionary[kRecipientID];
+    QBChatDialog *currentDialog = self.allDialogsAsDictionary[kUserID];
     if (currentDialog != nil) {
         
         // update dialog:
@@ -292,6 +300,11 @@
             currentHistory = [@[message] mutableCopy];
             self.allConversations[currentDialog.ID] = currentHistory;
         }
+    } else {
+        // if dialog = nil:
+        [self fetchAllDialogsWithBlock:^(NSArray *dialogs, NSError *error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kChatDialogsDidLoadedNotification object:nil];
+        }];
     }
     
 	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidReceiveMessage object:nil];
@@ -385,6 +398,14 @@
     if (message.delayed) {
         // ignore chat room history:
         return;
+    }
+    
+    // find user:
+    QBUUser *opponent = [QMContactList shared].friendsAsDictionary[[@(message.senderID) stringValue]];
+    if (opponent == nil) {
+        [[QMContactList shared] retrieveUserWithID:message.senderID completion:^(QBUUser *user, NSError *error) {
+            //
+        }];
     }
     
     QBChatDialog *currentDialog = self.allDialogsAsDictionary[roomJID];
