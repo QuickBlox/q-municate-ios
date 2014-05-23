@@ -215,6 +215,22 @@
     [[QBChat instance] dialogsWithDelegate:self];
 }
 
+- (void)joinRoomsForDialogs:(NSArray *)chatDialogs
+{
+    for (QBChatDialog *dialog in chatDialogs) {
+        
+        // check for existing room:
+        QBChatRoom *existRoom = self.allChatRoomsAsDictionary[dialog.roomJID];
+        if (existRoom != nil && existRoom.isJoined) {
+            continue;
+        }
+        
+        if (dialog.type != QBChatDialogTypePrivate) {
+            [self joinRoomWithRoomJID:dialog.roomJID];
+        }
+    }
+}
+
 - (void)chatDidNotSendMessage:(QBChatMessage *)message
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidNotSendMessage object:nil userInfo:@{@"message" : message}];
@@ -224,9 +240,7 @@
 {
     // handling invitations to chat:
     if (message.customParameters[@"room_jid"] != nil) {
-        NSString *roomJID = message.customParameters[@"room_jid"];
         
-//        [self joinRoomWithRoomJID:roomJID];
         [self fetchAllDialogs];
     }
     
@@ -237,6 +251,8 @@
         
         // update dialog:
         [self updateDialog:currentDialog forLastMessage:message];
+        // increase unread msg count:
+        currentDialog.unreadMessageCount += 1;
         
         // get chat history with current dialog id:
         NSMutableArray *currentHistory = self.allConversations[currentDialog.ID];
@@ -467,7 +483,11 @@
 	} else if (result.success && [result isKindOfClass:[QBDialogsPagedResult class]]) {
         QBDialogsPagedResult *dialogsResult = (QBDialogsPagedResult *)result;
         NSArray *dialogs = dialogsResult.dialogs;
+        // save dialogs to dictionary:
         self.allDialogsAsDictionary = [self arrayToDictionary:dialogs];
+        
+        // login to chats:
+        [self joinRoomsForDialogs:dialogs];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"ChatDialogsLoaded" object:nil];
         
