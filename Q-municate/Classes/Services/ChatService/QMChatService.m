@@ -48,12 +48,14 @@
 - (void)loginWithUser:(QBUUser *)user completion:(QBChatResultBlock)block
 {
     _chatBlock = block;
+    
     [[QBChat instance] loginWithUser:user];
 }
 
 - (void)logOut
 {
     [[QBChat instance] logout];
+    _loggedIn = NO;
 	[self.presenceTimer invalidate];
     self.presenceTimer = nil;
 }
@@ -137,6 +139,10 @@
     if (self.presenceTimer == nil) {
         self.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:30 target:[QBChat instance] selector:@selector(sendPresence) userInfo:nil repeats:YES];
     }
+    
+    // set is logged in flag:
+    _loggedIn = YES;
+    
     if (_chatBlock != nil) {
         _chatBlock(YES);
         _chatBlock = nil;
@@ -210,24 +216,38 @@
 #pragma mark - Chat
 
 // ******************* GETTING DIALOGS ***************************
-- (void)fetchAllDialogs
+- (void)fetchAllDialogsWithBlock:(void(^)(NSArray *dialogs, NSError *error))block
 {
-    [[QBChat instance] dialogsWithDelegate:self];
+    
+    QBResultBlock resBlock = ^(Result *result) {
+        if (result.success && [result isKindOfClass:[QBDialogsPagedResult class]]) {
+            NSArray *dialogs = ((QBDialogsPagedResult *)result).dialogs;
+            
+            // load dialogs to dictionary:
+            self.allDialogsAsDictionary = [self arrayToDictionary:dialogs];
+            
+            block(dialogs, nil);
+            return;
+        }
+        block(nil, result.errors[0]);
+    };
+    [[QBChat instance] dialogsWithDelegate:self context:Block_copy((__bridge void *)(resBlock))];
+
 }
 
 - (void)joinRoomsForDialogs:(NSArray *)chatDialogs
 {
     for (QBChatDialog *dialog in chatDialogs) {
-        
+        if (dialog.type == QBChatDialogTypePrivate) {
+            continue;
+        }
         // check for existing room:
         QBChatRoom *existRoom = self.allChatRoomsAsDictionary[dialog.roomJID];
         if (existRoom != nil && existRoom.isJoined) {
             continue;
         }
-        
-        if (dialog.type != QBChatDialogTypePrivate) {
-            [self joinRoomWithRoomJID:dialog.roomJID];
-        }
+        [self joinRoomWithRoomJID:dialog.roomJID];
+    
     }
 }
 
@@ -241,7 +261,17 @@
     // handling invitations to chat:
     if (message.customParameters[@"room_jid"] != nil) {
         
-        [self fetchAllDialogs];
+        [self fetchAllDialogsWithBlock:^(NSArray *dialogs, NSError *error) {
+            if (error) {
+                return;
+            }
+            if ([self isLoggedIn]) {
+                [self joinRoomsForDialogs:dialogs];
+            }
+            
+            // say to controllers:
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"ChatDialogsLoaded" object:nil];
+        }];
     }
     
     // get dialog entity with current user:
@@ -330,7 +360,7 @@
 
 - (void)joinRoomWithRoomJID:(NSString *)roomJID;
 {
-	[[QBChat instance] createOrJoinRoomWithJID:roomJID membersOnly:YES persistent:NO];
+	[[QBChat instance] createOrJoinRoomWithJID:roomJID membersOnly:NO persistent:YES historyAttribute:@{@"maxstanzas":@"0"}];
 }
 
 - (void)createNewDialog:(QBChatDialog *)chatDialog withCompletion:(QBChatDialogResultBlock)block
@@ -480,18 +510,13 @@
             }
         }
         
-	} else if (result.success && [result isKindOfClass:[QBDialogsPagedResult class]]) {
-        QBDialogsPagedResult *dialogsResult = (QBDialogsPagedResult *)result;
-        NSArray *dialogs = dialogsResult.dialogs;
-        // save dialogs to dictionary:
-        self.allDialogsAsDictionary = [self arrayToDictionary:dialogs];
-        
-        // login to chats:
-        [self joinRoomsForDialogs:dialogs];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"ChatDialogsLoaded" object:nil];
-        
-    }
+	}
+}
+
+- (void)completedWithResult:(Result *)result context:(void *)contextInfo
+{
+    ((__bridge void (^)(Result * result))(contextInfo))(result);
+    Block_release(contextInfo);
 }
 
 - (NSMutableDictionary *)arrayToDictionary:(NSArray *)array

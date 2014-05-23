@@ -34,11 +34,6 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     // Do any additional setup after loading the view.
 //    self.dataSource = [QMChatRoomListDataSource new];
     
-    if ([QMChatService shared].allDialogsAsDictionary == nil || [[QMChatService shared].allDialogsAsDictionary count] == 0) {
-        [self loadDilogs];
-        [QMUtilities createIndicatorView];
-    }
-    
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatAddedNewRoom:) name:kChatRoomListUpdateNotification object:nil];
     
@@ -50,11 +45,6 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     [self reloadTableView];
     
     [super viewWillAppear:NO];
-}
-
-- (void)loadDilogs
-{
-    [[QMChatService shared] fetchAllDialogs];
 }
 
 - (void)didReceiveMemoryWarning
@@ -124,8 +114,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
 - (void)localChatDidReceiveMessage:(NSNotification *)notification
 {
-    //
-    
+    [self reloadTableView];
 }
 
 - (void)localChatAddedNewRoom:(NSNotification *)notification

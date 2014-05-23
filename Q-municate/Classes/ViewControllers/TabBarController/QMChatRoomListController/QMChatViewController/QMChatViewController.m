@@ -43,23 +43,17 @@ static CGFloat const kCellHeightOffset = 33.0f;
 	[self addChatObserver];
 	self.isBackButtonClicked = NO;
     
-    // update unread message count:
-    [self updateChatDialog];
-    
     // if dialog is group chat:
     if (self.chatDialog.type != QBChatDialogTypePrivate) {
         
         // if user is joined, return
-        if ([self userIsJoinedRoomForDialog:self.chatDialog]) {
+        if (![self userIsJoinedRoomForDialog:self.chatDialog]) {
             
-            self.chatRoom = [QMChatService shared].allChatRoomsAsDictionary[self.chatDialog.roomJID];
-            return;
+            // enter chat room:
+            [QMUtilities createIndicatorView];
+            [[QMChatService shared] joinRoomWithRoomJID:self.chatDialog.roomJID];
         }
-        
-        // enter chat room:
-        [QMUtilities createIndicatorView];
-        [[QMChatService shared] joinRoomWithRoomJID:self.chatDialog.roomJID];
-        return;
+        self.chatRoom = [QMChatService shared].allChatRoomsAsDictionary[self.chatDialog.roomJID];
     }
 
     // for private chat:
@@ -73,21 +67,17 @@ static CGFloat const kCellHeightOffset = 33.0f;
             [QMChatService shared].allConversations[self.chatDialog.ID] = emptyHistory;
             return;
         }
-        
-        // fetch chat history from server for p2p chat:
         [QMUtilities createIndicatorView];
-        [[QMChatService shared] getMessageHistoryWithDialogID:self.chatDialog.ID withCompletion:^(NSArray *chatDialogHistoryArray, NSError *error) {
-            [QMUtilities removeIndicatorView];
-            if (chatDialogHistoryArray != nil) {
-                [QMChatService shared].allConversations[self.chatDialog.ID] = chatDialogHistoryArray;
-            }
-            [self resetTableView];
-        }];
+        // load history:
+        [self loadHistory];
     }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    // update unread message count:
+    [self updateChatDialog];
+    
     [self resetTableView];
     
     [super viewWillAppear:NO];
@@ -96,6 +86,18 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (void)updateChatDialog
 {
     self.chatDialog.unreadMessageCount = 0;
+}
+
+- (void)loadHistory
+{
+    // load history:
+    [[QMChatService shared] getMessageHistoryWithDialogID:self.chatDialog.ID withCompletion:^(NSArray *chatDialogHistoryArray, NSError *error) {
+        [QMUtilities removeIndicatorView];
+        if (chatDialogHistoryArray != nil) {
+            [QMChatService shared].allConversations[self.chatDialog.ID] = chatDialogHistoryArray;
+        }
+        [self resetTableView];
+    }];
 }
 
 - (void)dealloc
@@ -321,21 +323,19 @@ static CGFloat const kCellHeightOffset = 33.0f;
     self.chatRoom = [QMChatService shared].allChatRoomsAsDictionary[self.chatDialog.roomJID];
     
     if (self.chatHistory != nil) {
+        [QMUtilities removeIndicatorView];
         return;
     }
     
     // load history:
-    [[QMChatService shared] getMessageHistoryWithDialogID:self.chatDialog.ID withCompletion:^(NSArray *chatDialogHistoryArray, NSError *error) {
-        [QMUtilities removeIndicatorView];
-        if (chatDialogHistoryArray != nil) {
-            [QMChatService shared].allConversations[self.chatDialog.ID] = chatDialogHistoryArray;
-        }
-        [self resetTableView];
-    }];
+    [self loadHistory];
 }
 
 - (void)chatRoomDidReveiveMessage
 {
+    // update unread message count:
+    [self updateChatDialog];
+    
     [self resetTableView];
 }
 

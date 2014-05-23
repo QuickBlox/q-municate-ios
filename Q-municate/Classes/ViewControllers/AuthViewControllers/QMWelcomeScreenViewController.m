@@ -82,9 +82,6 @@
 		}
         [[QMContactList shared] setMe:user];
         
-        // fetch dialogs:
-        [[QMChatService shared] fetchAllDialogs];
-        
         if (user.blobID == 0) {
             [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
                 if (success) {
@@ -121,7 +118,7 @@
 }
 
 
-#pragma mark - Options
+#pragma mark -
 
 - (void)logInToQuickbloxChatWithUser:(QBUUser *)user
 {
@@ -134,6 +131,17 @@
 				[[NSNotificationCenter defaultCenter] postNotificationName:kFriendsLoadedNotification object:nil];
 				[[NSNotificationCenter defaultCenter] postNotificationName:kLoggedInNotification object:nil];
 			}];
+            
+            [[QMChatService shared] fetchAllDialogsWithBlock:^(NSArray *dialogs, NSError *error) {
+                if (!error) {
+                    // join rooms:
+                    if ([[QMChatService shared] isLoggedIn]) {
+                        [[QMChatService shared] joinRoomsForDialogs:dialogs];
+                    }
+                    // say to controllers:
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"ChatDialogsLoaded" object:nil];
+                }
+            }];
 		}
     }];
 }

@@ -49,7 +49,7 @@
     fourthTab.image = [[UIImage imageNamed:@"tb_settings"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     fourthTab.selectedImage = [[UIImage imageNamed:@"tb_settings"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 }
-
+#warning Eto pzdc. Fix it ASAP
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:NO];
@@ -77,13 +77,23 @@
 						    user.password = password;
 						}
                         
-                        [[QMChatService shared] fetchAllDialogs];
                         [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
                             if (success) {
                                 [[QMContactList shared] retrieveFriendsUsingBlock:^(BOOL success) {
 									[[NSNotificationCenter defaultCenter] postNotificationName:kFriendsLoadedNotification object:nil];
 									[[NSNotificationCenter defaultCenter] postNotificationName:kLoggedInNotification object:nil];
                                     [QMUtilities removeIndicatorView];
+                                }];
+                                
+                                [[QMChatService shared] fetchAllDialogsWithBlock:^(NSArray *dialogs, NSError *error) {
+                                    if (!error) {
+                                        // join rooms:
+                                        if ([[QMChatService shared] isLoggedIn]) {
+                                            [[QMChatService shared] joinRoomsForDialogs:dialogs];
+                                        }
+                                        // say to controllers:
+                                        [[NSNotificationCenter defaultCenter] postNotificationName:@"ChatDialogsLoaded" object:nil];
+                                    }
                                 }];
                             } else {
                                 [QMUtilities removeIndicatorView];

@@ -21,6 +21,8 @@
 @property (nonatomic, strong) NSDictionary *customParams;
 @property (nonatomic, strong) QBChatRoom *chatRoom;
 
+@property (nonatomic, readonly, getter = isLoggedIn) BOOL loggedIn;
+
 + (instancetype)shared;
 
 // Log In & Log Out
@@ -31,7 +33,7 @@
 #pragma mark - Chat
 
 // ****************************** Dialogs **************************************
-- (void)fetchAllDialogs;
+- (void)fetchAllDialogsWithBlock:(void(^)(NSArray *dialogs, NSError *error))block;
 - (void)createNewDialog:(QBChatDialog *)chatDialog withCompletion:(QBChatDialogResultBlock)block;
 
 - (void)sendMessage:(QBChatMessage *)message;
@@ -39,6 +41,7 @@
 - (void)sendInviteMessageToUsers:(NSArray *)users withRoomJID:(NSString *)roomJID;
 
 - (void)joinRoomWithRoomJID:(NSString *)roomJID;
+- (void)joinRoomsForDialogs:(NSArray *)chatDialogs;
 
 - (void)getMessageHistoryWithDialogID:(NSString *)dialogIDString withCompletion:(QBChatDialogHistoryBlock)block;
 
