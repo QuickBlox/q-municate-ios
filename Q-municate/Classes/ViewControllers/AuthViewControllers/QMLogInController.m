@@ -173,7 +173,9 @@
         } else {
             [self showAlertWithMessage:kMessageString actionSuccess:NO];
         }
-    }
+    } else {
+		self.passwordField.text = kEmptyString;
+	}
 }
 
 
@@ -187,7 +189,7 @@
     }
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
                                                     message:messageString
-                                                   delegate:nil
+                                                   delegate:self
                                           cancelButtonTitle:kAlertButtonTitleOkString
                                           otherButtonTitles:nil];
     [alert show];

@@ -18,6 +18,9 @@
 #define QMSettingsCustomCellRowLogOut               2
 #define QMSettingsCustomCellRowVersion              3
 
+//*****************  Color  ********************************
+#define kHintColor [UIColor colorWithRed:187/255.0f green:192/255.0f blue:202/255.0f alpha:1.0f]
+
 //****************** Enums *********************************
 typedef enum {
     SettingsViewControllerModeNormal,
@@ -179,6 +182,7 @@ static NSString *const kButtonTitleCreateGroupChatString 	= @"Create Group Chat"
 
 static NSString *const kSettingsProfileDefaultStatusString	= @"Add Status";
 static NSString *const kSettingsProfileMessageWarningString	= @"This field could not be empty!";
+static NSString *const kSettingsProfileTextViewMessageWarningString	= @"This field could not be more then 43 characters!";
 
 
 

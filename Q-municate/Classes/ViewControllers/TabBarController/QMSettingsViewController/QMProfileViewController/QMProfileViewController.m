@@ -14,17 +14,20 @@
 #import "QMAuthService.h"
 #import "QMUtilities.h"
 
-#define kHintColor [UIColor colorWithRed:187/255.0f green:192/255.0f blue:202/255.0f alpha:1.0f]
 #define kDefaultContainerYOffset	0.0f
 #define kUserNameContainerYOffset	-40.0f
 #define kUserMailContainerYOffset	-90.0f
 #define kUserPhoneContainerYOffset	-150.0f
 #define kUserStatusContainerYOffset	-170.0f
 
+#define kUserStatusLengthConstraint	43
+
 @interface QMProfileViewController ()
 
 @property (nonatomic) BOOL isUserDataChanged;
 @property (nonatomic) BOOL isUserPhotoChanged;
+@property (assign) BOOL shouldShowWarning;
+@property (assign) BOOL isBackButtonClicked;
 @property (strong, nonatomic) NSDictionary *oldUserDataDictionary;
 @property (strong, nonatomic) NSString *oldUserStatusString;
 @property (strong, nonatomic) UIBarButtonItem *backItem;
@@ -39,7 +42,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.oldUserDataDictionary = [[NSUserDefaults standardUserDefaults] objectForKey:kUserDataInfoDictionary];
+    self.shouldShowWarning = YES;
+
+	self.oldUserDataDictionary = [[NSUserDefaults standardUserDefaults] objectForKey:kUserDataInfoDictionary];
     self.oldUserStatusString = [[NSUserDefaults standardUserDefaults] objectForKey:kUserStatusText];
     self.localUser = [QMContactList shared].me;
     if (!self.localUser.phone) {
@@ -75,6 +80,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+	[self.userStatusTextView resignFirstResponder];
+	[super viewWillDisappear:animated];
+}
+
+
 - (void)loadUserAvatarToImageView
 {
     if (self.localUser.website != nil) {
@@ -86,10 +98,12 @@
 
 - (IBAction)chooseUserPicture:(UIButton *)sender
 {
-    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-    imagePicker.delegate = self;
-    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    [self presentViewController:imagePicker animated:YES completion:nil];
+	if ([self checkForFullnessOfLoginAndMailFields]) {
+		UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+		imagePicker.delegate = self;
+		imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+		[self presentViewController:imagePicker animated:YES completion:nil];
+	}
 }
 
 #pragma mark - UIImagePickerControllerDelegate
@@ -131,6 +145,21 @@
 	}
 }
 
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+	return [self checkForFullnessOfLoginAndMailFields];
+}
+
+- (BOOL)checkForFullnessOfLoginAndMailFields
+{
+	if ((!self.userNameTextField.text.length || !self.userMailTextField.text.length) && self.shouldShowWarning) {
+		self.shouldShowWarning = NO;
+		[self showAlertWithMessage:kSettingsProfileMessageWarningString];
+		return NO;
+	}
+	return YES;
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     NSString *textString = textField.text;
@@ -147,6 +176,9 @@
 #pragma mark - TextViewDelegate
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
+	if (![self checkForFullnessOfLoginAndMailFields]) {
+		return NO;
+	}
 	NSString *statusString = textView.text;
 	if ([statusString isEqualToString:kSettingsProfileDefaultStatusString]) {
 	    self.userStatusTextView.text = kEmptyString;
@@ -225,16 +257,23 @@
 - (void)saveChanges
 {
     ILog(@"saving data");
-    [QMUtilities createIndicatorView];
-    if (self.isUserPhotoChanged) {
-        QMContent *content = [[QMContent alloc] init];
-        [content loadImageForBlob:self.userPhotoImageView.image named:self.oldUserDataDictionary[@"id"] completion:^(QBCBlob *blob) {
-            self.localUser.website = [blob publicUrl];
-            [self updateOtherDataForBlob:blob];
-        }];
-    } else {
-        [self updateOtherDataForBlob:nil];
-    }
+	if (self.userStatusTextView.text.length > kUserStatusLengthConstraint && self.shouldShowWarning) {
+		self.shouldShowWarning = NO;
+		[self showAlertWithMessage:kSettingsProfileTextViewMessageWarningString];
+		return;
+	}
+	if ([self checkForFullnessOfLoginAndMailFields]) {
+		[QMUtilities createIndicatorView];
+		if (self.isUserPhotoChanged) {
+			QMContent *content = [[QMContent alloc] init];
+			[content loadImageForBlob:self.userPhotoImageView.image named:self.oldUserDataDictionary[@"id"] completion:^(QBCBlob *blob) {
+				self.localUser.website = [blob publicUrl];
+				[self updateOtherDataForBlob:blob];
+			}];
+		} else {
+			[self updateOtherDataForBlob:nil];
+		}
+	}
 }
 
 - (void)updateOtherDataForBlob:(QBCBlob *)blob
@@ -275,6 +314,7 @@
 {
     self.isUserDataChanged = NO;
     self.isUserPhotoChanged = NO;
+	self.shouldShowWarning = YES;
     [self checkForDoneButton];
 }
 
@@ -286,6 +326,17 @@
 		[self.navigationItem setRightBarButtonItems:nil];
 	}
 }
+
+- (BOOL)textViewShouldEndEditing:(UITextView *)textView
+{
+	if (textView.text.length > kUserStatusLengthConstraint && self.shouldShowWarning) {
+		self.shouldShowWarning = NO;
+		[self showAlertWithMessage:kSettingsProfileTextViewMessageWarningString];
+		return NO;
+	}
+	return YES;
+}
+
 
 - (void)setFrameOffset:(CGFloat)yOffset
 {
@@ -299,6 +350,10 @@
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
     if ([text isEqualToString:@"\n"]) {
+		if (textView.text.length > kUserStatusLengthConstraint) {
+			[self showAlertWithMessage:kSettingsProfileTextViewMessageWarningString];
+			return NO;
+		}
         NSString *userStatusString = textView.text;
 		userStatusString = [self verifyResultStatusWithString:userStatusString];
 		if (![userStatusString isEqualToString:self.oldUserStatusString]) {
@@ -313,7 +368,7 @@
         [UIView animateWithDuration:0.3f animations:^{
             [self.containerView setFrame:r];
         }];
-    } else if (textView.text.length == 64 && !range.length) {
+    } else if (textView.text.length == kUserStatusLengthConstraint && !range.length) {
 		return NO;
     }
     return YES;
@@ -322,7 +377,8 @@
 #pragma mark - Alert
 - (void)showAlertWithMessage:(NSString *)messageString
 {
-	[[[UIAlertView alloc] initWithTitle:kEmptyString message:messageString delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
+	[[[UIAlertView alloc] initWithTitle:kEmptyString message:messageString delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
+	self.shouldShowWarning = YES;
 }
 
 
