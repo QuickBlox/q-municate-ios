@@ -19,7 +19,7 @@
 #define QMSettingsCustomCellRowVersion              3
 
 //*****************  Color  ********************************
-//#define kHintColor [UIColor colorWithRed:187/255.0f green:192/255.0f blue:202/255.0f alpha:1.0f]
+#define kHintColor [UIColor colorWithRed:187/255.0f green:192/255.0f blue:202/255.0f alpha:1.0f]
 
 //****************** Enums *********************************
 typedef enum {

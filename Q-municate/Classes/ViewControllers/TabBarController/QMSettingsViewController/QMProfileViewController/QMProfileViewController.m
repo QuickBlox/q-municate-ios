@@ -20,8 +20,6 @@
 #define kUserPhoneContainerYOffset	-150.0f
 #define kUserStatusContainerYOffset	-170.0f
 
-#define kHintColor [UIColor colorWithRed:187/255.0f green:192/255.0f blue:202/255.0f alpha:1.0f]
-
 #define kUserStatusLengthConstraint	43
 
 @interface QMProfileViewController ()
@@ -81,6 +79,13 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+	[self.userStatusTextView resignFirstResponder];
+	[super viewWillDisappear:animated];
+}
+
 
 - (void)loadUserAvatarToImageView
 {
