@@ -38,6 +38,7 @@
 		6943849418E42691001E08A9 /* UIImage+Cropper.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943849018E42691001E08A9 /* UIImage+Cropper.m */; };
 		6943849518E42691001E08A9 /* UIImageView+ImageWithBlobID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943849218E42691001E08A9 /* UIImageView+ImageWithBlobID.m */; };
 		6967D6B6192E140300D6C268 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6967D6B5192E140300D6C268 /* Quickblox.framework */; };
+		6967D6B9192E4F4500D6C268 /* QMChatInvitationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6967D6B8192E4F4500D6C268 /* QMChatInvitationCell.m */; };
 		6972022F18EB04280003A4CC /* QMChatViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6972022E18EB04280003A4CC /* QMChatViewCell.m */; };
 		69B1893E190950A70049C6F9 /* QMDefinitions.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B1893D190950A70049C6F9 /* QMDefinitions.m */; };
 		69CF189518AE1C3C003262EF /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CF189418AE1C3C003262EF /* CFNetwork.framework */; };
@@ -155,6 +156,8 @@
 		6943849118E42691001E08A9 /* UIImageView+ImageWithBlobID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+ImageWithBlobID.h"; sourceTree = "<group>"; };
 		6943849218E42691001E08A9 /* UIImageView+ImageWithBlobID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+ImageWithBlobID.m"; sourceTree = "<group>"; };
 		6967D6B5192E140300D6C268 /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quickblox.framework; path = External/Quickblox.framework; sourceTree = "<group>"; };
+		6967D6B7192E4F4500D6C268 /* QMChatInvitationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatInvitationCell.h; sourceTree = "<group>"; };
+		6967D6B8192E4F4500D6C268 /* QMChatInvitationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatInvitationCell.m; sourceTree = "<group>"; };
 		6972022D18EB04280003A4CC /* QMChatViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatViewCell.h; sourceTree = "<group>"; };
 		6972022E18EB04280003A4CC /* QMChatViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatViewCell.m; sourceTree = "<group>"; };
 		69B1893D190950A70049C6F9 /* QMDefinitions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDefinitions.m; sourceTree = "<group>"; };
@@ -433,6 +436,8 @@
 				69EB283A18E9692D00620A01 /* QMChatListCell.m */,
 				6972022D18EB04280003A4CC /* QMChatViewCell.h */,
 				6972022E18EB04280003A4CC /* QMChatViewCell.m */,
+				6967D6B7192E4F4500D6C268 /* QMChatInvitationCell.h */,
+				6967D6B8192E4F4500D6C268 /* QMChatInvitationCell.m */,
 			);
 			name = Views;
 			path = Classes/Views;
@@ -904,6 +909,7 @@
 				6943847618E42678001E08A9 /* QMAuthService.m in Sources */,
 				69EB283B18E9692D00620A01 /* QMChatListCell.m in Sources */,
 				693F347B18F554240032891F /* QMIncommingCallSegue.m in Sources */,
+				6967D6B9192E4F4500D6C268 /* QMChatInvitationCell.m in Sources */,
 				B71E0561190FAAF900DD6D34 /* QMChatViewController.m in Sources */,
 				6943847918E42678001E08A9 /* QMContactList.m in Sources */,
 				6943847C18E42678001E08A9 /* QMSignUpController.m in Sources */,

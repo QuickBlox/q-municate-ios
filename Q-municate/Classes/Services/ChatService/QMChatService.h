@@ -36,6 +36,7 @@
 
 - (void)sendMessage:(QBChatMessage *)message;
 - (void)sendMessage:(NSString *)message toRoom:(QBChatRoom *)chatRoom;
+- (void)sendInviteMessageToUsers:(NSArray *)users withRoomJID:(NSString *)roomJID;
 
 - (void)joinRoomWithRoomJID:(NSString *)roomJID;
 

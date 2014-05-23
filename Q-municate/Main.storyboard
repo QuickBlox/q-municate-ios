@@ -1145,7 +1145,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="WdI-cb-LAu">
-                                    <rect key="frame" x="0.0" y="82" width="320" height="1"/>
+                                    <rect key="frame" x="0.0" y="132" width="320" height="1"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <color key="backgroundColor" red="0.83137261867523193" green="0.83529418706893921" blue="0.83137261867523193" alpha="1" colorSpace="deviceRGB"/>
                                 </view>
@@ -1211,6 +1211,34 @@
                                             <outlet property="dateTimeLabel" destination="gfp-bd-z3l" id="swd-aw-HaJ"/>
                                             <outlet property="fullNameLabel" destination="wKc-lP-GWG" id="gcK-su-4lx"/>
                                             <outlet property="messageTextLabel" destination="Foo-LD-cC5" id="RIX-ei-vuX"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="InvitationCell" rowHeight="50" id="qzh-xA-ENz" customClass="QMChatInvitationCell">
+                                        <rect key="frame" x="0.0" y="82" width="320" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qzh-xA-ENz" id="yEb-tS-020">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="John Pope created a group dialog" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ggp-M5-spU">
+                                                    <rect key="frame" x="9" y="20" width="300" height="28"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <color key="textColor" red="0.65255837912087911" green="0.65255837912087911" blue="0.65255837912087911" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="6 min ago" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1uM-Iz-a95">
+                                                    <rect key="frame" x="20" y="5" width="280" height="16"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" red="0.38516268887362637" green="0.38516268887362637" blue="0.38516268887362637" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="dateTimeLabel" destination="1uM-Iz-a95" id="DjI-cq-O1t"/>
+                                            <outlet property="messageLabel" destination="ggp-M5-spU" id="rq4-Fi-8l8"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

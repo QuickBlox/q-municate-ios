@@ -12,6 +12,7 @@
 #import "QMContactList.h"
 #import "QMChatService.h"
 #import "QMUtilities.h"
+#import "QMChatInvitationCell.h"
 
 static CGFloat const kCellHeightOffset = 33.0f;
 
@@ -170,6 +171,9 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (IBAction)back:(id)sender
 {
 	self.isBackButtonClicked = YES;
+    if (self.createdJustNow) {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -182,8 +186,14 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    QMChatViewCell *cell = (QMChatViewCell *)[tableView dequeueReusableCellWithIdentifier:kChatViewCellIdentifier];
     QBChatAbstractMessage *message = self.chatHistory[indexPath.row];
+    if (message.customParameters[@"room_jid"] != nil) {
+        QMChatInvitationCell *invitationCell = (QMChatInvitationCell *)[tableView dequeueReusableCellWithIdentifier:@"InvitationCell"];
+        [invitationCell configureCellWithMessage:message];
+        return invitationCell;
+    }
+    
+    QMChatViewCell *cell = (QMChatViewCell *)[tableView dequeueReusableCellWithIdentifier:kChatViewCellIdentifier];
     
     QBUUser *currentUser = nil;
     if ([QMContactList shared].me.ID == message.senderID) {
@@ -200,6 +210,9 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QBChatAbstractMessage *chatMessage = self.chatHistory[indexPath.row];
+    if (chatMessage.customParameters[@"room_jid"] != nil) {
+        return 50.0f;
+    }
     return [QMChatViewCell cellHeightForMessage:chatMessage.text] + kCellHeightOffset;
 }
 

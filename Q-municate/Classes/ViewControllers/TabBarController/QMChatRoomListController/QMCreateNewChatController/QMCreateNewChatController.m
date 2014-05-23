@@ -82,7 +82,10 @@ static CGFloat const rowHeight = 60.0;
     [[QMChatService shared] createNewDialog:chatDialog withCompletion:^(QBChatDialog *dialog, NSError *error) {
         // save to dialogs dictionary:
         [QMChatService shared].allDialogsAsDictionary[dialog.roomJID] = dialog;
-
+        
+        // send invitation to users:
+        [[QMChatService shared] sendInviteMessageToUsers:selectedUsersMArray withRoomJID:dialog.roomJID];
+        
         [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:dialog];
     }];
 }
@@ -135,7 +138,7 @@ static CGFloat const rowHeight = 60.0;
 
 - (void)configureCreateChatButton
 {
-	if ([self.dataSource.friendsSelectedMArray count] <=2) {
+	if ([self.dataSource.friendsSelectedMArray count] <=1) {
 		[self.createGroupButton setEnabled:NO];
 		[self.createGroupButton setAlpha:0.5f];
         return;
@@ -153,10 +156,11 @@ static CGFloat const rowHeight = 60.0;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     QMChatViewController *childController = (QMChatViewController *)segue.destinationViewController;
-    if ([self.dataSource.friendsSelectedMArray count] > 2) {
+    if ([self.dataSource.friendsSelectedMArray count] > 1) {
         QBChatDialog *dialog = (QBChatDialog *)sender;
 		childController.chatDialog = dialog;
         childController.chatName = dialog.name;
+        childController.createdJustNow = YES;
 	}
 }
 
