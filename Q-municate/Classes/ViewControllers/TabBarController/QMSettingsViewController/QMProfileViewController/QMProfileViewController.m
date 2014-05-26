@@ -43,6 +43,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.shouldShowWarning = YES;
+	self.isBackButtonClicked = NO;
 
 	self.oldUserDataDictionary = [[NSUserDefaults standardUserDefaults] objectForKey:kUserDataInfoDictionary];
     self.oldUserStatusString = [[NSUserDefaults standardUserDefaults] objectForKey:kUserStatusText];
@@ -82,6 +83,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+	self.isBackButtonClicked = YES;
 	[self.userStatusTextView resignFirstResponder];
 	[super viewWillDisappear:animated];
 }
@@ -315,6 +317,7 @@
     self.isUserDataChanged = NO;
     self.isUserPhotoChanged = NO;
 	self.shouldShowWarning = YES;
+	self.isBackButtonClicked = NO;
     [self checkForDoneButton];
 }
 
@@ -329,7 +332,7 @@
 
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView
 {
-	if (textView.text.length > kUserStatusLengthConstraint && self.shouldShowWarning) {
+	if (textView.text.length > kUserStatusLengthConstraint && self.shouldShowWarning && !self.isBackButtonClicked) {
 		self.shouldShowWarning = NO;
 		[self showAlertWithMessage:kSettingsProfileTextViewMessageWarningString];
 		return NO;
