@@ -58,7 +58,7 @@
 	if (!self.oldUserStatusString || [self.oldUserStatusString isEqualToString:kEmptyString]) {
 		self.oldUserStatusString = kSettingsProfileDefaultStatusString;
 	}
-	[self checkStatusColor];
+	[self checkStatusColorWithString:self.oldUserStatusString];
 	self.userStatusTextView.text = self.oldUserStatusString;
 	self.isUserPhotoChanged = NO;
     
@@ -177,6 +177,41 @@
 	[self setFrameOffset:kDefaultContainerYOffset];
     return YES;
 }
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+	NSString *textString = textField.text;
+	NSString *resultString;
+	if (!range.length) {
+	    resultString = [NSString stringWithFormat:@"%@%@", textString, string];
+	} else {
+		resultString = [textString substringToIndex:range.location];
+	}
+	NSLog(@"resultString: %@", resultString);
+	if (textField == self.userNameTextField) {
+	    if (![resultString isEqualToString:self.localUser.fullName]) {
+			self.isUserDataChanged = YES;
+		} else {
+			self.isUserDataChanged = NO;
+		}
+	} else if (textField == self.userMailTextField) {
+		if (![resultString isEqualToString:self.localUser.email]) {
+			self.isUserDataChanged = YES;
+		} else {
+			self.isUserDataChanged = NO;
+		}
+	} else if (textField == self.userPhoneTextField) {
+		if (![resultString isEqualToString:self.localUser.phone]) {
+			self.isUserDataChanged = YES;
+		} else {
+			self.isUserDataChanged = NO;
+		}
+	}
+	[self checkForDoneButton];
+
+	return YES;
+}
+
 
 #pragma mark - TextViewDelegate
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
@@ -315,9 +350,9 @@
 	}
 }
 
-- (void)checkStatusColor
+- (void)checkStatusColorWithString:(NSString *)userStatusString
 {
-	if ([self.oldUserStatusString isEqualToString:kSettingsProfileDefaultStatusString]) {
+	if ([userStatusString isEqualToString:kSettingsProfileDefaultStatusString]) {
 		[self.userStatusTextView setTextColor:kHintColor];
 	} else {
 		[self.userStatusTextView setTextColor:[UIColor blackColor]];
@@ -330,7 +365,7 @@
 	self.userMailTextField.text = self.localUser.email;
 	self.userPhoneTextField.text = self.localUser.phone;
 	self.userStatusTextView.text = self.oldUserStatusString;
-	[self checkStatusColor];
+	[self checkStatusColorWithString:self.oldUserStatusString];
 	[self resetChanges];
 }
 
@@ -395,7 +430,24 @@
         }];
     } else if (textView.text.length == kUserStatusLengthConstraint && !range.length) {
 		return NO;
-    }
+    } else {
+		NSString *userStatusString = textView.text;
+		NSString *resultString;
+		if (!range.length) {
+			resultString = [NSString stringWithFormat:@"%@%@", userStatusString, text];
+		} else {
+			resultString = [userStatusString substringToIndex:range.location];
+		}
+		NSLog(@"resultString: %@", resultString);
+		userStatusString = [self verifyResultStatusWithString:resultString];
+		if (![userStatusString isEqualToString:self.oldUserStatusString]) {
+			self.isUserDataChanged = YES;
+		} else {
+			self.isUserDataChanged = NO;
+		}
+		[self checkStatusColorWithString:userStatusString];
+		[self checkForDoneButton];
+	}
     return YES;
 }
 
