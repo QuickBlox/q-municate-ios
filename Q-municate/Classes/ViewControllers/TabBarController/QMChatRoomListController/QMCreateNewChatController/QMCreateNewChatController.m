@@ -84,7 +84,7 @@ static CGFloat const rowHeight = 60.0;
         [QMChatService shared].allDialogsAsDictionary[dialog.roomJID] = dialog;
         
         // send invitation to users:
-        [[QMChatService shared] sendInviteMessageToUsers:selectedUsersMArray withRoomJID:dialog.roomJID];
+        [[QMChatService shared] sendInviteMessageToUsers:selectedUsersMArray withChatDialog:dialog];
         
         [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:dialog];
     }];

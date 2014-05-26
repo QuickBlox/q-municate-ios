@@ -34,9 +34,9 @@
 
 - (void)updateOtherUsersArray:(void(^)(BOOL isEmpty))block
 {
-    self.otherUsersArray = [[QMContactList shared].allUsers mutableCopy];
+    self.otherUsersArray = [[[QMContactList shared].searchedUsers allValues] mutableCopy];
     if ([self.otherUsersArray count] == 0) {
-        [QMContactList shared].allUsers = [NSMutableArray new];
+        [QMContactList shared].searchedUsers = [NSMutableDictionary new];
         block(YES);
     } else {
         block(NO);

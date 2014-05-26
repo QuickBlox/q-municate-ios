@@ -12,20 +12,24 @@
 
 + (instancetype)shared;
 
+/** Me */
 @property (strong, nonatomic) QBUUser *me;
 @property (strong, nonatomic) NSMutableDictionary *facebookMe;
-//@property (strong, nonatomic) NSMutableArray *friends;
-@property (strong, nonatomic) NSMutableDictionary *friendsAsDictionary;
-//@property (strong, nonatomic) NSMutableArray *pendingApproveUsers;
-@property (strong, nonatomic) NSArray *facebookFriendsToInvite;
 
+/** Users for invite friends */
+@property (strong, nonatomic) NSArray *facebookFriendsToInvite;
 @property (strong, nonatomic) NSArray *contactsToInvite;
-@property (strong, nonatomic) NSArray *allUsers;
+
+/** Friends */
+@property (strong, nonatomic) NSMutableDictionary *friendsAsDictionary;
+
+/** Searched users & all cached users */
+@property (strong, nonatomic) NSMutableDictionary *searchedUsers;
+@property (strong, nonatomic) NSMutableDictionary *allUsersAsDictionary;
 
 @property (strong, nonatomic) NSMutableDictionary *baseUserIDs;
 
 // FIND FRIENDS
-- (void)retrieveAllUsersOnQuickbloxWithCompletion:(QBChatResultBlock)block;
 - (void)retrieveFriendsUsingBlock:(QBChatResultBlock)block;
 - (void)retrieveFriendsFromFacebookWithCompletion:(QBChatResultBlock)resultBlock;
 - (void)retrieveUsersWithFullName:(NSString *)fullName completion:(QBChatResultBlock)block;

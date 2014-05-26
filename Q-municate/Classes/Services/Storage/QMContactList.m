@@ -28,30 +28,19 @@
     return storageInstance;
 }
 
-//- (id)init
-//{
-//    if (self = [super init]) {
-//        self.friendsAsDictionary = [NSMutableDictionary new];
-//    }
-//    return self;
-//}
+- (id)init
+{
+    if (self = [super init]) {
+        self.allUsersAsDictionary = [NSMutableDictionary new];
+    }
+    return self;
+}
 
 
 #pragma mark -
 #pragma mark - TERMINATE LOGIC
 
 // *********************** FIND FRIENDS ****************************
-
-- (void)retrieveAllUsersOnQuickbloxWithCompletion:(QBChatResultBlock)block
-{
-    [self retrieveAllUsersUsingBlock:^(Result *result) {
-        if (result.success && [result isKindOfClass:[QBUUserPagedResult class]]) {
-            NSArray *allUsers = ((QBUUserPagedResult *)result).users;
-            [QMContactList shared].allUsers = allUsers;
-            block(YES);
-        }
-    }];
-}
 
 - (void)retrieveFriendsFromFacebookWithCompletion:(QBChatResultBlock)resultBlock
 {
@@ -134,7 +123,7 @@
     QBResultBlock block = ^(Result *result){
         if (result.success && [result isKindOfClass:[QBUUserResult class]]) {
             QBUUser *user = ((QBUUserResult *)result).user;
-            self.friendsAsDictionary[[@(user.ID) stringValue]] = user;
+            self.allUsersAsDictionary[[@(user.ID) stringValue]] = user;
             completion(user, nil);
             return;
         }
@@ -149,7 +138,7 @@
     [self retrieveUsersWithFullName:fullName usingBlock:^(Result *result) {
         if (result.success && [result isKindOfClass:[QBUUserPagedResult class]]) {
             NSArray *users = ((QBUUserPagedResult *)result).users;
-            self.allUsers = users;
+            self.searchedUsers =  [self arrayToDictionary:users];
             block(YES);
             return;
         }
@@ -393,7 +382,7 @@
     self.me = nil;
     self.friendsAsDictionary = nil;
     self.baseUserIDs = nil;
-    self.allUsers = nil;
+    self.searchedUsers = nil;
     self.facebookFriendsToInvite = nil;
 	self.facebookMe = nil;
 	self.contactsToInvite = nil;
