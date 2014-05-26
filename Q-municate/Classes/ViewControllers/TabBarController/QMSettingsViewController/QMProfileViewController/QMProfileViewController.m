@@ -58,11 +58,7 @@
 	if (!self.oldUserStatusString || [self.oldUserStatusString isEqualToString:kEmptyString]) {
 		self.oldUserStatusString = kSettingsProfileDefaultStatusString;
 	}
-	if ([self.oldUserStatusString isEqualToString:kSettingsProfileDefaultStatusString]) {
-		[self.userStatusTextView setTextColor:kHintColor];
-	} else {
-		[self.userStatusTextView setTextColor:[UIColor blackColor]];
-	}
+	[self checkStatusColor];
 	self.userStatusTextView.text = self.oldUserStatusString;
 	self.isUserPhotoChanged = NO;
     
@@ -85,7 +81,14 @@
 {
 	self.isBackButtonClicked = YES;
 	[self.userStatusTextView resignFirstResponder];
+	[self setOldValues];
 	[super viewWillDisappear:animated];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+	self.isBackButtonClicked = NO;
 }
 
 
@@ -310,6 +313,25 @@
 	if (![userPhoneString isEqualToString:self.localUser.phone]) {
 		self.localUser.phone = userPhoneString;
 	}
+}
+
+- (void)checkStatusColor
+{
+	if ([self.oldUserStatusString isEqualToString:kSettingsProfileDefaultStatusString]) {
+		[self.userStatusTextView setTextColor:kHintColor];
+	} else {
+		[self.userStatusTextView setTextColor:[UIColor blackColor]];
+	}
+}
+
+- (void)setOldValues
+{
+	self.userNameTextField.text = self.localUser.fullName;
+	self.userMailTextField.text = self.localUser.email;
+	self.userPhoneTextField.text = self.localUser.phone;
+	self.userStatusTextView.text = self.oldUserStatusString;
+	[self checkStatusColor];
+	[self resetChanges];
 }
 
 - (void)resetChanges
