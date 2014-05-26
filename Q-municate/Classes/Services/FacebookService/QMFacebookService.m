@@ -24,7 +24,7 @@
 {
     NSMutableDictionary *postParams = [@{
                                          @"link" : @"http://quickblox.com/",
-                                         @"picture" : @"http://www.apps-world.net/europe/images/stories/Quickblox.jpg",
+                                         @"picture" : @"https://qbprod.s3.amazonaws.com/c6e81081d5954ed68485eead941b91a000",
                                          @"name" : @"Q-municate",
                                          @"caption" : @"By QuickBlox",
                                          @"description" : @"Join to new world of audio & video calls",
