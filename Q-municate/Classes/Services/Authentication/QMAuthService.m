@@ -109,8 +109,9 @@
 // **************************FACEBOOK**********************************
 - (void)authWithFacebookAndCompletionHandler:(QBAuthResultBlock)resultBlock
 {
-    [FBSession setActiveSession:[[FBSession alloc]initWithPermissions:@[@"basic_info", @"email"]]];
-    
+	if (![FBSession activeSession]) {
+		[FBSession setActiveSession:[[FBSession alloc]initWithPermissions:@[@"basic_info", @"email", @"read_stream", @"publish_stream"]]];
+	}
     if ([FBSession activeSession].state == FBSessionStateCreated) {
         [[FBSession activeSession] openWithBehavior:FBSessionLoginBehaviorForcingWebView completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
             if (status == FBSessionStateClosedLoginFailed) {
@@ -141,8 +142,7 @@
             }
         }];
     } else if ([FBSession activeSession].state == FBSessionStateCreatedTokenLoaded) {
-        
-        [[FBSession activeSession] openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+         [[FBSession activeSession] openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
             // request me from Facebook:
             QMFacebookService *facebookService = [[QMFacebookService alloc] init];
             [facebookService loadMeWithCompletion:^(NSData *data, NSError *error) {
@@ -311,7 +311,6 @@
                 }];
             }
         }];
-        
     }];
 }
 

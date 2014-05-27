@@ -33,23 +33,21 @@
 - (void)updateFacebookDataSource:(void(^)(NSError *error))completionBlock
 {
 	// Check for Active Facebook Session:
-	if ([FBSession activeSession] != nil) {
-		FBSession *newSession = [[FBSession alloc] initWithPermissions:@[@"basic_info", @"email", @"read_stream", @"publish_stream"]];
-		[FBSession setActiveSession:newSession];
-
-		[newSession openWithBehavior:FBSessionLoginBehaviorForcingWebView completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+	if (![FBSession activeSession]) {
+		[FBSession setActiveSession:[[FBSession alloc]initWithPermissions:@[@"basic_info", @"email", @"read_stream", @"publish_stream"]]];
+		[[FBSession activeSession] openWithBehavior:FBSessionLoginBehaviorForcingWebView completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
 			if (status == FBSessionStateOpen) {
 				[self fetchAndSaveFacebookFriends:^(NSError *innerError) {
 					if (innerError) {
-					    completionBlock(innerError);
+						completionBlock(innerError);
 					} else {
 						completionBlock(nil);
 					}
 				}];
 			} else if (status == FBSessionStateClosedLoginFailed) {
-			    if (error) {
-			        completionBlock(error);
-			    }
+				if (error) {
+					completionBlock(error);
+				}
 			}
 		}];
 		return;
