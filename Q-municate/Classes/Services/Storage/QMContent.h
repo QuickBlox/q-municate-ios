@@ -13,4 +13,6 @@
 - (void)loadImageForBlob:(UIImage *)image named:(NSString *)name completion:(QBContentBlock)block;
 - (void)loadImageFromFacebookWithUserID:(NSString *)facebookID accessToken:(NSString *)accessToken completion:(void (^)(id object))block;
 
+- (void)uploadImage:(UIImage *)image withCompletion:(void (^)(QBCBlob *blob, BOOL success, NSError *error))completion;
+
 @end

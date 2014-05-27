@@ -7,6 +7,7 @@
 //
 
 #import "QMContent.h"
+#import "QMContactList.h"
 
 @interface QMContent () <QBActionStatusDelegate>
 
@@ -44,6 +45,23 @@
     });
 }
 
+- (void)uploadImage:(UIImage *)image withCompletion:(void (^)(QBCBlob *blob, BOOL success, NSError *error))completion
+{
+    NSData *data = UIImagePNGRepresentation(image);
+    QBResultBlock block = ^(Result *result) {
+        if (result.success && [result isKindOfClass:[QBCFileUploadTaskResult class]]) {
+            QBCBlob *blob = ((QBCFileUploadTaskResult *)result).uploadedBlob;
+            completion(blob, YES, nil);
+            return;
+        }
+        completion(nil, NO, result.errors[0]);
+    };
+    
+    NSString *fileName = [NSString stringWithFormat:@"PIC_USR_ID_%lu", (unsigned long)[QMContactList shared].me.ID];
+    [QBContent TUploadFile:data fileName:fileName contentType:@"image/png" isPublic:YES delegate:self context:Block_copy((__bridge void *)(block))];
+}
+
+
 #pragma mark - QBActionStatusDelegate
 
 - (void)completedWithResult:(Result *)result
@@ -56,6 +74,12 @@
     }
     _resultBlock(nil);
     _resultBlock = nil;
+}
+
+- (void)completedWithResult:(Result *)result context:(void *)contextInfo
+{
+    ((__bridge void (^)(Result * result))(contextInfo))(result);
+    Block_release(contextInfo);
 }
 
 @end

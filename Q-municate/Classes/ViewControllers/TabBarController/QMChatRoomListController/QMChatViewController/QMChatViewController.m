@@ -12,11 +12,14 @@
 #import "QMContactList.h"
 #import "QMChatService.h"
 #import "QMUtilities.h"
+#import "QMContent.h"
 #import "QMChatInvitationCell.h"
+#import "QMPrivateChatCell.h"
+
 
 static CGFloat const kCellHeightOffset = 33.0f;
 
-@interface QMChatViewController ()
+@interface QMChatViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIView *inputMessageView;
@@ -192,6 +195,17 @@ static CGFloat const kCellHeightOffset = 33.0f;
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
+- (IBAction)showMediaFiles:(id)sender
+{
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
+        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        picker.delegate = self;
+        
+        [self presentViewController:picker animated:YES completion:nil];
+    }
+}
+
 
 #pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -208,14 +222,21 @@ static CGFloat const kCellHeightOffset = 33.0f;
         return invitationCell;
     }
     
-    QMChatViewCell *cell = (QMChatViewCell *)[tableView dequeueReusableCellWithIdentifier:kChatViewCellIdentifier];
-    
     QBUUser *currentUser = nil;
     if ([QMContactList shared].me.ID == message.senderID) {
         currentUser = [QMContactList shared].me;
     } else {
         currentUser = [[QMContactList shared] findFriendWithID:message.senderID];
     }
+    
+    // choosing cell:
+    if (self.chatDialog.type == QBChatDialogTypePrivate) {
+        QMPrivateChatCell *privateChatCell = (QMPrivateChatCell *)[tableView dequeueReusableCellWithIdentifier:@"PrivateChatCell"];
+        [privateChatCell configureCellWithMessage:message fromUser:currentUser];
+        return privateChatCell;
+    }
+    
+    QMChatViewCell *cell = (QMChatViewCell *)[tableView dequeueReusableCellWithIdentifier:kChatViewCellIdentifier];
     [cell configureCellWithMessage:message fromUser:currentUser];
 
     return cell;
@@ -227,6 +248,9 @@ static CGFloat const kCellHeightOffset = 33.0f;
     QBChatAbstractMessage *chatMessage = self.chatHistory[indexPath.row];
     if (chatMessage.customParameters[@"xmpp_room_jid"] != nil) {
         return 50.0f;
+    }
+    if (self.chatDialog.type == QBChatDialogTypePrivate) {
+        return [QMPrivateChatCell cellHeightForMessage:chatMessage] +9.0f;
     }
     return [QMChatViewCell cellHeightForMessage:chatMessage.text] + kCellHeightOffset;
 }
@@ -398,6 +422,28 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (void)showAlertWithErrorMessage:(NSString *)messageString
 {
 	[[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:messageString delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
+}
+
+
+#pragma mark - UIImagePickerControllerDelegate
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    UIImage *currentImage = info[UIImagePickerControllerOriginalImage];
+    
+    QMContent *content = [[QMContent alloc] init];
+    [content uploadImage:currentImage withCompletion:^(QBCBlob *blob, BOOL success, NSError *error) {
+        //
+    }];
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

@@ -9,6 +9,7 @@
 #import "QMChatViewCell.h"
 #import "NSDateFormatter+SinceDateFormat.h"
 #import "QMUtilities.h"
+#import "UIImageView+ImageWithBlobID.h"
 
 @implementation QMChatViewCell
 
@@ -27,6 +28,14 @@
     } else {
         self.fullNameLabel.text = user.fullName;
     }
+    
+    // load image:
+    if (user.website != nil) {
+        [self.avatarView setImageURL:[NSURL URLWithString:user.website]];
+    } else if (user.blobID > 0) {
+        [self.avatarView loadImageWithBlobID:user.blobID];
+    }
+    
 	self.messageTextLabel.text = message.text;
 
 	self.dateTimeLabel.text = [[QMUtilities shared].dateFormatter fullFormatPassedTimeFromDate:message.datetime];

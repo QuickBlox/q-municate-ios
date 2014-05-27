@@ -40,6 +40,7 @@
 		6967D6B9192E4F4500D6C268 /* QMChatInvitationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6967D6B8192E4F4500D6C268 /* QMChatInvitationCell.m */; };
 		6972022F18EB04280003A4CC /* QMChatViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6972022E18EB04280003A4CC /* QMChatViewCell.m */; };
 		69B1893E190950A70049C6F9 /* QMDefinitions.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B1893D190950A70049C6F9 /* QMDefinitions.m */; };
+		69B5343D1934C9C2005D865F /* QMPrivateChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B5343C1934C9C2005D865F /* QMPrivateChatCell.m */; };
 		69B71AE9192F7170005AE015 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69B71AE8192F7170005AE015 /* Quickblox.framework */; };
 		69CF189518AE1C3C003262EF /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CF189418AE1C3C003262EF /* CFNetwork.framework */; };
 		69CF189718AE1C49003262EF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CF189618AE1C48003262EF /* SystemConfiguration.framework */; };
@@ -161,6 +162,8 @@
 		6972022D18EB04280003A4CC /* QMChatViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatViewCell.h; sourceTree = "<group>"; };
 		6972022E18EB04280003A4CC /* QMChatViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatViewCell.m; sourceTree = "<group>"; };
 		69B1893D190950A70049C6F9 /* QMDefinitions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDefinitions.m; sourceTree = "<group>"; };
+		69B5343B1934C9C2005D865F /* QMPrivateChatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMPrivateChatCell.h; sourceTree = "<group>"; };
+		69B5343C1934C9C2005D865F /* QMPrivateChatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMPrivateChatCell.m; sourceTree = "<group>"; };
 		69B71AE8192F7170005AE015 /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quickblox.framework; path = External/Quickblox.framework; sourceTree = "<group>"; };
 		69CF189418AE1C3C003262EF /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		69CF189618AE1C48003262EF /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -425,6 +428,7 @@
 		6943846718E42678001E08A9 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				69B5343A1934BCFB005D865F /* PrivateChatCells */,
 				6943846818E42678001E08A9 /* QMFriendListCell.h */,
 				6943846918E42678001E08A9 /* QMFriendListCell.m */,
 				6943846A18E42678001E08A9 /* QMInviteFriendsCell.h */,
@@ -479,6 +483,15 @@
 			children = (
 			);
 			name = External;
+			sourceTree = "<group>";
+		};
+		69B5343A1934BCFB005D865F /* PrivateChatCells */ = {
+			isa = PBXGroup;
+			children = (
+				69B5343B1934C9C2005D865F /* QMPrivateChatCell.h */,
+				69B5343C1934C9C2005D865F /* QMPrivateChatCell.m */,
+			);
+			name = PrivateChatCells;
 			sourceTree = "<group>";
 		};
 		69D57E4918ACC11C00A9900A = {
@@ -904,6 +917,7 @@
 				B71E0565190FAAF900DD6D34 /* QMInviteFriendsController.m in Sources */,
 				6943848318E42678001E08A9 /* QMMainTabBarController.m in Sources */,
 				6943847318E42678001E08A9 /* QMPerson.m in Sources */,
+				69B5343D1934C9C2005D865F /* QMPrivateChatCell.m in Sources */,
 				6943847B18E42678001E08A9 /* QMLogInController.m in Sources */,
 				69E48F98193393FD009B5F6D /* NSArray+ArrayToString.m in Sources */,
 				69B1893E190950A70049C6F9 /* QMDefinitions.m in Sources */,
@@ -1057,7 +1071,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 869075CA2A3446469130768E /* Pods.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
+				ARCHS = armv7;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Khomenko Igor (67859YS754)";
@@ -1085,7 +1099,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "C454498C-EE0E-4DAF-9398-6E289C19C4EB";
 				SDKROOT = iphoneos;
-				VALID_ARCHS = armv7;
+				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1122,7 +1136,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "BF6DA726-B1A9-45B7-B503-663A47DB8B10";
 				SDKROOT = iphoneos;
-				VALID_ARCHS = armv7;
+				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
