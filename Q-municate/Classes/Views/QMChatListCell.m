@@ -68,6 +68,10 @@
             if (friend != nil) {
                 return friend.fullName;
             }
+            friend = [QMContactList shared].allUsersAsDictionary[ID];
+            if (friend != nil) {
+                return friend.fullName;
+            }
         }
         return @"Unknown user";
     }

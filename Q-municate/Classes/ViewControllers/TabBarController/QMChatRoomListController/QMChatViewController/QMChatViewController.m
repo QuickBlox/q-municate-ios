@@ -43,6 +43,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 	[self addChatObserver];
 	self.isBackButtonClicked = NO;
     
+    NSString *opponentID = [@(self.opponent.ID) stringValue];
     // if dialog is group chat:
     if (self.chatDialog.type != QBChatDialogTypePrivate) {
         
@@ -54,17 +55,24 @@ static CGFloat const kCellHeightOffset = 33.0f;
             [[QMChatService shared] joinRoomWithRoomJID:self.chatDialog.roomJID];
         }
         self.chatRoom = [QMChatService shared].allChatRoomsAsDictionary[self.chatDialog.roomJID];
+        // load history:
+        self.chatHistory = [QMChatService shared].allConversations[self.chatDialog.roomJID];
+        if (self.chatHistory == nil) {
+            [QMUtilities createIndicatorView];
+            [self loadHistory];
+        }
+        return;
     }
 
     // for private chat:
     // retrieve chat history:
-    self.chatHistory = [QMChatService shared].allConversations[self.chatDialog.ID];
+    self.chatHistory = [QMChatService shared].allConversations[opponentID];
     if (self.chatHistory == nil) {
         
         // if new chat dialog (not from server):
         if ([self.chatDialog.occupantIDs count] == 1) {    // created now:
             NSMutableArray *emptyHistory = [NSMutableArray new];
-            [QMChatService shared].allConversations[self.chatDialog.ID] = emptyHistory;
+            [QMChatService shared].allConversations[opponentID] = emptyHistory;
             return;
         }
         [QMUtilities createIndicatorView];
@@ -94,7 +102,12 @@ static CGFloat const kCellHeightOffset = 33.0f;
     [[QMChatService shared] getMessageHistoryWithDialogID:self.chatDialog.ID withCompletion:^(NSArray *chatDialogHistoryArray, NSError *error) {
         [QMUtilities removeIndicatorView];
         if (chatDialogHistoryArray != nil) {
-            [QMChatService shared].allConversations[self.chatDialog.ID] = chatDialogHistoryArray;
+            
+            if (self.chatDialog.type == QBChatDialogTypePrivate) {
+                [QMChatService shared].allConversations[[@(self.opponent.ID)stringValue]] = [chatDialogHistoryArray mutableCopy];
+            } else {
+                [QMChatService shared].allConversations[self.chatDialog.roomJID] = [chatDialogHistoryArray mutableCopy];
+            }
         }
         [self resetTableView];
     }];
@@ -189,7 +202,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QBChatAbstractMessage *message = self.chatHistory[indexPath.row];
-    if (message.customParameters[@"room_jid"] != nil) {
+    if (message.customParameters[@"xmpp_room_jid"] != nil) {
         QMChatInvitationCell *invitationCell = (QMChatInvitationCell *)[tableView dequeueReusableCellWithIdentifier:@"InvitationCell"];
         [invitationCell configureCellWithMessage:message];
         return invitationCell;
@@ -212,7 +225,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QBChatAbstractMessage *chatMessage = self.chatHistory[indexPath.row];
-    if (chatMessage.customParameters[@"room_jid"] != nil) {
+    if (chatMessage.customParameters[@"xmpp_room_jid"] != nil) {
         return 50.0f;
     }
     return [QMChatViewCell cellHeightForMessage:chatMessage.text] + kCellHeightOffset;
@@ -220,7 +233,11 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)resetTableView
 {
-    self.chatHistory = [QMChatService shared].allConversations[self.chatDialog.ID];
+    if (self.chatDialog.type == QBChatDialogTypePrivate) {
+         self.chatHistory = [QMChatService shared].allConversations[[@(self.opponent.ID) stringValue]];
+    } else {
+        self.chatHistory = [QMChatService shared].allConversations[self.chatDialog.roomJID];
+    }
     
     [self.tableView reloadData];
     if ([self.chatHistory count] >2) {

@@ -38,7 +38,7 @@
 
 - (void)sendMessage:(QBChatMessage *)message;
 - (void)sendMessage:(NSString *)message toRoom:(QBChatRoom *)chatRoom;
-- (void)sendInviteMessageToUsers:(NSArray *)users withRoomJID:(NSString *)roomJID;
+- (void)sendInviteMessageToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog;
 
 - (void)joinRoomWithRoomJID:(NSString *)roomJID;
 - (void)joinRoomsForDialogs:(NSArray *)chatDialogs;
