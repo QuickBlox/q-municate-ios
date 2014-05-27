@@ -70,7 +70,9 @@
     }
     
     [QMUtilities createIndicatorView];
-    [[QMAuthService shared] logInWithEmail:self.emailField.text password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSError *error) {
+	NSString *mailString = self.emailField.text;
+	mailString = [mailString stringByReplacingOccurrencesOfString:@"+" withString:@"%2b"];
+    [[QMAuthService shared] logInWithEmail:mailString password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSError *error) {
         if (!success) {
             ILog(@"error while logging in: %@", error);
             [QMUtilities removeIndicatorView];

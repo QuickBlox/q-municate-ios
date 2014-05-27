@@ -64,6 +64,7 @@
                 if (success) {
                     ILog(@"Session created");
                     NSString *email = [[NSUserDefaults standardUserDefaults] objectForKey:kEmail];
+					email = [email stringByReplacingOccurrencesOfString:@"+" withString:@"%2b"];
                     NSString *password = [[NSUserDefaults standardUserDefaults] objectForKey:kPassword];
                     [[QMAuthService shared] logInWithEmail:email password:password completion:^(QBUUser *user, BOOL success, NSError *error) {
                         if (!success) {
@@ -76,8 +77,7 @@
 						if (!user.password) {
 						    user.password = password;
 						}
-                        
-                        [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
+						[[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
                             if (success) {
                                 [[QMContactList shared] retrieveFriendsUsingBlock:^(BOOL success) {
 									[[NSNotificationCenter defaultCenter] postNotificationName:kFriendsLoadedNotification object:nil];
