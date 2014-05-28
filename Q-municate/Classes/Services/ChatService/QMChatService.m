@@ -353,6 +353,9 @@
         inviteMessage.customParameters = customParams;
         
         [[QBChat instance] sendMessage:inviteMessage];
+        
+        // save to history:
+        self.allConversations[[@(user.ID) stringValue]] = inviteMessage;
     }
 }
 
