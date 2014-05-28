@@ -82,4 +82,10 @@
     Block_release(contextInfo);
 }
 
+-(void)setProgress:(float)progress
+{
+    self.uploadProgress = progress;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadProgressDidChanged" object:nil];
+}
+
 @end
