@@ -52,8 +52,10 @@
 		self.localUser.phone = kEmptyString;
     }
     self.userNameTextField.text = self.localUser.fullName;
-    self.userMailTextField.text = self.localUser.email;
-    self.userPhoneTextField.text = self.localUser.phone;
+	NSString *mailString = self.localUser.email;
+	mailString = [mailString stringByReplacingOccurrencesOfString:@"%2b" withString:@"+"];
+	self.userMailTextField.text = mailString;
+	self.userPhoneTextField.text = self.localUser.phone;
 
 	if (!self.oldUserStatusString || [self.oldUserStatusString isEqualToString:kEmptyString]) {
 		self.oldUserStatusString = kSettingsProfileDefaultStatusString;
@@ -342,6 +344,7 @@
 	}
 	NSString *userMailString = self.userMailTextField.text;
 	if (![userMailString isEqualToString:self.localUser.email]) {
+		userMailString = [userMailString stringByReplacingOccurrencesOfString:@"+" withString:@"%2b"];
 		self.localUser.email = userMailString;
 	}
 	NSString *userPhoneString = self.userPhoneTextField.text;
