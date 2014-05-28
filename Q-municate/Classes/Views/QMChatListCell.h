@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AsyncImageView.h>
 
 @interface QMChatListCell : UITableViewCell
 
-@property (strong, nonatomic) IBOutlet UIImageView *avatar;
+@property (strong, nonatomic) IBOutlet AsyncImageView *avatar;
 @property (strong, nonatomic) IBOutlet UILabel *name;
 @property (strong, nonatomic) IBOutlet UILabel *lastMessage;
 

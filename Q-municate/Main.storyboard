@@ -1022,7 +1022,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="65"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="group_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="oai-MX-Rq6">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="group_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="oai-MX-Rq6" customClass="AsyncImageView">
                                                     <rect key="frame" x="13" y="10" width="45" height="45"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </imageView>
@@ -2440,7 +2440,7 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="cwy-pn-aAV"/>
-        <segue reference="gq5-5p-RwI"/>
         <segue reference="bAk-xe-kWS"/>
+        <segue reference="IAo-qy-uHQ"/>
     </inferredMetricsTieBreakers>
 </document>

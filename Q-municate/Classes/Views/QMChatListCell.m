@@ -8,6 +8,7 @@
 
 #import "QMChatListCell.h"
 #import "QMContactList.h"
+#import "UIImageView+ImageWithBlobID.h"
 
 @implementation QMChatListCell
 
@@ -26,6 +27,12 @@
 
 - (void)configureCellWithDialog:(QBChatDialog *)chatDialog
 {
+    self.avatar.layer.cornerRadius = self.avatar.frame.size.width / 2;
+    self.avatar.layer.borderWidth = 2.0f;
+    self.avatar.layer.borderColor = [UIColor colorWithRed:1/215 green:1/216 blue:1/215 alpha:0.04].CGColor;   //215,216,215
+    self.avatar.layer.masksToBounds = YES;
+    self.avatar.crossfadeDuration = 0.0f;
+    
     // avatar:
     if (chatDialog.type != QBChatDialogTypePrivate) {
         [self.avatar setImage:[UIImage imageNamed:@"group_placeholder"]];
@@ -39,8 +46,16 @@
         [self.avatar setImage:[UIImage imageNamed:@"upic_placeholderr"]];
         self.groupMembersNumb.hidden = YES;
         self.groupNumbBackground.hidden = YES;
+        
+        
+        QBUUser *friend = [[QMContactList shared] searchFriendFromChatDialog:chatDialog];
+        // load image:
+        if (friend.website != nil) {
+            [self.avatar setImageURL:[NSURL URLWithString:friend.website]];
+        } else if (friend.blobID > 0) {
+            [self.avatar loadImageWithBlobID:friend.blobID];
+        }
     }
-    
     // name:
     [self.name setText:[self chatNameForChatDialog:chatDialog]];
     

@@ -123,9 +123,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)addChatObserver
 {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidNotSendMessage:) name:kChatDidNotSendMessage object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidFailWithError:) name:kChatDidFailWithError object:nil];
     
     // chat room:
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatRoomDidEnterNotification) name:kChatRoomDidEnterNotification object:nil];
@@ -330,34 +328,13 @@ static CGFloat const kCellHeightOffset = 33.0f;
 }
 
 #pragma mark - Chat Notifications
-- (void)localChatDidNotSendMessage:(NSNotification *)notification
-{
-	NSLog(@"userInfo: %@", notification.userInfo);
-//	[self showAlertWithErrorMessage:notification.userInfo];
-	[QMUtilities removeIndicatorView];
-}
+
 
 - (void)localChatDidReceiveMessage:(NSNotification *)notification
 {
     [self updateChatDialog];
     [self resetTableView];
 }
-
-- (void)localChatDidFailWithError:(NSNotification *)notification
-{
-	NSLog(@"userInfo: %@", notification.userInfo);
-	NSString *errorMessage;
-	int errorCode = [notification.userInfo[@"errorCode"] integerValue];
-	if (!errorCode) {
-		errorMessage = @"QBChatServiceErrorConnectionRefused";
-	} else if (errorCode == 1) {
-		errorMessage = @"QBChatServiceErrorConnectionClosed";
-	} else if (errorCode == 2) {
-		errorMessage = @"QBChatServiceErrorConnectionTimeout";
-	}
-	[self showAlertWithErrorMessage:[NSString stringWithFormat:@"error: %@", errorMessage]];
-}
-
 
 // ************************** CHAT ROOM **********************************
 - (void)chatRoomDidEnterNotification
