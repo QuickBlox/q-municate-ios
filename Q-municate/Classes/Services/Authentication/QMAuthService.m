@@ -115,6 +115,7 @@
     if ([FBSession activeSession].state == FBSessionStateCreated) {
         [[FBSession activeSession] openWithBehavior:FBSessionLoginBehaviorForcingWebView completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
             if (status == FBSessionStateClosedLoginFailed) {
+				[FBSession setActiveSession:nil];
                 NSError *error = [NSError errorWithDomain:@"Failed login to Facebook:Canceled" code:10 userInfo:nil];
                 resultBlock(nil, NO, error);
                 return;

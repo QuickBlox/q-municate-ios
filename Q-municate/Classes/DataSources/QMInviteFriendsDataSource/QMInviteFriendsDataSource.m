@@ -37,7 +37,7 @@
 		[FBSession setActiveSession:[[FBSession alloc]initWithPermissions:@[@"basic_info", @"email", @"read_stream", @"publish_stream"]]];
 	}
 	if ([FBSession activeSession].state == FBSessionStateCreated) {
-		[[FBSession activeSession] openWithBehavior:FBSessionLoginBehaviorForcingWebView completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+		[[FBSession activeSession] openWithBehavior:FBSessionLoginBehaviorWithFallbackToWebView completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
 			if (status == FBSessionStateOpen) {
 				//TODO: хорошо бы вынести в отдельный метод
 				[self fetchAndSaveFacebookFriends:^(NSError *innerError) {
@@ -49,6 +49,7 @@
 				}];
 			} else if (status == FBSessionStateClosedLoginFailed) {
 				if ([FBSession activeSession]) {
+					[FBSession setActiveSession:nil];
 					completionBlock(error);
 				}
 			}
