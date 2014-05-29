@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		690A271518CA0F35003D6B80 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A271418CA0F35003D6B80 /* AddressBook.framework */; };
 		690F80701936148600A5023F /* QMPrivateContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 690F806F1936148600A5023F /* QMPrivateContentCell.m */; };
+		693808C21937321100BF926F /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 693808C11937321100BF926F /* Quickblox.framework */; };
 		693DC42618FFC45900AF46D9 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42518FFC45900AF46D9 /* libsqlite3.dylib */; };
 		693DC42C18FFC58000AF46D9 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */; };
 		693F347B18F554240032891F /* QMIncommingCallSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 693F347A18F554240032891F /* QMIncommingCallSegue.m */; };
@@ -107,6 +108,7 @@
 		690A271418CA0F35003D6B80 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		690F806E1936148600A5023F /* QMPrivateContentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMPrivateContentCell.h; sourceTree = "<group>"; };
 		690F806F1936148600A5023F /* QMPrivateContentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMPrivateContentCell.m; sourceTree = "<group>"; };
+		693808C11937321100BF926F /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quickblox.framework; path = External/Quickblox.framework; sourceTree = "<group>"; };
 		693DC42518FFC45900AF46D9 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
 		693F347918F554240032891F /* QMIncommingCallSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncommingCallSegue.h; sourceTree = "<group>"; };
@@ -261,6 +263,7 @@
 				69CF189918AE1C52003262EF /* MobileCoreServices.framework in Frameworks */,
 				69CF189718AE1C49003262EF /* SystemConfiguration.framework in Frameworks */,
 				69CF189518AE1C3C003262EF /* CFNetwork.framework in Frameworks */,
+				693808C21937321100BF926F /* Quickblox.framework in Frameworks */,
 				69D15CC318AE1721001E0480 /* libz.dylib in Frameworks */,
 				69D15CC118AE1714001E0480 /* libresolv.dylib in Frameworks */,
 				69D15CBF18AE1708001E0480 /* libxml2.dylib in Frameworks */,
@@ -520,6 +523,7 @@
 		69D57E5418ACC11C00A9900A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				693808C11937321100BF926F /* Quickblox.framework */,
 				693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */,
 				693DC42518FFC45900AF46D9 /* libsqlite3.dylib */,
 				69DB5EF418E31D6400277226 /* MessageUI.framework */,
