@@ -123,10 +123,9 @@ static CGFloat const kCellHeightOffset = 33.0f;
 }
 
 - (void)updateProgressFooter
-{
-    CGFloat progress = [self.uploadManager uploadProgress];
+{ 
     UILabel *progressLabel = (UILabel *)[self.progressFooter viewWithTag:3040];
-    progressLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)progress];
+    progressLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)(self.uploadManager.uploadProgress * 100)];
 }
 
 - (void)dealloc
