@@ -190,9 +190,9 @@
 	NSString *textString = textField.text;
 	NSString *resultString;
 	if (!range.length) {
-	    resultString = [NSString stringWithFormat:@"%@%@", textString, string];
+	    resultString = [NSString stringWithFormat:@"%@%@%@", [textString substringToIndex:range.location], string, [textString substringFromIndex:range.location]];
 	} else {
-		resultString = [textString substringToIndex:range.location];
+		resultString = [NSString stringWithFormat:@"%@%@", [textString substringToIndex:range.location], [textString substringFromIndex:range.location + 1]];
 	}
 	NSLog(@"resultString: %@", resultString);
 	if (textField == self.userNameTextField) {
@@ -202,10 +202,20 @@
 			self.isUserDataChanged = NO;
 		}
 	} else if (textField == self.userMailTextField) {
-		if (![resultString isEqualToString:self.localUser.email]) {
-			self.isUserDataChanged = YES;
+		if (self.localUser.email) {
+			if (![resultString isEqualToString:self.localUser.email]) {
+				self.isUserDataChanged = YES;
+			} else {
+				self.isUserDataChanged = NO;
+			}
 		} else {
-			self.isUserDataChanged = NO;
+			NSString *fbMailString = [QMContactList shared].facebookMe[kEmail];
+			BOOL isMailEqual = [resultString isEqualToString:fbMailString];
+			if (!isMailEqual) {
+				self.isUserDataChanged = YES;
+			} else {
+				self.isUserDataChanged = NO;
+			}
 		}
 	} else if (textField == self.userPhoneTextField) {
 		if (![resultString isEqualToString:self.localUser.phone]) {
@@ -278,11 +288,13 @@
 
 - (void)verifyInputFields
 {
-	if (![self.userPhoneTextField.text isEqualToString:self.localUser.phone] ||
-			![self.userNameTextField.text isEqualToString:self.localUser.fullName] ||
-			![self.userMailTextField.text isEqualToString:self.localUser.email] ||
-			(![self.userStatusTextView.text isEqualToString:self.oldUserStatusString] &&
-					![self.userStatusTextView.text isEqualToString:kEmptyString])) {
+	NSString *fbMailString = [QMContactList shared].facebookMe[kEmail];
+	BOOL isPhoneEqual = [self.userPhoneTextField.text isEqualToString:self.localUser.phone];
+	BOOL isFullNameEqual = [self.userNameTextField.text isEqualToString:self.localUser.fullName];
+	BOOL isMailEqual = ![self.userMailTextField.text isEqualToString:self.localUser.email] || ![self.userMailTextField.text isEqualToString:fbMailString];
+	BOOL isStatusEqual = [self.userStatusTextView.text isEqualToString:self.oldUserStatusString];
+	BOOL isStatusEmpty = [self.userStatusTextView.text isEqualToString:kEmptyString];
+	if (!isPhoneEqual ||!isFullNameEqual || !isMailEqual || !(isStatusEqual || isStatusEmpty)) {
 		self.isUserDataChanged = YES;
 	} else {
 		self.isUserDataChanged = NO;
@@ -348,8 +360,8 @@
 		self.localUser.fullName = userNameString;
 	}
 	NSString *userMailString = self.userMailTextField.text;
+	userMailString = [userMailString stringByReplacingOccurrencesOfString:@"+" withString:@"%2b"];
 	if (![userMailString isEqualToString:self.localUser.email]) {
-		userMailString = [userMailString stringByReplacingOccurrencesOfString:@"+" withString:@"%2b"];
 		self.localUser.email = userMailString;
 	}
 	NSString *userPhoneString = self.userPhoneTextField.text;
@@ -422,13 +434,13 @@
 			[self showAlertWithMessage:kSettingsProfileTextViewMessageWarningString];
 			return NO;
 		}
-        NSString *userStatusString = textView.text;
-		userStatusString = [self verifyResultStatusWithString:userStatusString];
-		if (![userStatusString isEqualToString:self.oldUserStatusString]) {
-            self.isUserDataChanged = YES;
-        } else {
-            self.isUserDataChanged = NO;
-        }
+//        NSString *userStatusString = textView.text;
+//		userStatusString = [self verifyResultStatusWithString:userStatusString];
+//		if (![userStatusString isEqualToString:self.oldUserStatusString]) {
+//            self.isUserDataChanged = YES;
+//        } else {
+//            self.isUserDataChanged = NO;
+//        }
 		[self checkForChanges];
         [textView resignFirstResponder];
         CGRect r = self.containerView.frame;
