@@ -52,7 +52,12 @@
 		self.localUser.phone = kEmptyString;
     }
     self.userNameTextField.text = self.localUser.fullName;
-	NSString *mailString = self.localUser.email;
+	NSString *mailString;
+	if (self.localUser.email) {
+	    mailString = self.localUser.email;
+	} else {
+		mailString = [QMContactList shared].facebookMe[kEmail];
+	}
 	mailString = [mailString stringByReplacingOccurrencesOfString:@"%2b" withString:@"+"];
 	self.userMailTextField.text = mailString;
 	self.userPhoneTextField.text = self.localUser.phone;

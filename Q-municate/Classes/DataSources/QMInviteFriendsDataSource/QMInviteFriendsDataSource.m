@@ -33,10 +33,13 @@
 - (void)updateFacebookDataSource:(void(^)(NSError *error))completionBlock
 {
 	// Check for Active Facebook Session:
-	if (![FBSession activeSession]) {
+	if (![FBSession activeSession] || ![[FBSession activeSession].permissions count]) {
 		[FBSession setActiveSession:[[FBSession alloc]initWithPermissions:@[@"basic_info", @"email", @"read_stream", @"publish_stream"]]];
+	}
+	if ([FBSession activeSession].state == FBSessionStateCreated) {
 		[[FBSession activeSession] openWithBehavior:FBSessionLoginBehaviorForcingWebView completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
 			if (status == FBSessionStateOpen) {
+				//TODO: хорошо бы вынести в отдельный метод
 				[self fetchAndSaveFacebookFriends:^(NSError *innerError) {
 					if (innerError) {
 						completionBlock(innerError);
@@ -45,21 +48,22 @@
 					}
 				}];
 			} else if (status == FBSessionStateClosedLoginFailed) {
-				if (error) {
+				if ([FBSession activeSession]) {
 					completionBlock(error);
 				}
 			}
+			return;
 		}];
-		return;
+	} else if ([FBSession activeSession].state == FBSessionStateCreatedTokenLoaded || [FBSession activeSession].state == FBSessionStateOpen) {
+		//TODO: хорошо бы вынести в отдельный метод - дублирование
+		[self fetchAndSaveFacebookFriends:^(NSError *innerError) {
+			if (innerError) {
+				completionBlock(innerError);
+			} else {
+				completionBlock(nil);
+			}
+		}];
 	}
-	[self fetchAndSaveFacebookFriends:^(NSError *innerError) {
-		if (innerError) {
-			completionBlock(innerError);
-		} else {
-			completionBlock(nil);
-		}
-	}];
-	return;
 }
 
 - (void)updateContactListDataSource:(void(^)(NSError *error))completionBlock

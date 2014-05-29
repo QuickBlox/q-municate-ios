@@ -109,7 +109,7 @@
 // **************************FACEBOOK**********************************
 - (void)authWithFacebookAndCompletionHandler:(QBAuthResultBlock)resultBlock
 {
-	if (![FBSession activeSession]) {
+	if (![FBSession activeSession] || ![[FBSession activeSession].permissions count]) {
 		[FBSession setActiveSession:[[FBSession alloc]initWithPermissions:@[@"basic_info", @"email", @"read_stream", @"publish_stream"]]];
 	}
     if ([FBSession activeSession].state == FBSessionStateCreated) {
