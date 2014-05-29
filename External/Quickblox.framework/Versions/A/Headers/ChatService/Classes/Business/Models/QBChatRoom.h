@@ -41,7 +41,7 @@
  @param roomName Room name
  @return QBChatRoom instance
  */
-- (id)initWithRoomName:(NSString *)roomName __attribute__((deprecated("Use method with JID instead")));;
+- (id)initWithRoomName:(NSString *)roomName;
 
 /**
  Init QBChatRoom instance with name & user nickname
@@ -54,7 +54,7 @@
  @param nickname User nickname wich will be used in room
  @return QBChatRoom instance
  */
-- (id)initWithRoomName:(NSString *)roomName nickname:(NSString *)nickname __attribute__((deprecated("Use method with JID instead")));
+- (id)initWithRoomName:(NSString *)roomName nickname:(NSString *)nickname;
 
 /**
  Init QBChatRoom instance with JID
@@ -92,6 +92,13 @@
  Join current room
  */
 - (void)joinRoom;
+
+/**
+ Join current room
+ 
+ @param historyAttribute Attribite to manage the amount of discussion history provided on entering a room. More info here http://xmpp.org/extensions/xep-0045.html#enter-history
+ */
+- (void)joinRoomWithHistoryAttribute:(NSDictionary *)historyAttribute;
 
 /**
  Leave current room

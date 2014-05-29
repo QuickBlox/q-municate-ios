@@ -50,7 +50,6 @@
 // Extract custom params & attachments
 + (NSMutableDictionary *)customParametersFromXMPPMessage:(id)message;
 + (NSArray *)attachmentsFromXMPPMessage:(id)xmppMessage;
-+ (void)setCustomParameters:(NSDictionary *)customParameters extensionName:(NSString *)extensionName toXMPPMessage:(id)message;
 + (void)setCustomParameters:(NSDictionary *)customParameters attachments:(NSArray *)attachments extensionName:(NSString *)extensionName toXMPPMessage:(id)xmppMessage;
 
 // Internet

@@ -15,6 +15,8 @@
 #import "QMContent.h"
 #import "QMChatInvitationCell.h"
 #import "QMPrivateChatCell.h"
+#import "QMPrivateContentCell.h"
+#import "UIImage+Cropper.h"
 
 
 static CGFloat const kCellHeightOffset = 33.0f;
@@ -24,7 +26,11 @@ static CGFloat const kCellHeightOffset = 33.0f;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIView *inputMessageView;
 @property (weak, nonatomic) IBOutlet UITextField *inputMessageTextField;
+@property (weak, nonatomic) IBOutlet UIView *progressFooter;
+
+@property (nonatomic, strong) QMContent *uploadManager;
 @property (nonatomic, strong) QMChatDataSource *dataSource;
+
 @property (assign) BOOL isBackButtonClicked;
 
 @property (nonatomic, strong) NSMutableArray *chatHistory;
@@ -116,6 +122,12 @@ static CGFloat const kCellHeightOffset = 33.0f;
     }];
 }
 
+- (void)updateProgressFooter
+{ 
+    UILabel *progressLabel = (UILabel *)[self.progressFooter viewWithTag:3040];
+    progressLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)(self.uploadManager.uploadProgress * 100)];
+}
+
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -124,6 +136,9 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (void)addChatObserver
 {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
+    
+    // upload progress:
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(progressDidChanged) name:@"UploadProgressDidChanged" object:nil];
     
     // chat room:
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatRoomDidEnterNotification) name:kChatRoomDidEnterNotification object:nil];
@@ -229,6 +244,12 @@ static CGFloat const kCellHeightOffset = 33.0f;
     
     // choosing cell:
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
+        if ([message.attachments count]>0) {
+            QMPrivateContentCell *contentCell = (QMPrivateContentCell *)[tableView dequeueReusableCellWithIdentifier:@"PrivateContentCell"];
+            [contentCell configureCellWithMessage:message forUser:currentUser];
+            return contentCell;
+        }
+        
         QMPrivateChatCell *privateChatCell = (QMPrivateChatCell *)[tableView dequeueReusableCellWithIdentifier:@"PrivateChatCell"];
         [privateChatCell configureCellWithMessage:message fromUser:currentUser];
         return privateChatCell;
@@ -248,6 +269,9 @@ static CGFloat const kCellHeightOffset = 33.0f;
         return 50.0f;
     }
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
+        if ([chatMessage.attachments count] >0) {
+            return 125;
+        }
         return [QMPrivateChatCell cellHeightForMessage:chatMessage] +9.0f;
     }
     return [QMChatViewCell cellHeightForMessage:chatMessage.text] + kCellHeightOffset;
@@ -395,6 +419,16 @@ static CGFloat const kCellHeightOffset = 33.0f;
     return YES;
 }
 
+
+#pragma mark - Content notifications
+
+- (void)progressDidChanged
+{
+    [self updateProgressFooter];
+    NSLog(@"STATUS: %lu persent loaded", (unsigned long)(self.uploadManager.uploadProgress * 100));
+}
+
+
 #pragma mark -
 - (void)showAlertWithErrorMessage:(NSString *)messageString
 {
@@ -406,15 +440,26 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    UIImage *currentImage = info[UIImagePickerControllerOriginalImage];
+    __block UIImage *currentImage = info[UIImagePickerControllerOriginalImage];
+    [currentImage imageByScalingProportionallyToMinimumSize:CGSizeMake(625, 400)];
     
-    QMContent *content = [[QMContent alloc] init];
-    [content uploadImage:currentImage withCompletion:^(QBCBlob *blob, BOOL success, NSError *error) {
-        //
-    }];
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // start load:
+        self.progressFooter.hidden = NO;
+        if ([self.chatHistory count] >2) {
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.chatHistory count]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        }
+        
+        self.uploadManager = [[QMContent alloc] init];
+        [self.uploadManager uploadImage:currentImage withCompletion:^(QBCBlob *blob, BOOL success, NSError *error) {
+            self.progressFooter.hidden = YES;
+            // create content message and send:
+            [[QMChatService shared] sendContentMessageToUserWithID:self.opponent.ID withBlob:blob];
+            [self resetTableView];
+        }];
+    }];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker

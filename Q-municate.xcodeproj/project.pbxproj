@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		690A271518CA0F35003D6B80 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A271418CA0F35003D6B80 /* AddressBook.framework */; };
+		690F80701936148600A5023F /* QMPrivateContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 690F806F1936148600A5023F /* QMPrivateContentCell.m */; };
+		693808C21937321100BF926F /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 693808C11937321100BF926F /* Quickblox.framework */; };
 		693DC42618FFC45900AF46D9 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42518FFC45900AF46D9 /* libsqlite3.dylib */; };
 		693DC42C18FFC58000AF46D9 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */; };
 		693F347B18F554240032891F /* QMIncommingCallSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 693F347A18F554240032891F /* QMIncommingCallSegue.m */; };
@@ -41,7 +43,6 @@
 		6972022F18EB04280003A4CC /* QMChatViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6972022E18EB04280003A4CC /* QMChatViewCell.m */; };
 		69B1893E190950A70049C6F9 /* QMDefinitions.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B1893D190950A70049C6F9 /* QMDefinitions.m */; };
 		69B5343D1934C9C2005D865F /* QMPrivateChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B5343C1934C9C2005D865F /* QMPrivateChatCell.m */; };
-		69B71AE9192F7170005AE015 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69B71AE8192F7170005AE015 /* Quickblox.framework */; };
 		69CF189518AE1C3C003262EF /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CF189418AE1C3C003262EF /* CFNetwork.framework */; };
 		69CF189718AE1C49003262EF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CF189618AE1C48003262EF /* SystemConfiguration.framework */; };
 		69CF189918AE1C52003262EF /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CF189818AE1C52003262EF /* MobileCoreServices.framework */; };
@@ -105,6 +106,9 @@
 /* Begin PBXFileReference section */
 		67976AC8FFE848A4B85EB2AF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		690A271418CA0F35003D6B80 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		690F806E1936148600A5023F /* QMPrivateContentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMPrivateContentCell.h; sourceTree = "<group>"; };
+		690F806F1936148600A5023F /* QMPrivateContentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMPrivateContentCell.m; sourceTree = "<group>"; };
+		693808C11937321100BF926F /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quickblox.framework; path = External/Quickblox.framework; sourceTree = "<group>"; };
 		693DC42518FFC45900AF46D9 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
 		693F347918F554240032891F /* QMIncommingCallSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncommingCallSegue.h; sourceTree = "<group>"; };
@@ -164,7 +168,6 @@
 		69B1893D190950A70049C6F9 /* QMDefinitions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDefinitions.m; sourceTree = "<group>"; };
 		69B5343B1934C9C2005D865F /* QMPrivateChatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMPrivateChatCell.h; sourceTree = "<group>"; };
 		69B5343C1934C9C2005D865F /* QMPrivateChatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMPrivateChatCell.m; sourceTree = "<group>"; };
-		69B71AE8192F7170005AE015 /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quickblox.framework; path = External/Quickblox.framework; sourceTree = "<group>"; };
 		69CF189418AE1C3C003262EF /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		69CF189618AE1C48003262EF /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		69CF189818AE1C52003262EF /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -260,7 +263,7 @@
 				69CF189918AE1C52003262EF /* MobileCoreServices.framework in Frameworks */,
 				69CF189718AE1C49003262EF /* SystemConfiguration.framework in Frameworks */,
 				69CF189518AE1C3C003262EF /* CFNetwork.framework in Frameworks */,
-				69B71AE9192F7170005AE015 /* Quickblox.framework in Frameworks */,
+				693808C21937321100BF926F /* Quickblox.framework in Frameworks */,
 				69D15CC318AE1721001E0480 /* libz.dylib in Frameworks */,
 				69D15CC118AE1714001E0480 /* libresolv.dylib in Frameworks */,
 				69D15CBF18AE1708001E0480 /* libxml2.dylib in Frameworks */,
@@ -490,6 +493,8 @@
 			children = (
 				69B5343B1934C9C2005D865F /* QMPrivateChatCell.h */,
 				69B5343C1934C9C2005D865F /* QMPrivateChatCell.m */,
+				690F806E1936148600A5023F /* QMPrivateContentCell.h */,
+				690F806F1936148600A5023F /* QMPrivateContentCell.m */,
 			);
 			name = PrivateChatCells;
 			sourceTree = "<group>";
@@ -518,7 +523,7 @@
 		69D57E5418ACC11C00A9900A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				69B71AE8192F7170005AE015 /* Quickblox.framework */,
+				693808C11937321100BF926F /* Quickblox.framework */,
 				693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */,
 				693DC42518FFC45900AF46D9 /* libsqlite3.dylib */,
 				69DB5EF418E31D6400277226 /* MessageUI.framework */,
@@ -908,6 +913,7 @@
 				6943848B18E42678001E08A9 /* QMRequestsCell.m in Sources */,
 				B71E0566190FAAF900DD6D34 /* QMProfileViewController.m in Sources */,
 				6943847218E42678001E08A9 /* QMCustomSegue.m in Sources */,
+				690F80701936148600A5023F /* QMPrivateContentCell.m in Sources */,
 				6943849418E42691001E08A9 /* UIImage+Cropper.m in Sources */,
 				6943848818E42678001E08A9 /* QMInviteFriendsCell.m in Sources */,
 				6943847718E42678001E08A9 /* QMChatService.m in Sources */,

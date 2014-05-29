@@ -359,10 +359,23 @@
     }
 }
 
-- (void)saveMessageToLocalHistory:(QBChatMessage *)chatMessage
+- (void)sendContentMessageToUserWithID:(NSUInteger)userID withBlob:(QBCBlob *)blob
 {
-	//
+    QBChatAttachment *attachment = [[QBChatAttachment alloc] init];
+    attachment.type = @"photo";
+    attachment.url = [blob publicUrl];
+    attachment.ID = [@(blob.ID) stringValue];
+    
+    // create QBChatMessage:
+    QBChatMessage *contentMessage = [QBChatMessage message];
+    contentMessage.recipientID = userID;
+    contentMessage.senderID = [QMContactList shared].me.ID;
+    contentMessage.text = @"Content";
+    contentMessage.attachments = @[attachment];
+    
+    [self sendMessage:contentMessage];
 }
+
 
 #pragma mark - Group Chat
 

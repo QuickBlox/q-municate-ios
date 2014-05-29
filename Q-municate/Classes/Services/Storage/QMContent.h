@@ -10,6 +10,8 @@
 
 @interface QMContent : NSObject
 
+@property (nonatomic, assign) CGFloat uploadProgress;
+
 - (void)loadImageForBlob:(UIImage *)image named:(NSString *)name completion:(QBContentBlock)block;
 - (void)loadImageFromFacebookWithUserID:(NSString *)facebookID accessToken:(NSString *)accessToken completion:(void (^)(id object))block;
 
