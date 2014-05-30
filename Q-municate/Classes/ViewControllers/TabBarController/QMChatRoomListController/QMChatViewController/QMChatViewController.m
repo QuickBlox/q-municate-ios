@@ -238,10 +238,11 @@ static CGFloat const kCellHeightOffset = 33.0f;
         [invitationCell configureCellWithMessage:message];
         return invitationCell;
     }
-    
+    BOOL isMe = NO;
     QBUUser *currentMessageUser = nil;
     if ([QMContactList shared].me.ID == message.senderID) {
         currentMessageUser = [QMContactList shared].me;
+        isMe = YES;
     } else {
         currentMessageUser = [[QMContactList shared] findFriendWithID:message.senderID];
     }
@@ -262,7 +263,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
         //
         if ([message.attachments count]>0) {
             QMPrivateContentCell *contentCell = (QMPrivateContentCell *)[tableView dequeueReusableCellWithIdentifier:@"PrivateContentCell"];
-            [contentCell configureCellWithMessage:message forUser:currentMessageUser];
+            [contentCell configureCellWithMessage:message forUser:currentMessageUser isMe:isMe];
             return contentCell;
         }
         
@@ -298,7 +299,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
     }
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         if ([chatMessage.attachments count] >0) {
-            return 125;
+            return 150;
         }
         return [QMPrivateChatCell cellHeightForMessage:chatMessage] +9.0f;
     }
@@ -334,9 +335,9 @@ static CGFloat const kCellHeightOffset = 33.0f;
     }
     
     [self.tableView reloadData];
-    if ([self.chatHistory count] >2) {
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.chatHistory count]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-    }
+//    if ([self.chatHistory count] >2) {
+//        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.chatHistory count]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+//    }
 }
 
 #pragma mark - Keyboard

@@ -12,6 +12,12 @@
 #import "UIImageView+ImageWithBlobID.h"
 #import "NSDateFormatter+SinceDateFormat.h"
 
+@interface QMPrivateContentCell()
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *photoCenterConstraint;
+
+@end
+
 @implementation QMPrivateContentCell
 
 
@@ -32,10 +38,13 @@
     self.opponentAvatar.crossfadeDuration = 0.0f;
 }
 
-- (void)configureCellWithMessage:(QBChatAbstractMessage *)message forUser:(QBUUser *)user
+- (void)configureCellWithMessage:(QBChatAbstractMessage *)message forUser:(QBUUser *)user isMe:(BOOL)isMe
 {
     // if message is mine:
-    if (message.senderID == [QMContactList shared].me.ID) {
+    if (isMe) {
+        
+        self.photoCenterConstraint.constant = 35.0f;
+        
         self.myAvatar.hidden = NO;
         self.opponentAvatar.hidden = YES;
         self.myAvatar.image = [UIImage imageNamed:@"upic-placeholder"];
@@ -48,6 +57,8 @@
         }
         self.backgroundColor = [UIColor whiteColor];
     } else {
+        self.photoCenterConstraint.constant = -31.0f;
+        
         self.myAvatar.hidden = YES;
         self.opponentAvatar.hidden = NO;
         self.opponentAvatar.image = [UIImage imageNamed:@"upic-placeholder"];
@@ -71,7 +82,6 @@
             [self.sharedImageView loadImageWithBlobID:[attach.ID integerValue]];
         }
     }
-    
 }
 
 @end

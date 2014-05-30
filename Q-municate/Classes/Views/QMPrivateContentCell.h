@@ -15,6 +15,6 @@
 @property (weak, nonatomic) IBOutlet AsyncImageView *sharedImageView;
 @property (weak, nonatomic) IBOutlet UILabel *datetimeLabel;
 
-- (void)configureCellWithMessage:(QBChatAbstractMessage *)message forUser:(QBUUser *)user;
+- (void)configureCellWithMessage:(QBChatAbstractMessage *)message forUser:(QBUUser *)user isMe:(BOOL)isMe;
 
 @end
