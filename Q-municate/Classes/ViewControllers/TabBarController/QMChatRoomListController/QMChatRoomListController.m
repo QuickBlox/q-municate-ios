@@ -14,6 +14,7 @@
 #import "QMChatRoomListDataSource.h"
 #import "QMCreateNewChatController.h"
 #import "QMUtilities.h"
+#import "TWMessageBarManager.h"
 
 static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
@@ -46,6 +47,16 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     [self reloadTableView];
     
     [super viewWillAppear:NO];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+	[super viewDidAppear:animated];
+
+	[[TWMessageBarManager sharedInstance] showMessageWithTitle:@"Hello message" description:@"hello description for message." type:TWMessageBarMessageTypeSuccess duration:10.0f callback:^{
+		// do some selector
+		NSLog(@"We are inside callback block;");
+	}];
 }
 
 - (void)didReceiveMemoryWarning
