@@ -30,6 +30,12 @@
 #define COCOAPODS_VERSION_MINOR_Reachability 1
 #define COCOAPODS_VERSION_PATCH_Reachability 1
 
+// TWMessageBarManager
+#define COCOAPODS_POD_AVAILABLE_TWMessageBarManager
+#define COCOAPODS_VERSION_MAJOR_TWMessageBarManager 1
+#define COCOAPODS_VERSION_MINOR_TWMessageBarManager 6
+#define COCOAPODS_VERSION_PATCH_TWMessageBarManager 0
+
 // UIDevice-Hardware
 #define COCOAPODS_POD_AVAILABLE_UIDevice_Hardware
 #define COCOAPODS_VERSION_MAJOR_UIDevice_Hardware 0
