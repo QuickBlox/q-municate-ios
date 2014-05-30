@@ -324,11 +324,19 @@
         // get chat history with current dialog id:
         NSMutableArray *currentHistory = self.allConversations[kRecipientID];
         if (currentHistory != nil) {
+            
+            if ([message isKindOfClass:QMChatUploadingMessage.class]) {
+                // convert upload message to chat message & replace it:
+                QBChatMessage *validMessage = [self chatMessageFromContentMessage:(QMChatUploadingMessage *)message];
+                NSUInteger contentMessageIndex = [currentHistory indexOfObject:message];
+                [currentHistory replaceObjectAtIndex:contentMessageIndex withObject:validMessage];
+                return;
+            }
             [currentHistory addObject:message];
-        } else {
-            currentHistory = [@[message] mutableCopy];
-            self.allConversations[kRecipientID] = currentHistory;
+            return;
         }
+        currentHistory = [@[message] mutableCopy];
+        self.allConversations[kRecipientID] = currentHistory;
     }
 }
 
@@ -359,18 +367,13 @@
     }
 }
 
-- (void)sendContentMessageToUserWithID:(NSUInteger)userID withBlob:(QBCBlob *)blob
+- (void)sendContentMessage:(QMChatUploadingMessage *)contentMessage withBlob:(QBCBlob *)blob
 {
     QBChatAttachment *attachment = [[QBChatAttachment alloc] init];
     attachment.type = @"photo";
     attachment.url = [blob publicUrl];
     attachment.ID = [@(blob.ID) stringValue];
     
-    // create QBChatMessage:
-    QBChatMessage *contentMessage = [QBChatMessage message];
-    contentMessage.recipientID = userID;
-    contentMessage.senderID = [QMContactList shared].me.ID;
-    contentMessage.text = @"Content";
     contentMessage.attachments = @[attachment];
     
     [self sendMessage:contentMessage];
@@ -496,6 +499,16 @@
 
 
 #pragma mark - Chat Utils
+
+- (QBChatMessage *)chatMessageFromContentMessage:(QMChatUploadingMessage *)uploadingMessage
+{
+    QBChatMessage *newMessage = [QBChatMessage message];
+    newMessage.text = uploadingMessage.text;
+    newMessage.recipientID = uploadingMessage.recipientID;
+    newMessage.senderID = uploadingMessage.senderID;
+    newMessage.attachments = uploadingMessage.attachments;
+    return newMessage;
+}
 
 - (QBChatDialog *)chatDialogForFriendWithID:(NSUInteger)ID
 {

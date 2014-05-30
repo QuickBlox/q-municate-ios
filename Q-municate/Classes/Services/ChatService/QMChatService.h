@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "QMChatUploadingMessage.h"
 
 @interface QMChatService : NSObject
 
@@ -39,7 +40,7 @@
 - (void)sendMessage:(QBChatMessage *)message;
 - (void)sendMessage:(NSString *)message toRoom:(QBChatRoom *)chatRoom;
 - (void)sendInviteMessageToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog;
-- (void)sendContentMessageToUserWithID:(NSUInteger)userID withBlob:(QBCBlob *)blob;
+- (void)sendContentMessage:(QMChatUploadingMessage *)message withBlob:(QBCBlob *)blob;
 - (void)joinRoomWithRoomJID:(NSString *)roomJID;
 - (void)joinRoomsForDialogs:(NSArray *)chatDialogs;
 
@@ -49,6 +50,7 @@
 #pragma mark - Chat Utils
 
 - (QBChatDialog *)chatDialogForFriendWithID:(NSUInteger)ID;
+- (QBChatMessage *)chatMessageFromContentMessage:(QMChatUploadingMessage *)uploadingMessage;
 
 
 #pragma mark - Audio/Video Calls

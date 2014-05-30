@@ -16,7 +16,10 @@
 #import "QMChatInvitationCell.h"
 #import "QMPrivateChatCell.h"
 #import "QMPrivateContentCell.h"
+#import "QMUploadAttachCell.h"
+#import "QMChatUploadingMessage.h"
 #import "UIImage+Cropper.h"
+#import "QMContentPreviewController.h"
 
 
 static CGFloat const kCellHeightOffset = 33.0f;
@@ -26,7 +29,6 @@ static CGFloat const kCellHeightOffset = 33.0f;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIView *inputMessageView;
 @property (weak, nonatomic) IBOutlet UITextField *inputMessageTextField;
-@property (weak, nonatomic) IBOutlet UIView *progressFooter;
 
 @property (nonatomic, strong) QMContent *uploadManager;
 @property (nonatomic, strong) QMChatDataSource *dataSource;
@@ -122,11 +124,10 @@ static CGFloat const kCellHeightOffset = 33.0f;
     }];
 }
 
-- (void)updateProgressFooter
-{ 
-    UILabel *progressLabel = (UILabel *)[self.progressFooter viewWithTag:3040];
-    progressLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)(self.uploadManager.uploadProgress * 100)];
-}
+//- (void)updateProgressFooter
+//{
+//    NSlog(@"%lu", (unsigned long)(self.uploadManager.uploadProgress * 100));
+//}
 
 - (void)dealloc
 {
@@ -138,7 +139,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
     
     // upload progress:
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(progressDidChanged) name:@"UploadProgressDidChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resetTableView) name:@"ContentDidLoadNotification" object:nil];
     
     // chat room:
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatRoomDidEnterNotification) name:kChatRoomDidEnterNotification object:nil];
@@ -229,34 +230,53 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QBChatAbstractMessage *message = self.chatHistory[indexPath.row];
+    
+    // "User created a group chat" cell
+    //
     if (message.customParameters[@"xmpp_room_jid"] != nil) {
         QMChatInvitationCell *invitationCell = (QMChatInvitationCell *)[tableView dequeueReusableCellWithIdentifier:@"InvitationCell"];
         [invitationCell configureCellWithMessage:message];
         return invitationCell;
     }
     
-    QBUUser *currentUser = nil;
+    QBUUser *currentMessageUser = nil;
     if ([QMContactList shared].me.ID == message.senderID) {
-        currentUser = [QMContactList shared].me;
+        currentMessageUser = [QMContactList shared].me;
     } else {
-        currentUser = [[QMContactList shared] findFriendWithID:message.senderID];
+        currentMessageUser = [[QMContactList shared] findFriendWithID:message.senderID];
     }
     
-    // choosing cell:
+    // Upload attach cell
+    //
+    if([message isKindOfClass:QMChatUploadingMessage.class]){
+        QMUploadAttachCell *cell = (QMUploadAttachCell *)[tableView dequeueReusableCellWithIdentifier:@"UploadingAttachIdentifier"];
+        [cell configureCellWithMessage:(QMChatUploadingMessage *)message];
+        return cell;
+    }
+    
+    // Privae chat cell
+    //
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
+        
+        // attachment cell
+        //
         if ([message.attachments count]>0) {
             QMPrivateContentCell *contentCell = (QMPrivateContentCell *)[tableView dequeueReusableCellWithIdentifier:@"PrivateContentCell"];
-            [contentCell configureCellWithMessage:message forUser:currentUser];
+            [contentCell configureCellWithMessage:message forUser:currentMessageUser];
             return contentCell;
         }
         
+        // message cell
+        //
         QMPrivateChatCell *privateChatCell = (QMPrivateChatCell *)[tableView dequeueReusableCellWithIdentifier:@"PrivateChatCell"];
-        [privateChatCell configureCellWithMessage:message fromUser:currentUser];
+        [privateChatCell configureCellWithMessage:message fromUser:currentMessageUser];
         return privateChatCell;
     }
     
+    // Group chat cell
+    //
     QMChatViewCell *cell = (QMChatViewCell *)[tableView dequeueReusableCellWithIdentifier:kChatViewCellIdentifier];
-    [cell configureCellWithMessage:message fromUser:currentUser];
+    [cell configureCellWithMessage:message fromUser:currentMessageUser];
 
     return cell;
 }
@@ -265,6 +285,14 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QBChatAbstractMessage *chatMessage = self.chatHistory[indexPath.row];
+    
+    // Upload attach cell
+    //
+    if([chatMessage isKindOfClass:QMChatUploadingMessage.class]){
+        return 60.f;
+    }
+    
+    
     if (chatMessage.customParameters[@"xmpp_room_jid"] != nil) {
         return 50.0f;
     }
@@ -275,6 +303,26 @@ static CGFloat const kCellHeightOffset = 33.0f;
         return [QMPrivateChatCell cellHeightForMessage:chatMessage] +9.0f;
     }
     return [QMChatViewCell cellHeightForMessage:chatMessage.text] + kCellHeightOffset;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *neededCell = [tableView cellForRowAtIndexPath:indexPath];
+    if ([neededCell isKindOfClass:QMPrivateContentCell.class]) {
+        
+        // getting image:
+        UIImage *contentImage = ((QMPrivateContentCell *)neededCell).sharedImageView.image;
+        [self performSegueWithIdentifier:@"ContentPreviewIdentifier" sender:contentImage];
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.destinationViewController isKindOfClass:QMContentPreviewController.class]) {
+        QMContentPreviewController *contentController = (QMContentPreviewController *)segue.destinationViewController;
+        contentController.contentImage = (UIImage *)sender;
+        // needed public url also:
+    }
 }
 
 - (void)resetTableView
@@ -420,15 +468,6 @@ static CGFloat const kCellHeightOffset = 33.0f;
 }
 
 
-#pragma mark - Content notifications
-
-- (void)progressDidChanged
-{
-    [self updateProgressFooter];
-    NSLog(@"STATUS: %lu persent loaded", (unsigned long)(self.uploadManager.uploadProgress * 100));
-}
-
-
 #pragma mark -
 - (void)showAlertWithErrorMessage:(NSString *)messageString
 {
@@ -441,24 +480,27 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     __block UIImage *currentImage = info[UIImagePickerControllerOriginalImage];
-    [currentImage imageByScalingProportionallyToMinimumSize:CGSizeMake(625, 400)];
-    
+    currentImage = [currentImage imageByScalingProportionallyToMinimumSize:CGSizeMake(625, 400)];
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
     [self dismissViewControllerAnimated:YES completion:^{
-        // start load:
-        self.progressFooter.hidden = NO;
-        if ([self.chatHistory count] >2) {
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.chatHistory count]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+
+        // Create  uploading message
+        QMChatUploadingMessage *chatMessage = [QMChatUploadingMessage new];
+		chatMessage.content = currentImage;
+		if (self.chatDialog.type == QBChatDialogTypePrivate) {
+            chatMessage.recipientID = self.opponent.ID;
+            chatMessage.text = @"Content";
         }
+        // fill other fields here
+        // ...
         
-        self.uploadManager = [[QMContent alloc] init];
-        [self.uploadManager uploadImage:currentImage withCompletion:^(QBCBlob *blob, BOOL success, NSError *error) {
-            self.progressFooter.hidden = YES;
-            // create content message and send:
-            [[QMChatService shared] sendContentMessageToUserWithID:self.opponent.ID withBlob:blob];
-            [self resetTableView];
-        }];
+        //add upload message to
+        NSMutableArray *messages = [QMChatService shared].allConversations[[@(self.opponent.ID) stringValue]];
+        [messages addObject:chatMessage];
+        
+        [self resetTableView];
     }];
 }
 
