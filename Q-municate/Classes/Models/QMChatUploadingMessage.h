@@ -11,5 +11,6 @@
 @interface QMChatUploadingMessage : QBChatMessage
 
 @property (strong) id content;
+@property (strong, nonatomic) NSString * roomJID;
 
 @end

@@ -11,6 +11,7 @@
 #import "NSArray+ArrayToString.h"
 
 
+
 @interface QMChatService () <QBChatDelegate, QBActionStatusDelegate>
 
 @property (copy, nonatomic) QBChatResultBlock chatBlock;
@@ -19,6 +20,9 @@
 @property (copy, nonatomic) QBChatDialogHistoryBlock chatDialogHistoryBlock;
 
 @property (strong, nonatomic) NSTimer *presenceTimer;
+
+/** Upload message needed for replacing with delivered message in chat hisoty. When used, it means that upload finished, and message has been delivered */
+@property (strong, nonatomic) QMChatUploadingMessage *uploadingMessage;
 
 @end
 
@@ -376,6 +380,12 @@
     
     contentMessage.attachments = @[attachment];
     
+    if (contentMessage.roomJID != nil) {
+        QBChatRoom *currentRoom = self.allChatRoomsAsDictionary[contentMessage.roomJID];
+        if (currentRoom != nil) {
+            [self sendMessage:contentMessage toRoom:currentRoom];
+        }
+    }
     [self sendMessage:contentMessage];
 }
 
@@ -399,16 +409,33 @@
 	[[QBChat instance] messagesWithDialogID:dialogIDString delegate:self];
 }
 
-- (void)sendMessage:(NSString *)message toRoom:(QBChatRoom *)chatRoom
+- (void)sendMessage:(QBChatMessage *)message toRoom:(QBChatRoom *)chatRoom
 {
-	[[QBChat instance] sendMessage:message toRoom:chatRoom];
+    [[QBChat instance] sendChatMessage:message toRoom:chatRoom];
+    
+    // cache upload message for replace with delivered message:
+    self.uploadingMessage = (QMChatUploadingMessage *)message;
+    
 }
 
 - (void)chatRoomDidReceiveMessage:(QBChatMessage *)message fromRoomJID:(NSString *)roomJID
 {
-    if (message.delayed) {
-        // ignore chat room history:
-        return;
+    if (self.uploadingMessage != nil) {
+        // track all incoming messages with attachments:
+        if ([message.attachments count] > 0) {
+            // if message is mine:
+            if (message.senderID == [QMContactList shared].me.ID) {
+                // get history and replace messages:
+                NSMutableArray *messageHistory = self.allConversations[roomJID];
+                NSUInteger index = [messageHistory indexOfObject:self.uploadingMessage];
+                [messageHistory replaceObjectAtIndex:index withObject:message];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kChatRoomDidReceiveMessageNotification object:nil];
+                
+                // release cached upload message:
+                self.uploadingMessage = nil;
+                return;
+            }
+        }
     }
     // if not my message:
     if (message.senderID != [QMContactList shared].me.ID) {

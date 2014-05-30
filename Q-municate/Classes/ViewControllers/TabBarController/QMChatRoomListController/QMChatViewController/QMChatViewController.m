@@ -256,7 +256,6 @@ static CGFloat const kCellHeightOffset = 33.0f;
     }
     
     // Privae chat cell
-    //
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
         // attachment cell
@@ -438,14 +437,14 @@ static CGFloat const kCellHeightOffset = 33.0f;
 	if (self.inputMessageTextField.text.length) {
 		QBChatMessage *chatMessage = [QBChatMessage new];
 		chatMessage.text = self.inputMessageTextField.text;
-		chatMessage.senderID = [QMContactList shared].me.ID;
         
 		if (self.chatDialog.type == QBChatDialogTypePrivate) { // private chat
             chatMessage.recipientID = self.opponent.ID;
+            chatMessage.senderID = [QMContactList shared].me.ID;
 			[[QMChatService shared] sendMessage:chatMessage];
 
 		} else { // group chat
-            [[QMChatService shared] sendMessage:chatMessage.text toRoom:self.chatRoom];
+            [[QMChatService shared] sendMessage:chatMessage toRoom:self.chatRoom];
 		}
         self.inputMessageTextField.text = @"";
         [self resetTableView];
@@ -481,7 +480,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     __block UIImage *currentImage = info[UIImagePickerControllerOriginalImage];
-    currentImage = [currentImage imageByScalingProportionallyToMinimumSize:CGSizeMake(625, 400)];
+//    currentImage = [currentImage imageByScalingProportionallyToMinimumSize:CGSizeMake(625, 400)];
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
@@ -490,15 +489,19 @@ static CGFloat const kCellHeightOffset = 33.0f;
         // Create  uploading message
         QMChatUploadingMessage *chatMessage = [QMChatUploadingMessage new];
 		chatMessage.content = currentImage;
+        chatMessage.text = @"Content";
 		if (self.chatDialog.type == QBChatDialogTypePrivate) {
             chatMessage.recipientID = self.opponent.ID;
-            chatMessage.text = @"Content";
+            
+            //add private upload message to history
+            NSMutableArray *messages = [QMChatService shared].allConversations[[@(self.opponent.ID) stringValue]];
+            [messages addObject:chatMessage];
+            [self resetTableView];
+            return;
         }
-        // fill other fields here
-        // ...
-        
-        //add upload message to
-        NSMutableArray *messages = [QMChatService shared].allConversations[[@(self.opponent.ID) stringValue]];
+        chatMessage.roomJID = self.chatDialog.roomJID;                      //room jid for caching message in QMChatService
+        //add group upload message to history
+        NSMutableArray *messages = [QMChatService shared].allConversations[self.chatDialog.roomJID];
         [messages addObject:chatMessage];
         
         [self resetTableView];
