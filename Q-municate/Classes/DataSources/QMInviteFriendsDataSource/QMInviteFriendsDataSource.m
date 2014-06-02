@@ -33,7 +33,8 @@
 - (void)updateFacebookDataSource:(void(^)(NSError *error))completionBlock
 {
 	// Check for Active Facebook Session:
-	if (![FBSession activeSession] || ![[FBSession activeSession].permissions count]) {
+	if (![FBSession activeSession] || ![[FBSession activeSession].permissions count] || ![FBSession activeSession].isOpen) {
+		[[FBSession activeSession] closeAndClearTokenInformation];
 		[FBSession setActiveSession:[[FBSession alloc]initWithPermissions:@[@"basic_info", @"email", @"read_stream", @"publish_stream"]]];
 	}
 	if ([FBSession activeSession].state == FBSessionStateCreated) {
