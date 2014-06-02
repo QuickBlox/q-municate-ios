@@ -1,4 +1,4 @@
-//
+ //
 //  QMChatService.m
 //  Q-municate
 //
@@ -66,6 +66,48 @@
 }
 
 
+#pragma mark -
+#pragma mark - Contact List (ROSTER)
+
+/** Contact Requests */
+- (void)sendFriendsRequestToUserWithID:(NSUInteger)userID
+{
+    [[QBChat instance] addUserToContactListRequest:userID];
+}
+
+- (void)confirmFriendsRequestFromUserWithID:(NSUInteger)userID
+{
+    [[QBChat instance] confirmAddContactRequest:userID];
+}
+
+- (void)rejectFriendsRequestFromUserWithID:(NSUInteger)userID
+{
+    [[QBChat instance] rejectAddContactRequest:userID];
+}
+
+- (void)removeContactFromFriendsWithID:(NSUInteger)userID
+{
+    [[QBChat instance] removeUserFromContactList:userID];
+}
+
+/** DELEGATES */
+- (void)chatContactListDidChange:(QBContactList *)contactList
+{
+    NSLog(@"%@", [contactList description]);
+}
+
+- (void)chatDidReceiveContactAddRequestFromUser:(NSUInteger)userID
+{
+    [self confirmFriendsRequestFromUserWithID:userID];
+}
+
+- (void)chatDidReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status
+{
+    ILog(@"UserID:%lu, online: %hhd, status:%@", (unsigned long)userID, isOnline, status);
+}
+
+
+#pragma mark -
 #pragma mark - Audio/Video Calls
 
 - (void)callUser:(NSUInteger)userID withVideo:(BOOL)videoEnabled

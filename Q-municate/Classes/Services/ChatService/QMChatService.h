@@ -31,6 +31,14 @@
 - (void)logOut;
 
 
+#pragma mark - Contact List (ROASTER)
+
+- (void)sendFriendsRequestToUserWithID:(NSUInteger)userID;
+- (void)confirmFriendsRequestFromUserWithID:(NSUInteger)userID;
+- (void)rejectFriendsRequestFromUserWithID:(NSUInteger)userID;
+- (void)removeContactFromFriendsWithID:(NSUInteger)userID;
+
+
 #pragma mark - Chat
 
 // ****************************** Dialogs **************************************

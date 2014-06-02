@@ -29,11 +29,19 @@
 
 @property (strong, nonatomic) NSMutableDictionary *baseUserIDs;
 
+
+#pragma mark -
+#pragma mark ROASTER
+
+- (void)retriveFriendsWithContactListInfo:(QBContactList *)contactList completion:(void (^)(BOOL success, NSError *error))completion;
+
+
+#pragma mark -
+
 // FIND FRIENDS
-- (void)retrieveFriendsUsingBlock:(QBChatResultBlock)block;
 - (void)retrieveFriendsFromFacebookWithCompletion:(QBChatResultBlock)resultBlock;
 - (void)retrieveUsersWithFullName:(NSString *)fullName completion:(QBChatResultBlock)block;
-- (void)retrieveUsersWithEmails:(NSArray *)emails usingBlock:(QBResultBlock)block;
+- (void)retrieveUsersWithEmails:(NSArray *)emails usingBlock:(void (^)(NSArray *users, BOOL success, NSError *error))block;
 - (void)retrieveUserWithID:(NSUInteger)userID completion:(void(^)(QBUUser *user, NSError *error))completion;
 - (void)findAndAddAllFriendsForFacebookUserWithCompletion:(QBChatResultBlock)block;
 
@@ -45,7 +53,7 @@
 
 
 // REQUEST FOR FRIENDS TO FACEBOOK:
-- (void)fetchFriendsFromFacebookWithCompletion:(FBResultBlock)handler;
+- (void)fetchFriendsFromFacebookWithCompletion:(QBPagedUsersBlock)handler;
 
 // Clear all data:
 - (void)clearData;

@@ -48,7 +48,7 @@ typedef void (^QBContactListBlock)(id object);
 typedef void (^QBContentBlock)(QBCBlob *blob);
 typedef void (^QBDataBlock)(id data);
 
-typedef void(^FBResultBlock)(NSArray *users, BOOL success, NSError *error);
+typedef void(^QBPagedUsersBlock)(NSArray *users, BOOL success, NSError *error);
 typedef void(^FBCompletionBlock)(BOOL success, NSError *error);
 
 typedef void(^AddressBookResult)(NSArray *contacts, BOOL success, NSError *error);

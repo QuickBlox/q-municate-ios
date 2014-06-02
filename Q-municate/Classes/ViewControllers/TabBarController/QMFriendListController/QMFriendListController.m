@@ -11,6 +11,7 @@
 #import "QMFriendListCell.h"
 #import "QMContactList.h"
 #import "QMFriendsListDataSource.h"
+#import "QMChatService.h"
 
 #define kSearchBarHeight            44.0f
 
@@ -124,10 +125,12 @@
     
     QMFriendListCell *cell = (QMFriendListCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:button.tag inSection:1]];
     [cell.indicatorView startAnimating];
-    [[QMContactList shared] addUserToFriendList:user completion:^(BOOL success) {
-        // reload friends
-        [self reloadFriendsList];
-    }];
+
+    // roaster:
+    [[QMChatService shared] sendFriendsRequestToUserWithID:user.ID];
+    
+    // reload friends
+    [self reloadFriendsList];
 }
 
 - (void)searchGlobal:(id)sender

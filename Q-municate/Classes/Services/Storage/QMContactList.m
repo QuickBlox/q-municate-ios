@@ -8,6 +8,7 @@
 
 #import "QMContactList.h"
 #import "QMPerson.h"
+#import "NSMutableDictionary+addQBUsersFromArray.h"
 
 @interface QMContactList () <QBActionStatusDelegate>
 
@@ -37,6 +38,56 @@
 }
 
 
+#pragma mark - FRIEND LIST ROASTER
+
+- (void)retriveFriendsWithContactListInfo:(QBContactList *)contactList completion:(void (^)(BOOL success, NSError *error))completion
+{
+    if ([contactList.contacts count] == 0) {
+        NSError *error = [NSError errorWithDomain:@"No friends found in roaster" code:1100 userInfo:nil];
+        
+        // out with error:
+        completion(NO, error);
+        return;
+    }
+    // searching IDs of users out of Friends list:
+    NSMutableArray *IDsToFetchFromQuickblox = [NSMutableArray new];
+    
+    for (QBContactListItem *record in contactList.contacts) {
+        
+        NSString *userID = [@(record.userID) stringValue];
+        QBUUser *friend = self.friendsAsDictionary[userID];
+        if (friend == nil) {
+            [IDsToFetchFromQuickblox addObject:userID];
+        }
+    }
+    if ([IDsToFetchFromQuickblox count] > 0) {
+        // retrive users with ids:
+        [self retrieveUsersWithIDs:IDsToFetchFromQuickblox usingBlock:^(NSArray *users, BOOL success, NSError *error) {
+            // add to dictionary:
+            if (success) {
+                // if friends dict is empty:
+                if (self.friendsAsDictionary == nil || [self.friendsAsDictionary count] == 0) {
+                    self.friendsAsDictionary = [self friendsAsDictionaryFromFriendsArray:users];
+                } else {
+                    [self.friendsAsDictionary addUsersFromArray:users];
+                }
+                
+                // friends added, out with success:
+                completion(YES, nil);
+                return;
+            }
+            
+            // out with error from server:
+            completion(NO, error);
+        }];
+        return;
+    }
+    NSError *error = [NSError errorWithDomain:@"No friends found in roaster" code:1100 userInfo:nil];
+    
+    // block invoke:
+    completion(NO, error);
+}
+
 #pragma mark -
 #pragma mark - TERMINATE LOGIC
 
@@ -54,54 +105,15 @@
         }
         NSMutableArray *friendsIDs = [self IDsOfFacebookUsers:myFriends];
         
-        [self retrieveUsersWithFacebookIDs:friendsIDs usingBlock:^(Result *result) {
-            if (result.success && [result isKindOfClass:[QBUUserPagedResult class]]) {
-                NSArray *facebookFriends = ((QBUUserPagedResult *)result).users;
-                if ([facebookFriends count] == 0) {
-                    resultBlock(NO);
-                    return;
-                }
-                self.friendsAsDictionary = [self arrayToDictionary:facebookFriends];
-                resultBlock(YES);
-                [self addUsersToFriends:facebookFriends];  // include hardcode
+        [self retrieveUsersWithFacebookIDs:friendsIDs usingBlock:^(NSArray *users, BOOL success, NSError *error) {
+            if (success) {
+                // we should to send contact requests to those users:
+#warning TODO:
             }
         }];
-
     }];
 }
-
-- (void)retrieveFriendsUsingBlock:(QBChatResultBlock)block
-{
-    [self retrieveIDsOfFriendsUsingBlock:^(Result *result) {
-        if (result.success && [result isKindOfClass:[QBCOCustomObjectPagedResult class]]) {
-            NSArray *customObjects = ((QBCOCustomObjectPagedResult *)result).objects;
-            if ([customObjects count] == 0) {
-                block(NO);
-                return;
-            }
-            
-            NSMutableArray *friendsIDs = [self friendsIDsAndBaseIDsFromObjects:customObjects];
-            
-            [self retrieveUsersWithIDs:friendsIDs usingBlock:^(Result *result) {
-                if (result.success && [result isKindOfClass:[QBUUserPagedResult class]]) {
-                    NSArray *friends = ((QBUUserPagedResult *)result).users;
-                    self.friendsAsDictionary = [self arrayToDictionary:friends];
-                    block(YES);
-                }
-            }];
-        }
-    }];
-}
-
-- (NSMutableDictionary *)arrayToDictionary:(NSArray *)array
-{
-    NSMutableDictionary *dictionaryOfUsers = [NSMutableDictionary new];
-    for (QBUUser *user in array) {
-        dictionaryOfUsers[[@(user.ID) stringValue]] = user;
-    }
-    return dictionaryOfUsers;
-}
-
+                
 - (NSMutableArray *)friendsIDsAndBaseIDsFromObjects:(NSArray *)objects
 {
     NSMutableArray *IDs = [NSMutableArray new];
@@ -133,18 +145,6 @@
     [QBUsers userWithID:userID delegate:self context:Block_copy((__bridge void *)(block))];
 }
 
-- (void)retrieveUsersWithFullName:(NSString *)fullName completion:(QBChatResultBlock)block
-{
-    [self retrieveUsersWithFullName:fullName usingBlock:^(Result *result) {
-        if (result.success && [result isKindOfClass:[QBUUserPagedResult class]]) {
-            NSArray *users = ((QBUUserPagedResult *)result).users;
-            self.searchedUsers =  [self arrayToDictionary:users];
-            block(YES);
-            return;
-        }
-        block(NO);
-    }];
-}
 
 - (void)findAndAddAllFriendsForFacebookUserWithCompletion:(QBChatResultBlock)block
 {
@@ -158,7 +158,7 @@
                 [self retrieveUsersWithIDs:friendsIDs usingBlock:^(Result *result) {
                     if (result.success && [result isKindOfClass:[QBUUserPagedResult class]]) {
                         NSArray *users = ((QBUUserPagedResult *)result).users;
-                        self.friendsAsDictionary = [self arrayToDictionary:users];
+                        self.friendsAsDictionary = [self friendsAsDictionaryFromFriendsArray:users];
                         block(YES);
                         return;
                     }
@@ -213,25 +213,7 @@
     }
 }
 
-- (void)removeUserFromFriendList:(QBUUser *)user completion:(QBChatResultBlock)block
-{
-    NSString *userID = [NSString stringWithFormat:@"%lu", (unsigned long)user.ID];
-    NSString *baseID = self.baseUserIDs[userID];
-
-    [self deleteUserWithID:baseID completion:^(Result *result) {
-        if (result.success) {
-            // delete user from CO:
-            [self.baseUserIDs removeObjectForKey:userID];
-            // delete user from friends:
-            [self.friendsAsDictionary removeObjectForKey:[@(user.ID) stringValue]];
-            block(YES);
-            return;
-        }
-        block(NO);
-    }];
-}
-
-- (void)fetchFriendsFromFacebookWithCompletion:(FBResultBlock)handler
+- (void)fetchFriendsFromFacebookWithCompletion:(QBPagedUsersBlock)handler
 {
     FBRequest *friendsRequest = [FBRequest requestForMyFriends];
     [friendsRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
@@ -248,22 +230,20 @@
 #pragma mark - API
 //**************************** API *********************************
 
-- (void)retrieveIDsOfFriendsUsingBlock:(QBResultBlock)block
+- (void)retrieveUsersWithFullName:(NSString *)fullName usingBlock:(QBPagedUsersBlock)block
 {
-    _resultBlock = block;
-    NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
-    extendedRequest[@"user_id"] = @(self.me.ID);
-    extendedRequest[@"limit"] = @100;
-    [QBCustomObjects objectsWithClassName:kClassName extendedRequest:extendedRequest delegate:self];
+    QBResultBlock resultBlock = ^(Result *result) {
+        if (result.success && [result isKindOfClass:QBUUserPagedResult.class]) {
+            NSArray *users = ((QBUUserPagedResult *)result).users;
+            block(users, YES, nil);
+            return;
+        }
+        block(nil, NO, result.errors[0]);
+    };
+    [QBUsers usersWithFullName:fullName delegate:self context:Block_copy((__bridge void *)(resultBlock))];
 }
 
-- (void)retrieveUsersWithFullName:(NSString *)fullName usingBlock:(QBResultBlock)block
-{
-    _resultBlock = block;
-    [QBUsers usersWithFullName:fullName delegate:self];
-}
-
-- (void)retrieveUsersWithIDs:(NSArray *)IDs usingBlock:(QBResultBlock)block
+- (void)retrieveUsersWithIDs:(NSArray *)IDs usingBlock:(QBPagedUsersBlock)block
 {
     NSString *stringOfIDs = [[NSString alloc] init];
     for (NSString *ID in IDs) {
@@ -273,54 +253,46 @@
             stringOfIDs = [stringOfIDs stringByAppendingString:[NSString stringWithFormat:@",%@", ID]];
         }
     }
+    QBResultBlock resultBlock = ^(Result *result) {
+        if (result.success && [result isKindOfClass:QBUUserPagedResult.class]) {
+            NSArray *users = ((QBUUserPagedResult *)result).users;
+            block(users, YES, nil);
+            return;
+        }
+        block(nil, NO, result.errors[0]);
+    };
     
-    _resultBlock = block;
-    [QBUsers usersWithIDs:stringOfIDs delegate:self];
+    [QBUsers usersWithIDs:stringOfIDs delegate:self context:Block_copy((__bridge void *)(resultBlock))];
 }
 
-- (void)retrieveUsersWithFacebookIDs:(NSArray *)facebookIDs usingBlock:(QBResultBlock)block
+- (void)retrieveUsersWithFacebookIDs:(NSArray *)facebookIDs usingBlock:(QBPagedUsersBlock)block
 {
-    _resultBlock = block;
-    [QBUsers usersWithFacebookIDs:facebookIDs delegate:self];
+    QBResultBlock resultBlock = ^(Result *result) {
+        if (result.success && [result isKindOfClass:QBUUserPagedResult.class]) {
+            NSArray *users = ((QBUUserPagedResult *)result).users;
+            block(users, YES, nil);
+            return;
+        }
+        block(nil, NO, result.errors[0]);
+    };
+    [QBUsers usersWithFacebookIDs:facebookIDs delegate:self context:Block_copy((__bridge void *)(resultBlock))];
 }
 
-- (void)retrieveUsersWithEmails:(NSArray *)emails usingBlock:(QBResultBlock)block
+- (void)retrieveUsersWithEmails:(NSArray *)emails usingBlock:(QBPagedUsersBlock)block
 {
-    _resultBlock = block;
-    [QBUsers usersWithEmails:emails delegate:self];
+    QBResultBlock resultBlock = ^(Result *result) {
+        if (result.success && [result isKindOfClass:QBUUserPagedResult.class]) {
+            NSArray *users = ((QBUUserPagedResult *)result).users;
+            block(users, YES, nil);
+            return;
+        }
+        block(nil, NO, result.errors[0]);
+    };
+    [QBUsers usersWithEmails:emails delegate:self context:Block_copy((__bridge void *)(resultBlock))];
 }
 
-- (void)retrieveAllUsersUsingBlock:(QBResultBlock)block
-{
-    _resultBlock = block;
-    PagedRequest *pagedRequest = [PagedRequest request];
-    pagedRequest.perPage = 100;
-    [QBUsers usersWithPagedRequest:pagedRequest delegate:self];
-}
-
-// ************ ADD / REMOVE *************************
-- (void)addUserWithID:(NSUInteger)ID completion:(QBResultBlock)block
-{
-    QBCOCustomObject *customObject = [QBCOCustomObject customObject];
-    customObject.className = kClassName;
-    customObject.fields[kFriendId] = @(ID);
-    
-    _resultBlock = block;
-    [QBCustomObjects createObject:customObject delegate:self];
-}
-
-- (void)deleteUserWithID:(NSString *)baseID completion:(QBResultBlock)block
-{
-    _resultBlock = block;
-    [QBCustomObjects deleteObjectWithID:baseID className:kClassName delegate:self];
-}
 
 #pragma mark - QBActionStatusDelegate
-
-- (void)completedWithResult:(Result *)result
-{
-    _resultBlock(result);
-}
 
 - (void)completedWithResult:(Result *)result context:(void *)contextInfo
 {
@@ -330,6 +302,15 @@
 
 
 #pragma mark - Configurations
+
+- (NSMutableDictionary *)friendsAsDictionaryFromFriendsArray:(NSArray *)friendsArray
+{
+    NSMutableDictionary *dictionaryOfUsers = [NSMutableDictionary new];
+    for (QBUUser *user in friendsArray) {
+        dictionaryOfUsers[[@(user.ID) stringValue]] = user;
+    }
+    return dictionaryOfUsers;
+}
 
 - (NSArray *)personsFromDictionaries:(NSArray *)dictionaries
 {

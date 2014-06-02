@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		69052799193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 69052798193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.m */; };
 		690A271518CA0F35003D6B80 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A271418CA0F35003D6B80 /* AddressBook.framework */; };
 		690F80701936148600A5023F /* QMPrivateContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 690F806F1936148600A5023F /* QMPrivateContentCell.m */; };
 		693808C5193738C400BF926F /* QMUploadAttachCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 693808C4193738C400BF926F /* QMUploadAttachCell.m */; };
@@ -109,6 +110,8 @@
 
 /* Begin PBXFileReference section */
 		67976AC8FFE848A4B85EB2AF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		69052797193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+addQBUsersFromArray.h"; sourceTree = "<group>"; };
+		69052798193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableDictionary+addQBUsersFromArray.m"; sourceTree = "<group>"; };
 		690A271418CA0F35003D6B80 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		690F806E1936148600A5023F /* QMPrivateContentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMPrivateContentCell.h; sourceTree = "<group>"; };
 		690F806F1936148600A5023F /* QMPrivateContentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMPrivateContentCell.m; sourceTree = "<group>"; };
@@ -491,6 +494,8 @@
 				6943849218E42691001E08A9 /* UIImageView+ImageWithBlobID.m */,
 				69E48F96193393FD009B5F6D /* NSArray+ArrayToString.h */,
 				69E48F97193393FD009B5F6D /* NSArray+ArrayToString.m */,
+				69052797193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.h */,
+				69052798193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -973,6 +978,7 @@
 				693808CC19378E3100BF926F /* QMContentPreviewController.m in Sources */,
 				69D57E6218ACC11C00A9900A /* main.m in Sources */,
 				6943847A18E42678001E08A9 /* QMContent.m in Sources */,
+				69052799193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.m in Sources */,
 				B71E0564190FAAF900DD6D34 /* QMFriendsDetailsController.m in Sources */,
 				6943847418E42678001E08A9 /* QMUtilities.m in Sources */,
 				6943848A18E42678001E08A9 /* QMMenuCell.m in Sources */,
