@@ -67,9 +67,16 @@ static NSString *const kChatViewSegueIdentifier       = @"ChatViewSegue";
 static NSString *const kIncomingCallIdentifier        = @"IncomingCallIdentifier";
 static NSString *const kProfileSegueIdentifier        = @"ProfileSegue";
 static NSString *const kCreateNewChatSegueIdentifier  = @"CreateNewChatSegue";
+static NSString *const kContentPreviewSegueIdentifier = @"ContentPreviewIdentifier";
 
 //****************** Cell Identifiers  ********************
-static NSString *const kSettingsVCCellIdentifier      = @"SettingsCellIdentifier";
+static NSString *const kSettingsVCCellIdentifier                = @"SettingsCellIdentifier";
+
+static NSString *const kChatUploadingAttachmentCellIdentitier   = @"UploadingAttachIdentifier";
+static NSString *const kChatInvitationCellIdentifier            = @"InvitationCell";
+static NSString *const kChatPrivateContentCellIdentifier        = @"PrivateContentCell";
+static NSString *const kChatPrivateMessageCellIdentifier        = @"PrivateChatCell";
+static NSString *const kChatGroupContentCellIdentifier          = @"GroupContentCell";
 
 //**************** Setting Cell Titles ********************
 static NSString *const kSettingsCellTitleProfile            = @"Profile";
@@ -101,6 +108,13 @@ static NSString *const kCallWasRejectedNotification = @"Call Was Rejected";
 static NSString *const kCallUserDidNotAnswerNotification = @"User didn't answer";
 static NSString *const kCallDidAcceptByUserNotification = @"User accepted call";
 static NSString *const kCallDidStartedByUserNotification = @"Call was started";
+static NSString *const kChatViewCellIdentifier          = @"ChatViewCell";
+static NSString *const kCreateChatCellIdentifier        = @"CreateChatCell";
+static NSString *const kFriendsListCellIdentifier       = @"FriendsListCell";
+static NSString *const kContactListCellIdentifier       = @"contactsCell";
+static NSString *const kFacebookCellIdentifier          = @"facebookCell";
+static NSString *const kInviteFriendCellIdentifier      = @"InviteFriendCell";
+
 
 
 //******************** USER DEFAULTS KEYS *****************
@@ -131,13 +145,6 @@ static NSString *const kTableHeaderAllUsersString       = @"All Users";
 
 static NSString *const kFacebookFriendStatus            = @"Facebook friend";
 static NSString *const kAddressBookUserStatus           = @"Contact List";
-
-static NSString *const kChatViewCellIdentifier          = @"ChatViewCell";
-static NSString *const kCreateChatCellIdentifier        = @"CreateChatCell";
-static NSString *const kFriendsListCellIdentifier       = @"FriendsListCell";
-static NSString *const kContactListCellIdentifier       = @"contactsCell";
-static NSString *const kFacebookCellIdentifier          = @"facebookCell";
-static NSString *const kInviteFriendCellIdentifier      = @"InviteFriendCell";
 
 static NSString *const kMessageString                   = @"Input email please.";
 static NSString *const kMoreResultString                = @"For more results:";

@@ -414,8 +414,9 @@
     [[QBChat instance] sendChatMessage:message toRoom:chatRoom];
     
     // cache upload message for replace with delivered message:
-    self.uploadingMessage = (QMChatUploadingMessage *)message;
-    
+    if ([message isKindOfClass:[QMChatUploadingMessage class]]) {
+        self.uploadingMessage = (QMChatUploadingMessage *)message;
+    }
 }
 
 - (void)chatRoomDidReceiveMessage:(QBChatMessage *)message fromRoomJID:(NSString *)roomJID

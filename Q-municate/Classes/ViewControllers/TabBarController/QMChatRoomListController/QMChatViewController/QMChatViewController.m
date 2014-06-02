@@ -20,6 +20,7 @@
 #import "QMChatUploadingMessage.h"
 #import "UIImage+Cropper.h"
 #import "QMContentPreviewController.h"
+#import "QMGroupContentCell.h"
 
 
 static CGFloat const kCellHeightOffset = 33.0f;
@@ -232,9 +233,8 @@ static CGFloat const kCellHeightOffset = 33.0f;
     QBChatAbstractMessage *message = self.chatHistory[indexPath.row];
     
     // "User created a group chat" cell
-    //
     if (message.customParameters[@"xmpp_room_jid"] != nil) {
-        QMChatInvitationCell *invitationCell = (QMChatInvitationCell *)[tableView dequeueReusableCellWithIdentifier:@"InvitationCell"];
+        QMChatInvitationCell *invitationCell = (QMChatInvitationCell *)[tableView dequeueReusableCellWithIdentifier:kChatInvitationCellIdentifier];
         [invitationCell configureCellWithMessage:message];
         return invitationCell;
     }
@@ -250,7 +250,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
     // Upload attach cell
     //
     if([message isKindOfClass:QMChatUploadingMessage.class]){
-        QMUploadAttachCell *cell = (QMUploadAttachCell *)[tableView dequeueReusableCellWithIdentifier:@"UploadingAttachIdentifier"];
+        QMUploadAttachCell *cell = (QMUploadAttachCell *)[tableView dequeueReusableCellWithIdentifier:kChatUploadingAttachmentCellIdentitier];
         [cell configureCellWithMessage:(QMChatUploadingMessage *)message];
         return cell;
     }
@@ -261,19 +261,26 @@ static CGFloat const kCellHeightOffset = 33.0f;
         // attachment cell
         //
         if ([message.attachments count]>0) {
-            QMPrivateContentCell *contentCell = (QMPrivateContentCell *)[tableView dequeueReusableCellWithIdentifier:@"PrivateContentCell"];
+            QMPrivateContentCell *contentCell = (QMPrivateContentCell *)[tableView dequeueReusableCellWithIdentifier:kChatPrivateContentCellIdentifier];
             [contentCell configureCellWithMessage:message forUser:currentMessageUser isMe:isMe];
             return contentCell;
         }
         
         // message cell
         //
-        QMPrivateChatCell *privateChatCell = (QMPrivateChatCell *)[tableView dequeueReusableCellWithIdentifier:@"PrivateChatCell"];
+        QMPrivateChatCell *privateChatCell = (QMPrivateChatCell *)[tableView dequeueReusableCellWithIdentifier:kChatPrivateMessageCellIdentifier];
         [privateChatCell configureCellWithMessage:message fromUser:currentMessageUser];
         return privateChatCell;
     }
     
-    // Group chat cell
+    // Group chat attachment cell
+    if ([message.attachments count] > 0) {
+        QMGroupContentCell *groupContentCell = (QMGroupContentCell *)[tableView dequeueReusableCellWithIdentifier:kChatGroupContentCellIdentifier];
+        [groupContentCell configureCellWithMessage:message fromUser:currentMessageUser];
+        return groupContentCell;
+    }
+    
+    // Group chat message cell
     //
     QMChatViewCell *cell = (QMChatViewCell *)[tableView dequeueReusableCellWithIdentifier:kChatViewCellIdentifier];
     [cell configureCellWithMessage:message fromUser:currentMessageUser];
@@ -292,7 +299,6 @@ static CGFloat const kCellHeightOffset = 33.0f;
         return 60.f;
     }
     
-    
     if (chatMessage.customParameters[@"xmpp_room_jid"] != nil) {
         return 50.0f;
     }
@@ -302,17 +308,29 @@ static CGFloat const kCellHeightOffset = 33.0f;
         }
         return [QMPrivateChatCell cellHeightForMessage:chatMessage] +9.0f;
     }
+    // group attach cell height:
+    if ([chatMessage.attachments count] >0) {
+        return 156;
+    }
     return [QMChatViewCell cellHeightForMessage:chatMessage.text] + kCellHeightOffset;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *neededCell = [tableView cellForRowAtIndexPath:indexPath];
+    
     if ([neededCell isKindOfClass:QMPrivateContentCell.class]) {
         
         // getting image:
         UIImage *contentImage = ((QMPrivateContentCell *)neededCell).sharedImageView.image;
-        [self performSegueWithIdentifier:@"ContentPreviewIdentifier" sender:contentImage];
+        [self performSegueWithIdentifier:kContentPreviewSegueIdentifier sender:contentImage];
+        return;
+    }
+    if ([neededCell isKindOfClass:QMGroupContentCell.class]) {
+        
+        // getting image:
+        UIImage *contentImage = ((QMGroupContentCell *)neededCell).contentImageView.image;
+        [self performSegueWithIdentifier:kContentPreviewSegueIdentifier sender:contentImage];
     }
 }
 
@@ -322,6 +340,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
         QMContentPreviewController *contentController = (QMContentPreviewController *)segue.destinationViewController;
         contentController.contentImage = (UIImage *)sender;
         // needed public url also:
+#warning Need public url!
     }
 }
 
@@ -334,9 +353,9 @@ static CGFloat const kCellHeightOffset = 33.0f;
     }
     
     [self.tableView reloadData];
-//    if ([self.chatHistory count] >2) {
-//        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.chatHistory count]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-//    }
+    if ([self.chatHistory count] >2) {
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.chatHistory count]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    }
 }
 
 #pragma mark - Keyboard
