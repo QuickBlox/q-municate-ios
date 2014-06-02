@@ -108,7 +108,7 @@
 		1B55ED28A55841DA85D50D31 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		28BB55EA0B8D4D709DF78D76 /* Pods-Reachability-Private.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Reachability-Private.xcconfig"; sourceTree = "<group>"; };
 		3D8A420BAED54D8F8D0AAD82 /* Pods-Reachability.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Reachability.xcconfig"; sourceTree = "<group>"; };
-		4BA3172FEC5841D3ACF33990 /* icon-info.png */ = {isa = PBXFileReference; includeInIndex = 1; name = "icon-info.png"; path = "Classes/Icons/icon-info.png"; sourceTree = "<group>"; };
+		4BA3172FEC5841D3ACF33990 /* icon-info.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = "icon-info.png"; path = "Classes/Icons/icon-info.png"; sourceTree = "<group>"; };
 		4D5343A9F5A8416FA5B48156 /* Pods-MBProgressHUD.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-MBProgressHUD.xcconfig"; sourceTree = "<group>"; };
 		4D6BDD322D274C35AB315C5E /* AsyncImageView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AsyncImageView.m; path = AsyncImageView/AsyncImageView.m; sourceTree = "<group>"; };
 		4E8DE718C78A4E9399451948 /* Pods-UIDevice-Hardware-Private.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-UIDevice-Hardware-Private.xcconfig"; sourceTree = "<group>"; };
@@ -116,11 +116,11 @@
 		5880FC7CA8DB43EFB26611BE /* Pods-AsyncImageView-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-AsyncImageView-prefix.pch"; sourceTree = "<group>"; };
 		5E745E713066448CB3E258B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		63E0A7B70F6D481F93D60B99 /* Pods-MBProgressHUD-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-MBProgressHUD-prefix.pch"; sourceTree = "<group>"; };
-		6455AC2A8C4D423F987BE729 /* icon-info@2x.png */ = {isa = PBXFileReference; includeInIndex = 1; name = "icon-info@2x.png"; path = "Classes/Icons/icon-info@2x.png"; sourceTree = "<group>"; };
+		6455AC2A8C4D423F987BE729 /* icon-info@2x.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = "icon-info@2x.png"; path = "Classes/Icons/icon-info@2x.png"; sourceTree = "<group>"; };
 		6577032A311748238BE7EC54 /* FPPopoverView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = FPPopoverView.m; sourceTree = "<group>"; };
 		6D9D9027EA9746BC965A5788 /* Pods-MBProgressHUD-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-MBProgressHUD-dummy.m"; sourceTree = "<group>"; };
 		6F182E56CACA43E0AFD55E01 /* UIDevice-Hardware.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "UIDevice-Hardware.m"; sourceTree = "<group>"; };
-		76804B09F32F41BC90142005 /* icon-error.png */ = {isa = PBXFileReference; includeInIndex = 1; name = "icon-error.png"; path = "Classes/Icons/icon-error.png"; sourceTree = "<group>"; };
+		76804B09F32F41BC90142005 /* icon-error.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = "icon-error.png"; path = "Classes/Icons/icon-error.png"; sourceTree = "<group>"; };
 		7936834717814E87BD7E8ABB /* Pods-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-acknowledgements.markdown"; sourceTree = "<group>"; };
 		7CB3249389CF43388D2CDE3E /* Pods-UIDevice-Hardware-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-UIDevice-Hardware-prefix.pch"; sourceTree = "<group>"; };
 		7CFE169B53F746E889131D45 /* libPods-MBProgressHUD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MBProgressHUD.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -131,7 +131,7 @@
 		8B36A64685864AC5A625F5D3 /* Pods-FPPopover.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-FPPopover.xcconfig"; sourceTree = "<group>"; };
 		8DA775249940483CB3FD5752 /* Pods-FPPopover-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-FPPopover-dummy.m"; sourceTree = "<group>"; };
 		92C8EA7D5CAE48D589DE6C04 /* libPods-AsyncImageView.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AsyncImageView.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		951FB0AF3F0D4B4AB5F16AC7 /* icon-success.png */ = {isa = PBXFileReference; includeInIndex = 1; name = "icon-success.png"; path = "Classes/Icons/icon-success.png"; sourceTree = "<group>"; };
+		951FB0AF3F0D4B4AB5F16AC7 /* icon-success.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = "icon-success.png"; path = "Classes/Icons/icon-success.png"; sourceTree = "<group>"; };
 		9782D12B20CC4A9FA47DED86 /* AsyncImageView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AsyncImageView.h; path = AsyncImageView/AsyncImageView.h; sourceTree = "<group>"; };
 		9FE5429B8FC84428A7C94074 /* Pods-MBProgressHUD-Private.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-MBProgressHUD-Private.xcconfig"; sourceTree = "<group>"; };
 		A037876238EC44F0B32CFA43 /* Pods-TWMessageBarManager-Private.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TWMessageBarManager-Private.xcconfig"; sourceTree = "<group>"; };
@@ -156,10 +156,10 @@
 		E2AF7AED49D24E02A00079F1 /* Pods-FPPopover-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-FPPopover-prefix.pch"; sourceTree = "<group>"; };
 		E4874797C66B422AA86DD0B2 /* Pods-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-resources.sh"; sourceTree = "<group>"; };
 		EF69F52864FC44A8B046BEDD /* FPPopoverController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = FPPopoverController.h; sourceTree = "<group>"; };
-		F187829ABB60437FB4C27FB7 /* icon-success@2x.png */ = {isa = PBXFileReference; includeInIndex = 1; name = "icon-success@2x.png"; path = "Classes/Icons/icon-success@2x.png"; sourceTree = "<group>"; };
+		F187829ABB60437FB4C27FB7 /* icon-success@2x.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = "icon-success@2x.png"; path = "Classes/Icons/icon-success@2x.png"; sourceTree = "<group>"; };
 		F3E6CBBEB472426184403F0D /* libPods-UIDevice-Hardware.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-UIDevice-Hardware.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F67638A4D021439C8846577F /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Pods.xcconfig; sourceTree = "<group>"; };
-		FAB2D63C3B624472BADE8612 /* icon-error@2x.png */ = {isa = PBXFileReference; includeInIndex = 1; name = "icon-error@2x.png"; path = "Classes/Icons/icon-error@2x.png"; sourceTree = "<group>"; };
+		FAB2D63C3B624472BADE8612 /* icon-error@2x.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = "icon-error@2x.png"; path = "Classes/Icons/icon-error@2x.png"; sourceTree = "<group>"; };
 		FDC586DA8E8B42C58AB3C3DA /* Podfile */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		FF9B2A9C1DA14BE9A2558304 /* Pods-Reachability-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Reachability-dummy.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -241,7 +241,6 @@
 				6F182E56CACA43E0AFD55E01 /* UIDevice-Hardware.m */,
 				F4F5F78389D742E8969CB913 /* Support Files */,
 			);
-			name = "UIDevice-Hardware";
 			path = "UIDevice-Hardware";
 			sourceTree = "<group>";
 		};
@@ -276,7 +275,6 @@
 				4D6BDD322D274C35AB315C5E /* AsyncImageView.m */,
 				39289878EF48441280524BD2 /* Support Files */,
 			);
-			name = AsyncImageView;
 			path = AsyncImageView;
 			sourceTree = "<group>";
 		};
@@ -335,7 +333,6 @@
 				B05B7A1C59374D26BF077DDC /* FPTouchView.m */,
 				D5E5EBA0ECAC49459D40FEEF /* Support Files */,
 			);
-			name = FPPopover;
 			path = FPPopover;
 			sourceTree = "<group>";
 		};
@@ -346,7 +343,6 @@
 				C8A0ACDF3E2143F194873F4E /* MBProgressHUD.m */,
 				7701305081204A97BD1D00EC /* Support Files */,
 			);
-			name = MBProgressHUD;
 			path = MBProgressHUD;
 			sourceTree = "<group>";
 		};
@@ -371,7 +367,6 @@
 				80670CCD0AFE46D29455690A /* Reachability.m */,
 				6F419E4752D848C8814AA0CA /* Support Files */,
 			);
-			name = Reachability;
 			path = Reachability;
 			sourceTree = "<group>";
 		};
@@ -403,7 +398,6 @@
 				6C9D148AFC1F4D249167AFF3 /* Resources */,
 				DFCFE66201EE429EB43074BC /* Support Files */,
 			);
-			name = TWMessageBarManager;
 			path = TWMessageBarManager;
 			sourceTree = "<group>";
 		};
@@ -663,8 +657,6 @@
 			mainGroup = E2B516D0EC764E8CA13C813E;
 			productRefGroup = 9B1E932F54144295A6F98EF9 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-			);
 			projectRoot = "";
 			targets = (
 				937C84E7174B4FE9A036DA2E /* Pods */,
@@ -784,7 +776,7 @@
 			baseConfigurationReference = 9FE5429B8FC84428A7C94074 /* Pods-MBProgressHUD-Private.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -813,7 +805,7 @@
 			baseConfigurationReference = 4E8DE718C78A4E9399451948 /* Pods-UIDevice-Hardware-Private.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -844,7 +836,7 @@
 			baseConfigurationReference = D7770B4DC91F4FFCA3D56951 /* Pods-FPPopover-Private.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -968,7 +960,7 @@
 			baseConfigurationReference = F67638A4D021439C8846577F /* Pods.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -996,7 +988,7 @@
 			baseConfigurationReference = 0C6C42571D3D464E898498F6 /* Pods-AsyncImageView-Private.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1027,7 +1019,7 @@
 			baseConfigurationReference = 28BB55EA0B8D4D709DF78D76 /* Pods-Reachability-Private.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1058,7 +1050,7 @@
 			baseConfigurationReference = A037876238EC44F0B32CFA43 /* Pods-TWMessageBarManager-Private.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1087,7 +1079,7 @@
 			baseConfigurationReference = 4E8DE718C78A4E9399451948 /* Pods-UIDevice-Hardware-Private.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1116,7 +1108,7 @@
 			baseConfigurationReference = 9FE5429B8FC84428A7C94074 /* Pods-MBProgressHUD-Private.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1147,7 +1139,7 @@
 			baseConfigurationReference = D7770B4DC91F4FFCA3D56951 /* Pods-FPPopover-Private.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1178,7 +1170,7 @@
 			baseConfigurationReference = 28BB55EA0B8D4D709DF78D76 /* Pods-Reachability-Private.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1207,7 +1199,7 @@
 			baseConfigurationReference = A037876238EC44F0B32CFA43 /* Pods-TWMessageBarManager-Private.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1238,7 +1230,7 @@
 			baseConfigurationReference = F67638A4D021439C8846577F /* Pods.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = armv7;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
