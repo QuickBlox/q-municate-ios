@@ -40,10 +40,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // set status bar color to white:
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
+    // send keep alive presence to load friends from Contact List:
+    [[QMChatService shared] sendPresence];
+    
+    // load all dialogs:
+    [self loadDialogs];
+    
     self.dataSource = [QMFriendsListDataSource new];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fillTableView) name:kFriendsLoadedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fillTableView) name:kFriendsReloadedNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -60,12 +68,21 @@
     }
 }
 
+- (void)loadDialogs
+{
+    // load QBChatDialogs:
+    [[QMChatService shared] fetchAllDialogsWithBlock:^(NSArray *dialogs, NSError *error) {
+        if (!error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kChatDialogsDidLoadedNotification object:nil];
+        }
+    }];
+}
+
 - (void)reloadFriendsList
 {
     self.tableView.tableFooterView = nil;
     [self updateDataSource];
 }
-
 
 #pragma mark - Footer
 
@@ -139,8 +156,10 @@
     if ([searchText isEqualToString:kEmptyString]) {
         return;
     }
-    [[QMContactList shared] retrieveUsersWithFullName:searchText completion:^(BOOL success) {
+    [[QMContactList shared] retrieveUsersWithFullName:searchText usingBlock:^(NSArray *users, BOOL success, NSError *error) {
         if (success) {
+            
+            
             [self.dataSource updateOtherUsersArray:^(BOOL isEmpty) {
                 self.tableView.tableFooterView = nil;
                 [self.tableView reloadData];
@@ -249,7 +268,7 @@
 
 - (void)fillTableView
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:kFriendsLoadedNotification];
+    [[NSNotificationCenter defaultCenter] removeObserver:kFriendsReloadedNotification];
     [self updateDataSource];
 }
 

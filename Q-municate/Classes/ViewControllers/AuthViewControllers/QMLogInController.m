@@ -85,22 +85,8 @@
         user.password = self.passwordField.text;
         [QMContactList shared].me = user;
         
-        // fetch dialogs:
-        [[QMChatService shared] fetchAllDialogsWithBlock:^(NSArray *dialogs, NSError *error) {
-            //
-        }];
-        
         // login to chat:
-        [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-            if (success) {
-                [[QMContactList shared] retrieveFriendsUsingBlock:^(BOOL success) {
-                    [QMUtilities removeIndicatorView];
-                    [self dismissViewControllerAnimated:NO completion:nil];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kFriendsLoadedNotification object:nil];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kLoggedInNotification object:nil];
-                }];
-            }
-        }];
+        [self logInToQuickbloxChatWithUser:user];
     }];
 }
 
@@ -221,23 +207,11 @@
 {
     // login to Quickblox chat:
     [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
+        [QMUtilities removeIndicatorView];
         if (success) {
-			[[QMContactList shared] findAndAddAllFriendsForFacebookUserWithCompletion:^(BOOL success) {
-				[QMUtilities removeIndicatorView];
-				[self dismissViewControllerAnimated:NO completion:nil];
-				[[NSNotificationCenter defaultCenter] postNotificationName:kFriendsLoadedNotification object:nil];
-				[[NSNotificationCenter defaultCenter] postNotificationName:kLoggedInNotification object:nil];
-			}];
-            [[QMChatService shared] fetchAllDialogsWithBlock:^(NSArray *dialogs, NSError *error) {
-                if (!error) {
-                    // join rooms:
-                    if ([[QMChatService shared] isLoggedIn]) {
-                        [[QMChatService shared] joinRoomsForDialogs:dialogs];
-                    }
-                    // say to controllers:
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"ChatDialogsLoaded" object:nil];
-                }
-            }];
+            UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
+            UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
+            [navigationController popToRootViewControllerAnimated:NO];
 		}
     }];
 }

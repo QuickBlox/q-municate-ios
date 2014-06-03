@@ -66,7 +66,14 @@
 }
 
 
-#pragma mark -
+#pragma mark - STATUS
+
+- (void)sendPresence
+{
+    [[QBChat instance] sendPresence];
+}
+
+
 #pragma mark - Contact List (ROSTER)
 
 /** Contact Requests */
@@ -94,6 +101,10 @@
 - (void)chatContactListDidChange:(QBContactList *)contactList
 {
     NSLog(@"%@", [contactList description]);
+    
+    [[QMContactList shared] retriveFriendsWithContactListInfo:contactList completion:^(BOOL success, NSError *error) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFriendsReloadedNotification object:nil];
+    }];
 }
 
 - (void)chatDidReceiveContactAddRequestFromUser:(NSUInteger)userID
@@ -271,7 +282,7 @@
             NSArray *dialogs = ((QBDialogsPagedResult *)result).dialogs;
             
             // load dialogs to dictionary:
-            self.allDialogsAsDictionary = [self arrayToDictionary:dialogs];
+            self.allDialogsAsDictionary = [self dialogsAsDictionaryFromDialogsArray:dialogs];
             
             block(dialogs, nil);
             return;
@@ -643,7 +654,7 @@
     return newDialog;
 }
 
-- (NSMutableDictionary *)arrayToDictionary:(NSArray *)array
+- (NSMutableDictionary *)dialogsAsDictionaryFromDialogsArray:(NSArray *)array
 {
     NSMutableDictionary *dictionaryOfDialogs = [NSMutableDictionary new];
     for (QBChatDialog *dialog in array) {

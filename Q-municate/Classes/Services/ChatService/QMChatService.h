@@ -30,6 +30,9 @@
 - (void)loginWithUser:(QBUUser *)user completion:(QBChatResultBlock)block;
 - (void)logOut;
 
+#pragma mark - STATUS
+- (void)sendPresence;
+
 
 #pragma mark - Contact List (ROASTER)
 

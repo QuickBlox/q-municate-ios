@@ -33,30 +33,41 @@
 #pragma mark -
 #pragma mark ROASTER
 
+/**
+ Request for users for IDs in Roaster. Returns NSArray of QBUUser's
+ */
 - (void)retriveFriendsWithContactListInfo:(QBContactList *)contactList completion:(void (^)(BOOL success, NSError *error))completion;
 
 
-#pragma mark -
-
-// FIND FRIENDS
-- (void)retrieveFriendsFromFacebookWithCompletion:(QBChatResultBlock)resultBlock;
-- (void)retrieveUsersWithFullName:(NSString *)fullName completion:(QBChatResultBlock)block;
-- (void)retrieveUsersWithEmails:(NSArray *)emails usingBlock:(void (^)(NSArray *users, BOOL success, NSError *error))block;
-- (void)retrieveUserWithID:(NSUInteger)userID completion:(void(^)(QBUUser *user, NSError *error))completion;
-- (void)findAndAddAllFriendsForFacebookUserWithCompletion:(QBChatResultBlock)block;
-
-// ADD / REMOVE FRIENDS
-- (void)addUserToFriendList:(QBUUser *)user completion:(QBChatResultBlock)block;
-- (void)addUserWithID:(NSUInteger)ID completion:(QBResultBlock)block;
-
-- (void)removeUserFromFriendList:(QBUUser *)user completion:(QBChatResultBlock)block;
+/** 
+ Request for Facebook users in Quickblox database. Returns NSArray of QBUUser's
+ */
+- (void)retrieveFriendsFromFacebookWithCompletion:(QBPagedUsersBlock)block;
 
 
-// REQUEST FOR FRIENDS TO FACEBOOK:
+/** 
+ Request for Facebook friends. Returns friends as FBGraphObjects (extended NSMutableDictionary)
+ */
 - (void)fetchFriendsFromFacebookWithCompletion:(QBPagedUsersBlock)handler;
 
-// Clear all data:
+
+/**
+ Retrieving user for user id. Returns QBUUser
+ */
+- (void)retrieveUserWithID:(NSUInteger)userID completion:(void(^)(QBUUser *user, NSError *error))completion;
+
+
+/**
+ Retrieving users with full name. Returns NSArray of QBUUser's
+ */
+- (void)retrieveUsersWithFullName:(NSString *)fullName usingBlock:(QBPagedUsersBlock)block;
+
+
+/** 
+ Clearing Contact list
+ */
 - (void)clearData;
+
 
 #pragma mark - Configurations
 

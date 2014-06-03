@@ -113,11 +113,11 @@
 
 - (IBAction)removeFromFriends:(id)sender
 {
-    [QMUtilities createIndicatorView];
-    [[QMContactList shared] removeUserFromFriendList:self.currentFriend completion:^(BOOL success) {
-        [QMUtilities removeIndicatorView];
-        [self.navigationController popViewControllerAnimated:YES];
-    }];
+//    [QMUtilities createIndicatorView];
+//    [[QMContactList shared] removeUserFromFriendList:self.currentFriend completion:^(BOOL success) {
+//        [QMUtilities removeIndicatorView];
+//        [self.navigationController popViewControllerAnimated:YES];
+//    }];
     self.currentFriend = nil;
 }
 

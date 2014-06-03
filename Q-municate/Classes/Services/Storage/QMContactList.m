@@ -12,8 +12,6 @@
 
 @interface QMContactList () <QBActionStatusDelegate>
 
-@property (copy, nonatomic) QBResultBlock resultBlock;
-
 @end
 
 
@@ -43,10 +41,7 @@
 - (void)retriveFriendsWithContactListInfo:(QBContactList *)contactList completion:(void (^)(BOOL success, NSError *error))completion
 {
     if ([contactList.contacts count] == 0) {
-        NSError *error = [NSError errorWithDomain:@"No friends found in roaster" code:1100 userInfo:nil];
-        
-        // out with error:
-        completion(NO, error);
+        completion(YES, nil);
         return;
     }
     // searching IDs of users out of Friends list:
@@ -82,52 +77,69 @@
         }];
         return;
     }
-    NSError *error = [NSError errorWithDomain:@"No friends found in roaster" code:1100 userInfo:nil];
-    
     // block invoke:
-    completion(NO, error);
+    completion(YES, nil);
 }
 
-#pragma mark -
-#pragma mark - TERMINATE LOGIC
 
-// *********************** FIND FRIENDS ****************************
+// *********************** FIND FRIENDS FROM FACEBOOK ****************************
 
-- (void)retrieveFriendsFromFacebookWithCompletion:(QBChatResultBlock)resultBlock
+- (void)retrieveFriendsFromFacebookWithCompletion:(QBPagedUsersBlock)block
 {
-     FBRequest *friendsRequest = [FBRequest requestForMyFriends];
-    [friendsRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-         
-        NSMutableArray *myFriends = [(FBGraphObject *)result objectForKey:kData];
-        if ([myFriends count] == 0) {
-            resultBlock(NO);
+    [self fetchFriendsFromFacebookWithCompletion:^(NSArray *users, BOOL success, NSError *error) {
+        if (!success) {
+            // out with error:
+            block(nil, NO, error);
             return;
         }
-        NSMutableArray *friendsIDs = [self IDsOfFacebookUsers:myFriends];
+        if ([users count] == 0) {
+            block(users, YES, nil);
+            return;
+        }
+        NSMutableArray *friendsIDs = [self IDsOfFacebookUsers:users];
         
         [self retrieveUsersWithFacebookIDs:friendsIDs usingBlock:^(NSArray *users, BOOL success, NSError *error) {
-            if (success) {
-                // we should to send contact requests to those users:
-#warning TODO:
+            if (!success) {
+                block(nil, NO, error);
+                return;
             }
+            block(users, YES, nil);
         }];
     }];
 }
-                
-- (NSMutableArray *)friendsIDsAndBaseIDsFromObjects:(NSArray *)objects
+
+
+#pragma mark - API
+
+// ******************** Facebook Friends ***********************
+
+
+- (void)fetchFriendsFromFacebookWithCompletion:(QBPagedUsersBlock)handler
 {
-    NSMutableArray *IDs = [NSMutableArray new];
-    NSMutableDictionary *baseIDs = [NSMutableDictionary new];
-    
-    for (QBCOCustomObject *object in objects) {
-        NSString *friendID = object.fields[kFriendId];
-        [IDs addObject:friendID];
-        baseIDs[friendID] = object.ID;
-    }
-    // save custom object IDs:
-    self.baseUserIDs = baseIDs;
-    
-    return IDs;
+    FBRequest *friendsRequest = [FBRequest requestForMyFriends];
+    [friendsRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        if (error) {
+            handler(nil, NO, error);
+            return;
+        }
+        NSArray *myFriends = [(FBGraphObject *)result objectForKey:kData];
+        handler(myFriends, YES, nil);
+    }];
+}
+
+//**************************** API *********************************
+
+- (void)retrieveUsersWithFullName:(NSString *)fullName usingBlock:(QBPagedUsersBlock)block
+{
+    QBResultBlock resultBlock = ^(Result *result) {
+        if (result.success && [result isKindOfClass:QBUUserPagedResult.class]) {
+            NSArray *users = ((QBUUserPagedResult *)result).users;
+            block(users, YES, nil);
+            return;
+        }
+        block(nil, NO, result.errors[0]);
+    };
+    [QBUsers usersWithFullName:fullName delegate:self context:Block_copy((__bridge void *)(resultBlock))];
 }
 
 - (void)retrieveUserWithID:(NSUInteger)userID completion:(void(^)(QBUUser *user, NSError *error))completion
@@ -143,104 +155,6 @@
     };
     
     [QBUsers userWithID:userID delegate:self context:Block_copy((__bridge void *)(block))];
-}
-
-
-- (void)findAndAddAllFriendsForFacebookUserWithCompletion:(QBChatResultBlock)block
-{
-    [self retrieveIDsOfFriendsUsingBlock:^(Result *result) {
-        if (result.success && [result isKindOfClass:[QBCOCustomObjectPagedResult class]]) {
-            NSArray *objects = ((QBCOCustomObjectPagedResult *)result).objects;
-            if ([objects count] != 0) {
-                
-                NSMutableArray *friendsIDs = [self friendsIDsAndBaseIDsFromObjects:objects];
-                
-                [self retrieveUsersWithIDs:friendsIDs usingBlock:^(Result *result) {
-                    if (result.success && [result isKindOfClass:[QBUUserPagedResult class]]) {
-                        NSArray *users = ((QBUUserPagedResult *)result).users;
-                        self.friendsAsDictionary = [self friendsAsDictionaryFromFriendsArray:users];
-                        block(YES);
-                        return;
-                    }
-                }];
-                
-                return;
-            }
-            [self retrieveFriendsFromFacebookWithCompletion:^(BOOL success) {
-                if (success) {
-                    block(YES);
-                    return;
-                }
-                block(NO);
-            }];
-        }
-    }];
-}
-
-// ******************** ADD / REMOVE FRIENDS ***********************
-
-- (void)addUserToFriendList:(QBUUser *)user completion:(QBChatResultBlock)block
-{
-    __weak QMContactList *weakSelf = self;
-    
-    [self addUserWithID:user.ID completion:^(Result *result) {
-        if (result.success && [result isKindOfClass:[QBCOCustomObjectResult class]]) {
-            QBCOCustomObject *object = ((QBCOCustomObjectResult *)result).object;
-            
-            // add user to friends list
-            weakSelf.friendsAsDictionary[[@(user.ID) stringValue]] = user;
-            // add baseID to baseIDs
-            weakSelf.baseUserIDs[object.fields[kFriendId]] = object.ID;
-            
-            block(YES);
-            return;
-        }
-        block(NO);
-    }];
-}
-
-- (void)addUsersToFriends:(NSArray *)users
-{
-    __weak QMContactList *weakSelf = self;
-    for (QBUUser *user in users) {
-        [self addUserWithID:user.ID completion:^(Result *result) {
-            if (result.success && [result isKindOfClass:[QBCOCustomObjectResult class]]) {
-                QBCOCustomObject *object = ((QBCOCustomObjectResult *)result).object;
-                // add baseID to baseIDs
-                weakSelf.baseUserIDs[object.fields[kFriendId]] = object.ID;
-            }
-        }];
-    }
-}
-
-- (void)fetchFriendsFromFacebookWithCompletion:(QBPagedUsersBlock)handler
-{
-    FBRequest *friendsRequest = [FBRequest requestForMyFriends];
-    [friendsRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        if (error) {
-            handler(nil, NO, error);
-            return;
-        }
-        NSArray *myFriends = [(FBGraphObject *)result objectForKey:kData];
-        handler(myFriends, YES, nil);
-    }];
-}
-
-
-#pragma mark - API
-//**************************** API *********************************
-
-- (void)retrieveUsersWithFullName:(NSString *)fullName usingBlock:(QBPagedUsersBlock)block
-{
-    QBResultBlock resultBlock = ^(Result *result) {
-        if (result.success && [result isKindOfClass:QBUUserPagedResult.class]) {
-            NSArray *users = ((QBUUserPagedResult *)result).users;
-            block(users, YES, nil);
-            return;
-        }
-        block(nil, NO, result.errors[0]);
-    };
-    [QBUsers usersWithFullName:fullName delegate:self context:Block_copy((__bridge void *)(resultBlock))];
 }
 
 - (void)retrieveUsersWithIDs:(NSArray *)IDs usingBlock:(QBPagedUsersBlock)block
