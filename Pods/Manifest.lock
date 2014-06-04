@@ -1,6 +1,9 @@
 PODS:
   - AsyncImageView (1.5.1)
   - FPPopover (1.4.1)
+  - MagicalRecord (2.2):
+    - MagicalRecord/Core
+  - MagicalRecord/Core (2.2)
   - MBProgressHUD (0.8)
   - Reachability (3.1.1)
   - TWMessageBarManager (1.6.0)
@@ -9,6 +12,7 @@ PODS:
 DEPENDENCIES:
   - AsyncImageView (~> 1.5.1)
   - FPPopover (~> 1.4.1)
+  - MagicalRecord (~> 2.2)
   - MBProgressHUD (~> 0.8)
   - Reachability (~> 3.1.1)
   - TWMessageBarManager (~> 1.6.0)
@@ -17,6 +21,7 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   AsyncImageView: 388442ae8314a5c99de0d98040c2926826d31da7
   FPPopover: bbfc452ec8949a2c2f555cf2d8c7236e621811f0
+  MagicalRecord: 2b471584fc9e3137f3d0a56967917baa4979e224
   MBProgressHUD: c356980b0cd097f19acec959b49dca5eb8ec31be
   Reachability: 8e9635e3cb4f98e7f825e51147f677ecc694d0e7
   TWMessageBarManager: 483963f4a300e31cbd8936378d4a255e6db5b6b3

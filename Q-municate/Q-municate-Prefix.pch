@@ -16,7 +16,7 @@
     #import <Foundation/Foundation.h>
     #import <Quickblox/Quickblox.h>
     #import <FacebookSDK/FacebookSDK.h>
-
+    #import "CoreData+MagicalRecord.h"
     #import "QMDefinitions.h"
 
 
