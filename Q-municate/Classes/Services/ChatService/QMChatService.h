@@ -55,7 +55,7 @@
 - (void)joinRoomWithRoomJID:(NSString *)roomJID;
 - (void)joinRoomsForDialogs:(NSArray *)chatDialogs;
 
-- (void)getMessageHistoryWithDialogID:(NSString *)dialogIDString withCompletion:(QBChatDialogHistoryBlock)block;
+- (void)getMessageHistoryWithDialogID:(NSString *)dialogIDString withCompletion:(void(^)(NSArray *messages, BOOL success, NSError *error))block;
 
 
 #pragma mark - Chat Utils

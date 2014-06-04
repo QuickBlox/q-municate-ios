@@ -56,8 +56,7 @@
         self.addToFriendsButton.hidden = NO;
     }
     
-    
-    // colour matching
+    // color matching
     if (searchText != nil && searchText.length > 0) {
         NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithAttributedString:self.fullName.attributedText];
         [text addAttribute: NSForegroundColorAttributeName value:[UIColor redColor]
@@ -65,14 +64,16 @@
         self.fullName.attributedText = text;
     }
     
-    // activity
-    NSDate *currentDate = [NSDate date];
-    double timeInterval = [currentDate timeIntervalSinceDate:user.lastRequestAt];
+    // Online/Offline status:
+    QBContactListItem *contactItem = [[QMContactList shared] contactItemFromContactListForOpponentID:user.ID];
+    BOOL isOnline = contactItem.online;
     NSString *activity = nil;
-    if (timeInterval <= kUptimeInterval) {
+    if (isOnline) {
         activity = kStatusOnlineString;
         if (isFriend) {
             self.onlineCircle.hidden = NO;
+        } else {
+            self.onlineCircle.hidden = YES;
         }
     } else {
         activity = kStatusOfflineString;

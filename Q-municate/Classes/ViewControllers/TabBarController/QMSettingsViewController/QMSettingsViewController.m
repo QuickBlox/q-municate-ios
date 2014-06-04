@@ -58,22 +58,35 @@ typedef NS_ENUM(NSUInteger, QMPasswordCheckState) {
     // Dispose of any resources that can be recreated.
 }
 
+- (void)clearCacheDefaults
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	[userDefaults setObject:@(YES) forKey:kSettingsPushNotificationsState];
+    [userDefaults setObject:kEmptyString forKey:kUserStatusText];
+    
+    // delete Email & Password:
+    [userDefaults removeObjectForKey:kEmail];
+    [userDefaults removeObjectForKey:kPassword];
+    
+    [userDefaults synchronize];
+}
+
 - (void)logOut
 {
     [[FBSession activeSession] closeAndClearTokenInformation];          // close fb session
     [[QMChatService shared] logOut];                                      // close chat
     [[QMContactList shared] clearData];                                   // clear all information about me and my data
-	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	[userDefaults setObject:@(YES) forKey:kDidLogout];
-	[userDefaults setObject:@(NO) forKey:kSettingsPushNotificationsState];
-    [userDefaults setObject:kEmptyString forKey:kUserStatusText];
-    [userDefaults synchronize];
+    
+    // clear cache:
+    [self clearCacheDefaults];
+    
 	[[NSNotificationCenter defaultCenter] postNotificationName:kInviteFriendsDataSourceShouldRefreshNotification object:nil];
     [[QMAuthService shared] destroySessionWithCompletion:^(BOOL success) {
-        if (success) {
-            self.tabBarController.selectedIndex = 0;
-            [self.tabBarController performSegueWithIdentifier:kWelcomeScreenSegueIdentifier sender:nil];
-        }
+        
+        //pop tab bar:
+        UIWindow *window = [[UIApplication sharedApplication].windows firstObject];
+        UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
+        [navigationController popToRootViewControllerAnimated:NO];
     }];
 }
 

@@ -307,4 +307,15 @@
     return friends;
 }
 
+- (QBContactListItem *)contactItemFromContactListForOpponentID:(NSUInteger)opponentID
+{
+    QBContactList *contactList = [QBChat instance].contactList;
+    for (QBContactListItem *item in contactList.contacts) {
+        if (item.userID == opponentID) {
+            return item;
+        }
+    }
+    return nil;
+}
+
 @end

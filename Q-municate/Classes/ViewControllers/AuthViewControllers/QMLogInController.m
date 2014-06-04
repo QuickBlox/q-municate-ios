@@ -129,7 +129,6 @@
 {
     if (isRemember) {
         [[NSUserDefaults standardUserDefaults] setObject:@(self.rememberMeSwitch.isOn) forKey:kRememberMe];
-        [[NSUserDefaults standardUserDefaults] setObject:@(!isRemember) forKey:kDidLogout];
         [[NSUserDefaults standardUserDefaults] setObject:self.emailField.text forKey:kEmail];
         [[NSUserDefaults standardUserDefaults] setObject:self.passwordField.text forKey:kPassword];
         [[NSUserDefaults standardUserDefaults] synchronize];

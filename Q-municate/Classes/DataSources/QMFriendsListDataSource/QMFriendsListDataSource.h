@@ -14,7 +14,7 @@
 
 - (void)updateFriendsArray:(void (^)(BOOL isEmpty))block;
 
-- (void)updateOtherUsersArray:(void (^)(BOOL isEmpty))block;
+- (void)updateSearchedUsersArray:(void (^)(BOOL isEmpty))block;
 
 - (void)updateFriendsArrayForSearchPhrase:(NSString *)searchPhraseString;
 

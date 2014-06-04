@@ -71,11 +71,14 @@
 
 #pragma mark - Configurations
 
+- (NSMutableDictionary *)friendsAsDictionaryFromFriendsArray:(NSArray *)friendsArray;
 - (NSArray *)personsFromDictionaries:(NSArray *)dictionaries;
 - (BOOL)isFriend:(QBUUser *)user;
 - (QBUUser *)findFriendWithID:(NSUInteger)userID;
 
 - (QBUUser *)searchFriendFromChatDialog:(QBChatDialog *)chatDialog;
 - (NSArray *)searchFriendsFromChatDialog:(QBChatDialog *)chatDialog;
+
+- (QBContactListItem *)contactItemFromContactListForOpponentID:(NSUInteger)opponentID;
 
 @end

@@ -32,7 +32,7 @@
     }
 }
 
-- (void)updateOtherUsersArray:(void(^)(BOOL isEmpty))block
+- (void)updateSearchedUsersArray:(void(^)(BOOL isEmpty))block
 {
     self.otherUsersArray = [[[QMContactList shared].searchedUsers allValues] mutableCopy];
     if ([self.otherUsersArray count] == 0) {
