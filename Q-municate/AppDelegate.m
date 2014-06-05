@@ -11,23 +11,25 @@
 
 @implementation AppDelegate
 
+const NSInteger size = 3;
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
     [QMDBStorage setupWithName:@"AndreyIvanov"];
-    NSMutableArray *qbusers = [NSMutableArray arrayWithCapacity:1000];
+    NSMutableArray *qbusers = [NSMutableArray arrayWithCapacity:size];
     
     //test
-    for (NSUInteger idx = 0; idx < 1000; idx++) {
+    for (NSUInteger idx = 0; idx < size; idx++) {
         
         QBUUser *user = [QBUUser user];
         user.fullName = [NSString stringWithFormat:@"User %d", idx];
-        user.ID = idx;
-        user.phone = [[NSDate date] description];
+        user.externalUserID = idx+1;
         [qbusers addObject:user];
     }
     
     [self.dbStorage cacheUsers:qbusers finish:^{
-        
+
     }];
     
     
