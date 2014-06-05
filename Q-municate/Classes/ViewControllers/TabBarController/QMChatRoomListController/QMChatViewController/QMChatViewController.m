@@ -381,7 +381,8 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 		BOOL isKeyboardShow = !(keyboardFrame.origin.y == [[UIScreen mainScreen] bounds].size.height);
 
-		NSInteger keyboardHeight = isKeyboardShow ? - keyboardFrame.size.height +49.0f: keyboardFrame.size.height -49.0f;
+		NSInteger keyboardHeight = isKeyboardShow ? - keyboardFrame.size.height : keyboardFrame.size.height;
+
         
 		[UIView animateWithDuration:animationDuration delay:0.0f options:animationCurve << 16 animations:^
 		{
@@ -394,7 +395,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 		} completion:^(BOOL finished) {
             [self.tableView reloadData];
             if ([self.chatHistory count] >2) {
-                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.chatHistory count]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.chatHistory count]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
             }
         }];
 	}

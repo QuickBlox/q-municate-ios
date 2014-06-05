@@ -59,6 +59,7 @@
     [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSError *error) {
         if (!success) {
             [QMUtilities removeIndicatorView];
+            [self showAlertWithMessage:error.description actionSuccess:NO];
             return;
         }
         // save me:
@@ -112,6 +113,22 @@
             [navigationController popToRootViewControllerAnimated:NO];
 		}
     }];
+}
+
+- (void)showAlertWithMessage:(NSString *)messageString actionSuccess:(BOOL)success
+{
+    NSString *title = nil;
+    if (success) {
+        title = kAlertTitleSuccessString;
+    } else {
+        title = kAlertTitleErrorString;
+    }
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:messageString
+                                                   delegate:self
+                                          cancelButtonTitle:kAlertButtonTitleOkString
+                                          otherButtonTitles:nil];
+    [alert show];
 }
 
 @end

@@ -96,6 +96,7 @@
     [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSError *error) {
         if (!success) {
             [QMUtilities removeIndicatorView];
+            [self showAlertWithMessage:error.description actionSuccess:NO];
             return;
         }
         // save me:
@@ -103,9 +104,12 @@
                 
         if (user.blobID == 0) {
             [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
-                if (success) {
-                    [self logInToQuickbloxChatWithUser:user];
+                if (!success) {
+                    [QMUtilities removeIndicatorView];
+                    [self showAlertWithMessage:error.description actionSuccess:NO];
+                    return;
                 }
+                [self logInToQuickbloxChatWithUser:user];
             }];
             return;
         }

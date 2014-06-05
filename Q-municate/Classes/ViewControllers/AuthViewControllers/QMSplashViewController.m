@@ -33,8 +33,8 @@
     [QMUtilities createIndicatorView];
     //start session:
     [[QMAuthService shared] startSessionWithBlock:^(BOOL success, NSError *error) {
-        [QMUtilities removeIndicatorView];
         if (!success) {
+            [QMUtilities removeIndicatorView];
             [self showAlertWithMessage:error.description actionSuccess:NO];
             return;
         }
@@ -51,6 +51,7 @@
             [self loginWithEmail:email password:password];
             return;
         }
+        [QMUtilities removeIndicatorView];
         [self showWelcomeScreen];
     }];
 }
@@ -83,9 +84,8 @@
 {
     [QMUtilities createIndicatorView];
     [[QMAuthService shared] logInWithEmail:email password:password completion:^(QBUUser *user, BOOL success, NSError *error) {
-        [QMUtilities removeIndicatorView];
         if (!success) {
-            ILog(@"error while logging in: %@", error);
+            [QMUtilities removeIndicatorView];
             [self showAlertWithMessage:[NSString stringWithFormat:@"%@", error] actionSuccess:NO];
             return;
         }
@@ -94,7 +94,6 @@
             user.password = password;
         }
         
-        [QMUtilities createIndicatorView];
         [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
             [QMUtilities removeIndicatorView];
             if (success) {
