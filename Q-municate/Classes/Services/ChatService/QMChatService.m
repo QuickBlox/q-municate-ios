@@ -9,7 +9,7 @@
 #import "QMChatService.h"
 #import "QMContactList.h"
 #import "NSArray+ArrayToString.h"
-
+#import <TWMessageBarManager.h>
 
 
 @interface QMChatService () <QBChatDelegate, QBActionStatusDelegate>
@@ -336,6 +336,9 @@
             }];
         }
     }
+    
+    // show popup message:
+    [[TWMessageBarManager sharedInstance] showMessageWithTitle:opponent.fullName description:message.text type:TWMessageBarMessageTypeInfo duration:5.0f callback:nil];
     
     // get dialog entity with current user:
     QBChatDialog *currentDialog = self.allDialogsAsDictionary[kUserID];

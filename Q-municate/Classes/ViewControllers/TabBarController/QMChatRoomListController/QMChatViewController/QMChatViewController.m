@@ -51,6 +51,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
     
     // UI & observers:
     [self configureInputMessageViewShadow];
+    [self configureNavBarButtons];
     [self addKeyboardObserver];
 	[self addChatObserver];
 	self.isBackButtonClicked = NO;

@@ -14,7 +14,7 @@
 #import "QMUtilities.h"
 #import "QMChatService.h"
 
-@interface QMFriendsDetailsController ()
+@interface QMFriendsDetailsController () <UIActionSheetDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *userAvatar;
 @property (weak, nonatomic) IBOutlet UILabel *fullName;
@@ -121,19 +121,26 @@
 
 #pragma mark - Actions
 
-- (IBAction)back:(id)sender
-{
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
 - (IBAction)removeFromFriends:(id)sender
 {
-    NSString *opponentID = [@(self.currentFriend.ID) stringValue];
-    [[QMContactList shared].friendsAsDictionary removeObjectForKey:opponentID];
-    [[QMChatService shared] removeContactFromFriendsWithID:self.currentFriend.ID];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:kFriendsReloadedNotification object:nil];
-    [self.navigationController popViewControllerAnimated:YES];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles:nil];
+    [actionSheet showInView:self.view];
+}
+
+
+#pragma mark - UIActionSheet
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    // Delete button tapped:
+    if (buttonIndex == 0) {
+        NSString *opponentID = [@(self.currentFriend.ID) stringValue];
+        [[QMContactList shared].friendsAsDictionary removeObjectForKey:opponentID];
+        [[QMChatService shared] removeContactFromFriendsWithID:self.currentFriend.ID];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFriendsReloadedNotification object:nil];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 

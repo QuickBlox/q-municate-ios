@@ -71,8 +71,6 @@
     
     [self loadUserAvatarToImageView];
 
-    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
-
     CALayer *imageLayer = self.userPhotoImageView.layer;
     imageLayer.cornerRadius = self.userPhotoImageView.frame.size.width / 2;
     imageLayer.masksToBounds = YES;

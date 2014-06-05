@@ -24,6 +24,10 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 @property (strong, nonatomic) QMChatRoomListDataSource *dataSource;
 
 @property (strong, nonatomic) NSArray *chatDialogs;
+
+///** Controller's flag. If YES, CreateNewChatController was popped and dialog was created */
+//@property (assign, getter = isCreateNewChatControllerLoaded) BOOL createNewChatControllerLoaded;
+
 @end
 
 @implementation QMChatRoomListController
@@ -32,7 +36,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
 //    self.dataSource = [QMChatRoomListDataSource new];
     
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
@@ -44,19 +48,19 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [self reloadTableView];
+    [super viewWillAppear:animated];
     
-    [super viewWillAppear:NO];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-	[super viewDidAppear:animated];
-
-	[[TWMessageBarManager sharedInstance] showMessageWithTitle:@"Hello message" description:@"hello description for message." type:TWMessageBarMessageTypeSuccess duration:10.0f callback:^{
-		// do some selector
-		NSLog(@"We are inside callback block;");
-	}];
+    // check for created now dialog:
+    QBChatDialog *newDialog = [QMChatService shared].lastCreatedDialog;
+    if (newDialog != nil) {
+        
+        //if dialog wasn't created:
+        QBChatDialog *createdNowDialog = [QMChatService shared].lastCreatedDialog;
+        [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:createdNowDialog];
+        
+        [QMChatService shared].lastCreatedDialog = nil;
+    }
+    [self reloadTableView];
 }
 
 - (void)didReceiveMemoryWarning

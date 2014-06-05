@@ -22,6 +22,7 @@
 @property (nonatomic, strong) NSDictionary *customParams;
 @property (nonatomic, strong) QBChatRoom *chatRoom;
 
+@property (nonatomic, strong) QBChatDialog *lastCreatedDialog;
 @property (nonatomic, readonly, getter = isLoggedIn) BOOL loggedIn;
 
 + (instancetype)shared;
