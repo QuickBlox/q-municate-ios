@@ -22,6 +22,7 @@
 @property (nonatomic, strong) NSDictionary *customParams;
 @property (nonatomic, strong) QBChatRoom *chatRoom;
 
+@property (nonatomic, strong) QBChatDialog *lastCreatedDialog;
 @property (nonatomic, readonly, getter = isLoggedIn) BOOL loggedIn;
 
 + (instancetype)shared;
@@ -55,7 +56,7 @@
 - (void)joinRoomWithRoomJID:(NSString *)roomJID;
 - (void)joinRoomsForDialogs:(NSArray *)chatDialogs;
 
-- (void)getMessageHistoryWithDialogID:(NSString *)dialogIDString withCompletion:(QBChatDialogHistoryBlock)block;
+- (void)getMessageHistoryWithDialogID:(NSString *)dialogIDString withCompletion:(void(^)(NSArray *messages, BOOL success, NSError *error))block;
 
 
 #pragma mark - Chat Utils

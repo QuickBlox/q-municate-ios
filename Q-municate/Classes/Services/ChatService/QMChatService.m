@@ -9,7 +9,7 @@
 #import "QMChatService.h"
 #import "QMContactList.h"
 #import "NSArray+ArrayToString.h"
-
+#import <TWMessageBarManager.h>
 
 
 @interface QMChatService () <QBChatDelegate, QBActionStatusDelegate>
@@ -337,6 +337,9 @@
         }
     }
     
+    // show popup message:
+    [[TWMessageBarManager sharedInstance] showMessageWithTitle:opponent.fullName description:message.text type:TWMessageBarMessageTypeInfo duration:5.0f callback:nil];
+    
     // get dialog entity with current user:
     QBChatDialog *currentDialog = self.allDialogsAsDictionary[kUserID];
     if (currentDialog != nil) {
@@ -456,10 +459,17 @@
 	[[QBChat instance] createDialog:chatDialog delegate:self];
 }
 
-- (void)getMessageHistoryWithDialogID:(NSString *)dialogIDString withCompletion:(QBChatDialogHistoryBlock)block
+- (void)getMessageHistoryWithDialogID:(NSString *)dialogIDString withCompletion:(void(^)(NSArray *messages, BOOL success, NSError *error))block
 {
-	_chatDialogHistoryBlock = block;
-	[[QBChat instance] messagesWithDialogID:dialogIDString delegate:self];
+	QBResultBlock resulBlock = ^(Result *result) {
+        if (result.success && [result isKindOfClass:[QBChatHistoryMessageResult class]]) {
+            NSArray *messages = ((QBChatHistoryMessageResult *)result).messages;
+            block(messages, YES, nil);
+            return;
+        }
+        block(nil, NO, result.errors[0]);
+    };
+	[[QBChat instance] messagesWithDialogID:dialogIDString delegate:self context:Block_copy((__bridge void *)(resulBlock))];
 }
 
 - (void)sendMessage:(QBChatMessage *)message toRoom:(QBChatRoom *)chatRoom

@@ -51,6 +51,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
     
     // UI & observers:
     [self configureInputMessageViewShadow];
+    [self configureNavBarButtons];
     [self addKeyboardObserver];
 	[self addChatObserver];
 	self.isBackButtonClicked = NO;
@@ -111,24 +112,20 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (void)loadHistory
 {
     // load history:
-    [[QMChatService shared] getMessageHistoryWithDialogID:self.chatDialog.ID withCompletion:^(NSArray *chatDialogHistoryArray, NSError *error) {
+    [[QMChatService shared] getMessageHistoryWithDialogID:self.chatDialog.ID withCompletion:^(NSArray *messages, BOOL success, NSError *error) {
+        
         [QMUtilities removeIndicatorView];
-        if (chatDialogHistoryArray != nil) {
+        if (messages != nil) {
             
             if (self.chatDialog.type == QBChatDialogTypePrivate) {
-                [QMChatService shared].allConversations[[@(self.opponent.ID)stringValue]] = [chatDialogHistoryArray mutableCopy];
+                [QMChatService shared].allConversations[[@(self.opponent.ID)stringValue]] = [messages mutableCopy];
             } else {
-                [QMChatService shared].allConversations[self.chatDialog.roomJID] = [chatDialogHistoryArray mutableCopy];
+                [QMChatService shared].allConversations[self.chatDialog.roomJID] = [messages mutableCopy];
             }
         }
         [self resetTableView];
     }];
 }
-
-//- (void)updateProgressFooter
-//{
-//    NSlog(@"%lu", (unsigned long)(self.uploadManager.uploadProgress * 100));
-//}
 
 - (void)dealloc
 {

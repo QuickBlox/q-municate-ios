@@ -186,7 +186,7 @@
         <!--Friends Details Controller - Details-->
         <scene sceneID="hb9-Nb-dND">
             <objects>
-                <tableViewController id="B6O-m1-ZGo" customClass="QMFriendsDetailsController" sceneMemberID="viewController">
+                <tableViewController hidesBottomBarWhenPushed="YES" id="B6O-m1-ZGo" customClass="QMFriendsDetailsController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="EcG-xN-W1h">
                         <rect key="frame" x="0.0" y="64" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -328,12 +328,6 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Details" id="wYX-0M-WGJ">
-                        <barButtonItem key="leftBarButtonItem" title="Back" id="TiS-rX-2up">
-                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="back:" destination="B6O-m1-ZGo" id="Ubk-rQ-loB"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" image="tobbar_remove" id="gp0-aY-zP7">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
@@ -479,6 +473,7 @@
                     <tabBarItem key="tabBarItem" title="Settings" image="tb_settings" id="CyK-i7-eGG"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="itI-lc-P93">
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="barTintColor" red="0.13333334029999999" green="0.40392160420000001" blue="0.68235296010000002" alpha="1" colorSpace="deviceRGB"/>
                         <textAttributes key="titleTextAttributes">
                             <fontDescription key="fontDescription" type="system" pointSize="22"/>
@@ -621,7 +616,7 @@
         <!--Profile View Controller - Profile-->
         <scene sceneID="r3w-dZ-Too">
             <objects>
-                <viewController id="WQB-nP-0pB" customClass="QMProfileViewController" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="WQB-nP-0pB" customClass="QMProfileViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="xik-Rj-1UN"/>
                         <viewControllerLayoutGuide type="bottom" id="D72-vd-dvV"/>
@@ -1029,6 +1024,7 @@
                     <tabBarItem key="tabBarItem" title="Chats" image="tb_chat" id="Jsu-HQ-Uka"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="ryl-dm-KJw">
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="barTintColor" red="0.13333334029999999" green="0.40392160420000001" blue="0.68235296010000002" alpha="1" colorSpace="deviceRGB"/>
                         <textAttributes key="titleTextAttributes">
                             <fontDescription key="fontDescription" type="system" pointSize="22"/>
@@ -1164,6 +1160,7 @@
                     <tabBarItem key="tabBarItem" title="Friends" image="tb_friends" id="Ahi-V6-tYw"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="fUc-nA-clP">
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="barTintColor" red="0.13333334029999999" green="0.40392160420000001" blue="0.68235296010000002" alpha="1" colorSpace="deviceRGB"/>
                         <textAttributes key="titleTextAttributes">
                             <fontDescription key="fontDescription" type="system" pointSize="22"/>
@@ -1181,7 +1178,7 @@
         <!--Chat View Controller-->
         <scene sceneID="zPm-bv-kk9">
             <objects>
-                <viewController id="zpv-I5-i7g" customClass="QMChatViewController" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="zpv-I5-i7g" customClass="QMChatViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="vdc-hh-O2N"/>
                         <viewControllerLayoutGuide type="bottom" id="3q7-BX-nci"/>
@@ -1593,12 +1590,6 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="kBZ-MI-1CD">
-                        <barButtonItem key="leftBarButtonItem" title="Back" id="Oai-oG-VVN">
-                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="back:" destination="zpv-I5-i7g" id="DkD-Tc-2uW"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" image="ic_info_top" id="cE7-SH-Uub">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
@@ -2057,7 +2048,7 @@
         <!--Create New Chat Controller - 0 Selected-->
         <scene sceneID="mNV-V4-d8l">
             <objects>
-                <viewController id="Rlv-IY-Rq7" customClass="QMCreateNewChatController" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="Rlv-IY-Rq7" customClass="QMCreateNewChatController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="1Sn-G1-g2v"/>
                         <viewControllerLayoutGuide type="bottom" id="AVD-JQ-jkt"/>
@@ -2151,12 +2142,6 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="0 Selected" id="zby-Rc-FdD">
-                        <barButtonItem key="leftBarButtonItem" title="Back" id="Hsp-Bb-Qbj">
-                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="back:" destination="Rlv-IY-Rq7" id="l9y-NH-3Tg"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Cancel" id="4pK-YW-JFZ">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
@@ -2167,7 +2152,6 @@
                     <connections>
                         <outlet property="createGroupButton" destination="Z4Q-C0-t5Y" id="h2F-yK-LQH"/>
                         <outlet property="tableView" destination="vaa-T0-hBz" id="W5X-lZ-CNz"/>
-                        <segue destination="zpv-I5-i7g" kind="push" identifier="ChatViewSegue" id="K9j-ZU-hsa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3g5-co-tsh" userLabel="First Responder" sceneMemberID="firstResponder"/>

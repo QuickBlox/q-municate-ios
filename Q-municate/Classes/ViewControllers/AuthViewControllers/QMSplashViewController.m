@@ -93,22 +93,15 @@
         if (!user.password) {
             user.password = password;
         }
+        
+        [QMUtilities createIndicatorView];
         [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
+            [QMUtilities removeIndicatorView];
             if (success) {
-                // Friends track!
-                
-                [[QMChatService shared] fetchAllDialogsWithBlock:^(NSArray *dialogs, NSError *error) {
-                    if (!error) {
-                        // join rooms:
-                        if ([[QMChatService shared] isLoggedIn]) {
-                            [[QMChatService shared] joinRoomsForDialogs:dialogs];
-                        }
-                        // say to controllers:
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"ChatDialogsLoaded" object:nil];
-                    }
-                }];
-            } else {
-                [QMUtilities removeIndicatorView];
+                //pop auth and push tab bar:
+                UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
+                UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
+                [navigationController popToRootViewControllerAnimated:NO];
             }
         }];
     }];

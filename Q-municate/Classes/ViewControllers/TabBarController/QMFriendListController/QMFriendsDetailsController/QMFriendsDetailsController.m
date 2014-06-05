@@ -14,7 +14,7 @@
 #import "QMUtilities.h"
 #import "QMChatService.h"
 
-@interface QMFriendsDetailsController ()
+@interface QMFriendsDetailsController () <UIActionSheetDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *userAvatar;
 @property (weak, nonatomic) IBOutlet UILabel *fullName;
@@ -32,22 +32,37 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUserStatus) name:kFriendsReloadedNotification object:nil];
+    
     [self configureUserAvatarView];
     
 	self.userAvatar.image = self.userPhotoImage;
     self.fullName.text = self.currentFriend.fullName;
+}
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self updateUserStatus];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)updateUserStatus
+{
     // online status
-    // activity
-    NSDate *currentDate = [NSDate date];
-    double timeInterval = [currentDate timeIntervalSinceDate:self.currentFriend.lastRequestAt];
-    if (timeInterval < 300) {
+    QBContactListItem *contactItem = [[QMContactList shared] contactItemFromContactListForOpponentID:self.currentFriend.ID];
+    BOOL isOnline = contactItem.online;
+    if (isOnline) {
         self.status.text = kStatusOnlineString;
         self.onlineCircle.hidden = NO;
-    } else {
-        self.status.text = kStatusOfflineString;
-        self.onlineCircle.hidden = YES;
+        return;
     }
+    self.status.text = kStatusOfflineString;
+    self.onlineCircle.hidden = YES;
 }
 
 - (void)configureUserAvatarView
@@ -106,19 +121,26 @@
 
 #pragma mark - Actions
 
-- (IBAction)back:(id)sender
-{
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
 - (IBAction)removeFromFriends:(id)sender
 {
-//    [QMUtilities createIndicatorView];
-//    [[QMContactList shared] removeUserFromFriendList:self.currentFriend completion:^(BOOL success) {
-//        [QMUtilities removeIndicatorView];
-//        [self.navigationController popViewControllerAnimated:YES];
-//    }];
-    self.currentFriend = nil;
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles:nil];
+    [actionSheet showInView:self.view];
+}
+
+
+#pragma mark - UIActionSheet
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    // Delete button tapped:
+    if (buttonIndex == 0) {
+        NSString *opponentID = [@(self.currentFriend.ID) stringValue];
+        [[QMContactList shared].friendsAsDictionary removeObjectForKey:opponentID];
+        [[QMChatService shared] removeContactFromFriendsWithID:self.currentFriend.ID];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFriendsReloadedNotification object:nil];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 

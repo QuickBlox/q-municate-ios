@@ -63,10 +63,6 @@ static CGFloat const rowHeight = 60.0;
         [self.tableView reloadData];
     }
 }
-- (IBAction)back:(id)sender
-{
-    [self.navigationController popViewControllerAnimated:YES];
-}
 
 - (IBAction)createGroupChat:(id)sender
 {
@@ -82,11 +78,11 @@ static CGFloat const rowHeight = 60.0;
     [[QMChatService shared] createNewDialog:chatDialog withCompletion:^(QBChatDialog *dialog, NSError *error) {
         // save to dialogs dictionary:
         [QMChatService shared].allDialogsAsDictionary[dialog.roomJID] = dialog;
-        
+        [QMChatService shared].lastCreatedDialog = dialog;
         // send invitation to users:
         [[QMChatService shared] sendInviteMessageToUsers:selectedUsersMArray withChatDialog:dialog];
         
-        [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:dialog];
+        [self.navigationController popViewControllerAnimated:NO];
     }];
 }
 
@@ -151,17 +147,6 @@ static CGFloat const rowHeight = 60.0;
 {
 	[self.createGroupButton setTitle:kButtonTitleCreateGroupChatString forState:UIControlStateNormal];
 	[self.createGroupButton setTitle:kButtonTitleCreateGroupChatString forState:UIControlStateHighlighted];
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    QMChatViewController *childController = (QMChatViewController *)segue.destinationViewController;
-    if ([self.dataSource.friendsSelectedMArray count] > 1) {
-        QBChatDialog *dialog = (QBChatDialog *)sender;
-		childController.chatDialog = dialog;
-        childController.chatName = dialog.name;
-        childController.createdJustNow = YES;
-	}
 }
 
 - (BOOL)isChecked:(QBUUser *)user

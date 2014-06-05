@@ -158,9 +158,10 @@
     }
     [[QMContactList shared] retrieveUsersWithFullName:searchText usingBlock:^(NSArray *users, BOOL success, NSError *error) {
         if (success) {
+            // convert array of users to dictionary and add to QMContactList:
+            [QMContactList shared].searchedUsers = [[QMContactList shared] friendsAsDictionaryFromFriendsArray:users];
             
-            
-            [self.dataSource updateOtherUsersArray:^(BOOL isEmpty) {
+            [self.dataSource updateSearchedUsersArray:^(BOOL isEmpty) {
                 self.tableView.tableFooterView = nil;
                 [self.tableView reloadData];
             }];

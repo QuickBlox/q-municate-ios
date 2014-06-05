@@ -11,6 +11,7 @@
 
 @interface QMRootViewController ()
 
+@property (assign) BOOL isLoggedIn;
 
 @end
 
@@ -20,11 +21,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if ([[QMAuthService shared] isSessionCreated]) {
+    if (_isLoggedIn) {
         [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
-        return;
+    } else {
+        [self performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
     }
-    [self performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
+    _isLoggedIn = !_isLoggedIn;
 }
 
 - (void)didReceiveMemoryWarning
