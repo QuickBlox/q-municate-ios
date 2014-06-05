@@ -21,9 +21,7 @@
 
 - (void)cachedQbUsers:(QMDBCollectionBlock)qbUsers {
     
-    NSArray *allUsers = [weakSelf allUsers];
-    
-    __weak __typeof(self)weakSelf = self;
+    NSArray *allUsers = [self allUsers];
     [self async:^(NSManagedObjectContext *context) {
         
         DO_AT_MAIN(qbUsers(allUsers));
