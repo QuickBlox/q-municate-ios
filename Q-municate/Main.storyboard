@@ -1,14 +1,65 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="ExU-yY-FRH">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RkR-TS-K9a">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="bLJ-Xw-iB8">
+            <objects>
+                <navigationController definesPresentationContext="YES" navigationBarHidden="YES" id="RkR-TS-K9a" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="EXI-Wx-ALs">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="KMc-2Y-0OH">
+                        <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
+                    <connections>
+                        <segue destination="yEP-eu-p1T" kind="relationship" relationship="rootViewController" id="xEs-8A-GVF"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PU6-eh-Yav" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3481" y="-6242"/>
+        </scene>
+        <!--Root View Controller-->
+        <scene sceneID="e2e-YP-Axo">
+            <objects>
+                <viewController modalTransitionStyle="flipHorizontal" id="yEP-eu-p1T" customClass="QMRootViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="mtS-0B-DgY"/>
+                        <viewControllerLayoutGuide type="bottom" id="ZEL-hU-1oq"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="l1M-M6-akG">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Root" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HHc-Hu-cQ9">
+                                <rect key="frame" x="20" y="138" width="280" height="80"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="70"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </view>
+                    <navigationItem key="navigationItem" id="bLR-Y9-pjt"/>
+                    <connections>
+                        <segue destination="BXK-2z-A4J" kind="push" identifier="SplashSegue" id="S8V-vG-uw1"/>
+                        <segue destination="ExU-yY-FRH" kind="push" identifier="TabBarSegue" id="mn4-yj-1vG"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5OS-eq-EYT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2993" y="-6242"/>
+        </scene>
         <!--Main Tab Bar Controller-->
         <scene sceneID="7vw-5C-LQY">
             <objects>
                 <tabBarController definesPresentationContext="YES" id="ExU-yY-FRH" customClass="QMMainTabBarController" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="yaz-Qe-RUt"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" opaque="NO" contentMode="scaleToFill" translucent="NO" selectionIndicatorImage="Fone" id="mug-V7-qxg">
                         <rect key="frame" x="129" y="330" width="163" height="49"/>
@@ -22,8 +73,6 @@
                         <segue destination="M2H-zK-wC0" kind="relationship" relationship="viewControllers" id="irr-6N-6Xl"/>
                         <segue destination="sO5-m2-ebb" kind="relationship" relationship="viewControllers" id="bbc-Yt-Z7l"/>
                         <segue destination="29n-Eo-CdN" kind="relationship" relationship="viewControllers" id="nFH-X7-aCh"/>
-                        <segue destination="BXK-2z-A4J" kind="modal" identifier="SplashSegue" modalTransitionStyle="crossDissolve" id="t2Y-Ux-V1H"/>
-                        <segue destination="vN9-k2-MLz" kind="modal" identifier="WelcomeScreenSegue" modalTransitionStyle="crossDissolve" animates="NO" id="cwy-pn-aAV"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x3H-Vf-NMM" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -442,7 +491,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zFO-eI-xNA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-307" y="-5749"/>
+            <point key="canvasLocation" x="-83" y="-6165"/>
         </scene>
         <!--Settings View Controller - Settings-->
         <scene sceneID="2IU-Qh-XCe">
@@ -567,7 +616,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZv-U7-ZbV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="219" y="-5749"/>
+            <point key="canvasLocation" x="443" y="-6165"/>
         </scene>
         <!--Profile View Controller - Profile-->
         <scene sceneID="r3w-dZ-Too">
@@ -666,7 +715,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wyo-0V-2mL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="695" y="-5749"/>
+            <point key="canvasLocation" x="919" y="-6165"/>
         </scene>
         <!--Navigation Controller - Invite Friends-->
         <scene sceneID="Gt0-yR-h4G">
@@ -687,7 +736,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Jc-4e-ZTr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="449" y="-6738"/>
+            <point key="canvasLocation" x="673" y="-7154"/>
         </scene>
         <!--Invite Friends Controller - Invite Friends-->
         <scene sceneID="bHm-va-kGv">
@@ -907,12 +956,12 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="seI-k4-WEM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="924" y="-6738"/>
+            <point key="canvasLocation" x="1148" y="-7154"/>
         </scene>
         <!--Splash View Controller-->
         <scene sceneID="Mtl-Mw-dPe">
             <objects>
-                <viewController id="BXK-2z-A4J" customClass="QMSplashViewController" sceneMemberID="viewController">
+                <viewController modalTransitionStyle="flipHorizontal" id="BXK-2z-A4J" customClass="QMSplashViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="N0L-iR-TDa"/>
                         <viewControllerLayoutGuide type="bottom" id="mRj-kO-e4j"/>
@@ -964,13 +1013,14 @@
                             <constraint firstAttribute="trailing" secondItem="Wk0-AK-w8y" secondAttribute="trailing" constant="93" id="p71-Y6-REU"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="jer-pp-E79"/>
                     <connections>
-                        <segue destination="vN9-k2-MLz" kind="modal" identifier="WelcomeScreenSegue" modalTransitionStyle="crossDissolve" animates="NO" id="m1O-4f-rYI"/>
+                        <segue destination="vN9-k2-MLz" kind="push" identifier="WelcomeScreenSegue" id="m1O-4f-rYI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gog-Ax-vr0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1867" y="-7068"/>
+            <point key="canvasLocation" x="-1370" y="-5164"/>
         </scene>
         <!--Navigation Controller - Chats-->
         <scene sceneID="j7L-tA-erJ">
@@ -1668,7 +1718,7 @@
         <!--Welcome Screen View Controller-->
         <scene sceneID="cT5-vU-OSf">
             <objects>
-                <viewController id="vN9-k2-MLz" customClass="QMWelcomeScreenViewController" sceneMemberID="viewController">
+                <viewController modalTransitionStyle="flipHorizontal" id="vN9-k2-MLz" customClass="QMWelcomeScreenViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Rnh-Ew-Non"/>
                         <viewControllerLayoutGuide type="bottom" id="fmD-Ba-LYv"/>
@@ -1767,7 +1817,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h4S-MN-8Hg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2355" y="-6944"/>
+            <point key="canvasLocation" x="-882" y="-5040"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="lqL-Gv-FGY">
@@ -1788,7 +1838,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="O23-9M-b3h" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3018" y="-6843"/>
+            <point key="canvasLocation" x="-219" y="-4939"/>
         </scene>
         <!--Sign Up Controller - Sign Up-->
         <scene sceneID="qZY-w9-T7p">
@@ -1885,7 +1935,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ujm-Td-aT6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3476" y="-6859"/>
+            <point key="canvasLocation" x="239" y="-4955"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="zOB-R5-csX">
@@ -1906,7 +1956,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VEc-lW-glV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3046" y="-6023"/>
+            <point key="canvasLocation" x="-191" y="-4119"/>
         </scene>
         <!--Log In Controller - Log In-->
         <scene sceneID="GcV-SH-veH">
@@ -2002,7 +2052,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MBB-7W-DNd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3600" y="-6015"/>
+            <point key="canvasLocation" x="363" y="-4111"/>
         </scene>
         <!--Create New Chat Controller - 0 Selected-->
         <scene sceneID="mNV-V4-d8l">
@@ -2599,7 +2649,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="cwy-pn-aAV"/>
         <segue reference="bAk-xe-kWS"/>
         <segue reference="IAo-qy-uHQ"/>
     </inferredMetricsTieBreakers>

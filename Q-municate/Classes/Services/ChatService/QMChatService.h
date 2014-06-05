@@ -30,6 +30,17 @@
 - (void)loginWithUser:(QBUUser *)user completion:(QBChatResultBlock)block;
 - (void)logOut;
 
+#pragma mark - STATUS
+- (void)sendPresence;
+
+
+#pragma mark - Contact List (ROASTER)
+
+- (void)sendFriendsRequestToUserWithID:(NSUInteger)userID;
+- (void)confirmFriendsRequestFromUserWithID:(NSUInteger)userID;
+- (void)rejectFriendsRequestFromUserWithID:(NSUInteger)userID;
+- (void)removeContactFromFriendsWithID:(NSUInteger)userID;
+
 
 #pragma mark - Chat
 

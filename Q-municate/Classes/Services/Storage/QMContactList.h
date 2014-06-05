@@ -29,26 +29,45 @@
 
 @property (strong, nonatomic) NSMutableDictionary *baseUserIDs;
 
-// FIND FRIENDS
-- (void)retrieveFriendsUsingBlock:(QBChatResultBlock)block;
-- (void)retrieveFriendsFromFacebookWithCompletion:(QBChatResultBlock)resultBlock;
-- (void)retrieveUsersWithFullName:(NSString *)fullName completion:(QBChatResultBlock)block;
-- (void)retrieveUsersWithEmails:(NSArray *)emails usingBlock:(QBResultBlock)block;
+
+#pragma mark -
+#pragma mark ROASTER
+
+/**
+ Request for users for IDs in Roaster. Returns NSArray of QBUUser's
+ */
+- (void)retriveFriendsWithContactListInfo:(QBContactList *)contactList completion:(void (^)(BOOL success, NSError *error))completion;
+
+
+/** 
+ Request for Facebook users in Quickblox database. Returns NSArray of QBUUser's
+ */
+- (void)retrieveFriendsFromFacebookWithCompletion:(QBPagedUsersBlock)block;
+
+
+/** 
+ Request for Facebook friends. Returns friends as FBGraphObjects (extended NSMutableDictionary)
+ */
+- (void)fetchFriendsFromFacebookWithCompletion:(QBPagedUsersBlock)handler;
+
+
+/**
+ Retrieving user for user id. Returns QBUUser
+ */
 - (void)retrieveUserWithID:(NSUInteger)userID completion:(void(^)(QBUUser *user, NSError *error))completion;
-- (void)findAndAddAllFriendsForFacebookUserWithCompletion:(QBChatResultBlock)block;
-
-// ADD / REMOVE FRIENDS
-- (void)addUserToFriendList:(QBUUser *)user completion:(QBChatResultBlock)block;
-- (void)addUserWithID:(NSUInteger)ID completion:(QBResultBlock)block;
-
-- (void)removeUserFromFriendList:(QBUUser *)user completion:(QBChatResultBlock)block;
 
 
-// REQUEST FOR FRIENDS TO FACEBOOK:
-- (void)fetchFriendsFromFacebookWithCompletion:(FBResultBlock)handler;
+/**
+ Retrieving users with full name. Returns NSArray of QBUUser's
+ */
+- (void)retrieveUsersWithFullName:(NSString *)fullName usingBlock:(QBPagedUsersBlock)block;
 
-// Clear all data:
+
+/** 
+ Clearing Contact list
+ */
 - (void)clearData;
+
 
 #pragma mark - Configurations
 

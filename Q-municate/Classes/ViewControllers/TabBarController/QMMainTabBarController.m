@@ -27,6 +27,12 @@
     [self customizeTabBar];
 }
 
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
 - (void)customizeTabBar
 {
     UIColor *white = [UIColor whiteColor];
@@ -48,95 +54,6 @@
     UITabBarItem *fourthTab = [self.tabBar.items objectAtIndex:3];
     fourthTab.image = [[UIImage imageNamed:@"tb_settings"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     fourthTab.selectedImage = [[UIImage imageNamed:@"tb_settings"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-}
-#warning Eto pzdc. Fix it ASAP
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:NO];
-
-	// if to be more correct, 'isLoggedIn' means the 'remember me' opt is on
-    BOOL isRememberMeOn = [[[NSUserDefaults standardUserDefaults] objectForKey:kRememberMe] boolValue];
-    BOOL isLoggedOut = [[[NSUserDefaults standardUserDefaults] objectForKey:kDidLogout] boolValue];
-    if (isRememberMeOn && !isLoggedOut) {
-        if (![QMAuthService shared].isSessionCreated) {
-            [QMUtilities createIndicatorView];
-            [[QMAuthService shared] startSessionWithBlock:^(BOOL success, NSError *error) {
-                if (success) {
-                    ILog(@"Session created");
-                    NSString *email = [[NSUserDefaults standardUserDefaults] objectForKey:kEmail];
-					email = [email stringByReplacingOccurrencesOfString:@"+" withString:@"%2b"];
-                    NSString *password = [[NSUserDefaults standardUserDefaults] objectForKey:kPassword];
-                    [[QMAuthService shared] logInWithEmail:email password:password completion:^(QBUUser *user, BOOL success, NSError *error) {
-                        if (!success) {
-                            ILog(@"error while logging in: %@", error);
-                            [QMUtilities removeIndicatorView];
-                            [self showAlertWithMessage:[NSString stringWithFormat:@"%@", error] actionSuccess:NO];
-                            return;
-                        }
-                        [QMContactList shared].me = user;
-						if (!user.password) {
-						    user.password = password;
-						}
-						[[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-                            if (success) {
-                                [[QMContactList shared] retrieveFriendsUsingBlock:^(BOOL success) {
-									[[NSNotificationCenter defaultCenter] postNotificationName:kFriendsLoadedNotification object:nil];
-									[[NSNotificationCenter defaultCenter] postNotificationName:kLoggedInNotification object:nil];
-                                    [QMUtilities removeIndicatorView];
-                                }];
-                                
-                                [[QMChatService shared] fetchAllDialogsWithBlock:^(NSArray *dialogs, NSError *error) {
-                                    if (!error) {
-                                        // join rooms:
-                                        if ([[QMChatService shared] isLoggedIn]) {
-                                            [[QMChatService shared] joinRoomsForDialogs:dialogs];
-                                        }
-                                        // say to controllers:
-                                        [[NSNotificationCenter defaultCenter] postNotificationName:@"ChatDialogsLoaded" object:nil];
-                                    }
-                                }];
-                            } else {
-                                [QMUtilities removeIndicatorView];
-                            }
-                        }];
-                    }];
-                } else {
-                    [QMUtilities removeIndicatorView];
-                    [self showAlertWithMessage:[NSString stringWithFormat:@"%@", error] actionSuccess:NO];
-                }
-            }];
-        }
-    } else {
-        static dispatch_once_t onceSplashToken;
-        dispatch_once(&onceSplashToken, ^{
-            [self performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
-        });
-    }
-
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - Alert
-
-- (void)showAlertWithMessage:(NSString *)messageString actionSuccess:(BOOL)success
-{
-    NSString *title = nil;
-    if (success) {
-        title = kAlertTitleSuccessString;
-    } else {
-        title = kAlertTitleErrorString;
-    }
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
-                                                    message:messageString
-                                                   delegate:nil
-                                          cancelButtonTitle:kAlertButtonTitleOkString
-                                          otherButtonTitles:nil];
-    [alert show];
 }
 
 @end

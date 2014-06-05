@@ -49,13 +49,14 @@ typedef void (^QBContentBlock)(QBCBlob *blob);
 typedef void (^QBDataBlock)(id data);
 typedef void (^QBUsersBlock)(NSArray *users);
 
-typedef void(^FBResultBlock)(NSArray *users, BOOL success, NSError *error);
+typedef void(^QBPagedUsersBlock)(NSArray *users, BOOL success, NSError *error);
 typedef void(^FBCompletionBlock)(BOOL success, NSError *error);
 
 typedef void(^AddressBookResult)(NSArray *contacts, BOOL success, NSError *error);
 
 
 //************** Segue Identifiers *************************
+static NSString *const kTabBarSegueIdnetifier         = @"TabBarSegue";
 static NSString *const kSplashSegueIdentifier         = @"SplashSegue";
 static NSString *const kWelcomeScreenSegueIdentifier  = @"WelcomeScreenSegue";
 static NSString *const kSignUpSegueIdentifier         = @"SignUpSegue";
@@ -86,7 +87,7 @@ static NSString *const kSettingsCellTitleChangePassword     = @"Change Password"
 static NSString *const kSettingsCellBundleVersion           = @"CFBundleVersion";
 
 //****************** Notifications  ***********************
-static NSString *const kFriendsLoadedNotification     = @"Friends Loaded";
+static NSString *const kFriendsReloadedNotification     = @"Friends reloaded";
 static NSString *const kAllUsersLoadedNotification    = @"All users loaded";
 static NSString *const kLoggedInNotification          = @"LoggedInNotification";
 

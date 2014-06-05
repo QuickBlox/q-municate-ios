@@ -118,7 +118,11 @@
         
         [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
             if (success) {
-                [self getFriends];
+                
+                // go to tab bar:
+                UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
+                UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
+                [navigationController popToRootViewControllerAnimated:NO];
             }
         }];
     }];
@@ -139,20 +143,14 @@
             // login to chat:
             [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
                 if (success) {
-                    [self getFriends];
+                    
+                    // go to tab bar:
+                    UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
+                    UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
+                    [navigationController popToRootViewControllerAnimated:NO];
                 }
             }];
         }];
-    }];
-}
-
-- (void)getFriends
-{
-    [[QMContactList shared] retrieveFriendsUsingBlock:^(BOOL success) {
-        [QMUtilities removeIndicatorView];
-        [self.root dismissViewControllerAnimated:NO completion:nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kFriendsLoadedNotification object:nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kLoggedInNotification object:nil];
     }];
 }
 
