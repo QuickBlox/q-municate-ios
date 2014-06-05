@@ -7,11 +7,30 @@
 //
 
 #import "AppDelegate.h"
+#import "QMDBStorage+Users.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [QMDBStorage setupWithName:@"AndreyIvanov"];
+    NSMutableArray *qbusers = [NSMutableArray arrayWithCapacity:1000];
+    
+    //test
+    for (NSUInteger idx = 0; idx < 1000; idx++) {
+        
+        QBUUser *user = [QBUUser user];
+        user.fullName = [NSString stringWithFormat:@"User %d", idx];
+        user.ID = idx;
+        user.phone = [[NSDate date] description];
+        [qbusers addObject:user];
+    }
+    
+    [self.dbStorage cacheUsers:qbusers finish:^{
+        
+    }];
+    
+    
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     
     // Quickblox credentials

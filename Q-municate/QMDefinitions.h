@@ -47,6 +47,7 @@ typedef void (^QBChatDialogHistoryBlock)(NSMutableArray *chatDialogHistoryArray,
 typedef void (^QBContactListBlock)(id object);
 typedef void (^QBContentBlock)(QBCBlob *blob);
 typedef void (^QBDataBlock)(id data);
+typedef void (^QBUsersBlock)(NSArray *users);
 
 typedef void(^FBResultBlock)(NSArray *users, BOOL success, NSError *error);
 typedef void(^FBCompletionBlock)(BOOL success, NSError *error);

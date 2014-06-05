@@ -8,6 +8,11 @@
 
 #import "CDUser.h"
 
+@class QBUUser;
+
 @interface CDUser (QBUUser)
+
+- (QBUUser *)toQBUUser;
+- (void)updateWithQBUser:(QBUUser *)user;
 
 @end

@@ -14,11 +14,12 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+    #import <SystemConfiguration/SystemConfiguration.h>
+    #import <MobileCoreServices/MobileCoreServices.h>
     #import <Quickblox/Quickblox.h>
     #import <FacebookSDK/FacebookSDK.h>
-    #import "CoreData+MagicalRecord.h"
     #import "QMDefinitions.h"
-
+    #import "MagicalRecord.h"
 
     #ifndef _EXTRACTS
         #define _EXTRACTS
