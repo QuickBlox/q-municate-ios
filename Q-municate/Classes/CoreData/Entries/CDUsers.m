@@ -14,9 +14,7 @@
     qbUser.fullName = self.fullName;
     qbUser.externalUserID = self.externalUserId.intValue;
     qbUser.email = self.email;
-//    qbUser.externalUserID = self.userId.integerValue;
-//    qbUser.phone = self.phone;
-//    qbUser.blobID = self.avatarId.integerValue;
+    qbUser.phone = self.phone;
     
     return qbUser;
 }
@@ -26,8 +24,7 @@
     self.fullName = user.fullName;
     self.externalUserId = @(user.externalUserID);
     self.email = user.email;
-//    self.phone = user.phone;
-//    self.avatarId = @(user.blobID);
+    self.phone = user.phone;
 }
 
 @end

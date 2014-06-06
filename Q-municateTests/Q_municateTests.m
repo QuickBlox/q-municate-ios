@@ -2,7 +2,7 @@
 //  Q_municateTests.m
 //  Q-municateTests
 //
-//  Created by Igor Alefirenko on 13/02/2014.
+//  Created by Andrey on 06.06.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 

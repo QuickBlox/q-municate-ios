@@ -24,6 +24,12 @@ typedef void(^QMDBFinishBlock)(void);
 + (void)setupWithName:(NSString *)name;
 
 /**
+ * @brief Clean data base for name
+ */
+
++ (void)cleanDBWithName:(NSString *)name;
+
+/**
  * @brief Perform operation in CoreData thread
  */
 

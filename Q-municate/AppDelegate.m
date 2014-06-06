@@ -7,31 +7,53 @@
 //
 
 #import "AppDelegate.h"
+
+#define TEST_QMDBStore 1
+
+#ifdef TEST_QMDBStore
 #import "QMDBStorage+Users.h"
+#endif
 
 @implementation AppDelegate
 
-const NSInteger size = 3;
+#ifdef TEST_QMDBStore
+
+- (void)testQMDBStorage {
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        
+//        [QMDBStorage cleanDBWithName:@"AndreyIvanov"];
+        [QMDBStorage setupWithName:@"AndreyIvanov"];
+        
+        QBUUser *user = [QBUUser user];
+        user.ID = 0;
+        user.fullName = @"user";
+        
+        QBUUser *user2 = [QBUUser user];
+        user2.ID = 1;
+        user2.fullName = @"user1";
+        
+        QBUUser *user3 = [QBUUser user];
+        user3.ID = 2;
+        user3.fullName = @"user2";
+        
+        dispatch_semaphore_t dsema = dispatch_semaphore_create(0);
+        
+        [self.dbStorage cacheUsers:@[] finish:^{
+            dispatch_semaphore_signal(dsema);
+        }];
+        
+        dispatch_semaphore_wait(dsema, DISPATCH_TIME_FOREVER);
+    });
+}
+#endif
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
-    [QMDBStorage setupWithName:@"AndreyIvanov"];
-    NSMutableArray *qbusers = [NSMutableArray arrayWithCapacity:size];
-    
-    //test
-    for (NSUInteger idx = 0; idx < size; idx++) {
-        
-        QBUUser *user = [QBUUser user];
-        user.fullName = [NSString stringWithFormat:@"User %d", idx];
-        user.externalUserID = idx+1;
-        [qbusers addObject:user];
-    }
-    
-    [self.dbStorage cacheUsers:qbusers finish:^{
 
-    }];
-    
+#ifdef TEST_QMDBStore
+    [self testQMDBStorage];
+#endif
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     

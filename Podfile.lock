@@ -7,12 +7,12 @@ PODS:
   - UIDevice-Hardware (0.1.3)
 
 DEPENDENCIES:
-  - AsyncImageView (~> 1.5.1)
-  - FPPopover (~> 1.4.1)
-  - MBProgressHUD (~> 0.8)
-  - Reachability (~> 3.1.1)
-  - TWMessageBarManager (~> 1.6.0)
-  - UIDevice-Hardware (~> 0.1.3)
+  - AsyncImageView
+  - FPPopover
+  - MBProgressHUD
+  - Reachability
+  - TWMessageBarManager
+  - UIDevice-Hardware
 
 SPEC CHECKSUMS:
   AsyncImageView: 388442ae8314a5c99de0d98040c2926826d31da7

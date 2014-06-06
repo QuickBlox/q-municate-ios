@@ -13,24 +13,28 @@
 @property (strong, nonatomic) MagicalRecordStack *stack;
 @property (strong, nonatomic) dispatch_queue_t queue;
 @property (strong, nonatomic) NSManagedObjectContext *context;
+@property (strong, nonatomic) NSString *storeName;
 
 @end
 
 @implementation QMDBStorage
 
-
 static QMDBStorage *storage = nil;
+
+NSString *StoreFileName(NSString *name) {
+    
+    NSString* fileName = [NSString stringWithFormat:@"%@.sqlite", name];
+    return fileName;
+}
 
 + (void)setupWithName:(NSString *)name {
     
     storage = nil;
     
-    NSString* fileName = [NSString stringWithFormat:@"%@.sqlite", name];
-    
     [MagicalRecord cleanUp];
-    MagicalRecordStack *stack = [MagicalRecord setupSQLiteStackWithStoreNamed:fileName];
     
-    storage = [[QMDBStorage alloc] initWithStack:stack];
+    MagicalRecordStack *stack = [MagicalRecord setupAutoMigratingStackWithSQLiteStoreNamed:StoreFileName(name)];
+    storage = [[QMDBStorage alloc] initWithStack:stack storeName:name];
 }
 
 + (QMDBStorage *)shared {
@@ -39,22 +43,50 @@ static QMDBStorage *storage = nil;
     return storage;
 }
 
-- (instancetype)initWithStack:(MagicalRecordStack *)stack {
++ (NSURL *)storeUrlWithName:(NSString *)name {
+    
+    NSURL *storeUrl = [NSPersistentStore MR_fileURLForStoreNameIfExistsOnDisk:StoreFileName(name)];
+    return storeUrl;
+}
+
++ (void)cleanDBWithName:(NSString *)name {
+    
+    [MagicalRecord cleanUp];
+    
+    NSURL *storeUrl = [self storeUrlWithName:name];
+
+    if (storeUrl) {
+        
+        NSError *error = nil;
+        if(![[NSFileManager defaultManager] removeItemAtURL:storeUrl error:&error]) {
+            NSLog(@"An error has occurred while deleting %@", storeUrl);
+            NSLog(@"Error description: %@", error.description);
+        } else {
+            NSLog(@"Clear %@ - Done!", storeUrl);
+        }
+    }
+}
+
+- (instancetype)initWithStack:(MagicalRecordStack *)stack storeName:(NSString *)storeName {
     
     self = [super init];
     
     if (self) {
+        
         self.queue = dispatch_queue_create("com.qmunicate.DBQueue", NULL);
         self.stack = stack;
+        self.storeName = storeName;
     }
     
     return self;
 }
 
 - (NSManagedObjectContext *)context {
+    
     if (!_context) {
         _context = [NSManagedObjectContext MR_confinementContextWithParent:self.stack.context];
     }
+    
     return _context;
 }
 
