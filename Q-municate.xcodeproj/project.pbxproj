@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		55943A0C1941A4AE00BF4312 /* CDDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 55943A0B1941A4AE00BF4312 /* CDDialog.m */; };
+		55943A0F1941A4C000BF4312 /* _CDDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 55943A0E1941A4C000BF4312 /* _CDDialog.m */; };
+		55943A121941A55800BF4312 /* CDMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 55943A111941A55800BF4312 /* CDMessages.m */; };
 		55D270911940B8D300238D50 /* QMDBStorage+Dialogs.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270111940B8D300238D50 /* QMDBStorage+Dialogs.m */; };
 		55D270921940B8D300238D50 /* QMDBStorage+Messages.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270141940B8D300238D50 /* QMDBStorage+Messages.m */; };
 		55D270931940B8D300238D50 /* QMDBStorage+Users.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270171940B8D300238D50 /* QMDBStorage+Users.m */; };
 		55D270941940B8D300238D50 /* QMDBStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270191940B8D300238D50 /* QMDBStorage.m */; };
-		55D270951940B8D300238D50 /* CDMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2701C1940B8D300238D50 /* CDMessages.m */; };
 		55D270961940B8D300238D50 /* CDUsers.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2701E1940B8D300238D50 /* CDUsers.m */; };
 		55D270971940B8D300238D50 /* _CDMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270211940B8D300238D50 /* _CDMessages.m */; };
 		55D270981940B8D300238D50 /* _CDUsers.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270231940B8D300238D50 /* _CDUsers.m */; };
@@ -187,6 +189,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		55943A0A1941A4AE00BF4312 /* CDDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDDialog.h; sourceTree = "<group>"; };
+		55943A0B1941A4AE00BF4312 /* CDDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDDialog.m; sourceTree = "<group>"; };
+		55943A0D1941A4C000BF4312 /* _CDDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _CDDialog.h; sourceTree = "<group>"; };
+		55943A0E1941A4C000BF4312 /* _CDDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _CDDialog.m; sourceTree = "<group>"; };
+		55943A101941A55800BF4312 /* CDMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDMessages.h; sourceTree = "<group>"; };
+		55943A111941A55800BF4312 /* CDMessages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDMessages.m; sourceTree = "<group>"; };
 		55D270101940B8D300238D50 /* QMDBStorage+Dialogs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QMDBStorage+Dialogs.h"; sourceTree = "<group>"; };
 		55D270111940B8D300238D50 /* QMDBStorage+Dialogs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMDBStorage+Dialogs.m"; sourceTree = "<group>"; };
 		55D270131940B8D300238D50 /* QMDBStorage+Messages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QMDBStorage+Messages.h"; sourceTree = "<group>"; };
@@ -195,8 +203,6 @@
 		55D270171940B8D300238D50 /* QMDBStorage+Users.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMDBStorage+Users.m"; sourceTree = "<group>"; };
 		55D270181940B8D300238D50 /* QMDBStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDBStorage.h; sourceTree = "<group>"; };
 		55D270191940B8D300238D50 /* QMDBStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDBStorage.m; sourceTree = "<group>"; };
-		55D2701B1940B8D300238D50 /* CDMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDMessages.h; sourceTree = "<group>"; };
-		55D2701C1940B8D300238D50 /* CDMessages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDMessages.m; sourceTree = "<group>"; };
 		55D2701D1940B8D300238D50 /* CDUsers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDUsers.h; sourceTree = "<group>"; };
 		55D2701E1940B8D300238D50 /* CDUsers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDUsers.m; sourceTree = "<group>"; };
 		55D270201940B8D300238D50 /* _CDMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _CDMessages.h; sourceTree = "<group>"; };
@@ -496,12 +502,12 @@
 		55D2700D1940B8D300238D50 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				55D2708B1940B8D300238D50 /* ModelIncludes.h */,
+				55D2708C1940B8D300238D50 /* QMModel.xcdatamodeld */,
 				55D2700E1940B8D300238D50 /* DBStorage */,
 				55D2701A1940B8D300238D50 /* Entries */,
 				55D2701F1940B8D300238D50 /* EntriesMachine */,
 				55D270241940B8D300238D50 /* MagicalRecord */,
-				55D2708B1940B8D300238D50 /* ModelIncludes.h */,
-				55D2708C1940B8D300238D50 /* QMModel.xcdatamodeld */,
 				55D2708E1940B8D300238D50 /* Scripts */,
 			);
 			name = CoreData;
@@ -511,11 +517,11 @@
 		55D2700E1940B8D300238D50 /* DBStorage */ = {
 			isa = PBXGroup;
 			children = (
+				55D270181940B8D300238D50 /* QMDBStorage.h */,
+				55D270191940B8D300238D50 /* QMDBStorage.m */,
 				55D2700F1940B8D300238D50 /* DBStorage+Dialogs */,
 				55D270121940B8D300238D50 /* DBStorage+Messages */,
 				55D270151940B8D300238D50 /* DBStorage+Users */,
-				55D270181940B8D300238D50 /* QMDBStorage.h */,
-				55D270191940B8D300238D50 /* QMDBStorage.m */,
 			);
 			path = DBStorage;
 			sourceTree = "<group>";
@@ -550,8 +556,10 @@
 		55D2701A1940B8D300238D50 /* Entries */ = {
 			isa = PBXGroup;
 			children = (
-				55D2701B1940B8D300238D50 /* CDMessages.h */,
-				55D2701C1940B8D300238D50 /* CDMessages.m */,
+				55943A101941A55800BF4312 /* CDMessages.h */,
+				55943A111941A55800BF4312 /* CDMessages.m */,
+				55943A0A1941A4AE00BF4312 /* CDDialog.h */,
+				55943A0B1941A4AE00BF4312 /* CDDialog.m */,
 				55D2701D1940B8D300238D50 /* CDUsers.h */,
 				55D2701E1940B8D300238D50 /* CDUsers.m */,
 			);
@@ -561,6 +569,8 @@
 		55D2701F1940B8D300238D50 /* EntriesMachine */ = {
 			isa = PBXGroup;
 			children = (
+				55943A0D1941A4C000BF4312 /* _CDDialog.h */,
+				55943A0E1941A4C000BF4312 /* _CDDialog.m */,
 				55D270201940B8D300238D50 /* _CDMessages.h */,
 				55D270211940B8D300238D50 /* _CDMessages.m */,
 				55D270221940B8D300238D50 /* _CDUsers.h */,
@@ -1402,9 +1412,11 @@
 				55D270A91940B8D300238D50 /* NSManagedObjectContext+MagicalSaves.m in Sources */,
 				6943847518E42678001E08A9 /* QMAddressBook.m in Sources */,
 				6943848B18E42678001E08A9 /* QMRequestsCell.m in Sources */,
+				55943A0C1941A4AE00BF4312 /* CDDialog.m in Sources */,
 				B71E0566190FAAF900DD6D34 /* QMProfileViewController.m in Sources */,
 				55D2709F1940B8D300238D50 /* NSString+MagicalDataImport.m in Sources */,
 				6943847218E42678001E08A9 /* QMCustomSegue.m in Sources */,
+				55943A121941A55800BF4312 /* CDMessages.m in Sources */,
 				55D270C41940B8D300238D50 /* QMModel.xcdatamodeld in Sources */,
 				690F80701936148600A5023F /* QMPrivateContentCell.m in Sources */,
 				6943849418E42691001E08A9 /* UIImage+Cropper.m in Sources */,
@@ -1487,10 +1499,10 @@
 				55D270981940B8D300238D50 /* _CDUsers.m in Sources */,
 				55D270AD1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.m in Sources */,
 				55D270C01940B8D300238D50 /* MagicalRecordStack.m in Sources */,
+				55943A0F1941A4C000BF4312 /* _CDDialog.m in Sources */,
 				B71E0560190FAAF900DD6D34 /* QMChatRoomListController.m in Sources */,
 				55D270C21940B8D300238D50 /* SQLiteMagicalRecordStack.m in Sources */,
 				55D270A81940B8D300238D50 /* NSManagedObjectContext+MagicalRecord.m in Sources */,
-				55D270951940B8D300238D50 /* CDMessages.m in Sources */,
 				55D270911940B8D300238D50 /* QMDBStorage+Dialogs.m in Sources */,
 				55D270C11940B8D300238D50 /* ManuallyMigratingMagicalRecordStack.m in Sources */,
 				55D270AC1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalAutoMigrations.m in Sources */,

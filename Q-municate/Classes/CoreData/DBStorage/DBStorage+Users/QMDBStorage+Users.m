@@ -85,9 +85,7 @@
             }
             
             if (toUpdateUser) {
-                
                 [toUpdate addObject:toUpdateUser];
-                
             } else {
                 [toInsert addObject:user];
             }
