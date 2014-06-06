@@ -70,6 +70,11 @@
 
 - (void)sendPresence
 {
+    NSString *status = [[NSUserDefaults standardUserDefaults] objectForKey:kUserStatusText];
+    if (status != nil) {
+        [[QBChat instance] sendPresenceWithStatus:status];
+        return;
+    }
     [[QBChat instance] sendPresence];
 }
 
@@ -195,7 +200,7 @@
 - (void)chatDidLogin
 {
     if (self.presenceTimer == nil) {
-        self.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:30 target:[QBChat instance] selector:@selector(sendPresence) userInfo:nil repeats:YES];
+        self.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(sendPresence) userInfo:nil repeats:YES];
     }
     
     // set is logged in flag:

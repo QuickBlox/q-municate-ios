@@ -146,9 +146,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)configureNavBarButtons
 {
-	BOOL isGroupChat = YES;
-
-	if (isGroupChat) {
+	if (self.chatDialog.type != QBChatDialogTypePrivate) {
 		UIButton *groupInfoButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		[groupInfoButton setFrame:CGRectMake(0, 0, 30, 40)];
 
@@ -173,7 +171,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 		UIBarButtonItem *videoCallBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:videoButton];
 		UIBarButtonItem *audioCallBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:audioButton];
-		self.navigationItem.rightBarButtonItems = @[audioCallBarButtonItem, videoCallBarButtonItem];
+		self.navigationItem.rightBarButtonItems = @[videoCallBarButtonItem,  audioCallBarButtonItem];
 	}
 }
 
@@ -395,7 +393,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 		} completion:^(BOOL finished) {
             [self.tableView reloadData];
             if ([self.chatHistory count] >2) {
-                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.chatHistory count]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.chatHistory count]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
             }
         }];
 	}
@@ -404,7 +402,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 #pragma mark - Nav Buttons Actions
 - (void)audioCallAction
 {
-	//
+	[[[UIAlertView alloc] initWithTitle:@"No Audio Calls yet" message:@"Coming soon" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
 }
 
 - (void)videoCallAction

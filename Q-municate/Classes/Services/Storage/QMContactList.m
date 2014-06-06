@@ -40,13 +40,14 @@
 
 - (void)retriveFriendsWithContactListInfo:(QBContactList *)contactList completion:(void (^)(BOOL success, NSError *error))completion
 {
-    if ([contactList.contacts count] == 0) {
+    if ([contactList.contacts count] == 0 && [contactList.pendingApproval count] == 0) {
         completion(YES, nil);
         return;
     }
     // searching IDs of users out of Friends list:
     NSMutableArray *IDsToFetchFromQuickblox = [NSMutableArray new];
     
+    // search active friends:
     for (QBContactListItem *record in contactList.contacts) {
         
         NSString *userID = [@(record.userID) stringValue];
@@ -55,6 +56,17 @@
             [IDsToFetchFromQuickblox addObject:userID];
         }
     }
+    
+    //search in pending list:
+    for (QBContactListItem *record in contactList.pendingApproval) {
+        
+        NSString *userID = [@(record.userID) stringValue];
+        QBUUser *friend = self.friendsAsDictionary[userID];
+        if (friend == nil) {
+            [IDsToFetchFromQuickblox addObject:userID];
+        }
+    }
+    
     if ([IDsToFetchFromQuickblox count] > 0) {
         // retrive users with ids:
         [self retrieveUsersWithIDs:IDsToFetchFromQuickblox usingBlock:^(NSArray *users, BOOL success, NSError *error) {
