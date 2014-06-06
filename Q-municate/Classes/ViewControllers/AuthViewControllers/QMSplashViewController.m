@@ -51,6 +51,15 @@
             [self loginWithEmail:email password:password];
             return;
         }
+        
+        // check for fb session remembered:
+        BOOL facebookSessionRemembered = [[[NSUserDefaults standardUserDefaults] objectForKey:kFBSessionRemembered] boolValue];
+        if (facebookSessionRemembered) {
+            [self loginWithFacebook];
+            return;
+        }
+        
+        // go to wellcome screen:
         [QMUtilities removeIndicatorView];
         [self showWelcomeScreen];
     }];
@@ -103,6 +112,47 @@
                 [navigationController popToRootViewControllerAnimated:NO];
             }
         }];
+    }];
+}
+
+- (void)loginWithFacebook
+{
+    // login with facebook:
+    [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSError *error) {
+        if (!success) {
+            [QMUtilities removeIndicatorView];
+            [self showAlertWithMessage:error.description actionSuccess:NO];
+            return;
+        }
+        // save me:
+        [[QMContactList shared] setMe:user];
+        
+        if (user.blobID == 0) {
+            [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
+                if (!success) {
+                    [QMUtilities removeIndicatorView];
+                    [self showAlertWithMessage:error.description actionSuccess:NO];
+                    return;
+                }
+                [self logInToQuickbloxChatWithUser:user];
+            }];
+            return;
+        }
+        [self logInToQuickbloxChatWithUser:user];
+    
+    }];
+}
+
+- (void)logInToQuickbloxChatWithUser:(QBUUser *)user
+{
+    // login to Quickblox chat:
+    [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
+        [QMUtilities removeIndicatorView];
+        if (success) {
+            UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
+            UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
+            [navigationController popToRootViewControllerAnimated:NO];
+		}
     }];
 }
 

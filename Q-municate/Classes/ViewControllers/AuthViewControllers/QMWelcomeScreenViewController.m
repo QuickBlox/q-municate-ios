@@ -62,6 +62,10 @@
             [self showAlertWithMessage:error.description actionSuccess:NO];
             return;
         }
+        // remember me with facebook login:
+        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:kFBSessionRemembered];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
         // save me:
         [[QMContactList shared] setMe:user];
         if (user.blobID == 0 || user.website == nil) {
