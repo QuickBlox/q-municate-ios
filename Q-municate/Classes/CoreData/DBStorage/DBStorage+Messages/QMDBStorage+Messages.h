@@ -10,6 +10,7 @@
 
 @interface QMDBStorage (Messages)
 
-- (void)cacheQBChatMessages:(NSArray *)messages finish:(QMDBFinishBlock)finish;
+- (void)cacheQBChatMessages:(NSArray *)messages withDialogId:(NSString *)dialogId finish:(QMDBFinishBlock)finish;
+- (void)cachedQBChatMessagesWithDialogId:(NSString *)dialogId qbMessages:(QMDBCollectionBlock)qbMessages;
 
 @end

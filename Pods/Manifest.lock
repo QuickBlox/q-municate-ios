@@ -1,25 +1,25 @@
 PODS:
   - AsyncImageView (1.5.1)
   - FPPopover (1.4.1)
-  - MBProgressHUD (0.8)
   - Reachability (3.1.1)
-  - TWMessageBarManager (1.6.0)
+  - SVProgressHUD (1.0)
+  - TWMessageBarManager (1.7.0)
   - UIDevice-Hardware (0.1.3)
 
 DEPENDENCIES:
-  - AsyncImageView
-  - FPPopover
-  - MBProgressHUD
-  - Reachability
-  - TWMessageBarManager
-  - UIDevice-Hardware
+  - AsyncImageView (~> 1.5.1)
+  - FPPopover (~> 1.4.1)
+  - Reachability (~> 3.1.1)
+  - SVProgressHUD (~> 1.0)
+  - TWMessageBarManager (~> 1.7.0)
+  - UIDevice-Hardware (~> 0.1.3)
 
 SPEC CHECKSUMS:
   AsyncImageView: 388442ae8314a5c99de0d98040c2926826d31da7
   FPPopover: bbfc452ec8949a2c2f555cf2d8c7236e621811f0
-  MBProgressHUD: c356980b0cd097f19acec959b49dca5eb8ec31be
   Reachability: 8e9635e3cb4f98e7f825e51147f677ecc694d0e7
-  TWMessageBarManager: 483963f4a300e31cbd8936378d4a255e6db5b6b3
+  SVProgressHUD: 5034c6e22b8c2ca3e09402e48d41ed0340aa1c50
+  TWMessageBarManager: 427c1f2463b22f4048ea2663184d33644212be37
   UIDevice-Hardware: b1c37dbeee3a5279ac15fbba070b8de556496b67
 
 COCOAPODS: 0.33.1

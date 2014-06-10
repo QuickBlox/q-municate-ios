@@ -39,11 +39,57 @@ typedef enum {
 /**
  *  Icon image of the message view.
  *
- *  @param type A MessageBarMessageType (error, information, success, etc)
+ *  @param type A MessageBarMessageType (error, information, success, etc).
  *
  *  @return UIImage istance representing the message view's icon.
  */
 - (UIImage *)iconImageForMessageType:(TWMessageBarMessageType)type;
+
+@optional
+
+/**
+ *  The (optional) UIFont to be used for the message's title.
+ *
+ *  Default: 16pt bold
+ *
+ *  @param type A MessageBarMessageType (error, information, success, etc).
+ *
+ *  @return UIFont instance representing the title font.
+ */
+- (UIFont *)titleFontForMessageType:(TWMessageBarMessageType)type;
+
+/**
+ *  The (optional) UIFont to be used for the message's description.
+ *
+ *  Default: 14pt regular
+ *
+ *  @param type A MessageBarMessageType (error, information, success, etc).
+ *
+ *  @return UIFont instance representing the description font.
+ */
+- (UIFont *)descriptionFontForMessageType:(TWMessageBarMessageType)type;
+
+/**
+ *  The (optional) UIColor to be used for the message's title.
+ *
+ *  Default: white
+ *
+ *  @param type A MessageBarMessageType (error, information, success, etc).
+ *
+ *  @return UIColor instance representing the title color.
+ */
+- (UIColor *)titleColorForMessageType:(TWMessageBarMessageType)type;
+
+/**
+ *  The (optional) UIColor to be used for the message's description.
+ *
+ *  Default: white
+ *
+ *  @param type A MessageBarMessageType (error, information, success, etc).
+ *
+ *  @return UIColor instance representing the description color.
+ */
+- (UIColor *)descriptionColorForMessageType:(TWMessageBarMessageType)type;
 
 @end
 

@@ -12,6 +12,10 @@
 
 @implementation QMDBStorage (Dialogs)
 
+- (void)addQBChatMessagesInDialog:(id)dialog {
+    
+}
+
 - (void)cacheQBDialogs:(NSArray *)dialogs finish:(QMDBFinishBlock)finish {
     
     __weak __typeof(self)weakSelf = self;
@@ -30,7 +34,6 @@
         DO_AT_MAIN(qbDialogs(allDialogs));
     }];
 }
-
 
 - (NSArray *)allQBChatDialogsInContext:(NSManagedObjectContext *)context {
     
@@ -54,7 +57,7 @@
 
 - (void)mergeQBChatDialogs:(NSArray *)qbChatDialogs inContext:(NSManagedObjectContext *)context finish:(QMDBFinishBlock)finish {
     
-    NSArray *allDialogs = [CDDialog MR_findAllInContext:context];
+    NSArray *allDialogs = [self allQBChatDialogsInContext:context];
     
     NSMutableArray *toInsert = [NSMutableArray array];
     NSMutableArray *toUpdate = [NSMutableArray array];

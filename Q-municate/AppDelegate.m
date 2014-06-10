@@ -18,13 +18,8 @@
 
 #ifdef TEST_QMDBStore
 
-#define START double startTime = CFAbsoluteTimeGetCurrent();
-#define END NSLog(@"%f", CFAbsoluteTimeGetCurrent()-startTime);
-
 - (void)testQMDBStorage {
     
-    
-   
 //   [QMDBStorage cleanDBWithName:@"AndreyIvanov"];
    
    [QMDBStorage setupWithName:@"AndreyIvanov"];
@@ -36,14 +31,11 @@
             user.ID = i;
             user.fullName = [NSString stringWithFormat:@"User %d", i];
             [users addObject:user];
-            
         }
         
         dispatch_semaphore_t dsema = dispatch_semaphore_create(0);
         
-        START
         [self.dbStorage cacheUsers:users finish:^{
-            END
             dispatch_semaphore_signal(dsema);
         }];
         

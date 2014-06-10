@@ -1,13 +1,6 @@
 #!/bin/sh
 #  mogen.sh
 #
-#  Created by Jean-Denis Muys on 24/02/11.
-#  Modified by Ryan Rounkles on 15/5/11 to use correct model version and to account for spaces in file paths
-#  Edited by MANIAK_dobrii for mogenerator demo
-
-#TODO: Change this to the name of custom ManagedObject base class
-#  If no custom MO class is required, remove the "--base-class $baseClass" parameter from mogenerator call
-#baseClass=DOManagedObject
 
 HUMAN_DIR="${PROJECT_DIR}/Q-municate/Classes/CoreData/Entries"
 MACHINE_DIR="${PROJECT_DIR}/Q-municate/Classes/CoreData/EntriesMachine"

@@ -21,6 +21,7 @@
 #import "UIImage+Cropper.h"
 #import "QMContentPreviewController.h"
 #import "QMGroupContentCell.h"
+#import "QMDBStorage+Messages.h"
 
 
 static CGFloat const kCellHeightOffset = 33.0f;
@@ -112,10 +113,13 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (void)loadHistory
 {
     // load history:
-    [[QMChatService shared] getMessageHistoryWithDialogID:self.chatDialog.ID withCompletion:^(NSArray *messages, BOOL success, NSError *error) {
+    
+    
+    void(^reloadDataAfterGetMessages) (NSArray *messages) = ^(NSArray *messages) {
         
         [QMUtilities removeIndicatorView];
-        if (messages != nil) {
+        
+        if (messages.count > 0) {
             
             if (self.chatDialog.type == QBChatDialogTypePrivate) {
                 [QMChatService shared].allConversations[[@(self.opponent.ID)stringValue]] = [messages mutableCopy];
@@ -123,8 +127,19 @@ static CGFloat const kCellHeightOffset = 33.0f;
                 [QMChatService shared].allConversations[self.chatDialog.roomJID] = [messages mutableCopy];
             }
         }
+        
         [self resetTableView];
+    };
+    
+
+    //TODO:TEMP
+    [self.dbStorage cachedQBChatMessagesWithDialogId:self.chatDialog.ID qbMessages:^(NSArray *collection) {
+        reloadDataAfterGetMessages(collection);
     }];
+    [[QMChatService shared] getMessageHistoryWithDialogID:self.chatDialog.ID withCompletion:^(NSArray *messages, BOOL success, NSError *error) {
+        reloadDataAfterGetMessages(messages);
+    }];
+    
 }
 
 - (void)dealloc
@@ -151,7 +166,6 @@ static CGFloat const kCellHeightOffset = 33.0f;
 		[groupInfoButton setFrame:CGRectMake(0, 0, 30, 40)];
 
 		[groupInfoButton setImage:[UIImage imageNamed:@"ic_info_top"] forState:UIControlStateNormal];
-		[groupInfoButton setImage:[UIImage imageNamed:@"ic_info_top"] forState:UIControlStateHighlighted];
 		[groupInfoButton addTarget:self action:@selector(groupInfoNavButtonAction) forControlEvents:UIControlEventTouchUpInside];
 		UIBarButtonItem *groupInfoBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:groupInfoButton];
 		self.navigationItem.rightBarButtonItems = @[groupInfoBarButtonItem];
@@ -162,11 +176,9 @@ static CGFloat const kCellHeightOffset = 33.0f;
 		[audioButton setFrame:CGRectMake(0, 0, 30, 40)];
 
 		[videoButton setImage:[UIImage imageNamed:@"ic_camera_top"] forState:UIControlStateNormal];
-		[videoButton setImage:[UIImage imageNamed:@"ic_camera_top"] forState:UIControlStateHighlighted];
 		[videoButton addTarget:self action:@selector(videoCallAction) forControlEvents:UIControlEventTouchUpInside];
 
 		[audioButton setImage:[UIImage imageNamed:@"ic_phone_top"] forState:UIControlStateNormal];
-		[audioButton setImage:[UIImage imageNamed:@"ic_phone_top"] forState:UIControlStateHighlighted];
 		[audioButton addTarget:self action:@selector(audioCallAction) forControlEvents:UIControlEventTouchUpInside];
 
 		UIBarButtonItem *videoCallBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:videoButton];
@@ -233,8 +245,11 @@ static CGFloat const kCellHeightOffset = 33.0f;
         [invitationCell configureCellWithMessage:message];
         return invitationCell;
     }
+    
     BOOL isMe = NO;
+    
     QBUUser *currentMessageUser = nil;
+    
     if ([QMContactList shared].me.ID == message.senderID) {
         currentMessageUser = [QMContactList shared].me;
         isMe = YES;

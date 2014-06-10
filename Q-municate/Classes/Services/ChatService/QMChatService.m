@@ -10,6 +10,7 @@
 #import "QMContactList.h"
 #import "NSArray+ArrayToString.h"
 #import <TWMessageBarManager.h>
+#import "QMDBStorage+Messages.h"
 
 
 @interface QMChatService () <QBChatDelegate, QBActionStatusDelegate>
@@ -371,7 +372,9 @@
 
 - (void)chatDidFailWithError:(NSInteger)code
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidFailWithError object:nil userInfo:@{@"errorCode" : [NSNumber numberWithInteger:code]}];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidFailWithError
+                                                        object:nil
+                                                      userInfo:@{@"errorCode" : @(code)}];
 }
 
 - (void)sendMessage:(QBChatMessage *)message
@@ -466,13 +469,21 @@
 
 - (void)getMessageHistoryWithDialogID:(NSString *)dialogIDString withCompletion:(void(^)(NSArray *messages, BOOL success, NSError *error))block
 {
+    
 	QBResultBlock resulBlock = ^(Result *result) {
+        
         if (result.success && [result isKindOfClass:[QBChatHistoryMessageResult class]]) {
+            
             NSArray *messages = ((QBChatHistoryMessageResult *)result).messages;
-            block(messages, YES, nil);
-            return;
+            
+            [self.dbStorage cacheQBChatMessages:messages withDialogId:dialogIDString finish:^{
+                block(messages, YES, nil);
+            }];
+            
+        }else {
+            block(nil, NO, result.errors[0]);
         }
-        block(nil, NO, result.errors[0]);
+        
     };
 	[[QBChat instance] messagesWithDialogID:dialogIDString delegate:self context:Block_copy((__bridge void *)(resulBlock))];
 }

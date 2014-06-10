@@ -60,11 +60,11 @@
     return qbUsers;
 }
 
-#define TEST_DUBLICATE_CASE
+#define TEST_DUPLICATE_CASE
 
-#ifdef TEST_DUBLICATE_CASE
+#ifdef TEST_DUPLICATE_CASE
 
-- (void)checkDublicateInQBUsers:(NSArray *)qbUsers {
+- (void)checkDuplicateInQBUsers:(NSArray *)qbUsers {
     
     NSMutableSet *ids = [NSMutableSet set];
     
@@ -80,35 +80,35 @@
     }];
     
     //TODO: Need add version checker
-    NSArray *dublicates = [qbUsers filteredArrayUsingPredicate:predicate];
-    NSAssert(dublicates.count == 0, @"Collectin have dublicates");
+    NSArray *duplicates = [qbUsers filteredArrayUsingPredicate:predicate];
+    NSAssert(duplicates.count == 0, @"Collection has duplicates");
 }
 
 #endif
 
 - (void)mergeQBUsers:(NSArray *)qbUsers inContext:(NSManagedObjectContext *)context finish:(QMDBFinishBlock)finish {
     
-#ifdef TEST_DUBLICATE_CASE
-    [self checkDublicateInQBUsers:qbUsers];
+#ifdef TEST_DUPLICATE_CASE
+    [self checkDuplicateInQBUsers:qbUsers];
 #endif
     
-    NSArray *allUsers = [self allUsersInContext:context];
+    NSArray *allQBUsersInCache = [self allUsersInContext:context];
     
     NSMutableArray *toInsert = [NSMutableArray array];
     NSMutableArray *toUpdate = [NSMutableArray array];
-    NSMutableArray *toDelete = [NSMutableArray arrayWithArray:allUsers];
+    NSMutableArray *toDelete = [NSMutableArray arrayWithArray:allQBUsersInCache];
     
     //Update/Insert/Delete
     
     for (QBUUser *user in qbUsers) {
         
-        NSInteger idx = [allUsers indexOfObject:user];
+        NSInteger idx = [allQBUsersInCache indexOfObject:user];
         
         if (idx == NSNotFound) {
             
             QBUUser *toUpdateUser = nil;
             
-            for (QBUUser *candidateToUpdate in allUsers) {
+            for (QBUUser *candidateToUpdate in allQBUsersInCache) {
                 
                 if (candidateToUpdate.ID == user.ID) {
                     
@@ -145,7 +145,7 @@
             [weakSelf deleteQBUsers:toDelete inContext:context];
         }
         
-        NSLog(@"Users in cahce %d", allUsers.count);
+        NSLog(@"Users in cahce %d", allQBUsersInCache.count);
         NSLog(@"Users to insert %d", toInsert.count);
         NSLog(@"Users to update %d", toUpdate.count);
         NSLog(@"Users to delete %d", toDelete.count);

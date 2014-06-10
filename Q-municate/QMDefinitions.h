@@ -194,7 +194,8 @@ static NSString *const kSettingsProfileDefaultStatusString	= @"Add Status";
 static NSString *const kSettingsProfileMessageWarningString	= @"This field could not be empty!";
 static NSString *const kSettingsProfileTextViewMessageWarningString	= @"This field could not be more then 43 characters!";
 
-
+//******************** CoreData *****************
+static NSString *const kCDMessageDatetimePath = @"datetime";
 
 extern QMLogLevel kLoggingLevel;
 

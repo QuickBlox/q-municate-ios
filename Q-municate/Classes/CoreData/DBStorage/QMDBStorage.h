@@ -13,6 +13,9 @@
 #define LIKE_C(attrName, attrVal) [NSPredicate predicateWithFormat:@"%K like[c] %@", attrName, attrVal]
 #define IS(attrName, attrVal) [NSPredicate predicateWithFormat:@"%K == %@", attrName, attrVal]
 
+#define START_LOG_TIME double startTime = CFAbsoluteTimeGetCurrent();
+#define END_LOG_TIME NSLog(@"%s %f", __PRETTY_FUNCTION__, CFAbsoluteTimeGetCurrent()-startTime);
+
 #define DO_AT_MAIN(x) dispatch_async(dispatch_get_main_queue(), ^{ x; });
 
 typedef void(^QMDBCollectionBlock)(NSArray *collection);

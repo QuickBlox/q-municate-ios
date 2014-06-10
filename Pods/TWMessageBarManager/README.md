@@ -45,7 +45,7 @@ Simply add the following line to your <code>Podfile</code>:
 Your podfile should look something like:
 
 	platform :ios, '6.0'
-	pod 'TWMessageBarManager', '~> 1.6.0'
+	pod 'TWMessageBarManager', '~> 1.7.0'
 	
 ### The Old School Way
 
@@ -79,7 +79,7 @@ The default display duration is ***3 seconds***. You can override this value by 
     [[TWMessageBarManager sharedInstance] showMessageWithTitle:@"Account Updated!"
                                                    description:@"Your account was successfully updated."
                                                           type:TWMessageBarMessageTypeSuccess
-                                                   forDuration:6.0];
+                                                      duration:6.0];
 
 
 ### Hiding messages
@@ -134,10 +134,19 @@ If you wish to hide the status bar altogether during presentations, you can do s
 
 An object conforming to the ***TWMessageBarStyleSheet*** protocol defines the message bar's look and feel:  
 
-	+ (UIColor *)backgroundColorForMessageType:(TWMessageBarMessageType)type;
-	+ (UIColor *)strokeColorForMessageType:(TWMessageBarMessageType)type;
-	+ (UIImage *)iconImageForMessageType:(TWMessageBarMessageType)type;
+	@required
 	
+	- (UIColor *)backgroundColorForMessageType:(TWMessageBarMessageType)type;
+	- (UIColor *)strokeColorForMessageType:(TWMessageBarMessageType)type;
+	- (UIImage *)iconImageForMessageType:(TWMessageBarMessageType)type;
+	
+	@optional
+	
+	- (UIFont *)titleFontForMessageType:(TWMessageBarMessageType)type;
+	- (UIFont *)descriptionFontForMessageType:(TWMessageBarMessageType)type;
+	- (UIColor *)titleColorForMessageType:(TWMessageBarMessageType)type;
+	- (UIColor *)descriptionColorForMessageType:(TWMessageBarMessageType)type;
+
 If no style sheet is supplied, a default class is provided on initialization. To customize the look and feel of your message bars, simply supply an object conforming to the ***TWMessageBarStyleSheet*** protocol via:
 
 	@property (nonatomic, weak) id<TWMessageBarStyleSheet> styleSheet;

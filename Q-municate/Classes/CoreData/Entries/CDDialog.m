@@ -9,6 +9,7 @@
 - (QBChatDialog *)toQBChatDialog {
     
     QBChatDialog *chatDialog = [[QBChatDialog alloc] init];
+    
     chatDialog.ID = self.uniqueId;
     chatDialog.roomJID = self.roomJID;
     chatDialog.type = self.type.intValue;
@@ -22,8 +23,7 @@
     self.uniqueId = dialog.ID;
     self.roomJID = dialog.roomJID;
     self.type = @(dialog.type);
-    self.name = dialog.name;
-    
+    self.name = dialog.name;    
 }
 
 @end

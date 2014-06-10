@@ -4,8 +4,10 @@
 #import "_CDMessages.h"
 
 const struct CDMessagesAttributes CDMessagesAttributes = {
-	.attachFileId = @"attachFileId",
+	.customParameters = @"customParameters",
 	.datetime = @"datetime",
+	.dialogId = @"dialogId",
+	.isRead = @"isRead",
 	.recipientID = @"recipientID",
 	.roomId = @"roomId",
 	.senderId = @"senderId",
@@ -16,6 +18,7 @@ const struct CDMessagesAttributes CDMessagesAttributes = {
 };
 
 const struct CDMessagesRelationships CDMessagesRelationships = {
+	.attachments = @"attachments",
 	.chatDialog = @"chatDialog",
 };
 
@@ -48,6 +51,11 @@ const struct CDMessagesFetchedProperties CDMessagesFetchedProperties = {
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
+	if ([key isEqualToString:@"isReadValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"isRead"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
 	if ([key isEqualToString:@"recipientIDValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"recipientID"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -70,7 +78,7 @@ const struct CDMessagesFetchedProperties CDMessagesFetchedProperties = {
 
 
 
-@dynamic attachFileId;
+@dynamic customParameters;
 
 
 
@@ -79,6 +87,39 @@ const struct CDMessagesFetchedProperties CDMessagesFetchedProperties = {
 
 @dynamic datetime;
 
+
+
+
+
+
+@dynamic dialogId;
+
+
+
+
+
+
+@dynamic isRead;
+
+
+
+- (BOOL)isReadValue {
+	NSNumber *result = [self isRead];
+	return [result boolValue];
+}
+
+- (void)setIsReadValue:(BOOL)value_ {
+	[self setIsRead:[NSNumber numberWithBool:value_]];
+}
+
+- (BOOL)primitiveIsReadValue {
+	NSNumber *result = [self primitiveIsRead];
+	return [result boolValue];
+}
+
+- (void)setPrimitiveIsReadValue:(BOOL)value_ {
+	[self setPrimitiveIsRead:[NSNumber numberWithBool:value_]];
+}
 
 
 
@@ -189,6 +230,19 @@ const struct CDMessagesFetchedProperties CDMessagesFetchedProperties = {
 
 
 
+
+@dynamic attachments;
+
+	
+- (NSMutableSet*)attachmentsSet {
+	[self willAccessValueForKey:@"attachments"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"attachments"];
+  
+	[self didAccessValueForKey:@"attachments"];
+	return result;
+}
+	
 
 @dynamic chatDialog;
 

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13D65" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="CDAttachment" representedClassName="CDAttachment" syncable="YES">
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uniqueId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="message" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDMessages" inverseName="attachments" inverseEntity="CDMessages" syncable="YES"/>
+    </entity>
     <entity name="CDDialogs" representedClassName="CDDialog" syncable="YES">
         <attribute name="countUnreadMessages" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -10,8 +16,10 @@
         <relationship name="occupants" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDUsers" inverseName="dialogs" inverseEntity="CDUsers" syncable="YES"/>
     </entity>
     <entity name="CDMessages" representedClassName="CDMessages" syncable="YES">
-        <attribute name="attachFileId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="customParameters" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="datetime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dialogId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isRead" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="recipientID" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="roomId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="senderId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -19,6 +27,7 @@
         <attribute name="state" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uniqueId" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="attachments" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDAttachment" inverseName="message" inverseEntity="CDAttachment" syncable="YES"/>
         <relationship name="chatDialog" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDDialogs" inverseName="messages" inverseEntity="CDDialogs" syncable="YES"/>
     </entity>
     <entity name="CDUsers" representedClassName="CDUsers" syncable="YES">
@@ -32,7 +41,8 @@
     </entity>
     <elements>
         <element name="CDDialogs" positionX="-668" positionY="-25" width="128" height="148"/>
-        <element name="CDMessages" positionX="-479" positionY="-153" width="128" height="193"/>
-        <element name="CDUsers" positionX="-477" positionY="117" width="128" height="148"/>
+        <element name="CDMessages" positionX="-479" positionY="-153" width="128" height="238"/>
+        <element name="CDUsers" positionX="-477" positionY="117" width="128" height="150"/>
+        <element name="CDAttachment" positionX="-290" positionY="-90" width="128" height="88"/>
     </elements>
 </model>

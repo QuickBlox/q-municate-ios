@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		552B423919471E19008DF1E8 /* CDAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 552B423819471E19008DF1E8 /* CDAttachment.m */; };
+		552B423C19471E22008DF1E8 /* _CDAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 552B423B19471E22008DF1E8 /* _CDAttachment.m */; };
 		55943A0C1941A4AE00BF4312 /* CDDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 55943A0B1941A4AE00BF4312 /* CDDialog.m */; };
 		55943A0F1941A4C000BF4312 /* _CDDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 55943A0E1941A4C000BF4312 /* _CDDialog.m */; };
 		55943A121941A55800BF4312 /* CDMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 55943A111941A55800BF4312 /* CDMessages.m */; };
@@ -190,6 +192,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		552B423619470A81008DF1E8 /* QBDBMergeProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QBDBMergeProtocol.h; sourceTree = "<group>"; };
+		552B423719471E19008DF1E8 /* CDAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDAttachment.h; sourceTree = "<group>"; };
+		552B423819471E19008DF1E8 /* CDAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDAttachment.m; sourceTree = "<group>"; };
+		552B423A19471E22008DF1E8 /* _CDAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _CDAttachment.h; sourceTree = "<group>"; };
+		552B423B19471E22008DF1E8 /* _CDAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _CDAttachment.m; sourceTree = "<group>"; };
 		55943A0A1941A4AE00BF4312 /* CDDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDDialog.h; sourceTree = "<group>"; };
 		55943A0B1941A4AE00BF4312 /* CDDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDDialog.m; sourceTree = "<group>"; };
 		55943A0D1941A4C000BF4312 /* _CDDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _CDDialog.h; sourceTree = "<group>"; };
@@ -531,6 +538,7 @@
 			children = (
 				55D270181940B8D300238D50 /* QMDBStorage.h */,
 				55D270191940B8D300238D50 /* QMDBStorage.m */,
+				552B423619470A81008DF1E8 /* QBDBMergeProtocol.h */,
 				55D270151940B8D300238D50 /* DBStorage+Users */,
 				55D2700F1940B8D300238D50 /* DBStorage+Dialogs */,
 				55D270121940B8D300238D50 /* DBStorage+Messages */,
@@ -568,6 +576,8 @@
 		55D2701A1940B8D300238D50 /* Entries */ = {
 			isa = PBXGroup;
 			children = (
+				552B423719471E19008DF1E8 /* CDAttachment.h */,
+				552B423819471E19008DF1E8 /* CDAttachment.m */,
 				55943A101941A55800BF4312 /* CDMessages.h */,
 				55943A111941A55800BF4312 /* CDMessages.m */,
 				55943A0A1941A4AE00BF4312 /* CDDialog.h */,
@@ -581,6 +591,8 @@
 		55D2701F1940B8D300238D50 /* EntriesMachine */ = {
 			isa = PBXGroup;
 			children = (
+				552B423A19471E22008DF1E8 /* _CDAttachment.h */,
+				552B423B19471E22008DF1E8 /* _CDAttachment.m */,
 				55943A0D1941A4C000BF4312 /* _CDDialog.h */,
 				55943A0E1941A4C000BF4312 /* _CDDialog.m */,
 				55D270201940B8D300238D50 /* _CDMessages.h */,
@@ -1453,6 +1465,7 @@
 				693808C5193738C400BF926F /* QMUploadAttachCell.m in Sources */,
 				6943847318E42678001E08A9 /* QMPerson.m in Sources */,
 				69B5343D1934C9C2005D865F /* QMPrivateChatCell.m in Sources */,
+				552B423919471E19008DF1E8 /* CDAttachment.m in Sources */,
 				6943847B18E42678001E08A9 /* QMLogInController.m in Sources */,
 				55D270B61940B8D300238D50 /* MagicalRecord+Setup.m in Sources */,
 				55D270B91940B8D300238D50 /* MagicalRecordShorthand.m in Sources */,
@@ -1471,6 +1484,7 @@
 				55D270AB1940B8D300238D50 /* NSPersistentStore+MagicalRecord.m in Sources */,
 				55D270B01940B8D300238D50 /* NSArray+MagicalRecord.m in Sources */,
 				693F347B18F554240032891F /* QMIncommingCallSegue.m in Sources */,
+				552B423C19471E22008DF1E8 /* _CDAttachment.m in Sources */,
 				55D270BA1940B8D300238D50 /* AutoMigratingMagicalRecordStack.m in Sources */,
 				6967D6B9192E4F4500D6C268 /* QMChatInvitationCell.m in Sources */,
 				690D9692193DF16D00BC4C70 /* QMRootViewController.m in Sources */,
