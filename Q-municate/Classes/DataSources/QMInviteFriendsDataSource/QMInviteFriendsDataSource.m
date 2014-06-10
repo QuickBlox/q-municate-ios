@@ -41,7 +41,7 @@
 		[[FBSession activeSession] openWithBehavior:FBSessionLoginBehaviorWithFallbackToWebView completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
 			if (status == FBSessionStateOpen) {
 				//TODO: хорошо бы вынести в отдельный метод
-				[self fetchAndSaveFacebookFriends:^(NSError *innerError) {
+				[self fetchAndSaveFacebookFriendsWithBlock:^(NSError *innerError) {
 					if (innerError) {
 						completionBlock(innerError);
 					} else {
@@ -58,7 +58,7 @@
 		}];
 	} else if ([FBSession activeSession].state == FBSessionStateCreatedTokenLoaded || [FBSession activeSession].state == FBSessionStateOpen) {
 		//TODO: хорошо бы вынести в отдельный метод - дублирование
-		[self fetchAndSaveFacebookFriends:^(NSError *innerError) {
+		[self fetchAndSaveFacebookFriendsWithBlock:^(NSError *innerError) {
 			if (innerError) {
 				completionBlock(innerError);
 			} else {
@@ -86,17 +86,6 @@
 			});
 		}];
 	});
-}
-
-- (void)fetchAndSaveFacebookFriends:(void(^)(NSError *error))block
-{
-	[self fetchAndSaveFacebookFriendsWithBlock:^(NSError *error) {
-		if (error) {
-			block(error);
-			return;
-		}
-		block(nil);
-	}];
 }
 
 - (void)refreshAllUsersDataSource

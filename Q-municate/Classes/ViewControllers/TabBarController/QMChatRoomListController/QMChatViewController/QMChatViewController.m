@@ -482,13 +482,6 @@ static CGFloat const kCellHeightOffset = 33.0f;
 	}
 }
 
-- (void)addMessageToHistory:(QBChatMessage *)chatMessage
-{
-	[self.dataSource addMessageToHistory:chatMessage];
-	[self clearMessageInputTextField];
-	[self.tableView reloadData];
-}
-
 - (BOOL)userIsJoinedRoomForDialog:(QBChatDialog *)dialog
 {
     QBChatRoom *currentRoom = [QMChatService shared].allChatRoomsAsDictionary[dialog.roomJID];
@@ -520,7 +513,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
         // Create  uploading message
         QMChatUploadingMessage *chatMessage = [QMChatUploadingMessage new];
 		chatMessage.content = currentImage;
-        chatMessage.text = @"Content";
+//        chatMessage.text = @"Content";
 		if (self.chatDialog.type == QBChatDialogTypePrivate) {
             chatMessage.recipientID = self.opponent.ID;
             
