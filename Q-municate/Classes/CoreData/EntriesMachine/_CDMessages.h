@@ -6,19 +6,25 @@
 
 extern const struct CDMessagesAttributes {
 	__unsafe_unretained NSString *attachFileId;
-	__unsafe_unretained NSString *body;
-	__unsafe_unretained NSString *id;
+	__unsafe_unretained NSString *datetime;
+	__unsafe_unretained NSString *recipientID;
 	__unsafe_unretained NSString *roomId;
 	__unsafe_unretained NSString *senderId;
+	__unsafe_unretained NSString *senderNick;
 	__unsafe_unretained NSString *state;
-	__unsafe_unretained NSString *time;
+	__unsafe_unretained NSString *text;
+	__unsafe_unretained NSString *uniqueId;
 } CDMessagesAttributes;
 
 extern const struct CDMessagesRelationships {
+	__unsafe_unretained NSString *chatDialog;
 } CDMessagesRelationships;
 
 extern const struct CDMessagesFetchedProperties {
 } CDMessagesFetchedProperties;
+
+@class CDDialog;
+
 
 
 
@@ -52,25 +58,25 @@ extern const struct CDMessagesFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* body;
+@property (nonatomic, strong) NSDate* datetime;
 
 
 
-//- (BOOL)validateBody:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateDatetime:(id*)value_ error:(NSError**)error_;
 
 
 
 
 
-@property (nonatomic, strong) NSNumber* id;
+@property (nonatomic, strong) NSNumber* recipientID;
 
 
 
-@property int32_t idValue;
-- (int32_t)idValue;
-- (void)setIdValue:(int32_t)value_;
+@property int32_t recipientIDValue;
+- (int32_t)recipientIDValue;
+- (void)setRecipientIDValue:(int32_t)value_;
 
-//- (BOOL)validateId:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateRecipientID:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -100,6 +106,16 @@ extern const struct CDMessagesFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* senderNick;
+
+
+
+//- (BOOL)validateSenderNick:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* state;
 
 
@@ -114,12 +130,29 @@ extern const struct CDMessagesFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSDate* time;
+@property (nonatomic, strong) NSString* text;
 
 
 
-//- (BOOL)validateTime:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateText:(id*)value_ error:(NSError**)error_;
 
+
+
+
+
+@property (nonatomic, strong) NSString* uniqueId;
+
+
+
+//- (BOOL)validateUniqueId:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) CDDialog *chatDialog;
+
+//- (BOOL)validateChatDialog:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -140,17 +173,17 @@ extern const struct CDMessagesFetchedProperties {
 
 
 
-- (NSString*)primitiveBody;
-- (void)setPrimitiveBody:(NSString*)value;
+- (NSDate*)primitiveDatetime;
+- (void)setPrimitiveDatetime:(NSDate*)value;
 
 
 
 
-- (NSNumber*)primitiveId;
-- (void)setPrimitiveId:(NSNumber*)value;
+- (NSNumber*)primitiveRecipientID;
+- (void)setPrimitiveRecipientID:(NSNumber*)value;
 
-- (int32_t)primitiveIdValue;
-- (void)setPrimitiveIdValue:(int32_t)value_;
+- (int32_t)primitiveRecipientIDValue;
+- (void)setPrimitiveRecipientIDValue:(int32_t)value_;
 
 
 
@@ -170,6 +203,12 @@ extern const struct CDMessagesFetchedProperties {
 
 
 
+- (NSString*)primitiveSenderNick;
+- (void)setPrimitiveSenderNick:(NSString*)value;
+
+
+
+
 - (NSNumber*)primitiveState;
 - (void)setPrimitiveState:(NSNumber*)value;
 
@@ -179,10 +218,21 @@ extern const struct CDMessagesFetchedProperties {
 
 
 
-- (NSDate*)primitiveTime;
-- (void)setPrimitiveTime:(NSDate*)value;
+- (NSString*)primitiveText;
+- (void)setPrimitiveText:(NSString*)value;
 
 
+
+
+- (NSString*)primitiveUniqueId;
+- (void)setPrimitiveUniqueId:(NSString*)value;
+
+
+
+
+
+- (CDDialog*)primitiveChatDialog;
+- (void)setPrimitiveChatDialog:(CDDialog*)value;
 
 
 @end

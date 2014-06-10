@@ -5,15 +5,15 @@
 
 const struct CDUsersAttributes CDUsersAttributes = {
 	.email = @"email",
-	.externalUserId = @"externalUserId",
 	.fullName = @"fullName",
-	.id = @"id",
 	.phone = @"phone",
 	.status = @"status",
 	.type = @"type",
+	.uniqueId = @"uniqueId",
 };
 
 const struct CDUsersRelationships CDUsersRelationships = {
+	.dialogs = @"dialogs",
 };
 
 const struct CDUsersFetchedProperties CDUsersFetchedProperties = {
@@ -45,13 +45,8 @@ const struct CDUsersFetchedProperties CDUsersFetchedProperties = {
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
-	if ([key isEqualToString:@"externalUserIdValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"externalUserId"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
-	if ([key isEqualToString:@"idValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"id"];
+	if ([key isEqualToString:@"uniqueIdValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"uniqueId"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -69,60 +64,8 @@ const struct CDUsersFetchedProperties CDUsersFetchedProperties = {
 
 
 
-@dynamic externalUserId;
-
-
-
-- (int32_t)externalUserIdValue {
-	NSNumber *result = [self externalUserId];
-	return [result intValue];
-}
-
-- (void)setExternalUserIdValue:(int32_t)value_ {
-	[self setExternalUserId:[NSNumber numberWithInt:value_]];
-}
-
-- (int32_t)primitiveExternalUserIdValue {
-	NSNumber *result = [self primitiveExternalUserId];
-	return [result intValue];
-}
-
-- (void)setPrimitiveExternalUserIdValue:(int32_t)value_ {
-	[self setPrimitiveExternalUserId:[NSNumber numberWithInt:value_]];
-}
-
-
-
-
-
 @dynamic fullName;
 
-
-
-
-
-
-@dynamic id;
-
-
-
-- (int32_t)idValue {
-	NSNumber *result = [self id];
-	return [result intValue];
-}
-
-- (void)setIdValue:(int32_t)value_ {
-	[self setId:[NSNumber numberWithInt:value_]];
-}
-
-- (int32_t)primitiveIdValue {
-	NSNumber *result = [self primitiveId];
-	return [result intValue];
-}
-
-- (void)setPrimitiveIdValue:(int32_t)value_ {
-	[self setPrimitiveId:[NSNumber numberWithInt:value_]];
-}
 
 
 
@@ -148,6 +91,36 @@ const struct CDUsersFetchedProperties CDUsersFetchedProperties = {
 
 
 
+
+@dynamic uniqueId;
+
+
+
+- (int32_t)uniqueIdValue {
+	NSNumber *result = [self uniqueId];
+	return [result intValue];
+}
+
+- (void)setUniqueIdValue:(int32_t)value_ {
+	[self setUniqueId:[NSNumber numberWithInt:value_]];
+}
+
+- (int32_t)primitiveUniqueIdValue {
+	NSNumber *result = [self primitiveUniqueId];
+	return [result intValue];
+}
+
+- (void)setPrimitiveUniqueIdValue:(int32_t)value_ {
+	[self setPrimitiveUniqueId:[NSNumber numberWithInt:value_]];
+}
+
+
+
+
+
+@dynamic dialogs;
+
+	
 
 
 

@@ -36,7 +36,7 @@
 /**
  Request for users for IDs in Roaster. Returns NSArray of QBUUser's
  */
-- (void)retriveFriendsWithContactListInfo:(QBContactList *)contactList completion:(void (^)(BOOL success, NSError *error))completion;
+- (void)retrieveFriendsWithContactListInfo:(QBContactList *)contactList completion:(void (^)(BOOL success, NSError *error))completion;
 
 
 /** 

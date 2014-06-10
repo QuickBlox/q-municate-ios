@@ -1,5 +1,8 @@
 #import "_CDMessages.h"
 
 @interface CDMessages : _CDMessages {}
-// Custom logic goes here.
+
+- (QBChatMessage *)toQBChatMessage;
+- (void)updateWithQBChatMessage:(QBChatMessage *)message;
+
 @end

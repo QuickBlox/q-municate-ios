@@ -38,7 +38,7 @@
 
 #pragma mark - FRIEND LIST ROASTER
 
-- (void)retriveFriendsWithContactListInfo:(QBContactList *)contactList completion:(void (^)(BOOL success, NSError *error))completion
+- (void)retrieveFriendsWithContactListInfo:(QBContactList *)contactList completion:(void (^)(BOOL success, NSError *error))completion
 {
     if ([contactList.contacts count] == 0) {
         completion(YES, nil);
@@ -49,7 +49,7 @@
     
     for (QBContactListItem *record in contactList.contacts) {
         
-        NSString *userID = [@(record.userID) stringValue];
+        NSString *userID = [NSString stringWithFormat:@"%d", record.userID];
         QBUUser *friend = self.friendsAsDictionary[userID];
         if (friend == nil) {
             [IDsToFetchFromQuickblox addObject:userID];

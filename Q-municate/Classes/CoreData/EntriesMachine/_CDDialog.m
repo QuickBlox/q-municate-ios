@@ -5,15 +5,15 @@
 
 const struct CDDialogAttributes CDDialogAttributes = {
 	.countUnreadMessages = @"countUnreadMessages",
-	.dialogId = @"dialogId",
-	.id = @"id",
-	.lastMessage = @"lastMessage",
 	.name = @"name",
-	.roomId = @"roomId",
+	.roomJID = @"roomJID",
 	.type = @"type",
+	.uniqueId = @"uniqueId",
 };
 
 const struct CDDialogRelationships CDDialogRelationships = {
+	.messages = @"messages",
+	.occupants = @"occupants",
 };
 
 const struct CDDialogFetchedProperties CDDialogFetchedProperties = {
@@ -50,8 +50,8 @@ const struct CDDialogFetchedProperties CDDialogFetchedProperties = {
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
-	if ([key isEqualToString:@"idValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"id"];
+	if ([key isEqualToString:@"typeValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"type"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -88,46 +88,6 @@ const struct CDDialogFetchedProperties CDDialogFetchedProperties = {
 
 
 
-@dynamic dialogId;
-
-
-
-
-
-
-@dynamic id;
-
-
-
-- (int32_t)idValue {
-	NSNumber *result = [self id];
-	return [result intValue];
-}
-
-- (void)setIdValue:(int32_t)value_ {
-	[self setId:[NSNumber numberWithInt:value_]];
-}
-
-- (int32_t)primitiveIdValue {
-	NSNumber *result = [self primitiveId];
-	return [result intValue];
-}
-
-- (void)setPrimitiveIdValue:(int32_t)value_ {
-	[self setPrimitiveId:[NSNumber numberWithInt:value_]];
-}
-
-
-
-
-
-@dynamic lastMessage;
-
-
-
-
-
-
 @dynamic name;
 
 
@@ -135,7 +95,7 @@ const struct CDDialogFetchedProperties CDDialogFetchedProperties = {
 
 
 
-@dynamic roomId;
+@dynamic roomJID;
 
 
 
@@ -146,8 +106,60 @@ const struct CDDialogFetchedProperties CDDialogFetchedProperties = {
 
 
 
+- (int16_t)typeValue {
+	NSNumber *result = [self type];
+	return [result shortValue];
+}
+
+- (void)setTypeValue:(int16_t)value_ {
+	[self setType:[NSNumber numberWithShort:value_]];
+}
+
+- (int16_t)primitiveTypeValue {
+	NSNumber *result = [self primitiveType];
+	return [result shortValue];
+}
+
+- (void)setPrimitiveTypeValue:(int16_t)value_ {
+	[self setPrimitiveType:[NSNumber numberWithShort:value_]];
+}
 
 
+
+
+
+@dynamic uniqueId;
+
+
+
+
+
+
+@dynamic messages;
+
+	
+- (NSMutableSet*)messagesSet {
+	[self willAccessValueForKey:@"messages"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"messages"];
+  
+	[self didAccessValueForKey:@"messages"];
+	return result;
+}
+	
+
+@dynamic occupants;
+
+	
+- (NSMutableSet*)occupantsSet {
+	[self willAccessValueForKey:@"occupants"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"occupants"];
+  
+	[self didAccessValueForKey:@"occupants"];
+	return result;
+}
+	
 
 
 

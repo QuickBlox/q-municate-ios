@@ -11,8 +11,8 @@
     
     QBUUser *qbUser = [QBUUser user];
     
+    qbUser.ID = self.uniqueId.intValue;
     qbUser.fullName = self.fullName;
-    qbUser.externalUserID = self.externalUserId.intValue;
     qbUser.email = self.email;
     qbUser.phone = self.phone;
     
@@ -22,7 +22,7 @@
 - (void)updateWithQBUser:(QBUUser *)user {
     
     self.fullName = user.fullName;
-    self.externalUserId = @(user.externalUserID);
+    self.uniqueId = @(user.ID);
     self.email = user.email;
     self.phone = user.phone;
 }

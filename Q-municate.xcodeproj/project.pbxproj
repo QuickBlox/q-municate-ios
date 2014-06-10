@@ -531,9 +531,9 @@
 			children = (
 				55D270181940B8D300238D50 /* QMDBStorage.h */,
 				55D270191940B8D300238D50 /* QMDBStorage.m */,
+				55D270151940B8D300238D50 /* DBStorage+Users */,
 				55D2700F1940B8D300238D50 /* DBStorage+Dialogs */,
 				55D270121940B8D300238D50 /* DBStorage+Messages */,
-				55D270151940B8D300238D50 /* DBStorage+Users */,
 			);
 			path = DBStorage;
 			sourceTree = "<group>";
@@ -1687,7 +1687,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 869075CA2A3446469130768E /* Pods.xcconfig */;
 			buildSettings = {
-				ARCHS = armv7;
+				ARCHS = (
+					armv7,
+					i386,
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Taras Filatov (BV2558G6T9)";
@@ -1714,7 +1717,7 @@
 				PROVISIONING_PROFILE = "F7F235D5-C871-4D94-A2BF-0EC942129F0B";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1723,7 +1726,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 869075CA2A3446469130768E /* Pods.xcconfig */;
 			buildSettings = {
-				ARCHS = armv7;
+				ARCHS = (
+					armv7,
+					i386,
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Conark Intelmed (94QGKQGS9G)";
@@ -1750,7 +1756,7 @@
 				PROVISIONING_PROFILE = "BC829C9B-8971-4B79-8BB5-482ECD39A43A";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1765,6 +1771,7 @@
 				55943ABB1941C8CA00BF4312 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		69D57E4D18ACC11C00A9900A /* Build configuration list for PBXProject "Q-municate" */ = {
 			isa = XCConfigurationList;

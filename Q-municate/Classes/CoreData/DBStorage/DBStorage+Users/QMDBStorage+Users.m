@@ -9,11 +9,6 @@
 #import "QMDBStorage+Users.h"
 #import "ModelIncludes.h"
 
-#define CONTAINS(attrName, attrVal) [NSPredicate predicateWithFormat:@"self.%K CONTAINS %@", attrName, attrVal]
-#define LIKE(attrName, attrVal) [NSPredicate predicateWithFormat:@"%K like %@", attrName, attrVal]
-#define LIKE_C(attrName, attrVal) [NSPredicate predicateWithFormat:@"%K like[c] %@", attrName, attrVal]
-#define IS(attrName, attrVal) [NSPredicate predicateWithFormat:@"%K == %@", attrName, attrVal]
-
 @interface QMDBStorage ()
 
 <NSFetchedResultsControllerDelegate>
@@ -75,7 +70,7 @@
     
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBUUser *qbUser, NSDictionary *bindings) {
         
-        NSNumber *userId = @(qbUser.externalUserID);
+        NSNumber *userId = @(qbUser.ID);
         BOOL contains = [ids containsObject:userId];
         
         if (!contains) {
@@ -115,7 +110,7 @@
             
             for (QBUUser *candidateToUpdate in allUsers) {
                 
-                if (candidateToUpdate.externalUserID == user.externalUserID) {
+                if (candidateToUpdate.ID == user.ID) {
                     
                     toUpdateUser = user;
                     [toDelete removeObject:candidateToUpdate];
@@ -169,8 +164,9 @@
 
 - (void)deleteQBUsers:(NSArray *)qbUsers inContext:(NSManagedObjectContext *)context {
     
+    
     for (QBUUser *qbUser in qbUsers) {
-        CDUsers *userToDelete = [CDUsers MR_findFirstWithPredicate:IS(@"externalUserId", @(qbUser.externalUserID))
+        CDUsers *userToDelete = [CDUsers MR_findFirstWithPredicate:IS(@"uniqueId", @(qbUser.ID))
                                                          inContext:context];
         [userToDelete MR_deleteEntityInContext:context];
     }
@@ -179,7 +175,7 @@
 - (void)updateQBUsers:(NSArray *)qbUsers inContext:(NSManagedObjectContext *)context {
     
     for (QBUUser *qbUser in qbUsers) {
-        CDUsers *userToUpdate = [CDUsers MR_findFirstWithPredicate:IS(@"externalUserId", @(qbUser.externalUserID))
+        CDUsers *userToUpdate = [CDUsers MR_findFirstWithPredicate:IS(@"uniqueId", @(qbUser.ID))
                                                          inContext:context];
         [userToUpdate updateWithQBUser:qbUser];
     }

@@ -102,7 +102,7 @@
 {
     NSLog(@"%@", [contactList description]);
     
-    [[QMContactList shared] retriveFriendsWithContactListInfo:contactList completion:^(BOOL success, NSError *error) {
+    [[QMContactList shared] retrieveFriendsWithContactListInfo:contactList completion:^(BOOL success, NSError *error) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kFriendsReloadedNotification object:nil];
     }];
 }

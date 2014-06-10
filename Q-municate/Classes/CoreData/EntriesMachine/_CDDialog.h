@@ -6,22 +6,22 @@
 
 extern const struct CDDialogAttributes {
 	__unsafe_unretained NSString *countUnreadMessages;
-	__unsafe_unretained NSString *dialogId;
-	__unsafe_unretained NSString *id;
-	__unsafe_unretained NSString *lastMessage;
 	__unsafe_unretained NSString *name;
-	__unsafe_unretained NSString *roomId;
+	__unsafe_unretained NSString *roomJID;
 	__unsafe_unretained NSString *type;
+	__unsafe_unretained NSString *uniqueId;
 } CDDialogAttributes;
 
 extern const struct CDDialogRelationships {
+	__unsafe_unretained NSString *messages;
+	__unsafe_unretained NSString *occupants;
 } CDDialogRelationships;
 
 extern const struct CDDialogFetchedProperties {
 } CDDialogFetchedProperties;
 
-
-
+@class CDMessages;
+@class CDUsers;
 
 
 
@@ -56,40 +56,6 @@ extern const struct CDDialogFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* dialogId;
-
-
-
-//- (BOOL)validateDialogId:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSNumber* id;
-
-
-
-@property int32_t idValue;
-- (int32_t)idValue;
-- (void)setIdValue:(int32_t)value_;
-
-//- (BOOL)validateId:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* lastMessage;
-
-
-
-//- (BOOL)validateLastMessage:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSString* name;
 
 
@@ -100,22 +66,50 @@ extern const struct CDDialogFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* roomId;
+@property (nonatomic, strong) NSString* roomJID;
 
 
 
-//- (BOOL)validateRoomId:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateRoomJID:(id*)value_ error:(NSError**)error_;
 
 
 
 
 
-@property (nonatomic, strong) NSString* type;
+@property (nonatomic, strong) NSNumber* type;
 
 
+
+@property int16_t typeValue;
+- (int16_t)typeValue;
+- (void)setTypeValue:(int16_t)value_;
 
 //- (BOOL)validateType:(id*)value_ error:(NSError**)error_;
 
+
+
+
+
+@property (nonatomic, strong) NSString* uniqueId;
+
+
+
+//- (BOOL)validateUniqueId:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSSet *messages;
+
+- (NSMutableSet*)messagesSet;
+
+
+
+
+@property (nonatomic, strong) NSSet *occupants;
+
+- (NSMutableSet*)occupantsSet;
 
 
 
@@ -124,6 +118,16 @@ extern const struct CDDialogFetchedProperties {
 @end
 
 @interface _CDDialog (CoreDataGeneratedAccessors)
+
+- (void)addMessages:(NSSet*)value_;
+- (void)removeMessages:(NSSet*)value_;
+- (void)addMessagesObject:(CDMessages*)value_;
+- (void)removeMessagesObject:(CDMessages*)value_;
+
+- (void)addOccupants:(NSSet*)value_;
+- (void)removeOccupants:(NSSet*)value_;
+- (void)addOccupantsObject:(CDUsers*)value_;
+- (void)removeOccupantsObject:(CDUsers*)value_;
 
 @end
 
@@ -139,43 +143,41 @@ extern const struct CDDialogFetchedProperties {
 
 
 
-- (NSString*)primitiveDialogId;
-- (void)setPrimitiveDialogId:(NSString*)value;
-
-
-
-
-- (NSNumber*)primitiveId;
-- (void)setPrimitiveId:(NSNumber*)value;
-
-- (int32_t)primitiveIdValue;
-- (void)setPrimitiveIdValue:(int32_t)value_;
-
-
-
-
-- (NSString*)primitiveLastMessage;
-- (void)setPrimitiveLastMessage:(NSString*)value;
-
-
-
-
 - (NSString*)primitiveName;
 - (void)setPrimitiveName:(NSString*)value;
 
 
 
 
-- (NSString*)primitiveRoomId;
-- (void)setPrimitiveRoomId:(NSString*)value;
+- (NSString*)primitiveRoomJID;
+- (void)setPrimitiveRoomJID:(NSString*)value;
 
 
 
 
-- (NSString*)primitiveType;
-- (void)setPrimitiveType:(NSString*)value;
+- (NSNumber*)primitiveType;
+- (void)setPrimitiveType:(NSNumber*)value;
+
+- (int16_t)primitiveTypeValue;
+- (void)setPrimitiveTypeValue:(int16_t)value_;
 
 
+
+
+- (NSString*)primitiveUniqueId;
+- (void)setPrimitiveUniqueId:(NSString*)value;
+
+
+
+
+
+- (NSMutableSet*)primitiveMessages;
+- (void)setPrimitiveMessages:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveOccupants;
+- (void)setPrimitiveOccupants:(NSMutableSet*)value;
 
 
 @end

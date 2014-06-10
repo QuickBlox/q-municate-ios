@@ -1,3 +1,4 @@
+
 //
 //  MagicalRecordStack.m
 //  MagicalRecord

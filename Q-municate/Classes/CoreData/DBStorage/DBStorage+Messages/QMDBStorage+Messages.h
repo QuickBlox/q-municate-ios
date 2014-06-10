@@ -10,4 +10,6 @@
 
 @interface QMDBStorage (Messages)
 
+- (void)cacheQBChatMessages:(NSArray *)messages finish:(QMDBFinishBlock)finish;
+
 @end

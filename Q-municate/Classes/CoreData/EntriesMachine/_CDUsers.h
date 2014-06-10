@@ -6,21 +6,21 @@
 
 extern const struct CDUsersAttributes {
 	__unsafe_unretained NSString *email;
-	__unsafe_unretained NSString *externalUserId;
 	__unsafe_unretained NSString *fullName;
-	__unsafe_unretained NSString *id;
 	__unsafe_unretained NSString *phone;
 	__unsafe_unretained NSString *status;
 	__unsafe_unretained NSString *type;
+	__unsafe_unretained NSString *uniqueId;
 } CDUsersAttributes;
 
 extern const struct CDUsersRelationships {
+	__unsafe_unretained NSString *dialogs;
 } CDUsersRelationships;
 
 extern const struct CDUsersFetchedProperties {
 } CDUsersFetchedProperties;
 
-
+@class CDDialog;
 
 
 
@@ -52,39 +52,11 @@ extern const struct CDUsersFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSNumber* externalUserId;
-
-
-
-@property int32_t externalUserIdValue;
-- (int32_t)externalUserIdValue;
-- (void)setExternalUserIdValue:(int32_t)value_;
-
-//- (BOOL)validateExternalUserId:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSString* fullName;
 
 
 
 //- (BOOL)validateFullName:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSNumber* id;
-
-
-
-@property int32_t idValue;
-- (int32_t)idValue;
-- (void)setIdValue:(int32_t)value_;
-
-//- (BOOL)validateId:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -120,6 +92,27 @@ extern const struct CDUsersFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSNumber* uniqueId;
+
+
+
+@property int32_t uniqueIdValue;
+- (int32_t)uniqueIdValue;
+- (void)setUniqueIdValue:(int32_t)value_;
+
+//- (BOOL)validateUniqueId:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) CDDialog *dialogs;
+
+//- (BOOL)validateDialogs:(id*)value_ error:(NSError**)error_;
+
+
+
+
 
 @end
 
@@ -136,26 +129,8 @@ extern const struct CDUsersFetchedProperties {
 
 
 
-- (NSNumber*)primitiveExternalUserId;
-- (void)setPrimitiveExternalUserId:(NSNumber*)value;
-
-- (int32_t)primitiveExternalUserIdValue;
-- (void)setPrimitiveExternalUserIdValue:(int32_t)value_;
-
-
-
-
 - (NSString*)primitiveFullName;
 - (void)setPrimitiveFullName:(NSString*)value;
-
-
-
-
-- (NSNumber*)primitiveId;
-- (void)setPrimitiveId:(NSNumber*)value;
-
-- (int32_t)primitiveIdValue;
-- (void)setPrimitiveIdValue:(int32_t)value_;
 
 
 
@@ -176,6 +151,20 @@ extern const struct CDUsersFetchedProperties {
 - (void)setPrimitiveType:(NSString*)value;
 
 
+
+
+- (NSNumber*)primitiveUniqueId;
+- (void)setPrimitiveUniqueId:(NSNumber*)value;
+
+- (int32_t)primitiveUniqueIdValue;
+- (void)setPrimitiveUniqueIdValue:(int32_t)value_;
+
+
+
+
+
+- (CDDialog*)primitiveDialogs;
+- (void)setPrimitiveDialogs:(CDDialog*)value;
 
 
 @end

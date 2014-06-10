@@ -5,15 +5,18 @@
 
 const struct CDMessagesAttributes CDMessagesAttributes = {
 	.attachFileId = @"attachFileId",
-	.body = @"body",
-	.id = @"id",
+	.datetime = @"datetime",
+	.recipientID = @"recipientID",
 	.roomId = @"roomId",
 	.senderId = @"senderId",
+	.senderNick = @"senderNick",
 	.state = @"state",
-	.time = @"time",
+	.text = @"text",
+	.uniqueId = @"uniqueId",
 };
 
 const struct CDMessagesRelationships CDMessagesRelationships = {
+	.chatDialog = @"chatDialog",
 };
 
 const struct CDMessagesFetchedProperties CDMessagesFetchedProperties = {
@@ -45,8 +48,8 @@ const struct CDMessagesFetchedProperties CDMessagesFetchedProperties = {
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
-	if ([key isEqualToString:@"idValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"id"];
+	if ([key isEqualToString:@"recipientIDValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"recipientID"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -74,33 +77,33 @@ const struct CDMessagesFetchedProperties CDMessagesFetchedProperties = {
 
 
 
-@dynamic body;
+@dynamic datetime;
 
 
 
 
 
 
-@dynamic id;
+@dynamic recipientID;
 
 
 
-- (int32_t)idValue {
-	NSNumber *result = [self id];
+- (int32_t)recipientIDValue {
+	NSNumber *result = [self recipientID];
 	return [result intValue];
 }
 
-- (void)setIdValue:(int32_t)value_ {
-	[self setId:[NSNumber numberWithInt:value_]];
+- (void)setRecipientIDValue:(int32_t)value_ {
+	[self setRecipientID:[NSNumber numberWithInt:value_]];
 }
 
-- (int32_t)primitiveIdValue {
-	NSNumber *result = [self primitiveId];
+- (int32_t)primitiveRecipientIDValue {
+	NSNumber *result = [self primitiveRecipientID];
 	return [result intValue];
 }
 
-- (void)setPrimitiveIdValue:(int32_t)value_ {
-	[self setPrimitiveId:[NSNumber numberWithInt:value_]];
+- (void)setPrimitiveRecipientIDValue:(int32_t)value_ {
+	[self setPrimitiveRecipientID:[NSNumber numberWithInt:value_]];
 }
 
 
@@ -140,6 +143,13 @@ const struct CDMessagesFetchedProperties CDMessagesFetchedProperties = {
 
 
 
+@dynamic senderNick;
+
+
+
+
+
+
 @dynamic state;
 
 
@@ -166,12 +176,23 @@ const struct CDMessagesFetchedProperties CDMessagesFetchedProperties = {
 
 
 
-@dynamic time;
+@dynamic text;
 
 
 
 
 
+
+@dynamic uniqueId;
+
+
+
+
+
+
+@dynamic chatDialog;
+
+	
 
 
 
