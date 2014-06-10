@@ -316,6 +316,9 @@
 
 - (void)chatDidReceiveMessage:(QBChatMessage *)message
 {
+    if (message.delayed) {
+        return;
+    }
     // handling invitations to chat:
     if (message.customParameters[@"xmpp_room_jid"] != nil) {
         
@@ -663,7 +666,7 @@
 {
     QBChatDialog *newDialog = [QBChatDialog new];
     newDialog.type = QBChatDialogTypePrivate;
-    newDialog.occupantIDs = @[ opponentID, [@([QMContactList shared].me.ID) stringValue]];  // occupant IDs: me & opponent
+    newDialog.occupantIDs = @[ opponentID];  // occupant ID
     [self updateDialog:newDialog forLastMessage:message];
     
     return newDialog;
