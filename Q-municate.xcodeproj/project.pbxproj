@@ -1701,10 +1701,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 869075CA2A3446469130768E /* Pods.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					armv7,
-					i386,
-				);
+				ARCHS = armv7;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Khomenko Igor (67859YS754)";
@@ -1740,10 +1737,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 869075CA2A3446469130768E /* Pods.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					armv7,
-					i386,
-				);
+				ARCHS = armv7;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
