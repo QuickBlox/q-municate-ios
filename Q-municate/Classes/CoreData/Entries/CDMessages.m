@@ -47,9 +47,12 @@
     if (message.attachments.count > 0) {
         
         NSMutableSet *attachments = [NSMutableSet setWithCapacity:message.attachments.count];
+        
+        NSManagedObjectContext *context = [self managedObjectContext];
+        
         for (QBChatAttachment *qbChatAttachment in message.attachments) {
             
-            CDAttachment *attachment = [CDAttachment MR_createEntity];
+            CDAttachment *attachment = [CDAttachment MR_createEntityInContext:context];
             [attachment updateWithQBChatAttachment:qbChatAttachment];
             [attachments addObject:attachment];
         }
