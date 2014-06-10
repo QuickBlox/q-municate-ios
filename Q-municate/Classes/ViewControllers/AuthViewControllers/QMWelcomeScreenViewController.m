@@ -59,8 +59,13 @@
     [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSError *error) {
         if (!success) {
             [QMUtilities removeIndicatorView];
+            [self showAlertWithMessage:error.description actionSuccess:NO];
             return;
         }
+        // remember me with facebook login:
+        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:kFBSessionRemembered];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
         // save me:
         [[QMContactList shared] setMe:user];
         if (user.blobID == 0 || user.website == nil) {
@@ -112,6 +117,22 @@
             [navigationController popToRootViewControllerAnimated:NO];
 		}
     }];
+}
+
+- (void)showAlertWithMessage:(NSString *)messageString actionSuccess:(BOOL)success
+{
+    NSString *title = nil;
+    if (success) {
+        title = kAlertTitleSuccessString;
+    } else {
+        title = kAlertTitleErrorString;
+    }
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:messageString
+                                                   delegate:self
+                                          cancelButtonTitle:kAlertButtonTitleOkString
+                                          otherButtonTitles:nil];
+    [alert show];
 }
 
 @end

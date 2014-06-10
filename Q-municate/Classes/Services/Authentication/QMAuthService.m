@@ -110,7 +110,7 @@
 - (void)authWithFacebookAndCompletionHandler:(QBAuthResultBlock)resultBlock
 {
 	if (![FBSession activeSession] || ![[FBSession activeSession].permissions count] || ![FBSession activeSession].isOpen) {
-		[[FBSession activeSession] closeAndClearTokenInformation];
+//		[[FBSession activeSession] closeAndClearTokenInformation];
 		[FBSession setActiveSession:[[FBSession alloc]initWithPermissions:@[@"basic_info", @"email", @"read_stream", @"publish_stream"]]];
 	}
     if ([FBSession activeSession].state == FBSessionStateCreated) {
@@ -121,6 +121,10 @@
                 resultBlock(nil, NO, error);
                 return;
             }
+            if (status == FBSessionStateClosed) {
+                return;
+            }
+            
             if (status == FBSessionStateOpen) {
                  NSString *token = session.accessTokenData.accessToken;
                 // request me from Facebook:
@@ -145,6 +149,10 @@
         }];
     } else if ([FBSession activeSession].state == FBSessionStateCreatedTokenLoaded) {
          [[FBSession activeSession] openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+             if (status == FBSessionStateClosed) {
+                 return;
+             }
+             
             // request me from Facebook:
             QMFacebookService *facebookService = [[QMFacebookService alloc] init];
             [facebookService loadMeWithCompletion:^(NSData *data, NSError *error) {

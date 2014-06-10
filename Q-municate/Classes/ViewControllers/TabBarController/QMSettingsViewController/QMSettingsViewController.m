@@ -67,6 +67,7 @@ typedef NS_ENUM(NSUInteger, QMPasswordCheckState) {
     // delete Email & Password:
     [userDefaults removeObjectForKey:kEmail];
     [userDefaults removeObjectForKey:kPassword];
+    [userDefaults removeObjectForKey:kFBSessionRemembered];
     
     [userDefaults synchronize];
 }

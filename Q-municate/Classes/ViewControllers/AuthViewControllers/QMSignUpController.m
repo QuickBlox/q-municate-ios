@@ -83,9 +83,8 @@
     
     [QMUtilities createIndicatorView];
     [[QMAuthService shared] signUpWithFullName:self.fullNameField.text email:self.emailField.text password:self.passwordField.text blobID:0 completion:^(QBUUser *user, BOOL success, NSError *error) {
-        
-        [QMUtilities removeIndicatorView];
         if (error) {
+            [QMUtilities removeIndicatorView];
             [self showAlertWithMessage:error.domain success:NO];
             return;
         }
@@ -102,26 +101,28 @@
 // **************** 
 - (void)loginWithUser:(QBUUser *)user afterLoadingImage:(UIImage *)image
 {
-    [QMUtilities createIndicatorView];
     [[QMAuthService shared] logInWithEmail:user.email password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSError *error) {
-        [QMUtilities removeIndicatorView];
+        if (!success) {
+            [QMUtilities removeIndicatorView];
+            [self showAlertWithMessage:error.description success:NO];
+            return;
+        }
         [self updateUser:user withAvatar:image];
     }];
 }
 
 - (void)loginWithUserWithoutImage:(QBUUser *)user
 {
-    [QMUtilities createIndicatorView];
     [[QMAuthService shared] logInWithEmail:user.email password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSError *error) {
-        [QMUtilities removeIndicatorView];
         if (!success) {
+            [QMUtilities removeIndicatorView];
+            [self showAlertWithMessage:error.description success:NO];
             return;
         }
         // save me:
         user.password = self.passwordField.text;
         [QMContactList shared].me = user;
         
-        [QMUtilities createIndicatorView];
         [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
             [QMUtilities removeIndicatorView];
             if (success) {
@@ -138,22 +139,19 @@
 
 - (void)updateUser:(QBUUser *)user withAvatar:(UIImage *)image
 {
-    [QMUtilities createIndicatorView];
     QMContent *content = [[QMContent alloc] init];
     [content loadImageForBlob:image named:user.email completion:^(QBCBlob *blob) {
-        [QMUtilities removeIndicatorView];
         //
-        [QMUtilities createIndicatorView];
         [[QMAuthService shared] updateUser:user withBlob:blob completion:^(QBUUser *user, BOOL success, NSError *error) {
-            [QMUtilities removeIndicatorView];
             if (!success) {
+                [QMUtilities removeIndicatorView];
+                [self showAlertWithMessage:error.description success:NO];
                 return;
             }
             user.password = self.passwordField.text;
             [QMContactList shared].me = user;
             
             // login to chat:
-            [QMUtilities createIndicatorView];
             [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
                 [QMUtilities removeIndicatorView];
                 if (success) {

@@ -146,9 +146,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)configureNavBarButtons
 {
-	BOOL isGroupChat = YES;
-
-	if (isGroupChat) {
+	if (self.chatDialog.type != QBChatDialogTypePrivate) {
 		UIButton *groupInfoButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		[groupInfoButton setFrame:CGRectMake(0, 0, 30, 40)];
 
@@ -173,7 +171,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 		UIBarButtonItem *videoCallBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:videoButton];
 		UIBarButtonItem *audioCallBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:audioButton];
-		self.navigationItem.rightBarButtonItems = @[audioCallBarButtonItem, videoCallBarButtonItem];
+		self.navigationItem.rightBarButtonItems = @[videoCallBarButtonItem,  audioCallBarButtonItem];
 	}
 }
 
@@ -381,7 +379,8 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 		BOOL isKeyboardShow = !(keyboardFrame.origin.y == [[UIScreen mainScreen] bounds].size.height);
 
-		NSInteger keyboardHeight = isKeyboardShow ? - keyboardFrame.size.height +49.0f: keyboardFrame.size.height -49.0f;
+		NSInteger keyboardHeight = isKeyboardShow ? - keyboardFrame.size.height : keyboardFrame.size.height;
+
         
 		[UIView animateWithDuration:animationDuration delay:0.0f options:animationCurve << 16 animations:^
 		{
@@ -392,6 +391,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 			[self.view layoutIfNeeded];
 
 		} completion:^(BOOL finished) {
+            [self.tableView reloadData];
             if ([self.chatHistory count] >2) {
                 [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.chatHistory count]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
             }
@@ -402,7 +402,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 #pragma mark - Nav Buttons Actions
 - (void)audioCallAction
 {
-	//
+	[[[UIAlertView alloc] initWithTitle:@"No Audio Calls yet" message:@"Coming soon" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
 }
 
 - (void)videoCallAction

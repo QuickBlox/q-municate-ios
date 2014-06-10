@@ -80,7 +80,7 @@
             return;
         }
         // remember me:
-        [self rememberMe:self.rememberMeSwitch.isOn];
+        [self rememberMe:self.rememberMeSwitch.isOn isFacebookSession:NO];
         
         user.password = self.passwordField.text;
         [QMContactList shared].me = user;
@@ -96,16 +96,23 @@
     [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSError *error) {
         if (!success) {
             [QMUtilities removeIndicatorView];
+            [self showAlertWithMessage:error.description actionSuccess:NO];
             return;
         }
+        // remember me:
+        [self rememberMe:self.rememberMeSwitch.isOn isFacebookSession:YES];
+        
         // save me:
         [[QMContactList shared] setMe:user];
                 
         if (user.blobID == 0) {
             [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
-                if (success) {
-                    [self logInToQuickbloxChatWithUser:user];
+                if (!success) {
+                    [QMUtilities removeIndicatorView];
+                    [self showAlertWithMessage:error.description actionSuccess:NO];
+                    return;
                 }
+                [self logInToQuickbloxChatWithUser:user];
             }];
             return;
         }
@@ -125,17 +132,25 @@
     }
 }
 
-- (void)rememberMe:(BOOL)isRemember
+- (void)rememberMe:(BOOL)isRemember isFacebookSession:(BOOL)isFacebookSession
 {
     if (isRemember) {
         [[NSUserDefaults standardUserDefaults] setObject:@(self.rememberMeSwitch.isOn) forKey:kRememberMe];
-        [[NSUserDefaults standardUserDefaults] setObject:self.emailField.text forKey:kEmail];
-        [[NSUserDefaults standardUserDefaults] setObject:self.passwordField.text forKey:kPassword];
+        
+        if (!isFacebookSession) {
+            [[NSUserDefaults standardUserDefaults] setObject:self.emailField.text forKey:kEmail];
+            [[NSUserDefaults standardUserDefaults] setObject:self.passwordField.text forKey:kPassword];
+        } else {
+            [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:kFBSessionRemembered];
+        }
+
         [[NSUserDefaults standardUserDefaults] synchronize];
     } else {
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:kRememberMe];
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:kEmail];
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPassword];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kFBSessionRemembered];
+        
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }

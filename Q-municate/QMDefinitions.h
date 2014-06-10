@@ -123,6 +123,7 @@ static NSString *const kInviteFriendCellIdentifier      = @"InviteFriendCell";
 static NSString *const kEmail       		= @"email";
 static NSString *const kPassword    		= @"password";
 static NSString *const kRememberMe  		= @"remember_me";
+static NSString *const kFBSessionRemembered = @"facebook_session_remembered";
 static NSString *const kUserStatusText   	= @"userStatusText";
 
 static NSString *const kChatLocalHistory	= @"chatLocalHistory";
