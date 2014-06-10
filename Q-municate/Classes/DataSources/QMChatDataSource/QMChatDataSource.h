@@ -14,5 +14,4 @@
 
 - (id)initWithHistoryArray:(NSArray *)chatDialogHistoryArray;
 
-- (void)addMessageToHistory:(QBChatMessage *)chatMessage;
 @end
