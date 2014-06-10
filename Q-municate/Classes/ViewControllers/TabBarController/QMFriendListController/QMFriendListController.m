@@ -44,9 +44,6 @@
     // set status bar color to white:
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
-    // send keep alive presence to load friends from Contact List:
-    [[QMChatService shared] sendPresence];
-    
     // load all dialogs:
     [self loadDialogs];
     

@@ -188,7 +188,9 @@
         block(nil, NO, result.errors[0]);
     };
     
-    [QBUsers usersWithIDs:stringOfIDs delegate:self context:Block_copy((__bridge void *)(resultBlock))];
+    PagedRequest *pagedRequest = [PagedRequest request];
+    pagedRequest.perPage = 100;
+    [QBUsers usersWithIDs:stringOfIDs pagedRequest:pagedRequest delegate:self context:Block_copy((__bridge void *)(resultBlock))];
 }
 
 - (void)retrieveUsersWithFacebookIDs:(NSArray *)facebookIDs usingBlock:(QBPagedUsersBlock)block
