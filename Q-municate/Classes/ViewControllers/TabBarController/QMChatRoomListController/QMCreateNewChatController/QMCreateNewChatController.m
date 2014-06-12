@@ -75,7 +75,7 @@ static CGFloat const rowHeight = 60.0;
     chatDialog.name = chatName;
     chatDialog.occupantIDs = usersIdArray;
     chatDialog.type = QBChatDialogTypeGroup;
-    [[QMChatService shared] createNewDialog:chatDialog withCompletion:^(QBChatDialog *dialog, NSError *error) {
+    [[QMChatService shared] createChatDialog:chatDialog withCompletion:^(QBChatDialog *dialog, NSError *error) {
         // save to dialogs dictionary:
         [QMChatService shared].allDialogsAsDictionary[dialog.roomJID] = dialog;
         [QMChatService shared].lastCreatedDialog = dialog;

@@ -277,12 +277,10 @@
 }
 
 
-#pragma mark - Chat
+#pragma mark - Chat Dialogs
 
-// ******************* GETTING DIALOGS ***************************
-- (void)fetchAllDialogsWithBlock:(void(^)(NSArray *dialogs, NSError *error))block
+- (void)fetchAllDialogsWithCompletion:(void(^)(NSArray *dialogs, NSError *error))completionHandler
 {
-    
     QBResultBlock resBlock = ^(Result *result) {
         if (result.success && [result isKindOfClass:[QBDialogsPagedResult class]]) {
             NSArray *dialogs = ((QBDialogsPagedResult *)result).dialogs;
@@ -290,14 +288,83 @@
             // load dialogs to dictionary:
             self.allDialogsAsDictionary = [self dialogsAsDictionaryFromDialogsArray:dialogs];
             
-            block(dialogs, nil);
+            completionHandler(dialogs, nil);
             return;
         }
-        block(nil, result.errors[0]);
+        completionHandler(nil, result.errors[0]);
     };
     [[QBChat instance] dialogsWithDelegate:self context:Block_copy((__bridge void *)(resBlock))];
-
+    
 }
+
+- (void)createChatDialog:(QBChatDialog *)chatDialog withCompletion:(QBChatDialogResultBlock)completionHandler
+{
+	 QBResultBlock resultBlock = ^(Result *result) {
+        if (result.success && [result isKindOfClass:[QBChatDialogResult class]]) {
+            QBChatDialog *chatDialog = ((QBChatDialogResult *)result).dialog;
+            completionHandler(chatDialog, nil);
+            return;
+        }
+         completionHandler(nil, result.errors[0]);
+     };
+    
+	[[QBChat instance] createDialog:chatDialog delegate:self context:Block_copy((__bridge void *)(resultBlock))];
+}
+
+- (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completionHandler
+{
+    NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
+    extendedRequest[@"name"] = dialogName;
+    
+    QBResultBlock resultBlock = ^(Result *result) {
+        if (result.success && [result isKindOfClass:[QBChatDialogResult class]]) {
+            QBChatDialog *chatDialog = ((QBChatDialogResult *)result).dialog;
+            completionHandler(chatDialog, nil);
+            return;
+        }
+        completionHandler(nil, result.errors[0]);
+    };
+    [[QBChat instance] updateDialogWithID:chatDialog.ID extendedRequest:extendedRequest delegate:self context:Block_copy((__bridge void *)(resultBlock))];
+}
+
+- (void)addUsers:(NSArray *)users toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completionHandler
+{
+    NSString *usersIDsAsString = [users stringFromArray];
+    
+    NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
+    extendedRequest[@"push[occupants_ids][]"] = usersIDsAsString;
+    
+    QBResultBlock resultBlock = ^(Result *result) {
+        if (result.success && [result isKindOfClass:[QBChatDialogResult class]]) {
+            QBChatDialog *chatDialog = ((QBChatDialogResult *)result).dialog;
+            completionHandler(chatDialog, nil);
+            return;
+        }
+        completionHandler(nil, result.errors[0]);
+    };
+    
+    [[QBChat instance] updateDialogWithID:chatDialog.ID extendedRequest:extendedRequest delegate:self context:Block_copy((__bridge void *)(resultBlock))];
+}
+
+- (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completionHandler
+{
+    NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
+    extendedRequest[@"pull_all[occupants_ids][]"] = [NSString stringWithFormat:@"%lu", (unsigned long)[QMContactList shared].me.ID];
+    
+    QBResultBlock resultBlock = ^(Result *result) {
+        if (result.success && [result isKindOfClass:[QBChatDialogResult class]]) {
+            QBChatDialog *chatDialog = ((QBChatDialogResult *)result).dialog;
+            completionHandler(chatDialog, nil);
+            return;
+        }
+        completionHandler(nil, result.errors[0]);
+    };
+    
+    [[QBChat instance] updateDialogWithID:chatDialog.ID extendedRequest:extendedRequest delegate:self context:Block_copy((__bridge void *)(resultBlock))];
+}
+
+
+#pragma mark - Chat
 
 - (void)joinRoomsForDialogs:(NSArray *)chatDialogs
 {
@@ -459,15 +526,10 @@
 
 #pragma mark - Group Chat
 
+
 - (void)joinRoomWithRoomJID:(NSString *)roomJID;
 {
 	[[QBChat instance] createOrJoinRoomWithJID:roomJID membersOnly:NO persistent:YES historyAttribute:@{@"maxstanzas":@"0"}];
-}
-
-- (void)createNewDialog:(QBChatDialog *)chatDialog withCompletion:(QBChatDialogResultBlock)block
-{
-	_chatDialogResultBlock = block;
-	[[QBChat instance] createDialog:chatDialog delegate:self];
 }
 
 - (void)getMessageHistoryWithDialogID:(NSString *)dialogIDString withCompletion:(void(^)(NSArray *messages, BOOL success, NSError *error))block
@@ -732,15 +794,7 @@
 
 - (void)completedWithResult:(Result *)result
 {
-	if (result.success && [result isKindOfClass:[QBChatDialogResult class]]) {
-		if (_chatDialogResultBlock) {
-			QBChatDialog *chatDialog = ((QBChatDialogResult *)result).dialog;
-			if (chatDialog) {
-				_chatDialogResultBlock(chatDialog, nil);
-				_chatDialogResultBlock = nil;
-			}
-		}
-	} else if ([result isKindOfClass:[QBChatHistoryMessageResult class]]) {
+    if ([result isKindOfClass:[QBChatHistoryMessageResult class]]) {
         
         if (result.success) {
             if (_chatDialogHistoryBlock) {

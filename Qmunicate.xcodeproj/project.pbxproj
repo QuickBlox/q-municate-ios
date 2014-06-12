@@ -71,6 +71,8 @@
 		55D270C41940B8D300238D50 /* QMModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 55D2708C1940B8D300238D50 /* QMModel.xcdatamodeld */; };
 		55D270C51940B8D300238D50 /* mogen.sh in Resources */ = {isa = PBXBuildFile; fileRef = 55D2708F1940B8D300238D50 /* mogen.sh */; };
 		55D270C61940B8D300238D50 /* mogend.sh in Resources */ = {isa = PBXBuildFile; fileRef = 55D270901940B8D300238D50 /* mogend.sh */; };
+		6903721F1949D1DE00B09515 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6903721E1949D1DE00B09515 /* Quickblox.framework */; };
+		69037223194A013700B09515 /* QMGroupDetailsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69037222194A013700B09515 /* QMGroupDetailsController.m */; };
 		69052799193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 69052798193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.m */; };
 		690A271518CA0F35003D6B80 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A271418CA0F35003D6B80 /* AddressBook.framework */; };
 		690D9692193DF16D00BC4C70 /* QMRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 690D9691193DF16D00BC4C70 /* QMRootViewController.m */; };
@@ -318,6 +320,9 @@
 		55D2708F1940B8D300238D50 /* mogen.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = mogen.sh; sourceTree = "<group>"; };
 		55D270901940B8D300238D50 /* mogend.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = mogend.sh; sourceTree = "<group>"; };
 		67976AC8FFE848A4B85EB2AF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		6903721E1949D1DE00B09515 /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quickblox.framework; path = External/Quickblox.framework; sourceTree = "<group>"; };
+		69037221194A013700B09515 /* QMGroupDetailsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMGroupDetailsController.h; path = QMGroupDetailsController/QMGroupDetailsController.h; sourceTree = "<group>"; };
+		69037222194A013700B09515 /* QMGroupDetailsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMGroupDetailsController.m; path = QMGroupDetailsController/QMGroupDetailsController.m; sourceTree = "<group>"; };
 		69052797193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+addQBUsersFromArray.h"; sourceTree = "<group>"; };
 		69052798193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableDictionary+addQBUsersFromArray.m"; sourceTree = "<group>"; };
 		690A271418CA0F35003D6B80 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
@@ -495,6 +500,7 @@
 				69CF189918AE1C52003262EF /* MobileCoreServices.framework in Frameworks */,
 				69CF189718AE1C49003262EF /* SystemConfiguration.framework in Frameworks */,
 				69CF189518AE1C3C003262EF /* CFNetwork.framework in Frameworks */,
+				6903721F1949D1DE00B09515 /* Quickblox.framework in Frameworks */,
 				69D15CC318AE1721001E0480 /* libz.dylib in Frameworks */,
 				69D15CC118AE1714001E0480 /* libresolv.dylib in Frameworks */,
 				69D15CBF18AE1708001E0480 /* libxml2.dylib in Frameworks */,
@@ -791,6 +797,15 @@
 			path = Scripts;
 			sourceTree = "<group>";
 		};
+		69037220194A00F800B09515 /* QMGroupDetailsController */ = {
+			isa = PBXGroup;
+			children = (
+				69037221194A013700B09515 /* QMGroupDetailsController.h */,
+				69037222194A013700B09515 /* QMGroupDetailsController.m */,
+			);
+			name = QMGroupDetailsController;
+			sourceTree = "<group>";
+		};
 		693808C919378DFC00BF926F /* QMContentPreviewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -1041,6 +1056,7 @@
 		69D57E5418ACC11C00A9900A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6903721E1949D1DE00B09515 /* Quickblox.framework */,
 				693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */,
 				693DC42518FFC45900AF46D9 /* libsqlite3.dylib */,
 				69DB5EF418E31D6400277226 /* MessageUI.framework */,
@@ -1206,6 +1222,7 @@
 		B71E0549190FAAF900DD6D34 /* QMChatViewController */ = {
 			isa = PBXGroup;
 			children = (
+				69037220194A00F800B09515 /* QMGroupDetailsController */,
 				693808C919378DFC00BF926F /* QMContentPreviewController */,
 				B71E054A190FAAF900DD6D34 /* QMChatViewController.h */,
 				B71E054B190FAAF900DD6D34 /* QMChatViewController.m */,
@@ -1540,6 +1557,7 @@
 				8DE8996F36A717BC50F4E17F /* QMSettingsDataSource.m in Sources */,
 				8DE8970036C1B4D33934449D /* QMNewChatDataSource.m in Sources */,
 				55D270931940B8D300238D50 /* QMDBStorage+Users.m in Sources */,
+				69037223194A013700B09515 /* QMGroupDetailsController.m in Sources */,
 				B71E055F190FAAF900DD6D34 /* QMVideoCallController.m in Sources */,
 				B71E0563190FAAF900DD6D34 /* QMFriendListController.m in Sources */,
 				55D270BC1940B8D300238D50 /* ClassicSQLiteMagicalRecordStack.m in Sources */,

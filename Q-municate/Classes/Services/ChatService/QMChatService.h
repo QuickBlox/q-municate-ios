@@ -43,14 +43,34 @@
 - (void)removeContactFromFriendsWithID:(NSUInteger)userID;
 
 
-#pragma mark - Chat
+#pragma mark - CHAT
 
-// ****************************** Dialogs **************************************
-- (void)fetchAllDialogsWithBlock:(void(^)(NSArray *dialogs, NSError *error))block;
-- (void)createNewDialog:(QBChatDialog *)chatDialog withCompletion:(QBChatDialogResultBlock)block;
+#pragma mark - Chat Dialogs
 
+/** Getting all dialogs you exist */
+- (void)fetchAllDialogsWithCompletion:(void(^)(NSArray *dialogs, NSError *error))completionHandler;
+
+/** Create new QBChatDialog instance */
+- (void)createChatDialog:(QBChatDialog *)chatDialog withCompletion:(QBChatDialogResultBlock)completionHandler;
+
+/** Changing name for QBChatDialog. Returns updated QBChatDialog */
+- (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completionHandler;
+
+/** Add users to dialog. Returns updated QBChatDialog */
+- (void)addUsers:(NSArray *)users toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completionHandler;
+
+/** Leave chat dialog. Returns QBChatDialog without your ID in occupantsIDs */
+- (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completionHandler;
+
+
+#pragma mark - Chat Messages & Rooms
+
+/** Send private message to user */
 - (void)sendMessage:(QBChatMessage *)message;
+
+/** Send group chat message to current room */
 - (void)sendMessage:(QBChatMessage *)message toRoom:(QBChatRoom *)chatRoom;
+
 - (void)sendInviteMessageToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog;
 - (void)sendContentMessage:(QMChatUploadingMessage *)message withBlob:(QBCBlob *)blob;
 - (void)joinRoomWithRoomJID:(NSString *)roomJID;

@@ -68,7 +68,7 @@
 - (void)loadDialogs
 {
     // load QBChatDialogs:
-    [[QMChatService shared] fetchAllDialogsWithBlock:^(NSArray *dialogs, NSError *error) {
+    [[QMChatService shared] fetchAllDialogsWithCompletion:^(NSArray *dialogs, NSError *error) {
         if (!error) {
             [[NSNotificationCenter defaultCenter] postNotificationName:kChatDialogsDidLoadedNotification object:nil];
         }

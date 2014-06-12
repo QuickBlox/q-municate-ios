@@ -35,6 +35,11 @@ typedef NS_ENUM(NSUInteger, QMLogLevel)
     QMLogLevelVerbose
 };
 
+typedef NS_ENUM(NSUInteger, QMMembersUpdateState) {
+    QMMembersUpdateStateNone,
+    QMMembersUpdateStateAdding,
+    QMMembersUpdateStateRemoving
+};
 
 //****************** Blocks *********************************
 typedef void (^QBResultBlock)(Result *result);
