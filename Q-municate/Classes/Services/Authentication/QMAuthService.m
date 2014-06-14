@@ -278,6 +278,8 @@
             [QMAuthService shared].isSessionCreated = YES;
         } else if ([result.answer isKindOfClass:[QBAAuthSessionDestroyAnswer class]]) {
             [QMAuthService shared].isSessionCreated = NO;
+        } else if ([result isKindOfClass:QBMRegisterSubscriptionTaskResult.class]) {
+            return;
         }
     }
     if (_resultBlock == nil) {

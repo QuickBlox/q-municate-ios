@@ -103,6 +103,9 @@
             user.password = password;
         }
         
+        // subscribe to push notification:
+        [[QMAuthService shared] subscribeToPushNotifications];
+        
         [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
             [QMUtilities removeIndicatorView];
             if (success) {
@@ -126,6 +129,9 @@
         }
         // save me:
         [[QMContactList shared] setMe:user];
+        
+        // subscribe to push notification:
+        [[QMAuthService shared] subscribeToPushNotifications];
         
         if (user.blobID == 0) {
             [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {

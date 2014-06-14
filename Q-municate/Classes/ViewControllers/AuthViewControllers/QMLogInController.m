@@ -85,6 +85,9 @@
         user.password = self.passwordField.text;
         [QMContactList shared].me = user;
         
+        // subscribe to push notification:
+        [[QMAuthService shared] subscribeToPushNotifications];
+        
         // login to chat:
         [self logInToQuickbloxChatWithUser:user];
     }];
@@ -104,7 +107,10 @@
         
         // save me:
         [[QMContactList shared] setMe:user];
-                
+        
+        // subscribe to push notification:
+        [[QMAuthService shared] subscribeToPushNotifications];
+        
         if (user.blobID == 0) {
             [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
                 if (!success) {

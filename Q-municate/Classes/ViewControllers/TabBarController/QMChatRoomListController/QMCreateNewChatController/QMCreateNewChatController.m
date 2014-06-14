@@ -200,19 +200,4 @@ static CGFloat const rowHeight = 60.0;
 	return YES;
 }
 
-// search bar find text
-//- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
-//{
-//	[self.dataSource emptyOtherUsersArray];
-//	self.searchIsActive = YES;
-//
-//	if ([searchText isEqualToString:kEmptyString]) {
-//		self.searchIsActive = NO;
-//		[self reloadFriendsList];
-//		return;
-//	}
-//	[self.dataSource updateFriendsArrayForSearchPhrase:searchText];
-//	[self.tableView reloadData];
-//}
-
 @end

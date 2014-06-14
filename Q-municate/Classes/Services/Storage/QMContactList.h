@@ -62,6 +62,10 @@
  */
 - (void)retrieveUsersWithFullName:(NSString *)fullName usingBlock:(QBPagedUsersBlock)block;
 
+/**
+ Retrieving users with IDs. Returns NSArray of QBUUser's
+ */
+- (void)retrieveUsersWithIDs:(NSArray *)IDs usingBlock:(QBPagedUsersBlock)block;
 
 /** 
  Clearing Contact list

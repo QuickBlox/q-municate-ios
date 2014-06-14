@@ -154,7 +154,7 @@
 
 - (void)cancelCall
 {
-    [self.activeStream finishCall];
+    [self.activeStream cancelCall];
 }
 
 - (void)finishCall
@@ -648,11 +648,6 @@
 	// You leaved room
 }
 
-- (void)chatRoomDidChangeOnlineUsers:(NSArray *)onlineUsers room:(NSString *)roomName
-{
-	//2
-}
-
 - (void)chatRoomDidReceiveListOfUsers:(NSArray *)users room:(NSString *)roomName
 {
     //
@@ -660,7 +655,7 @@
 
 - (void)chatRoomDidReceiveListOfOnlineUsers:(NSArray *)users room:(NSString *)roomName
 {
-    //
+    [[NSNotificationCenter defaultCenter] postNotificationName:kChatRoomDidChangeOnlineUsersList object:nil userInfo:@{@"online_users":users}];
 }
 
 

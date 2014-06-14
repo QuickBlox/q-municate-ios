@@ -52,6 +52,7 @@
 #endif
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     
     // Quickblox credentials
     [QBSettings setApplicationID:7232];
@@ -76,6 +77,11 @@
     [videoChatConfiguration setObject:@10 forKey:kQBVideoChatVideoFramesPerSecond];                                // frame per second
     [videoChatConfiguration setObject:@20 forKey:kQBVideoChatCallTimeout];                                         // call timeout
     [QBSettings setVideoChatConfiguration:videoChatConfiguration];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    NSLog(@"Push war received. User info: %@", userInfo);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

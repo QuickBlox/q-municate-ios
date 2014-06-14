@@ -123,6 +123,9 @@
         user.password = self.passwordField.text;
         [QMContactList shared].me = user;
         
+        // subscribe to push notification:
+        [[QMAuthService shared] subscribeToPushNotifications];
+        
         [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
             [QMUtilities removeIndicatorView];
             if (success) {
@@ -150,6 +153,9 @@
             }
             user.password = self.passwordField.text;
             [QMContactList shared].me = user;
+            
+            // subscribe to push notification:
+            [[QMAuthService shared] subscribeToPushNotifications];
             
             // login to chat:
             [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {

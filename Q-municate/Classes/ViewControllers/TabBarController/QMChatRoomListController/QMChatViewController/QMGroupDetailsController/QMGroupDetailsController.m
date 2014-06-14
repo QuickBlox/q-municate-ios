@@ -8,13 +8,18 @@
 
 #import "QMGroupDetailsController.h"
 #import <AsyncImageView.h>
+#import "QMGroupDetailsDataSource.h"
 
-@interface QMGroupDetailsController () <UITableViewDataSource, UITableViewDelegate>
+
+@interface QMGroupDetailsController () <UITableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet AsyncImageView *groupAvatarView;
 @property (weak, nonatomic) IBOutlet UILabel *groupNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *occupantsCountLabel;
 @property (weak, nonatomic) IBOutlet UILabel *onlineOccupantsCountLabel;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+
+@property (strong, nonatomic) QMGroupDetailsDataSource *dataSource;
 
 @end
 
@@ -28,7 +33,11 @@
     
     [self subscribeToChatNotifications];
     
-    // request online users:
+    // init data source for tableview:
+    self.dataSource = [[QMGroupDetailsDataSource alloc] initWithChatDialog:self.chatDialog tableView:self.tableView];
+    self.tableView.dataSource = self.dataSource;
+    
+    // request online users statuses:
     [self.chatRoom requestOnlineUsers];
     
     // show chat dialog getails on view:
@@ -69,18 +78,10 @@
 - (void)onlineUsersListChanged:(NSNotification *)notification
 {
     NSArray *onlineUsrList = notification.userInfo[@"online_users"];
-}
-
-#pragma mark - UITableViewDataSource
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return 0;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return nil;
+    
+    // update online participants count:
+    NSString *onlineUsersCountText = [NSString stringWithFormat:@"%lu/%lu online", (unsigned long)[onlineUsrList count], (unsigned long)[self.chatDialog.occupantIDs count]];
+    self.onlineOccupantsCountLabel.text = onlineUsersCountText;
 }
 
 @end

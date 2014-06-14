@@ -259,7 +259,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="65" id="cdx-on-7oD">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="VideoCallCell" rowHeight="65" id="cdx-on-7oD">
                                         <rect key="frame" x="0.0" y="197" width="320" height="65"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cdx-on-7oD" id="9aS-XM-dLh">
@@ -279,7 +279,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="65" id="Mhd-hZ-8rv">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="AudioCallCell" rowHeight="65" id="Mhd-hZ-8rv">
                                         <rect key="frame" x="0.0" y="262" width="320" height="65"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Mhd-hZ-8rv" id="LXS-p1-OkH">
@@ -299,7 +299,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="65" id="NZK-x3-urI">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChatCell" rowHeight="65" id="NZK-x3-urI">
                                         <rect key="frame" x="0.0" y="327" width="320" height="65"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="NZK-x3-urI" id="d96-Nz-xiR">
@@ -2227,6 +2227,11 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="W3J-kN-FVu">
+                                        <rect key="frame" x="0.0" y="135" width="320" height="1"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.76470595598220825" green="0.76470595598220825" blue="0.76470595598220825" alpha="1" colorSpace="deviceRGB"/>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
@@ -2254,7 +2259,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FriendsListCell" rowHeight="60" id="LCK-pC-hsn" customClass="QMFriendListCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="GroupDetailsCell" rowHeight="60" id="LCK-pC-hsn" customClass="QMGroupDetailsCell">
                                         <rect key="frame" x="0.0" y="22" width="320" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LCK-pC-hsn" id="AAh-sN-oBn">
@@ -2283,32 +2288,19 @@
                                                     <color key="textColor" red="0.58039218189999997" green="0.58039218189999997" blue="0.58039218189999997" alpha="1" colorSpace="deviceRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DcC-rF-Fct">
-                                                    <rect key="frame" x="277" y="0.0" width="43" height="59"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <state key="normal" image="add_friend">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="addToFriends:" destination="sR2-ys-LbL" eventType="touchUpInside" id="Cl3-Jg-orb"/>
-                                                    </connections>
-                                                </button>
-                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="wdn-w9-ehX">
-                                                    <rect key="frame" x="288" y="20" width="20" height="20"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </activityIndicatorView>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="addToFriendsButton" destination="DcC-rF-Fct" id="QS1-nY-3Dk"/>
-                                            <outlet property="fullName" destination="0Pu-bp-xEd" id="o0f-Bk-ql9"/>
-                                            <outlet property="indicatorView" destination="wdn-w9-ehX" id="NoC-1J-T9L"/>
-                                            <outlet property="lastActivity" destination="f2e-dV-iHy" id="rKO-AV-vCQ"/>
-                                            <outlet property="onlineCircle" destination="H4L-WX-mE7" id="OwI-gn-B7a"/>
-                                            <outlet property="userImage" destination="wES-an-arE" id="YLp-SO-h5x"/>
+                                            <outlet property="avatarView" destination="wES-an-arE" id="RtE-Gi-oKe"/>
+                                            <outlet property="fullNameLabel" destination="0Pu-bp-xEd" id="s0v-vt-JlX"/>
+                                            <outlet property="onlineCircle" destination="H4L-WX-mE7" id="kTU-m6-46I"/>
+                                            <outlet property="statusLabel" destination="f2e-dV-iHy" id="GBE-yX-ZuP"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="delegate" destination="Pbr-gf-Nnz" id="a8n-EM-JHa"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -2322,12 +2314,15 @@
                             <constraint firstItem="MCn-dd-abe" firstAttribute="leading" secondItem="LzP-d8-BC3" secondAttribute="leading" id="vSB-jM-XAK"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Group Details" id="RL1-RR-8fj"/>
+                    <navigationItem key="navigationItem" title="Group Details" id="RL1-RR-8fj">
+                        <barButtonItem key="rightBarButtonItem" image="add-participants" id="aRg-RO-SEj"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="groupAvatarView" destination="1Lq-TE-ZQ2" id="Jy6-sM-Bc1"/>
                         <outlet property="groupNameLabel" destination="FGa-35-6qB" id="y58-QA-h8h"/>
                         <outlet property="occupantsCountLabel" destination="92G-QK-rXf" id="UTD-6L-LRy"/>
                         <outlet property="onlineOccupantsCountLabel" destination="7eb-d0-xZ8" id="PWA-HG-vJj"/>
+                        <outlet property="tableView" destination="MCn-dd-abe" id="aNk-vq-PoZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ye0-93-wPS" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2384,6 +2379,7 @@
     </scenes>
     <resources>
         <image name="Fone" width="80" height="49"/>
+        <image name="add-participants" width="24" height="24"/>
         <image name="add_friend" width="24" height="24"/>
         <image name="answer" width="141" height="66"/>
         <image name="audiocall" width="23" height="23"/>

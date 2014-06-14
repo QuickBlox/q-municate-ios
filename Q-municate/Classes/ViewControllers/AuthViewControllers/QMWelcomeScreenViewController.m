@@ -66,6 +66,9 @@
         [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:kFBSessionRemembered];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
+        // subscribe to push notification:
+        [[QMAuthService shared] subscribeToPushNotifications];
+        
         // save me:
         [[QMContactList shared] setMe:user];
         if (user.blobID == 0 || user.website == nil) {

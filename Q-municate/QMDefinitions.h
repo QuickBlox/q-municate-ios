@@ -52,7 +52,6 @@ typedef void (^QBChatDialogHistoryBlock)(NSMutableArray *chatDialogHistoryArray,
 typedef void (^QBContactListBlock)(id object);
 typedef void (^QBContentBlock)(QBCBlob *blob);
 typedef void (^QBDataBlock)(id data);
-typedef void (^QBUsersBlock)(NSArray *users);
 
 typedef void(^QBPagedUsersBlock)(NSArray *users, BOOL success, NSError *error);
 typedef void(^FBCompletionBlock)(BOOL success, NSError *error);
@@ -121,6 +120,7 @@ static NSString *const kCallDidStartedByUserNotification = @"Call was started";
 static NSString *const kChatViewCellIdentifier          = @"ChatViewCell";
 static NSString *const kCreateChatCellIdentifier        = @"CreateChatCell";
 static NSString *const kFriendsListCellIdentifier       = @"FriendsListCell";
+static NSString *const kGroupDetailsCellIdentifier      = @"GroupDetailsCell";
 static NSString *const kContactListCellIdentifier       = @"contactsCell";
 static NSString *const kFacebookCellIdentifier          = @"facebookCell";
 static NSString *const kInviteFriendCellIdentifier      = @"InviteFriendCell";
