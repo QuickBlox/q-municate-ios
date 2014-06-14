@@ -70,6 +70,10 @@
     // load QBChatDialogs:
     [[QMChatService shared] fetchAllDialogsWithCompletion:^(NSArray *dialogs, NSError *error) {
         if (!error) {
+            
+            // join all group dialogs:
+            [[QMChatService shared] joinRoomsForDialogs:dialogs];
+            
             [[NSNotificationCenter defaultCenter] postNotificationName:kChatDialogsDidLoadedNotification object:nil];
         }
     }];

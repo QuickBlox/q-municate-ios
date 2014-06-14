@@ -20,6 +20,7 @@
 #import "QMChatUploadingMessage.h"
 #import "UIImage+Cropper.h"
 #import "QMContentPreviewController.h"
+#import "QMGroupDetailsController.h"
 #import "QMGroupContentCell.h"
 #import "QMDBStorage+Messages.h"
 
@@ -351,7 +352,13 @@ static CGFloat const kCellHeightOffset = 33.0f;
         contentController.contentImage = (UIImage *)sender;
         // needed public url also:
 #warning Need public url!
+    } else if ([segue.destinationViewController isKindOfClass:QMGroupDetailsController.class]) {
+        
+        ((QMGroupDetailsController *)segue.destinationViewController).chatDialog = self.chatDialog;
+        ((QMGroupDetailsController *)segue.destinationViewController).chatRoom = self.chatRoom;
     }
+    
+    
 }
 
 - (void)resetTableView
@@ -427,7 +434,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)groupInfoNavButtonAction
 {
-	//
+	[self performSegueWithIdentifier:kGroupDetailsSegueIdentifier sender:nil];
 }
 
 #pragma mark - Chat Notifications

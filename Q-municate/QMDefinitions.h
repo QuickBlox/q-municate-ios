@@ -75,6 +75,7 @@ static NSString *const kIncomingCallIdentifier        = @"IncomingCallIdentifier
 static NSString *const kProfileSegueIdentifier        = @"ProfileSegue";
 static NSString *const kCreateNewChatSegueIdentifier  = @"CreateNewChatSegue";
 static NSString *const kContentPreviewSegueIdentifier = @"ContentPreviewIdentifier";
+static NSString *const kGroupDetailsSegueIdentifier   = @"GroupDetailsSegue";
 
 //****************** Cell Identifiers  ********************
 static NSString *const kSettingsVCCellIdentifier                = @"SettingsCellIdentifier";
@@ -102,6 +103,8 @@ static NSString *const kChatDidFailWithError			= @"kChatDidFailWithError";
 static NSString *const kChatDidSendMessage				= @"kChatDidSendMessage";
 static NSString *const kChatRoomDidEnterNotification	= @"ChatRoomDidEnter";
 static NSString *const kChatRoomDidReceiveMessageNotification = @"ChatRoomDidReceiveMessage";
+static NSString *const kChatRoomDidChangeOnlineUsersList = @"OnlineUsersListChanged";
+
 static NSString *const kChatDialogsDidLoadedNotification = @"ChatDialogsLoaded";
 
 static NSString *const kChatRoomListUpdateNotification	= @"kChatRoomListUpdateNotification";

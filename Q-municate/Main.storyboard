@@ -1593,7 +1593,7 @@
                         <barButtonItem key="rightBarButtonItem" image="ic_info_top" id="cE7-SH-Uub">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
-                                <segue destination="Pbr-gf-Nnz" kind="push" id="VWP-Ij-nCp"/>
+                                <segue destination="Pbr-gf-Nnz" kind="push" identifier="GroupDetailsSegue" id="VWP-Ij-nCp"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -2182,7 +2182,7 @@
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FC Metalist" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FGa-35-6qB">
-                                        <rect key="frame" x="116" y="25" width="142" height="21"/>
+                                        <rect key="frame" x="116" y="25" width="184" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="ydb-le-ubl"/>
@@ -2238,7 +2238,7 @@
                                     <constraint firstAttribute="trailing" secondItem="92G-QK-rXf" secondAttribute="trailing" constant="62" id="OLA-S9-ISh"/>
                                     <constraint firstItem="92G-QK-rXf" firstAttribute="top" secondItem="d5o-vd-nnk" secondAttribute="top" constant="48" id="V99-El-cgu"/>
                                     <constraint firstItem="iFR-XQ-AlR" firstAttribute="top" secondItem="d5o-vd-nnk" secondAttribute="top" constant="93" id="Vpd-W4-3ul"/>
-                                    <constraint firstAttribute="trailing" secondItem="FGa-35-6qB" secondAttribute="trailing" constant="62" id="WWc-1K-3UN"/>
+                                    <constraint firstAttribute="trailing" secondItem="FGa-35-6qB" secondAttribute="trailing" constant="20" id="WWc-1K-3UN"/>
                                     <constraint firstItem="iFR-XQ-AlR" firstAttribute="leading" secondItem="d5o-vd-nnk" secondAttribute="leading" constant="20" id="WtS-k9-qUv"/>
                                     <constraint firstItem="sbb-sd-Onn" firstAttribute="leading" secondItem="d5o-vd-nnk" secondAttribute="leading" constant="96" id="Xvz-Tw-4Ov"/>
                                     <constraint firstItem="sbb-sd-Onn" firstAttribute="top" secondItem="d5o-vd-nnk" secondAttribute="top" constant="103" id="Zny-MU-8Yb"/>

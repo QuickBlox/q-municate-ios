@@ -25,6 +25,14 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    [self subscribeToChatNotifications];
+    
+    // request online users:
+    [self.chatRoom requestOnlineUsers];
+    
+    // show chat dialog getails on view:
+    [self showQBChatDialogDetails:self.chatDialog];
 }
 
 - (void)didReceiveMemoryWarning
@@ -37,11 +45,30 @@
 {
     if (chatDialog != nil && chatDialog.type == QBChatDialogTypeGroup) {
         
-        // set group name
+        // set group name:
         self.groupNameLabel.text = chatDialog.name;
         
-        // 
+        // numb of participants:
+        NSString *occupantsCountText = [NSString stringWithFormat:@"%lu participants", (unsigned long)[self.chatDialog.occupantIDs count]];
+        self.occupantsCountLabel.text = occupantsCountText;
+        
+        // default online participants counts:
+        NSString *onlineUsersCountText = [NSString stringWithFormat:@"0/%lu online", (unsigned long)[self.chatDialog.occupantIDs count]];
+        self.onlineOccupantsCountLabel.text = onlineUsersCountText;
     }
+}
+
+- (void)subscribeToChatNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineUsersListChanged:) name:kChatRoomDidChangeOnlineUsersList object:nil];
+}
+
+
+#pragma mark - Notifications
+
+- (void)onlineUsersListChanged:(NSNotification *)notification
+{
+    NSArray *onlineUsrList = notification.userInfo[@"online_users"];
 }
 
 #pragma mark - UITableViewDataSource

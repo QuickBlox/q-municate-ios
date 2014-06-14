@@ -378,7 +378,6 @@
             continue;
         }
         [self joinRoomWithRoomJID:dialog.roomJID];
-    
     }
 }
 
@@ -526,10 +525,15 @@
 
 #pragma mark - Group Chat
 
-
 - (void)joinRoomWithRoomJID:(NSString *)roomJID;
 {
-	[[QBChat instance] createOrJoinRoomWithJID:roomJID membersOnly:NO persistent:YES historyAttribute:@{@"maxstanzas":@"0"}];
+    QBChatRoom *chatRoom = [[QBChatRoom alloc] initWithRoomJID:roomJID];
+    [chatRoom joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
+    
+    if (self.allChatRoomsAsDictionary == nil) {
+        self.allChatRoomsAsDictionary = [NSMutableDictionary new];
+    }
+    self.allChatRoomsAsDictionary[chatRoom.JID] = chatRoom;
 }
 
 - (void)getMessageHistoryWithDialogID:(NSString *)dialogIDString withCompletion:(void(^)(NSArray *messages, BOOL success, NSError *error))block
@@ -617,21 +621,16 @@
 
 - (void)chatRoomDidReceiveInformation:(NSDictionary *)information room:(NSString *)roomName
 {
-
+    //
 }
 
 - (void)chatRoomDidCreate:(NSString *)roomName
 {
-
+    //
 }
 
 - (void)chatRoomDidEnter:(QBChatRoom *)room
 {
-    if (self.allChatRoomsAsDictionary == nil) {
-        self.allChatRoomsAsDictionary = [NSMutableDictionary new];
-    }
-    self.allChatRoomsAsDictionary[room.JID] = room;
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:kChatRoomDidEnterNotification object:nil];
 }
 
@@ -646,12 +645,7 @@
 
 - (void)chatRoomDidLeave:(NSString *)roomName
 {
-	//3
-}
-
-- (void)chatRoomDidDestroy:(NSString *)roomName
-{
-
+	// You leaved room
 }
 
 - (void)chatRoomDidChangeOnlineUsers:(NSArray *)onlineUsers room:(NSString *)roomName
@@ -661,12 +655,12 @@
 
 - (void)chatRoomDidReceiveListOfUsers:(NSArray *)users room:(NSString *)roomName
 {
-
+    //
 }
 
 - (void)chatRoomDidReceiveListOfOnlineUsers:(NSArray *)users room:(NSString *)roomName
 {
-
+    //
 }
 
 
