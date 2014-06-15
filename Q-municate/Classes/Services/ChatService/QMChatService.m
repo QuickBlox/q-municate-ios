@@ -154,7 +154,7 @@
 
 - (void)cancelCall
 {
-    [self.activeStream cancelCall];
+    [self.activeStream finishCall];
 }
 
 - (void)finishCall
@@ -272,7 +272,11 @@
     } else if ([status isEqualToString:kStopVideoChatCallStatus_BadConnection]) {
         stopCallReason = kStopVideoChatCallStatus_BadConnection;
     }
-               
+    
+    if (status == nil) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kCallWasStoppedNotification object:nil userInfo:nil];
+        return;
+    }
     [[NSNotificationCenter defaultCenter] postNotificationName:kCallWasStoppedNotification object:nil userInfo:@{@"reason":stopCallReason}];
 }
 

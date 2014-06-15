@@ -7,6 +7,7 @@
 //
 
 #import "QMChatViewController.h"
+#import "QMVideoCallController.h"
 #import "QMChatViewCell.h"
 #import "QMChatDataSource.h"
 #import "QMContactList.h"
@@ -356,8 +357,13 @@ static CGFloat const kCellHeightOffset = 33.0f;
         
         ((QMGroupDetailsController *)segue.destinationViewController).chatDialog = self.chatDialog;
         ((QMGroupDetailsController *)segue.destinationViewController).chatRoom = self.chatRoom;
+        
+    } else if ([segue.destinationViewController isKindOfClass:QMVideoCallController.class]) {
+        QMVideoCallController *videoCallVC = (QMVideoCallController *)segue.destinationViewController;
+        videoCallVC.videoEnabled = YES;         // video call
+        videoCallVC.opponent = self.opponent;
+        
     }
-    
     
 }
 
@@ -429,7 +435,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)videoCallAction
 {
-	//
+	[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil];
 }
 
 - (void)groupInfoNavButtonAction

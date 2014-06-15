@@ -21,26 +21,26 @@
     return self;
 }
 
-- (void)updateFriendsArray:(void (^)(BOOL isEmpty))block
+- (BOOL)updateFriendsArrayAndCheckForEmpty
 {
-    self.friendsArray = [[[QMContactList shared].friendsAsDictionary allValues] mutableCopy];
+    NSMutableArray *usersArray = [[[QMContactList shared].friendsAsDictionary allValues] mutableCopy];
+    self.friendsArray = [self sortUsersByFullname:usersArray];
     if ([self.friendsArray count] == 0) {
         [QMContactList shared].friendsAsDictionary = [NSMutableDictionary new];
-        block(YES);
-    } else {
-        block(NO);
+        return YES;
     }
+    return NO;
 }
 
-- (void)updateSearchedUsersArray:(void(^)(BOOL isEmpty))block
+- (BOOL)updateSearchedUsersArrayAndCheckForEmpty
 {
-    self.otherUsersArray = [[[QMContactList shared].searchedUsers allValues] mutableCopy];
+    NSMutableArray *usersArray = [[[QMContactList shared].searchedUsers allValues] mutableCopy];
+    self.otherUsersArray = [self sortUsersByFullname:usersArray];
     if ([self.otherUsersArray count] == 0) {
         [QMContactList shared].searchedUsers = [NSMutableDictionary new];
-        block(YES);
-    } else {
-        block(NO);
+        return YES;
     }
+    return NO;
 }
 
 - (void)updateFriendsArrayForSearchPhrase:(NSString *)searchPhraseString
@@ -74,5 +74,15 @@
     }
     return YES;
 }
+
+- (NSMutableArray *)sortUsersByFullname:(NSArray *)users
+{
+    __block NSArray *sortedUsers = nil;
+  
+        NSSortDescriptor *fullNameDescriptor = [[NSSortDescriptor alloc] initWithKey:@"fullName" ascending:YES];
+       sortedUsers = [users sortedArrayUsingDescriptors:@[fullNameDescriptor]];
+    return [sortedUsers mutableCopy];
+}
+
 
 @end

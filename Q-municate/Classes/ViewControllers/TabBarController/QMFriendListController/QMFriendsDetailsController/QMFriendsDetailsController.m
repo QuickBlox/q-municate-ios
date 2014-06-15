@@ -10,18 +10,24 @@
 #import "UIImageView+ImageWithBlobID.h"
 #import "QMVideoCallController.h"
 #import "QMChatViewController.h"
+#import "QMFriendsDetailsDataSource.h"
+#import "QMPhoneNumberCell.h"
 #import "QMContactList.h"
 #import "QMUtilities.h"
 #import "QMChatService.h"
+
+
+static CGFloat kCellHeight = 65.0f;
 
 @interface QMFriendsDetailsController () <UIActionSheetDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *userAvatar;
 @property (weak, nonatomic) IBOutlet UILabel *fullName;
 @property (weak, nonatomic) IBOutlet UILabel *userDetails;
-
 @property (weak, nonatomic) IBOutlet UILabel *status;
 @property (weak, nonatomic) IBOutlet UIImageView *onlineCircle;
+
+@property (strong, nonatomic) QMFriendsDetailsDataSource *dataSource;
 
 @end
 
@@ -38,6 +44,8 @@
     
 	self.userAvatar.image = self.userPhotoImage;
     self.fullName.text = self.currentFriend.fullName;
+    
+    self.dataSource = [[QMFriendsDetailsDataSource alloc] initWithUser:self.currentFriend];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -80,26 +88,60 @@
 }
 
 
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [self.dataSource cellIdentifiersCount];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // getting current cell identifier:
+    NSString *CellIdentifier = [self.dataSource cellIdentifierAtIndexPath:indexPath];
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if ([cell isKindOfClass:QMPhoneNumberCell.class]) {
+        ((QMPhoneNumberCell *)cell).phoneNumbLabel.text = self.currentFriend.phone;
+    }
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return kCellHeight;
+}
+
+
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row == 1) {
-        [self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:indexPath];
-    } else if (indexPath.row == 2) {
-        [self showAlertWithMessage:@"Comming soon"];
-    } else if (indexPath.row == 3) {
-        [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:indexPath];
+    
+    NSString *CellIdentifier = [self.dataSource cellIdentifierAtIndexPath:indexPath];
+    
+    if ([CellIdentifier isEqualToString:QMPhoneNumberCellIdentifier]) {
+        //
+    } else if ([CellIdentifier isEqualToString:QMVideoCallCellIdentifier]) {
+        [self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:CellIdentifier];
+    } else if ([CellIdentifier isEqualToString:QMAudioCallCellIdentifier]) {
+        [self showAlertWithMessage:@"Coming soon"];
+    } else if ([CellIdentifier isEqualToString:QMChatCellIdentifier]) {
+        [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:CellIdentifier];
     }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSIndexPath *currentPath = (NSIndexPath *)sender;
+    NSString *currentCellIdentifier = (NSString *)sender;
     
-    // if chat
-    if (currentPath.row == 3) {
+    if ([currentCellIdentifier isEqualToString:QMPhoneNumberCellIdentifier]) {
+        return;
+    }
+    
+    // if chat:
+    if ([currentCellIdentifier isEqualToString:QMChatCellIdentifier]) {
         QMChatViewController *chatController = (QMChatViewController *)segue.destinationViewController;
         QBChatDialog *dialog = [[QMChatService shared] chatDialogForFriendWithID:self.currentFriend.ID];
         chatController.chatDialog = dialog;
@@ -109,9 +151,10 @@
         return;
     }
     
-    if (currentPath.row == 1) {
+    // if audio or video call:
+    if ([currentCellIdentifier isEqualToString:QMVideoCallCellIdentifier]) {
         ((QMVideoCallController *)segue.destinationViewController).videoEnabled = YES;
-    } else if (currentPath.row == 2) {
+    } else if ([currentCellIdentifier isEqualToString:QMAudioCallCellIdentifier]) {
         ((QMVideoCallController *)segue.destinationViewController).videoEnabled = NO;
     }
     ((QMVideoCallController *)segue.destinationViewController).opponent = self.currentFriend;

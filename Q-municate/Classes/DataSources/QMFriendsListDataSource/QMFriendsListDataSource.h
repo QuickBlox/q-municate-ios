@@ -12,9 +12,12 @@
 @property (strong, nonatomic) NSMutableArray *friendsArray;
 @property (strong, nonatomic) NSMutableArray *otherUsersArray;
 
-- (void)updateFriendsArray:(void (^)(BOOL isEmpty))block;
 
-- (void)updateSearchedUsersArray:(void (^)(BOOL isEmpty))block;
+/** If returns YES - it means that array is empty, if NO - not empty */
+- (BOOL)updateFriendsArrayAndCheckForEmpty;
+
+/** If returns YES - it means that array is empty, if NO - not empty */
+- (BOOL)updateSearchedUsersArrayAndCheckForEmpty;
 
 - (void)updateFriendsArrayForSearchPhrase:(NSString *)searchPhraseString;
 

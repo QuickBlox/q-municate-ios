@@ -141,6 +141,7 @@
 		69D57E6818ACC11C00A9900A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69D57E6718ACC11C00A9900A /* Images.xcassets */; };
 		69D57E8518ACC13100A9900A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 69D57E8418ACC13100A9900A /* Main.storyboard */; };
 		69DB5EF518E31D6400277226 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69DB5EF418E31D6400277226 /* MessageUI.framework */; };
+		69DF2D4E194D91B800E8E80F /* QMFriendsDetailsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 69DF2D4D194D91B800E8E80F /* QMFriendsDetailsDataSource.m */; };
 		69E48F98193393FD009B5F6D /* NSArray+ArrayToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E48F97193393FD009B5F6D /* NSArray+ArrayToString.m */; };
 		69EB283B18E9692D00620A01 /* QMChatListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69EB283A18E9692D00620A01 /* QMChatListCell.m */; };
 		8DE8940607F20EA727C3D195 /* QMChatDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE89E678171D28A1CC3E0CA /* QMChatDataSource.m */; };
@@ -435,6 +436,8 @@
 		69D57E6E18ACC11C00A9900A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		69D57E8418ACC13100A9900A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		69DB5EF418E31D6400277226 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		69DF2D4C194D91B800E8E80F /* QMFriendsDetailsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMFriendsDetailsDataSource.h; path = Classes/DataSources/QMGroupDetailsDataSource/QMFriendsDetailsDataSource/QMFriendsDetailsDataSource.h; sourceTree = "<group>"; };
+		69DF2D4D194D91B800E8E80F /* QMFriendsDetailsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMFriendsDetailsDataSource.m; path = Classes/DataSources/QMGroupDetailsDataSource/QMFriendsDetailsDataSource/QMFriendsDetailsDataSource.m; sourceTree = "<group>"; };
 		69E48F96193393FD009B5F6D /* NSArray+ArrayToString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+ArrayToString.h"; sourceTree = "<group>"; };
 		69E48F97193393FD009B5F6D /* NSArray+ArrayToString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+ArrayToString.m"; sourceTree = "<group>"; };
 		69EB283918E9692D00620A01 /* QMChatListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatListCell.h; sourceTree = "<group>"; };
@@ -1130,9 +1133,19 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		69DF2D4B194D913D00E8E80F /* QMFriendsDetailsDataSource */ = {
+			isa = PBXGroup;
+			children = (
+				69DF2D4C194D91B800E8E80F /* QMFriendsDetailsDataSource.h */,
+				69DF2D4D194D91B800E8E80F /* QMFriendsDetailsDataSource.m */,
+			);
+			name = QMFriendsDetailsDataSource;
+			sourceTree = "<group>";
+		};
 		69EB283C18E971B300620A01 /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
+				69DF2D4B194D913D00E8E80F /* QMFriendsDetailsDataSource */,
 				69C43C8E194C4B4D007E7DAF /* QMGroupDetailsDataSource */,
 				8DE89C2A54B6D7C4A9964D32 /* QMChatDataSource */,
 				8DE89CDB6378EF1EFB424A6B /* QMFriendsListDataSource */,
@@ -1553,6 +1566,7 @@
 				55D270C31940B8D300238D50 /* SQLiteWithSavingContextMagicalRecordStack.m in Sources */,
 				55D270BB1940B8D300238D50 /* AutoMigratingWithSourceAndTargetModelMagicalRecordStack.m in Sources */,
 				55D270B21940B8D300238D50 /* NSError+MagicalRecordErrorHandling.m in Sources */,
+				69DF2D4E194D91B800E8E80F /* QMFriendsDetailsDataSource.m in Sources */,
 				8DE8961214595987DBFCA807 /* QMInviteFriendsDataSource.m in Sources */,
 				55D270AF1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalRecord.m in Sources */,
 				55D270B51940B8D300238D50 /* MagicalRecord+Options.m in Sources */,

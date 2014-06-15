@@ -51,6 +51,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fillTableView) name:kFriendsReloadedNotification object:nil];
 }
 
+- (void)dealloc
+{
+    //
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -162,10 +167,11 @@
             // convert array of users to dictionary and add to QMContactList:
             [QMContactList shared].searchedUsers = [[QMContactList shared] friendsAsDictionaryFromFriendsArray:users];
             
-            [self.dataSource updateSearchedUsersArray:^(BOOL isEmpty) {
+            if (![self.dataSource updateSearchedUsersArrayAndCheckForEmpty]) {
                 self.tableView.tableFooterView = nil;
                 [self.tableView reloadData];
-            }];
+            }
+
         } else {
             UIButton *globalSearchButton = (UIButton *)[self.tableView.tableFooterView viewWithTag:kSearchGlobalButtonTag];
             globalSearchButton.hidden = YES;
@@ -192,6 +198,8 @@
     if (self.searchBar != nil) {
         return;
     }
+    self.searchIsActive = YES;
+    
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 20, 320, 44)];
     self.searchBar.delegate = self;
 	self.searchBar.placeholder = kSearchFriendPlaceholdeString;
@@ -241,6 +249,7 @@
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
 {
+    [self createNoResultsFooterViewWithButton:YES];
     return YES;
 }
 
@@ -255,13 +264,7 @@
 {
     [self createNoResultsFooterViewWithButton:YES];
     [self.dataSource emptyOtherUsersArray];
-    self.searchIsActive = YES;
 
-    if ([searchText isEqualToString:kEmptyString]) {
-        self.searchIsActive = NO;
-        [self reloadFriendsList];
-        return;
-    }
     [self.dataSource updateFriendsArrayForSearchPhrase:searchText];
     [self.tableView reloadData];
 }
@@ -276,14 +279,12 @@
 
 - (void)updateDataSource
 {
-    [self.dataSource updateFriendsArray:^(BOOL isEmpty) {
-        if (isEmpty) {
+    if ([self.dataSource updateFriendsArrayAndCheckForEmpty]) {;
             [self createNoResultsFooterViewWithButton:NO];
         } else {
 			[self.tableView setTableFooterView:[[UIView alloc] init]];
 		}
-        [self.tableView reloadData];
-    }];
+    [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDataSource

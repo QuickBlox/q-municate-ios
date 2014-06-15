@@ -52,6 +52,11 @@
 
 
 /**
+ Request for all QBUUsers from Quickblox. Max users = 100 per page. Returns NSArray of QBUUser's
+ */
+- (void)retrieAllUsersUsingBlock:(QBPagedUsersBlock)block;
+
+/**
  Retrieving user for user id. Returns QBUUser
  */
 - (void)retrieveUserWithID:(NSUInteger)userID completion:(void(^)(QBUUser *user, NSError *error))completion;

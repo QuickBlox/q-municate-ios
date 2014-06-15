@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+// ********** FRIENDS DETAILS IDENTIFIERS *************
+static NSString *const QMPhoneNumberCellIdentifier  = @"PhoneNumberCell";
+static NSString *const QMVideoCallCellIdentifier    = @"VideoCallCell";
+static NSString *const QMAudioCallCellIdentifier    = @"AudioCallCell";
+static NSString *const QMChatCellIdentifier         = @"ChatCell";
+
+
 @interface QMFriendsDetailsController : UITableViewController
 
 @property (strong, nonatomic) QBUUser *currentFriend;

@@ -178,7 +178,7 @@
 {
     [self activeStreamInit];
     
-    [[QMChatService shared] acceptCallFromUser:self.opponentID withVideo:self.videoEnabled customParams:[QMChatService shared].customParams];
+    [[QMChatService shared] acceptCallFromUser:self.opponent.ID withVideo:self.videoEnabled customParams:[QMChatService shared].customParams];
     
     //UI:
     [self configureCallUIForAcceptedCall];

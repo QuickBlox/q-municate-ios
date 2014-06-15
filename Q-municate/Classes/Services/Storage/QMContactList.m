@@ -141,6 +141,22 @@
 
 //**************************** API *********************************
 
+- (void)retrieAllUsersUsingBlock:(QBPagedUsersBlock)block
+{
+    QBResultBlock resultBlock = ^(Result *result) {
+        if (result.success && [result isKindOfClass:QBUUserPagedResult.class]) {
+            NSArray *users = ((QBUUserPagedResult *)result).users;
+            block(users, YES, nil);
+            return;
+        }
+        block(nil, NO, result.errors[0]);
+    };
+    PagedRequest *pagedRequest = [PagedRequest request];
+    pagedRequest.perPage = 100;
+    
+    [QBUsers usersWithPagedRequest:pagedRequest delegate:self context:Block_copy((__bridge void *)(resultBlock))];
+}
+
 - (void)retrieveUsersWithFullName:(NSString *)fullName usingBlock:(QBPagedUsersBlock)block
 {
     QBResultBlock resultBlock = ^(Result *result) {
