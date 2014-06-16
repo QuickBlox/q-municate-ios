@@ -21,6 +21,8 @@
     return self;
 }
 
+
+// TODO: Refactor Datasource
 - (BOOL)updateFriendsArrayAndCheckForEmpty
 {
     NSMutableArray *usersArray = [[[QMContactList shared].friendsAsDictionary allValues] mutableCopy];
@@ -46,6 +48,11 @@
 - (void)updateFriendsArrayForSearchPhrase:(NSString *)searchPhraseString
 {
     //TODO: try setArray - that is more optimised
+    if ([searchPhraseString isEqualToString:kEmptyString]) {
+        [self.friendsArray setArray:[[QMContactList shared].friendsAsDictionary allValues]];
+        return;
+    }
+    
     NSMutableArray *searchedUsers = [self searchText:searchPhraseString inArray:[[QMContactList shared].friendsAsDictionary allValues]];
     [self.friendsArray setArray:searchedUsers];
 }
@@ -77,10 +84,9 @@
 
 - (NSMutableArray *)sortUsersByFullname:(NSArray *)users
 {
-    __block NSArray *sortedUsers = nil;
-  
-        NSSortDescriptor *fullNameDescriptor = [[NSSortDescriptor alloc] initWithKey:@"fullName" ascending:YES];
-       sortedUsers = [users sortedArrayUsingDescriptors:@[fullNameDescriptor]];
+    NSArray *sortedUsers = nil;
+    NSSortDescriptor *fullNameDescriptor = [[NSSortDescriptor alloc] initWithKey:@"fullName" ascending:YES];
+    sortedUsers = [users sortedArrayUsingDescriptors:@[fullNameDescriptor]];
     return [sortedUsers mutableCopy];
 }
 

@@ -263,8 +263,7 @@
 - (void)showNavDoneButton
 {
 	UIButton *doneButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 36)];
-	[doneButton setTitle:kButtonTitleDoneString forState:UIControlStateNormal];
-	[doneButton setTitle:kButtonTitleDoneString forState:UIControlStateHighlighted];
+	[doneButton setTitle:kButtonTitleSaveString forState:UIControlStateNormal];
 	[doneButton addTarget:self action:@selector(hideNumKeyboard) forControlEvents:UIControlEventTouchUpInside];
 	UIBarButtonItem *doneBarButton = [[UIBarButtonItem alloc] initWithCustomView:doneButton];
 	[self.navigationItem setRightBarButtonItems:@[doneBarButton]];

@@ -1282,10 +1282,11 @@
 			isa = PBXGroup;
 			children = (
 				69DF2D4B194D913D00E8E80F /* QMFriendsDetailsDataSource */,
+				8DE89CDB6378EF1EFB424A6B /* QMFriendsListDataSource */,
 				69C43C8E194C4B4D007E7DAF /* QMGroupDetailsDataSource */,
 				8DE89CDB6378EF1EFB424A6B /* QMFriendsListDataSource */,
+				8DE89C2A54B6D7C4A9964D32 /* QMChatDataSource */,
 				8DE89198A999DDE0830B3D47 /* QMInviteFriendsDataSource */,
-				8DE893083B15EA49F4B76D86 /* QMChatsControllerDataSource */,
 				8DE89260911FC2CEB185C3DC /* QMSettingsDataSource */,
 				8DE89A11637E90ABE0150406 /* QMNewChatDataSource */,
 			);
@@ -1295,6 +1296,7 @@
 		8DE89198A999DDE0830B3D47 /* QMInviteFriendsDataSource */ = {
 			isa = PBXGroup;
 			children = (
+				8DE893083B15EA49F4B76D86 /* QMChatsControllerDataSource */,
 				8DE89F0E1E6AC0060A32D5A4 /* QMInviteFriendsDataSource.h */,
 				8DE891AC48A8796625A26943 /* QMInviteFriendsDataSource.m */,
 			);
@@ -1949,7 +1951,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = Qmunicate;
-				PROVISIONING_PROFILE = "BC829C9B-8971-4B79-8BB5-482ECD39A43A";
+				PROVISIONING_PROFILE = "5F37965B-59B5-461B-83F6-77EFE66FC01B";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VALID_ARCHS = armv7;

@@ -156,10 +156,27 @@
     [self reloadFriendsList];
 }
 
+#warning REFACTORING NEEDED!
 - (void)searchGlobal:(id)sender
 {
     NSString *searchText = self.searchBar.text;
     if ([searchText isEqualToString:kEmptyString]) {
+        [[QMContactList shared] retrieAllUsersUsingBlock:^(NSArray *users, BOOL success, NSError *error) {
+            // convert array of users to dictionary and add to QMContactList:
+            [QMContactList shared].searchedUsers = [[QMContactList shared] friendsAsDictionaryFromFriendsArray:users];
+            
+            if (![self.dataSource updateSearchedUsersArrayAndCheckForEmpty]) {
+                self.tableView.tableFooterView = nil;
+                [self.tableView reloadData];
+            }
+            
+         else {
+            UIButton *globalSearchButton = (UIButton *)[self.tableView.tableFooterView viewWithTag:kSearchGlobalButtonTag];
+            globalSearchButton.hidden = YES;
+            [self.tableView reloadData];
+        }
+        }];
+        
         return;
     }
     [[QMContactList shared] retrieveUsersWithFullName:searchText usingBlock:^(NSArray *users, BOOL success, NSError *error) {
@@ -255,7 +272,6 @@
 
 - (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar
 {
-    [searchBar setShowsCancelButton:NO animated:YES];
     return YES;
 }
 
@@ -264,6 +280,10 @@
 {
     [self createNoResultsFooterViewWithButton:YES];
     [self.dataSource emptyOtherUsersArray];
+    
+    if ([searchText isEqualToString:kEmptyString]) {
+        [self.dataSource updateFriendsArrayAndCheckForEmpty];
+    }
 
     [self.dataSource updateFriendsArrayForSearchPhrase:searchText];
     [self.tableView reloadData];
@@ -273,7 +293,7 @@
 
 - (void)fillTableView
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:kFriendsReloadedNotification];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kFriendsReloadedNotification object:nil];
     [self updateDataSource];
 }
 

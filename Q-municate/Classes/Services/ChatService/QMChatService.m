@@ -456,6 +456,12 @@
 
 - (void)sendMessage:(QBChatMessage *)message
 {
+    // additional params:
+    NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
+    message.customParameters[@"date_sent"] = @(timestamp);
+    message.customParameters[@"save_to_history"] = @YES;
+    
+    // send message:
 	[[QBChat instance] sendMessage:message]; 
     
     // get dialog entity with current user:
@@ -581,6 +587,12 @@
 
 - (void)sendMessage:(QBChatMessage *)message toRoom:(QBChatRoom *)chatRoom
 {
+    // additional params:
+    NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
+    message.customParameters[@"date_sent"] = @(timestamp);
+    message.customParameters[@"save_to_history"] = @YES;
+    
+    // send message to user:
     [[QBChat instance] sendChatMessage:message toRoom:chatRoom];
     
     // cache upload message for replace with delivered message:
