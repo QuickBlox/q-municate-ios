@@ -9,6 +9,9 @@
 #ifndef Q_municate_Definitions_h
 #define Q_municate_Definitions_h
 
+#define IS_HEIGHT_GTE_568 [[UIScreen mainScreen ] bounds].size.height == 568.0f
+
+
 //*********** Settings Cell Row Names **********************
 #define QMSettingsNormalCellRowProfile              0
 #define QMSettingsNormalCellRowPushNotifications    1
@@ -167,6 +170,7 @@ static NSString *const kStatusOfflineString             = @"Offline";
 static NSString *const kMailSubjectString               = @"Q-municate";
 static NSString *const kMailBodyString                  = @"<a href='http://quickblox.com/'>Join us in Q-municate!</a>";
 static NSString *const kButtonTitleDoneString           = @"Done";
+static NSString *const kButtonTitleSaveString           = @"Save";
 
 static NSString *const kErrorKeyFromDictionaryString    	= @"error";
 

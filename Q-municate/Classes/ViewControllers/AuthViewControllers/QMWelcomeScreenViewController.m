@@ -18,6 +18,9 @@
 
 @interface QMWelcomeScreenViewController ()
 
+@property (weak, nonatomic) IBOutlet UIImageView *bubleImage;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bubleHeight;
+
 - (IBAction)connectWithFacebook:(id)sender;
 - (IBAction)SignUp:(id)sender;
 - (IBAction)LogIn:(id)sender;
@@ -29,6 +32,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    if (IS_HEIGHT_GTE_568) {
+        _bubleHeight.constant = 244;
+        _bubleImage.image = [UIImage imageNamed:@"logo_big"];
+    } else {
+        _bubleHeight.constant = 197;
+        _bubleImage.image = [UIImage imageNamed:@"logo_big_960"];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated

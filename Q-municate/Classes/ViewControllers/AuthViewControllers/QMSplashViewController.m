@@ -16,6 +16,7 @@
 @interface QMSplashViewController ()
 
 @property (nonatomic) BOOL isAlreadySeen;
+@property (weak, nonatomic) IBOutlet UIImageView *splashLogoView;
 
 @end
 
@@ -26,6 +27,11 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    if (IS_HEIGHT_GTE_568) {
+        [self.splashLogoView setImage:[UIImage imageNamed:@"splash"]];
+    } else {
+        [self.splashLogoView setImage:[UIImage imageNamed:@"splash-960"]];
+    }
     
     // start utilities singleton:
     [QMUtilities shared];
@@ -68,6 +74,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
