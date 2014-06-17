@@ -275,7 +275,7 @@
     [[QMUtilities shared] stopPlaying];
     
     if (callWasConfirmedByMe) {
-        [QMUtilities dismissIncomingCallController:nil];
+        [QMUtilities.shared dismissIncomingCallController];
         return;
     }
     [self dismissViewControllerAnimated:NO completion:nil];

@@ -7,8 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		550E4055194AF1AA00CD5D33 /* ChatBubbles.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 550E4054194AF1AA00CD5D33 /* ChatBubbles.xcassets */; };
+		550E405C194AF25900CD5D33 /* NSString+UsedSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 550E405B194AF25900CD5D33 /* NSString+UsedSize.m */; };
+		550E4062194AFB7300CD5D33 /* QMChatLayoutConfigs.m in Sources */ = {isa = PBXBuildFile; fileRef = 550E4061194AFB7300CD5D33 /* QMChatLayoutConfigs.m */; };
 		552B423919471E19008DF1E8 /* CDAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 552B423819471E19008DF1E8 /* CDAttachment.m */; };
 		552B423C19471E22008DF1E8 /* _CDAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 552B423B19471E22008DF1E8 /* _CDAttachment.m */; };
+		552E1AD11949AB120092340A /* QMMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 552E1AD01949AB120092340A /* QMMessage.m */; };
 		55943A0C1941A4AE00BF4312 /* CDDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 55943A0B1941A4AE00BF4312 /* CDDialog.m */; };
 		55943A0F1941A4C000BF4312 /* _CDDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 55943A0E1941A4C000BF4312 /* _CDDialog.m */; };
 		55943A121941A55800BF4312 /* CDMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 55943A111941A55800BF4312 /* CDMessages.m */; };
@@ -18,6 +22,10 @@
 		55943AC21941C8EC00BF4312 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55943ABD1941C8EC00BF4312 /* InfoPlist.strings */; };
 		55943AC31941C8EC00BF4312 /* Q_municateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 55943ABF1941C8EC00BF4312 /* Q_municateTests.m */; };
 		55943AC41941C8EC00BF4312 /* QmunicateTests-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 55943AC01941C8EC00BF4312 /* QmunicateTests-Info.plist */; };
+		559CD7501948A82100605A98 /* QMChatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 559CD74F1948A82100605A98 /* QMChatVC.m */; };
+		559CD7541948A8DB00605A98 /* QMChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 559CD7531948A8DB00605A98 /* QMChatCell.m */; };
+		559CD7581948B2A600605A98 /* QMChatInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 559CD7571948B2A600605A98 /* QMChatInputView.m */; };
+		55A6D226194ECE81008B284B /* QMChatDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A6D225194ECE81008B284B /* QMChatDataSource.m */; };
 		55D270911940B8D300238D50 /* QMDBStorage+Dialogs.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270111940B8D300238D50 /* QMDBStorage+Dialogs.m */; };
 		55D270921940B8D300238D50 /* QMDBStorage+Messages.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270141940B8D300238D50 /* QMDBStorage+Messages.m */; };
 		55D270931940B8D300238D50 /* QMDBStorage+Users.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270171940B8D300238D50 /* QMDBStorage+Users.m */; };
@@ -144,7 +152,6 @@
 		69DF2D4E194D91B800E8E80F /* QMFriendsDetailsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 69DF2D4D194D91B800E8E80F /* QMFriendsDetailsDataSource.m */; };
 		69E48F98193393FD009B5F6D /* NSArray+ArrayToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E48F97193393FD009B5F6D /* NSArray+ArrayToString.m */; };
 		69EB283B18E9692D00620A01 /* QMChatListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69EB283A18E9692D00620A01 /* QMChatListCell.m */; };
-		8DE8940607F20EA727C3D195 /* QMChatDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE89E678171D28A1CC3E0CA /* QMChatDataSource.m */; };
 		8DE8961214595987DBFCA807 /* QMInviteFriendsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE891AC48A8796625A26943 /* QMInviteFriendsDataSource.m */; };
 		8DE8970036C1B4D33934449D /* QMNewChatDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE898778FED07658F9B3698 /* QMNewChatDataSource.m */; };
 		8DE8996F36A717BC50F4E17F /* QMSettingsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE899FED9CFF5FD437561DF /* QMSettingsDataSource.m */; };
@@ -197,11 +204,20 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		550E4054194AF1AA00CD5D33 /* ChatBubbles.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ChatBubbles.xcassets; sourceTree = "<group>"; };
+		550E405A194AF25900CD5D33 /* NSString+UsedSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+UsedSize.h"; sourceTree = "<group>"; };
+		550E405B194AF25900CD5D33 /* NSString+UsedSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+UsedSize.m"; sourceTree = "<group>"; };
+		550E4060194AFB7300CD5D33 /* QMChatLayoutConfigs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatLayoutConfigs.h; sourceTree = "<group>"; };
+		550E4061194AFB7300CD5D33 /* QMChatLayoutConfigs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatLayoutConfigs.m; sourceTree = "<group>"; };
 		552B423619470A81008DF1E8 /* QBDBMergeProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QBDBMergeProtocol.h; sourceTree = "<group>"; };
 		552B423719471E19008DF1E8 /* CDAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDAttachment.h; sourceTree = "<group>"; };
 		552B423819471E19008DF1E8 /* CDAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDAttachment.m; sourceTree = "<group>"; };
 		552B423A19471E22008DF1E8 /* _CDAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _CDAttachment.h; sourceTree = "<group>"; };
 		552B423B19471E22008DF1E8 /* _CDAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _CDAttachment.m; sourceTree = "<group>"; };
+		552E1ACD1949A7910092340A /* QMMessageProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMMessageProtocol.h; sourceTree = "<group>"; };
+		552E1ACE1949AA530092340A /* QMMessageType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMMessageType.h; sourceTree = "<group>"; };
+		552E1ACF1949AB120092340A /* QMMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMessage.h; sourceTree = "<group>"; };
+		552E1AD01949AB120092340A /* QMMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMMessage.m; sourceTree = "<group>"; };
 		55943A0A1941A4AE00BF4312 /* CDDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDDialog.h; sourceTree = "<group>"; };
 		55943A0B1941A4AE00BF4312 /* CDDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDDialog.m; sourceTree = "<group>"; };
 		55943A0D1941A4C000BF4312 /* _CDDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _CDDialog.h; sourceTree = "<group>"; };
@@ -212,6 +228,14 @@
 		55943ABF1941C8EC00BF4312 /* Q_municateTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Q_municateTests.m; sourceTree = "<group>"; };
 		55943AC01941C8EC00BF4312 /* QmunicateTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "QmunicateTests-Info.plist"; sourceTree = "<group>"; };
 		55943AC11941C8EC00BF4312 /* Q-municateTests-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Q-municateTests-Prefix.pch"; sourceTree = "<group>"; };
+		559CD74E1948A82100605A98 /* QMChatVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatVC.h; sourceTree = "<group>"; };
+		559CD74F1948A82100605A98 /* QMChatVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatVC.m; sourceTree = "<group>"; };
+		559CD7521948A8DB00605A98 /* QMChatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatCell.h; sourceTree = "<group>"; };
+		559CD7531948A8DB00605A98 /* QMChatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatCell.m; sourceTree = "<group>"; };
+		559CD7561948B2A600605A98 /* QMChatInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatInputView.h; sourceTree = "<group>"; };
+		559CD7571948B2A600605A98 /* QMChatInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatInputView.m; sourceTree = "<group>"; };
+		55A6D224194ECE81008B284B /* QMChatDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatDataSource.h; sourceTree = "<group>"; };
+		55A6D225194ECE81008B284B /* QMChatDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatDataSource.m; sourceTree = "<group>"; };
 		55D270101940B8D300238D50 /* QMDBStorage+Dialogs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QMDBStorage+Dialogs.h"; sourceTree = "<group>"; };
 		55D270111940B8D300238D50 /* QMDBStorage+Dialogs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMDBStorage+Dialogs.m"; sourceTree = "<group>"; };
 		55D270131940B8D300238D50 /* QMDBStorage+Messages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QMDBStorage+Messages.h"; sourceTree = "<group>"; };
@@ -448,12 +472,10 @@
 		8DE892F2E7CE2CC2227DCCD0 /* QMChatRoomListDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMChatRoomListDataSource.h; path = Classes/DataSources/QMChatsControllerDataSource/QMChatRoomListDataSource.h; sourceTree = "<group>"; };
 		8DE894F60F828AD7EB72C7A8 /* QMFriendsListDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMFriendsListDataSource.h; sourceTree = "<group>"; };
 		8DE8980DFFF090B0D4FA1634 /* QMNewChatDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMNewChatDataSource.h; path = Classes/DataSources/QMNewChatDataSource/QMNewChatDataSource.h; sourceTree = "<group>"; };
-		8DE8986E0FD890D5D4EE4D31 /* QMChatDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMChatDataSource.h; path = Classes/DataSources/QMChatDataSource/QMChatDataSource.h; sourceTree = "<group>"; };
 		8DE898778FED07658F9B3698 /* QMNewChatDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMNewChatDataSource.m; path = Classes/DataSources/QMNewChatDataSource/QMNewChatDataSource.m; sourceTree = "<group>"; };
 		8DE899FED9CFF5FD437561DF /* QMSettingsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMSettingsDataSource.m; path = Classes/DataSources/QMSettingsDataSource/QMSettingsDataSource.m; sourceTree = "<group>"; };
 		8DE89B0BBDA2AC0837B4496B /* QMFriendsListDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMFriendsListDataSource.m; sourceTree = "<group>"; };
 		8DE89B7BB9FD146179D7262D /* QMSettingsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMSettingsDataSource.h; path = Classes/DataSources/QMSettingsDataSource/QMSettingsDataSource.h; sourceTree = "<group>"; };
-		8DE89E678171D28A1CC3E0CA /* QMChatDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMChatDataSource.m; path = Classes/DataSources/QMChatDataSource/QMChatDataSource.m; sourceTree = "<group>"; };
 		8DE89F0E1E6AC0060A32D5A4 /* QMInviteFriendsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMInviteFriendsDataSource.h; path = Classes/DataSources/QMInviteFriendsDataSource/QMInviteFriendsDataSource.h; sourceTree = "<group>"; };
 		B71E0541190FAAF900DD6D34 /* QMIncomingCallController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncomingCallController.h; sourceTree = "<group>"; };
 		B71E0542190FAAF900DD6D34 /* QMIncomingCallController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMIncomingCallController.m; sourceTree = "<group>"; };
@@ -522,6 +544,51 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		550E4059194AF25900CD5D33 /* NSString+UsedSize */ = {
+			isa = PBXGroup;
+			children = (
+				550E405A194AF25900CD5D33 /* NSString+UsedSize.h */,
+				550E405B194AF25900CD5D33 /* NSString+UsedSize.m */,
+			);
+			path = "NSString+UsedSize";
+			sourceTree = "<group>";
+		};
+		550E405D194AF26300CD5D33 /* Resourses */ = {
+			isa = PBXGroup;
+			children = (
+				550E4054194AF1AA00CD5D33 /* ChatBubbles.xcassets */,
+			);
+			name = Resourses;
+			sourceTree = "<group>";
+		};
+		550E405E194AF27E00CD5D33 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				550E4059194AF25900CD5D33 /* NSString+UsedSize */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
+		550E405F194AFB4000CD5D33 /* QMChatLayoutConfigs */ = {
+			isa = PBXGroup;
+			children = (
+				550E4060194AFB7300CD5D33 /* QMChatLayoutConfigs.h */,
+				550E4061194AFB7300CD5D33 /* QMChatLayoutConfigs.m */,
+			);
+			path = QMChatLayoutConfigs;
+			sourceTree = "<group>";
+		};
+		552E1ACC1949A76B0092340A /* QMMessage */ = {
+			isa = PBXGroup;
+			children = (
+				552E1ACD1949A7910092340A /* QMMessageProtocol.h */,
+				552E1ACE1949AA530092340A /* QMMessageType.h */,
+				552E1ACF1949AB120092340A /* QMMessage.h */,
+				552E1AD01949AB120092340A /* QMMessage.m */,
+			);
+			path = QMMessage;
+			sourceTree = "<group>";
+		};
 		55943AAE1941C8CA00BF4312 /* Q-municateTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -531,6 +598,49 @@
 				55943AC11941C8EC00BF4312 /* Q-municateTests-Prefix.pch */,
 			);
 			path = "Q-municateTests";
+			sourceTree = "<group>";
+		};
+		559CD74D1948A7DC00605A98 /* QMChatVC */ = {
+			isa = PBXGroup;
+			children = (
+				55A6D223194ECE81008B284B /* QMChatDataSource */,
+				550E405F194AFB4000CD5D33 /* QMChatLayoutConfigs */,
+				559CD74E1948A82100605A98 /* QMChatVC.h */,
+				559CD74F1948A82100605A98 /* QMChatVC.m */,
+				552E1ACC1949A76B0092340A /* QMMessage */,
+				559CD7551948B29100605A98 /* QMChatInputView */,
+				559CD7511948A8D100605A98 /* QMChatCell */,
+				550E405E194AF27E00CD5D33 /* Helpers */,
+				550E405D194AF26300CD5D33 /* Resourses */,
+			);
+			path = QMChatVC;
+			sourceTree = "<group>";
+		};
+		559CD7511948A8D100605A98 /* QMChatCell */ = {
+			isa = PBXGroup;
+			children = (
+				559CD7521948A8DB00605A98 /* QMChatCell.h */,
+				559CD7531948A8DB00605A98 /* QMChatCell.m */,
+			);
+			path = QMChatCell;
+			sourceTree = "<group>";
+		};
+		559CD7551948B29100605A98 /* QMChatInputView */ = {
+			isa = PBXGroup;
+			children = (
+				559CD7561948B2A600605A98 /* QMChatInputView.h */,
+				559CD7571948B2A600605A98 /* QMChatInputView.m */,
+			);
+			path = QMChatInputView;
+			sourceTree = "<group>";
+		};
+		55A6D223194ECE81008B284B /* QMChatDataSource */ = {
+			isa = PBXGroup;
+			children = (
+				55A6D224194ECE81008B284B /* QMChatDataSource.h */,
+				55A6D225194ECE81008B284B /* QMChatDataSource.m */,
+			);
+			path = QMChatDataSource;
 			sourceTree = "<group>";
 		};
 		55D2700D1940B8D300238D50 /* CoreData */ = {
@@ -932,6 +1042,7 @@
 		6943844C18E42677001E08A9 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				559CD74D1948A7DC00605A98 /* QMChatVC */,
 				6943844D18E42677001E08A9 /* AuthViewControllers */,
 				6943845618E42677001E08A9 /* TabBarController */,
 				690D9690193DF16D00BC4C70 /* QMRootViewController.h */,
@@ -1193,15 +1304,6 @@
 			name = QMNewChatDataSource;
 			sourceTree = "<group>";
 		};
-		8DE89C2A54B6D7C4A9964D32 /* QMChatDataSource */ = {
-			isa = PBXGroup;
-			children = (
-				8DE8986E0FD890D5D4EE4D31 /* QMChatDataSource.h */,
-				8DE89E678171D28A1CC3E0CA /* QMChatDataSource.m */,
-			);
-			name = QMChatDataSource;
-			sourceTree = "<group>";
-		};
 		8DE89CDB6378EF1EFB424A6B /* QMFriendsListDataSource */ = {
 			isa = PBXGroup;
 			children = (
@@ -1412,6 +1514,7 @@
 				69D57E8518ACC13100A9900A /* Main.storyboard in Resources */,
 				6943277D18F6D109002B0396 /* ringtone.wav in Resources */,
 				55D270C61940B8D300238D50 /* mogend.sh in Resources */,
+				550E4055194AF1AA00CD5D33 /* ChatBubbles.xcassets in Resources */,
 				6943277A18F6D109002B0396 /* busy.mp3 in Resources */,
 				6943277B18F6D109002B0396 /* calling.mp3 in Resources */,
 				69D57E6018ACC11C00A9900A /* InfoPlist.strings in Resources */,
@@ -1520,8 +1623,10 @@
 				552B423919471E19008DF1E8 /* CDAttachment.m in Sources */,
 				6943847B18E42678001E08A9 /* QMLogInController.m in Sources */,
 				55D270B61940B8D300238D50 /* MagicalRecord+Setup.m in Sources */,
+				559CD7501948A82100605A98 /* QMChatVC.m in Sources */,
 				55D270B91940B8D300238D50 /* MagicalRecordShorthand.m in Sources */,
 				55D2709B1940B8D300238D50 /* NSEntityDescription+MagicalDataImport.m in Sources */,
+				55A6D226194ECE81008B284B /* QMChatDataSource.m in Sources */,
 				69E48F98193393FD009B5F6D /* NSArray+ArrayToString.m in Sources */,
 				69B1893E190950A70049C6F9 /* QMDefinitions.m in Sources */,
 				6943849518E42691001E08A9 /* UIImageView+ImageWithBlobID.m in Sources */,
@@ -1537,8 +1642,10 @@
 				55D270B01940B8D300238D50 /* NSArray+MagicalRecord.m in Sources */,
 				693F347B18F554240032891F /* QMIncommingCallSegue.m in Sources */,
 				552B423C19471E22008DF1E8 /* _CDAttachment.m in Sources */,
+				550E405C194AF25900CD5D33 /* NSString+UsedSize.m in Sources */,
 				55D270BA1940B8D300238D50 /* AutoMigratingMagicalRecordStack.m in Sources */,
 				6967D6B9192E4F4500D6C268 /* QMChatInvitationCell.m in Sources */,
+				552E1AD11949AB120092340A /* QMMessage.m in Sources */,
 				690D9692193DF16D00BC4C70 /* QMRootViewController.m in Sources */,
 				693808C819373A6700BF926F /* QMChatUploadingMessage.m in Sources */,
 				B71E0561190FAAF900DD6D34 /* QMChatViewController.m in Sources */,
@@ -1551,16 +1658,18 @@
 				55D270BE1940B8D300238D50 /* InMemoryMagicalRecordStack.m in Sources */,
 				6943847A18E42678001E08A9 /* QMContent.m in Sources */,
 				55D270BF1940B8D300238D50 /* MagicalRecordStack+Actions.m in Sources */,
+				559CD7581948B2A600605A98 /* QMChatInputView.m in Sources */,
 				69052799193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.m in Sources */,
 				B71E0564190FAAF900DD6D34 /* QMFriendsDetailsController.m in Sources */,
+				559CD7541948A8DB00605A98 /* QMChatCell.m in Sources */,
 				6943847418E42678001E08A9 /* QMUtilities.m in Sources */,
 				55D2709A1940B8D300238D50 /* NSAttributeDescription+MagicalDataImport.m in Sources */,
 				55D270A61940B8D300238D50 /* NSManagedObject+MagicalRequests.m in Sources */,
 				55D270A11940B8D300238D50 /* NSManagedObject+MagicalAggregation.m in Sources */,
 				6943848A18E42678001E08A9 /* QMMenuCell.m in Sources */,
+				550E4062194AFB7300CD5D33 /* QMChatLayoutConfigs.m in Sources */,
 				6972022F18EB04280003A4CC /* QMChatViewCell.m in Sources */,
 				55D270A41940B8D300238D50 /* NSManagedObject+MagicalFinders.m in Sources */,
-				8DE8940607F20EA727C3D195 /* QMChatDataSource.m in Sources */,
 				8DE89B505F36868CDBF5970C /* QMFriendsListDataSource.m in Sources */,
 				55D270921940B8D300238D50 /* QMDBStorage+Messages.m in Sources */,
 				55D270C31940B8D300238D50 /* SQLiteWithSavingContextMagicalRecordStack.m in Sources */,

@@ -30,11 +30,11 @@
     // start utilities singleton:
     [QMUtilities shared];
     
-    [QMUtilities createIndicatorView];
+    [QMUtilities showActivityView];
     //start session:
     [[QMAuthService shared] startSessionWithBlock:^(BOOL success, NSError *error) {
         if (!success) {
-            [QMUtilities removeIndicatorView];
+            [QMUtilities hideActivityView];
             [self showAlertWithMessage:error.description actionSuccess:NO];
             return;
         }
@@ -60,7 +60,7 @@
         }
         
         // go to wellcome screen:
-        [QMUtilities removeIndicatorView];
+        [QMUtilities hideActivityView];
         [self showWelcomeScreen];
     }];
 }
@@ -91,10 +91,10 @@
 
 - (void)loginWithEmail:(NSString *)email password:(NSString *)password
 {
-    [QMUtilities createIndicatorView];
+    [QMUtilities showActivityView];
     [[QMAuthService shared] logInWithEmail:email password:password completion:^(QBUUser *user, BOOL success, NSError *error) {
         if (!success) {
-            [QMUtilities removeIndicatorView];
+            [QMUtilities hideActivityView];
             [self showAlertWithMessage:[NSString stringWithFormat:@"%@", error] actionSuccess:NO];
             return;
         }
@@ -107,7 +107,7 @@
         [[QMAuthService shared] subscribeToPushNotifications];
         
         [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-            [QMUtilities removeIndicatorView];
+            [QMUtilities hideActivityView];
             if (success) {
                 //pop auth and push tab bar:
                 UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
@@ -123,7 +123,7 @@
     // login with facebook:
     [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSError *error) {
         if (!success) {
-            [QMUtilities removeIndicatorView];
+            [QMUtilities hideActivityView];
             [self showAlertWithMessage:error.description actionSuccess:NO];
             return;
         }
@@ -136,7 +136,7 @@
         if (user.blobID == 0) {
             [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
                 if (!success) {
-                    [QMUtilities removeIndicatorView];
+                    [QMUtilities hideActivityView];
                     [self showAlertWithMessage:error.description actionSuccess:NO];
                     return;
                 }
@@ -153,7 +153,7 @@
 {
     // login to Quickblox chat:
     [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-        [QMUtilities removeIndicatorView];
+        [QMUtilities hideActivityView];
         if (success) {
             UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
             UINavigationController *navigationController = (UINavigationController *)window.rootViewController;

@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "QMChatVC.h"
 
-@interface QMChatViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface QMChatViewController : QMChatVC <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) NSString *chatName;
 @property (nonatomic, strong) QBUUser *opponent;  // If not p2p chat, opponent will be nil.

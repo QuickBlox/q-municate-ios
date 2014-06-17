@@ -283,7 +283,7 @@ typedef NS_ENUM(NSUInteger, QMPasswordCheckState) {
         } else if (password.length <=7 || newPassword.length <= 7) {
             [self showErrorAlertWithMessage:kAlertBodyPasswordIsShortString];
         } else {
-            [QMUtilities createIndicatorView];
+            [QMUtilities showActivityView];
 			[[NSUserDefaults standardUserDefaults] setObject:password forKey:kPassword];
 			[[NSUserDefaults standardUserDefaults] synchronize];
             // update user's password:
@@ -297,7 +297,7 @@ typedef NS_ENUM(NSUInteger, QMPasswordCheckState) {
                     user.password = password;
                     [[QMContactList shared] setMe:user];
                     
-                    [QMUtilities removeIndicatorView];
+                    [QMUtilities hideActivityView];
 					[[NSUserDefaults standardUserDefaults] removeObjectForKey:kPassword];
 					[[NSUserDefaults standardUserDefaults] synchronize];
 					[self logOut];

@@ -105,8 +105,8 @@
 
 - (void)dismissIncomingCallController
 {
-    [[QMUtilities shared] stopPlaying];
-    [QMUtilities dismissIncomingCallController:nil];
+    [QMUtilities.shared stopPlaying];
+    [QMUtilities.shared dismissIncomingCallController];
 }
 
 @end

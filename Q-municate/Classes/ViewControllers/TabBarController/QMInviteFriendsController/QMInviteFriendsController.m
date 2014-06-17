@@ -68,7 +68,7 @@
 	//share to Facebook:
     if ([self.dataSource.checkedFacebookUsers count] > 0) {
         NSString *tags = [self.dataSource emailsFromFacebookPersons];
-        [QMUtilities createIndicatorView];
+        [QMUtilities showActivityView];
         if ([FBSession activeSession].state == FBSessionStateOpen) {
             [self shareApplicationToFriends:tags];
         } else {
@@ -93,7 +93,7 @@
 - (void)shareApplicationToFriends:(NSString *)friendsListString
 {
     [QMFacebookService shareToFacebookUsersWithIDs:friendsListString withCompletion:^(BOOL success, NSError *error) {
-        [QMUtilities removeIndicatorView];
+        [QMUtilities hideActivityView];
         if (!success) {
             NSString *errorMessageString = [NSString stringWithFormat:@"%@", error];
             [self showAlertWithMessage:errorMessageString];
@@ -268,7 +268,7 @@
 
 - (void)loadFriendsFromFacebook
 {
-	[QMUtilities createIndicatorView];
+	[QMUtilities showActivityView];
 	self.facebookCellChecked = NO;
 	[self.dataSource emptyCheckedFBUsersArray];
 	[self.dataSource updateFacebookDataSource:^(NSError *error) {
@@ -277,13 +277,13 @@
 		} else {
 			[self.tableView reloadData];
 		}
-		[QMUtilities removeIndicatorView];
+		[QMUtilities hideActivityView];
 	}];
 }
 
 - (void)loadFriendsFromAddressBook
 {
-	[QMUtilities createIndicatorView];
+	[QMUtilities showActivityView];
 	self.contactsCellChecked = NO;
 	[self.dataSource emptyCheckedABUsersArray];
 	[self.dataSource updateContactListDataSource:^(NSError *error) {
@@ -296,7 +296,7 @@
 				[self.tableView reloadData];
 			}
 		}
-		[QMUtilities removeIndicatorView];
+		[QMUtilities hideActivityView];
 	}];
 }
 

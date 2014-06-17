@@ -9,7 +9,6 @@
 #import "QMChatViewController.h"
 #import "QMVideoCallController.h"
 #import "QMChatViewCell.h"
-#import "QMChatDataSource.h"
 #import "QMContactList.h"
 #import "QMChatService.h"
 #import "QMUtilities.h"
@@ -26,18 +25,17 @@
 #import "QMDBStorage+Messages.h"
 
 
+
 static CGFloat const kCellHeightOffset = 33.0f;
 
 @interface QMChatViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+//@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIView *inputMessageView;
 @property (weak, nonatomic) IBOutlet UITextField *inputMessageTextField;
 
 @property (nonatomic, strong) QMContent *uploadManager;
-@property (nonatomic, strong) QMChatDataSource *dataSource;
-
-@property (assign) BOOL isBackButtonClicked;
+//@property (nonatomic, strong) QMChatDataSource *dataSource;
 
 @property (nonatomic, strong) NSMutableArray *chatHistory;
 
@@ -57,7 +55,6 @@ static CGFloat const kCellHeightOffset = 33.0f;
     [self configureNavBarButtons];
     [self addKeyboardObserver];
 	[self addChatObserver];
-	self.isBackButtonClicked = NO;
     
     NSString *opponentID = [@(self.opponent.ID) stringValue];
     // if dialog is group chat:
@@ -67,14 +64,14 @@ static CGFloat const kCellHeightOffset = 33.0f;
         if (![self userIsJoinedRoomForDialog:self.chatDialog]) {
             
             // enter chat room:
-            [QMUtilities createIndicatorView];
+            [QMUtilities showActivityView];
             [[QMChatService shared] joinRoomWithRoomJID:self.chatDialog.roomJID];
         }
         self.chatRoom = [QMChatService shared].allChatRoomsAsDictionary[self.chatDialog.roomJID];
         // load history:
         self.chatHistory = [QMChatService shared].allConversations[self.chatDialog.roomJID];
         if (self.chatHistory == nil) {
-            [QMUtilities createIndicatorView];
+            [QMUtilities showActivityView];
             [self loadHistory];
         }
         return;
@@ -91,7 +88,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
             [QMChatService shared].allConversations[opponentID] = emptyHistory;
             return;
         }
-        [QMUtilities createIndicatorView];
+        [QMUtilities showActivityView];
         // load history:
         [self loadHistory];
     }
@@ -119,7 +116,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
     
     void(^reloadDataAfterGetMessages) (NSArray *messages) = ^(NSArray *messages) {
         
-        [QMUtilities removeIndicatorView];
+        [QMUtilities hideActivityView];
         
         if (messages.count > 0) {
             
@@ -151,7 +148,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)addChatObserver
 {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessageNotification object:nil];
     
     // upload progress:
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resetTableView) name:@"ContentDidLoadNotification" object:nil];
@@ -192,8 +189,8 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)addKeyboardObserver
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resizeViewWithKeyboardNotification:) name:UIKeyboardWillHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resizeViewWithKeyboardNotification:) name:UIKeyboardWillShowNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resizeViewWithKeyboardNotification:) name:UIKeyboardWillHideNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resizeViewWithKeyboardNotification:) name:UIKeyboardWillShowNotification object:nil];
 }
 
 - (void)configureInputMessageViewShadow
@@ -212,7 +209,6 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (IBAction)back:(id)sender
 {
-	self.isBackButtonClicked = YES;
     if (self.createdJustNow) {
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
@@ -387,45 +383,42 @@ static CGFloat const kCellHeightOffset = 33.0f;
 	self.inputMessageTextField.text = kEmptyString;
 	[self.inputMessageTextField resignFirstResponder];
 }
-- (void)resizeViewWithKeyboardNotification:(NSNotification *)notification
-{
-	if (self.isBackButtonClicked) {
-		[self clearMessageInputTextField];
-	} else {
-		/*
-		* below code is to follow animation of keyboard
-		* for view with textField and buttons('send', 'transfer')
-		* but still need to count tabBar height and time for animation
-		* */
-		NSDictionary * userInfo = notification.userInfo;
-		NSTimeInterval animationDuration;
-		UIViewAnimationCurve animationCurve;
-		CGRect keyboardFrame;
-		[[userInfo valueForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
-		[[userInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
-		[[userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardFrame];
-
-		BOOL isKeyboardShow = !(keyboardFrame.origin.y == [[UIScreen mainScreen] bounds].size.height);
-
-		NSInteger keyboardHeight = isKeyboardShow ? - keyboardFrame.size.height : keyboardFrame.size.height;
-
-        
-		[UIView animateWithDuration:animationDuration delay:0.0f options:animationCurve << 16 animations:^
-		{
-			CGRect frame = self.view.frame;
-			frame.size.height += keyboardHeight;
-			self.view.frame = frame;
-
-			[self.view layoutIfNeeded];
-
-		} completion:^(BOOL finished) {
-            [self.tableView reloadData];
-            if ([self.chatHistory count] >2) {
-                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.chatHistory count]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-            }
-        }];
-	}
-}
+//- (void)resizeViewWithKeyboardNotification:(NSNotification *)notification
+//{
+//
+//		/*
+//		* below code is to follow animation of keyboard
+//		* for view with textField and buttons('send', 'transfer')
+//		* but still need to count tabBar height and time for animation
+//		* */
+//		NSDictionary * userInfo = notification.userInfo;
+//		NSTimeInterval animationDuration;
+//		UIViewAnimationCurve animationCurve;
+//		CGRect keyboardFrame;
+//		[[userInfo valueForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
+//		[[userInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
+//		[[userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardFrame];
+//
+//		BOOL isKeyboardShow = !(keyboardFrame.origin.y == [[UIScreen mainScreen] bounds].size.height);
+//
+//		NSInteger keyboardHeight = isKeyboardShow ? - keyboardFrame.size.height : keyboardFrame.size.height;
+//
+//        
+//		[UIView animateWithDuration:animationDuration delay:0.0f options:animationCurve << 16 animations:^
+//		{
+//			CGRect frame = self.view.frame;
+//			frame.size.height += keyboardHeight;
+//			self.view.frame = frame;
+//
+//			[self.view layoutIfNeeded];
+//
+//		} completion:^(BOOL finished) {
+//            [self.tableView reloadData];
+//            if ([self.chatHistory count] >2) {
+//                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.chatHistory count]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+//            }
+//        }];
+//}
 
 #pragma mark - Nav Buttons Actions
 - (void)audioCallAction
@@ -458,7 +451,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
     self.chatRoom = [QMChatService shared].allChatRoomsAsDictionary[self.chatDialog.roomJID];
     
     if (self.chatHistory != nil) {
-        [QMUtilities removeIndicatorView];
+        [QMUtilities hideActivityView];
         return;
     }
     

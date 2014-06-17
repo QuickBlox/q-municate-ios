@@ -26,10 +26,10 @@ typedef NS_ENUM(NSUInteger, QMSoundPlayType) {
 
 + (instancetype)shared;
 
-+ (void)createIndicatorView;
-+ (void)removeIndicatorView;
++ (void)showActivityView;
++ (void)hideActivityView;
 
-+ (void)dismissIncomingCallController:(NSNotification *)notification;
+- (void)dismissIncomingCallController;
 
 // Audio Player:
 - (void)playSoundOfType:(QMSoundPlayType)soundType;

@@ -8,6 +8,11 @@
 
 #import "QMUtilities.h"
 
+@interface QMUtilities ()
+
+@property (strong, nonatomic) UIView *activityView;
+
+@end
 
 @implementation QMUtilities
 
@@ -16,9 +21,6 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         utilitiesInstance = [[self alloc] init];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showIncomingCallController:) name:kIncomingCallNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissIncomingCallController:) name:kCallWasStoppedNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissIncomingCallController:) name:kCallWasRejectedNotification object:nil];
     });
     return utilitiesInstance;
 }
@@ -26,6 +28,12 @@
 - (id)init
 {
     if (self= [super init]) {
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showIncomingCallController:) name:kIncomingCallNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissIncomingCallController:) name:kCallWasStoppedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissIncomingCallController:) name:kCallWasRejectedNotification object:nil];
+        
+        
         self.dateFormatter = [[NSDateFormatter alloc] init];
         [self.dateFormatter setLocale:[NSLocale currentLocale]];
         [self.dateFormatter setDateFormat:@"HH':'mm"];
@@ -41,79 +49,90 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-+ (void)createIndicatorView
-{
-	if (![[QMUtilities shared] getIndicatorViewIfExists]) {
-		UIWindow *window = [[UIApplication sharedApplication].delegate window];
-
-		UIView *backgroundView = [[UIView alloc] initWithFrame:[window bounds]];
-		backgroundView.backgroundColor = [UIColor blackColor];
-		backgroundView.alpha = 0.0f;
-		backgroundView.tag = 1304;
-
+- (UIView *)activityView {
+    
+    if (!_activityView) {
+        
+        UIWindow *window = [[UIApplication sharedApplication].delegate window];
+        
+        _activityView = [[UIView alloc] initWithFrame:window.bounds];
+		_activityView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
+        
 		UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-		indicator.center = CGPointMake(backgroundView.frame.size.width/2, backgroundView.frame.size.height/2);
-		[backgroundView addSubview:indicator];
-
+        
+		indicator.center = CGPointMake(_activityView.frame.size.width/2,
+                                       _activityView.frame.size.height/2);
+        
+		[_activityView addSubview:indicator];
+        
 		[indicator startAnimating];
-		[window addSubview:backgroundView];
-		[UIView animateWithDuration:0.2f
-						 animations:^{
-							 [backgroundView setAlpha:0.5f];
-						 }
-		];
-	}
+		[window addSubview:_activityView];
+    }
+    
+    return _activityView;
 }
 
-+ (void)removeIndicatorView
-{
-    UIView *indicatorView = [[QMUtilities shared] getIndicatorViewIfExists];
-	if ([indicatorView superview]) {
-		[UIView animateWithDuration:0.2f
-						 animations:^{
-							 [indicatorView setAlpha:0.0f];
-						 }
-						 completion:^(BOOL finished) {
-							 [indicatorView removeFromSuperview];
-						 }
-		];
-	}
+- (void)showActivity {
+    
+    if (!self.activityView.superview) {
+        [self.window addSubview:self.activityView];
+    }
 }
 
-- (UIView *)getIndicatorViewIfExists
-{
-	UIWindow *window = [[UIApplication sharedApplication].delegate window];
-	UIView *indicatorView = [window viewWithTag:1304];
-	if (indicatorView) {
-		return indicatorView;
-	}
-	return nil;
+- (void)hideActivity {
+    
+    if (self.activityView.superview) {
+        [self.activityView removeFromSuperview];
+    }
 }
 
++ (void)showActivityView {
+    
+    [QMUtilities.shared showActivity];
+}
 
-+ (void)showIncomingCallController:(NSNotification *)notification
++ (void)hideActivityView {
+    
+    [QMUtilities.shared hideActivity];
+}
+
+- (void)showIncomingCallController:(NSNotification *)notification
 {
     if ([QMUtilities shared].incomingCallController == nil) {
+        
         NSUInteger opponentID = [notification.userInfo[kId] intValue];
         NSUInteger type = [notification.userInfo[@"type"] intValue];
         
-        [QMUtilities shared].incomingCallController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallIdentifier];
+        [QMUtilities shared].incomingCallController =
+        [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallIdentifier];
+        
         [QMUtilities shared].incomingCallController.opponentID = opponentID;
         
         if (type == QBVideoChatConferenceTypeAudioAndVideo) {
             [QMUtilities shared].incomingCallController.isVideoCall = YES;
         }
-        [[[UIApplication sharedApplication].delegate window].rootViewController presentViewController:[QMUtilities shared].incomingCallController animated:NO completion:nil];
+        
+        [self.window.rootViewController presentViewController:[QMUtilities shared].incomingCallController
+                                                     animated:NO completion:nil];
     }
 }
 
-+ (void)dismissIncomingCallController:(NSNotification *)notification
-{
+- (UIWindow *)window {
+    return [[UIApplication sharedApplication].delegate window];
+}
+
+- (void)dismissIncomingCallController {
+    
     if ([QMUtilities shared].incomingCallController != nil) {
         [[[UIApplication sharedApplication].delegate window].rootViewController dismissViewControllerAnimated:NO completion:^{
             [QMUtilities shared].incomingCallController = nil;
         }];
     }
+}
+
+- (void)dismissIncomingCallController:(NSNotification *)notification {
+    
+    [self dismissIncomingCallController];
 }
 
 

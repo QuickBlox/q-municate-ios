@@ -1187,7 +1187,7 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="OS5-zg-wj4">
+                            <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="OS5-zg-wj4">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="412"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1543,12 +1543,8 @@
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="zpv-I5-i7g" id="2vL-5s-clF"/>
-                                    <outlet property="delegate" destination="zpv-I5-i7g" id="Hsk-4s-wWr"/>
-                                </connections>
                             </tableView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kJB-O6-OmZ">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kJB-O6-OmZ">
                                 <rect key="frame" x="0.0" y="411" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -1601,7 +1597,6 @@
                     <connections>
                         <outlet property="inputMessageTextField" destination="S0y-we-M7v" id="rZW-k7-oKo"/>
                         <outlet property="inputMessageView" destination="kJB-O6-OmZ" id="ri8-ou-Cmz"/>
-                        <outlet property="tableView" destination="OS5-zg-wj4" id="MxW-hQ-b4J"/>
                         <segue destination="ifJ-Du-hBS" kind="modal" identifier="ContentPreviewIdentifier" id="m55-Mk-0D3"/>
                     </connections>
                 </viewController>

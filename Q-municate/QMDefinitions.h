@@ -96,15 +96,13 @@ static NSString *const kFriendsReloadedNotification     = @"Friends reloaded";
 static NSString *const kAllUsersLoadedNotification    = @"All users loaded";
 static NSString *const kLoggedInNotification          = @"LoggedInNotification";
 
-static NSString *const kChatDidNotSendMessage			= @"kChatDidNotSendMessage";
-static NSString *const kChatDidReceiveMessage			= @"kChatDidReceiveMessage";
-static NSString *const kChatDidFailWithError			= @"kChatDidFailWithError";
-static NSString *const kChatDidSendMessage				= @"kChatDidSendMessage";
-static NSString *const kChatRoomDidEnterNotification	= @"ChatRoomDidEnter";
-static NSString *const kChatRoomDidReceiveMessageNotification = @"ChatRoomDidReceiveMessage";
-static NSString *const kChatRoomDidChangeOnlineUsersList = @"OnlineUsersListChanged";
-
-static NSString *const kChatDialogsDidLoadedNotification = @"ChatDialogsLoaded";
+static NSString *const kChatDidNotSendMessageNotification       = @"ChatDidNotSendMessageNotification";
+static NSString *const kChatDidReceiveMessageNotification       = @"ChatDidReceiveMessageNotification";
+static NSString *const kChatDidFailWithErrorNotification        = @"ChatDidFailWithErrorNotification";
+static NSString *const kChatDidSendMessageNotification          = @"ChatDidSendMessageNotification";
+static NSString *const kChatRoomDidEnterNotification            = @"ChatRoomDidEnterNotification";
+static NSString *const kChatRoomDidReceiveMessageNotification   = @"ChatRoomDidReceiveMessageNotification";
+static NSString *const kChatDialogsDidLoadedNotification        = @"ChatDialogsDidLoadedNotification";
 
 static NSString *const kChatRoomListUpdateNotification	= @"kChatRoomListUpdateNotification";
 static NSString *const kInviteFriendsDataSourceShouldRefreshNotification 	 = @"kInviteFriendsDataSourceShouldRefreshNotification";

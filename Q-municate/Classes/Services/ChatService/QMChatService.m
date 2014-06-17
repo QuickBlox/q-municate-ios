@@ -440,12 +440,12 @@
         self.allDialogsAsDictionary[kUserID] = currentDialog;
     }
     
-	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidReceiveMessage object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidNotSendMessageNotification object:nil];
 }
 
 - (void)chatDidFailWithError:(NSInteger)code
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidFailWithError
+	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidFailWithErrorNotification
                                                         object:nil
                                                       userInfo:@{@"errorCode" : @(code)}];
 }
@@ -481,6 +481,10 @@
     }
 }
 
+//TODO:(Andrey I.A) need polishing
+
+#define intToString(s) [NSString stringWithFormat:@"%d",s]
+
 - (void)sendInviteMessageToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog
 {
     QBUUser *me = [QMContactList shared].me;
@@ -502,9 +506,8 @@
         inviteMessage.customParameters = customParams;
         
         [[QBChat instance] sendMessage:inviteMessage];
-        
         // save to history:
-        self.allConversations[[@(user.ID) stringValue]] = inviteMessage;
+        self.allConversations[intToString(user.ID)] = inviteMessage;
     }
 }
 
@@ -513,7 +516,7 @@
     QBChatAttachment *attachment = [[QBChatAttachment alloc] init];
     attachment.type = @"photo";
     attachment.url = [blob publicUrl];
-    attachment.ID = [@(blob.ID) stringValue];
+    attachment.ID = intToString(blob.ID);
     
     contentMessage.attachments = @[attachment];
     
@@ -665,13 +668,13 @@
 
 #pragma mark - Chat Utils
 
-- (QBChatMessage *)chatMessageFromContentMessage:(QMChatUploadingMessage *)uploadingMessage
-{
+- (QBChatMessage *)chatMessageFromContentMessage:(QMChatUploadingMessage *)uploadingMessage {
     QBChatMessage *newMessage = [QBChatMessage message];
     newMessage.text = uploadingMessage.text;
     newMessage.recipientID = uploadingMessage.recipientID;
     newMessage.senderID = uploadingMessage.senderID;
     newMessage.attachments = uploadingMessage.attachments;
+    
     return newMessage;
 }
 
@@ -710,7 +713,7 @@
     currentDialog.roomJID = message.customParameters[@"xmpp_room_jid"];
     
     NSString *occupantsIDs = message.customParameters[@"occupants_ids"];
-    currentDialog.occupantIDs = [self stringToArray:occupantsIDs];
+    currentDialog.occupantIDs = [occupantsIDs componentsSeparatedByString:@","];
     
     // save dialog:
     self.allDialogsAsDictionary[currentDialog.roomJID] = currentDialog;
@@ -763,26 +766,6 @@
     return dictionaryOfDialogs;
 }
 
-- (NSArray *)stringToArray:(NSString *)string
-{
-    NSString *newString = [string copy];
-    NSMutableArray *array = [NSMutableArray new];
-    
-    while ([newString rangeOfString:@","].location < 1000000) {
-        NSRange range = [newString rangeOfString:@","];
-        // ID:
-        NSString *ID = [newString substringToIndex:range.location];
-        [array addObject:ID];
-        
-        // оставшаяся строка:
-        newString = [newString substringFromIndex:range.location+1];
-    }
-    [array addObject:newString];
-    
-    return [array copy];
-}
-
-
 #pragma mark - QBActionStatusDelegate
 
 - (void)completedWithResult:(Result *)result
@@ -792,17 +775,11 @@
         if (result.success) {
             if (_chatDialogHistoryBlock) {
                 NSMutableArray *messagesMArray = ((QBChatHistoryMessageResult *)result).messages;
-                if (messagesMArray) {
-                    _chatDialogHistoryBlock(messagesMArray, nil);
-                    _chatDialogHistoryBlock = nil;
-                } else {
-                    messagesMArray = [NSMutableArray new];
-                    _chatDialogHistoryBlock(messagesMArray, nil);
-                    _chatDialogHistoryBlock = nil;
-                }
+                
+                _chatDialogHistoryBlock(messagesMArray ? messagesMArray:@[].mutableCopy, nil);
+                _chatDialogHistoryBlock = nil;
             }
         }
-        
 	}
 }
 

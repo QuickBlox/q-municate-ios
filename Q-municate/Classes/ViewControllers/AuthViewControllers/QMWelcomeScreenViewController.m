@@ -55,10 +55,10 @@
 #pragma mark - Actions
 - (IBAction)connectWithFacebook:(id)sender
 {
-    [QMUtilities createIndicatorView];
+    [QMUtilities showActivityView];
     [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSError *error) {
         if (!success) {
-            [QMUtilities removeIndicatorView];
+            [QMUtilities hideActivityView];
             [self showAlertWithMessage:error.description actionSuccess:NO];
             return;
         }
@@ -113,7 +113,7 @@
 {
     // login to Quickblox chat:
     [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-        [QMUtilities removeIndicatorView];
+        [QMUtilities hideActivityView];
         if (success) {
             UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
             UINavigationController *navigationController = (UINavigationController *)window.rootViewController;

@@ -16,40 +16,8 @@
 
 @implementation AppDelegate
 
-#ifdef TEST_QMDBStore
-
-- (void)testQMDBStorage {
-    
-//   [QMDBStorage cleanDBWithName:@"AndreyIvanov"];
-   
-   [QMDBStorage setupWithName:@"AndreyIvanov"];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        
-        NSMutableArray *users = [NSMutableArray array];
-        for (NSUInteger i = 0; i < 10; i++) {
-            QBUUser *user = [QBUUser user];
-            user.ID = i;
-            user.fullName = [NSString stringWithFormat:@"User %d", i];
-            [users addObject:user];
-        }
-        
-        dispatch_semaphore_t dsema = dispatch_semaphore_create(0);
-        
-        [self.dbStorage cacheUsers:users finish:^{
-            dispatch_semaphore_signal(dsema);
-        }];
-        
-        dispatch_semaphore_wait(dsema, DISPATCH_TIME_FOREVER);
-    });
-}
-#endif
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-
-#ifdef TEST_QMDBStore
-    [self testQMDBStorage];
-#endif
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
@@ -107,6 +75,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    [FBAppCall handleDidBecomeActive];
     // Restart any tasks that were paused (or not yet started) while the application was inactive.
     // If the application was previously in the background, optionally refresh the user interface.
 }

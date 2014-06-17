@@ -39,7 +39,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     
 //    self.dataSource = [QMChatRoomListDataSource new];
     
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessage object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatDidReceiveMessage:) name:kChatDidReceiveMessageNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(localChatAddedNewRoom:) name:kChatRoomListUpdateNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dialogsLoaded) name:kChatDialogsDidLoadedNotification object:nil];
@@ -142,7 +142,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
 - (void)dialogsLoaded
 {
-    [QMUtilities removeIndicatorView];
+    [QMUtilities hideActivityView];
     [self reloadTableView];
 }
 

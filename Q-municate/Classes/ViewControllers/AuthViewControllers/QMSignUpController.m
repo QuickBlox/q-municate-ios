@@ -81,10 +81,10 @@
         return;
     }
     
-    [QMUtilities createIndicatorView];
+    [QMUtilities showActivityView];
     [[QMAuthService shared] signUpWithFullName:self.fullNameField.text email:self.emailField.text password:self.passwordField.text blobID:0 completion:^(QBUUser *user, BOOL success, NSError *error) {
         if (error) {
-            [QMUtilities removeIndicatorView];
+            [QMUtilities hideActivityView];
             [self showAlertWithMessage:error.domain success:NO];
             return;
         }
@@ -103,7 +103,7 @@
 {
     [[QMAuthService shared] logInWithEmail:user.email password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSError *error) {
         if (!success) {
-            [QMUtilities removeIndicatorView];
+            [QMUtilities hideActivityView];
             [self showAlertWithMessage:error.description success:NO];
             return;
         }
@@ -115,7 +115,7 @@
 {
     [[QMAuthService shared] logInWithEmail:user.email password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSError *error) {
         if (!success) {
-            [QMUtilities removeIndicatorView];
+            [QMUtilities hideActivityView];
             [self showAlertWithMessage:error.description success:NO];
             return;
         }
@@ -127,7 +127,7 @@
         [[QMAuthService shared] subscribeToPushNotifications];
         
         [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-            [QMUtilities removeIndicatorView];
+            [QMUtilities hideActivityView];
             if (success) {
                 // go to tab bar:
                 UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
@@ -147,7 +147,7 @@
         //
         [[QMAuthService shared] updateUser:user withBlob:blob completion:^(QBUUser *user, BOOL success, NSError *error) {
             if (!success) {
-                [QMUtilities removeIndicatorView];
+                [QMUtilities hideActivityView];
                 [self showAlertWithMessage:error.description success:NO];
                 return;
             }
@@ -159,7 +159,7 @@
             
             // login to chat:
             [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-                [QMUtilities removeIndicatorView];
+                [QMUtilities hideActivityView];
                 if (success) {
                     // go to tab bar:
                     UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];

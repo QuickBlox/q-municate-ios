@@ -320,7 +320,7 @@
 		return;
 	}
 	if ([self checkForFullnessOfLoginAndMailFields]) {
-		[QMUtilities createIndicatorView];
+		[QMUtilities showActivityView];
 		if (self.isUserPhotoChanged) {
 			QMContent *content = [[QMContent alloc] init];
 			[content loadImageForBlob:self.userPhotoImageView.image named:self.oldUserDataDictionary[@"id"] completion:^(QBCBlob *blob) {
@@ -343,7 +343,7 @@
 		} else {
 			[[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:[NSString stringWithFormat:@"%@", error] delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
 		}
-        [QMUtilities removeIndicatorView];
+        [QMUtilities hideActivityView];
     }];
 
     // hard code till there will be a field in QBUUser where to save to

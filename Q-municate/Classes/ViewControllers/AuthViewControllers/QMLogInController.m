@@ -37,9 +37,9 @@
         [self loadDefaults];
     }
     if (![QMAuthService shared].isSessionCreated) {
-        [QMUtilities createIndicatorView];
+        [QMUtilities showActivityView];
         [[QMAuthService shared] startSessionWithBlock:^(BOOL success, NSError *error) {
-            [QMUtilities removeIndicatorView];
+            [QMUtilities hideActivityView];
             if (success) {
                 ILog(@"Session created");
             } else {
@@ -69,13 +69,13 @@
         return;
     }
     
-    [QMUtilities createIndicatorView];
+    [QMUtilities showActivityView];
 	NSString *mailString = self.emailField.text;
 	mailString = [mailString stringByReplacingOccurrencesOfString:@"+" withString:@"%2b"];
     [[QMAuthService shared] logInWithEmail:mailString password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSError *error) {
         if (!success) {
             ILog(@"error while logging in: %@", error);
-            [QMUtilities removeIndicatorView];
+            [QMUtilities hideActivityView];
             [self showAlertWithMessage:[NSString stringWithFormat:@"%@", error] actionSuccess:NO];
             return;
         }
@@ -95,10 +95,10 @@
 
 - (IBAction)connectWithFacebook:(id)sender
 {
-    [QMUtilities createIndicatorView];
+    [QMUtilities showActivityView];
     [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSError *error) {
         if (!success) {
-            [QMUtilities removeIndicatorView];
+            [QMUtilities hideActivityView];
             [self showAlertWithMessage:error.description actionSuccess:NO];
             return;
         }
@@ -114,7 +114,7 @@
         if (user.blobID == 0) {
             [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
                 if (!success) {
-                    [QMUtilities removeIndicatorView];
+                    [QMUtilities hideActivityView];
                     [self showAlertWithMessage:error.description actionSuccess:NO];
                     return;
                 }
@@ -205,7 +205,7 @@
 
 - (void)resetPasswordForMail:(NSString *)emailString
 {
-    [QMUtilities createIndicatorView];
+    [QMUtilities showActivityView];
     [[QMAuthService shared] resetUserPasswordForEmail:emailString completion:^(Result *result) {
         if (result.success) {
             // show alert
@@ -216,7 +216,7 @@
 
             [self showAlertWithMessage:errorMessage actionSuccess:NO];
         }
-        [QMUtilities removeIndicatorView];
+        [QMUtilities hideActivityView];
     }];
 }
 
@@ -227,7 +227,7 @@
 {
     // login to Quickblox chat:
     [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-        [QMUtilities removeIndicatorView];
+        [QMUtilities hideActivityView];
         if (success) {
             UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
             UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
