@@ -69,7 +69,7 @@
 
 - (void)subscribeToChatNotifications
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineUsersListChanged:) name:kChatRoomDidChangeOnlineUsersList object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineUsersListChanged:) name:kChatRoomDidChangeOnlineUsersListNotification object:nil];
 }
 
 

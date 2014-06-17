@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@class QMChatDataSource;
+
 @interface QMChatVC : UIViewController
 
 @property (strong, nonatomic) UITableView *tableView;
+@property (strong, nonatomic) QMChatDataSource *dataSource;
 
 @end

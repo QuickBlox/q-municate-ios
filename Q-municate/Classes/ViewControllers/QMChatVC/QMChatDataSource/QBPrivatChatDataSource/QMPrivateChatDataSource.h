@@ -10,4 +10,9 @@
 
 @interface QMPrivateChatDataSource : QMChatDataSource
 
+- (instancetype)initWithChatDialog:(QBChatDialog *)dialog forTableView:(UITableView *)tableView
+__attribute__((unavailable("init is not a supported initializer for this class.")));
+
+- (instancetype)initWithChatDialog:(QBChatDialog *)dialog opponent:(QBUUser *)opponent forTableView:(UITableView *)tableView;
+
 @end

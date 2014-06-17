@@ -142,12 +142,11 @@ static CGFloat kCellHeight = 65.0f;
     
     // if chat:
     if ([currentCellIdentifier isEqualToString:QMChatCellIdentifier]) {
+        
         QMChatViewController *chatController = (QMChatViewController *)segue.destinationViewController;
         QBChatDialog *dialog = [[QMChatService shared] chatDialogForFriendWithID:self.currentFriend.ID];
-        chatController.chatDialog = dialog;
+        [chatController setupPrivateChatWithChatDialog:dialog andOpponent:self.currentFriend];
         
-        chatController.chatName = self.currentFriend.fullName;
-        chatController.opponent = self.currentFriend;
         return;
     }
     

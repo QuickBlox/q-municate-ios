@@ -110,16 +110,20 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.destinationViewController isKindOfClass:[QMChatViewController class]]) {
-        QMChatViewController *childController = (QMChatViewController *)segue.destinationViewController;
+        
+        QMChatViewController *chatController = (QMChatViewController *)segue.destinationViewController;
+        
         QBChatDialog *dialog = (QBChatDialog *)sender;
-        childController.chatDialog = dialog;
+        
         if (dialog.type == QBChatDialogTypePrivate) {
+        
             QBUUser *opponent = [[QMContactList shared] searchFriendFromChatDialog:dialog];
-            childController.opponent = opponent;
-            childController.chatName = opponent.fullName;
+            [chatController setupPrivateChatWithChatDialog:dialog andOpponent:opponent];
+            
         } else {
-            childController.chatName = dialog.name;
+            [chatController setupGroupChatWithChatDialog:dialog];
         }
+        
     } else if ([segue.destinationViewController isKindOfClass:[QMCreateNewChatController class]]) {
         
     }

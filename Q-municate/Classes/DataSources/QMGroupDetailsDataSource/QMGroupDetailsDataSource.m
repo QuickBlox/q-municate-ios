@@ -23,7 +23,7 @@
 {
     if (self = [super init]) {
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineParticipantsListLoaded:) name:kChatRoomDidChangeOnlineUsersList object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineParticipantsListLoaded:) name:kChatRoomDidChangeOnlineUsersListNotification object:nil];
         _tableView = tableView;
         _participants = [NSMutableArray new];
         [self findAllParticipantsForChatDialog:chatDialog];

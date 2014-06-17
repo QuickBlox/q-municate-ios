@@ -59,6 +59,7 @@
 /**
  Retrieving user for user id. Returns QBUUser
  */
+#warning GET SIMPLE QBUSER
 - (void)retrieveUserWithID:(NSUInteger)userID completion:(void(^)(QBUUser *user, NSError *error))completion;
 
 

@@ -25,6 +25,9 @@
 /** Upload message needed for replacing with delivered message in chat hisoty. When used, it means that upload finished, and message has been delivered */
 @property (strong, nonatomic) QMChatUploadingMessage *uploadingMessage;
 
+@property (strong, nonatomic) NSMutableDictionary *allChatRoomsAsDictionary;
+@property (strong, nonatomic) NSMutableDictionary *allConversations;
+
 @end
 
 @implementation QMChatService
@@ -297,6 +300,7 @@
         }
         completionHandler(nil, result.errors[0]);
     };
+    
     [[QBChat instance] dialogsWithDelegate:self context:Block_copy((__bridge void *)(resBlock))];
     
 }
@@ -481,7 +485,20 @@
     }
 }
 
-//TODO:(Andrey I.A) need polishing
+- (void)setHistory:(NSArray *)history forIdentifier:(NSString *)identifier {
+    
+    self.allConversations[identifier] = history;
+}
+
+- (NSArray *)historyWithIdentifier:(NSString *)identifier {
+    
+    return self.allConversations[identifier];
+}
+
+- (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID {
+    
+    return self.allChatRoomsAsDictionary[roomJID];
+}
 
 #define intToString(s) [NSString stringWithFormat:@"%d",s]
 
@@ -551,10 +568,8 @@
         if (result.success && [result isKindOfClass:[QBChatHistoryMessageResult class]]) {
             
             NSArray *messages = ((QBChatHistoryMessageResult *)result).messages;
-            
-            [self.dbStorage cacheQBChatMessages:messages withDialogId:dialogIDString finish:^{
-                block(messages, YES, nil);
-            }];
+        
+            block(messages, YES, nil);
             
         }else {
             block(nil, NO, result.errors[0]);
@@ -662,7 +677,7 @@
 
 - (void)chatRoomDidReceiveListOfOnlineUsers:(NSArray *)users room:(NSString *)roomName
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:kChatRoomDidChangeOnlineUsersList object:nil userInfo:@{@"online_users":users}];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kChatRoomDidChangeOnlineUsersListNotification object:nil userInfo:@{@"online_users":users}];
 }
 
 

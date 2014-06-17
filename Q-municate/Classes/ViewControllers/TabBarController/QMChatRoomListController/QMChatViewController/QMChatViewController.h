@@ -9,16 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "QMChatVC.h"
 
-@interface QMChatViewController : QMChatVC <UITableViewDataSource, UITableViewDelegate>
+@interface QMChatViewController : QMChatVC <UITableViewDelegate>
 
-@property (nonatomic, strong) NSString *chatName;
-@property (nonatomic, strong) QBUUser *opponent;  // If not p2p chat, opponent will be nil.
-
-@property (nonatomic, strong) NSArray  *usersRecipientsIdArray;
-@property (nonatomic, strong) QBChatDialog *chatDialog;
-@property (nonatomic, strong) QBChatRoom *chatRoom;
-
-/** Flag for create new chat controller. If you create new dialog - set YES. */
-@property (nonatomic, assign) BOOL createdJustNow;
+- (void)setupPrivateChatWithChatDialog:(QBChatDialog *)chatDialog andOpponent:(QBUUser *)opponent;
+- (void)setupGroupChatWithChatDialog:(QBChatDialog *)chatDialog;
 
 @end

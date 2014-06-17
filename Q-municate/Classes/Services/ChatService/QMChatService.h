@@ -11,10 +11,8 @@
 
 @interface QMChatService : NSObject
 
-
-@property (strong, nonatomic) NSMutableDictionary *allConversations;
 @property (strong, nonatomic) NSMutableDictionary *allDialogsAsDictionary;
-@property (strong, nonatomic) NSMutableDictionary *allChatRoomsAsDictionary;
+
 
 @property (strong, nonatomic) QBWebRTCVideoChat *activeStream;
 
@@ -42,8 +40,12 @@
 - (void)rejectFriendsRequestFromUserWithID:(NSUInteger)userID;
 - (void)removeContactFromFriendsWithID:(NSUInteger)userID;
 
-
 #pragma mark - CHAT
+
+- (void)setHistory:(NSArray *)history forIdentifier:(NSString *)identifier;
+- (NSArray *)historyWithIdentifier:(NSString *)identifier;
+
+- (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID;
 
 #pragma mark - Chat Dialogs
 

@@ -21,11 +21,12 @@
 		55943AAD1941C8CA00BF4312 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D57E5918ACC11C00A9900A /* UIKit.framework */; };
 		55943AC21941C8EC00BF4312 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55943ABD1941C8EC00BF4312 /* InfoPlist.strings */; };
 		55943AC31941C8EC00BF4312 /* Q_municateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 55943ABF1941C8EC00BF4312 /* Q_municateTests.m */; };
-		55943AC41941C8EC00BF4312 /* QmunicateTests-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 55943AC01941C8EC00BF4312 /* QmunicateTests-Info.plist */; };
 		559CD7501948A82100605A98 /* QMChatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 559CD74F1948A82100605A98 /* QMChatVC.m */; };
 		559CD7541948A8DB00605A98 /* QMChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 559CD7531948A8DB00605A98 /* QMChatCell.m */; };
 		559CD7581948B2A600605A98 /* QMChatInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 559CD7571948B2A600605A98 /* QMChatInputView.m */; };
 		55A6D226194ECE81008B284B /* QMChatDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A6D225194ECE81008B284B /* QMChatDataSource.m */; };
+		55A6D22B194EF8BC008B284B /* QMGroupChatDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A6D22A194EF8BC008B284B /* QMGroupChatDataSource.m */; };
+		55A6D22E194EF8D9008B284B /* QMPrivateChatDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A6D22D194EF8D9008B284B /* QMPrivateChatDataSource.m */; };
 		55D270911940B8D300238D50 /* QMDBStorage+Dialogs.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270111940B8D300238D50 /* QMDBStorage+Dialogs.m */; };
 		55D270921940B8D300238D50 /* QMDBStorage+Messages.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270141940B8D300238D50 /* QMDBStorage+Messages.m */; };
 		55D270931940B8D300238D50 /* QMDBStorage+Users.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270171940B8D300238D50 /* QMDBStorage+Users.m */; };
@@ -236,6 +237,10 @@
 		559CD7571948B2A600605A98 /* QMChatInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatInputView.m; sourceTree = "<group>"; };
 		55A6D224194ECE81008B284B /* QMChatDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatDataSource.h; sourceTree = "<group>"; };
 		55A6D225194ECE81008B284B /* QMChatDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatDataSource.m; sourceTree = "<group>"; };
+		55A6D229194EF8BC008B284B /* QMGroupChatDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMGroupChatDataSource.h; sourceTree = "<group>"; };
+		55A6D22A194EF8BC008B284B /* QMGroupChatDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMGroupChatDataSource.m; sourceTree = "<group>"; };
+		55A6D22C194EF8D9008B284B /* QMPrivateChatDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMPrivateChatDataSource.h; sourceTree = "<group>"; };
+		55A6D22D194EF8D9008B284B /* QMPrivateChatDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMPrivateChatDataSource.m; sourceTree = "<group>"; };
 		55D270101940B8D300238D50 /* QMDBStorage+Dialogs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QMDBStorage+Dialogs.h"; sourceTree = "<group>"; };
 		55D270111940B8D300238D50 /* QMDBStorage+Dialogs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMDBStorage+Dialogs.m"; sourceTree = "<group>"; };
 		55D270131940B8D300238D50 /* QMDBStorage+Messages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QMDBStorage+Messages.h"; sourceTree = "<group>"; };
@@ -639,8 +644,28 @@
 			children = (
 				55A6D224194ECE81008B284B /* QMChatDataSource.h */,
 				55A6D225194ECE81008B284B /* QMChatDataSource.m */,
+				55A6D227194EF718008B284B /* QBGroupChatDataSource */,
+				55A6D228194EF718008B284B /* QBPrivatChatDataSource */,
 			);
 			path = QMChatDataSource;
+			sourceTree = "<group>";
+		};
+		55A6D227194EF718008B284B /* QBGroupChatDataSource */ = {
+			isa = PBXGroup;
+			children = (
+				55A6D229194EF8BC008B284B /* QMGroupChatDataSource.h */,
+				55A6D22A194EF8BC008B284B /* QMGroupChatDataSource.m */,
+			);
+			path = QBGroupChatDataSource;
+			sourceTree = "<group>";
+		};
+		55A6D228194EF718008B284B /* QBPrivatChatDataSource */ = {
+			isa = PBXGroup;
+			children = (
+				55A6D22C194EF8D9008B284B /* QMPrivateChatDataSource.h */,
+				55A6D22D194EF8D9008B284B /* QMPrivateChatDataSource.m */,
+			);
+			path = QBPrivatChatDataSource;
 			sourceTree = "<group>";
 		};
 		55D2700D1940B8D300238D50 /* CoreData */ = {
@@ -1258,7 +1283,6 @@
 			children = (
 				69DF2D4B194D913D00E8E80F /* QMFriendsDetailsDataSource */,
 				69C43C8E194C4B4D007E7DAF /* QMGroupDetailsDataSource */,
-				8DE89C2A54B6D7C4A9964D32 /* QMChatDataSource */,
 				8DE89CDB6378EF1EFB424A6B /* QMFriendsListDataSource */,
 				8DE89198A999DDE0830B3D47 /* QMInviteFriendsDataSource */,
 				8DE893083B15EA49F4B76D86 /* QMChatsControllerDataSource */,
@@ -1468,7 +1492,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = QM;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Quickblox;
 				TargetAttributes = {
 					55943AAA1941C8CA00BF4312 = {
@@ -1502,7 +1526,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				55943AC41941C8EC00BF4312 /* QmunicateTests-Info.plist in Resources */,
 				55943AC21941C8EC00BF4312 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1586,6 +1609,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55D270AE1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalManualMigrations.m in Sources */,
+				55A6D22E194EF8D9008B284B /* QMPrivateChatDataSource.m in Sources */,
 				B71E0562190FAAF900DD6D34 /* QMCreateNewChatController.m in Sources */,
 				55D270971940B8D300238D50 /* _CDMessages.m in Sources */,
 				55D270A91940B8D300238D50 /* NSManagedObjectContext+MagicalSaves.m in Sources */,
@@ -1649,6 +1673,7 @@
 				690D9692193DF16D00BC4C70 /* QMRootViewController.m in Sources */,
 				693808C819373A6700BF926F /* QMChatUploadingMessage.m in Sources */,
 				B71E0561190FAAF900DD6D34 /* QMChatViewController.m in Sources */,
+				55A6D22B194EF8BC008B284B /* QMGroupChatDataSource.m in Sources */,
 				6943847918E42678001E08A9 /* QMContactList.m in Sources */,
 				6943847C18E42678001E08A9 /* QMSignUpController.m in Sources */,
 				55D270B11940B8D300238D50 /* NSDictionary+MagicalRecordAdditions.m in Sources */,
@@ -1788,7 +1813,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1829,7 +1853,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1864,43 +1887,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 869075CA2A3446469130768E /* Pods.xcconfig */;
 			buildSettings = {
-				ARCHS = armv7;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Taras Filatov (6AVH4TA956)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Taras Filatov (6AVH4TA956)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/External\"",
-					"$(PROJECT_DIR)/External",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Q-municate/Qmunicate-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/External\"",
-				);
-				INFOPLIST_FILE = "Q-municate/Qmunicate-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				OTHER_LDFLAGS = (
-					"-lxml2",
-					"-ObjC",
-					"-lstdc++",
-				);
-				PRODUCT_NAME = Qmunicate;
-				PROVISIONING_PROFILE = "6E004364-5E2F-449B-9394-5906B3C651CF";
-				SDKROOT = iphoneos;
-				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
-				VALID_ARCHS = armv7;
-				WRAPPER_EXTENSION = app;
-			};
-			name = Debug;
-		};
-		69D57E8018ACC11C00A9900A /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 869075CA2A3446469130768E /* Pods.xcconfig */;
-			buildSettings = {
-				ARCHS = armv7;
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "";
@@ -1918,13 +1905,51 @@
 				);
 				INFOPLIST_FILE = "Q-municate/Qmunicate-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-ObjC",
 					"-lstdc++",
 				);
 				PRODUCT_NAME = Qmunicate;
-				PROVISIONING_PROFILE = "5F37965B-59B5-461B-83F6-77EFE66FC01B";
+				PROVISIONING_PROFILE = "F7F235D5-C871-4D94-A2BF-0EC942129F0B";
+				SDKROOT = iphoneos;
+				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
+				VALID_ARCHS = armv7;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		69D57E8018ACC11C00A9900A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 869075CA2A3446469130768E /* Pods.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/External\"",
+					"$(PROJECT_DIR)/External",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Q-municate/Qmunicate-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/External\"",
+				);
+				INFOPLIST_FILE = "Q-municate/Qmunicate-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = (
+					"-lxml2",
+					"-ObjC",
+					"-lstdc++",
+				);
+				PRODUCT_NAME = Qmunicate;
+				PROVISIONING_PROFILE = "BC829C9B-8971-4B79-8BB5-482ECD39A43A";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VALID_ARCHS = armv7;

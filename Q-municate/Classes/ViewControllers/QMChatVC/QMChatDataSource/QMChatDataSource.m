@@ -7,50 +7,102 @@
 //
 
 #import "QMChatDataSource.h"
+#import "QMChatService.h"
+#import "QMDBStorage+Messages.h"
 
-@interface QMChatDataSource()
+@interface QMChatDataSource() <UITableViewDataSource>
 
+@property (weak, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) QBUUser *opponent;
-@property (strong, nonatomic) QBChatDialog *chatDialog;
-
+@property (strong, nonatomic) QBChatRoom *chatRoom;
 @end
 
 @implementation QMChatDataSource
 
-- (instancetype)initWithChatDialog:(QBChatDialog *)chatDialog {
+- (instancetype)initWithChatDialog:(QBChatDialog *)dialog forTableView:(UITableView *)tableView {
     
     self = [super init];
     
     if (self) {
-        self.chatDialog = chatDialog;
+        self.chatDialog = dialog;
+        self.tableView = tableView;
+        tableView.dataSource = self;
+        
+        QMChatService *chatService = [QMChatService shared];
+        NSString *identifier = [self messagesIdentifier];
+        
+        self.history = [chatService historyWithIdentifier:identifier].mutableCopy;
     }
     
     return self;
 }
 
-- (void) a{
+- (void)reloadTableViewData {
     
-    if (self.chatDialog.type != QBChatDialogTypePrivate) {
-        
-        // if user is joined, return
-        if (![self userIsJoinedRoomForDialog:self.chatDialog]) {
-            
-            // enter chat room:
-            [QMUtilities showActivityView];
-            [[QMChatService shared] joinRoomWithRoomJID:self.chatDialog.roomJID];
-        }
-        self.chatRoom = [QMChatService shared].allChatRoomsAsDictionary[self.chatDialog.roomJID];
-        // load history:
-        self.chatHistory = [QMChatService shared].allConversations[self.chatDialog.roomJID];
-        if (self.chatHistory == nil) {
-            [QMUtilities showActivityView];
-            [self loadHistory];
-        }
-        return;
-    }
-    
+    [self.tableView reloadData];
 }
 
+- (void)loadHistory:(void(^)(void))finish {
+    
+    void(^reloadDataAfterGetMessages) (NSArray *messages) = ^(NSArray *messages) {
+        
+        if (messages.count > 0) {
+            
+            QMChatService *chatService = [QMChatService shared];
+            NSString *identifier = [self messagesIdentifier];
+            
+            NSAssert(identifier, @"check it");
+            
+            [chatService setHistory:messages forIdentifier:identifier];
+        }
+    };
+    
+    [[QMChatService shared] getMessageHistoryWithDialogID:self.chatDialog.ID withCompletion:^(NSArray *messages, BOOL success, NSError *error) {
+        reloadDataAfterGetMessages(messages);
+    }];
+}
+
+#pragma mark - Abstract methods
+
+#define CHECK_OVERRIDE()\
+@throw\
+[NSException exceptionWithName:NSInternalInconsistencyException \
+                        reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]\
+                      userInfo:nil]
+
+- (NSArray *)cachedHistory {
+    
+    CHECK_OVERRIDE();
+    return nil;
+}
+
+- (void)sendMessageWithText:(NSString *)text {
+    
+    CHECK_OVERRIDE();
+}
+
+- (NSString *)messagesIdentifier {
+    
+    CHECK_OVERRIDE();
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    CHECK_OVERRIDE();
+    return 0;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    CHECK_OVERRIDE();
+    return 0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    CHECK_OVERRIDE();
+    return nil;
+}
 
 #pragma mark - Notifications
 
@@ -82,8 +134,6 @@
     
     NSNotificationCenter *notifCenter = [NSNotificationCenter defaultCenter];
     [notifCenter removeObserver:self];
-    
-    
 }
 
 #pragma mark -

@@ -96,13 +96,14 @@ static NSString *const kFriendsReloadedNotification     = @"Friends reloaded";
 static NSString *const kAllUsersLoadedNotification    = @"All users loaded";
 static NSString *const kLoggedInNotification          = @"LoggedInNotification";
 
-static NSString *const kChatDidNotSendMessageNotification       = @"ChatDidNotSendMessageNotification";
-static NSString *const kChatDidReceiveMessageNotification       = @"ChatDidReceiveMessageNotification";
-static NSString *const kChatDidFailWithErrorNotification        = @"ChatDidFailWithErrorNotification";
-static NSString *const kChatDidSendMessageNotification          = @"ChatDidSendMessageNotification";
-static NSString *const kChatRoomDidEnterNotification            = @"ChatRoomDidEnterNotification";
-static NSString *const kChatRoomDidReceiveMessageNotification   = @"ChatRoomDidReceiveMessageNotification";
-static NSString *const kChatDialogsDidLoadedNotification        = @"ChatDialogsDidLoadedNotification";
+static NSString *const kChatDidNotSendMessageNotification               = @"ChatDidNotSendMessageNotification";
+static NSString *const kChatDidReceiveMessageNotification               = @"ChatDidReceiveMessageNotification";
+static NSString *const kChatDidFailWithErrorNotification                = @"ChatDidFailWithErrorNotification";
+static NSString *const kChatDidSendMessageNotification                  = @"ChatDidSendMessageNotification";
+static NSString *const kChatRoomDidEnterNotification                    = @"ChatRoomDidEnterNotification";
+static NSString *const kChatRoomDidReceiveMessageNotification           = @"ChatRoomDidReceiveMessageNotification";
+static NSString *const kChatDialogsDidLoadedNotification                = @"ChatDialogsDidLoadedNotification";
+static NSString *const kChatRoomDidChangeOnlineUsersListNotification    = @"ChatRoomDidChangeOnlineUsersListNotification";
 
 static NSString *const kChatRoomListUpdateNotification	= @"kChatRoomListUpdateNotification";
 static NSString *const kInviteFriendsDataSourceShouldRefreshNotification 	 = @"kInviteFriendsDataSourceShouldRefreshNotification";
