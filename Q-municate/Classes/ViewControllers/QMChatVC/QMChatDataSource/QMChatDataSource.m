@@ -140,18 +140,22 @@
 
 - (void)chatDidReceiveMessageNotification:(NSNotification *)notificaiton {
     
+    NSLog(@"%@", NSStringFromSelector(_cmd));
 }
 
 - (void)chatRoomListUpdateNotification:(NSNotification *)notification {
     
+    NSLog(@"%@", NSStringFromSelector(_cmd));
 }
 
 - (void)chatDialogsDidLoadedNotification:(NSNotification *)notification {
     
+    NSLog(@"%@", NSStringFromSelector(_cmd));
 }
 
 - (void)chatRoomDidReceiveMessageNotification:(NSNotification *)notification {
     
+    NSLog(@"%@", NSStringFromSelector(_cmd));
 }
 
 @end
