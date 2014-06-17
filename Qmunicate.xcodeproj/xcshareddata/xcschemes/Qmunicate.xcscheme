@@ -15,23 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "69D57E5118ACC11C00A9900A"
-               BuildableName = "Q-municate.app"
-               BlueprintName = "Q-municate"
-               ReferencedContainer = "container:Q-municate.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "NO"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "55943AAA1941C8CA00BF4312"
-               BuildableName = "Q-municateTests"
-               BlueprintName = "Q-municateTests"
-               ReferencedContainer = "container:Q-municate.xcodeproj">
+               BuildableName = "Qmunicate.app"
+               BlueprintName = "Qmunicate"
+               ReferencedContainer = "container:Qmunicate.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "69D57E5118ACC11C00A9900A"
-            BuildableName = "Q-municate.app"
-            BlueprintName = "Q-municate"
-            ReferencedContainer = "container:Q-municate.xcodeproj">
+            BuildableName = "Qmunicate.app"
+            BlueprintName = "Qmunicate"
+            ReferencedContainer = "container:Qmunicate.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -66,9 +52,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "69D57E5118ACC11C00A9900A"
-            BuildableName = "Q-municate.app"
-            BlueprintName = "Q-municate"
-            ReferencedContainer = "container:Q-municate.xcodeproj">
+            BuildableName = "Qmunicate.app"
+            BlueprintName = "Qmunicate"
+            ReferencedContainer = "container:Qmunicate.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -84,9 +70,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "69D57E5118ACC11C00A9900A"
-            BuildableName = "Q-municate.app"
-            BlueprintName = "Q-municate"
-            ReferencedContainer = "container:Q-municate.xcodeproj">
+            BuildableName = "Qmunicate.app"
+            BlueprintName = "Qmunicate"
+            ReferencedContainer = "container:Qmunicate.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
