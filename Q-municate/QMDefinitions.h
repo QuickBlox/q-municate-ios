@@ -11,6 +11,12 @@
 
 #define IS_HEIGHT_GTE_568 [[UIScreen mainScreen ] bounds].size.height == 568.0f
 
+#define CHECK_OVERRIDE()\
+@throw\
+[NSException exceptionWithName:NSInternalInconsistencyException \
+reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]\
+userInfo:nil]
+
 
 //*********** Settings Cell Row Names **********************
 #define QMSettingsNormalCellRowProfile              0
@@ -112,6 +118,8 @@ static NSString *const kChatDialogsDidLoadedNotification = @"ChatDialogsLoaded";
 static NSString *const kChatRoomListUpdateNotification	= @"kChatRoomListUpdateNotification";
 static NSString *const kInviteFriendsDataSourceShouldRefreshNotification 	 = @"kInviteFriendsDataSourceShouldRefreshNotification";
 
+static NSString *const kChatDialogUpdatedNotification = @"ChatDialogUpdated";
+
 
 //****************** Calls Notifications  ***********************
 static NSString *const kIncomingCallNotification = @"Incoming Call";
@@ -120,6 +128,8 @@ static NSString *const kCallWasRejectedNotification = @"Call Was Rejected";
 static NSString *const kCallUserDidNotAnswerNotification = @"User didn't answer";
 static NSString *const kCallDidAcceptByUserNotification = @"User accepted call";
 static NSString *const kCallDidStartedByUserNotification = @"Call was started";
+
+
 static NSString *const kChatViewCellIdentifier          = @"ChatViewCell";
 static NSString *const kCreateChatCellIdentifier        = @"CreateChatCell";
 static NSString *const kFriendsListCellIdentifier       = @"FriendsListCell";
@@ -127,6 +137,7 @@ static NSString *const kGroupDetailsCellIdentifier      = @"GroupDetailsCell";
 static NSString *const kContactListCellIdentifier       = @"contactsCell";
 static NSString *const kFacebookCellIdentifier          = @"facebookCell";
 static NSString *const kInviteFriendCellIdentifier      = @"InviteFriendCell";
+
 
 
 

@@ -7,14 +7,17 @@
 //
 
 #import "QMGroupDetailsController.h"
+#import "QMAddMembersToGroupController.h"
 #import <AsyncImageView.h>
 #import "QMGroupDetailsDataSource.h"
+#import "QMChatService.h"
+#import "QMUtilities.h"
 
 
 @interface QMGroupDetailsController () <UITableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet AsyncImageView *groupAvatarView;
-@property (weak, nonatomic) IBOutlet UILabel *groupNameLabel;
+@property (weak, nonatomic) IBOutlet UITextField *groupNameField;
 @property (weak, nonatomic) IBOutlet UILabel *occupantsCountLabel;
 @property (weak, nonatomic) IBOutlet UILabel *onlineOccupantsCountLabel;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -31,7 +34,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [self subscribeToChatNotifications];
+    [self subscribeToNotifications];
     
     // init data source for tableview:
     self.dataSource = [[QMGroupDetailsDataSource alloc] initWithChatDialog:self.chatDialog tableView:self.tableView];
@@ -39,6 +42,11 @@
     
     // request online users statuses:
     [self.chatRoom requestOnlineUsers];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     
     // show chat dialog getails on view:
     [self showQBChatDialogDetails:self.chatDialog];
@@ -50,12 +58,37 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (IBAction)changeDialogName:(id)sender
+{
+    [QMUtilities createIndicatorView];
+    
+    [[QMChatService shared] changeChatName:self.groupNameField.text forChatDialog:self.chatDialog completion:^(QBChatDialog *dialog, NSError *error) {
+        if (error) {
+            [QMUtilities removeIndicatorView];
+            return;
+        }
+        
+        //send update dialog notifications to all participants of this group!
+        [[QMChatService shared] sendChatDialogDidUpdateNotificationToUsers:[self.dataSource participants] withChatDialog:dialog];
+        
+        // local notification:
+        [[NSNotificationCenter defaultCenter] postNotificationName:kChatDialogUpdatedNotification object:nil userInfo:@{@"room_jid":dialog.roomJID}];
+        
+        [QMUtilities removeIndicatorView];
+    }];
+}
+
 - (void)showQBChatDialogDetails:(QBChatDialog *)chatDialog
 {
     if (chatDialog != nil && chatDialog.type == QBChatDialogTypeGroup) {
         
         // set group name:
-        self.groupNameLabel.text = chatDialog.name;
+        self.groupNameField.text = chatDialog.name;
         
         // numb of participants:
         NSString *occupantsCountText = [NSString stringWithFormat:@"%lu participants", (unsigned long)[self.chatDialog.occupantIDs count]];
@@ -67,9 +100,10 @@
     }
 }
 
-- (void)subscribeToChatNotifications
+- (void)subscribeToNotifications
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineUsersListChanged:) name:kChatRoomDidChangeOnlineUsersList object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatDialogWasUpdated:) name:kChatDialogUpdatedNotification object:nil];
 }
 
 
@@ -82,6 +116,36 @@
     // update online participants count:
     NSString *onlineUsersCountText = [NSString stringWithFormat:@"%lu/%lu online", (unsigned long)[onlineUsrList count], (unsigned long)[self.chatDialog.occupantIDs count]];
     self.onlineOccupantsCountLabel.text = onlineUsersCountText;
+}
+
+- (void)chatDialogWasUpdated:(NSNotification *)notification
+{
+    NSString *roomJID = notification.userInfo[@"room_jid"];
+    QBChatDialog *updatedDialog = [QMChatService shared].allDialogsAsDictionary[roomJID];
+    self.chatDialog = updatedDialog;
+    
+    // update UI:
+    [self showQBChatDialogDetails:self.chatDialog];
+    [self updateDataSource];
+    
+    // request online users statuses:
+    [self.chatRoom requestOnlineUsers];
+}
+
+- (void)updateDataSource
+{
+    _dataSource = [[QMGroupDetailsDataSource alloc] initWithChatDialog:self.chatDialog tableView:self.tableView];
+    self.tableView.dataSource = _dataSource;
+}
+
+
+#pragma mark - Segue
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.destinationViewController isKindOfClass:QMAddMembersToGroupController.class]) {
+        ((QMAddMembersToGroupController *)segue.destinationViewController).chatDialog = self.chatDialog;
+    }
 }
 
 @end

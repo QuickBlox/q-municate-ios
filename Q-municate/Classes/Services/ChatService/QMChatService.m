@@ -320,15 +320,9 @@
     NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
     extendedRequest[@"name"] = dialogName;
     
-    QBResultBlock resultBlock = ^(Result *result) {
-        if (result.success && [result isKindOfClass:[QBChatDialogResult class]]) {
-            QBChatDialog *chatDialog = ((QBChatDialogResult *)result).dialog;
-            completionHandler(chatDialog, nil);
-            return;
-        }
-        completionHandler(nil, result.errors[0]);
-    };
-    [[QBChat instance] updateDialogWithID:chatDialog.ID extendedRequest:extendedRequest delegate:self context:Block_copy((__bridge void *)(resultBlock))];
+    [self updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialog *dialog, NSError *error) {
+        completionHandler(dialog, error);
+    }];
 }
 
 - (void)addUsers:(NSArray *)users toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completionHandler
@@ -338,16 +332,9 @@
     NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
     extendedRequest[@"push[occupants_ids][]"] = usersIDsAsString;
     
-    QBResultBlock resultBlock = ^(Result *result) {
-        if (result.success && [result isKindOfClass:[QBChatDialogResult class]]) {
-            QBChatDialog *chatDialog = ((QBChatDialogResult *)result).dialog;
-            completionHandler(chatDialog, nil);
-            return;
-        }
-        completionHandler(nil, result.errors[0]);
-    };
-    
-    [[QBChat instance] updateDialogWithID:chatDialog.ID extendedRequest:extendedRequest delegate:self context:Block_copy((__bridge void *)(resultBlock))];
+    [self updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialog *dialog, NSError *error) {
+        completionHandler(dialog, error);
+    }];
 }
 
 - (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completionHandler
@@ -355,16 +342,29 @@
     NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
     extendedRequest[@"pull_all[occupants_ids][]"] = [NSString stringWithFormat:@"%lu", (unsigned long)[QMContactList shared].me.ID];
     
+    [self updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialog *dialog, NSError *error) {
+        completionHandler(dialog, error);
+    }];
+}
+
+/** ABSTRACT UPDATE CHAT DIALOG METHOD */
+
+- (void)updateChatDialogWithID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest completion:(QBChatDialogResultBlock)completionHandler
+{
     QBResultBlock resultBlock = ^(Result *result) {
         if (result.success && [result isKindOfClass:[QBChatDialogResult class]]) {
             QBChatDialog *chatDialog = ((QBChatDialogResult *)result).dialog;
+            
+            // save to history:
+            self.allDialogsAsDictionary[chatDialog.roomJID] = chatDialog;
+            
             completionHandler(chatDialog, nil);
             return;
         }
         completionHandler(nil, result.errors[0]);
     };
     
-    [[QBChat instance] updateDialogWithID:chatDialog.ID extendedRequest:extendedRequest delegate:self context:Block_copy((__bridge void *)(resultBlock))];
+    [[QBChat instance] updateDialogWithID:dialogID extendedRequest:extendedRequest delegate:self context:Block_copy((__bridge void *)(resultBlock))];
 }
 
 
@@ -452,13 +452,14 @@
 
 - (void)sendMessage:(QBChatMessage *)message
 {
-    // additional params:
-    NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
-    message.customParameters[@"date_sent"] = @(timestamp);
-    message.customParameters[@"save_to_history"] = @YES;
-    
     // send message:
-	[[QBChat instance] sendMessage:message]; 
+	[[QBChat instance] sendMessage:message];
+    
+    // check for notification message. If exist, ignore them
+    NSUInteger notificationType = [message.customParameters[@"notification_type"] integerValue];
+    if (notificationType == 2 || notificationType == 1) {
+        return;
+    }
     
     // get dialog entity with current user:
     NSString *kRecipientID = [@(message.recipientID) stringValue];
@@ -487,7 +488,7 @@
     }
 }
 
-- (void)sendInviteMessageToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog
+- (void)sendChatDialogDidCreateNotificationToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog
 {
     QBUUser *me = [QMContactList shared].me;
     for (QBUUser *user in users) {
@@ -505,12 +506,46 @@
         customParams[@"type"] = @(chatDialog.type);
         customParams[@"occupants_ids"] = [chatDialog.occupantIDs stringFromArray];
         
+        NSTimeInterval timestamp = (unsigned long)[[NSDate date] timeIntervalSince1970];
+        customParams[@"date_sent"] = @(timestamp);
+        customParams[@"save_to_history"] = @YES;
+        
+        // save to hostory:
+        customParams[@"notification_type"] = @"1";
+        
         inviteMessage.customParameters = customParams;
         
         [[QBChat instance] sendMessage:inviteMessage];
         
         // save to history:
         self.allConversations[[@(user.ID) stringValue]] = inviteMessage;
+    }
+}
+
+- (void)sendChatDialogDidUpdateNotificationToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog
+{
+    QBUUser *me = [QMContactList shared].me;
+    for (QBUUser *user in users) {
+        if ([user isEqual:me]) {
+            continue;
+        }
+        // create message:
+        QBChatMessage *updateMessage = [QBChatMessage message];
+        updateMessage.recipientID = user.ID;
+        
+        NSMutableDictionary *customParams = [NSMutableDictionary new];
+        customParams[@"_id"] = chatDialog.ID;
+        customParams[@"xmpp_room_jid"] = chatDialog.roomJID;
+        customParams[@"name"] = chatDialog.name;
+        customParams[@"type"] = @(chatDialog.type);
+        customParams[@"occupants_ids"] = [chatDialog.occupantIDs stringFromArray];
+
+        // notification type: 2 = Chat dialog was updated:
+        customParams[@"notification_type"] = @"2";
+        
+        updateMessage.customParameters = customParams;
+        
+        [[QBChat instance] sendMessage:updateMessage];
     }
 }
 
@@ -529,6 +564,14 @@
             [self sendMessage:contentMessage toRoom:currentRoom];
         }
     }
+    
+    // additional params:
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    NSTimeInterval timestamp = (unsigned long)[[NSDate date] timeIntervalSince1970];
+    params[@"date_sent"] = @(timestamp);
+    params[@"save_to_history"] = @YES;
+    contentMessage.customParameters = params;
+    
     [self sendMessage:contentMessage];
 }
 
@@ -569,11 +612,6 @@
 
 - (void)sendMessage:(QBChatMessage *)message toRoom:(QBChatRoom *)chatRoom
 {
-    // additional params:
-    NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
-    message.customParameters[@"date_sent"] = @(timestamp);
-    message.customParameters[@"save_to_history"] = @YES;
-    
     // send message to user:
     [[QBChat instance] sendChatMessage:message toRoom:chatRoom];
     

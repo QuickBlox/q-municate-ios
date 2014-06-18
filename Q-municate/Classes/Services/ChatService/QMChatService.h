@@ -71,9 +71,17 @@
 /** Send group chat message to current room */
 - (void)sendMessage:(QBChatMessage *)message toRoom:(QBChatRoom *)chatRoom;
 
-- (void)sendInviteMessageToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog;
+/** Notification, that informs other participants about creating chat dialog. */
+- (void)sendChatDialogDidCreateNotificationToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog;
+
+/** Notification, that informs other participants of dialog about dialog updates. Chat Dialog should contain chat dialog id. May contain occupants ids, or chat name */
+- (void)sendChatDialogDidUpdateNotificationToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog;
+
 - (void)sendContentMessage:(QMChatUploadingMessage *)message withBlob:(QBCBlob *)blob;
+
+/** Creates QBChatRoom instance with room_jid field. */
 - (void)joinRoomWithRoomJID:(NSString *)roomJID;
+
 - (void)joinRoomsForDialogs:(NSArray *)chatDialogs;
 
 - (void)getMessageHistoryWithDialogID:(NSString *)dialogIDString withCompletion:(void(^)(NSArray *messages, BOOL success, NSError *error))block;

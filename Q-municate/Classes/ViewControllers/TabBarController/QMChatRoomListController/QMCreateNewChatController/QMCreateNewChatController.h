@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "QMAddUsersAbstractController.h"
 
-@interface QMCreateNewChatController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface QMCreateNewChatController : QMAddUsersAbstractController
 
 @end

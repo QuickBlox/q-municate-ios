@@ -159,6 +159,8 @@ static CGFloat const kCellHeightOffset = 33.0f;
     // chat room:
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatRoomDidEnterNotification) name:kChatRoomDidEnterNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatRoomDidReveiveMessage) name:kChatRoomDidReceiveMessageNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateNavTitleWithNotification:) name:kChatDialogUpdatedNotification object:nil];
 }
 
 - (void)configureNavBarButtons
@@ -443,7 +445,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 	[self performSegueWithIdentifier:kGroupDetailsSegueIdentifier sender:nil];
 }
 
-#pragma mark - Chat Notifications
+#pragma mark - Notifications
 
 
 - (void)localChatDidReceiveMessage:(NSNotification *)notification
@@ -474,6 +476,15 @@ static CGFloat const kCellHeightOffset = 33.0f;
     [self resetTableView];
 }
 
+- (void)updateNavTitleWithNotification:(NSNotification *)notification
+{
+    // update chat dialog:
+    NSString *roomJID = notification.userInfo[@"room_jid"];
+    QBChatDialog *dialog = [QMChatService shared].allDialogsAsDictionary[roomJID];
+    self.chatDialog = dialog;
+    self.title = dialog.name;
+}
+
 
 #pragma mark -
 - (IBAction)sendMessageButtonClicked:(UIButton *)sender
@@ -481,6 +492,13 @@ static CGFloat const kCellHeightOffset = 33.0f;
 	if (self.inputMessageTextField.text.length) {
 		QBChatMessage *chatMessage = [QBChatMessage new];
 		chatMessage.text = self.inputMessageTextField.text;
+        
+        // additional params:
+        NSMutableDictionary *params = [NSMutableDictionary new];
+        NSTimeInterval timestamp = (unsigned long)[[NSDate date] timeIntervalSince1970];
+        params[@"date_sent"] = @(timestamp);
+        params[@"save_to_history"] = @YES;
+        chatMessage.customParameters = params;
         
 		if (self.chatDialog.type == QBChatDialogTypePrivate) { // private chat
             chatMessage.recipientID = self.opponent.ID;

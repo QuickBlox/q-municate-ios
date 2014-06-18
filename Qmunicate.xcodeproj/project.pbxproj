@@ -79,6 +79,8 @@
 		693808C5193738C400BF926F /* QMUploadAttachCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 693808C4193738C400BF926F /* QMUploadAttachCell.m */; };
 		693808C819373A6700BF926F /* QMChatUploadingMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 693808C719373A6700BF926F /* QMChatUploadingMessage.m */; };
 		693808CC19378E3100BF926F /* QMContentPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 693808CB19378E3100BF926F /* QMContentPreviewController.m */; };
+		693D8A35195035F0009D20FF /* QMAddUsersAbstractController.m in Sources */ = {isa = PBXBuildFile; fileRef = 693D8A34195035F0009D20FF /* QMAddUsersAbstractController.m */; };
+		693D8A3819505164009D20FF /* QMAddMembersToGroupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 693D8A3719505164009D20FF /* QMAddMembersToGroupController.m */; };
 		693DC42618FFC45900AF46D9 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42518FFC45900AF46D9 /* libsqlite3.dylib */; };
 		693DC42C18FFC58000AF46D9 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */; };
 		693F347B18F554240032891F /* QMIncommingCallSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 693F347A18F554240032891F /* QMIncommingCallSegue.m */; };
@@ -338,6 +340,10 @@
 		693808C719373A6700BF926F /* QMChatUploadingMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatUploadingMessage.m; sourceTree = "<group>"; };
 		693808CA19378E3100BF926F /* QMContentPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMContentPreviewController.h; path = QMContentPreviewController/QMContentPreviewController.h; sourceTree = "<group>"; };
 		693808CB19378E3100BF926F /* QMContentPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMContentPreviewController.m; path = QMContentPreviewController/QMContentPreviewController.m; sourceTree = "<group>"; };
+		693D8A33195035F0009D20FF /* QMAddUsersAbstractController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAddUsersAbstractController.h; sourceTree = "<group>"; };
+		693D8A34195035F0009D20FF /* QMAddUsersAbstractController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAddUsersAbstractController.m; sourceTree = "<group>"; };
+		693D8A3619505164009D20FF /* QMAddMembersToGroupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMAddMembersToGroupController.h; path = QMAddMembersToGroupController/QMAddMembersToGroupController.h; sourceTree = "<group>"; };
+		693D8A3719505164009D20FF /* QMAddMembersToGroupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMAddMembersToGroupController.m; path = QMAddMembersToGroupController/QMAddMembersToGroupController.m; sourceTree = "<group>"; };
 		693DC42518FFC45900AF46D9 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
 		693F347918F554240032891F /* QMIncommingCallSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncommingCallSegue.h; sourceTree = "<group>"; };
@@ -824,6 +830,24 @@
 			name = QMContentPreviewController;
 			sourceTree = "<group>";
 		};
+		693D8A391950520F009D20FF /* QMAddMembersToGroupController */ = {
+			isa = PBXGroup;
+			children = (
+				693D8A3619505164009D20FF /* QMAddMembersToGroupController.h */,
+				693D8A3719505164009D20FF /* QMAddMembersToGroupController.m */,
+			);
+			name = QMAddMembersToGroupController;
+			sourceTree = "<group>";
+		};
+		693D8A3A19509BC2009D20FF /* QMCreateNewChatController */ = {
+			isa = PBXGroup;
+			children = (
+				B71E054D190FAAF900DD6D34 /* QMCreateNewChatController.h */,
+				B71E054E190FAAF900DD6D34 /* QMCreateNewChatController.m */,
+			);
+			name = QMCreateNewChatController;
+			sourceTree = "<group>";
+		};
 		6943277418F6D109002B0396 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -1264,8 +1288,10 @@
 		B71E054C190FAAF900DD6D34 /* QMCreateNewChatController */ = {
 			isa = PBXGroup;
 			children = (
-				B71E054D190FAAF900DD6D34 /* QMCreateNewChatController.h */,
-				B71E054E190FAAF900DD6D34 /* QMCreateNewChatController.m */,
+				693D8A3A19509BC2009D20FF /* QMCreateNewChatController */,
+				693D8A391950520F009D20FF /* QMAddMembersToGroupController */,
+				693D8A33195035F0009D20FF /* QMAddUsersAbstractController.h */,
+				693D8A34195035F0009D20FF /* QMAddUsersAbstractController.m */,
 			);
 			path = QMCreateNewChatController;
 			sourceTree = "<group>";
@@ -1500,6 +1526,7 @@
 				6943848818E42678001E08A9 /* QMInviteFriendsCell.m in Sources */,
 				55D270A01940B8D300238D50 /* NSFetchedResultsController+MagicalFetching.m in Sources */,
 				6943847718E42678001E08A9 /* QMChatService.m in Sources */,
+				693D8A35195035F0009D20FF /* QMAddUsersAbstractController.m in Sources */,
 				55D270A71940B8D300238D50 /* NSManagedObjectContext+MagicalObserving.m in Sources */,
 				55D270961940B8D300238D50 /* CDUsers.m in Sources */,
 				694811881938EBB4006603FD /* QMGroupContentCell.m in Sources */,
@@ -1584,6 +1611,7 @@
 				55943A0F1941A4C000BF4312 /* _CDDialog.m in Sources */,
 				B71E0560190FAAF900DD6D34 /* QMChatRoomListController.m in Sources */,
 				55D270C21940B8D300238D50 /* SQLiteMagicalRecordStack.m in Sources */,
+				693D8A3819505164009D20FF /* QMAddMembersToGroupController.m in Sources */,
 				55D270A81940B8D300238D50 /* NSManagedObjectContext+MagicalRecord.m in Sources */,
 				55D270911940B8D300238D50 /* QMDBStorage+Dialogs.m in Sources */,
 				55D270C11940B8D300238D50 /* ManuallyMigratingMagicalRecordStack.m in Sources */,
