@@ -710,7 +710,7 @@
 - (void)chatRoomDidReceiveListOfOnlineUsers:(NSArray *)users room:(NSString *)roomName
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:kChatRoomDidChangeOnlineUsersList object:nil userInfo:@{@"online_users":users}];
-}
+} 
 
 
 #pragma mark - Chat Utils
