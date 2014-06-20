@@ -21,6 +21,8 @@
 @property (copy, nonatomic) QBChatDialogResultBlock chatDialogResultBlock;
 @property (copy, nonatomic) QBChatDialogHistoryBlock chatDialogHistoryBlock;
 
+@property (strong, nonatomic) QBWebRTCVideoChat *activeStream;
+
 @property (strong, nonatomic) NSTimer *presenceTimer;
 
 /** Upload message needed for replacing with delivered message in chat hisoty. When used, it means that upload finished, and message has been delivered */
@@ -147,6 +149,7 @@
     //Destroy active stream:
     [[QBChat instance] unregisterWebRTCVideoChatInstance:self.activeStream];
     self.activeStream = nil;
+    self.customParams = nil;
 }
 
 - (void)callUser:(NSUInteger)userID
@@ -158,8 +161,10 @@
 {
     self.activeStream.viewToRenderOpponentVideoStream.remotePlatform = self.customParams[qbvideochat_platform];
     self.activeStream.viewToRenderOpponentVideoStream.remoteVideoOrientation = [QBChatUtils interfaceOrientationFromString:self.customParams[qbvideochat_device_orientation]];
-
-    [self.activeStream acceptCallWithOpponentID:userID customParameters:customParameters];
+    
+    if (self.customParams != nil) {
+        [self.activeStream acceptCallWithOpponentID:userID customParameters:self.customParams];
+    }
 }
 
 - (void)rejectCallFromUser:(NSUInteger)userID
@@ -232,6 +237,7 @@
 - (void)chatCallDidRejectByUser:(NSUInteger)userID
 {
     currentSessionID = nil;
+    _customParams = nil;
     [[NSNotificationCenter defaultCenter] postNotificationName:kCallWasRejectedNotification object:nil];
 }
 
@@ -239,6 +245,7 @@
 -(void) chatCallUserDidNotAnswer:(NSUInteger)userID
 {
     currentSessionID = nil;
+    _customParams = nil;
     [[NSNotificationCenter defaultCenter] postNotificationName:kCallWasStoppedNotification object:nil userInfo:@{@"reason":kStopVideoChatCallStatus_OpponentDidNotAnswer}];
 }
 
@@ -246,6 +253,8 @@
 - (void)chatCallDidStopByUser:(NSUInteger)userID status:(NSString *)status
 {
     currentSessionID = nil;
+    _customParams = nil;
+    
     NSString *stopCallReason = nil;
     if ([status isEqualToString:kStopVideoChatCallStatus_OpponentDidNotAnswer]) {
         stopCallReason = kStopVideoChatCallStatus_OpponentDidNotAnswer;
@@ -296,7 +305,7 @@
          completionHandler(nil, result.errors[0]);
      };
     
-	[[QBChat instance] createDialog:chatDialog delegate:self context:Block_copy((__bridge void *)(resultBlock))];
+	[QBChat createDialog:chatDialog delegate:self context:Block_copy((__bridge void *)(resultBlock))];
 }
 
 - (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completionHandler
@@ -348,7 +357,7 @@
         completionHandler(nil, result.errors[0]);
     };
     
-    [[QBChat instance] updateDialogWithID:dialogID extendedRequest:extendedRequest delegate:self context:Block_copy((__bridge void *)(resultBlock))];
+    [QBChat updateDialogWithID:dialogID extendedRequest:extendedRequest delegate:self context:Block_copy((__bridge void *)(resultBlock))];
 }
 
 
@@ -591,7 +600,7 @@
         }
         
     };
-	[[QBChat instance] messagesWithDialogID:dialogIDString delegate:self context:Block_copy((__bridge void *)(resulBlock))];
+	[QBChat messagesWithDialogID:dialogIDString delegate:self context:Block_copy((__bridge void *)(resulBlock))];
 }
 
 - (void)sendMessage:(QBChatMessage *)message toRoom:(QBChatRoom *)chatRoom

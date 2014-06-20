@@ -94,7 +94,7 @@
     // stop playing sound
     [[QMUtilities shared] stopPlaying];
     
-    [[QMChatService shared] initActiveStream];
+    [[QMChatService shared] initActiveStreamWithOpponentView:nil callType:<#(QMVideoChatType)#>];
     [[QMChatService shared] rejectCallFromUser:self.opponentID];
     [[QMChatService shared] releaseActiveStream];
     

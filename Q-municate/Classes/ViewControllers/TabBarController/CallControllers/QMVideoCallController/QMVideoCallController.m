@@ -159,9 +159,9 @@
 - (void)activeStreamInit
 {
     if (self.videoEnabled) {
-        [[QMChatService shared] initActiveStreamWithOpponentView:self.opponentsView ownView:self.myView];
+        [[QMChatService shared] initActiveStreamWithOpponentView:self.opponentsView callType:QMVideoChatTypeVideo];
     } else {
-        [[QMChatService shared] initActiveStream];
+        [[QMChatService shared] initActiveStreamWithOpponentView:self.opponentsView callType:QMVideoChatTypeAudio];
     }
 }
 
@@ -178,7 +178,7 @@
 {
     [self activeStreamInit];
     
-    [[QMChatService shared] acceptCallFromUser:self.opponent.ID withVideo:self.videoEnabled customParams:[QMChatService shared].customParams];
+    [[QMChatService shared] acceptCallFromUser:self.opponent.ID withVideo:self.videoEnabled];
     
     //UI:
     [self configureCallUIForAcceptedCall];

@@ -16,8 +16,6 @@
 @property (strong, nonatomic) NSMutableDictionary *allDialogsAsDictionary;
 @property (strong, nonatomic) NSMutableDictionary *allChatRoomsAsDictionary;
 
-@property (strong, nonatomic) QBWebRTCVideoChat *activeStream;
-
 @property (strong, nonatomic) NSString *currentSessionID;
 @property (nonatomic, strong) NSDictionary *customParams;
 @property (nonatomic, strong) QBChatRoom *chatRoom;
@@ -95,13 +93,13 @@
 
 #pragma mark - Audio/Video Calls
 
-- (void)initActiveStream;                                                                           // for audio calls
-- (void)initActiveStreamWithOpponentView:(UIView *)opponentView ownView:(UIView *)ownView;          // for video calls
+- (void)initActiveStreamWithOpponentView:(QBVideoView *)opponentView callType:(QMVideoChatType)type;
+
 - (void)releaseActiveStream;
 
 - (void)callUser:(NSUInteger)userID withVideo:(BOOL)videoEnabled;
 
-- (void)acceptCallFromUser:(NSUInteger)userID withVideo:(BOOL)videoEnabled customParams:(NSDictionary *)customParameters;
+- (void)acceptCallFromUser:(NSUInteger)userID withVideo:(BOOL)videoEnabled;
 - (void)rejectCallFromUser:(NSUInteger)userID;
 
 - (void)cancelCall;
