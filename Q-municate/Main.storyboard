@@ -593,8 +593,8 @@
         <!--Profile View Controller - Profile-->
         <scene sceneID="QLN-ly-kzY">
             <objects>
-                <tableViewController id="pjK-pp-4QI" customClass="QMProfileViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="oRS-33-Yk2">
+                <tableViewController hidesBottomBarWhenPushed="YES" id="pjK-pp-4QI" customClass="QMProfileViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="static" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="oRS-33-Yk2">
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -661,9 +661,9 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="textColor" red="0.66274511814117432" green="0.66666668653488159" blue="0.66274511814117432" alpha="1" colorSpace="deviceRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                                     <connections>
-                                                        <action selector="updateRecord:" destination="pjK-pp-4QI" eventType="editingDidEndOnExit" id="7lx-oG-gy8"/>
+                                                        <action selector="hideKeyboard:" destination="pjK-pp-4QI" eventType="editingDidEndOnExit" id="5If-tj-IYO"/>
                                                         <outlet property="delegate" destination="pjK-pp-4QI" id="Ogf-wa-S95"/>
                                                     </connections>
                                                 </textField>
@@ -682,9 +682,10 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="textColor" red="0.66274511810000003" green="0.66666668650000005" blue="0.66274511810000003" alpha="1" colorSpace="deviceRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="done"/>
                                                     <connections>
-                                                        <action selector="updateRecord:" destination="pjK-pp-4QI" eventType="editingDidEndOnExit" id="MqF-4M-I3g"/>
+                                                        <action selector="hideKeyboard:" destination="pjK-pp-4QI" eventType="editingDidEndOnExit" id="CWz-Af-pJO"/>
+                                                        <action selector="hideKeyboard:" destination="pjK-pp-4QI" eventType="touchUpInside" id="iRT-sT-wA0"/>
                                                         <outlet property="delegate" destination="pjK-pp-4QI" id="XR6-xu-6q0"/>
                                                     </connections>
                                                 </textField>
@@ -703,9 +704,10 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="textColor" red="0.66274511810000003" green="0.66666668650000005" blue="0.66274511810000003" alpha="1" colorSpace="deviceRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation" returnKeyType="done"/>
                                                     <connections>
-                                                        <action selector="updateRecord:" destination="pjK-pp-4QI" eventType="editingDidEndOnExit" id="Kj4-Qd-ltB"/>
+                                                        <action selector="hideKeyboard:" destination="pjK-pp-4QI" eventType="touchUpOutside" id="4IE-Z6-dtR"/>
+                                                        <action selector="hideKeyboard:" destination="pjK-pp-4QI" eventType="editingDidEndOnExit" id="om6-Nb-QsF"/>
                                                         <outlet property="delegate" destination="pjK-pp-4QI" id="I6O-9e-mJ9"/>
                                                     </connections>
                                                 </textField>
@@ -725,7 +727,8 @@
                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="textColor" red="0.76138613950996292" green="0.76600060096153844" blue="0.7567716780583873" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                                                    <dataDetectorType key="dataDetectorTypes" calendarEvent="YES"/>
                                                     <connections>
                                                         <outlet property="delegate" destination="pjK-pp-4QI" id="7V5-1m-IxP"/>
                                                     </connections>
@@ -741,13 +744,21 @@
                             <outlet property="delegate" destination="pjK-pp-4QI" id="np0-f6-Txc"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Profile" id="b5d-3r-hlf"/>
+                    <navigationItem key="navigationItem" title="Profile" id="b5d-3r-hlf">
+                        <barButtonItem key="rightBarButtonItem" title="Update" id="iMN-3L-JaH">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="saveChanges:" destination="pjK-pp-4QI" id="v0m-j6-49U"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="avatarView" destination="ke3-0u-LyM" id="YU5-Zv-lNQ"/>
                         <outlet property="emailField" destination="2CO-I0-WcE" id="ifn-jM-TTP"/>
                         <outlet property="fullNameField" destination="9fL-c9-U3Z" id="Gcw-Fp-OXq"/>
                         <outlet property="phoneNumberField" destination="XYZ-bQ-Hhz" id="os2-Jz-zzA"/>
                         <outlet property="statusField" destination="xlW-Om-x7C" id="yXe-Mj-n6L"/>
+                        <outlet property="updateProfileButton" destination="iMN-3L-JaH" id="c0j-MH-SUZ"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kNl-bm-sQ8" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -14,7 +14,7 @@
 #import "QMUtilities.h"
 
 
-static NSUInteger const QM_MAX_STATUS_TEXT_LENGTH = 43;
+static NSUInteger const QM_MAX_STATUS_TEXT_LENGTH = 64;
 
 // text field tags:
 static NSUInteger const kFullNameFieldTag = 11;
@@ -28,11 +28,17 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *phoneNumberField;
 @property (weak, nonatomic) IBOutlet UITextView *statusField;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *updateProfileButton;
 
 @property (nonatomic, strong) QBUUser *me;
 
-/** Field cache. */
-@property (nonatomic, copy) NSString *fieldCacheString;
+/** Fields caches. */
+@property (nonatomic, copy) NSString *fullNameFieldCache;
+@property (nonatomic, copy) NSString *phoneFieldCache;
+@property (nonatomic, copy) NSString *statusFieldCache;
+
+/** Optional cache */
+//@property (nonatomic, copy) NSString *emailFieldCache;
 
 @end
 
@@ -88,36 +94,43 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
     [self.phoneNumberField setText:me.phone];
     
     // status:
+    [self.statusField setText:@"Add status"];
 }
 
-- (IBAction)updateRecord:(id)sender
+- (IBAction)hideKeyboard:(id)sender
 {
     [sender resignFirstResponder];
 }
 
-
-#pragma mark - UITextFieldDelegate
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField
+- (IBAction)saveChanges:(id)sender
 {
-    // caching string:
-    _fieldCacheString = textField.text;
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    // check for field update:
-    if ([_fieldCacheString isEqualToString:textField.text]) {
+    // resing all responders:
+    [self.fullNameField resignFirstResponder];
+    [self.phoneNumberField resignFirstResponder];
+    [self.statusField resignFirstResponder];
+    
+    BOOL profileChanged = NO;
+    
+    // verifying all fields:
+    if (_fullNameFieldCache != nil && ![_fullNameFieldCache isEqualToString:me.fullName] ) {
+        profileChanged = YES;
+    }
+    if (_phoneFieldCache != nil && ![_phoneFieldCache isEqualToString:me.phone]) {
+        profileChanged = YES;
+    }
+//    if (_statusFieldCache != nil && ![_statusFieldCache isEqualToString:me.status]) {
+//        profileChanged = YES;
+//    }
+    
+    if (!profileChanged) {
         return;
     }
     
+    // delete password before update and cache:
+    NSString *password = me.password;
+    me.password = nil;
+    
     [QMUtilities createIndicatorView];
-    // update user's modified field:
-    if (textField.tag == kFullNameFieldTag) {
-        me.fullName = textField.text;
-    } else if (textField.tag == kPhoneNumberFieldTag) {
-        me.phone = textField.text;
-    }
     [[QMAuthService shared] updateUser:me withCompletion:^(QBUUser *user, BOOL success, NSError *error) {
         [QMUtilities removeIndicatorView];
         
@@ -125,21 +138,35 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
             [[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:error.description delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
             return;
         }
+        user.password = password;
         self.me = user;
+        
+        // show alert:
+        [[[UIAlertView alloc] initWithTitle:kAlertTitleSuccessString message:@"Profile was updated" delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
         [self updateProfileView];
     }];
 }
 
-#pragma mark - UITextViewDelegate
 
-- (void)textViewDidBeginEditing:(UITextView *)textView
+#pragma mark - UITextFieldDelegate
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    
+    if (textField.tag == kFullNameFieldTag) {
+        
+        // save modified full name:
+        _fullNameFieldCache = textField.text;
+        
+    } else if (textField.tag == kPhoneNumberFieldTag) {
+        
+        // save mofified phone number:
+        _phoneFieldCache = textField.text;
+    }
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
-    
+    _statusFieldCache = textView.text;
 }
 
 @end
