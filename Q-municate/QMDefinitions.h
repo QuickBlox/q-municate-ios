@@ -50,6 +50,12 @@ typedef NS_ENUM(NSUInteger, QMMembersUpdateState) {
     QMMembersUpdateStateRemoving
 };
 
+typedef NS_ENUM(NSUInteger, QMVideoChatType) {
+    QMVideoChatTypeNone,
+    QMVideoChatTypeVideo,
+    QMVideoChatTypeAudio
+};
+
 //****************** Blocks *********************************
 typedef void (^QBResultBlock)(Result *result);
 typedef void (^QBSessionCreationBlock)(BOOL success, NSError *error);

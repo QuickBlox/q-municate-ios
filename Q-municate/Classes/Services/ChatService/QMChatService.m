@@ -11,6 +11,7 @@
 #import "NSArray+ArrayToString.h"
 #import <TWMessageBarManager.h>
 #import "QMDBStorage+Messages.h"
+#import  <Quickblox/Quickblox.h>
 
 
 @interface QMChatService () <QBChatDelegate, QBActionStatusDelegate>
@@ -127,24 +128,38 @@
 #pragma mark -
 #pragma mark - Audio/Video Calls
 
-- (void)callUser:(NSUInteger)userID withVideo:(BOOL)videoEnabled
+
+- (void)initActiveStreamWithOpponentView:(QBVideoView *)opponentView callType:(QMVideoChatType)type
 {
-    if (videoEnabled) {
-        [self.activeStream callUser:userID conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
-        return;
+    // Active stream initialize:
+    if (currentSessionID == nil)
+    {
+        self.activeStream = [[QBChat instance] createWebRTCVideoChatInstance];
+    } else {
+        self.activeStream = [[QBChat instance] createAndRegisterWebRTCVideoChatInstanceWithSessionID:currentSessionID];
     }
-    [self.activeStream callUser:userID conferenceType:QBVideoChatConferenceTypeAudio];
+    self.activeStream.viewToRenderOpponentVideoStream = opponentView;  ///   opponent' view
+    self.activeStream.currentConferenceType = (int)type;
 }
 
-- (void)acceptCallFromUser:(NSUInteger)userID withVideo:(BOOL)videoEnabled customParams:(NSDictionary *)customParameters
+- (void)releaseActiveStream
+{
+    //Destroy active stream:
+    [[QBChat instance] unregisterWebRTCVideoChatInstance:self.activeStream];
+    self.activeStream = nil;
+}
+
+- (void)callUser:(NSUInteger)userID
+{
+    [self.activeStream callUser:userID];
+}
+
+- (void)acceptCallFromUser:(NSUInteger)userID customParams:(NSDictionary *)customParameters
 {
     self.activeStream.viewToRenderOpponentVideoStream.remotePlatform = self.customParams[qbvideochat_platform];
     self.activeStream.viewToRenderOpponentVideoStream.remoteVideoOrientation = [QBChatUtils interfaceOrientationFromString:self.customParams[qbvideochat_device_orientation]];
-    if (videoEnabled) {
-        [self.activeStream acceptCallWithOpponentID:userID conferenceType:QBVideoChatConferenceTypeAudioAndVideo customParameters:customParameters];
-        return;
-    }
-    [self.activeStream acceptCallWithOpponentID:userID conferenceType:QBVideoChatConferenceTypeAudio];
+
+    [self.activeStream acceptCallWithOpponentID:userID customParameters:customParameters];
 }
 
 - (void)rejectCallFromUser:(NSUInteger)userID
@@ -162,37 +177,6 @@
     [self cancelCall];
 }
 
-
-#pragma mark - Active Stream Options
-
-- (void)initActiveStream
-{
-    if (currentSessionID == nil) {
-        self.activeStream = [[QBChat instance] createAndRegisterWebRTCVideoChatInstanceWithSessionID:nil];
-        return;
-    }
-    self.activeStream = [[QBChat instance] createAndRegisterWebRTCVideoChatInstanceWithSessionID:currentSessionID];
-}
-
-- (void)initActiveStreamWithOpponentView:(QBVideoView *)opponentView ownView:(UIView *)ownView
-{
-    // Active stream initialize:
-    if (currentSessionID == nil)
-    {
-        self.activeStream = [[QBChat instance] createWebRTCVideoChatInstance];
-    } else {
-        self.activeStream = [[QBChat instance] createAndRegisterWebRTCVideoChatInstanceWithSessionID:currentSessionID];
-    }
-    self.activeStream.viewToRenderOpponentVideoStream = opponentView;  ///   opponent' view
-//    self.activeStream.viewToRenderOwnVideoStream = ownView;        ///   my view
-}
-
-- (void)releaseActiveStream
-{
-    //Destroy active stream:
-    [[QBChat instance] unregisterWebRTCVideoChatInstance:self.activeStream];
-    self.activeStream = nil;
-}
 
 
 #pragma mark - QBChatDelegate - Login to Chat
@@ -297,7 +281,7 @@
         }
         completionHandler(nil, result.errors[0]);
     };
-    [[QBChat instance] dialogsWithDelegate:self context:Block_copy((__bridge void *)(resBlock))];
+    [QBChat dialogsWithDelegate:self context:Block_copy((__bridge void *)(resBlock))];
     
 }
 
