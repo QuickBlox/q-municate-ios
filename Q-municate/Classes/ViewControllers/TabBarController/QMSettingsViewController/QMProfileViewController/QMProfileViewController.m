@@ -7,14 +7,14 @@
 //
 
 #import "QMProfileViewController.h"
-#import "UIImageView+ImageWithBlobID.h"
 #import "UIImage+Cropper.h"
 #import "QMContactList.h"
+#import "QMContent.h"
 #import "QMAuthService.h"
 #import "QMUtilities.h"
 
 
-static NSUInteger const QM_MAX_STATUS_TEXT_LENGTH = 64;
+static NSUInteger const QM_MAX_STATUS_TEXT_LENGTH = 44;
 
 // text field tags:
 static NSUInteger const kFullNameFieldTag = 11;
@@ -29,6 +29,8 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
 @property (weak, nonatomic) IBOutlet UITextField *phoneNumberField;
 @property (weak, nonatomic) IBOutlet UITextView *statusField;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *updateProfileButton;
+
+@property (nonatomic, strong) UIImage *avatarImage;
 
 @property (nonatomic, strong) QBUUser *me;
 
@@ -61,6 +63,7 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
     [super viewWillAppear:animated];
     
     // update profile screen:
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
     [self updateProfileView];
 }
 
@@ -94,7 +97,24 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
     [self.phoneNumberField setText:me.phone];
     
     // status:
-    [self.statusField setText:@"Add status"];
+    if (me.customData != nil) {
+        [self.statusField setText:me.customData];
+    } else {
+        [self.statusField setText:@"Add status..."];
+    }
+}
+
+- (IBAction)changeAvatar:(id)sender
+{
+    if (me.facebookID != nil) {
+        [[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:@"You can not change avatar. Go to facebook, and change avatar there." delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
+        return;
+    }
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    picker.delegate = self;
+
+    [self presentViewController:picker animated:YES completion:nil];
 }
 
 - (IBAction)hideKeyboard:(id)sender
@@ -108,29 +128,60 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
     [self.fullNameField resignFirstResponder];
     [self.phoneNumberField resignFirstResponder];
     [self.statusField resignFirstResponder];
+
+    if (![self profileWasChanged]) {
+        return;
+    }
+    if (_avatarImage != nil) {
+        [QMUtilities createIndicatorView];
+        
+        QMContent *manager = [[QMContent alloc] init];
+        [manager uploadImage:_avatarImage withCompletion:^(QBCBlob *blob, BOOL success, NSError *error) {
+            if (!success) {
+                [QMUtilities removeIndicatorView];
+                [[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:error.description delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
+                return;
+            }
+            [self updateUsersProfile];
+        }];
+    }
     
+    [self updateUsersProfile];
+}
+
+- (BOOL)profileWasChanged
+{
     BOOL profileChanged = NO;
     
     // verifying all fields:
+    if (_avatarImage != nil) {
+        profileChanged = YES;
+    }
     if (_fullNameFieldCache != nil && ![_fullNameFieldCache isEqualToString:me.fullName] ) {
+        
+        me.fullName = _fullNameFieldCache;
         profileChanged = YES;
     }
     if (_phoneFieldCache != nil && ![_phoneFieldCache isEqualToString:me.phone]) {
+        
+        me.phone = _phoneFieldCache;
         profileChanged = YES;
     }
-//    if (_statusFieldCache != nil && ![_statusFieldCache isEqualToString:me.status]) {
-//        profileChanged = YES;
-//    }
-    
-    if (!profileChanged) {
-        return;
+    if (_statusFieldCache != nil && ![_statusFieldCache isEqualToString:me.customData]) {
+        
+        NSString *statusText = [_statusFieldCache substringToIndex:QM_MAX_STATUS_TEXT_LENGTH];
+        me.customData = statusText;
+        profileChanged = YES;
     }
-    
+    return profileChanged;
+}
+
+- (void)updateUsersProfile
+{
     // delete password before update and cache:
     NSString *password = me.password;
     me.password = nil;
     
-    [QMUtilities createIndicatorView];
     [[QMAuthService shared] updateUser:me withCompletion:^(QBUUser *user, BOOL success, NSError *error) {
         [QMUtilities removeIndicatorView];
         
@@ -148,7 +199,7 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
 }
 
 
-#pragma mark - UITextFieldDelegate
+#pragma mark - UITextFieldDelegate & UITextViewDelegate
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
@@ -167,6 +218,24 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
     _statusFieldCache = textView.text;
+}
+
+
+#pragma mark - UIImagePickerControllerDelegate
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    UIImage *selectedImage = info[UIImagePickerControllerOriginalImage];
+    self.avatarImage = [selectedImage imageByScalingProportionallyToMinimumSize:CGSizeMake(1000.0f, 1000.0f)];
+    self.avatarView.image = self.avatarImage;
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    self.avatarImage = nil;
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

@@ -142,7 +142,6 @@
 		69D57E6818ACC11C00A9900A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69D57E6718ACC11C00A9900A /* Images.xcassets */; };
 		69D57E8518ACC13100A9900A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 69D57E8418ACC13100A9900A /* Main.storyboard */; };
 		69DB5EF518E31D6400277226 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69DB5EF418E31D6400277226 /* MessageUI.framework */; };
-		69DDB3E919548BF5005AC183 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69DDB3E819548BF5005AC183 /* Quickblox.framework */; };
 		69DF2D4E194D91B800E8E80F /* QMFriendsDetailsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 69DF2D4D194D91B800E8E80F /* QMFriendsDetailsDataSource.m */; };
 		69E48F98193393FD009B5F6D /* NSArray+ArrayToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E48F97193393FD009B5F6D /* NSArray+ArrayToString.m */; };
 		69EB283B18E9692D00620A01 /* QMChatListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69EB283A18E9692D00620A01 /* QMChatListCell.m */; };
@@ -441,7 +440,6 @@
 		69D57E6E18ACC11C00A9900A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		69D57E8418ACC13100A9900A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		69DB5EF418E31D6400277226 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		69DDB3E819548BF5005AC183 /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quickblox.framework; path = External/Quickblox.framework; sourceTree = "<group>"; };
 		69DF2D4C194D91B800E8E80F /* QMFriendsDetailsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMFriendsDetailsDataSource.h; path = Classes/DataSources/QMGroupDetailsDataSource/QMFriendsDetailsDataSource/QMFriendsDetailsDataSource.h; sourceTree = "<group>"; };
 		69DF2D4D194D91B800E8E80F /* QMFriendsDetailsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMFriendsDetailsDataSource.m; path = Classes/DataSources/QMGroupDetailsDataSource/QMFriendsDetailsDataSource/QMFriendsDetailsDataSource.m; sourceTree = "<group>"; };
 		69E48F96193393FD009B5F6D /* NSArray+ArrayToString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+ArrayToString.h"; sourceTree = "<group>"; };
@@ -515,7 +513,6 @@
 				69CF189918AE1C52003262EF /* MobileCoreServices.framework in Frameworks */,
 				69CF189718AE1C49003262EF /* SystemConfiguration.framework in Frameworks */,
 				69CF189518AE1C3C003262EF /* CFNetwork.framework in Frameworks */,
-				69DDB3E919548BF5005AC183 /* Quickblox.framework in Frameworks */,
 				69D15CC318AE1721001E0480 /* libz.dylib in Frameworks */,
 				69D15CC118AE1714001E0480 /* libresolv.dylib in Frameworks */,
 				69D15CBF18AE1708001E0480 /* libxml2.dylib in Frameworks */,
@@ -1100,7 +1097,6 @@
 		69D57E5418ACC11C00A9900A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				69DDB3E819548BF5005AC183 /* Quickblox.framework */,
 				693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */,
 				693DC42518FFC45900AF46D9 /* libsqlite3.dylib */,
 				69DB5EF418E31D6400277226 /* MessageUI.framework */,

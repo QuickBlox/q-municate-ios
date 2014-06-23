@@ -21,8 +21,15 @@
 @property (copy, nonatomic) QBChatDialogResultBlock chatDialogResultBlock;
 @property (copy, nonatomic) QBChatDialogHistoryBlock chatDialogHistoryBlock;
 
+
+/** Video Chat */
 @property (strong, nonatomic) QBWebRTCVideoChat *activeStream;
 
+@property (strong, nonatomic) NSString *currentSessionID;
+@property (nonatomic, strong) NSDictionary *customParams;
+@property (nonatomic, assign) QMVideoChatType callType;
+
+/** */
 @property (strong, nonatomic) NSTimer *presenceTimer;
 
 /** Upload message needed for replacing with delivered message in chat hisoty. When used, it means that upload finished, and message has been delivered */
@@ -131,50 +138,57 @@
 #pragma mark - Audio/Video Calls
 
 
-- (void)initActiveStreamWithOpponentView:(QBVideoView *)opponentView callType:(QMVideoChatType)type
+- (void)initActiveStreamWithOpponentView:(QBVideoView *)opponentView sessionID:(NSString *)sessionID callType:(QMVideoChatType)type
 {
     // Active stream initialize:
-    if (currentSessionID == nil)
+    if (sessionID == nil)
     {
         self.activeStream = [[QBChat instance] createWebRTCVideoChatInstance];
     } else {
         self.activeStream = [[QBChat instance] createAndRegisterWebRTCVideoChatInstanceWithSessionID:currentSessionID];
     }
-    self.activeStream.viewToRenderOpponentVideoStream = opponentView;  ///   opponent' view
+    // set conference type:
     self.activeStream.currentConferenceType = (int)type;
+    
+    // set opponent' view
+    self.activeStream.viewToRenderOpponentVideoStream = opponentView;
 }
 
 - (void)releaseActiveStream
 {
     //Destroy active stream:
     [[QBChat instance] unregisterWebRTCVideoChatInstance:self.activeStream];
-    self.activeStream = nil;
-    self.customParams = nil;
+    
+    [self clearCallsCacheParams];
 }
 
-- (void)callUser:(NSUInteger)userID
+- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView callType:(QMVideoChatType)callType
 {
+    [self initActiveStreamWithOpponentView:opponentView sessionID:nil callType:callType];
     [self.activeStream callUser:userID];
 }
 
-- (void)acceptCallFromUser:(NSUInteger)userID customParams:(NSDictionary *)customParameters
+- (void)acceptCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView
 {
+    [self initActiveStreamWithOpponentView:opponentView sessionID:self.currentSessionID callType:self.callType];
+    
     self.activeStream.viewToRenderOpponentVideoStream.remotePlatform = self.customParams[qbvideochat_platform];
     self.activeStream.viewToRenderOpponentVideoStream.remoteVideoOrientation = [QBChatUtils interfaceOrientationFromString:self.customParams[qbvideochat_device_orientation]];
     
-    if (self.customParams != nil) {
-        [self.activeStream acceptCallWithOpponentID:userID customParameters:self.customParams];
-    }
+    [self.activeStream acceptCallWithOpponentID:userID customParameters:self.customParams];
 }
 
-- (void)rejectCallFromUser:(NSUInteger)userID
+- (void)rejectCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView
 {
+    [self initActiveStreamWithOpponentView:opponentView sessionID:self.currentSessionID callType:self.callType];
     [self.activeStream rejectCallWithOpponentID:userID];
+    [self releaseActiveStream];
 }
 
 - (void)cancelCall
 {
     [self.activeStream finishCall];
+    [self releaseActiveStream];
 }
 
 - (void)finishCall
@@ -217,7 +231,9 @@
 - (void)chatDidReceiveCallRequestFromUser:(NSUInteger)userID withSessionID:(NSString *)_sessionID conferenceType:(enum QBVideoChatConferenceType)conferenceType customParameters:(NSDictionary *)customParameters
 {
     self.customParams = customParameters;
-    currentSessionID = _sessionID;
+    self.currentSessionID = _sessionID;
+    self.callType = (NSUInteger)conferenceType;
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:kIncomingCallNotification object:nil userInfo:@{@"id" : @(userID), @"type" : @(conferenceType)}];
 }
 
@@ -236,24 +252,23 @@
 // call rejected:
 - (void)chatCallDidRejectByUser:(NSUInteger)userID
 {
-    currentSessionID = nil;
-    _customParams = nil;
+    [self releaseActiveStream];
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:kCallWasRejectedNotification object:nil];
 }
 
 // user doesn't answer:
 -(void) chatCallUserDidNotAnswer:(NSUInteger)userID
 {
-    currentSessionID = nil;
-    _customParams = nil;
+    [self releaseActiveStream];
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:kCallWasStoppedNotification object:nil userInfo:@{@"reason":kStopVideoChatCallStatus_OpponentDidNotAnswer}];
 }
 
 // call finished of canceled:
 - (void)chatCallDidStopByUser:(NSUInteger)userID status:(NSString *)status
 {
-    currentSessionID = nil;
-    _customParams = nil;
+    [self releaseActiveStream];
     
     NSString *stopCallReason = nil;
     if ([status isEqualToString:kStopVideoChatCallStatus_OpponentDidNotAnswer]) {
@@ -271,6 +286,13 @@
         return;
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:kCallWasStoppedNotification object:nil userInfo:@{@"reason":stopCallReason}];
+}
+
+- (void)clearCallsCacheParams
+{
+    self.customParams = nil;
+    self.currentSessionID = nil;
+    self.callType = 0;
 }
 
 

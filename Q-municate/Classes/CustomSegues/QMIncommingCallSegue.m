@@ -17,7 +17,7 @@
     QMIncomingCallController *incommingCallController = (QMIncomingCallController *)self.sourceViewController;
     QMVideoCallController *callsController = (QMVideoCallController *)self.destinationViewController;
     
-    callsController.videoEnabled = incommingCallController.isVideoCall;
+    callsController.callType = incommingCallController.callType;
     callsController.opponent = incommingCallController.opponent;
     callsController.isOpponentCall = YES;
     

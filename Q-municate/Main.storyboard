@@ -394,7 +394,7 @@
                                 <color key="textColor" red="0.721078726" green="0.721078726" blue="0.721078726" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="upic_call" translatesAutoresizingMaskIntoConstraints="NO" id="mou-AN-SXe">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="upic_call" translatesAutoresizingMaskIntoConstraints="NO" id="mou-AN-SXe" customClass="AsyncImageView">
                                 <rect key="frame" x="94" y="168" width="132" height="132"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
@@ -433,7 +433,7 @@
                         <outlet property="opponentsView" destination="xKx-9a-k2a" id="Wkr-I0-fdx"/>
                         <outlet property="rightButton" destination="HxL-MP-CTf" id="KrD-oA-m3I"/>
                         <outlet property="spinner" destination="7FU-Z9-ghI" id="LlR-dU-GF5"/>
-                        <outlet property="userAvatarView" destination="mou-AN-SXe" id="GcK-oT-WQ9"/>
+                        <outlet property="userAvatarView" destination="mou-AN-SXe" id="sYM-sF-dNF"/>
                         <outlet property="userNameLabel" destination="L9T-tY-3Kn" id="jVR-3L-yO1"/>
                     </connections>
                 </viewController>
@@ -635,6 +635,9 @@
                                                     <state key="normal">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="changeAvatar:" destination="pjK-pp-4QI" eventType="touchUpInside" id="1PD-9K-Piu"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -2615,9 +2618,9 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="gq5-5p-RwI"/>
         <segue reference="veI-CA-d70"/>
         <segue reference="97f-Zx-Ebh"/>
+        <segue reference="gq5-5p-RwI"/>
         <segue reference="bAk-xe-kWS"/>
     </inferredMetricsTieBreakers>
 </document>

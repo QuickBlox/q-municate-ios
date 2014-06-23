@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 #import "AppDelegate.h"
-
+#import "AsyncImageView.h"
 #import "QMVideoCallController.h"
 #import "QMChatService.h"
 #import "QMUtilities.h"
@@ -31,7 +31,7 @@
 // Audio calls UI
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *callDurationLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *userAvatarView;
+@property (weak, nonatomic) IBOutlet AsyncImageView *userAvatarView;
 
 // Video calls UI
 @property (weak, nonatomic) IBOutlet QBVideoView *opponentsView;
@@ -62,7 +62,15 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(callRejectedByUser) name:kCallWasRejectedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(callStoppedByOpponentForReason:) name:kCallWasStoppedNotification object:nil];
     
-    [self.userAvatarView setImage:self.userImage];
+    if (self.userImage != nil) {
+        [self.userAvatarView setImage:self.userImage];
+    } else {
+        // set placeholder:
+        [self.userAvatarView setImage:[UIImage imageNamed:@"upic_call"]];
+        // load image for url:
+        [self.userAvatarView setImageURL:[NSURL URLWithString:self.opponent.website]];
+    }
+    
     [self.userNameLabel setText:self.opponent.fullName];
     [self.callDurationLabel setText:@"Calling..."];
     
@@ -96,10 +104,10 @@
 
 - (void)configureControlsForCallView
 {
-    if (_videoEnabled) {
+    if (self.callType == QMVideoChatTypeVideo) {
         [self.LeftButton setImage:[UIImage imageNamed:@"mute_off"] forState:UIControlStateNormal];
         [self.rightButton setImage:[UIImage imageNamed:@"switchcam"] forState:UIControlStateNormal];
-    } else {
+    } else if (self.callType == QMVideoChatTypeAudio) {
         [self.LeftButton setImage:[UIImage imageNamed:@"dynamic_on"] forState:UIControlStateNormal];
         [self.rightButton setImage:[UIImage imageNamed:@"mute_off"] forState:UIControlStateNormal];
     }
@@ -108,9 +116,9 @@
 - (void)configureCallUIForAcceptedCall
 {
     // UI:
-    if (_videoEnabled) {
+    if (self.callType == QMVideoChatTypeVideo) {
         [self activateVideoCallUI];
-    } else {
+    } else if (self.callType == QMVideoChatTypeAudio) {
         [self activateAudioCallUI];
     }
     [self.spinner startAnimating];
@@ -156,19 +164,9 @@
 
 #pragma mark - Actions
 
-- (void)activeStreamInit
-{
-    if (self.videoEnabled) {
-        [[QMChatService shared] initActiveStreamWithOpponentView:self.opponentsView callType:QMVideoChatTypeVideo];
-    } else {
-        [[QMChatService shared] initActiveStreamWithOpponentView:self.opponentsView callType:QMVideoChatTypeAudio];
-    }
-}
-
 - (void)startCall
 {
-    [self activeStreamInit];
-    [[QMChatService shared] callUser:self.opponent.ID withVideo:self.videoEnabled];
+    [[QMChatService shared] callUser:self.opponent.ID opponentView:self.opponentsView callType:self.callType];
     
     // play sound:
     [[QMUtilities shared] playSoundOfType:QMSoundPlayTypeCallingNow];
@@ -176,9 +174,7 @@
 
 - (void)confirmCall
 {
-    [self activeStreamInit];
-    
-    [[QMChatService shared] acceptCallFromUser:self.opponent.ID withVideo:self.videoEnabled];
+    [[QMChatService shared] acceptCallFromUser:self.opponent.ID opponentView:self.opponentsView];
     
     //UI:
     [self configureCallUIForAcceptedCall];
@@ -198,14 +194,13 @@
 - (void)callStartedWithUser
 {
     [self.spinner stopAnimating];
-    if (!_videoEnabled) {
+    if (self.callType == QMVideoChatTypeAudio) {
         [self startTimer];
     }
 }
 
 - (void)callRejectedByUser
 {
-    [[QMChatService shared] releaseActiveStream];
     self.callDurationLabel.text = @"User is busy";
     self.opponentsView.hidden = YES;
     // stop playing sound:
@@ -219,7 +214,8 @@
 
 - (void)callStoppedByOpponentForReason:(NSNotification *)notification
 {
-    if (!_videoEnabled) {
+    // audio call timer:
+    if (self.callType == QMVideoChatTypeAudio) {
         [self stopTimer];
     }
     NSString *reason = notification.userInfo[@"reason"];
@@ -227,7 +223,6 @@
     if ([self.spinner isAnimating]) {
         [self.spinner stopAnimating];
     }
-    [[QMChatService shared] releaseActiveStream];
     
     self.opponentsView.hidden = YES;
     
@@ -240,28 +235,25 @@
         self.callDurationLabel.text = @"User doesn't answer";
         [[QMUtilities shared] playSoundOfType:QMSoundPlayTypeUserIsBusy];
     } else if ([reason isEqualToString:kStopVideoChatCallStatus_BadConnection]) {
-        [[[UIAlertView alloc] initWithTitle:@"Stopped" message:@"Connection was stopped due bad connection" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [[[UIAlertView alloc] initWithTitle:@"Stopped" message:@"Call was stopped due bad connection" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
     }
     [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:2.0f];
 }
 
 - (IBAction)endOfCall:(id)sender
 {
+     [[QMChatService shared] finishCall];
+    
     self.opponentsView.hidden = YES;
-    if (!_videoEnabled) {
-        [self.callDuration invalidate];
-        self.callDuration = nil;
+    if (self.callType == QMVideoChatTypeAudio) {
+        [self stopTimer];
     }
+    
     if (callWasAccepted) {
-        [[QMChatService shared] finishCall];
-        
         self.callDurationLabel.text = @"Call finished";
     } else {
-        [[QMChatService shared] cancelCall];
-        
         self.callDurationLabel.text = @"Call canceled";
     }
-    [[QMChatService shared] releaseActiveStream];
     
     // stop playing sound:
     [[QMUtilities shared] stopPlaying];
@@ -286,65 +278,16 @@
 
 - (IBAction)leftControlTapped:(id)sender
 {
-    if (_videoEnabled) {
-        [self microphoneTapped];
-        // update icon: 
-        if (microphoneIsMuted) {
-            [self.LeftButton setImage:[UIImage imageNamed:@"mute_on"] forState:UIControlStateNormal];
-        } else {
-            [self.LeftButton setImage:[UIImage imageNamed:@"mute_off"] forState:UIControlStateNormal];
-        }
-    } else {
-        [self dynamicTapped];
-        // update icon:
-        if (headphoneUsed) {
-            [self.LeftButton setImage:[UIImage imageNamed:@"dynamic"] forState:UIControlStateNormal];
-        } else {
-            [self.LeftButton setImage:[UIImage imageNamed:@"dynamic_on"] forState:UIControlStateNormal];
-        }
-    }
+    // Not Implemented
 }
 
 - (IBAction)rightControlTapped:(id)sender
 {
-    if (_videoEnabled) {
-        [self cameraTapped];
-    } else {
-        [self microphoneTapped];
-        if (microphoneIsMuted) {
-            [self.rightButton setImage:[UIImage imageNamed:@"mute_on"] forState:UIControlStateNormal];
-        } else {
-            [self.rightButton setImage:[UIImage imageNamed:@"mute_off"] forState:UIControlStateNormal];
-        }
-    }
+    // Not Implemented
 }
 
-- (void)microphoneTapped
-{
-    microphoneIsMuted = !microphoneIsMuted;
-//    if (microphoneIsMuted) {
-//        [QMChatService shared].activeStream.microphoneEnabled = NO;
-//    } else {
-//        [QMChatService shared].activeStream.microphoneEnabled = YES;
-//    }
-}
 
-- (void)cameraTapped
-{
-    backCameraUsed = !backCameraUsed;
-//    if (backCameraUsed) {
-//        [QMChatService shared].activeStream.useBackCamera = YES;
-//    } else {
-//        [QMChatService shared].activeStream.useBackCamera = NO;
-//    }
-}
-
-- (void)dynamicTapped
-{
-    headphoneUsed = !headphoneUsed;
-}
-
-#pragma mark - 
+#pragma mark - Audio Call Timer
 
 - (void)updateCallDurationLabel
 {

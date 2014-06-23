@@ -362,9 +362,10 @@ static CGFloat const kCellHeightOffset = 33.0f;
         
     } else if ([segue.destinationViewController isKindOfClass:QMVideoCallController.class]) {
         QMVideoCallController *videoCallVC = (QMVideoCallController *)segue.destinationViewController;
-        videoCallVC.videoEnabled = YES;         // video call
         videoCallVC.opponent = self.opponent;
         
+        NSUInteger callType = [sender intValue];
+        videoCallVC.callType = callType;
     }
     
 }
@@ -432,12 +433,12 @@ static CGFloat const kCellHeightOffset = 33.0f;
 #pragma mark - Nav Buttons Actions
 - (void)audioCallAction
 {
-	[[[UIAlertView alloc] initWithTitle:@"No Audio Calls yet" message:@"Coming soon" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+	[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:@(QMVideoChatTypeAudio)];
 }
 
 - (void)videoCallAction
 {
-	[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil];
+	[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:@(QMVideoChatTypeVideo)];
 }
 
 - (void)groupInfoNavButtonAction

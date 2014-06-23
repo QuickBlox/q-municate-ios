@@ -100,9 +100,9 @@
         [QMUtilities shared].incomingCallController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallIdentifier];
         [QMUtilities shared].incomingCallController.opponentID = opponentID;
         
-        if (type == QBVideoChatConferenceTypeAudioAndVideo) {
-            [QMUtilities shared].incomingCallController.isVideoCall = YES;
-        }
+        // set call type:
+        [QMUtilities shared].incomingCallController.callType = type;
+        
         [[[UIApplication sharedApplication].delegate window].rootViewController presentViewController:[QMUtilities shared].incomingCallController animated:NO completion:nil];
     }
 }

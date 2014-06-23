@@ -126,7 +126,7 @@ static CGFloat kCellHeight = 65.0f;
     } else if ([CellIdentifier isEqualToString:QMVideoCallCellIdentifier]) {
         [self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:CellIdentifier];
     } else if ([CellIdentifier isEqualToString:QMAudioCallCellIdentifier]) {
-        [self showAlertWithMessage:@"Coming soon"];
+        [self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:CellIdentifier];
     } else if ([CellIdentifier isEqualToString:QMChatCellIdentifier]) {
         [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:CellIdentifier];
     }
@@ -153,9 +153,9 @@ static CGFloat kCellHeight = 65.0f;
     
     // if audio or video call:
     if ([currentCellIdentifier isEqualToString:QMVideoCallCellIdentifier]) {
-        ((QMVideoCallController *)segue.destinationViewController).videoEnabled = YES;
+        ((QMVideoCallController *)segue.destinationViewController).callType = QMVideoChatTypeVideo;
     } else if ([currentCellIdentifier isEqualToString:QMAudioCallCellIdentifier]) {
-        ((QMVideoCallController *)segue.destinationViewController).videoEnabled = NO;
+        ((QMVideoCallController *)segue.destinationViewController).callType = QMVideoChatTypeAudio;
     }
     ((QMVideoCallController *)segue.destinationViewController).opponent = self.currentFriend;
     ((QMVideoCallController *)segue.destinationViewController).userImage = self.userAvatar.image;
