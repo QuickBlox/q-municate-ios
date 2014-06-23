@@ -168,10 +168,15 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
         profileChanged = YES;
     }
     if (_statusFieldCache != nil && ![_statusFieldCache isEqualToString:me.customData]) {
-        
-        NSString *statusText = [_statusFieldCache substringToIndex:QM_MAX_STATUS_TEXT_LENGTH];
-        me.customData = statusText;
         profileChanged = YES;
+        
+        if (_statusFieldCache.length > QM_MAX_STATUS_TEXT_LENGTH) {
+            NSRange range = NSMakeRange(0, QM_MAX_STATUS_TEXT_LENGTH);
+            NSString *statusText = [_statusFieldCache substringWithRange:range];
+            me.customData = statusText;
+        } else {
+            me.customData = _statusFieldCache;
+        }
     }
     return profileChanged;
 }

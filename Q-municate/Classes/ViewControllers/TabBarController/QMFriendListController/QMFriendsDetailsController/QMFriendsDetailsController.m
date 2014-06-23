@@ -44,6 +44,7 @@ static CGFloat kCellHeight = 65.0f;
     
 	self.userAvatar.image = self.userPhotoImage;
     self.fullName.text = self.currentFriend.fullName;
+    self.userDetails.text = self.currentFriend.customData;
     
     self.dataSource = [[QMFriendsDetailsDataSource alloc] initWithUser:self.currentFriend];
 }

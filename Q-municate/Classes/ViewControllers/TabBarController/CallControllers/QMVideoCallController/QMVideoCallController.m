@@ -178,6 +178,7 @@
     
     //UI:
     [self configureCallUIForAcceptedCall];
+    [self callStartedWithUser];
     
     callWasAccepted = YES;
 }
@@ -189,6 +190,8 @@
     
     // stop playing sound:
     [[QMUtilities shared] stopPlaying];
+    
+    [self callStartedWithUser];
 }
 
 - (void)callStartedWithUser
@@ -235,9 +238,17 @@
         self.callDurationLabel.text = @"User doesn't answer";
         [[QMUtilities shared] playSoundOfType:QMSoundPlayTypeUserIsBusy];
     } else if ([reason isEqualToString:kStopVideoChatCallStatus_BadConnection]) {
+        self.callDurationLabel.text = @"Call was stopped";
         [[[UIAlertView alloc] initWithTitle:@"Stopped" message:@"Call was stopped due bad connection" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    } else {
+        self.callDurationLabel.text = @"Call was stopped";
     }
-    [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:2.0f];
+    
+    if (_isOpponentCall) {
+        [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:2.0f];
+        return;
+    }
+    [self performSelector:@selector(dismissViewControllerAnimated:completion:) withObject:self afterDelay:2.0f];
 }
 
 - (IBAction)endOfCall:(id)sender
