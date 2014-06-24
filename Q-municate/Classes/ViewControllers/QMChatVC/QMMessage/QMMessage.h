@@ -7,41 +7,49 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "QMMessageProtocol.h"
 #import "QMChatLayoutConfigs.h"
+#import "QMMessageType.h"
 
 @interface QMMessage : NSObject
 /**
  * Message text
  */
 @property (strong, nonatomic) QBChatHistoryMessage *data;
-
 /**
  * Attributes for attributed message text
  */
 @property (strong, nonatomic) NSDictionary *attributes;
-
 /**
- * Default thumbnail(placeholder) for media.
+ * Balloon image
  */
-@property (strong, nonatomic) UIImage *thumbnail;
-
-
+@property (strong, nonatomic, readonly) UIImage *balloonImage;
 /**
- * Boolean value that indicates who is the sender
- * This is important property and will be used to decide in which side show message.
+ Ballon color (Load from layout property)
  */
-@property (nonatomic) BOOL fromMe;
-
+@property (strong, nonatomic, readonly) UIColor *balloonColor;
+/**
+ This is important property
+ */
+@property (nonatomic) struct QMMessageLayout layout;
+/**
+ */
+@property (nonatomic, readonly) QMChatBalloon balloonSettings;
+/**
+ Calculate and cached message size
+ */
+@property (nonatomic, readonly) CGSize messageSize;
 /**
  * Type of message.
  * Available values:
  * QMMessageTypeText, QMMessageTypePhoto
  */
-@property (nonatomic) QMMessageType type;
-
-@property (nonatomic, readonly) CGSize size;
-
-@property (nonatomic) struct QMChatCellLayoutConfig layout;
+@property (nonatomic, readonly) QMMessageType type;
+/**
+ * Align message container
+ * Available values:
+ * QMMessageContentAlignLeft, QMMessageContentAlignRight, QMMessageContentAlignCenter
+ * This is important property and will be used to decide in which side show message.
+ */
+@property (nonatomic) QMMessageContentAlign align;
 
 @end

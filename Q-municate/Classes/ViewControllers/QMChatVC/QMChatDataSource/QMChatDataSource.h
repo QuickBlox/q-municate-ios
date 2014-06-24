@@ -7,23 +7,27 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "QMTextMessageCell.h"
+#import "QMSystemMessageCell.h"
+#import "QMAttachmentMessageCell.h"
 
 @interface QMChatDataSource : NSObject
 
 @property (strong, nonatomic) QBChatDialog *chatDialog;
-@property (strong, nonatomic) NSArray *history;
+@property (strong, nonatomic) NSArray *qmChatHistory;
 
 - (id)init __attribute__((unavailable("init is not a supported initializer for this class.")));
 
 - (instancetype)initWithChatDialog:(QBChatDialog *)dialog forTableView:(UITableView *)tableView;
-
+/**
+ Reload all cell in tableView
+ */
 - (void)reloadTableViewData;
 - (void)loadHistory:(void(^)(void))finish;
-
 /**
- Abstract method
- */
-- (NSArray *)cachedHistory;
+// Get Cell id at QMMessage
+// */
+//- (NSString *)cellIDAtQMMessage:(QMMessage *)message;
 /**
  Abstract method
  */
@@ -32,17 +36,13 @@
  Abstract method
  */
 - (void)sendMessageWithText:(NSString *)text;
-/**
- Abstract method 
- */
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
-/**
- Abstract method
- */
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
-/**
- Abstract method
- */
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+///**
+// Abstract method
+// */
+//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
+///**
+// Abstract method
+// */
+//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end

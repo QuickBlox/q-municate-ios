@@ -1,5 +1,5 @@
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/AsyncImageView" "${PODS_ROOT}/Headers/FPPopover" "${PODS_ROOT}/Headers/Reachability" "${PODS_ROOT}/Headers/SVProgressHUD" "${PODS_ROOT}/Headers/TWMessageBarManager" "${PODS_ROOT}/Headers/UIDevice-Hardware"
-OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers" -isystem "${PODS_ROOT}/Headers/AsyncImageView" -isystem "${PODS_ROOT}/Headers/FPPopover" -isystem "${PODS_ROOT}/Headers/Reachability" -isystem "${PODS_ROOT}/Headers/SVProgressHUD" -isystem "${PODS_ROOT}/Headers/TWMessageBarManager" -isystem "${PODS_ROOT}/Headers/UIDevice-Hardware"
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/AsyncImageView" "${PODS_ROOT}/Headers/FPPopover" "${PODS_ROOT}/Headers/Parus" "${PODS_ROOT}/Headers/Reachability" "${PODS_ROOT}/Headers/SVProgressHUD" "${PODS_ROOT}/Headers/TWMessageBarManager" "${PODS_ROOT}/Headers/UIDevice-Hardware"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers" -isystem "${PODS_ROOT}/Headers/AsyncImageView" -isystem "${PODS_ROOT}/Headers/FPPopover" -isystem "${PODS_ROOT}/Headers/Parus" -isystem "${PODS_ROOT}/Headers/Reachability" -isystem "${PODS_ROOT}/Headers/SVProgressHUD" -isystem "${PODS_ROOT}/Headers/TWMessageBarManager" -isystem "${PODS_ROOT}/Headers/UIDevice-Hardware"
 OTHER_LDFLAGS = -ObjC -framework QuartzCore -framework SystemConfiguration -framework UIKit
 PODS_ROOT = ${SRCROOT}/Pods

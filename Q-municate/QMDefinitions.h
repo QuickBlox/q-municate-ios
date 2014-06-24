@@ -9,6 +9,7 @@
 #ifndef Q_municate_Definitions_h
 #define Q_municate_Definitions_h
 
+
 //*********** Settings Cell Row Names **********************
 #define QMSettingsNormalCellRowProfile              0
 #define QMSettingsNormalCellRowPushNotifications    1
@@ -205,5 +206,11 @@ static NSString *const kSettingsProfileTextViewMessageWarningString	= @"This fie
 static NSString *const kCDMessageDatetimePath = @"datetime";
 
 extern QMLogLevel kLoggingLevel;
+
+#define CHECK_OVERRIDE()\
+@throw\
+[NSException exceptionWithName:NSInternalInconsistencyException \
+reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]\
+userInfo:nil]
 
 #endif

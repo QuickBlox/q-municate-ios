@@ -36,7 +36,7 @@
 @implementation QMChatViewController
 
 - (void)setupPrivateChatWithChatDialog:(QBChatDialog *)chatDialog andOpponent:(QBUUser *)opponent {
-    
+//    [self configureChatVC];
     self.dataSource = [[QMPrivateChatDataSource alloc] initWithChatDialog:chatDialog
                                                                  opponent:opponent
                                                              forTableView:self.tableView];
@@ -45,7 +45,7 @@
 - (void)setupGroupChatWithChatDialog:(QBChatDialog *)chatDialog {
     
     NSAssert(chatDialog.roomJID, @"Check it");
-    
+
     QMChatService *chatService = [QMChatService shared];
     QBChatRoom *chatRoom = [chatService chatRoomWithRoomJID:chatDialog.roomJID];
     
@@ -57,7 +57,14 @@
 - (void)viewDidLoad {
     
     [super viewDidLoad];
+    
+    QBChatDialog *dialog = [[QBChatDialog alloc] init];
+    QBUUser *qbUser = [[QBUUser alloc] init];
+    
+    [self setupPrivateChatWithChatDialog:dialog andOpponent:qbUser];
+    self.automaticallyScrollsToMostRecentMessage = YES;
 }
+
 
 //- (void)viewDidLoad
 //{

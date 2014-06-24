@@ -8,11 +8,8 @@
 
 #import "QMPrivateChatDataSource.h"
 #import "QMMessage.h"
-#import "QMChatCell.h"
 #import "QMChatService.h"
 #import "QMContactList.h"
-
-NSString *const kQMChatCellID = @"ChatCell";
 
 @interface QMPrivateChatDataSource()
 
@@ -32,10 +29,18 @@ NSString *const kQMChatCellID = @"ChatCell";
 
 - (void)setChatDialog:(QBChatDialog *)chatDialog {
 
-    if (chatDialog.ID) {
-        [super setChatDialog:chatDialog];
+    [super setChatDialog:chatDialog];
+    
+    if (self.qmChatHistory == nil) {
+        
+        __weak __typeof(self)weakSelf = self;
+        [self loadHistory:^{
+            [weakSelf reloadTableViewData];
+        }];
+        
     } else {
-        self.history = @[].mutableCopy;
+        
+        [self reloadTableViewData];
     }
 }
 

@@ -15,4 +15,8 @@
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) QMChatDataSource *dataSource;
 
+@property (assign, nonatomic) BOOL automaticallyScrollsToMostRecentMessage;
+
+- (void)configureChatVC;
+
 @end
