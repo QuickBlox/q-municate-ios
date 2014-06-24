@@ -31,6 +31,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    
+    
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     self.rememberMeSwitch.on = [[[NSUserDefaults standardUserDefaults] objectForKey:kRememberMe] boolValue];
     if (self.rememberMeSwitch.isOn) {
@@ -52,14 +56,6 @@
 - (IBAction)hideKeyboard:(id)sender
 {
     [sender resignFirstResponder];
-}
-
-
-- (IBAction)switchToSignUpController:(id)sender
-{
-    UINavigationController *navController = [self.root.childViewControllers lastObject];
-    [self.root signUpToQuickblox];
-    [navController removeFromParentViewController];
 }
 
 - (IBAction)logIn:(id)sender
@@ -229,9 +225,7 @@
     [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
         [QMUtilities hideActivityView];
         if (success) {
-            UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
-            UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
-            [navigationController popToRootViewControllerAnimated:NO];
+            [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
 		}
     }];
 }

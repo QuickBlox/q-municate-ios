@@ -15,7 +15,6 @@
 
 @interface QMSplashViewController ()
 
-@property (nonatomic) BOOL isAlreadySeen;
 @property (weak, nonatomic) IBOutlet UIImageView *splashLogoView;
 
 @end
@@ -89,13 +88,6 @@
     [self performSegueWithIdentifier:kWelcomeScreenSegueIdentifier sender:nil];
 }
 
-#pragma mark - Navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    QMWelcomeScreenViewController *welcomeScreenVC = segue.destinationViewController;
-    welcomeScreenVC.root = self;
-}
-
 - (void)loginWithEmail:(NSString *)email password:(NSString *)password
 {
     [QMUtilities showActivityView];
@@ -162,9 +154,7 @@
     [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
         [QMUtilities hideActivityView];
         if (success) {
-            UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
-            UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
-            [navigationController popToRootViewControllerAnimated:NO];
+            [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
 		}
     }];
 }

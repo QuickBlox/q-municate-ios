@@ -8,15 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@class QMSplashViewController;
+
 
 @interface QMWelcomeScreenViewController : UIViewController
-
-@property (strong, nonatomic) UIView *lastView;
-@property (strong, nonatomic) UINavigationController *lastController;
-@property (strong, nonatomic) QMSplashViewController *root;
-
-- (void)signUpToQuickblox;
-- (void)logInToQuickblox;
 
 @end

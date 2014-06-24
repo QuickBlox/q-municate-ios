@@ -11,6 +11,7 @@
 #import "NSArray+ArrayToString.h"
 #import <TWMessageBarManager.h>
 #import "QMDBStorage+Messages.h"
+#import  <Quickblox/Quickblox.h>
 
 
 @interface QMChatService () <QBChatDelegate, QBActionStatusDelegate>
@@ -20,6 +21,15 @@
 @property (copy, nonatomic) QBChatDialogResultBlock chatDialogResultBlock;
 @property (copy, nonatomic) QBChatDialogHistoryBlock chatDialogHistoryBlock;
 
+
+/** Video Chat */
+@property (strong, nonatomic) QBWebRTCVideoChat *activeStream;
+
+@property (strong, nonatomic) NSString *currentSessionID;
+@property (nonatomic, strong) NSDictionary *customParams;
+@property (nonatomic, assign) QMVideoChatType callType;
+
+/** */
 @property (strong, nonatomic) NSTimer *presenceTimer;
 
 /** Upload message needed for replacing with delivered message in chat hisoty. When used, it means that upload finished, and message has been delivered */
@@ -130,34 +140,58 @@
 #pragma mark -
 #pragma mark - Audio/Video Calls
 
-- (void)callUser:(NSUInteger)userID withVideo:(BOOL)videoEnabled
+
+- (void)initActiveStreamWithOpponentView:(QBVideoView *)opponentView sessionID:(NSString *)sessionID callType:(QMVideoChatType)type
 {
-    if (videoEnabled) {
-        [self.activeStream callUser:userID conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
-        return;
+    // Active stream initialize:
+    if (sessionID == nil)
+    {
+        self.activeStream = [[QBChat instance] createWebRTCVideoChatInstance];
+    } else {
+        self.activeStream = [[QBChat instance] createAndRegisterWebRTCVideoChatInstanceWithSessionID:currentSessionID];
     }
-    [self.activeStream callUser:userID conferenceType:QBVideoChatConferenceTypeAudio];
+    // set conference type:
+    self.activeStream.currentConferenceType = (int)type;
+    
+    // set opponent' view
+    self.activeStream.viewToRenderOpponentVideoStream = opponentView;
 }
 
-- (void)acceptCallFromUser:(NSUInteger)userID withVideo:(BOOL)videoEnabled customParams:(NSDictionary *)customParameters
+- (void)releaseActiveStream
 {
+    //Destroy active stream:
+    [[QBChat instance] unregisterWebRTCVideoChatInstance:self.activeStream];
+    
+    [self clearCallsCacheParams];
+}
+
+- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView callType:(QMVideoChatType)callType
+{
+    [self initActiveStreamWithOpponentView:opponentView sessionID:nil callType:callType];
+    [self.activeStream callUser:userID];
+}
+
+- (void)acceptCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView
+{
+    [self initActiveStreamWithOpponentView:opponentView sessionID:self.currentSessionID callType:self.callType];
+    
     self.activeStream.viewToRenderOpponentVideoStream.remotePlatform = self.customParams[qbvideochat_platform];
     self.activeStream.viewToRenderOpponentVideoStream.remoteVideoOrientation = [QBChatUtils interfaceOrientationFromString:self.customParams[qbvideochat_device_orientation]];
-    if (videoEnabled) {
-        [self.activeStream acceptCallWithOpponentID:userID conferenceType:QBVideoChatConferenceTypeAudioAndVideo customParameters:customParameters];
-        return;
-    }
-    [self.activeStream acceptCallWithOpponentID:userID conferenceType:QBVideoChatConferenceTypeAudio];
+    
+    [self.activeStream acceptCallWithOpponentID:userID customParameters:self.customParams];
 }
 
-- (void)rejectCallFromUser:(NSUInteger)userID
+- (void)rejectCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView
 {
+    [self initActiveStreamWithOpponentView:opponentView sessionID:self.currentSessionID callType:self.callType];
     [self.activeStream rejectCallWithOpponentID:userID];
+    [self releaseActiveStream];
 }
 
 - (void)cancelCall
 {
     [self.activeStream finishCall];
+    [self releaseActiveStream];
 }
 
 - (void)finishCall
@@ -165,37 +199,6 @@
     [self cancelCall];
 }
 
-
-#pragma mark - Active Stream Options
-
-- (void)initActiveStream
-{
-    if (currentSessionID == nil) {
-        self.activeStream = [[QBChat instance] createAndRegisterWebRTCVideoChatInstanceWithSessionID:nil];
-        return;
-    }
-    self.activeStream = [[QBChat instance] createAndRegisterWebRTCVideoChatInstanceWithSessionID:currentSessionID];
-}
-
-- (void)initActiveStreamWithOpponentView:(QBVideoView *)opponentView ownView:(UIView *)ownView
-{
-    // Active stream initialize:
-    if (currentSessionID == nil)
-    {
-        self.activeStream = [[QBChat instance] createWebRTCVideoChatInstance];
-    } else {
-        self.activeStream = [[QBChat instance] createAndRegisterWebRTCVideoChatInstanceWithSessionID:currentSessionID];
-    }
-    self.activeStream.viewToRenderOpponentVideoStream = opponentView;  ///   opponent' view
-//    self.activeStream.viewToRenderOwnVideoStream = ownView;        ///   my view
-}
-
-- (void)releaseActiveStream
-{
-    //Destroy active stream:
-    [[QBChat instance] unregisterWebRTCVideoChatInstance:self.activeStream];
-    self.activeStream = nil;
-}
 
 
 #pragma mark - QBChatDelegate - Login to Chat
@@ -231,7 +234,9 @@
 - (void)chatDidReceiveCallRequestFromUser:(NSUInteger)userID withSessionID:(NSString *)_sessionID conferenceType:(enum QBVideoChatConferenceType)conferenceType customParameters:(NSDictionary *)customParameters
 {
     self.customParams = customParameters;
-    currentSessionID = _sessionID;
+    self.currentSessionID = _sessionID;
+    self.callType = (NSUInteger)conferenceType;
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:kIncomingCallNotification object:nil userInfo:@{@"id" : @(userID), @"type" : @(conferenceType)}];
 }
 
@@ -250,21 +255,24 @@
 // call rejected:
 - (void)chatCallDidRejectByUser:(NSUInteger)userID
 {
-    currentSessionID = nil;
+    [self releaseActiveStream];
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:kCallWasRejectedNotification object:nil];
 }
 
 // user doesn't answer:
 -(void) chatCallUserDidNotAnswer:(NSUInteger)userID
 {
-    currentSessionID = nil;
+    [self releaseActiveStream];
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:kCallWasStoppedNotification object:nil userInfo:@{@"reason":kStopVideoChatCallStatus_OpponentDidNotAnswer}];
 }
 
 // call finished of canceled:
 - (void)chatCallDidStopByUser:(NSUInteger)userID status:(NSString *)status
 {
-    currentSessionID = nil;
+    [self releaseActiveStream];
+    
     NSString *stopCallReason = nil;
     if ([status isEqualToString:kStopVideoChatCallStatus_OpponentDidNotAnswer]) {
         stopCallReason = kStopVideoChatCallStatus_OpponentDidNotAnswer;
@@ -281,6 +289,13 @@
         return;
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:kCallWasStoppedNotification object:nil userInfo:@{@"reason":stopCallReason}];
+}
+
+- (void)clearCallsCacheParams
+{
+    self.customParams = nil;
+    self.currentSessionID = nil;
+    self.callType = 0;
 }
 
 
@@ -300,8 +315,7 @@
         }
         completionHandler(nil, result.errors[0]);
     };
-    
-    [[QBChat instance] dialogsWithDelegate:self context:Block_copy((__bridge void *)(resBlock))];
+    [QBChat dialogsWithDelegate:self context:Block_copy((__bridge void *)(resBlock))];
     
 }
 
@@ -316,7 +330,7 @@
          completionHandler(nil, result.errors[0]);
      };
     
-	[[QBChat instance] createDialog:chatDialog delegate:self context:Block_copy((__bridge void *)(resultBlock))];
+	[QBChat createDialog:chatDialog delegate:self context:Block_copy((__bridge void *)(resultBlock))];
 }
 
 - (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completionHandler
@@ -324,15 +338,9 @@
     NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
     extendedRequest[@"name"] = dialogName;
     
-    QBResultBlock resultBlock = ^(Result *result) {
-        if (result.success && [result isKindOfClass:[QBChatDialogResult class]]) {
-            QBChatDialog *chatDialog = ((QBChatDialogResult *)result).dialog;
-            completionHandler(chatDialog, nil);
-            return;
-        }
-        completionHandler(nil, result.errors[0]);
-    };
-    [[QBChat instance] updateDialogWithID:chatDialog.ID extendedRequest:extendedRequest delegate:self context:Block_copy((__bridge void *)(resultBlock))];
+    [self updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialog *dialog, NSError *error) {
+        completionHandler(dialog, error);
+    }];
 }
 
 - (void)addUsers:(NSArray *)users toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completionHandler
@@ -342,16 +350,9 @@
     NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
     extendedRequest[@"push[occupants_ids][]"] = usersIDsAsString;
     
-    QBResultBlock resultBlock = ^(Result *result) {
-        if (result.success && [result isKindOfClass:[QBChatDialogResult class]]) {
-            QBChatDialog *chatDialog = ((QBChatDialogResult *)result).dialog;
-            completionHandler(chatDialog, nil);
-            return;
-        }
-        completionHandler(nil, result.errors[0]);
-    };
-    
-    [[QBChat instance] updateDialogWithID:chatDialog.ID extendedRequest:extendedRequest delegate:self context:Block_copy((__bridge void *)(resultBlock))];
+    [self updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialog *dialog, NSError *error) {
+        completionHandler(dialog, error);
+    }];
 }
 
 - (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completionHandler
@@ -359,16 +360,29 @@
     NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
     extendedRequest[@"pull_all[occupants_ids][]"] = [NSString stringWithFormat:@"%lu", (unsigned long)[QMContactList shared].me.ID];
     
+    [self updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialog *dialog, NSError *error) {
+        completionHandler(dialog, error);
+    }];
+}
+
+/** ABSTRACT UPDATE CHAT DIALOG METHOD */
+
+- (void)updateChatDialogWithID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest completion:(QBChatDialogResultBlock)completionHandler
+{
     QBResultBlock resultBlock = ^(Result *result) {
         if (result.success && [result isKindOfClass:[QBChatDialogResult class]]) {
             QBChatDialog *chatDialog = ((QBChatDialogResult *)result).dialog;
+            
+            // save to history:
+            self.allDialogsAsDictionary[chatDialog.roomJID] = chatDialog;
+            
             completionHandler(chatDialog, nil);
             return;
         }
         completionHandler(nil, result.errors[0]);
     };
     
-    [[QBChat instance] updateDialogWithID:chatDialog.ID extendedRequest:extendedRequest delegate:self context:Block_copy((__bridge void *)(resultBlock))];
+    [QBChat updateDialogWithID:dialogID extendedRequest:extendedRequest delegate:self context:Block_copy((__bridge void *)(resultBlock))];
 }
 
 
@@ -456,13 +470,14 @@
 
 - (void)sendMessage:(QBChatMessage *)message
 {
-    // additional params:
-    NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
-    message.customParameters[@"date_sent"] = @(timestamp);
-    message.customParameters[@"save_to_history"] = @YES;
-    
     // send message:
-	[[QBChat instance] sendMessage:message]; 
+	[[QBChat instance] sendMessage:message];
+    
+    // check for notification message. If exist, ignore them
+    NSUInteger notificationType = [message.customParameters[@"notification_type"] integerValue];
+    if (notificationType == 2 || notificationType == 1) {
+        return;
+    }
     
     // get dialog entity with current user:
     NSString *kRecipientID = [@(message.recipientID) stringValue];
@@ -508,7 +523,8 @@
 
 #define intToString(s) [NSString stringWithFormat:@"%d",s]
 
-- (void)sendInviteMessageToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog
+//- (void)sendInviteMessageToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog
+- (void)sendChatDialogDidCreateNotificationToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog
 {
     QBUUser *me = [QMContactList shared].me;
     for (QBUUser *user in users) {
@@ -526,11 +542,45 @@
         customParams[@"type"] = @(chatDialog.type);
         customParams[@"occupants_ids"] = [chatDialog.occupantIDs stringFromArray];
         
+        NSTimeInterval timestamp = (unsigned long)[[NSDate date] timeIntervalSince1970];
+        customParams[@"date_sent"] = @(timestamp);
+        customParams[@"save_to_history"] = @YES;
+        
+        // save to hostory:
+        customParams[@"notification_type"] = @"1";
+        
         inviteMessage.customParameters = customParams;
         
         [[QBChat instance] sendMessage:inviteMessage];
         // save to history:
         self.allConversations[intToString(user.ID)] = inviteMessage;
+    }
+}
+
+- (void)sendChatDialogDidUpdateNotificationToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog
+{
+    QBUUser *me = [QMContactList shared].me;
+    for (QBUUser *user in users) {
+        if ([user isEqual:me]) {
+            continue;
+        }
+        // create message:
+        QBChatMessage *updateMessage = [QBChatMessage message];
+        updateMessage.recipientID = user.ID;
+        
+        NSMutableDictionary *customParams = [NSMutableDictionary new];
+        customParams[@"_id"] = chatDialog.ID;
+        customParams[@"xmpp_room_jid"] = chatDialog.roomJID;
+        customParams[@"name"] = chatDialog.name;
+        customParams[@"type"] = @(chatDialog.type);
+        customParams[@"occupants_ids"] = [chatDialog.occupantIDs stringFromArray];
+
+        // notification type: 2 = Chat dialog was updated:
+        customParams[@"notification_type"] = @"2";
+        
+        updateMessage.customParameters = customParams;
+        
+        [[QBChat instance] sendMessage:updateMessage];
     }
 }
 
@@ -549,6 +599,14 @@
             [self sendMessage:contentMessage toRoom:currentRoom];
         }
     }
+    
+    // additional params:
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    NSTimeInterval timestamp = (unsigned long)[[NSDate date] timeIntervalSince1970];
+    params[@"date_sent"] = @(timestamp);
+    params[@"save_to_history"] = @YES;
+    contentMessage.customParameters = params;
+    
     [self sendMessage:contentMessage];
 }
 
@@ -582,16 +640,11 @@
         }
         
     };
-	[[QBChat instance] messagesWithDialogID:dialogIDString delegate:self context:Block_copy((__bridge void *)(resulBlock))];
+	[QBChat messagesWithDialogID:dialogIDString delegate:self context:Block_copy((__bridge void *)(resulBlock))];
 }
 
 - (void)sendMessage:(QBChatMessage *)message toRoom:(QBChatRoom *)chatRoom
 {
-    // additional params:
-    NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
-    message.customParameters[@"date_sent"] = @(timestamp);
-    message.customParameters[@"save_to_history"] = @YES;
-    
     // send message to user:
     [[QBChat instance] sendChatMessage:message toRoom:chatRoom];
     

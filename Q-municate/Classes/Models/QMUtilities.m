@@ -108,9 +108,7 @@
         
         [QMUtilities shared].incomingCallController.opponentID = opponentID;
         
-        if (type == QBVideoChatConferenceTypeAudioAndVideo) {
-            [QMUtilities shared].incomingCallController.isVideoCall = YES;
-        }
+        [QMUtilities shared].incomingCallController.callType = type;
         
         [self.window.rootViewController presentViewController:[QMUtilities shared].incomingCallController
                                                      animated:NO completion:nil];

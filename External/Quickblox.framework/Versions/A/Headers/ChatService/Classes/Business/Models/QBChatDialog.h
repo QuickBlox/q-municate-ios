@@ -17,6 +17,7 @@
     NSString *lastMessageText;
     NSDate *lastMessageDate;
     NSUInteger lastMessageUserID;
+    NSUInteger unreadMessagesCount;
     NSArray *occupantIDs;
     enum QBChatDialogType type;
     NSUInteger unreadMessageCount;
@@ -42,6 +43,9 @@
 
 /** User ID of last opponent in private or group chat */
 @property (nonatomic, assign) NSUInteger lastMessageUserID;
+
+/** Number of unread messages in this dialog */
+@property (nonatomic, assign) NSUInteger unreadMessagesCount;
 
 /** Array of user ids in chat. For private chat count = 2 */
 @property (nonatomic, retain) NSArray *occupantIDs;

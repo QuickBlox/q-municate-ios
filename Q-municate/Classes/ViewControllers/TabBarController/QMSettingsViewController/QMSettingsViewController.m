@@ -83,11 +83,8 @@ typedef NS_ENUM(NSUInteger, QMPasswordCheckState) {
     
 	[[NSNotificationCenter defaultCenter] postNotificationName:kInviteFriendsDataSourceShouldRefreshNotification object:nil];
     [[QMAuthService shared] destroySessionWithCompletion:^(BOOL success) {
-        
         //pop tab bar:
-        UIWindow *window = [[UIApplication sharedApplication].windows firstObject];
-        UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
-        [navigationController popToRootViewControllerAnimated:NO];
+        [self performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
     }];
 }
 

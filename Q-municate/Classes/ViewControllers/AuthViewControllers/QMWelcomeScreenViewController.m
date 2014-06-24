@@ -22,8 +22,6 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *bubleHeight;
 
 - (IBAction)connectWithFacebook:(id)sender;
-- (IBAction)SignUp:(id)sender;
-- (IBAction)LogIn:(id)sender;
 
 @end
 
@@ -46,21 +44,13 @@
 {
     [super viewWillAppear:animated];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+    
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-
-	/*
-	* there was a bug when choosing user's ava on sigh up page
-	* -> switching to login view at once!
-	* https://jira-injoit.quickblox.com/browse/QMUN-90
-	* */
-	NSUInteger childControllersCount = [[self childViewControllers] count];
-    if (!self.root && !childControllersCount) {
-        [self logInToQuickblox];
-    }
 }
 
 #pragma mark - Actions
@@ -94,29 +84,6 @@
     }];
 }
 
-- (IBAction)SignUp:(id)sender
-{
-    [self signUpToQuickblox];
-}
-
-- (IBAction)LogIn:(id)sender
-{
-    [self logInToQuickblox];
-}
-
-
-#pragma mark - Authorization
-
-- (void)signUpToQuickblox
-{
-    [self performSegueWithIdentifier:kSignUpSegueIdentifier sender:nil];
-}
-
-- (void)logInToQuickblox
-{
-    [self performSegueWithIdentifier:kLogInSegueSegueIdentifier sender:nil];
-}
-
 
 #pragma mark -
 
@@ -126,9 +93,7 @@
     [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
         [QMUtilities hideActivityView];
         if (success) {
-            UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
-            UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
-            [navigationController popToRootViewControllerAnimated:NO];
+            [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
 		}
     }];
 }

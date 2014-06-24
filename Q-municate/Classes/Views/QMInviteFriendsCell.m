@@ -18,22 +18,23 @@ static double_t const kUptimeInterval = 300;
 @implementation QMInviteFriendsCell
 
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+- (void)awakeFromNib
 {
-    [super setSelected:selected animated:animated];
-}
-
-- (void)configureCellWithParams:(QMPerson *)user
-{
-    self.user = user;
     // cancel previous user's avatar loading
-    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget:self.userImageView];
+//    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget:self.userImageView];
     [self.userImageView setImage:[UIImage imageNamed:@"upic-placeholder"]];
     
     self.userImageView.layer.cornerRadius = self.userImageView.frame.size.width / 2;
     self.userImageView.layer.borderWidth = 2.0f;
     self.userImageView.layer.borderColor = [UIColor colorWithRed:1/215 green:1/216 blue:1/215 alpha:0.04].CGColor;   //215,216,215
     self.userImageView.crossfadeDuration = 0.0f;
+    self.userImageView.layer.masksToBounds = YES;
+}
+
+- (void)configureCellWithParams:(QMPerson *)user
+{
+    self.user = user;
+
     if (self.user.imageURL != nil) {
         [self.userImageView setImageURL:[NSURL URLWithString:user.imageURL]];
     } else {
@@ -59,13 +60,13 @@ static double_t const kUptimeInterval = 300;
 
 - (void)configureCellWithParamsForQBUser:(QBUUser *)user checked:(BOOL)checked
 {
-    self.userImageView.layer.cornerRadius = self.userImageView.frame.size.width / 2;
-    self.userImageView.layer.borderWidth = 2.0f;
-    self.userImageView.layer.borderColor = [UIColor colorWithRed:1/215 green:1/216 blue:1/215 alpha:0.04].CGColor;   //215,216,215
-    [self.userImageView loadImageWithBlobID:user.blobID];
-    self.userImageView.layer.masksToBounds = YES;
     // full name
     self.fullNameLabel.text = user.fullName;
+    
+    // avatar:
+    if (user.website != nil) {
+        [self.userImageView setImageURL:[NSURL URLWithString:user.website]];
+    }
     
     // activity
     NSDate *currentDate = [NSDate date];

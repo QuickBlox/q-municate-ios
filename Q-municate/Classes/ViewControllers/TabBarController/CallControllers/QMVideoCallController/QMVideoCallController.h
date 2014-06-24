@@ -13,7 +13,7 @@
 @property (nonatomic, strong) QBUUser *opponent;
 @property (nonatomic, strong) UIImage *userImage;
 
-@property (nonatomic, assign) BOOL videoEnabled;
+@property (nonatomic, assign) QMVideoChatType callType;
 @property (nonatomic, assign) BOOL isOpponentCall;
 
 @end

@@ -7,473 +7,240 @@
 //
 
 #import "QMProfileViewController.h"
-#import "UIImageView+ImageWithBlobID.h"
 #import "UIImage+Cropper.h"
 #import "QMContactList.h"
 #import "QMContent.h"
 #import "QMAuthService.h"
 #import "QMUtilities.h"
 
-#define kDefaultContainerYOffset	0.0f
-#define kUserNameContainerYOffset	-40.0f
-#define kUserMailContainerYOffset	-90.0f
-#define kUserPhoneContainerYOffset	-150.0f
-#define kUserStatusContainerYOffset	-170.0f
 
-#define kUserStatusLengthConstraint	43
+static NSUInteger const QM_MAX_STATUS_TEXT_LENGTH = 44;
 
-@interface QMProfileViewController ()
+// text field tags:
+static NSUInteger const kFullNameFieldTag = 11;
+static NSUInteger const kPhoneNumberFieldTag = 12;
 
-@property (nonatomic) BOOL isUserDataChanged;
-@property (nonatomic) BOOL isUserPhotoChanged;
-@property (assign) BOOL shouldShowWarning;
-@property (assign) BOOL isBackButtonClicked;
-@property (strong, nonatomic) NSDictionary *oldUserDataDictionary;
-@property (strong, nonatomic) NSString *oldUserStatusString;
-@property (strong, nonatomic) UIBarButtonItem *backItem;
-@property (strong, nonatomic) QBUUser *localUser;
+
+@interface QMProfileViewController () <UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate>
+
+@property (weak, nonatomic) IBOutlet AsyncImageView *avatarView;
+@property (weak, nonatomic) IBOutlet UITextField *fullNameField;
+@property (weak, nonatomic) IBOutlet UITextField *emailField;
+@property (weak, nonatomic) IBOutlet UITextField *phoneNumberField;
+@property (weak, nonatomic) IBOutlet UITextView *statusField;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *updateProfileButton;
+
+@property (nonatomic, strong) UIImage *avatarImage;
+
+@property (nonatomic, strong) QBUUser *me;
+
+/** Fields caches. */
+@property (nonatomic, copy) NSString *fullNameFieldCache;
+@property (nonatomic, copy) NSString *phoneFieldCache;
+@property (nonatomic, copy) NSString *statusFieldCache;
+
+/** Optional cache */
+//@property (nonatomic, copy) NSString *emailFieldCache;
 
 @end
 
+
 @implementation QMProfileViewController
+@synthesize me;
 
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.shouldShowWarning = YES;
-	self.isBackButtonClicked = NO;
-
-	self.oldUserDataDictionary = [[NSUserDefaults standardUserDefaults] objectForKey:kUserDataInfoDictionary];
-    self.oldUserStatusString = [[NSUserDefaults standardUserDefaults] objectForKey:kUserStatusText];
-    self.localUser = [QMContactList shared].me;
-    if (!self.localUser.phone) {
-		self.localUser.phone = kEmptyString;
-    }
-    self.userNameTextField.text = self.localUser.fullName;
-	NSString *mailString;
-	if (self.localUser.email) {
-	    mailString = self.localUser.email;
-	} else {
-		mailString = [QMContactList shared].facebookMe[kEmail];
-	}
-	mailString = [mailString stringByReplacingOccurrencesOfString:@"%2b" withString:@"+"];
-	self.userMailTextField.text = mailString;
-	self.userPhoneTextField.text = self.localUser.phone;
-
-	if (!self.oldUserStatusString || [self.oldUserStatusString isEqualToString:kEmptyString]) {
-		self.oldUserStatusString = kSettingsProfileDefaultStatusString;
-	}
-	[self checkStatusColorWithString:self.oldUserStatusString];
-	self.userStatusTextView.text = self.oldUserStatusString;
-	self.isUserPhotoChanged = NO;
+    [self configureAvatarView];
     
-    [self loadUserAvatarToImageView];
-
-    CALayer *imageLayer = self.userPhotoImageView.layer;
-    imageLayer.cornerRadius = self.userPhotoImageView.frame.size.width / 2;
-    imageLayer.masksToBounds = YES;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-	self.isBackButtonClicked = YES;
-	[self.userStatusTextView resignFirstResponder];
-	[self setOldValues];
-	[super viewWillDisappear:animated];
+    me = [QMContactList shared].me;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-	[super viewWillAppear:animated];
-	self.isBackButtonClicked = NO;
+    [super viewWillAppear:animated];
+    
+    // update profile screen:
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
+    [self updateProfileView];
 }
 
 
-- (void)loadUserAvatarToImageView
+- (void)didReceiveMemoryWarning
 {
-    if (self.localUser.website != nil) {
-        [self.userPhotoImageView setImageURL:[NSURL URLWithString:self.localUser.website]];
+    [super didReceiveMemoryWarning];
+}
+
+- (void)configureAvatarView
+{
+    self.avatarView.layer.cornerRadius = self.avatarView.frame.size.width / 2;
+    self.avatarView.layer.borderWidth = 2.0f;
+    self.avatarView.layer.borderColor = [UIColor colorWithRed:1/215 green:1/216 blue:1/215 alpha:0.04].CGColor;   //215,216,215
+    self.avatarView.layer.masksToBounds = YES;
+    self.avatarView.crossfadeDuration = 0.0f;
+}
+
+- (void)updateProfileView
+{
+    // avatar:
+    [self.avatarView setImageURL:[NSURL URLWithString:me.website]];
+    
+    // full name:
+    [self.fullNameField setText:me.fullName];
+    
+    // email:
+    [self.emailField setText:me.email];
+    
+    // phone number:
+    [self.phoneNumberField setText:me.phone];
+    
+    // status:
+    if (me.customData != nil) {
+        [self.statusField setText:me.customData];
+    } else {
+        [self.statusField setText:@"Add status..."];
+    }
+}
+
+- (IBAction)changeAvatar:(id)sender
+{
+    if (me.facebookID != nil) {
+        [[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:@"You can not change avatar. Go to facebook, and change avatar there." delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
         return;
     }
-    [self.userPhotoImageView loadImageWithBlobID:self.localUser.blobID];
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    picker.delegate = self;
+
+    [self presentViewController:picker animated:YES completion:nil];
 }
 
-- (IBAction)chooseUserPicture:(UIButton *)sender
+- (IBAction)hideKeyboard:(id)sender
 {
-	if ([self checkForFullnessOfLoginAndMailFields]) {
-		UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-		imagePicker.delegate = self;
-		imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-		[self presentViewController:imagePicker animated:YES completion:nil];
-	}
+    [sender resignFirstResponder];
 }
 
-#pragma mark - UIImagePickerControllerDelegate
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+- (IBAction)saveChanges:(id)sender
 {
-    CGSize imgViewSize = CGSizeMake(200, 200);
-    UIImage *image =  info[UIImagePickerControllerOriginalImage];
-    UIImage *scaledImage = [image imageByScalingProportionallyToMinimumSize:imgViewSize];
-    [self.userPhotoImageView setImage:scaledImage];
-    self.isUserPhotoChanged = YES;
-    [self checkForDoneButton];
+    // resing all responders:
+    [self.fullNameField resignFirstResponder];
+    [self.phoneNumberField resignFirstResponder];
+    [self.statusField resignFirstResponder];
 
-    [self dismissViewControllerAnimated:YES completion:nil];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    if (![self profileWasChanged]) {
+        return;
+    }
+    if (_avatarImage != nil) {
+        [QMUtilities showActivityView];
+        
+        QMContent *manager = [[QMContent alloc] init];
+        [manager uploadImage:_avatarImage withCompletion:^(QBCBlob *blob, BOOL success, NSError *error) {
+            if (!success) {
+                [QMUtilities hideActivityView];
+                [[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:error.description delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
+                return;
+            }
+            [self updateUsersProfile];
+        }];
+    }
+    
+    [self updateUsersProfile];
 }
 
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+- (BOOL)profileWasChanged
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    BOOL profileChanged = NO;
+    
+    // verifying all fields:
+    if (_avatarImage != nil) {
+        profileChanged = YES;
+    }
+    if (_fullNameFieldCache != nil && ![_fullNameFieldCache isEqualToString:me.fullName] ) {
+        
+        me.fullName = _fullNameFieldCache;
+        profileChanged = YES;
+    }
+    if (_phoneFieldCache != nil && ![_phoneFieldCache isEqualToString:me.phone]) {
+        
+        me.phone = _phoneFieldCache;
+        profileChanged = YES;
+    }
+    if (_statusFieldCache != nil && ![_statusFieldCache isEqualToString:me.customData]) {
+        profileChanged = YES;
+        
+        if (_statusFieldCache.length > QM_MAX_STATUS_TEXT_LENGTH) {
+            NSRange range = NSMakeRange(0, QM_MAX_STATUS_TEXT_LENGTH);
+            NSString *statusText = [_statusFieldCache substringWithRange:range];
+            me.customData = statusText;
+        } else {
+            me.customData = _statusFieldCache;
+        }
+    }
+    return profileChanged;
 }
 
-#pragma mark - TextFieldDelegate
-- (void)textFieldDidBeginEditing:(UITextField *)textField
+- (void)updateUsersProfile
 {
-	[self checkForChanges];
-	if (textField == self.userPhoneTextField) {
-		[self showNavDoneButton];
-		[self setFrameOffset:kUserPhoneContainerYOffset];
-	} else {
-		if (self.navigationItem.rightBarButtonItems) {
-			[self.navigationItem setRightBarButtonItems:nil];
-		}
-	}
-	if (textField == self.userNameTextField) {
-		[self setFrameOffset:kUserNameContainerYOffset];
-	} else if (textField == self.userMailTextField) {
-		[self setFrameOffset:kUserMailContainerYOffset];
-	}
-}
-
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
-{
-	return [self checkForFullnessOfLoginAndMailFields];
-}
-
-- (BOOL)checkForFullnessOfLoginAndMailFields
-{
-	if ((!self.userNameTextField.text.length || !self.userMailTextField.text.length) && self.shouldShowWarning) {
-		self.shouldShowWarning = NO;
-		[self showAlertWithMessage:kSettingsProfileMessageWarningString];
-		return NO;
-	}
-	return YES;
-}
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    NSString *textString = textField.text;
-	if (!textString.length && (textField == self.userNameTextField || textField == self.userMailTextField)) {
-		[self showAlertWithMessage:kSettingsProfileMessageWarningString];
-		return NO;
-	}
-	[self checkForChanges];
-    [textField resignFirstResponder];
-	[self setFrameOffset:kDefaultContainerYOffset];
-    return YES;
-}
-
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-{
-	NSString *textString = textField.text;
-	NSString *resultString;
-	if (!range.length) {
-	    resultString = [NSString stringWithFormat:@"%@%@%@", [textString substringToIndex:range.location], string, [textString substringFromIndex:range.location]];
-	} else {
-		resultString = [NSString stringWithFormat:@"%@%@", [textString substringToIndex:range.location], [textString substringFromIndex:range.location + 1]];
-	}
-	NSLog(@"resultString: %@", resultString);
-	if (textField == self.userNameTextField) {
-	    if (![resultString isEqualToString:self.localUser.fullName]) {
-			self.isUserDataChanged = YES;
-		} else {
-			self.isUserDataChanged = NO;
-		}
-	} else if (textField == self.userMailTextField) {
-		if (self.localUser.email) {
-			if (![resultString isEqualToString:self.localUser.email]) {
-				self.isUserDataChanged = YES;
-			} else {
-				self.isUserDataChanged = NO;
-			}
-		} else {
-			NSString *fbMailString = [QMContactList shared].facebookMe[kEmail];
-			BOOL isMailEqual = [resultString isEqualToString:fbMailString];
-			if (!isMailEqual) {
-				self.isUserDataChanged = YES;
-			} else {
-				self.isUserDataChanged = NO;
-			}
-		}
-	} else if (textField == self.userPhoneTextField) {
-		if (![resultString isEqualToString:self.localUser.phone]) {
-			self.isUserDataChanged = YES;
-		} else {
-			self.isUserDataChanged = NO;
-		}
-	}
-	[self checkForDoneButton];
-
-	return YES;
+    // delete password before update and cache:
+    NSString *password = me.password;
+    me.password = nil;
+    
+    [[QMAuthService shared] updateUser:me withCompletion:^(QBUUser *user, BOOL success, NSError *error) {
+        [QMUtilities hideActivityView];
+        
+        if (!success) {
+            [[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:error.description delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
+            return;
+        }
+        user.password = password;
+        self.me = user;
+        
+        // show alert:
+        [[[UIAlertView alloc] initWithTitle:kAlertTitleSuccessString message:@"Profile was updated" delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
+        [self updateProfileView];
+    }];
 }
 
 
-#pragma mark - TextViewDelegate
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
+#pragma mark - UITextFieldDelegate & UITextViewDelegate
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
 {
-	if (![self checkForFullnessOfLoginAndMailFields]) {
-		return NO;
-	}
-	NSString *statusString = textView.text;
-	if ([statusString isEqualToString:kSettingsProfileDefaultStatusString]) {
-	    self.userStatusTextView.text = kEmptyString;
-		[self.userStatusTextView setTextColor:[UIColor blackColor]];
-	}
-	return YES;
+    if (textField.tag == kFullNameFieldTag) {
+        
+        // save modified full name:
+        _fullNameFieldCache = textField.text;
+        
+    } else if (textField.tag == kPhoneNumberFieldTag) {
+        
+        // save mofified phone number:
+        _phoneFieldCache = textField.text;
+    }
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
-	NSString *statusString = textView.text;
-	self.userStatusTextView.text = [self verifyResultStatusWithString:statusString];
+    _statusFieldCache = textView.text;
 }
 
-- (NSString *)verifyResultStatusWithString:(NSString *)resultTextViewString
+
+#pragma mark - UIImagePickerControllerDelegate
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-	if ([resultTextViewString isEqualToString:kEmptyString]) {
-		resultTextViewString = kSettingsProfileDefaultStatusString;
-	}
-	if ([resultTextViewString isEqualToString:kSettingsProfileDefaultStatusString]) {
-		[self.userStatusTextView setTextColor:kHintColor];
-	}
-	return resultTextViewString;
+    UIImage *selectedImage = info[UIImagePickerControllerOriginalImage];
+    self.avatarImage = [selectedImage imageByScalingProportionallyToMinimumSize:CGSizeMake(1000.0f, 1000.0f)];
+    self.avatarView.image = self.avatarImage;
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark -
-- (void)showNavDoneButton
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-	UIButton *doneButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 36)];
-	[doneButton setTitle:kButtonTitleSaveString forState:UIControlStateNormal];
-	[doneButton addTarget:self action:@selector(hideNumKeyboard) forControlEvents:UIControlEventTouchUpInside];
-	UIBarButtonItem *doneBarButton = [[UIBarButtonItem alloc] initWithCustomView:doneButton];
-	[self.navigationItem setRightBarButtonItems:@[doneBarButton]];
+    self.avatarImage = nil;
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
-
-- (IBAction)hideNumKeyboard
-{
-	[self.userPhoneTextField resignFirstResponder];
-	[self.navigationItem setRightBarButtonItems:nil];
-	[self setFrameOffset:kDefaultContainerYOffset];
-	[self checkForChanges];
-}
-
-- (void)checkForChanges
-{
-	[self verifyInputFields];
-	[self checkForDoneButton];
-}
-
-- (void)verifyInputFields
-{
-	NSString *fbMailString = [QMContactList shared].facebookMe[kEmail];
-	BOOL isPhoneEqual = [self.userPhoneTextField.text isEqualToString:self.localUser.phone];
-	BOOL isFullNameEqual = [self.userNameTextField.text isEqualToString:self.localUser.fullName];
-	BOOL isMailEqual = ![self.userMailTextField.text isEqualToString:self.localUser.email] || ![self.userMailTextField.text isEqualToString:fbMailString];
-	BOOL isStatusEqual = [self.userStatusTextView.text isEqualToString:self.oldUserStatusString];
-	BOOL isStatusEmpty = [self.userStatusTextView.text isEqualToString:kEmptyString];
-	if (!isPhoneEqual ||!isFullNameEqual || !isMailEqual || !(isStatusEqual || isStatusEmpty)) {
-		self.isUserDataChanged = YES;
-	} else {
-		self.isUserDataChanged = NO;
-	}
-}
-
-- (void)checkForDoneButton
-{
-    if (self.isUserDataChanged || self.isUserPhotoChanged) {
-        if (!self.backItem) {
-            self.backItem = self.navigationController.navigationBar.backItem.backBarButtonItem;
-        }
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:kButtonTitleDoneString style:UIBarButtonItemStyleDone target:self action:@selector(saveChanges)];
-    } else {
-        self.navigationItem.leftBarButtonItem = self.backItem;
-    }
-}
-
-- (void)saveChanges
-{
-    ILog(@"saving data");
-	if (self.userStatusTextView.text.length > kUserStatusLengthConstraint && self.shouldShowWarning) {
-		self.shouldShowWarning = NO;
-		[self showAlertWithMessage:kSettingsProfileTextViewMessageWarningString];
-		return;
-	}
-	if ([self checkForFullnessOfLoginAndMailFields]) {
-		[QMUtilities showActivityView];
-		if (self.isUserPhotoChanged) {
-			QMContent *content = [[QMContent alloc] init];
-			[content loadImageForBlob:self.userPhotoImageView.image named:self.oldUserDataDictionary[@"id"] completion:^(QBCBlob *blob) {
-				self.localUser.website = [blob publicUrl];
-				[self updateOtherDataForBlob:blob];
-			}];
-		} else {
-			[self updateOtherDataForBlob:nil];
-		}
-	}
-}
-
-- (void)updateOtherDataForBlob:(QBCBlob *)blob
-{
-	[self prepareUserData];
-	[[QMAuthService shared] updateUser:self.localUser withBlob:blob completion:^(QBUUser *user, BOOL success, NSError *error) {
-        if (success) {
-            [QMContactList shared].me = user;
-			[self resetChanges];
-		} else {
-			[[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:[NSString stringWithFormat:@"%@", error] delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
-		}
-        [QMUtilities hideActivityView];
-    }];
-
-    // hard code till there will be a field in QBUUser where to save to
-    [[NSUserDefaults standardUserDefaults] setObject:self.userStatusTextView.text forKey:kUserStatusText];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (void)prepareUserData
-{
-	NSString *userNameString = self.userNameTextField.text;
-	if (![userNameString isEqualToString:self.localUser.fullName]) {
-		self.localUser.fullName = userNameString;
-	}
-	NSString *userMailString = self.userMailTextField.text;
-	userMailString = [userMailString stringByReplacingOccurrencesOfString:@"+" withString:@"%2b"];
-	if (![userMailString isEqualToString:self.localUser.email]) {
-		self.localUser.email = userMailString;
-	}
-	NSString *userPhoneString = self.userPhoneTextField.text;
-	if (![userPhoneString isEqualToString:self.localUser.phone]) {
-		self.localUser.phone = userPhoneString;
-	}
-}
-
-- (void)checkStatusColorWithString:(NSString *)userStatusString
-{
-	if ([userStatusString isEqualToString:kSettingsProfileDefaultStatusString]) {
-		[self.userStatusTextView setTextColor:kHintColor];
-	} else {
-		[self.userStatusTextView setTextColor:[UIColor blackColor]];
-	}
-}
-
-- (void)setOldValues
-{
-	self.userNameTextField.text = self.localUser.fullName;
-	self.userMailTextField.text = self.localUser.email;
-	self.userPhoneTextField.text = self.localUser.phone;
-	self.userStatusTextView.text = self.oldUserStatusString;
-	[self checkStatusColorWithString:self.oldUserStatusString];
-	[self resetChanges];
-}
-
-- (void)resetChanges
-{
-    self.isUserDataChanged = NO;
-    self.isUserPhotoChanged = NO;
-	self.shouldShowWarning = YES;
-	self.isBackButtonClicked = NO;
-    [self checkForDoneButton];
-}
-
-- (void)textViewDidBeginEditing:(UITextView *)textView
-{
-	[self checkForChanges];
-	[self setFrameOffset:kUserStatusContainerYOffset];
-	if (self.navigationItem.rightBarButtonItems) {
-		[self.navigationItem setRightBarButtonItems:nil];
-	}
-}
-
-- (BOOL)textViewShouldEndEditing:(UITextView *)textView
-{
-	if (textView.text.length > kUserStatusLengthConstraint && self.shouldShowWarning && !self.isBackButtonClicked) {
-		self.shouldShowWarning = NO;
-		[self showAlertWithMessage:kSettingsProfileTextViewMessageWarningString];
-		return NO;
-	}
-	return YES;
-}
-
-
-- (void)setFrameOffset:(CGFloat)yOffset
-{
-	CGRect r = self.containerView.frame;
-	r.origin.y = yOffset;
-	[UIView animateWithDuration:0.3f animations:^{
-		[self.containerView setFrame:r];
-	}];
-}
-
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
-{
-    if ([text isEqualToString:@"\n"]) {
-		if (textView.text.length > kUserStatusLengthConstraint) {
-			[self showAlertWithMessage:kSettingsProfileTextViewMessageWarningString];
-			return NO;
-		}
-//        NSString *userStatusString = textView.text;
-//		userStatusString = [self verifyResultStatusWithString:userStatusString];
-//		if (![userStatusString isEqualToString:self.oldUserStatusString]) {
-//            self.isUserDataChanged = YES;
-//        } else {
-//            self.isUserDataChanged = NO;
-//        }
-		[self checkForChanges];
-        [textView resignFirstResponder];
-        CGRect r = self.containerView.frame;
-        r.origin.y = 0;
-        [UIView animateWithDuration:0.3f animations:^{
-            [self.containerView setFrame:r];
-        }];
-    } else if (textView.text.length == kUserStatusLengthConstraint && !range.length) {
-		return NO;
-    } else {
-		NSString *userStatusString = textView.text;
-		NSString *resultString;
-		if (!range.length) {
-			resultString = [NSString stringWithFormat:@"%@%@", userStatusString, text];
-		} else {
-			resultString = [userStatusString substringToIndex:range.location];
-		}
-		NSLog(@"resultString: %@", resultString);
-		userStatusString = [self verifyResultStatusWithString:resultString];
-		if (![userStatusString isEqualToString:self.oldUserStatusString]) {
-			self.isUserDataChanged = YES;
-		} else {
-			self.isUserDataChanged = NO;
-		}
-		[self checkStatusColorWithString:userStatusString];
-		[self checkForDoneButton];
-	}
-    return YES;
-}
-
-#pragma mark - Alert
-- (void)showAlertWithMessage:(NSString *)messageString
-{
-	[[[UIAlertView alloc] initWithTitle:kEmptyString message:messageString delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
-	self.shouldShowWarning = YES;
-}
-
 
 @end
