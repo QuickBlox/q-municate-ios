@@ -79,7 +79,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="upic-placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="eL1-En-W6S" customClass="AsyncImageView">
-                                                    <rect key="frame" x="13" y="5" width="50" height="50"/>
+                                                    <rect key="frame" x="18" y="7" width="45" height="45"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </imageView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Leonore Cantly" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gcJ-iy-62p">
@@ -2628,9 +2628,9 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="veI-CA-d70"/>
+        <segue reference="IAo-qy-uHQ"/>
+        <segue reference="TaC-No-aTb"/>
         <segue reference="97f-Zx-Ebh"/>
-        <segue reference="gq5-5p-RwI"/>
-        <segue reference="bAk-xe-kWS"/>
+        <segue reference="2RR-va-3ZG"/>
     </inferredMetricsTieBreakers>
 </document>
