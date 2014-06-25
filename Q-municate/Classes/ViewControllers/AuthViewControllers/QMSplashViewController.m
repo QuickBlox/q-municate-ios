@@ -108,10 +108,7 @@
         [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
             [QMUtilities hideActivityView];
             if (success) {
-                //pop auth and push tab bar:
-                UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
-                UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
-                [navigationController popToRootViewControllerAnimated:NO];
+                [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
             }
         }];
     }];
