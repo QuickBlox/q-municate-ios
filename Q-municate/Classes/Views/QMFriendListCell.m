@@ -13,7 +13,6 @@
 #import "QMUtilities.h"
 
 
-#define kUptimeInterval  300
 
 @implementation QMFriendListCell
 
@@ -65,7 +64,7 @@
     } else {
         activity = kStatusOfflineString;
     }
-    self.onlineCircle.hidden = isOnline;
+    self.onlineCircle.hidden = !isOnline;
     self.lastActivity.text = activity;
 }
 

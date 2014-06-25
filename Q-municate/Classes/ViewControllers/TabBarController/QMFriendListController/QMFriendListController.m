@@ -204,12 +204,12 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
 
 - (IBAction)searchUsers:(id)sender
 {
-    if (_searchActive) {
+    _searchActive = !_searchActive;
+    if (!_searchActive) {
         [self removeSearchBarAnimated:YES];
     } else {
         [self createSearchBar];
     }
-    _searchActive = !_searchActive;
 }
 
 
@@ -237,6 +237,8 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
 
 - (void)removeSearchBarAnimated:(BOOL)animated
 {
+    self.searchBar.text = @"";
+    
     if (self.searchBar == nil) {
         return;
     }
@@ -350,7 +352,7 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     if (!_searchActive) {
-        return kEmptyString;
+        return @"";
     }
     if (section == 0) {
         if ([self.dataSource.friendsArray count] == 0) {
