@@ -36,13 +36,5 @@
  Abstract method
  */
 - (void)sendMessageWithText:(NSString *)text;
-///**
-// Abstract method
-// */
-//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
-///**
-// Abstract method
-// */
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end

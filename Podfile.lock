@@ -3,6 +3,7 @@ PODS:
   - FPPopover (1.4.1)
   - Parus (1.0)
   - Reachability (3.1.1)
+  - StaticDataTableViewController (2.0.3)
   - SVProgressHUD (1.0)
   - TWMessageBarManager (1.7.0)
   - UIDevice-Hardware (0.1.3)
@@ -12,6 +13,7 @@ DEPENDENCIES:
   - FPPopover (~> 1.4.1)
   - Parus (~> 1.0)
   - Reachability (~> 3.1.1)
+  - StaticDataTableViewController (~> 2.0.3)
   - SVProgressHUD (~> 1.0)
   - TWMessageBarManager (~> 1.7.0)
   - UIDevice-Hardware (~> 0.1.3)
@@ -21,6 +23,7 @@ SPEC CHECKSUMS:
   FPPopover: bbfc452ec8949a2c2f555cf2d8c7236e621811f0
   Parus: 4ed2c119d86103e160a3820d81564c08cf330eb0
   Reachability: 8e9635e3cb4f98e7f825e51147f677ecc694d0e7
+  StaticDataTableViewController: 171ee35f17f6176baa98ce05c1e4769a628732ad
   SVProgressHUD: 5034c6e22b8c2ca3e09402e48d41ed0340aa1c50
   TWMessageBarManager: 427c1f2463b22f4048ea2663184d33644212be37
   UIDevice-Hardware: b1c37dbeee3a5279ac15fbba070b8de556496b67

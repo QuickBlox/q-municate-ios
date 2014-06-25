@@ -9,6 +9,14 @@
 #ifndef Q_municate_Definitions_h
 #define Q_municate_Definitions_h
 
+#define IS_HEIGHT_GTE_568 [[UIScreen mainScreen ] bounds].size.height == 568.0f
+
+#define CHECK_OVERRIDE()\
+@throw\
+[NSException exceptionWithName:NSInternalInconsistencyException \
+reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]\
+userInfo:nil]
+
 
 //*********** Settings Cell Row Names **********************
 #define QMSettingsNormalCellRowProfile              0
@@ -40,6 +48,12 @@ typedef NS_ENUM(NSUInteger, QMMembersUpdateState) {
     QMMembersUpdateStateNone,
     QMMembersUpdateStateAdding,
     QMMembersUpdateStateRemoving
+};
+
+typedef NS_ENUM(NSUInteger, QMVideoChatType) {
+    QMVideoChatTypeNone,
+    QMVideoChatTypeVideo,
+    QMVideoChatTypeAudio
 };
 
 //****************** Blocks *********************************
@@ -109,6 +123,8 @@ static NSString *const kChatRoomDidChangeOnlineUsersListNotification    = @"Chat
 static NSString *const kChatRoomListUpdateNotification	= @"kChatRoomListUpdateNotification";
 static NSString *const kInviteFriendsDataSourceShouldRefreshNotification 	 = @"kInviteFriendsDataSourceShouldRefreshNotification";
 
+static NSString *const kChatDialogUpdatedNotification = @"ChatDialogUpdated";
+
 
 //****************** Calls Notifications  ***********************
 static NSString *const kIncomingCallNotification = @"Incoming Call";
@@ -117,6 +133,8 @@ static NSString *const kCallWasRejectedNotification = @"Call Was Rejected";
 static NSString *const kCallUserDidNotAnswerNotification = @"User didn't answer";
 static NSString *const kCallDidAcceptByUserNotification = @"User accepted call";
 static NSString *const kCallDidStartedByUserNotification = @"Call was started";
+
+
 static NSString *const kChatViewCellIdentifier          = @"ChatViewCell";
 static NSString *const kCreateChatCellIdentifier        = @"CreateChatCell";
 static NSString *const kFriendsListCellIdentifier       = @"FriendsListCell";
@@ -127,18 +145,15 @@ static NSString *const kInviteFriendCellIdentifier      = @"InviteFriendCell";
 
 
 
+
 //******************** USER DEFAULTS KEYS *****************
-static NSString *const kEmail       		= @"email";
-static NSString *const kPassword    		= @"password";
-static NSString *const kRememberMe  		= @"remember_me";
-static NSString *const kFBSessionRemembered = @"facebook_session_remembered";
+
 static NSString *const kUserStatusText   	= @"userStatusText";
 
-static NSString *const kChatLocalHistory	= @"chatLocalHistory";
-static NSString *const kChatOpponentHistory	= @"opponentHistory";
+//static NSString *const kChatLocalHistory	= @"chatLocalHistory";
+//static NSString *const kChatOpponentHistory	= @"opponentHistory";
 static NSString *const kChatOpponentName	= @"chatOpponentName";
 static NSString *const kChatOpponentIDString	= @"chatOpponentIDString";
-static NSString *const kSettingsPushNotificationsState	= @"kSettingsPushNotificationsState";
 
 static NSString *const kId          = @"id";
 static NSString *const kData        = @"data";
@@ -167,6 +182,7 @@ static NSString *const kStatusOfflineString             = @"Offline";
 static NSString *const kMailSubjectString               = @"Q-municate";
 static NSString *const kMailBodyString                  = @"<a href='http://quickblox.com/'>Join us in Q-municate!</a>";
 static NSString *const kButtonTitleDoneString           = @"Done";
+static NSString *const kButtonTitleSaveString           = @"Save";
 
 static NSString *const kErrorKeyFromDictionaryString    	= @"error";
 
@@ -206,11 +222,5 @@ static NSString *const kSettingsProfileTextViewMessageWarningString	= @"This fie
 static NSString *const kCDMessageDatetimePath = @"datetime";
 
 extern QMLogLevel kLoggingLevel;
-
-#define CHECK_OVERRIDE()\
-@throw\
-[NSException exceptionWithName:NSInternalInconsistencyException \
-reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]\
-userInfo:nil]
 
 #endif

@@ -10,8 +10,12 @@
 
 @interface QMNewChatDataSource : NSObject
 
-@property (strong, nonatomic) NSArray *friendListArray;
-@property (strong, nonatomic) NSMutableArray *friendsSelectedMArray;
-@property (strong, nonatomic) NSArray *searchedFriendsArray;
+@property (strong, nonatomic, readonly) NSArray *friendListArray;
+@property (strong, nonatomic, readonly) NSMutableArray *friendsSelectedMArray;
+
+- (id)initWithChatDialog:(QBChatDialog *)chatDialog;
+
+- (NSInteger)friendsListCount;
+- (NSInteger)friendsSelectedCount;
 
 @end

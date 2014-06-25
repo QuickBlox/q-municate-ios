@@ -36,6 +36,12 @@
 #define COCOAPODS_VERSION_MINOR_SVProgressHUD 0
 #define COCOAPODS_VERSION_PATCH_SVProgressHUD 0
 
+// StaticDataTableViewController
+#define COCOAPODS_POD_AVAILABLE_StaticDataTableViewController
+#define COCOAPODS_VERSION_MAJOR_StaticDataTableViewController 2
+#define COCOAPODS_VERSION_MINOR_StaticDataTableViewController 0
+#define COCOAPODS_VERSION_PATCH_StaticDataTableViewController 3
+
 // TWMessageBarManager
 #define COCOAPODS_POD_AVAILABLE_TWMessageBarManager
 #define COCOAPODS_VERSION_MAJOR_TWMessageBarManager 1

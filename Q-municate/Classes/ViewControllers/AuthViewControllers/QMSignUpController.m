@@ -39,6 +39,7 @@
     [super viewDidLoad];
     [self configureAvatarImage];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 
@@ -57,13 +58,6 @@
 - (IBAction)hideKeyboard:(id)sender
 {
     [sender resignFirstResponder];
-}
-
-- (IBAction)switchToLoginController:(id)sender
-{
-    UINavigationController *navController = [self.root.childViewControllers lastObject];
-    [self.root logInToQuickblox];
-    [navController removeFromParentViewController];
 }
 
 - (IBAction)chooseUserPicture:(id)sender
@@ -130,9 +124,7 @@
             [QMUtilities hideActivityView];
             if (success) {
                 // go to tab bar:
-                UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
-                UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
-                [navigationController popToRootViewControllerAnimated:NO];
+                [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
                 return;
             }
             [self showAlertWithMessage:error.description success:NO];
@@ -162,9 +154,7 @@
                 [QMUtilities hideActivityView];
                 if (success) {
                     // go to tab bar:
-                    UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
-                    UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
-                    [navigationController popToRootViewControllerAnimated:NO];
+                    [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
                 }
             }];
         }];

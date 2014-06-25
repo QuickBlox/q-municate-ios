@@ -13,3 +13,6 @@
 #import "GET/QBChatHistoryMessageGetQuery.h"
 #import "POST/QBChatDialogCreateQuery.h"
 #import "PUT/QBChatDialogUpdateQuery.h"
+#import "PUT/QBChatHistoryMessageUpdateQuery.h"
+#import "DELETE/QBChatHistoryMessageDeleteQuery.h"
+

@@ -18,21 +18,19 @@
 @implementation QMFriendListCell
 
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:selected animated:animated];
-}
-
-- (void)configureCellWithParams:(QBUUser *)user searchText:(NSString *)searchText indexPath:(NSIndexPath *)indexPath
+- (void)awakeFromNib
 {
     self.userImage.layer.cornerRadius = self.userImage.frame.size.width / 2;
     self.userImage.layer.borderWidth = 2.0f;
     self.userImage.layer.borderColor = [UIColor colorWithRed:1/215 green:1/216 blue:1/215 alpha:0.04].CGColor;   //215,216,215
-    
-    // cancel previous user's avatar loading
+    self.userImage.layer.masksToBounds = YES;
+    self.userImage.crossfadeDuration = 0.0f;
     [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget:self.userImage];
     [self.userImage setImage:[UIImage imageNamed:@"upic-placeholder"]];
+}
 
+- (void)configureCellWithParams:(QBUUser *)user searchText:(NSString *)searchText indexPath:(NSIndexPath *)indexPath
+{
     // load avatar:
     if (user.website != nil) {
         [self.userImage setImageURL:[NSURL URLWithString:user.website]];

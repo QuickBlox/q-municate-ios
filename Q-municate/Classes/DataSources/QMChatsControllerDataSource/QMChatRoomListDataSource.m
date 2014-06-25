@@ -21,15 +21,15 @@
 
 - (void)updateDialogList
 {
-	id json = [[NSUserDefaults standardUserDefaults] objectForKey:kChatLocalHistory];
-	NSArray *array=nil;
-	if (json) {
-		NSError *error = nil;
-		array = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:&error];
-		self.roomsListMArray = [[NSMutableArray alloc] initWithArray:array];
-	} else {
-		self.roomsListMArray = [NSMutableArray new];
-	}
+//	id json = [[NSUserDefaults standardUserDefaults] objectForKey:kChatLocalHistory];
+//	NSArray *array=nil;
+//	if (json) {
+//		NSError *error = nil;
+//		array = [NSJSONSerialization JSONObjectWithData:json options:NSJSONReadingAllowFragments error:&error];
+//		self.roomsListMArray = [[NSMutableArray alloc] initWithArray:array];
+//	} else {
+//		self.roomsListMArray = [NSMutableArray new];
+//	}
 }
 
 @end

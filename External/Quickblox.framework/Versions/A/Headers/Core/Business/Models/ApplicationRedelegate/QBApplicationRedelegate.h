@@ -6,6 +6,7 @@
 //  Copyright 2011 QuickBlox team. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 @protocol UIApplicationDelegate42<UIApplicationDelegate>

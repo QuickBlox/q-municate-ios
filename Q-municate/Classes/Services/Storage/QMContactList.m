@@ -309,7 +309,7 @@
     self.baseUserIDs = nil;
     self.searchedUsers = nil;
     self.facebookFriendsToInvite = nil;
-	self.facebookMe = nil;
+	self.fbMe = nil;
 	self.contactsToInvite = nil;
 }
 

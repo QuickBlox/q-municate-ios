@@ -29,22 +29,23 @@
 /** Switch between speaker/headphone. Bu default - NO */
 @property (nonatomic, assign) BOOL useHeadphone;
 
+/** should be set after creating webrtc video chat and before setting viewToRenderOpponentVideoStream */
+@property (assign) enum QBVideoChatConferenceType currentConferenceType;
+
 /**
  Call user. After this your opponent will be receiving one call request per second during 15 seconds to QBChatDelegate's method 'chatDidReceiveCallRequestFromUser:conferenceType:'
  
  @param userID ID of opponent
- @param conferenceType Type of conference. 'QBVideoChatConferenceTypeAudioAndVideo' and 'QBVideoChatConferenceTypeAudio' values are available
  */
-- (void)callUser:(NSUInteger)userID conferenceType:(enum QBVideoChatConferenceType)conferenceType;
+- (void)callUser:(NSUInteger)userID;
 
 /**
  Call user. After this your opponent will be receiving one call request per second during 15 seconds to QBChatDelegate's method 'chatDidReceiveCallRequestFromUser:conferenceType:customMessage:
  
  @param userID ID of opponent
- @param conferenceType Type of conference. 'QBVideoChatConferenceTypeAudioAndVideo' and 'QBVideoChatConferenceTypeAudio' values are available
  @param customParameters Custom parameters
  */
-- (void)callUser:(NSUInteger)userID conferenceType:(enum QBVideoChatConferenceType)conferenceType customParameters:(NSDictionary *)customParameters;
+- (void)callUser:(NSUInteger)userID customParameters:(NSDictionary *)customParameters;
 
 /**
  Сancel call requests which is producing 'callUser:' method
@@ -55,18 +56,16 @@
  Accept call. Opponent will receive accept signal in QBChatDelegate's method 'chatCallDidAcceptByUser:'
  
  @param userID ID of opponent
- @param conferenceType Type of conference
  */
-- (void)acceptCallWithOpponentID:(NSUInteger)userID conferenceType:(enum QBVideoChatConferenceType)conferenceType;
+- (void)acceptCallWithOpponentID:(NSUInteger)userID;
 
 /**
  Accept call with custom parameters. Opponent will receive accept signal in QBChatDelegate's method 'chatCallDidAcceptByUser:customParameters:'
  
  @param userID ID of opponent
- @param conferenceType Type of conference
  @param customParameters Custom parameters
  */
-- (void)acceptCallWithOpponentID:(NSUInteger)userID conferenceType:(enum QBVideoChatConferenceType)conferenceType customParameters:(NSDictionary *)customParameters;
+- (void)acceptCallWithOpponentID:(NSUInteger)userID customParameters:(NSDictionary *)customParameters;
 
 /**
  Reject call. Opponent will receive reject signal in QBChatDelegate's method 'chatCallDidRejectByUser:'

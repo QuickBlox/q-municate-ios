@@ -15,24 +15,15 @@
 
 - (void)awakeFromNib
 {
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
-
-- (void)configureCellWithDialog:(QBChatDialog *)chatDialog
-{
     self.avatar.layer.cornerRadius = self.avatar.frame.size.width / 2;
     self.avatar.layer.borderWidth = 2.0f;
     self.avatar.layer.borderColor = [UIColor colorWithRed:1/215 green:1/216 blue:1/215 alpha:0.04].CGColor;   //215,216,215
     self.avatar.layer.masksToBounds = YES;
     self.avatar.crossfadeDuration = 0.0f;
-    
+}
+
+- (void)configureCellWithDialog:(QBChatDialog *)chatDialog
+{
     // avatar:
     if (chatDialog.type != QBChatDialogTypePrivate) {
         [self.avatar setImage:[UIImage imageNamed:@"group_placeholder"]];
@@ -70,7 +61,11 @@
     }
     
     // last message text:
-    [self.lastMessage setText:chatDialog.lastMessageText];
+    if (chatDialog.lastMessageText != nil) {
+        [self.lastMessage setText:chatDialog.lastMessageText];
+        return;
+    }
+    [self.lastMessage setText:@"Attachment"];
 }
 
 - (NSString *)chatNameForChatDialog:(QBChatDialog *)chatDialog

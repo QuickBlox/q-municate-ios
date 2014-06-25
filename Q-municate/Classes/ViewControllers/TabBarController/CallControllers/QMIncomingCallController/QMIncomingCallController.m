@@ -25,7 +25,6 @@
 @end
 
 @implementation QMIncomingCallController
-@synthesize isVideoCall;
 @synthesize opponent;
 @synthesize sessionID;
 
@@ -42,10 +41,10 @@
     } else {
         self.userNameLabel.text = @"Unknown caller";
     }
-    if (isVideoCall) {
+    if (self.callType == QMVideoChatTypeVideo) {
         self.incomingCallLabel.text = @"Incoming video call";
         [self.acceptButton setImage:[ UIImage imageNamed:@"answer-video"] forState:UIControlStateNormal];
-    } else {
+    } else if (self.callType == QMVideoChatTypeAudio) {
         self.incomingCallLabel.text = @"Incoming call";
         [self.acceptButton setImage:[ UIImage imageNamed:@"answer"] forState:UIControlStateNormal];
     }
@@ -94,9 +93,11 @@
     // stop playing sound
     [[QMUtilities shared] stopPlaying];
     
-    [[QMChatService shared] initActiveStream];
-    [[QMChatService shared] rejectCallFromUser:self.opponentID];
-    [[QMChatService shared] releaseActiveStream];
+    if (opponent != nil) {
+        [[QMChatService shared] rejectCallFromUser:self.opponent.ID opponentView:nil];
+    } else {
+        [[QMChatService shared] rejectCallFromUser:self.opponentID opponentView:nil];
+    }
     
     [[QMUtilities shared] playSoundOfType:QMSoundPlayTypeEndOfCall];
     

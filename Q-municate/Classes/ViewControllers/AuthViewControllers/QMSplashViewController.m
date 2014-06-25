@@ -12,52 +12,57 @@
 #import "QMChatService.h"
 #import "QMContactList.h"
 #import "QMUtilities.h"
+#import "QMSettingsManager.h"
 
 @interface QMSplashViewController ()
 
-@property (nonatomic) BOOL isAlreadySeen;
+@property (weak, nonatomic) IBOutlet UIImageView *splashLogoView;
 
 @end
 
 @implementation QMSplashViewController
 
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
+    
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+    [self.splashLogoView setImage:[UIImage imageNamed:IS_HEIGHT_GTE_568 ? @"splash" : @"splash-960"]];
+
     // start utilities singleton:
     [QMUtilities shared];
-    
     [QMUtilities showActivityView];
     //start session:
+    
+    QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
+    
     [[QMAuthService shared] startSessionWithBlock:^(BOOL success, NSError *error) {
+
         if (!success) {
             [QMUtilities hideActivityView];
             [self showAlertWithMessage:error.description actionSuccess:NO];
             return;
         }
+        
         ILog(@"Session created");
         
+        BOOL rememberMe = settingsManager.rememberMe;
+
+        if (rememberMe) {
+            
+            NSString *email = settingsManager.login;
+            NSString *password = settingsManager.password;
+            
+            // if user with email was remebered:
+            if (email != nil && password != nil) {
+                [self loginWithEmail:email password:password];
+            } else {
+                [self loginWithFacebook];
+            }
+            
+            // check for fb session remembered:
+            return;
+        }
         // load defaults:
-        NSString *email = [[NSUserDefaults standardUserDefaults] objectForKey:kEmail];
-        email = [email stringByReplacingOccurrencesOfString:@"+" withString:@"%2b"];
-        NSString *password = [[NSUserDefaults standardUserDefaults] objectForKey:kPassword];
-        
-        // if user with email was remebered:
-        if (email != nil && password != nil) {
-            // login automatically:
-            [self loginWithEmail:email password:password];
-            return;
-        }
-        
-        // check for fb session remembered:
-        BOOL facebookSessionRemembered = [[[NSUserDefaults standardUserDefaults] objectForKey:kFBSessionRemembered] boolValue];
-        if (facebookSessionRemembered) {
-            [self loginWithFacebook];
-            return;
-        }
         
         // go to wellcome screen:
         [QMUtilities hideActivityView];
@@ -65,14 +70,13 @@
     }];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
+    
     [super viewWillAppear:animated];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
@@ -82,22 +86,17 @@
     [self performSegueWithIdentifier:kWelcomeScreenSegueIdentifier sender:nil];
 }
 
-#pragma mark - Navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    QMWelcomeScreenViewController *welcomeScreenVC = segue.destinationViewController;
-    welcomeScreenVC.root = self;
-}
-
-- (void)loginWithEmail:(NSString *)email password:(NSString *)password
-{
+- (void)loginWithEmail:(NSString *)email password:(NSString *)password {
+    
     [QMUtilities showActivityView];
     [[QMAuthService shared] logInWithEmail:email password:password completion:^(QBUUser *user, BOOL success, NSError *error) {
+        
         if (!success) {
             [QMUtilities hideActivityView];
-            [self showAlertWithMessage:[NSString stringWithFormat:@"%@", error] actionSuccess:NO];
+            [self showAlertWithMessage:error.localizedDescription actionSuccess:NO];
             return;
         }
+        
         [QMContactList shared].me = user;
         if (!user.password) {
             user.password = password;
@@ -107,6 +106,7 @@
         [[QMAuthService shared] subscribeToPushNotifications];
         
         [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
+    
             [QMUtilities hideActivityView];
             if (success) {
                 //pop auth and push tab bar:
@@ -155,9 +155,7 @@
     [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
         [QMUtilities hideActivityView];
         if (success) {
-            UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
-            UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
-            [navigationController popToRootViewControllerAnimated:NO];
+            [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
 		}
     }];
 }

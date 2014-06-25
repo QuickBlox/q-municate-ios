@@ -9,101 +9,73 @@
 #import "QMFacebookService.h"
 #import "QMContactList.h"
 
-
-
-@interface QMFacebookService () <NSURLConnectionDataDelegate, NSURLConnectionDelegate>
-
-@property (nonatomic, strong) FBContentBlock contentBlock;
-@property (nonatomic, strong) NSMutableData *receivedMData;
+@interface QMFacebookService ()
 
 @end
 
 @implementation QMFacebookService
 
-+ (void)shareToFacebookUsersWithIDs:(NSString *)facebookIDs withCompletion:(FBCompletionBlock)handler
-{
-    NSMutableDictionary *postParams = [@{
-                                         @"link" : @"http://quickblox.com/",
-                                         @"picture" : @"https://qbprod.s3.amazonaws.com/c6e81081d5954ed68485eead941b91a000",
-                                         @"name" : @"Q-municate",
-                                         @"caption" : @"By QuickBlox",
-                                         @"description" : @"Join to new world of audio & video calls",
-                                         @"place":@"155021662189",
-                                         @"message": @"Very Nice!"
-                                         } mutableCopy];
+NSString *const kQMQuickbloxHomeUrl = @"http://quickblox.com";
+NSString *const kQMQuickbloxLogoUrl = @"https://qbprod.s3.amazonaws.com/c6e81081d5954ed68485eead941b91a000";
+NSString *const kQMAppName = @"Q-municate";
+
++ (void)shareToFacebookUsersWithIDs:(NSString *)facebookIDs withCompletion:(FBCompletionBlock)handler {
     
-    postParams[@"tags"] = facebookIDs;
+    NSDictionary *postParams = @{
+                                 @"link" : kQMQuickbloxHomeUrl,
+                                 @"picture" : kQMQuickbloxLogoUrl,
+                                 @"name" : kQMAppName,
+                                 @"caption" : @"By QuickBlox",
+                                 @"description" : @"Join to new world of audio & video calls",
+                                 @"place":@"155021662189",
+                                 @"message": @"Very Nice!",
+                                 @"tags" : facebookIDs
+                                 };
     
-    [FBRequestConnection startWithGraphPath:@"me/feed" parameters:postParams HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        if (error){
-            handler(NO, error);
-            return;
-        }
-        handler(YES, nil);
+    [FBRequestConnection startWithGraphPath:@"me/feed"
+                                 parameters:postParams
+                                 HTTPMethod:@"POST"
+                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                              handler((BOOL)result, error);
+                          }];
+}
+
+NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/picture?height=400&width=400&access_token=%@";
+
+- (void)loadUserImageFromFacebookWithUserID:(NSString *)userID completion:(ImageBlock)handler {
+    
+    FBSession *session = [FBSession activeSession];
+    NSString *urlString = [NSString stringWithFormat:kFBGraphGetPictureFormat, userID, session.accessTokenData.accessToken];
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            handler(image);
+        });
+    });
+}
+
+- (void)loadMeWithCompletion:(FBContentBlock)handler {
+    
+    FBRequest *friendsRequest = [FBRequest requestForMe];
+    
+    [friendsRequest startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
+        handler(user, error);
     }];
+    
 }
 
-- (void)loadAvatarImageFromFacebookWithCompletion:(FBContentBlock)handler
-{
-    _contentBlock = [handler copy];
-    NSString *urlString = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?height=400&width=400&access_token=%@", [QMContactList shared].facebookMe[@"id"],[FBSession activeSession].accessTokenData.accessToken];
-    NSURLRequest *avatarRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-    NSURLConnection *connection = [NSURLConnection connectionWithRequest:avatarRequest delegate:self];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [connection start];
-    });
-}
-
-- (void)loadMeWithCompletion:(FBContentBlock)handler
-{
-    _contentBlock = [handler copy];
-    NSString *urlString = [NSString stringWithFormat:@"https://graph.facebook.com/me?fields=id,name,email&access_token=%@", [FBSession activeSession].accessTokenData.accessToken];
-    NSURLRequest *requestForMe = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-    NSURLConnection *connection = [NSURLConnection connectionWithRequest:requestForMe delegate:self];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [connection start];
-    });
-}
-
-- (void)fetchFacebookFriendsUsingBlock:(QBChatResultBlock)block
-{
+- (void)fetchFacebookFriendsUsingBlock:(QBChatResultBlock)block {
+    
     FBRequest *friendsRequest = [FBRequest requestForMyFriends];
     [friendsRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        
         NSMutableArray *myFriends = [(FBGraphObject *)result objectForKey:kData];
-        if ([myFriends count] == 0) {
-            return;
-        }
         [QMContactList shared].facebookFriendsToInvite = myFriends;
+        
         block(YES);
     }];
-}
-
-#pragma mark - NSURLConnectionDataDelegate
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    if (data.length) {
-        ILog(@"data.length: %lu", (unsigned long)data.length);
-        if (!self.receivedMData) {
-            self.receivedMData = [NSMutableData new];
-        }
-        [self.receivedMData appendData:data];
-    }
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        _contentBlock(self.receivedMData, nil);
-        _contentBlock = nil;
-    });
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        _contentBlock(nil, error);
-        _contentBlock = nil;
-    });
 }
 
 @end

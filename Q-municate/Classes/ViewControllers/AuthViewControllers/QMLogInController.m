@@ -13,6 +13,8 @@
 #import "QMAuthService.h"
 #import "QMContactList.h"
 #import "QMUtilities.h"
+#import "QMSettingsManager.h"
+#import "REAlertView.h"
 
 @interface QMLogInController ()
 
@@ -31,11 +33,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    self.rememberMeSwitch.on = [[[NSUserDefaults standardUserDefaults] objectForKey:kRememberMe] boolValue];
+    
+    QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
+    
+    self.rememberMeSwitch.on = settingsManager.rememberMe;
+    
     if (self.rememberMeSwitch.isOn) {
         [self loadDefaults];
     }
+    
     if (![QMAuthService shared].isSessionCreated) {
         [QMUtilities showActivityView];
         [[QMAuthService shared] startSessionWithBlock:^(BOOL success, NSError *error) {
@@ -43,38 +52,31 @@
             if (success) {
                 ILog(@"Session created");
             } else {
-                [self showAlertWithMessage:[NSString stringWithFormat:@"%@", error] actionSuccess:NO];
+                [self showAlertWithMessage:error.localizedDescription actionSuccess:NO];
             }
         }];
     }
 }
 
-- (IBAction)hideKeyboard:(id)sender
-{
+- (IBAction)hideKeyboard:(id)sender {
     [sender resignFirstResponder];
 }
 
-
-- (IBAction)switchToSignUpController:(id)sender
-{
-    UINavigationController *navController = [self.root.childViewControllers lastObject];
-    [self.root signUpToQuickblox];
-    [navController removeFromParentViewController];
-}
-
-- (IBAction)logIn:(id)sender
-{
+- (IBAction)logIn:(id)sender {
+    
     if ([self.emailField.text isEqual:kEmptyString] || [self.passwordField.text isEqual:kEmptyString]) {
         [self showAlertWithMessage:kAlertBodyFillInAllFieldsString actionSuccess:NO];
         return;
     }
     
     [QMUtilities showActivityView];
-	NSString *mailString = self.emailField.text;
-	mailString = [mailString stringByReplacingOccurrencesOfString:@"+" withString:@"%2b"];
+	
+    NSString *mailString = self.emailField.text;
+    
     [[QMAuthService shared] logInWithEmail:mailString password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSError *error) {
+
         if (!success) {
-            ILog(@"error while logging in: %@", error);
+            
             [QMUtilities hideActivityView];
             [self showAlertWithMessage:[NSString stringWithFormat:@"%@", error] actionSuccess:NO];
             return;
@@ -126,99 +128,93 @@
     }];
 }
 
-- (IBAction)forgotPassword:(id)sender
-{
+- (IBAction)forgotPassword:(id)sender {
+    
     // sending to email
-    NSString *email = self.emailField.text;
-    if ([email isEqualToString:kEmptyString]) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:kMessageString message:nil delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil];
-        alertView.tag = 1;
-        alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
-        [alertView show];
-    }
+//    NSString *email = self.emailField.text;
+//    
+//
+//    
+//    if ([email isEqualToString:kEmptyString]) {
+//        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:kMessageString message:nil delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil];
+//        alertView.tag = 1;
+//        alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+//        [alertView show];
+//    }
 }
 
-- (void)rememberMe:(BOOL)isRemember isFacebookSession:(BOOL)isFacebookSession
-{
+- (void)rememberMe:(BOOL)isRemember isFacebookSession:(BOOL)isFacebookSession {
+    
+     QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
+    
     if (isRemember) {
-        [[NSUserDefaults standardUserDefaults] setObject:@(self.rememberMeSwitch.isOn) forKey:kRememberMe];
+        
+        settingsManager.rememberMe = self.rememberMeSwitch.isOn;
+        
+        NSString *login = self.emailField.text;
+        NSString *password = self.passwordField.text;
         
         if (!isFacebookSession) {
-            [[NSUserDefaults standardUserDefaults] setObject:self.emailField.text forKey:kEmail];
-            [[NSUserDefaults standardUserDefaults] setObject:self.passwordField.text forKey:kPassword];
-        } else {
-            [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:kFBSessionRemembered];
+            
+            settingsManager.login = login;
+            settingsManager.password = password;
         }
 
-        [[NSUserDefaults standardUserDefaults] synchronize];
     } else {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kRememberMe];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kEmail];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPassword];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kFBSessionRemembered];
-        
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        [settingsManager clearSettings];
     }
 }
 
-- (void)loadDefaults
-{
-    NSString *email = [[NSUserDefaults standardUserDefaults] objectForKey:kEmail];
-    self.emailField.text = email;
-    NSString *password = [[NSUserDefaults standardUserDefaults] objectForKey:kPassword];
+- (void)loadDefaults {
+    
+    QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
+    NSString *login = settingsManager.login;
+    NSString *password = settingsManager.password;
+    self.emailField.text = login;
     self.passwordField.text = password;
 }
 
+//#pragma mark - Alert
 
-#pragma mark - Alert
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (alertView.tag == 1) {
-        NSString *emailString = [alertView textFieldAtIndex:0].text;
-        if (![emailString isEqualToString:kEmptyString]) {
-            [self resetPasswordForMail:emailString];
-        } else {
-            [self showAlertWithMessage:kMessageString actionSuccess:NO];
-        }
-    } else {
-		self.passwordField.text = kEmptyString;
-	}
-}
+//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//    if (alertView.tag == 1) {
+//        NSString *emailString = [alertView textFieldAtIndex:0].text;
+//        if (![emailString isEqualToString:kEmptyString]) {
+//            [self resetPasswordForMail:emailString];
+//        } else {
+//            [self showAlertWithMessage:kMessageString actionSuccess:NO];
+//        }
+//    } else {
+//		self.passwordField.text = kEmptyString;
+//	}
+//}
 
 
-- (void)showAlertWithMessage:(NSString *)messageString actionSuccess:(BOOL)success
-{
-    NSString *title = nil;
-    if (success) {
-        title = kAlertTitleSuccessString;
-    } else {
-        title = kAlertTitleErrorString;
-    }
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
-                                                    message:messageString
-                                                   delegate:self
-                                          cancelButtonTitle:kAlertButtonTitleOkString
-                                          otherButtonTitles:nil];
-    [alert show];
-}
 
-- (void)resetPasswordForMail:(NSString *)emailString
-{
-    [QMUtilities showActivityView];
-    [[QMAuthService shared] resetUserPasswordForEmail:emailString completion:^(Result *result) {
-        if (result.success) {
-            // show alert
-            [self showAlertWithMessage:kAlertBodyMessageWasSentToMailString actionSuccess:YES];
-        } else {
-            NSString *errorMessage = [[result.errors description] stringByReplacingOccurrencesOfString:@"(" withString:@""];
-            errorMessage = [errorMessage stringByReplacingOccurrencesOfString:@")" withString:@""];
-
-            [self showAlertWithMessage:errorMessage actionSuccess:NO];
-        }
-        [QMUtilities hideActivityView];
+- (void)showAlertWithMessage:(NSString *)messageString actionSuccess:(BOOL)success {
+    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
+        alertView.title = success ? kAlertTitleSuccessString : kAlertTitleErrorString;
+        [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{}];
     }];
 }
+
+//- (void)resetPasswordForMail:(NSString *)emailString
+//{
+//    [QMUtilities showActivityView];
+//    [[QMAuthService shared] resetUserPasswordForEmail:emailString completion:^(Result *result) {
+//        if (result.success) {
+//            // show alert
+//            [self showAlertWithMessage:kAlertBodyMessageWasSentToMailString actionSuccess:YES];
+//        } else {
+//            NSString *errorMessage = [[result.errors description] stringByReplacingOccurrencesOfString:@"(" withString:@""];
+//            errorMessage = [errorMessage stringByReplacingOccurrencesOfString:@")" withString:@""];
+//
+//            [self showAlertWithMessage:errorMessage actionSuccess:NO];
+//        }
+//        [QMUtilities hideActivityView];
+//    }];
+//}
 
 
 #pragma mark - Options
@@ -229,9 +225,7 @@
     [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
         [QMUtilities hideActivityView];
         if (success) {
-            UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
-            UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
-            [navigationController popToRootViewControllerAnimated:NO];
+            [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
 		}
     }];
 }

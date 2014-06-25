@@ -15,12 +15,14 @@
 #import "QMUtilities.h"
 #import "QMSplashViewController.h"
 #import "QMFacebookService.h"
+#import "QMSettingsManager.h"
 
 @interface QMWelcomeScreenViewController ()
 
+@property (weak, nonatomic) IBOutlet UIImageView *bubleImage;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bubleHeight;
+
 - (IBAction)connectWithFacebook:(id)sender;
-- (IBAction)SignUp:(id)sender;
-- (IBAction)LogIn:(id)sender;
 
 @end
 
@@ -29,42 +31,45 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    if (IS_HEIGHT_GTE_568) {
+        _bubleHeight.constant = 244;
+        _bubleImage.image = [UIImage imageNamed:@"logo_big"];
+    } else {
+        _bubleHeight.constant = 197;
+        _bubleImage.image = [UIImage imageNamed:@"logo_big_960"];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+    
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-
-	/*
-	* there was a bug when choosing user's ava on sigh up page
-	* -> switching to login view at once!
-	* https://jira-injoit.quickblox.com/browse/QMUN-90
-	* */
-	NSUInteger childControllersCount = [[self childViewControllers] count];
-    if (!self.root && !childControllersCount) {
-        [self logInToQuickblox];
-    }
 }
 
 #pragma mark - Actions
-- (IBAction)connectWithFacebook:(id)sender
-{
+- (IBAction)connectWithFacebook:(id)sender {
+    
+    QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
+    
     [QMUtilities showActivityView];
     [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSError *error) {
+        
         if (!success) {
             [QMUtilities hideActivityView];
             [self showAlertWithMessage:error.description actionSuccess:NO];
             return;
         }
+        
         // remember me with facebook login:
-        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:kFBSessionRemembered];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        settingsManager.rememberMe = YES;
         
         // subscribe to push notification:
         [[QMAuthService shared] subscribeToPushNotifications];
@@ -83,29 +88,6 @@
     }];
 }
 
-- (IBAction)SignUp:(id)sender
-{
-    [self signUpToQuickblox];
-}
-
-- (IBAction)LogIn:(id)sender
-{
-    [self logInToQuickblox];
-}
-
-
-#pragma mark - Authorization
-
-- (void)signUpToQuickblox
-{
-    [self performSegueWithIdentifier:kSignUpSegueIdentifier sender:nil];
-}
-
-- (void)logInToQuickblox
-{
-    [self performSegueWithIdentifier:kLogInSegueSegueIdentifier sender:nil];
-}
-
 
 #pragma mark -
 
@@ -115,9 +97,7 @@
     [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
         [QMUtilities hideActivityView];
         if (success) {
-            UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
-            UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
-            [navigationController popToRootViewControllerAnimated:NO];
+            [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
 		}
     }];
 }

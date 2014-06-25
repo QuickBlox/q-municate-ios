@@ -30,22 +30,11 @@
     [QBSettings setAccountKey:@"LpNmxA2Pq2uyW5qBjHy8"];
     
     // STAGE PARAMS
-    [QBSettings setServerChatDomain:@"chatstage.quickblox.com"];
-    [QBSettings setServerApiDomain:@"http://api.stage.quickblox.com"];
-	[QBSettings setContentBucket:@"blobs-test-oz"];
-    [self setCallQuality];
+//    [QBSettings setServerChatDomain:@"chatstage.quickblox.com"];
+//    [QBSettings setServerApiDomain:@"http://api.stage.quickblox.com"];
+//	[QBSettings setContentBucket:@"blobs-test-oz"];
 
     return YES;
-}
-
-- (void)setCallQuality
-{
-    NSMutableDictionary *videoChatConfiguration = [[QBSettings videoChatConfiguration] mutableCopy];
-    
-    [videoChatConfiguration setObject:AVCaptureSessionPresetLow forKey:kQBVideoChatFrameQualityPreset];
-    [videoChatConfiguration setObject:@10 forKey:kQBVideoChatVideoFramesPerSecond];                                // frame per second
-    [videoChatConfiguration setObject:@20 forKey:kQBVideoChatCallTimeout];                                         // call timeout
-    [QBSettings setVideoChatConfiguration:videoChatConfiguration];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo

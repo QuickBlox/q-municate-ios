@@ -134,8 +134,9 @@
  
  @param information Room information
  @param roomJID JID of room
+ @param roomName Name of room
  */
-- (void)chatRoomDidReceiveInformation:(NSDictionary *)information roomJID:(NSString *)roomJID;
+- (void)chatRoomDidReceiveInformation:(NSDictionary *)information roomJID:(NSString *)roomJID roomName:(NSString *)roomName;
 
 /**
  Fired when room was successfully created
