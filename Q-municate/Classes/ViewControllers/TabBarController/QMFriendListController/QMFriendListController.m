@@ -13,10 +13,11 @@
 #import "QMFriendsListDataSource.h"
 #import "QMChatService.h"
 
-#define kSearchBarHeight            44.0f
 
-#define kNoResultsViewTag           1101
-#define kSearchGlobalButtonTag      1102
+static CGFloat const FRIENDS_CELL_HEIGHT = 60.0f;
+static CGFloat const kSearchBarHeight = 44.0f;
+static NSUInteger const kNoResultsViewTag = 1101;
+static NSUInteger const kSearchGlobalButtonTag = 1102;
 
 
 @interface QMFriendListController () <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate>
@@ -27,8 +28,8 @@
 
 @property (nonatomic, strong) QMFriendsListDataSource *dataSource;
 
-@property (assign, nonatomic) BOOL searchBarIsShowed;
-@property (assign, nonatomic) BOOL searchIsActive;
+@property (assign, nonatomic) BOOL searchActive;
+
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *viewHeight;
 
 @end
@@ -147,10 +148,14 @@
     QBUUser *user = [self.dataSource.otherUsersArray objectAtIndex:userIndex];
     
     QMFriendListCell *cell = (QMFriendListCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:button.tag inSection:1]];
+    [cell.addToFriendsButton setHidden:YES];
     [cell.indicatorView startAnimating];
 
     // roaster:
     [[QMChatService shared] sendFriendsRequestToUserWithID:user.ID];
+    
+    NSString *userID = [NSString stringWithFormat:@"%lu", (unsigned long)user.ID];
+    [[QMContactList shared].friendsAsDictionary setObject:user forKey:userID];
     
     // reload friends
     [self reloadFriendsList];
@@ -199,12 +204,12 @@
 
 - (IBAction)searchUsers:(id)sender
 {
-    if (_searchBarIsShowed) {
+    _searchActive = !_searchActive;
+    if (!_searchActive) {
         [self removeSearchBarAnimated:YES];
     } else {
         [self createSearchBar];
     }
-    _searchBarIsShowed = !_searchBarIsShowed;
 }
 
 
@@ -215,7 +220,6 @@
     if (self.searchBar != nil) {
         return;
     }
-    self.searchIsActive = YES;
     
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 20, 320, 44)];
     self.searchBar.delegate = self;
@@ -233,10 +237,12 @@
 
 - (void)removeSearchBarAnimated:(BOOL)animated
 {
+    self.searchBar.text = @"";
+    
     if (self.searchBar == nil) {
         return;
     }
-    self.searchIsActive = NO;
+    
     [self.dataSource emptyOtherUsersArray];
     [self reloadFriendsList];
     [self.searchBar resignFirstResponder];
@@ -345,8 +351,8 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (!_searchIsActive) {
-        return kEmptyString;
+    if (!_searchActive) {
+        return @"";
     }
     if (section == 0) {
         if ([self.dataSource.friendsArray count] == 0) {
@@ -371,7 +377,7 @@
         if (self.searchBar != nil) {
             [self removeSearchBarAnimated:NO];
         }
-        _searchBarIsShowed = !_searchBarIsShowed;
+        _searchActive = !_searchActive;
 		QMFriendListCell *cell = (QMFriendListCell *) [tableView cellForRowAtIndexPath:indexPath];
 		NSDictionary *userDetailsDictionary = @{
 				@"user" : currentUser,

@@ -187,7 +187,7 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
     NSString *password = me.password;
     me.password = nil;
     
-    [[QMAuthService shared] updateUser:me withCompletion:^(QBUUser *user, BOOL success, NSError *error) {
+    [[QMAuthService shared] updateUser:me withCompletion:^(QBUUser *user, BOOL success, NSString *error) {
         [QMUtilities hideActivityView];
         
         if (!success) {
@@ -234,7 +234,9 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
     self.avatarImage = [selectedImage imageByScalingProportionallyToMinimumSize:CGSizeMake(1000.0f, 1000.0f)];
     self.avatarView.image = self.avatarImage;
     
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        self.avatarView.image = self.avatarImage;
+    }];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker

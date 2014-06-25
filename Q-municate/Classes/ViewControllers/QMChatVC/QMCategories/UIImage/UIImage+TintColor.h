@@ -10,6 +10,7 @@
 
 @interface UIImage (TintColor)
 
-- (UIImage *)tintImageWithColor:(UIColor *)maskColor ;
+- (UIImage *)tintImageWithColor:(UIColor *)maskColor;
+- (UIImage *)tintImageWithColor:(UIColor *)maskColor resizableImageWithCapInsets:(UIEdgeInsets)capInsets NS_AVAILABLE_IOS(5_0);
 
 @end

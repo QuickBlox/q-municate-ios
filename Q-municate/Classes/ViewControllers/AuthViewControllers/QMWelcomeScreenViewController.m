@@ -16,6 +16,7 @@
 #import "QMSplashViewController.h"
 #import "QMFacebookService.h"
 #import "QMSettingsManager.h"
+#import "REAlertView.h"
 
 @interface QMWelcomeScreenViewController ()
 
@@ -60,11 +61,11 @@
     QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
     
     [QMUtilities showActivityView];
-    [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSError *error) {
+    [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSString *error) {
         
         if (!success) {
             [QMUtilities hideActivityView];
-            [self showAlertWithMessage:error.description actionSuccess:NO];
+            [self showAlertWithMessage:error actionSuccess:NO];
             return;
         }
         
@@ -91,8 +92,7 @@
 
 #pragma mark -
 
-- (void)logInToQuickbloxChatWithUser:(QBUUser *)user
-{
+- (void)logInToQuickbloxChatWithUser:(QBUUser *)user {
     // login to Quickblox chat:
     [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
         [QMUtilities hideActivityView];
@@ -102,20 +102,13 @@
     }];
 }
 
-- (void)showAlertWithMessage:(NSString *)messageString actionSuccess:(BOOL)success
-{
-    NSString *title = nil;
-    if (success) {
-        title = kAlertTitleSuccessString;
-    } else {
-        title = kAlertTitleErrorString;
-    }
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
-                                                    message:messageString
-                                                   delegate:self
-                                          cancelButtonTitle:kAlertButtonTitleOkString
-                                          otherButtonTitles:nil];
-    [alert show];
+- (void)showAlertWithMessage:(NSString *)messageString actionSuccess:(BOOL)success {
+
+    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
+        alertView.title = success ? kAlertTitleSuccessString : kAlertTitleErrorString;
+        alertView.message = messageString;
+        [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{}];
+    }];
 }
 
 @end

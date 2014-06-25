@@ -8,76 +8,94 @@
 
 #import "NSUserDefaultsHelper.h"
 
-void __defaults_post_notification(NSString *key);
-void __defaults_save();
+NSUserDefaults *defaults();
+void defaultsPostNotification(NSString *key);
+void defaultsSave();
 
 inline NSUserDefaults *defaults() {
+    
 	return [NSUserDefaults standardUserDefaults];
 }
 
-inline void userDefaultsIntiWithDictionary(NSDictionary *dictionary) {
+inline void defInit(NSDictionary *dictionary) {
+    
 	[defaults() registerDefaults:dictionary];
 }
 
-inline id def_object(NSString *key) {
+inline id defObject(NSString *key) {
+    
     id obj = [defaults() objectForKey:key];
     return obj;
 }
 
-inline void def_set_object(NSString *key, NSObject *object) {
+inline void defSetObject(NSString *key, NSObject *object) {
+    
 	[defaults() setObject:object forKey:key];
-	__defaults_save();
-	__defaults_post_notification(key);
+	defaultsSave();
+	defaultsPostNotification(key);
 }
 
-inline void def_remove(NSString *key) {
+inline void defRemove(NSString *key) {
+    
     [defaults() removeObjectForKey:key];
-	__defaults_save();
-    __defaults_post_notification(key);
+	defaultsSave();
+    defaultsPostNotification(key);
 }
 
-inline BOOL def_bool(NSString *key) {
+inline BOOL defBool(NSString *key) {
+    
     return [defaults() boolForKey:key];
 }
 
-inline void def_set_bool(NSString *key, BOOL var) {
+inline void defSetBool(NSString *key, BOOL var) {
+    
     [defaults() setBool:var forKey:key];
-    __defaults_save();
-    __defaults_post_notification(key);
+    defaultsSave();
+    defaultsPostNotification(key);
 }
 
-inline BOOL def_int(NSString *key) {
+inline BOOL defInt(NSString *key) {
+    
     return [defaults() integerForKey:key];
 }
 
-inline void def_set_int(NSString *key, NSInteger var) {
-    [defaults() setInteger:var forKey:key];
-    __defaults_save();
-    __defaults_post_notification(key);
-}
-
-inline id def_observe(NSString *key, void (^block) (id object)) {
+inline void defSetInt(NSString *key, NSInteger var) {
     
-	return [[NSNotificationCenter defaultCenter] addObserverForName:key object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-                block(note.userInfo);
-            }];           
+    [defaults() setInteger:var forKey:key];
+    defaultsSave();
+    defaultsPostNotification(key);
 }
 
-inline void def_reset(){
+inline id defObserve(NSString *key, void (^block) (id object)) {
+    
+	return [[NSNotificationCenter defaultCenter] addObserverForName:key
+                                                             object:nil
+                                                              queue:[NSOperationQueue mainQueue]
+                                                         usingBlock:^(NSNotification *note) {
+                                                             block(note.userInfo);
+                                                         }];
+}
+
+inline void defReset() {
+    
 	NSDictionary *defaultsDictionary = [defaults() dictionaryRepresentation];
 	for (NSString *key in [defaultsDictionary allKeys]) {
-	    def_remove(key);
+	    defRemove(key);
 	}
 }
 
-inline void __defaults_post_notification(NSString *key) {
-    id object = def_object(key);
+#pragma private
+
+inline void defaultsPostNotification(NSString *key) {
+    
+    id object = defObject(key);
     NSDictionary *userInfo = object ? [NSDictionary dictionaryWithObject:object forKey:@"value"] : [NSDictionary dictionary];
 	[[NSNotificationCenter defaultCenter] postNotificationName:key
                                                         object:nil
                                                       userInfo:userInfo];
 }
 
-inline void __defaults_save() {
+inline void defaultsSave() {
+    
 	[defaults() synchronize];
 }

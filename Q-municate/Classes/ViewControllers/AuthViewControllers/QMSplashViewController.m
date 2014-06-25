@@ -89,11 +89,11 @@
 - (void)loginWithEmail:(NSString *)email password:(NSString *)password {
     
     [QMUtilities showActivityView];
-    [[QMAuthService shared] logInWithEmail:email password:password completion:^(QBUUser *user, BOOL success, NSError *error) {
+    [[QMAuthService shared] logInWithEmail:email password:password completion:^(QBUUser *user, BOOL success, NSString *error) {
         
         if (!success) {
             [QMUtilities hideActivityView];
-            [self showAlertWithMessage:error.localizedDescription actionSuccess:NO];
+            [self showAlertWithMessage:error actionSuccess:NO];
             return;
         }
         
@@ -109,10 +109,7 @@
     
             [QMUtilities hideActivityView];
             if (success) {
-                //pop auth and push tab bar:
-                UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
-                UINavigationController *navigationController = (UINavigationController *)window.rootViewController;
-                [navigationController popToRootViewControllerAnimated:NO];
+                [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
             }
         }];
     }];
@@ -121,7 +118,7 @@
 - (void)loginWithFacebook
 {
     // login with facebook:
-    [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSError *error) {
+    [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSString *error) {
         if (!success) {
             [QMUtilities hideActivityView];
             [self showAlertWithMessage:error.description actionSuccess:NO];
@@ -137,7 +134,7 @@
             [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
                 if (!success) {
                     [QMUtilities hideActivityView];
-                    [self showAlertWithMessage:error.description actionSuccess:NO];
+                    [self showAlertWithMessage:error actionSuccess:NO];
                     return;
                 }
                 [self logInToQuickbloxChatWithUser:user];

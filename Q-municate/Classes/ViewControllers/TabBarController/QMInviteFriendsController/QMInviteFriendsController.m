@@ -72,7 +72,7 @@
         if ([FBSession activeSession].state == FBSessionStateOpen) {
             [self shareApplicationToFriends:tags];
         } else {
-            [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSError *error) {
+            [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSString *error) {
                 if (success) {
                     [self shareApplicationToFriends:tags];
                 }

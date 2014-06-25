@@ -52,8 +52,7 @@
             resultBlock(user, YES, nil);
             return;
         }
-        NSError *error = [NSError errorWithDomain:[NSString stringWithFormat:@"%@",[result.errors lastObject]] code:0 userInfo:nil];
-        resultBlock(nil,NO,error);
+        resultBlock(nil, NO, result.errors.firstObject);
     }];
 }
 
@@ -76,7 +75,7 @@
             QBUUser *user = ((QBUUserLogInResult *)result).user;
             resultBlock(user, YES, nil);
         } else {
-            resultBlock(nil, NO, result.errors[0]);
+            resultBlock(nil, NO, result.errors.firstObject);
         }
     }];
 }
@@ -90,13 +89,7 @@
             block(user, YES, nil);
             return;
         }
-		NSError *completionError = nil;
-		if (![result.errors count]) {
-		    completionError = [NSError errorWithDomain:NSNetServicesErrorDomain code:701 userInfo:@{NSLocalizedDescriptionKey : @"Logging in with FBAccessToken. result.errors[0] is empty. Refer to [QMAuthService logInWithFacebookAccessToken:completion:]"}];
-		} else {
-			completionError = result.errors[0];
-		}
-        block(nil, NO, completionError);//TODO:fix for crash
+        block(nil, NO, result.errors.firstObject);
     }];
 }
 
@@ -119,8 +112,7 @@
             
             if (status == FBSessionStateClosedLoginFailed) {
 				[FBSession setActiveSession:nil];
-                NSError *error = [NSError errorWithDomain:@"Failed login to Facebook:Canceled" code:10 userInfo:nil];
-                resultBlock(nil, NO, error);
+                resultBlock(nil, NO, @"Failed login to Facebook:Canceled");
                 return;
             }
             
@@ -143,7 +135,7 @@
                     [QMContactList shared].fbMe = content.mutableCopy;
                     
                     // login to Quickblox
-                    [self logInWithFacebookAccessToken:token completion:^(QBUUser *user, BOOL success, NSError *error) {
+                    [self logInWithFacebookAccessToken:token completion:^(QBUUser *user, BOOL success, NSString *error) {
                         
                         if (success) {
                             resultBlock(user, success, nil);
@@ -168,14 +160,14 @@
             [facebookService loadMeWithCompletion:^(NSDictionary *content, NSError *error) {
                 
                 if (error) {
-                    resultBlock(nil, NO, error);
+                    resultBlock(nil, NO, error.localizedDescription);
                     return;
                 }
                 
                 [QMContactList shared].fbMe = content.mutableCopy;
                 
                 NSString *token = [FBSession activeSession].accessTokenData.accessToken;
-                [self logInWithFacebookAccessToken:token completion:^(QBUUser *user, BOOL success, NSError *error) {
+                [self logInWithFacebookAccessToken:token completion:^(QBUUser *user, BOOL success, NSString *error) {
                     
                     if (success) {
                         resultBlock(user, YES, nil);
@@ -206,11 +198,13 @@
 - (void)updateUser:(QBUUser *)user withCompletion:(QBAuthResultBlock)block
 {
     [self updateUser:user resultBlock:^(Result *result) {
+        
         if (result.success && [result isKindOfClass:[QBUUserResult class]]) {
             QBUUser *updatedUser = ((QBUUserResult *)result).user;
             block(updatedUser, YES, nil);
             return;
         }
+        
         block(nil, NO, [result.errors firstObject]);
     }];
 }
@@ -317,7 +311,9 @@
                 if (blob) {
                     // update user with new blob:
                     NSString *userPassword = user.password;
-                    [[QMAuthService shared] updateUser:user withBlob:blob completion:^(QBUUser *user, BOOL success, NSError *error) {
+
+                    [[QMAuthService shared] updateUser:user withBlob:blob completion:^(QBUUser *user, BOOL success, NSString *error) {
+                        
                         if (success) {
                             user.password = userPassword;
                             if (user.email == nil || [user.email isEqualToString:kEmptyString]) {

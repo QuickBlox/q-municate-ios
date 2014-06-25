@@ -28,65 +28,65 @@ NSString *const kQMSettingsUserStatusKey = @"userStatusKey";
 
 - (NSString *)login {
     
-    NSString *login = def_object(kQMSettingsLoginKey);
+    NSString *login = defObject(kQMSettingsLoginKey);
     return login;
 }
 
 - (void)setLogin:(NSString *)login {
     
-    def_set_object(kQMSettingsLoginKey, login);
+    defSetObject(kQMSettingsLoginKey, login);
 }
 
 #pragma mark - Password
 
 - (NSString *)password {
     
-    NSString *password = def_object(kQMSettingsPasswordKey);
+    NSString *password = defObject(kQMSettingsPasswordKey);
     return password;
 }
 
 - (void)setPassword:(NSString *)password {
     
-    def_set_object(kQMSettingsPasswordKey, password);
+    defSetObject(kQMSettingsPasswordKey, password);
 }
 
 #pragma mark - Push notifications enabled
 
 - (BOOL)pushNotificationsEnabled {
     
-    BOOL pushNotificationEnabled = def_bool(kQMSettingsPushNotificationEnabled);
+    BOOL pushNotificationEnabled = defBool(kQMSettingsPushNotificationEnabled);
     return pushNotificationEnabled;
 }
 
 - (void)setPushNotificationsEnabled:(BOOL)pushNotificationsEnabled {
     
-    def_set_bool(kQMSettingsPushNotificationEnabled, pushNotificationsEnabled);
+    defSetBool(kQMSettingsPushNotificationEnabled, pushNotificationsEnabled);
 }
 
 #pragma makr - remember login
 
 - (BOOL)rememberMe {
     
-    BOOL rememberMe = def_bool(kQMSettingsRememberMeKey);
+    BOOL rememberMe = defBool(kQMSettingsRememberMeKey);
     return rememberMe;
 }
 
 - (void)setRememberMe:(BOOL)rememberMe {
     
-    def_set_bool(kQMSettingsRememberMeKey, rememberMe);
+    defSetBool(kQMSettingsRememberMeKey, rememberMe);
 }
 
 #pragma mark - User Status
 
 - (NSString *)userStatus {
     
-    NSString *userStatus = def_object(kQMSettingsUserStatusKey);
+    NSString *userStatus = defObject(kQMSettingsUserStatusKey);
     return userStatus;
 }
 
 - (void)setUserStatus:(NSString *)userStatus {
     
-    def_set_object(kQMSettingsUserStatusKey, userStatus);
+    defSetObject(kQMSettingsUserStatusKey, userStatus);
 }
 
 #pragma mark - Default Settings

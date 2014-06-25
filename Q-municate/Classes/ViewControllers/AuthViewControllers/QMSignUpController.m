@@ -76,10 +76,14 @@
     }
     
     [QMUtilities showActivityView];
-    [[QMAuthService shared] signUpWithFullName:self.fullNameField.text email:self.emailField.text password:self.passwordField.text blobID:0 completion:^(QBUUser *user, BOOL success, NSError *error) {
+    [[QMAuthService shared] signUpWithFullName:self.fullNameField.text
+                                         email:self.emailField.text
+                                      password:self.passwordField.text
+                                        blobID:0
+                                    completion:^(QBUUser *user, BOOL success, NSString *error) {
         if (error) {
             [QMUtilities hideActivityView];
-            [self showAlertWithMessage:error.domain success:NO];
+            [self showAlertWithMessage:error success:NO];
             return;
         }
         
@@ -95,10 +99,10 @@
 // **************** 
 - (void)loginWithUser:(QBUUser *)user afterLoadingImage:(UIImage *)image
 {
-    [[QMAuthService shared] logInWithEmail:user.email password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSError *error) {
+    [[QMAuthService shared] logInWithEmail:user.email password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSString *error) {
         if (!success) {
             [QMUtilities hideActivityView];
-            [self showAlertWithMessage:error.description success:NO];
+            [self showAlertWithMessage:error success:NO];
             return;
         }
         [self updateUser:user withAvatar:image];
@@ -107,7 +111,7 @@
 
 - (void)loginWithUserWithoutImage:(QBUUser *)user
 {
-    [[QMAuthService shared] logInWithEmail:user.email password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSError *error) {
+    [[QMAuthService shared] logInWithEmail:user.email password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSString *error) {
         if (!success) {
             [QMUtilities hideActivityView];
             [self showAlertWithMessage:error.description success:NO];
@@ -127,7 +131,7 @@
                 [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
                 return;
             }
-            [self showAlertWithMessage:error.description success:NO];
+            [self showAlertWithMessage:error success:NO];
         }];
     }];
 }
@@ -137,10 +141,10 @@
     QMContent *content = [[QMContent alloc] init];
     [content loadImageForBlob:image named:user.email completion:^(QBCBlob *blob) {
         //
-        [[QMAuthService shared] updateUser:user withBlob:blob completion:^(QBUUser *user, BOOL success, NSError *error) {
+        [[QMAuthService shared] updateUser:user withBlob:blob completion:^(QBUUser *user, BOOL success, NSString *error) {
             if (!success) {
                 [QMUtilities hideActivityView];
-                [self showAlertWithMessage:error.description success:NO];
+                [self showAlertWithMessage:error success:NO];
                 return;
             }
             user.password = self.passwordField.text;

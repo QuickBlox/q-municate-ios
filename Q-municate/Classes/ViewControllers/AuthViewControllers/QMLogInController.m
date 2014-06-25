@@ -73,12 +73,12 @@
 	
     NSString *mailString = self.emailField.text;
     
-    [[QMAuthService shared] logInWithEmail:mailString password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSError *error) {
+    [[QMAuthService shared] logInWithEmail:mailString password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSString *error) {
 
         if (!success) {
             
             [QMUtilities hideActivityView];
-            [self showAlertWithMessage:[NSString stringWithFormat:@"%@", error] actionSuccess:NO];
+            [self showAlertWithMessage:error actionSuccess:NO];
             return;
         }
         // remember me:
@@ -98,10 +98,10 @@
 - (IBAction)connectWithFacebook:(id)sender
 {
     [QMUtilities showActivityView];
-    [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSError *error) {
+    [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSString *error) {
         if (!success) {
             [QMUtilities hideActivityView];
-            [self showAlertWithMessage:error.description actionSuccess:NO];
+            [self showAlertWithMessage:error actionSuccess:NO];
             return;
         }
         // remember me:
@@ -193,8 +193,10 @@
 
 
 - (void)showAlertWithMessage:(NSString *)messageString actionSuccess:(BOOL)success {
+    
     [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
         alertView.title = success ? kAlertTitleSuccessString : kAlertTitleErrorString;
+        alertView.message = messageString;
         [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{}];
     }];
 }

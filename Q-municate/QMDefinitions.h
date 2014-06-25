@@ -59,7 +59,7 @@ typedef NS_ENUM(NSUInteger, QMVideoChatType) {
 //****************** Blocks *********************************
 typedef void (^QBResultBlock)(Result *result);
 typedef void (^QBSessionCreationBlock)(BOOL success, NSError *error);
-typedef void (^QBAuthResultBlock)(QBUUser *user, BOOL success, NSError *error);
+typedef void (^QBAuthResultBlock)(QBUUser *user, BOOL success, NSString *error);
 typedef void (^QBChatResultBlock)(BOOL success);
 typedef void (^QBChatDialogResultBlock)(QBChatDialog *dialog, NSError *error);
 typedef void (^QBChatRoomResultBlock)(QBChatRoom *chatRoom, NSError *error);

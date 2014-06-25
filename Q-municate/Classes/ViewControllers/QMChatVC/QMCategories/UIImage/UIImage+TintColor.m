@@ -11,6 +11,12 @@
 
 @implementation UIImage (TintColor)
 
+- (UIImage *)tintImageWithColor:(UIColor *)maskColor resizableImageWithCapInsets:(UIEdgeInsets)capInsets {
+    
+    UIImage *tintImg = [self tintImageWithColor:maskColor];
+    return [tintImg resizableImageWithCapInsets:capInsets];
+}
+
 - (UIImage *)tintImageWithColor:(UIColor *)maskColor {
     
     NSParameterAssert(maskColor != nil);
