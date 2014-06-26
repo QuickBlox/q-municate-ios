@@ -249,4 +249,91 @@
     NSLog(@"%@", NSStringFromSelector(_cmd));
 }
 
+#pragma mark - Send actions 
+
+- (void)sendImage:(UIImage *)image {
+    
+}
+
+- (void)sendMessage:(NSString *)message {
+    
+}
+
+//
+//#pragma mark - Notifications
+//
+//- (void)localChatDidReceiveMessage:(NSNotification *)notification
+//{
+//    //    [self updateChatDialog];
+//    //    [self resetTableView];
+//}
+//
+// ************************** CHAT ROOM **********************************
+//- (void)chatRoomDidEnterNotification
+//{
+//    self.chatRoom = [QMChatService shared].allChatRoomsAsDictionary[self.chatDialog.roomJID];
+//
+//    if (self.chatHistory != nil) {
+//        [QMUtilities removeIndicatorView];
+//        return;
+//    }
+//
+//    // load history:
+//    [self loadHistory];
+//}
+//
+//- (void)chatRoomDidReveiveMessage
+//{
+//    // update unread message count:
+//    [self updateChatDialog];
+//
+//    [self resetTableView];
+//}
+//
+//- (void)updateNavTitleWithNotification:(NSNotification *)notification
+//{
+//    // update chat dialog:
+//    NSString *roomJID = notification.userInfo[@"room_jid"];
+//    QBChatDialog *dialog = [QMChatService shared].allDialogsAsDictionary[roomJID];
+//    self.chatDialog = dialog;
+//    self.title = dialog.name;
+//}
+//
+//
+//#pragma mark -
+//- (IBAction)sendMessageButtonClicked:(UIButton *)sender
+//{
+//	if (self.inputMessageTextField.text.length) {
+//		QBChatMessage *chatMessage = [QBChatMessage new];
+//		chatMessage.text = self.inputMessageTextField.text;
+//
+//        // additional params:
+//        NSMutableDictionary *params = [NSMutableDictionary new];
+//        NSTimeInterval timestamp = (unsigned long)[[NSDate date] timeIntervalSince1970];
+//        params[@"date_sent"] = @(timestamp);
+//        params[@"save_to_history"] = @YES;
+//        chatMessage.customParameters = params;
+//
+//		if (self.chatDialog.type == QBChatDialogTypePrivate) { // private chat
+//            chatMessage.recipientID = self.opponent.ID;
+//            chatMessage.senderID = [QMContactList shared].me.ID;
+//			[[QMChatService shared] sendMessage:chatMessage];
+//
+//		} else { // group chat
+//            [[QMChatService shared] sendMessage:chatMessage toRoom:self.chatRoom];
+//		}
+//        self.inputMessageTextField.text = @"";
+//        [self resetTableView];
+//	}
+//}
+//
+//- (BOOL)userIsJoinedRoomForDialog:(QBChatDialog *)dialog
+//{
+//    QBChatRoom *currentRoom = [QMChatService shared].allChatRoomsAsDictionary[dialog.roomJID];
+//    if (currentRoom == nil || !currentRoom.isJoined) {
+//        return NO;
+//    }
+//    return YES;
+//}
+
 @end

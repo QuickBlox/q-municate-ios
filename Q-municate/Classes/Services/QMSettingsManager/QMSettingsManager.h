@@ -13,12 +13,12 @@
 /**
  * User login
  */
-@property (strong, nonatomic) NSString *login;
+@property (strong, nonatomic, readonly) NSString *login;
 
 /**
  * User password
  */
-@property (strong, nonatomic) NSString *password;
+@property (strong, nonatomic, readonly) NSString *password;
 
 /**
  * User status
@@ -35,6 +35,7 @@
  */
 @property (assign, nonatomic) BOOL rememberMe;
 
+- (void)setLogin:(NSString *)login andPassword:(NSString *)password;
 /**
  * Set Default settings
  */

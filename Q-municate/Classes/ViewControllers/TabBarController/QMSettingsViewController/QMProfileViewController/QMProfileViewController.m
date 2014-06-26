@@ -12,7 +12,7 @@
 #import "QMContent.h"
 #import "QMAuthService.h"
 #import "QMUtilities.h"
-
+#import "REAlertView.h"
 
 static NSUInteger const QM_MAX_STATUS_TEXT_LENGTH = 44;
 
@@ -21,7 +21,9 @@ static NSUInteger const kFullNameFieldTag = 11;
 static NSUInteger const kPhoneNumberFieldTag = 12;
 
 
-@interface QMProfileViewController () <UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate>
+@interface QMProfileViewController ()
+
+<UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate>
 
 @property (weak, nonatomic) IBOutlet AsyncImageView *avatarView;
 @property (weak, nonatomic) IBOutlet UITextField *fullNameField;
@@ -132,13 +134,12 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
     if (![self profileWasChanged]) {
         return;
     }
+    
     if (_avatarImage != nil) {
-        [QMUtilities showActivityView];
         
         QMContent *manager = [[QMContent alloc] init];
         [manager uploadImage:_avatarImage withCompletion:^(QBCBlob *blob, BOOL success, NSError *error) {
             if (!success) {
-                [QMUtilities hideActivityView];
                 [[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:error.description delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
                 return;
             }
@@ -188,7 +189,6 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
     me.password = nil;
     
     [[QMAuthService shared] updateUser:me withCompletion:^(QBUUser *user, BOOL success, NSString *error) {
-        [QMUtilities hideActivityView];
         
         if (!success) {
             [[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:error.description delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];

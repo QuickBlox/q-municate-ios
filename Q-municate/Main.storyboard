@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                     <connections>
-                        <segue destination="BXK-2z-A4J" kind="relationship" relationship="rootViewController" id="spP-nY-W0m"/>
+                        <segue destination="zpv-I5-i7g" kind="relationship" relationship="rootViewController" id="eWp-An-d0w"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PU6-eh-Yav" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -479,7 +479,7 @@
             <objects>
                 <tableViewController id="IAA-4v-Yxp" customClass="QMSettingsViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="WKb-up-Nb9">
-                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="fqe-LW-5i2">
@@ -632,7 +632,7 @@
             <objects>
                 <tableViewController id="pWH-oD-4SD" customClass="QMChangePasswordVC" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="cOR-WP-JqI">
-                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <sections>
@@ -721,7 +721,7 @@
             <objects>
                 <tableViewController hidesBottomBarWhenPushed="YES" id="pjK-pp-4QI" customClass="QMProfileViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="static" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="oRS-33-Yk2">
-                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <sections>
@@ -1152,10 +1152,17 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Ccj-RC-Fcq">
+                                <rect key="frame" x="150" y="485" width="37" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="color" red="0.0" green="0.74117648601531982" blue="0.24313727021217346" alpha="1" colorSpace="deviceRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="mRj-kO-e4j" firstAttribute="top" secondItem="Ccj-RC-Fcq" secondAttribute="bottom" constant="46" id="3nx-ga-fuz"/>
                             <constraint firstAttribute="trailing" secondItem="PCD-hf-H4f" secondAttribute="trailing" id="D2w-53-8Se"/>
+                            <constraint firstItem="Ccj-RC-Fcq" firstAttribute="leading" secondItem="oP1-5n-nsc" secondAttribute="leading" constant="150" id="D9P-q3-CUI"/>
                             <constraint firstItem="mRj-kO-e4j" firstAttribute="top" secondItem="PCD-hf-H4f" secondAttribute="bottom" id="Ga7-H3-OKN"/>
                             <constraint firstItem="PCD-hf-H4f" firstAttribute="leading" secondItem="oP1-5n-nsc" secondAttribute="leading" id="LN0-ja-crO"/>
                             <constraint firstItem="PCD-hf-H4f" firstAttribute="top" secondItem="oP1-5n-nsc" secondAttribute="top" id="aNR-6l-cFM"/>
@@ -1163,6 +1170,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="jer-pp-E79"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="Ccj-RC-Fcq" id="Meb-Zg-BSD"/>
                         <outlet property="splashLogoView" destination="PCD-hf-H4f" id="tWl-7z-fxX"/>
                         <segue destination="vN9-k2-MLz" kind="push" identifier="WelcomeScreenSegue" id="m1O-4f-rYI"/>
                         <segue destination="ExU-yY-FRH" kind="custom" identifier="TabBarSegue" customClass="QMCustomSegue" id="TaC-No-aTb"/>
@@ -1841,7 +1849,7 @@
             <objects>
                 <tableViewController id="KLj-ox-aYM" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="0p0-mz-TsW">
-                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <sections>
@@ -1918,7 +1926,7 @@
             <objects>
                 <tableViewController id="LiR-az-0qu" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="08Z-R3-Ghj">
-                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
@@ -2440,7 +2448,7 @@
             <objects>
                 <tableViewController id="ejW-bT-BSi" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="zFd-22-zWJ">
-                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
@@ -2539,9 +2547,8 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="IAo-qy-uHQ"/>
         <segue reference="TaC-No-aTb"/>
-        <segue reference="spP-nY-W0m"/>
+        <segue reference="IAo-qy-uHQ"/>
         <segue reference="bAk-xe-kWS"/>
     </inferredMetricsTieBreakers>
 </document>

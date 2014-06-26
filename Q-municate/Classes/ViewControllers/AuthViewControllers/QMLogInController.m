@@ -46,13 +46,12 @@
     }
     
     if (![QMAuthService shared].isSessionCreated) {
-        [QMUtilities showActivityView];
-        [[QMAuthService shared] startSessionWithBlock:^(BOOL success, NSError *error) {
-            [QMUtilities hideActivityView];
+        
+        [[QMAuthService shared] startSessionWithBlock:^(BOOL success, NSString *error) {
             if (success) {
                 ILog(@"Session created");
             } else {
-                [self showAlertWithMessage:error.localizedDescription actionSuccess:NO];
+                [self showAlertWithMessage:error actionSuccess:NO];
             }
         }];
     }
@@ -68,16 +67,12 @@
         [self showAlertWithMessage:kAlertBodyFillInAllFieldsString actionSuccess:NO];
         return;
     }
-    
-    [QMUtilities showActivityView];
 	
     NSString *mailString = self.emailField.text;
     
     [[QMAuthService shared] logInWithEmail:mailString password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSString *error) {
 
         if (!success) {
-            
-            [QMUtilities hideActivityView];
             [self showAlertWithMessage:error actionSuccess:NO];
             return;
         }
@@ -95,12 +90,10 @@
     }];
 }
 
-- (IBAction)connectWithFacebook:(id)sender
-{
-    [QMUtilities showActivityView];
+- (IBAction)connectWithFacebook:(id)sender {
+    
     [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSString *error) {
         if (!success) {
-            [QMUtilities hideActivityView];
             [self showAlertWithMessage:error actionSuccess:NO];
             return;
         }
@@ -116,7 +109,6 @@
         if (user.blobID == 0) {
             [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
                 if (!success) {
-                    [QMUtilities hideActivityView];
                     [self showAlertWithMessage:error.description actionSuccess:NO];
                     return;
                 }
@@ -155,9 +147,7 @@
         NSString *password = self.passwordField.text;
         
         if (!isFacebookSession) {
-            
-            settingsManager.login = login;
-            settingsManager.password = password;
+            [settingsManager setLogin:login andPassword:password];
         }
 
     } else {
@@ -225,7 +215,6 @@
 {
     // login to Quickblox chat:
     [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-        [QMUtilities hideActivityView];
         if (success) {
             [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
 		}

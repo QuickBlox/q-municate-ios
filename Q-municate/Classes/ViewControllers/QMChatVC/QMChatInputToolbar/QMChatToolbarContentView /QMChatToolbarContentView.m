@@ -25,15 +25,23 @@
 
 #pragma mark - Initialization
 
+#define DEBUG_COLORS 0
+
+
 - (instancetype)initWithFrame:(CGRect)frame {
     
     self = [super initWithFrame:frame];
     if (self) {
         
         [self configureChatToolbarContentView];
+       
+        self.leftBarButtonItem = nil;
+        self.rightBarButtonItem = nil;
         
-        //        self.leftBarButtonItem = nil;
-        //        self.rightBarButtonItem = nil;
+#if DEBUG_COLORS
+        self.leftBarButtonContainerView.backgroundColor = [UIColor redColor];
+        self.rightBarButtonContainerView.backgroundColor = [UIColor greenColor];
+#endif
     }
     
     return self;
@@ -66,115 +74,29 @@
 
 - (void)configureConstraints {
     
+    CGFloat margin = 6.f;
+    
     self.translatesAutoresizingMaskIntoConstraints = NO;
     self.leftBarButtonContainerView.translatesAutoresizingMaskIntoConstraints = NO;
     self.rightBarButtonContainerView.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    NSMutableArray *constrains = [NSMutableArray array];
     
     UIView *lView = self.leftBarButtonContainerView;
     UIView *cView = self.textView;
     UIView *rView = self.rightBarButtonContainerView;
     
-    NSDictionary *views = NSDictionaryOfVariableBindings(lView, cView, rView);
-    
-    [constrains addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"[lView][cView][rView]|"
-                                                                            options:NSLayoutFormatAlignAllBottom
-                                                                            metrics:nil
-                                                                              views:views]];
-    
-    [self addConstraints:constrains];
-    
-//    [constrains addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-pading-[lView(50)]-pading-[cView]-pading-[rView(50)]-pading-|"
-//                                                                            options:(NSLayoutFormatAlignAllBottom)
-//                                                                            metrics:@{@"pading" : @4}
-//                                                                              views:views]];
-//    [constrains addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[lView(50)][cView][rView(50)]|"
-//                                                                            options:(NSLayoutFormatAlignAllCenterY)
-//                                                                            metrics:nil
-//                                                                              views:views]];
-    
-    //    /*Left container*/
-    //    [constrains addObject:[NSLayoutConstraint constraintWithItem:self.leftBarButtonContainerView
-    //                                                       attribute:NSLayoutAttributeWidth
-    //                                                       relatedBy:NSLayoutRelationEqual
-    //                                                          toItem:nil
-    //                                                       attribute:NSLayoutAttributeNotAnAttribute
-    //                                                      multiplier:1.f
-    //                                                        constant:60]];
-    //
-    //    [constrains addObject:[NSLayoutConstraint constraintWithItem:self.leftBarButtonContainerView
-    //                                                       attribute:NSLayoutAttributeHeight
-    //                                                       relatedBy:NSLayoutRelationEqual
-    //                                                          toItem:nil
-    //                                                       attribute:NSLayoutAttributeNotAnAttribute
-    //                                                      multiplier:1.f
-    //                                                        constant:34]];
-    //
-    //    [constrains addObject:[NSLayoutConstraint constraintWithItem:self.leftBarButtonContainerView
-    //                                                       attribute:NSLayoutAttributeBottom
-    //                                                       relatedBy:NSLayoutRelationEqual
-    //                                                          toItem:self
-    //                                                       attribute:NSLayoutAttributeBottom
-    //                                                      multiplier:1.f
-    //                                                        constant:0]];
-    //
-    //    [constrains addObject:[NSLayoutConstraint constraintWithItem:self.leftBarButtonContainerView
-    //                                                       attribute:NSLayoutAttributeLeft
-    //                                                       relatedBy:NSLayoutRelationEqual
-    //                                                          toItem:self
-    //                                                       attribute:NSLayoutAttributeLeft
-    //                                                      multiplier:1.f
-    //                                                        constant:2]];
-    //    /*Right constainer*/
-    //    [constrains addObject:[NSLayoutConstraint constraintWithItem:self.rightBarButtonContainerView
-    //                                                       attribute:NSLayoutAttributeWidth
-    //                                                       relatedBy:NSLayoutRelationEqual
-    //                                                          toItem:nil
-    //                                                       attribute:NSLayoutAttributeNotAnAttribute
-    //                                                      multiplier:1.f
-    //                                                        constant:60]];
-    //
-    //    [constrains addObject:[NSLayoutConstraint constraintWithItem:self.rightBarButtonContainerView
-    //                                                       attribute:NSLayoutAttributeHeight
-    //                                                       relatedBy:NSLayoutRelationEqual
-    //                                                          toItem:nil
-    //                                                       attribute:NSLayoutAttributeNotAnAttribute
-    //                                                      multiplier:1.f
-    //                                                        constant:34]];
-    //
-    //    [constrains addObject:[NSLayoutConstraint constraintWithItem:self.rightBarButtonContainerView
-    //                                                       attribute:NSLayoutAttributeBottom
-    //                                                       relatedBy:NSLayoutRelationEqual
-    //                                                          toItem:self
-    //                                                       attribute:NSLayoutAttributeBottom
-    //                                                      multiplier:1.f
-    //                                                        constant:0]];
-    //
-    //    [constrains addObject:[NSLayoutConstraint constraintWithItem:self.rightBarButtonContainerView
-    //                                                       attribute:NSLayoutAttributeRight
-    //                                                       relatedBy:NSLayoutRelationEqual
-    //                                                          toItem:self
-    //                                                       attribute:NSLayoutAttributeRight
-    //                                                      multiplier:1.f
-    //                                                        constant:2]];
-    //    /*Center view*/
-    //    [constrains addObject:[NSLayoutConstraint constraintWithItem:self.textView
-    //                                                       attribute:NSLayoutAttributeHeight
-    //                                                       relatedBy:NSLayoutRelationEqual
-    //                                                          toItem:nil
-    //                                                       attribute:NSLayoutAttributeNotAnAttribute
-    //                                                      multiplier:1.f
-    //                                                        constant:34]];
-    //
-    
-    //
-    //    self.leftBarButtonContainerViewWidthConstraint = constrains[0];
-    //    self.rightBarButtonContainerViewWidthConstraint = constrains[2];
+    [self addConstraints:PVGroup(@[ PVLeftOf(lView).equalTo.leftOf(self).plus(margin).asConstraint,
+                                    PVLeftOf(cView).equalTo.rightOf(lView).plus(margin).asConstraint,
+                                    PVRightOf(cView).equalTo.leftOf(rView).minus(margin).asConstraint,
+                                    PVRightOf(rView).equalTo.rightOf(self).minus(margin).asConstraint,
+                                    /*Boottom*/
+                                    PVBottomOf(lView).equalTo.bottomOf(self).minus(12).asConstraint,
+                                    PVBottomOf(cView).equalTo.bottomOf(self).minus(margin).asConstraint,
+                                    PVBottomOf(rView).equalTo.bottomOf(self).minus(margin).asConstraint,
+                                    /*Top*/
+                                    PVTopOf(cView).equalTo.topOf(self).plus(margin).asConstraint]).asArray];
 }
 
 - (void)layoutSubviews {
-    
     [super layoutSubviews];
 }
 
@@ -201,21 +123,12 @@
         return;
     }
     
-    if (CGRectEqualToRect(_leftBarButtonItem.frame, CGRectZero)) {
-        _leftBarButtonItem.frame = CGRectMake(0.0f,
-                                              0.0f,
-                                              CGRectGetWidth(self.leftBarButtonContainerView.frame),
-                                              CGRectGetHeight(self.leftBarButtonContainerView.frame));
-    }
-    
     leftBarButtonItem.translatesAutoresizingMaskIntoConstraints = NO;
+    
     self.leftBarButtonContainerView.hidden = NO;
     
     [self.leftBarButtonContainerView addSubview:leftBarButtonItem];
-//    [self addConstraints:PVGroup(@[PVTopOf(self).equalTo.topOf(self.leftBarButtonContainerView),
-//                                                              PVBottomOf(self).equalTo.bottomOf(se.)]).asArray];
-//    [self.leftBarButtonContainerView pinAllEdgesOfSubview:leftBarButtonItem];
-    
+    [self pinAllEdgesOfSubview:leftBarButtonItem ofView:self.leftBarButtonContainerView];
     [self setNeedsUpdateConstraints];
     
     _leftBarButtonItem = leftBarButtonItem;
@@ -245,18 +158,21 @@
     
     self.rightBarButtonContainerView.hidden = NO;
     
-    if (CGRectEqualToRect(_rightBarButtonItem.frame, CGRectZero)) {
-        _rightBarButtonItem.frame = CGRectMake(0.0f,
-                                               0.0f,
-                                               CGRectGetWidth(self.rightBarButtonContainerView.frame),
-                                               CGRectGetHeight(self.rightBarButtonContainerView.frame));
-    }
-    
     [self.rightBarButtonContainerView addSubview:rightBarButtonItem];
-//    [self.rightBarButtonContainerView pinAllEdgesOfSubview:rightBarButtonItem];
+    [self pinAllEdgesOfSubview:rightBarButtonItem ofView:self.rightBarButtonContainerView];
     [self setNeedsUpdateConstraints];
     
     _rightBarButtonItem = rightBarButtonItem;
+}
+
+- (void)pinAllEdgesOfSubview:(UIView *)subview ofView:(UIView *)view {
+    
+    [self addConstraints:PVGroup(@[
+                                   PVTopOf(subview).equalTo.topOf(view).asConstraint,
+                                   PVLeftOf(subview).equalTo.leftOf(view).asConstraint,
+                                   PVBottomOf(subview).equalTo.bottomOf(view).asConstraint,
+                                   PVRightOf(subview).equalTo.rightOf(view).asConstraint,
+                                   ]).asArray];
 }
 
 - (void)setRightBarButtonItemWidth:(CGFloat)rightBarButtonItemWidth {

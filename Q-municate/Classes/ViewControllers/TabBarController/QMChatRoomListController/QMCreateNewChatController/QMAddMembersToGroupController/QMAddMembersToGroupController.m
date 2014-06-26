@@ -49,16 +49,13 @@
 - (IBAction)performAction:(id)sender
 {
     //create indicator view:
-    [QMUtilities showActivityView];
-    
-    
+
     NSMutableArray *selectedUsersMArray = [self.dataSource friendsSelectedMArray];
     NSArray *usersIds = [self usersIDFromSelectedUsers:selectedUsersMArray];
     
     // update current dialog:
     [[QMChatService shared] addUsers:usersIds toChatDialog:self.chatDialog completion:^(QBChatDialog *dialog, NSError *error) {
         if (error) {
-            [QMUtilities hideActivityView];
             return;
         }
         //send update dialog notifications to all participants of this group!
@@ -67,8 +64,6 @@
         [[QMChatService shared] sendChatDialogDidCreateNotificationToUsers:selectedUsersMArray withChatDialog:dialog];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:kChatDialogUpdatedNotification object:nil userInfo:@{@"room_jid":dialog.roomJID}];
-        
-        [QMUtilities hideActivityView];
         [self.navigationController popViewControllerAnimated:YES];
     }];
 }

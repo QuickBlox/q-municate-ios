@@ -75,14 +75,12 @@
         return;
     }
     
-    [QMUtilities showActivityView];
     [[QMAuthService shared] signUpWithFullName:self.fullNameField.text
                                          email:self.emailField.text
                                       password:self.passwordField.text
                                         blobID:0
                                     completion:^(QBUUser *user, BOOL success, NSString *error) {
         if (error) {
-            [QMUtilities hideActivityView];
             [self showAlertWithMessage:error success:NO];
             return;
         }
@@ -101,7 +99,6 @@
 {
     [[QMAuthService shared] logInWithEmail:user.email password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSString *error) {
         if (!success) {
-            [QMUtilities hideActivityView];
             [self showAlertWithMessage:error success:NO];
             return;
         }
@@ -113,7 +110,6 @@
 {
     [[QMAuthService shared] logInWithEmail:user.email password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSString *error) {
         if (!success) {
-            [QMUtilities hideActivityView];
             [self showAlertWithMessage:error.description success:NO];
             return;
         }
@@ -125,7 +121,6 @@
         [[QMAuthService shared] subscribeToPushNotifications];
         
         [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-            [QMUtilities hideActivityView];
             if (success) {
                 // go to tab bar:
                 [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
@@ -143,7 +138,6 @@
         //
         [[QMAuthService shared] updateUser:user withBlob:blob completion:^(QBUUser *user, BOOL success, NSString *error) {
             if (!success) {
-                [QMUtilities hideActivityView];
                 [self showAlertWithMessage:error success:NO];
                 return;
             }
@@ -155,7 +149,6 @@
             
             // login to chat:
             [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-                [QMUtilities hideActivityView];
                 if (success) {
                     // go to tab bar:
                     [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];

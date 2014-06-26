@@ -21,6 +21,8 @@
 @property (weak, nonatomic) QMMessage *message;
 @property (nonatomic, getter = isHiddenUserImage) BOOL hideUserImage; //Default NO
 
+@property (strong, nonatomic, readonly) CALayer *maskLayer;
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
 - (void)createContainerSubviews;
 /**

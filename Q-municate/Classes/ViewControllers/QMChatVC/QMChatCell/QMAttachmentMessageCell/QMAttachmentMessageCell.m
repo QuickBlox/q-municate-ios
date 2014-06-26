@@ -10,7 +10,9 @@
 
 @interface QMAttachmentMessageCell()
 
-@property (strong, nonatomic) UIImageView *attachmentImageView;
+@property (strong, nonatomic) UIView *attachmentView;
+@property (strong, nonatomic) CALayer *contentLayer;
+
 
 @end
 
@@ -26,9 +28,15 @@
     
     [super createContainerSubviews];
     
-    self.attachmentImageView = [[UIImageView alloc] init];
-    self.attachmentImageView.contentMode = UIViewContentModeScaleAspectFill;
-    [self.containerView addSubview:self.attachmentImageView];
+    self.attachmentView = [[UIView alloc] init];
+    self.attachmentView.contentMode = UIViewContentModeScaleAspectFill;
+    
+    [self.containerView addSubview:self.attachmentView];
+    
+    self.contentLayer = [CALayer layer];
+    self.contentLayer.backgroundColor = [UIColor clearColor].CGColor;
+    self.contentLayer.anchorPoint = CGPointMake(0, 0);
+    [self.attachmentView.layer addSublayer:self.contentLayer];
 }
 
 - (void)prepareForReuse {
@@ -41,27 +49,13 @@
     
     [super layoutSubviews];
     
-    CGRect rect = self.containerView.bounds;
+    self.attachmentView.frame = self.containerView.bounds;
     
-    self.attachmentImageView.frame = rect;
+    UIImage *image = [UIImage imageNamed:@"qm.png"];
     
-    UIImage *image = [UIImage imageNamed:@"video_call_me"];
-    UIImage *maskImage = self.message.balloonImage;
-    
-    CALayer* mask = [CALayer layer];
-    
-    mask.frame = rect;
-    mask.contents = (__bridge id)[maskImage CGImage];
-    
-    QMChatBalloon ballonSettings = self.message.balloonSettings;
-    
-    mask.contentsCenter = CGRectMake(ballonSettings.imageCapInsets.left / maskImage.size.width,
-                                     ballonSettings.imageCapInsets.top / maskImage.size.height,
-                                     1.0 / maskImage.size.width,
-                                     1.0 / maskImage.size.height);
-    
-    self.attachmentImageView.layer.mask = mask;
-    self.attachmentImageView.image = image;
+    self.contentLayer.bounds = (CGRect){CGPointZero, self.containerView.frame.size};
+    self.contentLayer.contents = (id)image.CGImage;
+    self.contentLayer.mask = self.maskLayer;
 }
 
 @end

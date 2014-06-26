@@ -13,10 +13,14 @@
 #import "QMContactList.h"
 #import "QMUtilities.h"
 #import "QMSettingsManager.h"
+#import "REAlertView.h"
+
+#warning [QMUtilities shared];
 
 @interface QMSplashViewController ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *splashLogoView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 @end
 
@@ -27,153 +31,103 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self.splashLogoView setImage:[UIImage imageNamed:IS_HEIGHT_GTE_568 ? @"splash" : @"splash-960"]];
-
-    // start utilities singleton:
-    [QMUtilities shared];
-    [QMUtilities showActivityView];
-    //start session:
+    [self.activityIndicator startAnimating];
     
-    QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
-    
-    [[QMAuthService shared] startSessionWithBlock:^(BOOL success, NSError *error) {
-
-        if (!success) {
-            [QMUtilities hideActivityView];
-            [self showAlertWithMessage:error.description actionSuccess:NO];
-            return;
-        }
-        
-        ILog(@"Session created");
-        
-        BOOL rememberMe = settingsManager.rememberMe;
-
-        if (rememberMe) {
-            
-            NSString *email = settingsManager.login;
-            NSString *password = settingsManager.password;
-            
-            // if user with email was remebered:
-            if (email != nil && password != nil) {
-                [self loginWithEmail:email password:password];
-            } else {
-                [self loginWithFacebook];
-            }
-            
-            // check for fb session remembered:
-            return;
-        }
-        // load defaults:
-        
-        // go to wellcome screen:
-        [QMUtilities hideActivityView];
-        [self showWelcomeScreen];
-    }];
+    [self initialize];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    
     [super viewWillAppear:animated];
+    
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
-- (void)showWelcomeScreen
-{
-    [self performSegueWithIdentifier:kWelcomeScreenSegueIdentifier sender:nil];
+- (void)initialize {
+    
+    QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
+    
+    [[QMAuthService shared] startSessionWithBlock:^(BOOL success, NSString *error) {
+        
+        if (success) {
+            
+            BOOL rememberMe = settingsManager.rememberMe;
+            
+            if (rememberMe) {
+                
+                NSString *email = settingsManager.login;
+                NSString *password = settingsManager.password;
+                
+                // if user with email was remebered:
+                if (email && password) {
+                    [self loginWithEmail:email password:password];
+                } else {
+                    [self loginWithFacebook];
+                }
+            } else {
+                [self performSegueWithIdentifier:kWelcomeScreenSegueIdentifier sender:nil];
+            }
+            
+        } else {
+            
+            [self showAlertWithMessage:error actionSuccess:NO];
+        }
+    }];
+
 }
 
 - (void)loginWithEmail:(NSString *)email password:(NSString *)password {
     
-    [QMUtilities showActivityView];
     [[QMAuthService shared] logInWithEmail:email password:password completion:^(QBUUser *user, BOOL success, NSString *error) {
         
-        if (!success) {
-            [QMUtilities hideActivityView];
+        if (success) {
+            
+            [QMContactList shared].me = user;
+            [self loginWithUser:user];
+            
+        } else {
             [self showAlertWithMessage:error actionSuccess:NO];
             return;
         }
-        
-        [QMContactList shared].me = user;
-        if (!user.password) {
-            user.password = password;
-        }
-        
-        // subscribe to push notification:
-        [[QMAuthService shared] subscribeToPushNotifications];
-        
-        [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-    
-            [QMUtilities hideActivityView];
-            if (success) {
-                [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
-            }
-        }];
     }];
 }
 
-- (void)loginWithFacebook
-{
-    // login with facebook:
+- (void)loginWithFacebook {
+    
     [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSString *error) {
-        if (!success) {
-            [QMUtilities hideActivityView];
-            [self showAlertWithMessage:error.description actionSuccess:NO];
-            return;
-        }
-        // save me:
-        [[QMContactList shared] setMe:user];
-        
-        // subscribe to push notification:
-        [[QMAuthService shared] subscribeToPushNotifications];
-        
-        if (user.blobID == 0) {
-            [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
-                if (!success) {
-                    [QMUtilities hideActivityView];
-                    [self showAlertWithMessage:error actionSuccess:NO];
-                    return;
-                }
-                [self logInToQuickbloxChatWithUser:user];
-            }];
-            return;
-        }
-        [self logInToQuickbloxChatWithUser:user];
-    
-    }];
-}
 
-- (void)logInToQuickbloxChatWithUser:(QBUUser *)user
-{
-    // login to Quickblox chat:
-    [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-        [QMUtilities hideActivityView];
         if (success) {
-            [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
-		}
+            [self loginWithUser:user];
+        } else {
+            [self showAlertWithMessage:error actionSuccess:NO];
+        }
+        
     }];
 }
 
+- (void)loginWithUser:(QBUUser *)user {
+    
+    [[QMAuthService shared] subscribeToPushNotifications];
+    [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
+        if (success) {
+            [self.activityIndicator stopAnimating];
+            [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+        }
+    }];
+}
 
 #pragma mark - Alert
 
-- (void)showAlertWithMessage:(NSString *)messageString actionSuccess:(BOOL)success
-{
-    NSString *title = nil;
-    if (success) {
-        title = kAlertTitleSuccessString;
-    } else {
-        title = kAlertTitleErrorString;
-    }
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
-                                                    message:messageString
-                                                   delegate:nil
-                                          cancelButtonTitle:kAlertButtonTitleOkString
-                                          otherButtonTitles:nil];
-    [alert show];
+- (void)showAlertWithMessage:(NSString *)messageString actionSuccess:(BOOL)success {
+    
+    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
+        alertView.title = success ? kAlertTitleSuccessString : kAlertTitleErrorString;
+        alertView.message = messageString;
+        [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{}];
+    }];
 }
 
 @end

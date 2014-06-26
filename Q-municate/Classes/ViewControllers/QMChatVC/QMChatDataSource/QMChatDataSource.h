@@ -24,6 +24,8 @@
  */
 - (void)reloadTableViewData;
 - (void)loadHistory:(void(^)(void))finish;
+- (void)sendImage:(UIImage *)image;
+- (void)sendMessage:(NSString *)message;
 /**
 // Get Cell id at QMMessage
 // */

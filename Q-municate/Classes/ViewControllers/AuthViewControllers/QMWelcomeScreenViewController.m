@@ -60,11 +60,9 @@
     
     QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
     
-    [QMUtilities showActivityView];
     [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSString *error) {
         
         if (!success) {
-            [QMUtilities hideActivityView];
             [self showAlertWithMessage:error actionSuccess:NO];
             return;
         }
@@ -95,7 +93,6 @@
 - (void)logInToQuickbloxChatWithUser:(QBUUser *)user {
     // login to Quickblox chat:
     [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-        [QMUtilities hideActivityView];
         if (success) {
             [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
 		}

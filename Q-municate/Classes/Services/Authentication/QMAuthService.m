@@ -270,29 +270,6 @@
     }];
 }
 
-
-#pragma mark -
-#pragma mark QBActionStatusDelegate
-
--(void)completedWithResult:(Result *)result
-{
-    if (result.success) {
-        if ([result isKindOfClass:[QBAAuthSessionCreationResult class]]) {
-            [QMAuthService shared].isSessionCreated = YES;
-        } else if ([result.answer isKindOfClass:[QBAAuthSessionDestroyAnswer class]]) {
-            [QMAuthService shared].isSessionCreated = NO;
-        } else if ([result isKindOfClass:QBMRegisterSubscriptionTaskResult.class]) {
-            return;
-        }
-    }
-    if (_resultBlock == nil) {
-        ILog(@"block == nil, result: %@", result);
-        return;
-    }
-    _resultBlock(result);
-}
-
-
 #pragma mark - Options
 
 - (void)loadFacebookUserPhotoAndUpdateUser:(QBUUser *)user completion:(QBChatResultBlock)handler
@@ -342,5 +319,31 @@
     // Unsubscribe Users to Push Notifications
     [QBMessages TUnregisterSubscriptionWithDelegate:self];
 }
+
+#pragma mark - QBActionStatusDelegate
+
+-(void)completedWithResult:(Result *)result
+{
+    if (result.success) {
+        if ([result isKindOfClass:[QBAAuthSessionCreationResult class]]) {
+            [QMAuthService shared].isSessionCreated = YES;
+        } else if ([result.answer isKindOfClass:[QBAAuthSessionDestroyAnswer class]]) {
+            [QMAuthService shared].isSessionCreated = NO;
+        } else if ([result isKindOfClass:QBMRegisterSubscriptionTaskResult.class]) {
+            return;
+        }
+    }
+    if (_resultBlock == nil) {
+        ILog(@"block == nil, result: %@", result);
+        return;
+    }
+    _resultBlock(result);
+}
+
+//- (void)completedWithResult:(Result *)result context:(void *)contextInfo
+//{
+//    ((__bridge void (^)(Result * result))(contextInfo))(result);
+//    Block_release(contextInfo);
+//}
 
 @end

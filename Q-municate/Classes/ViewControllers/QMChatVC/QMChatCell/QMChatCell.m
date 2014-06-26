@@ -16,6 +16,9 @@
 @property (strong, nonatomic) UIImageView *balloonImageView;
 @property (strong, nonatomic) UILabel *timeLabel;
 @property (strong, nonatomic) UILabel *headerLabel;
+@property (strong, nonatomic) CALayer *maskLayer;
+
+
 
 @end
 
@@ -40,6 +43,7 @@
     self.balloonImageView = [[UIImageView alloc] init];
     self.userImageView = [[UIImageView alloc] init];
     self.timeLabel = [[UILabel alloc] init];
+    self.maskLayer = [CALayer layer];
     
     self.userImageView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     self.userImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -89,11 +93,6 @@
     
     _balloonTintColor = balloonTintColor;
     self.messageContainer.tintColor = _balloonTintColor;
-}
-
-- (void)prepareForReuse {
-    
-    [super prepareForReuse];
 }
 
 - (void)layoutSubviews {
@@ -180,6 +179,24 @@
     self.userImageView.frame = userImageRect;
     self.balloonImageView.frame = balloonFrame;
     self.containerView.frame = containerFrame;
+    /*
+     *
+     */
+    
+    UIImage *maskImage = self.message.balloonImage;
+    
+    
+    self.maskLayer.frame = self.containerView.bounds;
+    self.maskLayer.contents = (__bridge id)[maskImage CGImage];
+    
+    QMChatBalloon ballonSettings = self.message.balloonSettings;
+    self.maskLayer.contentsScale = 2;
+    
+    self.maskLayer.contentsCenter = CGRectMake(ballonSettings.imageCapInsets.left / maskImage.size.width,
+                                               ballonSettings.imageCapInsets.top / maskImage.size.height,
+                                               1.0 / maskImage.size.width,
+                                               1.0 / maskImage.size.height);
+    
 }
 
 #pragma mark - Set user image

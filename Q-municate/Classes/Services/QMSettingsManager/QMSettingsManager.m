@@ -9,12 +9,13 @@
 #import "QMSettingsManager.h"
 #import <Security/Security.h>
 #import "NSUserDefaultsHelper.h"
+#import "SSKeychain.h"
 
 NSString *const kQMSettingsLoginKey = @"loginKey";
-NSString *const kQMSettingsPasswordKey = @"passwordKey";
 NSString *const kQMSettingsRememberMeKey = @"rememberMeKey";
 NSString *const kQMSettingsPushNotificationEnabled = @"pushNotificationEnabledKey";
 NSString *const kQMSettingsUserStatusKey = @"userStatusKey";
+NSString *const kQMAuthService = @"QMAuthService";
 
 @implementation QMSettingsManager
 
@@ -23,6 +24,12 @@ NSString *const kQMSettingsUserStatusKey = @"userStatusKey";
 @dynamic userStatus;
 @dynamic pushNotificationsEnabled;
 @dynamic rememberMe;
+
+- (void)setLogin:(NSString *)login andPassword:(NSString *)password {
+
+    [self setLogin:login];
+    [SSKeychain setPassword:password forService:kQMAuthService account:login];
+}
 
 #pragma makr - Login
 
@@ -41,13 +48,8 @@ NSString *const kQMSettingsUserStatusKey = @"userStatusKey";
 
 - (NSString *)password {
     
-    NSString *password = defObject(kQMSettingsPasswordKey);
+    NSString *password = [SSKeychain passwordForService:kQMAuthService account:self.login];
     return password;
-}
-
-- (void)setPassword:(NSString *)password {
-    
-    defSetObject(kQMSettingsPasswordKey, password);
 }
 
 #pragma mark - Push notifications enabled
@@ -93,10 +95,11 @@ NSString *const kQMSettingsUserStatusKey = @"userStatusKey";
 
 - (void)clearSettings {
     
+    [SSKeychain deletePasswordForService:kQMAuthService account:self.login];
+    
     self.pushNotificationsEnabled = YES;
     self.userStatus = nil;
     self.login = nil;
-    self.password = nil;
     self.rememberMe = NO;
 }
 

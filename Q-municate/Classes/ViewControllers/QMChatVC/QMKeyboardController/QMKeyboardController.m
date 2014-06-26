@@ -51,7 +51,7 @@ static void * kQMKeyboardControllerKeyValueObservingContext = &kQMKeyboardContro
 - (void)setKeyboardView:(UIView *)keyboardView {
     
     if (_keyboardView) {
-        [self removeKeyboardFrameObserver];
+//        [self removeKeyboardFrameObserver];
     }
     
     _keyboardView = keyboardView;
@@ -209,8 +209,8 @@ static void * kQMKeyboardControllerKeyValueObservingContext = &kQMKeyboardContro
     }
 }
 
-- (void)removeKeyboardFrameObserver
-{
+- (void)removeKeyboardFrameObserver {
+    
     @try {
         [_keyboardView removeObserver:self
                            forKeyPath:NSStringFromSelector(@selector(frame))

@@ -92,7 +92,7 @@ const NSUInteger kQMMinPasswordLenght = 7;
     [[QMAuthService shared] updateUser:myProfile withCompletion:^(QBUUser *user, BOOL success, NSString *error) {
         if (success) {
             
-            self.settingsManager.password = myProfile.password;
+            [self.settingsManager setLogin:myProfile.login andPassword:myProfile.password];
             [SVProgressHUD showSuccessWithStatus:kAlertBodyPasswordChangedString];
             [self.navigationController popViewControllerAnimated:YES];
             

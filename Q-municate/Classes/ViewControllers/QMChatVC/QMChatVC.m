@@ -1,4 +1,4 @@
-//
+
 //  QMChatVC.m
 //  Q-municate
 //
@@ -20,8 +20,9 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 @interface QMChatVC ()
 
-<UITableViewDelegate, QMKeyboardControllerDelegate>
+<UITableViewDelegate, QMKeyboardControllerDelegate, QMChatInputToolbarDelegate>
 
+@property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) QMChatInputToolbar *inputView;
 @property (strong, nonatomic) UIView *tableViewHeaderView;
 @property (strong, nonatomic) QMKeyboardController *keyboardController;
@@ -45,6 +46,18 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
                                                                  contextView:self.view
                                                         panGestureRecognizer:self.tableView.panGestureRecognizer
                                                                     delegate:self];
+}
+
+- (void)didPressAccessoryButton:(UIButton *)sender {
+    
+    CHECK_OVERRIDE();
+}
+
+- (void)didPressSendButton:(UIButton *)button
+           withMessageText:(NSString *)text
+                      date:(NSDate *)date {
+    
+    CHECK_OVERRIDE();
 }
 
 - (void)dealloc {
@@ -92,7 +105,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     self.keyboardController.keyboardTriggerPoint = CGPointMake(0.0f, CGRectGetHeight(self.inputView.bounds));
 }
 
-#pragma mark - Configure Chat View Controller
+#pragma mark - Configure ChatVC
 
 - (void)configureChatVC {
     
@@ -101,6 +114,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     self.inputView = [[QMChatInputToolbar alloc] init];
+    self.inputView.delegate = self;
     
     [self.view addSubview:self.tableView];
     [self.view addSubview:self.inputView];
@@ -122,11 +136,11 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     self.toolbarBottomLayoutGuide = PVBottomOf(self.inputView).equalTo.bottomOf(self.view).asConstraint;
     
     [self.view addConstraints:PVGroup(@[
-                                       PVTrailingOf(self.view).equalTo.trailingOf(self.inputView),
-                                       PVLeadingOf(self.view).equalTo.leadingOf(self.inputView),
-                                       self.toolbarBottomLayoutGuide,
-                                       self.toolbarHeightConstraint
-                                       ]).asArray];
+                                        PVTrailingOf(self.view).equalTo.trailingOf(self.inputView),
+                                        PVLeadingOf(self.view).equalTo.leadingOf(self.inputView),
+                                        self.toolbarBottomLayoutGuide,
+                                        self.toolbarHeightConstraint
+                                        ]).asArray];
 }
 
 - (void)setDataSource:(QMChatDataSource *)dataSource {
@@ -134,14 +148,12 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     _dataSource = dataSource;
 }
 
-
 - (void)scrollToBottomAnimated:(BOOL)animated {
     
     if ([self.tableView numberOfSections] == 0) {
         return;
     }
     
-    //    NSInteger items = [self.tableView numberOfItemsInSection:0];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.dataSource.qmChatHistory.count-1 inSection:0];
     
     if (indexPath > 0) {
@@ -202,9 +214,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 }
 
 - (void)addObservers {
-    
-    //    [self removeObservers];
-    
+
     [self.inputView.contentView.textView addObserver:self
                                           forKeyPath:NSStringFromSelector(@selector(contentSize))
                                              options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
@@ -315,6 +325,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
             
             [self adjustInputToolbarForComposerTextViewContentSizeChange:dy];
             [self updateCollectionViewInsets];
+            
             if (self.automaticallyScrollsToMostRecentMessage) {
                 [self scrollToBottomAnimated:NO];
             }
@@ -393,6 +404,40 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     
     [self setTableViewInsetsTopValue:self.topLayoutGuide.length
                          bottomValue:CGRectGetHeight(self.tableView.frame) - CGRectGetMinY(self.inputView.frame)];
+}
+
+- (NSString *)currentlyComposedMessageText {
+    
+    NSString *text = self.inputView.contentView.textView.text;
+    self.inputView.contentView.textView.text = [text stringByAppendingString:@" "];
+    
+    return self.inputView.contentView.textView.text;
+}
+
+#pragma mark - QMChatInputToolbarDelegate
+
+- (void)chatInputToolbar:(QMChatInputToolbar *)toolbar didPressRightBarButton:(UIButton *)sender {
+    
+    if (toolbar.sendButtonOnRight) {
+        [self didPressSendButton:sender
+                 withMessageText:[self currentlyComposedMessageText]
+                            date:[NSDate date]];
+    }
+    else {
+        [self didPressAccessoryButton:sender];
+    }
+}
+
+- (void)chatInputToolbar:(QMChatInputToolbar *)toolbar didPressLeftBarButton:(UIButton *)sender {
+    
+    if (toolbar.sendButtonOnRight) {
+        [self didPressAccessoryButton:sender];
+    }
+    else {
+        [self didPressSendButton:sender
+                 withMessageText:[self currentlyComposedMessageText]
+                            date:[NSDate date]];
+    }
 }
 
 @end
