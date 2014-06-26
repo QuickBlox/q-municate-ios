@@ -1786,8 +1786,8 @@
 				ARCHS = armv7;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Taras Filatov (6AVH4TA956)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Taras Filatov (6AVH4TA956)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External\"",
@@ -1807,7 +1807,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = Qmunicate;
-				PROVISIONING_PROFILE = "6E004364-5E2F-449B-9394-5906B3C651CF";
+				PROVISIONING_PROFILE = "6FEA5496-FFBF-4739-BDF9-3BB9C8D4265E";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VALID_ARCHS = armv7;
