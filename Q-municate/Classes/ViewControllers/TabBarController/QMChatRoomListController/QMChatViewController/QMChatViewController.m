@@ -60,7 +60,6 @@ static CGFloat const kCellHeightOffset = 33.0f;
 	[self addChatObserver];
 	self.isBackButtonClicked = NO;
     
-    NSString *opponentID = [NSString stringWithFormat:@"%lu", (unsigned long)self.opponent.ID];
     // if dialog is group chat:
     if (self.chatDialog != nil && self.chatDialog.type != QBChatDialogTypePrivate) {
         
@@ -87,14 +86,18 @@ static CGFloat const kCellHeightOffset = 33.0f;
             if (error) {
                 [self showAlertWithErrorMessage:error.description];
                 return;
-                
+#warning Notify controllers for created chat dialog
                 // save dialog:
                 NSString *kOpponentID = KEY_OPPONENT_ID(self.opponent.ID);
                 [QMChatService shared].allDialogsAsDictionary[kOpponentID] = dialog;
                 
                 [self retriveChatHistoryForDialog:dialog];
+                
+                // notify opponent:
+                [[QMChatService shared] sendChatDialogDidCreateNotificationToUsers:@[self.opponent] withChatDialog:dialog];
             }
         }];
+        return;
     }
     
     // retrieve chat history:

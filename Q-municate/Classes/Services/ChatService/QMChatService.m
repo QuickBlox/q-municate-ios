@@ -327,9 +327,17 @@
     newDialog.type = QBChatDialogTypePrivate;
     newDialog.occupantIDs = occupantsIDs;
     
-    [self createChatDialog:newDialog withCompletion:^(QBChatDialog *dialog, NSError *error) {
-        completionHandler(dialog, error);
-    }];
+    
+    QBResultBlock resultBlock = ^(Result *result) {
+        if (result.success && [result isKindOfClass:[QBChatDialogResult class]]) {
+            QBChatDialog *chatDialog = ((QBChatDialogResult *)result).dialog;
+            completionHandler(chatDialog, nil);
+            return;
+        }
+        completionHandler(nil, result.errors[0]);
+    };
+    
+	[QBChat createDialog:newDialog delegate:self context:Block_copy((__bridge void *)(resultBlock))];
 }
 
 - (void)createChatDialog:(QBChatDialog *)chatDialog withCompletion:(QBChatDialogResultBlock)completionHandler
