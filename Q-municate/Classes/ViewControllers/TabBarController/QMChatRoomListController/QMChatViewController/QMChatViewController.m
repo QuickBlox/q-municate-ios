@@ -25,6 +25,7 @@
 #import "QMGroupContentCell.h"
 #import "QMDBStorage+Messages.h"
 
+#define KEY_OPPONENT_ID(val) [NSString stringWithFormat:@"%lu", (unsigned long)val]
 
 static CGFloat const kCellHeightOffset = 33.0f;
 
@@ -59,9 +60,9 @@ static CGFloat const kCellHeightOffset = 33.0f;
 	[self addChatObserver];
 	self.isBackButtonClicked = NO;
     
-    NSString *opponentID = [@(self.opponent.ID) stringValue];
+    NSString *opponentID = [NSString stringWithFormat:@"%lu", (unsigned long)self.opponent.ID];
     // if dialog is group chat:
-    if (self.chatDialog.type != QBChatDialogTypePrivate) {
+    if (self.chatDialog != nil && self.chatDialog.type != QBChatDialogTypePrivate) {
         
         // if user is joined, return
         if (![self userIsJoinedRoomForDialog:self.chatDialog]) {
@@ -72,7 +73,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
         }
         self.chatRoom = [QMChatService shared].allChatRoomsAsDictionary[self.chatDialog.roomJID];
         // load history:
-        self.chatHistory = [QMChatService shared].allConversations[self.chatDialog.roomJID];
+        self.chatHistory = [QMChatService shared].allConversations[self.chatDialog.ID];
         if (self.chatHistory == nil) {
             [QMUtilities createIndicatorView];
             [self loadHistory];
@@ -81,20 +82,23 @@ static CGFloat const kCellHeightOffset = 33.0f;
     }
 
     // for private chat:
-    // retrieve chat history:
-    self.chatHistory = [QMChatService shared].allConversations[opponentID];
-    if (self.chatHistory == nil) {
-        
-        // if new chat dialog (not from server):
-        if ([self.chatDialog.occupantIDs count] == 1) {    // created now:
-            NSMutableArray *emptyHistory = [NSMutableArray new];
-            [QMChatService shared].allConversations[opponentID] = emptyHistory;
-            return;
-        }
-        [QMUtilities createIndicatorView];
-        // load history:
-        [self loadHistory];
+    if (self.chatDialog == nil) {
+        [[QMChatService shared] createPrivateChatDialogWithOpponent:self.opponent completion:^(QBChatDialog *dialog, NSError *error) {
+            if (error) {
+                [self showAlertWithErrorMessage:error.description];
+                return;
+                
+                // save dialog:
+                NSString *kOpponentID = KEY_OPPONENT_ID(self.opponent.ID);
+                [QMChatService shared].allDialogsAsDictionary[kOpponentID] = dialog;
+                
+                [self retriveChatHistoryForDialog:dialog];
+            }
+        }];
     }
+    
+    // retrieve chat history:
+    [self retriveChatHistoryForDialog:self.chatDialog];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -107,6 +111,19 @@ static CGFloat const kCellHeightOffset = 33.0f;
     [super viewWillAppear:NO];
 }
 
+- (void)retriveChatHistoryForDialog:(QBChatDialog *)dialog
+{
+    // retrieve chat history:
+    self.chatHistory = [QMChatService shared].allConversations[dialog.ID];
+    if (self.chatHistory == nil) {
+        
+        [QMUtilities createIndicatorView];
+        // load history:
+        [self loadHistory];
+    }
+
+}
+
 - (void)updateChatDialog
 {
     self.chatDialog.unreadMessageCount = 0;
@@ -115,29 +132,23 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (void)loadHistory
 {
     // load history:
-    
-    
     void(^reloadDataAfterGetMessages) (NSArray *messages) = ^(NSArray *messages) {
         
         [QMUtilities removeIndicatorView];
         
         if (messages.count > 0) {
             
-            if (self.chatDialog.type == QBChatDialogTypePrivate) {
-                [QMChatService shared].allConversations[[@(self.opponent.ID)stringValue]] = [messages mutableCopy];
-            } else {
-                [QMChatService shared].allConversations[self.chatDialog.roomJID] = [messages mutableCopy];
-            }
+            [QMChatService shared].allConversations[self.chatDialog.ID] = [messages mutableCopy];
         }
-        
         [self resetTableView];
     };
     
-
-    //TODO:TEMP
-    [self.dbStorage cachedQBChatMessagesWithDialogId:self.chatDialog.ID qbMessages:^(NSArray *collection) {
-        reloadDataAfterGetMessages(collection);
-    }];
+#warning DB Strorage turned off
+//TODO:TEMP
+//    [self.dbStorage cachedQBChatMessagesWithDialogId:self.chatDialog.ID qbMessages:^(NSArray *collection) {
+//        reloadDataAfterGetMessages(collection);
+//    }];
+    
     [[QMChatService shared] getMessageHistoryWithDialogID:self.chatDialog.ID withCompletion:^(NSArray *messages, BOOL success, NSError *error) {
         reloadDataAfterGetMessages(messages);
     }];
@@ -372,12 +383,8 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)resetTableView
 {
-    if (self.chatDialog.type == QBChatDialogTypePrivate) {
-         self.chatHistory = [QMChatService shared].allConversations[[@(self.opponent.ID) stringValue]];
-    } else {
-        self.chatHistory = [QMChatService shared].allConversations[self.chatDialog.roomJID];
-    }
-    
+    self.chatHistory = [QMChatService shared].allConversations[self.chatDialog.ID];
+  
     [self.tableView reloadData];
     if ([self.chatHistory count] >2) {
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.chatHistory count]-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];

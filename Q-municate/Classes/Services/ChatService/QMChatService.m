@@ -316,6 +316,22 @@
     
 }
 
+- (void)createPrivateChatDialogWithOpponent:(QBUUser *)opponent completion:(QBChatDialogResultBlock)completionHandler
+{
+    NSString *opponentID = [NSString stringWithFormat:@"%lu", (unsigned long)opponent.ID];
+    NSArray *occupantsIDs = @[opponentID];
+    
+    // creating private chat dialog:
+    QBChatDialog *newDialog = [[QBChatDialog alloc] init];
+    
+    newDialog.type = QBChatDialogTypePrivate;
+    newDialog.occupantIDs = occupantsIDs;
+    
+    [self createChatDialog:newDialog withCompletion:^(QBChatDialog *dialog, NSError *error) {
+        completionHandler(dialog, error);
+    }];
+}
+
 - (void)createChatDialog:(QBChatDialog *)chatDialog withCompletion:(QBChatDialogResultBlock)completionHandler
 {
 	 QBResultBlock resultBlock = ^(Result *result) {
@@ -570,11 +586,11 @@
         if (result.success && [result isKindOfClass:[QBChatHistoryMessageResult class]]) {
             
             NSArray *messages = ((QBChatHistoryMessageResult *)result).messages;
-            
-            [self.dbStorage cacheQBChatMessages:messages withDialogId:dialogIDString finish:^{
-                block(messages, YES, nil);
-            }];
-            
+#warning Storage turned off
+//            [self.dbStorage cacheQBChatMessages:messages withDialogId:dialogIDString finish:^{
+//                block(messages, YES, nil);
+//            }];
+            block(messages, YES, nil);
         }else {
             block(nil, NO, result.errors[0]);
         }
@@ -616,33 +632,11 @@
     // if not my message:
     if (message.senderID != [QMContactList shared].me.ID) {
         // find user:
-        NSString *kUserID = [@(message.senderID) stringValue];
-        QBUUser *opponent = [QMContactList shared].friendsAsDictionary[kUserID];
-        if (opponent == nil) {
-            opponent = [QMContactList shared].allUsersAsDictionary[kUserID];
-            if (opponent == nil) {
-                [[QMContactList shared] retrieveUserWithID:message.senderID completion:^(QBUUser *user, NSError *error) {
-                    // update dialogs names:
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kChatDialogsDidLoadedNotification object:nil];
-                }];
-            }
-        }
+        [self searchForOpponentWithIDAndFetchIfNeeded:message.senderID];
     }
-    QBChatDialog *currentDialog = self.allDialogsAsDictionary[roomJID];
-    if (currentDialog != nil) {
-        
-        // update dialog:
-        [self updateDialogsLastMessageFields:currentDialog forLastMessage:message];
-        
-        // get chat history with current dialog id:
-        NSMutableArray *currentHistory = self.allConversations[roomJID];
-        if (currentHistory != nil) {
-            [currentHistory addObject:message];
-        } else {
-            currentHistory = [@[message] mutableCopy];
-            self.allConversations[roomJID] = currentHistory;
-        }
-    }
+    
+    [self saveMessageToLocalHistory:message chatDialogKey:roomJID];
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:kChatRoomDidReceiveMessageNotification object:nil];
 }
 
@@ -703,7 +697,9 @@
     // get dialog entity with current user:
     QBChatDialog *chatDialog = self.allDialogsAsDictionary[dialogKey];
     
-    NSAssert(!chatDialog, @"Dialog you are looking for not found.");
+    if (chatDialog == nil) {
+         NSAssert(!chatDialog, @"Dialog you are looking for not found.");
+    }
     
     // update dialog:
     [self updateDialogsLastMessageFields:chatDialog forLastMessage:message];
@@ -721,19 +717,8 @@
 
 - (QBChatDialog *)chatDialogForFriendWithID:(NSUInteger)ID
 {
-    NSString *kUserID = [@(ID) stringValue];
+    NSString *kUserID = [NSString stringWithFormat:@"%lu", (unsigned long)ID];
     QBChatDialog *dialog= self.allDialogsAsDictionary[kUserID];
-    if (dialog != nil) {
-        return dialog;
-        
-    }
-    // create fake dialog:
-    dialog = [[QBChatDialog alloc] init];
-    dialog.type = QBChatDialogTypePrivate;
-    dialog.occupantIDs = @[[@(ID) stringValue]];
-    dialog.ID = kUserID;
-    
-    self.allDialogsAsDictionary[kUserID] = dialog;
     
     return dialog;
 }

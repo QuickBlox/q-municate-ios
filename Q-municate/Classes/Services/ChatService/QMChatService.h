@@ -46,6 +46,8 @@
 /** Getting all dialogs you exist */
 - (void)fetchAllDialogsWithCompletion:(void(^)(NSArray *dialogs, NSError *error))completionHandler;
 
+- (void)createPrivateChatDialogWithOpponent:(QBUUser *)opponent completion:(QBChatDialogResultBlock)completionHandler;
+
 /** Create new QBChatDialog instance */
 - (void)createChatDialog:(QBChatDialog *)chatDialog withCompletion:(QBChatDialogResultBlock)completionHandler;
 

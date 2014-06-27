@@ -65,6 +65,10 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
+    
+    if (_searchActive) {
+        _searchActive = !_searchActive;
+    }
     if (self.searchBar != nil) {
         [self removeSearchBarAnimated:NO];
         self.tableView.tableFooterView = nil;
@@ -377,7 +381,7 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
         if (self.searchBar != nil) {
             [self removeSearchBarAnimated:NO];
         }
-        _searchActive = !_searchActive;
+
 		QMFriendListCell *cell = (QMFriendListCell *) [tableView cellForRowAtIndexPath:indexPath];
 		NSDictionary *userDetailsDictionary = @{
 				@"user" : currentUser,
