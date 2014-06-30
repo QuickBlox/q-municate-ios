@@ -30,7 +30,7 @@ static double_t const kUptimeInterval = 300;
     
     self.fullNameLabel.text = user.fullName;
     self.statusLabel.text = user.status;
-    self.activeCheckbox.hidden = user.checked;
+    self.activeCheckbox.hidden = !user.checked;
 }
 
 - (void)configureCellWithParamsForQBUser:(QBUUser *)user checked:(BOOL)checked {
@@ -43,7 +43,7 @@ static double_t const kUptimeInterval = 300;
     double timeInterval = [currentDate timeIntervalSinceDate:user.lastRequestAt];
     NSString *activity = (timeInterval <= kUptimeInterval) ? kStatusOnlineString : kStatusOfflineString;
     self.statusLabel.text = activity;
-    self.activeCheckbox.hidden = checked;
+    self.activeCheckbox.hidden = !checked;
 }
 
 - (void)setUserImageWithUrl:(NSURL *)url {

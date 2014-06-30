@@ -16,9 +16,7 @@
 {
     QMIncomingCallController *incommingCallController = (QMIncomingCallController *)self.sourceViewController;
     QMVideoCallController *callsController = (QMVideoCallController *)self.destinationViewController;
-    
-    callsController.callType = incommingCallController.callType;
-    callsController.opponent = incommingCallController.opponent;
+    [callsController setOpponent:incommingCallController.opponent callType:incommingCallController.callType];
     callsController.isOpponentCall = YES;
     
     [incommingCallController addChildViewController:callsController];

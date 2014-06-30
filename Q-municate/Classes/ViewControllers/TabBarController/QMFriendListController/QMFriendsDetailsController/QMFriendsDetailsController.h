@@ -7,17 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "StaticDataTableViewController.h"
 
-// ********** FRIENDS DETAILS IDENTIFIERS *************
-static NSString *const QMPhoneNumberCellIdentifier  = @"PhoneNumberCell";
-static NSString *const QMVideoCallCellIdentifier    = @"VideoCallCell";
-static NSString *const QMAudioCallCellIdentifier    = @"AudioCallCell";
-static NSString *const QMChatCellIdentifier         = @"ChatCell";
+@interface QMFriendsDetailsController : StaticDataTableViewController
 
-
-@interface QMFriendsDetailsController : UITableViewController
-
-@property (strong, nonatomic) QBUUser *currentFriend;
-@property (strong, nonatomic) UIImage *userPhotoImage;
+@property (strong, nonatomic) QBUUser *selectedUser;
 
 @end

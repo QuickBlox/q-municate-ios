@@ -73,7 +73,7 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
 - (void)loadDialogs {
     // load QBChatDialogs:
     [[QMChatService shared] fetchAllDialogsWithCompletion:^(NSArray *dialogs, NSError *error) {
-
+        
         if (!error) {
             // join all group dialogs:
             [[QMChatService shared] joinRoomsForDialogs:dialogs];
@@ -119,7 +119,7 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
     
     [footerView addSubview:noResultsLabel];
     
-     UIImage *buttonImage = [UIImage imageNamed:@"globalsearch-btn"];
+    UIImage *buttonImage = [UIImage imageNamed:@"globalsearch-btn"];
     UIButton *globalSearchButton = [[UIButton alloc] initWithFrame:CGRectMake(160 - buttonImage.size.width/2 , 30, buttonImage.size.width, buttonImage.size.height)];
     [globalSearchButton setImage:buttonImage forState:UIControlStateNormal];
     [globalSearchButton addTarget:self action:@selector(searchGlobal:) forControlEvents:UIControlEventTouchUpInside];
@@ -146,7 +146,7 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
     QMFriendListCell *cell = (QMFriendListCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:button.tag inSection:1]];
     [cell.addToFriendsButton setHidden:YES];
     [cell.indicatorView startAnimating];
-
+    
     // roaster:
     [[QMChatService shared] sendFriendsRequestToUserWithID:user.ID];
     
@@ -171,11 +171,11 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
                 [self.tableView reloadData];
             }
             
-         else {
-            UIButton *globalSearchButton = (UIButton *)[self.tableView.tableFooterView viewWithTag:kSearchGlobalButtonTag];
-            globalSearchButton.hidden = YES;
-            [self.tableView reloadData];
-        }
+            else {
+                UIButton *globalSearchButton = (UIButton *)[self.tableView.tableFooterView viewWithTag:kSearchGlobalButtonTag];
+                globalSearchButton.hidden = YES;
+                [self.tableView reloadData];
+            }
         }];
         
         return;
@@ -189,7 +189,7 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
                 self.tableView.tableFooterView = nil;
                 [self.tableView reloadData];
             }
-
+            
         } else {
             UIButton *globalSearchButton = (UIButton *)[self.tableView.tableFooterView viewWithTag:kSearchGlobalButtonTag];
             globalSearchButton.hidden = YES;
@@ -222,7 +222,7 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
 	self.searchBar.placeholder = kSearchFriendPlaceholdeString;
     
     self.viewHeight.constant += kSearchBarHeight;
-
+    
     [self.navigationController.view insertSubview:self.searchBar atIndex:1];
     [UIView animateWithDuration:0.3 animations:^{
         self.tableView.transform = CGAffineTransformMakeTranslation(0, kSearchBarHeight);
@@ -286,7 +286,7 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
     if ([searchText isEqualToString:kEmptyString]) {
         [self.dataSource updateFriendsArrayAndCheckForEmpty];
     }
-
+    
     [self.dataSource updateFriendsArrayForSearchPhrase:searchText];
     [self.tableView reloadData];
 }
@@ -302,10 +302,10 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
 - (void)updateDataSource
 {
     if ([self.dataSource updateFriendsArrayAndCheckForEmpty]) {;
-            [self createNoResultsFooterViewWithButton:NO];
-        } else {
-			[self.tableView setTableFooterView:[[UIView alloc] init]];
-		}
+        [self createNoResultsFooterViewWithButton:NO];
+    } else {
+        [self.tableView setTableFooterView:[[UIView alloc] init]];
+    }
     [self.tableView reloadData];
 }
 
@@ -365,31 +365,27 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
 
 #pragma mark - UITableViewDelegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    QBUUser *currentUser;
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (!indexPath.section) {
-        
-        currentUser = self.dataSource.friendsArray[indexPath.row];
-
-        if (self.searchBar != nil) {
-            [self removeSearchBarAnimated:NO];
-        }
-        #warning show details 
-		[self performSegueWithIdentifier:kDetailsSegueIdentifier sender:nil];
-        
-	}
+    if (self.searchBar != nil) {
+        [self removeSearchBarAnimated:NO];
+    }
+    
+    [self performSegueWithIdentifier:kDetailsSegueIdentifier sender:nil];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    ((QMFriendsDetailsController *)segue.destinationViewController).currentFriend = sender;
-	QMFriendsDetailsController *vc = segue.destinationViewController;
-	vc.currentFriend = sender[@"user"];
-	vc.userPhotoImage = sender[@"userPhoto"];
+    
+    if ([segue.identifier isEqualToString:kDetailsSegueIdentifier]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        QBUUser *selectedUser = self.dataSource.friendsArray[indexPath.row];
+        QMFriendsDetailsController *vc = segue.destinationViewController;
+        vc.selectedUser = selectedUser;
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     return 60.0f;
 }
 

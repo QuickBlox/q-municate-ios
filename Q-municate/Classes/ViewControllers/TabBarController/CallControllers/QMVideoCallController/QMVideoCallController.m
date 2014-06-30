@@ -9,6 +9,7 @@
 #import "QMVideoCallController.h"
 #import "QMChatService.h"
 #import "QMUtilities.h"
+#import "QMImageView.h"
 
 @interface QMVideoCallController () {
     BOOL callWasConfirmedByMe;
@@ -21,6 +22,9 @@
     double_t timeRemained;
 }
 
+@property (nonatomic, strong) QBUUser *opponent;
+@property (nonatomic, assign) QMVideoChatType callType;
+
 @property (weak, nonatomic) IBOutlet UIButton *LeftButton;
 @property (weak, nonatomic) IBOutlet UIButton *rightButton;
 
@@ -30,7 +34,7 @@
 // Audio calls UI
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *callDurationLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *userAvatarView;
+@property (weak, nonatomic) IBOutlet QMImageView *userAvatarView;
 
 // Video calls UI
 @property (weak, nonatomic) IBOutlet QBVideoView *opponentsView;
@@ -52,8 +56,6 @@
     microphoneIsMuted = NO;
     backCameraUsed = NO;
     
-    [self configureUserAvatarCircledView];
-    
     [self configureControlsForCallView];
     
     
@@ -62,18 +64,12 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(callRejectedByUser) name:kCallWasRejectedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(callStoppedByOpponentForReason:) name:kCallWasStoppedNotification object:nil];
     
-    if (self.userImage != nil) {
-        [self.userAvatarView setImage:self.userImage];
-    } else {
-        // set placeholder:
-        [self.userAvatarView setImage:[UIImage imageNamed:@"upic_call"]];
-        // load image for url:
-        #warning image
-//        [self.userAvatarView setImageURL:[NSURL URLWithString:self.opponent.website]];
-    }
-    
-    [self.userNameLabel setText:self.opponent.fullName];
-    [self.callDurationLabel setText:@"Calling..."];
+    self.userAvatarView.imageViewType = QMImageViewTypeCircle;
+    UIImage *placeholder = [UIImage imageNamed:@"upic_call"];
+    NSURL *url = [NSURL URLWithString:self.opponent.website];
+    [self.userAvatarView setImageWithURL:url placeholderImage:placeholder];
+    self.userNameLabel.text = self.opponent.fullName;
+    self.callDurationLabel.text = @"Calling...";
     
     if (!_isOpponentCall) {
         [self startCall];
@@ -84,23 +80,18 @@
     }
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)setOpponent:(QBUUser *)opponent callType:(QMVideoChatType)callType {
+    self.opponent = opponent;
+    self.callType = callType;
+}
+
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)configureUserAvatarCircledView
-{
-    self.userAvatarView.layer.cornerRadius = self.userAvatarView.frame.size.width / 2;
-    self.userAvatarView.layer.borderWidth = 2.0f;
-    self.userAvatarView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    self.userAvatarView.layer.masksToBounds = YES;
 }
 
 - (void)configureControlsForCallView
