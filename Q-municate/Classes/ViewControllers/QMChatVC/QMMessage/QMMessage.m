@@ -9,85 +9,159 @@
 #import "QMMessage.h"
 #import "QMChatLayoutConfigs.h"
 #import "NSString+UsedSize.h"
+#import "UIColor+Hex.h"
+
+typedef NS_ENUM(NSUInteger, QMChatNotificationsType) {
+    
+    QMChatNotificationsTypeNone,
+    QMChatNotificationsTypeRoomCreated,
+    QMChatNotificationsTypeRoomUpdated,
+};
+
+NSString *const kQMNotificationTypeKey = @"notification_type";
+
+@interface QMMessage()
+
+@property (assign, nonatomic) CGSize messageSize;
+@property (assign, nonatomic) QMMessageType type;
+@property (strong, nonatomic) UIImage *balloonImage;
+@property (strong, nonatomic) UIColor *balloonColor;
+
+@end
 
 @implementation QMMessage
 
-@synthesize data = data;
-@synthesize attributes = _attributes;
-@synthesize thumbnail = _thumbnail;
-@synthesize fromMe = _fromMe;
-@synthesize type = _type;
-@synthesize layout = _layout;
-@synthesize size = _size;
-
-- (CGSize)calculateSize {
+- (void)setData:(QBChatHistoryMessage *)data {
     
-    UIFont *font = [UIFont fontWithName:self.layout.fontName
-                                   size:self.layout.fontSize];
+    NSAssert([QBChatHistoryMessage class], @"Check it");
+    _data = data;
     
+    NSNumber *notificationType = data.customParameters[kQMNotificationTypeKey];
     
-    QMChatCellLayoutConfig layout = self.layout;
-    
-    if (self.attributes) {
-        layout.textSize = [self.data.text usedSizeForMaxWidth:self.layout.messageMaxWidth
-                                               withAttributes:self.attributes];
+    if (data.attachments.count > 0) {
+        
+        self.type = QMMessageTypePhoto;
+        self.layout = QMMessageAttachmentLayout;
+        
+    } else if (notificationType) {
+        
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                       reason:@"Need update it"
+                                     userInfo:@{}];
+        
+        self.type = QMMessageTypeSystem;
+        
     } else {
-        layout.textSize = [self.data.text usedSizeForMaxWidth:self.layout.messageMaxWidth
-                                                     withFont:font];
+        
+        self.type = QMMessageTypeText;
+        self.layout = QMMessageQmunicateLayout;
     }
-    
-    self.layout = layout;
-    
-    CGSize size = layout.textSize;
-    
-    if (self.layout.balloonMinWidth) {
-        
-        CGFloat messageMinWidth = self.layout.balloonMinWidth - self.layout.balloonMinHeight - self.layout.messageRightMargin;
-        
-        
-        if (size.width <  messageMinWidth) {
-            size.width = messageMinWidth;
-            
-            CGSize newSize = [self.data.text usedSizeForMaxWidth:messageMinWidth
-                                                        withFont:font];
-            
-            if (self.attributes) {
-                newSize = [self.data.text usedSizeForMaxWidth:messageMinWidth
-                                               withAttributes:self.attributes];
-            }
-            
-            size.height = newSize.height;
-        }
-    }
-    
-//    CGFloat messageMinHeight = self.layout.balloonMinHeight - self.layout.messageTopMargin + self.layout.messageBottomMargin;
-//    
-//    if (self.layout.balloonMinHeight && size.height < messageMinHeight) {
-//        size.height = messageMinHeight;
-//    }
-    
-    size.height += self.layout.messageTopMargin + self.layout.messageBottomMargin;
-    
-    if (!CGSizeEqualToSize(self.layout.userImageSize, CGSizeZero)) {
-        
-        if (size.height < self.layout.userImageSize.height) {
-            size.height = self.layout.userImageSize.height;
-        }
-    }
-    
-    CGFloat height = size.height + self.layout.balloonTopMargin + self.layout.balloonBottomMargin;
-    
-    return CGSizeMake(size.width, height);
 }
 
-- (CGSize)size {
+- (CGSize)calculateMessageSize {
     
-    if (CGSizeEqualToSize(_size, CGSizeZero)) {
+    QMMessageLayout layout = self.layout;
+    QMChatBalloon balloon = self.balloonSettings;
+    UIEdgeInsets insets = balloon.imageCapInsets;
+    CGSize contentSize = CGSizeZero;
+    /**
+     Calculate content size
+     */
+    if (self.type == QMMessageTypePhoto) {
         
-        _size = [self calculateSize];
+        contentSize = CGSizeMake(150, 150);
+        
+    } else if (self.type == QMMessageTypeText) {
+        
+        UIFont *font = UIFontFromQMMessageLayout(self.layout);
+
+        CGFloat textWidth = layout.messageMaxWidth - layout.userImageSize.width - insets.left - insets.right;
+        
+        contentSize = [self.data.text usedSizeForMaxWidth:textWidth
+                                                     font:font
+                                           withAttributes:self.attributes];
+        if (layout.messageMinWidth > 0) {
+            if (contentSize.width < layout.messageMinWidth) {
+                contentSize.width = layout.messageMinWidth;
+            }
+        }
     }
     
-    return _size;
+    layout.contentSize = contentSize;   //Set Content size
+    self.layout = layout;               //Save Content size for reuse
+    
+    /**
+     *Calculate message size
+     */
+    CGSize messageSize = contentSize;
+    
+    messageSize.height += layout.messageMargin.top + layout.messageMargin.bottom + insets.top + insets.bottom;
+    messageSize.width += layout.messageMargin.left + layout.messageMargin.right;
+    
+    if (!CGSizeEqualToSize(layout.userImageSize, CGSizeZero)) {
+        if (messageSize.height - (layout.messageMargin.top + layout.messageMargin.bottom) < layout.userImageSize.height) {
+            messageSize.height = layout.userImageSize.height + layout.messageMargin.top + layout.messageMargin.bottom;
+        }
+    }
+    
+    return messageSize;
+}
+
+- (CGSize)messageSize {
+    
+    if (CGSizeEqualToSize(_messageSize, CGSizeZero)) {
+        
+        _messageSize = [self calculateMessageSize];
+    }
+    
+    return _messageSize;
+}
+
+- (UIImage *)balloonImage {
+
+    if (!_balloonImage) {
+
+        NSAssert(self, @"Check it");
+        
+        QMChatBalloon balloon = [self balloonSettings];
+        
+        NSString *imageName = balloon.imageName;
+        UIImage *balloonImage = [UIImage imageNamed:imageName];
+        
+        balloonImage = [balloonImage resizableImageWithCapInsets:balloon.imageCapInsets];
+        _balloonImage = [balloonImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    }
+    return _balloonImage;
+}
+
+- (QMChatBalloon)balloonSettings {
+    
+    if (self.align == QMMessageContentAlignLeft) {
+        return self.layout.leftBalloon;
+    } else if (self.align == QMMessageContentAlignRight) {
+        return self.layout.rightBalloon;
+    }
+    
+    return QMChatBalloonNull;
+}
+
+- (UIColor *)balloonColor {
+
+    if (!_balloonColor) {
+        
+        QMChatBalloon balloonSettings = [self balloonSettings];
+        NSString *hexString = balloonSettings.hexTintColor;
+        
+        if (hexString.length > 0) {
+            
+            UIColor *color = [UIColor colorWithHexString:hexString];
+            NSAssert(color, @"Check it");
+            
+            _balloonColor = color;
+        }
+    }
+    
+    return _balloonColor;
 }
 
 @end

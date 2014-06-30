@@ -8,33 +8,54 @@
 
 #import <Foundation/Foundation.h>
 
-extern const struct QMChatCellLayoutConfig {
+typedef NS_ENUM(NSUInteger, QMMessageContentAlign) {
     
-    CGFloat messageTopMargin;
-    CGFloat messageBottomMargin;
+    QMMessageContentAlignLeft,
+    QMMessageContentAlignRight,
+    QMMessageContentAlignCenter
+};
+
+typedef struct QMChatBalloon {
     
-    CGFloat messageLeftMargin;
-    CGFloat messageRightMargin;
+    __unsafe_unretained NSString *imageName;
+    __unsafe_unretained NSString *hexTintColor;
+    __unsafe_unretained NSString *textColor;
+    UIEdgeInsets imageCapInsets;
+    
+} QMChatBalloon ;
+
+QMChatBalloon QMChatBalloonNull;
+
+/**
+ Message layout stucture
+ */
+typedef struct QMMessageLayout {
+    
+    UIEdgeInsets messageMargin;
     
     CGFloat messageMaxWidth;
+    CGFloat messageMinWidth;
     
-    CGFloat balloonMinWidth;
-    CGFloat balloonMinHeight;
-    
-    CGFloat balloonTopMargin;
-    CGFloat balloonBottomMargin;
+    CGSize contentSize;
     
     CGSize userImageSize;
-    CGSize textSize;
     
     CGFloat fontSize;
+    __unsafe_unretained NSString *fontName;
     
-    __unsafe_unretained  NSString *fontName;
-    __unsafe_unretained  NSString *babbleImageName;
-}
+    QMChatBalloon leftBalloon;
+    QMChatBalloon rightBalloon;
+    
+} QMMessageLayout;
 
-QMChatCellLayoutConfigRect,
-QMChatCellLayoutConfigBubble;
+/**
+ Examples Of Themes
+ QMMessageQmunicateLayout - default theme
+ QMMessageBubbleLayout - bubble thme
+ */
 
-typedef struct QMChatCellLayoutConfig QMChatCellLayoutConfig;
+QMMessageLayout QMMessageQmunicateLayout;
+QMMessageLayout QMMessageBubbleLayout;
+QMMessageLayout QMMessageAttachmentLayout;
 
+UIFont * UIFontFromQMMessageLayout(QMMessageLayout layout);

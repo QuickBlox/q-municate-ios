@@ -10,306 +10,77 @@
 #import "QMChatService.h"
 #import "QMContactList.h"
 #import "QMAuthService.h"
-#import "QMUtilities.h"
-#import "QMSettingsDataSource.h"
+#import "REAlertView.h"
+#import "QMSettingsManager.h"
 
+@interface QMSettingsViewController ()
 
-typedef NS_ENUM(NSUInteger, QMPasswordCheckState) {
-    QMPasswordCheckStateNone,
-    QMPasswordCheckStateInputed,
-    QMPasswordCheckStateConfirmed
-};
-
-@interface QMSettingsViewController () <UIActionSheetDelegate, UIAlertViewDelegate>{
-
-    QMPasswordCheckState passwordCheckState;
-    NSString *oldPassword;
-    NSString *newPassword;
-}
+@property (weak, nonatomic) IBOutlet UITableViewCell *logoutCell;
+@property (weak, nonatomic) IBOutlet UILabel *versionLabel;
 @property (weak, nonatomic) IBOutlet UITableViewCell *changePasswordCell;
-@property (nonatomic, strong) QMSettingsDataSource *dataSource;
-@property (nonatomic, strong) UISwitch *notificationsSwitch;
+@property (weak, nonatomic) IBOutlet UITableViewCell *profileCell;
+@property (weak, nonatomic) IBOutlet UISwitch *pushNotificationSwitch;
+
 @end
 
 @implementation QMSettingsViewController
 
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
-    self.dataSource = [QMSettingsDataSource new];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
+    
     if ([FBSession activeSession].state == FBSessionStateOpen) {
-        self.cellViewMode = SettingsViewControllerModeCustom;
-    } else {
-        self.cellViewMode = SettingsViewControllerModeNormal;
+        [self cell:self.changePasswordCell setHidden:YES];
     }
-    [self.tableView reloadData];
+    
+    [self configureSettingsViewController];
 }
 
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)configureSettingsViewController {
+    
+    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:kSettingsCellBundleVersion];
+    self.versionLabel.text = appVersion;
 }
 
-- (void)clearCacheDefaults
-{
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-	[userDefaults setObject:@(YES) forKey:kSettingsPushNotificationsState];
-    [userDefaults setObject:kEmptyString forKey:kUserStatusText];
+- (void)logOut {
     
-    // delete Email & Password:
-    [userDefaults removeObjectForKey:kEmail];
-    [userDefaults removeObjectForKey:kPassword];
-    [userDefaults removeObjectForKey:kFBSessionRemembered];
-    
-    [userDefaults synchronize];
-}
-
-- (void)logOut
-{
-    [[FBSession activeSession] closeAndClearTokenInformation];          // close fb session
-    [[QMChatService shared] logOut];                                      // close chat
-    [[QMContactList shared] clearData];                                   // clear all information about me and my data
-    
-    // clear cache:
-    [self clearCacheDefaults];
-    
-	[[NSNotificationCenter defaultCenter] postNotificationName:kInviteFriendsDataSourceShouldRefreshNotification object:nil];
     [[QMAuthService shared] destroySessionWithCompletion:^(BOOL success) {
-        //pop tab bar:
+        
+        if ([FBSession activeSession].state == FBSessionStateOpen) {
+            [[FBSession activeSession] closeAndClearTokenInformation];
+        }
+        
+        [[QMChatService shared] logOut];
+        [[QMContactList shared] clearData];
+        
+        QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
+        [settingsManager clearSettings];
+        
         [self performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
+#warning need update logic
+        [[NSNotificationCenter defaultCenter] postNotificationName:kInviteFriendsDataSourceShouldRefreshNotification object:nil];
     }];
 }
 
-- (void)changePassword
-{
-    // first stage:
-    [self showAlertWithTitle:kAlertTitleEnterPasswordString message:nil];
-}
+#pragma mark - UITableViewDelegate
 
-
-#pragma mark - UITableViewDataSource
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (indexPath.row == QMSettingsNormalCellRowProfile) {
-        [self performSegueWithIdentifier:kProfileSegueIdentifier sender:self];
-    } else {
-        if (self.cellViewMode == SettingsViewControllerModeNormal) {
-            [self serveNormalModeCellsForRow:indexPath.row];
-        } else {
-            [self serveCustomModeCellsForRow:indexPath.row];
-        }
-    }
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return [self.dataSource countForDataSourceWithMode:self.cellViewMode];
-}
-
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kSettingsVCCellIdentifier];
-    if (!cell) {
-        cell = [self configureCellForIndexPath:indexPath];
-    }
-
-    return cell;
-}
-
-#pragma mark - work with cell
-
-- (void)serveNormalModeCellsForRow:(NSInteger)row
-{
-	if (row == QMSettingsNormalCellRowChangePassword) {
-		[self changePassword];
-	} else if (row == QMSettingsNormalCellRowLogOut) {
-		[self showLogoutActionSheet];
-	}
-}
-
-- (void)serveCustomModeCellsForRow:(NSInteger)row
-{
-	if (row == QMSettingsCustomCellRowLogOut) {
-		[self showLogoutActionSheet];
-	}
-}
-
-- (UITableViewCell *)configureCellForIndexPath:(NSIndexPath *)indexPath
-{
-	UITableViewCell *cell = [UITableViewCell new];
-	if (indexPath.row == QMSettingsNormalCellRowProfile) {
-		cell.textLabel.text = kSettingsCellTitleProfile;
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-	} else if (indexPath.row == QMSettingsNormalCellRowPushNotifications) {
-		cell.textLabel.text = kSettingsCellTitlePushNotifications;
-		self.notificationsSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(256, 9, 0, 0)];
-		[self.notificationsSwitch addTarget:self action:@selector(triggerNotificationsState) forControlEvents:UIControlEventValueChanged];
-		BOOL pushNotificationsStateBool = [[[NSUserDefaults standardUserDefaults] objectForKey: kSettingsPushNotificationsState] boolValue];
-		self.notificationsSwitch.on = pushNotificationsStateBool;
-		[cell.contentView addSubview:self.notificationsSwitch];
-	} else {
-		if (self.cellViewMode == SettingsViewControllerModeNormal) {
-			cell = [self configureNormalModeCell:cell withIndexPath:indexPath];
-		} else {
-			cell = [self configureCustomModeCell:cell withIndexPath:indexPath];
-		}
-	}
-
-	return cell;
-}
-
-- (UITableViewCell *)configureVersionCell:(UITableViewCell *)cell
-{
-	cell.textLabel.text = [[NSBundle mainBundle] objectForInfoDictionaryKey:kSettingsCellBundleVersion];
-	cell.textLabel.textColor = [UIColor grayColor];
-	cell.userInteractionEnabled = NO;
-
-	return cell;
-}
-
-- (UITableViewCell *)configureNormalModeCell:(UITableViewCell *)cell withIndexPath:(NSIndexPath *)indexPath
-{
-	if (indexPath.row == QMSettingsNormalCellRowChangePassword) {
-		cell.textLabel.text = kSettingsCellTitleChangePassword;
-	} else if (indexPath.row == QMSettingsNormalCellRowLogOut) {
-		cell.textLabel.text = kAlertButtonTitleLogOutString;
-	} else if (indexPath.row == QMSettingsNormalCellRowVersion) {
-		cell = [self configureVersionCell:cell];
-	}
-
-	return cell;
-}
-
-- (UITableViewCell *)configureCustomModeCell:(UITableViewCell *)cell withIndexPath:(NSIndexPath *)indexPath
-{
-	if (indexPath.row == QMSettingsCustomCellRowLogOut) {
-		cell.textLabel.text = kAlertButtonTitleLogOutString;
-	} else if (indexPath.row == QMSettingsCustomCellRowVersion) {
-		cell = [self configureVersionCell:cell];
-	}
-
-	return cell;
-}
-
-#pragma mark - Switching Notifications
-- (void)triggerNotificationsState
-{
-    if (self.notificationsSwitch.on) {
-        [[QMAuthService shared] subscribeToPushNotifications];
-    } else {
-        [[QMAuthService shared] unSubscribeFromPushNotifications];
-    }
-	[[NSUserDefaults standardUserDefaults] setObject:@(self.notificationsSwitch.on) forKey:kSettingsPushNotificationsState];
-	[[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (void)showLogoutActionSheet
-{
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:kAlertTitleAreYouSureString
-                                                             delegate:self
-                                                    cancelButtonTitle:kAlertButtonTitleCancelString
-                                               destructiveButtonTitle:kAlertButtonTitleLogOutString
-                                                    otherButtonTitles:nil];
-    [actionSheet showFromTabBar:self.tabBarController.tabBar];
-}
-
-#pragma mark - UIActionSheetDelegate
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 0) {
-        [self logOut];
-    }
-}
-
-
-#pragma mark - Alert
-
-- (void)showAlertWithTitle:(NSString *)title message:(NSString *)messageString
-{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:messageString delegate:self cancelButtonTitle:kAlertButtonTitleCancelString otherButtonTitles:kAlertButtonTitleOkString, nil];
-    alert.alertViewStyle = UIAlertViewStyleSecureTextInput;
-    [alert show];
-}
-
-- (void)showErrorAlertWithMessage:(NSString *)alertMessage
-{
-    [[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:alertMessage delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
-}
-
-// delegate:
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    NSString *password = [alertView textFieldAtIndex:0].text;
-    if (buttonIndex == 0) {
-        [self clearPasswordFields];
-        passwordCheckState = QMPasswordCheckStateNone;
-        return;
-    }
-    if (passwordCheckState == QMPasswordCheckStateNone) {
-        NSString *oldPasswordString = [[NSUserDefaults standardUserDefaults] objectForKey:kPassword];
-		if ([oldPasswordString isEqualToString:password]) {
-			oldPassword = password;
-			passwordCheckState = QMPasswordCheckStateInputed;
-			[self showAlertWithTitle:kAlertTitleEnterNewPasswordString message:nil];
-		} else {
-			[self showErrorAlertWithMessage:kAlertBodyWrongPasswordString];
-		}
+    if (cell == self.logoutCell) {
+        __weak __typeof(self)weakSelf = self;
         
-    } else if (passwordCheckState == QMPasswordCheckStateInputed) {
-        newPassword = password;
-        passwordCheckState = QMPasswordCheckStateConfirmed;
-        [self showAlertWithTitle:kAlertTitleConfirmNewPasswordString message:nil];
-    } else if (passwordCheckState == QMPasswordCheckStateConfirmed) {
-        passwordCheckState = QMPasswordCheckStateNone;
-        // all check
-        if (![oldPassword isEqualToString:[QMContactList shared].me.password]) {
-            [self showErrorAlertWithMessage:kAlertBodyWrongPasswordString];
-        } else if (![password isEqualToString:newPassword]) {
-            [self showErrorAlertWithMessage:kAlertBodyPasswDoesNotMatchString];
-        } else if (password.length <=7 || newPassword.length <= 7) {
-            [self showErrorAlertWithMessage:kAlertBodyPasswordIsShortString];
-        } else {
-            [QMUtilities showActivityView];
-			[[NSUserDefaults standardUserDefaults] setObject:password forKey:kPassword];
-			[[NSUserDefaults standardUserDefaults] synchronize];
-            // update user's password:
-            QBUUser *me = [QMContactList shared].me;
-            NSString *passwordToChange = me.password;
-            me.password = password;
-            me.oldPassword = passwordToChange;
-            [[QMAuthService shared] updateUser:me withCompletion:^(QBUUser *user, BOOL success, NSError *error) {
-                if (success) {
-                    // save user password locally:
-                    user.password = password;
-                    [[QMContactList shared] setMe:user];
-                    
-                    [QMUtilities hideActivityView];
-					[[NSUserDefaults standardUserDefaults] removeObjectForKey:kPassword];
-					[[NSUserDefaults standardUserDefaults] synchronize];
-					[self logOut];
-                    [[[UIAlertView alloc] initWithTitle:kAlertTitleSuccessString message:kAlertBodyPasswordChangedString delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
-                }
+        [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
+            alertView.message = kAlertTitleAreYouSureString;
+            [alertView addButtonWithTitle:kAlertButtonTitleLogOutString andActionBlock:^{
+                [weakSelf logOut];
+                
             }];
-        }
-        [self clearPasswordFields];
+            
+            [alertView addButtonWithTitle:kAlertButtonTitleCancelString andActionBlock:^{}];
+        }];
     }
-}
-
-- (void)clearPasswordFields
-{
-    oldPassword = nil;
-    newPassword = nil;
 }
 
 @end

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "QMChatVC.h"
 
-@interface QMChatViewController : QMChatVC <UITableViewDelegate>
+@interface QMChatViewController : QMChatVC
 
 - (void)setupPrivateChatWithChatDialog:(QBChatDialog *)chatDialog andOpponent:(QBUUser *)opponent;
 - (void)setupGroupChatWithChatDialog:(QBChatDialog *)chatDialog;

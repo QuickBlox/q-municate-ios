@@ -63,13 +63,10 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (IBAction)changeDialogName:(id)sender
-{
-    [QMUtilities showActivityView];
+- (IBAction)changeDialogName:(id)sender {
     
     [[QMChatService shared] changeChatName:self.groupNameField.text forChatDialog:self.chatDialog completion:^(QBChatDialog *dialog, NSError *error) {
         if (error) {
-            [QMUtilities hideActivityView];
             return;
         }
         
@@ -78,8 +75,6 @@
         
         // local notification:
         [[NSNotificationCenter defaultCenter] postNotificationName:kChatDialogUpdatedNotification object:nil userInfo:@{@"room_jid":dialog.roomJID}];
-        
-        [QMUtilities hideActivityView];
     }];
 }
 

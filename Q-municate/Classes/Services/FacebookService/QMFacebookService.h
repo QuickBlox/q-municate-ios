@@ -8,14 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void(^FBContentBlock)(NSData *data, NSError *error);
+typedef void(^FBContentBlock)(NSDictionary *content, NSError *error);
+typedef void(^ImageBlock)(UIImage *img);
 
 
 
 @interface QMFacebookService : NSObject
 
 + (void)shareToFacebookUsersWithIDs:(NSString *)facebookIDs withCompletion:(FBCompletionBlock)handler;
-- (void)loadAvatarImageFromFacebookWithCompletion:(FBContentBlock)handler;
+- (void)loadUserImageFromFacebookWithUserID:(NSString *)userID completion:(ImageBlock)handler;
 - (void)loadMeWithCompletion:(FBContentBlock)handler;
 - (void)fetchFacebookFriendsUsingBlock:(QBChatResultBlock)block;
 

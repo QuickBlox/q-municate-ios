@@ -18,6 +18,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [QMDBStorage setupWithName:@"Andrey"];
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];

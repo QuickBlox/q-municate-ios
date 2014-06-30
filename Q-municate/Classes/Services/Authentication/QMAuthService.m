@@ -9,7 +9,7 @@
 #import "QMAuthService.h"
 #import "QMFacebookService.h"
 #import "QMContactList.h"
-#import "QMChatService.h"
+//#import "QMChatService.h"
 #import "QMUtilities.h"
 #import "QMContent.h"
 
@@ -52,8 +52,7 @@
             resultBlock(user, YES, nil);
             return;
         }
-        NSError *error = [NSError errorWithDomain:[NSString stringWithFormat:@"%@",[result.errors lastObject]] code:0 userInfo:nil];
-        resultBlock(nil,NO,error);
+        resultBlock(nil, NO, result.errors.firstObject);
     }];
 }
 
@@ -76,7 +75,7 @@
             QBUUser *user = ((QBUUserLogInResult *)result).user;
             resultBlock(user, YES, nil);
         } else {
-            resultBlock(nil, NO, result.errors[0]);
+            resultBlock(nil, NO, result.errors.firstObject);
         }
     }];
 }
@@ -90,13 +89,7 @@
             block(user, YES, nil);
             return;
         }
-		NSError *completionError = nil;
-		if (![result.errors count]) {
-		    completionError = [NSError errorWithDomain:NSNetServicesErrorDomain code:701 userInfo:@{NSLocalizedDescriptionKey : @"Logging in with FBAccessToken. result.errors[0] is empty. Refer to [QMAuthService logInWithFacebookAccessToken:completion:]"}];
-		} else {
-			completionError = result.errors[0];
-		}
-        block(nil, NO, completionError);//TODO:fix for crash
+        block(nil, NO, result.errors.firstObject);
     }];
 }
 
@@ -107,71 +100,80 @@
 }
 
 // **************************FACEBOOK**********************************
-- (void)authWithFacebookAndCompletionHandler:(QBAuthResultBlock)resultBlock
-{
+- (void)authWithFacebookAndCompletionHandler:(QBAuthResultBlock)resultBlock {
+    
 	if (![FBSession activeSession] || ![[FBSession activeSession].permissions count] || ![FBSession activeSession].isOpen) {
 		[FBSession setActiveSession:[[FBSession alloc]initWithPermissions:@[@"basic_info", @"email", @"read_stream", @"publish_stream"]]];
 	}
+    
     if ([FBSession activeSession].state == FBSessionStateCreated) {
+        
         [[FBSession activeSession] openWithBehavior:FBSessionLoginBehaviorWithFallbackToWebView completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+            
             if (status == FBSessionStateClosedLoginFailed) {
 				[FBSession setActiveSession:nil];
-                NSError *error = [NSError errorWithDomain:@"Failed login to Facebook:Canceled" code:10 userInfo:nil];
-                resultBlock(nil, NO, error);
+                resultBlock(nil, NO, @"Failed login to Facebook:Canceled");
                 return;
             }
+            
             if (status == FBSessionStateClosed) {
                 return;
             }
             
             if (status == FBSessionStateOpen) {
-                 NSString *token = session.accessTokenData.accessToken;
+                
+                NSString *token = session.accessTokenData.accessToken;
                 // request me from Facebook:
                 QMFacebookService *facebookService = [[QMFacebookService alloc] init];
-                [facebookService loadMeWithCompletion:^(NSData *data, NSError *error) {
+                
+                [facebookService loadMeWithCompletion:^(NSDictionary *content, NSError *error) {
+                    
                     if (error) {
                         return;
                     }
-                    NSDictionary *me = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
-                    [QMContactList shared].facebookMe = [me mutableCopy];
+                    
+                    [QMContactList shared].fbMe = content.mutableCopy;
                     
                     // login to Quickblox
-                    [self logInWithFacebookAccessToken:token completion:^(QBUUser *user, BOOL success, NSError *error) {
+                    [self logInWithFacebookAccessToken:token completion:^(QBUUser *user, BOOL success, NSString *error) {
+                        
                         if (success) {
                             resultBlock(user, success, nil);
                             return;
                         }
+                        
                         resultBlock(nil, success, error);
                     }];
                 }];
             }
         }];
     } else if ([FBSession activeSession].state == FBSessionStateCreatedTokenLoaded) {
-         [[FBSession activeSession] openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-             if (status == FBSessionStateClosed) {
-                 return;
-             }
-             
+        
+        [[FBSession activeSession] openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+            if (status == FBSessionStateClosed) {
+                return;
+            }
+            
             // request me from Facebook:
             QMFacebookService *facebookService = [[QMFacebookService alloc] init];
-            [facebookService loadMeWithCompletion:^(NSData *data, NSError *error) {
+            
+            [facebookService loadMeWithCompletion:^(NSDictionary *content, NSError *error) {
+                
                 if (error) {
+                    resultBlock(nil, NO, error.localizedDescription);
                     return;
                 }
-                NSDictionary *me = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
-				if ([me count] == 1) {
-					if ([((NSString *)[me allKeys][0]) isEqualToString:kErrorKeyFromDictionaryString]) {
-					    return;
-					}
-				}
-                [QMContactList shared].facebookMe = [me mutableCopy];
+                
+                [QMContactList shared].fbMe = content.mutableCopy;
                 
                 NSString *token = [FBSession activeSession].accessTokenData.accessToken;
-                [self logInWithFacebookAccessToken:token completion:^(QBUUser *user, BOOL success, NSError *error) {
+                [self logInWithFacebookAccessToken:token completion:^(QBUUser *user, BOOL success, NSString *error) {
+                    
                     if (success) {
                         resultBlock(user, YES, nil);
                         return;
                     }
+                    
                     resultBlock(nil, success, error);
                 }];
             }];
@@ -196,11 +198,13 @@
 - (void)updateUser:(QBUUser *)user withCompletion:(QBAuthResultBlock)block
 {
     [self updateUser:user resultBlock:^(Result *result) {
+        
         if (result.success && [result isKindOfClass:[QBUUserResult class]]) {
             QBUUser *updatedUser = ((QBUUserResult *)result).user;
             block(updatedUser, YES, nil);
             return;
         }
+        
         block(nil, NO, [result.errors firstObject]);
     }];
 }
@@ -255,7 +259,6 @@
     [QBUsers updateUser:user delegate:self];
 }
 
-
 - (void)startSessionWithBlock:(QBSessionCreationBlock)block
 {
     [[QMAuthService shared] createSessionUsingBlock:^(Result *result) {
@@ -267,9 +270,57 @@
     }];
 }
 
+#pragma mark - Options
 
-#pragma mark -
-#pragma mark QBActionStatusDelegate
+- (void)loadFacebookUserPhotoAndUpdateUser:(QBUUser *)user completion:(QBChatResultBlock)handler
+{
+    // upload photo:
+    QMFacebookService *facebookService = [[QMFacebookService alloc] init];
+    
+    NSString *fbUserID = [QMContactList shared].fbMe.id;
+    
+    [facebookService loadUserImageFromFacebookWithUserID:fbUserID completion:^(UIImage *img) {
+        
+        if (img) {
+            
+            QMContent *contentStorage = [[QMContent alloc] init];
+            [contentStorage loadImageForBlob:img named:[QMContactList shared].fbMe.id completion:^(QBCBlob *blob) {
+                if (blob) {
+                    // update user with new blob:
+                    NSString *userPassword = user.password;
+
+                    [[QMAuthService shared] updateUser:user withBlob:blob completion:^(QBUUser *user, BOOL success, NSString *error) {
+                        
+                        if (success) {
+                            user.password = userPassword;
+                            if (user.email == nil || [user.email isEqualToString:kEmptyString]) {
+                                NSString *email = [QMContactList shared].fbMe[@"mail"];
+                                user.email = email;
+                            }
+                            [[QMContactList shared] setMe:user];
+                            handler(YES);
+                        }
+                    }];
+                }
+            }];
+            
+        }
+        
+    }];
+}
+
+#pragma mark - Push Notifications
+- (void)subscribeToPushNotifications {
+    // Subscribe Users to Push Notifications
+    [QBMessages TRegisterSubscriptionWithDelegate:self];
+}
+
+- (void)unSubscribeFromPushNotifications {
+    // Unsubscribe Users to Push Notifications
+    [QBMessages TUnregisterSubscriptionWithDelegate:self];
+}
+
+#pragma mark - QBActionStatusDelegate
 
 -(void)completedWithResult:(Result *)result
 {
@@ -289,51 +340,10 @@
     _resultBlock(result);
 }
 
-
-#pragma mark - Options
-
-- (void)loadFacebookUserPhotoAndUpdateUser:(QBUUser *)user completion:(QBChatResultBlock)handler
-{
-    // upload photo:
-    QMFacebookService *facebookService = [[QMFacebookService alloc] init];
-    [facebookService loadAvatarImageFromFacebookWithCompletion:^(NSData *data, NSError *error) {
-        if (error) {
-            [[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:error.localizedDescription delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
-            return;
-        }
-        UIImage *avatarImage = [UIImage imageWithData:data];
-        
-        // load image to Quickblox:
-        QMContent *contentStorage = [[QMContent alloc] init];
-        [contentStorage loadImageForBlob:avatarImage named:[QMContactList shared].facebookMe[kId] completion:^(QBCBlob *blob) {
-            if (blob) {
-                // update user with new blob:
-                NSString *userPassword = user.password;
-                [[QMAuthService shared] updateUser:user withBlob:blob completion:^(QBUUser *user, BOOL success, NSError *error) {
-                    if (success) {
-                        user.password = userPassword;
-						if (user.email == nil || [user.email isEqualToString:kEmptyString]) {
-							NSString *email = [QMContactList shared].facebookMe[kEmail];
-							user.email = email;
-						}
-                        [[QMContactList shared] setMe:user];
-                        handler(YES);
-                    }
-                }];
-            }
-        }];
-    }];
-}
-
-#pragma mark - Push Notifications
-- (void)subscribeToPushNotifications {
-    // Subscribe Users to Push Notifications
-    [QBMessages TRegisterSubscriptionWithDelegate:self];
-}
-
-- (void)unSubscribeFromPushNotifications {
-    // Unsubscribe Users to Push Notifications
-    [QBMessages TUnregisterSubscriptionWithDelegate:self];
-}
+//- (void)completedWithResult:(Result *)result context:(void *)contextInfo
+//{
+//    ((__bridge void (^)(Result * result))(contextInfo))(result);
+//    Block_release(contextInfo);
+//}
 
 @end

@@ -41,6 +41,7 @@ install_resource()
       ;;
   esac
 }
+install_resource "AGEmojiKeyboard/Resources/EmojisList.plist"
 install_resource "SVProgressHUD/SVProgressHUD/SVProgressHUD.bundle"
 install_resource "TWMessageBarManager/Classes/Icons/icon-error.png"
 install_resource "TWMessageBarManager/Classes/Icons/icon-error@2x.png"

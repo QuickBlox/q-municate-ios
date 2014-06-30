@@ -146,7 +146,6 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
 - (void)dialogsLoaded
 {
-    [QMUtilities hideActivityView];
     [self reloadTableView];
 }
 

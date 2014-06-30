@@ -9,6 +9,7 @@
 #import "QMGroupChatDataSource.h"
 #import "QMContactList.h"
 #import "QMChatService.h"
+#import "QMChatCell.h"
 
 @interface QMGroupChatDataSource()
 
@@ -32,7 +33,7 @@
     
     [super setChatDialog:chatDialog];
     
-    if (self.history == nil) {
+    if (self.qmChatHistory == nil) {
         
         __weak __typeof(self)weakSelf = self;
         [self loadHistory:^{

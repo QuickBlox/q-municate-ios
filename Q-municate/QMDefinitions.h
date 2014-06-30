@@ -58,8 +58,8 @@ typedef NS_ENUM(NSUInteger, QMVideoChatType) {
 
 //****************** Blocks *********************************
 typedef void (^QBResultBlock)(Result *result);
-typedef void (^QBSessionCreationBlock)(BOOL success, NSError *error);
-typedef void (^QBAuthResultBlock)(QBUUser *user, BOOL success, NSError *error);
+typedef void (^QBSessionCreationBlock)(BOOL success, NSString *error);
+typedef void (^QBAuthResultBlock)(QBUUser *user, BOOL success, NSString *error);
 typedef void (^QBChatResultBlock)(BOOL success);
 typedef void (^QBChatDialogResultBlock)(QBChatDialog *dialog, NSError *error);
 typedef void (^QBChatRoomResultBlock)(QBChatRoom *chatRoom, NSError *error);
@@ -147,17 +147,13 @@ static NSString *const kInviteFriendCellIdentifier      = @"InviteFriendCell";
 
 
 //******************** USER DEFAULTS KEYS *****************
-static NSString *const kEmail       		= @"email";
-static NSString *const kPassword    		= @"password";
-static NSString *const kRememberMe  		= @"remember_me";
-static NSString *const kFBSessionRemembered = @"facebook_session_remembered";
+
 static NSString *const kUserStatusText   	= @"userStatusText";
 
-static NSString *const kChatLocalHistory	= @"chatLocalHistory";
-static NSString *const kChatOpponentHistory	= @"opponentHistory";
+//static NSString *const kChatLocalHistory	= @"chatLocalHistory";
+//static NSString *const kChatOpponentHistory	= @"opponentHistory";
 static NSString *const kChatOpponentName	= @"chatOpponentName";
 static NSString *const kChatOpponentIDString	= @"chatOpponentIDString";
-static NSString *const kSettingsPushNotificationsState	= @"kSettingsPushNotificationsState";
 
 static NSString *const kId          = @"id";
 static NSString *const kData        = @"data";

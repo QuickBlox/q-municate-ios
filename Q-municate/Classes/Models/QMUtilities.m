@@ -49,53 +49,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (UIView *)activityView {
-    
-    if (!_activityView) {
-        
-        UIWindow *window = [[UIApplication sharedApplication].delegate window];
-        
-        _activityView = [[UIView alloc] initWithFrame:window.bounds];
-		_activityView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
-        
-		UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        
-		indicator.center = CGPointMake(_activityView.frame.size.width/2,
-                                       _activityView.frame.size.height/2);
-        
-		[_activityView addSubview:indicator];
-        
-		[indicator startAnimating];
-		[window addSubview:_activityView];
-    }
-    
-    return _activityView;
-}
-
-- (void)showActivity {
-    
-    if (!self.activityView.superview) {
-        [self.window addSubview:self.activityView];
-    }
-}
-
-- (void)hideActivity {
-    
-    if (self.activityView.superview) {
-        [self.activityView removeFromSuperview];
-    }
-}
-
-+ (void)showActivityView {
-    
-    [QMUtilities.shared showActivity];
-}
-
-+ (void)hideActivityView {
-    
-    [QMUtilities.shared hideActivity];
-}
-
 - (void)showIncomingCallController:(NSNotification *)notification
 {
     if ([QMUtilities shared].incomingCallController == nil) {
