@@ -7,13 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <AsyncImageView.h>
+//#import <AsyncImageView.h>
 
 @interface QMGroupContentCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet AsyncImageView *avatarView;
-@property (weak, nonatomic) IBOutlet UILabel *fullNameLabel;
-@property (weak, nonatomic) IBOutlet UILabel *datetimeLabel;
-@property (weak, nonatomic) IBOutlet AsyncImageView *contentImageView;
+//@property (weak, nonatomic) IBOutlet AsyncImageView *avatarView;
+//@property (weak, nonatomic) IBOutlet UILabel *fullNameLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *datetimeLabel;
+//@property (weak, nonatomic) IBOutlet AsyncImageView *contentImageView;
 
 - (void)configureCellWithMessage:(QBChatAbstractMessage *)message fromUser:(QBUUser *)user;
 

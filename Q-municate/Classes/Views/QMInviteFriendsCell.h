@@ -7,13 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <AsyncImageView.h>
 
 @class QMPerson;
+@class QMImageView;
 
 @interface QMInviteFriendsCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet AsyncImageView *userImageView;
+@property (weak, nonatomic) IBOutlet QMImageView *userImageView;
 @property (weak, nonatomic) IBOutlet UILabel *fullNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *activeCheckbox;

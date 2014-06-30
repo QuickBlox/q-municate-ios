@@ -14,9 +14,7 @@
 #import "QMChatService.h"
 
 
-static CGFloat const FRIENDS_CELL_HEIGHT = 60.0f;
 static CGFloat const kSearchBarHeight = 44.0f;
-static NSUInteger const kNoResultsViewTag = 1101;
 static NSUInteger const kSearchGlobalButtonTag = 1102;
 
 
@@ -24,7 +22,6 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) UISearchBar *searchBar;
-@property (strong, nonatomic) UIView *searchResultsView;
 
 @property (nonatomic, strong) QMFriendsListDataSource *dataSource;
 
@@ -37,9 +34,7 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
 @implementation QMFriendListController
 
 
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
     // set status bar color to white:
@@ -75,22 +70,19 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
     }
 }
 
-- (void)loadDialogs
-{
+- (void)loadDialogs {
     // load QBChatDialogs:
     [[QMChatService shared] fetchAllDialogsWithCompletion:^(NSArray *dialogs, NSError *error) {
+
         if (!error) {
-            
             // join all group dialogs:
             [[QMChatService shared] joinRoomsForDialogs:dialogs];
-            
             [[NSNotificationCenter defaultCenter] postNotificationName:kChatDialogsDidLoadedNotification object:nil];
         }
     }];
 }
 
-- (void)reloadFriendsList
-{
+- (void)reloadFriendsList {
     self.tableView.tableFooterView = nil;
     [self updateDataSource];
 }
@@ -376,31 +368,28 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     QBUUser *currentUser;
+    
     if (!indexPath.section) {
+        
         currentUser = self.dataSource.friendsArray[indexPath.row];
+
         if (self.searchBar != nil) {
             [self removeSearchBarAnimated:NO];
         }
-
-		QMFriendListCell *cell = (QMFriendListCell *) [tableView cellForRowAtIndexPath:indexPath];
-		NSDictionary *userDetailsDictionary = @{
-				@"user" : currentUser,
-				@"userPhoto" : cell.userImage.image
-		};
-		[self performSegueWithIdentifier:kDetailsSegueIdentifier sender:userDetailsDictionary];
+        #warning show details 
+		[self performSegueWithIdentifier:kDetailsSegueIdentifier sender:nil];
+        
 	}
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     ((QMFriendsDetailsController *)segue.destinationViewController).currentFriend = sender;
 	QMFriendsDetailsController *vc = segue.destinationViewController;
 	vc.currentFriend = sender[@"user"];
 	vc.userPhotoImage = sender[@"userPhoto"];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 60.0f;
 }
 

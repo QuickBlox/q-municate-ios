@@ -74,11 +74,11 @@
     [self.tableView reloadData];
 }
 
-#define MESSAGES_DEBUG
+#define MESSAGES_DEBUG 0
 
 - (void)loadHistory:(void(^)(void))finish {
     
-#ifdef MESSAGES_DEBUG 
+#if MESSAGES_DEBUG
 
     QBChatHistoryMessage *message = [[QBChatHistoryMessage alloc] init];
     

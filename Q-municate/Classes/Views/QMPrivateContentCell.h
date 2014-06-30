@@ -7,14 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <AsyncImageView.h>
 
 @interface QMPrivateContentCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet AsyncImageView *myAvatar;
-@property (weak, nonatomic) IBOutlet AsyncImageView *opponentAvatar;
-@property (weak, nonatomic) IBOutlet AsyncImageView *sharedImageView;
-@property (weak, nonatomic) IBOutlet UILabel *datetimeLabel;
-
-- (void)configureCellWithMessage:(QBChatAbstractMessage *)message forUser:(QBUUser *)user isMe:(BOOL)isMe;
+//@property (weak, nonatomic) IBOutlet AsyncImageView *myAvatar;
+//@property (weak, nonatomic) IBOutlet AsyncImageView *opponentAvatar;
+//@property (weak, nonatomic) IBOutlet AsyncImageView *sharedImageView;
+//@property (weak, nonatomic) IBOutlet UILabel *datetimeLabel;
+//
+//- (void)configureCellWithMessage:(QBChatAbstractMessage *)message forUser:(QBUUser *)user isMe:(BOOL)isMe;
 
 @end

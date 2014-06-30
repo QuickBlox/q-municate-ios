@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <AsyncImageView.h>
+//#import <AsyncImageView.h>
 
 @interface QMGroupDetailsCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet AsyncImageView *avatarView;
+@property (weak, nonatomic) IBOutlet UIImageView *avatarView;
 @property (weak, nonatomic) IBOutlet UILabel *fullNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *onlineCircle;

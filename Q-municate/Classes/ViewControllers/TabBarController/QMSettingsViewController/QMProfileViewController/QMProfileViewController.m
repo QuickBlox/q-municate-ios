@@ -25,7 +25,7 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
 
 <UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate>
 
-@property (weak, nonatomic) IBOutlet AsyncImageView *avatarView;
+@property (weak, nonatomic) IBOutlet UIImageView *avatarView;
 @property (weak, nonatomic) IBOutlet UITextField *fullNameField;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *phoneNumberField;
@@ -77,17 +77,17 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
 
 - (void)configureAvatarView
 {
-    self.avatarView.layer.cornerRadius = self.avatarView.frame.size.width / 2;
-    self.avatarView.layer.borderWidth = 2.0f;
-    self.avatarView.layer.borderColor = [UIColor colorWithRed:1/215 green:1/216 blue:1/215 alpha:0.04].CGColor;   //215,216,215
-    self.avatarView.layer.masksToBounds = YES;
-    self.avatarView.crossfadeDuration = 0.0f;
+//    self.avatarView.layer.cornerRadius = self.avatarView.frame.size.width / 2;
+//    self.avatarView.layer.borderWidth = 2.0f;
+//    self.avatarView.layer.borderColor = [UIColor colorWithRed:1/215 green:1/216 blue:1/215 alpha:0.04].CGColor;   //215,216,215
+//    self.avatarView.layer.masksToBounds = YES;
+//    self.avatarView.crossfadeDuration = 0.0f;
 }
 
 - (void)updateProfileView
 {
     // avatar:
-    [self.avatarView setImageURL:[NSURL URLWithString:me.website]];
+//    [self.avatarView setImageURL:[NSURL URLWithString:me.website]];
     
     // full name:
     [self.fullNameField setText:me.fullName];

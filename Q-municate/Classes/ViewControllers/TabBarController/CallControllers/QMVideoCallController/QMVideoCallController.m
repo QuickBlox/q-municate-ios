@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 #import "AppDelegate.h"
-#import "AsyncImageView.h"
 #import "QMVideoCallController.h"
 #import "QMChatService.h"
 #import "QMUtilities.h"
@@ -31,7 +30,7 @@
 // Audio calls UI
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *callDurationLabel;
-@property (weak, nonatomic) IBOutlet AsyncImageView *userAvatarView;
+@property (weak, nonatomic) IBOutlet UIImageView *userAvatarView;
 
 // Video calls UI
 @property (weak, nonatomic) IBOutlet QBVideoView *opponentsView;
@@ -69,7 +68,8 @@
         // set placeholder:
         [self.userAvatarView setImage:[UIImage imageNamed:@"upic_call"]];
         // load image for url:
-        [self.userAvatarView setImageURL:[NSURL URLWithString:self.opponent.website]];
+        #warning image
+//        [self.userAvatarView setImageURL:[NSURL URLWithString:self.opponent.website]];
     }
     
     [self.userNameLabel setText:self.opponent.fullName];

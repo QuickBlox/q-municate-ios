@@ -7,19 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <AsyncImageView.h>
+
+@class QMImageView;
 
 @interface QMChatListCell : UITableViewCell
 
-@property (strong, nonatomic) IBOutlet AsyncImageView *avatar;
-@property (strong, nonatomic) IBOutlet UILabel *name;
-@property (strong, nonatomic) IBOutlet UILabel *lastMessage;
-
-@property (strong, nonatomic) IBOutlet UILabel *unreadMsgNumb;
-@property (strong, nonatomic) IBOutlet UILabel *groupMembersNumb;
-
-@property (strong, nonatomic) IBOutlet UIImageView *groupNumbBackground;
-@property (strong, nonatomic) IBOutlet UIImageView *unreadMsgBackground;
 
 
 - (void)configureCellWithDialog:(QBChatDialog *)chatDialog;

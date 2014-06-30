@@ -7,9 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <AsyncImageView.h>
-
-
 
 @interface QMProfileViewController : UITableViewController
 

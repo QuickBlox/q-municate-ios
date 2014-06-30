@@ -8,7 +8,6 @@
 
 #import "QMIncomingCallController.h"
 #import "UIImageView+ImageWithBlobID.h"
-#import <AsyncImageView.h>
 #import "QMChatService.h"
 #import "QMContactList.h"
 #import "QMUtilities.h"
@@ -17,7 +16,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *incomingCallLabel;
-@property (weak, nonatomic) IBOutlet AsyncImageView *userAvatarView;
+@property (weak, nonatomic) IBOutlet UIImageView *userAvatarView;
 @property (weak, nonatomic) IBOutlet UIButton *acceptButton;
 
 @property (copy, nonatomic) NSString *sessionID;
@@ -50,7 +49,8 @@
     }
     
     if (opponent.website != nil) {
-        [self.userAvatarView setImageURL:[NSURL URLWithString:opponent.website]];
+        #warning image
+//        [self.userAvatarView setImageURL:[NSURL URLWithString:opponent.website]];
     } else {
         [self.userAvatarView loadImageWithBlobID:opponent.blobID];
     }

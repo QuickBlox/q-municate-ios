@@ -19,6 +19,7 @@
 @implementation REAlertView
 
 - (id)init {
+    
     self = [super init];
     if (self){
 		self.buttonActions = @[].mutableCopy;
@@ -28,6 +29,7 @@
 }
 
 - (void)addButtonWithTitle:(NSString *)title andActionBlock:(REAlertButtonAction)block{
+    
 	[self.buttonActions insertObject:[block copy] atIndex:[self addButtonWithTitle:title]];
 }
 

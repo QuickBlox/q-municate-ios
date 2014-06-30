@@ -8,7 +8,6 @@
 
 #import "QMChatService.h"
 #import "QMContactList.h"
-#import "NSArray+ArrayToString.h"
 #import <TWMessageBarManager.h>
 #import "QMDBStorage+Messages.h"
 #import  <Quickblox/Quickblox.h>
@@ -369,7 +368,7 @@
 
 - (void)addUsers:(NSArray *)users toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completionHandler
 {
-    NSString *usersIDsAsString = [users stringFromArray];
+    NSString *usersIDsAsString = [users componentsJoinedByString:@","];
     
     NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
     extendedRequest[@"push[occupants_ids][]"] = usersIDsAsString;
@@ -529,7 +528,7 @@
         customParams[@"name"] = chatDialog.name;
         customParams[@"_id"] = chatDialog.ID;
         customParams[@"type"] = @(chatDialog.type);
-        customParams[@"occupants_ids"] = [chatDialog.occupantIDs stringFromArray];
+        customParams[@"occupants_ids"] = [chatDialog.occupantIDs componentsJoinedByString:@","];
         
         NSTimeInterval timestamp = (unsigned long)[[NSDate date] timeIntervalSince1970];
         customParams[@"date_sent"] = @(timestamp);
@@ -545,6 +544,7 @@
     }
 }
 
+
 - (void)sendChatDialogDidUpdateNotificationToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog
 {
     QBUUser *me = [QMContactList shared].me;
@@ -558,7 +558,8 @@
         
         NSMutableDictionary *customParams = [NSMutableDictionary new];
         customParams[@"name"] = chatDialog.name;
-        customParams[@"occupants_ids"] = [chatDialog.occupantIDs stringFromArray];
+        customParams[@"type"] = @(chatDialog.type);
+        customParams[@"occupants_ids"] = [chatDialog.occupantIDs componentsJoinedByString:@","];
 
         // notification type: 2 = Chat dialog was updated:
         customParams[@"notification_type"] = @"2";
@@ -766,7 +767,7 @@
     chatDialog.type = [chatMessage.customParameters[@"type"] intValue];
     
     NSString *occupantsIDs = chatMessage.customParameters[@"occupants_ids"];
-    chatDialog.occupantIDs = [self stringToArray:occupantsIDs];
+    chatDialog.occupantIDs = [occupantsIDs componentsSeparatedByString:@","];
     
     return chatDialog;
 }
@@ -785,7 +786,7 @@
     dialog.name = chatMessage.customParameters[@"name"];
     
     NSString *occupantsIDs = chatMessage.customParameters[@"occupants_ids"];
-    dialog.occupantIDs = [self stringToArray:occupantsIDs];
+    dialog.occupantIDs = [occupantsIDs componentsSeparatedByString:@","];
 }
 
 - (void)createOrUpdateChatDialogFromChatMessage:(QBChatMessage *)message
@@ -793,7 +794,6 @@
     NSInteger notificationType = [message.customParameters[@"notification_type"] intValue];
     
     NSString *occupantsIDs = message.customParameters[@"occupants_ids"];
-    currentDialog.occupantIDs = [occupantsIDs componentsSeparatedByString:@","];
     // if notification type = update dialog:
     if (notificationType == 2) {
         [self updateChatDialogForChatMessage:message];

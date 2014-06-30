@@ -1,5 +1,5 @@
 #include "Pods-TWMessageBarManager.xcconfig"
 GCC_PREPROCESSOR_DEFINITIONS = COCOAPODS=1
-HEADER_SEARCH_PATHS = "${PODS_ROOT}/BuildHeaders" "${PODS_ROOT}/BuildHeaders/TWMessageBarManager" "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/AGEmojiKeyboard" "${PODS_ROOT}/Headers/AsyncImageView" "${PODS_ROOT}/Headers/Parus" "${PODS_ROOT}/Headers/SDWebImage" "${PODS_ROOT}/Headers/SSKeychain" "${PODS_ROOT}/Headers/SVProgressHUD" "${PODS_ROOT}/Headers/StaticDataTableViewController" "${PODS_ROOT}/Headers/TWMessageBarManager" "${PODS_ROOT}/Headers/UIDevice-Hardware"
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/BuildHeaders" "${PODS_ROOT}/BuildHeaders/TWMessageBarManager" "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/AGEmojiKeyboard" "${PODS_ROOT}/Headers/Parus" "${PODS_ROOT}/Headers/SDWebImage" "${PODS_ROOT}/Headers/SSKeychain" "${PODS_ROOT}/Headers/SVProgressHUD" "${PODS_ROOT}/Headers/StaticDataTableViewController" "${PODS_ROOT}/Headers/TWMessageBarManager" "${PODS_ROOT}/Headers/UIDevice-Hardware"
 OTHER_LDFLAGS = -ObjC
 PODS_ROOT = ${SRCROOT}

@@ -12,12 +12,6 @@
 #define COCOAPODS_VERSION_MINOR_AGEmojiKeyboard 1
 #define COCOAPODS_VERSION_PATCH_AGEmojiKeyboard 0
 
-// AsyncImageView
-#define COCOAPODS_POD_AVAILABLE_AsyncImageView
-#define COCOAPODS_VERSION_MAJOR_AsyncImageView 1
-#define COCOAPODS_VERSION_MINOR_AsyncImageView 5
-#define COCOAPODS_VERSION_PATCH_AsyncImageView 1
-
 // Parus
 #define COCOAPODS_POD_AVAILABLE_Parus
 #define COCOAPODS_VERSION_MAJOR_Parus 1

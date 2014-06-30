@@ -8,7 +8,6 @@
 
 #import "QMGroupDetailsController.h"
 #import "QMAddMembersToGroupController.h"
-#import <AsyncImageView.h>
 #import "QMGroupDetailsDataSource.h"
 #import "QMChatService.h"
 #import "QMUtilities.h"
@@ -16,7 +15,7 @@
 
 @interface QMGroupDetailsController () <UITableViewDelegate>
 
-@property (weak, nonatomic) IBOutlet AsyncImageView *groupAvatarView;
+@property (weak, nonatomic) IBOutlet UIImageView *groupAvatarView;
 @property (weak, nonatomic) IBOutlet UITextField *groupNameField;
 @property (weak, nonatomic) IBOutlet UILabel *occupantsCountLabel;
 @property (weak, nonatomic) IBOutlet UILabel *onlineOccupantsCountLabel;

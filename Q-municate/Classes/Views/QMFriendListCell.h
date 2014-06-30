@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <AsyncImageView.h>
+
+@class QMImageView;
 
 @interface QMFriendListCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet AsyncImageView *userImage;
+
+@property (weak, nonatomic) IBOutlet QMImageView *userImage;
 @property (weak, nonatomic) IBOutlet UILabel *fullName;
 @property (weak, nonatomic) IBOutlet UILabel *lastActivity;
 @property (weak, nonatomic) IBOutlet UIImageView *onlineCircle;

@@ -11,8 +11,8 @@
 
 @implementation QMFriendsListDataSource
 
-- (id)init
-{
+- (id)init {
+    
     self = [super init];
     if (self) {
         _friendsArray = [NSMutableArray new];
@@ -21,10 +21,9 @@
     return self;
 }
 
-
 // TODO: Refactor Datasource
-- (BOOL)updateFriendsArrayAndCheckForEmpty
-{
+- (BOOL)updateFriendsArrayAndCheckForEmpty {
+    
     NSMutableArray *usersArray = [[[QMContactList shared].friendsAsDictionary allValues] mutableCopy];
     self.friendsArray = [self sortUsersByFullname:usersArray];
     if ([self.friendsArray count] == 0) {
@@ -34,19 +33,21 @@
     return NO;
 }
 
-- (BOOL)updateSearchedUsersArrayAndCheckForEmpty
-{
+- (BOOL)updateSearchedUsersArrayAndCheckForEmpty {
+    
     NSMutableArray *usersArray = [[[QMContactList shared].searchedUsers allValues] mutableCopy];
     self.otherUsersArray = [self sortUsersByFullname:usersArray];
+    
     if ([self.otherUsersArray count] == 0) {
         [QMContactList shared].searchedUsers = [NSMutableDictionary new];
         return YES;
     }
+    
     return NO;
 }
 
-- (void)updateFriendsArrayForSearchPhrase:(NSString *)searchPhraseString
-{
+- (void)updateFriendsArrayForSearchPhrase:(NSString *)searchPhraseString {
+    
     //TODO: try setArray - that is more optimised
     if ([searchPhraseString isEqualToString:kEmptyString]) {
         [self.friendsArray setArray:[[QMContactList shared].friendsAsDictionary allValues]];
@@ -62,8 +63,8 @@
     [self.otherUsersArray setArray:[@[] mutableCopy]];
 }
 
-- (NSMutableArray *)searchText:(NSString *)text  inArray:(NSArray *)array
-{
+- (NSMutableArray *)searchText:(NSString *)text  inArray:(NSArray *)array {
+    
     NSMutableArray *foundMArray = [[NSMutableArray alloc] init];
     for (QBUUser *user in array) {
         if ([self searchingString:user.fullName inString:text]) {
@@ -73,17 +74,18 @@
     return foundMArray;
 }
 
-- (BOOL)searchingString:(NSString *)source inString:(NSString *)searchString
-{
+- (BOOL)searchingString:(NSString *)source inString:(NSString *)searchString {
+    
     NSRange range = [source rangeOfString:searchString options:NSCaseInsensitiveSearch];
     if (range.location == NSNotFound) {
         return NO;
     }
+    
     return YES;
 }
 
-- (NSMutableArray *)sortUsersByFullname:(NSArray *)users
-{
+- (NSMutableArray *)sortUsersByFullname:(NSArray *)users {
+    
     NSArray *sortedUsers = nil;
     NSSortDescriptor *fullNameDescriptor = [[NSSortDescriptor alloc] initWithKey:@"fullName" ascending:YES];
     sortedUsers = [users sortedArrayUsingDescriptors:@[fullNameDescriptor]];

@@ -40,7 +40,7 @@ NSString *const kQMAppName = @"Q-municate";
                           }];
 }
 
-NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/picture?height=400&width=400&access_token=%@";
+NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/picture?height=100&width=100&access_token=%@";
 
 - (void)loadUserImageFromFacebookWithUserID:(NSString *)userID completion:(ImageBlock)handler {
     

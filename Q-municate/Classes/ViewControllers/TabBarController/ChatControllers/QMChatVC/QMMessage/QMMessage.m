@@ -44,11 +44,11 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
         self.layout = QMMessageAttachmentLayout;
         
     } else if (notificationType) {
-        
-        @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                       reason:@"Need update it"
-                                     userInfo:@{}];
-        
+#warning need update it
+//        @throw [NSException exceptionWithName:NSInternalInconsistencyException
+//                                       reason:@"Need update it"
+//                                     userInfo:@{}];
+        self.layout = QMMessageQmunicateLayout;
         self.type = QMMessageTypeSystem;
         
     } else {

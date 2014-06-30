@@ -36,6 +36,10 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 @implementation QMChatVC
 
+- (void)loadView {
+    [super loadView];
+}
+
 - (void)viewDidLoad {
     
     [super viewDidLoad];
@@ -89,7 +93,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
-    [self.view layoutIfNeeded];
+//    [self.view layoutIfNeeded];
     
     if (self.automaticallyScrollsToMostRecentMessage) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -150,15 +154,14 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 - (void)scrollToBottomAnimated:(BOOL)animated {
     
-    if ([self.tableView numberOfSections] == 0) {
-        return;
-    }
-    
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.dataSource.qmChatHistory.count-1 inSection:0];
-    
-    if (indexPath > 0) {
-        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:animated];
+    if (self.dataSource.qmChatHistory.count > 0) {
         
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.dataSource.qmChatHistory.count-1 inSection:0];
+        
+        if (indexPath > 0) {
+            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:animated];
+            
+        }
     }
 }
 

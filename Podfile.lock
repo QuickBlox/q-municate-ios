@@ -1,6 +1,5 @@
 PODS:
   - AGEmojiKeyboard (0.1.0)
-  - AsyncImageView (1.5.1)
   - Parus (1.0)
   - SDWebImage (3.6):
     - SDWebImage/Core
@@ -13,7 +12,6 @@ PODS:
 
 DEPENDENCIES:
   - AGEmojiKeyboard (~> 0.1.0)
-  - AsyncImageView (~> 1.5.1)
   - Parus (~> 1.0)
   - SDWebImage (~> 3.6)
   - SSKeychain (~> 1.2.2)
@@ -24,7 +22,6 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AGEmojiKeyboard: dd58fd8520856094b5dd64ebb001703df85815e6
-  AsyncImageView: 388442ae8314a5c99de0d98040c2926826d31da7
   Parus: 4ed2c119d86103e160a3820d81564c08cf330eb0
   SDWebImage: c6989652c1cdf27cbdf3f56957e2030f825af5bc
   SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9

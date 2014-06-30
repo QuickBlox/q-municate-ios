@@ -7,16 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <AsyncImageView.h>
 
 @interface QMPrivateChatCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel *messageLabel;
-@property (weak, nonatomic) IBOutlet AsyncImageView *opponentAvatarView;
-@property (weak, nonatomic) IBOutlet AsyncImageView *myAvatarView;
-@property (weak, nonatomic) IBOutlet UILabel *datetimeLabel;
-
-- (void)configureCellWithMessage:(QBChatAbstractMessage *)message fromUser:(QBUUser *)user;
-+ (CGFloat)cellHeightForMessage:(QBChatAbstractMessage *)message;
+//@property (weak, nonatomic) IBOutlet UILabel *messageLabel;
+//@property (weak, nonatomic) IBOutlet AsyncImageView *opponentAvatarView;
+//@property (weak, nonatomic) IBOutlet AsyncImageView *myAvatarView;
+//@property (weak, nonatomic) IBOutlet UILabel *datetimeLabel;
+//
+//- (void)configureCellWithMessage:(QBChatAbstractMessage *)message fromUser:(QBUUser *)user;
+//+ (CGFloat)cellHeightForMessage:(QBChatAbstractMessage *)message;
 
 @end

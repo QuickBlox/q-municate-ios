@@ -129,7 +129,6 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     }
 }
 
-
 #pragma mark - Notifications
 
 - (void)localChatDidReceiveMessage:(NSNotification *)notification
