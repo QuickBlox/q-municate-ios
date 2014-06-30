@@ -48,14 +48,6 @@
     [self.performButton setAlpha:1.0f];
 }
 
-- (NSMutableArray *)usersIDFromSelectedUsers:(NSMutableArray *)users
-{
-    NSMutableArray *usersIDs = [super usersIDFromSelectedUsers:users];
-    // also add me:
-    NSString *myID = [NSString stringWithFormat:@"%lu", (unsigned long)[QMContactList shared].me.ID];
-    [usersIDs addObject:myID];
-    return usersIDs;
-}
 
 #pragma mark - Overriden Actions
 

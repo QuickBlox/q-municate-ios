@@ -319,6 +319,30 @@
     
 }
 
+- (void)createPrivateChatDialogWithOpponent:(QBUUser *)opponent completion:(QBChatDialogResultBlock)completionHandler
+{
+    NSString *opponentID = [NSString stringWithFormat:@"%lu", (unsigned long)opponent.ID];
+    NSArray *occupantsIDs = @[opponentID];
+    
+    // creating private chat dialog:
+    QBChatDialog *newDialog = [[QBChatDialog alloc] init];
+    
+    newDialog.type = QBChatDialogTypePrivate;
+    newDialog.occupantIDs = occupantsIDs;
+    
+    
+    QBResultBlock resultBlock = ^(Result *result) {
+        if (result.success && [result isKindOfClass:[QBChatDialogResult class]]) {
+            QBChatDialog *chatDialog = ((QBChatDialogResult *)result).dialog;
+            completionHandler(chatDialog, nil);
+            return;
+        }
+        completionHandler(nil, result.errors[0]);
+    };
+    
+	[QBChat createDialog:newDialog delegate:self context:Block_copy((__bridge void *)(resultBlock))];
+}
+
 - (void)createChatDialog:(QBChatDialog *)chatDialog withCompletion:(QBChatDialogResultBlock)completionHandler
 {
 	 QBResultBlock resultBlock = ^(Result *result) {
@@ -408,55 +432,22 @@
     if (message.delayed) {
         return;
     }
-    // handling invitations to chat:
-    if (message.customParameters[@"xmpp_room_jid"] != nil) {
-        
-        QBChatDialog *chatDialog = [self chatGroupDialogFromMessage:message];
-        
-        if ([self isLoggedIn]) {
-            [self joinRoomWithRoomJID:chatDialog.roomJID];
-        }
-            
-        // say to controllers:
-        [[NSNotificationCenter defaultCenter] postNotificationName:kChatDialogsDidLoadedNotification object:nil];
+    // check for notification:
+    if (message.customParameters[@"notification_type"] != nil) {
+        [self createOrUpdateChatDialogFromChatMessage:message];
 
+        [[NSNotificationCenter defaultCenter] postNotificationName:kChatDialogsDidLoadedNotification object:nil];
+        return;
     }
-    // find user:
-    NSString *kUserID = [@(message.senderID) stringValue];
-    QBUUser *opponent = [QMContactList shared].friendsAsDictionary[kUserID];
-    if (opponent == nil) {
-        opponent = [QMContactList shared].allUsersAsDictionary[kUserID];
-        if (opponent == nil) {
-            [[QMContactList shared] retrieveUserWithID:message.senderID completion:^(QBUUser *user, NSError *error) {
-                // update dialogs names:
-                [[NSNotificationCenter defaultCenter] postNotificationName:kChatDialogsDidLoadedNotification object:nil];
-            }];
-        }
-    }
+
+    // find opponent and fetch if needed:
+    [self searchForOpponentWithIDAndFetchIfNeeded:message.senderID];
     
-    // show popup message:
-    [[TWMessageBarManager sharedInstance] showMessageWithTitle:opponent.fullName description:message.text type:TWMessageBarMessageTypeInfo duration:5.0f callback:nil];
+//    // show popup message:
+//    [[TWMessageBarManager sharedInstance] showMessageWithTitle:opponent.fullName description:message.text type:TWMessageBarMessageTypeInfo duration:5.0f callback:nil];
     
-    // get dialog entity with current user:
-    QBChatDialog *currentDialog = self.allDialogsAsDictionary[kUserID];
-    if (currentDialog != nil) {
-        
-        // update dialog:
-        [self updateDialog:currentDialog forLastMessage:message];
-        
-        // get chat history with current dialog id:
-        NSMutableArray *currentHistory = self.allConversations[kUserID];
-        if (currentHistory != nil) {
-            [currentHistory addObject:message];
-        } else {
-            currentHistory = [@[message] mutableCopy];
-            self.allConversations[kUserID] = currentHistory;
-        }
-    } else {
-        // create terminate dialog:
-        currentDialog = [self createPrivateDialogWithOpponentID:kUserID message:message];
-        self.allDialogsAsDictionary[kUserID] = currentDialog;
-    }
+    NSString *dialogKey = [NSString stringWithFormat:@"%lu", (unsigned long)message.senderID];
+    [self saveMessageToLocalHistory:message chatDialogKey:dialogKey];
     
 	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidNotSendMessageNotification object:nil];
 }
@@ -474,8 +465,7 @@
 	[[QBChat instance] sendMessage:message];
     
     // check for notification message. If exist, ignore them
-    NSUInteger notificationType = [message.customParameters[@"notification_type"] integerValue];
-    if (notificationType == 2 || notificationType == 1) {
+    if (message.customParameters[@"notification_type"]) {
         return;
     }
     
@@ -485,10 +475,10 @@
     if (currentDialog != nil) {
         
         // update dialog:
-        [self updateDialog:currentDialog forLastMessage:message];
+        [self updateDialogsLastMessageFields:currentDialog forLastMessage:message];
         
         // get chat history with current dialog id:
-        NSMutableArray *currentHistory = self.allConversations[kRecipientID];
+        NSMutableArray *currentHistory = self.allConversations[currentDialog.ID];
         if (currentHistory != nil) {
             
             if ([message isKindOfClass:QMChatUploadingMessage.class]) {
@@ -502,7 +492,7 @@
             return;
         }
         currentHistory = [@[message] mutableCopy];
-        self.allConversations[kRecipientID] = currentHistory;
+        self.allConversations[currentDialog.ID] = currentHistory;
     }
 }
 
@@ -531,7 +521,6 @@
         
         // create message:
         QBChatMessage *inviteMessage = [QBChatMessage message];
-        inviteMessage.senderID = me.ID;
         inviteMessage.recipientID = user.ID;
         inviteMessage.text = [NSString stringWithFormat:@"%@ created a group conversation", me.fullName];
         
@@ -544,7 +533,6 @@
         
         NSTimeInterval timestamp = (unsigned long)[[NSDate date] timeIntervalSince1970];
         customParams[@"date_sent"] = @(timestamp);
-        customParams[@"save_to_history"] = @YES;
         
         // save to hostory:
         customParams[@"notification_type"] = @"1";
@@ -569,10 +557,7 @@
         updateMessage.recipientID = user.ID;
         
         NSMutableDictionary *customParams = [NSMutableDictionary new];
-        customParams[@"_id"] = chatDialog.ID;
-        customParams[@"xmpp_room_jid"] = chatDialog.roomJID;
         customParams[@"name"] = chatDialog.name;
-        customParams[@"type"] = @(chatDialog.type);
         customParams[@"occupants_ids"] = [chatDialog.occupantIDs stringFromArray];
 
         // notification type: 2 = Chat dialog was updated:
@@ -635,6 +620,10 @@
         
             block(messages, YES, nil);
             
+#warning Storage turned off
+//            [self.dbStorage cacheQBChatMessages:messages withDialogId:dialogIDString finish:^{
+//                block(messages, YES, nil);
+//            }];
         }else {
             block(nil, NO, result.errors[0]);
         }
@@ -676,33 +665,11 @@
     // if not my message:
     if (message.senderID != [QMContactList shared].me.ID) {
         // find user:
-        NSString *kUserID = [@(message.senderID) stringValue];
-        QBUUser *opponent = [QMContactList shared].friendsAsDictionary[kUserID];
-        if (opponent == nil) {
-            opponent = [QMContactList shared].allUsersAsDictionary[kUserID];
-            if (opponent == nil) {
-                [[QMContactList shared] retrieveUserWithID:message.senderID completion:^(QBUUser *user, NSError *error) {
-                    // update dialogs names:
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kChatDialogsDidLoadedNotification object:nil];
-                }];
-            }
-        }
+        [self searchForOpponentWithIDAndFetchIfNeeded:message.senderID];
     }
-    QBChatDialog *currentDialog = self.allDialogsAsDictionary[roomJID];
-    if (currentDialog != nil) {
-        
-        // update dialog:
-        [self updateDialog:currentDialog forLastMessage:message];
-        
-        // get chat history with current dialog id:
-        NSMutableArray *currentHistory = self.allConversations[roomJID];
-        if (currentHistory != nil) {
-            [currentHistory addObject:message];
-        } else {
-            currentHistory = [@[message] mutableCopy];
-            self.allConversations[roomJID] = currentHistory;
-        }
-    }
+    
+    [self saveMessageToLocalHistory:message chatDialogKey:roomJID];
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:kChatRoomDidReceiveMessageNotification object:nil];
 }
 
@@ -758,50 +725,100 @@
     return newMessage;
 }
 
+- (void)saveMessageToLocalHistory:(QBChatMessage *)message chatDialogKey:(NSString *)dialogKey
+{
+    // get dialog entity with current user:
+    QBChatDialog *chatDialog = self.allDialogsAsDictionary[dialogKey];
+    
+    if (chatDialog == nil) {
+         NSAssert(!chatDialog, @"Dialog you are looking for not found.");
+    }
+    
+    // update dialog:
+    [self updateDialogsLastMessageFields:chatDialog forLastMessage:message];
+    
+    // get chat history with current dialog id:
+    NSMutableArray *currentHistory = self.allConversations[chatDialog.ID];
+    if (currentHistory != nil) {
+        [currentHistory addObject:message];
+    } else {
+        currentHistory = [@[message] mutableCopy];
+        self.allConversations[chatDialog.ID] = currentHistory;
+    }
+    
+}
+
 - (QBChatDialog *)chatDialogForFriendWithID:(NSUInteger)ID
 {
-    NSString *kUserID = [@(ID) stringValue];
+    NSString *kUserID = [NSString stringWithFormat:@"%lu", (unsigned long)ID];
     QBChatDialog *dialog= self.allDialogsAsDictionary[kUserID];
-    if (dialog != nil) {
-        return dialog;
-        
-    }
-    // create fake dialog:
-    dialog = [[QBChatDialog alloc] init];
-    dialog.type = QBChatDialogTypePrivate;
-    dialog.occupantIDs = @[[@(ID) stringValue]];
-    dialog.ID = kUserID;
-    
-    self.allDialogsAsDictionary[kUserID] = dialog;
     
     return dialog;
 }
 
-- (QBChatDialog *)chatGroupDialogFromMessage:(QBChatMessage *)message
+- (QBChatDialog *)createChatDialogForChatMessage:(QBChatMessage *)chatMessage
 {
-    NSString *kRoomJID = message.customParameters[@"xmpp_room_jid"];
-    QBChatDialog *currentDialog = self.allDialogsAsDictionary[kRoomJID];
-    if (currentDialog != nil) {
-        return currentDialog;
+    QBChatDialog *chatDialog = [[QBChatDialog alloc] init];
+    
+    chatDialog.ID = chatMessage.customParameters[@"_id"];
+    chatDialog.roomJID = chatMessage.customParameters[@"xmpp_room_jid"];
+    chatDialog.name = chatMessage.customParameters[@"name"];
+    chatDialog.type = [chatMessage.customParameters[@"type"] intValue];
+    
+    NSString *occupantsIDs = chatMessage.customParameters[@"occupants_ids"];
+    chatDialog.occupantIDs = [self stringToArray:occupantsIDs];
+    
+    return chatDialog;
+}
+
+/** Only for Group dialogs */
+- (void)updateChatDialogForChatMessage:(QBChatMessage *)chatMessage
+{
+    NSString *kRoomJID = chatMessage.customParameters[@"xmpp_room_jid"];
+    
+    QBChatDialog *dialog = self.allDialogsAsDictionary[kRoomJID];
+    if (dialog == nil) {
+        NSAssert(!dialog, @"Dialog you are looking for not found.");
+        return;
     }
     
-    currentDialog = [[QBChatDialog alloc] init];
-    currentDialog.ID = message.customParameters[@"_id"];
+    dialog.name = chatMessage.customParameters[@"name"];
     
-    currentDialog.type = [message.customParameters[@"type"] intValue];
-    currentDialog.name = message.customParameters[@"name"];
-    currentDialog.roomJID = message.customParameters[@"xmpp_room_jid"];
+    NSString *occupantsIDs = chatMessage.customParameters[@"occupants_ids"];
+    dialog.occupantIDs = [self stringToArray:occupantsIDs];
+}
+
+- (void)createOrUpdateChatDialogFromChatMessage:(QBChatMessage *)message
+{
+    NSInteger notificationType = [message.customParameters[@"notification_type"] intValue];
     
     NSString *occupantsIDs = message.customParameters[@"occupants_ids"];
     currentDialog.occupantIDs = [occupantsIDs componentsSeparatedByString:@","];
+    // if notification type = update dialog:
+    if (notificationType == 2) {
+        [self updateChatDialogForChatMessage:message];
+        return;
+    }
     
-    // save dialog:
-    self.allDialogsAsDictionary[currentDialog.roomJID] = currentDialog;
+    // if notification type = create dialog:
+    QBChatDialog *newDialog = [self createChatDialogForChatMessage:message];
     
-    return currentDialog;
+    // save to history:
+    if (newDialog.type == QBChatDialogTypePrivate) {
+        NSString *kSenderID = [NSString stringWithFormat:@"%lu",(unsigned long)message.senderID];
+        self.allDialogsAsDictionary[kSenderID] = newDialog;
+        return;
+    }
+    // if dialog type = group:
+    self.allDialogsAsDictionary[newDialog.roomJID] = newDialog;
+    
+    // if user is not joined to room, join:
+    if (![self userIsJoinedRoomWithJID:newDialog.roomJID]) {
+        [self joinRoomWithRoomJID:newDialog.roomJID];
+    }
 }
 
-- (void)updateDialog:(QBChatDialog *)dialog forLastMessage:(QBChatMessage *)message
+- (void)updateDialogsLastMessageFields:(QBChatDialog *)dialog forLastMessage:(QBChatMessage *)message
 {
     dialog.lastMessageDate = message.datetime;
     dialog.lastMessageText = message.text;
@@ -811,14 +828,40 @@
     }
 }
 
-- (QBChatDialog *)createPrivateDialogWithOpponentID:(NSString *)opponentID message:(QBChatMessage *)message
+//- (QBChatDialog *)createPrivateDialogWithOpponentID:(NSString *)opponentID message:(QBChatMessage *)message
+//{
+//    QBChatDialog *newDialog = [QBChatDialog new];
+//    newDialog.type = QBChatDialogTypePrivate;
+//    newDialog.occupantIDs = @[ opponentID];  // occupant ID
+//    [self updateDialogsLastMessageFields:newDialog forLastMessage:message];
+//    
+//    return newDialog;
+//}
+
+- (BOOL)userIsJoinedRoomWithJID:(NSString *)roomJID
 {
-    QBChatDialog *newDialog = [QBChatDialog new];
-    newDialog.type = QBChatDialogTypePrivate;
-    newDialog.occupantIDs = @[ opponentID];  // occupant ID
-    [self updateDialog:newDialog forLastMessage:message];
+    QBChatRoom *room = self.allChatRoomsAsDictionary[roomJID];
+    if (room == nil) {
+        return NO;
+    }
+    return YES;
+}
+
+- (void)searchForOpponentWithIDAndFetchIfNeeded:(NSUInteger)opponentID
+{
+    // find user:
+    NSString *kOpponentID = [NSString stringWithFormat:@"%lu",(unsigned long)opponentID];
     
-    return newDialog;
+    QBUUser *opponent = [QMContactList shared].friendsAsDictionary[kOpponentID];
+    if (opponent == nil) {
+        opponent = [QMContactList shared].allUsersAsDictionary[kOpponentID];
+        if (opponent == nil) {
+            [[QMContactList shared] retrieveUserWithID:opponentID completion:^(QBUUser *user, NSError *error) {
+                // update dialogs names:
+                [[NSNotificationCenter defaultCenter] postNotificationName:kChatDialogsDidLoadedNotification object:nil];
+            }];
+        }
+    }
 }
 
 - (NSMutableDictionary *)dialogsAsDictionaryFromDialogsArray:(NSArray *)array

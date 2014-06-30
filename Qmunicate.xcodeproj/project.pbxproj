@@ -10,6 +10,7 @@
 		550E4055194AF1AA00CD5D33 /* ChatBubbles.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 550E4054194AF1AA00CD5D33 /* ChatBubbles.xcassets */; };
 		550E405C194AF25900CD5D33 /* NSString+UsedSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 550E405B194AF25900CD5D33 /* NSString+UsedSize.m */; };
 		550E4062194AFB7300CD5D33 /* QMChatLayoutConfigs.m in Sources */ = {isa = PBXBuildFile; fileRef = 550E4061194AFB7300CD5D33 /* QMChatLayoutConfigs.m */; };
+		247859A2195DD9BE0057EFAF /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 247859A1195DD9BE0057EFAF /* Quickblox.framework */; };
 		552B423919471E19008DF1E8 /* CDAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 552B423819471E19008DF1E8 /* CDAttachment.m */; };
 		552B423C19471E22008DF1E8 /* _CDAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 552B423B19471E22008DF1E8 /* _CDAttachment.m */; };
 		552E1AD11949AB120092340A /* QMMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 552E1AD01949AB120092340A /* QMMessage.m */; };
@@ -122,7 +123,6 @@
 		694811881938EBB4006603FD /* QMGroupContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 694811871938EBB4006603FD /* QMGroupContentCell.m */; };
 		6967D6B9192E4F4500D6C268 /* QMChatInvitationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6967D6B8192E4F4500D6C268 /* QMChatInvitationCell.m */; };
 		6972022F18EB04280003A4CC /* QMChatViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6972022E18EB04280003A4CC /* QMChatViewCell.m */; };
-		6979B3F91958869C00A49821 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6979B3F81958869C00A49821 /* Quickblox.framework */; };
 		69B013F9194854C3001A3FE1 /* QMPhoneNumberCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B013F8194854C3001A3FE1 /* QMPhoneNumberCell.m */; };
 		69B1893E190950A70049C6F9 /* QMDefinitions.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B1893D190950A70049C6F9 /* QMDefinitions.m */; };
 		69B5343D1934C9C2005D865F /* QMPrivateChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B5343C1934C9C2005D865F /* QMPrivateChatCell.m */; };
@@ -212,6 +212,7 @@
 		550E405B194AF25900CD5D33 /* NSString+UsedSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+UsedSize.m"; sourceTree = "<group>"; };
 		550E4060194AFB7300CD5D33 /* QMChatLayoutConfigs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatLayoutConfigs.h; sourceTree = "<group>"; };
 		550E4061194AFB7300CD5D33 /* QMChatLayoutConfigs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatLayoutConfigs.m; sourceTree = "<group>"; };
+		247859A1195DD9BE0057EFAF /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quickblox.framework; path = External/Quickblox.framework; sourceTree = "<group>"; };
 		552B423619470A81008DF1E8 /* QBDBMergeProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QBDBMergeProtocol.h; sourceTree = "<group>"; };
 		552B423719471E19008DF1E8 /* CDAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDAttachment.h; sourceTree = "<group>"; };
 		552B423819471E19008DF1E8 /* CDAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDAttachment.m; sourceTree = "<group>"; };
@@ -430,7 +431,6 @@
 		6967D6B8192E4F4500D6C268 /* QMChatInvitationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatInvitationCell.m; sourceTree = "<group>"; };
 		6972022D18EB04280003A4CC /* QMChatViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatViewCell.h; sourceTree = "<group>"; };
 		6972022E18EB04280003A4CC /* QMChatViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatViewCell.m; sourceTree = "<group>"; };
-		6979B3F81958869C00A49821 /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quickblox.framework; path = External/Quickblox.framework; sourceTree = "<group>"; };
 		69B013F7194854C3001A3FE1 /* QMPhoneNumberCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMPhoneNumberCell.h; sourceTree = "<group>"; };
 		69B013F8194854C3001A3FE1 /* QMPhoneNumberCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMPhoneNumberCell.m; sourceTree = "<group>"; };
 		69B1893D190950A70049C6F9 /* QMDefinitions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDefinitions.m; sourceTree = "<group>"; };
@@ -541,7 +541,7 @@
 				69CF189918AE1C52003262EF /* MobileCoreServices.framework in Frameworks */,
 				69CF189718AE1C49003262EF /* SystemConfiguration.framework in Frameworks */,
 				69CF189518AE1C3C003262EF /* CFNetwork.framework in Frameworks */,
-				6979B3F91958869C00A49821 /* Quickblox.framework in Frameworks */,
+				247859A2195DD9BE0057EFAF /* Quickblox.framework in Frameworks */,
 				69D15CC318AE1721001E0480 /* libz.dylib in Frameworks */,
 				69D15CC118AE1714001E0480 /* libresolv.dylib in Frameworks */,
 				69D15CBF18AE1708001E0480 /* libxml2.dylib in Frameworks */,
@@ -1234,7 +1234,7 @@
 		69D57E5418ACC11C00A9900A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				6979B3F81958869C00A49821 /* Quickblox.framework */,
+				247859A1195DD9BE0057EFAF /* Quickblox.framework */,
 				693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */,
 				693DC42518FFC45900AF46D9 /* libsqlite3.dylib */,
 				69DB5EF418E31D6400277226 /* MessageUI.framework */,
@@ -1923,6 +1923,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/External\"",
 					"$(PROJECT_DIR)/External",
+					"/Users/mak/Quickblox/SDK-ios/Framework/build/Framework",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Q-municate/Qmunicate-Prefix.pch";
@@ -1960,6 +1961,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/External\"",
 					"$(PROJECT_DIR)/External",
+					"/Users/mak/Quickblox/SDK-ios/Framework/build/Framework",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Q-municate/Qmunicate-Prefix.pch";
