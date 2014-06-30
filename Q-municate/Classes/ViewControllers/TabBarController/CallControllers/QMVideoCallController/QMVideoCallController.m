@@ -252,11 +252,7 @@
         [self stopTimer];
     }
     
-    if (callWasAccepted) {
-        self.callDurationLabel.text = @"Call finished";
-    } else {
-        self.callDurationLabel.text = @"Call canceled";
-    }
+    self.callDurationLabel.text = callWasAccepted ? @"Call finished" :  @"Call canceled";
     
     // stop playing sound:
     [[QMUtilities shared] stopPlaying];
