@@ -59,31 +59,48 @@
 - (IBAction)connectWithFacebook:(id)sender {
     
     QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
+    QMFacebookService *fbService = [[QMFacebookService alloc] init];
+    QMAuthService *authService = [QMAuthService shared];
+
+    [fbService connectToFacebook:^(NSString *sessionToken) {
+        
+        [authService logInWithFacebookAccessToken:sessionToken completion:^(QBUUser *user, BOOL success, NSString *error) {
+            
+            if (!success) {
+                [self showAlertWithMessage:error actionSuccess:NO];
+                return;
+            }
+            
+            settingsManager.rememberMe = YES;
+            
+            // subscribe to push notification:
+            [[QMAuthService shared] subscribeToPushNotifications];
+            
+            // save me:
+            [[QMContactList shared] setMe:user];
+            
+            if (!user.website) {
+                
+//                [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
+//                    if (success) {
+//                        [self logInToQuickbloxChatWithUser:user];
+//                    }
+//                }];
+//                return;
+            }
+            [self logInToQuickbloxChatWithUser:user];
+            
+        }];
+        
+    }];
     
-    [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSString *error) {
-        
-        if (!success) {
-            [self showAlertWithMessage:error actionSuccess:NO];
-            return;
-        }
-        
-        // remember me with facebook login:
-        settingsManager.rememberMe = YES;
-        
-        // subscribe to push notification:
-        [[QMAuthService shared] subscribeToPushNotifications];
-        
-        // save me:
-        [[QMContactList shared] setMe:user];
-        if (user.blobID == 0 || user.website == nil) {
-            [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
-                if (success) {
-                    [self logInToQuickbloxChatWithUser:user];
-                }
-            }];
-            return;
-        }
-        [self logInToQuickbloxChatWithUser:user];
+}
+
+- (void)showMessage:(NSString *)text withTitle:(NSString *)title {
+    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
+        alertView.title = title;
+        alertView.message = text;
+        [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{}];
     }];
 }
 

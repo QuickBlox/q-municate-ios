@@ -1,12 +1,12 @@
 //
-//  QMLogInController.m
+//  QMLogInVC.m
 //  Q-municate
 //
 //  Created by Igor Alefirenko on 13/02/2014.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import "QMLogInController.h"
+#import "QMLogInVC.h"
 #import "QMWelcomeScreenViewController.h"
 #import "QMChatService.h"
 #import "QMAddressBook.h"
@@ -16,7 +16,7 @@
 #import "QMSettingsManager.h"
 #import "REAlertView.h"
 
-@interface QMLogInController ()
+@interface QMLogInVC ()
 
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
@@ -24,11 +24,10 @@
 
 - (IBAction)logIn:(id)sender;
 - (IBAction)connectWithFacebook:(id)sender;
-- (IBAction)forgotPassword:(id)sender;
 
 @end
 
-@implementation QMLogInController
+@implementation QMLogInVC
 
 - (void)viewDidLoad
 {
@@ -91,48 +90,33 @@
 }
 
 - (IBAction)connectWithFacebook:(id)sender {
-    
-    [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSString *error) {
-        if (!success) {
-            [self showAlertWithMessage:error actionSuccess:NO];
-            return;
-        }
-        // remember me:
-        [self rememberMe:self.rememberMeSwitch.isOn isFacebookSession:YES];
-        
-        // save me:
-        [[QMContactList shared] setMe:user];
-        
-        // subscribe to push notification:
-        [[QMAuthService shared] subscribeToPushNotifications];
-        
-        if (user.blobID == 0) {
-            [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
-                if (!success) {
-                    [self showAlertWithMessage:error.description actionSuccess:NO];
-                    return;
-                }
-                [self logInToQuickbloxChatWithUser:user];
-            }];
-            return;
-        }
-        [self logInToQuickbloxChatWithUser:user];
-    }];
-}
-
-- (IBAction)forgotPassword:(id)sender {
-    
-    // sending to email
-//    NSString *email = self.emailField.text;
-//    
-//
-//    
-//    if ([email isEqualToString:kEmptyString]) {
-//        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:kMessageString message:nil delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil];
-//        alertView.tag = 1;
-//        alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
-//        [alertView show];
-//    }
+#warning connetcWithFacebook
+//    [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSString *error) {
+//        if (!success) {
+//            [self showAlertWithMessage:error actionSuccess:NO];
+//            return;
+//        }
+//        // remember me:
+//        [self rememberMe:self.rememberMeSwitch.isOn isFacebookSession:YES];
+//        
+//        // save me:
+//        [[QMContactList shared] setMe:user];
+//        
+//        // subscribe to push notification:
+//        [[QMAuthService shared] subscribeToPushNotifications];
+//        
+//        if (user.blobID == 0) {
+//            [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
+//                if (!success) {
+//                    [self showAlertWithMessage:error.description actionSuccess:NO];
+//                    return;
+//                }
+//                [self logInToQuickbloxChatWithUser:user];
+//            }];
+//            return;
+//        }
+//        [self logInToQuickbloxChatWithUser:user];
+//    }];
 }
 
 - (void)rememberMe:(BOOL)isRemember isFacebookSession:(BOOL)isFacebookSession {
@@ -158,28 +142,13 @@
 - (void)loadDefaults {
     
     QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
+    
     NSString *login = settingsManager.login;
     NSString *password = settingsManager.password;
+    
     self.emailField.text = login;
     self.passwordField.text = password;
 }
-
-//#pragma mark - Alert
-
-//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-//{
-//    if (alertView.tag == 1) {
-//        NSString *emailString = [alertView textFieldAtIndex:0].text;
-//        if (![emailString isEqualToString:kEmptyString]) {
-//            [self resetPasswordForMail:emailString];
-//        } else {
-//            [self showAlertWithMessage:kMessageString actionSuccess:NO];
-//        }
-//    } else {
-//		self.passwordField.text = kEmptyString;
-//	}
-//}
-
 
 
 - (void)showAlertWithMessage:(NSString *)messageString actionSuccess:(BOOL)success {
@@ -191,28 +160,10 @@
     }];
 }
 
-//- (void)resetPasswordForMail:(NSString *)emailString
-//{
-//    [QMUtilities showActivityView];
-//    [[QMAuthService shared] resetUserPasswordForEmail:emailString completion:^(Result *result) {
-//        if (result.success) {
-//            // show alert
-//            [self showAlertWithMessage:kAlertBodyMessageWasSentToMailString actionSuccess:YES];
-//        } else {
-//            NSString *errorMessage = [[result.errors description] stringByReplacingOccurrencesOfString:@"(" withString:@""];
-//            errorMessage = [errorMessage stringByReplacingOccurrencesOfString:@")" withString:@""];
-//
-//            [self showAlertWithMessage:errorMessage actionSuccess:NO];
-//        }
-//        [QMUtilities hideActivityView];
-//    }];
-//}
-
 
 #pragma mark - Options
 
-- (void)logInToQuickbloxChatWithUser:(QBUUser *)user
-{
+- (void)logInToQuickbloxChatWithUser:(QBUUser *)user {
     // login to Quickblox chat:
     [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
         if (success) {

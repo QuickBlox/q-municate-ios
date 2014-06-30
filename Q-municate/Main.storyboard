@@ -1709,10 +1709,10 @@
             </objects>
             <point key="canvasLocation" x="-2641" y="-7345"/>
         </scene>
-        <!--Log In Controller - Log In-->
+        <!--Log InVC - Log In-->
         <scene sceneID="GcV-SH-veH">
             <objects>
-                <viewController id="kK1-uY-WDS" customClass="QMLogInController" sceneMemberID="viewController">
+                <viewController id="kK1-uY-WDS" customClass="QMLogInVC" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="g2Y-Kh-8jh"/>
                         <viewControllerLayoutGuide type="bottom" id="pCn-tC-STD"/>
@@ -1802,7 +1802,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="forgotPassword:" destination="kK1-uY-WDS" eventType="touchUpInside" id="2BH-Cm-raU"/>
+                                    <segue destination="Uz2-In-U2Z" kind="push" id="LfQ-pc-wn8"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1843,6 +1843,72 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MBB-7W-DNd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-2641" y="-6605"/>
+        </scene>
+        <!--Forgot PasswordTVC - Forgot password?-->
+        <scene sceneID="lmt-3a-5Zy">
+            <objects>
+                <tableViewController id="Uz2-In-U2Z" customClass="QMForgotPasswordTVC" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="2kQ-Tq-9iF">
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <sections>
+                            <tableViewSection id="hnv-9l-VGr">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="lnE-gd-yWS">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lnE-gd-yWS" id="iyM-qS-H6N">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Email" minimumFontSize="17" background="underline" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="uHZ-wV-ADZ">
+                                                    <rect key="frame" x="20" y="7" width="280" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
+                                                </textField>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="641-Oo-4en">
+                                        <rect key="frame" x="0.0" y="44" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="641-Oo-4en" id="1wy-E4-8cp">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dEK-BY-Ip3" customClass="QMCornerButton">
+                                                    <rect key="frame" x="35" y="0.0" width="250" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" red="0.0" green="0.74117648599999997" blue="0.24313727020000001" alpha="1" colorSpace="deviceRGB"/>
+                                                    <state key="normal" title="Reset Password">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="pressResetPasswordBtn:" destination="Uz2-In-U2Z" eventType="touchUpInside" id="GzO-sX-QcS"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="Uz2-In-U2Z" id="nfE-PS-Y7R"/>
+                            <outlet property="delegate" destination="Uz2-In-U2Z" id="l3s-GS-R49"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Forgot password?" id="VZl-bg-FCN"/>
+                    <connections>
+                        <outlet property="emailTextField" destination="uHZ-wV-ADZ" id="ZVq-9s-SHy"/>
+                        <outlet property="resetPasswordBtn" destination="dEK-BY-Ip3" id="mOD-Fr-Ekq"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="L6Z-mo-X1m" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2129" y="-6597"/>
         </scene>
         <!--Table View Controller-->
         <scene sceneID="1Fb-UK-pas">
@@ -2547,9 +2613,9 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="veI-CA-d70"/>
         <segue reference="2sb-bJ-gNA"/>
-        <segue reference="TaC-No-aTb"/>
-        <segue reference="IAo-qy-uHQ"/>
         <segue reference="bAk-xe-kWS"/>
+        <segue reference="gq5-5p-RwI"/>
     </inferredMetricsTieBreakers>
 </document>

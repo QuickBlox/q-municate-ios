@@ -1,13 +1,13 @@
 //
-//  QMMenuCell.h
+//  QMLogInVC.h
 //  Q-municate
 //
-//  Created by Igor Alefirenko on 20/02/2014.
+//  Created by Igor Alefirenko on 13/02/2014.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface QMMenuCell : UITableViewCell
+@interface QMLogInVC : UIViewController
 
 @end

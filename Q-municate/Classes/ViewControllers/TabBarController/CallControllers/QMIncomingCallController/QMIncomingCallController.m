@@ -24,22 +24,20 @@
 @end
 
 @implementation QMIncomingCallController
+
 @synthesize opponent;
 @synthesize sessionID;
 
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self configureUserAvatarCircledView];
     
     opponent = [[QMContactList shared] findFriendWithID:self.opponentID];
-    if (opponent != nil) {
-        self.userNameLabel.text = opponent.fullName;
-    } else {
-        self.userNameLabel.text = @"Unknown caller";
-    }
+    
+    self.userNameLabel.text = opponent ? opponent.fullName : @"Unknown caller";
+ 
+    
     if (self.callType == QMVideoChatTypeVideo) {
         self.incomingCallLabel.text = @"Incoming video call";
         [self.acceptButton setImage:[ UIImage imageNamed:@"answer-video"] forState:UIControlStateNormal];
@@ -72,40 +70,29 @@
     self.userAvatarView.layer.masksToBounds = YES;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [[QMUtilities shared] stopPlaying];
 }
-
 
 #pragma mark - Actions
 
-- (IBAction)acceptCall:(id)sender
-{
-    // stop playing music:
-    [[QMUtilities shared] stopPlaying];
+- (IBAction)acceptCall:(id)sender {
     
+    [[QMUtilities shared] stopPlaying];
     [self performSegueWithIdentifier:kStartCallSegueIdentifier sender:nil];
 }
 
-- (IBAction)declineCall:(id)sender
-{
-    // stop playing sound
+- (IBAction)declineCall:(id)sender {
+    
     [[QMUtilities shared] stopPlaying];
-    
-    if (opponent != nil) {
-        [[QMChatService shared] rejectCallFromUser:self.opponent.ID opponentView:nil];
-    } else {
-        [[QMChatService shared] rejectCallFromUser:self.opponentID opponentView:nil];
-    }
-    
+    [[QMChatService shared] rejectCallFromUser:opponent ? self.opponent.ID : self.opponentID  opponentView:nil];
     [[QMUtilities shared] playSoundOfType:QMSoundPlayTypeEndOfCall];
     
     [self performSelector:@selector(dismissIncomingCallController) withObject:self afterDelay:1.0f];
 }
 
-- (void)dismissIncomingCallController
-{
+- (void)dismissIncomingCallController {
+    
     [QMUtilities.shared stopPlaying];
     [QMUtilities.shared dismissIncomingCallController];
 }

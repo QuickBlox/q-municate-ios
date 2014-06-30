@@ -56,6 +56,7 @@
 {
     if (self = [super init]) {
         self.allConversations = [NSMutableDictionary new];
+        self.allChatRoomsAsDictionary = [NSMutableDictionary new];
         [QBChat instance].delegate = self;
     }
     return self;
@@ -414,6 +415,7 @@
 - (void)joinRoomsForDialogs:(NSArray *)chatDialogs
 {
     for (QBChatDialog *dialog in chatDialogs) {
+        
         if (dialog.type == QBChatDialogTypePrivate) {
             continue;
         }
@@ -603,10 +605,6 @@
 {
     QBChatRoom *chatRoom = [[QBChatRoom alloc] initWithRoomJID:roomJID];
     [chatRoom joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
-    
-    if (self.allChatRoomsAsDictionary == nil) {
-        self.allChatRoomsAsDictionary = [NSMutableDictionary new];
-    }
     self.allChatRoomsAsDictionary[chatRoom.JID] = chatRoom;
 }
 

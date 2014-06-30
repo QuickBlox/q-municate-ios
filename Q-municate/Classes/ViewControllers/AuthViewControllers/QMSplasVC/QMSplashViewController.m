@@ -14,6 +14,7 @@
 #import "QMUtilities.h"
 #import "QMSettingsManager.h"
 #import "REAlertView.h"
+#import "QMFacebookService.h"
 
 #warning [QMUtilities shared];
 
@@ -97,13 +98,19 @@
 
 - (void)loginWithFacebook {
     
-    [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSString *error) {
-
-        if (success) {
-            [self loginWithUser:user];
-        } else {
-            [self showAlertWithMessage:error actionSuccess:NO];
-        }
+    QMAuthService *authService = [QMAuthService shared];
+    QMFacebookService *fbService = [[QMFacebookService alloc] init];
+    
+    [fbService connectToFacebook:^(NSString *sessionToken) {
+       
+        [authService logInWithFacebookAccessToken:sessionToken completion:^(QBUUser *user, BOOL success, NSString *error) {
+            
+            if (success) {
+                [self loginWithUser:user];
+            } else {
+                [self showAlertWithMessage:error actionSuccess:NO];
+            }
+        }];
         
     }];
 }

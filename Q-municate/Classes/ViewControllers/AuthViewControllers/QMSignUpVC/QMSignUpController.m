@@ -68,18 +68,24 @@
     [self presentViewController:imagePicker animated:YES completion:nil];
 }
 
-- (IBAction)signUp:(id)sender
-{
-    if ([self.emailField.text isEqual:kEmptyString] || [self.fullNameField.text isEqual:kEmptyString] || [self.passwordField isEqual:kEmptyString]) {
+- (IBAction)signUp:(id)sender {
+    
+    NSString *fullName = self.fullNameField.text;
+    NSString *email = self.emailField.text;
+    NSString *password = self.passwordField.text;
+    
+    if (fullName.length == 0 || password.length == 0 || email.length == 0) {
         [self showAlertWithMessage:kAlertBodyFillInAllFieldsString success:NO];
         return;
     }
     
-    [[QMAuthService shared] signUpWithFullName:self.fullNameField.text
-                                         email:self.emailField.text
-                                      password:self.passwordField.text
-                                        blobID:0
-                                    completion:^(QBUUser *user, BOOL success, NSString *error) {
+    QBUUser *newUser = [QBUUser user];
+    
+    newUser.fullName = fullName;
+    newUser.email = email;
+    newUser.password = password;
+    
+    [[QMAuthService shared] signUpUser:newUser completion:^(QBUUser *user, BOOL success, NSString *error) {
         if (error) {
             [self showAlertWithMessage:error success:NO];
             return;

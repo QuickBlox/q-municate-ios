@@ -22,4 +22,5 @@
 - (void)updateFriendsArrayForSearchPhrase:(NSString *)searchPhraseString;
 
 - (void)emptyOtherUsersArray;
+
 @end

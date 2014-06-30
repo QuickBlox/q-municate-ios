@@ -67,16 +67,15 @@
 {
 	//share to Facebook:
     if ([self.dataSource.checkedFacebookUsers count] > 0) {
+        
         NSString *tags = [self.dataSource emailsFromFacebookPersons];
-        if ([FBSession activeSession].state == FBSessionStateOpen) {
+        
+        QMFacebookService *fbService = [[QMFacebookService alloc] init];
+
+        [fbService connectToFacebook:^(NSString *sessionToken) {
+            
             [self shareApplicationToFriends:tags];
-        } else {
-            [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSString *error) {
-                if (success) {
-                    [self shareApplicationToFriends:tags];
-                }
-            }];
-        }
+        }];
         return;
     }
     // share via Email:
@@ -91,7 +90,8 @@
 
 - (void)shareApplicationToFriends:(NSString *)friendsListString
 {
-    [QMFacebookService shareToFacebookUsersWithIDs:friendsListString withCompletion:^(BOOL success, NSError *error) {
+    QMFacebookService *fbService = [[QMFacebookService alloc] init];
+    [fbService shareToFacebookUsersWithIDs:friendsListString withCompletion:^(BOOL success, NSError *error) {
         if (!success) {
             NSString *errorMessageString = [NSString stringWithFormat:@"%@", error];
             [self showAlertWithMessage:errorMessageString];

@@ -12,6 +12,7 @@
 #import "QMAuthService.h"
 #import "REAlertView.h"
 #import "QMSettingsManager.h"
+#import "QMFacebookService.h"
 
 @interface QMSettingsViewController ()
 
@@ -45,12 +46,11 @@
     
     [[QMAuthService shared] destroySessionWithCompletion:^(BOOL success) {
         
-        if ([FBSession activeSession].state == FBSessionStateOpen) {
-            [[FBSession activeSession] closeAndClearTokenInformation];
-        }
+        QMFacebookService *fbService = [[QMFacebookService alloc] init];
         
         [[QMChatService shared] logOut];
         [[QMContactList shared] clearData];
+        [fbService logout];
         
         QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
         [settingsManager clearSettings];
