@@ -8,7 +8,7 @@
 
 #import "QMForgotPasswordTVC.h"
 #import "QMAuthService.h"
-#import "REAlertView.h"
+#import "SVProgressHUD.h"
 
 @interface QMForgotPasswordTVC ()
 
@@ -36,29 +36,17 @@
 
 - (void)resetPasswordForMail:(NSString *)emailString {
     
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     [[QMAuthService shared] resetUserPasswordForEmail:emailString completion:^(Result *result) {
+
         if (result.success) {
+            [SVProgressHUD showSuccessWithStatus:kAlertBodyMessageWasSentToMailString];
+            [self.navigationController popViewControllerAnimated:YES];
             
-            [self showAlertWithMessage:kAlertBodyMessageWasSentToMailString actionSuccess:YES successBlock:^{
-                
-            }];
-            
-        } else {
-            NSString *errorMessage = [[result.errors description] stringByReplacingOccurrencesOfString:@"(" withString:@""];
-            errorMessage = [errorMessage stringByReplacingOccurrencesOfString:@")" withString:@""];
-
-            [self showAlertWithMessage:errorMessage actionSuccess:NO successBlock:nil];
         }
-
-    }];
-}
-
-- (void)showAlertWithMessage:(NSString *)messageString actionSuccess:(BOOL)success successBlock:(void(^)(void))successBlock{
-    
-    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-        alertView.title = success ? kAlertTitleSuccessString : kAlertTitleErrorString;
-        alertView.message = messageString;
-        [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:successBlock];
+        else {
+            [SVProgressHUD showErrorWithStatus:result.errors.lastObject];
+        }
     }];
 }
 

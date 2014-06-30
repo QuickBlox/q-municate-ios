@@ -86,7 +86,6 @@
     [QBAuth createSessionWithDelegate:self context:Block_copy((__bridge void *)(completion))];
 }
 
-
 #pragma mark - Push Notifications
 - (void)subscribeToPushNotifications {
     // Subscribe Users to Push Notifications
