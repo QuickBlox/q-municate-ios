@@ -9,12 +9,12 @@
 #import "QMSignUpController.h"
 #import "QMWelcomeScreenViewController.h"
 #import "UIImage+Cropper.h"
-#import "QMAddressBook.h"
 #import "QMAuthService.h"
 #import "QMChatService.h"
 #import "QMContactList.h"
 #import "QMContent.h"
-#import "QMUtilities.h"
+#import "REAlertView+QMSuccess.h"
+#import "SVProgressHUD.h"
 
 @interface QMSignUpController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
@@ -30,38 +30,33 @@
 
 @end
 
-
 @implementation QMSignUpController
 
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
+    
     [self configureAvatarImage];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
-
 #pragma mark - UI
 
-- (void)configureAvatarImage
-{
+- (void)configureAvatarImage {
+    
     CALayer *imageLayer = self.userImage.layer;
     imageLayer.cornerRadius = self.userImage.frame.size.width / 2;
     imageLayer.masksToBounds = YES;
 }
 
-
 #pragma mark - Actions
 
-- (IBAction)hideKeyboard:(id)sender
-{
+- (IBAction)hideKeyboard:(id)sender {
     [sender resignFirstResponder];
 }
 
-- (IBAction)chooseUserPicture:(id)sender
-{
+- (IBAction)chooseUserPicture:(id)sender {
+    
     UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
     imagePicker.delegate = self;
     imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
@@ -75,7 +70,7 @@
     NSString *password = self.passwordField.text;
     
     if (fullName.length == 0 || password.length == 0 || email.length == 0) {
-        [self showAlertWithMessage:kAlertBodyFillInAllFieldsString success:NO];
+        [REAlertView showAlertWithMessage:kAlertBodyFillInAllFieldsString actionSuccess:NO];
         return;
     }
     
@@ -84,111 +79,106 @@
     newUser.fullName = fullName;
     newUser.email = email;
     newUser.password = password;
+
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+
+    [[QMAuthService shared] signUpUser:newUser completion:^(QBUUserResult *result) {
+
+        [SVProgressHUD dismiss];
+        
+        if (result.success) {
+            // load image and update user with blob ID:
+            if (self.cachedPicture != nil) {
+                [self loginWithUser:result.user afterLoadingImage:self.cachedPicture];
+            }
+            [self loginWithUserWithoutImage:result.user];
+        }
+        else {
+            [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
+        }
+        
+    }];
+}
+
+- (void)loginWithUser:(QBUUser *)user afterLoadingImage:(UIImage *)image {
     
-    [[QMAuthService shared] signUpUser:newUser completion:^(QBUUser *user, BOOL success, NSString *error) {
-        if (error) {
-            [self showAlertWithMessage:error success:NO];
-            return;
-        }
+    [[QMAuthService shared] logInWithEmail:user.email password:self.passwordField.text completion:^(QBUUserLogInResult *result) {
         
-        // load image and update user with blob ID:
-        if (self.cachedPicture != nil) {
-            [self loginWithUser:user afterLoadingImage:self.cachedPicture];
-            return;
+        if (result.success) {
+            [self updateUser:user withAvatar:image];
         }
-        [self loginWithUserWithoutImage:user];
+        else {
+            [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
+        }
     }];
 }
 
-// **************** 
-- (void)loginWithUser:(QBUUser *)user afterLoadingImage:(UIImage *)image
-{
-    [[QMAuthService shared] logInWithEmail:user.email password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSString *error) {
-        if (!success) {
-            [self showAlertWithMessage:error success:NO];
-            return;
-        }
-        [self updateUser:user withAvatar:image];
-    }];
-}
+- (void)loginWithUserWithoutImage:(QBUUser *)user {
 
-- (void)loginWithUserWithoutImage:(QBUUser *)user
-{
-    [[QMAuthService shared] logInWithEmail:user.email password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSString *error) {
-        if (!success) {
-            [self showAlertWithMessage:error.description success:NO];
-            return;
-        }
-        // save me:
-        user.password = self.passwordField.text;
-        [QMContactList shared].me = user;
+    QMChatService *chatService = [QMChatService shared];
+    QMAuthService *authService = [QMAuthService shared];
+    QMContactList *contactList = [QMContactList shared];
+    
+    [authService logInWithEmail:user.email password:self.passwordField.text completion:^(QBUUserLogInResult *result) {
         
-        // subscribe to push notification:
-        [[QMAuthService shared] subscribeToPushNotifications];
-        
-        [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-            if (success) {
-                // go to tab bar:
-                [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
-                return;
-            }
-            [self showAlertWithMessage:error success:NO];
-        }];
-    }];
-}
-
-- (void)updateUser:(QBUUser *)user withAvatar:(UIImage *)image
-{
-    QMContent *content = [[QMContent alloc] init];
-    [content loadImageForBlob:image named:user.email completion:^(QBCBlob *blob) {
-        //
-        [[QMAuthService shared] updateUser:user withBlob:blob completion:^(QBUUser *user, BOOL success, NSString *error) {
-            if (!success) {
-                [self showAlertWithMessage:error success:NO];
-                return;
-            }
+        if (result.success) {
+            // save me:
             user.password = self.passwordField.text;
-            [QMContactList shared].me = user;
+            contactList.me = user;
             
             // subscribe to push notification:
-            [[QMAuthService shared] subscribeToPushNotifications];
+            [authService subscribeToPushNotifications];
             
-            // login to chat:
-            [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
+            [chatService loginWithUser:user completion:^(BOOL success) {
                 if (success) {
-                    // go to tab bar:
                     [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
                 }
+                else {
+                    [REAlertView showAlertWithMessage:@"" actionSuccess:NO];
+                }
             }];
-        }];
+        }
+        else {
+            [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
+        }
     }];
 }
 
+- (void)updateUser:(QBUUser *)user withAvatar:(UIImage *)image {
+    
+    QMContent *content = [[QMContent alloc] init];
+    [content uploadImage:image named:user.email completion:^(QBCFileUploadTaskResult *result) {
+        
+        [[QMAuthService shared] updateUser:user withBlob:result.uploadedBlob completion:^(QBUUserResult *updateResult) {
+            
+            if (updateResult.success) {
+                
+                user.password = self.passwordField.text;
+                [QMContactList shared].me = user;
+                
+                // subscribe to push notification:
+                [[QMAuthService shared] subscribeToPushNotifications];
+                
+                // login to chat:
+                [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
+                    if (success) {
+                        // go to tab bar:
+                        [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+                    }
+                }];
 
-#pragma mark - Alert
-
-- (void)showAlertWithMessage:(NSString *)message success:(BOOL)success
-{
-    NSString *title = nil;
-    if (success) {
-        title = kEmptyString;
-    } else {
-        title = kAlertTitleErrorString;
-    }
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
-                                                    message:message
-                                                   delegate:nil
-                                          cancelButtonTitle:kAlertButtonTitleOkString
-                                          otherButtonTitles: nil];
-    [alert show];
+            }
+            else {
+                [REAlertView showAlertWithMessage:updateResult.errors.lastObject actionSuccess:NO];
+            }
+        }];
+    }];
 }
-
 
 #pragma mark - UIImagePickerControllerDelegate
 
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
-{
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    
     CGSize imgViewSize = CGSizeMake(self.userImage.frame.size.width * 2, self.userImage.frame.size.height * 2);
     UIImage *image =  info[UIImagePickerControllerOriginalImage];
     UIImage *scaledImage = [image imageByScalingProportionallyToMinimumSize:imgViewSize];
@@ -199,8 +189,7 @@
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
-{
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     [self dismissViewControllerAnimated:YES completion:nil];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }

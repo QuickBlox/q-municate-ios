@@ -43,7 +43,7 @@ NSString *const kQMAppName = @"Q-municate";
 
 NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/picture?height=100&width=100&access_token=%@";
 
-- (void)loadUserImageFromFacebookWithUserID:(NSString *)userID completion:(ImageBlock)handler {
+- (void)loadUserImageFromFacebookWithUserID:(NSString *)userID completion:(FBImageBlock)handler {
     
     FBSession *session = [FBSession activeSession];
     NSString *urlString = [NSString stringWithFormat:kFBGraphGetPictureFormat, userID, session.accessTokenData.accessToken];

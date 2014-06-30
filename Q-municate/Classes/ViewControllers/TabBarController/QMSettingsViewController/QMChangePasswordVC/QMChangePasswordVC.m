@@ -10,7 +10,7 @@
 #import "QMSettingsManager.h"
 #import "QMAuthService.h"
 #import "QMContactList.h"
-#import "REAlertView.h"
+#import "REAlertView+QMSuccess.h"
 #import "UIImage+TintColor.h"
 #import "SVProgressHUD.h"
 
@@ -42,7 +42,7 @@ const NSUInteger kQMMinPasswordLenght = 7;
 }
 
 - (void)configureChangePasswordVC {
-
+    
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     UIImage *buttonBG = [UIImage imageNamed:@"blue_conter"];
@@ -50,7 +50,7 @@ const NSUInteger kQMMinPasswordLenght = 7;
     UIEdgeInsets imgInsets = UIEdgeInsetsMake(9, 9, 9, 9);
     [self.changeButton setBackgroundImage:[buttonBG tintImageWithColor:normalColor resizableImageWithCapInsets:imgInsets]
                                  forState:UIControlStateNormal];
-
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -73,9 +73,9 @@ const NSUInteger kQMMinPasswordLenght = 7;
     NSString *newPassword = self.passwordTextField.text;
     
     if (![oldPassword isEqualToString:confirmOldPassword]) {
-        [self showErrorAlertWithMessage:kAlertBodyPasswDoesNotMatchString];
+        [REAlertView showAlertWithMessage:kAlertBodyPasswDoesNotMatchString actionSuccess:NO];
     } else if (newPassword.length < kQMMinPasswordLenght) {
-        [self showErrorAlertWithMessage:kAlertBodyPasswordIsShortString];
+        [REAlertView showAlertWithMessage:kAlertBodyPasswordIsShortString actionSuccess:NO];
     } else{
         [self updatePassword:oldPassword newPassword:newPassword];
     }
@@ -89,25 +89,17 @@ const NSUInteger kQMMinPasswordLenght = 7;
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     
-    [[QMAuthService shared] updateUser:myProfile withCompletion:^(QBUUser *user, BOOL success, NSString *error) {
-        if (success) {
+    [[QMAuthService shared] updateUser:myProfile withCompletion:^(QBUUserResult *result) {
+        
+        if (result.success) {
             
             [self.settingsManager setLogin:myProfile.login andPassword:myProfile.password];
             [SVProgressHUD showSuccessWithStatus:kAlertBodyPasswordChangedString];
             [self.navigationController popViewControllerAnimated:YES];
             
         } else{
-            [SVProgressHUD showErrorWithStatus:@"Error"];
+            [SVProgressHUD showErrorWithStatus:result.errors.lastObject];
         }
-    }];
-}
-
-- (void)showErrorAlertWithMessage:(NSString *)message {
-    
-    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-        alertView.title =  kAlertTitleErrorString;
-        alertView.message = message;
-        [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{}];
     }];
 }
 

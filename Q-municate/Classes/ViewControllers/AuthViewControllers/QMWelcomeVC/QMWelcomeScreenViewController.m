@@ -56,54 +56,66 @@
 }
 
 #pragma mark - Actions
+
 - (IBAction)connectWithFacebook:(id)sender {
     
     QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
     QMFacebookService *fbService = [[QMFacebookService alloc] init];
     QMAuthService *authService = [QMAuthService shared];
+    QMContactList *constactList = [QMContactList shared];
 
+    /*Open FBSession if needed*/
     [fbService connectToFacebook:^(NSString *sessionToken) {
-        
-        [authService logInWithFacebookAccessToken:sessionToken completion:^(QBUUser *user, BOOL success, NSString *error) {
-            
-            if (!success) {
-                [self showAlertWithMessage:error actionSuccess:NO];
-                return;
-            }
-            
-            settingsManager.rememberMe = YES;
-            
-            // subscribe to push notification:
-            [[QMAuthService shared] subscribeToPushNotifications];
-            
-            // save me:
-            [[QMContactList shared] setMe:user];
-            
-            if (!user.website) {
-                
-//                [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
-//                    if (success) {
-//                        [self logInToQuickbloxChatWithUser:user];
-//                    }
-//                }];
-//                return;
-            }
-            [self logInToQuickbloxChatWithUser:user];
-            
-        }];
-        
+        /*Login with facebook*/
+        [authService logInWithFacebookAccessToken:sessionToken
+                                       completion:^(QBUUserLogInResult *loginWithFBResult) {
+                                           
+             if (loginWithFBResult.success) {
+                 
+                 settingsManager.rememberMe = YES;
+                 [authService subscribeToPushNotifications];
+                 constactList.me = loginWithFBResult.user;
+                 
+                 if (!loginWithFBResult.user.website.length == 0) {
+                     /*Get user image from facebook*/
+                     [fbService loadUserImageFromFacebookWithUserID:constactList.fbMe.id completion:^(UIImage *fbImage) {
+                         
+                         if (fbImage) {
+                             
+                             QMContent *content = [[QMContent alloc] init];
+                             /*Upload */
+                             [content uploadImage:fbImage named:constactList.fbMe.id completion:^(QBCFileUploadTaskResult *result) {
+                                 if (result.success) {
+                                     
+                                     NSString *userPassword = loginWithFBResult.user.password;
+                                     
+                                     [[QMAuthService shared] updateUser:loginWithFBResult.user withBlob:result.uploadedBlob completion:^(QBUUserResult *updateResult) {
+                                        
+                                          if (updateResult.success) {
+                                              
+                                              updateResult.user.password = userPassword;
+                                              
+                                              if (updateResult.user.email.length == 0) {
+                                                  NSString *email = [QMContactList shared].fbMe[@"mail"];
+                                                  updateResult.user.email = email;
+                                              }
+                                              
+                                              constactList.me = updateResult.user;
+                                              [self logInToQuickbloxChatWithUser:updateResult.user];
+                                          }
+                                      }];
+                                 }
+                             }];
+                         }
+                     }];
+                 }
+                 [self logInToQuickbloxChatWithUser:loginWithFBResult.user];
+             } else {
+                 [self showAlertWithMessage:loginWithFBResult.errors.lastObject actionSuccess:NO];
+             }
+         }];
     }];
-    
 }
-
-- (void)showMessage:(NSString *)text withTitle:(NSString *)title {
-    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-        alertView.title = title;
-        alertView.message = text;
-        [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{}];
-    }];
-}
-
 
 #pragma mark -
 
@@ -117,7 +129,7 @@
 }
 
 - (void)showAlertWithMessage:(NSString *)messageString actionSuccess:(BOOL)success {
-
+    
     [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
         alertView.title = success ? kAlertTitleSuccessString : kAlertTitleErrorString;
         alertView.message = messageString;

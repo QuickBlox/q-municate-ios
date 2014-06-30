@@ -9,13 +9,13 @@
 #import <Foundation/Foundation.h>
 
 typedef void(^FBContentBlock)(NSDictionary *content, NSError *error);
-typedef void(^ImageBlock)(UIImage *img);
+typedef void(^FBImageBlock)(UIImage *fbImg);
 
 @interface QMFacebookService : NSObject
 
 - (void)connectToFacebook:(void(^)(NSString *sessionToken))completion;
 - (void)shareToFacebookUsersWithIDs:(NSString *)facebookIDs withCompletion:(FBCompletionBlock)handler;
-- (void)loadUserImageFromFacebookWithUserID:(NSString *)userID completion:(ImageBlock)handler;
+- (void)loadUserImageFromFacebookWithUserID:(NSString *)userID completion:(FBImageBlock)handler;
 - (void)loadMeWithCompletion:(FBContentBlock)handler;
 - (void)fetchFacebookFriendsUsingBlock:(QBChatResultBlock)block;
 - (void)logout;

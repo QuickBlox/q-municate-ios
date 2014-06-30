@@ -57,15 +57,19 @@ typedef NS_ENUM(NSUInteger, QMVideoChatType) {
 };
 
 //****************** Blocks *********************************
+typedef void (^QBFileUploadTaskResultBlock)(QBCFileUploadTaskResult *result);
+typedef void (^QBUUserResultBlock)(QBUUserResult *result);
+typedef void (^QBAAuthResultBlock)(QBAAuthResult *result);
+typedef void (^QBUUserLogInResultBlock)(QBUUserLogInResult *result);
+typedef void (^QBAAuthSessionCreationResultBlock)(QBAAuthSessionCreationResult *result);
+
 typedef void (^QBResultBlock)(Result *result);
 typedef void (^QBSessionCreationBlock)(BOOL success, NSString *error);
-typedef void (^QBAuthResultBlock)(QBUUser *user, BOOL success, NSString *error);
 typedef void (^QBChatResultBlock)(BOOL success);
 typedef void (^QBChatDialogResultBlock)(QBChatDialog *dialog, NSError *error);
 typedef void (^QBChatRoomResultBlock)(QBChatRoom *chatRoom, NSError *error);
 typedef void (^QBChatDialogHistoryBlock)(NSMutableArray *chatDialogHistoryArray, NSError *error);
 typedef void (^QBContactListBlock)(id object);
-typedef void (^QBContentBlock)(QBCBlob *blob);
 typedef void (^QBDataBlock)(id data);
 
 typedef void(^QBPagedUsersBlock)(NSArray *users, BOOL success, NSError *error);

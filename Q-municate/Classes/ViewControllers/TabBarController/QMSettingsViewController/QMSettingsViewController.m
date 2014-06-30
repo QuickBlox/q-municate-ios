@@ -10,7 +10,7 @@
 #import "QMChatService.h"
 #import "QMContactList.h"
 #import "QMAuthService.h"
-#import "REAlertView.h"
+#import "REAlertView+QMSuccess.h"
 #import "QMSettingsManager.h"
 #import "QMFacebookService.h"
 
@@ -44,20 +44,21 @@
 
 - (void)logOut {
     
-    [[QMAuthService shared] destroySessionWithCompletion:^(BOOL success) {
+    [[QMAuthService shared] destroySessionWithCompletion:^(QBAAuthResult *result) {
         
-        QMFacebookService *fbService = [[QMFacebookService alloc] init];
-        
-        [[QMChatService shared] logOut];
-        [[QMContactList shared] clearData];
-        [fbService logout];
-        
-        QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
-        [settingsManager clearSettings];
-        
-        [self performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
-#warning need update logic
-        [[NSNotificationCenter defaultCenter] postNotificationName:kInviteFriendsDataSourceShouldRefreshNotification object:nil];
+        if (result.success) {
+            
+            QMFacebookService *fbService = [[QMFacebookService alloc] init];
+            QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
+            
+            [settingsManager clearSettings];
+            [[QMChatService shared] logOut];
+            [[QMContactList shared] clearData];
+            [fbService logout];
+            
+            [self performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kInviteFriendsDataSourceShouldRefreshNotification object:nil];
+        }
     }];
 }
 
@@ -69,13 +70,12 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 
     if (cell == self.logoutCell) {
-        __weak __typeof(self)weakSelf = self;
         
+        __weak __typeof(self)weakSelf = self;
         [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
             alertView.message = kAlertTitleAreYouSureString;
             [alertView addButtonWithTitle:kAlertButtonTitleLogOutString andActionBlock:^{
                 [weakSelf logOut];
-                
             }];
             
             [alertView addButtonWithTitle:kAlertButtonTitleCancelString andActionBlock:^{}];

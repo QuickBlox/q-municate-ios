@@ -12,8 +12,8 @@
 @implementation QMUploadAttachCell
 @synthesize isLoadBegan;
 
-- (void)awakeFromNib
-{
+- (void)awakeFromNib {
+    [super awakeFromNib];
     // Initialization code
     if (!self.uploadManager) {
         self.uploadManager = [[QMContent alloc] init];
@@ -26,13 +26,13 @@
         return;
     }
     isLoadBegan = YES;
-    [self.uploadManager uploadImage:uploadMessage.content withCompletion:^(QBCBlob *blob, BOOL success, NSError *error) {
-        
-        // create content message and send:
-        [[QMChatService shared] sendContentMessage:uploadMessage withBlob:blob];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"ContentDidLoadNotification" object:nil];
-        isLoadBegan = NO;
-    }];
+//    [self.uploadManager uploadImage:uploadMessage.content withCompletion:^(QBCBlob *blob, BOOL success, NSError *error) {
+//        
+//        // create content message and send:
+//        [[QMChatService shared] sendContentMessage:uploadMessage withBlob:blob];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"ContentDidLoadNotification" object:nil];
+//        isLoadBegan = NO;
+//    }];
 }
 
 @end

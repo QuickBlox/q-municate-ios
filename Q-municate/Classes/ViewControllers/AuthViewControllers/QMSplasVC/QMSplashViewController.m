@@ -51,9 +51,9 @@
     
     QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
     
-    [[QMAuthService shared] startSessionWithBlock:^(BOOL success, NSString *error) {
+    [[QMAuthService shared] startSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
         
-        if (success) {
+        if (result.success) {
             
             BOOL rememberMe = settingsManager.rememberMe;
             
@@ -74,24 +74,26 @@
             
         } else {
             
-            [self showAlertWithMessage:error actionSuccess:NO];
+            [self showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
         }
     }];
 
 }
 
 - (void)loginWithEmail:(NSString *)email password:(NSString *)password {
+
+    QMContactList *contactList = [QMContactList shared];
+    QMAuthService *authService = [QMAuthService shared];
     
-    [[QMAuthService shared] logInWithEmail:email password:password completion:^(QBUUser *user, BOOL success, NSString *error) {
+    [authService logInWithEmail:email password:password completion:^(QBUUserLogInResult *result) {
         
-        if (success) {
+        if (result.success) {
             
-            [QMContactList shared].me = user;
-            [self loginWithUser:user];
+            contactList.me = result.user;
+            [self loginWithUser:result.user];
             
         } else {
-            [self showAlertWithMessage:error actionSuccess:NO];
-            return;
+            [self showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
         }
     }];
 }
@@ -103,15 +105,14 @@
     
     [fbService connectToFacebook:^(NSString *sessionToken) {
        
-        [authService logInWithFacebookAccessToken:sessionToken completion:^(QBUUser *user, BOOL success, NSString *error) {
+        [authService logInWithFacebookAccessToken:sessionToken completion:^(QBUUserLogInResult *result) {
             
-            if (success) {
-                [self loginWithUser:user];
+            if (result.success) {
+                [self loginWithUser:result.user];
             } else {
-                [self showAlertWithMessage:error actionSuccess:NO];
+                [self showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
             }
-        }];
-        
+        }]; 
     }];
 }
 

@@ -7,12 +7,9 @@
 //
 
 #import "QMAuthService.h"
-#import "QMFacebookService.h"
 #import "QMContactList.h"
-//#import "QMChatService.h"
 #import "QMUtilities.h"
 #import "QMContent.h"
-
 
 @interface QMAuthService () <QBActionStatusDelegate>
 
@@ -35,38 +32,23 @@
 #pragma mark -
 #pragma mark - Authorization
 
-- (void)signUpUser:(QBUUser *)user completion:(QBAuthResultBlock)completion {
-    
-    void (^resultBlock)(QBUUserResult *) = ^(QBUUserResult *result) {
-        completion(result.user, result.success, result.errors.firstObject);
-    };
-    
-    [QBUsers signUp:user delegate:self context:Block_copy(Block_copy((__bridge void *)(resultBlock)))] ;
+- (void)signUpUser:(QBUUser *)user completion:(QBUUserResultBlock)completion {
+    [QBUsers signUp:user delegate:self context:Block_copy(Block_copy((__bridge void *)(completion)))] ;
 }
 
-- (void)destroySessionWithCompletion:(QBChatResultBlock)completion {
-    
-    void (^resultBlock)(QBAAuthResult *) =^(QBAAuthResult *result) {
-        completion(result.success);
-    };
-    
-    [QBAuth destroySessionWithDelegate:self context:Block_copy(Block_copy((__bridge void *)(resultBlock)))];
+- (void)destroySessionWithCompletion:(QBAAuthResultBlock)completion {
+    [QBAuth destroySessionWithDelegate:self context:Block_copy(Block_copy((__bridge void *)(completion)))];
 }
 
-- (void)logInWithEmail:(NSString *)email password:(NSString *)password completion:(QBAuthResultBlock)complition {
-    
-    void (^resultBlock)(QBUUserLogInResult *) =^(QBUUserLogInResult *result) {
-        complition(result.user, result.success, result.errors.firstObject);
-    };
-    
-    [QBUsers logInWithUserEmail:email password:password delegate:self context:Block_copy(Block_copy((__bridge void *)(resultBlock)))];
+- (void)logInWithEmail:(NSString *)email password:(NSString *)password completion:(QBUUserLogInResultBlock)complition {
+    [QBUsers logInWithUserEmail:email password:password delegate:self context:Block_copy(Block_copy((__bridge void *)(complition)))];
 }
 
-- (void)logInWithFacebookAccessToken:(NSString *)accessToken completion:(QBAuthResultBlock)completion {
+- (void)logInWithFacebookAccessToken:(NSString *)accessToken completion:(QBUUserLogInResultBlock)completion {
 
     void (^resultBlock) (QBUUserLogInResult *) =^ (QBUUserLogInResult *result) {
         result.user.password = [QBBaseModule sharedModule].token;
-        completion(result.user, result.success, result.errors.lastObject);
+        completion(result);
     };
     
     [QBUsers logInWithSocialProvider:kFacebook
@@ -82,71 +64,28 @@
     [QBUsers resetUserPasswordWithEmail:email delegate:self context:Block_copy(Block_copy((__bridge void *)(completion)))];
 }
 
-- (void)updateUser:(QBUUser *)user withBlob:(QBCBlob *)blob completion:(QBAuthResultBlock)completion {
+- (void)updateUser:(QBUUser *)user withBlob:(QBCBlob *)blob completion:(QBUUserResultBlock)completion {
     
     user.oldPassword = user.password;
     user.website = [blob publicUrl];
     [self updateUser:user withCompletion:completion];
 }
 
-- (void)updateUser:(QBUUser *)user withCompletion:(QBAuthResultBlock)completion {
+- (void)updateUser:(QBUUser *)user withCompletion:(QBUUserResultBlock)completion {
     
     void (^resultBlock)(QBUUserResult *) =^(QBUUserResult *result) {
         
         [QMContactList shared].me = result.user;
-        completion(result.user, result.success, result.errors.firstObject);
+        completion(result);
     };
     
     [QBUsers updateUser:user delegate:self context:Block_copy((__bridge void *)(resultBlock))];
 }
 
-- (void)startSessionWithBlock:(QBSessionCreationBlock)block {
-    
-    void (^resultBlock)(QBAAuthSessionCreationResult*) =^(QBAAuthSessionCreationResult *result) {
-            block(result.success, result.errors.firstObject);
-    };
-    
-    [QBAuth createSessionWithDelegate:self context:Block_copy((__bridge void *)(resultBlock))];
+- (void)startSessionWithBlock:(QBAAuthSessionCreationResultBlock)completion {
+    [QBAuth createSessionWithDelegate:self context:Block_copy((__bridge void *)(completion))];
 }
 
-#pragma mark - Options
-
-- (void)loadFacebookUserPhotoAndUpdateUser:(QBUUser *)user completion:(QBChatResultBlock)handler
-{
-    // upload photo:
-    QMFacebookService *facebookService = [[QMFacebookService alloc] init];
-    
-    NSString *fbUserID = [QMContactList shared].fbMe.id;
-    
-    [facebookService loadUserImageFromFacebookWithUserID:fbUserID completion:^(UIImage *img) {
-        
-        if (img) {
-            
-            QMContent *contentStorage = [[QMContent alloc] init];
-            [contentStorage loadImageForBlob:img named:[QMContactList shared].fbMe.id completion:^(QBCBlob *blob) {
-                if (blob) {
-                    // update user with new blob:
-                    NSString *userPassword = user.password;
-
-                    [[QMAuthService shared] updateUser:user withBlob:blob completion:^(QBUUser *user, BOOL success, NSString *error) {
-                        
-                        if (success) {
-                            user.password = userPassword;
-                            if (user.email == nil || [user.email isEqualToString:kEmptyString]) {
-                                NSString *email = [QMContactList shared].fbMe[@"mail"];
-                                user.email = email;
-                            }
-                            [[QMContactList shared] setMe:user];
-                            handler(YES);
-                        }
-                    }];
-                }
-            }];
-            
-        }
-        
-    }];
-}
 
 #pragma mark - Push Notifications
 - (void)subscribeToPushNotifications {

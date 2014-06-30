@@ -35,6 +35,7 @@
 		559BE02819619733000588FE /* QMPhoneNumberCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BE01519619733000588FE /* QMPhoneNumberCell.m */; };
 		559BE02B19619733000588FE /* QMUploadAttachCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BE01E19619733000588FE /* QMUploadAttachCell.m */; };
 		559BE02F1961987F000588FE /* QMGroupDetailsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BE02E1961987F000588FE /* QMGroupDetailsCell.m */; };
+		559BE0331961FC8C000588FE /* REAlertView+QMSuccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BE0321961FC8C000588FE /* REAlertView+QMSuccess.m */; };
 		55CEA9EE195D835B001A8ED6 /* QMImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEA9ED195D835B001A8ED6 /* QMImageView.m */; };
 		55CEAB81195DBCFA001A8ED6 /* QMIncomingCallController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB15195DBCFA001A8ED6 /* QMIncomingCallController.m */; };
 		55CEAB82195DBCFA001A8ED6 /* QMVideoCallController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB18195DBCFA001A8ED6 /* QMVideoCallController.m */; };
@@ -264,6 +265,8 @@
 		559BE01E19619733000588FE /* QMUploadAttachCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMUploadAttachCell.m; sourceTree = "<group>"; };
 		559BE02D1961987F000588FE /* QMGroupDetailsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMGroupDetailsCell.h; sourceTree = "<group>"; };
 		559BE02E1961987F000588FE /* QMGroupDetailsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMGroupDetailsCell.m; sourceTree = "<group>"; };
+		559BE0311961FC8C000588FE /* REAlertView+QMSuccess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "REAlertView+QMSuccess.h"; sourceTree = "<group>"; };
+		559BE0321961FC8C000588FE /* REAlertView+QMSuccess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "REAlertView+QMSuccess.m"; sourceTree = "<group>"; };
 		55CEA9EC195D835B001A8ED6 /* QMImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMImageView.h; sourceTree = "<group>"; };
 		55CEA9ED195D835B001A8ED6 /* QMImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMImageView.m; sourceTree = "<group>"; };
 		55CEAB14195DBCFA001A8ED6 /* QMIncomingCallController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncomingCallController.h; sourceTree = "<group>"; };
@@ -590,6 +593,7 @@
 		553A590819599B3A00FAD889 /* REAlertView */ = {
 			isa = PBXGroup;
 			children = (
+				559BE0301961FC77000588FE /* REAlertView+QBSuccess */,
 				553A590919599B3A00FAD889 /* REAlertView.h */,
 				553A590A19599B3A00FAD889 /* REAlertView.m */,
 			);
@@ -766,6 +770,15 @@
 				559BE02E1961987F000588FE /* QMGroupDetailsCell.m */,
 			);
 			path = QMGroupDetailCell;
+			sourceTree = "<group>";
+		};
+		559BE0301961FC77000588FE /* REAlertView+QBSuccess */ = {
+			isa = PBXGroup;
+			children = (
+				559BE0311961FC8C000588FE /* REAlertView+QMSuccess.h */,
+				559BE0321961FC8C000588FE /* REAlertView+QMSuccess.m */,
+			);
+			path = "REAlertView+QBSuccess";
 			sourceTree = "<group>";
 		};
 		55CEA9EB195D835B001A8ED6 /* QMImageView */ = {
@@ -2031,6 +2044,7 @@
 				55D270991940B8D300238D50 /* MagicalImportFunctions.m in Sources */,
 				55D2709E1940B8D300238D50 /* NSRelationshipDescription+MagicalDataImport.m in Sources */,
 				55D270981940B8D300238D50 /* _CDUsers.m in Sources */,
+				559BE0331961FC8C000588FE /* REAlertView+QMSuccess.m in Sources */,
 				55D270AD1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.m in Sources */,
 				55D270C01940B8D300238D50 /* MagicalRecordStack.m in Sources */,
 				55943A0F1941A4C000BF4312 /* _CDDialog.m in Sources */,

@@ -9,12 +9,10 @@
 #import "QMLogInVC.h"
 #import "QMWelcomeScreenViewController.h"
 #import "QMChatService.h"
-#import "QMAddressBook.h"
 #import "QMAuthService.h"
 #import "QMContactList.h"
-#import "QMUtilities.h"
 #import "QMSettingsManager.h"
-#import "REAlertView.h"
+#import "REAlertView+QMSuccess.h"
 
 @interface QMLogInVC ()
 
@@ -29,8 +27,8 @@
 
 @implementation QMLogInVC
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
+    
     [super viewDidLoad];
     
     [self.navigationController setNavigationBarHidden:NO animated:YES];
@@ -46,11 +44,12 @@
     
     if (![QMAuthService shared].isSessionCreated) {
         
-        [[QMAuthService shared] startSessionWithBlock:^(BOOL success, NSString *error) {
-            if (success) {
+        [[QMAuthService shared] startSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
+            
+            if (result.success) {
                 ILog(@"Session created");
             } else {
-                [self showAlertWithMessage:error actionSuccess:NO];
+                [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
             }
         }];
     }
@@ -62,31 +61,36 @@
 
 - (IBAction)logIn:(id)sender {
     
-    if ([self.emailField.text isEqual:kEmptyString] || [self.passwordField.text isEqual:kEmptyString]) {
-        [self showAlertWithMessage:kAlertBodyFillInAllFieldsString actionSuccess:NO];
-        return;
-    }
-	
     NSString *mailString = self.emailField.text;
+    NSString *passwordString = self.passwordField.text;
     
-    [[QMAuthService shared] logInWithEmail:mailString password:self.passwordField.text completion:^(QBUUser *user, BOOL success, NSString *error) {
-
-        if (!success) {
-            [self showAlertWithMessage:error actionSuccess:NO];
-            return;
-        }
-        // remember me:
-        [self rememberMe:self.rememberMeSwitch.isOn isFacebookSession:NO];
+    if (mailString.length == 0 || passwordString.length == 0) {
+        [REAlertView showAlertWithMessage:kAlertBodyFillInAllFieldsString actionSuccess:NO];
+    }
+    else {
+        QMAuthService *authService = [QMAuthService shared];
+        QMContactList *contactList = [QMContactList shared];
         
-        user.password = self.passwordField.text;
-        [QMContactList shared].me = user;
-        
-        // subscribe to push notification:
-        [[QMAuthService shared] subscribeToPushNotifications];
-        
-        // login to chat:
-        [self logInToQuickbloxChatWithUser:user];
-    }];
+        [authService logInWithEmail:mailString password:passwordString completion:^(QBUUserLogInResult *result) {
+            
+            if (result.success) {
+                // remember me:
+                [self rememberMe:self.rememberMeSwitch.isOn isFacebookSession:NO];
+                
+                result.user.password = passwordString;
+                contactList.me = result.user;
+                
+                // subscribe to push notification:
+                [authService subscribeToPushNotifications];
+                
+                // login to chat:
+                [self logInToQuickbloxChatWithUser:result.user];
+            }
+            else {
+                [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
+            }
+        }];
+    }
 }
 
 - (IBAction)connectWithFacebook:(id)sender {
@@ -149,17 +153,6 @@
     self.emailField.text = login;
     self.passwordField.text = password;
 }
-
-
-- (void)showAlertWithMessage:(NSString *)messageString actionSuccess:(BOOL)success {
-    
-    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-        alertView.title = success ? kAlertTitleSuccessString : kAlertTitleErrorString;
-        alertView.message = messageString;
-        [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{}];
-    }];
-}
-
 
 #pragma mark - Options
 

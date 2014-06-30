@@ -12,9 +12,7 @@
 
 @property (nonatomic, assign) CGFloat uploadProgress;
 
-- (void)loadImageForBlob:(UIImage *)image named:(NSString *)name completion:(QBContentBlock)block;
-- (void)loadImageFromFacebookWithUserID:(NSString *)facebookID accessToken:(NSString *)accessToken completion:(void (^)(id object))block;
-
-- (void)uploadImage:(UIImage *)image withCompletion:(void (^)(QBCBlob *blob, BOOL success, NSError *error))completion;
+- (void)uploadImage:(UIImage *)image named:(NSString *)name completion:(QBFileUploadTaskResultBlock)completion;
+- (void)uploadUserImageForUser:(QBUUser *)user image:(UIImage *)image withCompletion:(QBFileUploadTaskResultBlock)completion;
 
 @end

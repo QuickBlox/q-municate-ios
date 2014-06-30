@@ -70,28 +70,27 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
         
         [QMChatService shared].lastCreatedDialog = nil;
     }
+    
     [self reloadTableView];
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - UITableViewDataSource
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
     return [self.chatDialogs count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     QMChatListCell *cell = [tableView dequeueReusableCellWithIdentifier:ChatListCellIdentifier];
 
     QBChatDialog *dialog = self.chatDialogs[indexPath.row];
@@ -101,8 +100,8 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     return cell;
 }
 
-- (void)reloadTableView
-{
+- (void)reloadTableView {
+    
     self.chatDialogs = [[[QMChatService shared].allDialogsAsDictionary allValues] mutableCopy];
     [self.chatsTableView reloadData];
 }
@@ -117,8 +116,8 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatDialog];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
     if ([segue.destinationViewController isKindOfClass:[QMChatViewController class]]) {
         
         QMChatViewController *chatController = (QMChatViewController *)segue.destinationViewController;
@@ -141,23 +140,21 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
 #pragma mark - Notifications
 
-- (void)localChatDidReceiveMessage:(NSNotification *)notification
-{
+- (void)localChatDidReceiveMessage:(NSNotification *)notification {
+    
     [self reloadTableView];
 }
 
-- (void)localChatAddedNewRoom:(NSNotification *)notification
-{
+- (void)localChatAddedNewRoom:(NSNotification *)notification {
+    
 	NSLog(@"userInfo: %@", notification.userInfo);
 	[self.dataSource updateDialogList];
 	[self.chatsTableView reloadData];
 }
 
-- (void)dialogsLoaded
-{
+- (void)dialogsLoaded {
     [self reloadTableView];
 }
-
 
 #pragma mark - Actions
 

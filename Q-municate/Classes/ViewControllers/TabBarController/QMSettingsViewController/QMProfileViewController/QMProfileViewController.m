@@ -12,7 +12,7 @@
 #import "QMContent.h"
 #import "QMAuthService.h"
 #import "QMUtilities.h"
-#import "REAlertView.h"
+#import "REAlertView+QMSuccess.h"
 
 static NSUInteger const QM_MAX_STATUS_TEXT_LENGTH = 44;
 
@@ -48,16 +48,12 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
 
 
 @implementation QMProfileViewController
-@synthesize me;
 
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self configureAvatarView];
-    
-    me = [QMContactList shared].me;
+    self.me = [QMContactList shared].me;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -75,13 +71,7 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
     [super didReceiveMemoryWarning];
 }
 
-- (void)configureAvatarView
-{
-//    self.avatarView.layer.cornerRadius = self.avatarView.frame.size.width / 2;
-//    self.avatarView.layer.borderWidth = 2.0f;
-//    self.avatarView.layer.borderColor = [UIColor colorWithRed:1/215 green:1/216 blue:1/215 alpha:0.04].CGColor;   //215,216,215
-//    self.avatarView.layer.masksToBounds = YES;
-//    self.avatarView.crossfadeDuration = 0.0f;
+- (void)configureAvatarView {
 }
 
 - (void)updateProfileView
@@ -90,33 +80,40 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
 //    [self.avatarView setImageURL:[NSURL URLWithString:me.website]];
     
     // full name:
-    [self.fullNameField setText:me.fullName];
+    [self.fullNameField setText:self.me.fullName];
     
     // email:
-    [self.emailField setText:me.email];
+    [self.emailField setText:self.me.email];
     
     // phone number:
-    [self.phoneNumberField setText:me.phone];
+    [self.phoneNumberField setText:self.me.phone];
     
     // status:
-    if (me.customData != nil) {
-        [self.statusField setText:me.customData];
+    if (self.me.customData != nil) {
+        [self.statusField setText:self.me.customData];
     } else {
         [self.statusField setText:@"Add status..."];
     }
 }
 
-- (IBAction)changeAvatar:(id)sender
-{
-    if (me.facebookID != nil) {
-        [[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:@"You can not change avatar. Go to facebook, and change avatar there." delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
-        return;
+- (IBAction)changeAvatar:(id)sender {
+    
+    if (self.me.facebookID.length == 0) {
+    
+        [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
+            alertView.title = kAlertTitleErrorString;
+            alertView.message = @"You can not change avatar. Go to facebook, and change avatar there.";
+            [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{}];
+        }];
     }
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    picker.delegate = self;
-
-    [self presentViewController:picker animated:YES completion:nil];
+    else {
+    
+        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        picker.delegate = self;
+        [self presentViewController:picker animated:YES completion:nil];
+    }
+    
 }
 
 - (IBAction)hideKeyboard:(id)sender
@@ -135,16 +132,19 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
         return;
     }
     
-    if (_avatarImage != nil) {
+    if (self.avatarImage) {
         
         QMContent *manager = [[QMContent alloc] init];
-        [manager uploadImage:_avatarImage withCompletion:^(QBCBlob *blob, BOOL success, NSError *error) {
-            if (!success) {
-                [[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:error.description delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
-                return;
+        [manager uploadUserImageForUser:self.me image:self.avatarImage withCompletion:^(QBCFileUploadTaskResult *result) {
+            
+            if (result.success) {
+                [self updateUsersProfile];
             }
-            [self updateUsersProfile];
+            else {
+                [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
+            }
         }];
+
     }
     
     [self updateUsersProfile];
@@ -155,28 +155,28 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
     BOOL profileChanged = NO;
     
     // verifying all fields:
-    if (_avatarImage != nil) {
+    if (self.avatarImage != nil) {
         profileChanged = YES;
     }
-    if (_fullNameFieldCache != nil && ![_fullNameFieldCache isEqualToString:me.fullName] ) {
+    if (_fullNameFieldCache != nil && ![_fullNameFieldCache isEqualToString:self.me.fullName] ) {
         
-        me.fullName = _fullNameFieldCache;
+        self.me.fullName = _fullNameFieldCache;
         profileChanged = YES;
     }
-    if (_phoneFieldCache != nil && ![_phoneFieldCache isEqualToString:me.phone]) {
+    if (_phoneFieldCache != nil && ![_phoneFieldCache isEqualToString:self.me.phone]) {
         
-        me.phone = _phoneFieldCache;
+        self.me.phone = _phoneFieldCache;
         profileChanged = YES;
     }
-    if (_statusFieldCache != nil && ![_statusFieldCache isEqualToString:me.customData]) {
+    if (_statusFieldCache != nil && ![_statusFieldCache isEqualToString:self.me.customData]) {
         profileChanged = YES;
         
         if (_statusFieldCache.length > QM_MAX_STATUS_TEXT_LENGTH) {
             NSRange range = NSMakeRange(0, QM_MAX_STATUS_TEXT_LENGTH);
             NSString *statusText = [_statusFieldCache substringWithRange:range];
-            me.customData = statusText;
+            self.me.customData = statusText;
         } else {
-            me.customData = _statusFieldCache;
+            self.me.customData = _statusFieldCache;
         }
     }
     return profileChanged;
@@ -185,24 +185,23 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
 - (void)updateUsersProfile
 {
     // delete password before update and cache:
-    NSString *password = me.password;
-    me.password = nil;
+    NSString *password = self.me.password;
+    self.me.password = nil;
     
-    [[QMAuthService shared] updateUser:me withCompletion:^(QBUUser *user, BOOL success, NSString *error) {
+    [[QMAuthService shared] updateUser:self.me withCompletion:^(QBUUserResult *result) {
         
-        if (!success) {
-            [[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:error.description delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
-            return;
+        if (result.success) {
+            
+            result.user.password = password;
+            self.me = result.user;
+            [REAlertView showAlertWithMessage:@"Profile was updated" actionSuccess:YES];
+            [self updateProfileView];
         }
-        user.password = password;
-        self.me = user;
-        
-        // show alert:
-        [[[UIAlertView alloc] initWithTitle:kAlertTitleSuccessString message:@"Profile was updated" delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
-        [self updateProfileView];
+        else {
+            [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
+        }
     }];
 }
-
 
 #pragma mark - UITextFieldDelegate & UITextViewDelegate
 
@@ -228,8 +227,8 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
 
 #pragma mark - UIImagePickerControllerDelegate
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
-{
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    
     UIImage *selectedImage = info[UIImagePickerControllerOriginalImage];
     self.avatarImage = [selectedImage imageByScalingProportionallyToMinimumSize:CGSizeMake(1000.0f, 1000.0f)];
     self.avatarView.image = self.avatarImage;
@@ -239,8 +238,8 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
     }];
 }
 
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
-{
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    
     self.avatarImage = nil;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
