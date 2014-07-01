@@ -29,5 +29,12 @@ typedef void(^QMSoundManagerCompletionBlock)(void);
 - (void)stopAllSounds;
 - (void)stopSoundWithFilename:(NSString *)filename;
 - (void)preloadSoundWithFilename:(NSString *)filename extension:(NSString *)extension;
+/*Default sounds*/
++ (void)playMessageReceivedSound;
++ (void)playMessageSentSound;
++ (void)playCallingSound;
++ (void)playBusySound;
++ (void)playEndOfCallSound;
++ (void)playRingtoneSound;
 
 @end

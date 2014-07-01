@@ -10,6 +10,7 @@
 #import "QMChatService.h"
 #import "QMUtilities.h"
 #import "QMImageView.h"
+#import "QMSoundManager.h"
 
 @interface QMVideoCallController () {
     BOOL callWasConfirmedByMe;
@@ -156,12 +157,10 @@
 
 #pragma mark - Actions
 
-- (void)startCall
-{
-    [[QMChatService shared] callUser:self.opponent.ID opponentView:self.opponentsView callType:self.callType];
+- (void)startCall {
     
-    // play sound:
-    [[QMUtilities shared] playSoundOfType:QMSoundPlayTypeCallingNow];
+    [[QMChatService shared] callUser:self.opponent.ID opponentView:self.opponentsView callType:self.callType];
+    [QMSoundManager playCallingSound];
 }
 
 - (void)confirmCall
@@ -175,13 +174,13 @@
     callWasAccepted = YES;
 }
 
-- (void)callAcceptedByUser
-{
+- (void)callAcceptedByUser {
+    
     [self configureCallUIForAcceptedCall];
     callWasAccepted = YES;
     
     // stop playing sound:
-    [[QMUtilities shared] stopPlaying];
+    [[QMSoundManager shared] stopAllSounds];
     
     [self callStartedWithUser];
 }
@@ -194,16 +193,15 @@
     }
 }
 
-- (void)callRejectedByUser
-{
+- (void)callRejectedByUser {
+    
     self.callDurationLabel.text = @"User is busy";
     self.opponentsView.hidden = YES;
     // stop playing sound:
-    [[QMUtilities shared] stopPlaying];
+    [[QMSoundManager shared] stopAllSounds];
     
     callWasAccepted = NO;
-    
-    [[QMUtilities shared] playSoundOfType:QMSoundPlayTypeUserIsBusy];
+    [QMSoundManager playBusySound];
     [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:2.0f];
 }
 
@@ -224,11 +222,11 @@
     callWasAccepted = NO;
     
     // stop playing sound:
-    [[QMUtilities shared] stopPlaying];
+    [[QMSoundManager shared] stopAllSounds];
     
     if ([reason isEqualToString:kStopVideoChatCallStatus_OpponentDidNotAnswer]) {
         self.callDurationLabel.text = @"User doesn't answer";
-        [[QMUtilities shared] playSoundOfType:QMSoundPlayTypeUserIsBusy];
+        [QMSoundManager playBusySound];
     } else if ([reason isEqualToString:kStopVideoChatCallStatus_BadConnection]) {
         self.callDurationLabel.text = @"Call was stopped";
         [[[UIAlertView alloc] initWithTitle:@"Stopped" message:@"Call was stopped due bad connection" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
@@ -255,15 +253,15 @@
     self.callDurationLabel.text = callWasAccepted ? @"Call finished" :  @"Call canceled";
     
     // stop playing sound:
-    [[QMUtilities shared] stopPlaying];
+    [[QMSoundManager shared] stopAllSounds];
     
-    [[QMUtilities shared] playSoundOfType:QMSoundPlayTypeEndOfCall];
+    [QMSoundManager playEndOfCallSound];
     [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:1.0f];
 }
 
 - (void)dismissCallsController
 {
-    [[QMUtilities shared] stopPlaying];
+    [[QMSoundManager shared] stopAllSounds];
     
     if (callWasConfirmedByMe) {
         [QMUtilities.shared dismissIncomingCallController];

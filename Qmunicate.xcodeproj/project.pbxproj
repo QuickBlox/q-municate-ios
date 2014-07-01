@@ -36,6 +36,12 @@
 		559BE02F1961987F000588FE /* QMGroupDetailsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BE02E1961987F000588FE /* QMGroupDetailsCell.m */; };
 		559BE0331961FC8C000588FE /* REAlertView+QMSuccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BE0321961FC8C000588FE /* REAlertView+QMSuccess.m */; };
 		559BE0371962255D000588FE /* QMSoundManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BE0361962255D000588FE /* QMSoundManager.m */; };
+		559BE04019622D81000588FE /* ringtone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 559BE03C19622D81000588FE /* ringtone.wav */; };
+		559BE04A19623075000588FE /* busy.wav in Resources */ = {isa = PBXBuildFile; fileRef = 559BE04519623075000588FE /* busy.wav */; };
+		559BE04B19623075000588FE /* calling.wav in Resources */ = {isa = PBXBuildFile; fileRef = 559BE04619623075000588FE /* calling.wav */; };
+		559BE04C19623075000588FE /* end_of_call.wav in Resources */ = {isa = PBXBuildFile; fileRef = 559BE04719623075000588FE /* end_of_call.wav */; };
+		559BE04D19623075000588FE /* received.wav in Resources */ = {isa = PBXBuildFile; fileRef = 559BE04819623075000588FE /* received.wav */; };
+		559BE04E19623075000588FE /* sent.wav in Resources */ = {isa = PBXBuildFile; fileRef = 559BE04919623075000588FE /* sent.wav */; };
 		55CEA9EE195D835B001A8ED6 /* QMImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEA9ED195D835B001A8ED6 /* QMImageView.m */; };
 		55CEAB81195DBCFA001A8ED6 /* QMIncomingCallController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB15195DBCFA001A8ED6 /* QMIncomingCallController.m */; };
 		55CEAB82195DBCFA001A8ED6 /* QMVideoCallController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB18195DBCFA001A8ED6 /* QMVideoCallController.m */; };
@@ -131,10 +137,6 @@
 		693DC42618FFC45900AF46D9 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42518FFC45900AF46D9 /* libsqlite3.dylib */; };
 		693DC42C18FFC58000AF46D9 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */; };
 		693F347B18F554240032891F /* QMIncommingCallSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 693F347A18F554240032891F /* QMIncommingCallSegue.m */; };
-		6943277A18F6D109002B0396 /* busy.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 6943277618F6D109002B0396 /* busy.mp3 */; };
-		6943277B18F6D109002B0396 /* calling.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 6943277718F6D109002B0396 /* calling.mp3 */; };
-		6943277C18F6D109002B0396 /* end_of_call.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 6943277818F6D109002B0396 /* end_of_call.mp3 */; };
-		6943277D18F6D109002B0396 /* ringtone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6943277918F6D109002B0396 /* ringtone.wav */; };
 		6943847218E42678001E08A9 /* QMCustomSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943843418E42677001E08A9 /* QMCustomSegue.m */; };
 		6943847318E42678001E08A9 /* QMPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943843718E42677001E08A9 /* QMPerson.m */; };
 		6943847418E42678001E08A9 /* QMUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943843918E42677001E08A9 /* QMUtilities.m */; };
@@ -266,6 +268,12 @@
 		559BE0321961FC8C000588FE /* REAlertView+QMSuccess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "REAlertView+QMSuccess.m"; sourceTree = "<group>"; };
 		559BE0351962255D000588FE /* QMSoundManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSoundManager.h; sourceTree = "<group>"; };
 		559BE0361962255D000588FE /* QMSoundManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSoundManager.m; sourceTree = "<group>"; };
+		559BE03C19622D81000588FE /* ringtone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ringtone.wav; sourceTree = "<group>"; };
+		559BE04519623075000588FE /* busy.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = busy.wav; sourceTree = "<group>"; };
+		559BE04619623075000588FE /* calling.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = calling.wav; sourceTree = "<group>"; };
+		559BE04719623075000588FE /* end_of_call.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = end_of_call.wav; sourceTree = "<group>"; };
+		559BE04819623075000588FE /* received.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = received.wav; sourceTree = "<group>"; };
+		559BE04919623075000588FE /* sent.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sent.wav; sourceTree = "<group>"; };
 		55CEA9EC195D835B001A8ED6 /* QMImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMImageView.h; sourceTree = "<group>"; };
 		55CEA9ED195D835B001A8ED6 /* QMImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMImageView.m; sourceTree = "<group>"; };
 		55CEAB14195DBCFA001A8ED6 /* QMIncomingCallController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncomingCallController.h; sourceTree = "<group>"; };
@@ -459,10 +467,6 @@
 		693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
 		693F347918F554240032891F /* QMIncommingCallSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncommingCallSegue.h; sourceTree = "<group>"; };
 		693F347A18F554240032891F /* QMIncommingCallSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMIncommingCallSegue.m; sourceTree = "<group>"; };
-		6943277618F6D109002B0396 /* busy.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = busy.mp3; sourceTree = "<group>"; };
-		6943277718F6D109002B0396 /* calling.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = calling.mp3; sourceTree = "<group>"; };
-		6943277818F6D109002B0396 /* end_of_call.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = end_of_call.mp3; sourceTree = "<group>"; };
-		6943277918F6D109002B0396 /* ringtone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ringtone.wav; sourceTree = "<group>"; };
 		6943843318E42677001E08A9 /* QMCustomSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCustomSegue.h; sourceTree = "<group>"; };
 		6943843418E42677001E08A9 /* QMCustomSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMCustomSegue.m; sourceTree = "<group>"; };
 		6943843618E42677001E08A9 /* QMPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMPerson.h; sourceTree = "<group>"; };
@@ -774,8 +778,22 @@
 			children = (
 				559BE0351962255D000588FE /* QMSoundManager.h */,
 				559BE0361962255D000588FE /* QMSoundManager.m */,
+				559BE03819622D81000588FE /* Sounds */,
 			);
 			path = QMSoundManager;
+			sourceTree = "<group>";
+		};
+		559BE03819622D81000588FE /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				559BE04519623075000588FE /* busy.wav */,
+				559BE04619623075000588FE /* calling.wav */,
+				559BE04719623075000588FE /* end_of_call.wav */,
+				559BE04819623075000588FE /* received.wav */,
+				559BE04919623075000588FE /* sent.wav */,
+				559BE03C19622D81000588FE /* ringtone.wav */,
+			);
+			path = Sounds;
 			sourceTree = "<group>";
 		};
 		55CEA9EB195D835B001A8ED6 /* QMImageView */ = {
@@ -1446,20 +1464,8 @@
 		6943277418F6D109002B0396 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				6943277518F6D109002B0396 /* Sounds */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		6943277518F6D109002B0396 /* Sounds */ = {
-			isa = PBXGroup;
-			children = (
-				6943277618F6D109002B0396 /* busy.mp3 */,
-				6943277718F6D109002B0396 /* calling.mp3 */,
-				6943277818F6D109002B0396 /* end_of_call.mp3 */,
-				6943277918F6D109002B0396 /* ringtone.wav */,
-			);
-			path = Sounds;
 			sourceTree = "<group>";
 		};
 		6943843218E42677001E08A9 /* CustomSegues */ = {
@@ -1848,15 +1854,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				69D57E8518ACC13100A9900A /* Main.storyboard in Resources */,
-				6943277D18F6D109002B0396 /* ringtone.wav in Resources */,
+				559BE04D19623075000588FE /* received.wav in Resources */,
+				559BE04B19623075000588FE /* calling.wav in Resources */,
 				55D270C61940B8D300238D50 /* mogend.sh in Resources */,
-				6943277A18F6D109002B0396 /* busy.mp3 in Resources */,
 				55CEAB83195DBCFA001A8ED6 /* ChatBubbles.xcassets in Resources */,
-				6943277B18F6D109002B0396 /* calling.mp3 in Resources */,
 				69D57E6018ACC11C00A9900A /* InfoPlist.strings in Resources */,
+				559BE04E19623075000588FE /* sent.wav in Resources */,
 				69D57E6818ACC11C00A9900A /* Images.xcassets in Resources */,
-				6943277C18F6D109002B0396 /* end_of_call.mp3 in Resources */,
 				55D270C51940B8D300238D50 /* mogen.sh in Resources */,
+				559BE04C19623075000588FE /* end_of_call.wav in Resources */,
+				559BE04019622D81000588FE /* ringtone.wav in Resources */,
+				559BE04A19623075000588FE /* busy.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

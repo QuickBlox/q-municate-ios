@@ -10,6 +10,7 @@
 #import "UIImageView+ImageWithBlobID.h"
 #import "QMChatService.h"
 #import "QMContactList.h"
+#import "QMSoundManager.h"
 #import "QMUtilities.h"
 
 @interface QMIncomingCallController ()
@@ -52,8 +53,8 @@
     } else {
         [self.userAvatarView loadImageWithBlobID:opponent.blobID];
     }
+    [QMSoundManager playRingtoneSound];
     
-    [[QMUtilities shared] playSoundOfType:QMSoundPlayTypeIncommingCall];
 }
 
 - (void)didReceiveMemoryWarning
@@ -71,29 +72,29 @@
 }
 
 - (void)dealloc {
-    [[QMUtilities shared] stopPlaying];
+    
+    [[QMSoundManager shared] stopAllSounds];
 }
 
 #pragma mark - Actions
 
 - (IBAction)acceptCall:(id)sender {
     
-    [[QMUtilities shared] stopPlaying];
+    [[QMSoundManager shared] stopAllSounds];
     [self performSegueWithIdentifier:kStartCallSegueIdentifier sender:nil];
 }
 
 - (IBAction)declineCall:(id)sender {
     
-    [[QMUtilities shared] stopPlaying];
+    [[QMSoundManager shared] stopAllSounds];
     [[QMChatService shared] rejectCallFromUser:opponent ? self.opponent.ID : self.opponentID  opponentView:nil];
-    [[QMUtilities shared] playSoundOfType:QMSoundPlayTypeEndOfCall];
+    [QMSoundManager playEndOfCallSound];
     
     [self performSelector:@selector(dismissIncomingCallController) withObject:self afterDelay:1.0f];
 }
 
 - (void)dismissIncomingCallController {
-    
-    [QMUtilities.shared stopPlaying];
+    [[QMSoundManager shared] stopAllSounds];
     [QMUtilities.shared dismissIncomingCallController];
 }
 

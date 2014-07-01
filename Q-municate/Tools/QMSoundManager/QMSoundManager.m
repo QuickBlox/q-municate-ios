@@ -326,12 +326,51 @@ void systemServicesSoundCompletion(SystemSoundID  soundID, void *data) {
     NSLog(@"%@ Error: (code %d) %@", message, (int)error, errorMessage);
 }
 
-#pragma mark - Notifications
+#pragma mark - Did Receive Memory Warning Notification
 
 - (void)didReceiveMemoryWarningNotification:(NSNotification *)notification {
     
     NSLog(@"%@ received memory warning!", [self class]);
     [self unloadSoundIDs];
+}
+
+#pragma mark - Default sounds
+
+NSString *const kQMReceivedSoundName = @"received";
+NSString *const kQMSendSoundName = @"sent";
+NSString *const kQMCallingSoundName = @"calling";
+NSString *const kQMBusySoundName = @"busy";
+NSString *const kQMEndOfCallSoundName = @"end_of_call";
+NSString *const kQMRingtoneSoundName = @"ringtone";
+
++ (void)playMessageReceivedSound {
+    
+    [[QMSoundManager shared] playSoundWithName:kQMReceivedSoundName extension:kystemSoundTypeWAV];
+}
+
++ (void)playMessageSentSound {
+    
+    [[QMSoundManager shared] playSoundWithName:kQMSendSoundName extension:kystemSoundTypeWAV];
+}
+
++ (void)playCallingSound {
+    
+    [[QMSoundManager shared] playSoundWithName:kQMCallingSoundName extension:kystemSoundTypeWAV];
+}
+
++ (void)playBusySound {
+    
+    [[QMSoundManager shared] playSoundWithName:kQMBusySoundName extension:kystemSoundTypeWAV];
+}
+
++ (void)playEndOfCallSound {
+    
+    [[QMSoundManager shared] playSoundWithName:kQMEndOfCallSoundName extension:kystemSoundTypeWAV];
+}
+
++ (void)playRingtoneSound {
+    
+    [[QMSoundManager shared] playSoundWithName:kQMRingtoneSoundName extension:kystemSoundTypeWAV];
 }
 
 @end

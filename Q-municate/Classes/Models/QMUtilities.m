@@ -89,37 +89,37 @@
 
 #pragma mark -
 
-- (void)playSoundOfType:(QMSoundPlayType)soundType
-{
-    if (self.audioPlayer != nil) {
-        return;
-    }
-    NSString *soundFile = nil;
-    NSInteger numberOfLoops = 0;
-    if (soundType == QMSoundPlayTypeIncommingCall) {
-        soundFile = [[NSBundle mainBundle] pathForResource:@"ringtone" ofType:@"wav"];
-        numberOfLoops = 30;
-    } else if (soundType == QMSoundPlayTypeCallingNow) {
-        soundFile = [[NSBundle mainBundle] pathForResource:@"calling" ofType:@"mp3"];
-        numberOfLoops = 40;
-    } else if (soundType == QMSoundPlayTypeUserIsBusy) {
-        soundFile = [[NSBundle mainBundle] pathForResource:@"busy" ofType:@"mp3"];
-    } else if (soundType == QMSoundPlayTypeEndOfCall) {
-        soundFile = [[NSBundle mainBundle] pathForResource:@"end_of_call" ofType:@"mp3"];
-    }
-    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:soundFile] error:nil];
-    self.audioPlayer.numberOfLoops = numberOfLoops;
-    
-    [self.audioPlayer play];
-}
-
-- (void)stopPlaying
-{
-    if (self.audioPlayer != nil) {
-        [self.audioPlayer stop];
-        self.audioPlayer = nil;
-    }
-}
+//- (void)playSoundOfType:(QMSoundPlayType)soundType
+//{
+//    if (self.audioPlayer != nil) {
+//        return;
+//    }
+//    NSString *soundFile = nil;
+//    NSInteger numberOfLoops = 0;
+//    if (soundType == QMSoundPlayTypeIncommingCall) {
+//        soundFile = [[NSBundle mainBundle] pathForResource:@"ringtone" ofType:@"wav"];
+//        numberOfLoops = 30;
+//    } else if (soundType == QMSoundPlayTypeCallingNow) {
+//        soundFile = [[NSBundle mainBundle] pathForResource:@"calling" ofType:@"mp3"];
+//        numberOfLoops = 40;
+//    } else if (soundType == QMSoundPlayTypeUserIsBusy) {
+//        soundFile = [[NSBundle mainBundle] pathForResource:@"busy" ofType:@"mp3"];
+//    } else if (soundType == QMSoundPlayTypeEndOfCall) {
+//        soundFile = [[NSBundle mainBundle] pathForResource:@"end_of_call" ofType:@"mp3"];
+//    }
+//    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:soundFile] error:nil];
+//    self.audioPlayer.numberOfLoops = numberOfLoops;
+//    
+//    [self.audioPlayer play];
+//}
+//
+//- (void)stopPlaying
+//{
+//    if (self.audioPlayer != nil) {
+//        [self.audioPlayer stop];
+//        self.audioPlayer = nil;
+//    }
+//}
 
 
 #pragma mark -

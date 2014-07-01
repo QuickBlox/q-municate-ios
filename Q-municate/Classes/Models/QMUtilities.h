@@ -11,26 +11,19 @@
 #import "NSDateFormatter+SinceDateFormat.h"
 
 
-typedef NS_ENUM(NSUInteger, QMSoundPlayType) {
-    QMSoundPlayTypeIncommingCall,
-    QMSoundPlayTypeUserIsBusy,
-    QMSoundPlayTypeCallingNow,
-    QMSoundPlayTypeEndOfCall
-};
-
 @interface QMUtilities : NSObject
 
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
-@property (strong, nonatomic) AVAudioPlayer *audioPlayer;
+//@property (strong, nonatomic) AVAudioPlayer *audioPlayer;
 @property (strong, nonatomic) QMIncomingCallController *incomingCallController;
 
 + (instancetype)shared;
 
 - (void)dismissIncomingCallController;
 
-// Audio Player:
-- (void)playSoundOfType:(QMSoundPlayType)soundType;
-- (void)stopPlaying;
+//// Audio Player:
+//- (void)playSoundOfType:(QMSoundPlayType)soundType;
+//- (void)stopPlaying;
 
 - (NSString *)formattedTimeFromTimeInterval:(double_t)time;
 
