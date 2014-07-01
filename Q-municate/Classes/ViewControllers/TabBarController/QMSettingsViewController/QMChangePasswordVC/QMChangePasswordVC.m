@@ -13,6 +13,7 @@
 #import "REAlertView+QMSuccess.h"
 #import "UIImage+TintColor.h"
 #import "SVProgressHUD.h"
+#import "QMApi.h"
 
 const NSUInteger kQMMinPasswordLenght = 7;
 
@@ -89,8 +90,8 @@ const NSUInteger kQMMinPasswordLenght = 7;
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     
-    [[QMAuthService shared] updateUser:myProfile withCompletion:^(QBUUserResult *result) {
-        
+    [[QMApi shared].authService updateUser:myProfile withCompletion:^(QBUUserResult *result) {
+        [QMContactList shared].me = result.user;
         if (result.success) {
             
             [self.settingsManager setLogin:myProfile.login andPassword:myProfile.password];

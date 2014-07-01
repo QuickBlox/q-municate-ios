@@ -12,6 +12,4 @@
 
 @interface QMSignUpController : UIViewController
 
-@property (strong, nonatomic) QMWelcomeScreenViewController *root;
-
 @end

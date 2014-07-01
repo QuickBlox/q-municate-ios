@@ -15,6 +15,7 @@
 #import "QMContent.h"
 #import "REAlertView+QMSuccess.h"
 #import "SVProgressHUD.h"
+#import "QMApi.h"
 
 @interface QMSignUpController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
@@ -81,97 +82,10 @@
     newUser.password = password;
 
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-
-    [[QMAuthService shared] signUpUser:newUser completion:^(QBUUserResult *result) {
-
+    [[QMApi shared] signUpAndLoginWithUser:newUser userAvatar:self.cachedPicture completion:^(QBUUserResult *result) {
         [SVProgressHUD dismiss];
-        
-        if (result.success) {
-            // load image and update user with blob ID:
-            if (self.cachedPicture != nil) {
-                [self loginWithUser:result.user afterLoadingImage:self.cachedPicture];
-            }
-            [self loginWithUserWithoutImage:result.user];
-        }
-        else {
-            [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
-        }
-        
-    }];
-}
-
-- (void)loginWithUser:(QBUUser *)user afterLoadingImage:(UIImage *)image {
-    
-    [[QMAuthService shared] logInWithEmail:user.email password:self.passwordField.text completion:^(QBUUserLogInResult *result) {
-        
-        if (result.success) {
-            [self updateUser:user withAvatar:image];
-        }
-        else {
-            [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
-        }
-    }];
-}
-
-- (void)loginWithUserWithoutImage:(QBUUser *)user {
-
-    QMChatService *chatService = [QMChatService shared];
-    QMAuthService *authService = [QMAuthService shared];
-    QMContactList *contactList = [QMContactList shared];
-    
-    [authService logInWithEmail:user.email password:self.passwordField.text completion:^(QBUUserLogInResult *result) {
-        
-        if (result.success) {
-            // save me:
-            user.password = self.passwordField.text;
-            contactList.me = user;
-            
-            // subscribe to push notification:
-            [authService subscribeToPushNotifications];
-            
-            [chatService loginWithUser:user completion:^(BOOL success) {
-                if (success) {
-                    [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
-                }
-                else {
-                    [REAlertView showAlertWithMessage:@"" actionSuccess:NO];
-                }
-            }];
-        }
-        else {
-            [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
-        }
-    }];
-}
-
-- (void)updateUser:(QBUUser *)user withAvatar:(UIImage *)image {
-    
-    QMContent *content = [[QMContent alloc] init];
-    [content uploadImage:image named:user.email completion:^(QBCFileUploadTaskResult *result) {
-        
-        [[QMAuthService shared] updateUser:user withBlob:result.uploadedBlob completion:^(QBUUserResult *updateResult) {
-            
-            if (updateResult.success) {
-                
-                user.password = self.passwordField.text;
-                [QMContactList shared].me = user;
-                
-                // subscribe to push notification:
-                [[QMAuthService shared] subscribeToPushNotifications];
-                
-                // login to chat:
-                [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-                    if (success) {
-                        // go to tab bar:
-                        [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
-                    }
-                }];
-
-            }
-            else {
-                [REAlertView showAlertWithMessage:updateResult.errors.lastObject actionSuccess:NO];
-            }
-        }];
+        if(result.success)
+            [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
     }];
 }
 

@@ -10,10 +10,6 @@
 
 @interface QMAuthService : NSObject
 
-+ (instancetype)shared;
-
-@property (assign) BOOL isSessionCreated;
-
 #pragma mark - Authorization
 
 // sign up
@@ -30,7 +26,6 @@
 - (void)resetUserPasswordForEmail:(NSString *)email completion:(QBResultBlock)completion;
 
 // update user with blobID
-- (void)updateUser:(QBUUser *)user withBlob:(QBCBlob *)blob completion:(QBUUserResultBlock)completion;
 - (void)updateUser:(QBUUser *)user withCompletion:(QBUUserResultBlock)completion;
 
 - (void)startSessionWithBlock:(QBAAuthSessionCreationResultBlock)block;

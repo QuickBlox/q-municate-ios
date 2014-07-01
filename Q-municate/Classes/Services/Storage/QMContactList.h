@@ -14,7 +14,6 @@
 
 /** Me */
 @property (strong, nonatomic) QBUUser *me;
-@property (strong, nonatomic) NSMutableDictionary<FBGraphUser> *fbMe;
 
 /** Users for invite friends */
 @property (strong, nonatomic) NSArray *facebookFriendsToInvite;

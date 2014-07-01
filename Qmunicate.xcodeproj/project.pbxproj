@@ -42,6 +42,7 @@
 		559BE04C19623075000588FE /* end_of_call.wav in Resources */ = {isa = PBXBuildFile; fileRef = 559BE04719623075000588FE /* end_of_call.wav */; };
 		559BE04D19623075000588FE /* received.wav in Resources */ = {isa = PBXBuildFile; fileRef = 559BE04819623075000588FE /* received.wav */; };
 		559BE04E19623075000588FE /* sent.wav in Resources */ = {isa = PBXBuildFile; fileRef = 559BE04919623075000588FE /* sent.wav */; };
+		559D30A81962C1EA002CD5C0 /* QMApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 559D30A71962C1EA002CD5C0 /* QMApi.m */; };
 		55CEA9EE195D835B001A8ED6 /* QMImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEA9ED195D835B001A8ED6 /* QMImageView.m */; };
 		55CEAB81195DBCFA001A8ED6 /* QMIncomingCallController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB15195DBCFA001A8ED6 /* QMIncomingCallController.m */; };
 		55CEAB82195DBCFA001A8ED6 /* QMVideoCallController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB18195DBCFA001A8ED6 /* QMVideoCallController.m */; };
@@ -274,6 +275,8 @@
 		559BE04719623075000588FE /* end_of_call.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = end_of_call.wav; sourceTree = "<group>"; };
 		559BE04819623075000588FE /* received.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = received.wav; sourceTree = "<group>"; };
 		559BE04919623075000588FE /* sent.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sent.wav; sourceTree = "<group>"; };
+		559D30A61962C1EA002CD5C0 /* QMApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMApi.h; sourceTree = "<group>"; };
+		559D30A71962C1EA002CD5C0 /* QMApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMApi.m; sourceTree = "<group>"; };
 		55CEA9EC195D835B001A8ED6 /* QMImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMImageView.h; sourceTree = "<group>"; };
 		55CEA9ED195D835B001A8ED6 /* QMImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMImageView.m; sourceTree = "<group>"; };
 		55CEAB14195DBCFA001A8ED6 /* QMIncomingCallController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncomingCallController.h; sourceTree = "<group>"; };
@@ -794,6 +797,15 @@
 				559BE03C19622D81000588FE /* ringtone.wav */,
 			);
 			path = Sounds;
+			sourceTree = "<group>";
+		};
+		559D30A51962C1D6002CD5C0 /* QMApi */ = {
+			isa = PBXGroup;
+			children = (
+				559D30A61962C1EA002CD5C0 /* QMApi.h */,
+				559D30A71962C1EA002CD5C0 /* QMApi.m */,
+			);
+			path = QMApi;
 			sourceTree = "<group>";
 		};
 		55CEA9EB195D835B001A8ED6 /* QMImageView */ = {
@@ -1497,6 +1509,7 @@
 		6943843A18E42677001E08A9 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				559D30A51962C1D6002CD5C0 /* QMApi */,
 				553A590C1959A0D000FAD889 /* QMSettingsManager */,
 				6943843B18E42677001E08A9 /* AddressBook */,
 				6943843E18E42677001E08A9 /* Authentication */,
@@ -1981,6 +1994,7 @@
 				55CEAB9D195DBCFA001A8ED6 /* QMFriendListController.m in Sources */,
 				55CEAB95195DBCFA001A8ED6 /* QMKeyboardController.m in Sources */,
 				6943849518E42691001E08A9 /* UIImageView+ImageWithBlobID.m in Sources */,
+				559D30A81962C1EA002CD5C0 /* QMApi.m in Sources */,
 				69D57E6618ACC11C00A9900A /* AppDelegate.m in Sources */,
 				55CEAB97195DBCFA001A8ED6 /* QMAddMembersToGroupController.m in Sources */,
 				6943849318E42691001E08A9 /* NSDateFormatter+SinceDateFormat.m in Sources */,

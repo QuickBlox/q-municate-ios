@@ -13,6 +13,8 @@
 #import "QMContactList.h"
 #import "QMSettingsManager.h"
 #import "REAlertView+QMSuccess.h"
+#import "QMApi.h"
+#import "SVProgressHUD.h"
 
 @interface QMLogInVC ()
 
@@ -42,17 +44,14 @@
         [self loadDefaults];
     }
     
-    if (![QMAuthService shared].isSessionCreated) {
+    [[QMApi shared].authService startSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
         
-        [[QMAuthService shared] startSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
-            
-            if (result.success) {
-                ILog(@"Session created");
-            } else {
-                [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
-            }
-        }];
-    }
+        if (result.success) {
+            ILog(@"Session created");
+        } else {
+            [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
+        }
+    }];
 }
 
 - (IBAction)hideKeyboard:(id)sender {
@@ -64,14 +63,15 @@
     NSString *mailString = self.emailField.text;
     NSString *passwordString = self.passwordField.text;
     
+
+    
     if (mailString.length == 0 || passwordString.length == 0) {
         [REAlertView showAlertWithMessage:kAlertBodyFillInAllFieldsString actionSuccess:NO];
     }
     else {
-        QMAuthService *authService = [QMAuthService shared];
         QMContactList *contactList = [QMContactList shared];
         
-        [authService logInWithEmail:mailString password:passwordString completion:^(QBUUserLogInResult *result) {
+        [[QMApi shared].authService logInWithEmail:mailString password:passwordString completion:^(QBUUserLogInResult *result) {
             
             if (result.success) {
                 // remember me:
@@ -81,7 +81,7 @@
                 contactList.me = result.user;
                 
                 // subscribe to push notification:
-                [authService subscribeToPushNotifications];
+                [[QMApi shared].authService subscribeToPushNotifications];
                 
                 // login to chat:
                 [self logInToQuickbloxChatWithUser:result.user];
@@ -94,38 +94,19 @@
 }
 
 - (IBAction)connectWithFacebook:(id)sender {
-#warning connetcWithFacebook
-//    [[QMAuthService shared] authWithFacebookAndCompletionHandler:^(QBUUser *user, BOOL success, NSString *error) {
-//        if (!success) {
-//            [self showAlertWithMessage:error actionSuccess:NO];
-//            return;
-//        }
-//        // remember me:
-//        [self rememberMe:self.rememberMeSwitch.isOn isFacebookSession:YES];
-//        
-//        // save me:
-//        [[QMContactList shared] setMe:user];
-//        
-//        // subscribe to push notification:
-//        [[QMAuthService shared] subscribeToPushNotifications];
-//        
-//        if (user.blobID == 0) {
-//            [[QMAuthService shared] loadFacebookUserPhotoAndUpdateUser:user completion:^(BOOL success) {
-//                if (!success) {
-//                    [self showAlertWithMessage:error.description actionSuccess:NO];
-//                    return;
-//                }
-//                [self logInToQuickbloxChatWithUser:user];
-//            }];
-//            return;
-//        }
-//        [self logInToQuickbloxChatWithUser:user];
-//    }];
+    
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    [[QMApi shared] loginWithFacebook:^(BOOL success) {
+        [SVProgressHUD dismiss];
+        if (success) {
+            [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+        }
+    }];
 }
 
 - (void)rememberMe:(BOOL)isRemember isFacebookSession:(BOOL)isFacebookSession {
     
-     QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
+    QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
     
     if (isRemember) {
         
@@ -137,7 +118,7 @@
         if (!isFacebookSession) {
             [settingsManager setLogin:login andPassword:password];
         }
-
+        
     } else {
         [settingsManager clearSettings];
     }

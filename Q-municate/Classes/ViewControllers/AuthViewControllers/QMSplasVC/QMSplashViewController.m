@@ -13,10 +13,9 @@
 #import "QMContactList.h"
 #import "QMUtilities.h"
 #import "QMSettingsManager.h"
-#import "REAlertView.h"
+#import "REAlertView+QMSuccess.h"
 #import "QMFacebookService.h"
-
-#warning [QMUtilities shared];
+#import "QMApi.h"
 
 @interface QMSplashViewController ()
 
@@ -51,7 +50,7 @@
     
     QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
     
-    [[QMAuthService shared] startSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
+    [[QMApi shared].authService startSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
         
         if (result.success) {
             
@@ -74,67 +73,28 @@
             
         } else {
             
-            [self showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
+            [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
         }
     }];
-
 }
 
 - (void)loginWithEmail:(NSString *)email password:(NSString *)password {
 
-    QMContactList *contactList = [QMContactList shared];
-    QMAuthService *authService = [QMAuthService shared];
+    QBUUser *user = [QBUUser user];
+    user.email = email;
+    user.password = password;
     
-    [authService logInWithEmail:email password:password completion:^(QBUUserLogInResult *result) {
-        
-        if (result.success) {
-            
-            contactList.me = result.user;
-            [self loginWithUser:result.user];
-            
-        } else {
-            [self showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
-        }
+    [[QMApi shared] loginWithUser:user completion:^(QBUUserLogInResult *result) {
+        [self.activityIndicator stopAnimating];
+        [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
     }];
 }
 
 - (void)loginWithFacebook {
     
-    QMAuthService *authService = [QMAuthService shared];
-    QMFacebookService *fbService = [[QMFacebookService alloc] init];
-    
-    [fbService connectToFacebook:^(NSString *sessionToken) {
-       
-        [authService logInWithFacebookAccessToken:sessionToken completion:^(QBUUserLogInResult *result) {
-            
-            if (result.success) {
-                [self loginWithUser:result.user];
-            } else {
-                [self showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
-            }
-        }]; 
-    }];
-}
-
-- (void)loginWithUser:(QBUUser *)user {
-    
-    [[QMAuthService shared] subscribeToPushNotifications];
-    [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-        if (success) {
-            [self.activityIndicator stopAnimating];
-            [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
-        }
-    }];
-}
-
-#pragma mark - Alert
-
-- (void)showAlertWithMessage:(NSString *)messageString actionSuccess:(BOOL)success {
-    
-    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-        alertView.title = success ? kAlertTitleSuccessString : kAlertTitleErrorString;
-        alertView.message = messageString;
-        [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{}];
+    [[QMApi shared] loginWithFacebook:^(BOOL success) {
+        [self.activityIndicator stopAnimating];
+        [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
     }];
 }
 

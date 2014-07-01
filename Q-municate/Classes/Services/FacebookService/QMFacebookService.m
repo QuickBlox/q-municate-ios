@@ -132,7 +132,6 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
         // If the session is closed
         NSLog(@"Session closed");
         // Show the user the logged-out UI
-        [self logout];
     }
     
     // Handle errors
@@ -170,10 +169,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
                 [self showMessage:alertText withTitle:alertTitle];
             }
         }
-        // Clear this token
-        [FBSession.activeSession closeAndClearTokenInformation];
-        // Show the user the logged-out UI
-        [self logout];
+        completion(nil);
     }
 }
 

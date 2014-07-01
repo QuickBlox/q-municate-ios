@@ -8,6 +8,7 @@
 
 #import "QMForgotPasswordTVC.h"
 #import "QMAuthService.h"
+#import "QMApi.h"
 #import "SVProgressHUD.h"
 
 @interface QMForgotPasswordTVC ()
@@ -37,7 +38,7 @@
 - (void)resetPasswordForMail:(NSString *)emailString {
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [[QMAuthService shared] resetUserPasswordForEmail:emailString completion:^(Result *result) {
+    [[QMApi shared].authService resetUserPasswordForEmail:emailString completion:^(Result *result) {
 
         if (result.success) {
             [SVProgressHUD showSuccessWithStatus:kAlertBodyMessageWasSentToMailString];

@@ -7,9 +7,6 @@
 //
 
 #import "QMAuthService.h"
-#import "QMContactList.h"
-#import "QMUtilities.h"
-#import "QMContent.h"
 
 @interface QMAuthService () <QBActionStatusDelegate>
 
@@ -19,29 +16,19 @@
 
 @implementation QMAuthService
 
-+ (instancetype)shared {
-    
-    static id authInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        authInstance = [[self alloc] init];
-    });
-    return authInstance;
-}
-
 #pragma mark -
 #pragma mark - Authorization
 
 - (void)signUpUser:(QBUUser *)user completion:(QBUUserResultBlock)completion {
-    [QBUsers signUp:user delegate:self context:Block_copy(Block_copy((__bridge void *)(completion)))] ;
+    [QBUsers signUp:user delegate:self context:Block_copy((__bridge void *)(completion))];
 }
 
 - (void)destroySessionWithCompletion:(QBAAuthResultBlock)completion {
-    [QBAuth destroySessionWithDelegate:self context:Block_copy(Block_copy((__bridge void *)(completion)))];
+    [QBAuth destroySessionWithDelegate:self context:Block_copy((__bridge void *)(completion))];
 }
 
 - (void)logInWithEmail:(NSString *)email password:(NSString *)password completion:(QBUUserLogInResultBlock)complition {
-    [QBUsers logInWithUserEmail:email password:password delegate:self context:Block_copy(Block_copy((__bridge void *)(complition)))];
+    [QBUsers logInWithUserEmail:email password:password delegate:self context:Block_copy((__bridge void *)(complition))];
 }
 
 - (void)logInWithFacebookAccessToken:(NSString *)accessToken completion:(QBUUserLogInResultBlock)completion {
@@ -61,21 +48,12 @@
 
 - (void)resetUserPasswordForEmail:(NSString *)email completion:(QBResultBlock)completion {
     
-    [QBUsers resetUserPasswordWithEmail:email delegate:self context:Block_copy(Block_copy((__bridge void *)(completion)))];
-}
-
-- (void)updateUser:(QBUUser *)user withBlob:(QBCBlob *)blob completion:(QBUUserResultBlock)completion {
-    
-    user.oldPassword = user.password;
-    user.website = [blob publicUrl];
-    [self updateUser:user withCompletion:completion];
+    [QBUsers resetUserPasswordWithEmail:email delegate:self context:Block_copy((__bridge void *)(completion))];
 }
 
 - (void)updateUser:(QBUUser *)user withCompletion:(QBUUserResultBlock)completion {
     
     void (^resultBlock)(QBUUserResult *) =^(QBUUserResult *result) {
-        
-        [QMContactList shared].me = result.user;
         completion(result);
     };
     

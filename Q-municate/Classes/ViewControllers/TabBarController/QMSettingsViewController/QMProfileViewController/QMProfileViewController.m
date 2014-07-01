@@ -13,6 +13,7 @@
 #import "QMAuthService.h"
 #import "QMUtilities.h"
 #import "REAlertView+QMSuccess.h"
+#import "QMApi.h"
 
 static NSUInteger const QM_MAX_STATUS_TEXT_LENGTH = 44;
 
@@ -188,12 +189,13 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
     NSString *password = self.me.password;
     self.me.password = nil;
     
-    [[QMAuthService shared] updateUser:self.me withCompletion:^(QBUUserResult *result) {
-        
+    [[QMApi shared].authService updateUser:self.me withCompletion:^(QBUUserResult *result) {
         if (result.success) {
             
             result.user.password = password;
             self.me = result.user;
+            [QMContactList shared].me = result.user;
+            
             [REAlertView showAlertWithMessage:@"Profile was updated" actionSuccess:YES];
             [self updateProfileView];
         }

@@ -13,6 +13,7 @@
 #import "REAlertView+QMSuccess.h"
 #import "QMSettingsManager.h"
 #import "QMFacebookService.h"
+#import "QMApi.h"
 
 @interface QMSettingsViewController ()
 
@@ -44,7 +45,7 @@
 
 - (void)logOut {
     
-    [[QMAuthService shared] destroySessionWithCompletion:^(QBAAuthResult *result) {
+    [[QMApi shared].authService destroySessionWithCompletion:^(QBAAuthResult *result) {
         
         if (result.success) {
             
