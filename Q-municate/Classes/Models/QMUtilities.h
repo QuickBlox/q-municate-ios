@@ -21,10 +21,6 @@
 
 - (void)dismissIncomingCallController;
 
-//// Audio Player:
-//- (void)playSoundOfType:(QMSoundPlayType)soundType;
-//- (void)stopPlaying;
-
 - (NSString *)formattedTimeFromTimeInterval:(double_t)time;
 
 @end

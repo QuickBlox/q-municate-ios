@@ -51,17 +51,17 @@
 
 - (void)showIncomingCallController:(NSNotification *)notification
 {
-    if ([QMUtilities shared].incomingCallController == nil) {
+    if (self.incomingCallController == nil) {
         
         NSUInteger opponentID = [notification.userInfo[kId] intValue];
         NSUInteger type = [notification.userInfo[@"type"] intValue];
         
-        [QMUtilities shared].incomingCallController =
+        self.incomingCallController =
         [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallIdentifier];
         
-        [QMUtilities shared].incomingCallController.opponentID = opponentID;
+        self.incomingCallController.opponentID = opponentID;
         
-        [QMUtilities shared].incomingCallController.callType = type;
+        self.incomingCallController.callType = type;
         
         [self.window.rootViewController presentViewController:[QMUtilities shared].incomingCallController
                                                      animated:NO completion:nil];
@@ -74,9 +74,9 @@
 
 - (void)dismissIncomingCallController {
     
-    if ([QMUtilities shared].incomingCallController != nil) {
+    if (self.incomingCallController != nil) {
         [[[UIApplication sharedApplication].delegate window].rootViewController dismissViewControllerAnimated:NO completion:^{
-            [QMUtilities shared].incomingCallController = nil;
+            self.incomingCallController = nil;
         }];
     }
 }
@@ -85,42 +85,6 @@
     
     [self dismissIncomingCallController];
 }
-
-
-#pragma mark -
-
-//- (void)playSoundOfType:(QMSoundPlayType)soundType
-//{
-//    if (self.audioPlayer != nil) {
-//        return;
-//    }
-//    NSString *soundFile = nil;
-//    NSInteger numberOfLoops = 0;
-//    if (soundType == QMSoundPlayTypeIncommingCall) {
-//        soundFile = [[NSBundle mainBundle] pathForResource:@"ringtone" ofType:@"wav"];
-//        numberOfLoops = 30;
-//    } else if (soundType == QMSoundPlayTypeCallingNow) {
-//        soundFile = [[NSBundle mainBundle] pathForResource:@"calling" ofType:@"mp3"];
-//        numberOfLoops = 40;
-//    } else if (soundType == QMSoundPlayTypeUserIsBusy) {
-//        soundFile = [[NSBundle mainBundle] pathForResource:@"busy" ofType:@"mp3"];
-//    } else if (soundType == QMSoundPlayTypeEndOfCall) {
-//        soundFile = [[NSBundle mainBundle] pathForResource:@"end_of_call" ofType:@"mp3"];
-//    }
-//    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:soundFile] error:nil];
-//    self.audioPlayer.numberOfLoops = numberOfLoops;
-//    
-//    [self.audioPlayer play];
-//}
-//
-//- (void)stopPlaying
-//{
-//    if (self.audioPlayer != nil) {
-//        [self.audioPlayer stop];
-//        self.audioPlayer = nil;
-//    }
-//}
-
 
 #pragma mark -
 
