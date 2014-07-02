@@ -62,6 +62,7 @@ typedef void (^QBUUserResultBlock)(QBUUserResult *result);
 typedef void (^QBAAuthResultBlock)(QBAAuthResult *result);
 typedef void (^QBUUserLogInResultBlock)(QBUUserLogInResult *result);
 typedef void (^QBAAuthSessionCreationResultBlock)(QBAAuthSessionCreationResult *result);
+typedef void (^QBMRegisterSubscriptionTaskResultBlock)(QBMRegisterSubscriptionTaskResult *result);
 
 typedef void (^QBResultBlock)(Result *result);
 typedef void (^QBSessionCreationBlock)(BOOL success, NSString *error);

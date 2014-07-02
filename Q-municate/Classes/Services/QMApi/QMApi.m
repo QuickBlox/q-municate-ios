@@ -173,5 +173,15 @@
         }
     }];
 }
+#pragma mark - Push Notifications
+- (void)subscribeToPushNotifications {
+    // Subscribe Users to Push Notifications
+    [QBMessages TRegisterSubscriptionWithDelegate:self];
+}
+
+- (void)unSubscribeFromPushNotifications {
+    // Unsubscribe Users to Push Notifications
+    [QBMessages TUnregisterSubscriptionWithDelegate:self];
+}
 
 @end

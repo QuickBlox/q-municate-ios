@@ -18,7 +18,7 @@
 - (void)destroySessionWithCompletion:(QBAAuthResultBlock)completion;
 
 // log in
-- (void)logInWithEmail:(NSString *)email password:(NSString *)password completion:(QBUUserLogInResultBlock)complition;
+- (void)logInWithEmail:(NSString *)email password:(NSString *)password completion:(QBUUserLogInResultBlock)completion;
 
 - (void)logInWithFacebookAccessToken:(NSString *)accessToken completion:(QBUUserLogInResultBlock)completion;
 
