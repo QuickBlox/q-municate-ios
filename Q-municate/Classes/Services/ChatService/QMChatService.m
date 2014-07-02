@@ -26,7 +26,7 @@
 
 @property (strong, nonatomic) NSString *currentSessionID;
 @property (nonatomic, strong) NSDictionary *customParams;
-@property (nonatomic, assign) QMVideoChatType callType;
+@property (nonatomic, assign) QBVideoChatConferenceType callType;
 
 /** */
 @property (strong, nonatomic) NSTimer *presenceTimer;
@@ -141,7 +141,7 @@
 #pragma mark - Audio/Video Calls
 
 
-- (void)initActiveStreamWithOpponentView:(QBVideoView *)opponentView sessionID:(NSString *)sessionID callType:(QMVideoChatType)type
+- (void)initActiveStreamWithOpponentView:(QBVideoView *)opponentView sessionID:(NSString *)sessionID callType:(QBVideoChatConferenceType)type
 {
     // Active stream initialize:
     if (sessionID == nil)
@@ -151,7 +151,7 @@
         self.activeStream = [[QBChat instance] createAndRegisterWebRTCVideoChatInstanceWithSessionID:currentSessionID];
     }
     // set conference type:
-    self.activeStream.currentConferenceType = (int)type;
+    self.activeStream.currentConferenceType = type;
     
     // set opponent' view
     self.activeStream.viewToRenderOpponentVideoStream = opponentView;
@@ -165,7 +165,7 @@
     [self clearCallsCacheParams];
 }
 
-- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView callType:(QMVideoChatType)callType
+- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView callType:(QBVideoChatConferenceType)callType
 {
     [self initActiveStreamWithOpponentView:opponentView sessionID:nil callType:callType];
     [self.activeStream callUser:userID];
@@ -235,7 +235,7 @@
 {
     self.customParams = customParameters;
     self.currentSessionID = _sessionID;
-    self.callType = (NSUInteger)conferenceType;
+    self.callType = conferenceType;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kIncomingCallNotification object:nil userInfo:@{@"id" : @(userID), @"type" : @(conferenceType)}];
 }
@@ -825,16 +825,6 @@
         dialog.unreadMessageCount +=1;
     }
 }
-
-//- (QBChatDialog *)createPrivateDialogWithOpponentID:(NSString *)opponentID message:(QBChatMessage *)message
-//{
-//    QBChatDialog *newDialog = [QBChatDialog new];
-//    newDialog.type = QBChatDialogTypePrivate;
-//    newDialog.occupantIDs = @[ opponentID];  // occupant ID
-//    [self updateDialogsLastMessageFields:newDialog forLastMessage:message];
-//    
-//    return newDialog;
-//}
 
 - (BOOL)userIsJoinedRoomWithJID:(NSString *)roomJID
 {

@@ -1,0 +1,69 @@
+//
+//  QMContentView.m
+//  Qmunicate
+//
+//  Created by Igor Alefirenko on 01/07/2014.
+//  Copyright (c) 2014 Quickblox. All rights reserved.
+//
+
+#import "QMContentView.h"
+#import "QMUtilities.h"
+
+@interface QMContentView()
+
+@property (nonatomic, strong, readonly) NSTimer *timer;
+@property (nonatomic, assign) double_t timeInterval;
+
+@end
+
+@implementation QMContentView
+
+/**
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation. 
+ */
+- (void)drawRect:(CGRect)rect
+{
+    // Drawing code
+    self.avatarView.imageViewType = QMImageViewTypeCircle;
+}
+
+- (void)updateViewWithUser:(QBUUser *)user
+{
+    UIImage *placeholder = [UIImage imageNamed:@"upic_call"];
+    NSURL *url = [NSURL URLWithString:user.website];
+    [self.avatarView setImageWithURL:url placeholderImage:placeholder];
+    self.fullNameLabel.text = user.fullName;
+    self.statusLabel.text = @"Calling...";
+    
+    [self layoutSubviews];
+}
+
+- (void)updateViewWithStatus:(NSString *)status
+{
+    self.statusLabel.text = status;
+}
+
+- (void)startTimer
+{
+    _timeInterval = 0;
+    [self updateStatusLabel];
+    _timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateStatusLabel) userInfo:nil repeats:YES];
+    [_timer fire];
+}
+
+- (void)stopTimer
+{
+    [_timer invalidate];
+    _timer = nil;
+    _timeInterval = 0;
+}
+
+// selector:
+- (void)updateStatusLabel
+{
+    _timeInterval++;
+    self.statusLabel.text = [[QMUtilities shared] formattedTimeFromTimeInterval:_timeInterval];
+}
+
+@end

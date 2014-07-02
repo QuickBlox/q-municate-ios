@@ -134,6 +134,9 @@
 		55D270C61940B8D300238D50 /* mogend.sh in Resources */ = {isa = PBXBuildFile; fileRef = 55D270901940B8D300238D50 /* mogend.sh */; };
 		69052799193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 69052798193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.m */; };
 		690A271518CA0F35003D6B80 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A271418CA0F35003D6B80 /* AddressBook.framework */; };
+		693206EA1962BCC300B15EF9 /* QMBaseCallsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 693206E91962BCC300B15EF9 /* QMBaseCallsController.m */; };
+		693206EE1962C0F600B15EF9 /* QMAudioCallController.m in Sources */ = {isa = PBXBuildFile; fileRef = 693206ED1962C0F600B15EF9 /* QMAudioCallController.m */; };
+		693206F11962DFBF00B15EF9 /* QMContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 693206F01962DFBF00B15EF9 /* QMContentView.m */; };
 		693808C819373A6700BF926F /* QMChatUploadingMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 693808C719373A6700BF926F /* QMChatUploadingMessage.m */; };
 		693DC42618FFC45900AF46D9 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42518FFC45900AF46D9 /* libsqlite3.dylib */; };
 		693DC42C18FFC58000AF46D9 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */; };
@@ -464,6 +467,12 @@
 		69052797193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+addQBUsersFromArray.h"; sourceTree = "<group>"; };
 		69052798193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableDictionary+addQBUsersFromArray.m"; sourceTree = "<group>"; };
 		690A271418CA0F35003D6B80 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		693206E81962BCC300B15EF9 /* QMBaseCallsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMBaseCallsController.h; sourceTree = "<group>"; };
+		693206E91962BCC300B15EF9 /* QMBaseCallsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMBaseCallsController.m; sourceTree = "<group>"; };
+		693206EC1962C0F600B15EF9 /* QMAudioCallController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMAudioCallController.h; path = QMAudioCallController/QMAudioCallController.h; sourceTree = "<group>"; };
+		693206ED1962C0F600B15EF9 /* QMAudioCallController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMAudioCallController.m; path = QMAudioCallController/QMAudioCallController.m; sourceTree = "<group>"; };
+		693206EF1962DFBF00B15EF9 /* QMContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMContentView.h; sourceTree = "<group>"; };
+		693206F01962DFBF00B15EF9 /* QMContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMContentView.m; sourceTree = "<group>"; };
 		693808C619373A6700BF926F /* QMChatUploadingMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatUploadingMessage.h; sourceTree = "<group>"; };
 		693808C719373A6700BF926F /* QMChatUploadingMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatUploadingMessage.m; sourceTree = "<group>"; };
 		693DC42518FFC45900AF46D9 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -820,8 +829,13 @@
 		55CEAB12195DBCFA001A8ED6 /* CallControllers */ = {
 			isa = PBXGroup;
 			children = (
-				55CEAB13195DBCFA001A8ED6 /* QMIncomingCallController */,
 				55CEAB16195DBCFA001A8ED6 /* QMVideoCallController */,
+				693206EB1962C0B500B15EF9 /* QMAudioCallController */,
+				55CEAB13195DBCFA001A8ED6 /* QMIncomingCallController */,
+				693206E81962BCC300B15EF9 /* QMBaseCallsController.h */,
+				693206E91962BCC300B15EF9 /* QMBaseCallsController.m */,
+				693206EF1962DFBF00B15EF9 /* QMContentView.h */,
+				693206F01962DFBF00B15EF9 /* QMContentView.m */,
 			);
 			path = CallControllers;
 			sourceTree = "<group>";
@@ -1473,6 +1487,15 @@
 			path = Scripts;
 			sourceTree = "<group>";
 		};
+		693206EB1962C0B500B15EF9 /* QMAudioCallController */ = {
+			isa = PBXGroup;
+			children = (
+				693206EC1962C0F600B15EF9 /* QMAudioCallController.h */,
+				693206ED1962C0F600B15EF9 /* QMAudioCallController.m */,
+			);
+			name = QMAudioCallController;
+			sourceTree = "<group>";
+		};
 		6943277418F6D109002B0396 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -1966,6 +1989,7 @@
 				6943847718E42678001E08A9 /* QMChatService.m in Sources */,
 				55D270A71940B8D300238D50 /* NSManagedObjectContext+MagicalObserving.m in Sources */,
 				55CEAB93195DBCFA001A8ED6 /* QMChatLayoutConfigs.m in Sources */,
+				693206EE1962C0F600B15EF9 /* QMAudioCallController.m in Sources */,
 				55D270961940B8D300238D50 /* CDUsers.m in Sources */,
 				559BE0371962255D000588FE /* QMSoundManager.m in Sources */,
 				55CEAB8F195DBCFA001A8ED6 /* QMChatDataSource.m in Sources */,
@@ -2041,6 +2065,7 @@
 				559BE02219619733000588FE /* QMFriendListCell.m in Sources */,
 				55D270B21940B8D300238D50 /* NSError+MagicalRecordErrorHandling.m in Sources */,
 				8DE8961214595987DBFCA807 /* QMInviteFriendsDataSource.m in Sources */,
+				693206EA1962BCC300B15EF9 /* QMBaseCallsController.m in Sources */,
 				559BDFF719619222000588FE /* QMCornerButton.m in Sources */,
 				55D270AF1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalRecord.m in Sources */,
 				55D270B51940B8D300238D50 /* MagicalRecord+Options.m in Sources */,
@@ -2059,6 +2084,7 @@
 				55943A0F1941A4C000BF4312 /* _CDDialog.m in Sources */,
 				559BDFE719618D3D000588FE /* QMLogInVC.m in Sources */,
 				559BE02619619733000588FE /* QMInviteFriendsStaticCell.m in Sources */,
+				693206F11962DFBF00B15EF9 /* QMContentView.m in Sources */,
 				55D270C21940B8D300238D50 /* SQLiteMagicalRecordStack.m in Sources */,
 				55D270A81940B8D300238D50 /* NSManagedObjectContext+MagicalRecord.m in Sources */,
 				55CEAB84195DBCFA001A8ED6 /* NSString+HasText.m in Sources */,
@@ -2235,8 +2261,8 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Taras Filatov (BV2558G6T9)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Taras Filatov (6AVH4TA956)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Taras Filatov (6AVH4TA956)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External\"",
@@ -2258,7 +2284,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = Qmunicate;
-				PROVISIONING_PROFILE = "F7F235D5-C871-4D94-A2BF-0EC942129F0B";
+				PROVISIONING_PROFILE = "6E004364-5E2F-449B-9394-5906B3C651CF";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VALID_ARCHS = armv7;
@@ -2273,8 +2299,8 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External\"",

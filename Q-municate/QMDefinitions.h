@@ -50,11 +50,7 @@ typedef NS_ENUM(NSUInteger, QMMembersUpdateState) {
     QMMembersUpdateStateRemoving
 };
 
-typedef NS_ENUM(NSUInteger, QMVideoChatType) {
-    QMVideoChatTypeNone,
-    QMVideoChatTypeVideo,
-    QMVideoChatTypeAudio
-};
+typedef enum QBVideoChatConferenceType QBVideoChatConferenceType;
 
 //****************** Blocks *********************************
 typedef void (^QBFileUploadTaskResultBlock)(QBCFileUploadTaskResult *result);
@@ -148,14 +144,19 @@ static NSString *const kFacebookCellIdentifier          = @"facebookCell";
 static NSString *const kInviteFriendCellIdentifier      = @"InviteFriendCell";
 
 
+static NSString *const kUserIsBusyStatus            = @"User is busy";
+static NSString *const kUserDoesntAnswerStatus      = @"User doesn't answer";
+
+static NSString *const kCallBadConnectionStatus     = @"Bad connection";
+static NSString *const kCallWasStoppedByUserStatus  = @"Call was stopped";
+
+
 
 
 //******************** USER DEFAULTS KEYS *****************
 
 static NSString *const kUserStatusText   	= @"userStatusText";
 
-//static NSString *const kChatLocalHistory	= @"chatLocalHistory";
-//static NSString *const kChatOpponentHistory	= @"opponentHistory";
 static NSString *const kChatOpponentName	= @"chatOpponentName";
 static NSString *const kChatOpponentIDString	= @"chatOpponentIDString";
 
