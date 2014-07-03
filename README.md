@@ -1,15 +1,5 @@
-# README #
-
-
-## QuickBlox
-
-QuickBlox - Communication backed as a Service (CBaaS) platform which brings superpowers to mobile apps.
-
-QuickBlox is a suite of communication features & data services (APIs, SDKs, code samples, admin panel, tutorials) which help digital agencies, mobile developers and publishers to add great functionality to smartphone applications.
-
-Please read full IOS SDK documentation on the QuickBlox website, IOS section
-
-## Q-municate 
+# Q-municate
+ 
 Q-municate is an open source code of chat application with full range of communication features on board (such as messaging, file transfer, push notifications, audio/video calls).
 
 We are inspired to give you chat application out of the box. You can customize this application depending on your needs. As always QuickBlox backend is at your service: http://quickblox.com/plans/
