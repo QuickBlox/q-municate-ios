@@ -62,7 +62,7 @@ The App works only in Portrait screen mode
 ![53b4265f007791664c38fdf8.png](https://bitbucket.org/repo/rMnaz8/images/1822093224-53b4265f007791664c38fdf8.png)
 
 ## Video calls
-![qm__0005_01-3-video-call.png](https://bitbucket.org/repo/rMnaz8/images/4116586744-qm__0005_01-3-video-call.png)
+![qm__0005_01-3-video-call.png](https://bitbucket.org/repo/rMnaz8/images/4116586744-qm__0005_01-3-video-call.png=200x)
 
 ## Audio calls
 ![qm__0014_05-2-audio-call-incoming.png](https://bitbucket.org/repo/rMnaz8/images/4223997465-qm__0014_05-2-audio-call-incoming.png)
