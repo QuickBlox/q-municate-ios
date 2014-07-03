@@ -73,7 +73,7 @@ If you want to build your own iOS app using Q-municate as a basis, please do the
 *  create a new app 
 *  click on the app title in the list to reveal app details:
 
-![2014-07-03_1729.png](https://bitbucket.org/repo/rMnaz8/images/3352422798-2014-07-03_1729.png)
+![2014-07-03_1729.png](https://bitbucket.org/repo/rMnaz8/images/3352422798-2014-07-03_1729.png =250x)
 
 *  copy credentials (App ID, Authorization key, Authorization secret) into your Q-municate project code in Consts.java
 *  Enjoy!
