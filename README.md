@@ -1,6 +1,6 @@
-# # README # #
+# README #
 
-### QuickBlox ### 
+### QuickBlox### 
 
 QuickBlox - Communication backed as a Service (CaaS) platform which brings superpowers to mobile apps.
 
