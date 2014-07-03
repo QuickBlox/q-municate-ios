@@ -50,7 +50,7 @@ The App works only in Portrait screen mode
 
 ## Prelogin screen
 
-![IMG_2558.PNG ] (https://bitbucket.org/repo/rMnaz8/images/3603671593-IMG_2558.PNG ) 
+![step_1(2).png](https://bitbucket.org/repo/rMnaz8/images/4218470199-step_1%282%29.png)
 
 
 ## Private chat screen
