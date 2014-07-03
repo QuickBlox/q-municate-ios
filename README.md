@@ -47,3 +47,18 @@ The IOS App is developed as native IOS application.
 Web component is based on QuickBlox platform.
 The App and Web panel has English language interface.
 The App works only in Portrait screen mode
+
+
+## Important - how to build your own Chat app
+
+If you want to build your own iOS app using ChattAR as a basis, please do the following:
+1) download the project from here (GIT)
+2) register a QuickBlox account (if you don't have one yet): http://admin.quickblox.com/register
+3) log in to QuickBlox admin panel [http://admin.quickblox.com/signin]http://admin.quickblox.com/signin
+4) create a new app 
+5) click on the app title in the list to reveal app details:
+
+App credentials 
+
+6) copy credentials (App ID, Authorization key, Authorization secret) into your Q-municate project code in Consts.java
+7) Enjoy!
