@@ -48,23 +48,19 @@ Web component is based on QuickBlox platform.
 The App and Web panel has English language interface.
 The App works only in Portrait screen mode
 
+## Prelogin screen
+
+![IMG_2558.PNG] (https://bitbucket.org/repo/rMnaz8/images/3603671593-IMG_2558.PNG ) 
 
 
-![IMG_2558.PNG](https://bitbucket.org/repo/rMnaz8/images/3603671593-IMG_2558.PNG ) :scale: 50 %
-
-
-
-
-
-
-## Private chat
+## Private chat screen
 
 ![53b4265f007791664c38fdf8.png](https://bitbucket.org/repo/rMnaz8/images/1822093224-53b4265f007791664c38fdf8.png)
 
-## Video calls
+## Video calls screen
 ![qm__0005_01-3-video-call.png](https://bitbucket.org/repo/rMnaz8/images/4116586744-qm__0005_01-3-video-call.png)
 
-## Audio calls
+## Audio calls screen
 ![qm__0014_05-2-audio-call-incoming.png](https://bitbucket.org/repo/rMnaz8/images/4223997465-qm__0014_05-2-audio-call-incoming.png)
 
 ## Important - how to build your own Chat app
