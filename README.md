@@ -48,9 +48,8 @@ Web component is based on QuickBlox platform.
 The App and Web panel has English language interface.
 The App works only in Portrait screen mode
 
-<img src="IMG_2558.PNG](https://bitbucket.org/repo/rMnaz8/images/3603671593-IMG_2558.PNG" height="400" />&nbsp;
-
 ![IMG_2558.PNG](https://bitbucket.org/repo/rMnaz8/images/3603671593-IMG_2558.PNG)
+
 
 ![53b4265f007791664c38fdf8.png](https://bitbucket.org/repo/rMnaz8/images/1822093224-53b4265f007791664c38fdf8.png)
 
