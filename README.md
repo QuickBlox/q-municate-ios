@@ -55,7 +55,7 @@ The App works only in Portrait screen mode
 
 ## Private chat screen
 
-![53b4265f007791664c38fdf8.png](https://bitbucket.org/repo/rMnaz8/images/1822093224-53b4265f007791664c38fdf8.png)
+![53b4265f007791664c38fdf8.png](https://bitbucket.org/repo/rMnaz8/images/1822093224-53b4265f007791664c38fdf8.png "Optional title")
 
 ## Video calls screen
 ![qm__0005_01-3-video-call.png](https://bitbucket.org/repo/rMnaz8/images/4116586744-qm__0005_01-3-video-call.png)
