@@ -49,6 +49,10 @@ The App and Web panel has English language interface.
 The App works only in Portrait screen mode
 
 
+![IMG_2558.PNG](https://bitbucket.org/repo/rMnaz8/images/3603671593-IMG_2558.PNG)
+
+![53b4265f007791664c38fdf8.png](https://bitbucket.org/repo/rMnaz8/images/1822093224-53b4265f007791664c38fdf8.png)
+
 ## Important - how to build your own Chat app
 
 If you want to build your own iOS app using Q-municate as a basis, please do the following:
