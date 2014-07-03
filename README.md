@@ -51,6 +51,17 @@ The App works only in Portrait screen mode
 ## Prelogin screen
 
 ![step_1(2).png](https://bitbucket.org/repo/rMnaz8/images/4218470199-step_1%282%29.png)
+Available features:
+
+Buttons:
+
+* Connect with FB– this button allows user to enter the App with his/her Facebook credentials, if user has entered Facebook credentials into device settings.
+If there are no Facebook credentials in the device’s settings, App shows pop-up message with appropriate text. After pop-up message Facebook authorization page will be shown .
+If App has passed Facebook authorization successfully, the App will show pop-up message
+* Sign up (with email) – if tapped, user is redirected to Register Page
+* Already have an account? (Log in)– button allows user to enter the App if he/she provides correct and valid email and password. By tapping on this button user will be redirected to the login screen.
+
+Please note, that user will skip this page, if “Remember me” tick is set in the check box on Login page.
 
 
 ## Private chat screen
