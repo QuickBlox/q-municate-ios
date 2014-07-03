@@ -51,7 +51,7 @@ The App works only in Portrait screen mode
 
 ## Important - how to build your own Chat app
 
-If you want to build your own iOS app using ChattAR as a basis, please do the following:
+If you want to build your own iOS app using Q-municate as a basis, please do the following:
 
 *  download the project from here (GIT)
 *  register a QuickBlox account (if you don't have one yet): http://admin.quickblox.com/register
