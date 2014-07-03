@@ -50,7 +50,7 @@ The App works only in Portrait screen mode
 
 
 
-![IMG_2558.PNG](https://bitbucket.org/repo/rMnaz8/images/3603671593-IMG_2558.PNG)
+![IMG_2558.PNG](https://bitbucket.org/repo/rMnaz8/images/3603671593-IMG_2558.PNG :scale: 50 %)
 
 
 
