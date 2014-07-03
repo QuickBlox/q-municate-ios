@@ -82,10 +82,13 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
     // for private chat:
     if (self.chatDialog == nil) {
+        [QMUtilities createIndicatorView];
         [[QMChatService shared] createPrivateChatDialogWithOpponent:self.opponent completion:^(QBChatDialog *dialog, NSError *error) {
             if (error) {
                 [self showAlertWithErrorMessage:error.description];
+                [QMUtilities removeIndicatorView];
                 return;
+                
 #warning Notify controllers for created chat dialog
                 // save dialog:
                 NSString *kOpponentID = KEY_OPPONENT_ID(self.opponent.ID);
@@ -546,7 +549,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     __block UIImage *currentImage = info[UIImagePickerControllerOriginalImage];
-//    currentImage = [currentImage imageByScalingProportionallyToMinimumSize:CGSizeMake(625, 400)];
+    currentImage = [currentImage imageByScalingProportionallyToMinimumSize:CGSizeMake(1000, 1000)];
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
@@ -557,17 +560,18 @@ static CGFloat const kCellHeightOffset = 33.0f;
 		chatMessage.content = currentImage;
 //        chatMessage.text = @"Content";
 		if (self.chatDialog.type == QBChatDialogTypePrivate) {
+            chatMessage.senderID = [QMContactList shared].me.ID;
             chatMessage.recipientID = self.opponent.ID;
             
             //add private upload message to history
-            NSMutableArray *messages = [QMChatService shared].allConversations[[@(self.opponent.ID) stringValue]];
+            NSMutableArray *messages = [QMChatService shared].allConversations[self.chatDialog.ID];
             [messages addObject:chatMessage];
             [self resetTableView];
             return;
         }
         chatMessage.roomJID = self.chatDialog.roomJID;                      //room jid for caching message in QMChatService
         //add group upload message to history
-        NSMutableArray *messages = [QMChatService shared].allConversations[self.chatDialog.roomJID];
+        NSMutableArray *messages = [QMChatService shared].allConversations[self.chatDialog.ID];
         [messages addObject:chatMessage];
         
         [self resetTableView];
@@ -581,3 +585,10 @@ static CGFloat const kCellHeightOffset = 33.0f;
 }
 
 @end
+
+
+
+
+
+
+

@@ -64,8 +64,11 @@
     if (chatDialog.lastMessageText != nil) {
         [self.lastMessage setText:chatDialog.lastMessageText];
         return;
+    } else if (chatDialog.lastMessageDate > 0) {
+        [self.lastMessage setText:@"Attachment"];
+        return;
     }
-    [self.lastMessage setText:@"Attachment"];
+    [self.lastMessage setText:@""];
 }
 
 - (NSString *)chatNameForChatDialog:(QBChatDialog *)chatDialog
