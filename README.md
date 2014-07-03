@@ -55,13 +55,14 @@ The App works only in Portrait screen mode
 
 ## Private chat screen
 
-![53b4265f007791664c38fdf8.png](https://bitbucket.org/repo/rMnaz8/images/1822093224-53b4265f007791664c38fdf8.png "Optional title")
+![step_2(2).png](https://bitbucket.org/repo/rMnaz8/images/2924576187-step_2%282%29.png)
 
 ## Video calls screen
-![qm__0005_01-3-video-call.png](https://bitbucket.org/repo/rMnaz8/images/4116586744-qm__0005_01-3-video-call.png)
+
+![step_3(2).png](https://bitbucket.org/repo/rMnaz8/images/2190095292-step_3%282%29.png)
 
 ## Audio calls screen
-![qm__0014_05-2-audio-call-incoming.png](https://bitbucket.org/repo/rMnaz8/images/4223997465-qm__0014_05-2-audio-call-incoming.png)
+![step_4(2).png](https://bitbucket.org/repo/rMnaz8/images/2813259661-step_4%282%29.png)
 
 ## Important - how to build your own Chat app
 
