@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "QMUtilities.h"
 
 #define TEST_QMDBStore 1
 
@@ -28,6 +29,8 @@
     [QBSettings setAuthorizationKey:@"MpOecRZy-5WsFva"];
     [QBSettings setAuthorizationSecret:@"dTSLaxDsFKqegD7"];
     [QBSettings setAccountKey:@"LpNmxA2Pq2uyW5qBjHy8"];
+    
+    [QMUtilities shared];
     
     // STAGE PARAMS
 //    [QBSettings setServerChatDomain:@"chatstage.quickblox.com"];

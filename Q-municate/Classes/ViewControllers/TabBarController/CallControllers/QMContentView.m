@@ -28,6 +28,22 @@
     self.avatarView.imageViewType = QMImageViewTypeCircle;
 }
 
+
+#pragma mark - Show/Hide
+
+- (void)show
+{
+    [self setHidden:NO];
+}
+
+- (void)hide
+{
+    [self setHidden:YES];
+}
+
+
+#pragma mark -
+
 - (void)updateViewWithUser:(QBUUser *)user
 {
     UIImage *placeholder = [UIImage imageNamed:@"upic_call"];

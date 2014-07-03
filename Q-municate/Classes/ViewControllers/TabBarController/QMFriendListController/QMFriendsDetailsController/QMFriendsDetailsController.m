@@ -78,12 +78,12 @@
     if ([segue.identifier isEqualToString:kVideoCallSegueIdentifier]) {
         
         QMVideoCallController *videoCallVC = segue.destinationViewController;
-        [videoCallVC setOpponent:self.selectedUser callType:QMVideoChatTypeVideo];
+        [videoCallVC setOpponent:self.selectedUser];
         
     } else if ([segue.identifier isEqualToString:kAudioCallSegueIdentifier]) {
         
         QMVideoCallController *audioCallVC = segue.destinationViewController;
-        [audioCallVC setOpponent:self.selectedUser callType:QMVideoChatTypeAudio];
+        [audioCallVC setOpponent:self.selectedUser];
 
     } else if ([segue.identifier isEqualToString:kChatViewSegueIdentifier]) {
         

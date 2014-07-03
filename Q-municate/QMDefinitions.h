@@ -149,6 +149,7 @@ static NSString *const kUserDoesntAnswerStatus      = @"User doesn't answer";
 
 static NSString *const kCallBadConnectionStatus     = @"Bad connection";
 static NSString *const kCallWasStoppedByUserStatus  = @"Call was stopped";
+static NSString *const kCallConnectingStatus        = @"Connecting...";
 
 
 

@@ -235,12 +235,12 @@
 
 - (void)audioCallAction {
     
-	[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:@(QMVideoChatTypeAudio)];
+	[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:@(QBVideoChatConferenceTypeAudio)];
 }
 
 - (void)videoCallAction {
     
-	[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:@(QMVideoChatTypeVideo)];
+	[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:@(QBVideoChatConferenceTypeAudioAndVideo)];
 }
 
 - (void)groupInfoNavButtonAction {

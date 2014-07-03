@@ -8,6 +8,6 @@
 
 #import "QMBaseCallsController.h"
 
-@interface QMAudioCallController : QMBaseCallsController <QMBaseCallsControllerProtocol>
+@interface QMAudioCallController : QMBaseCallsController
 
 @end

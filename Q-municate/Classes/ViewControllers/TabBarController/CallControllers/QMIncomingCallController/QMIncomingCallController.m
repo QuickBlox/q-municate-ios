@@ -39,10 +39,10 @@
     self.userNameLabel.text = opponent ? opponent.fullName : @"Unknown caller";
  
     
-    if (self.callType == QMVideoChatTypeVideo) {
+    if (self.callType == QBVideoChatConferenceTypeAudioAndVideo) {
         self.incomingCallLabel.text = @"Incoming video call";
         [self.acceptButton setImage:[ UIImage imageNamed:@"answer-video"] forState:UIControlStateNormal];
-    } else if (self.callType == QMVideoChatTypeAudio) {
+    } else if (self.callType == QBVideoChatConferenceTypeAudio) {
         self.incomingCallLabel.text = @"Incoming call";
         [self.acceptButton setImage:[ UIImage imageNamed:@"answer"] forState:UIControlStateNormal];
     }

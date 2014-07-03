@@ -21,4 +21,10 @@
 - (void)startTimer;
 - (void)stopTimer;
 
+
+#pragma mark - Show/Hide
+
+- (void)show;
+- (void)hide;
+
 @end

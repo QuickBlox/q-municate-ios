@@ -9,14 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "QMContentView.h"
 
-@protocol QMBaseCallsControllerProtocol <NSObject>
-
-- (void)callAcceptedByUser;
-- (void)callStartedWithUser;
-- (void)callRejectedByUser;
-- (void)callStoppedByOpponent;
-
-@end
 
 
 @interface QMBaseCallsController : UIViewController
@@ -30,6 +22,8 @@
 
 /** Content View */
 @property (weak, nonatomic) IBOutlet QMContentView *contentView;
+@property (nonatomic, weak)  QBVideoView *opponentsView;
+
 @property (nonatomic, strong) QBUUser *opponent;
 
 /** Controls selectors */
@@ -37,7 +31,14 @@
 - (IBAction)rightControlTapped:(id)sender;
 - (IBAction)stopCallTapped:(id)sender;
 
-/** Segue setter */
-- (void)setOpponent:(QBUUser *)opponent;
+/** Override actions in child */
+- (void)startCall;
+- (void)confirmCall;
+
+/** Override callbacks in child if needed */
+- (void)callAcceptedByUser;
+- (void)callStartedWithUser;
+- (void)callRejectedByUser;
+- (void)callStoppedByOpponentForReason:(NSNotification *)notification;
 
 @end

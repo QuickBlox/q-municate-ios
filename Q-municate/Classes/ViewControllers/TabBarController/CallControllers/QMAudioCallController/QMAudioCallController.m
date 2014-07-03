@@ -40,11 +40,4 @@
     //
 }
 
-- (void)stopCallTapped:(id)sender
-{
-    [[QMChatService shared] callUser:self.opponent.ID opponentView:self.opponentsView callType:self.callType];
-    [QMSoundManager playCallingSound];
-    //
-}
-
 @end

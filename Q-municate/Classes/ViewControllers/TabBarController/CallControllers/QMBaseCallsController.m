@@ -13,8 +13,6 @@
 
 @interface QMBaseCallsController ()
 
-@property (weak, nonatomic) IBOutlet QBVideoView *opponentsView;
-
 @end
 
 @implementation QMBaseCallsController
@@ -27,13 +25,21 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.opponentsView.backgroundColor = [UIColor clearColor];
+    [self subscribeForNotifications];
     
     if (!_isOpponentCaller) {
         [self startCall];
     } else {
         [self confirmCall];
     }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    self.opponentsView.backgroundColor = [UIColor clearColor];
+    [self.contentView updateViewWithUser:self.opponent];
 }
 
 - (void)dealloc {
@@ -54,10 +60,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(callStoppedByOpponentForReason:) name:kCallWasStoppedNotification object:nil];
 }
 
-- (void)setOpponent:(QBUUser *)opponent
-{
-    self.opponent = opponent;
-}
+
+#pragma mark - Override actions
 
 - (void)startCall
 {
@@ -67,32 +71,29 @@
 - (void)confirmCall
 {
     // Override this method in child:
-    [[QMChatService shared] acceptCallFromUser:self.opponent.ID opponentView:self.opponentsView];
-    
 }
-
-
-#pragma mark - Override actions:
 
 - (IBAction)leftControlTapped:(id)sender
 {
-    //
+    // Override this method in child:
 }
 
 - (IBAction)rightControlTapped:(id)sender
 {
-    //
+    // Override this method in child:
 }
 
 - (IBAction)stopCallTapped:(id)sender
 {
     [[QMChatService shared] finishCall];
     
-    [self.contentView updateViewWithStatus:<#(NSString *)#>];
+    [self.contentView updateViewWithStatus:kCallWasStoppedByUserStatus];
     
     // stop playing sound:
     [[QMSoundManager shared] stopAllSounds];
     
+#warning Refactor this:
+    self.opponentsView.hidden = YES;
     [QMSoundManager playEndOfCallSound];
     [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:1.0f];
 }
@@ -107,11 +108,15 @@
 
 - (void)callStartedWithUser
 {
-    //
+    // Override this method in child:
 }
 
 - (void)callRejectedByUser
 {
+#warning Refactor this:
+    self.opponentsView.hidden = YES;
+    
+    [self.contentView updateViewWithStatus:kUserIsBusyStatus];
     [[QMSoundManager shared] stopAllSounds];
     [QMSoundManager playBusySound];
     [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:2.0f];
@@ -119,6 +124,9 @@
 
 - (void)callStoppedByOpponentForReason:(NSNotification *)notification
 {
+#warning Refactor this:
+    self.opponentsView.hidden = YES;
+    
     NSString *reason = notification.userInfo[@"reason"];
     
     // stop playing sound:
@@ -132,7 +140,7 @@
         [QMSoundManager playEndOfCallSound];
     } else if ([reason isEqualToString:kStopVideoChatCallStatus_Manually]) {
         [self.contentView updateViewWithStatus:kUserIsBusyStatus];
-        [QMSoundManager playBusySound];
+        [QMSoundManager playEndOfCallSound];
     } else {
         [self.contentView updateViewWithStatus:kCallWasStoppedByUserStatus];
         [QMSoundManager playEndOfCallSound];

@@ -9,6 +9,6 @@
 #import "QMBaseCallsController.h"
 
 
-@interface QMVideoCallController : QMBaseCallsController <QMBaseCallsControllerProtocol>
+@interface QMVideoCallController : QMBaseCallsController
 
 @end
