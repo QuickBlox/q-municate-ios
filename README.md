@@ -57,6 +57,7 @@ The App works only in Portrait screen mode
 
 
 
+## Private chat
 
 ![53b4265f007791664c38fdf8.png](https://bitbucket.org/repo/rMnaz8/images/1822093224-53b4265f007791664c38fdf8.png)
 
