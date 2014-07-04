@@ -40,4 +40,56 @@
     //
 }
 
+- (IBAction)stopCallTapped:(id)sender
+{
+    [super stopCallTapped:sender];
+    [self stopCallDurationTimer];
+}
+
+
+#pragma mark - Overriden methods
+
+-(void)startCall
+{
+    [[QMChatService shared] callUser:self.opponent.ID opponentView:self.opponentsView callType:QBVideoChatConferenceTypeAudio];
+    [QMSoundManager playCallingSound];
+}
+
+-(void)confirmCall
+{
+    [super confirmCall];
+    [self startCallDurationTimer];
+}
+
+
+#pragma mark - Protocol
+
+- (void)callAcceptedByUser
+{
+    // stop playing sound:
+    [[QMSoundManager shared] stopAllSounds];
+    [self callStartedWithUser];
+}
+
+- (void)callStartedWithUser
+{
+    [self startCallDurationTimer];
+}
+
+- (void)callStoppedByOpponentForReason:(NSNotification *)notification
+{
+    [self stopCallDurationTimer];
+    [super callStoppedByOpponentForReason:notification];
+}
+
+- (void)startCallDurationTimer
+{
+    [self.contentView startTimer];
+}
+
+- (void)stopCallDurationTimer
+{
+    [self.contentView stopTimer];
+}
+
 @end

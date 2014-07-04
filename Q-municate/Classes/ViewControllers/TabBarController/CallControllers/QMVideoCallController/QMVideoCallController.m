@@ -7,7 +7,6 @@
 //
 #import "AppDelegate.h"
 #import "QMVideoCallController.h"
-#import "QMChatService.h"
 #import "QMUtilities.h"
 #import "QMImageView.h"
 #import "QMSoundManager.h"
@@ -60,14 +59,6 @@
     [[QMChatService shared] callUser:self.opponent.ID opponentView:self.opponentsView callType:QBVideoChatConferenceTypeAudioAndVideo];
     [QMSoundManager playCallingSound];
 }
-
-- (void)confirmCall
-{
-    [[QMChatService shared] acceptCallFromUser:self.opponent.ID opponentView:self.opponentsView];
-}
-
-
-#pragma mark - Protocol
 
 - (void)callAcceptedByUser
 {

@@ -81,7 +81,11 @@
 - (IBAction)acceptCall:(id)sender {
     
     [[QMSoundManager shared] stopAllSounds];
-    [self performSegueWithIdentifier:kStartCallSegueIdentifier sender:nil];
+    if (self.callType == QBVideoChatConferenceTypeAudioAndVideo) {
+        [self performSegueWithIdentifier:kStartVideoCallSegueIdentifier sender:nil];
+    } else {
+        [self performSegueWithIdentifier:kStartAudioCallSegueIdentifier sender:nil];
+    }
 }
 
 - (IBAction)declineCall:(id)sender {
@@ -90,7 +94,7 @@
     [[QMChatService shared] rejectCallFromUser:opponent ? self.opponent.ID : self.opponentID  opponentView:nil];
     [QMSoundManager playEndOfCallSound];
     
-    [self performSelector:@selector(dismissIncomingCallController) withObject:self afterDelay:1.0f];
+    [self performSelector:@selector(dismissIncomingCallController) withObject:self afterDelay:2.0f];
 }
 
 - (void)dismissIncomingCallController {

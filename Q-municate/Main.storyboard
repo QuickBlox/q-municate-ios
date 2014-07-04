@@ -254,7 +254,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="ouq-Kw-WJb" kind="modal" identifier="VideoCallSegue" id="D2K-Xi-hCk"/>
+                                            <segue destination="ouq-Kw-WJb" kind="modal" identifier="VideoCallSegue" animates="NO" id="D2K-Xi-hCk"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="AudioCallCell" rowHeight="65" id="Mhd-hZ-8rv">
@@ -277,7 +277,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="DrB-Lv-9YV" kind="modal" identifier="AudioCallSegue" id="mcz-x0-bxg"/>
+                                            <segue destination="DrB-Lv-9YV" kind="modal" identifier="AudioCallSegue" animates="NO" id="mcz-x0-bxg"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChatCell" rowHeight="65" id="NZK-x3-urI">
@@ -409,7 +409,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fBp-A2-pHp">
                                 <rect key="frame" x="12" y="491" width="66" height="66"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="dynamic">
+                                <state key="normal" image="mute_on">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="selected" image="dynamic_on"/>
@@ -430,7 +430,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HxL-MP-CTf">
                                 <rect key="frame" x="244" y="491" width="66" height="66"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="mute_on">
+                                <state key="normal" image="switchcam">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -1492,8 +1492,8 @@
                         <outlet property="incomingCallLabel" destination="4pX-7R-C18" id="PTv-fp-0yl"/>
                         <outlet property="userAvatarView" destination="rxQ-rV-FCa" id="tSS-1j-S4H"/>
                         <outlet property="userNameLabel" destination="fFn-CD-Xl1" id="uSE-Te-n4W"/>
-                        <segue destination="ouq-Kw-WJb" kind="custom" identifier="StartCallSegue" customClass="QMIncommingCallSegue" id="aeV-0O-de3"/>
-                        <segue destination="DrB-Lv-9YV" kind="modal" id="bOV-zd-nKn"/>
+                        <segue destination="ouq-Kw-WJb" kind="custom" identifier="StartVideoCallSegue" customClass="QMIncommingCallSegue" id="aeV-0O-de3"/>
+                        <segue destination="DrB-Lv-9YV" kind="custom" identifier="StartAudioCallSegue" customClass="QMIncommingCallSegue" id="bOV-zd-nKn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EM7-1U-KLL" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2688,6 +2688,7 @@
         <image name="red_counter" width="34" height="22"/>
         <image name="signup-btn" width="280" height="44"/>
         <image name="splash" width="320" height="568"/>
+        <image name="switchcam" width="66" height="66"/>
         <image name="tb_chat" width="30" height="30"/>
         <image name="tb_friends" width="30" height="30"/>
         <image name="tb_invite" width="30" height="30"/>
@@ -2706,10 +2707,10 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="veI-CA-d70"/>
         <segue reference="97f-Zx-Ebh"/>
+        <segue reference="veI-CA-d70"/>
         <segue reference="hbf-5d-R0X"/>
-        <segue reference="D2K-Xi-hCk"/>
-        <segue reference="mcz-x0-bxg"/>
+        <segue reference="bOV-zd-nKn"/>
+        <segue reference="aeV-0O-de3"/>
     </inferredMetricsTieBreakers>
 </document>

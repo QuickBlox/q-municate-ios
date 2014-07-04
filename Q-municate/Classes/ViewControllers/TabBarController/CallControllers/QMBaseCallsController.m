@@ -7,13 +7,7 @@
 //
 
 #import "QMBaseCallsController.h"
-#import "QMChatService.h"
-#import "QMSoundManager.h"
-#import "QMUtilities.h"
 
-@interface QMBaseCallsController ()
-
-@end
 
 @implementation QMBaseCallsController
 
@@ -70,6 +64,7 @@
 
 - (void)confirmCall
 {
+    [[QMChatService shared] acceptCallFromUser:self.opponent.ID opponentView:self.opponentsView];
     // Override this method in child:
 }
 
@@ -146,7 +141,7 @@
         [QMSoundManager playEndOfCallSound];
     }
     
-    [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:1.0];
+    [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:2.0];
 }
 
 - (void)dismissCallsController

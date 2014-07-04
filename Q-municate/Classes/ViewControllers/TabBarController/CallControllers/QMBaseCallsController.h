@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "QMContentView.h"
+#import "QMChatService.h"
+#import "QMSoundManager.h"
+#import "QMUtilities.h"
 
 
 
