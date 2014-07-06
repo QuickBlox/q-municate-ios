@@ -83,7 +83,7 @@
 
 - (void)dismissIncomingCallController:(NSNotification *)notification {
     
-    [self dismissIncomingCallController];
+    [self performSelector:@selector(dismissIncomingCallController) withObject:self afterDelay:2.0];
 }
 
 #pragma mark -

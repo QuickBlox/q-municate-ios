@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "QMChatUploadingMessage.h"
 
+
 @interface QMChatService : NSObject
 
 @property (strong, nonatomic) NSMutableDictionary *allDialogsAsDictionary;
@@ -95,7 +96,7 @@
 
 #pragma mark - Audio/Video Calls
 
-- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView callType:(QMVideoChatType)callType;
+- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView callType:(QBVideoChatConferenceType)callType;
 - (void)acceptCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView;
 - (void)rejectCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView;
 

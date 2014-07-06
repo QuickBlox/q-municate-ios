@@ -50,11 +50,7 @@ typedef NS_ENUM(NSUInteger, QMMembersUpdateState) {
     QMMembersUpdateStateRemoving
 };
 
-typedef NS_ENUM(NSUInteger, QMVideoChatType) {
-    QMVideoChatTypeNone,
-    QMVideoChatTypeVideo,
-    QMVideoChatTypeAudio
-};
+typedef enum QBVideoChatConferenceType QBVideoChatConferenceType;
 
 //****************** Blocks *********************************
 typedef void (^QBFileUploadTaskResultBlock)(QBCFileUploadTaskResult *result);
@@ -88,7 +84,8 @@ static NSString *const kLogInSegueSegueIdentifier     = @"LogInSegue";
 static NSString *const kDetailsSegueIdentifier        = @"DetailsSegue";
 static NSString *const kVideoCallSegueIdentifier      = @"VideoCallSegue";
 static NSString *const kAudioCallSegueIdentifier      = @"AudioCallSegue";
-static NSString *const kStartCallSegueIdentifier      = @"StartCallSegue";
+static NSString *const kStartAudioCallSegueIdentifier = @"StartAudioCallSegue";
+static NSString *const kStartVideoCallSegueIdentifier = @"StartVideoCallSegue";
 static NSString *const kChatViewSegueIdentifier       = @"ChatViewSegue";
 static NSString *const kIncomingCallIdentifier        = @"IncomingCallIdentifier";
 static NSString *const kProfileSegueIdentifier        = @"ProfileSegue";
@@ -149,14 +146,20 @@ static NSString *const kFacebookCellIdentifier          = @"facebookCell";
 static NSString *const kInviteFriendCellIdentifier      = @"InviteFriendCell";
 
 
+static NSString *const kUserIsBusyStatus            = @"User is busy";
+static NSString *const kUserDoesntAnswerStatus      = @"User doesn't answer";
+
+static NSString *const kCallBadConnectionStatus     = @"Bad connection";
+static NSString *const kCallWasStoppedByUserStatus  = @"Call was stopped";
+static NSString *const kCallConnectingStatus        = @"Connecting...";
+
+
 
 
 //******************** USER DEFAULTS KEYS *****************
 
 static NSString *const kUserStatusText   	= @"userStatusText";
 
-//static NSString *const kChatLocalHistory	= @"chatLocalHistory";
-//static NSString *const kChatOpponentHistory	= @"opponentHistory";
 static NSString *const kChatOpponentName	= @"chatOpponentName";
 static NSString *const kChatOpponentIDString	= @"chatOpponentIDString";
 

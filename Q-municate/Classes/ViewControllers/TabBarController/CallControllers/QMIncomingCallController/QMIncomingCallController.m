@@ -39,10 +39,10 @@
     self.userNameLabel.text = opponent ? opponent.fullName : @"Unknown caller";
  
     
-    if (self.callType == QMVideoChatTypeVideo) {
+    if (self.callType == QBVideoChatConferenceTypeAudioAndVideo) {
         self.incomingCallLabel.text = @"Incoming video call";
         [self.acceptButton setImage:[ UIImage imageNamed:@"answer-video"] forState:UIControlStateNormal];
-    } else if (self.callType == QMVideoChatTypeAudio) {
+    } else if (self.callType == QBVideoChatConferenceTypeAudio) {
         self.incomingCallLabel.text = @"Incoming call";
         [self.acceptButton setImage:[ UIImage imageNamed:@"answer"] forState:UIControlStateNormal];
     }
@@ -81,7 +81,11 @@
 - (IBAction)acceptCall:(id)sender {
     
     [[QMSoundManager shared] stopAllSounds];
-    [self performSegueWithIdentifier:kStartCallSegueIdentifier sender:nil];
+    if (self.callType == QBVideoChatConferenceTypeAudioAndVideo) {
+        [self performSegueWithIdentifier:kStartVideoCallSegueIdentifier sender:nil];
+    } else {
+        [self performSegueWithIdentifier:kStartAudioCallSegueIdentifier sender:nil];
+    }
 }
 
 - (IBAction)declineCall:(id)sender {
@@ -90,7 +94,7 @@
     [[QMChatService shared] rejectCallFromUser:opponent ? self.opponent.ID : self.opponentID  opponentView:nil];
     [QMSoundManager playEndOfCallSound];
     
-    [self performSelector:@selector(dismissIncomingCallController) withObject:self afterDelay:1.0f];
+    [self performSelector:@selector(dismissIncomingCallController) withObject:self afterDelay:2.0f];
 }
 
 - (void)dismissIncomingCallController {

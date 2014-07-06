@@ -6,12 +6,9 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "QMBaseCallsController.h"
 
-@interface QMVideoCallController : UIViewController
 
-@property (nonatomic, assign) BOOL isOpponentCall;
-
-- (void)setOpponent:(QBUUser *)opponent callType:(QMVideoChatType)callType;
+@interface QMVideoCallController : QMBaseCallsController
 
 @end
