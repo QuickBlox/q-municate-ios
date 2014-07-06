@@ -7,7 +7,14 @@
 //
 
 #import "QMFriendsListDataSource.h"
-#import "QMContactList.h"
+#import "QMUsersService.h"
+
+@interface QMFriendsListDataSource()
+
+@property (strong, nonatomic) NSMutableArray *friendsArray;
+@property (strong, nonatomic) NSMutableArray *otherUsersArray;
+
+@end
 
 @implementation QMFriendsListDataSource
 
@@ -21,56 +28,55 @@
     return self;
 }
 
-// TODO: Refactor Datasource
+
 - (BOOL)updateFriendsArrayAndCheckForEmpty {
     
-    NSMutableArray *usersArray = [[[QMContactList shared].friendsAsDictionary allValues] mutableCopy];
-    self.friendsArray = [self sortUsersByFullname:usersArray];
-    if ([self.friendsArray count] == 0) {
-        [QMContactList shared].friendsAsDictionary = [NSMutableDictionary new];
-        return YES;
-    }
+//    NSMutableArray *usersArray = [[[QMContactList shared].friendsAsDictionary allValues] mutableCopy];
+//    self.friendsArray = [self sortUsersByFullname:usersArray];
+//    if ([self.friendsArray count] == 0) {
+//        [QMContactList shared].friendsAsDictionary = [NSMutableDictionary new];
+//        return YES;
+//    }
     return NO;
 }
 
 - (BOOL)updateSearchedUsersArrayAndCheckForEmpty {
     
-    NSMutableArray *usersArray = [[[QMContactList shared].searchedUsers allValues] mutableCopy];
-    self.otherUsersArray = [self sortUsersByFullname:usersArray];
-    
-    if ([self.otherUsersArray count] == 0) {
-        [QMContactList shared].searchedUsers = [NSMutableDictionary new];
-        return YES;
-    }
-    
+//    NSMutableArray *usersArray = [[[QMContactList shared].searchedUsers allValues] mutableCopy];
+//    self.otherUsersArray = [self sortUsersByFullname:usersArray];
+//    
+//    if ([self.otherUsersArray count] == 0) {
+//        [QMContactList shared].searchedUsers = [NSMutableDictionary new];
+//        return YES;
+//    }
+//    
     return NO;
 }
 
 - (void)updateFriendsArrayForSearchPhrase:(NSString *)searchPhraseString {
-    
-    //TODO: try setArray - that is more optimised
-    if ([searchPhraseString isEqualToString:kEmptyString]) {
-        [self.friendsArray setArray:[[QMContactList shared].friendsAsDictionary allValues]];
-        return;
-    }
-    
-    NSMutableArray *searchedUsers = [self searchText:searchPhraseString inArray:[[QMContactList shared].friendsAsDictionary allValues]];
-    [self.friendsArray setArray:searchedUsers];
+
+//    if ([searchPhraseString isEqualToString:kEmptyString]) {
+//        [self.friendsArray setArray:[[QMContactList shared].friendsAsDictionary allValues]];
+//        return;
+//    }
+//    
+//    NSMutableArray *searchedUsers = [self searchText:searchPhraseString inArray:[[QMContactList shared].friendsAsDictionary allValues]];
+//    [self.friendsArray setArray:searchedUsers];
 }
 
 - (void)emptyOtherUsersArray
 {
-    [self.otherUsersArray setArray:[@[] mutableCopy]];
+//    [self.otherUsersArray setArray:[@[] mutableCopy]];
 }
 
 - (NSMutableArray *)searchText:(NSString *)text  inArray:(NSArray *)array {
     
     NSMutableArray *foundMArray = [[NSMutableArray alloc] init];
-    for (QBUUser *user in array) {
-        if ([self searchingString:user.fullName inString:text]) {
-            [foundMArray addObject:user];
-        }
-    }
+//    for (QBUUser *user in array) {
+//        if ([self searchingString:user.fullName inString:text]) {
+//            [foundMArray addObject:user];
+//        }
+//    }
     return foundMArray;
 }
 
@@ -91,6 +97,5 @@
     sortedUsers = [users sortedArrayUsingDescriptors:@[fullNameDescriptor]];
     return [sortedUsers mutableCopy];
 }
-
 
 @end

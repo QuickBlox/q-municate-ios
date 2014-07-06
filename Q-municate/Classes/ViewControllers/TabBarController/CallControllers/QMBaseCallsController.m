@@ -64,7 +64,7 @@
 
 - (void)confirmCall
 {
-    [[QMChatService shared] acceptCallFromUser:self.opponent.ID opponentView:self.opponentsView];
+//    [[QMChatService shared] acceptCallFromUser:self.opponent.ID opponentView:self.opponentsView];
     // Override this method in child:
 }
 
@@ -80,7 +80,7 @@
 
 - (IBAction)stopCallTapped:(id)sender
 {
-    [[QMChatService shared] finishCall];
+//    [[QMChatService shared] finishCall];
     
     [self.contentView updateViewWithStatus:kCallWasStoppedByUserStatus];
     

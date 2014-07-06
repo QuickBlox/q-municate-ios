@@ -9,7 +9,7 @@
 #import "QMFriendListCell.h"
 #import "NSDateFormatter+SinceDateFormat.h"
 #import "UIImageView+ImageWithBlobID.h"
-#import "QMContactList.h"
+#import "QMUsersService.h"
 #import "QMUtilities.h"
 #import "QMImageView.h"
 
@@ -29,30 +29,31 @@
     self.fullName.text = (user.fullName.length == 0) ? kEmptyString : user.fullName;
 
     self.addToFriendsButton.tag = indexPath.row;
-    
-    BOOL isFriend = [[QMContactList shared] isFriend:user];
-    self.addToFriendsButton.hidden = isFriend;
-
-    
-    // color matching
-    if (searchText != nil && searchText.length > 0) {
-        NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithAttributedString:self.fullName.attributedText];
-        [text addAttribute: NSForegroundColorAttributeName value:[UIColor redColor]
-                     range:[[user.fullName lowercaseString] rangeOfString:[searchText lowercaseString]]];
-        self.fullName.attributedText = text;
-    }
-    
-    // Online/Offline status:
-    QBContactListItem *contactItem = [[QMContactList shared] contactItemFromContactListForOpponentID:user.ID];
-    BOOL isOnline = contactItem.online;
-    NSString *activity = nil;
-    if (isOnline) {
-        activity = kStatusOnlineString;
-    } else {
-        activity = kStatusOfflineString;
-    }
-    self.onlineCircle.hidden = !isOnline;
-    self.lastActivity.text = activity;
+#warning me.iD
+#warning QMContactList shared
+//    BOOL isFriend = [[QMContactList shared] isFriend:user];
+//    self.addToFriendsButton.hidden = isFriend;
+//
+//    
+//    // color matching
+//    if (searchText != nil && searchText.length > 0) {
+//        NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithAttributedString:self.fullName.attributedText];
+//        [text addAttribute: NSForegroundColorAttributeName value:[UIColor redColor]
+//                     range:[[user.fullName lowercaseString] rangeOfString:[searchText lowercaseString]]];
+//        self.fullName.attributedText = text;
+//    }
+//    
+//    // Online/Offline status:
+//    QBContactListItem *contactItem = [[QMContactList shared] contactItemFromContactListForOpponentID:user.ID];
+//    BOOL isOnline = contactItem.online;
+//    NSString *activity = nil;
+//    if (isOnline) {
+//        activity = kStatusOnlineString;
+//    } else {
+//        activity = kStatusOfflineString;
+//    }
+//    self.onlineCircle.hidden = !isOnline;
+//    self.lastActivity.text = activity;
 }
 
 @end

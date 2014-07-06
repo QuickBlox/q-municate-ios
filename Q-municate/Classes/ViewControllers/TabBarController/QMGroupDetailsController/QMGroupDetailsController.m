@@ -9,9 +9,7 @@
 #import "QMGroupDetailsController.h"
 #import "QMAddMembersToGroupController.h"
 #import "QMGroupDetailsDataSource.h"
-#import "QMChatService.h"
-#import "QMUtilities.h"
-
+#import "QMApi.h"
 
 @interface QMGroupDetailsController () <UITableViewDelegate>
 
@@ -27,9 +25,7 @@
 
 @implementation QMGroupDetailsController
 
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
@@ -43,42 +39,30 @@
     [self.chatRoom requestOnlineUsers];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     // show chat dialog getails on view:
     [self showQBChatDialogDetails:self.chatDialog];
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (IBAction)changeDialogName:(id)sender {
     
-    [[QMChatService shared] changeChatName:self.groupNameField.text forChatDialog:self.chatDialog completion:^(QBChatDialog *dialog, NSError *error) {
-        if (error) {
-            return;
-        }
+    [[QMApi instance] changeChatName:self.groupNameField.text forChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
         
-        //send update dialog notifications to all participants of this group!
-        [[QMChatService shared] sendChatDialogDidUpdateNotificationToUsers:[self.dataSource participants] withChatDialog:dialog];
-        
-        // local notification:
-        [[NSNotificationCenter defaultCenter] postNotificationName:kChatDialogUpdatedNotification object:nil userInfo:@{@"room_jid":dialog.roomJID}];
     }];
 }
 
-- (void)showQBChatDialogDetails:(QBChatDialog *)chatDialog
-{
+- (void)showQBChatDialogDetails:(QBChatDialog *)chatDialog {
     if (chatDialog != nil && chatDialog.type == QBChatDialogTypeGroup) {
         
         // set group name:
@@ -94,16 +78,13 @@
     }
 }
 
-- (void)subscribeToNotifications
-{
+- (void)subscribeToNotifications {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineUsersListChanged:) name:kChatRoomDidChangeOnlineUsersListNotification object:nil];
 }
 
-
 #pragma mark - Notifications
 
-- (void)onlineUsersListChanged:(NSNotification *)notification
-{
+- (void)onlineUsersListChanged:(NSNotification *)notification {
     NSArray *onlineUsrList = notification.userInfo[@"online_users"];
     
     // update online participants count:
@@ -111,11 +92,11 @@
     self.onlineOccupantsCountLabel.text = onlineUsersCountText;
 }
 
-- (void)chatDialogWasUpdated:(NSNotification *)notification
-{
+- (void)chatDialogWasUpdated:(NSNotification *)notification {
     NSString *roomJID = notification.userInfo[@"room_jid"];
-    QBChatDialog *updatedDialog = [QMChatService shared].allDialogsAsDictionary[roomJID];
-    self.chatDialog = updatedDialog;
+#warning  update it
+//    QBChatDialog *updatedDialog = [QMChatService shared].allDialogsAsDictionary[roomJID];
+//    self.chatDialog = updatedDialog;
     
     // update UI:
     [self showQBChatDialogDetails:self.chatDialog];
@@ -125,17 +106,15 @@
     [self.chatRoom requestOnlineUsers];
 }
 
-- (void)updateDataSource
-{
+- (void)updateDataSource {
     _dataSource = [[QMGroupDetailsDataSource alloc] initWithChatDialog:self.chatDialog tableView:self.tableView];
     self.tableView.dataSource = _dataSource;
 }
 
-
 #pragma mark - Segue
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
     if ([segue.destinationViewController isKindOfClass:QMAddMembersToGroupController.class]) {
         ((QMAddMembersToGroupController *)segue.destinationViewController).chatDialog = self.chatDialog;
     }

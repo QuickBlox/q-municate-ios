@@ -9,24 +9,19 @@
 #import "QMFriendListController.h"
 #import "QMFriendsDetailsController.h"
 #import "QMFriendListCell.h"
-#import "QMContactList.h"
 #import "QMFriendsListDataSource.h"
-#import "QMChatService.h"
-
+#import "QMApi.h"
 
 static CGFloat const kSearchBarHeight = 44.0f;
-static NSUInteger const kSearchGlobalButtonTag = 1102;
 
+@interface QMFriendListController ()
 
-@interface QMFriendListController () <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate>
+<UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) UISearchBar *searchBar;
-
 @property (nonatomic, strong) QMFriendsListDataSource *dataSource;
-
 @property (assign, nonatomic) BOOL searchActive;
-
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *viewHeight;
 
 @end
@@ -47,9 +42,7 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fillTableView) name:kFriendsReloadedNotification object:nil];
 }
 
-- (void)dealloc
-{
-    //
+- (void)dealloc {
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -71,14 +64,9 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
 }
 
 - (void)loadDialogs {
-    // load QBChatDialogs:
-    [[QMChatService shared] fetchAllDialogsWithCompletion:^(NSArray *dialogs, NSError *error) {
+    
+    [[QMApi instance] fetchAllDialogs:^{
         
-        if (!error) {
-            // join all group dialogs:
-            [[QMChatService shared] joinRoomsForDialogs:dialogs];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kChatDialogsDidLoadedNotification object:nil];
-        }
     }];
 }
 
@@ -110,8 +98,8 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
     [footerView addSubview:label];
 }
 
-- (void)createNoResultsLabelWithGlobalSearchButtonForFooterView:(UIView *)footerView
-{
+- (void)createNoResultsLabelWithGlobalSearchButtonForFooterView:(UIView *)footerView {
+    
     UILabel *noResultsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 22)];
     noResultsLabel.textAlignment = NSTextAlignmentCenter;
     noResultsLabel.text = kMoreResultString;
@@ -120,48 +108,43 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
     [footerView addSubview:noResultsLabel];
     
     UIImage *buttonImage = [UIImage imageNamed:@"globalsearch-btn"];
-    UIButton *globalSearchButton = [[UIButton alloc] initWithFrame:CGRectMake(160 - buttonImage.size.width/2 , 30, buttonImage.size.width, buttonImage.size.height)];
+    UIButton *globalSearchButton = [[UIButton alloc] initWithFrame:CGRectMake(160 - buttonImage.size.width/2 ,
+                                                                              30,
+                                                                              buttonImage.size.width,
+                                                                              buttonImage.size.height)];
     [globalSearchButton setImage:buttonImage forState:UIControlStateNormal];
     [globalSearchButton addTarget:self action:@selector(searchGlobal:) forControlEvents:UIControlEventTouchUpInside];
-    globalSearchButton.tag = kSearchGlobalButtonTag;
     
     [footerView addSubview:globalSearchButton];
 }
 
-- (void)removeFooterView
-{
-    self.tableView.tableFooterView = nil;
-}
-
-
 #pragma mark - Actions
 
-- (IBAction)addToFriends:(id)sender
-{
-    UIButton *button = (UIButton *)sender;
-    button.hidden = YES;
-    NSInteger userIndex = button.tag;
-    QBUUser *user = [self.dataSource.otherUsersArray objectAtIndex:userIndex];
-    
-    QMFriendListCell *cell = (QMFriendListCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:button.tag inSection:1]];
-    [cell.addToFriendsButton setHidden:YES];
-    [cell.indicatorView startAnimating];
-    
-    // roaster:
-    [[QMChatService shared] sendFriendsRequestToUserWithID:user.ID];
-    
-    NSString *userID = [NSString stringWithFormat:@"%lu", (unsigned long)user.ID];
-    [[QMContactList shared].friendsAsDictionary setObject:user forKey:userID];
-    
-    // reload friends
-    [self reloadFriendsList];
+- (IBAction)addToFriends:(UIButton *)sender {
+
+//    QBUUser *user = [self.dataSource.otherUsersArray objectAtIndex:userIndex];
+//    
+//    QMFriendListCell *cell = (QMFriendListCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:button.tag inSection:1]];
+//    [cell.addToFriendsButton setHidden:YES];
+//    [cell.indicatorView startAnimating];
+//    
+//    // roaster:
+//    [[QMChatService shared] sendFriendsRequestToUserWithID:user.ID];
+//    
+//    NSString *userID = [NSString stringWithFormat:@"%lu", (unsigned long)user.ID];
+//    [[QMContactList shared].friendsAsDictionary setObject:user forKey:userID];
+//    
+//    // reload friends
+//    [self reloadFriendsList];
 }
 
 #warning REFACTORING NEEDED!
-- (void)searchGlobal:(id)sender
-{
+
+- (void)searchGlobal:(id)sender {
+    
     NSString *searchText = self.searchBar.text;
     if ([searchText isEqualToString:kEmptyString]) {
+        
         [[QMContactList shared] retrieAllUsersUsingBlock:^(NSArray *users, BOOL success, NSError *error) {
             // convert array of users to dictionary and add to QMContactList:
             [QMContactList shared].searchedUsers = [[QMContactList shared] friendsAsDictionaryFromFriendsArray:users];
@@ -180,6 +163,7 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
         
         return;
     }
+    
     [[QMContactList shared] retrieveUsersWithFullName:searchText usingBlock:^(NSArray *users, BOOL success, NSError *error) {
         if (success) {
             // convert array of users to dictionary and add to QMContactList:
@@ -301,7 +285,7 @@ static NSUInteger const kSearchGlobalButtonTag = 1102;
 
 - (void)updateDataSource
 {
-    if ([self.dataSource updateFriendsArrayAndCheckForEmpty]) {;
+    if ([self.dataSource updateFriendsArrayAndCheckForEmpty]) {
         [self createNoResultsFooterViewWithButton:NO];
     } else {
         [self.tableView setTableFooterView:[[UIView alloc] init]];

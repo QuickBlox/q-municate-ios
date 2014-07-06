@@ -9,7 +9,7 @@
 #import "QMChatRoomListController.h"
 #import "QMChatViewController.h"
 #import "QMChatListCell.h"
-#import "QMContactList.h"
+#import "QMUsersService.h"
 #import "QMChatService.h"
 #import "QMChatRoomListDataSource.h"
 #import "QMCreateNewChatController.h"
@@ -61,15 +61,15 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     [super viewWillAppear:animated];
     
     // check for created now dialog:
-    QBChatDialog *newDialog = [QMChatService shared].lastCreatedDialog;
-    if (newDialog != nil) {
-        
-        //if dialog wasn't created:
-        QBChatDialog *createdNowDialog = [QMChatService shared].lastCreatedDialog;
-        [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:createdNowDialog];
-        
-        [QMChatService shared].lastCreatedDialog = nil;
-    }
+//    QBChatDialog *newDialog = [QMChatService shared].lastCreatedDialog;
+//    if (newDialog != nil) {
+//        
+//        //if dialog wasn't created:
+//        QBChatDialog *createdNowDialog = [QMChatService shared].lastCreatedDialog;
+//        [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:createdNowDialog];
+//        
+//        [QMChatService shared].lastCreatedDialog = nil;
+//    }
     
     [self reloadTableView];
 }
@@ -101,8 +101,9 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 }
 
 - (void)reloadTableView {
-    
-    self.chatDialogs = [[[QMChatService shared].allDialogsAsDictionary allValues] mutableCopy];
+#warning me.iD
+#warning QMContactList shared
+//    self.chatDialogs = [[[QMChatService shared].allDialogsAsDictionary allValues] mutableCopy];
     [self.chatsTableView reloadData];
 }
 
@@ -125,9 +126,10 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
         QBChatDialog *dialog = (QBChatDialog *)sender;
         
         if (dialog.type == QBChatDialogTypePrivate) {
-        
-            QBUUser *opponent = [[QMContactList shared] searchFriendFromChatDialog:dialog];
-            [chatController setupPrivateChatWithChatDialog:dialog andOpponent:opponent];
+#warning me.iD
+#warning QMContactList shared
+//            QBUUser *opponent = [[QMContactList shared] searchFriendFromChatDialog:dialog];
+//            [chatController setupPrivateChatWithChatDialog:dialog andOpponent:opponent];
             
         } else {
             [chatController setupGroupChatWithChatDialog:dialog];

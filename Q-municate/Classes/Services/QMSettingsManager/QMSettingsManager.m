@@ -15,7 +15,7 @@ NSString *const kQMSettingsLoginKey = @"loginKey";
 NSString *const kQMSettingsRememberMeKey = @"rememberMeKey";
 NSString *const kQMSettingsPushNotificationEnabled = @"pushNotificationEnabledKey";
 NSString *const kQMSettingsUserStatusKey = @"userStatusKey";
-NSString *const kQMAuthService = @"QMAuthService";
+NSString *const kQMAuthServiceKey = @"QMAuthServiceKey";
 
 @implementation QMSettingsManager
 
@@ -28,7 +28,7 @@ NSString *const kQMAuthService = @"QMAuthService";
 - (void)setLogin:(NSString *)login andPassword:(NSString *)password {
 
     [self setLogin:login];
-    [SSKeychain setPassword:password forService:kQMAuthService account:login];
+    [SSKeychain setPassword:password forService:kQMAuthServiceKey account:login];
 }
 
 #pragma makr - Login
@@ -48,7 +48,7 @@ NSString *const kQMAuthService = @"QMAuthService";
 
 - (NSString *)password {
     
-    NSString *password = [SSKeychain passwordForService:kQMAuthService account:self.login];
+    NSString *password = [SSKeychain passwordForService:kQMAuthServiceKey account:self.login];
     return password;
 }
 
@@ -95,7 +95,7 @@ NSString *const kQMAuthService = @"QMAuthService";
 
 - (void)clearSettings {
     
-    [SSKeychain deletePasswordForService:kQMAuthService account:self.login];
+    [SSKeychain deletePasswordForService:kQMAuthServiceKey account:self.login];
     
     self.pushNotificationsEnabled = YES;
     self.userStatus = nil;

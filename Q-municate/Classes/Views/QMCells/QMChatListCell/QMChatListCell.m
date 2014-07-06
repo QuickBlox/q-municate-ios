@@ -7,7 +7,7 @@
 //
 
 #import "QMChatListCell.h"
-#import "QMContactList.h"
+#import "QMApi.h"
 #import "QMImageView.h"
 
 @interface QMChatListCell()
@@ -42,24 +42,26 @@
     self.lastMessage.text = chatDialog.lastMessageText.length > 0 ? chatDialog.lastMessageText : @"Attachment";
     self.name.text = [self chatNameWithDialog:chatDialog];
     
-    UIImage *placeholder = [UIImage imageNamed: isGroup ? @"group_placeholder" : @"upic_placeholderr"];
     
     if (isGroup) {
         self.groupMembersNumb.text = [@([chatDialog.occupantIDs count]) stringValue];
     } else {
-        
-        QBUUser *friend = [[QMContactList shared] searchFriendFromChatDialog:chatDialog];
+
+        UIImage *placeholder = [UIImage imageNamed: isGroup ? @"group_placeholder" : @"upic_placeholderr"];
+        QBUUser *friend;// = [[QMContactList shared] searchFriendFromChatDialog:chatDialog];
         NSURL *url = [NSURL URLWithString:friend.website];
         [self.avatar setImageWithURL:url placeholderImage:placeholder];
     }
 }
 
 - (NSString *)chatNameWithDialog:(QBChatDialog *)chatDialog {
-    
-    if (chatDialog.type == QBChatDialogTypePrivate) {
-        QBUUser *friend = [[QMContactList shared] searchFriendFromChatDialog:chatDialog];
-        return friend ? friend.fullName : @"Unknown user";
-    }
+#warning me.iD
+#warning QMContactList shared
+//
+//    if (chatDialog.type == QBChatDialogTypePrivate) {
+//        QBUUser *friend = [[QMContactList shared] searchFriendFromChatDialog:chatDialog];
+//        return friend ? friend.fullName : @"Unknown user";
+//    }
     
     return chatDialog.name;
 }

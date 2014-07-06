@@ -36,19 +36,20 @@
 }
 
 - (void)resetPasswordForMail:(NSString *)emailString {
-    
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [[QMApi shared].authService resetUserPasswordForEmail:emailString completion:^(Result *result) {
-
-        if (result.success) {
-            [SVProgressHUD showSuccessWithStatus:kAlertBodyMessageWasSentToMailString];
-            [self.navigationController popViewControllerAnimated:YES];
-            
-        }
-        else {
-            [SVProgressHUD showErrorWithStatus:result.errors.lastObject];
-        }
-    }];
+#warning me.iD
+#warning QMContactList shared
+//    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+//    [[QMApi shared].authService resetUserPasswordForEmail:emailString completion:^(Result *result) {
+//
+//        if (result.success) {
+//            [SVProgressHUD showSuccessWithStatus:kAlertBodyMessageWasSentToMailString];
+//            [self.navigationController popViewControllerAnimated:YES];
+//            
+//        }
+//        else {
+//            [SVProgressHUD showErrorWithStatus:result.errors.lastObject];
+//        }
+//    }];
 }
 
 @end

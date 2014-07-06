@@ -9,10 +9,6 @@
 
 @interface QMFriendsListDataSource : NSObject
 
-@property (strong, nonatomic) NSMutableArray *friendsArray;
-@property (strong, nonatomic) NSMutableArray *otherUsersArray;
-
-
 /** If returns YES - it means that array is empty, if NO - not empty */
 - (BOOL)updateFriendsArrayAndCheckForEmpty;
 

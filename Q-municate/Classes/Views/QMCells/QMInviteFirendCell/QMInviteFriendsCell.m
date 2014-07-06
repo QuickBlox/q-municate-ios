@@ -7,7 +7,8 @@
 //
 
 #import "QMInviteFriendsCell.h"
-#import "QMPerson.h"
+#warning comment
+//#import "QMPerson.h"
 #import "QMImageView.h"
 #import "SVProgressHUD.h"
 
@@ -24,13 +25,13 @@ static double_t const kUptimeInterval = 300;
 - (void)configureCellWithParams:(QMPerson *)user {
     
     self.user = user;
-
-    NSURL *url = [NSURL URLWithString:user.imageURL];
-    [self setUserImageWithUrl:url];
-    
-    self.fullNameLabel.text = user.fullName;
-    self.statusLabel.text = user.status;
-    self.activeCheckbox.hidden = !user.checked;
+#warning comment
+//    NSURL *url = [NSURL URLWithString:user.imageURL];
+//    [self setUserImageWithUrl:url];
+//    
+//    self.fullNameLabel.text = user.fullName;
+//    self.statusLabel.text = user.status;
+//    self.activeCheckbox.hidden = !user.checked;
 }
 
 - (void)configureCellWithParamsForQBUser:(QBUUser *)user checked:(BOOL)checked {

@@ -40,7 +40,7 @@
 - (IBAction)connectWithFacebook:(id)sender {
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [[QMApi shared] loginWithFacebook:^(BOOL success) {
+    [[QMApi instance] loginWithFacebook:^(BOOL success) {
         [SVProgressHUD dismiss];
         if (success) {
             [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];

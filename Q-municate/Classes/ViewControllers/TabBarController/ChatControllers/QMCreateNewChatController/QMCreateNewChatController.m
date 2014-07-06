@@ -9,10 +9,8 @@
 #import "QMCreateNewChatController.h"
 #import "QMChatViewController.h"
 #import "QMInviteFriendsCell.h"
-#import "QMContactList.h"
-#import "QMNewChatDataSource.h"
-#import "QMChatService.h"
-
+#import "QMUsersService.h"
+#import "QMApi.h"
 
 @interface QMCreateNewChatController ()
 
@@ -20,75 +18,36 @@
 
 @implementation QMCreateNewChatController
 
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
-    // set up data source:
-    self.dataSource = [QMNewChatDataSource new];
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
-
-/** OVERRIDEN */
-- (void)applyChangesForPerformButton
-{
-	if ([self.dataSource.friendsSelectedMArray count] <=1) {
-		[self.performButton setEnabled:NO];
-		[self.performButton setAlpha:0.5f];
-        return;
-	}
-    [self.performButton setEnabled:YES];
-    [self.performButton setAlpha:1.0f];
-}
-
 
 #pragma mark - Overriden Actions
 
-- (IBAction)performAction:(id)sender
-{
-	NSMutableArray *selectedUsersMArray = self.dataSource.friendsSelectedMArray;
+- (IBAction)performAction:(id)sender {
+    
+	NSMutableArray *selectedUsersMArray = self.selectedFriends;
     NSString *chatName = [self chatNameFromUserNames:selectedUsersMArray];
-	NSArray *usersIdArray = [self usersIDFromSelectedUsers:selectedUsersMArray];
-        
-    // create new dialog entity:
-    QBChatDialog *chatDialog = [QBChatDialog new];
-    chatDialog.name = chatName;
-    chatDialog.occupantIDs = usersIdArray;
-    chatDialog.type = QBChatDialogTypeGroup;
-    [[QMChatService shared] createChatDialog:chatDialog withCompletion:^(QBChatDialog *dialog, NSError *error) {
-        // save to dialogs dictionary:
-        [QMChatService shared].allDialogsAsDictionary[dialog.roomJID] = dialog;
-        [QMChatService shared].lastCreatedDialog = dialog;
-        // send invitation to users:
-        [[QMChatService shared] sendChatDialogDidCreateNotificationToUsers:selectedUsersMArray withChatDialog:dialog];
-        
+    
+    [[QMApi instance] createGroupChatDialogWithName:chatName ocupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
         [self.navigationController popViewControllerAnimated:NO];
     }];
 }
 
-#pragma mark - Options
 
-// title for chat view:
-- (NSString *)chatNameFromUserNames:(NSMutableArray *)users
-{
-    NSMutableString *chatName = nil;
+- (NSString *)chatNameFromUserNames:(NSMutableArray *)users {
+    
+    NSMutableArray *names = [NSMutableArray arrayWithCapacity:users.count];
+    
     for (QBUUser *user in users) {
-        if ([user isEqual:[users firstObject]]) {
-            chatName = [user.fullName mutableCopy];
-            continue;
-        }
-        [chatName appendString:@", "];
-        [chatName appendString:user.fullName];
+        [names addObject:user.fullName];
     }
-    return chatName;
+    
+    return [names componentsJoinedByString:@", "];
 }
-
 
 @end

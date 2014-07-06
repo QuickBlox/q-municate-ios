@@ -7,16 +7,13 @@
 //
 
 #import "QMChatViewController.h"
-#import "QMChatService.h"
-#import "QMContent.h"
 #import "QMPrivateChatDataSource.h"
 #import "QMGroupChatDataSource.h"
+#import "QMApi.h"
 
 @interface QMChatViewController ()
 
 <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
-
-@property (nonatomic, strong) QMContent *uploadManager;
 
 @end
 
@@ -31,9 +28,7 @@
 - (void)setupGroupChatWithChatDialog:(QBChatDialog *)chatDialog {
     
     NSAssert(chatDialog.roomJID, @"Check it");
-
-    QMChatService *chatService = [QMChatService shared];
-    QBChatRoom *chatRoom = [chatService chatRoomWithRoomJID:chatDialog.roomJID];
+    QBChatRoom *chatRoom;// = [chatService chatRoomWithRoomJID:chatDialog.roomJID];
     
     self.dataSource = [[QMGroupChatDataSource alloc ] initWithChatDialog:chatDialog
                                                                 chatRoom:chatRoom

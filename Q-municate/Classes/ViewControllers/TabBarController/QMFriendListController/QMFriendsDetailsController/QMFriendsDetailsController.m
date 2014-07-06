@@ -9,7 +9,7 @@
 #import "QMFriendsDetailsController.h"
 #import "QMVideoCallController.h"
 #import "QMChatViewController.h"
-#import "QMContactList.h"
+#import "QMUsersService.h"
 #import "QMChatService.h"
 #import "QMImageView.h"
 #import "REAlertView.h"
@@ -61,12 +61,14 @@
 }
 
 - (void)updateUserStatus {
+#warning me.iD
+#warning QMContactList shared
     // online status
-    QBContactListItem *contactItem = [[QMContactList shared] contactItemFromContactListForOpponentID:self.selectedUser.ID];
-    BOOL isOnline = contactItem.online;
-    
-    self.status.text = isOnline ? kStatusOnlineString : kStatusOfflineString;
-    self.onlineCircle.hidden = isOnline ? NO : YES;
+//    QBContactListItem *contactItem = [[QMContactList shared] contactItemFromContactListForOpponentID:self.selectedUser.ID];
+//    BOOL isOnline = contactItem.online;
+//    
+//    self.status.text = isOnline ? kStatusOnlineString : kStatusOfflineString;
+//    self.onlineCircle.hidden = isOnline ? NO : YES;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -86,32 +88,31 @@
         [audioCallVC setOpponent:self.selectedUser];
 
     } else if ([segue.identifier isEqualToString:kChatViewSegueIdentifier]) {
-        
-        QMChatViewController *chatController = (QMChatViewController *)segue.destinationViewController;
-        QBChatDialog *dialog = [[QMChatService shared] chatDialogForFriendWithID:self.selectedUser.ID];
-        [chatController setupPrivateChatWithChatDialog:dialog andOpponent:self.selectedUser];
+#warning comment        
+//        QMChatViewController *chatController = (QMChatViewController *)segue.destinationViewController;
+//        QBChatDialog *dialog = [[QMChatService shared] chatDialogForFriendWithID:self.selectedUser.ID];
+//        [chatController setupPrivateChatWithChatDialog:dialog andOpponent:self.selectedUser];
     }
 }
 
 #pragma mark - Actions
 
 - (IBAction)removeFromFriends:(id)sender {
-    
-    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-        
-        alertView.title = @"Are you sure?";
-        [alertView addButtonWithTitle:@"Cancel" andActionBlock:^{}];
-        
-        [alertView addButtonWithTitle:@"Delete" andActionBlock:^{
-            
-            NSString *opponentID = [@(self.selectedUser.ID) stringValue];
-            [[QMContactList shared].friendsAsDictionary removeObjectForKey:opponentID];
-            [[QMChatService shared] removeContactFromFriendsWithID:self.selectedUser.ID];
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:kFriendsReloadedNotification object:nil];
-            [self.navigationController popViewControllerAnimated:YES];
-        }];
-    }];
+#warning me.iD
+#warning QMContactList shared
+//    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
+//        
+//        alertView.title = @"Are you sure?";
+//        [alertView addButtonWithTitle:@"Cancel" andActionBlock:^{}];
+//        
+//        [alertView addButtonWithTitle:@"Delete" andActionBlock:^{
+//            
+//            NSString *opponentID = [@(self.selectedUser.ID) stringValue];
+//            [[QMContactList shared].friendsAsDictionary removeObjectForKey:opponentID];
+//            [[QMChatService shared] removeContactFromFriendsWithID:self.selectedUser.ID];
+//            [self.navigationController popViewControllerAnimated:YES];
+//        }];
+//    }];
 }
 
 @end

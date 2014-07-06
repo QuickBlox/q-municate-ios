@@ -8,7 +8,8 @@
 
 #import "QMGroupDetailsDataSource.h"
 #import "QMGroupDetailsCell.h"
-#import "QMContactList.h"
+#import "QMUsersService.h"
+#import "QMApi.h"
 
 @interface QMGroupDetailsDataSource ()
 
@@ -26,7 +27,9 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineParticipantsListLoaded:) name:kChatRoomDidChangeOnlineUsersListNotification object:nil];
         _tableView = tableView;
         _participants = [NSMutableArray new];
-        [self findAllParticipantsForChatDialog:chatDialog];
+        
+        #warning check it
+        //        [self findAllParticipantsForChatDialog:chatDialog];
     }
     return self;
 }
@@ -41,49 +44,8 @@
     return [_participants count];
 }
 
-- (void)findAllParticipantsForChatDialog:(QBChatDialog *)chatDialog
-{
-    QBUUser *me = [QMContactList shared].me;
-    
-    // participants, founded in friends list:
-    NSMutableArray *participants = [NSMutableArray new];
-    
-    // participants to fetch from QB Server:
-    NSMutableArray *participantsToFetchFomDB = [NSMutableArray new];
-    
-    // find participants in friends list:
-    NSArray *participantsIDs = chatDialog.occupantIDs;
-    for (NSString *participantID in participantsIDs) {
-        // check for me:
-        if ([participantID integerValue] == me.ID) {
-            [participants addObject:me];
-            continue;
-        }
-        
-        QBUUser *participant = [QMContactList shared].friendsAsDictionary[participantID];
-        if (participant != nil) {
-            [participants addObject:participant];
-            continue;
-        } else {
-            [participantsToFetchFomDB addObject:participantID];
-        }
-    }
-    
-    // adding founded participants to array:
-    [_participants addObjectsFromArray:participants];
-    [_tableView reloadData];
-    
-    if ([participantsToFetchFomDB count] > 0) {
-        [[QMContactList shared] retrieveUsersWithIDs:participantsToFetchFomDB usingBlock:^(NSArray *users, BOOL success, NSError *error) {
-            if (!success) {
-                return;
-            }
-            // add requested users to participants array:
-            [_participants addObjectsFromArray:users];
-            [_tableView reloadData];
-        }];
-    }
-}
+#warning me.iD
+#warning QMContactList shared
 
 
 #pragma mark - UITableViewDataSource

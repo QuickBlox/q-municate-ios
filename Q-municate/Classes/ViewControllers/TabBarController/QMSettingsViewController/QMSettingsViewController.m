@@ -7,12 +7,12 @@
 //
 
 #import "QMSettingsViewController.h"
-#import "QMChatService.h"
-#import "QMContactList.h"
-#import "QMAuthService.h"
+//#import "QMChatService.h"
+//#import "QMUsersService.h"
+//#import "QMAuthService.h"
 #import "REAlertView+QMSuccess.h"
-#import "QMSettingsManager.h"
-#import "QMFacebookService.h"
+//#import "QMSettingsManager.h"
+//#import "QMFacebookService.h"
 #import "QMApi.h"
 
 @interface QMSettingsViewController ()
@@ -43,25 +43,24 @@
     self.versionLabel.text = appVersion;
 }
 
-- (void)logOut {
-    
-    [[QMApi shared].authService destroySessionWithCompletion:^(QBAAuthResult *result) {
-        
-        if (result.success) {
-            
-            QMFacebookService *fbService = [[QMFacebookService alloc] init];
-            QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
-            
-            [settingsManager clearSettings];
-            [[QMChatService shared] logOut];
-            [[QMContactList shared] clearData];
-            [fbService logout];
-            
-            [self performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kInviteFriendsDataSourceShouldRefreshNotification object:nil];
-        }
-    }];
-}
+//- (void)logOut {
+//    
+//    [[QMApi instance].authService destroySessionWithCompletion:^(QBAAuthResult *result) {
+//        
+//        if (result.success) {
+//            
+//            QMFacebookService *fbService = [[QMFacebookService alloc] init];
+//            QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
+//            
+//            [settingsManager clearSettings];
+//            [[QMApi instance].chatService logout];
+//            [fbService logout];
+//            
+//            [self performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:kInviteFriendsDataSourceShouldRefreshNotification object:nil];
+//        }
+//    }];
+//}
 
 #pragma mark - UITableViewDelegate
 
@@ -76,7 +75,7 @@
         [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
             alertView.message = kAlertTitleAreYouSureString;
             [alertView addButtonWithTitle:kAlertButtonTitleLogOutString andActionBlock:^{
-                [weakSelf logOut];
+//                [weakSelf logOut];
             }];
             
             [alertView addButtonWithTitle:kAlertButtonTitleCancelString andActionBlock:^{}];

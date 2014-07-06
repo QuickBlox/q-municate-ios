@@ -8,8 +8,10 @@
 
 #import "QMPrivateChatDataSource.h"
 #import "QMMessage.h"
-#import "QMChatService.h"
-#import "QMContactList.h"
+#import "QMApi.h"
+
+//#import "QMChatService.h"
+//#import "QMContactList.h"
 
 @interface QMPrivateChatDataSource()
 
@@ -51,9 +53,8 @@
         QBChatMessage *chatMessage = [QBChatMessage new];
 		chatMessage.text = text;
         chatMessage.recipientID = self.opponent.ID;
-        chatMessage.senderID = [QMContactList shared].me.ID;
-        
-        [[QMChatService shared] sendMessage:chatMessage];
+        chatMessage.senderID = [QMApi instance].currentUser.ID;
+//        [[QMChatService shared] sendMessage:chatMessage];
     }
 }
 

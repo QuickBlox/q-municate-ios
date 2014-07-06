@@ -8,11 +8,12 @@
 
 #import <MessageUI/MessageUI.h>
 #import "QMInviteFriendsController.h"
-#import "QMContactList.h"
+#import "QMUsersService.h"
 #import "QMAddressBook.h"
 #import "QMInviteFriendsCell.h"
 #import "QMInviteFriendsStaticCell.h"
-#import "QMPerson.h"
+#warning update person
+//#import "QMPerson.h"
 #import "QMUtilities.h"
 
 #import "QMFacebookService.h"
@@ -90,17 +91,19 @@
 
 - (void)shareApplicationToFriends:(NSString *)friendsListString
 {
-    QMFacebookService *fbService = [[QMFacebookService alloc] init];
-    [fbService shareToFacebookUsersWithIDs:friendsListString withCompletion:^(BOOL success, NSError *error) {
-        if (!success) {
-            NSString *errorMessageString = [NSString stringWithFormat:@"%@", error];
-            [self showAlertWithMessage:errorMessageString];
-            return;
-        }
-        [self.dataSource emptyCheckedFBUsersArray];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:kAlertTitleSuccessString message:kAlertBodyRecordPostedString delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil];
-        [alert show];
-    }];
+#warning me.iD
+#warning QMContactList shared
+//    QMFacebookService *fbService = [[QMFacebookService alloc] init];
+//    [fbService shareToFacebookUsersWithIDs:friendsListString withCompletion:^(BOOL success, NSError *error) {
+//        if (!success) {
+//            NSString *errorMessageString = [NSString stringWithFormat:@"%@", error];
+//            [self showAlertWithMessage:errorMessageString];
+//            return;
+//        }
+//        [self.dataSource emptyCheckedFBUsersArray];
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:kAlertTitleSuccessString message:kAlertBodyRecordPostedString delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil];
+//        [alert show];
+//    }];
 }
 
 - (void)showEmailController
@@ -229,11 +232,12 @@
 
 - (void)checkForFriendsSetCompletenessForCell:(QMInviteFriendsCell *)cell
 {
-	if (cell.user.isFacebookPerson) {
-		[self checkForFacebookSetCompleteness];
-	} else {
-		[self checkForContactsSetCompleteness];
-	}
+#warning update it
+//	if (cell.user.isFacebookPerson) {
+//		[self checkForFacebookSetCompleteness];
+//	} else {
+//		[self checkForContactsSetCompleteness];
+//	}
 }
 
 - (void)checkForFacebookSetCompleteness
@@ -282,17 +286,19 @@
 {
 	self.contactsCellChecked = NO;
 	[self.dataSource emptyCheckedABUsersArray];
-	[self.dataSource updateContactListDataSource:^(NSError *error) {
-		if (error) {
-			ILog(@"%@",error);
-		} else {
-			if (![[QMContactList shared].contactsToInvite count]) {
-				[self showAlertWithMessage:kAlertBodyNoContactsWithEmailsString];
-			} else {
-				[self.tableView reloadData];
-			}
-		}
-	}];
+#warning me.iD
+#warning QMContactList shared
+//	[self.dataSource updateContactListDataSource:^(NSError *error) {
+//		if (error) {
+//			ILog(@"%@",error);
+//		} else {
+//			if (![[QMContactList shared].contactsToInvite count]) {
+//				[self showAlertWithMessage:kAlertBodyNoContactsWithEmailsString];
+//			} else {
+//				[self.tableView reloadData];
+//			}
+//		}
+//	}];
 }
 
 

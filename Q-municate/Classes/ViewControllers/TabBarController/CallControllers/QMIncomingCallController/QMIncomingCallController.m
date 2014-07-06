@@ -9,7 +9,7 @@
 #import "QMIncomingCallController.h"
 #import "UIImageView+ImageWithBlobID.h"
 #import "QMChatService.h"
-#import "QMContactList.h"
+//#import "QMContactList.h"
 #import "QMSoundManager.h"
 #import "QMUtilities.h"
 
@@ -34,7 +34,7 @@
     // Do any additional setup after loading the view.
     [self configureUserAvatarCircledView];
     
-    opponent = [[QMContactList shared] findFriendWithID:self.opponentID];
+//    opponent = [[QMContactList shared] findFriendWithID:self.opponentID];
     
     self.userNameLabel.text = opponent ? opponent.fullName : @"Unknown caller";
  
@@ -91,7 +91,7 @@
 - (IBAction)declineCall:(id)sender {
     
     [[QMSoundManager shared] stopAllSounds];
-    [[QMChatService shared] rejectCallFromUser:opponent ? self.opponent.ID : self.opponentID  opponentView:nil];
+//    [[QMChatService shared] rejectCallFromUser:opponent ? self.opponent.ID : self.opponentID  opponentView:nil];
     [QMSoundManager playEndOfCallSound];
     
     [self performSelector:@selector(dismissIncomingCallController) withObject:self afterDelay:2.0f];
