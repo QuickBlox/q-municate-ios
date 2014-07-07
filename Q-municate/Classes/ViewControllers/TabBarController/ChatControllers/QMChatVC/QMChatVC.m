@@ -20,7 +20,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 @interface QMChatVC ()
 
-<UITableViewDelegate, QMKeyboardControllerDelegate, QMChatInputToolbarDelegate>
+<UITableViewDelegate, QMKeyboardControllerDelegate, QMChatInputToolbarDelegate, UITextFieldDelegate>
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) QMChatInputToolbar *inputView;
@@ -40,12 +40,14 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     [super loadView];
 }
 
+
 - (void)viewDidLoad {
     
     [super viewDidLoad];
     [self configureChatVC];
     
     [self registerForNotifications:YES];
+
     self.keyboardController = [[QMKeyboardController alloc] initWithTextView:self.inputView.contentView.textView
                                                                  contextView:self.view
                                                         panGestureRecognizer:self.tableView.panGestureRecognizer
@@ -119,6 +121,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     
     self.inputView = [[QMChatInputToolbar alloc] init];
     self.inputView.delegate = self;
+    self.inputView.contentView.textView.delegate =self;
     
     [self.view addSubview:self.tableView];
     [self.view addSubview:self.inputView];
@@ -306,6 +309,15 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 - (void)textViewDidChange:(UITextView *)textView {
     
     [self.inputView toggleSendButtonEnabled];
+    
+    if (textView.text.length > 0) {
+        self.inputView.contentView.rightBarButtonItemWidth = 44.0f;
+        self.inputView.contentView.rightBarButtonItem = [QMChatButtonsFactory sendButton];
+    } else {
+        self.inputView.contentView.rightBarButtonItemWidth = 26.0f;
+        self.inputView.contentView.rightBarButtonItem = [QMChatButtonsFactory cameraButton];
+    }
+    [self.inputView.contentView layoutIfNeeded];
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {

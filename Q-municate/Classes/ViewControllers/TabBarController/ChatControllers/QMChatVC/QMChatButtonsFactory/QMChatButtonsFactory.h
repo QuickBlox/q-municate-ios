@@ -12,5 +12,6 @@
 
 + (UIButton *)sendButton;
 + (UIButton *)cameraButton;
++ (UIButton *)emojiButton;
 
 @end

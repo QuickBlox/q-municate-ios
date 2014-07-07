@@ -28,8 +28,10 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
     if (self) {
         [self configureChatToolbarContentView];
         
-        self.contentView.leftBarButtonItem = [QMChatButtonsFactory cameraButton];
-        self.contentView.rightBarButtonItem = [QMChatButtonsFactory sendButton];
+        self.contentView.leftBarButtonItem = [QMChatButtonsFactory emojiButton];
+        self.contentView.rightBarButtonItem = [QMChatButtonsFactory cameraButton];
+        self.contentView.rightBarButtonItemWidth = 26;      // 26 for camera and  44 for send button
+        self.contentView.leftBarButtonItemWidth = 26;
     }
     
     return self;

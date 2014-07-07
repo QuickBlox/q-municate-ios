@@ -17,6 +17,7 @@
 @property (strong, nonatomic) QMChatInputTextView *textView;
 
 @property (strong, nonatomic) NSLayoutConstraint *rightBarButtonContainerViewWidthConstraint;
+
 @property (strong, nonatomic) NSLayoutConstraint *leftBarButtonContainerViewWidthConstraint;
 
 @end
@@ -62,7 +63,7 @@
     self.rightBarButtonContainerView = [[UIView alloc] init];
     self.textView = [[QMChatInputTextView alloc] init];
     
-    self.textView.placeHolder = @"input text here...";
+    self.textView.placeHolder = @"Message";
     self.textView.placeHolderTextColor = [UIColor grayColor];
     
     [self addSubview:self.leftBarButtonContainerView];
@@ -84,20 +85,31 @@
     UIView *cView = self.textView;
     UIView *rView = self.rightBarButtonContainerView;
     
-    [self addConstraints:PVGroup(@[ PVLeftOf(lView).equalTo.leftOf(self).plus(margin).asConstraint,
+    self.leftBarButtonContainerViewWidthConstraint = PVWidthOf(lView).equalTo.constant(26).asConstraint;
+    self.rightBarButtonContainerViewWidthConstraint= PVWidthOf(rView).equalTo.constant(26).asConstraint;
+    
+    [self
+     addConstraints:PVGroup(@[ PVLeftOf(lView).equalTo.leftOf(self).plus(margin).asConstraint,
                                     PVLeftOf(cView).equalTo.rightOf(lView).plus(margin).asConstraint,
                                     PVRightOf(cView).equalTo.leftOf(rView).minus(margin).asConstraint,
                                     PVRightOf(rView).equalTo.rightOf(self).minus(margin).asConstraint,
                                     /*Boottom*/
-                                    PVBottomOf(lView).equalTo.bottomOf(self).minus(12).asConstraint,
+                                    PVBottomOf(lView).equalTo.bottomOf(self).minus(margin).asConstraint,
                                     PVBottomOf(cView).equalTo.bottomOf(self).minus(margin).asConstraint,
                                     PVBottomOf(rView).equalTo.bottomOf(self).minus(margin).asConstraint,
+                                    self.rightBarButtonContainerViewWidthConstraint,
+                                    self.leftBarButtonContainerViewWidthConstraint,
+                               
+                                    PVHeightOf(rView).equalTo.constant(32).asConstraint,
+                                    PVHeightOf(lView).equalTo.constant(32).asConstraint,
+                               
                                     /*Top*/
                                     PVTopOf(cView).equalTo.topOf(self).plus(margin).asConstraint]).asArray];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    
 }
 
 #pragma mark - Setters
@@ -140,6 +152,12 @@
     [self setNeedsUpdateConstraints];
 }
 
+- (void)setLeftBarButtonItemHeight:(CGFloat)leftBarButtonItemheight {
+    
+    self.leftBarButtonContainerViewWidthConstraint.constant = leftBarButtonItemheight;
+    [self setNeedsUpdateConstraints];
+}
+
 - (void)setRightBarButtonItem:(UIButton *)rightBarButtonItem {
     
     if (_rightBarButtonItem) {
@@ -178,6 +196,12 @@
 - (void)setRightBarButtonItemWidth:(CGFloat)rightBarButtonItemWidth {
     
     self.rightBarButtonContainerViewWidthConstraint.constant = rightBarButtonItemWidth;
+    [self setNeedsUpdateConstraints];
+}
+
+- (void)setRightBarButtonItemHeight:(CGFloat)rightBarButtonItemHeight {
+    
+    self.rightBarButtonContainerViewWidthConstraint.constant = rightBarButtonItemHeight;
     [self setNeedsUpdateConstraints];
 }
 

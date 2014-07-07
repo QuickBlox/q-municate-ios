@@ -44,6 +44,8 @@
     [super viewDidLoad];
     
     self.automaticallyScrollsToMostRecentMessage = YES;
+    
+    [self setupPrivateChatWithChatDialog:[QBChatDialog new] andOpponent:[QBUUser user]];
 }
 
 #pragma mark - InputView Button Actions
