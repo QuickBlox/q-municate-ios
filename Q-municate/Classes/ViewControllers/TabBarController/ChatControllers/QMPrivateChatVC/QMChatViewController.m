@@ -14,8 +14,6 @@
 
 @interface QMChatViewController ()
 
-<UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
-
 @property (nonatomic, strong) QMContent *uploadManager;
 
 @end
@@ -48,43 +46,7 @@
     [self setupPrivateChatWithChatDialog:[QBChatDialog new] andOpponent:[QBUUser user]];
 }
 
-#pragma mark - InputView Button Actions
 
-- (void)didPressAccessoryButton:(UIButton *)sender {
-    [self presentImagePicker];
-}
-
-- (void)didPressSendButton:(UIButton *)button
-           withMessageText:(NSString *)text
-                      date:(NSDate *)date {
-    
-    [self.dataSource sendMessage:text];
-}
-
-- (void)presentImagePicker {
-
-    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-    
-    imagePicker.delegate = self;
-    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    imagePicker.mediaTypes = @[(NSString *) kUTTypeImage]; //(NSString *) kUTTypeMovie
-    imagePicker.allowsEditing = YES;
-    
-    [self presentViewController:imagePicker animated:YES completion:nil];
-}
-
-#pragma mark - UIImagePickerControllerDelegate
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    
-    NSString *mediaType = info[UIImagePickerControllerMediaType];
-    
-    if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
-        UIImage *editImage = info[ UIImagePickerControllerEditedImage];
-        [self.dataSource sendImage:editImage];
-    
-    }
-}
 
 //- (void)configureNavigationBarForPrivateChat {
 //
