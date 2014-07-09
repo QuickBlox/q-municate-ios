@@ -9,10 +9,9 @@
 #import "QMFriendsDetailsController.h"
 #import "QMVideoCallController.h"
 #import "QMChatViewController.h"
-#import "QMUsersService.h"
-#import "QMChatService.h"
 #import "QMImageView.h"
 #import "REAlertView.h"
+#import "QMApi.h"
 
 @interface QMFriendsDetailsController () <UIActionSheetDelegate>
 
@@ -33,7 +32,6 @@
 @implementation QMFriendsDetailsController
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewDidLoad {
@@ -56,19 +54,16 @@
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
     [self.userAvatar setImageWithURL:url placeholderImage:placeholder];
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUserStatus) name:kFriendsReloadedNotification object:nil];
     [self updateUserStatus];
 }
 
 - (void)updateUserStatus {
-#warning me.iD
-#warning QMContactList shared
-    // online status
-//    QBContactListItem *contactItem = [[QMContactList shared] contactItemFromContactListForOpponentID:self.selectedUser.ID];
-//    BOOL isOnline = contactItem.online;
-//    
-//    self.status.text = isOnline ? kStatusOnlineString : kStatusOfflineString;
-//    self.onlineCircle.hidden = isOnline ? NO : YES;
+
+    if ([[QMApi instance] isFriedID:self.selectedUser.ID]) {
+        BOOL isOnline = [[QMApi instance] onlineStatusForFriendID:self.selectedUser.ID];
+        self.status.text = isOnline ? kStatusOnlineString : kStatusOfflineString;
+        self.onlineCircle.hidden = isOnline ? NO : YES;
+    }
 }
 
 - (void)didReceiveMemoryWarning {

@@ -10,4 +10,5 @@
 
 @interface QMFriendListViewController : UIViewController
 
+
 @end

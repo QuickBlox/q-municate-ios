@@ -1,5 +1,5 @@
 //
-//  QMChatReciver.h
+//  QMChatReceiver.h
 //  Qmunicate
 //
 //  Created by Andrey on 07.07.14.
@@ -38,7 +38,7 @@ typedef void(^QMChatDidReceiveContactAddRequest)(NSUInteger userID);
 typedef void(^QMChatContactListDidChange)(QBContactList * contactList);
 typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL isOnline, NSString *status);
 
-@interface QMChatReciver : NSObject <QBChatDelegate>
+@interface QMChatReceiver : NSObject <QBChatDelegate>
 
 + (instancetype)instance;
 /**

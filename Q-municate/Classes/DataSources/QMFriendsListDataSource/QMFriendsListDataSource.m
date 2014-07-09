@@ -14,7 +14,7 @@
 #import "QMApi.h"
 #import "QMUsersService.h"
 #import "SVProgressHud.h"
-#import "QMChatReciver.h"
+#import "QMChatReceiver.h"
 
 static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
 static NSString *const kQMSearchGlobalCellIdentifier = @"QMSearchGlobalCell";
@@ -42,7 +42,7 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
         
         self.searchDatasource = [NSMutableArray array];
         
-        [[QMChatReciver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
+        [[QMChatReceiver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
             
             [[QMApi instance] retrieveUsersIfNeededWithContactList:contactList completion:^(BOOL updated) {
                 
@@ -149,16 +149,16 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    return [self datasourceForSection:section].count;
+    return [self usersAtSections:section].count;
 }
 
-- (NSArray *)datasourceForSection:(NSUInteger)section {
+- (NSArray *)usersAtSections:(NSUInteger)section {
     return (section == 0 ) ? self.friendsDatasource : self.searchDatasource;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSArray *datasource = [self datasourceForSection:indexPath.section];
+    NSArray *datasource = [self usersAtSections:indexPath.section];
     QBUUser *user = datasource[indexPath.row];
     
     QMFriendListCell *cell = [tableView dequeueReusableCellWithIdentifier:kFriendsListCellIdentifier];
