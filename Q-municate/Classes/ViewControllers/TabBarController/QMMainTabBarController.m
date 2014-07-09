@@ -10,7 +10,7 @@
 #import "QMSplashViewController.h"
 #import "QMUtilities.h"
 #import "QMAuthService.h"
-#import "QMContactList.h"
+#import "QMUsersService.h"
 #import "QMChatService.h"
 
 @interface QMMainTabBarController ()

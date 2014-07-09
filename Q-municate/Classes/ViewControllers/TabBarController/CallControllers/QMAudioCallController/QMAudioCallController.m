@@ -51,7 +51,7 @@
 
 -(void)startCall
 {
-    [[QMChatService shared] callUser:self.opponent.ID opponentView:self.opponentsView callType:QBVideoChatConferenceTypeAudio];
+//    [[QMChatService shared] callUser:self.opponent.ID opponentView:self.opponentsView callType:QBVideoChatConferenceTypeAudio];
     [QMSoundManager playCallingSound];
 }
 

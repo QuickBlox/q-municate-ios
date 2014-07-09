@@ -8,53 +8,85 @@
 
 #import "QMAddUsersAbstractController.h"
 #import "QMInviteFriendsCell.h"
-#import "QMContactList.h"
+#import "QMUsersService.h"
 
 @interface QMAddUsersAbstractController ()
 
-@end
+@property (weak, nonatomic) IBOutlet UIButton *performButton;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
+@end
 
 @implementation QMAddUsersAbstractController
 
+- (id)initWithChatDialog:(QBChatDialog *)chatDialog {
+    
+    if (self = [super init]) {
+        self.selectedFriends = [NSMutableArray array];
+        
+#warning me.iD
+#warning QMContactList shared
+        //        _friendsSelectedMArray = [NSMutableArray new];
+        //
+        //        NSArray *unsortedUsers = [[QMContactList shared].friendsAsDictionary allValues];
+        //        NSMutableArray *sortedUsers = [self sortUsersByFullname:unsortedUsers];
+        //
+        //        NSMutableArray *usersToDelete = [NSMutableArray new];
+        //        for (NSString *participantID in chatDialog.occupantIDs) {
+        //
+        //            QBUUser *user = [QMContactList shared].friendsAsDictionary[participantID];
+        //            if (user != nil) {
+        //                [usersToDelete addObject:user];
+        //            }
+        //        }
+        //        [sortedUsers removeObjectsInArray:usersToDelete];
+        //
+        //        _friendListArray = sortedUsers;
+    }
+    return self;
+}
+
+- (NSMutableArray *)sortUsersByFullname:(NSArray *)users
+{
+    NSArray *sortedUsers = nil;
+    NSSortDescriptor *fullNameDescriptor = [[NSSortDescriptor alloc] initWithKey:@"fullName" ascending:YES];
+    sortedUsers = [users sortedArrayUsingDescriptors:@[fullNameDescriptor]];
+    return [sortedUsers mutableCopy];
+}
 
 #pragma mark - LifeCycle
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
+    
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self configurePerformButtonBorder];
     [self updateNavTitle];
-    
     [self applyChangesForPerformButton];
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-
 #pragma mark - UI Configurations
 
-- (void)updateNavTitle
-{
-    self.title  = [NSString stringWithFormat:@"%li Selected", (unsigned long)[self.dataSource.friendsSelectedMArray count]];
+- (void)updateNavTitle {
+    
+    self.title  = [NSString stringWithFormat:@"%d Selected", self.selectedFriends.count];
 }
 
-- (void)configurePerformButtonBorder
-{
+- (void)configurePerformButtonBorder {
+    
     self.performButton.layer.borderColor = [UIColor darkGrayColor].CGColor;
     self.performButton.layer.borderWidth = 0.5;
 }
 
-- (void)applyChangesForPerformButton
-{
-    // Override:
+- (void)applyChangesForPerformButton {
+    
+    [self.performButton setEnabled:!self.selectedFriends.count == 0];
 }
-
 
 #pragma mark - Actions
 
@@ -64,10 +96,10 @@
    CHECK_OVERRIDE();
 }
 
-- (IBAction)cancelSelection:(id)sender
-{
-    if ([self.dataSource.friendsSelectedMArray count] > 0) {
-        [self.dataSource.friendsSelectedMArray removeAllObjects];
+- (IBAction)cancelSelection:(id)sender {
+    
+    if ([self.selectedFriends count] > 0) {
+        [self.selectedFriends removeAllObjects];
         
         [self updateNavTitle];
         [self applyChangesForPerformButton];
@@ -75,74 +107,40 @@
     }
 }
 
-
 #pragma mark - UITableViewDataSource
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return [self.dataSource.friendListArray count];
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    return self.friends.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    QMInviteFriendsCell *cell = (QMInviteFriendsCell *) [tableView dequeueReusableCellWithIdentifier:kCreateChatCellIdentifier];
-    QBUUser *person = self.dataSource.friendListArray[indexPath.row];
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    BOOL checked = [self isChecked:person];
-    [cell configureCellWithParamsForQBUser:person checked:checked];
+    QMInviteFriendsCell *cell = (QMInviteFriendsCell *) [tableView dequeueReusableCellWithIdentifier:kCreateChatCellIdentifier];
+    QBUUser *friend = self.friends[indexPath.row];
+    [cell configureCellWithParamsForQBUser:friend checked:[self.selectedFriends containsObject:friend]];
     
     return cell;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return rowHeight;
-}
-
-
 #pragma mark - UITableViewDelegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    QBUUser *checkedUser = self.dataSource.friendListArray[indexPath.row];
+    QBUUser *checkedUser = self.friends[indexPath.row];
     
-    BOOL checked = [self isChecked:checkedUser];
-    if (checked) {
-        [self.dataSource.friendsSelectedMArray removeObject:checkedUser];
+    if ([self.selectedFriends containsObject:checkedUser]) {
+        [self.friends removeObject:checkedUser];
     } else {
-        [self.dataSource.friendsSelectedMArray addObject:checkedUser];
+        [self.friends addObject:checkedUser];
     }
-    
+
     // update navigation title:
     [self updateNavTitle];
     
 	[self applyChangesForPerformButton];
 	[self.tableView reloadData];
 }
-
-
-#pragma mark - Options
-
-- (BOOL)isChecked:(QBUUser *)user
-{
-    for (QBUUser *person in self.dataSource.friendsSelectedMArray) {
-        if ([person isEqual:user]) {
-            return YES;
-        }
-    }
-    return NO;
-}
-
-- (NSMutableArray *)usersIDFromSelectedUsers:(NSMutableArray *)users
-{
-	NSMutableArray *usersIDMArray = [NSMutableArray new];
-	for (QBUUser *user in users) {
-		[usersIDMArray addObject:[NSString stringWithFormat:@"%lu", (unsigned long)user.ID]];
-	}
-	return usersIDMArray;
-}
-
-
 
 @end

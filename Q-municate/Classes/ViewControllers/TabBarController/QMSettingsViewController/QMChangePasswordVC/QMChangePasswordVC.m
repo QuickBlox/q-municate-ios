@@ -9,7 +9,7 @@
 #import "QMChangePasswordVC.h"
 #import "QMSettingsManager.h"
 #import "QMAuthService.h"
-#import "QMContactList.h"
+#import "QMUsersService.h"
 #import "REAlertView+QMSuccess.h"
 #import "UIImage+TintColor.h"
 #import "SVProgressHUD.h"
@@ -83,24 +83,16 @@ const NSUInteger kQMMinPasswordLenght = 7;
 }
 
 - (void)updatePassword:(NSString *)oldPassword newPassword:(NSString *)newPassword {
-    
-    QBUUser *myProfile = [QMContactList shared].me;
+
+    QBUUser *myProfile = [QMApi instance].currentUser;
     myProfile.password = newPassword;
     myProfile.oldPassword = oldPassword;
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     
-    [[QMApi shared].authService updateUser:myProfile withCompletion:^(QBUUserResult *result) {
-        [QMContactList shared].me = result.user;
-        if (result.success) {
-            
-            [self.settingsManager setLogin:myProfile.login andPassword:myProfile.password];
-            [SVProgressHUD showSuccessWithStatus:kAlertBodyPasswordChangedString];
-            [self.navigationController popViewControllerAnimated:YES];
-            
-        } else{
-            [SVProgressHUD showErrorWithStatus:result.errors.lastObject];
-        }
+    [[QMApi instance] changePasswordForCurrentUser:myProfile completion:^(BOOL success) {
+        [SVProgressHUD showSuccessWithStatus:kAlertBodyPasswordChangedString];
+        [self.navigationController popViewControllerAnimated:YES];
     }];
 }
 

@@ -84,7 +84,7 @@
                 }
             }
             
-            if (toUpdate) {
+            if (dialogToUpdate) {
                 [toUpdate addObject:dialogToUpdate];
             } else {
                 [toInsert addObject:dialog];

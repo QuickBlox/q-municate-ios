@@ -58,21 +58,21 @@ typedef void (^QBUUserResultBlock)(QBUUserResult *result);
 typedef void (^QBAAuthResultBlock)(QBAAuthResult *result);
 typedef void (^QBUUserLogInResultBlock)(QBUUserLogInResult *result);
 typedef void (^QBAAuthSessionCreationResultBlock)(QBAAuthSessionCreationResult *result);
+typedef void (^QBUUserPagedResultBlock)(QBUUserPagedResult *pagedResult);
+typedef void (^QBMRegisterSubscriptionTaskResultBlock)(QBMRegisterSubscriptionTaskResult *result);
+typedef void (^QBDialogsPagedResultBlock)(QBDialogsPagedResult *result);
+typedef void (^QBChatDialogResultBlock)(QBChatDialogResult *result);
+typedef void (^QBChatHistoryMessageResultBlock)(QBChatHistoryMessageResult *result);
 
 typedef void (^QBResultBlock)(Result *result);
 typedef void (^QBSessionCreationBlock)(BOOL success, NSString *error);
 typedef void (^QBChatResultBlock)(BOOL success);
-typedef void (^QBChatDialogResultBlock)(QBChatDialog *dialog, NSError *error);
 typedef void (^QBChatRoomResultBlock)(QBChatRoom *chatRoom, NSError *error);
 typedef void (^QBChatDialogHistoryBlock)(NSMutableArray *chatDialogHistoryArray, NSError *error);
 typedef void (^QBContactListBlock)(id object);
 typedef void (^QBDataBlock)(id data);
 
-typedef void(^QBPagedUsersBlock)(NSArray *users, BOOL success, NSError *error);
-typedef void(^FBCompletionBlock)(BOOL success, NSError *error);
-
 typedef void(^AddressBookResult)(NSArray *contacts, BOOL success, NSError *error);
-
 
 //************** Segue Identifiers *************************
 static NSString *const kTabBarSegueIdnetifier         = @"TabBarSegue";
@@ -108,7 +108,6 @@ static NSString *const kSettingsCellTitleChangePassword     = @"Change Password"
 static NSString *const kSettingsCellBundleVersion           = @"CFBundleVersion";
 
 //****************** Notifications  ***********************
-static NSString *const kFriendsReloadedNotification     = @"Friends reloaded";
 static NSString *const kAllUsersLoadedNotification    = @"All users loaded";
 static NSString *const kLoggedInNotification          = @"LoggedInNotification";
 
@@ -138,7 +137,6 @@ static NSString *const kCallDidStartedByUserNotification = @"Call was started";
 
 static NSString *const kChatViewCellIdentifier          = @"ChatViewCell";
 static NSString *const kCreateChatCellIdentifier        = @"CreateChatCell";
-static NSString *const kFriendsListCellIdentifier       = @"FriendsListCell";
 static NSString *const kGroupDetailsCellIdentifier      = @"GroupDetailsCell";
 static NSString *const kContactListCellIdentifier       = @"contactsCell";
 static NSString *const kFacebookCellIdentifier          = @"facebookCell";
@@ -181,7 +179,6 @@ static NSString *const kAddressBookUserStatus           = @"Contact List";
 static NSString *const kMessageString                   = @"Input email please.";
 static NSString *const kMoreResultString                = @"For more results:";
 static NSString *const kSearchingFriendsString          = @"You have no friends yet. Try to search for new friends";
-static NSString *const kSearchFriendPlaceholdeString    = @"Search friend";
 static NSString *const kNoChatString                    = @"No Chat yet";
 static NSString *const kStatusOnlineString              = @"Online";
 static NSString *const kStatusOfflineString             = @"Offline";

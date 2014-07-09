@@ -11,7 +11,7 @@
 #import "UIImage+Cropper.h"
 #import "QMAuthService.h"
 #import "QMChatService.h"
-#import "QMContactList.h"
+#import "QMUsersService.h"
 #import "QMContent.h"
 #import "REAlertView+QMSuccess.h"
 #import "SVProgressHUD.h"
@@ -82,7 +82,7 @@
     newUser.password = password;
 
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [[QMApi shared] signUpAndLoginWithUser:newUser userAvatar:self.cachedPicture completion:^(QBUUserResult *result) {
+    [[QMApi instance] signUpAndLoginWithUser:newUser userAvatar:self.cachedPicture completion:^(QBUUserResult *result) {
         [SVProgressHUD dismiss];
         if(result.success)
             [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];

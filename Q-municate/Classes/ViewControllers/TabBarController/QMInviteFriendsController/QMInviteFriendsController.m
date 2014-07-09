@@ -8,11 +8,11 @@
 
 #import <MessageUI/MessageUI.h>
 #import "QMInviteFriendsController.h"
-#import "QMContactList.h"
+#import "QMUsersService.h"
 #import "QMAddressBook.h"
 #import "QMInviteFriendsCell.h"
 #import "QMInviteFriendsStaticCell.h"
-#import "QMPerson.h"
+#import "ABPerson.h"
 #import "QMUtilities.h"
 
 #import "QMFacebookService.h"
@@ -20,7 +20,9 @@
 #import "QMAuthService.h"
 
 
-@interface QMInviteFriendsController () <QBActionStatusDelegate, MFMailComposeViewControllerDelegate>
+@interface QMInviteFriendsController ()
+
+<QBActionStatusDelegate, MFMailComposeViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
@@ -88,19 +90,19 @@
 	}
 }
 
-- (void)shareApplicationToFriends:(NSString *)friendsListString
-{
-    QMFacebookService *fbService = [[QMFacebookService alloc] init];
-    [fbService shareToFacebookUsersWithIDs:friendsListString withCompletion:^(BOOL success, NSError *error) {
-        if (!success) {
-            NSString *errorMessageString = [NSString stringWithFormat:@"%@", error];
-            [self showAlertWithMessage:errorMessageString];
-            return;
-        }
-        [self.dataSource emptyCheckedFBUsersArray];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:kAlertTitleSuccessString message:kAlertBodyRecordPostedString delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil];
-        [alert show];
-    }];
+- (void)shareApplicationToFriends:(NSString *)friendsListString {
+
+//    QMFacebookService *fbService = [[QMFacebookService alloc] init];
+//    [fbService shareToFacebookUsersWithIDs:friendsListString withCompletion:^(BOOL success, NSError *error) {
+//        if (!success) {
+//            NSString *errorMessageString = [NSString stringWithFormat:@"%@", error];
+//            [self showAlertWithMessage:errorMessageString];
+//            return;
+//        }
+//        [self.dataSource emptyCheckedFBUsersArray];
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:kAlertTitleSuccessString message:kAlertBodyRecordPostedString delegate:self cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil];
+//        [alert show];
+//    }];
 }
 
 - (void)showEmailController
@@ -118,24 +120,21 @@
     }
 }
 
-
 #pragma mark - UITableViewDataSource
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 2;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 0) {
         return 2;
     }
     return [self.dataSource.users count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     if (indexPath.section == 0) {
        QMInviteFriendsStaticCell *cell = [self cellForTableView:tableView andIndexPath:indexPath];
         if ([cell.cellType isEqualToString:kFacebookFriendStatus]) {
@@ -229,11 +228,12 @@
 
 - (void)checkForFriendsSetCompletenessForCell:(QMInviteFriendsCell *)cell
 {
-	if (cell.user.isFacebookPerson) {
-		[self checkForFacebookSetCompleteness];
-	} else {
-		[self checkForContactsSetCompleteness];
-	}
+#warning update it
+//	if (cell.user.isFacebookPerson) {
+//		[self checkForFacebookSetCompleteness];
+//	} else {
+//		[self checkForContactsSetCompleteness];
+//	}
 }
 
 - (void)checkForFacebookSetCompleteness
@@ -282,17 +282,19 @@
 {
 	self.contactsCellChecked = NO;
 	[self.dataSource emptyCheckedABUsersArray];
-	[self.dataSource updateContactListDataSource:^(NSError *error) {
-		if (error) {
-			ILog(@"%@",error);
-		} else {
-			if (![[QMContactList shared].contactsToInvite count]) {
-				[self showAlertWithMessage:kAlertBodyNoContactsWithEmailsString];
-			} else {
-				[self.tableView reloadData];
-			}
-		}
-	}];
+#warning me.iD
+#warning QMContactList shared
+//	[self.dataSource updateContactListDataSource:^(NSError *error) {
+//		if (error) {
+//			ILog(@"%@",error);
+//		} else {
+//			if (![[QMContactList shared].contactsToInvite count]) {
+//				[self showAlertWithMessage:kAlertBodyNoContactsWithEmailsString];
+//			} else {
+//				[self.tableView reloadData];
+//			}
+//		}
+//	}];
 }
 
 

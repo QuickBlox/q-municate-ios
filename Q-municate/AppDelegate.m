@@ -23,12 +23,15 @@
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-    
-    // Quickblox credentials
+    /**
+     Setup framework
+     Quickblox credentials
+     */
     [QBSettings setApplicationID:7232];
     [QBSettings setAuthorizationKey:@"MpOecRZy-5WsFva"];
     [QBSettings setAuthorizationSecret:@"dTSLaxDsFKqegD7"];
     [QBSettings setAccountKey:@"LpNmxA2Pq2uyW5qBjHy8"];
+    [QBSettings setLogLevel:QBLogLevelNothing];
     
     [QMUtilities shared];
     

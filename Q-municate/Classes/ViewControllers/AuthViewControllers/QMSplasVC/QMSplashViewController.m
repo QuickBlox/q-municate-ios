@@ -10,7 +10,7 @@
 #import "QMWelcomeScreenViewController.h"
 #import "QMAuthService.h"
 #import "QMChatService.h"
-#import "QMContactList.h"
+#import "QMUsersService.h"
 #import "QMUtilities.h"
 #import "QMSettingsManager.h"
 #import "REAlertView+QMSuccess.h"
@@ -50,41 +50,31 @@
     
     QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
     
-    [[QMApi shared].authService startSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
+    BOOL rememberMe = settingsManager.rememberMe;
+    
+    if (rememberMe) {
         
-        if (result.success) {
-            
-            BOOL rememberMe = settingsManager.rememberMe;
-            
-            if (rememberMe) {
-                
-                NSString *email = settingsManager.login;
-                NSString *password = settingsManager.password;
-                
-                // if user with email was remebered:
-                if (email && password) {
-                    [self loginWithEmail:email password:password];
-                } else {
-                    [self loginWithFacebook];
-                }
-            } else {
-                [self performSegueWithIdentifier:kWelcomeScreenSegueIdentifier sender:nil];
-            }
-            
+        NSString *email = settingsManager.login;
+        NSString *password = settingsManager.password;
+        
+        // if user with email was remebered:
+        if (email && password) {
+            [self loginWithEmail:email password:password];
         } else {
-            
-            [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
+            [self loginWithFacebook];
         }
-    }];
+    } else {
+        [self performSegueWithIdentifier:kWelcomeScreenSegueIdentifier sender:nil];
+    }
 }
 
 - (void)loginWithEmail:(NSString *)email password:(NSString *)password {
-
+    
     QBUUser *user = [QBUUser user];
     user.email = email;
     user.password = password;
     
-    [[QMApi shared] loginWithUser:user completion:^(QBUUserLogInResult *result) {
+    [[QMApi instance] loginWithUser:user completion:^(QBUUserLogInResult *result) {
         [self.activityIndicator stopAnimating];
         [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
     }];
@@ -92,9 +82,11 @@
 
 - (void)loginWithFacebook {
     
-    [[QMApi shared] loginWithFacebook:^(BOOL success) {
-        [self.activityIndicator stopAnimating];
-        [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+    [[QMApi instance] loginWithFacebook:^(BOOL success) {
+        if (success) {
+            [self.activityIndicator stopAnimating];
+            [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+        }
     }];
 }
 

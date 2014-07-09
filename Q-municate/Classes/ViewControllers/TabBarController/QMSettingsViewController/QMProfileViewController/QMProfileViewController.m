@@ -8,25 +8,17 @@
 
 #import "QMProfileViewController.h"
 #import "UIImage+Cropper.h"
-#import "QMContactList.h"
-#import "QMContent.h"
-#import "QMAuthService.h"
-#import "QMUtilities.h"
-#import "REAlertView+QMSuccess.h"
 #import "QMApi.h"
-
-static NSUInteger const QM_MAX_STATUS_TEXT_LENGTH = 44;
-
-// text field tags:
-static NSUInteger const kFullNameFieldTag = 11;
-static NSUInteger const kPhoneNumberFieldTag = 12;
-
+#import "REAlertView+QMSuccess.h"
+#import "QMImageView.h"
+#import "QMContent.h"
+#import "SVProgressHUD.h"
 
 @interface QMProfileViewController ()
 
 <UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate>
 
-@property (weak, nonatomic) IBOutlet UIImageView *avatarView;
+@property (weak, nonatomic) IBOutlet QMImageView *avatarView;
 @property (weak, nonatomic) IBOutlet UITextField *fullNameField;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *phoneNumberField;
@@ -35,71 +27,56 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
 
 @property (nonatomic, strong) UIImage *avatarImage;
 
-@property (nonatomic, strong) QBUUser *me;
-
 /** Fields caches. */
 @property (nonatomic, copy) NSString *fullNameFieldCache;
 @property (nonatomic, copy) NSString *phoneFieldCache;
 @property (nonatomic, copy) NSString *statusFieldCache;
+
+@property (strong, nonatomic) QBUUser *currentUser;
 
 /** Optional cache */
 //@property (nonatomic, copy) NSString *emailFieldCache;
 
 @end
 
-
 @implementation QMProfileViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    self.currentUser = [QMApi instance].currentUser;
     [self configureAvatarView];
-    self.me = [QMContactList shared].me;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    // update profile screen:
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
     [self updateProfileView];
 }
 
-
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
 
 - (void)configureAvatarView {
 }
 
-- (void)updateProfileView
-{
-    // avatar:
-//    [self.avatarView setImageURL:[NSURL URLWithString:me.website]];
+- (void)updateProfileView {
     
-    // full name:
-    [self.fullNameField setText:self.me.fullName];
+    UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
+    NSURL *url = [NSURL URLWithString:self.currentUser.website];
+    [self.avatarView setImageWithURL:url placeholderImage:placeholder];
     
-    // email:
-    [self.emailField setText:self.me.email];
-    
-    // phone number:
-    [self.phoneNumberField setText:self.me.phone];
-    
-    // status:
-    if (self.me.customData != nil) {
-        [self.statusField setText:self.me.customData];
-    } else {
-        [self.statusField setText:@"Add status..."];
-    }
+    self.fullNameField.text = self.currentUser.fullName;
+    self.emailField.text = self.currentUser.email;
+    self.phoneNumberField.text = self.currentUser.phone;
+
+    self.statusField.text = self.currentUser.customData ? self.currentUser.customData : @"Add status";
 }
 
 - (IBAction)changeAvatar:(id)sender {
     
-    if (self.me.facebookID.length == 0) {
+    if (self.currentUser.facebookID.length > 0) {
     
         [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
             alertView.title = kAlertTitleErrorString;
@@ -136,7 +113,7 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
     if (self.avatarImage) {
         
         QMContent *manager = [[QMContent alloc] init];
-        [manager uploadUserImageForUser:self.me image:self.avatarImage withCompletion:^(QBCFileUploadTaskResult *result) {
+        [manager uploadUserImageForUser:self.currentUser image:self.avatarImage withCompletion:^(QBCFileUploadTaskResult *result) {
             
             if (result.success) {
                 [self updateUsersProfile];
@@ -159,49 +136,35 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
     if (self.avatarImage != nil) {
         profileChanged = YES;
     }
-    if (_fullNameFieldCache != nil && ![_fullNameFieldCache isEqualToString:self.me.fullName] ) {
+    if (_fullNameFieldCache != nil && ![_fullNameFieldCache isEqualToString:self.currentUser.fullName] ) {
         
-        self.me.fullName = _fullNameFieldCache;
+        self.currentUser.fullName = _fullNameFieldCache;
         profileChanged = YES;
     }
-    if (_phoneFieldCache != nil && ![_phoneFieldCache isEqualToString:self.me.phone]) {
+    if (_phoneFieldCache != nil && ![_phoneFieldCache isEqualToString:self.currentUser.phone]) {
         
-        self.me.phone = _phoneFieldCache;
+        self.currentUser.phone = _phoneFieldCache;
         profileChanged = YES;
     }
-    if (_statusFieldCache != nil && ![_statusFieldCache isEqualToString:self.me.customData]) {
+    if (_statusFieldCache != nil && ![_statusFieldCache isEqualToString:self.currentUser.customData]) {
         profileChanged = YES;
         
-        if (_statusFieldCache.length > QM_MAX_STATUS_TEXT_LENGTH) {
-            NSRange range = NSMakeRange(0, QM_MAX_STATUS_TEXT_LENGTH);
+        if (_statusFieldCache.length > 100) {
+            NSRange range = NSMakeRange(0, 100);
             NSString *statusText = [_statusFieldCache substringWithRange:range];
-            self.me.customData = statusText;
+            self.currentUser.customData = statusText;
         } else {
-            self.me.customData = _statusFieldCache;
+            self.currentUser.customData = _statusFieldCache;
         }
     }
     return profileChanged;
 }
 
-- (void)updateUsersProfile
-{
-    // delete password before update and cache:
-    NSString *password = self.me.password;
-    self.me.password = nil;
-    
-    [[QMApi shared].authService updateUser:self.me withCompletion:^(QBUUserResult *result) {
-        if (result.success) {
-            
-            result.user.password = password;
-            self.me = result.user;
-            [QMContactList shared].me = result.user;
-            
-            [REAlertView showAlertWithMessage:@"Profile was updated" actionSuccess:YES];
-            [self updateProfileView];
-        }
-        else {
-            [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
-        }
+- (void)updateUsersProfile {
+
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    [[QMApi instance] updateUser:self.currentUser completion:^(BOOL success) {
+        [SVProgressHUD dismiss];
     }];
 }
 
@@ -209,23 +172,22 @@ static NSUInteger const kPhoneNumberFieldTag = 12;
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    if (textField.tag == kFullNameFieldTag) {
-        
-        // save modified full name:
-        _fullNameFieldCache = textField.text;
-        
-    } else if (textField.tag == kPhoneNumberFieldTag) {
-        
-        // save mofified phone number:
-        _phoneFieldCache = textField.text;
-    }
+#warning ?????????
+//    if (textField.tag == kFullNameFieldTag) {
+//        
+//        // save modified full name:
+//        _fullNameFieldCache = textField.text;
+//        
+//    } else if (textField.tag == kPhoneNumberFieldTag) {
+//        
+//        // save mofified phone number:
+//        _phoneFieldCache = textField.text;
+//    }
 }
 
-- (void)textViewDidEndEditing:(UITextView *)textView
-{
+- (void)textViewDidEndEditing:(UITextView *)textView {
     _statusFieldCache = textView.text;
 }
-
 
 #pragma mark - UIImagePickerControllerDelegate
 

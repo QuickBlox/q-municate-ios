@@ -7,7 +7,7 @@
 //
 
 #import "QMGroupChatDataSource.h"
-#import "QMContactList.h"
+#import "QMUsersService.h"
 #import "QMChatService.h"
 #import "QMChatCell.h"
 
@@ -47,16 +47,17 @@
 }
 
 - (void)sendMessageWithText:(NSString *)text {
-    
-    if (text.length > 0) {
-        
-        QBChatMessage *chatMessage = [QBChatMessage new];
-		chatMessage.text = text;
-        chatMessage.senderID = [QMContactList shared].me.ID;
-        
-        NSAssert(!self.chatRoom, @"Check it");
-        [[QMChatService shared] sendMessage:chatMessage toRoom:self.chatRoom];
-    }
+#warning me.iD
+#warning QMContactList shared
+//    if (text.length > 0) {
+//        
+//        QBChatMessage *chatMessage = [QBChatMessage new];
+//		chatMessage.text = text;
+//        chatMessage.senderID = [QMContactList shared].me.ID;
+//        
+//        NSAssert(!self.chatRoom, @"Check it");
+//        [[QMChatService shared] sendMessage:chatMessage toRoom:self.chatRoom];
+//    }
 }
 
 - (NSString *)messagesIdentifier {

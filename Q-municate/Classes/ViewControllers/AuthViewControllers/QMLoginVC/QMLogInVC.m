@@ -8,11 +8,8 @@
 
 #import "QMLogInVC.h"
 #import "QMWelcomeScreenViewController.h"
-#import "QMChatService.h"
-#import "QMAuthService.h"
-#import "QMContactList.h"
-#import "QMSettingsManager.h"
 #import "REAlertView+QMSuccess.h"
+#import "QMSettingsManager.h"
 #import "QMApi.h"
 #import "SVProgressHUD.h"
 
@@ -36,22 +33,11 @@
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
-    QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
-    
-    self.rememberMeSwitch.on = settingsManager.rememberMe;
+    self.rememberMeSwitch.on = [QMApi instance].settingsManager.rememberMe;
     
     if (self.rememberMeSwitch.isOn) {
         [self loadDefaults];
     }
-    
-    [[QMApi shared].authService startSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
-        
-        if (result.success) {
-            ILog(@"Session created");
-        } else {
-            [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
-        }
-    }];
 }
 
 - (IBAction)hideKeyboard:(id)sender {
@@ -63,32 +49,17 @@
     NSString *mailString = self.emailField.text;
     NSString *passwordString = self.passwordField.text;
     
-
-    
     if (mailString.length == 0 || passwordString.length == 0) {
         [REAlertView showAlertWithMessage:kAlertBodyFillInAllFieldsString actionSuccess:NO];
     }
     else {
-        QMContactList *contactList = [QMContactList shared];
+
+        QBUUser *user = [QBUUser user];
+        user.login = mailString;
+        user.password = passwordString;
         
-        [[QMApi shared].authService logInWithEmail:mailString password:passwordString completion:^(QBUUserLogInResult *result) {
-            
-            if (result.success) {
-                // remember me:
-                [self rememberMe:self.rememberMeSwitch.isOn isFacebookSession:NO];
-                
-                result.user.password = passwordString;
-                contactList.me = result.user;
-                
-                // subscribe to push notification:
-                [[QMApi shared].authService subscribeToPushNotifications];
-                
-                // login to chat:
-                [self logInToQuickbloxChatWithUser:result.user];
-            }
-            else {
-                [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
-            }
+        [[QMApi instance] loginWithUser:user completion:^(QBUUserLogInResult *result) {
+            [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
         }];
     }
 }
@@ -96,7 +67,7 @@
 - (IBAction)connectWithFacebook:(id)sender {
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [[QMApi shared] loginWithFacebook:^(BOOL success) {
+    [[QMApi instance] loginWithFacebook:^(BOOL success) {
         [SVProgressHUD dismiss];
         if (success) {
             [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
@@ -133,17 +104,6 @@
     
     self.emailField.text = login;
     self.passwordField.text = password;
-}
-
-#pragma mark - Options
-
-- (void)logInToQuickbloxChatWithUser:(QBUUser *)user {
-    // login to Quickblox chat:
-    [[QMChatService shared] loginWithUser:user completion:^(BOOL success) {
-        if (success) {
-            [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
-		}
-    }];
 }
 
 @end

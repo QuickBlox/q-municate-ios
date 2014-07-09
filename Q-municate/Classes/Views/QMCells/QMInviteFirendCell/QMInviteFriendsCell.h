@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class QMPerson;
+@class ABPerson;
 @class QMImageView;
 
 @interface QMInviteFriendsCell : UITableViewCell
@@ -18,9 +18,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *activeCheckbox;
 
-@property (strong, nonatomic) QMPerson *user;
+@property (strong, nonatomic) ABPerson *user;
 
-- (void)configureCellWithParams:(QMPerson *)user;
+- (void)configureCellWithParams:(ABPerson *)user;
 - (void)configureCellWithParamsForQBUser:(QBUUser *)user checked:(BOOL)checked;
 
 @end

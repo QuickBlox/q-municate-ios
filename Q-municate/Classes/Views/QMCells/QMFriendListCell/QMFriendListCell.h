@@ -8,17 +8,21 @@
 
 #import <UIKit/UIKit.h>
 
-@class QMImageView;
+@class QMFriendListCell;
+
+@protocol QMFriendListCellDelegate <NSObject>
+
+- (void)friendListCell:(QMFriendListCell *)cell pressAddBtn:(UIButton *)sender;
+
+@end
 
 @interface QMFriendListCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet QMImageView *userImage;
-@property (weak, nonatomic) IBOutlet UILabel *fullName;
-@property (weak, nonatomic) IBOutlet UILabel *lastActivity;
-@property (weak, nonatomic) IBOutlet UIImageView *onlineCircle;
-@property (weak, nonatomic) IBOutlet UIButton *addToFriendsButton;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicatorView;
+@property (strong, nonatomic) QBUUser *user;
+@property (strong, nonatomic) NSString *searchText;
+@property (assign, nonatomic) BOOL online;
+@property (assign, nonatomic) BOOL isFriend;
 
-- (void)configureCellWithParams:(QBUUser *)user searchText:(NSString *)searchText indexPath:(NSIndexPath *)indexPath;
+@property (weak, nonatomic) id <QMFriendListCellDelegate>delegate;
 
 @end

@@ -7,7 +7,8 @@
 //
 
 #import "QMInviteFriendsCell.h"
-#import "QMPerson.h"
+
+#import "ABPerson.h"
 #import "QMImageView.h"
 #import "SVProgressHUD.h"
 
@@ -21,16 +22,15 @@ static double_t const kUptimeInterval = 300;
     self.userImageView.imageViewType = QMImageViewTypeCircle;
 }
 
-- (void)configureCellWithParams:(QMPerson *)user {
+- (void)configureCellWithParams:(ABPerson *)user {
     
     self.user = user;
-
-    NSURL *url = [NSURL URLWithString:user.imageURL];
-    [self setUserImageWithUrl:url];
     
-    self.fullNameLabel.text = user.fullName;
-    self.statusLabel.text = user.status;
-    self.activeCheckbox.hidden = !user.checked;
+    self.userImageView.image = user.image;
+    
+    self.fullNameLabel.text = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
+    self.statusLabel.text = @"Contact list";
+//    self.activeCheckbox.hidden = !user.checked;
 }
 
 - (void)configureCellWithParamsForQBUser:(QBUUser *)user checked:(BOOL)checked {

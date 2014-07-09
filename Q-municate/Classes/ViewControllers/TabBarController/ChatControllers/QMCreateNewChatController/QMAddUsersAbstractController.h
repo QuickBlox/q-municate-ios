@@ -7,32 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "QMNewChatDataSource.h"
 
 static CGFloat const rowHeight = 60.0;
 
 
 @interface QMAddUsersAbstractController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (weak, nonatomic) IBOutlet UIButton *performButton;
+@property (strong, nonatomic) NSMutableArray *selectedFriends;
+@property (strong, nonatomic) NSMutableArray *friends;
 
-/** Data Source */
-@property (strong, nonatomic) QMNewChatDataSource *dataSource;
-
-/** Updates navigation title */
-- (void)updateNavTitle;
-
-/** Override this method if needed. */
-- (void)applyChangesForPerformButton;
 
 
 /** Actions */
 - (IBAction)performAction:(id)sender;
 - (IBAction)cancelSelection:(id)sender;
-
-
-/** Confrigurations */
-- (NSMutableArray *)usersIDFromSelectedUsers:(NSMutableArray *)users;
 
 @end

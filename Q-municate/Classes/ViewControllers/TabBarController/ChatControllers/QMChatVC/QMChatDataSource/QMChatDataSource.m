@@ -11,7 +11,7 @@
 #import "QMChatService.h"
 #import "QMDBStorage+Messages.h"
 #import "QMMessage.h"
-#import "QMContactList.h"
+#import "QMUsersService.h"
 #import "QMDBStorage+Messages.h"
 
 @interface QMChatDataSource()
@@ -116,34 +116,34 @@
     return;
 #endif
     
-    void(^reloadDataAfterGetMessages) (NSArray *messages) = ^(NSArray *messages) {
-        
-        if (messages.count > 0) {
-            
-            QMChatService *chatService = [QMChatService shared];
-            NSString *identifier = [self messagesIdentifier];
-            
-            NSAssert(identifier, @"check it");
-            
-            [chatService setHistory:messages forIdentifier:identifier];
-            
-            NSMutableArray *qmChatHistroy = [NSMutableArray arrayWithCapacity:messages.count];
-            
-            for (QBChatHistoryMessage *qbChatHistoryMessage in messages) {
-                
-                QMMessage *message = [self qmMessageWithQbChatHistoryMessage:qbChatHistoryMessage];
-                [qmChatHistroy addObject:message];
-            }
-            
-            self.qmChatHistory = qmChatHistroy;
-        }
-        
-        finish();
-    };
-    
-    [[QMChatService shared] getMessageHistoryWithDialogID:self.chatDialog.ID withCompletion:^(NSArray *messages, BOOL success, NSError *error) {
-        reloadDataAfterGetMessages(messages);
-    }];
+//    void(^reloadDataAfterGetMessages) (NSArray *messages) = ^(NSArray *messages) {
+//        
+//        if (messages.count > 0) {
+//            
+//            QMChatService *chatService = [QMChatService shared];
+//            NSString *identifier = [self messagesIdentifier];
+//            
+//            NSAssert(identifier, @"check it");
+//            
+//            [chatService setHistory:messages forIdentifier:identifier];
+//            
+//            NSMutableArray *qmChatHistroy = [NSMutableArray arrayWithCapacity:messages.count];
+//            
+//            for (QBChatHistoryMessage *qbChatHistoryMessage in messages) {
+//                
+//                QMMessage *message = [self qmMessageWithQbChatHistoryMessage:qbChatHistoryMessage];
+//                [qmChatHistroy addObject:message];
+//            }
+//            
+//            self.qmChatHistory = qmChatHistroy;
+//        }
+//        
+//        finish();
+//    };
+//    
+//    [[QMChatService shared] getMessageHistoryWithDialogID:self.chatDialog.ID withCompletion:^(NSArray *messages, BOOL success, NSError *error) {
+//        reloadDataAfterGetMessages(messages);
+//    }];
 }
 
 - (QMMessage *)qmMessageWithQbChatHistoryMessage:(QBChatHistoryMessage *)historyMessage {
@@ -151,12 +151,11 @@
     QMMessage *message = [[QMMessage alloc] init];
     
     message.data = historyMessage;
-        
-    QMContactList *contactList = [QMContactList shared];
+    
     if (message.type) {
 
     }
-    message.align = (contactList.me.ID == historyMessage.senderID) ? QMMessageContentAlignRight : QMMessageContentAlignLeft;
+//    message.align = (contactList.me.ID == historyMessage.senderID) ? QMMessageContentAlignRight : QMMessageContentAlignLeft;
     
     return message;
 }
