@@ -25,8 +25,8 @@
     return self;
 }
 
-- (void) dealloc
-{
+- (void)dealloc {
+    
     if (self.recordRef)
         CFRelease(_recordRef);
 }

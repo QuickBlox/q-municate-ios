@@ -8,6 +8,6 @@
 
 #import "QMChatService.h"
 
-@interface QMAVCallService : QMChatService
+@interface QMAVCallService : NSObject
 
 @end

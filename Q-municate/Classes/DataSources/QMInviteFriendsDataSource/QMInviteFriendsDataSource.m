@@ -31,8 +31,9 @@
 }
 
 #pragma mark - Updating Sources
-- (void)updateFacebookDataSource:(void(^)(NSError *error))completionBlock
-{
+
+- (void)updateFacebookDataSource:(void(^)(NSError *error))completionBlock {
+    
 	// Check for Active Facebook Session:
 	if (![FBSession activeSession] || ![[FBSession activeSession].permissions count] || ![FBSession activeSession].isOpen) {
 		[[FBSession activeSession] closeAndClearTokenInformation];
@@ -225,12 +226,12 @@
 //    }];
 }
 
-//- (void)markAsFBFriends:(BOOL)isFacebookFriend friendsData:(NSArray *)persons
-//{
+- (void)markAsFBFriends:(BOOL)isFacebookFriend friendsData:(NSArray *)persons
+{
 //	for (QMPerson *person in persons) {
 //		person.isFacebookPerson = isFacebookFriend;
 //	}
-//}
+}
 
 
 @end

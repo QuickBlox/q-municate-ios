@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import "QMChatService.h"
+#import <Foundation/Foundation.h>
 
-@interface QMChatDialogsService : QMChatService
+@interface QMChatDialogsService : NSObject
 
 - (void)fetchAllDialogs:(QBDialogsPagedResultBlock)completion;
 - (void)createChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completionl;

@@ -56,7 +56,7 @@
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
     [self.userAvatar setImageWithURL:url placeholderImage:placeholder];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUserStatus) name:kFriendsReloadedNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUserStatus) name:kFriendsReloadedNotification object:nil];
     [self updateUserStatus];
 }
 

@@ -24,7 +24,6 @@
 
 - (void)updateChatDialogWithID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest completion:(QBChatDialogResultBlock)completion {
     //    self.allDialogsAsDictionary[chatDialog.roomJID] = chatDialog;
-    
     [QBChat updateDialogWithID:dialogID
                extendedRequest:extendedRequest
                       delegate:[QBEchoObject instance]

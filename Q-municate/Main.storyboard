@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RkR-TS-K9a">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RkR-TS-K9a">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -54,10 +54,10 @@
             </objects>
             <point key="canvasLocation" x="-1344" y="-7805"/>
         </scene>
-        <!--Friend List Controller - Friends-->
+        <!--Friend List View Controller - Friends-->
         <scene sceneID="2Hp-2T-EX5">
             <objects>
-                <viewController id="sR2-ys-LbL" customClass="QMFriendListController" sceneMemberID="viewController">
+                <viewController id="sR2-ys-LbL" customClass="QMFriendListViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y20-oY-25X"/>
                         <viewControllerLayoutGuide type="bottom" id="myK-k2-7mD"/>
@@ -66,13 +66,38 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <searchBar contentMode="redraw" placeholder="Search users..." translatesAutoresizingMaskIntoConstraints="NO" id="JZj-Xl-Ka9">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="EJB-2P-TXn">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="455"/>
+                                <rect key="frame" x="0.0" y="44" width="320" height="411"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FriendsListCell" rowHeight="60" id="lvE-w4-eU2" customClass="QMFriendListCell">
-                                        <rect key="frame" x="0.0" y="22" width="320" height="60"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="QMNotResultCell" rowHeight="75" id="qNL-nx-YcU" customClass="QMNotResultCell">
+                                        <rect key="frame" x="0.0" y="22" width="320" height="75"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qNL-nx-YcU" id="ie9-bC-tkU">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="74"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="You have no friends yet. Try to search for new friends" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="adS-7C-QVJ">
+                                                    <rect key="frame" x="20" y="15" width="280" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="notResultLabel" destination="adS-7C-QVJ" id="meb-ox-7Sl"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="QMFriendListCell" rowHeight="60" id="lvE-w4-eU2" customClass="QMFriendListCell">
+                                        <rect key="frame" x="0.0" y="97" width="320" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lvE-w4-eU2" id="bei-1e-cM5">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="59"/>
@@ -90,11 +115,11 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="online" translatesAutoresizingMaskIntoConstraints="NO" id="5Mq-uu-OCp">
-                                                    <rect key="frame" x="298" y="24" width="12" height="12"/>
+                                                    <rect key="frame" x="292" y="24" width="12" height="12"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Online" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="egi-iq-gNu">
-                                                    <rect key="frame" x="71" y="33" width="170" height="13"/>
+                                                    <rect key="frame" x="71" y="36" width="170" height="13"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="italicSystem" pointSize="12"/>
                                                     <color key="textColor" red="0.58039218189999997" green="0.58039218189999997" blue="0.58039218189999997" alpha="1" colorSpace="deviceRGB"/>
@@ -107,7 +132,7 @@
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="addToFriends:" destination="sR2-ys-LbL" eventType="touchUpInside" id="lBG-yU-MK4"/>
+                                                        <action selector="pressAddBtn:" destination="lvE-w4-eU2" eventType="touchUpInside" id="PRH-vJ-dfG"/>
                                                     </connections>
                                                 </button>
                                                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="DeS-5W-SuF">
@@ -125,19 +150,44 @@
                                             <outlet property="userImage" destination="eL1-En-W6S" id="esc-wH-xfR"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="QMSearchGlobalCell" rowHeight="75" id="pc8-JX-xgu" customClass="QMSearchGlobalCell">
+                                        <rect key="frame" x="0.0" y="157" width="320" height="75"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="pc8-JX-xgu" id="7mF-yo-IIT">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="74"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fZz-Q8-Vbc">
+                                                    <rect key="frame" x="17" y="23" width="286" height="46"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <state key="normal" image="globalsearch-btn">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="globalSearch:" destination="sR2-ys-LbL" eventType="touchUpInside" id="Rd2-yw-i5Z"/>
+                                                    </connections>
+                                                </button>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="For more results:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QdE-Fm-eSv">
+                                                    <rect key="frame" x="20" y="2" width="280" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="sR2-ys-LbL" id="C8r-pI-pDg"/>
-                                    <outlet property="delegate" destination="sR2-ys-LbL" id="CvE-vx-pxo"/>
-                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="myK-k2-7mD" firstAttribute="top" secondItem="EJB-2P-TXn" secondAttribute="bottom" id="CR4-sW-zxp"/>
-                            <constraint firstAttribute="trailing" secondItem="EJB-2P-TXn" secondAttribute="trailing" id="eBm-In-G5m"/>
-                            <constraint firstItem="EJB-2P-TXn" firstAttribute="leading" secondItem="ZVX-e7-ale" secondAttribute="leading" id="ltX-SA-5OP"/>
-                            <constraint firstItem="EJB-2P-TXn" firstAttribute="top" secondItem="y20-oY-25X" secondAttribute="bottom" id="qLX-I6-mB1"/>
+                            <constraint firstItem="EJB-2P-TXn" firstAttribute="leading" secondItem="ZVX-e7-ale" secondAttribute="leading" id="3Qc-mC-XNU"/>
+                            <constraint firstAttribute="trailing" secondItem="JZj-Xl-Ka9" secondAttribute="trailing" id="CgA-ym-NnL"/>
+                            <constraint firstItem="JZj-Xl-Ka9" firstAttribute="leading" secondItem="ZVX-e7-ale" secondAttribute="leading" id="Cov-Y6-mnS"/>
+                            <constraint firstItem="JZj-Xl-Ka9" firstAttribute="top" secondItem="y20-oY-25X" secondAttribute="bottom" id="GDh-Hc-stu"/>
+                            <constraint firstItem="myK-k2-7mD" firstAttribute="top" secondItem="EJB-2P-TXn" secondAttribute="bottom" id="WJd-Qi-NIm"/>
+                            <constraint firstAttribute="trailing" secondItem="EJB-2P-TXn" secondAttribute="trailing" id="d10-D5-fWE"/>
+                            <constraint firstItem="EJB-2P-TXn" firstAttribute="top" secondItem="JZj-Xl-Ka9" secondAttribute="bottom" id="ndu-Lh-T1S"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Friends" id="2vU-dx-7CX">
@@ -149,8 +199,9 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="searchBar" destination="JZj-Xl-Ka9" id="Os3-nI-Rvq"/>
+                        <outlet property="searchBarTopConstraint" destination="GDh-Hc-stu" id="09Q-nD-LSI"/>
                         <outlet property="tableView" destination="EJB-2P-TXn" id="pMY-ix-krl"/>
-                        <outlet property="viewHeight" destination="CR4-sW-zxp" id="0ae-4M-gDd"/>
                         <segue destination="B6O-m1-ZGo" kind="push" identifier="DetailsSegue" id="Zzy-2r-MWB"/>
                     </connections>
                 </viewController>
@@ -1426,7 +1477,7 @@
                                     <action selector="acceptCall:" destination="rnK-am-vds" eventType="touchUpInside" id="2VA-99-ZBw"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="upic_call" translatesAutoresizingMaskIntoConstraints="NO" id="rxQ-rV-FCa">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="upic_call" translatesAutoresizingMaskIntoConstraints="NO" id="rxQ-rV-FCa" customClass="QMImageView">
                                 <rect key="frame" x="94" y="166" width="132" height="132"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <constraints>
@@ -2677,6 +2728,7 @@
         <image name="fb-btn" width="280" height="44"/>
         <image name="fb_btn" width="320" height="60"/>
         <image name="fb_ic" width="30" height="30"/>
+        <image name="globalsearch-btn" width="280" height="44"/>
         <image name="group_placeholder" width="45" height="45"/>
         <image name="ic_info_top" width="21" height="21"/>
         <image name="login-btn" width="280" height="44"/>

@@ -20,8 +20,7 @@
 @implementation QMGroupDetailsDataSource
 
 
-- (id)initWithChatDialog:(QBChatDialog *)chatDialog tableView:(UITableView *)tableView
-{
+- (id)initWithChatDialog:(QBChatDialog *)chatDialog tableView:(UITableView *)tableView {
     if (self = [super init]) {
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineParticipantsListLoaded:) name:kChatRoomDidChangeOnlineUsersListNotification object:nil];
@@ -34,24 +33,18 @@
     return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (NSInteger)participantsCount
-{
+- (NSInteger)participantsCount {
     return [_participants count];
 }
-
-#warning me.iD
-#warning QMContactList shared
 
 
 #pragma mark - UITableViewDataSource
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self participantsCount];
 }
 

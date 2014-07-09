@@ -8,94 +8,179 @@
 
 #import "QMFriendsListDataSource.h"
 #import "QMUsersService.h"
+#import "QMFriendListCell.h"
+#import "QMSearchGlobalCell.h"
+#import "QMNotResultCell.h"
+#import "QMApi.h"
+#import "QMUsersService.h"
+#import "SVProgressHud.h"
+#import "QMChatReciver.h"
+
+static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
+static NSString *const kQMSearchGlobalCellIdentifier = @"QMSearchGlobalCell";
+static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
 
 @interface QMFriendsListDataSource()
 
-@property (strong, nonatomic) NSMutableArray *friendsArray;
-@property (strong, nonatomic) NSMutableArray *otherUsersArray;
+<QMFriendListCellDelegate>
 
+@property (strong, nonatomic) NSMutableArray *searchDatasource;
+@property (strong, nonatomic, readonly) NSArray *friendsDatasource;
+
+@property (weak, nonatomic) UITableView *tableView;
 @end
 
 @implementation QMFriendsListDataSource
 
-- (id)init {
+- (instancetype)initWithTableView:(UITableView *)tableView {
     
     self = [super init];
     if (self) {
-        _friendsArray = [NSMutableArray new];
-        _otherUsersArray = [NSMutableArray new];
+        
+        self.tableView = tableView;
+        self.tableView.dataSource = self;
+        
+        self.searchDatasource = [NSMutableArray array];
+        
+        [[QMChatReciver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
+            
+            [[QMApi instance] retrieveUsersIfNeededWithContactList:contactList completion:^(BOOL updated) {
+                
+                if (updated) {
+                    [self.tableView reloadData];
+                } else {
+                    if (self.friendsDatasource.count == 0 && !self.searchActive) {
+                        self.tableView.tableFooterView = [self.tableView dequeueReusableCellWithIdentifier:kQMNotResultCellIdentifier];
+                    }
+                }
+            }];
+        }];
     }
+    
     return self;
 }
 
-
-- (BOOL)updateFriendsArrayAndCheckForEmpty {
+- (NSArray *)sortUsersByFullname:(NSArray *)users {
     
-//    NSMutableArray *usersArray = [[[QMContactList shared].friendsAsDictionary allValues] mutableCopy];
-//    self.friendsArray = [self sortUsersByFullname:usersArray];
-//    if ([self.friendsArray count] == 0) {
-//        [QMContactList shared].friendsAsDictionary = [NSMutableDictionary new];
-//        return YES;
-//    }
-    return NO;
-}
-
-- (BOOL)updateSearchedUsersArrayAndCheckForEmpty {
+    NSSortDescriptor *fullNameDescriptor = [[NSSortDescriptor alloc] initWithKey:@"fullName" ascending:YES];
+    NSArray *sortedUsers = [users sortedArrayUsingDescriptors:@[fullNameDescriptor]];
     
-//    NSMutableArray *usersArray = [[[QMContactList shared].searchedUsers allValues] mutableCopy];
-//    self.otherUsersArray = [self sortUsersByFullname:usersArray];
-//    
-//    if ([self.otherUsersArray count] == 0) {
-//        [QMContactList shared].searchedUsers = [NSMutableDictionary new];
-//        return YES;
-//    }
-//    
-    return NO;
+    return sortedUsers;
 }
 
-- (void)updateFriendsArrayForSearchPhrase:(NSString *)searchPhraseString {
-
-//    if ([searchPhraseString isEqualToString:kEmptyString]) {
-//        [self.friendsArray setArray:[[QMContactList shared].friendsAsDictionary allValues]];
-//        return;
-//    }
-//    
-//    NSMutableArray *searchedUsers = [self searchText:searchPhraseString inArray:[[QMContactList shared].friendsAsDictionary allValues]];
-//    [self.friendsArray setArray:searchedUsers];
-}
-
-- (void)emptyOtherUsersArray
-{
-//    [self.otherUsersArray setArray:[@[] mutableCopy]];
-}
-
-- (NSMutableArray *)searchText:(NSString *)text  inArray:(NSArray *)array {
+- (void)globalSearch {
     
-    NSMutableArray *foundMArray = [[NSMutableArray alloc] init];
-//    for (QBUUser *user in array) {
-//        if ([self searchingString:user.fullName inString:text]) {
-//            [foundMArray addObject:user];
-//        }
-//    }
-    return foundMArray;
+    QBUUserPagedResultBlock userPagedBlock = ^(QBUUserPagedResult *pagedResult) {
+        
+        if (pagedResult.success) {
+            self.searchDatasource = [self sortUsersByFullname:pagedResult.users].mutableCopy;
+            [self.tableView reloadData];
+        }
+        
+        [SVProgressHUD dismiss];
+
+    };
+    
+    PagedRequest *request = [[PagedRequest alloc] init];
+    request.page = 1;
+    request.perPage = 100;
+    
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+
+    if (self.searchText.length == 0) {
+        [[QMApi instance].usersService retrieveUsersWithPagedRequest:request completion:userPagedBlock];
+    } else {
+        [[QMApi instance].usersService retrieveUsersWithFullName:self.searchText pagedRequest:request completion:userPagedBlock];
+    }
 }
 
-- (BOOL)searchingString:(NSString *)source inString:(NSString *)searchString {
+- (void)showSearchGloblButton:(BOOL)isShow {
     
-    NSRange range = [source rangeOfString:searchString options:NSCaseInsensitiveSearch];
-    if (range.location == NSNotFound) {
-        return NO;
+    self.tableView.tableFooterView = isShow ?
+    [self.tableView dequeueReusableCellWithIdentifier:kQMSearchGlobalCellIdentifier] :
+    [[UIView alloc] initWithFrame:CGRectZero];
+}
+
+- (void)setSearchActive:(BOOL)searchActive {
+    
+    if (searchActive != _searchActive) {
+        _searchActive = searchActive;
+        [self showSearchGloblButton:searchActive];
+    }
+}
+
+- (NSArray *)friendsDatasource {
+    
+    NSArray *allFriends = [[QMApi instance] allFriends];
+    
+    if (self.searchActive && self.searchText.length > 0) {
+
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.fullName CONTAINS[cd] %@", self.searchText];
+        NSArray *filtered = [allFriends filteredArrayUsingPredicate:predicate];
+        NSArray *sortered = [self sortUsersByFullname:filtered];
+        
+        return sortered;
     }
     
-    return YES;
+    return allFriends;
 }
 
-- (NSMutableArray *)sortUsersByFullname:(NSArray *)users {
+- (void)setSearchText:(NSString *)searchText {
     
-    NSArray *sortedUsers = nil;
-    NSSortDescriptor *fullNameDescriptor = [[NSSortDescriptor alloc] initWithKey:@"fullName" ascending:YES];
-    sortedUsers = [users sortedArrayUsingDescriptors:@[fullNameDescriptor]];
-    return [sortedUsers mutableCopy];
+    if (_searchText != searchText) {
+        _searchText = searchText;
+    }
+}
+
+#pragma mark - UITableViewDataSource
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    
+    if (self.searchActive) {
+        return (section == 0) ? kTableHeaderFriendsString : kTableHeaderAllUsersString;
+    }
+    
+    return @"";
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    return [self datasourceForSection:section].count;
+}
+
+- (NSArray *)datasourceForSection:(NSUInteger)section {
+    return (section == 0 ) ? self.friendsDatasource : self.searchDatasource;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    NSArray *datasource = [self datasourceForSection:indexPath.section];
+    QBUUser *user = datasource[indexPath.row];
+    
+    QMFriendListCell *cell = [tableView dequeueReusableCellWithIdentifier:kFriendsListCellIdentifier];
+    cell.user = user;
+    cell.isFriend = [[QMApi instance] isFriedID:user.ID];
+    cell.online = [[QMApi instance] onlineStatusForFriendID:user.ID];
+    cell.searchText = self.searchText;
+    
+    cell.delegate = self;
+    
+    return cell;
+}
+
+#pragma mark - QMFriendListCellDelegate
+
+- (void)friendListCell:(QMFriendListCell *)cell pressAddBtn:(UIButton *)sender {
+    
+   BOOL success = [[QMApi instance] addUserInContactListWithUserID:cell.user.ID];
+
+    if (success) {
+        NSLog(@"");
+    }
 }
 
 @end

@@ -11,24 +11,6 @@
 
 @implementation QMMessagesService
 
-/**
- didNotSendMessage fired when message cannot be send to user
- 
- @param message Message passed to sendMessage method into QBChat
- */
-- (void)chatDidNotSendMessage:(QBChatMessage *)message {
-    
-}
-
-/**
- didReceiveMessage fired when new message was received from QBChat
- 
- @param message Message received from Chat
- */
-- (void)chatDidReceiveMessage:(QBChatMessage *)message {
-    
-}
-
 - (BOOL)sendMessage:(QBChatMessage *)message saveToHistory:(BOOL)save {
     
     message.customParameters = @{

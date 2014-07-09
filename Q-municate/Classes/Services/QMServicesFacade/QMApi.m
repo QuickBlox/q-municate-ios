@@ -17,10 +17,13 @@
 #import "QMChatDialogsService.h"
 #import "QMAVCallService.h"
 #import "QMMessagesService.h"
-
 #import "REAlertView+QMSuccess.h"
+#import "QMChatReciver.h"
 
 @interface QMApi()
+
+@property (strong, nonatomic) QBContactList *contactList;
+@property (strong, nonatomic) NSMutableDictionary *usersMemoryCache;
 
 @end
 
@@ -48,8 +51,12 @@
         self.usersService = [[QMUsersService alloc] init];
         self.avCallService = [[QMAVCallService alloc] init];
         self.chatDialogsService = [[QMChatDialogsService alloc] init];
-        self.messagesService = [[QMMessagesService alloc] init];
         self.chatService = [[QMChatService alloc] init];
+        self.usersMemoryCache = [NSMutableDictionary dictionary];
+
+        [[QMChatReciver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
+            self.contactList = contactList;
+        }];
     }
     
     return self;
@@ -57,13 +64,11 @@
 
 - (BOOL)checkResult:(Result *)result {
     
-    if (result.success) {
-        return YES;
-    }
-    else {
+    if (!result.success) {
         [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
-        return NO;
     }
+    
+    return result.success;
 }
 
 @end

@@ -9,10 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <AddressBook/AddressBook.h>
 
-
 @interface ABPerson : NSObject
 
 @property (strong, nonatomic, readonly) NSString *firstName;
+@property (strong, nonatomic, readonly) NSString *lastName;
+@property (strong, nonatomic, readonly) UIImage *image;
+@property (strong, nonatomic, readonly) NSArray *emails;
 
 - (instancetype)initWithRecordRef:(ABRecordRef)recordRef;
 

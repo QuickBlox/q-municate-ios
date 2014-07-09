@@ -7,16 +7,13 @@
 //
 
 
-@interface QMFriendsListDataSource : NSObject
+@interface QMFriendsListDataSource : NSObject <UITableViewDataSource>
 
-/** If returns YES - it means that array is empty, if NO - not empty */
-- (BOOL)updateFriendsArrayAndCheckForEmpty;
+@property (weak, nonatomic, readonly) UITableView *tableView;
+@property (strong, nonatomic) NSString *searchText;
+@property (assign, nonatomic) BOOL searchActive;
 
-/** If returns YES - it means that array is empty, if NO - not empty */
-- (BOOL)updateSearchedUsersArrayAndCheckForEmpty;
-
-- (void)updateFriendsArrayForSearchPhrase:(NSString *)searchPhraseString;
-
-- (void)emptyOtherUsersArray;
+- (void)globalSearch;
+- (instancetype)initWithTableView:(UITableView *)tableView;
 
 @end

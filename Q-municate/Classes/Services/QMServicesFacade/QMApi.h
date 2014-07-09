@@ -16,6 +16,7 @@
 @class QMChatDialogsService;
 @class QMAVCallService;
 @class QMMessagesService;
+@class QMChatReciver;
 
 @interface QMApi : NSObject
 
@@ -27,6 +28,7 @@
 @property (strong, nonatomic) QMAVCallService *avCallService;
 @property (strong, nonatomic) QMChatDialogsService *chatDialogsService;
 @property (strong, nonatomic) QMMessagesService *messagesService;
+@property (strong, nonatomic) QMChatReciver *responceService;
 
 @property (strong, atomic) QBUUser *currentUser;
 
@@ -119,8 +121,23 @@
 
 
 @interface QMApi (Users)
-/**
- */
-- (void)fetchUnknownUsersWithIDs:(NSArray *)unkonwnIds;
+
+//Local storage
+
+- (void)addUser:(QBUUser *)user;
+- (void)addUsers:(NSArray *)users;
+- (QBUUser *)userWithID:(NSUInteger)userID;
+- (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID;
+- (NSArray *)allFriends;
+
+- (BOOL)isFriedID:(NSUInteger)userID;
+- (BOOL)onlineStatusForFriendID:(NSUInteger)friendID;
+
+//Quickblox Api
+
+- (BOOL)addUserInContactListWithUserID:(NSUInteger)userID;
+- (void)retrieveUsersIfNeededWithContactList:(QBContactList *)contactList completion:(void(^)(BOOL updated))completion;
+- (void)retrieveUsersForChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(BOOL updated))completion;
+- (void)retrieveUsersWithIDs:(NSArray *)idsToFetch completion:(void(^)(BOOL updated))completion;
 
 @end

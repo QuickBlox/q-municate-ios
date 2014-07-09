@@ -12,8 +12,7 @@
 #import "QMAddressBook.h"
 #import "QMInviteFriendsCell.h"
 #import "QMInviteFriendsStaticCell.h"
-#warning update person
-//#import "QMPerson.h"
+#import "ABPerson.h"
 #import "QMUtilities.h"
 
 #import "QMFacebookService.h"
@@ -21,7 +20,9 @@
 #import "QMAuthService.h"
 
 
-@interface QMInviteFriendsController () <QBActionStatusDelegate, MFMailComposeViewControllerDelegate>
+@interface QMInviteFriendsController ()
+
+<QBActionStatusDelegate, MFMailComposeViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
@@ -89,10 +90,8 @@
 	}
 }
 
-- (void)shareApplicationToFriends:(NSString *)friendsListString
-{
-#warning me.iD
-#warning QMContactList shared
+- (void)shareApplicationToFriends:(NSString *)friendsListString {
+
 //    QMFacebookService *fbService = [[QMFacebookService alloc] init];
 //    [fbService shareToFacebookUsersWithIDs:friendsListString withCompletion:^(BOOL success, NSError *error) {
 //        if (!success) {
@@ -121,24 +120,21 @@
     }
 }
 
-
 #pragma mark - UITableViewDataSource
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 2;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 0) {
         return 2;
     }
     return [self.dataSource.users count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     if (indexPath.section == 0) {
        QMInviteFriendsStaticCell *cell = [self cellForTableView:tableView andIndexPath:indexPath];
         if ([cell.cellType isEqualToString:kFacebookFriendStatus]) {

@@ -53,8 +53,6 @@
     [QBUsers updateUser:user delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
 }
 
-
-
 #pragma mark - Push Notifications
 
 - (void)subscribeToPushNotifications {
