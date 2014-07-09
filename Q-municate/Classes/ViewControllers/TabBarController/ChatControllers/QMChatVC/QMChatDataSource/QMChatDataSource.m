@@ -96,12 +96,11 @@
     
     NSArray *messages = @[m2, m3, message, m1, message, m1, m3, message, message, m1, m3, m3];
     
-    QMChatService *chatService = [QMChatService shared];
     NSString *identifier = [self messagesIdentifier];
     
     NSAssert(identifier, @"check it");
     
-    [chatService setHistory:messages forIdentifier:identifier];
+//    [chatService setHistory:messages forIdentifier:identifier];
     
     NSMutableArray *qmChatHistroy = [NSMutableArray arrayWithCapacity:messages.count];
     
