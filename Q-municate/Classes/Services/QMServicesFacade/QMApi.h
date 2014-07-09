@@ -127,11 +127,8 @@
 - (void)addUser:(QBUUser *)user;
 - (void)addUsers:(NSArray *)users;
 - (QBUUser *)userWithID:(NSUInteger)userID;
-- (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID;
 - (NSArray *)allFriends;
-
-- (BOOL)isFriedID:(NSUInteger)userID;
-- (BOOL)onlineStatusForFriendID:(NSUInteger)friendID;
+- (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID;
 
 //Quickblox Api
 

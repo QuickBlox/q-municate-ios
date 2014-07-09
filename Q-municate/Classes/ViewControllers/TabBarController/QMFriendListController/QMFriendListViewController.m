@@ -52,6 +52,11 @@
 - (void)showSearchBar:(BOOL)isShow animated:(BOOL)animated {
 
     self.searchBarTopConstraint.constant -= self.searchBar.frame.size.height * (isShow ?  -1 : 1);
+
+    if (!isShow) {
+        self.dataSource.searchText = self.searchBar.text = nil;
+    }
+    
     void(^show)(void) = ^() {
         [self.view layoutIfNeeded];
     };
@@ -61,18 +66,8 @@
 
 #pragma mark - UISearchBarDelegate
 
-- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
-    return YES;
-}
-
-- (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar {
-    return YES;
-}
-
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-
     self.dataSource.searchText = searchText;
-    [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDelegate
