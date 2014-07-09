@@ -18,7 +18,7 @@
 #import "QMAVCallService.h"
 #import "QMMessagesService.h"
 #import "REAlertView+QMSuccess.h"
-#import "QMChatReciver.h"
+#import "QMChatReceiver.h"
 
 @interface QMApi()
 
@@ -54,7 +54,7 @@
         self.chatService = [[QMChatService alloc] init];
         self.usersMemoryCache = [NSMutableDictionary dictionary];
 
-        [[QMChatReciver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
+        [[QMChatReceiver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
             self.contactList = contactList;
         }];
     }

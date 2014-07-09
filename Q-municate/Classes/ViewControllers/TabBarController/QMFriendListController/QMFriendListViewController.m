@@ -80,15 +80,19 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
     [self performSegueWithIdentifier:kDetailsSegueIdentifier sender:nil];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if ([segue.identifier isEqualToString:kDetailsSegueIdentifier]) {
-        //        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        //        QBUUser *selectedUser = self.dataSource.friendsArray[indexPath.row];
-        //        QMFriendsDetailsController *vc = segue.destinationViewController;
-        //        vc.selectedUser = selectedUser;
+        
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        NSArray *users = [self.dataSource usersAtSections:indexPath.section];
+        QBUUser *selectedUser = users[indexPath.row];
+        
+        QMFriendsDetailsController *vc = segue.destinationViewController;
+        vc.selectedUser = selectedUser;
     }
 }
 

@@ -16,7 +16,7 @@
 @class QMChatDialogsService;
 @class QMAVCallService;
 @class QMMessagesService;
-@class QMChatReciver;
+@class QMChatReceiver;
 
 @interface QMApi : NSObject
 
@@ -28,7 +28,7 @@
 @property (strong, nonatomic) QMAVCallService *avCallService;
 @property (strong, nonatomic) QMChatDialogsService *chatDialogsService;
 @property (strong, nonatomic) QMMessagesService *messagesService;
-@property (strong, nonatomic) QMChatReciver *responceService;
+@property (strong, nonatomic) QMChatReceiver *responceService;
 
 @property (strong, atomic) QBUUser *currentUser;
 

@@ -9,7 +9,7 @@
 #import "QMChatService.h"
 #import "QMUsersService.h"
 #import "QBEchoObject.h"
-#import "QMChatReciver.h"
+#import "QMChatReceiver.h"
 
 @interface QMChatService ()
 
@@ -23,7 +23,7 @@
 - (id)init {
     
     if (self = [super init]) {
-        [QBChat instance].delegate = [QMChatReciver instance];
+        [QBChat instance].delegate = [QMChatReceiver instance];
     }
     
     return self;
@@ -41,7 +41,7 @@
         block(success);
     };
     
-    [[QMChatReciver instance] chatDidLoginWithTarget:self block:result];
+    [[QMChatReceiver instance] chatDidLoginWithTarget:self block:result];
 
     return [[QBChat instance] loginWithUser:user];
 }

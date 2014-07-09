@@ -15,5 +15,6 @@
 
 - (void)globalSearch;
 - (instancetype)initWithTableView:(UITableView *)tableView;
+- (NSArray *)usersAtSections:(NSUInteger)section;
 
 @end

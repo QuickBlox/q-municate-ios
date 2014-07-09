@@ -1,12 +1,12 @@
 //
-//  QMChatReciver.m
+//  QMChatReceiver.m
 //  Qmunicate
 //
 //  Created by Andrey on 07.07.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import "QMChatReciver.h"
+#import "QMChatReceiver.h"
 
 @interface QMChatHandlerObject : NSObject
 
@@ -18,13 +18,13 @@
 @implementation QMChatHandlerObject
 @end
 
-@interface QMChatReciver()
+@interface QMChatReceiver()
 
 @property (strong, nonatomic) NSMutableDictionary *bloks;
 
 @end
 
-@implementation QMChatReciver
+@implementation QMChatReceiver
 
 + (instancetype)instance {
     
