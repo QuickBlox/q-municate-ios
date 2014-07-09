@@ -14,9 +14,7 @@ static CGFloat const rowHeight = 60.0;
 @interface QMAddUsersAbstractController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic) NSMutableArray *selectedFriends;
-@property (strong, nonatomic) NSMutableArray *friends;
-
-
+@property (strong, nonatomic) NSArray *friends;
 
 /** Actions */
 - (IBAction)performAction:(id)sender;

@@ -123,17 +123,17 @@
 @interface QMApi (Users)
 
 //Local storage
+@property (strong, nonatomic, readonly) NSArray *friends;
 
 - (void)addUser:(QBUUser *)user;
 - (void)addUsers:(NSArray *)users;
 - (QBUUser *)userWithID:(NSUInteger)userID;
-- (NSArray *)allFriends;
 - (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID;
 
 //Quickblox Api
 
 - (BOOL)addUserInContactListWithUserID:(NSUInteger)userID;
-- (void)retrieveUsersIfNeededWithContactList:(QBContactList *)contactList completion:(void(^)(BOOL updated))completion;
+- (void)retrieveFriendsIfNeeded:(void(^)(BOOL updated))completion;
 - (void)retrieveUsersForChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(BOOL updated))completion;
 - (void)retrieveUsersWithIDs:(NSArray *)idsToFetch completion:(void(^)(BOOL updated))completion;
 

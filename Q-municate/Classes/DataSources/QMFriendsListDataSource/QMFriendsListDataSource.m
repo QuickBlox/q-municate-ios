@@ -45,9 +45,9 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
         
         self.searchList = [NSArray array];
         
-        [[QMChatReceiver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
+        [[QMChatReceiver instance] chatContactListWilChangeWithTarget:self block:^{
             
-            [[QMApi instance] retrieveUsersIfNeededWithContactList:contactList completion:^(BOOL updated) {
+            [[QMApi instance] retrieveFriendsIfNeeded:^(BOOL updated) {
                 
                 if (updated) {
                     [self reloadDatasource];
@@ -81,7 +81,7 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
 
 - (void)reloadDatasource {
     
-    self.friendList = [[QMApi instance] allFriends];
+    self.friendList = [QMApi instance].friends;
     [self.tableView reloadData];
 }
 
@@ -98,12 +98,14 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
     QBUUserPagedResultBlock userPagedBlock = ^(QBUUserPagedResult *pagedResult) {
         
         if (pagedResult.success) {
-            self.searchList = [self sortUsersByFullname:pagedResult.users].mutableCopy;
+            
+            NSMutableArray *users = pagedResult.users.mutableCopy;
+            [users removeObject:[QMApi instance].currentUser];
+            self.searchList = [self sortUsersByFullname:users];
             [self.tableView reloadData];
         }
         
         [SVProgressHUD dismiss];
-        
     };
     
     PagedRequest *request = [[PagedRequest alloc] init];

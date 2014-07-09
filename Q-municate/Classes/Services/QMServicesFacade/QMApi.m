@@ -22,8 +22,8 @@
 
 @interface QMApi()
 
-@property (strong, nonatomic) QBContactList *contactList;
 @property (strong, nonatomic) NSMutableDictionary *usersMemoryCache;
+@property (strong, nonatomic) NSMutableArray *contactList;
 
 @end
 
@@ -53,9 +53,12 @@
         self.chatDialogsService = [[QMChatDialogsService alloc] init];
         self.chatService = [[QMChatService alloc] init];
         self.usersMemoryCache = [NSMutableDictionary dictionary];
+        self.contactList = [NSMutableArray array];
 
         [[QMChatReceiver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
-            self.contactList = contactList;
+            [self.contactList removeAllObjects];
+            [self.contactList addObjectsFromArray:contactList.pendingApproval];
+            [self.contactList addObjectsFromArray:contactList.contacts];
         }];
     }
     

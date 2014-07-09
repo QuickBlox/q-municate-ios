@@ -167,7 +167,20 @@
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatContactListDidChange block) {
         block(contactList);
     }];
+
+    [self chatContactListWillChange];
 }
+
+- (void)chatContactListWilChangeWithTarget:(id)target block:(QMChatContactListWillChange)block {
+    [self subsribeWithTarget:target selector:@selector(chatContactListWillChange) block:block];
+}
+
+- (void)chatContactListWillChange {
+    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatContactListWillChange block) {
+        block();
+    }];
+}
+
 
 /**
  Called in case changing contact's online status

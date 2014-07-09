@@ -35,22 +35,35 @@
                     if ([weakSelf checkResult:loginWithFBResult]) {
                         
                         weakSelf.settingsManager.rememberMe = YES;
-                        [weakSelf.authService subscribeToPushNotifications];
-                        weakSelf.currentUser = loginWithFBResult.user;
-                        /*Upload image from facebook to qbserver if needed*/
-                        if (!loginWithFBResult.user.website.length == 0) {
-                            
-                            [weakSelf updateUserAvatarFromFacebook:^(QBUUserResult *result) {
-                                [weakSelf.chatService loginWithUser:result.user completion:completion];
-                            }];
+                        
+                        if (weakSelf.settingsManager.pushNotificationsEnabled) {
+                            [weakSelf.authService subscribeToPushNotifications];
                         }
                         
-                        [weakSelf.chatService loginWithUser:loginWithFBResult.user completion:completion];
+                        weakSelf.currentUser = loginWithFBResult.user;
+                        
+                         [weakSelf.chatService loginWithUser:loginWithFBResult.user completion:^(BOOL success) {
+                             
+                             if (loginWithFBResult.user.website.length == 0) {
+                                 /*Upload image from facebook to qbserver if needed*/
+                                 [weakSelf updateUserAvatarFromFacebook:^(QBUUserResult *result) {
+                                     weakSelf.currentUser.website = result.user.website;
+                                     completion(result.success);
+                                 }];
+                             }
+                             completion(YES);
+                         }]; //Chat Login With user
+                        
+                    } else {
+                        completion(NO);
                     }
-                }];
-            }];
+                }]; // loginin with facebook
+            }]; // Connect to facebook
+            
+        } else {
+            completion(NO);
         }
-    }];
+    }]; // Create session
 }
 
 - (void)signUpAndLoginWithUser:(QBUUser *)user userAvatar:(UIImage *)userAvatar completion:(QBUUserResultBlock)completion {

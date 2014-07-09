@@ -36,6 +36,7 @@ typedef void(^QMDidStartUseTURNForVideoChat)(void);
 
 typedef void(^QMChatDidReceiveContactAddRequest)(NSUInteger userID);
 typedef void(^QMChatContactListDidChange)(QBContactList * contactList);
+typedef void(^QMChatContactListWillChange)(void);
 typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL isOnline, NSString *status);
 
 @interface QMChatReceiver : NSObject <QBChatDelegate>
@@ -53,6 +54,7 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
  */
 - (void)chatDidReceiveContactAddRequestWithTarget:(id)target block:(QMChatDidReceiveContactAddRequest)block;
 - (void)chatContactListDidChangeWithTarget:(id)target block:(QMChatContactListDidChange)block;
+- (void)chatContactListWilChangeWithTarget:(id)target block:(QMChatContactListWillChange)block;
 - (void)chatDidReceiveContactItemActivityWithTarget:(id)target block:(QMChathatDidReceiveContactItemActivity)block;
 /**
  ChatRoom Called

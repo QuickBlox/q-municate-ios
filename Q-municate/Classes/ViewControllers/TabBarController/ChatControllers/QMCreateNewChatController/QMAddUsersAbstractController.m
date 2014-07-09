@@ -8,7 +8,7 @@
 
 #import "QMAddUsersAbstractController.h"
 #import "QMInviteFriendsCell.h"
-#import "QMUsersService.h"
+#import "QMApi.h"
 
 @interface QMAddUsersAbstractController ()
 
@@ -22,26 +22,23 @@
 - (id)initWithChatDialog:(QBChatDialog *)chatDialog {
     
     if (self = [super init]) {
-        self.selectedFriends = [NSMutableArray array];
         
-#warning me.iD
-#warning QMContactList shared
-        //        _friendsSelectedMArray = [NSMutableArray new];
-        //
-        //        NSArray *unsortedUsers = [[QMContactList shared].friendsAsDictionary allValues];
-        //        NSMutableArray *sortedUsers = [self sortUsersByFullname:unsortedUsers];
-        //
-        //        NSMutableArray *usersToDelete = [NSMutableArray new];
-        //        for (NSString *participantID in chatDialog.occupantIDs) {
-        //
-        //            QBUUser *user = [QMContactList shared].friendsAsDictionary[participantID];
-        //            if (user != nil) {
-        //                [usersToDelete addObject:user];
-        //            }
-        //        }
-        //        [sortedUsers removeObjectsInArray:usersToDelete];
-        //
-        //        _friendListArray = sortedUsers;
+        self.selectedFriends = [NSMutableArray array];
+        self.friends = [QMApi instance].friends;
+        
+//        NSMutableArray *sortedUsers = [self sortUsersByFullname:unsortedUsers];
+//
+//        NSMutableArray *usersToDelete = [NSMutableArray new];
+//        for (NSString *participantID in chatDialog.occupantIDs) {
+//
+//            QBUUser *user = [QMContactList shared].friendsAsDictionary[participantID];
+//            if (user != nil) {
+//                [usersToDelete addObject:user];
+//            }
+//        }
+//        [sortedUsers removeObjectsInArray:usersToDelete];
+//
+//        _friendListArray = sortedUsers;
     }
     return self;
 }
@@ -59,6 +56,9 @@
 - (void)viewDidLoad {
     
     [super viewDidLoad];
+    
+    self.selectedFriends = [NSMutableArray array];
+    self.friends = [QMApi instance].friends;
     // Do any additional setup after loading the view.
     [self configurePerformButtonBorder];
     [self updateNavTitle];
@@ -131,9 +131,9 @@
     QBUUser *checkedUser = self.friends[indexPath.row];
     
     if ([self.selectedFriends containsObject:checkedUser]) {
-        [self.friends removeObject:checkedUser];
+        [self.selectedFriends removeObject:checkedUser];
     } else {
-        [self.friends addObject:checkedUser];
+        [self.selectedFriends addObject:checkedUser];
     }
 
     // update navigation title:

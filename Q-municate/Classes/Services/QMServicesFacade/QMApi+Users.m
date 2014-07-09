@@ -11,8 +11,8 @@
 
 @interface QMApi()
 
-@property (strong, nonatomic) QBContactList *contactList;
 @property (strong, nonatomic) NSMutableDictionary *usersMemoryCache;
+@property (strong, nonatomic) NSMutableArray *contactList;
 
 @end
 
@@ -38,9 +38,9 @@
     }
 }
 
-- (void)retrieveUsersIfNeededWithContactList:(QBContactList *)contactList completion:(void(^)(BOOL updated))completion {
+- (void)retrieveFriendsIfNeeded:(void(^)(BOOL updated))completion {
     
-    NSArray *occupantIDs = [self idsFromContactList:contactList];
+    NSArray *occupantIDs = [self idsFromContactListItems];
     [self retrieveUsersWithIDs:occupantIDs completion:completion];
 }
 
@@ -60,7 +60,7 @@
 
 - (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID {
     
-    NSArray *contacts = [self contactListItemsWithContactList:self.contactList];
+    NSArray *contacts = self.contactList;
     for (QBContactListItem *item in contacts) {
         if (item.userID == userID) {
             return item;
@@ -84,10 +84,10 @@
     return [idsToFetch allObjects];
 }
 
-- (NSArray *)idsFromContactList:(QBContactList *)contactList {
+- (NSArray *)idsFromContactListItems {
     
     NSMutableArray *idsToFetch = [NSMutableArray new];
-    NSArray *contactListItems = [self contactListItemsWithContactList:contactList];
+    NSArray *contactListItems = self.contactList;
     
     for (QBContactListItem *item in contactListItems) {
         NSString *stringID = [NSString stringWithFormat:@"%d", item.userID];
@@ -99,7 +99,9 @@
 
 - (NSArray *)contactListItemsWithContactList:(QBContactList *)contactList {
     
-    NSMutableArray *contactListItems = [NSMutableArray arrayWithArray:contactList.contacts];
+    NSUInteger count = contactList.pendingApproval.count + contactList.contacts.count;
+    NSMutableArray *contactListItems = [NSMutableArray arrayWithCapacity:count];
+    [contactListItems addObjectsFromArray:contactList.contacts];
     [contactListItems addObjectsFromArray:contactList.pendingApproval];
     
     return contactListItems;
@@ -126,9 +128,9 @@
     return user;
 }
 
-- (NSArray *)allFriends {
+- (NSArray *)friends {
     
-    NSArray *ids = [self idsFromContactList:self.contactList];
+    NSArray *ids = [self idsFromContactListItems];
     NSMutableArray *allFriends = [NSMutableArray array];
     
     for (NSString * friendID in ids) {
