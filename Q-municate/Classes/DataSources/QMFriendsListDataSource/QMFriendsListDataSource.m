@@ -162,10 +162,13 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
     QBUUser *user = datasource[indexPath.row];
     
     QMFriendListCell *cell = [tableView dequeueReusableCellWithIdentifier:kFriendsListCellIdentifier];
-    cell.user = user;
-    cell.isFriend = [[QMApi instance] isFriedID:user.ID];
-    cell.online = [[QMApi instance] onlineStatusForFriendID:user.ID];
-    cell.searchText = self.searchText;
+    
+    if (user != (id)[NSNull null]) {
+        cell.user = user;
+        cell.isFriend = [[QMApi instance] isFriedID:user.ID];
+        cell.online = [[QMApi instance] onlineStatusForFriendID:user.ID];
+        cell.searchText = self.searchText;
+    }
     
     cell.delegate = self;
     

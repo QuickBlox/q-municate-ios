@@ -32,7 +32,7 @@
 }
 
 - (void)setUser:(QBUUser *)user {
-    
+
     if (user != _user) {
         _user = user;
         

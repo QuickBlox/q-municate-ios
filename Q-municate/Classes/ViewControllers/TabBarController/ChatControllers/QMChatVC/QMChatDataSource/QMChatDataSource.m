@@ -74,7 +74,7 @@
     [self.tableView reloadData];
 }
 
-#define MESSAGES_DEBUG 1
+#define MESSAGES_DEBUG 0
 
 - (void)loadHistory:(void(^)(void))finish {
     

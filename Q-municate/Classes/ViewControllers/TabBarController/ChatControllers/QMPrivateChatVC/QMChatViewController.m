@@ -14,7 +14,6 @@
 @interface QMChatViewController ()
 <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
-@property (nonatomic, strong) QMContent *uploadManager;
 
 @end
 

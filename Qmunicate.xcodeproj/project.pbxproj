@@ -168,6 +168,7 @@
 		6943849418E42691001E08A9 /* UIImage+Cropper.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943849018E42691001E08A9 /* UIImage+Cropper.m */; };
 		6943849518E42691001E08A9 /* UIImageView+ImageWithBlobID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943849218E42691001E08A9 /* UIImageView+ImageWithBlobID.m */; };
 		69B1893E190950A70049C6F9 /* QMDefinitions.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B1893D190950A70049C6F9 /* QMDefinitions.m */; };
+		69B72F7F196D37FE00ECEE4C /* QMFeedbackTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B72F7E196D37FE00ECEE4C /* QMFeedbackTableViewController.m */; };
 		69C43C91194C4B8C007E7DAF /* QMGroupDetailsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C43C90194C4B8C007E7DAF /* QMGroupDetailsDataSource.m */; };
 		69CF189518AE1C3C003262EF /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CF189418AE1C3C003262EF /* CFNetwork.framework */; };
 		69CF189718AE1C49003262EF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CF189618AE1C48003262EF /* SystemConfiguration.framework */; };
@@ -541,6 +542,8 @@
 		6943849118E42691001E08A9 /* UIImageView+ImageWithBlobID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+ImageWithBlobID.h"; sourceTree = "<group>"; };
 		6943849218E42691001E08A9 /* UIImageView+ImageWithBlobID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+ImageWithBlobID.m"; sourceTree = "<group>"; };
 		69B1893D190950A70049C6F9 /* QMDefinitions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDefinitions.m; sourceTree = "<group>"; };
+		69B72F7D196D37FE00ECEE4C /* QMFeedbackTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMFeedbackTableViewController.h; sourceTree = "<group>"; };
+		69B72F7E196D37FE00ECEE4C /* QMFeedbackTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMFeedbackTableViewController.m; sourceTree = "<group>"; };
 		69C43C8F194C4B8C007E7DAF /* QMGroupDetailsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMGroupDetailsDataSource.h; path = Classes/DataSources/QMGroupDetailsDataSource/QMGroupDetailsDataSource.h; sourceTree = "<group>"; };
 		69C43C90194C4B8C007E7DAF /* QMGroupDetailsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMGroupDetailsDataSource.m; path = Classes/DataSources/QMGroupDetailsDataSource/QMGroupDetailsDataSource.m; sourceTree = "<group>"; };
 		69CF189418AE1C3C003262EF /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -1367,6 +1370,7 @@
 				55CEAB7C195DBCFA001A8ED6 /* QMProfileViewController */,
 				55CEAB7F195DBCFA001A8ED6 /* QMSettingsViewController.h */,
 				55CEAB80195DBCFA001A8ED6 /* QMSettingsViewController.m */,
+				69B72F7C196D37D500ECEE4C /* QMFeedbackTableViewController */,
 			);
 			path = QMSettingsViewController;
 			sourceTree = "<group>";
@@ -1797,6 +1801,15 @@
 			name = Classes;
 			sourceTree = "<group>";
 		};
+		69B72F7C196D37D500ECEE4C /* QMFeedbackTableViewController */ = {
+			isa = PBXGroup;
+			children = (
+				69B72F7D196D37FE00ECEE4C /* QMFeedbackTableViewController.h */,
+				69B72F7E196D37FE00ECEE4C /* QMFeedbackTableViewController.m */,
+			);
+			path = QMFeedbackTableViewController;
+			sourceTree = "<group>";
+		};
 		69C43C8E194C4B4D007E7DAF /* QMGroupDetailsDataSource */ = {
 			isa = PBXGroup;
 			children = (
@@ -2118,6 +2131,7 @@
 				55D270A01940B8D300238D50 /* NSFetchedResultsController+MagicalFetching.m in Sources */,
 				559BE02519619733000588FE /* QMInviteFriendsCell.m in Sources */,
 				55D270A71940B8D300238D50 /* NSManagedObjectContext+MagicalObserving.m in Sources */,
+				69B72F7F196D37FE00ECEE4C /* QMFeedbackTableViewController.m in Sources */,
 				55CEAB93195DBCFA001A8ED6 /* QMChatLayoutConfigs.m in Sources */,
 				693206EE1962C0F600B15EF9 /* QMAudioCallController.m in Sources */,
 				55D270961940B8D300238D50 /* CDUsers.m in Sources */,
@@ -2400,8 +2414,8 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Taras Filatov (6AVH4TA956)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Taras Filatov (6AVH4TA956)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External\"",
@@ -2422,7 +2436,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = Qmunicate;
-				PROVISIONING_PROFILE = "F7F235D5-C871-4D94-A2BF-0EC942129F0B";
+				PROVISIONING_PROFILE = "6E004364-5E2F-449B-9394-5906B3C651CF";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VALID_ARCHS = armv7;
@@ -2437,8 +2451,8 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External\"",
@@ -2459,7 +2473,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = Qmunicate;
-				PROVISIONING_PROFILE = "BC829C9B-8971-4B79-8BB5-482ECD39A43A";
+				PROVISIONING_PROFILE = "5F37965B-59B5-461B-83F6-77EFE66FC01B";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VALID_ARCHS = armv7;
