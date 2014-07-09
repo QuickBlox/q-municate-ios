@@ -59,10 +59,10 @@
 
 - (void)updateUserStatus {
 
-    if ([[QMApi instance] isFriedID:self.selectedUser.ID]) {
-        BOOL isOnline = [[QMApi instance] onlineStatusForFriendID:self.selectedUser.ID];
-        self.status.text = isOnline ? kStatusOnlineString : kStatusOfflineString;
-        self.onlineCircle.hidden = isOnline ? NO : YES;
+    QBContactListItem *item = [[QMApi instance] contactItemWithUserID:self.selectedUser.ID];
+    if (item) { //friend if YES
+        self.status.text = item.online ? kStatusOnlineString : kStatusOfflineString;
+        self.onlineCircle.hidden = item.online ? NO : YES;
     }
 }
 

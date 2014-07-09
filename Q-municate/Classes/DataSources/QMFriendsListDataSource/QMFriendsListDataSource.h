@@ -13,8 +13,8 @@
 @property (strong, nonatomic) NSString *searchText;
 @property (assign, nonatomic) BOOL searchActive;
 
-- (void)globalSearch;
 - (instancetype)initWithTableView:(UITableView *)tableView;
+- (void)globalSearch;
 - (NSArray *)usersAtSections:(NSUInteger)section;
 
 @end

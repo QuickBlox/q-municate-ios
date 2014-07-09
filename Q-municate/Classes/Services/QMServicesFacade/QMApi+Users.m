@@ -19,17 +19,19 @@
 @implementation QMApi (Users)
 
 - (void)retrieveUsersWithIDs:(NSArray *)idsToFetch completion:(void(^)(BOOL updated))completion {
+
+    NSArray *filteredIDs = [self checkExistIds:idsToFetch];
     
-    if (idsToFetch.count == 0) {
+    if (filteredIDs.count == 0) {
         completion(NO);
     } else {
         
         PagedRequest *pagedRequest = [[PagedRequest alloc] init];
         pagedRequest.page = 1;
-        pagedRequest.perPage = idsToFetch.count < 100 ? idsToFetch.count : 100;
+        pagedRequest.perPage = filteredIDs.count < 100 ? filteredIDs.count : 100;
         
         __weak __typeof(self)weakSelf = self;
-        [self.usersService retrieveUsersWithIDs:idsToFetch pagedRequest:pagedRequest completion:^(QBUUserPagedResult *pagedResult) {
+        [self.usersService retrieveUsersWithIDs:filteredIDs pagedRequest:pagedRequest completion:^(QBUUserPagedResult *pagedResult) {
             [weakSelf addUsers:pagedResult.users];
             completion(YES);
         }];
@@ -39,14 +41,12 @@
 - (void)retrieveUsersIfNeededWithContactList:(QBContactList *)contactList completion:(void(^)(BOOL updated))completion {
     
     NSArray *occupantIDs = [self idsFromContactList:contactList];
-    NSArray *idsToFetch = [self idsToFetchWithIDs:occupantIDs];
-    [self retrieveUsersWithIDs:idsToFetch completion:completion];
+    [self retrieveUsersWithIDs:occupantIDs completion:completion];
 }
 
 - (void)retrieveUsersForChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(BOOL updated))completion {
     
-    NSArray *idsToFetch = [self idsToFetchWithIDs:chatDialog.occupantIDs];
-    [self retrieveUsersWithIDs:idsToFetch completion:completion];
+    [self retrieveUsersWithIDs:chatDialog.occupantIDs completion:completion];
 }
 
 - (BOOL)addUserInContactListWithUserID:(NSUInteger)userID {
@@ -60,7 +60,8 @@
 
 - (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID {
     
-    for (QBContactListItem *item in self.contactList.contacts) {
+    NSArray *contacts = [self contactListItemsWithContactList:self.contactList];
+    for (QBContactListItem *item in contacts) {
         if (item.userID == userID) {
             return item;
         }
@@ -69,10 +70,9 @@
     return nil;
 }
 
-- (NSArray *)idsToFetchWithIDs:(NSArray *)ids {
+- (NSArray *)checkExistIds:(NSArray *)ids {
     
     NSMutableSet *idsToFetch = [NSMutableSet setWithArray:ids];
-    
     for (NSString *userID in ids) {
         
         QBUUser *user = self.usersMemoryCache[userID];
@@ -87,10 +87,9 @@
 - (NSArray *)idsFromContactList:(QBContactList *)contactList {
     
     NSMutableArray *idsToFetch = [NSMutableArray new];
-    NSMutableArray *contacts = [NSMutableArray arrayWithArray:contactList.contacts];
-    [contacts addObjectsFromArray:contactList.pendingApproval];
+    NSArray *contactListItems = [self contactListItemsWithContactList:contactList];
     
-    for (QBContactListItem *item in contacts) {
+    for (QBContactListItem *item in contactListItems) {
         NSString *stringID = [NSString stringWithFormat:@"%d", item.userID];
         [idsToFetch addObject:stringID];
     }
@@ -98,41 +97,12 @@
     return idsToFetch;
 }
 
-- (NSArray *)contactListItems {
+- (NSArray *)contactListItemsWithContactList:(QBContactList *)contactList {
     
-    QBContactList *contactList = self.contactList;
     NSMutableArray *contactListItems = [NSMutableArray arrayWithArray:contactList.contacts];
     [contactListItems addObjectsFromArray:contactList.pendingApproval];
     
     return contactListItems;
-}
-
-- (BOOL)checkIDInCurrentContactListContactList:(NSUInteger)userID exist:(BOOL (^)(QBContactListItem *contactItem))exist {
-    
-    BOOL check = NO;
-    NSArray *contacts = [self contactListItems];
-    for (QBContactListItem *contactListItem in contacts) {
-        if (contactListItem.userID == userID) {
-            check = exist(contactListItem);
-            break;
-        }
-    }
-    
-    return check;
-}
-
-- (BOOL)isFriedID:(NSUInteger)userID {
-    
-    return [self checkIDInCurrentContactListContactList:userID exist:^BOOL(QBContactListItem *contactItem) {
-        return YES;
-    }];
-}
-
-- (BOOL)onlineStatusForFriendID:(NSUInteger)userID {
-    
-    return [self checkIDInCurrentContactListContactList:userID exist:^BOOL(QBContactListItem *contactItem) {
-        return contactItem.online;
-    }];
 }
 
 - (void)addUsers:(NSArray *)users {
@@ -152,15 +122,23 @@
     
     NSString *stingID = [NSString stringWithFormat:@"%d", userID];
     QBUUser *user = self.usersMemoryCache[stingID];
+    
     return user;
 }
 
 - (NSArray *)allFriends {
     
     NSArray *ids = [self idsFromContactList:self.contactList];
-    NSArray *friends = [self.usersMemoryCache objectsForKeys:ids notFoundMarker:[NSNull null]];
+    NSMutableArray *allFriends = [NSMutableArray array];
     
-    return friends;
+    for (NSString * friendID in ids) {
+        QBUUser *user = self.usersMemoryCache[friendID];
+        if (user) {
+            [allFriends addObject:user];
+        }
+    }
+    
+    return allFriends;
 }
 
 @end
