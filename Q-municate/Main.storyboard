@@ -1391,7 +1391,6 @@
                                             <outlet property="contentImageView" destination="Zyc-zI-gUo" id="FvS-CY-BzB"/>
                                             <outlet property="datetimeLabel" destination="raI-bf-vqL" id="F2h-bF-Fei"/>
                                             <outlet property="fullNameLabel" destination="fEg-B5-4iN" id="3Yl-dA-a7Z"/>
-                                            <segue destination="ouq-Kw-WJb" kind="modal" identifier="VideoCallSegue" animates="NO" id="2RR-va-3ZG"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="PrivateContentCell" rowHeight="150" id="yXp-fI-vzx" customClass="QMPrivateContentCell">
@@ -1642,7 +1641,8 @@
                         <outlet property="inputMessageTextField" destination="S0y-we-M7v" id="rZW-k7-oKo"/>
                         <outlet property="inputMessageView" destination="kJB-O6-OmZ" id="ri8-ou-Cmz"/>
                         <outlet property="tableView" destination="OS5-zg-wj4" id="MxW-hQ-b4J"/>
-                        <segue destination="ifJ-Du-hBS" kind="modal" identifier="ContentPreviewIdentifier" id="m55-Mk-0D3"/>
+                        <segue destination="ifJ-Du-hBS" kind="modal" identifier="ContentPreviewIdentifier" id="ijr-60-93X"/>
+                        <segue destination="ouq-Kw-WJb" kind="modal" identifier="VideoCallSegue" id="Dmo-df-9c6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uys-xC-HlL" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2631,6 +2631,6 @@
         <segue reference="IAo-qy-uHQ"/>
         <segue reference="TaC-No-aTb"/>
         <segue reference="97f-Zx-Ebh"/>
-        <segue reference="2RR-va-3ZG"/>
+        <segue reference="Dmo-df-9c6"/>
     </inferredMetricsTieBreakers>
 </document>

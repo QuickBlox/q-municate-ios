@@ -88,17 +88,20 @@ static CGFloat const kCellHeightOffset = 33.0f;
                 [self showAlertWithErrorMessage:error.description];
                 [QMUtilities removeIndicatorView];
                 return;
-                
-#warning Notify controllers for created chat dialog
-                // save dialog:
-                NSString *kOpponentID = KEY_OPPONENT_ID(self.opponent.ID);
-                [QMChatService shared].allDialogsAsDictionary[kOpponentID] = dialog;
-                
-                [self retriveChatHistoryForDialog:dialog];
-                
-                // notify opponent:
-                [[QMChatService shared] sendChatDialogDidCreateNotificationToUsers:@[self.opponent] withChatDialog:dialog];
             }
+            
+#warning Notify controllers for created chat dialog
+            // save dialog:
+            NSString *kOpponentID = KEY_OPPONENT_ID(self.opponent.ID);
+            [QMChatService shared].allDialogsAsDictionary[kOpponentID] = dialog;
+            self.chatDialog = dialog;
+            
+            [self retriveChatHistoryForDialog:dialog];
+            
+            // notify opponent:
+            [[QMChatService shared] sendChatDialogDidCreateNotificationToUsers:@[self.opponent] withChatDialog:dialog];
+            [QMUtilities removeIndicatorView];
+    
         }];
         return;
     }
@@ -182,7 +185,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)configureNavBarButtons
 {
-	if (self.chatDialog.type != QBChatDialogTypePrivate) {
+	if (self.chatDialog.type == QBChatDialogTypeGroup) {
 		UIButton *groupInfoButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		[groupInfoButton setFrame:CGRectMake(0, 0, 30, 40)];
 
@@ -367,6 +370,9 @@ static CGFloat const kCellHeightOffset = 33.0f;
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+#warning Terminate fix!
+    
+    
     if ([segue.destinationViewController isKindOfClass:QMContentPreviewController.class]) {
         QMContentPreviewController *contentController = (QMContentPreviewController *)segue.destinationViewController;
         contentController.contentImage = (UIImage *)sender;
@@ -384,6 +390,7 @@ static CGFloat const kCellHeightOffset = 33.0f;
         NSUInteger callType = [sender intValue];
         videoCallVC.callType = callType;
     }
+    
     
 }
 

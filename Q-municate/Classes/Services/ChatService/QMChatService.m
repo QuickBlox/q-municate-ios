@@ -498,14 +498,21 @@
     QBUUser *me = [QMContactList shared].me;
     for (QBUUser *user in users) {
         
+        if ([user isEqual:me]) {
+            continue;
+        }
         // create message:
         QBChatMessage *inviteMessage = [QBChatMessage message];
         inviteMessage.recipientID = user.ID;
         inviteMessage.text = [NSString stringWithFormat:@"%@ created a group conversation", me.fullName];
         
         NSMutableDictionary *customParams = [NSMutableDictionary new];
-        customParams[@"xmpp_room_jid"] = chatDialog.roomJID;
-        customParams[@"name"] = chatDialog.name;
+        if (chatDialog.roomJID) {
+             customParams[@"xmpp_room_jid"] = chatDialog.roomJID;
+        }
+        if (chatDialog.name) {
+             customParams[@"name"] = chatDialog.name;
+        }
         customParams[@"_id"] = chatDialog.ID;
         customParams[@"type"] = @(chatDialog.type);
         customParams[@"occupants_ids"] = [chatDialog.occupantIDs stringFromArray];
