@@ -74,7 +74,7 @@
     [self.tableView reloadData];
 }
 
-#define MESSAGES_DEBUG 0
+#define MESSAGES_DEBUG 1
 
 - (void)loadHistory:(void(^)(void))finish {
     
@@ -94,7 +94,10 @@
     QBChatHistoryMessage *m3 = [m1 copy];
     m3.text = @"Hi";
     
-    NSArray *messages = @[m2, m3, message, m1, message, m1, m3, message, message, m1, m3, m3];
+    QBChatHistoryMessage *m4 = [m3 copy];
+    m4.text = @"Hey there. Is anybody here?";
+    
+    NSArray *messages = @[m2, m3, message, m1, message, m1, m3, message, message, m4, m1, m3, m3];
     
     NSString *identifier = [self messagesIdentifier];
     

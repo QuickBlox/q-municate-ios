@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                     <connections>
-                        <segue destination="BXK-2z-A4J" kind="relationship" relationship="rootViewController" id="RMM-nx-WaA"/>
+                        <segue destination="BXK-2z-A4J" kind="relationship" relationship="rootViewController" id="MwZ-5e-1h3"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PU6-eh-Yav" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1804,7 +1804,7 @@
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="checkLicense:" destination="IoF-ax-XjW" eventType="touchUpInside" id="JXv-7F-FFC"/>
+                                                        <segue destination="tmG-J0-h0D" kind="push" id="zzb-F0-jZ0"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -1831,6 +1831,45 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HLs-IP-E8b" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-2552" y="-7379"/>
+        </scene>
+        <!--License Agreement View Controller - License Agreement-->
+        <scene sceneID="5SO-5H-OIB">
+            <objects>
+                <viewController id="tmG-J0-h0D" customClass="QMLicenseAgreementViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="zcL-cZ-hwS"/>
+                        <viewControllerLayoutGuide type="bottom" id="5JK-8e-Igm"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="2ob-Ft-nln">
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d7D-s6-FUB">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <outlet property="delegate" destination="tmG-J0-h0D" id="EMB-R9-LG9"/>
+                                </connections>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="d7D-s6-FUB" firstAttribute="leading" secondItem="2ob-Ft-nln" secondAttribute="leading" id="6oa-yq-LJV"/>
+                            <constraint firstItem="d7D-s6-FUB" firstAttribute="top" secondItem="2ob-Ft-nln" secondAttribute="top" id="hk1-go-DGk"/>
+                            <constraint firstAttribute="trailing" secondItem="d7D-s6-FUB" secondAttribute="trailing" id="yI5-Fy-YgF"/>
+                            <constraint firstItem="5JK-8e-Igm" firstAttribute="top" secondItem="d7D-s6-FUB" secondAttribute="bottom" id="yWO-Qa-hHg"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="License Agreement" id="wdf-0k-2Z3"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+                    <connections>
+                        <outlet property="webView" destination="d7D-s6-FUB" id="p1Y-dg-MqS"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qr7-8M-Mgf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2148" y="-7379"/>
         </scene>
         <!--Log InVC - Log In-->
         <scene sceneID="GcV-SH-veH">
@@ -2791,9 +2830,9 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="Gs8-3F-TjX"/>
-        <segue reference="RMM-nx-WaA"/>
+        <segue reference="MwZ-5e-1h3"/>
         <segue reference="hbf-5d-R0X"/>
-        <segue reference="aeV-0O-de3"/>
         <segue reference="bOV-zd-nKn"/>
+        <segue reference="aeV-0O-de3"/>
     </inferredMetricsTieBreakers>
 </document>
