@@ -163,7 +163,6 @@
 }
 
 - (void)chatContactListDidChange:(QBContactList *)contactList {
-    NSLog(@"%@", contactList);
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatContactListDidChange block) {
         block(contactList);
     }];

@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "QMUserCell.h"
 
 @class QMFriendListCell;
 
@@ -16,12 +16,11 @@
 
 @end
 
-@interface QMFriendListCell : UITableViewCell
+@interface QMFriendListCell : QMUserCell
 
-@property (strong, nonatomic) QBUUser *user;
 @property (strong, nonatomic) NSString *searchText;
-@property (assign, nonatomic) BOOL online;
 @property (assign, nonatomic) BOOL isFriend;
+@property (assign, nonatomic) BOOL online;
 
 @property (weak, nonatomic) id <QMFriendListCellDelegate>delegate;
 

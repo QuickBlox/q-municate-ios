@@ -11,7 +11,6 @@
 #import "QMChatListCell.h"
 #import "QMUsersService.h"
 #import "QMChatService.h"
-#import "QMChatRoomListDataSource.h"
 #import "QMCreateNewChatController.h"
 #import "QMUtilities.h"
 #import "TWMessageBarManager.h"
@@ -21,7 +20,6 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 @interface QMChatRoomListController () <QBActionStatusDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *chatsTableView;
-@property (strong, nonatomic) QMChatRoomListDataSource *dataSource;
 
 @property (strong, nonatomic) NSArray *chatDialogs;
 
@@ -94,8 +92,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     QMChatListCell *cell = [tableView dequeueReusableCellWithIdentifier:ChatListCellIdentifier];
 
     QBChatDialog *dialog = self.chatDialogs[indexPath.row];
-    
-    [cell configureCellWithDialog:dialog];
+    cell.dialog = dialog;
 
     return cell;
 }
@@ -150,7 +147,6 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 - (void)localChatAddedNewRoom:(NSNotification *)notification {
     
 	NSLog(@"userInfo: %@", notification.userInfo);
-	[self.dataSource updateDialogList];
 	[self.chatsTableView reloadData];
 }
 

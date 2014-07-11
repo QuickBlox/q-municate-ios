@@ -29,9 +29,9 @@ NSString *const kQMAppName = @"Q-municate";
 }
 
 - (void)fetchMyFriendsIDs:(void(^)(NSArray *facebookFriendsIDs))completion {
-
+    
     [self fetchMyFriends:^(NSArray *facebookFriends) {
-
+        
         NSMutableArray *array = [NSMutableArray arrayWithCapacity:facebookFriends.count];
         for (NSDictionary<FBGraphUser> *user in facebookFriends) {
             [array addObject:user.id];
@@ -64,12 +64,18 @@ NSString *const kQMAppName = @"Q-municate";
 
 NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/picture?height=100&width=100&access_token=%@";
 
-- (void)loadUserImageWithUserID:(NSString *)userID completion:(void(^)(UIImage *fbUserImage))completion {
-    
+- (NSURL *)userImageUrlWithUserID:(NSString *)userID {
+
     FBSession *session = [FBSession activeSession];
     NSString *urlString = [NSString stringWithFormat:kFBGraphGetPictureFormat, userID, session.accessTokenData.accessToken];
     NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
+
+- (void)loadUserImageWithUserID:(NSString *)userID completion:(void(^)(UIImage *fbUserImage))completion {
     
+    NSURL *url = [self userImageUrlWithUserID:userID];
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -78,7 +84,6 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     });
 }
 
-
 - (void)loadMe:(void(^)(NSDictionary<FBGraphUser> *user))completion {
     
     FBRequest *friendsRequest = [FBRequest requestForMe];
@@ -86,7 +91,47 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     [friendsRequest startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
         completion(user);
     }];
+}
+
+- (void)inviteFriends {
     
+    [FBWebDialogs presentRequestsDialogModallyWithSession:nil message:@"Q-municate." title:nil parameters:nil handler:
+     
+     ^(FBWebDialogResult result, NSURL *resultURL, NSError *error)
+     {
+         if (error) {
+             // Error launching the dialog or sending the request.
+             NSLog(@"Error sending request.");
+         } else {
+             if (result == FBWebDialogResultDialogNotCompleted) {
+                 // User clicked the "x" icon
+                 NSLog(@"User canceled request.");
+             } else {
+                 // Handle the send request callback
+                 NSDictionary *urlParams = [self parseURLParams:[resultURL query]];
+                 if (![urlParams valueForKey:@"request"]) {
+                     // User clicked the Cancel button
+                     NSLog(@"User canceled request.");
+                 } else {
+                     // User clicked the Send button
+                     NSString *requestID = [urlParams valueForKey:@"request"];
+                     NSLog(@"Request ID: %@", requestID);
+                 }
+             }
+         }
+     }];
+}
+
+- (NSDictionary*)parseURLParams:(NSString *)query {
+    NSArray *pairs = [query componentsSeparatedByString:@"&"];
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    for (NSString *pair in pairs) {
+        NSArray *kv = [pair componentsSeparatedByString:@"="];
+        NSString *val =
+        [kv[1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        params[kv[0]] = val;
+    }
+    return params;
 }
 
 - (void)logout {
@@ -184,7 +229,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
 }
 
 - (void)showMessage:(NSString *)message withTitle:(NSString *)title {
-
+    
     [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
         alertView.title = title;
         alertView.message = message;

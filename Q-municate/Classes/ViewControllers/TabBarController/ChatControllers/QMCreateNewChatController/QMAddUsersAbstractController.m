@@ -7,7 +7,7 @@
 //
 
 #import "QMAddUsersAbstractController.h"
-#import "QMInviteFriendsCell.h"
+#import "QMInviteFriendCell.h"
 #import "QMApi.h"
 
 @interface QMAddUsersAbstractController ()
@@ -116,9 +116,11 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    QMInviteFriendsCell *cell = (QMInviteFriendsCell *) [tableView dequeueReusableCellWithIdentifier:kCreateChatCellIdentifier];
+    QMInviteFriendCell *cell = [tableView dequeueReusableCellWithIdentifier:kCreateChatCellIdentifier];
+    
     QBUUser *friend = self.friends[indexPath.row];
-    [cell configureCellWithParamsForQBUser:friend checked:[self.selectedFriends containsObject:friend]];
+    BOOL checked = [self.selectedFriends containsObject:friend];
+    [cell setUser:friend checked:checked];
     
     return cell;
 }

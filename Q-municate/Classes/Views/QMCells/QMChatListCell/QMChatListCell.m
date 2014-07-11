@@ -12,10 +12,6 @@
 
 @interface QMChatListCell()
 
-@property (strong, nonatomic) IBOutlet QMImageView *avatar;
-@property (strong, nonatomic) IBOutlet UILabel *name;
-@property (strong, nonatomic) IBOutlet UILabel *lastMessage;
-
 @property (strong, nonatomic) IBOutlet UILabel *unreadMsgNumb;
 @property (strong, nonatomic) IBOutlet UILabel *groupMembersNumb;
 
@@ -28,8 +24,11 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
+    
+}
 
-    self.avatar.imageViewType = QMImageViewTypeCircle;
+- (void)setDialog:(QBChatDialog *)dialog {
+    _dialog = dialog;
 }
 
 - (void)configureCellWithDialog:(QBChatDialog *)chatDialog {
@@ -39,18 +38,16 @@
     self.groupMembersNumb.hidden = self.groupNumbBackground.hidden = !isGroup;
     self.unreadMsgBackground.hidden = self.unreadMsgNumb.hidden = !(chatDialog.unreadMessageCount > 0);
     self.unreadMsgNumb.text = [@(chatDialog.unreadMessageCount) stringValue];
-    self.lastMessage.text = chatDialog.lastMessageText.length > 0 ? chatDialog.lastMessageText : @"Attachment";
-    self.name.text = [self chatNameWithDialog:chatDialog];
-    
+    self.titleLabel.text = [self chatNameWithDialog:chatDialog];
+    self.descriptionLabel.text = chatDialog.lastMessageText.length > 0 ? chatDialog.lastMessageText : @"Attachment";
     
     if (isGroup) {
         self.groupMembersNumb.text = [@([chatDialog.occupantIDs count]) stringValue];
     } else {
 
-        UIImage *placeholder = [UIImage imageNamed: isGroup ? @"group_placeholder" : @"upic_placeholderr"];
         QBUUser *friend;// = [[QMContactList shared] searchFriendFromChatDialog:chatDialog];
         NSURL *url = [NSURL URLWithString:friend.website];
-        [self.avatar setImageWithURL:url placeholderImage:placeholder];
+        [self setUserImageWithUrl:url];
     }
 }
 

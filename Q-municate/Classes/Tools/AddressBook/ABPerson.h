@@ -13,9 +13,13 @@
 
 @property (strong, nonatomic, readonly) NSString *firstName;
 @property (strong, nonatomic, readonly) NSString *lastName;
+@property (strong, nonatomic, readonly) NSString *middleName;
+@property (strong, nonatomic, readonly) NSString *nickName;
 @property (strong, nonatomic, readonly) UIImage *image;
 @property (strong, nonatomic, readonly) NSArray *emails;
+@property (strong, nonatomic, readonly) NSString *organizationProperty;
+@property (strong, nonatomic, readonly) NSString *fullName;
 
-- (instancetype)initWithRecordRef:(ABRecordRef)recordRef;
+- (instancetype)initWithRecordID:(ABRecordID)recordID addressBookRef:(ABAddressBookRef)addressBookRef;
 
 @end

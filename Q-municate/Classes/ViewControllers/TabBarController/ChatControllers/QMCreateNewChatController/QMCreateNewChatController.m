@@ -8,7 +8,7 @@
 
 #import "QMCreateNewChatController.h"
 #import "QMChatViewController.h"
-#import "QMInviteFriendsCell.h"
+#import "QMInviteFriendCell.h"
 #import "QMUsersService.h"
 #import "QMApi.h"
 

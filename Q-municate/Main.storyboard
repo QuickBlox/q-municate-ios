@@ -107,9 +107,10 @@
                                                     <rect key="frame" x="18" y="7" width="45" height="45"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </imageView>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Leonore Cantly" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gcJ-iy-62p">
-                                                    <rect key="frame" x="71" y="12" width="170" height="24"/>
+                                                <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Leonore Cantly" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gcJ-iy-62p">
+                                                    <rect key="frame" x="71" y="12" width="229" height="24"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -118,9 +119,10 @@
                                                     <rect key="frame" x="292" y="24" width="12" height="12"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Online" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="egi-iq-gNu">
+                                                <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Online" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="egi-iq-gNu">
                                                     <rect key="frame" x="71" y="36" width="170" height="13"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="italicSystem" pointSize="12"/>
                                                     <color key="textColor" red="0.58039218189999997" green="0.58039218189999997" blue="0.58039218189999997" alpha="1" colorSpace="deviceRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -135,19 +137,14 @@
                                                         <action selector="pressAddBtn:" destination="lvE-w4-eU2" eventType="touchUpInside" id="PRH-vJ-dfG"/>
                                                     </connections>
                                                 </button>
-                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="DeS-5W-SuF">
-                                                    <rect key="frame" x="288" y="20" width="20" height="20"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </activityIndicatorView>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="addToFriendsButton" destination="IXw-0K-tKW" id="yEt-mn-UNM"/>
-                                            <outlet property="fullName" destination="gcJ-iy-62p" id="BaB-IP-GTh"/>
-                                            <outlet property="indicatorView" destination="DeS-5W-SuF" id="2gS-Jn-fO8"/>
-                                            <outlet property="lastActivity" destination="egi-iq-gNu" id="o3c-8w-uhO"/>
+                                            <outlet property="descriptionLabel" destination="egi-iq-gNu" id="P1q-bg-neo"/>
                                             <outlet property="onlineCircle" destination="5Mq-uu-OCp" id="Fgn-E9-mjK"/>
-                                            <outlet property="userImage" destination="eL1-En-W6S" id="esc-wH-xfR"/>
+                                            <outlet property="qmImageView" destination="eL1-En-W6S" id="dJ0-sX-zNJ"/>
+                                            <outlet property="titleLabel" destination="gcJ-iy-62p" id="f3u-Zg-5Vs"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="QMSearchGlobalCell" rowHeight="75" id="pc8-JX-xgu" customClass="QMSearchGlobalCell">
@@ -167,9 +164,10 @@
                                                         <action selector="globalSearch:" destination="sR2-ys-LbL" eventType="touchUpInside" id="Rd2-yw-i5Z"/>
                                                     </connections>
                                                 </button>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="For more results:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QdE-Fm-eSv">
+                                                <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="For more results:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QdE-Fm-eSv">
                                                     <rect key="frame" x="20" y="2" width="280" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -1039,20 +1037,21 @@
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         </view>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="facebookCell" id="ExT-vI-WyV" customClass="QMInviteFriendsStaticCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="QMStaticFBCell" id="ExT-vI-WyV" customClass="QMInviteStaticCell">
                                 <rect key="frame" x="0.0" y="79" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ExT-vI-WyV" id="Ci2-D4-SO5">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="from Facebook" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4jg-tb-BUx">
-                                            <rect key="frame" x="47" y="10" width="125" height="24"/>
+                                        <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="From Facebook" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4jg-tb-BUx">
+                                            <rect key="frame" x="47" y="10" width="177" height="24"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="fb_ic" translatesAutoresizingMaskIntoConstraints="NO" id="CU9-Ox-O06">
+                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="fb_ic" translatesAutoresizingMaskIntoConstraints="NO" id="CU9-Ox-O06">
                                             <rect key="frame" x="10" y="5" width="29" height="34"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
@@ -1075,14 +1074,14 @@
                                             <rect key="frame" x="284" y="14" width="16" height="16"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IZ8-dt-CNl">
+                                        <button contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IZ8-dt-CNl">
                                             <rect key="frame" x="264" y="0.0" width="56" height="43"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
-                                                <action selector="markFacebookUsersList:" destination="scd-jL-KOO" eventType="touchUpInside" id="wT6-Pc-T6K"/>
+                                                <action selector="pressCheckBox:" destination="ExT-vI-WyV" eventType="touchUpInside" id="2GO-oJ-bUu"/>
                                             </connections>
                                         </button>
                                     </subviews>
@@ -1092,7 +1091,7 @@
                                     <outlet property="badgeCounter" destination="KLk-yh-bXR" id="vma-jK-aP6"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="contactsCell" id="VmF-5s-i5V" customClass="QMInviteFriendsStaticCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="QMStaticABCell" id="VmF-5s-i5V" customClass="QMInviteStaticCell">
                                 <rect key="frame" x="0.0" y="123" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VmF-5s-i5V" id="iak-14-6r3">
@@ -1105,7 +1104,7 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="contacts_ic" translatesAutoresizingMaskIntoConstraints="NO" id="UWm-S5-fPA">
+                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="contacts_ic" translatesAutoresizingMaskIntoConstraints="NO" id="UWm-S5-fPA">
                                             <rect key="frame" x="10" y="7" width="30" height="29"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
@@ -1117,7 +1116,7 @@
                                             <rect key="frame" x="232" y="11" width="34" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="12" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z11-Zw-bMr">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z11-Zw-bMr">
                                             <rect key="frame" x="232" y="11" width="34" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
@@ -1129,13 +1128,13 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5tQ-IR-g1v">
-                                            <rect key="frame" x="263" y="0.0" width="57" height="43"/>
+                                            <rect key="frame" x="268" y="0.0" width="52" height="43"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
-                                                <action selector="markContactUsersList:" destination="scd-jL-KOO" eventType="touchUpInside" id="r5P-Un-oAC"/>
+                                                <action selector="pressCheckBox:" destination="VmF-5s-i5V" eventType="touchUpInside" id="bej-rg-K2q"/>
                                             </connections>
                                         </button>
                                     </subviews>
@@ -1145,7 +1144,7 @@
                                     <outlet property="badgeCounter" destination="z11-Zw-bMr" id="BXf-kB-FrJ"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="InviteFriendCell" rowHeight="60" id="iJ3-x6-VSB" customClass="QMInviteFriendsCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="QMInviteFriendCell" rowHeight="60" id="iJ3-x6-VSB" customClass="QMInviteFriendCell">
                                 <rect key="frame" x="0.0" y="167" width="320" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="iJ3-x6-VSB" id="yXp-Uj-UQ3">
@@ -1156,16 +1155,18 @@
                                             <rect key="frame" x="13" y="5" width="50" height="50"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </imageView>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Leonore Cantly" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6jh-Qz-SUl">
-                                            <rect key="frame" x="71" y="12" width="170" height="24"/>
+                                        <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Leonore Cantly" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6jh-Qz-SUl">
+                                            <rect key="frame" x="71" y="12" width="205" height="24"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Online" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bpP-jW-lIv">
+                                        <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Online" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bpP-jW-lIv">
                                             <rect key="frame" x="71" y="33" width="170" height="13"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <fontDescription key="fontDescription" type="italicSystem" pointSize="12"/>
                                             <color key="textColor" red="0.58039218189999997" green="0.58039218189999997" blue="0.58039218189999997" alpha="1" colorSpace="deviceRGB"/>
                                             <nil key="highlightedColor"/>
@@ -1179,22 +1180,22 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Luv-K6-hhb">
-                                            <rect key="frame" x="249" y="0.0" width="71" height="59"/>
+                                            <rect key="frame" x="270" y="0.0" width="50" height="59"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
-                                                <action selector="markUser:" destination="scd-jL-KOO" eventType="touchUpInside" id="TfA-Sj-t8N"/>
+                                                <action selector="pressCheckBox:" destination="iJ3-x6-VSB" eventType="touchUpInside" id="9y2-DH-FDx"/>
                                             </connections>
                                         </button>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="activeCheckbox" destination="g1o-Aa-cF4" id="nBH-Kd-4J5"/>
-                                    <outlet property="fullNameLabel" destination="6jh-Qz-SUl" id="L5V-P7-yw7"/>
-                                    <outlet property="statusLabel" destination="bpP-jW-lIv" id="9fQ-Mc-4BE"/>
-                                    <outlet property="userImageView" destination="bkt-QF-q8l" id="Hw6-tf-jb6"/>
+                                    <outlet property="descriptionLabel" destination="bpP-jW-lIv" id="m1q-OX-Cw2"/>
+                                    <outlet property="qmImageView" destination="bkt-QF-q8l" id="ptL-ga-jfu"/>
+                                    <outlet property="titleLabel" destination="6jh-Qz-SUl" id="SOJ-R2-UOD"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -1358,11 +1359,11 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="avatar" destination="oai-MX-Rq6" id="7cY-k2-MsG"/>
+                                            <outlet property="descriptionLabel" destination="xrB-uj-SaW" id="jSR-0Q-Xr2"/>
                                             <outlet property="groupMembersNumb" destination="CgZ-1R-iIh" id="uuG-um-jph"/>
                                             <outlet property="groupNumbBackground" destination="mcj-3Q-v6K" id="Ols-3P-NZh"/>
-                                            <outlet property="lastMessage" destination="xrB-uj-SaW" id="WMv-oe-ldD"/>
-                                            <outlet property="name" destination="SMq-cL-ZLA" id="7Jn-2R-pws"/>
+                                            <outlet property="qmImageView" destination="oai-MX-Rq6" id="UIg-c8-4OM"/>
+                                            <outlet property="titleLabel" destination="SMq-cL-ZLA" id="joY-Ba-lYF"/>
                                             <outlet property="unreadMsgBackground" destination="seo-Qn-upI" id="T2D-id-hO7"/>
                                             <outlet property="unreadMsgNumb" destination="jgW-7w-aOI" id="4aR-qT-gvg"/>
                                         </connections>
@@ -2094,7 +2095,7 @@
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CreateChatCell" rowHeight="60" id="hCb-Qx-DcN" customClass="QMInviteFriendsCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CreateChatCell" rowHeight="60" id="hCb-Qx-DcN" customClass="QMInviteFriendCell">
                                         <rect key="frame" x="0.0" y="22" width="320" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hCb-Qx-DcN" id="hlC-13-Hu2">
@@ -2288,14 +2289,14 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="GroupDetailsCell" rowHeight="60" id="LCK-pC-hsn" customClass="QMGroupDetailsCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="GroupDetailsCell" rowHeight="60" id="LCK-pC-hsn" customClass="QMUserCell">
                                         <rect key="frame" x="0.0" y="22" width="320" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LCK-pC-hsn" id="AAh-sN-oBn">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="59"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="upic-placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="wES-an-arE">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="upic-placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="wES-an-arE" customClass="QMImageView">
                                                     <rect key="frame" x="13" y="5" width="50" height="50"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </imageView>
@@ -2320,10 +2321,9 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="avatarView" destination="wES-an-arE" id="RtE-Gi-oKe"/>
                                             <outlet property="fullNameLabel" destination="0Pu-bp-xEd" id="s0v-vt-JlX"/>
-                                            <outlet property="onlineCircle" destination="H4L-WX-mE7" id="kTU-m6-46I"/>
                                             <outlet property="statusLabel" destination="f2e-dV-iHy" id="GBE-yX-ZuP"/>
+                                            <outlet property="userImageView" destination="wES-an-arE" id="x5u-ne-sey"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -2431,7 +2431,7 @@
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CreateChatCell" rowHeight="60" id="M46-Tk-8IQ" customClass="QMInviteFriendsCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CreateChatCell" rowHeight="60" id="M46-Tk-8IQ" customClass="QMInviteFriendCell">
                                         <rect key="frame" x="0.0" y="22" width="320" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="M46-Tk-8IQ" id="EXB-4J-sqT">
@@ -2759,9 +2759,9 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="97f-Zx-Ebh"/>
         <segue reference="veI-CA-d70"/>
-        <segue reference="hbf-5d-R0X"/>
+        <segue reference="97f-Zx-Ebh"/>
+        <segue reference="IAo-qy-uHQ"/>
         <segue reference="bOV-zd-nKn"/>
         <segue reference="aeV-0O-de3"/>
     </inferredMetricsTieBreakers>

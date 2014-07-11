@@ -72,8 +72,6 @@ typedef void (^QBChatDialogHistoryBlock)(NSMutableArray *chatDialogHistoryArray,
 typedef void (^QBContactListBlock)(id object);
 typedef void (^QBDataBlock)(id data);
 
-typedef void(^AddressBookResult)(NSArray *contacts, BOOL success, NSError *error);
-
 //************** Segue Identifiers *************************
 static NSString *const kTabBarSegueIdnetifier         = @"TabBarSegue";
 static NSString *const kSplashSegueIdentifier         = @"SplashSegue";

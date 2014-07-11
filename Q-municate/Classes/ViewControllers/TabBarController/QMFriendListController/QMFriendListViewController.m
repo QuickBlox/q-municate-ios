@@ -2,7 +2,7 @@
 //  QMFriendListController.m
 //  Q-municate
 //
-//  Created by Igor Alefirenko on 24/02/2014.
+//  Created by Ivanov Andrey on 7/07/2014.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -40,6 +40,7 @@
 #pragma mark - Actions
 
 - (IBAction)globalSearch:(id)sender {
+    
     [self.dataSource globalSearch];
 }
 
@@ -48,6 +49,8 @@
     self.dataSource.searchActive ^= 1;
     [self showSearchBar:self.dataSource.searchActive animated:YES];
 }
+
+#pragma mark - Show/Hide UISearchBar
 
 - (void)showSearchBar:(BOOL)isShow animated:(BOOL)animated {
 
@@ -67,6 +70,7 @@
 #pragma mark - UISearchBarDelegate
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    
     self.dataSource.searchText = searchText;
 }
 

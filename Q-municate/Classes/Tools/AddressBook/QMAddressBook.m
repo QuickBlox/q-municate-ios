@@ -12,7 +12,7 @@
 
 @implementation QMAddressBook
 
-- (void)getAllContactsFromAddressBook:(AddressBookResult)block {
++ (void)getAllContactsFromAddressBook:(AddressBookResult)block {
 
     CFErrorRef error = nil;
     
@@ -38,17 +38,24 @@
                 if (contactsCount > 0) {
                     
                     CFArrayRef peoples = ABAddressBookCopyArrayOfAllPeople(addressBook);
+                   
                     for (CFIndex i = 0; i < contactsCount; i++) {
+                        
                         ABRecordRef ref = CFArrayGetValueAtIndex(peoples, i);
-                        ABPerson *person = [[ABPerson alloc] initWithRecordRef:ref];
+
+                        ABRecordID contactID = ABRecordGetRecordID(ref);
+                        
+                        ABPerson *person = [[ABPerson alloc] initWithRecordID:contactID addressBookRef:addressBook];
                         [persons addObject:person];
                     }
                     CFRelease(peoples);
                 }
-                block(persons, YES, nil);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    block(persons, YES, nil);
+                });
             }
+            CFRelease(addressBook);
         });
-        CFRelease(addressBook);
     }
 }
 

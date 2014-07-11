@@ -2,7 +2,7 @@
 //  QMChatCell.m
 //  Q-municate
 //
-//  Created by Andrey on 11.06.14.
+//  Created by Ivanov Andrey on 11.06.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -17,8 +17,6 @@
 @property (strong, nonatomic) UILabel *timeLabel;
 @property (strong, nonatomic) UILabel *headerLabel;
 @property (strong, nonatomic) CALayer *maskLayer;
-
-
 
 @end
 
@@ -196,7 +194,6 @@
                                                ballonSettings.imageCapInsets.top / maskImage.size.height,
                                                1.0 / maskImage.size.width,
                                                1.0 / maskImage.size.height);
-    
 }
 
 #pragma mark - Set user image

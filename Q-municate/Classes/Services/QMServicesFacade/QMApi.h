@@ -123,6 +123,7 @@
 @interface QMApi (Users)
 
 //Local storage
+
 @property (strong, nonatomic, readonly) NSArray *friends;
 
 - (void)addUser:(QBUUser *)user;
@@ -136,5 +137,12 @@
 - (void)retrieveFriendsIfNeeded:(void(^)(BOOL updated))completion;
 - (void)retrieveUsersForChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(BOOL updated))completion;
 - (void)retrieveUsersWithIDs:(NSArray *)idsToFetch completion:(void(^)(BOOL updated))completion;
+
+@end
+
+@interface QMApi (Facebook)
+
+- (NSURL *)fbUserImageURLWithUserID:(NSString *)userID;
+- (void)fbFriends:(void(^)(NSArray *fbFriends))completion;
 
 @end

@@ -6,14 +6,10 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "QMTableViewCell.h"
 
-@class QMImageView;
+@interface QMChatListCell : QMTableViewCell
 
-@interface QMChatListCell : UITableViewCell
-
-
-
-- (void)configureCellWithDialog:(QBChatDialog *)chatDialog;
+@property (strong, nonatomic) QBChatDialog *dialog;
 
 @end
