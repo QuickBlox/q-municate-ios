@@ -21,16 +21,23 @@
     self.descriptionLabel.text = kStatusOfflineString;
 }
 
-- (void)setUser:(QBUUser *)user {
+- (void)setUserData:(id)userData {
     
-    if (user != _user) {
-        _user = user;
+    if (_userData != userData) {
+        _userData = userData;
         
-        self.titleLabel.text = (user.fullName.length == 0) ? kEmptyString : user.fullName;
-        NSURL *avatarUrl = [NSURL URLWithString:user.website];
-        [self setUserImageWithUrl:avatarUrl];
+        if ([_userData isKindOfClass:[QBUUser class]]) {
+            [self configureWihtUser:_userData];
+        }
     }
 }
 
+- (void)configureWihtUser:(QBUUser *)user {
+    
+    self.titleLabel.text = (user.fullName.length == 0) ? kEmptyString : user.fullName;
+    NSURL *avatarUrl = [NSURL URLWithString:user.website];
+    [self setUserImageWithUrl:avatarUrl];
+
+}
 
 @end

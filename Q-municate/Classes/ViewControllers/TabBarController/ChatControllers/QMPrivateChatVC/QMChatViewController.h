@@ -11,7 +11,6 @@
 
 @interface QMChatViewController : QMChatVC
 
-- (void)setupPrivateChatWithChatDialog:(QBChatDialog *)chatDialog andOpponent:(QBUUser *)opponent;
-- (void)setupGroupChatWithChatDialog:(QBChatDialog *)chatDialog;
+@property (strong, nonatomic) QBChatDialog *dialog;
 
 @end

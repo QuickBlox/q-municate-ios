@@ -11,7 +11,7 @@
 
 @interface QMApi()
 
-@property (strong, nonatomic) NSMutableDictionary *usersMemoryCache;
+@property (strong, nonatomic) NSMutableDictionary *users;
 @property (strong, nonatomic) NSMutableArray *contactList;
 
 @end
@@ -75,7 +75,7 @@
     NSMutableSet *idsToFetch = [NSMutableSet setWithArray:ids];
     for (NSString *userID in ids) {
         
-        QBUUser *user = self.usersMemoryCache[userID];
+        QBUUser *user = self.users[userID];
         if (user) {
             [idsToFetch removeObject:userID];
         }
@@ -117,13 +117,13 @@
 - (void)addUser:(QBUUser *)user {
     
     NSString *key = [NSString stringWithFormat:@"%d", user.ID];
-    self.usersMemoryCache[key] = user;
+    self.users[key] = user;
 }
 
 - (QBUUser *)userWithID:(NSUInteger)userID {
     
     NSString *stingID = [NSString stringWithFormat:@"%d", userID];
-    QBUUser *user = self.usersMemoryCache[stingID];
+    QBUUser *user = self.users[stingID];
     
     return user;
 }
@@ -134,7 +134,7 @@
     NSMutableArray *allFriends = [NSMutableArray array];
     
     for (NSString * friendID in ids) {
-        QBUUser *user = self.usersMemoryCache[friendID];
+        QBUUser *user = self.users[friendID];
         if (user) {
             [allFriends addObject:user];
         }

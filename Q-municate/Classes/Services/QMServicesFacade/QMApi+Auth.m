@@ -185,4 +185,12 @@
     }];
 }
 
+- (void)resetUserPassordWithEmail:(NSString *)email completion:(void(^)(BOOL success))completion {
+    
+    __weak __typeof(self)weakSelf = self;
+    [self.authService resetUserPasswordWithEmail:email completion:^(Result *result) {
+        completion([weakSelf checkResult:result]);
+    }];
+}
+
 @end

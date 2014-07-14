@@ -2,13 +2,9 @@
 //  QMInviteFriendsDataSource.h
 //  Q-municate
 //
-//  Created by lysenko.mykhayl on 4/4/14.
+//  Created by Ivanov Andrey on 07.04.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
-
-@class QMPerson;
-
-
 
 @interface QMInviteFriendsDataSource : NSObject
 
@@ -16,5 +12,7 @@
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 
+- (NSArray *)facebookIDsToInvite;
+- (NSArray *)emailsToInvite;
 
 @end

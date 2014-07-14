@@ -35,9 +35,9 @@
     return success;
 }
 
-- (void)getMessageHistoryWithDialogID:(NSString *)dialogIDString withCompletion:(QBChatHistoryMessageResultBlock)completion {
+- (void)messageWithDialogID:(NSString *)dialogID completion:(QBChatHistoryMessageResultBlock)completion {
     
-	[QBChat messagesWithDialogID:dialogIDString delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
+	[QBChat messagesWithDialogID:dialogID delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
 }
 
 @end

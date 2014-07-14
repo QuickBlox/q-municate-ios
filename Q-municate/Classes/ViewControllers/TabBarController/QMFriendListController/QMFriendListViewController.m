@@ -58,6 +58,7 @@
 
     if (!isShow) {
         self.dataSource.searchText = self.searchBar.text = nil;
+        [self.searchBar endEditing:isShow];
     }
     
     void(^show)(void) = ^() {

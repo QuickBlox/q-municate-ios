@@ -119,8 +119,8 @@
     QMInviteFriendCell *cell = [tableView dequeueReusableCellWithIdentifier:kCreateChatCellIdentifier];
     
     QBUUser *friend = self.friends[indexPath.row];
-    BOOL checked = [self.selectedFriends containsObject:friend];
-    [cell setUser:friend checked:checked];
+    cell.check = [self.selectedFriends containsObject:friend];
+    cell.userData = friend;
     
     return cell;
 }
@@ -132,12 +132,9 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     QBUUser *checkedUser = self.friends[indexPath.row];
     
-    if ([self.selectedFriends containsObject:checkedUser]) {
-        [self.selectedFriends removeObject:checkedUser];
-    } else {
-        [self.selectedFriends addObject:checkedUser];
-    }
-
+    BOOL contains = [self.selectedFriends containsObject:checkedUser];
+    contains ? [self.selectedFriends removeObject:checkedUser] : [self.selectedFriends addObject:checkedUser];
+    
     // update navigation title:
     [self updateNavTitle];
     

@@ -7,77 +7,29 @@
 //
 
 #import "QMChatViewController.h"
-#import "QMPrivateChatDataSource.h"
-#import "QMGroupChatDataSource.h"
+#import "QMChatDataSource.h"
 #import "QMApi.h"
 
 @interface QMChatViewController ()
-
 <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+
 
 @end
 
 @implementation QMChatViewController
 
-- (void)setupPrivateChatWithChatDialog:(QBChatDialog *)chatDialog andOpponent:(QBUUser *)opponent {
-    self.dataSource = [[QMPrivateChatDataSource alloc] initWithChatDialog:chatDialog
-                                                                 opponent:opponent
-                                                             forTableView:self.tableView];
-}
-
-- (void)setupGroupChatWithChatDialog:(QBChatDialog *)chatDialog {
-    
-    NSAssert(chatDialog.roomJID, @"Check it");
-    QBChatRoom *chatRoom;// = [chatService chatRoomWithRoomJID:chatDialog.roomJID];
-    
-    self.dataSource = [[QMGroupChatDataSource alloc ] initWithChatDialog:chatDialog
-                                                                chatRoom:chatRoom
-                                                            forTableView:self.tableView];
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    self.dataSource = [[QMChatDataSource alloc] initWithChatDialog:self.dialog forTableView:self.tableView];
     
     self.automaticallyScrollsToMostRecentMessage = YES;
+    
+    [self setupPrivateChatWithChatDialog:[QBChatDialog new] andOpponent:[QBUUser user]];
 }
 
-#pragma mark - InputView Button Actions
 
-- (void)didPressAccessoryButton:(UIButton *)sender {
-    [self presentImagePicker];
-}
-
-- (void)didPressSendButton:(UIButton *)button
-           withMessageText:(NSString *)text
-                      date:(NSDate *)date {
-    
-    [self.dataSource sendMessage:text];
-}
-
-- (void)presentImagePicker {
-
-    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-    
-    imagePicker.delegate = self;
-    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    imagePicker.mediaTypes = @[(NSString *) kUTTypeImage]; //(NSString *) kUTTypeMovie
-    imagePicker.allowsEditing = YES;
-    
-    [self presentViewController:imagePicker animated:YES completion:nil];
-}
-
-#pragma mark - UIImagePickerControllerDelegate
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    
-    NSString *mediaType = info[UIImagePickerControllerMediaType];
-    
-    if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
-        UIImage *editImage = info[ UIImagePickerControllerEditedImage];
-        [self.dataSource sendImage:editImage];
-    
-    }
-}
 
 //- (void)configureNavigationBarForPrivateChat {
 //

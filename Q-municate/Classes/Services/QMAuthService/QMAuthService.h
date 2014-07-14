@@ -51,7 +51,7 @@
  Type of Result - Result
  @param email User's email
  */
-- (void)resetUserPasswordForEmail:(NSString *)email completion:(QBResultBlock)completion;
+- (void)resetUserPasswordWithEmail:(NSString *)email completion:(QBResultBlock)completion;
 /**
  Update User
  Type of Result - QBUUserResult

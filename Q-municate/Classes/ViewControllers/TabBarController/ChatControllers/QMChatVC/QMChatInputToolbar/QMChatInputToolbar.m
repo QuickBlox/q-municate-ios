@@ -28,8 +28,6 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
     if (self) {
         [self configureChatToolbarContentView];
         
-        self.contentView.leftBarButtonItem = [QMChatButtonsFactory cameraButton];
-        self.contentView.rightBarButtonItem = [QMChatButtonsFactory sendButton];
     }
     
     return self;
@@ -38,7 +36,6 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
 - (void)configureChatToolbarContentView {
     
     self.translatesAutoresizingMaskIntoConstraints = NO;
-    self.sendButtonOnRight = YES;
     
     QMChatToolbarContentView *contentView = [[QMChatToolbarContentView alloc] init];
     [self addSubview:contentView];

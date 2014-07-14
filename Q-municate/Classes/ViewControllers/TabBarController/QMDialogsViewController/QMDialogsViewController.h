@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface QMChatRoomListController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface QMDialogsViewController : UIViewController
 
 @end

@@ -11,13 +11,10 @@
 
 @class QMInviteFriendCell;
 
-
 @interface QMInviteFriendCell : QMUserCell
 
-@property (assign, nonatomic, getter = isCheck) BOOL check;
+@property (strong, nonatomic) id userData;
+@property (assign, nonatomic, getter = isChecked) BOOL check;
 @property (weak, nonatomic) id <QMCheckBoxProtocol> delegate;
-
-- (void)setUserData:(id)userData checked:(BOOL)checked;
-- (void)setUser:(QBUUser *)user checked:(BOOL)checked;
 
 @end

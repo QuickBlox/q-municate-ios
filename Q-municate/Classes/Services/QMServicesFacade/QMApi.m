@@ -22,8 +22,11 @@
 
 @interface QMApi()
 
-@property (strong, nonatomic) NSMutableDictionary *usersMemoryCache;
 @property (strong, nonatomic) NSMutableArray *contactList;
+@property (strong, nonatomic) NSMutableDictionary *users;
+@property (strong, nonatomic) NSMutableArray *dialogs;
+@property (strong, nonatomic) NSMutableDictionary *chatRooms;
+@property (strong, nonatomic) NSMutableDictionary *messages;
 
 @end
 
@@ -52,8 +55,14 @@
         self.avCallService = [[QMAVCallService alloc] init];
         self.chatDialogsService = [[QMChatDialogsService alloc] init];
         self.chatService = [[QMChatService alloc] init];
-        self.usersMemoryCache = [NSMutableDictionary dictionary];
+        
+        self.users = [NSMutableDictionary dictionary];
         self.contactList = [NSMutableArray array];
+        
+        self.dialogs = [NSMutableArray array];
+        self.chatRooms = [NSMutableDictionary dictionary];
+        
+        self.messages = [NSMutableDictionary dictionary];
 
         [[QMChatReceiver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
             [self.contactList removeAllObjects];

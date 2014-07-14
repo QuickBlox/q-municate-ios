@@ -10,15 +10,22 @@
 #import "QMChatDialogsService.h"
 #import "QMMessagesService.h"
 
+@interface QMApi()
+
+@property (strong, nonatomic) NSMutableArray *dialogs;
+@property (strong, nonatomic) NSMutableDictionary *chatRooms;
+
+@end
+
 @implementation QMApi (ChatDialogs)
 
 - (void)fetchAllDialogs:(void(^)(void))completion {
 
     __weak __typeof(self)weakSelf = self;
     [self.chatDialogsService fetchAllDialogs:^(QBDialogsPagedResult *result) {
+        
         if ([weakSelf checkResult:result]) {
-            //join all group dialogs:
-            [self joinRoomsForDialogs:result.dialogs];
+            [self addDialogs:result.dialogs];
             completion();
         }
     }];
@@ -59,7 +66,7 @@
 
 - (void)createPrivateChatDialogWithOpponent:(QBUUser *)opponent completion:(QBChatDialogResultBlock)completion {
     
-    NSString *opponentID = [NSString stringWithFormat:@"%lu", (unsigned long)opponent.ID];
+    NSString *opponentID = [NSString stringWithFormat:@"%d", opponent.ID];
     NSArray *occupantsIDs = @[opponentID];
     
     // creating private chat dialog:
@@ -73,14 +80,22 @@
 
 - (void)createGroupChatDialogWithName:(NSString *)name ocupants:(NSArray *)ocupants completion:(QBChatDialogResultBlock)completion {
 
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:ocupants.count];
+    
+    for (QBUUser *user in ocupants) {
+        [array addObject:[NSString stringWithFormat:@"%d", user.ID]];
+    }
+    
     QBChatDialog *chatDialog = [[QBChatDialog alloc] init];
     chatDialog.name = name;
-    chatDialog.occupantIDs = ocupants;
+    chatDialog.occupantIDs = array;
     chatDialog.type = QBChatDialogTypeGroup;
 
     __weak __typeof(self)weakSelf = self;
     [self.chatDialogsService createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
-        [weakSelf sendNotificationWithType:1 toRecipients:ocupants chatDialog:chatDialog];
+        [weakSelf addDialog:result.dialog];
+        [weakSelf sendNotificationWithType:1 toRecipients:ocupants chatDialog:result.dialog];
+        completion(result);
     }];
 }
 
@@ -100,15 +115,12 @@
     
     NSTimeInterval timestamp = (unsigned long)[[NSDate date] timeIntervalSince1970];
     customParams[@"date_sent"] = @(timestamp);
-    customParams[@"notification_type"] = @"1";
+    customParams[@"notification_type"] = [NSString stringWithFormat:@"%d", type];
     
     msg.customParameters = customParams;
     
     return msg;
 }
-
-//1-create
-//2-update
 
 - (void)sendNotificationWithType:(NSUInteger)type toRecipients:(NSArray *)recipients chatDialog:(QBChatDialog *)chatDialog {
 
@@ -122,25 +134,35 @@
 
 #pragma mark - Join to room
 
-- (void)joinRoomWithRoomJID:(NSString *)roomJID {
-    
-    QBChatRoom *chatRoom = [[QBChatRoom alloc] initWithRoomJID:roomJID];
-    [chatRoom joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
-}
 
-- (void)joinRoomsForDialogs:(NSArray *)chatDialogs {
+- (void)addDialogs:(NSArray *)dialogs {
     
-    for (QBChatDialog *dialog in chatDialogs) {
-        /** Room JID. If private chat, room JID will be nil */
-        QBChatRoom *existRoom = nil;//self.allChatRoomsAsDictionary[dialog.roomJID];
-        
-        if (dialog.roomJID && existRoom.isJoined && !existRoom) {
-            continue;
-        }
-        
-        [self joinRoomWithRoomJID:dialog.roomJID];
+    for (QBChatDialog *chatDialog in dialogs) {
+        [self addDialog:chatDialog];
     }
 }
+
+- (void)addDialog:(QBChatDialog *)chatDialog {
+    
+    if (chatDialog.type == QBChatDialogTypeGroup) {
+
+        NSString *roomJID = chatDialog.roomJID;
+        NSAssert(roomJID, @"Need update this case");
+        
+        QBChatRoom *existRoom = self.chatRooms[roomJID];
+        
+        if (!existRoom) {
+            QBChatRoom *chatRoom = [[QBChatRoom alloc] initWithRoomJID:roomJID];
+            [chatRoom joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
+            self.chatRooms[roomJID] = chatRoom;
+        }
+    }
+    
+    if (![self.dialogs containsObject:chatDialog]) {
+        [self.dialogs addObject:chatDialog];
+    }
+}
+
 //
 //- (void)updateChatDialogForChatMessage:(QBChatMessage *)chatMessage {
 //    

@@ -2,7 +2,7 @@
 //  QMFriendsListDataSource.m
 //  Q-municate
 //
-//  Created by lysenko.mykhayl on 4/3/14.
+//  Created by Ivanov Andrey on 4/3/14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -26,7 +26,6 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
 
 @property (strong, nonatomic) NSArray *searchList;
 @property (strong, nonatomic) NSArray *friendList;
-
 @property (weak, nonatomic) UITableView *tableView;
 
 @end
@@ -131,9 +130,9 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
         [[UIView alloc] initWithFrame:CGRectZero];
         
         if (_searchActive) {
+        } else {
             [self.tableView beginUpdates];
             [self.tableView endUpdates];
-        } else {
             self.searchList = nil;
         }
     }
@@ -168,6 +167,7 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
 }
 
 - (NSArray *)usersAtSections:(NSUInteger)section {
+    
     return (section == 0 ) ? self.friendList : self.searchList;
 }
 
@@ -179,8 +179,8 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
     
     QBContactListItem *contactItem = [[QMApi instance] contactItemWithUserID:user.ID];
     
-    cell.user = user;
-    cell.isFriend = contactItem ? YES : NO;
+    cell.userData = user;
+    cell.isFriend = (BOOL)contactItem;
     cell.online = contactItem.online;
     cell.searchText = self.searchText;
     cell.delegate = self;
@@ -191,7 +191,12 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
 #pragma mark - QMFriendListCellDelegate
 
 - (void)friendListCell:(QMFriendListCell *)cell pressAddBtn:(UIButton *)sender {
-    [[QMApi instance] addUserInContactListWithUserID:cell.user.ID];
+    
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    NSArray *datasource = [self usersAtSections:indexPath.section];
+    QBUUser *user = datasource[indexPath.row];
+    
+    [[QMApi instance] addUserInContactListWithUserID:user.ID];
 }
 
 @end

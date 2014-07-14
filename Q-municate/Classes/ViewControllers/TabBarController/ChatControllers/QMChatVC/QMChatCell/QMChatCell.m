@@ -26,13 +26,12 @@
     
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        
         [self createContainerSubviews];
     }
     return self;
 }
 
-//#define SHOW_BORDERS
+#define SHOW_BORDERS
 
 - (void)createContainerSubviews {
     
@@ -76,6 +75,12 @@
     
     self.balloonImageView.layer.borderColor = [UIColor colorWithRed:0.286 green:0.587 blue:0.663 alpha:1.000].CGColor;
     self.balloonImageView.layer.borderWidth = 1;
+    
+    /***** ******/
+//    self.messageContainer.backgroundColor = [UIColor yellowColor];
+//    self.balloonImageView.backgroundColor = [UIColor lightGrayColor];
+//    self.containerView.backgroundColor = [UIColor orangeColor];
+//    self.userImageView.backgroundColor = [UIColor greenColor];
     
 #endif
     

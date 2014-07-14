@@ -27,4 +27,6 @@
  */
 - (BOOL)sendChatMessage:(QBChatMessage *)message toRoom:(QBChatRoom *)chatRoom;
 
+- (void)messageWithDialogID:(NSString *)dialogID completion:(QBChatHistoryMessageResultBlock)completion;
+
 @end

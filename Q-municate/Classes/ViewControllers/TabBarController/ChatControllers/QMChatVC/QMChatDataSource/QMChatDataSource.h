@@ -14,29 +14,15 @@
 @interface QMChatDataSource : NSObject
 
 @property (strong, nonatomic) QBChatDialog *chatDialog;
-@property (strong, nonatomic) NSArray *qmChatHistory;
+@property (strong, nonatomic, readonly) NSArray *messages;
 
 - (id)init __attribute__((unavailable("init is not a supported initializer for this class.")));
 
 - (instancetype)initWithChatDialog:(QBChatDialog *)dialog forTableView:(UITableView *)tableView;
-/**
- Reload all cell in tableView
- */
-- (void)reloadTableViewData;
-- (void)loadHistory:(void(^)(void))finish;
+
 - (void)sendImage:(UIImage *)image;
 - (void)sendMessage:(NSString *)message;
-/**
-// Get Cell id at QMMessage
-// */
-//- (NSString *)cellIDAtQMMessage:(QMMessage *)message;
-/**
- Abstract method
- */
-- (NSString *)messagesIdentifier;
-/**
- Abstract method
- */
+
 - (void)sendMessageWithText:(NSString *)text;
 
 @end

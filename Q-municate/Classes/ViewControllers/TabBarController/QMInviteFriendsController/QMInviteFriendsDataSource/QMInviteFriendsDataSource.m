@@ -2,7 +2,7 @@
 //  QMInviteFriendsDataSource.m
 //  Q-municate
 //
-//  Created by Ivanov Andrey on 10/07/14.
+//  Created by Ivanov Andrey on 07.04.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -15,11 +15,12 @@
 #import "QMAddressBook.h"
 #import "SVProgressHUD.h"
 
-typedef NS_ENUM(NSUInteger, QMInviteSecions) {
+typedef NS_ENUM(NSUInteger, QMCollectionGroup) {
     
-    QMInviteStaticSection = 0,
-    QMInviteFriendsSection = 1,
-    QMInviteNumberOfSection = 2
+    QMStaticCellsSection = 0,
+    QMFriendsListSection = 1,
+    QMABFriendsToInviteSection = 3,
+    QMFBFriendsToInviteSection = 4
 };
 
 typedef NS_ENUM(NSUInteger, QMInviteFriendsSourceType) {
@@ -33,6 +34,7 @@ NSString *const kQMStaticABCellID = @"QMStaticABCell";
 
 const CGFloat kQMInviteFriendCellHeight = 60;
 const CGFloat kQMStaticCellHeihgt = 44;
+const NSUInteger kQMNumberOfSection = 2;
 
 @interface QMInviteFriendsDataSource()
 
@@ -41,8 +43,11 @@ const CGFloat kQMStaticCellHeihgt = 44;
 @property (weak, nonatomic) UITableView *tableView;
 
 @property (strong, nonatomic) NSMutableDictionary *collections;
+
 @property (strong, nonatomic) QMInviteStaticCell *abStaticCell;
 @property (strong, nonatomic) QMInviteStaticCell *fbStaticCell;
+@property (strong, nonatomic) NSArray *fbUsers;
+@property (strong, nonatomic) NSArray *abUsers;
 
 @end
 
@@ -53,11 +58,14 @@ const CGFloat kQMStaticCellHeihgt = 44;
     self = [super init];
     if (self) {
         
+        _collections = [NSMutableDictionary dictionary];
+        _abUsers = @[];
+        _fbUsers = @[];
+        
         self.tableView = tableView;
         self.tableView.dataSource = self;
-        self.collections = [NSMutableDictionary dictionary];
         
-        NSMutableArray *staticCells = [NSMutableArray array];
+        NSMutableArray *staticCells = @[].mutableCopy;
         self.abStaticCell = [self.tableView dequeueReusableCellWithIdentifier:kQMStaticABCellID];
         self.abStaticCell.delegate = self;
         
@@ -66,73 +74,140 @@ const CGFloat kQMStaticCellHeihgt = 44;
         
         [staticCells insertObject:self.abStaticCell atIndex:QMInviteFriendsSourceTypeAddressBook];
         [staticCells insertObject:self.fbStaticCell atIndex:QMInviteFriendsSourceTypeFacebook];
-        
-        [self setCollection:staticCells toSecion:QMInviteStaticSection];
+
+        [self setCollection:staticCells toSection:QMStaticCellsSection];
+        [self setCollection:@[].mutableCopy toSection:QMABFriendsToInviteSection];
+        [self setCollection:@[].mutableCopy toSection:QMFBFriendsToInviteSection];
     }
     
     return self;
 }
 
-- (void)reloadFriendSection {
-    
-    [self.tableView beginUpdates];
-    
-    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex: QMInviteFriendsSection];
-    [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
-    
-    [self.tableView endUpdates];
-}
+#pragma mark - fetch user 
 
-- (void)fetchFacebookFriends {
+- (void)fetchFacebookFriends:(void(^)(void))completion {
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] fbFriends:^(NSArray *fbFriends) {
-        
-        [self setCollection:fbFriends toSecion:QMInviteFriendsSection];
-        [self reloadFriendSection];
+        self.fbUsers = fbFriends;
         [SVProgressHUD dismiss];
+        if (completion) completion();
     }];
 }
 
-- (void)fetchAdressbookFriends {
+- (void)fetchAdressbookFriends:(void(^)(void))completion {
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     [QMAddressBook getAllContactsFromAddressBook:^(NSArray *contacts, BOOL success, NSError *error) {
-        
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.emails.@count > 0"];
-        NSArray *emailExist = [contacts filteredArrayUsingPredicate:predicate];
-        
-        [self setCollection:emailExist toSecion:QMInviteFriendsSection];
-        [self reloadFriendSection];
+        self.abUsers = [contacts filteredArrayUsingPredicate:predicate];
         [SVProgressHUD dismiss];
+        if (completion) completion();
     }];
 }
 
-#pragma mark - keys
+#pragma mark - setters
 
+- (void)setFbUsers:(NSArray *)fbUsers {
+    
+    fbUsers = [self sortUsersByKey:@"first_name" users:fbUsers];
+    if (![_fbUsers isEqualToArray:fbUsers]) {
+        _fbUsers = fbUsers;
+        [self updateDatasource];
+    }
+}
+
+- (void)setAbUsers:(NSArray *)abUsers {
+    
+    abUsers = [self sortUsersByKey:@"fullName" users:abUsers];
+    if (![_abUsers isEqualToArray:abUsers]) {
+        _abUsers = abUsers;
+        [self updateDatasource];
+    }
+}
+
+- (NSArray *)sortUsersByKey:(NSString *)key users:(NSArray *)users {
+    
+    NSSortDescriptor *fullNameDescriptor = [[NSSortDescriptor alloc] initWithKey:key ascending:YES];
+    NSArray *sortedUsers = [users sortedArrayUsingDescriptors:@[fullNameDescriptor]];
+    
+    return sortedUsers;
+}
+
+- (void)reloadFriendSectionWithRowAnimation:(UITableViewRowAnimation)animation {
+    
+    [self.tableView beginUpdates];
+    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:QMFriendsListSection];
+    [self.tableView reloadSections:indexSet withRowAnimation:animation];
+    [self.tableView endUpdates];
+}
+
+- (void)reloadRowPathAtIndexPath:(NSIndexPath *)indexPath withRowAnimation:(UITableViewRowAnimation)animation {
+   
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:animation];
+    [self.tableView endUpdates];
+}
+
+- (void)updateDatasource {
+    
+    NSArray * friendsCollection = [self.fbUsers arrayByAddingObjectsFromArray:self.abUsers];
+    [self setCollection:friendsCollection toSection:QMFriendsListSection];
+    [self reloadFriendSectionWithRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return kQMNumberOfSection;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    NSArray *collection = [self collectionAtSection:section];
+    return collection.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.section == QMStaticCellsSection) {
+
+        QMInviteStaticCell *staticCell = [self itemAtIndexPath:indexPath];
+        NSArray *array = [self collectionAtSection:staticCell == self.fbStaticCell ? QMFBFriendsToInviteSection : QMABFriendsToInviteSection];
+        staticCell.badgeCount = array.count;
+        return staticCell;
+    }
+    
+    QMInviteFriendCell *cell = [tableView dequeueReusableCellWithIdentifier:kQMInviteFriendCellID];
+    
+    cell.userData = [self itemAtIndexPath:indexPath];
+    cell.check = [self checkedAtIndexPath:indexPath];
+    cell.delegate = self;
+    
+    return cell;
+}
+
+#pragma mark - keys
+/**
+ Access key for collection At section
+ */
 - (NSString *)keyAtSection:(NSUInteger)section {
     
     NSString *sectionKey = [NSString stringWithFormat:@"section - %d", section];
     return sectionKey;
 }
 
-- (NSString *)chekedKey {
-    
-    NSString *chekedkey = @"Cheked";
-    return chekedkey;
-}
-
 #pragma mark - collections
 
-- (NSArray *)collectionAtSection:(NSUInteger)section {
+- (NSMutableArray *)collectionAtSection:(NSUInteger)section {
     
     NSString *key = [self keyAtSection:section];
-    NSArray *collection = self.collections[key];
+    NSMutableArray *collection = self.collections[key];
     
     return collection;
 }
 
-- (void)setCollection:(NSArray *)collection toSecion:(NSUInteger)section {
+- (void)setCollection:(NSArray *)collection toSection:(NSUInteger)section {
     
     NSString *key = [self keyAtSection:section];
     self.collections[key] = collection;
@@ -146,81 +221,130 @@ const CGFloat kQMStaticCellHeihgt = 44;
     return item;
 }
 
-- (BOOL)chekedAtIndexPath:(NSIndexPath *)indexPath {
+- (NSUInteger)sectionToInviteWihtUserData:(id)data {
     
-    NSString *key = [self chekedKey];
-    NSArray *collection = self.collections[key];
-    BOOL cheked = [collection containsObject:indexPath];
-    
-    return cheked;
-}
-
-- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-
-    if (indexPath.section == QMInviteStaticSection) {
-        QMInviteFriendsSourceType type = indexPath.row;
-        switch (type) {
-            case QMInviteFriendsSourceTypeAddressBook: [self fetchAdressbookFriends]; break;
-            case QMInviteFriendsSourceTypeFacebook:[self fetchFacebookFriends]; break;
-            default:NSAssert(nil, @"Update logic for this row"); break;
-        }
-    }
-}
-
-- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (indexPath.section == QMInviteStaticSection ) {
-        return kQMStaticCellHeihgt;
-    } else if (indexPath.section == QMInviteFriendsSection) {
-        return kQMInviteFriendCellHeight;
+    if ([data isKindOfClass:ABPerson.class]) {
+        return QMABFriendsToInviteSection;
+    } else if([data conformsToProtocol:@protocol(FBGraphUser)]) {
+        return QMFBFriendsToInviteSection;
     }
     
+    NSAssert(nil, @"Need update this case");
     return 0;
 }
 
-#pragma mark - UITableViewDataSource
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return QMInviteNumberOfSection;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
-    NSArray *collection = [self collectionAtSection:section];
-    return collection.count;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (indexPath.section == QMInviteStaticSection) {
-        return [self itemAtIndexPath:indexPath];
-    }
-    
-    QMInviteFriendCell *cell = [tableView dequeueReusableCellWithIdentifier:kQMInviteFriendCellID];
-    cell.delegate = self;
+- (BOOL)checkedAtIndexPath:(NSIndexPath *)indexPath {
     
     id item = [self itemAtIndexPath:indexPath];
-    BOOL cheked = [self chekedAtIndexPath:indexPath];
-    [cell setUserData:item checked:cheked];
+    NSInteger sectionToInvite = [self sectionToInviteWihtUserData:item];
+    NSArray *toInvite = [self collectionAtSection:sectionToInvite];
+    BOOL checked = [toInvite containsObject:item];
     
-    return cell;
+    return checked;
 }
 
 #pragma mark - QMCheckBoxProtocol
 
 - (void)containerView:(UIView *)containerView didChangeState:(id)sender {
     
-    if (containerView == self.abStaticCell || containerView == self.fbStaticCell) {
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:(id)containerView];
+   
+    void (^update)(NSUInteger, NSArray*) = ^(NSUInteger collectionSection, NSArray *collection){
         
         QMInviteStaticCell *cell = (QMInviteStaticCell *)containerView;
-        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
         
-        cell.check ^= 1;
+        [self setCollection:cell.isChecked ? collection.mutableCopy : @[].mutableCopy toSection:collectionSection];
+        [self reloadRowPathAtIndexPath:indexPath withRowAnimation:UITableViewRowAnimationNone];
+        [self reloadFriendSectionWithRowAnimation:UITableViewRowAnimationNone];
+    };
+    
+    if (containerView == self.abStaticCell) {
+        
+        if (self.abUsers.count == 0) {
+            [self fetchAdressbookFriends:^{
+                update(QMABFriendsToInviteSection, self.abUsers);
+            }];
+        } else {
+            update(QMABFriendsToInviteSection, self.abUsers);
+        }
+        
+    } else if (containerView == self.fbStaticCell) {
+        
+        if (self.fbUsers.count == 0) {
+            [self fetchFacebookFriends:^{
+                update(QMFBFriendsToInviteSection, self.fbUsers);
+            }];
+        } else {
+            update(QMFBFriendsToInviteSection, self.fbUsers);
+        }
         
     } else {
         
         QMInviteFriendCell *cell = (QMInviteFriendCell *)containerView;
-        cell.check ^= 1;
+        
+        id item = [self itemAtIndexPath:indexPath];
+        
+        NSUInteger section = [self sectionToInviteWihtUserData:item];
+        NSMutableArray *toInvite = [self collectionAtSection:section];
+        cell.isChecked ? [toInvite addObject:item] : [toInvite removeObject:item];
+    
+        NSUInteger row = (section == QMFBFriendsToInviteSection) ? QMInviteFriendsSourceTypeFacebook : QMInviteFriendsSourceTypeAddressBook;
+        NSIndexPath *indexPathToReload = [NSIndexPath indexPathForRow:row inSection:QMStaticCellsSection];
+        
+        [self reloadRowPathAtIndexPath:indexPathToReload withRowAnimation:UITableViewRowAnimationNone];
+    }
+}
+
+#pragma mark - Public methods
+#pragma mark Invite Data
+
+- (NSArray *)facebookIDsToInvite {
+    
+    NSMutableArray *result = [NSMutableArray array];
+    NSArray *facebookUsersToInvite = [self collectionAtSection:QMFBFriendsToInviteSection];
+    
+    for (NSDictionary <FBGraphUser> *user in facebookUsersToInvite) {
+        [result addObject:user.id];
+    }
+    
+    return result;
+}
+
+- (NSArray *)emailsToInvite {
+    
+    NSMutableArray *result = [NSMutableArray array];
+    
+    NSArray *addressBookUsersToInvite = [self collectionAtSection:QMABFriendsToInviteSection];
+    for (ABPerson *user in addressBookUsersToInvite) {
+        [result addObject:user.emails.firstObject];
+    }
+    
+    return result;
+}
+
+#pragma mark -
+
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.section == QMStaticCellsSection ) {
+        return kQMStaticCellHeihgt;
+    } else if (indexPath.section == QMFriendsListSection) {
+        return kQMInviteFriendCellHeight;
+    }
+    
+    NSAssert(nil, @"Need Update this case");
+    return 0;
+}
+
+- (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.section == QMStaticCellsSection) {
+        QMInviteFriendsSourceType type = indexPath.row;
+        switch (type) {
+            case QMInviteFriendsSourceTypeAddressBook: [self fetchAdressbookFriends:nil]; break;
+            case QMInviteFriendsSourceTypeFacebook:[self fetchFacebookFriends:nil]; break;
+            default:NSAssert(nil, @"Need Update this case"); break;
+        }
     }
 }
 

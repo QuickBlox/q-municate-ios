@@ -1,5 +1,5 @@
 //
-//  QMChatListCell.h
+//  QMDialogCell.h
 //  Q-municate
 //
 //  Created by Igor Alefirenko on 31/03/2014.
@@ -8,7 +8,7 @@
 
 #import "QMTableViewCell.h"
 
-@interface QMChatListCell : QMTableViewCell
+@interface QMDialogCell : QMTableViewCell
 
 @property (strong, nonatomic) QBChatDialog *dialog;
 

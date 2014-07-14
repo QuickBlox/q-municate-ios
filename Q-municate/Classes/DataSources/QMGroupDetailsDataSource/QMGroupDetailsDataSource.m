@@ -40,10 +40,11 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     QMUserCell *cell = [tableView dequeueReusableCellWithIdentifier:kGroupDetailsCellIdentifier];
     
     QBUUser *user = self.participants[indexPath.row];
-    cell.user = user;
+    cell.userData = user;
     
     return cell;
 }

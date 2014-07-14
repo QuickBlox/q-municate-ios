@@ -2,7 +2,7 @@
 //  ABPerson.m
 //  Qmunicate
 //
-//  Created by Andrey on 06.07.14.
+//  Created by Andrey Ivanov on 06.07.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -126,6 +126,22 @@
     }
     
     return emailAddresses;
+}
+
+- (BOOL)isEqual:(ABPerson *)other {
+
+    if (other == self) {
+        return YES;
+    } else if (self.recordID == other.recordID) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (NSUInteger)hash {
+    
+    return self.recordID;
 }
 
 @end

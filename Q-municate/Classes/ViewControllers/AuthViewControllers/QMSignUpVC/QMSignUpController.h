@@ -10,6 +10,6 @@
 
 @class QMWelcomeScreenViewController;
 
-@interface QMSignUpController : UIViewController
+@interface QMSignUpController : UITableViewController
 
 @end

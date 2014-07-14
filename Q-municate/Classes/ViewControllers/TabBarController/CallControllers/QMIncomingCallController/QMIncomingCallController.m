@@ -38,7 +38,6 @@
     
     self.userNameLabel.text = opponent ? opponent.fullName : @"Unknown caller";
  
-    
     if (self.callType == QBVideoChatConferenceTypeAudioAndVideo) {
         self.incomingCallLabel.text = @"Incoming video call";
         [self.acceptButton setImage:[ UIImage imageNamed:@"answer-video"] forState:UIControlStateNormal];
@@ -50,12 +49,10 @@
     [self.userAvatarView setImageWithURL:[NSURL URLWithString:opponent.website]];
 
     [QMSoundManager playRingtoneSound];
-    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void)dealloc {

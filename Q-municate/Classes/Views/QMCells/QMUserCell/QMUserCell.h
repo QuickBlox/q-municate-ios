@@ -10,8 +10,6 @@
 
 @class QMImageView;
 
-@interface QMUserCell : QMTableViewCell
-
-@property (strong, nonatomic) QBUUser *user;
+@interface QMUserCell : QMTableViewCell 
 
 @end

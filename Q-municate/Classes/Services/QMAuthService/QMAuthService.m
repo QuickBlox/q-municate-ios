@@ -45,7 +45,7 @@
                              context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
 }
 
-- (void)resetUserPasswordForEmail:(NSString *)email completion:(QBResultBlock)completion {
+- (void)resetUserPasswordWithEmail:(NSString *)email completion:(QBResultBlock)completion {
     [QBUsers resetUserPasswordWithEmail:email delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
 }
 

@@ -10,6 +10,7 @@
 #import "QMChatViewController.h"
 #import "QMInviteFriendCell.h"
 #import "QMUsersService.h"
+#import "SVProgressHUD.h"
 #import "QMApi.h"
 
 @interface QMCreateNewChatController ()
@@ -32,12 +33,14 @@
     
 	NSMutableArray *selectedUsersMArray = self.selectedFriends;
     NSString *chatName = [self chatNameFromUserNames:selectedUsersMArray];
-    
+
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] createGroupChatDialogWithName:chatName ocupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
+    
+        [SVProgressHUD dismiss];
         [self.navigationController popViewControllerAnimated:NO];
     }];
 }
-
 
 - (NSString *)chatNameFromUserNames:(NSMutableArray *)users {
     

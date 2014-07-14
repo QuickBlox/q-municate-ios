@@ -12,18 +12,17 @@
 @implementation QMChatDialogsService
 
 - (void)fetchAllDialogs:(QBDialogsPagedResultBlock)completion {
-    //    self.allDialogsAsDictionary = [self dialogsAsDictionaryFromDialogsArray:dialogs];
+    
     [QBChat dialogsWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
 }
 
-/*Create group dialog*/
-
 - (void)createChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
+    
 	[QBChat createDialog:chatDialog delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
 }
 
 - (void)updateChatDialogWithID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest completion:(QBChatDialogResultBlock)completion {
-    //    self.allDialogsAsDictionary[chatDialog.roomJID] = chatDialog;
+    
     [QBChat updateDialogWithID:dialogID
                extendedRequest:extendedRequest
                       delegate:[QBEchoObject instance]

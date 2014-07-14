@@ -7,7 +7,6 @@
 //
 
 #import "QMForgotPasswordTVC.h"
-#import "QMAuthService.h"
 #import "QMApi.h"
 #import "SVProgressHUD.h"
 
@@ -36,20 +35,17 @@
 }
 
 - (void)resetPasswordForMail:(NSString *)emailString {
-#warning me.iD
-#warning QMContactList shared
-//    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-//    [[QMApi shared].authService resetUserPasswordForEmail:emailString completion:^(Result *result) {
-//
-//        if (result.success) {
-//            [SVProgressHUD showSuccessWithStatus:kAlertBodyMessageWasSentToMailString];
-//            [self.navigationController popViewControllerAnimated:YES];
-//            
-//        }
-//        else {
-//            [SVProgressHUD showErrorWithStatus:result.errors.lastObject];
-//        }
-//    }];
+    
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    
+    [[QMApi instance] resetUserPassordWithEmail:emailString completion:^(BOOL success) {
+        if (success) {
+            [SVProgressHUD showSuccessWithStatus:kAlertBodyMessageWasSentToMailString];
+            [self.navigationController popViewControllerAnimated:YES];
+        }else {
+            [SVProgressHUD dismiss];
+        }
+    }];
 }
 
 @end

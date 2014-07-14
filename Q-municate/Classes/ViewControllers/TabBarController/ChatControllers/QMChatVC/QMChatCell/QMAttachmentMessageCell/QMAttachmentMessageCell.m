@@ -13,7 +13,6 @@
 @property (strong, nonatomic) UIView *attachmentView;
 @property (strong, nonatomic) CALayer *contentLayer;
 
-
 @end
 
 @implementation QMAttachmentMessageCell

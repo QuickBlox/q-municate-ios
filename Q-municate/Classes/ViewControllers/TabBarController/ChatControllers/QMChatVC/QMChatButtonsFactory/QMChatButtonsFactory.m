@@ -9,6 +9,7 @@
 #import "QMChatButtonsFactory.h"
 #import "UIImage+TintColor.h"
 
+
 @implementation QMChatButtonsFactory
 
 + (UIButton *)sendButton {
@@ -45,6 +46,19 @@
     cameraButton.tintColor = [UIColor lightGrayColor];
     
     return cameraButton;
+}
+
++ (UIButton *)emojiButton
+{
+    UIImage *buttonImage = [UIImage imageNamed:@"ic_smile"];
+    
+    UIButton *emojiButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    
+    [emojiButton setImage:buttonImage forState:UIControlStateNormal];
+    emojiButton.contentMode = UIViewContentModeScaleAspectFit;
+    emojiButton.backgroundColor = [UIColor clearColor];
+    
+    return emojiButton;
 }
 
 @end

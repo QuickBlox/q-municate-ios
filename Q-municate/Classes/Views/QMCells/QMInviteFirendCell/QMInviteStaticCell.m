@@ -37,7 +37,8 @@
 }
 
 - (IBAction)pressCheckBox:(id)sender {
-    
+
+    self.check ^= 1;
     [self.delegate containerView:self didChangeState:sender];
 }
 

@@ -61,14 +61,22 @@
 /**
  */
 - (void)changePasswordForCurrentUser:(QBUUser *)currentUser completion:(void(^)(BOOL success))completion;
+/**
+ */
+- (void)resetUserPassordWithEmail:(NSString *)email completion:(void(^)(BOOL success))completion;
 
 @end
 
 @interface QMApi (Messages)
 
+- (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete;
+- (NSArray *)messagesWithDialog:(QBChatDialog *)chatDialog;
+
 @end
 
 @interface QMApi (ChatDialogs)
+
+@property (strong, nonatomic, readonly) NSMutableArray *dialogs;
 
 /**
  Get all dialogs for current user
@@ -144,5 +152,6 @@
 
 - (NSURL *)fbUserImageURLWithUserID:(NSString *)userID;
 - (void)fbFriends:(void(^)(NSArray *fbFriends))completion;
+- (void)fbInviteUsersWithIDs:(NSArray *)ids copmpletion:(void(^)(void))completion;
 
 @end

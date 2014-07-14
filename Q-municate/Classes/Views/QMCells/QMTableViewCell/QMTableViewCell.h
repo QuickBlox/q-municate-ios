@@ -9,7 +9,11 @@
 #import <UIKit/UIKit.h>
 @class QMImageView;
 
-@interface QMTableViewCell : UITableViewCell
+@interface QMTableViewCell : UITableViewCell {
+    id _userData;
+}
+
+@property (strong, nonatomic) id userData;
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;

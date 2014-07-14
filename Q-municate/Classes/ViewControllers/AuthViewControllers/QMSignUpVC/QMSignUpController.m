@@ -28,6 +28,7 @@
 
 - (IBAction)chooseUserPicture:(id)sender;
 - (IBAction)signUp:(id)sender;
+- (IBAction)checkLicense:(id)sender;
 
 @end
 
@@ -87,6 +88,11 @@
         if(result.success)
             [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
     }];
+}
+
+- (IBAction)checkLicense:(id)sender
+{
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://q-municate.com/agreement/"]];
 }
 
 #pragma mark - UIImagePickerControllerDelegate

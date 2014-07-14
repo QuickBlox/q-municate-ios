@@ -13,7 +13,6 @@
 @interface QMInviteFriendCell()
 
 @property (weak, nonatomic) IBOutlet UIImageView *activeCheckbox;
-@property (strong, nonatomic) ABPerson *addressBookUser;
 
 @end
 
@@ -21,50 +20,43 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
+    
     self.activeCheckbox.hidden = YES;
 }
 
-- (void)setAddressBookUser:(ABPerson *)addressBookUser {
+- (void)setUserData:(id)userData {
     
-    if (_addressBookUser != addressBookUser) {
-        _addressBookUser = addressBookUser;
+    if ([userData isKindOfClass:QBUUser.class]) {
+        [super setUserData:userData];
+        return;
+    }
+    
+    if (_userData != userData) {
+        _userData = userData;
         
-        self.titleLabel.text = addressBookUser.fullName;
-        self.descriptionLabel.text = @"Contact list";
-        
-        UIImage *image = self.addressBookUser.image;
-        [self setUserImage:image];
+        if ([userData isKindOfClass:ABPerson.class]) {
+            [self configureWithAdressaddressBookUser:userData];
+        } else if ([userData conformsToProtocol:@protocol(FBGraphUser)]) {
+            [self configureWithFBGraphUser:userData];
+        }
     }
 }
 
-- (void)setUserData:(id)userData checked:(BOOL)checked {
-
-    if ([userData isKindOfClass:ABPerson.class]) {
-        [self addressBookUser:userData checked:checked];
-    } else if ([userData conformsToProtocol:@protocol(FBGraphUser)]) {
-        [self setFBGraphUser:userData checked:checked];
-    }
-}
-
-- (void)setFBGraphUser:(NSDictionary<FBGraphUser> *)user checked:(BOOL)checked {
+- (void)configureWithFBGraphUser:(NSDictionary<FBGraphUser> *)user {
     
     self.titleLabel.text = [NSString stringWithFormat:@"%@ %@", user.first_name, user.last_name];
     NSURL *url = [[QMApi instance] fbUserImageURLWithUserID:user.id];
     [self setUserImageWithUrl:url];
     self.descriptionLabel.text = @"Facebook";
-    self.check = checked;
 }
 
-- (void)setUser:(QBUUser *)user checked:(BOOL)checked {
+- (void)configureWithAdressaddressBookUser:(ABPerson *)addressBookUser {
     
-    self.user = user;
-    self.check = checked;
-}
-
-- (void)addressBookUser:(ABPerson *)addressBookUser checked:(BOOL)checked {
+    self.titleLabel.text = addressBookUser.fullName;
+    self.descriptionLabel.text = @"Contact list";
     
-    self.addressBookUser = addressBookUser;
-    self.check = checked;
+    UIImage *image = addressBookUser.image;
+    [self setUserImage:image];
 }
 
 - (void)setCheck:(BOOL)check {
@@ -78,7 +70,8 @@
 #pragma mark - Actions
 
 - (IBAction)pressCheckBox:(id)sender {
-    
+
+    self.check ^= 1;
     [self.delegate containerView:self didChangeState:sender];
 }
 

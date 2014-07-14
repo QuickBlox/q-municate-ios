@@ -2,7 +2,7 @@
 //  QMFriendListCell.m
 //  Q-municate
 //
-//  Created by Igor Alefirenko on 25/02/2014.
+//  Created by Ivanov Andrey on 25/02/2014.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -21,7 +21,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    self.addToFriendsButton.hidden = YES;
+    self.addToFriendsButton.hidden = NO;
     self.onlineCircle.hidden = YES;
 }
 
@@ -43,10 +43,13 @@
     _searchText = searchText;
     if (_searchText.length > 0) {
         
-        NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithAttributedString:self.titleLabel.attributedText];
+        QBUUser *user = self.userData;
+        NSString *fullName = user.fullName;
+        
+        NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:fullName];
         [text addAttribute: NSForegroundColorAttributeName
                      value:[UIColor redColor]
-                     range:[self.user.fullName.lowercaseString rangeOfString:searchText.lowercaseString]];
+                     range:[fullName.lowercaseString rangeOfString:searchText.lowercaseString]];
         
         self.titleLabel.attributedText = text;
     }

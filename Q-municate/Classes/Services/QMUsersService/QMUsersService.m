@@ -54,5 +54,4 @@
                             context:[QBEchoObject makeBlockForEchoObject:completion]];
 }
 
-
 @end
