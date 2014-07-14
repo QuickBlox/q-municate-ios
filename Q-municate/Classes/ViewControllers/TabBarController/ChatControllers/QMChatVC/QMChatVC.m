@@ -35,25 +35,25 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 @property (nonatomic, strong) UIButton *sendButton;
 @property (nonatomic, strong) UIButton *cameraButton;
+@property (nonatomic, strong) UIButton *emojiButton;
+
+@property (assign, nonatomic) BOOL showCameraButton;
 
 @end
 
 @implementation QMChatVC
 
-
 - (void)viewDidLoad {
     
     [super viewDidLoad];
     [self configureChatVC];
-    
     [self registerForNotifications:YES];
-
     self.keyboardController = [[QMKeyboardController alloc] initWithTextView:self.inputView.contentView.textView
                                                                  contextView:self.view
                                                         panGestureRecognizer:self.tableView.panGestureRecognizer
                                                                     delegate:self];
+    _showCameraButton = YES;
 }
-
 
 - (void)dealloc {
     
@@ -84,7 +84,6 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
-//    [self.view layoutIfNeeded];
     
     if (self.automaticallyScrollsToMostRecentMessage) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -102,18 +101,17 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 #pragma mark - Configure ChatVC
 
-- (void)configureInputView
-{
+- (void)configureInputView {
+    
     self.cameraButton = [QMChatButtonsFactory cameraButton];
     self.sendButton = [QMChatButtonsFactory sendButton];
+    self.emojiButton = [QMChatButtonsFactory emojiButton];
     
-    self.inputView.contentView.leftBarButtonItem = [QMChatButtonsFactory emojiButton];
+    self.inputView.contentView.leftBarButtonItem = self.emojiButton;
     self.inputView.contentView.rightBarButtonItem = self.cameraButton;
+    
     self.inputView.contentView.rightBarButtonItemWidth = 26;      // 26 for camera and  44 for send button
     self.inputView.contentView.leftBarButtonItemWidth = 26;
-    
-    self.cameraButton = self.inputView.contentView.leftBarButtonItem;
-    
 }
 
 - (void)configureChatVC {
@@ -168,7 +166,6 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
         
         if (indexPath > 0) {
             [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:animated];
-            
         }
     }
 }
@@ -186,9 +183,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 - (void)keyboardDidChangeFrame:(CGRect)keyboardFrame {
     
     CGFloat heightFromBottom = CGRectGetHeight(self.tableView.frame) - CGRectGetMinY(keyboardFrame);
-    
     heightFromBottom = MAX(0.0f, heightFromBottom + self.statusBarChangeInHeight);
-    
     [self setToolbarBottomLayoutGuideConstant:heightFromBottom];
 }
 
@@ -225,7 +220,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 }
 
 - (void)addObservers {
-
+    
     [self.inputView.contentView.textView addObserver:self
                                           forKeyPath:NSStringFromSelector(@selector(contentSize))
                                              options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
@@ -311,19 +306,23 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     }
 }
 
+- (void)setShowCameraButton:(BOOL)showCameraButton {
+    
+    if (_showCameraButton != showCameraButton) {
+        _showCameraButton = showCameraButton;
+        if (_showCameraButton) {
+            self.inputView.contentView.rightBarButtonItem = self.cameraButton;
+            self.inputView.contentView.rightBarButtonItemWidth = 26.0f;
+        }else {
+            self.inputView.contentView.rightBarButtonItem = self.sendButton;
+            self.inputView.contentView.rightBarButtonItemWidth = 44.0f;
+        }
+    }
+}
+
 - (void)textViewDidChange:(UITextView *)textView {
     
-#warning ToggleSendButton disabled
-//    [self.inputView toggleSendButtonEnabled];
-    
-    if (textView.text.length > 0) {
-        self.inputView.contentView.rightBarButtonItemWidth = 44.0f;
-        self.inputView.contentView.rightBarButtonItem = self.sendButton;
-    } else {
-        self.inputView.contentView.rightBarButtonItemWidth = 26.0f;
-        self.inputView.contentView.rightBarButtonItem = self.cameraButton;
-    }
-    [self.inputView.contentView layoutIfNeeded];
+    self.showCameraButton = textView.text.length == 0;
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
@@ -427,29 +426,16 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
                          bottomValue:CGRectGetHeight(self.tableView.frame) - CGRectGetMinY(self.inputView.frame)];
 }
 
-- (NSString *)currentlyComposedMessageText {
-    
-    NSString *text = self.inputView.contentView.textView.text;
-    self.inputView.contentView.textView.text = [text stringByAppendingString:@" "];
-    
-    return self.inputView.contentView.textView.text;
-}
-
 #pragma mark - QMChatInputToolbarDelegate
 
 - (void)chatInputToolbar:(QMChatInputToolbar *)toolbar didPressRightBarButton:(UIButton *)sender {
     
-//    if (toolbar.sendButtonOnRight) {
-//        [self didPressSendButton:sender
-//                 withMessageText:[self currentlyComposedMessageText]
-//                            date:[NSDate date]];
-//    }
-//    else {
-//        [self didPressAccessoryButton:sender];
-//    }
-    
-    if ((UIButton *)sender == self.sendButton) {
-        [self.dataSource sendMessage:[self currentlyComposedMessageText]];
+    if (sender == self.sendButton) {
+        
+        NSString *text = self.inputView.contentView.textView.text;
+        self.inputView.contentView.textView.text = @"";
+        
+        [self.dataSource sendMessage:text];
     }
     else {
         [self presentImagePicker];
@@ -458,18 +444,8 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 - (void)chatInputToolbar:(QMChatInputToolbar *)toolbar didPressLeftBarButton:(UIButton *)sender {
     
-//    if (toolbar.sendButtonOnRight) {
-//        [self didPressAccessoryButton:sender];
-//    }
-//    else {
-//        [self didPressSendButton:sender
-//                 withMessageText:[self currentlyComposedMessageText]
-//                            date:[NSDate date]];
-//    }
     [self showEmojiKeyboard];
-    
 }
-
 
 #pragma mark - ImagePicker & UIImagePickerControllerDelegate
 
@@ -496,12 +472,13 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     }
 }
 
-
 #pragma mark - Emoji
 
-- (void)showEmojiKeyboard
-{
-    AGEmojiKeyboardView *emojiKeyboardView = [[AGEmojiKeyboardView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 216) dataSource:self];
+- (void)showEmojiKeyboard {
+    
+    AGEmojiKeyboardView *emojiKeyboardView =
+    [[AGEmojiKeyboardView alloc] initWithFrame:CGRectMake(0,
+                                                          0, self.view.frame.size.width, 216) dataSource:self];
     emojiKeyboardView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     emojiKeyboardView.delegate = self;
     
@@ -518,9 +495,8 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 
 - (NSArray *)sectionsImages {
-    return @[@"😊", @"😊",@"🎍",@"🐶",@"🏠",@"🕘", @"✔"];
+    return @[@"😊", @"😊", @"🎍", @"🐶", @"🏠", @"🕘", @"✔"];
 }
-
 
 - (UIImage *)randomImage:(NSInteger)categoryImage {
     CGSize size = CGSizeMake(30, 30);
@@ -530,7 +506,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     [attributes setObject:[UIFont systemFontOfSize:27] forKey:NSFontAttributeName];
     NSString * sectionImage = self.sectionsImages[categoryImage];
     [sectionImage drawInRect:CGRectMake(0, 0, 30, 30) withAttributes:attributes];
-
+    
     
     UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();

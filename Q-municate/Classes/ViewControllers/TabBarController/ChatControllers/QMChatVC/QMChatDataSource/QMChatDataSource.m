@@ -123,6 +123,8 @@
 
 - (void)sendMessage:(NSString *)message {
     
+//    [QMApi instance] send
+    
 }
 
 

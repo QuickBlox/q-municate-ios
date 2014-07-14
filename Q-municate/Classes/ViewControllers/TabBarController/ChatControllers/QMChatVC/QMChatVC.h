@@ -34,21 +34,5 @@
  *  @param animated Pass `YES` if you want to animate scrolling, `NO` if it should be immediate.
  */
 - (void)scrollToBottomAnimated:(BOOL)animated;
-/**
- *  This method is called when the user taps the accessory button on the `inputToolbar`.
- *
- *  @param sender The accessory button that was pressed by the user.
- */
-- (void)didPressAccessoryButton:(UIButton *)sender;
-/**
- *  This method is called when the user taps the send button on the inputToolbar
- *  after composing a message with the specified data.
- *
- *  @param button The send button that was pressed by the user.
- *  @param text   The message text.
- *  @param date   The message date.
- */
-- (void)didPressSendButton:(UIButton *)button
-           withMessageText:(NSString *)text
-                      date:(NSDate *)date;
+
 @end

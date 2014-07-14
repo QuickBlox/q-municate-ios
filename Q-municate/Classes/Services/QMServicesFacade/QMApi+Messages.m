@@ -38,4 +38,10 @@
     return messages;
 }
 
+- (void)sendText:(NSString *)text {
+
+//    QM
+//    self.messagesService sendChatMessage:<#(QBChatMessage *)#> toRoom:<#(QBChatRoom *)#>
+}
+
 @end

@@ -31,6 +31,31 @@
     return sendButton;
 }
 
++ (UIButton *)groupInfo {
+    
+    UIButton *groupInfoButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [groupInfoButton setFrame:CGRectMake(0, 0, 30, 40)];
+    [groupInfoButton setImage:[UIImage imageNamed:@"ic_info_top"] forState:UIControlStateNormal];
+    
+    return groupInfoButton;
+}
+
++ (UIButton *)audioCall {
+    
+    UIButton *audioButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [audioButton setFrame:CGRectMake(0, 0, 30, 40)];
+    [audioButton setImage:[UIImage imageNamed:@"ic_phone_top"] forState:UIControlStateNormal];
+    return audioButton;
+}
+
++ (UIButton *)videoCall {
+    
+    UIButton *videoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [videoButton setFrame:CGRectMake(0, 0, 30, 40)];
+    [videoButton setImage:[UIImage imageNamed:@"ic_camera_top"] forState:UIControlStateNormal];
+    return videoButton;
+}
+
 + (UIButton *)cameraButton {
     
     UIImage *cameraImage = [UIImage imageNamed:@"ic_camera"];

@@ -13,5 +13,8 @@
 + (UIButton *)sendButton;
 + (UIButton *)cameraButton;
 + (UIButton *)emojiButton;
++ (UIButton *)groupInfo;
++ (UIButton *)audioCall;
++ (UIButton *)videoCall;
 
 @end

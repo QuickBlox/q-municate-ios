@@ -144,6 +144,7 @@
     [self setNeedsUpdateConstraints];
     
     _leftBarButtonItem = leftBarButtonItem;
+    [self layoutIfNeeded];
 }
 
 - (void)setLeftBarButtonItemWidth:(CGFloat)leftBarButtonItemWidth {
@@ -181,6 +182,7 @@
     [self setNeedsUpdateConstraints];
     
     _rightBarButtonItem = rightBarButtonItem;
+    [self layoutIfNeeded];
 }
 
 - (void)pinAllEdgesOfSubview:(UIView *)subview ofView:(UIView *)view {
