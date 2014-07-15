@@ -9,6 +9,9 @@
 #import "QMFeedbackTableViewController.h"
 #import <UIDevice-Hardware.h>
 #import <MessageUI/MessageUI.h>
+#import "REMessageUI.h"
+#import "REAlertView+QMSuccess.h"
+#import <SVProgressHUD.h>
 
 @interface QMFeedbackTableViewController () <MFMailComposeViewControllerDelegate>
 
@@ -31,8 +34,10 @@
 {
     UIDevice *device = [UIDevice currentDevice];
     NSString *modelName = [device modelName];
-    NSString *modelIdentifier = [device modelIdentifier];
-    NSString *deviceInfo = [NSString stringWithFormat:@"\n\n\nModel: %@,\n Identifier: %@,\n", modelName, modelIdentifier];
+    NSString *systemVersion = [device systemVersion];
+    NSString *buildVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:kSettingsCellBundleVersion];
+    
+    NSString *deviceInfo = [NSString stringWithFormat:@"\n\n\nModel: %@,\nSystem version: %@,\nBuild version: %@,\n", modelName, systemVersion, buildVersion];
     return deviceInfo;
 }
 
@@ -57,38 +62,36 @@
 
 - (IBAction)writeAnEmailTapped:(id)sender
 {
-    [self showMailComposer];
-}
-
-- (void)showMailComposer
-{
-    NSString *recipient = @"q-municate@quickblox.com";
-    NSString *subject = ((UITableViewCell *)[self.tableView cellForRowAtIndexPath:self.lastIndexPath]).reuseIdentifier;
-    NSString *messageBody = [self deviceInfo];
     
-    MFMailComposeViewController *mailController = [[MFMailComposeViewController alloc] init];
-    mailController.mailComposeDelegate = self;
-    
-    [mailController setSubject:subject];
-    [mailController setToRecipients:@[recipient]];
-    [mailController setMessageBody:messageBody isHTML:NO];
-    
-    [self presentViewController:mailController animated:YES completion:nil];
-}
-
-#pragma mark - Mail composer delegate
-
-- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
-{
-    if (result == MFMailComposeResultSent) {
-        [[[UIAlertView alloc] initWithTitle:kAlertTitleSuccessString message:@"Thanks for your feedback!" delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
-    } else if (result == MFMailComposeResultFailed) {
-        [[[UIAlertView alloc] initWithTitle:kAlertTitleErrorString message:error.localizedDescription delegate:nil cancelButtonTitle:kAlertButtonTitleCancelString otherButtonTitles:nil] show];
-    }
-    [self dismissViewControllerAnimated:YES completion:^{
-        [self.navigationController popViewControllerAnimated:YES];
+    [REMailComposeViewController present:^(REMailComposeViewController *mailVC) {
+        
+        NSString *recipient = @"q-municate@quickblox.com";
+        NSString *subject = ((UITableViewCell *)[self.tableView cellForRowAtIndexPath:self.lastIndexPath]).reuseIdentifier;
+        NSString *messageBody = [self deviceInfo];
+        
+//        MFMailComposeViewController *mailController = [[MFMailComposeViewController alloc] init];
+//        mailController.mailComposeDelegate = self;
+        
+        [mailVC setSubject:subject];
+        [mailVC setToRecipients:@[recipient]];
+        [mailVC setMessageBody:messageBody isHTML:NO];
+        
+        [self presentViewController:mailVC animated:YES completion:nil];
+        
+    } finish:^(MFMailComposeResult result, NSError *error) {
+        
+       __weak typeof(self) weakself = self;
+        
+        if (result == MFMailComposeResultSent) {
+            
+            [SVProgressHUD showSuccessWithStatus:@"Thanks!"];
+            [weakself.navigationController popViewControllerAnimated:YES];
+            
+        } else if (result == MFMailComposeResultFailed) {
+            [SVProgressHUD showErrorWithStatus:@"Error"];
+        }
     }];
-
 }
+
 
 @end
