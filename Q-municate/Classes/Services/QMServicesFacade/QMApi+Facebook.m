@@ -23,12 +23,10 @@
     return [self.facebookService userImageUrlWithUserID:userID];
 }
 
-- (void)fbInviteUsersWithIDs:(NSArray *)ids copmpletion:(void(^)(void))completion {
+- (void)fbInviteUsersWithIDs:(NSArray *)ids copmpletion:(void(^)(NSError *error))completion {
 
     NSString *strIds = [ids componentsJoinedByString:@","];
-    [self.facebookService shareToUsers:strIds completion:^(NSError *error) {
-        completion();
-    }];
+    [self.facebookService shareToUsers:strIds completion:completion];
 }
 
 - (void)fbLogout {

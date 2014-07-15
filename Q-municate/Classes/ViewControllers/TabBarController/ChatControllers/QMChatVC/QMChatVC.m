@@ -15,6 +15,7 @@
 #import "QMChatInputTextView.h"
 #import "QMChatButtonsFactory.h"
 #import "AGEmojiKeyBoardView.h"
+#import "QMSoundManager.h"
 #import "Parus.h"
 
 static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
@@ -24,8 +25,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 <UITableViewDelegate, QMKeyboardControllerDelegate, QMChatInputToolbarDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, AGEmojiKeyboardViewDataSource, AGEmojiKeyboardViewDelegate>
 
 @property (strong, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) QMChatInputToolbar *inputView;
-@property (strong, nonatomic) UIView *tableViewHeaderView;
+@property (strong, nonatomic) QMChatInputToolbar *inputToolBar;
 @property (strong, nonatomic) QMKeyboardController *keyboardController;
 
 @property (weak, nonatomic) NSLayoutConstraint *toolbarHeightConstraint;
@@ -48,8 +48,8 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     [super viewDidLoad];
     [self configureChatVC];
     [self registerForNotifications:YES];
-    self.keyboardController = [[QMKeyboardController alloc] initWithTextView:self.inputView.contentView.textView
-                                                                 contextView:self.view
+    self.keyboardController = [[QMKeyboardController alloc] initWithTextView:self.inputToolBar.contentView.textView
+                                                                 contextView:self.navigationController.view
                                                         panGestureRecognizer:self.tableView.panGestureRecognizer
                                                                     delegate:self];
     _showCameraButton = YES;
@@ -85,18 +85,12 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     
     [super viewWillAppear:animated];
     
-    if (self.automaticallyScrollsToMostRecentMessage) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self scrollToBottomAnimated:NO];
-        });
-    }
-    
     [self updateKeyboardTriggerPoint];
 }
 
 - (void)updateKeyboardTriggerPoint {
     
-    self.keyboardController.keyboardTriggerPoint = CGPointMake(0.0f, CGRectGetHeight(self.inputView.bounds));
+    self.keyboardController.keyboardTriggerPoint = CGPointMake(0.0f, CGRectGetHeight(self.inputToolBar.bounds));
 }
 
 #pragma mark - Configure ChatVC
@@ -107,11 +101,11 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     self.sendButton = [QMChatButtonsFactory sendButton];
     self.emojiButton = [QMChatButtonsFactory emojiButton];
     
-    self.inputView.contentView.leftBarButtonItem = self.emojiButton;
-    self.inputView.contentView.rightBarButtonItem = self.cameraButton;
+    self.inputToolBar.contentView.leftBarButtonItem = self.emojiButton;
+    self.inputToolBar.contentView.rightBarButtonItem = self.cameraButton;
     
-    self.inputView.contentView.rightBarButtonItemWidth = 26;      // 26 for camera and  44 for send button
-    self.inputView.contentView.leftBarButtonItemWidth = 26;
+    self.inputToolBar.contentView.rightBarButtonItemWidth = 26;      // 26 for camera and  44 for send button
+    self.inputToolBar.contentView.leftBarButtonItemWidth = 26;
 }
 
 - (void)configureChatVC {
@@ -120,14 +114,14 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     self.tableView.delegate = self;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-    self.inputView = [[QMChatInputToolbar alloc] init];
+    self.inputToolBar = [[QMChatInputToolbar alloc] init];
     [self configureInputView];
     
-    self.inputView.delegate = self;
-    self.inputView.contentView.textView.delegate =self;
+    self.inputToolBar.delegate = self;
+    self.inputToolBar.contentView.textView.delegate =self;
     
     [self.view addSubview:self.tableView];
-    [self.view addSubview:self.inputView];
+    [self.view addSubview:self.inputToolBar];
     
     [self configureChatContstraints];
 }
@@ -136,38 +130,24 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    [self.view addConstraints:PVGroup(@[
-                                        PVTopOf(self.view).equalTo.topOf(self.tableView),
-                                        PVBottomOf(self.view).equalTo.bottomOf(self.tableView),
-                                        PVLeadingOf(self.view).equalTo.leadingOf(self.tableView),
-                                        PVTrailingOf(self.view).equalTo.trailingOf(self.tableView)]).asArray];
-    
     self.toolbarHeightConstraint = PVHeightOf(self.inputView).equalTo.constant(kQMChatInputToolbarHeightDefault).asConstraint;
     self.toolbarBottomLayoutGuide = PVBottomOf(self.inputView).equalTo.bottomOf(self.view).asConstraint;
     
     [self.view addConstraints:PVGroup(@[
+                                        PVTopOf(self.view).equalTo.topOf(self.tableView),
+                                        PVLeadingOf(self.view).equalTo.leadingOf(self.tableView),
+                                        PVTrailingOf(self.view).equalTo.trailingOf(self.tableView),
                                         PVTrailingOf(self.view).equalTo.trailingOf(self.inputView),
                                         PVLeadingOf(self.view).equalTo.leadingOf(self.inputView),
                                         self.toolbarBottomLayoutGuide,
-                                        self.toolbarHeightConstraint
+                                        self.toolbarHeightConstraint,
+                                        PVTopOf(self.inputView).equalTo.bottomOf(self.tableView),
                                         ]).asArray];
 }
 
 - (void)setDataSource:(QMChatDataSource *)dataSource {
     
     _dataSource = dataSource;
-}
-
-- (void)scrollToBottomAnimated:(BOOL)animated {
-    
-    if (self.dataSource.messages.count > 0) {
-        
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.dataSource.messages.count-1 inSection:0];
-        
-        if (indexPath > 0) {
-            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:animated];
-        }
-    }
 }
 
 #pragma mark - UITableViewDelegate
@@ -182,63 +162,48 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 - (void)keyboardDidChangeFrame:(CGRect)keyboardFrame {
     
-    CGFloat heightFromBottom = CGRectGetHeight(self.tableView.frame) - CGRectGetMinY(keyboardFrame);
-    heightFromBottom = MAX(0.0f, heightFromBottom + self.statusBarChangeInHeight);
+    CGFloat heightFromBottom = keyboardFrame.origin.y - CGRectGetMaxY(self.view.frame);
     [self setToolbarBottomLayoutGuideConstant:heightFromBottom];
 }
 
 - (void)setToolbarBottomLayoutGuideConstant:(CGFloat)constant {
     
-    self.toolbarBottomLayoutGuide.constant = -constant;
+    self.toolbarBottomLayoutGuide.constant = constant;
     [self.view setNeedsUpdateConstraints];
     [self.view layoutIfNeeded];
-    
-    [self updateTableViewInsets];
-}
-
-- (void)updateTableViewInsets {
-    
-    [self setTableViewInsetsTopValue:self.topLayoutGuide.length
-                         bottomValue:CGRectGetHeight(self.tableView.frame) - CGRectGetMinY(self.inputView.frame)];
-}
-
-- (void)setTableViewInsetsTopValue:(CGFloat)top bottomValue:(CGFloat)bottom {
-    
-    UIEdgeInsets insets = UIEdgeInsetsMake(top, 0.0f, bottom, 0.0f);
-    self.tableView.contentInset = insets;
-    self.tableView.scrollIndicatorInsets = insets;
 }
 
 - (void)removeObservers {
     
     @try {
-        [self.inputView.contentView.textView removeObserver:self
-                                                 forKeyPath:NSStringFromSelector(@selector(contentSize))
-                                                    context:kQMKeyValueObservingContext];
+        [self.inputToolBar.contentView.textView removeObserver:self
+                                                    forKeyPath:NSStringFromSelector(@selector(contentSize))
+                                                       context:kQMKeyValueObservingContext];
     }
     @catch (NSException * __unused exception) { }
 }
 
 - (void)addObservers {
     
-    [self.inputView.contentView.textView addObserver:self
-                                          forKeyPath:NSStringFromSelector(@selector(contentSize))
-                                             options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
-                                             context:kQMKeyValueObservingContext];
+    [self.inputToolBar.contentView.textView addObserver:self
+                                             forKeyPath:NSStringFromSelector(@selector(contentSize))
+                                                options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
+                                                context:kQMKeyValueObservingContext];
 }
 
 - (void)registerForNotifications:(BOOL)registerForNotifications {
     
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     if (registerForNotifications) {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(handleDidChangeStatusBarFrameNotification:)
-                                                     name:UIApplicationDidChangeStatusBarFrameNotification
-                                                   object:nil];
+        [notificationCenter addObserver:self
+                               selector:@selector(handleDidChangeStatusBarFrameNotification:)
+                                   name:UIApplicationDidChangeStatusBarFrameNotification
+                                 object:nil];
     }
     else {
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:UIApplicationDidChangeStatusBarFrameNotification
-                                                      object:nil];
+        [notificationCenter removeObserver:self
+                                      name:UIApplicationDidChangeStatusBarFrameNotification
+                                    object:nil];
     }
 }
 
@@ -275,7 +240,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
         case UIGestureRecognizerStateBegan:
         {
             [self.keyboardController endListeningForKeyboard];
-            [self.inputView.contentView.textView resignFirstResponder];
+            [self.inputToolBar.contentView.textView resignFirstResponder];
             [UIView animateWithDuration:0.0
                              animations:^{
                                  [self setToolbarBottomLayoutGuideConstant:0.0f];
@@ -301,9 +266,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     
     [textView becomeFirstResponder];
     
-    if (self.automaticallyScrollsToMostRecentMessage) {
-        [self scrollToBottomAnimated:YES];
-    }
+    [self.dataSource scrollToBottomAnimated:NO];
 }
 
 - (void)setShowCameraButton:(BOOL)showCameraButton {
@@ -311,11 +274,11 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     if (_showCameraButton != showCameraButton) {
         _showCameraButton = showCameraButton;
         if (_showCameraButton) {
-            self.inputView.contentView.rightBarButtonItem = self.cameraButton;
-            self.inputView.contentView.rightBarButtonItemWidth = 26.0f;
+            self.inputToolBar.contentView.rightBarButtonItem = self.cameraButton;
+            self.inputToolBar.contentView.rightBarButtonItemWidth = 26.0f;
         }else {
-            self.inputView.contentView.rightBarButtonItem = self.sendButton;
-            self.inputView.contentView.rightBarButtonItemWidth = 44.0f;
+            self.inputToolBar.contentView.rightBarButtonItem = self.sendButton;
+            self.inputToolBar.contentView.rightBarButtonItemWidth = 44.0f;
         }
     }
 }
@@ -336,7 +299,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     
     if (context == kQMKeyValueObservingContext) {
         
-        if (object == self.inputView.contentView.textView && [keyPath isEqualToString:NSStringFromSelector(@selector(contentSize))]) {
+        if (object == self.inputToolBar.contentView.textView && [keyPath isEqualToString:NSStringFromSelector(@selector(contentSize))]) {
             
             CGSize oldContentSize = [[change objectForKey:NSKeyValueChangeOldKey] CGSizeValue];
             CGSize newContentSize = [[change objectForKey:NSKeyValueChangeNewKey] CGSizeValue];
@@ -344,11 +307,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
             CGFloat dy = newContentSize.height - oldContentSize.height;
             
             [self adjustInputToolbarForComposerTextViewContentSizeChange:dy];
-            [self updateCollectionViewInsets];
-            
-            if (self.automaticallyScrollsToMostRecentMessage) {
-                [self scrollToBottomAnimated:NO];
-            }
+            [self.dataSource scrollToBottomAnimated:NO];
         }
     }
 }
@@ -357,28 +316,28 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     
     BOOL contentSizeIsIncreasing = (dy > 0);
     
-    if ([self inputToolbarHasReachedMaximumHeight]) {
-        BOOL contentOffsetIsPositive = (self.inputView.contentView.textView.contentOffset.y > 0);
+    UITextView *textView = self.inputToolBar.contentView.textView;
+    int numLines = textView.contentSize.height / textView.font.leading;
+    
+    if ([self inputToolbarHasReachedMaximumHeight] || numLines >= 4) {
         
+        BOOL contentOffsetIsPositive = (self.inputToolBar.contentView.textView.contentOffset.y > 0);
         if (contentSizeIsIncreasing || contentOffsetIsPositive) {
             [self scrollComposerTextViewToBottomAnimated:YES];
             return;
         }
     }
     
-    CGFloat toolbarOriginY = CGRectGetMinY(self.inputView.frame);
+    CGFloat toolbarOriginY = CGRectGetMinY(self.inputToolBar.frame);
     CGFloat newToolbarOriginY = toolbarOriginY - dy;
     
-    //  attempted to increase origin.Y above topLayoutGuide
     if (newToolbarOriginY <= self.topLayoutGuide.length) {
         dy = toolbarOriginY - self.topLayoutGuide.length;
         [self scrollComposerTextViewToBottomAnimated:YES];
     }
     
     [self adjustInputToolbarHeightConstraintByDelta:dy];
-    
     [self updateKeyboardTriggerPoint];
-    
     if (dy < 0) {
         [self scrollComposerTextViewToBottomAnimated:NO];
     }
@@ -398,7 +357,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 - (void)scrollComposerTextViewToBottomAnimated:(BOOL)animated {
     
-    UITextView *textView = self.inputView.contentView.textView;
+    UITextView *textView = self.inputToolBar.contentView.textView;
     CGPoint contentOffsetToShowLastLine = CGPointMake(0.0f, textView.contentSize.height - CGRectGetHeight(textView.bounds));
     
     if (!animated) {
@@ -420,21 +379,15 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     return (CGRectGetMinY(self.inputView.frame) == self.topLayoutGuide.length);
 }
 
-- (void)updateCollectionViewInsets {
-    
-    [self setTableViewInsetsTopValue:self.topLayoutGuide.length
-                         bottomValue:CGRectGetHeight(self.tableView.frame) - CGRectGetMinY(self.inputView.frame)];
-}
-
 #pragma mark - QMChatInputToolbarDelegate
 
 - (void)chatInputToolbar:(QMChatInputToolbar *)toolbar didPressRightBarButton:(UIButton *)sender {
     
     if (sender == self.sendButton) {
         
-        NSString *text = self.inputView.contentView.textView.text;
-        self.inputView.contentView.textView.text = @"";
-        
+        NSString *text = self.inputToolBar.contentView.textView.text;
+        self.inputToolBar.contentView.textView.text = @"";
+        [QMSoundManager playMessageSentSound];
         [self.dataSource sendMessage:text];
     }
     else {
@@ -482,15 +435,15 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     emojiKeyboardView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     emojiKeyboardView.delegate = self;
     
-    self.inputView.contentView.textView.inputView = emojiKeyboardView;
+    self.inputToolBar.contentView.textView.inputView = emojiKeyboardView;
     emojiKeyboardView.tintColor = [UIColor grayColor];
     
-    if ([self.inputView.contentView.textView isFirstResponder]) {
+    if ([self.inputToolBar.contentView.textView isFirstResponder]) {
         
-        [self.inputView.contentView.textView reloadInputViews];
+        [self.inputToolBar.contentView.textView reloadInputViews];
         return;
     }
-    [self.inputView.contentView.textView becomeFirstResponder];
+    [self.inputToolBar.contentView.textView becomeFirstResponder];
 }
 
 
@@ -532,18 +485,17 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     return [img imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 }
 
-
 #pragma Emoji Delegate
 
 - (void)emojiKeyBoardView:(AGEmojiKeyboardView *)emojiKeyBoardView didUseEmoji:(NSString *)emoji {
-    NSString *textViewString = self.inputView.contentView.textView.text;
-    self.inputView.contentView.textView.text = [textViewString stringByAppendingString:emoji];
+    NSString *textViewString = self.inputToolBar.contentView.textView.text;
+    self.inputToolBar.contentView.textView.text = [textViewString stringByAppendingString:emoji];
 }
 
 - (void)emojiKeyBoardViewDidPressBackSpace:(AGEmojiKeyboardView *)emojiKeyBoardView {
     
-    self.inputView.contentView.textView.inputView = nil;
-    [self.inputView.contentView.textView reloadInputViews];
+    self.inputToolBar.contentView.textView.inputView = nil;
+    [self.inputToolBar.contentView.textView reloadInputViews];
 }
 
 @end

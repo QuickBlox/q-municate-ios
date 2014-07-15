@@ -10,6 +10,7 @@
 #import "QMInviteFriendsDataSource.h"
 #import "QMApi.h"
 #import "REMessageUI.h"
+#import "SVProgressHUD.h"
 
 @interface QMInviteViewController ()
 
@@ -51,14 +52,27 @@
                 [self presentViewController:mailVC animated:YES completion:nil];
                 
             } finish:^(MFMailComposeResult result, NSError *error) {
-                
+                !error ? [self.dataSource clearFBFriendsToInvite] : [SVProgressHUD showErrorWithStatus:error.localizedDescription];
             }];
         }
     };
     
     NSArray *fbIDs = [self.dataSource facebookIDsToInvite];
+
     if (fbIDs.count > 0) {
-        [[QMApi instance] fbInviteUsersWithIDs:fbIDs copmpletion:inviteWithEmail];
+        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+        
+        [[QMApi instance] fbInviteUsersWithIDs:fbIDs copmpletion:^(NSError *error) {
+            
+            if (error) {
+                [SVProgressHUD showErrorWithStatus:error.localizedDescription];
+            }else {
+                [self.dataSource clearFBFriendsToInvite];
+                [SVProgressHUD showSuccessWithStatus:kAlertBodyRecordPostedString];
+            }
+            inviteWithEmail();
+        }];
+        
     } else {
         inviteWithEmail();
     }

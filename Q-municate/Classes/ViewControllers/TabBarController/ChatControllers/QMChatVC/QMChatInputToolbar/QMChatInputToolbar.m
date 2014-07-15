@@ -22,6 +22,11 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
 
 @implementation QMChatInputToolbar
 
+- (void)dealloc {
+    [self removeObservers];
+    _contentView = nil;
+}
+
 - (id)initWithFrame:(CGRect)frame {
     
     self = [super initWithFrame:frame];
@@ -54,12 +59,6 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
      [self addObservers];
     
     [self toggleSendButtonEnabled];
-}
-
-- (void)dealloc {
-    
-    [self removeObservers];
-    _contentView = nil;
 }
 
 #pragma mark - Actions

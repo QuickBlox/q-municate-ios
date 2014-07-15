@@ -190,6 +190,6 @@
 - (void)fbLogout;
 - (NSURL *)fbUserImageURLWithUserID:(NSString *)userID;
 - (void)fbFriends:(void(^)(NSArray *fbFriends))completion;
-- (void)fbInviteUsersWithIDs:(NSArray *)ids copmpletion:(void(^)(void))completion;
+- (void)fbInviteUsersWithIDs:(NSArray *)ids copmpletion:(void(^)(NSError *error))completion;
 
 @end

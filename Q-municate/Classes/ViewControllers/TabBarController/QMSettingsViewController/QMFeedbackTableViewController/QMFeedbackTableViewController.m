@@ -33,6 +33,7 @@
     NSString *modelName = [device modelName];
     NSString *modelIdentifier = [device modelIdentifier];
     NSString *deviceInfo = [NSString stringWithFormat:@"\n\n\nModel: %@,\n Identifier: %@,\n", modelName, modelIdentifier];
+    
     return deviceInfo;
 }
 

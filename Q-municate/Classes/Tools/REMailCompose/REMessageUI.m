@@ -1,6 +1,6 @@
 //
 //  REMailCompose.m
-//  Boligappen
+//  Q-municate
 //
 //  Created by Andrey Ivanov on 07.01.14.
 //  Copyright (c) 2014 QuickBlox. All rights reserved.

@@ -21,6 +21,15 @@
 @property (strong, nonatomic) QBUUser *opponent;
 @property (strong, nonatomic) NSMutableArray *messages;
 
+/**
+ *  Specifies whether or not the view controller should automatically scroll to the most recent message
+ *  when the view appears and when sending, receiving, and composing a new message.
+ *
+ *  @discussion The default value is `YES`, which allows the view controller to scroll automatically to the most recent message.
+ *  Set to `NO` if you want to manage scrolling yourself.
+ */
+@property (assign, nonatomic) BOOL automaticallyScrollsToMostRecentMessage;
+
 @end
 
 @implementation QMChatDataSource
@@ -34,6 +43,8 @@
         self.chatDialog = dialog;
         self.tableView = tableView;
         self.messages = [NSMutableArray array];
+        
+        self.automaticallyScrollsToMostRecentMessage = YES;
         
         tableView.dataSource = self;
         
@@ -52,11 +63,25 @@
             }
         
             [self.tableView reloadData];
+            [self scrollToBottomAnimated:NO];
+            
             [SVProgressHUD dismiss];
         }];
     }
     
     return self;
+}
+
+- (void)scrollToBottomAnimated:(BOOL)animated {
+    
+    if (self.messages.count > 0) {
+        
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.messages.count-1 inSection:0];
+        
+        if (indexPath > 0) {
+            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:animated];
+        }
+    }
 }
 
 - (NSString *)cellIDAtQMMessage:(QMMessage *)message {

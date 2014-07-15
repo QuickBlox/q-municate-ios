@@ -87,7 +87,6 @@
     // stop playing sound:
     [[QMSoundManager shared] stopAllSounds];
     
-#warning Refactor this:
     self.opponentsView.hidden = YES;
     [QMSoundManager playEndOfCallSound];
     [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:1.0f];
@@ -108,7 +107,6 @@
 
 - (void)callRejectedByUser
 {
-#warning Refactor this:
     self.opponentsView.hidden = YES;
     
     [self.contentView updateViewWithStatus:kUserIsBusyStatus];

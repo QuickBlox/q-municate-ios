@@ -21,8 +21,6 @@
     [super viewDidLoad];
 
     self.dataSource = [[QMChatDataSource alloc] initWithChatDialog:self.dialog forTableView:self.tableView];
-    self.automaticallyScrollsToMostRecentMessage = YES;
-
     (self.dialog.type == QBChatDialogTypeGroup) ? [self configureNavigationBarForGroupChat] : [self configureNavigationBarForPrivateChat];
  
 }

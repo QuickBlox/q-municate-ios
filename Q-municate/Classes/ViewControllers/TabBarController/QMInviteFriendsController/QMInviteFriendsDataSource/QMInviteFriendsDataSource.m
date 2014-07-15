@@ -295,6 +295,16 @@ const NSUInteger kQMNumberOfSection = 2;
     }
 }
 
+- (void)clearABFriendsToInvite  {
+    [self setCollection:@[].mutableCopy toSection:QMABFriendsToInviteSection];
+    [self.tableView reloadData];
+}
+
+- (void)clearFBFriendsToInvite {
+    [self setCollection:@[].mutableCopy toSection:QMFBFriendsToInviteSection];
+    [self.tableView reloadData];
+}
+
 #pragma mark - Public methods
 #pragma mark Invite Data
 

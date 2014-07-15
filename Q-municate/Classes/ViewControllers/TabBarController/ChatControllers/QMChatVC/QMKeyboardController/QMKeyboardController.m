@@ -16,8 +16,10 @@ static void * kQMKeyboardControllerKeyValueObservingContext = &kQMKeyboardContro
 @interface QMKeyboardController()
 
 @property (weak, nonatomic) UIView *keyboardView;
+@property (assign, nonatomic) BOOL subscribed;
 
 @end
+
 
 @implementation QMKeyboardController
 
@@ -51,12 +53,14 @@ static void * kQMKeyboardControllerKeyValueObservingContext = &kQMKeyboardContro
 - (void)setKeyboardView:(UIView *)keyboardView {
     
     if (_keyboardView) {
-//        [self removeKeyboardFrameObserver];
+        [self removeKeyboardFrameObserver];
     }
     
     _keyboardView = keyboardView;
     
+    
     if (keyboardView) {
+        self.subscribed = YES;
         [_keyboardView addObserver:self
                         forKeyPath:NSStringFromSelector(@selector(frame))
                            options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew)
@@ -86,26 +90,26 @@ static void * kQMKeyboardControllerKeyValueObservingContext = &kQMKeyboardContro
 - (void)subscribeToKeyboardNotifications {
     
     [self unsubscribeFromKeyboardNotifications];
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    [notificationCenter addObserver:self
+                           selector:@selector(didReceiveKeyboardDidShowNotification:)
+                               name:UIKeyboardDidShowNotification
+                             object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didReceiveKeyboardDidShowNotification:)
-                                                 name:UIKeyboardDidShowNotification
-                                               object:nil];
+    [notificationCenter addObserver:self
+                           selector:@selector(didReceiveKeyboardWillChangeFrameNotification:)
+                               name:UIKeyboardWillChangeFrameNotification
+                             object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didReceiveKeyboardWillChangeFrameNotification:)
-                                                 name:UIKeyboardWillChangeFrameNotification
-                                               object:nil];
+    [notificationCenter addObserver:self
+                           selector:@selector(didReceiveKeyboardDidChangeFrameNotification:)
+                               name:UIKeyboardDidChangeFrameNotification
+                             object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didReceiveKeyboardDidChangeFrameNotification:)
-                                                 name:UIKeyboardDidChangeFrameNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didReceiveKeyboardDidHideNotification:)
-                                                 name:UIKeyboardDidHideNotification
-                                               object:nil];
+    [notificationCenter addObserver:self
+                           selector:@selector(didReceiveKeyboardDidHideNotification:)
+                               name:UIKeyboardDidHideNotification
+                             object:nil];
 }
 
 - (void)unsubscribeFromKeyboardNotifications {
@@ -118,8 +122,9 @@ static void * kQMKeyboardControllerKeyValueObservingContext = &kQMKeyboardContro
     self.keyboardView = self.textView.inputAccessoryView.superview;
     [self setKeyboardViewHidden:NO];
     
+    __weak __typeof(self)weakSelf = self;
     [self handleKeyboardNotification:notification completion:^(BOOL finished) {
-        [self.panGestureRecognizer addTarget:self action:@selector(handlePanGestureRecognizer:)];
+        [weakSelf.panGestureRecognizer addTarget:self action:@selector(handlePanGestureRecognizer:)];
     }];
 }
 
@@ -202,7 +207,7 @@ static void * kQMKeyboardControllerKeyValueObservingContext = &kQMKeyboardContro
             if (CGRectEqualToRect(newKeyboardFrame, oldKeyboardFrame) || CGRectIsNull(newKeyboardFrame)) {
                 return;
             }
-
+            
             [self.delegate keyboardDidChangeFrame:newKeyboardFrame];
             [self postKeyboardFrameNotificationForFrame:newKeyboardFrame];
         }
@@ -211,12 +216,15 @@ static void * kQMKeyboardControllerKeyValueObservingContext = &kQMKeyboardContro
 
 - (void)removeKeyboardFrameObserver {
     
-    @try {
-        [_keyboardView removeObserver:self
-                           forKeyPath:NSStringFromSelector(@selector(frame))
-                              context:kQMKeyboardControllerKeyValueObservingContext];
+    if (self.subscribed) {
+        @try {
+            [_keyboardView removeObserver:self
+                               forKeyPath:NSStringFromSelector(@selector(frame))
+                                  context:kQMKeyboardControllerKeyValueObservingContext];
+            self.subscribed = NO;
+        }
+        @catch (NSException * __unused exception) { }
     }
-    @catch (NSException * __unused exception) { }
 }
 
 #pragma mark - Pan gesture recognizer
@@ -241,8 +249,9 @@ static void * kQMKeyboardControllerKeyValueObservingContext = &kQMKeyboardContro
     self.keyboardView.userInteractionEnabled = !userIsDraggingNearThresholdForDismissing;
     
     switch (pan.state) {
-        case UIGestureRecognizerStateChanged:
-        {
+            
+        case UIGestureRecognizerStateChanged: {
+            
             newKeyboardViewFrame.origin.y = touch.y + self.keyboardTriggerPoint.y;
             newKeyboardViewFrame.origin.y = MIN(newKeyboardViewFrame.origin.y, contextViewWindowHeight);
             newKeyboardViewFrame.origin.y = MAX(newKeyboardViewFrame.origin.y, contextViewWindowHeight - keyboardViewHeight);
@@ -251,22 +260,17 @@ static void * kQMKeyboardControllerKeyValueObservingContext = &kQMKeyboardContro
                 return;
             }
             
-            [UIView animateWithDuration:0.0
-                                  delay:0.0
-                                options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionTransitionNone
-                             animations:^{
-                                 self.keyboardView.frame = newKeyboardViewFrame;
-                             }
-                             completion:nil];
+            self.keyboardView.frame = newKeyboardViewFrame;
         }
             break;
             
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateCancelled:
-        case UIGestureRecognizerStateFailed:
-        {
+        case UIGestureRecognizerStateFailed: {
+            
             BOOL keyboardViewIsHidden = (CGRectGetMinY(self.keyboardView.frame) >= contextViewWindowHeight);
             if (keyboardViewIsHidden) {
+                [self shouldHide];
                 return;
             }
             
@@ -276,27 +280,26 @@ static void * kQMKeyboardControllerKeyValueObservingContext = &kQMKeyboardContro
             
             newKeyboardViewFrame.origin.y = shouldHide ? contextViewWindowHeight : (contextViewWindowHeight - keyboardViewHeight);
             
-            [UIView animateWithDuration:0.25
-                                  delay:0.0
-                                options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveEaseOut
-                             animations:^{
-                                 self.keyboardView.frame = newKeyboardViewFrame;
-                             }
-                             completion:^(BOOL finished) {
-                                 self.keyboardView.userInteractionEnabled = !shouldHide;
-                                 
-                                 if (shouldHide) {
-                                     [self setKeyboardViewHidden:YES];
-                                     [self removeKeyboardFrameObserver];
-                                     [self.textView resignFirstResponder];
-                                 }
-                             }];
+            [UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveEaseOut animations:^ {
+                self.keyboardView.frame = newKeyboardViewFrame;
+            } completion:^(BOOL finished) {
+                self.keyboardView.userInteractionEnabled = !shouldHide;
+                if (shouldHide) {
+                    [self shouldHide];
+                }
+            }];
         }
             break;
             
-        default:
-            break;
+        default:break;
     }
+}
+
+- (void)shouldHide {
+    
+    [self setKeyboardViewHidden:YES];
+    [self removeKeyboardFrameObserver];
+    [self.textView resignFirstResponder];
 }
 
 @end

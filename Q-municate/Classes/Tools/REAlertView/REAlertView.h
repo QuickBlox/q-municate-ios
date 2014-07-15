@@ -1,6 +1,6 @@
 //
 //  REAlertView.h
-//  Boligappen
+//  Q-municate
 //
 //  Created by Andrey Ivanov on 22.10.12.
 //  Copyright (c) 2014 QuickBlox. All rights reserved.
