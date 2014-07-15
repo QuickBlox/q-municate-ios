@@ -15,6 +15,13 @@
 
 @implementation QMApi (Auth)
 
+- (void)logout {
+
+    [self.settingsManager clearSettings];
+    [self.chatService logout];
+    [self.facebookService logout];
+}
+
 - (void)loginWithFacebook:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
@@ -126,10 +133,12 @@
     
     __weak __typeof(self)weakSelf = self;
     
+    NSString *password = user.password;
+    user.password = nil;
     [self.authService updateUser:user withCompletion:^(QBUUserResult *result) {
         
         if ([weakSelf checkResult:result]) {
-            result.user.password = user.password;
+            result.user.password = password;
             weakSelf.currentUser = result.user;
         }
         
@@ -190,6 +199,14 @@
     __weak __typeof(self)weakSelf = self;
     [self.authService resetUserPasswordWithEmail:email completion:^(Result *result) {
         completion([weakSelf checkResult:result]);
+    }];
+}
+
+- (void)destroySessionWithCompletion:(void(^)(BOOL success))completion {
+
+    [self.authService destroySessionWithCompletion:^(QBAAuthResult *result) {
+        BOOL success = [self checkResult:result];
+        completion(success);
     }];
 }
 

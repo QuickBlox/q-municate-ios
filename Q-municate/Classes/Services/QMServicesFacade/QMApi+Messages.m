@@ -21,7 +21,7 @@
     
     [self.messagesService messageWithDialogID:chatDialog.ID completion:^(QBChatHistoryMessageResult *result) {
         if ([self checkResult:result]) {
-            [self addMessages:result.messages withDialog:chatDialog];
+            [self addMessages:result.messages ? result.messages : @[] withDialog:chatDialog];
         }
         complete (result.success);
     }];
@@ -38,10 +38,17 @@
     return messages;
 }
 
-- (void)sendText:(NSString *)text {
+- (void)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog {
+    
+    QBChatMessage *message = [QBChatMessage message];
+    message.senderID = self.currentUser.ID;
+    message.text = text;
 
-//    QM
-//    self.messagesService sendChatMessage:<#(QBChatMessage *)#> toRoom:<#(QBChatRoom *)#>
+    if (dialog.type == QBChatDialogTypeGroup) {
+
+        QBChatRoom *room = [self roomWithRoomJID:dialog.roomJID];
+        [self.messagesService sendChatMessage:message toRoom:room];
+    }
 }
 
 @end

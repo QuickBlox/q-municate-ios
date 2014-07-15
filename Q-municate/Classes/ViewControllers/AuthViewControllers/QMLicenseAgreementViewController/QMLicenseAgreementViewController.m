@@ -10,7 +10,11 @@
 #import <SVProgressHUD.h>
 #import "REAlertView.h"
 
-@interface QMLicenseAgreementViewController () <UIWebViewDelegate>
+NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
+
+@interface QMLicenseAgreementViewController ()
+
+<UIWebViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 
@@ -18,39 +22,29 @@
 
 @implementation QMLicenseAgreementViewController
 
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [self loadPage];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
--(void)loadPage
-{
     [SVProgressHUD show];
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://q-municate.com/agreement"]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kQMAgreementUrl]];
     [self.webView loadRequest:request];
+}
+
+- (void)didReceiveMemoryWarning{
+    [super didReceiveMemoryWarning];
 }
 
 #pragma mark - UIWebViewDelegate
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView
-{
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    
     [SVProgressHUD dismiss];
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
-{
-    // alert:
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     
+    [SVProgressHUD showErrorWithStatus:error.localizedDescription];
     [self.navigationController popViewControllerAnimated:YES];
 }
 

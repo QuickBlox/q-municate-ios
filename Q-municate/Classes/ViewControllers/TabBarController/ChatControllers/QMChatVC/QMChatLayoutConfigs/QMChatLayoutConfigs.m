@@ -32,20 +32,20 @@ struct QMMessageLayout QMMessageQmunicateLayout = {
     .userImageSize = (CGSize){36,36},
     
     .fontName = @"HelveticaNeue",
-    .fontSize = 12,
+    .fontSize = 15,
 
     .leftBalloon = {
         .imageName = @"qm_balloon_left",
         .imageCapInsets= (UIEdgeInsets){7, 13, 8, 7},
         .hexTintColor = @"#e2ebf2",
-        .textColor = @"#FFFFFF"
+        .textColor = @"#000"
     },
     
     .rightBalloon = {
         .imageName = @"qm_balloon_right",
         .imageCapInsets = (UIEdgeInsets){7, 7, 8, 13},
         .hexTintColor = @"#17d14b",
-        .textColor = @"#000"
+        .textColor = @"#FFFFFF"
     },
 };
 

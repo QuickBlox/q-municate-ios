@@ -12,6 +12,7 @@
 
 @property (nonatomic, assign) CGFloat uploadProgress;
 
+- (void)loadImageWithBlobID:(NSUInteger)blobID completion:(QBCFileDownloadTaskResultBlock)completion;
 - (void)uploadImage:(UIImage *)image named:(NSString *)name completion:(QBFileUploadTaskResultBlock)completion;
 - (void)uploadUserImageForUser:(QBUUser *)user image:(UIImage *)image withCompletion:(QBFileUploadTaskResultBlock)completion;
 

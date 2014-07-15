@@ -10,26 +10,14 @@
 
 @implementation NSString (UsedSize)
 
-- (CGSize)usedSizeForMaxWidth:(CGFloat)width font:(UIFont *)font withAttributes:(NSDictionary *)attributes {
-
-    NSTextStorage *textStorage = [[NSTextStorage alloc] initWithString:self attributes:attributes];
-
-    NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize: CGSizeMake(width, MAXFLOAT)];
-    NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
+- (CGSize)usedSizeForWidth:(CGFloat)width font:(UIFont *)font withAttributes:(NSDictionary *)attributes {
     
-    [layoutManager addTextContainer:textContainer];
-    [textStorage addLayoutManager:layoutManager];
-
-    if (!attributes) {
-        [textStorage addAttribute:NSFontAttributeName
-                            value:font
-                            range:NSMakeRange(0, textStorage.length)];
-    }
-    
-    [textContainer setLineFragmentPadding:0.0];
-    
-    [layoutManager glyphRangeForTextContainer:textContainer];
-    CGRect frame = [layoutManager usedRectForTextContainer:textContainer];
+    // NSString class method: boundingRectWithSize:options:attributes:context is
+    // available only on ios7.0 sdk.
+    CGRect frame = [self boundingRectWithSize:CGSizeMake(width, CGFLOAT_MAX)
+                                              options:NSStringDrawingUsesLineFragmentOrigin
+                                           attributes:@{NSFontAttributeName: font}
+                                              context:nil];
     
     return frame.size;
 }

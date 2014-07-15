@@ -31,7 +31,7 @@
     return self;
 }
 
-#define SHOW_BORDERS
+//#define SHOW_BORDERS
 
 - (void)createContainerSubviews {
     
@@ -77,10 +77,10 @@
     self.balloonImageView.layer.borderWidth = 1;
     
     /***** ******/
-//    self.messageContainer.backgroundColor = [UIColor yellowColor];
-//    self.balloonImageView.backgroundColor = [UIColor lightGrayColor];
-//    self.containerView.backgroundColor = [UIColor orangeColor];
-//    self.userImageView.backgroundColor = [UIColor greenColor];
+    self.messageContainer.backgroundColor = [UIColor yellowColor];
+    self.balloonImageView.backgroundColor = [UIColor lightGrayColor];
+    self.containerView.backgroundColor = [UIColor orangeColor];
+    self.userImageView.backgroundColor = [UIColor greenColor];
     
 #endif
     
@@ -182,12 +182,8 @@
     self.userImageView.frame = userImageRect;
     self.balloonImageView.frame = balloonFrame;
     self.containerView.frame = containerFrame;
-    /*
-     *
-     */
-    
+
     UIImage *maskImage = self.message.balloonImage;
-    
     
     self.maskLayer.frame = self.containerView.bounds;
     self.maskLayer.contents = (__bridge id)[maskImage CGImage];
@@ -208,8 +204,6 @@
     _userImage = userImage;
     self.userImageView.image = _userImage;
 }
-
-/*static _dateFormatter need for performance*/
 
 static NSDateFormatter *_dateFormatter = nil;
 

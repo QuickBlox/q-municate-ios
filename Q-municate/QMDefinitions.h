@@ -56,6 +56,7 @@ typedef NS_ENUM(NSUInteger, QMMembersUpdateState) {
 typedef enum QBVideoChatConferenceType QBVideoChatConferenceType;
 
 //****************** Blocks *********************************
+typedef void (^QBCFileDownloadTaskResultBlock)(QBCFileDownloadTaskResult *result);
 typedef void (^QBFileUploadTaskResultBlock)(QBCFileUploadTaskResult *result);
 typedef void (^QBUUserResultBlock)(QBUUserResult *result);
 typedef void (^QBAAuthResultBlock)(QBAAuthResult *result);

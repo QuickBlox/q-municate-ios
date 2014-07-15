@@ -20,9 +20,10 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    
-    self.addToFriendsButton.hidden = NO;
+
+    self.addToFriendsButton.hidden = _isFriend = YES;
     self.onlineCircle.hidden = YES;
+    self.descriptionLabel.text = kStatusOfflineString;
 }
 
 - (void)setOnline:(BOOL)online {
@@ -31,10 +32,9 @@
         _online = online;
         
         self.onlineCircle.hidden = !online;
+        NSString *activity = (online) ? kStatusOnlineString : kStatusOfflineString;
+        self.descriptionLabel.text = activity;
     }
-    
-//    NSString *activity = (online) ? kStatusOnlineString : kStatusOfflineString;
-//    self.lastActivity.text = activity;
 }
 
 
@@ -57,9 +57,11 @@
 
 - (void)setIsFriend:(BOOL)isFriend {
     
-    if (isFriend != _isFriend) {
+    if (_isFriend != isFriend) {
         _isFriend = isFriend;
         self.addToFriendsButton.hidden = isFriend;
+    }else {
+        
     }
 }
 

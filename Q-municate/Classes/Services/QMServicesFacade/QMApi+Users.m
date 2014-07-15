@@ -50,7 +50,15 @@
 }
 
 - (BOOL)addUserInContactListWithUserID:(NSUInteger)userID {
-    return [[QBChat instance] addUserToContactListRequest:userID];
+
+    BOOL success = [[QBChat instance] addUserToContactListRequest:userID];
+    return success;
+}
+
+- (BOOL)removeUserFromContactListWithUserID:(NSUInteger)userID {
+    
+    BOOL success = [[QBChat instance] removeUserFromContactList:userID];
+    return success;
 }
 
 /**

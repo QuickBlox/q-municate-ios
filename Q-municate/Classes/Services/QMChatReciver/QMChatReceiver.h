@@ -41,23 +41,25 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 
 @interface QMChatReceiver : NSObject <QBChatDelegate>
 
+- (void)destroy;
+
 + (instancetype)instance;
 /**
- ChatService Called
+ ChatService
  */
 - (void)chatDidLoginWithTarget:(id)target block:(QMChatDidLogin)block;
 - (void)chatDidNotLoginWithTarget:(id)target block:(QMChatDidLogin)block;
 - (void)chatDidFailWithTarget:(id)target block:(QMChatDidFailLogin)block;
 - (void)chatDidReceivePresenceOfUserWithTarget:(id)target block:(QMChatDidReceivePresenceOfUser)block;
 /**
- ContactList Called
+ ContactList
  */
 - (void)chatDidReceiveContactAddRequestWithTarget:(id)target block:(QMChatDidReceiveContactAddRequest)block;
 - (void)chatContactListDidChangeWithTarget:(id)target block:(QMChatContactListDidChange)block;
 - (void)chatContactListWilChangeWithTarget:(id)target block:(QMChatContactListWillChange)block;
 - (void)chatDidReceiveContactItemActivityWithTarget:(id)target block:(QMChathatDidReceiveContactItemActivity)block;
 /**
- ChatRoom Called
+ ChatRoom
  */
 - (void)chatDidReceiveListOfRoomsWithTarget:(id)target block:(QMChatDidReceiveListOfRooms)block;
 - (void)chatRoomDidReceiveMessageWithTarget:(id)target block:(QMChatRoomDidReceiveMessage)block;
@@ -71,7 +73,7 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 - (void)chatRoomDidReceiveListOfUsersWithTarget:(id)target block:(QMChatRoomDidReceiveListOfUsers)block;
 - (void)chatRoomDidReceiveListOfOnlineUsersWithTarget:(id)target block:(QMChatRoomDidReceiveListOfOnlineUsers)block;
 /**
- VideoChat Called
+ VideoChat
  */
 - (void)chatDidReceiveCallRequestWithTarget:(id)target block:(QMChatDidReceiveCallRequest)block;
 - (void)chatDidReceiveCallRequestCustomParametesrWithTarget:(id)target block:(QMChatDidReceiveCallRequestCustomParams)block;

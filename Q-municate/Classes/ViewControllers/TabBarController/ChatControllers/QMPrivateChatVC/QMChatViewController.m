@@ -29,14 +29,6 @@
 
 - (void)configureNavigationBarForPrivateChat {
 
-    UIButton *groupInfoButton = [QMChatButtonsFactory groupInfo];
-    [groupInfoButton addTarget:self action:@selector(groupInfoNavButtonAction) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *groupInfoBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:groupInfoButton];
-    self.navigationItem.rightBarButtonItems = @[groupInfoBarButtonItem];
-}
-
-- (void)configureNavigationBarForGroupChat {
-    
     UIButton *audioButton = [QMChatButtonsFactory audioCall];
     [audioButton addTarget:self action:@selector(audioCallAction) forControlEvents:UIControlEventTouchUpInside];
     
@@ -47,6 +39,14 @@
     UIBarButtonItem *audioCallBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:audioButton];
     
     [self.navigationItem setRightBarButtonItems:@[videoCallBarButtonItem,  audioCallBarButtonItem] animated:YES];
+}
+
+- (void)configureNavigationBarForGroupChat {
+    
+    UIButton *groupInfoButton = [QMChatButtonsFactory groupInfo];
+    [groupInfoButton addTarget:self action:@selector(groupInfoNavButtonAction) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *groupInfoBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:groupInfoButton];
+    self.navigationItem.rightBarButtonItems = @[groupInfoBarButtonItem];
 }
 
 - (void)back:(id)sender {

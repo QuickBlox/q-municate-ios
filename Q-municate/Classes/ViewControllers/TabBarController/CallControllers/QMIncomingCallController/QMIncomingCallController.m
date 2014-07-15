@@ -7,7 +7,6 @@
 //
 
 #import "QMIncomingCallController.h"
-#import "UIImageView+ImageWithBlobID.h"
 #import "QMChatService.h"
 #import "QMImageView.h"
 #import "QMSoundManager.h"

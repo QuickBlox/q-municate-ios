@@ -10,6 +10,6 @@
 
 @interface NSString (UsedSize)
 
-- (CGSize)usedSizeForMaxWidth:(CGFloat)width font:(UIFont *)font withAttributes:(NSDictionary *)attributes;
+- (CGSize)usedSizeForWidth:(CGFloat)width font:(UIFont *)font withAttributes:(NSDictionary *)attributes;
 
 @end

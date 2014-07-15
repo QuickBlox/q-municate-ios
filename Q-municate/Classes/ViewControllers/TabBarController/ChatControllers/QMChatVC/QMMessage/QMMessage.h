@@ -10,11 +10,7 @@
 #import "QMChatLayoutConfigs.h"
 #import "QMMessageType.h"
 
-@interface QMMessage : NSObject
-/**
- * Message text
- */
-@property (strong, nonatomic) QBChatHistoryMessage *data;
+@interface QMMessage : QBChatHistoryMessage
 /**
  * Attributes for attributed message text
  */
@@ -27,6 +23,8 @@
  Ballon color (Load from layout property)
  */
 @property (strong, nonatomic, readonly) UIColor *balloonColor;
+
+- (UIColor *)textColor ;
 /**
  This is important property
  */
@@ -51,5 +49,7 @@
  * This is important property and will be used to decide in which side show message.
  */
 @property (nonatomic) QMMessageContentAlign align;
+
+- (instancetype)initWithChatHistoryMessage:(QBChatHistoryMessage *)historyMessage;
 
 @end

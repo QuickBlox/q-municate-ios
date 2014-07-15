@@ -27,15 +27,11 @@
 
 @property (nonatomic, strong) UIImage *avatarImage;
 
-/** Fields caches. */
 @property (nonatomic, copy) NSString *fullNameFieldCache;
 @property (nonatomic, copy) NSString *phoneFieldCache;
 @property (nonatomic, copy) NSString *statusFieldCache;
 
 @property (strong, nonatomic) QBUUser *currentUser;
-
-/** Optional cache */
-//@property (nonatomic, copy) NSString *emailFieldCache;
 
 @end
 
@@ -43,22 +39,19 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.currentUser = [QMApi instance].currentUser;
-    [self configureAvatarView];
+    self.avatarView.imageViewType = QMImageViewTypeCircle;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
     [self updateProfileView];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-}
-
-- (void)configureAvatarView {
 }
 
 - (void)updateProfileView {
@@ -91,21 +84,16 @@
         picker.delegate = self;
         [self presentViewController:picker animated:YES completion:nil];
     }
-    
 }
 
-- (IBAction)hideKeyboard:(id)sender
-{
+- (IBAction)hideKeyboard:(id)sender {
     [sender resignFirstResponder];
 }
 
-- (IBAction)saveChanges:(id)sender
-{
-    // resing all responders:
-    [self.fullNameField resignFirstResponder];
-    [self.phoneNumberField resignFirstResponder];
-    [self.statusField resignFirstResponder];
-
+- (IBAction)saveChanges:(id)sender {
+    
+    [self.view endEditing:YES];
+ 
     if (![self profileWasChanged]) {
         return;
     }
@@ -122,31 +110,32 @@
                 [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
             }
         }];
-
     }
     
     [self updateUsersProfile];
 }
 
-- (BOOL)profileWasChanged
-{
+- (BOOL)profileWasChanged {
+    
     BOOL profileChanged = NO;
     
     // verifying all fields:
     if (self.avatarImage != nil) {
         profileChanged = YES;
     }
-    if (_fullNameFieldCache != nil && ![_fullNameFieldCache isEqualToString:self.currentUser.fullName] ) {
+    
+    if (![self.fullNameFieldCache isEqualToString:self.currentUser.fullName] ) {
         
-        self.currentUser.fullName = _fullNameFieldCache;
+        self.currentUser.fullName = self.fullNameFieldCache;
         profileChanged = YES;
     }
-    if (_phoneFieldCache != nil && ![_phoneFieldCache isEqualToString:self.currentUser.phone]) {
+    if (![_phoneFieldCache isEqualToString:self.currentUser.phone]) {
         
         self.currentUser.phone = _phoneFieldCache;
         profileChanged = YES;
     }
-    if (_statusFieldCache != nil && ![_statusFieldCache isEqualToString:self.currentUser.customData]) {
+    if (![_statusFieldCache isEqualToString:self.currentUser.customData]) {
+        
         profileChanged = YES;
         
         if (_statusFieldCache.length > 100) {
@@ -154,7 +143,7 @@
             NSString *statusText = [_statusFieldCache substringWithRange:range];
             self.currentUser.customData = statusText;
         } else {
-            self.currentUser.customData = _statusFieldCache;
+            self.currentUser.customData = self.statusFieldCache;
         }
     }
     return profileChanged;
@@ -170,23 +159,17 @@
 
 #pragma mark - UITextFieldDelegate & UITextViewDelegate
 
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-#warning ?????????
-//    if (textField.tag == kFullNameFieldTag) {
-//        
-//        // save modified full name:
-//        _fullNameFieldCache = textField.text;
-//        
-//    } else if (textField.tag == kPhoneNumberFieldTag) {
-//        
-//        // save mofified phone number:
-//        _phoneFieldCache = textField.text;
-//    }
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    
+    if (textField == self.fullNameField) {
+        self.fullNameFieldCache = textField.text;
+    } else if (textField == self.phoneNumberField) {
+        self.phoneFieldCache = textField.text;
+    }
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView {
-    _statusFieldCache = textView.text;
+    self.statusFieldCache = textView.text;
 }
 
 #pragma mark - UIImagePickerControllerDelegate

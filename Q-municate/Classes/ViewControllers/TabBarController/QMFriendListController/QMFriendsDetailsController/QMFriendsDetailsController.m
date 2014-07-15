@@ -83,31 +83,29 @@
         [audioCallVC setOpponent:self.selectedUser];
 
     } else if ([segue.identifier isEqualToString:kChatViewSegueIdentifier]) {
-#warning comment        
-//        QMChatViewController *chatController = (QMChatViewController *)segue.destinationViewController;
-//        QBChatDialog *dialog = [[QMChatService shared] chatDialogForFriendWithID:self.selectedUser.ID];
-//        [chatController setupPrivateChatWithChatDialog:dialog andOpponent:self.selectedUser];
+       
+        QMChatViewController *chatController = (QMChatViewController *)segue.destinationViewController;
+        QBChatDialog *dialog = [[QMApi instance] privateDialogWithOpponentID:self.selectedUser.ID];
+        chatController.dialog = dialog;
     }
 }
 
 #pragma mark - Actions
 
 - (IBAction)removeFromFriends:(id)sender {
-#warning me.iD
-#warning QMContactList shared
-//    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-//        
-//        alertView.title = @"Are you sure?";
-//        [alertView addButtonWithTitle:@"Cancel" andActionBlock:^{}];
-//        
-//        [alertView addButtonWithTitle:@"Delete" andActionBlock:^{
-//            
-//            NSString *opponentID = [@(self.selectedUser.ID) stringValue];
-//            [[QMContactList shared].friendsAsDictionary removeObjectForKey:opponentID];
-//            [[QMChatService shared] removeContactFromFriendsWithID:self.selectedUser.ID];
-//            [self.navigationController popViewControllerAnimated:YES];
-//        }];
-//    }];
+
+    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
+        
+        alertView.title = @"Are you sure?";
+        [alertView addButtonWithTitle:@"Cancel" andActionBlock:^{}];
+        
+        [alertView addButtonWithTitle:@"Delete" andActionBlock:^{
+            
+            if ([[QMApi instance] removeUserFromContactListWithUserID:self.selectedUser.ID]) {
+                [self.navigationController popViewControllerAnimated:YES];
+            }
+        }];
+    }];
 }
 
 @end

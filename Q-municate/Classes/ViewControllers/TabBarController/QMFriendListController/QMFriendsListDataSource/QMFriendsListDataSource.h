@@ -16,5 +16,6 @@
 - (instancetype)initWithTableView:(UITableView *)tableView;
 - (void)globalSearch;
 - (NSArray *)usersAtSections:(NSUInteger)section;
+- (QBUUser *)userAtIndexPath:(NSIndexPath *)indexPath;
 
 @end

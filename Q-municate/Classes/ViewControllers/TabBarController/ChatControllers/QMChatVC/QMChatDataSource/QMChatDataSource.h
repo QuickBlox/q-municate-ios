@@ -14,7 +14,7 @@
 @interface QMChatDataSource : NSObject
 
 @property (strong, nonatomic) QBChatDialog *chatDialog;
-@property (strong, nonatomic, readonly) NSArray *messages;
+@property (strong, nonatomic, readonly) NSMutableArray *messages;
 
 - (id)init __attribute__((unavailable("init is not a supported initializer for this class.")));
 
@@ -22,7 +22,5 @@
 
 - (void)sendImage:(UIImage *)image;
 - (void)sendMessage:(NSString *)message;
-
-- (void)sendMessageWithText:(NSString *)text;
 
 @end

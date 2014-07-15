@@ -31,7 +31,7 @@
     [QBSettings setAuthorizationKey:@"MpOecRZy-5WsFva"];
     [QBSettings setAuthorizationSecret:@"dTSLaxDsFKqegD7"];
     [QBSettings setAccountKey:@"LpNmxA2Pq2uyW5qBjHy8"];
-    [QBSettings setLogLevel:QBLogLevelNothing];
+//    [QBSettings setLogLevel:QBLogLevelNothing];
     
     [QMUtilities shared];
     

@@ -16,6 +16,11 @@
 @end
 
 @implementation QMChatHandlerObject
+
+- (void)dealloc {
+    NSLog(@"%@ %@", NSStringFromClass(self.class), NSStringFromSelector(_cmd));
+}
+
 @end
 
 @interface QMChatReceiver()
@@ -35,6 +40,11 @@
     });
     
     return instance;
+}
+
+- (void)destroy {
+    
+    self.bloks = [NSMutableDictionary dictionary];
 }
 
 - (instancetype)init {

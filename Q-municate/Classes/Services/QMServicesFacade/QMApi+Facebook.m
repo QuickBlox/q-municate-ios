@@ -31,4 +31,8 @@
     }];
 }
 
+- (void)fbLogout {
+    [self.facebookService logout];
+}
+
 @end

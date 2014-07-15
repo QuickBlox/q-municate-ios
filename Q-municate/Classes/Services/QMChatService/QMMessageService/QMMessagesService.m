@@ -26,7 +26,7 @@
 - (BOOL)sendChatMessage:(QBChatMessage *)message toRoom:(QBChatRoom *)chatRoom {
     // additional params:
     message.customParameters = @{
-                                 @"date_sent" : @([[NSDate date] timeIntervalSince1970]),
+                                 @"date_sent" : @((NSUInteger)[[NSDate date] timeIntervalSince1970]),
                                  @"save_to_history" : @YES
                                  }.mutableCopy;
     

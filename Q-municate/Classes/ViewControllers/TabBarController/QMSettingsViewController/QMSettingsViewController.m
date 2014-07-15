@@ -43,24 +43,16 @@
     self.versionLabel.text = appVersion;
 }
 
-//- (void)logOut {
-//    
-//    [[QMApi instance].authService destroySessionWithCompletion:^(QBAAuthResult *result) {
-//        
-//        if (result.success) {
-//            
-//            QMFacebookService *fbService = [[QMFacebookService alloc] init];
-//            QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
-//            
-//            [settingsManager clearSettings];
-//            [[QMApi instance].chatService logout];
-//            [fbService logout];
-//            
-//            [self performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
-//            [[NSNotificationCenter defaultCenter] postNotificationName:kInviteFriendsDataSourceShouldRefreshNotification object:nil];
-//        }
-//    }];
-//}
+- (void)logOut {
+    
+    [[QMApi instance] destroySessionWithCompletion:^(BOOL success) {
+       
+        if (success) {
+            [[QMApi instance] logout];
+            [self performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
+        }
+    }];
+}
 
 #pragma mark - UITableViewDelegate
 
@@ -75,7 +67,7 @@
         [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
             alertView.message = kAlertTitleAreYouSureString;
             [alertView addButtonWithTitle:kAlertButtonTitleLogOutString andActionBlock:^{
-//                [weakSelf logOut];
+                [weakSelf logOut];
             }];
             
             [alertView addButtonWithTitle:kAlertButtonTitleCancelString andActionBlock:^{}];

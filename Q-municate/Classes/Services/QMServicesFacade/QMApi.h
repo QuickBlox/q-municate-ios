@@ -45,6 +45,9 @@
  Type of Result - QBUUserLogInResult
  @return completion stastus
  */
+
+- (void)logout;
+
 - (void)loginWithFacebook:(void(^)(BOOL success))completion;
 
 /**
@@ -65,16 +68,26 @@
  */
 - (void)resetUserPassordWithEmail:(NSString *)email completion:(void(^)(BOOL success))completion;
 
+- (void)destroySessionWithCompletion:(void(^)(BOOL success))completion;
+
 @end
 
 @interface QMApi (Messages)
 
 - (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete;
+/**
+ */
 - (NSArray *)messagesWithDialog:(QBChatDialog *)chatDialog;
+/**
+ */
+- (void)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog;
 
 @end
 
 @interface QMApi (ChatDialogs)
+
+- (QBChatDialog *)privateDialogWithOpponentID:(NSUInteger)opponentID;
+- (QBChatRoom *)roomWithRoomJID:(NSString *)roomJID;
 
 @property (strong, nonatomic, readonly) NSMutableArray *dialogs;
 
@@ -140,16 +153,41 @@
 - (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID;
 
 //Quickblox Api
-
+/**
+ Add user to contact list request
+ 
+ @param userID ID of user which you would like to add to contact list
+ @return*/
 - (BOOL)addUserInContactListWithUserID:(NSUInteger)userID;
+
+/**
+ Remove user from contact list
+ 
+ @param userID ID of user which you would like to remove from contact list
+ @return YES if the request was sent successfully. If not - see log.
+ */
+- (BOOL)removeUserFromContactListWithUserID:(NSUInteger)userID;
+
+/**
+ Retrieve Friends from contact list if needed;
+ */
 - (void)retrieveFriendsIfNeeded:(void(^)(BOOL updated))completion;
+
+/**
+ Retrieve users from chat Dialog (occupantIDs) if needed;
+ */
 - (void)retrieveUsersForChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(BOOL updated))completion;
+
+/**
+ Retrieve users with ids (idsToFetch - must be NSString's)
+ */
 - (void)retrieveUsersWithIDs:(NSArray *)idsToFetch completion:(void(^)(BOOL updated))completion;
 
 @end
 
 @interface QMApi (Facebook)
 
+- (void)fbLogout;
 - (NSURL *)fbUserImageURLWithUserID:(NSString *)userID;
 - (void)fbFriends:(void(^)(NSArray *fbFriends))completion;
 - (void)fbInviteUsersWithIDs:(NSArray *)ids copmpletion:(void(^)(void))completion;

@@ -73,8 +73,8 @@
     return cameraButton;
 }
 
-+ (UIButton *)emojiButton
-{
++ (UIButton *)emojiButton {
+    
     UIImage *buttonImage = [UIImage imageNamed:@"ic_smile"];
     
     UIButton *emojiButton = [UIButton buttonWithType:UIButtonTypeSystem];

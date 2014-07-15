@@ -32,7 +32,6 @@
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.dataSource = [[QMFriendsListDataSource alloc] initWithTableView:self.tableView];
     self.tableView.delegate = self;
-    
     self.searchBar.delegate = self;
     [self showSearchBar:NO animated:NO];
 }
@@ -79,8 +78,13 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-    [self performSegueWithIdentifier:kDetailsSegueIdentifier sender:nil];
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    QBUUser *selectedUser = [self.dataSource userAtIndexPath:indexPath];
+    QBContactListItem *item = [[QMApi instance] contactItemWithUserID:selectedUser.ID];
+    // if item then show details for friend
+    if (item) {
+        [self performSegueWithIdentifier:kDetailsSegueIdentifier sender:nil];
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -88,9 +92,7 @@
     if ([segue.identifier isEqualToString:kDetailsSegueIdentifier]) {
         
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSArray *users = [self.dataSource usersAtSections:indexPath.section];
-        QBUUser *selectedUser = users[indexPath.row];
-        
+        QBUUser *selectedUser = [self.dataSource userAtIndexPath:indexPath];
         QMFriendsDetailsController *vc = segue.destinationViewController;
         vc.selectedUser = selectedUser;
     }

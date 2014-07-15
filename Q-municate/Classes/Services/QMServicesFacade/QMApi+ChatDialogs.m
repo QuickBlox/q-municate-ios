@@ -14,6 +14,7 @@
 
 @property (strong, nonatomic) NSMutableArray *dialogs;
 @property (strong, nonatomic) NSMutableDictionary *chatRooms;
+@property (strong, nonatomic) NSMutableDictionary *privateDialogs;
 
 @end
 
@@ -41,11 +42,6 @@
 
 - (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion; {
     
-//    //send update dialog notifications to all participants of this group!
-//    [[QMChatService shared] sendChatDialogDidUpdateNotificationToUsers:[self.dataSource friendsSelectedMArray] withChatDialog:dialog];
-//    // and send create dialog notification to users that did added now:
-//    [[QMChatService shared] sendChatDialogDidCreateNotificationToUsers:selectedUsersMArray withChatDialog:dialog];
-//
     NSString *usersIDsAsString;//=[ids componentsJoinedByString:@","];
     NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
     extendedRequest[@"push[occupants_ids][]"] = usersIDsAsString;
@@ -156,29 +152,52 @@
             [chatRoom joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
             self.chatRooms[roomJID] = chatRoom;
         }
-    }
-    
-    if (![self.dialogs containsObject:chatDialog]) {
+        
         [self.dialogs addObject:chatDialog];
+        
+    } else if (chatDialog.type == QBChatDialogTypePrivate) {
+    
+        NSAssert(chatDialog.occupantIDs.count == 2, @"Array of user ids in chat. For private chat count = 2");
+        
+        NSString *myID = [NSString stringWithFormat:@"%d", self.currentUser.ID];
+        for (NSString *strID in chatDialog.occupantIDs) {
+            
+            if (![strID isEqualToString:myID]) {
+                self.privateDialogs[strID] = chatDialog;
+                return;
+            }
+        }
+        
+        NSAssert(nil, @"Need update this logic");
     }
 }
 
-//
-//- (void)updateChatDialogForChatMessage:(QBChatMessage *)chatMessage {
-//    
-//    NSString *kRoomJID = chatMessage.customParameters[@"xmpp_room_jid"];
-//#warning nil
-//    QBChatDialog *dialog = nil;//self.allDialogsAsDictionary[kRoomJID];
-//    if (dialog == nil) {
-//        NSAssert(!dialog, @"Dialog you are looking for not found.");
-//        return;
-//    }
-//    
-//    dialog.name = chatMessage.customParameters[@"name"];
-//    
-//    NSString *occupantsIDs = chatMessage.customParameters[@"occupants_ids"];
-//    dialog.occupantIDs = [occupantsIDs componentsSeparatedByString:@","];
-//}
+- (QBChatRoom *)roomWithRoomJID:(NSString *)roomJID {
+    return self.chatRooms[roomJID];
+}
+
+- (QBChatDialog *)privateDialogWithOpponentID:(NSUInteger)opponentID {
+    NSString *key = [NSString stringWithFormat:@"%d", opponentID];
+    QBChatDialog *privateDialog = self.privateDialogs[key];
+    
+    return privateDialog;
+}
+
+- (void)updateChatDialogForChatMessage:(QBChatMessage *)chatMessage {
+    
+    NSString *kRoomJID = chatMessage.customParameters[@"xmpp_room_jid"];
+    
+    QBChatDialog *dialog = nil;//self.allDialogsAsDictionary[kRoomJID];
+    if (dialog == nil) {
+        NSAssert(!dialog, @"Dialog you are looking for not found.");
+        return;
+    }
+    
+    dialog.name = chatMessage.customParameters[@"name"];
+    
+    NSString *occupantsIDs = chatMessage.customParameters[@"occupants_ids"];
+    dialog.occupantIDs = [occupantsIDs componentsSeparatedByString:@","];
+}
 
 //- (void)createOrUpdateChatDialogFromChatMessage:(QBChatMessage *)message {
 //    
@@ -209,17 +228,6 @@
 //    
 //}
 
-#pragma mark - Chat Utils
-//
-//- (QBChatDialog *)chatDialogForFriendWithID:(NSUInteger)ID
-//{
-//    NSString *kUserID = [NSString stringWithFormat:@"%lu", (unsigned long)ID];
-//#warning updae alldialogsasdictiononary
-//    QBChatDialog *dialog;//self.allDialogsAsDictionary[kUserID];
-//    
-//    return dialog;
-//}
-//
 //- (QBChatDialog *)createChatDialogForChatMessage:(QBChatMessage *)chatMessage
 //{
 //    QBChatDialog *chatDialog = [[QBChatDialog alloc] init];

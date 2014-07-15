@@ -49,7 +49,9 @@
 - (BOOL)logout {
     
     BOOL success = [[QBChat instance] logout];
+    
     if (success) {
+        [[QMChatReceiver instance] destroy];
         [self.presenceTimer invalidate];
         self.presenceTimer = nil;
     }

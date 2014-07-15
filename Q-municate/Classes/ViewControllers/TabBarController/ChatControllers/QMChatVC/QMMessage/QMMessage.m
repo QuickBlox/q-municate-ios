@@ -31,30 +31,43 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
 
 @implementation QMMessage
 
-- (void)setData:(QBChatHistoryMessage *)data {
+- (instancetype)initWithChatHistoryMessage:(QBChatHistoryMessage *)historyMessage {
     
-    NSAssert([QBChatHistoryMessage class], @"Check it");
-    _data = data;
-    
-    NSNumber *notificationType = data.customParameters[kQMNotificationTypeKey];
-    
-    if (data.attachments.count > 0) {
+    self = [super init];
+    if (self) {
         
-        self.type = QMMessageTypePhoto;
-        self.layout = QMMessageAttachmentLayout;
+        self.text = historyMessage.text;
+        self.dialogID = historyMessage.dialogID;
+        self.read = historyMessage.isRead;
+        self.ID = historyMessage.ID;
+        self.recipientID = historyMessage.recipientID;
+        self.senderID = historyMessage.senderID;
+        self.datetime = historyMessage.datetime;
+        self.customParameters = historyMessage.customParameters;
+        self.attachments = historyMessage.attachments;
         
-    } else if (notificationType) {
-        @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                       reason:@"Need update it"
-                                     userInfo:@{}];
-        self.layout = QMMessageQmunicateLayout;
-        self.type = QMMessageTypeSystem;
+        NSNumber *notificationType = self.customParameters[kQMNotificationTypeKey];
         
-    } else {
+        if (self.attachments.count > 0) {
+            
+            self.type = QMMessageTypePhoto;
+            self.layout = QMMessageAttachmentLayout;
+            
+        } else if (notificationType) {
+            @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                           reason:@"Need update it"
+                                         userInfo:@{}];
+            self.layout = QMMessageQmunicateLayout;
+            self.type = QMMessageTypeSystem;
+            
+        } else {
+            
+            self.type = QMMessageTypeText;
+            self.layout = QMMessageQmunicateLayout;
+        }
         
-        self.type = QMMessageTypeText;
-        self.layout = QMMessageQmunicateLayout;
     }
+    return self;
 }
 
 - (CGSize)calculateMessageSize {
@@ -73,12 +86,12 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
     } else if (self.type == QMMessageTypeText) {
         
         UIFont *font = UIFontFromQMMessageLayout(self.layout);
-
+        
         CGFloat textWidth = layout.messageMaxWidth - layout.userImageSize.width - insets.left - insets.right;
         
-        contentSize = [self.data.text usedSizeForMaxWidth:textWidth
-                                                     font:font
-                                           withAttributes:self.attributes];
+        contentSize = [self.text usedSizeForWidth:textWidth
+                                             font:font
+                                   withAttributes:self.attributes];
         if (layout.messageMinWidth > 0) {
             if (contentSize.width < layout.messageMinWidth) {
                 contentSize.width = layout.messageMinWidth;
@@ -117,9 +130,9 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
 }
 
 - (UIImage *)balloonImage {
-
+    
     if (!_balloonImage) {
-
+        
         NSAssert(self, @"Check it");
         
         QMChatBalloon balloon = [self balloonSettings];
@@ -144,8 +157,23 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
     return QMChatBalloonNull;
 }
 
-- (UIColor *)balloonColor {
+- (UIColor *)textColor {
+    
+    QMChatBalloon balloonSettings = [self balloonSettings];
+    NSString *hexString = balloonSettings.textColor;
+    
+    if (hexString.length > 0) {
+        
+        UIColor *color = [UIColor colorWithHexString:hexString];
+        NSAssert(color, @"Check it");
+        return color;
+    }
+    
+    return nil;
+}
 
+- (UIColor *)balloonColor {
+    
     if (!_balloonColor) {
         
         QMChatBalloon balloonSettings = [self balloonSettings];

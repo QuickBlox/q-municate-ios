@@ -55,7 +55,7 @@
     else {
 
         QBUUser *user = [QBUUser user];
-        user.login = mailString;
+        user.email = mailString;
         user.password = passwordString;
         
         [[QMApi instance] loginWithUser:user completion:^(QBUUserLogInResult *result) {

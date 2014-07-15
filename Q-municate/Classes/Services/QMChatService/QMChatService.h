@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-//#import "QMChatUploadingMessage.h"
 
 @interface QMChatService : NSObject <QBActionStatusDelegate>
 

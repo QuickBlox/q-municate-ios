@@ -25,6 +25,7 @@
 @property (strong, nonatomic) NSMutableArray *contactList;
 @property (strong, nonatomic) NSMutableDictionary *users;
 @property (strong, nonatomic) NSMutableArray *dialogs;
+@property (strong, nonatomic) NSMutableDictionary *privateDialogs;
 @property (strong, nonatomic) NSMutableDictionary *chatRooms;
 @property (strong, nonatomic) NSMutableDictionary *messages;
 
@@ -55,16 +56,21 @@
         self.avCallService = [[QMAVCallService alloc] init];
         self.chatDialogsService = [[QMChatDialogsService alloc] init];
         self.chatService = [[QMChatService alloc] init];
-        
+        self.messagesService = [[QMMessagesService alloc] init];
+        /**
+         TODO:temp
+         */
         self.users = [NSMutableDictionary dictionary];
         self.contactList = [NSMutableArray array];
         
         self.dialogs = [NSMutableArray array];
+        self.privateDialogs = [NSMutableDictionary dictionary];
         self.chatRooms = [NSMutableDictionary dictionary];
         
         self.messages = [NSMutableDictionary dictionary];
 
         [[QMChatReceiver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
+            
             [self.contactList removeAllObjects];
             [self.contactList addObjectsFromArray:contactList.pendingApproval];
             [self.contactList addObjectsFromArray:contactList.contacts];

@@ -47,14 +47,7 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
         [[QMChatReceiver instance] chatContactListWilChangeWithTarget:self block:^{
             
             [[QMApi instance] retrieveFriendsIfNeeded:^(BOOL updated) {
-                
-                if (updated) {
-                    [self reloadDatasource];
-                } else {
-                    if (self.friendList.count == 0 && !self.searchActive) {
-                        self.tableView.tableFooterView = [self.tableView dequeueReusableCellWithIdentifier:kQMNotResultCellIdentifier];
-                    }
-                }
+                [self reloadDatasource];
             }];
         }];
     }
@@ -82,6 +75,10 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
     
     self.friendList = [QMApi instance].friends;
     [self.tableView reloadData];
+    
+    if (self.friendList.count == 0 && !self.searchActive) {
+        self.tableView.tableFooterView = [self.tableView dequeueReusableCellWithIdentifier:kQMNotResultCellIdentifier];
+    }
 }
 
 - (NSArray *)sortUsersByFullname:(NSArray *)users {
@@ -129,12 +126,10 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
         [self.tableView dequeueReusableCellWithIdentifier:kQMSearchGlobalCellIdentifier] :
         [[UIView alloc] initWithFrame:CGRectZero];
         
-        if (_searchActive) {
-        } else {
-            [self.tableView beginUpdates];
-            [self.tableView endUpdates];
+        if (!_searchActive)  {
             self.searchList = nil;
         }
+        [self.tableView reloadData];
     }
 }
 
@@ -158,6 +153,7 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    
     return 2;
 }
 
@@ -171,6 +167,14 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
     return (section == 0 ) ? self.friendList : self.searchList;
 }
 
+- (QBUUser *)userAtIndexPath:(NSIndexPath *)indexPath {
+    
+    NSArray *users = [self usersAtSections:indexPath.section];
+    QBUUser *user = users[indexPath.row];
+
+    return user;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     QMFriendListCell *cell = [tableView dequeueReusableCellWithIdentifier:kFriendsListCellIdentifier];
@@ -180,7 +184,7 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
     QBContactListItem *contactItem = [[QMApi instance] contactItemWithUserID:user.ID];
     
     cell.userData = user;
-    cell.isFriend = (BOOL)contactItem;
+    cell.isFriend = contactItem ? YES : NO;
     cell.online = contactItem.online;
     cell.searchText = self.searchText;
     cell.delegate = self;

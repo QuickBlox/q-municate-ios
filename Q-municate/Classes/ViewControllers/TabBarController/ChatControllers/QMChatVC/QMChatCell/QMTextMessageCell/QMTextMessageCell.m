@@ -10,7 +10,7 @@
 
 @interface QMTextMessageCell()
 
-@property (strong, nonatomic) UITextView *textView;
+@property (strong, nonatomic) UILabel *messageLabel;
 @property (strong, nonatomic) UIFont *font;
 
 @end
@@ -21,22 +21,22 @@
     
     [super createContainerSubviews];
     
-    self.textView = [[UITextView alloc] init];
-    
-    self.textView.textContainerInset = UIEdgeInsetsZero;
-    self.textView.textContainer.lineFragmentPadding = 0;
-    self.textView.backgroundColor = [UIColor clearColor];
-    self.textView.scrollEnabled = NO;
-    
-    [self.containerView addSubview:self.textView];
+    self.messageLabel = [[UILabel alloc] init];
+    self.messageLabel.numberOfLines = 0;
+    self.messageLabel.opaque = YES;
+    self.messageLabel.backgroundColor = [UIColor clearColor];
+
+    [self.containerView addSubview:self.messageLabel];
 }
 
 - (void)setMessage:(QMMessage *)message {
     
     [super setMessage:message];
     
-    self.textView.font = UIFontFromQMMessageLayout(self.message.layout);
-    self.textView.text = message.data.text;
+    self.messageLabel.font = UIFontFromQMMessageLayout(self.message.layout);
+    self.messageLabel.text = message.text;
+    self.messageLabel.textColor = [message textColor];
+    
     self.balloonImage =  message.balloonImage;
     self.balloonTintColor = message.balloonColor;
 }
@@ -44,13 +44,13 @@
 - (void)prepareForReuse {
     
     [super prepareForReuse];
-    self.textView.text = nil;
+    self.messageLabel.text = nil;
 }
 
 - (void)layoutSubviews {
     
     [super layoutSubviews];
-    self.textView.frame = self.containerView.bounds;
+    self.messageLabel.frame = self.containerView.bounds;
 }
 
 @end
