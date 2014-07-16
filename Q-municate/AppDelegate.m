@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "QMUtilities.h"
+#import "QMincomingCallService.h"
 
 #define TEST_QMDBStore 1
 
@@ -33,7 +33,7 @@
     [QBSettings setAccountKey:@"LpNmxA2Pq2uyW5qBjHy8"];
 //    [QBSettings setLogLevel:QBLogLevelNothing];
     
-    [QMUtilities shared];
+    [QMIncomingCallService shared];
     
     // STAGE PARAMS
 //    [QBSettings setServerChatDomain:@"chatstage.quickblox.com"];

@@ -10,7 +10,7 @@
 #import "QMChatService.h"
 #import "QMImageView.h"
 #import "QMSoundManager.h"
-#import "QMUtilities.h"
+#import "QMincomingCallService.h"
 
 @interface QMIncomingCallController ()
 
@@ -83,7 +83,7 @@
 - (void)dismissIncomingCallController {
     
     [[QMSoundManager shared] stopAllSounds];
-    [QMUtilities.shared dismissIncomingCallController];
+    [self dismissIncomingCallController];
 }
 
 @end

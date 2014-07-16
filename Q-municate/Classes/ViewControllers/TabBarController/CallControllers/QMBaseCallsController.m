@@ -147,7 +147,7 @@
     [[QMSoundManager shared] stopAllSounds];
     
     if (_isOpponentCaller) {
-        [QMUtilities.shared dismissIncomingCallController];
+        [QMIncomingCallService.shared dismissIncomingCallController];
         return;
     }
     [self dismissViewControllerAnimated:NO completion:nil];

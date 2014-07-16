@@ -6,15 +6,15 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import "QMUtilities.h"
+#import "QMIncomingCallService.h"
 
-@interface QMUtilities ()
+@interface QMIncomingCallService ()
 
 @property (strong, nonatomic) UIView *activityView;
 
 @end
 
-@implementation QMUtilities
+@implementation QMIncomingCallService
 
 + (instancetype)shared {
     static id utilitiesInstance = nil;
@@ -63,7 +63,7 @@
         
         self.incomingCallController.callType = type;
         
-        [self.window.rootViewController presentViewController:[QMUtilities shared].incomingCallController
+        [self.window.rootViewController presentViewController:self.incomingCallController
                                                      animated:NO completion:nil];
     }
 }

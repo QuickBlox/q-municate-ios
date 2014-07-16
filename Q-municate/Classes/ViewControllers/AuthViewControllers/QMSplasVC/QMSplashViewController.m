@@ -11,7 +11,7 @@
 #import "QMAuthService.h"
 #import "QMChatService.h"
 #import "QMUsersService.h"
-#import "QMUtilities.h"
+#import "QMincomingCallService.h"
 #import "QMSettingsManager.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMFacebookService.h"

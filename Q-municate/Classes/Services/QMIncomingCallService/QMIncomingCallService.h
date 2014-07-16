@@ -11,7 +11,7 @@
 #import "NSDateFormatter+SinceDateFormat.h"
 
 
-@interface QMUtilities : NSObject
+@interface QMIncomingCallService : NSObject
 
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
 //@property (strong, nonatomic) AVAudioPlayer *audioPlayer;
