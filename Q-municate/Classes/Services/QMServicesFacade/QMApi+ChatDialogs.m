@@ -26,7 +26,7 @@
     [self.chatDialogsService fetchAllDialogs:^(QBDialogsPagedResult *result) {
         
         if ([weakSelf checkResult:result]) {
-            [self addDialogs:result.dialogs];
+            [weakSelf addDialogs:result.dialogs];
             completion();
         }
     }];

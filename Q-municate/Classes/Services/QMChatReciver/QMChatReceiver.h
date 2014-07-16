@@ -11,6 +11,8 @@
 
 typedef void(^QMChatDidLogin)(BOOL success);
 typedef void(^QMChatDidFailLogin)(NSInteger errorCode);
+typedef void(^QMChatDidNotSendMessage)(QBChatMessage *message);
+typedef void(^QMChatDidReceiveMessage)(QBChatMessage *message);
 typedef void(^QMChatDidReceivePresenceOfUser)(NSUInteger userID, NSString *type);
 typedef void(^QMChatDidReceiveListOfRooms)(NSArray *rooms);
 typedef void(^QMChatRoomDidReceiveMessage)(QBChatMessage *message, NSString *roomJID);
@@ -50,6 +52,8 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 - (void)chatDidLoginWithTarget:(id)target block:(QMChatDidLogin)block;
 - (void)chatDidNotLoginWithTarget:(id)target block:(QMChatDidLogin)block;
 - (void)chatDidFailWithTarget:(id)target block:(QMChatDidFailLogin)block;
+- (void)chatDidReceiveMessageWithTarget:(id)target block:(QMChatDidReceiveMessage)block;
+- (void)chatDidNotSendMessageWithTarget:(id)target block:(QMChatDidNotSendMessage)block;
 - (void)chatDidReceivePresenceOfUserWithTarget:(id)target block:(QMChatDidReceivePresenceOfUser)block;
 /**
  ContactList

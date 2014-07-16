@@ -12,6 +12,7 @@
 #import "QMMessage.h"
 #import "QMApi.h"
 #import "SVProgressHUD.h"
+#import "QMChatReceiver.h"
 
 @interface QMChatDataSource()
 
@@ -61,11 +62,19 @@
                 QMMessage *qmMessage = [self qmMessageWithQbChatHistoryMessage:historyMessage];
                 [self.messages addObject:qmMessage];
             }
-        
+            
             [self.tableView reloadData];
             [self scrollToBottomAnimated:NO];
             
             [SVProgressHUD dismiss];
+        }];
+        
+        [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+            NSLog(@"chatDidReceiveMessageWithTarget");
+        }];
+        
+        [[QMChatReceiver instance] chatDidNotSendMessageWithTarget:self block:^(QBChatMessage *message) {
+            NSLog(@"chatDidNotSendMessageWithTarget");
         }];
     }
     
@@ -137,48 +146,5 @@
     
     [[QMApi instance] sendText:message toDialog:self.chatDialog];
 }
-
-
-// ************************** CHAT ROOM **********************************
-//- (void)chatRoomDidEnterNotification
-//{
-//    self.chatRoom = [QMChatService shared].allChatRoomsAsDictionary[self.chatDialog.roomJID];
-//
-//    if (self.chatHistory != nil) {
-//        [QMUtilities removeIndicatorView];
-//        return;
-//    }
-//
-//    // load history:
-//    [self loadHistory];
-//}
-//
-//- (void)chatRoomDidReveiveMessage
-//{
-//    // update unread message count:
-//    [self updateChatDialog];
-//
-//    [self resetTableView];
-//}
-//
-//- (void)updateNavTitleWithNotification:(NSNotification *)notification
-//{
-//    // update chat dialog:
-//    NSString *roomJID = notification.userInfo[@"room_jid"];
-//    QBChatDialog *dialog = [QMChatService shared].allDialogsAsDictionary[roomJID];
-//    self.chatDialog = dialog;
-//    self.title = dialog.name;
-//}
-//
-//
-
-
-//		if (self.chatDialog.type == QBChatDialogTypePrivate) { // private chat
-//            chatMessage.recipientID = self.opponent.ID;
-//            chatMessage.senderID = [QMContactList shared].me.ID;
-//			[[QMChatService shared] sendMessage:chatMessage];
-
-
-
 
 @end

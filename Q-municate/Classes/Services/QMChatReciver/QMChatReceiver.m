@@ -115,6 +115,38 @@
 }
 
 /**
+ didNotSendMessage fired when message cannot be send to user
+ 
+ @param message Message passed to sendMessage method into QBChat
+ */
+
+- (void)chatDidNotSendMessageWithTarget:(id)target block:(QMChatDidNotSendMessage)block {
+    [self subsribeWithTarget:target selector:@selector(chatDidNotSendMessage:) block:block];
+}
+
+- (void)chatDidNotSendMessage:(QBChatMessage *)message {
+    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatDidNotSendMessage block) {
+        block(message);
+    }];
+}
+
+/**
+ didReceiveMessage fired when new message was received from QBChat
+ 
+ @param message Message received from Chat
+ */
+
+- (void)chatDidReceiveMessageWithTarget:(id)target block:(QMChatDidReceiveMessage)block {
+    [self subsribeWithTarget:target selector:@selector(chatDidReceiveMessage:) block:block];
+}
+
+- (void)chatDidReceiveMessage:(QBChatMessage *)message {
+    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatDidReceiveMessage block) {
+        block(message);
+    }];
+}
+
+/**
  didFailWithError fired when connection error occurs
  
  @param error Error code from QBChatServiceError enum
@@ -549,7 +581,7 @@
 
 - (void)didStartUseTURNForVideoChat {
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMDidStartUseTURNForVideoChat block) {
-        
+        block();
     }];
 }
 

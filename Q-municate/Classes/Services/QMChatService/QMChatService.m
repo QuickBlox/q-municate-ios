@@ -7,14 +7,11 @@
 //
 
 #import "QMChatService.h"
-#import "QMUsersService.h"
-#import "QBEchoObject.h"
 #import "QMChatReceiver.h"
 
 @interface QMChatService ()
 
 @property (strong, nonatomic) NSTimer *presenceTimer;
-@property (copy, nonatomic) QBChatResultBlock chatLoginBlock;
 
 @end
 
@@ -30,8 +27,8 @@
 }
 
 - (BOOL)loginWithUser:(QBUUser *)user completion:(QBChatResultBlock)block {
-
-    QBChatResultBlock result =^ (BOOL success) {
+    
+    [[QMChatReceiver instance] chatDidLoginWithTarget:self block:^(BOOL success) {
         
         self.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:30
                                                               target:self
@@ -39,9 +36,9 @@
                                                             userInfo:nil
                                                              repeats:YES];
         block(success);
-    };
+    }];
     
-    [[QMChatReceiver instance] chatDidLoginWithTarget:self block:result];
+    [[QMChatReceiver instance] chatDidNotLoginWithTarget:self block:block];
 
     return [[QBChat instance] loginWithUser:user];
 }
@@ -71,24 +68,6 @@
 
 - (void)sendPresence {
     [[QBChat instance] sendPresence];
-}
-
-#pragma mark - QMChatService
-/**
- didLogin fired by QBChat when connection to service established and login is successfull
- */
-- (void)chatDidLogin {
-    if (self.presenceTimer == nil) {
-        
-    }
-    self.chatLoginBlock(YES);
-}
-
-/**
- didNotLogin fired when login process did not finished successfully
- */
-- (void)chatDidNotLogin {
-    self.chatLoginBlock(NO);
 }
 
 @end

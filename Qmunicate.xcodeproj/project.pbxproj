@@ -1714,13 +1714,6 @@
 			name = QMAudioCallController;
 			sourceTree = "<group>";
 		};
-		6943277418F6D109002B0396 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
 		6943843218E42677001E08A9 /* CustomSegues */ = {
 			isa = PBXGroup;
 			children = (
@@ -1756,9 +1749,9 @@
 		6943845618E42677001E08A9 /* TabBarController */ = {
 			isa = PBXGroup;
 			children = (
-				55BBA75D197327AA0040DB5C /* QMDialogsViewController */,
 				6943845F18E42678001E08A9 /* QMMainTabBarController.h */,
 				6943846018E42678001E08A9 /* QMMainTabBarController.m */,
+				55BBA75D197327AA0040DB5C /* QMDialogsViewController */,
 				55CEAB12195DBCFA001A8ED6 /* CallControllers */,
 				55CEAB19195DBCFA001A8ED6 /* ChatControllers */,
 				55CEAB69195DBCFA001A8ED6 /* QMContentPreviewController */,
@@ -1891,7 +1884,6 @@
 		69D57E5B18ACC11C00A9900A /* Q-municate */ = {
 			isa = PBXGroup;
 			children = (
-				6943277418F6D109002B0396 /* Resources */,
 				69CF18AA18AE3788003262EF /* QMDefinitions.h */,
 				69B1893D190950A70049C6F9 /* QMDefinitions.m */,
 				69D57E6418ACC11C00A9900A /* AppDelegate.h */,
@@ -2422,7 +2414,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = Qmunicate;
-				PROVISIONING_PROFILE = "6E004364-5E2F-449B-9394-5906B3C651CF";
+				PROVISIONING_PROFILE = "F7F235D5-C871-4D94-A2BF-0EC942129F0B";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VALID_ARCHS = armv7;
@@ -2459,7 +2451,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = Qmunicate;
-				PROVISIONING_PROFILE = "5F37965B-59B5-461B-83F6-77EFE66FC01B";
+				PROVISIONING_PROFILE = "BC829C9B-8971-4B79-8BB5-482ECD39A43A";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VALID_ARCHS = armv7;

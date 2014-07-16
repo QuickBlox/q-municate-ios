@@ -33,11 +33,11 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     self.tableView.delegate = self;
     
     [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
-        
+        NSLog(@"chatRoomDidReceiveMessageWithTarget");
     }];
     
     [[QMChatReceiver instance] chatRoomDidCreateWithTarget:self block:^(NSString *roomName) {
-        
+        NSLog(@"chatRoomDidCreateWithTarget");
     }];
 }
 
@@ -55,7 +55,6 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:nil];
-    
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
