@@ -193,3 +193,17 @@
 - (void)fbInviteUsersWithIDs:(NSArray *)ids copmpletion:(void(^)(NSError *error))completion;
 
 @end
+
+
+
+/** Calls interface */
+@interface QMApi (Calls)
+
+- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView conferenceType:(QBVideoChatConferenceType)conferenceType;
+
+- (void)acceptCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView;
+- (void)rejectCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView;
+
+- (void)finishCall;
+
+@end

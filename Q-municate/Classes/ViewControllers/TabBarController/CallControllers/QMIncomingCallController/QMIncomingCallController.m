@@ -7,7 +7,7 @@
 //
 
 #import "QMIncomingCallController.h"
-#import "QMChatService.h"
+#import "QMApi.h"
 #import "QMImageView.h"
 #import "QMSoundManager.h"
 #import "QMincomingCallService.h"
@@ -74,7 +74,7 @@
 - (IBAction)declineCall:(id)sender {
     
     [[QMSoundManager shared] stopAllSounds];
-//    [[QMChatService shared] rejectCallFromUser:opponent ? self.opponent.ID : self.opponentID  opponentView:nil];
+    [[QMApi instance] rejectCallFromUser:opponent ? self.opponent.ID : self.opponentID  opponentView:nil];
     [QMSoundManager playEndOfCallSound];
     
     [self performSelector:@selector(dismissIncomingCallController) withObject:self afterDelay:2.0f];

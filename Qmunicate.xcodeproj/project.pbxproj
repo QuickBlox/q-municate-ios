@@ -171,6 +171,8 @@
 		697E2D4D196EA82400CD2BDE /* QMLicenseAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 697E2D4B196EA82400CD2BDE /* QMLicenseAgreementViewController.m */; };
 		698C94F1197670AB002C53FA /* QMIncomingCallService.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C94F0197670AB002C53FA /* QMIncomingCallService.m */; };
 		698C94F2197670AB002C53FA /* QMIncomingCallService.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C94F0197670AB002C53FA /* QMIncomingCallService.m */; };
+		698C94F51976D483002C53FA /* QMApi+Calls.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C94F41976D483002C53FA /* QMApi+Calls.m */; };
+		698C94F61976D483002C53FA /* QMApi+Calls.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C94F41976D483002C53FA /* QMApi+Calls.m */; };
 		69B1893E190950A70049C6F9 /* QMDefinitions.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B1893D190950A70049C6F9 /* QMDefinitions.m */; };
 		69B72F7F196D37FE00ECEE4C /* QMFeedbackTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B72F7E196D37FE00ECEE4C /* QMFeedbackTableViewController.m */; };
 		69C43C91194C4B8C007E7DAF /* QMGroupDetailsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C43C90194C4B8C007E7DAF /* QMGroupDetailsDataSource.m */; };
@@ -546,6 +548,7 @@
 		697E2D4B196EA82400CD2BDE /* QMLicenseAgreementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMLicenseAgreementViewController.m; path = QMLicenseAgreementViewController/QMLicenseAgreementViewController.m; sourceTree = "<group>"; };
 		698C94EF197670AB002C53FA /* QMIncomingCallService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncomingCallService.h; sourceTree = "<group>"; };
 		698C94F0197670AB002C53FA /* QMIncomingCallService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMIncomingCallService.m; sourceTree = "<group>"; };
+		698C94F41976D483002C53FA /* QMApi+Calls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Calls.m"; sourceTree = "<group>"; };
 		69B1893D190950A70049C6F9 /* QMDefinitions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDefinitions.m; sourceTree = "<group>"; };
 		69B72F7D196D37FE00ECEE4C /* QMFeedbackTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMFeedbackTableViewController.h; sourceTree = "<group>"; };
 		69B72F7E196D37FE00ECEE4C /* QMFeedbackTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMFeedbackTableViewController.m; sourceTree = "<group>"; };
@@ -778,6 +781,7 @@
 				55A8B0AA1965A66300B5D33B /* QMApi+ChatDialogs.m */,
 				55A8B0AD1965AD1800B5D33B /* QMApi+Users.m */,
 				551F8723196E854500DBCA02 /* QMApi+Facebook.m */,
+				698C94F41976D483002C53FA /* QMApi+Calls.m */,
 			);
 			path = QMServicesFacade;
 			sourceTree = "<group>";
@@ -2078,6 +2082,7 @@
 			files = (
 				698C94F2197670AB002C53FA /* QMIncomingCallService.m in Sources */,
 				55943AC31941C8EC00BF4312 /* Q_municateTests.m in Sources */,
+				698C94F61976D483002C53FA /* QMApi+Calls.m in Sources */,
 				697E2D4D196EA82400CD2BDE /* QMLicenseAgreementViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2230,6 +2235,7 @@
 				55D270B81940B8D300238D50 /* MagicalRecordInternal.m in Sources */,
 				559BDFE819618D3D000588FE /* QMSignUpController.m in Sources */,
 				55CEAB87195DBCFA001A8ED6 /* UIImage+TintColor.m in Sources */,
+				698C94F51976D483002C53FA /* QMApi+Calls.m in Sources */,
 				55D2709C1940B8D300238D50 /* NSNumber+MagicalDataImport.m in Sources */,
 				55CEAB8B195DBCFA001A8ED6 /* QMSystemMessageCell.m in Sources */,
 				55A8B0AE1965AD1800B5D33B /* QMApi+Users.m in Sources */,
@@ -2415,7 +2421,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = Qmunicate;
-				PROVISIONING_PROFILE = "F7F235D5-C871-4D94-A2BF-0EC942129F0B";
+				PROVISIONING_PROFILE = "6E004364-5E2F-449B-9394-5906B3C651CF";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VALID_ARCHS = armv7;
@@ -2452,7 +2458,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = Qmunicate;
-				PROVISIONING_PROFILE = "BC829C9B-8971-4B79-8BB5-482ECD39A43A";
+				PROVISIONING_PROFILE = "5F37965B-59B5-461B-83F6-77EFE66FC01B";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VALID_ARCHS = armv7;

@@ -7,6 +7,7 @@
 //
 
 #import "QMBaseCallsController.h"
+#import "QMChatReceiver.h"
 
 
 @implementation QMBaseCallsController
@@ -48,10 +49,25 @@
 
 - (void)subscribeForNotifications
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(callAcceptedByUser) name:kCallDidAcceptByUserNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(callStartedWithUser) name:kCallDidStartedByUserNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(callRejectedByUser) name:kCallWasRejectedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(callStoppedByOpponentForReason:) name:kCallWasStoppedNotification object:nil];
+    /** CALL WAS ACCEPTED */
+    [[QMChatReceiver instance] chatCallDidAcceptWithTarget:self block:^(NSUInteger userID) {
+        [self callAcceptedByUser];
+    }];
+    
+    /** CALL WAS STARTED */
+    [[QMChatReceiver instance] chatCallDidStartWithTarget:self block:^(NSUInteger userID, NSString *sessionID) {
+        [self callStartedWithUser];
+    }];
+    
+    /** CALL WAS REJECTED */
+    [[QMChatReceiver instance] chatCallDidRejectByUserWithTarget:self block:^(NSUInteger userID) {
+        [self callRejectedByUser];
+    }];
+    
+    /** CALL WAS STOPPED */
+    [[QMChatReceiver instance] chatCallDidStopWithTarget:self block:^(NSUInteger userID, NSString *status) {
+        [self callStoppedByOpponentForReason:status];
+    }];
 }
 
 
@@ -64,7 +80,7 @@
 
 - (void)confirmCall
 {
-//    [[QMChatService shared] acceptCallFromUser:self.opponent.ID opponentView:self.opponentsView];
+    [[QMApi instance] acceptCallFromUser:self.opponent.ID opponentView:self.opponentsView];
     // Override this method in child:
 }
 
@@ -80,7 +96,7 @@
 
 - (IBAction)stopCallTapped:(id)sender
 {
-//    [[QMChatService shared] finishCall];
+    [[QMApi instance] finishCall];
     
     [self.contentView updateViewWithStatus:kCallWasStoppedByUserStatus];
     
@@ -115,12 +131,10 @@
     [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:2.0f];
 }
 
-- (void)callStoppedByOpponentForReason:(NSNotification *)notification
+- (void)callStoppedByOpponentForReason:(NSString *)reason
 {
 #warning Refactor this:
     self.opponentsView.hidden = YES;
-    
-    NSString *reason = notification.userInfo[@"reason"];
     
     // stop playing sound:
     [[QMSoundManager shared] stopAllSounds];
@@ -139,7 +153,7 @@
         [QMSoundManager playEndOfCallSound];
     }
     
-    [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:2.0];
+    [self dismissCallsController];
 }
 
 - (void)dismissCallsController
@@ -147,10 +161,10 @@
     [[QMSoundManager shared] stopAllSounds];
     
     if (_isOpponentCaller) {
-        [QMIncomingCallService.shared dismissIncomingCallController];
+        [QMIncomingCallService.shared hideIncomingCallControllerWithStatus:nil];
         return;
     }
-    [self dismissViewControllerAnimated:NO completion:nil];
+    [self performSelector:@selector(dismissViewControllerAnimated:completion:) withObject:self afterDelay:2.0f];
 }
 
 @end

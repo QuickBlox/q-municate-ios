@@ -7,9 +7,11 @@
 //
 
 #import "QMIncomingCallService.h"
+#import "QMChatReceiver.h"
 
 @interface QMIncomingCallService ()
 
+@property (strong, nonatomic) QMIncomingCallController *incomingCallController;
 @property (strong, nonatomic) UIView *activityView;
 
 @end
@@ -28,12 +30,7 @@
 - (id)init
 {
     if (self= [super init]) {
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showIncomingCallController:) name:kIncomingCallNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissIncomingCallController:) name:kCallWasStoppedNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissIncomingCallController:) name:kCallWasRejectedNotification object:nil];
-        
-        
+
         self.dateFormatter = [[NSDateFormatter alloc] init];
         [self.dateFormatter setLocale:[NSLocale currentLocale]];
         [self.dateFormatter setDateFormat:@"HH':'mm"];
@@ -49,19 +46,16 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)showIncomingCallController:(NSNotification *)notification
+- (void)showIncomingCallControllerWithOpponentID:(NSUInteger)opponentID conferenceType:(QBVideoChatConferenceType)conferenceType
 {
-    if (self.incomingCallController == nil) {
-        
-        NSUInteger opponentID = [notification.userInfo[kId] intValue];
-        NSUInteger type = [notification.userInfo[@"type"] intValue];
+    if (!self.incomingCallController) {
         
         self.incomingCallController =
         [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallIdentifier];
         
         self.incomingCallController.opponentID = opponentID;
         
-        self.incomingCallController.callType = type;
+        self.incomingCallController.callType = conferenceType;
         
         [self.window.rootViewController presentViewController:self.incomingCallController
                                                      animated:NO completion:nil];
@@ -75,15 +69,15 @@
 - (void)dismissIncomingCallController {
     
     if (self.incomingCallController != nil) {
-        [[[UIApplication sharedApplication].delegate window].rootViewController dismissViewControllerAnimated:NO completion:^{
+        [self.window.rootViewController dismissViewControllerAnimated:NO completion:^{
             self.incomingCallController = nil;
         }];
     }
 }
 
-- (void)dismissIncomingCallController:(NSNotification *)notification {
-    
-    [self performSelector:@selector(dismissIncomingCallController) withObject:self afterDelay:2.0];
+- (void)hideIncomingCallControllerWithStatus:(NSString *)status
+{
+    [self performSelector:@selector(dismissIncomingCallController) withObject:self afterDelay:2.0f];
 }
 
 #pragma mark -

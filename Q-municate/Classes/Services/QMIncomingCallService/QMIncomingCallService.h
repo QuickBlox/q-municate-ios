@@ -14,12 +14,11 @@
 @interface QMIncomingCallService : NSObject
 
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
-//@property (strong, nonatomic) AVAudioPlayer *audioPlayer;
-@property (strong, nonatomic) QMIncomingCallController *incomingCallController;
 
 + (instancetype)shared;
 
-- (void)dismissIncomingCallController;
+- (void)showIncomingCallControllerWithOpponentID:(NSUInteger)opponentID conferenceType:(QBVideoChatConferenceType)conferenceType;
+- (void)hideIncomingCallControllerWithStatus:(NSString *)status;
 
 - (NSString *)formattedTimeFromTimeInterval:(double_t)time;
 
