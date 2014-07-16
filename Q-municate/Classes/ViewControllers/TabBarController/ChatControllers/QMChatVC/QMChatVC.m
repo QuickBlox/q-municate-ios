@@ -130,18 +130,18 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    self.toolbarHeightConstraint = PVHeightOf(self.inputView).equalTo.constant(kQMChatInputToolbarHeightDefault).asConstraint;
-    self.toolbarBottomLayoutGuide = PVBottomOf(self.inputView).equalTo.bottomOf(self.view).asConstraint;
+    self.toolbarHeightConstraint = PVHeightOf(self.inputToolBar).equalTo.constant(kQMChatInputToolbarHeightDefault).asConstraint;
+    self.toolbarBottomLayoutGuide = PVBottomOf(self.inputToolBar).equalTo.bottomOf(self.view).asConstraint;
     
     [self.view addConstraints:PVGroup(@[
                                         PVTopOf(self.view).equalTo.topOf(self.tableView),
                                         PVLeadingOf(self.view).equalTo.leadingOf(self.tableView),
                                         PVTrailingOf(self.view).equalTo.trailingOf(self.tableView),
-                                        PVTrailingOf(self.view).equalTo.trailingOf(self.inputView),
-                                        PVLeadingOf(self.view).equalTo.leadingOf(self.inputView),
+                                        PVTrailingOf(self.view).equalTo.trailingOf(self.inputToolBar),
+                                        PVLeadingOf(self.view).equalTo.leadingOf(self.inputToolBar),
                                         self.toolbarBottomLayoutGuide,
                                         self.toolbarHeightConstraint,
-                                        PVTopOf(self.inputView).equalTo.bottomOf(self.tableView),
+                                        PVTopOf(self.inputToolBar).equalTo.bottomOf(self.tableView),
                                         ]).asArray];
 }
 
@@ -376,7 +376,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 - (BOOL)inputToolbarHasReachedMaximumHeight {
     
-    return (CGRectGetMinY(self.inputView.frame) == self.topLayoutGuide.length);
+    return (CGRectGetMinY(self.inputToolBar.frame) == self.topLayoutGuide.length);
 }
 
 #pragma mark - QMChatInputToolbarDelegate

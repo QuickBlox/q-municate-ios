@@ -24,6 +24,7 @@
         
         _tableView = tableView;
         _participants = [NSMutableArray new];
+        self.tableView.dataSource = self;
     }
     
     return self;
