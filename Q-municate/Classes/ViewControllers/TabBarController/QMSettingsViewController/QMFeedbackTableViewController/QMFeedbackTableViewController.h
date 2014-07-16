@@ -10,4 +10,6 @@
 
 @interface QMFeedbackTableViewController : UITableViewController
 
+@property (strong, nonatomic) NSString *feedbackType;
+
 @end
