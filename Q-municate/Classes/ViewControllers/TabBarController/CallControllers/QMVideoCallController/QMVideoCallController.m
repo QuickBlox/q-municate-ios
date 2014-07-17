@@ -5,11 +5,12 @@
 //  Created by Igor Alefirenko on 19/03/2014.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
-#import "AppDelegate.h"
+
 #import "QMVideoCallController.h"
-#import "QMUtilities.h"
+#import "QMincomingCallService.h"
 #import "QMImageView.h"
 #import "QMSoundManager.h"
+
 
 @interface QMVideoCallController ()
 
@@ -56,7 +57,7 @@
 
 -(void)startCall
 {
-//    [[QMChatService shared] callUser:self.opponent.ID opponentView:self.opponentsView callType:QBVideoChatConferenceTypeAudioAndVideo];
+    [[QMApi instance] callUser:self.opponent.ID opponentView:self.opponentsView conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
     [QMSoundManager playCallingSound];
 }
 
@@ -72,10 +73,10 @@
     [self.contentView hide];
 }
 
-- (void)callStoppedByOpponentForReason:(NSNotification *)notification
+- (void)callStoppedByOpponentForReason:(NSString *)reason
 {
     [self.contentView show];
-    [super callStoppedByOpponentForReason:notification];
+    [super callStoppedByOpponentForReason:reason];
 }
 
 @end

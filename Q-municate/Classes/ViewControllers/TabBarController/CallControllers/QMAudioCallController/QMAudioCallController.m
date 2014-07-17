@@ -40,7 +40,7 @@
 #pragma mark - Overriden methods
 
 - (void)startCall {
-//    [[QMChatService shared] callUser:self.opponent.ID opponentView:self.opponentsView callType:QBVideoChatConferenceTypeAudio];
+    [[QMApi instance] callUser:self.opponent.ID opponentView:self.opponentsView conferenceType:QBVideoChatConferenceTypeAudio];
     [QMSoundManager playCallingSound];
 }
 
@@ -63,10 +63,10 @@
     [self startCallDurationTimer];
 }
 
-- (void)callStoppedByOpponentForReason:(NSNotification *)notification {
+- (void)callStoppedByOpponentForReason:(NSString *)reason {
     
     [self stopCallDurationTimer];
-    [super callStoppedByOpponentForReason:notification];
+    [super callStoppedByOpponentForReason:reason];
 }
 
 - (void)startCallDurationTimer {

@@ -237,8 +237,8 @@
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatContactListDidChange block) {
         block(contactList);
     }];
-
     [self chatContactListWillChange];
+
 }
 
 - (void)chatContactListWilChangeWithTarget:(id)target block:(QMChatContactListWillChange)block {

@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "QMContentView.h"
-#import "QMChatService.h"
+#import "QMApi.h"
 #import "QMSoundManager.h"
-#import "QMUtilities.h"
+#import "QMincomingCallService.h"
 
 
 
@@ -42,6 +42,6 @@
 - (void)callAcceptedByUser;
 - (void)callStartedWithUser;
 - (void)callRejectedByUser;
-- (void)callStoppedByOpponentForReason:(NSNotification *)notification;
+- (void)callStoppedByOpponentForReason:(NSString *)reason;
 
 @end
