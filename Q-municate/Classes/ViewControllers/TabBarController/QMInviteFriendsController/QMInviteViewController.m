@@ -38,14 +38,15 @@
 #pragma mark - Actions
 
 - (IBAction)sendButtonClicked:(id)sender {
-    
+
+    @weakify(self)
     void (^inviteWithEmail)(void) =^{
         
         NSArray *abEmails = [self.dataSource emailsToInvite];
         if (abEmails.count > 0) {
             
             [REMailComposeViewController present:^(REMailComposeViewController *mailVC) {
-                
+                @strongify(self)
                 [mailVC setToRecipients:abEmails];
                 [mailVC setSubject:kMailSubjectString];
                 [mailVC setMessageBody:kMailBodyString isHTML:YES];
@@ -63,7 +64,7 @@
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         
         [[QMApi instance] fbInviteUsersWithIDs:fbIDs copmpletion:^(NSError *error) {
-            
+            @strongify(self)
             if (error) {
                 [SVProgressHUD showErrorWithStatus:error.localizedDescription];
             }else {

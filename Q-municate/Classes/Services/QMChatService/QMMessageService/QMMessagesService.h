@@ -6,9 +6,16 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import "QMChatService.h"
+#import <Foundation/Foundation.h>
+#import "QMServiceProtocol.h"
 
-@interface QMMessagesService : QMChatService
+@interface QMMessagesService : NSObject <QMServiceProtocol>
+
+- (NSArray *)messageHistoryWithDialogID:(NSString *)dialogID;
+- (void)addMessageInHistory:(QBChatMessage *)message withDialogID:(NSString *)dialogID;
+
+- (void)start;
+- (void)destroy;
 
 /**
  Send message
@@ -16,7 +23,7 @@
  @param message QBChatMessage structure which contains message text and recipient id
  @return YES if the request was sent successfully. If not - see log.
  */
-- (BOOL)sendMessage:(QBChatMessage *)message saveToHistory:(BOOL)save;
+- (BOOL)sendMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID saveToHistory:(BOOL)save;
 
 /**
  Send chat message to room
@@ -25,8 +32,8 @@
  @param room Room to send message
  @return YES if the request was sent successfully. If not - see log.
  */
-- (BOOL)sendChatMessage:(QBChatMessage *)message toRoom:(QBChatRoom *)chatRoom;
+- (BOOL)sendChatMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID toRoom:(QBChatRoom *)chatRoom;
 
-- (void)messageWithDialogID:(NSString *)dialogID completion:(QBChatHistoryMessageResultBlock)completion;
+- (void)messagesWithDialogID:(NSString *)dialogID completion:(QBChatHistoryMessageResultBlock)completion;
 
 @end

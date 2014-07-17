@@ -9,17 +9,11 @@
 #import "QMApi.h"
 #import "QMUsersService.h"
 
-@interface QMApi()
-
-@property (strong, nonatomic) NSMutableDictionary *users;
-@property (strong, nonatomic) NSMutableArray *contactList;
-
-@end
 
 @implementation QMApi (Users)
 
 - (void)retrieveUsersWithIDs:(NSArray *)idsToFetch completion:(void(^)(BOOL updated))completion {
-
+    
     NSArray *filteredIDs = [self checkExistIds:idsToFetch];
     
     if (filteredIDs.count == 0) {
@@ -30,9 +24,10 @@
         pagedRequest.page = 1;
         pagedRequest.perPage = filteredIDs.count < 100 ? filteredIDs.count : 100;
         
-        __weak __typeof(self)weakSelf = self;
+        @weakify(self)
         [self.usersService retrieveUsersWithIDs:filteredIDs pagedRequest:pagedRequest completion:^(QBUUserPagedResult *pagedResult) {
-            [weakSelf addUsers:pagedResult.users];
+            @strongify(self)
+            [self addUsers:pagedResult.users];
             completion(YES);
         }];
     }
@@ -40,8 +35,8 @@
 
 - (void)retrieveFriendsIfNeeded:(void(^)(BOOL updated))completion {
     
-    NSArray *occupantIDs = [self idsFromContactListItems];
-    [self retrieveUsersWithIDs:occupantIDs completion:completion];
+    NSArray *friendsIDs = [self idsFromContactListItems];
+    [self retrieveUsersWithIDs:friendsIDs completion:completion];
 }
 
 - (void)retrieveUsersForChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(BOOL updated))completion {
@@ -49,8 +44,8 @@
     [self retrieveUsersWithIDs:chatDialog.occupantIDs completion:completion];
 }
 
-- (BOOL)addUserInContactListWithUserID:(NSUInteger)userID {
-
+- (BOOL)addUserToContactListRequest:(NSUInteger)userID {
+    
     BOOL success = [[QBChat instance] addUserToContactListRequest:userID];
     return success;
 }
@@ -61,6 +56,18 @@
     return success;
 }
 
+- (BOOL)confirmAddContactRequest:(NSUInteger)userID {
+    
+    BOOL success = [[QBChat instance] confirmAddContactRequest:userID];
+    return success;
+}
+
+- (BOOL)rejectAddContactRequest:(NSUInteger)userID {
+    
+    BOOL success =[[QBChat instance] rejectAddContactRequest:userID];
+    return success;
+}
+
 /**
  @param QBUUser ID
  @return QBContactListItem from chaced contactList
@@ -68,7 +75,7 @@
 
 - (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID {
     
-    NSArray *contacts = self.contactList;
+    NSArray *contacts = self.usersService.contactList;
     for (QBContactListItem *item in contacts) {
         if (item.userID == userID) {
             return item;
@@ -83,7 +90,7 @@
     NSMutableSet *idsToFetch = [NSMutableSet setWithArray:ids];
     for (NSString *userID in ids) {
         
-        QBUUser *user = self.users[userID];
+        QBUUser *user = self.usersService.users[userID];
         if (user) {
             [idsToFetch removeObject:userID];
         }
@@ -95,7 +102,7 @@
 - (NSArray *)idsFromContactListItems {
     
     NSMutableArray *idsToFetch = [NSMutableArray new];
-    NSArray *contactListItems = self.contactList;
+    NSArray *contactListItems = self.usersService.contactList;
     
     for (QBContactListItem *item in contactListItems) {
         NSString *stringID = [NSString stringWithFormat:@"%d", item.userID];
@@ -125,13 +132,13 @@
 - (void)addUser:(QBUUser *)user {
     
     NSString *key = [NSString stringWithFormat:@"%d", user.ID];
-    self.users[key] = user;
+    self.usersService.users[key] = user;
 }
 
 - (QBUUser *)userWithID:(NSUInteger)userID {
     
     NSString *stingID = [NSString stringWithFormat:@"%d", userID];
-    QBUUser *user = self.users[stingID];
+    QBUUser *user = self.usersService.users[stingID];
     
     return user;
 }
@@ -142,7 +149,7 @@
     NSMutableArray *allFriends = [NSMutableArray array];
     
     for (NSString * friendID in ids) {
-        QBUUser *user = self.users[friendID];
+        QBUUser *user = self.usersService.users[friendID];
         if (user) {
             [allFriends addObject:user];
         }

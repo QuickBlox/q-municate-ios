@@ -37,8 +37,6 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
     if (self) {
         
         self.text = historyMessage.text;
-        self.dialogID = historyMessage.dialogID;
-        self.read = historyMessage.isRead;
         self.ID = historyMessage.ID;
         self.recipientID = historyMessage.recipientID;
         self.senderID = historyMessage.senderID;

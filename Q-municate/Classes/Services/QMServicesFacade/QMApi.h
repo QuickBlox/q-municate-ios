@@ -34,6 +34,7 @@
 
 + (instancetype)instance;
 - (BOOL)checkResult:(Result *)result;
+- (void)cleanUp;
 
 @end
 
@@ -45,6 +46,8 @@
  Type of Result - QBUUserLogInResult
  @return completion stastus
  */
+
+- (void)setAutoLogin:(BOOL)autologin;
 
 - (void)logout;
 
@@ -77,17 +80,14 @@
 - (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete;
 /**
  */
-- (NSArray *)messagesWithDialog:(QBChatDialog *)chatDialog;
+- (NSArray *)messagesHistoryWithDialog:(QBChatDialog *)chatDialog;
 /**
  */
-- (void)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog;
+- (BOOL)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog;
 
 @end
 
 @interface QMApi (ChatDialogs)
-
-- (QBChatDialog *)privateDialogWithOpponentID:(NSUInteger)opponentID;
-- (QBChatRoom *)roomWithRoomJID:(NSString *)roomJID;
 
 @property (strong, nonatomic, readonly) NSMutableArray *dialogs;
 
@@ -112,7 +112,7 @@
  @result QBChatDialogResult
  */
 - (void)createPrivateChatDialogWithOpponent:(QBUUser *)opponent completion:(QBChatDialogResultBlock)completion;
-
+- (void)createPrivateChatDialogIfNeededWithOpponent:(QBUUser *)opponent completion:(void(^)(QBChatDialog *chatDialog))completion;
 /**
  Leave user from chat dialog
  
@@ -138,12 +138,16 @@
  */
 - (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
 
+- (NSString *)occupantIDForPrivateChatDialog:(QBChatDialog *)chatDialog;
+
+- (QBChatDialog *)privateDialogWithOpponentID:(NSUInteger)opponentID;
+
+- (QBChatRoom *)roomWithRoomJID:(NSString *)roomJID;
+
 @end
 
 
 @interface QMApi (Users)
-
-//Local storage
 
 @property (strong, nonatomic, readonly) NSArray *friends;
 
@@ -152,13 +156,12 @@
 - (QBUUser *)userWithID:(NSUInteger)userID;
 - (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID;
 
-//Quickblox Api
 /**
  Add user to contact list request
  
  @param userID ID of user which you would like to add to contact list
  @return*/
-- (BOOL)addUserInContactListWithUserID:(NSUInteger)userID;
+- (BOOL)addUserToContactListRequest:(NSUInteger)userID;
 
 /**
  Remove user from contact list
@@ -167,6 +170,10 @@
  @return YES if the request was sent successfully. If not - see log.
  */
 - (BOOL)removeUserFromContactListWithUserID:(NSUInteger)userID;
+
+- (BOOL)confirmAddContactRequest:(NSUInteger)userID;
+
+- (BOOL)rejectAddContactRequest:(NSUInteger)userID;
 
 /**
  Retrieve Friends from contact list if needed;

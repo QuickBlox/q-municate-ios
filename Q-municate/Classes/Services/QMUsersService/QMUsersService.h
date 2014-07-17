@@ -7,8 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "QMServiceProtocol.h"
 
-@interface QMUsersService : NSObject
+@interface QMUsersService : NSObject <QMServiceProtocol>
+
+@property (strong, nonatomic) NSMutableArray *contactList;
+@property (strong, nonatomic) NSMutableDictionary *users;
 
 /**
  Retrieve users with facebook ids (max 10 users, for more - use equivalent method with 'pagedRequest' argument)

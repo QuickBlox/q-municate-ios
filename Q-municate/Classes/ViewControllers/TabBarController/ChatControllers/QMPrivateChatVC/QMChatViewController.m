@@ -9,6 +9,7 @@
 #import "QMChatViewController.h"
 #import "QMChatDataSource.h"
 #import "QMChatButtonsFactory.h"
+#import "QMGroupDetailsController.h"
 #import "QMApi.h"
 
 @interface QMChatViewController ()
@@ -56,17 +57,30 @@
 
 - (void)audioCallAction {
     
-	[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:@(QBVideoChatConferenceTypeAudio)];
+	[self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil];
 }
 
 - (void)videoCallAction {
     
-	[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:@(QBVideoChatConferenceTypeAudioAndVideo)];
+	[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil];
 }
 
 - (void)groupInfoNavButtonAction {
     
 	[self performSegueWithIdentifier:kGroupDetailsSegueIdentifier sender:nil];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    if ([segue.identifier isEqualToString:kVideoCallSegueIdentifier]) {
+        
+    } else if ([segue.identifier isEqualToString:kAudioCallSegueIdentifier]) {
+        
+    } else if ([segue.identifier isEqualToString:kGroupDetailsSegueIdentifier]) {
+        
+        QMGroupDetailsController *groupDetailVC = segue.destinationViewController;
+        groupDetailVC.chatDialog = self.dialog;
+    }
 }
 
 @end

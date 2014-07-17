@@ -26,14 +26,20 @@
 
 @implementation QMFriendListViewController
 
+- (void)dealloc {
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.dataSource = [[QMFriendsListDataSource alloc] initWithTableView:self.tableView];
-    self.tableView.delegate = self;
+    
     self.searchBar.delegate = self;
     [self showSearchBar:NO animated:NO];
+
+    [[QMApi instance] fetchAllDialogs:^{}];
 }
 
 #pragma mark - Actions
@@ -65,6 +71,10 @@
     };
     
     animated ? [UIView animateWithDuration:0.3 animations:show] : show();
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 59;
 }
 
 #pragma mark - UISearchBarDelegate

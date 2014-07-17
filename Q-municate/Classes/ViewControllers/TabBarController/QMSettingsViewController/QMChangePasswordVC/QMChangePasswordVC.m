@@ -89,8 +89,9 @@ const NSUInteger kQMMinPasswordLenght = 7;
     myProfile.oldPassword = oldPassword;
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    
+    @weakify(self)
     [[QMApi instance] changePasswordForCurrentUser:myProfile completion:^(BOOL success) {
+        @strongify(self)
         [SVProgressHUD showSuccessWithStatus:kAlertBodyPasswordChangedString];
         [self.navigationController popViewControllerAnimated:YES];
     }];

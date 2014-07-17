@@ -45,10 +45,11 @@
 
 - (void)logOut {
     
+    [[QMApi instance] logout];
+    @weakify(self)
     [[QMApi instance] destroySessionWithCompletion:^(BOOL success) {
-       
+        @strongify(self)
         if (success) {
-            [[QMApi instance] logout];
             [self performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
         }
     }];
@@ -60,14 +61,14 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-
+    
     if (cell == self.logoutCell) {
-        
-        __weak __typeof(self)weakSelf = self;
+        @weakify(self)
         [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
+            @strongify(self)
             alertView.message = kAlertTitleAreYouSureString;
             [alertView addButtonWithTitle:kAlertButtonTitleLogOutString andActionBlock:^{
-                [weakSelf logOut];
+                [self logOut];
             }];
             
             [alertView addButtonWithTitle:kAlertButtonTitleCancelString andActionBlock:^{}];

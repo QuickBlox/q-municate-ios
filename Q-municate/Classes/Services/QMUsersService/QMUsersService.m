@@ -8,8 +8,40 @@
 
 #import "QMUsersService.h"
 #import "QBEchoObject.h"
+#import "QMChatReceiver.h"
+
+@interface QMUsersService()
+
+@end
 
 @implementation QMUsersService
+
+- (instancetype)init {
+    
+    self = [super init];
+    if (self) {
+        self.users = [NSMutableDictionary dictionary];
+        self.contactList = [NSMutableArray array];
+    }
+    return self;
+}
+
+- (void)start {
+    
+    @weakify(self)
+    [[QMChatReceiver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
+        @strongify(self)
+        [self.contactList removeAllObjects];
+        [self.contactList addObjectsFromArray:contactList.pendingApproval];
+        [self.contactList addObjectsFromArray:contactList.contacts];
+    }];
+}
+
+- (void)destroy {
+    
+    [self.users removeAllObjects];
+    [self.contactList removeAllObjects];
+}
 
 #pragma mark - FRIEND LIST ROASTER
 

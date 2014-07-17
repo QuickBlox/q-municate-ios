@@ -1,4 +1,4 @@
-//
+ //
 //  QMChatReceiver.m
 //  Qmunicate
 //
@@ -11,7 +11,8 @@
 @interface QMChatHandlerObject : NSObject
 
 @property (weak, nonatomic) id target;
-@property (copy, nonatomic) id callback;
+@property (strong, nonatomic) id callback;
+@property (assign, nonatomic) NSUInteger identifier;
 
 @end
 
@@ -21,11 +22,15 @@
     NSLog(@"%@ %@", NSStringFromClass(self.class), NSStringFromSelector(_cmd));
 }
 
+- (NSString *)description {
+    return [NSString stringWithFormat:@"target - %@, callback - %@, identfier - %d", self.target, self.callback, self.identifier];
+}
+
 @end
 
 @interface QMChatReceiver()
 
-@property (strong, nonatomic) NSMutableDictionary *bloks;
+@property (strong, nonatomic) NSMutableDictionary *handlerList;
 
 @end
 
@@ -42,45 +47,57 @@
     return instance;
 }
 
-- (void)destroy {
-    
-    self.bloks = [NSMutableDictionary dictionary];
-}
 
 - (instancetype)init {
     
     self = [super init];
     if (self) {
-        self.bloks = [NSMutableDictionary dictionary];
+        self.handlerList = [NSMutableDictionary dictionary];
     }
     
     return self;
 }
 
+- (void)unsubsribeWithTarget:(id)target {
+    
+    NSArray *allHendlers = [self.handlerList allValues];
+    
+    NSUInteger identifier = [target hash];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SUBQUERY(self, $x, $x.identifier == %d).@count != 0", identifier];
+    NSArray *result = [allHendlers filteredArrayUsingPredicate:predicate];
+    
+    for (NSMutableArray *toRemove in result) {
+        [toRemove removeAllObjects];
+    }
+}
+
 - (void)subsribeWithTarget:(id)target selector:(SEL)selector block:(id)block {
     
     NSString *key = NSStringFromSelector(selector);
-    NSMutableArray *array = self.bloks[key];
+    NSMutableArray *array = self.handlerList[key];
     
     if (!array) {
         array = [NSMutableArray array];
     }
-    QMChatHandlerObject *handler = [[QMChatHandlerObject alloc] init];
-    handler.callback = block;
-    handler.target = target;
     
+    QMChatHandlerObject *handler = [[QMChatHandlerObject alloc] init];
+    handler.callback = [block copy];
+    handler.target = target;
+    handler.identifier = [target hash];
+    
+    NSLog(@"Subscirbe:%@", [handler description]);
     [array addObject:handler];
-    self.bloks[key] = array;
+    self.handlerList[key] = array;
 }
 
 - (void)executeBloksWithSelector:(SEL)selector enumerateBloks:(void(^)(id block))enumerateBloks {
     
     NSString *key = NSStringFromSelector(selector);
 
-    NSArray *bloksToExecute = self.bloks[key];
+    NSArray *handlerObjToExecute = self.handlerList[key];
     
-    for (QMChatHandlerObject *handler in bloksToExecute) {
-        NSLog(@"\n------------------------------------------\nsend %@ notification to %@\n------------------------------------------", key, handler.target);
+    for (QMChatHandlerObject *handler in handlerObjToExecute) {
+        NSLog(@"Send %@ notification to %@", key, handler.target);
         enumerateBloks(handler.callback);
     }
 }
@@ -120,12 +137,12 @@
  @param message Message passed to sendMessage method into QBChat
  */
 
-- (void)chatDidNotSendMessageWithTarget:(id)target block:(QMChatDidNotSendMessage)block {
+- (void)chatDidNotSendMessageWithTarget:(id)target block:(QMChatMessageBlock)block {
     [self subsribeWithTarget:target selector:@selector(chatDidNotSendMessage:) block:block];
 }
 
 - (void)chatDidNotSendMessage:(QBChatMessage *)message {
-    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatDidNotSendMessage block) {
+    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatMessageBlock block) {
         block(message);
     }];
 }
@@ -136,12 +153,24 @@
  @param message Message received from Chat
  */
 
-- (void)chatDidReceiveMessageWithTarget:(id)target block:(QMChatDidReceiveMessage)block {
+- (void)chatDidReceiveMessageWithTarget:(id)target block:(QMChatMessageBlock)block {
     [self subsribeWithTarget:target selector:@selector(chatDidReceiveMessage:) block:block];
 }
 
 - (void)chatDidReceiveMessage:(QBChatMessage *)message {
-    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatDidReceiveMessage block) {
+    
+    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatMessageBlock block) {
+        block(message);
+    }];
+    [self chatAfterDidReceiveMessage:message];
+}
+
+- (void)chatAfterDidReceiveMessageWithTarget:(id)target block:(QMChatMessageBlock)block {
+    [self subsribeWithTarget:target selector:@selector(chatAfterDidReceiveMessage:) block:block];
+}
+
+- (void)chatAfterDidReceiveMessage:(QBChatMessage *)message {
+    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatMessageBlock block) {
         block(message);
     }];
 }
@@ -222,7 +251,6 @@
     }];
 }
 
-
 /**
  Called in case changing contact's online status
  
@@ -235,7 +263,6 @@
 }
 
 - (void)chatDidReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
-    NSLog(@"\n------------------ROSTER------------------\n%@\n------------------------------------------", NSStringFromSelector(_cmd));
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChathatDidReceiveContactItemActivity block) {
         block(userID, isOnline, status);
     }];
@@ -273,6 +300,8 @@
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatRoomDidReceiveMessage block) {
         block(message, roomJID);
     }];
+    
+    [self chatAfterDidReceiveMessage:message];
 }
 
 /**

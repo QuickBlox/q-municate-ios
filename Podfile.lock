@@ -1,9 +1,44 @@
 PODS:
   - AGEmojiKeyboard (0.1.0)
+  - libextobjc (0.4):
+    - libextobjc/EXTADT
+    - libextobjc/EXTConcreteProtocol
+    - libextobjc/EXTKeyPathCoding
+    - libextobjc/EXTNil
+    - libextobjc/EXTSafeCategory
+    - libextobjc/EXTScope
+    - libextobjc/EXTSelectorChecking
+    - libextobjc/EXTSynthesize
+    - libextobjc/NSInvocation+EXT
+    - libextobjc/NSMethodSignature+EXT
+    - libextobjc/RuntimeExtensions
+    - libextobjc/UmbrellaHeader
+  - libextobjc/EXTADT (0.4):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTConcreteProtocol (0.4):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTKeyPathCoding (0.4):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTNil (0.4):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSafeCategory (0.4):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTScope (0.4):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSelectorChecking (0.4):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSynthesize (0.4):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/NSInvocation+EXT (0.4):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/NSMethodSignature+EXT (0.4):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/RuntimeExtensions (0.4)
+  - libextobjc/UmbrellaHeader (0.4)
   - Parus (1.0)
-  - SDWebImage (3.6):
+  - SDWebImage (3.7.0):
     - SDWebImage/Core
-  - SDWebImage/Core (3.6)
+  - SDWebImage/Core (3.7.0)
   - SSKeychain (1.2.2)
   - StaticDataTableViewController (2.0.3)
   - SVProgressHUD (1.0)
@@ -12,6 +47,7 @@ PODS:
 
 DEPENDENCIES:
   - AGEmojiKeyboard (~> 0.1.0)
+  - libextobjc (~> 0.4)
   - Parus (~> 1.0)
   - SDWebImage (~> 3.6)
   - SSKeychain (~> 1.2.2)
@@ -22,8 +58,9 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AGEmojiKeyboard: dd58fd8520856094b5dd64ebb001703df85815e6
+  libextobjc: ba42e4111f433273a886cd54f0ddaddb7f62f82f
   Parus: 4ed2c119d86103e160a3820d81564c08cf330eb0
-  SDWebImage: c6989652c1cdf27cbdf3f56957e2030f825af5bc
+  SDWebImage: 791cb0f588046cb0bb7802ae8ae8f5462947b773
   SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
   StaticDataTableViewController: 171ee35f17f6176baa98ce05c1e4769a628732ad
   SVProgressHUD: 5034c6e22b8c2ca3e09402e48d41ed0340aa1c50

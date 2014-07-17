@@ -45,7 +45,7 @@
         [self.acceptButton setImage:[ UIImage imageNamed:@"answer"] forState:UIControlStateNormal];
     }
 
-    [self.userAvatarView setImageWithURL:[NSURL URLWithString:opponent.website]];
+    [self.userAvatarView sd_setImageWithURL:[NSURL URLWithString:opponent.website]];
 
     [QMSoundManager playRingtoneSound];
 }

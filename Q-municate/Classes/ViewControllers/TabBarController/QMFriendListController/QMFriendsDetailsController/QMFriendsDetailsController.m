@@ -13,6 +13,15 @@
 #import "REAlertView.h"
 #import "QMApi.h"
 
+typedef NS_ENUM(NSUInteger, QMCallType) {
+    QMCallTypePhone,
+    QMCallTypeVideo,
+    QMCallTypeAudio,
+    QMCallTypeChat
+    
+};
+
+
 @interface QMFriendsDetailsController () <UIActionSheetDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableViewCell *phoneCell;
@@ -28,6 +37,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *onlineCircle;
 
 @end
+
 
 @implementation QMFriendsDetailsController
 
@@ -52,7 +62,7 @@
     self.userAvatar.imageViewType = QMImageViewTypeCircle;
     NSURL *url = [NSURL URLWithString:self.selectedUser.website];
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
-    [self.userAvatar setImageWithURL:url placeholderImage:placeholder];
+    [self.userAvatar sd_setImageWithURL:url placeholderImage:placeholder];
     
     [self updateUserStatus];
 }
@@ -90,6 +100,26 @@
     }
 }
 
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    switch (indexPath.row) {
+        case QMCallTypePhone: break;
+        case QMCallTypeVideo:[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil]; break;
+        case QMCallTypeAudio: [self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil]; break;
+        case QMCallTypeChat: {
+            
+
+            __weak __typeof(self)weakSelf = self;
+            [[QMApi instance] createPrivateChatDialogIfNeededWithOpponent:self.selectedUser completion:^(QBChatDialog *chatDialog) {
+                [weakSelf performSegueWithIdentifier:kChatViewSegueIdentifier sender:nil];
+            }];
+            
+        } break;
+        default:break;
+    }
+}
+
 #pragma mark - Actions
 
 - (IBAction)removeFromFriends:(id)sender {
@@ -100,8 +130,9 @@
         [alertView addButtonWithTitle:@"Cancel" andActionBlock:^{}];
         
         [alertView addButtonWithTitle:@"Delete" andActionBlock:^{
-            
+            @weakify(self)
             if ([[QMApi instance] removeUserFromContactListWithUserID:self.selectedUser.ID]) {
+                @strongify(self)
                 [self.navigationController popViewControllerAnimated:YES];
             }
         }];

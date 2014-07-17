@@ -9,3 +9,5 @@ pod 'StaticDataTableViewController', '~> 2.0.3'
 pod 'SSKeychain', '~> 1.2.2'
 pod 'AGEmojiKeyboard', '~> 0.1.0'
 pod 'SDWebImage', '~> 3.6'
+pod 'libextobjc', '~> 0.4'
+

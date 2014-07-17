@@ -28,11 +28,6 @@
         self.tableView = tableView;
         self.tableView.dataSource = self;
         
-        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-        [self fetchDialog:^{
-            [SVProgressHUD dismiss];
-            [self.tableView reloadData];
-        }];
     }
     return self;
 }
@@ -40,13 +35,7 @@
 #pragma mark - UITableViewDataSource
 
 - (void)fetchDialog:(void(^)(void))comletion {
-    
-    [[QMApi instance] fetchAllDialogs:^{
-        
-        //        self.dialogs = [QMApi instance] dis
-        
-        comletion();
-    }];
+    [[QMApi instance] fetchAllDialogs:comletion];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

@@ -13,9 +13,10 @@
 
 - (void)fbFriends:(void(^)(NSArray *fbFriends))completion {
 
-    __weak __typeof(self)weakSelf = self;
+    @weakify(self)
     [self.facebookService connectToFacebook:^(NSString *sessionToken) {
-        [weakSelf.facebookService fetchMyFriends:completion];
+        @strongify(self)
+        [self.facebookService fetchMyFriends:completion];
     }];
 }
 

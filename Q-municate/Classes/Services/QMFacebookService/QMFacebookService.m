@@ -149,13 +149,13 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
 - (void)connectToFacebook:(void(^)(NSString *sessionToken))completion {
     // Whenever a person opens the app, check for a cached session
     if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
-        NSLog(@"Found a cached session");
+        NSLog(@"FBSession - Found a cached session");
         // If there's one, just open the session silently, without showing the user the login UI
         [FBSession openActiveSessionWithReadPermissions:@[@"public_profile"]
                                            allowLoginUI:NO
                                       completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
                                           // Handler for session state changes
-                                          [self sessionStateChanged:session state:state error:error completion:completion];
+                                          [self sessionStateChanged:session state:state error:error sessionBlock:completion];
                                       }];
         
         // If there's no cached session, we will show a login button
@@ -168,24 +168,26 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
          ^(FBSession *session, FBSessionState state, NSError *error) {
              
              // Call  sessionStateChanged:state:error method to handle session state changes
-             [self sessionStateChanged:session state:state error:error completion:completion];
+             [self sessionStateChanged:session state:state error:error sessionBlock:^(NSString *sessionToken) {
+                 completion(sessionToken);
+             }];
          }];
     }
 }
 
 // This method will handle ALL the session state changes in the app
-- (void)sessionStateChanged:(FBSession *)session state:(FBSessionState) state error:(NSError *)error completion:(void(^)(NSString *sessionToken))completion  {
+- (void)sessionStateChanged:(FBSession *)session state:(FBSessionState) state error:(NSError *)error sessionBlock:(void(^)(NSString *sessionToken))sessionBlock  {
     // If the session was opened successfully
     if (!error && state == FBSessionStateOpen){
-        NSLog(@"Session opened");
+        NSLog(@"FBSession - Session opened");
         // Show the user the logged-in UI
-        completion(session.accessTokenData.accessToken);
+        sessionBlock(session.accessTokenData.accessToken);
         return;
     }
     
     if (state == FBSessionStateClosed || state == FBSessionStateClosedLoginFailed){
         // If the session is closed
-        NSLog(@"Session closed");
+        NSLog(@"FBSession - Session closed");
         // Show the user the logged-out UI
     }
     
@@ -224,8 +226,8 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
                 [self showMessage:alertText withTitle:alertTitle];
             }
         }
-        completion(nil);
     }
+    sessionBlock(nil);
 }
 
 - (void)showMessage:(NSString *)message withTitle:(NSString *)title {

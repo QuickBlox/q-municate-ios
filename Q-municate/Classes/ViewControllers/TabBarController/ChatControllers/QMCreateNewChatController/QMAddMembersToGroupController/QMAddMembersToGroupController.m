@@ -30,8 +30,9 @@
 
 - (IBAction)performAction:(id)sender {
     // update current dialog:
+    @weakify(self)
     [[QMApi instance] joinOccupants:self.selectedFriends toChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
-        
+        @strongify(self)
         [self.navigationController popViewControllerAnimated:YES];
         
     }];

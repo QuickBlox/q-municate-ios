@@ -35,6 +35,11 @@
 
 @implementation QMChatDataSource
 
+- (void)dealloc {
+    [[QMChatReceiver instance] unsubsribeWithTarget:self];
+    NSLog(@"%@ - %@", NSStringFromSelector(_cmd), self);
+}
+
 - (instancetype)initWithChatDialog:(QBChatDialog *)dialog forTableView:(UITableView *)tableView {
     
     self = [super init];
@@ -48,29 +53,21 @@
         self.automaticallyScrollsToMostRecentMessage = YES;
         
         tableView.dataSource = self;
-        
         [tableView registerClass:[QMTextMessageCell class] forCellReuseIdentifier:QMTextMessageCellID];
         [tableView registerClass:[QMAttachmentMessageCell class] forCellReuseIdentifier:QMAttachmentMessageCellID];
         [tableView registerClass:[QMSystemMessageCell class] forCellReuseIdentifier:QMSystemMessageCellID];
         
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+        
+        __weak __typeof(self)weakSelf = self;
+
         [[QMApi instance] fetchMessageWithDialog:self.chatDialog complete:^(BOOL success) {
-            
-            NSArray *history = [[QMApi instance] messagesWithDialog:self.chatDialog];
-            
-            for (QBChatHistoryMessage *historyMessage in history) {
-                QMMessage *qmMessage = [self qmMessageWithQbChatHistoryMessage:historyMessage];
-                [self.messages addObject:qmMessage];
-            }
-            
-            [self.tableView reloadData];
-            [self scrollToBottomAnimated:NO];
-            
+            [weakSelf reloadCachedMessages:NO];
             [SVProgressHUD dismiss];
         }];
         
-        [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-            NSLog(@"chatDidReceiveMessageWithTarget");
+        [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+            [weakSelf reloadCachedMessages:YES];
         }];
         
         [[QMChatReceiver instance] chatDidNotSendMessageWithTarget:self block:^(QBChatMessage *message) {
@@ -79,6 +76,21 @@
     }
     
     return self;
+}
+
+- (void)reloadCachedMessages:(BOOL)animated {
+    
+    NSArray *history = [[QMApi instance] messagesHistoryWithDialog:self.chatDialog];
+    
+    [self.messages removeAllObjects];
+    
+    for (QBChatHistoryMessage *historyMessage in history) {
+        QMMessage *qmMessage = [self qmMessageWithQbChatHistoryMessage:historyMessage];
+        [self.messages addObject:qmMessage];
+    }
+    
+    [self.tableView reloadData];
+    [self scrollToBottomAnimated:animated];
 }
 
 - (void)scrollToBottomAnimated:(BOOL)animated {
@@ -128,9 +140,12 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     QMMessage *message = self.messages[indexPath.row];
-    QMChatCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIDAtQMMessage:message]
-                                                       forIndexPath:indexPath];
-    cell.hideUserImage = [QMApi instance].currentUser.ID == message.senderID;
+    QMChatCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIDAtQMMessage:message]];
+    
+    BOOL myMessage = [QMApi instance].currentUser.ID == message.senderID;
+    cell.hideUserImage = myMessage;
+    
+    [[QMApi instance] userWithID:message.senderID];
     cell.message = message;
     
     return cell;
@@ -144,7 +159,10 @@
 
 - (void)sendMessage:(NSString *)message {
     
-    [[QMApi instance] sendText:message toDialog:self.chatDialog];
+    BOOL success = [[QMApi instance] sendText:message toDialog:self.chatDialog];
+    if (success) {
+        [self reloadCachedMessages:YES];
+    }
 }
 
 @end

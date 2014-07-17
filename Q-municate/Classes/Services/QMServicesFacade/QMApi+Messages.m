@@ -9,46 +9,45 @@
 #import "QMApi.h"
 #import "QMMessagesService.h"
 
-@interface QMApi()
-
-@property (strong, nonatomic) NSMutableDictionary *messages;
-
-@end
-
 @implementation QMApi (Messages)
 
 - (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete {
     
-    [self.messagesService messageWithDialogID:chatDialog.ID completion:^(QBChatHistoryMessageResult *result) {
-        if ([self checkResult:result]) {
-            [self addMessages:result.messages ? result.messages : @[] withDialog:chatDialog];
-        }
-        complete (result.success);
+    __weak __typeof(self)weakSelf = self;
+    [self.messagesService messagesWithDialogID:chatDialog.ID completion:^(QBChatHistoryMessageResult *result) {
+        complete ([weakSelf checkResult:result]);
     }];
 }
 
-- (void)addMessages:(NSArray *)messages withDialog:(QBChatDialog *)dialog {
+- (BOOL)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog {
     
-    self.messages[dialog.ID] = messages;
-}
-
-- (NSArray *)messagesWithDialog:(QBChatDialog *)chatDialog {
-
-    NSArray *messages = self.messages[chatDialog.ID];
-    return messages;
-}
-
-- (void)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog {
+    QBChatMessage *message = [[QBChatMessage alloc] init];
     
-    QBChatMessage *message = [QBChatMessage message];
-    message.senderID = self.currentUser.ID;
     message.text = text;
-
+    
+    BOOL success = NO;
+    
     if (dialog.type == QBChatDialogTypeGroup) {
-
         QBChatRoom *room = [self roomWithRoomJID:dialog.roomJID];
-        [self.messagesService sendChatMessage:message toRoom:room];
+        success = [self.messagesService sendChatMessage:message withDialogID:dialog.ID toRoom:room];
+        
+    } else if (dialog.type == QBChatDialogTypePrivate) {
+        message.senderID = self.currentUser.ID;
+        message.recipientID = [self occupantIDForPrivateChatDialog:dialog].integerValue;
+        success = [self.messagesService sendMessage:message  withDialogID:dialog.ID saveToHistory:YES];
     }
+    
+    if (success) {
+        [self.messagesService addMessageInHistory:message withDialogID:dialog.ID];
+        dialog.lastMessageText = message.text;
+        dialog.lastMessageDate = message.datetime;
+    }
+    
+    return success;
+}
+
+- (NSArray *)messagesHistoryWithDialog:(QBChatDialog *)chatDialog {
+    return [self.messagesService messageHistoryWithDialogID:chatDialog.ID];
 }
 
 @end

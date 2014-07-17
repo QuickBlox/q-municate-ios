@@ -34,6 +34,10 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
 
 @synthesize friendList = _friendList;
 
+- (void)dealloc {
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
+
 - (instancetype)initWithTableView:(UITableView *)tableView {
     
     self = [super init];
@@ -44,11 +48,21 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
         
         self.searchList = [NSArray array];
         
-        [[QMChatReceiver instance] chatContactListWilChangeWithTarget:self block:^{
-            
+        @weakify(self)
+        void(^retrive)(void) = ^() {
             [[QMApi instance] retrieveFriendsIfNeeded:^(BOOL updated) {
+                @strongify(self)
                 [self reloadDatasource];
             }];
+        };
+                
+        [[QMChatReceiver instance] chatContactListWilChangeWithTarget:self block:retrive];
+        
+        [[QMChatReceiver instance] chatDidReceiveContactAddRequestWithTarget:self block:^(NSUInteger userID) {
+            BOOL success = [[QMApi instance] confirmAddContactRequest:userID];
+            if (success) {
+                NSLog(@"Auto approve userID - %d", userID);
+            }
         }];
     }
     
@@ -90,9 +104,10 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
 }
 
 - (void)globalSearch {
-    
+
+    @weakify(self)
     QBUUserPagedResultBlock userPagedBlock = ^(QBUUserPagedResult *pagedResult) {
-        
+        @strongify(self)
         if (pagedResult.success) {
             
             NSMutableArray *users = pagedResult.users.mutableCopy;
@@ -200,7 +215,7 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
     NSArray *datasource = [self usersAtSections:indexPath.section];
     QBUUser *user = datasource[indexPath.row];
     
-    [[QMApi instance] addUserInContactListWithUserID:user.ID];
+    [[QMApi instance] addUserToContactListRequest:user.ID];
 }
 
 @end

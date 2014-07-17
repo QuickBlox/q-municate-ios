@@ -56,7 +56,6 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 }
 
 - (void)dealloc {
-    
     [self registerForNotifications:NO];
 }
 
@@ -143,11 +142,6 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
                                         self.toolbarHeightConstraint,
                                         PVTopOf(self.inputToolBar).equalTo.bottomOf(self.tableView),
                                         ]).asArray];
-}
-
-- (void)setDataSource:(QMChatDataSource *)dataSource {
-    
-    _dataSource = dataSource;
 }
 
 #pragma mark - UITableViewDelegate
@@ -345,10 +339,12 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 - (void)adjustInputToolbarHeightConstraintByDelta:(CGFloat)dy {
     
-    self.toolbarHeightConstraint.constant += dy;
+    float h = self.toolbarHeightConstraint.constant + dy;
     
-    if (self.toolbarHeightConstraint.constant < kQMChatInputToolbarHeightDefault) {
+    if (h < kQMChatInputToolbarHeightDefault) {
         self.toolbarHeightConstraint.constant = kQMChatInputToolbarHeightDefault;
+    }else {
+        self.toolbarHeightConstraint.constant = h;
     }
     
     [self.view setNeedsUpdateConstraints];
@@ -429,26 +425,27 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 - (void)showEmojiKeyboard {
     
-    AGEmojiKeyboardView *emojiKeyboardView =
-    [[AGEmojiKeyboardView alloc] initWithFrame:CGRectMake(0,
-                                                          0, self.view.frame.size.width, 216) dataSource:self];
-    emojiKeyboardView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-    emojiKeyboardView.delegate = self;
-    
-    self.inputToolBar.contentView.textView.inputView = emojiKeyboardView;
-    emojiKeyboardView.tintColor = [UIColor grayColor];
-    
-    if ([self.inputToolBar.contentView.textView isFirstResponder]) {
-        
+    if ([self.inputToolBar.contentView.textView.inputView isKindOfClass:[AGEmojiKeyboardView class]]) {
+      
+        self.inputToolBar.contentView.textView.inputView = nil;
         [self.inputToolBar.contentView.textView reloadInputViews];
-        return;
+        
+    } else {
+        
+        AGEmojiKeyboardView *emojiKeyboardView = [[AGEmojiKeyboardView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 216) dataSource:self];
+        emojiKeyboardView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        emojiKeyboardView.delegate = self;
+        emojiKeyboardView.tintColor = [UIColor colorWithRed:0.678 green:0.762 blue:0.752 alpha:1.000];
+        
+        self.inputToolBar.contentView.textView.inputView = emojiKeyboardView;
+        [self.inputToolBar.contentView.textView reloadInputViews];
+        [self.inputToolBar.contentView.textView becomeFirstResponder];
     }
-    [self.inputToolBar.contentView.textView becomeFirstResponder];
 }
 
 
 - (NSArray *)sectionsImages {
-    return @[@"😊", @"😊", @"🎍", @"🐶", @"🏠", @"🕘", @"✔"];
+    return @[@"😊", @"😊", @"🎍", @"🐶", @"🏠", @"🕘", @"Back"];
 }
 
 - (UIImage *)randomImage:(NSInteger)categoryImage {
@@ -488,6 +485,8 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 #pragma Emoji Delegate
 
 - (void)emojiKeyBoardView:(AGEmojiKeyboardView *)emojiKeyBoardView didUseEmoji:(NSString *)emoji {
+    
+    [self textViewDidChange:self.inputToolBar.contentView.textView];
     NSString *textViewString = self.inputToolBar.contentView.textView.text;
     self.inputToolBar.contentView.textView.text = [textViewString stringByAppendingString:emoji];
 }

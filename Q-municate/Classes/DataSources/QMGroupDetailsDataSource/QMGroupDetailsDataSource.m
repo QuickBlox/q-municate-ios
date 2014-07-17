@@ -13,7 +13,7 @@
 @interface QMGroupDetailsDataSource ()
 
 @property (nonatomic, strong) NSArray *onlineParticipantsIDs;
-
+@property (nonatomic, strong) NSArray *participants;
 @end
 
 @implementation QMGroupDetailsDataSource
@@ -23,14 +23,16 @@
     if (self = [super init]) {
         
         _tableView = tableView;
-        _participants = [NSMutableArray new];
+        _participants = [[QMApi instance] friends];
         self.tableView.dataSource = self;
+        
     }
     
     return self;
 }
 
 - (NSInteger)participantsCount {
+    
     return [_participants count];
 }
 

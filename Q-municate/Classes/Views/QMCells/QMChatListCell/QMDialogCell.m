@@ -28,6 +28,8 @@
 
 - (void)setDialog:(QBChatDialog *)dialog {
     
+    self.descriptionLabel.text = dialog.lastMessageText.length > 0 ? dialog.lastMessageText : @"Attachment";
+    
     if (_dialog != dialog) {
         _dialog = dialog;
         [self configureCellWithDialog:dialog];
@@ -39,7 +41,7 @@
     BOOL isGroup = (chatDialog.type == QBChatDialogTypeGroup);
 
     self.groupMembersNumb.hidden = self.groupNumbBackground.hidden = !isGroup;
-    self.unreadMsgBackground.hidden = self.unreadMsgNumb.hidden = !(chatDialog.unreadMessageCount > 0);
+    self.unreadMsgBackground.hidden = self.unreadMsgNumb.hidden = (chatDialog.unreadMessageCount == 0);
     self.unreadMsgNumb.text = [NSString stringWithFormat:@"%d", chatDialog.unreadMessageCount];
     
     if (!isGroup) {
@@ -64,8 +66,6 @@
         self.titleLabel.text = chatDialog.name;
         self.groupMembersNumb.text = [NSString stringWithFormat:@"%d", chatDialog.occupantIDs.count];
     }
-    
-    self.descriptionLabel.text = chatDialog.lastMessageText.length > 0 ? chatDialog.lastMessageText : @"Attachment";
 }
 
 @end
