@@ -77,13 +77,13 @@
     [[QMApi instance] rejectCallFromUser:opponent ? self.opponent.ID : self.opponentID  opponentView:nil];
     [QMSoundManager playEndOfCallSound];
     
-    [self performSelector:@selector(dismissIncomingCallController) withObject:self afterDelay:2.0f];
+    [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:2.0f];
 }
 
-- (void)dismissIncomingCallController {
+- (void)dismissCallsController {
     
     [[QMSoundManager shared] stopAllSounds];
-    [self dismissIncomingCallController];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

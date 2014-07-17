@@ -2831,10 +2831,10 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="MwZ-5e-1h3"/>
-        <segue reference="Gs8-3F-TjX"/>
-        <segue reference="IAo-qy-uHQ"/>
-        <segue reference="aeV-0O-de3"/>
         <segue reference="bOV-zd-nKn"/>
+        <segue reference="Gs8-3F-TjX"/>
+        <segue reference="MwZ-5e-1h3"/>
+        <segue reference="IAo-qy-uHQ"/>
+        <segue reference="D2K-Xi-hCk"/>
     </inferredMetricsTieBreakers>
 </document>

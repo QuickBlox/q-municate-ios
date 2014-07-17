@@ -81,11 +81,14 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
  */
 - (void)chatDidReceiveCallRequestWithTarget:(id)target block:(QMChatDidReceiveCallRequest)block;
 - (void)chatDidReceiveCallRequestCustomParametesrWithTarget:(id)target block:(QMChatDidReceiveCallRequestCustomParams)block;
+- (void)chatAfrerDidReceiveCallRequestCustomParametesrWithTarget:(id)target block:(QMChatDidReceiveCallRequestCustomParams)block;
 - (void)chatCallUserDidNotAnswerWithTarget:(id)target block:(QMChatCallUserDidNotAnswer)block;
 - (void)chatCallDidAcceptWithTarget:(id)target block:(QMChatCallDidAcceptByUser)block;
 - (void)chatCallDidAcceptCustomParametersWithTarget:(id)target block:(QMChatCallDidAcceptByUserCustomParams)block;
 - (void)chatCallDidRejectByUserWithTarget:(id)target block:(QMChatCallDidRejectByUser)block;
+- (void)chatAfterCallDidRejectByUserWithTarget:(id)target block:(QMChatCallDidRejectByUser)block;
 - (void)chatCallDidStopWithTarget:(id)target block:(QMChatCallDidStopByUser)block;
+- (void)chatAfterCallDidStopWithTarget:(id)target block:(QMChatCallDidStopByUser)block;
 - (void)chatCallDidStopCustomParametersWithTarget:(id)target block:(QMChatCallDidStopByUserCustomParams)block;
 - (void)chatCallDidStartWithTarget:(id)target block:(QMChathatCallDidStartWithUser)block;
 - (void)didStartUseTURNForVideoChatWithTarget:(id)target block:(QMDidStartUseTURNForVideoChat)block;

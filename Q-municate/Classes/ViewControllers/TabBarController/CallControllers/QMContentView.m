@@ -8,6 +8,7 @@
 
 #import "QMContentView.h"
 #import "QMincomingCallService.h"
+#import "NSString+DateTimeIntervalFormatting.h"
 
 @interface QMContentView()
 
@@ -79,7 +80,7 @@
 - (void)updateStatusLabel
 {
     _timeInterval++;
-    self.statusLabel.text = [[QMIncomingCallService shared] formattedTimeFromTimeInterval:_timeInterval];
+    self.statusLabel.text = [self.statusLabel.text formattedTimeFromTimeInterval:_timeInterval];
 }
 
 @end

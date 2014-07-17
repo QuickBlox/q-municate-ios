@@ -459,6 +459,22 @@
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatDidReceiveCallRequestCustomParams block) {
         block(userID, sessionID, conferenceType, customParameters);
     }];
+    [self chatAfterDidReceiveCallRequestFromUser:userID withSessionID:sessionID conferenceType:conferenceType customParameters:customParameters];
+}
+
+- (void)chatAfrerDidReceiveCallRequestCustomParametesrWithTarget:(id)target block:(QMChatDidReceiveCallRequestCustomParams)block
+{
+    [self subsribeWithTarget:target selector:@selector(chatAfterDidReceiveCallRequestFromUser:withSessionID:conferenceType:customParameters:) block:block];
+}
+
+- (void)chatAfterDidReceiveCallRequestFromUser:(NSUInteger)userID
+                            withSessionID:(NSString*)sessionID
+                           conferenceType:(enum QBVideoChatConferenceType)conferenceType
+                         customParameters:(NSDictionary *)customParameters
+{
+    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatDidReceiveCallRequestCustomParams block) {
+        block(userID, sessionID, conferenceType, customParameters);
+    }];
 }
 
 /**
@@ -521,6 +537,19 @@
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallDidRejectByUser block) {
         block(userID);
     }];
+    [self chatAfterCallDidRejectByUser:userID];
+}
+
+- (void)chatAfterCallDidRejectByUserWithTarget:(id)target block:(QMChatCallDidRejectByUser)block
+{
+    [self subsribeWithTarget:target selector:@selector(chatAfterCallDidRejectByUser:) block:block];
+}
+
+- (void)chatAfterCallDidRejectByUser:(NSUInteger)userID
+{
+    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallDidRejectByUser block) {
+        block(userID);
+    }];
 }
 
 /**
@@ -534,6 +563,18 @@
 }
 
 - (void)chatCallDidStopByUser:(NSUInteger)userID status:(NSString *)status {
+    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallDidStopByUser block) {
+        block(userID, status);
+    }];
+    [self chatAfterCallDidStopByUser:userID status:status];
+}
+
+- (void)chatAfterCallDidStopWithTarget:(id)target block:(QMChatCallDidStopByUser)block
+{
+    [self subsribeWithTarget:target selector:@selector(chatAfterCallDidStopByUser:status:) block:block];
+}
+
+- (void)chatAfterCallDidStopByUser:(NSUInteger)userID status:(NSString *)status {
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallDidStopByUser block) {
         block(userID, status);
     }];

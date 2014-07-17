@@ -101,20 +101,16 @@
         self.customParams = customParameters;
         self.currentSessionID = sessionID;
         self.conferenceType = conferenceType;
-        
-        [[QMIncomingCallService shared] showIncomingCallControllerWithOpponentID:userID conferenceType:conferenceType];
     }];
     
     //call was rejected:
     [[QMChatReceiver instance] chatCallDidRejectByUserWithTarget:self block:^(NSUInteger userID) {
         [self releaseActiveStream];
-        [[QMIncomingCallService shared] hideIncomingCallControllerWithStatus:nil];
     }];
     
     // call was stopped:
     [[QMChatReceiver instance] chatCallDidStopWithTarget:self block:^(NSUInteger userID, NSString *status) {
         [self releaseActiveStream];
-        [[QMIncomingCallService shared] hideIncomingCallControllerWithStatus:status];
     }];
 }
 

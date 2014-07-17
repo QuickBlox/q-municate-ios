@@ -190,6 +190,8 @@
 		69D15CBF18AE1708001E0480 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D15CBE18AE1708001E0480 /* libxml2.dylib */; };
 		69D15CC118AE1714001E0480 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D15CC018AE1714001E0480 /* libresolv.dylib */; };
 		69D15CC318AE1721001E0480 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D15CC218AE1721001E0480 /* libz.dylib */; };
+		69D261501978258000A4104B /* NSString+DateTimeIntervalFormatting.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D2614F1978258000A4104B /* NSString+DateTimeIntervalFormatting.m */; };
+		69D261511978258000A4104B /* NSString+DateTimeIntervalFormatting.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D2614F1978258000A4104B /* NSString+DateTimeIntervalFormatting.m */; };
 		69D4184918D09B630046C629 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D4184818D09B630046C629 /* FacebookSDK.framework */; };
 		69D57E5618ACC11C00A9900A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D57E5518ACC11C00A9900A /* Foundation.framework */; };
 		69D57E5818ACC11C00A9900A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D57E5718ACC11C00A9900A /* CoreGraphics.framework */; };
@@ -569,6 +571,8 @@
 		69D15CBE18AE1708001E0480 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		69D15CC018AE1714001E0480 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
 		69D15CC218AE1721001E0480 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		69D2614E1978258000A4104B /* NSString+DateTimeIntervalFormatting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+DateTimeIntervalFormatting.h"; sourceTree = "<group>"; };
+		69D2614F1978258000A4104B /* NSString+DateTimeIntervalFormatting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+DateTimeIntervalFormatting.m"; sourceTree = "<group>"; };
 		69D4184818D09B630046C629 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = External/FacebookSDK.framework; sourceTree = "<group>"; };
 		69D57E5218ACC11C00A9900A /* Qmunicate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Qmunicate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		69D57E5518ACC11C00A9900A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1780,6 +1784,8 @@
 				6943849018E42691001E08A9 /* UIImage+Cropper.m */,
 				69052797193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.h */,
 				69052798193CD2A4009901C0 /* NSMutableDictionary+addQBUsersFromArray.m */,
+				69D2614E1978258000A4104B /* NSString+DateTimeIntervalFormatting.h */,
+				69D2614F1978258000A4104B /* NSString+DateTimeIntervalFormatting.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -2080,6 +2086,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69D261511978258000A4104B /* NSString+DateTimeIntervalFormatting.m in Sources */,
 				698C94F2197670AB002C53FA /* QMIncomingCallService.m in Sources */,
 				55943AC31941C8EC00BF4312 /* Q_municateTests.m in Sources */,
 				698C94F61976D483002C53FA /* QMApi+Calls.m in Sources */,
@@ -2121,6 +2128,7 @@
 				55CEAB93195DBCFA001A8ED6 /* QMChatLayoutConfigs.m in Sources */,
 				693206EE1962C0F600B15EF9 /* QMAudioCallController.m in Sources */,
 				55D270961940B8D300238D50 /* CDUsers.m in Sources */,
+				69D261501978258000A4104B /* NSString+DateTimeIntervalFormatting.m in Sources */,
 				55A8B06E1965986A00B5D33B /* QMSoundManager.m in Sources */,
 				55CEAB8F195DBCFA001A8ED6 /* QMChatDataSource.m in Sources */,
 				55CEAB88195DBCFA001A8ED6 /* QMChatButtonsFactory.m in Sources */,
