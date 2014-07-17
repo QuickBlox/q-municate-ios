@@ -86,9 +86,11 @@ const NSUInteger kQMNumberOfSection = 2;
 #pragma mark - fetch user 
 
 - (void)fetchFacebookFriends:(void(^)(void))completion {
-    
+
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    @weakify(self)
     [[QMApi instance] fbFriends:^(NSArray *fbFriends) {
+        @strongify(self)
         self.fbUsers = fbFriends;
         [SVProgressHUD dismiss];
         if (completion) completion();

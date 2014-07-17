@@ -28,9 +28,9 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.dataSource = [[QMDialogsDataSource alloc] initWithTableView:self.tableView];
-    self.tableView.delegate = self;
     
     [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
         NSLog(@"chatRoomDidReceiveMessageWithTarget");
@@ -51,6 +51,10 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 }
 
 #pragma mark - UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 59;
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     

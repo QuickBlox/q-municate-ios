@@ -17,27 +17,27 @@
 
 @implementation QMChatService
 
-- (id)init {
+- (void)start {
+    [QBChat instance].delegate = [QMChatReceiver instance];
+    NSAssert(self.presenceTimer == nil, @"Need Update this case");
+    self.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:30
+                                                          target:self
+                                                        selector:@selector(sendPresence)
+                                                        userInfo:nil
+                                                         repeats:YES];
+}
+
+- (void)destroy {
     
-    if (self = [super init]) {
-        [QBChat instance].delegate = [QMChatReceiver instance];
-    }
-    
-    return self;
+    [self.presenceTimer invalidate];
+    self.presenceTimer = nil;
 }
 
 - (BOOL)loginWithUser:(QBUUser *)user completion:(QBChatResultBlock)block {
     
-    [[QMChatReceiver instance] chatDidLoginWithTarget:self block:^(BOOL success) {
-        
-        self.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:30
-                                                              target:self
-                                                            selector:@selector(sendPresence)
-                                                            userInfo:nil
-                                                             repeats:YES];
-        block(success);
-    }];
+    [self start];
     
+    [[QMChatReceiver instance] chatDidLoginWithTarget:self block:block];
     [[QMChatReceiver instance] chatDidNotLoginWithTarget:self block:block];
 
     return [[QBChat instance] loginWithUser:user];
@@ -48,9 +48,7 @@
     BOOL success = [[QBChat instance] logout];
     
     if (success) {
-        [[QMChatReceiver instance] destroy];
-        [self.presenceTimer invalidate];
-        self.presenceTimer = nil;
+        [self destroy];
     }
     return success;
 }

@@ -11,6 +11,5 @@
 @interface QMGroupDetailsController : UIViewController
 
 @property (nonatomic, strong) QBChatDialog *chatDialog;
-@property (nonatomic, strong) QBChatRoom *chatRoom;
 
 @end

@@ -48,7 +48,7 @@
 {
     UIImage *placeholder = [UIImage imageNamed:@"upic_call"];
     NSURL *url = [NSURL URLWithString:user.website];
-    [self.avatarView setImageWithURL:url placeholderImage:placeholder];
+    [self.avatarView sd_setImageWithURL:url placeholderImage:placeholder];
     self.fullNameLabel.text = user.fullName;
     self.statusLabel.text = @"Calling...";
     

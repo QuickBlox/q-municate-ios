@@ -26,6 +26,10 @@
 
 @implementation QMSplashViewController
 
+- (void)dealloc {
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
+
 - (void)viewDidLoad {
     
     [super viewDidLoad];
@@ -73,8 +77,9 @@
     QBUUser *user = [QBUUser user];
     user.email = email;
     user.password = password;
-    
+    @weakify(self)
     [[QMApi instance] loginWithUser:user completion:^(QBUUserLogInResult *result) {
+        @strongify(self)
         [self.activityIndicator stopAnimating];
         [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
     }];
@@ -82,7 +87,9 @@
 
 - (void)loginWithFacebook {
     
+    @weakify(self)
     [[QMApi instance] loginWithFacebook:^(BOOL success) {
+        @strongify(self)
         if (success) {
             [self.activityIndicator stopAnimating];
             [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];

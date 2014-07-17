@@ -11,7 +11,7 @@
 @interface QMGroupDetailsDataSource : NSObject <UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong, readonly) NSMutableArray *participants;
+
 
 - (id)initWithChatDialog:(QBChatDialog *)chatDialog tableView:(UITableView *)tableView;
 

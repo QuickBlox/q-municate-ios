@@ -58,7 +58,7 @@
     
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
     NSURL *url = [NSURL URLWithString:self.currentUser.website];
-    [self.avatarView setImageWithURL:url placeholderImage:placeholder];
+    [self.avatarView sd_setImageWithURL:url placeholderImage:placeholder];
     
     self.fullNameField.text = self.currentUser.fullName;
     self.emailField.text = self.currentUser.email;

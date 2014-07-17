@@ -22,6 +22,10 @@
 
 @implementation QMWelcomeScreenViewController
 
+- (void)dealloc {
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -40,10 +44,13 @@
 - (IBAction)connectWithFacebook:(id)sender {
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+
+    __weak __typeof(self)weakSelf = self;
     [[QMApi instance] loginWithFacebook:^(BOOL success) {
+
         [SVProgressHUD dismiss];
         if (success) {
-            [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+            [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
         }
     }];
 }

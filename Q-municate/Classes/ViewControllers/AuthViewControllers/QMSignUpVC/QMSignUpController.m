@@ -33,6 +33,10 @@
 
 @implementation QMSignUpController
 
+- (void)dealloc {
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -80,9 +84,11 @@
     newUser.fullName = fullName;
     newUser.email = email;
     newUser.password = password;
-
+    
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    @weakify(self)
     [[QMApi instance] signUpAndLoginWithUser:newUser userAvatar:self.cachedPicture completion:^(QBUUserResult *result) {
+        @strongify(self)
         [SVProgressHUD dismiss];
         if(result.success)
             [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];

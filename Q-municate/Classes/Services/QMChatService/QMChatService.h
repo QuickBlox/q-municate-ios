@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "QMServiceProtocol.h"
 
-@interface QMChatService : NSObject <QBActionStatusDelegate>
+@interface QMChatService : NSObject <QMServiceProtocol>
 
 /**
  Authorize on QuickBlox Chat

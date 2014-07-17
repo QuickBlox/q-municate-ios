@@ -26,7 +26,7 @@
 		55943AAD1941C8CA00BF4312 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D57E5918ACC11C00A9900A /* UIKit.framework */; };
 		55943AC21941C8EC00BF4312 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55943ABD1941C8EC00BF4312 /* InfoPlist.strings */; };
 		55943AC31941C8EC00BF4312 /* Q_municateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 55943ABF1941C8EC00BF4312 /* Q_municateTests.m */; };
-		559BDFE719618D3D000588FE /* QMLogInVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFDD19618D3D000588FE /* QMLogInVC.m */; };
+		559BDFE719618D3D000588FE /* QMLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFDD19618D3D000588FE /* QMLogInViewController.m */; };
 		559BDFE819618D3D000588FE /* QMSignUpController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE019618D3D000588FE /* QMSignUpController.m */; };
 		559BDFE919618D3D000588FE /* QMSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE319618D3D000588FE /* QMSplashViewController.m */; };
 		559BDFEA19618D3D000588FE /* QMWelcomeScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE619618D3D000588FE /* QMWelcomeScreenViewController.m */; };
@@ -264,8 +264,8 @@
 		55943ABE1941C8EC00BF4312 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		55943ABF1941C8EC00BF4312 /* Q_municateTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Q_municateTests.m; sourceTree = "<group>"; };
 		55943AC01941C8EC00BF4312 /* QmunicateTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "QmunicateTests-Info.plist"; sourceTree = "<group>"; };
-		559BDFDC19618D3D000588FE /* QMLogInVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLogInVC.h; sourceTree = "<group>"; };
-		559BDFDD19618D3D000588FE /* QMLogInVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLogInVC.m; sourceTree = "<group>"; };
+		559BDFDC19618D3D000588FE /* QMLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLogInViewController.h; sourceTree = "<group>"; };
+		559BDFDD19618D3D000588FE /* QMLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLogInViewController.m; sourceTree = "<group>"; };
 		559BDFDF19618D3D000588FE /* QMSignUpController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSignUpController.h; sourceTree = "<group>"; };
 		559BDFE019618D3D000588FE /* QMSignUpController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSignUpController.m; sourceTree = "<group>"; };
 		559BDFE219618D3D000588FE /* QMSplashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSplashViewController.h; sourceTree = "<group>"; };
@@ -504,6 +504,7 @@
 		55D2708D1940B8D300238D50 /* QMModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = QMModel.xcdatamodel; sourceTree = "<group>"; };
 		55D2708F1940B8D300238D50 /* mogen.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = mogen.sh; sourceTree = "<group>"; };
 		55D270901940B8D300238D50 /* mogend.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = mogend.sh; sourceTree = "<group>"; };
+		55D5DB07197796840001FE36 /* QMServiceProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMServiceProtocol.h; sourceTree = "<group>"; };
 		55D963C1196430F300A87ECE /* QMSettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSettingsManager.h; sourceTree = "<group>"; };
 		55D963C2196430F300A87ECE /* QMSettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSettingsManager.m; sourceTree = "<group>"; };
 		55F4A3B5196FF0830068EBC3 /* QMDialogCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDialogCell.h; sourceTree = "<group>"; };
@@ -708,8 +709,8 @@
 		559BDFDB19618D3D000588FE /* QMLoginVC */ = {
 			isa = PBXGroup;
 			children = (
-				559BDFDC19618D3D000588FE /* QMLogInVC.h */,
-				559BDFDD19618D3D000588FE /* QMLogInVC.m */,
+				559BDFDC19618D3D000588FE /* QMLogInViewController.h */,
+				559BDFDD19618D3D000588FE /* QMLogInViewController.m */,
 			);
 			path = QMLoginVC;
 			sourceTree = "<group>";
@@ -770,6 +771,7 @@
 		55A8B022196597B400B5D33B /* QMServicesFacade */ = {
 			isa = PBXGroup;
 			children = (
+				55D5DB07197796840001FE36 /* QMServiceProtocol.h */,
 				55A8B035196597B400B5D33B /* QMApi.h */,
 				55A8B036196597B400B5D33B /* QMApi.m */,
 				55A8B0A4196599FA00B5D33B /* QMApi+Auth.m */,
@@ -2213,7 +2215,7 @@
 				55A8B096196598A300B5D33B /* QMAVCallService.m in Sources */,
 				55943A0F1941A4C000BF4312 /* _CDDialog.m in Sources */,
 				55A8B0761965986A00B5D33B /* REAlertView.m in Sources */,
-				559BDFE719618D3D000588FE /* QMLogInVC.m in Sources */,
+				559BDFE719618D3D000588FE /* QMLogInViewController.m in Sources */,
 				693206F11962DFBF00B15EF9 /* QMContentView.m in Sources */,
 				55A8B098196598A300B5D33B /* QMChatService.m in Sources */,
 				55D270C21940B8D300238D50 /* SQLiteMagicalRecordStack.m in Sources */,
@@ -2414,7 +2416,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = Qmunicate;
-				PROVISIONING_PROFILE = "F7F235D5-C871-4D94-A2BF-0EC942129F0B";
+				PROVISIONING_PROFILE = "7C10F44D-9DA6-469F-92B5-FEA785098661";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VALID_ARCHS = armv7;

@@ -22,12 +22,9 @@
 
 @interface QMApi()
 
-@property (strong, nonatomic) NSMutableArray *contactList;
-@property (strong, nonatomic) NSMutableDictionary *users;
 @property (strong, nonatomic) NSMutableArray *dialogs;
 @property (strong, nonatomic) NSMutableDictionary *privateDialogs;
 @property (strong, nonatomic) NSMutableDictionary *chatRooms;
-@property (strong, nonatomic) NSMutableDictionary *messages;
 
 @end
 
@@ -44,40 +41,48 @@
     return servicesFacade;
 }
 
+- (void)dealloc {
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
+
 - (instancetype)init {
     
     self = [super init];
     if (self) {
         
+        self.chatService = [[QMChatService alloc] init];
         self.authService = [[QMAuthService alloc] init];
+
+        self.usersService = [[QMUsersService alloc] init];
+        [self.usersService start];
+        
         self.settingsManager = [[QMSettingsManager alloc] init];
         self.facebookService = [[QMFacebookService alloc] init];
-        self.usersService = [[QMUsersService alloc] init];
         self.avCallService = [[QMAVCallService alloc] init];
         self.chatDialogsService = [[QMChatDialogsService alloc] init];
-        self.chatService = [[QMChatService alloc] init];
+        
         self.messagesService = [[QMMessagesService alloc] init];
+        [self.messagesService start];
         /**
          TODO:temp
          */
-        self.users = [NSMutableDictionary dictionary];
-        self.contactList = [NSMutableArray array];
         
         self.dialogs = [NSMutableArray array];
         self.privateDialogs = [NSMutableDictionary dictionary];
         self.chatRooms = [NSMutableDictionary dictionary];
-        
-        self.messages = [NSMutableDictionary dictionary];
-
-        [[QMChatReceiver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
-            
-            [self.contactList removeAllObjects];
-            [self.contactList addObjectsFromArray:contactList.pendingApproval];
-            [self.contactList addObjectsFromArray:contactList.contacts];
-        }];
     }
     
     return self;
+}
+
+- (void)cleanUp {
+    
+    [self.usersService destroy];
+    [self.chatService destroy];
+    
+    [self.dialogs removeAllObjects];
+    [self.privateDialogs removeAllObjects];
+    [self.chatRooms removeAllObjects];
 }
 
 - (BOOL)checkResult:(Result *)result {

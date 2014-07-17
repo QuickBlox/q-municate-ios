@@ -22,6 +22,10 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
 @implementation QMLicenseAgreementViewController
 
+- (void)dealloc {
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.

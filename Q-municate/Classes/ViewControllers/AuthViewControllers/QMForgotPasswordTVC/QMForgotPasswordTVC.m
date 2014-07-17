@@ -19,6 +19,10 @@
 
 @implementation QMForgotPasswordTVC
 
+- (void)dealloc {
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 }
@@ -37,8 +41,9 @@
 - (void)resetPasswordForMail:(NSString *)emailString {
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    
+    @weakify(self)
     [[QMApi instance] resetUserPassordWithEmail:emailString completion:^(BOOL success) {
+        @strongify(self)
         if (success) {
             [SVProgressHUD showSuccessWithStatus:kAlertBodyMessageWasSentToMailString];
             [self.navigationController popViewControllerAnimated:YES];

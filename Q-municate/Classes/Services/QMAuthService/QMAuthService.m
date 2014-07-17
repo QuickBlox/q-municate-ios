@@ -58,7 +58,7 @@
 - (void)subscribeToPushNotifications {
     // Subscribe Users to Push Notifications
     QBMRegisterSubscriptionTaskResultBlock subscibeResult =^(QBMRegisterSubscriptionTaskResult *result) {
-        NSLog(@"Subscriptions - %@", result.subscriptions);
+//        NSLog(@"Subscriptions - %@", result.subscriptions);
     };
     
     [QBMessages TRegisterSubscriptionWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:subscibeResult]];
@@ -67,7 +67,7 @@
 - (void)unSubscribeFromPushNotifications {
     // Unsubscribe Users to Push Notifications
     QBMRegisterSubscriptionTaskResultBlock unSubscibeResult =^(QBMRegisterSubscriptionTaskResult *result) {
-        NSLog(@"Subscriptions - %@", result.subscriptions);
+//        NSLog(@"Subscriptions - %@", result.subscriptions);
     };
     
     [QBMessages TUnregisterSubscriptionWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:unSubscibeResult]];

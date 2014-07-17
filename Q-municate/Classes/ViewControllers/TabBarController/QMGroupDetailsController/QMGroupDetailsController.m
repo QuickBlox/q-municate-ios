@@ -23,6 +23,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *onlineOccupantsCountLabel;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
+@property (strong, nonatomic) QBChatRoom *chatRoom;
+
 @property (strong, nonatomic) QMGroupDetailsDataSource *dataSource;
 
 @end
@@ -31,13 +33,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
+
+    self.dataSource = [[QMGroupDetailsDataSource alloc] initWithChatDialog:self.chatDialog tableView:self.tableView];
     [self subscribeToNotifications];
     
-    // init data source for tableview:
-    self.dataSource = [[QMGroupDetailsDataSource alloc] initWithChatDialog:self.chatDialog tableView:self.tableView];
-    // request online users statuses:
+    self.chatRoom = [[QMApi instance] roomWithRoomJID:self.chatDialog.roomJID];
     [self.chatRoom requestOnlineUsers];
 }
 
@@ -53,8 +53,10 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [self.view endEditing:YES];
 }
 
 - (IBAction)changeDialogName:(id)sender {
@@ -87,24 +89,24 @@
         NSString *onlineUsersCountText = [NSString stringWithFormat:@"%d/%d online", users.count, self.chatDialog.occupantIDs.count];
         self.onlineOccupantsCountLabel.text = onlineUsersCountText;
     }];
-
 }
 
-- (void)chatDialogWasUpdated:(NSNotification *)notification {
-    
-    NSString *roomJID = notification.userInfo[@"room_jid"];
-//    QBChatDialog *updatedDialog = [QMChatService shared].allDialogsAsDictionary[roomJID];
-//    self.chatDialog = updatedDialog;
-    
-    // update UI:
-    [self showQBChatDialogDetails:self.chatDialog];
-    [self updateDataSource];
-    
-    // request online users statuses:
-    [self.chatRoom requestOnlineUsers];
-}
+//- (void)chatDialogWasUpdated:(NSNotification *)notification {
+//    
+//    NSString *roomJID = notification.userInfo[@"room_jid"];
+////    QBChatDialog *updatedDialog = [QMChatService shared].allDialogsAsDictionary[roomJID];
+////    self.chatDialog = updatedDialog;
+//    
+//    // update UI:
+//    [self showQBChatDialogDetails:self.chatDialog];
+//    [self updateDataSource];
+//    
+//    // request online users statuses:
+//    [self.chatRoom requestOnlineUsers];
+//}
 
 - (void)updateDataSource {
+    
     _dataSource = [[QMGroupDetailsDataSource alloc] initWithChatDialog:self.chatDialog tableView:self.tableView];
     self.tableView.dataSource = _dataSource;
 }

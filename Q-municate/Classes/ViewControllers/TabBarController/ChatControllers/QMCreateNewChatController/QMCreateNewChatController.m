@@ -33,10 +33,11 @@
     
 	NSMutableArray *selectedUsersMArray = self.selectedFriends;
     NSString *chatName = [self chatNameFromUserNames:selectedUsersMArray];
-
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [[QMApi instance] createGroupChatDialogWithName:chatName ocupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
     
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    @weakify(self)
+    [[QMApi instance] createGroupChatDialogWithName:chatName ocupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
+        @strongify(self)
         [SVProgressHUD dismiss];
         [self.navigationController popViewControllerAnimated:NO];
     }];
