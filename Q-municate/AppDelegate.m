@@ -31,14 +31,8 @@
     [QBSettings setAuthorizationKey:@"MpOecRZy-5WsFva"];
     [QBSettings setAuthorizationSecret:@"dTSLaxDsFKqegD7"];
     [QBSettings setAccountKey:@"LpNmxA2Pq2uyW5qBjHy8"];
-//    [QBSettings setLogLevel:QBLogLevelNothing];
     
-    [QMIncomingCallService shared];
-    
-    // STAGE PARAMS
-//    [QBSettings setServerChatDomain:@"chatstage.quickblox.com"];
-//    [QBSettings setServerApiDomain:@"http://api.stage.quickblox.com"];
-//	[QBSettings setContentBucket:@"blobs-test-oz"];
+     self.incomingCallService = [[QMIncomingCallService alloc] init];
 
     return YES;
 }

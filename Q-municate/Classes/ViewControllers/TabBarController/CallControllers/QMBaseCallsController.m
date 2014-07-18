@@ -105,7 +105,7 @@
     
     self.opponentsView.hidden = YES;
     [QMSoundManager playEndOfCallSound];
-    [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:1.0f];
+    [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:2.0f];
 }
 
 
@@ -160,11 +160,11 @@
 {
     [[QMSoundManager shared] stopAllSounds];
     
-    if (_isOpponentCaller) {
-        [QMIncomingCallService.shared hideIncomingCallControllerWithStatus:nil];
-        return;
-    }
-    [self performSelector:@selector(dismissViewControllerAnimated:completion:) withObject:self afterDelay:2.0f];
+//    if (_isOpponentCaller) {
+//        [QMIncomingCallService.shared hideIncomingCallControllerWithStatus:nil];
+//        return;
+//    }
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

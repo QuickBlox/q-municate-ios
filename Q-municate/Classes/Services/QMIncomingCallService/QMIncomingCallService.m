@@ -18,14 +18,6 @@
 
 @implementation QMIncomingCallService
 
-+ (instancetype)shared {
-    static id utilitiesInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        utilitiesInstance = [[self alloc] init];
-    });
-    return utilitiesInstance;
-}
 
 - (id)init
 {
@@ -37,6 +29,8 @@
         [self.dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
         
         self.incomingCallController = nil;
+        
+        [self subscribeToNotifications];
     }
     return self;
 }
@@ -57,19 +51,34 @@
         
         self.incomingCallController.callType = conferenceType;
         
-        [self.window.rootViewController presentViewController:self.incomingCallController
+        [self.root presentViewController:self.incomingCallController
                                                      animated:NO completion:nil];
     }
 }
 
-- (UIWindow *)window {
-    return [[UIApplication sharedApplication].delegate window];
+- (void)subscribeToNotifications
+{
+    [[QMChatReceiver instance]chatAfrerDidReceiveCallRequestCustomParametesrWithTarget:self block:^(NSUInteger userID, NSString *sessionID, QBVideoChatConferenceType conferenceType, NSDictionary *customParameters) {
+        [self showIncomingCallControllerWithOpponentID:userID conferenceType:conferenceType];
+    }];
+    
+    [[QMChatReceiver instance] chatAfterCallDidRejectByUserWithTarget:self block:^(NSUInteger userID) {
+        [self hideIncomingCallControllerWithStatus:nil];
+    }];
+    
+    [[QMChatReceiver instance] chatAfterCallDidStopWithTarget:self block:^(NSUInteger userID, NSString *status) {
+        [self hideIncomingCallControllerWithStatus:nil];
+    }];
+}
+
+- (UIViewController *)root {
+    return [[UIApplication sharedApplication].delegate.window rootViewController];
 }
 
 - (void)dismissIncomingCallController {
     
-    if (self.incomingCallController != nil) {
-        [self.window.rootViewController dismissViewControllerAnimated:NO completion:^{
+    if (self.incomingCallController) {
+        [self.root dismissViewControllerAnimated:NO completion:^{
             self.incomingCallController = nil;
         }];
     }
@@ -78,35 +87,6 @@
 - (void)hideIncomingCallControllerWithStatus:(NSString *)status
 {
     [self performSelector:@selector(dismissIncomingCallController) withObject:self afterDelay:2.0f];
-}
-
-#pragma mark -
-
-- (NSString *)formattedTimeFromTimeInterval:(double_t)time
-{
-    NSString *formattedTime = nil;
-    if (time <=9) {
-        formattedTime = [NSString stringWithFormat:@"00:0%i",(int)time];
-    } else if (time <=59) {
-        formattedTime = [NSString stringWithFormat:@"00:%i", (int)time];
-    } else if (time <= 359) {
-        int minutes = time/60;
-        int seconds = time - (minutes * 60);
-        if (minutes<=9) {
-            if (seconds <=9) {
-                formattedTime = [NSString stringWithFormat:@"0%i:0%i", minutes, seconds];
-            } else {
-                formattedTime = [NSString stringWithFormat:@"0%i:%i", minutes, seconds];
-            }
-        } else {
-            if (seconds <=9) {
-                formattedTime = [NSString stringWithFormat:@"%i:0%i", minutes, seconds];
-            } else {
-                formattedTime = [NSString stringWithFormat:@"%i:%i", minutes, seconds];
-            }
-        }
-    }
-    return formattedTime;
 }
 
 @end
