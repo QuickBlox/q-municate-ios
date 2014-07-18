@@ -10,6 +10,7 @@
 #import "QMChatDataSource.h"
 #import "QMChatButtonsFactory.h"
 #import "QMGroupDetailsController.h"
+#import "QMBaseCallsController.h"
 #import "QMApi.h"
 
 @interface QMChatViewController ()
@@ -72,14 +73,19 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    if ([segue.identifier isEqualToString:kVideoCallSegueIdentifier]) {
-        
-    } else if ([segue.identifier isEqualToString:kAudioCallSegueIdentifier]) {
-        
-    } else if ([segue.identifier isEqualToString:kGroupDetailsSegueIdentifier]) {
-        
+//    if ([segue.identifier isEqualToString:kVideoCallSegueIdentifier]) {
+//
+//    } else if ([segue.identifier isEqualToString:kAudioCallSegueIdentifier]) {
+//        
+//    } else
+    if ([segue.identifier isEqualToString:kGroupDetailsSegueIdentifier]) {
+    
         QMGroupDetailsController *groupDetailVC = segue.destinationViewController;
         groupDetailVC.chatDialog = self.dialog;
+    } else {
+        QBUUser *opponent = [self.dataSource opponent];
+        QMBaseCallsController *callsController = segue.destinationViewController;
+        [callsController setOpponent:opponent];
     }
 }
 

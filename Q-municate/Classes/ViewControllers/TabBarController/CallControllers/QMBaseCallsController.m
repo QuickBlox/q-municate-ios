@@ -8,6 +8,7 @@
 
 #import "QMBaseCallsController.h"
 #import "QMChatReceiver.h"
+#import "AppDelegate.h"
 
 
 @implementation QMBaseCallsController
@@ -49,24 +50,26 @@
 
 - (void)subscribeForNotifications
 {
+    __weak typeof(self) weakSelf = self;
+    
     /** CALL WAS ACCEPTED */
-    [[QMChatReceiver instance] chatCallDidAcceptWithTarget:self block:^(NSUInteger userID) {
-        [self callAcceptedByUser];
+    [[QMChatReceiver instance] chatCallDidAcceptCustomParametersWithTarget:self block:^(NSUInteger userID, NSDictionary *customParameters) {
+        [weakSelf callAcceptedByUser];
     }];
     
     /** CALL WAS STARTED */
     [[QMChatReceiver instance] chatCallDidStartWithTarget:self block:^(NSUInteger userID, NSString *sessionID) {
-        [self callStartedWithUser];
+        [weakSelf callStartedWithUser];
     }];
     
     /** CALL WAS REJECTED */
     [[QMChatReceiver instance] chatCallDidRejectByUserWithTarget:self block:^(NSUInteger userID) {
-        [self callRejectedByUser];
+        [weakSelf callRejectedByUser];
     }];
     
     /** CALL WAS STOPPED */
-    [[QMChatReceiver instance] chatCallDidStopWithTarget:self block:^(NSUInteger userID, NSString *status) {
-        [self callStoppedByOpponentForReason:status];
+    [[QMChatReceiver instance] chatCallDidStopCustomParametersWithTarget:self block:^(NSUInteger userID, NSString *status, NSDictionary *customParameters) {
+        [weakSelf callStoppedByOpponentForReason:status];
     }];
 }
 
@@ -160,10 +163,11 @@
 {
     [[QMSoundManager shared] stopAllSounds];
     
-//    if (_isOpponentCaller) {
-//        [QMIncomingCallService.shared hideIncomingCallControllerWithStatus:nil];
-//        return;
-//    }
+    if (_isOpponentCaller) {
+        AppDelegate *delegate = [UIApplication sharedApplication].delegate;
+        [delegate.incomingCallService hideIncomingCallControllerWithStatus:nil];
+        return;
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

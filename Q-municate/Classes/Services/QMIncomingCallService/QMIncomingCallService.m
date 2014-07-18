@@ -43,31 +43,28 @@
 - (void)showIncomingCallControllerWithOpponentID:(NSUInteger)opponentID conferenceType:(QBVideoChatConferenceType)conferenceType
 {
     if (!self.incomingCallController) {
-        
-        self.incomingCallController =
-        [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallIdentifier];
-        
+            self.incomingCallController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallIdentifier];
+        }
         self.incomingCallController.opponentID = opponentID;
-        
         self.incomingCallController.callType = conferenceType;
-        
-        [self.root presentViewController:self.incomingCallController
-                                                     animated:NO completion:nil];
-    }
+    
+    [self.root presentViewController:self.incomingCallController animated:NO completion:nil];
 }
 
 - (void)subscribeToNotifications
 {
+    __weak typeof(self) weakSelf = self;
+    
     [[QMChatReceiver instance]chatAfrerDidReceiveCallRequestCustomParametesrWithTarget:self block:^(NSUInteger userID, NSString *sessionID, QBVideoChatConferenceType conferenceType, NSDictionary *customParameters) {
-        [self showIncomingCallControllerWithOpponentID:userID conferenceType:conferenceType];
+        [weakSelf showIncomingCallControllerWithOpponentID:userID conferenceType:conferenceType];
     }];
     
     [[QMChatReceiver instance] chatAfterCallDidRejectByUserWithTarget:self block:^(NSUInteger userID) {
-        [self hideIncomingCallControllerWithStatus:nil];
+        [weakSelf hideIncomingCallControllerWithStatus:nil];
     }];
     
     [[QMChatReceiver instance] chatAfterCallDidStopWithTarget:self block:^(NSUInteger userID, NSString *status) {
-        [self hideIncomingCallControllerWithStatus:nil];
+        [weakSelf hideIncomingCallControllerWithStatus:nil];
     }];
 }
 

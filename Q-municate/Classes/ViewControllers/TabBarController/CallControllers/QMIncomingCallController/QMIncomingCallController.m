@@ -33,7 +33,7 @@
     // Do any additional setup after loading the view.
     self.userAvatarView.imageViewType = QMImageViewTypeCircle;
     
-//    opponent = [[QMContactList shared] findFriendWithID:self.opponentID];
+    opponent = [[QMApi instance] userWithID:self.opponentID];
     
     self.userNameLabel.text = opponent ? opponent.fullName : @"Unknown caller";
  
@@ -45,7 +45,7 @@
         [self.acceptButton setImage:[ UIImage imageNamed:@"answer"] forState:UIControlStateNormal];
     }
 
-    [self.userAvatarView sd_setImageWithURL:[NSURL URLWithString:opponent.website]];
+    [self.userAvatarView sd_setImageWithURL:[NSURL URLWithString:opponent.website] placeholderImage:[UIImage imageNamed:@"upic_call"]];
 
     [QMSoundManager playRingtoneSound];
 }
@@ -76,14 +76,22 @@
     [[QMSoundManager shared] stopAllSounds];
     [[QMApi instance] rejectCallFromUser:opponent ? self.opponent.ID : self.opponentID  opponentView:nil];
     [QMSoundManager playEndOfCallSound];
+    self.incomingCallLabel.text = @"Call was cancelled";
     
     [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:2.0f];
-}
+} 
 
 - (void)dismissCallsController {
     
     [[QMSoundManager shared] stopAllSounds];
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)setCallStatus:(NSString *)callStatus
+{
+    if (![self.incomingCallLabel isEqual:callStatus]) {
+        self.incomingCallLabel.text = callStatus;
+    }
 }
 
 @end

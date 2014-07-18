@@ -165,4 +165,9 @@
     }
 }
 
+- (id)opponent
+{
+    return _opponent;
+}
+
 @end

@@ -29,9 +29,7 @@
     return self;
 }
 
-- (void)initActiveStreamWithOpponentView:(QBVideoView *)opponentView
-                               sessionID:(NSString *)sessionID
-                          conferenceType:(QBVideoChatConferenceType)conferenceType {
+- (void)initActiveStreamWithOpponentView:(QBVideoView *)opponentView sessionID:(NSString *)sessionID conferenceType:(QBVideoChatConferenceType)conferenceType {
     
     if (sessionID == nil) {
         self.activeStream = [[QBChat instance] createWebRTCVideoChatInstance];
@@ -45,9 +43,7 @@
 
 - (void)acceptCallFromUser:(NSUInteger)userID andOpponentView:(QBVideoView *)opponentView {
     
-    [self initActiveStreamWithOpponentView:opponentView
-                                 sessionID:self.currentSessionID
-                            conferenceType:self.conferenceType];
+    [self initActiveStreamWithOpponentView:opponentView  sessionID:self.currentSessionID conferenceType:self.conferenceType];
     
     self.activeStream.viewToRenderOpponentVideoStream.remotePlatform = self.customParams[qbvideochat_platform];
     self.activeStream.viewToRenderOpponentVideoStream.remoteVideoOrientation = [QBChatUtils interfaceOrientationFromString:self.customParams[qbvideochat_device_orientation]];
@@ -57,9 +53,7 @@
 
 - (void)rejectCallFromUser:(NSUInteger)userID andOpponentView:(QBVideoView *)opponentView {
     
-    [self initActiveStreamWithOpponentView:opponentView
-                                 sessionID:self.currentSessionID
-                            conferenceType:self.conferenceType];
+    [self initActiveStreamWithOpponentView:opponentView sessionID:self.currentSessionID conferenceType:self.conferenceType];
     [self.activeStream rejectCallWithOpponentID:userID];
     [self releaseActiveStream];
 }
@@ -70,10 +64,8 @@
     self.activeStream = nil;
 }
 
-- (void)callToUser:(NSUInteger)userID
-    opponentView:(QBVideoView *)opponentView
-  conferenceType:(QBVideoChatConferenceType)conferenceType {
-    
+- (void)callToUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView conferenceType:(QBVideoChatConferenceType)conferenceType
+{
     [self initActiveStreamWithOpponentView:opponentView
                                  sessionID:nil
                             conferenceType:conferenceType];
@@ -96,21 +88,22 @@
 
 - (void)subscribToNotifications
 {
+    __weak typeof(self) weakSelf = self;
     // incoming call signal:
     [[QMChatReceiver instance] chatDidReceiveCallRequestCustomParametesrWithTarget:self block:^(NSUInteger userID, NSString *sessionID, QBVideoChatConferenceType conferenceType, NSDictionary *customParameters) {
-        self.customParams = customParameters;
-        self.currentSessionID = sessionID;
-        self.conferenceType = conferenceType;
+        weakSelf.customParams = customParameters;
+        weakSelf.currentSessionID = sessionID;
+        weakSelf.conferenceType = conferenceType;
     }];
     
     //call was rejected:
     [[QMChatReceiver instance] chatCallDidRejectByUserWithTarget:self block:^(NSUInteger userID) {
-        [self releaseActiveStream];
+        [weakSelf releaseActiveStream];
     }];
     
     // call was stopped:
-    [[QMChatReceiver instance] chatCallDidStopWithTarget:self block:^(NSUInteger userID, NSString *status) {
-        [self releaseActiveStream];
+    [[QMChatReceiver instance] chatCallDidStopCustomParametersWithTarget:self block:^(NSUInteger userID, NSString *status, NSDictionary *customParameters) {
+         [weakSelf releaseActiveStream];
     }];
 }
 

@@ -21,7 +21,7 @@
 {
     [QMDBStorage setupWithName:@"Andrey"];
     
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     /**
      Setup framework

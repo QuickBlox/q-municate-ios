@@ -51,7 +51,8 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     if (self.selectedUser.phone.length == 0) {
-        [self cell:self.phoneCell setHidden:YES];
+//        [self cell:self.phoneCell setHidden:YES];
+        [self.phoneLabel setText:@"(none)"];
     } else {
         self.phoneLabel.text = self.selectedUser.phone;
     }

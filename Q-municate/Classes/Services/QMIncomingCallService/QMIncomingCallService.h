@@ -18,6 +18,4 @@
 - (void)showIncomingCallControllerWithOpponentID:(NSUInteger)opponentID conferenceType:(QBVideoChatConferenceType)conferenceType;
 - (void)hideIncomingCallControllerWithStatus:(NSString *)status;
 
-- (NSString *)formattedTimeFromTimeInterval:(double_t)time;
-
 @end

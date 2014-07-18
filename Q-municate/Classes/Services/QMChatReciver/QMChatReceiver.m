@@ -448,7 +448,8 @@
 }
 
 #pragma mark -
-#pragma mark Video Chat Called
+#pragma mark Video Chat Callbacks
+#pragma mark -
 
 /**
  Called in case when opponent is calling to you
@@ -456,18 +457,18 @@
  @param userID ID of uopponent
  @param conferenceType Type of conference. 'QBVideoChatConferenceTypeAudioAndVideo' and 'QBVideoChatConferenceTypeAudio' values are available
  */
-- (void)chatDidReceiveCallRequestWithTarget:(id)target block:(QMChatDidReceiveCallRequest)block {
-    [self subsribeWithTarget:target selector:@selector(chatDidReceiveCallRequestFromUser:withSessionID:conferenceType:) block:block];
-}
-
-- (void)chatDidReceiveCallRequestFromUser:(NSUInteger)userID
-                            withSessionID:(NSString*)sessionID
-                           conferenceType:(enum QBVideoChatConferenceType)conferenceType {
-    
-    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatDidReceiveCallRequest block) {
-        block(userID, sessionID, conferenceType);
-    }];
-}
+//- (void)chatDidReceiveCallRequestWithTarget:(id)target block:(QMChatDidReceiveCallRequest)block {
+//    [self subsribeWithTarget:target selector:@selector(chatDidReceiveCallRequestFromUser:withSessionID:conferenceType:) block:block];
+//}
+//
+//- (void)chatDidReceiveCallRequestFromUser:(NSUInteger)userID
+//                            withSessionID:(NSString*)sessionID
+//                           conferenceType:(enum QBVideoChatConferenceType)conferenceType {
+//    
+//    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatDidReceiveCallRequest block) {
+//        block(userID, sessionID, conferenceType);
+//    }];
+//}
 
 /**
  Called in case when opponent is calling to you
@@ -506,35 +507,37 @@
     }];
 }
 
+#pragma mark -
+
 /**
  Called in case when you are calling to user, but hi hasn't answered
  
  @param userID ID of opponent
  */
-- (void)chatCallUserDidNotAnswerWithTarget:(id)target block:(QMChatCallUserDidNotAnswer)block {
-    [self subsribeWithTarget:target selector:@selector(chatCallUserDidNotAnswer:) block:block];
-}
-
-- (void)chatCallUserDidNotAnswer:(NSUInteger)userID {
-    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallUserDidNotAnswer block) {
-        block(userID);
-    }];
-}
+//- (void)chatCallUserDidNotAnswerWithTarget:(id)target block:(QMChatCallUserDidNotAnswer)block {
+//    [self subsribeWithTarget:target selector:@selector(chatCallUserDidNotAnswer:) block:block];
+//}
+//
+//- (void)chatCallUserDidNotAnswer:(NSUInteger)userID {
+//    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallUserDidNotAnswer block) {
+//        block(userID);
+//    }];
+//}
 
 /**
  Called in case when opponent has accepted you call
  
  @param userID ID of opponent
  */
-- (void)chatCallDidAcceptWithTarget:(id)target block:(QMChatCallDidAcceptByUser)block {
-    [self subsribeWithTarget:target selector:@selector(chatCallDidAcceptByUser:) block:block];
-}
-
-- (void)chatCallDidAcceptByUser:(NSUInteger)userID {
-    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallDidAcceptByUser block) {
-        block(userID);
-    }];
-}
+//- (void)chatCallDidAcceptWithTarget:(id)target block:(QMChatCallDidAcceptByUser)block {
+//    [self subsribeWithTarget:target selector:@selector(chatCallDidAcceptByUser:) block:block];
+//}
+//
+//- (void)chatCallDidAcceptByUser:(NSUInteger)userID {
+//    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallDidAcceptByUser block) {
+//        block(userID);
+//    }];
+//}
 
 /**
  Called in case when opponent has accepted you call
@@ -544,7 +547,7 @@
  */
 
 - (void)chatCallDidAcceptCustomParametersWithTarget:(id)target block:(QMChatCallDidAcceptByUserCustomParams)block {
-    [self subsribeWithTarget:target selector:@selector(chatCallDidAcceptByUser:) block:block];
+    [self subsribeWithTarget:target selector:@selector(chatCallDidAcceptByUser:customParameters:) block:block];
 }
 
 - (void)chatCallDidAcceptByUser:(NSUInteger)userID customParameters:(NSDictionary *)customParameters {
@@ -552,7 +555,7 @@
         block(userID, customParameters);
     }];
 }
-
+#pragma mark -
 /**
  Called in case when opponent has rejected you call
  
@@ -580,6 +583,7 @@
         block(userID);
     }];
 }
+#pragma mark -
 
 /**
  Called in case when opponent has finished call
@@ -587,27 +591,15 @@
  @param userID ID of opponent
  @param status Reason of finish call. There are 2 reasons: 1) Opponent did not answer - 'kStopVideoChatCallStatus_OpponentDidNotAnswer'. 2) Opponent finish call with method 'finishCall' - 'kStopVideoChatCallStatus_Manually'
  */
-- (void)chatCallDidStopWithTarget:(id)target block:(QMChatCallDidStopByUser)block {
-    [self subsribeWithTarget:target selector:@selector(chatCallDidStopByUser:status:) block:block];
-}
-
-- (void)chatCallDidStopByUser:(NSUInteger)userID status:(NSString *)status {
-    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallDidStopByUser block) {
-        block(userID, status);
-    }];
-    [self chatAfterCallDidStopByUser:userID status:status];
-}
-
-- (void)chatAfterCallDidStopWithTarget:(id)target block:(QMChatCallDidStopByUser)block
-{
-    [self subsribeWithTarget:target selector:@selector(chatAfterCallDidStopByUser:status:) block:block];
-}
-
-- (void)chatAfterCallDidStopByUser:(NSUInteger)userID status:(NSString *)status {
-    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallDidStopByUser block) {
-        block(userID, status);
-    }];
-}
+//- (void)chatCallDidStopWithTarget:(id)target block:(QMChatCallDidStopByUser)block {
+//    [self subsribeWithTarget:target selector:@selector(chatCallDidStopByUser:status:) block:block];
+//}
+//
+//- (void)chatCallDidStopByUser:(NSUInteger)userID status:(NSString *)status {
+//    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallDidStopByUser block) {
+//        block(userID, status);
+//    }];
+//}
 
 /**
  Called in case when opponent has finished call
@@ -624,8 +616,20 @@
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallDidStopByUserCustomParams block) {
         block(userID, status, customParameters);
     }];
+    [self chatAfterCallDidStopByUser:userID status:status];
 }
 
+- (void)chatAfterCallDidStopWithTarget:(id)target block:(QMChatCallDidStopByUser)block
+{
+    [self subsribeWithTarget:target selector:@selector(chatAfterCallDidStopByUser:status:) block:block];
+}
+
+- (void)chatAfterCallDidStopByUser:(NSUInteger)userID status:(NSString *)status {
+    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallDidStopByUser block) {
+        block(userID, status);
+    }];
+}
+#pragma mark -
 /**
  Called in case when call has started
  
@@ -641,18 +645,19 @@
         block(userID, sessionID);
     }];
 }
+#pragma mark -
 
 /**
  Called in case when start using TURN relay for video chat (not p2p).
  */
-- (void)didStartUseTURNForVideoChatWithTarget:(id)target block:(QMDidStartUseTURNForVideoChat)block {
-    [self subsribeWithTarget:target selector:@selector(didStartUseTURNForVideoChat) block:block];
-}
-
-- (void)didStartUseTURNForVideoChat {
-    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMDidStartUseTURNForVideoChat block) {
-        block();
-    }];
-}
+//- (void)didStartUseTURNForVideoChatWithTarget:(id)target block:(QMDidStartUseTURNForVideoChat)block {
+//    [self subsribeWithTarget:target selector:@selector(didStartUseTURNForVideoChat) block:block];
+//}
+//
+//- (void)didStartUseTURNForVideoChat {
+//    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMDidStartUseTURNForVideoChat block) {
+//        block();
+//    }];
+//}
 
 @end

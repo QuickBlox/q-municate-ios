@@ -14,4 +14,6 @@
 @property (assign, nonatomic) QBVideoChatConferenceType callType;
 @property (strong, nonatomic) QBUUser *opponent;
 
+- (void)setCallStatus:(NSString *)callStatus;
+
 @end
