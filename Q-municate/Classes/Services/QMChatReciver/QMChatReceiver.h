@@ -34,7 +34,6 @@ typedef void(^QMChatCallDidStopByUser)(NSUInteger userID, NSString *status);
 typedef void(^QMChatCallDidStopByUserCustomParams)(NSUInteger userID, NSString *status, NSDictionary *customParameters);
 typedef void(^QMChathatCallDidStartWithUser)(NSUInteger userID, NSString *sessionID);
 typedef void(^QMDidStartUseTURNForVideoChat)(void);
-
 typedef void(^QMChatDidReceiveContactAddRequest)(NSUInteger userID);
 typedef void(^QMChatContactListDidChange)(QBContactList * contactList);
 typedef void(^QMChatContactListWillChange)(void);

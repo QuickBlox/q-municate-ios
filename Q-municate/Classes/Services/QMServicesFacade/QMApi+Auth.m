@@ -31,19 +31,21 @@
     
     __weak __typeof(self)weakSelf = self;
     
-    [self.authService createSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
-
-        if([weakSelf checkResult:result]) {
-            /*Open FBSession if needed*/
-            [weakSelf.facebookService connectToFacebook:^(NSString *sessionToken) {
-
-                if (!sessionToken) {
-                    completion(NO);
-                    return;
-                }
+    [self.facebookService connectToFacebook:^(NSString *sessionToken) {
+        
+        if (!sessionToken) {
+            completion(NO);
+            return;
+        }
+        
+        [weakSelf.authService createSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
+            
+            if([weakSelf checkResult:result]) {
+                /*Open FBSession if needed*/
+                
                 /*Login with facebook*/
                 [weakSelf.authService logInWithFacebookAccessToken:sessionToken completion:^(QBUUserLogInResult *loginWithFBResult) {
-
+                    
                     if ([weakSelf checkResult:loginWithFBResult]) {
                         [weakSelf setAutoLogin:YES];
                         
@@ -53,40 +55,43 @@
                         
                         weakSelf.currentUser = loginWithFBResult.user;
                         
-                         [weakSelf.chatService loginWithUser:loginWithFBResult.user completion:^(BOOL success) {
-                             if (loginWithFBResult.user.website.length == 0) {
-                                 /*Upload image from facebook to qbserver if needed*/
-                                 [weakSelf updateUserAvatarFromFacebook:^(QBUUserResult *result) {
-
-                                     weakSelf.currentUser.website = result.user.website;
-                                     completion(result.success);
-                                 }];
-                             }
-                             completion(YES);
-                         }]; //Chat Login With user
+                        [weakSelf.chatService loginWithUser:loginWithFBResult.user completion:^(BOOL success) {
+                            completion(success);
+                            return;
+                            if (loginWithFBResult.user.website.length == 0) {
+                                /*Upload image from facebook to qbserver if needed*/
+                                [weakSelf updateUserAvatarFromFacebook:^(QBUUserResult *result) {
+                                    
+                                    weakSelf.currentUser.website = result.user.website;
+                                    completion(result.success);
+                                    return;
+                                }];
+                            }
+                            completion(YES);
+                        }]; //Chat Login With user
                         
                     } else {
                         completion(NO);
                     }
                 }]; // loginin with facebook
-            }]; // Connect to facebook
-            
-        } else {
-            completion(NO);
-        }
-    }]; // Create session
+                
+            } else {
+                completion(NO);
+            }
+        }]; // Create session
+    }]; // Connect to facebook
 }
 
 - (void)signUpAndLoginWithUser:(QBUUser *)user userAvatar:(UIImage *)userAvatar completion:(QBUUserResultBlock)completion {
-
+    
     __weak __typeof(self)weakSelf = self;
-
+    
     [self.authService createSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
-
-        if([weakSelf checkResult:result]) {
         
-            [weakSelf.authService signUpUser:user completion:^(QBUUserResult *signUpResult) {
+        if([weakSelf checkResult:result]) {
             
+            [weakSelf.authService signUpUser:user completion:^(QBUUserResult *signUpResult) {
+                
                 if ([weakSelf checkResult:signUpResult]) {
                     
                     [weakSelf loginWithUser:user completion:^(QBUUserLogInResult *loginResult) {
@@ -113,9 +118,9 @@
         
         [self.settingsManager setLogin:user.email andPassword:user.password];
     }
-
+    
     __weak __typeof(self)weakSelf = self;
-
+    
     [self.authService createSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
         
         if([weakSelf checkResult:result]) {
@@ -151,7 +156,7 @@
     
     __weak __typeof(self)weakSelf = self;
     [self.authService updateUser:user withCompletion:^(QBUUserResult *result) {
-
+        
         if ([weakSelf checkResult:result]) {
             result.user.password = password;
             weakSelf.currentUser = result.user;
@@ -165,7 +170,7 @@
     
     __weak __typeof(self)weakSelf = self;
     [self updateUser:currentUser completion:^(BOOL success) {
-
+        
         if (success) {
             [weakSelf.settingsManager setLogin:currentUser.login andPassword:currentUser.password];
         }
@@ -174,10 +179,10 @@
 }
 
 - (void)updateUserAvatarFromFacebook:(QBUUserResultBlock)completion {
-
+    
     __weak __typeof(self)weakSelf = self;
     [self.facebookService loadUserImageWithUserID:self.currentUser.facebookID completion:^(UIImage *fbImage) {
-    
+        
         if (fbImage) {
             [weakSelf updateUserAvatar:fbImage imageName:weakSelf.currentUser.facebookID completion:completion];
         }
@@ -197,7 +202,7 @@
             user.website = [result.uploadedBlob publicUrl];
             
             [weakSelf.authService updateUser:user withCompletion:^(QBUUserResult *updateResult) {
-
+                
                 if ([weakSelf checkResult:updateResult]) {
                     
                     updateResult.user.password = weakSelf.currentUser.password;
@@ -219,7 +224,7 @@
 }
 
 - (void)destroySessionWithCompletion:(void(^)(BOOL success))completion {
-
+    
     __weak __typeof(self)weakSelf = self;
     [self.authService destroySessionWithCompletion:^(QBAAuthResult *result) {
         completion([weakSelf checkResult:result]);

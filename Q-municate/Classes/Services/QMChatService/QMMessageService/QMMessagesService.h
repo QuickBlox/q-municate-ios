@@ -12,7 +12,7 @@
 @interface QMMessagesService : NSObject <QMServiceProtocol>
 
 - (NSArray *)messageHistoryWithDialogID:(NSString *)dialogID;
-- (void)addMessageInHistory:(QBChatMessage *)message withDialogID:(NSString *)dialogID;
+- (void)addMessageToHistory:(QBChatMessage *)message withDialogID:(NSString *)dialogID;
 
 - (void)start;
 - (void)destroy;

@@ -71,7 +71,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    [FBAppCall handleDidBecomeActive];
+    [FBSession.activeSession handleDidBecomeActive];
     // Restart any tasks that were paused (or not yet started) while the application was inactive.
     // If the application was previously in the background, optionally refresh the user interface.
 }
@@ -86,11 +86,8 @@
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
     // attempt to extract a token from the url
-    return [FBAppCall handleOpenURL:url
-                  sourceApplication:sourceApplication
-                    fallbackHandler:^(FBAppCall *call) {
-                        ILog(@"In fallback handler");
-                    }];
+    BOOL urlWasIntendedForFacebook = [FBSession.activeSession handleOpenURL:url];
+    return urlWasIntendedForFacebook;
 }
 
 @end

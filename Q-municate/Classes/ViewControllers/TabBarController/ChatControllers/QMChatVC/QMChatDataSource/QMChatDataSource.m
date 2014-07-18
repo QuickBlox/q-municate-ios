@@ -57,10 +57,9 @@
         [tableView registerClass:[QMAttachmentMessageCell class] forCellReuseIdentifier:QMAttachmentMessageCellID];
         [tableView registerClass:[QMSystemMessageCell class] forCellReuseIdentifier:QMSystemMessageCellID];
         
-        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-        
         __weak __typeof(self)weakSelf = self;
 
+        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         [[QMApi instance] fetchMessageWithDialog:self.chatDialog complete:^(BOOL success) {
             [weakSelf reloadCachedMessages:NO];
             [SVProgressHUD dismiss];
@@ -76,6 +75,18 @@
     }
     
     return self;
+}
+
+- (void)insertNewMessage:(QBChatMessage *)message {
+
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.messages.count inSection:0];
+    QMMessage *qmMessage = [self qmMessageWithQbChatHistoryMessage:(QBChatHistoryMessage *)message];
+    [self.messages addObject:qmMessage];
+    
+    [self.tableView beginUpdates];
+    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView endUpdates];
+    [self scrollToBottomAnimated:YES];
 }
 
 - (void)reloadCachedMessages:(BOOL)animated {
@@ -157,11 +168,11 @@
     
 }
 
-- (void)sendMessage:(NSString *)message {
+- (void)sendMessage:(NSString *)text {
     
-    BOOL success = [[QMApi instance] sendText:message toDialog:self.chatDialog];
-    if (success) {
-        [self reloadCachedMessages:YES];
+    QBChatMessage *message = [[QMApi instance] sendText:text toDialog:self.chatDialog];
+    if (message) {
+        [self insertNewMessage:message];
     }
 }
 
