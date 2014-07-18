@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+
+
+
 @interface QMUploadService : NSObject
+
 
 @end

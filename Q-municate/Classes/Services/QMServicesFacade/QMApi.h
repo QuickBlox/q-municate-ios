@@ -82,8 +82,9 @@
  */
 - (NSArray *)messagesHistoryWithDialog:(QBChatDialog *)chatDialog;
 /**
+ if ok return QBChatMessage , else nil
  */
-- (BOOL)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog;
+- (QBChatMessage *)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog;
 
 @end
 

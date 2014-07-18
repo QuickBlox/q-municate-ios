@@ -19,7 +19,7 @@
     }];
 }
 
-- (BOOL)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog {
+- (QBChatMessage *)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog {
     
     QBChatMessage *message = [[QBChatMessage alloc] init];
     
@@ -28,22 +28,28 @@
     BOOL success = NO;
     
     if (dialog.type == QBChatDialogTypeGroup) {
+        
         QBChatRoom *room = [self roomWithRoomJID:dialog.roomJID];
         success = [self.messagesService sendChatMessage:message withDialogID:dialog.ID toRoom:room];
         
     } else if (dialog.type == QBChatDialogTypePrivate) {
+        
         message.senderID = self.currentUser.ID;
         message.recipientID = [self occupantIDForPrivateChatDialog:dialog].integerValue;
         success = [self.messagesService sendMessage:message  withDialogID:dialog.ID saveToHistory:YES];
     }
     
     if (success) {
-        [self.messagesService addMessageInHistory:message withDialogID:dialog.ID];
+        
+        message.senderID = self.currentUser.ID;
+        [self.messagesService addMessageToHistory:message withDialogID:dialog.ID];
         dialog.lastMessageText = message.text;
         dialog.lastMessageDate = message.datetime;
+
+        return message;
     }
     
-    return success;
+    return nil;
 }
 
 - (NSArray *)messagesHistoryWithDialog:(QBChatDialog *)chatDialog {

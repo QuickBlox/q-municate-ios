@@ -7,7 +7,7 @@
 //
 
 #import "QMFacebookService.h"
-#import "REAlertView.h"
+#import "REAlertView+QMSuccess.h"
 
 @interface QMFacebookService ()
 
@@ -40,7 +40,6 @@ NSString *const kQMAppName = @"Q-municate";
     }];
 }
 
-
 - (void)shareToUsers:(NSString *)usersIDs completion:(void(^)(NSError *error))completion {
     
     NSDictionary *postParams = @{
@@ -65,7 +64,7 @@ NSString *const kQMAppName = @"Q-municate";
 NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/picture?height=100&width=100&access_token=%@";
 
 - (NSURL *)userImageUrlWithUserID:(NSString *)userID {
-
+    
     FBSession *session = [FBSession activeSession];
     NSString *urlString = [NSString stringWithFormat:kFBGraphGetPictureFormat, userID, session.accessTokenData.accessToken];
     NSURL *url = [NSURL URLWithString:urlString];
@@ -75,7 +74,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
 - (void)loadUserImageWithUserID:(NSString *)userID completion:(void(^)(UIImage *fbUserImage))completion {
     
     NSURL *url = [self userImageUrlWithUserID:userID];
-
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -95,16 +94,24 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
 
 - (void)inviteFriends {
     
-    [FBWebDialogs presentRequestsDialogModallyWithSession:nil message:@"Q-municate." title:nil parameters:nil handler:
-     
-     ^(FBWebDialogResult result, NSURL *resultURL, NSError *error)
-     {
+    [FBWebDialogs presentRequestsDialogModallyWithSession:nil
+                                                  message:kQMAppName
+                                                    title:nil
+                                               parameters:nil
+                                                  handler:
+     ^(FBWebDialogResult result, NSURL *resultURL, NSError *error) {
+         
          if (error) {
              // Error launching the dialog or sending the request.
              NSLog(@"Error sending request.");
+             
          } else {
+             
+             //Indicates that the dialog operation was not completed.
+             //This occurs in cases such as the closure of the web-view
+             //using the X in the upper left corner.
+             
              if (result == FBWebDialogResultDialogNotCompleted) {
-                 // User clicked the "x" icon
                  NSLog(@"User canceled request.");
              } else {
                  // Handle the send request callback
@@ -123,120 +130,151 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
 }
 
 - (NSDictionary*)parseURLParams:(NSString *)query {
+    
     NSArray *pairs = [query componentsSeparatedByString:@"&"];
-    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary *params = @{}.mutableCopy;
+    
     for (NSString *pair in pairs) {
+        
         NSArray *kv = [pair componentsSeparatedByString:@"="];
-        NSString *val =
-        [kv[1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *val = [kv[1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         params[kv[0]] = val;
     }
+    
     return params;
 }
 
 - (void)logout {
     
     // If the session state is any of the two "open"
-    if (FBSession.activeSession.state == FBSessionStateOpen
-        || FBSession.activeSession.state == FBSessionStateOpenTokenExtended) {
+    if (FBSession.activeSession.state == FBSessionStateOpen || FBSession.activeSession.state == FBSessionStateOpenTokenExtended) {
         // Close the session and remove the access token from the cache
         // The session state handler (in the app delegate) will be called automatically
         [FBSession.activeSession closeAndClearTokenInformation];
         // If the session state is not any of the two "open" states when the button is clicked
     }
+    FBSession.activeSession = nil;
 }
 
+- (BOOL)isSessionStateEffectivelyLoggedIn:(FBSessionState)state {
+    BOOL effectivelyLoggedIn;
+    
+    switch (state) {
+        case FBSessionStateOpen:
+            NSLog(@"Facebook session state: FBSessionStateOpen");
+            effectivelyLoggedIn = YES;
+            break;
+        case FBSessionStateCreatedTokenLoaded:
+            NSLog(@"Facebook session state: FBSessionStateCreatedTokenLoaded");
+            effectivelyLoggedIn = YES;
+            break;
+        case FBSessionStateOpenTokenExtended:
+            NSLog(@"Facebook session state: FBSessionStateOpenTokenExtended");
+            effectivelyLoggedIn = YES;
+            break;
+        default:
+            NSLog(@"Facebook session state: not of one of the open or openable types.");
+            effectivelyLoggedIn = NO;
+            break;
+    }
+    
+    return effectivelyLoggedIn;
+}
+
+/**
+ * Determines if the Facebook session has an authorized state. It might still need to be opened if it is a cached
+ * token, but the purpose of this call is to determine if the user is authorized at least that they will not be
+ * explicitly asked anything.
+ */
+
+- (BOOL)isLoggedIn {
+    
+    FBSession *activeSession = [FBSession activeSession];
+    FBSessionState state = activeSession.state;
+    BOOL isLoggedIn = activeSession && [self isSessionStateEffectivelyLoggedIn:state];
+    
+    NSLog(@"Facebook active session state: %d; logged in conclusion: %@", state, isLoggedIn ? @"YES" : @"NO");
+    
+    return isLoggedIn;
+}
+
+/**
+ * Attempts to silently open the Facebook session if we have a valid token loaded (that perhaps needs a behind the scenes refresh).
+ * After that attempt, we defer to the basic concept of the session being in one of the valid authorized states.
+ */
+
 - (void)connectToFacebook:(void(^)(NSString *sessionToken))completion {
+    
+    __weak __typeof(self)weakSelf = self;
+    
     // Whenever a person opens the app, check for a cached session
     if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
-        NSLog(@"FBSession - Found a cached session");
-        // If there's one, just open the session silently, without showing the user the login UI
-        [FBSession openActiveSessionWithReadPermissions:@[@"public_profile"]
-                                           allowLoginUI:NO
-                                      completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
-                                          // Handler for session state changes
-                                          [self sessionStateChanged:session state:state error:error sessionBlock:completion];
-                                      }];
         
-        // If there's no cached session, we will show a login button
+        NSLog(@"We have a cached token, so we're going to re-establish the login for the user.");
+        // If there's one, just open the session silently, without showing the user the login UI
+        
     } else {
+        // If there's no cached session, we will show a login button
         // Open a session showing the user the login UI
         // You must ALWAYS ask for public_profile permissions when opening a session
-        [FBSession openActiveSessionWithReadPermissions:@[@"public_profile"]
-                                           allowLoginUI:YES
-                                      completionHandler:
-         ^(FBSession *session, FBSessionState state, NSError *error) {
-             
-             // Call  sessionStateChanged:state:error method to handle session state changes
-             [self sessionStateChanged:session state:state error:error sessionBlock:^(NSString *sessionToken) {
-                 completion(sessionToken);
-             }];
-         }];
+        NSLog(@"Active session wasn't in state 'FBSessionStateCreatedTokenLoaded'. It has state: %d", FBSession.activeSession.state);
     }
+    
+    FBSessionStateHandler handler = ^(FBSession *session, FBSessionState state, NSError *error) {
+        [weakSelf sessionStateChanged:session state:state error:error sessionBlock:completion];
+    };
+    
+    [FBSession.activeSession openWithCompletionHandler:handler];
+    
 }
 
 // This method will handle ALL the session state changes in the app
-- (void)sessionStateChanged:(FBSession *)session state:(FBSessionState) state error:(NSError *)error sessionBlock:(void(^)(NSString *sessionToken))sessionBlock  {
+- (void)sessionStateChanged:(FBSession *)session
+                      state:(FBSessionState)state
+                      error:(NSError *)error
+               sessionBlock:(void(^)(NSString *sessionToken))sessionBlock  {
+    
     // If the session was opened successfully
-    if (!error && state == FBSessionStateOpen){
-        NSLog(@"FBSession - Session opened");
-        // Show the user the logged-in UI
-        sessionBlock(session.accessTokenData.accessToken);
-        return;
-    }
-    
-    if (state == FBSessionStateClosed || state == FBSessionStateClosedLoginFailed){
-        // If the session is closed
-        NSLog(@"FBSession - Session closed");
-        // Show the user the logged-out UI
-    }
-    
-    // Handle errors
-    if (error){
+    if (![self isLoggedIn] && error) {
         
-        NSLog(@"Error");
         NSString *alertText;
-        NSString *alertTitle;
-        // If the error requires people using an app to make an action outside of the app in order to recover
-        if ([FBErrorUtility shouldNotifyUserForError:error] == YES){
-            alertTitle = @"Something went wrong";
-            alertText = [FBErrorUtility userMessageForError:error];
-            [self showMessage:alertText withTitle:alertTitle];
-        } else {
+        
+        FBErrorCategory errorCategory = [FBErrorUtility errorCategoryForError:error];
+        
+        BOOL shouldNotify = [FBErrorUtility shouldNotifyUserForError:error];
+        
+        if (shouldNotify) {
             
+            alertText = [FBErrorUtility userMessageForError:error];
+            
+        } else {
+            shouldNotify = YES;
             // If the user cancelled login, do nothing
-            if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryUserCancelled) {
-                NSLog(@"User cancelled login");
-                
+            if (errorCategory == FBErrorCategoryUserCancelled) {
+                shouldNotify = NO;
                 // Handle session closures that happen outside of the app
-            } else if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryAuthenticationReopenSession){
-                alertTitle = @"Session Error";
+            } else if (errorCategory == FBErrorCategoryAuthenticationReopenSession) {
+                
                 alertText = @"Your current session is no longer valid. Please log in again.";
-                [self showMessage:alertText withTitle:alertTitle];
                 
                 // For simplicity, here we just show a generic message for all other errors
                 // You can learn how to handle other errors using our guide: https://developers.facebook.com/docs/ios/errors
             } else {
                 //Get more error information from the error
-                NSDictionary *errorInformation = [[[error.userInfo objectForKey:@"com.facebook.sdk:ParsedJSONResponseKey"] objectForKey:@"body"] objectForKey:@"error"];
+                NSDictionary *errorInformation =
+                [[[error.userInfo objectForKey:@"com.facebook.sdk:ParsedJSONResponseKey"] objectForKey:@"body"] objectForKey:@"error"];
                 
                 // Show the user an error message
-                alertTitle = @"Something went wrong";
-                alertText = [NSString stringWithFormat:@"Please retry. \n\n If the problem persists contact us and mention this error code: %@", [errorInformation objectForKey:@"message"]];
-                [self showMessage:alertText withTitle:alertTitle];
+                alertText = [NSString stringWithFormat:@"Please retry. \n\n If the problem persists contact us and mention this error code: %@",
+                             [errorInformation objectForKey:@"message"]];
             }
         }
+        
+        if (shouldNotify) [REAlertView showAlertWithMessage:alertText actionSuccess:NO];
+        [self logout];
     }
-    sessionBlock(nil);
-}
-
-- (void)showMessage:(NSString *)message withTitle:(NSString *)title {
     
-    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-        alertView.title = title;
-        alertView.message = message;
-        [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{}];
-    }];
+    sessionBlock(session.accessTokenData.accessToken);
 }
 
 @end

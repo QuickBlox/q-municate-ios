@@ -130,13 +130,7 @@
 
 - (BOOL)isEqual:(ABPerson *)other {
 
-    if (other == self) {
-        return YES;
-    } else if (self.recordID == other.recordID) {
-        return YES;
-    }
-    
-    return NO;
+    return (other == self || self.recordID == other.recordID) ? YES : NO;
 }
 
 - (NSUInteger)hash {

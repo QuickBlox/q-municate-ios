@@ -10,6 +10,10 @@
 #import "QBEchoObject.h"
 #import "QMChatReceiver.h"
 
+NSString const* kQMMsgCustomParamSaveToHistory = @"save_to_history";
+NSString const* kQMMsgCustomParamDialogID = @"dialog_id";
+NSString const* kQMMsgCustomParamDateSent = @"date_sent";
+
 @interface QMMessagesService()
 
 @property (strong, nonatomic) NSMutableDictionary *history;
@@ -25,9 +29,10 @@
     __weak __typeof(self)weakSelf = self;
     void (^updateHistory)(QBChatMessage *) = ^(QBChatMessage *message) {
 
-        NSString *dialogIDKey = @"dialog_id";
-        NSString *dialogID = message.customParameters[dialogIDKey];
-        [weakSelf addMessageInHistory:message withDialogID:dialogID];
+        if (message.recipientID != message.senderID) {
+            NSString *dialogID = message.customParameters[kQMMsgCustomParamDialogID];
+            [weakSelf addMessageToHistory:message withDialogID:dialogID];
+        }
     };
     
     [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
@@ -49,16 +54,10 @@
     self.history[dialogID] = messages;
 }
 
-- (void)addMessageInHistory:(QBChatMessage *)message withDialogID:(NSString *)dialogID {
+- (void)addMessageToHistory:(QBChatMessage *)message withDialogID:(NSString *)dialogID {
     
     NSMutableArray *history = self.history[dialogID];
-    NSInteger idx = [history indexOfObject:message];
-
-    if (idx != NSNotFound) {
-        [history replaceObjectAtIndex:idx withObject:message];
-    }else {
-        [history addObject:message];
-    }
+    [history addObject:message];
 }
 
 - (NSArray *)messageHistoryWithDialogID:(NSString *)dialogID {
@@ -84,10 +83,11 @@
 }
 
 - (NSMutableDictionary *)messageCusotmParameterWithDialogID:(NSString *)dialogID saveToHistory:(BOOL)saveToHistory {
+
     return @{
-             @"date_sent" : @((NSUInteger)[[NSDate date] timeIntervalSince1970]),
-             @"save_to_history" : @(saveToHistory),
-             @"dialog_id" : dialogID
+             kQMMsgCustomParamDateSent : @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970),
+             kQMMsgCustomParamSaveToHistory : @(saveToHistory),
+             kQMMsgCustomParamDialogID: dialogID
              }.mutableCopy;
 }
 

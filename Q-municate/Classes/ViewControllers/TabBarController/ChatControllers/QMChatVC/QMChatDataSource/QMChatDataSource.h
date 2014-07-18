@@ -22,6 +22,6 @@
 - (id)opponent;
 - (void)scrollToBottomAnimated:(BOOL)animated;
 - (void)sendImage:(UIImage *)image;
-- (void)sendMessage:(NSString *)message;
+- (void)sendMessage:(NSString *)text;
 
 @end
