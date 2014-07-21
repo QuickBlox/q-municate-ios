@@ -69,21 +69,21 @@
 
 - (IBAction)changeAvatar:(id)sender {
     
-    if (self.currentUser.facebookID.length > 0) {
-    
-        [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-            alertView.title = kAlertTitleErrorString;
-            alertView.message = @"You can not change avatar. Go to facebook, and change avatar there.";
-            [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{}];
-        }];
-    }
-    else {
+//    if (self.currentUser.facebookID.length > 0) {
+//    
+//        [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
+//            alertView.title = kAlertTitleErrorString;
+//            alertView.message = @"You can not change avatar. Go to facebook, and change avatar there.";
+//            [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{}];
+//        }];
+//    }
+//    else {
     
         UIImagePickerController *picker = [[UIImagePickerController alloc] init];
         picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         picker.delegate = self;
         [self presentViewController:picker animated:YES completion:nil];
-    }
+//    }
 }
 
 - (void)setUpdateButtonActivity:(BOOL)isActive

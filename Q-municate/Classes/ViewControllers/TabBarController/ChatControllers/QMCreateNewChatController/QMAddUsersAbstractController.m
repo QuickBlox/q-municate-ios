@@ -12,6 +12,7 @@
 
 @interface QMAddUsersAbstractController ()
 
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *resetButton;
 @property (weak, nonatomic) IBOutlet UIButton *performButton;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
@@ -62,6 +63,8 @@
     // Do any additional setup after loading the view.
     [self configurePerformButtonBorder];
     [self updateNavTitle];
+    
+    [self applyChangesForResetButton];
     [self applyChangesForPerformButton];
 }
 
@@ -88,6 +91,11 @@
     [self.performButton setEnabled:!self.selectedFriends.count == 0];
 }
 
+- (void)applyChangesForResetButton
+{
+    self.resetButton.enabled = [self.selectedFriends count] > 0;
+}
+
 #pragma mark - Actions
 
 /** Override this methods */
@@ -105,6 +113,7 @@
         [self applyChangesForPerformButton];
         [self.tableView reloadData];
     }
+    [self applyChangesForResetButton];
 }
 
 #pragma mark - UITableViewDataSource
@@ -137,8 +146,8 @@
     
     // update navigation title:
     [self updateNavTitle];
-    
 	[self applyChangesForPerformButton];
+    [self applyChangesForResetButton];
 	[self.tableView reloadData];
 }
 

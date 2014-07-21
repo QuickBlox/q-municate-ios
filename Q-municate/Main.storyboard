@@ -2314,6 +2314,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="performButton" destination="Z4Q-C0-t5Y" id="KoZ-cF-pPf"/>
+                        <outlet property="resetButton" destination="4pK-YW-JFZ" id="d5t-zd-hSv"/>
                         <outlet property="tableView" destination="vaa-T0-hBz" id="TE4-Rh-hAN"/>
                     </connections>
                 </viewController>
@@ -2650,6 +2651,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="performButton" destination="LJm-Fn-hwz" id="iBQ-b1-xLD"/>
+                        <outlet property="resetButton" destination="y9j-i7-Kyb" id="C7E-N8-oWr"/>
                         <outlet property="tableView" destination="kef-62-AYz" id="qPx-L9-cb8"/>
                     </connections>
                 </viewController>
