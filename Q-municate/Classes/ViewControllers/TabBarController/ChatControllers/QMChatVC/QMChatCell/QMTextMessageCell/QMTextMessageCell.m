@@ -14,6 +14,8 @@
 @property (strong, nonatomic) UITextView *textView;
 @property (strong, nonatomic) UILabel *userName;
 @property (strong, nonatomic) UILabel *timeLabel;
+@property (strong, nonatomic) UIFont *font;
+@property (strong, nonatomic) UIColor *textColor;
 
 @end
 
@@ -44,13 +46,6 @@
     [self.containerView addSubview:self.textView];
     self.textView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    [self.containerView addConstraints:PVGroup(@[
-                                                 
-                                                 PVLeftOf(self.textView).equalTo.leftOf(self.containerView).asConstraint,
-                                                 PVBottomOf(self.textView).equalTo.bottomOf(self.containerView).asConstraint,
-                                                 PVTopOf(self.textView).equalTo.topOf(self.containerView).asConstraint,
-                                                 PVRightOf(self.textView).equalTo.rightOf(self.containerView).asConstraint]).asArray];
-    
     self.userName = [[UILabel alloc] init];
     self.userName.font = [UIFont boldSystemFontOfSize:10];
     self.userName.textColor = [UIColor darkGrayColor];
@@ -65,7 +60,18 @@
     
     [self.headerView addSubview:self.userName];
     [self.headerView addSubview:self.timeLabel];
+}
+
+- (void)layoutSubviews {
     
+    [super layoutSubviews];
+    
+    [self.containerView addConstraints:PVGroup(@[
+                                                 
+                                                 PVLeftOf(self.textView).equalTo.leftOf(self.containerView).asConstraint,
+                                                 PVBottomOf(self.textView).equalTo.bottomOf(self.containerView).asConstraint,
+                                                 PVTopOf(self.textView).equalTo.topOf(self.containerView).asConstraint,
+                                                 PVRightOf(self.textView).equalTo.rightOf(self.containerView).asConstraint]).asArray];
     [self.headerView addConstraints:PVGroup(@[
                                               PVWidthOf(self.timeLabel).equalTo.constant(40).asConstraint,
                                               PVRightOf(self.timeLabel).equalTo.rightOf(self.headerView).asConstraint,
@@ -77,20 +83,36 @@
                                               PVTopOf(self.userName).equalTo.topOf(self.headerView).asConstraint,
                                               PVRightOf(self.userName).equalTo.leftOf(self.timeLabel).asConstraint,
                                               ]).asArray];
-    [self setNeedsUpdateConstraints];
 }
 
 - (void)setMessage:(QMMessage *)message {
     
     [super setMessage:message];
     
-    self.textView.font = UIFontFromQMMessageLayout(self.message.layout);
+    self.textColor = message.textColor;
     self.textView.text = message.text;
-    self.textView.textColor = [message textColor];
+    self.textView.font = UIFontFromQMMessageLayout(self.message.layout);
+    
     
     self.balloonImage =  message.balloonImage;
     self.balloonTintColor = message.balloonColor;
     self.timeLabel.text = [self.formatter stringFromDate:message.datetime];
+}
+
+- (void)setTextColor:(UIColor *)textColor {
+    
+    if (![_textColor isEqual:textColor] ) {
+        _textColor = textColor;
+        self.textView.textColor = textColor;
+    }
+}
+
+- (void)setFont:(UIFont *)font {
+    
+    if ([_font isEqual:font]) {
+        _font = font;
+        self.textView.font = font;
+    }
 }
 
 - (void)setUser:(QBUUser *)user {
@@ -99,9 +121,5 @@
     self.userName.text = user.fullName;
 }
 
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-}
 
 @end

@@ -60,7 +60,7 @@
     self.containerView = [[UIView alloc] init];
     self.balloonImageView = [[UIImageView alloc] init];
     self.userImageView = [[QMImageView alloc] init];
-    self.headerView = [[UILabel alloc] init];
+    self.headerView = [[UIView alloc] init];
     self.maskLayer = [CALayer layer];
     
     self.messageContainer.translatesAutoresizingMaskIntoConstraints = NO;
@@ -106,19 +106,11 @@
 }
 
 - (void)setBalloonImage:(UIImage *)balloonImage {
-    
-    if (_balloonImage != balloonImage) {
-        _balloonImage = balloonImage;
-        self.balloonImageView.image = _balloonImage;
-    }
+    self.balloonImageView.image = balloonImage;
 }
 
 - (void)setBalloonTintColor:(UIColor *)balloonTintColor {
-    
-    if (_balloonTintColor != balloonTintColor) {
-        _balloonTintColor = balloonTintColor;
-        self.messageContainer.tintColor = _balloonTintColor;
-    }
+    self.messageContainer.tintColor = balloonTintColor;
 }
 
 - (void)createConstrains {
@@ -137,25 +129,34 @@
     self.tTitleConstraint = PVTopOf(self.headerView).equalTo.topOf(self.balloonImageView).asConstraint;
     self.lTitleConstraint = PVLeftOf(self.headerView).equalTo.leftOf(self.balloonImageView).asConstraint,
     self.rTitleConstraint = PVRightOf(self.headerView).equalTo.rightOf(self.balloonImageView).asConstraint,
-    self.bTitleConstraint = PVBottomOf(self.headerView).equalTo.topOf(self.containerView).asConstraint;
+//    self.bTitleConstraint = PVBottomOf(self.headerView).equalTo.topOf(self.containerView).asConstraint;
     
     self.bContainerConstraint = PVBottomOf(self.containerView).equalTo.bottomOf(self.balloonImageView).asConstraint;
     self.hContainerConstraint= PVHeightOf(self.containerView).equalTo.constant(0).asConstraint;
     self.wContainerConstraint= PVWidthOf(self.containerView).equalTo.constant(0).asConstraint;
     
-    [self.contentView addConstraints:@[self.bMessageContainerConstraint, self.tMessageContainerConstraint,
-                                       self.lMessageContainerConstraint, self.rMessageContainerConstraint,
+    [self.contentView addConstraints:@[self.bMessageContainerConstraint,
+                                       self.tMessageContainerConstraint,
+                                       self.lMessageContainerConstraint,
+                                       self.rMessageContainerConstraint,
 
-                                       self.wUserImageViewConstraint,self.hUserImageViewConstraint,
+                                       self.wUserImageViewConstraint,
+                                       self.hUserImageViewConstraint,
                                        
                                        PVBottomOf(self.userImageView).equalTo.bottomOf(self.messageContainer).asConstraint,
+                                       
+                                       self.hBalloonConstraint,
+                                       self.wBalloonConstraint,
                                        PVBottomOf(self.balloonImageView).equalTo.bottomOf(self.messageContainer).asConstraint,
-                                       
-                                       self.hBalloonConstraint, self.wBalloonConstraint,
                 
-                                       self.bContainerConstraint,self.hContainerConstraint, self.wContainerConstraint,
+                                       self.bContainerConstraint,
+                                       self.hContainerConstraint,
+                                       self.wContainerConstraint,
                                        
-                                       self.tTitleConstraint, self.lTitleConstraint, self.rTitleConstraint, self.bTitleConstraint
+                                       self.tTitleConstraint,
+                                       self.lTitleConstraint,
+                                       self.rTitleConstraint,
+//                                       self.bTitleConstraint
                                        ]];
 }
 
@@ -170,7 +171,65 @@
 }
 
 - (void)layoutSubviews {
+    
     [super layoutSubviews];
+    
+    QMMessageContentAlign align = self.message.align;
+    QMMessageLayout layout = self.message.layout;
+    UIEdgeInsets insets = UIEdgeInsetsZero;
+    
+    /*Layout text container*/
+    self.bMessageContainerConstraint.constant = -layout.messageMargin.bottom;
+    self.tMessageContainerConstraint.constant = layout.messageMargin.top;
+    self.lMessageContainerConstraint.constant = layout.messageMargin.left;
+    self.rMessageContainerConstraint.constant = - layout.messageMargin.right;
+    
+    CGSize userImageSize = self.isHiddenUserImage ? CGSizeZero : layout.userImageSize;
+    self.hUserImageViewConstraint.constant = userImageSize.height;
+    self.wUserImageViewConstraint.constant = userImageSize.width;
+    
+    if (align == QMMessageContentAlignLeft) {
+        insets = layout.leftBalloon.imageCapInsets;
+    } else if (align == QMMessageContentAlignRight) {
+        insets = layout.rightBalloon.imageCapInsets;
+    }
+    
+    CGFloat balloonWidth = insets.left + layout.contentSize.width + insets.right;
+    
+    if (balloonWidth < layout.messageMinWidth) {
+        balloonWidth = layout.messageMinWidth;
+    }
+    
+    if (align == QMMessageContentAlignLeft) {
+        
+        self.currentAlignConstrains =
+        PVGroup(@[
+                  PVLeftOf(self.userImageView).equalTo.leftOf(self.messageContainer).asConstraint,
+                  PVLeftOf(self.balloonImageView).equalTo.rightOf(self.userImageView).asConstraint,
+                  PVLeftOf(self.containerView).equalTo.leftOf(self.balloonImageView).plus(insets.left).asConstraint,
+                  ]).asArray;
+        
+    } else if (align == QMMessageContentAlignRight) {
+        
+        self.currentAlignConstrains =
+        PVGroup(@[
+                  PVRightOf(self.userImageView).equalTo.rightOf(self.messageContainer).asConstraint,
+                  PVRightOf(self.balloonImageView).equalTo.leftOf(self.userImageView).asConstraint,
+                  PVRightOf(self.containerView).equalTo.rightOf(self.balloonImageView).minus(insets.right).asConstraint,
+                  
+                  ]).asArray;
+    }
+    self.tTitleConstraint.constant = insets.top;
+    self.bContainerConstraint.constant = -insets.top;
+    self.hContainerConstraint.constant = layout.contentSize.height;
+    self.wContainerConstraint.constant = layout.contentSize.width;
+    
+    self.hBalloonConstraint.constant = insets.top + layout.contentSize.height + insets.bottom + layout.titleHeight;
+    self.wBalloonConstraint.constant = balloonWidth;
+    
+    self.lTitleConstraint.constant = insets.left;
+    self.rTitleConstraint.constant = -insets.right;
+    self.userImageView.imageViewType = QMImageViewTypeCircle;
 }
 
 #pragma mark - Set user image
@@ -179,66 +238,8 @@
     
     if (_message != message) {
         _message = message;
-        
-        QMMessageContentAlign align = self.message.align;
-        QMMessageLayout layout = self.message.layout;
-        UIEdgeInsets insets = UIEdgeInsetsZero;
-        
-        /*Layout text container*/
-        self.bMessageContainerConstraint.constant = -layout.messageMargin.bottom;
-        self.tMessageContainerConstraint.constant = layout.messageMargin.top;
-        self.lMessageContainerConstraint.constant = layout.messageMargin.left;
-        self.rMessageContainerConstraint.constant = - layout.messageMargin.right;
-        
-        CGSize userImageSize = self.isHiddenUserImage ? CGSizeZero : layout.userImageSize;
-        self.hUserImageViewConstraint.constant = userImageSize.height;
-        self.wUserImageViewConstraint.constant = userImageSize.width;
-        
-        if (align == QMMessageContentAlignLeft) {
-            insets = layout.leftBalloon.imageCapInsets;
-        } else if (align == QMMessageContentAlignRight) {
-            insets = layout.rightBalloon.imageCapInsets;
-        }
-        
-        CGFloat balloonWidth = insets.left + layout.contentSize.width + insets.right;
-        
-        if (balloonWidth < layout.messageMinWidth) {
-            balloonWidth = layout.messageMinWidth;
-        }
-        
-        if (align == QMMessageContentAlignLeft) {
-            
-            self.currentAlignConstrains =
-            PVGroup(@[
-                      PVLeftOf(self.userImageView).equalTo.leftOf(self.messageContainer).asConstraint,
-                      PVLeftOf(self.balloonImageView).equalTo.rightOf(self.userImageView).asConstraint,
-                      PVLeftOf(self.containerView).equalTo.leftOf(self.balloonImageView).plus(insets.left).asConstraint,
-                      ]).asArray;
-            
-        } else if (align == QMMessageContentAlignRight) {
-            
-            self.currentAlignConstrains =
-            PVGroup(@[
-                      PVRightOf(self.userImageView).equalTo.rightOf(self.messageContainer).asConstraint,
-                      PVRightOf(self.balloonImageView).equalTo.leftOf(self.userImageView).asConstraint,
-                      PVRightOf(self.containerView).equalTo.rightOf(self.balloonImageView).minus(insets.right).asConstraint,
-
-                      ]).asArray;
-        }
-        
-        self.bContainerConstraint.constant = -insets.top;
-        self.hContainerConstraint.constant = layout.contentSize.height;
-        self.wContainerConstraint.constant = layout.contentSize.width;
-        
-        self.hBalloonConstraint.constant = insets.top + layout.contentSize.height + insets.bottom + layout.titleHeight;
-        self.wBalloonConstraint.constant = balloonWidth;
-        
-        self.lTitleConstraint.constant = insets.left;
-        self.rTitleConstraint.constant = -insets.right;
     }
-    
-    [self setNeedsUpdateConstraints];
-    [self layoutIfNeeded];
+
 }
 
 - (void)setUser:(QBUUser *)user {

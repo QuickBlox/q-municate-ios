@@ -15,8 +15,6 @@
 
 @property (strong, nonatomic) UIView *containerView;
 @property (strong, nonatomic) QBUUser *user;
-@property (strong, nonatomic) UIImage *balloonImage;
-@property (strong, nonatomic) UIColor *balloonTintColor;
 @property (strong, nonatomic) UIView *headerView;
 @property (strong, nonatomic, readonly) UIImageView *balloonImageView;
 @property (strong, nonatomic) QMMessage *message;
@@ -24,6 +22,8 @@
 
 @property (strong, nonatomic, readonly) CALayer *maskLayer;
 
+- (void)setBalloonImage:(UIImage *)balloonImage;
+- (void)setBalloonTintColor:(UIColor *)balloonTintColor;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
 - (void)createContainerSubviews;
 - (NSDateFormatter *)formatter;

@@ -29,6 +29,14 @@ CGFloat kQMUserImageViewSquareCornerRadius = 6;
     return self;
 }
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [self configure];
+    }
+    return self;
+}
+
 - (id)initWithImage:(UIImage *)image highlightedImage:(UIImage *)highlightedImage NS_AVAILABLE_IOS(3_0) {
     
     self = [super initWithImage:image highlightedImage:highlightedImage];
@@ -46,14 +54,16 @@ CGFloat kQMUserImageViewSquareCornerRadius = 6;
 
 - (void)configure {
     
-    self.imageViewType = QMImageViewTypeNone;
+    _imageViewType = QMImageViewTypeNone;
     self.layer.masksToBounds = YES;
 }
 
 - (void)setImageViewType:(QMImageViewType)imageViewType {
 
     if (_imageViewType != imageViewType) {
-
+        
+        _imageViewType = imageViewType;
+        
         switch (imageViewType) {
                 
             case QMImageViewTypeNone: [self applyDefaultTheme]; break;
@@ -75,14 +85,14 @@ CGFloat kQMUserImageViewSquareCornerRadius = 6;
 
 - (void)applyCircleTheme {
     
-    self.layer.borderWidth = 1;
+    self.layer.borderWidth = kQMUserImageViewLineBorderWidth;
     self.layer.borderColor = [UIColor colorWithWhite:1.000 alpha:0.720].CGColor;
     self.layer.cornerRadius = self.frame.size.width / 2;
 }
 
 - (void)applySquareTheme {
     
-    self.layer.borderWidth = 1;
+    self.layer.borderWidth = kQMUserImageViewLineBorderWidth;
     self.layer.borderColor = [UIColor whiteColor].CGColor;
     self.layer.cornerRadius = kQMUserImageViewSquareCornerRadius;
 }
