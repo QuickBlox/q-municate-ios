@@ -1293,7 +1293,7 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="66" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="uh0-WE-xWZ">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="59" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="uh0-WE-xWZ">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="455"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2845,7 +2845,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="Gs8-3F-TjX"/>
         <segue reference="MwZ-5e-1h3"/>
-        <segue reference="VIK-5Z-bdZ"/>
+        <segue reference="IAo-qy-uHQ"/>
         <segue reference="sPU-d9-maS"/>
         <segue reference="M45-HY-t12"/>
     </inferredMetricsTieBreakers>

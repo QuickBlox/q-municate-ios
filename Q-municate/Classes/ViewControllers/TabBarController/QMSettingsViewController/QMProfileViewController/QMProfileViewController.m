@@ -86,6 +86,11 @@
     }
 }
 
+- (void)setUpdateButtonActivity:(BOOL)isActive
+{
+    self.updateProfileButton.enabled = isActive;
+}
+
 - (IBAction)hideKeyboard:(id)sender {
     [sender resignFirstResponder];
 }
