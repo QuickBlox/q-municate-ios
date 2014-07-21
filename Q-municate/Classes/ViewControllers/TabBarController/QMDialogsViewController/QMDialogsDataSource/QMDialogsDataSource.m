@@ -49,9 +49,9 @@
     return dialog;
 }
 
-- (NSMutableArray *)dialogs {
+- (NSArray *)dialogs {
     
-    return [[QMApi instance] dialogs];
+    return [[QMApi instance] dialogHistory];
 }
 
 NSString *const kQMDialogCellID = @"QMDialogCell";

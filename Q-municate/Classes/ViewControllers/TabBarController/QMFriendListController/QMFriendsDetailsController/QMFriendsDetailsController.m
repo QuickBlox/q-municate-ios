@@ -21,7 +21,6 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     
 };
 
-
 @interface QMFriendsDetailsController () <UIActionSheetDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableViewCell *phoneCell;
@@ -37,7 +36,6 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 @property (weak, nonatomic) IBOutlet UIImageView *onlineCircle;
 
 @end
-
 
 @implementation QMFriendsDetailsController
 
@@ -96,8 +94,9 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     } else if ([segue.identifier isEqualToString:kChatViewSegueIdentifier]) {
        
         QMChatViewController *chatController = (QMChatViewController *)segue.destinationViewController;
-        QBChatDialog *dialog = [[QMApi instance] privateDialogWithOpponentID:self.selectedUser.ID];
-        chatController.dialog = dialog;
+        chatController.dialog = sender;
+        
+        NSAssert([sender isKindOfClass:QBChatDialog.class], @"Need update this case");
     }
 }
 
@@ -109,11 +108,10 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
         case QMCallTypeVideo:[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil]; break;
         case QMCallTypeAudio: [self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil]; break;
         case QMCallTypeChat: {
-            
 
             __weak __typeof(self)weakSelf = self;
             [[QMApi instance] createPrivateChatDialogIfNeededWithOpponent:self.selectedUser completion:^(QBChatDialog *chatDialog) {
-                [weakSelf performSegueWithIdentifier:kChatViewSegueIdentifier sender:nil];
+                [weakSelf performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatDialog];
             }];
             
         } break;
@@ -125,16 +123,15 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 
 - (IBAction)removeFromFriends:(id)sender {
 
+    __weak __typeof(self)weakSelf = self;
     [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
         
         alertView.title = @"Are you sure?";
         [alertView addButtonWithTitle:@"Cancel" andActionBlock:^{}];
         
         [alertView addButtonWithTitle:@"Delete" andActionBlock:^{
-            @weakify(self)
-            if ([[QMApi instance] removeUserFromContactListWithUserID:self.selectedUser.ID]) {
-                @strongify(self)
-                [self.navigationController popViewControllerAnimated:YES];
+            if ([[QMApi instance] removeUserFromContactListWithUserID:weakSelf.selectedUser.ID]) {
+                [weakSelf.navigationController popViewControllerAnimated:YES];
             }
         }];
     }];

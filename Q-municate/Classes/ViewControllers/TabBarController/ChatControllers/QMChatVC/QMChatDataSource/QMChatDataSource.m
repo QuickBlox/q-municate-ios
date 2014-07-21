@@ -3,7 +3,7 @@
 //  QMChatDataSource.m
 //  Q-municate
 //
-//  Created by Andrey on 16.06.14.
+//  Created by Andrey Ivanov on 16.06.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -19,7 +19,6 @@
 <UITableViewDataSource>
 
 @property (weak, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) QBUUser *opponent;
 @property (strong, nonatomic) NSMutableArray *messages;
 
 /**
@@ -36,7 +35,7 @@
 @implementation QMChatDataSource
 
 - (void)dealloc {
-    [[QMChatReceiver instance] unsubsribeWithTarget:self];
+    [[QMChatReceiver instance] unsubsribeForTarget:self];
     NSLog(@"%@ - %@", NSStringFromSelector(_cmd), self);
 }
 
@@ -154,9 +153,9 @@
     QMChatCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIDAtQMMessage:message]];
     
     BOOL myMessage = [QMApi instance].currentUser.ID == message.senderID;
-    cell.hideUserImage = myMessage;
     
-    [[QMApi instance] userWithID:message.senderID];
+    cell.hideUserImage = myMessage;    
+    cell.user = [[QMApi instance] userWithID:message.senderID];
     cell.message = message;
     
     return cell;
@@ -174,11 +173,6 @@
     if (message) {
         [self insertNewMessage:message];
     }
-}
-
-- (id)opponent
-{
-    return _opponent;
 }
 
 @end

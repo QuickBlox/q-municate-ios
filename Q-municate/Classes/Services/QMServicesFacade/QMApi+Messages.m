@@ -29,13 +29,13 @@
     
     if (dialog.type == QBChatDialogTypeGroup) {
         
-        QBChatRoom *room = [self roomWithRoomJID:dialog.roomJID];
+        QBChatRoom *room = [self chatRoomWithRoomJID:dialog.roomJID];
         success = [self.messagesService sendChatMessage:message withDialogID:dialog.ID toRoom:room];
         
     } else if (dialog.type == QBChatDialogTypePrivate) {
         
         message.senderID = self.currentUser.ID;
-        message.recipientID = [self occupantIDForPrivateChatDialog:dialog].integerValue;
+        message.recipientID = [self occupantIDForPrivateChatDialog:dialog];
         success = [self.messagesService sendMessage:message  withDialogID:dialog.ID saveToHistory:YES];
     }
     

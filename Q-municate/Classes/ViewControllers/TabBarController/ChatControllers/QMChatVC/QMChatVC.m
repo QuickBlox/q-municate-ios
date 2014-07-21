@@ -103,7 +103,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     self.inputToolBar.contentView.leftBarButtonItem = self.emojiButton;
     self.inputToolBar.contentView.rightBarButtonItem = self.cameraButton;
     
-    self.inputToolBar.contentView.rightBarButtonItemWidth = 26;      // 26 for camera and  44 for send button
+    self.inputToolBar.contentView.rightBarButtonItemWidth = 26;
     self.inputToolBar.contentView.leftBarButtonItemWidth = 26;
 }
 

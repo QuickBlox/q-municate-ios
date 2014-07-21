@@ -10,57 +10,39 @@
 #import "QMChatDialogsService.h"
 #import "QMMessagesService.h"
 
-@interface QMApi()
+NSString const *kQMEditDialogExtendedNameParameter = @"name";
+NSString const *kQMEditDialogExtendedPushOccupantsParameter = @"push[occupants_ids][]";
+NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupants_ids][]";
 
-@property (strong, nonatomic) NSMutableArray *dialogs;
-@property (strong, nonatomic) NSMutableDictionary *chatRooms;
-@property (strong, nonatomic) NSMutableDictionary *privateDialogs;
+NSString const *kQMDialogCustomParameterRoomJID = @"xmpp_room_jid";
+NSString const *kQMDialogCustomParameterDialogName = @"name";
+NSString const *kQMDialogCustomParameterDialogID = @"dialog_id";
+NSString const *kQMDialogCustomParameterDialogType = @"type";
+NSString const *kQMDialogCustomParameterDialogOccupantsIDs = @"occupants_ids";
+NSString const *kQMDialogCustomParameterDialogDateSent = @"date_sent";
+NSString const *kQMDialogCustomParameterNotificationType = @"notification_type";
+
+@interface QMApi()
 
 @end
 
 @implementation QMApi (ChatDialogs)
 
 - (void)fetchAllDialogs:(void(^)(void))completion {
-    @weakify(self)
+
+    __weak __typeof(self)weakSelf = self;
     [self.chatDialogsService fetchAllDialogs:^(QBDialogsPagedResult *result) {
-        @strongify(self)
-        if ([self checkResult:result]) {
-            [self addDialogs:result.dialogs];
+        if ([weakSelf checkResult:result]) {
+            [weakSelf.chatDialogsService addDialogs:result.dialogs];
             if (completion) completion();
         }
     }];
 }
 
-- (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
-    
-    NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
-    extendedRequest[@"name"] = dialogName;
-    
-    [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:completion];
-}
-
-- (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
-    
-    NSString *usersIDsAsString;//=[ids componentsJoinedByString:@","];
-    NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
-    extendedRequest[@"push[occupants_ids][]"] = usersIDsAsString;
-    [self sendNotificationWithType:2 toRecipients:occupants chatDialog:chatDialog];
-    
-    [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:completion];
-}
-
-- (void)leaveWithUserId:(NSUInteger)userID fromChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
-    
-    NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
-    extendedRequest[@"pull_all[occupants_ids][]"] = [NSString stringWithFormat:@"%d", userID];
-    
-    [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:completion];
-}
-
 #pragma mark - Create Chat Dialogs
 
 - (void)createPrivateChatDialogWithOpponent:(QBUUser *)opponent completion:(QBChatDialogResultBlock)completion {
-    // creating private chat dialog:
+
     NSString *opponentID = [NSString stringWithFormat:@"%d", opponent.ID];
     
     QBChatDialog *chatDialog = [[QBChatDialog alloc] init];
@@ -72,15 +54,14 @@
 
 - (void)createPrivateChatDialogIfNeededWithOpponent:(QBUUser *)opponent completion:(void(^)(QBChatDialog *chatDialog))completion {
     
-    QBChatDialog *dialog = [self privateDialogWithOpponentID:opponent.ID];
+    QBChatDialog *dialog = [self.chatDialogsService privateDialogWithOpponentID:opponent.ID];
     if (!dialog) {
-        @weakify(self)
+        __weak __typeof(self)weakSelf = self;
         [self createPrivateChatDialogWithOpponent:opponent completion:^(QBChatDialogResult *result) {
-            @strongify(self)
-            [self addDialog:result.dialog];
+            [weakSelf.chatDialogsService addDialogToHistory:result.dialog];
             completion(result.dialog);
         }];
-    }else {
+    } else {
         completion(dialog);
     }
 }
@@ -97,11 +78,11 @@
     chatDialog.name = name;
     chatDialog.occupantIDs = array;
     chatDialog.type = QBChatDialogTypeGroup;
-    @weakify(self)
+
+    __weak __typeof(self)weakSelf = self;
     [self.chatDialogsService createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
-        @strongify(self)
-        [self addDialog:result.dialog];
-        [self sendNotificationWithType:1 toRecipients:ocupants chatDialog:result.dialog];
+        [weakSelf.chatDialogsService addDialogToHistory:result.dialog];
+        [weakSelf sendNotificationWithType:1 toRecipients:ocupants chatDialog:result.dialog];
         completion(result);
     }];
 }
@@ -114,15 +95,13 @@
     msg.text = text;
     
     NSMutableDictionary *customParams = [NSMutableDictionary new];
-    customParams[@"xmpp_room_jid"] = chatDialog.roomJID;
-    customParams[@"name"] = chatDialog.name;
-    customParams[@"_id"] = chatDialog.ID;
-    customParams[@"type"] = @(chatDialog.type);
-    customParams[@"occupants_ids"] = chatDialog.occupantIDs;
-    
-    NSUInteger timestamp = (unsigned long)[[NSDate date] timeIntervalSince1970];
-    customParams[@"date_sent"] = @(timestamp);
-    customParams[@"notification_type"] = [NSString stringWithFormat:@"%d", type];
+    customParams[kQMDialogCustomParameterRoomJID] = chatDialog.roomJID;
+    customParams[kQMDialogCustomParameterDialogName] = chatDialog.name;
+    customParams[kQMDialogCustomParameterDialogID] = chatDialog.ID;
+    customParams[kQMDialogCustomParameterDialogType] = @(chatDialog.type);
+    customParams[kQMDialogCustomParameterDialogOccupantsIDs] = chatDialog.occupantIDs;
+    customParams[kQMDialogCustomParameterDialogDateSent] = @(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);
+    customParams[kQMDialogCustomParameterNotificationType] = [NSString stringWithFormat:@"%d", type];
     
     msg.customParameters = customParams;
     
@@ -139,44 +118,40 @@
     }
 }
 
-#pragma mark - Join to room
+#pragma mark - Edit dialog methods
 
-
-- (void)addDialogs:(NSArray *)dialogs {
+- (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
     
-    for (QBChatDialog *chatDialog in dialogs) {
-        [self addDialog:chatDialog];
-    }
+    NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
+    extendedRequest[kQMEditDialogExtendedNameParameter] = dialogName;
+    
+    [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:completion];
 }
 
-- (void)addDialog:(QBChatDialog *)chatDialog {
-    
-    if (chatDialog.type == QBChatDialogTypeGroup) {
-        
-        NSString *roomJID = chatDialog.roomJID;
-        NSAssert(roomJID, @"Need update this case");
-        
-        QBChatRoom *existRoom = self.chatRooms[roomJID];
-        
-        if (!existRoom) {
-            QBChatRoom *chatRoom = [[QBChatRoom alloc] initWithRoomJID:roomJID];
-            [chatRoom joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
-            self.chatRooms[roomJID] = chatRoom;
+- (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
+
+    NSArray *opponentsIDs = [self idsWithUsers:occupants];
+    NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
+    extendedRequest[kQMEditDialogExtendedPushOccupantsParameter] = opponentsIDs;
+
+    __weak __typeof(self)weakSelf = self;
+    [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialogResult *result) {
+        if (result.success) {
+            [weakSelf sendNotificationWithType:2 toRecipients:opponentsIDs chatDialog:chatDialog];
         }
-        
-    } else if (chatDialog.type == QBChatDialogTypePrivate) {
-        
-        NSString *occupantID = [self occupantIDForPrivateChatDialog:chatDialog];
-        self.privateDialogs[occupantID] = chatDialog;
-    }
-    
-    if (![self.dialogs containsObject:chatDialog]) {
-        [self.dialogs addObject:chatDialog];
-    }
-    
+        completion(result);
+    }];
 }
 
-- (NSString *)occupantIDForPrivateChatDialog:(QBChatDialog *)chatDialog {
+- (void)leaveWithUserId:(NSUInteger)userID fromChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
+    
+    NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
+    extendedRequest[kQMEditDialogExtendedPullOccupantsParameter] = [NSString stringWithFormat:@"%d", userID];
+    
+    [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:completion];
+}
+
+- (NSUInteger )occupantIDForPrivateChatDialog:(QBChatDialog *)chatDialog {
     
     NSAssert(chatDialog.type == QBChatDialogTypePrivate, @"Chat dialog type != QBChatDialogTypePrivate");
     NSAssert(chatDialog.occupantIDs.count == 2, @"Array of user ids in chat. For private chat count = 2");
@@ -185,40 +160,37 @@
     for (NSString *strID in chatDialog.occupantIDs) {
         
         if (![strID isEqualToString:myID]) {
-            return strID;
+            return strID.integerValue;
         }
     }
     
     NSAssert(nil, @"Need update this cace");
-    return nil;
+    return 0;
 }
 
-- (QBChatRoom *)roomWithRoomJID:(NSString *)roomJID {
-    return self.chatRooms[roomJID];
+#pragma mark - Dialogs toos
+
+- (NSArray *)dialogHistory {
+    return [self.chatDialogsService dialogHistory];
 }
 
-- (QBChatDialog *)privateDialogWithOpponentID:(NSUInteger)opponentID {
-    NSString *key = [NSString stringWithFormat:@"%d", opponentID];
-    QBChatDialog *privateDialog = self.privateDialogs[key];
-    
-    return privateDialog;
+- (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID {
+    return [self.chatDialogsService chatRoomWithRoomJID:roomJID];
 }
 
-- (void)updateChatDialogForChatMessage:(QBChatMessage *)chatMessage {
+- (NSArray *)allOccupantIDsFromDialogsHistory{
     
-    NSString *kRoomJID = chatMessage.customParameters[@"xmpp_room_jid"];
+    NSArray *allDialogs = self.dialogHistory;
+    NSMutableSet *ids = [NSMutableSet set];
     
-    QBChatDialog *dialog = nil;//self.allDialogsAsDictionary[kRoomJID];
-    if (dialog == nil) {
-        NSAssert(!dialog, @"Dialog you are looking for not found.");
-        return;
+    for (QBChatDialog *dialog in allDialogs) {
+        [ids addObjectsFromArray:dialog.occupantIDs];
     }
     
-    dialog.name = chatMessage.customParameters[@"name"];
-    
-    NSString *occupantsIDs = chatMessage.customParameters[@"occupants_ids"];
-    dialog.occupantIDs = [occupantsIDs componentsSeparatedByString:@","];
+    return ids.allObjects;
 }
+
+
 
 //- (void)createOrUpdateChatDialogFromChatMessage:(QBChatMessage *)message {
 //
@@ -249,21 +221,6 @@
 //
 //}
 
-//- (QBChatDialog *)createChatDialogForChatMessage:(QBChatMessage *)chatMessage
-//{
-//    QBChatDialog *chatDialog = [[QBChatDialog alloc] init];
-//
-//    chatDialog.ID = chatMessage.customParameters[@"_id"];
-//    chatDialog.roomJID = chatMessage.customParameters[@"xmpp_room_jid"];
-//    chatDialog.name = chatMessage.customParameters[@"name"];
-//    chatDialog.type = [chatMessage.customParameters[@"type"] intValue];
-//
-//    NSString *occupantsIDs = chatMessage.customParameters[@"occupants_ids"];
-//    chatDialog.occupantIDs = [occupantsIDs componentsSeparatedByString:@","];
-//
-//    return chatDialog;
-//}
-
 /** Only for Group dialogs */
 
 //- (void)updateDialogsLastMessageFields:(QBChatDialog *)dialog forLastMessage:(QBChatMessage *)message
@@ -277,17 +234,6 @@
 //    //        dialog.unreadMessageCount +=1;
 //    //    }
 //}
-
-//- (QBChatDialog *)createPrivateDialogWithOpponentID:(NSString *)opponentID message:(QBChatMessage *)message
-//{
-//    QBChatDialog *newDialog = [QBChatDialog new];
-//    newDialog.type = QBChatDialogTypePrivate;
-//    newDialog.occupantIDs = @[ opponentID];  // occupant ID
-//    [self updateDialogsLastMessageFields:newDialog forLastMessage:message];
-//
-//    return newDialog;
-//}
-
 
 //- (NSMutableDictionary *)dialogsAsDictionaryFromDialogsArray:(NSArray *)array
 //{

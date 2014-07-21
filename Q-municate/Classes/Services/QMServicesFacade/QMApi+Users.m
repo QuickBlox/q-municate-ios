@@ -24,10 +24,9 @@
         pagedRequest.page = 1;
         pagedRequest.perPage = filteredIDs.count < 100 ? filteredIDs.count : 100;
         
-        @weakify(self)
+        __weak __typeof(self)weakSelf = self;
         [self.usersService retrieveUsersWithIDs:filteredIDs pagedRequest:pagedRequest completion:^(QBUUserPagedResult *pagedResult) {
-            @strongify(self)
-            [self addUsers:pagedResult.users];
+            [weakSelf addUsers:pagedResult.users];
             completion(YES);
         }];
     }
@@ -97,6 +96,16 @@
     }
     
     return [idsToFetch allObjects];
+}
+
+- (NSArray *)idsWithUsers:(NSArray *)users {
+
+    NSMutableSet *ids = [NSMutableSet set];
+    for (QBUUser *user in users) {
+        NSString *userID = [NSString stringWithFormat:@"%d", user.ID];
+        [ids addObject:userID];
+    }
+    return [ids allObjects];
 }
 
 - (NSArray *)idsFromContactListItems {

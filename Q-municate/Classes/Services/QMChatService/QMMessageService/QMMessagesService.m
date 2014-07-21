@@ -93,8 +93,9 @@ NSString const* kQMMsgCustomParamDateSent = @"date_sent";
 
 - (void)messagesWithDialogID:(NSString *)dialogID completion:(QBChatHistoryMessageResultBlock)completion {
     
+    __weak __typeof(self)weakSelf = self;
     QBChatHistoryMessageResultBlock echoObject = ^(QBChatHistoryMessageResult *result) {
-        [self setMessages:result.messages.count ? result.messages.mutableCopy : @[].mutableCopy withDialogID:dialogID];
+        [weakSelf setMessages:result.messages.count ? result.messages.mutableCopy : @[].mutableCopy withDialogID:dialogID];
         completion(result);
     };
     

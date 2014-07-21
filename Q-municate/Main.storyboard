@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RkR-TS-K9a">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RkR-TS-K9a">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -2467,7 +2467,7 @@
                     <navigationItem key="navigationItem" title="Group Details" id="RL1-RR-8fj">
                         <barButtonItem key="rightBarButtonItem" image="add-participants" id="aRg-RO-SEj">
                             <connections>
-                                <segue destination="HGR-Mg-6Ip" kind="push" id="xux-Ei-grh"/>
+                                <segue destination="HGR-Mg-6Ip" kind="push" identifier="QMAddMembersToGroupController" id="xux-Ei-grh"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -2829,8 +2829,8 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="MwZ-5e-1h3"/>
         <segue reference="Gs8-3F-TjX"/>
+        <segue reference="MwZ-5e-1h3"/>
         <segue reference="VIK-5Z-bdZ"/>
         <segue reference="sPU-d9-maS"/>
         <segue reference="M45-HY-t12"/>

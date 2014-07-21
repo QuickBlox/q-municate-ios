@@ -14,9 +14,10 @@
 @interface QMChatCell : UITableViewCell
 
 @property (strong, nonatomic) UIView *containerView;
-@property (strong, nonatomic) UIImage *userImage;
+@property (strong, nonatomic) QBUUser *user;
 @property (strong, nonatomic) UIImage *balloonImage;
 @property (strong, nonatomic) UIColor *balloonTintColor;
+@property (strong, nonatomic) UIView *headerView;
 @property (strong, nonatomic, readonly) UIImageView *balloonImageView;
 @property (strong, nonatomic) QMMessage *message;
 @property (nonatomic, getter = isHiddenUserImage) BOOL hideUserImage; //Default NO

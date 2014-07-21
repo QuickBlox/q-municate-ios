@@ -8,8 +8,8 @@
 
 #import "QMChatLayoutConfigs.h"
 
-const CGFloat kQMMessageMaxWidth = 200;
-const CGFloat kQMMessageMinWidth = 15;
+const CGFloat kQMMessageMaxWidth = 250;
+const CGFloat kQMMessageMinWidth = 150;
 
 struct QMChatBalloon QMChatBalloonNull = {
     
@@ -26,13 +26,13 @@ struct QMMessageLayout QMMessageQmunicateLayout = {
         .bottom = 5,
         .right = 5,
     },
-    
+    .titleHeight = 15,
     .messageMaxWidth = kQMMessageMaxWidth,
-    
+    .messageMinWidth = kQMMessageMinWidth,
     .userImageSize = (CGSize){36,36},
     
     .fontName = @"HelveticaNeue",
-    .fontSize = 15,
+    .fontSize = 12,
 
     .leftBalloon = {
         .imageName = @"qm_balloon_left",
@@ -60,7 +60,6 @@ struct QMMessageLayout QMMessageBubbleLayout = {
     
     .messageMaxWidth = kQMMessageMaxWidth,
     .messageMinWidth = kQMMessageMinWidth,
-    
     .userImageSize = (CGSize){40,40},
     
     .fontName = @"HelveticaNeue-UltraLight",
@@ -89,7 +88,6 @@ struct QMMessageLayout QMMessageAttachmentLayout = {
     },
     
     .messageMaxWidth = kQMMessageMaxWidth,
-    .messageMinWidth = kQMMessageMinWidth,
 
     .userImageSize = (CGSize){36,36},
     

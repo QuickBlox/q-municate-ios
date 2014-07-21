@@ -85,16 +85,12 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
         
         UIFont *font = UIFontFromQMMessageLayout(self.layout);
         
-        CGFloat textWidth = layout.messageMaxWidth - layout.userImageSize.width - insets.left - insets.right;
+        CGFloat textWidth = layout.messageMaxWidth - layout.userImageSize.width - insets.left - insets.right - layout.messageMargin.right - layout.messageMargin.left;
         
         contentSize = [self.text usedSizeForWidth:textWidth
                                              font:font
                                    withAttributes:self.attributes];
-        if (layout.messageMinWidth > 0) {
-            if (contentSize.width < layout.messageMinWidth) {
-                contentSize.width = layout.messageMinWidth;
-            }
-        }
+        
     }
     
     layout.contentSize = contentSize;   //Set Content size
@@ -105,7 +101,7 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
      */
     CGSize messageSize = contentSize;
     
-    messageSize.height += layout.messageMargin.top + layout.messageMargin.bottom + insets.top + insets.bottom;
+    messageSize.height += layout.messageMargin.top + layout.messageMargin.bottom + insets.top + insets.bottom + layout.titleHeight;
     messageSize.width += layout.messageMargin.left + layout.messageMargin.right;
     
     if (!CGSizeEqualToSize(layout.userImageSize, CGSizeZero)) {

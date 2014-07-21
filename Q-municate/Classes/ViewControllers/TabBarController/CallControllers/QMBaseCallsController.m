@@ -30,20 +30,14 @@
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     self.opponentsView.backgroundColor = [UIColor clearColor];
     [self.contentView updateViewWithUser:self.opponent];
 }
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
@@ -73,36 +67,27 @@
     }];
 }
 
-
 #pragma mark - Override actions
 
-- (void)startCall
-{
-    // Override this method in child:
-}
+// Override this method in child:
+- (void)startCall{}
 
-- (void)confirmCall
-{
+// Override this method in child:
+- (void)confirmCall {
     [[QMApi instance] acceptCallFromUser:self.opponent.ID opponentView:self.opponentsView];
-    // Override this method in child:
 }
 
-- (IBAction)leftControlTapped:(id)sender
-{
-    // Override this method in child:
-}
+// Override this method in child:
+- (IBAction)leftControlTapped:(id)sender {}
 
-- (IBAction)rightControlTapped:(id)sender
-{
-    // Override this method in child:
-}
+// Override this method in child:
+- (IBAction)rightControlTapped:(id)sender {}
 
-- (IBAction)stopCallTapped:(id)sender
-{
+- (IBAction)stopCallTapped:(id)sender {
+
     [[QMApi instance] finishCall];
     
     [self.contentView updateViewWithStatus:kCallWasStoppedByUserStatus];
-    
     // stop playing sound:
     [[QMSoundManager shared] stopAllSounds];
     
@@ -111,21 +96,18 @@
     [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:2.0f];
 }
 
-
 #pragma mark - Calls notifications
 
-- (void)callAcceptedByUser
-{
-    // Override this method in child:
+// Override this method in child:
+- (void)callAcceptedByUser {
 }
 
-- (void)callStartedWithUser
-{
-    // Override this method in child:
+// Override this method in child:
+- (void)callStartedWithUser {
 }
 
-- (void)callRejectedByUser
-{
+- (void)callRejectedByUser {
+    
     self.opponentsView.hidden = YES;
     
     [self.contentView updateViewWithStatus:kUserIsBusyStatus];
@@ -134,11 +116,9 @@
     [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:2.0f];
 }
 
-- (void)callStoppedByOpponentForReason:(NSString *)reason
-{
-#warning Refactor this:
-    self.opponentsView.hidden = YES;
+- (void)callStoppedByOpponentForReason:(NSString *)reason {
     
+    self.opponentsView.hidden = YES;
     // stop playing sound:
     [[QMSoundManager shared] stopAllSounds];
 
@@ -159,8 +139,8 @@
     [self dismissCallsController];
 }
 
-- (void)dismissCallsController
-{
+- (void)dismissCallsController {
+    
     [[QMSoundManager shared] stopAllSounds];
     
     if (_isOpponentCaller) {
@@ -168,6 +148,7 @@
         [delegate.incomingCallService hideIncomingCallControllerWithStatus:nil];
         return;
     }
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

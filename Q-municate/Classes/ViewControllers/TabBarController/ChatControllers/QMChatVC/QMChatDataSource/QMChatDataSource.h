@@ -19,7 +19,6 @@
 - (id)init __attribute__((unavailable("init is not a supported initializer for this class.")));
 
 - (instancetype)initWithChatDialog:(QBChatDialog *)dialog forTableView:(UITableView *)tableView;
-- (id)opponent;
 - (void)scrollToBottomAnimated:(BOOL)animated;
 - (void)sendImage:(UIImage *)image;
 - (void)sendMessage:(NSString *)text;

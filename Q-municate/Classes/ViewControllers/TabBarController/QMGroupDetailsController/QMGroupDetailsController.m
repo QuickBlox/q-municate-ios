@@ -13,6 +13,8 @@
 #import "QMApi.h"
 #import "QMChatReceiver.h"
 
+NSString *const kQMAddMembersToGroupControllerID = @"QMAddMembersToGroupController";
+
 @interface QMGroupDetailsController ()
 
 <UITableViewDelegate>
@@ -22,9 +24,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *occupantsCountLabel;
 @property (weak, nonatomic) IBOutlet UILabel *onlineOccupantsCountLabel;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-
 @property (strong, nonatomic) QBChatRoom *chatRoom;
-
 @property (strong, nonatomic) QMGroupDetailsDataSource *dataSource;
 
 @end
@@ -37,20 +37,17 @@
     self.dataSource = [[QMGroupDetailsDataSource alloc] initWithChatDialog:self.chatDialog tableView:self.tableView];
     [self subscribeToNotifications];
     
-    self.chatRoom = [[QMApi instance] roomWithRoomJID:self.chatDialog.roomJID];
+    self.chatRoom = [[QMApi instance] chatRoomWithRoomJID:self.chatDialog.roomJID];
     [self.chatRoom requestOnlineUsers];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    // show chat dialog getails on view:
-    [self showQBChatDialogDetails:self.chatDialog];
+    [self updateGUIWithChatDialog:self.chatDialog];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -67,10 +64,9 @@
     }];
 }
 
-- (void)showQBChatDialogDetails:(QBChatDialog *)chatDialog {
+- (void)updateGUIWithChatDialog:(QBChatDialog *)chatDialog {
     
     if (chatDialog != nil && chatDialog.type == QBChatDialogTypeGroup) {
-        
         // set group name:
         self.groupNameField.text = chatDialog.name;
         // numb of participants:
@@ -83,40 +79,39 @@
 }
 
 - (void)subscribeToNotifications {
+
+    __weak __typeof(self)weakSelf = self;
     
     [[QMChatReceiver instance] chatRoomDidReceiveListOfOnlineUsersWithTarget:self block:^(NSArray *users, NSString *roomName) {
-        // update online participants count:
-        NSString *onlineUsersCountText = [NSString stringWithFormat:@"%d/%d online", users.count, self.chatDialog.occupantIDs.count];
-        self.onlineOccupantsCountLabel.text = onlineUsersCountText;
+        NSString *onlineUsersCountText = [NSString stringWithFormat:@"%d/%d online", users.count, weakSelf.chatDialog.occupantIDs.count];
+        weakSelf.onlineOccupantsCountLabel.text = onlineUsersCountText;
     }];
 }
 
-//- (void)chatDialogWasUpdated:(NSNotification *)notification {
-//    
-//    NSString *roomJID = notification.userInfo[@"room_jid"];
-////    QBChatDialog *updatedDialog = [QMChatService shared].allDialogsAsDictionary[roomJID];
-////    self.chatDialog = updatedDialog;
-//    
-//    // update UI:
-//    [self showQBChatDialogDetails:self.chatDialog];
-//    [self updateDataSource];
-//    
-//    // request online users statuses:
-//    [self.chatRoom requestOnlineUsers];
-//}
+- (void)chatDialogWasUpdated:(NSNotification *)notification {
+    
+//    QBChatDialog *updatedDialog = [QMChatService shared].allDialogsAsDictionary[roomJID];
+//    self.chatDialog = updatedDialog;
+    
+    // update UI:
+    [self updateGUIWithChatDialog:self.chatDialog];
+    [self updateDataSource];
+    
+    // request online users statuses:
+    [self.chatRoom requestOnlineUsers];
+}
 
 - (void)updateDataSource {
-    
-    _dataSource = [[QMGroupDetailsDataSource alloc] initWithChatDialog:self.chatDialog tableView:self.tableView];
-    self.tableView.dataSource = _dataSource;
+    self.dataSource = [[QMGroupDetailsDataSource alloc] initWithChatDialog:self.chatDialog tableView:self.tableView];
 }
 
 #pragma mark - Segue
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    if ([segue.destinationViewController isKindOfClass:QMAddMembersToGroupController.class]) {
-        ((QMAddMembersToGroupController *)segue.destinationViewController).chatDialog = self.chatDialog;
+    if ([segue.identifier isEqualToString:kQMAddMembersToGroupControllerID]) {
+        QMAddMembersToGroupController *addMembersVC = segue.destinationViewController;
+        addMembersVC.chatDialog = self.chatDialog;
     }
 }
 

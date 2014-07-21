@@ -19,34 +19,31 @@
 @implementation QMIncomingCallService
 
 
-- (id)init
-{
+- (id)init {
+    
     if (self= [super init]) {
 
         self.dateFormatter = [[NSDateFormatter alloc] init];
-        [self.dateFormatter setLocale:[NSLocale currentLocale]];
-        [self.dateFormatter setDateFormat:@"HH':'mm"];
-        [self.dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
-        
-        self.incomingCallController = nil;
+        self.dateFormatter.locale = [NSLocale currentLocale];
+        self.dateFormatter.dateFormat = @"HH':'mm";
+        self.dateFormatter.timeZone = [NSTimeZone localTimeZone];
         
         [self subscribeToNotifications];
     }
     return self;
 }
 
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+- (void)dealloc {
+    [[QMChatReceiver instance] unsubsribeForTarget:self];
 }
 
-- (void)showIncomingCallControllerWithOpponentID:(NSUInteger)opponentID conferenceType:(QBVideoChatConferenceType)conferenceType
-{
-    if (!self.incomingCallController) {
-            self.incomingCallController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallIdentifier];
+- (void)showIncomingCallControllerWithOpponentID:(NSUInteger)opponentID conferenceType:(QBVideoChatConferenceType)conferenceType {
+    
+    if (!_incomingCallController) {
+            _incomingCallController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallIdentifier];
         }
-        self.incomingCallController.opponentID = opponentID;
-        self.incomingCallController.callType = conferenceType;
+        _incomingCallController.opponentID = opponentID;
+        _incomingCallController.callType = conferenceType;
     
     [self.root presentViewController:self.incomingCallController animated:NO completion:nil];
 }
@@ -55,7 +52,7 @@
 {
     __weak typeof(self) weakSelf = self;
     
-    [[QMChatReceiver instance]chatAfrerDidReceiveCallRequestCustomParametesrWithTarget:self block:^(NSUInteger userID, NSString *sessionID, QBVideoChatConferenceType conferenceType, NSDictionary *customParameters) {
+    [[QMChatReceiver instance] chatAfrerDidReceiveCallRequestCustomParametesrWithTarget:self block:^(NSUInteger userID, NSString *sessionID, QBVideoChatConferenceType conferenceType, NSDictionary *customParameters) {
         [weakSelf showIncomingCallControllerWithOpponentID:userID conferenceType:conferenceType];
     }];
     
@@ -72,18 +69,13 @@
     return [[UIApplication sharedApplication].delegate.window rootViewController];
 }
 
-- (void)dismissIncomingCallController {
+- (void)hideIncomingCallControllerWithStatus:(NSString *)status {
     
-    if (self.incomingCallController) {
-        [self.root dismissViewControllerAnimated:NO completion:^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.incomingCallController dismissViewControllerAnimated:YES completion:^{
             self.incomingCallController = nil;
         }];
-    }
-}
-
-- (void)hideIncomingCallControllerWithStatus:(NSString *)status
-{
-    [self performSelector:@selector(dismissIncomingCallController) withObject:self afterDelay:2.0f];
+    });
 }
 
 @end

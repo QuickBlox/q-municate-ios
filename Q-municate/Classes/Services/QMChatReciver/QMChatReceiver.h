@@ -43,7 +43,7 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 
 + (instancetype)instance;
 
-- (void)unsubsribeWithTarget:(id)target;
+- (void)unsubsribeForTarget:(id)target;
 /**
  ChatService
  */

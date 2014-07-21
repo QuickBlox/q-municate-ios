@@ -39,7 +39,8 @@
     self.searchBar.delegate = self;
     [self showSearchBar:NO animated:NO];
 
-    [[QMApi instance] fetchAllDialogs:^{}];
+
+    [[QMApi instance] fetchAllHistory];
 }
 
 #pragma mark - Actions

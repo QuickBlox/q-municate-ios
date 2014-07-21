@@ -33,6 +33,7 @@
 @property (strong, atomic) QBUUser *currentUser;
 
 + (instancetype)instance;
+- (void)fetchAllHistory;
 - (BOOL)checkResult:(Result *)result;
 - (void)cleanUp;
 
@@ -64,9 +65,11 @@
 /**
  */
 - (void)updateUser:(QBUUser *)user completion:(void(^)(BOOL success))completion;
+
 /**
  */
 - (void)changePasswordForCurrentUser:(QBUUser *)currentUser completion:(void(^)(BOOL success))completion;
+
 /**
  */
 - (void)resetUserPassordWithEmail:(NSString *)email completion:(void(^)(BOOL success))completion;
@@ -90,7 +93,8 @@
 
 @interface QMApi (ChatDialogs)
 
-@property (strong, nonatomic, readonly) NSMutableArray *dialogs;
+- (NSArray *)dialogHistory;
+- (NSArray *)allOccupantIDsFromDialogsHistory;
 
 /**
  Get all dialogs for current user
@@ -139,11 +143,8 @@
  */
 - (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
 
-- (NSString *)occupantIDForPrivateChatDialog:(QBChatDialog *)chatDialog;
-
-- (QBChatDialog *)privateDialogWithOpponentID:(NSUInteger)opponentID;
-
-- (QBChatRoom *)roomWithRoomJID:(NSString *)roomJID;
+- (NSUInteger)occupantIDForPrivateChatDialog:(QBChatDialog *)chatDialog;
+- (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID;
 
 @end
 
@@ -152,6 +153,7 @@
 
 @property (strong, nonatomic, readonly) NSArray *friends;
 
+- (NSArray *)idsWithUsers:(NSArray *)users;
 - (void)addUser:(QBUUser *)user;
 - (void)addUsers:(NSArray *)users;
 - (QBUUser *)userWithID:(NSUInteger)userID;
@@ -172,6 +174,12 @@
  */
 - (BOOL)removeUserFromContactListWithUserID:(NSUInteger)userID;
 
+/**
+ Confirm add to contact list request
+ 
+ @param userID ID of user from which you would like to confirm add to contact request
+ @return YES if the request was sent successfully. If not - see log.
+ */
 - (BOOL)confirmAddContactRequest:(NSUInteger)userID;
 
 - (BOOL)rejectAddContactRequest:(NSUInteger)userID;
@@ -193,6 +201,9 @@
 
 @end
 
+/**
+ Facebook interface
+ */
 @interface QMApi (Facebook)
 
 - (void)fbLogout;
@@ -202,9 +213,9 @@
 
 @end
 
-
-
-/** Calls interface */
+/** 
+ Calls interface 
+ */
 @interface QMApi (Calls)
 
 - (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView conferenceType:(QBVideoChatConferenceType)conferenceType;

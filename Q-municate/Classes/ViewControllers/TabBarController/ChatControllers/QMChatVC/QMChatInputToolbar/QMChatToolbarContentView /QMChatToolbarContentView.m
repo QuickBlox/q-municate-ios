@@ -35,7 +35,7 @@
     if (self) {
         
         [self configureChatToolbarContentView];
-       
+        
         self.leftBarButtonItem = nil;
         self.rightBarButtonItem = nil;
         
@@ -89,27 +89,19 @@
     self.rightBarButtonContainerViewWidthConstraint= PVWidthOf(rView).equalTo.constant(26).asConstraint;
     
     [self
-     addConstraints:PVGroup(@[ PVLeftOf(lView).equalTo.leftOf(self).plus(margin).asConstraint,
-                                    PVLeftOf(cView).equalTo.rightOf(lView).plus(margin).asConstraint,
-                                    PVRightOf(cView).equalTo.leftOf(rView).minus(margin).asConstraint,
-                                    PVRightOf(rView).equalTo.rightOf(self).minus(margin).asConstraint,
-                                    /*Boottom*/
-                                    PVBottomOf(lView).equalTo.bottomOf(self).minus(margin).asConstraint,
-                                    PVBottomOf(cView).equalTo.bottomOf(self).minus(margin).asConstraint,
-                                    PVBottomOf(rView).equalTo.bottomOf(self).minus(margin).asConstraint,
-                                    self.rightBarButtonContainerViewWidthConstraint,
-                                    self.leftBarButtonContainerViewWidthConstraint,
-                               
-                                    PVHeightOf(rView).equalTo.constant(32).asConstraint,
-                                    PVHeightOf(lView).equalTo.constant(32).asConstraint,
-                               
-                                    /*Top*/
-                                    PVTopOf(cView).equalTo.topOf(self).plus(margin).asConstraint]).asArray];
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
+     addConstraints:PVGroup(@[
+                              PVLeftOf(lView).equalTo.leftOf(self).plus(margin).asConstraint,
+                              PVLeftOf(cView).equalTo.rightOf(lView).plus(margin).asConstraint,
+                              PVRightOf(cView).equalTo.leftOf(rView).minus(margin).asConstraint,
+                              PVRightOf(rView).equalTo.rightOf(self).minus(margin).asConstraint,
+                              PVBottomOf(lView).equalTo.bottomOf(self).minus(margin).asConstraint,
+                              PVBottomOf(cView).equalTo.bottomOf(self).minus(margin).asConstraint,
+                              PVBottomOf(rView).equalTo.bottomOf(self).minus(margin).asConstraint,
+                              self.rightBarButtonContainerViewWidthConstraint,
+                              self.leftBarButtonContainerViewWidthConstraint,
+                              PVHeightOf(rView).equalTo.constant(32).asConstraint,
+                              PVHeightOf(lView).equalTo.constant(32).asConstraint,
+                              PVTopOf(cView).equalTo.topOf(self).plus(margin).asConstraint]).asArray];
 }
 
 #pragma mark - Setters

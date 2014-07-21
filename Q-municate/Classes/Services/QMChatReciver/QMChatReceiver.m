@@ -58,7 +58,7 @@
     return self;
 }
 
-- (void)unsubsribeWithTarget:(id)target {
+- (void)unsubsribeForTarget:(id)target {
     
     NSArray *allHendlers = [self.handlerList allValues];
     

@@ -18,6 +18,7 @@
 @implementation QMChatService
 
 - (void)start {
+    
     [QBChat instance].delegate = [QMChatReceiver instance];
     NSAssert(self.presenceTimer == nil, @"Need Update this case");
     self.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:30

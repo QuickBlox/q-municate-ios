@@ -15,11 +15,14 @@
     // NSString class method: boundingRectWithSize:options:attributes:context is
     // available only on ios7.0 sdk.
     CGRect frame = [self boundingRectWithSize:CGSizeMake(width, CGFLOAT_MAX)
-                                              options:NSStringDrawingUsesLineFragmentOrigin
+                                              options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
                                            attributes:@{NSFontAttributeName: font}
                                               context:nil];
+    CGSize size = frame.size;
+    size.height = ceilf(size.height) +1;
+    size.width = ceilf(size.width);
     
-    return frame.size;
+    return size;
 }
 
 @end

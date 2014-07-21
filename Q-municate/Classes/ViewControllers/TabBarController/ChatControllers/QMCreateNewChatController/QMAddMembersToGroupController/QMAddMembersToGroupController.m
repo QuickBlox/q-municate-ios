@@ -29,11 +29,10 @@
 
 
 - (IBAction)performAction:(id)sender {
-    // update current dialog:
-    @weakify(self)
+    
+    __weak __typeof(self)weakSelf = self;
     [[QMApi instance] joinOccupants:self.selectedFriends toChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
-        @strongify(self)
-        [self.navigationController popViewControllerAnimated:YES];
+        [weakSelf.navigationController popViewControllerAnimated:YES];
         
     }];
 }

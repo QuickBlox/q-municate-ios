@@ -20,13 +20,6 @@
 #import "REAlertView+QMSuccess.h"
 #import "QMChatReceiver.h"
 
-@interface QMApi()
-
-@property (strong, nonatomic) NSMutableArray *dialogs;
-@property (strong, nonatomic) NSMutableDictionary *privateDialogs;
-@property (strong, nonatomic) NSMutableDictionary *chatRooms;
-
-@end
 
 @implementation QMApi
 
@@ -52,24 +45,16 @@
         
         self.chatService = [[QMChatService alloc] init];
         self.authService = [[QMAuthService alloc] init];
-
         self.usersService = [[QMUsersService alloc] init];
-        [self.usersService start];
-        
+        self.chatDialogsService = [[QMChatDialogsService alloc] init];
+        self.messagesService = [[QMMessagesService alloc] init];
         self.settingsManager = [[QMSettingsManager alloc] init];
         self.facebookService = [[QMFacebookService alloc] init];
         self.avCallService = [[QMAVCallService alloc] init];
-        self.chatDialogsService = [[QMChatDialogsService alloc] init];
         
-        self.messagesService = [[QMMessagesService alloc] init];
+        [self.usersService start];
+        [self.chatDialogsService start];
         [self.messagesService start];
-        /**
-         TODO:temp
-         */
-        
-        self.dialogs = [NSMutableArray array];
-        self.privateDialogs = [NSMutableDictionary dictionary];
-        self.chatRooms = [NSMutableDictionary dictionary];
     }
     
     return self;
@@ -79,10 +64,25 @@
     
     [self.usersService destroy];
     [self.chatService destroy];
+    [self.chatDialogsService destroy];
+}
+
+- (void)fetchAllHistory {
+
+    /**
+     Feach Dialogs
+     */
+    __weak __typeof(self)weakSelf = self;
+    [self fetchAllDialogs:^{
+        
+        NSArray *allOccupantIDs = [weakSelf allOccupantIDsFromDialogsHistory];
+        
+        [weakSelf retrieveUsersWithIDs:allOccupantIDs completion:^(BOOL updated) {
+            NSLog(@"");
+        }];
+        
+    }];
     
-    [self.dialogs removeAllObjects];
-    [self.privateDialogs removeAllObjects];
-    [self.chatRooms removeAllObjects];
 }
 
 - (BOOL)checkResult:(Result *)result {

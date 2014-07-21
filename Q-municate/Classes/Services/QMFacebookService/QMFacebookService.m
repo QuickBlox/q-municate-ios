@@ -9,10 +9,6 @@
 #import "QMFacebookService.h"
 #import "REAlertView+QMSuccess.h"
 
-@interface QMFacebookService ()
-
-@end
-
 @implementation QMFacebookService
 
 NSString *const kQMQuickbloxHomeUrl = @"http://quickblox.com";
@@ -235,7 +231,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
                sessionBlock:(void(^)(NSString *sessionToken))sessionBlock  {
     
     // If the session was opened successfully
-    if (![self isLoggedIn] && error) {
+    if (![self isLoggedIn] || error) {
         
         NSString *alertText;
         
@@ -260,13 +256,18 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
                 // For simplicity, here we just show a generic message for all other errors
                 // You can learn how to handle other errors using our guide: https://developers.facebook.com/docs/ios/errors
             } else {
-                //Get more error information from the error
-                NSDictionary *errorInformation =
-                [[[error.userInfo objectForKey:@"com.facebook.sdk:ParsedJSONResponseKey"] objectForKey:@"body"] objectForKey:@"error"];
                 
-                // Show the user an error message
-                alertText = [NSString stringWithFormat:@"Please retry. \n\n If the problem persists contact us and mention this error code: %@",
-                             [errorInformation objectForKey:@"message"]];
+                if (error) {
+                    //Get more error information from the error
+                    NSDictionary *errorInformation =
+                    [[[error.userInfo objectForKey:@"com.facebook.sdk:ParsedJSONResponseKey"] objectForKey:@"body"] objectForKey:@"error"];
+                    
+                    // Show the user an error message
+                    alertText = [NSString stringWithFormat:@"Please retry. \n\n If the problem persists contact us and mention this error code: %@",
+                                 [errorInformation objectForKey:@"message"]];
+                } else {
+                     shouldNotify = NO;
+                }
             }
         }
         

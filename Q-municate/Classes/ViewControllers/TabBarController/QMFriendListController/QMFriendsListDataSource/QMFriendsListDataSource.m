@@ -48,11 +48,10 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
         
         self.searchList = [NSArray array];
         
-        @weakify(self)
+        __weak __typeof(self)weakSelf = self;
         void(^retrive)(void) = ^() {
             [[QMApi instance] retrieveFriendsIfNeeded:^(BOOL updated) {
-                @strongify(self)
-                [self reloadDatasource];
+                [weakSelf reloadDatasource];
             }];
         };
                 

@@ -35,6 +35,7 @@ typedef struct QMMessageLayout {
     
     CGFloat messageMaxWidth;
     CGFloat messageMinWidth;
+    CGFloat titleHeight;
     
     CGSize contentSize;
     
@@ -45,6 +46,7 @@ typedef struct QMMessageLayout {
     
     QMChatBalloon leftBalloon;
     QMChatBalloon rightBalloon;
+    
     
 } QMMessageLayout;
 

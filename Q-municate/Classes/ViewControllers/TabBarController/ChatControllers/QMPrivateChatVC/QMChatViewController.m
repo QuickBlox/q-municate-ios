@@ -2,7 +2,7 @@
 //  QMChatViewController.m
 //  Q-municate
 //
-//  Created by Igor Alefirenko on 01/04/2014.
+//  Created by Ivanov Andrey on 01/04/2014.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -23,8 +23,12 @@
     [super viewDidLoad];
 
     self.dataSource = [[QMChatDataSource alloc] initWithChatDialog:self.dialog forTableView:self.tableView];
-    (self.dialog.type == QBChatDialogTypeGroup) ? [self configureNavigationBarForGroupChat] : [self configureNavigationBarForPrivateChat];
- 
+    self.dialog.type == QBChatDialogTypeGroup ? [self configureNavigationBarForGroupChat] : [self configureNavigationBarForPrivateChat];
+    [self setChatTitleWithChatDialog:self.dialog];
+}
+
+- (void)setChatTitleWithChatDialog:(QBChatDialog *)chatDialog {
+    self.title = chatDialog.name;
 }
 
 - (void)configureNavigationBarForPrivateChat {
@@ -73,17 +77,16 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-//    if ([segue.identifier isEqualToString:kVideoCallSegueIdentifier]) {
-//
-//    } else if ([segue.identifier isEqualToString:kAudioCallSegueIdentifier]) {
-//        
-//    } else
     if ([segue.identifier isEqualToString:kGroupDetailsSegueIdentifier]) {
     
         QMGroupDetailsController *groupDetailVC = segue.destinationViewController;
         groupDetailVC.chatDialog = self.dialog;
-    } else {
-        QBUUser *opponent = [self.dataSource opponent];
+    }
+    else {
+        
+        NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
+        QBUUser *opponent = [[QMApi instance] userWithID:opponentID];
+        
         QMBaseCallsController *callsController = segue.destinationViewController;
         [callsController setOpponent:opponent];
     }
