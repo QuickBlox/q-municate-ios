@@ -64,6 +64,7 @@ typedef void (^QBUUserLogInResultBlock)(QBUUserLogInResult *result);
 typedef void (^QBAAuthSessionCreationResultBlock)(QBAAuthSessionCreationResult *result);
 typedef void (^QBUUserPagedResultBlock)(QBUUserPagedResult *pagedResult);
 typedef void (^QBMRegisterSubscriptionTaskResultBlock)(QBMRegisterSubscriptionTaskResult *result);
+typedef void (^QBMUnregisterSubscriptionTaskResultBlock)(QBMUnregisterSubscriptionTaskResult *result);
 typedef void (^QBDialogsPagedResultBlock)(QBDialogsPagedResult *result);
 typedef void (^QBChatDialogResultBlock)(QBChatDialogResult *result);
 typedef void (^QBChatHistoryMessageResultBlock)(QBChatHistoryMessageResult *result);

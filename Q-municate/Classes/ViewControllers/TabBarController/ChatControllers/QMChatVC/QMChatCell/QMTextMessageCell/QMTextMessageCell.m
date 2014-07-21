@@ -11,7 +11,7 @@
 
 @interface QMTextMessageCell()
 
-@property (strong, nonatomic) UITextView *textView;
+@property (strong, nonatomic) UILabel *textView;
 @property (strong, nonatomic) UILabel *userName;
 @property (strong, nonatomic) UILabel *timeLabel;
 @property (strong, nonatomic) UIFont *font;
@@ -25,22 +25,24 @@
     
     [super createContainerSubviews];
     
-    self.textView = [[UITextView alloc] init];
+    self.textView = [[UILabel alloc] init];
     self.textView.backgroundColor = [UIColor clearColor];
-    self.textView.editable = NO;
-    self.textView.selectable = YES;
-    self.textView.userInteractionEnabled = YES;
-    self.textView.dataDetectorTypes = UIDataDetectorTypeNone;
-    self.textView.showsHorizontalScrollIndicator = NO;
-    self.textView.showsVerticalScrollIndicator = NO;
-    self.textView.scrollEnabled = NO;
-    self.textView.textContainer.lineFragmentPadding = 0;
-    self.textView.scrollIndicatorInsets = UIEdgeInsetsZero;
-    self.textView.textContainerInset = UIEdgeInsetsZero;
-    self.textView.linkTextAttributes = @{
-                                         NSForegroundColorAttributeName : [UIColor whiteColor],
-                                         NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid)
-                                         };
+    self.textView.numberOfLines = 0;
+
+//    self.textView.editable = NO;
+//    self.textView.selectable = YES;
+//    self.textView.userInteractionEnabled = YES;
+//    self.textView.dataDetectorTypes = UIDataDetectorTypeNone;
+//    self.textView.showsHorizontalScrollIndicator = NO;
+//    self.textView.showsVerticalScrollIndicator = NO;
+//    self.textView.scrollEnabled = NO;
+//    self.textView.textContainer.lineFragmentPadding = 0;
+//    self.textView.scrollIndicatorInsets = UIEdgeInsetsZero;
+//    self.textView.textContainerInset = UIEdgeInsetsZero;
+//    self.textView.linkTextAttributes = @{
+//                                         NSForegroundColorAttributeName : [UIColor whiteColor],
+//                                         NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid)
+//                                         };
     
     
     [self.containerView addSubview:self.textView];
@@ -90,8 +92,8 @@
     [super setMessage:message];
     
     self.textColor = message.textColor;
+    self.font = UIFontFromQMMessageLayout(self.message.layout);
     self.textView.text = message.text;
-    self.textView.font = UIFontFromQMMessageLayout(self.message.layout);
     
     
     self.balloonImage =  message.balloonImage;
@@ -107,9 +109,14 @@
     }
 }
 
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    self.textView.text = nil;
+}
+
 - (void)setFont:(UIFont *)font {
     
-    if ([_font isEqual:font]) {
+    if (![_font isEqual:font]) {
         _font = font;
         self.textView.font = font;
     }

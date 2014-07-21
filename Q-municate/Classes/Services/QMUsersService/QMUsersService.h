@@ -12,7 +12,10 @@
 @interface QMUsersService : NSObject <QMServiceProtocol>
 
 @property (strong, nonatomic) NSMutableArray *contactList;
-@property (strong, nonatomic) NSMutableDictionary *users;
+
+- (void)addUsers:(NSArray *)users;
+- (void)addUser:(QBUUser *)user;
+- (QBUUser *)userWithID:(NSUInteger)userID;
 
 /**
  Retrieve users with facebook ids (max 10 users, for more - use equivalent method with 'pagedRequest' argument)

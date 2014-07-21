@@ -104,15 +104,16 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
 
 - (void)globalSearch {
 
-    @weakify(self)
+    __weak __typeof(self)weakSelf = self;
     QBUUserPagedResultBlock userPagedBlock = ^(QBUUserPagedResult *pagedResult) {
-        @strongify(self)
+
         if (pagedResult.success) {
             
-            NSMutableArray *users = pagedResult.users.mutableCopy;
-            [users removeObject:[QMApi instance].currentUser];
-            self.searchList = [self sortUsersByFullname:users];
-            [self.tableView reloadData];
+            NSArray *users = [weakSelf sortUsersByFullname:pagedResult.users];
+            //Remove current user from search result
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.ID != %d", [QMApi instance].currentUser.ID];
+            weakSelf.searchList = [users filteredArrayUsingPredicate:predicate];
+            [weakSelf.tableView reloadData];
         }
         
         [SVProgressHUD dismiss];

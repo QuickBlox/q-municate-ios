@@ -12,6 +12,7 @@
 #import "TWMessageBarManager.h"
 #import "QMDialogsDataSource.h"
 #import "QMChatReceiver.h"
+#import "QMApi.h"
 
 static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
@@ -33,6 +34,8 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     self.dataSource = [[QMDialogsDataSource alloc] initWithTableView:self.tableView];
     
     [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
+        QBChatDialog *chatDialog = [[QMApi instance] chatDialogWithID:roomJID];
+        
         NSLog(@"chatRoomDidReceiveMessageWithTarget");
     }];
     
@@ -69,6 +72,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
         [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
         
         QBChatDialog *dialog = [self.dataSource dialogAtIndexPath:indexPath];
+        
         QMChatViewController *chatController = segue.destinationViewController;
         chatController.dialog = dialog;
         

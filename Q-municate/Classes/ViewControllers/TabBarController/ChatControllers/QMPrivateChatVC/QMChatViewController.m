@@ -24,15 +24,16 @@
 
     self.dataSource = [[QMChatDataSource alloc] initWithChatDialog:self.dialog forTableView:self.tableView];
     self.dialog.type == QBChatDialogTypeGroup ? [self configureNavigationBarForGroupChat] : [self configureNavigationBarForPrivateChat];
-    [self setChatTitleWithChatDialog:self.dialog];
 }
 
-- (void)setChatTitleWithChatDialog:(QBChatDialog *)chatDialog {
-    self.title = chatDialog.name;
-}
 
 - (void)configureNavigationBarForPrivateChat {
 
+    NSUInteger oponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
+    QBUUser *opponent = [[QMApi instance] userWithID:oponentID];
+
+    self.title = opponent.fullName;
+    
     UIButton *audioButton = [QMChatButtonsFactory audioCall];
     [audioButton addTarget:self action:@selector(audioCallAction) forControlEvents:UIControlEventTouchUpInside];
     
@@ -46,7 +47,8 @@
 }
 
 - (void)configureNavigationBarForGroupChat {
-    
+
+    self.title = self.dialog.name;
     UIButton *groupInfoButton = [QMChatButtonsFactory groupInfo];
     [groupInfoButton addTarget:self action:@selector(groupInfoNavButtonAction) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *groupInfoBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:groupInfoButton];
@@ -54,6 +56,7 @@
 }
 
 - (void)back:(id)sender {
+    
     
 	[self.navigationController popViewControllerAnimated:YES];
 }

@@ -10,11 +10,8 @@
 #import "QMContent.h"
 #import "QBEchoObject.h"
 
-typedef void(^QMContentProgressBlock)(float progress);
 
-typedef void(^QMContentCompetionBlock)(NSError *error);
-
-@interface QMUploadService()
+@interface QMUploadService() 
 
 @property(strong, nonatomic) NSOperationQueue *contentOperationQueue;
 
@@ -33,67 +30,56 @@ typedef void(^QMContentCompetionBlock)(NSError *error);
 
 @end
 
-@interface QMContentOperation : NSOperation
-
-<QBActionStatusDelegate>
-
-@property (copy, nonatomic) QMContentProgressBlock progressBlock;
-@property (copy, nonatomic) QMContentCompetionBlock completion;
-
-@end
-
-@interface QMUploadOperation : QMContentOperation
-
-@end
-
-@interface QMDownloadOperation : QMContentOperation
-
-@end
-
-@implementation QMContentOperation
+@implementation QMContentOperation 
 
 - (void)setProgress:(float)progress {
+    
     if(self.progressBlock)
         self.progressBlock(progress);
 }
-
 
 - (void)completedWithResult:(Result*)result {
 
     NSError *error = nil;
     
     if (!result.success) {
-        
-    }
-    
-    if (self.completion) {
-        self.completion(error);
+        if (self.completion) {
+            self.completion(error);
+        }
     }
 }
 
 @end
 
 @implementation QMDownloadOperation
-- (void)loadImageWithBlobID:(NSUInteger)blobID completion:(QBCFileDownloadTaskResultBlock)completion {
+
+- (void)loadImageWithBlobID:(NSUInteger)blobID {
     [QBContent TDownloadFileWithBlobID:blobID delegate:self];
 }
 
-- (void)uploadImage:(UIImage *)image named:(NSString *)name completion:(QBFileUploadTaskResultBlock)completion {
+@end
+
+@interface QMUploadOperation()
+
+@property (strong, nonatomic) NSData *data;
+@property (strong, nonatomic) NSString *fileName;
+@property (strong, nonatomic) NSString *contentType;
+@property (assign, nonatomic) BOOL public;
+
+@end
+
+@implementation QMUploadOperation
+
+- (instancetype)initWithUploadFile:(NSData *)data fileName:(NSString *)fileName contentType:(NSString *)contentType isPublic:(BOOL)isPublic {
+    self = [super init];
+    if (self) {
     
-    NSData *data = UIImagePNGRepresentation(image);
-    
-    [QBContent TUploadFile:data
-                  fileName:name
-               contentType:@"image/png"
-                  isPublic:YES
-                  delegate:[QBEchoObject instance]
-                   context:[QBEchoObject makeBlockForEchoObject:completion]];
+    }
+    return self;
 }
 
-- (void)uploadUserImageForUser:(QBUUser *)user image:(UIImage *)image withCompletion:(QBFileUploadTaskResultBlock)completion {
-    
-    NSString *fileName = [NSString stringWithFormat:@"PIC_USR_ID_%lu", (unsigned long)user.ID];
-    [self uploadImage:image named:fileName completion:completion];
+- (void)main {
+    [QBContent TUploadFile:self.data fileName:self.fileName contentType:self.contentType isPublic:self.public delegate:self];
 }
 
 @end

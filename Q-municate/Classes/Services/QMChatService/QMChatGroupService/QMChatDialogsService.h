@@ -19,6 +19,7 @@
 - (void)addDialogToHistory:(QBChatDialog *)chatDialog;
 - (void)addDialogs:(NSArray *)dialogs;
 - (QBChatDialog *)privateDialogWithOpponentID:(NSUInteger)opponentID;
+- (QBChatDialog *)chatDialogWithID:(NSString *)dialogID;
 - (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID;
 
 @end

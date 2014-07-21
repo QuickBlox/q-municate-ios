@@ -28,10 +28,9 @@
 
 - (void)setDialog:(QBChatDialog *)dialog {
     
-    self.descriptionLabel.text = dialog.lastMessageText.length > 0 ? dialog.lastMessageText : @"Attachment";
-    
     if (_dialog != dialog) {
         _dialog = dialog;
+        
         [self configureCellWithDialog:dialog];
     }
 }
@@ -39,27 +38,20 @@
 - (void)configureCellWithDialog:(QBChatDialog *)chatDialog {
     
     BOOL isGroup = (chatDialog.type == QBChatDialogTypeGroup);
-
+    self.descriptionLabel.text =  chatDialog.lastMessageText;
     self.groupMembersNumb.hidden = self.groupNumbBackground.hidden = !isGroup;
-    self.unreadMsgBackground.hidden = self.unreadMsgNumb.hidden = (chatDialog.unreadMessageCount == 0);
-    self.unreadMsgNumb.text = [NSString stringWithFormat:@"%d", chatDialog.unreadMessageCount];
+    self.unreadMsgBackground.hidden = self.unreadMsgNumb.hidden = (chatDialog.unreadMessagesCount == 0);
+    self.unreadMsgNumb.text = [NSString stringWithFormat:@"%d", chatDialog.unreadMessagesCount];
     
     if (!isGroup) {
         
-        QBUUser *occupant = nil;
+        NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
+        QBUUser *opponent = [[QMApi instance] userWithID:opponentID];
         
-        for (NSString *ocupantID in chatDialog.occupantIDs) {
-            QBUUser *friend = [[QMApi instance] userWithID:ocupantID.integerValue];
-            if (friend) {
-                occupant = friend;
-                break;
-            }
-        }
-        
-        NSURL *url = [NSURL URLWithString:occupant.website];
+        NSURL *url = [NSURL URLWithString:opponent.website];
         [self setUserImageWithUrl:url];
         
-        self.titleLabel.text = occupant.fullName;
+        self.titleLabel.text = opponent.fullName;
         
     } else {
         

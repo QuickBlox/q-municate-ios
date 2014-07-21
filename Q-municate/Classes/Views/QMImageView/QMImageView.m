@@ -29,14 +29,6 @@ CGFloat kQMUserImageViewSquareCornerRadius = 6;
     return self;
 }
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        [self configure];
-    }
-    return self;
-}
-
 - (id)initWithImage:(UIImage *)image highlightedImage:(UIImage *)highlightedImage NS_AVAILABLE_IOS(3_0) {
     
     self = [super initWithImage:image highlightedImage:highlightedImage];
@@ -54,15 +46,13 @@ CGFloat kQMUserImageViewSquareCornerRadius = 6;
 
 - (void)configure {
     
-    _imageViewType = QMImageViewTypeNone;
+    self.imageViewType = QMImageViewTypeNone;
     self.layer.masksToBounds = YES;
 }
 
 - (void)setImageViewType:(QMImageViewType)imageViewType {
 
     if (_imageViewType != imageViewType) {
-        
-        _imageViewType = imageViewType;
         
         switch (imageViewType) {
                 

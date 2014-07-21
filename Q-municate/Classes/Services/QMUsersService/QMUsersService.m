@@ -12,6 +12,8 @@
 
 @interface QMUsersService()
 
+@property (strong, nonatomic) NSMutableDictionary *users;
+
 @end
 
 @implementation QMUsersService
@@ -28,12 +30,11 @@
 
 - (void)start {
     
-    @weakify(self)
+    __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
-        @strongify(self)
-        [self.contactList removeAllObjects];
-        [self.contactList addObjectsFromArray:contactList.pendingApproval];
-        [self.contactList addObjectsFromArray:contactList.contacts];
+        [weakSelf.contactList removeAllObjects];
+        [weakSelf.contactList addObjectsFromArray:contactList.pendingApproval];
+        [weakSelf.contactList addObjectsFromArray:contactList.contacts];
     }];
 }
 
@@ -43,6 +44,26 @@
     [self.contactList removeAllObjects];
 }
 
+- (QBUUser *)userWithID:(NSUInteger)userID {
+    
+    NSString *stingID = [NSString stringWithFormat:@"%d", userID];
+    QBUUser *user = self.users[stingID];
+    return user;
+}
+
+- (void)addUsers:(NSArray *)users {
+    
+    for (QBUUser *user in users) {
+        [self addUser:user];
+    }
+}
+
+- (void)addUser:(QBUUser *)user {
+    
+    NSString *key = [NSString stringWithFormat:@"%d", user.ID];
+    self.users[key] = user;
+}
+
 #pragma mark - FRIEND LIST ROASTER
 
 - (NSObject<Cancelable> *)retrieveUsersWithFacebookIDs:(NSArray *)facebookIDs completion:(QBUUserPagedResultBlock)completion {
@@ -50,7 +71,6 @@
 }
 
 - (NSObject<Cancelable> *)retrieveUsersWithIDs:(NSArray *)ids pagedRequest:(PagedRequest *)pagedRequest completion:(QBUUserPagedResultBlock)completion {
-    
     NSString *joinedIds = [ids componentsJoinedByString:@","];
     return [QBUsers usersWithIDs:joinedIds pagedRequest:pagedRequest
                         delegate:[QBEchoObject instance]

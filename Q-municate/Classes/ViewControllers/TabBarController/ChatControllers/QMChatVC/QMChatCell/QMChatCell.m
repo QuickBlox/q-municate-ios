@@ -248,6 +248,7 @@
         _user = user;
         NSURL *url = [NSURL URLWithString:user.website];
         UIImage *placeHolder = [UIImage imageNamed:@"upic-placeholder"];
+        self.userImageView.imageViewType = QMImageViewTypeCircle;
         [self.userImageView sd_setImageWithURL:url placeholderImage:placeHolder];
     }
 }

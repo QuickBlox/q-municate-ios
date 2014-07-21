@@ -178,6 +178,10 @@ NSString const *kQMDialogCustomParameterNotificationType = @"notification_type";
     return [self.chatDialogsService chatRoomWithRoomJID:roomJID];
 }
 
+- (QBChatDialog *)chatDialogWithID:(NSString *)dialogID {
+    return [self.chatDialogsService chatDialogWithID:dialogID];
+}
+
 - (NSArray *)allOccupantIDsFromDialogsHistory{
     
     NSArray *allDialogs = self.dialogHistory;
@@ -189,76 +193,5 @@ NSString const *kQMDialogCustomParameterNotificationType = @"notification_type";
     
     return ids.allObjects;
 }
-
-
-
-//- (void)createOrUpdateChatDialogFromChatMessage:(QBChatMessage *)message {
-//
-//    NSInteger notificationType = [message.customParameters[@"notification_type"] intValue];
-//
-//    NSString *occupantsIDs = message.customParameters[@"occupants_ids"];
-//    // if notification type = update dialog:
-//    if (notificationType == 2) {
-//        [self updateChatDialogForChatMessage:message];
-//        return;
-//    }
-//
-//    // if notification type = create dialog:
-//    QBChatDialog *newDialog = [self createChatDialogForChatMessage:message];
-//
-//    // save to history:
-//    if (newDialog.type == QBChatDialogTypePrivate) {
-//        NSString *kSenderID = [NSString stringWithFormat:@"%lu",(unsigned long)message.senderID];
-//#warning updae alldialogsasdictiononary
-//        //        self.allDialogsAsDictionary[kSenderID] = newDialog;
-//        return;
-//    }
-//    // if dialog type = group:
-//#warning updae alldialogsasdictiononary
-//    //self.allDialogsAsDictionary[newDialog.roomJID] = newDialog;
-//
-//    // if user is not joined to room, join:
-//
-//}
-
-/** Only for Group dialogs */
-
-//- (void)updateDialogsLastMessageFields:(QBChatDialog *)dialog forLastMessage:(QBChatMessage *)message
-//{
-//#warning me.iD
-//#warning QMContactList shared
-//    //    dialog.lastMessageDate = message.datetime;
-//    //    dialog.lastMessageText = message.text;
-//    //    dialog.lastMessageUserID = message.senderID;
-//    //    if (message.senderID != [QMContactList shared].me.ID) {
-//    //        dialog.unreadMessageCount +=1;
-//    //    }
-//}
-
-//- (NSMutableDictionary *)dialogsAsDictionaryFromDialogsArray:(NSArray *)array
-//{
-//    NSMutableDictionary *dictionaryOfDialogs = [NSMutableDictionary new];
-//    for (QBChatDialog *dialog in array) {
-//
-//        if (dialog.type != QBChatDialogTypePrivate) {
-//
-//            // save group dialogs by roomJID:
-//            dictionaryOfDialogs[dialog.roomJID] = dialog;
-//            continue;
-//        }
-//#warning me.iD
-//#warning QMContactList shared
-//        //        for (NSString *ID in dialog.occupantIDs) {
-//        //            NSString *meID = [NSString stringWithFormat:@"%lu", (unsigned long)[QMContactList shared].me.ID];
-//        //
-//        //            // if my ID
-//        //            if (![meID isEqualToString:ID]) {
-//        //                dictionaryOfDialogs[ID] = dialog;
-//        //                break;
-//        //            }
-//        //        }
-//    }
-//    return dictionaryOfDialogs;
-//}
 
 @end

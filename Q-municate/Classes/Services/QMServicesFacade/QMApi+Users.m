@@ -9,12 +9,12 @@
 #import "QMApi.h"
 #import "QMUsersService.h"
 
-
 @implementation QMApi (Users)
 
 - (void)retrieveUsersWithIDs:(NSArray *)idsToFetch completion:(void(^)(BOOL updated))completion {
     
     NSArray *filteredIDs = [self checkExistIds:idsToFetch];
+    NSLog(@"RetrieveUsers %@", filteredIDs);
     
     if (filteredIDs.count == 0) {
         completion(NO);
@@ -26,7 +26,7 @@
         
         __weak __typeof(self)weakSelf = self;
         [self.usersService retrieveUsersWithIDs:filteredIDs pagedRequest:pagedRequest completion:^(QBUUserPagedResult *pagedResult) {
-            [weakSelf addUsers:pagedResult.users];
+            [weakSelf.usersService addUsers:pagedResult.users];
             completion(YES);
         }];
     }
@@ -76,6 +76,7 @@
     
     NSArray *contacts = self.usersService.contactList;
     for (QBContactListItem *item in contacts) {
+        
         if (item.userID == userID) {
             return item;
         }
@@ -89,7 +90,7 @@
     NSMutableSet *idsToFetch = [NSMutableSet setWithArray:ids];
     for (NSString *userID in ids) {
         
-        QBUUser *user = self.usersService.users[userID];
+        QBUUser *user = [self userWithID:userID.integerValue];
         if (user) {
             [idsToFetch removeObject:userID];
         }
@@ -131,25 +132,8 @@
     return contactListItems;
 }
 
-- (void)addUsers:(NSArray *)users {
-    
-    for (QBUUser *user in users) {
-        [self addUser:user];
-    }
-}
-
-- (void)addUser:(QBUUser *)user {
-    
-    NSString *key = [NSString stringWithFormat:@"%d", user.ID];
-    self.usersService.users[key] = user;
-}
-
 - (QBUUser *)userWithID:(NSUInteger)userID {
-    
-    NSString *stingID = [NSString stringWithFormat:@"%d", userID];
-    QBUUser *user = self.usersService.users[stingID];
-    
-    return user;
+    return [self.usersService userWithID:userID];
 }
 
 - (NSArray *)friends {
@@ -158,7 +142,7 @@
     NSMutableArray *allFriends = [NSMutableArray array];
     
     for (NSString * friendID in ids) {
-        QBUUser *user = self.usersService.users[friendID];
+        QBUUser *user = [self userWithID:friendID.integerValue];
         if (user) {
             [allFriends addObject:user];
         }

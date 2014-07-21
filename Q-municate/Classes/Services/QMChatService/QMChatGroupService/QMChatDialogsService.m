@@ -56,6 +56,10 @@
     }
 }
 
+- (QBChatDialog *)chatDialogWithID:(NSString *)dialogID {
+    return self.dialogs[dialogID];
+}
+
 - (void)addDialogToHistory:(QBChatDialog *)chatDialog {
     
     //If type is equal group then need join room
@@ -68,7 +72,7 @@
         
         if (!existRoom) {
             QBChatRoom *chatRoom = [[QBChatRoom alloc] initWithRoomJID:roomJID];
-            [chatRoom joinRoomWithHistoryAttribute:@{@"maxstanzas": @(0)}];
+            [chatRoom joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
             self.chatRooms[roomJID] = chatRoom;
         }
         
