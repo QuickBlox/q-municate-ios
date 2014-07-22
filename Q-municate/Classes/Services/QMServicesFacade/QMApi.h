@@ -33,7 +33,7 @@
 @property (strong, atomic) QBUUser *currentUser;
 
 + (instancetype)instance;
-- (void)fetchAllHistory;
+- (void)fetchAllHistory:(void(^)(void))completion;
 - (BOOL)checkResult:(Result *)result;
 - (void)cleanUp;
 
@@ -49,32 +49,12 @@
  */
 
 - (void)setAutoLogin:(BOOL)autologin;
-
-- (void)logout;
-
 - (void)loginWithFacebook:(void(^)(BOOL success))completion;
-
-/**
- */
-- (void)loginWithUser:(QBUUser *)user completion:(QBUUserLogInResultBlock)complition;
-
-/**
- */
-- (void)signUpAndLoginWithUser:(QBUUser *)user userAvatar:(UIImage *)userAvatar completion:(QBUUserResultBlock)completion;
-
-/**
- */
-- (void)updateUser:(QBUUser *)user completion:(void(^)(BOOL success))completion;
-
-/**
- */
-- (void)changePasswordForCurrentUser:(QBUUser *)currentUser completion:(void(^)(BOOL success))completion;
-
-/**
- */
+- (void)loginWithUser:(QBUUser *)user completion:(void(^)(BOOL success))complition;
+- (void)signUpAndLoginWithUser:(QBUUser *)user completion:(void(^)(BOOL success))completion;
+/*logout*/
 - (void)resetUserPassordWithEmail:(NSString *)email completion:(void(^)(BOOL success))completion;
-
-- (void)destroySessionWithCompletion:(void(^)(BOOL success))completion;
+- (void)logout:(void(^)(BOOL success))success;
 
 @end
 
@@ -95,6 +75,7 @@
 
 - (NSArray *)dialogHistory;
 - (NSArray *)allOccupantIDsFromDialogsHistory;
+- (QBChatDialog *)chatDialogWithID:(NSString *)dialogID;
 
 /**
  Get all dialogs for current user
@@ -154,8 +135,6 @@
 @property (strong, nonatomic, readonly) NSArray *friends;
 
 - (NSArray *)idsWithUsers:(NSArray *)users;
-- (void)addUser:(QBUUser *)user;
-- (void)addUsers:(NSArray *)users;
 - (QBUUser *)userWithID:(NSUInteger)userID;
 - (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID;
 
@@ -199,6 +178,10 @@
  */
 - (void)retrieveUsersWithIDs:(NSArray *)idsToFetch completion:(void(^)(BOOL updated))completion;
 
+/*UPDATE USER*/
+- (void)updateUser:(QBUUser *)user completion:(void(^)(BOOL success))completion;
+- (void)changePasswordForCurrentUser:(QBUUser *)currentUser completion:(void(^)(BOOL success))completion;
+
 @end
 
 /**
@@ -219,10 +202,8 @@
 @interface QMApi (Calls)
 
 - (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView conferenceType:(QBVideoChatConferenceType)conferenceType;
-
 - (void)acceptCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView;
 - (void)rejectCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView;
-
 - (void)finishCall;
 
 @end

@@ -19,6 +19,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     [QMDBStorage setupWithName:@"Andrey"];
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;

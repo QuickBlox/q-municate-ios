@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "QMServiceProtocol.h"
 
 typedef void(^QMChatDidLogin)(BOOL success);
 typedef void(^QMChatDidFailLogin)(NSInteger errorCode);
@@ -39,7 +39,7 @@ typedef void(^QMChatContactListDidChange)(QBContactList * contactList);
 typedef void(^QMChatContactListWillChange)(void);
 typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL isOnline, NSString *status);
 
-@interface QMChatReceiver : NSObject <QBChatDelegate>
+@interface QMChatReceiver : NSObject <QBChatDelegate, QMServiceProtocol>
 
 + (instancetype)instance;
 
@@ -78,8 +78,6 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 /**
  VideoChat
  */
-
-
 #pragma mark - AUDIO/VIDEO CALLS
 #pragma mark -
 
@@ -95,7 +93,6 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 - (void)chatAfterCallDidStopWithTarget:(id)target block:(QMChatCallDidStopByUser)block;
 
 - (void)chatCallDidStartWithTarget:(id)target block:(QMChathatCallDidStartWithUser)block;
-
 
 #pragma mark - Unsued
 

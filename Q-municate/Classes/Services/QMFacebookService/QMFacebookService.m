@@ -205,7 +205,6 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     
     // Whenever a person opens the app, check for a cached session
     if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
-        
         NSLog(@"We have a cached token, so we're going to re-establish the login for the user.");
         // If there's one, just open the session silently, without showing the user the login UI
         
@@ -220,8 +219,11 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
         [weakSelf sessionStateChanged:session state:state error:error sessionBlock:completion];
     };
     
-    [FBSession.activeSession openWithCompletionHandler:handler];
-    
+    if (!FBSession.activeSession.isOpen) {
+        [FBSession.activeSession openWithCompletionHandler:handler];
+    } else {
+        completion(FBSession.activeSession.accessTokenData.accessToken);
+    }
 }
 
 // This method will handle ALL the session state changes in the app

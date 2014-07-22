@@ -84,5 +84,18 @@ Type of Result - QBUUserPagedResult
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
 - (NSObject<Cancelable> *)retrieveUsersWithEmails:(NSArray *)emails completion:(QBUUserPagedResultBlock)completion;
+/**
+ Reset user's password. User with this email will retrieve email instruction for reset password.
+ Type of Result - Result
+ @param email User's email
+ */
+
+- (NSObject<Cancelable> *)resetUserPasswordWithEmail:(NSString *)email completion:(QBResultBlock)completion;
+/**
+ Update User
+ Type of Result - QBUUserResult
+ @param user An instance of QBUUser, describing the user to be edited.
+ */
+- (NSObject<Cancelable> *)updateUser:(QBUUser *)user withCompletion:(QBUUserResultBlock)completion;
 
 @end

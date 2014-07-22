@@ -151,4 +151,68 @@
     return allFriends;
 }
 
+#pragma mark - Update current User
+
+- (void)updateUser:(QBUUser *)user completion:(void(^)(BOOL success))completion  {
+    
+    NSString *password = user.password;
+    user.password = nil;
+    
+    __weak __typeof(self)weakSelf = self;
+    [self.usersService updateUser:user withCompletion:^(QBUUserResult *result) {
+        
+        if ([weakSelf checkResult:result]) {
+            result.user.password = password;
+            weakSelf.currentUser = result.user;
+        }
+        
+        completion(result.success);
+    }];
+}
+
+- (void)changePasswordForCurrentUser:(QBUUser *)currentUser completion:(void(^)(BOOL success))completion {
+    
+    [self updateUser:currentUser completion:^(BOOL success) {
+        completion(success);
+    }];
+}
+
+
+//- (void)updateUserAvatarFromFacebook:(QBUUserResultBlock)completion {
+//
+//    __weak __typeof(self)weakSelf = self;
+//    [self.facebookService loadUserImageWithUserID:self.currentUser.facebookID completion:^(UIImage *fbImage) {
+//
+//        if (fbImage) {
+////            [weakSelf updateUserAvatar:fbImage imageName:weakSelf.currentUser.facebookID completion:completion];
+//        }
+//    }];
+//}
+
+//- (void)updateUserAvatar:(UIImage *)image imageName:(NSString *)imageName completion:(QBUUserResultBlock)completion {
+//
+//    QMContent *content = [[QMContent alloc] init];
+//    __weak __typeof(self)weakSelf = self;
+//    [content uploadImage:image named:imageName completion:^(QBCFileUploadTaskResult *result) {
+//
+//        if ([weakSelf checkResult:result]) {
+//
+//            QBUUser *user = weakSelf.currentUser;
+//            user.oldPassword = user.password;
+//            user.website = [result.uploadedBlob publicUrl];
+//
+//            [weakSelf.authService updateUser:user withCompletion:^(QBUUserResult *updateResult) {
+//
+//                if ([weakSelf checkResult:updateResult]) {
+//
+//                    updateResult.user.password = weakSelf.currentUser.password;
+//                    weakSelf.currentUser = updateResult.user;
+//                }
+//
+//                if (completion) completion(updateResult);
+//            }];
+//        }
+//    }];
+//}
+
 @end

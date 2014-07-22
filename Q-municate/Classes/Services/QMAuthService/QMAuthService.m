@@ -13,64 +13,46 @@
 
 #pragma mark Create/Destroy Quickblox Sesson
 
-- (void)createSessionWithBlock:(QBAAuthSessionCreationResultBlock)completion {
-    [QBAuth createSessionWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
+- (NSObject<Cancelable> *)createSessionWithBlock:(QBAAuthSessionCreationResultBlock)completion {
+    return [QBAuth createSessionWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
 }
 
-- (void)destroySessionWithCompletion:(QBAAuthResultBlock)completion {
-    [QBAuth destroySessionWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
+- (NSObject<Cancelable> *)destroySessionWithCompletion:(QBAAuthResultBlock)completion {
+    return [QBAuth destroySessionWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
 }
 
 #pragma mark - Authorization
 
-- (void)signUpUser:(QBUUser *)user completion:(QBUUserResultBlock)completion {
-    [QBUsers signUp:user delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
+- (NSObject<Cancelable> *)signUpUser:(QBUUser *)user completion:(QBUUserResultBlock)completion {
+    return [QBUsers signUp:user delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
 }
 
-- (void)logInWithEmail:(NSString *)email password:(NSString *)password completion:(QBUUserLogInResultBlock)completion {
-    [QBUsers logInWithUserEmail:email password:password delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
+- (NSObject<Cancelable> *)logInWithEmail:(NSString *)email password:(NSString *)password completion:(QBUUserLogInResultBlock)completion {
+    return [QBUsers logInWithUserEmail:email password:password delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
 }
 
-- (void)logInWithFacebookAccessToken:(NSString *)accessToken completion:(QBUUserLogInResultBlock)completion {
+- (NSObject<Cancelable> *)logInWithFacebookAccessToken:(NSString *)accessToken completion:(QBUUserLogInResultBlock)completion {
     
     void (^resultBlock) (QBUUserLogInResult *) =^ (QBUUserLogInResult *result) {
         result.user.password = [QBBaseModule sharedModule].token;
         completion(result);
     };
     
-    [QBUsers logInWithSocialProvider:kFacebook
-                         accessToken:accessToken
-                   accessTokenSecret:nil
-                            delegate:[QBEchoObject instance]
-                             context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
-}
-
-- (void)resetUserPasswordWithEmail:(NSString *)email completion:(QBResultBlock)completion {
-    [QBUsers resetUserPasswordWithEmail:email delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
-}
-
-- (void)updateUser:(QBUUser *)user withCompletion:(QBUUserResultBlock)completion {
-    [QBUsers updateUser:user delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
+    return [QBUsers logInWithSocialProvider:kFacebook
+                                accessToken:accessToken
+                          accessTokenSecret:nil
+                                   delegate:[QBEchoObject instance]
+                                    context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
 }
 
 #pragma mark - Push Notifications
 
-- (void)subscribeToPushNotifications {
-    // Subscribe Users to Push Notifications
-    QBMRegisterSubscriptionTaskResultBlock subscibeResult =^(QBMRegisterSubscriptionTaskResult *result) {
-//        NSLog(@"Subscriptions - %@", result.subscriptions);
-    };
-    
-    [QBMessages TRegisterSubscriptionWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:subscibeResult]];
+- (NSObject<Cancelable> *)subscribeToPushNotifications:(QBMRegisterSubscriptionTaskResultBlock)competion {
+    return [QBMessages TRegisterSubscriptionWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:competion]];
 }
 
-- (void)unSubscribeFromPushNotifications {
-    // Unsubscribe Users to Push Notifications
-    QBMRegisterSubscriptionTaskResultBlock unSubscibeResult =^(QBMRegisterSubscriptionTaskResult *result) {
-//        NSLog(@"Subscriptions - %@", result.subscriptions);
-    };
-    
-    [QBMessages TUnregisterSubscriptionWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:unSubscibeResult]];
+- (NSObject<Cancelable> *)unSubscribeFromPushNotifications:(QBMUnregisterSubscriptionTaskResultBlock)competion {
+    return [QBMessages TUnregisterSubscriptionWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:competion]];
 }
 
 @end

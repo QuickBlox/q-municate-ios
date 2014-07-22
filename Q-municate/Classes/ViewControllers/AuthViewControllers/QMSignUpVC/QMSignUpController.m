@@ -90,12 +90,10 @@
     newUser.password = password;
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    @weakify(self)
-    [[QMApi instance] signUpAndLoginWithUser:newUser userAvatar:self.cachedPicture completion:^(QBUUserResult *result) {
-        @strongify(self)
+    __weak __typeof(self)weakSelf = self;
+    [[QMApi instance] signUpAndLoginWithUser:newUser completion:^(BOOL success) {
         [SVProgressHUD dismiss];
-        if(result.success)
-            [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+        if(success)[weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
     }];
 }
 
