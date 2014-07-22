@@ -14,7 +14,9 @@
 
 @interface QMInviteViewController ()
 
-<QBActionStatusDelegate, MFMailComposeViewControllerDelegate>
+<QBActionStatusDelegate, MFMailComposeViewControllerDelegate, QMCheckBoxStateDelegate>
+
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *sendButton;
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) QMInviteFriendsDataSource *dataSource;
@@ -29,6 +31,9 @@
     
     self.dataSource = nil;
 	self.dataSource = [[QMInviteFriendsDataSource alloc] initWithTableView:self.tableView];
+    self.dataSource.checkBoxDelegate = self;
+    
+    [self changeSendButtonEnableForCheckedUsersCount:0];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -79,6 +84,12 @@
     }
 }
 
+- (void)changeSendButtonEnableForCheckedUsersCount:(NSInteger)checkedUsersCount
+{
+    self.sendButton.enabled = checkedUsersCount > 0;
+}
+
+
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -90,6 +101,14 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self.dataSource didSelectRowAtIndexPath:indexPath];
+}
+
+
+#pragma mark - QMCheckBoxStatusDelegate
+
+- (void)checkListDidchangeCount:(NSInteger)checkedCount
+{
+      [self changeSendButtonEnableForCheckedUsersCount:checkedCount];
 }
 
 @end

@@ -36,9 +36,12 @@ const CGFloat kQMInviteFriendCellHeight = 60;
 const CGFloat kQMStaticCellHeihgt = 44;
 const NSUInteger kQMNumberOfSection = 2;
 
+
+
+
 @interface QMInviteFriendsDataSource()
 
-<UITableViewDataSource, QMCheckBoxProtocol>
+<UITableViewDataSource, QMCheckBoxProtocol, QMCheckBoxStateDelegate>
 
 @property (weak, nonatomic) UITableView *tableView;
 
@@ -64,6 +67,7 @@ const NSUInteger kQMNumberOfSection = 2;
         
         self.tableView = tableView;
         self.tableView.dataSource = self;
+        self.checkBoxDelegate = self;
         
         NSMutableArray *staticCells = @[].mutableCopy;
         self.abStaticCell = [self.tableView dequeueReusableCellWithIdentifier:kQMStaticABCellID];
@@ -295,6 +299,10 @@ const NSUInteger kQMNumberOfSection = 2;
         
         [self reloadRowPathAtIndexPath:indexPathToReload withRowAnimation:UITableViewRowAnimationNone];
     }
+    
+    NSArray *facebookUsersToInvite = self.collections[[self keyAtSection:QMFBFriendsToInviteSection]];
+    NSArray *addressBookFriendsToInvite = self.collections [[self keyAtSection:QMABFriendsToInviteSection]];
+    [self.checkBoxDelegate checkListDidchangeCount:([facebookUsersToInvite count] + [addressBookFriendsToInvite count])];
 }
 
 - (void)clearABFriendsToInvite  {
@@ -306,6 +314,12 @@ const NSUInteger kQMNumberOfSection = 2;
     [self setCollection:@[].mutableCopy toSection:QMFBFriendsToInviteSection];
     [self.tableView reloadData];
 }
+
+
+#pragma mark - QMCheckBoxStatusDelegate
+
+- (void)checkListDidchangeCount:(NSInteger)checkedCount { }
+
 
 #pragma mark - Public methods
 #pragma mark Invite Data

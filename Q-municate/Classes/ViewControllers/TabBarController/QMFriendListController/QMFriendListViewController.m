@@ -43,6 +43,12 @@
     [[QMApi instance] fetchAllHistory];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+}
+
 #pragma mark - Actions
 
 - (IBAction)globalSearch:(id)sender {

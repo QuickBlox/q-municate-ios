@@ -20,8 +20,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [QMDBStorage setupWithName:@"Andrey"];
-    
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     /**
      Setup framework
@@ -33,7 +31,6 @@
     [QBSettings setAccountKey:@"LpNmxA2Pq2uyW5qBjHy8"];
 //    [QBSettings setLogLevel:QBLogLevelNothing];
      self.incomingCallService = [[QMIncomingCallService alloc] init];
-
     return YES;
 }
 
