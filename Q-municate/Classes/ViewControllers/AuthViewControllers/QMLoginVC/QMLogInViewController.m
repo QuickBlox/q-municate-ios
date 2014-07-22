@@ -63,9 +63,15 @@
 
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         __weak __typeof(self)weakSelf = self;
-        [[QMApi instance] loginWithUser:user completion:^(QBUUserLogInResult *result) {
+        [[QMApi instance] loginWithUser:user completion:^(BOOL success) {
+            
             [SVProgressHUD dismiss];
-            [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+            if (success) {
+                [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+            }
+            else{
+                [weakSelf.rememberMeSwitch setOn:NO animated:YES];
+            }
         }];
     }
 }
@@ -73,18 +79,18 @@
 - (IBAction)connectWithFacebook:(id)sender {
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-
     __weak __typeof(self)weakSelf = self;
     [[QMApi instance] loginWithFacebook:^(BOOL success) {
+        
+        [SVProgressHUD dismiss];
         if (success) {
             [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
-            [SVProgressHUD dismiss];
         }
     }];
 }
 
 - (IBAction)changeRememberMe:(UISwitch *)sender {
-    [[QMApi instance] setAutoLogin:sender.isOn];
+    [[QMApi instance] setAutoLogin:sender.on];
 }
 
 @end

@@ -38,9 +38,6 @@
     
     self.searchBar.delegate = self;
     [self showSearchBar:NO animated:NO];
-
-
-    [[QMApi instance] fetchAllHistory];
 }
 
 - (void)viewWillAppear:(BOOL)animated

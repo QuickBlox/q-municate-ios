@@ -40,12 +40,13 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 @implementation QMFriendsDetailsController
 
 - (void)dealloc {
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {
     
     [super viewDidLoad];
-    
+    self.navigationController.navigationItem.rightBarButtonItem = nil;
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     if (self.selectedUser.phone.length == 0) {

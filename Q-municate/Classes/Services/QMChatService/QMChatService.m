@@ -2,7 +2,7 @@
 //  QMChatService.m
 //  Q-municate
 //
-//  Created by Igor Alefirenko on 17/02/2014.
+//  Created by I on 17/02/2014.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -18,8 +18,9 @@
 @implementation QMChatService
 
 - (void)start {
-    
+    [[QMChatReceiver instance] start];
     [QBChat instance].delegate = [QMChatReceiver instance];
+    
     NSAssert(self.presenceTimer == nil, @"Need Update this case");
     self.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:30
                                                           target:self
@@ -30,6 +31,7 @@
 
 - (void)destroy {
     
+    [[QMChatReceiver instance] destroy];
     [self.presenceTimer invalidate];
     self.presenceTimer = nil;
 }

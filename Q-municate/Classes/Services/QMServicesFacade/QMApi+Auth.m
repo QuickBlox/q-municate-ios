@@ -11,16 +11,26 @@
 #import "QMFacebookService.h"
 #import "QMChatService.h"
 #import "QMSettingsManager.h"
-#import "QMContent.h"
+#import "QMUsersService.h"
 
 @implementation QMApi (Auth)
 
-- (void)logout {
-    
-    [self.settingsManager clearSettings];
-    [self.chatService logout];
-    [self.facebookService logout];
-    [self cleanUp];
+#pragma mark Public methods
+
+- (void)logout:(void(^)(BOOL success))completion {
+
+    [self destroySessionWithCompletion:^(BOOL success) {
+        if (!success) {
+            completion(success);
+        }
+        else {
+            [self.settingsManager clearSettings];
+            [self.chatService logout];
+            [self.facebookService logout];
+            [self cleanUp];
+            completion(success);
+        }
+    }];
 }
 
 - (void)setAutoLogin:(BOOL)autologin {
@@ -30,116 +40,51 @@
 - (void)loginWithFacebook:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
-    
+    /*open facebook session*/
     [self.facebookService connectToFacebook:^(NSString *sessionToken) {
-        
         if (!sessionToken) {
             completion(NO);
-            return;
         }
-        
-        [weakSelf.authService createSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
-            
-            if([weakSelf checkResult:result]) {
-                /*Open FBSession if needed*/
-                
-                /*Login with facebook*/
-                [weakSelf.authService logInWithFacebookAccessToken:sessionToken completion:^(QBUUserLogInResult *loginWithFBResult) {
-                    
-                    if ([weakSelf checkResult:loginWithFBResult]) {
-                        [weakSelf setAutoLogin:YES];
-                        
-                        if (weakSelf.settingsManager.pushNotificationsEnabled) {
-                            [weakSelf.authService subscribeToPushNotifications];
-                        }
-                        
-                        weakSelf.currentUser = loginWithFBResult.user;
-                        
-                        [weakSelf.chatService loginWithUser:loginWithFBResult.user completion:^(BOOL success) {
+        else {
+            /*create QBSession*/
+            [weakSelf createSessionWithBlock:^(BOOL success) {
+                if (!success) {
+                    completion(success);
+                }
+                else {
+                    /*Longin with Social provider*/
+                    [weakSelf logInWithFacebookAccessToken:sessionToken completion:^(BOOL success) {
+                        if (!success) {
                             completion(success);
-                            return;
-                            if (loginWithFBResult.user.website.length == 0) {
-                                /*Upload image from facebook to qbserver if needed*/
-                                [weakSelf updateUserAvatarFromFacebook:^(QBUUserResult *result) {
-                                    
-                                    weakSelf.currentUser.website = result.user.website;
-                                    completion(result.success);
-                                    return;
-                                }];
-                            }
-                            completion(YES);
-                        }]; //Chat Login With user
-                        
-                    } else {
-                        completion(NO);
-                    }
-                }]; // loginin with facebook
-                
-            } else {
-                completion(NO);
-            }
-        }]; // Create session
-    }]; // Connect to facebook
+                        }
+                        else {
+                            [weakSelf setAutoLogin:YES];
+                            /*Authorize on QuickBlox Chat*/
+                            [weakSelf autorizeOnQuickbloxChat:completion];
+                        }
+                    }];
+                }
+            }];
+        }
+    }];
 }
 
-- (void)signUpAndLoginWithUser:(QBUUser *)user userAvatar:(UIImage *)userAvatar completion:(QBUUserResultBlock)completion {
+- (void)signUpAndLoginWithUser:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
-    
-    [self.authService createSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
-        
-        if([weakSelf checkResult:result]) {
-            
+    [self createSessionWithBlock:^(BOOL success) {
+        if (!success) {
+            completion(success);
+        }
+        else {
             [weakSelf.authService signUpUser:user completion:^(QBUUserResult *signUpResult) {
                 
-                if ([weakSelf checkResult:signUpResult]) {
-                    
-                    [weakSelf loginWithUser:user completion:^(QBUUserLogInResult *loginResult) {
-                        
-                        if (userAvatar) {
-                            NSString *imageName = [NSString stringWithFormat:@"%d", loginResult.user.ID];
-                            [weakSelf updateUserAvatar:userAvatar imageName:imageName completion:completion];
-                        }
-                        
-                        completion(loginResult);
-                    }];
-                } else {
-                    completion(signUpResult);
+                if (![weakSelf checkResult:signUpResult]) {
+                    completion(signUpResult.success);
                 }
-            }];
-        }
-    }];
-}
-
-- (void)loginWithUser:(QBUUser *)user completion:(QBUUserLogInResultBlock)complition {
-    
-    
-    if (self.settingsManager.rememberMe) {
-        
-        [self.settingsManager setLogin:user.email andPassword:user.password];
-    }
-    
-    __weak __typeof(self)weakSelf = self;
-    
-    [self.authService createSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
-        
-        if([weakSelf checkResult:result]) {
-            
-            [weakSelf.authService logInWithEmail:user.email password:user.password completion:^(QBUUserLogInResult *loginResult) {
-                
-                loginResult.user.password = user.password;
-                weakSelf.currentUser = loginResult.user;
-                
-                if ([weakSelf checkResult:loginResult]) {
-                    [weakSelf.authService subscribeToPushNotifications];
-                    
-                    [weakSelf.chatService loginWithUser:loginResult.user completion:^(BOOL success) {
-                        
-                        if (success) {
-                            complition (loginResult);
-                        } else {
-                            NSAssert(NO, @"Update it");
-                        }
+                else {
+                    [weakSelf loginWithEmail:user.email password:user.password completion:^(BOOL success) {
+                        [weakSelf autorizeOnQuickbloxChat:completion];
                     }];
                 }
             }];
@@ -147,69 +92,21 @@
     }];
 }
 
-#pragma mark - Update current User
-
-- (void)updateUser:(QBUUser *)user completion:(void(^)(BOOL success))completion  {
-    
-    NSString *password = user.password;
-    user.password = nil;
+- (void)loginWithUser:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
-    [self.authService updateUser:user withCompletion:^(QBUUserResult *result) {
-        
-        if ([weakSelf checkResult:result]) {
-            result.user.password = password;
-            weakSelf.currentUser = result.user;
+    [self createSessionWithBlock:^(BOOL success) {
+        if (!success) {
+            completion (success);
         }
-        
-        completion(result.success);
-    }];
-}
-
-- (void)changePasswordForCurrentUser:(QBUUser *)currentUser completion:(void(^)(BOOL success))completion {
-    
-    __weak __typeof(self)weakSelf = self;
-    [self updateUser:currentUser completion:^(BOOL success) {
-        
-        if (success) {
-            [weakSelf.settingsManager setLogin:currentUser.login andPassword:currentUser.password];
-        }
-        completion(success);
-    }];
-}
-
-- (void)updateUserAvatarFromFacebook:(QBUUserResultBlock)completion {
-    
-    __weak __typeof(self)weakSelf = self;
-    [self.facebookService loadUserImageWithUserID:self.currentUser.facebookID completion:^(UIImage *fbImage) {
-        
-        if (fbImage) {
-            [weakSelf updateUserAvatar:fbImage imageName:weakSelf.currentUser.facebookID completion:completion];
-        }
-    }];
-}
-
-- (void)updateUserAvatar:(UIImage *)image imageName:(NSString *)imageName completion:(QBUUserResultBlock)completion {
-    
-    QMContent *content = [[QMContent alloc] init];
-    __weak __typeof(self)weakSelf = self;
-    [content uploadImage:image named:imageName completion:^(QBCFileUploadTaskResult *result) {
-        
-        if ([weakSelf checkResult:result]) {
-            
-            QBUUser *user = weakSelf.currentUser;
-            user.oldPassword = user.password;
-            user.website = [result.uploadedBlob publicUrl];
-            
-            [weakSelf.authService updateUser:user withCompletion:^(QBUUserResult *updateResult) {
-                
-                if ([weakSelf checkResult:updateResult]) {
-                    
-                    updateResult.user.password = weakSelf.currentUser.password;
-                    weakSelf.currentUser = updateResult.user;
+        else {
+            [weakSelf loginWithEmail:user.email password:user.password completion:^(BOOL success) {
+                if (!success) {
+                    completion(success);
                 }
-                
-                if (completion) completion(updateResult);
+                else {
+                    [weakSelf autorizeOnQuickbloxChat:completion];
+                }
             }];
         }
     }];
@@ -218,8 +115,34 @@
 - (void)resetUserPassordWithEmail:(NSString *)email completion:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
-    [self.authService resetUserPasswordWithEmail:email completion:^(Result *result) {
+    [self createSessionWithBlock:^(BOOL success) {
+        if (!success) {
+            completion(success);
+        } else {
+            
+            [weakSelf.usersService resetUserPasswordWithEmail:email completion:^(Result *result) {
+                completion([weakSelf checkResult:result]);
+            }];
+        }
+    }];
+}
+
+#pragma mark - Private methods
+
+- (void)createSessionWithBlock:(void(^)(BOOL success))completion {
+    
+    __weak __typeof(self)weakSelf = self;
+    [self.authService createSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
         completion([weakSelf checkResult:result]);
+    }];
+}
+
+- (void)logInWithFacebookAccessToken:(NSString *)accessToken completion:(void(^)(BOOL success))completion {
+    
+    __weak __typeof(self)weakSelf = self;
+    [weakSelf.authService logInWithFacebookAccessToken:accessToken completion:^(QBUUserLogInResult *loginWithFBResult) {
+        weakSelf.currentUser = loginWithFBResult.user;
+        completion([weakSelf checkResult:loginWithFBResult]);
     }];
 }
 
@@ -228,6 +151,51 @@
     __weak __typeof(self)weakSelf = self;
     [self.authService destroySessionWithCompletion:^(QBAAuthResult *result) {
         completion([weakSelf checkResult:result]);
+    }];
+}
+
+- (void)subscribeToPushNotificationsIfNeeded {
+    
+    if (self.settingsManager.pushNotificationsEnabled) {
+        __weak __typeof(self)weakSelf = self;
+        [self.authService subscribeToPushNotifications:^(QBMRegisterSubscriptionTaskResult *result) {
+            [weakSelf checkResult:result];
+        }];
+    }
+}
+
+- (void)autorizeOnQuickbloxChat:(void(^)(BOOL success))completion {
+    
+    __weak __typeof(self)weakSelf = self;
+    /*Authorize on QuickBlox Chat*/
+    [self.chatService loginWithUser:self.currentUser completion:^(BOOL success) {
+        if (!success) {
+            completion(success);
+        }
+        else {
+            [weakSelf fetchAllHistory:^{}];
+            completion(success);
+            [weakSelf subscribeToPushNotificationsIfNeeded];
+        }
+    }];
+}
+
+- (void)loginWithEmail:(NSString *)email password:(NSString *)password completion:(void(^)(BOOL success))completion {
+
+    __weak __typeof(self)weakSelf = self;
+    [self.authService logInWithEmail:email password:password completion:^(QBUUserLogInResult *loginResult) {
+        
+        weakSelf.currentUser = loginResult.user;
+        weakSelf.currentUser.password = password;
+
+        if(![weakSelf checkResult:loginResult]){
+            completion(loginResult.success);
+        } else {
+            if (weakSelf.settingsManager.rememberMe) {
+                [weakSelf.settingsManager setLogin:email andPassword:password];
+            }
+            completion(loginResult.success);
+        }
     }];
 }
 

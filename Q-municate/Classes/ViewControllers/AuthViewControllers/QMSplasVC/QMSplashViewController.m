@@ -71,22 +71,21 @@
     QBUUser *user = [QBUUser user];
     user.email = email;
     user.password = password;
-    @weakify(self)
-    [[QMApi instance] loginWithUser:user completion:^(QBUUserLogInResult *result) {
-        @strongify(self)
-        [self.activityIndicator stopAnimating];
-        [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+
+    __weak __typeof(self)weakSelf = self;
+    [[QMApi instance] loginWithUser:user completion:^(BOOL success) {
+        [weakSelf.activityIndicator stopAnimating];
+        [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
     }];
 }
 
 - (void)loginWithFacebook {
     
-    @weakify(self)
+    __weak __typeof(self)weakSelf = self;
     [[QMApi instance] loginWithFacebook:^(BOOL success) {
-        @strongify(self)
         if (success) {
-            [self.activityIndicator stopAnimating];
-            [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+            [weakSelf.activityIndicator stopAnimating];
+            [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
         }
     }];
 }

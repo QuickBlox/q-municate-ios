@@ -7,12 +7,8 @@
 //
 
 #import "QMSettingsViewController.h"
-//#import "QMChatService.h"
-//#import "QMUsersService.h"
-//#import "QMAuthService.h"
 #import "REAlertView+QMSuccess.h"
-//#import "QMSettingsManager.h"
-//#import "QMFacebookService.h"
+#import "SVProgressHUD.h"
 #import "QMApi.h"
 
 @interface QMSettingsViewController ()
@@ -45,12 +41,14 @@
 
 - (void)logOut {
     
-    [[QMApi instance] logout];
-    @weakify(self)
-    [[QMApi instance] destroySessionWithCompletion:^(BOOL success) {
-        @strongify(self)
+    __weak __typeof(self)weakSelf = self;
+
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    [[QMApi instance] logout:^(BOOL success) {
+        
+        [SVProgressHUD dismiss];
         if (success) {
-            [self performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
+            [weakSelf performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
         }
     }];
 }
@@ -63,12 +61,12 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     
     if (cell == self.logoutCell) {
-        @weakify(self)
+        
+        __weak __typeof(self)weakSelf = self;
         [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-            @strongify(self)
             alertView.message = kAlertTitleAreYouSureString;
             [alertView addButtonWithTitle:kAlertButtonTitleLogOutString andActionBlock:^{
-                [self logOut];
+                [weakSelf logOut];
             }];
             
             [alertView addButtonWithTitle:kAlertButtonTitleCancelString andActionBlock:^{}];

@@ -16,20 +16,20 @@
  Session Creation
  Type of Result - QBAAuthSessionCreationResult.
  */
-- (void)createSessionWithBlock:(QBAAuthSessionCreationResultBlock)block;
+- (NSObject<Cancelable> *)createSessionWithBlock:(QBAAuthSessionCreationResultBlock)block;
 
 /**
  User sign up
  Type of Result - QBUUserResult
  @param user An instance of QBUUser, describing the user to be created.
  */
-- (void)signUpUser:(QBUUser *)user completion:(QBUUserResultBlock)completion;
+- (NSObject<Cancelable> *)signUpUser:(QBUUser *)user completion:(QBUUserResultBlock)completion;
 
 /**
  Session Destroy
  Type of Result - QBAAuthResult.
   */
-- (void)destroySessionWithCompletion:(QBAAuthResultBlock)completion;
+- (NSObject<Cancelable> *)destroySessionWithCompletion:(QBAAuthResultBlock)completion;
 
 /**
  User LogIn with email
@@ -37,30 +37,34 @@
  @param email Email of QBUUser which authenticates.
  @param password Password of QBUUser which authenticates.
  */
-- (void)logInWithEmail:(NSString *)email password:(NSString *)password completion:(QBUUserLogInResultBlock)completion;
+- (NSObject<Cancelable> *)logInWithEmail:(NSString *)email password:(NSString *)password completion:(QBUUserLogInResultBlock)completion;
 
 /**
  User LogIn with social provider's token
  Type of Result - QBUUserLogInResult
  @param accessToken Social provider access token.
  */
-- (void)logInWithFacebookAccessToken:(NSString *)accessToken completion:(QBUUserLogInResultBlock)completion;
+- (NSObject<Cancelable> *)logInWithFacebookAccessToken:(NSString *)accessToken completion:(QBUUserLogInResultBlock)completion;
 
-/**
- Reset user's password. User with this email will retrieve email instruction for reset password.
- Type of Result - Result
- @param email User's email
+/** Create subscription for current device.
+ 
+ This method registers push token on the server if they are not registered yet, then creates a Subscription and associates it with curent User.
+ 
+ Type of Result - QBMRegisterSubscriptionTaskResult
+ 
+ @param  finish of the request, result will be an instance of QBMRegisterSubscriptionTaskResult class.
+ @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-- (void)resetUserPasswordWithEmail:(NSString *)email completion:(QBResultBlock)completion;
-/**
- Update User
- Type of Result - QBUUserResult
- @param user An instance of QBUUser, describing the user to be edited.
+- (NSObject<Cancelable> *)subscribeToPushNotifications:(QBMRegisterSubscriptionTaskResultBlock)competion;
+/** Remove subscription for current device.
+ 
+ This method remove subscription for current device from server.
+ 
+ Type of Result - QBMUnregisterSubscriptionTaskResult
+ 
+ @param finish of the request, result will be an instance of QBMUnregisterSubscriptionTaskResult class.
+ @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-- (void)updateUser:(QBUUser *)user withCompletion:(QBUUserResultBlock)completion;
-
-
-- (void)subscribeToPushNotifications;
-- (void)unSubscribeFromPushNotifications;
+- (NSObject<Cancelable> *)unSubscribeFromPushNotifications:(QBMUnregisterSubscriptionTaskResultBlock)competion;
 
 @end

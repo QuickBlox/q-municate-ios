@@ -67,7 +67,7 @@
     [self.chatDialogsService destroy];
 }
 
-- (void)fetchAllHistory {
+- (void)fetchAllHistory:(void(^)(void))completion {
 
     /**
      Feach Dialogs
@@ -78,7 +78,7 @@
         NSArray *allOccupantIDs = [weakSelf allOccupantIDsFromDialogsHistory];
         
         [weakSelf retrieveUsersWithIDs:allOccupantIDs completion:^(BOOL updated) {
-            NSLog(@"");
+            completion();
         }];
         
     }];

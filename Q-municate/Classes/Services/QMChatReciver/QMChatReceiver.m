@@ -47,15 +47,12 @@
     return instance;
 }
 
+- (void)start {
+    self.handlerList = [NSMutableDictionary dictionary];
+}
 
-- (instancetype)init {
-    
-    self = [super init];
-    if (self) {
-        self.handlerList = [NSMutableDictionary dictionary];
-    }
-    
-    return self;
+- (void)destroy {
+    [self.handlerList removeAllObjects];
 }
 
 - (void)unsubsribeForTarget:(id)target {
@@ -112,6 +109,7 @@
 }
 
 - (void)chatDidLogin {
+    
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatDidLogin block) {
         block(YES);
     }];
@@ -122,7 +120,7 @@
  */
 
 - (void)chatDidNotLoginWithTarget:(id)target block:(QMChatDidLogin)block {
-    [self subsribeWithTarget:target selector:@selector(chatDidLogin) block:block];
+    [self subsribeWithTarget:target selector:@selector(chatDidNotLogin) block:block];
 }
 
 - (void)chatDidNotLogin {

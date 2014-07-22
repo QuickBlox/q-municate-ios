@@ -106,4 +106,14 @@
                             context:[QBEchoObject makeBlockForEchoObject:completion]];
 }
 
+- (NSObject<Cancelable> *)resetUserPasswordWithEmail:(NSString *)email completion:(QBResultBlock)completion {
+
+    return [QBUsers resetUserPasswordWithEmail:email delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
+}
+
+- (NSObject<Cancelable> *)updateUser:(QBUUser *)user withCompletion:(QBUUserResultBlock)completion {
+    
+    return [QBUsers updateUser:user delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
+}
+
 @end
