@@ -15,6 +15,8 @@
 
 @implementation QMApi (Auth)
 
+#pragma mark Public methods
+
 - (void)logout:(void(^)(BOOL success))completion {
 
     [self destroySessionWithCompletion:^(BOOL success) {
@@ -30,62 +32,11 @@
         }
     }];
 }
-/*Public*/
+
 - (void)setAutoLogin:(BOOL)autologin {
     self.settingsManager.rememberMe = autologin;
 }
-/*Private*/
-- (void)createSessionWithBlock:(void(^)(BOOL success))completion {
-    
-    __weak __typeof(self)weakSelf = self;
-    [self.authService createSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
-        completion([weakSelf checkResult:result]);
-    }];
-}
-/*Private*/
-- (void)logInWithFacebookAccessToken:(NSString *)accessToken completion:(void(^)(BOOL success))completion {
-    
-    __weak __typeof(self)weakSelf = self;
-    [weakSelf.authService logInWithFacebookAccessToken:accessToken completion:^(QBUUserLogInResult *loginWithFBResult) {
-        weakSelf.currentUser = loginWithFBResult.user;
-        completion([weakSelf checkResult:loginWithFBResult]);
-    }];
-}
-/*Private*/
-- (void)destroySessionWithCompletion:(void(^)(BOOL success))completion {
-    
-    __weak __typeof(self)weakSelf = self;
-    [self.authService destroySessionWithCompletion:^(QBAAuthResult *result) {
-        completion([weakSelf checkResult:result]);
-    }];
-}
-/*Private*/
-- (void)subscribeToPushNotificationsIfNeeded {
 
-    if (self.settingsManager.pushNotificationsEnabled) {
-        __weak __typeof(self)weakSelf = self;
-        [self.authService subscribeToPushNotifications:^(QBMRegisterSubscriptionTaskResult *result) {
-            [weakSelf checkResult:result];
-        }];
-    }
-}
-/*Private*/
-- (void)autorizeOnQuickbloxChat:(void(^)(BOOL success))completion {
-
-    __weak __typeof(self)weakSelf = self;
-    /*Authorize on QuickBlox Chat*/
-    [self.chatService loginWithUser:self.currentUser completion:^(BOOL success) {
-        if (!success) {
-            completion(success);
-        }
-        else {
-            [weakSelf fetchAllHistory:^{}];
-            completion(success);
-            [weakSelf subscribeToPushNotificationsIfNeeded];
-        }
-    }];
-}
-/*Public*/
 - (void)loginWithFacebook:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
@@ -117,26 +68,7 @@
         }
     }];
 }
-/*Private*/
-- (void)loginWithEmail:(NSString *)email password:(NSString *)password completion:(void(^)(BOOL success))completion {
 
-    __weak __typeof(self)weakSelf = self;
-    [self.authService logInWithEmail:email password:password completion:^(QBUUserLogInResult *loginResult) {
-        
-        weakSelf.currentUser = loginResult.user;
-        weakSelf.currentUser.password = password;
-
-        if(![weakSelf checkResult:loginResult]){
-            completion(loginResult.success);
-        } else {
-            if (weakSelf.settingsManager.rememberMe) {
-                [weakSelf.settingsManager setLogin:email andPassword:password];
-            }
-            completion(loginResult.success);
-        }
-    }];
-}
-/*Public*/
 - (void)signUpAndLoginWithUser:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
@@ -159,7 +91,7 @@
         }
     }];
 }
-/*Public*/
+
 - (void)loginWithUser:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
@@ -191,6 +123,78 @@
             [weakSelf.usersService resetUserPasswordWithEmail:email completion:^(Result *result) {
                 completion([weakSelf checkResult:result]);
             }];
+        }
+    }];
+}
+
+#pragma mark - Private methods
+
+- (void)createSessionWithBlock:(void(^)(BOOL success))completion {
+    
+    __weak __typeof(self)weakSelf = self;
+    [self.authService createSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
+        completion([weakSelf checkResult:result]);
+    }];
+}
+
+- (void)logInWithFacebookAccessToken:(NSString *)accessToken completion:(void(^)(BOOL success))completion {
+    
+    __weak __typeof(self)weakSelf = self;
+    [weakSelf.authService logInWithFacebookAccessToken:accessToken completion:^(QBUUserLogInResult *loginWithFBResult) {
+        weakSelf.currentUser = loginWithFBResult.user;
+        completion([weakSelf checkResult:loginWithFBResult]);
+    }];
+}
+
+- (void)destroySessionWithCompletion:(void(^)(BOOL success))completion {
+    
+    __weak __typeof(self)weakSelf = self;
+    [self.authService destroySessionWithCompletion:^(QBAAuthResult *result) {
+        completion([weakSelf checkResult:result]);
+    }];
+}
+
+- (void)subscribeToPushNotificationsIfNeeded {
+    
+    if (self.settingsManager.pushNotificationsEnabled) {
+        __weak __typeof(self)weakSelf = self;
+        [self.authService subscribeToPushNotifications:^(QBMRegisterSubscriptionTaskResult *result) {
+            [weakSelf checkResult:result];
+        }];
+    }
+}
+
+- (void)autorizeOnQuickbloxChat:(void(^)(BOOL success))completion {
+    
+    __weak __typeof(self)weakSelf = self;
+    /*Authorize on QuickBlox Chat*/
+    [self.chatService loginWithUser:self.currentUser completion:^(BOOL success) {
+        if (!success) {
+            completion(success);
+        }
+        else {
+            [weakSelf fetchAllHistory:^{}];
+            completion(success);
+            [weakSelf subscribeToPushNotificationsIfNeeded];
+        }
+    }];
+}
+
+- (void)loginWithEmail:(NSString *)email password:(NSString *)password completion:(void(^)(BOOL success))completion {
+
+    __weak __typeof(self)weakSelf = self;
+    [self.authService logInWithEmail:email password:password completion:^(QBUUserLogInResult *loginResult) {
+        
+        weakSelf.currentUser = loginResult.user;
+        weakSelf.currentUser.password = password;
+
+        if(![weakSelf checkResult:loginResult]){
+            completion(loginResult.success);
+        } else {
+            if (weakSelf.settingsManager.rememberMe) {
+                [weakSelf.settingsManager setLogin:email andPassword:password];
+            }
+            completion(loginResult.success);
         }
     }];
 }
