@@ -2,7 +2,7 @@
 //  QMInviteFriendsDataSource.m
 //  Q-municate
 //
-//  Created by Ivanov Andrey on 07.04.14.
+//  Created by Ivanov Andrey Ivanov on 07.04.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 

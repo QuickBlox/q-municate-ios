@@ -2,7 +2,7 @@
 //  QMServicesFacade.h
 //  Qmunicate
 //
-//  Created by Andrey on 01.07.14.
+//  Created by Andrey Ivanov on 01.07.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -35,7 +35,9 @@
 + (instancetype)instance;
 - (void)fetchAllHistory:(void(^)(void))completion;
 - (BOOL)checkResult:(Result *)result;
-- (void)cleanUp;
+
+- (void)startServices;
+- (void)stopServices;
 
 @end
 

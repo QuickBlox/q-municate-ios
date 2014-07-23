@@ -2,7 +2,7 @@
 //  QMFriendListController.m
 //  Q-municate
 //
-//  Created by Ivanov Andrey on 7/07/2014.
+//  Created by Ivanov Andrey Ivanov on 7/07/2014.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 

@@ -2,7 +2,7 @@
 //  QMChatReceiver.h
 //  Qmunicate
 //
-//  Created by Andrey on 07.07.14.
+//  Created by Andrey Ivanov on 07.07.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -43,7 +43,7 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 
 + (instancetype)instance;
 
-- (void)unsubsribeForTarget:(id)target;
+- (void)unsubscribeForTarget:(id)target;
 /**
  ChatService
  */

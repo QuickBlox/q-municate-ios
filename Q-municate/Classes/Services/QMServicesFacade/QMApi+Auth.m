@@ -2,7 +2,7 @@
 //  QMApi+Auth.m
 //  Qmunicate
 //
-//  Created by Andrey on 03.07.14.
+//  Created by Andrey Ivanov on 03.07.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -19,15 +19,17 @@
 
 - (void)logout:(void(^)(BOOL success))completion {
 
+    __weak __typeof(self)weakSelf = self;
     [self destroySessionWithCompletion:^(BOOL success) {
         if (!success) {
             completion(success);
         }
         else {
-            [self.settingsManager clearSettings];
-            [self.chatService logout];
-            [self.facebookService logout];
-            [self cleanUp];
+            [weakSelf stopServices];
+            [weakSelf.chatService logout];
+            [weakSelf.facebookService logout];
+            [weakSelf.settingsManager clearSettings];
+            
             completion(success);
         }
     }];
@@ -168,8 +170,10 @@
     
     __weak __typeof(self)weakSelf = self;
     /*Authorize on QuickBlox Chat*/
+    [weakSelf startServices];
     [self.chatService loginWithUser:self.currentUser completion:^(BOOL success) {
         if (!success) {
+            [weakSelf stopServices];
             completion(success);
         }
         else {

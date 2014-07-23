@@ -34,7 +34,7 @@
 }
 
 - (void)dealloc {
-    [[QMChatReceiver instance] unsubsribeForTarget:self];
+    [[QMChatReceiver instance] unsubscribeForTarget:self];
 }
 
 - (void)showIncomingCallControllerWithOpponentID:(NSUInteger)opponentID conferenceType:(QBVideoChatConferenceType)conferenceType {

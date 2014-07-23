@@ -2,7 +2,7 @@
 //  ABPerson.h
 //  Qmunicate
 //
-//  Created by Andrey on 06.07.14.
+//  Created by Andrey Ivanov on 06.07.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 

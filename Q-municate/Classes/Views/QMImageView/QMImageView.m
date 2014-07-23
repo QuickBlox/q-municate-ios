@@ -2,7 +2,7 @@
 //  QMImageView.m
 //  Qmunicate
 //
-//  Created by Andrey on 27.06.14.
+//  Created by Andrey Ivanov on 27.06.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 

@@ -2,7 +2,7 @@
 //  QMServicesFacade.m
 //  Qmunicate
 //
-//  Created by Andrey on 01.07.14.
+//  Created by Andrey Ivanov on 01.07.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -51,24 +51,30 @@
         self.settingsManager = [[QMSettingsManager alloc] init];
         self.facebookService = [[QMFacebookService alloc] init];
         self.avCallService = [[QMAVCallService alloc] init];
-        
-        [self.usersService start];
-        [self.chatDialogsService start];
-        [self.messagesService start];
     }
     
     return self;
 }
 
-- (void)cleanUp {
+- (void)startServices {
     
-    [self.usersService destroy];
+    [self.chatService start];
+    [self.usersService start];
+    [self.chatDialogsService start];
+    [self.messagesService start];
+    [self.avCallService start];
+}
+
+- (void)stopServices {
+    
     [self.chatService destroy];
+    [self.usersService destroy];
     [self.chatDialogsService destroy];
+    [self.messagesService destroy];
+    [self.avCallService destroy];
 }
 
 - (void)fetchAllHistory:(void(^)(void))completion {
-
     /**
      Feach Dialogs
      */
@@ -80,9 +86,7 @@
         [weakSelf retrieveUsersWithIDs:allOccupantIDs completion:^(BOOL updated) {
             completion();
         }];
-        
     }];
-    
 }
 
 - (BOOL)checkResult:(Result *)result {

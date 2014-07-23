@@ -2,7 +2,7 @@
 //  QMDialogsDataSource.m
 //  Qmunicate
 //
-//  Created by Andrey on 13.07.14.
+//  Created by Andrey Ivanov on 13.07.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -32,11 +32,11 @@
         self.tableView.dataSource = self;
         
         [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
-
+            
             QBChatDialog *chatDialog = [[QMApi instance] chatDialogWithID:roomJID];
             NSLog(@"chatRoomDidReceiveMessageWithTarget");
         }];
-
+        
         [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
             
         }];

@@ -2,7 +2,7 @@
 //  QMAVCallService.m
 //  Qmunicate
 //
-//  Created by Andrey on 02.07.14.
+//  Created by Andrey Ivanov on 02.07.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -20,12 +20,31 @@
 
 @implementation QMAVCallService
 
-- (id)init
-{
-    if (self = [super init]) {
-        [self subscribToNotifications];
-    }
-    return self;
+- (void)start {
+    
+    NSLog(@"\n____________________________\nSTART AV Call Service\n____________________________");
+    __weak typeof(self) weakSelf = self;
+    // incoming call signal:
+    [[QMChatReceiver instance] chatDidReceiveCallRequestCustomParametesrWithTarget:self block:^(NSUInteger userID, NSString *sessionID, QBVideoChatConferenceType conferenceType, NSDictionary *customParameters) {
+        weakSelf.customParams = customParameters;
+        weakSelf.currentSessionID = sessionID;
+        weakSelf.conferenceType = conferenceType;
+    }];
+    
+    //call was rejected:
+    [[QMChatReceiver instance] chatCallDidRejectByUserWithTarget:self block:^(NSUInteger userID) {
+        [weakSelf releaseActiveStream];
+    }];
+    
+    // call was stopped:
+    [[QMChatReceiver instance] chatCallDidStopCustomParametersWithTarget:self block:^(NSUInteger userID, NSString *status, NSDictionary *customParameters) {
+        [weakSelf releaseActiveStream];
+    }];
+}
+
+- (void)destroy {
+     NSLog(@"\n____________________________\nSTART AV Call Service\n____________________________");
+    [[QMChatReceiver instance] unsubscribeForTarget:self];
 }
 
 - (void)initActiveStreamWithOpponentView:(QBVideoView *)opponentView sessionID:(NSString *)sessionID conferenceType:(QBVideoChatConferenceType)conferenceType {
@@ -71,39 +90,15 @@
     [self.activeStream callUser:userID];
 }
 
-- (void)cancelCall
-{
+- (void)cancelCall {
+    
     [self.activeStream finishCall];
     [self releaseActiveStream];
 }
 
-- (void)finishCallFromOpponent
-{
+- (void)finishCallFromOpponent {
+    
     [self cancelCall];
-}
-
-
-#pragma mark - Notifications
-
-- (void)subscribToNotifications
-{
-    __weak typeof(self) weakSelf = self;
-    // incoming call signal:
-    [[QMChatReceiver instance] chatDidReceiveCallRequestCustomParametesrWithTarget:self block:^(NSUInteger userID, NSString *sessionID, QBVideoChatConferenceType conferenceType, NSDictionary *customParameters) {
-        weakSelf.customParams = customParameters;
-        weakSelf.currentSessionID = sessionID;
-        weakSelf.conferenceType = conferenceType;
-    }];
-    
-    //call was rejected:
-    [[QMChatReceiver instance] chatCallDidRejectByUserWithTarget:self block:^(NSUInteger userID) {
-        [weakSelf releaseActiveStream];
-    }];
-    
-    // call was stopped:
-    [[QMChatReceiver instance] chatCallDidStopCustomParametersWithTarget:self block:^(NSUInteger userID, NSString *status, NSDictionary *customParameters) {
-         [weakSelf releaseActiveStream];
-    }];
 }
 
 @end

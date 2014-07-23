@@ -2,7 +2,7 @@
 //  QMNotFriendsCell.h
 //  Qmunicate
 //
-//  Created by Andrey on 07.07.14.
+//  Created by Andrey Ivanov on 07.07.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 

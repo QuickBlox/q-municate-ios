@@ -2,7 +2,7 @@
 //  NSUserDefaultsHelper.c
 //  Qmunicate
 //
-//  Created by Andrey on 24.06.14.
+//  Created by Andrey Ivanov on 24.06.14.
 //  Copyright (c) 2014 QuickBlox. All rights reserved.
 //
 

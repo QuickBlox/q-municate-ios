@@ -2,7 +2,7 @@
 //  QMAttachmentMessageCell.h
 //  Qmunicate
 //
-//  Created by Andrey on 17.06.14.
+//  Created by Andrey Ivanov on 17.06.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 

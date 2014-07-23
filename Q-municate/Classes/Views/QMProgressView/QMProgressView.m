@@ -2,7 +2,7 @@
 //  QMProgressView.m
 //  Qmunicate
 //
-//  Created by Andrey on 26.06.14.
+//  Created by Andrey Ivanov on 26.06.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 

@@ -2,7 +2,7 @@
 //  REAlertView+QMSuccess.m
 //  Qmunicate
 //
-//  Created by Andrey on 30.06.14.
+//  Created by Andrey Ivanov on 30.06.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 

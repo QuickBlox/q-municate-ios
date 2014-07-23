@@ -2,13 +2,13 @@
 //  QMChatDialogsService.m
 //  Qmunicate
 //
-//  Created by Andrey on 02.07.14.
+//  Created by Andrey Ivanov on 02.07.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
 #import "QMChatDialogsService.h"
 #import "QBEchoObject.h"
-
+#import "QMChatReceiver.h"
 
 @interface QMChatDialogsService()
 
@@ -23,9 +23,28 @@
     
     self.dialogs = [NSMutableDictionary dictionary];
     self.chatRooms = [NSMutableDictionary dictionary];
+
+    __weak __typeof(self)weakSelf = self;
+    [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
+        NSLog(@"chatRoomDidReceiveMessageWithTarget");
+        
+        QBChatDialog *dialog = [weakSelf chatDialogWithRoomJID:roomJID];
+        
+    }];
+    
+    [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+        
+    }];
+    
+    [[QMChatReceiver instance] chatRoomDidCreateWithTarget:self block:^(NSString *roomName) {
+        NSLog(@"chatRoomDidCreateWithTarget");
+    }];
 }
 
+
 - (void)destroy {
+    
+    [[QMChatReceiver instance] unsubscribeForTarget:self];
     
     [self.dialogs removeAllObjects];
     [self.chatRooms removeAllObjects];
@@ -56,13 +75,22 @@
     }
 }
 
+- (QBChatDialog *)chatDialogWithRoomJID:(NSString *)roomJID {
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ANY self.roomJID == %@", roomJID];
+    NSArray *allDialogs = [self dialogHistory];
+
+    QBChatDialog *dialog = [allDialogs filteredArrayUsingPredicate:predicate].firstObject;
+    return dialog;
+}
+
 - (QBChatDialog *)chatDialogWithID:(NSString *)dialogID {
     return self.dialogs[dialogID];
 }
 
 - (void)addDialogToHistory:(QBChatDialog *)chatDialog {
     
-    //If type is equal group then need join room
+    //If dialog type is equal group then need join room
     if (chatDialog.type == QBChatDialogTypeGroup) {
         
         NSString *roomJID = chatDialog.roomJID;

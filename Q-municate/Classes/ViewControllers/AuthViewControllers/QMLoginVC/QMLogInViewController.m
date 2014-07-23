@@ -19,7 +19,6 @@
 @property (weak, nonatomic) IBOutlet UISwitch *rememberMeSwitch;
 @property (strong, nonatomic) QMSettingsManager *settingsManager;
 
-
 @end
 
 @implementation QMLogInViewController
@@ -31,6 +30,9 @@
 - (void)viewDidLoad {
     
     [super viewDidLoad];
+    
+    self.rememberMeSwitch.on = YES;
+    [[QMApi instance] setAutoLogin:YES];
     
     [self.navigationController setNavigationBarHidden:NO animated:YES];
 }

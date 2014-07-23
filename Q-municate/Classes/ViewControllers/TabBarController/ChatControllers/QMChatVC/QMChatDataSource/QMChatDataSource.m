@@ -35,7 +35,7 @@
 @implementation QMChatDataSource
 
 - (void)dealloc {
-    [[QMChatReceiver instance] unsubsribeForTarget:self];
+    [[QMChatReceiver instance] unsubscribeForTarget:self];
     NSLog(@"%@ - %@", NSStringFromSelector(_cmd), self);
 }
 

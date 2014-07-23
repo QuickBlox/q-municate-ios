@@ -2,7 +2,7 @@
 //  QMChatReceiver.m
 //  Qmunicate
 //
-//  Created by Andrey on 07.07.14.
+//  Created by Andrey Ivanov on 07.07.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -58,16 +58,18 @@
 }
 
 - (void)start {
+    
     NSAssert((_isActive == NO), @"Need update this case");
     self.isActive = YES;
 }
 
 - (void)destroy {
+    
     _isActive = NO;
     [self.handlerList removeAllObjects];
 }
 
-- (void)unsubsribeForTarget:(id)target {
+- (void)unsubscribeForTarget:(id)target {
     
     NSArray *allHendlers = [self.handlerList allValues];
     

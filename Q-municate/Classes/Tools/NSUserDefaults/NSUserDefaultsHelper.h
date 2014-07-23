@@ -2,7 +2,7 @@
 //  NSUserDefaultsHalper.h
 //  CASP
 //
-//  Created by Andrey on 13.08.13.
+//  Created by Andrey Ivanov on 13.08.13.
 //  Copyright (c) 2013 2ShareNetworksBV. All rights reserved.
 
 #import <Foundation/Foundation.h>
