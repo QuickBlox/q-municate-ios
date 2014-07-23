@@ -25,6 +25,11 @@
 @property (weak, nonatomic) IBOutlet UITextView *statusField;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *updateProfileButton;
 
+@property (strong, nonatomic) NSString *fullNameFieldCache;
+@property (copy, nonatomic) NSString *phoneFieldCache;
+@property (copy, nonatomic) NSString *statusTextCache;
+
+
 @property (nonatomic, strong) UIImage *avatarImage;
 @property (strong, nonatomic) QBUUser *currentUser;
 
@@ -52,8 +57,16 @@
     [super didReceiveMemoryWarning];
 }
 
+- (void)cacheNeededFields
+{
+    self.fullNameFieldCache = self.currentUser.fullName;
+    self.phoneFieldCache = self.currentUser.phone;
+    self.statusTextCache = self.currentUser.customData;
+}
+
 - (void)updateProfileView {
     
+    [self cacheNeededFields];
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
     NSURL *url = [NSURL URLWithString:self.currentUser.website];
     [self.avatarView sd_setImageWithURL:url placeholderImage:placeholder];
@@ -62,7 +75,7 @@
     self.emailField.text = self.currentUser.email;
     self.phoneNumberField.text = self.currentUser.phone;
 
-    self.statusField.text = self.currentUser.customData ? self.currentUser.customData : @"Add status";
+    self.statusField.text = self.currentUser.customData;
 }
 
 - (IBAction)changeAvatar:(id)sender
@@ -111,9 +124,9 @@
 - (BOOL)fieldsWereChanged
 {
     if (self.avatarImage != nil) return YES;
-    if (![self.fullNameField.text isEqualToString:self.currentUser.fullName]) return YES;
-    if (![self.phoneNumberField.text isEqualToString:self.userPhone]) return YES;
-    if (![self.statusField.text isEqualToString:self.currentUser.customData]) return YES;
+    if (![self.fullNameFieldCache isEqualToString:self.currentUser.fullName]) return YES;
+    if ( (self.phoneFieldCache != nil && ![self.phoneFieldCache isEqualToString:@""])  &&  ![self.phoneFieldCache isEqualToString:self.currentUser.phone]) return YES;
+    if ((self.statusTextCache != nil && [self.statusTextCache isEqualToString:@""]) && ![self.statusTextCache isEqualToString:self.currentUser.customData]) return YES;
     
     return NO;
 }
@@ -124,9 +137,15 @@
 
 - (void)updateUsersProfile {
 
+    self.currentUser.fullName = self.fullNameFieldCache;
+    self.currentUser.phone = self.phoneFieldCache;
+    self.currentUser.customData = self.statusTextCache;
+    
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] updateUser:self.currentUser completion:^(BOOL success) {
         [SVProgressHUD dismiss];
+        [self updateProfileView];
+        [self setUpdateButtonActivity];
     }];
 }
 
@@ -134,6 +153,11 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
+    if (textField == self.fullNameField) {
+        self.fullNameFieldCache = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    } else if (textField == self.phoneNumberField) {
+        self.phoneFieldCache = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    }
     
     [self setUpdateButtonActivity];
     return YES;
@@ -141,6 +165,7 @@
 
 - (void)textViewDidChange:(UITextView *)textView
 {
+    self.statusTextCache = textView.text;
     [self setUpdateButtonActivity];
 }
 
