@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "QMincomingCallService.h"
+#import "QMIncomingCallHandler.h"
 
 const NSUInteger kQMApplicationID = 7232;
 NSString *const kQMAuthorizationKey = @"MpOecRZy-5WsFva";

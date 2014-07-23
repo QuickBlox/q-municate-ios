@@ -10,9 +10,6 @@
 #import "QMContentView.h"
 #import "QMApi.h"
 #import "QMSoundManager.h"
-#import "QMincomingCallService.h"
-
-
 
 @interface QMBaseCallsController : UIViewController
 

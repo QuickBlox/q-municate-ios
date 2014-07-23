@@ -10,7 +10,6 @@
 #import "QMApi.h"
 #import "QMImageView.h"
 #import "QMSoundManager.h"
-#import "QMincomingCallService.h"
 
 @interface QMIncomingCallController ()
 

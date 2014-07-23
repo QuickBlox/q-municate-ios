@@ -1,27 +1,27 @@
 //
-//  Utilities.m
+//  QMIncomingCallHandler.m
 //  Q-municate
 //
 //  Created by Igor Alefirenko on 19/02/2014.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import "QMIncomingCallService.h"
+#import "QMIncomingCallHandler.h"
 #import "QMChatReceiver.h"
 
-@interface QMIncomingCallService ()
+@interface QMIncomingCallHandler ()
 
 @property (strong, nonatomic) QMIncomingCallController *incomingCallController;
 @property (strong, nonatomic) UIView *activityView;
 
 @end
 
-@implementation QMIncomingCallService
+@implementation QMIncomingCallHandler
 
 
 - (id)init {
     
-    if (self= [super init]) {
+    if (self = [super init]) {
 
         self.dateFormatter = [[NSDateFormatter alloc] init];
         self.dateFormatter.locale = [NSLocale currentLocale];

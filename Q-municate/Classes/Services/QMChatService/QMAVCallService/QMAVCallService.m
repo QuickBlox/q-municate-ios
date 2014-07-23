@@ -8,7 +8,6 @@
 
 #import "QMAVCallService.h"
 #import "QMChatReceiver.h"
-#import "QMIncomingCallService.h"
 
 @interface QMAVCallService()
 

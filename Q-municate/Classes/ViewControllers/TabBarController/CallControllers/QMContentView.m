@@ -7,7 +7,6 @@
 //
 
 #import "QMContentView.h"
-#import "QMincomingCallService.h"
 #import "NSString+DateTimeIntervalFormatting.h"
 
 @interface QMContentView()

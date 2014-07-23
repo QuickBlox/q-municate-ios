@@ -1,5 +1,5 @@
 //
-//  Utilities.h
+//  QMIncomingCallHandler.h
 //  Q-municate
 //
 //  Created by Igor Alefirenko on 19/02/2014.
@@ -10,8 +10,7 @@
 #import "QMIncomingCallController.h"
 #import "NSDateFormatter+SinceDateFormat.h"
 
-
-@interface QMIncomingCallService : NSObject
+@interface QMIncomingCallHandler : NSObject
 
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
 

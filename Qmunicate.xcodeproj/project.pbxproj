@@ -12,6 +12,7 @@
 		551F8728196EA68900DBCA02 /* QMInviteFriendsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 551F8727196EA68900DBCA02 /* QMInviteFriendsDataSource.m */; };
 		55202F08196AD04100307D2C /* QMNotResultCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55202F07196AD04100307D2C /* QMNotResultCell.m */; };
 		55202F0B196AD05300307D2C /* QMSearchGlobalCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55202F0A196AD05300307D2C /* QMSearchGlobalCell.m */; };
+		5521401E197FF00900F55373 /* QMIncomingCallHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5521401D197FF00900F55373 /* QMIncomingCallHandler.m */; };
 		5526D909196D3267003AA9B6 /* QMChatReceiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 5526D908196D3267003AA9B6 /* QMChatReceiver.m */; };
 		552B423919471E19008DF1E8 /* CDAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 552B423819471E19008DF1E8 /* CDAttachment.m */; };
 		552B423C19471E22008DF1E8 /* _CDAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 552B423B19471E22008DF1E8 /* _CDAttachment.m */; };
@@ -168,8 +169,6 @@
 		6943849418E42691001E08A9 /* UIImage+Cropper.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943849018E42691001E08A9 /* UIImage+Cropper.m */; };
 		697E2D4C196EA82400CD2BDE /* QMLicenseAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 697E2D4B196EA82400CD2BDE /* QMLicenseAgreementViewController.m */; };
 		697E2D4D196EA82400CD2BDE /* QMLicenseAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 697E2D4B196EA82400CD2BDE /* QMLicenseAgreementViewController.m */; };
-		698C94F1197670AB002C53FA /* QMIncomingCallService.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C94F0197670AB002C53FA /* QMIncomingCallService.m */; };
-		698C94F2197670AB002C53FA /* QMIncomingCallService.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C94F0197670AB002C53FA /* QMIncomingCallService.m */; };
 		698C94F51976D483002C53FA /* QMApi+Calls.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C94F41976D483002C53FA /* QMApi+Calls.m */; };
 		698C94F61976D483002C53FA /* QMApi+Calls.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C94F41976D483002C53FA /* QMApi+Calls.m */; };
 		69B1893E190950A70049C6F9 /* QMDefinitions.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B1893D190950A70049C6F9 /* QMDefinitions.m */; };
@@ -246,6 +245,8 @@
 		55202F07196AD04100307D2C /* QMNotResultCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMNotResultCell.m; sourceTree = "<group>"; };
 		55202F09196AD05300307D2C /* QMSearchGlobalCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSearchGlobalCell.h; sourceTree = "<group>"; };
 		55202F0A196AD05300307D2C /* QMSearchGlobalCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSearchGlobalCell.m; sourceTree = "<group>"; };
+		5521401C197FF00900F55373 /* QMIncomingCallHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncomingCallHandler.h; sourceTree = "<group>"; };
+		5521401D197FF00900F55373 /* QMIncomingCallHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMIncomingCallHandler.m; sourceTree = "<group>"; };
 		5526D907196D3267003AA9B6 /* QMChatReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatReceiver.h; sourceTree = "<group>"; };
 		5526D908196D3267003AA9B6 /* QMChatReceiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatReceiver.m; sourceTree = "<group>"; };
 		552B423619470A81008DF1E8 /* QBDBMergeProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QBDBMergeProtocol.h; sourceTree = "<group>"; };
@@ -546,8 +547,6 @@
 		6943849018E42691001E08A9 /* UIImage+Cropper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Cropper.m"; sourceTree = "<group>"; };
 		697E2D4A196EA82400CD2BDE /* QMLicenseAgreementViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMLicenseAgreementViewController.h; path = QMLicenseAgreementViewController/QMLicenseAgreementViewController.h; sourceTree = "<group>"; };
 		697E2D4B196EA82400CD2BDE /* QMLicenseAgreementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMLicenseAgreementViewController.m; path = QMLicenseAgreementViewController/QMLicenseAgreementViewController.m; sourceTree = "<group>"; };
-		698C94EF197670AB002C53FA /* QMIncomingCallService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncomingCallService.h; sourceTree = "<group>"; };
-		698C94F0197670AB002C53FA /* QMIncomingCallService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMIncomingCallService.m; sourceTree = "<group>"; };
 		698C94F41976D483002C53FA /* QMApi+Calls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Calls.m"; sourceTree = "<group>"; };
 		69B1893D190950A70049C6F9 /* QMDefinitions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDefinitions.m; sourceTree = "<group>"; };
 		69B72F7D196D37FE00ECEE4C /* QMFeedbackTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMFeedbackTableViewController.h; sourceTree = "<group>"; };
@@ -668,6 +667,15 @@
 				55202F0A196AD05300307D2C /* QMSearchGlobalCell.m */,
 			);
 			path = QMSearchGlobalCell;
+			sourceTree = "<group>";
+		};
+		5521401B197FF00900F55373 /* QMIncomingCallHandler */ = {
+			isa = PBXGroup;
+			children = (
+				5521401C197FF00900F55373 /* QMIncomingCallHandler.h */,
+				5521401D197FF00900F55373 /* QMIncomingCallHandler.m */,
+			);
+			path = QMIncomingCallHandler;
 			sourceTree = "<group>";
 		};
 		55481024195C698000D74505 /* QMProgressView */ = {
@@ -1630,7 +1638,7 @@
 		55D963A9196430F300A87ECE /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				698C94EE197670AB002C53FA /* QMIncomingCallService */,
+				5521401B197FF00900F55373 /* QMIncomingCallHandler */,
 				55202F00196A7EC900307D2C /* QMChatReciver */,
 				55A8B022196597B400B5D33B /* QMServicesFacade */,
 				55A8B077196598A300B5D33B /* QMAuthService */,
@@ -1808,15 +1816,6 @@
 				697E2D4B196EA82400CD2BDE /* QMLicenseAgreementViewController.m */,
 			);
 			name = QMLicenseAgreementViewController;
-			sourceTree = "<group>";
-		};
-		698C94EE197670AB002C53FA /* QMIncomingCallService */ = {
-			isa = PBXGroup;
-			children = (
-				698C94EF197670AB002C53FA /* QMIncomingCallService.h */,
-				698C94F0197670AB002C53FA /* QMIncomingCallService.m */,
-			);
-			path = QMIncomingCallService;
 			sourceTree = "<group>";
 		};
 		69B72F7C196D37D500ECEE4C /* QMFeedbackTableViewController */ = {
@@ -2084,7 +2083,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				69D261511978258000A4104B /* NSString+DateTimeIntervalFormatting.m in Sources */,
-				698C94F2197670AB002C53FA /* QMIncomingCallService.m in Sources */,
 				55943AC31941C8EC00BF4312 /* Q_municateTests.m in Sources */,
 				698C94F61976D483002C53FA /* QMApi+Calls.m in Sources */,
 				697E2D4D196EA82400CD2BDE /* QMLicenseAgreementViewController.m in Sources */,
@@ -2117,6 +2115,7 @@
 				55CEAB9A195DBCFA001A8ED6 /* QMChatViewController.m in Sources */,
 				55A8B06C1965986A00B5D33B /* QBEchoObject.m in Sources */,
 				6943849418E42691001E08A9 /* UIImage+Cropper.m in Sources */,
+				5521401E197FF00900F55373 /* QMIncomingCallHandler.m in Sources */,
 				55CEAB86195DBCFA001A8ED6 /* UIColor+Hex.m in Sources */,
 				55D270BD1940B8D300238D50 /* ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.m in Sources */,
 				55D270A01940B8D300238D50 /* NSFetchedResultsController+MagicalFetching.m in Sources */,
@@ -2141,7 +2140,6 @@
 				55D270B31940B8D300238D50 /* MagicalMigrationManager.m in Sources */,
 				55CEAB98195DBCFA001A8ED6 /* QMAddUsersAbstractController.m in Sources */,
 				6943848318E42678001E08A9 /* QMMainTabBarController.m in Sources */,
-				698C94F1197670AB002C53FA /* QMIncomingCallService.m in Sources */,
 				55A8B09E196598A300B5D33B /* QMUsersService.m in Sources */,
 				55CEAB96195DBCFA001A8ED6 /* QMMessage.m in Sources */,
 				55CEAB9F195DBCFA001A8ED6 /* QMGroupDetailsController.m in Sources */,

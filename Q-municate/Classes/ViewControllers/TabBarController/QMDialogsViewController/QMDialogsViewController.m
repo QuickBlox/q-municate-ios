@@ -32,16 +32,6 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.dataSource = [[QMDialogsDataSource alloc] initWithTableView:self.tableView];
-    
-    [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
-//        QBChatDialog *chatDialog = [[QMApi instance] chatDialogWithID:roomJID];
-        
-        NSLog(@"chatRoomDidReceiveMessageWithTarget");
-    }];
-    
-    [[QMChatReceiver instance] chatRoomDidCreateWithTarget:self block:^(NSString *roomName) {
-        NSLog(@"chatRoomDidCreateWithTarget");
-    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

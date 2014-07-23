@@ -8,7 +8,7 @@
 
 #import "QMMainTabBarController.h"
 #import "QMSplashViewController.h"
-#import "QMincomingCallService.h"
+#import "QMIncomingCallHandler.h"
 #import "QMAuthService.h"
 #import "QMUsersService.h"
 #import "QMChatService.h"

@@ -10,8 +10,11 @@
 #import "QMDialogCell.h"
 #import "SVProgressHUD.h"
 #import "QMApi.h"
+#import "QMChatReceiver.h"
 
-@interface QMDialogsDataSource() <UITableViewDataSource>
+@interface QMDialogsDataSource()
+
+<UITableViewDataSource>
 
 @property (weak, nonatomic) UITableView *tableView;
 @property (strong, nonatomic, readonly) NSMutableArray *dialogs;
@@ -27,6 +30,20 @@
         
         self.tableView = tableView;
         self.tableView.dataSource = self;
+        
+        [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
+
+            QBChatDialog *chatDialog = [[QMApi instance] chatDialogWithID:roomJID];
+            NSLog(@"chatRoomDidReceiveMessageWithTarget");
+        }];
+
+        [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+            
+        }];
+        
+        [[QMChatReceiver instance] chatRoomDidCreateWithTarget:self block:^(NSString *roomName) {
+            NSLog(@"chatRoomDidCreateWithTarget");
+        }];
         
     }
     return self;

@@ -31,7 +31,9 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
     if (self = [super init]) {
         
         _tableView = tableView;
+        
         self.chatDialog = chatDialog;
+        
         self.tableView.dataSource = nil;
         [self reloadParticipants];
         self.tableView.dataSource = self;

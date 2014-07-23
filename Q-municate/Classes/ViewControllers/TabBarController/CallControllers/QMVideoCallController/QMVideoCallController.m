@@ -7,7 +7,7 @@
 //
 
 #import "QMVideoCallController.h"
-#import "QMincomingCallService.h"
+#import "QMIncomingCallHandler.h"
 #import "QMImageView.h"
 #import "QMSoundManager.h"
 

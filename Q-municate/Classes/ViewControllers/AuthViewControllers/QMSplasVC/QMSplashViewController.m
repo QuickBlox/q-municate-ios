@@ -8,13 +8,8 @@
 
 #import "QMSplashViewController.h"
 #import "QMWelcomeScreenViewController.h"
-#import "QMAuthService.h"
-#import "QMChatService.h"
-#import "QMUsersService.h"
-#import "QMincomingCallService.h"
 #import "QMSettingsManager.h"
 #import "REAlertView+QMSuccess.h"
-#import "QMFacebookService.h"
 #import "QMApi.h"
 
 @interface QMSplashViewController ()

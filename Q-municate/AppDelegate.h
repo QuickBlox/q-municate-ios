@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@class QMIncomingCallService;
+@class QMIncomingCallHandler;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) QMIncomingCallService *incomingCallService;
+@property (strong, nonatomic) QMIncomingCallHandler *incomingCallService;
 
 @end

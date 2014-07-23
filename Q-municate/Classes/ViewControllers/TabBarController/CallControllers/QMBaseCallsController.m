@@ -9,43 +9,33 @@
 #import "QMBaseCallsController.h"
 #import "QMChatReceiver.h"
 #import "AppDelegate.h"
-
+#import "QMIncomingCallHandler.h"
 
 @implementation QMBaseCallsController
 
-
 #pragma mark - LifeCycle
 
-- (void)viewDidLoad
-{
+- (void)dealloc {
+    
+    [[QMChatReceiver instance] unsubsribeForTarget:self];
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
+
+- (void)viewDidLoad {
+    
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
     [self subscribeForNotifications];
-    
-    if (!_isOpponentCaller) {
-        [self startCall];
-    } else {
-        [self confirmCall];
-    }
-}
+    !self.isOpponentCaller ? [self startCall] : [self confirmCall];
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    self.opponentsView.backgroundColor = [UIColor clearColor];
     [self.contentView updateViewWithUser:self.opponent];
+    self.opponentsView.backgroundColor = [UIColor clearColor];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)subscribeForNotifications
-{
-    __weak typeof(self) weakSelf = self;
+- (void)subscribeForNotifications {
     
+    __weak typeof(self) weakSelf = self;
     /** CALL WAS ACCEPTED */
     [[QMChatReceiver instance] chatCallDidAcceptCustomParametersWithTarget:self block:^(NSUInteger userID, NSDictionary *customParameters) {
         [weakSelf callAcceptedByUser];
@@ -143,13 +133,13 @@
     
     [[QMSoundManager shared] stopAllSounds];
     
-    if (_isOpponentCaller) {
+    if (self.isOpponentCaller) {
         AppDelegate *delegate = [UIApplication sharedApplication].delegate;
         [delegate.incomingCallService hideIncomingCallControllerWithStatus:nil];
-        return;
     }
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
+    else {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 @end
