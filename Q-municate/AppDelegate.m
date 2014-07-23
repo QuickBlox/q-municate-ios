@@ -16,21 +16,24 @@ NSString *const kQMAcconuntKey = @"LpNmxA2Pq2uyW5qBjHy8";
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-    [QMDBStorage setupWithName:@"Andrey"];
+
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-    /**
-     Setup framework
-     Quickblox credentials
-     */
-    [QBSettings setApplicationID:7232];
-    [QBSettings setAuthorizationKey:@"MpOecRZy-5WsFva"];
-    [QBSettings setAuthorizationSecret:@"dTSLaxDsFKqegD7"];
-    [QBSettings setAccountKey:@"LpNmxA2Pq2uyW5qBjHy8"];
-//    [QBSettings setLogLevel:QBLogLevelNothing];
-     self.incomingCallService = [[QMIncomingCallService alloc] init];
+
+    [QBSettings setApplicationID:kQMApplicationID];
+    [QBSettings setAuthorizationKey:kQMAuthorizationKey];
+    [QBSettings setAuthorizationSecret:kQMAuthorizationSecret];
+    [QBSettings setAccountKey:kQMAcconuntKey];
+    [QBSettings setLogLevel:QBLogLevelNothing];
+    
+    /*Configure app appearance*/
+    NSDictionary *normalAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:1.000 alpha:0.830]};
+    NSDictionary *disabledAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:0.935 alpha:0.260]};
+    [[UIBarButtonItem appearance] setTitleTextAttributes:normalAttributes forState:UIControlStateNormal];
+    [[UIBarButtonItem appearance] setTitleTextAttributes:disabledAttributes forState:UIControlStateDisabled];
+
     return YES;
 }
 
