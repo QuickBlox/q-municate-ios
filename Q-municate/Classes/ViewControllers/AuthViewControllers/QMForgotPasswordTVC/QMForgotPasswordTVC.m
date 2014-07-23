@@ -23,9 +23,6 @@
     NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-}
 
 #pragma mark - actions
 

@@ -25,12 +25,12 @@
 @property (weak, nonatomic) IBOutlet UITextView *statusField;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *updateProfileButton;
 
+@property (strong, nonatomic) NSString *fullNameFieldCache;
+@property (copy, nonatomic) NSString *phoneFieldCache;
+@property (copy, nonatomic) NSString *statusTextCache;
+
+
 @property (nonatomic, strong) UIImage *avatarImage;
-
-@property (nonatomic, copy) NSString *fullNameFieldCache;
-@property (nonatomic, copy) NSString *phoneFieldCache;
-@property (nonatomic, copy) NSString *statusFieldCache;
-
 @property (strong, nonatomic) QBUUser *currentUser;
 
 @end
@@ -42,20 +42,31 @@
     
     self.currentUser = [QMApi instance].currentUser;
     self.avatarView.imageViewType = QMImageViewTypeCircle;
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
     
     [self updateProfileView];
+    [self setUpdateButtonActivity];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
 
+- (void)cacheNeededFields
+{
+    self.fullNameFieldCache = self.currentUser.fullName;
+    self.phoneFieldCache = self.currentUser.phone;
+    self.statusTextCache = self.currentUser.customData;
+}
+
 - (void)updateProfileView {
     
+    [self cacheNeededFields];
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
     NSURL *url = [NSURL URLWithString:self.currentUser.website];
     [self.avatarView sd_setImageWithURL:url placeholderImage:placeholder];
@@ -64,31 +75,21 @@
     self.emailField.text = self.currentUser.email;
     self.phoneNumberField.text = self.currentUser.phone;
 
-    self.statusField.text = self.currentUser.customData ? self.currentUser.customData : @"Add status";
+    self.statusField.text = self.currentUser.customData;
 }
 
-- (IBAction)changeAvatar:(id)sender {
-    
-//    if (self.currentUser.facebookID.length > 0) {
-//    
-//        [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-//            alertView.title = kAlertTitleErrorString;
-//            alertView.message = @"You can not change avatar. Go to facebook, and change avatar there.";
-//            [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{}];
-//        }];
-//    }
-//    else {
-    
-        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        picker.delegate = self;
-        [self presentViewController:picker animated:YES completion:nil];
-//    }
-}
-
-- (void)setUpdateButtonActivity:(BOOL)isActive
+- (IBAction)changeAvatar:(id)sender
 {
-    self.updateProfileButton.enabled = isActive;
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    picker.delegate = self;
+    [self presentViewController:picker animated:YES completion:nil];
+}
+
+- (void)setUpdateButtonActivity
+{
+    BOOL activity = [self fieldsWereChanged];
+    self.updateProfileButton.enabled = activity;
 }
 
 - (IBAction)hideKeyboard:(id)sender {
@@ -99,7 +100,7 @@
     
     [self.view endEditing:YES];
  
-    if (![self profileWasChanged]) {
+    if (![self fieldsWereChanged]) {
         return;
     }
     
@@ -120,62 +121,54 @@
     [self updateUsersProfile];
 }
 
-- (BOOL)profileWasChanged {
+- (BOOL)fieldsWereChanged
+{
+    if (self.avatarImage != nil) return YES;
+    if (![self.fullNameFieldCache isEqualToString:self.currentUser.fullName]) return YES;
+    if ( (self.phoneFieldCache != nil && ![self.phoneFieldCache isEqualToString:@""])  &&  ![self.phoneFieldCache isEqualToString:self.currentUser.phone]) return YES;
+    if ((self.statusTextCache != nil && [self.statusTextCache isEqualToString:@""]) && ![self.statusTextCache isEqualToString:self.currentUser.customData]) return YES;
     
-    BOOL profileChanged = NO;
-    
-    // verifying all fields:
-    if (self.avatarImage != nil) {
-        profileChanged = YES;
-    }
-    
-    if (![self.fullNameFieldCache isEqualToString:self.currentUser.fullName] ) {
-        
-        self.currentUser.fullName = self.fullNameFieldCache;
-        profileChanged = YES;
-    }
-    if (![_phoneFieldCache isEqualToString:self.currentUser.phone]) {
-        
-        self.currentUser.phone = _phoneFieldCache;
-        profileChanged = YES;
-    }
-    if (![_statusFieldCache isEqualToString:self.currentUser.customData]) {
-        
-        profileChanged = YES;
-        
-        if (_statusFieldCache.length > 100) {
-            NSRange range = NSMakeRange(0, 100);
-            NSString *statusText = [_statusFieldCache substringWithRange:range];
-            self.currentUser.customData = statusText;
-        } else {
-            self.currentUser.customData = self.statusFieldCache;
-        }
-    }
-    return profileChanged;
+    return NO;
+}
+
+- (NSString *)userPhone {
+    return self.currentUser.phone ? self.currentUser.phone : @"";
 }
 
 - (void)updateUsersProfile {
 
+    self.currentUser.fullName = self.fullNameFieldCache;
+    self.currentUser.phone = self.phoneFieldCache;
+    self.currentUser.customData = self.statusTextCache;
+    
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] updateUser:self.currentUser completion:^(BOOL success) {
         [SVProgressHUD dismiss];
+        [self updateProfileView];
+        [self setUpdateButtonActivity];
     }];
 }
 
 #pragma mark - UITextFieldDelegate & UITextViewDelegate
 
-- (void)textFieldDidEndEditing:(UITextField *)textField {
-    
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
     if (textField == self.fullNameField) {
-        self.fullNameFieldCache = textField.text;
+        self.fullNameFieldCache = [textField.text stringByReplacingCharactersInRange:range withString:string];
     } else if (textField == self.phoneNumberField) {
-        self.phoneFieldCache = textField.text;
+        self.phoneFieldCache = [textField.text stringByReplacingCharactersInRange:range withString:string];
     }
+    
+    [self setUpdateButtonActivity];
+    return YES;
 }
 
-- (void)textViewDidEndEditing:(UITextView *)textView {
-    self.statusFieldCache = textView.text;
+- (void)textViewDidChange:(UITextView *)textView
+{
+    self.statusTextCache = textView.text;
+    [self setUpdateButtonActivity];
 }
+
 
 #pragma mark - UIImagePickerControllerDelegate
 
@@ -187,6 +180,7 @@
     
     [picker dismissViewControllerAnimated:YES completion:^{
         self.avatarView.image = self.avatarImage;
+        [self setUpdateButtonActivity];
     }];
 }
 

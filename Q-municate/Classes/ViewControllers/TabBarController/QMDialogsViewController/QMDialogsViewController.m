@@ -34,7 +34,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     self.dataSource = [[QMDialogsDataSource alloc] initWithTableView:self.tableView];
     
     [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
-        QBChatDialog *chatDialog = [[QMApi instance] chatDialogWithID:roomJID];
+//        QBChatDialog *chatDialog = [[QMApi instance] chatDialogWithID:roomJID];
         
         NSLog(@"chatRoomDidReceiveMessageWithTarget");
     }];
