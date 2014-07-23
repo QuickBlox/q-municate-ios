@@ -196,11 +196,8 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
     NSArray *datasource = [self usersAtSections:indexPath.section];
     QBUUser *user = datasource[indexPath.row];
     
-    QBContactListItem *contactItem = [[QMApi instance] contactItemWithUserID:user.ID];
-    
+    cell.contactlistItem = [[QMApi instance] contactItemWithUserID:user.ID];
     cell.userData = user;
-    cell.isFriend = contactItem ? YES : NO;
-    cell.online = contactItem.online;
     cell.searchText = self.searchText;
     cell.delegate = self;
     

@@ -119,7 +119,7 @@
     self.tMessageContainerConstraint = PVTopOf(self.messageContainer).equalTo.topOf(self.contentView).asConstraint;
     self.lMessageContainerConstraint = PVLeftOf(self.messageContainer).equalTo.leftOf(self.contentView).asConstraint;
     self.rMessageContainerConstraint = PVRightOf(self.messageContainer).equalTo.rightOf(self.contentView).asConstraint;
-
+    
     self.wUserImageViewConstraint = PVWidthOf(self.userImageView).equalTo.constant(0).asConstraint;
     self.hUserImageViewConstraint = PVHeightOf(self.userImageView).equalTo.constant(0).asConstraint;
     
@@ -127,19 +127,18 @@
     self.wBalloonConstraint = PVWidthOf(self.balloonImageView).equalTo.constant(0).asConstraint;
     
     self.tTitleConstraint = PVTopOf(self.headerView).equalTo.topOf(self.balloonImageView).asConstraint;
-    self.lTitleConstraint = PVLeftOf(self.headerView).equalTo.leftOf(self.balloonImageView).asConstraint,
-    self.rTitleConstraint = PVRightOf(self.headerView).equalTo.rightOf(self.balloonImageView).asConstraint,
-//    self.bTitleConstraint = PVBottomOf(self.headerView).equalTo.topOf(self.containerView).asConstraint;
+    self.lTitleConstraint = PVLeftOf(self.headerView).equalTo.leftOf(self.balloonImageView).asConstraint;
+    self.rTitleConstraint = PVRightOf(self.headerView).equalTo.rightOf(self.balloonImageView).asConstraint;
     
     self.bContainerConstraint = PVBottomOf(self.containerView).equalTo.bottomOf(self.balloonImageView).asConstraint;
-    self.hContainerConstraint= PVHeightOf(self.containerView).equalTo.constant(0).asConstraint;
-    self.wContainerConstraint= PVWidthOf(self.containerView).equalTo.constant(0).asConstraint;
+    self.hContainerConstraint = PVHeightOf(self.containerView).equalTo.constant(0).asConstraint;
+    self.wContainerConstraint = PVWidthOf(self.containerView).equalTo.constant(0).asConstraint;
     
     [self.contentView addConstraints:@[self.bMessageContainerConstraint,
                                        self.tMessageContainerConstraint,
                                        self.lMessageContainerConstraint,
                                        self.rMessageContainerConstraint,
-
+                                       
                                        self.wUserImageViewConstraint,
                                        self.hUserImageViewConstraint,
                                        
@@ -148,16 +147,14 @@
                                        self.hBalloonConstraint,
                                        self.wBalloonConstraint,
                                        PVBottomOf(self.balloonImageView).equalTo.bottomOf(self.messageContainer).asConstraint,
-                
+                                       
                                        self.bContainerConstraint,
                                        self.hContainerConstraint,
                                        self.wContainerConstraint,
                                        
                                        self.tTitleConstraint,
                                        self.lTitleConstraint,
-                                       self.rTitleConstraint,
-//                                       self.bTitleConstraint
-                                       ]];
+                                       self.rTitleConstraint]];
 }
 
 - (void)setCurrentAlignConstrains:(NSArray *)currentAlignConstrains {
@@ -209,7 +206,8 @@
                   PVLeftOf(self.containerView).equalTo.leftOf(self.balloonImageView).plus(insets.left).asConstraint,
                   ]).asArray;
         
-    } else if (align == QMMessageContentAlignRight) {
+    }
+    else if (align == QMMessageContentAlignRight) {
         
         self.currentAlignConstrains =
         PVGroup(@[
@@ -219,6 +217,7 @@
                   
                   ]).asArray;
     }
+    
     self.tTitleConstraint.constant = insets.top;
     self.bContainerConstraint.constant = -insets.top;
     self.hContainerConstraint.constant = layout.contentSize.height;
@@ -239,7 +238,7 @@
     if (_message != message) {
         _message = message;
     }
-
+    
 }
 
 - (void)setUser:(QBUUser *)user {

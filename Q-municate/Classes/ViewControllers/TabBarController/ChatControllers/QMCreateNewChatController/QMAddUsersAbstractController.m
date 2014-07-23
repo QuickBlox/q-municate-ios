@@ -20,32 +20,8 @@
 
 @implementation QMAddUsersAbstractController
 
-- (id)initWithChatDialog:(QBChatDialog *)chatDialog {
+- (NSMutableArray *)sortUsersByFullname:(NSArray *)users {
     
-    if (self = [super init]) {
-        
-        self.selectedFriends = [NSMutableArray array];
-        self.friends = [QMApi instance].friends;
-        
-//        NSMutableArray *sortedUsers = [self sortUsersByFullname:unsortedUsers];
-//
-//        NSMutableArray *usersToDelete = [NSMutableArray new];
-//        for (NSString *participantID in chatDialog.occupantIDs) {
-//
-//            QBUUser *user = [QMContactList shared].friendsAsDictionary[participantID];
-//            if (user != nil) {
-//                [usersToDelete addObject:user];
-//            }
-//        }
-//        [sortedUsers removeObjectsInArray:usersToDelete];
-//
-//        _friendListArray = sortedUsers;
-    }
-    return self;
-}
-
-- (NSMutableArray *)sortUsersByFullname:(NSArray *)users
-{
     NSArray *sortedUsers = nil;
     NSSortDescriptor *fullNameDescriptor = [[NSSortDescriptor alloc] initWithKey:@"fullName" ascending:YES];
     sortedUsers = [users sortedArrayUsingDescriptors:@[fullNameDescriptor]];
@@ -59,61 +35,33 @@
     [super viewDidLoad];
     
     self.selectedFriends = [NSMutableArray array];
-    self.friends = [QMApi instance].friends;
-    // Do any additional setup after loading the view.
-    [self configurePerformButtonBorder];
-    [self updateNavTitle];
-    
-    [self applyChangesForResetButton];
-    [self applyChangesForPerformButton];
+    [self updateGUI];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - UI Configurations
-
-- (void)updateNavTitle {
+- (void)updateGUI {
     
-    self.title  = [NSString stringWithFormat:@"%d Selected", self.selectedFriends.count];
-}
-
-- (void)configurePerformButtonBorder {
-    
-    self.performButton.layer.borderColor = [UIColor darkGrayColor].CGColor;
-    self.performButton.layer.borderWidth = 0.5;
-}
-
-- (void)applyChangesForPerformButton {
-    
-    [self.performButton setEnabled:!self.selectedFriends.count == 0];
-}
-
-- (void)applyChangesForResetButton
-{
-    self.resetButton.enabled = [self.selectedFriends count] > 0;
+    self.title = [NSString stringWithFormat:@"%d Selected", self.selectedFriends.count];
+    BOOL enabled = self.selectedFriends.count > 0;
+    self.performButton.enabled = enabled;
+    self.resetButton.enabled = enabled;
+    [self.tableView reloadData];
 }
 
 #pragma mark - Actions
 
 /** Override this methods */
-- (IBAction)performAction:(id)sender
-{
+- (IBAction)performAction:(id)sender {
    CHECK_OVERRIDE();
 }
 
-- (IBAction)cancelSelection:(id)sender {
+- (IBAction)pressResetButton:(UIButton *)sender {
     
-    if ([self.selectedFriends count] > 0) {
-        [self.selectedFriends removeAllObjects];
-        
-        [self updateNavTitle];
-        [self applyChangesForPerformButton];
-        [self.tableView reloadData];
-    }
-    [self applyChangesForResetButton];
+    [self.selectedFriends removeAllObjects];
+    [self updateGUI];
 }
 
 #pragma mark - UITableViewDataSource
@@ -143,12 +91,7 @@
     
     BOOL contains = [self.selectedFriends containsObject:checkedUser];
     contains ? [self.selectedFriends removeObject:checkedUser] : [self.selectedFriends addObject:checkedUser];
-    
-    // update navigation title:
-    [self updateNavTitle];
-	[self applyChangesForPerformButton];
-    [self applyChangesForResetButton];
-	[self.tableView reloadData];
+    [self updateGUI];
 }
 
 @end

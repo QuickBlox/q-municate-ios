@@ -134,9 +134,11 @@
 
 @property (strong, nonatomic, readonly) NSArray *friends;
 
+- (NSArray *)usersWithIDs:(NSArray *)ids;
 - (NSArray *)idsWithUsers:(NSArray *)users;
 - (QBUUser *)userWithID:(NSUInteger)userID;
 - (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID;
+- (NSArray *)idsFromContactListItems;
 
 /**
  Add user to contact list request

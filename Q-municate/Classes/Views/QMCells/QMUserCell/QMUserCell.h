@@ -10,6 +10,6 @@
 
 @class QMImageView;
 
-@interface QMUserCell : QMTableViewCell 
+@interface QMUserCell : QMTableViewCell
 
 @end

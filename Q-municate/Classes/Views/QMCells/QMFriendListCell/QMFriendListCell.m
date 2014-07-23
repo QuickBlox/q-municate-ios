@@ -8,11 +8,15 @@
 
 #import "QMFriendListCell.h"
 #import "QMImageView.h"
+#import "QMApi.h"
 
 @interface QMFriendListCell()
 
 @property (weak, nonatomic) IBOutlet UIImageView *onlineCircle;
 @property (weak, nonatomic) IBOutlet UIButton *addToFriendsButton;
+
+@property (assign, nonatomic) BOOL isFriend;
+@property (assign, nonatomic) BOOL online;
 
 @end
 
@@ -20,23 +24,52 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-
-    self.addToFriendsButton.hidden = _isFriend = YES;
+    
+    /*isFriend - YES*/
+    _isFriend = YES;
+    self.addToFriendsButton.hidden = self.isFriend;
+    /*isOnlien - NO*/
     self.onlineCircle.hidden = YES;
     self.descriptionLabel.text = kStatusOfflineString;
 }
 
 - (void)setOnline:(BOOL)online {
     
+    QBUUser *user = self.userData;
+    online = (user.ID == [QMApi instance].currentUser.ID) ? YES : online;
+    
     if (_online != online) {
         _online = online;
-        
-        self.onlineCircle.hidden = !online;
-        NSString *activity = (online) ? kStatusOnlineString : kStatusOfflineString;
-        self.descriptionLabel.text = activity;
     }
+    
+    NSString *status = (online) ?  kStatusOnlineString : kStatusOfflineString;
+    
+    self.descriptionLabel.text = status;
+    self.onlineCircle.hidden = !online;
 }
 
+- (void)setContactlistItem:(QBContactListItem *)contactlistItem {
+
+    if (_contactlistItem != contactlistItem) {
+        _contactlistItem = contactlistItem;
+    }
+    
+    self.online = contactlistItem.online;
+    self.isFriend = contactlistItem ?  YES : NO;
+}
+
+- (void)setIsFriend:(BOOL)isFriend {
+    
+    QBUUser *user = self.userData;
+    isFriend = (user.ID == [QMApi instance].currentUser.ID) ? YES : isFriend;
+    
+    _isFriend = isFriend;
+    
+    self.addToFriendsButton.hidden = isFriend;
+    if (!_isFriend) {
+        self.descriptionLabel.text = @"";
+    }
+}
 
 - (void)setSearchText:(NSString *)searchText {
     
@@ -52,16 +85,6 @@
                      range:[fullName.lowercaseString rangeOfString:searchText.lowercaseString]];
         
         self.titleLabel.attributedText = text;
-    }
-}
-
-- (void)setIsFriend:(BOOL)isFriend {
-    
-    if (_isFriend != isFriend) {
-        _isFriend = isFriend;
-        self.addToFriendsButton.hidden = isFriend;
-    }else {
-        
     }
 }
 

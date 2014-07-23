@@ -136,9 +136,8 @@
     return [self.usersService userWithID:userID];
 }
 
-- (NSArray *)friends {
-    
-    NSArray *ids = [self idsFromContactListItems];
+- (NSArray *)usersWithIDs:(NSArray *)ids {
+
     NSMutableArray *allFriends = [NSMutableArray array];
     
     for (NSString * friendID in ids) {
@@ -147,6 +146,14 @@
             [allFriends addObject:user];
         }
     }
+    
+    return allFriends;
+}
+
+- (NSArray *)friends {
+    
+    NSArray *ids = [self idsFromContactListItems];
+    NSArray *allFriends = [self usersWithIDs:ids];
     
     return allFriends;
 }

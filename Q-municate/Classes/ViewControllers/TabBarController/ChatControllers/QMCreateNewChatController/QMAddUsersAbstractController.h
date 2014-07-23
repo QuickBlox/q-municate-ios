@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-static CGFloat const rowHeight = 60.0;
-
 
 @interface QMAddUsersAbstractController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
@@ -17,7 +15,6 @@ static CGFloat const rowHeight = 60.0;
 @property (strong, nonatomic) NSArray *friends;
 
 /** Actions */
-- (IBAction)performAction:(id)sender;
-- (IBAction)cancelSelection:(id)sender;
+- (IBAction)performAction:(UIButton *)sender;
 
 @end

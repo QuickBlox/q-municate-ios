@@ -7,19 +7,14 @@
 //
 
 #import "QMCreateNewChatController.h"
-#import "QMChatViewController.h"
-#import "QMInviteFriendCell.h"
-#import "QMUsersService.h"
 #import "SVProgressHUD.h"
 #import "QMApi.h"
-
-@interface QMCreateNewChatController ()
-
-@end
 
 @implementation QMCreateNewChatController
 
 - (void)viewDidLoad {
+    
+    self.friends = [[QMApi instance] friends];
     [super viewDidLoad];
 }
 
@@ -35,11 +30,11 @@
     NSString *chatName = [self chatNameFromUserNames:selectedUsersMArray];
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    @weakify(self)
+
+    __weak __typeof(self)weakSelf = self;
     [[QMApi instance] createGroupChatDialogWithName:chatName ocupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
-        @strongify(self)
         [SVProgressHUD dismiss];
-        [self.navigationController popViewControllerAnimated:NO];
+        [weakSelf.navigationController popViewControllerAnimated:NO];
     }];
 }
 

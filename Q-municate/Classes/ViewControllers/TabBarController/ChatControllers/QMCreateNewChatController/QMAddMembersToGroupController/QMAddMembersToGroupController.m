@@ -8,32 +8,29 @@
 
 #import "QMAddMembersToGroupController.h"
 #import "QMApi.h"
-
-@interface QMAddMembersToGroupController ()
-
-@end
+#import "SVProgressHUD.h"
 
 @implementation QMAddMembersToGroupController
 
 - (void)viewDidLoad {
+    
+    NSMutableArray *friendsIDS = [[QMApi instance] idsFromContactListItems].mutableCopy;
+    [friendsIDS removeObjectsInArray:self.chatDialog.occupantIDs];
+    NSArray * friends = [[QMApi instance] usersWithIDs:friendsIDS];
+    self.friends = friends;
+    
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Overriden methods
 
-
 - (IBAction)performAction:(id)sender {
     
     __weak __typeof(self)weakSelf = self;
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] joinOccupants:self.selectedFriends toChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
         [weakSelf.navigationController popViewControllerAnimated:YES];
-        
+        [SVProgressHUD dismiss];
     }];
 }
 

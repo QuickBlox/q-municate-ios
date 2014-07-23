@@ -9,78 +9,60 @@
 #import "AppDelegate.h"
 #import "QMincomingCallService.h"
 
-#define TEST_QMDBStore 1
-
-#ifdef TEST_QMDBStore
-#import "QMDBStorage+Users.h"
-#endif
+const NSUInteger kQMApplicationID = 7232;
+NSString *const kQMAuthorizationKey = @"MpOecRZy-5WsFva";
+NSString *const kQMAuthorizationSecret = @"dTSLaxDsFKqegD7";
+NSString *const kQMAcconuntKey = @"LpNmxA2Pq2uyW5qBjHy8";
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    [QMDBStorage setupWithName:@"Andrey"];
+    
+    self.incomingCallService = [[QMIncomingCallService alloc] init];
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-    /**
-     Setup framework
-     Quickblox credentials
-     */
-    [QBSettings setApplicationID:7232];
-    [QBSettings setAuthorizationKey:@"MpOecRZy-5WsFva"];
-    [QBSettings setAuthorizationSecret:@"dTSLaxDsFKqegD7"];
-    [QBSettings setAccountKey:@"LpNmxA2Pq2uyW5qBjHy8"];
-//    [QBSettings setLogLevel:QBLogLevelNothing];
-     self.incomingCallService = [[QMIncomingCallService alloc] init];
 
+    /* Setup framework Quickblox credentials*/
+    [QBSettings setApplicationID:kQMApplicationID];
+    [QBSettings setAuthorizationKey:kQMAuthorizationKey];
+    [QBSettings setAuthorizationSecret:kQMAuthorizationSecret];
+    [QBSettings setAccountKey:kQMAcconuntKey];
+    [QBSettings setLogLevel:QBLogLevelNothing];
+    
+    /*Configure app appearance*/
+    NSDictionary *normalAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:1.000 alpha:0.830]};
+    NSDictionary *disabledAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:0.935 alpha:0.260]};
+    [[UIBarButtonItem appearance] setTitleTextAttributes:normalAttributes forState:UIControlStateNormal];
+    [[UIBarButtonItem appearance] setTitleTextAttributes:disabledAttributes forState:UIControlStateDisabled];
+    
     return YES;
 }
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
-{
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     NSLog(@"Push war received. User info: %@", userInfo);
 }
 
-- (void)applicationWillResignActive:(UIApplication *)application
-{
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types
-    // of temporary interruptions (such as an incoming phone call or SMS message) or
-    // when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-}
+- (void)applicationWillResignActive:(UIApplication *)application {}
 
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough
-    // application state information to restore your application to its current state in case it is terminated later.
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-}
+- (void)applicationDidEnterBackground:(UIApplication *)application {}
 
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-    // Called as part of the transition from the background to the inactive state;
-    // here you can undo many of the changes made on entering the background.
-}
+- (void)applicationWillEnterForeground:(UIApplication *)application {}
 
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    
     [FBSession.activeSession handleDidBecomeActive];
-    // Restart any tasks that were paused (or not yet started) while the application was inactive.
-    // If the application was previously in the background, optionally refresh the user interface.
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application
-{
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+- (void)applicationWillTerminate:(UIApplication *)application {
 }
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
-    // attempt to extract a token from the url
+
     BOOL urlWasIntendedForFacebook = [FBSession.activeSession handleOpenURL:url];
     return urlWasIntendedForFacebook;
 }

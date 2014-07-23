@@ -18,9 +18,8 @@
 
 @interface QMFriendListCell : QMUserCell
 
+@property (strong, nonatomic) QBContactListItem *contactlistItem;
 @property (strong, nonatomic) NSString *searchText;
-@property (assign, nonatomic) BOOL isFriend;
-@property (assign, nonatomic) BOOL online;
 
 @property (weak, nonatomic) id <QMFriendListCellDelegate>delegate;
 

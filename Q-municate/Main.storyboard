@@ -950,6 +950,7 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="avatarView" destination="ke3-0u-LyM" id="YU5-Zv-lNQ"/>
                         <outlet property="emailField" destination="2CO-I0-WcE" id="ifn-jM-TTP"/>
@@ -2271,16 +2272,13 @@
                                     <outlet property="delegate" destination="Rlv-IY-Rq7" id="WiP-hM-pba"/>
                                 </connections>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z4Q-C0-t5Y">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z4Q-C0-t5Y">
                                 <rect key="frame" x="0.0" y="400" width="320" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="gap-Um-ZOi"/>
                                 </constraints>
-                                <state key="normal" title="Create Group Chat">
-                                    <color key="titleColor" red="0.1215686351" green="0.4156863093" blue="0.69411766529999996" alpha="1" colorSpace="deviceRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
+                                <state key="normal" title="Create Group Chat"/>
                                 <connections>
                                     <action selector="performAction:" destination="Rlv-IY-Rq7" eventType="touchUpInside" id="zEW-GZ-d6p"/>
                                 </connections>
@@ -2301,7 +2299,7 @@
                         <barButtonItem key="rightBarButtonItem" title="Reset" id="4pK-YW-JFZ">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
-                                <action selector="cancelSelection:" destination="Rlv-IY-Rq7" id="AFp-Xl-epz"/>
+                                <action selector="pressResetButton:" destination="Rlv-IY-Rq7" id="AOW-LS-e2V"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -2418,41 +2416,55 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="GroupDetailsCell" rowHeight="59" id="LCK-pC-hsn" customClass="QMUserCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="QMFriendListCell" rowHeight="59" id="81y-lY-KsM" customClass="QMFriendListCell">
                                         <rect key="frame" x="0.0" y="22" width="320" height="59"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LCK-pC-hsn" id="AAh-sN-oBn">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="81y-lY-KsM" id="P0Y-Yc-ydR">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="58"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="upic-placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="wES-an-arE" customClass="QMImageView">
-                                                    <rect key="frame" x="18" y="7" width="45" height="45"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="upic-placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="WbY-wV-ozV" customClass="QMImageView">
+                                                    <rect key="frame" x="18" y="7" width="45" height="44"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </imageView>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Leonore Cantly" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Pu-bp-xEd">
-                                                    <rect key="frame" x="71" y="12" width="170" height="24"/>
+                                                <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Leonore Cantly" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yB2-C3-nCB">
+                                                    <rect key="frame" x="71" y="10" width="229" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="online" translatesAutoresizingMaskIntoConstraints="NO" id="H4L-WX-mE7">
-                                                    <rect key="frame" x="298" y="24" width="12" height="12"/>
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="online" translatesAutoresizingMaskIntoConstraints="NO" id="3i0-1u-TMr">
+                                                    <rect key="frame" x="259" y="24" width="12" height="12"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Online" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f2e-dV-iHy">
-                                                    <rect key="frame" x="71" y="33" width="170" height="13"/>
+                                                <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Online" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="73o-h7-0EW">
+                                                    <rect key="frame" x="71" y="27" width="170" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="italicSystem" pointSize="12"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <fontDescription key="fontDescription" type="italicSystem" pointSize="14"/>
                                                     <color key="textColor" red="0.58039218189999997" green="0.58039218189999997" blue="0.58039218189999997" alpha="1" colorSpace="deviceRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s5q-cV-dQM">
+                                                    <rect key="frame" x="277" y="0.0" width="43" height="59"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <state key="normal" image="add_friend">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="pressAddBtn:" destination="81y-lY-KsM" eventType="touchUpInside" id="Zqr-zC-L6I"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="descriptionLabel" destination="f2e-dV-iHy" id="rh8-6R-7fm"/>
-                                            <outlet property="qmImageView" destination="wES-an-arE" id="9x1-HV-a1A"/>
-                                            <outlet property="titleLabel" destination="0Pu-bp-xEd" id="l5n-B8-Rs4"/>
+                                            <outlet property="addToFriendsButton" destination="s5q-cV-dQM" id="QBO-sR-kh8"/>
+                                            <outlet property="descriptionLabel" destination="73o-h7-0EW" id="PE6-Rg-7dP"/>
+                                            <outlet property="onlineCircle" destination="3i0-1u-TMr" id="akQ-A2-nxX"/>
+                                            <outlet property="qmImageView" destination="WbY-wV-ozV" id="UgM-1N-eMn"/>
+                                            <outlet property="titleLabel" destination="yB2-C3-nCB" id="Xcn-UH-zxb"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -2597,9 +2609,9 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="activeCheckbox" destination="Blt-HN-okw" id="8Mx-OD-gOX"/>
-                                            <outlet property="fullNameLabel" destination="Jc2-Pm-eDn" id="BIa-2D-fGI"/>
-                                            <outlet property="statusLabel" destination="qWI-dt-b2a" id="xmh-OC-75F"/>
-                                            <outlet property="userImageView" destination="SMh-ii-fh0" id="GyK-Zi-Qux"/>
+                                            <outlet property="descriptionLabel" destination="qWI-dt-b2a" id="mVB-Wk-mRy"/>
+                                            <outlet property="qmImageView" destination="SMh-ii-fh0" id="KdK-1D-by8"/>
+                                            <outlet property="titleLabel" destination="Jc2-Pm-eDn" id="skx-4K-sMf"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -2608,16 +2620,13 @@
                                     <outlet property="delegate" destination="HGR-Mg-6Ip" id="3j3-Mj-XaL"/>
                                 </connections>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LJm-Fn-hwz">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LJm-Fn-hwz">
                                 <rect key="frame" x="0.0" y="400" width="320" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="gBE-5F-OL2"/>
                                 </constraints>
-                                <state key="normal" title="Add users to chat">
-                                    <color key="titleColor" red="0.1215686351" green="0.4156863093" blue="0.69411766529999996" alpha="1" colorSpace="deviceRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
+                                <state key="normal" title="Add users to chat"/>
                                 <connections>
                                     <action selector="performAction:" destination="HGR-Mg-6Ip" eventType="touchUpInside" id="AuY-T2-D5p"/>
                                 </connections>
@@ -2638,7 +2647,7 @@
                         <barButtonItem key="rightBarButtonItem" title="Reset" id="y9j-i7-Kyb">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
-                                <action selector="cancelSelection:" destination="HGR-Mg-6Ip" id="luv-fI-e1c"/>
+                                <action selector="pressResetButton:" destination="HGR-Mg-6Ip" id="w0h-O1-Uxx"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
