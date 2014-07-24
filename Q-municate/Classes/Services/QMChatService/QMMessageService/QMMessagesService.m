@@ -87,7 +87,7 @@ NSString const* kQMMsgCustomParamDateSent = @"date_sent";
 
     return @{
              kQMMsgCustomParamDateSent : @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970),
-             kQMMsgCustomParamSaveToHistory : @(saveToHistory),
+//             kQMMsgCustomParamSaveToHistory : @(saveToHistory),
              kQMMsgCustomParamDialogID: dialogID
              }.mutableCopy;
 }

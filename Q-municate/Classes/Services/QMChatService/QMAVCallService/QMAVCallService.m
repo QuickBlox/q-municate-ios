@@ -92,7 +92,7 @@
 
 - (void)cancelCall {
     
-    [self.activeStream finishCall];
+    [self.activeStream cancelCall];
     [self releaseActiveStream];
 }
 

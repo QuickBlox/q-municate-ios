@@ -16,6 +16,7 @@
 #import "QMChatButtonsFactory.h"
 #import "AGEmojiKeyBoardView.h"
 #import "QMSoundManager.h"
+#import "NSString+HasText.h"
 #import "Parus.h"
 
 static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
@@ -382,9 +383,12 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     if (sender == self.sendButton) {
         
         NSString *text = self.inputToolBar.contentView.textView.text;
-        self.inputToolBar.contentView.textView.text = @"";
-        [QMSoundManager playMessageSentSound];
-        [self.dataSource sendMessage:text];
+        if ([text hasText]) {
+            self.inputToolBar.contentView.textView.text = [text stringByTrimingWhitespace];
+            [QMSoundManager playMessageSentSound];
+            [self.dataSource sendMessage:text];
+        }
+        self.inputToolBar.contentView.textView.text = kEmptyString;
     }
     else {
         [self presentImagePicker];
@@ -486,9 +490,9 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 - (void)emojiKeyBoardView:(AGEmojiKeyboardView *)emojiKeyBoardView didUseEmoji:(NSString *)emoji {
     
-    [self textViewDidChange:self.inputToolBar.contentView.textView];
     NSString *textViewString = self.inputToolBar.contentView.textView.text;
     self.inputToolBar.contentView.textView.text = [textViewString stringByAppendingString:emoji];
+    [self textViewDidChange:self.inputToolBar.contentView.textView];
 }
 
 - (void)emojiKeyBoardViewDidPressBackSpace:(AGEmojiKeyboardView *)emojiKeyBoardView {
