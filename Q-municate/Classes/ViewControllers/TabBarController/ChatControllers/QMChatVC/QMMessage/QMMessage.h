@@ -49,6 +49,10 @@
  * This is important property and will be used to decide in which side show message.
  */
 @property (nonatomic) QMMessageContentAlign align;
+/**
+ if -1 then minWidht getting from layout property
+ */
+@property (nonatomic) CGFloat minWidth;
 
 - (instancetype)initWithChatHistoryMessage:(QBChatHistoryMessage *)historyMessage;
 

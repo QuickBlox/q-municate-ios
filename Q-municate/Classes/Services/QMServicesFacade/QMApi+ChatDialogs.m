@@ -14,14 +14,6 @@ NSString const *kQMEditDialogExtendedNameParameter = @"name";
 NSString const *kQMEditDialogExtendedPushOccupantsParameter = @"push[occupants_ids][]";
 NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupants_ids][]";
 
-NSString const *kQMDialogCustomParameterRoomJID = @"xmpp_room_jid";
-NSString const *kQMDialogCustomParameterDialogName = @"name";
-NSString const *kQMDialogCustomParameterDialogID = @"dialog_id";
-NSString const *kQMDialogCustomParameterDialogType = @"type";
-NSString const *kQMDialogCustomParameterDialogOccupantsIDs = @"occupants_ids";
-NSString const *kQMDialogCustomParameterDialogDateSent = @"date_sent";
-NSString const *kQMDialogCustomParameterNotificationType = @"notification_type";
-
 @interface QMApi()
 
 @end
@@ -93,17 +85,9 @@ NSString const *kQMDialogCustomParameterNotificationType = @"notification_type";
     
     msg.recipientID = recipient.ID;
     msg.text = text;
-    
-    NSMutableDictionary *customParams = [NSMutableDictionary new];
-    customParams[kQMDialogCustomParameterRoomJID] = chatDialog.roomJID;
-    customParams[kQMDialogCustomParameterDialogName] = chatDialog.name;
-    customParams[kQMDialogCustomParameterDialogID] = chatDialog.ID;
-    customParams[kQMDialogCustomParameterDialogType] = @(chatDialog.type);
-    customParams[kQMDialogCustomParameterDialogOccupantsIDs] = chatDialog.occupantIDs;
-    customParams[kQMDialogCustomParameterDialogDateSent] = @(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);
-    customParams[kQMDialogCustomParameterNotificationType] = [NSString stringWithFormat:@"%d", type];
-    
-    msg.customParameters = customParams;
+    msg.cParamNotificationType = @(type);
+    msg.cParamDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);    
+    [msg setCustomParametersWithChatDialog:chatDialog];
     
     return msg;
 }
@@ -137,7 +121,7 @@ NSString const *kQMDialogCustomParameterNotificationType = @"notification_type";
     __weak __typeof(self)weakSelf = self;
     [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialogResult *result) {
         if (result.success) {
-            [weakSelf sendNotificationWithType:2 toRecipients:opponentsIDs chatDialog:chatDialog];
+            [weakSelf sendNotificationWithType:2 toRecipients:occupants chatDialog:chatDialog];
         }
         completion(result);
     }];

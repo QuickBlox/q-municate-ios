@@ -2,7 +2,7 @@
 //  QMChatViewController.m
 //  Q-municate
 //
-//  Created by Ivanov Andrey Ivanov on 01/04/2014.
+//  Created by Andrey Ivanov on 01/04/2014.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -25,7 +25,6 @@
     self.dataSource = [[QMChatDataSource alloc] initWithChatDialog:self.dialog forTableView:self.tableView];
     self.dialog.type == QBChatDialogTypeGroup ? [self configureNavigationBarForGroupChat] : [self configureNavigationBarForPrivateChat];
 }
-
 
 - (void)configureNavigationBarForPrivateChat {
 
@@ -56,7 +55,6 @@
 }
 
 - (void)back:(id)sender {
-    
     
 	[self.navigationController popViewControllerAnimated:YES];
 }

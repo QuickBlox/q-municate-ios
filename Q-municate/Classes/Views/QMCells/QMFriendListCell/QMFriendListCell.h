@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import "QMUserCell.h"
+#import "QMTableViewCell.h"
 
 @class QMFriendListCell;
 
@@ -16,7 +16,7 @@
 
 @end
 
-@interface QMFriendListCell : QMUserCell
+@interface QMFriendListCell : QMTableViewCell
 
 @property (strong, nonatomic) QBContactListItem *contactlistItem;
 @property (strong, nonatomic) NSString *searchText;

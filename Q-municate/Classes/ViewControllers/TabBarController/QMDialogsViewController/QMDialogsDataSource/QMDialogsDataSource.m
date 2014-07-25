@@ -36,8 +36,16 @@
             QBChatDialog *chatDialog = [[QMApi instance] chatDialogWithID:roomJID];
             NSLog(@"chatRoomDidReceiveMessageWithTarget");
         }];
+
+        __weak __typeof(self)weakSelf = self;
         
-        [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+        [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+
+            QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
+            if (dialog) {                
+                NSUInteger idx = [self.dialogs indexOfObject:dialog];
+                [weakSelf reloadRowAtIndex:idx];
+            }
             
         }];
         
@@ -47,6 +55,15 @@
         
     }
     return self;
+}
+
+- (void)reloadRowAtIndex:(NSUInteger)index {
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+    
+    [self.tableView beginUpdates];
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView endUpdates];
 }
 
 #pragma mark - UITableViewDataSource

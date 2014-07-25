@@ -59,12 +59,12 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     if ([segue.identifier isEqualToString:kChatViewSegueIdentifier]) {
         
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-        
-        QBChatDialog *dialog = [self.dataSource dialogAtIndexPath:indexPath];
         
         QMChatViewController *chatController = segue.destinationViewController;
+        QBChatDialog *dialog = [self.dataSource dialogAtIndexPath:indexPath];
+        dialog.unreadMessagesCount = 0;
         chatController.dialog = dialog;
+//        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
         
     } else if ([segue.destinationViewController isKindOfClass:[QMCreateNewChatController class]]) {
         

@@ -2,7 +2,7 @@
 //  QMFriendsListDataSource.m
 //  Q-municate
 //
-//  Created by Ivanov Andrey Ivanov on 4/3/14.
+//  Created by Andrey Ivanov on 4/3/14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 

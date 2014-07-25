@@ -15,6 +15,7 @@
 @interface QMSplashViewController ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *splashLogoView;
+@property (weak, nonatomic) IBOutlet UIButton *reconnectBtn;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 @end
@@ -30,17 +31,35 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self.splashLogoView setImage:[UIImage imageNamed:IS_HEIGHT_GTE_568 ? @"splash" : @"splash-960"]];
-    [self.activityIndicator startAnimating];
-    
-    [self initialize];
+    self.reconnectBtn.alpha = 0;
+
+    [self start];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
 
-- (void)initialize {
+- (IBAction)pressReconnectBtn:(id)sender {
+
+    [UIView animateWithDuration:0.3 animations:^{
+        self.reconnectBtn.alpha = 0;
+    } completion:^(BOOL finished) {
+        [self start];
+    }];
+}
+
+- (void)needReconnect {
     
+    [self.activityIndicator stopAnimating];
+    [UIView animateWithDuration:0.3 animations:^{
+        self.reconnectBtn.alpha = 1;
+    }];
+}
+
+- (void)start {
+    
+    [self.activityIndicator startAnimating];
     QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
     
     BOOL rememberMe = settingsManager.rememberMe;
@@ -69,8 +88,13 @@
 
     __weak __typeof(self)weakSelf = self;
     [[QMApi instance] loginWithUser:user completion:^(BOOL success) {
-        [weakSelf.activityIndicator stopAnimating];
-        [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+        
+        if (success) {
+            [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+        }
+        else {
+            [weakSelf needReconnect];
+        }
     }];
 }
 
@@ -79,8 +103,10 @@
     __weak __typeof(self)weakSelf = self;
     [[QMApi instance] loginWithFacebook:^(BOOL success) {
         if (success) {
-            [weakSelf.activityIndicator stopAnimating];
             [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+        }
+        else {
+            [weakSelf needReconnect];
         }
     }];
 }

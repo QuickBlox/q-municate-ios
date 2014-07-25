@@ -77,8 +77,8 @@ NSString *const kQMAddMembersToGroupControllerID = @"QMAddMembersToGroupControll
 
 - (void)viewWillDisappear:(BOOL)animated {
     
-    [super viewWillDisappear:animated];
     [self.view endEditing:YES];
+    [super viewWillDisappear:animated];
 }
 
 - (IBAction)changeDialogName:(id)sender {

@@ -31,7 +31,7 @@ const NSUInteger kQMMinPasswordLenght = 7;
 @implementation QMChangePasswordVC
 
 - (void)dealloc {
-    NSLog(@"");
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {
@@ -89,11 +89,16 @@ const NSUInteger kQMMinPasswordLenght = 7;
     myProfile.oldPassword = oldPassword;
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    @weakify(self)
+
+    __weak __typeof(self)weakSelf = self;
     [[QMApi instance] changePasswordForCurrentUser:myProfile completion:^(BOOL success) {
-        @strongify(self)
-        [SVProgressHUD showSuccessWithStatus:kAlertBodyPasswordChangedString];
-        [self.navigationController popViewControllerAnimated:YES];
+        
+        if (success) {
+            [weakSelf.settingsManager setLogin:myProfile.email andPassword:newPassword];
+            [SVProgressHUD showSuccessWithStatus:kAlertBodyPasswordChangedString];
+            [weakSelf.navigationController popViewControllerAnimated:YES];
+        }
+        
     }];
 }
 

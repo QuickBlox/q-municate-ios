@@ -24,7 +24,6 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
 
 @property (assign, nonatomic) CGSize messageSize;
 @property (assign, nonatomic) QMMessageType type;
-@property (strong, nonatomic) UIImage *balloonImage;
 @property (strong, nonatomic) UIColor *balloonColor;
 
 @end
@@ -36,6 +35,7 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
     self = [super init];
     if (self) {
         
+        self.minWidth = -1;
         self.text = historyMessage.text;
         self.ID = historyMessage.ID;
         self.recipientID = historyMessage.recipientID;
@@ -77,6 +77,10 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
     /**
      Calculate content size
      */
+    if (self.minWidth != -1) {
+        layout.messageMinWidth = self.minWidth;
+    }
+    
     if (self.type == QMMessageTypePhoto) {
         
         contentSize = CGSizeMake(150, 150);
@@ -125,19 +129,15 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
 
 - (UIImage *)balloonImage {
     
-    if (!_balloonImage) {
-        
-        NSAssert(self, @"Check it");
-        
-        QMChatBalloon balloon = [self balloonSettings];
-        
-        NSString *imageName = balloon.imageName;
-        UIImage *balloonImage = [UIImage imageNamed:imageName];
-        
-        balloonImage = [balloonImage resizableImageWithCapInsets:balloon.imageCapInsets];
-        _balloonImage = [balloonImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    }
-    return _balloonImage;
+    QMChatBalloon balloon = [self balloonSettings];
+    
+    NSString *imageName = balloon.imageName;
+    UIImage *balloonImage = [UIImage imageNamed:imageName];
+    
+    balloonImage = [balloonImage resizableImageWithCapInsets:balloon.imageCapInsets];
+    balloonImage = [balloonImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+
+    return balloonImage;
 }
 
 - (QMChatBalloon)balloonSettings {

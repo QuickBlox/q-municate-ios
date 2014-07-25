@@ -90,26 +90,29 @@ static void * kQMKeyboardControllerKeyValueObservingContext = &kQMKeyboardContro
 - (void)subscribeToKeyboardNotifications {
     
     [self unsubscribeFromKeyboardNotifications];
-    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-    [notificationCenter addObserver:self
-                           selector:@selector(didReceiveKeyboardDidShowNotification:)
-                               name:UIKeyboardDidShowNotification
-                             object:nil];
-    
-    [notificationCenter addObserver:self
-                           selector:@selector(didReceiveKeyboardWillChangeFrameNotification:)
-                               name:UIKeyboardWillChangeFrameNotification
-                             object:nil];
-    
-    [notificationCenter addObserver:self
-                           selector:@selector(didReceiveKeyboardDidChangeFrameNotification:)
-                               name:UIKeyboardDidChangeFrameNotification
-                             object:nil];
-    
-    [notificationCenter addObserver:self
-                           selector:@selector(didReceiveKeyboardDidHideNotification:)
-                               name:UIKeyboardDidHideNotification
-                             object:nil];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+        [notificationCenter addObserver:self
+                               selector:@selector(didReceiveKeyboardDidShowNotification:)
+                                   name:UIKeyboardDidShowNotification
+                                 object:nil];
+        
+        [notificationCenter addObserver:self
+                               selector:@selector(didReceiveKeyboardWillChangeFrameNotification:)
+                                   name:UIKeyboardWillChangeFrameNotification
+                                 object:nil];
+        
+        [notificationCenter addObserver:self
+                               selector:@selector(didReceiveKeyboardDidChangeFrameNotification:)
+                                   name:UIKeyboardDidChangeFrameNotification
+                                 object:nil];
+        
+        [notificationCenter addObserver:self
+                               selector:@selector(didReceiveKeyboardDidHideNotification:)
+                                   name:UIKeyboardDidHideNotification
+                                 object:nil];
+    });
 }
 
 - (void)unsubscribeFromKeyboardNotifications {

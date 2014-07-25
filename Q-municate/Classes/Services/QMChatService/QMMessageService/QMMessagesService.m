@@ -10,10 +10,6 @@
 #import "QBEchoObject.h"
 #import "QMChatReceiver.h"
 
-NSString const* kQMMsgCustomParamSaveToHistory = @"save_to_history";
-NSString const* kQMMsgCustomParamDialogID = @"dialog_id";
-NSString const* kQMMsgCustomParamDateSent = @"date_sent";
-
 @interface QMMessagesService()
 
 @property (strong, nonatomic) NSMutableDictionary *history;
@@ -30,8 +26,7 @@ NSString const* kQMMsgCustomParamDateSent = @"date_sent";
     void (^updateHistory)(QBChatMessage *) = ^(QBChatMessage *message) {
 
         if (message.recipientID != message.senderID) {
-            NSString *dialogID = message.customParameters[kQMMsgCustomParamDialogID];
-            [weakSelf addMessageToHistory:message withDialogID:dialogID];
+            [weakSelf addMessageToHistory:message withDialogID:message.cParamDialogID];
         }
     };
     
@@ -69,7 +64,11 @@ NSString const* kQMMsgCustomParamDateSent = @"date_sent";
 
 - (BOOL)sendMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID saveToHistory:(BOOL)save {
     
-    message.customParameters = [self messageCusotmParameterWithDialogID:dialogID saveToHistory:save];
+    message.cParamDialogID = dialogID;
+    if (save) {
+        message.cParamSaveToHistory = @"1";
+    }
+    
     BOOL success  = [[QBChat instance] sendMessage:message];
     
     return success;
@@ -77,19 +76,13 @@ NSString const* kQMMsgCustomParamDateSent = @"date_sent";
 
 - (BOOL)sendChatMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID toRoom:(QBChatRoom *)chatRoom {
     
-    message.customParameters = [self messageCusotmParameterWithDialogID:dialogID saveToHistory:YES];
+    message.cParamDialogID = dialogID;
+    message.cParamSaveToHistory = @"1";
+    message.cParamDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);
+    
     BOOL success = [[QBChat instance] sendChatMessage:message toRoom:chatRoom];
     
     return success;
-}
-
-- (NSMutableDictionary *)messageCusotmParameterWithDialogID:(NSString *)dialogID saveToHistory:(BOOL)saveToHistory {
-
-    return @{
-             kQMMsgCustomParamDateSent : @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970),
-//             kQMMsgCustomParamSaveToHistory : @(saveToHistory),
-             kQMMsgCustomParamDialogID: dialogID
-             }.mutableCopy;
 }
 
 - (void)messagesWithDialogID:(NSString *)dialogID completion:(QBChatHistoryMessageResultBlock)completion {

@@ -12,7 +12,7 @@
 @interface SDWebImageCombinedOperation : NSObject <SDWebImageOperation>
 
 @property (assign, nonatomic, getter = isCancelled) BOOL cancelled;
-@property (copy, nonatomic) void (^cancelBlock)();
+@property (copy, nonatomic) SDWebImageNoParamsBlock cancelBlock;
 @property (strong, nonatomic) NSOperation *cacheOperation;
 
 @end
@@ -297,11 +297,14 @@
 
 @implementation SDWebImageCombinedOperation
 
-- (void)setCancelBlock:(void (^)())cancelBlock {
+- (void)setCancelBlock:(SDWebImageNoParamsBlock)cancelBlock {
+    // check if the operation is already cancelled, then we just call the cancelBlock
     if (self.isCancelled) {
-        if (cancelBlock) cancelBlock();
-    }
-    else {
+        if (cancelBlock) {
+            cancelBlock();
+        }
+        _cancelBlock = nil; // don't forget to nil the cancelBlock, otherwise we will get crashes
+    } else {
         _cancelBlock = [cancelBlock copy];
     }
 }
@@ -314,7 +317,11 @@
     }
     if (self.cancelBlock) {
         self.cancelBlock();
-        self.cancelBlock = nil;
+        
+        // TODO: this is a temporary fix to #809.
+        // Until we can figure the exact cause of the crash, going with the ivar instead of the setter
+//        self.cancelBlock = nil;
+        _cancelBlock = nil;
     }
 }
 

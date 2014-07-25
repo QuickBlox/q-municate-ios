@@ -31,8 +31,8 @@
     if (_dialog != dialog) {
         _dialog = dialog;
         
-        [self configureCellWithDialog:dialog];
     }
+    [self configureCellWithDialog:dialog];
 }
 
 - (void)configureCellWithDialog:(QBChatDialog *)chatDialog {
@@ -55,6 +55,8 @@
         
     } else {
         
+        UIImage *img = [UIImage imageNamed:@"upic_placeholder_details_group"];
+        [self setUserImage:img];
         self.titleLabel.text = chatDialog.name;
         self.groupMembersNumb.text = [NSString stringWithFormat:@"%d", chatDialog.occupantIDs.count];
     }

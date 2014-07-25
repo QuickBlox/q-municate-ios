@@ -26,19 +26,18 @@
 
 - (void)setUserData:(id)userData {
     
-    if ([userData isKindOfClass:QBUUser.class]) {
-        [super setUserData:userData];
-        return;
-    }
+    [super setUserData:userData];
     
-    if (_userData != userData) {
-        _userData = userData;
-        
-        if ([userData isKindOfClass:ABPerson.class]) {
-            [self configureWithAdressaddressBookUser:userData];
-        } else if ([userData conformsToProtocol:@protocol(FBGraphUser)]) {
-            [self configureWithFBGraphUser:userData];
-        }
+    if ([userData isKindOfClass:ABPerson.class]) {
+        [self configureWithAdressaddressBookUser:userData];
+    } else if ([userData conformsToProtocol:@protocol(FBGraphUser)]) {
+        [self configureWithFBGraphUser:userData];
+    } else if ([userData isKindOfClass:[QBUUser class]]) {
+
+        QBUUser *user = userData;
+        self.titleLabel.text = (user.fullName.length == 0) ? kEmptyString : user.fullName;
+        NSURL *avatarUrl = [NSURL URLWithString:user.website];
+        [self setUserImageWithUrl:avatarUrl];
     }
 }
 
