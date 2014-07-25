@@ -18,7 +18,6 @@
 
 @interface QMFriendListCell : QMTableViewCell
 
-@property (strong, nonatomic) QBContactListItem *contactlistItem;
 @property (strong, nonatomic) NSString *searchText;
 
 @property (weak, nonatomic) id <QMFriendListCellDelegate>delegate;

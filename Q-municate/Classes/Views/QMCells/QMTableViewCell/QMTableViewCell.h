@@ -12,6 +12,7 @@
 @interface QMTableViewCell : UITableViewCell 
 
 @property (strong, nonatomic) id userData;
+@property (strong, nonatomic) QBContactListItem *contactlistItem;
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;

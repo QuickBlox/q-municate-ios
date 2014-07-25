@@ -59,10 +59,7 @@
 
 - (void)setContactlistItem:(QBContactListItem *)contactlistItem {
 
-    if (_contactlistItem != contactlistItem) {
-        _contactlistItem = contactlistItem;
-    }
-    
+    [super setContactlistItem:contactlistItem];
     self.online = contactlistItem.online;
     self.isFriend = contactlistItem ?  YES : NO;
 }

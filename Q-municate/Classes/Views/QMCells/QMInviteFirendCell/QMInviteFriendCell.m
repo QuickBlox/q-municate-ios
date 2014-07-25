@@ -41,6 +41,14 @@
     }
 }
 
+- (void)setContactlistItem:(QBContactListItem *)contactlistItem {
+
+    if (contactlistItem) {
+        NSString *status = (contactlistItem.online) ?  kStatusOnlineString : kStatusOfflineString;
+        self.descriptionLabel.text = status;
+    }
+}
+
 - (void)configureWithFBGraphUser:(NSDictionary<FBGraphUser> *)user {
     
     self.titleLabel.text = [NSString stringWithFormat:@"%@ %@", user.first_name, user.last_name];

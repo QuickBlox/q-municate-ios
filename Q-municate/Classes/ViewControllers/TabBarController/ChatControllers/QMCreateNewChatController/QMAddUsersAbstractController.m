@@ -76,8 +76,10 @@
     QMInviteFriendCell *cell = [tableView dequeueReusableCellWithIdentifier:kCreateChatCellIdentifier];
     
     QBUUser *friend = self.friends[indexPath.row];
-    cell.check = [self.selectedFriends containsObject:friend];
+    
+    cell.contactlistItem = [[QMApi instance] contactItemWithUserID:friend.ID];
     cell.userData = friend;
+    cell.check = [self.selectedFriends containsObject:friend];
     
     return cell;
 }

@@ -185,8 +185,15 @@ const NSUInteger kQMNumberOfSection = 2;
     }
     
     QMInviteFriendCell *cell = [tableView dequeueReusableCellWithIdentifier:kQMInviteFriendCellID];
+
+    id userData = [self itemAtIndexPath:indexPath];
+
+    if ([userData isKindOfClass:[QBUUser class]]) {
+        QBUUser *user = userData;
+        cell.contactlistItem = [[QMApi instance] contactItemWithUserID:user.ID];
+    }
     
-    cell.userData = [self itemAtIndexPath:indexPath];
+    cell.userData = userData;
     cell.check = [self checkedAtIndexPath:indexPath];
     cell.delegate = self;
     

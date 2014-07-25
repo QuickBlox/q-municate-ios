@@ -26,11 +26,11 @@
 
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
-        [weakSelf updateExistDialogWithMessage:message];
+        [weakSelf updateOrCreateDialogWithMessage:message];
     }];
     
     [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-        [weakSelf updateExistDialogWithMessage:message];
+        [weakSelf updateOrCreateDialogWithMessage:message];
     }];
     
     [[QMChatReceiver instance] chatRoomDidCreateWithTarget:self block:^(NSString *roomName) {
@@ -140,12 +140,15 @@
     dialog.name = chatMessage.customParameters[@"name"];
     
     NSString *occupantsIDs = chatMessage.customParameters[@"occupants_ids"];
-    dialog.occupantIDs = [occupantsIDs componentsSeparatedByString:@","];
+    dialog.occupantIDs = [occupantsIDs componentsSeparatedByString:@", "];
 }
 
-- (void)updateExistDialogWithMessage:(QBChatMessage *)message {
+- (void)updateOrCreateDialogWithMessage:(QBChatMessage *)message {
     
     NSAssert(message.cParamDialogID, @"Need update this case");
+    if (message.cParamNotificationType.integerValue == 1) {
+            NSLog(@"");
+    }
     QBChatDialog *dialog = [self chatDialogWithID:message.cParamDialogID];
     dialog.lastMessageText = message.text;
     dialog.unreadMessagesCount++;

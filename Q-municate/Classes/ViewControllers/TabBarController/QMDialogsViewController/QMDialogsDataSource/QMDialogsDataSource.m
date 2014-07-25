@@ -42,7 +42,8 @@
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
 
             QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
-            if (dialog) {                
+
+            if (dialog) {
                 NSUInteger idx = [self.dialogs indexOfObject:dialog];
                 [weakSelf reloadRowAtIndex:idx];
             }
@@ -54,11 +55,13 @@
         }];
         
     }
+    
     return self;
 }
 
 - (void)reloadRowAtIndex:(NSUInteger)index {
     
+    NSArray *visibleCells = [self.tableView visibleCells];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
     
     [self.tableView beginUpdates];

@@ -88,7 +88,8 @@
 - (NSArray *)checkExistIds:(NSArray *)ids {
     
     NSMutableSet *idsToFetch = [NSMutableSet setWithArray:ids];
-    for (NSString *userID in ids) {
+    
+    for (NSNumber *userID in ids) {
         
         QBUUser *user = [self userWithID:userID.integerValue];
         if (user) {
@@ -103,8 +104,7 @@
 
     NSMutableSet *ids = [NSMutableSet set];
     for (QBUUser *user in users) {
-        NSString *userID = [NSString stringWithFormat:@"%d", user.ID];
-        [ids addObject:userID];
+        [ids addObject:@(user.ID)];
     }
     return [ids allObjects];
 }
@@ -115,8 +115,7 @@
     NSArray *contactListItems = self.usersService.contactList;
     
     for (QBContactListItem *item in contactListItems) {
-        NSString *stringID = [NSString stringWithFormat:@"%d", item.userID];
-        [idsToFetch addObject:stringID];
+        [idsToFetch addObject:@(item.userID)];
     }
     
     return idsToFetch;

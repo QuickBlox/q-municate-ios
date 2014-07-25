@@ -112,7 +112,9 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 
             __weak __typeof(self)weakSelf = self;
             [[QMApi instance] createPrivateChatDialogIfNeededWithOpponent:self.selectedUser completion:^(QBChatDialog *chatDialog) {
-                [weakSelf performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatDialog];
+                if (chatDialog) {
+                    [weakSelf performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatDialog];
+                }
             }];
             
         } break;

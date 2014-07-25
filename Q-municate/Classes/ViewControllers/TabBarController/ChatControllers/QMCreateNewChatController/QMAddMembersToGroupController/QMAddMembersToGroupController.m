@@ -29,7 +29,9 @@
     __weak __typeof(self)weakSelf = self;
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] joinOccupants:self.selectedFriends toChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
-        [weakSelf.navigationController popViewControllerAnimated:YES];
+        if (result.success) {
+            [weakSelf.navigationController popViewControllerAnimated:YES];
+        }
         [SVProgressHUD dismiss];
     }];
 }

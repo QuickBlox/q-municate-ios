@@ -7,10 +7,17 @@
 //
 
 #import "QMCreateNewChatController.h"
+#import "QMChatViewController.h"
 #import "SVProgressHUD.h"
 #import "QMApi.h"
 
+NSString *const QMChatViewControllerID = @"QMChatViewController";
+
 @implementation QMCreateNewChatController
+
+- (void)dealloc {
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
 
 - (void)viewDidLoad {
     
@@ -33,8 +40,19 @@
 
     __weak __typeof(self)weakSelf = self;
     [[QMApi instance] createGroupChatDialogWithName:chatName ocupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
+        
+        if (result.success) {
+            
+            QMChatViewController *chatVC = [self.storyboard instantiateViewControllerWithIdentifier:QMChatViewControllerID];
+            chatVC.dialog = result.dialog;
+            
+            NSMutableArray *controllers = self.navigationController.viewControllers.mutableCopy;
+            [controllers removeLastObject];
+            [controllers addObject:chatVC];
+            weakSelf.navigationController.viewControllers = controllers;
+        }
+        
         [SVProgressHUD dismiss];
-        [weakSelf.navigationController popViewControllerAnimated:NO];
     }];
 }
 

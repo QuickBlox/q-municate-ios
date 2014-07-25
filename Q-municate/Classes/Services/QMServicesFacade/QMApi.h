@@ -99,7 +99,6 @@
  @param opponent - oponent.
  @result QBChatDialogResult
  */
-- (void)createPrivateChatDialogWithOpponent:(QBUUser *)opponent completion:(QBChatDialogResultBlock)completion;
 - (void)createPrivateChatDialogIfNeededWithOpponent:(QBUUser *)opponent completion:(void(^)(QBChatDialog *chatDialog))completion;
 /**
  Leave user from chat dialog

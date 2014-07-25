@@ -133,7 +133,7 @@ NSString const *kQMCustomParameterDialogOccupantsIDs = @"occupants_ids";
 #pragma mark - cParamNotificationType
 
 - (void)setCParamNotificationType:(NSNumber *)cParamNotificationType {
-    self.context[kQMCustomParameterDialogOccupantsIDs] = cParamNotificationType;
+    self.context[kQMCustomParameterNotificationType] = cParamNotificationType;
 }
 
 - (NSString *)cParamNotificationType {

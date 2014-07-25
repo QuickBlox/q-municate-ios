@@ -33,26 +33,29 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 
 #pragma mark - Create Chat Dialogs
 
-- (void)createPrivateChatDialogWithOpponent:(QBUUser *)opponent completion:(QBChatDialogResultBlock)completion {
-
-    NSString *opponentID = [NSString stringWithFormat:@"%d", opponent.ID];
-    
-    QBChatDialog *chatDialog = [[QBChatDialog alloc] init];
-    chatDialog.type = QBChatDialogTypePrivate;
-    chatDialog.occupantIDs =  @[opponentID];
-    
-	[self.chatDialogsService createChatDialog:chatDialog completion:completion];
-}
-
 - (void)createPrivateChatDialogIfNeededWithOpponent:(QBUUser *)opponent completion:(void(^)(QBChatDialog *chatDialog))completion {
     
     QBChatDialog *dialog = [self.chatDialogsService privateDialogWithOpponentID:opponent.ID];
+    
     if (!dialog) {
+        
+        NSString *opponentID = [NSString stringWithFormat:@"%d", opponent.ID];
+        
+        QBChatDialog *chatDialog = [[QBChatDialog alloc] init];
+        chatDialog.type = QBChatDialogTypePrivate;
+        chatDialog.occupantIDs =  @[opponentID];
+        
         __weak __typeof(self)weakSelf = self;
-        [self createPrivateChatDialogWithOpponent:opponent completion:^(QBChatDialogResult *result) {
-            [weakSelf.chatDialogsService addDialogToHistory:result.dialog];
+        [self.chatDialogsService createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
+            
+            if ([weakSelf checkResult:result]) {
+                [weakSelf.chatDialogsService addDialogToHistory:result.dialog];
+            }
+            
             completion(result.dialog);
+            
         }];
+        
     } else {
         completion(dialog);
     }
@@ -73,8 +76,11 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 
     __weak __typeof(self)weakSelf = self;
     [self.chatDialogsService createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
-        [weakSelf.chatDialogsService addDialogToHistory:result.dialog];
-        [weakSelf sendNotificationWithType:1 toRecipients:ocupants chatDialog:result.dialog];
+        
+        if ([weakSelf checkResult:result]) {
+            [weakSelf.chatDialogsService addDialogToHistory:result.dialog];
+            [weakSelf sendNotificationWithType:1 toRecipients:ocupants chatDialog:result.dialog];
+        }
         completion(result);
     }];
 }
@@ -120,7 +126,8 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 
     __weak __typeof(self)weakSelf = self;
     [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialogResult *result) {
-        if (result.success) {
+       
+        if ([weakSelf checkResult:result]) {
             [weakSelf sendNotificationWithType:2 toRecipients:occupants chatDialog:chatDialog];
         }
         completion(result);
