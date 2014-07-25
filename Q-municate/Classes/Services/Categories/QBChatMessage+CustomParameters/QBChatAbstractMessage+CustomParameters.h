@@ -27,5 +27,6 @@ extern NSString const *kQMCustomParameterChatMessageID;
 @property (strong, nonatomic) NSString *cParamDialogOccupantsIDs;
 
 - (void)setCustomParametersWithChatDialog:(QBChatDialog *)chatDialog;
+- (QBChatDialog *)chatDialogFromCustomParameters;
 
 @end

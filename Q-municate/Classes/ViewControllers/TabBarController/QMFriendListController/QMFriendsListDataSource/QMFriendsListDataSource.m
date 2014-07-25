@@ -89,8 +89,10 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
     self.friendList = [QMApi instance].friends;
     [self.tableView reloadData];
     
-    if (self.friendList.count == 0 && !self.searchActive) {
-        self.tableView.tableFooterView = [self.tableView dequeueReusableCellWithIdentifier:kQMNotResultCellIdentifier];
+    if (!self.searchActive) {
+        
+        self.tableView.tableFooterView =
+        self.friendList.count == 0 ? [self.tableView dequeueReusableCellWithIdentifier:kQMNotResultCellIdentifier] : [[UIView alloc] initWithFrame:CGRectZero];
     }
 }
 

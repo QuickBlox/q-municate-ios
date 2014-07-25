@@ -26,6 +26,12 @@
     self.dialog.type == QBChatDialogTypeGroup ? [self configureNavigationBarForGroupChat] : [self configureNavigationBarForPrivateChat];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+
+    self.dialog.unreadMessagesCount = 0;
+}
+
 - (void)configureNavigationBarForPrivateChat {
 
     NSUInteger oponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];

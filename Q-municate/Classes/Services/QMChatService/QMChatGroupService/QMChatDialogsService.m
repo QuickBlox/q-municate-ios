@@ -108,7 +108,12 @@
 }
 
 - (NSArray *)dialogHistory {
-    return [self.dialogs allValues];
+    
+    NSArray *dialogs = [self.dialogs allValues];
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"lastMessageDate" ascending:YES];
+    dialogs = [dialogs sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
+   
+    return dialogs;
 }
 
 - (QBChatDialog *)privateDialogWithOpponentID:(NSUInteger)opponentID {
@@ -139,19 +144,24 @@
     
     dialog.name = chatMessage.customParameters[@"name"];
     
-    NSString *occupantsIDs = chatMessage.customParameters[@"occupants_ids"];
-    dialog.occupantIDs = [occupantsIDs componentsSeparatedByString:@", "];
+    dialog.occupantIDs = [chatMessage.cParamDialogOccupantsIDs componentsSeparatedByString:@", "];
 }
 
 - (void)updateOrCreateDialogWithMessage:(QBChatMessage *)message {
     
     NSAssert(message.cParamDialogID, @"Need update this case");
+    
     if (message.cParamNotificationType.integerValue == 1) {
-            NSLog(@"");
+        
+        QBChatDialog *chatDialog = [message chatDialogFromCustomParameters];
+        [self addDialogToHistory:chatDialog];
     }
-    QBChatDialog *dialog = [self chatDialogWithID:message.cParamDialogID];
-    dialog.lastMessageText = message.text;
-    dialog.unreadMessagesCount++;
+    else {
+        
+        QBChatDialog *dialog = [self chatDialogWithID:message.cParamDialogID];
+        dialog.lastMessageText = message.text;
+        dialog.unreadMessagesCount++;
+    }
 }
 
 @end

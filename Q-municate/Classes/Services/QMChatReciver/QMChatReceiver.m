@@ -77,8 +77,18 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SUBQUERY(self, $x, $x.identifier == %d).@count != 0", identifier];
     NSArray *result = [allHendlers filteredArrayUsingPredicate:predicate];
     
-    for (NSMutableArray *toRemove in result) {
-        [toRemove removeAllObjects];
+    for (NSMutableArray *handlers in result) {
+    
+        NSMutableArray *toRemove = [NSMutableArray array];
+        
+        for (QMChatHandlerObject *handler in handlers) {
+            
+            if (handler.identifier == identifier) {
+                [toRemove addObject:handler];
+            }
+        }
+        
+        [handlers removeObjectsInArray:toRemove];
     }
 }
 

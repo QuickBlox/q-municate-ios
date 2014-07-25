@@ -66,7 +66,7 @@ NSString const *kQMCustomParameterDialogOccupantsIDs = @"occupants_ids";
     self.context[kQMCustomParameterDateSent] = cParamDateSent;
 }
 
-- (NSString *)cParamDateSent {
+- (NSNumber *)cParamDateSent {
     return self.context[kQMCustomParameterDateSent];
 }
 
@@ -117,7 +117,7 @@ NSString const *kQMCustomParameterDialogOccupantsIDs = @"occupants_ids";
 }
 
 - (NSString *)cParamDialogName {
-    return self.context[kQMCustomParameterDialogType];
+    return self.context[kQMCustomParameterDialogName];
 }
 
 #pragma mark - cParamDialogOccupantsIDs
@@ -147,7 +147,19 @@ NSString const *kQMCustomParameterDialogOccupantsIDs = @"occupants_ids";
     self.cParamDialogName = chatDialog.name;
     self.cParamDialogType = @(chatDialog.type);
     self.cParamDialogOccupantsIDs = [chatDialog.occupantIDs componentsJoinedByString:@", "];
+}
 
+- (QBChatDialog *)chatDialogFromCustomParameters {
+
+    QBChatDialog *chatDialog = [[QBChatDialog alloc] init];
+    chatDialog.ID = self.cParamDialogID;
+    chatDialog.roomJID = self.cParamRoomJID;
+    chatDialog.name = self.cParamDialogName;
+    chatDialog.occupantIDs = [self.cParamDialogOccupantsIDs componentsSeparatedByString:@", "];
+    chatDialog.type = self.cParamDialogType.integerValue;
+    chatDialog.lastMessageDate = [NSDate dateWithTimeIntervalSince1970:self.cParamDateSent.doubleValue];
+    
+    return chatDialog;
 }
 
 @end

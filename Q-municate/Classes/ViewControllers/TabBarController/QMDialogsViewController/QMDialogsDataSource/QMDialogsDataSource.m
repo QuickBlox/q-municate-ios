@@ -23,6 +23,11 @@
 
 @implementation QMDialogsDataSource
 
+- (void)dealloc {
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    [[QMChatReceiver instance] unsubscribeForTarget:self];
+}
+
 - (instancetype)initWithTableView:(UITableView *)tableView {
     
     self = [super init];
@@ -32,8 +37,6 @@
         self.tableView.dataSource = self;
         
         [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
-            
-            QBChatDialog *chatDialog = [[QMApi instance] chatDialogWithID:roomJID];
             NSLog(@"chatRoomDidReceiveMessageWithTarget");
         }];
 
@@ -45,13 +48,10 @@
 
             if (dialog) {
                 NSUInteger idx = [self.dialogs indexOfObject:dialog];
-                [weakSelf reloadRowAtIndex:idx];
+                
+                message.cParamNotificationType.integerValue == 1 ?
+                [weakSelf insertRowAtIndex:idx] : [weakSelf.tableView reloadData];
             }
-            
-        }];
-        
-        [[QMChatReceiver instance] chatRoomDidCreateWithTarget:self block:^(NSString *roomName) {
-            NSLog(@"chatRoomDidCreateWithTarget");
         }];
         
     }
@@ -59,19 +59,19 @@
     return self;
 }
 
-- (void)reloadRowAtIndex:(NSUInteger)index {
+- (void)insertRowAtIndex:(NSUInteger)index {
     
-    NSArray *visibleCells = [self.tableView visibleCells];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
     
     [self.tableView beginUpdates];
-    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
     [self.tableView endUpdates];
 }
 
 #pragma mark - UITableViewDataSource
 
 - (void)fetchDialog:(void(^)(void))comletion {
+    
     [[QMApi instance] fetchAllDialogs:comletion];
 }
 

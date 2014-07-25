@@ -62,7 +62,6 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
         
         QMChatViewController *chatController = segue.destinationViewController;
         QBChatDialog *dialog = [self.dataSource dialogAtIndexPath:indexPath];
-        dialog.unreadMessagesCount = 0;
         chatController.dialog = dialog;
 //        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
         
