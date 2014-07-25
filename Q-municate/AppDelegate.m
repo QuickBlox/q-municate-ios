@@ -18,16 +18,15 @@ NSString *const kQMAcconuntKey = @"LpNmxA2Pq2uyW5qBjHy8";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-//    self.incomingCallService = [QMIncomingCallHandler new];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-    self.incomingCallService = [[QMIncomingCallHandler alloc] init];
+//    self.incomingCallService = [[QMIncomingCallHandler alloc] init];
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
 
     [QBSettings setApplicationID:kQMApplicationID];
     [QBSettings setAuthorizationKey:kQMAuthorizationKey];
     [QBSettings setAuthorizationSecret:kQMAuthorizationSecret];
     [QBSettings setAccountKey:kQMAcconuntKey];
-    [QBSettings setLogLevel:QBLogLevelNothing];
+//    [QBSettings setLogLevel:QBLogLevelNothing];
     
     /*Configure app appearance*/
     NSDictionary *normalAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:1.000 alpha:0.750]};
