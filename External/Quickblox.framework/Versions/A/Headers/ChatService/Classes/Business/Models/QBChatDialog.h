@@ -20,7 +20,6 @@
     NSUInteger unreadMessagesCount;
     NSArray *occupantIDs;
     enum QBChatDialogType type;
-    NSUInteger unreadMessageCount;
 }
 
 /** Object ID */
@@ -50,7 +49,10 @@
 /** Array of user ids in chat. For private chat count = 2 */
 @property (nonatomic, retain) NSArray *occupantIDs;
 
-/** Unread messages count. If you create dialog, count will be 0 */
-@property (nonatomic, assign) NSUInteger unreadMessageCount;
+/** ID of a recipient if type = QBChatDialogTypePrivate. -1 otherwise or if you aren't logged in to Chat.  */
+@property (nonatomic, readonly) NSInteger recipientID;
+
+/** Returns an autoreleased instance of QBChatRoom to join if type = QBChatDialogTypeGroup or QBChatDialogTypePublicGroup. nil otherwise. */
+@property (nonatomic, readonly) QBChatRoom *chatRoom;
 
 @end
