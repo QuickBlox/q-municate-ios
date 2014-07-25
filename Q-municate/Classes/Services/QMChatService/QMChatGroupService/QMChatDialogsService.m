@@ -145,6 +145,9 @@
 
 - (void)updateOrCreateDialogWithMessage:(QBChatMessage *)message {
     
+    if (!message.customParameters) {
+        return;
+    }
     NSAssert(message.cParamDialogID, @"Need update this case");
     if (message.cParamNotificationType.integerValue == 1) {
             NSLog(@"");
