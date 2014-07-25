@@ -102,12 +102,15 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 }
 
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     switch (indexPath.row) {
         case QMCallTypePhone: break;
-        case QMCallTypeVideo:[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil]; break;
-        case QMCallTypeAudio: [self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil]; break;
+//        case QMCallTypeVideo:[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil]; break;
+//        case QMCallTypeAudio: [self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil]; break;
+        case QMCallTypeVideo:[[[UIAlertView alloc]initWithTitle:@"Coming soon." message:nil delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show]; break;
+        case QMCallTypeAudio:[[[UIAlertView alloc]initWithTitle:@"Coming soon." message:nil delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show]; break;
         case QMCallTypeChat: {
 
             __weak __typeof(self)weakSelf = self;

@@ -65,12 +65,14 @@
 
 - (void)audioCallAction {
     
-	[self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil];
+    [[[UIAlertView alloc]initWithTitle:@"Coming soon." message:nil delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
+//	[self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil];
 }
 
 - (void)videoCallAction {
     
-	[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil];
+    [[[UIAlertView alloc]initWithTitle:@"Coming soon." message:nil delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
+//	[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil];
 }
 
 - (void)groupInfoNavButtonAction {
