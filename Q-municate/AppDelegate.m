@@ -19,7 +19,7 @@ NSString *const kQMAcconuntKey = @"LpNmxA2Pq2uyW5qBjHy8";
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-    self.incomingCallService = [[QMIncomingCallHandler alloc] init];
+//    self.incomingCallService = [[QMIncomingCallHandler alloc] init];
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
 
     [QBSettings setApplicationID:kQMApplicationID];
