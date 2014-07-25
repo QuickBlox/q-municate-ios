@@ -156,11 +156,11 @@ NSString const *kQMDialogCustomParameterNotificationType = @"notification_type";
     NSAssert(chatDialog.type == QBChatDialogTypePrivate, @"Chat dialog type != QBChatDialogTypePrivate");
     NSAssert(chatDialog.occupantIDs.count == 2, @"Array of user ids in chat. For private chat count = 2");
     
-    NSString *myID = [NSString stringWithFormat:@"%d", self.currentUser.ID];
-    for (NSString *strID in chatDialog.occupantIDs) {
+    NSNumber *myID = @(self.currentUser.ID);
+    for (NSNumber *ID in chatDialog.occupantIDs) {
         
-        if (![strID isEqualToString:myID]) {
-            return strID.integerValue;
+        if (ID != myID) {
+            return ID.integerValue;
         }
     }
     
