@@ -26,21 +26,17 @@
 
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
-        NSLog(@"chatRoomDidReceiveMessageWithTarget");
-        
-        QBChatDialog *dialog = [weakSelf chatDialogWithRoomJID:roomJID];
-        
+        [weakSelf updateExistDialogWithMessage:message];
     }];
     
     [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-        
+        [weakSelf updateExistDialogWithMessage:message];
     }];
     
     [[QMChatReceiver instance] chatRoomDidCreateWithTarget:self block:^(NSString *roomName) {
         NSLog(@"chatRoomDidCreateWithTarget");
     }];
 }
-
 
 - (void)destroy {
     
@@ -77,7 +73,7 @@
 
 - (QBChatDialog *)chatDialogWithRoomJID:(NSString *)roomJID {
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"ANY self.roomJID == %@", roomJID];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.roomJID == %@", roomJID];
     NSArray *allDialogs = [self dialogHistory];
 
     QBChatDialog *dialog = [allDialogs filteredArrayUsingPredicate:predicate].firstObject;
@@ -133,11 +129,9 @@
     return self.chatRooms[roomJID];
 }
 
-- (void)updateChatDialogForChatMessage:(QBChatMessage *)chatMessage {
+- (void)updateChatDialogWithChatMessage:(QBChatMessage *)chatMessage {
     
-    NSString *roomJID = chatMessage.customParameters[@"xmpp_room_jid"];
-    
-    QBChatDialog *dialog = self.dialogs[roomJID];
+    QBChatDialog *dialog = self.dialogs[chatMessage.cParamRoomJID];
     if (dialog == nil) {
         NSAssert(!dialog, @"Dialog you are looking for not found.");
         return;
@@ -149,5 +143,12 @@
     dialog.occupantIDs = [occupantsIDs componentsSeparatedByString:@","];
 }
 
+- (void)updateExistDialogWithMessage:(QBChatMessage *)message {
+    
+    NSAssert(message.cParamDialogID, @"Need update this case");
+    QBChatDialog *dialog = [self chatDialogWithID:message.cParamDialogID];
+    dialog.lastMessageText = message.text;
+    dialog.unreadMessagesCount++;
+}
 
 @end

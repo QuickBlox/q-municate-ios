@@ -19,22 +19,25 @@ NSString *const kQMAcconuntKey = @"LpNmxA2Pq2uyW5qBjHy8";
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
 //    self.incomingCallService = [QMIncomingCallHandler new];
-    
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-
+    self.incomingCallService = [[QMIncomingCallHandler alloc] init];
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
 
     [QBSettings setApplicationID:kQMApplicationID];
     [QBSettings setAuthorizationKey:kQMAuthorizationKey];
     [QBSettings setAuthorizationSecret:kQMAuthorizationSecret];
     [QBSettings setAccountKey:kQMAcconuntKey];
-    [QBSettings setLogLevel:QBLogLevelDebug];
+    [QBSettings setLogLevel:QBLogLevelNothing];
     
     /*Configure app appearance*/
-    NSDictionary *normalAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:1.000 alpha:0.830]};
+    NSDictionary *normalAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:1.000 alpha:0.750]};
     NSDictionary *disabledAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:0.935 alpha:0.260]};
     [[UIBarButtonItem appearance] setTitleTextAttributes:normalAttributes forState:UIControlStateNormal];
     [[UIBarButtonItem appearance] setTitleTextAttributes:disabledAttributes forState:UIControlStateDisabled];
+    
+    [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateNormal];
+    [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateDisabled];
+    
     return YES;
 }
 
@@ -53,7 +56,8 @@ NSString *const kQMAcconuntKey = @"LpNmxA2Pq2uyW5qBjHy8";
     [FBSession.activeSession handleDidBecomeActive];
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application {}
+- (void)applicationWillTerminate:(UIApplication *)application {
+}
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url

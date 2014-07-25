@@ -46,6 +46,7 @@
         [names addObject:user.fullName];
     }
     
+    [names addObject:[QMApi instance].currentUser.fullName];
     return [names componentsJoinedByString:@", "];
 }
 

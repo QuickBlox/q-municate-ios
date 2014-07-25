@@ -28,32 +28,32 @@
     self.textView = [[UILabel alloc] init];
     self.textView.backgroundColor = [UIColor clearColor];
     self.textView.numberOfLines = 0;
-
-//    self.textView.editable = NO;
-//    self.textView.selectable = YES;
-//    self.textView.userInteractionEnabled = YES;
-//    self.textView.dataDetectorTypes = UIDataDetectorTypeNone;
-//    self.textView.showsHorizontalScrollIndicator = NO;
-//    self.textView.showsVerticalScrollIndicator = NO;
-//    self.textView.scrollEnabled = NO;
-//    self.textView.textContainer.lineFragmentPadding = 0;
-//    self.textView.scrollIndicatorInsets = UIEdgeInsetsZero;
-//    self.textView.textContainerInset = UIEdgeInsetsZero;
-//    self.textView.linkTextAttributes = @{
-//                                         NSForegroundColorAttributeName : [UIColor whiteColor],
-//                                         NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid)
-//                                         };
+    
+    //    self.textView.editable = NO;
+    //    self.textView.selectable = YES;
+    //    self.textView.userInteractionEnabled = YES;
+    //    self.textView.dataDetectorTypes = UIDataDetectorTypeNone;
+    //    self.textView.showsHorizontalScrollIndicator = NO;
+    //    self.textView.showsVerticalScrollIndicator = NO;
+    //    self.textView.scrollEnabled = NO;
+    //    self.textView.textContainer.lineFragmentPadding = 0;
+    //    self.textView.scrollIndicatorInsets = UIEdgeInsetsZero;
+    //    self.textView.textContainerInset = UIEdgeInsetsZero;
+    //    self.textView.linkTextAttributes = @{
+    //                                         NSForegroundColorAttributeName : [UIColor whiteColor],
+    //                                         NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid)
+    //                                         };
     
     
     [self.containerView addSubview:self.textView];
     self.textView.translatesAutoresizingMaskIntoConstraints = NO;
     
     self.userName = [[UILabel alloc] init];
-    self.userName.font = [UIFont boldSystemFontOfSize:10];
+    self.userName.font = [UIFont boldSystemFontOfSize:12];
     self.userName.textColor = [UIColor darkGrayColor];
     
     self.timeLabel = [[UILabel alloc] init];
-    self.timeLabel.font = [UIFont systemFontOfSize:10];
+    self.timeLabel.font = [UIFont systemFontOfSize:12];
     self.timeLabel.textColor = [UIColor grayColor];
     self.timeLabel.textAlignment = NSTextAlignmentRight;
     
@@ -122,11 +122,9 @@
     }
 }
 
-- (void)setUser:(QBUUser *)user {
-    
-    [super setUser:user];
-    self.userName.text = user.fullName;
+- (void)setUser:(QBUUser *)user isMe:(BOOL)isMe {
+    [super setUser:user isMe:isMe];
+    self.userName.text = isMe ? nil : user.fullName;
 }
-
 
 @end

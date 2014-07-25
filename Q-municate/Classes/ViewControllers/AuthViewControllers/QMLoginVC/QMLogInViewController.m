@@ -32,7 +32,6 @@
     [super viewDidLoad];
     
     self.rememberMeSwitch.on = YES;
-    [[QMApi instance] setAutoLogin:YES];
     
     [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
@@ -50,6 +49,8 @@
 }
 
 - (IBAction)logIn:(id)sender {
+    
+    [[QMApi instance] setAutoLogin:self.rememberMeSwitch.on];
     
     NSString *mailString = self.emailField.text;
     NSString *passwordString = self.passwordField.text;
@@ -71,7 +72,7 @@
             if (success) {
                 [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
             }
-            else{
+            else {
                 [weakSelf.rememberMeSwitch setOn:NO animated:YES];
             }
         }];

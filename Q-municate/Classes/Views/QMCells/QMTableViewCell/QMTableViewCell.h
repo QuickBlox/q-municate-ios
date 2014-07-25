@@ -9,9 +9,7 @@
 #import <UIKit/UIKit.h>
 @class QMImageView;
 
-@interface QMTableViewCell : UITableViewCell {
-    id _userData;
-}
+@interface QMTableViewCell : UITableViewCell 
 
 @property (strong, nonatomic) id userData;
 

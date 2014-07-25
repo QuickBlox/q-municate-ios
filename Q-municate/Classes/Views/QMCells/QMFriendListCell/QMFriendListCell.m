@@ -2,7 +2,7 @@
 //  QMFriendListCell.m
 //  Q-municate
 //
-//  Created by Ivanov Andrey Ivanov on 25/02/2014.
+//  Created by Andrey Ivanov on 25/02/2014.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -31,6 +31,15 @@
     /*isOnlien - NO*/
     self.onlineCircle.hidden = YES;
     self.descriptionLabel.text = kStatusOfflineString;
+}
+
+- (void)setUserData:(id)userData {
+    [super setUserData:userData];
+
+    QBUUser *user = userData;
+    self.titleLabel.text = (user.fullName.length == 0) ? kEmptyString : user.fullName;
+    NSURL *avatarUrl = [NSURL URLWithString:user.website];
+    [self setUserImageWithUrl:avatarUrl];
 }
 
 - (void)setOnline:(BOOL)online {

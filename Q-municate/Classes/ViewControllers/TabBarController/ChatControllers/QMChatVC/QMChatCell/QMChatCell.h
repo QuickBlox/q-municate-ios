@@ -2,7 +2,7 @@
 //  QMChatCell.h
 //  Q-municate
 //
-//  Created by Ivanov Andrey Ivanov on 11.06.14.
+//  Created by Andrey Ivanov on 11.06.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -10,17 +10,19 @@
 #import "QMMessage.h"
 
 @class QMMessage;
+@class QMImageView;
 
 @interface QMChatCell : UITableViewCell
 
-@property (strong, nonatomic) UIView *containerView;
-@property (strong, nonatomic) QBUUser *user;
-@property (strong, nonatomic) UIView *headerView;
+@property (strong, nonatomic, readonly) UIView *containerView;
+@property (strong, nonatomic, readonly) UIView *headerView;
 @property (strong, nonatomic, readonly) UIImageView *balloonImageView;
-@property (strong, nonatomic) QMMessage *message;
-@property (nonatomic, getter = isHiddenUserImage) BOOL hideUserImage; //Default NO
-
+@property (strong, nonatomic, readonly) QMImageView *userImageView;
 @property (strong, nonatomic, readonly) CALayer *maskLayer;
+
+@property (strong, nonatomic) QMMessage *message;
+
+- (void)setUser:(QBUUser *)user isMe:(BOOL)isMe;
 
 - (void)setBalloonImage:(UIImage *)balloonImage;
 - (void)setBalloonTintColor:(UIColor *)balloonTintColor;

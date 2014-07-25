@@ -135,7 +135,9 @@
 - (QMMessage *)qmMessageWithQbChatHistoryMessage:(QBChatHistoryMessage *)historyMessage {
     
     QMMessage *message = [[QMMessage alloc] initWithChatHistoryMessage:historyMessage];
-    message.align = ([QMApi instance].currentUser.ID == historyMessage.senderID) ? QMMessageContentAlignRight : QMMessageContentAlignLeft;
+    BOOL fromMe = ([QMApi instance].currentUser.ID == historyMessage.senderID);
+    message.minWidth = fromMe ? 60 : -1;
+    message.align =  fromMe ? QMMessageContentAlignRight : QMMessageContentAlignLeft;
     
     return message;
 }
@@ -152,11 +154,12 @@
     QMMessage *message = self.messages[indexPath.row];
     QMChatCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIDAtQMMessage:message]];
     
-    BOOL myMessage = [QMApi instance].currentUser.ID == message.senderID;
-    
-    cell.hideUserImage = myMessage;    
-    cell.user = [[QMApi instance] userWithID:message.senderID];
     cell.message = message;
+    
+    BOOL isMe = [QMApi instance].currentUser.ID == message.senderID;
+    
+    QBUUser *user = [[QMApi instance] userWithID:message.senderID];
+    [cell setUser:user isMe:isMe];
     
     return cell;
 }

@@ -2,7 +2,7 @@
 //  QMChatVC.m
 //  Q-municate
 //
-//  Created by Ivanov Andrey Ivanov on 11.06.14.
+//  Created by Andrey Ivanov on 11.06.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -49,6 +49,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     [super viewDidLoad];
     [self configureChatVC];
     [self registerForNotifications:YES];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     self.keyboardController = [[QMKeyboardController alloc] initWithTextView:self.inputToolBar.contentView.textView
                                                                  contextView:self.navigationController.view
                                                         panGestureRecognizer:self.tableView.panGestureRecognizer
@@ -84,7 +85,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
     [self updateKeyboardTriggerPoint];
 }
 
@@ -404,6 +405,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 - (void)presentImagePicker {
     
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
     
     imagePicker.delegate = self;
@@ -411,11 +413,11 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     imagePicker.mediaTypes = @[(NSString *) kUTTypeImage]; //(NSString *) kUTTypeMovie
     imagePicker.allowsEditing = YES;
     
-    [self presentViewController:imagePicker animated:YES completion:nil];
+    [self presentViewController:imagePicker animated:NO completion:nil];
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     NSString *mediaType = info[UIImagePickerControllerMediaType];
     
     if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
@@ -423,6 +425,13 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
         [self.dataSource sendImage:editImage];
         
     }
+    
+    [picker dismissViewControllerAnimated:NO completion:nil];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [picker dismissViewControllerAnimated:NO completion:nil];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
 #pragma mark - Emoji
@@ -453,6 +462,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 }
 
 - (UIImage *)randomImage:(NSInteger)categoryImage {
+    
     CGSize size = CGSizeMake(30, 30);
     UIGraphicsBeginImageContextWithOptions(size , NO, 0);
     

@@ -2,7 +2,7 @@
 //  QMChatCell.m
 //  Q-municate
 //
-//  Created by Ivanov Andrey Ivanov on 11.06.14.
+//  Created by Andrey Ivanov on 11.06.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -14,10 +14,13 @@
 @interface QMChatCell ()
 
 @property (strong, nonatomic) UIView *messageContainer;
-@property (strong, nonatomic) QMImageView *userImageView;
 @property (strong, nonatomic) UIImageView *balloonImageView;
 @property (strong, nonatomic) CALayer *maskLayer;
 @property (strong, nonatomic) NSArray *currentAlignConstrains;
+@property (strong, nonatomic) UIView *containerView;
+@property (strong, nonatomic) QMImageView *userImageView;
+@property (strong, nonatomic) UIView *headerView;
+@property (strong, nonatomic) QBUUser *user;
 
 @property (strong, nonatomic) NSLayoutConstraint *rMessageContainerConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *lMessageContainerConstraint;
@@ -39,6 +42,8 @@
 @property (strong, nonatomic) NSLayoutConstraint *rTitleConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *bTitleConstraint;
 
+@property (assign, nonatomic) BOOL showUserImage;
+
 @end
 
 @implementation QMChatCell
@@ -52,7 +57,7 @@
     return self;
 }
 
-//#define SHOW_BORDERS
+#define SHOW_BORDERS 0
 
 - (void)createContainerSubviews {
     
@@ -79,7 +84,7 @@
     
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     
-#ifdef SHOW_BORDERS
+#if SHOW_BORDERS
     
     self.messageContainer.layer.borderColor = [UIColor colorWithRed:1.000 green:0.975 blue:0.000 alpha:1.000].CGColor;
     self.messageContainer.layer.borderWidth = 1;
@@ -93,23 +98,24 @@
     self.balloonImageView.layer.borderColor = [UIColor colorWithRed:0.000 green:0.826 blue:1.000 alpha:1.000].CGColor;
     self.balloonImageView.layer.borderWidth = 1;
     
-    /***** ******/
     self.balloonImageView.backgroundColor = [UIColor lightGrayColor];
-    //    self.containerView.backgroundColor = [UIColor orangeColor];
+    self.containerView.backgroundColor = [UIColor colorWithRed:0.974 green:0.599 blue:1.000 alpha:1.000];
     self.userImageView.backgroundColor = [UIColor greenColor];
     self.headerView.backgroundColor = [UIColor colorWithWhite:0.128 alpha:0.400];
     self.messageContainer.backgroundColor = [UIColor yellowColor];
     
 #endif
-    [self createConstrains];
     
+    [self createConstrains];
 }
 
 - (void)setBalloonImage:(UIImage *)balloonImage {
+    
     self.balloonImageView.image = balloonImage;
 }
 
 - (void)setBalloonTintColor:(UIColor *)balloonTintColor {
+    
     self.messageContainer.tintColor = balloonTintColor;
 }
 
@@ -181,7 +187,7 @@
     self.lMessageContainerConstraint.constant = layout.messageMargin.left;
     self.rMessageContainerConstraint.constant = - layout.messageMargin.right;
     
-    CGSize userImageSize = self.isHiddenUserImage ? CGSizeZero : layout.userImageSize;
+    CGSize userImageSize = self.showUserImage ?  layout.userImageSize : CGSizeZero;
     self.hUserImageViewConstraint.constant = userImageSize.height;
     self.wUserImageViewConstraint.constant = userImageSize.width;
     
@@ -228,27 +234,32 @@
     
     self.lTitleConstraint.constant = insets.left;
     self.rTitleConstraint.constant = -insets.right;
-    self.userImageView.imageViewType = QMImageViewTypeCircle;
+
+    if (self.showUserImage) {
+        self.userImageView.imageViewType = QMImageViewTypeCircle;
+    }
 }
 
 #pragma mark - Set user image
 
-- (void)setMessage:(QMMessage *)message {
-    
-    if (_message != message) {
-        _message = message;
-    }
-    
+- (void)setUser:(QBUUser *)user isMe:(BOOL)isMe {
+
+    self.showUserImage = !isMe;
+    self.user = user;
 }
 
 - (void)setUser:(QBUUser *)user {
     
-    if (_user != user) {
-        _user = user;
+    _user = user;
+
+    if (self.showUserImage) {
+        
         NSURL *url = [NSURL URLWithString:user.website];
         UIImage *placeHolder = [UIImage imageNamed:@"upic-placeholder"];
-        self.userImageView.imageViewType = QMImageViewTypeCircle;
         [self.userImageView sd_setImageWithURL:url placeholderImage:placeHolder];
+    }
+    else {
+        self.userImageView.image = nil;
     }
 }
 
