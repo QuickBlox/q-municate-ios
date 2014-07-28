@@ -388,6 +388,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
             self.inputToolBar.contentView.textView.text = [text stringByTrimingWhitespace];
             [QMSoundManager playMessageSentSound];
             [self.dataSource sendMessage:text];
+            self.showCameraButton = YES;
         }
         self.inputToolBar.contentView.textView.text = kEmptyString;
     }
@@ -439,10 +440,13 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     
     if ([self.inputToolBar.contentView.textView.inputView isKindOfClass:[AGEmojiKeyboardView class]]) {
       
+        [self.inputToolBar.contentView.leftBarButtonItem setImage:[UIImage imageNamed:@"ic_smile"] forState:UIControlStateNormal];
         self.inputToolBar.contentView.textView.inputView = nil;
         [self.inputToolBar.contentView.textView reloadInputViews];
         
     } else {
+        
+        [self.inputToolBar.contentView.leftBarButtonItem setImage:[UIImage imageNamed:@"keyboard_icon"] forState:UIControlStateNormal];
         
         AGEmojiKeyboardView *emojiKeyboardView = [[AGEmojiKeyboardView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 216) dataSource:self];
         emojiKeyboardView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
