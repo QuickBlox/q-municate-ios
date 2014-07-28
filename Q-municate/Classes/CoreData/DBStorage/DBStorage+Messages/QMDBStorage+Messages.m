@@ -9,6 +9,8 @@
 #import "QMDBStorage+Messages.h"
 #import "ModelIncludes.h"
 
+NSString *const kCDMessageDatetimePath = @"datetime";
+
 @implementation QMDBStorage (Messages)
 
 - (void)cacheQBChatMessages:(NSArray *)messages withDialogId:(NSString *)dialogId finish:(QMDBFinishBlock)finish {

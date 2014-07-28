@@ -47,6 +47,7 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
         self.tableView.dataSource = self;
         
         self.searchList = [NSArray array];
+        self.tableView.tableFooterView = [self.tableView dequeueReusableCellWithIdentifier:kQMNotResultCellIdentifier];
         
         __weak __typeof(self)weakSelf = self;
         void(^retrive)(void) = ^() {
@@ -141,7 +142,7 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
         
         self.tableView.tableFooterView = _searchActive ?
         [self.tableView dequeueReusableCellWithIdentifier:kQMSearchGlobalCellIdentifier] :
-        [[UIView alloc] initWithFrame:CGRectZero];
+        (self.friendList.count == 0 ? [self.tableView dequeueReusableCellWithIdentifier:kQMNotResultCellIdentifier] : [[UIView alloc] initWithFrame:CGRectZero]);
         
         if (!_searchActive)  {
             self.searchList = nil;

@@ -12,7 +12,7 @@
 @interface QMAVCallService()
 
 @property (strong, nonatomic) QBWebRTCVideoChat *activeStream;
-@property (nonatomic, assign) QBVideoChatConferenceType conferenceType;
+@property (nonatomic, assign) enum QBVideoChatConferenceType conferenceType;
 @property (strong, nonatomic) NSString *currentSessionID;
 @property (strong, nonatomic) NSDictionary *customParams;
 
@@ -25,7 +25,7 @@
     NSLog(@"\n____________________________\nSTART AV Call Service\n____________________________");
     __weak typeof(self) weakSelf = self;
     // incoming call signal:
-    [[QMChatReceiver instance] chatDidReceiveCallRequestCustomParametesrWithTarget:self block:^(NSUInteger userID, NSString *sessionID, QBVideoChatConferenceType conferenceType, NSDictionary *customParameters) {
+    [[QMChatReceiver instance] chatDidReceiveCallRequestCustomParametesrWithTarget:self block:^(NSUInteger userID, NSString *sessionID, enum QBVideoChatConferenceType conferenceType, NSDictionary *customParameters) {
         weakSelf.customParams = customParameters;
         weakSelf.currentSessionID = sessionID;
         weakSelf.conferenceType = conferenceType;
@@ -47,7 +47,7 @@
     [[QMChatReceiver instance] unsubscribeForTarget:self];
 }
 
-- (void)initActiveStreamWithOpponentView:(QBVideoView *)opponentView sessionID:(NSString *)sessionID conferenceType:(QBVideoChatConferenceType)conferenceType {
+- (void)initActiveStreamWithOpponentView:(QBVideoView *)opponentView sessionID:(NSString *)sessionID conferenceType:(enum QBVideoChatConferenceType)conferenceType {
     
     if (sessionID == nil) {
         self.activeStream = [[QBChat instance] createWebRTCVideoChatInstance];
@@ -82,7 +82,7 @@
     self.activeStream = nil;
 }
 
-- (void)callToUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView conferenceType:(QBVideoChatConferenceType)conferenceType
+- (void)callToUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView conferenceType:(enum QBVideoChatConferenceType)conferenceType
 {
     [self initActiveStreamWithOpponentView:opponentView
                                  sessionID:nil

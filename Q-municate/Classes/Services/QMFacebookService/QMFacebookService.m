@@ -14,12 +14,13 @@
 NSString *const kQMQuickbloxHomeUrl = @"http://quickblox.com";
 NSString *const kQMQuickbloxLogoUrl = @"https://qbprod.s3.amazonaws.com/c6e81081d5954ed68485eead941b91a000";
 NSString *const kQMAppName = @"Q-municate";
+NSString *const kQMDataKey = @"data";
 
 - (void)fetchMyFriends:(void(^)(NSArray *facebookFriends))completion {
     
     FBRequest *friendsRequest = [FBRequest requestForMyFriends];
     [friendsRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        NSArray *myFriends = error ? @[] : [(FBGraphObject *)result objectForKey:kData];
+        NSArray *myFriends = error ? @[] : [(FBGraphObject *)result objectForKey:kQMDataKey];
         completion(myFriends);
     }];
 }
@@ -65,18 +66,6 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     NSString *urlString = [NSString stringWithFormat:kFBGraphGetPictureFormat, userID, session.accessTokenData.accessToken];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
-}
-
-- (void)loadUserImageWithUserID:(NSString *)userID completion:(void(^)(UIImage *fbUserImage))completion {
-    
-    NSURL *url = [self userImageUrlWithUserID:userID];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            completion(image);
-        });
-    });
 }
 
 - (void)loadMe:(void(^)(NSDictionary<FBGraphUser> *user))completion {

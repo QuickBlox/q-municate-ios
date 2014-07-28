@@ -8,6 +8,7 @@
 
 #import "QMApi.h"
 #import "QMUsersService.h"
+#import "QMContentService.h"
 
 @implementation QMApi (Users)
 
@@ -183,42 +184,40 @@
     }];
 }
 
+- (void)updateUser:(QBUUser *)user image:(UIImage *)image progress:(QMContentProgressBlock)progress completion:(void (^)(BOOL success))completion {
+    
+    __weak __typeof(self)weakSelf = self;
 
-//- (void)updateUserAvatarFromFacebook:(QBUUserResultBlock)completion {
-//
-//    __weak __typeof(self)weakSelf = self;
-//    [self.facebookService loadUserImageWithUserID:self.currentUser.facebookID completion:^(UIImage *fbImage) {
-//
-//        if (fbImage) {
-////            [weakSelf updateUserAvatar:fbImage imageName:weakSelf.currentUser.facebookID completion:completion];
-//        }
-//    }];
-//}
+    __block QBUUser *userInfo = user;
+    void (^updateUserProfile)(NSString *) =^(NSString *publicUrl) {
 
-//- (void)updateUserAvatar:(UIImage *)image imageName:(NSString *)imageName completion:(QBUUserResultBlock)completion {
-//
-//    QMContent *content = [[QMContent alloc] init];
-//    __weak __typeof(self)weakSelf = self;
-//    [content uploadImage:image named:imageName completion:^(QBCFileUploadTaskResult *result) {
-//
-//        if ([weakSelf checkResult:result]) {
-//
-//            QBUUser *user = weakSelf.currentUser;
-//            user.oldPassword = user.password;
-//            user.website = [result.uploadedBlob publicUrl];
-//
-//            [weakSelf.authService updateUser:user withCompletion:^(QBUUserResult *updateResult) {
-//
-//                if ([weakSelf checkResult:updateResult]) {
-//
-//                    updateResult.user.password = weakSelf.currentUser.password;
-//                    weakSelf.currentUser = updateResult.user;
-//                }
-//
-//                if (completion) completion(updateResult);
-//            }];
-//        }
-//    }];
-//}
+        if (!userInfo) {
+            userInfo = weakSelf.currentUser;
+        }
+        
+        if (publicUrl.length > 0) {
+            userInfo.website = publicUrl;
+        }
+        [weakSelf updateUser:userInfo completion:completion];
+    };
+    
+    if (image) {
+        [self.contentService uploadPNGImage:image progress:progress completion:^(QBCFileUploadTaskResult *result) {
+            updateUserProfile(result.uploadedBlob.publicUrl);
+        }];
+    }
+    else {
+        updateUserProfile(nil);
+    }
+}
+
+- (void)updateUser:(QBUUser *)user imageUrl:(NSURL *)imageUrl progress:(QMContentProgressBlock)progress completion:(void (^)(BOOL success))completion {
+    [self.contentService downloadFileWithUrl:imageUrl completion:^(NSData *data) {
+        if (data) {
+            UIImage *image = [UIImage imageWithData:data];
+            [self updateUser:user image:image progress:progress completion:completion];
+        }
+    }];
+}
 
 @end

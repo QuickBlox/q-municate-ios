@@ -11,6 +11,4 @@
 
 @interface QMSettingsViewController : StaticDataTableViewController
 
-@property (nonatomic, assign) SettingsViewControllerMode cellViewMode;
-
 @end

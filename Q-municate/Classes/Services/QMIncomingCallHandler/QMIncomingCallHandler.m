@@ -37,7 +37,7 @@
     [[QMChatReceiver instance] unsubscribeForTarget:self];
 }
 
-- (void)showIncomingCallControllerWithOpponentID:(NSUInteger)opponentID conferenceType:(QBVideoChatConferenceType)conferenceType {
+- (void)showIncomingCallControllerWithOpponentID:(NSUInteger)opponentID conferenceType:(enum QBVideoChatConferenceType)conferenceType {
     
     if (!_incomingCallController) {
             _incomingCallController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallIdentifier];
@@ -52,7 +52,7 @@
 {
     __weak typeof(self) weakSelf = self;
     
-    [[QMChatReceiver instance] chatAfrerDidReceiveCallRequestCustomParametesrWithTarget:self block:^(NSUInteger userID, NSString *sessionID, QBVideoChatConferenceType conferenceType, NSDictionary *customParameters) {
+    [[QMChatReceiver instance] chatAfrerDidReceiveCallRequestCustomParametesrWithTarget:self block:^(NSUInteger userID, NSString *sessionID, enum QBVideoChatConferenceType conferenceType, NSDictionary *customParameters) {
         [weakSelf showIncomingCallControllerWithOpponentID:userID conferenceType:conferenceType];
     }];
     
