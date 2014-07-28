@@ -423,7 +423,6 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
         UIImage *editImage = info[ UIImagePickerControllerEditedImage];
         [self.dataSource sendImage:editImage];
-        
     }
     
     [picker dismissViewControllerAnimated:NO completion:nil];
@@ -492,7 +491,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 }
 
 - (UIImage *)backSpaceButtonImageForEmojiKeyboardView:(AGEmojiKeyboardView *)emojiKeyboardView {
-    UIImage *img = [self randomImage:6];
+    UIImage *img = [UIImage imageNamed:@"keyboard_icon"];
     return [img imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 }
 
