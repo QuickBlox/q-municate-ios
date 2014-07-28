@@ -263,19 +263,19 @@ Friends profile page shows user’s information:
 - Mobile phone number  /numeric fields, not mandatory
 
 #### Buttons:
-##### Video call:
+* Video call:
 - Video call button starts video call with current user 
 
 ##### Audio call:
 - Audio call button starts audio call with current user
 
-##### Chat:
+* Chat:
 - Chat button starts chat with current user 
 
-##### Remove contact:
+* Remove contact:
 - Remove contact- delete current user from the Friends list
 
-##### Back:
+* Back:
 - Back button returns to the previous screen (Main page)
  
 
