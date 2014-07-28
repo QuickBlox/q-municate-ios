@@ -118,11 +118,10 @@
 
 - (QBChatDialog *)privateDialogWithOpponentID:(NSUInteger)opponentID {
 
-    NSString *substring = [NSString stringWithFormat:@"%d", opponentID];
     NSArray *allDialogs = [self dialogHistory];
     
     NSPredicate *predicate =
-    [NSPredicate predicateWithFormat:@"SELF.type == %d AND SELF.occupantIDs CONTAINS[cd] %@", QBChatDialogTypePrivate, substring];
+    [NSPredicate predicateWithFormat:@"SELF.type == %d AND SUBQUERY(SELF.occupantIDs, $userID, $userID == %@).@count > 0", QBChatDialogTypePrivate, @(opponentID)];
     
     NSArray *result = [allDialogs filteredArrayUsingPredicate:predicate];
     QBChatDialog *dialog = result.firstObject;
@@ -142,16 +141,12 @@
         return;
     }
     
-    dialog.name = chatMessage.customParameters[@"name"];
-    
+    dialog.name = chatMessage.cParamDialogName;
     dialog.occupantIDs = [chatMessage.cParamDialogOccupantsIDs componentsSeparatedByString:@", "];
 }
 
 - (void)updateOrCreateDialogWithMessage:(QBChatMessage *)message {
     
-    if (!message.customParameters) {
-        return;
-    }
     NSAssert(message.cParamDialogID, @"Need update this case");
     
     if (message.cParamNotificationType.integerValue == 1) {

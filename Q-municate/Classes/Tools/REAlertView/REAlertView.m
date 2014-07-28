@@ -21,23 +21,20 @@
 - (id)init {
     
     self = [super init];
-    if (self){
+    if (self) {
 		self.buttonActions = @[].mutableCopy;
 		self.delegate = self;
     }
     return self;
 }
 
-- (void)addButtonWithTitle:(NSString *)title andActionBlock:(REAlertButtonAction)block{
-    
+- (void)addButtonWithTitle:(NSString *)title andActionBlock:(REAlertButtonAction)block {
+    if (!block) {
+         block = ^() {};
+    }
 	[self.buttonActions insertObject:[block copy] atIndex:[self addButtonWithTitle:title]];
 }
 
-- (void)message:(NSString *)message andActionBlock:(REAlertButtonAction)block {
-    self.message = message;
-    if (!block) { block = ^() {}; }
-    [self.buttonActions insertObject:[block copy] atIndex:[self addButtonWithTitle:@"Ok"]];
-}
 
 - (void)dissmis {
     self.isDissmis = YES;
@@ -56,8 +53,9 @@
 
 #pragma mark - UIAlertViewDelegate
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-	REAlertView* reAlertView = (REAlertView *)alertView;
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+	REAlertView *reAlertView = (REAlertView *)alertView;
 	REAlertButtonAction action = [reAlertView.buttonActions objectAtIndex:buttonIndex];
     if (action) { action();}
     self.buttonActions = nil;

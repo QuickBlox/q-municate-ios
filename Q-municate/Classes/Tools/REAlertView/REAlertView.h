@@ -18,6 +18,5 @@ typedef void(^REAlertConfiguration)(REAlertView *alertView);
 - (void)dissmis;
 - (void)addButtonWithTitle:(NSString *)title andActionBlock:(REAlertButtonAction)block;
 + (void)presentAlertViewWithConfiguration:(REAlertConfiguration)configuration;
-- (void)message:(NSString *)message andActionBlock:(REAlertButtonAction)block;
 
 @end
