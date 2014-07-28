@@ -263,20 +263,15 @@ Friends profile page shows user’s information:
 - Mobile phone number  /numeric fields, not mandatory
 
 #### Buttons:
-* Video call:
-- Video call button starts video call with current user 
+* Video call: - Video call button starts video call with current user 
 
-##### Audio call:
-- Audio call button starts audio call with current user
+* Audio call: - Audio call button starts audio call with current user
 
-* Chat:
-- Chat button starts chat with current user 
+* Chat: - Chat button starts chat with current user 
 
-* Remove contact:
-- Remove contact- delete current user from the Friends list
+* Remove contact: - Remove contact- delete current user from the Friends list
 
-* Back:
-- Back button returns to the previous screen (Main page)
+* Back: - Back button returns to the previous screen (Main page)
  
 
 ### Step 7. Invite Friends
@@ -428,11 +423,12 @@ Timestamp – device time and date should be used
 
 // sending Private Message With Attach Image
 coming soon
-
+   	}
+    }];
 
 
 ### Step 11. Group chat page
-
+![step_1(2).png](http://image.quickblox.com/d2192f7b9331ca9c8ccb3eee68f7.injoit.png) 
 
 Group Chat Page is used for messaging with friends.
 
@@ -476,6 +472,7 @@ Timestamp – device time and date should be used
 
 
 ### Step 12. Calls (Coming soon)
+
 ### Audio call (Coming soon)
 ![step_4(2).png](https://bitbucket.org/repo/rMnaz8/images/2813259661-step_4%282%29.png)
 
