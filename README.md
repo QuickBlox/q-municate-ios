@@ -250,6 +250,7 @@ A list of friends, listed in alphabetical order.
 
 
 ### Step 6. Details Page
+![step_1(2).png](http://image.quickblox.com/4ba1c3406edcab40d553a1f18a14.injoit.png) 
 
 Details Page is used for friends profile information.
 
