@@ -82,6 +82,7 @@
     [emojiButton setImage:buttonImage forState:UIControlStateNormal];
     emojiButton.contentMode = UIViewContentModeScaleAspectFit;
     emojiButton.backgroundColor = [UIColor clearColor];
+    emojiButton.tintColor = [UIColor lightGrayColor];
     
     return emojiButton;
 }
