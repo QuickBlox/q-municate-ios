@@ -469,7 +469,8 @@ Timestamp – device time and date should be used
 
 // sending Group Message With Attach Image
   coming soon
-
+   	}
+    }];
 
 ### Step 12. Calls (Coming soon)
 
