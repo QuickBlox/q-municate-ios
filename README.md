@@ -532,7 +532,7 @@ Email –editable field
 
 
 ### Step 14. Profile Page
-http://image.quickblox.com/e4c714750b03672c8157f191d459.injoit.png
+![step_3(2).png](http://image.quickblox.com/d3867bd5823d0509eb4930f995d9.injoit.png) 
 
 Profile page allows user to edit his/her profile info.
 
