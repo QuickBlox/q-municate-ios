@@ -423,8 +423,7 @@ Timestamp – device time and date should be used
 
 // sending Private Message With Attach Image
 coming soon
-   	}
-    }];
+
 
 
 ### Step 11. Group chat page
