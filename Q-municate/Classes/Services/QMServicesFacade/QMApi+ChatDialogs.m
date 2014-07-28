@@ -150,7 +150,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     NSNumber *myID = @(self.currentUser.ID);
     for (NSNumber *ID in chatDialog.occupantIDs) {
         
-        if (ID != myID) {
+        if (![ID isEqual:myID]) {
             return ID.integerValue;
         }
     }
