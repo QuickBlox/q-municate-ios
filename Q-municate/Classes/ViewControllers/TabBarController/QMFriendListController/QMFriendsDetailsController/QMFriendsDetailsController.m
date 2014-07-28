@@ -11,6 +11,7 @@
 #import "QMChatViewController.h"
 #import "QMImageView.h"
 #import "REAlertView.h"
+#import "SVProgressHUD.h"
 #import "QMApi.h"
 
 typedef NS_ENUM(NSUInteger, QMCallType) {
@@ -50,7 +51,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     if (self.selectedUser.phone.length == 0) {
-//        [self cell:self.phoneCell setHidden:YES];
+        //        [self cell:self.phoneCell setHidden:YES];
         [self.phoneLabel setText:@"(none)"];
     } else {
         self.phoneLabel.text = self.selectedUser.phone;
@@ -58,7 +59,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     
     self.fullName.text = self.selectedUser.fullName;
     self.userDetails.text = self.selectedUser.customData;
-
+    
     self.userAvatar.imageViewType = QMImageViewTypeCircle;
     NSURL *url = [NSURL URLWithString:self.selectedUser.website];
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
@@ -68,7 +69,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 }
 
 - (void)updateUserStatus {
-
+    
     QBContactListItem *item = [[QMApi instance] contactItemWithUserID:self.selectedUser.ID];
     if (item) { //friend if YES
         self.status.text = item.online ? kStatusOnlineString : kStatusOfflineString;
@@ -91,9 +92,9 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
         
         QMVideoCallController *audioCallVC = segue.destinationViewController;
         [audioCallVC setOpponent:self.selectedUser];
-
+        
     } else if ([segue.identifier isEqualToString:kChatViewSegueIdentifier]) {
-       
+        
         QMChatViewController *chatController = (QMChatViewController *)segue.destinationViewController;
         chatController.dialog = sender;
         
@@ -101,26 +102,50 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     }
 }
 
+#define QM_AUDIO_VIDEO_ENABLED 0
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
     switch (indexPath.row) {
         case QMCallTypePhone: break;
-//        case QMCallTypeVideo:[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil]; break;
-//        case QMCallTypeAudio: [self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil]; break;
-        case QMCallTypeVideo:[[[UIAlertView alloc]initWithTitle:@"Coming soon." message:nil delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show]; break;
-        case QMCallTypeAudio:[[[UIAlertView alloc]initWithTitle:@"Coming soon." message:nil delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show]; break;
+            
+#if QM_AUDIO_VIDEO_ENABLED
+        case QMCallTypeVideo:[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil]; break;
+        case QMCallTypeAudio: [self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil]; break;
+#else
+        case QMCallTypeVideo: {
+            
+            [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
+                alertView.title = @"Coming soon.";
+                [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:nil];
+            }];
+            
+        } break;
+            
+        case QMCallTypeAudio:{
+            
+            [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
+                alertView.title = @"Coming soon.";
+                [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:nil];
+            }];
+            
+        } break;
+#endif
         case QMCallTypeChat: {
-
+            
             __weak __typeof(self)weakSelf = self;
+            [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
             [[QMApi instance] createPrivateChatDialogIfNeededWithOpponent:self.selectedUser completion:^(QBChatDialog *chatDialog) {
                 if (chatDialog) {
                     [weakSelf performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatDialog];
                 }
+                [SVProgressHUD dismiss];
             }];
             
         } break;
+            
         default:break;
     }
 }
@@ -128,7 +153,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 #pragma mark - Actions
 
 - (IBAction)removeFromFriends:(id)sender {
-
+    
     __weak __typeof(self)weakSelf = self;
     [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
         
