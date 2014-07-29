@@ -8,22 +8,25 @@
 
 #import "QMImageView.h"
 
-
 CGFloat kQMUserImageViewLineBorderWidth = 1.0;
 CGFloat kQMUserImageViewSquareCornerRadius = 6;
 
-@interface QMImageView()
-
-
-@end
-
 @implementation QMImageView
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.layer.masksToBounds = YES;
+    }
+    return self;
+}
 - (id)initWithImage:(UIImage *)image {
+    
     self = [super initWithImage:image];
     
     if (self) {
-        [self configure];
+        self.layer.masksToBounds = YES;
     }
     
     return self;
@@ -33,7 +36,7 @@ CGFloat kQMUserImageViewSquareCornerRadius = 6;
     
     self = [super initWithImage:image highlightedImage:highlightedImage];
     if (self) {
-        [self configure];
+        self.layer.masksToBounds = YES;
     }
     return self;
 }
@@ -41,19 +44,25 @@ CGFloat kQMUserImageViewSquareCornerRadius = 6;
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    [self configure];
-}
-
-- (void)configure {
-    
-    self.imageViewType = QMImageViewTypeNone;
     self.layer.masksToBounds = YES;
 }
 
-- (void)setImageViewType:(QMImageViewType)imageViewType {
+- (void)layoutSubviews {
+    
+    [super layoutSubviews];
+    
+    if (self.image) {
+        CGFloat r = self.frame.size.width / 2;
+        if (self.imageViewType == QMImageViewTypeCircle && r != self.layer.cornerRadius) {
+            self.layer.cornerRadius = self.frame.size.width / 2;
+        }
+    }
+}
 
+- (void)setImageViewType:(QMImageViewType)imageViewType {
+    
     if (_imageViewType != imageViewType) {
-        
+        _imageViewType = imageViewType;
         switch (imageViewType) {
                 
             case QMImageViewTypeNone: [self applyDefaultTheme]; break;

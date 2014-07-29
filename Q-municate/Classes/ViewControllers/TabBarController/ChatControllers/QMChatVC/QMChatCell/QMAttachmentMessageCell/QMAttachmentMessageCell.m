@@ -9,9 +9,11 @@
 #import "QMAttachmentMessageCell.h"
 #import "Parus.h"
 #import "SDWebImageManager.h"
+#import "QMProgressView.h"
 
 @interface QMAttachmentMessageCell()
 
+@property (strong, nonatomic) QMProgressView *progressView;
 @property (strong, nonatomic) CALayer *maskLayer;
 
 //@property (strong, nonatomic) UIImageView *attachmentView;
@@ -33,30 +35,15 @@
 - (void)createContainerSubviews {
     
     [super createContainerSubviews];
+    
     self.maskLayer = [CALayer layer];
-    self.maskLayer.contentsScale = 2;
+    self.maskLayer.contentsScale = [UIScreen mainScreen].scale;
     self.balloonImageView.contentMode = UIViewContentModeScaleAspectFill;
+    self.balloonImageView.layer.mask = self.maskLayer;
 }
 
 - (void)setMessage:(QMMessage *)message {
     [super setMessage:message];
-    
-    SDWebImageManager *manager = [SDWebImageManager sharedManager];
-    QBChatAttachment *attachment = self.message.attachments.lastObject;
-
-    __weak __typeof(self)weakSelf = self;
-    self.balloonImageView.image = nil;
-    NSURL *imageUrl = [NSURL URLWithString:attachment.url];
-    [manager downloadImageWithURL:imageUrl options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-        NSLog(@"%d %d", receivedSize, expectedSize);
-    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-        weakSelf.balloonImageView.image = image;
-    }];
-}
-
-- (void)layoutSubviews {
-    
-    [super layoutSubviews];
     
     QMMessageLayout layout = self.message.layout;
     QMMessageContentAlign align = self.message.align;
@@ -78,9 +65,26 @@
                1.0/maskImage.size.height);
     
     self.maskLayer.contents = (id)maskImage.CGImage;
-   
+    
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    QBChatAttachment *attachment = self.message.attachments.lastObject;
+
+    self.balloonImageView.image = nil;
+    NSURL *imageUrl = [NSURL URLWithString:attachment.url];
+    
+    __weak __typeof(self)weakSelf = self;
+    [manager downloadImageWithURL:imageUrl options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+        NSLog(@"%d %d", receivedSize, expectedSize);
+    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+        weakSelf.balloonImageView.image = image;
+    }];
+}
+
+- (void)layoutSubviews {
+    
+    [super layoutSubviews];
+    
     self.maskLayer.frame = self.balloonImageView.bounds;
-    self.balloonImageView.layer.mask = self.maskLayer;
 }
 
 @end

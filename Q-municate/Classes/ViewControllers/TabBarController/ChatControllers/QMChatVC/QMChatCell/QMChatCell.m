@@ -77,7 +77,8 @@
     self.userImageView.translatesAutoresizingMaskIntoConstraints = NO;
     self.headerView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    self.userImageView.contentMode = UIViewContentModeScaleToFill;
+    self.userImageView.contentMode = UIViewContentModeScaleAspectFit;
+    self.userImageView.imageViewType = QMImageViewTypeCircle;
     
     [self.contentView addSubview:self.messageContainer];
     [self.messageContainer addSubview:self.balloonImageView];
@@ -85,7 +86,6 @@
     [self.balloonImageView addSubview:self.containerView];
     [self.messageContainer addSubview:self.headerView];
     
-    [self layoutIfNeeded];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     
 #if SHOW_BORDERS
@@ -228,10 +228,6 @@
     
     self.lTitleConstraint.constant = insets.left;
     self.rTitleConstraint.constant = -insets.right;
-    
-    if (self.showUserImage) {
-        self.userImageView.imageViewType = QMImageViewTypeCircle;
-    }
 
     [self layoutIfNeeded];
 }
