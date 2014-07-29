@@ -19,11 +19,7 @@
     }];
 }
 
-- (QBChatMessage *)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog {
-    
-    QBChatMessage *message = [[QBChatMessage alloc] init];
-    
-    message.text = text;
+- (QBChatMessage *)sendMessage:(QBChatMessage *)message toDialog:(QBChatDialog *)dialog {
     
     BOOL success = NO;
     
@@ -50,6 +46,24 @@
     }
     
     return nil;
+}
+
+- (QBChatMessage *)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog {
+    
+    QBChatMessage *message = [[QBChatMessage alloc] init];
+    message.text = text;
+    return [self sendMessage:message toDialog:dialog];
+}
+
+- (QBChatMessage *)sendAttachment:(NSString *)attachmentUrl toDialog:(QBChatDialog *)dialog {
+    
+    QBChatMessage *message = [[QBChatMessage alloc] init];
+    QBChatAttachment *attachment = [[QBChatAttachment alloc] init];
+    attachment.url = attachmentUrl;
+    attachment.type = @"image";
+    message.attachments = @[attachment];
+    
+    return [self sendMessage:message toDialog:dialog];
 }
 
 - (NSArray *)messagesHistoryWithDialog:(QBChatDialog *)chatDialog {

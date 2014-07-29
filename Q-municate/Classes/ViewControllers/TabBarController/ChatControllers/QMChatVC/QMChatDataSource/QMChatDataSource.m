@@ -13,6 +13,7 @@
 #import "QMApi.h"
 #import "SVProgressHUD.h"
 #import "QMChatReceiver.h"
+#import "QMContentService.h"
 
 @interface QMChatDataSource()
 
@@ -57,7 +58,7 @@
         [tableView registerClass:[QMSystemMessageCell class] forCellReuseIdentifier:QMSystemMessageCellID];
         
         __weak __typeof(self)weakSelf = self;
-
+        
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         [[QMApi instance] fetchMessageWithDialog:self.chatDialog complete:^(BOOL success) {
             [weakSelf reloadCachedMessages:NO];
@@ -77,7 +78,7 @@
 }
 
 - (void)insertNewMessage:(QBChatMessage *)message {
-
+    
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.messages.count inSection:0];
     QMMessage *qmMessage = [self qmMessageWithQbChatHistoryMessage:(QBChatHistoryMessage *)message];
     [self.messages addObject:qmMessage];
@@ -152,7 +153,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     QMMessage *message = self.messages[indexPath.row];
-    QMChatCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIDAtQMMessage:message]];
+    QMChatCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIDAtQMMessage:message] forIndexPath:indexPath];
     
     cell.message = message;
     
@@ -168,6 +169,19 @@
 
 - (void)sendImage:(UIImage *)image {
     
+    __weak __typeof(self)weakSelf = self;
+    
+    [SVProgressHUD showProgress:0];
+    [[QMApi instance].contentService uploadJPEGImage:image progress:^(float progress) {
+        [SVProgressHUD showProgress:progress];
+    } completion:^(QBCFileUploadTaskResult *result) {
+        
+        if (result.success) {
+           QBChatMessage *message = [[QMApi instance] sendAttachment:result.uploadedBlob.publicUrl toDialog:weakSelf.chatDialog];
+            [weakSelf insertNewMessage:message];
+        }
+        [SVProgressHUD dismiss];
+    }];
 }
 
 - (void)sendMessage:(NSString *)text {

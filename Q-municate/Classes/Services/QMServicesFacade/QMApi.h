@@ -72,6 +72,7 @@
  if ok return QBChatMessage , else nil
  */
 - (QBChatMessage *)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog;
+- (QBChatMessage *)sendAttachment:(NSString *)attachmentUrl toDialog:(QBChatDialog *)dialog;
 
 @end
 

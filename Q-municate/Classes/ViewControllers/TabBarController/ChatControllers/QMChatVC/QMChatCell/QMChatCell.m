@@ -15,7 +15,6 @@
 
 @property (strong, nonatomic) UIView *messageContainer;
 @property (strong, nonatomic) UIImageView *balloonImageView;
-@property (strong, nonatomic) CALayer *maskLayer;
 @property (strong, nonatomic) NSArray *currentAlignConstrains;
 @property (strong, nonatomic) UIView *containerView;
 @property (strong, nonatomic) QMImageView *userImageView;
@@ -66,7 +65,11 @@
     self.balloonImageView = [[UIImageView alloc] init];
     self.userImageView = [[QMImageView alloc] init];
     self.headerView = [[UIView alloc] init];
-    self.maskLayer = [CALayer layer];
+
+    self.containerView.backgroundColor = [UIColor clearColor];
+    self.balloonImageView.backgroundColor = [UIColor clearColor];
+    self.headerView.backgroundColor = [UIColor clearColor];
+    self.messageContainer.backgroundColor = [UIColor clearColor];
     
     self.messageContainer.translatesAutoresizingMaskIntoConstraints = NO;
     self.containerView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -75,6 +78,7 @@
     self.headerView.translatesAutoresizingMaskIntoConstraints = NO;
     
     self.userImageView.contentMode = UIViewContentModeScaleToFill;
+    self.balloonImageView.contentMode = UIViewContentModeScaleAspectFill;
     
     [self.contentView addSubview:self.messageContainer];
     [self.messageContainer addSubview:self.balloonImageView];
@@ -82,6 +86,7 @@
     [self.balloonImageView addSubview:self.containerView];
     [self.messageContainer addSubview:self.headerView];
     
+    [self layoutIfNeeded];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     
 #if SHOW_BORDERS
@@ -163,19 +168,9 @@
                                        self.rTitleConstraint]];
 }
 
-- (void)setCurrentAlignConstrains:(NSArray *)currentAlignConstrains {
+- (void)setMessage:(QMMessage *)message {
     
-    if (_currentAlignConstrains) {
-        [self.contentView removeConstraints:_currentAlignConstrains];
-    }
-    _currentAlignConstrains = currentAlignConstrains;
-    
-    [self.contentView addConstraints:_currentAlignConstrains];
-}
-
-- (void)layoutSubviews {
-    
-    [super layoutSubviews];
+    _message = message;
     
     QMMessageContentAlign align = self.message.align;
     QMMessageLayout layout = self.message.layout;
@@ -234,10 +229,22 @@
     
     self.lTitleConstraint.constant = insets.left;
     self.rTitleConstraint.constant = -insets.right;
-
+    
     if (self.showUserImage) {
         self.userImageView.imageViewType = QMImageViewTypeCircle;
     }
+
+    [self layoutIfNeeded];
+}
+
+- (void)setCurrentAlignConstrains:(NSArray *)currentAlignConstrains {
+    
+    if (_currentAlignConstrains) {
+        [self.contentView removeConstraints:_currentAlignConstrains];
+    }
+    _currentAlignConstrains = currentAlignConstrains;
+    
+    [self.contentView addConstraints:_currentAlignConstrains];
 }
 
 #pragma mark - Set user image

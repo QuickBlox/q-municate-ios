@@ -58,6 +58,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 }
 
 - (void)dealloc {
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     [self registerForNotifications:NO];
 }
 
@@ -412,17 +413,18 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     imagePicker.delegate = self;
     imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     imagePicker.mediaTypes = @[(NSString *) kUTTypeImage]; //(NSString *) kUTTypeMovie
-    imagePicker.allowsEditing = YES;
+//    imagePicker.allowsEditing = YES;
     
     [self presentViewController:imagePicker animated:NO completion:nil];
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+   
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     NSString *mediaType = info[UIImagePickerControllerMediaType];
     
     if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
-        UIImage *editImage = info[ UIImagePickerControllerEditedImage];
+        UIImage *editImage = info[ UIImagePickerControllerOriginalImage];
         [self.dataSource sendImage:editImage];
     }
     

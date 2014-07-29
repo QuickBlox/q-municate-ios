@@ -83,7 +83,7 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
     
     if (self.type == QMMessageTypePhoto) {
         
-        contentSize = CGSizeMake(150, 150);
+        contentSize = CGSizeMake(200, 200);
         
     } else if (self.type == QMMessageTypeText) {
         

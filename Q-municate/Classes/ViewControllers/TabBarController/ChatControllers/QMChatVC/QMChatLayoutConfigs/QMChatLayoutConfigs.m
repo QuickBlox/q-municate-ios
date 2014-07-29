@@ -96,15 +96,17 @@ struct QMMessageLayout QMMessageAttachmentLayout = {
     
     .leftBalloon = {
         .imageName = @"qm_balloon_left",
-        .hexTintColor = @"#17d14b",
-        .imageCapInsets = (UIEdgeInsets){7, 13, 8, 7},
+        .imageCapInsets= (UIEdgeInsets){7, 13, 8, 7},
+        .hexTintColor = @"#e2ebf2",
+        .textColor = @"#000"
     },
     
     .rightBalloon = {
         .imageName = @"qm_balloon_right",
         .imageCapInsets = (UIEdgeInsets){7, 7, 8, 13},
-        .hexTintColor = @"#e2ebf2",
-    },
+        .hexTintColor = @"#17d14b",
+        .textColor = @"#FFFFFF"
+    }
 };
 
 UIFont * UIFontFromQMMessageLayout(QMMessageLayout layout) {
