@@ -41,6 +41,7 @@
 - (void)startServices;
 - (void)stopServices;
 
+
 @end
 
 @interface QMApi (Auth)
@@ -59,6 +60,8 @@
 /*logout*/
 - (void)resetUserPassordWithEmail:(NSString *)email completion:(void(^)(BOOL success))completion;
 - (void)logout:(void(^)(BOOL success))success;
+- (void)applicationDidBecomeActive;
+- (void)applicationWillResignActive;
 
 @end
 

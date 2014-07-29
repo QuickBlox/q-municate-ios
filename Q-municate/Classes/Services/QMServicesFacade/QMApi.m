@@ -73,7 +73,6 @@
 
 - (void)startServices {
     
-    [self.chatService start];
     [self.usersService start];
     [self.chatDialogsService start];
     [self.messagesService start];
@@ -82,7 +81,6 @@
 
 - (void)stopServices {
     
-    [self.chatService destroy];
     [self.usersService destroy];
     [self.chatDialogsService destroy];
     [self.messagesService destroy];
@@ -112,5 +110,6 @@
     
     return result.success;
 }
+
 
 @end

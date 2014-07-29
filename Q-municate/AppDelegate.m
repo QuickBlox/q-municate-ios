@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "QMIncomingCallHandler.h"
 #import "SVProgressHUD.h"
+#import "QMApi.h"
 
 const NSUInteger kQMApplicationID = 7232;
 NSString *const kQMAuthorizationKey = @"MpOecRZy-5WsFva";
@@ -48,18 +49,21 @@ NSString *const kQMAcconuntKey = @"LpNmxA2Pq2uyW5qBjHy8";
     NSLog(@"Push war received. User info: %@", userInfo);
 }
 
-- (void)applicationWillResignActive:(UIApplication *)application {}
-
 - (void)applicationDidEnterBackground:(UIApplication *)application {}
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {}
 
+- (void)applicationWillResignActive:(UIApplication *)application {
+    [[QMApi instance] applicationWillResignActive];
+}
+
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    
+    [[QMApi instance] applicationDidBecomeActive];
     [FBSession.activeSession handleDidBecomeActive];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
+
 }
 
 - (BOOL)application:(UIApplication *)application

@@ -31,7 +31,6 @@
 @interface QMChatReceiver()
 
 @property (strong, nonatomic) NSMutableDictionary *handlerList;
-@property (assign, nonatomic) BOOL isActive;
 
 @end
 
@@ -55,18 +54,6 @@
         self.handlerList = [NSMutableDictionary dictionary];
     }
     return self;
-}
-
-- (void)start {
-    
-    NSAssert((_isActive == NO), @"Need update this case");
-    self.isActive = YES;
-}
-
-- (void)destroy {
-    
-    _isActive = NO;
-    [self.handlerList removeAllObjects];
 }
 
 - (void)unsubscribeForTarget:(id)target {

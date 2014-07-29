@@ -65,6 +65,7 @@
 - (BOOL)sendMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID saveToHistory:(BOOL)save {
     
     message.cParamDialogID = dialogID;
+     message.cParamDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);
     if (save) {
         message.cParamSaveToHistory = @"1";
     }

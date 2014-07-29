@@ -18,7 +18,7 @@
 #pragma mark Public methods
 
 - (void)logout:(void(^)(BOOL success))completion {
-
+    
     __weak __typeof(self)weakSelf = self;
     [self destroySessionWithCompletion:^(BOOL success) {
         if (!success) {
@@ -71,7 +71,7 @@
                             if (weakSelf.currentUser.website.length == 0) {
                                 /*Update user image from facebook */
                                 [weakSelf.facebookService loadMe:^(NSDictionary<FBGraphUser> *user) {
-                                   
+                                    
                                     NSURL *userImageUrl = [weakSelf.facebookService userImageUrlWithUserID:user.id];
                                     [weakSelf updateUser:weakSelf.currentUser imageUrl:userImageUrl progress:^(float progress) {
                                         NSLog(@"Upload user avatar %f", progress);
@@ -204,13 +204,13 @@
 }
 
 - (void)loginWithEmail:(NSString *)email password:(NSString *)password completion:(void(^)(BOOL success))completion {
-
+    
     __weak __typeof(self)weakSelf = self;
     [self.authService logInWithEmail:email password:password completion:^(QBUUserLogInResult *loginResult) {
         
         weakSelf.currentUser = loginResult.user;
         weakSelf.currentUser.password = password;
-
+        
         if(![weakSelf checkResult:loginResult]){
             completion(loginResult.success);
         } else {
@@ -220,6 +220,21 @@
             completion(loginResult.success);
         }
     }];
+}
+
+- (void)applicationDidBecomeActive {
+    
+    if(self.currentUser) {
+        
+        [self loginWithUser:self.currentUser completion:^(BOOL success) {
+            
+        }];
+    }
+}
+
+- (void)applicationWillResignActive {
+    
+    [self.chatService logout];
 }
 
 @end

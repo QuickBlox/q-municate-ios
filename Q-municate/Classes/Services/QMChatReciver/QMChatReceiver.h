@@ -39,8 +39,7 @@ typedef void(^QMChatContactListDidChange)(QBContactList * contactList);
 typedef void(^QMChatContactListWillChange)(void);
 typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL isOnline, NSString *status);
 
-@interface QMChatReceiver : NSObject <QBChatDelegate, QMServiceProtocol>
-
+@interface QMChatReceiver : NSObject <QBChatDelegate>
 + (instancetype)instance;
 
 - (void)unsubscribeForTarget:(id)target;

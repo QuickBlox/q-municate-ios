@@ -146,7 +146,7 @@ NSString const *kQMCustomParameterDialogOccupantsIDs = @"occupants_ids";
     self.cParamRoomJID = chatDialog.roomJID;
     self.cParamDialogName = chatDialog.name;
     self.cParamDialogType = @(chatDialog.type);
-    self.cParamDialogOccupantsIDs = [chatDialog.occupantIDs componentsJoinedByString:@", "];
+    self.cParamDialogOccupantsIDs = [chatDialog.occupantIDs componentsJoinedByString:@","];
 }
 
 - (QBChatDialog *)chatDialogFromCustomParameters {
@@ -155,7 +155,7 @@ NSString const *kQMCustomParameterDialogOccupantsIDs = @"occupants_ids";
     chatDialog.ID = self.cParamDialogID;
     chatDialog.roomJID = self.cParamRoomJID;
     chatDialog.name = self.cParamDialogName;
-    chatDialog.occupantIDs = [self.cParamDialogOccupantsIDs componentsSeparatedByString:@", "];
+    chatDialog.occupantIDs = [self.cParamDialogOccupantsIDs componentsSeparatedByString:@","];
     chatDialog.type = self.cParamDialogType.integerValue;
     chatDialog.lastMessageDate = [NSDate dateWithTimeIntervalSince1970:self.cParamDateSent.doubleValue];
     

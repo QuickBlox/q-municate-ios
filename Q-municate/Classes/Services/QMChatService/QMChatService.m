@@ -9,7 +9,7 @@
 #import "QMChatService.h"
 #import "QMChatReceiver.h"
 
-@interface QMChatService ()
+@interface QMChatService () <QMServiceProtocol>
 
 @property (strong, nonatomic) NSTimer *presenceTimer;
 
@@ -18,8 +18,7 @@
 @implementation QMChatService
 
 - (void)start {
-    NSLog(@"\n____________________________\nSTART Chat Service\n____________________________");
-    [[QMChatReceiver instance] start];
+
     [QBChat instance].delegate = [QMChatReceiver instance];
     
     NSAssert(self.presenceTimer == nil, @"Need Update this case");
@@ -31,14 +30,14 @@
 }
 
 - (void)destroy {
-    NSLog(@"\n____________________________\nSTOP Chat Service\n____________________________");
-    [[QMChatReceiver instance] destroy];
+    
     [self.presenceTimer invalidate];
     self.presenceTimer = nil;
 }
 
 - (BOOL)loginWithUser:(QBUUser *)user completion:(QBChatResultBlock)block {
-    
+
+    [self start];
     [[QMChatReceiver instance] chatDidLoginWithTarget:self block:block];
     [[QMChatReceiver instance] chatDidNotLoginWithTarget:self block:block];
 
