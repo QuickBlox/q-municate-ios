@@ -180,11 +180,6 @@
 }
 
 - (void)chatDidReceiveMessage:(QBChatMessage *)message {
-    
-#warning FIX FOR ENTERPRISE CLIENT
-    if (message.ID == nil) {
-        return;
-    }
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatMessageBlock block) {
         block(message);
     }];
