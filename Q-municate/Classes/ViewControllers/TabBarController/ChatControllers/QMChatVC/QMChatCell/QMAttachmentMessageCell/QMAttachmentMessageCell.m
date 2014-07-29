@@ -7,54 +7,80 @@
 //
 
 #import "QMAttachmentMessageCell.h"
+#import "Parus.h"
+#import "SDWebImageManager.h"
 
 @interface QMAttachmentMessageCell()
 
-@property (strong, nonatomic) UIView *attachmentView;
-@property (strong, nonatomic) CALayer *contentLayer;
+@property (strong, nonatomic) CALayer *maskLayer;
+
+//@property (strong, nonatomic) UIImageView *attachmentView;
+//@property (strong, nonatomic) CALayer *contentLayer;
 
 @end
 
 @implementation QMAttachmentMessageCell
+
+- (void)dealloc {
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     
     QMAttachmentMessageCell *cell = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     return cell;
 }
-
 - (void)createContainerSubviews {
     
     [super createContainerSubviews];
-    
-    self.attachmentView = [[UIView alloc] init];
-    self.attachmentView.contentMode = UIViewContentModeScaleAspectFill;
-    
-    [self.containerView addSubview:self.attachmentView];
-    
-    self.contentLayer = [CALayer layer];
-    self.contentLayer.backgroundColor = [UIColor clearColor].CGColor;
-    self.contentLayer.anchorPoint = CGPointMake(0, 0);
-    [self.attachmentView.layer addSublayer:self.contentLayer];
+    self.maskLayer = [CALayer layer];
+    self.maskLayer.contentsScale = 2;
+    self.balloonImageView.contentMode = UIViewContentModeScaleAspectFill;
 }
 
-- (void)prepareForReuse {
+- (void)setMessage:(QMMessage *)message {
+    [super setMessage:message];
     
-    [super prepareForReuse];
-    self.balloonImageView.layer.mask = nil;
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    QBChatAttachment *attachment = self.message.attachments.lastObject;
+
+    __weak __typeof(self)weakSelf = self;
+    self.balloonImageView.image = nil;
+    NSURL *imageUrl = [NSURL URLWithString:attachment.url];
+    [manager downloadImageWithURL:imageUrl options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+        NSLog(@"%d %d", receivedSize, expectedSize);
+    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+        weakSelf.balloonImageView.image = image;
+    }];
 }
 
 - (void)layoutSubviews {
     
     [super layoutSubviews];
     
-    self.attachmentView.frame = self.containerView.bounds;
+    QMMessageLayout layout = self.message.layout;
+    QMMessageContentAlign align = self.message.align;
     
-    UIImage *image = [UIImage imageNamed:@"qm.png"];
+    UIEdgeInsets insets = UIEdgeInsetsZero;
     
-    self.contentLayer.bounds = (CGRect){CGPointZero, self.containerView.frame.size};
-    self.contentLayer.contents = (id)image.CGImage;
-    self.contentLayer.mask = self.maskLayer;
+    if (align == QMMessageContentAlignLeft) {
+        insets = layout.leftBalloon.imageCapInsets;
+    } else if (align == QMMessageContentAlignRight) {
+        insets = layout.rightBalloon.imageCapInsets;
+    }
+    
+    UIImage *maskImage = self.message.balloonImage;
+    
+    self.maskLayer.contentsCenter =
+    CGRectMake(insets.left/maskImage.size.width,
+               insets.top/maskImage.size.height,
+               1.0/maskImage.size.width,
+               1.0/maskImage.size.height);
+    
+    self.maskLayer.contents = (id)maskImage.CGImage;
+   
+    self.maskLayer.frame = self.balloonImageView.bounds;
+    self.balloonImageView.layer.mask = self.maskLayer;
 }
 
 @end

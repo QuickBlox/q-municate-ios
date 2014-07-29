@@ -18,7 +18,6 @@
 @property (strong, nonatomic, readonly) UIView *headerView;
 @property (strong, nonatomic, readonly) UIImageView *balloonImageView;
 @property (strong, nonatomic, readonly) QMImageView *userImageView;
-@property (strong, nonatomic, readonly) CALayer *maskLayer;
 
 @property (strong, nonatomic) QMMessage *message;
 

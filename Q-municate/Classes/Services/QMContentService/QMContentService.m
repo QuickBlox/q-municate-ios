@@ -30,16 +30,27 @@ NSString *const kQMDefaultImageName = @"image";
     return self;
 }
 
-- (void)uploadJPEGImage:(UIImage *)image progress:(QMContentProgressBlock)progress completion:(QMCFileUploadTaskResultBlockBlock)completion {
+- (void)uploadJPEGImage:(UIImage *)image
+               progress:(QMContentProgressBlock)progress
+             completion:(QMCFileUploadTaskResultBlockBlock)completion {
     
-    NSData *data = UIImageJPEGRepresentation(image, 0.6);
-    [self uploadData:data fileName:@"image" contentType:@"image/jpeg" isPublic:YES progress:progress completion:completion];
+    NSData *data = UIImageJPEGRepresentation(image, 0.5);
+    [self uploadData:data
+            fileName:@"image"
+         contentType:@"image/jpeg"
+            isPublic:YES progress:progress
+          completion:completion];
 }
 
-- (void)uploadPNGImage:(UIImage *)image progress:(QMContentProgressBlock)progress completion:(QMCFileUploadTaskResultBlockBlock)completion {
-
+- (void)uploadPNGImage:(UIImage *)image
+              progress:(QMContentProgressBlock)progress
+            completion:(QMCFileUploadTaskResultBlockBlock)completion {
+    
     NSData *data = UIImagePNGRepresentation(image);
-    [self uploadData:data fileName:@"image" contentType:@"image/png" isPublic:YES progress:progress completion:completion];
+    [self uploadData:data fileName:@"image"
+         contentType:@"image/png"
+            isPublic:YES progress:progress
+          completion:completion];
 }
 
 - (void)uploadData:(NSData *)data
@@ -49,19 +60,24 @@ NSString *const kQMDefaultImageName = @"image";
           progress:(QMContentProgressBlock)progress
         completion:(QMCFileUploadTaskResultBlockBlock)completion {
     
-    QMUploadContentOperation *uploadOperation = [[QMUploadContentOperation alloc] initWithUploadFile:data
-                                                                                            fileName:fileName
-                                                                                         contentType:contentType
-                                                                                            isPublic:YES];
+    QMUploadContentOperation *uploadOperation =
+    [[QMUploadContentOperation alloc] initWithUploadFile:data
+                                                fileName:fileName
+                                             contentType:contentType
+                                                isPublic:YES];
     uploadOperation.progressHandler = progress;
     uploadOperation.completionHandler = completion;
     
     [self.contentOperationQueue addOperation:uploadOperation];
 }
 
-- (void)downloadFileWithBlobID:(NSUInteger )blobID progress:(QMContentProgressBlock)progress completion:(QMCFileDownloadTaskResultBlockBlock)completion {
+- (void)downloadFileWithBlobID:(NSUInteger )blobID
+                      progress:(QMContentProgressBlock)progress
+                    completion:(QMCFileDownloadTaskResultBlockBlock)completion {
     
-    QMDownloadContentOperation *downloadOperation = [[QMDownloadContentOperation alloc] initWithBlobID:blobID];
+    QMDownloadContentOperation *downloadOperation =
+    [[QMDownloadContentOperation alloc] initWithBlobID:blobID];
+    
     downloadOperation.progressHandler = progress;
     downloadOperation.completionHandler = completion;
     

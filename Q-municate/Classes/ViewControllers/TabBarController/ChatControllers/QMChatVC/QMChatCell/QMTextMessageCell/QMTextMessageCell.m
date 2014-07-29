@@ -16,6 +16,7 @@
 @property (strong, nonatomic) UILabel *timeLabel;
 @property (strong, nonatomic) UIFont *font;
 @property (strong, nonatomic) UIColor *textColor;
+@property (strong, nonatomic) NSLayoutConstraint *timeWidhtConstraint;
 
 @end
 
@@ -62,20 +63,17 @@
     
     [self.headerView addSubview:self.userName];
     [self.headerView addSubview:self.timeLabel];
-}
 
-- (void)layoutSubviews {
-    
-    [super layoutSubviews];
-    
     [self.containerView addConstraints:PVGroup(@[
                                                  
                                                  PVLeftOf(self.textView).equalTo.leftOf(self.containerView).asConstraint,
                                                  PVBottomOf(self.textView).equalTo.bottomOf(self.containerView).asConstraint,
                                                  PVTopOf(self.textView).equalTo.topOf(self.containerView).asConstraint,
                                                  PVRightOf(self.textView).equalTo.rightOf(self.containerView).asConstraint]).asArray];
+
+    self.timeWidhtConstraint = PVWidthOf(self.timeLabel).equalTo.constant(0).asConstraint;
     [self.headerView addConstraints:PVGroup(@[
-                                              PVWidthOf(self.timeLabel).equalTo.constant(40).asConstraint,
+                                              self.timeWidhtConstraint,
                                               PVRightOf(self.timeLabel).equalTo.rightOf(self.headerView).asConstraint,
                                               PVTopOf(self.timeLabel).equalTo.topOf(self.headerView).asConstraint,
                                               PVBottomOf(self.timeLabel).equalTo.bottomOf(self.headerView).asConstraint,
@@ -87,6 +85,12 @@
                                               ]).asArray];
 }
 
+- (void)layoutSubviews {
+    
+    [super layoutSubviews];
+    self.timeWidhtConstraint.constant = 40;
+}
+
 - (void)setMessage:(QMMessage *)message {
     
     [super setMessage:message];
@@ -94,7 +98,6 @@
     self.textColor = message.textColor;
     self.font = UIFontFromQMMessageLayout(self.message.layout);
     self.textView.text = message.text;
-    
     
     self.balloonImage =  message.balloonImage;
     self.balloonTintColor = message.balloonColor;
