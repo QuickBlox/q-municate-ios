@@ -9,7 +9,7 @@
 #import "QMChatInputToolbar.h"
 #import "QMChatToolbarContentView.h"
 #import "QMChatButtonsFactory.h"
-#import "QMChatInputTextView.h"
+#import "QMPlaceholderTextView.h"
 #import "Parus.h"
 
 const CGFloat kQMChatInputToolbarHeightDefault = 44.0f;

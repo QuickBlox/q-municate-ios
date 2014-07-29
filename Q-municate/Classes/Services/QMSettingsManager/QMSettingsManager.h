@@ -10,6 +10,12 @@
 
 @interface QMSettingsManager : NSObject
 
+
+/**
+ Licence Agreement accepted
+ */
+@property (assign, nonatomic) BOOL userAgreementAccepted;
+
 /**
  * User login
  */

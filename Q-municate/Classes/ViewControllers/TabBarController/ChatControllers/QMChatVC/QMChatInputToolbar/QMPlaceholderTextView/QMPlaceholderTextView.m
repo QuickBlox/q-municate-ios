@@ -6,9 +6,14 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import "QMChatInputTextView.h"
+#import "QMPlaceholderTextView.h"
 
-@implementation QMChatInputTextView
+typedef NS_ENUM(NSUInteger, QMPlaceholderTextViewStyle) {
+    QMPlaceholderTextViewStylePlain,
+    QMPlaceholderTextViewStyleBordered,
+};
+
+@implementation QMPlaceholderTextView
 
 const CGFloat kChatInputCornerRadius = 6.0;
 
@@ -16,19 +21,26 @@ const CGFloat kChatInputCornerRadius = 6.0;
     
     self = [super initWithFrame:frame textContainer:textContainer];
     if (self) {
-        [self configureTextView];
+        [self configureTextViewWithStyle:QMPlaceholderTextViewStyleBordered];
     }
     return self;
 }
 
-- (void)configureTextView {
+- (void)awakeFromNib
+{
+    [self configureTextViewWithStyle:QMPlaceholderTextViewStylePlain];
+}
+
+- (void)configureTextViewWithStyle:(QMPlaceholderTextViewStyle)textViewStyle {
     
     [self setTranslatesAutoresizingMaskIntoConstraints:NO];
     
+    if (textViewStyle == QMPlaceholderTextViewStyleBordered) {
+        self.layer.borderWidth = 0.5f;
+        self.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        self.layer.cornerRadius = kChatInputCornerRadius;
+    }
     self.backgroundColor = [UIColor whiteColor];
-    self.layer.borderWidth = 0.5f;
-    self.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    self.layer.cornerRadius = kChatInputCornerRadius;
     
     self.scrollIndicatorInsets = UIEdgeInsetsMake(kChatInputCornerRadius, 0.0f, kChatInputCornerRadius, 0.0f);
     

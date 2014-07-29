@@ -180,7 +180,6 @@
 }
 
 - (void)chatDidReceiveMessage:(QBChatMessage *)message {
-    
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatMessageBlock block) {
         block(message);
     }];

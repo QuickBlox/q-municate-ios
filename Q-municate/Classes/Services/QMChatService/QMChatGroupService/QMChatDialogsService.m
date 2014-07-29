@@ -147,6 +147,10 @@
 
 - (void)updateOrCreateDialogWithMessage:(QBChatMessage *)message {
     
+#warning FIX FOR ENTERPRISE CLIENT
+    if (message.ID == nil) {
+        return;
+    }
     NSAssert(message.cParamDialogID, @"Need update this case");
     
     if (message.cParamNotificationType.integerValue == 1) {
