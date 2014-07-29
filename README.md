@@ -455,16 +455,18 @@ Timestamp – device time and date should be used
 
 ```java
 // creating Group Chat
+
     [[QMApi instance] createGroupChatDialogWithName:chatName ocupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
         
         if (result.success) {
-            // do something..
-        }
-    }];
+            // do something...
 
 // sending Group Message
 	
 	QBChatMessage *message = [[QMApi instance] sendText:text toDialog:self.chatDialog];
+		}
+    }];
+
 
 // sending Group Message With Attach Image
   coming soon
