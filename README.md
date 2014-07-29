@@ -508,7 +508,8 @@ Can be enabled by tapping it once more
 
 
 ### Step 13. Settings Page
-http://image.quickblox.com/7333a05a8aaab026e81219a33e1f.injoit.png
+![step_4(2).png](http://image.quickblox.com/7333a05a8aaab026e81219a33e1f.injoit.png)
+
 
 Settings Page allows user to change his/her profile and change other in-app controls.
 
