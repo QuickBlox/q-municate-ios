@@ -19,7 +19,7 @@
 @implementation QMChatHandlerObject
 
 - (void)dealloc {
-    NSLog(@"%@ %@", NSStringFromClass(self.class), NSStringFromSelector(_cmd));
+    NSLog(@"%@ %@", self.description, NSStringFromSelector(_cmd));
 }
 
 - (NSString *)description {

@@ -49,16 +49,20 @@ NSString *const kQMAcconuntKey = @"LpNmxA2Pq2uyW5qBjHy8";
     NSLog(@"Push war received. User info: %@", userInfo);
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application {}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {}
-
-- (void)applicationWillResignActive:(UIApplication *)application {
+- (void)applicationDidEnterBackground:(UIApplication *)application {
     [[QMApi instance] applicationWillResignActive];
 }
 
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+    [[QMApi instance] applicationDidBecomeActive:^(BOOL success) {}];
+}
+
+- (void)applicationWillResignActive:(UIApplication *)application {
+    
+}
+
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    [[QMApi instance] applicationDidBecomeActive];
+    
     [FBSession.activeSession handleDidBecomeActive];
 }
 
