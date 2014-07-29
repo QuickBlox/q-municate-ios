@@ -65,7 +65,9 @@
                             void (^autorizeOnQuickBloxChat)(BOOL) = ^(BOOL success) {
                                 
                                 /*Authorize on QuickBlox Chat*/
-                                [weakSelf autorizeOnQuickbloxChat:completion];
+                                [weakSelf autorizeOnQuickbloxChat:^(BOOL success) {
+                                    [weakSelf fetchDataOrForce:!success completion:completion];
+                                }];
                             };
                             
                             if (weakSelf.currentUser.website.length == 0) {
@@ -105,12 +107,23 @@
                 }
                 else {
                     [weakSelf loginWithEmail:user.email password:user.password completion:^(BOOL success) {
-                        [weakSelf autorizeOnQuickbloxChat:completion];
+                        [weakSelf autorizeOnQuickbloxChat:^(BOOL success) {
+                            [weakSelf fetchDataOrForce:!success completion:completion];
+                        }];
                     }];
                 }
             }];
         }
     }];
+}
+
+- (void)fetchDataOrForce:(BOOL)force completion:(void(^)(BOOL success))completion {
+    
+    if (!force) {
+        [self startServices];
+        [self fetchAllHistory:^{}];
+    }
+    completion(!force);
 }
 
 - (void)loginWithUser:(QBUUser *)user completion:(void(^)(BOOL success))completion {
@@ -126,7 +139,9 @@
                     completion(success);
                 }
                 else {
-                    [weakSelf autorizeOnQuickbloxChat:completion];
+                    [weakSelf autorizeOnQuickbloxChat:^(BOOL success) {
+                        [weakSelf fetchDataOrForce:!success completion:completion];
+                    }];
                 }
             }];
         }
@@ -189,18 +204,20 @@
     
     __weak __typeof(self)weakSelf = self;
     /*Authorize on QuickBlox Chat*/
-    [weakSelf startServices];
-    [self.chatService loginWithUser:self.currentUser completion:^(BOOL success) {
-        if (!success) {
-            [weakSelf stopServices];
-            completion(success);
-        }
-        else {
-            [weakSelf fetchAllHistory:^{}];
-            completion(success);
-            [weakSelf subscribeToPushNotificationsIfNeeded];
-        }
-    }];
+    if (!self.currentUser) {
+        completion(NO);
+    }
+    else {
+        [self.chatService loginWithUser:self.currentUser completion:^(BOOL success) {
+            if (!success) {
+                completion(success);
+            }
+            else {
+                completion(success);
+                [weakSelf subscribeToPushNotificationsIfNeeded];
+            }
+        }];
+    }
 }
 
 - (void)loginWithEmail:(NSString *)email password:(NSString *)password completion:(void(^)(BOOL success))completion {
@@ -222,19 +239,19 @@
     }];
 }
 
-- (void)applicationDidBecomeActive {
+- (void)applicationDidBecomeActive:(void(^)(BOOL success))completion {
     
-    if(self.currentUser) {
-        
-        [self loginWithUser:self.currentUser completion:^(BOOL success) {
-            
-        }];
-    }
+    [self autorizeOnQuickbloxChat:completion];
+
 }
 
 - (void)applicationWillResignActive {
     
-    [self.chatService logout];
+    if ([self.chatService logout]) {
+        [self stopServices];
+    } else {
+        NSLog(@"");
+    }
 }
 
 @end
