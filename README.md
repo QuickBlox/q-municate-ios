@@ -562,8 +562,6 @@ If you want to build your own app using Q-municate as a basis, please do the fol
  3. Log in to QuickBlox admin panel [http://admin.quickblox.com/signin]http://admin.quickblox.com/signin
  4. Create a new app
  5. Click on the app title in the list to reveal the app details:
-
    ![App credentials](http://files.quickblox.com/app_credentials.png)
-
  6. Copy credentials (App ID, Authorization key, Authorization secret) into your Q-municate project code in Consts.java<br />
  7. Enjoy!
