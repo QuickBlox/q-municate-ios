@@ -182,7 +182,7 @@
 - (void)chatDidReceiveMessage:(QBChatMessage *)message {
     
 #warning FIX FOR ENTERPRISE CLIENT
-    if (message.customParameters == nil) {
+    if (message.ID == nil) {
         return;
     }
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatMessageBlock block) {
