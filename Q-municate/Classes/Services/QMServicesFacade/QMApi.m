@@ -13,13 +13,27 @@
 #import "QMAuthService.h"
 #import "QMUsersService.h"
 #import "QMChatService.h"
-#import "QMContent.h"
 #import "QMChatDialogsService.h"
+#import "QMContentService.h"
 #import "QMAVCallService.h"
 #import "QMMessagesService.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMChatReceiver.h"
 
+@interface QMApi()
+
+@property (strong, nonatomic) QMAuthService *authService;
+@property (strong, nonatomic) QMSettingsManager *settingsManager;
+@property (strong, nonatomic) QMFacebookService *facebookService;
+@property (strong, nonatomic) QMUsersService *usersService;
+@property (strong, nonatomic) QMChatService *chatService;
+@property (strong, nonatomic) QMAVCallService *avCallService;
+@property (strong, nonatomic) QMChatDialogsService *chatDialogsService;
+@property (strong, nonatomic) QMMessagesService *messagesService;
+@property (strong, nonatomic) QMChatReceiver *responceService;
+@property (strong, nonatomic) QMContentService *contentService;
+
+@end
 
 @implementation QMApi
 
@@ -51,6 +65,7 @@
         self.settingsManager = [[QMSettingsManager alloc] init];
         self.facebookService = [[QMFacebookService alloc] init];
         self.avCallService = [[QMAVCallService alloc] init];
+        self.contentService = [[QMContentService alloc] init];
     }
     
     return self;

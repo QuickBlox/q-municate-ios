@@ -11,7 +11,7 @@
 
 @implementation QMApi (Calls)
 
-- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView conferenceType:(QBVideoChatConferenceType)conferenceType
+- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView conferenceType:(enum QBVideoChatConferenceType)conferenceType
 {
     [self.avCallService callToUser:userID opponentView:opponentView conferenceType:conferenceType];
 }

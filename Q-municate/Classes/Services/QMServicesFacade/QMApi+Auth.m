@@ -55,14 +55,33 @@
                 }
                 else {
                     /*Longin with Social provider*/
-                    [weakSelf logInWithFacebookAccessToken:sessionToken completion:^(BOOL success) {
-                        if (!success) {
-                            completion(success);
+                    [weakSelf logInWithFacebookAccessToken:sessionToken completion:^(BOOL successLoginWithFacebook) {
+                        if (!successLoginWithFacebook) {
+                            completion(successLoginWithFacebook);
                         }
                         else {
                             [weakSelf setAutoLogin:YES];
-                            /*Authorize on QuickBlox Chat*/
-                            [weakSelf autorizeOnQuickbloxChat:completion];
+                            
+                            void (^autorizeOnQuickBloxChat)(BOOL) = ^(BOOL success) {
+                                
+                                /*Authorize on QuickBlox Chat*/
+                                [weakSelf autorizeOnQuickbloxChat:completion];
+                            };
+                            
+                            if (weakSelf.currentUser.website.length == 0) {
+                                /*Update user image from facebook */
+                                [weakSelf.facebookService loadMe:^(NSDictionary<FBGraphUser> *user) {
+                                   
+                                    NSURL *userImageUrl = [weakSelf.facebookService userImageUrlWithUserID:user.id];
+                                    [weakSelf updateUser:weakSelf.currentUser imageUrl:userImageUrl progress:^(float progress) {
+                                        NSLog(@"Upload user avatar %f", progress);
+                                    } completion:autorizeOnQuickBloxChat];
+                                    
+                                }];
+                            }
+                            else {
+                                autorizeOnQuickBloxChat(successLoginWithFacebook);
+                            }
                         }
                     }];
                 }

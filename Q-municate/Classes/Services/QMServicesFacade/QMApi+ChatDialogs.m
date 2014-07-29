@@ -112,7 +112,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 
 - (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
     
-    NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
+    NSMutableDictionary *extendedRequest = [[NSMutableDictionary alloc] init];
     extendedRequest[kQMEditDialogExtendedNameParameter] = dialogName;
     
     [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:completion];
@@ -121,7 +121,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 - (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
 
     NSArray *opponentsIDs = [self idsWithUsers:occupants];
-    NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
+    NSMutableDictionary *extendedRequest = [[NSMutableDictionary alloc] init];
     extendedRequest[kQMEditDialogExtendedPushOccupantsParameter] = opponentsIDs;
 
     __weak __typeof(self)weakSelf = self;
@@ -136,7 +136,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 
 - (void)leaveWithUserId:(NSUInteger)userID fromChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
     
-    NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
+    NSMutableDictionary *extendedRequest = [[NSMutableDictionary alloc] init];
     extendedRequest[kQMEditDialogExtendedPullOccupantsParameter] = [NSString stringWithFormat:@"%d", userID];
     
     [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:completion];
@@ -147,10 +147,11 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     NSAssert(chatDialog.type == QBChatDialogTypePrivate, @"Chat dialog type != QBChatDialogTypePrivate");
     NSAssert(chatDialog.occupantIDs.count == 2, @"Array of user ids in chat. For private chat count = 2");
     
-    NSNumber *myID = @(self.currentUser.ID);
+    NSInteger myID = self.currentUser.ID;
+    
     for (NSNumber *ID in chatDialog.occupantIDs) {
         
-        if (![ID isEqual:myID]) {
+        if (ID.integerValue != myID) {
             return ID.integerValue;
         }
     }

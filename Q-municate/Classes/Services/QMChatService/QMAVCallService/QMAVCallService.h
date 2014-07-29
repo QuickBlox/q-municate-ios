@@ -11,7 +11,7 @@
 
 @interface QMAVCallService : NSObject <QMServiceProtocol>
 
-- (void)callToUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView conferenceType:(QBVideoChatConferenceType)conferenceType;
+- (void)callToUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView conferenceType:(enum QBVideoChatConferenceType)conferenceType;
 
 - (void)acceptCallFromUser:(NSUInteger)userID andOpponentView:(QBVideoView *)opponentView;
 - (void)rejectCallFromUser:(NSUInteger)userID andOpponentView:(QBVideoView *)opponentView;

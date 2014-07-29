@@ -12,7 +12,6 @@
 #import "QMAuthService.h"
 #import "QMChatService.h"
 #import "QMUsersService.h"
-#import "QMContent.h"
 #import "REAlertView+QMSuccess.h"
 #import "SVProgressHUD.h"
 #import "QMApi.h"
@@ -41,7 +40,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSAttributedString *userAgeementString = [[NSAttributedString alloc] initWithString:@"User Agreement." attributes:@{NSUnderlineStyleAttributeName:@(NSUnderlineStyleSingle)}];
+    NSAttributedString *userAgeementString =
+    [[NSAttributedString alloc] initWithString:@"User Agreement." attributes:@{NSUnderlineStyleAttributeName:@(NSUnderlineStyleSingle)}];
     self.userAgreementLabel.attributedText = userAgeementString;
     
     [self configureAvatarImage];
@@ -75,6 +75,7 @@
     UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
     imagePicker.delegate = self;
     imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    imagePicker.allowsEditing = YES;
     [self presentViewController:imagePicker animated:YES completion:nil];
 }
 
@@ -97,9 +98,33 @@
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] signUpAndLoginWithUser:newUser completion:^(BOOL success) {
+    
+    void (^presentTabBar)(void) = ^(void) {
+        
         [SVProgressHUD dismiss];
-        if(success)[weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+        [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+    };
+    
+    [[QMApi instance] signUpAndLoginWithUser:newUser completion:^(BOOL success) {
+
+        if (success) {
+            
+            if (weakSelf.cachedPicture) {
+                
+                [SVProgressHUD showProgress:0.f];
+                [[QMApi instance] updateUser:nil image:weakSelf.cachedPicture progress:^(float progress) {
+                    [SVProgressHUD showProgress:progress];
+                } completion:^(BOOL success) {
+                   presentTabBar();
+                }];
+            }
+            else {
+                presentTabBar();
+            }
+        }
+        else {
+            [SVProgressHUD dismiss];
+        }
     }];
 }
 
@@ -107,11 +132,10 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
-    CGSize imgViewSize = CGSizeMake(self.userImage.frame.size.width * 2, self.userImage.frame.size.height * 2);
-    UIImage *image =  info[UIImagePickerControllerOriginalImage];
-    UIImage *scaledImage = [image imageByScalingProportionallyToMinimumSize:imgViewSize];
-    [self.userImage setImage:scaledImage];
-    self.cachedPicture = scaledImage;
+    UIImage *image =  info[UIImagePickerControllerEditedImage];
+
+    [self.userImage setImage:image];
+    self.cachedPicture = image;
     
     [self dismissViewControllerAnimated:YES completion:nil];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];

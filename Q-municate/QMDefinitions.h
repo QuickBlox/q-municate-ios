@@ -18,46 +18,11 @@
 reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]\
 userInfo:nil]
 
+/*QMContentService*/
+typedef void(^QMContentProgressBlock)(float progress);
+typedef void(^QMCFileUploadTaskResultBlockBlock)(QBCFileUploadTaskResult *result);
+typedef void(^QMCFileDownloadTaskResultBlockBlock)(QBCFileDownloadTaskResult *result);
 
-//*********** Settings Cell Row Names **********************
-#define QMSettingsNormalCellRowProfile              0
-#define QMSettingsNormalCellRowPushNotifications    1
-#define QMSettingsNormalCellRowChangePassword       2
-#define QMSettingsNormalCellRowLogOut               3
-#define QMSettingsNormalCellRowVersion              4
-#define QMSettingsCustomCellRowLogOut               2
-#define QMSettingsCustomCellRowVersion              3
-
-//*****************  Color  ********************************
-#define kHintColor [UIColor colorWithRed:187/255.0f green:192/255.0f blue:202/255.0f alpha:1.0f]
-
-//****************** Enums *********************************
-typedef enum {
-    SettingsViewControllerModeNormal,
-    SettingsViewControllerModeCustom
-} SettingsViewControllerMode;
-
-typedef NS_ENUM(NSUInteger, QMLogLevel)
-{
-    QMLogLevelNothing,
-    QMLogLevelError,
-    QMLogLevelInfo,
-    QMLogLevelVerbose
-};
-
-typedef NS_ENUM(NSUInteger, QMMembersUpdateState) {
-    QMMembersUpdateStateNone,
-    QMMembersUpdateStateAdding,
-    QMMembersUpdateStateRemoving
-};
-
-
-
-typedef enum QBVideoChatConferenceType QBVideoChatConferenceType;
-
-//****************** Blocks *********************************
-typedef void (^QBCFileDownloadTaskResultBlock)(QBCFileDownloadTaskResult *result);
-typedef void (^QBFileUploadTaskResultBlock)(QBCFileUploadTaskResult *result);
 typedef void (^QBUUserResultBlock)(QBUUserResult *result);
 typedef void (^QBAAuthResultBlock)(QBAAuthResult *result);
 typedef void (^QBUUserLogInResultBlock)(QBUUserLogInResult *result);
@@ -74,8 +39,6 @@ typedef void (^QBSessionCreationBlock)(BOOL success, NSString *error);
 typedef void (^QBChatResultBlock)(BOOL success);
 typedef void (^QBChatRoomResultBlock)(QBChatRoom *chatRoom, NSError *error);
 typedef void (^QBChatDialogHistoryBlock)(NSMutableArray *chatDialogHistoryArray, NSError *error);
-typedef void (^QBContactListBlock)(id object);
-typedef void (^QBDataBlock)(id data);
 
 //************** Segue Identifiers *************************
 static NSString *const kTabBarSegueIdnetifier         = @"TabBarSegue";
@@ -154,18 +117,8 @@ static NSString *const kCallWasStoppedByUserStatus  = @"Call was stopped";
 static NSString *const kCallConnectingStatus        = @"Connecting...";
 
 
-
-
 //******************** USER DEFAULTS KEYS *****************
 
-static NSString *const kUserStatusText   	= @"userStatusText";
-
-static NSString *const kChatOpponentName	= @"chatOpponentName";
-static NSString *const kChatOpponentIDString	= @"chatOpponentIDString";
-
-static NSString *const kId          = @"id";
-static NSString *const kData        = @"data";
-static NSString *const kClassName   = @"Friend";
 static NSString *const kFacebook    = @"facebook";
 
 static NSString *const kFriendId               = @"FriendID";
@@ -225,9 +178,7 @@ static NSString *const kSettingsProfileDefaultStatusString	= @"Add Status";
 static NSString *const kSettingsProfileMessageWarningString	= @"This field could not be empty!";
 static NSString *const kSettingsProfileTextViewMessageWarningString	= @"This field could not be more then 43 characters!";
 
-//******************** CoreData *****************
-static NSString *const kCDMessageDatetimePath = @"datetime";
 
-extern QMLogLevel kLoggingLevel;
+
 
 #endif

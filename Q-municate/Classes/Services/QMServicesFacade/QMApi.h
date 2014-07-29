@@ -17,22 +17,24 @@
 @class QMAVCallService;
 @class QMMessagesService;
 @class QMChatReceiver;
+@class QMContentService;
 
 @interface QMApi : NSObject
 
-@property (strong, nonatomic) QMAuthService *authService;
-@property (strong, nonatomic) QMSettingsManager *settingsManager;
-@property (strong, nonatomic) QMFacebookService *facebookService;
-@property (strong, nonatomic) QMUsersService *usersService;
-@property (strong, nonatomic) QMChatService *chatService;
-@property (strong, nonatomic) QMAVCallService *avCallService;
-@property (strong, nonatomic) QMChatDialogsService *chatDialogsService;
-@property (strong, nonatomic) QMMessagesService *messagesService;
-@property (strong, nonatomic) QMChatReceiver *responceService;
-
+@property (strong, nonatomic, readonly) QMAuthService *authService;
+@property (strong, nonatomic, readonly) QMSettingsManager *settingsManager;
+@property (strong, nonatomic, readonly) QMFacebookService *facebookService;
+@property (strong, nonatomic, readonly) QMUsersService *usersService;
+@property (strong, nonatomic, readonly) QMChatService *chatService;
+@property (strong, nonatomic, readonly) QMAVCallService *avCallService;
+@property (strong, nonatomic, readonly) QMChatDialogsService *chatDialogsService;
+@property (strong, nonatomic, readonly) QMMessagesService *messagesService;
+@property (strong, nonatomic, readonly) QMChatReceiver *responceService;
+@property (strong, nonatomic, readonly) QMContentService *contentService;
 @property (strong, atomic) QBUUser *currentUser;
 
 + (instancetype)instance;
+
 - (void)fetchAllHistory:(void(^)(void))completion;
 - (BOOL)checkResult:(Result *)result;
 
@@ -183,6 +185,17 @@
 
 /*UPDATE USER*/
 - (void)updateUser:(QBUUser *)user completion:(void(^)(BOOL success))completion;
+
+/**
+ */
+- (void)updateUser:(QBUUser *)user image:(UIImage *)image progress:(QMContentProgressBlock)progress completion:(void (^)(BOOL success))completion;
+/**
+ 
+ */
+- (void)updateUser:(QBUUser *)user imageUrl:(NSURL *)imageUrl progress:(QMContentProgressBlock)progress completion:(void (^)(BOOL success))completion;
+
+/**
+ */
 - (void)changePasswordForCurrentUser:(QBUUser *)currentUser completion:(void(^)(BOOL success))completion;
 
 @end
@@ -204,7 +217,7 @@
  */
 @interface QMApi (Calls)
 
-- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView conferenceType:(QBVideoChatConferenceType)conferenceType;
+- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView conferenceType:(enum QBVideoChatConferenceType)conferenceType;
 - (void)acceptCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView;
 - (void)rejectCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView;
 - (void)finishCall;
