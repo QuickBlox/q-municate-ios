@@ -123,7 +123,7 @@
     if (self.avatarImage != nil) return YES;
     if (![self.fullNameFieldCache isEqualToString:self.currentUser.fullName]) return YES;
     if ( (self.phoneFieldCache != nil && ![self.phoneFieldCache isEqualToString:@""])  &&  ![self.phoneFieldCache isEqualToString:self.currentUser.phone]) return YES;
-    if ((self.statusTextCache != nil && [self.statusTextCache isEqualToString:@""]) && ![self.statusTextCache isEqualToString:self.currentUser.customData]) return YES;
+    if ((self.statusTextCache != nil && ![self.statusTextCache isEqualToString:@""]) && ![self.statusTextCache isEqualToString:self.currentUser.customData]) return YES;
     
     return NO;
 }
