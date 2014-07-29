@@ -78,7 +78,6 @@
     self.headerView.translatesAutoresizingMaskIntoConstraints = NO;
     
     self.userImageView.contentMode = UIViewContentModeScaleToFill;
-    self.balloonImageView.contentMode = UIViewContentModeScaleAspectFill;
     
     [self.contentView addSubview:self.messageContainer];
     [self.messageContainer addSubview:self.balloonImageView];

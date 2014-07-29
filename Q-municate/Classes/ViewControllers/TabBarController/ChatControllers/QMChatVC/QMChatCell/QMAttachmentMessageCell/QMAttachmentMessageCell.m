@@ -33,14 +33,13 @@
 - (void)createContainerSubviews {
     
     [super createContainerSubviews];
-    
     self.maskLayer = [CALayer layer];
     self.maskLayer.contentsScale = 2;
+    self.balloonImageView.contentMode = UIViewContentModeScaleAspectFill;
 }
 
 - (void)setMessage:(QMMessage *)message {
     [super setMessage:message];
-    
     
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
     QBChatAttachment *attachment = self.message.attachments.lastObject;
@@ -51,10 +50,8 @@
     [manager downloadImageWithURL:imageUrl options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         NSLog(@"%d %d", receivedSize, expectedSize);
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-
         weakSelf.balloonImageView.image = image;
     }];
-    
 }
 
 - (void)layoutSubviews {
