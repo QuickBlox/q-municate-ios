@@ -155,12 +155,11 @@
     QMMessage *message = self.messages[indexPath.row];
     QMChatCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIDAtQMMessage:message] forIndexPath:indexPath];
     
-    cell.message = message;
-    
     BOOL isMe = [QMApi instance].currentUser.ID == message.senderID;
-    
     QBUUser *user = [[QMApi instance] userWithID:message.senderID];
     [cell setUser:user isMe:isMe];
+    cell.message = message;
+    
     
     return cell;
 }

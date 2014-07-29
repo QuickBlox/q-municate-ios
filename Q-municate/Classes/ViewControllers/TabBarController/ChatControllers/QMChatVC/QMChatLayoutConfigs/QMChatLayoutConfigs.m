@@ -29,7 +29,7 @@ struct QMMessageLayout QMMessageQmunicateLayout = {
     .titleHeight = 13,
     .messageMaxWidth = kQMMessageMaxWidth,
     .messageMinWidth = kQMMessageMinWidth,
-    .userImageSize = (CGSize){36, 36},
+    .userImageSize = (CGSize){50, 50},
     
     .fontName = @"HelveticaNeue",
     .fontSize = 16,
@@ -89,7 +89,7 @@ struct QMMessageLayout QMMessageAttachmentLayout = {
     
     .messageMaxWidth = kQMMessageMaxWidth,
 
-    .userImageSize = (CGSize){36,36},
+    .userImageSize = (CGSize){50,50},
     
     .fontName = @"HelveticaNeue-Light",
     .fontSize = 16,

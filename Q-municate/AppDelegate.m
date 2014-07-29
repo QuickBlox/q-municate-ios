@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "QMIncomingCallHandler.h"
+#import "SVProgressHUD.h"
 
 const NSUInteger kQMApplicationID = 7232;
 NSString *const kQMAuthorizationKey = @"MpOecRZy-5WsFva";
@@ -36,6 +37,9 @@ NSString *const kQMAcconuntKey = @"LpNmxA2Pq2uyW5qBjHy8";
     
     [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateNormal];
     [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateDisabled];
+    
+    [[SVProgressHUD appearance] setHudBackgroundColor:[UIColor colorWithRed:0.046 green:0.377 blue:0.633 alpha:1.000]];
+    [[SVProgressHUD appearance] setHudForegroundColor:[UIColor colorWithWhite:1.000 alpha:1.000]];
     
     return YES;
 }
