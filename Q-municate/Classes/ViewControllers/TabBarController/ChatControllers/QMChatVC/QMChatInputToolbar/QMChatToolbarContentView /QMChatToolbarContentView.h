@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@class QMChatInputTextView;
+@class QMPlaceholderTextView;
 
 @interface QMChatToolbarContentView : UIView
 /**
  *  Returns the text view in which the user enter a message.
  */
-@property (strong, nonatomic, readonly) QMChatInputTextView *textView;
+@property (strong, nonatomic, readonly) QMPlaceholderTextView *textView;
 
 /**
  *  A custom button item displayed on the left of the toolbar content view.

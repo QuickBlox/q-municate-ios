@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface QMChatInputTextView : UITextView
+@interface QMPlaceholderTextView : UITextView
 /**
  *  The text to be displayed when the text view is empty. The default value is `nil`.
  */

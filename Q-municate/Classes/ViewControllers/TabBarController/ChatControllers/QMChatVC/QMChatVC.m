@@ -12,7 +12,7 @@
 #import "QMChatDataSource.h"
 #import "QMKeyboardController.h"
 #import "QMChatToolbarContentView.h"
-#import "QMChatInputTextView.h"
+#import "QMPlaceholderTextView.h"
 #import "QMChatButtonsFactory.h"
 #import "AGEmojiKeyBoardView.h"
 #import "QMSoundManager.h"

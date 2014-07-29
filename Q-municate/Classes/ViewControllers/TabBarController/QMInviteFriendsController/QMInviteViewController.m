@@ -47,6 +47,7 @@
     @weakify(self)
     void (^inviteWithEmail)(void) =^{
         
+        [self checkListDidchangeCount:0];
         NSArray *abEmails = [self.dataSource emailsToInvite];
         if (abEmails.count > 0) {
             
@@ -58,6 +59,7 @@
                 [self presentViewController:mailVC animated:YES completion:nil];
                 
             } finish:^(MFMailComposeResult result, NSError *error) {
+                [self.dataSource clearABFriendsToInvite];
                 !error ? [self.dataSource clearFBFriendsToInvite] : [SVProgressHUD showErrorWithStatus:error.localizedDescription];
             }];
         }

@@ -16,6 +16,7 @@ NSString *const kQMSettingsRememberMeKey = @"rememberMeKey";
 NSString *const kQMSettingsPushNotificationEnabled = @"pushNotificationEnabledKey";
 NSString *const kQMSettingsUserStatusKey = @"userStatusKey";
 NSString *const kQMAuthServiceKey = @"QMAuthServiceKey";
+NSString *const kQMLicenceAcceptedKey = @"licence_accepted";
 
 @implementation QMSettingsManager
 
@@ -25,13 +26,26 @@ NSString *const kQMAuthServiceKey = @"QMAuthServiceKey";
 @dynamic pushNotificationsEnabled;
 @dynamic rememberMe;
 
+
+- (void)setUserAgreementAccepted:(BOOL)userAgreementAccepted
+{
+    defSetBool(kQMLicenceAcceptedKey, userAgreementAccepted);
+}
+
+- (BOOL)userAgreementAccepted
+{
+    BOOL accepted = defBool(kQMLicenceAcceptedKey);
+    return accepted;
+}
+
+
+#pragma makr - Login
+
 - (void)setLogin:(NSString *)login andPassword:(NSString *)password {
 
     [self setLogin:login];
     [SSKeychain setPassword:password forService:kQMAuthServiceKey account:login];
 }
-
-#pragma makr - Login
 
 - (NSString *)login {
     

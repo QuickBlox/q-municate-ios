@@ -927,7 +927,7 @@ Line 2</string>
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xlW-Om-x7C">
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xlW-Om-x7C" customClass="QMPlaceholderTextView">
                                                     <rect key="frame" x="15" y="10" width="285" height="79"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -2869,8 +2869,8 @@ Q-munication by sending them private invitations.</string>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="Gs8-3F-TjX"/>
         <segue reference="MwZ-5e-1h3"/>
-        <segue reference="TaC-No-aTb"/>
         <segue reference="IAo-qy-uHQ"/>
         <segue reference="hW5-9n-Jcg"/>
         <segue reference="Xoz-l0-6ya"/>

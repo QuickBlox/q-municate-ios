@@ -7,14 +7,14 @@
 //
 
 #import "QMChatToolbarContentView.h"
-#import "QMChatInputTextView.h"
+#import "QMPlaceholderTextView.h"
 #import "Parus.h"
 
 @interface QMChatToolbarContentView()
 
 @property (strong, nonatomic) UIView *leftBarButtonContainerView;
 @property (strong, nonatomic) UIView *rightBarButtonContainerView;
-@property (strong, nonatomic) QMChatInputTextView *textView;
+@property (strong, nonatomic) QMPlaceholderTextView *textView;
 
 @property (strong, nonatomic) NSLayoutConstraint *rightBarButtonContainerViewWidthConstraint;
 
@@ -61,7 +61,7 @@
     
     self.leftBarButtonContainerView = [[UIView alloc] init];
     self.rightBarButtonContainerView = [[UIView alloc] init];
-    self.textView = [[QMChatInputTextView alloc] init];
+    self.textView = [[QMPlaceholderTextView alloc] init];
     
     self.textView.placeHolder = @"Message";
     self.textView.placeHolderTextColor = [UIColor grayColor];

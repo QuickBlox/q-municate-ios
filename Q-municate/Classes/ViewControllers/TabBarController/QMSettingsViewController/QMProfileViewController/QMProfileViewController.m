@@ -7,6 +7,7 @@
 //
 
 #import "QMProfileViewController.h"
+#import "QMPlaceholderTextView.h"
 #import "QMApi.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMImageView.h"
@@ -21,7 +22,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *fullNameField;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *phoneNumberField;
-@property (weak, nonatomic) IBOutlet UITextView *statusField;
+@property (weak, nonatomic) IBOutlet QMPlaceholderTextView *statusField;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *updateProfileButton;
 
 @property (strong, nonatomic) NSString *fullNameFieldCache;
@@ -40,6 +41,7 @@
     [super viewDidLoad];
     
     self.avatarView.imageViewType = QMImageViewTypeCircle;
+    self.statusField.placeHolder = @"Add status...";
     
     [self updateProfileView];
     [self setUpdateButtonActivity];
@@ -123,7 +125,7 @@
     if (self.avatarImage != nil) return YES;
     if (![self.fullNameFieldCache isEqualToString:self.currentUser.fullName]) return YES;
     if ( (self.phoneFieldCache != nil && ![self.phoneFieldCache isEqualToString:@""])  &&  ![self.phoneFieldCache isEqualToString:self.currentUser.phone]) return YES;
-    if ((self.statusTextCache != nil && ![self.statusTextCache isEqualToString:@""]) && ![self.statusTextCache isEqualToString:self.currentUser.customData]) return YES;
+    if ((self.statusTextCache != nil) && ![self.statusTextCache isEqualToString:self.currentUser.customData]) return YES;
     
     return NO;
 }
