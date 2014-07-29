@@ -114,6 +114,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     
     NSMutableDictionary *extendedRequest = [[NSMutableDictionary alloc] init];
     extendedRequest[kQMEditDialogExtendedNameParameter] = dialogName;
+    chatDialog.name = dialogName;
     
     [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:completion];
 }
