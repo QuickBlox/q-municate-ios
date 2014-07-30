@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RkR-TS-K9a">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RkR-TS-K9a">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -1637,10 +1637,10 @@ Q-munication by sending them private invitations.</string>
                                 </constraints>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_txt" translatesAutoresizingMaskIntoConstraints="NO" id="hnq-Ge-e1j">
-                                <rect key="frame" x="30" y="265" width="260" height="61"/>
+                                <rect key="frame" x="33" y="268" width="255" height="58"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="61" id="eYu-se-oV1"/>
+                                    <constraint firstAttribute="height" constant="58" id="eYu-se-oV1"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -1652,13 +1652,13 @@ Q-munication by sending them private invitations.</string>
                             <constraint firstItem="LiY-av-v3j" firstAttribute="leading" secondItem="Zfd-Se-Wif" secondAttribute="leading" id="LOQ-oe-sIE"/>
                             <constraint firstAttribute="trailing" secondItem="bSI-HI-0SC" secondAttribute="trailing" id="Rje-za-FLe"/>
                             <constraint firstAttribute="trailing" secondItem="X2a-mx-tHB" secondAttribute="trailing" constant="32" id="Uay-rI-F3p"/>
-                            <constraint firstItem="hnq-Ge-e1j" firstAttribute="top" secondItem="X2a-mx-tHB" secondAttribute="bottom" constant="21" id="Unr-fW-sUx"/>
+                            <constraint firstItem="hnq-Ge-e1j" firstAttribute="top" secondItem="X2a-mx-tHB" secondAttribute="bottom" constant="24" id="Unr-fW-sUx"/>
                             <constraint firstItem="bSI-HI-0SC" firstAttribute="top" secondItem="pjU-Ya-5ft" secondAttribute="bottom" constant="8" id="f6C-Iq-ynH"/>
                             <constraint firstItem="LiY-av-v3j" firstAttribute="top" secondItem="bSI-HI-0SC" secondAttribute="bottom" constant="8" id="gpw-zQ-UBd"/>
                             <constraint firstItem="X2a-mx-tHB" firstAttribute="leading" secondItem="Zfd-Se-Wif" secondAttribute="leading" id="hWe-ha-3Db"/>
-                            <constraint firstAttribute="trailing" secondItem="hnq-Ge-e1j" secondAttribute="trailing" constant="30" id="jtN-Rp-O6r"/>
+                            <constraint firstAttribute="trailing" secondItem="hnq-Ge-e1j" secondAttribute="trailing" constant="32" id="jtN-Rp-O6r"/>
                             <constraint firstAttribute="trailing" secondItem="LiY-av-v3j" secondAttribute="trailing" id="tdo-Qw-vYK"/>
-                            <constraint firstItem="hnq-Ge-e1j" firstAttribute="leading" secondItem="Zfd-Se-Wif" secondAttribute="leading" constant="30" id="u5v-A7-eKV"/>
+                            <constraint firstItem="hnq-Ge-e1j" firstAttribute="leading" secondItem="Zfd-Se-Wif" secondAttribute="leading" constant="33" id="u5v-A7-eKV"/>
                             <constraint firstItem="X2a-mx-tHB" firstAttribute="top" secondItem="Zfd-Se-Wif" secondAttribute="top" id="xIu-lm-PjP"/>
                             <constraint firstAttribute="trailing" secondItem="pjU-Ya-5ft" secondAttribute="trailing" id="ywC-Y7-EHk"/>
                         </constraints>
@@ -2850,7 +2850,7 @@ Q-munication by sending them private invitations.</string>
         <image name="ic_info_top" width="21" height="21"/>
         <image name="login-btn" width="280" height="44"/>
         <image name="logo_big" width="288" height="244"/>
-        <image name="logo_txt" width="260" height="61"/>
+        <image name="logo_txt" width="255" height="58"/>
         <image name="mute_on" width="66" height="66"/>
         <image name="new_chat" width="21" height="21"/>
         <image name="online" width="13" height="13"/>
@@ -2875,10 +2875,10 @@ Q-munication by sending them private invitations.</string>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="MwZ-5e-1h3"/>
+        <segue reference="qsg-NO-Ors"/>
+        <segue reference="IAo-qy-uHQ"/>
         <segue reference="bOV-zd-nKn"/>
         <segue reference="aeV-0O-de3"/>
-        <segue reference="Gs8-3F-TjX"/>
-        <segue reference="MwZ-5e-1h3"/>
-        <segue reference="IAo-qy-uHQ"/>
     </inferredMetricsTieBreakers>
 </document>
