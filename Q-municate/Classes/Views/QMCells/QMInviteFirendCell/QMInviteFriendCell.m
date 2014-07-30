@@ -63,7 +63,7 @@
     self.descriptionLabel.text = @"Contact list";
     
     UIImage *image = addressBookUser.image;
-    [self setUserImage:image];
+    [self setUserImage:image withKey:addressBookUser.fullName];
 }
 
 - (void)setCheck:(BOOL)check {

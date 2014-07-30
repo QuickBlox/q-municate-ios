@@ -9,7 +9,7 @@
 
 @protocol QMCheckBoxStateDelegate <NSObject>
 @optional
-- (void)checkListDidchangeCount:(NSInteger)checkedCount;
+- (void)checkListDidChangeCount:(NSInteger)checkedCount;
 @end
 
 

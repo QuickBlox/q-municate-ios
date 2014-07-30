@@ -27,11 +27,11 @@
     [self.qmImageView sd_setImageWithURL:userImageUrl placeholderImage:placeHolder];
 }
 
-- (void)setUserImage:(UIImage *)image {
+- (void)setUserImage:(UIImage *)image withKey:(NSString *)key {
     if (!image) {
         image = [UIImage imageNamed:@"upic-placeholder"];
     }
-    self.qmImageView.image = image;
+    [self.qmImageView sd_setImage:image withKey:key];
 }
 
 @end

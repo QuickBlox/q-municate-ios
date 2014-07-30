@@ -56,7 +56,7 @@
     } else {
         
         UIImage *img = [UIImage imageNamed:@"upic_placeholder_details_group"];
-        [self setUserImage:img];
+        [self setUserImage:img withKey:@"upic_placeholder_details_group"];
         self.titleLabel.text = chatDialog.name;
         self.groupMembersNumb.text = [NSString stringWithFormat:@"%d", chatDialog.occupantIDs.count];
     }

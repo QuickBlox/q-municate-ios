@@ -19,6 +19,6 @@
 @property (weak, nonatomic) IBOutlet QMImageView *qmImageView;
 
 - (void)setUserImageWithUrl:(NSURL *)userImageUrl;
-- (void)setUserImage:(UIImage *)image;
+- (void)setUserImage:(UIImage *)image withKey:(NSString *)key;
 
 @end

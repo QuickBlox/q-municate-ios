@@ -21,6 +21,7 @@ typedef NS_ENUM(NSUInteger, QMImageViewType) {
  */
 @property (assign, nonatomic) QMImageViewType imageViewType;
 
+- (void)sd_setImage:(UIImage *)image withKey:(NSString *)key;
 - (void)sd_setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placehoderImage;
 - (void)sd_setImageWithURL:(NSURL *)url progress:(SDWebImageDownloaderProgressBlock)progress placeholderImage:(UIImage *)placehoderImage;
 

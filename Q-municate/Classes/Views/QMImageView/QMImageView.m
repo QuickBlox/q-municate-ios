@@ -53,9 +53,9 @@ NSString *const kQMAvatarsImageCacheName = @"qm.images.cache";
     self.image = placehoderImage;
     
     NSString *key = [self keyWithURL:url];
-    UIImage *image = [self.imageCache imageFromDiskCacheForKey:key];
-    if (image) {
-        self.image = image;
+    UIImage *cachedImage = [self.imageCache imageFromDiskCacheForKey:key];
+    if (cachedImage) {
+        self.image = cachedImage;
     }
     else {
         
@@ -67,25 +67,41 @@ NSString *const kQMAvatarsImageCacheName = @"qm.images.cache";
          {
              
              if (image && finished) {
-                 
-                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                     
-                     UIImage *resultImage = image;
-                     
-                     if (weakSelf.imageViewType == QMImageViewTypeSquare) {
-                         resultImage = [resultImage imageByScaleAndCrop:weakSelf.frame.size];
-                     }
-                     else if (weakSelf.imageViewType == QMImageViewTypeCircle) {
-                         resultImage = [resultImage imageByCircularScaleAndCrop:weakSelf.frame.size];
-                     }
-                     dispatch_async(dispatch_get_main_queue(), ^{
-                         weakSelf.image = resultImage;
-                         [weakSelf.imageCache storeImage:resultImage forKey:key];
-                     });
-                 });
+                 [weakSelf storeImage:image withKey:key];
              }
          }];
     }
 };
+
+- (void)storeImage:(UIImage *)image withKey:(NSString *)key {
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        
+        UIImage *resultImage = image;
+        
+        if (self.imageViewType == QMImageViewTypeSquare) {
+            resultImage = [resultImage imageByScaleAndCrop:self.frame.size];
+        }
+        else if (self.imageViewType == QMImageViewTypeCircle) {
+            resultImage = [resultImage imageByCircularScaleAndCrop:self.frame.size];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.image = resultImage;
+            [self.imageCache storeImage:resultImage forKey:key];
+        });
+    });
+}
+
+- (void)sd_setImage:(UIImage *)image withKey:(NSString *)key {
+
+    UIImage *cachedImage = [self.imageCache imageFromDiskCacheForKey:key];
+    if (cachedImage) {
+        self.image = cachedImage;
+    }
+    else {
+        [self storeImage:image withKey:key];
+    }
+
+}
 
 @end
