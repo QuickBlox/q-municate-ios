@@ -114,8 +114,16 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     
     NSMutableDictionary *extendedRequest = [[NSMutableDictionary alloc] init];
     extendedRequest[kQMEditDialogExtendedNameParameter] = dialogName;
+    chatDialog.name = dialogName;
     
-    [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:completion];
+    NSArray *opponentsIDs = [self usersWithIDs:chatDialog.occupantIDs];
+    __weak __typeof(self)weakSelf = self;
+    
+    [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialogResult *result) {
+        
+        [weakSelf sendNotificationWithType:2 toRecipients:opponentsIDs chatDialog:chatDialog];
+        completion(result);
+    }];
 }
 
 - (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {

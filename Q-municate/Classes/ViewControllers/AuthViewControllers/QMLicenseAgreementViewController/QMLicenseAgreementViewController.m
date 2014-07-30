@@ -9,6 +9,8 @@
 #import "QMLicenseAgreementViewController.h"
 #import <SVProgressHUD.h>
 #import "REAlertView.h"
+#import "QMApi.h"
+#import "QMSettingsManager.h"
 
 NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
@@ -17,18 +19,26 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 <UIWebViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
+@property (assign, nonatomic) BOOL licenceAccepted;
 
 @end
 
 @implementation QMLicenseAgreementViewController
 
-- (void)dealloc {
-    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+
+- (void)dealloc
+{
+    if (self.licenceCompletionBlock) {
+        self.licenceCompletionBlock(self.licenceAccepted);
+    }
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [self.navigationController setNavigationBarHidden:NO];
     
     [SVProgressHUD show];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kQMAgreementUrl]];
@@ -38,6 +48,14 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 - (void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
 }
+
+- (IBAction)acceptLicense:(id)sender
+{
+    [[QMApi instance].settingsManager setUserAgreementAccepted:YES];
+    self.licenceAccepted = YES;
+    [self.navigationController popViewControllerAnimated:NO];
+}
+
 
 #pragma mark - UIWebViewDelegate
 

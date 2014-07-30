@@ -85,6 +85,7 @@ NSString *const kQMAddMembersToGroupControllerID = @"QMAddMembersToGroupControll
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] changeChatName:self.groupNameField.text forChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
+        
         [SVProgressHUD dismiss];
     }];
 }

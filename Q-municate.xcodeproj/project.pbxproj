@@ -281,7 +281,7 @@
 		55943A111941A55800BF4312 /* CDMessages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDMessages.m; sourceTree = "<group>"; };
 		55943ABE1941C8EC00BF4312 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		55943ABF1941C8EC00BF4312 /* Q_municateTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Q_municateTests.m; sourceTree = "<group>"; };
-		55943AC01941C8EC00BF4312 /* QmunicateTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "QmunicateTests-Info.plist"; sourceTree = "<group>"; };
+		55943AC01941C8EC00BF4312 /* Q-municateTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Q-municateTests-Info.plist"; sourceTree = "<group>"; };
 		559BDFDC19618D3D000588FE /* QMLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLogInViewController.h; sourceTree = "<group>"; };
 		559BDFDD19618D3D000588FE /* QMLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLogInViewController.m; sourceTree = "<group>"; };
 		559BDFDF19618D3D000588FE /* QMSignUpController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSignUpController.h; sourceTree = "<group>"; };
@@ -576,14 +576,14 @@
 		69D2614E1978258000A4104B /* NSString+DateTimeIntervalFormatting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+DateTimeIntervalFormatting.h"; sourceTree = "<group>"; };
 		69D2614F1978258000A4104B /* NSString+DateTimeIntervalFormatting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+DateTimeIntervalFormatting.m"; sourceTree = "<group>"; };
 		69D4184818D09B630046C629 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = External/FacebookSDK.framework; sourceTree = "<group>"; };
-		69D57E5218ACC11C00A9900A /* Qmunicate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Qmunicate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		69D57E5218ACC11C00A9900A /* Q-municate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Q-municate.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		69D57E5518ACC11C00A9900A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		69D57E5718ACC11C00A9900A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		69D57E5918ACC11C00A9900A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		69D57E5D18ACC11C00A9900A /* Qmunicate-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Qmunicate-Info.plist"; sourceTree = "<group>"; };
+		69D57E5D18ACC11C00A9900A /* Q-municate-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Q-municate-Info.plist"; sourceTree = "<group>"; };
 		69D57E5F18ACC11C00A9900A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		69D57E6118ACC11C00A9900A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		69D57E6318ACC11C00A9900A /* Qmunicate-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Qmunicate-Prefix.pch"; sourceTree = "<group>"; };
+		69D57E6318ACC11C00A9900A /* Q-municate-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Q-municate-Prefix.pch"; sourceTree = "<group>"; };
 		69D57E6418ACC11C00A9900A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		69D57E6518ACC11C00A9900A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		69D57E6718ACC11C00A9900A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -774,7 +774,7 @@
 			children = (
 				55943ABD1941C8EC00BF4312 /* InfoPlist.strings */,
 				55943ABF1941C8EC00BF4312 /* Q_municateTests.m */,
-				55943AC01941C8EC00BF4312 /* QmunicateTests-Info.plist */,
+				55943AC01941C8EC00BF4312 /* Q-municateTests-Info.plist */,
 			);
 			path = "Q-municateTests";
 			sourceTree = "<group>";
@@ -1886,7 +1886,7 @@
 		69D57E5318ACC11C00A9900A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				69D57E5218ACC11C00A9900A /* Qmunicate.app */,
+				69D57E5218ACC11C00A9900A /* Q-municate.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1942,10 +1942,10 @@
 		69D57E5C18ACC11C00A9900A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				69D57E5D18ACC11C00A9900A /* Qmunicate-Info.plist */,
+				69D57E5D18ACC11C00A9900A /* Q-municate-Info.plist */,
 				69D57E5E18ACC11C00A9900A /* InfoPlist.strings */,
 				69D57E6118ACC11C00A9900A /* main.m */,
-				69D57E6318ACC11C00A9900A /* Qmunicate-Prefix.pch */,
+				69D57E6318ACC11C00A9900A /* Q-municate-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1953,9 +1953,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		55943AAA1941C8CA00BF4312 /* QmunicateTests */ = {
+		55943AAA1941C8CA00BF4312 /* Q-municateTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 55943AB91941C8CA00BF4312 /* Build configuration list for PBXNativeTarget "QmunicateTests" */;
+			buildConfigurationList = 55943AB91941C8CA00BF4312 /* Build configuration list for PBXNativeTarget "Q-municateTests" */;
 			buildPhases = (
 				55943AA71941C8CA00BF4312 /* Sources */,
 				55943AA81941C8CA00BF4312 /* Frameworks */,
@@ -1967,13 +1967,13 @@
 			dependencies = (
 				55943AC61941CA1300BF4312 /* PBXTargetDependency */,
 			);
-			name = QmunicateTests;
+			name = "Q-municateTests";
 			productName = "Q-municateTests";
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		69D57E5118ACC11C00A9900A /* Qmunicate */ = {
+		69D57E5118ACC11C00A9900A /* Q-municate */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 69D57E7E18ACC11C00A9900A /* Build configuration list for PBXNativeTarget "Qmunicate" */;
+			buildConfigurationList = 69D57E7E18ACC11C00A9900A /* Build configuration list for PBXNativeTarget "Q-municate" */;
 			buildPhases = (
 				4CF911AA6A0A49948F56AD2E /* Check Pods Manifest.lock */,
 				69D57E4E18ACC11C00A9900A /* Sources */,
@@ -1987,9 +1987,9 @@
 			);
 			dependencies = (
 			);
-			name = Qmunicate;
+			name = "Q-municate";
 			productName = "Q-municate";
-			productReference = 69D57E5218ACC11C00A9900A /* Qmunicate.app */;
+			productReference = 69D57E5218ACC11C00A9900A /* Q-municate.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -2010,7 +2010,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 69D57E4D18ACC11C00A9900A /* Build configuration list for PBXProject "Qmunicate" */;
+			buildConfigurationList = 69D57E4D18ACC11C00A9900A /* Build configuration list for PBXProject "Q-municate" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -2022,8 +2022,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				69D57E5118ACC11C00A9900A /* Qmunicate */,
-				55943AAA1941C8CA00BF4312 /* QmunicateTests */,
+				69D57E5118ACC11C00A9900A /* Q-municate */,
+				55943AAA1941C8CA00BF4312 /* Q-municateTests */,
 			);
 		};
 /* End PBXProject section */
@@ -2279,7 +2279,7 @@
 /* Begin PBXTargetDependency section */
 		55943AC61941CA1300BF4312 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 69D57E5118ACC11C00A9900A /* Qmunicate */;
+			target = 69D57E5118ACC11C00A9900A /* Q-municate */;
 			targetProxy = 55943AC51941CA1300BF4312 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -2315,15 +2315,15 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Q-municateTests/QmunicateTests-Prefix.pch";
+				GCC_PREFIX_HEADER = "Q-municateTests/Q-municateTests-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = "Q-municateTests/QmunicateTests-Info.plist";
+				INFOPLIST_FILE = "Q-municateTests/Q-municateTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				PRODUCT_NAME = QmunicateTests;
+				PRODUCT_NAME = "Q-municateTests";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -2339,11 +2339,11 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Q-municateTests/QmunicateTests-Prefix.pch";
+				GCC_PREFIX_HEADER = "Q-municateTests/Q-municateTests-Prefix.pch";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = "Q-municateTests/QmunicateTests-Info.plist";
+				INFOPLIST_FILE = "Q-municateTests/Q-municateTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				PRODUCT_NAME = QmunicateTests;
+				PRODUCT_NAME = "Q-municateTests";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -2438,12 +2438,12 @@
 					"$(PROJECT_DIR)/External",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Q-municate/Qmunicate-Prefix.pch";
+				GCC_PREFIX_HEADER = "Q-municate/Q-municate-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External\"",
 				);
-				INFOPLIST_FILE = "Q-municate/Qmunicate-Info.plist";
+				INFOPLIST_FILE = "Q-municate/Q-municate-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -2451,7 +2451,7 @@
 					"-ObjC",
 					"-lstdc++",
 				);
-				PRODUCT_NAME = Qmunicate;
+				PRODUCT_NAME = "Q-municate";
 				PROVISIONING_PROFILE = "7C10F44D-9DA6-469F-92B5-FEA785098661";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
@@ -2475,12 +2475,12 @@
 					"$(PROJECT_DIR)/External",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Q-municate/Qmunicate-Prefix.pch";
+				GCC_PREFIX_HEADER = "Q-municate/Q-municate-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External\"",
 				);
-				INFOPLIST_FILE = "Q-municate/Qmunicate-Info.plist";
+				INFOPLIST_FILE = "Q-municate/Q-municate-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -2488,7 +2488,7 @@
 					"-ObjC",
 					"-lstdc++",
 				);
-				PRODUCT_NAME = Qmunicate;
+				PRODUCT_NAME = "Q-municate";
 				PROVISIONING_PROFILE = "5F37965B-59B5-461B-83F6-77EFE66FC01B";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
@@ -2500,7 +2500,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		55943AB91941C8CA00BF4312 /* Build configuration list for PBXNativeTarget "QmunicateTests" */ = {
+		55943AB91941C8CA00BF4312 /* Build configuration list for PBXNativeTarget "Q-municateTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				55943ABA1941C8CA00BF4312 /* Debug */,
@@ -2509,7 +2509,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		69D57E4D18ACC11C00A9900A /* Build configuration list for PBXProject "Qmunicate" */ = {
+		69D57E4D18ACC11C00A9900A /* Build configuration list for PBXProject "Q-municate" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				69D57E7C18ACC11C00A9900A /* Debug */,
@@ -2518,7 +2518,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		69D57E7E18ACC11C00A9900A /* Build configuration list for PBXNativeTarget "Qmunicate" */ = {
+		69D57E7E18ACC11C00A9900A /* Build configuration list for PBXNativeTarget "Q-municate" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				69D57E7F18ACC11C00A9900A /* Debug */,
