@@ -100,7 +100,6 @@
     self.textView.text = message.text;
     
     self.balloonImage =  message.balloonImage;
-    self.balloonTintColor = message.balloonColor;
     self.timeLabel.text = [self.formatter stringFromDate:message.datetime];
 }
 
@@ -110,11 +109,6 @@
         _textColor = textColor;
         self.textView.textColor = textColor;
     }
-}
-
-- (void)prepareForReuse {
-    [super prepareForReuse];
-    self.textView.text = nil;
 }
 
 - (void)setFont:(UIFont *)font {

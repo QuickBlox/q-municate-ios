@@ -92,10 +92,10 @@ const NSUInteger kQMNumberOfSection = 2;
 - (void)fetchFacebookFriends:(void(^)(void))completion {
 
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    @weakify(self)
+
+    __weak __typeof(self)weakSelf = self;
     [[QMApi instance] fbFriends:^(NSArray *fbFriends) {
-        @strongify(self)
-        self.fbUsers = fbFriends;
+        weakSelf.fbUsers = fbFriends;
         [SVProgressHUD dismiss];
         if (completion) completion();
     }];

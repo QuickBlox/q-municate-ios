@@ -7,93 +7,85 @@
 //
 
 #import "QMImageView.h"
+#import "UIImage+Cropper.h"
 
-CGFloat kQMUserImageViewLineBorderWidth = 1.0;
-CGFloat kQMUserImageViewSquareCornerRadius = 6;
+NSString *const kQMAvatarsImageCacheName = @"qm.images.cache";
+
+@interface QMImageView()
+
+@property (strong, nonatomic, readonly) SDImageCache *imageCache;
+
+@end
 
 @implementation QMImageView
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        self.layer.masksToBounds = YES;
-    }
-    return self;
-}
-- (id)initWithImage:(UIImage *)image {
-    
-    self = [super initWithImage:image];
-    
-    if (self) {
-        self.layer.masksToBounds = YES;
-    }
-    
-    return self;
-}
+@dynamic imageCache;
 
-- (id)initWithImage:(UIImage *)image highlightedImage:(UIImage *)highlightedImage NS_AVAILABLE_IOS(3_0) {
-    
-    self = [super initWithImage:image highlightedImage:highlightedImage];
-    if (self) {
-        self.layer.masksToBounds = YES;
-    }
-    return self;
-}
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    
-    self.layer.masksToBounds = YES;
 }
 
-- (void)layoutSubviews {
+- (SDImageCache *)imageCache {
     
-    [super layoutSubviews];
+    static dispatch_once_t onceToken;
+    static  SDImageCache *_imageCache = nil;
+    dispatch_once(&onceToken, ^{
+        _imageCache = [[SDImageCache alloc] initWithNamespace:kQMAvatarsImageCacheName];
+    });
+    return _imageCache;
+}
+
+- (void)sd_setImageWithURL:(NSURL *)url  placeholderImage:(UIImage *)placehoderImage {
+    [self sd_setImageWithURL:url progress:nil placeholderImage:placehoderImage];
+}
+
+- (NSString *)keyWithURL:(NSURL *)url {
     
-    if (self.image) {
-        CGFloat r = self.frame.size.width / 2;
-        if (self.imageViewType == QMImageViewTypeCircle && r != self.layer.cornerRadius) {
-            self.layer.cornerRadius = self.frame.size.width / 2;
-        }
+    NSString* prefix = NSStringFromCGSize(self.frame.size);
+    NSString *key = [NSString stringWithFormat:@"%@-forSize-%@", url.absoluteString, prefix];
+    
+    return key;
+}
+
+- (void)sd_setImageWithURL:(NSURL *)url progress:(SDWebImageDownloaderProgressBlock)progress placeholderImage:(UIImage *)placehoderImage {
+    
+    self.image = placehoderImage;
+    
+    NSString *key = [self keyWithURL:url];
+    UIImage *image = [self.imageCache imageFromDiskCacheForKey:key];
+    if (image) {
+        self.image = image;
     }
-}
-
-- (void)setImageViewType:(QMImageViewType)imageViewType {
-    
-    if (_imageViewType != imageViewType) {
-        _imageViewType = imageViewType;
-        switch (imageViewType) {
-                
-            case QMImageViewTypeNone: [self applyDefaultTheme]; break;
-            case QMImageViewTypeCircle: [self applyCircleTheme]; break;
-            case QMImageViewTypeSquare: [self applySquareTheme]; break;
-                
-            default:
-                break;
-        }
+    else {
+        
+        __weak __typeof(self)weakSelf = self;
+        [SDWebImageDownloader.sharedDownloader downloadImageWithURL:url
+                                                            options:0
+                                                           progress:progress
+                                                          completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
+         {
+             
+             if (image && finished) {
+                 
+                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                     
+                     UIImage *resultImage = image;
+                     
+                     if (weakSelf.imageViewType == QMImageViewTypeSquare) {
+                         resultImage = [resultImage imageByScaleAndCrop:weakSelf.frame.size];
+                     }
+                     else if (weakSelf.imageViewType == QMImageViewTypeCircle) {
+                         resultImage = [resultImage imageByCircularScaleAndCrop:weakSelf.frame.size];
+                     }
+                     dispatch_async(dispatch_get_main_queue(), ^{
+                         weakSelf.image = resultImage;
+                         [weakSelf.imageCache storeImage:resultImage forKey:key];
+                     });
+                 });
+             }
+         }];
     }
-}
-
-- (void)applyDefaultTheme {
-    
-    self.layer.borderWidth = 0;
-    self.layer.borderColor = nil;
-    self.layer.cornerRadius = 0;
-}
-
-- (void)applyCircleTheme {
-    
-    self.layer.borderWidth = kQMUserImageViewLineBorderWidth;
-    self.layer.borderColor = [UIColor colorWithWhite:1.000 alpha:0.720].CGColor;
-    self.layer.cornerRadius = self.frame.size.width / 2;
-}
-
-- (void)applySquareTheme {
-    
-    self.layer.borderWidth = kQMUserImageViewLineBorderWidth;
-    self.layer.borderColor = [UIColor whiteColor].CGColor;
-    self.layer.cornerRadius = kQMUserImageViewSquareCornerRadius;
-}
+};
 
 @end

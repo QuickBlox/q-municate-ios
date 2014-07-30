@@ -40,6 +40,7 @@
 
 - (void)destroy {
     
+    [[QMChatReceiver instance] unsubscribeForTarget:self];
     [self.users removeAllObjects];
     [self.contactList removeAllObjects];
 }

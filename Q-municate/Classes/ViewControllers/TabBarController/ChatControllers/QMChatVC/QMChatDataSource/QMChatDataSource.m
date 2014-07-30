@@ -153,7 +153,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     QMMessage *message = self.messages[indexPath.row];
-    QMChatCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIDAtQMMessage:message] forIndexPath:indexPath];
+    QMChatCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIDAtQMMessage:message]];
     
     BOOL isMe = [QMApi instance].currentUser.ID == message.senderID;
     QBUUser *user = [[QMApi instance] userWithID:message.senderID];

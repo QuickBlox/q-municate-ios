@@ -9,9 +9,12 @@
 #import "QMChatService.h"
 #import "QMChatReceiver.h"
 
+const NSTimeInterval kQMPresenceTime = 30;
+
 @interface QMChatService () <QMServiceProtocol>
 
 @property (strong, nonatomic) NSTimer *presenceTimer;
+@property (assign, nonatomic) BOOL isLogin;
 
 @end
 
@@ -22,15 +25,15 @@
     [QBChat instance].delegate = [QMChatReceiver instance];
     
     NSAssert(self.presenceTimer == nil, @"Need Update this case");
-    self.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:30
+    self.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:kQMPresenceTime
                                                           target:self
-                                                        selector:@selector(sendPresence)
+                                selector:@selector(sendPresence)
                                                         userInfo:nil
                                                          repeats:YES];
 }
 
 - (void)destroy {
-    
+    [[QMChatReceiver instance] unsubscribeForTarget:self];
     [self.presenceTimer invalidate];
     self.presenceTimer = nil;
 }
@@ -46,9 +49,9 @@
 
 - (BOOL)logout {
     
-    BOOL success = [[QBChat instance] logout];
-    
-    if (success) {
+    BOOL success = NO;
+    if ([[QBChat instance] isLoggedIn]) {
+        success = [[QBChat instance] logout];
         [self destroy];
     }
     return success;

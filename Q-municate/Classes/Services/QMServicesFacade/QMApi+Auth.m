@@ -19,20 +19,12 @@
 
 - (void)logout:(void(^)(BOOL success))completion {
     
-    __weak __typeof(self)weakSelf = self;
-    [self destroySessionWithCompletion:^(BOOL success) {
-        if (!success) {
-            completion(success);
-        }
-        else {
-            [weakSelf stopServices];
-            [weakSelf.chatService logout];
-            [weakSelf.facebookService logout];
-            [weakSelf.settingsManager clearSettings];
-            
-            completion(success);
-        }
-    }];
+    [self.chatService logout];
+    [self.facebookService logout];
+    [self.settingsManager clearSettings];
+    [self stopServices];
+    self.currentUser = nil;
+    completion(YES);
 }
 
 - (void)setAutoLogin:(BOOL)autologin {
