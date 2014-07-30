@@ -1597,7 +1597,7 @@ Q-munication by sending them private invitations.</string>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="IoF-ax-XjW" kind="push" id="mzl-Cu-N4b"/>
+                                    <action selector="signUpWithEmail:" destination="vN9-k2-MLz" eventType="touchUpInside" id="8qC-vO-Z4z"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="50" verticalCompressionResistancePriority="50" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LiY-av-v3j">
@@ -1612,7 +1612,7 @@ Q-munication by sending them private invitations.</string>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="kK1-uY-WDS" kind="push" id="cRp-Ic-oq4"/>
+                                    <action selector="logInWithEmail:" destination="vN9-k2-MLz" eventType="touchUpInside" id="zd5-Iv-8sO"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pjU-Ya-5ft">
@@ -1668,6 +1668,8 @@ Q-munication by sending them private invitations.</string>
                         <outlet property="bubleHeight" destination="Exx-We-B7g" id="ElR-ez-G2z"/>
                         <outlet property="bubleImage" destination="X2a-mx-tHB" id="ill-oM-yWM"/>
                         <segue destination="ExU-yY-FRH" kind="custom" identifier="TabBarSegue" customClass="QMCustomSegue" id="qsg-NO-Ors"/>
+                        <segue destination="IoF-ax-XjW" kind="push" identifier="SignUpSegue" id="SgK-hq-bCZ"/>
+                        <segue destination="kK1-uY-WDS" kind="push" identifier="LogInSegue" id="Cli-ec-Q9C"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h4S-MN-8Hg" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1852,7 +1854,7 @@ Q-munication by sending them private invitations.</string>
         <!--License Agreement View Controller - License Agreement-->
         <scene sceneID="5SO-5H-OIB">
             <objects>
-                <viewController id="tmG-J0-h0D" customClass="QMLicenseAgreementViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="QMLicenceAgreementControllerID" id="tmG-J0-h0D" customClass="QMLicenseAgreementViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zcL-cZ-hwS"/>
                         <viewControllerLayoutGuide type="bottom" id="5JK-8e-Igm"/>
@@ -1878,7 +1880,13 @@ Q-munication by sending them private invitations.</string>
                             <constraint firstItem="5JK-8e-Igm" firstAttribute="top" secondItem="d7D-s6-FUB" secondAttribute="bottom" id="yWO-Qa-hHg"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="License Agreement" id="wdf-0k-2Z3"/>
+                    <navigationItem key="navigationItem" title="License Agreement" id="wdf-0k-2Z3">
+                        <barButtonItem key="rightBarButtonItem" title="Accept" id="2G5-ho-1Ig">
+                            <connections>
+                                <action selector="acceptLicense:" destination="tmG-J0-h0D" id="ZOG-dh-oie"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <connections>
                         <outlet property="webView" destination="d7D-s6-FUB" id="p1Y-dg-MqS"/>

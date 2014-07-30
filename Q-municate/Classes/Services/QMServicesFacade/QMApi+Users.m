@@ -139,8 +139,7 @@
 - (NSArray *)usersWithIDs:(NSArray *)ids {
 
     NSMutableArray *allFriends = [NSMutableArray array];
-    
-    for (NSString * friendID in ids) {
+    for (NSNumber * friendID in ids) {
         QBUUser *user = [self userWithID:friendID.integerValue];
         if (user) {
             [allFriends addObject:user];
