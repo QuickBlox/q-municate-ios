@@ -59,7 +59,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
         chatDialog.type = QBChatDialogTypePrivate;
         chatDialog.occupantIDs = occupantsIDS;
         
-        [self createChatDialog:chatDialog occupants:occupantsIDS completion:^(QBChatDialogResult *result) {
+        [self createChatDialog:chatDialog occupants:occupants completion:^(QBChatDialogResult *result) {
             completion(result.dialog);
         }];
         
@@ -121,7 +121,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     NSMutableDictionary *extendedRequest = [[NSMutableDictionary alloc] init];
     extendedRequest[kQMEditDialogExtendedPushOccupantsParameter] = opponentsIDs;
     
-    [self updateChatDialog:chatDialog extendedRequest:extendedRequest recipients:opponentsIDs completion:completion];
+    [self updateChatDialog:chatDialog extendedRequest:extendedRequest recipients:occupants completion:completion];
 }
 
 - (void)updateChatDialog:(QBChatDialog *)chatDialog extendedRequest:(NSMutableDictionary *)extendedRequest recipients:(NSArray *)recipients completion:(QBChatDialogResultBlock)completion {
