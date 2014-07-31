@@ -16,6 +16,7 @@
 #import "QMChatButtonsFactory.h"
 #import "AGEmojiKeyBoardView.h"
 #import "QMSoundManager.h"
+#import "QMChatReceiver.h"
 #import "NSString+HasText.h"
 #import "Parus.h"
 
@@ -196,11 +197,18 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
                                selector:@selector(handleDidChangeStatusBarFrameNotification:)
                                    name:UIApplicationDidChangeStatusBarFrameNotification
                                  object:nil];
+        
+        [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+            if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog) {
+                self.title = message.cParamDialogName;
+            }
+        }];
     }
     else {
         [notificationCenter removeObserver:self
                                       name:UIApplicationDidChangeStatusBarFrameNotification
                                     object:nil];
+        [[QMChatReceiver instance] unsubscribeForTarget:self];
     }
 }
 

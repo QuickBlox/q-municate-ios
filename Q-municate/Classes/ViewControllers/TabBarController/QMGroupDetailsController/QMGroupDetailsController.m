@@ -60,9 +60,12 @@ NSString *const kQMAddMembersToGroupControllerID = @"QMAddMembersToGroupControll
         }
     }];
     
-    self.chatRoom = [[QMApi instance] chatRoomWithRoomJID:self.chatDialog.roomJID];
-    [self.chatRoom requestOnlineUsers];
-    
+    [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog) {
+            self.chatDialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
+            [self updateGUIWithChatDialog:self.chatDialog];
+        }
+    }];
 }
 
 - (void)updateOnlineStatus:(NSUInteger)online {
@@ -97,6 +100,9 @@ NSString *const kQMAddMembersToGroupControllerID = @"QMAddMembersToGroupControll
     self.groupNameField.text = chatDialog.name;
     self.occupantsCountLabel.text = [NSString stringWithFormat:@"%d participants", self.chatDialog.occupantIDs.count];
     self.onlineOccupantsCountLabel.text = [NSString stringWithFormat:@"0/%d online", self.chatDialog.occupantIDs.count];
+    
+    self.chatRoom = [[QMApi instance] chatRoomWithRoomJID:self.chatDialog.roomJID];
+    [self.chatRoom requestOnlineUsers];
 }
 
 #pragma mark - Segue
