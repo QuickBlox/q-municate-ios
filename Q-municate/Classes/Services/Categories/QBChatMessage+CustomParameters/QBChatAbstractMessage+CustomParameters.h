@@ -9,7 +9,8 @@
 #import <Quickblox/Quickblox.h>
 
 typedef NS_ENUM(NSUInteger, QMMessageNotificationType) {
-    QMMessageNotificationTypeCreateDialog = 1,
+    QMMessageNotificationTypeNone,
+    QMMessageNotificationTypeCreateDialog,
     QMMessageNotificationTypeUpdateDialog
 };
 

@@ -59,8 +59,8 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     
     self.fullName.text = self.selectedUser.fullName;
     self.userDetails.text = self.selectedUser.customData;
-    
     self.userAvatar.imageViewType = QMImageViewTypeCircle;
+    
     NSURL *url = [NSURL URLWithString:self.selectedUser.website];
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
     [self.userAvatar sd_setImageWithURL:url placeholderImage:placeholder];
@@ -95,7 +95,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
         
     } else if ([segue.identifier isEqualToString:kChatViewSegueIdentifier]) {
         
-        QMChatViewController *chatController = (QMChatViewController *)segue.destinationViewController;
+        QMChatViewController *chatController = segue.destinationViewController;
         chatController.dialog = sender;
         
         NSAssert([sender isKindOfClass:QBChatDialog.class], @"Need update this case");
@@ -138,6 +138,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
             __weak __typeof(self)weakSelf = self;
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
             [[QMApi instance] createPrivateChatDialogIfNeededWithOpponent:self.selectedUser completion:^(QBChatDialog *chatDialog) {
+                
                 if (chatDialog) {
                     [weakSelf performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatDialog];
                 }
@@ -159,7 +160,6 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
         
         alertView.title = @"Are you sure?";
         [alertView addButtonWithTitle:@"Cancel" andActionBlock:^{}];
-        
         [alertView addButtonWithTitle:@"Delete" andActionBlock:^{
             if ([[QMApi instance] removeUserFromContactListWithUserID:weakSelf.selectedUser.ID]) {
                 [weakSelf.navigationController popViewControllerAnimated:YES];

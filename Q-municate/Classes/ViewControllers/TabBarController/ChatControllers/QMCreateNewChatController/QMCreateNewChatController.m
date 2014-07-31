@@ -39,7 +39,7 @@ NSString *const QMChatViewControllerID = @"QMChatViewController";
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
 
     __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] createGroupChatDialogWithName:chatName ocupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
+    [[QMApi instance] createGroupChatDialogWithName:chatName occupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
         
         if (result.success) {
             

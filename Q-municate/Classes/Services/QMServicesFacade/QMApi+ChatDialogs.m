@@ -21,7 +21,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 @implementation QMApi (ChatDialogs)
 
 - (void)fetchAllDialogs:(void(^)(void))completion {
-
+    
     __weak __typeof(self)weakSelf = self;
     [self.chatDialogsService fetchAllDialogs:^(QBDialogsPagedResult *result) {
         if ([weakSelf checkResult:result]) {
@@ -33,27 +33,34 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 
 #pragma mark - Create Chat Dialogs
 
+- (void)createChatDialog:(QBChatDialog *)chatDialog occupants:(NSArray *)occupants completion:(QBChatDialogResultBlock)completion {
+    
+    __weak __typeof(self)weakSelf = self;
+    [self.chatDialogsService createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
+        
+        if ([weakSelf checkResult:result]) {
+            [weakSelf.chatDialogsService addDialogToHistory:result.dialog];
+            [weakSelf sendNotificationWithType:QMMessageNotificationTypeCreateDialog toRecipients:occupants chatDialog:result.dialog];
+        }
+        completion(result);
+    }];
+}
+
 - (void)createPrivateChatDialogIfNeededWithOpponent:(QBUUser *)opponent completion:(void(^)(QBChatDialog *chatDialog))completion {
     
     QBChatDialog *dialog = [self.chatDialogsService privateDialogWithOpponentID:opponent.ID];
     
     if (!dialog) {
         
-        NSString *opponentID = [NSString stringWithFormat:@"%d", opponent.ID];
+        NSArray *occupants = @[opponent];
+        NSArray *occupantsIDS = [self idsWithUsers:occupants];
         
         QBChatDialog *chatDialog = [[QBChatDialog alloc] init];
         chatDialog.type = QBChatDialogTypePrivate;
-        chatDialog.occupantIDs =  @[opponentID];
+        chatDialog.occupantIDs = occupantsIDS;
         
-        __weak __typeof(self)weakSelf = self;
-        [self.chatDialogsService createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
-            
-            if ([weakSelf checkResult:result]) {
-                [weakSelf.chatDialogsService addDialogToHistory:result.dialog];
-            }
-            
+        [self createChatDialog:chatDialog occupants:occupantsIDS completion:^(QBChatDialogResult *result) {
             completion(result.dialog);
-            
         }];
         
     } else {
@@ -61,44 +68,32 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     }
 }
 
-- (void)createGroupChatDialogWithName:(NSString *)name ocupants:(NSArray *)ocupants completion:(QBChatDialogResultBlock)completion {
+- (void)createGroupChatDialogWithName:(NSString *)name occupants:(NSArray *)occupants completion:(QBChatDialogResultBlock)completion {
     
-    NSMutableArray *array = [NSMutableArray arrayWithCapacity:ocupants.count];
-    
-    for (QBUUser *user in ocupants) {
-        [array addObject:[NSString stringWithFormat:@"%d", user.ID]];
-    }
+    NSArray *occupantIDs = [self idsWithUsers:occupants];
     
     QBChatDialog *chatDialog = [[QBChatDialog alloc] init];
     chatDialog.name = name;
-    chatDialog.occupantIDs = array;
+    chatDialog.occupantIDs = occupantIDs;
     chatDialog.type = QBChatDialogTypeGroup;
-
-    __weak __typeof(self)weakSelf = self;
-    [self.chatDialogsService createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
-        
-        if ([weakSelf checkResult:result]) {
-            [weakSelf.chatDialogsService addDialogToHistory:result.dialog];
-            [weakSelf sendNotificationWithType:1 toRecipients:ocupants chatDialog:result.dialog];
-        }
-        completion(result);
-    }];
+    
+    [self createChatDialog:chatDialog occupants:occupants completion:completion];
 }
 
-- (QBChatMessage *)notification:(NSUInteger)type recipient:(QBUUser *)recipient text:(NSString *)text chatDialog:(QBChatDialog *)chatDialog {
+- (QBChatMessage *)notification:(QMMessageNotificationType)type recipient:(QBUUser *)recipient text:(NSString *)text chatDialog:(QBChatDialog *)chatDialog {
     
     QBChatMessage *msg = [QBChatMessage message];
     
     msg.recipientID = recipient.ID;
     msg.text = text;
-    msg.cParamNotificationType = @(type);
-    msg.cParamDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);    
+    msg.cParamNotificationType = type;
+    msg.cParamDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);
     [msg setCustomParametersWithChatDialog:chatDialog];
     
     return msg;
 }
 
-- (void)sendNotificationWithType:(NSUInteger)type toRecipients:(NSArray *)recipients chatDialog:(QBChatDialog *)chatDialog {
+- (void)sendNotificationWithType:(QMMessageNotificationType)type toRecipients:(NSArray *)recipients chatDialog:(QBChatDialog *)chatDialog {
     
     NSString *text = [NSString stringWithFormat:@"%@ created a group conversation", self.currentUser.fullName];
     
@@ -117,26 +112,25 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     chatDialog.name = dialogName;
     
     NSArray *opponentsIDs = [self usersWithIDs:chatDialog.occupantIDs];
-    __weak __typeof(self)weakSelf = self;
-    
-    [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialogResult *result) {
-        
-        [weakSelf sendNotificationWithType:2 toRecipients:opponentsIDs chatDialog:chatDialog];
-        completion(result);
-    }];
+    [self updateChatDialog:chatDialog extendedRequest:extendedRequest recipients:opponentsIDs completion:completion];
 }
 
 - (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
-
+    
     NSArray *opponentsIDs = [self idsWithUsers:occupants];
     NSMutableDictionary *extendedRequest = [[NSMutableDictionary alloc] init];
     extendedRequest[kQMEditDialogExtendedPushOccupantsParameter] = opponentsIDs;
+    
+    [self updateChatDialog:chatDialog extendedRequest:extendedRequest recipients:opponentsIDs completion:completion];
+}
 
+- (void)updateChatDialog:(QBChatDialog *)chatDialog extendedRequest:(NSMutableDictionary *)extendedRequest recipients:(NSArray *)recipients completion:(QBChatDialogResultBlock)completion {
+    
     __weak __typeof(self)weakSelf = self;
     [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialogResult *result) {
-       
+        
         if ([weakSelf checkResult:result]) {
-            [weakSelf sendNotificationWithType:2 toRecipients:occupants chatDialog:chatDialog];
+            [weakSelf sendNotificationWithType:QMMessageNotificationTypeUpdateDialog toRecipients:recipients chatDialog:chatDialog];
         }
         completion(result);
     }];
@@ -171,14 +165,17 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 #pragma mark - Dialogs toos
 
 - (NSArray *)dialogHistory {
+    
     return [self.chatDialogsService dialogHistory];
 }
 
 - (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID {
+    
     return [self.chatDialogsService chatRoomWithRoomJID:roomJID];
 }
 
 - (QBChatDialog *)chatDialogWithID:(NSString *)dialogID {
+    
     return [self.chatDialogsService chatDialogWithID:dialogID];
 }
 

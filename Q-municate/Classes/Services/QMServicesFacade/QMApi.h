@@ -81,7 +81,13 @@
 
 @interface QMApi (ChatDialogs)
 
+/**
+ return cached dialogs
+ 
+ @result array QBChatDialg's
+ */
 - (NSArray *)dialogHistory;
+/**/
 - (NSArray *)allOccupantIDsFromDialogsHistory;
 - (QBChatDialog *)chatDialogWithID:(NSString *)dialogID;
 
@@ -97,7 +103,7 @@
  @param ocupants - Array of QBUUser in chat.
  @result QBChatDialogResult
  */
-- (void)createGroupChatDialogWithName:(NSString *)name ocupants:(NSArray *)ocupants completion:(QBChatDialogResultBlock)completion;
+- (void)createGroupChatDialogWithName:(NSString *)name occupants:(NSArray *)occupants completion:(QBChatDialogResultBlock)completion;
 
 /**
  Create private chat dialog
@@ -132,6 +138,13 @@
 - (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
 
 - (NSUInteger)occupantIDForPrivateChatDialog:(QBChatDialog *)chatDialog;
+
+/**
+ QBChatRoom with roomJID
+ 
+ @param roomJID
+ @result QBChatDialogResult
+ */
 - (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID;
 
 @end
@@ -170,6 +183,12 @@
  */
 - (BOOL)confirmAddContactRequest:(NSUInteger)userID;
 
+/**
+ Reject add to contact list request
+ 
+ @param userID ID of user from which you would like to reject add to contact request
+ @return YES if the request was sent successfully. If not - see log.
+ */
 - (BOOL)rejectAddContactRequest:(NSUInteger)userID;
 
 /**
