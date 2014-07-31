@@ -238,12 +238,7 @@
 }
 
 - (void)applicationWillResignActive {
-    
-    if ([self.chatService logout]) {
-        [self stopServices];
-    } else {
-        NSLog(@"");
-    }
+    [self.chatService logout];
 }
 
 @end
