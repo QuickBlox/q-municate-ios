@@ -49,8 +49,12 @@
             if (dialog) {
                 NSUInteger idx = [self.dialogs indexOfObject:dialog];
                 
-                message.cParamNotificationType.integerValue == 1 ?
-                [weakSelf insertRowAtIndex:idx] : [weakSelf.tableView reloadData];
+                if (message.cParamNotificationType == QMMessageNotificationTypeCreateDialog ) {
+                    [weakSelf insertRowAtIndex:idx];
+                }
+                else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog) {
+                    [weakSelf.tableView reloadData];
+                }
             }
         }];
         

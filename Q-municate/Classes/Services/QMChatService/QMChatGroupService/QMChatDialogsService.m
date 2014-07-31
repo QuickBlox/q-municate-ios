@@ -146,19 +146,17 @@
 }
 
 - (void)updateOrCreateDialogWithMessage:(QBChatMessage *)message {
-    
-#warning FIX FOR ENTERPRISE CLIENT
-    if (message.ID == nil) {
-        return;
-    }
+
     NSAssert(message.cParamDialogID, @"Need update this case");
     
-    if (message.cParamNotificationType.integerValue == 1) {
+    if (message.cParamNotificationType == QMMessageNotificationTypeCreateDialog) {
         
         QBChatDialog *chatDialog = [message chatDialogFromCustomParameters];
         [self addDialogToHistory:chatDialog];
     }
-    else {
+    else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog){
+       // lol
+    }  else {
         
         QBChatDialog *dialog = [self chatDialogWithID:message.cParamDialogID];
         dialog.lastMessageText = message.text;

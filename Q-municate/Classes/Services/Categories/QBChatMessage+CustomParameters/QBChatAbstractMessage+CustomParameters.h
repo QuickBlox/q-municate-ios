@@ -8,15 +8,15 @@
 
 #import <Quickblox/Quickblox.h>
 
-extern NSString const* kQMCustomParameterSaveToHistory;
-extern NSString const* kQMCustomParameterDialogID;
-extern NSString const* kQMCustomParameterDateSent;
-extern NSString const *kQMCustomParameterChatMessageID;
+typedef NS_ENUM(NSUInteger, QMMessageNotificationType) {
+    QMMessageNotificationTypeCreateDialog = 1,
+    QMMessageNotificationTypeUpdateDialog
+};
 
 @interface QBChatAbstractMessage (CustomParameters)
 
 @property (strong, nonatomic) NSString *cParamSaveToHistory;
-@property (strong, nonatomic) NSNumber *cParamNotificationType;
+@property (assign, nonatomic) QMMessageNotificationType cParamNotificationType;
 @property (strong, nonatomic) NSString *cParamChatMessageID;
 @property (strong, nonatomic) NSNumber *cParamDateSent;
 
