@@ -69,15 +69,19 @@ const NSUInteger kQMMinPasswordLenght = 7;
 - (IBAction)pressChangeButton:(id)sender {
     
     NSString *oldPassword = self.settingsManager.password;
-    
     NSString *confirmOldPassword = self.oldPasswordTextField.text;
     NSString *newPassword = self.passwordTextField.text;
     
     if (newPassword.length < kQMMinPasswordLenght) {
         [REAlertView showAlertWithMessage:kAlertBodyPasswordIsShortString actionSuccess:NO];
-    } else if (![oldPassword isEqualToString:confirmOldPassword]) {
+    }
+    else if (![oldPassword isEqualToString:confirmOldPassword]) {
         [REAlertView showAlertWithMessage:kAlertBodyPasswDoesNotMatchString actionSuccess:NO];
-    } else{
+    }
+    else if (newPassword.length == 0 || confirmOldPassword.length == 0){
+        [REAlertView showAlertWithMessage:kAlertBodyFillInAllFieldsString actionSuccess:NO];
+    }
+    else {
         [self updatePassword:oldPassword newPassword:newPassword];
     }
 }

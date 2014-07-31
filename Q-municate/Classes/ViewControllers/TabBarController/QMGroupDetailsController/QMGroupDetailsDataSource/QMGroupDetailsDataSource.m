@@ -26,6 +26,11 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
 
 @implementation QMGroupDetailsDataSource
 
+- (void)dealloc {
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    [[QMChatReceiver instance] unsubscribeForTarget:self];
+}
+
 - (id)initWithChatDialog:(QBChatDialog *)chatDialog tableView:(UITableView *)tableView {
 
     if (self = [super init]) {

@@ -114,13 +114,7 @@
 }
 
 - (void)setBalloonImage:(UIImage *)balloonImage {
-    
     self.balloonImageView.image = balloonImage;
-}
-
-- (void)setBalloonTintColor:(UIColor *)balloonTintColor {
-    
-    self.messageContainer.tintColor = balloonTintColor;
 }
 
 - (void)createConstrains {

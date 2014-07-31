@@ -36,6 +36,7 @@ static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
 
 - (void)dealloc {
     NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    [[QMChatReceiver instance] unsubscribeForTarget:self];
 }
 
 - (instancetype)initWithTableView:(UITableView *)tableView {

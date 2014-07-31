@@ -44,23 +44,31 @@
 
 - (IBAction)sendButtonClicked:(id)sender {
 
-    @weakify(self)
+    __weak __typeof(self)weakSelf = self;
     void (^inviteWithEmail)(void) =^{
         
-        [self checkListDidchangeCount:0];
-        NSArray *abEmails = [self.dataSource emailsToInvite];
+        NSArray *abEmails = [weakSelf.dataSource emailsToInvite];
         if (abEmails.count > 0) {
             
             [REMailComposeViewController present:^(REMailComposeViewController *mailVC) {
-                @strongify(self)
+
                 [mailVC setToRecipients:abEmails];
                 [mailVC setSubject:kMailSubjectString];
                 [mailVC setMessageBody:kMailBodyString isHTML:YES];
-                [self presentViewController:mailVC animated:YES completion:nil];
+                [weakSelf presentViewController:mailVC animated:YES completion:nil];
                 
             } finish:^(MFMailComposeResult result, NSError *error) {
-                [self.dataSource clearABFriendsToInvite];
-                !error ? [self.dataSource clearFBFriendsToInvite] : [SVProgressHUD showErrorWithStatus:error.localizedDescription];
+                
+                if (!error && result != MFMailComposeResultFailed && result != MFMailComposeResultCancelled) {
+
+                    [weakSelf.dataSource clearABFriendsToInvite];
+                    [weakSelf.dataSource clearFBFriendsToInvite];
+                }
+                else {
+                    if (result == MFMailComposeResultFailed && !error) {
+                        [SVProgressHUD showErrorWithStatus:@"Please check your email settings"];
+                    }
+                }
             }];
         }
     };
@@ -71,11 +79,11 @@
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         
         [[QMApi instance] fbInviteUsersWithIDs:fbIDs copmpletion:^(NSError *error) {
-            @strongify(self)
+
             if (error) {
                 [SVProgressHUD showErrorWithStatus:error.localizedDescription];
             }else {
-                [self.dataSource clearFBFriendsToInvite];
+                [weakSelf.dataSource clearFBFriendsToInvite];
                 [SVProgressHUD showSuccessWithStatus:kAlertBodyRecordPostedString];
             }
             inviteWithEmail();
@@ -108,7 +116,7 @@
 
 #pragma mark - QMCheckBoxStatusDelegate
 
-- (void)checkListDidchangeCount:(NSInteger)checkedCount
+- (void)checkListDidChangeCount:(NSInteger)checkedCount
 {
       [self changeSendButtonEnableForCheckedUsersCount:checkedCount];
 }

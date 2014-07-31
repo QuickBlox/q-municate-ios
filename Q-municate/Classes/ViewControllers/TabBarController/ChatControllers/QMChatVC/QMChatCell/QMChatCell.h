@@ -24,7 +24,6 @@
 - (void)setUser:(QBUUser *)user isMe:(BOOL)isMe;
 
 - (void)setBalloonImage:(UIImage *)balloonImage;
-- (void)setBalloonTintColor:(UIColor *)balloonTintColor;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
 - (void)createContainerSubviews;
 - (NSDateFormatter *)formatter;

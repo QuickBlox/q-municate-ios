@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIImageView+WebCache.h"
+#import "SDWebImageManager.h"
 
 typedef NS_ENUM(NSUInteger, QMImageViewType) {
     QMImageViewTypeNone,
@@ -20,5 +20,9 @@ typedef NS_ENUM(NSUInteger, QMImageViewType) {
  Default QMUserImageViewType QMUserImageViewTypeNone
  */
 @property (assign, nonatomic) QMImageViewType imageViewType;
+
+- (void)sd_setImage:(UIImage *)image withKey:(NSString *)key;
+- (void)sd_setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placehoderImage;
+- (void)sd_setImageWithURL:(NSURL *)url progress:(SDWebImageDownloaderProgressBlock)progress placeholderImage:(UIImage *)placehoderImage;
 
 @end

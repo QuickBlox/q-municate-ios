@@ -22,7 +22,6 @@
 
 - (void)start {
     
-    NSLog(@"\n____________________________\nSTART AV Call Service\n____________________________");
     __weak typeof(self) weakSelf = self;
     // incoming call signal:
     [[QMChatReceiver instance] chatDidReceiveCallRequestCustomParametesrWithTarget:self block:^(NSUInteger userID, NSString *sessionID, enum QBVideoChatConferenceType conferenceType, NSDictionary *customParameters) {
@@ -43,7 +42,7 @@
 }
 
 - (void)destroy {
-     NSLog(@"\n____________________________\nSTART AV Call Service\n____________________________");
+
     [[QMChatReceiver instance] unsubscribeForTarget:self];
 }
 

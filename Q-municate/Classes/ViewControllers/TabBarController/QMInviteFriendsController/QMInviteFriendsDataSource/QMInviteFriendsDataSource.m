@@ -92,10 +92,10 @@ const NSUInteger kQMNumberOfSection = 2;
 - (void)fetchFacebookFriends:(void(^)(void))completion {
 
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    @weakify(self)
+
+    __weak __typeof(self)weakSelf = self;
     [[QMApi instance] fbFriends:^(NSArray *fbFriends) {
-        @strongify(self)
-        self.fbUsers = fbFriends;
+        weakSelf.fbUsers = fbFriends;
         [SVProgressHUD dismiss];
         if (completion) completion();
     }];
@@ -163,7 +163,7 @@ const NSUInteger kQMNumberOfSection = 2;
     
     NSArray * friendsCollection = [self.fbUsers arrayByAddingObjectsFromArray:self.abUsers];
     [self setCollection:friendsCollection toSection:QMFriendsListSection];
-    [self reloadFriendSectionWithRowAnimation:UITableViewRowAnimationAutomatic];
+    [self reloadFriendSectionWithRowAnimation:UITableViewRowAnimationFade];
 }
 
 #pragma mark - UITableViewDataSource
@@ -311,26 +311,27 @@ const NSUInteger kQMNumberOfSection = 2;
         [self reloadRowPathAtIndexPath:indexPathToReload withRowAnimation:UITableViewRowAnimationNone];
     }
     
-    NSArray *facebookUsersToInvite = self.collections[[self keyAtSection:QMFBFriendsToInviteSection]];
-    NSArray *addressBookFriendsToInvite = self.collections [[self keyAtSection:QMABFriendsToInviteSection]];
-    [self.checkBoxDelegate checkListDidchangeCount:([facebookUsersToInvite count] + [addressBookFriendsToInvite count])];
+    [self checkListDidChange];
 }
 
 - (void)clearABFriendsToInvite  {
     [self setCollection:@[].mutableCopy toSection:QMABFriendsToInviteSection];
     [self.tableView reloadData];
+    [self checkListDidChange];
 }
 
 - (void)clearFBFriendsToInvite {
     [self setCollection:@[].mutableCopy toSection:QMFBFriendsToInviteSection];
     [self.tableView reloadData];
+    [self checkListDidChange];
 }
 
-
-#pragma mark - QMCheckBoxStatusDelegate
-
-- (void)checkListDidchangeCount:(NSInteger)checkedCount { }
-
+- (void)checkListDidChange {
+    
+    NSArray *facebookUsersToInvite = self.collections[[self keyAtSection:QMFBFriendsToInviteSection]];
+    NSArray *addressBookFriendsToInvite = self.collections [[self keyAtSection:QMABFriendsToInviteSection]];
+    [self.checkBoxDelegate checkListDidChangeCount:(facebookUsersToInvite.count + addressBookFriendsToInvite.count)];
+}
 
 #pragma mark - Public methods
 #pragma mark Invite Data

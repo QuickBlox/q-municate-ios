@@ -10,6 +10,8 @@
 #import "QMChatLayoutConfigs.h"
 #import "NSString+UsedSize.h"
 #import "UIColor+Hex.h"
+#import "SDImageCache.h"
+#import "UIImage+TintColor.h"
 
 typedef NS_ENUM(NSUInteger, QMChatNotificationsType) {
     
@@ -29,6 +31,7 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
 @end
 
 @implementation QMMessage
+
 
 - (instancetype)initWithChatHistoryMessage:(QBChatHistoryMessage *)historyMessage {
     
@@ -131,11 +134,15 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
     
     QMChatBalloon balloon = [self balloonSettings];
     
-    NSString *imageName = balloon.imageName;
-    UIImage *balloonImage = [UIImage imageNamed:imageName];
+    UIImage *balloonImage = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:balloon.imageName];
     
-    balloonImage = [balloonImage resizableImageWithCapInsets:balloon.imageCapInsets];
-    balloonImage = [balloonImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    if (!balloonImage) {
+        
+        balloonImage = [UIImage imageNamed:balloon.imageName];
+        balloonImage = [balloonImage tintImageWithColor:self.balloonColor];
+        balloonImage = [balloonImage resizableImageWithCapInsets:balloon.imageCapInsets];
+        [[SDImageCache sharedImageCache]  storeImage:balloonImage forKey:balloon.imageName toDisk:NO];
+    }
 
     return balloonImage;
 }
