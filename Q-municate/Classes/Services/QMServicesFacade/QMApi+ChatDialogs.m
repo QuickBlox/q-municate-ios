@@ -87,7 +87,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     msg.recipientID = recipient.ID;
     msg.text = text;
     msg.cParamNotificationType = type;
-    msg.cParamDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);    
+    msg.cParamDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);
     [msg setCustomParametersWithChatDialog:chatDialog];
     
     return msg;

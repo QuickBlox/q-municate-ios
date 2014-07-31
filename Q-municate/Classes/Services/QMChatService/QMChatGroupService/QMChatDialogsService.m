@@ -131,14 +131,14 @@
 
 - (void)updateChatDialogWithChatMessage:(QBChatMessage *)chatMessage {
     
-    QBChatDialog *dialog = self.dialogs[chatMessage.cParamRoomJID];
+    QBChatDialog *dialog = self.dialogs[chatMessage.cParamDialogID];
     if (dialog == nil) {
         NSAssert(!dialog, @"Dialog you are looking for not found.");
         return;
     }
     
     dialog.name = chatMessage.cParamDialogName;
-    dialog.occupantIDs = [chatMessage.cParamDialogOccupantsIDs componentsSeparatedByString:@", "];
+    dialog.occupantIDs = [chatMessage.cParamDialogOccupantsIDs componentsSeparatedByString:@","];
 }
 
 - (void)updateOrCreateDialogWithMessage:(QBChatMessage *)message {
