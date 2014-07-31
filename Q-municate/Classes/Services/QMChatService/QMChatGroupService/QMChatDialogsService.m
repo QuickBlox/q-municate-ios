@@ -32,10 +32,6 @@
     [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
         [weakSelf updateOrCreateDialogWithMessage:message];
     }];
-    
-    [[QMChatReceiver instance] chatRoomDidCreateWithTarget:self block:^(NSString *roomName) {
-        NSLog(@"chatRoomDidCreateWithTarget");
-    }];
 }
 
 - (void)destroy {
@@ -156,6 +152,9 @@
     }
     else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog){
        // lol
+        [self updateChatDialogWithChatMessage:message];
+        
+        
     }  else {
         
         QBChatDialog *dialog = [self chatDialogWithID:message.cParamDialogID];
