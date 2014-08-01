@@ -49,7 +49,8 @@ NSString *const kQMDefaultImageName = @"image";
     NSData *data = UIImagePNGRepresentation(image);
     [self uploadData:data fileName:@"image"
          contentType:@"image/png"
-            isPublic:YES progress:progress
+            isPublic:YES
+            progress:progress
           completion:completion];
 }
 

@@ -19,6 +19,12 @@
 @class QMChatReceiver;
 @class QMContentService;
 
+typedef NS_ENUM(NSUInteger, QMAuthState) {
+    QMAuthStateNone,
+    QMAuthStateInProgress,
+    QMAuthStateDone
+};
+
 @interface QMApi : NSObject
 
 @property (strong, nonatomic, readonly) QMAuthService *authService;
@@ -31,20 +37,29 @@
 @property (strong, nonatomic, readonly) QMMessagesService *messagesService;
 @property (strong, nonatomic, readonly) QMChatReceiver *responceService;
 @property (strong, nonatomic, readonly) QMContentService *contentService;
-@property (strong, atomic) QBUUser *currentUser;
+
+@property (strong, nonatomic) QBUUser *currentUser;
 
 + (instancetype)instance;
+
+- (BOOL)logoutChat;
+- (BOOL)loginChatWithUser:(QBUUser *)user completion:(QBChatResultBlock)block;
 
 - (void)fetchAllHistory:(void(^)(void))completion;
 - (BOOL)checkResult:(Result *)result;
 
+- (void)applicationDidBecomeActive:(void(^)(BOOL success))completion;
+- (void)applicationWillResignActive;
+
 - (void)startServices;
 - (void)stopServices;
-
 
 @end
 
 @interface QMApi (Auth)
+
+- (void)setAutoLogin:(BOOL)autologin;
+- (void)autoLogin:(void(^)(BOOL success))completion;
 
 /**
  User LogIn with facebook
@@ -52,16 +67,12 @@
  Type of Result - QBUUserLogInResult
  @return completion stastus
  */
-
-- (void)setAutoLogin:(BOOL)autologin;
-- (void)loginWithFacebook:(void(^)(BOOL success))completion;
-- (void)loginWithUser:(QBUUser *)user completion:(void(^)(BOOL success))complition;
 - (void)signUpAndLoginWithUser:(QBUUser *)user completion:(void(^)(BOOL success))completion;
-/*logout*/
+- (void)loginWithEmail:(NSString *)email password:(NSString *)password completion:(void(^)(BOOL success))completion;
+- (void)loginWithFacebook:(void(^)(BOOL success))completion;
 - (void)resetUserPassordWithEmail:(NSString *)email completion:(void(^)(BOOL success))completion;
-- (void)logout:(void(^)(BOOL success))success;
-- (void)applicationDidBecomeActive:(void(^)(BOOL success))completion;
-- (void)applicationWillResignActive;
+- (void)autorizeOnQuickbloxChat:(void(^)(BOOL success))completion;
+- (void)logout;
 
 @end
 
@@ -244,5 +255,11 @@
 - (void)acceptCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView;
 - (void)rejectCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView;
 - (void)finishCall;
+
+@end
+
+@interface NSObject(CurrentUser)
+
+@property (strong, nonatomic) QBUUser *currentUser;
 
 @end

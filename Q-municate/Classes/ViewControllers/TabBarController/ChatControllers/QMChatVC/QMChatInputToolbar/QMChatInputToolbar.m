@@ -52,7 +52,7 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
                                    PVRightOf(contentView).equalTo.rightOf(self).asConstraint,
                                    ]).asArray];
     
-    [self setNeedsUpdateConstraints];
+    [self updateConstraintsIfNeeded];
     
     _contentView = contentView;
     
@@ -62,6 +62,11 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
 }
 
 #pragma mark - Actions
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+}
 
 - (void)leftBarButtonPressed:(UIButton *)sender {
     

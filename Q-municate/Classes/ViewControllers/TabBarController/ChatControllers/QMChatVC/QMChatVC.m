@@ -117,6 +117,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     self.inputToolBar = [[QMChatInputToolbar alloc] init];
+    
     [self configureInputView];
     
     self.inputToolBar.delegate = self;

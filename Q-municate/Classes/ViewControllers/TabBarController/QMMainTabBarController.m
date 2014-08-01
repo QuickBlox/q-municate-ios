@@ -7,11 +7,8 @@
 //
 
 #import "QMMainTabBarController.h"
-#import "QMSplashViewController.h"
-#import "QMIncomingCallHandler.h"
-#import "QMAuthService.h"
-#import "QMUsersService.h"
-#import "QMChatService.h"
+#import "SVProgressHUD.h"
+#import "QMApi.h"
 
 @interface QMMainTabBarController ()
 
@@ -25,6 +22,16 @@
 
     [self customizeTabBar];
     [self.navigationController setNavigationBarHidden:YES animated:NO];
+
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    __weak __typeof(self)weakSelf = self;
+    [[QMApi instance] autoLogin:^(BOOL success) {
+        [[QMApi instance] loginChatWithUser:weakSelf.currentUser completion:^(BOOL success) {
+            [[QMApi instance] fetchAllHistory:^{
+                [SVProgressHUD dismiss];
+            }];
+        }];
+    }];
 }
 
 - (void)didReceiveMemoryWarning {

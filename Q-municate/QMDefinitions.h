@@ -179,6 +179,4 @@ static NSString *const kSettingsProfileMessageWarningString	= @"This field could
 static NSString *const kSettingsProfileTextViewMessageWarningString	= @"This field could not be more then 43 characters!";
 
 
-
-
 #endif

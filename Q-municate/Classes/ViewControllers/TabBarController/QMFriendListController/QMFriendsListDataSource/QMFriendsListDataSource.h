@@ -7,14 +7,9 @@
 //
 
 
-@interface QMFriendsListDataSource : NSObject <UITableViewDataSource>
+@interface QMFriendsListDataSource : NSObject <UITableViewDataSource, UISearchDisplayDelegate>
 
-@property (weak, nonatomic, readonly) UITableView *tableView;
-@property (strong, nonatomic) NSString *searchText;
-@property (assign, nonatomic) BOOL searchActive;
-
-- (instancetype)initWithTableView:(UITableView *)tableView;
-- (void)globalSearch;
+- (instancetype)initWithTableView:(UITableView *)tableView searchDisplayController:(UISearchDisplayController *)searchDisplayController;
 - (NSArray *)usersAtSections:(NSUInteger)section;
 - (QBUUser *)userAtIndexPath:(NSIndexPath *)indexPath;
 

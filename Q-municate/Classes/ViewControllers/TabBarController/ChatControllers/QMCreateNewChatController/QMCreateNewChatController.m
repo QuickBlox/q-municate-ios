@@ -49,7 +49,7 @@ NSString *const QMChatViewControllerID = @"QMChatViewController";
             NSMutableArray *controllers = self.navigationController.viewControllers.mutableCopy;
             [controllers removeLastObject];
             [controllers addObject:chatVC];
-            weakSelf.navigationController.viewControllers = controllers;
+            [weakSelf.navigationController setViewControllers:controllers animated:YES];
         }
         
         [SVProgressHUD dismiss];

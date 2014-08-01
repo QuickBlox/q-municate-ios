@@ -185,9 +185,9 @@
 
 - (void)updateUser:(QBUUser *)user image:(UIImage *)image progress:(QMContentProgressBlock)progress completion:(void (^)(BOOL success))completion {
     
-    __weak __typeof(self)weakSelf = self;
-
     __block QBUUser *userInfo = user;
+    __weak __typeof(self)weakSelf = self;
+    
     void (^updateUserProfile)(NSString *) =^(NSString *publicUrl) {
 
         if (!userInfo) {
@@ -211,10 +211,12 @@
 }
 
 - (void)updateUser:(QBUUser *)user imageUrl:(NSURL *)imageUrl progress:(QMContentProgressBlock)progress completion:(void (^)(BOOL success))completion {
+    
+    __weak __typeof(self)weakSelf = self;
     [self.contentService downloadFileWithUrl:imageUrl completion:^(NSData *data) {
         if (data) {
             UIImage *image = [UIImage imageWithData:data];
-            [self updateUser:user image:image progress:progress completion:completion];
+            [weakSelf updateUser:user image:image progress:progress completion:completion];
         }
     }];
 }

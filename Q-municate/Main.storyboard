@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RkR-TS-K9a">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RkR-TS-K9a">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -54,168 +54,101 @@
             </objects>
             <point key="canvasLocation" x="-3940" y="-8365"/>
         </scene>
-        <!--Friend List View Controller - Friends-->
-        <scene sceneID="2Hp-2T-EX5">
+        <!--Friend List View Controller - Contacts-->
+        <scene sceneID="eCC-3Z-35T">
             <objects>
-                <viewController id="sR2-ys-LbL" customClass="QMFriendListViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y20-oY-25X"/>
-                        <viewControllerLayoutGuide type="bottom" id="myK-k2-7mD"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="ZVX-e7-ale">
+                <tableViewController id="w1g-vg-JcU" customClass="QMFriendListViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="c12-D4-BAB">
                         <rect key="frame" x="0.0" y="64" width="320" height="455"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <searchBar contentMode="redraw" placeholder="Search users..." translatesAutoresizingMaskIntoConstraints="NO" id="JZj-Xl-Ka9">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </searchBar>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="EJB-2P-TXn">
-                                <rect key="frame" x="0.0" y="44" width="320" height="411"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="QMNotResultCell" rowHeight="75" id="qNL-nx-YcU" customClass="QMNotResultCell">
-                                        <rect key="frame" x="0.0" y="22" width="320" height="75"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qNL-nx-YcU" id="ie9-bC-tkU">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="74"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="You have no friends yet. Try to search for new friends" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="adS-7C-QVJ">
-                                                    <rect key="frame" x="20" y="15" width="280" height="44"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="notResultLabel" destination="adS-7C-QVJ" id="meb-ox-7Sl"/>
-                                        </connections>
-                                    </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="QMFriendListCell" rowHeight="59" id="lvE-w4-eU2" customClass="QMFriendListCell">
-                                        <rect key="frame" x="0.0" y="97" width="320" height="59"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lvE-w4-eU2" id="bei-1e-cM5">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="58"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="upic-placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="eL1-En-W6S" customClass="QMImageView">
-                                                    <rect key="frame" x="10" y="4" width="50" height="50"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </imageView>
-                                                <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Leonore Cantly" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gcJ-iy-62p">
-                                                    <rect key="frame" x="65" y="10" width="210" height="19"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="online" translatesAutoresizingMaskIntoConstraints="NO" id="5Mq-uu-OCp">
-                                                    <rect key="frame" x="292" y="24" width="12" height="12"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </imageView>
-                                                <label clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Onlineq" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="egi-iq-gNu">
-                                                    <rect key="frame" x="65" y="30" width="210" height="17"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <color key="textColor" red="0.58039218189999997" green="0.58039218189999997" blue="0.58039218189999997" alpha="1" colorSpace="deviceRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <button hidden="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IXw-0K-tKW">
-                                                    <rect key="frame" x="277" y="0.0" width="43" height="59"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <state key="normal" image="add_friend">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="pressAddBtn:" destination="lvE-w4-eU2" eventType="touchUpInside" id="PRH-vJ-dfG"/>
-                                                    </connections>
-                                                </button>
-                                            </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="addToFriendsButton" destination="IXw-0K-tKW" id="yEt-mn-UNM"/>
-                                            <outlet property="descriptionLabel" destination="egi-iq-gNu" id="P1q-bg-neo"/>
-                                            <outlet property="onlineCircle" destination="5Mq-uu-OCp" id="Fgn-E9-mjK"/>
-                                            <outlet property="qmImageView" destination="eL1-En-W6S" id="dJ0-sX-zNJ"/>
-                                            <outlet property="titleLabel" destination="gcJ-iy-62p" id="f3u-Zg-5Vs"/>
-                                        </connections>
-                                    </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="QMSearchGlobalCell" rowHeight="75" id="pc8-JX-xgu" customClass="QMSearchGlobalCell">
-                                        <rect key="frame" x="0.0" y="156" width="320" height="75"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="pc8-JX-xgu" id="7mF-yo-IIT">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="74"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fZz-Q8-Vbc">
-                                                    <rect key="frame" x="17" y="23" width="286" height="46"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <state key="normal" image="globalsearch-btn">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="globalSearch:" destination="sR2-ys-LbL" eventType="touchUpInside" id="Rd2-yw-i5Z"/>
-                                                    </connections>
-                                                </button>
-                                                <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="For more results:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QdE-Fm-eSv">
-                                                    <rect key="frame" x="20" y="2" width="280" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </prototypes>
-                                <connections>
-                                    <outlet property="delegate" destination="sR2-ys-LbL" id="31y-zf-f7R"/>
-                                </connections>
-                            </tableView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="EJB-2P-TXn" firstAttribute="leading" secondItem="ZVX-e7-ale" secondAttribute="leading" id="3Qc-mC-XNU"/>
-                            <constraint firstAttribute="trailing" secondItem="JZj-Xl-Ka9" secondAttribute="trailing" id="CgA-ym-NnL"/>
-                            <constraint firstItem="JZj-Xl-Ka9" firstAttribute="leading" secondItem="ZVX-e7-ale" secondAttribute="leading" id="Cov-Y6-mnS"/>
-                            <constraint firstItem="JZj-Xl-Ka9" firstAttribute="top" secondItem="y20-oY-25X" secondAttribute="bottom" id="GDh-Hc-stu"/>
-                            <constraint firstItem="myK-k2-7mD" firstAttribute="top" secondItem="EJB-2P-TXn" secondAttribute="bottom" id="WJd-Qi-NIm"/>
-                            <constraint firstAttribute="trailing" secondItem="EJB-2P-TXn" secondAttribute="trailing" id="d10-D5-fWE"/>
-                            <constraint firstItem="EJB-2P-TXn" firstAttribute="top" secondItem="JZj-Xl-Ka9" secondAttribute="bottom" id="ndu-Lh-T1S"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" title="Friends" id="2vU-dx-7CX">
-                        <barButtonItem key="rightBarButtonItem" image="topbar_search" id="pQJ-Eg-pSw">
-                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="TCR-af-lm5">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <textInputTraits key="textInputTraits"/>
                             <connections>
-                                <action selector="searchUsers:" destination="sR2-ys-LbL" id="Rku-sQ-u35"/>
+                                <outlet property="delegate" destination="w1g-vg-JcU" id="XnQ-Jy-UvK"/>
                             </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                        </searchBar>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="QMFriendListCell" rowHeight="59" id="Wsq-dQ-OWJ" customClass="QMFriendListCell">
+                                <rect key="frame" x="0.0" y="66" width="320" height="59"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Wsq-dQ-OWJ" id="qnp-92-eYn">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="58"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="upic-placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="2lU-cS-422" customClass="QMImageView">
+                                            <rect key="frame" x="10" y="4" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </imageView>
+                                        <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Leonore Cantly" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rrX-6n-Jom">
+                                            <rect key="frame" x="65" y="10" width="210" height="19"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="online" translatesAutoresizingMaskIntoConstraints="NO" id="fbg-bc-VAz">
+                                            <rect key="frame" x="292" y="24" width="12" height="12"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </imageView>
+                                        <label clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Online" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hlx-en-FNJ">
+                                            <rect key="frame" x="65" y="30" width="210" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" red="0.58039218189999997" green="0.58039218189999997" blue="0.58039218189999997" alpha="1" colorSpace="deviceRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button hidden="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sre-3a-oWK">
+                                            <rect key="frame" x="277" y="0.0" width="43" height="59"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <state key="normal" image="add_friend">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="pressAddBtn:" destination="Wsq-dQ-OWJ" eventType="touchUpInside" id="LJ8-gt-PIG"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="addToFriendsButton" destination="Sre-3a-oWK" id="mx8-AJ-IiF"/>
+                                    <outlet property="descriptionLabel" destination="hlx-en-FNJ" id="I6T-jT-MY2"/>
+                                    <outlet property="onlineCircle" destination="fbg-bc-VAz" id="aNx-Ua-jEq"/>
+                                    <outlet property="qmImageView" destination="2lU-cS-422" id="cg7-5R-Tch"/>
+                                    <outlet property="titleLabel" destination="rrX-6n-Jom" id="DfT-UC-bDc"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="delegate" destination="w1g-vg-JcU" id="pY0-x9-adO"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Contacts" id="K2m-kB-kuX"/>
                     <connections>
-                        <outlet property="searchBar" destination="JZj-Xl-Ka9" id="Os3-nI-Rvq"/>
-                        <outlet property="searchBarTopConstraint" destination="GDh-Hc-stu" id="09Q-nD-LSI"/>
-                        <outlet property="tableView" destination="EJB-2P-TXn" id="pMY-ix-krl"/>
-                        <segue destination="B6O-m1-ZGo" kind="push" identifier="DetailsSegue" id="Zzy-2r-MWB"/>
+                        <outlet property="searchDisplayController" destination="Lrc-4R-CPI" id="d9E-bY-Kui"/>
+                        <segue destination="B6O-m1-ZGo" kind="push" identifier="DetailsSegue" id="g4i-Rf-Ina"/>
                     </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="hKi-bo-eTA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wGV-eg-rMI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController searchResultsTitle="" id="Lrc-4R-CPI" customClass="QMSearchDisplayController">
+                    <connections>
+                        <outlet property="delegate" destination="w1g-vg-JcU" id="dRX-5r-jtc"/>
+                        <outlet property="searchBar" destination="TCR-af-lm5" id="dZc-Ba-sbZ"/>
+                        <outlet property="searchContentsController" destination="w1g-vg-JcU" id="7ef-gF-J7M"/>
+                        <outlet property="searchResultsDataSource" destination="w1g-vg-JcU" id="Ro1-0S-Xmh"/>
+                        <outlet property="searchResultsDelegate" destination="w1g-vg-JcU" id="mSb-Px-5To"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="-2906" y="-9060"/>
+            <point key="canvasLocation" x="-2994" y="-9060"/>
         </scene>
         <!--Friends Details Controller - Details-->
         <scene sceneID="hb9-Nb-dND">
@@ -702,7 +635,7 @@ Line 2</string>
                         <outlet property="profileCell" destination="s2j-cO-Nks" id="lcp-qZ-Xzq"/>
                         <outlet property="pushNotificationSwitch" destination="Z13-Xt-d6J" id="Qh7-iZ-kce"/>
                         <outlet property="versionLabel" destination="lrg-HD-bYB" id="gys-rZ-0kh"/>
-                        <segue destination="BXK-2z-A4J" kind="custom" identifier="SplashSegue" customClass="QMCustomSegue" id="97f-Zx-Ebh"/>
+                        <segue destination="RkR-TS-K9a" kind="custom" identifier="SplashSegue" customClass="QMCustomSegue" id="A42-kR-3SJ"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZv-U7-ZbV" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1432,7 +1365,7 @@ Q-munication by sending them private invitations.</string>
                         </textAttributes>
                     </navigationBar>
                     <connections>
-                        <segue destination="sR2-ys-LbL" kind="relationship" relationship="rootViewController" id="vKv-ax-Hlm"/>
+                        <segue destination="w1g-vg-JcU" kind="relationship" relationship="rootViewController" id="k6Q-mh-FBi"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YGO-uw-laf" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2854,7 +2787,6 @@ Q-munication by sending them private invitations.</string>
         <image name="fb-btn" width="280" height="44"/>
         <image name="fb_btn" width="320" height="60"/>
         <image name="fb_ic" width="30" height="30"/>
-        <image name="globalsearch-btn" width="280" height="44"/>
         <image name="group_placeholder" width="45" height="45"/>
         <image name="ic_info_top" width="21" height="21"/>
         <image name="login-btn" width="280" height="44"/>
@@ -2871,7 +2803,6 @@ Q-munication by sending them private invitations.</string>
         <image name="tb_friends" width="30" height="30"/>
         <image name="tb_invite" width="30" height="30"/>
         <image name="tb_settings" width="30" height="30"/>
-        <image name="topbar_search" width="21" height="21"/>
         <image name="underline" width="1" height="30"/>
         <image name="upic-placeholder" width="64" height="64"/>
         <image name="upic_call" width="132" height="132"/>
@@ -2884,8 +2815,7 @@ Q-munication by sending them private invitations.</string>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="MwZ-5e-1h3"/>
-        <segue reference="qsg-NO-Ors"/>
+        <segue reference="TaC-No-aTb"/>
         <segue reference="IAo-qy-uHQ"/>
         <segue reference="bOV-zd-nKn"/>
         <segue reference="aeV-0O-de3"/>

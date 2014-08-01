@@ -133,22 +133,21 @@
     
     [self.leftBarButtonContainerView addSubview:leftBarButtonItem];
     [self pinAllEdgesOfSubview:leftBarButtonItem ofView:self.leftBarButtonContainerView];
-    [self setNeedsUpdateConstraints];
+    [self updateConstraintsIfNeeded];
     
     _leftBarButtonItem = leftBarButtonItem;
-    [self layoutIfNeeded];
 }
 
 - (void)setLeftBarButtonItemWidth:(CGFloat)leftBarButtonItemWidth {
     
     self.leftBarButtonContainerViewWidthConstraint.constant = leftBarButtonItemWidth;
-    [self setNeedsUpdateConstraints];
+    [self updateConstraintsIfNeeded];
 }
 
 - (void)setLeftBarButtonItemHeight:(CGFloat)leftBarButtonItemheight {
     
     self.leftBarButtonContainerViewWidthConstraint.constant = leftBarButtonItemheight;
-    [self setNeedsUpdateConstraints];
+    [self updateConstraintsIfNeeded];
 }
 
 - (void)setRightBarButtonItem:(UIButton *)rightBarButtonItem {
@@ -171,10 +170,9 @@
     
     [self.rightBarButtonContainerView addSubview:rightBarButtonItem];
     [self pinAllEdgesOfSubview:rightBarButtonItem ofView:self.rightBarButtonContainerView];
-    [self setNeedsUpdateConstraints];
+    [self updateConstraintsIfNeeded];
     
     _rightBarButtonItem = rightBarButtonItem;
-    [self layoutIfNeeded];
 }
 
 - (void)pinAllEdgesOfSubview:(UIView *)subview ofView:(UIView *)view {
@@ -190,13 +188,19 @@
 - (void)setRightBarButtonItemWidth:(CGFloat)rightBarButtonItemWidth {
     
     self.rightBarButtonContainerViewWidthConstraint.constant = rightBarButtonItemWidth;
-    [self setNeedsUpdateConstraints];
+    [self updateConstraintsIfNeeded];
 }
 
 - (void)setRightBarButtonItemHeight:(CGFloat)rightBarButtonItemHeight {
     
     self.rightBarButtonContainerViewWidthConstraint.constant = rightBarButtonItemHeight;
-    [self setNeedsUpdateConstraints];
+    [self updateConstraintsIfNeeded];
+}
+
+- (void)layoutSubviews {
+    
+    [super layoutSubviews];
+    
 }
 
 #pragma mark - Getters

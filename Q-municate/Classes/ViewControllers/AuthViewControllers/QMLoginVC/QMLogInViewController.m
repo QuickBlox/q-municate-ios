@@ -53,22 +53,17 @@
     
     [[QMApi instance] setAutoLogin:self.rememberMeSwitch.on];
     
-    NSString *mailString = self.emailField.text;
-    NSString *passwordString = self.passwordField.text;
+    NSString *mail = self.emailField.text;
+    NSString *password = self.passwordField.text;
     
-    if (mailString.length == 0 || passwordString.length == 0) {
+    if (mail.length == 0 || password.length == 0) {
         [REAlertView showAlertWithMessage:kAlertBodyFillInAllFieldsString actionSuccess:NO];
     }
     else {
 
-        QBUUser *user = [QBUUser user];
-        user.email = mailString;
-        user.password = passwordString;
-
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         __weak __typeof(self)weakSelf = self;
-        [[QMApi instance] loginWithUser:user completion:^(BOOL success) {
-            
+        [[QMApi instance] loginWithEmail:mail password:password completion:^(BOOL success) {
             [SVProgressHUD dismiss];
             if (success) {
                 [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];

@@ -39,20 +39,6 @@
     self.versionLabel.text = appVersion;
 }
 
-- (void)logOut {
-    
-    __weak __typeof(self)weakSelf = self;
-
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [[QMApi instance] logout:^(BOOL success) {
-        
-        [SVProgressHUD dismiss];
-        if (success) {
-            [weakSelf performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
-        }
-    }];
-}
-
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -66,7 +52,8 @@
         [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
             alertView.message = kAlertTitleAreYouSureString;
             [alertView addButtonWithTitle:kAlertButtonTitleLogOutString andActionBlock:^{
-                [weakSelf logOut];
+                [[QMApi instance] logout];
+                [weakSelf performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
             }];
             
             [alertView addButtonWithTitle:kAlertButtonTitleCancelString andActionBlock:^{}];

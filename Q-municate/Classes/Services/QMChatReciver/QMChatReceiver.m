@@ -26,6 +26,14 @@
     return [NSString stringWithFormat:@"target - %@, callback - %@, identfier - %d", self.target, self.callback, self.identifier];
 }
 
+- (BOOL)isEqual:(QMChatHandlerObject *)other {
+    
+    if(other == self || [super isEqual:other] || [self.target isEqual:other.target] || self.identifier == other.identifier){
+        return YES;
+    }
+    return NO;
+}
+
 @end
 
 @interface QMChatReceiver()
@@ -64,28 +72,29 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SUBQUERY(self, $x, $x.identifier == %d).@count != 0", identifier];
     NSArray *result = [allHendlers filteredArrayUsingPredicate:predicate];
     
-    for (NSMutableArray *handlers in result) {
+    for (NSMutableSet *handlers in result) {
     
-        NSMutableArray *toRemove = [NSMutableArray array];
+        NSMutableSet *minusSet = [NSMutableSet set];
         
         for (QMChatHandlerObject *handler in handlers) {
             
             if (handler.identifier == identifier) {
-                [toRemove addObject:handler];
+                [minusSet addObject:handler];
             }
         }
         
-        [handlers removeObjectsInArray:toRemove];
+        [handlers minusSet:minusSet];
+        NSLog(@"");
     }
 }
 
 - (void)subsribeWithTarget:(id)target selector:(SEL)selector block:(id)block {
     
     NSString *key = NSStringFromSelector(selector);
-    NSMutableArray *array = self.handlerList[key];
+    NSMutableSet *handlers = self.handlerList[key];
     
-    if (!array) {
-        array = [NSMutableArray array];
+    if (!handlers) {
+        handlers = [NSMutableSet set];
     }
     
     QMChatHandlerObject *handler = [[QMChatHandlerObject alloc] init];
@@ -94,19 +103,21 @@
     handler.identifier = [target hash];
     
     NSLog(@"Subscirbe:%@", [handler description]);
-    [array addObject:handler];
-    self.handlerList[key] = array;
+    [handlers addObject:handler];
+    self.handlerList[key] = handlers;
 }
 
 - (void)executeBloksWithSelector:(SEL)selector enumerateBloks:(void(^)(id block))enumerateBloks {
     
     NSString *key = NSStringFromSelector(selector);
 
-    NSArray *handlerObjToExecute = self.handlerList[key];
+    NSMutableSet *toExecute = self.handlerList[key];
     
-    for (QMChatHandlerObject *handler in handlerObjToExecute) {
-        NSLog(@"Send %@ notification to %@", key, handler.target);
-        enumerateBloks(handler.callback);
+    for (QMChatHandlerObject *handler in toExecute) {
+        if (handler.callback) {
+            NSLog(@"Send %@ notification to %@", key, handler.target);
+            enumerateBloks(handler.callback);
+        }
     }
 }
 
@@ -120,7 +131,7 @@
 }
 
 - (void)chatDidLogin {
-    
+    NSLog(@"Chat Did login");
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatDidLogin block) {
         block(YES);
     }];
@@ -464,25 +475,6 @@
  
  @param userID ID of uopponent
  @param conferenceType Type of conference. 'QBVideoChatConferenceTypeAudioAndVideo' and 'QBVideoChatConferenceTypeAudio' values are available
- */
-//- (void)chatDidReceiveCallRequestWithTarget:(id)target block:(QMChatDidReceiveCallRequest)block {
-//    [self subsribeWithTarget:target selector:@selector(chatDidReceiveCallRequestFromUser:withSessionID:conferenceType:) block:block];
-//}
-//
-//- (void)chatDidReceiveCallRequestFromUser:(NSUInteger)userID
-//                            withSessionID:(NSString*)sessionID
-//                           conferenceType:(enum QBVideoChatConferenceType)conferenceType {
-//    
-//    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatDidReceiveCallRequest block) {
-//        block(userID, sessionID, conferenceType);
-//    }];
-//}
-
-/**
- Called in case when opponent is calling to you
- 
- @param userID ID of uopponent
- @param conferenceType Type of conference. 'QBVideoChatConferenceTypeAudioAndVideo' and 'QBVideoChatConferenceTypeAudio' values are available
  @param customParameters Custom caller parameters
  */
 - (void)chatDidReceiveCallRequestCustomParametesrWithTarget:(id)target block:(QMChatDidReceiveCallRequestCustomParams)block {
@@ -514,38 +506,6 @@
         block(userID, sessionID, conferenceType, customParameters);
     }];
 }
-
-#pragma mark -
-
-/**
- Called in case when you are calling to user, but hi hasn't answered
- 
- @param userID ID of opponent
- */
-//- (void)chatCallUserDidNotAnswerWithTarget:(id)target block:(QMChatCallUserDidNotAnswer)block {
-//    [self subsribeWithTarget:target selector:@selector(chatCallUserDidNotAnswer:) block:block];
-//}
-//
-//- (void)chatCallUserDidNotAnswer:(NSUInteger)userID {
-//    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallUserDidNotAnswer block) {
-//        block(userID);
-//    }];
-//}
-
-/**
- Called in case when opponent has accepted you call
- 
- @param userID ID of opponent
- */
-//- (void)chatCallDidAcceptWithTarget:(id)target block:(QMChatCallDidAcceptByUser)block {
-//    [self subsribeWithTarget:target selector:@selector(chatCallDidAcceptByUser:) block:block];
-//}
-//
-//- (void)chatCallDidAcceptByUser:(NSUInteger)userID {
-//    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallDidAcceptByUser block) {
-//        block(userID);
-//    }];
-//}
 
 /**
  Called in case when opponent has accepted you call
@@ -598,22 +558,6 @@
  
  @param userID ID of opponent
  @param status Reason of finish call. There are 2 reasons: 1) Opponent did not answer - 'kStopVideoChatCallStatus_OpponentDidNotAnswer'. 2) Opponent finish call with method 'finishCall' - 'kStopVideoChatCallStatus_Manually'
- */
-//- (void)chatCallDidStopWithTarget:(id)target block:(QMChatCallDidStopByUser)block {
-//    [self subsribeWithTarget:target selector:@selector(chatCallDidStopByUser:status:) block:block];
-//}
-//
-//- (void)chatCallDidStopByUser:(NSUInteger)userID status:(NSString *)status {
-//    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallDidStopByUser block) {
-//        block(userID, status);
-//    }];
-//}
-
-/**
- Called in case when opponent has finished call
- 
- @param userID ID of opponent
- @param status Reason of finish call. There are 2 reasons: 1) Opponent did not answer - 'kStopVideoChatCallStatus_OpponentDidNotAnswer'. 2) Opponent finish call with method 'finishCall' - 'kStopVideoChatCallStatus_Manually'
  @param customParameters Custom caller parameters
  */
 - (void)chatCallDidStopCustomParametersWithTarget:(id)target block:(QMChatCallDidStopByUserCustomParams)block {
@@ -653,19 +597,5 @@
         block(userID, sessionID);
     }];
 }
-#pragma mark -
-
-/**
- Called in case when start using TURN relay for video chat (not p2p).
- */
-//- (void)didStartUseTURNForVideoChatWithTarget:(id)target block:(QMDidStartUseTURNForVideoChat)block {
-//    [self subsribeWithTarget:target selector:@selector(didStartUseTURNForVideoChat) block:block];
-//}
-//
-//- (void)didStartUseTURNForVideoChat {
-//    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMDidStartUseTURNForVideoChat block) {
-//        block();
-//    }];
-//}
 
 @end

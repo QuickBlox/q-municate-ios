@@ -12,13 +12,14 @@
 #import "QMFacebookService.h"
 #import "QMAuthService.h"
 #import "QMUsersService.h"
-#import "QMChatService.h"
 #import "QMChatDialogsService.h"
 #import "QMContentService.h"
 #import "QMAVCallService.h"
 #import "QMMessagesService.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMChatReceiver.h"
+
+const NSTimeInterval kQMPresenceTime = 30;
 
 @interface QMApi()
 
@@ -33,23 +34,27 @@
 @property (strong, nonatomic) QMChatReceiver *responceService;
 @property (strong, nonatomic) QMContentService *contentService;
 
+@property (strong, nonatomic) NSTimer *presenceTimer;
+
 @end
 
 @implementation QMApi
 
 + (instancetype)instance {
     
-    static id servicesFacade = nil;
+    static QMApi *servicesFacade = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         servicesFacade = [[self alloc] init];
+        [QBChat instance].delegate = [QMChatReceiver instance];
+        servicesFacade.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:kQMPresenceTime
+                                                                        target:servicesFacade
+                                                                      selector:@selector(sendPresence)
+                                                                      userInfo:nil
+                                                                       repeats:YES];
     });
     
     return servicesFacade;
-}
-
-- (void)dealloc {
-    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (instancetype)init {
@@ -57,7 +62,6 @@
     self = [super init];
     if (self) {
         
-        self.chatService = [[QMChatService alloc] init];
         self.authService = [[QMAuthService alloc] init];
         self.usersService = [[QMUsersService alloc] init];
         self.chatDialogsService = [[QMChatDialogsService alloc] init];
@@ -111,5 +115,60 @@
     return result.success;
 }
 
+- (BOOL)loginChatWithUser:(QBUUser *)user completion:(QBChatResultBlock)block {
+    
+    if (([[QBChat instance] isLoggedIn])) {
+        NSAssert(nil, @"Update this case");
+    }
+    
+    [[QMChatReceiver instance] chatDidLoginWithTarget:self block:block];
+    [[QMChatReceiver instance] chatDidNotLoginWithTarget:self block:block];
+    
+    return [[QBChat instance] loginWithUser:user];
+}
+
+- (BOOL)logoutChat {
+    
+    BOOL success = YES;
+    if ([[QBChat instance] isLoggedIn]) {
+        success = [[QBChat instance] logout];
+    }
+    return success;
+}
+
+#pragma mark - STATUS
+
+- (void)sendPresence {
+    
+    if ([[QBChat instance] isLoggedIn]) {
+        [[QBChat instance] sendPresence];
+    }
+    else if (self.currentUser) {
+        [self loginChatWithUser:self.currentUser completion:nil];
+    }
+}
+
+- (void)applicationDidBecomeActive:(void(^)(BOOL success))completion {
+    
+    if (self.currentUser) {
+        [[QBChat instance] loginWithUser:self.currentUser];
+    }
+}
+
+- (void)applicationWillResignActive {
+    
+    [self logoutChat];
+}
+
+
+@end
+
+@implementation NSObject(CurrentUser)
+
+@dynamic currentUser;
+
+- (QBUUser *)currentUser {
+   return [[QMApi instance] currentUser];
+}
 
 @end

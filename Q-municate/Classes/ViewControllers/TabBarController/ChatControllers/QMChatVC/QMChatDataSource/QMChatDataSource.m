@@ -160,7 +160,6 @@
     [cell setUser:user isMe:isMe];
     cell.message = message;
     
-    
     return cell;
 }
 

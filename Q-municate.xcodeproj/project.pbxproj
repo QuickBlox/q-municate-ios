@@ -55,7 +55,6 @@
 		55A8B095196598A300B5D33B /* QMAuthService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B079196598A300B5D33B /* QMAuthService.m */; };
 		55A8B096196598A300B5D33B /* QMAVCallService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B07D196598A300B5D33B /* QMAVCallService.m */; };
 		55A8B097196598A300B5D33B /* QMChatDialogsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B080196598A300B5D33B /* QMChatDialogsService.m */; };
-		55A8B098196598A300B5D33B /* QMChatService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B082196598A300B5D33B /* QMChatService.m */; };
 		55A8B099196598A300B5D33B /* QMMessagesService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B085196598A300B5D33B /* QMMessagesService.m */; };
 		55A8B09A196598A300B5D33B /* QMFacebookService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B088196598A300B5D33B /* QMFacebookService.m */; };
 		55A8B09E196598A300B5D33B /* QMUsersService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B094196598A300B5D33B /* QMUsersService.m */; };
@@ -98,6 +97,7 @@
 		55CEABA1195DBCFA001A8ED6 /* QMChangePasswordVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB7B195DBCFA001A8ED6 /* QMChangePasswordVC.m */; };
 		55CEABA2195DBCFA001A8ED6 /* QMProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB7E195DBCFA001A8ED6 /* QMProfileViewController.m */; };
 		55CEABA3195DBCFA001A8ED6 /* QMSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB80195DBCFA001A8ED6 /* QMSettingsViewController.m */; };
+		55D25B25198BBF3700443D0C /* QMSearchDisplayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D25B24198BBF3700443D0C /* QMSearchDisplayController.m */; };
 		55D270911940B8D300238D50 /* QMDBStorage+Dialogs.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270111940B8D300238D50 /* QMDBStorage+Dialogs.m */; };
 		55D270921940B8D300238D50 /* QMDBStorage+Messages.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270141940B8D300238D50 /* QMDBStorage+Messages.m */; };
 		55D270931940B8D300238D50 /* QMDBStorage+Users.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270171940B8D300238D50 /* QMDBStorage+Users.m */; };
@@ -321,8 +321,6 @@
 		55A8B07D196598A300B5D33B /* QMAVCallService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAVCallService.m; sourceTree = "<group>"; };
 		55A8B07F196598A300B5D33B /* QMChatDialogsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatDialogsService.h; sourceTree = "<group>"; };
 		55A8B080196598A300B5D33B /* QMChatDialogsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatDialogsService.m; sourceTree = "<group>"; };
-		55A8B081196598A300B5D33B /* QMChatService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatService.h; sourceTree = "<group>"; };
-		55A8B082196598A300B5D33B /* QMChatService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatService.m; sourceTree = "<group>"; };
 		55A8B084196598A300B5D33B /* QMMessagesService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMessagesService.h; sourceTree = "<group>"; };
 		55A8B085196598A300B5D33B /* QMMessagesService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMMessagesService.m; sourceTree = "<group>"; };
 		55A8B087196598A300B5D33B /* QMFacebookService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMFacebookService.h; sourceTree = "<group>"; };
@@ -406,6 +404,8 @@
 		55CEAB7E195DBCFA001A8ED6 /* QMProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMProfileViewController.m; sourceTree = "<group>"; };
 		55CEAB7F195DBCFA001A8ED6 /* QMSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSettingsViewController.h; sourceTree = "<group>"; };
 		55CEAB80195DBCFA001A8ED6 /* QMSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSettingsViewController.m; sourceTree = "<group>"; };
+		55D25B23198BBF3700443D0C /* QMSearchDisplayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSearchDisplayController.h; sourceTree = "<group>"; };
+		55D25B24198BBF3700443D0C /* QMSearchDisplayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSearchDisplayController.m; sourceTree = "<group>"; };
 		55D270101940B8D300238D50 /* QMDBStorage+Dialogs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QMDBStorage+Dialogs.h"; sourceTree = "<group>"; };
 		55D270111940B8D300238D50 /* QMDBStorage+Dialogs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMDBStorage+Dialogs.m"; sourceTree = "<group>"; };
 		55D270131940B8D300238D50 /* QMDBStorage+Messages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QMDBStorage+Messages.h"; sourceTree = "<group>"; };
@@ -968,8 +968,6 @@
 		55A8B07A196598A300B5D33B /* QMChatService */ = {
 			isa = PBXGroup;
 			children = (
-				55A8B081196598A300B5D33B /* QMChatService.h */,
-				55A8B082196598A300B5D33B /* QMChatService.m */,
 				55A8B07B196598A300B5D33B /* QMAVCallService */,
 				55A8B07E196598A300B5D33B /* QMChatGroupService */,
 				55A8B083196598A300B5D33B /* QMMessageService */,
@@ -1408,6 +1406,15 @@
 			path = QMProfileViewController;
 			sourceTree = "<group>";
 		};
+		55D25B22198BBF2100443D0C /* QMSearchDisplayController */ = {
+			isa = PBXGroup;
+			children = (
+				55D25B23198BBF3700443D0C /* QMSearchDisplayController.h */,
+				55D25B24198BBF3700443D0C /* QMSearchDisplayController.m */,
+			);
+			path = QMSearchDisplayController;
+			sourceTree = "<group>";
+		};
 		55D2700D1940B8D300238D50 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
@@ -1684,11 +1691,11 @@
 		55D963A9196430F300A87ECE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				55A8B022196597B400B5D33B /* QMServicesFacade */,
 				5549368719867738007F2CF1 /* QMContentService */,
 				558745151981464A005B1783 /* Categories */,
 				5521401B197FF00900F55373 /* QMIncomingCallHandler */,
 				55202F00196A7EC900307D2C /* QMChatReciver */,
-				55A8B022196597B400B5D33B /* QMServicesFacade */,
 				55A8B077196598A300B5D33B /* QMAuthService */,
 				55A8B07A196598A300B5D33B /* QMChatService */,
 				55A8B086196598A300B5D33B /* QMFacebookService */,
@@ -1795,6 +1802,7 @@
 			children = (
 				6943845F18E42678001E08A9 /* QMMainTabBarController.h */,
 				6943846018E42678001E08A9 /* QMMainTabBarController.m */,
+				55D25B22198BBF2100443D0C /* QMSearchDisplayController */,
 				55BBA75D197327AA0040DB5C /* QMDialogsViewController */,
 				55CEAB12195DBCFA001A8ED6 /* CallControllers */,
 				55CEAB19195DBCFA001A8ED6 /* ChatControllers */,
@@ -2155,6 +2163,7 @@
 				5549368E19867738007F2CF1 /* QMContentService.m in Sources */,
 				69D261501978258000A4104B /* NSString+DateTimeIntervalFormatting.m in Sources */,
 				55A8B06E1965986A00B5D33B /* QMSoundManager.m in Sources */,
+				55D25B25198BBF3700443D0C /* QMSearchDisplayController.m in Sources */,
 				55CEAB8F195DBCFA001A8ED6 /* QMChatDataSource.m in Sources */,
 				55CEAB88195DBCFA001A8ED6 /* QMChatButtonsFactory.m in Sources */,
 				55D270941940B8D300238D50 /* QMDBStorage.m in Sources */,
@@ -2252,7 +2261,6 @@
 				55A8B0761965986A00B5D33B /* REAlertView.m in Sources */,
 				559BDFE719618D3D000588FE /* QMLogInViewController.m in Sources */,
 				693206F11962DFBF00B15EF9 /* QMContentView.m in Sources */,
-				55A8B098196598A300B5D33B /* QMChatService.m in Sources */,
 				55D270C21940B8D300238D50 /* SQLiteMagicalRecordStack.m in Sources */,
 				55D270A81940B8D300238D50 /* NSManagedObjectContext+MagicalRecord.m in Sources */,
 				55CEAB84195DBCFA001A8ED6 /* NSString+HasText.m in Sources */,

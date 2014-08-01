@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import "QMChatService.h"
 #import "QMServiceProtocol.h"
 
 @interface QMAVCallService : NSObject <QMServiceProtocol>

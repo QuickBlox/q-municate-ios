@@ -9,7 +9,6 @@
 #import "QMApi.h"
 #import "QMAuthService.h"
 #import "QMFacebookService.h"
-#import "QMChatService.h"
 #import "QMSettingsManager.h"
 #import "QMUsersService.h"
 
@@ -17,18 +16,30 @@
 
 #pragma mark Public methods
 
-- (void)logout:(void(^)(BOOL success))completion {
+- (void)logout{
     
-    [self.chatService logout];
+    [self logoutChat];
     [self.facebookService logout];
     [self.settingsManager clearSettings];
     [self stopServices];
     self.currentUser = nil;
-    completion(YES);
 }
 
 - (void)setAutoLogin:(BOOL)autologin {
     self.settingsManager.rememberMe = autologin;
+}
+
+- (void)autoLogin:(void(^)(BOOL success))completion {
+    
+    NSString *email = self.settingsManager.login;
+    NSString *password = self.settingsManager.password;
+    [self startServices];
+    // if user with email was remebered:
+    if (email && password) {
+        [self loginWithEmail:email password:password completion:completion];
+    } else {
+        [self loginWithFacebook:completion];
+    }
 }
 
 - (void)loginWithFacebook:(void(^)(BOOL success))completion {
@@ -54,14 +65,6 @@
                         else {
                             [weakSelf setAutoLogin:YES];
                             
-                            void (^autorizeOnQuickBloxChat)(BOOL) = ^(BOOL success) {
-                                
-                                /*Authorize on QuickBlox Chat*/
-                                [weakSelf autorizeOnQuickbloxChat:^(BOOL success) {
-                                    [weakSelf fetchDataOrForce:!success completion:completion];
-                                }];
-                            };
-                            
                             if (weakSelf.currentUser.website.length == 0) {
                                 /*Update user image from facebook */
                                 [weakSelf.facebookService loadMe:^(NSDictionary<FBGraphUser> *user) {
@@ -69,12 +72,12 @@
                                     NSURL *userImageUrl = [weakSelf.facebookService userImageUrlWithUserID:user.id];
                                     [weakSelf updateUser:weakSelf.currentUser imageUrl:userImageUrl progress:^(float progress) {
                                         NSLog(@"Upload user avatar %f", progress);
-                                    } completion:autorizeOnQuickBloxChat];
+                                    } completion:completion];
                                     
                                 }];
                             }
                             else {
-                                autorizeOnQuickBloxChat(successLoginWithFacebook);
+                                completion(YES);
                             }
                         }
                     }];
@@ -98,11 +101,7 @@
                     completion(signUpResult.success);
                 }
                 else {
-                    [weakSelf loginWithEmail:user.email password:user.password completion:^(BOOL success) {
-                        [weakSelf autorizeOnQuickbloxChat:^(BOOL success) {
-                            [weakSelf fetchDataOrForce:!success completion:completion];
-                        }];
-                    }];
+                    [weakSelf loginWithEmail:user.email password:user.password completion:completion];
                 }
             }];
         }
@@ -126,16 +125,7 @@
             completion (success);
         }
         else {
-            [weakSelf loginWithEmail:user.email password:user.password completion:^(BOOL success) {
-                if (!success) {
-                    completion(success);
-                }
-                else {
-                    [weakSelf autorizeOnQuickbloxChat:^(BOOL success) {
-                        [weakSelf fetchDataOrForce:!success completion:completion];
-                    }];
-                }
-            }];
+            [weakSelf loginWithEmail:user.email password:user.password completion:completion];
         }
     }];
 }
@@ -168,6 +158,7 @@
 - (void)logInWithFacebookAccessToken:(NSString *)accessToken completion:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
+    
     [weakSelf.authService logInWithFacebookAccessToken:accessToken completion:^(QBUUserLogInResult *loginWithFBResult) {
         weakSelf.currentUser = loginWithFBResult.user;
         completion([weakSelf checkResult:loginWithFBResult]);
@@ -195,21 +186,16 @@
 - (void)autorizeOnQuickbloxChat:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
-    /*Authorize on QuickBlox Chat*/
-    if (!self.currentUser) {
-        completion(NO);
-    }
-    else {
-        [self.chatService loginWithUser:self.currentUser completion:^(BOOL success) {
-            if (!success) {
-                completion(success);
-            }
-            else {
-                completion(success);
-                [weakSelf subscribeToPushNotificationsIfNeeded];
-            }
-        }];
-    }
+    
+    [self loginChatWithUser:self.currentUser completion:^(BOOL success) {
+        if (!success) {
+            completion(success);
+        }
+        else {
+            completion(success);
+            [weakSelf subscribeToPushNotificationsIfNeeded];
+        }
+    }];
 }
 
 - (void)loginWithEmail:(NSString *)email password:(NSString *)password completion:(void(^)(BOOL success))completion {
@@ -229,16 +215,6 @@
             completion(loginResult.success);
         }
     }];
-}
-
-- (void)applicationDidBecomeActive:(void(^)(BOOL success))completion {
-    
-    [self autorizeOnQuickbloxChat:completion];
-
-}
-
-- (void)applicationWillResignActive {
-    [self.chatService logout];
 }
 
 @end

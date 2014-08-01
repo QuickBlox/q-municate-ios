@@ -14,8 +14,7 @@
 - (void)perform {
     
     UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
-    UINavigationController *navController = (UINavigationController *)window.rootViewController;
-    navController.viewControllers = @[self.destinationViewController];
+    window.rootViewController = self.destinationViewController;
 }
 
 @end

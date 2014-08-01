@@ -59,7 +59,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
         chatDialog.type = QBChatDialogTypePrivate;
         chatDialog.occupantIDs = occupantsIDS;
         
-        [self createChatDialog:chatDialog occupants:occupantsIDS completion:^(QBChatDialogResult *result) {
+        [self createChatDialog:chatDialog occupants:occupants completion:^(QBChatDialogResult *result) {
             completion(result.dialog);
         }];
         

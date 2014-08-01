@@ -110,7 +110,7 @@
 - (NSArray *)dialogHistory {
     
     NSArray *dialogs = [self.dialogs allValues];
-    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"lastMessageDate" ascending:YES];
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"lastMessageDate" ascending:NO];
     dialogs = [dialogs sortedArrayUsingDescriptors:@[sort]];
    
     return dialogs;
