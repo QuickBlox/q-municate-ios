@@ -76,6 +76,11 @@
     return dialog;
 }
 
+- (void)updateChatDialog:(QBChatDialog *)chatDialog
+{
+    self.dialogs[chatDialog.ID] = chatDialog;
+}
+
 - (QBChatDialog *)chatDialogWithID:(NSString *)dialogID {
     return self.dialogs[dialogID];
 }
@@ -149,14 +154,9 @@
         
         QBChatDialog *chatDialog = [message chatDialogFromCustomParameters];
         [self addDialogToHistory:chatDialog];
-    }
-    else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog){
-       // lol
+    } else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog){
         [self updateChatDialogWithChatMessage:message];
-        
-        
     }  else {
-        
         QBChatDialog *dialog = [self chatDialogWithID:message.cParamDialogID];
         dialog.lastMessageText = message.text;
         dialog.unreadMessagesCount++;

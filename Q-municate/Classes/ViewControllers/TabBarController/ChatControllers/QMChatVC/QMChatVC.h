@@ -27,4 +27,6 @@
  *  @param animated Pass `YES` if you want to animate scrolling, `NO` if it should be immediate.
  */
 
+@property (strong, nonatomic) QBChatDialog *dialog;
+
 @end
