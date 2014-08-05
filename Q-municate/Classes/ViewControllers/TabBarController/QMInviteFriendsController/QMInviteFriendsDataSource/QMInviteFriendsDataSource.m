@@ -36,9 +36,6 @@ const CGFloat kQMInviteFriendCellHeight = 60;
 const CGFloat kQMStaticCellHeihgt = 44;
 const NSUInteger kQMNumberOfSection = 2;
 
-
-
-
 @interface QMInviteFriendsDataSource()
 
 <UITableViewDataSource, QMCheckBoxProtocol, QMCheckBoxStateDelegate>

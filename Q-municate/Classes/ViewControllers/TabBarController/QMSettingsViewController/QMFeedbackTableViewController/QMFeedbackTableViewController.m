@@ -13,11 +13,6 @@
 #import "REAlertView+QMSuccess.h"
 #import <SVProgressHUD.h>
 
-static NSString *const kLocalizedFeedbackTypeBugString = @"Bug";
-static NSString *const kLocalizedFeedbackTypeImprovementString = @"Improvement";
-static NSString *const kLocalizedFeedbackTypeSuggestionString = @"Suggestion";
-
-
 @interface QMFeedbackTableViewController ()
 
 @property (nonatomic, strong) NSIndexPath *lastIndexPath;
@@ -33,7 +28,10 @@ static NSString *const kLocalizedFeedbackTypeSuggestionString = @"Suggestion";
     [super viewDidLoad];
     
     // first tapped by default:
-    self.titles = @[kLocalizedFeedbackTypeBugString, kLocalizedFeedbackTypeImprovementString, kLocalizedFeedbackTypeSuggestionString];
+    self.titles = @[NSLocalizedString(@"QM_STR_BUG", nil),
+                    NSLocalizedString(@"QM_STR_IMPROVEMENT", nil),
+                    NSLocalizedString(@"QM_STR_SUGGESTION", nil)];
+    
     self.lastIndexPath = [NSIndexPath indexPathForRow:1 inSection:0];
 }
 
@@ -104,11 +102,11 @@ static NSString *const kLocalizedFeedbackTypeSuggestionString = @"Suggestion";
         
         if (result == MFMailComposeResultSent) {
             
-            [SVProgressHUD showSuccessWithStatus:@"Thanks!"];
+            [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_THANKS", nil)];
             [weakself.navigationController popViewControllerAnimated:YES];
             
         } else if (result == MFMailComposeResultFailed) {
-            [SVProgressHUD showErrorWithStatus:@"Error"];
+            [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_ERROR", nil)];
         }
     }];
 }

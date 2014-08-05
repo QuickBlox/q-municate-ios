@@ -65,7 +65,7 @@
 {
     // stop playing sound:
     [[QMSoundManager shared] stopAllSounds];
-    [self.contentView updateViewWithStatus:kCallConnectingStatus];
+    [self.contentView updateViewWithStatus:NSLocalizedString(@"QM_STR_CONNECTING", nil)];
 }
 
 - (void)callStartedWithUser

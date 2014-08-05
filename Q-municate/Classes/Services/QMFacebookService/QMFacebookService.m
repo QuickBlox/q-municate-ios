@@ -46,7 +46,7 @@ NSString *const kQMDataKey = @"data";
                                  @"caption" : kQMAppName,
                                  @"description" : @"",
                                  @"place":@"155021662189",
-                                 @"message": @"Dear friend, use Q-municate application to reach me! Download it here: http://q-municate.com",
+                                 @"message": NSLocalizedString(@"QM_STR_DEAR_FRIEND", nil),
                                  @"tags" : usersIDs
                                  };
     
@@ -242,7 +242,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
                 // Handle session closures that happen outside of the app
             } else if (errorCategory == FBErrorCategoryAuthenticationReopenSession) {
                 
-                alertText = @"Your current session is no longer valid. Please log in again.";
+                alertText = NSLocalizedString(@"QM_STR_YOUR _SURRENT_SESSION_IS_NO_LONGER_VALID", nil);
                 
                 // For simplicity, here we just show a generic message for all other errors
                 // You can learn how to handle other errors using our guide: https://developers.facebook.com/docs/ios/errors

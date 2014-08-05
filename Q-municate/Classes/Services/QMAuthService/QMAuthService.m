@@ -93,7 +93,7 @@
         completion(result);
     };
     
-    return [QBUsers logInWithSocialProvider:kFacebook
+    return [QBUsers logInWithSocialProvider:@"facebook"
                                 accessToken:accessToken
                           accessTokenSecret:nil
                                    delegate:[QBEchoObject instance]

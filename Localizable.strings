@@ -34,3 +34,10 @@
 "QM_STR_BAD_CONNECTION" = "Bad connection";
 "QM_STR_USER_DOESNT_ANSWER" = "User doesn't answer";
 "QM_STR_CALL_WAS_STOPPED" = "Call was stopped";
+"QM_STR_CONNECTING" = "Connecting...";
+"QM_STR_THANKS" = "Thanks!";
+"QM_STR_BUG" = "Bug";
+"QM_STR_IMPROVEMENT" = "Improvement";
+"QM_STR_SUGGESTION" = "Suggestion";
+"QM_STR_DEAR_FRIEND" = "Dear friend, use Q-municate application to reach me! Download it here: http://q-municate.com";
+"QM_STR_YOUR _SURRENT_SESSION_IS_NO_LONGER_VALID" = "Your current session is no longer valid. Please log in again.";

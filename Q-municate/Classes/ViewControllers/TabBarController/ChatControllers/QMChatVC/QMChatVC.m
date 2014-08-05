@@ -403,7 +403,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
             [self.dataSource sendMessage:text];
             self.showCameraButton = YES;
         }
-        self.inputToolBar.contentView.textView.text = kEmptyString;
+        self.inputToolBar.contentView.textView.text = @"";
     }
     else {
         [self presentImagePicker];
