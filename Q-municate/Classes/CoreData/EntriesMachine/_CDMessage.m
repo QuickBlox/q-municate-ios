@@ -1,12 +1,13 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to CDMessages.m instead.
+// Make changes to CDMessage.m instead.
 
-#import "_CDMessages.h"
+#import "_CDMessage.h"
 
-const struct CDMessagesAttributes CDMessagesAttributes = {
+const struct CDMessageAttributes CDMessageAttributes = {
 	.customParameters = @"customParameters",
 	.datetime = @"datetime",
 	.dialogId = @"dialogId",
+	.id = @"id",
 	.isRead = @"isRead",
 	.recipientID = @"recipientID",
 	.roomId = @"roomId",
@@ -14,38 +15,37 @@ const struct CDMessagesAttributes CDMessagesAttributes = {
 	.senderNick = @"senderNick",
 	.state = @"state",
 	.text = @"text",
-	.uniqueId = @"uniqueId",
 };
 
-const struct CDMessagesRelationships CDMessagesRelationships = {
+const struct CDMessageRelationships CDMessageRelationships = {
 	.attachments = @"attachments",
 	.chatDialog = @"chatDialog",
 };
 
-const struct CDMessagesFetchedProperties CDMessagesFetchedProperties = {
+const struct CDMessageFetchedProperties CDMessageFetchedProperties = {
 };
 
-@implementation CDMessagesID
+@implementation CDMessageID
 @end
 
-@implementation _CDMessages
+@implementation _CDMessage
 
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription insertNewObjectForEntityForName:@"CDMessages" inManagedObjectContext:moc_];
+	return [NSEntityDescription insertNewObjectForEntityForName:@"CDMessage" inManagedObjectContext:moc_];
 }
 
 + (NSString*)entityName {
-	return @"CDMessages";
+	return @"CDMessage";
 }
 
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription entityForName:@"CDMessages" inManagedObjectContext:moc_];
+	return [NSEntityDescription entityForName:@"CDMessage" inManagedObjectContext:moc_];
 }
 
-- (CDMessagesID*)objectID {
-	return (CDMessagesID*)[super objectID];
+- (CDMessageID*)objectID {
+	return (CDMessageID*)[super objectID];
 }
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
@@ -93,6 +93,13 @@ const struct CDMessagesFetchedProperties CDMessagesFetchedProperties = {
 
 
 @dynamic dialogId;
+
+
+
+
+
+
+@dynamic id;
 
 
 
@@ -218,13 +225,6 @@ const struct CDMessagesFetchedProperties CDMessagesFetchedProperties = {
 
 
 @dynamic text;
-
-
-
-
-
-
-@dynamic uniqueId;
 
 
 

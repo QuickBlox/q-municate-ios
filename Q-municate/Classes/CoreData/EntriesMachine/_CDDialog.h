@@ -6,10 +6,10 @@
 
 extern const struct CDDialogAttributes {
 	__unsafe_unretained NSString *countUnreadMessages;
+	__unsafe_unretained NSString *id;
 	__unsafe_unretained NSString *name;
 	__unsafe_unretained NSString *roomJID;
 	__unsafe_unretained NSString *type;
-	__unsafe_unretained NSString *uniqueId;
 } CDDialogAttributes;
 
 extern const struct CDDialogRelationships {
@@ -20,8 +20,8 @@ extern const struct CDDialogRelationships {
 extern const struct CDDialogFetchedProperties {
 } CDDialogFetchedProperties;
 
-@class CDMessages;
-@class CDUsers;
+@class CDMessage;
+@class CDUser;
 
 
 
@@ -51,6 +51,16 @@ extern const struct CDDialogFetchedProperties {
 - (void)setCountUnreadMessagesValue:(int32_t)value_;
 
 //- (BOOL)validateCountUnreadMessages:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* id;
+
+
+
+//- (BOOL)validateId:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -90,16 +100,6 @@ extern const struct CDDialogFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* uniqueId;
-
-
-
-//- (BOOL)validateUniqueId:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSSet *messages;
 
 - (NSMutableSet*)messagesSet;
@@ -121,13 +121,13 @@ extern const struct CDDialogFetchedProperties {
 
 - (void)addMessages:(NSSet*)value_;
 - (void)removeMessages:(NSSet*)value_;
-- (void)addMessagesObject:(CDMessages*)value_;
-- (void)removeMessagesObject:(CDMessages*)value_;
+- (void)addMessagesObject:(CDMessage*)value_;
+- (void)removeMessagesObject:(CDMessage*)value_;
 
 - (void)addOccupants:(NSSet*)value_;
 - (void)removeOccupants:(NSSet*)value_;
-- (void)addOccupantsObject:(CDUsers*)value_;
-- (void)removeOccupantsObject:(CDUsers*)value_;
+- (void)addOccupantsObject:(CDUser*)value_;
+- (void)removeOccupantsObject:(CDUser*)value_;
 
 @end
 
@@ -139,6 +139,12 @@ extern const struct CDDialogFetchedProperties {
 
 - (int32_t)primitiveCountUnreadMessagesValue;
 - (void)setPrimitiveCountUnreadMessagesValue:(int32_t)value_;
+
+
+
+
+- (NSString*)primitiveId;
+- (void)setPrimitiveId:(NSString*)value;
 
 
 
@@ -160,12 +166,6 @@ extern const struct CDDialogFetchedProperties {
 
 - (int16_t)primitiveTypeValue;
 - (void)setPrimitiveTypeValue:(int16_t)value_;
-
-
-
-
-- (NSString*)primitiveUniqueId;
-- (void)setPrimitiveUniqueId:(NSString*)value;
 
 
 

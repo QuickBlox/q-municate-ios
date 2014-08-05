@@ -10,6 +10,8 @@
 #import "QMInviteFriendCell.h"
 #import "QMApi.h"
 
+NSString *const kCreateChatCellIdentifier = @"CreateChatCell";
+
 @interface QMAddUsersAbstractController ()
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *resetButton;

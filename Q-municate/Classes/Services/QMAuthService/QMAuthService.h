@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "QMBaseService.h"
 
+typedef void (^QBUUserResultBlock)(QBUUserResult *result);
+
 @interface QMAuthService : QMBaseService
 
 #pragma mark - Authorization

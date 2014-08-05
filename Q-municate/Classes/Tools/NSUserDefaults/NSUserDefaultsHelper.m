@@ -84,7 +84,7 @@ inline void defReset() {
 	}
 }
 
-#pragma private
+#pragma mark
 
 inline void defaultsPostNotification(NSString *key) {
     

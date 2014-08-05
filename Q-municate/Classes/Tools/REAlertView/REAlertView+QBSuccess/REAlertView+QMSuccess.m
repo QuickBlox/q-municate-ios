@@ -13,9 +13,9 @@
 + (void)showAlertWithMessage:(NSString *)messageString actionSuccess:(BOOL)success {
     
     [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-        alertView.title = success ? kAlertTitleSuccessString : kAlertTitleErrorString;
+        alertView.title = success ? NSLocalizedString(@"QM_STR_SUCCESS", nil) : NSLocalizedString(@"QM_STR_ERROR", nil);
         alertView.message = messageString;
-        [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{}];
+        [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_OK", nil) andActionBlock:^{}];
     }];
 }
 

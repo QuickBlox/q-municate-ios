@@ -42,10 +42,9 @@
 }
 
 - (void)setContactlistItem:(QBContactListItem *)contactlistItem {
-
+    
     if (contactlistItem) {
-        NSString *status = (contactlistItem.online) ?  kStatusOnlineString : kStatusOfflineString;
-        self.descriptionLabel.text = status;
+        self.descriptionLabel.text = NSLocalizedString(contactlistItem.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
     }
 }
 
@@ -54,13 +53,13 @@
     self.titleLabel.text = [NSString stringWithFormat:@"%@ %@", user.first_name, user.last_name];
     NSURL *url = [[QMApi instance] fbUserImageURLWithUserID:user.id];
     [self setUserImageWithUrl:url];
-    self.descriptionLabel.text = @"Facebook";
+    self.descriptionLabel.text = NSLocalizedString(@"QM_STR_FACEBOOK", nil);
 }
 
 - (void)configureWithAdressaddressBookUser:(ABPerson *)addressBookUser {
     
     self.titleLabel.text = addressBookUser.fullName;
-    self.descriptionLabel.text = @"Contact list";
+    self.descriptionLabel.text = NSLocalizedString(@"QM_STR_CONTACT_LIST", nil);
     
     UIImage *image = addressBookUser.image;
     [self setUserImage:image withKey:addressBookUser.fullName];

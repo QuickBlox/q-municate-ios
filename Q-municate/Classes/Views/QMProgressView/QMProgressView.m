@@ -66,7 +66,7 @@
     return (CAGradientLayer*)self.layer;
 }
 
-#pragma  configuration
+#pragma mark -  configuration
 
 - (void)commonInit {
     
@@ -203,6 +203,7 @@
     return @[[NSNumber numberWithFloat:rescaledProgress], [NSNumber numberWithFloat:rescaledProgress]];
 }
 
+
 - (CGFloat)gradientOrientationAngle {
     
     // map-inverse the points because Apple is using (0,0) at the top-left origin
@@ -212,7 +213,7 @@
     CGFloat dx = s.x - e.x,
     dy = s.y - e.y;
     
-    if (dx == 0) {
+    if (dx == 0.f) {
         return M_PI_2;
     }
     
@@ -427,7 +428,7 @@
     yaw *= -1;      // reverse the angle so that it reflect a *liquid-like* behavior
     yaw += M_PI_2;  // because for the motion manager 0 is the calibration value (but for us 0 is the horizontal axis)
     
-    if (self.motionLastYaw == 0) {
+    if (self.motionLastYaw == 0.f) {
         self.motionLastYaw = yaw;
     }
     

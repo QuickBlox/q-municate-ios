@@ -66,7 +66,8 @@
                 }
                 else {
                     if (result == MFMailComposeResultFailed && !error) {
-                        [SVProgressHUD showErrorWithStatus:@"Please check your email settings"];
+                        
+                        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_PLEASE_CHECK_YOUR_EMAIL_SETTINGS", nil)];
                     }
                 }
             }];
@@ -84,7 +85,8 @@
                 [SVProgressHUD showErrorWithStatus:error.localizedDescription];
             }else {
                 [weakSelf.dataSource clearFBFriendsToInvite];
-                [SVProgressHUD showSuccessWithStatus:kAlertBodyRecordPostedString];
+
+                [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_INVITATION_WAS_POSTED_TO_WALL", nil)];
             }
             inviteWithEmail();
         }];
@@ -116,8 +118,7 @@
 
 #pragma mark - QMCheckBoxStatusDelegate
 
-- (void)checkListDidChangeCount:(NSInteger)checkedCount
-{
+- (void)checkListDidChangeCount:(NSInteger)checkedCount {
       [self changeSendButtonEnableForCheckedUsersCount:checkedCount];
 }
 

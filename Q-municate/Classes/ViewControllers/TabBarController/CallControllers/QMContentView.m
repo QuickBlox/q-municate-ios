@@ -50,7 +50,7 @@
     NSURL *url = [NSURL URLWithString:user.website];
     [self.avatarView sd_setImageWithURL:url placeholderImage:placeholder];
     self.fullNameLabel.text = user.fullName;
-    self.statusLabel.text = @"Calling...";
+    self.statusLabel.text = NSLocalizedString(@"QM_STR_CALLING", nil);
     
     [self layoutSubviews];
 }

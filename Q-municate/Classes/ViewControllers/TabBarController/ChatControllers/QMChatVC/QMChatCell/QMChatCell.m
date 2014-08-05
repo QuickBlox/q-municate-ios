@@ -259,16 +259,15 @@
     }
 }
 
-static NSDateFormatter *_dateFormatter = nil;
-
 - (NSDateFormatter *)formatter {
-    
-    if (!_dateFormatter) {
-        
+
+    static dispatch_once_t onceToken;
+    static NSDateFormatter *_dateFormatter = nil;
+    dispatch_once(&onceToken, ^{
         _dateFormatter = [[NSDateFormatter alloc] init];
         [_dateFormatter setDateFormat:@"HH:mm"];
-    }
-    
+    });
+
     return _dateFormatter;
 }
 

@@ -10,6 +10,7 @@
 #import "QMVideoCallController.h"
 #import "QMChatViewController.h"
 #import "QMImageView.h"
+#import "QMAlertsFactory.h"
 #import "REAlertView.h"
 #import "SVProgressHUD.h"
 #import "QMApi.h"
@@ -19,7 +20,6 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     QMCallTypeVideo,
     QMCallTypeAudio,
     QMCallTypeChat
-    
 };
 
 @interface QMFriendsDetailsController () <UIActionSheetDelegate>
@@ -52,7 +52,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     
     if (self.selectedUser.phone.length == 0) {
         //        [self cell:self.phoneCell setHidden:YES];
-        [self.phoneLabel setText:@"(none)"];
+        [self.phoneLabel setText:NSLocalizedString(@"QM_STR_NONE", nil)];
     } else {
         self.phoneLabel.text = self.selectedUser.phone;
     }
@@ -72,7 +72,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     
     QBContactListItem *item = [[QMApi instance] contactItemWithUserID:self.selectedUser.ID];
     if (item) { //friend if YES
-        self.status.text = item.online ? kStatusOnlineString : kStatusOfflineString;
+        self.status.text = NSLocalizedString(item.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
         self.onlineCircle.hidden = item.online ? NO : YES;
     }
 }
@@ -102,7 +102,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     }
 }
 
-#define QM_AUDIO_VIDEO_ENABLED 0
+
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -115,23 +115,8 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
         case QMCallTypeVideo:[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil]; break;
         case QMCallTypeAudio: [self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil]; break;
 #else
-        case QMCallTypeVideo: {
-            
-            [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-                alertView.title = @"Coming soon.";
-                [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:nil];
-            }];
-            
-        } break;
-            
-        case QMCallTypeAudio:{
-            
-            [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-                alertView.title = @"Coming soon.";
-                [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:nil];
-            }];
-            
-        } break;
+        case QMCallTypeVideo:
+        case QMCallTypeAudio:[QMAlertsFactory comingSoonAlert]; break;
 #endif
         case QMCallTypeChat: {
             
@@ -158,9 +143,9 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     __weak __typeof(self)weakSelf = self;
     [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
         
-        alertView.title = @"Are you sure?";
-        [alertView addButtonWithTitle:@"Cancel" andActionBlock:^{}];
-        [alertView addButtonWithTitle:@"Delete" andActionBlock:^{
+        alertView.title = NSLocalizedString(@"QM_STR_ARE_YOU_SURE", nil);
+        [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
+        [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil) andActionBlock:^{
             if ([[QMApi instance] removeUserFromContactListWithUserID:weakSelf.selectedUser.ID]) {
                 [weakSelf.navigationController popViewControllerAnimated:YES];
             }

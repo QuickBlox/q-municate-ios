@@ -5,10 +5,10 @@
 
 const struct CDDialogAttributes CDDialogAttributes = {
 	.countUnreadMessages = @"countUnreadMessages",
+	.id = @"id",
 	.name = @"name",
 	.roomJID = @"roomJID",
 	.type = @"type",
-	.uniqueId = @"uniqueId",
 };
 
 const struct CDDialogRelationships CDDialogRelationships = {
@@ -26,16 +26,16 @@ const struct CDDialogFetchedProperties CDDialogFetchedProperties = {
 
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription insertNewObjectForEntityForName:@"CDDialogs" inManagedObjectContext:moc_];
+	return [NSEntityDescription insertNewObjectForEntityForName:@"CDDialog" inManagedObjectContext:moc_];
 }
 
 + (NSString*)entityName {
-	return @"CDDialogs";
+	return @"CDDialog";
 }
 
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription entityForName:@"CDDialogs" inManagedObjectContext:moc_];
+	return [NSEntityDescription entityForName:@"CDDialog" inManagedObjectContext:moc_];
 }
 
 - (CDDialogID*)objectID {
@@ -88,6 +88,13 @@ const struct CDDialogFetchedProperties CDDialogFetchedProperties = {
 
 
 
+@dynamic id;
+
+
+
+
+
+
 @dynamic name;
 
 
@@ -123,13 +130,6 @@ const struct CDDialogFetchedProperties CDDialogFetchedProperties = {
 - (void)setPrimitiveTypeValue:(int16_t)value_ {
 	[self setPrimitiveType:[NSNumber numberWithShort:value_]];
 }
-
-
-
-
-
-@dynamic uniqueId;
-
 
 
 

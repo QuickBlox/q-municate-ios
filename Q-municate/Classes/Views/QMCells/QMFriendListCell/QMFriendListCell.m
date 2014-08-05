@@ -30,7 +30,7 @@
     self.addToFriendsButton.hidden = self.isFriend;
     /*isOnlien - NO*/
     self.onlineCircle.hidden = YES;
-    self.descriptionLabel.text = kStatusOfflineString;
+    self.descriptionLabel.text = NSLocalizedString(@"QM_STR_OFFLINE", nil);
 }
 
 - (void)setUserData:(id)userData {
@@ -51,7 +51,7 @@
         _online = online;
     }
     
-    NSString *status = (online) ?  kStatusOnlineString : kStatusOfflineString;
+    NSString *status = NSLocalizedString(online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
     
     self.descriptionLabel.text = status;
     self.onlineCircle.hidden = !online;

@@ -5,7 +5,7 @@
 - (QBChatAttachment *)toQBChatAttachment {
     
     QBChatAttachment *attachment = [[QBChatAttachment alloc] init];
-    attachment.ID = self.uniqueId;
+    attachment.ID = self.id;
     attachment.url = self.url;
     attachment.type = self.type;
     
@@ -15,7 +15,7 @@
 
 - (void)updateWithQBChatAttachment:(QBChatAttachment *)attachment {
     
-    self.uniqueId = attachment.ID;
+    self.id = attachment.ID;
     self.url = attachment.url;
     self.type = attachment.type;
 }

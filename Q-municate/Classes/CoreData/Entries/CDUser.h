@@ -1,8 +1,6 @@
-#import "_CDUsers.h"
+#import "_CDUser.h"
 
-@interface CDUsers : _CDUsers {}
-
+@interface CDUser : _CDUser {}
 - (QBUUser *)toQBUUser;
 - (void)updateWithQBUser:(QBUUser *)user;
-
 @end

@@ -12,6 +12,8 @@
 #import "QMGroupDetailsController.h"
 #import "QMBaseCallsController.h"
 #import "QMApi.h"
+#import "REAlertView.h"
+#import "QMAlertsFactory.h"
 
 @interface QMChatViewController ()
 
@@ -76,16 +78,21 @@
 
 #pragma mark - Nav Buttons Actions
 
+
 - (void)audioCallAction {
-    
-    [[[UIAlertView alloc]initWithTitle:@"Coming soon." message:nil delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
-//	[self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil];
+#if QM_AUDIO_VIDEO_ENABLED == 0
+    [QMAlertsFactory comingSoonAlert];
+#else
+	[self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil];
+#endif
 }
 
 - (void)videoCallAction {
-    
-    [[[UIAlertView alloc]initWithTitle:@"Coming soon." message:nil delegate:nil cancelButtonTitle:kAlertButtonTitleOkString otherButtonTitles:nil] show];
-//	[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil];
+#if QM_AUDIO_VIDEO_ENABLED == 0
+    [QMAlertsFactory comingSoonAlert];
+#else
+	[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil];
+#endif
 }
 
 - (void)groupInfoNavButtonAction {

@@ -27,7 +27,7 @@
     __weak __typeof(self)weakSelf = self;
     [[QMApi instance] autoLogin:^(BOOL success) {
         [weakSelf.viewControllers makeObjectsPerformSelector:@selector(view)];
-        [[QMApi instance] loginChatWithUser:weakSelf.currentUser completion:^(BOOL success) {
+        [[QMApi instance] loginChatWithUser:weakSelf.currentUser completion:^(BOOL loginSuccess) {
             [[QMApi instance] fetchAllHistory:^{
                 [SVProgressHUD dismiss];
             }];

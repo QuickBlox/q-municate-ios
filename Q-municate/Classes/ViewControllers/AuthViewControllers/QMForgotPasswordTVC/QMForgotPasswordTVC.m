@@ -23,7 +23,6 @@
     NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
-
 #pragma mark - actions
 
 - (IBAction)pressResetPasswordBtn:(id)sender {
@@ -38,12 +37,13 @@
 - (void)resetPasswordForMail:(NSString *)emailString {
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    @weakify(self)
+
+    __weak __typeof(self)weakSelf = self;
     [[QMApi instance] resetUserPassordWithEmail:emailString completion:^(BOOL success) {
-        @strongify(self)
+
         if (success) {
-            [SVProgressHUD showSuccessWithStatus:kAlertBodyMessageWasSentToMailString];
-            [self.navigationController popViewControllerAnimated:YES];
+            [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_MESSAGE_WAS_SENT_TO_YOUR_EMAIL", nil)];
+            [weakSelf.navigationController popViewControllerAnimated:YES];
         }else {
             [SVProgressHUD dismiss];
         }

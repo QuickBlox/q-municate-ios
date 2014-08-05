@@ -80,7 +80,7 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
     /**
      Calculate content size
      */
-    if (self.minWidth != -1) {
+    if (self.minWidth > 0) {
         layout.messageMinWidth = self.minWidth;
     }
     

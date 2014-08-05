@@ -96,18 +96,18 @@
     }
     
     __weak __typeof(self)weakSelf = self;
-    [self async:^(NSManagedObjectContext *context) {
+    [self async:^(NSManagedObjectContext *asyncContext) {
         
         if (toUpdate.count != 0) {
-            [weakSelf updateQBChatDialogs:toUpdate inContext:context];
+            [weakSelf updateQBChatDialogs:toUpdate inContext:asyncContext];
         }
         
         if (toInsert.count != 0) {
-            [weakSelf insertQBChatDialogs:toInsert inContext:context];
+            [weakSelf insertQBChatDialogs:toInsert inContext:asyncContext];
         }
         
         if (toDelete.count != 0) {
-            [weakSelf deleteQBChatDialogs:toDelete inContext:context];
+            [weakSelf deleteQBChatDialogs:toDelete inContext:asyncContext];
         }
         
         NSLog(@"Dialogs in cahce %d", allDialogs.count);

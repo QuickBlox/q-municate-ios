@@ -29,7 +29,7 @@ NSString *const kQMAccountTypeKey = @"accountType";
 @dynamic userAgreementAccepted;
 @dynamic accountType;
 
-#pragma makr - accountType
+#pragma mark - accountType
 
 - (void)setAccountType:(QMAccountType)accountType {
     defSetInt(kQMAccountTypeKey, accountType);
@@ -53,7 +53,7 @@ NSString *const kQMAccountTypeKey = @"accountType";
     return accepted;
 }
 
-#pragma makr - Login
+#pragma mark - Login
 
 - (void)setLogin:(NSString *)login andPassword:(NSString *)password {
 
@@ -93,7 +93,7 @@ NSString *const kQMAccountTypeKey = @"accountType";
     defSetBool(kQMSettingsPushNotificationEnabled, pushNotificationsEnabled);
 }
 
-#pragma makr - remember login
+#pragma mark - remember login
 
 - (BOOL)rememberMe {
     

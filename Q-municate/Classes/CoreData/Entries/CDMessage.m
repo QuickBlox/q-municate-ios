@@ -1,17 +1,21 @@
-#import "CDMessages.h"
+#import "CDMessage.h"
 #import "CDAttachment.h"
 
-@interface CDMessages ()
+@interface CDMessage ()
+
+// Private interface goes here.
 
 @end
 
-@implementation CDMessages
+
+@implementation CDMessage
+
 
 - (QBChatHistoryMessage *)toQBChatHistoryMessage {
     
     QBChatHistoryMessage *chatHistoryMessage = [[QBChatHistoryMessage alloc] init];
     
-    chatHistoryMessage.ID = self.uniqueId;
+    chatHistoryMessage.ID = self.id;
     chatHistoryMessage.text = self.text;
     chatHistoryMessage.recipientID = self.recipientID.intValue;
     chatHistoryMessage.senderID = self.senderId.intValue;
@@ -35,7 +39,7 @@
 
 - (void)updateWithQBChatHistoryMessage:(QBChatHistoryMessage *)message {
     
-    self.uniqueId = message.ID;
+    self.id = message.ID;
     self.text = message.text;
     self.datetime = message.datetime;
     self.recipientID = @(message.recipientID);
@@ -74,7 +78,7 @@
 }
 
 - (Class)objectClass {
-    return [CDMessages class];
+    return [CDMessage class];
 }
 
 @end

@@ -1,13 +1,14 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to CDMessages.h instead.
+// Make changes to CDMessage.h instead.
 
 #import <CoreData/CoreData.h>
 
 
-extern const struct CDMessagesAttributes {
+extern const struct CDMessageAttributes {
 	__unsafe_unretained NSString *customParameters;
 	__unsafe_unretained NSString *datetime;
 	__unsafe_unretained NSString *dialogId;
+	__unsafe_unretained NSString *id;
 	__unsafe_unretained NSString *isRead;
 	__unsafe_unretained NSString *recipientID;
 	__unsafe_unretained NSString *roomId;
@@ -15,16 +16,15 @@ extern const struct CDMessagesAttributes {
 	__unsafe_unretained NSString *senderNick;
 	__unsafe_unretained NSString *state;
 	__unsafe_unretained NSString *text;
-	__unsafe_unretained NSString *uniqueId;
-} CDMessagesAttributes;
+} CDMessageAttributes;
 
-extern const struct CDMessagesRelationships {
+extern const struct CDMessageRelationships {
 	__unsafe_unretained NSString *attachments;
 	__unsafe_unretained NSString *chatDialog;
-} CDMessagesRelationships;
+} CDMessageRelationships;
 
-extern const struct CDMessagesFetchedProperties {
-} CDMessagesFetchedProperties;
+extern const struct CDMessageFetchedProperties {
+} CDMessageFetchedProperties;
 
 @class CDAttachment;
 @class CDDialog;
@@ -41,14 +41,14 @@ extern const struct CDMessagesFetchedProperties {
 
 
 
-@interface CDMessagesID : NSManagedObjectID {}
+@interface CDMessageID : NSManagedObjectID {}
 @end
 
-@interface _CDMessages : NSManagedObject {}
+@interface _CDMessage : NSManagedObject {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
-- (CDMessagesID*)objectID;
+- (CDMessageID*)objectID;
 
 
 
@@ -79,6 +79,16 @@ extern const struct CDMessagesFetchedProperties {
 
 
 //- (BOOL)validateDialogId:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* id;
+
+
+
+//- (BOOL)validateId:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -170,16 +180,6 @@ extern const struct CDMessagesFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* uniqueId;
-
-
-
-//- (BOOL)validateUniqueId:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSSet *attachments;
 
 - (NSMutableSet*)attachmentsSet;
@@ -197,7 +197,7 @@ extern const struct CDMessagesFetchedProperties {
 
 @end
 
-@interface _CDMessages (CoreDataGeneratedAccessors)
+@interface _CDMessage (CoreDataGeneratedAccessors)
 
 - (void)addAttachments:(NSSet*)value_;
 - (void)removeAttachments:(NSSet*)value_;
@@ -206,7 +206,7 @@ extern const struct CDMessagesFetchedProperties {
 
 @end
 
-@interface _CDMessages (CoreDataGeneratedPrimitiveAccessors)
+@interface _CDMessage (CoreDataGeneratedPrimitiveAccessors)
 
 
 - (NSData*)primitiveCustomParameters;
@@ -223,6 +223,12 @@ extern const struct CDMessagesFetchedProperties {
 
 - (NSString*)primitiveDialogId;
 - (void)setPrimitiveDialogId:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveId;
+- (void)setPrimitiveId:(NSString*)value;
 
 
 
@@ -277,12 +283,6 @@ extern const struct CDMessagesFetchedProperties {
 
 - (NSString*)primitiveText;
 - (void)setPrimitiveText:(NSString*)value;
-
-
-
-
-- (NSString*)primitiveUniqueId;
-- (void)setPrimitiveUniqueId:(NSString*)value;
 
 
 

@@ -50,14 +50,15 @@
         
         __weak __typeof(self)weakSelf = self;
         [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-            alertView.message = kAlertTitleAreYouSureString;
-            [alertView addButtonWithTitle:kAlertButtonTitleLogOutString andActionBlock:^{
+            
+            alertView.message = NSLocalizedString(@"QM_STR_ARE_YOU_SURE", nil);
+            [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_LOGOUT", nil) andActionBlock:^{
                 [[QMApi instance] logout:^(BOOL success) {
                     [weakSelf performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
                 }];
             }];
             
-            [alertView addButtonWithTitle:kAlertButtonTitleCancelString andActionBlock:^{}];
+            [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
         }];
     }
 }

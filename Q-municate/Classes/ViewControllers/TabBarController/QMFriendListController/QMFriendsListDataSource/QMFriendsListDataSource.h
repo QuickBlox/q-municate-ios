@@ -10,7 +10,7 @@
 @interface QMFriendsListDataSource : NSObject <UITableViewDataSource, UISearchDisplayDelegate>
 
 - (instancetype)initWithTableView:(UITableView *)tableView searchDisplayController:(UISearchDisplayController *)searchDisplayController;
-- (NSArray *)usersAtSections:(NSUInteger)section;
+- (NSArray *)usersAtSections:(NSInteger)section;
 - (QBUUser *)userAtIndexPath:(NSIndexPath *)indexPath;
 
 @end

@@ -28,8 +28,8 @@
             // callback can occur in background, address book must be accessed on thread it was created on
             if (error) {
                 
-                NSError *error = (__bridge NSError *)cfError;
-                block(nil,NO, error);
+                NSError *requestError = (__bridge NSError *)cfError;
+                block(nil, NO, requestError);
                 
             } else {
                 

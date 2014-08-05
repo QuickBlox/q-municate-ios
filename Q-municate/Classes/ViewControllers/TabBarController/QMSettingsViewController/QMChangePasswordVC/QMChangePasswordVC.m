@@ -73,13 +73,15 @@ const NSUInteger kQMMinPasswordLenght = 7;
     NSString *newPassword = self.passwordTextField.text;
     
     if (newPassword.length < kQMMinPasswordLenght) {
-        [REAlertView showAlertWithMessage:kAlertBodyPasswordIsShortString actionSuccess:NO];
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_PASSWORD_IS_TOO_SHORT", nil) actionSuccess:NO];
     }
     else if (![oldPassword isEqualToString:confirmOldPassword]) {
-        [REAlertView showAlertWithMessage:kAlertBodyPasswDoesNotMatchString actionSuccess:NO];
+        
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_PASSWORD_DONT_MATCH", nil) actionSuccess:NO];
     }
     else if (newPassword.length == 0 || confirmOldPassword.length == 0){
-        [REAlertView showAlertWithMessage:kAlertBodyFillInAllFieldsString actionSuccess:NO];
+        
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) actionSuccess:NO];
     }
     else {
         [self updatePassword:oldPassword newPassword:newPassword];
@@ -99,7 +101,8 @@ const NSUInteger kQMMinPasswordLenght = 7;
         
         if (success) {
             [weakSelf.settingsManager setLogin:myProfile.email andPassword:newPassword];
-            [SVProgressHUD showSuccessWithStatus:kAlertBodyPasswordChangedString];
+            
+            [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_PASSWORD_CHANGED", nil)];
             [weakSelf.navigationController popViewControllerAnimated:YES];
         }
         

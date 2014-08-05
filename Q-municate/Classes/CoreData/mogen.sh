@@ -1,12 +1,12 @@
 #!/bin/sh
 #  mogen.sh
 #
-
+COREDATA_DIR="${PROJECT_DIR}/Q-municate/Classes/CoreData/"
 HUMAN_DIR="${PROJECT_DIR}/Q-municate/Classes/CoreData/Entries"
 MACHINE_DIR="${PROJECT_DIR}/Q-municate/Classes/CoreData/EntriesMachine"
 INCLUDE_H="${PROJECT_DIR}/Q-municate/Classes/CoreData/ModelIncludes.h"
 
-mogenerator = mogenerator
+mogenerator = /usr/local/bin/mogenerator
 
 echo $mogenerator --model \"${INPUT_FILE_PATH}\" --machine-dir "$MACHINE_DIR/" --human-dir "$HUMAN_DIR/" --includeh "$INCLUDE_H" --template-var arc=true
 $mogenerator --model \"${INPUT_FILE_PATH}\" --machine-dir "$MACHINE_DIR/" --human-dir "$HUMAN_DIR/" --includeh "$INCLUDE_H" --template-var arc=true

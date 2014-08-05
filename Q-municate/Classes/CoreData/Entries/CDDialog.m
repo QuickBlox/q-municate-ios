@@ -10,7 +10,7 @@
     
     QBChatDialog *chatDialog = [[QBChatDialog alloc] init];
     
-    chatDialog.ID = self.uniqueId;
+    chatDialog.ID = self.id;
     chatDialog.roomJID = self.roomJID;
     chatDialog.type = self.type.intValue;
     chatDialog.name = self.name;
@@ -20,7 +20,7 @@
 
 - (void)updateWithQBChatDialog:(QBChatDialog *)dialog {
 
-    self.uniqueId = dialog.ID;
+    self.id = dialog.ID;
     self.roomJID = dialog.roomJID;
     self.type = @(dialog.type);
     self.name = dialog.name;    

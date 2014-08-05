@@ -38,6 +38,10 @@
     return NO;
 }
 
+- (NSUInteger)hash {
+    return self.identifier;
+}
+
 @end
 
 @interface QMChatReceiver()

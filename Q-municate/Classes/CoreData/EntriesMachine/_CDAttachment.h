@@ -5,8 +5,8 @@
 
 
 extern const struct CDAttachmentAttributes {
+	__unsafe_unretained NSString *id;
 	__unsafe_unretained NSString *type;
-	__unsafe_unretained NSString *uniqueId;
 	__unsafe_unretained NSString *url;
 } CDAttachmentAttributes;
 
@@ -17,7 +17,7 @@ extern const struct CDAttachmentRelationships {
 extern const struct CDAttachmentFetchedProperties {
 } CDAttachmentFetchedProperties;
 
-@class CDMessages;
+@class CDMessage;
 
 
 
@@ -36,21 +36,21 @@ extern const struct CDAttachmentFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* id;
+
+
+
+//- (BOOL)validateId:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* type;
 
 
 
 //- (BOOL)validateType:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* uniqueId;
-
-
-
-//- (BOOL)validateUniqueId:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -66,7 +66,7 @@ extern const struct CDAttachmentFetchedProperties {
 
 
 
-@property (nonatomic, strong) CDMessages *message;
+@property (nonatomic, strong) CDMessage *message;
 
 //- (BOOL)validateMessage:(id*)value_ error:(NSError**)error_;
 
@@ -83,14 +83,14 @@ extern const struct CDAttachmentFetchedProperties {
 @interface _CDAttachment (CoreDataGeneratedPrimitiveAccessors)
 
 
+- (NSString*)primitiveId;
+- (void)setPrimitiveId:(NSString*)value;
+
+
+
+
 - (NSString*)primitiveType;
 - (void)setPrimitiveType:(NSString*)value;
-
-
-
-
-- (NSString*)primitiveUniqueId;
-- (void)setPrimitiveUniqueId:(NSString*)value;
 
 
 
@@ -102,8 +102,8 @@ extern const struct CDAttachmentFetchedProperties {
 
 
 
-- (CDMessages*)primitiveMessage;
-- (void)setPrimitiveMessage:(CDMessages*)value;
+- (CDMessage*)primitiveMessage;
+- (void)setPrimitiveMessage:(CDMessage*)value;
 
 
 @end

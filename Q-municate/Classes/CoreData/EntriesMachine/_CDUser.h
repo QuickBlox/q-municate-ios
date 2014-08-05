@@ -1,24 +1,24 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to CDUsers.h instead.
+// Make changes to CDUser.h instead.
 
 #import <CoreData/CoreData.h>
 
 
-extern const struct CDUsersAttributes {
+extern const struct CDUserAttributes {
 	__unsafe_unretained NSString *email;
 	__unsafe_unretained NSString *fullName;
+	__unsafe_unretained NSString *id;
 	__unsafe_unretained NSString *phone;
 	__unsafe_unretained NSString *status;
 	__unsafe_unretained NSString *type;
-	__unsafe_unretained NSString *uniqueId;
-} CDUsersAttributes;
+} CDUserAttributes;
 
-extern const struct CDUsersRelationships {
+extern const struct CDUserRelationships {
 	__unsafe_unretained NSString *dialogs;
-} CDUsersRelationships;
+} CDUserRelationships;
 
-extern const struct CDUsersFetchedProperties {
-} CDUsersFetchedProperties;
+extern const struct CDUserFetchedProperties {
+} CDUserFetchedProperties;
 
 @class CDDialog;
 
@@ -29,14 +29,14 @@ extern const struct CDUsersFetchedProperties {
 
 
 
-@interface CDUsersID : NSManagedObjectID {}
+@interface CDUserID : NSManagedObjectID {}
 @end
 
-@interface _CDUsers : NSManagedObject {}
+@interface _CDUser : NSManagedObject {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
-- (CDUsersID*)objectID;
+- (CDUserID*)objectID;
 
 
 
@@ -57,6 +57,20 @@ extern const struct CDUsersFetchedProperties {
 
 
 //- (BOOL)validateFullName:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* id;
+
+
+
+@property int32_t idValue;
+- (int32_t)idValue;
+- (void)setIdValue:(int32_t)value_;
+
+//- (BOOL)validateId:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -92,20 +106,6 @@ extern const struct CDUsersFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSNumber* uniqueId;
-
-
-
-@property int32_t uniqueIdValue;
-- (int32_t)uniqueIdValue;
-- (void)setUniqueIdValue:(int32_t)value_;
-
-//- (BOOL)validateUniqueId:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) CDDialog *dialogs;
 
 //- (BOOL)validateDialogs:(id*)value_ error:(NSError**)error_;
@@ -116,11 +116,11 @@ extern const struct CDUsersFetchedProperties {
 
 @end
 
-@interface _CDUsers (CoreDataGeneratedAccessors)
+@interface _CDUser (CoreDataGeneratedAccessors)
 
 @end
 
-@interface _CDUsers (CoreDataGeneratedPrimitiveAccessors)
+@interface _CDUser (CoreDataGeneratedPrimitiveAccessors)
 
 
 - (NSString*)primitiveEmail;
@@ -131,6 +131,15 @@ extern const struct CDUsersFetchedProperties {
 
 - (NSString*)primitiveFullName;
 - (void)setPrimitiveFullName:(NSString*)value;
+
+
+
+
+- (NSNumber*)primitiveId;
+- (void)setPrimitiveId:(NSNumber*)value;
+
+- (int32_t)primitiveIdValue;
+- (void)setPrimitiveIdValue:(int32_t)value_;
 
 
 
@@ -149,15 +158,6 @@ extern const struct CDUsersFetchedProperties {
 
 - (NSString*)primitiveType;
 - (void)setPrimitiveType:(NSString*)value;
-
-
-
-
-- (NSNumber*)primitiveUniqueId;
-- (void)setPrimitiveUniqueId:(NSNumber*)value;
-
-- (int32_t)primitiveUniqueIdValue;
-- (void)setPrimitiveUniqueIdValue:(int32_t)value_;
 
 
 

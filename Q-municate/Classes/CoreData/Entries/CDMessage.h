@@ -1,11 +1,6 @@
+#import "_CDMessage.h"
 
-#import "_CDMessages.h"
-#import "QBDBMergeProtocol.h"
-
-@interface CDMessages : _CDMessages <QBDBMergeProtocol>
-
+@interface CDMessage : _CDMessage {}
 - (QBChatHistoryMessage *)toQBChatHistoryMessage;
 - (void)updateWithQBChatHistoryMessage:(QBChatHistoryMessage *)message;
-
 @end
-

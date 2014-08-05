@@ -148,7 +148,7 @@ static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
     return [self usersAtSections:section].count;
 }
 
-- (NSArray *)usersAtSections:(NSUInteger)section {
+- (NSArray *)usersAtSections:(NSInteger)section {
     return (section == 0 ) ? self.friendList : self.searchResult;
 }
 

@@ -56,7 +56,7 @@
     NSString *password = self.passwordField.text;
     
     if (email.length == 0 || password.length == 0) {
-        [REAlertView showAlertWithMessage:kAlertBodyFillInAllFieldsString actionSuccess:NO];
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) actionSuccess:NO];
     }
     else {
 
@@ -89,11 +89,12 @@
 - (void)signInWithFacebookAfterAcceptingUserAgreement {
     
     [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-        alertView.message = @"By clicking Sign Up, you agree to Q-MUNICATE User Agreement.";
-        [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{
+        
+        alertView.message = NSLocalizedString(@"QM_STR_QMUNICATE_AGREE", nil);
+        [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_OK", nil) andActionBlock:^{
             [[QMApi instance].settingsManager setUserAgreementAccepted:YES];
         }];
-        [alertView addButtonWithTitle:@"Cancel" andActionBlock:nil];
+        [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:nil];
     }];
 }
 

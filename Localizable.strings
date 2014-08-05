@@ -1,0 +1,36 @@
+/* 
+  Localized.strings
+  Q-municate
+
+  Created by Andrey on 05.08.14.
+  Copyright (c) 2014 Quickblox. All rights reserved.
+*/
+"QM_STR_OK" = "Ok";
+"QM_STR_COMING_SOON" = "Coming soon";
+"QM_STR_LOGOUT" = "Log Out";
+"QM_STR_CANCEL" = "Cancel";
+"QM_STR_SUCCESS" = "Success";
+"QM_STR_ERROR" = "Error";
+"QM_STR_QMUNICATE_AGREE" = "By clicking Sign Up, you agree to Q-MUNICATE User Agreement.";
+"QM_STR_CALLING" = "Calling...";
+"QM_STR_NONE" = "None";
+"QM_STR_ARE_YOU_SURE" = "Are you sure?";
+"QM_STR_DELETE" = "Delete";
+"QM_STR_INCOMING_VIDEO_CALL" = "Incoming video call";
+"QM_STR_INCOMING_CALL" = "Incoming call";
+"QM_STR_CONTACT_LIST" = "Contact list";
+"QM_STR_CALL_WAS_CANCELLED" = "Call was cancelled";
+"QM_STR_FACEBOOK" = "Facebook";
+"QM_STR_PASSWORD_DONT_MATCH" = "Passwords don't match";
+"QM_STR_FILL_IN_ALL_THE_FIELDS" = "Fill in all the fields";
+"QM_STR_PASSWORD_CHANGED" = "Password changed";
+"QM_STR_ONLINE" = "Online";
+"QM_STR_OFFLINE" = "Offline";
+"QM_STR_PASSWORD_IS_TOO_SHORT" = "Password is too short";
+"QM_STR_MESSAGE_WAS_SENT_TO_YOUR_EMAIL" = "Message was sent to your email. Check it";
+"QM_STR_INVITATION_WAS_POSTED_TO_WALL" = "Invitation was posted to wall.";
+"QM_STR_PLEASE_CHECK_YOUR_EMAIL_SETTINGS" = "Please check your email settings";
+"QM_STR_USER_IS_BUSY" = "User is busy";
+"QM_STR_BAD_CONNECTION" = "Bad connection";
+"QM_STR_USER_DOESNT_ANSWER" = "User doesn't answer";
+"QM_STR_CALL_WAS_STOPPED" = "Call was stopped";

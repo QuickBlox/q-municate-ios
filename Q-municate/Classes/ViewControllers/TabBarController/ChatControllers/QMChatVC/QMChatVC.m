@@ -20,6 +20,7 @@
 #import "NSString+HasText.h"
 #import "QMApi.h"
 #import "Parus.h"
+#import "QMHelpers.h"
 
 static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
@@ -386,7 +387,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 - (BOOL)inputToolbarHasReachedMaximumHeight {
     
-    return (CGRectGetMinY(self.inputToolBar.frame) == self.topLayoutGuide.length);
+    return FloatAlmostEqual(CGRectGetMinY(self.inputToolBar.frame), self.topLayoutGuide.length, 0.00001);
 }
 
 #pragma mark - QMChatInputToolbarDelegate
@@ -512,7 +513,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     return [img imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 }
 
-#pragma Emoji Delegate
+#pragma mark - Emoji Delegate
 
 - (void)emojiKeyBoardView:(AGEmojiKeyboardView *)emojiKeyBoardView didUseEmoji:(NSString *)emoji {
     

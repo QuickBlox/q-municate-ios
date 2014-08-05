@@ -7,6 +7,7 @@
 //
 
 #import "QMKeyboardController.h"
+#import "QMHelpers.h"
 
 NSString * const QMKeyboardControllerNotificationKeyboardDidChangeFrame = @"QMKeyboardControllerNotificationKeyboardDidChangeFrame";
 NSString * const QMKeyboardControllerUserInfoKeyKeyboardDidChangeFrame = @"QMKeyboardControllerUserInfoKeyKeyboardDidChangeFrame";
@@ -259,7 +260,7 @@ static void * kQMKeyboardControllerKeyValueObservingContext = &kQMKeyboardContro
             newKeyboardViewFrame.origin.y = MIN(newKeyboardViewFrame.origin.y, contextViewWindowHeight);
             newKeyboardViewFrame.origin.y = MAX(newKeyboardViewFrame.origin.y, contextViewWindowHeight - keyboardViewHeight);
             
-            if (CGRectGetMinY(newKeyboardViewFrame) == CGRectGetMinY(self.keyboardView.frame)) {
+            if (FloatAlmostEqual(CGRectGetMinY(newKeyboardViewFrame), CGRectGetMinY(self.keyboardView.frame), 0.00001)) {
                 return;
             }
             

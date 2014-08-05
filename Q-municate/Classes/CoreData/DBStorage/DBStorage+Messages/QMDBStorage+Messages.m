@@ -29,7 +29,7 @@ NSString *const kCDMessageDatetimePath = @"datetime";
     
     [self async:^(NSManagedObjectContext *context) {
         
-        NSArray *messages = [CDMessages MR_findAllSortedBy:kCDMessageDatetimePath
+        NSArray *messages = [CDMessage MR_findAllSortedBy:kCDMessageDatetimePath
                                                  ascending:NO
                                              withPredicate:IS(@"dialogId", dialogId)
                                                  inContext:context];
@@ -44,14 +44,14 @@ NSString *const kCDMessageDatetimePath = @"datetime";
     
     for (QBChatHistoryMessage *chatMessage in messages) {
         
-        CDMessages *message = [CDMessages MR_createEntityInContext:context];
+        CDMessage *message = [CDMessage MR_createEntityInContext:context];
         [message updateWithQBChatHistoryMessage:chatMessage];
     }
 }
 
 - (NSArray *)allQBChatHistoryMessagesWithDialogId:(NSString *)dialogId InContext:(NSManagedObjectContext *)context {
     
-    NSArray *cdChatHistoryMessages = [CDMessages MR_findAllSortedBy:kCDMessageDatetimePath
+    NSArray *cdChatHistoryMessages = [CDMessage MR_findAllSortedBy:kCDMessageDatetimePath
                                                           ascending:NO
                                                       withPredicate:IS(@"dialogId", dialogId)
                                                           inContext:context];
@@ -65,7 +65,7 @@ NSString *const kCDMessageDatetimePath = @"datetime";
     
     NSMutableArray *qbChatHistoryMessages = [NSMutableArray arrayWithCapacity:cdMessages.count];
     
-    for (CDMessages *message in cdMessages) {
+    for (CDMessage *message in cdMessages) {
         QBChatHistoryMessage *qbChatHistoryMessage = [message toQBChatHistoryMessage];
         [qbChatHistoryMessages addObject:qbChatHistoryMessage];
     }
@@ -118,18 +118,18 @@ NSString *const kCDMessageDatetimePath = @"datetime";
     }
     
     __weak __typeof(self)weakSelf = self;
-    [self async:^(NSManagedObjectContext *context) {
+    [self async:^(NSManagedObjectContext *asyncContext) {
         
         if (toUpdate.count != 0) {
-            [weakSelf updateQBChatHistoryMessages:toUpdate inContext:context];
+            [weakSelf updateQBChatHistoryMessages:toUpdate inContext:asyncContext];
         }
         
         if (toInsert.count != 0) {
-            [weakSelf insertQBChatHistoryMessages:toInsert inContext:context];
+            [weakSelf insertQBChatHistoryMessages:toInsert inContext:asyncContext];
         }
         
         if (toDelete.count != 0) {
-            [weakSelf deleteQBChatHistoryMessages:toDelete inContext:context];
+            [weakSelf deleteQBChatHistoryMessages:toDelete inContext:asyncContext];
         }
         
         NSLog(@"/////////////////////////////////");
@@ -145,7 +145,7 @@ NSString *const kCDMessageDatetimePath = @"datetime";
 - (void)insertQBChatHistoryMessages:(NSArray *)qbChatHistoryMessages inContext:(NSManagedObjectContext *)context {
     
     for (QBChatHistoryMessage *qbChatHistoryMessage in qbChatHistoryMessages) {
-        CDMessages *messageToInsert = [CDMessages MR_createEntityInContext:context];
+        CDMessage *messageToInsert = [CDMessage MR_createEntityInContext:context];
         [messageToInsert updateWithQBChatHistoryMessage:qbChatHistoryMessage];
     }
 }
@@ -154,7 +154,7 @@ NSString *const kCDMessageDatetimePath = @"datetime";
     
     
     for (QBChatHistoryMessage *qbChatHistoryMessage in qbChatHistoryMessages) {
-        CDMessages *messageToDelete = [CDMessages MR_findFirstWithPredicate:IS(@"uniqueId", qbChatHistoryMessage.ID)
+        CDMessage *messageToDelete = [CDMessage MR_findFirstWithPredicate:IS(@"uniqueId", qbChatHistoryMessage.ID)
                                                              inContext:context];
         [messageToDelete MR_deleteEntityInContext:context];
     }
@@ -163,7 +163,7 @@ NSString *const kCDMessageDatetimePath = @"datetime";
 - (void)updateQBChatHistoryMessages:(NSArray *)qbChatHistoryMessages inContext:(NSManagedObjectContext *)context {
     
     for (QBChatHistoryMessage *qbChatHistoryMessage in qbChatHistoryMessages) {
-        CDMessages *messageToUpdate = [CDMessages MR_findFirstWithPredicate:IS(@"uniqueId", qbChatHistoryMessage.ID)
+        CDMessage *messageToUpdate = [CDMessage MR_findFirstWithPredicate:IS(@"uniqueId", qbChatHistoryMessage.ID)
                                                              inContext:context];
         [messageToUpdate updateWithQBChatHistoryMessage:qbChatHistoryMessage];
     }
