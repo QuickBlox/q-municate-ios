@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import "QMServiceProtocol.h"
+#import "QMBaseService.h"
 
-@interface QMAVCallService : NSObject <QMServiceProtocol>
+@interface QMAVCallService : QMBaseService
 
 - (void)callToUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView conferenceType:(enum QBVideoChatConferenceType)conferenceType;
 

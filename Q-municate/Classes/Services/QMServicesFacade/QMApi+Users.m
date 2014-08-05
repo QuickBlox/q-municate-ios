@@ -197,6 +197,7 @@
         if (publicUrl.length > 0) {
             userInfo.website = publicUrl;
         }
+        
         [weakSelf updateUser:userInfo completion:completion];
     };
     

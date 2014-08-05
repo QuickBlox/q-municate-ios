@@ -52,8 +52,9 @@
         [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
             alertView.message = kAlertTitleAreYouSureString;
             [alertView addButtonWithTitle:kAlertButtonTitleLogOutString andActionBlock:^{
-                [[QMApi instance] logout];
-                [weakSelf performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
+                [[QMApi instance] logout:^(BOOL success) {
+                    [weakSelf performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
+                }];
             }];
             
             [alertView addButtonWithTitle:kAlertButtonTitleCancelString andActionBlock:^{}];

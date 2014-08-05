@@ -19,6 +19,7 @@
 @implementation QMMessagesService
 
 - (void)start {
+    [super start];
     
     self.history = [NSMutableDictionary dictionary];
 
@@ -39,7 +40,8 @@
     }];
 }
 
-- (void)destroy {
+- (void)stop {
+    [super stop];
     
     [[QMChatReceiver instance] unsubscribeForTarget:self];
     [self.history removeAllObjects];

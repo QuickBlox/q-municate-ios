@@ -23,6 +23,16 @@
 
 @dynamic mask;
 
+
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self commonInit];
+    }
+    return self;
+}
+
 - (id)initWithFrame:(CGRect)frame gravity:(BOOL)gravity {
     
     self = [super initWithFrame:frame];
@@ -61,8 +71,9 @@
 - (void)commonInit {
     
     self.backgroundColor = [UIColor clearColor];
-    self.trackTintColor = [UIColor greenColor];
-    self.progressTintColor = [UIColor blueColor];
+    _trackTintColor = [UIColor greenColor];
+    _progressTintColor = [UIColor blueColor];
+    [self updateGradientColors];
     
     self.progressType = QMProgressTypeVertical;
     self.gradientLayer.locations = @[@0.f, @0.f];

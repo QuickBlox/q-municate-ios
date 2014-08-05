@@ -13,6 +13,7 @@
 @property (weak, nonatomic) id target;
 @property (strong, nonatomic) id callback;
 @property (assign, nonatomic) NSUInteger identifier;
+@property (strong, nonatomic) NSString *selector;
 
 @end
 
@@ -23,7 +24,10 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"target - %@, callback - %@, identfier - %d", self.target, self.callback, self.identifier];
+    
+    return [NSString stringWithFormat:
+            @"target - %@, callback - %@, identfier - %d, selector - %@",
+            self.target, self.callback, self.identifier, self.selector];
 }
 
 - (BOOL)isEqual:(QMChatHandlerObject *)other {
@@ -84,7 +88,6 @@
         }
         
         [handlers minusSet:minusSet];
-        NSLog(@"");
     }
 }
 
@@ -101,6 +104,14 @@
     handler.callback = [block copy];
     handler.target = target;
     handler.identifier = [target hash];
+    handler.selector = key;
+    
+#if QM_TEST
+    if (handlers.count > 0)
+    for (QMChatHandlerObject * test_handler in handlers) {
+        NSAssert(![test_handler isEqual:handler], @"Check this case");
+    }
+#endif
     
     NSLog(@"Subscirbe:%@", [handler description]);
     [handlers addObject:handler];

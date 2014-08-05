@@ -23,9 +23,10 @@
     [self customizeTabBar];
     [self.navigationController setNavigationBarHidden:YES animated:NO];
 
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+//    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     __weak __typeof(self)weakSelf = self;
     [[QMApi instance] autoLogin:^(BOOL success) {
+        [weakSelf.viewControllers makeObjectsPerformSelector:@selector(view)];
         [[QMApi instance] loginChatWithUser:weakSelf.currentUser completion:^(BOOL success) {
             [[QMApi instance] fetchAllHistory:^{
                 [SVProgressHUD dismiss];

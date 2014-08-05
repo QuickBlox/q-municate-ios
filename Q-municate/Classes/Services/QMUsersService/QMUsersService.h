@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "QMServiceProtocol.h"
+#import "QMBaseService.h"
 
-@interface QMUsersService : NSObject <QMServiceProtocol>
+@interface QMUsersService : QMBaseService
 
 @property (strong, nonatomic) NSMutableArray *contactList;
 

@@ -20,6 +20,7 @@
 @implementation QMChatDialogsService
 
 - (void)start {
+    [super start];
     
     self.dialogs = [NSMutableDictionary dictionary];
     self.chatRooms = [NSMutableDictionary dictionary];
@@ -38,7 +39,8 @@
     }];
 }
 
-- (void)destroy {
+- (void)stop {
+    [super stop];
     
     [[QMChatReceiver instance] unsubscribeForTarget:self];
     

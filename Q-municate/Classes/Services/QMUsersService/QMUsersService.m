@@ -29,6 +29,7 @@
 }
 
 - (void)start {
+    [super start];
     
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
@@ -38,7 +39,8 @@
     }];
 }
 
-- (void)destroy {
+- (void)stop {
+    [super stop];
     
     [[QMChatReceiver instance] unsubscribeForTarget:self];
     [self.users removeAllObjects];

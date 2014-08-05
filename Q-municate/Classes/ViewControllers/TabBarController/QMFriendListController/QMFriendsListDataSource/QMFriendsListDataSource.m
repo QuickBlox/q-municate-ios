@@ -48,7 +48,7 @@ static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
         self.tableView.dataSource = self;
         
         self.searchResult = [NSArray array];
-//        self.tableView.tableFooterView = [self.tableView dequeueReusableCellWithIdentifier:kQMNotResultCellIdentifier];
+        //        self.tableView.tableFooterView = [self.tableView dequeueReusableCellWithIdentifier:kQMNotResultCellIdentifier];
         
         self.searchDisplayController = searchDisplayController;
         __weak __typeof(self)weakSelf = self;
@@ -77,8 +77,8 @@ static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
 
 - (NSArray *)friendList {
     
-   if (self.searchDisplayController.isActive && self.searchDisplayController.searchBar.text.length > 0) {
-    
+    if (self.searchDisplayController.isActive && self.searchDisplayController.searchBar.text.length > 0) {
+        
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.fullName CONTAINS[cd] %@", self.searchDisplayController.searchBar.text];
         NSArray *filtered = [_friendList filteredArrayUsingPredicate:predicate];
         
@@ -94,10 +94,10 @@ static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
     if (!self.searchDisplayController.isActive) {
         [self.tableView reloadData];
         
-//        self.tableView.tableFooterView =
-//        self.friendList.count == 0 ?
-//        [self.tableView dequeueReusableCellWithIdentifier:kQMNotResultCellIdentifier] : [[UIView alloc] initWithFrame:CGRectZero];
-    }else {
+        //        self.tableView.tableFooterView =
+        //        self.friendList.count == 0 ?
+        //        [self.tableView dequeueReusableCellWithIdentifier:kQMNotResultCellIdentifier] : [[UIView alloc] initWithFrame:CGRectZero];
+    } else {
         [self.searchDisplayController.searchResultsTableView reloadData];
     }
 }
@@ -119,27 +119,19 @@ static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
     __weak __typeof(self)weakSelf = self;
     QBUUserPagedResultBlock userPagedBlock = ^(QBUUserPagedResult *pagedResult) {
         
-        if (pagedResult.success) {
-            
-            NSArray *users = [weakSelf sortUsersByFullname:pagedResult.users];
-            //Remove current user from search result
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.ID != %d", [QMApi instance].currentUser.ID];
-            weakSelf.searchResult = [users filteredArrayUsingPredicate:predicate];
-            [weakSelf.searchDisplayController.searchResultsTableView reloadData];
-        }
-        
-//        [SVProgressHUD dismiss];
+        NSArray *users = [weakSelf sortUsersByFullname:pagedResult.users];
+        //Remove current user from search result
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.ID != %d", [QMApi instance].currentUser.ID];
+        weakSelf.searchResult = [users filteredArrayUsingPredicate:predicate];
+        [weakSelf.searchDisplayController.searchResultsTableView reloadData];
     };
     
     PagedRequest *request = [[PagedRequest alloc] init];
     request.page = 1;
     request.perPage = 100;
     
-//    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    [[QMApi instance].usersService retrieveUsersWithFullName:searchText pagedRequest:request completion:userPagedBlock];
     
-
-        [[QMApi instance].usersService retrieveUsersWithFullName:searchText pagedRequest:request completion:userPagedBlock];
-
 }
 
 #pragma mark - UITableViewDataSource
@@ -149,7 +141,7 @@ static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.searchDisplayController.isActive ? 1 : 1;
+    return self.searchDisplayController.isActive ? 2 : 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -191,7 +183,7 @@ static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
 
 - (void)friendListCell:(QMFriendListCell *)cell pressAddBtn:(UIButton *)sender {
     
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    NSIndexPath *indexPath = [self.searchDisplayController.searchResultsTableView indexPathForCell:cell];
     NSArray *datasource = [self usersAtSections:indexPath.section];
     QBUUser *user = datasource[indexPath.row];
     
@@ -205,7 +197,7 @@ static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
 }
 
 - (void)searchDisplayControllerDidBeginSearch:(UISearchDisplayController *)controller {
-
+    
     
 }
 
@@ -214,7 +206,7 @@ static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
 }
 
 - (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
-
+    
     
 }
 

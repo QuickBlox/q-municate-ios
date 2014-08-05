@@ -8,7 +8,9 @@
 
 @protocol QMServiceProtocol <NSObject>
 
+@property (assign, nonatomic, getter = isActive) BOOL active;
+
 - (void)start;
-- (void)destroy;
+- (void)stop;
 
 @end

@@ -46,6 +46,7 @@
 #pragma mark - Actions
 
 - (IBAction)connectWithFacebook:(id)sender {
+    
     [self checkForAcceptedUserAgreement:^(BOOL success) {
         if (success) {
             [self signInWithFacebook];
@@ -54,6 +55,7 @@
 }
 
 - (IBAction)signUpWithEmail:(id)sender {
+    
     [self checkForAcceptedUserAgreement:^(BOOL success) {
         if (success) {
             [self performSegueWithIdentifier:kSignUpSegueIdentifier sender:nil];
@@ -61,7 +63,8 @@
     }];
 }
 
-- (IBAction)logInWithEmail:(id)sender {
+- (IBAction)pressAlreadyBtn:(id)sender {
+    
     [self checkForAcceptedUserAgreement:^(BOOL success) {
         if (success) {
             [self performSegueWithIdentifier:kLogInSegueSegueIdentifier sender:nil];
@@ -69,24 +72,26 @@
     }];
 }
 
-- (void)checkForAcceptedUserAgreement:(void(^)(BOOL success))completion
-{
+- (void)checkForAcceptedUserAgreement:(void(^)(BOOL success))completion {
+    
     BOOL licenceAccepted = [[QMApi instance].settingsManager userAgreementAccepted];
     if (licenceAccepted) {
         completion(YES);
-        return;
     }
-    QMLicenseAgreementViewController *licenceController  = [self.storyboard instantiateViewControllerWithIdentifier:@"QMLicenceAgreementControllerID"];
-    licenceController.licenceCompletionBlock = completion;
-    [self.navigationController pushViewController:licenceController animated:YES];
+    else {
+        QMLicenseAgreementViewController *licenceController =
+        [self.storyboard instantiateViewControllerWithIdentifier:@"QMLicenceAgreementControllerID"];
+        licenceController.licenceCompletionBlock = completion;
+        [self.navigationController pushViewController:licenceController animated:YES];
+    }
 }
 
-- (void)signInWithFacebook
-{
+- (void)signInWithFacebook {
+    
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     
     __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] loginWithFacebook:^(BOOL success) {
+    [[QMApi instance] singUpAndLoginWithFacebook:^(BOOL success) {
         
         [SVProgressHUD dismiss];
         if (success) {

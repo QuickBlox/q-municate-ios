@@ -7,15 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "QMServiceProtocol.h"
+#import "QMBaseService.h"
 
-@interface QMMessagesService : NSObject <QMServiceProtocol>
+@interface QMMessagesService : QMBaseService
 
 - (NSArray *)messageHistoryWithDialogID:(NSString *)dialogID;
 - (void)addMessageToHistory:(QBChatMessage *)message withDialogID:(NSString *)dialogID;
-
-- (void)start;
-- (void)destroy;
 
 /**
  Send message

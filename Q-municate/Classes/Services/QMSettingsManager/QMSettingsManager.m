@@ -17,6 +17,7 @@ NSString *const kQMSettingsPushNotificationEnabled = @"pushNotificationEnabledKe
 NSString *const kQMSettingsUserStatusKey = @"userStatusKey";
 NSString *const kQMAuthServiceKey = @"QMAuthServiceKey";
 NSString *const kQMLicenceAcceptedKey = @"licence_accepted";
+NSString *const kQMAccountTypeKey = @"accountType";
 
 @implementation QMSettingsManager
 
@@ -25,19 +26,32 @@ NSString *const kQMLicenceAcceptedKey = @"licence_accepted";
 @dynamic userStatus;
 @dynamic pushNotificationsEnabled;
 @dynamic rememberMe;
+@dynamic userAgreementAccepted;
+@dynamic accountType;
 
+#pragma makr - accountType
 
-- (void)setUserAgreementAccepted:(BOOL)userAgreementAccepted
-{
+- (void)setAccountType:(QMAccountType)accountType {
+    defSetInt(kQMAccountTypeKey, accountType);
+}
+
+- (QMAccountType)accountType {
+    
+    NSUInteger accountType = defInt(kQMAccountTypeKey);
+    return accountType;
+}
+
+#pragma mark - userAgreementAccepted
+
+- (void)setUserAgreementAccepted:(BOOL)userAgreementAccepted {
+    
     defSetBool(kQMLicenceAcceptedKey, userAgreementAccepted);
 }
 
-- (BOOL)userAgreementAccepted
-{
+- (BOOL)userAgreementAccepted {
     BOOL accepted = defBool(kQMLicenceAcceptedKey);
     return accepted;
 }
-
 
 #pragma makr - Login
 
@@ -109,8 +123,9 @@ NSString *const kQMLicenceAcceptedKey = @"licence_accepted";
 
 - (void)clearSettings {
     
-    [SSKeychain deletePasswordForService:kQMAuthServiceKey account:self.login];
-    
+    [self setLogin:nil andPassword:nil];
+    self.userAgreementAccepted = NO;
+    self.accountType = QMAccountTypeNone;
     self.pushNotificationsEnabled = YES;
     self.userStatus = nil;
     self.login = nil;

@@ -30,22 +30,46 @@
     
     [super viewDidLoad];
     [self.splashLogoView setImage:[UIImage imageNamed:IS_HEIGHT_GTE_568 ? @"splash" : @"splash-960"]];
-    self.reconnectBtn.alpha = 0;
+    [self createSession];
+}
 
-    QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
-    BOOL rememberMe = settingsManager.rememberMe;
+- (void)createSession {
     
-    if (rememberMe) {
-        [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
-    } else {
-        [self performSegueWithIdentifier:kWelcomeScreenSegueIdentifier sender:nil];
-    }
+    self.reconnectBtn.alpha = 0;
+    [self.activityIndicator startAnimating];
+
+    __weak __typeof(self)weakSelf = self;
+    [[QMApi instance] createSessionWithBlock:^(BOOL success) {
+
+        if (!success) {
+            [weakSelf reconnect];
+        }
+        else {
+            
+            QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
+            BOOL rememberMe = settingsManager.rememberMe;
+            
+            if (rememberMe) {
+                [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+            } else {
+                [weakSelf performSegueWithIdentifier:kWelcomeScreenSegueIdentifier sender:nil];
+            }
+        }
+    }];
+}
+
+- (void)reconnect {
+    
+    self.reconnectBtn.alpha = 1;
+    [self.activityIndicator stopAnimating];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
 
-- (IBAction)pressReconnectBtn:(id)sender {}
+- (IBAction)pressReconnectBtn:(id)sender {
+    [self createSession];
+}
 
 @end

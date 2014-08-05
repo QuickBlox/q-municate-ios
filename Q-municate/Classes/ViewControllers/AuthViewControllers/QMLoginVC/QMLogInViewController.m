@@ -51,25 +51,23 @@
 
 - (IBAction)logIn:(id)sender {
     
-    [[QMApi instance] setAutoLogin:self.rememberMeSwitch.on];
     
-    NSString *mail = self.emailField.text;
+    NSString *email = self.emailField.text;
     NSString *password = self.passwordField.text;
     
-    if (mail.length == 0 || password.length == 0) {
+    if (email.length == 0 || password.length == 0) {
         [REAlertView showAlertWithMessage:kAlertBodyFillInAllFieldsString actionSuccess:NO];
     }
     else {
 
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         __weak __typeof(self)weakSelf = self;
-        [[QMApi instance] loginWithEmail:mail password:password completion:^(BOOL success) {
+
+        [[QMApi instance] loginWithEmail:email password:password rememberMe:weakSelf.rememberMeSwitch.on completion:^(BOOL success) {
             [SVProgressHUD dismiss];
             if (success) {
+                [[QMApi instance] setAutoLogin:weakSelf.rememberMeSwitch.on withAccountType:QMAccountTypeEmail];
                 [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
-            }
-            else {
-                [weakSelf.rememberMeSwitch setOn:NO animated:YES];
             }
         }];
     }
@@ -77,32 +75,9 @@
 
 - (IBAction)connectWithFacebook:(id)sender {
     
-    BOOL licenceAccepted = [[QMApi instance].settingsManager userAgreementAccepted];
-    if (licenceAccepted) {
-        [self signInWithFacebook];
-        return;
-    }
-    [self signInWithFacebookAfterAcceptingUserAgreement];
-}
-
-- (void)signInWithFacebookAfterAcceptingUserAgreement
-{
-    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-        alertView.message = @"By clicking Sign Up, you agree to Q-MUNICATE User Agreement.";
-        [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{
-            [self signInWithFacebook];
-            [[QMApi instance].settingsManager setUserAgreementAccepted:YES];
-        }];
-        [alertView addButtonWithTitle:@"Cancel" andActionBlock:nil];
-    }];
-}
-
-- (void)signInWithFacebook
-{
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    
     __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] loginWithFacebook:^(BOOL success) {
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    [[QMApi instance] singUpAndLoginWithFacebook:^(BOOL success) {
         
         [SVProgressHUD dismiss];
         if (success) {
@@ -111,8 +86,16 @@
     }];
 }
 
-- (IBAction)changeRememberMe:(UISwitch *)sender {
-    [[QMApi instance] setAutoLogin:sender.on];
+- (void)signInWithFacebookAfterAcceptingUserAgreement {
+    
+    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
+        alertView.message = @"By clicking Sign Up, you agree to Q-MUNICATE User Agreement.";
+        [alertView addButtonWithTitle:kAlertButtonTitleOkString andActionBlock:^{
+            [[QMApi instance].settingsManager setUserAgreementAccepted:YES];
+        }];
+        [alertView addButtonWithTitle:@"Cancel" andActionBlock:nil];
+    }];
 }
+
 
 @end

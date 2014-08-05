@@ -131,6 +131,7 @@ NSString *const kCDMessageDatetimePath = @"datetime";
         if (toDelete.count != 0) {
             [weakSelf deleteQBChatHistoryMessages:toDelete inContext:context];
         }
+        
         NSLog(@"/////////////////////////////////");
         NSLog(@"Chat history in cahce %d objects by id %@", allQBChatHistoryMessagesInCache.count, dialogId);
         NSLog(@"Messages to insert %d", toInsert.count);

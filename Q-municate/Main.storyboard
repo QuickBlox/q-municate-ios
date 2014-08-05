@@ -864,13 +864,12 @@ Line 2</string>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xlW-Om-x7C" customClass="QMPlaceholderTextView">
-                                                    <rect key="frame" x="15" y="10" width="285" height="79"/>
+                                                    <rect key="frame" x="15" y="0.0" width="285" height="89"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
-                                                    <dataDetectorType key="dataDetectorTypes" calendarEvent="YES"/>
                                                     <connections>
                                                         <outlet property="delegate" destination="pjK-pp-4QI" id="7V5-1m-IxP"/>
                                                     </connections>
@@ -1545,7 +1544,7 @@ Q-munication by sending them private invitations.</string>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="logInWithEmail:" destination="vN9-k2-MLz" eventType="touchUpInside" id="zd5-Iv-8sO"/>
+                                    <action selector="pressAlreadyBtn:" destination="vN9-k2-MLz" eventType="touchUpInside" id="EZz-go-5bQ"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pjU-Ya-5ft">
@@ -1733,26 +1732,61 @@ Q-munication by sending them private invitations.</string>
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" text="By clicking Sign Up, you agree to Q-MUNICATE " textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3if-5w-JCG">
-                                                    <rect key="frame" x="10" y="8" width="300" height="24"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <color key="textColor" red="0.46139895260989006" green="0.46139895260989006" blue="0.46139895260989006" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                </textView>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="User Agreement" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7UL-6D-JJO">
-                                                    <rect key="frame" x="10" y="30" width="300" height="14"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                    <color key="textColor" red="0.21696937295867594" green="0.39226771970133562" blue="0.55002892017364502" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jNY-WW-QTo">
-                                                    <rect key="frame" x="20" y="8" width="280" height="52"/>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="characterWrap" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jNY-WW-QTo">
+                                                    <rect key="frame" x="20" y="4" width="280" height="48"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <state key="normal">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <attributedString key="attributedTitle">
+                                                            <fragment content="By clicking Sign Up, you agree to Q-MUNICATE ">
+                                                                <attributes>
+                                                                    <font key="NSFont" size="12" name="HelveticaNeue"/>
+                                                                    <font key="NSOriginalFont" size="12" name="HelveticaNeue"/>
+                                                                    <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                                </attributes>
+                                                            </fragment>
+                                                            <fragment content="User Agreement">
+                                                                <attributes>
+                                                                    <color key="NSColor" red="0.29860757372850893" green="0.55496123252876839" blue="0.78583386479591844" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <font key="NSFont" size="12" name="HelveticaNeue"/>
+                                                                    <font key="NSOriginalFont" size="12" name="HelveticaNeue"/>
+                                                                    <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                                </attributes>
+                                                            </fragment>
+                                                        </attributedString>
+                                                    </state>
+                                                    <state key="selected">
+                                                        <attributedString key="attributedTitle">
+                                                            <fragment content="By clicking Sign Up, you agree to Q-MUNICATE ">
+                                                                <attributes>
+                                                                    <font key="NSFont" size="12" name="HelveticaNeue"/>
+                                                                    <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                                </attributes>
+                                                            </fragment>
+                                                            <fragment content="User Agreement">
+                                                                <attributes>
+                                                                    <color key="NSColor" red="0.44723401778942778" green="0.51488326734356449" blue="0.54509803921568623" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <font key="NSFont" size="12" name="HelveticaNeue"/>
+                                                                    <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                                </attributes>
+                                                            </fragment>
+                                                        </attributedString>
+                                                    </state>
+                                                    <state key="highlighted">
+                                                        <attributedString key="attributedTitle">
+                                                            <fragment content="By clicking Sign Up, you agree to Q-MUNICATE ">
+                                                                <attributes>
+                                                                    <font key="NSFont" size="12" name="HelveticaNeue"/>
+                                                                    <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                                </attributes>
+                                                            </fragment>
+                                                            <fragment content="User Agreement">
+                                                                <attributes>
+                                                                    <color key="NSColor" red="0.20176242880714546" green="0.38554027334195051" blue="0.54581871811224492" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <font key="NSFont" size="12" name="HelveticaNeue"/>
+                                                                    <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                                </attributes>
+                                                            </fragment>
+                                                        </attributedString>
                                                     </state>
                                                     <connections>
                                                         <segue destination="tmG-J0-h0D" kind="push" id="zzb-F0-jZ0"/>
@@ -1775,7 +1809,6 @@ Q-munication by sending them private invitations.</string>
                         <outlet property="emailField" destination="cC8-oa-qFu" id="3ut-4F-URa"/>
                         <outlet property="fullNameField" destination="UPF-tg-NCe" id="wMn-Jf-cnW"/>
                         <outlet property="passwordField" destination="qDN-Md-VjN" id="xwy-kT-aN6"/>
-                        <outlet property="userAgreementLabel" destination="7UL-6D-JJO" id="0EN-IG-BkZ"/>
                         <outlet property="userImage" destination="gYz-xn-kfg" id="ole-7V-uXQ"/>
                         <segue destination="ExU-yY-FRH" kind="custom" identifier="TabBarSegue" customClass="QMCustomSegue" id="Gs8-3F-TjX"/>
                     </connections>
@@ -1871,9 +1904,6 @@ Q-munication by sending them private invitations.</string>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="31" id="zCf-nf-EQx"/>
                                 </constraints>
-                                <connections>
-                                    <action selector="changeRememberMe:" destination="kK1-uY-WDS" eventType="valueChanged" id="VLn-gc-8Zh"/>
-                                </connections>
                             </switch>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remember Me" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zvu-7R-7Ar">
                                 <rect key="frame" x="20" y="160" width="124" height="31"/>
@@ -2815,9 +2845,9 @@ Q-munication by sending them private invitations.</string>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="TaC-No-aTb"/>
+        <segue reference="Gs8-3F-TjX"/>
         <segue reference="IAo-qy-uHQ"/>
-        <segue reference="bOV-zd-nKn"/>
         <segue reference="aeV-0O-de3"/>
+        <segue reference="bOV-zd-nKn"/>
     </inferredMetricsTieBreakers>
 </document>

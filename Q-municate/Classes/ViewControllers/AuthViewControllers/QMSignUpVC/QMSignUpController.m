@@ -14,7 +14,6 @@
 #import "QMApi.h"
 
 @interface QMSignUpController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
-@property (weak, nonatomic) IBOutlet UILabel *userAgreementLabel;
 
 @property (weak, nonatomic) IBOutlet UITextField *fullNameField;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
@@ -37,17 +36,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSAttributedString *userAgeementString =
-    [[NSAttributedString alloc] initWithString:@"User Agreement." attributes:@{NSUnderlineStyleAttributeName:@(NSUnderlineStyleSingle)}];
-    self.userAgreementLabel.attributedText = userAgeementString;
-    
     [self configureAvatarImage];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
+    
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
@@ -102,7 +96,7 @@
         [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
     };
     
-    [[QMApi instance] signUpAndLoginWithUser:newUser completion:^(BOOL success) {
+    [[QMApi instance] signUpAndLoginWithUser:newUser rememberMe:NO completion:^(BOOL success) {
 
         if (success) {
             

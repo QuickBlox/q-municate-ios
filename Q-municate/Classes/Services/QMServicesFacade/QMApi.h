@@ -19,11 +19,7 @@
 @class QMChatReceiver;
 @class QMContentService;
 
-typedef NS_ENUM(NSUInteger, QMAuthState) {
-    QMAuthStateNone,
-    QMAuthStateInProgress,
-    QMAuthStateDone
-};
+typedef NS_ENUM(NSUInteger, QMAccountType);
 
 @interface QMApi : NSObject
 
@@ -42,24 +38,37 @@ typedef NS_ENUM(NSUInteger, QMAuthState) {
 
 + (instancetype)instance;
 
+- (BOOL)checkResult:(Result *)result;
 - (BOOL)logoutChat;
 - (BOOL)loginChatWithUser:(QBUUser *)user completion:(QBChatResultBlock)block;
 
-- (void)fetchAllHistory:(void(^)(void))completion;
-- (BOOL)checkResult:(Result *)result;
+- (void)startServices;
+- (void)stopServices;
 
 - (void)applicationDidBecomeActive:(void(^)(BOOL success))completion;
 - (void)applicationWillResignActive;
 
-- (void)startServices;
-- (void)stopServices;
+- (void)fetchAllHistory:(void(^)(void))completion;
 
 @end
 
 @interface QMApi (Auth)
 
-- (void)setAutoLogin:(BOOL)autologin;
 - (void)autoLogin:(void(^)(BOOL success))completion;
+
+- (void)createSessionWithBlock:(void(^)(BOOL success))completion;
+- (void)setAutoLogin:(BOOL)autologin withAccountType:(QMAccountType)accountType;
+
+- (void)signUpAndLoginWithUser:(QBUUser *)user rememberMe:(BOOL)rememberMe completion:(void(^)(BOOL success))completion;
+- (void)singUpAndLoginWithFacebook:(void(^)(BOOL success))completion;
+/**
+ User LogIn with email and password
+ 
+ Type of Result - QBUUserLogInResult
+ @return completion stastus
+ */
+
+- (void)loginWithEmail:(NSString *)email password:(NSString *)password rememberMe:(BOOL)rememberMe completion:(void(^)(BOOL success))completion;
 
 /**
  User LogIn with facebook
@@ -67,12 +76,15 @@ typedef NS_ENUM(NSUInteger, QMAuthState) {
  Type of Result - QBUUserLogInResult
  @return completion stastus
  */
-- (void)signUpAndLoginWithUser:(QBUUser *)user completion:(void(^)(BOOL success))completion;
-- (void)loginWithEmail:(NSString *)email password:(NSString *)password completion:(void(^)(BOOL success))completion;
 - (void)loginWithFacebook:(void(^)(BOOL success))completion;
-- (void)resetUserPassordWithEmail:(NSString *)email completion:(void(^)(BOOL success))completion;
 - (void)autorizeOnQuickbloxChat:(void(^)(BOOL success))completion;
-- (void)logout;
+
+- (void)logout:(void(^)(BOOL success))completion;
+
+/**
+ Reset user password wiht email
+ */
+- (void)resetUserPassordWithEmail:(NSString *)email completion:(void(^)(BOOL success))completion;
 
 @end
 

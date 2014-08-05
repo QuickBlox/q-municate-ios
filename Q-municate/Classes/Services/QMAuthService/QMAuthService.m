@@ -11,7 +11,24 @@
 
 @implementation QMAuthService
 
+
 #pragma mark Create/Destroy Quickblox Sesson
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [QBBaseModule createSharedModule];
+    }
+    return self;
+}
+
+- (void)start {
+    [super start];
+}
+
+- (void)stop {
+    [super stop];
+}
 
 - (BOOL)sessionTokenHasExpiredOrNeedCreate {
     
@@ -27,6 +44,7 @@
 }
 
 - (NSObject<Cancelable> *)createSessionWithBlock:(QBAAuthSessionCreationResultBlock)completion {
+    
     return [QBAuth createSessionWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
 }
 

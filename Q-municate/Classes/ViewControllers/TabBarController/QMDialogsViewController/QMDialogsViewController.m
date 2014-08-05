@@ -1,8 +1,8 @@
 //
-//  QMChatRoomListController.m
+//  QMDialogsViewController.m
 //  Q-municate
 //
-//  Created by Igor Alefirenko on 31/03/2014.
+//  Created by Andrey Ivanov on 30/06/2014.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -63,7 +63,6 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
         QMChatViewController *chatController = segue.destinationViewController;
         QBChatDialog *dialog = [self.dataSource dialogAtIndexPath:indexPath];
         chatController.dialog = dialog;
-//        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
         
     } else if ([segue.destinationViewController isKindOfClass:[QMCreateNewChatController class]]) {
         

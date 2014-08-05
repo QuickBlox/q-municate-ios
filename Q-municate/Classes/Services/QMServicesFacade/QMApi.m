@@ -33,7 +33,6 @@ const NSTimeInterval kQMPresenceTime = 30;
 @property (strong, nonatomic) QMMessagesService *messagesService;
 @property (strong, nonatomic) QMChatReceiver *responceService;
 @property (strong, nonatomic) QMContentService *contentService;
-
 @property (strong, nonatomic) NSTimer *presenceTimer;
 
 @end
@@ -61,7 +60,6 @@ const NSTimeInterval kQMPresenceTime = 30;
     
     self = [super init];
     if (self) {
-        
         self.authService = [[QMAuthService alloc] init];
         self.usersService = [[QMUsersService alloc] init];
         self.chatDialogsService = [[QMChatDialogsService alloc] init];
@@ -77,6 +75,7 @@ const NSTimeInterval kQMPresenceTime = 30;
 
 - (void)startServices {
     
+    [self.authService start];
     [self.usersService start];
     [self.chatDialogsService start];
     [self.messagesService start];
@@ -85,10 +84,11 @@ const NSTimeInterval kQMPresenceTime = 30;
 
 - (void)stopServices {
     
-    [self.usersService destroy];
-    [self.chatDialogsService destroy];
-    [self.messagesService destroy];
-    [self.avCallService destroy];
+    [self.authService stop];
+    [self.usersService stop];
+    [self.chatDialogsService stop];
+    [self.messagesService stop];
+    [self.avCallService stop];
 }
 
 - (void)fetchAllHistory:(void(^)(void))completion {
@@ -130,6 +130,7 @@ const NSTimeInterval kQMPresenceTime = 30;
 - (BOOL)logoutChat {
     
     BOOL success = YES;
+    [[QMChatReceiver instance] unsubscribeForTarget:self];
     if ([[QBChat instance] isLoggedIn]) {
         success = [[QBChat instance] logout];
     }
@@ -142,9 +143,6 @@ const NSTimeInterval kQMPresenceTime = 30;
     
     if ([[QBChat instance] isLoggedIn]) {
         [[QBChat instance] sendPresence];
-    }
-    else if (self.currentUser) {
-        [self loginChatWithUser:self.currentUser completion:nil];
     }
 }
 
@@ -159,7 +157,6 @@ const NSTimeInterval kQMPresenceTime = 30;
     
     [self logoutChat];
 }
-
 
 @end
 

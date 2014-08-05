@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "QMBaseService.h"
 
-@interface QMAuthService : NSObject
+@interface QMAuthService : QMBaseService
 
 #pragma mark - Authorization
 

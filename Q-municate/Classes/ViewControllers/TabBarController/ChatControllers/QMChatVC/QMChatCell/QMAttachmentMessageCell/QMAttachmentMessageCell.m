@@ -16,9 +16,6 @@
 @property (strong, nonatomic) QMProgressView *progressView;
 @property (strong, nonatomic) CALayer *maskLayer;
 
-//@property (strong, nonatomic) UIImageView *attachmentView;
-//@property (strong, nonatomic) CALayer *contentLayer;
-
 @end
 
 @implementation QMAttachmentMessageCell
@@ -32,12 +29,29 @@
     QMAttachmentMessageCell *cell = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     return cell;
 }
+
 - (void)createContainerSubviews {
     
     [super createContainerSubviews];
     
     self.maskLayer = [CALayer layer];
     self.maskLayer.contentsScale = [UIScreen mainScreen].scale;
+    
+    self.progressView  = [[QMProgressView alloc] init];
+    self.progressView.trackTintColor = [UIColor colorWithWhite:0.956 alpha:1.000];
+
+    self.progressView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.progressView.mask = self.maskLayer;
+    
+    [self.balloonImageView addSubview:self.progressView];
+    [self.balloonImageView addConstraints:PVGroup(@[
+                                                 
+                                                 PVLeftOf(self.progressView).equalTo.leftOf(self.balloonImageView).asConstraint,
+                                                 PVBottomOf(self.progressView).equalTo.bottomOf(self.balloonImageView).asConstraint,
+                                                 PVTopOf(self.progressView).equalTo.topOf(self.balloonImageView).asConstraint,
+                                                 PVRightOf(self.progressView).equalTo.rightOf(self.balloonImageView).asConstraint]).asArray];
+    
+    
     self.balloonImageView.contentMode = UIViewContentModeScaleAspectFill;
     self.balloonImageView.layer.mask = self.maskLayer;
 }
@@ -68,14 +82,17 @@
     
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
     QBChatAttachment *attachment = self.message.attachments.lastObject;
-
+    self.progressView.progressTintColor = message.balloonColor;
     self.balloonImageView.image = nil;
-    NSURL *imageUrl = [NSURL URLWithString:attachment.url];
     
+    NSURL *imageUrl = [NSURL URLWithString:attachment.url];
+    self.progressView.hidden = NO;
     __weak __typeof(self)weakSelf = self;
     [manager downloadImageWithURL:imageUrl options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-        NSLog(@"%d %d", receivedSize, expectedSize);
+         CGFloat progress = ((CGFloat)receivedSize)/((CGFloat)expectedSize);
+        weakSelf.progressView.progress = progress;
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+        weakSelf.progressView.hidden = YES;
         weakSelf.balloonImageView.image = image;
     }];
 }
@@ -83,8 +100,8 @@
 - (void)layoutSubviews {
     
     [super layoutSubviews];
-    
     self.maskLayer.frame = self.balloonImageView.bounds;
+    
 }
 
 @end

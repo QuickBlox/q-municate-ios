@@ -8,8 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSUInteger, QMAccountType) {
+    QMAccountTypeNone,
+    QMAccountTypeEmail,
+    QMAccountTypeFacebook
+};
+
 @interface QMSettingsManager : NSObject
 
+@property (assign, nonatomic) QMAccountType accountType;
 
 /**
  Licence Agreement accepted
@@ -40,6 +47,7 @@
  * Remember user login and password
  */
 @property (assign, nonatomic) BOOL rememberMe;
+
 
 - (void)setLogin:(NSString *)login andPassword:(NSString *)password;
 /**

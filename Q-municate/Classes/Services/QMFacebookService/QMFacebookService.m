@@ -43,10 +43,10 @@ NSString *const kQMDataKey = @"data";
                                  @"link" : kQMQuickbloxHomeUrl,
                                  @"picture" : kQMQuickbloxLogoUrl,
                                  @"name" : kQMAppName,
-                                 @"caption" : @"By QuickBlox",
-                                 @"description" : @"Join to new world of audio & video calls",
+                                 @"caption" : kQMAppName,
+                                 @"description" : @"",
                                  @"place":@"155021662189",
-                                 @"message": @"Very Nice!",
+                                 @"message": @"Dear friend, use Q-municate application to reach me! Download it here: http://q-municate.com",
                                  @"tags" : usersIDs
                                  };
     
