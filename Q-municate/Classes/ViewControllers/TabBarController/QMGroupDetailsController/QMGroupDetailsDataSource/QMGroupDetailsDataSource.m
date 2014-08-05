@@ -40,9 +40,9 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
         self.chatDialog = chatDialog;
         
         self.tableView.dataSource = nil;
-        [self reloadParticipants];
         self.tableView.dataSource = self;
         
+        [self reloadParticipants];
         __weak __typeof(self)weakSelf = self;
         void(^retrive)(void) = ^() {
             [[QMApi instance] retrieveFriendsIfNeeded:^(BOOL updated) {
@@ -51,17 +51,33 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
         };
         
         [[QMChatReceiver instance] chatContactListWilChangeWithTarget:self block:retrive];
+        
+        [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+            if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog && [message.cParamDialogID isEqualToString:self.chatDialog.ID]) {
+                [weakSelf applyChangesWithMessageNotification:message];
+            }
+        }];
     }
     
     return self;
 }
-
 
 - (void)reloadParticipants {
     
     self.participants = [[QMApi instance] usersWithIDs:self.chatDialog.occupantIDs];
     [self.tableView reloadData];
 }
+
+- (void)applyChangesWithMessageNotification:(QBChatMessage *)messageNotification
+{
+    QBChatDialog *updatedDialog = [[QMApi instance] chatDialogWithID:messageNotification.cParamDialogID];
+    if ([self.chatDialog.occupantIDs count] != [updatedDialog.occupantIDs count]) {
+        self.chatDialog = updatedDialog;
+        [self reloadParticipants];
+    }
+    
+}
+
 
 #pragma mark - UITableViewDataSource
 

@@ -80,6 +80,11 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     [self createChatDialog:chatDialog occupants:occupants completion:completion];
 }
 
+- (void)updateChatDialog:(QBChatDialog *)chatDialog
+{
+    [[QMApi instance].chatDialogsService updateChatDialog:chatDialog];
+}
+
 - (QBChatMessage *)notification:(QMMessageNotificationType)type recipient:(QBUUser *)recipient text:(NSString *)text chatDialog:(QBChatDialog *)chatDialog {
     
     QBChatMessage *msg = [QBChatMessage message];
@@ -109,28 +114,35 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     
     NSMutableDictionary *extendedRequest = [[NSMutableDictionary alloc] init];
     extendedRequest[kQMEditDialogExtendedNameParameter] = dialogName;
-    chatDialog.name = dialogName;
-    
     NSArray *opponentsIDs = [self usersWithIDs:chatDialog.occupantIDs];
-    [self updateChatDialog:chatDialog extendedRequest:extendedRequest recipients:opponentsIDs completion:completion];
+
+    __weak __typeof(self)weakSelf = self;
+    [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialogResult *result) {
+
+        if ([weakSelf checkResult:result]) {
+            chatDialog.name = dialogName;
+            [weakSelf sendNotificationWithType:QMMessageNotificationTypeUpdateDialog toRecipients:opponentsIDs chatDialog:chatDialog];
+        }
+        
+        completion(result);
+    }];
 }
 
 - (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
     
-    NSArray *opponentsIDs = [self idsWithUsers:occupants];
-    NSMutableDictionary *extendedRequest = [[NSMutableDictionary alloc] init];
-    extendedRequest[kQMEditDialogExtendedPushOccupantsParameter] = opponentsIDs;
+    NSArray *occupantsToJoinIDs = [self idsWithUsers:occupants];
+    NSArray *occupantsToNotify = [self usersWithIDs:chatDialog.occupantIDs];
     
-    [self updateChatDialog:chatDialog extendedRequest:extendedRequest recipients:opponentsIDs completion:completion];
-}
-
-- (void)updateChatDialog:(QBChatDialog *)chatDialog extendedRequest:(NSMutableDictionary *)extendedRequest recipients:(NSArray *)recipients completion:(QBChatDialogResultBlock)completion {
+    NSMutableDictionary *extendedRequest = [[NSMutableDictionary alloc] init];
+    extendedRequest[kQMEditDialogExtendedPushOccupantsParameter] = occupantsToJoinIDs;
     
     __weak __typeof(self)weakSelf = self;
     [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialogResult *result) {
         
         if ([weakSelf checkResult:result]) {
-            [weakSelf sendNotificationWithType:QMMessageNotificationTypeUpdateDialog toRecipients:recipients chatDialog:chatDialog];
+            [weakSelf updateChatDialog:result.dialog];
+            [weakSelf sendNotificationWithType:QMMessageNotificationTypeCreateDialog toRecipients:occupants chatDialog:result.dialog];
+            [weakSelf sendNotificationWithType:QMMessageNotificationTypeUpdateDialog toRecipients:occupantsToNotify chatDialog:result.dialog];
         }
         completion(result);
     }];

@@ -39,17 +39,17 @@
     
     self.progressView  = [[QMProgressView alloc] init];
     self.progressView.trackTintColor = [UIColor colorWithWhite:0.956 alpha:1.000];
-
+    
     self.progressView.translatesAutoresizingMaskIntoConstraints = NO;
     self.progressView.mask = self.maskLayer;
     
     [self.balloonImageView addSubview:self.progressView];
     [self.balloonImageView addConstraints:PVGroup(@[
-                                                 
-                                                 PVLeftOf(self.progressView).equalTo.leftOf(self.balloonImageView).asConstraint,
-                                                 PVBottomOf(self.progressView).equalTo.bottomOf(self.balloonImageView).asConstraint,
-                                                 PVTopOf(self.progressView).equalTo.topOf(self.balloonImageView).asConstraint,
-                                                 PVRightOf(self.progressView).equalTo.rightOf(self.balloonImageView).asConstraint]).asArray];
+                                                    
+                                                    PVLeftOf(self.progressView).equalTo.leftOf(self.balloonImageView).asConstraint,
+                                                    PVBottomOf(self.progressView).equalTo.bottomOf(self.balloonImageView).asConstraint,
+                                                    PVTopOf(self.progressView).equalTo.topOf(self.balloonImageView).asConstraint,
+                                                    PVRightOf(self.progressView).equalTo.rightOf(self.balloonImageView).asConstraint]).asArray];
     
     
     self.balloonImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -82,14 +82,16 @@
     
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
     QBChatAttachment *attachment = self.message.attachments.lastObject;
-    self.progressView.progressTintColor = message.balloonColor;
     self.balloonImageView.image = nil;
     
-    NSURL *imageUrl = [NSURL URLWithString:attachment.url];
     self.progressView.hidden = NO;
+    self.progressView.progressTintColor = message.balloonColor;
+    
+    NSURL *imageUrl = [NSURL URLWithString:attachment.url];
+    
     __weak __typeof(self)weakSelf = self;
     [manager downloadImageWithURL:imageUrl options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-         CGFloat progress = ((CGFloat)receivedSize)/((CGFloat)expectedSize);
+        CGFloat progress = ((CGFloat)receivedSize)/((CGFloat)expectedSize);
         weakSelf.progressView.progress = progress;
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
         weakSelf.progressView.hidden = YES;

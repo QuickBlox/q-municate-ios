@@ -144,12 +144,10 @@ NSString const *kQMCustomParameterDialogOccupantsIDs = @"occupants_ids";
 - (void)setCustomParametersWithChatDialog:(QBChatDialog *)chatDialog {
     
     self.cParamDialogID = chatDialog.ID;
-    
     if (chatDialog.type == QBChatDialogTypeGroup) {
         self.cParamRoomJID = chatDialog.roomJID;
         self.cParamDialogName = chatDialog.name;
     }
-    
     self.cParamDialogType = @(chatDialog.type);
     self.cParamDialogOccupantsIDs = [chatDialog.occupantIDs componentsJoinedByString:@","];
 }

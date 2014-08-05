@@ -14,9 +14,11 @@
 
 - (void)viewDidLoad {
     
-    NSMutableArray *friendsIDS = [[QMApi instance] idsFromContactListItems].mutableCopy;
-    [friendsIDS removeObjectsInArray:self.chatDialog.occupantIDs];
-    NSArray * friends = [[QMApi instance] usersWithIDs:friendsIDS];
+    NSMutableSet *friendsIDS = [NSMutableSet setWithArray:[[QMApi instance] idsFromContactListItems]];
+    NSSet *minusSet = [NSSet setWithArray:self.chatDialog.occupantIDs];
+    [friendsIDS minusSet:minusSet];
+    
+    NSArray * friends = [[QMApi instance] usersWithIDs:friendsIDS.allObjects];
     self.friends = friends;
     
     [super viewDidLoad];

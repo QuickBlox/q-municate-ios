@@ -78,7 +78,6 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  */
 - (void)loginWithFacebook:(void(^)(BOOL success))completion;
 - (void)autorizeOnQuickbloxChat:(void(^)(BOOL success))completion;
-
 - (void)logout:(void(^)(BOOL success))completion;
 
 /**

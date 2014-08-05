@@ -981,7 +981,7 @@
 			isa = PBXGroup;
 			children = (
 				55A8B07B196598A300B5D33B /* QMAVCallService */,
-				55A8B07E196598A300B5D33B /* QMChatGroupService */,
+				55A8B07E196598A300B5D33B /* QMChatDialogService */,
 				55A8B083196598A300B5D33B /* QMMessageService */,
 			);
 			path = QMChatService;
@@ -996,12 +996,13 @@
 			path = QMAVCallService;
 			sourceTree = "<group>";
 		};
-		55A8B07E196598A300B5D33B /* QMChatGroupService */ = {
+		55A8B07E196598A300B5D33B /* QMChatDialogService */ = {
 			isa = PBXGroup;
 			children = (
 				55A8B07F196598A300B5D33B /* QMChatDialogsService.h */,
 				55A8B080196598A300B5D33B /* QMChatDialogsService.m */,
 			);
+			name = QMChatDialogService;
 			path = QMChatGroupService;
 			sourceTree = "<group>";
 		};

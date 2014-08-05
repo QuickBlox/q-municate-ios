@@ -33,10 +33,6 @@
     [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
         [weakSelf updateOrCreateDialogWithMessage:message];
     }];
-    
-    [[QMChatReceiver instance] chatRoomDidCreateWithTarget:self block:^(NSString *roomName) {
-        NSLog(@"chatRoomDidCreateWithTarget");
-    }];
 }
 
 - (void)stop {
@@ -80,6 +76,11 @@
 
     QBChatDialog *dialog = [allDialogs filteredArrayUsingPredicate:predicate].firstObject;
     return dialog;
+}
+
+- (void)updateChatDialog:(QBChatDialog *)chatDialog
+{
+    self.dialogs[chatDialog.ID] = chatDialog;
 }
 
 - (QBChatDialog *)chatDialogWithID:(NSString *)dialogID {
@@ -137,14 +138,14 @@
 
 - (void)updateChatDialogWithChatMessage:(QBChatMessage *)chatMessage {
     
-    QBChatDialog *dialog = self.dialogs[chatMessage.cParamRoomJID];
+    QBChatDialog *dialog = self.dialogs[chatMessage.cParamDialogID];
     if (dialog == nil) {
         NSAssert(!dialog, @"Dialog you are looking for not found.");
         return;
     }
     
     dialog.name = chatMessage.cParamDialogName;
-    dialog.occupantIDs = [chatMessage.cParamDialogOccupantsIDs componentsSeparatedByString:@", "];
+    dialog.occupantIDs = [chatMessage.cParamDialogOccupantsIDs componentsSeparatedByString:@","];
 }
 
 - (void)updateOrCreateDialogWithMessage:(QBChatMessage *)message {
@@ -155,11 +156,9 @@
         
         QBChatDialog *chatDialog = [message chatDialogFromCustomParameters];
         [self addDialogToHistory:chatDialog];
-    }
-    else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog){
-       // lol
+    } else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog){
+        [self updateChatDialogWithChatMessage:message];
     }  else {
-        
         QBChatDialog *dialog = [self chatDialogWithID:message.cParamDialogID];
         dialog.lastMessageText = message.text;
         dialog.unreadMessagesCount++;
