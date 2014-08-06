@@ -41,6 +41,7 @@
     if (!self.currentUser) {
         
         if (self.settingsManager.accountType == QMAccountTypeEmail) {
+            
             NSString *email = self.settingsManager.login;
             NSString *password = self.settingsManager.password;
             
@@ -203,7 +204,8 @@
         if(![weakSelf checkResult:loginResult]){
             completion(loginResult.success);
         } else {
-            if (weakSelf.settingsManager.rememberMe) {
+            if (rememberMe) {
+                weakSelf.settingsManager.rememberMe = rememberMe;
                 [weakSelf.settingsManager setLogin:email andPassword:password];
             }
             completion(loginResult.success);

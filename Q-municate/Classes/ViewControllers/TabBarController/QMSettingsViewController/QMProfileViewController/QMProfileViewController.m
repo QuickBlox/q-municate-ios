@@ -13,6 +13,7 @@
 #import "QMImageView.h"
 #import "SVProgressHUD.h"
 #import "QMContentService.h"
+#import "UIImage+Cropper.h"
 
 @interface QMProfileViewController ()
 
@@ -42,6 +43,7 @@
     
     self.avatarView.imageViewType = QMImageViewTypeCircle;
     self.statusField.placeHolder = @"Add status...";
+    self.statusField.placeHolderTextColor = [UIColor lightGrayColor];
     
     [self updateProfileView];
     [self setUpdateButtonActivity];
@@ -162,11 +164,11 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
     UIImage *selectedImage = info[UIImagePickerControllerEditedImage];
+    
     self.avatarImage = selectedImage;
-    self.avatarView.image = self.avatarImage;
+    self.avatarView.image = [selectedImage imageByCircularScaleAndCrop:self.avatarView.frame.size];
     
     [picker dismissViewControllerAnimated:YES completion:^{
-        self.avatarView.image = self.avatarImage;
         [self setUpdateButtonActivity];
     }];
 }

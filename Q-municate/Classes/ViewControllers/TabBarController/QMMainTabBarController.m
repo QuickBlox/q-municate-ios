@@ -26,12 +26,19 @@
 //    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     __weak __typeof(self)weakSelf = self;
     [[QMApi instance] autoLogin:^(BOOL success) {
-        [weakSelf.viewControllers makeObjectsPerformSelector:@selector(view)];
-        [[QMApi instance] loginChatWithUser:weakSelf.currentUser completion:^(BOOL loginSuccess) {
-            [[QMApi instance] fetchAllHistory:^{
-                [SVProgressHUD dismiss];
+        
+        if (!success) {
+            [[QMApi instance] logout:^(BOOL logoutSuccess) {
+                [weakSelf performSegueWithIdentifier:@"SplashSegue" sender:nil];
             }];
-        }];
+        }else {
+            [[QMApi instance] loginChatWithUser:weakSelf.currentUser completion:^(BOOL loginSuccess) {
+                [[QMApi instance] fetchAllHistory:^{
+                    [SVProgressHUD dismiss];
+                }];
+            }];
+        }
+//        [weakSelf.viewControllers makeObjectsPerformSelector:@selector(view)];
     }];
 }
 
