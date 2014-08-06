@@ -26,8 +26,8 @@ const CGFloat kChatInputCornerRadius = 6.0;
     return self;
 }
 
-- (void)awakeFromNib
-{
+- (void)awakeFromNib {
+    [super awakeFromNib];
     [self configureTextViewWithStyle:QMPlaceholderTextViewStylePlain];
 }
 

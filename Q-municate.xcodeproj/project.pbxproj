@@ -50,6 +50,9 @@
 		556192CB19891BD70048D112 /* QMGroupDetailsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 556192CA19891BD70048D112 /* QMGroupDetailsDataSource.m */; };
 		5587451A198146D5005B1783 /* QBChatAbstractMessage+CustomParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 55874519198146D5005B1783 /* QBChatAbstractMessage+CustomParameters.m */; };
 		558AE52C196EA7C400AEAC1F /* QMFriendsListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 558AE52B196EA7C400AEAC1F /* QMFriendsListDataSource.m */; };
+		5593279F199216FB001C4BF8 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D57E6E18ACC11C00A9900A /* XCTest.framework */; };
+		559327A5199216FB001C4BF8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 559327A3199216FB001C4BF8 /* InfoPlist.strings */; };
+		559327A7199216FB001C4BF8 /* Q_municate_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 559327A6199216FB001C4BF8 /* Q_municate_Tests.m */; };
 		55943A0C1941A4AE00BF4312 /* CDDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 55943A0B1941A4AE00BF4312 /* CDDialog.m */; };
 		559BDFE719618D3D000588FE /* QMLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFDD19618D3D000588FE /* QMLogInViewController.m */; };
 		559BDFE819618D3D000588FE /* QMSignUpController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE019618D3D000588FE /* QMSignUpController.m */; };
@@ -237,6 +240,16 @@
 		};
 /* End PBXBuildRule section */
 
+/* Begin PBXContainerItemProxy section */
+		559327A9199216FB001C4BF8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 69D57E4A18ACC11C00A9900A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 69D57E5118ACC11C00A9900A;
+			remoteInfo = "Q-municate";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		551BD882199103C0006AC667 /* _CDAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _CDAttachment.h; sourceTree = "<group>"; };
 		551BD883199103C0006AC667 /* _CDAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _CDAttachment.m; sourceTree = "<group>"; };
@@ -292,6 +305,11 @@
 		55874519198146D5005B1783 /* QBChatAbstractMessage+CustomParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QBChatAbstractMessage+CustomParameters.m"; sourceTree = "<group>"; };
 		558AE52A196EA7C400AEAC1F /* QMFriendsListDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMFriendsListDataSource.h; sourceTree = "<group>"; };
 		558AE52B196EA7C400AEAC1F /* QMFriendsListDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMFriendsListDataSource.m; sourceTree = "<group>"; };
+		5593279E199216FB001C4BF8 /* Q-municate Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Q-municate Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		559327A2199216FB001C4BF8 /* Q-municate Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Q-municate Tests-Info.plist"; sourceTree = "<group>"; };
+		559327A4199216FB001C4BF8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		559327A6199216FB001C4BF8 /* Q_municate_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Q_municate_Tests.m; sourceTree = "<group>"; };
+		559327A8199216FB001C4BF8 /* Q-municate Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Q-municate Tests-Prefix.pch"; sourceTree = "<group>"; };
 		55943A0A1941A4AE00BF4312 /* CDDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDDialog.h; sourceTree = "<group>"; };
 		55943A0B1941A4AE00BF4312 /* CDDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDDialog.m; sourceTree = "<group>"; };
 		559BDFDC19618D3D000588FE /* QMLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLogInViewController.h; sourceTree = "<group>"; };
@@ -598,6 +616,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		5593279B199216FB001C4BF8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5593279F199216FB001C4BF8 /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		69D57E4F18ACC11C00A9900A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -787,6 +813,25 @@
 				558AE52B196EA7C400AEAC1F /* QMFriendsListDataSource.m */,
 			);
 			path = QMFriendsListDataSource;
+			sourceTree = "<group>";
+		};
+		559327A0199216FB001C4BF8 /* Q-municate Tests */ = {
+			isa = PBXGroup;
+			children = (
+				559327A6199216FB001C4BF8 /* Q_municate_Tests.m */,
+				559327A1199216FB001C4BF8 /* Supporting Files */,
+			);
+			path = "Q-municate Tests";
+			sourceTree = "<group>";
+		};
+		559327A1199216FB001C4BF8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				559327A2199216FB001C4BF8 /* Q-municate Tests-Info.plist */,
+				559327A3199216FB001C4BF8 /* InfoPlist.strings */,
+				559327A8199216FB001C4BF8 /* Q-municate Tests-Prefix.pch */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		559BDFDA19618D3D000588FE /* AuthViewControllers */ = {
@@ -1891,6 +1936,7 @@
 			children = (
 				55286995199131B5006F92CB /* Localizable.strings */,
 				69D57E5B18ACC11C00A9900A /* Q-municate */,
+				559327A0199216FB001C4BF8 /* Q-municate Tests */,
 				69D57E5418ACC11C00A9900A /* Frameworks */,
 				69D57E5318ACC11C00A9900A /* Products */,
 				869075CA2A3446469130768E /* Pods.xcconfig */,
@@ -1901,6 +1947,7 @@
 			isa = PBXGroup;
 			children = (
 				69D57E5218ACC11C00A9900A /* Q-municate.app */,
+				5593279E199216FB001C4BF8 /* Q-municate Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1966,6 +2013,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		5593279D199216FB001C4BF8 /* Q-municate Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 559327AD199216FB001C4BF8 /* Build configuration list for PBXNativeTarget "Q-municate Tests" */;
+			buildPhases = (
+				5593279A199216FB001C4BF8 /* Sources */,
+				5593279B199216FB001C4BF8 /* Frameworks */,
+				5593279C199216FB001C4BF8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				559327AA199216FB001C4BF8 /* PBXTargetDependency */,
+			);
+			name = "Q-municate Tests";
+			productName = "Q-municate Tests";
+			productReference = 5593279E199216FB001C4BF8 /* Q-municate Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		69D57E5118ACC11C00A9900A /* Q-municate */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 69D57E7E18ACC11C00A9900A /* Build configuration list for PBXNativeTarget "Q-municate" */;
@@ -1997,6 +2062,9 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Quickblox;
 				TargetAttributes = {
+					5593279D199216FB001C4BF8 = {
+						TestTargetID = 69D57E5118ACC11C00A9900A;
+					};
 					69D57E5118ACC11C00A9900A = {
 						DevelopmentTeam = 8885H5G2YX;
 					};
@@ -2017,11 +2085,20 @@
 			targets = (
 				69D57E5118ACC11C00A9900A /* Q-municate */,
 				55311AD01990F35200C585D5 /* mogenerator */,
+				5593279D199216FB001C4BF8 /* Q-municate Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		5593279C199216FB001C4BF8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				559327A5199216FB001C4BF8 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		69D57E5018ACC11C00A9900A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2091,6 +2168,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		5593279A199216FB001C4BF8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				559327A7199216FB001C4BF8 /* Q_municate_Tests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		69D57E4E18ACC11C00A9900A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2253,6 +2338,25 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		559327AA199216FB001C4BF8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 69D57E5118ACC11C00A9900A /* Q-municate */;
+			targetProxy = 559327A9199216FB001C4BF8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		559327A3199216FB001C4BF8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				559327A4199216FB001C4BF8 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
 		55311AD21990F35200C585D5 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -2265,6 +2369,53 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		559327AB199216FB001C4BF8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Q-municate.app/Q-municate";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Q-municate Tests/Q-municate Tests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Q-municate Tests/Q-municate Tests-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		559327AC199216FB001C4BF8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Q-municate.app/Q-municate";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Q-municate Tests/Q-municate Tests-Prefix.pch";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Q-municate Tests/Q-municate Tests-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
 		};
@@ -2441,6 +2592,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		559327AD199216FB001C4BF8 /* Build configuration list for PBXNativeTarget "Q-municate Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				559327AB199216FB001C4BF8 /* Debug */,
+				559327AC199216FB001C4BF8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		69D57E4D18ACC11C00A9900A /* Build configuration list for PBXProject "Q-municate" */ = {
 			isa = XCConfigurationList;

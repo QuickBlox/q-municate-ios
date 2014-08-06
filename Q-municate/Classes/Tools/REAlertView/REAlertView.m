@@ -11,8 +11,7 @@
 @interface REAlertView ()
 
 @property (assign, nonatomic) BOOL isDissmis;
-
-@property (nonatomic, retain) NSMutableArray* buttonActions;
+@property (strong, nonatomic) NSMutableArray* buttonActions;
 
 @end
 

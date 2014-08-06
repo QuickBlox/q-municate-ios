@@ -9,7 +9,7 @@
 #ifndef Q_municate_Definitions_h
 #define Q_municate_Definitions_h
 
-#define QM_TEST 1
+#define QM_TEST 0
 #define QM_AUDIO_VIDEO_ENABLED 0
 
 #define IS_HEIGHT_GTE_568 [[UIScreen mainScreen ] bounds].size.height == 568.0f

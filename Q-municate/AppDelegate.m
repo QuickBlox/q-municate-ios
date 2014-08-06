@@ -20,10 +20,11 @@ NSString *const kQMAcconuntKey = @"LpNmxA2Pq2uyW5qBjHy8";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-//    self.incomingCallService = [[QMIncomingCallHandler alloc] init];
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-
+    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleDefault;
+#if QM_AUDIO_VIDEO_ENABLED == 1
+    self.incomingCallService = [[QMIncomingCallHandler alloc] init];
+#endif
+    UIApplication.sharedApplication.applicationIconBadgeNumber = 0;
     [QBSettings setApplicationID:kQMApplicationID];
     [QBSettings setAuthorizationKey:kQMAuthorizationKey];
     [QBSettings setAuthorizationSecret:kQMAuthorizationSecret];
@@ -33,6 +34,7 @@ NSString *const kQMAcconuntKey = @"LpNmxA2Pq2uyW5qBjHy8";
     /*Configure app appearance*/
     NSDictionary *normalAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:1.000 alpha:0.750]};
     NSDictionary *disabledAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:0.935 alpha:0.260]};
+    
     [[UIBarButtonItem appearance] setTitleTextAttributes:normalAttributes forState:UIControlStateNormal];
     [[UIBarButtonItem appearance] setTitleTextAttributes:disabledAttributes forState:UIControlStateDisabled];
     

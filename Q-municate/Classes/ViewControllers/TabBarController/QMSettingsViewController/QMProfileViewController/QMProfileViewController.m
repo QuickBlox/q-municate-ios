@@ -131,7 +131,7 @@
 }
 
 - (NSString *)userPhone {
-    return self.currentUser.phone ? self.currentUser.phone : @"";
+    return self.currentUser.phone ?: @"";
 }
 
 #pragma mark - UITextFieldDelegate & UITextViewDelegate

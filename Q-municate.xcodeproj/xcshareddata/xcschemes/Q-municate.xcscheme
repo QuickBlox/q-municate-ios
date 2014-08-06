@@ -52,6 +52,16 @@
                ReferencedContainer = "container:Q-municate.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5593279D199216FB001C4BF8"
+               BuildableName = "Q-municate Tests.xctest"
+               BlueprintName = "Q-municate Tests"
+               ReferencedContainer = "container:Q-municate.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
