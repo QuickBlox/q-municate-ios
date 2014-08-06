@@ -166,9 +166,9 @@
     
     __weak __typeof(self)weakSelf = self;
     
-    [SVProgressHUD showProgress:0];
+    [SVProgressHUD showProgress:0 status:@"" maskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance].contentService uploadJPEGImage:image progress:^(float progress) {
-        [SVProgressHUD showProgress:progress];
+        [SVProgressHUD showProgress:progress status:@"" maskType:SVProgressHUDMaskTypeClear];
     } completion:^(QBCFileUploadTaskResult *result) {
         
         if (result.success) {

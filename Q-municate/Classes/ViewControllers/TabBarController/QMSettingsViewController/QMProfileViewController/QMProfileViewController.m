@@ -107,9 +107,9 @@
     user.phone = weakSelf.phoneFieldCache;
     user.customData = weakSelf.statusTextCache;
     
-    [SVProgressHUD showProgress:0.f status:@""];
+    [SVProgressHUD showProgress:0.f status:@"UploadImage..." maskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] updateUser:user image:self.avatarImage progress:^(float progress) {
-        [SVProgressHUD showProgress:progress status:@"Upload image..."];
+        [SVProgressHUD showProgress:progress status:@"Upload image..." maskType:SVProgressHUDMaskTypeClear];
     } completion:^(BOOL success) {
 
         if (success) {
