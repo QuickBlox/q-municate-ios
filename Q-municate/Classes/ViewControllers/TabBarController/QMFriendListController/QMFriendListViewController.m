@@ -26,9 +26,13 @@
     NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
+#define kQMSHOW_SEARCH 0
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+#if kQMSHOW_SEARCH
     [self.tableView setContentOffset:CGPointMake(0, self.searchDisplayController.searchBar.frame.size.height) animated:NO];
+#endif
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.dataSource = [[QMFriendsListDataSource alloc] initWithTableView:self.tableView searchDisplayController:self.searchDisplayController];
 }
