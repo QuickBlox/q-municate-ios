@@ -96,8 +96,11 @@ static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
 
 - (NSArray *)sortUsersByFullname:(NSArray *)users {
     
-    NSSortDescriptor *fullNameDescriptor = [[NSSortDescriptor alloc] initWithKey:@"fullName" ascending:YES];
-    NSArray *sortedUsers = [users sortedArrayUsingDescriptors:@[fullNameDescriptor]];
+    NSSortDescriptor *sorter = [[NSSortDescriptor alloc]
+                                initWithKey:@"fullName"
+                                ascending:YES
+                                selector:@selector(localizedCaseInsensitiveCompare:)];
+    NSArray *sortedUsers = [users sortedArrayUsingDescriptors:@[sorter]];
     
     return sortedUsers;
 }
@@ -117,6 +120,7 @@ static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
         weakSelf.searchResult = [users filteredArrayUsingPredicate:predicate];
         [weakSelf.searchDisplayController.searchResultsTableView reloadData];
     };
+    
     
     PagedRequest *request = [[PagedRequest alloc] init];
     request.page = 1;
