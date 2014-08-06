@@ -203,7 +203,12 @@
     
     if (image) {
         [self.contentService uploadPNGImage:image progress:progress completion:^(QBCFileUploadTaskResult *result) {
-            updateUserProfile(result.uploadedBlob.publicUrl);
+            if ([weakSelf checkResult:result]) {
+                updateUserProfile(result.uploadedBlob.publicUrl);
+            }
+            else {
+                updateUserProfile(nil);                
+            }
         }];
     }
     else {

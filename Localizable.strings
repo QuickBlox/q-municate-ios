@@ -21,7 +21,7 @@
 "QM_STR_CONTACT_LIST" = "Contact list";
 "QM_STR_CALL_WAS_CANCELLED" = "Call was cancelled";
 "QM_STR_FACEBOOK" = "Facebook";
-"QM_STR_PASSWORD_DONT_MATCH" = "Passwords don't match";
+"QM_STR_WRONG_OLD_PASSWORD" = "Wrong old password";
 "QM_STR_FILL_IN_ALL_THE_FIELDS" = "Fill in all the fields";
 "QM_STR_PASSWORD_CHANGED" = "Password changed";
 "QM_STR_ONLINE" = "Online";

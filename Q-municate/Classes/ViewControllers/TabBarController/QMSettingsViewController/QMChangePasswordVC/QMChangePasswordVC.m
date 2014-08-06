@@ -82,7 +82,7 @@ const NSUInteger kQMMinPasswordLenght = 7;
     }
     else if (![oldPassword isEqualToString:confirmOldPassword]) {
         
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_PASSWORD_DONT_MATCH", nil) actionSuccess:NO];
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_WRONG_OLD_PASSWORD", nil) actionSuccess:NO];
     }
     else {
         
