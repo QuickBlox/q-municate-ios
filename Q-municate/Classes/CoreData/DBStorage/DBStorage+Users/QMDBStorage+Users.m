@@ -80,7 +80,7 @@
     }];
     
     //TODO: Need add version checker
-    NSArray *duplicates = [qbUsers filteredArrayUsingPredicate:predicate];
+    __unused NSArray *duplicates = [qbUsers filteredArrayUsingPredicate:predicate];
     NSAssert(duplicates.count == 0, @"Collection has duplicates");
 }
 

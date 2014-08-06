@@ -9,7 +9,3 @@
 #import <Foundation/Foundation.h>
 
 BOOL FloatAlmostEqual(double x, double y, double delta);
-
-@interface QMHelpers : NSObject
-
-@end

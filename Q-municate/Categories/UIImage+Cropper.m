@@ -12,7 +12,7 @@
 @implementation UIImage (Cropper)
 
 - (UIImage *)imageByScaleAndCrop:(CGSize)targetSize {
-	
+
 	UIImage *sourceImage = self;
 	UIImage *newImage = nil;
 	

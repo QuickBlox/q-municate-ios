@@ -12,6 +12,3 @@ BOOL FloatAlmostEqual(double x, double y, double delta) {
     return fabs(x - y) <= delta;
 }
 
-@implementation QMHelpers
-
-@end
