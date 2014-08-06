@@ -9,15 +9,12 @@
 #import "QMFriendsListDataSource.h"
 #import "QMUsersService.h"
 #import "QMFriendListCell.h"
-#import "QMSearchGlobalCell.h"
-#import "QMNotResultCell.h"
 #import "QMApi.h"
 #import "QMUsersService.h"
 #import "SVProgressHud.h"
 #import "QMChatReceiver.h"
 
 static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
-//static NSString *const kQMNotResultCellIdentifier = @"QMNotResultCell";
 
 @interface QMFriendsListDataSource()
 
@@ -48,17 +45,15 @@ static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
         self.tableView.dataSource = self;
         
         self.searchResult = [NSArray array];
-        //        self.tableView.tableFooterView = [self.tableView dequeueReusableCellWithIdentifier:kQMNotResultCellIdentifier];
         
         self.searchDisplayController = searchDisplayController;
         __weak __typeof(self)weakSelf = self;
-        void(^retrive)(void) = ^() {
+        
+        [[QMChatReceiver instance] chatContactListWilChangeWithTarget:self block:^{
             [[QMApi instance] retrieveFriendsIfNeeded:^(BOOL updated) {
                 [weakSelf reloadDatasource];
             }];
-        };
-        
-        [[QMChatReceiver instance] chatContactListWilChangeWithTarget:self block:retrive];
+        }];
         
         [[QMChatReceiver instance] chatDidReceiveContactAddRequestWithTarget:self block:^(NSUInteger userID) {
             BOOL success = [[QMApi instance] confirmAddContactRequest:userID];
@@ -94,9 +89,6 @@ static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
     if (!self.searchDisplayController.isActive) {
         [self.tableView reloadData];
         
-        //        self.tableView.tableFooterView =
-        //        self.friendList.count == 0 ?
-        //        [self.tableView dequeueReusableCellWithIdentifier:kQMNotResultCellIdentifier] : [[UIView alloc] initWithFrame:CGRectZero];
     } else {
         [self.searchDisplayController.searchResultsTableView reloadData];
     }
@@ -137,14 +129,30 @@ static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
 #pragma mark - UITableViewDataSource
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"";//(self.searchDisplayController.isActive) ? ((section == 0) ? kTableHeaderFriendsString : kTableHeaderAllUsersString) : @"";
+    
+    if (self.searchDisplayController.isActive) {
+        
+        NSArray *users = [self usersAtSections:section];
+        
+        if (section == 0) {
+            return users.count > 0 ? NSLocalizedString(@"QM_STR_FRIENDS", nil) : nil;
+        }
+        else {
+            return users.count > 0 ? NSLocalizedString(@"QM_STR_ALL_USERS", nil) : nil;
+        }
+    }
+    else {
+        return nil;
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    
     return self.searchDisplayController.isActive ? 2 : 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
     return [self usersAtSections:section].count;
 }
 
@@ -170,11 +178,6 @@ static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
     cell.userData = user;
     cell.searchText = self.searchDisplayController.searchBar.text;
     cell.delegate = self;
-    if (self.tableView == tableView) {
-        NSLog(@"Friend TableView reloaded");
-    }else {
-        NSLog(@"Search tableView Reloaded");
-    }
     
     return cell;
 }
@@ -211,7 +214,7 @@ static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
 }
 
 - (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
-    
+    [self reloadDatasource];
 }
 
 @end
