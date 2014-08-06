@@ -59,7 +59,6 @@
 
 - (void)updateProfileView {
 
-    self.
     self.currentUser = [QMApi instance].currentUser;
     
     self.fullNameFieldCache = self.currentUser.fullName;

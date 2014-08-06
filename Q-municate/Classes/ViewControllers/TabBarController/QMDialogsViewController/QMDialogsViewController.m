@@ -18,7 +18,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
 @interface QMDialogsViewController ()
 
-<UITableViewDelegate>
+<UITableViewDelegate, QMDialogsDataSourceDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) QMDialogsDataSource *dataSource;
@@ -32,10 +32,12 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.dataSource = [[QMDialogsDataSource alloc] initWithTableView:self.tableView];
+    self.dataSource.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.dataSource fetchUnreadDialogsCount];
     [self.tableView reloadData];
 }
 
@@ -58,9 +60,8 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     
     if ([segue.identifier isEqualToString:kChatViewSegueIdentifier]) {
         
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        
         QMChatViewController *chatController = segue.destinationViewController;
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         QBChatDialog *dialog = [self.dataSource dialogAtIndexPath:indexPath];
         chatController.dialog = dialog;
         
@@ -72,7 +73,18 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 #pragma mark - Actions
 
 - (IBAction)createNewDialog:(id)sender {
-    [self performSegueWithIdentifier:@"CreateNewChatSegue" sender:nil];
+    [self performSegueWithIdentifier:kCreateNewChatSegueIdentifier sender:nil];
+}
+
+#pragma mark - QMDialogsDataSourceDelegate
+
+- (void)didChangeUnreadDialogCount:(NSUInteger)unreadDialogsCount {
+    
+    NSUInteger idx = [self.tabBarController.viewControllers indexOfObject:self.navigationController];
+    if (idx != NSNotFound) {
+        UITabBarItem *item = self.tabBarController.tabBar.items[idx];
+        item.badgeValue = unreadDialogsCount > 0 ? [NSString stringWithFormat:@"%d", unreadDialogsCount] : nil;
+    }
 }
 
 @end

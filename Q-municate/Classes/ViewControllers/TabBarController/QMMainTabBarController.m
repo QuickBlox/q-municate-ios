@@ -64,6 +64,11 @@
     UITabBarItem *fourthTab = self.tabBar.items[3];
     fourthTab.image = settingsImg;
     fourthTab.selectedImage = settingsImg;
+    
+    for (UINavigationController *navViewController in self.viewControllers ) {
+        NSAssert([navViewController isKindOfClass:[UINavigationController class]], @"is not UINavigationController");
+        [navViewController.viewControllers makeObjectsPerformSelector:@selector(view)];
+    }
 }
 
 @end

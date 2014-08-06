@@ -18,6 +18,7 @@
 
 @property (weak, nonatomic) UITableView *tableView;
 @property (strong, nonatomic, readonly) NSMutableArray *dialogs;
+@property (assign, nonatomic) NSUInteger unreadDialogsCount;
 
 @end
 
@@ -43,7 +44,7 @@
             QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
 
             if (dialog) {
-                NSUInteger idx = [self.dialogs indexOfObject:dialog];
+                NSUInteger idx = [weakSelf.dialogs indexOfObject:dialog];
                 
                 if (message.cParamNotificationType == QMMessageNotificationTypeCreateDialog ) {
                     [weakSelf insertRowAtIndex:idx];
@@ -52,11 +53,28 @@
             } else {
                 NSAssert(nil, @"Dialog == nil, need update this case");
             }
+            [weakSelf fetchUnreadDialogsCount];
         }];
-        
     }
     
     return self;
+}
+
+- (void)setUnreadDialogsCount:(NSUInteger)unreadDialogsCount {
+    
+    if (_unreadDialogsCount != unreadDialogsCount) {
+        _unreadDialogsCount = unreadDialogsCount;
+
+        [self.delegate didChangeUnreadDialogCount:_unreadDialogsCount];
+    }
+}
+
+- (void)fetchUnreadDialogsCount {
+    
+    NSArray * dialogs = [[QMApi instance] dialogHistory];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"unreadMessagesCount > 0"];
+    NSArray *result = [dialogs filteredArrayUsingPredicate:predicate];
+    self.unreadDialogsCount = result.count;
 }
 
 - (void)insertRowAtIndex:(NSUInteger)index {
