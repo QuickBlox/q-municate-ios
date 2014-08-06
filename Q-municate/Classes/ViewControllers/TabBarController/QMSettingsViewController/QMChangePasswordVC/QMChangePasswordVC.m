@@ -72,18 +72,20 @@ const NSUInteger kQMMinPasswordLenght = 7;
     NSString *confirmOldPassword = self.oldPasswordTextField.text;
     NSString *newPassword = self.passwordTextField.text;
     
-    if (newPassword.length < kQMMinPasswordLenght) {
+    if (newPassword.length == 0 || confirmOldPassword.length == 0){
+        
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) actionSuccess:NO];
+    }
+    else if (newPassword.length < kQMMinPasswordLenght) {
+        
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_PASSWORD_IS_TOO_SHORT", nil) actionSuccess:NO];
     }
     else if (![oldPassword isEqualToString:confirmOldPassword]) {
         
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_PASSWORD_DONT_MATCH", nil) actionSuccess:NO];
     }
-    else if (newPassword.length == 0 || confirmOldPassword.length == 0){
-        
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) actionSuccess:NO];
-    }
     else {
+        
         [self updatePassword:oldPassword newPassword:newPassword];
     }
 }
