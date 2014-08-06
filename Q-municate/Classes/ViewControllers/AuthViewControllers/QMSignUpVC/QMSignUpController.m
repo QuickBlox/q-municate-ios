@@ -96,7 +96,7 @@
         [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
     };
     
-    [[QMApi instance] signUpAndLoginWithUser:newUser rememberMe:NO completion:^(BOOL success) {
+    [[QMApi instance] signUpAndLoginWithUser:newUser rememberMe:YES completion:^(BOOL success) {
 
         if (success) {
             

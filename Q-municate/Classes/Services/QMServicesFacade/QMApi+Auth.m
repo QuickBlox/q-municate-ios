@@ -94,7 +94,7 @@
             completion(signUpResult.success);
         }
         else {
-            [weakSelf setAutoLogin:YES withAccountType:QMAccountTypeEmail];
+            [weakSelf setAutoLogin:rememberMe withAccountType:QMAccountTypeEmail];
             [weakSelf loginWithEmail:user.email password:user.password rememberMe:rememberMe completion:completion];
         }
     }];

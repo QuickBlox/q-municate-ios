@@ -11,8 +11,8 @@
 
 @implementation QMFacebookService
 
-NSString *const kQMQuickbloxHomeUrl = @"http://quickblox.com";
-NSString *const kQMQuickbloxLogoUrl = @"https://qbprod.s3.amazonaws.com/c6e81081d5954ed68485eead941b91a000";
+NSString *const kQMHomeUrl = @"http://q-municate.com";
+NSString *const kQMLogoUrl = @"http://files.quickblox.com/ic_launcher.png";
 NSString *const kQMAppName = @"Q-municate";
 NSString *const kQMDataKey = @"data";
 
@@ -40,8 +40,8 @@ NSString *const kQMDataKey = @"data";
 - (void)shareToUsers:(NSString *)usersIDs completion:(void(^)(NSError *error))completion {
     
     NSDictionary *postParams = @{
-                                 @"link" : kQMQuickbloxHomeUrl,
-                                 @"picture" : kQMQuickbloxLogoUrl,
+                                 @"link" : kQMHomeUrl,
+                                 @"picture" : kQMLogoUrl,
                                  @"name" : kQMAppName,
                                  @"caption" : kQMAppName,
                                  @"description" : @"",
