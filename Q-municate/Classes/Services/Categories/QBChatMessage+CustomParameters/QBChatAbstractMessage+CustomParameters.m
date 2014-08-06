@@ -15,7 +15,7 @@ NSString const *kQMCustomParameterChatMessageID = @"chat_message_id";
 NSString const *kQMCustomParameterDateSent = @"date_sent";
 /*Dialogs keys*/
 NSString const *kQMCustomParameterDialogID = @"dialog_id";
-NSString const *kQMCustomParameterRoomJID = @"xmpp_room_jid";
+NSString const *kQMCustomParameterRoomJID = @"room_jid";
 NSString const *kQMCustomParameterDialogName = @"name";
 NSString const *kQMCustomParameterDialogType = @"type";
 NSString const *kQMCustomParameterDialogOccupantsIDs = @"occupants_ids";

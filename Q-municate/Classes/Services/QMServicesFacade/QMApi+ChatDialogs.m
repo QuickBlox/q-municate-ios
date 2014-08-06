@@ -177,7 +177,6 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 #pragma mark - Dialogs toos
 
 - (NSArray *)dialogHistory {
-    
     return [self.chatDialogsService dialogHistory];
 }
 
@@ -193,7 +192,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 
 - (NSArray *)allOccupantIDsFromDialogsHistory{
     
-    NSArray *allDialogs = self.dialogHistory;
+    NSArray *allDialogs = self.chatDialogsService.dialogHistory;
     NSMutableSet *ids = [NSMutableSet set];
     
     for (QBChatDialog *dialog in allDialogs) {

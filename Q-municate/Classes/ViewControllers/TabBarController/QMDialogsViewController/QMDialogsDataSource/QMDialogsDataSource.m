@@ -35,10 +35,6 @@
         
         self.tableView = tableView;
         self.tableView.dataSource = self;
-        
-        [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
-            NSLog(@"chatRoomDidReceiveMessageWithTarget");
-        }];
 
         __weak __typeof(self)weakSelf = self;
         
@@ -52,9 +48,9 @@
                 if (message.cParamNotificationType == QMMessageNotificationTypeCreateDialog ) {
                     [weakSelf insertRowAtIndex:idx];
                 }
-                else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog) {
-                    [weakSelf.tableView reloadData];
-                }
+                [weakSelf.tableView reloadData];
+            } else {
+                NSAssert(nil, @"Dialog == nil, need update this case");
             }
         }];
         
@@ -92,7 +88,10 @@
 
 - (NSArray *)dialogs {
     
-    return [[QMApi instance] dialogHistory];
+    NSArray * dialogs = [[QMApi instance] dialogHistory];
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"lastMessageDate" ascending:NO];
+    dialogs = [dialogs sortedArrayUsingDescriptors:@[sort]];
+    return dialogs;
 }
 
 NSString *const kQMDialogCellID = @"QMDialogCell";

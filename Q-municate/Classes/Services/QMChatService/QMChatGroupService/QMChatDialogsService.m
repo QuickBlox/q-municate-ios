@@ -113,9 +113,6 @@
 - (NSArray *)dialogHistory {
     
     NSArray *dialogs = [self.dialogs allValues];
-    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"lastMessageDate" ascending:NO];
-    dialogs = [dialogs sortedArrayUsingDescriptors:@[sort]];
-   
     return dialogs;
 }
 
@@ -156,11 +153,16 @@
         
         QBChatDialog *chatDialog = [message chatDialogFromCustomParameters];
         [self addDialogToHistory:chatDialog];
-    } else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog){
+    }
+    else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog) {
+        
         [self updateChatDialogWithChatMessage:message];
-    }  else {
+    }
+    else {
+        
         QBChatDialog *dialog = [self chatDialogWithID:message.cParamDialogID];
         dialog.lastMessageText = message.text;
+        dialog.lastMessageDate = [NSDate dateWithTimeIntervalSince1970:message.cParamDateSent.doubleValue];
         dialog.unreadMessagesCount++;
     }
 }
