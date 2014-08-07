@@ -32,7 +32,6 @@
 
 
 @property (nonatomic, strong) UIImage *avatarImage;
-@property (strong, nonatomic) QBUUser *currentUser;
 
 @end
 
@@ -43,16 +42,16 @@
     
     self.avatarView.imageViewType = QMImageViewTypeCircle;
     self.statusField.placeHolder = @"Add status...";
-    self.statusField.placeHolderTextColor = [UIColor lightGrayColor];
     
     [self updateProfileView];
     [self setUpdateButtonActivity];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
+    
     [super viewWillAppear:animated];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
+    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleLightContent;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -61,11 +60,10 @@
 
 - (void)updateProfileView {
 
-    self.currentUser = [QMApi instance].currentUser;
     
     self.fullNameFieldCache = self.currentUser.fullName;
-    self.phoneFieldCache = self.currentUser.phone;
-    self.statusTextCache = self.currentUser.customData;
+    self.phoneFieldCache = self.currentUser.phone ?: @"";
+    self.statusTextCache = self.currentUser.customData ?: @"";
     
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
     NSURL *url = [NSURL URLWithString:self.currentUser.website];
@@ -83,7 +81,9 @@
     picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     picker.allowsEditing = YES;
     picker.delegate = self;
-    [self presentViewController:picker animated:YES completion:nil];
+    [self presentViewController:picker animated:YES completion:^{
+        UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleDefault;
+    }];
 }
 
 - (void)setUpdateButtonActivity {
@@ -107,11 +107,11 @@
     user.phone = weakSelf.phoneFieldCache;
     user.customData = weakSelf.statusTextCache;
     
-    [SVProgressHUD showProgress:0.f status:@"UploadImage..." maskType:SVProgressHUDMaskTypeClear];
+    [SVProgressHUD showProgress:0.f status:@"" maskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] updateUser:user image:self.avatarImage progress:^(float progress) {
-        [SVProgressHUD showProgress:progress status:@"Upload image..." maskType:SVProgressHUDMaskTypeClear];
+        [SVProgressHUD showProgress:progress status:@"" maskType:SVProgressHUDMaskTypeClear];
     } completion:^(BOOL success) {
-
+        
         if (success) {
             weakSelf.avatarImage = nil;
             [weakSelf updateProfileView];
@@ -123,22 +123,18 @@
 
 - (BOOL)fieldsWereChanged {
     
-    if (self.avatarImage != nil) return YES;
+    if (self.avatarImage) return YES;
     if (![self.fullNameFieldCache isEqualToString:self.currentUser.fullName]) return YES;
-    if ( (self.phoneFieldCache != nil && ![self.phoneFieldCache isEqualToString:@""])  &&  ![self.phoneFieldCache isEqualToString:self.currentUser.phone]) return YES;
-    if ((self.statusTextCache != nil) && ![self.statusTextCache isEqualToString:self.currentUser.customData]) return YES;
+    if (![self.phoneFieldCache isEqualToString:self.currentUser.phone ?: @""]) return YES;
+    if (![self.statusTextCache isEqualToString:self.currentUser.customData ?: @""]) return YES;
     
     return NO;
 }
 
-- (NSString *)userPhone {
-    return self.currentUser.phone ?: @"";
-}
-
 #pragma mark - UITextFieldDelegate & UITextViewDelegate
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-{
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    
     NSString *str = [textField.text stringByReplacingCharactersInRange:range withString:string];
     
     if (textField == self.fullNameField) {
@@ -152,8 +148,8 @@
     return YES;
 }
 
-- (void)textViewDidChange:(UITextView *)textView
-{
+- (void)textViewDidChange:(UITextView *)textView {
+    
     self.statusTextCache = textView.text;
     [self setUpdateButtonActivity];
 }
@@ -169,6 +165,7 @@
     self.avatarView.image = [selectedImage imageByCircularScaleAndCrop:self.avatarView.frame.size];
     
     [picker dismissViewControllerAnimated:YES completion:^{
+        UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleLightContent;
         [self setUpdateButtonActivity];
     }];
 }
@@ -176,7 +173,9 @@
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     
     self.avatarImage = nil;
-    [picker dismissViewControllerAnimated:YES completion:nil];
+    [picker dismissViewControllerAnimated:YES completion:^{
+        UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleLightContent;
+    }];
 }
 
 @end

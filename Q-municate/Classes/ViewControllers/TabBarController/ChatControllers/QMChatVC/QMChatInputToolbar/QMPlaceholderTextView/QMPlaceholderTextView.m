@@ -51,7 +51,7 @@ const CGFloat kChatInputCornerRadius = 6.0;
     self.scrollsToTop = NO;
     self.userInteractionEnabled = YES;
     
-    self.font = [UIFont systemFontOfSize:16.0f];
+    self.font = [UIFont systemFontOfSize:17.0f];
     self.textColor = [UIColor blackColor];
     self.textAlignment = NSTextAlignmentLeft;
     
@@ -64,7 +64,7 @@ const CGFloat kChatInputCornerRadius = 6.0;
     self.text = nil;
     
     self.placeHolder = nil;
-    self.placeHolderTextColor = [UIColor lightGrayColor];
+    self.placeHolderTextColor = [UIColor colorWithWhite:0.667 alpha:0.560];
     
     [self addTextViewNotificationObservers];
 }

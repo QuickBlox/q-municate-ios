@@ -203,19 +203,11 @@ static NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
     return NO;
 }
 
-- (void)searchDisplayControllerDidBeginSearch:(UISearchDisplayController *)controller {
-    
-    
-}
+- (void)searchDisplayControllerDidBeginSearch:(UISearchDisplayController *)controller {}
 
-- (void)searchDisplayController:(UISearchDisplayController *)controller didLoadSearchResultsTableView:(UITableView *)tableView {
-    
-}
+- (void)searchDisplayController:(UISearchDisplayController *)controller didLoadSearchResultsTableView:(UITableView *)tableView {}
 
-- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
-    
-    
-}
+- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {}
 
 - (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
     [self reloadDatasource];
