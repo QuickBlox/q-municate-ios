@@ -97,7 +97,7 @@
     };
     
     [[QMApi instance] signUpAndLoginWithUser:newUser rememberMe:YES completion:^(BOOL success) {
-
+        
         if (success) {
             
             if (weakSelf.cachedPicture) {
@@ -106,7 +106,7 @@
                 [[QMApi instance] updateUser:nil image:weakSelf.cachedPicture progress:^(float progress) {
                     [SVProgressHUD showProgress:progress status:@"" maskType:SVProgressHUDMaskTypeClear];
                 } completion:^(BOOL updateUserSuccess) {
-                   presentTabBar();
+                    presentTabBar();
                 }];
             }
             else {
@@ -124,7 +124,7 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
     UIImage *image =  info[UIImagePickerControllerEditedImage];
-
+    
     [self.userImage setImage:image];
     self.cachedPicture = image;
     

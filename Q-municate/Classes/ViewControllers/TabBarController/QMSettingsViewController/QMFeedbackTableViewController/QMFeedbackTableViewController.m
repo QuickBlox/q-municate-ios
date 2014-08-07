@@ -83,27 +83,26 @@
 
 - (IBAction)writeAnEmailTapped:(id)sender {
     
+    __weak __typeof(self)weakSelf = self;
     [REMailComposeViewController present:^(REMailComposeViewController *mailVC) {
         
         NSString *recipient = @"q-municate@quickblox.com";
         
-        NSString *subject = [self titleForRowAtIndexPath:self.lastIndexPath];
-        NSString *messageBody = [self deviceInfo];
+        NSString *subject = [weakSelf titleForRowAtIndexPath:weakSelf.lastIndexPath];
+        NSString *messageBody = [weakSelf deviceInfo];
         
         [mailVC setSubject:subject];
         [mailVC setToRecipients:@[recipient]];
         [mailVC setMessageBody:messageBody isHTML:NO];
         
-        [self presentViewController:mailVC animated:YES completion:nil];
+        [weakSelf presentViewController:mailVC animated:YES completion:nil];
         
     } finish:^(MFMailComposeResult result, NSError *error) {
-        
-       __weak typeof(self) weakself = self;
         
         if (result == MFMailComposeResultSent) {
             
             [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_THANKS", nil)];
-            [weakself.navigationController popViewControllerAnimated:YES];
+            [weakSelf.navigationController popViewControllerAnimated:YES];
             
         } else if (result == MFMailComposeResultFailed) {
             [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_ERROR", nil)];

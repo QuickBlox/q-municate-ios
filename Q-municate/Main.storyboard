@@ -127,6 +127,25 @@
                                     <outlet property="titleLabel" destination="rrX-6n-Jom" id="DfT-UC-bDc"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="QMDontHaveAnyFriendsCell" textLabel="lxL-3w-p3S" rowHeight="59" style="IBUITableViewCellStyleDefault" id="726-nC-1yZ">
+                                <rect key="frame" x="0.0" y="125" width="320" height="59"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="726-nC-1yZ" id="w2i-bX-fcf">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="58"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="290" id="lxL-3w-p3S">
+                                            <rect key="frame" x="15" y="0.0" width="290" height="58"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <string key="text">Oops...
+Your don't have any friends, tap search icon to find them or invite new ones.</string>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="delegate" destination="w1g-vg-JcU" id="pY0-x9-adO"/>
@@ -149,7 +168,7 @@
                     </connections>
                 </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="-2994" y="-9060"/>
+            <point key="canvasLocation" x="-2906" y="-9048"/>
         </scene>
         <!--Friends Details Controller - Details-->
         <scene sceneID="hb9-Nb-dND">

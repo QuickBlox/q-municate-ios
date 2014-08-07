@@ -32,7 +32,7 @@
                 [weakSelf performSegueWithIdentifier:@"SplashSegue" sender:nil];
             }];
         }else {
-            [[QMApi instance] loginChatWithUser:weakSelf.currentUser completion:^(BOOL loginSuccess) {
+            [[QMApi instance] loginChat:^(BOOL loginSuccess) {
                 [[QMApi instance] fetchAllHistory:^{
                     [SVProgressHUD dismiss];
                 }];

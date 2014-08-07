@@ -12,7 +12,6 @@
 @class QMSettingsManager;
 @class QMFacebookService;
 @class QMUsersService;
-@class QMChatService;
 @class QMChatDialogsService;
 @class QMAVCallService;
 @class QMMessagesService;
@@ -27,7 +26,6 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 @property (strong, nonatomic, readonly) QMSettingsManager *settingsManager;
 @property (strong, nonatomic, readonly) QMFacebookService *facebookService;
 @property (strong, nonatomic, readonly) QMUsersService *usersService;
-@property (strong, nonatomic, readonly) QMChatService *chatService;
 @property (strong, nonatomic, readonly) QMAVCallService *avCallService;
 @property (strong, nonatomic, readonly) QMChatDialogsService *chatDialogsService;
 @property (strong, nonatomic, readonly) QMMessagesService *messagesService;
@@ -39,8 +37,6 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 + (instancetype)instance;
 
 - (BOOL)checkResult:(Result *)result;
-- (BOOL)logoutChat;
-- (BOOL)loginChatWithUser:(QBUUser *)user completion:(QBChatResultBlock)block;
 
 - (void)startServices;
 - (void)stopServices;
@@ -89,6 +85,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 
 @interface QMApi (Messages)
 
+- (BOOL)loginChat:(QBChatResultBlock)block;
 - (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete;
 /**
  */
@@ -187,7 +184,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  
  @param userID ID of user which you would like to add to contact list
  @return*/
-- (BOOL)addUserToContactListRequest:(NSUInteger)userID;
+- (void)addUserToContactListRequest:(NSUInteger)userID completion:(void(^)(BOOL success))completion;
 
 /**
  Remove user from contact list
@@ -195,7 +192,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  @param userID ID of user which you would like to remove from contact list
  @return YES if the request was sent successfully. If not - see log.
  */
-- (BOOL)removeUserFromContactListWithUserID:(NSUInteger)userID;
+- (void)removeUserFromContactListWithUserID:(NSUInteger)userID completion:(void(^)(BOOL success))completion;
 
 /**
  Confirm add to contact list request
@@ -203,7 +200,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  @param userID ID of user from which you would like to confirm add to contact request
  @return YES if the request was sent successfully. If not - see log.
  */
-- (BOOL)confirmAddContactRequest:(NSUInteger)userID;
+- (void)confirmAddContactRequest:(NSUInteger)userID completion:(void(^)(BOOL success))completion;
 
 /**
  Reject add to contact list request
@@ -211,7 +208,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  @param userID ID of user from which you would like to reject add to contact request
  @return YES if the request was sent successfully. If not - see log.
  */
-- (BOOL)rejectAddContactRequest:(NSUInteger)userID;
+- (void)rejectAddContactRequest:(NSUInteger)userID completion:(void(^)(BOOL success))completion;
 
 /**
  Retrieve Friends from contact list if needed;

@@ -29,8 +29,9 @@
 
 - (void)cachedQBChatDialogs:(QMDBCollectionBlock)qbDialogs {
     
+    __weak __typeof(self)weakSelf = self;
     [self async:^(NSManagedObjectContext *context) {
-        NSArray *allDialogs = [self allQBChatDialogsInContext:context];
+        NSArray *allDialogs = [weakSelf allQBChatDialogsInContext:context];
         DO_AT_MAIN(qbDialogs(allDialogs));
     }];
 }

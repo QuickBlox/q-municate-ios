@@ -11,6 +11,12 @@
 
 @interface QMMessagesService : QMBaseService
 
+@property (strong, nonatomic) QBUUser *currentUser;
+
+- (void)chat:(void(^)(QBChat *chat))chatBlock;
+- (BOOL)loginChat:(QBChatResultBlock)block;
+- (BOOL)logoutChat;
+
 - (NSArray *)messageHistoryWithDialogID:(NSString *)dialogID;
 - (void)addMessageToHistory:(QBChatMessage *)message withDialogID:(NSString *)dialogID;
 

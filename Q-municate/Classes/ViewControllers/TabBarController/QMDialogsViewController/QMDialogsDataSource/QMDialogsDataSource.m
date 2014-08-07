@@ -51,7 +51,7 @@
                 }
                 [weakSelf.tableView reloadData];
             } else {
-                NSAssert(nil, @"Dialog == nil, need update this case");
+                NSCAssert(nil, @"Dialog == nil, need update this case");
             }
             [weakSelf fetchUnreadDialogsCount];
         }];

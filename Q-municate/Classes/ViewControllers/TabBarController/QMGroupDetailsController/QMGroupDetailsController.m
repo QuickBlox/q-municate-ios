@@ -48,22 +48,24 @@ NSString *const kQMAddMembersToGroupControllerID = @"QMAddMembersToGroupControll
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatRoomDidReceiveListOfOnlineUsersWithTarget:self block:^(NSArray *users, NSString *roomName) {
         
-        if ([roomName isEqualToString:self.chatRoom.name]) {
+        if ([roomName isEqualToString:weakSelf.chatRoom.name]) {
             [weakSelf updateOnlineStatus:users.count];
         }
     }];
     
     [[QMChatReceiver instance] chatRoomDidChangeOnlineUsersWithTarget:self block:^(NSArray *onlineUsers, NSString *roomName) {
         
-        if ([roomName isEqualToString:self.chatRoom.name]) {
+        if ([roomName isEqualToString:weakSelf.chatRoom.name]) {
             [weakSelf updateOnlineStatus:onlineUsers.count];
         }
     }];
     
     [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog && [message.cParamDialogID isEqualToString:self.chatDialog.ID]) {
-            self.chatDialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
-            [self updateGUIWithChatDialog:self.chatDialog];
+        
+        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog && [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID]) {
+            
+            weakSelf.chatDialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
+            [weakSelf updateGUIWithChatDialog:weakSelf.chatDialog];
         }
     }];
 }
@@ -88,7 +90,6 @@ NSString *const kQMAddMembersToGroupControllerID = @"QMAddMembersToGroupControll
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] changeChatName:self.groupNameField.text forChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
-        
         [SVProgressHUD dismiss];
     }];
 }

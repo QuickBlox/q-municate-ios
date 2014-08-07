@@ -101,12 +101,13 @@ const NSUInteger kQMNumberOfSection = 2;
 - (void)fetchAdressbookFriends:(void(^)(void))completion {
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    __weak __typeof(self)weakSelf = self;
     [QMAddressBook getAllContactsFromAddressBook:^(NSArray *contacts, BOOL success, NSError *error) {
         if (success) {
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.emails.@count > 0"];
-            self.abUsers = [contacts filteredArrayUsingPredicate:predicate];
+            weakSelf.abUsers = [contacts filteredArrayUsingPredicate:predicate];
         }else {
-            self.abUsers = @[];
+            weakSelf.abUsers = @[];
         }
         [SVProgressHUD dismiss];
         if (completion) completion();
@@ -262,31 +263,31 @@ const NSUInteger kQMNumberOfSection = 2;
 - (void)containerView:(UIView *)containerView didChangeState:(id)sender {
     
     NSIndexPath *indexPath = [self.tableView indexPathForCell:(id)containerView];
-   
+   __weak __typeof(self)weakSelf = self;
     void (^update)(NSUInteger, NSArray*) = ^(NSUInteger collectionSection, NSArray *collection){
         
         QMInviteStaticCell *cell = (QMInviteStaticCell *)containerView;
         
-        [self setCollection:cell.isChecked ? collection.mutableCopy : @[].mutableCopy toSection:collectionSection];
-        [self reloadRowPathAtIndexPath:indexPath withRowAnimation:UITableViewRowAnimationNone];
-        [self reloadFriendSectionWithRowAnimation:UITableViewRowAnimationNone];
+        [weakSelf setCollection:cell.isChecked ? collection.mutableCopy : @[].mutableCopy toSection:collectionSection];
+        [weakSelf reloadRowPathAtIndexPath:indexPath withRowAnimation:UITableViewRowAnimationNone];
+        [weakSelf reloadFriendSectionWithRowAnimation:UITableViewRowAnimationNone];
     };
     
     if (containerView == self.abStaticCell) {
         
         if (self.abUsers.count == 0) {
             [self fetchAdressbookFriends:^{
-                update(QMABFriendsToInviteSection, self.abUsers);
+                update(QMABFriendsToInviteSection, weakSelf.abUsers);
             }];
         } else {
             update(QMABFriendsToInviteSection, self.abUsers);
         }
         
-    } else if (containerView == self.fbStaticCell) {
+    } else if (containerView == weakSelf.fbStaticCell) {
         
         if (self.fbUsers.count == 0) {
             [self fetchFacebookFriends:^{
-                update(QMFBFriendsToInviteSection, self.fbUsers);
+                update(QMFBFriendsToInviteSection, weakSelf.fbUsers);
             }];
         } else {
             update(QMFBFriendsToInviteSection, self.fbUsers);
@@ -312,12 +313,14 @@ const NSUInteger kQMNumberOfSection = 2;
 }
 
 - (void)clearABFriendsToInvite  {
+    
     [self setCollection:@[].mutableCopy toSection:QMABFriendsToInviteSection];
     [self.tableView reloadData];
     [self checkListDidChange];
 }
 
 - (void)clearFBFriendsToInvite {
+    
     [self setCollection:@[].mutableCopy toSection:QMFBFriendsToInviteSection];
     [self.tableView reloadData];
     [self checkListDidChange];

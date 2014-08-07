@@ -26,14 +26,15 @@ NSString *const kCDMessageDatetimePath = @"datetime";
 }
 
 - (void)cachedQBChatMessagesWithDialogId:(NSString *)dialogId qbMessages:(QMDBCollectionBlock)qbMessages {
-    
+   
+    __weak __typeof(self)weakSelf = self;
     [self async:^(NSManagedObjectContext *context) {
         
         NSArray *messages = [CDMessage MR_findAllSortedBy:kCDMessageDatetimePath
                                                  ascending:NO
                                              withPredicate:IS(@"dialogId", dialogId)
                                                  inContext:context];
-        NSArray *result = [self qbChatHistoryMessagesWithcdMessages:messages];
+        NSArray *result = [weakSelf qbChatHistoryMessagesWithcdMessages:messages];
         
         DO_AT_MAIN(qbMessages(result));
         

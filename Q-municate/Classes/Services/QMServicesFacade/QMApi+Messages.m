@@ -11,6 +11,10 @@
 
 @implementation QMApi (Messages)
 
+- (void)loginChat:(QBChatResultBlock)block {
+    [self.messagesService loginChat:block];
+}
+
 - (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete {
     
     __weak __typeof(self)weakSelf = self;

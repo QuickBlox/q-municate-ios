@@ -43,10 +43,10 @@ NSString *const QMChatViewControllerID = @"QMChatViewController";
         
         if (result.success) {
             
-            QMChatViewController *chatVC = [self.storyboard instantiateViewControllerWithIdentifier:QMChatViewControllerID];
+            QMChatViewController *chatVC = [weakSelf.storyboard instantiateViewControllerWithIdentifier:QMChatViewControllerID];
             chatVC.dialog = result.dialog;
             
-            NSMutableArray *controllers = self.navigationController.viewControllers.mutableCopy;
+            NSMutableArray *controllers = weakSelf.navigationController.viewControllers.mutableCopy;
             [controllers removeLastObject];
             [controllers addObject:chatVC];
             

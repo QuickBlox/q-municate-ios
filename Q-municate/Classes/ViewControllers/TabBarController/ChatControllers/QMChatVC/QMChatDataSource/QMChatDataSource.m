@@ -14,6 +14,10 @@
 #import "SVProgressHUD.h"
 #import "QMChatReceiver.h"
 #import "QMContentService.h"
+#import "QMTextMessageCell.h"
+#import "QMSystemMessageCell.h"
+#import "QMAttachmentMessageCell.h"
+#import "QMSoundManager.h"
 
 @interface QMChatDataSource()
 
@@ -66,11 +70,15 @@
         }];
         
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-            [weakSelf reloadCachedMessages:YES];
-        }];
-        
-        [[QMChatReceiver instance] chatDidNotSendMessageWithTarget:self block:^(QBChatMessage *message) {
-            NSLog(@"chatDidNotSendMessageWithTarget");
+            QBChatDialog *dialogForReceiverMessage = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
+            if ([weakSelf.chatDialog isEqual:dialogForReceiverMessage]) {
+                if (message.senderID != [QMApi instance].currentUser.ID) {
+                    [QMSoundManager playMessageReceivedSound];
+                    [weakSelf reloadCachedMessages:YES];
+                }
+            } else {
+                [weakSelf.delegate message:message forOtherOtherDialog:dialogForReceiverMessage];
+            }
         }];
     }
     
@@ -120,13 +128,7 @@
         case QMMessageTypeSystem: return QMSystemMessageCellID; break;
         case QMMessageTypePhoto: return QMAttachmentMessageCellID; break;
         case QMMessageTypeText: return QMTextMessageCellID; break;
-            
-        default:
-            @throw
-            [NSException exceptionWithName:NSInternalInconsistencyException
-                                    reason:@"Check it"
-                                  userInfo:nil];
-            break;
+        default: NSAssert(nil, @"Need update this case"); break;
     }
 }
 

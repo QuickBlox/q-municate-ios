@@ -9,6 +9,7 @@
 #import "QMApi.h"
 #import "QMUsersService.h"
 #import "QMContentService.h"
+#import "QMMessagesService.h"
 
 @implementation QMApi (Users)
 
@@ -44,28 +45,35 @@
     [self retrieveUsersWithIDs:chatDialog.occupantIDs completion:completion];
 }
 
-- (BOOL)addUserToContactListRequest:(NSUInteger)userID {
-    
-    BOOL success = [[QBChat instance] addUserToContactListRequest:userID];
-    return success;
+- (void)addUserToContactListRequest:(NSUInteger)userID completion:(void(^)(BOOL success))completion {
+
+    [self.messagesService chat:^(QBChat *chat) {
+        BOOL success = [chat addUserToContactListRequest:userID];
+        completion(success);
+    }];
 }
 
-- (BOOL)removeUserFromContactListWithUserID:(NSUInteger)userID {
+- (void)removeUserFromContactListWithUserID:(NSUInteger)userID completion:(void(^)(BOOL success))completion {
     
-    BOOL success = [[QBChat instance] removeUserFromContactList:userID];
-    return success;
+    [self.messagesService chat:^(QBChat *chat) {
+        BOOL success = [chat removeUserFromContactList:userID];
+        completion(success);
+    }];
 }
 
-- (BOOL)confirmAddContactRequest:(NSUInteger)userID {
+- (void)confirmAddContactRequest:(NSUInteger)userID completion:(void(^)(BOOL success))completion {
     
-    BOOL success = [[QBChat instance] confirmAddContactRequest:userID];
-    return success;
+    [self.messagesService chat:^(QBChat *chat) {
+        BOOL success = [chat confirmAddContactRequest:userID];
+        completion(success);
+    }];
 }
 
-- (BOOL)rejectAddContactRequest:(NSUInteger)userID {
-    
-    BOOL success =[[QBChat instance] rejectAddContactRequest:userID];
-    return success;
+- (void)rejectAddContactRequest:(NSUInteger)userID completion:(void(^)(BOOL success))completion {
+    [self.messagesService chat:^(QBChat *chat) {
+        BOOL success = [chat rejectAddContactRequest:userID];
+        completion(success);
+    }];
 }
 
 /**

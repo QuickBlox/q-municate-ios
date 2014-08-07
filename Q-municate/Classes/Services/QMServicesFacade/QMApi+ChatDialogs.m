@@ -24,6 +24,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     
     __weak __typeof(self)weakSelf = self;
     [self.chatDialogsService fetchAllDialogs:^(QBDialogsPagedResult *result) {
+        
         if ([weakSelf checkResult:result]) {
             [weakSelf.chatDialogsService addDialogs:result.dialogs];
             if (completion) completion();

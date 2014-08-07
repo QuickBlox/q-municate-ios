@@ -14,22 +14,41 @@
 #import "QMApi.h"
 #import "REAlertView.h"
 #import "QMAlertsFactory.h"
+#import "QMChatReceiver.h"
+#import "TWMessageBarManager.h"
+#import "QMMessageBarStyleSheetFactory.h"
+#import "QMSoundManager.h"
 
-@interface QMChatViewController ()
+@interface QMChatViewController () <QMChatDataSourceDelegate>
 
 @end
 
 @implementation QMChatViewController
 
+- (void)dealloc {
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    [[QMChatReceiver instance] unsubscribeForTarget:self];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
     self.dataSource = [[QMChatDataSource alloc] initWithChatDialog:self.dialog forTableView:self.tableView];
+    self.dataSource.delegate = self;
+    
     self.dialog.type == QBChatDialogTypeGroup ? [self configureNavigationBarForGroupChat] : [self configureNavigationBarForPrivateChat];
+    
+    __weak __typeof(self)weakSelf = self;
+    [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+        
+        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog && [message.cParamDialogID isEqualToString:weakSelf.dialog.ID]) {
+            weakSelf.title = message.cParamDialogName;
+        }
+    }];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
+    
     [super viewWillAppear:animated];
 
     if (self.dialog.type == QBChatDialogTypeGroup) {
@@ -78,7 +97,6 @@
 
 #pragma mark - Nav Buttons Actions
 
-
 - (void)audioCallAction {
 #if QM_AUDIO_VIDEO_ENABLED == 0
     [QMAlertsFactory comingSoonAlert];
@@ -115,6 +133,40 @@
         QMBaseCallsController *callsController = segue.destinationViewController;
         [callsController setOpponent:opponent];
     }
+}
+
+#pragma mark - QMChatDataSourceDelegate
+
+- (void)message:(QBChatMessage *)message forOtherOtherDialog:(QBChatDialog *)otherDialog {
+    
+    __block UIImage *img = nil;
+    NSString *title = nil;
+    
+    if (otherDialog.type ==  QBChatDialogTypeGroup) {
+        img = [UIImage imageNamed:@"upic_placeholder_details_group"];
+        title = otherDialog.name;
+    } else if (otherDialog.type == QBChatDialogTypePrivate) {
+        NSUInteger occupantID = [[QMApi instance] occupantIDForPrivateChatDialog:otherDialog];
+        QBUUser *user = [[QMApi instance] userWithID:occupantID];
+        title = user.fullName;
+        
+        [QMImageView imageWithURL:[NSURL URLWithString:user.website]
+                             size:CGSizeMake(50, 50)
+                         progress:nil
+                             type:QMImageViewTypeCircle
+                       completion:^(UIImage *userAvatar) {
+                                 img = userAvatar;
+                             }];
+        if (!img) {
+            img = [UIImage imageNamed:@"upic-placeholder"];
+        }
+        
+    }
+    [QMSoundManager playMessageReceivedSound];
+    [TWMessageBarManager sharedInstance].styleSheet = [QMMessageBarStyleSheetFactory defaultMsgBarWithImage:img];
+    [[TWMessageBarManager sharedInstance] showMessageWithTitle:title
+                                                   description:message.text
+                                                          type:TWMessageBarMessageTypeSuccess];
 }
 
 @end

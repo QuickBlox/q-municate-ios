@@ -13,7 +13,7 @@
 @property (weak, nonatomic) id target;
 @property (strong, nonatomic) id callback;
 @property (assign, nonatomic) NSUInteger identifier;
-@property (strong, nonatomic) NSString *selector;
+@property (strong, nonatomic) NSString *className;
 
 @end
 
@@ -26,8 +26,8 @@
 - (NSString *)description {
     
     return [NSString stringWithFormat:
-            @"target - %@, callback - %@, identfier - %d, selector - %@",
-            self.target, self.callback, self.identifier, self.selector];
+            @"target - %@, callback - %@, identfier - %d, targetClass - %@",
+            self.target, self.callback, self.identifier, self.className];
 }
 
 - (BOOL)isEqual:(QMChatHandlerObject *)other {
@@ -108,7 +108,7 @@
     handler.callback = [block copy];
     handler.target = target;
     handler.identifier = [target hash];
-    handler.selector = key;
+    handler.className = NSStringFromClass([target class]);
     
 #if QM_TEST
     if (handlers.count > 0)

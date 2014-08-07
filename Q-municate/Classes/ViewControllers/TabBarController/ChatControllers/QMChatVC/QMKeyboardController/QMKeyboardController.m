@@ -128,7 +128,7 @@ static void * kQMKeyboardControllerKeyValueObservingContext = &kQMKeyboardContro
     
     __weak __typeof(self)weakSelf = self;
     [self handleKeyboardNotification:notification completion:^(BOOL finished) {
-        [weakSelf.panGestureRecognizer addTarget:self action:@selector(handlePanGestureRecognizer:)];
+        [weakSelf.panGestureRecognizer addTarget:weakSelf action:@selector(handlePanGestureRecognizer:)];
     }];
 }
 
@@ -146,9 +146,9 @@ static void * kQMKeyboardControllerKeyValueObservingContext = &kQMKeyboardContro
 - (void)didReceiveKeyboardDidHideNotification:(NSNotification *)notification {
     
     self.keyboardView = nil;
-    
+    __weak __typeof(self)weakSelf = self;
     [self handleKeyboardNotification:notification completion:^(BOOL finished) {
-        [self.panGestureRecognizer removeTarget:self action:NULL];
+        [weakSelf.panGestureRecognizer removeTarget:weakSelf action:NULL];
     }];
 }
 

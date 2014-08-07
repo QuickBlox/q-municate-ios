@@ -11,6 +11,7 @@
 #import "QMFacebookService.h"
 #import "QMSettingsManager.h"
 #import "QMUsersService.h"
+#import "QMMessagesService.h"
 
 @implementation QMApi (Auth)
 
@@ -20,7 +21,7 @@
     
     __weak __typeof(self)weakSelf = self;
     [self.authService unSubscribeFromPushNotifications:^(QBMUnregisterSubscriptionTaskResult *result) { 
-        [weakSelf logoutChat];
+        [weakSelf.messagesService logoutChat];
         [weakSelf.facebookService logout];
         [weakSelf.settingsManager clearSettings];
         [weakSelf stopServices];
@@ -182,7 +183,7 @@
 - (void)autorizeOnQuickbloxChat:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
-    [self loginChatWithUser:self.currentUser completion:^(BOOL success) {
+    [self loginChat:^(BOOL success) {
         if (!success) {
             completion(success);
         }

@@ -18,6 +18,40 @@
 
 @implementation QMMessagesService
 
+- (void)chat:(void(^)(QBChat *chat))chatBlock {
+    
+    if ([[QBChat instance] isLoggedIn]) {
+        chatBlock([QBChat instance]);
+    } else {
+        [self loginChat:^(BOOL success) {
+            chatBlock([QBChat instance]);
+        }];
+    }
+}
+
+- (BOOL)loginChat:(QBChatResultBlock)block {
+    
+    if (([[QBChat instance] isLoggedIn])) {
+        NSAssert(nil, @"Update this case");
+    }
+    
+    [[QMChatReceiver instance] chatDidLoginWithTarget:self block:block];
+    [[QMChatReceiver instance] chatDidNotLoginWithTarget:self block:block];
+
+    NSAssert(self.currentUser, @"update this case");
+    return [[QBChat instance] loginWithUser:self.currentUser];
+}
+
+- (BOOL)logoutChat {
+    
+    BOOL success = YES;
+    [[QMChatReceiver instance] unsubscribeForTarget:self];
+    if ([[QBChat instance] isLoggedIn]) {
+        success = [[QBChat instance] logout];
+    }
+    return success;
+}
+
 - (void)start {
     [super start];
     

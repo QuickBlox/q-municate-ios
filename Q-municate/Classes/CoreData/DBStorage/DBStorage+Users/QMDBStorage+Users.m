@@ -20,10 +20,11 @@
 #pragma mark - Public methods
 
 - (void)cachedQbUsers:(QMDBCollectionBlock)qbUsers {
-    
+
+    __weak __typeof(self)weakSelf = self;
     [self async:^(NSManagedObjectContext *context) {
         
-        NSArray *allUsers = [self allUsersInContext:context];
+        NSArray *allUsers = [weakSelf allUsersInContext:context];
         DO_AT_MAIN(qbUsers(allUsers));
         
     }];
