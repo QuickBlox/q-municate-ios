@@ -83,23 +83,12 @@
     return [self.dataSource searchDisplayController:controller shouldReloadTableForSearchString:searchString];
 }
 
-- (void)searchDisplayController:(UISearchDisplayController *)controller didLoadSearchResultsTableView:(UITableView *)tableView {
-    [self.dataSource searchDisplayController:controller didLoadSearchResultsTableView:tableView];
-}
-
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption {
-    return [self.dataSource searchDisplayController:controller shouldReloadTableForSearchScope:searchOption];
-}
-
-- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
+- (void) searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
     [self.dataSource searchDisplayControllerWillBeginSearch:controller];
+    
 }
 
-- (void) searchDisplayControllerDidBeginSearch:(UISearchDisplayController *)controller {
-    [self.dataSource searchDisplayControllerDidBeginSearch:controller];
-}
-
-- (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
+- (void) searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
     [self.dataSource searchDisplayControllerWillEndSearch:controller];
 }
 

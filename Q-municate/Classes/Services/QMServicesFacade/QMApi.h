@@ -73,19 +73,21 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  @return completion stastus
  */
 - (void)loginWithFacebook:(void(^)(BOOL success))completion;
-- (void)autorizeOnQuickbloxChat:(void(^)(BOOL success))completion;
 - (void)logout:(void(^)(BOOL success))completion;
 
 /**
  Reset user password wiht email
  */
 - (void)resetUserPassordWithEmail:(NSString *)email completion:(void(^)(BOOL success))completion;
+- (void)subscribeToPushNotifications;
 
 @end
 
 @interface QMApi (Messages)
 
 - (void)loginChat:(QBChatResultBlock)block;
+/**
+ */
 - (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete;
 /**
  */

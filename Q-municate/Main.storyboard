@@ -55,7 +55,7 @@
             </objects>
             <point key="canvasLocation" x="-3940" y="-8365"/>
         </scene>
-        <!--Friend List View Controller - Contacts-->
+        <!--Friend List View Controller - Friends-->
         <scene sceneID="eCC-3Z-35T">
             <objects>
                 <tableViewController id="w1g-vg-JcU" customClass="QMFriendListViewController" sceneMemberID="viewController">
@@ -151,7 +151,7 @@ Your don't have any friends, tap search icon to find them or invite new ones.</s
                             <outlet property="delegate" destination="w1g-vg-JcU" id="pY0-x9-adO"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Contacts" id="K2m-kB-kuX"/>
+                    <navigationItem key="navigationItem" title="Friends" id="K2m-kB-kuX"/>
                     <connections>
                         <outlet property="searchDisplayController" destination="Lrc-4R-CPI" id="d9E-bY-Kui"/>
                         <segue destination="B6O-m1-ZGo" kind="push" identifier="DetailsSegue" id="g4i-Rf-Ina"/>
@@ -168,7 +168,7 @@ Your don't have any friends, tap search icon to find them or invite new ones.</s
                     </connections>
                 </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="-2906" y="-9048"/>
+            <point key="canvasLocation" x="-2906" y="-9060"/>
         </scene>
         <!--Friends Details Controller - Details-->
         <scene sceneID="hb9-Nb-dND">

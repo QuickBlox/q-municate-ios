@@ -25,6 +25,7 @@ NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFriendsCell
 @property (strong, nonatomic) NSArray *friendList;
 @property (weak, nonatomic) UITableView *tableView;
 @property (weak, nonatomic) UISearchDisplayController *searchDisplayController;
+@property (weak, nonatomic) UITableView *tView;
 
 @end
 
@@ -44,7 +45,7 @@ NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFriendsCell
         
         self.tableView = tableView;
         self.tableView.dataSource = self;
-        
+        self.tView = self.tableView;
         self.searchResult = [NSArray array];
         
         self.searchDisplayController = searchDisplayController;
@@ -58,10 +59,6 @@ NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFriendsCell
         
         [[QMChatReceiver instance] chatDidReceiveContactAddRequestWithTarget:self block:^(NSUInteger userID) {
             [[QMApi instance] confirmAddContactRequest:userID completion:^(BOOL success) {
-                
-                if (success) {
-                    NSLog(@"Auto approve userID - %d", userID);
-                }
             }];
         }];
     }
@@ -88,13 +85,7 @@ NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFriendsCell
 - (void)reloadDatasource {
     
     self.friendList = [QMApi instance].friends;
-    
-    if (!self.searchDisplayController.isActive) {
-        [self.tableView reloadData];
-        
-    } else {
-        [self.searchDisplayController.searchResultsTableView reloadData];
-    }
+    [self.tableView reloadData];
 }
 
 - (NSArray *)sortUsersByFullname:(NSArray *)users {
@@ -121,7 +112,7 @@ NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFriendsCell
         //Remove current user from search result
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.ID != %d", [QMApi instance].currentUser.ID];
         weakSelf.searchResult = [users filteredArrayUsingPredicate:predicate];
-        [weakSelf.searchDisplayController.searchResultsTableView reloadData];
+        [weakSelf.tableView reloadData];
     };
     
     
@@ -164,7 +155,7 @@ NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFriendsCell
     if (self.searchDisplayController.isActive) {
         return users.count;
     } else {
-        return users.count > 0 ?: 1;
+        return users.count > 0 ? users.count : 1;
     }
 }
 
@@ -186,12 +177,12 @@ NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFriendsCell
     
     if (!self.searchDisplayController.isActive) {
         if (users.count == 0) {
-            UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:kQMDontHaveAnyFriendsCellIdentifier];
+            UITableViewCell *cell = [self.tView dequeueReusableCellWithIdentifier:kQMDontHaveAnyFriendsCellIdentifier];
             return cell;
         }
     }
     
-    QMFriendListCell *cell = [self.tableView dequeueReusableCellWithIdentifier:kQMFriendsListCellIdentifier];
+    QMFriendListCell *cell = [self.tView dequeueReusableCellWithIdentifier:kQMFriendsListCellIdentifier];
     QBUUser *user = users[indexPath.row];
     
     cell.contactlistItem = [[QMApi instance] contactItemWithUserID:user.ID];
@@ -216,18 +207,21 @@ NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFriendsCell
 }
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
+    
     [self globalSearch:searchString];
     
     return NO;
 }
 
-- (void)searchDisplayControllerDidBeginSearch:(UISearchDisplayController *)controller {}
+- (void) searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
+ 
+    self.tableView.dataSource = nil;
+    self.tableView = controller.searchResultsTableView;
+}
 
-- (void)searchDisplayController:(UISearchDisplayController *)controller didLoadSearchResultsTableView:(UITableView *)tableView {}
-
-- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {}
-
-- (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
+- (void) searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
+    self.tableView = self.tView;
+    self.tableView.dataSource = self;
     [self.tableView reloadData];
 }
 

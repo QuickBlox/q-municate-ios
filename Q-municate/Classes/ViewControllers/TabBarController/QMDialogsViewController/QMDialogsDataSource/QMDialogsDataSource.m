@@ -44,14 +44,7 @@
             QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
 
             if (dialog) {
-                NSUInteger idx = [weakSelf.dialogs indexOfObject:dialog];
-                
-                if (message.cParamNotificationType == QMMessageNotificationTypeCreateDialog ) {
-                    [weakSelf insertRowAtIndex:idx];
-                }
                 [weakSelf.tableView reloadData];
-            } else {
-                NSCAssert(nil, @"Dialog == nil, need update this case");
             }
             [weakSelf fetchUnreadDialogsCount];
         }];

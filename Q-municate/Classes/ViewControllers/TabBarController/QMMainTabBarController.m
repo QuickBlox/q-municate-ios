@@ -9,8 +9,13 @@
 #import "QMMainTabBarController.h"
 #import "SVProgressHUD.h"
 #import "QMApi.h"
+#import "QMImageView.h"
+#import "TWMessageBarManager.h"
+#import "QMMessageBarStyleSheetFactory.h"
+#import "QMSoundManager.h"
+#import "QMChatDataSource.h"
 
-@interface QMMainTabBarController ()
+@interface QMMainTabBarController () <QMChatDataSourceDelegate>
 
 @end
 
@@ -23,7 +28,6 @@
     [self customizeTabBar];
     [self.navigationController setNavigationBarHidden:YES animated:NO];
 
-//    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     __weak __typeof(self)weakSelf = self;
     [[QMApi instance] autoLogin:^(BOOL success) {
         
@@ -33,12 +37,10 @@
             }];
         }else {
             [[QMApi instance] loginChat:^(BOOL loginSuccess) {
-                [[QMApi instance] fetchAllHistory:^{
-                    [SVProgressHUD dismiss];
-                }];
+                [[QMApi instance] subscribeToPushNotifications];
+                [[QMApi instance] fetchAllHistory:^{}];
             }];
         }
-//        [weakSelf.viewControllers makeObjectsPerformSelector:@selector(view)];
     }];
 }
 
@@ -76,6 +78,40 @@
         NSAssert([navViewController isKindOfClass:[UINavigationController class]], @"is not UINavigationController");
         [navViewController.viewControllers makeObjectsPerformSelector:@selector(view)];
     }
+}
+
+#pragma mark - QMChatDataSourceDelegate
+
+- (void)message:(QBChatMessage *)message forOtherOtherDialog:(QBChatDialog *)otherDialog {
+    
+    __block UIImage *img = nil;
+    NSString *title = nil;
+    
+    if (otherDialog.type ==  QBChatDialogTypeGroup) {
+        img = [UIImage imageNamed:@"upic_placeholder_details_group"];
+        title = otherDialog.name;
+    } else if (otherDialog.type == QBChatDialogTypePrivate) {
+        NSUInteger occupantID = [[QMApi instance] occupantIDForPrivateChatDialog:otherDialog];
+        QBUUser *user = [[QMApi instance] userWithID:occupantID];
+        title = user.fullName;
+        
+        [QMImageView imageWithURL:[NSURL URLWithString:user.website]
+                             size:CGSizeMake(50, 50)
+                         progress:nil
+                             type:QMImageViewTypeCircle
+                       completion:^(UIImage *userAvatar) {
+                           img = userAvatar;
+                       }];
+        if (!img) {
+            img = [UIImage imageNamed:@"upic-placeholder"];
+        }
+        
+    }
+    [QMSoundManager playMessageReceivedSound];
+    [TWMessageBarManager sharedInstance].styleSheet = [QMMessageBarStyleSheetFactory defaultMsgBarWithImage:img];
+    [[TWMessageBarManager sharedInstance] showMessageWithTitle:title
+                                                   description:message.text
+                                                          type:TWMessageBarMessageTypeSuccess];
 }
 
 @end

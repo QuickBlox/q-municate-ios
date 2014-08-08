@@ -15,11 +15,9 @@
 #import "REAlertView.h"
 #import "QMAlertsFactory.h"
 #import "QMChatReceiver.h"
-#import "TWMessageBarManager.h"
-#import "QMMessageBarStyleSheetFactory.h"
-#import "QMSoundManager.h"
 
-@interface QMChatViewController () <QMChatDataSourceDelegate>
+
+@interface QMChatViewController ()
 
 @end
 
@@ -34,7 +32,6 @@
     [super viewDidLoad];
 
     self.dataSource = [[QMChatDataSource alloc] initWithChatDialog:self.dialog forTableView:self.tableView];
-    self.dataSource.delegate = self;
     
     self.dialog.type == QBChatDialogTypeGroup ? [self configureNavigationBarForGroupChat] : [self configureNavigationBarForPrivateChat];
     
@@ -50,7 +47,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
-
+    self.dataSource.delegate = (id <QMChatDataSourceDelegate>)self.tabBarController;
     if (self.dialog.type == QBChatDialogTypeGroup) {
         self.title = self.dialog.name;
     }
@@ -133,40 +130,6 @@
         QMBaseCallsController *callsController = segue.destinationViewController;
         [callsController setOpponent:opponent];
     }
-}
-
-#pragma mark - QMChatDataSourceDelegate
-
-- (void)message:(QBChatMessage *)message forOtherOtherDialog:(QBChatDialog *)otherDialog {
-    
-    __block UIImage *img = nil;
-    NSString *title = nil;
-    
-    if (otherDialog.type ==  QBChatDialogTypeGroup) {
-        img = [UIImage imageNamed:@"upic_placeholder_details_group"];
-        title = otherDialog.name;
-    } else if (otherDialog.type == QBChatDialogTypePrivate) {
-        NSUInteger occupantID = [[QMApi instance] occupantIDForPrivateChatDialog:otherDialog];
-        QBUUser *user = [[QMApi instance] userWithID:occupantID];
-        title = user.fullName;
-        
-        [QMImageView imageWithURL:[NSURL URLWithString:user.website]
-                             size:CGSizeMake(50, 50)
-                         progress:nil
-                             type:QMImageViewTypeCircle
-                       completion:^(UIImage *userAvatar) {
-                                 img = userAvatar;
-                             }];
-        if (!img) {
-            img = [UIImage imageNamed:@"upic-placeholder"];
-        }
-        
-    }
-    [QMSoundManager playMessageReceivedSound];
-    [TWMessageBarManager sharedInstance].styleSheet = [QMMessageBarStyleSheetFactory defaultMsgBarWithImage:img];
-    [[TWMessageBarManager sharedInstance] showMessageWithTitle:title
-                                                   description:message.text
-                                                          type:TWMessageBarMessageTypeSuccess];
 }
 
 @end

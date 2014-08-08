@@ -170,7 +170,7 @@
     }];
 }
 
-- (void)subscribeToPushNotificationsIfNeeded {
+- (void)subscribeToPushNotifications {
     
     if (self.settingsManager.pushNotificationsEnabled) {
         __weak __typeof(self)weakSelf = self;
@@ -178,20 +178,6 @@
             [weakSelf checkResult:result];
         }];
     }
-}
-
-- (void)autorizeOnQuickbloxChat:(void(^)(BOOL success))completion {
-    
-    __weak __typeof(self)weakSelf = self;
-    [self loginChat:^(BOOL success) {
-        if (!success) {
-            completion(success);
-        }
-        else {
-            completion(success);
-            [weakSelf subscribeToPushNotificationsIfNeeded];
-        }
-    }];
 }
 
 - (void)loginWithEmail:(NSString *)email password:(NSString *)password rememberMe:(BOOL)rememberMe completion:(void(^)(BOOL success))completion {
