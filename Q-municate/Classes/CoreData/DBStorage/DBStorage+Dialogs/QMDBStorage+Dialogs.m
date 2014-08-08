@@ -2,7 +2,7 @@
 //  QMDBStorage+Dialogs.m
 //  Q-municate
 //
-//  Created by Andrey on 04.06.14.
+//  Created by Andrey Ivanov on 04.06.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -29,8 +29,9 @@
 
 - (void)cachedQBChatDialogs:(QMDBCollectionBlock)qbDialogs {
     
+    __weak __typeof(self)weakSelf = self;
     [self async:^(NSManagedObjectContext *context) {
-        NSArray *allDialogs = [self allQBChatDialogsInContext:context];
+        NSArray *allDialogs = [weakSelf allQBChatDialogsInContext:context];
         DO_AT_MAIN(qbDialogs(allDialogs));
     }];
 }
@@ -84,7 +85,7 @@
                 }
             }
             
-            if (toUpdate) {
+            if (dialogToUpdate) {
                 [toUpdate addObject:dialogToUpdate];
             } else {
                 [toInsert addObject:dialog];
@@ -96,18 +97,18 @@
     }
     
     __weak __typeof(self)weakSelf = self;
-    [self async:^(NSManagedObjectContext *context) {
+    [self async:^(NSManagedObjectContext *asyncContext) {
         
         if (toUpdate.count != 0) {
-            [weakSelf updateQBChatDialogs:toUpdate inContext:context];
+            [weakSelf updateQBChatDialogs:toUpdate inContext:asyncContext];
         }
         
         if (toInsert.count != 0) {
-            [weakSelf insertQBChatDialogs:toInsert inContext:context];
+            [weakSelf insertQBChatDialogs:toInsert inContext:asyncContext];
         }
         
         if (toDelete.count != 0) {
-            [weakSelf deleteQBChatDialogs:toDelete inContext:context];
+            [weakSelf deleteQBChatDialogs:toDelete inContext:asyncContext];
         }
         
         NSLog(@"Dialogs in cahce %d", allDialogs.count);

@@ -9,12 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "QMChatUploadingMessage.h"
 
+
 @interface QMChatService : NSObject
 
-
-@property (strong, nonatomic) NSMutableDictionary *allConversations;
 @property (strong, nonatomic) NSMutableDictionary *allDialogsAsDictionary;
-@property (strong, nonatomic) NSMutableDictionary *allChatRoomsAsDictionary;
+
 
 @property (nonatomic, strong) QBChatRoom *chatRoom;
 
@@ -38,8 +37,12 @@
 - (void)rejectFriendsRequestFromUserWithID:(NSUInteger)userID;
 - (void)removeContactFromFriendsWithID:(NSUInteger)userID;
 
-
 #pragma mark - CHAT
+
+- (void)setHistory:(NSArray *)history forIdentifier:(NSString *)identifier;
+- (NSArray *)historyWithIdentifier:(NSString *)identifier;
+
+- (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID;
 
 #pragma mark - Chat Dialogs
 
@@ -93,7 +96,7 @@
 
 #pragma mark - Audio/Video Calls
 
-- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView callType:(QMVideoChatType)callType;
+- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView callType:(QBVideoChatConferenceType)callType;
 - (void)acceptCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView;
 - (void)rejectCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView;
 

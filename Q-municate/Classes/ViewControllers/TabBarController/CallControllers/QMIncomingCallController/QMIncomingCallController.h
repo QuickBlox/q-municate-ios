@@ -11,7 +11,9 @@
 @interface QMIncomingCallController : UIViewController
 
 @property (assign, nonatomic) NSUInteger opponentID;
-@property (assign, nonatomic) QMVideoChatType callType;
+@property (assign, nonatomic) enum QBVideoChatConferenceType callType;
 @property (strong, nonatomic) QBUUser *opponent;
+
+- (void)setCallStatus:(NSString *)callStatus;
 
 @end

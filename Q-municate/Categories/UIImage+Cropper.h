@@ -10,6 +10,7 @@
 
 @interface UIImage (Cropper)
 
-- (UIImage *)imageByScalingProportionallyToMinimumSize:(CGSize)targetSize;
+- (UIImage *)imageByScaleAndCrop:(CGSize)targetSize;
+- (UIImage *)imageByCircularScaleAndCrop:(CGSize)targetSize;
 
 @end

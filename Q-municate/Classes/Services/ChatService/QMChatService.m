@@ -8,7 +8,6 @@
 
 #import "QMChatService.h"
 #import "QMContactList.h"
-#import "NSArray+ArrayToString.h"
 #import <TWMessageBarManager.h>
 #import "QMDBStorage+Messages.h"
 #import  <Quickblox/Quickblox.h>
@@ -27,13 +26,16 @@
 
 @property (strong, nonatomic) NSString *currentSessionID;
 @property (nonatomic, strong) NSDictionary *customParams;
-@property (nonatomic, assign) QMVideoChatType callType;
+@property (nonatomic, assign) QBVideoChatConferenceType callType;
 
 /** */
 @property (strong, nonatomic) NSTimer *presenceTimer;
 
 /** Upload message needed for replacing with delivered message in chat hisoty. When used, it means that upload finished, and message has been delivered */
 @property (strong, nonatomic) QMChatUploadingMessage *uploadingMessage;
+
+@property (strong, nonatomic) NSMutableDictionary *allChatRoomsAsDictionary;
+@property (strong, nonatomic) NSMutableDictionary *allConversations;
 
 @end
 
@@ -54,6 +56,7 @@
 {
     if (self = [super init]) {
         self.allConversations = [NSMutableDictionary new];
+        self.allChatRoomsAsDictionary = [NSMutableDictionary new];
         [QBChat instance].delegate = self;
     }
     return self;
@@ -138,7 +141,7 @@
 #pragma mark - Audio/Video Calls
 
 
-- (void)initActiveStreamWithOpponentView:(QBVideoView *)opponentView sessionID:(NSString *)sessionID callType:(QMVideoChatType)type
+- (void)initActiveStreamWithOpponentView:(QBVideoView *)opponentView sessionID:(NSString *)sessionID callType:(QBVideoChatConferenceType)type
 {
     // Active stream initialize:
     if (sessionID == nil)
@@ -148,7 +151,7 @@
         self.activeStream = [[QBChat instance] createAndRegisterWebRTCVideoChatInstanceWithSessionID:currentSessionID];
     }
     // set conference type:
-    self.activeStream.currentConferenceType = (int)type;
+    self.activeStream.currentConferenceType = type;
     
     // set opponent' view
     self.activeStream.viewToRenderOpponentVideoStream = opponentView;
@@ -162,7 +165,7 @@
     [self clearCallsCacheParams];
 }
 
-- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView callType:(QMVideoChatType)callType
+- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView callType:(QBVideoChatConferenceType)callType
 {
     [self initActiveStreamWithOpponentView:opponentView sessionID:nil callType:callType];
     [self.activeStream callUser:userID];
@@ -232,7 +235,7 @@
 {
     self.customParams = customParameters;
     self.currentSessionID = _sessionID;
-    self.callType = (NSUInteger)conferenceType;
+    self.callType = conferenceType;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kIncomingCallNotification object:nil userInfo:@{@"id" : @(userID), @"type" : @(conferenceType)}];
 }
@@ -366,7 +369,7 @@
 
 - (void)addUsers:(NSArray *)users toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completionHandler
 {
-    NSString *usersIDsAsString = [users stringFromArray];
+    NSString *usersIDsAsString = [users componentsJoinedByString:@","];
     
     NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
     extendedRequest[@"push[occupants_ids][]"] = usersIDsAsString;
@@ -412,6 +415,7 @@
 - (void)joinRoomsForDialogs:(NSArray *)chatDialogs
 {
     for (QBChatDialog *dialog in chatDialogs) {
+        
         if (dialog.type == QBChatDialogTypePrivate) {
             continue;
         }
@@ -446,12 +450,12 @@
     NSString *dialogKey = [NSString stringWithFormat:@"%lu", (unsigned long)message.senderID];
     [self saveMessageToLocalHistory:message chatDialogKey:dialogKey];
     
-	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidReceiveMessage object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidNotSendMessageNotification object:nil];
 }
 
 - (void)chatDidFailWithError:(NSInteger)code
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidFailWithError
+	[[NSNotificationCenter defaultCenter] postNotificationName:kChatDidFailWithErrorNotification
                                                         object:nil
                                                       userInfo:@{@"errorCode" : @(code)}];
 }
@@ -493,6 +497,24 @@
     }
 }
 
+- (void)setHistory:(NSArray *)history forIdentifier:(NSString *)identifier {
+    
+    self.allConversations[identifier] = history;
+}
+
+- (NSArray *)historyWithIdentifier:(NSString *)identifier {
+    
+    return self.allConversations[identifier];
+}
+
+- (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID {
+    
+    return self.allChatRoomsAsDictionary[roomJID];
+}
+
+#define intToString(s) [NSString stringWithFormat:@"%d",s]
+
+//- (void)sendInviteMessageToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog
 - (void)sendChatDialogDidCreateNotificationToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog
 {
     QBUUser *me = [QMContactList shared].me;
@@ -515,7 +537,7 @@
         }
         customParams[@"_id"] = chatDialog.ID;
         customParams[@"type"] = @(chatDialog.type);
-        customParams[@"occupants_ids"] = [chatDialog.occupantIDs stringFromArray];
+        customParams[@"occupants_ids"] = [chatDialog.occupantIDs componentsJoinedByString:@","];
         
         NSTimeInterval timestamp = (unsigned long)[[NSDate date] timeIntervalSince1970];
         customParams[@"date_sent"] = @(timestamp);
@@ -526,8 +548,11 @@
         inviteMessage.customParameters = customParams;
         
         [[QBChat instance] sendMessage:inviteMessage];
+        // save to history:
+        self.allConversations[intToString(user.ID)] = inviteMessage;
     }
 }
+
 
 - (void)sendChatDialogDidUpdateNotificationToUsers:(NSArray *)users withChatDialog:(QBChatDialog *)chatDialog
 {
@@ -542,7 +567,8 @@
         
         NSMutableDictionary *customParams = [NSMutableDictionary new];
         customParams[@"name"] = chatDialog.name;
-        customParams[@"occupants_ids"] = [chatDialog.occupantIDs stringFromArray];
+        customParams[@"type"] = @(chatDialog.type);
+        customParams[@"occupants_ids"] = [chatDialog.occupantIDs componentsJoinedByString:@","];
 
         // notification type: 2 = Chat dialog was updated:
         customParams[@"notification_type"] = @"2";
@@ -558,7 +584,7 @@
     QBChatAttachment *attachment = [[QBChatAttachment alloc] init];
     attachment.type = @"photo";
     attachment.url = [blob publicUrl];
-    attachment.ID = [@(blob.ID) stringValue];
+    attachment.ID = intToString(blob.ID);
     
     contentMessage.attachments = @[attachment];
     
@@ -586,10 +612,6 @@
 {
     QBChatRoom *chatRoom = [[QBChatRoom alloc] initWithRoomJID:roomJID];
     [chatRoom joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
-    
-    if (self.allChatRoomsAsDictionary == nil) {
-        self.allChatRoomsAsDictionary = [NSMutableDictionary new];
-    }
     self.allChatRoomsAsDictionary[chatRoom.JID] = chatRoom;
 }
 
@@ -601,11 +623,13 @@
         if (result.success && [result isKindOfClass:[QBChatHistoryMessageResult class]]) {
             
             NSArray *messages = ((QBChatHistoryMessageResult *)result).messages;
+        
+            block(messages, YES, nil);
+            
 #warning Storage turned off
 //            [self.dbStorage cacheQBChatMessages:messages withDialogId:dialogIDString finish:^{
 //                block(messages, YES, nil);
 //            }];
-            block(messages, YES, nil);
         }else {
             block(nil, NO, result.errors[0]);
         }
@@ -691,19 +715,19 @@
 
 - (void)chatRoomDidReceiveListOfOnlineUsers:(NSArray *)users room:(NSString *)roomName
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:kChatRoomDidChangeOnlineUsersList object:nil userInfo:@{@"online_users":users}];
-} 
+    [[NSNotificationCenter defaultCenter] postNotificationName:kChatRoomDidChangeOnlineUsersListNotification object:nil userInfo:@{@"online_users":users}];
+}
 
 
 #pragma mark - Chat Utils
 
-- (QBChatMessage *)chatMessageFromContentMessage:(QMChatUploadingMessage *)uploadingMessage
-{
+- (QBChatMessage *)chatMessageFromContentMessage:(QMChatUploadingMessage *)uploadingMessage {
     QBChatMessage *newMessage = [QBChatMessage message];
     newMessage.text = uploadingMessage.text;
     newMessage.recipientID = uploadingMessage.recipientID;
     newMessage.senderID = uploadingMessage.senderID;
     newMessage.attachments = uploadingMessage.attachments;
+    
     return newMessage;
 }
 
@@ -748,7 +772,7 @@
     chatDialog.type = [chatMessage.customParameters[@"type"] intValue];
     
     NSString *occupantsIDs = chatMessage.customParameters[@"occupants_ids"];
-    chatDialog.occupantIDs = [self stringToArray:occupantsIDs];
+    chatDialog.occupantIDs = [occupantsIDs componentsSeparatedByString:@","];
     
     return chatDialog;
 }
@@ -767,13 +791,14 @@
     dialog.name = chatMessage.customParameters[@"name"];
     
     NSString *occupantsIDs = chatMessage.customParameters[@"occupants_ids"];
-    dialog.occupantIDs = [self stringToArray:occupantsIDs];
+    dialog.occupantIDs = [occupantsIDs componentsSeparatedByString:@","];
 }
 
 - (void)createOrUpdateChatDialogFromChatMessage:(QBChatMessage *)message
 {
     NSInteger notificationType = [message.customParameters[@"notification_type"] intValue];
     
+    NSString *occupantsIDs = message.customParameters[@"occupants_ids"];
     // if notification type = update dialog:
     if (notificationType == 2) {
         [self updateChatDialogForChatMessage:message];
@@ -807,16 +832,6 @@
         dialog.unreadMessageCount +=1;
     }
 }
-
-//- (QBChatDialog *)createPrivateDialogWithOpponentID:(NSString *)opponentID message:(QBChatMessage *)message
-//{
-//    QBChatDialog *newDialog = [QBChatDialog new];
-//    newDialog.type = QBChatDialogTypePrivate;
-//    newDialog.occupantIDs = @[ opponentID];  // occupant ID
-//    [self updateDialogsLastMessageFields:newDialog forLastMessage:message];
-//    
-//    return newDialog;
-//}
 
 - (BOOL)userIsJoinedRoomWithJID:(NSString *)roomJID
 {
@@ -869,26 +884,6 @@
     return dictionaryOfDialogs;
 }
 
-- (NSArray *)stringToArray:(NSString *)string
-{
-    NSString *newString = [string copy];
-    NSMutableArray *array = [NSMutableArray new];
-    
-    while ([newString rangeOfString:@","].location < 1000000) {
-        NSRange range = [newString rangeOfString:@","];
-        // ID:
-        NSString *ID = [newString substringToIndex:range.location];
-        [array addObject:ID];
-        
-        // оставшаяся строка:
-        newString = [newString substringFromIndex:range.location+1];
-    }
-    [array addObject:newString];
-    
-    return [array copy];
-}
-
-
 #pragma mark - QBActionStatusDelegate
 
 - (void)completedWithResult:(Result *)result
@@ -898,17 +893,11 @@
         if (result.success) {
             if (_chatDialogHistoryBlock) {
                 NSMutableArray *messagesMArray = ((QBChatHistoryMessageResult *)result).messages;
-                if (messagesMArray) {
-                    _chatDialogHistoryBlock(messagesMArray, nil);
-                    _chatDialogHistoryBlock = nil;
-                } else {
-                    messagesMArray = [NSMutableArray new];
-                    _chatDialogHistoryBlock(messagesMArray, nil);
-                    _chatDialogHistoryBlock = nil;
-                }
+                
+                _chatDialogHistoryBlock(messagesMArray ? messagesMArray:@[].mutableCopy, nil);
+                _chatDialogHistoryBlock = nil;
             }
         }
-        
 	}
 }
 

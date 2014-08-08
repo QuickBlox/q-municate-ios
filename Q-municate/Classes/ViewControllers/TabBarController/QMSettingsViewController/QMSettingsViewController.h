@@ -7,9 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "StaticDataTableViewController.h"
 
-@interface QMSettingsViewController : UITableViewController
-
-@property (nonatomic, assign) SettingsViewControllerMode cellViewMode;
+@interface QMSettingsViewController : StaticDataTableViewController
 
 @end

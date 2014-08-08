@@ -4,8 +4,8 @@
 #import "_CDAttachment.h"
 
 const struct CDAttachmentAttributes CDAttachmentAttributes = {
+	.id = @"id",
 	.type = @"type",
-	.uniqueId = @"uniqueId",
 	.url = @"url",
 };
 
@@ -49,14 +49,14 @@ const struct CDAttachmentFetchedProperties CDAttachmentFetchedProperties = {
 
 
 
+@dynamic id;
+
+
+
+
+
+
 @dynamic type;
-
-
-
-
-
-
-@dynamic uniqueId;
 
 
 

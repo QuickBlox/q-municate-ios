@@ -7,55 +7,111 @@
 //
 
 #import "QMMainTabBarController.h"
-#import "QMSplashViewController.h"
-#import "QMUtilities.h"
-#import "QMAuthService.h"
-#import "QMContactList.h"
-#import "QMChatService.h"
+#import "SVProgressHUD.h"
+#import "QMApi.h"
+#import "QMImageView.h"
+#import "TWMessageBarManager.h"
+#import "QMMessageBarStyleSheetFactory.h"
+#import "QMSoundManager.h"
+#import "QMChatDataSource.h"
 
-@interface QMMainTabBarController ()
+@interface QMMainTabBarController () <QMChatDataSourceDelegate>
 
 @end
 
 @implementation QMMainTabBarController
 
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+
     [self customizeTabBar];
-    
     [self.navigationController setNavigationBarHidden:YES animated:NO];
+
+    __weak __typeof(self)weakSelf = self;
+    [[QMApi instance] autoLogin:^(BOOL success) {
+        
+        if (!success) {
+            [[QMApi instance] logout:^(BOOL logoutSuccess) {
+                [weakSelf performSegueWithIdentifier:@"SplashSegue" sender:nil];
+            }];
+        }else {
+            [[QMApi instance] loginChat:^(BOOL loginSuccess) {
+                [[QMApi instance] subscribeToPushNotifications];
+                [[QMApi instance] fetchAllHistory:^{}];
+            }];
+        }
+    }];
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
-- (void)customizeTabBar
-{
+- (void)customizeTabBar {
+    
     UIColor *white = [UIColor whiteColor];
     [[UITabBarItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : white} forState:UIControlStateNormal];
     self.tabBarController.tabBar.tintColor = white;
     
-    UITabBarItem *firstTab = [self.tabBar.items objectAtIndex:0];
-    firstTab.image = [[UIImage imageNamed:@"tb_friends"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    firstTab.selectedImage = [[UIImage imageNamed:@"tb_friends"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UIImage *friendsImg = [[UIImage imageNamed:@"tb_friends"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UITabBarItem *firstTab = self.tabBar.items[0];
+    firstTab.image = friendsImg;
+    firstTab.selectedImage = friendsImg;
     
-    UITabBarItem *secondTab = [self.tabBar.items objectAtIndex:1];
-    secondTab.image = [[UIImage imageNamed:@"tb_chat"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    secondTab.selectedImage = [[UIImage imageNamed:@"tb_chat"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UIImage *chatImg = [[UIImage imageNamed:@"tb_chat"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UITabBarItem *chatTab = self.tabBar.items[1];
+    chatTab.image = chatImg;
+    chatTab.selectedImage = chatImg;
     
-    UITabBarItem *thirdTab = [self.tabBar.items objectAtIndex:2];
-    thirdTab.image = [[UIImage imageNamed:@"tb_invite"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    thirdTab.selectedImage = [[UIImage imageNamed:@"tb_invite"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UIImage *inviteImg = [[UIImage imageNamed:@"tb_invite"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UITabBarItem *inviteTab = self.tabBar.items[2];
+    inviteTab.image = inviteImg;
+    inviteTab.selectedImage = inviteImg;
     
-    UITabBarItem *fourthTab = [self.tabBar.items objectAtIndex:3];
-    fourthTab.image = [[UIImage imageNamed:@"tb_settings"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    fourthTab.selectedImage = [[UIImage imageNamed:@"tb_settings"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UIImage *settingsImg = [[UIImage imageNamed:@"tb_settings"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UITabBarItem *fourthTab = self.tabBar.items[3];
+    fourthTab.image = settingsImg;
+    fourthTab.selectedImage = settingsImg;
+    
+    for (UINavigationController *navViewController in self.viewControllers ) {
+        NSAssert([navViewController isKindOfClass:[UINavigationController class]], @"is not UINavigationController");
+        [navViewController.viewControllers makeObjectsPerformSelector:@selector(view)];
+    }
+}
+
+#pragma mark - QMChatDataSourceDelegate
+
+- (void)message:(QBChatMessage *)message forOtherOtherDialog:(QBChatDialog *)otherDialog {
+    
+    __block UIImage *img = nil;
+    NSString *title = nil;
+    
+    if (otherDialog.type ==  QBChatDialogTypeGroup) {
+        img = [UIImage imageNamed:@"upic_placeholder_details_group"];
+        title = otherDialog.name;
+    } else if (otherDialog.type == QBChatDialogTypePrivate) {
+        NSUInteger occupantID = [[QMApi instance] occupantIDForPrivateChatDialog:otherDialog];
+        QBUUser *user = [[QMApi instance] userWithID:occupantID];
+        title = user.fullName;
+        
+        [QMImageView imageWithURL:[NSURL URLWithString:user.website]
+                             size:CGSizeMake(50, 50)
+                         progress:nil
+                             type:QMImageViewTypeCircle
+                       completion:^(UIImage *userAvatar) {
+                           img = userAvatar;
+                       }];
+        if (!img) {
+            img = [UIImage imageNamed:@"upic-placeholder"];
+        }
+        
+    }
+    [QMSoundManager playMessageReceivedSound];
+    [TWMessageBarManager sharedInstance].styleSheet = [QMMessageBarStyleSheetFactory defaultMsgBarWithImage:img];
+    [[TWMessageBarManager sharedInstance] showMessageWithTitle:title
+                                                   description:message.text
+                                                          type:TWMessageBarMessageTypeSuccess];
 }
 
 @end

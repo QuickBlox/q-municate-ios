@@ -2,7 +2,7 @@
 //  QMDBStorage+Users.m
 //  Q-municate
 //
-//  Created by Andrey on 04.06.14.
+//  Created by Andrey Ivanov on 04.06.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -20,10 +20,11 @@
 #pragma mark - Public methods
 
 - (void)cachedQbUsers:(QMDBCollectionBlock)qbUsers {
-    
+
+    __weak __typeof(self)weakSelf = self;
     [self async:^(NSManagedObjectContext *context) {
         
-        NSArray *allUsers = [self allUsersInContext:context];
+        NSArray *allUsers = [weakSelf allUsersInContext:context];
         DO_AT_MAIN(qbUsers(allUsers));
         
     }];
@@ -42,7 +43,7 @@
 
 - (NSArray *)allUsersInContext:(NSManagedObjectContext *)context {
     
-    NSArray *cdUsers = [CDUsers MR_findAllInContext:context];
+    NSArray *cdUsers = [CDUser MR_findAllInContext:context];
     NSArray *result = (cdUsers.count == 0) ? @[] : [self qbUsersWithcdUsers:cdUsers];
     
     return result;
@@ -52,7 +53,7 @@
     
     NSMutableArray *qbUsers = [NSMutableArray arrayWithCapacity:cdUsers.count];
     
-    for (CDUsers *user in cdUsers) {
+    for (CDUser *user in cdUsers) {
         QBUUser *qbUser = [user toQBUUser];
         [qbUsers addObject:qbUser];
     }
@@ -80,7 +81,7 @@
     }];
     
     //TODO: Need add version checker
-    NSArray *duplicates = [qbUsers filteredArrayUsingPredicate:predicate];
+    __unused NSArray *duplicates = [qbUsers filteredArrayUsingPredicate:predicate];
     NSAssert(duplicates.count == 0, @"Collection has duplicates");
 }
 
@@ -131,18 +132,18 @@
     }
     
     __weak __typeof(self)weakSelf = self;
-    [self async:^(NSManagedObjectContext *context) {
+    [self async:^(NSManagedObjectContext *asyncContext) {
         
         if (toUpdate.count != 0) {
-            [weakSelf updateQBUsers:toUpdate inContext:context];
+            [weakSelf updateQBUsers:toUpdate inContext:asyncContext];
         }
         
         if (toInsert.count != 0) {
-            [weakSelf insertQBUsers:toInsert inContext:context];
+            [weakSelf insertQBUsers:toInsert inContext:asyncContext];
         }
         
         if (toDelete.count != 0) {
-            [weakSelf deleteQBUsers:toDelete inContext:context];
+            [weakSelf deleteQBUsers:toDelete inContext:asyncContext];
         }
         
         NSLog(@"Users in cahce %d", allQBUsersInCache.count);
@@ -157,7 +158,7 @@
 - (void)insertQBUsers:(NSArray *)qbUsers inContext:(NSManagedObjectContext *)context {
     
     for (QBUUser *qbUser in qbUsers) {
-        CDUsers *user = [CDUsers MR_createEntityInContext:context];
+        CDUser *user = [CDUser MR_createEntityInContext:context];
         [user updateWithQBUser:qbUser];
     }
 }
@@ -166,7 +167,7 @@
     
     
     for (QBUUser *qbUser in qbUsers) {
-        CDUsers *userToDelete = [CDUsers MR_findFirstWithPredicate:IS(@"uniqueId", @(qbUser.ID))
+        CDUser *userToDelete = [CDUser MR_findFirstWithPredicate:IS(@"uniqueId", @(qbUser.ID))
                                                          inContext:context];
         [userToDelete MR_deleteEntityInContext:context];
     }
@@ -175,7 +176,7 @@
 - (void)updateQBUsers:(NSArray *)qbUsers inContext:(NSManagedObjectContext *)context {
     
     for (QBUUser *qbUser in qbUsers) {
-        CDUsers *userToUpdate = [CDUsers MR_findFirstWithPredicate:IS(@"uniqueId", @(qbUser.ID))
+        CDUser *userToUpdate = [CDUser MR_findFirstWithPredicate:IS(@"uniqueId", @(qbUser.ID))
                                                          inContext:context];
         [userToUpdate updateWithQBUser:qbUser];
     }

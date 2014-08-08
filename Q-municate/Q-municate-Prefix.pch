@@ -1,0 +1,50 @@
+//
+//  Prefix header
+//
+//  The contents of this file are implicitly included at the beginning of every source file.
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_3_0
+#warning "This project uses features only available in iOS SDK 3.0 and later."
+#endif
+
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+    #import <SystemConfiguration/SystemConfiguration.h>
+    #import <MobileCoreServices/MobileCoreServices.h>
+    #import "QBChatAbstractMessage+CustomParameters.h"
+    #import <Quickblox/Quickblox.h>
+    #import <FacebookSDK/FacebookSDK.h>
+    #import "QMDefinitions.h"
+    #import "MagicalRecord.h"
+    #import "EXTScope.h"
+
+    #ifndef _EXTRACTS
+        #define _EXTRACTS
+    #endif
+
+    #ifdef DEBUG
+        #define ELog(...) do { if(kLoggingLevel >= QMLogLevelError) NSLog(@"%s %@", __PRETTY_FUNCTION__, [NSString stringWithFormat:__VA_ARGS__]); } while(0)
+        #define ILog(...) do { if(kLoggingLevel >= QMLogLevelInfo) NSLog(@"%s %@", __PRETTY_FUNCTION__, [NSString stringWithFormat:__VA_ARGS__]); } while(0)
+        #define VLog(...) do { if(kLoggingLevel >= QMLogLevelVerbose) NSLog(@"%s %@", __PRETTY_FUNCTION__, [NSString stringWithFormat:__VA_ARGS__]); } while(0)
+        #define ALog(...) [[NSAssertionHandler currentHandler] handleFailureInFunction:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding] file:[NSString stringWithCString:__FILE__ encoding:NSUTF8StringEncoding] lineNumber:__LINE__ description:__VA_ARGS__]
+    #else
+        #define ELog(...) NSLog(@"%s %@", __PRETTY_FUNCTION__, [NSString stringWithFormat:__VA_ARGS__])
+        #define ILog(...) do { } while (0)
+        #define VLog(...) do { } while (0)
+
+        #ifndef NS_BLOCK_ASSERTIONS
+        #define NS_BLOCK_ASSERTIONS
+    #endif
+
+    #define ALog(...) NSLog(@"%s %@", __PRETTY_FUNCTION__, [NSString stringWithFormat:__VA_ARGS__])
+    #endif
+
+    #define PLog(...) [[NSNotificationCenter defaultCenter] postNotificationName:UFAppLogInfoNotification object:[NSString stringWithFormat:__VA_ARGS__]]
+    #endif
+
+//#endif

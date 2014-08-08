@@ -11,7 +11,7 @@
 
 @implementation MagicalRecord (Actions)
 
-+ (void) saveWithBlock:(void(^)(NSManagedObjectContext *localContext))block;
++ (void) saveWithBlock:(void(^)(NSManagedObjectContext *localContext))block
 {
     [[MagicalRecordStack defaultStack] saveWithBlock:block];
 }
@@ -26,12 +26,12 @@
     [[MagicalRecordStack defaultStack] saveWithBlock:block identifier:contextWorkingName completion:completion];
 }
 
-+ (void) saveWithIdentifier:(NSString *)identifier block:(void(^)(NSManagedObjectContext *))block;
++ (void) saveWithIdentifier:(NSString *)identifier block:(void(^)(NSManagedObjectContext *))block
 {
     [[MagicalRecordStack defaultStack] saveWithIdentifier:identifier block:block];
 }
 
-+ (BOOL) saveWithBlockAndWait:(void(^)(NSManagedObjectContext *localContext))block;
++ (BOOL) saveWithBlockAndWait:(void(^)(NSManagedObjectContext *localContext))block
 {
     return [self saveWithBlockAndWait:block error:nil];
 }
