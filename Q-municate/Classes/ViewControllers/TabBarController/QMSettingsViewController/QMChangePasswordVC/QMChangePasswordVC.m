@@ -102,7 +102,6 @@ const NSUInteger kQMMinPasswordLenght = 7;
     [[QMApi instance] changePasswordForCurrentUser:myProfile completion:^(BOOL success) {
         
         if (success) {
-            [weakSelf.settingsManager setLogin:myProfile.email andPassword:newPassword];
             
             [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_PASSWORD_CHANGED", nil)];
             [weakSelf.navigationController popViewControllerAnimated:YES];

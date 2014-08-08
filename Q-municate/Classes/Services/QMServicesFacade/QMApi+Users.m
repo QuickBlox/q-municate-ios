@@ -10,6 +10,7 @@
 #import "QMUsersService.h"
 #import "QMContentService.h"
 #import "QMMessagesService.h"
+#import "QMSettingsManager.h"
 
 @implementation QMApi (Users)
 
@@ -167,27 +168,19 @@
 
 #pragma mark - Update current User
 
-- (void)updateUser:(QBUUser *)user completion:(void(^)(BOOL success))completion  {
-    
-    NSString *password = user.password;
-    user.password = nil;
+- (void)changePasswordForCurrentUser:(QBUUser *)currentUser completion:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
-    [self.usersService updateUser:user withCompletion:^(QBUUserResult *result) {
+    [self.usersService updateUser:currentUser withCompletion:^(QBUUserResult *result) {
         
         if ([weakSelf checkResult:result]) {
-            result.user.password = password;
+            
             weakSelf.currentUser = result.user;
+            weakSelf.currentUser.password = currentUser.password;
+            [weakSelf.settingsManager setLogin:currentUser.email andPassword:currentUser.password];
         }
         
         completion(result.success);
-    }];
-}
-
-- (void)changePasswordForCurrentUser:(QBUUser *)currentUser completion:(void(^)(BOOL success))completion {
-    
-    [self updateUser:currentUser completion:^(BOOL success) {
-        completion(success);
     }];
 }
 
@@ -205,8 +198,19 @@
         if (publicUrl.length > 0) {
             userInfo.website = publicUrl;
         }
+        NSString *password = user.password;
+        user.password = nil;
         
-        [weakSelf updateUser:userInfo completion:completion];
+        [weakSelf.usersService updateUser:user withCompletion:^(QBUUserResult *result) {
+            
+            if ([weakSelf checkResult:result]) {
+                
+                weakSelf.currentUser = result.user;
+                weakSelf.currentUser.password = password;
+            }
+            
+            completion(result.success);
+        }];
     };
     
     if (image) {

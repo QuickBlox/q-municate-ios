@@ -85,7 +85,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 
 @interface QMApi (Messages)
 
-- (BOOL)loginChat:(QBChatResultBlock)block;
+- (void)loginChat:(QBChatResultBlock)block;
 - (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete;
 /**
  */
@@ -224,9 +224,6 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  Retrieve users with ids (idsToFetch - must be NSString's)
  */
 - (void)retrieveUsersWithIDs:(NSArray *)idsToFetch completion:(void(^)(BOOL updated))completion;
-
-/*UPDATE USER*/
-- (void)updateUser:(QBUUser *)user completion:(void(^)(BOOL success))completion;
 
 /**
  */

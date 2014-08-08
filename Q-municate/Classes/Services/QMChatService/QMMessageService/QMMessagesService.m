@@ -31,6 +31,9 @@
 
 - (BOOL)loginChat:(QBChatResultBlock)block {
     
+    if (!self.currentUser) {
+        return NO;
+    }
     if (([[QBChat instance] isLoggedIn])) {
         NSAssert(nil, @"Update this case");
     }
