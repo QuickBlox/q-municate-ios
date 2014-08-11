@@ -7,7 +7,6 @@
 //
 
 #import "QMContentView.h"
-#import "NSString+DateTimeIntervalFormatting.h"
 
 @interface QMContentView()
 
@@ -76,10 +75,11 @@
 }
 
 // selector:
-- (void)updateStatusLabel
-{
+- (void)updateStatusLabel {
+    
     _timeInterval++;
-    self.statusLabel.text = [self.statusLabel.text formattedTimeFromTimeInterval:_timeInterval];
+    
+    self.statusLabel.text = [NSString stringWithFormat:@"%02u:%05.2f", (int)(_timeInterval/60), fmod(_timeInterval, 60)];
 }
 
 @end

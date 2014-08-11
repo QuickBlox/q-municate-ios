@@ -73,7 +73,7 @@ NSString *const kQMAvatarsImageCacheName = @"qm.images.cache";
 
 
 - (void)sd_setImage:(UIImage *)image withKey:(NSString *)key {
-
+    
     UIImage *cachedImage = [QMImageView.imageCache imageFromDiskCacheForKey:key];
     if (cachedImage) {
         self.image = cachedImage;
@@ -84,7 +84,7 @@ NSString *const kQMAvatarsImageCacheName = @"qm.images.cache";
             weakSelf.image = img;
         }];
     }
-
+    
 }
 
 + (void)imageWithURL:(NSURL *)url
@@ -114,22 +114,20 @@ NSString *const kQMAvatarsImageCacheName = @"qm.images.cache";
 
 + (void)storeImage:(UIImage *)image size:(CGSize)size type:(QMImageViewType)type key:(NSString *)key completion:(void (^)(UIImage *img))completion {
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        
-        UIImage *resultImage = image;
-        
-        if (type == QMImageViewTypeSquare) {
-            resultImage = [resultImage imageByScaleAndCrop:size];
-        }
-        else if (type == QMImageViewTypeCircle) {
-            resultImage = [resultImage imageByCircularScaleAndCrop:size];
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [QMImageView.imageCache storeImage:resultImage forKey:key];
-            completion(resultImage);
-        });
+    UIImage *resultImage = nil;
+    
+    if (type == QMImageViewTypeSquare) {
+        resultImage = [image imageByScaleAndCrop:size];
+    }
+    else if (type == QMImageViewTypeCircle) {
+        resultImage = [image imageByCircularScaleAndCrop:size];
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [QMImageView.imageCache storeImage:resultImage forKey:key];
+        completion(resultImage);
     });
-
+    
 }
 
 @end

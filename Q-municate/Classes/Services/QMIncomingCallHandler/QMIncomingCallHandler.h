@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "QMIncomingCallController.h"
-#import "NSDateFormatter+SinceDateFormat.h"
 
 @interface QMIncomingCallHandler : NSObject
 
