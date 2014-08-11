@@ -10,7 +10,6 @@
     attachment.type = self.type;
     
     return attachment;
-    
 }
 
 - (void)updateWithQBChatAttachment:(QBChatAttachment *)attachment {
