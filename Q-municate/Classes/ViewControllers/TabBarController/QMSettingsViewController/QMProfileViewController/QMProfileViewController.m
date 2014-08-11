@@ -14,10 +14,12 @@
 #import "SVProgressHUD.h"
 #import "QMContentService.h"
 #import "UIImage+Cropper.h"
+#import "REActionSheet.h"
+#import "QMImagePicker.h"
 
 @interface QMProfileViewController ()
 
-<UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate>
+<UITextFieldDelegate, UITextViewDelegate>
 
 @property (weak, nonatomic) IBOutlet QMImageView *avatarView;
 @property (weak, nonatomic) IBOutlet UITextField *fullNameField;
@@ -59,7 +61,7 @@
 }
 
 - (void)updateProfileView {
-
+    
     
     self.fullNameFieldCache = self.currentUser.fullName;
     self.phoneFieldCache = self.currentUser.phone ?: @"";
@@ -77,12 +79,35 @@
 
 - (IBAction)changeAvatar:(id)sender {
     
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    picker.allowsEditing = YES;
-    picker.delegate = self;
-    [self presentViewController:picker animated:YES completion:^{
-        UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleDefault;
+    __weak __typeof(self)weakSelf = self;
+    
+    [REActionSheet presentActionSheetInView:self.view configuration:^(REActionSheet *actionSheet) {
+        
+        [actionSheet addButtonWithTitle:@"Take New Photo" andActionBlock:^{
+            [weakSelf choosePhotoWithSourceType:UIImagePickerControllerSourceTypeCamera];
+        }];
+        
+        [actionSheet addButtonWithTitle:@"Choose from Library" andActionBlock:^{
+            [weakSelf choosePhotoWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+        }];
+        
+        [actionSheet addCancelButtonWihtTitle:@"Cancel" andActionBlock:^{}];
+    }];
+}
+
+- (void)choosePhotoWithSourceType:(UIImagePickerControllerSourceType)type {
+    
+    __weak __typeof(self)weakSelf = self;
+    [QMImagePicker presentIn:self configure:^(UIImagePickerController *picker) {
+        
+        picker.sourceType = type;
+        picker.allowsEditing = YES;
+        
+    } result:^(UIImage *image) {
+        
+        weakSelf.avatarImage = image;
+        weakSelf.avatarView.image = [image imageByCircularScaleAndCrop:weakSelf.avatarView.frame.size];
+        [weakSelf setUpdateButtonActivity];
     }];
 }
 
@@ -152,30 +177,6 @@
     
     self.statusTextCache = textView.text;
     [self setUpdateButtonActivity];
-}
-
-
-#pragma mark - UIImagePickerControllerDelegate
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    
-    UIImage *selectedImage = info[UIImagePickerControllerEditedImage];
-    
-    self.avatarImage = selectedImage;
-    self.avatarView.image = [selectedImage imageByCircularScaleAndCrop:self.avatarView.frame.size];
-    
-    [picker dismissViewControllerAnimated:YES completion:^{
-        UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleLightContent;
-        [self setUpdateButtonActivity];
-    }];
-}
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    
-    self.avatarImage = nil;
-    [picker dismissViewControllerAnimated:YES completion:^{
-        UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleLightContent;
-    }];
 }
 
 @end

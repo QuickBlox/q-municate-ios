@@ -20,12 +20,14 @@
 #import "QMApi.h"
 #import "Parus.h"
 #import "QMHelpers.h"
+#import "QMImagePicker.h"
+#import "REActionSheet.h"
 
 static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 @interface QMChatVC ()
 
-<UITableViewDelegate, QMKeyboardControllerDelegate, QMChatInputToolbarDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, AGEmojiKeyboardViewDataSource, AGEmojiKeyboardViewDelegate>
+<UITableViewDelegate, QMKeyboardControllerDelegate, QMChatInputToolbarDelegate, UITextViewDelegate, AGEmojiKeyboardViewDataSource, AGEmojiKeyboardViewDelegate>
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) QMChatInputToolbar *inputToolBar;
@@ -397,7 +399,21 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
         self.inputToolBar.contentView.textView.text = @"";
     }
     else {
-        [self presentImagePicker];
+        
+        __weak __typeof(self)weakSelf = self;
+        [self.view endEditing:YES];
+        [REActionSheet presentActionSheetInView:self.view configuration:^(REActionSheet *actionSheet) {
+            
+            [actionSheet addButtonWithTitle:@"Take New Photo" andActionBlock:^{
+                [weakSelf choosePhotoWithSourceType:UIImagePickerControllerSourceTypeCamera];
+            }];
+            
+            [actionSheet addButtonWithTitle:@"Choose from Library" andActionBlock:^{
+                [weakSelf choosePhotoWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+            }];
+            
+            [actionSheet addCancelButtonWihtTitle:@"Cancel" andActionBlock:^{}];
+        }];
     }
 }
 
@@ -406,37 +422,16 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     [self showEmojiKeyboard];
 }
 
-#pragma mark - ImagePicker & UIImagePickerControllerDelegate
-
-- (void)presentImagePicker {
+- (void)choosePhotoWithSourceType:(UIImagePickerControllerSourceType)type {
     
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-    
-    imagePicker.delegate = self;
-    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    imagePicker.mediaTypes = @[(NSString *) kUTTypeImage]; //(NSString *) kUTTypeMovie
-//    imagePicker.allowsEditing = YES;
-    
-    [self presentViewController:imagePicker animated:NO completion:nil];
-}
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-   
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    NSString *mediaType = info[UIImagePickerControllerMediaType];
-    
-    if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
-        UIImage *editImage = info[ UIImagePickerControllerOriginalImage];
-        [self.dataSource sendImage:editImage];
-    }
-    
-    [picker dismissViewControllerAnimated:NO completion:nil];
-}
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    [picker dismissViewControllerAnimated:NO completion:nil];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    __weak __typeof(self)weakSelf = self;
+    [QMImagePicker presentIn:self configure:^(UIImagePickerController *picker) {
+        
+        picker.sourceType = type;
+        
+    } result:^(UIImage *image) {
+        [weakSelf.dataSource sendImage:image];
+    }];
 }
 
 #pragma mark - Emoji

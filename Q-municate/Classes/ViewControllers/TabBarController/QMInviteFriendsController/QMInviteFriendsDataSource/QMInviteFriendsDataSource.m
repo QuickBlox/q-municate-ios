@@ -161,7 +161,7 @@ const NSUInteger kQMNumberOfSection = 2;
     
     NSArray * friendsCollection = [self.fbUsers arrayByAddingObjectsFromArray:self.abUsers];
     [self setCollection:friendsCollection toSection:QMFriendsListSection];
-    [self reloadFriendSectionWithRowAnimation:UITableViewRowAnimationFade];
+    [self reloadFriendSectionWithRowAnimation:UITableViewRowAnimationNone];
 }
 
 #pragma mark - UITableViewDataSource

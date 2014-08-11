@@ -34,8 +34,10 @@
     if (!self.currentUser) {
         return NO;
     }
+    
     if (([[QBChat instance] isLoggedIn])) {
-        NSAssert(nil, @"Update this case");
+        block(YES);
+        return YES;
     }
     
     [[QMChatReceiver instance] chatDidLoginWithTarget:self block:block];

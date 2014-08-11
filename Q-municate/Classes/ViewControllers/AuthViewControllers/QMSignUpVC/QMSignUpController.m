@@ -12,8 +12,10 @@
 #import "REAlertView+QMSuccess.h"
 #import "SVProgressHUD.h"
 #import "QMApi.h"
+#import "QMImagePicker.h"
+#import "REActionSheet.h"
 
-@interface QMSignUpController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface QMSignUpController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *fullNameField;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
@@ -36,7 +38,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self configureAvatarImage];
+    self.userImage.layer.cornerRadius = self.userImage.frame.size.width / 2;
+    self.userImage.layer.masksToBounds = YES;
+
     [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
@@ -44,15 +48,6 @@
     
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-}
-
-#pragma mark - UI
-
-- (void)configureAvatarImage {
-    
-    CALayer *imageLayer = self.userImage.layer;
-    imageLayer.cornerRadius = self.userImage.frame.size.width / 2;
-    imageLayer.masksToBounds = YES;
 }
 
 #pragma mark - Actions
@@ -63,11 +58,35 @@
 
 - (IBAction)chooseUserPicture:(id)sender {
     
-    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-    imagePicker.delegate = self;
-    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    imagePicker.allowsEditing = YES;
-    [self presentViewController:imagePicker animated:YES completion:nil];
+    __weak __typeof(self)weakSelf = self;
+    
+    [REActionSheet presentActionSheetInView:self.view configuration:^(REActionSheet *actionSheet) {
+        
+        [actionSheet addButtonWithTitle:@"Take New Photo" andActionBlock:^{
+            [weakSelf choosePhotoWithSourceType:UIImagePickerControllerSourceTypeCamera];
+        }];
+        
+        [actionSheet addButtonWithTitle:@"Choose from Library" andActionBlock:^{
+            [weakSelf choosePhotoWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+        }];
+        
+        [actionSheet addCancelButtonWihtTitle:@"Cancel" andActionBlock:^{}];
+    }];
+}
+
+- (void)choosePhotoWithSourceType:(UIImagePickerControllerSourceType)type {
+    
+    __weak __typeof(self)weakSelf = self;
+    [QMImagePicker presentIn:self configure:^(UIImagePickerController *picker) {
+        
+        picker.sourceType = type;
+        picker.allowsEditing = YES;
+        
+    } result:^(UIImage *image) {
+        
+        [weakSelf.userImage setImage:image];
+        weakSelf.cachedPicture = image;
+    }];
 }
 
 - (IBAction)signUp:(id)sender {
@@ -118,23 +137,4 @@
         }
     }];
 }
-
-#pragma mark - UIImagePickerControllerDelegate
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    
-    UIImage *image =  info[UIImagePickerControllerEditedImage];
-    
-    [self.userImage setImage:image];
-    self.cachedPicture = image;
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-}
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    [self dismissViewControllerAnimated:YES completion:nil];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-}
-
 @end
