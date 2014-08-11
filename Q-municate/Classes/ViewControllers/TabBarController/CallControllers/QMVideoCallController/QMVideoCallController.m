@@ -86,6 +86,7 @@
 - (void)callStoppedByOpponentForReason:(NSString *)reason
 {
     [self.contentView show];
+    self.opponentsView.hidden = YES;
     [super callStoppedByOpponentForReason:reason];
 }
 

@@ -58,7 +58,8 @@
         // stop sound and change status label text:
         [[QMSoundManager shared] stopAllSounds];
         
-        
+        self.incomingCallLabel.text = NSLocalizedString(@"QM_STR_CALL_WAS_CANCELLED", nil);
+        [QMSoundManager playEndOfCallSound];
     }];
 }
 
@@ -93,9 +94,8 @@
     [self dismissCallsController];
 } 
 
-- (void)dismissCallsController {
-    
-    [[QMSoundManager shared] performSelector:@selector(stopAllSounds) withObject:self afterDelay:2.0f];
+- (void)dismissCallsController
+{
     [self.callsHandler hideIncomingCallController];
 }
 

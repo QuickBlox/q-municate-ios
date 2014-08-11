@@ -33,8 +33,8 @@
 }
 
 - (IBAction)stopCallTapped:(id)sender {
-    [super stopCallTapped:sender];
     [self stopCallDurationTimer];
+    [super stopCallTapped:sender];
 }
 
 #pragma mark - Overriden methods

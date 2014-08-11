@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RkR-TS-K9a">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RkR-TS-K9a">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -367,7 +367,7 @@ Line 2</string>
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pbH-vY-Jr8" customClass="QMContentView">
@@ -451,7 +451,7 @@ Line 2</string>
                                 </constraints>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="0.21891097184065933" green="0.21891097184065933" blue="0.21891097184065933" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="cgB-KY-Zm9" firstAttribute="top" secondItem="zdH-fi-T39" secondAttribute="bottom" id="9Nv-D4-ZsX"/>
                             <constraint firstItem="fvG-tF-pe0" firstAttribute="top" secondItem="hTz-bf-aoH" secondAttribute="bottom" constant="11" id="DbU-hi-oda"/>
@@ -1489,7 +1489,7 @@ Q-munication by sending them private invitations.</string>
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" red="0.31449605082417587" green="0.31449605082417587" blue="0.31449605082417587" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="4pX-7R-C18" firstAttribute="top" secondItem="dVO-A2-s1J" secondAttribute="bottom" constant="81" id="5xi-BI-gZY"/>
                             <constraint firstItem="psp-1c-5hG" firstAttribute="top" secondItem="ML4-fO-kX9" secondAttribute="bottom" constant="20" id="7RR-JG-Ji2"/>

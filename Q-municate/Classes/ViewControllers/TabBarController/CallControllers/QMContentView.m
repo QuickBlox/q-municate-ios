@@ -62,7 +62,7 @@
 - (void)startTimer
 {
     _timeInterval = 0;
-    [self updateStatusLabel];
+    self.statusLabel.text = [NSString stringWithFormat:@"%02u:%05.2f", (int)(_timeInterval/60), fmod(_timeInterval, 60)];
     _timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateStatusLabel) userInfo:nil repeats:YES];
     [_timer fire];
 }
@@ -75,11 +75,11 @@
 }
 
 // selector:
-- (void)updateStatusLabel {
-    
-    _timeInterval++;
-    
+- (void)updateStatusLabel
+{
+    NSLog(@"_________TIMER NOW = %f__________", _timeInterval);
     self.statusLabel.text = [NSString stringWithFormat:@"%02u:%05.2f", (int)(_timeInterval/60), fmod(_timeInterval, 60)];
+    _timeInterval++;
 }
 
 @end
