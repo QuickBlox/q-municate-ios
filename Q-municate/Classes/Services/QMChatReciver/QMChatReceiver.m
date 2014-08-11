@@ -522,6 +522,8 @@
     }];
 }
 
+#pragma mark -
+
 /**
  Called in case when opponent has accepted you call
  

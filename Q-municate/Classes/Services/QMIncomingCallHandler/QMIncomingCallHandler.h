@@ -15,6 +15,6 @@
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
 
 - (void)showIncomingCallControllerWithOpponentID:(NSUInteger)opponentID conferenceType:(enum QBVideoChatConferenceType)conferenceType;
-- (void)hideIncomingCallControllerWithStatus:(NSString *)status;
+- (void)hideIncomingCallController;
 
 @end

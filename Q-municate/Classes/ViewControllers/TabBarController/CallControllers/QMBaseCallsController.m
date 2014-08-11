@@ -134,7 +134,7 @@
     
     if (self.isOpponentCaller) {
         AppDelegate *delegate = [UIApplication sharedApplication].delegate;
-        [delegate.incomingCallService hideIncomingCallControllerWithStatus:nil];
+        [delegate.incomingCallService hideIncomingCallController];
     }
     else {
         [self dismissViewControllerAnimated:YES completion:nil];
