@@ -2,14 +2,15 @@
 //  REActionSheet.m
 //  Q-municate
 //
-//  Created by Andrey Ivanov on 11.08.12.
-//  Copyright (c) 2012 Mobidev. All rights reserved.
+//  Created by Andrey Ivanov on 11.08.14.
+//  Copyright (c) 2014 QuickBlox. All rights reserved.
 //
 
 #import "REActionSheet.h"
 
+@interface REActionSheet()
 
-@interface REActionSheet() <UIActionSheetDelegate>
+<UIActionSheetDelegate>
 
 @property (nonatomic, strong) NSMutableArray* buttonActions;
 

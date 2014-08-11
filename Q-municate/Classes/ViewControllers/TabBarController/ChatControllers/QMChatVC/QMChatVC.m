@@ -401,7 +401,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     else {
         
         __weak __typeof(self)weakSelf = self;
-        
+        [self.view endEditing:YES];
         [REActionSheet presentActionSheetInView:self.view configuration:^(REActionSheet *actionSheet) {
             
             [actionSheet addButtonWithTitle:@"Take New Photo" andActionBlock:^{

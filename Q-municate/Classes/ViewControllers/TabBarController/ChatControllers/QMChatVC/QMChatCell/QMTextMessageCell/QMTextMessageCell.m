@@ -29,23 +29,7 @@
     self.textView = [[UILabel alloc] init];
     self.textView.backgroundColor = [UIColor clearColor];
     self.textView.numberOfLines = 0;
-    
-    //    self.textView.editable = NO;
-    //    self.textView.selectable = YES;
-    //    self.textView.userInteractionEnabled = YES;
-    //    self.textView.dataDetectorTypes = UIDataDetectorTypeNone;
-    //    self.textView.showsHorizontalScrollIndicator = NO;
-    //    self.textView.showsVerticalScrollIndicator = NO;
-    //    self.textView.scrollEnabled = NO;
-    //    self.textView.textContainer.lineFragmentPadding = 0;
-    //    self.textView.scrollIndicatorInsets = UIEdgeInsetsZero;
-    //    self.textView.textContainerInset = UIEdgeInsetsZero;
-    //    self.textView.linkTextAttributes = @{
-    //                                         NSForegroundColorAttributeName : [UIColor whiteColor],
-    //                                         NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid)
-    //                                         };
-    
-    
+
     [self.containerView addSubview:self.textView];
     self.textView.translatesAutoresizingMaskIntoConstraints = NO;
     
