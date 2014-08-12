@@ -128,9 +128,9 @@
 - (void)jointRooms {
     
     NSArray *allRooms = [self.chatRooms allValues];
-    for (QBChatRoom *room in allRooms) {
-        if (!room.isJoined) {
-            [room joinRoom];
+    for (QBChatRoom *chatRoom in allRooms) {
+        if (!chatRoom.isJoined) {
+            [chatRoom joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
         }
     }
 }

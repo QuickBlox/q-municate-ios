@@ -46,6 +46,10 @@
         [[QMChatReceiver instance] dialogsHisotryUpdatedWithTarget:self block:^{
             [weakSelf updateGUI];
         }];
+        
+        [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:^{
+            [weakSelf.tableView reloadData];
+        }];
     }
     
     return self;

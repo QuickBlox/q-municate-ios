@@ -12,6 +12,17 @@
 
 @implementation QMAddMembersToGroupController
 
+- (NSArray *)sortUsersByFullname:(NSArray *)users {
+    
+    NSSortDescriptor *sorter = [[NSSortDescriptor alloc]
+                                initWithKey:@"fullName"
+                                ascending:YES
+                                selector:@selector(localizedCaseInsensitiveCompare:)];
+    NSArray *sortedUsers = [users sortedArrayUsingDescriptors:@[sorter]];
+    
+    return sortedUsers;
+}
+
 - (void)viewDidLoad {
     
     NSArray *friends = [[QMApi instance] friends];
@@ -22,7 +33,7 @@
     [friendsIDs minusSet:minusSet];
     
     NSArray *toAdd = [[QMApi instance] usersWithIDs:friendsIDs.allObjects];
-    self.friends = toAdd;
+    self.friends = [self sortUsersByFullname:toAdd];
     
     [super viewDidLoad];
 }
