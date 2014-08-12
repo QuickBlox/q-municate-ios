@@ -16,6 +16,10 @@
  */
 @property (strong, nonatomic) NSDictionary *attributes;
 /**
+ QBChatDialog
+ */
+@property (weak, nonatomic, readonly) QBChatDialog *chatDialog;
+/**
  * Balloon image
  */
 @property (strong, nonatomic, readonly) UIImage *balloonImage;

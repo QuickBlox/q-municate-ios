@@ -392,7 +392,6 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
         NSString *text = self.inputToolBar.contentView.textView.text;
         if ([text hasText]) {
             self.inputToolBar.contentView.textView.text = [text stringByTrimingWhitespace];
-            [QMSoundManager playMessageSentSound];
             [self.dataSource sendMessage:text];
             self.showCameraButton = YES;
         }

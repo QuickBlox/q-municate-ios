@@ -23,4 +23,7 @@
 - (QBChatDialog *)chatDialogWithID:(NSString *)dialogID;
 - (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID;
 
+- (void)leaveFromRooms;
+- (void)jointRooms;
+
 @end

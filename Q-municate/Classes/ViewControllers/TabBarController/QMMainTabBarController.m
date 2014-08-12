@@ -95,16 +95,16 @@
         QBUUser *user = [[QMApi instance] userWithID:occupantID];
         title = user.fullName;
         
-        [QMImageView imageWithURL:[NSURL URLWithString:user.website]
-                             size:CGSizeMake(50, 50)
-                         progress:nil
-                             type:QMImageViewTypeCircle
-                       completion:^(UIImage *userAvatar) {
-                           img = userAvatar;
-                       }];
-        if (!img) {
-            img = [UIImage imageNamed:@"upic-placeholder"];
-        }
+//        [QMImageView imageWithURL:[NSURL URLWithString:user.website]
+//                             size:CGSizeMake(50, 50)
+//                         progress:nil
+//                             type:QMImageViewTypeCircle
+//                       completion:^(UIImage *userAvatar) {
+//                           img = userAvatar;
+//                       }];
+//        if (!img) {
+//            img = [UIImage imageNamed:@"upic-placeholder"];
+//        }
         
     }
     [QMSoundManager playMessageReceivedSound];

@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "QMServiceProtocol.h"
 
+typedef void(^QMDialogsHistoryUpdated)(void);
+typedef void(^QMUsersHistoryUpdated)(void);
+
 typedef void(^QMChatDidLogin)(BOOL success);
 typedef void(^QMChatDidFailLogin)(NSInteger errorCode);
 typedef void(^QMChatMessageBlock)(QBChatMessage *message);
@@ -44,6 +47,9 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 + (instancetype)instance;
 
 - (void)unsubscribeForTarget:(id)target;
+- (void)subsribeWithTarget:(id)target selector:(SEL)selector block:(id)block;
+- (void)executeBloksWithSelector:(SEL)selector enumerateBloks:(void(^)(id block))enumerateBloks;
+
 /**
  ChatService
  */
@@ -59,7 +65,7 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
  */
 - (void)chatDidReceiveContactAddRequestWithTarget:(id)target block:(QMChatDidReceiveContactAddRequest)block;
 - (void)chatContactListDidChangeWithTarget:(id)target block:(QMChatContactListDidChange)block;
-- (void)chatContactListWilChangeWithTarget:(id)target block:(QMChatContactListWillChange)block;
+- (void)chatContactListUpdatedWithTarget:(id)target block:(QMChatContactListWillChange)block;
 - (void)chatDidReceiveContactItemActivityWithTarget:(id)target block:(QMChathatDidReceiveContactItemActivity)block;
 /**
  ChatRoom
@@ -92,3 +98,17 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 
 @end
 
+@interface QMChatReceiver (DialogsHistoryUpdated)
+
+- (void)postDialogsHistoryUpdated;
+- (void)dialogsHisotryUpdatedWithTarget:(id)target block:(QMDialogsHistoryUpdated)block;
+
+@end
+
+
+@interface QMChatReceiver (UsersHistoryUpdated)
+
+- (void)postUsersHistoryUpdated;
+- (void)usersHistoryUpdatedWithTarget:(id)target block:(QMUsersHistoryUpdated)block;
+
+@end

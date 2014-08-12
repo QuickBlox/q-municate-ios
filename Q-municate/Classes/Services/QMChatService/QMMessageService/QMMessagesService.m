@@ -103,28 +103,34 @@
     return messages;
 }
 
-- (BOOL)sendMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID saveToHistory:(BOOL)save {
+- (void)sendMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID saveToHistory:(BOOL)save completion:(void(^)(void))completion {
     
     message.cParamDialogID = dialogID;
-     message.cParamDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);
+    message.cParamDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);
+    
     if (save) {
         message.cParamSaveToHistory = @"1";
     }
     
-    BOOL success  = [[QBChat instance] sendMessage:message];
-    
-    return success;
+    [self chat:^(QBChat *chat) {
+        if ([chat sendMessage:message]) {
+            completion();
+        }
+
+    }];
 }
 
-- (BOOL)sendChatMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID toRoom:(QBChatRoom *)chatRoom {
+- (void)sendChatMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID toRoom:(QBChatRoom *)chatRoom completion:(void(^)(void))completion {
     
     message.cParamDialogID = dialogID;
     message.cParamSaveToHistory = @"1";
     message.cParamDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);
     
-    BOOL success = [[QBChat instance] sendChatMessage:message toRoom:chatRoom];
-    
-    return success;
+    [self chat:^(QBChat *chat) {
+        if ([chat sendChatMessage:message toRoom:chatRoom]) {
+            completion();
+        }
+    }];
 }
 
 - (void)messagesWithDialogID:(NSString *)dialogID completion:(QBChatHistoryMessageResultBlock)completion {
@@ -135,7 +141,8 @@
         completion(result);
     };
     
-	[QBChat messagesWithDialogID:dialogID delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:echoObject]];
+    [QBChat messagesWithDialogID:dialogID delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:echoObject]];
+    
 }
 
 @end

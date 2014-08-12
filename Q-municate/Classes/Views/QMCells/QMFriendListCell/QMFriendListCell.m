@@ -45,7 +45,7 @@
 - (void)setOnline:(BOOL)online {
     
     QBUUser *user = self.userData;
-    online = (user.ID == [QMApi instance].currentUser.ID && [QMApi instance].currentUser.ID > 0) ? YES : online;
+    online = (user.ID == [QMApi instance].currentUser.ID) ? YES : online;
     
     if (_online != online) {
         _online = online;
@@ -67,7 +67,7 @@
 - (void)setIsFriend:(BOOL)isFriend {
     
     QBUUser *user = self.userData;
-    isFriend = (user.ID == [QMApi instance].currentUser.ID && [QMApi instance].currentUser.ID > 0) ? YES : isFriend;
+    isFriend = (user.ID == [QMApi instance].currentUser.ID) ? YES : isFriend;
     
     _isFriend = isFriend;
     

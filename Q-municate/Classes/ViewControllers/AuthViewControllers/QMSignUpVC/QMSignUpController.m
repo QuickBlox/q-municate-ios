@@ -22,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 @property (weak, nonatomic) IBOutlet UIImageView *userImage;
 
+
 @property (strong, nonatomic) UIImage *cachedPicture;
 
 - (IBAction)chooseUserPicture:(id)sender;
@@ -121,9 +122,9 @@
             
             if (weakSelf.cachedPicture) {
                 
-                [SVProgressHUD showProgress:0.f status:@"" maskType:SVProgressHUDMaskTypeClear];
+                [SVProgressHUD showProgress:0.f status:nil maskType:SVProgressHUDMaskTypeClear];
                 [[QMApi instance] updateUser:nil image:weakSelf.cachedPicture progress:^(float progress) {
-                    [SVProgressHUD showProgress:progress status:@"" maskType:SVProgressHUDMaskTypeClear];
+                    [SVProgressHUD showProgress:progress status:nil maskType:SVProgressHUDMaskTypeClear];
                 } completion:^(BOOL updateUserSuccess) {
                     presentTabBar();
                 }];

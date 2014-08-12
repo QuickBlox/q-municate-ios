@@ -69,7 +69,7 @@
     
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
     NSURL *url = [NSURL URLWithString:self.currentUser.website];
-    [self.avatarView sd_setImageWithURL:url placeholderImage:placeholder];
+    [self.avatarView sd_setImageWithURL:url progress:nil placeholderImage:placeholder];
     
     self.fullNameField.text = self.currentUser.fullName;
     self.emailField.text = self.currentUser.email;
@@ -132,9 +132,9 @@
     user.phone = weakSelf.phoneFieldCache;
     user.customData = weakSelf.statusTextCache;
     
-    [SVProgressHUD showProgress:0.f status:@"" maskType:SVProgressHUDMaskTypeClear];
+    [SVProgressHUD showProgress:0.f status:nil maskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] updateUser:user image:self.avatarImage progress:^(float progress) {
-        [SVProgressHUD showProgress:progress status:@"" maskType:SVProgressHUDMaskTypeClear];
+        [SVProgressHUD showProgress:progress status:nil maskType:SVProgressHUDMaskTypeClear];
     } completion:^(BOOL success) {
         
         if (success) {

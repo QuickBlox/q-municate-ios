@@ -86,6 +86,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 @interface QMApi (Messages)
 
 - (void)loginChat:(QBChatResultBlock)block;
+- (void)logoutFromChat;
 /**
  */
 - (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete;
@@ -95,8 +96,9 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 /**
  if ok return QBChatMessage , else nil
  */
-- (QBChatMessage *)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog;
-- (QBChatMessage *)sendAttachment:(NSString *)attachmentUrl toDialog:(QBChatDialog *)dialog;
+
+- (void)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion;
+- (void)sendAttachment:(NSString *)attachmentUrl toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion;
 
 @end
 
@@ -179,7 +181,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 - (NSArray *)idsWithUsers:(NSArray *)users;
 - (QBUUser *)userWithID:(NSUInteger)userID;
 - (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID;
-- (NSArray *)idsFromContactListItems;
+//- (NSArray *)idsFromContactListItems;
 
 /**
  Add user to contact list request
@@ -211,21 +213,6 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  @return YES if the request was sent successfully. If not - see log.
  */
 - (void)rejectAddContactRequest:(NSUInteger)userID completion:(void(^)(BOOL success))completion;
-
-/**
- Retrieve Friends from contact list if needed;
- */
-- (void)retrieveFriendsIfNeeded:(void(^)(BOOL updated))completion;
-
-/**
- Retrieve users from chat Dialog (occupantIDs) if needed;
- */
-- (void)retrieveUsersForChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(BOOL updated))completion;
-
-/**
- Retrieve users with ids (idsToFetch - must be NSString's)
- */
-- (void)retrieveUsersWithIDs:(NSArray *)idsToFetch completion:(void(^)(BOOL updated))completion;
 
 /**
  */

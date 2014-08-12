@@ -117,6 +117,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
+    [self.view endEditing:YES];
     if ([segue.identifier isEqualToString:kGroupDetailsSegueIdentifier]) {
     
         QMGroupDetailsController *groupDetailVC = segue.destinationViewController;

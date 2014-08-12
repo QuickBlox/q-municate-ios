@@ -46,8 +46,10 @@
         [self.acceptButton setImage:[ UIImage imageNamed:@"answer"] forState:UIControlStateNormal];
     }
 
-    [self subscribeToNotifications];
-    [self.userAvatarView sd_setImageWithURL:[NSURL URLWithString:opponent.website] placeholderImage:[UIImage imageNamed:@"upic_call"]];
+    NSURL *url = [NSURL URLWithString:opponent.website];
+    UIImage *placeholderImage = [UIImage imageNamed:@"upic_call"];
+    
+    [self.userAvatarView sd_setImageWithURL:url progress:nil placeholderImage:placeholderImage];;
 
     [QMSoundManager playRingtoneSound];
 }

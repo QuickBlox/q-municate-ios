@@ -10,6 +10,7 @@
 #import "Parus.h"
 #import "SDWebImageManager.h"
 #import "QMProgressView.h"
+#import "QMImageView.h"
 
 @interface QMAttachmentMessageCell()
 
@@ -54,13 +55,15 @@
     
     self.balloonImageView.contentMode = UIViewContentModeScaleAspectFill;
     self.balloonImageView.layer.mask = self.maskLayer;
+    self.timeLabel.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.250];
+    self.timeLabel.layer.cornerRadius = 6;
 }
 
-- (void)setMessage:(QMMessage *)message {
-    [super setMessage:message];
+- (void)setMessage:(QMMessage *)message user:(QBUUser *)user isMe:(BOOL)isMe {
+    [super setMessage:message user:user isMe:isMe];
     
-    QMMessageLayout layout = self.message.layout;
-    QMMessageContentAlign align = self.message.align;
+    QMMessageLayout layout = message.layout;
+    QMMessageContentAlign align = message.align;
     
     UIEdgeInsets insets = UIEdgeInsetsZero;
     
@@ -70,18 +73,17 @@
         insets = layout.rightBalloon.imageCapInsets;
     }
     
-    UIImage *maskImage = self.message.balloonImage;
+    self.timeLabel.text = [self.formatter stringFromDate:message.datetime];
+    self.timeLabel.textColor = (isMe) ? [UIColor colorWithRed:0.938 green:0.948 blue:0.898 alpha:1.000] : [UIColor grayColor];
+    
+    UIImage *maskImage = message.balloonImage;
     
     self.maskLayer.contentsCenter =
-    CGRectMake(insets.left/maskImage.size.width,
-               insets.top/maskImage.size.height,
-               1.0/maskImage.size.width,
-               1.0/maskImage.size.height);
+    CGRectMake(insets.left/maskImage.size.width, insets.top/maskImage.size.height, 1.0/maskImage.size.width, 1.0/maskImage.size.height);
     
     self.maskLayer.contents = (id)maskImage.CGImage;
     
-    SDWebImageManager *manager = [SDWebImageManager sharedManager];
-    QBChatAttachment *attachment = self.message.attachments.lastObject;
+    QBChatAttachment *attachment = message.attachments.lastObject;
     self.balloonImageView.image = nil;
     
     self.progressView.hidden = NO;
@@ -90,12 +92,12 @@
     NSURL *imageUrl = [NSURL URLWithString:attachment.url];
     
     __weak __typeof(self)weakSelf = self;
-    [manager downloadImageWithURL:imageUrl options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+    
+    [weakSelf.balloonImageView sd_setImageWithURL:imageUrl progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         CGFloat progress = ((CGFloat)receivedSize)/((CGFloat)expectedSize);
         weakSelf.progressView.progress = progress;
-    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+    } placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         weakSelf.progressView.hidden = YES;
-        weakSelf.balloonImageView.image = image;
     }];
 }
 

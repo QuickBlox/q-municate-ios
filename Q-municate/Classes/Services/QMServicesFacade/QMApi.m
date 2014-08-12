@@ -109,7 +109,7 @@ const NSTimeInterval kQMPresenceTime = 30;
         
         NSArray *allOccupantIDs = [weakSelf allOccupantIDsFromDialogsHistory];
         
-        [weakSelf retrieveUsersWithIDs:allOccupantIDs completion:^(BOOL updated) {
+        [weakSelf.usersService retrieveUsersWithIDs:allOccupantIDs completion:^(BOOL updated) {
             completion();
         }];
     }];
@@ -134,15 +134,11 @@ const NSTimeInterval kQMPresenceTime = 30;
 }
 
 - (void)applicationDidBecomeActive:(void(^)(BOOL success))completion {
-    
-    if (self.currentUser) {
-        [[QBChat instance] loginWithUser:self.currentUser];
-    }
+    [self loginChat:completion];
 }
 
 - (void)applicationWillResignActive {
-    
-    [self.messagesService logoutChat];
+    [self logoutFromChat];
 }
 
 @end

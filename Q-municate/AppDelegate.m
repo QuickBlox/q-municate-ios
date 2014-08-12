@@ -24,6 +24,7 @@ NSString *const kQMAcconuntKey = @"LpNmxA2Pq2uyW5qBjHy8";
 #if QM_AUDIO_VIDEO_ENABLED == 1
     self.incomingCallService = [[QMIncomingCallHandler alloc] init];
 #endif
+    self.window.backgroundColor = [UIColor whiteColor];
     UIApplication.sharedApplication.applicationIconBadgeNumber = 0;
     [QBSettings setApplicationID:kQMApplicationID];
     [QBSettings setAuthorizationKey:kQMAuthorizationKey];

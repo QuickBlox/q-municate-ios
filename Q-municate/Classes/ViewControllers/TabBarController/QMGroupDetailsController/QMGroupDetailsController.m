@@ -63,9 +63,10 @@ NSString *const kQMAddMembersToGroupControllerID = @"QMAddMembersToGroupControll
     [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
         
         if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog && [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID]) {
-            
-            weakSelf.chatDialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
-            [weakSelf updateGUIWithChatDialog:weakSelf.chatDialog];
+            if (message.senderID != [QMApi instance].currentUser.ID) {                
+                weakSelf.chatDialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
+                [weakSelf updateGUIWithChatDialog:weakSelf.chatDialog];
+            }
         }
     }];
 }

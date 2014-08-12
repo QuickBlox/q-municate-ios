@@ -26,7 +26,7 @@
  @param message QBChatMessage structure which contains message text and recipient id
  @return YES if the request was sent successfully. If not - see log.
  */
-- (BOOL)sendMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID saveToHistory:(BOOL)save;
+- (void)sendMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID saveToHistory:(BOOL)save completion:(void(^)(void))completion;
 
 /**
  Send chat message to room
@@ -35,7 +35,7 @@
  @param room Room to send message
  @return YES if the request was sent successfully. If not - see log.
  */
-- (BOOL)sendChatMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID toRoom:(QBChatRoom *)chatRoom;
+- (void)sendChatMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID toRoom:(QBChatRoom *)chatRoom completion:(void(^)(void))completion ;
 
 - (void)messagesWithDialogID:(NSString *)dialogID completion:(QBChatHistoryMessageResultBlock)completion;
 

@@ -12,6 +12,7 @@
 #import "UIColor+Hex.h"
 #import "SDImageCache.h"
 #import "UIImage+TintColor.h"
+#import "QMApi.h"
 
 typedef NS_ENUM(NSUInteger, QMChatNotificationsType) {
     
@@ -27,6 +28,7 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
 @property (assign, nonatomic) CGSize messageSize;
 @property (assign, nonatomic) QMMessageType type;
 @property (strong, nonatomic) UIColor *balloonColor;
+@property (weak, nonatomic) QBChatDialog *chatDialog;
 
 @end
 
@@ -46,6 +48,8 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
         self.datetime = historyMessage.datetime;
         self.customParameters = historyMessage.customParameters;
         self.attachments = historyMessage.attachments;
+        
+        self.chatDialog = [[QMApi instance] chatDialogWithID:historyMessage.cParamDialogID];
         
         NSNumber *notificationType = self.customParameters[kQMNotificationTypeKey];
         

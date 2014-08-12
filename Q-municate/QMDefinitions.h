@@ -10,6 +10,7 @@
 #define Q_municate_Definitions_h
 
 #define QM_TEST 0
+
 #define QM_AUDIO_VIDEO_ENABLED 1
 #define STAGE_SERVER_IS_ACTIVE 0
 
