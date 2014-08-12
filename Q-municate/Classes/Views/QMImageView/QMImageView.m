@@ -30,7 +30,7 @@
     return key;
 }
 
-- (void)sd_setImageWithURL:(NSURL *)url progress:(SDWebImageDownloaderProgressBlock)progress placeholderImage:(UIImage *)placehoderImage {
+- (void)sd_setImageWithURL:(NSURL *)url progress:(SDWebImageDownloaderProgressBlock)progress placeholderImage:(UIImage *)placehoderImage completed:(SDWebImageCompletionBlock)completedBlock  {
     
     __weak __typeof(self)weakSelf = self;
     
@@ -43,7 +43,13 @@
     
     [self sd_setImageWithURL:url placeholderImage:placehoderImage
                      options:SDWebImageHighPriority
-                    progress:progress completed:nil];
+                    progress:progress
+                   completed:completedBlock];
+}
+
+- (void)sd_setImageWithURL:(NSURL *)url progress:(SDWebImageDownloaderProgressBlock)progress placeholderImage:(UIImage *)placehoderImage {
+    
+    [self sd_setImageWithURL:url progress:progress placeholderImage:placehoderImage completed:nil];
     
 };
 

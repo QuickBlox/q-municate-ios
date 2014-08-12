@@ -10,6 +10,7 @@
 #import "Parus.h"
 #import "SDWebImageManager.h"
 #import "QMProgressView.h"
+#import "QMImageView.h"
 
 @interface QMAttachmentMessageCell()
 
@@ -82,7 +83,6 @@
     
     self.maskLayer.contents = (id)maskImage.CGImage;
     
-    SDWebImageManager *manager = [SDWebImageManager sharedManager];
     QBChatAttachment *attachment = message.attachments.lastObject;
     self.balloonImageView.image = nil;
     
@@ -92,12 +92,12 @@
     NSURL *imageUrl = [NSURL URLWithString:attachment.url];
     
     __weak __typeof(self)weakSelf = self;
-    [manager downloadImageWithURL:imageUrl options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+    
+    [weakSelf.balloonImageView sd_setImageWithURL:imageUrl progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         CGFloat progress = ((CGFloat)receivedSize)/((CGFloat)expectedSize);
         weakSelf.progressView.progress = progress;
-    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+    } placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         weakSelf.progressView.hidden = YES;
-        weakSelf.balloonImageView.image = image;
     }];
 }
 

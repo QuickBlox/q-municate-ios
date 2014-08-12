@@ -14,10 +14,10 @@
 @interface QMChatCell ()
 
 @property (strong, nonatomic) UIView *messageContainer;
-@property (strong, nonatomic) UIImageView *balloonImageView;
 @property (strong, nonatomic) NSArray *currentAlignConstrains;
 @property (strong, nonatomic) UIView *containerView;
 @property (strong, nonatomic) QMImageView *userImageView;
+@property (strong, nonatomic) QMImageView *balloonImageView;
 
 @property (strong, nonatomic) UIView *headerView;
 @property (strong, nonatomic) UILabel *title;
@@ -70,7 +70,7 @@
     
     self.messageContainer = [[UIView alloc] init];
     self.containerView = [[UIView alloc] init];
-    self.balloonImageView = [[UIImageView alloc] init];
+    self.balloonImageView = [[QMImageView alloc] init];
     self.userImageView = [[QMImageView alloc] init];
     self.headerView = [[UIView alloc] init];
 
@@ -87,6 +87,7 @@
     
     self.userImageView.contentMode = UIViewContentModeScaleAspectFit;
     self.userImageView.imageViewType = QMImageViewTypeCircle;
+    self.balloonImageView.imageViewType = QMImageViewTypeNone;
     
     self.title = [[UILabel alloc] init];
     self.title.font = [UIFont boldSystemFontOfSize:12];

@@ -16,7 +16,7 @@
 
 @property (strong, nonatomic, readonly) UIView *containerView;
 @property (strong, nonatomic, readonly) UIView *headerView;
-@property (strong, nonatomic, readonly) UIImageView *balloonImageView;
+@property (strong, nonatomic, readonly) QMImageView *balloonImageView;
 @property (strong, nonatomic, readonly) QMImageView *userImageView;
 @property (strong, nonatomic, readonly) UILabel *title;
 @property (strong, nonatomic, readonly) UILabel *timeLabel;
