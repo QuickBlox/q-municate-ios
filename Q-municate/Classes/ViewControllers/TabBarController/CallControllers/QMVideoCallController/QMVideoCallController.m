@@ -21,6 +21,10 @@
 
 @implementation QMVideoCallController
 
+- (void)dealloc
+{
+    NSLog(@"");
+}
 
 - (void)viewDidLoad
 {
@@ -61,11 +65,17 @@
     [QMSoundManager playCallingSound];
 }
 
+- (void)confirmCall
+{
+    [super confirmCall];
+    [self callStartedWithUser];
+}
+
 - (void)callAcceptedByUser
 {
     // stop playing sound:
     [[QMSoundManager shared] stopAllSounds];
-    [self.contentView updateViewWithStatus:NSLocalizedString(@"QM_STR_CONNECTING", nil)];
+    [self callStartedWithUser];
 }
 
 - (void)callStartedWithUser
@@ -76,6 +86,7 @@
 - (void)callStoppedByOpponentForReason:(NSString *)reason
 {
     [self.contentView show];
+    self.opponentsView.hidden = YES;
     [super callStoppedByOpponentForReason:reason];
 }
 

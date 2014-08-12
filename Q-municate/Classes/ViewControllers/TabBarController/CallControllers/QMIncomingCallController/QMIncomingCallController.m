@@ -7,6 +7,8 @@
 //
 
 #import "QMIncomingCallController.h"
+#import "QMIncomingCallHandler.h"
+#import "QMChatReceiver.h"
 #import "QMApi.h"
 #import "QMImageView.h"
 #import "QMSoundManager.h"
@@ -52,13 +54,25 @@
     [QMSoundManager playRingtoneSound];
 }
 
+- (void)subscribeToNotifications
+{
+    [[QMChatReceiver instance] chatAfterCallDidStopWithTarget:self block:^(NSUInteger userID, NSString *status) {
+        // stop sound and change status label text:
+        [[QMSoundManager shared] stopAllSounds];
+        
+        self.incomingCallLabel.text = NSLocalizedString(@"QM_STR_CALL_WAS_CANCELLED", nil);
+        [QMSoundManager playEndOfCallSound];
+    }];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
 
-- (void)dealloc {
-    
+- (void)dealloc
+{
     [[QMSoundManager shared] stopAllSounds];
+    [[QMChatReceiver init] unsubscribeForTarget:self];
 }
 
 #pragma mark - Actions
@@ -79,14 +93,12 @@
     [[QMApi instance] rejectCallFromUser:opponent ? self.opponent.ID : self.opponentID  opponentView:nil];
     [QMSoundManager playEndOfCallSound];
     self.incomingCallLabel.text = NSLocalizedString(@"QM_STR_CALL_WAS_CANCELLED", nil);
-    
-    [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:2.0f];
+    [self dismissCallsController];
 } 
 
-- (void)dismissCallsController {
-    
-    [[QMSoundManager shared] stopAllSounds];
-    [self dismissViewControllerAnimated:YES completion:nil];
+- (void)dismissCallsController
+{
+    [self.callsHandler hideIncomingCallController];
 }
 
 - (void)setCallStatus:(NSString *)callStatus {

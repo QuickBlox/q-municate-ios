@@ -59,7 +59,12 @@ NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFriendsCell
         }];
         
         [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:^{
-            [weakSelf reloadDatasource];
+            if (weakSelf.searchDisplayController.isActive) {
+                [weakSelf.searchDisplayController.searchResultsTableView reloadData];
+            }
+            else {
+                [weakSelf reloadDatasource];
+            }
         }];
         
         UINib *nib = [UINib nibWithNibName:@"QMFriendListCell" bundle:nil];
@@ -224,7 +229,9 @@ NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFriendsCell
     NSArray *datasource = [self usersAtSections:indexPath.section];
     QBUUser *user = datasource[indexPath.row];
     
-    [[QMApi instance] addUserToContactListRequest:user.ID completion:^(BOOL success) {}];
+    [[QMApi instance] addUserToContactListRequest:user.ID completion:^(BOOL success) {
+        
+    }];
 }
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {

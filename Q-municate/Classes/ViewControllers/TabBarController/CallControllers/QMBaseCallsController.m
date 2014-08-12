@@ -30,7 +30,7 @@
     !self.isOpponentCaller ? [self startCall] : [self confirmCall];
 
     [self.contentView updateViewWithUser:self.opponent];
-    self.opponentsView.backgroundColor = [UIColor clearColor];
+//    self.opponentsView.backgroundColor = [UIColor clearColor];
 }
 
 - (void)subscribeForNotifications {
@@ -80,9 +80,9 @@
     // stop playing sound:
     [[QMSoundManager shared] stopAllSounds];
     
-    self.opponentsView.hidden = YES;
+//    self.opponentsView.hidden = YES;
     [QMSoundManager playEndOfCallSound];
-    [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:2.0f];
+    [self dismissCallsController];
 }
 
 #pragma mark - Calls notifications
@@ -97,18 +97,17 @@
 
 - (void)callRejectedByUser {
     
-    self.opponentsView.hidden = YES;
+//    self.opponentsView.hidden = YES;
     
     
     [self.contentView updateViewWithStatus:NSLocalizedString(@"QM_STR_USER_IS_BUSY", nil)];
     [[QMSoundManager shared] stopAllSounds];
     [QMSoundManager playBusySound];
-    [self performSelector:@selector(dismissCallsController) withObject:self afterDelay:2.0f];
+    [self dismissCallsController];
 }
 
 - (void)callStoppedByOpponentForReason:(NSString *)reason {
     
-    self.opponentsView.hidden = YES;
     // stop playing sound:
     [[QMSoundManager shared] stopAllSounds];
 
@@ -134,10 +133,12 @@
     
     if (self.isOpponentCaller) {
         AppDelegate *delegate = [UIApplication sharedApplication].delegate;
-        [delegate.incomingCallService hideIncomingCallControllerWithStatus:nil];
+        [delegate.incomingCallService hideIncomingCallController];
     }
     else {
-        [self dismissViewControllerAnimated:YES completion:nil];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+           [self dismissViewControllerAnimated:YES completion:nil];
+        });
     }
 }
 

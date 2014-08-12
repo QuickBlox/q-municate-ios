@@ -39,11 +39,13 @@
 
 - (void)showIncomingCallControllerWithOpponentID:(NSUInteger)opponentID conferenceType:(enum QBVideoChatConferenceType)conferenceType {
     
-    if (!_incomingCallController) {
-            _incomingCallController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallIdentifier];
-        }
-        _incomingCallController.opponentID = opponentID;
-        _incomingCallController.callType = conferenceType;
+    if (!self.incomingCallController) {
+            self.incomingCallController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallIdentifier];
+        self.incomingCallController.callsHandler = self;
+    }
+    
+    self.incomingCallController.opponentID = opponentID;
+    self.incomingCallController.callType = conferenceType;
     
     [self.root presentViewController:self.incomingCallController animated:NO completion:nil];
 }
@@ -57,11 +59,11 @@
     }];
     
     [[QMChatReceiver instance] chatAfterCallDidRejectByUserWithTarget:self block:^(NSUInteger userID) {
-        [weakSelf hideIncomingCallControllerWithStatus:nil];
+        [weakSelf hideIncomingCallController];
     }];
     
     [[QMChatReceiver instance] chatAfterCallDidStopWithTarget:self block:^(NSUInteger userID, NSString *status) {
-        [weakSelf hideIncomingCallControllerWithStatus:nil];
+        [weakSelf hideIncomingCallController];
     }];
 }
 
@@ -69,8 +71,8 @@
     return [[UIApplication sharedApplication].delegate.window rootViewController];
 }
 
-- (void)hideIncomingCallControllerWithStatus:(NSString *)status {
-    
+- (void)hideIncomingCallController
+{
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.incomingCallController dismissViewControllerAnimated:YES completion:^{
             self.incomingCallController = nil;
