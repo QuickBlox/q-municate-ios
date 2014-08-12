@@ -24,7 +24,7 @@
 - (void)setUserImageWithUrl:(NSURL *)userImageUrl {
     
     UIImage *placeHolder = [UIImage imageNamed:@"upic-placeholder"];
-    [self.qmImageView sd_setImageWithURL:userImageUrl placeholderImage:placeHolder];
+    [self.qmImageView sd_setImageWithURL:userImageUrl progress:nil placeholderImage:placeHolder];
 }
 
 - (void)setUserImage:(UIImage *)image withKey:(NSString *)key {

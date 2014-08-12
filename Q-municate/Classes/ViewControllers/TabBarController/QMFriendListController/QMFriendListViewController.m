@@ -16,6 +16,7 @@
 
 <UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate>
 
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) QMFriendsListDataSource *dataSource;
 
 @end
@@ -85,7 +86,6 @@
 
 - (void) searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
     [self.dataSource searchDisplayControllerWillBeginSearch:controller];
-    
 }
 
 - (void) searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {

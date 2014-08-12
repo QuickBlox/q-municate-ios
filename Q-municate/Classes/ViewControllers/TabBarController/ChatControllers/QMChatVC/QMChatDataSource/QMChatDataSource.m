@@ -65,17 +65,24 @@
         
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         [[QMApi instance] fetchMessageWithDialog:self.chatDialog complete:^(BOOL success) {
+            
             [weakSelf reloadCachedMessages:NO];
             [SVProgressHUD dismiss];
+            
         }];
         
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+
             QBChatDialog *dialogForReceiverMessage = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
-            if ([weakSelf.chatDialog isEqual:dialogForReceiverMessage]) {
+            
+            if ([weakSelf.chatDialog isEqual:dialogForReceiverMessage] && message.cParamNotificationType == QMMessageNotificationTypeNone) {
+                
                 if (message.senderID != [QMApi instance].currentUser.ID) {
                     [QMSoundManager playMessageReceivedSound];
-                    [weakSelf reloadCachedMessages:YES];
+                    
+                    [weakSelf insertNewMessage:message];
                 }
+                
             } else {
                 [weakSelf.delegate message:message forOtherOtherDialog:dialogForReceiverMessage];
             }
@@ -96,6 +103,7 @@
     [self.tableView endUpdates];
     [self scrollToBottomAnimated:YES];
 }
+
 
 - (void)reloadCachedMessages:(BOOL)animated {
     
@@ -136,7 +144,8 @@
     
     QMMessage *message = [[QMMessage alloc] initWithChatHistoryMessage:historyMessage];
     BOOL fromMe = ([QMApi instance].currentUser.ID == historyMessage.senderID);
-    message.minWidth = fromMe ? 60 : -1;
+    
+    message.minWidth = fromMe || (message.chatDialog.type == QBChatDialogTypePrivate) ? 60 : -1;
     message.align =  fromMe ? QMMessageContentAlignRight : QMMessageContentAlignLeft;
     
     return message;
@@ -156,8 +165,7 @@
     
     BOOL isMe = [QMApi instance].currentUser.ID == message.senderID;
     QBUUser *user = [[QMApi instance] userWithID:message.senderID];
-    [cell setUser:user isMe:isMe];
-    cell.message = message;
+    [cell setMessage:message user:user isMe:isMe];
     
     return cell;
 }
@@ -168,14 +176,18 @@
     
     __weak __typeof(self)weakSelf = self;
     
-    [SVProgressHUD showProgress:0 status:@"" maskType:SVProgressHUDMaskTypeClear];
+    [SVProgressHUD showProgress:0 status:nil maskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance].contentService uploadJPEGImage:image progress:^(float progress) {
-        [SVProgressHUD showProgress:progress status:@"" maskType:SVProgressHUDMaskTypeClear];
+        
+        [SVProgressHUD showProgress:progress status:nil maskType:SVProgressHUDMaskTypeClear];
+        
     } completion:^(QBCFileUploadTaskResult *result) {
         
         if (result.success) {
-           QBChatMessage *message = [[QMApi instance] sendAttachment:result.uploadedBlob.publicUrl toDialog:weakSelf.chatDialog];
-            [weakSelf insertNewMessage:message];
+            
+           [[QMApi instance] sendAttachment:result.uploadedBlob.publicUrl toDialog:weakSelf.chatDialog completion:^(QBChatMessage *message) {
+               [weakSelf insertNewMessage:message];
+           }];
         }
         [SVProgressHUD dismiss];
     }];
@@ -183,10 +195,11 @@
 
 - (void)sendMessage:(NSString *)text {
     
-    QBChatMessage *message = [[QMApi instance] sendText:text toDialog:self.chatDialog];
-    if (message) {
-        [self insertNewMessage:message];
-    }
+    __weak __typeof(self)weakSelf = self;
+    [[QMApi instance] sendText:text toDialog:self.chatDialog completion:^(QBChatMessage *message) {
+        [QMSoundManager playMessageSentSound];
+        [weakSelf insertNewMessage:message];
+    }];
 }
 
 @end

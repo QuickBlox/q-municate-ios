@@ -18,7 +18,12 @@
 @property (strong, nonatomic) NSArray *currentAlignConstrains;
 @property (strong, nonatomic) UIView *containerView;
 @property (strong, nonatomic) QMImageView *userImageView;
+
 @property (strong, nonatomic) UIView *headerView;
+@property (strong, nonatomic) UILabel *title;
+@property (strong, nonatomic) UILabel *timeLabel;
+
+@property (strong, nonatomic) QMMessage *message;
 @property (strong, nonatomic) QBUUser *user;
 
 @property (strong, nonatomic) NSLayoutConstraint *rMessageContainerConstraint;
@@ -40,6 +45,9 @@
 @property (strong, nonatomic) NSLayoutConstraint *lTitleConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *rTitleConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *bTitleConstraint;
+
+@property (strong, nonatomic) NSLayoutConstraint *timeWidhtConstraint;
+@property (strong, nonatomic) NSArray *nameConstrains;
 
 @property (assign, nonatomic) BOOL showUserImage;
 
@@ -80,12 +88,41 @@
     self.userImageView.contentMode = UIViewContentModeScaleAspectFit;
     self.userImageView.imageViewType = QMImageViewTypeCircle;
     
+    self.title = [[UILabel alloc] init];
+    self.title.font = [UIFont boldSystemFontOfSize:12];
+    self.title.textColor = [UIColor darkGrayColor];
+    
+    self.timeLabel = [[UILabel alloc] init];
+    self.timeLabel.font = [UIFont systemFontOfSize:12];
+    self.timeLabel.textColor = [UIColor grayColor];
+    self.timeLabel.textAlignment = NSTextAlignmentCenter;
+    
+    self.title.translatesAutoresizingMaskIntoConstraints = NO;
+    self.timeLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    
+
+    self.nameConstrains = @[PVBottomOf(self.title).equalTo.bottomOf(self.headerView).asConstraint,
+                            PVLeftOf(self.title).equalTo.leftOf(self.headerView).asConstraint,
+                            PVTopOf(self.title).equalTo.topOf(self.headerView).asConstraint,
+                            PVRightOf(self.title).equalTo.leftOf(self.timeLabel).asConstraint];
+    
     [self.contentView addSubview:self.messageContainer];
     [self.messageContainer addSubview:self.balloonImageView];
     [self.messageContainer addSubview:self.userImageView];
     [self.balloonImageView addSubview:self.containerView];
     [self.messageContainer addSubview:self.headerView];
     
+    [self.headerView addSubview:self.title];
+    [self.headerView addSubview:self.timeLabel];
+    
+    
+    self.timeWidhtConstraint = PVWidthOf(self.timeLabel).equalTo.constant(0).asConstraint;
+    [self.headerView addConstraints:@[self.timeWidhtConstraint,
+                                      PVRightOf(self.timeLabel).equalTo.rightOf(self.headerView).asConstraint,
+                                      PVTopOf(self.timeLabel).equalTo.topOf(self.headerView).asConstraint,
+                                      PVBottomOf(self.timeLabel).equalTo.bottomOf(self.headerView).asConstraint,
+                                      ]];
+
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     
 #if SHOW_BORDERS
@@ -222,6 +259,7 @@
     
     self.lTitleConstraint.constant = insets.left;
     self.rTitleConstraint.constant = -insets.right;
+    self.timeWidhtConstraint.constant = 40;
 
     [self layoutIfNeeded];
 }
@@ -238,10 +276,20 @@
 
 #pragma mark - Set user image
 
-- (void)setUser:(QBUUser *)user isMe:(BOOL)isMe {
-
+- (void)setMessage:(QMMessage *)message user:(QBUUser *)user isMe:(BOOL)isMe {
+    
     self.showUserImage = !isMe;
     self.user = user;
+    self.message = message;
+    
+    if (isMe || (message.chatDialog.type == QBChatDialogTypePrivate )) {
+        self.title.text = nil;
+        [self.headerView removeConstraints:self.nameConstrains];
+    }
+    else {
+        self.title.text = user.fullName;
+        [self.headerView addConstraints:self.nameConstrains];
+    }
 }
 
 - (void)setUser:(QBUUser *)user {
@@ -251,8 +299,8 @@
     if (self.showUserImage) {
         
         NSURL *url = [NSURL URLWithString:user.website];
-        UIImage *placeHolder = [UIImage imageNamed:@"upic-placeholder"];
-        [self.userImageView sd_setImageWithURL:url placeholderImage:placeHolder];
+        UIImage *placeholderImage = [UIImage imageNamed:@"upic-placeholder"];
+        [self.userImageView sd_setImageWithURL:url progress:nil placeholderImage:placeholderImage];
     }
     else {
         self.userImageView.image = nil;

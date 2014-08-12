@@ -118,8 +118,13 @@
     void (^createQBSession)(void) = ^() {
         __weak __typeof(self)weakSelf = self;
         [weakSelf.authService createSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
-            if(completion)
+            if([self checkResult:result]){
+                
                 completion([weakSelf checkResult:result]);
+            }
+            else {
+                completion(NO);
+            }
         }];
     };
     

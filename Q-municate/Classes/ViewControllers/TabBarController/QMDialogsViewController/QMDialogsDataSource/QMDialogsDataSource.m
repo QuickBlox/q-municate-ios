@@ -36,28 +36,31 @@
         
         self.tableView = tableView;
         self.tableView.dataSource = self;
-
+        
         __weak __typeof(self)weakSelf = self;
         
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-
-            QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
-
-            if (dialog) {
-                [weakSelf.tableView reloadData];
-            }
-            [weakSelf fetchUnreadDialogsCount];
+            [weakSelf updateGUI];
+        }];
+        
+        [[QMChatReceiver instance] dialogsHisotryUpdatedWithTarget:self block:^{
+            [weakSelf updateGUI];
         }];
     }
     
     return self;
 }
 
+- (void)updateGUI {
+    [self.tableView reloadData];
+    [self fetchUnreadDialogsCount];
+}
+
 - (void)setUnreadDialogsCount:(NSUInteger)unreadDialogsCount {
     
     if (_unreadDialogsCount != unreadDialogsCount) {
         _unreadDialogsCount = unreadDialogsCount;
-
+        
         [self.delegate didChangeUnreadDialogCount:_unreadDialogsCount];
     }
 }

@@ -46,7 +46,12 @@
 
 - (void)fetchAllDialogs:(QBDialogsPagedResultBlock)completion {
     
-    [QBChat dialogsWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
+    QBDialogsPagedResultBlock resultBlock = ^(QBDialogsPagedResult *result) {
+        completion(result);
+        [[QMChatReceiver instance] postDialogsHistoryUpdated];
+    };
+    
+    [QBChat dialogsWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
 }
 
 - (void)createChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
@@ -108,6 +113,26 @@
     }
     
     self.dialogs[chatDialog.ID] = chatDialog;
+}
+
+- (void)leaveFromRooms {
+    
+    NSArray *allRooms = [self.chatRooms allValues];
+    for (QBChatRoom *room in allRooms) {
+        if (room.isJoined) {
+            [room leaveRoom];
+        }
+    }
+}
+
+- (void)jointRooms {
+    
+    NSArray *allRooms = [self.chatRooms allValues];
+    for (QBChatRoom *room in allRooms) {
+        if (!room.isJoined) {
+            [room joinRoom];
+        }
+    }
 }
 
 - (NSArray *)dialogHistory {

@@ -16,7 +16,9 @@
 - (void)addUsers:(NSArray *)users;
 - (void)addUser:(QBUUser *)user;
 - (QBUUser *)userWithID:(NSUInteger)userID;
-
+- (NSArray *)checkExistIds:(NSArray *)ids;
+- (NSArray *)idsFromContactListItems;
+- (void)retrieveUsersWithIDs:(NSArray *)idsToFetch completion:(void(^)(BOOL updated))completion;
 /**
  Retrieve users with facebook ids (max 10 users, for more - use equivalent method with 'pagedRequest' argument)
  

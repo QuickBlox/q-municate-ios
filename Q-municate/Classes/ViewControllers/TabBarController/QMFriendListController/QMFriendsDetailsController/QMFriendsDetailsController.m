@@ -51,7 +51,6 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     if (self.selectedUser.phone.length == 0) {
-        //        [self cell:self.phoneCell setHidden:YES];
         [self.phoneLabel setText:NSLocalizedString(@"QM_STR_NONE", nil)];
     } else {
         self.phoneLabel.text = self.selectedUser.phone;
@@ -63,7 +62,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     
     NSURL *url = [NSURL URLWithString:self.selectedUser.website];
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
-    [self.userAvatar sd_setImageWithURL:url placeholderImage:placeholder];
+    [self.userAvatar sd_setImageWithURL:url progress:nil placeholderImage:placeholder];
     
     [self updateUserStatus];
 }

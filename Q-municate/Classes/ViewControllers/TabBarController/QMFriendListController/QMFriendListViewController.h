@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface QMFriendListViewController : UITableViewController
+@interface QMFriendListViewController : UIViewController
 
 
 @end

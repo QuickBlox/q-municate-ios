@@ -14,12 +14,15 @@
 
 - (void)viewDidLoad {
     
-    NSMutableSet *friendsIDS = [NSMutableSet setWithArray:[[QMApi instance] idsFromContactListItems]];
-    NSSet *minusSet = [NSSet setWithArray:self.chatDialog.occupantIDs];
-    [friendsIDS minusSet:minusSet];
+    NSArray *friends = [[QMApi instance] friends];
+    NSArray *usersIDs = [[QMApi instance] idsWithUsers:friends];
     
-    NSArray * friends = [[QMApi instance] usersWithIDs:friendsIDS.allObjects];
-    self.friends = friends;
+    NSMutableSet *friendsIDs = [NSMutableSet setWithArray:usersIDs];
+    NSSet *minusSet = [NSSet setWithArray:self.chatDialog.occupantIDs];
+    [friendsIDs minusSet:minusSet];
+    
+    NSArray *toAdd = [[QMApi instance] usersWithIDs:friendsIDs.allObjects];
+    self.friends = toAdd;
     
     [super viewDidLoad];
 }
@@ -28,12 +31,16 @@
 
 - (IBAction)performAction:(id)sender {
     
-    __weak __typeof(self)weakSelf = self;
+    
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    
+    __weak __typeof(self)weakSelf = self;
     [[QMApi instance] joinOccupants:self.selectedFriends toChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
+        
         if (result.success) {
             [weakSelf.navigationController popViewControllerAnimated:YES];
         }
+        
         [SVProgressHUD dismiss];
     }];
 }

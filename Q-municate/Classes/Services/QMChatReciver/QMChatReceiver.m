@@ -271,15 +271,15 @@
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatContactListDidChange block) {
         block(contactList);
     }];
-    [self chatContactListWillChange];
+    [self chatContactListUpdated];
 
 }
 
-- (void)chatContactListWilChangeWithTarget:(id)target block:(QMChatContactListWillChange)block {
-    [self subsribeWithTarget:target selector:@selector(chatContactListWillChange) block:block];
+- (void)chatContactListUpdatedWithTarget:(id)target block:(QMChatContactListWillChange)block {
+    [self subsribeWithTarget:target selector:@selector(chatContactListUpdated) block:block];
 }
 
-- (void)chatContactListWillChange {
+- (void)chatContactListUpdated {
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatContactListWillChange block) {
         block();
     }];
@@ -586,8 +586,7 @@
     [self chatAfterCallDidStopByUser:userID status:status];
 }
 
-- (void)chatAfterCallDidStopWithTarget:(id)target block:(QMChatCallDidStopByUser)block
-{
+- (void)chatAfterCallDidStopWithTarget:(id)target block:(QMChatCallDidStopByUser)block {
     [self subsribeWithTarget:target selector:@selector(chatAfterCallDidStopByUser:status:) block:block];
 }
 

@@ -41,7 +41,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
         
         if ([weakSelf checkResult:result]) {
             [weakSelf.chatDialogsService addDialogToHistory:result.dialog];
-            [weakSelf sendNotificationWithType:QMMessageNotificationTypeCreateDialog toRecipients:occupants chatDialog:result.dialog];
+            [weakSelf sendNotificationWithType:QMMessageNotificationTypeCreateDialog text:@"Create new chat" toRecipients:occupants chatDialog:result.dialog];
         }
         completion(result);
     }];
@@ -99,13 +99,15 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     return msg;
 }
 
-- (void)sendNotificationWithType:(QMMessageNotificationType)type toRecipients:(NSArray *)recipients chatDialog:(QBChatDialog *)chatDialog {
+- (void)sendNotificationWithType:(QMMessageNotificationType)type text:(NSString *)text toRecipients:(NSArray *)recipients chatDialog:(QBChatDialog *)chatDialog {
     
-    NSString *text = [NSString stringWithFormat:@"%@ created a group conversation", self.currentUser.fullName];
+    NSString *notifMessage = [NSString stringWithFormat:@"%@ %@", self.currentUser.fullName, text];
     
     for (QBUUser *recipient in recipients) {
-        QBChatMessage *notification = [self notification:type recipient:recipient text:text chatDialog:chatDialog];
-        [self.messagesService sendMessage:notification withDialogID:chatDialog.ID saveToHistory:NO];
+        QBChatMessage *notification = [self notification:type recipient:recipient text:notifMessage chatDialog:chatDialog];
+        [self.messagesService sendMessage:notification withDialogID:chatDialog.ID saveToHistory:NO completion:^{
+            
+        }];
     }
 }
 
@@ -122,7 +124,9 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 
         if ([weakSelf checkResult:result]) {
             chatDialog.name = dialogName;
-            [weakSelf sendNotificationWithType:QMMessageNotificationTypeUpdateDialog toRecipients:opponentsIDs chatDialog:chatDialog];
+            [weakSelf sendNotificationWithType:QMMessageNotificationTypeUpdateDialog
+                                          text:[NSString stringWithFormat:@"New chat name - %@", dialogName]
+                                  toRecipients:opponentsIDs chatDialog:chatDialog];
         }
         
         completion(result);
@@ -142,8 +146,16 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
         
         if ([weakSelf checkResult:result]) {
             [weakSelf updateChatDialog:result.dialog];
-            [weakSelf sendNotificationWithType:QMMessageNotificationTypeCreateDialog toRecipients:occupants chatDialog:result.dialog];
-            [weakSelf sendNotificationWithType:QMMessageNotificationTypeUpdateDialog toRecipients:occupantsToNotify chatDialog:result.dialog];
+            
+            [weakSelf sendNotificationWithType:QMMessageNotificationTypeCreateDialog
+                                          text:@"Create new dialog"
+                                  toRecipients:occupants
+                                    chatDialog:result.dialog];
+            
+            [weakSelf sendNotificationWithType:QMMessageNotificationTypeUpdateDialog
+                                          text:@"Added new users"
+                                  toRecipients:occupantsToNotify
+                                    chatDialog:result.dialog];
         }
         completion(result);
     }];
