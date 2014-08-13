@@ -72,7 +72,7 @@
 - (void)dealloc
 {
     [[QMSoundManager shared] stopAllSounds];
-    [[QMChatReceiver init] unsubscribeForTarget:self];
+    [[QMChatReceiver instance] unsubscribeForTarget:self];
 }
 
 #pragma mark - Actions
