@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		24FDA66F199B7A610005662B /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24FDA66E199B7A610005662B /* Crashlytics.framework */; };
 		551BD88A199103C0006AC667 /* _CDAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 551BD883199103C0006AC667 /* _CDAttachment.m */; };
 		551BD88B199103C0006AC667 /* _CDDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 551BD885199103C0006AC667 /* _CDDialog.m */; };
 		551BD88C199103C0006AC667 /* _CDMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 551BD887199103C0006AC667 /* _CDMessage.m */; };
@@ -226,6 +227,7 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXFileReference section */
+		24FDA66E199B7A610005662B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = External/Crashlytics.framework; sourceTree = "<group>"; };
 		551BD882199103C0006AC667 /* _CDAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _CDAttachment.h; sourceTree = "<group>"; };
 		551BD883199103C0006AC667 /* _CDAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _CDAttachment.m; sourceTree = "<group>"; };
 		551BD884199103C0006AC667 /* _CDDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _CDDialog.h; sourceTree = "<group>"; };
@@ -597,6 +599,7 @@
 			files = (
 				86FD874D1982512000B6FA43 /* GLKit.framework in Frameworks */,
 				69CF189D18AE1C6A003262EF /* CoreData.framework in Frameworks */,
+				24FDA66F199B7A610005662B /* Crashlytics.framework in Frameworks */,
 				693DC42C18FFC58000AF46D9 /* libstdc++.6.0.9.dylib in Frameworks */,
 				693DC42618FFC45900AF46D9 /* libsqlite3.dylib in Frameworks */,
 				69DB5EF518E31D6400277226 /* MessageUI.framework in Frameworks */,
@@ -1938,6 +1941,7 @@
 		69D57E5418ACC11C00A9900A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				24FDA66E199B7A610005662B /* Crashlytics.framework */,
 				86FD874C1982512000B6FA43 /* GLKit.framework */,
 				86FD874A1982510700B6FA43 /* OpenGLES.framework */,
 				693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */,
@@ -2005,6 +2009,7 @@
 				69D57E4F18ACC11C00A9900A /* Frameworks */,
 				69D57E5018ACC11C00A9900A /* Resources */,
 				F7C9D5C402A745C9BB21C910 /* Copy Pods Resources */,
+				248D44C6199B6CF4000EADA2 /* ShellScript */,
 			);
 			buildRules = (
 				55D26F491940AE2300238D50 /* PBXBuildRule */,
@@ -2075,6 +2080,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		248D44C6199B6CF4000EADA2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./External/Crashlytics.framework/run 7aea78439bec41a9005c7488bb6751c5e33fe270 343e58f13448a59778de3a8f630a0bd4a03803d1ae397818fbe2e76c66d09398";
+		};
 		4CF911AA6A0A49948F56AD2E /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2370,6 +2388,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/External\"",
 					"$(PROJECT_DIR)/External",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Q-municate/Q-municate-Prefix.pch";
@@ -2386,7 +2405,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "7C10F44D-9DA6-469F-92B5-FEA785098661";
+				PROVISIONING_PROFILE = "6E004364-5E2F-449B-9394-5906B3C651CF";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VALID_ARCHS = armv7;
@@ -2416,6 +2435,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/External\"",
 					"$(PROJECT_DIR)/External",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Q-municate/Q-municate-Prefix.pch";

@@ -7,14 +7,15 @@
 //
 
 #import "AppDelegate.h"
+#import <Crashlytics/Crashlytics.h>
 #import "QMIncomingCallHandler.h"
 #import "SVProgressHUD.h"
 #import "QMApi.h"
 
-const NSUInteger kQMApplicationID = 7232;
-NSString *const kQMAuthorizationKey = @"MpOecRZy-5WsFva";
-NSString *const kQMAuthorizationSecret = @"dTSLaxDsFKqegD7";
-NSString *const kQMAcconuntKey = @"LpNmxA2Pq2uyW5qBjHy8";
+const NSUInteger kQMApplicationID = 13318;
+NSString *const kQMAuthorizationKey = @"WzrAY7vrGmbgFfP";
+NSString *const kQMAuthorizationSecret = @"xS2uerEveGHmEun";
+NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 @implementation AppDelegate
 
@@ -49,6 +50,9 @@ NSString *const kQMAcconuntKey = @"LpNmxA2Pq2uyW5qBjHy8";
     
     [[SVProgressHUD appearance] setHudBackgroundColor:[UIColor colorWithRed:0.046 green:0.377 blue:0.633 alpha:1.000]];
     [[SVProgressHUD appearance] setHudForegroundColor:[UIColor colorWithWhite:1.000 alpha:1.000]];
+    
+    /** Crashlytics */
+    [Crashlytics startWithAPIKey:@"7aea78439bec41a9005c7488bb6751c5e33fe270"];
     
     return YES;
 }

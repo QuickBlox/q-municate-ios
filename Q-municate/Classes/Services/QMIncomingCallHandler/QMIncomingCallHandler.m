@@ -42,12 +42,12 @@
     if (!self.incomingCallController) {
             self.incomingCallController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallIdentifier];
         self.incomingCallController.callsHandler = self;
+        
+        self.incomingCallController.opponentID = opponentID;
+        self.incomingCallController.callType = conferenceType;
+        
+        [self.root presentViewController:self.incomingCallController animated:NO completion:nil];
     }
-    
-    self.incomingCallController.opponentID = opponentID;
-    self.incomingCallController.callType = conferenceType;
-    
-    [self.root presentViewController:self.incomingCallController animated:NO completion:nil];
 }
 
 - (void)subscribeToNotifications
