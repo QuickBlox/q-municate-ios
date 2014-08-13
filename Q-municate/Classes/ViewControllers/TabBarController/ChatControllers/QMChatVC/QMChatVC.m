@@ -403,7 +403,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
         [self.view endEditing:YES];
         
         
-        [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
+        [QMImagePicker chooseSourceTypeInVC:self allowsEditing:NO result:^(UIImage *image) {
             [weakSelf.dataSource sendImage:image];
         }];
     }
