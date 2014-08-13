@@ -73,7 +73,7 @@
     
     [self.avatarView setImageWithURL:url
                          placeholder:placeholder
-                             options:SDWebImageContinueInBackground
+                             options:SDWebImageHighPriority
                             progress:^
      (NSInteger receivedSize, NSInteger expectedSize) {
          

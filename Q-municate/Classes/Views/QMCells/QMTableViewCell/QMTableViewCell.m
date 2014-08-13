@@ -27,7 +27,7 @@
     
     [self.qmImageView setImageWithURL:userImageUrl
                           placeholder:placeholder
-                              options:SDWebImageContinueInBackground
+                              options:SDWebImageHighPriority
                              progress:^(NSInteger receivedSize, NSInteger expectedSize) {}
                        completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
 }

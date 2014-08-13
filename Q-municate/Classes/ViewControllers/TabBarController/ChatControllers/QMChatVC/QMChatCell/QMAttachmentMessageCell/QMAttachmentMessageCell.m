@@ -43,6 +43,8 @@
     
     self.progressView.translatesAutoresizingMaskIntoConstraints = NO;
     self.progressView.mask = self.maskLayer;
+    self.progressView.hidden = YES;
+    self.progressView.alpha = 1;
     
     [self.balloonImageView addSubview:self.progressView];
     [self.balloonImageView addConstraints:PVGroup(@[
@@ -88,6 +90,9 @@
     
     self.progressView.hidden = NO;
     self.progressView.progressTintColor = message.balloonColor;
+    [UIView animateWithDuration:0.3 animations:^{
+        self.progressView.alpha = 1;
+    }];
     
     NSURL *url = [NSURL URLWithString:attachment.url];
     
@@ -95,7 +100,7 @@
     
     [weakSelf.balloonImageView setImageWithURL:url
                                    placeholder:nil
-                                       options:SDWebImageLowPriority
+                                       options:SDWebImageContinueInBackground
                                       progress: ^(NSInteger receivedSize, NSInteger expectedSize) {
                                           
                                           CGFloat progress = ((CGFloat)receivedSize)/((CGFloat)expectedSize);
@@ -103,7 +108,11 @@
                                           
                                       }
                                 completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                                    weakSelf.progressView.hidden = YES;
+                                    [UIView animateWithDuration:cacheType == SDImageCacheTypeNone? 0.4 : 0 animations:^{
+                                        weakSelf.progressView.alpha = 0;
+                                    } completion:^(BOOL finished) {
+                                        weakSelf.progressView.hidden = YES;
+                                    }];
                                 }];
 }
 

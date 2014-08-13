@@ -26,7 +26,7 @@
         
         ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef cfError) {
             // callback can occur in background, address book must be accessed on thread it was created on
-            if (error) {
+            if (error || !granted) {
                 
                 NSError *requestError = (__bridge NSError *)cfError;
                 block(nil, NO, requestError);

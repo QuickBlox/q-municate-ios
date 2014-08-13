@@ -2448,7 +2448,7 @@ Q-munication by sending them private invitations.</string>
                                             <constraint firstAttribute="height" constant="26" id="4LX-6t-xyN"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="next"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                         <connections>
                                             <action selector="changeDialogName:" destination="Pbr-gf-Nnz" eventType="editingDidEndOnExit" id="JTK-yO-GIq"/>
                                         </connections>

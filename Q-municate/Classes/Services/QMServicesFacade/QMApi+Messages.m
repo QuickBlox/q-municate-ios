@@ -75,11 +75,10 @@
 - (void)sendAttachment:(NSString *)attachmentUrl toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion {
     
     QBChatMessage *message = [[QBChatMessage alloc] init];
-    
+    message.text = @"Attachment";
     QBChatAttachment *attachment = [[QBChatAttachment alloc] init];
     attachment.url = attachmentUrl;
     attachment.type = @"image";
-    
     message.attachments = @[attachment];
     
     [self sendMessage:message toDialog:dialog completion:completion];

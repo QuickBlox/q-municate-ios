@@ -37,6 +37,11 @@
     [self configure];
 }
 
+- (void)dealloc {
+    [self sd_cancelCurrentImageLoad];
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
+
 - (void)configure {
     
     self.webManager = [[SDWebImageManager alloc] init];
@@ -64,7 +69,6 @@
          completedBlock:(SDWebImageCompletionBlock)completedBlock  {
     
     self.image = placehoder;
-    
     
     [self sd_cancelCurrentImageLoad];
     objc_setAssociatedObject(self, &url, url, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
