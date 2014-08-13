@@ -32,6 +32,11 @@ NSString *const kQMAcconuntKey = @"LpNmxA2Pq2uyW5qBjHy8";
     [QBSettings setAccountKey:kQMAcconuntKey];
     [QBSettings setLogLevel:QBLogLevelDebug];
     
+#if STAGE_SERVER_IS_ACTIVE == 1
+    [QBSettings setServerApiDomain:@"http://api.stage.quickblox.com"];
+    [QBSettings setServerChatDomain:@"chatstage.quickblox.com"];
+#endif
+    
     /*Configure app appearance*/
     NSDictionary *normalAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:1.000 alpha:0.750]};
     NSDictionary *disabledAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:0.935 alpha:0.260]};
