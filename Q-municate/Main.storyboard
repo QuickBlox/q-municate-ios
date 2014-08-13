@@ -142,7 +142,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="58"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="290" id="VIf-H3-5KQ">
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="290" id="VIf-H3-5KQ" userLabel="Label - Oops... Your don't have any friends, tap search icon to find them or invite new ones.">
                                                     <rect key="frame" x="15" y="0.0" width="290" height="58"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <attributedString key="attributedText">
@@ -1339,23 +1339,73 @@ Q-munication by sending them private invitations.</string>
                                                     <rect key="frame" x="15" y="0.0" width="290" height="58"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <attributedString key="attributedText">
+                                                        <fragment content="Oops...">
+                                                            <attributes>
+                                                                <color key="NSColor" red="0.4455915178571429" green="0.4455915178571429" blue="0.4455915178571429" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <font key="NSFont" size="12" name="HelveticaNeue"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                            </attributes>
+                                                        </fragment>
                                                         <fragment>
-                                                            <string key="content">Oops...
-You don't have any chats, tap '</string>
+                                                            <string key="content" base64-UTF8="YES">
+Cg
+</string>
                                                             <attributes>
                                                                 <color key="NSColor" red="0.4455915178571429" green="0.4455915178571429" blue="0.4455915178571429" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <font key="NSFont" size="11" name="HelveticaNeue"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
                                                             </attributes>
                                                         </fragment>
-                                                        <fragment content="+">
+                                                        <fragment content="You don't have any chats, tap">
                                                             <attributes>
-                                                                <color key="NSColor" red="0.17490433673469385" green="0.17490433673469385" blue="0.17490433673469385" alpha="1" colorSpace="calibratedRGB"/>
-                                                                <font key="NSFont" size="11" name="HelveticaNeue-Bold"/>
+                                                                <color key="NSColor" red="0.4455915178571429" green="0.4455915178571429" blue="0.4455915178571429" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <font key="NSFont" size="12" name="HelveticaNeue"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
                                                             </attributes>
                                                         </fragment>
-                                                        <fragment content="' icon to create new group chat or go in private chat via ">
+                                                        <fragment content=" ">
+                                                            <attributes>
+                                                                <color key="NSColor" red="0.4455915178571429" green="0.4455915178571429" blue="0.4455915178571429" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <font key="NSFont" size="11" name="HelveticaNeue"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                        <fragment content="'">
+                                                            <attributes>
+                                                                <color key="NSColor" red="0.4455915178571429" green="0.4455915178571429" blue="0.4455915178571429" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <font key="NSFont" size="12" name="HelveticaNeue"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                        <fragment content="+">
+                                                            <attributes>
+                                                                <color key="NSColor" red="0.17490433673469385" green="0.17490433673469385" blue="0.17490433673469385" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <font key="NSFont" size="12" name="HelveticaNeue-Bold"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                        <fragment content="'">
+                                                            <attributes>
+                                                                <color key="NSColor" red="0.4455915178571429" green="0.4455915178571429" blue="0.4455915178571429" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <font key="NSFont" size="12" name="HelveticaNeue"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                        <fragment content=" ">
+                                                            <attributes>
+                                                                <color key="NSColor" red="0.4455915178571429" green="0.4455915178571429" blue="0.4455915178571429" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <font key="NSFont" size="11" name="HelveticaNeue"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                        <fragment content="icon to create new group chat or go in private chat via">
+                                                            <attributes>
+                                                                <color key="NSColor" red="0.4455915178571429" green="0.4455915178571429" blue="0.4455915178571429" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <font key="NSFont" size="12" name="HelveticaNeue"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                        <fragment content=" ">
                                                             <attributes>
                                                                 <color key="NSColor" red="0.4455915178571429" green="0.4455915178571429" blue="0.4455915178571429" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <font key="NSFont" size="11" name="HelveticaNeue"/>
@@ -1365,14 +1415,21 @@ You don't have any chats, tap '</string>
                                                         <fragment content="Friends Details">
                                                             <attributes>
                                                                 <color key="NSColor" red="0.1068638392857143" green="0.1068638392857143" blue="0.1068638392857143" alpha="1" colorSpace="calibratedRGB"/>
-                                                                <font key="NSFont" size="11" name="HelveticaNeue-Bold"/>
+                                                                <font key="NSFont" size="12" name="HelveticaNeue-Bold"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
                                                             </attributes>
                                                         </fragment>
-                                                        <fragment content=" page">
+                                                        <fragment content=" ">
                                                             <attributes>
                                                                 <color key="NSColor" red="0.4455915178571429" green="0.4455915178571429" blue="0.4455915178571429" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <font key="NSFont" size="11" name="HelveticaNeue"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                        <fragment content="page">
+                                                            <attributes>
+                                                                <color key="NSColor" red="0.4455915178571429" green="0.4455915178571429" blue="0.4455915178571429" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <font key="NSFont" size="12" name="HelveticaNeue"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
                                                             </attributes>
                                                         </fragment>

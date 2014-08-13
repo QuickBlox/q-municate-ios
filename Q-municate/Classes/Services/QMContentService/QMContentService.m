@@ -25,7 +25,7 @@ NSString *const kQMDefaultImageName = @"image";
     self = [super init];
     if (self) {
         self.contentOperationQueue = [[NSOperationQueue alloc] init];
-        self.contentOperationQueue.maxConcurrentOperationCount = 1;
+        self.contentOperationQueue.maxConcurrentOperationCount = 3;
     }
     return self;
 }
@@ -34,7 +34,7 @@ NSString *const kQMDefaultImageName = @"image";
                progress:(QMContentProgressBlock)progress
              completion:(QMCFileUploadTaskResultBlockBlock)completion {
     
-    NSData *data = UIImageJPEGRepresentation(image, 0.5);
+    NSData *data = UIImageJPEGRepresentation(image, 0.4);
     [self uploadData:data
             fileName:@"image"
          contentType:@"image/jpeg"

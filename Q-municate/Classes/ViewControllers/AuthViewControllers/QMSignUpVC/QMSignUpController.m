@@ -61,30 +61,8 @@
     
     __weak __typeof(self)weakSelf = self;
     
-    [REActionSheet presentActionSheetInView:self.view configuration:^(REActionSheet *actionSheet) {
-        
-        [actionSheet addButtonWithTitle:@"Take New Photo" andActionBlock:^{
-            [weakSelf choosePhotoWithSourceType:UIImagePickerControllerSourceTypeCamera];
-        }];
-        
-        [actionSheet addButtonWithTitle:@"Choose from Library" andActionBlock:^{
-            [weakSelf choosePhotoWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-        }];
-        
-        [actionSheet addCancelButtonWihtTitle:@"Cancel" andActionBlock:^{}];
-    }];
-}
+    [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
 
-- (void)choosePhotoWithSourceType:(UIImagePickerControllerSourceType)type {
-    
-    __weak __typeof(self)weakSelf = self;
-    [QMImagePicker presentIn:self configure:^(UIImagePickerController *picker) {
-        
-        picker.sourceType = type;
-        picker.allowsEditing = YES;
-        
-    } result:^(UIImage *image) {
-        
         [weakSelf.userImage setImage:image];
         weakSelf.cachedPicture = image;
     }];
