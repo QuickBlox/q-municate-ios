@@ -9,8 +9,10 @@
 #import "QMApi.h"
 #import "QMUsersService.h"
 #import "QMContentService.h"
+#import "QMFacebookService.h"
 #import "QMMessagesService.h"
 #import "QMSettingsManager.h"
+
 
 @implementation QMApi (Users)
 
@@ -167,6 +169,34 @@
             UIImage *image = [UIImage imageWithData:data];
             [weakSelf updateUser:user image:image progress:progress completion:completion];
         }
+    }];
+}
+
+
+#pragma mark - Import friends
+
+- (void)importFriendsFromFacebook
+{
+    __weak __typeof(self)weakSelf = self;
+    [self.facebookService fetchMyFriendsIDs:^(NSArray *facebookFriendsIDs) {
+        
+        if ([facebookFriendsIDs count] == 0) {
+            return;
+        }
+        [weakSelf.usersService retrieveUsersWithFacebookIDs:facebookFriendsIDs completion:^(QBUUserPagedResult *pagedResult) {
+
+            if (!pagedResult.success) {
+                return;
+            }
+            if ([pagedResult.users count] == 0) {
+                return;
+            }
+            
+            // sending contact requests:
+            for (QBUUser *user in pagedResult.users) {
+                [weakSelf addUserToContactListRequest:user.ID completion:nil];
+            }
+        }];
     }];
 }
 
