@@ -47,9 +47,15 @@
     }
 
     NSURL *url = [NSURL URLWithString:opponent.website];
-    UIImage *placeholderImage = [UIImage imageNamed:@"upic_call"];
+    UIImage *placeholder = [UIImage imageNamed:@"upic_call"];
     
-    [self.userAvatarView sd_setImageWithURL:url progress:nil placeholderImage:placeholderImage];;
+    [self.userAvatarView setImageWithURL:url
+                             placeholder:placeholder
+                                 options:SDWebImageLowPriority
+                                progress:^(NSInteger receivedSize, NSInteger expectedSize) {}
+                          completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+     }];
+
 
     [QMSoundManager playRingtoneSound];
 }

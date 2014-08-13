@@ -128,9 +128,9 @@ const NSTimeInterval kQMPresenceTime = 30;
 
 - (void)sendPresence {
     
-    [self.messagesService chat:^(QBChat *chat) {
-        [chat sendPresence];
-    }];
+    if ([[QBChat instance] isLoggedIn]) {
+        [[QBChat instance] sendPresence];
+    }
 }
 
 - (void)applicationDidBecomeActive:(void(^)(BOOL success))completion {

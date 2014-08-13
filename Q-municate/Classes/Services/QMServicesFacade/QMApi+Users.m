@@ -129,10 +129,10 @@
         if (publicUrl.length > 0) {
             userInfo.website = publicUrl;
         }
-        NSString *password = user.password;
-        user.password = nil;
+        NSString *password = userInfo.password;
+        userInfo.password = nil;
         
-        [weakSelf.usersService updateUser:user withCompletion:^(QBUUserResult *result) {
+        [weakSelf.usersService updateUser:userInfo withCompletion:^(QBUUserResult *result) {
             
             if ([weakSelf checkResult:result]) {
                 

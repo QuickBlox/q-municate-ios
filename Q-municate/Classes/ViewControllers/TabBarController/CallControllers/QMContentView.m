@@ -47,7 +47,14 @@
 {
     UIImage *placeholder = [UIImage imageNamed:@"upic_call"];
     NSURL *url = [NSURL URLWithString:user.website];
-    [self.avatarView sd_setImageWithURL:url progress:nil placeholderImage:placeholder];
+    [self.avatarView setImageWithURL:url
+                         placeholder:placeholder
+                             options:SDWebImageLowPriority
+                            progress:
+     ^(NSInteger receivedSize, NSInteger expectedSize) {}
+                      completedBlock:
+     ^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
+
     self.fullNameLabel.text = user.fullName;
     self.statusLabel.text = NSLocalizedString(@"QM_STR_CALLING", nil);
     

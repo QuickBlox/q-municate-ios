@@ -66,7 +66,10 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    [[QMApi instance] applicationDidBecomeActive:^(BOOL success) {}];
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    [[QMApi instance] applicationDidBecomeActive:^(BOOL success) {
+        [SVProgressHUD dismiss];
+    }];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

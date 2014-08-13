@@ -8,19 +8,51 @@
 
 #import "QMImageView.h"
 #import "UIImage+Cropper.h"
-#import "UIImageView+WebCache.h"
 #import "SDWebImageManager.h"
+#import "objc/runtime.h"
+#import "UIView+WebCacheOperation.h"
+#import "UIImageView+WebCache.h"
 
-@interface QMImageView() <SDWebImageManagerDelegate>
+@interface QMImageView()
+
+<SDWebImageManagerDelegate>
+
+@property (strong, nonatomic) SDWebImageManager *webManager;
 
 @end
 
 @implementation QMImageView
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
+- (instancetype)init {
+    
+    self = [super init];
+    if (self) {
+        [self configure];
+    }
+    return self;
 }
 
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    [self configure];
+}
+
+- (void)dealloc {
+    [self sd_cancelCurrentImageLoad];
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
+
+- (void)configure {
+    
+    self.webManager = [[SDWebImageManager alloc] init];
+    self.webManager.delegate = self;
+    
+    __weak __typeof(self)weakSelf = self;
+    [self.webManager setCacheKeyFilter:^(NSURL *t_url) {
+        NSString *key = [weakSelf keyWithURL:t_url size:weakSelf.frame.size];
+        return key;
+    }];
+}
 
 - (NSString *)keyWithURL:(NSURL *)url size:(CGSize)size {
     
@@ -30,30 +62,71 @@
     return key;
 }
 
-- (void)sd_setImageWithURL:(NSURL *)url progress:(SDWebImageDownloaderProgressBlock)progress placeholderImage:(UIImage *)placehoderImage completed:(SDWebImageCompletionBlock)completedBlock  {
+- (void)setImageWithURL:(NSURL *)url
+            placeholder:(UIImage *)placehoder
+                options:(SDWebImageOptions)options
+               progress:(SDWebImageDownloaderProgressBlock)progress
+         completedBlock:(SDWebImageCompletionBlock)completedBlock  {
     
-    __weak __typeof(self)weakSelf = self;
+    self.image = placehoder;
     
-    [[SDWebImageManager sharedManager] setCacheKeyFilter:^(NSURL *t_url) {
-        return [weakSelf keyWithURL:t_url size:weakSelf.frame.size];
+    [self sd_cancelCurrentImageLoad];
+    objc_setAssociatedObject(self, &url, url, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    if (!(options & SDWebImageDelayPlaceholder)) {
+        self.image = placehoder;
+    }
+    
+    if (url) {
         
-    }];
-    
-    [SDWebImageManager sharedManager].delegate = self;
-    
-    [self sd_setImageWithURL:url placeholderImage:placehoderImage
-                     options:SDWebImageHighPriority
-                    progress:progress
-                   completed:completedBlock];
+        __weak __typeof(self)weakSelf = self;
+        id <SDWebImageOperation> operation = [self.webManager downloadImageWithURL:url options:options progress:progress completed:
+                                              ^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+                                                  
+                                                  if (!weakSelf) return;
+                                                  dispatch_main_sync_safe(^{
+                                                      
+                                                      if (!weakSelf) return;
+                                                      
+                                                      if (weakSelf) {
+                                                          
+                                                          weakSelf.image = image;
+                                                          [weakSelf setNeedsLayout];
+                                                      }
+                                                      else {
+                                                          
+                                                          if ((options & SDWebImageDelayPlaceholder)) {
+                                                              weakSelf.image = placehoder;
+                                                              [weakSelf setNeedsLayout];
+                                                          }
+                                                      }
+                                                      
+                                                      if (completedBlock && finished) {
+                                                          completedBlock(image, error, cacheType, url);
+                                                      }
+                                                  });
+                                              }];
+        
+        [self sd_setImageLoadOperation:operation forKey:@"UIImageViewImageLoad"];
+    }
+    else {
+        dispatch_main_async_safe(^{
+            
+            NSError *error =
+            [NSError errorWithDomain:@"SDWebImageErrorDomain"
+                                code:-1
+                            userInfo:@{NSLocalizedDescriptionKey : @"Trying to load a nil url"}];
+            
+            if (completedBlock) {
+                completedBlock(nil, error, SDImageCacheTypeNone, url);
+            }
+        });
+    }
 }
 
-- (void)sd_setImageWithURL:(NSURL *)url progress:(SDWebImageDownloaderProgressBlock)progress placeholderImage:(UIImage *)placehoderImage {
-    
-    [self sd_setImageWithURL:url progress:progress placeholderImage:placehoderImage completed:nil];
-    
-};
-
-- (UIImage *)imageManager:(SDWebImageManager *)imageManager transformDownloadedImage:(UIImage *)image withURL:(NSURL *)imageURL {
+- (UIImage *)imageManager:(SDWebImageManager *)imageManager
+ transformDownloadedImage:(UIImage *)image
+                  withURL:(NSURL *)imageURL {
     
     return [self transformImage:image];
 }
@@ -72,14 +145,14 @@
 
 - (void)sd_setImage:(UIImage *)image withKey:(NSString *)key {
     
-    UIImage *cachedImage = [[[SDWebImageManager sharedManager] imageCache] imageFromDiskCacheForKey:key];
+    UIImage *cachedImage = [[self.webManager imageCache] imageFromDiskCacheForKey:key];
     if (cachedImage) {
         self.image = cachedImage;
     }
     else {
-
+        
         UIImage *img = [self transformImage:image];
-        [[[SDWebImageManager sharedManager] imageCache] storeImage:img forKey:key];
+        [[self.webManager imageCache] storeImage:img forKey:key];
         self.image = img;
     }
 }

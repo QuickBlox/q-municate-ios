@@ -16,14 +16,14 @@
     
     __weak __typeof(self)weakSelf = self;
     [self.messagesService loginChat:^(BOOL success) {
-        [weakSelf.chatDialogsService jointRooms];
+        [weakSelf.chatDialogsService joinRooms];
         block(success);
     }];
 }
 
 - (void)logoutFromChat {
-    [self.messagesService logoutChat];
     [self.chatDialogsService leaveFromRooms];
+    [self.messagesService logoutChat];
 }
 
 - (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete {
@@ -50,9 +50,8 @@
     
     if (dialog.type == QBChatDialogTypeGroup) {
         
-        QBChatRoom *room = [self chatRoomWithRoomJID:dialog.roomJID];
-        
-        [self.messagesService sendChatMessage:message withDialogID:dialog.ID toRoom:room completion:^{
+        QBChatRoom *chatRoom = [self.chatDialogsService chatRoomWithRoomJID:dialog.roomJID];
+        [self.messagesService sendChatMessage:message withDialogID:dialog.ID toRoom:chatRoom completion:^{
             finish(message);
         }];
         
@@ -76,11 +75,10 @@
 - (void)sendAttachment:(NSString *)attachmentUrl toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion {
     
     QBChatMessage *message = [[QBChatMessage alloc] init];
-    
+    message.text = @"Attachment";
     QBChatAttachment *attachment = [[QBChatAttachment alloc] init];
     attachment.url = attachmentUrl;
     attachment.type = @"image";
-    
     message.attachments = @[attachment];
     
     [self sendMessage:message toDialog:dialog completion:completion];

@@ -22,9 +22,9 @@ typedef NS_ENUM(NSUInteger, QMImageViewType) {
 @property (assign, nonatomic) QMImageViewType imageViewType;
 
 - (void)sd_setImage:(UIImage *)image withKey:(NSString *)key;
-- (void)sd_setImageWithURL:(NSURL *)url progress:(SDWebImageDownloaderProgressBlock)progress placeholderImage:(UIImage *)placehoderImage;
-- (void)sd_setImageWithURL:(NSURL *)url
-                  progress:(SDWebImageDownloaderProgressBlock)progress
-          placeholderImage:(UIImage *)placehoderImage
-                 completed:(SDWebImageCompletionBlock)completedBlock;
+- (void)setImageWithURL:(NSURL *)url
+            placeholder:(UIImage *)placehoder
+                options:(SDWebImageOptions)options
+               progress:(SDWebImageDownloaderProgressBlock)progress
+         completedBlock:(SDWebImageCompletionBlock)completedBlock;
 @end

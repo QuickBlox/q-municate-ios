@@ -14,7 +14,7 @@
 - (void)fetchAllDialogs:(QBDialogsPagedResultBlock)completion;
 - (void)createChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completionl;
 - (void)updateChatDialogWithID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest completion:(QBChatDialogResultBlock)completion;
-- (void)updateChatDialog:(QBChatDialog *)chatDialog;
+//- (void)updateChatDialog:(QBChatDialog *)chatDialog;
 
 - (NSArray *)dialogHistory;
 - (void)addDialogToHistory:(QBChatDialog *)chatDialog;
@@ -24,6 +24,6 @@
 - (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID;
 
 - (void)leaveFromRooms;
-- (void)jointRooms;
+- (void)joinRooms;
 
 @end

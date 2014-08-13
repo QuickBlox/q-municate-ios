@@ -13,7 +13,7 @@
 @interface QMChatDialogsService()
 
 @property (strong, nonatomic) NSMutableDictionary *dialogs;
-@property (strong, nonatomic) NSMutableDictionary *chatRooms;
+@property (strong, nonatomic) NSMutableDictionary *rooms;
 
 @end
 
@@ -23,8 +23,8 @@
     [super start];
     
     self.dialogs = [NSMutableDictionary dictionary];
-    self.chatRooms = [NSMutableDictionary dictionary];
-
+    self.rooms = [NSMutableDictionary dictionary];
+    
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
         [weakSelf updateOrCreateDialogWithMessage:message];
@@ -40,8 +40,8 @@
     
     [[QMChatReceiver instance] unsubscribeForTarget:self];
     
+    [self.rooms removeAllObjects];
     [self.dialogs removeAllObjects];
-    [self.chatRooms removeAllObjects];
 }
 
 - (void)fetchAllDialogs:(QBDialogsPagedResultBlock)completion {
@@ -78,15 +78,15 @@
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.roomJID == %@", roomJID];
     NSArray *allDialogs = [self dialogHistory];
-
+    
     QBChatDialog *dialog = [allDialogs filteredArrayUsingPredicate:predicate].firstObject;
     return dialog;
 }
 
-- (void)updateChatDialog:(QBChatDialog *)chatDialog
-{
-    self.dialogs[chatDialog.ID] = chatDialog;
-}
+//- (void)updateChatDialog:(QBChatDialog *)chatDialog
+//{
+//    self.dialogs[chatDialog.ID] = chatDialog;
+//}
 
 - (QBChatDialog *)chatDialogWithID:(NSString *)dialogID {
     return self.dialogs[dialogID];
@@ -100,39 +100,15 @@
         NSString *roomJID = chatDialog.roomJID;
         NSAssert(roomJID, @"Need update this case");
         
-        QBChatRoom *existRoom = self.chatRooms[roomJID];
-        
-        if (!existRoom) {
-            QBChatRoom *chatRoom = [[QBChatRoom alloc] initWithRoomJID:roomJID];
-            [chatRoom joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
-            self.chatRooms[roomJID] = chatRoom;
-        }
+        QBChatRoom *room = chatDialog.chatRoom;
+        [room joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
+        self.rooms[chatDialog.roomJID] = room;
         
     } else if (chatDialog.type == QBChatDialogTypePrivate) {
         
     }
     
     self.dialogs[chatDialog.ID] = chatDialog;
-}
-
-- (void)leaveFromRooms {
-    
-    NSArray *allRooms = [self.chatRooms allValues];
-    for (QBChatRoom *room in allRooms) {
-        if (room.isJoined) {
-            [room leaveRoom];
-        }
-    }
-}
-
-- (void)jointRooms {
-    
-    NSArray *allRooms = [self.chatRooms allValues];
-    for (QBChatRoom *chatRoom in allRooms) {
-        if (!chatRoom.isJoined) {
-            [chatRoom joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
-        }
-    }
 }
 
 - (NSArray *)dialogHistory {
@@ -142,7 +118,7 @@
 }
 
 - (QBChatDialog *)privateDialogWithOpponentID:(NSUInteger)opponentID {
-
+    
     NSArray *allDialogs = [self dialogHistory];
     
     NSPredicate *predicate =
@@ -154,9 +130,6 @@
     return dialog;
 }
 
-- (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID {
-    return self.chatRooms[roomJID];
-}
 
 - (void)updateChatDialogWithChatMessage:(QBChatMessage *)chatMessage {
     
@@ -171,7 +144,7 @@
 }
 
 - (void)updateOrCreateDialogWithMessage:(QBChatMessage *)message {
-
+    
     NSAssert(message.cParamDialogID, @"Need update this case");
     
     if (message.cParamNotificationType == QMMessageNotificationTypeCreateDialog) {
@@ -189,6 +162,45 @@
         dialog.lastMessageText = message.text;
         dialog.lastMessageDate = [NSDate dateWithTimeIntervalSince1970:message.cParamDateSent.doubleValue];
         dialog.unreadMessagesCount++;
+    }
+}
+
+
+
+#pragma mark - Chat Room
+
+- (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID {
+    
+    QBChatRoom *room = self.rooms[roomJID];
+    NSAssert(room, @"Need update this case");
+
+    return room;
+}
+
+- (void)leaveFromRooms {
+    
+    NSArray *allRooms = [self.rooms allValues];
+    for (QBChatRoom *room in allRooms) {
+       
+        if (room.isJoined) {
+            [room leaveRoom];
+            [self.rooms removeObjectForKey:room.JID];
+        }
+    }
+}
+
+- (void)joinRooms {
+    
+    NSArray *allDialogs = [self dialogHistory];
+    for (QBChatDialog *dialog in allDialogs) {
+        
+        if (dialog.roomJID) {
+            
+            QBChatRoom *room = dialog.chatRoom;
+            [room joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
+
+            self.rooms[dialog.roomJID] = room;
+        }
     }
 }
 
