@@ -12,10 +12,10 @@
 #import "SVProgressHUD.h"
 #import "QMApi.h"
 
-const NSUInteger kQMApplicationID = 7232;
-NSString *const kQMAuthorizationKey = @"MpOecRZy-5WsFva";
-NSString *const kQMAuthorizationSecret = @"dTSLaxDsFKqegD7";
-NSString *const kQMAcconuntKey = @"LpNmxA2Pq2uyW5qBjHy8";
+const NSUInteger kQMApplicationID = 13318;
+NSString *const kQMAuthorizationKey = @"WzrAY7vrGmbgFfP";
+NSString *const kQMAuthorizationSecret = @"xS2uerEveGHmEun";
+NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 @implementation AppDelegate
 
