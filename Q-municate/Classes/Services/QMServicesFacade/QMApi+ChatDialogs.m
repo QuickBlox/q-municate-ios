@@ -81,10 +81,10 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     [self createChatDialog:chatDialog occupants:occupants completion:completion];
 }
 
-- (void)updateChatDialog:(QBChatDialog *)chatDialog
-{
-    [[QMApi instance].chatDialogsService updateChatDialog:chatDialog];
-}
+//- (void)updateChatDialog:(QBChatDialog *)chatDialog {
+//    
+//    [self.chatDialogsService updateChatDialog:chatDialog];
+//}
 
 - (QBChatMessage *)notification:(QMMessageNotificationType)type recipient:(QBUUser *)recipient text:(NSString *)text chatDialog:(QBChatDialog *)chatDialog {
     
@@ -145,10 +145,9 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialogResult *result) {
         
         if ([weakSelf checkResult:result]) {
-            [weakSelf updateChatDialog:result.dialog];
             
             [weakSelf sendNotificationWithType:QMMessageNotificationTypeCreateDialog
-                                          text:@"Create new dialog"
+                                          text:@"Created new dialog"
                                   toRecipients:occupants
                                     chatDialog:result.dialog];
             

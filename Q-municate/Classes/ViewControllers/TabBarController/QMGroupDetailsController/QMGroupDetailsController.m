@@ -26,7 +26,6 @@ NSString *const kQMAddMembersToGroupControllerID = @"QMAddMembersToGroupControll
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @property (strong, nonatomic) QMGroupDetailsDataSource *dataSource;
-@property (strong, nonatomic) QBChatRoom *chatRoom;
 
 @end
 
@@ -48,14 +47,16 @@ NSString *const kQMAddMembersToGroupControllerID = @"QMAddMembersToGroupControll
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatRoomDidReceiveListOfOnlineUsersWithTarget:self block:^(NSArray *users, NSString *roomName) {
         
-        if ([roomName isEqualToString:weakSelf.chatRoom.name]) {
+        QBChatRoom *chatRoom = [[QMApi instance] chatRoomWithRoomJID:weakSelf.chatDialog.roomJID];
+        if ([roomName isEqualToString:chatRoom.name]) {
             [weakSelf updateOnlineStatus:users.count];
         }
     }];
     
     [[QMChatReceiver instance] chatRoomDidChangeOnlineUsersWithTarget:self block:^(NSArray *onlineUsers, NSString *roomName) {
         
-        if ([roomName isEqualToString:weakSelf.chatRoom.name]) {
+        QBChatRoom *chatRoom = [[QMApi instance] chatRoomWithRoomJID:weakSelf.chatDialog.roomJID];
+        if ([roomName isEqualToString:chatRoom.name]) {
             [weakSelf updateOnlineStatus:onlineUsers.count];
         }
     }];
@@ -102,9 +103,9 @@ NSString *const kQMAddMembersToGroupControllerID = @"QMAddMembersToGroupControll
     self.groupNameField.text = chatDialog.name;
     self.occupantsCountLabel.text = [NSString stringWithFormat:@"%d participants", self.chatDialog.occupantIDs.count];
     self.onlineOccupantsCountLabel.text = [NSString stringWithFormat:@"0/%d online", self.chatDialog.occupantIDs.count];
-    
-    self.chatRoom = [[QMApi instance] chatRoomWithRoomJID:self.chatDialog.roomJID];
-    [self.chatRoom requestOnlineUsers];
+
+    QBChatRoom *chatRoom = [[QMApi instance] chatRoomWithRoomJID:self.chatDialog.roomJID];
+    [chatRoom requestOnlineUsers];
 }
 
 #pragma mark - Segue

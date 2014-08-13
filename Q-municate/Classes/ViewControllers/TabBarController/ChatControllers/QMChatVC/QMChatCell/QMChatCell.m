@@ -73,7 +73,7 @@
     self.balloonImageView = [[QMImageView alloc] init];
     self.userImageView = [[QMImageView alloc] init];
     self.headerView = [[UIView alloc] init];
-
+    
     self.containerView.backgroundColor = [UIColor clearColor];
     self.balloonImageView.backgroundColor = [UIColor clearColor];
     self.headerView.backgroundColor = [UIColor clearColor];
@@ -101,7 +101,7 @@
     self.title.translatesAutoresizingMaskIntoConstraints = NO;
     self.timeLabel.translatesAutoresizingMaskIntoConstraints = NO;
     
-
+    
     self.nameConstrains = @[PVBottomOf(self.title).equalTo.bottomOf(self.headerView).asConstraint,
                             PVLeftOf(self.title).equalTo.leftOf(self.headerView).asConstraint,
                             PVTopOf(self.title).equalTo.topOf(self.headerView).asConstraint,
@@ -123,7 +123,7 @@
                                       PVTopOf(self.timeLabel).equalTo.topOf(self.headerView).asConstraint,
                                       PVBottomOf(self.timeLabel).equalTo.bottomOf(self.headerView).asConstraint,
                                       ]];
-
+    
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     
 #if SHOW_BORDERS
@@ -261,7 +261,7 @@
     self.lTitleConstraint.constant = insets.left;
     self.rTitleConstraint.constant = -insets.right;
     self.timeWidhtConstraint.constant = 40;
-
+    
     [self layoutIfNeeded];
 }
 
@@ -296,12 +296,17 @@
 - (void)setUser:(QBUUser *)user {
     
     _user = user;
-
+    
     if (self.showUserImage) {
         
         NSURL *url = [NSURL URLWithString:user.website];
-        UIImage *placeholderImage = [UIImage imageNamed:@"upic-placeholder"];
-        [self.userImageView sd_setImageWithURL:url progress:nil placeholderImage:placeholderImage];
+        UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
+        
+        [self.userImageView setImageWithURL:url
+                                placeholder:placeholder
+                                    options:SDWebImageLowPriority
+                                   progress:^(NSInteger receivedSize, NSInteger expectedSize) {}
+                             completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
     }
     else {
         self.userImageView.image = nil;
@@ -309,14 +314,14 @@
 }
 
 - (NSDateFormatter *)formatter {
-
+    
     static dispatch_once_t onceToken;
     static NSDateFormatter *_dateFormatter = nil;
     dispatch_once(&onceToken, ^{
         _dateFormatter = [[NSDateFormatter alloc] init];
         [_dateFormatter setDateFormat:@"HH:mm"];
     });
-
+    
     return _dateFormatter;
 }
 

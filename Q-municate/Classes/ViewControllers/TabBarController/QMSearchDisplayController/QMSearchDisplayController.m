@@ -12,7 +12,6 @@
 
 - (void)setActive:(BOOL)visible animated:(BOOL)animated {
     [super setActive: visible animated: animated];
-    [[UIApplication sharedApplication] setStatusBarStyle:visible ? UIStatusBarStyleDefault : UIStatusBarStyleLightContent];
 }
 
 

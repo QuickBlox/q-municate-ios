@@ -23,14 +23,21 @@
 
 - (void)setUserImageWithUrl:(NSURL *)userImageUrl {
     
-    UIImage *placeHolder = [UIImage imageNamed:@"upic-placeholder"];
-    [self.qmImageView sd_setImageWithURL:userImageUrl progress:nil placeholderImage:placeHolder];
+    UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
+    
+    [self.qmImageView setImageWithURL:userImageUrl
+                          placeholder:placeholder
+                              options:SDWebImageContinueInBackground
+                             progress:^(NSInteger receivedSize, NSInteger expectedSize) {}
+                       completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
 }
 
 - (void)setUserImage:(UIImage *)image withKey:(NSString *)key {
+    
     if (!image) {
         image = [UIImage imageNamed:@"upic-placeholder"];
     }
+    
     [self.qmImageView sd_setImage:image withKey:key];
 }
 

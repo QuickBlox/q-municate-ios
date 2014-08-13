@@ -16,14 +16,14 @@
     
     __weak __typeof(self)weakSelf = self;
     [self.messagesService loginChat:^(BOOL success) {
-        [weakSelf.chatDialogsService jointRooms];
+        [weakSelf.chatDialogsService joinRooms];
         block(success);
     }];
 }
 
 - (void)logoutFromChat {
-    [self.messagesService logoutChat];
     [self.chatDialogsService leaveFromRooms];
+    [self.messagesService logoutChat];
 }
 
 - (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete {
@@ -50,9 +50,8 @@
     
     if (dialog.type == QBChatDialogTypeGroup) {
         
-        QBChatRoom *room = [self chatRoomWithRoomJID:dialog.roomJID];
-        
-        [self.messagesService sendChatMessage:message withDialogID:dialog.ID toRoom:room completion:^{
+        QBChatRoom *chatRoom = [self.chatDialogsService chatRoomWithRoomJID:dialog.roomJID];
+        [self.messagesService sendChatMessage:message withDialogID:dialog.ID toRoom:chatRoom completion:^{
             finish(message);
         }];
         

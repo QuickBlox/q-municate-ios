@@ -62,7 +62,18 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     
     NSURL *url = [NSURL URLWithString:self.selectedUser.website];
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
-    [self.userAvatar sd_setImageWithURL:url progress:nil placeholderImage:placeholder];
+    [self.userAvatar setImageWithURL:url
+                         placeholder:placeholder
+                             options:SDWebImageLowPriority
+                            progress:
+     ^(NSInteger receivedSize, NSInteger expectedSize) {
+         
+     }
+     
+                      completedBlock:
+     ^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+     }];
+    
     
     [self updateUserStatus];
 }

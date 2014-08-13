@@ -168,6 +168,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  @param roomJID
  @result QBChatDialogResult
  */
+
 - (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID;
 
 @end

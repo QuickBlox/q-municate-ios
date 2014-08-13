@@ -89,16 +89,22 @@
     self.progressView.hidden = NO;
     self.progressView.progressTintColor = message.balloonColor;
     
-    NSURL *imageUrl = [NSURL URLWithString:attachment.url];
+    NSURL *url = [NSURL URLWithString:attachment.url];
     
     __weak __typeof(self)weakSelf = self;
     
-    [weakSelf.balloonImageView sd_setImageWithURL:imageUrl progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-        CGFloat progress = ((CGFloat)receivedSize)/((CGFloat)expectedSize);
-        weakSelf.progressView.progress = progress;
-    } placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        weakSelf.progressView.hidden = YES;
-    }];
+    [weakSelf.balloonImageView setImageWithURL:url
+                                   placeholder:nil
+                                       options:SDWebImageLowPriority
+                                      progress: ^(NSInteger receivedSize, NSInteger expectedSize) {
+                                          
+                                          CGFloat progress = ((CGFloat)receivedSize)/((CGFloat)expectedSize);
+                                          weakSelf.progressView.progress = progress;
+                                          
+                                      }
+                                completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                    weakSelf.progressView.hidden = YES;
+                                }];
 }
 
 - (void)layoutSubviews {
