@@ -83,7 +83,10 @@
                     [weakSelf insertNewMessage:message];
                 }
                 
-            } else {
+            }
+            else if (message.cParamNotificationType == QMMessageNotificationTypeDeliveryMessage ){
+            }
+            else {
                 [weakSelf.delegate message:message forOtherOtherDialog:dialogForReceiverMessage];
             }
         }];
