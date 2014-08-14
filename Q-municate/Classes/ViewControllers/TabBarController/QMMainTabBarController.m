@@ -14,6 +14,8 @@
 #import "QMMessageBarStyleSheetFactory.h"
 #import "QMSoundManager.h"
 #import "QMChatDataSource.h"
+#import "QMSettingsManager.h"
+
 
 @interface QMMainTabBarController () <QMChatDataSourceDelegate>
 
@@ -38,9 +40,14 @@
         }else {
             [[QMApi instance] loginChat:^(BOOL loginSuccess) {
                 [[QMApi instance] subscribeToPushNotifications];
-                [[QMApi instance] fetchAllHistory:^{
-                    
-                }];
+                
+                QMSettingsManager *settings = [QMApi instance].settingsManager;
+                if (![settings isFirstFacebookLogin]) {
+                    [settings setFirstFacebookLogin:YES];
+                    [[QMApi instance] importFriendsFromFacebook];
+                    return;
+                }
+                [[QMApi instance] fetchAllHistory:^{}];
             }];
         }
     }];

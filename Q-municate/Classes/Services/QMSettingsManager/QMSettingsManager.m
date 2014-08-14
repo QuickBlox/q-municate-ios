@@ -13,6 +13,7 @@
 
 NSString *const kQMSettingsLoginKey = @"loginKey";
 NSString *const kQMSettingsRememberMeKey = @"rememberMeKey";
+NSString *const kQMFirstFacebookLoginKey = @"first_facebook_login";
 NSString *const kQMSettingsPushNotificationEnabled = @"pushNotificationEnabledKey";
 NSString *const kQMSettingsUserStatusKey = @"userStatusKey";
 NSString *const kQMAuthServiceKey = @"QMAuthServiceKey";
@@ -117,6 +118,18 @@ NSString *const kQMAccountTypeKey = @"accountType";
 - (void)setUserStatus:(NSString *)userStatus {
     
     defSetObject(kQMSettingsUserStatusKey, userStatus);
+}
+
+#pragma mark - First facebook login
+
+- (void)setFirstFacebookLogin:(BOOL)firstFacebookLogin
+{
+    defSetBool(kQMFirstFacebookLoginKey, firstFacebookLogin);
+}
+
+- (BOOL)isFirstFacebookLogin
+{
+    return defBool(kQMFirstFacebookLoginKey);
 }
 
 #pragma mark - Default Settings

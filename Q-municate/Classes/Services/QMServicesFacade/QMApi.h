@@ -184,6 +184,11 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 - (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID;
 //- (NSArray *)idsFromContactListItems;
 
+/** 
+ Import facebook friends from quickblox database.
+ */
+- (void)importFriendsFromFacebook;
+
 /**
  Add user to contact list request
  
