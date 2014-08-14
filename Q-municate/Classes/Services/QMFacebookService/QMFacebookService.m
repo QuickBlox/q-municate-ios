@@ -18,7 +18,7 @@ NSString *const kQMDataKey = @"data";
 
 - (void)fetchMyFriends:(void(^)(NSArray *facebookFriends))completion {
     
-    FBRequest *friendsRequest = [FBRequest requestForMyFriends];
+    FBRequest *friendsRequest = [FBRequest requestForGraphPath:@"me/friends"];
     [friendsRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
         NSArray *myFriends = error ? @[] : [(FBGraphObject *)result objectForKey:kQMDataKey];
         completion(myFriends);
@@ -209,6 +209,13 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     };
     
     if (!FBSession.activeSession.isOpen) {
+        
+//        if (FBSession.activeSession.permissions.count == 0) {
+//            NSArray *permissions = @[ @"user_friends"];
+//            FBSession *session = [[FBSession alloc] initWithPermissions:permissions];
+//            [FBSession setActiveSession:session];
+//        }
+        
         [FBSession.activeSession openWithCompletionHandler:handler];
     } else {
         completion(FBSession.activeSession.accessTokenData.accessToken);

@@ -240,6 +240,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 @interface QMApi (Facebook)
 
 - (void)fbLogout;
+- (void)fbIniviteDialog;
 - (NSURL *)fbUserImageURLWithUserID:(NSString *)userID;
 - (void)fbFriends:(void(^)(NSArray *fbFriends))completion;
 - (void)fbInviteUsersWithIDs:(NSArray *)ids copmpletion:(void(^)(NSError *error))completion;

@@ -84,8 +84,8 @@ const NSTimeInterval kQMPresenceTime = 30;
 
 - (void)startServices {
     
-    [self.messagesService start];
     [self.authService start];
+    [self.messagesService start];
     [self.usersService start];
     [self.chatDialogsService start];
     [self.avCallService start];

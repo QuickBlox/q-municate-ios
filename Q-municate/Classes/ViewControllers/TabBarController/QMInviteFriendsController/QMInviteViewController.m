@@ -43,57 +43,33 @@
 #pragma mark - Actions
 
 - (IBAction)sendButtonClicked:(id)sender {
-
-    __weak __typeof(self)weakSelf = self;
-    void (^inviteWithEmail)(void) =^{
-        
-        NSArray *abEmails = [weakSelf.dataSource emailsToInvite];
-        if (abEmails.count > 0) {
-            
-            [REMailComposeViewController present:^(REMailComposeViewController *mailVC) {
-
-                [mailVC setToRecipients:abEmails];
-                [mailVC setSubject:kMailSubjectString];
-                [mailVC setMessageBody:kMailBodyString isHTML:YES];
-                [weakSelf presentViewController:mailVC animated:YES completion:nil];
-                
-            } finish:^(MFMailComposeResult result, NSError *error) {
-                
-                if (!error && result != MFMailComposeResultFailed && result != MFMailComposeResultCancelled) {
-
-                    [weakSelf.dataSource clearABFriendsToInvite];
-                    [weakSelf.dataSource clearFBFriendsToInvite];
-                }
-                else {
-                    if (result == MFMailComposeResultFailed && !error) {
-                        
-                        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_PLEASE_CHECK_YOUR_EMAIL_SETTINGS", nil)];
-                    }
-                }
-            }];
-        }
-    };
     
-    NSArray *fbIDs = [self.dataSource facebookIDsToInvite];
-
-    if (fbIDs.count > 0) {
-        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    __weak __typeof(self)weakSelf = self;
+    NSArray *abEmails = [weakSelf.dataSource emailsToInvite];
+    if (abEmails.count > 0) {
         
-        [[QMApi instance] fbInviteUsersWithIDs:fbIDs copmpletion:^(NSError *error) {
-
-            if (error) {
-                [SVProgressHUD showErrorWithStatus:error.localizedDescription];
-            }else {
-                [weakSelf.dataSource clearFBFriendsToInvite];
-
-                [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_INVITATION_WAS_POSTED_TO_WALL", nil)];
+        [REMailComposeViewController present:^(REMailComposeViewController *mailVC) {
+            
+            [mailVC setToRecipients:abEmails];
+            [mailVC setSubject:kMailSubjectString];
+            [mailVC setMessageBody:kMailBodyString isHTML:YES];
+            [weakSelf presentViewController:mailVC animated:YES completion:nil];
+            
+        } finish:^(MFMailComposeResult result, NSError *error) {
+            
+            if (!error && result != MFMailComposeResultFailed && result != MFMailComposeResultCancelled) {
+                
+                [weakSelf.dataSource clearABFriendsToInvite];
             }
-            inviteWithEmail();
+            else {
+                if (result == MFMailComposeResultFailed && !error) {
+                    
+                    [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_PLEASE_CHECK_YOUR_EMAIL_SETTINGS", nil)];
+                }
+            }
         }];
-        
-    } else {
-        inviteWithEmail();
     }
+
 }
 
 - (void)changeSendButtonEnableForCheckedUsersCount:(NSInteger)checkedUsersCount

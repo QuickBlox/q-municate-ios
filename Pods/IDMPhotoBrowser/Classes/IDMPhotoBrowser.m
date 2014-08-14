@@ -1171,7 +1171,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 - (void)updateToolbar {
     // Counter
 	if ([self numberOfPhotos] > 1) {
-		_counterLabel.text = [NSString stringWithFormat:@"%i %@ %i", _currentPageIndex+1, IDMPhotoBrowserLocalizedStrings(@"of"), [self numberOfPhotos]];
+		_counterLabel.text = [NSString stringWithFormat:@"%i %@ %i", (int)_currentPageIndex+1, IDMPhotoBrowserLocalizedStrings(@"of"), (int)[self numberOfPhotos]];
 	} else {
 		_counterLabel.text = nil;
 	}

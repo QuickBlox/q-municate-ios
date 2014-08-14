@@ -33,4 +33,12 @@
     [self.facebookService logout];
 }
 
+- (void)fbIniviteDialog {
+    
+    __weak __typeof(self)weakSelf = self;
+    [self.facebookService connectToFacebook:^(NSString *sessionToken) {
+        [weakSelf.facebookService inviteFriends];
+    }];
+}
+
 @end

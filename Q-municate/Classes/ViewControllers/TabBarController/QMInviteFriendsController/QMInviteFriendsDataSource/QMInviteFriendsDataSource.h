@@ -21,9 +21,7 @@
 - (instancetype)initWithTableView:(UITableView *)tableView;
 - (void)didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath;
-- (NSArray *)facebookIDsToInvite;
 - (NSArray *)emailsToInvite;
 - (void)clearABFriendsToInvite;
-- (void)clearFBFriendsToInvite;
 
 @end

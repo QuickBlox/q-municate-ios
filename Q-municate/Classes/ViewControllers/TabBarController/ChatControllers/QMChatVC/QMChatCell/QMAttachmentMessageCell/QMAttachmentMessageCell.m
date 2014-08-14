@@ -108,7 +108,7 @@
                                           
                                       }
                                 completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                                    [UIView animateWithDuration:cacheType == SDImageCacheTypeNone? 0.4 : 0 animations:^{
+                                    [UIView animateWithDuration:cacheType != SDImageCacheTypeMemory? 0.4 : 0 animations:^{
                                         weakSelf.progressView.alpha = 0;
                                     } completion:^(BOOL finished) {
                                         weakSelf.progressView.hidden = YES;

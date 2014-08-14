@@ -14,6 +14,7 @@
 @property (strong, nonatomic) id callback;
 @property (assign, nonatomic) NSUInteger identifier;
 @property (strong, nonatomic) NSString *className;
+@property (strong, nonatomic) NSString *tcmd;
 
 @end
 
@@ -26,8 +27,8 @@
 - (NSString *)description {
     
     return [NSString stringWithFormat:
-            @"target - %@, callback - %@, identfier - %d, targetClass - %@",
-            self.target, self.callback, self.identifier, self.className];
+            @"cmd - %@, callback - %@, identfier - %d, targetClass - %@",
+            self.tcmd, self.callback, self.identifier, self.className];
 }
 
 - (BOOL)isEqual:(QMChatHandlerObject *)other {
@@ -109,6 +110,7 @@
     handler.target = target;
     handler.identifier = [target hash];
     handler.className = NSStringFromClass([target class]);
+    handler.tcmd = key;
     
 #if QM_TEST
     if (handlers.count > 0)
