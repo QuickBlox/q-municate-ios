@@ -147,7 +147,7 @@
     };
     
     if (image) {
-        [self.contentService uploadPNGImage:image progress:progress completion:^(QBCFileUploadTaskResult *result) {
+        [self.contentService uploadJPEGImage:image progress:progress completion:^(QBCFileUploadTaskResult *result) {
             if ([weakSelf checkResult:result]) {
                 updateUserProfile(result.uploadedBlob.publicUrl);
             }

@@ -53,7 +53,10 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:nil];
+    QBChatDialog *dialog = [self.dataSource dialogAtIndexPath:indexPath];
+    if (dialog) {
+        [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:nil];
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

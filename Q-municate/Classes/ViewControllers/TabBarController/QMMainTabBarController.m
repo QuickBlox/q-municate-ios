@@ -97,9 +97,12 @@
     NSString *title = nil;
     
     if (otherDialog.type ==  QBChatDialogTypeGroup) {
+        
         img = [UIImage imageNamed:@"upic_placeholder_details_group"];
         title = otherDialog.name;
-    } else if (otherDialog.type == QBChatDialogTypePrivate) {
+    }
+    else if (otherDialog.type == QBChatDialogTypePrivate) {
+        
         NSUInteger occupantID = [[QMApi instance] occupantIDForPrivateChatDialog:otherDialog];
         QBUUser *user = [[QMApi instance] userWithID:occupantID];
         title = user.fullName;

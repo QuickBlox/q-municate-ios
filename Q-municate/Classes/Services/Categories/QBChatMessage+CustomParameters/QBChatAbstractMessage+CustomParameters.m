@@ -13,6 +13,7 @@ NSString const *kQMCustomParameterSaveToHistory = @"save_to_history";
 NSString const *kQMCustomParameterNotificationType = @"notification_type";
 NSString const *kQMCustomParameterChatMessageID = @"chat_message_id";
 NSString const *kQMCustomParameterDateSent = @"date_sent";
+NSString const *kQMCustomParameterChatMessageDeliveryStatus = @"message_delivery_status_read";
 /*Dialogs keys*/
 NSString const *kQMCustomParameterDialogID = @"dialog_id";
 NSString const *kQMCustomParameterRoomJID = @"room_jid";
@@ -33,6 +34,7 @@ NSString const *kQMCustomParameterDialogOccupantsIDs = @"occupants_ids";
 @dynamic cParamNotificationType;
 @dynamic cParamChatMessageID;
 @dynamic cParamDateSent;
+@dynamic cParamMessageDeliveryStatus;
 
 /*dialog info params*/
 @dynamic cParamDialogID;
@@ -140,6 +142,18 @@ NSString const *kQMCustomParameterDialogOccupantsIDs = @"occupants_ids";
 - (QMMessageNotificationType)cParamNotificationType {
     return [self.context[kQMCustomParameterNotificationType] integerValue];
 }
+
+#pragma mark - cParamMessageDeliveryStatus
+
+- (void)setCParamMessageDeliveryStatus:(BOOL)cParamMessageDeliveryStatus {
+    self.context[kQMCustomParameterChatMessageDeliveryStatus] = @(cParamMessageDeliveryStatus);
+}
+
+- (BOOL)cParamMessageDeliveryStatus {
+    return [self.context[kQMCustomParameterChatMessageDeliveryStatus] boolValue];
+}
+
+#pragma mark - QBChatDialog
 
 - (void)setCustomParametersWithChatDialog:(QBChatDialog *)chatDialog {
     

@@ -74,14 +74,12 @@
     [self.avatarView setImageWithURL:url
                          placeholder:placeholder
                              options:SDWebImageHighPriority
-                            progress:^
-     (NSInteger receivedSize, NSInteger expectedSize) {
-         
-    }
-                      completedBlock:^
-     (UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-    }];
-     
+                            progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                                NSLog(@"r - %d; e - %d", receivedSize, expectedSize);
+                            } completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                                
+                            }];
+    
     self.fullNameField.text = self.currentUser.fullName;
     self.emailField.text = self.currentUser.email;
     self.phoneNumberField.text = self.currentUser.phone;
@@ -91,30 +89,7 @@
 - (IBAction)changeAvatar:(id)sender {
     
     __weak __typeof(self)weakSelf = self;
-    
-    [REActionSheet presentActionSheetInView:self.view configuration:^(REActionSheet *actionSheet) {
-        
-        [actionSheet addButtonWithTitle:@"Take New Photo" andActionBlock:^{
-            [weakSelf choosePhotoWithSourceType:UIImagePickerControllerSourceTypeCamera];
-        }];
-        
-        [actionSheet addButtonWithTitle:@"Choose from Library" andActionBlock:^{
-            [weakSelf choosePhotoWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-        }];
-        
-        [actionSheet addCancelButtonWihtTitle:@"Cancel" andActionBlock:^{}];
-    }];
-}
-
-- (void)choosePhotoWithSourceType:(UIImagePickerControllerSourceType)type {
-    
-    __weak __typeof(self)weakSelf = self;
-    [QMImagePicker presentIn:self configure:^(UIImagePickerController *picker) {
-        
-        picker.sourceType = type;
-        picker.allowsEditing = YES;
-        
-    } result:^(UIImage *image) {
+    [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
         
         weakSelf.avatarImage = image;
         weakSelf.avatarView.image = [image imageByCircularScaleAndCrop:weakSelf.avatarView.frame.size];

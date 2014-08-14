@@ -25,6 +25,7 @@
 @implementation QMDialogsDataSource
 
 - (void)dealloc {
+    
     NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     [[QMChatReceiver instance] unsubscribeForTarget:self];
 }
@@ -56,6 +57,7 @@
 }
 
 - (void)updateGUI {
+    
     [self.tableView reloadData];
     [self fetchUnreadDialogsCount];
 }
@@ -95,12 +97,18 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    return self.dialogs.count;
+    NSUInteger count = self.dialogs.count;
+    return count > 0 ?:1;
 }
 
 - (QBChatDialog *)dialogAtIndexPath:(NSIndexPath *)indexPath {
     
-    QBChatDialog *dialog = self.dialogs[indexPath.row];
+    NSArray *dialogs = self.dialogs;
+    if (dialogs.count == 0) {
+        return nil;
+    }
+    
+    QBChatDialog *dialog = dialogs[indexPath.row];
     return dialog;
 }
 
@@ -109,15 +117,24 @@
     NSArray * dialogs = [[QMApi instance] dialogHistory];
     NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"lastMessageDate" ascending:NO];
     dialogs = [dialogs sortedArrayUsingDescriptors:@[sort]];
+    
     return dialogs;
 }
 
 NSString *const kQMDialogCellID = @"QMDialogCell";
+NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    NSArray *dialogs = self.dialogs;
+    
+    if (dialogs.count == 0) {
+        QMDialogCell *cell = [tableView dequeueReusableCellWithIdentifier:kQMDontHaveAnyChatsCellID];
+        return cell;
+    }
     
     QMDialogCell *cell = [tableView dequeueReusableCellWithIdentifier:kQMDialogCellID];
-    QBChatDialog *dialog = self.dialogs[indexPath.row];
+    QBChatDialog *dialog = dialogs[indexPath.row];
     cell.dialog = dialog;
     
     return cell;

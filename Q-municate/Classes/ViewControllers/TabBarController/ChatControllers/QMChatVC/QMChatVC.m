@@ -401,17 +401,10 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
         
         __weak __typeof(self)weakSelf = self;
         [self.view endEditing:YES];
-        [REActionSheet presentActionSheetInView:self.view configuration:^(REActionSheet *actionSheet) {
-            
-            [actionSheet addButtonWithTitle:@"Take New Photo" andActionBlock:^{
-                [weakSelf choosePhotoWithSourceType:UIImagePickerControllerSourceTypeCamera];
-            }];
-            
-            [actionSheet addButtonWithTitle:@"Choose from Library" andActionBlock:^{
-                [weakSelf choosePhotoWithSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-            }];
-            
-            [actionSheet addCancelButtonWihtTitle:@"Cancel" andActionBlock:^{}];
+        
+        
+        [QMImagePicker chooseSourceTypeInVC:self allowsEditing:NO result:^(UIImage *image) {
+            [weakSelf.dataSource sendImage:image];
         }];
     }
 }
@@ -419,18 +412,6 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 - (void)chatInputToolbar:(QMChatInputToolbar *)toolbar didPressLeftBarButton:(UIButton *)sender {
     
     [self showEmojiKeyboard];
-}
-
-- (void)choosePhotoWithSourceType:(UIImagePickerControllerSourceType)type {
-    
-    __weak __typeof(self)weakSelf = self;
-    [QMImagePicker presentIn:self configure:^(UIImagePickerController *picker) {
-        
-        picker.sourceType = type;
-        
-    } result:^(UIImage *image) {
-        [weakSelf.dataSource sendImage:image];
-    }];
 }
 
 #pragma mark - Emoji

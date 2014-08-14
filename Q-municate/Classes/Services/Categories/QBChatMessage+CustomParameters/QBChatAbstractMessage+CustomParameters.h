@@ -11,7 +11,9 @@
 typedef NS_ENUM(NSUInteger, QMMessageNotificationType) {
     QMMessageNotificationTypeNone,
     QMMessageNotificationTypeCreateDialog,
-    QMMessageNotificationTypeUpdateDialog
+    QMMessageNotificationTypeUpdateDialog,
+    QMMessageNotificationTypeDeliveryMessage
+    
 };
 
 @interface QBChatAbstractMessage (CustomParameters)
@@ -20,6 +22,7 @@ typedef NS_ENUM(NSUInteger, QMMessageNotificationType) {
 @property (assign, nonatomic) QMMessageNotificationType cParamNotificationType;
 @property (strong, nonatomic) NSString *cParamChatMessageID;
 @property (strong, nonatomic) NSNumber *cParamDateSent;
+@property (assign, nonatomic) BOOL cParamMessageDeliveryStatus;
 
 @property (strong, nonatomic) NSString *cParamDialogID;
 @property (strong, nonatomic) NSString *cParamRoomJID;

@@ -21,7 +21,6 @@
     #import <FacebookSDK/FacebookSDK.h>
     #import "QMDefinitions.h"
     #import "MagicalRecord.h"
-    #import "EXTScope.h"
 
     #ifndef _EXTRACTS
         #define _EXTRACTS
