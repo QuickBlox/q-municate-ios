@@ -12,6 +12,8 @@
 #import "QMFacebookService.h"
 #import "QMMessagesService.h"
 #import "QMSettingsManager.h"
+#import "QMAddressBook.h"
+#import "ABPerson.h"
 
 
 @implementation QMApi (Users)
@@ -20,7 +22,7 @@
 
     [self.messagesService chat:^(QBChat *chat) {
         BOOL success = [chat addUserToContactListRequest:userID];
-        completion(success);
+        if (completion) completion(success);
     }];
 }
 
@@ -195,6 +197,38 @@
             // sending contact requests:
             for (QBUUser *user in pagedResult.users) {
                 [weakSelf addUserToContactListRequest:user.ID completion:nil];
+            }
+        }];
+    }];
+}
+
+- (void)importFriendsFromAddressBook
+{
+    __weak __typeof(self)weakSelf = self;
+    [QMAddressBook getContactsWithEmailsWithCompletionBlock:^(NSArray *contactsWithEmails) {
+        
+        if ([contactsWithEmails count] == 0) {
+            return;
+        }
+        NSMutableArray *emails = [[NSMutableArray alloc] init];
+        for (ABPerson *person in contactsWithEmails) {
+            [emails addObjectsFromArray:person.emails];
+        }
+        
+        // post request for emails to QB server:
+        [weakSelf.usersService retrieveUsersWithEmails:emails completion:^(QBUUserPagedResult *pagedResult) {
+            if (!pagedResult.success) {
+                return;
+            }
+            if ([pagedResult.users count] == 0) {
+                return;
+            }
+            
+            // sending contact requests:
+            for (QBUUser *user in pagedResult.users) {
+                [weakSelf addUserToContactListRequest:user.ID completion:^(BOOL success) {
+                    // lol:
+                }];
             }
         }];
     }];

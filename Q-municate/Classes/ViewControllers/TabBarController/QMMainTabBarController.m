@@ -43,8 +43,11 @@
                 
                 QMSettingsManager *settings = [QMApi instance].settingsManager;
                 if (![settings isFirstFacebookLogin]) {
+                    
                     [settings setFirstFacebookLogin:YES];
                     [[QMApi instance] importFriendsFromFacebook];
+                    [[QMApi instance] importFriendsFromAddressBook];
+                    
                     return;
                 }
                 [[QMApi instance] fetchAllHistory:^{}];

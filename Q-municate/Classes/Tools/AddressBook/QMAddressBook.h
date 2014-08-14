@@ -13,5 +13,6 @@ typedef void(^AddressBookResult)(NSArray *contacts, BOOL success, NSError *error
 @interface QMAddressBook : NSObject
 
 + (void)getAllContactsFromAddressBook:(AddressBookResult)block;
++ (void)getContactsWithEmailsWithCompletionBlock:(void(^)(NSArray *contactsWithEmails))block;
 
 @end

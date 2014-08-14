@@ -102,13 +102,9 @@ const NSUInteger kQMNumberOfSection = 2;
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     __weak __typeof(self)weakSelf = self;
-    [QMAddressBook getAllContactsFromAddressBook:^(NSArray *contacts, BOOL success, NSError *error) {
-        if (success) {
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.emails.@count > 0"];
-            weakSelf.abUsers = [contacts filteredArrayUsingPredicate:predicate];
-        }else {
-            weakSelf.abUsers = @[];
-        }
+    
+    [QMAddressBook getContactsWithEmailsWithCompletionBlock:^(NSArray *contactsWithEmails) {
+        weakSelf.abUsers = contactsWithEmails;
         [SVProgressHUD dismiss];
         if (completion) completion();
     }];
