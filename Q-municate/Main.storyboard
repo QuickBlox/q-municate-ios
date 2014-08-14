@@ -2040,6 +2040,7 @@ Cg
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <connections>
+                        <outlet property="acceptButton" destination="2G5-ho-1Ig" id="XT9-rW-hTa"/>
                         <outlet property="webView" destination="d7D-s6-FUB" id="p1Y-dg-MqS"/>
                     </connections>
                 </viewController>

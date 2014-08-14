@@ -19,6 +19,7 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 <UIWebViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *acceptButton;
 @property (assign, nonatomic) BOOL licenceAccepted;
 
 @end
@@ -39,6 +40,12 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     [self.navigationController setNavigationBarHidden:NO];
+    
+    // fast fix:
+    _licenceAccepted = [[QMApi instance].settingsManager userAgreementAccepted];
+    if (_licenceAccepted) {
+        self.navigationItem.rightBarButtonItem = nil;
+    }
     
     [SVProgressHUD show];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kQMAgreementUrl]];
