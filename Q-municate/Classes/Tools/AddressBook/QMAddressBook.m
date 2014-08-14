@@ -59,4 +59,20 @@
     }
 }
 
++ (void)getContactsWithEmailsWithCompletionBlock:(void(^)(NSArray *contactsWithEmails))block
+{
+    [QMAddressBook getAllContactsFromAddressBook:^(NSArray *contacts, BOOL success, NSError *error) {
+        if (success) {
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.emails.@count > 0"];
+            NSArray *contactsWithEmails = [contacts filteredArrayUsingPredicate:predicate];
+            if (contactsWithEmails == nil) {
+                contactsWithEmails = @[];
+            }
+            block(contactsWithEmails);
+            return;
+        }
+        block(@[]);
+    }];
+}
+
 @end

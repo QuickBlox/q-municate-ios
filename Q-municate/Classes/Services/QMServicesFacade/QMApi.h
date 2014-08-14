@@ -190,6 +190,11 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 - (void)importFriendsFromFacebook;
 
 /**
+ Import friends from Address book which exists in quickblox database.
+ */
+- (void)importFriendsFromAddressBook;
+
+/**
  Add user to contact list request
  
  @param userID ID of user which you would like to add to contact list
