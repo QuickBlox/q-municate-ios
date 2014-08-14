@@ -11,7 +11,7 @@
 
 #define QM_TEST 0
 
-#define QM_AUDIO_VIDEO_ENABLED 1
+#define QM_AUDIO_VIDEO_ENABLED 0
 #define STAGE_SERVER_IS_ACTIVE 0
 
 #define IS_HEIGHT_GTE_568 [[UIScreen mainScreen ] bounds].size.height == 568.0f
