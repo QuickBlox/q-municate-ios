@@ -23,7 +23,7 @@
 @property (strong, nonatomic) NSArray *friendList;
 @property (weak, nonatomic) UITableView *tableView;
 @property (weak, nonatomic) UISearchDisplayController *searchDisplayController;
-@property (strong, nonatomic) NSMutableArray *searchDequeue;
+@property (strong, nonatomic) NSObject<Cancelable> *searchOperation;
 
 @end
 
@@ -108,6 +108,8 @@
 - (void)globalSearch:(NSString *)searchText {
     
     if (searchText.length == 0) {
+        self.searchResult = @[];
+        [self.searchDisplayController.searchResultsTableView reloadData];
         return;
     }
     
@@ -119,15 +121,36 @@
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.ID != %d", [QMApi instance].currentUser.ID];
         weakSelf.searchResult = [users filteredArrayUsingPredicate:predicate];
         [weakSelf.searchDisplayController.searchResultsTableView reloadData];
+        
+        [SVProgressHUD dismiss];
     };
     
+    [self.searchDisplayController.searchResultsTableView reloadData];
     
-    PagedRequest *request = [[PagedRequest alloc] init];
-    request.page = 1;
-    request.perPage = 100;
+    __block NSString *tsearch = [searchText copy];
     
-    [[QMApi instance].usersService retrieveUsersWithFullName:searchText pagedRequest:request completion:userPagedBlock];
-    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        if ([self.searchDisplayController.searchBar.text isEqualToString:tsearch]) {
+            
+            if (self.searchOperation) {
+                [self.searchOperation cancel];
+                self.searchOperation = nil;
+            }
+            
+            PagedRequest *request = [[PagedRequest alloc] init];
+            request.page = 1;
+            request.perPage = 100;
+            
+            
+            [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+            self.searchOperation = [[QMApi instance].usersService retrieveUsersWithFullName:searchText pagedRequest:request completion:userPagedBlock];
+        } else {
+            NSLog(@"Hello");
+        }
+
+    });
+
 }
 
 #pragma mark - UITableViewDataSource
@@ -156,7 +179,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-
+    
     NSArray *users = [self usersAtSections:section];
     if (self.searchDisplayController.isActive) {
         return users.count;
@@ -188,7 +211,7 @@
             return cell;
         }
     }
-
+    
     QMFriendListCell *cell = [tableView dequeueReusableCellWithIdentifier:kQMFriendsListCellIdentifier];
     
     QBUUser *user = users[indexPath.row];
@@ -206,18 +229,6 @@
     return cell;
 }
 
-- (QMFriendListCell *)dequeueCell {
-    
-    for (QMFriendListCell * cell in self.searchDequeue) {
-        if (!cell.superview) {
-            return cell;
-        }
-    }
-    
-    QMFriendListCell *cell = [self.tableView dequeueReusableCellWithIdentifier:kQMFriendsListCellIdentifier];
-    [self.searchDequeue addObject:cell];
-    return cell;
-}
 
 #pragma mark - QMFriendListCellDelegate
 
@@ -241,12 +252,9 @@
 
 - (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
     
-    self.searchDequeue = [NSMutableArray array];
 }
 
 - (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
-
-    self.searchDequeue = nil;
     [self.tableView reloadData];
 }
 

@@ -12,12 +12,13 @@
 #import "QMGroupDetailsController.h"
 #import "QMBaseCallsController.h"
 #import "QMApi.h"
-#import "REAlertView.h"
 #import "QMAlertsFactory.h"
 #import "QMChatReceiver.h"
-
+#import "QMOnlineTitle.h"
 
 @interface QMChatViewController ()
+
+@property (strong, nonatomic) QMOnlineTitle *onlineTitle;
 
 @end
 
@@ -30,7 +31,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     self.dataSource = [[QMChatDataSource alloc] initWithChatDialog:self.dialog forTableView:self.tableView];
     
     self.dialog.type == QBChatDialogTypeGroup ? [self configureNavigationBarForGroupChat] : [self configureNavigationBarForPrivateChat];
@@ -41,30 +42,37 @@
         if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog && [message.cParamDialogID isEqualToString:weakSelf.dialog.ID]) {
             weakSelf.title = message.cParamDialogName;
         }
+        
     }];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     
-    [super viewWillAppear:animated];
-    self.dataSource.delegate = (id <QMChatDataSourceDelegate>)self.tabBarController;
     if (self.dialog.type == QBChatDialogTypeGroup) {
         self.title = self.dialog.name;
+    }
+    else if (self.dialog.type == QBChatDialogTypePrivate) {
+        
+        NSUInteger oponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
+        QBUUser *opponent = [[QMApi instance] userWithID:oponentID];
+        
+        self.onlineTitle.title = @"Hello";
+        
+        //opponent.fullName;
     }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-
+    
     self.dialog.unreadMessagesCount = 0;
 }
 
 - (void)configureNavigationBarForPrivateChat {
-
-    NSUInteger oponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
-    QBUUser *opponent = [[QMApi instance] userWithID:oponentID];
-
-    self.title = opponent.fullName;
+    
+    self.onlineTitle = [[QMOnlineTitle alloc] initWithFrame:CGRectZero];
+    self.navigationItem.titleView = self.onlineTitle;
     
     UIButton *audioButton = [QMChatButtonsFactory audioCall];
     [audioButton addTarget:self action:@selector(audioCallAction) forControlEvents:UIControlEventTouchUpInside];
@@ -79,7 +87,7 @@
 }
 
 - (void)configureNavigationBarForGroupChat {
-
+    
     self.title = self.dialog.name;
     UIButton *groupInfoButton = [QMChatButtonsFactory groupInfo];
     [groupInfoButton addTarget:self action:@selector(groupInfoNavButtonAction) forControlEvents:UIControlEventTouchUpInside];
@@ -119,7 +127,7 @@
     
     [self.view endEditing:YES];
     if ([segue.identifier isEqualToString:kGroupDetailsSegueIdentifier]) {
-    
+        
         QMGroupDetailsController *groupDetailVC = segue.destinationViewController;
         groupDetailVC.chatDialog = self.dialog;
     }

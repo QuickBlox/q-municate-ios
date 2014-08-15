@@ -14,4 +14,12 @@
 
 @implementation QMSystemMessageCell
 
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    
+    QMSystemMessageCell *cell = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    cell.backgroundColor = [UIColor colorWithWhite:0.943 alpha:1.000];
+    
+    return cell;
+}
+
 @end

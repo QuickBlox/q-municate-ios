@@ -21,7 +21,7 @@ struct QMChatBalloon QMChatBalloonNull = {
 struct QMMessageLayout QMMessageQmunicateLayout = {
     
     .messageMargin = {
-        .top = 5,
+        .top = 15,
         .left = 5,
         .bottom = 5,
         .right = 5,
@@ -50,38 +50,39 @@ struct QMMessageLayout QMMessageQmunicateLayout = {
 };
 
 struct QMMessageLayout QMMessageBubbleLayout = {
-    
     .messageMargin = {
-        .top = 10,
-        .left = 10,
-        .bottom = 10,
-        .right = 10,
+        .top = 5,
+        .left = 5,
+        .bottom = 5,
+        .right = 5,
     },
-    
+    .titleHeight = 13,
     .messageMaxWidth = kQMMessageMaxWidth,
     .messageMinWidth = kQMMessageMinWidth,
-    .userImageSize = (CGSize){40,40},
+    .userImageSize = (CGSize){50, 50},
     
-    .fontName = @"HelveticaNeue-UltraLight",
-    .fontSize = 14,
+    .fontName = @"HelveticaNeue",
+    .fontSize = 16,
     
     .leftBalloon = {
         .imageName = @"qm_balloon_left",
-        .hexTintColor = @"#17d14b",
-        .imageCapInsets = (UIEdgeInsets){7, 13, 8, 7},
+        .imageCapInsets= (UIEdgeInsets){7, 13, 8, 7},
+        .hexTintColor = @"#e2ebf2",
+        .textColor = @"#000"
     },
     
     .rightBalloon = {
         .imageName = @"qm_balloon_right",
         .imageCapInsets = (UIEdgeInsets){7, 7, 8, 13},
-        .hexTintColor = @"#e2ebf2",
+        .hexTintColor = @"#17d14b",
+        .textColor = @"#FFFFFF"
     },
 };
 
 struct QMMessageLayout QMMessageAttachmentLayout = {
     
     .messageMargin = {
-        .top = 5,
+        .top = 15,
         .left = 5,
         .bottom = 5,
         .right = 5,
@@ -106,7 +107,7 @@ struct QMMessageLayout QMMessageAttachmentLayout = {
         .imageCapInsets = (UIEdgeInsets){7, 7, 8, 13},
         .hexTintColor = @"#17d14b",
         .textColor = @"#FFFFFF"
-    }
+    },
 };
 
 UIFont * UIFontFromQMMessageLayout(QMMessageLayout layout) {

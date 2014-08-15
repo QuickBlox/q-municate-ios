@@ -134,15 +134,18 @@ NSString *const kQMAccountTypeKey = @"accountType";
 
 #pragma mark - Default Settings
 
+- (void)defaultSettings {
+    self.pushNotificationsEnabled = YES;
+}
+
 - (void)clearSettings {
-    
+    [self defaultSettings];
+    self.rememberMe = NO;
     [self setLogin:nil andPassword:nil];
     self.userAgreementAccepted = NO;
     self.accountType = QMAccountTypeNone;
-    self.pushNotificationsEnabled = YES;
     self.userStatus = nil;
     self.login = nil;
-    self.rememberMe = NO;
 }
 
 @end

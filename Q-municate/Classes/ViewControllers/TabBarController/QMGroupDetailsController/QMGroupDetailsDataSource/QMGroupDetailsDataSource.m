@@ -49,6 +49,10 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
             [weakSelf reloadParticipants];
         }];
         
+        [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:^{
+            [weakSelf reloadParticipants];
+        }];
+        
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
             
             if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog && [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID]) {

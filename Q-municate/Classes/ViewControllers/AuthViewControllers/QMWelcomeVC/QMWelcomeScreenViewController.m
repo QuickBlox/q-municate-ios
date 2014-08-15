@@ -29,15 +29,17 @@
     NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
+    
     [super viewDidLoad];
     
     self.bubleHeight.constant = IS_HEIGHT_GTE_568 ? 244 : 197;
     self.bubleImage.image = [UIImage imageNamed:IS_HEIGHT_GTE_568 ? @"logo_big" : @"logo_big_960"];
+    [[QMApi instance].settingsManager defaultSettings];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     [self.navigationController setNavigationBarHidden:YES animated:NO];

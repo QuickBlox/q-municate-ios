@@ -17,7 +17,7 @@
 #import "QMSettingsManager.h"
 
 
-@interface QMMainTabBarController () <QMChatDataSourceDelegate>
+@interface QMMainTabBarController ()
 
 @end
 
@@ -34,14 +34,19 @@
     [[QMApi instance] autoLogin:^(BOOL success) {
         
         if (!success) {
+            
             [[QMApi instance] logout:^(BOOL logoutSuccess) {
                 [weakSelf performSegueWithIdentifier:@"SplashSegue" sender:nil];
             }];
+            
         }else {
+            
             [[QMApi instance] loginChat:^(BOOL loginSuccess) {
                 [[QMApi instance] subscribeToPushNotifications];
                 
                 QMSettingsManager *settings = [QMApi instance].settingsManager;
+                [[QMApi instance] fetchAllHistory:^{}];
+                
                 if (![settings isFirstFacebookLogin]) {
                     
                     [settings setFirstFacebookLogin:YES];
@@ -50,7 +55,7 @@
                     
                     return;
                 }
-                [[QMApi instance] fetchAllHistory:^{}];
+                
             }];
         }
     }];

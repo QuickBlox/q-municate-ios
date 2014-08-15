@@ -59,5 +59,6 @@ typedef NS_ENUM(NSUInteger, QMAccountType) {
  * Set Default settings
  */
 - (void)clearSettings;
+- (void)defaultSettings;
 
 @end

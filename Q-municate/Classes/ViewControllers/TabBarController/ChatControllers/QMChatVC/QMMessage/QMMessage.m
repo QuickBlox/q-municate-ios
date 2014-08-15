@@ -59,10 +59,10 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
             self.layout = QMMessageAttachmentLayout;
             
         } else if (notificationType) {
-            @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                           reason:@"Need update it"
-                                         userInfo:@{}];
-            self.layout = QMMessageQmunicateLayout;
+//            @throw [NSException exceptionWithName:NSInternalInconsistencyException
+//                                           reason:@"Need update it"
+//                                         userInfo:@{}];
+            self.layout = QMMessageBubbleLayout;
             self.type = QMMessageTypeSystem;
             
         } else {
@@ -96,7 +96,8 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
         
         UIFont *font = UIFontFromQMMessageLayout(self.layout);
         
-        CGFloat textWidth = layout.messageMaxWidth - layout.userImageSize.width - insets.left - insets.right - layout.messageMargin.right - layout.messageMargin.left;
+        CGFloat textWidth =
+        layout.messageMaxWidth - layout.userImageSize.width - insets.left - insets.right - layout.messageMargin.right - layout.messageMargin.left;
         
         contentSize = [self.text usedSizeForWidth:textWidth
                                              font:font

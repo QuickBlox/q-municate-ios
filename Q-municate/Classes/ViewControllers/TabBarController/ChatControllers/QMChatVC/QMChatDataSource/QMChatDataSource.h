@@ -8,17 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol QMChatDataSourceDelegate <NSObject>
-
-- (void)message:(QBChatMessage *)message forOtherOtherDialog:(QBChatDialog *)otherDialog;
-
-@end
-
 @interface QMChatDataSource : NSObject
 
 @property (strong, nonatomic) QBChatDialog *chatDialog;
 @property (strong, nonatomic, readonly) NSMutableArray *messages;
-@property (weak, nonatomic) id <QMChatDataSourceDelegate> delegate;
 
 - (id)init __attribute__((unavailable("init is not a supported initializer for this class.")));
 

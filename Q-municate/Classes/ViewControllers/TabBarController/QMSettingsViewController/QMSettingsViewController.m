@@ -33,8 +33,6 @@
     }
     
     [self configureSettingsViewController];
-    
-
 }
 
 - (void)viewWillAppear:(BOOL)animated {

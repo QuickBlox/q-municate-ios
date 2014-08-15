@@ -84,7 +84,6 @@ const NSUInteger kQMNumberOfSection = 2;
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     __weak __typeof(self)weakSelf = self;
-    
     [QMAddressBook getContactsWithEmailsWithCompletionBlock:^(NSArray *contactsWithEmails) {
         weakSelf.abUsers = contactsWithEmails;
         [SVProgressHUD dismiss];

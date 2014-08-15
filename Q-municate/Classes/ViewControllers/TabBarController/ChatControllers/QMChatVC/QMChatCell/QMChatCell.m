@@ -96,11 +96,10 @@
     self.timeLabel = [[UILabel alloc] init];
     self.timeLabel.font = [UIFont systemFontOfSize:12];
     self.timeLabel.textColor = [UIColor grayColor];
-    self.timeLabel.textAlignment = NSTextAlignmentCenter;
+    self.timeLabel.textAlignment = NSTextAlignmentRight;
     
     self.title.translatesAutoresizingMaskIntoConstraints = NO;
     self.timeLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    
     
     self.nameConstrains = @[PVBottomOf(self.title).equalTo.bottomOf(self.headerView).asConstraint,
                             PVLeftOf(self.title).equalTo.leftOf(self.headerView).asConstraint,
@@ -231,23 +230,17 @@
     
     if (align == QMMessageContentAlignLeft) {
         
-        self.currentAlignConstrains =
-        PVGroup(@[
-                  PVLeftOf(self.userImageView).equalTo.leftOf(self.messageContainer).asConstraint,
-                  PVLeftOf(self.balloonImageView).equalTo.rightOf(self.userImageView).asConstraint,
-                  PVLeftOf(self.containerView).equalTo.leftOf(self.balloonImageView).plus(insets.left).asConstraint,
-                  ]).asArray;
-        
+        self.currentAlignConstrains = @[
+                                        PVLeftOf(self.userImageView).equalTo.leftOf(self.messageContainer).asConstraint,
+                                        PVLeftOf(self.balloonImageView).equalTo.rightOf(self.userImageView).asConstraint,
+                                        PVLeftOf(self.containerView).equalTo.leftOf(self.balloonImageView).plus(insets.left).asConstraint];
     }
     else if (align == QMMessageContentAlignRight) {
         
-        self.currentAlignConstrains =
-        PVGroup(@[
-                  PVRightOf(self.userImageView).equalTo.rightOf(self.messageContainer).asConstraint,
-                  PVRightOf(self.balloonImageView).equalTo.leftOf(self.userImageView).asConstraint,
-                  PVRightOf(self.containerView).equalTo.rightOf(self.balloonImageView).minus(insets.right).asConstraint,
-                  
-                  ]).asArray;
+        self.currentAlignConstrains = @[
+                                        PVRightOf(self.userImageView).equalTo.rightOf(self.messageContainer).asConstraint,
+                                        PVRightOf(self.balloonImageView).equalTo.leftOf(self.userImageView).asConstraint,
+                                        PVRightOf(self.containerView).equalTo.rightOf(self.balloonImageView).minus(insets.right).asConstraint];
     }
     
     self.tTitleConstraint.constant = insets.top;
@@ -260,7 +253,7 @@
     
     self.lTitleConstraint.constant = insets.left;
     self.rTitleConstraint.constant = -insets.right;
-    self.timeWidhtConstraint.constant = 40;
+    self.timeWidhtConstraint.constant = 60;
     
     [self layoutIfNeeded];
 }

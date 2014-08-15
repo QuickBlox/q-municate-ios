@@ -72,7 +72,7 @@
         }];
         
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-
+            
             QBChatDialog *dialogForReceiverMessage = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
             
             if ([weakSelf.chatDialog isEqual:dialogForReceiverMessage] && message.cParamNotificationType == QMMessageNotificationTypeNone) {
@@ -86,9 +86,7 @@
             }
             else if (message.cParamNotificationType == QMMessageNotificationTypeDeliveryMessage ){
             }
-            else {
-                [weakSelf.delegate message:message forOtherOtherDialog:dialogForReceiverMessage];
-            }
+            
         }];
     }
     
@@ -148,7 +146,7 @@
     QMMessage *message = [[QMMessage alloc] initWithChatHistoryMessage:historyMessage];
     BOOL fromMe = ([QMApi instance].currentUser.ID == historyMessage.senderID);
     
-    message.minWidth = fromMe || (message.chatDialog.type == QBChatDialogTypePrivate) ? 60 : -1;
+    message.minWidth = fromMe || (message.chatDialog.type == QBChatDialogTypePrivate) ? 78 : -1;
     message.align =  fromMe ? QMMessageContentAlignRight : QMMessageContentAlignLeft;
     
     return message;
@@ -188,9 +186,9 @@
         
         if (result.success) {
             
-           [[QMApi instance] sendAttachment:result.uploadedBlob.publicUrl toDialog:weakSelf.chatDialog completion:^(QBChatMessage *message) {
-               [weakSelf insertNewMessage:message];
-           }];
+            [[QMApi instance] sendAttachment:result.uploadedBlob.publicUrl toDialog:weakSelf.chatDialog completion:^(QBChatMessage *message) {
+                [weakSelf insertNewMessage:message];
+            }];
         }
         [SVProgressHUD dismiss];
     }];

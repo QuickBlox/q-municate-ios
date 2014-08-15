@@ -57,8 +57,10 @@
     
     self.balloonImageView.contentMode = UIViewContentModeScaleAspectFill;
     self.balloonImageView.layer.mask = self.maskLayer;
-    self.timeLabel.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.250];
-    self.timeLabel.layer.cornerRadius = 6;
+    
+    self.timeLabel.textAlignment = NSTextAlignmentCenter;
+    self.timeLabel.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.500];
+    self.timeLabel.textColor = [UIColor blackColor];
 }
 
 - (void)setMessage:(QMMessage *)message user:(QBUUser *)user isMe:(BOOL)isMe {
@@ -76,7 +78,6 @@
     }
     
     self.timeLabel.text = [self.formatter stringFromDate:message.datetime];
-    self.timeLabel.textColor = (isMe) ? [UIColor colorWithRed:0.938 green:0.948 blue:0.898 alpha:1.000] : [UIColor grayColor];
     
     UIImage *maskImage = message.balloonImage;
     

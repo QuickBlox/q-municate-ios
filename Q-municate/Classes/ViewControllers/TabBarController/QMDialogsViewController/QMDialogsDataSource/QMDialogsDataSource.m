@@ -41,7 +41,12 @@
         __weak __typeof(self)weakSelf = self;
         
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-            [weakSelf updateGUI];
+            
+            if (message.cParamNotificationType) {
+                
+            } else {
+                [weakSelf updateGUI];
+            }
         }];
         
         [[QMChatReceiver instance] dialogsHisotryUpdatedWithTarget:self block:^{
@@ -51,6 +56,7 @@
         [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:^{
             [weakSelf.tableView reloadData];
         }];
+        
     }
     
     return self;
