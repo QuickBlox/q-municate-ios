@@ -51,6 +51,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if (cell.reuseIdentifier == kQMDontHaveAnyFriendsCellIdentifier) {
+        return;
+    }
+    
     QBUUser *selectedUser = [self.dataSource userAtIndexPath:indexPath];
     QBContactListItem *item = [[QMApi instance] contactItemWithUserID:selectedUser.ID];
 

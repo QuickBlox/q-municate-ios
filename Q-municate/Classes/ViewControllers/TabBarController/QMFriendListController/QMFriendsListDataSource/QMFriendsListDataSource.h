@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
+static NSString *const kQMFriendsListCellIdentifier = @"QMFriendListCell";
+static NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFriendsCell";
 
 @interface QMFriendsListDataSource : NSObject <UITableViewDataSource, UISearchDisplayDelegate>
 

@@ -14,8 +14,6 @@
 #import "SVProgressHud.h"
 #import "QMChatReceiver.h"
 
-NSString *const kQMFriendsListCellIdentifier = @"QMFriendListCell";
-NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFriendsCell";
 
 @interface QMFriendsListDataSource()
 

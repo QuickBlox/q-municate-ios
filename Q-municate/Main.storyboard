@@ -135,7 +135,7 @@
                                             <outlet property="titleLabel" destination="Fri-qf-Qga" id="kLR-Yi-59O"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="QMDontHaveAnyFriendsCell" textLabel="VIf-H3-5KQ" rowHeight="59" style="IBUITableViewCellStyleDefault" id="KTf-Lc-6LE">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="QMDontHaveAnyFriendsCell" textLabel="VIf-H3-5KQ" rowHeight="59" style="IBUITableViewCellStyleDefault" id="KTf-Lc-6LE">
                                         <rect key="frame" x="0.0" y="125" width="320" height="59"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KTf-Lc-6LE" id="9HD-gO-wjk">
