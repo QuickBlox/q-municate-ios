@@ -64,7 +64,11 @@
             
             alertView.message = NSLocalizedString(@"QM_STR_ARE_YOU_SURE", nil);
             [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_LOGOUT", nil) andActionBlock:^{
+                
+                [weakSelf pressClearCache:nil];
+                [SVProgressHUD  showWithMaskType:SVProgressHUDMaskTypeClear];
                 [[QMApi instance] logout:^(BOOL success) {
+                    [SVProgressHUD dismiss];
                     [weakSelf performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
                 }];
             }];
@@ -77,11 +81,9 @@
 - (IBAction)pressClearCache:(id)sender {
     
     __weak __typeof(self)weakSelf = self;
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     [[[SDWebImageManager sharedManager] imageCache] clearMemory];
     [[[SDWebImageManager sharedManager] imageCache] clearDiskOnCompletion:^{
         
-        [SVProgressHUD dismiss];
         [[[SDWebImageManager sharedManager] imageCache] calculateSizeWithCompletionBlock:^(NSUInteger fileCount, NSUInteger totalSize) {
             weakSelf.cacheSize.text = [NSString stringWithFormat:@"Cache size: %.2f mb", (float)totalSize / 1024.f / 1024.f];
         }];

@@ -52,8 +52,6 @@
                     [settings setFirstFacebookLogin:YES];
                     [[QMApi instance] importFriendsFromFacebook];
                     [[QMApi instance] importFriendsFromAddressBook];
-                    
-                    return;
                 }
                 
             }];

@@ -19,13 +19,14 @@
 
 - (void)logout:(void(^)(BOOL success))completion {
     
+    [self.facebookService logout];
+    [self.settingsManager clearSettings];
+    [self stopServices];
+    self.currentUser = nil;
+    
     __weak __typeof(self)weakSelf = self;
-    [self.authService unSubscribeFromPushNotifications:^(QBMUnregisterSubscriptionTaskResult *result) { 
+    [self.authService unSubscribeFromPushNotifications:^(QBMUnregisterSubscriptionTaskResult *result) {
         [weakSelf.messagesService logoutChat];
-        [weakSelf.facebookService logout];
-        [weakSelf.settingsManager clearSettings];
-        [weakSelf stopServices];
-        weakSelf.currentUser = nil;
         completion(YES);
     }];
 }
