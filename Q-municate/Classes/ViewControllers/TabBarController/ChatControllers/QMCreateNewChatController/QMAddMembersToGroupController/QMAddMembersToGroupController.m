@@ -27,12 +27,9 @@
     
     NSArray *friends = [[QMApi instance] friends];
     NSArray *usersIDs = [[QMApi instance] idsWithUsers:friends];
+    NSArray *friendsIDsToAdd = [self filteredIDs:usersIDs forChatDialog:self.chatDialog];
     
-    NSMutableSet *friendsIDs = [NSMutableSet setWithArray:usersIDs];
-    NSSet *minusSet = [NSSet setWithArray:self.chatDialog.occupantIDs];
-    [friendsIDs minusSet:minusSet];
-    
-    NSArray *toAdd = [[QMApi instance] usersWithIDs:friendsIDs.allObjects];
+    NSArray *toAdd = [[QMApi instance] usersWithIDs:friendsIDsToAdd];
     self.friends = [self sortUsersByFullname:toAdd];
     
     [super viewDidLoad];
@@ -41,7 +38,6 @@
 #pragma mark - Overriden methods
 
 - (IBAction)performAction:(id)sender {
-    
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     
@@ -54,6 +50,13 @@
         
         [SVProgressHUD dismiss];
     }];
+}
+
+- (NSArray *)filteredIDs:(NSArray *)IDs forChatDialog:(QBChatDialog *)chatDialog
+{
+    NSMutableArray *newArray = [[NSMutableArray alloc] initWithArray:IDs];
+    [newArray removeObjectsInArray:chatDialog.occupantIDs];
+    return [newArray copy];
 }
 
 @end

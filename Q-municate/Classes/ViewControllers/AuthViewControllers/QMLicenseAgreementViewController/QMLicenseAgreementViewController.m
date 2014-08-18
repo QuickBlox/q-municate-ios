@@ -32,6 +32,7 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
     if (self.licenceCompletionBlock) {
         self.licenceCompletionBlock(self.licenceAccepted);
     }
+    [SVProgressHUD dismiss];
 }
 
 - (void)viewDidLoad {

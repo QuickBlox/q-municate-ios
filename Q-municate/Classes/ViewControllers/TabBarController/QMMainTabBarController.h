@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface QMMainTabBarController : UITabBarController
+@interface QMMainTabBarController : UITabBarController <QMTabBarChatDelegate>
+
+@property (nonatomic, weak) id <QMTabBarChatDelegate> chatDelegate;
 
 @end

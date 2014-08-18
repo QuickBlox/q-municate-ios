@@ -7,10 +7,13 @@
 //
 
 #import "QMChatViewController.h"
+#import "QMMainTabBarController.h"
 #import "QMChatDataSource.h"
 #import "QMChatButtonsFactory.h"
 #import "QMGroupDetailsController.h"
 #import "QMBaseCallsController.h"
+#import "TWMessageBarManager.h"
+#import "QMMessageBarStyleSheetFactory.h"
 #import "QMApi.h"
 #import "QMAlertsFactory.h"
 #import "QMChatReceiver.h"
@@ -27,10 +30,12 @@
 - (void)dealloc {
     NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     [[QMChatReceiver instance] unsubscribeForTarget:self];
+    [self removeTabBarChatDelegate];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setUpTabBarChatDelegate];
     
     self.dataSource = [[QMChatDataSource alloc] initWithChatDialog:self.dialog forTableView:self.tableView];
     
@@ -67,6 +72,20 @@
     [super viewWillDisappear:animated];
     
     self.dialog.unreadMessagesCount = 0;
+}
+
+- (void)setUpTabBarChatDelegate
+{
+    if (self.tabBarController != nil && [self.tabBarController isKindOfClass:QMMainTabBarController.class]) {
+        ((QMMainTabBarController *)self.tabBarController).chatDelegate = self;
+    }
+}
+
+- (void)removeTabBarChatDelegate
+{
+    if (self.tabBarController != nil && [self.tabBarController isKindOfClass:QMMainTabBarController.class]) {
+        ((QMMainTabBarController *)self.tabBarController).chatDelegate = nil;
+    }
 }
 
 - (void)configureNavigationBarForPrivateChat {
@@ -139,6 +158,47 @@
         QMBaseCallsController *callsController = segue.destinationViewController;
         [callsController setOpponent:opponent];
     }
+}
+
+
+#pragma mark - QMTabBarChatDelegate
+
+- (void)tabBarChatWithChatMessage:(QBChatMessage *)message chatDialog:(QBChatDialog *)dialog showTMessage:(BOOL)show
+{
+    if (!show) {
+        return;
+    }
+    __block UIImage *img = nil;
+    NSString *title = nil;
+    
+    if (dialog.type ==  QBChatDialogTypeGroup) {
+        
+        img = [UIImage imageNamed:@"upic_placeholder_details_group"];
+        title = dialog.name;
+    }
+    else if (dialog.type == QBChatDialogTypePrivate) {
+        
+        NSUInteger occupantID = [[QMApi instance] occupantIDForPrivateChatDialog:dialog];
+        QBUUser *user = [[QMApi instance] userWithID:occupantID];
+        title = user.fullName;
+        
+        //        [QMImageView imageWithURL:[NSURL URLWithString:user.website]
+        //                             size:CGSizeMake(50, 50)
+        //                         progress:nil
+        //                             type:QMImageViewTypeCircle
+        //                       completion:^(UIImage *userAvatar) {
+        //                           img = userAvatar;
+        //                       }];
+        //        if (!img) {
+        //            img = [UIImage imageNamed:@"upic-placeholder"];
+        //        }
+        
+    }
+    [QMSoundManager playMessageReceivedSound];
+    [TWMessageBarManager sharedInstance].styleSheet = [QMMessageBarStyleSheetFactory defaultMsgBarWithImage:img];
+    [[TWMessageBarManager sharedInstance] showMessageWithTitle:title
+                                                   description:message.text
+                                                          type:TWMessageBarMessageTypeSuccess];
 }
 
 @end

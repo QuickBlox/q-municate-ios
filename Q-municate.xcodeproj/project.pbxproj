@@ -228,6 +228,7 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXFileReference section */
+		240CE3AF19A2223A00392E06 /* QMProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMProtocols.h; sourceTree = "<group>"; };
 		24FDA66E199B7A610005662B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = External/Crashlytics.framework; sourceTree = "<group>"; };
 		551BD882199103C0006AC667 /* _CDAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _CDAttachment.h; sourceTree = "<group>"; };
 		551BD883199103C0006AC667 /* _CDAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _CDAttachment.m; sourceTree = "<group>"; };
@@ -1989,6 +1990,7 @@
 			isa = PBXGroup;
 			children = (
 				69CF18AA18AE3788003262EF /* QMDefinitions.h */,
+				240CE3AF19A2223A00392E06 /* QMProtocols.h */,
 				69D57E6418ACC11C00A9900A /* AppDelegate.h */,
 				69D57E6518ACC11C00A9900A /* AppDelegate.m */,
 				69D57E8418ACC13100A9900A /* Main.storyboard */,
@@ -2419,7 +2421,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "7C10F44D-9DA6-469F-92B5-FEA785098661";
+				PROVISIONING_PROFILE = "6E004364-5E2F-449B-9394-5906B3C651CF";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VALID_ARCHS = armv7;

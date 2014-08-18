@@ -12,24 +12,34 @@
 #import "QMImageView.h"
 #import "TWMessageBarManager.h"
 #import "QMMessageBarStyleSheetFactory.h"
+#import "QMChatViewController.h"
 #import "QMSoundManager.h"
 #import "QMChatDataSource.h"
 #import "QMSettingsManager.h"
+#import "QMChatReceiver.h"
 
 
 @interface QMMainTabBarController ()
 
 @end
 
+
 @implementation QMMainTabBarController
 
 
+- (void)dealloc
+{
+    [[QMChatReceiver instance] unsubscribeForTarget:self];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    self.chatDelegate = self;
+    
     [self customizeTabBar];
     [self.navigationController setNavigationBarHidden:YES animated:NO];
 
+    [self subscribeToNotifications];
     __weak __typeof(self)weakSelf = self;
     [[QMApi instance] autoLogin:^(BOOL success) {
         
@@ -61,6 +71,27 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+- (void)setChatDelegate:(id)chatDelegate
+{
+    if (chatDelegate == nil) {
+        _chatDelegate = self;
+        return;
+    }
+    _chatDelegate = chatDelegate;
+}
+
+- (void)subscribeToNotifications
+{
+    __weak typeof(self)weakSelf = self;
+    [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+        if (message.delayed) {
+            return;
+        }
+        QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
+        [weakSelf message:message forOtherDialog:dialog];
+    }];
 }
 
 - (void)customizeTabBar {
@@ -97,32 +128,47 @@
 
 #pragma mark - QMChatDataSourceDelegate
 
-- (void)message:(QBChatMessage *)message forOtherOtherDialog:(QBChatDialog *)otherDialog {
+- (void)message:(QBChatMessage *)message forOtherDialog:(QBChatDialog *)otherDialog {
     
+    if ([self.chatDelegate isKindOfClass:QMChatViewController.class] && [otherDialog isEqual:((QMChatViewController *)self.chatDelegate).dialog]) {
+        [self.chatDelegate tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:NO];
+        return;
+    }
+    [self.chatDelegate tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:YES];
+}
+
+
+#pragma mark - QMTabBarChatDelegate
+
+- (void)tabBarChatWithChatMessage:(QBChatMessage *)message chatDialog:(QBChatDialog *)dialog showTMessage:(BOOL)show
+{
+    if (!show) {
+        return;
+    }
     __block UIImage *img = nil;
     NSString *title = nil;
     
-    if (otherDialog.type ==  QBChatDialogTypeGroup) {
+    if (dialog.type ==  QBChatDialogTypeGroup) {
         
         img = [UIImage imageNamed:@"upic_placeholder_details_group"];
-        title = otherDialog.name;
+        title = dialog.name;
     }
-    else if (otherDialog.type == QBChatDialogTypePrivate) {
+    else if (dialog.type == QBChatDialogTypePrivate) {
         
-        NSUInteger occupantID = [[QMApi instance] occupantIDForPrivateChatDialog:otherDialog];
+        NSUInteger occupantID = [[QMApi instance] occupantIDForPrivateChatDialog:dialog];
         QBUUser *user = [[QMApi instance] userWithID:occupantID];
         title = user.fullName;
         
-//        [QMImageView imageWithURL:[NSURL URLWithString:user.website]
-//                             size:CGSizeMake(50, 50)
-//                         progress:nil
-//                             type:QMImageViewTypeCircle
-//                       completion:^(UIImage *userAvatar) {
-//                           img = userAvatar;
-//                       }];
-//        if (!img) {
-//            img = [UIImage imageNamed:@"upic-placeholder"];
-//        }
+        //        [QMImageView imageWithURL:[NSURL URLWithString:user.website]
+        //                             size:CGSizeMake(50, 50)
+        //                         progress:nil
+        //                             type:QMImageViewTypeCircle
+        //                       completion:^(UIImage *userAvatar) {
+        //                           img = userAvatar;
+        //                       }];
+        //        if (!img) {
+        //            img = [UIImage imageNamed:@"upic-placeholder"];
+        //        }
         
     }
     [QMSoundManager playMessageReceivedSound];
@@ -131,5 +177,6 @@
                                                    description:message.text
                                                           type:TWMessageBarMessageTypeSuccess];
 }
+
 
 @end

@@ -117,7 +117,8 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     
     NSMutableDictionary *extendedRequest = [[NSMutableDictionary alloc] init];
     extendedRequest[kQMEditDialogExtendedNameParameter] = dialogName;
-    NSArray *opponentsIDs = [self usersWithIDs:chatDialog.occupantIDs];
+    NSArray *opponents = [self usersWithIDs:chatDialog.occupantIDs];
+    NSArray *opponentsWithoutMe = [self occupantsWithoutMe:opponents];
 
     __weak __typeof(self)weakSelf = self;
     [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialogResult *result) {
@@ -126,7 +127,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
             chatDialog.name = dialogName;
             [weakSelf sendNotificationWithType:QMMessageNotificationTypeUpdateDialog
                                           text:[NSString stringWithFormat:@"New chat name - %@", dialogName]
-                                  toRecipients:opponentsIDs chatDialog:chatDialog];
+                                  toRecipients:opponentsWithoutMe chatDialog:chatDialog];
         }
         
         completion(result);
@@ -212,6 +213,19 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     }
     
     return ids.allObjects;
+}
+
+- (NSArray *)occupantsWithoutMe:(NSArray *)opponents
+{
+    QBUUser *me = self.me;
+    NSMutableArray *newArray = [[NSMutableArray alloc] init];
+    
+    for (QBUUser *opponent in opponents) {
+        if (![opponent isEqual:me]) {
+            [newArray addObject:opponent];
+        }
+    }
+    return [newArray copy];
 }
 
 @end

@@ -20,6 +20,7 @@
     #import <Quickblox/Quickblox.h>
     #import <FacebookSDK/FacebookSDK.h>
     #import "QMDefinitions.h"
+    #import "QMProtocols.h"
     #import "MagicalRecord.h"
 
     #ifndef _EXTRACTS

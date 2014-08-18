@@ -101,6 +101,12 @@
     return allFriends;
 }
 
+- (QBUUser *)me
+{
+    return self.messagesService.currentUser;
+}
+
+
 #pragma mark - Update current User
 
 - (void)changePasswordForCurrentUser:(QBUUser *)currentUser completion:(void(^)(BOOL success))completion {

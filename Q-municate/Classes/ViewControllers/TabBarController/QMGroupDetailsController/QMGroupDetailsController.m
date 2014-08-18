@@ -60,16 +60,14 @@ NSString *const kQMAddMembersToGroupControllerID = @"QMAddMembersToGroupControll
             [weakSelf updateOnlineStatus:onlineUsers.count];
         }
     }];
-    
-    
 
     [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
         
         if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog && [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID]) {
             if (message.senderID != [QMApi instance].currentUser.ID) {                
                 weakSelf.chatDialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
-                [weakSelf updateGUIWithChatDialog:weakSelf.chatDialog];
             }
+            [weakSelf updateGUIWithChatDialog:weakSelf.chatDialog];
         }
     }];
 }

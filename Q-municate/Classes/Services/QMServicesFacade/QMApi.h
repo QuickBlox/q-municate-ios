@@ -176,6 +176,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 
 @interface QMApi (Users)
 
+@property (strong, nonatomic, readonly) QBUUser *me;
 @property (strong, nonatomic, readonly) NSArray *friends;
 
 - (NSArray *)usersWithIDs:(NSArray *)ids;
