@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		24F8B8F719A26F63009F8656 /* NSString+occupantsIDsFromMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 24F8B8F619A26F63009F8656 /* NSString+occupantsIDsFromMessage.m */; };
 		24FDA66F199B7A610005662B /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24FDA66E199B7A610005662B /* Crashlytics.framework */; };
 		551BD88A199103C0006AC667 /* _CDAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 551BD883199103C0006AC667 /* _CDAttachment.m */; };
 		551BD88B199103C0006AC667 /* _CDDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 551BD885199103C0006AC667 /* _CDDialog.m */; };
@@ -229,6 +230,8 @@
 
 /* Begin PBXFileReference section */
 		240CE3AF19A2223A00392E06 /* QMProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMProtocols.h; sourceTree = "<group>"; };
+		24F8B8F519A26F63009F8656 /* NSString+occupantsIDsFromMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+occupantsIDsFromMessage.h"; sourceTree = "<group>"; };
+		24F8B8F619A26F63009F8656 /* NSString+occupantsIDsFromMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+occupantsIDsFromMessage.m"; sourceTree = "<group>"; };
 		24FDA66E199B7A610005662B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = External/Crashlytics.framework; sourceTree = "<group>"; };
 		551BD882199103C0006AC667 /* _CDAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _CDAttachment.h; sourceTree = "<group>"; };
 		551BD883199103C0006AC667 /* _CDAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _CDAttachment.m; sourceTree = "<group>"; };
@@ -1887,6 +1890,8 @@
 			children = (
 				6943848F18E42691001E08A9 /* UIImage+Cropper.h */,
 				6943849018E42691001E08A9 /* UIImage+Cropper.m */,
+				24F8B8F519A26F63009F8656 /* NSString+occupantsIDsFromMessage.h */,
+				24F8B8F619A26F63009F8656 /* NSString+occupantsIDsFromMessage.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -2190,6 +2195,7 @@
 				5523F97B198FAFC000C5ED4F /* QMBaseService.m in Sources */,
 				5526D909196D3267003AA9B6 /* QMChatReceiver.m in Sources */,
 				55CEABA3195DBCFA001A8ED6 /* QMSettingsViewController.m in Sources */,
+				24F8B8F719A26F63009F8656 /* NSString+occupantsIDsFromMessage.m in Sources */,
 				559BDFEF19618F39000588FE /* QMForgotPasswordTVC.m in Sources */,
 				55A8B097196598A300B5D33B /* QMChatDialogsService.m in Sources */,
 				551F8724196E854500DBCA02 /* QMApi+Facebook.m in Sources */,
