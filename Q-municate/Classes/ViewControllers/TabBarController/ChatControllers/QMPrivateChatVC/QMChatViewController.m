@@ -63,7 +63,7 @@
         
         self.onlineTitle.title = @"Hello";
         
-        //opponent.fullName;
+        self.title = opponent.fullName;
     }
 }
 

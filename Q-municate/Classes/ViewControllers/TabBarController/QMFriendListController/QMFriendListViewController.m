@@ -61,8 +61,8 @@
 
     if (item) {
         [self performSegueWithIdentifier:kDetailsSegueIdentifier sender:nil];
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 #pragma mark - UITableViewDataSource
@@ -103,7 +103,12 @@
     
     if ([segue.identifier isEqualToString:kDetailsSegueIdentifier]) {
         
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        NSIndexPath *indexPath = nil;
+        if (self.searchDisplayController.isActive) {
+            indexPath = [self.searchDisplayController.searchResultsTableView indexPathForSelectedRow];
+        } else {
+            indexPath = [self.tableView indexPathForSelectedRow];
+        }
         QMFriendsDetailsController *vc = segue.destinationViewController;
         vc.selectedUser = [self.dataSource userAtIndexPath:indexPath];
     }
