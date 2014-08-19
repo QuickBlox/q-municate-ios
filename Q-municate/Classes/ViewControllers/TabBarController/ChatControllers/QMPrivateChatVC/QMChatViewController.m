@@ -30,12 +30,10 @@
 - (void)dealloc {
     NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     [[QMChatReceiver instance] unsubscribeForTarget:self];
-    [self removeTabBarChatDelegate];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setUpTabBarChatDelegate];
     
     self.dataSource = [[QMChatDataSource alloc] initWithChatDialog:self.dialog forTableView:self.tableView];
     
@@ -53,6 +51,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    [self setUpTabBarChatDelegate];
     
     if (self.dialog.type == QBChatDialogTypeGroup) {
         self.title = self.dialog.name;
@@ -68,10 +67,12 @@
     }
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
+- (void)viewWillDisappear:(BOOL)animated
+{    
+    [self removeTabBarChatDelegate];
     self.dialog.unreadMessagesCount = 0;
+    
+    [super viewWillDisappear:animated];
 }
 
 - (void)setUpTabBarChatDelegate
@@ -83,9 +84,9 @@
 
 - (void)removeTabBarChatDelegate
 {
-    if (self.tabBarController != nil && [self.tabBarController isKindOfClass:QMMainTabBarController.class]) {
+     if (self.tabBarController != nil && [self.tabBarController isKindOfClass:QMMainTabBarController.class]) {
         ((QMMainTabBarController *)self.tabBarController).chatDelegate = nil;
-    }
+     }
 }
 
 - (void)configureNavigationBarForPrivateChat {
