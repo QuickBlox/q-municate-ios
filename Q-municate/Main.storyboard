@@ -2671,7 +2671,7 @@ Cg
                     <navigationItem key="navigationItem" title="Group Details" id="RL1-RR-8fj">
                         <barButtonItem key="rightBarButtonItem" image="add-participants" id="aRg-RO-SEj">
                             <connections>
-                                <segue destination="HGR-Mg-6Ip" kind="push" identifier="QMAddMembersToGroupController" id="xux-Ei-grh"/>
+                                <action selector="addFriendsToChat:" destination="Pbr-gf-Nnz" id="GSm-Eu-Lch"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -2681,6 +2681,7 @@ Cg
                         <outlet property="occupantsCountLabel" destination="92G-QK-rXf" id="UTD-6L-LRy"/>
                         <outlet property="onlineOccupantsCountLabel" destination="7eb-d0-xZ8" id="PWA-HG-vJj"/>
                         <outlet property="tableView" destination="MCn-dd-abe" id="aNk-vq-PoZ"/>
+                        <segue destination="HGR-Mg-6Ip" kind="push" identifier="QMAddMembersToGroupControllerSegue" id="s3M-HT-DaI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ye0-93-wPS" userLabel="First Responder" sceneMemberID="firstResponder"/>

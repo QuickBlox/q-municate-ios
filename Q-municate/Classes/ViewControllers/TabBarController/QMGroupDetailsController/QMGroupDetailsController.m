@@ -13,7 +13,7 @@
 #import "QMApi.h"
 #import "QMChatReceiver.h"
 
-NSString *const kQMAddMembersToGroupControllerID = @"QMAddMembersToGroupController";
+NSString *const kErrorAlertMessage = @"You can't add new friend, because all existing friends are added in this group chat";
 
 @interface QMGroupDetailsController ()
 
@@ -95,6 +95,19 @@ NSString *const kQMAddMembersToGroupControllerID = @"QMAddMembersToGroupControll
         [SVProgressHUD dismiss];
     }];
 }
+- (IBAction)addFriendsToChat:(id)sender
+{
+    // check for friends:
+    NSArray *friends = [[QMApi instance] friends];
+    NSArray *usersIDs = [[QMApi instance] idsWithUsers:friends];
+    NSArray *friendsIDsToAdd = [self filteredIDs:usersIDs forChatDialog:self.chatDialog];
+    
+    if ([friendsIDsToAdd count] == 0) {
+        [[[UIAlertView alloc] initWithTitle:nil message:kErrorAlertMessage delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil] show];
+        return;
+    }
+    [self performSegueWithIdentifier:kQMAddMembersToGroupControllerSegue sender:nil];
+}
 
 - (void)updateGUIWithChatDialog:(QBChatDialog *)chatDialog {
     
@@ -108,11 +121,19 @@ NSString *const kQMAddMembersToGroupControllerID = @"QMAddMembersToGroupControll
     [chatRoom requestOnlineUsers];
 }
 
+- (NSArray *)filteredIDs:(NSArray *)IDs forChatDialog:(QBChatDialog *)chatDialog
+{
+    NSMutableArray *newArray = [[NSMutableArray alloc] initWithArray:IDs];
+    [newArray removeObjectsInArray:chatDialog.occupantIDs];
+    return [newArray copy];
+}
+
+
 #pragma mark - Segue
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    if ([segue.identifier isEqualToString:kQMAddMembersToGroupControllerID]) {
+    if ([segue.identifier isEqualToString:kQMAddMembersToGroupControllerSegue]) {
         QMAddMembersToGroupController *addMembersVC = segue.destinationViewController;
         addMembersVC.chatDialog = self.chatDialog;
     }

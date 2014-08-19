@@ -61,6 +61,7 @@ static NSString *const kProfileSegueIdentifier        = @"ProfileSegue";
 static NSString *const kCreateNewChatSegueIdentifier  = @"CreateNewChatSegue";
 static NSString *const kContentPreviewSegueIdentifier = @"ContentPreviewIdentifier";
 static NSString *const kGroupDetailsSegueIdentifier   = @"GroupDetailsSegue";
+static NSString *const kQMAddMembersToGroupControllerSegue = @"QMAddMembersToGroupControllerSegue";
 
 static NSString *const kSettingsCellBundleVersion = @"CFBundleVersion";
 

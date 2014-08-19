@@ -130,6 +130,11 @@
 
 - (void)message:(QBChatMessage *)message forOtherDialog:(QBChatDialog *)otherDialog {
     
+    if ((message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog) && (message.senderID == [QMApi instance].me.ID)) {
+        [self.chatDelegate tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:NO];
+        return;
+    }
+    
     if ([self.chatDelegate isKindOfClass:QMChatViewController.class] && [otherDialog isEqual:((QMChatViewController *)self.chatDelegate).dialog]) {
         [self.chatDelegate tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:NO];
         return;

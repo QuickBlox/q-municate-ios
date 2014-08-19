@@ -44,7 +44,6 @@
     __weak __typeof(self)weakSelf = self;
     [[QMApi instance] joinOccupants:self.selectedFriends toChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
         
-        QBChatDialog *dialog = result.dialog;
         if (result.success) {
             [weakSelf.navigationController popViewControllerAnimated:YES];
         }
