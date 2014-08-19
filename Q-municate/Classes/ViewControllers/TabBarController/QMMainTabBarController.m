@@ -135,6 +135,11 @@
         return;
     }
     
+    if (message.cParamNotificationType == QMMessageNotificationTypeDeliveryMessage) {
+        [self.chatDelegate tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:NO];
+        return;
+    }
+    
     if ([self.chatDelegate isKindOfClass:QMChatViewController.class] && [otherDialog isEqual:((QMChatViewController *)self.chatDelegate).dialog]) {
         [self.chatDelegate tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:NO];
         return;

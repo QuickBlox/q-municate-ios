@@ -40,6 +40,12 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBSettings setAccountKey:kQMAcconuntKey];
     [QBSettings setLogLevel:QBLogLevelDebug];
     
+    
+#ifndef DEBUG
+    [QBSettings useProductionEnvironmentForPushNotifications:YES];
+#endif
+    
+    
 #if STAGE_SERVER_IS_ACTIVE == 1
     [QBSettings setServerApiDomain:@"http://api.stage.quickblox.com"];
     [QBSettings setServerChatDomain:@"chatstage.quickblox.com"];
