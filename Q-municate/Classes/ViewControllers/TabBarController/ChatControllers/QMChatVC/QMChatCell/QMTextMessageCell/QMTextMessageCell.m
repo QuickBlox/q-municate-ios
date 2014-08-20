@@ -43,7 +43,7 @@
     
     self.textColor = message.textColor;
     self.font = UIFontFromQMMessageLayout(message.layout);
-    self.textView.text = message.text;
+    self.textView.text = message.encodedText;
     
     self.balloonImage =  message.balloonImage;
     

@@ -49,27 +49,28 @@
 
 - (IBAction)connectWithFacebook:(id)sender {
     
+    __weak __typeof(self)weakSelf = self;
     [self checkForAcceptedUserAgreement:^(BOOL success) {
         if (success) {
-            [self signInWithFacebook];
+            [weakSelf signInWithFacebook];
         }
     }];
 }
 
 - (IBAction)signUpWithEmail:(id)sender {
-    
+    __weak __typeof(self)weakSelf = self;
     [self checkForAcceptedUserAgreement:^(BOOL success) {
         if (success) {
-            [self performSegueWithIdentifier:kSignUpSegueIdentifier sender:nil];
+            [weakSelf performSegueWithIdentifier:kSignUpSegueIdentifier sender:nil];
         }
     }];
 }
 
 - (IBAction)pressAlreadyBtn:(id)sender {
-    
+    __weak __typeof(self)weakSelf = self;
     [self checkForAcceptedUserAgreement:^(BOOL success) {
         if (success) {
-            [self performSegueWithIdentifier:kLogInSegueSegueIdentifier sender:nil];
+            [weakSelf performSegueWithIdentifier:kLogInSegueSegueIdentifier sender:nil];
         }
     }];
 }

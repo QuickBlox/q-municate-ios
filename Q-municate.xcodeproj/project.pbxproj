@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */; };
+		2494559B19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 2494559A19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m */; };
 		24F8B8F719A26F63009F8656 /* NSString+occupantsIDsFromMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 24F8B8F619A26F63009F8656 /* NSString+occupantsIDsFromMessage.m */; };
 		24FDA66F199B7A610005662B /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24FDA66E199B7A610005662B /* Crashlytics.framework */; };
 		551BD88A199103C0006AC667 /* _CDAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 551BD883199103C0006AC667 /* _CDAttachment.m */; };
@@ -230,6 +232,10 @@
 
 /* Begin PBXFileReference section */
 		240CE3AF19A2223A00392E06 /* QMProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMProtocols.h; sourceTree = "<group>"; };
+		2494559619A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+GTMNSStringHTMLAdditions.h"; sourceTree = "<group>"; };
+		2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+GTMNSStringHTMLAdditions.m"; sourceTree = "<group>"; };
+		2494559919A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBChatAbstractMessage+TextEncoding.h"; sourceTree = "<group>"; };
+		2494559A19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QBChatAbstractMessage+TextEncoding.m"; sourceTree = "<group>"; };
 		24F8B8F519A26F63009F8656 /* NSString+occupantsIDsFromMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+occupantsIDsFromMessage.h"; sourceTree = "<group>"; };
 		24F8B8F619A26F63009F8656 /* NSString+occupantsIDsFromMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+occupantsIDsFromMessage.m"; sourceTree = "<group>"; };
 		24FDA66E199B7A610005662B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = External/Crashlytics.framework; sourceTree = "<group>"; };
@@ -1892,6 +1898,10 @@
 				6943849018E42691001E08A9 /* UIImage+Cropper.m */,
 				24F8B8F519A26F63009F8656 /* NSString+occupantsIDsFromMessage.h */,
 				24F8B8F619A26F63009F8656 /* NSString+occupantsIDsFromMessage.m */,
+				2494559619A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.h */,
+				2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */,
+				2494559919A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.h */,
+				2494559A19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -2162,6 +2172,7 @@
 				5549369A198677CE007F2CF1 /* QMUploadContentOperation.m in Sources */,
 				6943847218E42678001E08A9 /* QMCustomSegue.m in Sources */,
 				55CEAB94195DBCFA001A8ED6 /* QMChatVC.m in Sources */,
+				2494559B19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m in Sources */,
 				55A8B099196598A300B5D33B /* QMMessagesService.m in Sources */,
 				55A8B095196598A300B5D33B /* QMAuthService.m in Sources */,
 				55F4A3C9196FF0830068EBC3 /* QMInviteFriendCell.m in Sources */,
@@ -2273,6 +2284,7 @@
 				55D270A31940B8D300238D50 /* NSManagedObject+MagicalFetching.m in Sources */,
 				55CEAB89195DBCFA001A8ED6 /* QMAttachmentMessageCell.m in Sources */,
 				55D2709D1940B8D300238D50 /* NSObject+MagicalDataImport.m in Sources */,
+				2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */,
 				559143C2199CFECB001DD2C4 /* QMOnlineTitle.m in Sources */,
 				55D270B71940B8D300238D50 /* MagicalRecord+VersionInformation.m in Sources */,
 				55A8B09A196598A300B5D33B /* QMFacebookService.m in Sources */,

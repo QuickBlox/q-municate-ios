@@ -41,7 +41,7 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
     if (self) {
         
         self.minWidth = -1;
-        self.text = historyMessage.text;
+        self.text = historyMessage.encodedText;
         self.ID = historyMessage.ID;
         self.recipientID = historyMessage.recipientID;
         self.senderID = historyMessage.senderID;

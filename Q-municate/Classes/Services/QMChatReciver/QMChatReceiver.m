@@ -7,6 +7,7 @@
 //
 
 #import "QMChatReceiver.h"
+#import "NSString+GTMNSStringHTMLAdditions.h"
 
 @interface QMChatHandlerObject : NSObject
 
@@ -195,6 +196,7 @@
 }
 
 - (void)chatDidReceiveMessage:(QBChatMessage *)message {
+    message.text = [message.text gtm_stringByUnescapingFromHTML];
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatMessageBlock block) {
         block(message);
     }];
@@ -333,6 +335,7 @@
 }
 
 - (void)chatRoomDidReceiveMessage:(QBChatMessage *)message fromRoomJID:(NSString *)roomJID {
+    message.text = [message.text gtm_stringByUnescapingFromHTML];
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatRoomDidReceiveMessage block) {
         block(message, roomJID);
     }];

@@ -42,7 +42,7 @@
         
         historyMessage.senderID = weakSelf.currentUser.ID;
         [weakSelf.messagesService addMessageToHistory:historyMessage withDialogID:dialog.ID];
-        dialog.lastMessageText = historyMessage.text;
+        dialog.lastMessageText = historyMessage.encodedText;
         dialog.lastMessageDate = historyMessage.datetime;
         
         completion(message);

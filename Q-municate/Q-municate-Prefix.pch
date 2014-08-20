@@ -16,9 +16,13 @@
     #import <Foundation/Foundation.h>
     #import <SystemConfiguration/SystemConfiguration.h>
     #import <MobileCoreServices/MobileCoreServices.h>
-    #import "QBChatAbstractMessage+CustomParameters.h"
     #import <Quickblox/Quickblox.h>
     #import <FacebookSDK/FacebookSDK.h>
+
+
+    #import "QBChatAbstractMessage+CustomParameters.h"
+    #import "QBChatAbstractMessage+TextEncoding.h"
+
     #import "QMDefinitions.h"
     #import "QMProtocols.h"
     #import "MagicalRecord.h"

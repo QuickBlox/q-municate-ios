@@ -9,6 +9,7 @@
 #import "QMMessagesService.h"
 #import "QBEchoObject.h"
 #import "QMChatReceiver.h"
+#import "NSString+GTMNSStringHTMLAdditions.h"
 
 @interface QMMessagesService()
 
@@ -107,6 +108,7 @@
     
     message.cParamDialogID = dialogID;
     message.cParamDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);
+    message.text = [message.text gtm_stringByEscapingForHTML];
     
     if (save) {
         message.cParamSaveToHistory = @"1";
@@ -125,6 +127,7 @@
     message.cParamDialogID = dialogID;
     message.cParamSaveToHistory = @"1";
     message.cParamDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);
+    message.text = [message.text gtm_stringByEscapingForHTML];
     
     [self chat:^(QBChat *chat) {
         if ([chat sendChatMessage:message toRoom:chatRoom]) {

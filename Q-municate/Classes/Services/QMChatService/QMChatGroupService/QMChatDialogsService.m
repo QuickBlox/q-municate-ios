@@ -163,7 +163,7 @@
     else {
         
         QBChatDialog *dialog = [self chatDialogWithID:message.cParamDialogID];
-        dialog.lastMessageText = message.text;
+        dialog.lastMessageText = message.encodedText;
         dialog.lastMessageDate = [NSDate dateWithTimeIntervalSince1970:message.cParamDateSent.doubleValue];
         dialog.unreadMessagesCount++;
     }

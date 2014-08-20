@@ -198,7 +198,7 @@
     [QMSoundManager playMessageReceivedSound];
     [TWMessageBarManager sharedInstance].styleSheet = [QMMessageBarStyleSheetFactory defaultMsgBarWithImage:img];
     [[TWMessageBarManager sharedInstance] showMessageWithTitle:title
-                                                   description:message.text
+                                                   description:message.encodedText
                                                           type:TWMessageBarMessageTypeSuccess];
 }
 

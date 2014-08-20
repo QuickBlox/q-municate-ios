@@ -18,15 +18,15 @@
 #pragma mark Public methods
 
 - (void)logout:(void(^)(BOOL success))completion {
-    
-    [self.facebookService logout];
     [self.settingsManager clearSettings];
+     [self.messagesService logoutChat];
+
+    
     [self stopServices];
     self.currentUser = nil;
-    
-    __weak __typeof(self)weakSelf = self;
+
     [self.authService unSubscribeFromPushNotifications:^(QBMUnregisterSubscriptionTaskResult *result) {
-        [weakSelf.messagesService logoutChat];
+       
         completion(YES);
     }];
 }
@@ -119,7 +119,7 @@
     void (^createQBSession)(void) = ^() {
         __weak __typeof(self)weakSelf = self;
         [weakSelf.authService createSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
-            if([self checkResult:result]){
+            if([weakSelf checkResult:result]){
                 
                 completion([weakSelf checkResult:result]);
             }

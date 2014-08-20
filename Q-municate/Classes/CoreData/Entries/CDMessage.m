@@ -40,7 +40,7 @@
 - (void)updateWithQBChatHistoryMessage:(QBChatHistoryMessage *)message {
     
     self.id = message.ID;
-    self.text = message.text;
+    self.text = message.encodedText;
     self.datetime = message.datetime;
     self.recipientID = @(message.recipientID);
     self.senderId = @(message.senderID);

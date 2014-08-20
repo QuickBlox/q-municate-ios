@@ -9,6 +9,7 @@
 #import "QMDialogCell.h"
 #import "QMApi.h"
 #import "QMImageView.h"
+#import "NSString+GTMNSStringHTMLAdditions.h"
 
 @interface QMDialogCell()
 
@@ -38,7 +39,7 @@
 - (void)configureCellWithDialog:(QBChatDialog *)chatDialog {
     
     BOOL isGroup = (chatDialog.type == QBChatDialogTypeGroup);
-    self.descriptionLabel.text =  chatDialog.lastMessageText;
+    self.descriptionLabel.text =  [chatDialog.lastMessageText gtm_stringByUnescapingFromHTML];
     self.groupMembersNumb.hidden = self.groupNumbBackground.hidden = !isGroup;
     self.unreadMsgBackground.hidden = self.unreadMsgNumb.hidden = (chatDialog.unreadMessagesCount == 0);
     self.unreadMsgNumb.text = [NSString stringWithFormat:@"%d", chatDialog.unreadMessagesCount];

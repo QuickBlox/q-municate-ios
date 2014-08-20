@@ -58,6 +58,8 @@
  */
 @property (nonatomic) CGFloat minWidth;
 
+@property (nonatomic, readonly) NSString *encodingText;
+
 - (instancetype)initWithChatHistoryMessage:(QBChatHistoryMessage *)historyMessage;
 
 @end

@@ -21,6 +21,8 @@
 
 @interface QMMainTabBarController ()
 
+@property (strong, nonatomic) void(^completion)(BOOL success);
+
 @end
 
 
@@ -40,13 +42,13 @@
     [self.navigationController setNavigationBarHidden:YES animated:NO];
 
     [self subscribeToNotifications];
-    __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] autoLogin:^(BOOL success) {
-        
+     __weak __typeof(self)weakSelf = self;
+    self.completion =  ^ (BOOL success) {
         if (!success) {
             
             [[QMApi instance] logout:^(BOOL logoutSuccess) {
                 [weakSelf performSegueWithIdentifier:@"SplashSegue" sender:nil];
+                weakSelf.completion = nil;
             }];
             
         }else {
@@ -64,9 +66,13 @@
                     [[QMApi instance] importFriendsFromAddressBook];
                 }
                 
+                weakSelf.completion = nil;
+                
             }];
         }
-    }];
+    };
+   
+[[QMApi instance] autoLogin:self.completion];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -184,7 +190,7 @@
     [QMSoundManager playMessageReceivedSound];
     [TWMessageBarManager sharedInstance].styleSheet = [QMMessageBarStyleSheetFactory defaultMsgBarWithImage:img];
     [[TWMessageBarManager sharedInstance] showMessageWithTitle:title
-                                                   description:message.text
+                                                   description:message.encodedText
                                                           type:TWMessageBarMessageTypeSuccess];
 }
 
