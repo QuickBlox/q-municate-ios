@@ -42,11 +42,7 @@
         
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
             
-            if (message.cParamNotificationType) {
-                
-            } else {
-                [weakSelf updateGUI];
-            }
+            [weakSelf updateGUI];
         }];
         
         [[QMChatReceiver instance] dialogsHisotryUpdatedWithTarget:self block:^{

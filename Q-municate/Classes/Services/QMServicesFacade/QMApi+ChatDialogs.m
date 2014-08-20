@@ -41,7 +41,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
         
         if ([weakSelf checkResult:result]) {
             [weakSelf.chatDialogsService addDialogToHistory:result.dialog];
-            [weakSelf sendNotificationWithType:QMMessageNotificationTypeCreateDialog text:@"Create new chat" toRecipients:occupants chatDialog:result.dialog];
+            [weakSelf sendNotificationWithType:QMMessageNotificationTypeCreateDialog text:@"created a group conversation" toRecipients:occupants chatDialog:result.dialog];
         }
         completion(result);
     }];
