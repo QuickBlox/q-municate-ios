@@ -67,7 +67,8 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
 
 - (void)reloadParticipants {
     
-    self.participants = [[QMApi instance] usersWithIDs:self.chatDialog.occupantIDs];
+    NSArray *unsortedParticipants = [[QMApi instance] usersWithIDs:self.chatDialog.occupantIDs];
+    self.participants = [QMUsersUtils sortUsersByFullname:unsortedParticipants];
     [self.tableView reloadData];
 }
 

@@ -22,13 +22,7 @@ NSString *const kCreateChatCellIdentifier = @"CreateChatCell";
 
 @implementation QMAddUsersAbstractController
 
-- (NSMutableArray *)sortUsersByFullname:(NSArray *)users {
-    
-    NSArray *sortedUsers = nil;
-    NSSortDescriptor *fullNameDescriptor = [[NSSortDescriptor alloc] initWithKey:@"fullName" ascending:YES];
-    sortedUsers = [users sortedArrayUsingDescriptors:@[fullNameDescriptor]];
-    return [sortedUsers mutableCopy];
-}
+
 
 #pragma mark - LifeCycle
 

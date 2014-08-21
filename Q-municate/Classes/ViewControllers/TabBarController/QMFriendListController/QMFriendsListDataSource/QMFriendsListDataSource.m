@@ -58,7 +58,10 @@
         
         [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:^{
             if (weakSelf.searchDisplayController.isActive) {
+                
+                CGPoint contentOffcet = weakSelf.searchDisplayController.searchResultsTableView.contentOffset;
                 [weakSelf.searchDisplayController.searchResultsTableView reloadData];
+                [weakSelf.searchDisplayController.searchResultsTableView setContentOffset:contentOffcet];
             }
             else {
                 [weakSelf reloadDatasource];
@@ -73,7 +76,7 @@
 }
 
 - (void)setFriendList:(NSArray *)friendList {
-    _friendList = [self sortUsersByFullname:friendList];
+    _friendList = [QMUsersUtils sortUsersByFullname:friendList];
 }
 
 - (NSArray *)friendList {
@@ -94,17 +97,6 @@
     [self.tableView reloadData];
 }
 
-- (NSArray *)sortUsersByFullname:(NSArray *)users {
-    
-    NSSortDescriptor *sorter = [[NSSortDescriptor alloc]
-                                initWithKey:@"fullName"
-                                ascending:YES
-                                selector:@selector(localizedCaseInsensitiveCompare:)];
-    NSArray *sortedUsers = [users sortedArrayUsingDescriptors:@[sorter]];
-    
-    return sortedUsers;
-}
-
 - (void)globalSearch:(NSString *)searchText {
     
     if (searchText.length == 0) {
@@ -116,7 +108,7 @@
     __weak __typeof(self)weakSelf = self;
     QBUUserPagedResultBlock userPagedBlock = ^(QBUUserPagedResult *pagedResult) {
         
-        NSArray *users = [weakSelf sortUsersByFullname:pagedResult.users];
+        NSArray *users = [QMUsersUtils sortUsersByFullname:pagedResult.users];
         //Remove current user from search result
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.ID != %d", [QMApi instance].currentUser.ID];
         weakSelf.searchResult = [users filteredArrayUsingPredicate:predicate];

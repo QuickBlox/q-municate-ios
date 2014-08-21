@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "QMUsersUtils.h"
 
 @class QMAuthService;
 @class QMSettingsManager;
@@ -246,7 +247,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 @interface QMApi (Facebook)
 
 - (void)fbLogout;
-- (void)fbIniviteDialog;
+- (void)fbIniviteDialogWithCompletion:(void(^)(BOOL success))completion;
 - (NSURL *)fbUserImageURLWithUserID:(NSString *)userID;
 - (void)fbFriends:(void(^)(NSArray *fbFriends))completion;
 - (void)fbInviteUsersWithIDs:(NSArray *)ids copmpletion:(void(^)(NSError *error))completion;

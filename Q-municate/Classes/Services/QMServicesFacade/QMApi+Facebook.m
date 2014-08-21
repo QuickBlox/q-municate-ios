@@ -33,11 +33,11 @@
     [self.facebookService logout];
 }
 
-- (void)fbIniviteDialog {
+- (void)fbIniviteDialogWithCompletion:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
     [self.facebookService connectToFacebook:^(NSString *sessionToken) {
-        [weakSelf.facebookService inviteFriends];
+        [weakSelf.facebookService inviteFriendsWithCompletion:completion];
     }];
 }
 

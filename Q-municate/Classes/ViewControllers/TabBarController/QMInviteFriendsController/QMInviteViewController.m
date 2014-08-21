@@ -60,11 +60,13 @@
             if (!error && result != MFMailComposeResultFailed && result != MFMailComposeResultCancelled) {
                 
                 [weakSelf.dataSource clearABFriendsToInvite];
+                [SVProgressHUD showSuccessWithStatus:@"Success!"];
             }
             else {
                 if (result == MFMailComposeResultFailed && !error) {
                     
                     [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_PLEASE_CHECK_YOUR_EMAIL_SETTINGS", nil)];
+                    [SVProgressHUD showErrorWithStatus:@"Error"];
                 }
             }
         }];

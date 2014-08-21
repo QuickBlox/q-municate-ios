@@ -27,6 +27,10 @@
 "QM_STR_ONLINE" = "Online";
 "QM_STR_OFFLINE" = "Offline";
 "QM_STR_PASSWORD_IS_TOO_SHORT" = "Password is too short";
+
+"QM_STR_USER_CREATED_GROUP_CONVERSATION" = "created a group conversation";
+"QM_STR_USER_CREATED_PRIVATE_CHAT" = "created new chat";
+
 "QM_STR_MESSAGE_WAS_SENT_TO_YOUR_EMAIL" = "Message was sent to your email. Check it";
 "QM_STR_INVITATION_WAS_POSTED_TO_WALL" = "Invitation was posted to wall.";
 "QM_STR_PLEASE_CHECK_YOUR_EMAIL_SETTINGS" = "Please check your email settings";
