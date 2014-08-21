@@ -143,6 +143,7 @@ NSString *const kQMAccountTypeKey = @"accountType";
     self.rememberMe = NO;
     [self setLogin:nil andPassword:nil];
     self.userAgreementAccepted = NO;
+    self.firstFacebookLogin = NO;
     self.accountType = QMAccountTypeNone;
     self.userStatus = nil;
     self.login = nil;

@@ -15,7 +15,7 @@
 
 /**
  */
-+ (void)inviteFriends;
++ (void)inviteFriendsWithCompletion:(void(^)(BOOL success))completion;
 
 /**
  */

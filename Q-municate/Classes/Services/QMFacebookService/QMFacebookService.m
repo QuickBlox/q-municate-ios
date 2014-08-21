@@ -77,7 +77,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     }];
 }
 
-+ (void)inviteFriends {
++ (void)inviteFriendsWithCompletion:(void(^)(BOOL success))completion {
     
     [FBWebDialogs presentRequestsDialogModallyWithSession:nil
                                                   message:NSLocalizedString(@"QM_STR_DEAR_FRIEND", nil)
@@ -89,6 +89,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
          if (error) {
              // Error launching the dialog or sending the request.
              NSLog(@"Error sending request.");
+             completion(NO);
              
          } else {
              
@@ -98,6 +99,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
              
              if (result == FBWebDialogResultDialogNotCompleted) {
                  NSLog(@"User canceled request.");
+                 completion(NO);
              } else {
                  // Handle the send request callback
                  NSDictionary *urlParams = [self parseURLParams:[resultURL query]];
@@ -108,6 +110,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
                      // User clicked the Send button
                      NSString *requestID = [urlParams valueForKey:@"request"];
                      NSLog(@"Request ID: %@", requestID);
+                     completion(YES);
                  }
              }
          }

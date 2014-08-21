@@ -19,21 +19,10 @@ NSString *const QMChatViewControllerID = @"QMChatViewController";
     NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
-
-- (NSArray *)sortUsersByFullname:(NSArray *)users {
-    
-    NSSortDescriptor *sorter = [[NSSortDescriptor alloc]
-                                initWithKey:@"fullName"
-                                ascending:YES
-                                selector:@selector(localizedCaseInsensitiveCompare:)];
-    NSArray *sortedUsers = [users sortedArrayUsingDescriptors:@[sorter]];
-    
-    return sortedUsers;
-}
-
 - (void)viewDidLoad {
     
-    self.friends = [self sortUsersByFullname:[[QMApi instance] friends]];
+    NSArray *unsortedFriends = [[QMApi instance] friends];
+    self.friends = [QMUsersUtils sortUsersByFullname:unsortedFriends];
     [super viewDidLoad];
 }
 

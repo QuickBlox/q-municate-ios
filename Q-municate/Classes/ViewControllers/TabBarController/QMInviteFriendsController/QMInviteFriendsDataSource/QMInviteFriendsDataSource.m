@@ -76,7 +76,13 @@ const NSUInteger kQMNumberOfSection = 2;
 
 - (void)fetchFacebookFriends:(void(^)(void))completion {
     
-    [[QMApi instance] fbIniviteDialog];
+    [[QMApi instance] fbIniviteDialogWithCompletion:^(BOOL success) {
+        if (success) {
+            [SVProgressHUD showSuccessWithStatus:@"Success"];
+            return;
+        }
+        [SVProgressHUD showErrorWithStatus:@"Error"];
+    }];
 
 }
 

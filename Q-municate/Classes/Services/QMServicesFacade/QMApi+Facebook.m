@@ -31,10 +31,10 @@
     [QMFacebookService logout];
 }
 
-- (void)fbIniviteDialog {
+- (void)fbIniviteDialogWithCompletion:(void(^)(BOOL success))completion {
     
     [QMFacebookService connectToFacebook:^(NSString *sessionToken) {
-        [QMFacebookService inviteFriends];
+        [QMFacebookService inviteFriendsWithCompletion:completion];
     }];
 }
 
