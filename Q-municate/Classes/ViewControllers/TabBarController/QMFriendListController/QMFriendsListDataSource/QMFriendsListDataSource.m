@@ -131,11 +131,11 @@
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        if ([self.searchDisplayController.searchBar.text isEqualToString:tsearch]) {
+        if ([weakSelf.searchDisplayController.searchBar.text isEqualToString:tsearch]) {
             
-            if (self.searchOperation) {
-                [self.searchOperation cancel];
-                self.searchOperation = nil;
+            if (weakSelf.searchOperation) {
+                [weakSelf.searchOperation cancel];
+                weakSelf.searchOperation = nil;
             }
             
             PagedRequest *request = [[PagedRequest alloc] init];
@@ -144,13 +144,9 @@
             
             
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-            self.searchOperation = [[QMApi instance].usersService retrieveUsersWithFullName:searchText pagedRequest:request completion:userPagedBlock];
-        } else {
-            NSLog(@"Hello");
+            weakSelf.searchOperation = [[QMApi instance].usersService retrieveUsersWithFullName:searchText pagedRequest:request completion:userPagedBlock];
         }
-
     });
-
 }
 
 #pragma mark - UITableViewDataSource
@@ -238,15 +234,12 @@
     NSArray *datasource = [self usersAtSections:indexPath.section];
     QBUUser *user = datasource[indexPath.row];
     
-    [[QMApi instance] addUserToContactListRequest:user.ID completion:^(BOOL success) {
-        
-    }];
+    [[QMApi instance] addUserToContactListRequest:user.ID completion:^(BOOL success) {}];
 }
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
     
     [self globalSearch:searchString];
-    
     return NO;
 }
 

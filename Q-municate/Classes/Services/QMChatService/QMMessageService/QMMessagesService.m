@@ -23,39 +23,39 @@
     
     if ([[QBChat instance] isLoggedIn]) {
         chatBlock([QBChat instance]);
-    } else {
+    }
+    else {
         [self loginChat:^(BOOL success) {
             chatBlock([QBChat instance]);
         }];
     }
 }
 
-- (BOOL)loginChat:(QBChatResultBlock)block {
+- (void)loginChat:(QBChatResultBlock)block {
     
     if (!self.currentUser) {
-        return NO;
+        block(NO);
+        return;
     }
     
     if (([[QBChat instance] isLoggedIn])) {
         block(YES);
-        return YES;
+        return;
     }
     
     [[QMChatReceiver instance] chatDidLoginWithTarget:self block:block];
     [[QMChatReceiver instance] chatDidNotLoginWithTarget:self block:block];
 
     NSAssert(self.currentUser, @"update this case");
-    return [[QBChat instance] loginWithUser:self.currentUser];
+    [[QBChat instance] loginWithUser:self.currentUser];
 }
 
-- (BOOL)logoutChat {
+- (void)logoutChat {
     
-    BOOL success = YES;
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
     if ([[QBChat instance] isLoggedIn]) {
-        success = [[QBChat instance] logout];
+        [[QBChat instance] logout];
+        [[QMChatReceiver instance] unsubscribeForTarget:self];
     }
-    return success;
 }
 
 - (void)start {

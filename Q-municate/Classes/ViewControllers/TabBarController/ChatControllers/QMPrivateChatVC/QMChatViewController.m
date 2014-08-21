@@ -58,13 +58,20 @@
     }
     else if (self.dialog.type == QBChatDialogTypePrivate) {
         
-        NSUInteger oponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
-        QBUUser *opponent = [[QMApi instance] userWithID:oponentID];
-        
-        self.onlineTitle.title = @"Hello";
-        
-        self.title = opponent.fullName;
+        [self updateTitleInfoForPrivateDialog];
     }
+}
+
+- (void)updateTitleInfoForPrivateDialog {
+    
+    NSUInteger oponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
+    QBUUser *opponent = [[QMApi instance] userWithID:oponentID];
+
+    QBContactListItem *item = [[QMApi instance] contactItemWithUserID:opponent.ID];
+    NSString *status = NSLocalizedString(item.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
+    
+    self.onlineTitle.titleLabel.text = opponent.fullName;
+    self.onlineTitle.statusLabel.text = status;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -91,8 +98,16 @@
 
 - (void)configureNavigationBarForPrivateChat {
     
-    self.onlineTitle = [[QMOnlineTitle alloc] initWithFrame:CGRectZero];
+    self.onlineTitle = [[QMOnlineTitle alloc] initWithFrame:CGRectMake(0,
+                                                                       0,
+                                                                       150,
+                                                                       self.navigationController.navigationBar.frame.size.height)];
     self.navigationItem.titleView = self.onlineTitle;
+    
+    __weak __typeof(self)weakSelf = self;
+    [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:^{
+        [weakSelf updateTitleInfoForPrivateDialog];
+    }];
     
     UIButton *audioButton = [QMChatButtonsFactory audioCall];
     [audioButton addTarget:self action:@selector(audioCallAction) forControlEvents:UIControlEventTouchUpInside];

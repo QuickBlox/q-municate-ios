@@ -7,32 +7,11 @@
 //
 
 #import "QMOnlineTitle.h"
-#import "Parus.h"
-
-@interface QMOnlineTitle()
-
-@property (strong, nonatomic) UILabel *titleLabel;
-@property (strong, nonatomic) UILabel *statusLabel;
-
-@end
 
 @implementation QMOnlineTitle
 
-- (void)setTitle:(NSString *)title {
-    
-    if (_title != title) {
-        _title = title;
-        self.titleLabel.text = title;
-        [self layoutIfNeeded];
-    }
-}
-
-- (void)setStatus:(NSString *)status {
-    
-    if (_status != status) {
-        _status = status;
-        self.statusLabel.text = status;
-    }
+- (void)dealloc {
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -40,25 +19,30 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.backgroundColor = [UIColor greenColor];
-        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        self.titleLabel.backgroundColor = [UIColor redColor];
-    
-        [self addSubview:self.titleLabel];
+        self.backgroundColor = [UIColor clearColor];
         
-        [self addConstraints:@[PVTopOf(self.titleLabel).equalTo.topOf(self).asConstraint,
-                               PVBottomOf(self.titleLabel).equalTo.bottomOf(self).asConstraint,
-                               PVLeftOf(self.titleLabel).equalTo.leftOf(self).asConstraint,
-                               PVRightOf(self.titleLabel).equalTo.rightOf(self).asConstraint]];
+        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,
+                                                                    0,
+                                                                    self.frame.size.width,
+                                                                    self.frame.size.height/2)];
+        self.titleLabel.font = [UIFont boldSystemFontOfSize:17];
+        self.titleLabel.textAlignment = NSTextAlignmentCenter;
+        self.titleLabel.textColor = [UIColor whiteColor];
 
+        self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,
+                                                                     self.frame.size.height/2,
+                                                                     self.frame.size.width,
+                                                                     self.frame.size.height/2)];
+        self.statusLabel.font = [UIFont systemFontOfSize:14];
+        self.statusLabel.textAlignment = NSTextAlignmentCenter;
+        self.statusLabel.textColor = [UIColor colorWithWhite:1.000 alpha:0.760];
+        self.statusLabel.text = @"Offline";
+        
+        [self addSubview:self.titleLabel];
+        [self addSubview:self.statusLabel];
     }
     
     return self;
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
 }
 
 @end

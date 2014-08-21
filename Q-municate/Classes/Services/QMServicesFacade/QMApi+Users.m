@@ -186,7 +186,7 @@
 - (void)importFriendsFromFacebook
 {
     __weak __typeof(self)weakSelf = self;
-    [self.facebookService fetchMyFriendsIDs:^(NSArray *facebookFriendsIDs) {
+    [QMFacebookService fetchMyFriendsIDs:^(NSArray *facebookFriendsIDs) {
         
         if ([facebookFriendsIDs count] == 0) {
             return;

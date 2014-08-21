@@ -33,7 +33,9 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     self.incomingCallService = [[QMIncomingCallHandler alloc] init];
 #endif
     self.window.backgroundColor = [UIColor whiteColor];
+    
     UIApplication.sharedApplication.applicationIconBadgeNumber = 0;
+    
     [QBSettings setApplicationID:kQMApplicationID];
     [QBSettings setAuthorizationKey:kQMAuthorizationKey];
     [QBSettings setAuthorizationSecret:kQMAuthorizationSecret];

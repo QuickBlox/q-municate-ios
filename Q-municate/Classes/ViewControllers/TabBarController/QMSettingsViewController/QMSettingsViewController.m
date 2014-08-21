@@ -11,6 +11,7 @@
 #import "SVProgressHUD.h"
 #import "SDWebImageManager.h"
 #import "QMApi.h"
+#import "QMSettingsManager.h"
 
 @interface QMSettingsViewController ()
 
@@ -28,11 +29,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if ([FBSession activeSession].state == FBSessionStateOpen) {
+    if ([QMApi instance].settingsManager.accountType == QMAccountTypeFacebook) {
         [self cell:self.changePasswordCell setHidden:YES];
     }
     
-    [self configureSettingsViewController];
+    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:kSettingsCellBundleVersion];
+    self.versionLabel.text = appVersion;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -42,12 +44,6 @@
     [[[SDWebImageManager sharedManager] imageCache] calculateSizeWithCompletionBlock:^(NSUInteger fileCount, NSUInteger totalSize) {
         weakSelf.cacheSize.text = [NSString stringWithFormat:@"Cache size: %.2f mb", (float)totalSize / 1024.f / 1024.f];
     }];
-}
-
-- (void)configureSettingsViewController {
-    
-    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:kSettingsCellBundleVersion];
-    self.versionLabel.text = appVersion;
 }
 
 #pragma mark - UITableViewDelegate

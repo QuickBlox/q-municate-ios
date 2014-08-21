@@ -18,12 +18,12 @@
 #pragma mark Public methods
 
 - (void)logout:(void(^)(BOOL success))completion {
-    [self.settingsManager clearSettings];
-     [self.messagesService logoutChat];
 
-    
-    [self stopServices];
     self.currentUser = nil;
+    [self.settingsManager clearSettings];
+    [self.messagesService logoutChat];
+    [QMFacebookService logout];
+    [self stopServices];
 
     [self.authService unSubscribeFromPushNotifications:^(QBMUnregisterSubscriptionTaskResult *result) {
        
@@ -73,9 +73,9 @@
             [weakSelf setAutoLogin:YES withAccountType:QMAccountTypeFacebook];
             if (weakSelf.currentUser.website.length == 0) {
                 /*Update user image from facebook */
-                [weakSelf.facebookService loadMe:^(NSDictionary<FBGraphUser> *user) {
+                [QMFacebookService loadMe:^(NSDictionary<FBGraphUser> *user) {
                     
-                    NSURL *userImageUrl = [weakSelf.facebookService userImageUrlWithUserID:user.id];
+                    NSURL *userImageUrl = [QMFacebookService userImageUrlWithUserID:user.id];
                     [weakSelf updateUser:weakSelf.currentUser imageUrl:userImageUrl progress:nil completion:completion];
                     
                 }];
@@ -158,7 +158,7 @@
     
     /*open facebook session*/
     __weak __typeof(self)weakSelf = self;
-    [self.facebookService connectToFacebook:^(NSString *sessionToken) {
+    [QMFacebookService connectToFacebook:^(NSString *sessionToken) {
         if (!sessionToken) {
             completion(NO);
         }

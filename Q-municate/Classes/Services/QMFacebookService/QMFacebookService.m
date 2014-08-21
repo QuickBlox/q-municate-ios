@@ -16,7 +16,7 @@ NSString *const kQMLogoUrl = @"http://files.quickblox.com/ic_launcher.png";
 NSString *const kQMAppName = @"Q-municate";
 NSString *const kQMDataKey = @"data";
 
-- (void)fetchMyFriends:(void(^)(NSArray *facebookFriends))completion {
++ (void)fetchMyFriends:(void(^)(NSArray *facebookFriends))completion {
     
     FBRequest *friendsRequest = [FBRequest requestForGraphPath:@"me/friends"];
     [friendsRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
@@ -25,7 +25,7 @@ NSString *const kQMDataKey = @"data";
     }];
 }
 
-- (void)fetchMyFriendsIDs:(void(^)(NSArray *facebookFriendsIDs))completion {
++ (void)fetchMyFriendsIDs:(void(^)(NSArray *facebookFriendsIDs))completion {
     
     [self fetchMyFriends:^(NSArray *facebookFriends) {
         
@@ -37,7 +37,7 @@ NSString *const kQMDataKey = @"data";
     }];
 }
 
-- (void)shareToUsers:(NSString *)usersIDs completion:(void(^)(NSError *error))completion {
++ (void)shareToUsers:(NSString *)usersIDs completion:(void(^)(NSError *error))completion {
     
     NSDictionary *postParams = @{
                                  @"link" : kQMHomeUrl,
@@ -60,7 +60,7 @@ NSString *const kQMDataKey = @"data";
 
 NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/picture?height=100&width=100&access_token=%@";
 
-- (NSURL *)userImageUrlWithUserID:(NSString *)userID {
++ (NSURL *)userImageUrlWithUserID:(NSString *)userID {
     
     FBSession *session = [FBSession activeSession];
     NSString *urlString = [NSString stringWithFormat:kFBGraphGetPictureFormat, userID, session.accessTokenData.accessToken];
@@ -68,7 +68,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     return url;
 }
 
-- (void)loadMe:(void(^)(NSDictionary<FBGraphUser> *user))completion {
++ (void)loadMe:(void(^)(NSDictionary<FBGraphUser> *user))completion {
     
     FBRequest *friendsRequest = [FBRequest requestForMe];
     
@@ -77,11 +77,11 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     }];
 }
 
-- (void)inviteFriends {
++ (void)inviteFriends {
     
     [FBWebDialogs presentRequestsDialogModallyWithSession:nil
-                                                  message:kQMAppName
-                                                    title:nil
+                                                  message:NSLocalizedString(@"QM_STR_DEAR_FRIEND", nil)
+                                                    title:kQMAppName
                                                parameters:nil
                                                   handler:
      ^(FBWebDialogResult result, NSURL *resultURL, NSError *error) {
@@ -114,7 +114,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
      }];
 }
 
-- (NSDictionary*)parseURLParams:(NSString *)query {
++ (NSDictionary*)parseURLParams:(NSString *)query {
     
     NSArray *pairs = [query componentsSeparatedByString:@"&"];
     NSMutableDictionary *params = @{}.mutableCopy;
@@ -129,7 +129,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     return params;
 }
 
-- (void)logout {
++ (void)logout {
     
     // If the session state is any of the two "open"
     if (FBSession.activeSession.state == FBSessionStateOpen || FBSession.activeSession.state == FBSessionStateOpenTokenExtended) {
@@ -140,31 +140,31 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     }
     FBSession.activeSession = nil;
 }
-
-- (BOOL)isSessionStateEffectivelyLoggedIn:(FBSessionState)state {
-    BOOL effectivelyLoggedIn;
-    
-    switch (state) {
-        case FBSessionStateOpen:
-            NSLog(@"Facebook session state: FBSessionStateOpen");
-            effectivelyLoggedIn = YES;
-            break;
-        case FBSessionStateCreatedTokenLoaded:
-            NSLog(@"Facebook session state: FBSessionStateCreatedTokenLoaded");
-            effectivelyLoggedIn = YES;
-            break;
-        case FBSessionStateOpenTokenExtended:
-            NSLog(@"Facebook session state: FBSessionStateOpenTokenExtended");
-            effectivelyLoggedIn = YES;
-            break;
-        default:
-            NSLog(@"Facebook session state: not of one of the open or openable types.");
-            effectivelyLoggedIn = NO;
-            break;
-    }
-    
-    return effectivelyLoggedIn;
-}
+//
+//+ (BOOL)isSessionStateEffectivelyLoggedIn:(FBSessionState)state {
+//    BOOL effectivelyLoggedIn;
+//    
+//    switch (state) {
+//        case FBSessionStateOpen:
+//            NSLog(@"Facebook session state: FBSessionStateOpen");
+//            effectivelyLoggedIn = YES;
+//            break;
+//        case FBSessionStateCreatedTokenLoaded:
+//            NSLog(@"Facebook session state: FBSessionStateCreatedTokenLoaded");
+//            effectivelyLoggedIn = YES;
+//            break;
+//        case FBSessionStateOpenTokenExtended:
+//            NSLog(@"Facebook session state: FBSessionStateOpenTokenExtended");
+//            effectivelyLoggedIn = YES;
+//            break;
+//        default:
+//            NSLog(@"Facebook session state: not of one of the open or openable types.");
+//            effectivelyLoggedIn = NO;
+//            break;
+//    }
+//    
+//    return effectivelyLoggedIn;
+//}
 
 /**
  * Determines if the Facebook session has an authorized state. It might still need to be opened if it is a cached
@@ -172,23 +172,23 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
  * explicitly asked anything.
  */
 
-- (BOOL)isLoggedIn {
-    
-    FBSession *activeSession = [FBSession activeSession];
-    FBSessionState state = activeSession.state;
-    BOOL isLoggedIn = activeSession && [self isSessionStateEffectivelyLoggedIn:state];
-    
-    NSLog(@"Facebook active session state: %d; logged in conclusion: %@", state, isLoggedIn ? @"YES" : @"NO");
-    
-    return isLoggedIn;
-}
+//+ (BOOL)isLoggedIn {
+//    
+//    FBSession *activeSession = [FBSession activeSession];
+//    FBSessionState state = activeSession.state;
+//    BOOL isLoggedIn = activeSession && [self isSessionStateEffectivelyLoggedIn:state];
+//    
+//    NSLog(@"Facebook active session state: %d; logged in conclusion: %@", state, isLoggedIn ? @"YES" : @"NO");
+//    
+//    return isLoggedIn;
+//}
 
 /**
  * Attempts to silently open the Facebook session if we have a valid token loaded (that perhaps needs a behind the scenes refresh).
  * After that attempt, we defer to the basic concept of the session being in one of the valid authorized states.
  */
 
-- (void)connectToFacebook:(void(^)(NSString *sessionToken))completion {
++ (void)connectToFacebook:(void(^)(NSString *sessionToken))completion {
     
     __weak __typeof(self)weakSelf = self;
     
@@ -203,33 +203,29 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
         // You must ALWAYS ask for public_profile permissions when opening a session
         NSLog(@"Active session wasn't in state 'FBSessionStateCreatedTokenLoaded'. It has state: %d", FBSession.activeSession.state);
     }
-    
-    FBSessionStateHandler handler = ^(FBSession *session, FBSessionState state, NSError *error) {
-        [weakSelf sessionStateChanged:session state:state error:error sessionBlock:completion];
-    };
-    
+
     if (!FBSession.activeSession.isOpen) {
         
-//        if (FBSession.activeSession.permissions.count == 0) {
-//            NSArray *permissions = @[ @"user_friends"];
-//            FBSession *session = [[FBSession alloc] initWithPermissions:permissions];
-//            [FBSession setActiveSession:session];
-//        }
-        
-        [FBSession.activeSession openWithCompletionHandler:handler];
+        [FBSession.activeSession openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+            if (status == FBSessionStateClosed && error == nil) {
+                return;
+            }
+            
+            [weakSelf sessionStateChanged:session state:status error:error sessionBlock:completion];
+        }];
     } else {
         completion(FBSession.activeSession.accessTokenData.accessToken);
     }
 }
 
 // This method will handle ALL the session state changes in the app
-- (void)sessionStateChanged:(FBSession *)session
++ (void)sessionStateChanged:(FBSession *)session
                       state:(FBSessionState)state
                       error:(NSError *)error
                sessionBlock:(void(^)(NSString *sessionToken))sessionBlock  {
     
     // If the session was opened successfully
-    if (![self isLoggedIn] || error) {
+    if (error) {
         
         NSString *alertText;
         
@@ -270,9 +266,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
         }
         
         if (shouldNotify) [REAlertView showAlertWithMessage:alertText actionSuccess:NO];
-        [self logout];
     }
-    
     sessionBlock(session.accessTokenData.accessToken);
 }
 

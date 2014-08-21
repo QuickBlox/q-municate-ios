@@ -25,7 +25,6 @@ const NSTimeInterval kQMPresenceTime = 30;
 
 @property (strong, nonatomic) QMAuthService *authService;
 @property (strong, nonatomic) QMSettingsManager *settingsManager;
-@property (strong, nonatomic) QMFacebookService *facebookService;
 @property (strong, nonatomic) QMUsersService *usersService;
 @property (strong, nonatomic) QMAVCallService *avCallService;
 @property (strong, nonatomic) QMChatDialogsService *chatDialogsService;
@@ -66,7 +65,6 @@ const NSTimeInterval kQMPresenceTime = 30;
         self.usersService = [[QMUsersService alloc] init];
         self.chatDialogsService = [[QMChatDialogsService alloc] init];
         self.settingsManager = [[QMSettingsManager alloc] init];
-        self.facebookService = [[QMFacebookService alloc] init];
         self.avCallService = [[QMAVCallService alloc] init];
         self.contentService = [[QMContentService alloc] init];
     }

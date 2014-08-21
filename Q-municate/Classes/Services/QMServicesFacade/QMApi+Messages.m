@@ -16,7 +16,9 @@
     
     __weak __typeof(self)weakSelf = self;
     [self.messagesService loginChat:^(BOOL success) {
-        [weakSelf.chatDialogsService joinRooms];
+        if (success) {
+            [weakSelf.chatDialogsService joinRooms];
+        }
         block(success);
     }];
 }

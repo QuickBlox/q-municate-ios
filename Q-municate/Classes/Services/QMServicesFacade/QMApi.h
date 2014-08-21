@@ -24,7 +24,6 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 
 @property (strong, nonatomic, readonly) QMAuthService *authService;
 @property (strong, nonatomic, readonly) QMSettingsManager *settingsManager;
-@property (strong, nonatomic, readonly) QMFacebookService *facebookService;
 @property (strong, nonatomic, readonly) QMUsersService *usersService;
 @property (strong, nonatomic, readonly) QMAVCallService *avCallService;
 @property (strong, nonatomic, readonly) QMChatDialogsService *chatDialogsService;

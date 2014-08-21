@@ -11,34 +11,34 @@
 @interface QMFacebookService : NSObject
 /**
  */
-- (void)connectToFacebook:(void(^)(NSString *sessionToken))completion;
++ (void)connectToFacebook:(void(^)(NSString *sessionToken))completion;
 
 /**
  */
-- (void)inviteFriends;
++ (void)inviteFriends;
 
 /**
  */
-- (void)fetchMyFriends:(void(^)(NSArray *facebookFriends))completion;
++ (void)fetchMyFriends:(void(^)(NSArray *facebookFriends))completion;
 
 /**
  */
-- (void)fetchMyFriendsIDs:(void(^)(NSArray *facebookFriendsIDs))completion;
++ (void)fetchMyFriendsIDs:(void(^)(NSArray *facebookFriendsIDs))completion;
 
 /**
  */
-- (NSURL *)userImageUrlWithUserID:(NSString *)userID;
++ (NSURL *)userImageUrlWithUserID:(NSString *)userID;
 
 /**
  */
-- (void)shareToUsers:(NSString *)usersIDs completion:(void(^)(NSError *error))completion;
++ (void)shareToUsers:(NSString *)usersIDs completion:(void(^)(NSError *error))completion;
 
 /**
  */
-- (void)loadMe:(void(^)(NSDictionary<FBGraphUser> *user))completion;
++ (void)loadMe:(void(^)(NSDictionary<FBGraphUser> *user))completion;
 
 /**
  */
-- (void)logout;
++ (void)logout;
 
 @end

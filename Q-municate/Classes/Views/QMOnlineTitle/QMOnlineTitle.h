@@ -10,7 +10,7 @@
 
 @interface QMOnlineTitle : UIView
 
-@property (strong, nonatomic) NSString *title;
-@property (strong, nonatomic) NSString *status;
+@property (strong, nonatomic) UILabel *titleLabel;
+@property (strong, nonatomic) UILabel *statusLabel;
 
 @end

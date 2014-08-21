@@ -12,32 +12,29 @@
 @implementation QMApi (Facebook)
 
 - (void)fbFriends:(void(^)(NSArray *fbFriends))completion {
-
-    __weak __typeof(self)weakSelf = self;
-    [self.facebookService connectToFacebook:^(NSString *sessionToken) {
-        [weakSelf.facebookService fetchMyFriends:completion];
+    [QMFacebookService connectToFacebook:^(NSString *sessionToken) {
+        [QMFacebookService fetchMyFriends:completion];
     }];
 }
 
 - (NSURL *)fbUserImageURLWithUserID:(NSString *)userID {
-    return [self.facebookService userImageUrlWithUserID:userID];
+    return [QMFacebookService userImageUrlWithUserID:userID];
 }
 
 - (void)fbInviteUsersWithIDs:(NSArray *)ids copmpletion:(void(^)(NSError *error))completion {
 
     NSString *strIds = [ids componentsJoinedByString:@","];
-    [self.facebookService shareToUsers:strIds completion:completion];
+    [QMFacebookService shareToUsers:strIds completion:completion];
 }
 
 - (void)fbLogout {
-    [self.facebookService logout];
+    [QMFacebookService logout];
 }
 
 - (void)fbIniviteDialog {
     
-    __weak __typeof(self)weakSelf = self;
-    [self.facebookService connectToFacebook:^(NSString *sessionToken) {
-        [weakSelf.facebookService inviteFriends];
+    [QMFacebookService connectToFacebook:^(NSString *sessionToken) {
+        [QMFacebookService inviteFriends];
     }];
 }
 
