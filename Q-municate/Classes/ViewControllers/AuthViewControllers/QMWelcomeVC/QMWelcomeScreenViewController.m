@@ -57,22 +57,14 @@
     }];
 }
 
-- (IBAction)signUpWithEmail:(id)sender {
-    __weak __typeof(self)weakSelf = self;
-    [self checkForAcceptedUserAgreement:^(BOOL success) {
-        if (success) {
-            [weakSelf performSegueWithIdentifier:kSignUpSegueIdentifier sender:nil];
-        }
-    }];
+- (IBAction)signUpWithEmail:(id)sender
+{
+    [self performSegueWithIdentifier:kSignUpSegueIdentifier sender:nil];
 }
 
-- (IBAction)pressAlreadyBtn:(id)sender {
-    __weak __typeof(self)weakSelf = self;
-    [self checkForAcceptedUserAgreement:^(BOOL success) {
-        if (success) {
-            [weakSelf performSegueWithIdentifier:kLogInSegueSegueIdentifier sender:nil];
-        }
-    }];
+- (IBAction)pressAlreadyBtn:(id)sender
+{
+    [self performSegueWithIdentifier:kLogInSegueSegueIdentifier sender:nil];
 }
 
 - (void)checkForAcceptedUserAgreement:(void(^)(BOOL success))completion {

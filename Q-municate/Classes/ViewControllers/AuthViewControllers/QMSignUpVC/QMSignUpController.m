@@ -8,6 +8,8 @@
 
 #import "QMSignUpController.h"
 #import "QMWelcomeScreenViewController.h"
+#import "QMLicenseAgreementViewController.h"
+#import "QMSettingsManager.h"
 #import "UIImage+Cropper.h"
 #import "REAlertView+QMSuccess.h"
 #import "SVProgressHUD.h"
@@ -68,8 +70,18 @@
     }];
 }
 
-- (IBAction)signUp:(id)sender {
-    
+- (IBAction)signUp:(id)sender
+{
+    __weak __typeof(self)weakSelf = self;
+    [self checkForAcceptedUserAgreement:^(BOOL success) {
+        if (success) {
+            [weakSelf fireSignUp];
+        }
+    }];
+}
+
+- (void)fireSignUp
+{
     NSString *fullName = self.fullNameField.text;
     NSString *email = self.emailField.text;
     NSString *password = self.passwordField.text;
@@ -115,5 +127,19 @@
             [SVProgressHUD dismiss];
         }
     }];
+}
+
+- (void)checkForAcceptedUserAgreement:(void(^)(BOOL success))completion {
+    
+    BOOL licenceAccepted = [[QMApi instance].settingsManager userAgreementAccepted];
+    if (licenceAccepted) {
+        completion(YES);
+    }
+    else {
+        QMLicenseAgreementViewController *licenceController =
+        [self.storyboard instantiateViewControllerWithIdentifier:@"QMLicenceAgreementControllerID"];
+        licenceController.licenceCompletionBlock = completion;
+        [self.navigationController pushViewController:licenceController animated:YES];
+    }
 }
 @end
