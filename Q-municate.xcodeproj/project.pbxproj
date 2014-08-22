@@ -239,6 +239,7 @@
 		2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+GTMNSStringHTMLAdditions.m"; sourceTree = "<group>"; };
 		2494559919A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBChatAbstractMessage+TextEncoding.h"; sourceTree = "<group>"; };
 		2494559A19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QBChatAbstractMessage+TextEncoding.m"; sourceTree = "<group>"; };
+		24ECC26419A73587003F5038 /* Macro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macro.h; sourceTree = "<group>"; };
 		24F8B8F519A26F63009F8656 /* NSString+occupantsIDsFromMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+occupantsIDsFromMessage.h"; sourceTree = "<group>"; };
 		24F8B8F619A26F63009F8656 /* NSString+occupantsIDsFromMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+occupantsIDsFromMessage.m"; sourceTree = "<group>"; };
 		24FDA66E199B7A610005662B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = External/Crashlytics.framework; sourceTree = "<group>"; };
@@ -2018,6 +2019,7 @@
 			isa = PBXGroup;
 			children = (
 				69CF18AA18AE3788003262EF /* QMDefinitions.h */,
+				24ECC26419A73587003F5038 /* Macro.h */,
 				240CE3AF19A2223A00392E06 /* QMProtocols.h */,
 				69D57E6418ACC11C00A9900A /* AppDelegate.h */,
 				69D57E6518ACC11C00A9900A /* AppDelegate.m */,
@@ -2453,7 +2455,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "7C10F44D-9DA6-469F-92B5-FEA785098661";
+				PROVISIONING_PROFILE = "6E004364-5E2F-449B-9394-5906B3C651CF";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VALID_ARCHS = armv7;

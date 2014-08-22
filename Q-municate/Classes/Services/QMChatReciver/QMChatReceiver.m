@@ -22,7 +22,7 @@
 @implementation QMChatHandlerObject
 
 - (void)dealloc {
-    NSLog(@"%@ %@", self.description, NSStringFromSelector(_cmd));
+    ILog(@"%@ %@", self.description, NSStringFromSelector(_cmd));
 }
 
 - (NSString *)description {
@@ -120,7 +120,7 @@
     }
 #endif
     
-    NSLog(@"Subscirbe:%@", [handler description]);
+    ILog(@"Subscirbe:%@", [handler description]);
     [handlers addObject:handler];
     self.handlerList[key] = handlers;
 }
@@ -133,7 +133,7 @@
     
     for (QMChatHandlerObject *handler in toExecute) {
         if (handler.callback) {
-            NSLog(@"Send %@ notification to %@", key, handler.target);
+            ILog(@"Send %@ notification to %@", key, handler.target);
             enumerateBloks(handler.callback);
         }
     }
@@ -149,7 +149,7 @@
 }
 
 - (void)chatDidLogin {
-    NSLog(@"Chat Did login");
+    ILog(@"Chat Did login");
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatDidLogin block) {
         block(YES);
     }];

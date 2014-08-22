@@ -41,7 +41,7 @@
 
 - (void)dealloc {
     [[QMChatReceiver instance] unsubscribeForTarget:self];
-    NSLog(@"%@ - %@", NSStringFromSelector(_cmd), self);
+    ILog(@"%@ - %@", NSStringFromSelector(_cmd), self);
 }
 
 - (instancetype)initWithChatDialog:(QBChatDialog *)dialog forTableView:(UITableView *)tableView {

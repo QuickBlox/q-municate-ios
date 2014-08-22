@@ -148,7 +148,7 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
                                  context:kQMInputToolbarKeyValueObservingContext];
         
     } @catch (NSException *__unused exception) {
-        NSLog(@"%@", exception);
+        ILog(@"%@", exception);
     }
 }
 

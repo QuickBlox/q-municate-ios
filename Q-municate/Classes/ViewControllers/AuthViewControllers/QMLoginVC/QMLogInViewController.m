@@ -8,6 +8,8 @@
 
 #import "QMLogInViewController.h"
 #import "QMWelcomeScreenViewController.h"
+#import "QMLicenseAgreementViewController.h"
+#import "QMSettingsManager.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMApi.h"
 #import "QMSettingsManager.h"
@@ -25,7 +27,7 @@
 @implementation QMLogInViewController
 
 - (void)dealloc {
-    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {
@@ -49,9 +51,19 @@
     [sender resignFirstResponder];
 }
 
-- (IBAction)logIn:(id)sender {
+- (IBAction)logIn:(id)sender
+{
+    __weak __typeof(self)weakSelf = self;
+    [self checkForAcceptedUserAgreement:^(BOOL success) {
+        if (success) {
+            [weakSelf fireLogIn];
+        }
+    }];
     
-    
+}
+
+- (void)fireLogIn
+{
     NSString *email = self.emailField.text;
     NSString *password = self.passwordField.text;
     
@@ -59,10 +71,10 @@
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) actionSuccess:NO];
     }
     else {
-
+        
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         __weak __typeof(self)weakSelf = self;
-
+        
         [[QMApi instance] loginWithEmail:email password:password rememberMe:weakSelf.rememberMeSwitch.on completion:^(BOOL success) {
             [SVProgressHUD dismiss];
             if (success) {
@@ -73,8 +85,18 @@
     }
 }
 
-- (IBAction)connectWithFacebook:(id)sender {
-    
+- (IBAction)connectWithFacebook:(id)sender
+{
+    __weak __typeof(self)weakSelf = self;
+    [self checkForAcceptedUserAgreement:^(BOOL success) {
+        if (success) {
+            [weakSelf fireConnectWithFacebook];
+        }
+    }];
+}
+
+- (void)fireConnectWithFacebook
+{
     __weak __typeof(self)weakSelf = self;
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] singUpAndLoginWithFacebook:^(BOOL success) {
@@ -86,16 +108,18 @@
     }];
 }
 
-- (void)signInWithFacebookAfterAcceptingUserAgreement {
+- (void)checkForAcceptedUserAgreement:(void(^)(BOOL success))completion {
     
-    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-        
-        alertView.message = NSLocalizedString(@"QM_STR_QMUNICATE_AGREE", nil);
-        [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_OK", nil) andActionBlock:^{
-            [[QMApi instance].settingsManager setUserAgreementAccepted:YES];
-        }];
-        [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:nil];
-    }];
+    BOOL licenceAccepted = [[QMApi instance].settingsManager userAgreementAccepted];
+    if (licenceAccepted) {
+        completion(YES);
+    }
+    else {
+        QMLicenseAgreementViewController *licenceController =
+        [self.storyboard instantiateViewControllerWithIdentifier:@"QMLicenceAgreementControllerID"];
+        licenceController.licenceCompletionBlock = completion;
+        [self.navigationController pushViewController:licenceController animated:YES];
+    }
 }
 
 

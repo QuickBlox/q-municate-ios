@@ -21,10 +21,6 @@
 
 @implementation QMVideoCallController
 
-- (void)dealloc
-{
-    NSLog(@"");
-}
 
 - (void)viewDidLoad
 {

@@ -59,10 +59,10 @@ NSString *StoreFileName(NSString *name) {
         
         NSError *error = nil;
         if(![[NSFileManager defaultManager] removeItemAtURL:storeUrl error:&error]) {
-            NSLog(@"An error has occurred while deleting %@", storeUrl);
-            NSLog(@"Error description: %@", error.description);
+            ILog(@"An error has occurred while deleting %@", storeUrl);
+            ILog(@"Error description: %@", error.description);
         } else {
-            NSLog(@"Clear %@ - Done!", storeUrl);
+            ILog(@"Clear %@ - Done!", storeUrl);
         }
     }
 }

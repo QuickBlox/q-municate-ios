@@ -88,7 +88,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
          
          if (error) {
              // Error launching the dialog or sending the request.
-             NSLog(@"Error sending request.");
+             ILog(@"Error sending request.");
              completion(NO);
              
          } else {
@@ -98,18 +98,18 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
              //using the X in the upper left corner.
              
              if (result == FBWebDialogResultDialogNotCompleted) {
-                 NSLog(@"User canceled request.");
+                 ILog(@"User canceled request.");
                  completion(NO);
              } else {
                  // Handle the send request callback
                  NSDictionary *urlParams = [self parseURLParams:[resultURL query]];
                  if (![urlParams valueForKey:@"request"]) {
                      // User clicked the Cancel button
-                     NSLog(@"User canceled request.");
+                     ILog(@"User canceled request.");
                  } else {
                      // User clicked the Send button
                      NSString *requestID = [urlParams valueForKey:@"request"];
-                     NSLog(@"Request ID: %@", requestID);
+                     ILog(@"Request ID: %@", requestID);
                      completion(YES);
                  }
              }
@@ -149,19 +149,19 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
 //    
 //    switch (state) {
 //        case FBSessionStateOpen:
-//            NSLog(@"Facebook session state: FBSessionStateOpen");
+//            ILog(@"Facebook session state: FBSessionStateOpen");
 //            effectivelyLoggedIn = YES;
 //            break;
 //        case FBSessionStateCreatedTokenLoaded:
-//            NSLog(@"Facebook session state: FBSessionStateCreatedTokenLoaded");
+//            ILog(@"Facebook session state: FBSessionStateCreatedTokenLoaded");
 //            effectivelyLoggedIn = YES;
 //            break;
 //        case FBSessionStateOpenTokenExtended:
-//            NSLog(@"Facebook session state: FBSessionStateOpenTokenExtended");
+//            ILog(@"Facebook session state: FBSessionStateOpenTokenExtended");
 //            effectivelyLoggedIn = YES;
 //            break;
 //        default:
-//            NSLog(@"Facebook session state: not of one of the open or openable types.");
+//            ILog(@"Facebook session state: not of one of the open or openable types.");
 //            effectivelyLoggedIn = NO;
 //            break;
 //    }
@@ -181,7 +181,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
 //    FBSessionState state = activeSession.state;
 //    BOOL isLoggedIn = activeSession && [self isSessionStateEffectivelyLoggedIn:state];
 //    
-//    NSLog(@"Facebook active session state: %d; logged in conclusion: %@", state, isLoggedIn ? @"YES" : @"NO");
+//    ILog(@"Facebook active session state: %d; logged in conclusion: %@", state, isLoggedIn ? @"YES" : @"NO");
 //    
 //    return isLoggedIn;
 //}
@@ -197,14 +197,14 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     
     // Whenever a person opens the app, check for a cached session
     if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
-        NSLog(@"We have a cached token, so we're going to re-establish the login for the user.");
+        ILog(@"We have a cached token, so we're going to re-establish the login for the user.");
         // If there's one, just open the session silently, without showing the user the login UI
         
     } else {
         // If there's no cached session, we will show a login button
         // Open a session showing the user the login UI
         // You must ALWAYS ask for public_profile permissions when opening a session
-        NSLog(@"Active session wasn't in state 'FBSessionStateCreatedTokenLoaded'. It has state: %d", FBSession.activeSession.state);
+        ILog(@"Active session wasn't in state 'FBSessionStateCreatedTokenLoaded'. It has state: %d", FBSession.activeSession.state);
     }
 
     if (!FBSession.activeSession.isOpen) {

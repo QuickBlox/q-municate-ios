@@ -11,7 +11,7 @@
 @implementation QMOnlineTitle
 
 - (void)dealloc {
-    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (id)initWithFrame:(CGRect)frame {

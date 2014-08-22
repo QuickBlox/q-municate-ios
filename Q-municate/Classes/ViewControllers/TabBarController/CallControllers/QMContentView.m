@@ -84,7 +84,7 @@
 // selector:
 - (void)updateStatusLabel
 {
-    NSLog(@"_________TIMER NOW = %f__________", _timeInterval);
+    ILog(@"_________TIMER NOW = %f__________", _timeInterval);
     self.statusLabel.text = [NSString stringWithFormat:@"%02u:%05.2f", (int)(_timeInterval/60), fmod(_timeInterval, 60)];
     _timeInterval++;
 }

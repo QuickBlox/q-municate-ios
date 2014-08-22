@@ -276,7 +276,7 @@ void systemServicesSoundCompletion(SystemSoundID  soundID, void *data) {
         }
     }
     
-    NSLog(@"Error: audio file not found at URL: %@", fileURL);
+    ILog(@"Error: audio file not found at URL: %@", fileURL);
     return 0;
 }
 
@@ -326,14 +326,14 @@ void systemServicesSoundCompletion(SystemSoundID  soundID, void *data) {
             break;
     }
     
-    NSLog(@"%@ Error: (code %d) %@", message, (int)error, errorMessage);
+    ILog(@"%@ Error: (code %d) %@", message, (int)error, errorMessage);
 }
 
 #pragma mark - Did Receive Memory Warning Notification
 
 - (void)didReceiveMemoryWarningNotification:(NSNotification *)notification {
     
-    NSLog(@"%@ received memory warning!", [self class]);
+    ILog(@"%@ received memory warning!", [self class]);
     [self unloadSoundIDs];
 }
 
