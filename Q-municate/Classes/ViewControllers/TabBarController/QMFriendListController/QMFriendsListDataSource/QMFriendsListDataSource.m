@@ -25,6 +25,8 @@
 @property (weak, nonatomic) UISearchDisplayController *searchDisplayController;
 @property (strong, nonatomic) NSObject<Cancelable> *searchOperation;
 
+@property (strong, nonatomic) id tUser;
+
 @end
 
 @implementation QMFriendsListDataSource
@@ -48,28 +50,46 @@
         self.searchDisplayController = searchDisplayController;
         __weak __typeof(self)weakSelf = self;
         
-        [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:^{
-            [weakSelf reloadDatasource];
-        }];
+        void (^reloadDatasource)(void) = ^(void) {
+            
+            if (weakSelf.searchOperation) {
+                return;
+            }
+            
+            if (weakSelf.searchDisplayController.isActive) {
+                
+                CGPoint point = weakSelf.searchDisplayController.searchResultsTableView.contentOffset;
+                
+                weakSelf.friendList = [QMApi instance].friends;
+                [weakSelf.searchDisplayController.searchResultsTableView reloadData];
+                NSUInteger idx = [weakSelf.friendList indexOfObject:weakSelf.tUser];
+                NSUInteger idx2 = [weakSelf.searchResult indexOfObject:weakSelf.tUser];
+               
+                if (idx != NSNotFound && idx2 != NSNotFound) {
+                    
+                    point .y += 59;
+                    weakSelf.searchDisplayController.searchResultsTableView.contentOffset = point;
+                    
+                    weakSelf.tUser = nil;
+                    [SVProgressHUD dismiss];
+                }
+                
+            }
+            else {
+                [weakSelf reloadDatasource];
+            }
+        };
+        
+        [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:reloadDatasource];
+        [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:reloadDatasource];
         
         [[QMChatReceiver instance] chatDidReceiveContactAddRequestWithTarget:self block:^(NSUInteger userID) {
             [[QMApi instance] confirmAddContactRequest:userID completion:^(BOOL success) {}];
         }];
         
-        [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:^{
-            if (weakSelf.searchDisplayController.isActive) {
-                
-                CGPoint contentOffcet = weakSelf.searchDisplayController.searchResultsTableView.contentOffset;
-                [weakSelf.searchDisplayController.searchResultsTableView reloadData];
-                [weakSelf.searchDisplayController.searchResultsTableView setContentOffset:contentOffcet];
-            }
-            else {
-                [weakSelf reloadDatasource];
-            }
-        }];
-        
         UINib *nib = [UINib nibWithNibName:@"QMFriendListCell" bundle:nil];
-        [searchDisplayController.searchResultsTableView registerNib:nib forCellReuseIdentifier:kQMFriendsListCellIdentifier];
+        [searchDisplayController.searchResultsTableView registerNib:nib
+                                             forCellReuseIdentifier:kQMFriendsListCellIdentifier];
     }
     
     return self;
@@ -113,7 +133,7 @@
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.ID != %d", [QMApi instance].currentUser.ID];
         weakSelf.searchResult = [users filteredArrayUsingPredicate:predicate];
         [weakSelf.searchDisplayController.searchResultsTableView reloadData];
-        
+        weakSelf.searchOperation = nil;
         [SVProgressHUD dismiss];
     };
     
@@ -208,7 +228,7 @@
     cell.contactlistItem = item;
     cell.userData = user;
     
-    if(self.searchDisplayController.isActive){
+    if(self.searchDisplayController.isActive) {
         cell.searchText = self.searchDisplayController.searchBar.text;
     }
     
@@ -226,7 +246,13 @@
     NSArray *datasource = [self usersAtSections:indexPath.section];
     QBUUser *user = datasource[indexPath.row];
     
-    [[QMApi instance] addUserToContactListRequest:user.ID completion:^(BOOL success) {}];
+    __weak __typeof(self)weakSelf = self;
+    [[QMApi instance] addUserToContactListRequest:user completion:^(BOOL success) {
+        if (success) {
+            weakSelf.tUser = user;
+            [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+        }
+    }];
 }
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {

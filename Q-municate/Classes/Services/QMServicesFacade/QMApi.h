@@ -32,7 +32,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 @property (strong, nonatomic, readonly) QMChatReceiver *responceService;
 @property (strong, nonatomic, readonly) QMContentService *contentService;
 
-@property (strong, nonatomic) QBUUser *currentUser;
+@property (strong, nonatomic, readonly) QBUUser *currentUser;
 
 + (instancetype)instance;
 
@@ -176,7 +176,6 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 
 @interface QMApi (Users)
 
-@property (strong, nonatomic, readonly) QBUUser *me;
 @property (strong, nonatomic, readonly) NSArray *friends;
 
 - (NSArray *)usersWithIDs:(NSArray *)ids;
@@ -198,9 +197,9 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 /**
  Add user to contact list request
  
- @param userID ID of user which you would like to add to contact list
+ @param user of user which you would like to add to contact list
  @return*/
-- (void)addUserToContactListRequest:(NSUInteger)userID completion:(void(^)(BOOL success))completion;
+- (void)addUserToContactListRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion;
 
 /**
  Remove user from contact list

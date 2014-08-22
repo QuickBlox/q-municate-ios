@@ -217,11 +217,10 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 
 - (NSArray *)occupantsWithoutMe:(NSArray *)opponents
 {
-    QBUUser *me = self.me;
     NSMutableArray *newArray = [[NSMutableArray alloc] init];
     
     for (QBUUser *opponent in opponents) {
-        if (![opponent isEqual:me]) {
+        if (![opponent isEqual:self.currentUser]) {
             [newArray addObject:opponent];
         }
     }

@@ -81,7 +81,6 @@ const NSUInteger kQMNumberOfSection = 2;
             [SVProgressHUD showSuccessWithStatus:@"Success"];
             return;
         }
-        [SVProgressHUD showErrorWithStatus:@"Error"];
     }];
 
 }

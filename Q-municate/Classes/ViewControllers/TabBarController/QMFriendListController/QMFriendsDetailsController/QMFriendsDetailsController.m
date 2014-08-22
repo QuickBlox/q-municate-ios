@@ -14,6 +14,7 @@
 #import "REAlertView.h"
 #import "SVProgressHUD.h"
 #import "QMApi.h"
+#import "QMChatReceiver.h"
 
 typedef NS_ENUM(NSUInteger, QMCallType) {
     QMCallTypePhone,
@@ -41,6 +42,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 @implementation QMFriendsDetailsController
 
 - (void)dealloc {
+    [[QMChatReceiver instance] unsubscribeForTarget:self];
     NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
@@ -75,6 +77,10 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
          
      }];
     
+    __weak __typeof(self)weakSelf = self;
+    [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:^{
+        [weakSelf updateUserStatus];
+    }];
     
     [self updateUserStatus];
 }
@@ -82,6 +88,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 - (void)updateUserStatus {
     
     QBContactListItem *item = [[QMApi instance] contactItemWithUserID:self.selectedUser.ID];
+    
     if (item) { //friend if YES
         self.status.text = NSLocalizedString(item.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
         self.onlineCircle.hidden = item.online ? NO : YES;

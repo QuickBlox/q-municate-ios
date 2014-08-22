@@ -145,7 +145,22 @@
     };
     
     [QBChat messagesWithDialogID:dialogID delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:echoObject]];
+}
+
+- (void)messagesWithDialogID:(NSString *)dialogID time:(NSUInteger)time completion:(QBChatHistoryMessageResultBlock)completion {
     
+    __weak __typeof(self)weakSelf = self;
+    QBChatHistoryMessageResultBlock echoObject = ^(QBChatHistoryMessageResult *result) {
+        [weakSelf setMessages:result.messages.count ? result.messages.mutableCopy : @[].mutableCopy withDialogID:dialogID];
+        completion(result);
+    };
+    
+    NSMutableDictionary *getRequest = [NSMutableDictionary dictionary];
+    
+    [getRequest setObject:@(time)
+                   forKey:@"date_send[gt]"];
+    
+    [QBChat messagesWithDialogID:dialogID extendedRequest:getRequest delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:echoObject]];
 }
 
 @end

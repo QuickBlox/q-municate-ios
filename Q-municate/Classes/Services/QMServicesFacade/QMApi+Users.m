@@ -18,10 +18,13 @@
 
 @implementation QMApi (Users)
 
-- (void)addUserToContactListRequest:(NSUInteger)userID completion:(void(^)(BOOL success))completion {
+- (void)addUserToContactListRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion {
 
     [self.messagesService chat:^(QBChat *chat) {
-        BOOL success = [chat addUserToContactListRequest:userID];
+        BOOL success = [chat addUserToContactListRequest:user.ID];
+        if (success) {
+            [self.usersService addUser:user];
+        }
         if (completion) completion(success);
     }];
 }
@@ -99,11 +102,6 @@
     NSArray *allFriends = [self usersWithIDs:ids];
     
     return allFriends;
-}
-
-- (QBUUser *)me
-{
-    return self.messagesService.currentUser;
 }
 
 
@@ -202,7 +200,7 @@
             
             // sending contact requests:
             for (QBUUser *user in pagedResult.users) {
-                [weakSelf addUserToContactListRequest:user.ID completion:nil];
+                [weakSelf addUserToContactListRequest:user completion:nil];
             }
         }];
     }];
@@ -216,7 +214,7 @@
         if ([contactsWithEmails count] == 0) {
             return;
         }
-        NSMutableArray *emails = [[NSMutableArray alloc] init];
+        NSMutableArray *emails = [NSMutableArray array];
         for (ABPerson *person in contactsWithEmails) {
             [emails addObjectsFromArray:person.emails];
         }
@@ -226,15 +224,14 @@
             if (!pagedResult.success) {
                 return;
             }
+            
             if ([pagedResult.users count] == 0) {
                 return;
             }
             
             // sending contact requests:
             for (QBUUser *user in pagedResult.users) {
-                [weakSelf addUserToContactListRequest:user.ID completion:^(BOOL success) {
-                    // lol:
-                }];
+                [weakSelf addUserToContactListRequest:user completion:^(BOOL success) {}];
             }
         }];
     }];

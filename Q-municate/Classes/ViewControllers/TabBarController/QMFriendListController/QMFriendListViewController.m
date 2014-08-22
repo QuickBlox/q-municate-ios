@@ -35,11 +35,13 @@
     [self.tableView setContentOffset:CGPointMake(0, self.searchDisplayController.searchBar.frame.size.height) animated:NO];
 #endif
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    self.dataSource = [[QMFriendsListDataSource alloc] initWithTableView:self.tableView searchDisplayController:self.searchDisplayController];
+    self.dataSource = [[QMFriendsListDataSource alloc] initWithTableView:self.tableView
+                                                 searchDisplayController:self.searchDisplayController];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 

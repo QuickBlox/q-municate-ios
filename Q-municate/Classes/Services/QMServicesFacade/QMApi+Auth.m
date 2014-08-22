@@ -19,9 +19,9 @@
 
 - (void)logout:(void(^)(BOOL success))completion {
 
+    [self.messagesService logoutChat];
     self.currentUser = nil;
     [self.settingsManager clearSettings];
-    [self.messagesService logoutChat];
     [QMFacebookService logout];
     [self stopServices];
 

@@ -33,9 +33,7 @@
 
 - (void)fbIniviteDialogWithCompletion:(void(^)(BOOL success))completion {
     
-    [QMFacebookService connectToFacebook:^(NSString *sessionToken) {
-        [QMFacebookService inviteFriendsWithCompletion:completion];
-    }];
+   [QMFacebookService inviteFriendsWithCompletion:completion];
 }
 
 @end
