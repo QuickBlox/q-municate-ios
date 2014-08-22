@@ -53,13 +53,7 @@
 
 - (IBAction)logIn:(id)sender
 {
-    __weak __typeof(self)weakSelf = self;
-    [self checkForAcceptedUserAgreement:^(BOOL success) {
-        if (success) {
-            [weakSelf fireLogIn];
-        }
-    }];
-    
+    [self fireLogIn];
 }
 
 - (void)fireLogIn
