@@ -39,7 +39,7 @@
 
 - (void)dealloc {
     [self sd_cancelCurrentImageLoad];
-    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)configure {

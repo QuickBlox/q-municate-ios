@@ -62,7 +62,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 }
 
 - (void)dealloc {
-    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     [self registerForNotifications:NO];
 }
 

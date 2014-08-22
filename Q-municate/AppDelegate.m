@@ -73,7 +73,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    NSLog(@"Push war received. User info: %@", userInfo);
+    ILog(@"Push war received. User info: %@", userInfo);
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {

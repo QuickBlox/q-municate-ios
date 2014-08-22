@@ -18,7 +18,7 @@
 - (void)dealloc {
     
     [[QMChatReceiver instance] unsubscribeForTarget:self];
-    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {

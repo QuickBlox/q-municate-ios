@@ -41,7 +41,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 @implementation QMFriendsDetailsController
 
 - (void)dealloc {
-    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {

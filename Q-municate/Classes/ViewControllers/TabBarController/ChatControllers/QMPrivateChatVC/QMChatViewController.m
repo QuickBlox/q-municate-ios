@@ -28,7 +28,7 @@
 @implementation QMChatViewController
 
 - (void)dealloc {
-    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     [[QMChatReceiver instance] unsubscribeForTarget:self];
 }
 

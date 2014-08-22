@@ -391,7 +391,7 @@ static int EscapeMapCompare(const void *ucharVoid, const void *mapVoid) {
         NSMutableData *data = [NSMutableData dataWithLength:length * sizeof(UniChar)];
         if (!data) {
             // COV_NF_START  - Memory fail case
-            NSLog(@"couldn't alloc buffer");
+            ILog(@"couldn't alloc buffer");
             return nil;
             // COV_NF_END
         }
@@ -401,7 +401,7 @@ static int EscapeMapCompare(const void *ucharVoid, const void *mapVoid) {
     
     if (!buffer || !data2) {
         // COV_NF_START
-        NSLog(@"Unable to allocate buffer or data2");
+        ILog(@"Unable to allocate buffer or data2");
         return nil;
         // COV_NF_END
     }

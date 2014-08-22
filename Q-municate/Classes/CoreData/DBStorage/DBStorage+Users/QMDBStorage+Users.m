@@ -146,10 +146,10 @@
             [weakSelf deleteQBUsers:toDelete inContext:asyncContext];
         }
         
-        NSLog(@"Users in cahce %d", allQBUsersInCache.count);
-        NSLog(@"Users to insert %d", toInsert.count);
-        NSLog(@"Users to update %d", toUpdate.count);
-        NSLog(@"Users to delete %d", toDelete.count);
+        ILog(@"Users in cahce %d", allQBUsersInCache.count);
+        ILog(@"Users to insert %d", toInsert.count);
+        ILog(@"Users to update %d", toUpdate.count);
+        ILog(@"Users to delete %d", toDelete.count);
         
         [weakSelf save:finish];
     }];

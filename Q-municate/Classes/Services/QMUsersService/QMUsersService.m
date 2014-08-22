@@ -116,7 +116,7 @@
 - (void)retrieveUsersWithIDs:(NSArray *)idsToFetch completion:(void(^)(BOOL updated))completion {
     
     NSArray *filteredIDs = [self checkExistIds:idsToFetch];
-    NSLog(@"RetrieveUsers %@", filteredIDs);
+    ILog(@"RetrieveUsers %@", filteredIDs);
     
     if (filteredIDs.count == 0) {
         completion(NO);

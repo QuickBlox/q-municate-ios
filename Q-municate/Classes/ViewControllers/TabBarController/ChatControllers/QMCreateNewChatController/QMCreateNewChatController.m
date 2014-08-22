@@ -16,7 +16,7 @@ NSString *const QMChatViewControllerID = @"QMChatViewController";
 @implementation QMCreateNewChatController
 
 - (void)dealloc {
-    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {

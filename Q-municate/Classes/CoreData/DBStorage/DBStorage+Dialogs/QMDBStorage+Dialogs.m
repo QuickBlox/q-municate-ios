@@ -111,10 +111,10 @@
             [weakSelf deleteQBChatDialogs:toDelete inContext:asyncContext];
         }
         
-        NSLog(@"Dialogs in cahce %d", allDialogs.count);
-        NSLog(@"Dialogs to insert %d", toInsert.count);
-        NSLog(@"Dialogs to update %d", toUpdate.count);
-        NSLog(@"Dialogs to delete %d", toDelete.count);
+        ILog(@"Dialogs in cahce %d", allDialogs.count);
+        ILog(@"Dialogs to insert %d", toInsert.count);
+        ILog(@"Dialogs to update %d", toUpdate.count);
+        ILog(@"Dialogs to delete %d", toDelete.count);
         
         [weakSelf save:finish];
     }];

@@ -239,6 +239,7 @@
 		2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+GTMNSStringHTMLAdditions.m"; sourceTree = "<group>"; };
 		2494559919A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBChatAbstractMessage+TextEncoding.h"; sourceTree = "<group>"; };
 		2494559A19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QBChatAbstractMessage+TextEncoding.m"; sourceTree = "<group>"; };
+		24ECC26419A73587003F5038 /* Macro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macro.h; sourceTree = "<group>"; };
 		24F8B8F519A26F63009F8656 /* NSString+occupantsIDsFromMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+occupantsIDsFromMessage.h"; sourceTree = "<group>"; };
 		24F8B8F619A26F63009F8656 /* NSString+occupantsIDsFromMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+occupantsIDsFromMessage.m"; sourceTree = "<group>"; };
 		24FDA66E199B7A610005662B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = External/Crashlytics.framework; sourceTree = "<group>"; };
@@ -2018,6 +2019,7 @@
 			isa = PBXGroup;
 			children = (
 				69CF18AA18AE3788003262EF /* QMDefinitions.h */,
+				24ECC26419A73587003F5038 /* Macro.h */,
 				240CE3AF19A2223A00392E06 /* QMProtocols.h */,
 				69D57E6418ACC11C00A9900A /* AppDelegate.h */,
 				69D57E6518ACC11C00A9900A /* AppDelegate.m */,
@@ -2477,8 +2479,8 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External\"",
@@ -2505,7 +2507,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "5F37965B-59B5-461B-83F6-77EFE66FC01B";
+				PROVISIONING_PROFILE = "dd8e1b9a-3697-4273-a34a-8d3c12eaab2d";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VALID_ARCHS = armv7;

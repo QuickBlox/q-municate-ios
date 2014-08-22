@@ -133,12 +133,12 @@ NSString *const kCDMessageDatetimePath = @"datetime";
             [weakSelf deleteQBChatHistoryMessages:toDelete inContext:asyncContext];
         }
         
-        NSLog(@"/////////////////////////////////");
-        NSLog(@"Chat history in cahce %d objects by id %@", allQBChatHistoryMessagesInCache.count, dialogId);
-        NSLog(@"Messages to insert %d", toInsert.count);
-        NSLog(@"Messages to update %d", toUpdate.count);
-        NSLog(@"Messages to delete %d", toDelete.count);
-        NSLog(@"/////////////////////////////////");
+        ILog(@"/////////////////////////////////");
+        ILog(@"Chat history in cahce %d objects by id %@", allQBChatHistoryMessagesInCache.count, dialogId);
+        ILog(@"Messages to insert %d", toInsert.count);
+        ILog(@"Messages to update %d", toUpdate.count);
+        ILog(@"Messages to delete %d", toDelete.count);
+        ILog(@"/////////////////////////////////");
         [weakSelf save:finish];
     }];
 }

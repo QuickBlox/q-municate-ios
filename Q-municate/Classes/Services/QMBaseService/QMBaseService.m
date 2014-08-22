@@ -16,14 +16,14 @@
     
     NSAssert(self.active == NO, @"Need stop service before start...");
     self.active = YES;
-    NSLog(@"******************** (START %@ SERVICE) ********************", NSStringFromClass(self.class));
+    ILog(@"******************** (START %@ SERVICE) ********************", NSStringFromClass(self.class));
 }
 
 - (void)stop {
     
     NSAssert(self.active == YES, @"Service dont running..");
     self.active = NO;
-    NSLog(@"******************** (STOP %@ SERVICE )********************", NSStringFromClass(self.class));
+    ILog(@"******************** (STOP %@ SERVICE )********************", NSStringFromClass(self.class));
 }
 
 @end

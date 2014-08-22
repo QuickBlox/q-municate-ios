@@ -34,7 +34,7 @@ NSString *const kErrorAlertMessage = @"You can't add new friend, because all exi
 - (void)dealloc {
     
     [[QMChatReceiver instance] unsubscribeForTarget:self];
-    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {
