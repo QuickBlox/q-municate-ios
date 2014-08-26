@@ -100,7 +100,7 @@ Remember me tick in the check box on Login page will be set automatically, so th
 
 ### Step 3. Login page
 
-![step_1(2).png](http://image.quickblox.com/044f84c321e3efd5d180d74b27ba.injoit.png) 
+![login_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/2235282969-login_screen_320_568.jpg) 
 
 User can login in the app via Facebook or login as a QM user.
 
