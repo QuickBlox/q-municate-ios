@@ -171,8 +171,9 @@ Notification with text "Please wait, Q-municate app is searching for your friend
 
 #### The code:
 
-   [[QMApi instance] importFriendsFromFacebook];
-   [[QMApi instance] importFriendsFromAddressBook];
+
+     [[QMApi instance] importFriendsFromFacebook];
+     [[QMApi instance] importFriendsFromAddressBook];
 
 
 
@@ -502,7 +503,7 @@ Can be enabled by tapping it once more
 
 #### The code:
 
-   [[QMApi instance] callUser:self.opponent.ID opponentView:self.opponentsView conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
+   [[QMApi instance] callUser:self.opponent.ID opponentView:self.opponentsView  conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
 
 
 
