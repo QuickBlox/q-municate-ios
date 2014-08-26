@@ -108,7 +108,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
                      ILog(@"User canceled request.");
                  } else {
                      // User clicked the Send button
-                     NSString *requestID = [urlParams valueForKey:@"request"];
+                     __unused NSString *requestID = [urlParams valueForKey:@"request"];
                      ILog(@"Request ID: %@", requestID);
                      completion(YES);
                  }
@@ -146,7 +146,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
 //
 //+ (BOOL)isSessionStateEffectivelyLoggedIn:(FBSessionState)state {
 //    BOOL effectivelyLoggedIn;
-//    
+//
 //    switch (state) {
 //        case FBSessionStateOpen:
 //            ILog(@"Facebook session state: FBSessionStateOpen");
@@ -165,7 +165,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
 //            effectivelyLoggedIn = NO;
 //            break;
 //    }
-//    
+//
 //    return effectivelyLoggedIn;
 //}
 
@@ -176,13 +176,13 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
  */
 
 //+ (BOOL)isLoggedIn {
-//    
+//
 //    FBSession *activeSession = [FBSession activeSession];
 //    FBSessionState state = activeSession.state;
 //    BOOL isLoggedIn = activeSession && [self isSessionStateEffectivelyLoggedIn:state];
-//    
+//
 //    ILog(@"Facebook active session state: %d; logged in conclusion: %@", state, isLoggedIn ? @"YES" : @"NO");
-//    
+//
 //    return isLoggedIn;
 //}
 
@@ -206,7 +206,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
         // You must ALWAYS ask for public_profile permissions when opening a session
         ILog(@"Active session wasn't in state 'FBSessionStateCreatedTokenLoaded'. It has state: %d", FBSession.activeSession.state);
     }
-
+    
     if (!FBSession.activeSession.isOpen) {
         
         [FBSession.activeSession openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
@@ -263,7 +263,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
                     alertText = [NSString stringWithFormat:@"Please retry. \n\n If the problem persists contact us and mention this error code: %@",
                                  [errorInformation objectForKey:@"message"]];
                 } else {
-                     shouldNotify = NO;
+                    shouldNotify = NO;
                 }
             }
         }

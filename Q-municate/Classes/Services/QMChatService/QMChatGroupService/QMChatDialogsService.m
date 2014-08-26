@@ -98,7 +98,7 @@
     //If dialog type is equal group then need join room
     if (chatDialog.type == QBChatDialogTypeGroup) {
         
-        NSString *roomJID = chatDialog.roomJID;
+       __unused NSString *roomJID = chatDialog.roomJID;
         NSAssert(roomJID, @"Need update this case");
         
         QBChatRoom *room = chatDialog.chatRoom;
