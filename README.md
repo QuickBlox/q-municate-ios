@@ -53,6 +53,7 @@ _______
 
 ## Step by step guide
 ### Step 1. PreLogin page
+
 ![wellcome_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/1650301560-wellcome_screen_320_568.jpg)
 
 
@@ -176,7 +177,8 @@ Notification with text "Please wait, Q-municate app is searching for your friend
 
 
 ### Step 5. Friends page
-![step_1(2).png](http://image.quickblox.com/c365fc73451b298567c269ccbaed.injoit.png) 
+
+![friends_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/3312680721-friends_screen_320_568.jpg)
 
 User goes to Friends page, if correct credentials are entered
 Friends Page is used for list of user’s friends.
