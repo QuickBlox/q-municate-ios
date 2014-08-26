@@ -159,7 +159,6 @@ Tapping on Forgot password link a predefined email from the server will be sent 
 
         [[QMApi instance] loginWithUser:user completion:^(BOOL success) {
             
-            [SVProgressHUD dismiss];
             if (success) {
                 // do something...
             }
