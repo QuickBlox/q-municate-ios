@@ -215,7 +215,6 @@ Side bar will be shown during first app login.
 
 
 #### Step 5.1. Tab bar
-![step_1(2).png](http://image.quickblox.com/c365fc73451b298567c269ccbaed.injoit.png) 
 
 * Friends page (Main page): 
 - A list of friends, listed in alphabetical order.
@@ -250,7 +249,9 @@ A list of friends, listed in alphabetical order.
 
 
 ### Step 6. Details Page
-![step_1(2).png](http://image.quickblox.com/4ba1c3406edcab40d553a1f18a14.injoit.png) 
+
+![![step_1(2).png]
+(https://bitbucket.org/repo/rMnaz8/images/4014049389-friends_details_320_568.jpg)
 
 Details Page is used for friends profile information.
 
