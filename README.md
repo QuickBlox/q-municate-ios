@@ -354,7 +354,7 @@ Chats Page shows scrollable chats list (private and group).
 
 
 ### Step 9. New chat page
-
+![create_new_chat_page_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/3591448249-create_new_chat_page_320_568.jpg)
 
 New Chat Page allows to create new chat.
 
