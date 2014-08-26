@@ -300,8 +300,7 @@ User can access Invite Friends page from the Side bar, to invite his/her friends
       // invite via facebook:
     [[QMApi instance] fbIniviteDialogWithCompletion:^(BOOL success) {
         if (success) {
-            [SVProgressHUD showSuccessWithStatus:@"Success"];
-            return;
+            // do something...
         }
     }];
 
@@ -353,7 +352,7 @@ Chats Page shows scrollable chats list (private and group).
     [self fetchAllDialogs:^{
         
         [weakSelf retrieveUsersWithIDs:occupantIDs completion:^(BOOL updated) {
-            completion();
+            // do something...
         }];
     }];
 
@@ -371,11 +370,10 @@ New Chat Page allows to create new chat.
 
 #### The code:
 
-    [[QMApi instance] createGroupChatDialogWithName:chatName ocupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
-        
-        if (result.success) {
-            // do something...
-      	}
+    [[QMApi instance] loginChat:^(BOOL loginSuccess) {
+          if (loginSuccess) {
+                // do something...
+          }     
     }];
 
 
