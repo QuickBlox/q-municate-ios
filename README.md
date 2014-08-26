@@ -100,10 +100,6 @@ Remember me tick in the check box on Login page will be set automatically, so th
     }];
 
 
-
-
-
-
 ### Step 3. Login page
 
 ![step_1(2).png](http://image.quickblox.com/044f84c321e3efd5d180d74b27ba.injoit.png) 
