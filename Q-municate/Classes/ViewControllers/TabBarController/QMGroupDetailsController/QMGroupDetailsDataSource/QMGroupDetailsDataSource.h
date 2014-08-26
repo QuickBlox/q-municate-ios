@@ -10,6 +10,7 @@
 
 @interface QMGroupDetailsDataSource : NSObject <UITableViewDataSource>
 
-- (id)initWithChatDialog:(QBChatDialog *)chatDialog tableView:(UITableView *)tableView;
+- (id)initWithTableView:(UITableView *)tableView;
+- (void)reloadDataWithChatDialog:(QBChatDialog *)chatDialog;
 
 @end

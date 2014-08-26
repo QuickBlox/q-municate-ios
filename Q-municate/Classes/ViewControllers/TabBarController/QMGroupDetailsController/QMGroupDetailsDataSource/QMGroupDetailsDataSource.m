@@ -31,33 +31,32 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
     [[QMChatReceiver instance] unsubscribeForTarget:self];
 }
 
-- (id)initWithChatDialog:(QBChatDialog *)chatDialog tableView:(UITableView *)tableView {
+- (id)initWithTableView:(UITableView *)tableView {
 
     if (self = [super init]) {
         
         _tableView = tableView;
         
-        self.chatDialog = chatDialog;
         
         self.tableView.dataSource = nil;
         self.tableView.dataSource = self;
         
-        [self reloadParticipants];
         __weak __typeof(self)weakSelf = self;
         
         [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:^{
-            [weakSelf reloadParticipants];
+            [weakSelf reloadUserData];
         }];
         
         [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:^{
-            [weakSelf reloadParticipants];
+            [weakSelf reloadUserData];
         }];
         
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
             
-            if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog && [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID]) {
-                
-                [weakSelf reloadParticipants];
+            if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog &&
+                [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID])
+            {
+                [weakSelf reloadUserData];
             }
         }];
     }
@@ -65,7 +64,13 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
     return self;
 }
 
-- (void)reloadParticipants {
+- (void)reloadDataWithChatDialog:(QBChatDialog *)chatDialog  {
+    
+    self.chatDialog = chatDialog;
+    [self reloadUserData];
+}
+
+- (void)reloadUserData {
     
     NSArray *unsortedParticipants = [[QMApi instance] usersWithIDs:self.chatDialog.occupantIDs];
     self.participants = [QMUsersUtils sortUsersByFullname:unsortedParticipants];

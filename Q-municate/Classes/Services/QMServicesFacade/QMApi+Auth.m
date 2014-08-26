@@ -150,6 +150,7 @@
     __weak __typeof(self)weakSelf = self;
     [self.authService logInWithFacebookAccessToken:accessToken completion:^(QBUUserLogInResult *loginWithFBResult) {
         weakSelf.currentUser = loginWithFBResult.user;
+        [weakSelf.usersService addUser:weakSelf.currentUser];
         completion([weakSelf checkResult:loginWithFBResult]);
     }];
 }
@@ -193,6 +194,7 @@
         
         weakSelf.currentUser = loginResult.user;
         weakSelf.currentUser.password = password;
+        [weakSelf.usersService addUser:weakSelf.currentUser];
         
         if(![weakSelf checkResult:loginResult]){
             completion(loginResult.success);

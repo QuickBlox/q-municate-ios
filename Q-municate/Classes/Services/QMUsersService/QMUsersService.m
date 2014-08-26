@@ -81,6 +81,7 @@
     for (QBUUser *user in users) {
         [self addUser:user];
     }
+    
     [[QMChatReceiver instance] postUsersHistoryUpdated];
 }
 
