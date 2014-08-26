@@ -79,7 +79,8 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  Reset user password wiht email
  */
 - (void)resetUserPassordWithEmail:(NSString *)email completion:(void(^)(BOOL success))completion;
-- (void)subscribeToPushNotifications;
+- (void)subscribeToPushNotificationsForceSettings:(BOOL)force complete:(void(^)(BOOL success))complete;
+- (void)unSubscribeToPushNotifications:(void(^)(BOOL success))complete;
 
 @end
 

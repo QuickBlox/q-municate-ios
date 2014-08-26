@@ -52,7 +52,12 @@
         }else {
             
             [[QMApi instance] loginChat:^(BOOL loginSuccess) {
-                [[QMApi instance] subscribeToPushNotifications];
+                [[QMApi instance] subscribeToPushNotificationsForceSettings:NO complete:^(BOOL subscribeToPushNotificationsSuccess) {
+                
+                    if (!subscribeToPushNotificationsSuccess) {
+                        [QMApi instance].settingsManager.pushNotificationsEnabled = NO;
+                    }
+                }];
                 
                 QMSettingsManager *settings = [QMApi instance].settingsManager;
                 [[QMApi instance] fetchAllHistory:^{}];

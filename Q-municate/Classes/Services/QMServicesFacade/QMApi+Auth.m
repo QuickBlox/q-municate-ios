@@ -18,15 +18,15 @@
 #pragma mark Public methods
 
 - (void)logout:(void(^)(BOOL success))completion {
-
+    
     [self.messagesService logoutChat];
     self.currentUser = nil;
     [self.settingsManager clearSettings];
     [QMFacebookService logout];
     [self stopServices];
-
+    
     [self.authService unSubscribeFromPushNotifications:^(QBMUnregisterSubscriptionTaskResult *result) {
-       
+        
         completion(YES);
     }];
 }
@@ -177,12 +177,35 @@
     }];
 }
 
-- (void)subscribeToPushNotifications {
+- (void)subscribeToPushNotificationsForceSettings:(BOOL)force complete:(void(^)(BOOL success))complete {
+    
+    if (self.settingsManager.pushNotificationsEnabled || force) {
+        __weak __typeof(self)weakSelf = self;
+        [self.authService subscribeToPushNotifications:^(QBMRegisterSubscriptionTaskResult *result) {
+            if (result.success && force) {
+                weakSelf.settingsManager.pushNotificationsEnabled = YES;
+            }
+            if (complete)
+                complete([weakSelf checkResult:result]);
+        }];
+    }
+}
+
+- (void)unSubscribeToPushNotifications:(void(^)(BOOL success))complete {
     
     if (self.settingsManager.pushNotificationsEnabled) {
         __weak __typeof(self)weakSelf = self;
-        [self.authService subscribeToPushNotifications:^(QBMRegisterSubscriptionTaskResult *result) {
-            [weakSelf checkResult:result];
+        [self.authService unSubscribeFromPushNotifications:^(QBMUnregisterSubscriptionTaskResult *result) {
+            
+            if (![weakSelf checkResult:result]) {
+                if (complete)
+                    complete(NO);
+            }
+            else {
+                weakSelf.settingsManager.pushNotificationsEnabled = NO;
+                if (complete)
+                    complete(YES);
+            }
         }];
     }
 }

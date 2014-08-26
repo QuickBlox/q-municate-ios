@@ -29,6 +29,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.pushNotificationSwitch.on = [QMApi instance].settingsManager.pushNotificationsEnabled;
     if ([QMApi instance].settingsManager.accountType == QMAccountTypeFacebook) {
         [self cell:self.changePasswordCell setHidden:YES];
     }
@@ -72,6 +73,24 @@
             [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
         }];
     }
+}
+
+#pragma mark - Actions
+
+- (IBAction)changePushNotificationValue:(UISwitch *)sender {
+
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    if (sender.on) {
+        [[QMApi instance] subscribeToPushNotificationsForceSettings:YES complete:^(BOOL success) {
+            [SVProgressHUD dismiss];
+        }];
+    }
+    else {
+        [[QMApi instance] unSubscribeToPushNotifications:^(BOOL success) {
+            [SVProgressHUD dismiss];
+        }];
+    }
+    
 }
 
 - (IBAction)pressClearCache:(id)sender {
