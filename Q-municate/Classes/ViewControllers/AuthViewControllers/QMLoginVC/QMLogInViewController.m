@@ -34,9 +34,8 @@
     
     [super viewDidLoad];
     
-    self.rememberMeSwitch.on = YES;
-    
     [self.navigationController setNavigationBarHidden:NO animated:YES];
+    self.rememberMeSwitch.on = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -53,29 +52,40 @@
 
 - (IBAction)logIn:(id)sender
 {
-    [self fireLogIn];
-}
-
-- (void)fireLogIn
-{
     NSString *email = self.emailField.text;
     NSString *password = self.passwordField.text;
     
     if (email.length == 0 || password.length == 0) {
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) actionSuccess:NO];
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil)
+                            actionSuccess:NO];
     }
     else {
         
-        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         __weak __typeof(self)weakSelf = self;
-        
-        [[QMApi instance] loginWithEmail:email password:password rememberMe:weakSelf.rememberMeSwitch.on completion:^(BOOL success) {
-            [SVProgressHUD dismiss];
-            if (success) {
-                [[QMApi instance] setAutoLogin:weakSelf.rememberMeSwitch.on withAccountType:QMAccountTypeEmail];
-                [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+        [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL userAgreementSuccess) {
+            
+            if (userAgreementSuccess) {
+                
+                [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+                
+                [[QMApi instance] loginWithEmail:email
+                                        password:password
+                                      rememberMe:weakSelf.rememberMeSwitch.on
+                                      completion:^(BOOL success)
+                 {
+                     [SVProgressHUD dismiss];
+                     
+                     if (success) {
+                         [[QMApi instance] setAutoLogin:weakSelf.rememberMeSwitch.on
+                                        withAccountType:QMAccountTypeEmail];
+                         [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier
+                                                       sender:nil];
+                     }
+                 }];
             }
         }];
+        
+        
     }
 }
 

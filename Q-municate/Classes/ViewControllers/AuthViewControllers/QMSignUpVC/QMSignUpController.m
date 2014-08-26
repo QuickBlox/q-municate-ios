@@ -42,7 +42,7 @@
     
     self.userImage.layer.cornerRadius = self.userImage.frame.size.width / 2;
     self.userImage.layer.masksToBounds = YES;
-
+    
     [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
@@ -63,7 +63,7 @@
     __weak __typeof(self)weakSelf = self;
     
     [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
-
+        
         [weakSelf.userImage setImage:image];
         weakSelf.cachedPicture = image;
     }];
@@ -74,14 +74,8 @@
     [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:nil];
 }
 
-- (IBAction)signUp:(id)sender
-{
-    __weak __typeof(self)weakSelf = self;
-    [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL success) {
-        if (success) {
-            [weakSelf fireSignUp];
-        }
-    }];
+- (IBAction)signUp:(id)sender {
+    [self fireSignUp];
 }
 
 - (void)fireSignUp
@@ -95,40 +89,46 @@
         return;
     }
     
-    QBUUser *newUser = [QBUUser user];
-    
-    newUser.fullName = fullName;
-    newUser.email = email;
-    newUser.password = password;
-    
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     __weak __typeof(self)weakSelf = self;
-    
-    void (^presentTabBar)(void) = ^(void) {
+    [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL userAgreementSuccess) {
         
-        [SVProgressHUD dismiss];
-        [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
-    };
-    
-    [[QMApi instance] signUpAndLoginWithUser:newUser rememberMe:YES completion:^(BOOL success) {
-        
-        if (success) {
+        if (userAgreementSuccess) {
             
-            if (weakSelf.cachedPicture) {
+            QBUUser *newUser = [QBUUser user];
+            
+            newUser.fullName = fullName;
+            newUser.email = email;
+            newUser.password = password;
+            
+            [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+            
+            void (^presentTabBar)(void) = ^(void) {
                 
-                [SVProgressHUD showProgress:0.f status:nil maskType:SVProgressHUDMaskTypeClear];
-                [[QMApi instance] updateUser:nil image:weakSelf.cachedPicture progress:^(float progress) {
-                    [SVProgressHUD showProgress:progress status:nil maskType:SVProgressHUDMaskTypeClear];
-                } completion:^(BOOL updateUserSuccess) {
-                    presentTabBar();
-                }];
-            }
-            else {
-                presentTabBar();
-            }
-        }
-        else {
-            [SVProgressHUD dismiss];
+                [SVProgressHUD dismiss];
+                [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+            };
+            
+            [[QMApi instance] signUpAndLoginWithUser:newUser rememberMe:YES completion:^(BOOL success) {
+                
+                if (success) {
+                    
+                    if (weakSelf.cachedPicture) {
+                        
+                        [SVProgressHUD showProgress:0.f status:nil maskType:SVProgressHUDMaskTypeClear];
+                        [[QMApi instance] updateUser:nil image:weakSelf.cachedPicture progress:^(float progress) {
+                            [SVProgressHUD showProgress:progress status:nil maskType:SVProgressHUDMaskTypeClear];
+                        } completion:^(BOOL updateUserSuccess) {
+                            presentTabBar();
+                        }];
+                    }
+                    else {
+                        presentTabBar();
+                    }
+                }
+                else {
+                    [SVProgressHUD dismiss];
+                }
+            }];
         }
     }];
 }
