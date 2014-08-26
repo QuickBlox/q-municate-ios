@@ -230,7 +230,7 @@ Side bar will be shown during first app login.
 - A page with app settings and preferences.
 
 #### Step 5.2. Search Bar
-![step_1(2).png](http://image.quickblox.com/61ca0beffbdd9c6372f97cda36bb.injoit.png) 
+![search_page_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/400004350-search_page_320_568.jpg)
 
 Search icon on Friends page opens/hides search bar.
 
@@ -276,7 +276,7 @@ Friends profile page shows user’s information:
  
 
 ### Step 7. Invite Friends
-![step_1(2).png](http://image.quickblox.com/04beaf8f5ff511e8b60093e8ee1f.injoit.png) 
+![![step_1(2).png](http://image.quickblox.com/04beaf8f5ff511e8b60093e8ee1f.injoit.png) ](https://bitbucket.org/repo/rMnaz8/images/408245049-invite_friends_320_568.jpg)
 
 
 User can access Invite Friends page from the Side bar, to invite his/her friends in the app.
@@ -328,8 +328,7 @@ User can access Invite Friends page from the Side bar, to invite his/her friends
 
 
 ### Step 8. Chats page
-![step_1(2).png](http://image.quickblox.com/205a622e63e5041008ab6ddf72e5.injoit.png) 
-
+![chats_page_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/3357516681-chats_page_320_568.jpg)
 
 Chats Page shows scrollable chats list (private and group).
 
@@ -503,13 +502,12 @@ Can be enabled by tapping it once more
 
 #### The code:
 
-   [[QMApi instance] callUser:self.opponent.ID opponentView:self.opponentsView  conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
+       [[QMApi instance] callUser:self.opponent.ID opponentView:self.opponentsView  conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
 
 
 
 ### Step 13. Settings Page
-![step_4(2).png](http://image.quickblox.com/7333a05a8aaab026e81219a33e1f.injoit.png)
-
+![settings_page_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/3532052183-settings_page_320_568.jpg)
 
 Settings Page allows user to change his/her profile and change other in-app controls.
 
