@@ -1,7 +1,5 @@
-_____________________
-
 # Q-municate
- 
+
 Q-municate is an open source code of chat application with full range of communication features on board (such as messaging, file transfer, push notifications, audio/video calls).
 
 We are inspired to give you chat application out of the box. You can customize this application depending on your needs. As always QuickBlox backend is at your service: http://quickblox.com/plans/
@@ -55,7 +53,8 @@ _______
 
 ## Step by step guide
 ### Step 1. PreLogin page
-![step_1(2).png](http://image.quickblox.com/88d93e6bef947107cdf660110ad9.injoit.png) 
+
+![wellcome_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/1650301560-wellcome_screen_320_568.jpg)
 
 
 #### Available features:
@@ -70,7 +69,7 @@ _______
 
 
 ### Step 2. Sign Up page
-![step_1(2).png](http://image.quickblox.com/d064bf5f4bea92a73dbf15915e8f.injoit.png) 
+ ![signup_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/434633715-signup_screen_320_568.jpg) 
 
 
 Sign Up Page allows to create new QM user.
@@ -102,7 +101,7 @@ Remember me tick in the check box on Login page will be set automatically, so th
 
 ### Step 3. Login page
 
-![step_1(2).png](http://image.quickblox.com/044f84c321e3efd5d180d74b27ba.injoit.png) 
+![login_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/2235282969-login_screen_320_568.jpg) 
 
 User can login in the app via Facebook or login as a QM user.
 
@@ -178,7 +177,8 @@ Notification with text "Please wait, Q-municate app is searching for your friend
 
 
 ### Step 5. Friends page
-![step_1(2).png](http://image.quickblox.com/c365fc73451b298567c269ccbaed.injoit.png) 
+
+![friends_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/3312680721-friends_screen_320_568.jpg)
 
 User goes to Friends page, if correct credentials are entered
 Friends Page is used for list of user’s friends.
@@ -215,7 +215,6 @@ Side bar will be shown during first app login.
 
 
 #### Step 5.1. Tab bar
-![step_1(2).png](http://image.quickblox.com/c365fc73451b298567c269ccbaed.injoit.png) 
 
 * Friends page (Main page): 
 - A list of friends, listed in alphabetical order.
@@ -250,7 +249,9 @@ A list of friends, listed in alphabetical order.
 
 
 ### Step 6. Details Page
-![step_1(2).png](http://image.quickblox.com/4ba1c3406edcab40d553a1f18a14.injoit.png) 
+
+![![step_1(2).png]
+(https://bitbucket.org/repo/rMnaz8/images/4014049389-friends_details_320_568.jpg)
 
 Details Page is used for friends profile information.
 
