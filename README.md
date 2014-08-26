@@ -1,4 +1,3 @@
-![wellcome_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/1650301560-wellcome_screen_320_568.jpg)_____________________
 
 # Q-municate
  
@@ -55,7 +54,7 @@ _______
 
 ## Step by step guide
 ### Step 1. PreLogin page
-![step_1(2).png](http://image.quickblox.com/88d93e6bef947107cdf660110ad9.injoit.png) 
+![wellcome_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/1650301560-wellcome_screen_320_568.jpg)
 
 
 #### Available features:
