@@ -502,7 +502,7 @@ Can be enabled by tapping it once more
 
 #### The code:
 
-[[QMApi instance] callUser:self.opponent.ID opponentView:self.opponentsView conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
+   [[QMApi instance] callUser:self.opponent.ID opponentView:self.opponentsView conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
 
 
 
@@ -529,7 +529,7 @@ Email –editable field
 
 
 ### Step 14. Profile Page
-![step_3(2).png](http://image.quickblox.com/d3867bd5823d0509eb4930f995d9.injoit.png) 
+![profile_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/4270567284-profile_screen_320_568.jpg)
 
 Profile page allows user to edit his/her profile info.
 
