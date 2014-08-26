@@ -100,10 +100,6 @@ Remember me tick in the check box on Login page will be set automatically, so th
     }];
 
 
-
-
-
-
 ### Step 3. Login page
 
 ![step_1(2).png](http://image.quickblox.com/044f84c321e3efd5d180d74b27ba.injoit.png) 
@@ -159,7 +155,6 @@ Tapping on Forgot password link a predefined email from the server will be sent 
 
         [[QMApi instance] loginWithUser:user completion:^(BOOL success) {
             
-            [SVProgressHUD dismiss];
             if (success) {
                 // do something...
             }
@@ -174,6 +169,11 @@ An app will import all user’s friends by email and Facebook ID after the first
 
 #### Feature work flow:
 Notification with text "Please wait, Q-municate app is searching for your friends" and the spinner should be shown. Tapping out of the notification (or OK button) user can close this pop-up. App takes all emails from the phone contacts list and search them in Q-municate users table (in the background). Adds all Q-municate friends on the Friends page, If there are any in the search result. Friends screen will be shown. On Friends screen will be shown grey text “Invite your friends”, if there are no friends in the friends list.
+
+#### The code:
+
+   [[QMApi instance] importFriendsFromFacebook];
+   [[QMApi instance] importFriendsFromAddressBook];
 
 
 
@@ -293,42 +293,36 @@ User can access Invite Friends page from the Side bar, to invite his/her friends
 
 #### The code:
 
-	// invite via Emails:
-    void (^inviteWithEmail)(void) =^{
-        
-        NSArray *abEmails = [self.dataSource emailsToInvite];
-        if (abEmails.count > 0) {
-            
-            [REMailComposeViewController present:^(REMailComposeViewController *mailVC) {
-                @strongify(self)
-                [mailVC setToRecipients:abEmails];
-                [mailVC setSubject:kMailSubjectString];
-                [mailVC setMessageBody:kMailBodyString isHTML:YES];
-                [self presentViewController:mailVC animated:YES completion:nil];
-                
-            } finish:^(MFMailComposeResult result, NSError *error) {
-                !error ? [self.dataSource clearFBFriendsToInvite] : [SVProgressHUD showErrorWithStatus:error.localizedDescription];
-            }];
+      // invite via facebook:
+    [[QMApi instance] fbIniviteDialogWithCompletion:^(BOOL success) {
+        if (success) {
+            // do something...
         }
-    };
-    
-	// Invite via facebook
-    NSArray *fbIDs = [self.dataSource facebookIDsToInvite];
+    }];
 
-    if (fbIDs.count > 0) {
-        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+	// invite via Emails:
+    __weak __typeof(self)weakSelf = self;
+    NSArray *abEmails = [weakSelf.dataSource emailsToInvite];
+    if (abEmails.count > 0) {
         
-        [[QMApi instance] fbInviteUsersWithIDs:fbIDs copmpletion:^(NSError *error) {
-            @strongify(self)
-            if (error) {
-                [SVProgressHUD showErrorWithStatus:error.localizedDescription];
-            }else {
-                [self.dataSource clearFBFriendsToInvite];
-                [SVProgressHUD showSuccessWithStatus:kAlertBodyRecordPostedString];
+        [REMailComposeViewController present:^(REMailComposeViewController *mailVC) {
+            
+            [mailVC setToRecipients:abEmails];
+            [mailVC setSubject:kMailSubjectString];
+            [mailVC setMessageBody:kMailBodyString isHTML:YES];
+            [weakSelf presentViewController:mailVC animated:YES completion:nil];
+            
+        } finish:^(MFMailComposeResult result, NSError *error) {
+            
+            if (!error && result != MFMailComposeResultFailed && result != MFMailComposeResultCancelled) {
+                
+                [weakSelf.dataSource clearABFriendsToInvite];
             }
-            inviteWithEmail();
+            else {
+                if (result == MFMailComposeResultFailed && !error) {
+                    // do something...
+            }
         }];
-        
     }
 
 
@@ -354,7 +348,7 @@ Chats Page shows scrollable chats list (private and group).
     [self fetchAllDialogs:^{
         
         [weakSelf retrieveUsersWithIDs:occupantIDs completion:^(BOOL updated) {
-            completion();
+            // do something...
         }];
     }];
 
@@ -372,11 +366,10 @@ New Chat Page allows to create new chat.
 
 #### The code:
 
-    [[QMApi instance] createGroupChatDialogWithName:chatName ocupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
-        
-        if (result.success) {
-            // do something...
-      	}
+    [[QMApi instance] loginChat:^(BOOL loginSuccess) {
+          if (loginSuccess) {
+                // do something...
+          }     
     }];
 
 
