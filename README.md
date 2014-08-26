@@ -297,42 +297,37 @@ User can access Invite Friends page from the Side bar, to invite his/her friends
 
 #### The code:
 
-	// invite via Emails:
-    void (^inviteWithEmail)(void) =^{
-        
-        NSArray *abEmails = [self.dataSource emailsToInvite];
-        if (abEmails.count > 0) {
-            
-            [REMailComposeViewController present:^(REMailComposeViewController *mailVC) {
-                @strongify(self)
-                [mailVC setToRecipients:abEmails];
-                [mailVC setSubject:kMailSubjectString];
-                [mailVC setMessageBody:kMailBodyString isHTML:YES];
-                [self presentViewController:mailVC animated:YES completion:nil];
-                
-            } finish:^(MFMailComposeResult result, NSError *error) {
-                !error ? [self.dataSource clearFBFriendsToInvite] : [SVProgressHUD showErrorWithStatus:error.localizedDescription];
-            }];
+      // invite via facebook:
+    [[QMApi instance] fbIniviteDialogWithCompletion:^(BOOL success) {
+        if (success) {
+            [SVProgressHUD showSuccessWithStatus:@"Success"];
+            return;
         }
-    };
-    
-	// Invite via facebook
-    NSArray *fbIDs = [self.dataSource facebookIDsToInvite];
+    }];
 
-    if (fbIDs.count > 0) {
-        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+	// invite via Emails:
+    __weak __typeof(self)weakSelf = self;
+    NSArray *abEmails = [weakSelf.dataSource emailsToInvite];
+    if (abEmails.count > 0) {
         
-        [[QMApi instance] fbInviteUsersWithIDs:fbIDs copmpletion:^(NSError *error) {
-            @strongify(self)
-            if (error) {
-                [SVProgressHUD showErrorWithStatus:error.localizedDescription];
-            }else {
-                [self.dataSource clearFBFriendsToInvite];
-                [SVProgressHUD showSuccessWithStatus:kAlertBodyRecordPostedString];
+        [REMailComposeViewController present:^(REMailComposeViewController *mailVC) {
+            
+            [mailVC setToRecipients:abEmails];
+            [mailVC setSubject:kMailSubjectString];
+            [mailVC setMessageBody:kMailBodyString isHTML:YES];
+            [weakSelf presentViewController:mailVC animated:YES completion:nil];
+            
+        } finish:^(MFMailComposeResult result, NSError *error) {
+            
+            if (!error && result != MFMailComposeResultFailed && result != MFMailComposeResultCancelled) {
+                
+                [weakSelf.dataSource clearABFriendsToInvite];
             }
-            inviteWithEmail();
+            else {
+                if (result == MFMailComposeResultFailed && !error) {
+                    // do something...
+            }
         }];
-        
     }
 
 
