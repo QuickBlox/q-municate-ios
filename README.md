@@ -550,8 +550,24 @@ App will create round image from the center part of the selected image automatic
 
 #### The code:
 
+    QBUUser *myProfile = [QMApi instance].currentUser;
+    myProfile.password = newPassword;
+    myProfile.oldPassword = oldPassword;
+    
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
 
-```
+    __weak __typeof(self)weakSelf = self;
+    [[QMApi instance] changePasswordForCurrentUser:myProfile completion:^(BOOL success) {
+        
+        if (success) {
+            
+            [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_PASSWORD_CHANGED", nil)];
+            [weakSelf.navigationController popViewControllerAnimated:YES];
+        }
+        
+    }];
+
+
 
 ### Important - how to build your own Chat app</h3>
 
