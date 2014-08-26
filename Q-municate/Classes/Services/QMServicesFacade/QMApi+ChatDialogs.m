@@ -81,11 +81,6 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     [self createChatDialog:chatDialog occupants:occupants completion:completion];
 }
 
-//- (void)updateChatDialog:(QBChatDialog *)chatDialog {
-//    
-//    [self.chatDialogsService updateChatDialog:chatDialog];
-//}
-
 - (QBChatMessage *)notification:(QMMessageNotificationType)type recipient:(QBUUser *)recipient text:(NSString *)text chatDialog:(QBChatDialog *)chatDialog {
     
     QBChatMessage *msg = [QBChatMessage message];
@@ -190,6 +185,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 #pragma mark - Dialogs toos
 
 - (NSArray *)dialogHistory {
+    
     return [self.chatDialogsService dialogHistory];
 }
 

@@ -9,7 +9,7 @@
 #import "QMChatDialogsService.h"
 #import "QBEchoObject.h"
 #import "QMChatReceiver.h"
-#import "NSString+occupantsIDsFromMessage.h"
+//#import "NSString+occupantsIDsFromMessage.h"
 
 @interface QMChatDialogsService()
 
@@ -141,7 +141,7 @@
     }
     
     dialog.name = chatMessage.cParamDialogName;
-    dialog.occupantIDs = [chatMessage.cParamDialogOccupantsIDs occupantsIDs];
+//    dialog.occupantIDs = [chatMessage.cParamDialogOccupantsIDs occupantsIDs];
 }
 
 - (void)updateOrCreateDialogWithMessage:(QBChatMessage *)message {

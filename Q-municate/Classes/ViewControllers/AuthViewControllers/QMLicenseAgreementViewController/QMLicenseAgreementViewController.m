@@ -20,31 +20,25 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *acceptButton;
-@property (assign, nonatomic) BOOL licenceAccepted;
 
 @end
 
 @implementation QMLicenseAgreementViewController
 
-
-- (void)dealloc
-{
-    if (self.licenceCompletionBlock) {
-        self.licenceCompletionBlock(self.licenceAccepted);
-    }
-    [SVProgressHUD dismiss];
+- (void)dealloc {
+    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:0.048 green:0.361 blue:0.606 alpha:1.000];
+    self.navigationController.navigationBar.translucent = NO;
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    [self.navigationController setNavigationBarHidden:NO];
     
-    // fast fix:
-    _licenceAccepted = [[QMApi instance].settingsManager userAgreementAccepted];
-    if (_licenceAccepted) {
+    BOOL licenceAccepted = [[QMApi instance].settingsManager userAgreementAccepted];
+    if (licenceAccepted) {
         self.navigationItem.rightBarButtonItem = nil;
     }
     
@@ -53,15 +47,26 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
     [self.webView loadRequest:request];
 }
 
-- (void)didReceiveMemoryWarning{
-    [super didReceiveMemoryWarning];
+- (IBAction)done:(id)sender {
+    [self dismissViewControllerSuccess:NO];
 }
 
-- (IBAction)acceptLicense:(id)sender
-{
+- (void)dismissViewControllerSuccess:(BOOL)success {
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+        if(self.licenceCompletionBlock) {
+            
+            self.licenceCompletionBlock(success);
+            self.licenceCompletionBlock = nil;
+        }
+    }];
+}
+
+- (IBAction)acceptLicense:(id)sender {
+    
     [[QMApi instance].settingsManager setUserAgreementAccepted:YES];
-    self.licenceAccepted = YES;
-    [self.navigationController popViewControllerAnimated:NO];
+    [self dismissViewControllerSuccess:YES];
 }
 
 
@@ -73,9 +78,7 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
-    
     [SVProgressHUD showErrorWithStatus:error.localizedDescription];
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

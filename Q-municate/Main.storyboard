@@ -1974,7 +1974,7 @@ Cg
                                                         </attributedString>
                                                     </state>
                                                     <connections>
-                                                        <segue destination="tmG-J0-h0D" kind="push" id="zzb-F0-jZ0"/>
+                                                        <action selector="pressentUserAgreement:" destination="IoF-ax-XjW" eventType="touchUpInside" id="9lZ-eA-wVy"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -2032,6 +2032,11 @@ Cg
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="License Agreement" id="wdf-0k-2Z3">
+                        <barButtonItem key="leftBarButtonItem" title="Back" id="jB9-Yg-KBM">
+                            <connections>
+                                <action selector="done:" destination="tmG-J0-h0D" id="QdJ-ky-J9B"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Accept" id="2G5-ho-1Ig">
                             <connections>
                                 <action selector="acceptLicense:" destination="tmG-J0-h0D" id="ZOG-dh-oie"/>

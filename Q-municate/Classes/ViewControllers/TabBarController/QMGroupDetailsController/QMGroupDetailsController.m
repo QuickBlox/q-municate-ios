@@ -13,8 +13,6 @@
 #import "QMApi.h"
 #import "QMChatReceiver.h"
 
-NSString *const kErrorAlertMessage = @"You can't add new friend, because all existing friends are added in this group chat";
-
 @interface QMGroupDetailsController ()
 
 <UITableViewDelegate>
@@ -103,7 +101,11 @@ NSString *const kErrorAlertMessage = @"You can't add new friend, because all exi
     NSArray *friendsIDsToAdd = [self filteredIDs:usersIDs forChatDialog:self.chatDialog];
     
     if ([friendsIDsToAdd count] == 0) {
-        [[[UIAlertView alloc] initWithTitle:nil message:kErrorAlertMessage delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil] show];
+        [[[UIAlertView alloc] initWithTitle:nil
+                                    message:NSLocalizedString(@"QM_STR_CANT_ADD_NEW_FRIEND", <#comment#>)
+                                   delegate:nil
+                          cancelButtonTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+                          otherButtonTitles:nil] show];
         return;
     }
     [self performSegueWithIdentifier:kQMAddMembersToGroupControllerSegue sender:nil];
