@@ -174,6 +174,11 @@ An app will import all user’s friends by email and Facebook ID after the first
 #### Feature work flow:
 Notification with text "Please wait, Q-municate app is searching for your friends" and the spinner should be shown. Tapping out of the notification (or OK button) user can close this pop-up. App takes all emails from the phone contacts list and search them in Q-municate users table (in the background). Adds all Q-municate friends on the Friends page, If there are any in the search result. Friends screen will be shown. On Friends screen will be shown grey text “Invite your friends”, if there are no friends in the friends list.
 
+#### The code:
+
+   [[QMApi instance] importFriendsFromFacebook];
+   [[QMApi instance] importFriendsFromAddressBook];
+
 
 
 ### Step 5. Friends page
