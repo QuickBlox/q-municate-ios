@@ -196,7 +196,7 @@ Side bar will be shown during first app login.
 
 #### The code:
 
-// updating Friends list
+    // updating Friends list
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
         [weakSelf.contactList removeAllObjects];
@@ -204,8 +204,7 @@ Side bar will be shown during first app login.
         [weakSelf.contactList addObjectsFromArray:contactList.contacts];
     }];
 
-// inviting User to list
-
+    // inviting User to list
         [[QMChatReceiver instance] chatDidReceiveContactAddRequestWithTarget:self block:^(NSUInteger userID) {
             BOOL success = [[QMApi instance] confirmAddContactRequest:userID];
             if (success) {
@@ -250,7 +249,7 @@ A list of friends, listed in alphabetical order.
 
 ### Step 6. Details Page
 
-![![step_1(2).png]
+![step_1(2).png]
 (https://bitbucket.org/repo/rMnaz8/images/4014049389-friends_details_320_568.jpg)
 
 Details Page is used for friends profile information.
@@ -375,7 +374,8 @@ New Chat Page allows to create new chat.
 
 
 ### Step 10. Private chat page
-![step_1(2).png](http://image.quickblox.com/084c1d4a89cbdac3d49c97f26242.injoit.png) 
+
+![private_chat_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/2999854127-private_chat_screen_320_568.jpg)
 
 Private Chat Page is used for messaging with a friend.
 
@@ -412,16 +412,19 @@ Timestamp – device time and date should be used
                 }
             }];
 
-// sending Private Message
-		[[QMApi instance] sendText:text toDialog:chatDialog];
+        // sending Private Message
+        [[QMApi instance] sendText:text toDialog:chatDialog];
 
-// sending Private Message With Attach Image
-coming soon
+        // sending Private Message With Attach Image
+        [[QMApi instance] sendAttachment:attachmentUrl toDialog:chatDialog completion:^(QBChatMessage *message) {
+                // do something...
+            }];
 
 
 
 ### Step 11. Group chat page
-![step_1(2).png](http://image.quickblox.com/d2192f7b9331ca9c8ccb3eee68f7.injoit.png) 
+
+![group_chat_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/826481537-group_chat_screen_320_568.jpg)
 
 Group Chat Page is used for messaging with friends.
 
@@ -447,22 +450,24 @@ Timestamp – device time and date should be used
 
 #### The code:
 
-// creating Group Chat
+    // creating Group Chat
 
     [[QMApi instance] createGroupChatDialogWithName:chatName ocupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
         
         if (result.success) {
             // do something...
 
-// sending Group Message
+       // sending Group Message
 	
-	QBChatMessage *message = [[QMApi instance] sendText:text toDialog:self.chatDialog];
+	QBChatMessage *message = [[QMApi instance] sendText:text toDialog:chatDialog];
 		}
     }];
 
 
-// sending Group Message With Attach Image
-  coming soon
+       // sending Group Message With Attach Image
+               [[QMApi instance] sendAttachment:attachmentUrl toDialog:chatDialog completion:^(QBChatMessage *message) {
+                // do something...
+            }];
 
 
 ### Step 12. Calls (Coming soon)
