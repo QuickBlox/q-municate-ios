@@ -11,8 +11,8 @@
 
 
 @protocol QMTabBarChatDelegate <NSObject>
+@optional
 - (void)tabBarChatWithChatMessage:(QBChatMessage *)message chatDialog:(QBChatDialog *)dialog showTMessage:(BOOL)show;
 @end
-
 
 #endif

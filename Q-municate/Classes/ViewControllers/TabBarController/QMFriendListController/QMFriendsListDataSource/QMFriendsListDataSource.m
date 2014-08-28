@@ -17,10 +17,12 @@
 
 @interface QMFriendsListDataSource()
 
-<QMFriendListCellDelegate>
+<QMUsersListCellDelegate>
 
 @property (strong, nonatomic) NSArray *searchResult;
 @property (strong, nonatomic) NSArray *friendList;
+@property (strong, nonatomic) NSArray *contactRequests;
+
 @property (weak, nonatomic) UITableView *tableView;
 @property (weak, nonatomic) UISearchDisplayController *searchDisplayController;
 @property (strong, nonatomic) NSObject<Cancelable> *searchOperation;
@@ -82,10 +84,6 @@
         
         [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:reloadDatasource];
         [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:reloadDatasource];
-        
-        [[QMChatReceiver instance] chatDidReceiveContactAddRequestWithTarget:self block:^(NSUInteger userID) {
-            [[QMApi instance] confirmAddContactRequest:userID completion:^(BOOL success) {}];
-        }];
         
         UINib *nib = [UINib nibWithNibName:@"QMFriendListCell" bundle:nil];
         [searchDisplayController.searchResultsTableView registerNib:nib
@@ -165,39 +163,45 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     
+    NSArray *users = [self usersAtSections:section];
     if (self.searchDisplayController.isActive) {
-        
-        NSArray *users = [self usersAtSections:section];
         
         if (section == 0) {
             return users.count > 0 ? NSLocalizedString(@"QM_STR_FRIENDS", nil) : nil;
         }
-        else {
-            return users.count > 0 ? NSLocalizedString(@"QM_STR_ALL_USERS", nil) : nil;
+        return users.count > 0 ? NSLocalizedString(@"QM_STR_ALL_USERS", nil) : nil;
+        
+    } else if ([self.contactRequests count] > 0) {
+        if (section == 0) {
+            return self.contactRequests.count > 0 ? NSLocalizedString(@"QM_STR_REQUESTS", nil) : nil;
         }
+        return users.count > 0 ? NSLocalizedString(@"QM_STR_FRIENDS", nil) : nil;
     }
-    else {
-        return nil;
-    }
+    return users.count > 0 ? NSLocalizedString(@"QM_STR_FRIENDS", nil) : nil;;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
-    return self.searchDisplayController.isActive ? 2 : 1;
+    if (self.searchDisplayController.isActive || [[QMApi instance].contactRequestUsers count] > 0) {
+        return 2;
+    }
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     NSArray *users = [self usersAtSections:section];
+    
     if (self.searchDisplayController.isActive) {
         return users.count;
-    } else {
-        return users.count > 0 ? users.count : 1;
+    } else if ([self.contactRequests count] > 0) {
+        return self.contactRequests.count;
     }
+    return users.count > 0 ? users.count : 1;
 }
 
-- (NSArray *)usersAtSections:(NSInteger)section {
-    
+- (NSArray *)usersAtSections:(NSInteger)section
+{
     return (section == 0 ) ? self.friendList : self.searchResult;
 }
 
@@ -215,7 +219,7 @@
     
     if (!self.searchDisplayController.isActive) {
         if (users.count == 0) {
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kQMDontHaveAnyFriendsCellIdentifier ];
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kQMDontHaveAnyFriendsCellIdentifier];
             return cell;
         }
     }
@@ -240,7 +244,7 @@
 
 #pragma mark - QMFriendListCellDelegate
 
-- (void)friendListCell:(QMFriendListCell *)cell pressAddBtn:(UIButton *)sender {
+- (void)usersListCell:(QMFriendListCell *)cell pressAddBtn:(UIButton *)sender {
     
     NSIndexPath *indexPath = [self.searchDisplayController.searchResultsTableView indexPathForCell:cell];
     NSArray *datasource = [self usersAtSections:indexPath.section];

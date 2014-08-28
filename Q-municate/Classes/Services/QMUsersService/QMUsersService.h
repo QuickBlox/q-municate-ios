@@ -12,6 +12,7 @@
 @interface QMUsersService : QMBaseService
 
 @property (strong, nonatomic) NSMutableArray *contactList;
+@property (strong, nonatomic) NSMutableArray *confirmRequestUsersIDs;
 
 - (void)addUsers:(NSArray *)users;
 - (void)addUser:(QBUUser *)user;

@@ -47,5 +47,6 @@
 "QM_STR_YOUR _SURRENT_SESSION_IS_NO_LONGER_VALID" = "Your current session is no longer valid. Please log in again.";
 "QM_STR_FRIENDS" = "Friends";
 "QM_STR_ALL_USERS" = "All users";
+"QM_STR_REQUESTS" = "REQUESTS";
 "QM_STR_TAKE_NEW_PHOTO" = "Take New Photo";
 "QM_STR_CHOOSE_FROM_LIBRARY" = "Choose from Library";

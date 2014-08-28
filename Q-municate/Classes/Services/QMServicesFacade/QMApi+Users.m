@@ -104,6 +104,13 @@
     return allFriends;
 }
 
+- (NSArray *)contactRequestUsers
+{
+    NSArray *ids = [self.usersService confirmRequestUsersIDs];
+    NSArray *users = [self usersWithIDs:ids];
+    return users;
+}
+
 
 #pragma mark - Update current User
 

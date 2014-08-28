@@ -10,9 +10,9 @@
 
 @class QMFriendListCell;
 
-@protocol QMFriendListCellDelegate <NSObject>
+@protocol QMUsersListCellDelegate <NSObject>
 
-- (void)friendListCell:(QMFriendListCell *)cell pressAddBtn:(UIButton *)sender;
+- (void)usersListCell:(QMTableViewCell *)cell pressAddBtn:(UIButton *)sender;
 
 @end
 
@@ -20,6 +20,6 @@
 
 @property (strong, nonatomic) NSString *searchText;
 
-@property (weak, nonatomic) id <QMFriendListCellDelegate>delegate;
+@property (weak, nonatomic) id <QMUsersListCellDelegate>delegate;
 
 @end

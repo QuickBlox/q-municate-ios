@@ -34,6 +34,7 @@
 - (void)start {
     [super start];
     
+    self.confirmRequestUsersIDs = [NSMutableArray new];
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
         
@@ -45,6 +46,20 @@
         [weakSelf retrieveUsersWithIDs:[weakSelf idsFromContactListItems] completion:^(BOOL updated) {
             
         }];
+    }];
+    [[QMChatReceiver instance] chatDidReceiveContactAddRequestWithTarget:self block:^(NSUInteger userID) {
+//        [[QMApi instance] confirmAddContactRequest:userID completion:^(BOOL success) {}];
+        [weakSelf.confirmRequestUsersIDs addObject:@(userID)];
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            // to do:
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [weakSelf retrieveUsersWithIDs:[weakSelf.confirmRequestUsersIDs copy] completion:^(BOOL updated) {
+                    // show contact requests:
+                    [[QMChatReceiver instance] contactRequestUsersListChanged];
+                }];
+            });
+        });
     }];
 }
 

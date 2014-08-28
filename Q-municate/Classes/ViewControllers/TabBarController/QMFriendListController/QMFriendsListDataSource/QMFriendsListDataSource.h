@@ -8,6 +8,8 @@
 
 static NSString *const kQMFriendsListCellIdentifier = @"QMFriendListCell";
 static NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFriendsCell";
+static NSString *const kQMContactRequestCellIdentifier = @"QMContactRequestCell";
+
 
 @interface QMFriendsListDataSource : NSObject <UITableViewDataSource, UISearchDisplayDelegate>
 
