@@ -59,7 +59,7 @@
     
     [picker dismissViewControllerAnimated:YES completion:^{
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-        self.result = nil;        
+        self.result = nil;
     }];
 }
 
