@@ -149,9 +149,13 @@
     
     __weak __typeof(self)weakSelf = self;
     [self.authService logInWithFacebookAccessToken:accessToken completion:^(QBUUserLogInResult *loginWithFBResult) {
-        weakSelf.currentUser = loginWithFBResult.user;
-        [weakSelf.usersService addUser:weakSelf.currentUser];
-        completion([weakSelf checkResult:loginWithFBResult]);
+
+        if ([weakSelf checkResult:loginWithFBResult]) {
+            
+            weakSelf.currentUser = loginWithFBResult.user;
+            [weakSelf.usersService addUser:weakSelf.currentUser];
+        }
+        completion(loginWithFBResult.success);
     }];
 }
 
@@ -215,13 +219,14 @@
     __weak __typeof(self)weakSelf = self;
     [self.authService logInWithEmail:email password:password completion:^(QBUUserLogInResult *loginResult) {
         
-        weakSelf.currentUser = loginResult.user;
-        weakSelf.currentUser.password = password;
-        [weakSelf.usersService addUser:weakSelf.currentUser];
-        
         if(![weakSelf checkResult:loginResult]){
             completion(loginResult.success);
         } else {
+            
+            weakSelf.currentUser = loginResult.user;
+            weakSelf.currentUser.password = password;
+            [weakSelf.usersService addUser:weakSelf.currentUser];
+            
             if (rememberMe) {
                 weakSelf.settingsManager.rememberMe = rememberMe;
                 [weakSelf.settingsManager setLogin:email andPassword:password];
