@@ -125,11 +125,23 @@ NSString const *kQMCustomParameterDialogOccupantsIDs = @"occupants_ids";
 #pragma mark - cParamDialogOccupantsIDs
 
 - (void)setCParamDialogOccupantsIDs:(NSArray *)cParamDialogOccupantsIDs {
-    self.context[kQMCustomParameterDialogOccupantsIDs] = cParamDialogOccupantsIDs;
+    
+    NSString *strIDs = [cParamDialogOccupantsIDs componentsJoinedByString:@","];
+    self.context[kQMCustomParameterDialogOccupantsIDs] = strIDs;
 }
 
 - (NSArray *)cParamDialogOccupantsIDs {
-    return self.context[kQMCustomParameterDialogOccupantsIDs];
+    
+    NSString * strIDs = self.context[kQMCustomParameterDialogOccupantsIDs];
+    
+    NSArray *componets = [strIDs componentsSeparatedByString:@","];
+    NSMutableArray *result = [NSMutableArray arrayWithCapacity:componets.count];
+
+    for (NSString *occupantID in componets) {
+        [result addObject:@(occupantID.integerValue)];
+    }
+    
+    return result;
 }
 
 #pragma mark - cParamNotificationType
@@ -158,10 +170,12 @@ NSString const *kQMCustomParameterDialogOccupantsIDs = @"occupants_ids";
 - (void)setCustomParametersWithChatDialog:(QBChatDialog *)chatDialog {
     
     self.cParamDialogID = chatDialog.ID;
+    
     if (chatDialog.type == QBChatDialogTypeGroup) {
         self.cParamRoomJID = chatDialog.roomJID;
         self.cParamDialogName = chatDialog.name;
     }
+    
     self.cParamDialogType = @(chatDialog.type);
     self.cParamDialogOccupantsIDs = chatDialog.occupantIDs;
 }

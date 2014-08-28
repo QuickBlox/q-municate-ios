@@ -71,14 +71,6 @@
             
         }];
         
-        [[QMChatReceiver instance] chatRoomDidEnterWithTarget:self block:^(QBChatRoom *room) {
-            
-            if ([weakSelf.chatDialog.roomJID isEqualToString:room.JID]) {
-                
-            }
-            
-        }];
-        
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
             
             QBChatDialog *dialogForReceiverMessage = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
@@ -233,7 +225,6 @@
             [self.delegate chatDatasource:self prepareImageAttachement:image fromView:imageView];
         }
 #else
-        
         if ([self.delegate respondsToSelector:@selector(chatDatasource:prepareImageURLAttachement:)]) {
             
             QBChatAttachment *attachment = [message.attachments firstObject];
