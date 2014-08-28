@@ -12,6 +12,12 @@
 @class QMMessage;
 @class QMImageView;
 
+@protocol QMChatCellDelegate <NSObject>
+
+- (void)chatCell:(id)cell didSelectMessage:(QMMessage *)message;
+
+@end
+
 @interface QMChatCell : UITableViewCell
 
 @property (strong, nonatomic, readonly) UIView *containerView;
@@ -21,8 +27,9 @@
 @property (strong, nonatomic, readonly) UILabel *title;
 @property (strong, nonatomic, readonly) UILabel *timeLabel;
 
-- (void)setMessage:(QMMessage *)message user:(QBUUser *)user isMe:(BOOL)isMe;
+@property (weak, nonatomic) id <QMChatCellDelegate> delegate;
 
+- (void)setMessage:(QMMessage *)message user:(QBUUser *)user isMe:(BOOL)isMe;
 - (void)setBalloonImage:(UIImage *)balloonImage;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
 - (void)createContainerSubviews;

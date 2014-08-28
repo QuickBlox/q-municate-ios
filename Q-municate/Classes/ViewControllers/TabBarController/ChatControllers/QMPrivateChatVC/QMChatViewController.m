@@ -18,8 +18,11 @@
 #import "QMAlertsFactory.h"
 #import "QMChatReceiver.h"
 #import "QMOnlineTitle.h"
+#import "IDMPhotoBrowser.h"
 
 @interface QMChatViewController ()
+
+<QMChatDataSourceDelegate>
 
 @property (strong, nonatomic) QMOnlineTitle *onlineTitle;
 
@@ -36,7 +39,7 @@
     [super viewDidLoad];
     
     self.dataSource = [[QMChatDataSource alloc] initWithChatDialog:self.dialog forTableView:self.tableView];
-    
+    self.dataSource.delegate = self;
     self.dialog.type == QBChatDialogTypeGroup ? [self configureNavigationBarForGroupChat] : [self configureNavigationBarForPrivateChat];
     
     __weak __typeof(self)weakSelf = self;
@@ -198,23 +201,28 @@
         QBUUser *user = [[QMApi instance] userWithID:occupantID];
         title = user.fullName;
         
-        //        [QMImageView imageWithURL:[NSURL URLWithString:user.website]
-        //                             size:CGSizeMake(50, 50)
-        //                         progress:nil
-        //                             type:QMImageViewTypeCircle
-        //                       completion:^(UIImage *userAvatar) {
-        //                           img = userAvatar;
-        //                       }];
-        //        if (!img) {
-        //            img = [UIImage imageNamed:@"upic-placeholder"];
-        //        }
-        
     }
     [QMSoundManager playMessageReceivedSound];
     [TWMessageBarManager sharedInstance].styleSheet = [QMMessageBarStyleSheetFactory defaultMsgBarWithImage:img];
     [[TWMessageBarManager sharedInstance] showMessageWithTitle:title
                                                    description:message.encodedText
                                                           type:TWMessageBarMessageTypeSuccess];
+}
+
+#pragma mark - QMChatDataSourceDelegate
+
+- (void)chatDatasource:(QMChatDataSource *)chatDatasource prepareImageURLAttachement:(NSURL *)imageUrl {
+ 
+    IDMPhoto *photo = [IDMPhoto photoWithURL:imageUrl];
+    IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:@[photo]];
+    [self presentViewController:browser animated:YES completion:nil];
+}
+
+- (void)chatDatasource:(QMChatDataSource *)chatDatasource prepareImageAttachement:(UIImage *)image fromView:(UIView *)fromView {
+    
+    IDMPhoto *photo = [IDMPhoto photoWithImage:image];
+    IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:@[photo] animatedFromView:fromView];
+    [self presentViewController:browser animated:YES completion:nil];
 }
 
 @end

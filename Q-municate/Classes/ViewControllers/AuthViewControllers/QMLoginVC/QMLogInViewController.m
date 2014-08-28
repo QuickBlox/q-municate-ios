@@ -62,28 +62,24 @@
     else {
         
         __weak __typeof(self)weakSelf = self;
-        [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL userAgreementSuccess) {
-            
-            if (userAgreementSuccess) {
-                
-                [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-                
-                [[QMApi instance] loginWithEmail:email
-                                        password:password
-                                      rememberMe:weakSelf.rememberMeSwitch.on
-                                      completion:^(BOOL success)
-                 {
-                     [SVProgressHUD dismiss];
-                     
-                     if (success) {
-                         [[QMApi instance] setAutoLogin:weakSelf.rememberMeSwitch.on
-                                        withAccountType:QMAccountTypeEmail];
-                         [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier
-                                                       sender:nil];
-                     }
-                 }];
-            }
-        }];
+        
+        
+        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+        
+        [[QMApi instance] loginWithEmail:email
+                                password:password
+                              rememberMe:weakSelf.rememberMeSwitch.on
+                              completion:^(BOOL success)
+         {
+             [SVProgressHUD dismiss];
+             
+             if (success) {
+                 [[QMApi instance] setAutoLogin:weakSelf.rememberMeSwitch.on
+                                withAccountType:QMAccountTypeEmail];
+                 [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier
+                                               sender:nil];
+             }
+         }];
     }
 }
 

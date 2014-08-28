@@ -12,4 +12,5 @@ static NSString *const QMAttachmentMessageCellID = @"QMAttachmentMessageCell";
 
 @interface QMAttachmentMessageCell : QMChatCell
 
+
 @end

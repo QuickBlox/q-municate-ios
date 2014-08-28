@@ -98,23 +98,26 @@
     NSURL *url = [NSURL URLWithString:attachment.url];
     
     __weak __typeof(self)weakSelf = self;
-    
+    self.userInteractionEnabled = NO;
     [weakSelf.balloonImageView setImageWithURL:url
                                    placeholder:nil
                                        options:SDWebImageContinueInBackground
-                                      progress: ^(NSInteger receivedSize, NSInteger expectedSize) {
-                                          
-                                          CGFloat progress = ((CGFloat)receivedSize)/((CGFloat)expectedSize);
-                                          weakSelf.progressView.progress = progress;
-                                          
-                                      }
-                                completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                                    [UIView animateWithDuration:cacheType != SDImageCacheTypeMemory? 0.4 : 0 animations:^{
-                                        weakSelf.progressView.alpha = 0;
-                                    } completion:^(BOOL finished) {
-                                        weakSelf.progressView.hidden = YES;
-                                    }];
-                                }];
+                                      progress:
+     ^(NSInteger receivedSize, NSInteger expectedSize) {
+         
+         CGFloat progress = ((CGFloat)receivedSize)/((CGFloat)expectedSize);
+         weakSelf.progressView.progress = progress;
+         
+     }
+                                completedBlock:
+     ^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+         weakSelf.userInteractionEnabled= YES;
+         [UIView animateWithDuration:cacheType != SDImageCacheTypeMemory? 0.4 : 0 animations:^{
+             weakSelf.progressView.alpha = 0;
+         } completion:^(BOOL finished) {
+             weakSelf.progressView.hidden = YES;
+         }];
+     }];
 }
 
 - (void)layoutSubviews {

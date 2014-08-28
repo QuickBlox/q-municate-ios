@@ -50,6 +50,7 @@
 @property (strong, nonatomic) NSArray *nameConstrains;
 
 @property (assign, nonatomic) BOOL showUserImage;
+@property (strong, nonatomic) UITapGestureRecognizer *tapGestureRecognizer;
 
 @end
 
@@ -60,6 +61,8 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         [self createContainerSubviews];
+        self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapRecognize:)];
+        [self addGestureRecognizer:self.tapGestureRecognizer];
     }
     return self;
 }
@@ -306,6 +309,8 @@
     }
 }
 
+#pragma mark - Date formatter
+
 - (NSDateFormatter *)formatter {
     
     static dispatch_once_t onceToken;
@@ -316,6 +321,15 @@
     });
     
     return _dateFormatter;
+}
+
+#pragma mark - Tap gesture
+
+- (void)didTapRecognize:(id)sender {
+    
+    if ([self.delegate respondsToSelector:@selector(chatCell:didSelectMessage:)]) {
+        [self.delegate chatCell:self didSelectMessage:self.message];
+    }
 }
 
 @end
