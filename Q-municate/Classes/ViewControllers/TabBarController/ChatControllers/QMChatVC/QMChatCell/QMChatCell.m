@@ -82,12 +82,6 @@
     self.headerView.backgroundColor = [UIColor clearColor];
     self.messageContainer.backgroundColor = [UIColor clearColor];
     
-    self.messageContainer.translatesAutoresizingMaskIntoConstraints = NO;
-    self.containerView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.balloonImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.userImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.headerView.translatesAutoresizingMaskIntoConstraints = NO;
-    
     self.userImageView.contentMode = UIViewContentModeScaleAspectFit;
     self.userImageView.imageViewType = QMImageViewTypeCircle;
     self.balloonImageView.imageViewType = QMImageViewTypeNone;
@@ -101,13 +95,17 @@
     self.timeLabel.textColor = [UIColor grayColor];
     self.timeLabel.textAlignment = NSTextAlignmentRight;
     
-    self.title.translatesAutoresizingMaskIntoConstraints = NO;
+    self.messageContainer.translatesAutoresizingMaskIntoConstraints = NO;
+    self.containerView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.balloonImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.userImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.headerView.translatesAutoresizingMaskIntoConstraints = NO;
     self.timeLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.title.translatesAutoresizingMaskIntoConstraints = NO;
     
     self.nameConstrains = @[PVBottomOf(self.title).equalTo.bottomOf(self.headerView).asConstraint,
                             PVLeftOf(self.title).equalTo.leftOf(self.headerView).asConstraint,
-                            PVTopOf(self.title).equalTo.topOf(self.headerView).asConstraint,
-                            PVRightOf(self.title).equalTo.leftOf(self.timeLabel).asConstraint];
+                            PVTopOf(self.title).equalTo.topOf(self.headerView).asConstraint];
     
     [self.contentView addSubview:self.messageContainer];
     [self.messageContainer addSubview:self.balloonImageView];
