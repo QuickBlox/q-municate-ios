@@ -11,7 +11,7 @@ static NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFrie
 static NSString *const kQMContactRequestCellIdentifier = @"QMContactRequestCell";
 
 
-@interface QMFriendsListDataSource : NSObject <UITableViewDataSource, UISearchDisplayDelegate>
+@interface QMFriendsListDataSource : NSObject <UITableViewDataSource, UISearchDisplayDelegate, QMUsersListCellDelegate>
 
 - (instancetype)initWithTableView:(UITableView *)tableView searchDisplayController:(UISearchDisplayController *)searchDisplayController;
 - (NSArray *)usersAtSections:(NSInteger)section;

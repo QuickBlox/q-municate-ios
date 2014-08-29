@@ -10,9 +10,7 @@
 
 @interface QMTableDataSource : NSObject <UITableViewDataSource>
 
-@property (nonatomic, strong, readonly) NSArray *friends;
-@property (nonatomic, strong, readonly) NSArray *otherUsers;
-
-- (instancetype)initWithFriendsArray:(NSArray *)friendsArray otherUsersArray:(NSArray *)otherUsersArray;
+@property (nonatomic, copy) NSArray *friends;
+@property (nonatomic, copy) NSArray *otherUsers;
 
 @end

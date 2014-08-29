@@ -9,11 +9,26 @@
 #import "QMContactRequestDataSource.h"
 #import "QMFriendsListDataSource.h"
 #import "QMContactRequestCell.h"
+#import "QMApi.h"
 
 
+@interface QMContactRequestDataSource ()
+@property (nonatomic, strong) QMFriendsListDataSource *friendsListDataSource;
+@end
 
 @implementation QMContactRequestDataSource
 
+
+- (instancetype)initWithFriendsListDataSource:(QMFriendsListDataSource *)friendsListDataSource
+{
+    if (self = [super init]) {
+        self.friendsListDataSource = friendsListDataSource;
+    }
+    return self;
+}
+
+
+#pragma mark - Table View Data Source
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
@@ -38,17 +53,26 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 0) {
-        QMContactRequestCell *cell = (QMContactRequestCell *)[tableView dequeueReusableCellWithIdentifier:kQMContactRequestCellIdentifier];
-        QBUUser *user = self.otherUsers[indexPath.row];
-        cell.userData = user;
-        return cell;
-    }
-    if (self.friends.count == 0) {
+    if (indexPath.section > 0 && self.friends.count == 0) {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kQMDontHaveAnyFriendsCellIdentifier];
         return cell;
     }
-    return nil;
+    QMTableViewCell *cell = nil;
+    QBUUser *user = nil;
+    if (indexPath.section == 0) {
+        cell = [tableView dequeueReusableCellWithIdentifier:kQMContactRequestCellIdentifier];
+        ((QMContactRequestCell *)cell).delegate = self.friendsListDataSource;
+        user = self.otherUsers[indexPath.row];
+    } else {
+        cell = [tableView dequeueReusableCellWithIdentifier:kQMFriendsListCellIdentifier];
+        user = self.friends[indexPath.row];
+    }
+    
+    QBContactListItem *item = [[QMApi instance] contactItemWithUserID:user.ID];
+    cell.contactlistItem = item;
+    cell.userData = user;
+
+    return cell;
 }
 
 @end

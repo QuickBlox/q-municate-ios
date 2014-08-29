@@ -10,4 +10,6 @@
 
 @interface QMContactRequestCell : QMTableViewCell
 
+@property (nonatomic, weak) id <QMUsersListCellDelegate> delegate;
+
 @end

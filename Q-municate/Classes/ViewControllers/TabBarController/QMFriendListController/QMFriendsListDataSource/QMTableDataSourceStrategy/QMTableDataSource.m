@@ -10,15 +10,6 @@
 
 @implementation QMTableDataSource
 
-- (instancetype)initWithFriendsArray:(NSArray *)friendsArray otherUsersArray:(NSArray *)otherUsersArray
-{
-    if (self = [super init]) {
-        _friends = friendsArray;
-        _otherUsers = otherUsersArray;
-    }
-    return self;
-}
-
 
 #pragma mark - Table View Data Source
 

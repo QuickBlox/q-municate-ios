@@ -259,6 +259,7 @@
 }
 
 - (void)chatDidReceiveContactAddRequestFromUser:(NSUInteger)userID {
+    NSLog(@"User %d", userID);
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatDidReceiveContactAddRequest block) {
         block(userID);
     }];

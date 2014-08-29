@@ -8,13 +8,6 @@
 
 #import "QMTableViewCell.h"
 
-@class QMFriendListCell;
-
-@protocol QMUsersListCellDelegate <NSObject>
-
-- (void)usersListCell:(QMTableViewCell *)cell pressAddBtn:(UIButton *)sender;
-
-@end
 
 @interface QMFriendListCell : QMTableViewCell
 

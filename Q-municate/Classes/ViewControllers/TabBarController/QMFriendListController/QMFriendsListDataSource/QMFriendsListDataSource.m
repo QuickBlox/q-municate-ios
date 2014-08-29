@@ -14,10 +14,13 @@
 #import "SVProgressHud.h"
 #import "QMChatReceiver.h"
 
+#import "QMTableDataSource.h"
+#import "QMDefaultDataSource.h"
+#import "QMContactRequestDataSource.h"
+
 
 @interface QMFriendsListDataSource()
 
-<QMUsersListCellDelegate>
 
 @property (strong, nonatomic) NSArray *searchResult;
 @property (strong, nonatomic) NSArray *friendList;
@@ -26,6 +29,8 @@
 @property (weak, nonatomic) UITableView *tableView;
 @property (weak, nonatomic) UISearchDisplayController *searchDisplayController;
 @property (strong, nonatomic) NSObject<Cancelable> *searchOperation;
+
+@property (strong, nonatomic) QMTableDataSource *tableDataSource;
 
 @property (strong, nonatomic) id tUser;
 
@@ -46,7 +51,8 @@
     if (self) {
         
         self.tableView = tableView;
-        self.tableView.dataSource = self;
+        [self setUpTableDataSource];
+//        self.tableView.dataSource = self;
         self.searchResult = [NSArray array];
         
         self.searchDisplayController = searchDisplayController;
@@ -78,9 +84,17 @@
                 
             }
             else {
+                [weakSelf setUpTableDataSource];
                 [weakSelf reloadDatasource];
             }
         };
+        
+        [[QMChatReceiver instance] contactRequestUsersListChangedWithTarget:self block:^{
+            weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
+            
+            [weakSelf setUpTableDataSource];
+            [weakSelf.tableView reloadData];
+        }];
         
         [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:reloadDatasource];
         [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:reloadDatasource];
@@ -241,8 +255,31 @@
     return cell;
 }
 
+- (void)setUpTableDataSource
+{
+    if (self.searchDisplayController.isActive) {
+        // to do:
+        return;
+    }
+    if ([self.contactRequests count] > 0) {
+        if (![self.tableDataSource isKindOfClass:QMContactRequestDataSource.class]) {
+            self.tableDataSource = [[QMContactRequestDataSource alloc] initWithFriendsListDataSource:self];
+            self.tableView.dataSource = self.tableDataSource;
+        }
+        self.tableDataSource.friends = self.friendList;
+        self.tableDataSource.otherUsers = self.contactRequests;
+        return;
+    }
+    // default statte:
+    if (![self.tableDataSource isKindOfClass:QMDefaultDataSource.class]) {
+        self.tableDataSource = [QMDefaultDataSource new];
+        self.tableView.dataSource = self.tableDataSource;
+    }
+    self.tableDataSource.friends = self.friendList;
+}
 
-#pragma mark - QMFriendListCellDelegate
+
+#pragma mark - QMUsersListCellDelegate
 
 - (void)usersListCell:(QMFriendListCell *)cell pressAddBtn:(UIButton *)sender {
     
@@ -259,6 +296,30 @@
     }];
 }
 
+- (void)usersListCell:(QMTableViewCell *)cell requestWasAccepted:(BOOL)accepted
+{
+    QBUUser *user = cell.userData;
+    QMApi *api = [QMApi instance];
+    [api.usersService.confirmRequestUsersIDs removeObject:@(user.ID)];
+    self.contactRequests = api.contactRequestUsers;
+    [self setUpTableDataSource];
+    [self reloadDatasource];
+//    __weak __typeof(self)weakSelf = self;
+//    
+//    if (accepted) {
+//        [[QMApi instance] confirmAddContactRequest:user.ID completion:^(BOOL success) {
+//            //to do:
+//        }];
+//    } else {
+//        [[QMApi instance] rejectAddContactRequest:user.ID completion:^(BOOL success) {
+//            // to do:
+//        }];
+//    }
+}
+
+
+#pragma mark - UISearchDisplayController
+
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
     
     [self globalSearch:searchString];
@@ -266,10 +327,11 @@
 }
 
 - (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
-    
+    [self setUpTableDataSource];
 }
 
 - (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
+    [self setUpTableDataSource];
     [self.tableView reloadData];
 }
 

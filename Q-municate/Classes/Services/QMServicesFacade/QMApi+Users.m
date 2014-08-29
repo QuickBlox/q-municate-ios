@@ -41,6 +41,7 @@
     
     [self.messagesService chat:^(QBChat *chat) {
         BOOL success = [chat confirmAddContactRequest:userID];
+        [self.usersService.confirmRequestUsersIDs removeObject:@(userID)];
         completion(success);
     }];
 }
@@ -48,6 +49,7 @@
 - (void)rejectAddContactRequest:(NSUInteger)userID completion:(void(^)(BOOL success))completion {
     [self.messagesService chat:^(QBChat *chat) {
         BOOL success = [chat rejectAddContactRequest:userID];
+        [self.usersService.confirmRequestUsersIDs removeObject:@(userID)];
         completion(success);
     }];
 }

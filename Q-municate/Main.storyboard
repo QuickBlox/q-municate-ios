@@ -162,14 +162,20 @@
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="acceptButtonPressed:" destination="nNB-Xc-u6h" eventType="touchUpInside" id="JxZ-1K-hKY"/>
+                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Uv-fR-Pi9">
-                                                    <rect key="frame" x="235" y="9" width="38" height="40"/>
+                                                    <rect key="frame" x="236" y="9" width="38" height="40"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" image="reject">
                                                         <color key="titleColor" red="0.14610877403846156" green="0.14610877403846156" blue="0.14610877403846156" alpha="1" colorSpace="calibratedRGB"/>
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="rejectButtonPressed:" destination="nNB-Xc-u6h" eventType="touchUpInside" id="J3J-CN-Btg"/>
+                                                    </connections>
                                                 </button>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="devider" translatesAutoresizingMaskIntoConstraints="NO" id="tFj-wp-KvB">
                                                     <rect key="frame" x="277" y="9" width="1" height="40"/>
@@ -3083,10 +3089,10 @@ Cg
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="A42-kR-3SJ"/>
-        <segue reference="Gs8-3F-TjX"/>
+        <segue reference="TaC-No-aTb"/>
+        <segue reference="kkU-F4-K0a"/>
         <segue reference="IAo-qy-uHQ"/>
-        <segue reference="bOV-zd-nKn"/>
         <segue reference="aeV-0O-de3"/>
+        <segue reference="bOV-zd-nKn"/>
     </inferredMetricsTieBreakers>
 </document>
