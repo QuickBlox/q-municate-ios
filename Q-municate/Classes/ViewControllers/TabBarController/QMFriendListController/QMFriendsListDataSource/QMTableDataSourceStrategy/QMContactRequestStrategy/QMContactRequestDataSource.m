@@ -12,20 +12,7 @@
 #import "QMApi.h"
 
 
-@interface QMContactRequestDataSource ()
-@property (nonatomic, strong) QMFriendsListDataSource *friendsListDataSource;
-@end
-
 @implementation QMContactRequestDataSource
-
-
-- (instancetype)initWithFriendsListDataSource:(QMFriendsListDataSource *)friendsListDataSource
-{
-    if (self = [super init]) {
-        self.friendsListDataSource = friendsListDataSource;
-    }
-    return self;
-}
 
 
 #pragma mark - Table View Data Source

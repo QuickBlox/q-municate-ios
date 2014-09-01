@@ -176,6 +176,7 @@
 		6943847218E42678001E08A9 /* QMCustomSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943843418E42677001E08A9 /* QMCustomSegue.m */; };
 		6943848318E42678001E08A9 /* QMMainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943846018E42678001E08A9 /* QMMainTabBarController.m */; };
 		6943849418E42691001E08A9 /* UIImage+Cropper.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943849018E42691001E08A9 /* UIImage+Cropper.m */; };
+		69670E4B19B48D7700A5DDA3 /* QMSearchDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 69670E4A19B48D7700A5DDA3 /* QMSearchDataSource.m */; };
 		697E2D4C196EA82400CD2BDE /* QMLicenseAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 697E2D4B196EA82400CD2BDE /* QMLicenseAgreementViewController.m */; };
 		6985C42119B07C8A006EFF4C /* QMDefaultDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6985C42019B07C8A006EFF4C /* QMDefaultDataSource.m */; };
 		698C94F51976D483002C53FA /* QMApi+Calls.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C94F41976D483002C53FA /* QMApi+Calls.m */; };
@@ -571,6 +572,8 @@
 		6943846018E42678001E08A9 /* QMMainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMMainTabBarController.m; sourceTree = "<group>"; };
 		6943848F18E42691001E08A9 /* UIImage+Cropper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Cropper.h"; sourceTree = "<group>"; };
 		6943849018E42691001E08A9 /* UIImage+Cropper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Cropper.m"; sourceTree = "<group>"; };
+		69670E4919B48D7700A5DDA3 /* QMSearchDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMSearchDataSource.h; path = QMTableDataSourceStrategy/QMSearchStrategy/QMSearchDataSource.h; sourceTree = "<group>"; };
+		69670E4A19B48D7700A5DDA3 /* QMSearchDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMSearchDataSource.m; path = QMTableDataSourceStrategy/QMSearchStrategy/QMSearchDataSource.m; sourceTree = "<group>"; };
 		697E2D4A196EA82400CD2BDE /* QMLicenseAgreementViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMLicenseAgreementViewController.h; path = QMLicenseAgreementViewController/QMLicenseAgreementViewController.h; sourceTree = "<group>"; };
 		697E2D4B196EA82400CD2BDE /* QMLicenseAgreementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMLicenseAgreementViewController.m; path = QMLicenseAgreementViewController/QMLicenseAgreementViewController.m; sourceTree = "<group>"; };
 		6985C41F19B07C8A006EFF4C /* QMDefaultDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMDefaultDataSource.h; path = QMTableDataSourceStrategy/QMDefaultStrategy/QMDefaultDataSource.h; sourceTree = "<group>"; };
@@ -1948,6 +1951,15 @@
 			name = Classes;
 			sourceTree = "<group>";
 		};
+		69670E4819B48D3B00A5DDA3 /* QMSearchStrategy */ = {
+			isa = PBXGroup;
+			children = (
+				69670E4919B48D7700A5DDA3 /* QMSearchDataSource.h */,
+				69670E4A19B48D7700A5DDA3 /* QMSearchDataSource.m */,
+			);
+			name = QMSearchStrategy;
+			sourceTree = "<group>";
+		};
 		697E2D49196EA7E500CD2BDE /* QMLicenseAgreementViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -1987,10 +1999,11 @@
 		699C415019AF7D0C0060859F /* QMTableDataSourceStrategy */ = {
 			isa = PBXGroup;
 			children = (
+				69670E4819B48D3B00A5DDA3 /* QMSearchStrategy */,
+				699C415419AF7DF00060859F /* QMContactRequestsStrategy */,
+				6985C41E19B07C54006EFF4C /* QMDefaultStrategy */,
 				699C415119AF7DE70060859F /* QMTableDataSource.h */,
 				699C415219AF7DE70060859F /* QMTableDataSource.m */,
-				6985C41E19B07C54006EFF4C /* QMDefaultStrategy */,
-				699C415419AF7DF00060859F /* QMContactRequestsStrategy */,
 			);
 			name = QMTableDataSourceStrategy;
 			sourceTree = "<group>";
@@ -2365,6 +2378,7 @@
 				55493694198677B0007F2CF1 /* QMContentOperation.m in Sources */,
 				55A8B0A819659BA000B5D33B /* QMApi+Messages.m in Sources */,
 				55D270AD1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.m in Sources */,
+				69670E4B19B48D7700A5DDA3 /* QMSearchDataSource.m in Sources */,
 				55D270C01940B8D300238D50 /* MagicalRecordStack.m in Sources */,
 				55A8B096196598A300B5D33B /* QMAVCallService.m in Sources */,
 				55A8B0761965986A00B5D33B /* REAlertView.m in Sources */,

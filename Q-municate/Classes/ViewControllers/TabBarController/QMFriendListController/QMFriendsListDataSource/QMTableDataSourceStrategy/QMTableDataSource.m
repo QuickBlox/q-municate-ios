@@ -8,8 +8,18 @@
 
 #import "QMTableDataSource.h"
 
+
+
 @implementation QMTableDataSource
 
+
+- (instancetype)initWithFriendsListDataSource:(QMFriendsListDataSource *)friendsListDataSource
+{
+    if (self = [super init]) {
+        _friendsListDataSource = friendsListDataSource;
+    }
+    return self;
+}
 
 #pragma mark - Table View Data Source
 

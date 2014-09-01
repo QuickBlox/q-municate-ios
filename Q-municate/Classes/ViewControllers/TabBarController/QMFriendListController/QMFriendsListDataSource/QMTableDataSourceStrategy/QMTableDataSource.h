@@ -8,9 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+@class QMFriendsListDataSource;
+
 @interface QMTableDataSource : NSObject <UITableViewDataSource>
 
 @property (nonatomic, copy) NSArray *friends;
 @property (nonatomic, copy) NSArray *otherUsers;
+
+@property (nonatomic, strong, readonly) QMFriendsListDataSource *friendsListDataSource;
+
+- (instancetype)initWithFriendsListDataSource:(QMFriendsListDataSource *)friendsListDataSource;
 
 @end

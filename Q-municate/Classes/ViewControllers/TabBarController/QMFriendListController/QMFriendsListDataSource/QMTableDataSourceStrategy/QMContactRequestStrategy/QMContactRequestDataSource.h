@@ -8,10 +8,6 @@
 
 #import "QMTableDataSource.h"
 
-@class QMFriendsListDataSource;
-
 @interface QMContactRequestDataSource : QMTableDataSource
-
-- (instancetype)initWithFriendsListDataSource:(QMFriendsListDataSource *)friendsListDataSource;
 
 @end

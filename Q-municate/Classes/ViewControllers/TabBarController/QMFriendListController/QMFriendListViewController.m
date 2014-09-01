@@ -91,11 +91,11 @@
     return [self.dataSource searchDisplayController:controller shouldReloadTableForSearchString:searchString];
 }
 
-- (void) searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
+-(void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
     [self.dataSource searchDisplayControllerWillBeginSearch:controller];
 }
 
-- (void) searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
+- (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
     [self.dataSource searchDisplayControllerWillEndSearch:controller];
 }
 

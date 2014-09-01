@@ -9,14 +9,16 @@
 #import "QMFriendsListDataSource.h"
 #import "QMUsersService.h"
 #import "QMFriendListCell.h"
+#import "QMContactRequestCell.h"
 #import "QMApi.h"
 #import "QMUsersService.h"
 #import "SVProgressHud.h"
 #import "QMChatReceiver.h"
 
-#import "QMTableDataSource.h"
+#import "QMSearchDataSource.h"
 #import "QMDefaultDataSource.h"
 #import "QMContactRequestDataSource.h"
+
 
 
 @interface QMFriendsListDataSource()
@@ -51,8 +53,8 @@
     if (self) {
         
         self.tableView = tableView;
-        [self setUpTableDataSource];
-//        self.tableView.dataSource = self;
+//        [self setUpTableDataSource];
+        self.tableView.dataSource = self;
         self.searchResult = [NSArray array];
         
         self.searchDisplayController = searchDisplayController;
@@ -84,7 +86,6 @@
                 
             }
             else {
-                [weakSelf setUpTableDataSource];
                 [weakSelf reloadDatasource];
             }
         };
@@ -92,7 +93,6 @@
         [[QMChatReceiver instance] contactRequestUsersListChangedWithTarget:self block:^{
             weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
             
-            [weakSelf setUpTableDataSource];
             [weakSelf.tableView reloadData];
         }];
         
@@ -102,6 +102,8 @@
         UINib *nib = [UINib nibWithNibName:@"QMFriendListCell" bundle:nil];
         [searchDisplayController.searchResultsTableView registerNib:nib
                                              forCellReuseIdentifier:kQMFriendsListCellIdentifier];
+        [searchDisplayController.searchResultsTableView registerNib:nil forCellReuseIdentifier:kQMContactRequestCellIdentifier];
+//        searchDisplayController.searchResultsDataSource = self;
     }
     
     return self;
@@ -187,7 +189,7 @@
         
     } else if ([self.contactRequests count] > 0) {
         if (section == 0) {
-            return self.contactRequests.count > 0 ? NSLocalizedString(@"QM_STR_REQUESTS", nil) : nil;
+            return users.count > 0 ? NSLocalizedString(@"QM_STR_REQUESTS", nil) : nil;
         }
         return users.count > 0 ? NSLocalizedString(@"QM_STR_FRIENDS", nil) : nil;
     }
@@ -205,18 +207,25 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     NSArray *users = [self usersAtSections:section];
-    
     if (self.searchDisplayController.isActive) {
         return users.count;
-    } else if ([self.contactRequests count] > 0) {
-        return self.contactRequests.count;
     }
     return users.count > 0 ? users.count : 1;
 }
 
 - (NSArray *)usersAtSections:(NSInteger)section
 {
-    return (section == 0 ) ? self.friendList : self.searchResult;
+    if (section == 0 ) {
+        return ([self.contactRequests count] > 0 && !self.searchDisplayController.isActive) ? self.contactRequests : self.friendList;
+    }
+    if (self.searchDisplayController.isActive) {
+        return self.searchResult;
+    }
+    
+    if ([self.contactRequests count] > 0) {
+        return self.friendList;
+    }
+    return nil;
 }
 
 - (QBUUser *)userAtIndexPath:(NSIndexPath *)indexPath {
@@ -237,9 +246,14 @@
             return cell;
         }
     }
-    
-    QMFriendListCell *cell = [tableView dequeueReusableCellWithIdentifier:kQMFriendsListCellIdentifier];
-    
+    QMTableViewCell *cell = nil;
+    if ([self.contactRequests count] > 0 && indexPath.section == 0) {
+        cell = [tableView dequeueReusableCellWithIdentifier:kQMContactRequestCellIdentifier];
+        ((QMContactRequestCell *)cell).delegate = self;
+    } else {
+        cell = [tableView dequeueReusableCellWithIdentifier:kQMFriendsListCellIdentifier];
+        ((QMFriendListCell *)cell).delegate = self;
+    }
     QBUUser *user = users[indexPath.row];
     
     QBContactListItem *item = [[QMApi instance] contactItemWithUserID:user.ID];
@@ -247,36 +261,42 @@
     cell.userData = user;
     
     if(self.searchDisplayController.isActive) {
-        cell.searchText = self.searchDisplayController.searchBar.text;
+        ((QMFriendListCell *)cell).searchText = self.searchDisplayController.searchBar.text;
     }
     
-    cell.delegate = self;
     
     return cell;
 }
 
-- (void)setUpTableDataSource
-{
-    if (self.searchDisplayController.isActive) {
-        // to do:
-        return;
-    }
-    if ([self.contactRequests count] > 0) {
-        if (![self.tableDataSource isKindOfClass:QMContactRequestDataSource.class]) {
-            self.tableDataSource = [[QMContactRequestDataSource alloc] initWithFriendsListDataSource:self];
-            self.tableView.dataSource = self.tableDataSource;
-        }
-        self.tableDataSource.friends = self.friendList;
-        self.tableDataSource.otherUsers = self.contactRequests;
-        return;
-    }
-    // default statte:
-    if (![self.tableDataSource isKindOfClass:QMDefaultDataSource.class]) {
-        self.tableDataSource = [QMDefaultDataSource new];
-        self.tableView.dataSource = self.tableDataSource;
-    }
-    self.tableDataSource.friends = self.friendList;
-}
+//- (void)setUpTableDataSource
+//{
+//    if (self.searchDisplayController.isActive) {
+//        if (![self.tableDataSource isKindOfClass:QMSearchDataSource.class]) {
+//            self.tableDataSource = [[QMSearchDataSource alloc] initWithFriendsListDataSource:self];
+//            self.searchDisplayController.searchResultsDataSource = self.tableDataSource;
+//            self.tableView.dataSource = self.tableDataSource;
+//        }
+//        self.tableDataSource.friends = self.friendList;
+//        self.tableDataSource.otherUsers = self.searchResult;
+//        ((QMSearchDataSource *)self.tableDataSource).searchString = self.searchDisplayController.searchBar.text;
+//        return;
+//    }
+//    if ([self.contactRequests count] > 0) {
+//        if (![self.tableDataSource isKindOfClass:QMContactRequestDataSource.class]) {
+//            self.tableDataSource = [[QMContactRequestDataSource alloc] initWithFriendsListDataSource:self];
+//            self.tableView.dataSource = self.tableDataSource;
+//        }
+//        self.tableDataSource.friends = self.friendList;
+//        self.tableDataSource.otherUsers = self.contactRequests;
+//        return;
+//    }
+//    // default statte:
+//    if (![self.tableDataSource isKindOfClass:QMDefaultDataSource.class]) {
+//        self.tableDataSource = [QMDefaultDataSource new];
+//        self.tableView.dataSource = self.tableDataSource;
+//    }
+//    self.tableDataSource.friends = self.friendList;
+//}
 
 
 #pragma mark - QMUsersListCellDelegate
@@ -302,7 +322,6 @@
     QMApi *api = [QMApi instance];
     [api.usersService.confirmRequestUsersIDs removeObject:@(user.ID)];
     self.contactRequests = api.contactRequestUsers;
-    [self setUpTableDataSource];
     [self reloadDatasource];
 //    __weak __typeof(self)weakSelf = self;
 //    
@@ -326,12 +345,13 @@
     return NO;
 }
 
-- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
-    [self setUpTableDataSource];
+-(void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
+{
+    //
 }
 
-- (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
-    [self setUpTableDataSource];
+- (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller
+{
     [self.tableView reloadData];
 }
 
