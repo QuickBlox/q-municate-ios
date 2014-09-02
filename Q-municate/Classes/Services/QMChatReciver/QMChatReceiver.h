@@ -113,4 +113,6 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 - (void)contactRequestUsersListChanged;
 - (void)contactRequestUsersListChangedWithTarget:(id)target block:(QMUsersHistoryUpdated)block;
 
+- (void)chatContactListDidChange:(QBContactList *)contactList;
+
 @end

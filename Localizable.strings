@@ -26,6 +26,7 @@
 "QM_STR_PASSWORD_CHANGED" = "Password changed";
 "QM_STR_ONLINE" = "Online";
 "QM_STR_OFFLINE" = "Offline";
+"QM_STR_PENDING" = "Pending";
 "QM_STR_PASSWORD_IS_TOO_SHORT" = "Password is too short";
 
 "QM_STR_USER_CREATED_GROUP_CONVERSATION" = "created a group conversation";

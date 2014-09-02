@@ -12,6 +12,7 @@
 #import "QMFacebookService.h"
 #import "QMMessagesService.h"
 #import "QMSettingsManager.h"
+#import "QMChatReceiver.h"
 #import "QMAddressBook.h"
 #import "ABPerson.h"
 
@@ -42,6 +43,14 @@
     [self.messagesService chat:^(QBChat *chat) {
         BOOL success = [chat confirmAddContactRequest:userID];
         [self.usersService.confirmRequestUsersIDs removeObject:@(userID)];
+        
+        // fake QBContactListItem
+        QBContactListItem *fakeItem = [[QBContactListItem alloc] init];
+        fakeItem.userID = userID;
+        fakeItem.subscriptionState = QBPresenseSubscriptionStateBoth;
+        [(NSMutableArray *)[QBChat instance].contactList.contacts addObject:fakeItem];
+        [[QMChatReceiver instance] chatContactListDidChange:[QBChat instance].contactList];
+        
         completion(success);
     }];
 }
