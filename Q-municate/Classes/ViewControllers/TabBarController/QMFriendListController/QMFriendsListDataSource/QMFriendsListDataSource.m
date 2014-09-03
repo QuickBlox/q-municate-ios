@@ -88,8 +88,7 @@
         [[QMChatReceiver instance] contactRequestUsersListChangedWithTarget:self block:^{
             weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
             
-            NSArray *indexPaths = [weakSelf indexPathsForUsers:weakSelf.contactRequests];
-            [weakSelf.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+            [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
         }];
         
         [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:reloadDatasource];
@@ -126,7 +125,7 @@
 - (void)reloadDatasource {
     
     self.friendList = [QMApi instance].friends;
-    [self.tableView reloadData];
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 - (void)globalSearch:(NSString *)searchText {
@@ -144,7 +143,7 @@
         //Remove current user from search result
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.ID != %d", [QMApi instance].currentUser.ID];
         weakSelf.searchResult = [users filteredArrayUsingPredicate:predicate];
-        [weakSelf.searchDisplayController.searchResultsTableView reloadData];
+        [weakSelf.searchDisplayController.searchResultsTableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationFade];
         weakSelf.searchOperation = nil;
         [SVProgressHUD dismiss];
     };
@@ -203,6 +202,8 @@
     } else if (section == 1) {
         if (self.searchIsActive) {
             return ([users count] > 0) ? users.count : 0;
+        } else if ([self.contactRequests count] > 0) {
+            return ([users count] > 0) ? users.count : 0;
         }
         return ([users count] > 0) ? users.count : 1;
     }
@@ -258,16 +259,6 @@
     return cell;
 }
 
-- (NSArray *)indexPathsForUsers:(NSArray *)users
-{
-    NSMutableArray *array = [NSMutableArray new];
-    for (NSUInteger i = 0; i < [users count]; i++) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-        [array addObject:indexPath];
-    }
-    return [array copy];
-}
-
 
 #pragma mark - QMUsersListCellDelegate
 
@@ -290,19 +281,22 @@
 {
     QBUUser *user = cell.userData;    
     __weak __typeof(self)weakSelf = self;
-    
+
     if (accepted) {
         [[QMApi instance] confirmAddContactRequest:user.ID completion:^(BOOL success) {
-            weakSelf.contactRequests = [[QMApi instance] contactRequestUsers];
-            NSIndexPath *indexPath = [weakSelf.tableView indexPathForCell:cell];
-            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+            weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
+            [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
+            
         }];
     } else {
         [[QMApi instance] rejectAddContactRequest:user.ID completion:^(BOOL success) {
-            weakSelf.contactRequests = [[QMApi instance] contactRequestUsers];
+            
+            weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
             NSIndexPath *indexPath = [weakSelf.tableView indexPathForCell:cell];
-            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+            [weakSelf.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+
         }];
+        
     }
 }
 
@@ -319,7 +313,7 @@
 
 -(void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
 {
-    [controller.searchResultsTableView reloadData];
+//    [controller.searchResultsTableView reloadData];
 }
 
 - (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller
@@ -327,7 +321,7 @@
     if (self.searchIsActive) {
         self.searchIsActive = NO;
     }
-    [self.tableView reloadData];
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 @end

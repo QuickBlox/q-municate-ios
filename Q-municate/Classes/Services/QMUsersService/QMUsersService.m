@@ -47,19 +47,34 @@
             
         }];
     }];
+    
     [[QMChatReceiver instance] chatDidReceiveContactAddRequestWithTarget:self block:^(NSUInteger userID) {
-//        [[QMApi instance] confirmAddContactRequest:userID completion:^(BOOL success) {}];
+        
         [weakSelf.confirmRequestUsersIDs addObject:@(userID)];
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            // to do:
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [weakSelf retrieveUsersWithIDs:[weakSelf.confirmRequestUsersIDs copy] completion:^(BOOL updated) {
-                    // show contact requests:
-                    [[QMChatReceiver instance] contactRequestUsersListChanged];
-                }];
-            });
-        });
+        
+        QBUUser *user = [weakSelf userWithID:userID];
+        
+        if (user != nil) {
+            [[QMChatReceiver instance] contactRequestUsersListChanged];
+            return;
+        }
+        [weakSelf retrieveUserWithID:userID completion:^(QBUUserResult *result) {
+            // show contact requests:
+            [[QMChatReceiver instance] contactRequestUsersListChanged];
+        }];
+        
+        
+        // ************************************** DONT TOUCH *****************************
+//        static dispatch_once_t onceToken;
+//        dispatch_once(&onceToken, ^{
+//            // to do:
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                [weakSelf retrieveUsersWithIDs:[weakSelf.confirmRequestUsersIDs copy] completion:^(BOOL updated) {
+//                    // show contact requests:
+//                    [[QMChatReceiver instance] contactRequestUsersListChanged];
+//                }];
+//            });
+//        });
     }];
 }
 
@@ -185,9 +200,13 @@
 
 - (NSObject<Cancelable> *)retrieveUserWithID:(NSUInteger)userID completion:(QBUUserResultBlock)completion {
     
-    return [QBUsers userWithID:userID
-                      delegate:[QBEchoObject instance]
-                       context:[QBEchoObject makeBlockForEchoObject:completion]];
+    __weak __typeof(self)weakSelf = self;
+    QBUUserResultBlock resultBlock = ^(QBUUserResult *result) {
+        [weakSelf addUser:result.user];
+        completion(result);
+    };
+    
+    return [QBUsers userWithID:userID delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
 }
 
 - (NSObject<Cancelable> *)retrieveUsersWithEmails:(NSArray *)emails completion:(QBUUserPagedResultBlock)completion {
