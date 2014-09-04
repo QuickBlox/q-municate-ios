@@ -88,7 +88,7 @@
         [[QMChatReceiver instance] contactRequestUsersListChangedWithTarget:self block:^{
             weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
             
-            [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+            [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)] withRowAnimation:UITableViewRowAnimationFade];
         }];
         
         [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:reloadDatasource];
@@ -202,7 +202,8 @@
     } else if (section == 1) {
         if (self.searchIsActive) {
             return ([users count] > 0) ? users.count : 0;
-        } else if ([self.contactRequests count] > 0) {
+        }
+        else if ([self.contactRequests count] > 0) {
             return ([users count] > 0) ? users.count : 0;
         }
         return ([users count] > 0) ? users.count : 1;
