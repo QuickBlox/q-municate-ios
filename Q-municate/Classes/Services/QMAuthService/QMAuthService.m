@@ -2,7 +2,7 @@
 //  QBAuthService.m
 //  Q-municate
 //
-//  Created by Ivanov Andrey on 13/07/2014.
+//  Created by Ivanov Andrey Ivanov on 13/07/2014.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 

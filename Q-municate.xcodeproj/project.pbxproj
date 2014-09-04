@@ -10,7 +10,6 @@
 		2476BA8119A5D91F00CC666D /* QMUsersUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2476BA8019A5D91F00CC666D /* QMUsersUtils.m */; };
 		2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */; };
 		2494559B19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 2494559A19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m */; };
-		24F8B8F719A26F63009F8656 /* NSString+occupantsIDsFromMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 24F8B8F619A26F63009F8656 /* NSString+occupantsIDsFromMessage.m */; };
 		24FDA66F199B7A610005662B /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24FDA66E199B7A610005662B /* Crashlytics.framework */; };
 		551BD88A199103C0006AC667 /* _CDAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 551BD883199103C0006AC667 /* _CDAttachment.m */; };
 		551BD88B199103C0006AC667 /* _CDDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 551BD885199103C0006AC667 /* _CDDialog.m */; };
@@ -21,41 +20,25 @@
 		551F8724196E854500DBCA02 /* QMApi+Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 551F8723196E854500DBCA02 /* QMApi+Facebook.m */; };
 		551F8728196EA68900DBCA02 /* QMInviteFriendsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 551F8727196EA68900DBCA02 /* QMInviteFriendsDataSource.m */; };
 		5521401E197FF00900F55373 /* QMIncomingCallHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5521401D197FF00900F55373 /* QMIncomingCallHandler.m */; };
-		5523F97B198FAFC000C5ED4F /* QMBaseService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5523F97A198FAFC000C5ED4F /* QMBaseService.m */; };
-		5524C2CE1998B3DB007450DB /* REActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 5524C2CD1998B3DB007450DB /* REActionSheet.m */; };
-		5524C2D21998B573007450DB /* QMImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5524C2D11998B573007450DB /* QMImagePicker.m */; };
-		5524C2D51998E0CF007450DB /* QMChatReceiver+DialogsHistoryUpdated.m in Sources */ = {isa = PBXBuildFile; fileRef = 5524C2D41998E0CF007450DB /* QMChatReceiver+DialogsHistoryUpdated.m */; };
 		5524C2D819991308007450DB /* QMChatReceiver+UsersHistoryUpdated.m in Sources */ = {isa = PBXBuildFile; fileRef = 5524C2D719991308007450DB /* QMChatReceiver+UsersHistoryUpdated.m */; };
 		5526D909196D3267003AA9B6 /* QMChatReceiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 5526D908196D3267003AA9B6 /* QMChatReceiver.m */; };
 		55286996199131B5006F92CB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55286995199131B5006F92CB /* Localizable.strings */; };
-		5528699A1991365E006F92CB /* QMHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 552869991991365E006F92CB /* QMHelpers.m */; };
 		552B423919471E19008DF1E8 /* CDAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 552B423819471E19008DF1E8 /* CDAttachment.m */; };
 		552E483B199A2711006A25E1 /* QMFriendListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552E483A199A2711006A25E1 /* QMFriendListCell.xib */; };
-		55311ADC1990FE7300C585D5 /* QMModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 55311ADA1990FE7300C585D5 /* QMModel.xcdatamodeld */; };
 		55311ADF1990FEA500C585D5 /* mogen.sh in Resources */ = {isa = PBXBuildFile; fileRef = 55311ADD1990FEA500C585D5 /* mogen.sh */; };
 		55311AE01990FEA500C585D5 /* mogend.sh in Resources */ = {isa = PBXBuildFile; fileRef = 55311ADE1990FEA500C585D5 /* mogend.sh */; };
-		553F9919196998EB000C13F3 /* ABPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 553F9918196998EB000C13F3 /* ABPerson.m */; };
-		55481027195C699C00D74505 /* QMProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55481026195C699C00D74505 /* QMProgressView.m */; };
 		5549368E19867738007F2CF1 /* QMContentService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5549368C19867738007F2CF1 /* QMContentService.m */; };
 		55493694198677B0007F2CF1 /* QMContentOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 55493693198677B0007F2CF1 /* QMContentOperation.m */; };
-		55493697198677C4007F2CF1 /* QMDownloadContentOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 55493696198677C4007F2CF1 /* QMDownloadContentOperation.m */; };
-		5549369A198677CE007F2CF1 /* QMUploadContentOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 55493699198677CE007F2CF1 /* QMUploadContentOperation.m */; };
 		55495A221993BCC100B7764C /* QMAlertsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 55495A201993BCC100B7764C /* QMAlertsFactory.m */; };
-		55495A251993BCD500B7764C /* QMMessageBarStyleSheetFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 55495A241993BCD500B7764C /* QMMessageBarStyleSheetFactory.m */; };
 		556192CB19891BD70048D112 /* QMGroupDetailsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 556192CA19891BD70048D112 /* QMGroupDetailsDataSource.m */; };
-		5587451A198146D5005B1783 /* QBChatAbstractMessage+CustomParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 55874519198146D5005B1783 /* QBChatAbstractMessage+CustomParameters.m */; };
 		558AE52C196EA7C400AEAC1F /* QMFriendsListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 558AE52B196EA7C400AEAC1F /* QMFriendsListDataSource.m */; };
-		559143C2199CFECB001DD2C4 /* QMOnlineTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = 559143C1199CFECB001DD2C4 /* QMOnlineTitle.m */; };
 		55943A0C1941A4AE00BF4312 /* CDDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 55943A0B1941A4AE00BF4312 /* CDDialog.m */; };
 		5594E4CC199E218800AA0D09 /* ChatBubbles.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5594E4CB199E218800AA0D09 /* ChatBubbles.xcassets */; };
 		559BDFE719618D3D000588FE /* QMLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFDD19618D3D000588FE /* QMLogInViewController.m */; };
 		559BDFE819618D3D000588FE /* QMSignUpController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE019618D3D000588FE /* QMSignUpController.m */; };
 		559BDFE919618D3D000588FE /* QMSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE319618D3D000588FE /* QMSplashViewController.m */; };
 		559BDFEA19618D3D000588FE /* QMWelcomeScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE619618D3D000588FE /* QMWelcomeScreenViewController.m */; };
-		559BDFEF19618F39000588FE /* QMForgotPasswordTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFEE19618F39000588FE /* QMForgotPasswordTVC.m */; };
-		559BDFF719619222000588FE /* QMCornerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFF619619222000588FE /* QMCornerButton.m */; };
 		55A8B046196597B400B5D33B /* QMApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B036196597B400B5D33B /* QMApi.m */; };
-		55A8B06A1965986A00B5D33B /* QMAddressBook.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B0521965986A00B5D33B /* QMAddressBook.m */; };
 		55A8B06B1965986A00B5D33B /* NSUserDefaultsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B0551965986A00B5D33B /* NSUserDefaultsHelper.m */; };
 		55A8B06C1965986A00B5D33B /* QBEchoObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B0581965986A00B5D33B /* QBEchoObject.m */; };
 		55A8B06D1965986A00B5D33B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 55A8B0591965986A00B5D33B /* README.md */; };
@@ -66,13 +49,8 @@
 		55A8B0721965986A00B5D33B /* received.wav in Resources */ = {isa = PBXBuildFile; fileRef = 55A8B0611965986A00B5D33B /* received.wav */; };
 		55A8B0731965986A00B5D33B /* ringtone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 55A8B0621965986A00B5D33B /* ringtone.wav */; };
 		55A8B0741965986A00B5D33B /* sent.wav in Resources */ = {isa = PBXBuildFile; fileRef = 55A8B0631965986A00B5D33B /* sent.wav */; };
-		55A8B0751965986A00B5D33B /* REAlertView+QMSuccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B0671965986A00B5D33B /* REAlertView+QMSuccess.m */; };
 		55A8B0761965986A00B5D33B /* REAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B0691965986A00B5D33B /* REAlertView.m */; };
 		55A8B095196598A300B5D33B /* QMAuthService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B079196598A300B5D33B /* QMAuthService.m */; };
-		55A8B096196598A300B5D33B /* QMAVCallService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B07D196598A300B5D33B /* QMAVCallService.m */; };
-		55A8B097196598A300B5D33B /* QMChatDialogsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B080196598A300B5D33B /* QMChatDialogsService.m */; };
-		55A8B099196598A300B5D33B /* QMMessagesService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B085196598A300B5D33B /* QMMessagesService.m */; };
-		55A8B09A196598A300B5D33B /* QMFacebookService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B088196598A300B5D33B /* QMFacebookService.m */; };
 		55A8B09E196598A300B5D33B /* QMUsersService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B094196598A300B5D33B /* QMUsersService.m */; };
 		55A8B0A5196599FA00B5D33B /* QMApi+Auth.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B0A4196599FA00B5D33B /* QMApi+Auth.m */; };
 		55A8B0A819659BA000B5D33B /* QMApi+Messages.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B0A719659BA000B5D33B /* QMApi+Messages.m */; };
@@ -80,86 +58,110 @@
 		55A8B0AE1965AD1800B5D33B /* QMApi+Users.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B0AD1965AD1800B5D33B /* QMApi+Users.m */; };
 		55BBA75C19730B960040DB5C /* REMessageUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BBA75B19730B960040DB5C /* REMessageUI.m */; };
 		55BBA760197327AB0040DB5C /* QMDialogsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BBA75F197327AB0040DB5C /* QMDialogsViewController.m */; };
-		55BBA764197327D20040DB5C /* QMDialogsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BBA763197327D20040DB5C /* QMDialogsDataSource.m */; };
 		55CEA9EE195D835B001A8ED6 /* QMImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEA9ED195D835B001A8ED6 /* QMImageView.m */; };
 		55CEAB81195DBCFA001A8ED6 /* QMIncomingCallController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB15195DBCFA001A8ED6 /* QMIncomingCallController.m */; };
 		55CEAB82195DBCFA001A8ED6 /* QMVideoCallController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB18195DBCFA001A8ED6 /* QMVideoCallController.m */; };
-		55CEAB84195DBCFA001A8ED6 /* NSString+HasText.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB20195DBCFA001A8ED6 /* NSString+HasText.m */; };
 		55CEAB85195DBCFA001A8ED6 /* NSString+UsedSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB23195DBCFA001A8ED6 /* NSString+UsedSize.m */; };
 		55CEAB86195DBCFA001A8ED6 /* UIColor+Hex.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB27195DBCFA001A8ED6 /* UIColor+Hex.m */; };
-		55CEAB87195DBCFA001A8ED6 /* UIImage+TintColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB2A195DBCFA001A8ED6 /* UIImage+TintColor.m */; };
-		55CEAB88195DBCFA001A8ED6 /* QMChatButtonsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB2E195DBCFA001A8ED6 /* QMChatButtonsFactory.m */; };
-		55CEAB89195DBCFA001A8ED6 /* QMAttachmentMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB32195DBCFA001A8ED6 /* QMAttachmentMessageCell.m */; };
 		55CEAB8A195DBCFA001A8ED6 /* QMChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB34195DBCFA001A8ED6 /* QMChatCell.m */; };
-		55CEAB8B195DBCFA001A8ED6 /* QMSystemMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB37195DBCFA001A8ED6 /* QMSystemMessageCell.m */; };
-		55CEAB8C195DBCFA001A8ED6 /* QMTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB3A195DBCFA001A8ED6 /* QMTextMessageCell.m */; };
 		55CEAB8F195DBCFA001A8ED6 /* QMChatDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB43195DBCFA001A8ED6 /* QMChatDataSource.m */; };
 		55CEAB91195DBCFA001A8ED6 /* QMChatInputToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB49195DBCFA001A8ED6 /* QMChatInputToolbar.m */; };
-		55CEAB92195DBCFA001A8ED6 /* QMChatToolbarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB4C195DBCFA001A8ED6 /* QMChatToolbarContentView.m */; };
 		55CEAB93195DBCFA001A8ED6 /* QMChatLayoutConfigs.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB4F195DBCFA001A8ED6 /* QMChatLayoutConfigs.m */; };
 		55CEAB94195DBCFA001A8ED6 /* QMChatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB51195DBCFA001A8ED6 /* QMChatVC.m */; };
-		55CEAB95195DBCFA001A8ED6 /* QMKeyboardController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB54195DBCFA001A8ED6 /* QMKeyboardController.m */; };
 		55CEAB96195DBCFA001A8ED6 /* QMMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB57195DBCFA001A8ED6 /* QMMessage.m */; };
-		55CEAB97195DBCFA001A8ED6 /* QMAddMembersToGroupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB5D195DBCFA001A8ED6 /* QMAddMembersToGroupController.m */; };
-		55CEAB98195DBCFA001A8ED6 /* QMAddUsersAbstractController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB5F195DBCFA001A8ED6 /* QMAddUsersAbstractController.m */; };
-		55CEAB99195DBCFA001A8ED6 /* QMCreateNewChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB61195DBCFA001A8ED6 /* QMCreateNewChatController.m */; };
 		55CEAB9A195DBCFA001A8ED6 /* QMChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB65195DBCFA001A8ED6 /* QMChatViewController.m */; };
 		55CEAB9C195DBCFA001A8ED6 /* QMContentPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB6B195DBCFA001A8ED6 /* QMContentPreviewController.m */; };
 		55CEAB9D195DBCFA001A8ED6 /* QMFriendListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB6E195DBCFA001A8ED6 /* QMFriendListViewController.m */; };
 		55CEAB9E195DBCFA001A8ED6 /* QMFriendsDetailsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB71195DBCFA001A8ED6 /* QMFriendsDetailsController.m */; };
 		55CEAB9F195DBCFA001A8ED6 /* QMGroupDetailsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB74195DBCFA001A8ED6 /* QMGroupDetailsController.m */; };
 		55CEABA0195DBCFA001A8ED6 /* QMInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB77195DBCFA001A8ED6 /* QMInviteViewController.m */; };
-		55CEABA1195DBCFA001A8ED6 /* QMChangePasswordVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB7B195DBCFA001A8ED6 /* QMChangePasswordVC.m */; };
 		55CEABA2195DBCFA001A8ED6 /* QMProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB7E195DBCFA001A8ED6 /* QMProfileViewController.m */; };
 		55CEABA3195DBCFA001A8ED6 /* QMSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEAB80195DBCFA001A8ED6 /* QMSettingsViewController.m */; };
-		55D25B25198BBF3700443D0C /* QMSearchDisplayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D25B24198BBF3700443D0C /* QMSearchDisplayController.m */; };
 		55D270911940B8D300238D50 /* QMDBStorage+Dialogs.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270111940B8D300238D50 /* QMDBStorage+Dialogs.m */; };
 		55D270921940B8D300238D50 /* QMDBStorage+Messages.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270141940B8D300238D50 /* QMDBStorage+Messages.m */; };
 		55D270931940B8D300238D50 /* QMDBStorage+Users.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270171940B8D300238D50 /* QMDBStorage+Users.m */; };
 		55D270941940B8D300238D50 /* QMDBStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270191940B8D300238D50 /* QMDBStorage.m */; };
-		55D270991940B8D300238D50 /* MagicalImportFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2702A1940B8D300238D50 /* MagicalImportFunctions.m */; };
-		55D2709A1940B8D300238D50 /* NSAttributeDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2702C1940B8D300238D50 /* NSAttributeDescription+MagicalDataImport.m */; };
-		55D2709B1940B8D300238D50 /* NSEntityDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2702E1940B8D300238D50 /* NSEntityDescription+MagicalDataImport.m */; };
-		55D2709C1940B8D300238D50 /* NSNumber+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270301940B8D300238D50 /* NSNumber+MagicalDataImport.m */; };
-		55D2709D1940B8D300238D50 /* NSObject+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270321940B8D300238D50 /* NSObject+MagicalDataImport.m */; };
-		55D2709E1940B8D300238D50 /* NSRelationshipDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270341940B8D300238D50 /* NSRelationshipDescription+MagicalDataImport.m */; };
-		55D2709F1940B8D300238D50 /* NSString+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270361940B8D300238D50 /* NSString+MagicalDataImport.m */; };
-		55D270A01940B8D300238D50 /* NSFetchedResultsController+MagicalFetching.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270381940B8D300238D50 /* NSFetchedResultsController+MagicalFetching.m */; };
-		55D270A11940B8D300238D50 /* NSManagedObject+MagicalAggregation.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2703B1940B8D300238D50 /* NSManagedObject+MagicalAggregation.m */; };
-		55D270A21940B8D300238D50 /* NSManagedObject+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2703D1940B8D300238D50 /* NSManagedObject+MagicalDataImport.m */; };
-		55D270A31940B8D300238D50 /* NSManagedObject+MagicalFetching.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2703F1940B8D300238D50 /* NSManagedObject+MagicalFetching.m */; };
-		55D270A41940B8D300238D50 /* NSManagedObject+MagicalFinders.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270411940B8D300238D50 /* NSManagedObject+MagicalFinders.m */; };
-		55D270A51940B8D300238D50 /* NSManagedObject+MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270431940B8D300238D50 /* NSManagedObject+MagicalRecord.m */; };
-		55D270A61940B8D300238D50 /* NSManagedObject+MagicalRequests.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270451940B8D300238D50 /* NSManagedObject+MagicalRequests.m */; };
-		55D270A71940B8D300238D50 /* NSManagedObjectContext+MagicalObserving.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270481940B8D300238D50 /* NSManagedObjectContext+MagicalObserving.m */; };
-		55D270A81940B8D300238D50 /* NSManagedObjectContext+MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2704A1940B8D300238D50 /* NSManagedObjectContext+MagicalRecord.m */; };
-		55D270A91940B8D300238D50 /* NSManagedObjectContext+MagicalSaves.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2704C1940B8D300238D50 /* NSManagedObjectContext+MagicalSaves.m */; };
-		55D270AA1940B8D300238D50 /* NSManagedObjectModel+MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2704E1940B8D300238D50 /* NSManagedObjectModel+MagicalRecord.m */; };
-		55D270AB1940B8D300238D50 /* NSPersistentStore+MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270501940B8D300238D50 /* NSPersistentStore+MagicalRecord.m */; };
-		55D270AC1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalAutoMigrations.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270541940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalAutoMigrations.m */; };
-		55D270AD1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270561940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.m */; };
-		55D270AE1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalManualMigrations.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270581940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalManualMigrations.m */; };
-		55D270AF1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2705A1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalRecord.m */; };
-		55D270B01940B8D300238D50 /* NSArray+MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2705D1940B8D300238D50 /* NSArray+MagicalRecord.m */; };
-		55D270B11940B8D300238D50 /* NSDictionary+MagicalRecordAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2705F1940B8D300238D50 /* NSDictionary+MagicalRecordAdditions.m */; };
-		55D270B21940B8D300238D50 /* NSError+MagicalRecordErrorHandling.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270611940B8D300238D50 /* NSError+MagicalRecordErrorHandling.m */; };
-		55D270B31940B8D300238D50 /* MagicalMigrationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270631940B8D300238D50 /* MagicalMigrationManager.m */; };
-		55D270B41940B8D300238D50 /* MagicalRecord+Actions.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270661940B8D300238D50 /* MagicalRecord+Actions.m */; };
-		55D270B51940B8D300238D50 /* MagicalRecord+Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270681940B8D300238D50 /* MagicalRecord+Options.m */; };
-		55D270B61940B8D300238D50 /* MagicalRecord+Setup.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2706A1940B8D300238D50 /* MagicalRecord+Setup.m */; };
-		55D270B71940B8D300238D50 /* MagicalRecord+VersionInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2706C1940B8D300238D50 /* MagicalRecord+VersionInformation.m */; };
-		55D270B81940B8D300238D50 /* MagicalRecordInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2706F1940B8D300238D50 /* MagicalRecordInternal.m */; };
-		55D270B91940B8D300238D50 /* MagicalRecordShorthand.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270731940B8D300238D50 /* MagicalRecordShorthand.m */; };
-		55D270BA1940B8D300238D50 /* AutoMigratingMagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270771940B8D300238D50 /* AutoMigratingMagicalRecordStack.m */; };
-		55D270BB1940B8D300238D50 /* AutoMigratingWithSourceAndTargetModelMagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270791940B8D300238D50 /* AutoMigratingWithSourceAndTargetModelMagicalRecordStack.m */; };
-		55D270BC1940B8D300238D50 /* ClassicSQLiteMagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2707B1940B8D300238D50 /* ClassicSQLiteMagicalRecordStack.m */; };
-		55D270BD1940B8D300238D50 /* ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2707D1940B8D300238D50 /* ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.m */; };
-		55D270BE1940B8D300238D50 /* InMemoryMagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2707F1940B8D300238D50 /* InMemoryMagicalRecordStack.m */; };
-		55D270BF1940B8D300238D50 /* MagicalRecordStack+Actions.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270811940B8D300238D50 /* MagicalRecordStack+Actions.m */; };
-		55D270C01940B8D300238D50 /* MagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270841940B8D300238D50 /* MagicalRecordStack.m */; };
-		55D270C11940B8D300238D50 /* ManuallyMigratingMagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270861940B8D300238D50 /* ManuallyMigratingMagicalRecordStack.m */; };
-		55D270C21940B8D300238D50 /* SQLiteMagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D270881940B8D300238D50 /* SQLiteMagicalRecordStack.m */; };
-		55D270C31940B8D300238D50 /* SQLiteWithSavingContextMagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D2708A1940B8D300238D50 /* SQLiteWithSavingContextMagicalRecordStack.m */; };
+		55D8ACFB19AC70A500DAF79F /* QBChatAbstractMessage+CustomParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ACFA19AC70A500DAF79F /* QBChatAbstractMessage+CustomParameters.m */; };
+		55D8ACFE19AC70B000DAF79F /* QMMessageBarStyleSheetFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ACFD19AC70B000DAF79F /* QMMessageBarStyleSheetFactory.m */; };
+		55D8AD0119AC751200DAF79F /* QMMessagesService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD0019AC751200DAF79F /* QMMessagesService.m */; };
+		55D8AD0419AC753600DAF79F /* QMImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD0319AC753600DAF79F /* QMImagePicker.m */; };
+		55D8AD0719AC756000DAF79F /* REActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD0619AC756000DAF79F /* REActionSheet.m */; };
+		55D8AD0A19AC756E00DAF79F /* QMHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD0919AC756E00DAF79F /* QMHelpers.m */; };
+		55D8AD0F19AC757900DAF79F /* ABPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD0C19AC757900DAF79F /* ABPerson.m */; };
+		55D8AD1019AC757900DAF79F /* QMAddressBook.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD0E19AC757900DAF79F /* QMAddressBook.m */; };
+		55D8AD1319AC758C00DAF79F /* QMBaseService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD1219AC758C00DAF79F /* QMBaseService.m */; };
+		55D8AD1619AC759C00DAF79F /* QMDownloadContentOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD1519AC759C00DAF79F /* QMDownloadContentOperation.m */; };
+		55D8AD1919AC75AA00DAF79F /* QMAVCallService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD1819AC75AA00DAF79F /* QMAVCallService.m */; };
+		55D8AD1D19AC75B700DAF79F /* QMChatDialogsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD1B19AC75B700DAF79F /* QMChatDialogsService.m */; };
+		55D8AD1E19AC75B700DAF79F /* QMChatReceiver+DialogsHistoryUpdated.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD1C19AC75B700DAF79F /* QMChatReceiver+DialogsHistoryUpdated.m */; };
+		55D8AD2119AC75C100DAF79F /* QMFacebookService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD2019AC75C100DAF79F /* QMFacebookService.m */; };
+		55D8AD8819AC75FA00DAF79F /* MagicalImportFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD2719AC75FA00DAF79F /* MagicalImportFunctions.m */; };
+		55D8AD8919AC75FA00DAF79F /* NSAttributeDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD2919AC75FA00DAF79F /* NSAttributeDescription+MagicalDataImport.m */; };
+		55D8AD8A19AC75FA00DAF79F /* NSEntityDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD2B19AC75FA00DAF79F /* NSEntityDescription+MagicalDataImport.m */; };
+		55D8AD8B19AC75FA00DAF79F /* NSNumber+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD2D19AC75FA00DAF79F /* NSNumber+MagicalDataImport.m */; };
+		55D8AD8C19AC75FA00DAF79F /* NSObject+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD2F19AC75FA00DAF79F /* NSObject+MagicalDataImport.m */; };
+		55D8AD8D19AC75FA00DAF79F /* NSRelationshipDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD3119AC75FA00DAF79F /* NSRelationshipDescription+MagicalDataImport.m */; };
+		55D8AD8E19AC75FA00DAF79F /* NSString+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD3319AC75FA00DAF79F /* NSString+MagicalDataImport.m */; };
+		55D8AD8F19AC75FA00DAF79F /* NSFetchedResultsController+MagicalFetching.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD3519AC75FA00DAF79F /* NSFetchedResultsController+MagicalFetching.m */; };
+		55D8AD9019AC75FA00DAF79F /* NSManagedObject+MagicalAggregation.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD3819AC75FA00DAF79F /* NSManagedObject+MagicalAggregation.m */; };
+		55D8AD9119AC75FA00DAF79F /* NSManagedObject+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD3A19AC75FA00DAF79F /* NSManagedObject+MagicalDataImport.m */; };
+		55D8AD9219AC75FA00DAF79F /* NSManagedObject+MagicalFetching.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD3C19AC75FA00DAF79F /* NSManagedObject+MagicalFetching.m */; };
+		55D8AD9319AC75FA00DAF79F /* NSManagedObject+MagicalFinders.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD3E19AC75FA00DAF79F /* NSManagedObject+MagicalFinders.m */; };
+		55D8AD9419AC75FA00DAF79F /* NSManagedObject+MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD4019AC75FA00DAF79F /* NSManagedObject+MagicalRecord.m */; };
+		55D8AD9519AC75FA00DAF79F /* NSManagedObject+MagicalRequests.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD4219AC75FA00DAF79F /* NSManagedObject+MagicalRequests.m */; };
+		55D8AD9619AC75FA00DAF79F /* NSManagedObjectContext+MagicalObserving.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD4519AC75FA00DAF79F /* NSManagedObjectContext+MagicalObserving.m */; };
+		55D8AD9719AC75FA00DAF79F /* NSManagedObjectContext+MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD4719AC75FA00DAF79F /* NSManagedObjectContext+MagicalRecord.m */; };
+		55D8AD9819AC75FA00DAF79F /* NSManagedObjectContext+MagicalSaves.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD4919AC75FA00DAF79F /* NSManagedObjectContext+MagicalSaves.m */; };
+		55D8AD9919AC75FA00DAF79F /* NSManagedObjectModel+MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD4B19AC75FA00DAF79F /* NSManagedObjectModel+MagicalRecord.m */; };
+		55D8AD9A19AC75FA00DAF79F /* NSPersistentStore+MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD4D19AC75FA00DAF79F /* NSPersistentStore+MagicalRecord.m */; };
+		55D8AD9B19AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalAutoMigrations.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD5119AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalAutoMigrations.m */; };
+		55D8AD9C19AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD5319AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.m */; };
+		55D8AD9D19AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalManualMigrations.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD5519AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalManualMigrations.m */; };
+		55D8AD9E19AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD5719AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalRecord.m */; };
+		55D8AD9F19AC75FA00DAF79F /* NSArray+MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD5A19AC75FA00DAF79F /* NSArray+MagicalRecord.m */; };
+		55D8ADA019AC75FA00DAF79F /* NSDictionary+MagicalRecordAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD5C19AC75FA00DAF79F /* NSDictionary+MagicalRecordAdditions.m */; };
+		55D8ADA119AC75FA00DAF79F /* NSError+MagicalRecordErrorHandling.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD5E19AC75FA00DAF79F /* NSError+MagicalRecordErrorHandling.m */; };
+		55D8ADA219AC75FA00DAF79F /* MagicalMigrationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD6019AC75FA00DAF79F /* MagicalMigrationManager.m */; };
+		55D8ADA319AC75FA00DAF79F /* MagicalRecord+Actions.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD6319AC75FA00DAF79F /* MagicalRecord+Actions.m */; };
+		55D8ADA419AC75FA00DAF79F /* MagicalRecord+Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD6519AC75FA00DAF79F /* MagicalRecord+Options.m */; };
+		55D8ADA519AC75FA00DAF79F /* MagicalRecord+Setup.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD6719AC75FA00DAF79F /* MagicalRecord+Setup.m */; };
+		55D8ADA619AC75FA00DAF79F /* MagicalRecord+VersionInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD6919AC75FA00DAF79F /* MagicalRecord+VersionInformation.m */; };
+		55D8ADA719AC75FA00DAF79F /* MagicalRecordInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD6C19AC75FA00DAF79F /* MagicalRecordInternal.m */; };
+		55D8ADA819AC75FA00DAF79F /* MagicalRecordShorthand.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD7019AC75FA00DAF79F /* MagicalRecordShorthand.m */; };
+		55D8ADA919AC75FA00DAF79F /* AutoMigratingMagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD7419AC75FA00DAF79F /* AutoMigratingMagicalRecordStack.m */; };
+		55D8ADAA19AC75FA00DAF79F /* AutoMigratingWithSourceAndTargetModelMagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD7619AC75FA00DAF79F /* AutoMigratingWithSourceAndTargetModelMagicalRecordStack.m */; };
+		55D8ADAB19AC75FA00DAF79F /* ClassicSQLiteMagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD7819AC75FA00DAF79F /* ClassicSQLiteMagicalRecordStack.m */; };
+		55D8ADAC19AC75FA00DAF79F /* ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD7A19AC75FA00DAF79F /* ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.m */; };
+		55D8ADAD19AC75FA00DAF79F /* InMemoryMagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD7C19AC75FA00DAF79F /* InMemoryMagicalRecordStack.m */; };
+		55D8ADAE19AC75FA00DAF79F /* MagicalRecordStack+Actions.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD7E19AC75FA00DAF79F /* MagicalRecordStack+Actions.m */; };
+		55D8ADAF19AC75FA00DAF79F /* MagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD8119AC75FA00DAF79F /* MagicalRecordStack.m */; };
+		55D8ADB019AC75FA00DAF79F /* ManuallyMigratingMagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD8319AC75FA00DAF79F /* ManuallyMigratingMagicalRecordStack.m */; };
+		55D8ADB119AC75FA00DAF79F /* SQLiteMagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD8519AC75FA00DAF79F /* SQLiteMagicalRecordStack.m */; };
+		55D8ADB219AC75FA00DAF79F /* SQLiteWithSavingContextMagicalRecordStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD8719AC75FA00DAF79F /* SQLiteWithSavingContextMagicalRecordStack.m */; };
+		55D8ADB519AC761000DAF79F /* QMForgotPasswordTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADB419AC761000DAF79F /* QMForgotPasswordTVC.m */; };
+		55D8ADB819AC762100DAF79F /* QMSearchDisplayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADB719AC762100DAF79F /* QMSearchDisplayController.m */; };
+		55D8ADBB19AC762C00DAF79F /* QMDialogsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADBA19AC762C00DAF79F /* QMDialogsDataSource.m */; };
+		55D8ADBE19AC764500DAF79F /* NSString+HasText.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADBD19AC764500DAF79F /* NSString+HasText.m */; };
+		55D8ADC119AC765400DAF79F /* UIImage+TintColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADC019AC765400DAF79F /* UIImage+TintColor.m */; };
+		55D8ADC419AC765F00DAF79F /* QMChatButtonsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADC319AC765F00DAF79F /* QMChatButtonsFactory.m */; };
+		55D8ADC719AC766E00DAF79F /* QMAttachmentMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADC619AC766E00DAF79F /* QMAttachmentMessageCell.m */; };
+		55D8ADCA19AC767F00DAF79F /* QMSystemMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADC919AC767F00DAF79F /* QMSystemMessageCell.m */; };
+		55D8ADCD19AC768800DAF79F /* QMTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADCC19AC768800DAF79F /* QMTextMessageCell.m */; };
+		55D8ADD019AC769500DAF79F /* QMChatToolbarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADCF19AC769500DAF79F /* QMChatToolbarContentView.m */; };
+		55D8ADD319AC769E00DAF79F /* QMPlaceholderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADD219AC769E00DAF79F /* QMPlaceholderTextView.m */; };
+		55D8ADD619AC76AE00DAF79F /* QMKeyboardController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADD519AC76AE00DAF79F /* QMKeyboardController.m */; };
+		55D8ADDD19AC76E200DAF79F /* QMAddMembersToGroupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADD819AC76E200DAF79F /* QMAddMembersToGroupController.m */; };
+		55D8ADDE19AC76E200DAF79F /* QMAddUsersAbstractController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADDA19AC76E200DAF79F /* QMAddUsersAbstractController.m */; };
+		55D8ADDF19AC76E200DAF79F /* QMCreateNewChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADDC19AC76E200DAF79F /* QMCreateNewChatController.m */; };
+		55D8ADE219AC76F900DAF79F /* QMChangePasswordVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADE119AC76F900DAF79F /* QMChangePasswordVC.m */; };
+		55D8ADE519AC770400DAF79F /* QMFeedbackTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADE419AC770400DAF79F /* QMFeedbackTableViewController.m */; };
+		55D8ADE819AC771400DAF79F /* QMOnlineTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADE719AC771400DAF79F /* QMOnlineTitle.m */; };
+		55D8ADEB19AC773000DAF79F /* QMCornerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADEA19AC773000DAF79F /* QMCornerButton.m */; };
+		55D8ADEE19AC773B00DAF79F /* QMProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADED19AC773B00DAF79F /* QMProgressView.m */; };
+		55D8ADF119AC775C00DAF79F /* QMUploadContentOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADF019AC775C00DAF79F /* QMUploadContentOperation.m */; };
+		55D8ADF419AC776A00DAF79F /* REAlertView+QMSuccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADF319AC776A00DAF79F /* REAlertView+QMSuccess.m */; };
+		55D8ADF719AC77A700DAF79F /* QMModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADF519AC77A700DAF79F /* QMModel.xcdatamodeld */; };
+		55D8ADFB19AC833300DAF79F /* QMLicenseAgreement.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADFA19AC833300DAF79F /* QMLicenseAgreement.m */; };
 		55D963CA196430F300A87ECE /* QMSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D963C2196430F300A87ECE /* QMSettingsManager.m */; };
 		55F4A3C7196FF0830068EBC3 /* QMDialogCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F4A3B6196FF0830068EBC3 /* QMDialogCell.m */; };
 		55F4A3C8196FF0830068EBC3 /* QMFriendListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F4A3B9196FF0830068EBC3 /* QMFriendListCell.m */; };
@@ -183,7 +185,6 @@
 		6996F8FA1987976D003A8328 /* QMPlaceholderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6996F8F91987976D003A8328 /* QMPlaceholderTextView.m */; };
 		699C414F19AF473C0060859F /* QMContactRequestCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 699C414E19AF473C0060859F /* QMContactRequestCell.m */; };
 		69AF263D198254E5004BCD0C /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69AF263C198254E5004BCD0C /* Quickblox.framework */; };
-		69B72F7F196D37FE00ECEE4C /* QMFeedbackTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B72F7E196D37FE00ECEE4C /* QMFeedbackTableViewController.m */; };
 		69CF189518AE1C3C003262EF /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CF189418AE1C3C003262EF /* CFNetwork.framework */; };
 		69CF189718AE1C49003262EF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CF189618AE1C48003262EF /* SystemConfiguration.framework */; };
 		69CF189918AE1C52003262EF /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CF189818AE1C52003262EF /* MobileCoreServices.framework */; };
@@ -243,8 +244,6 @@
 		2494559919A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBChatAbstractMessage+TextEncoding.h"; sourceTree = "<group>"; };
 		2494559A19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QBChatAbstractMessage+TextEncoding.m"; sourceTree = "<group>"; };
 		24ECC26419A73587003F5038 /* Macro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macro.h; sourceTree = "<group>"; };
-		24F8B8F519A26F63009F8656 /* NSString+occupantsIDsFromMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+occupantsIDsFromMessage.h"; sourceTree = "<group>"; };
-		24F8B8F619A26F63009F8656 /* NSString+occupantsIDsFromMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+occupantsIDsFromMessage.m"; sourceTree = "<group>"; };
 		24FDA66E199B7A610005662B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = External/Crashlytics.framework; sourceTree = "<group>"; };
 		551BD882199103C0006AC667 /* _CDAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _CDAttachment.h; sourceTree = "<group>"; };
 		551BD883199103C0006AC667 /* _CDAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _CDAttachment.m; sourceTree = "<group>"; };
@@ -263,50 +262,26 @@
 		551F8727196EA68900DBCA02 /* QMInviteFriendsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMInviteFriendsDataSource.m; sourceTree = "<group>"; };
 		5521401C197FF00900F55373 /* QMIncomingCallHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncomingCallHandler.h; sourceTree = "<group>"; };
 		5521401D197FF00900F55373 /* QMIncomingCallHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMIncomingCallHandler.m; sourceTree = "<group>"; };
-		5523F979198FAFC000C5ED4F /* QMBaseService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMBaseService.h; sourceTree = "<group>"; };
-		5523F97A198FAFC000C5ED4F /* QMBaseService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMBaseService.m; sourceTree = "<group>"; };
-		5524C2CC1998B3DB007450DB /* REActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = REActionSheet.h; sourceTree = "<group>"; };
-		5524C2CD1998B3DB007450DB /* REActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = REActionSheet.m; sourceTree = "<group>"; };
-		5524C2D01998B573007450DB /* QMImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMImagePicker.h; sourceTree = "<group>"; };
-		5524C2D11998B573007450DB /* QMImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMImagePicker.m; sourceTree = "<group>"; };
-		5524C2D41998E0CF007450DB /* QMChatReceiver+DialogsHistoryUpdated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMChatReceiver+DialogsHistoryUpdated.m"; sourceTree = "<group>"; };
 		5524C2D719991308007450DB /* QMChatReceiver+UsersHistoryUpdated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMChatReceiver+UsersHistoryUpdated.m"; sourceTree = "<group>"; };
 		5526D907196D3267003AA9B6 /* QMChatReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatReceiver.h; sourceTree = "<group>"; };
 		5526D908196D3267003AA9B6 /* QMChatReceiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatReceiver.m; sourceTree = "<group>"; };
 		55286995199131B5006F92CB /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
-		552869981991365E006F92CB /* QMHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMHelpers.h; sourceTree = "<group>"; };
-		552869991991365E006F92CB /* QMHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMHelpers.m; sourceTree = "<group>"; };
 		552B423619470A81008DF1E8 /* QBDBMergeProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QBDBMergeProtocol.h; sourceTree = "<group>"; };
 		552B423719471E19008DF1E8 /* CDAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDAttachment.h; sourceTree = "<group>"; };
 		552B423819471E19008DF1E8 /* CDAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDAttachment.m; sourceTree = "<group>"; };
 		552E483A199A2711006A25E1 /* QMFriendListCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QMFriendListCell.xib; sourceTree = "<group>"; };
-		55311ADB1990FE7300C585D5 /* QMModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = QMModel.xcdatamodel; sourceTree = "<group>"; };
 		55311ADD1990FEA500C585D5 /* mogen.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = mogen.sh; sourceTree = "<group>"; };
 		55311ADE1990FEA500C585D5 /* mogend.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = mogend.sh; sourceTree = "<group>"; };
-		553F9917196998EB000C13F3 /* ABPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABPerson.h; sourceTree = "<group>"; };
-		553F9918196998EB000C13F3 /* ABPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABPerson.m; sourceTree = "<group>"; };
-		55481025195C699C00D74505 /* QMProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMProgressView.h; sourceTree = "<group>"; };
-		55481026195C699C00D74505 /* QMProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMProgressView.m; sourceTree = "<group>"; };
 		5549368B19867738007F2CF1 /* QMContentService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMContentService.h; sourceTree = "<group>"; };
 		5549368C19867738007F2CF1 /* QMContentService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMContentService.m; sourceTree = "<group>"; };
 		55493692198677B0007F2CF1 /* QMContentOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMContentOperation.h; sourceTree = "<group>"; };
 		55493693198677B0007F2CF1 /* QMContentOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMContentOperation.m; sourceTree = "<group>"; };
-		55493695198677C4007F2CF1 /* QMDownloadContentOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDownloadContentOperation.h; sourceTree = "<group>"; };
-		55493696198677C4007F2CF1 /* QMDownloadContentOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDownloadContentOperation.m; sourceTree = "<group>"; };
-		55493698198677CE007F2CF1 /* QMUploadContentOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMUploadContentOperation.h; sourceTree = "<group>"; };
-		55493699198677CE007F2CF1 /* QMUploadContentOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMUploadContentOperation.m; sourceTree = "<group>"; };
 		55495A1F1993BCC100B7764C /* QMAlertsFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAlertsFactory.h; sourceTree = "<group>"; };
 		55495A201993BCC100B7764C /* QMAlertsFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAlertsFactory.m; sourceTree = "<group>"; };
-		55495A231993BCD500B7764C /* QMMessageBarStyleSheetFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMessageBarStyleSheetFactory.h; sourceTree = "<group>"; };
-		55495A241993BCD500B7764C /* QMMessageBarStyleSheetFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMMessageBarStyleSheetFactory.m; sourceTree = "<group>"; };
 		556192C919891BD70048D112 /* QMGroupDetailsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMGroupDetailsDataSource.h; sourceTree = "<group>"; };
 		556192CA19891BD70048D112 /* QMGroupDetailsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMGroupDetailsDataSource.m; sourceTree = "<group>"; };
-		55874518198146D5005B1783 /* QBChatAbstractMessage+CustomParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBChatAbstractMessage+CustomParameters.h"; sourceTree = "<group>"; };
-		55874519198146D5005B1783 /* QBChatAbstractMessage+CustomParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QBChatAbstractMessage+CustomParameters.m"; sourceTree = "<group>"; };
 		558AE52A196EA7C400AEAC1F /* QMFriendsListDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMFriendsListDataSource.h; sourceTree = "<group>"; };
 		558AE52B196EA7C400AEAC1F /* QMFriendsListDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMFriendsListDataSource.m; sourceTree = "<group>"; };
-		559143C0199CFECB001DD2C4 /* QMOnlineTitle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMOnlineTitle.h; sourceTree = "<group>"; };
-		559143C1199CFECB001DD2C4 /* QMOnlineTitle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMOnlineTitle.m; sourceTree = "<group>"; };
 		559327A2199216FB001C4BF8 /* Q-municate Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Q-municate Tests-Info.plist"; sourceTree = "<group>"; };
 		559327A4199216FB001C4BF8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		559327A6199216FB001C4BF8 /* Q_municate_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Q_municate_Tests.m; sourceTree = "<group>"; };
@@ -322,14 +297,8 @@
 		559BDFE319618D3D000588FE /* QMSplashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSplashViewController.m; sourceTree = "<group>"; };
 		559BDFE519618D3D000588FE /* QMWelcomeScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMWelcomeScreenViewController.h; sourceTree = "<group>"; };
 		559BDFE619618D3D000588FE /* QMWelcomeScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMWelcomeScreenViewController.m; sourceTree = "<group>"; };
-		559BDFED19618F39000588FE /* QMForgotPasswordTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMForgotPasswordTVC.h; sourceTree = "<group>"; };
-		559BDFEE19618F39000588FE /* QMForgotPasswordTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMForgotPasswordTVC.m; sourceTree = "<group>"; };
-		559BDFF519619222000588FE /* QMCornerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCornerButton.h; sourceTree = "<group>"; };
-		559BDFF619619222000588FE /* QMCornerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMCornerButton.m; sourceTree = "<group>"; };
 		55A8B035196597B400B5D33B /* QMApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMApi.h; sourceTree = "<group>"; };
 		55A8B036196597B400B5D33B /* QMApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMApi.m; sourceTree = "<group>"; };
-		55A8B0511965986A00B5D33B /* QMAddressBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAddressBook.h; sourceTree = "<group>"; };
-		55A8B0521965986A00B5D33B /* QMAddressBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAddressBook.m; sourceTree = "<group>"; };
 		55A8B0541965986A00B5D33B /* NSUserDefaultsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSUserDefaultsHelper.h; sourceTree = "<group>"; };
 		55A8B0551965986A00B5D33B /* NSUserDefaultsHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSUserDefaultsHelper.m; sourceTree = "<group>"; };
 		55A8B0571965986A00B5D33B /* QBEchoObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QBEchoObject.h; sourceTree = "<group>"; };
@@ -343,20 +312,10 @@
 		55A8B0611965986A00B5D33B /* received.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = received.wav; sourceTree = "<group>"; };
 		55A8B0621965986A00B5D33B /* ringtone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ringtone.wav; sourceTree = "<group>"; };
 		55A8B0631965986A00B5D33B /* sent.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sent.wav; sourceTree = "<group>"; };
-		55A8B0661965986A00B5D33B /* REAlertView+QMSuccess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "REAlertView+QMSuccess.h"; sourceTree = "<group>"; };
-		55A8B0671965986A00B5D33B /* REAlertView+QMSuccess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "REAlertView+QMSuccess.m"; sourceTree = "<group>"; };
 		55A8B0681965986A00B5D33B /* REAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = REAlertView.h; sourceTree = "<group>"; };
 		55A8B0691965986A00B5D33B /* REAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = REAlertView.m; sourceTree = "<group>"; };
 		55A8B078196598A300B5D33B /* QMAuthService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAuthService.h; sourceTree = "<group>"; };
 		55A8B079196598A300B5D33B /* QMAuthService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAuthService.m; sourceTree = "<group>"; };
-		55A8B07C196598A300B5D33B /* QMAVCallService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAVCallService.h; sourceTree = "<group>"; };
-		55A8B07D196598A300B5D33B /* QMAVCallService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAVCallService.m; sourceTree = "<group>"; };
-		55A8B07F196598A300B5D33B /* QMChatDialogsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatDialogsService.h; sourceTree = "<group>"; };
-		55A8B080196598A300B5D33B /* QMChatDialogsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatDialogsService.m; sourceTree = "<group>"; };
-		55A8B084196598A300B5D33B /* QMMessagesService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMessagesService.h; sourceTree = "<group>"; };
-		55A8B085196598A300B5D33B /* QMMessagesService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMMessagesService.m; sourceTree = "<group>"; };
-		55A8B087196598A300B5D33B /* QMFacebookService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMFacebookService.h; sourceTree = "<group>"; };
-		55A8B088196598A300B5D33B /* QMFacebookService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMFacebookService.m; sourceTree = "<group>"; };
 		55A8B08A196598A300B5D33B /* QMSettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSettingsManager.h; sourceTree = "<group>"; };
 		55A8B08B196598A300B5D33B /* QMSettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSettingsManager.m; sourceTree = "<group>"; };
 		55A8B093196598A300B5D33B /* QMUsersService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMUsersService.h; sourceTree = "<group>"; };
@@ -369,54 +328,30 @@
 		55BBA75B19730B960040DB5C /* REMessageUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = REMessageUI.m; sourceTree = "<group>"; };
 		55BBA75E197327AB0040DB5C /* QMDialogsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDialogsViewController.h; sourceTree = "<group>"; };
 		55BBA75F197327AB0040DB5C /* QMDialogsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDialogsViewController.m; sourceTree = "<group>"; };
-		55BBA762197327D20040DB5C /* QMDialogsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDialogsDataSource.h; sourceTree = "<group>"; };
-		55BBA763197327D20040DB5C /* QMDialogsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDialogsDataSource.m; sourceTree = "<group>"; };
 		55CEA9EC195D835B001A8ED6 /* QMImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMImageView.h; sourceTree = "<group>"; };
 		55CEA9ED195D835B001A8ED6 /* QMImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMImageView.m; sourceTree = "<group>"; };
 		55CEAB14195DBCFA001A8ED6 /* QMIncomingCallController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncomingCallController.h; sourceTree = "<group>"; };
 		55CEAB15195DBCFA001A8ED6 /* QMIncomingCallController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMIncomingCallController.m; sourceTree = "<group>"; };
 		55CEAB17195DBCFA001A8ED6 /* QMVideoCallController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMVideoCallController.h; sourceTree = "<group>"; };
 		55CEAB18195DBCFA001A8ED6 /* QMVideoCallController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMVideoCallController.m; sourceTree = "<group>"; };
-		55CEAB1F195DBCFA001A8ED6 /* NSString+HasText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HasText.h"; sourceTree = "<group>"; };
-		55CEAB20195DBCFA001A8ED6 /* NSString+HasText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HasText.m"; sourceTree = "<group>"; };
 		55CEAB22195DBCFA001A8ED6 /* NSString+UsedSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+UsedSize.h"; sourceTree = "<group>"; };
 		55CEAB23195DBCFA001A8ED6 /* NSString+UsedSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+UsedSize.m"; sourceTree = "<group>"; };
 		55CEAB26195DBCFA001A8ED6 /* UIColor+Hex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Hex.h"; sourceTree = "<group>"; };
 		55CEAB27195DBCFA001A8ED6 /* UIColor+Hex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Hex.m"; sourceTree = "<group>"; };
-		55CEAB29195DBCFA001A8ED6 /* UIImage+TintColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+TintColor.h"; sourceTree = "<group>"; };
-		55CEAB2A195DBCFA001A8ED6 /* UIImage+TintColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+TintColor.m"; sourceTree = "<group>"; };
-		55CEAB2D195DBCFA001A8ED6 /* QMChatButtonsFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatButtonsFactory.h; sourceTree = "<group>"; };
-		55CEAB2E195DBCFA001A8ED6 /* QMChatButtonsFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatButtonsFactory.m; sourceTree = "<group>"; };
-		55CEAB31195DBCFA001A8ED6 /* QMAttachmentMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAttachmentMessageCell.h; sourceTree = "<group>"; };
-		55CEAB32195DBCFA001A8ED6 /* QMAttachmentMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAttachmentMessageCell.m; sourceTree = "<group>"; };
 		55CEAB33195DBCFA001A8ED6 /* QMChatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatCell.h; sourceTree = "<group>"; };
 		55CEAB34195DBCFA001A8ED6 /* QMChatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatCell.m; sourceTree = "<group>"; };
-		55CEAB36195DBCFA001A8ED6 /* QMSystemMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSystemMessageCell.h; sourceTree = "<group>"; };
-		55CEAB37195DBCFA001A8ED6 /* QMSystemMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSystemMessageCell.m; sourceTree = "<group>"; };
-		55CEAB39195DBCFA001A8ED6 /* QMTextMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMTextMessageCell.h; sourceTree = "<group>"; };
-		55CEAB3A195DBCFA001A8ED6 /* QMTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMTextMessageCell.m; sourceTree = "<group>"; };
 		55CEAB42195DBCFA001A8ED6 /* QMChatDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatDataSource.h; sourceTree = "<group>"; };
 		55CEAB43195DBCFA001A8ED6 /* QMChatDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatDataSource.m; sourceTree = "<group>"; };
 		55CEAB48195DBCFA001A8ED6 /* QMChatInputToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatInputToolbar.h; sourceTree = "<group>"; };
 		55CEAB49195DBCFA001A8ED6 /* QMChatInputToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatInputToolbar.m; sourceTree = "<group>"; };
-		55CEAB4B195DBCFA001A8ED6 /* QMChatToolbarContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatToolbarContentView.h; sourceTree = "<group>"; };
-		55CEAB4C195DBCFA001A8ED6 /* QMChatToolbarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatToolbarContentView.m; sourceTree = "<group>"; };
 		55CEAB4E195DBCFA001A8ED6 /* QMChatLayoutConfigs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatLayoutConfigs.h; sourceTree = "<group>"; };
 		55CEAB4F195DBCFA001A8ED6 /* QMChatLayoutConfigs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatLayoutConfigs.m; sourceTree = "<group>"; };
 		55CEAB50195DBCFA001A8ED6 /* QMChatVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatVC.h; sourceTree = "<group>"; };
 		55CEAB51195DBCFA001A8ED6 /* QMChatVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatVC.m; sourceTree = "<group>"; };
-		55CEAB53195DBCFA001A8ED6 /* QMKeyboardController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMKeyboardController.h; sourceTree = "<group>"; };
-		55CEAB54195DBCFA001A8ED6 /* QMKeyboardController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMKeyboardController.m; sourceTree = "<group>"; };
 		55CEAB56195DBCFA001A8ED6 /* QMMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMessage.h; sourceTree = "<group>"; };
 		55CEAB57195DBCFA001A8ED6 /* QMMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMMessage.m; sourceTree = "<group>"; };
 		55CEAB58195DBCFA001A8ED6 /* QMMessageDatasourceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMessageDatasourceProtocol.h; sourceTree = "<group>"; };
 		55CEAB59195DBCFA001A8ED6 /* QMMessageType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMessageType.h; sourceTree = "<group>"; };
-		55CEAB5C195DBCFA001A8ED6 /* QMAddMembersToGroupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAddMembersToGroupController.h; sourceTree = "<group>"; };
-		55CEAB5D195DBCFA001A8ED6 /* QMAddMembersToGroupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAddMembersToGroupController.m; sourceTree = "<group>"; };
-		55CEAB5E195DBCFA001A8ED6 /* QMAddUsersAbstractController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAddUsersAbstractController.h; sourceTree = "<group>"; };
-		55CEAB5F195DBCFA001A8ED6 /* QMAddUsersAbstractController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAddUsersAbstractController.m; sourceTree = "<group>"; };
-		55CEAB60195DBCFA001A8ED6 /* QMCreateNewChatController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCreateNewChatController.h; sourceTree = "<group>"; };
-		55CEAB61195DBCFA001A8ED6 /* QMCreateNewChatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMCreateNewChatController.m; sourceTree = "<group>"; };
 		55CEAB64195DBCFA001A8ED6 /* QMChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatViewController.h; sourceTree = "<group>"; };
 		55CEAB65195DBCFA001A8ED6 /* QMChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatViewController.m; sourceTree = "<group>"; };
 		55CEAB6A195DBCFA001A8ED6 /* QMContentPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMContentPreviewController.h; sourceTree = "<group>"; };
@@ -429,14 +364,10 @@
 		55CEAB74195DBCFA001A8ED6 /* QMGroupDetailsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMGroupDetailsController.m; sourceTree = "<group>"; };
 		55CEAB76195DBCFA001A8ED6 /* QMInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMInviteViewController.h; sourceTree = "<group>"; };
 		55CEAB77195DBCFA001A8ED6 /* QMInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMInviteViewController.m; sourceTree = "<group>"; };
-		55CEAB7A195DBCFA001A8ED6 /* QMChangePasswordVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChangePasswordVC.h; sourceTree = "<group>"; };
-		55CEAB7B195DBCFA001A8ED6 /* QMChangePasswordVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChangePasswordVC.m; sourceTree = "<group>"; };
 		55CEAB7D195DBCFA001A8ED6 /* QMProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMProfileViewController.h; sourceTree = "<group>"; };
 		55CEAB7E195DBCFA001A8ED6 /* QMProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMProfileViewController.m; sourceTree = "<group>"; };
 		55CEAB7F195DBCFA001A8ED6 /* QMSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSettingsViewController.h; sourceTree = "<group>"; };
 		55CEAB80195DBCFA001A8ED6 /* QMSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSettingsViewController.m; sourceTree = "<group>"; };
-		55D25B23198BBF3700443D0C /* QMSearchDisplayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSearchDisplayController.h; sourceTree = "<group>"; };
-		55D25B24198BBF3700443D0C /* QMSearchDisplayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSearchDisplayController.m; sourceTree = "<group>"; };
 		55D270101940B8D300238D50 /* QMDBStorage+Dialogs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QMDBStorage+Dialogs.h"; sourceTree = "<group>"; };
 		55D270111940B8D300238D50 /* QMDBStorage+Dialogs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMDBStorage+Dialogs.m"; sourceTree = "<group>"; };
 		55D270131940B8D300238D50 /* QMDBStorage+Messages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QMDBStorage+Messages.h"; sourceTree = "<group>"; };
@@ -445,100 +376,174 @@
 		55D270171940B8D300238D50 /* QMDBStorage+Users.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMDBStorage+Users.m"; sourceTree = "<group>"; };
 		55D270181940B8D300238D50 /* QMDBStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDBStorage.h; sourceTree = "<group>"; };
 		55D270191940B8D300238D50 /* QMDBStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDBStorage.m; sourceTree = "<group>"; };
-		55D270291940B8D300238D50 /* MagicalImportFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalImportFunctions.h; sourceTree = "<group>"; };
-		55D2702A1940B8D300238D50 /* MagicalImportFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalImportFunctions.m; sourceTree = "<group>"; };
-		55D2702B1940B8D300238D50 /* NSAttributeDescription+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributeDescription+MagicalDataImport.h"; sourceTree = "<group>"; };
-		55D2702C1940B8D300238D50 /* NSAttributeDescription+MagicalDataImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributeDescription+MagicalDataImport.m"; sourceTree = "<group>"; };
-		55D2702D1940B8D300238D50 /* NSEntityDescription+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSEntityDescription+MagicalDataImport.h"; sourceTree = "<group>"; };
-		55D2702E1940B8D300238D50 /* NSEntityDescription+MagicalDataImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSEntityDescription+MagicalDataImport.m"; sourceTree = "<group>"; };
-		55D2702F1940B8D300238D50 /* NSNumber+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNumber+MagicalDataImport.h"; sourceTree = "<group>"; };
-		55D270301940B8D300238D50 /* NSNumber+MagicalDataImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+MagicalDataImport.m"; sourceTree = "<group>"; };
-		55D270311940B8D300238D50 /* NSObject+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+MagicalDataImport.h"; sourceTree = "<group>"; };
-		55D270321940B8D300238D50 /* NSObject+MagicalDataImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+MagicalDataImport.m"; sourceTree = "<group>"; };
-		55D270331940B8D300238D50 /* NSRelationshipDescription+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSRelationshipDescription+MagicalDataImport.h"; sourceTree = "<group>"; };
-		55D270341940B8D300238D50 /* NSRelationshipDescription+MagicalDataImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSRelationshipDescription+MagicalDataImport.m"; sourceTree = "<group>"; };
-		55D270351940B8D300238D50 /* NSString+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MagicalDataImport.h"; sourceTree = "<group>"; };
-		55D270361940B8D300238D50 /* NSString+MagicalDataImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MagicalDataImport.m"; sourceTree = "<group>"; };
-		55D270371940B8D300238D50 /* NSFetchedResultsController+MagicalFetching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFetchedResultsController+MagicalFetching.h"; sourceTree = "<group>"; };
-		55D270381940B8D300238D50 /* NSFetchedResultsController+MagicalFetching.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFetchedResultsController+MagicalFetching.m"; sourceTree = "<group>"; };
-		55D2703A1940B8D300238D50 /* NSManagedObject+MagicalAggregation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+MagicalAggregation.h"; sourceTree = "<group>"; };
-		55D2703B1940B8D300238D50 /* NSManagedObject+MagicalAggregation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+MagicalAggregation.m"; sourceTree = "<group>"; };
-		55D2703C1940B8D300238D50 /* NSManagedObject+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+MagicalDataImport.h"; sourceTree = "<group>"; };
-		55D2703D1940B8D300238D50 /* NSManagedObject+MagicalDataImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+MagicalDataImport.m"; sourceTree = "<group>"; };
-		55D2703E1940B8D300238D50 /* NSManagedObject+MagicalFetching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+MagicalFetching.h"; sourceTree = "<group>"; };
-		55D2703F1940B8D300238D50 /* NSManagedObject+MagicalFetching.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+MagicalFetching.m"; sourceTree = "<group>"; };
-		55D270401940B8D300238D50 /* NSManagedObject+MagicalFinders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+MagicalFinders.h"; sourceTree = "<group>"; };
-		55D270411940B8D300238D50 /* NSManagedObject+MagicalFinders.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+MagicalFinders.m"; sourceTree = "<group>"; };
-		55D270421940B8D300238D50 /* NSManagedObject+MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+MagicalRecord.h"; sourceTree = "<group>"; };
-		55D270431940B8D300238D50 /* NSManagedObject+MagicalRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+MagicalRecord.m"; sourceTree = "<group>"; };
-		55D270441940B8D300238D50 /* NSManagedObject+MagicalRequests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+MagicalRequests.h"; sourceTree = "<group>"; };
-		55D270451940B8D300238D50 /* NSManagedObject+MagicalRequests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+MagicalRequests.m"; sourceTree = "<group>"; };
-		55D270471940B8D300238D50 /* NSManagedObjectContext+MagicalObserving.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectContext+MagicalObserving.h"; sourceTree = "<group>"; };
-		55D270481940B8D300238D50 /* NSManagedObjectContext+MagicalObserving.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectContext+MagicalObserving.m"; sourceTree = "<group>"; };
-		55D270491940B8D300238D50 /* NSManagedObjectContext+MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectContext+MagicalRecord.h"; sourceTree = "<group>"; };
-		55D2704A1940B8D300238D50 /* NSManagedObjectContext+MagicalRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectContext+MagicalRecord.m"; sourceTree = "<group>"; };
-		55D2704B1940B8D300238D50 /* NSManagedObjectContext+MagicalSaves.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectContext+MagicalSaves.h"; sourceTree = "<group>"; };
-		55D2704C1940B8D300238D50 /* NSManagedObjectContext+MagicalSaves.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectContext+MagicalSaves.m"; sourceTree = "<group>"; };
-		55D2704D1940B8D300238D50 /* NSManagedObjectModel+MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectModel+MagicalRecord.h"; sourceTree = "<group>"; };
-		55D2704E1940B8D300238D50 /* NSManagedObjectModel+MagicalRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectModel+MagicalRecord.m"; sourceTree = "<group>"; };
-		55D2704F1940B8D300238D50 /* NSPersistentStore+MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSPersistentStore+MagicalRecord.h"; sourceTree = "<group>"; };
-		55D270501940B8D300238D50 /* NSPersistentStore+MagicalRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSPersistentStore+MagicalRecord.m"; sourceTree = "<group>"; };
-		55D270511940B8D300238D50 /* NSPersistentStore+MagicalRecordPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSPersistentStore+MagicalRecordPrivate.h"; sourceTree = "<group>"; };
-		55D270531940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalAutoMigrations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSPersistentStoreCoordinator+MagicalAutoMigrations.h"; sourceTree = "<group>"; };
-		55D270541940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalAutoMigrations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSPersistentStoreCoordinator+MagicalAutoMigrations.m"; sourceTree = "<group>"; };
-		55D270551940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.h"; sourceTree = "<group>"; };
-		55D270561940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.m"; sourceTree = "<group>"; };
-		55D270571940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalManualMigrations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSPersistentStoreCoordinator+MagicalManualMigrations.h"; sourceTree = "<group>"; };
-		55D270581940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalManualMigrations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSPersistentStoreCoordinator+MagicalManualMigrations.m"; sourceTree = "<group>"; };
-		55D270591940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSPersistentStoreCoordinator+MagicalRecord.h"; sourceTree = "<group>"; };
-		55D2705A1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSPersistentStoreCoordinator+MagicalRecord.m"; sourceTree = "<group>"; };
-		55D2705C1940B8D300238D50 /* NSArray+MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+MagicalRecord.h"; sourceTree = "<group>"; };
-		55D2705D1940B8D300238D50 /* NSArray+MagicalRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+MagicalRecord.m"; sourceTree = "<group>"; };
-		55D2705E1940B8D300238D50 /* NSDictionary+MagicalRecordAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+MagicalRecordAdditions.h"; sourceTree = "<group>"; };
-		55D2705F1940B8D300238D50 /* NSDictionary+MagicalRecordAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+MagicalRecordAdditions.m"; sourceTree = "<group>"; };
-		55D270601940B8D300238D50 /* NSError+MagicalRecordErrorHandling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+MagicalRecordErrorHandling.h"; sourceTree = "<group>"; };
-		55D270611940B8D300238D50 /* NSError+MagicalRecordErrorHandling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+MagicalRecordErrorHandling.m"; sourceTree = "<group>"; };
-		55D270621940B8D300238D50 /* MagicalMigrationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalMigrationManager.h; sourceTree = "<group>"; };
-		55D270631940B8D300238D50 /* MagicalMigrationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalMigrationManager.m; sourceTree = "<group>"; };
-		55D270651940B8D300238D50 /* MagicalRecord+Actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MagicalRecord+Actions.h"; sourceTree = "<group>"; };
-		55D270661940B8D300238D50 /* MagicalRecord+Actions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MagicalRecord+Actions.m"; sourceTree = "<group>"; };
-		55D270671940B8D300238D50 /* MagicalRecord+Options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MagicalRecord+Options.h"; sourceTree = "<group>"; };
-		55D270681940B8D300238D50 /* MagicalRecord+Options.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MagicalRecord+Options.m"; sourceTree = "<group>"; };
-		55D270691940B8D300238D50 /* MagicalRecord+Setup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MagicalRecord+Setup.h"; sourceTree = "<group>"; };
-		55D2706A1940B8D300238D50 /* MagicalRecord+Setup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MagicalRecord+Setup.m"; sourceTree = "<group>"; };
-		55D2706B1940B8D300238D50 /* MagicalRecord+VersionInformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MagicalRecord+VersionInformation.h"; sourceTree = "<group>"; };
-		55D2706C1940B8D300238D50 /* MagicalRecord+VersionInformation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MagicalRecord+VersionInformation.m"; sourceTree = "<group>"; };
-		55D2706D1940B8D300238D50 /* MagicalRecordDeprecated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalRecordDeprecated.h; sourceTree = "<group>"; };
-		55D2706E1940B8D300238D50 /* MagicalRecordInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalRecordInternal.h; sourceTree = "<group>"; };
-		55D2706F1940B8D300238D50 /* MagicalRecordInternal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalRecordInternal.m; sourceTree = "<group>"; };
-		55D270701940B8D300238D50 /* MagicalRecordLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalRecordLogging.h; sourceTree = "<group>"; };
-		55D270711940B8D300238D50 /* MagicalRecordMOGeneratorProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalRecordMOGeneratorProtocol.h; sourceTree = "<group>"; };
-		55D270721940B8D300238D50 /* MagicalRecordShorthand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalRecordShorthand.h; sourceTree = "<group>"; };
-		55D270731940B8D300238D50 /* MagicalRecordShorthand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalRecordShorthand.m; sourceTree = "<group>"; };
-		55D270741940B8D300238D50 /* MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalRecord.h; sourceTree = "<group>"; };
-		55D270761940B8D300238D50 /* AutoMigratingMagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoMigratingMagicalRecordStack.h; sourceTree = "<group>"; };
-		55D270771940B8D300238D50 /* AutoMigratingMagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoMigratingMagicalRecordStack.m; sourceTree = "<group>"; };
-		55D270781940B8D300238D50 /* AutoMigratingWithSourceAndTargetModelMagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoMigratingWithSourceAndTargetModelMagicalRecordStack.h; sourceTree = "<group>"; };
-		55D270791940B8D300238D50 /* AutoMigratingWithSourceAndTargetModelMagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoMigratingWithSourceAndTargetModelMagicalRecordStack.m; sourceTree = "<group>"; };
-		55D2707A1940B8D300238D50 /* ClassicSQLiteMagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClassicSQLiteMagicalRecordStack.h; sourceTree = "<group>"; };
-		55D2707B1940B8D300238D50 /* ClassicSQLiteMagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClassicSQLiteMagicalRecordStack.m; sourceTree = "<group>"; };
-		55D2707C1940B8D300238D50 /* ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.h; sourceTree = "<group>"; };
-		55D2707D1940B8D300238D50 /* ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.m; sourceTree = "<group>"; };
-		55D2707E1940B8D300238D50 /* InMemoryMagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InMemoryMagicalRecordStack.h; sourceTree = "<group>"; };
-		55D2707F1940B8D300238D50 /* InMemoryMagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InMemoryMagicalRecordStack.m; sourceTree = "<group>"; };
-		55D270801940B8D300238D50 /* MagicalRecordStack+Actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MagicalRecordStack+Actions.h"; sourceTree = "<group>"; };
-		55D270811940B8D300238D50 /* MagicalRecordStack+Actions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MagicalRecordStack+Actions.m"; sourceTree = "<group>"; };
-		55D270821940B8D300238D50 /* MagicalRecordStack+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MagicalRecordStack+Private.h"; sourceTree = "<group>"; };
-		55D270831940B8D300238D50 /* MagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalRecordStack.h; sourceTree = "<group>"; };
-		55D270841940B8D300238D50 /* MagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalRecordStack.m; sourceTree = "<group>"; };
-		55D270851940B8D300238D50 /* ManuallyMigratingMagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManuallyMigratingMagicalRecordStack.h; sourceTree = "<group>"; };
-		55D270861940B8D300238D50 /* ManuallyMigratingMagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManuallyMigratingMagicalRecordStack.m; sourceTree = "<group>"; };
-		55D270871940B8D300238D50 /* SQLiteMagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLiteMagicalRecordStack.h; sourceTree = "<group>"; };
-		55D270881940B8D300238D50 /* SQLiteMagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLiteMagicalRecordStack.m; sourceTree = "<group>"; };
-		55D270891940B8D300238D50 /* SQLiteWithSavingContextMagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLiteWithSavingContextMagicalRecordStack.h; sourceTree = "<group>"; };
-		55D2708A1940B8D300238D50 /* SQLiteWithSavingContextMagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLiteWithSavingContextMagicalRecordStack.m; sourceTree = "<group>"; };
 		55D2708B1940B8D300238D50 /* ModelIncludes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelIncludes.h; sourceTree = "<group>"; };
 		55D5DB07197796840001FE36 /* QMServiceProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMServiceProtocol.h; sourceTree = "<group>"; };
+		55D8ACF919AC70A500DAF79F /* QBChatAbstractMessage+CustomParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBChatAbstractMessage+CustomParameters.h"; sourceTree = "<group>"; };
+		55D8ACFA19AC70A500DAF79F /* QBChatAbstractMessage+CustomParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QBChatAbstractMessage+CustomParameters.m"; sourceTree = "<group>"; };
+		55D8ACFC19AC70B000DAF79F /* QMMessageBarStyleSheetFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMessageBarStyleSheetFactory.h; sourceTree = "<group>"; };
+		55D8ACFD19AC70B000DAF79F /* QMMessageBarStyleSheetFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMMessageBarStyleSheetFactory.m; sourceTree = "<group>"; };
+		55D8ACFF19AC751200DAF79F /* QMMessagesService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMessagesService.h; sourceTree = "<group>"; };
+		55D8AD0019AC751200DAF79F /* QMMessagesService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMMessagesService.m; sourceTree = "<group>"; };
+		55D8AD0219AC753600DAF79F /* QMImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMImagePicker.h; sourceTree = "<group>"; };
+		55D8AD0319AC753600DAF79F /* QMImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMImagePicker.m; sourceTree = "<group>"; };
+		55D8AD0519AC756000DAF79F /* REActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = REActionSheet.h; sourceTree = "<group>"; };
+		55D8AD0619AC756000DAF79F /* REActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = REActionSheet.m; sourceTree = "<group>"; };
+		55D8AD0819AC756E00DAF79F /* QMHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMHelpers.h; sourceTree = "<group>"; };
+		55D8AD0919AC756E00DAF79F /* QMHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMHelpers.m; sourceTree = "<group>"; };
+		55D8AD0B19AC757900DAF79F /* ABPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABPerson.h; sourceTree = "<group>"; };
+		55D8AD0C19AC757900DAF79F /* ABPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABPerson.m; sourceTree = "<group>"; };
+		55D8AD0D19AC757900DAF79F /* QMAddressBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAddressBook.h; sourceTree = "<group>"; };
+		55D8AD0E19AC757900DAF79F /* QMAddressBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAddressBook.m; sourceTree = "<group>"; };
+		55D8AD1119AC758C00DAF79F /* QMBaseService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMBaseService.h; sourceTree = "<group>"; };
+		55D8AD1219AC758C00DAF79F /* QMBaseService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMBaseService.m; sourceTree = "<group>"; };
+		55D8AD1419AC759C00DAF79F /* QMDownloadContentOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDownloadContentOperation.h; sourceTree = "<group>"; };
+		55D8AD1519AC759C00DAF79F /* QMDownloadContentOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDownloadContentOperation.m; sourceTree = "<group>"; };
+		55D8AD1719AC75AA00DAF79F /* QMAVCallService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAVCallService.h; sourceTree = "<group>"; };
+		55D8AD1819AC75AA00DAF79F /* QMAVCallService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAVCallService.m; sourceTree = "<group>"; };
+		55D8AD1A19AC75B700DAF79F /* QMChatDialogsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatDialogsService.h; sourceTree = "<group>"; };
+		55D8AD1B19AC75B700DAF79F /* QMChatDialogsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatDialogsService.m; sourceTree = "<group>"; };
+		55D8AD1C19AC75B700DAF79F /* QMChatReceiver+DialogsHistoryUpdated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMChatReceiver+DialogsHistoryUpdated.m"; sourceTree = "<group>"; };
+		55D8AD1F19AC75C100DAF79F /* QMFacebookService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMFacebookService.h; sourceTree = "<group>"; };
+		55D8AD2019AC75C100DAF79F /* QMFacebookService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMFacebookService.m; sourceTree = "<group>"; };
+		55D8AD2619AC75FA00DAF79F /* MagicalImportFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalImportFunctions.h; sourceTree = "<group>"; };
+		55D8AD2719AC75FA00DAF79F /* MagicalImportFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalImportFunctions.m; sourceTree = "<group>"; };
+		55D8AD2819AC75FA00DAF79F /* NSAttributeDescription+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributeDescription+MagicalDataImport.h"; sourceTree = "<group>"; };
+		55D8AD2919AC75FA00DAF79F /* NSAttributeDescription+MagicalDataImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributeDescription+MagicalDataImport.m"; sourceTree = "<group>"; };
+		55D8AD2A19AC75FA00DAF79F /* NSEntityDescription+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSEntityDescription+MagicalDataImport.h"; sourceTree = "<group>"; };
+		55D8AD2B19AC75FA00DAF79F /* NSEntityDescription+MagicalDataImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSEntityDescription+MagicalDataImport.m"; sourceTree = "<group>"; };
+		55D8AD2C19AC75FA00DAF79F /* NSNumber+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNumber+MagicalDataImport.h"; sourceTree = "<group>"; };
+		55D8AD2D19AC75FA00DAF79F /* NSNumber+MagicalDataImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+MagicalDataImport.m"; sourceTree = "<group>"; };
+		55D8AD2E19AC75FA00DAF79F /* NSObject+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+MagicalDataImport.h"; sourceTree = "<group>"; };
+		55D8AD2F19AC75FA00DAF79F /* NSObject+MagicalDataImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+MagicalDataImport.m"; sourceTree = "<group>"; };
+		55D8AD3019AC75FA00DAF79F /* NSRelationshipDescription+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSRelationshipDescription+MagicalDataImport.h"; sourceTree = "<group>"; };
+		55D8AD3119AC75FA00DAF79F /* NSRelationshipDescription+MagicalDataImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSRelationshipDescription+MagicalDataImport.m"; sourceTree = "<group>"; };
+		55D8AD3219AC75FA00DAF79F /* NSString+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MagicalDataImport.h"; sourceTree = "<group>"; };
+		55D8AD3319AC75FA00DAF79F /* NSString+MagicalDataImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MagicalDataImport.m"; sourceTree = "<group>"; };
+		55D8AD3419AC75FA00DAF79F /* NSFetchedResultsController+MagicalFetching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFetchedResultsController+MagicalFetching.h"; sourceTree = "<group>"; };
+		55D8AD3519AC75FA00DAF79F /* NSFetchedResultsController+MagicalFetching.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFetchedResultsController+MagicalFetching.m"; sourceTree = "<group>"; };
+		55D8AD3719AC75FA00DAF79F /* NSManagedObject+MagicalAggregation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+MagicalAggregation.h"; sourceTree = "<group>"; };
+		55D8AD3819AC75FA00DAF79F /* NSManagedObject+MagicalAggregation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+MagicalAggregation.m"; sourceTree = "<group>"; };
+		55D8AD3919AC75FA00DAF79F /* NSManagedObject+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+MagicalDataImport.h"; sourceTree = "<group>"; };
+		55D8AD3A19AC75FA00DAF79F /* NSManagedObject+MagicalDataImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+MagicalDataImport.m"; sourceTree = "<group>"; };
+		55D8AD3B19AC75FA00DAF79F /* NSManagedObject+MagicalFetching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+MagicalFetching.h"; sourceTree = "<group>"; };
+		55D8AD3C19AC75FA00DAF79F /* NSManagedObject+MagicalFetching.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+MagicalFetching.m"; sourceTree = "<group>"; };
+		55D8AD3D19AC75FA00DAF79F /* NSManagedObject+MagicalFinders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+MagicalFinders.h"; sourceTree = "<group>"; };
+		55D8AD3E19AC75FA00DAF79F /* NSManagedObject+MagicalFinders.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+MagicalFinders.m"; sourceTree = "<group>"; };
+		55D8AD3F19AC75FA00DAF79F /* NSManagedObject+MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+MagicalRecord.h"; sourceTree = "<group>"; };
+		55D8AD4019AC75FA00DAF79F /* NSManagedObject+MagicalRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+MagicalRecord.m"; sourceTree = "<group>"; };
+		55D8AD4119AC75FA00DAF79F /* NSManagedObject+MagicalRequests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+MagicalRequests.h"; sourceTree = "<group>"; };
+		55D8AD4219AC75FA00DAF79F /* NSManagedObject+MagicalRequests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+MagicalRequests.m"; sourceTree = "<group>"; };
+		55D8AD4419AC75FA00DAF79F /* NSManagedObjectContext+MagicalObserving.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectContext+MagicalObserving.h"; sourceTree = "<group>"; };
+		55D8AD4519AC75FA00DAF79F /* NSManagedObjectContext+MagicalObserving.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectContext+MagicalObserving.m"; sourceTree = "<group>"; };
+		55D8AD4619AC75FA00DAF79F /* NSManagedObjectContext+MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectContext+MagicalRecord.h"; sourceTree = "<group>"; };
+		55D8AD4719AC75FA00DAF79F /* NSManagedObjectContext+MagicalRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectContext+MagicalRecord.m"; sourceTree = "<group>"; };
+		55D8AD4819AC75FA00DAF79F /* NSManagedObjectContext+MagicalSaves.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectContext+MagicalSaves.h"; sourceTree = "<group>"; };
+		55D8AD4919AC75FA00DAF79F /* NSManagedObjectContext+MagicalSaves.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectContext+MagicalSaves.m"; sourceTree = "<group>"; };
+		55D8AD4A19AC75FA00DAF79F /* NSManagedObjectModel+MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectModel+MagicalRecord.h"; sourceTree = "<group>"; };
+		55D8AD4B19AC75FA00DAF79F /* NSManagedObjectModel+MagicalRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectModel+MagicalRecord.m"; sourceTree = "<group>"; };
+		55D8AD4C19AC75FA00DAF79F /* NSPersistentStore+MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSPersistentStore+MagicalRecord.h"; sourceTree = "<group>"; };
+		55D8AD4D19AC75FA00DAF79F /* NSPersistentStore+MagicalRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSPersistentStore+MagicalRecord.m"; sourceTree = "<group>"; };
+		55D8AD4E19AC75FA00DAF79F /* NSPersistentStore+MagicalRecordPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSPersistentStore+MagicalRecordPrivate.h"; sourceTree = "<group>"; };
+		55D8AD5019AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalAutoMigrations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSPersistentStoreCoordinator+MagicalAutoMigrations.h"; sourceTree = "<group>"; };
+		55D8AD5119AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalAutoMigrations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSPersistentStoreCoordinator+MagicalAutoMigrations.m"; sourceTree = "<group>"; };
+		55D8AD5219AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.h"; sourceTree = "<group>"; };
+		55D8AD5319AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.m"; sourceTree = "<group>"; };
+		55D8AD5419AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalManualMigrations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSPersistentStoreCoordinator+MagicalManualMigrations.h"; sourceTree = "<group>"; };
+		55D8AD5519AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalManualMigrations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSPersistentStoreCoordinator+MagicalManualMigrations.m"; sourceTree = "<group>"; };
+		55D8AD5619AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSPersistentStoreCoordinator+MagicalRecord.h"; sourceTree = "<group>"; };
+		55D8AD5719AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSPersistentStoreCoordinator+MagicalRecord.m"; sourceTree = "<group>"; };
+		55D8AD5919AC75FA00DAF79F /* NSArray+MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+MagicalRecord.h"; sourceTree = "<group>"; };
+		55D8AD5A19AC75FA00DAF79F /* NSArray+MagicalRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+MagicalRecord.m"; sourceTree = "<group>"; };
+		55D8AD5B19AC75FA00DAF79F /* NSDictionary+MagicalRecordAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+MagicalRecordAdditions.h"; sourceTree = "<group>"; };
+		55D8AD5C19AC75FA00DAF79F /* NSDictionary+MagicalRecordAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+MagicalRecordAdditions.m"; sourceTree = "<group>"; };
+		55D8AD5D19AC75FA00DAF79F /* NSError+MagicalRecordErrorHandling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+MagicalRecordErrorHandling.h"; sourceTree = "<group>"; };
+		55D8AD5E19AC75FA00DAF79F /* NSError+MagicalRecordErrorHandling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+MagicalRecordErrorHandling.m"; sourceTree = "<group>"; };
+		55D8AD5F19AC75FA00DAF79F /* MagicalMigrationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalMigrationManager.h; sourceTree = "<group>"; };
+		55D8AD6019AC75FA00DAF79F /* MagicalMigrationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalMigrationManager.m; sourceTree = "<group>"; };
+		55D8AD6219AC75FA00DAF79F /* MagicalRecord+Actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MagicalRecord+Actions.h"; sourceTree = "<group>"; };
+		55D8AD6319AC75FA00DAF79F /* MagicalRecord+Actions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MagicalRecord+Actions.m"; sourceTree = "<group>"; };
+		55D8AD6419AC75FA00DAF79F /* MagicalRecord+Options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MagicalRecord+Options.h"; sourceTree = "<group>"; };
+		55D8AD6519AC75FA00DAF79F /* MagicalRecord+Options.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MagicalRecord+Options.m"; sourceTree = "<group>"; };
+		55D8AD6619AC75FA00DAF79F /* MagicalRecord+Setup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MagicalRecord+Setup.h"; sourceTree = "<group>"; };
+		55D8AD6719AC75FA00DAF79F /* MagicalRecord+Setup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MagicalRecord+Setup.m"; sourceTree = "<group>"; };
+		55D8AD6819AC75FA00DAF79F /* MagicalRecord+VersionInformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MagicalRecord+VersionInformation.h"; sourceTree = "<group>"; };
+		55D8AD6919AC75FA00DAF79F /* MagicalRecord+VersionInformation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MagicalRecord+VersionInformation.m"; sourceTree = "<group>"; };
+		55D8AD6A19AC75FA00DAF79F /* MagicalRecordDeprecated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalRecordDeprecated.h; sourceTree = "<group>"; };
+		55D8AD6B19AC75FA00DAF79F /* MagicalRecordInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalRecordInternal.h; sourceTree = "<group>"; };
+		55D8AD6C19AC75FA00DAF79F /* MagicalRecordInternal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalRecordInternal.m; sourceTree = "<group>"; };
+		55D8AD6D19AC75FA00DAF79F /* MagicalRecordLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalRecordLogging.h; sourceTree = "<group>"; };
+		55D8AD6E19AC75FA00DAF79F /* MagicalRecordMOGeneratorProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalRecordMOGeneratorProtocol.h; sourceTree = "<group>"; };
+		55D8AD6F19AC75FA00DAF79F /* MagicalRecordShorthand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalRecordShorthand.h; sourceTree = "<group>"; };
+		55D8AD7019AC75FA00DAF79F /* MagicalRecordShorthand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalRecordShorthand.m; sourceTree = "<group>"; };
+		55D8AD7119AC75FA00DAF79F /* MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalRecord.h; sourceTree = "<group>"; };
+		55D8AD7319AC75FA00DAF79F /* AutoMigratingMagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoMigratingMagicalRecordStack.h; sourceTree = "<group>"; };
+		55D8AD7419AC75FA00DAF79F /* AutoMigratingMagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoMigratingMagicalRecordStack.m; sourceTree = "<group>"; };
+		55D8AD7519AC75FA00DAF79F /* AutoMigratingWithSourceAndTargetModelMagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoMigratingWithSourceAndTargetModelMagicalRecordStack.h; sourceTree = "<group>"; };
+		55D8AD7619AC75FA00DAF79F /* AutoMigratingWithSourceAndTargetModelMagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoMigratingWithSourceAndTargetModelMagicalRecordStack.m; sourceTree = "<group>"; };
+		55D8AD7719AC75FA00DAF79F /* ClassicSQLiteMagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClassicSQLiteMagicalRecordStack.h; sourceTree = "<group>"; };
+		55D8AD7819AC75FA00DAF79F /* ClassicSQLiteMagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClassicSQLiteMagicalRecordStack.m; sourceTree = "<group>"; };
+		55D8AD7919AC75FA00DAF79F /* ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.h; sourceTree = "<group>"; };
+		55D8AD7A19AC75FA00DAF79F /* ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.m; sourceTree = "<group>"; };
+		55D8AD7B19AC75FA00DAF79F /* InMemoryMagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InMemoryMagicalRecordStack.h; sourceTree = "<group>"; };
+		55D8AD7C19AC75FA00DAF79F /* InMemoryMagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InMemoryMagicalRecordStack.m; sourceTree = "<group>"; };
+		55D8AD7D19AC75FA00DAF79F /* MagicalRecordStack+Actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MagicalRecordStack+Actions.h"; sourceTree = "<group>"; };
+		55D8AD7E19AC75FA00DAF79F /* MagicalRecordStack+Actions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MagicalRecordStack+Actions.m"; sourceTree = "<group>"; };
+		55D8AD7F19AC75FA00DAF79F /* MagicalRecordStack+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MagicalRecordStack+Private.h"; sourceTree = "<group>"; };
+		55D8AD8019AC75FA00DAF79F /* MagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalRecordStack.h; sourceTree = "<group>"; };
+		55D8AD8119AC75FA00DAF79F /* MagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalRecordStack.m; sourceTree = "<group>"; };
+		55D8AD8219AC75FA00DAF79F /* ManuallyMigratingMagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManuallyMigratingMagicalRecordStack.h; sourceTree = "<group>"; };
+		55D8AD8319AC75FA00DAF79F /* ManuallyMigratingMagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManuallyMigratingMagicalRecordStack.m; sourceTree = "<group>"; };
+		55D8AD8419AC75FA00DAF79F /* SQLiteMagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLiteMagicalRecordStack.h; sourceTree = "<group>"; };
+		55D8AD8519AC75FA00DAF79F /* SQLiteMagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLiteMagicalRecordStack.m; sourceTree = "<group>"; };
+		55D8AD8619AC75FA00DAF79F /* SQLiteWithSavingContextMagicalRecordStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLiteWithSavingContextMagicalRecordStack.h; sourceTree = "<group>"; };
+		55D8AD8719AC75FA00DAF79F /* SQLiteWithSavingContextMagicalRecordStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLiteWithSavingContextMagicalRecordStack.m; sourceTree = "<group>"; };
+		55D8ADB319AC761000DAF79F /* QMForgotPasswordTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMForgotPasswordTVC.h; sourceTree = "<group>"; };
+		55D8ADB419AC761000DAF79F /* QMForgotPasswordTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMForgotPasswordTVC.m; sourceTree = "<group>"; };
+		55D8ADB619AC762100DAF79F /* QMSearchDisplayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSearchDisplayController.h; sourceTree = "<group>"; };
+		55D8ADB719AC762100DAF79F /* QMSearchDisplayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSearchDisplayController.m; sourceTree = "<group>"; };
+		55D8ADB919AC762C00DAF79F /* QMDialogsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDialogsDataSource.h; sourceTree = "<group>"; };
+		55D8ADBA19AC762C00DAF79F /* QMDialogsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDialogsDataSource.m; sourceTree = "<group>"; };
+		55D8ADBC19AC764500DAF79F /* NSString+HasText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HasText.h"; sourceTree = "<group>"; };
+		55D8ADBD19AC764500DAF79F /* NSString+HasText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HasText.m"; sourceTree = "<group>"; };
+		55D8ADBF19AC765400DAF79F /* UIImage+TintColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+TintColor.h"; sourceTree = "<group>"; };
+		55D8ADC019AC765400DAF79F /* UIImage+TintColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+TintColor.m"; sourceTree = "<group>"; };
+		55D8ADC219AC765F00DAF79F /* QMChatButtonsFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatButtonsFactory.h; sourceTree = "<group>"; };
+		55D8ADC319AC765F00DAF79F /* QMChatButtonsFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatButtonsFactory.m; sourceTree = "<group>"; };
+		55D8ADC519AC766E00DAF79F /* QMAttachmentMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAttachmentMessageCell.h; sourceTree = "<group>"; };
+		55D8ADC619AC766E00DAF79F /* QMAttachmentMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAttachmentMessageCell.m; sourceTree = "<group>"; };
+		55D8ADC819AC767F00DAF79F /* QMSystemMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSystemMessageCell.h; sourceTree = "<group>"; };
+		55D8ADC919AC767F00DAF79F /* QMSystemMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSystemMessageCell.m; sourceTree = "<group>"; };
+		55D8ADCB19AC768800DAF79F /* QMTextMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMTextMessageCell.h; sourceTree = "<group>"; };
+		55D8ADCC19AC768800DAF79F /* QMTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMTextMessageCell.m; sourceTree = "<group>"; };
+		55D8ADCE19AC769500DAF79F /* QMChatToolbarContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatToolbarContentView.h; sourceTree = "<group>"; };
+		55D8ADCF19AC769500DAF79F /* QMChatToolbarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatToolbarContentView.m; sourceTree = "<group>"; };
+		55D8ADD119AC769E00DAF79F /* QMPlaceholderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMPlaceholderTextView.h; sourceTree = "<group>"; };
+		55D8ADD219AC769E00DAF79F /* QMPlaceholderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMPlaceholderTextView.m; sourceTree = "<group>"; };
+		55D8ADD419AC76AE00DAF79F /* QMKeyboardController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMKeyboardController.h; sourceTree = "<group>"; };
+		55D8ADD519AC76AE00DAF79F /* QMKeyboardController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMKeyboardController.m; sourceTree = "<group>"; };
+		55D8ADD719AC76E200DAF79F /* QMAddMembersToGroupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAddMembersToGroupController.h; sourceTree = "<group>"; };
+		55D8ADD819AC76E200DAF79F /* QMAddMembersToGroupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAddMembersToGroupController.m; sourceTree = "<group>"; };
+		55D8ADD919AC76E200DAF79F /* QMAddUsersAbstractController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAddUsersAbstractController.h; sourceTree = "<group>"; };
+		55D8ADDA19AC76E200DAF79F /* QMAddUsersAbstractController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAddUsersAbstractController.m; sourceTree = "<group>"; };
+		55D8ADDB19AC76E200DAF79F /* QMCreateNewChatController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCreateNewChatController.h; sourceTree = "<group>"; };
+		55D8ADDC19AC76E200DAF79F /* QMCreateNewChatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMCreateNewChatController.m; sourceTree = "<group>"; };
+		55D8ADE019AC76F900DAF79F /* QMChangePasswordVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChangePasswordVC.h; sourceTree = "<group>"; };
+		55D8ADE119AC76F900DAF79F /* QMChangePasswordVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChangePasswordVC.m; sourceTree = "<group>"; };
+		55D8ADE319AC770400DAF79F /* QMFeedbackTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMFeedbackTableViewController.h; sourceTree = "<group>"; };
+		55D8ADE419AC770400DAF79F /* QMFeedbackTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMFeedbackTableViewController.m; sourceTree = "<group>"; };
+		55D8ADE619AC771400DAF79F /* QMOnlineTitle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMOnlineTitle.h; sourceTree = "<group>"; };
+		55D8ADE719AC771400DAF79F /* QMOnlineTitle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMOnlineTitle.m; sourceTree = "<group>"; };
+		55D8ADE919AC773000DAF79F /* QMCornerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCornerButton.h; sourceTree = "<group>"; };
+		55D8ADEA19AC773000DAF79F /* QMCornerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMCornerButton.m; sourceTree = "<group>"; };
+		55D8ADEC19AC773B00DAF79F /* QMProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMProgressView.h; sourceTree = "<group>"; };
+		55D8ADED19AC773B00DAF79F /* QMProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMProgressView.m; sourceTree = "<group>"; };
+		55D8ADEF19AC775C00DAF79F /* QMUploadContentOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMUploadContentOperation.h; sourceTree = "<group>"; };
+		55D8ADF019AC775C00DAF79F /* QMUploadContentOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMUploadContentOperation.m; sourceTree = "<group>"; };
+		55D8ADF219AC776A00DAF79F /* REAlertView+QMSuccess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "REAlertView+QMSuccess.h"; sourceTree = "<group>"; };
+		55D8ADF319AC776A00DAF79F /* REAlertView+QMSuccess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "REAlertView+QMSuccess.m"; sourceTree = "<group>"; };
+		55D8ADF619AC77A700DAF79F /* QMModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = QMModel.xcdatamodel; sourceTree = "<group>"; };
+		55D8ADF919AC833300DAF79F /* QMLicenseAgreement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLicenseAgreement.h; sourceTree = "<group>"; };
+		55D8ADFA19AC833300DAF79F /* QMLicenseAgreement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLicenseAgreement.m; sourceTree = "<group>"; };
 		55D963C1196430F300A87ECE /* QMSettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSettingsManager.h; sourceTree = "<group>"; };
 		55D963C2196430F300A87ECE /* QMSettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSettingsManager.m; sourceTree = "<group>"; };
 		55F4A3B5196FF0830068EBC3 /* QMDialogCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDialogCell.h; sourceTree = "<group>"; };
@@ -580,8 +585,6 @@
 		699C414D19AF473C0060859F /* QMContactRequestCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMContactRequestCell.h; path = QMContactRequestCell/QMContactRequestCell.h; sourceTree = "<group>"; };
 		699C414E19AF473C0060859F /* QMContactRequestCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMContactRequestCell.m; path = QMContactRequestCell/QMContactRequestCell.m; sourceTree = "<group>"; };
 		69AF263C198254E5004BCD0C /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quickblox.framework; path = External/Quickblox.framework; sourceTree = "<group>"; };
-		69B72F7D196D37FE00ECEE4C /* QMFeedbackTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMFeedbackTableViewController.h; sourceTree = "<group>"; };
-		69B72F7E196D37FE00ECEE4C /* QMFeedbackTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMFeedbackTableViewController.m; sourceTree = "<group>"; };
 		69CF189418AE1C3C003262EF /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		69CF189618AE1C48003262EF /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		69CF189818AE1C52003262EF /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -692,8 +695,8 @@
 		5523F978198FAFAB00C5ED4F /* QMBaseService */ = {
 			isa = PBXGroup;
 			children = (
-				5523F979198FAFC000C5ED4F /* QMBaseService.h */,
-				5523F97A198FAFC000C5ED4F /* QMBaseService.m */,
+				55D8AD1119AC758C00DAF79F /* QMBaseService.h */,
+				55D8AD1219AC758C00DAF79F /* QMBaseService.m */,
 			);
 			path = QMBaseService;
 			sourceTree = "<group>";
@@ -701,8 +704,8 @@
 		5524C2CB1998B3DB007450DB /* REActionSheet */ = {
 			isa = PBXGroup;
 			children = (
-				5524C2CC1998B3DB007450DB /* REActionSheet.h */,
-				5524C2CD1998B3DB007450DB /* REActionSheet.m */,
+				55D8AD0519AC756000DAF79F /* REActionSheet.h */,
+				55D8AD0619AC756000DAF79F /* REActionSheet.m */,
 			);
 			path = REActionSheet;
 			sourceTree = "<group>";
@@ -710,8 +713,8 @@
 		5524C2CF1998B560007450DB /* QMImagePicker */ = {
 			isa = PBXGroup;
 			children = (
-				5524C2D01998B573007450DB /* QMImagePicker.h */,
-				5524C2D11998B573007450DB /* QMImagePicker.m */,
+				55D8AD0219AC753600DAF79F /* QMImagePicker.h */,
+				55D8AD0319AC753600DAF79F /* QMImagePicker.m */,
 			);
 			path = QMImagePicker;
 			sourceTree = "<group>";
@@ -719,8 +722,8 @@
 		552869971991364D006F92CB /* QMHelpers */ = {
 			isa = PBXGroup;
 			children = (
-				552869981991365E006F92CB /* QMHelpers.h */,
-				552869991991365E006F92CB /* QMHelpers.m */,
+				55D8AD0819AC756E00DAF79F /* QMHelpers.h */,
+				55D8AD0919AC756E00DAF79F /* QMHelpers.m */,
 			);
 			path = QMHelpers;
 			sourceTree = "<group>";
@@ -728,8 +731,8 @@
 		55481024195C698000D74505 /* QMProgressView */ = {
 			isa = PBXGroup;
 			children = (
-				55481025195C699C00D74505 /* QMProgressView.h */,
-				55481026195C699C00D74505 /* QMProgressView.m */,
+				55D8ADEC19AC773B00DAF79F /* QMProgressView.h */,
+				55D8ADED19AC773B00DAF79F /* QMProgressView.m */,
 			);
 			path = QMProgressView;
 			sourceTree = "<group>";
@@ -758,8 +761,8 @@
 		554936901986777F007F2CF1 /* QMDownloadContentOperation */ = {
 			isa = PBXGroup;
 			children = (
-				55493695198677C4007F2CF1 /* QMDownloadContentOperation.h */,
-				55493696198677C4007F2CF1 /* QMDownloadContentOperation.m */,
+				55D8AD1419AC759C00DAF79F /* QMDownloadContentOperation.h */,
+				55D8AD1519AC759C00DAF79F /* QMDownloadContentOperation.m */,
 			);
 			path = QMDownloadContentOperation;
 			sourceTree = "<group>";
@@ -767,8 +770,8 @@
 		554936911986777F007F2CF1 /* QMUploadContentOperation */ = {
 			isa = PBXGroup;
 			children = (
-				55493698198677CE007F2CF1 /* QMUploadContentOperation.h */,
-				55493699198677CE007F2CF1 /* QMUploadContentOperation.m */,
+				55D8ADEF19AC775C00DAF79F /* QMUploadContentOperation.h */,
+				55D8ADF019AC775C00DAF79F /* QMUploadContentOperation.m */,
 			);
 			path = QMUploadContentOperation;
 			sourceTree = "<group>";
@@ -795,8 +798,8 @@
 		55495A211993BCC100B7764C /* QMMessageBarStyleSheetFactory */ = {
 			isa = PBXGroup;
 			children = (
-				55495A231993BCD500B7764C /* QMMessageBarStyleSheetFactory.h */,
-				55495A241993BCD500B7764C /* QMMessageBarStyleSheetFactory.m */,
+				55D8ACFC19AC70B000DAF79F /* QMMessageBarStyleSheetFactory.h */,
+				55D8ACFD19AC70B000DAF79F /* QMMessageBarStyleSheetFactory.m */,
 			);
 			path = QMMessageBarStyleSheetFactory;
 			sourceTree = "<group>";
@@ -821,8 +824,8 @@
 		558745171981466B005B1783 /* QBChatMessage+CustomParameters */ = {
 			isa = PBXGroup;
 			children = (
-				55874518198146D5005B1783 /* QBChatAbstractMessage+CustomParameters.h */,
-				55874519198146D5005B1783 /* QBChatAbstractMessage+CustomParameters.m */,
+				55D8ACF919AC70A500DAF79F /* QBChatAbstractMessage+CustomParameters.h */,
+				55D8ACFA19AC70A500DAF79F /* QBChatAbstractMessage+CustomParameters.m */,
 			);
 			path = "QBChatMessage+CustomParameters";
 			sourceTree = "<group>";
@@ -839,8 +842,8 @@
 		559143BF199CFEB4001DD2C4 /* QMOnlineTitle */ = {
 			isa = PBXGroup;
 			children = (
-				559143C0199CFECB001DD2C4 /* QMOnlineTitle.h */,
-				559143C1199CFECB001DD2C4 /* QMOnlineTitle.m */,
+				55D8ADE619AC771400DAF79F /* QMOnlineTitle.h */,
+				55D8ADE719AC771400DAF79F /* QMOnlineTitle.m */,
 			);
 			path = QMOnlineTitle;
 			sourceTree = "<group>";
@@ -916,8 +919,8 @@
 		559BDFEC19618F24000588FE /* QMForgotPasswordTVC */ = {
 			isa = PBXGroup;
 			children = (
-				559BDFED19618F39000588FE /* QMForgotPasswordTVC.h */,
-				559BDFEE19618F39000588FE /* QMForgotPasswordTVC.m */,
+				55D8ADB319AC761000DAF79F /* QMForgotPasswordTVC.h */,
+				55D8ADB419AC761000DAF79F /* QMForgotPasswordTVC.m */,
 			);
 			path = QMForgotPasswordTVC;
 			sourceTree = "<group>";
@@ -925,8 +928,8 @@
 		559BDFF419619212000588FE /* QMCornerButton */ = {
 			isa = PBXGroup;
 			children = (
-				559BDFF519619222000588FE /* QMCornerButton.h */,
-				559BDFF619619222000588FE /* QMCornerButton.m */,
+				55D8ADE919AC773000DAF79F /* QMCornerButton.h */,
+				55D8ADEA19AC773000DAF79F /* QMCornerButton.m */,
 			);
 			path = QMCornerButton;
 			sourceTree = "<group>";
@@ -958,6 +961,7 @@
 		55A8B04F1965986A00B5D33B /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				55D8ADF819AC81CD00DAF79F /* QMLicenseAgreement */,
 				2476BA7E19A5D8D300CC666D /* QMUsersUtils */,
 				5524C2CF1998B560007450DB /* QMImagePicker */,
 				5524C2CB1998B3DB007450DB /* REActionSheet */,
@@ -976,10 +980,10 @@
 		55A8B0501965986A00B5D33B /* AddressBook */ = {
 			isa = PBXGroup;
 			children = (
-				55A8B0511965986A00B5D33B /* QMAddressBook.h */,
-				55A8B0521965986A00B5D33B /* QMAddressBook.m */,
-				553F9917196998EB000C13F3 /* ABPerson.h */,
-				553F9918196998EB000C13F3 /* ABPerson.m */,
+				55D8AD0B19AC757900DAF79F /* ABPerson.h */,
+				55D8AD0C19AC757900DAF79F /* ABPerson.m */,
+				55D8AD0D19AC757900DAF79F /* QMAddressBook.h */,
+				55D8AD0E19AC757900DAF79F /* QMAddressBook.m */,
 			);
 			path = AddressBook;
 			sourceTree = "<group>";
@@ -1039,8 +1043,8 @@
 		55A8B0651965986A00B5D33B /* REAlertView+QBSuccess */ = {
 			isa = PBXGroup;
 			children = (
-				55A8B0661965986A00B5D33B /* REAlertView+QMSuccess.h */,
-				55A8B0671965986A00B5D33B /* REAlertView+QMSuccess.m */,
+				55D8ADF219AC776A00DAF79F /* REAlertView+QMSuccess.h */,
+				55D8ADF319AC776A00DAF79F /* REAlertView+QMSuccess.m */,
 			);
 			path = "REAlertView+QBSuccess";
 			sourceTree = "<group>";
@@ -1067,8 +1071,8 @@
 		55A8B07B196598A300B5D33B /* QMAVCallService */ = {
 			isa = PBXGroup;
 			children = (
-				55A8B07C196598A300B5D33B /* QMAVCallService.h */,
-				55A8B07D196598A300B5D33B /* QMAVCallService.m */,
+				55D8AD1719AC75AA00DAF79F /* QMAVCallService.h */,
+				55D8AD1819AC75AA00DAF79F /* QMAVCallService.m */,
 			);
 			path = QMAVCallService;
 			sourceTree = "<group>";
@@ -1076,9 +1080,9 @@
 		55A8B07E196598A300B5D33B /* QMChatDialogService */ = {
 			isa = PBXGroup;
 			children = (
-				55A8B07F196598A300B5D33B /* QMChatDialogsService.h */,
-				55A8B080196598A300B5D33B /* QMChatDialogsService.m */,
-				5524C2D41998E0CF007450DB /* QMChatReceiver+DialogsHistoryUpdated.m */,
+				55D8AD1A19AC75B700DAF79F /* QMChatDialogsService.h */,
+				55D8AD1B19AC75B700DAF79F /* QMChatDialogsService.m */,
+				55D8AD1C19AC75B700DAF79F /* QMChatReceiver+DialogsHistoryUpdated.m */,
 			);
 			name = QMChatDialogService;
 			path = QMChatGroupService;
@@ -1087,8 +1091,8 @@
 		55A8B083196598A300B5D33B /* QMMessageService */ = {
 			isa = PBXGroup;
 			children = (
-				55A8B084196598A300B5D33B /* QMMessagesService.h */,
-				55A8B085196598A300B5D33B /* QMMessagesService.m */,
+				55D8ACFF19AC751200DAF79F /* QMMessagesService.h */,
+				55D8AD0019AC751200DAF79F /* QMMessagesService.m */,
 			);
 			path = QMMessageService;
 			sourceTree = "<group>";
@@ -1096,8 +1100,8 @@
 		55A8B086196598A300B5D33B /* QMFacebookService */ = {
 			isa = PBXGroup;
 			children = (
-				55A8B087196598A300B5D33B /* QMFacebookService.h */,
-				55A8B088196598A300B5D33B /* QMFacebookService.m */,
+				55D8AD1F19AC75C100DAF79F /* QMFacebookService.h */,
+				55D8AD2019AC75C100DAF79F /* QMFacebookService.m */,
 			);
 			path = QMFacebookService;
 			sourceTree = "<group>";
@@ -1143,8 +1147,8 @@
 		55BBA761197327C20040DB5C /* QMDialogsDataSource */ = {
 			isa = PBXGroup;
 			children = (
-				55BBA762197327D20040DB5C /* QMDialogsDataSource.h */,
-				55BBA763197327D20040DB5C /* QMDialogsDataSource.m */,
+				55D8ADB919AC762C00DAF79F /* QMDialogsDataSource.h */,
+				55D8ADBA19AC762C00DAF79F /* QMDialogsDataSource.m */,
 			);
 			path = QMDialogsDataSource;
 			sourceTree = "<group>";
@@ -1240,8 +1244,8 @@
 		55CEAB1E195DBCFA001A8ED6 /* NSString+HasText */ = {
 			isa = PBXGroup;
 			children = (
-				55CEAB1F195DBCFA001A8ED6 /* NSString+HasText.h */,
-				55CEAB20195DBCFA001A8ED6 /* NSString+HasText.m */,
+				55D8ADBC19AC764500DAF79F /* NSString+HasText.h */,
+				55D8ADBD19AC764500DAF79F /* NSString+HasText.m */,
 			);
 			path = "NSString+HasText";
 			sourceTree = "<group>";
@@ -1275,8 +1279,8 @@
 		55CEAB28195DBCFA001A8ED6 /* UIImage */ = {
 			isa = PBXGroup;
 			children = (
-				55CEAB29195DBCFA001A8ED6 /* UIImage+TintColor.h */,
-				55CEAB2A195DBCFA001A8ED6 /* UIImage+TintColor.m */,
+				55D8ADBF19AC765400DAF79F /* UIImage+TintColor.h */,
+				55D8ADC019AC765400DAF79F /* UIImage+TintColor.m */,
 			);
 			path = UIImage;
 			sourceTree = "<group>";
@@ -1284,8 +1288,8 @@
 		55CEAB2C195DBCFA001A8ED6 /* QMChatButtonsFactory */ = {
 			isa = PBXGroup;
 			children = (
-				55CEAB2D195DBCFA001A8ED6 /* QMChatButtonsFactory.h */,
-				55CEAB2E195DBCFA001A8ED6 /* QMChatButtonsFactory.m */,
+				55D8ADC219AC765F00DAF79F /* QMChatButtonsFactory.h */,
+				55D8ADC319AC765F00DAF79F /* QMChatButtonsFactory.m */,
 			);
 			path = QMChatButtonsFactory;
 			sourceTree = "<group>";
@@ -1305,8 +1309,8 @@
 		55CEAB30195DBCFA001A8ED6 /* QMAttachmentMessageCell */ = {
 			isa = PBXGroup;
 			children = (
-				55CEAB31195DBCFA001A8ED6 /* QMAttachmentMessageCell.h */,
-				55CEAB32195DBCFA001A8ED6 /* QMAttachmentMessageCell.m */,
+				55D8ADC519AC766E00DAF79F /* QMAttachmentMessageCell.h */,
+				55D8ADC619AC766E00DAF79F /* QMAttachmentMessageCell.m */,
 			);
 			path = QMAttachmentMessageCell;
 			sourceTree = "<group>";
@@ -1314,8 +1318,8 @@
 		55CEAB35195DBCFA001A8ED6 /* QMSystemMessageCell */ = {
 			isa = PBXGroup;
 			children = (
-				55CEAB36195DBCFA001A8ED6 /* QMSystemMessageCell.h */,
-				55CEAB37195DBCFA001A8ED6 /* QMSystemMessageCell.m */,
+				55D8ADC819AC767F00DAF79F /* QMSystemMessageCell.h */,
+				55D8ADC919AC767F00DAF79F /* QMSystemMessageCell.m */,
 			);
 			path = QMSystemMessageCell;
 			sourceTree = "<group>";
@@ -1323,8 +1327,8 @@
 		55CEAB38195DBCFA001A8ED6 /* QMTextMessageCell */ = {
 			isa = PBXGroup;
 			children = (
-				55CEAB39195DBCFA001A8ED6 /* QMTextMessageCell.h */,
-				55CEAB3A195DBCFA001A8ED6 /* QMTextMessageCell.m */,
+				55D8ADCB19AC768800DAF79F /* QMTextMessageCell.h */,
+				55D8ADCC19AC768800DAF79F /* QMTextMessageCell.m */,
 			);
 			path = QMTextMessageCell;
 			sourceTree = "<group>";
@@ -1341,9 +1345,9 @@
 		55CEAB44195DBCFA001A8ED6 /* QMChatInputToolbar */ = {
 			isa = PBXGroup;
 			children = (
-				6996F8F71987976D003A8328 /* QMPlaceholderTextView */,
 				55CEAB48195DBCFA001A8ED6 /* QMChatInputToolbar.h */,
 				55CEAB49195DBCFA001A8ED6 /* QMChatInputToolbar.m */,
+				6996F8F71987976D003A8328 /* QMPlaceholderTextView */,
 				55CEAB4A195DBCFA001A8ED6 /* QMChatToolbarContentView  */,
 			);
 			path = QMChatInputToolbar;
@@ -1352,8 +1356,8 @@
 		55CEAB4A195DBCFA001A8ED6 /* QMChatToolbarContentView  */ = {
 			isa = PBXGroup;
 			children = (
-				55CEAB4B195DBCFA001A8ED6 /* QMChatToolbarContentView.h */,
-				55CEAB4C195DBCFA001A8ED6 /* QMChatToolbarContentView.m */,
+				55D8ADCE19AC769500DAF79F /* QMChatToolbarContentView.h */,
+				55D8ADCF19AC769500DAF79F /* QMChatToolbarContentView.m */,
 			);
 			path = "QMChatToolbarContentView ";
 			sourceTree = "<group>";
@@ -1370,8 +1374,8 @@
 		55CEAB52195DBCFA001A8ED6 /* QMKeyboardController */ = {
 			isa = PBXGroup;
 			children = (
-				55CEAB53195DBCFA001A8ED6 /* QMKeyboardController.h */,
-				55CEAB54195DBCFA001A8ED6 /* QMKeyboardController.m */,
+				55D8ADD419AC76AE00DAF79F /* QMKeyboardController.h */,
+				55D8ADD519AC76AE00DAF79F /* QMKeyboardController.m */,
 			);
 			path = QMKeyboardController;
 			sourceTree = "<group>";
@@ -1390,22 +1394,14 @@
 		55CEAB5A195DBCFA001A8ED6 /* QMCreateNewChatController */ = {
 			isa = PBXGroup;
 			children = (
-				55CEAB5E195DBCFA001A8ED6 /* QMAddUsersAbstractController.h */,
-				55CEAB5F195DBCFA001A8ED6 /* QMAddUsersAbstractController.m */,
-				55CEAB5B195DBCFA001A8ED6 /* QMAddMembersToGroupController */,
-				55CEAB60195DBCFA001A8ED6 /* QMCreateNewChatController.h */,
-				55CEAB61195DBCFA001A8ED6 /* QMCreateNewChatController.m */,
+				55D8ADD719AC76E200DAF79F /* QMAddMembersToGroupController.h */,
+				55D8ADD819AC76E200DAF79F /* QMAddMembersToGroupController.m */,
+				55D8ADD919AC76E200DAF79F /* QMAddUsersAbstractController.h */,
+				55D8ADDA19AC76E200DAF79F /* QMAddUsersAbstractController.m */,
+				55D8ADDB19AC76E200DAF79F /* QMCreateNewChatController.h */,
+				55D8ADDC19AC76E200DAF79F /* QMCreateNewChatController.m */,
 			);
 			path = QMCreateNewChatController;
-			sourceTree = "<group>";
-		};
-		55CEAB5B195DBCFA001A8ED6 /* QMAddMembersToGroupController */ = {
-			isa = PBXGroup;
-			children = (
-				55CEAB5C195DBCFA001A8ED6 /* QMAddMembersToGroupController.h */,
-				55CEAB5D195DBCFA001A8ED6 /* QMAddMembersToGroupController.m */,
-			);
-			path = QMAddMembersToGroupController;
 			sourceTree = "<group>";
 		};
 		55CEAB63195DBCFA001A8ED6 /* QMPrivateChatVC */ = {
@@ -1481,8 +1477,8 @@
 		55CEAB79195DBCFA001A8ED6 /* QMChangePasswordVC */ = {
 			isa = PBXGroup;
 			children = (
-				55CEAB7A195DBCFA001A8ED6 /* QMChangePasswordVC.h */,
-				55CEAB7B195DBCFA001A8ED6 /* QMChangePasswordVC.m */,
+				55D8ADE019AC76F900DAF79F /* QMChangePasswordVC.h */,
+				55D8ADE119AC76F900DAF79F /* QMChangePasswordVC.m */,
 			);
 			path = QMChangePasswordVC;
 			sourceTree = "<group>";
@@ -1499,8 +1495,8 @@
 		55D25B22198BBF2100443D0C /* QMSearchDisplayController */ = {
 			isa = PBXGroup;
 			children = (
-				55D25B23198BBF3700443D0C /* QMSearchDisplayController.h */,
-				55D25B24198BBF3700443D0C /* QMSearchDisplayController.m */,
+				55D8ADB619AC762100DAF79F /* QMSearchDisplayController.h */,
+				55D8ADB719AC762100DAF79F /* QMSearchDisplayController.m */,
 			);
 			path = QMSearchDisplayController;
 			sourceTree = "<group>";
@@ -1508,10 +1504,10 @@
 		55D2700D1940B8D300238D50 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				55D8ADF519AC77A700DAF79F /* QMModel.xcdatamodeld */,
 				55311ADD1990FEA500C585D5 /* mogen.sh */,
 				55311ADE1990FEA500C585D5 /* mogend.sh */,
 				55D2708B1940B8D300238D50 /* ModelIncludes.h */,
-				55311ADA1990FE7300C585D5 /* QMModel.xcdatamodeld */,
 				55D2700E1940B8D300238D50 /* DBStorage */,
 				55D2701A1940B8D300238D50 /* Entries */,
 				55D2701F1940B8D300238D50 /* EntriesMachine */,
@@ -1594,180 +1590,189 @@
 		55D270241940B8D300238D50 /* MagicalRecord */ = {
 			isa = PBXGroup;
 			children = (
-				55D270251940B8D300238D50 /* Library */,
+				55D8AD2219AC75FA00DAF79F /* Library */,
 			);
 			path = MagicalRecord;
 			sourceTree = "<group>";
 		};
-		55D270251940B8D300238D50 /* Library */ = {
+		55D8AD2219AC75FA00DAF79F /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				55D270261940B8D300238D50 /* Categories */,
-				55D270621940B8D300238D50 /* MagicalMigrationManager.h */,
-				55D270631940B8D300238D50 /* MagicalMigrationManager.m */,
-				55D270641940B8D300238D50 /* MagicalRecord */,
-				55D270741940B8D300238D50 /* MagicalRecord.h */,
-				55D270751940B8D300238D50 /* MagicalRecordStack */,
+				55D8AD2319AC75FA00DAF79F /* Categories */,
+				55D8AD5F19AC75FA00DAF79F /* MagicalMigrationManager.h */,
+				55D8AD6019AC75FA00DAF79F /* MagicalMigrationManager.m */,
+				55D8AD6119AC75FA00DAF79F /* MagicalRecord */,
+				55D8AD7119AC75FA00DAF79F /* MagicalRecord.h */,
+				55D8AD7219AC75FA00DAF79F /* MagicalRecordStack */,
 			);
 			path = Library;
 			sourceTree = "<group>";
 		};
-		55D270261940B8D300238D50 /* Categories */ = {
+		55D8AD2319AC75FA00DAF79F /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				55D270271940B8D300238D50 /* CoreData */,
-				55D2705B1940B8D300238D50 /* Foundation */,
+				55D8AD2419AC75FA00DAF79F /* CoreData */,
+				55D8AD5819AC75FA00DAF79F /* Foundation */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
 		};
-		55D270271940B8D300238D50 /* CoreData */ = {
+		55D8AD2419AC75FA00DAF79F /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				55D270281940B8D300238D50 /* Import */,
-				55D270371940B8D300238D50 /* NSFetchedResultsController+MagicalFetching.h */,
-				55D270381940B8D300238D50 /* NSFetchedResultsController+MagicalFetching.m */,
-				55D270391940B8D300238D50 /* NSManagedObject */,
-				55D270461940B8D300238D50 /* NSManagedObjectContext */,
-				55D2704D1940B8D300238D50 /* NSManagedObjectModel+MagicalRecord.h */,
-				55D2704E1940B8D300238D50 /* NSManagedObjectModel+MagicalRecord.m */,
-				55D2704F1940B8D300238D50 /* NSPersistentStore+MagicalRecord.h */,
-				55D270501940B8D300238D50 /* NSPersistentStore+MagicalRecord.m */,
-				55D270511940B8D300238D50 /* NSPersistentStore+MagicalRecordPrivate.h */,
-				55D270521940B8D300238D50 /* NSPersistentStoreCoordinator */,
+				55D8AD2519AC75FA00DAF79F /* Import */,
+				55D8AD3419AC75FA00DAF79F /* NSFetchedResultsController+MagicalFetching.h */,
+				55D8AD3519AC75FA00DAF79F /* NSFetchedResultsController+MagicalFetching.m */,
+				55D8AD3619AC75FA00DAF79F /* NSManagedObject */,
+				55D8AD4319AC75FA00DAF79F /* NSManagedObjectContext */,
+				55D8AD4A19AC75FA00DAF79F /* NSManagedObjectModel+MagicalRecord.h */,
+				55D8AD4B19AC75FA00DAF79F /* NSManagedObjectModel+MagicalRecord.m */,
+				55D8AD4C19AC75FA00DAF79F /* NSPersistentStore+MagicalRecord.h */,
+				55D8AD4D19AC75FA00DAF79F /* NSPersistentStore+MagicalRecord.m */,
+				55D8AD4E19AC75FA00DAF79F /* NSPersistentStore+MagicalRecordPrivate.h */,
+				55D8AD4F19AC75FA00DAF79F /* NSPersistentStoreCoordinator */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
 		};
-		55D270281940B8D300238D50 /* Import */ = {
+		55D8AD2519AC75FA00DAF79F /* Import */ = {
 			isa = PBXGroup;
 			children = (
-				55D270291940B8D300238D50 /* MagicalImportFunctions.h */,
-				55D2702A1940B8D300238D50 /* MagicalImportFunctions.m */,
-				55D2702B1940B8D300238D50 /* NSAttributeDescription+MagicalDataImport.h */,
-				55D2702C1940B8D300238D50 /* NSAttributeDescription+MagicalDataImport.m */,
-				55D2702D1940B8D300238D50 /* NSEntityDescription+MagicalDataImport.h */,
-				55D2702E1940B8D300238D50 /* NSEntityDescription+MagicalDataImport.m */,
-				55D2702F1940B8D300238D50 /* NSNumber+MagicalDataImport.h */,
-				55D270301940B8D300238D50 /* NSNumber+MagicalDataImport.m */,
-				55D270311940B8D300238D50 /* NSObject+MagicalDataImport.h */,
-				55D270321940B8D300238D50 /* NSObject+MagicalDataImport.m */,
-				55D270331940B8D300238D50 /* NSRelationshipDescription+MagicalDataImport.h */,
-				55D270341940B8D300238D50 /* NSRelationshipDescription+MagicalDataImport.m */,
-				55D270351940B8D300238D50 /* NSString+MagicalDataImport.h */,
-				55D270361940B8D300238D50 /* NSString+MagicalDataImport.m */,
+				55D8AD2619AC75FA00DAF79F /* MagicalImportFunctions.h */,
+				55D8AD2719AC75FA00DAF79F /* MagicalImportFunctions.m */,
+				55D8AD2819AC75FA00DAF79F /* NSAttributeDescription+MagicalDataImport.h */,
+				55D8AD2919AC75FA00DAF79F /* NSAttributeDescription+MagicalDataImport.m */,
+				55D8AD2A19AC75FA00DAF79F /* NSEntityDescription+MagicalDataImport.h */,
+				55D8AD2B19AC75FA00DAF79F /* NSEntityDescription+MagicalDataImport.m */,
+				55D8AD2C19AC75FA00DAF79F /* NSNumber+MagicalDataImport.h */,
+				55D8AD2D19AC75FA00DAF79F /* NSNumber+MagicalDataImport.m */,
+				55D8AD2E19AC75FA00DAF79F /* NSObject+MagicalDataImport.h */,
+				55D8AD2F19AC75FA00DAF79F /* NSObject+MagicalDataImport.m */,
+				55D8AD3019AC75FA00DAF79F /* NSRelationshipDescription+MagicalDataImport.h */,
+				55D8AD3119AC75FA00DAF79F /* NSRelationshipDescription+MagicalDataImport.m */,
+				55D8AD3219AC75FA00DAF79F /* NSString+MagicalDataImport.h */,
+				55D8AD3319AC75FA00DAF79F /* NSString+MagicalDataImport.m */,
 			);
 			path = Import;
 			sourceTree = "<group>";
 		};
-		55D270391940B8D300238D50 /* NSManagedObject */ = {
+		55D8AD3619AC75FA00DAF79F /* NSManagedObject */ = {
 			isa = PBXGroup;
 			children = (
-				55D2703A1940B8D300238D50 /* NSManagedObject+MagicalAggregation.h */,
-				55D2703B1940B8D300238D50 /* NSManagedObject+MagicalAggregation.m */,
-				55D2703C1940B8D300238D50 /* NSManagedObject+MagicalDataImport.h */,
-				55D2703D1940B8D300238D50 /* NSManagedObject+MagicalDataImport.m */,
-				55D2703E1940B8D300238D50 /* NSManagedObject+MagicalFetching.h */,
-				55D2703F1940B8D300238D50 /* NSManagedObject+MagicalFetching.m */,
-				55D270401940B8D300238D50 /* NSManagedObject+MagicalFinders.h */,
-				55D270411940B8D300238D50 /* NSManagedObject+MagicalFinders.m */,
-				55D270421940B8D300238D50 /* NSManagedObject+MagicalRecord.h */,
-				55D270431940B8D300238D50 /* NSManagedObject+MagicalRecord.m */,
-				55D270441940B8D300238D50 /* NSManagedObject+MagicalRequests.h */,
-				55D270451940B8D300238D50 /* NSManagedObject+MagicalRequests.m */,
+				55D8AD3719AC75FA00DAF79F /* NSManagedObject+MagicalAggregation.h */,
+				55D8AD3819AC75FA00DAF79F /* NSManagedObject+MagicalAggregation.m */,
+				55D8AD3919AC75FA00DAF79F /* NSManagedObject+MagicalDataImport.h */,
+				55D8AD3A19AC75FA00DAF79F /* NSManagedObject+MagicalDataImport.m */,
+				55D8AD3B19AC75FA00DAF79F /* NSManagedObject+MagicalFetching.h */,
+				55D8AD3C19AC75FA00DAF79F /* NSManagedObject+MagicalFetching.m */,
+				55D8AD3D19AC75FA00DAF79F /* NSManagedObject+MagicalFinders.h */,
+				55D8AD3E19AC75FA00DAF79F /* NSManagedObject+MagicalFinders.m */,
+				55D8AD3F19AC75FA00DAF79F /* NSManagedObject+MagicalRecord.h */,
+				55D8AD4019AC75FA00DAF79F /* NSManagedObject+MagicalRecord.m */,
+				55D8AD4119AC75FA00DAF79F /* NSManagedObject+MagicalRequests.h */,
+				55D8AD4219AC75FA00DAF79F /* NSManagedObject+MagicalRequests.m */,
 			);
 			path = NSManagedObject;
 			sourceTree = "<group>";
 		};
-		55D270461940B8D300238D50 /* NSManagedObjectContext */ = {
+		55D8AD4319AC75FA00DAF79F /* NSManagedObjectContext */ = {
 			isa = PBXGroup;
 			children = (
-				55D270471940B8D300238D50 /* NSManagedObjectContext+MagicalObserving.h */,
-				55D270481940B8D300238D50 /* NSManagedObjectContext+MagicalObserving.m */,
-				55D270491940B8D300238D50 /* NSManagedObjectContext+MagicalRecord.h */,
-				55D2704A1940B8D300238D50 /* NSManagedObjectContext+MagicalRecord.m */,
-				55D2704B1940B8D300238D50 /* NSManagedObjectContext+MagicalSaves.h */,
-				55D2704C1940B8D300238D50 /* NSManagedObjectContext+MagicalSaves.m */,
+				55D8AD4419AC75FA00DAF79F /* NSManagedObjectContext+MagicalObserving.h */,
+				55D8AD4519AC75FA00DAF79F /* NSManagedObjectContext+MagicalObserving.m */,
+				55D8AD4619AC75FA00DAF79F /* NSManagedObjectContext+MagicalRecord.h */,
+				55D8AD4719AC75FA00DAF79F /* NSManagedObjectContext+MagicalRecord.m */,
+				55D8AD4819AC75FA00DAF79F /* NSManagedObjectContext+MagicalSaves.h */,
+				55D8AD4919AC75FA00DAF79F /* NSManagedObjectContext+MagicalSaves.m */,
 			);
 			path = NSManagedObjectContext;
 			sourceTree = "<group>";
 		};
-		55D270521940B8D300238D50 /* NSPersistentStoreCoordinator */ = {
+		55D8AD4F19AC75FA00DAF79F /* NSPersistentStoreCoordinator */ = {
 			isa = PBXGroup;
 			children = (
-				55D270531940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalAutoMigrations.h */,
-				55D270541940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalAutoMigrations.m */,
-				55D270551940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.h */,
-				55D270561940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.m */,
-				55D270571940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalManualMigrations.h */,
-				55D270581940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalManualMigrations.m */,
-				55D270591940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalRecord.h */,
-				55D2705A1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalRecord.m */,
+				55D8AD5019AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalAutoMigrations.h */,
+				55D8AD5119AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalAutoMigrations.m */,
+				55D8AD5219AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.h */,
+				55D8AD5319AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.m */,
+				55D8AD5419AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalManualMigrations.h */,
+				55D8AD5519AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalManualMigrations.m */,
+				55D8AD5619AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalRecord.h */,
+				55D8AD5719AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalRecord.m */,
 			);
 			path = NSPersistentStoreCoordinator;
 			sourceTree = "<group>";
 		};
-		55D2705B1940B8D300238D50 /* Foundation */ = {
+		55D8AD5819AC75FA00DAF79F /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
-				55D2705C1940B8D300238D50 /* NSArray+MagicalRecord.h */,
-				55D2705D1940B8D300238D50 /* NSArray+MagicalRecord.m */,
-				55D2705E1940B8D300238D50 /* NSDictionary+MagicalRecordAdditions.h */,
-				55D2705F1940B8D300238D50 /* NSDictionary+MagicalRecordAdditions.m */,
-				55D270601940B8D300238D50 /* NSError+MagicalRecordErrorHandling.h */,
-				55D270611940B8D300238D50 /* NSError+MagicalRecordErrorHandling.m */,
+				55D8AD5919AC75FA00DAF79F /* NSArray+MagicalRecord.h */,
+				55D8AD5A19AC75FA00DAF79F /* NSArray+MagicalRecord.m */,
+				55D8AD5B19AC75FA00DAF79F /* NSDictionary+MagicalRecordAdditions.h */,
+				55D8AD5C19AC75FA00DAF79F /* NSDictionary+MagicalRecordAdditions.m */,
+				55D8AD5D19AC75FA00DAF79F /* NSError+MagicalRecordErrorHandling.h */,
+				55D8AD5E19AC75FA00DAF79F /* NSError+MagicalRecordErrorHandling.m */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
 		};
-		55D270641940B8D300238D50 /* MagicalRecord */ = {
+		55D8AD6119AC75FA00DAF79F /* MagicalRecord */ = {
 			isa = PBXGroup;
 			children = (
-				55D270651940B8D300238D50 /* MagicalRecord+Actions.h */,
-				55D270661940B8D300238D50 /* MagicalRecord+Actions.m */,
-				55D270671940B8D300238D50 /* MagicalRecord+Options.h */,
-				55D270681940B8D300238D50 /* MagicalRecord+Options.m */,
-				55D270691940B8D300238D50 /* MagicalRecord+Setup.h */,
-				55D2706A1940B8D300238D50 /* MagicalRecord+Setup.m */,
-				55D2706B1940B8D300238D50 /* MagicalRecord+VersionInformation.h */,
-				55D2706C1940B8D300238D50 /* MagicalRecord+VersionInformation.m */,
-				55D2706D1940B8D300238D50 /* MagicalRecordDeprecated.h */,
-				55D2706E1940B8D300238D50 /* MagicalRecordInternal.h */,
-				55D2706F1940B8D300238D50 /* MagicalRecordInternal.m */,
-				55D270701940B8D300238D50 /* MagicalRecordLogging.h */,
-				55D270711940B8D300238D50 /* MagicalRecordMOGeneratorProtocol.h */,
-				55D270721940B8D300238D50 /* MagicalRecordShorthand.h */,
-				55D270731940B8D300238D50 /* MagicalRecordShorthand.m */,
+				55D8AD6219AC75FA00DAF79F /* MagicalRecord+Actions.h */,
+				55D8AD6319AC75FA00DAF79F /* MagicalRecord+Actions.m */,
+				55D8AD6419AC75FA00DAF79F /* MagicalRecord+Options.h */,
+				55D8AD6519AC75FA00DAF79F /* MagicalRecord+Options.m */,
+				55D8AD6619AC75FA00DAF79F /* MagicalRecord+Setup.h */,
+				55D8AD6719AC75FA00DAF79F /* MagicalRecord+Setup.m */,
+				55D8AD6819AC75FA00DAF79F /* MagicalRecord+VersionInformation.h */,
+				55D8AD6919AC75FA00DAF79F /* MagicalRecord+VersionInformation.m */,
+				55D8AD6A19AC75FA00DAF79F /* MagicalRecordDeprecated.h */,
+				55D8AD6B19AC75FA00DAF79F /* MagicalRecordInternal.h */,
+				55D8AD6C19AC75FA00DAF79F /* MagicalRecordInternal.m */,
+				55D8AD6D19AC75FA00DAF79F /* MagicalRecordLogging.h */,
+				55D8AD6E19AC75FA00DAF79F /* MagicalRecordMOGeneratorProtocol.h */,
+				55D8AD6F19AC75FA00DAF79F /* MagicalRecordShorthand.h */,
+				55D8AD7019AC75FA00DAF79F /* MagicalRecordShorthand.m */,
 			);
 			path = MagicalRecord;
 			sourceTree = "<group>";
 		};
-		55D270751940B8D300238D50 /* MagicalRecordStack */ = {
+		55D8AD7219AC75FA00DAF79F /* MagicalRecordStack */ = {
 			isa = PBXGroup;
 			children = (
-				55D270761940B8D300238D50 /* AutoMigratingMagicalRecordStack.h */,
-				55D270771940B8D300238D50 /* AutoMigratingMagicalRecordStack.m */,
-				55D270781940B8D300238D50 /* AutoMigratingWithSourceAndTargetModelMagicalRecordStack.h */,
-				55D270791940B8D300238D50 /* AutoMigratingWithSourceAndTargetModelMagicalRecordStack.m */,
-				55D2707A1940B8D300238D50 /* ClassicSQLiteMagicalRecordStack.h */,
-				55D2707B1940B8D300238D50 /* ClassicSQLiteMagicalRecordStack.m */,
-				55D2707C1940B8D300238D50 /* ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.h */,
-				55D2707D1940B8D300238D50 /* ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.m */,
-				55D2707E1940B8D300238D50 /* InMemoryMagicalRecordStack.h */,
-				55D2707F1940B8D300238D50 /* InMemoryMagicalRecordStack.m */,
-				55D270801940B8D300238D50 /* MagicalRecordStack+Actions.h */,
-				55D270811940B8D300238D50 /* MagicalRecordStack+Actions.m */,
-				55D270821940B8D300238D50 /* MagicalRecordStack+Private.h */,
-				55D270831940B8D300238D50 /* MagicalRecordStack.h */,
-				55D270841940B8D300238D50 /* MagicalRecordStack.m */,
-				55D270851940B8D300238D50 /* ManuallyMigratingMagicalRecordStack.h */,
-				55D270861940B8D300238D50 /* ManuallyMigratingMagicalRecordStack.m */,
-				55D270871940B8D300238D50 /* SQLiteMagicalRecordStack.h */,
-				55D270881940B8D300238D50 /* SQLiteMagicalRecordStack.m */,
-				55D270891940B8D300238D50 /* SQLiteWithSavingContextMagicalRecordStack.h */,
-				55D2708A1940B8D300238D50 /* SQLiteWithSavingContextMagicalRecordStack.m */,
+				55D8AD7319AC75FA00DAF79F /* AutoMigratingMagicalRecordStack.h */,
+				55D8AD7419AC75FA00DAF79F /* AutoMigratingMagicalRecordStack.m */,
+				55D8AD7519AC75FA00DAF79F /* AutoMigratingWithSourceAndTargetModelMagicalRecordStack.h */,
+				55D8AD7619AC75FA00DAF79F /* AutoMigratingWithSourceAndTargetModelMagicalRecordStack.m */,
+				55D8AD7719AC75FA00DAF79F /* ClassicSQLiteMagicalRecordStack.h */,
+				55D8AD7819AC75FA00DAF79F /* ClassicSQLiteMagicalRecordStack.m */,
+				55D8AD7919AC75FA00DAF79F /* ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.h */,
+				55D8AD7A19AC75FA00DAF79F /* ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.m */,
+				55D8AD7B19AC75FA00DAF79F /* InMemoryMagicalRecordStack.h */,
+				55D8AD7C19AC75FA00DAF79F /* InMemoryMagicalRecordStack.m */,
+				55D8AD7D19AC75FA00DAF79F /* MagicalRecordStack+Actions.h */,
+				55D8AD7E19AC75FA00DAF79F /* MagicalRecordStack+Actions.m */,
+				55D8AD7F19AC75FA00DAF79F /* MagicalRecordStack+Private.h */,
+				55D8AD8019AC75FA00DAF79F /* MagicalRecordStack.h */,
+				55D8AD8119AC75FA00DAF79F /* MagicalRecordStack.m */,
+				55D8AD8219AC75FA00DAF79F /* ManuallyMigratingMagicalRecordStack.h */,
+				55D8AD8319AC75FA00DAF79F /* ManuallyMigratingMagicalRecordStack.m */,
+				55D8AD8419AC75FA00DAF79F /* SQLiteMagicalRecordStack.h */,
+				55D8AD8519AC75FA00DAF79F /* SQLiteMagicalRecordStack.m */,
+				55D8AD8619AC75FA00DAF79F /* SQLiteWithSavingContextMagicalRecordStack.h */,
+				55D8AD8719AC75FA00DAF79F /* SQLiteWithSavingContextMagicalRecordStack.m */,
 			);
 			path = MagicalRecordStack;
+			sourceTree = "<group>";
+		};
+		55D8ADF819AC81CD00DAF79F /* QMLicenseAgreement */ = {
+			isa = PBXGroup;
+			children = (
+				55D8ADF919AC833300DAF79F /* QMLicenseAgreement.h */,
+				55D8ADFA19AC833300DAF79F /* QMLicenseAgreement.m */,
+			);
+			path = QMLicenseAgreement;
 			sourceTree = "<group>";
 		};
 		55D963A9196430F300A87ECE /* Services */ = {
@@ -1927,8 +1932,6 @@
 			children = (
 				6943848F18E42691001E08A9 /* UIImage+Cropper.h */,
 				6943849018E42691001E08A9 /* UIImage+Cropper.m */,
-				24F8B8F519A26F63009F8656 /* NSString+occupantsIDsFromMessage.h */,
-				24F8B8F619A26F63009F8656 /* NSString+occupantsIDsFromMessage.m */,
 				2494559619A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.h */,
 				2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */,
 				2494559919A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.h */,
@@ -1963,8 +1966,8 @@
 		6996F8F71987976D003A8328 /* QMPlaceholderTextView */ = {
 			isa = PBXGroup;
 			children = (
-				6996F8F81987976D003A8328 /* QMPlaceholderTextView.h */,
-				6996F8F91987976D003A8328 /* QMPlaceholderTextView.m */,
+				55D8ADD119AC769E00DAF79F /* QMPlaceholderTextView.h */,
+				55D8ADD219AC769E00DAF79F /* QMPlaceholderTextView.m */,
 			);
 			path = QMPlaceholderTextView;
 			sourceTree = "<group>";
@@ -1982,8 +1985,8 @@
 		69B72F7C196D37D500ECEE4C /* QMFeedbackTableViewController */ = {
 			isa = PBXGroup;
 			children = (
-				69B72F7D196D37FE00ECEE4C /* QMFeedbackTableViewController.h */,
-				69B72F7E196D37FE00ECEE4C /* QMFeedbackTableViewController.m */,
+				55D8ADE319AC770400DAF79F /* QMFeedbackTableViewController.h */,
+				55D8ADE419AC770400DAF79F /* QMFeedbackTableViewController.m */,
 			);
 			path = QMFeedbackTableViewController;
 			sourceTree = "<group>";
@@ -2204,163 +2207,163 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55D8ADAA19AC75FA00DAF79F /* AutoMigratingWithSourceAndTargetModelMagicalRecordStack.m in Sources */,
 				697E2D4C196EA82400CD2BDE /* QMLicenseAgreementViewController.m in Sources */,
-				5524C2D21998B573007450DB /* QMImagePicker.m in Sources */,
 				55D963CA196430F300A87ECE /* QMSettingsManager.m in Sources */,
-				55D270AE1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalManualMigrations.m in Sources */,
-				55D270A91940B8D300238D50 /* NSManagedObjectContext+MagicalSaves.m in Sources */,
-				55495A251993BCD500B7764C /* QMMessageBarStyleSheetFactory.m in Sources */,
+				55D8ADAF19AC75FA00DAF79F /* MagicalRecordStack.m in Sources */,
 				55943A0C1941A4AE00BF4312 /* CDDialog.m in Sources */,
 				55A8B0AB1965A66300B5D33B /* QMApi+ChatDialogs.m in Sources */,
-				55D2709F1940B8D300238D50 /* NSString+MagicalDataImport.m in Sources */,
-				5549369A198677CE007F2CF1 /* QMUploadContentOperation.m in Sources */,
+				55D8ADCA19AC767F00DAF79F /* QMSystemMessageCell.m in Sources */,
+				55D8ADA319AC75FA00DAF79F /* MagicalRecord+Actions.m in Sources */,
 				2476BA8119A5D91F00CC666D /* QMUsersUtils.m in Sources */,
+				55D8ADA019AC75FA00DAF79F /* NSDictionary+MagicalRecordAdditions.m in Sources */,
+				55D8ADF419AC776A00DAF79F /* REAlertView+QMSuccess.m in Sources */,
 				6943847218E42678001E08A9 /* QMCustomSegue.m in Sources */,
 				55CEAB94195DBCFA001A8ED6 /* QMChatVC.m in Sources */,
 				2494559B19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m in Sources */,
-				55A8B099196598A300B5D33B /* QMMessagesService.m in Sources */,
 				55A8B095196598A300B5D33B /* QMAuthService.m in Sources */,
 				55F4A3C9196FF0830068EBC3 /* QMInviteFriendCell.m in Sources */,
 				55CEABA2195DBCFA001A8ED6 /* QMProfileViewController.m in Sources */,
 				55CEAB82195DBCFA001A8ED6 /* QMVideoCallController.m in Sources */,
+				55D8AD9019AC75FA00DAF79F /* NSManagedObject+MagicalAggregation.m in Sources */,
+				55D8ACFE19AC70B000DAF79F /* QMMessageBarStyleSheetFactory.m in Sources */,
 				55F4A3C7196FF0830068EBC3 /* QMDialogCell.m in Sources */,
+				55D8AD0F19AC757900DAF79F /* ABPerson.m in Sources */,
+				55D8ADEB19AC773000DAF79F /* QMCornerButton.m in Sources */,
+				55D8ADA619AC75FA00DAF79F /* MagicalRecord+VersionInformation.m in Sources */,
+				55D8AD8F19AC75FA00DAF79F /* NSFetchedResultsController+MagicalFetching.m in Sources */,
+				55D8AD9219AC75FA00DAF79F /* NSManagedObject+MagicalFetching.m in Sources */,
 				55CEAB9A195DBCFA001A8ED6 /* QMChatViewController.m in Sources */,
+				55D8AD1919AC75AA00DAF79F /* QMAVCallService.m in Sources */,
 				55A8B06C1965986A00B5D33B /* QBEchoObject.m in Sources */,
-				5524C2CE1998B3DB007450DB /* REActionSheet.m in Sources */,
 				6943849418E42691001E08A9 /* UIImage+Cropper.m in Sources */,
-				5524C2D51998E0CF007450DB /* QMChatReceiver+DialogsHistoryUpdated.m in Sources */,
+				55D8ADA719AC75FA00DAF79F /* MagicalRecordInternal.m in Sources */,
+				55D8AD9C19AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.m in Sources */,
+				55D8AD9419AC75FA00DAF79F /* NSManagedObject+MagicalRecord.m in Sources */,
+				55D8ACFB19AC70A500DAF79F /* QBChatAbstractMessage+CustomParameters.m in Sources */,
+				55D8AD9119AC75FA00DAF79F /* NSManagedObject+MagicalDataImport.m in Sources */,
 				5521401E197FF00900F55373 /* QMIncomingCallHandler.m in Sources */,
 				55CEAB86195DBCFA001A8ED6 /* UIColor+Hex.m in Sources */,
-				55311ADC1990FE7300C585D5 /* QMModel.xcdatamodeld in Sources */,
-				55D270BD1940B8D300238D50 /* ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.m in Sources */,
+				55D8ADCD19AC768800DAF79F /* QMTextMessageCell.m in Sources */,
+				55D8AD9319AC75FA00DAF79F /* NSManagedObject+MagicalFinders.m in Sources */,
 				551BD88B199103C0006AC667 /* _CDDialog.m in Sources */,
-				5528699A1991365E006F92CB /* QMHelpers.m in Sources */,
-				55D270A01940B8D300238D50 /* NSFetchedResultsController+MagicalFetching.m in Sources */,
-				55D270A71940B8D300238D50 /* NSManagedObjectContext+MagicalObserving.m in Sources */,
-				69B72F7F196D37FE00ECEE4C /* QMFeedbackTableViewController.m in Sources */,
 				55CEAB93195DBCFA001A8ED6 /* QMChatLayoutConfigs.m in Sources */,
+				55D8AD9819AC75FA00DAF79F /* NSManagedObjectContext+MagicalSaves.m in Sources */,
 				693206EE1962C0F600B15EF9 /* QMAudioCallController.m in Sources */,
+				55D8ADA419AC75FA00DAF79F /* MagicalRecord+Options.m in Sources */,
+				55D8ADA219AC75FA00DAF79F /* MagicalMigrationManager.m in Sources */,
 				5549368E19867738007F2CF1 /* QMContentService.m in Sources */,
+				55D8ADAC19AC75FA00DAF79F /* ClassicWithBackgroundCoordinatorSQLiteMagicalRecordStack.m in Sources */,
+				55D8AD8C19AC75FA00DAF79F /* NSObject+MagicalDataImport.m in Sources */,
 				55A8B06E1965986A00B5D33B /* QMSoundManager.m in Sources */,
-				55D25B25198BBF3700443D0C /* QMSearchDisplayController.m in Sources */,
 				55CEAB8F195DBCFA001A8ED6 /* QMChatDataSource.m in Sources */,
-				55CEAB88195DBCFA001A8ED6 /* QMChatButtonsFactory.m in Sources */,
 				55D270941940B8D300238D50 /* QMDBStorage.m in Sources */,
-				55D270B41940B8D300238D50 /* MagicalRecord+Actions.m in Sources */,
 				55CEAB9E195DBCFA001A8ED6 /* QMFriendsDetailsController.m in Sources */,
-				5523F97B198FAFC000C5ED4F /* QMBaseService.m in Sources */,
 				5526D909196D3267003AA9B6 /* QMChatReceiver.m in Sources */,
+				55D8AD1E19AC75B700DAF79F /* QMChatReceiver+DialogsHistoryUpdated.m in Sources */,
 				55CEABA3195DBCFA001A8ED6 /* QMSettingsViewController.m in Sources */,
-				24F8B8F719A26F63009F8656 /* NSString+occupantsIDsFromMessage.m in Sources */,
-				559BDFEF19618F39000588FE /* QMForgotPasswordTVC.m in Sources */,
-				55A8B097196598A300B5D33B /* QMChatDialogsService.m in Sources */,
+				55D8AD0119AC751200DAF79F /* QMMessagesService.m in Sources */,
+				55D8ADEE19AC773B00DAF79F /* QMProgressView.m in Sources */,
+				55D8ADB219AC75FA00DAF79F /* SQLiteWithSavingContextMagicalRecordStack.m in Sources */,
+				55D8AD9719AC75FA00DAF79F /* NSManagedObjectContext+MagicalRecord.m in Sources */,
 				551F8724196E854500DBCA02 /* QMApi+Facebook.m in Sources */,
-				55D270B31940B8D300238D50 /* MagicalMigrationManager.m in Sources */,
-				55CEAB98195DBCFA001A8ED6 /* QMAddUsersAbstractController.m in Sources */,
 				6943848318E42678001E08A9 /* QMMainTabBarController.m in Sources */,
 				556192CB19891BD70048D112 /* QMGroupDetailsDataSource.m in Sources */,
+				55D8AD9A19AC75FA00DAF79F /* NSPersistentStore+MagicalRecord.m in Sources */,
 				55A8B09E196598A300B5D33B /* QMUsersService.m in Sources */,
+				55D8ADDD19AC76E200DAF79F /* QMAddMembersToGroupController.m in Sources */,
+				55D8ADE219AC76F900DAF79F /* QMChangePasswordVC.m in Sources */,
+				55D8ADE819AC771400DAF79F /* QMOnlineTitle.m in Sources */,
 				55CEAB96195DBCFA001A8ED6 /* QMMessage.m in Sources */,
 				55CEAB9F195DBCFA001A8ED6 /* QMGroupDetailsController.m in Sources */,
-				55CEAB92195DBCFA001A8ED6 /* QMChatToolbarContentView.m in Sources */,
 				552B423919471E19008DF1E8 /* CDAttachment.m in Sources */,
-				55493697198677C4007F2CF1 /* QMDownloadContentOperation.m in Sources */,
-				55D270B61940B8D300238D50 /* MagicalRecord+Setup.m in Sources */,
-				55D270B91940B8D300238D50 /* MagicalRecordShorthand.m in Sources */,
 				55BBA75C19730B960040DB5C /* REMessageUI.m in Sources */,
-				55A8B06A1965986A00B5D33B /* QMAddressBook.m in Sources */,
-				55D2709B1940B8D300238D50 /* NSEntityDescription+MagicalDataImport.m in Sources */,
 				551BD88C199103C0006AC667 /* _CDMessage.m in Sources */,
+				55D8ADF119AC775C00DAF79F /* QMUploadContentOperation.m in Sources */,
 				55CEAB9D195DBCFA001A8ED6 /* QMFriendListViewController.m in Sources */,
 				699C414F19AF473C0060859F /* QMContactRequestCell.m in Sources */,
 				551BD88D199103C0006AC667 /* _CDUser.m in Sources */,
-				55CEAB95195DBCFA001A8ED6 /* QMKeyboardController.m in Sources */,
 				69D57E6618ACC11C00A9900A /* AppDelegate.m in Sources */,
-				55CEAB97195DBCFA001A8ED6 /* QMAddMembersToGroupController.m in Sources */,
-				553F9919196998EB000C13F3 /* ABPerson.m in Sources */,
-				55CEAB99195DBCFA001A8ED6 /* QMCreateNewChatController.m in Sources */,
-				5587451A198146D5005B1783 /* QBChatAbstractMessage+CustomParameters.m in Sources */,
+				55D8ADC719AC766E00DAF79F /* QMAttachmentMessageCell.m in Sources */,
 				55CEABA0195DBCFA001A8ED6 /* QMInviteViewController.m in Sources */,
-				55D270A51940B8D300238D50 /* NSManagedObject+MagicalRecord.m in Sources */,
 				55CEAB9C195DBCFA001A8ED6 /* QMContentPreviewController.m in Sources */,
-				55CEABA1195DBCFA001A8ED6 /* QMChangePasswordVC.m in Sources */,
+				55D8AD8919AC75FA00DAF79F /* NSAttributeDescription+MagicalDataImport.m in Sources */,
 				559BDFEA19618D3D000588FE /* QMWelcomeScreenViewController.m in Sources */,
+				55D8ADC419AC765F00DAF79F /* QMChatButtonsFactory.m in Sources */,
+				55D8ADB119AC75FA00DAF79F /* SQLiteMagicalRecordStack.m in Sources */,
 				55BBA760197327AB0040DB5C /* QMDialogsViewController.m in Sources */,
-				55D270A21940B8D300238D50 /* NSManagedObject+MagicalDataImport.m in Sources */,
 				55A8B046196597B400B5D33B /* QMApi.m in Sources */,
 				55A8B0A5196599FA00B5D33B /* QMApi+Auth.m in Sources */,
+				55D8AD9B19AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalAutoMigrations.m in Sources */,
 				55F4A3C8196FF0830068EBC3 /* QMFriendListCell.m in Sources */,
-				55BBA764197327D20040DB5C /* QMDialogsDataSource.m in Sources */,
 				55F4A3D2196FF0D80068EBC3 /* QMTableViewCell.m in Sources */,
-				55D270AB1940B8D300238D50 /* NSPersistentStore+MagicalRecord.m in Sources */,
-				55D270B01940B8D300238D50 /* NSArray+MagicalRecord.m in Sources */,
+				55D8AD0419AC753600DAF79F /* QMImagePicker.m in Sources */,
 				693F347B18F554240032891F /* QMIncommingCallSegue.m in Sources */,
-				55D270BA1940B8D300238D50 /* AutoMigratingMagicalRecordStack.m in Sources */,
-				55D270B11940B8D300238D50 /* NSDictionary+MagicalRecordAdditions.m in Sources */,
-				55D270AA1940B8D300238D50 /* NSManagedObjectModel+MagicalRecord.m in Sources */,
+				55D8AD8819AC75FA00DAF79F /* MagicalImportFunctions.m in Sources */,
+				55D8AD1019AC757900DAF79F /* QMAddressBook.m in Sources */,
+				55D8ADAD19AC75FA00DAF79F /* InMemoryMagicalRecordStack.m in Sources */,
 				55F4A3CA196FF0830068EBC3 /* QMInviteStaticCell.m in Sources */,
 				69D57E6218ACC11C00A9900A /* main.m in Sources */,
-				55481027195C699C00D74505 /* QMProgressView.m in Sources */,
-				55D270BE1940B8D300238D50 /* InMemoryMagicalRecordStack.m in Sources */,
+				55D8ADA119AC75FA00DAF79F /* NSError+MagicalRecordErrorHandling.m in Sources */,
+				55D8ADC119AC765400DAF79F /* UIImage+TintColor.m in Sources */,
 				559BDFE919618D3D000588FE /* QMSplashViewController.m in Sources */,
-				55A8B0751965986A00B5D33B /* REAlertView+QMSuccess.m in Sources */,
-				55D270BF1940B8D300238D50 /* MagicalRecordStack+Actions.m in Sources */,
+				55D8ADB819AC762100DAF79F /* QMSearchDisplayController.m in Sources */,
 				551F8728196EA68900DBCA02 /* QMInviteFriendsDataSource.m in Sources */,
+				55D8ADE519AC770400DAF79F /* QMFeedbackTableViewController.m in Sources */,
 				5524C2D819991308007450DB /* QMChatReceiver+UsersHistoryUpdated.m in Sources */,
+				55D8AD0A19AC756E00DAF79F /* QMHelpers.m in Sources */,
+				55D8ADAB19AC75FA00DAF79F /* ClassicSQLiteMagicalRecordStack.m in Sources */,
 				551BD8921991042C006AC667 /* CDMessage.m in Sources */,
+				55D8AD1D19AC75B700DAF79F /* QMChatDialogsService.m in Sources */,
+				55D8ADA519AC75FA00DAF79F /* MagicalRecord+Setup.m in Sources */,
 				55CEAB8A195DBCFA001A8ED6 /* QMChatCell.m in Sources */,
+				55D8ADB019AC75FA00DAF79F /* ManuallyMigratingMagicalRecordStack.m in Sources */,
+				55D8AD0719AC756000DAF79F /* REActionSheet.m in Sources */,
 				55A8B06B1965986A00B5D33B /* NSUserDefaultsHelper.m in Sources */,
-				6996F8FA1987976D003A8328 /* QMPlaceholderTextView.m in Sources */,
-				55D2709A1940B8D300238D50 /* NSAttributeDescription+MagicalDataImport.m in Sources */,
 				55495A221993BCC100B7764C /* QMAlertsFactory.m in Sources */,
-				55D270A61940B8D300238D50 /* NSManagedObject+MagicalRequests.m in Sources */,
-				55D270A11940B8D300238D50 /* NSManagedObject+MagicalAggregation.m in Sources */,
-				55D270A41940B8D300238D50 /* NSManagedObject+MagicalFinders.m in Sources */,
+				55D8ADBE19AC764500DAF79F /* NSString+HasText.m in Sources */,
+				55D8ADA819AC75FA00DAF79F /* MagicalRecordShorthand.m in Sources */,
+				55D8ADB519AC761000DAF79F /* QMForgotPasswordTVC.m in Sources */,
 				55D270921940B8D300238D50 /* QMDBStorage+Messages.m in Sources */,
-				55D270C31940B8D300238D50 /* SQLiteWithSavingContextMagicalRecordStack.m in Sources */,
 				55CEAB85195DBCFA001A8ED6 /* NSString+UsedSize.m in Sources */,
-				55D270BB1940B8D300238D50 /* AutoMigratingWithSourceAndTargetModelMagicalRecordStack.m in Sources */,
-				55CEAB8C195DBCFA001A8ED6 /* QMTextMessageCell.m in Sources */,
-				55D270B21940B8D300238D50 /* NSError+MagicalRecordErrorHandling.m in Sources */,
+				55D8AD9619AC75FA00DAF79F /* NSManagedObjectContext+MagicalObserving.m in Sources */,
+				55D8AD9919AC75FA00DAF79F /* NSManagedObjectModel+MagicalRecord.m in Sources */,
 				693206EA1962BCC300B15EF9 /* QMBaseCallsController.m in Sources */,
-				559BDFF719619222000588FE /* QMCornerButton.m in Sources */,
-				55D270AF1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalRecord.m in Sources */,
+				55D8AD1319AC758C00DAF79F /* QMBaseService.m in Sources */,
+				55D8ADD019AC769500DAF79F /* QMChatToolbarContentView.m in Sources */,
+				55D8ADF719AC77A700DAF79F /* QMModel.xcdatamodeld in Sources */,
 				558AE52C196EA7C400AEAC1F /* QMFriendsListDataSource.m in Sources */,
-				55D270B51940B8D300238D50 /* MagicalRecord+Options.m in Sources */,
-				55D270A31940B8D300238D50 /* NSManagedObject+MagicalFetching.m in Sources */,
-				55CEAB89195DBCFA001A8ED6 /* QMAttachmentMessageCell.m in Sources */,
-				55D2709D1940B8D300238D50 /* NSObject+MagicalDataImport.m in Sources */,
+				55D8AD1619AC759C00DAF79F /* QMDownloadContentOperation.m in Sources */,
+				55D8AD8B19AC75FA00DAF79F /* NSNumber+MagicalDataImport.m in Sources */,
 				2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */,
-				559143C2199CFECB001DD2C4 /* QMOnlineTitle.m in Sources */,
-				55D270B71940B8D300238D50 /* MagicalRecord+VersionInformation.m in Sources */,
-				55A8B09A196598A300B5D33B /* QMFacebookService.m in Sources */,
-				55D270991940B8D300238D50 /* MagicalImportFunctions.m in Sources */,
-				55D2709E1940B8D300238D50 /* NSRelationshipDescription+MagicalDataImport.m in Sources */,
 				55493694198677B0007F2CF1 /* QMContentOperation.m in Sources */,
+				55D8ADBB19AC762C00DAF79F /* QMDialogsDataSource.m in Sources */,
 				55A8B0A819659BA000B5D33B /* QMApi+Messages.m in Sources */,
-				55D270AD1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalInMemoryStoreAdditions.m in Sources */,
-				55D270C01940B8D300238D50 /* MagicalRecordStack.m in Sources */,
-				55A8B096196598A300B5D33B /* QMAVCallService.m in Sources */,
+				55D8ADDE19AC76E200DAF79F /* QMAddUsersAbstractController.m in Sources */,
+				55D8AD9D19AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalManualMigrations.m in Sources */,
+				55D8AD8D19AC75FA00DAF79F /* NSRelationshipDescription+MagicalDataImport.m in Sources */,
+				55D8AD8A19AC75FA00DAF79F /* NSEntityDescription+MagicalDataImport.m in Sources */,
 				55A8B0761965986A00B5D33B /* REAlertView.m in Sources */,
+				55D8AD2119AC75C100DAF79F /* QMFacebookService.m in Sources */,
+				55D8ADD319AC769E00DAF79F /* QMPlaceholderTextView.m in Sources */,
+				55D8ADFB19AC833300DAF79F /* QMLicenseAgreement.m in Sources */,
+				55D8ADA919AC75FA00DAF79F /* AutoMigratingMagicalRecordStack.m in Sources */,
+				55D8ADAE19AC75FA00DAF79F /* MagicalRecordStack+Actions.m in Sources */,
 				559BDFE719618D3D000588FE /* QMLogInViewController.m in Sources */,
 				693206F11962DFBF00B15EF9 /* QMContentView.m in Sources */,
+				55D8ADDF19AC76E200DAF79F /* QMCreateNewChatController.m in Sources */,
 				551BD88A199103C0006AC667 /* _CDAttachment.m in Sources */,
-				55D270C21940B8D300238D50 /* SQLiteMagicalRecordStack.m in Sources */,
-				55D270A81940B8D300238D50 /* NSManagedObjectContext+MagicalRecord.m in Sources */,
-				55CEAB84195DBCFA001A8ED6 /* NSString+HasText.m in Sources */,
+				55D8AD9E19AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalRecord.m in Sources */,
 				55D270911940B8D300238D50 /* QMDBStorage+Dialogs.m in Sources */,
-				55D270C11940B8D300238D50 /* ManuallyMigratingMagicalRecordStack.m in Sources */,
-				55D270AC1940B8D300238D50 /* NSPersistentStoreCoordinator+MagicalAutoMigrations.m in Sources */,
+				55D8ADD619AC76AE00DAF79F /* QMKeyboardController.m in Sources */,
 				55CEAB91195DBCFA001A8ED6 /* QMChatInputToolbar.m in Sources */,
+				55D8AD9519AC75FA00DAF79F /* NSManagedObject+MagicalRequests.m in Sources */,
 				55D270931940B8D300238D50 /* QMDBStorage+Users.m in Sources */,
 				55CEA9EE195D835B001A8ED6 /* QMImageView.m in Sources */,
-				55D270BC1940B8D300238D50 /* ClassicSQLiteMagicalRecordStack.m in Sources */,
-				55D270B81940B8D300238D50 /* MagicalRecordInternal.m in Sources */,
 				559BDFE819618D3D000588FE /* QMSignUpController.m in Sources */,
-				55CEAB87195DBCFA001A8ED6 /* UIImage+TintColor.m in Sources */,
+				55D8AD9F19AC75FA00DAF79F /* NSArray+MagicalRecord.m in Sources */,
 				698C94F51976D483002C53FA /* QMApi+Calls.m in Sources */,
-				55D2709C1940B8D300238D50 /* NSNumber+MagicalDataImport.m in Sources */,
-				55CEAB8B195DBCFA001A8ED6 /* QMSystemMessageCell.m in Sources */,
+				55D8AD8E19AC75FA00DAF79F /* NSString+MagicalDataImport.m in Sources */,
 				55A8B0AE1965AD1800B5D33B /* QMApi+Users.m in Sources */,
 				551BD8931991042C006AC667 /* CDUser.m in Sources */,
 				55CEAB81195DBCFA001A8ED6 /* QMIncomingCallController.m in Sources */,
@@ -2416,7 +2419,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "F7F235D5-C871-4D94-A2BF-0EC942129F0B";
+				PROVISIONING_PROFILE = "f3ebe0f6-5c8d-4acb-8a42-7b3db4e9ba51";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2569,12 +2572,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		55311ADA1990FE7300C585D5 /* QMModel.xcdatamodeld */ = {
+		55D8ADF519AC77A700DAF79F /* QMModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				55311ADB1990FE7300C585D5 /* QMModel.xcdatamodel */,
+				55D8ADF619AC77A700DAF79F /* QMModel.xcdatamodel */,
 			);
-			currentVersion = 55311ADB1990FE7300C585D5 /* QMModel.xcdatamodel */;
+			currentVersion = 55D8ADF619AC77A700DAF79F /* QMModel.xcdatamodel */;
 			path = QMModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

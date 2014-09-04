@@ -7,7 +7,6 @@
 //
 
 #import "QBChatAbstractMessage+CustomParameters.h"
-#import "NSString+occupantsIDsFromMessage.h"
 
 /*Message keys*/
 NSString const *kQMCustomParameterSaveToHistory = @"save_to_history";
@@ -125,12 +124,24 @@ NSString const *kQMCustomParameterDialogOccupantsIDs = @"occupants_ids";
 
 #pragma mark - cParamDialogOccupantsIDs
 
-- (void)setCParamDialogOccupantsIDs:(NSString *)cParamDialogOccupantsIDs {
-    self.context[kQMCustomParameterDialogOccupantsIDs] = cParamDialogOccupantsIDs;
+- (void)setCParamDialogOccupantsIDs:(NSArray *)cParamDialogOccupantsIDs {
+    
+    NSString *strIDs = [cParamDialogOccupantsIDs componentsJoinedByString:@","];
+    self.context[kQMCustomParameterDialogOccupantsIDs] = strIDs;
 }
 
-- (NSString *)cParamDialogOccupantsIDs {
-    return self.context[kQMCustomParameterDialogOccupantsIDs];
+- (NSArray *)cParamDialogOccupantsIDs {
+    
+    NSString * strIDs = self.context[kQMCustomParameterDialogOccupantsIDs];
+    
+    NSArray *componets = [strIDs componentsSeparatedByString:@","];
+    NSMutableArray *result = [NSMutableArray arrayWithCapacity:componets.count];
+
+    for (NSString *occupantID in componets) {
+        [result addObject:@(occupantID.integerValue)];
+    }
+    
+    return result;
 }
 
 #pragma mark - cParamNotificationType
@@ -159,12 +170,14 @@ NSString const *kQMCustomParameterDialogOccupantsIDs = @"occupants_ids";
 - (void)setCustomParametersWithChatDialog:(QBChatDialog *)chatDialog {
     
     self.cParamDialogID = chatDialog.ID;
+    
     if (chatDialog.type == QBChatDialogTypeGroup) {
         self.cParamRoomJID = chatDialog.roomJID;
         self.cParamDialogName = chatDialog.name;
     }
+    
     self.cParamDialogType = @(chatDialog.type);
-    self.cParamDialogOccupantsIDs = [chatDialog.occupantIDs componentsJoinedByString:@","];
+    self.cParamDialogOccupantsIDs = chatDialog.occupantIDs;
 }
 
 - (QBChatDialog *)chatDialogFromCustomParameters {
@@ -173,7 +186,7 @@ NSString const *kQMCustomParameterDialogOccupantsIDs = @"occupants_ids";
     chatDialog.ID = self.cParamDialogID;
     chatDialog.roomJID = self.cParamRoomJID;
     chatDialog.name = self.cParamDialogName;
-    chatDialog.occupantIDs = [self.cParamDialogOccupantsIDs occupantsIDs];
+    chatDialog.occupantIDs = self.cParamDialogOccupantsIDs;
     chatDialog.type = self.cParamDialogType.integerValue;
     chatDialog.lastMessageDate = [NSDate dateWithTimeIntervalSince1970:self.cParamDateSent.doubleValue];
     

@@ -13,8 +13,6 @@
 #import "QMApi.h"
 #import "QMChatReceiver.h"
 
-NSString *const kErrorAlertMessage = @"You can't add new friend, because all existing friends are added in this group chat";
-
 @interface QMGroupDetailsController ()
 
 <UITableViewDelegate>
@@ -42,7 +40,8 @@ NSString *const kErrorAlertMessage = @"You can't add new friend, because all exi
     
     [self updateGUIWithChatDialog:self.chatDialog];
     
-    self.dataSource = [[QMGroupDetailsDataSource alloc] initWithChatDialog:self.chatDialog tableView:self.tableView];
+    self.dataSource = [[QMGroupDetailsDataSource alloc] initWithTableView:self.tableView];
+    [self.dataSource reloadDataWithChatDialog:self.chatDialog];
     
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatRoomDidReceiveListOfOnlineUsersWithTarget:self block:^(NSArray *users, NSString *roomName) {
@@ -63,10 +62,10 @@ NSString *const kErrorAlertMessage = @"You can't add new friend, because all exi
 
     [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
         
-        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog && [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID]) {
-            if (message.senderID != [QMApi instance].currentUser.ID) {                
-                weakSelf.chatDialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
-            }
+        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog &&
+            [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID]) {
+            
+            weakSelf.chatDialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
             [weakSelf updateGUIWithChatDialog:weakSelf.chatDialog];
         }
     }];
@@ -103,9 +102,14 @@ NSString *const kErrorAlertMessage = @"You can't add new friend, because all exi
     NSArray *friendsIDsToAdd = [self filteredIDs:usersIDs forChatDialog:self.chatDialog];
     
     if ([friendsIDsToAdd count] == 0) {
-        [[[UIAlertView alloc] initWithTitle:nil message:kErrorAlertMessage delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:nil] show];
+        [[[UIAlertView alloc] initWithTitle:nil
+                                    message:NSLocalizedString(@"QM_STR_CANT_ADD_NEW_FRIEND", nil)
+                                   delegate:nil
+                          cancelButtonTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+                          otherButtonTitles:nil] show];
         return;
     }
+    
     [self performSegueWithIdentifier:kQMAddMembersToGroupControllerSegue sender:nil];
 }
 
@@ -117,6 +121,8 @@ NSString *const kErrorAlertMessage = @"You can't add new friend, because all exi
     self.occupantsCountLabel.text = [NSString stringWithFormat:@"%d participants", self.chatDialog.occupantIDs.count];
     self.onlineOccupantsCountLabel.text = [NSString stringWithFormat:@"0/%d online", self.chatDialog.occupantIDs.count];
 
+    [self.dataSource reloadDataWithChatDialog:self.chatDialog];
+    
     QBChatRoom *chatRoom = [[QMApi instance] chatRoomWithRoomJID:self.chatDialog.roomJID];
     [chatRoom requestOnlineUsers];
 }

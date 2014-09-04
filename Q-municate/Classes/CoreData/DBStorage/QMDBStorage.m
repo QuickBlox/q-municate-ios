@@ -54,7 +54,7 @@ NSString *StoreFileName(NSString *name) {
     [MagicalRecord cleanUp];
     
     NSURL *storeUrl = [self storeUrlWithName:name];
-
+    
     if (storeUrl) {
         
         NSError *error = nil;

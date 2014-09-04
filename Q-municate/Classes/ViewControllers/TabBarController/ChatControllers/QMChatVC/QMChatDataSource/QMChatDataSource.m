@@ -21,7 +21,7 @@
 
 @interface QMChatDataSource()
 
-<UITableViewDataSource>
+<UITableViewDataSource, QMChatCellDelegate>
 
 @property (weak, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *messages;
@@ -68,14 +68,6 @@
             
             [weakSelf reloadCachedMessages:NO];
             [SVProgressHUD dismiss];
-            
-        }];
-        
-        [[QMChatReceiver instance] chatRoomDidEnterWithTarget:self block:^(QBChatRoom *room) {
-            
-            if ([weakSelf.chatDialog.roomJID isEqualToString:room.JID]) {
-                
-            }
             
         }];
         
@@ -172,6 +164,8 @@
     QMMessage *message = self.messages[indexPath.row];
     QMChatCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIDAtQMMessage:message]];
     
+    cell.delegate = self;
+    
     BOOL isMe = [QMApi instance].currentUser.ID == message.senderID;
     QBUUser *user = [[QMApi instance] userWithID:message.senderID];
     [cell setMessage:message user:user isMe:isMe];
@@ -198,6 +192,7 @@
                 [weakSelf insertNewMessage:message];
             }];
         }
+        
         [SVProgressHUD dismiss];
     }];
 }
@@ -206,9 +201,38 @@
     
     __weak __typeof(self)weakSelf = self;
     [[QMApi instance] sendText:text toDialog:self.chatDialog completion:^(QBChatMessage *message) {
+        
         [QMSoundManager playMessageSentSound];
         [weakSelf insertNewMessage:message];
     }];
+}
+
+#pragma mark - QMChatCellDelegate
+
+#define USE_ATTACHMENT_FROM_CACHE 1
+
+- (void)chatCell:(id)cell didSelectMessage:(QMMessage *)message {
+    
+    if ([cell isKindOfClass:[QMAttachmentMessageCell class]]) {
+#if USE_ATTACHMENT_FROM_CACHE
+        QMAttachmentMessageCell *imageCell = cell;
+        
+        if ([self.delegate respondsToSelector:@selector(chatDatasource:prepareImageAttachement:fromView:)]) {
+            
+            UIImageView *imageView = (UIImageView *)imageCell.balloonImageView;
+            UIImage *image  = imageView.image;
+            
+            [self.delegate chatDatasource:self prepareImageAttachement:image fromView:imageView];
+        }
+#else
+        if ([self.delegate respondsToSelector:@selector(chatDatasource:prepareImageURLAttachement:)]) {
+            
+            QBChatAttachment *attachment = [message.attachments firstObject];
+            NSURL *url = [NSURL URLWithString:attachment.url];
+            [self.delegate chatDatasource:self prepareImageURLAttachement:url];
+        }
+#endif
+    }
 }
 
 @end

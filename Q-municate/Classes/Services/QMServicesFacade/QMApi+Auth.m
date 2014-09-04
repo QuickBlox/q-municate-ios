@@ -18,15 +18,15 @@
 #pragma mark Public methods
 
 - (void)logout:(void(^)(BOOL success))completion {
-
+    
     [self.messagesService logoutChat];
     self.currentUser = nil;
     [self.settingsManager clearSettings];
     [QMFacebookService logout];
     [self stopServices];
-
+    
     [self.authService unSubscribeFromPushNotifications:^(QBMUnregisterSubscriptionTaskResult *result) {
-       
+        
         completion(YES);
     }];
 }
@@ -40,6 +40,7 @@
 - (void)autoLogin:(void(^)(BOOL success))completion {
     
     [self startServices];
+    
     if (!self.currentUser) {
         
         if (self.settingsManager.accountType == QMAccountTypeEmail) {
@@ -51,10 +52,12 @@
         }
         else if (self.settingsManager.accountType == QMAccountTypeFacebook) {
             [self loginWithFacebook:completion];
-        } else {
+        }
+        else {
             NSAssert(nil, @"Need update this case");
         }
-    } else {
+    }
+    else {
         
         completion(YES);
     }
@@ -70,7 +73,9 @@
             completion(success);
         }
         else {
+            
             [weakSelf setAutoLogin:YES withAccountType:QMAccountTypeFacebook];
+            
             if (weakSelf.currentUser.website.length == 0) {
                 /*Update user image from facebook */
                 [QMFacebookService loadMe:^(NSDictionary<FBGraphUser> *user) {
@@ -115,22 +120,12 @@
 
 - (void)createSessionWithBlock:(void(^)(BOOL success))completion {
     
-    //get the current date
-    void (^createQBSession)(void) = ^() {
+    if ([self.authService sessionTokenHasExpiredOrNeedCreate]) {
+        
         __weak __typeof(self)weakSelf = self;
         [weakSelf.authService createSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
-            if([weakSelf checkResult:result]){
-                
-                completion([weakSelf checkResult:result]);
-            }
-            else {
-                completion(NO);
-            }
-        }];
-    };
-    
-    if ([self.authService sessionTokenHasExpiredOrNeedCreate]) {
-        createQBSession();
+            completion([weakSelf checkResult:result]);
+        }];;
     }
     else {
         completion(YES);
@@ -149,8 +144,13 @@
     
     __weak __typeof(self)weakSelf = self;
     [self.authService logInWithFacebookAccessToken:accessToken completion:^(QBUUserLogInResult *loginWithFBResult) {
-        weakSelf.currentUser = loginWithFBResult.user;
-        completion([weakSelf checkResult:loginWithFBResult]);
+        
+        if ([weakSelf checkResult:loginWithFBResult]) {
+            
+            weakSelf.currentUser = loginWithFBResult.user;
+            [weakSelf.usersService addUser:weakSelf.currentUser];
+        }
+        completion(loginWithFBResult.success);
     }];
 }
 
@@ -165,23 +165,41 @@
         else {
             /*Longin with Social provider*/
             [weakSelf logInWithFacebookAccessToken:sessionToken completion:^(BOOL successLoginWithFacebook) {
-                if (!successLoginWithFacebook) {
-                    completion(successLoginWithFacebook);
-                }
-                else {
-                    completion(YES);
-                }
+                completion(successLoginWithFacebook);
             }];
         }
     }];
 }
 
-- (void)subscribeToPushNotifications {
+- (void)subscribeToPushNotificationsForceSettings:(BOOL)force complete:(void(^)(BOOL success))complete {
+    
+    if (self.settingsManager.pushNotificationsEnabled || force) {
+        __weak __typeof(self)weakSelf = self;
+        [self.authService subscribeToPushNotifications:^(QBMRegisterSubscriptionTaskResult *result) {
+            if (result.success && force) {
+                weakSelf.settingsManager.pushNotificationsEnabled = YES;
+            }
+            if (complete)
+                complete([weakSelf checkResult:result]);
+        }];
+    }
+}
+
+- (void)unSubscribeToPushNotifications:(void(^)(BOOL success))complete {
     
     if (self.settingsManager.pushNotificationsEnabled) {
         __weak __typeof(self)weakSelf = self;
-        [self.authService subscribeToPushNotifications:^(QBMRegisterSubscriptionTaskResult *result) {
-            [weakSelf checkResult:result];
+        [self.authService unSubscribeFromPushNotifications:^(QBMUnregisterSubscriptionTaskResult *result) {
+            
+            if (![weakSelf checkResult:result]) {
+                if (complete)
+                    complete(NO);
+            }
+            else {
+                weakSelf.settingsManager.pushNotificationsEnabled = NO;
+                if (complete)
+                    complete(YES);
+            }
         }];
     }
 }
@@ -191,16 +209,21 @@
     __weak __typeof(self)weakSelf = self;
     [self.authService logInWithEmail:email password:password completion:^(QBUUserLogInResult *loginResult) {
         
-        weakSelf.currentUser = loginResult.user;
-        weakSelf.currentUser.password = password;
-        
         if(![weakSelf checkResult:loginResult]){
+            
             completion(loginResult.success);
-        } else {
+        }
+        else {
+            
+            weakSelf.currentUser = loginResult.user;
+            weakSelf.currentUser.password = password;
+            [weakSelf.usersService addUser:weakSelf.currentUser];
+            
             if (rememberMe) {
                 weakSelf.settingsManager.rememberMe = rememberMe;
                 [weakSelf.settingsManager setLogin:email andPassword:password];
             }
+            
             completion(loginResult.success);
         }
     }];

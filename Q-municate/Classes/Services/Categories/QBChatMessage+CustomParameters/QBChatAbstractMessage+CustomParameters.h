@@ -28,7 +28,7 @@ typedef NS_ENUM(NSUInteger, QMMessageNotificationType) {
 @property (strong, nonatomic) NSString *cParamRoomJID;
 @property (strong, nonatomic) NSString *cParamDialogName;
 @property (strong, nonatomic) NSNumber *cParamDialogType;
-@property (strong, nonatomic) NSString *cParamDialogOccupantsIDs;
+@property (strong, nonatomic) NSArray *cParamDialogOccupantsIDs;
 
 - (void)setCustomParametersWithChatDialog:(QBChatDialog *)chatDialog;
 - (QBChatDialog *)chatDialogFromCustomParameters;

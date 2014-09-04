@@ -7,7 +7,7 @@
 //
 
 #import "QMWelcomeScreenViewController.h"
-#import "QMLicenseAgreementViewController.h"
+#import "QMLicenseAgreement.h"
 #import "QMSplashViewController.h"
 #import "QMApi.h"
 #import "QMSettingsManager.h"
@@ -50,7 +50,7 @@
 - (IBAction)connectWithFacebook:(id)sender {
     
     __weak __typeof(self)weakSelf = self;
-    [self checkForAcceptedUserAgreement:^(BOOL success) {
+    [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL success) {
         if (success) {
             [weakSelf signInWithFacebook];
         }
@@ -65,20 +65,6 @@
 - (IBAction)pressAlreadyBtn:(id)sender
 {
     [self performSegueWithIdentifier:kLogInSegueSegueIdentifier sender:nil];
-}
-
-- (void)checkForAcceptedUserAgreement:(void(^)(BOOL success))completion {
-    
-    BOOL licenceAccepted = [[QMApi instance].settingsManager userAgreementAccepted];
-    if (licenceAccepted) {
-        completion(YES);
-    }
-    else {
-        QMLicenseAgreementViewController *licenceController =
-        [self.storyboard instantiateViewControllerWithIdentifier:@"QMLicenceAgreementControllerID"];
-        licenceController.licenceCompletionBlock = completion;
-        [self.navigationController pushViewController:licenceController animated:YES];
-    }
 }
 
 - (void)signInWithFacebook {

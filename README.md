@@ -1,7 +1,5 @@
-_____________________
-
 # Q-municate
- 
+
 Q-municate is an open source code of chat application with full range of communication features on board (such as messaging, file transfer, push notifications, audio/video calls).
 
 We are inspired to give you chat application out of the box. You can customize this application depending on your needs. As always QuickBlox backend is at your service: http://quickblox.com/plans/
@@ -55,7 +53,8 @@ _______
 
 ## Step by step guide
 ### Step 1. PreLogin page
-![step_1(2).png](http://image.quickblox.com/88d93e6bef947107cdf660110ad9.injoit.png) 
+
+![wellcome_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/1650301560-wellcome_screen_320_568.jpg)
 
 
 #### Available features:
@@ -70,7 +69,7 @@ _______
 
 
 ### Step 2. Sign Up page
-![step_1(2).png](http://image.quickblox.com/d064bf5f4bea92a73dbf15915e8f.injoit.png) 
+ ![signup_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/434633715-signup_screen_320_568.jpg) 
 
 
 Sign Up Page allows to create new QM user.
@@ -100,13 +99,9 @@ Remember me tick in the check box on Login page will be set automatically, so th
     }];
 
 
-
-
-
-
 ### Step 3. Login page
 
-![step_1(2).png](http://image.quickblox.com/044f84c321e3efd5d180d74b27ba.injoit.png) 
+![login_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/2235282969-login_screen_320_568.jpg) 
 
 User can login in the app via Facebook or login as a QM user.
 
@@ -159,7 +154,6 @@ Tapping on Forgot password link a predefined email from the server will be sent 
 
         [[QMApi instance] loginWithUser:user completion:^(BOOL success) {
             
-            [SVProgressHUD dismiss];
             if (success) {
                 // do something...
             }
@@ -175,10 +169,17 @@ An app will import all user’s friends by email and Facebook ID after the first
 #### Feature work flow:
 Notification with text "Please wait, Q-municate app is searching for your friends" and the spinner should be shown. Tapping out of the notification (or OK button) user can close this pop-up. App takes all emails from the phone contacts list and search them in Q-municate users table (in the background). Adds all Q-municate friends on the Friends page, If there are any in the search result. Friends screen will be shown. On Friends screen will be shown grey text “Invite your friends”, if there are no friends in the friends list.
 
+#### The code:
+
+
+     [[QMApi instance] importFriendsFromFacebook];
+     [[QMApi instance] importFriendsFromAddressBook];
+
 
 
 ### Step 5. Friends page
-![step_1(2).png](http://image.quickblox.com/c365fc73451b298567c269ccbaed.injoit.png) 
+
+![friends_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/3312680721-friends_screen_320_568.jpg)
 
 User goes to Friends page, if correct credentials are entered
 Friends Page is used for list of user’s friends.
@@ -196,7 +197,7 @@ Side bar will be shown during first app login.
 
 #### The code:
 
-// updating Friends list
+    // updating Friends list
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
         [weakSelf.contactList removeAllObjects];
@@ -204,8 +205,7 @@ Side bar will be shown during first app login.
         [weakSelf.contactList addObjectsFromArray:contactList.contacts];
     }];
 
-// inviting User to list
-
+    // inviting User to list
         [[QMChatReceiver instance] chatDidReceiveContactAddRequestWithTarget:self block:^(NSUInteger userID) {
             BOOL success = [[QMApi instance] confirmAddContactRequest:userID];
             if (success) {
@@ -215,7 +215,6 @@ Side bar will be shown during first app login.
 
 
 #### Step 5.1. Tab bar
-![step_1(2).png](http://image.quickblox.com/c365fc73451b298567c269ccbaed.injoit.png) 
 
 * Friends page (Main page): 
 - A list of friends, listed in alphabetical order.
@@ -231,7 +230,7 @@ Side bar will be shown during first app login.
 - A page with app settings and preferences.
 
 #### Step 5.2. Search Bar
-![step_1(2).png](http://image.quickblox.com/61ca0beffbdd9c6372f97cda36bb.injoit.png) 
+![search_page_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/400004350-search_page_320_568.jpg)
 
 Search icon on Friends page opens/hides search bar.
 
@@ -250,7 +249,9 @@ A list of friends, listed in alphabetical order.
 
 
 ### Step 6. Details Page
-![step_1(2).png](http://image.quickblox.com/4ba1c3406edcab40d553a1f18a14.injoit.png) 
+
+![step_1(2).png]
+(https://bitbucket.org/repo/rMnaz8/images/4014049389-friends_details_320_568.jpg)
 
 Details Page is used for friends profile information.
 
@@ -275,7 +276,7 @@ Friends profile page shows user’s information:
  
 
 ### Step 7. Invite Friends
-![step_1(2).png](http://image.quickblox.com/04beaf8f5ff511e8b60093e8ee1f.injoit.png) 
+![![step_1(2).png](http://image.quickblox.com/04beaf8f5ff511e8b60093e8ee1f.injoit.png) ](https://bitbucket.org/repo/rMnaz8/images/408245049-invite_friends_320_568.jpg)
 
 
 User can access Invite Friends page from the Side bar, to invite his/her friends in the app.
@@ -293,48 +294,41 @@ User can access Invite Friends page from the Side bar, to invite his/her friends
 
 #### The code:
 
-	// invite via Emails:
-    void (^inviteWithEmail)(void) =^{
-        
-        NSArray *abEmails = [self.dataSource emailsToInvite];
-        if (abEmails.count > 0) {
-            
-            [REMailComposeViewController present:^(REMailComposeViewController *mailVC) {
-                @strongify(self)
-                [mailVC setToRecipients:abEmails];
-                [mailVC setSubject:kMailSubjectString];
-                [mailVC setMessageBody:kMailBodyString isHTML:YES];
-                [self presentViewController:mailVC animated:YES completion:nil];
-                
-            } finish:^(MFMailComposeResult result, NSError *error) {
-                !error ? [self.dataSource clearFBFriendsToInvite] : [SVProgressHUD showErrorWithStatus:error.localizedDescription];
-            }];
+      // invite via facebook:
+    [[QMApi instance] fbIniviteDialogWithCompletion:^(BOOL success) {
+        if (success) {
+            // do something...
         }
-    };
-    
-	// Invite via facebook
-    NSArray *fbIDs = [self.dataSource facebookIDsToInvite];
+    }];
 
-    if (fbIDs.count > 0) {
-        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+	// invite via Emails:
+    __weak __typeof(self)weakSelf = self;
+    NSArray *abEmails = [weakSelf.dataSource emailsToInvite];
+    if (abEmails.count > 0) {
         
-        [[QMApi instance] fbInviteUsersWithIDs:fbIDs copmpletion:^(NSError *error) {
-            @strongify(self)
-            if (error) {
-                [SVProgressHUD showErrorWithStatus:error.localizedDescription];
-            }else {
-                [self.dataSource clearFBFriendsToInvite];
-                [SVProgressHUD showSuccessWithStatus:kAlertBodyRecordPostedString];
+        [REMailComposeViewController present:^(REMailComposeViewController *mailVC) {
+            
+            [mailVC setToRecipients:abEmails];
+            [mailVC setSubject:kMailSubjectString];
+            [mailVC setMessageBody:kMailBodyString isHTML:YES];
+            [weakSelf presentViewController:mailVC animated:YES completion:nil];
+            
+        } finish:^(MFMailComposeResult result, NSError *error) {
+            
+            if (!error && result != MFMailComposeResultFailed && result != MFMailComposeResultCancelled) {
+                
+                [weakSelf.dataSource clearABFriendsToInvite];
             }
-            inviteWithEmail();
+            else {
+                if (result == MFMailComposeResultFailed && !error) {
+                    // do something...
+            }
         }];
-        
     }
 
 
 ### Step 8. Chats page
-![step_1(2).png](http://image.quickblox.com/205a622e63e5041008ab6ddf72e5.injoit.png) 
-
+![chats_page_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/3357516681-chats_page_320_568.jpg)
 
 Chats Page shows scrollable chats list (private and group).
 
@@ -354,13 +348,13 @@ Chats Page shows scrollable chats list (private and group).
     [self fetchAllDialogs:^{
         
         [weakSelf retrieveUsersWithIDs:occupantIDs completion:^(BOOL updated) {
-            completion();
+            // do something...
         }];
     }];
 
 
 ### Step 9. New chat page
-
+![create_new_chat_page_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/3591448249-create_new_chat_page_320_568.jpg)
 
 New Chat Page allows to create new chat.
 
@@ -372,16 +366,16 @@ New Chat Page allows to create new chat.
 
 #### The code:
 
-    [[QMApi instance] createGroupChatDialogWithName:chatName ocupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
-        
-        if (result.success) {
-            // do something...
-      	}
+    [[QMApi instance] loginChat:^(BOOL loginSuccess) {
+          if (loginSuccess) {
+                // do something...
+          }     
     }];
 
 
 ### Step 10. Private chat page
-![step_1(2).png](http://image.quickblox.com/084c1d4a89cbdac3d49c97f26242.injoit.png) 
+
+![private_chat_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/2999854127-private_chat_screen_320_568.jpg)
 
 Private Chat Page is used for messaging with a friend.
 
@@ -418,16 +412,19 @@ Timestamp – device time and date should be used
                 }
             }];
 
-// sending Private Message
-		[[QMApi instance] sendText:text toDialog:chatDialog];
+        // sending Private Message
+        [[QMApi instance] sendText:text toDialog:chatDialog];
 
-// sending Private Message With Attach Image
-coming soon
+        // sending Private Message With Attach Image
+        [[QMApi instance] sendAttachment:attachmentUrl toDialog:chatDialog completion:^(QBChatMessage *message) {
+                // do something...
+            }];
 
 
 
 ### Step 11. Group chat page
-![step_1(2).png](http://image.quickblox.com/d2192f7b9331ca9c8ccb3eee68f7.injoit.png) 
+
+![group_chat_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/826481537-group_chat_screen_320_568.jpg)
 
 Group Chat Page is used for messaging with friends.
 
@@ -453,22 +450,24 @@ Timestamp – device time and date should be used
 
 #### The code:
 
-// creating Group Chat
+    // creating Group Chat
 
     [[QMApi instance] createGroupChatDialogWithName:chatName ocupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
         
         if (result.success) {
             // do something...
 
-// sending Group Message
+       // sending Group Message
 	
-	QBChatMessage *message = [[QMApi instance] sendText:text toDialog:self.chatDialog];
+	QBChatMessage *message = [[QMApi instance] sendText:text toDialog:chatDialog];
 		}
     }];
 
 
-// sending Group Message With Attach Image
-  coming soon
+       // sending Group Message With Attach Image
+               [[QMApi instance] sendAttachment:attachmentUrl toDialog:chatDialog completion:^(QBChatMessage *message) {
+                // do something...
+            }];
 
 
 ### Step 12. Calls (Coming soon)
@@ -503,13 +502,12 @@ Can be enabled by tapping it once more
 
 #### The code:
 
-[[QMApi instance] callUser:self.opponent.ID opponentView:self.opponentsView conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
+       [[QMApi instance] callUser:self.opponent.ID opponentView:self.opponentsView  conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
 
 
 
 ### Step 13. Settings Page
-![step_4(2).png](http://image.quickblox.com/7333a05a8aaab026e81219a33e1f.injoit.png)
-
+![settings_page_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/3532052183-settings_page_320_568.jpg)
 
 Settings Page allows user to change his/her profile and change other in-app controls.
 
@@ -530,7 +528,7 @@ Email –editable field
 
 
 ### Step 14. Profile Page
-![step_3(2).png](http://image.quickblox.com/d3867bd5823d0509eb4930f995d9.injoit.png) 
+![profile_screen_320_568.jpg](https://bitbucket.org/repo/rMnaz8/images/4270567284-profile_screen_320_568.jpg)
 
 Profile page allows user to edit his/her profile info.
 
@@ -550,8 +548,19 @@ App will create round image from the center part of the selected image automatic
 
 #### The code:
 
+    QBUUser *myProfile = [QMApi instance].currentUser;
+    myProfile.password = newPassword;
+    myProfile.oldPassword = oldPassword;
+    
+    [[QMApi instance] changePasswordForCurrentUser:myProfile completion:^(BOOL success) {
+        
+        if (success) {
+             // do something:
+        }
+        
+    }];
 
-```
+
 
 ### Important - how to build your own Chat app</h3>
 

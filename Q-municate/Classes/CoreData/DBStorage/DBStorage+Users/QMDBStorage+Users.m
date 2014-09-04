@@ -20,7 +20,7 @@
 #pragma mark - Public methods
 
 - (void)cachedQbUsers:(QMDBCollectionBlock)qbUsers {
-
+    
     __weak __typeof(self)weakSelf = self;
     [self async:^(NSManagedObjectContext *context) {
         
@@ -168,7 +168,7 @@
     
     for (QBUUser *qbUser in qbUsers) {
         CDUser *userToDelete = [CDUser MR_findFirstWithPredicate:IS(@"uniqueId", @(qbUser.ID))
-                                                         inContext:context];
+                                                       inContext:context];
         [userToDelete MR_deleteEntityInContext:context];
     }
 }
@@ -177,7 +177,7 @@
     
     for (QBUUser *qbUser in qbUsers) {
         CDUser *userToUpdate = [CDUser MR_findFirstWithPredicate:IS(@"uniqueId", @(qbUser.ID))
-                                                         inContext:context];
+                                                       inContext:context];
         [userToUpdate updateWithQBUser:qbUser];
     }
 }

@@ -50,6 +50,7 @@
 @property (strong, nonatomic) NSArray *nameConstrains;
 
 @property (assign, nonatomic) BOOL showUserImage;
+@property (strong, nonatomic) UITapGestureRecognizer *tapGestureRecognizer;
 
 @end
 
@@ -60,6 +61,8 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         [self createContainerSubviews];
+        self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapRecognize:)];
+        [self addGestureRecognizer:self.tapGestureRecognizer];
     }
     return self;
 }
@@ -79,12 +82,6 @@
     self.headerView.backgroundColor = [UIColor clearColor];
     self.messageContainer.backgroundColor = [UIColor clearColor];
     
-    self.messageContainer.translatesAutoresizingMaskIntoConstraints = NO;
-    self.containerView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.balloonImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.userImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.headerView.translatesAutoresizingMaskIntoConstraints = NO;
-    
     self.userImageView.contentMode = UIViewContentModeScaleAspectFit;
     self.userImageView.imageViewType = QMImageViewTypeCircle;
     self.balloonImageView.imageViewType = QMImageViewTypeNone;
@@ -98,13 +95,17 @@
     self.timeLabel.textColor = [UIColor grayColor];
     self.timeLabel.textAlignment = NSTextAlignmentRight;
     
-    self.title.translatesAutoresizingMaskIntoConstraints = NO;
+    self.messageContainer.translatesAutoresizingMaskIntoConstraints = NO;
+    self.containerView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.balloonImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.userImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.headerView.translatesAutoresizingMaskIntoConstraints = NO;
     self.timeLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.title.translatesAutoresizingMaskIntoConstraints = NO;
     
     self.nameConstrains = @[PVBottomOf(self.title).equalTo.bottomOf(self.headerView).asConstraint,
                             PVLeftOf(self.title).equalTo.leftOf(self.headerView).asConstraint,
-                            PVTopOf(self.title).equalTo.topOf(self.headerView).asConstraint,
-                            PVRightOf(self.title).equalTo.leftOf(self.timeLabel).asConstraint];
+                            PVTopOf(self.title).equalTo.topOf(self.headerView).asConstraint];
     
     [self.contentView addSubview:self.messageContainer];
     [self.messageContainer addSubview:self.balloonImageView];
@@ -306,6 +307,8 @@
     }
 }
 
+#pragma mark - Date formatter
+
 - (NSDateFormatter *)formatter {
     
     static dispatch_once_t onceToken;
@@ -316,6 +319,15 @@
     });
     
     return _dateFormatter;
+}
+
+#pragma mark - Tap gesture
+
+- (void)didTapRecognize:(id)sender {
+    
+    if ([self.delegate respondsToSelector:@selector(chatCell:didSelectMessage:)]) {
+        [self.delegate chatCell:self didSelectMessage:self.message];
+    }
 }
 
 @end
