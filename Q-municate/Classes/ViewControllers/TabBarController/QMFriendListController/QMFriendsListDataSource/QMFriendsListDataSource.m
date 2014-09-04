@@ -14,6 +14,7 @@
 #import "QMUsersService.h"
 #import "SVProgressHud.h"
 #import "QMChatReceiver.h"
+#import "REAlertView.h"
 
 
 
@@ -290,14 +291,20 @@
             
         }];
     } else {
-        [[QMApi instance] rejectAddContactRequest:user.ID completion:^(BOOL success) {
-            
-            weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
-            NSIndexPath *indexPath = [weakSelf.tableView indexPathForCell:cell];
-            [weakSelf.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
-
-        }];
         
+        [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
+            alertView.title = @"Are you sure?";
+            [alertView addButtonWithTitle:@"Cancel" andActionBlock:^{}];
+            [alertView addButtonWithTitle:@"OK" andActionBlock:^{
+                //
+                [[QMApi instance] rejectAddContactRequest:user.ID completion:^(BOOL success) {
+                    weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
+                    NSIndexPath *indexPath = [weakSelf.tableView indexPathForCell:cell];
+                    [weakSelf.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+                    
+                }];
+            }];
+        }];
     }
 }
 

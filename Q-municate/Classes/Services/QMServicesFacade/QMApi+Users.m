@@ -109,7 +109,7 @@
 
 - (NSArray *)contactRequestUsers
 {
-    NSArray *ids = [self.usersService confirmRequestUsersIDs];
+    NSArray *ids = [self.usersService.confirmRequestUsersIDs allObjects];
     NSArray *users = [self usersWithIDs:ids];
     return users;
 }

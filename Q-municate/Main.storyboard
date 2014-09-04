@@ -399,7 +399,13 @@ Line 2</string>
                             <outlet property="delegate" destination="B6O-m1-ZGo" id="lac-4M-xCR"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Details" id="wYX-0M-WGJ"/>
+                    <navigationItem key="navigationItem" title="Details" id="wYX-0M-WGJ">
+                        <barButtonItem key="rightBarButtonItem" systemItem="trash" id="vRY-C1-ciU">
+                            <connections>
+                                <action selector="removeFromFriends:" destination="B6O-m1-ZGo" id="iUf-46-zUq"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="audioChatCell" destination="Mhd-hZ-8rv" id="EPh-La-qcS"/>
                         <outlet property="chatCell" destination="NZK-x3-urI" id="vx0-hm-eF1"/>
@@ -3100,7 +3106,7 @@ Cg
         <segue reference="TaC-No-aTb"/>
         <segue reference="kkU-F4-K0a"/>
         <segue reference="IAo-qy-uHQ"/>
-        <segue reference="aeV-0O-de3"/>
-        <segue reference="bOV-zd-nKn"/>
+        <segue reference="M45-HY-t12"/>
+        <segue reference="sPU-d9-maS"/>
     </inferredMetricsTieBreakers>
 </document>
