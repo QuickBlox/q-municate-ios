@@ -7,6 +7,7 @@
 //
 
 #import "QMFriendsListDataSource.h"
+#import "QMFriendListViewController.h"
 #import "QMUsersService.h"
 #import "QMFriendListCell.h"
 #import "QMContactRequestCell.h"
@@ -16,6 +17,11 @@
 #import "QMChatReceiver.h"
 #import "REAlertView.h"
 
+typedef enum : NSUInteger {
+    QMFriendsListContactRequestSectionIndex,
+    QMFriendsListFriendsSectionIndex,
+    QMFriendsListSearchResultsSectionIndex,
+} QMFriendsListSectionIndex;
 
 
 @interface QMFriendsListDataSource()
@@ -44,7 +50,8 @@
     [[QMChatReceiver instance] unsubscribeForTarget:self];
 }
 
-- (instancetype)initWithTableView:(UITableView *)tableView searchDisplayController:(UISearchDisplayController *)searchDisplayController {
+- (instancetype)initWithTableView:(UITableView *)tableView searchDisplayController:(UISearchDisplayController *)searchDisplayController
+{
     
     self = [super init];
     if (self) {
@@ -79,16 +86,17 @@
                     weakSelf.tUser = nil;
                     [SVProgressHUD dismiss];
                 }
-                
             }
             else {
-                [weakSelf reloadDatasource];
+                [weakSelf reloadDataSource];
             }
         };
         
         [[QMChatReceiver instance] contactRequestUsersListChangedWithTarget:self block:^{
             weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
-            
+            if (weakSelf.viewIsShowed) {
+                return;
+            }
             [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)] withRowAnimation:UITableViewRowAnimationFade];
         }];
         
@@ -123,10 +131,26 @@
     return _friendList;
 }
 
-- (void)reloadDatasource {
+- (void)reloadDataSource {
     
     self.friendList = [QMApi instance].friends;
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+    if (self.viewIsShowed) {
+        [self.tableView reloadData];   
+    }
+}
+
+- (void)reloadSectionWithSectionIndex:(QMFriendsListSectionIndex)sectionIndex
+{
+    if (!self.viewIsShowed) {
+        return;
+    }
+    if (sectionIndex == QMFriendsListContactRequestSectionIndex) {
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)] withRowAnimation:UITableViewRowAnimationFade];
+    } else if (sectionIndex == QMFriendsListFriendsSectionIndex) {
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+    } else {
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationFade];
+    }
 }
 
 - (void)globalSearch:(NSString *)searchText {
@@ -182,7 +206,7 @@
     if (section == 0) {
         return (!self.searchIsActive && users.count > 0) ? NSLocalizedString(@"QM_STR_REQUESTS", nil) : nil;
     } else if (section == 1) {
-        return (users.count > 0) ? NSLocalizedString(@"QM_STR_FRIENDS", nil) : nil;
+        return (users.count > 0) ? NSLocalizedString(@"QM_STR_CONTACTS", nil) : nil;
     }
     return (self.searchIsActive) ? NSLocalizedString(@"QM_STR_ALL_USERS", nil) : nil;
 }
@@ -287,8 +311,10 @@
     if (accepted) {
         [[QMApi instance] confirmAddContactRequest:user.ID completion:^(BOOL success) {
             weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
+            if (weakSelf.viewIsShowed) {
+                return;
+            }
             [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
-            
         }];
     } else {
         
@@ -299,9 +325,10 @@
                 //
                 [[QMApi instance] rejectAddContactRequest:user.ID completion:^(BOOL success) {
                     weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
-                    NSIndexPath *indexPath = [weakSelf.tableView indexPathForCell:cell];
-                    [weakSelf.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
-                    
+                    if (weakSelf.viewIsShowed) {
+                        return;
+                    }
+                    [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
                 }];
             }];
         }];

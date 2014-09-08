@@ -44,18 +44,18 @@
                         <color key="barTintColor" red="0.19215688110000001" green="0.46274513010000001" blue="0.71372550729999995" alpha="1" colorSpace="deviceRGB"/>
                     </tabBar>
                     <connections>
-                        <segue destination="zpr-lT-CIk" kind="relationship" relationship="viewControllers" id="VLQ-Cr-B11"/>
-                        <segue destination="M2H-zK-wC0" kind="relationship" relationship="viewControllers" id="irr-6N-6Xl"/>
-                        <segue destination="sO5-m2-ebb" kind="relationship" relationship="viewControllers" id="bbc-Yt-Z7l"/>
-                        <segue destination="29n-Eo-CdN" kind="relationship" relationship="viewControllers" id="nFH-X7-aCh"/>
                         <segue destination="RkR-TS-K9a" kind="custom" identifier="SplashSegue" customClass="QMCustomSegue" id="kkU-F4-K0a"/>
+                        <segue destination="M2H-zK-wC0" kind="relationship" relationship="viewControllers" id="1cf-Uh-M0N"/>
+                        <segue destination="zpr-lT-CIk" kind="relationship" relationship="viewControllers" id="Z7m-8T-r6o"/>
+                        <segue destination="sO5-m2-ebb" kind="relationship" relationship="viewControllers" id="Q0Z-bP-8U6"/>
+                        <segue destination="29n-Eo-CdN" kind="relationship" relationship="viewControllers" id="nFH-X7-aCh"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x3H-Vf-NMM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-3940" y="-8365"/>
         </scene>
-        <!--Friend List View Controller - Friends-->
+        <!--Friend List View Controller - Contacts-->
         <scene sceneID="oBS-u7-ovz">
             <objects>
                 <viewController id="sEL-JF-bOt" customClass="QMFriendListViewController" sceneMemberID="viewController">
@@ -230,7 +230,7 @@ Your don't have any friends, tap search icon to find them or invite new ones.</s
                             <constraint firstItem="dqG-l5-KjD" firstAttribute="leading" secondItem="PD2-vb-oCL" secondAttribute="leading" id="j2Y-0i-SdA"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Friends" id="f0j-2P-HiD"/>
+                    <navigationItem key="navigationItem" title="Contacts" id="f0j-2P-HiD"/>
                     <connections>
                         <outlet property="searchDisplayController" destination="bvK-w8-8DJ" id="2xU-Pa-IQe"/>
                         <outlet property="tableView" destination="dqG-l5-KjD" id="Blm-GM-S3w"/>
@@ -1596,11 +1596,11 @@ Cg
             </objects>
             <point key="canvasLocation" x="-2906" y="-8365"/>
         </scene>
-        <!--Navigation Controller - Friends-->
+        <!--Navigation Controller - Contacts-->
         <scene sceneID="A8C-jc-QtK">
             <objects>
                 <navigationController definesPresentationContext="YES" id="zpr-lT-CIk" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Friends" image="tb_friends" id="Ahi-V6-tYw"/>
+                    <tabBarItem key="tabBarItem" title="Contacts" image="tb_friends" id="Ahi-V6-tYw"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="fUc-nA-clP">
                         <rect key="frame" x="0.0" y="0.0" width="0.0" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
