@@ -17,12 +17,6 @@
 #import "QMChatReceiver.h"
 #import "REAlertView.h"
 
-typedef enum : NSUInteger {
-    QMFriendsListContactRequestSectionIndex,
-    QMFriendsListFriendsSectionIndex,
-    QMFriendsListSearchResultsSectionIndex,
-} QMFriendsListSectionIndex;
-
 
 @interface QMFriendsListDataSource()
 
@@ -95,9 +89,8 @@ typedef enum : NSUInteger {
         [[QMChatReceiver instance] contactRequestUsersListChangedWithTarget:self block:^{
             weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
             if (weakSelf.viewIsShowed) {
-                return;
+                [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)] withRowAnimation:UITableViewRowAnimationFade];
             }
-            [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)] withRowAnimation:UITableViewRowAnimationFade];
         }];
         
         [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:reloadDatasource];
@@ -136,20 +129,6 @@ typedef enum : NSUInteger {
     self.friendList = [QMApi instance].friends;
     if (self.viewIsShowed) {
         [self.tableView reloadData];   
-    }
-}
-
-- (void)reloadSectionWithSectionIndex:(QMFriendsListSectionIndex)sectionIndex
-{
-    if (!self.viewIsShowed) {
-        return;
-    }
-    if (sectionIndex == QMFriendsListContactRequestSectionIndex) {
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (sectionIndex == QMFriendsListFriendsSectionIndex) {
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
-    } else {
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationFade];
     }
 }
 
@@ -312,9 +291,8 @@ typedef enum : NSUInteger {
         [[QMApi instance] confirmAddContactRequest:user.ID completion:^(BOOL success) {
             weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
             if (weakSelf.viewIsShowed) {
-                return;
+                [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
             }
-            [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
         }];
     } else {
         
@@ -326,9 +304,8 @@ typedef enum : NSUInteger {
                 [[QMApi instance] rejectAddContactRequest:user.ID completion:^(BOOL success) {
                     weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
                     if (weakSelf.viewIsShowed) {
-                        return;
+                            [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
                     }
-                    [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
                 }];
             }];
         }];

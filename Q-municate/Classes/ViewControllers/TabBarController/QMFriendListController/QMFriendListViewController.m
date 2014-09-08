@@ -45,6 +45,7 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)] withRowAnimation:UITableViewRowAnimationNone];
     self.dataSource.viewIsShowed = YES;
     [super viewDidAppear:animated];
 }
