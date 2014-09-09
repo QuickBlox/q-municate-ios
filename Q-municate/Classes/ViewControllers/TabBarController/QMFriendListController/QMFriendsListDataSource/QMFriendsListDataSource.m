@@ -317,6 +317,10 @@
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
     if (!self.searchIsActive) {
+        if (searchString.length > 0) {
+            [self.tableView setDataSource:nil];
+        }
+        [self.tableView setDataSource:self];
         self.searchIsActive = YES;
     }
     [self globalSearch:searchString];
@@ -325,7 +329,6 @@
 
 -(void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
 {
-//    [controller.searchResultsTableView reloadData];
 }
 
 - (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller
@@ -333,7 +336,7 @@
     if (self.searchIsActive) {
         self.searchIsActive = NO;
     }
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView reloadData];
 }
 
 @end
