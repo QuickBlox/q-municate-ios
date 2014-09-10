@@ -3103,10 +3103,10 @@ Cg
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="VIK-5Z-bdZ"/>
         <segue reference="TaC-No-aTb"/>
         <segue reference="kkU-F4-K0a"/>
-        <segue reference="IAo-qy-uHQ"/>
-        <segue reference="M45-HY-t12"/>
         <segue reference="sPU-d9-maS"/>
+        <segue reference="M45-HY-t12"/>
     </inferredMetricsTieBreakers>
 </document>

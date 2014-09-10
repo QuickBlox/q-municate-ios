@@ -104,7 +104,7 @@
     return messages;
 }
 
-- (void)sendMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID saveToHistory:(BOOL)save completion:(void(^)(void))completion {
+- (void)sendMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID saveToHistory:(BOOL)save completion:(void(^)(NSError *error))completion {
     
     message.cParamDialogID = dialogID;
     message.cParamDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);
@@ -112,13 +112,11 @@
     
     if (save) {
         message.cParamSaveToHistory = @"1";
+        message.markable = YES;
     }
     
     [self chat:^(QBChat *chat) {
-        if ([chat sendMessage:message]) {
-            completion();
-        }
-
+        [chat sendMessage:message sentBlock:completion];
     }];
 }
 

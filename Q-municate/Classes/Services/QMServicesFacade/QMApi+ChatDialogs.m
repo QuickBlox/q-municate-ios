@@ -107,10 +107,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
                                                     text:notifMessage
                                               chatDialog:chatDialog];
         
-        [self.messagesService sendMessage:notification
-                             withDialogID:chatDialog.ID
-                            saveToHistory:NO
-                               completion:^{}];
+        [self.messagesService sendMessage:notification withDialogID:chatDialog.ID saveToHistory:NO completion:^(NSError *error){}];
     }
 }
 

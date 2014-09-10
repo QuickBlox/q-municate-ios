@@ -33,7 +33,7 @@
 		556192CB19891BD70048D112 /* QMGroupDetailsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 556192CA19891BD70048D112 /* QMGroupDetailsDataSource.m */; };
 		558AE52C196EA7C400AEAC1F /* QMFriendsListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 558AE52B196EA7C400AEAC1F /* QMFriendsListDataSource.m */; };
 		55943A0C1941A4AE00BF4312 /* CDDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 55943A0B1941A4AE00BF4312 /* CDDialog.m */; };
-		5594E4CC199E218800AA0D09 /* ChatBubbles.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5594E4CB199E218800AA0D09 /* ChatBubbles.xcassets */; };
+		5594E4CC199E218800AA0D09 /* ChatIcons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5594E4CB199E218800AA0D09 /* ChatIcons.xcassets */; };
 		559BDFE719618D3D000588FE /* QMLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFDD19618D3D000588FE /* QMLogInViewController.m */; };
 		559BDFE819618D3D000588FE /* QMSignUpController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE019618D3D000588FE /* QMSignUpController.m */; };
 		559BDFE919618D3D000588FE /* QMSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE319618D3D000588FE /* QMSplashViewController.m */; };
@@ -287,7 +287,7 @@
 		559327A8199216FB001C4BF8 /* Q-municate Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Q-municate Tests-Prefix.pch"; sourceTree = "<group>"; };
 		55943A0A1941A4AE00BF4312 /* CDDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDDialog.h; sourceTree = "<group>"; };
 		55943A0B1941A4AE00BF4312 /* CDDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDDialog.m; sourceTree = "<group>"; };
-		5594E4CB199E218800AA0D09 /* ChatBubbles.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ChatBubbles.xcassets; sourceTree = "<group>"; };
+		5594E4CB199E218800AA0D09 /* ChatIcons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ChatIcons.xcassets; sourceTree = "<group>"; };
 		559BDFDC19618D3D000588FE /* QMLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLogInViewController.h; sourceTree = "<group>"; };
 		559BDFDD19618D3D000588FE /* QMLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLogInViewController.m; sourceTree = "<group>"; };
 		559BDFDF19618D3D000588FE /* QMSignUpController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSignUpController.h; sourceTree = "<group>"; };
@@ -1205,7 +1205,7 @@
 		55CEAB1A195DBCFA001A8ED6 /* QMChatVC */ = {
 			isa = PBXGroup;
 			children = (
-				5594E4CB199E218800AA0D09 /* ChatBubbles.xcassets */,
+				5594E4CB199E218800AA0D09 /* ChatIcons.xcassets */,
 				55CEAB50195DBCFA001A8ED6 /* QMChatVC.h */,
 				55CEAB51195DBCFA001A8ED6 /* QMChatVC.m */,
 				55CEAB1C195DBCFA001A8ED6 /* QMCategories */,
@@ -2148,7 +2148,7 @@
 				69D57E6818ACC11C00A9900A /* Images.xcassets in Resources */,
 				55A8B06D1965986A00B5D33B /* README.md in Resources */,
 				55286996199131B5006F92CB /* Localizable.strings in Resources */,
-				5594E4CC199E218800AA0D09 /* ChatBubbles.xcassets in Resources */,
+				5594E4CC199E218800AA0D09 /* ChatIcons.xcassets in Resources */,
 				55311AE01990FEA500C585D5 /* mogend.sh in Resources */,
 				55A8B0721965986A00B5D33B /* received.wav in Resources */,
 			);
