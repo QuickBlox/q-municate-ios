@@ -2065,7 +2065,7 @@ Cg
             </objects>
             <point key="canvasLocation" x="-4534" y="-7629"/>
         </scene>
-        <!--License Agreement View Controller - License Agreement-->
+        <!--License Agreement View Controller-->
         <scene sceneID="5SO-5H-OIB">
             <objects>
                 <viewController storyboardIdentifier="QMLicenceAgreementControllerID" id="tmG-J0-h0D" customClass="QMLicenseAgreementViewController" sceneMemberID="viewController">
@@ -2094,12 +2094,27 @@ Cg
                             <constraint firstItem="5JK-8e-Igm" firstAttribute="top" secondItem="d7D-s6-FUB" secondAttribute="bottom" id="yWO-Qa-hHg"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="License Agreement" id="wdf-0k-2Z3">
+                    <navigationItem key="navigationItem" id="wdf-0k-2Z3">
+                        <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" title="Back" id="jB9-Yg-KBM">
                             <connections>
                                 <action selector="done:" destination="tmG-J0-h0D" id="QdJ-ky-J9B"/>
                             </connections>
                         </barButtonItem>
+                        <view key="titleView" contentMode="scaleToFill" id="UjL-PZ-o3L">
+                            <rect key="frame" x="83" y="6" width="154" height="33"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="License Agreement" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F4j-Am-IFN">
+                                    <rect key="frame" x="0.0" y="0.0" width="154" height="33"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </view>
                         <barButtonItem key="rightBarButtonItem" title="Accept" id="2G5-ho-1Ig">
                             <connections>
                                 <action selector="acceptLicense:" destination="tmG-J0-h0D" id="ZOG-dh-oie"/>
@@ -3103,10 +3118,10 @@ Cg
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="VIK-5Z-bdZ"/>
-        <segue reference="TaC-No-aTb"/>
         <segue reference="kkU-F4-K0a"/>
-        <segue reference="sPU-d9-maS"/>
+        <segue reference="Gs8-3F-TjX"/>
+        <segue reference="VIK-5Z-bdZ"/>
         <segue reference="M45-HY-t12"/>
+        <segue reference="sPU-d9-maS"/>
     </inferredMetricsTieBreakers>
 </document>
