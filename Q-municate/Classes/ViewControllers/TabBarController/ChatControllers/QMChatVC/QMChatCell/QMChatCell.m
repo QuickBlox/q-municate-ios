@@ -22,6 +22,7 @@
 @property (strong, nonatomic) UIView *headerView;
 @property (strong, nonatomic) UILabel *title;
 @property (strong, nonatomic) UILabel *timeLabel;
+@property (strong, nonatomic) UIImageView *deliveryStatusView;
 
 @property (strong, nonatomic) QMMessage *message;
 @property (strong, nonatomic) QBUUser *user;
@@ -47,7 +48,10 @@
 @property (strong, nonatomic) NSLayoutConstraint *bTitleConstraint;
 
 @property (strong, nonatomic) NSLayoutConstraint *timeWidhtConstraint;
+@property (strong, nonatomic) NSLayoutConstraint *timeRightConstraint;
+
 @property (strong, nonatomic) NSArray *nameConstrains;
+@property (strong, nonatomic) NSArray *deliveryViewConstraints;
 
 @property (assign, nonatomic) BOOL showUserImage;
 @property (strong, nonatomic) UITapGestureRecognizer *tapGestureRecognizer;
@@ -95,6 +99,13 @@
     self.timeLabel.textColor = [UIColor grayColor];
     self.timeLabel.textAlignment = NSTextAlignmentRight;
     
+    self.deliveryStatusView = [[UIImageView alloc] init];
+    self.deliveryStatusView.contentMode = UIViewContentModeScaleAspectFit;
+    
+    self.title.backgroundColor = [UIColor clearColor];
+    self.timeLabel.backgroundColor = [UIColor clearColor];
+    self.deliveryStatusView.backgroundColor = [UIColor clearColor];
+    
     self.messageContainer.translatesAutoresizingMaskIntoConstraints = NO;
     self.containerView.translatesAutoresizingMaskIntoConstraints = NO;
     self.balloonImageView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -102,10 +113,17 @@
     self.headerView.translatesAutoresizingMaskIntoConstraints = NO;
     self.timeLabel.translatesAutoresizingMaskIntoConstraints = NO;
     self.title.translatesAutoresizingMaskIntoConstraints = NO;
+    self.deliveryStatusView.translatesAutoresizingMaskIntoConstraints = NO;
+    
     
     self.nameConstrains = @[PVBottomOf(self.title).equalTo.bottomOf(self.headerView).asConstraint,
                             PVLeftOf(self.title).equalTo.leftOf(self.headerView).asConstraint,
                             PVTopOf(self.title).equalTo.topOf(self.headerView).asConstraint];
+    
+    self.deliveryViewConstraints = @[PVWidthOf(self.deliveryStatusView).equalTo.constant(12).asConstraint,
+                                     PVRightOf(self.deliveryStatusView).equalTo.rightOf(self.headerView).asConstraint,
+                                     PVTopOf(self.deliveryStatusView).equalTo.topOf(self.headerView).asConstraint,
+                                     PVBottomOf(self.deliveryStatusView).equalTo.bottomOf(self.headerView).asConstraint];
     
     [self.contentView addSubview:self.messageContainer];
     [self.messageContainer addSubview:self.balloonImageView];
@@ -115,11 +133,14 @@
     
     [self.headerView addSubview:self.title];
     [self.headerView addSubview:self.timeLabel];
+    [self.headerView addSubview:self.deliveryStatusView];
     
     
     self.timeWidhtConstraint = PVWidthOf(self.timeLabel).equalTo.constant(0).asConstraint;
+    self.timeRightConstraint = PVRightOf(self.timeLabel).equalTo.rightOf(self.headerView).asConstraint;
+    
     [self.headerView addConstraints:@[self.timeWidhtConstraint,
-                                      PVRightOf(self.timeLabel).equalTo.rightOf(self.headerView).asConstraint,
+                                      self.timeRightConstraint,
                                       PVTopOf(self.timeLabel).equalTo.topOf(self.headerView).asConstraint,
                                       PVBottomOf(self.timeLabel).equalTo.bottomOf(self.headerView).asConstraint,
                                       ]];
@@ -254,7 +275,7 @@
     
     self.lTitleConstraint.constant = insets.left;
     self.rTitleConstraint.constant = -insets.right;
-    self.timeWidhtConstraint.constant = 60;
+    self.timeWidhtConstraint.constant = 40;
     
     [self layoutIfNeeded];
 }
@@ -280,10 +301,19 @@
     if (isMe || (message.chatDialog.type == QBChatDialogTypePrivate )) {
         self.title.text = nil;
         [self.headerView removeConstraints:self.nameConstrains];
-    }
-    else {
+    } else {
         self.title.text = user.fullName;
         [self.headerView addConstraints:self.nameConstrains];
+    }
+    
+    if (isMe) {
+        self.timeRightConstraint.constant = -12;
+        [self.headerView addConstraints:self.deliveryViewConstraints];
+        [self setDeliveryStatus:2];
+    } else {
+        self.timeRightConstraint.constant = 0;
+        [self.headerView removeConstraints:self.deliveryViewConstraints];
+        [self setDeliveryStatus:0];
     }
 }
 
@@ -306,6 +336,22 @@
         self.userImageView.image = nil;
     }
 }
+
+- (void)setDeliveryStatus:(NSUInteger)deliveryStatus
+{
+    UIImage *statusImg;
+    if (deliveryStatus == 0) {
+        statusImg = nil;
+    } else if (deliveryStatus == 1) {
+        statusImg = [UIImage imageNamed:@"sent_ic"];
+    } else if (deliveryStatus == 2) {
+        statusImg = [UIImage imageNamed:@"sent-received_ic"];
+    } else {
+        statusImg = [UIImage imageNamed:@"notreceived_ic"];
+    }
+    [self.deliveryStatusView setImage:statusImg];
+}
+
 
 #pragma mark - Date formatter
 

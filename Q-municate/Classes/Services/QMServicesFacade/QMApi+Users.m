@@ -11,6 +11,7 @@
 #import "QMContentService.h"
 #import "QMFacebookService.h"
 #import "QMMessagesService.h"
+#import "QMChatReceiver.h"
 #import "QMSettingsManager.h"
 #import "QMAddressBook.h"
 #import "ABPerson.h"
@@ -41,6 +42,7 @@
     
     [self.messagesService chat:^(QBChat *chat) {
         BOOL success = [chat confirmAddContactRequest:userID];
+        [self.usersService.confirmRequestUsersIDs removeObject:@(userID)];
         completion(success);
     }];
 }
@@ -48,6 +50,7 @@
 - (void)rejectAddContactRequest:(NSUInteger)userID completion:(void(^)(BOOL success))completion {
     [self.messagesService chat:^(QBChat *chat) {
         BOOL success = [chat rejectAddContactRequest:userID];
+        [self.usersService.confirmRequestUsersIDs removeObject:@(userID)];
         completion(success);
     }];
 }
@@ -102,6 +105,13 @@
     NSArray *allFriends = [self usersWithIDs:ids];
     
     return allFriends;
+}
+
+- (NSArray *)contactRequestUsers
+{
+    NSArray *ids = [self.usersService.confirmRequestUsersIDs allObjects];
+    NSArray *users = [self usersWithIDs:ids];
+    return users;
 }
 
 

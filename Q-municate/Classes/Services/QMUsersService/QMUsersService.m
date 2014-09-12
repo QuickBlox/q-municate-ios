@@ -34,6 +34,7 @@
 - (void)start {
     [super start];
     
+    self.confirmRequestUsersIDs = [NSMutableSet new];
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
         
@@ -44,6 +45,22 @@
         
         [weakSelf retrieveUsersWithIDs:[weakSelf idsFromContactListItems] completion:^(BOOL updated) {
             
+        }];
+    }];
+    
+    [[QMChatReceiver instance] chatDidReceiveContactAddRequestWithTarget:self block:^(NSUInteger userID) {
+        
+        [weakSelf.confirmRequestUsersIDs addObject:@(userID)];
+        
+        QBUUser *user = [weakSelf userWithID:userID];
+        
+        if (user != nil) {
+            [[QMChatReceiver instance] contactRequestUsersListChanged];
+            return;
+        }
+        [weakSelf retrieveUserWithID:userID completion:^(QBUUserResult *result) {
+            // show contact requests:
+            [[QMChatReceiver instance] contactRequestUsersListChanged];
         }];
     }];
 }
@@ -171,9 +188,15 @@
 
 - (NSObject<Cancelable> *)retrieveUserWithID:(NSUInteger)userID completion:(QBUUserResultBlock)completion {
     
-    return [QBUsers userWithID:userID
-                      delegate:[QBEchoObject instance]
-                       context:[QBEchoObject makeBlockForEchoObject:completion]];
+    __weak __typeof(self)weakSelf = self;
+    QBUUserResultBlock resultBlock = ^(QBUUserResult *result) {
+        if (result.success) {
+            [weakSelf addUser:result.user];
+        }
+        completion(result);
+    };
+    
+    return [QBUsers userWithID:userID delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
 }
 
 - (NSObject<Cancelable> *)retrieveUsersWithEmails:(NSArray *)emails completion:(QBUUserPagedResultBlock)completion {

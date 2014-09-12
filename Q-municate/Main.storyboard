@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RkR-TS-K9a">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RkR-TS-K9a">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -44,18 +44,18 @@
                         <color key="barTintColor" red="0.19215688110000001" green="0.46274513010000001" blue="0.71372550729999995" alpha="1" colorSpace="deviceRGB"/>
                     </tabBar>
                     <connections>
-                        <segue destination="zpr-lT-CIk" kind="relationship" relationship="viewControllers" id="VLQ-Cr-B11"/>
-                        <segue destination="M2H-zK-wC0" kind="relationship" relationship="viewControllers" id="irr-6N-6Xl"/>
-                        <segue destination="sO5-m2-ebb" kind="relationship" relationship="viewControllers" id="bbc-Yt-Z7l"/>
-                        <segue destination="29n-Eo-CdN" kind="relationship" relationship="viewControllers" id="nFH-X7-aCh"/>
                         <segue destination="RkR-TS-K9a" kind="custom" identifier="SplashSegue" customClass="QMCustomSegue" id="kkU-F4-K0a"/>
+                        <segue destination="M2H-zK-wC0" kind="relationship" relationship="viewControllers" id="1cf-Uh-M0N"/>
+                        <segue destination="zpr-lT-CIk" kind="relationship" relationship="viewControllers" id="Z7m-8T-r6o"/>
+                        <segue destination="sO5-m2-ebb" kind="relationship" relationship="viewControllers" id="Q0Z-bP-8U6"/>
+                        <segue destination="29n-Eo-CdN" kind="relationship" relationship="viewControllers" id="nFH-X7-aCh"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x3H-Vf-NMM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-3940" y="-8365"/>
         </scene>
-        <!--Friend List View Controller - Friends-->
+        <!--Friend List View Controller - Contacts-->
         <scene sceneID="oBS-u7-ovz">
             <objects>
                 <viewController id="sEL-JF-bOt" customClass="QMFriendListViewController" sceneMemberID="viewController">
@@ -135,8 +135,62 @@
                                             <outlet property="titleLabel" destination="Fri-qf-Qga" id="kLR-Yi-59O"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="QMDontHaveAnyFriendsCell" textLabel="VIf-H3-5KQ" rowHeight="59" style="IBUITableViewCellStyleDefault" id="KTf-Lc-6LE">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="QMContactRequestCell" rowHeight="59" id="nNB-Xc-u6h" customClass="QMContactRequestCell">
                                         <rect key="frame" x="0.0" y="125" width="320" height="59"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nNB-Xc-u6h" id="JM9-MO-nvF">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="58"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="upic-placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="wWb-XQ-nde" customClass="QMImageView">
+                                                    <rect key="frame" x="10" y="4" width="50" height="50"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </imageView>
+                                                <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Leonore Cantly" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uWc-YZ-Fkq">
+                                                    <rect key="frame" x="68" y="19" width="150" height="19"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IOs-om-lmi">
+                                                    <rect key="frame" x="282" y="9" width="36" height="40"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <state key="normal" image="approve">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="acceptButtonPressed:" destination="nNB-Xc-u6h" eventType="touchUpInside" id="JxZ-1K-hKY"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Uv-fR-Pi9">
+                                                    <rect key="frame" x="236" y="9" width="38" height="40"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <state key="normal" image="reject">
+                                                        <color key="titleColor" red="0.14610877403846156" green="0.14610877403846156" blue="0.14610877403846156" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="rejectButtonPressed:" destination="nNB-Xc-u6h" eventType="touchUpInside" id="J3J-CN-Btg"/>
+                                                    </connections>
+                                                </button>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="devider" translatesAutoresizingMaskIntoConstraints="NO" id="tFj-wp-KvB">
+                                                    <rect key="frame" x="277" y="9" width="1" height="40"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="qmImageView" destination="wWb-XQ-nde" id="ikB-dc-sCS"/>
+                                            <outlet property="titleLabel" destination="uWc-YZ-Fkq" id="fVc-8m-bSF"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="QMDontHaveAnyFriendsCell" textLabel="VIf-H3-5KQ" rowHeight="59" style="IBUITableViewCellStyleDefault" id="KTf-Lc-6LE">
+                                        <rect key="frame" x="0.0" y="184" width="320" height="59"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KTf-Lc-6LE" id="9HD-gO-wjk">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="58"/>
@@ -176,7 +230,7 @@ Your don't have any friends, tap search icon to find them or invite new ones.</s
                             <constraint firstItem="dqG-l5-KjD" firstAttribute="leading" secondItem="PD2-vb-oCL" secondAttribute="leading" id="j2Y-0i-SdA"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Friends" id="f0j-2P-HiD"/>
+                    <navigationItem key="navigationItem" title="Contacts" id="f0j-2P-HiD"/>
                     <connections>
                         <outlet property="searchDisplayController" destination="bvK-w8-8DJ" id="2xU-Pa-IQe"/>
                         <outlet property="tableView" destination="dqG-l5-KjD" id="Blm-GM-S3w"/>
@@ -345,7 +399,13 @@ Line 2</string>
                             <outlet property="delegate" destination="B6O-m1-ZGo" id="lac-4M-xCR"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Details" id="wYX-0M-WGJ"/>
+                    <navigationItem key="navigationItem" title="Details" id="wYX-0M-WGJ">
+                        <barButtonItem key="rightBarButtonItem" systemItem="trash" id="vRY-C1-ciU">
+                            <connections>
+                                <action selector="removeFromFriends:" destination="B6O-m1-ZGo" id="iUf-46-zUq"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="audioChatCell" destination="Mhd-hZ-8rv" id="EPh-La-qcS"/>
                         <outlet property="chatCell" destination="NZK-x3-urI" id="vx0-hm-eF1"/>
@@ -1536,11 +1596,11 @@ Cg
             </objects>
             <point key="canvasLocation" x="-2906" y="-8365"/>
         </scene>
-        <!--Navigation Controller - Friends-->
+        <!--Navigation Controller - Contacts-->
         <scene sceneID="A8C-jc-QtK">
             <objects>
                 <navigationController definesPresentationContext="YES" id="zpr-lT-CIk" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Friends" image="tb_friends" id="Ahi-V6-tYw"/>
+                    <tabBarItem key="tabBarItem" title="Contacts" image="tb_friends" id="Ahi-V6-tYw"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="fUc-nA-clP">
                         <rect key="frame" x="0.0" y="0.0" width="0.0" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -2997,6 +3057,7 @@ Cg
         <image name="add-participants" width="24" height="24"/>
         <image name="add_friend" width="24" height="24"/>
         <image name="answer" width="141" height="66"/>
+        <image name="approve" width="22" height="18"/>
         <image name="audiocall" width="23" height="23"/>
         <image name="back_counter" width="34" height="22"/>
         <image name="bg" width="320" height="568"/>
@@ -3006,6 +3067,7 @@ Cg
         <image name="checkbox_unch" width="16" height="16"/>
         <image name="contacts_ic" width="30" height="30"/>
         <image name="decline" width="141" height="66"/>
+        <image name="devider" width="1" height="40"/>
         <image name="dynamic" width="66" height="66"/>
         <image name="dynamic_on" width="66" height="66"/>
         <image name="end_btn" width="141" height="66"/>
@@ -3021,6 +3083,7 @@ Cg
         <image name="new_chat" width="21" height="21"/>
         <image name="online" width="13" height="13"/>
         <image name="red_counter" width="34" height="22"/>
+        <image name="reject" width="19" height="18"/>
         <image name="signup-btn" width="280" height="44"/>
         <image name="splash" width="320" height="568"/>
         <image name="switchcam" width="66" height="66"/>
@@ -3040,10 +3103,10 @@ Cg
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="A42-kR-3SJ"/>
-        <segue reference="Gs8-3F-TjX"/>
-        <segue reference="IAo-qy-uHQ"/>
-        <segue reference="bOV-zd-nKn"/>
-        <segue reference="aeV-0O-de3"/>
+        <segue reference="VIK-5Z-bdZ"/>
+        <segue reference="TaC-No-aTb"/>
+        <segue reference="kkU-F4-K0a"/>
+        <segue reference="sPU-d9-maS"/>
+        <segue reference="M45-HY-t12"/>
     </inferredMetricsTieBreakers>
 </document>

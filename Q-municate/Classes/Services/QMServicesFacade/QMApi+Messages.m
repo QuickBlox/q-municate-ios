@@ -61,7 +61,7 @@
         
         message.senderID = self.currentUser.ID;
         message.recipientID = [self occupantIDForPrivateChatDialog:dialog];
-        [self.messagesService sendMessage:message  withDialogID:dialog.ID saveToHistory:YES completion:^{
+        [self.messagesService sendMessage:message  withDialogID:dialog.ID saveToHistory:YES completion:^(NSError *error){
             finish(message);
         }];
     }

@@ -21,4 +21,16 @@
     [self subsribeWithTarget:target selector:@selector(postUsersHistoryUpdated) block:block];
 }
 
+- (void)contactRequestUsersListChanged
+{
+    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMUsersHistoryUpdated block) {
+        block();
+    }];
+}
+
+- (void)contactRequestUsersListChangedWithTarget:(id)target block:(QMUsersHistoryUpdated)block {
+    [self subsribeWithTarget:target selector:@selector(contactRequestUsersListChanged) block:block];
+}
+
+
 @end

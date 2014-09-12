@@ -1,4 +1,4 @@
-//
+ //
 //  QMFriendListController.m
 //  Q-municate
 //
@@ -35,14 +35,27 @@
     [self.tableView setContentOffset:CGPointMake(0, self.searchDisplayController.searchBar.frame.size.height) animated:NO];
 #endif
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    self.dataSource = [[QMFriendsListDataSource alloc] initWithTableView:self.tableView
-                                                 searchDisplayController:self.searchDisplayController];
+    self.dataSource = [[QMFriendsListDataSource alloc] initWithTableView:self.tableView searchDisplayController:self.searchDisplayController];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+    if (!self.dataSource.searchIsActive) {
+        [self.tableView reloadData];
+    }
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    self.dataSource.viewIsShowed = YES;
+    [super viewDidAppear:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    self.dataSource.viewIsShowed = NO;
+    [super viewDidDisappear:animated];
 }
 
 #pragma mark - UITableViewDelegate
@@ -91,11 +104,11 @@
     return [self.dataSource searchDisplayController:controller shouldReloadTableForSearchString:searchString];
 }
 
-- (void) searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
+-(void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
     [self.dataSource searchDisplayControllerWillBeginSearch:controller];
 }
 
-- (void) searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
+- (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
     [self.dataSource searchDisplayControllerWillEndSearch:controller];
 }
 

@@ -105,15 +105,15 @@
     [[UITabBarItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : white} forState:UIControlStateNormal];
     self.tabBarController.tabBar.tintColor = white;
     
-    UIImage *friendsImg = [[UIImage imageNamed:@"tb_friends"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    UITabBarItem *firstTab = self.tabBar.items[0];
-    firstTab.image = friendsImg;
-    firstTab.selectedImage = friendsImg;
-    
     UIImage *chatImg = [[UIImage imageNamed:@"tb_chat"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UITabBarItem *firstTab = self.tabBar.items[0];
+    firstTab.image = chatImg;
+    firstTab.selectedImage = chatImg;
+    
+    UIImage *friendsImg = [[UIImage imageNamed:@"tb_friends"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     UITabBarItem *chatTab = self.tabBar.items[1];
-    chatTab.image = chatImg;
-    chatTab.selectedImage = chatImg;
+    chatTab.image = friendsImg;
+    chatTab.selectedImage = friendsImg;
     
     UIImage *inviteImg = [[UIImage imageNamed:@"tb_invite"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     UITabBarItem *inviteTab = self.tabBar.items[2];

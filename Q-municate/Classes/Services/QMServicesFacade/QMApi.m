@@ -45,6 +45,7 @@ const NSTimeInterval kQMPresenceTime = 30;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         servicesFacade = [[self alloc] init];
+        [QBChat instance].useMutualSubscriptionForContactList = YES;
         [QBChat instance].delegate = [QMChatReceiver instance];
         servicesFacade.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:kQMPresenceTime
                                                                         target:servicesFacade

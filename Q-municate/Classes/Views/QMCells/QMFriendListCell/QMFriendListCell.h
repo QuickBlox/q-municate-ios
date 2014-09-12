@@ -8,18 +8,11 @@
 
 #import "QMTableViewCell.h"
 
-@class QMFriendListCell;
-
-@protocol QMFriendListCellDelegate <NSObject>
-
-- (void)friendListCell:(QMFriendListCell *)cell pressAddBtn:(UIButton *)sender;
-
-@end
 
 @interface QMFriendListCell : QMTableViewCell
 
 @property (strong, nonatomic) NSString *searchText;
 
-@property (weak, nonatomic) id <QMFriendListCellDelegate>delegate;
+@property (weak, nonatomic) id <QMUsersListCellDelegate>delegate;
 
 @end

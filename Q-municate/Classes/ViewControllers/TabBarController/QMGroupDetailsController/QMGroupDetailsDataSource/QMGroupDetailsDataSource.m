@@ -15,7 +15,7 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
 
 @interface QMGroupDetailsDataSource ()
 
-<QMFriendListCellDelegate>
+<QMUsersListCellDelegate>
 
 @property (nonatomic, weak) UITableView *tableView;
 @property (nonatomic, strong) NSArray *participants;
@@ -99,7 +99,7 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
 
 #pragma mark - QMFriendListCellDelegate
 
-- (void)friendListCell:(QMFriendListCell *)cell pressAddBtn:(UIButton *)sender {
+- (void)usersListCell:(QMFriendListCell *)cell pressAddBtn:(UIButton *)sender {
 
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     QBUUser *user = self.participants[indexPath.row];

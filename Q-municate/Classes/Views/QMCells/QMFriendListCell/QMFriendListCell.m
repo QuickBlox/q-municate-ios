@@ -50,10 +50,6 @@
     if (_online != online) {
         _online = online;
     }
-    
-    NSString *status = NSLocalizedString(online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
-    
-    self.descriptionLabel.text = status;
     self.onlineCircle.hidden = !online;
 }
 
@@ -62,6 +58,17 @@
     [super setContactlistItem:contactlistItem];
     self.online = contactlistItem.online;
     self.isFriend = contactlistItem ?  YES : NO;
+    
+    NSString *status = nil;
+    
+    if (!contactlistItem) {
+        status = @"";
+    } else if (contactlistItem.subscriptionState == QBPresenseSubscriptionStateBoth) {
+        status = NSLocalizedString(contactlistItem.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
+    } else {
+        status = NSLocalizedString(@"QM_STR_PENDING", nil);
+    }
+    self.descriptionLabel.text = status;
 }
 
 - (void)setIsFriend:(BOOL)isFriend {
@@ -98,8 +105,8 @@
 
 - (IBAction)pressAddBtn:(UIButton *)sender {
     
-    if ([self.delegate respondsToSelector:@selector(friendListCell:pressAddBtn:)]) {
-        [self.delegate friendListCell:self pressAddBtn:sender];
+    if ([self.delegate respondsToSelector:@selector(usersListCell:pressAddBtn:)]) {
+        [self.delegate usersListCell:self pressAddBtn:sender];
     }
 }
 

@@ -65,6 +65,7 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
  */
 - (void)chatDidReceiveContactAddRequestWithTarget:(id)target block:(QMChatDidReceiveContactAddRequest)block;
 - (void)chatContactListDidChangeWithTarget:(id)target block:(QMChatContactListDidChange)block;
+- (void)chatContactListDidChange:(QBContactList *)contactList;
 - (void)chatContactListUpdatedWithTarget:(id)target block:(QMChatContactListWillChange)block;
 - (void)chatDidReceiveContactItemActivityWithTarget:(id)target block:(QMChathatDidReceiveContactItemActivity)block;
 /**
@@ -110,5 +111,7 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 
 - (void)postUsersHistoryUpdated;
 - (void)usersHistoryUpdatedWithTarget:(id)target block:(QMUsersHistoryUpdated)block;
+- (void)contactRequestUsersListChanged;
+- (void)contactRequestUsersListChangedWithTarget:(id)target block:(QMUsersHistoryUpdated)block;
 
 @end
