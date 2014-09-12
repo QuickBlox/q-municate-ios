@@ -35,7 +35,7 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
 @implementation QMMessage
 
 
-- (instancetype)initWithChatHistoryMessage:(QBChatHistoryMessage *)historyMessage {
+- (instancetype)initWithChatHistoryMessage:(QBChatAbstractMessage *)historyMessage {
     
     self = [super init];
     if (self) {

@@ -18,13 +18,14 @@
 #import "QMSystemMessageCell.h"
 #import "QMAttachmentMessageCell.h"
 #import "QMSoundManager.h"
+#import "QMChatSection.h"
 
 @interface QMChatDataSource()
 
 <UITableViewDataSource, QMChatCellDelegate>
 
 @property (weak, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) NSMutableArray *messages;
+@property (strong, nonatomic) NSMutableArray *chatSections;
 
 /**
  *  Specifies whether or not the view controller should automatically scroll to the most recent message
@@ -52,7 +53,7 @@
         
         self.chatDialog = dialog;
         self.tableView = tableView;
-        self.messages = [NSMutableArray array];
+        self.chatSections = [NSMutableArray array];
         
         self.automaticallyScrollsToMostRecentMessage = YES;
         
@@ -93,39 +94,78 @@
     return self;
 }
 
-- (void)insertNewMessage:(QBChatMessage *)message {
-    
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.messages.count inSection:0];
-    QMMessage *qmMessage = [self qmMessageWithQbChatHistoryMessage:(QBChatHistoryMessage *)message];
-    [self.messages addObject:qmMessage];
-    
-    [self.tableView beginUpdates];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView endUpdates];
-    [self scrollToBottomAnimated:YES];
+- (QMChatSection *)chatSectionForDate:(NSDate *)date
+{
+    NSInteger identifer = [QMChatSection daysBetweenDate:date andDate:[NSDate date]];
+    for (QMChatSection *section in self.chatSections) {
+        if (identifer == section.identifier) {
+            return section;
+        }
+    }
+    QMChatSection *newSection = [[QMChatSection alloc] initWithDate:date];
+    [self.chatSections addObject:newSection];
+    return newSection;
 }
 
+- (void)insertNewMessage:(QBChatMessage *)message {
+    
+    QMMessage *qmMessage = [self qmMessageWithQbChatHistoryMessage:message];
+    
+    QMChatSection *chatSection = [self chatSectionForDate:qmMessage.datetime];
+    [chatSection addMessage:qmMessage];
+    
+    [self.tableView beginUpdates];
+    if (chatSection.messages.count > 1) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:chatSection.messages.count-1 inSection:self.chatSections.count-1];
+        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    } else {
+        [self.tableView insertSections:[NSIndexSet indexSetWithIndex:self.chatSections.count-1] withRowAnimation:UITableViewRowAnimationNone];
+    }
+    [self.tableView endUpdates];
+    
+    [self scrollToBottomAnimated:YES];
+}
 
 - (void)reloadCachedMessages:(BOOL)animated {
     
     NSArray *history = [[QMApi instance] messagesHistoryWithDialog:self.chatDialog];
     
-    [self.messages removeAllObjects];
-    
-    for (QBChatHistoryMessage *historyMessage in history) {
-        QMMessage *qmMessage = [self qmMessageWithQbChatHistoryMessage:historyMessage];
-        [self.messages addObject:qmMessage];
-    }
+    [self.chatSections removeAllObjects];
+    self.chatSections = [self sortedChatSectionsFromMessageArray:history];
     
     [self.tableView reloadData];
     [self scrollToBottomAnimated:animated];
 }
 
+// ******************************************************************************
+- (NSMutableArray *)sortedChatSectionsFromMessageArray:(NSArray *)messagesArray
+{
+    NSMutableArray *arrayOfSections = [[NSMutableArray alloc] init];
+    NSMutableDictionary *sectionsDictionary = [NSMutableDictionary new];
+    NSDate *dateNow = [NSDate date];
+    
+    for (QBChatHistoryMessage *historyMessage in messagesArray) {
+        QMMessage *qmMessage = [self qmMessageWithQbChatHistoryMessage:historyMessage];
+        NSNumber *key = @([QMChatSection daysBetweenDate:historyMessage.datetime andDate:dateNow]);
+        QMChatSection *section = sectionsDictionary[key];
+        if (!section) {
+            section = [[QMChatSection alloc] initWithDate:qmMessage.datetime];
+            sectionsDictionary[key] = section;
+            [arrayOfSections addObject:section];
+            
+        }
+        [section addMessage:qmMessage];
+        
+    }
+    return arrayOfSections;
+}
+// *******************************************************************************
+
 - (void)scrollToBottomAnimated:(BOOL)animated {
     
-    if (self.messages.count > 0) {
-        
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.messages.count-1 inSection:0];
+    if (self.chatSections.count > 0) {
+        QMChatSection *chatSection = [self.chatSections lastObject];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:chatSection.messages.count-1 inSection:self.chatSections.count-1];
         [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:animated];
     }
 }
@@ -141,7 +181,7 @@
     }
 }
 
-- (QMMessage *)qmMessageWithQbChatHistoryMessage:(QBChatHistoryMessage *)historyMessage {
+- (QMMessage *)qmMessageWithQbChatHistoryMessage:(QBChatAbstractMessage *)historyMessage {
     
     QMMessage *message = [[QMMessage alloc] initWithChatHistoryMessage:historyMessage];
     BOOL fromMe = ([QMApi instance].currentUser.ID == historyMessage.senderID);
@@ -154,14 +194,28 @@
 
 #pragma mark - Abstract methods
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
-    return self.messages.count;
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    QMChatSection *chatSection = self.chatSections[section];
+    NSAssert(chatSection, @"Section not found. Check this case");
+    return ([chatSection.messages count] > 0) ? chatSection.name : nil;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return [self.chatSections count];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    QMChatSection *chatSection = self.chatSections[section];
+    return chatSection.messages.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    QMMessage *message = self.messages[indexPath.row];
+    QMChatSection *chatSection = self.chatSections[indexPath.section];
+    QMMessage *message = chatSection.messages[indexPath.row];
     QMChatCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIDAtQMMessage:message]];
     
     cell.delegate = self;

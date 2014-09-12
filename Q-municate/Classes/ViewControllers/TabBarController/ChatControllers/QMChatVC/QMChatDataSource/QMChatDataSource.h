@@ -20,7 +20,7 @@
 @interface QMChatDataSource : NSObject
 
 @property (strong, nonatomic) QBChatDialog *chatDialog;
-@property (strong, nonatomic, readonly) NSMutableArray *messages;
+@property (strong, nonatomic, readonly) NSMutableArray *chatSections;
 
 @property (weak, nonatomic) id <QMChatDataSourceDelegate> delegate;
 

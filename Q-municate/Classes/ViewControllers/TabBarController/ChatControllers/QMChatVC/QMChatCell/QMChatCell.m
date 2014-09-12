@@ -72,6 +72,8 @@
 }
 
 #define SHOW_BORDERS 0
+#define DELIVERY_STATUS_ACTIVATED 0
+
 
 - (void)createContainerSubviews {
     
@@ -120,10 +122,12 @@
                             PVLeftOf(self.title).equalTo.leftOf(self.headerView).asConstraint,
                             PVTopOf(self.title).equalTo.topOf(self.headerView).asConstraint];
     
+#if DELIVERY_STATUS_ACTIVATED
     self.deliveryViewConstraints = @[PVWidthOf(self.deliveryStatusView).equalTo.constant(12).asConstraint,
                                      PVRightOf(self.deliveryStatusView).equalTo.rightOf(self.headerView).asConstraint,
                                      PVTopOf(self.deliveryStatusView).equalTo.topOf(self.headerView).asConstraint,
                                      PVBottomOf(self.deliveryStatusView).equalTo.bottomOf(self.headerView).asConstraint];
+#endif
     
     [self.contentView addSubview:self.messageContainer];
     [self.messageContainer addSubview:self.balloonImageView];
@@ -298,15 +302,15 @@
     self.user = user;
     self.message = message;
     
-    if (isMe || (message.chatDialog.type == QBChatDialogTypePrivate )) {
+    if (isMe || (message.chatDialog.type == QBChatDialogTypePrivate)) {
         self.title.text = nil;
         [self.headerView removeConstraints:self.nameConstrains];
     } else {
         self.title.text = user.fullName;
         [self.headerView addConstraints:self.nameConstrains];
     }
-    
-    if (isMe) {
+#if DELIVERY_STATUS_ACTIVATED
+    if (isMe && (message.chatDialog.type == QBChatDialogTypePrivate)) {
         self.timeRightConstraint.constant = -12;
         [self.headerView addConstraints:self.deliveryViewConstraints];
         [self setDeliveryStatus:2];
@@ -315,6 +319,7 @@
         [self.headerView removeConstraints:self.deliveryViewConstraints];
         [self setDeliveryStatus:0];
     }
+#endif
 }
 
 - (void)setUser:(QBUUser *)user {

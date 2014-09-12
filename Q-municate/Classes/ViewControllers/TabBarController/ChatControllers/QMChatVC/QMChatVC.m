@@ -22,6 +22,7 @@
 #import "QMHelpers.h"
 #import "QMImagePicker.h"
 #import "REActionSheet.h"
+#import "QMChatSection.h"
 
 static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
@@ -156,8 +157,25 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    QMMessage *message = self.dataSource.messages[indexPath.row];
+    QMChatSection *chatSection = self.dataSource.chatSections[indexPath.section];
+    QMMessage *message = chatSection.messages[indexPath.row];
     return message.messageSize.height;
+}
+
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    QMChatSection *chatSection = self.dataSource.chatSections[section];
+    
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 18)];
+    /* Create custom view to display section header... */
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 3, tableView.frame.size.width, 15)];
+    [label setFont:[UIFont boldSystemFontOfSize:13]];
+    [label setTextColor:[UIColor grayColor]];
+    [label setTextAlignment:NSTextAlignmentCenter];
+    [label setText:chatSection.name];
+    [view addSubview:label];
+    [view setBackgroundColor:[UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:0.95]]; //your background color...
+    return view;
 }
 
 #pragma mark - QMKeyboardControllerDelegate

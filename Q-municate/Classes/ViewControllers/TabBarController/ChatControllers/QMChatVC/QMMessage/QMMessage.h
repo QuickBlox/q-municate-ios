@@ -60,6 +60,6 @@
 
 @property (nonatomic, readonly) NSString *encodingText;
 
-- (instancetype)initWithChatHistoryMessage:(QBChatHistoryMessage *)historyMessage;
+- (instancetype)initWithChatHistoryMessage:(QBChatAbstractMessage *)historyMessage;
 
 @end
