@@ -8,18 +8,21 @@
 
 #import "QMFriendListViewController.h"
 #import "QMFriendsDetailsController.h"
+#import "QMMainTabBarController.h"
 #import "QMFriendListCell.h"
 #import "QMFriendsListDataSource.h"
 #import "QMApi.h"
 
 @interface QMFriendListViewController ()
 
-<UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate>
+<UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate, QMFriendsListDataSourceDelegate, QMFriendsTabDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) QMFriendsListDataSource *dataSource;
 
 @end
+
+
 
 @implementation QMFriendListViewController
 
@@ -31,19 +34,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    ((QMMainTabBarController *)self.tabBarController).tabDelegate = self;
+    
 #if kQMSHOW_SEARCH
     [self.tableView setContentOffset:CGPointMake(0, self.searchDisplayController.searchBar.frame.size.height) animated:NO];
 #endif
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.dataSource = [[QMFriendsListDataSource alloc] initWithTableView:self.tableView searchDisplayController:self.searchDisplayController];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    if (!self.dataSource.searchIsActive) {
-        [self.tableView reloadData];
-    }
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    self.dataSource.delegate = self;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -57,6 +55,7 @@
     self.dataSource.viewIsShowed = NO;
     [super viewDidDisappear:animated];
 }
+
 
 #pragma mark - UITableViewDelegate
 
@@ -80,6 +79,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
+
 #pragma mark - UITableViewDataSource
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -98,6 +98,7 @@
     return [self.dataSource tableView:tableView cellForRowAtIndexPath:indexPath];
 }
 
+
 #pragma mark - UISearchDisplayDelegate
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
@@ -111,6 +112,7 @@
 - (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
     [self.dataSource searchDisplayControllerWillEndSearch:controller];
 }
+
 
 #pragma mark - prepareForSegue
 
@@ -128,5 +130,26 @@
         vc.selectedUser = [self.dataSource userAtIndexPath:indexPath];
     }
 }
+
+
+#pragma mark - QMFriendsListDataSourceDelegate
+
+- (void)didChangeContactRequestsCount:(NSUInteger)contactRequestsCount
+{
+    NSUInteger idx = [self.tabBarController.viewControllers indexOfObject:self.navigationController];
+    if (idx != NSNotFound) {
+        UITabBarItem *item = self.tabBarController.tabBar.items[idx];
+        item.badgeValue = contactRequestsCount > 0 ? [NSString stringWithFormat:@"%d", contactRequestsCount] : nil;
+    }
+}
+
+
+#pragma mark - QMFriendsTabDelegate
+
+- (void)friendsListTabWasTapped:(UITabBarItem *)tab
+{
+    [self.tableView reloadData];
+}
+
 
 @end

@@ -120,7 +120,8 @@
     
     self.nameConstrains = @[PVBottomOf(self.title).equalTo.bottomOf(self.headerView).asConstraint,
                             PVLeftOf(self.title).equalTo.leftOf(self.headerView).asConstraint,
-                            PVTopOf(self.title).equalTo.topOf(self.headerView).asConstraint];
+                            PVTopOf(self.title).equalTo.topOf(self.headerView).asConstraint,
+                            PVRightOf(self.title).equalTo.leftOf(self.timeLabel).asConstraint];
     
 #if DELIVERY_STATUS_ACTIVATED
     self.deliveryViewConstraints = @[PVWidthOf(self.deliveryStatusView).equalTo.constant(12).asConstraint,
@@ -279,7 +280,7 @@
     
     self.lTitleConstraint.constant = insets.left;
     self.rTitleConstraint.constant = -insets.right;
-    self.timeWidhtConstraint.constant = 40;
+    self.timeWidhtConstraint.constant = 34;
     
     [self layoutIfNeeded];
 }

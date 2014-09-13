@@ -167,18 +167,6 @@
         NSUInteger occupantID = [[QMApi instance] occupantIDForPrivateChatDialog:dialog];
         QBUUser *user = [[QMApi instance] userWithID:occupantID];
         title = user.fullName;
-        
-        //        [QMImageView imageWithURL:[NSURL URLWithString:user.website]
-        //                             size:CGSizeMake(50, 50)
-        //                         progress:nil
-        //                             type:QMImageViewTypeCircle
-        //                       completion:^(UIImage *userAvatar) {
-        //                           img = userAvatar;
-        //                       }];
-        //        if (!img) {
-        //            img = [UIImage imageNamed:@"upic-placeholder"];
-        //        }
-        
     }
     [QMSoundManager playMessageReceivedSound];
     [TWMessageBarManager sharedInstance].styleSheet = [QMMessageBarStyleSheetFactory defaultMsgBarWithImage:img];
@@ -187,5 +175,17 @@
                                                           type:TWMessageBarMessageTypeSuccess];
 }
 
+
+#pragma mark - QMTabBarDelegate
+
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
+{
+    UITabBarItem *neededTab = tabBar.items[1];
+    if ([item isEqual:neededTab]) {
+        if ([self.tabDelegate respondsToSelector:@selector(friendsListTabWasTapped:)]) {
+            [self.tabDelegate friendsListTabWasTapped:item];
+        }
+    }
+}
 
 @end

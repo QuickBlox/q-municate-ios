@@ -33,6 +33,8 @@
 
 @property (assign, nonatomic) BOOL searchIsActive;
 
+@property (assign, nonatomic) NSUInteger contactRequestsCount;
+
 @end
 
 @implementation QMFriendsListDataSource
@@ -88,6 +90,7 @@
         
         [[QMChatReceiver instance] contactRequestUsersListChangedWithTarget:self block:^{
             weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
+            weakSelf.contactRequestsCount = weakSelf.contactRequests.count;
             if (weakSelf.viewIsShowed) {
                 [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)] withRowAnimation:UITableViewRowAnimationFade];
             }
@@ -174,6 +177,16 @@
             weakSelf.searchOperation = [[QMApi instance].usersService retrieveUsersWithFullName:searchText pagedRequest:request completion:userPagedBlock];
         }
     });
+}
+
+- (void)setContactRequestsCount:(NSUInteger)contactRequestsCount
+{
+    if (_contactRequestsCount != contactRequestsCount) {
+        _contactRequestsCount = contactRequestsCount;
+        if ([self.delegate respondsToSelector:@selector(didChangeContactRequestsCount:)]) {
+            [self.delegate didChangeContactRequestsCount:_contactRequestsCount];
+        }
+    }
 }
 
 #pragma mark - UITableViewDataSource
@@ -290,6 +303,7 @@
     if (accepted) {
         [[QMApi instance] confirmAddContactRequest:user.ID completion:^(BOOL success) {
             weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
+            weakSelf.contactRequestsCount = weakSelf.contactRequests.count;
             if (weakSelf.viewIsShowed) {
                 [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
             }
@@ -303,6 +317,7 @@
                 //
                 [[QMApi instance] rejectAddContactRequest:user.ID completion:^(BOOL success) {
                     weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
+                    weakSelf.contactRequestsCount = weakSelf.contactRequests.count;
                     if (weakSelf.viewIsShowed) {
                             [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
                     }
