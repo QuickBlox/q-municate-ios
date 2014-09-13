@@ -203,6 +203,11 @@
     [self chatAfterDidReceiveMessage:message];
 }
 
+- (void)chatDidDeliverMessageWithPacketID:(NSString *)packetID
+{
+    ILog(@"Message was delivered to user. Message package ID: %@", packetID);
+}
+
 - (void)chatAfterDidReceiveMessageWithTarget:(id)target block:(QMChatMessageBlock)block {
     [self subsribeWithTarget:target selector:@selector(chatAfterDidReceiveMessage:) block:block];
 }
