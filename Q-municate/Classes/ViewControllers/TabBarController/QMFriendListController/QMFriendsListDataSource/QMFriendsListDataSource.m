@@ -131,9 +131,9 @@
     
     self.friendList = [QMApi instance].friends;
     if (self.viewIsShowed) {
-        [self.tableView reloadData];   
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
     }
-}
+} 
 
 - (void)globalSearch:(NSString *)searchText {
     
@@ -302,28 +302,29 @@
 
     if (accepted) {
         [[QMApi instance] confirmAddContactRequest:user.ID completion:^(BOOL success) {
-            weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
-            weakSelf.contactRequestsCount = weakSelf.contactRequests.count;
-            if (weakSelf.viewIsShowed) {
-                [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
-            }
+            [weakSelf reloadContactListSectionIfNeeded];
         }];
     } else {
         
         [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-            alertView.title = @"Are you sure?";
-            [alertView addButtonWithTitle:@"Cancel" andActionBlock:^{}];
-            [alertView addButtonWithTitle:@"OK" andActionBlock:^{
+            alertView.title = NSLocalizedString(@"QM_STR_ARE_YOU_SURE", nil);
+            [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
+            [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_OK", nil) andActionBlock:^{
                 //
                 [[QMApi instance] rejectAddContactRequest:user.ID completion:^(BOOL success) {
-                    weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
-                    weakSelf.contactRequestsCount = weakSelf.contactRequests.count;
-                    if (weakSelf.viewIsShowed) {
-                            [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
-                    }
+                    [weakSelf reloadContactListSectionIfNeeded];
                 }];
             }];
         }];
+    }
+}
+
+- (void)reloadContactListSectionIfNeeded
+{
+    self.contactRequests = [QMApi instance].contactRequestUsers;
+    self.contactRequestsCount = self.contactRequests.count;
+    if (self.viewIsShowed) {
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
     }
 }
 

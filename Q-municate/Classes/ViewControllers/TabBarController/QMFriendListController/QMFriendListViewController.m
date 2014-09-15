@@ -44,16 +44,16 @@
     self.dataSource.delegate = self;
 }
 
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
     self.dataSource.viewIsShowed = YES;
-    [super viewDidAppear:animated];
+    [super viewWillAppear:animated];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
     self.dataSource.viewIsShowed = NO;
-    [super viewDidDisappear:animated];
+    [super viewWillDisappear:animated];
 }
 
 
