@@ -7,10 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TWMessageBarManager.h"
+#import "MPGNotification.h"
 
 @interface QMMessageBarStyleSheetFactory : NSObject
 
-+ (NSObject <TWMessageBarStyleSheet> *)defaultMsgBarWithImage:(UIImage *)img;
++ (void)showMessageBarNotificationWithMessage:(QBChatAbstractMessage *)chatMessage chatDialog:(QBChatDialog *)chatDialog completionBlock:(MPGNotificationButtonHandler)block;
 
 @end

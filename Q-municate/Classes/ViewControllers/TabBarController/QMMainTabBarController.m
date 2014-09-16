@@ -10,7 +10,7 @@
 #import "SVProgressHUD.h"
 #import "QMApi.h"
 #import "QMImageView.h"
-#import "TWMessageBarManager.h"
+#import "MPGNotification.h"
 #import "QMMessageBarStyleSheetFactory.h"
 #import "QMChatViewController.h"
 #import "QMSoundManager.h"
@@ -154,25 +154,18 @@
     if (!show) {
         return;
     }
-    __block UIImage *img = nil;
-    NSString *title = nil;
-    
-    if (dialog.type ==  QBChatDialogTypeGroup) {
-        
-        img = [UIImage imageNamed:@"upic_placeholder_details_group"];
-        title = dialog.name;
-    }
-    else if (dialog.type == QBChatDialogTypePrivate) {
-        
-        NSUInteger occupantID = [[QMApi instance] occupantIDForPrivateChatDialog:dialog];
-        QBUUser *user = [[QMApi instance] userWithID:occupantID];
-        title = user.fullName;
-    }
     [QMSoundManager playMessageReceivedSound];
-    [TWMessageBarManager sharedInstance].styleSheet = [QMMessageBarStyleSheetFactory defaultMsgBarWithImage:img];
-    [[TWMessageBarManager sharedInstance] showMessageWithTitle:title
-                                                   description:message.encodedText
-                                                          type:TWMessageBarMessageTypeSuccess];
+    
+    __weak typeof(self) weakSelf = self;
+    [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
+        if (buttonIndex == 1) {
+            UINavigationController *navigationController = (UINavigationController *)[weakSelf selectedViewController];
+            QMChatViewController *chatController = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"QMChatViewController"];
+            chatController.dialog = dialog;
+            [navigationController pushViewController:chatController animated:YES];
+        }
+    }];
+    
 }
 
 

@@ -307,7 +307,7 @@
     } else {
         
         [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-            alertView.title = NSLocalizedString(@"QM_STR_ARE_YOU_SURE", nil);
+            alertView.message = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_CONFIRM_REJECT_FRIENDS_REQUEST", @"{User's full name}"),  user.fullName];
             [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
             [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_OK", nil) andActionBlock:^{
                 //

@@ -3118,10 +3118,10 @@ Cg
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="kkU-F4-K0a"/>
         <segue reference="Gs8-3F-TjX"/>
+        <segue reference="kkU-F4-K0a"/>
         <segue reference="VIK-5Z-bdZ"/>
-        <segue reference="M45-HY-t12"/>
-        <segue reference="sPU-d9-maS"/>
+        <segue reference="Xoz-l0-6ya"/>
+        <segue reference="hW5-9n-Jcg"/>
     </inferredMetricsTieBreakers>
 </document>

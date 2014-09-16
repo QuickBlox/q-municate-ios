@@ -12,7 +12,6 @@
 #import "QMChatButtonsFactory.h"
 #import "QMGroupDetailsController.h"
 #import "QMBaseCallsController.h"
-#import "TWMessageBarManager.h"
 #import "QMMessageBarStyleSheetFactory.h"
 #import "QMApi.h"
 #import "QMAlertsFactory.h"
@@ -203,10 +202,8 @@
         
     }
     [QMSoundManager playMessageReceivedSound];
-    [TWMessageBarManager sharedInstance].styleSheet = [QMMessageBarStyleSheetFactory defaultMsgBarWithImage:img];
-    [[TWMessageBarManager sharedInstance] showMessageWithTitle:title
-                                                   description:message.encodedText
-                                                          type:TWMessageBarMessageTypeSuccess];
+    MPGNotification *newNotification = [MPGNotification notificationWithTitle:title subtitle:message.encodedText backgroundColor:[UIColor lightGrayColor] iconImage:img];
+    [newNotification show];
 }
 
 #pragma mark - QMChatDataSourceDelegate

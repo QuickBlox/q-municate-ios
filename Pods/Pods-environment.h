@@ -66,6 +66,12 @@
 #define COCOAPODS_VERSION_MINOR_IDMPhotoBrowser 3
 #define COCOAPODS_VERSION_PATCH_IDMPhotoBrowser 5
 
+// MPGNotification
+#define COCOAPODS_POD_AVAILABLE_MPGNotification
+#define COCOAPODS_VERSION_MAJOR_MPGNotification 1
+#define COCOAPODS_VERSION_MINOR_MPGNotification 1
+#define COCOAPODS_VERSION_PATCH_MPGNotification 1
+
 // Parus
 #define COCOAPODS_POD_AVAILABLE_Parus
 #define COCOAPODS_VERSION_MAJOR_Parus 1
@@ -101,12 +107,6 @@
 #define COCOAPODS_VERSION_MAJOR_StaticDataTableViewController 2
 #define COCOAPODS_VERSION_MINOR_StaticDataTableViewController 0
 #define COCOAPODS_VERSION_PATCH_StaticDataTableViewController 3
-
-// TWMessageBarManager
-#define COCOAPODS_POD_AVAILABLE_TWMessageBarManager
-#define COCOAPODS_VERSION_MAJOR_TWMessageBarManager 1
-#define COCOAPODS_VERSION_MINOR_TWMessageBarManager 7
-#define COCOAPODS_VERSION_PATCH_TWMessageBarManager 0
 
 // UIDevice-Hardware
 #define COCOAPODS_POD_AVAILABLE_UIDevice_Hardware

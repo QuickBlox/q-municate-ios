@@ -9,7 +9,6 @@
 #import "QMDialogsViewController.h"
 #import "QMChatViewController.h"
 #import "QMCreateNewChatController.h"
-#import "TWMessageBarManager.h"
 #import "QMDialogsDataSource.h"
 #import "QMChatReceiver.h"
 #import "QMApi.h"

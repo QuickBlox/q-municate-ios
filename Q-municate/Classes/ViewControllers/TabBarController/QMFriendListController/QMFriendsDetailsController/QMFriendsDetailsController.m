@@ -161,7 +161,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     __weak __typeof(self)weakSelf = self;
     [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
         
-        alertView.title = NSLocalizedString(@"QM_STR_ARE_YOU_SURE", nil);
+        alertView.message = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_CONFIRM_DELETE_CONTACT", @"{User Full Name}"), self.selectedUser.fullName];
         [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
         [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil) andActionBlock:^{
             

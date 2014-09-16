@@ -7,57 +7,34 @@
 //
 
 #import "QMMessageBarStyleSheetFactory.h"
+#import "QMApi.h"
 
-@interface QMMessageBarStyleSheet : NSObject <TWMessageBarStyleSheet>
-
-@property (strong, nonatomic) UIColor *bgColor;
-@property (strong, nonatomic) UIColor *strokeColor;
-@property (strong, nonatomic) UIImage *icon;
-
-- (UIColor *)backgroundColorForMessageType:(TWMessageBarMessageType)type;
-- (UIColor *)strokeColorForMessageType:(TWMessageBarMessageType)type;
-- (UIImage *)iconImageForMessageType:(TWMessageBarMessageType)type;
-
-@end
-
-@implementation QMMessageBarStyleSheet
-
-- (instancetype)initWithBGColor:(UIColor *)bg strokeColor:(UIColor *)strokeColor icon:(UIImage *)icon {
-    
-    self = [super init];
-    if (self) {
-        
-        self.bgColor = bg;
-        self.strokeColor = strokeColor;
-        self.icon = icon;
-    }
-    
-    return self;
-}
-
-- (UIColor *)backgroundColorForMessageType:(TWMessageBarMessageType)type {
-    return self.bgColor;
-}
-
-- (UIColor *)strokeColorForMessageType:(TWMessageBarMessageType)type {
-    return self.strokeColor;
-}
-
-- (UIImage *)iconImageForMessageType:(TWMessageBarMessageType)type {
-    return self.icon;
-}
-
-@end
 
 @implementation QMMessageBarStyleSheetFactory
 
-+ (NSObject <TWMessageBarStyleSheet> *)defaultMsgBarWithImage:(UIImage *)img {
++ (void)showMessageBarNotificationWithMessage:(QBChatAbstractMessage *)chatMessage chatDialog:(QBChatDialog *)chatDialog completionBlock:(MPGNotificationButtonHandler)block
+{
+    UIImage *img = nil;
+    NSString *title = nil;
     
-    QMMessageBarStyleSheet *defSheet =
-    [[QMMessageBarStyleSheet alloc] initWithBGColor:[UIColor colorWithRed:0.000 green:0.793 blue:0.357 alpha:1.000]
-                                        strokeColor:[UIColor colorWithRed:0.413 green:0.695 blue:0.996 alpha:1.000]
-                                               icon:img];
-    return defSheet;
+    if (chatDialog.type ==  QBChatDialogTypeGroup) {
+        
+        img = [UIImage imageNamed:@"upic_placeholder_details_group"];
+        title = chatDialog.name;
+    }
+    else if (chatDialog.type == QBChatDialogTypePrivate) {
+        
+        NSUInteger occupantID = [[QMApi instance] occupantIDForPrivateChatDialog:chatDialog];
+        QBUUser *user = [[QMApi instance] userWithID:occupantID];
+        title = user.fullName;
+    }
+
+    MPGNotification *newNotification = [MPGNotification notificationWithTitle:title subtitle:chatMessage.encodedText backgroundColor:[UIColor colorWithRed:0.32 green:0.33 blue:0.34 alpha:0.86] iconImage:img];
+    [newNotification setButtonConfiguration:MPGNotificationButtonConfigrationOneButton withButtonTitles:@[@"Reply"]];
+    newNotification.duration = 2.0f;
+    
+    newNotification.buttonHandler = block;
+    [newNotification show];
 }
 
 
