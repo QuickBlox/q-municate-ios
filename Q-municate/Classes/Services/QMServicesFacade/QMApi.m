@@ -47,7 +47,7 @@ const NSTimeInterval kQMPresenceTime = 30;
         servicesFacade = [[self alloc] init];
         [QBChat instance].useMutualSubscriptionForContactList = YES;
 //        [QBChat instance].autoReconnectEnabled = YES;
-//        [QBChat instance].streamManagementEnabled = YES;
+        [QBChat instance].streamManagementEnabled = YES;
         
         [QBChat instance].delegate = [QMChatReceiver instance];
         servicesFacade.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:kQMPresenceTime

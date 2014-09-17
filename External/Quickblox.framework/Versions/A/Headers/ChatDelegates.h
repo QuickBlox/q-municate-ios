@@ -57,7 +57,14 @@
  
  @param error Error code from QBChatServiceError enum
  */
-- (void)chatDidFailWithError:(NSInteger)code;
+- (void)chatDidFailWithError:(NSInteger)code __attribute__((deprecated("Use chatDidFailWithStreamError:")));
+
+/**
+ chatDidFailWithStreamError fired when connection error
+ 
+ @param error XMPPStream Error
+ */
+- (void)chatDidFailWithStreamError:(NSError *)error;
 
 /**
  Called in case receiving presence

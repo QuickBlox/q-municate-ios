@@ -26,7 +26,7 @@
     NSString *website;
     NSMutableArray *tags;
     NSString *password;
-    NSString *oldPasswordX;
+    NSString *oldPassword;
     NSDate *lastRequestAt;
     NSString *customData;
 }

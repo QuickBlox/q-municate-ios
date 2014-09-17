@@ -29,8 +29,7 @@
  QBChatServiceErrorConnectionTimeout - Connection with server timed out
  */
 typedef enum QBChatServiceError {
-    QBChatServiceErrorConnectionRefused,
-    QBChatServiceErrorConnectionClosed,
+    QBChatServiceErrorConnectionClosed = 1,
     QBChatServiceErrorConnectionTimeout
 } QBChatServiceError;
 
@@ -38,11 +37,7 @@ typedef enum QBChatServiceError {
 /** Overview */
 /** This class is the main entry point to work with Quickblox Chat API. */
 
-@interface QBChat : NSObject{
-@private
-    id<QBChatDelegate> delegate;
-    QBUUser *qbUser;
-}
+@interface QBChat : NSObject 
 
 /** QBChat delegate for callbacks */
 @property (nonatomic, retain) id<QBChatDelegate> delegate;
