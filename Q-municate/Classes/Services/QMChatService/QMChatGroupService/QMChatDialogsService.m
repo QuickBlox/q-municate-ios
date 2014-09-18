@@ -99,11 +99,14 @@
     if (chatDialog.type == QBChatDialogTypeGroup) {
         
        __unused NSString *roomJID = chatDialog.roomJID;
-        NSAssert(roomJID, @"Need update this case");
-        
-        QBChatRoom *room = chatDialog.chatRoom;
-        [room joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
-        self.rooms[chatDialog.roomJID] = room;
+        if (!self.rooms[roomJID]) {
+            
+            NSAssert(roomJID, @"Need update this case");
+            
+            QBChatRoom *room = chatDialog.chatRoom;
+            [room joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
+            self.rooms[chatDialog.roomJID] = room;
+        }
         
     } else if (chatDialog.type == QBChatDialogTypePrivate) {
         

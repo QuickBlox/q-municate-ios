@@ -47,7 +47,6 @@
         if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog && [message.cParamDialogID isEqualToString:weakSelf.dialog.ID]) {
             weakSelf.title = message.cParamDialogName;
         }
-        
     }];
 }
 
@@ -186,24 +185,17 @@
     if (!show) {
         return;
     }
-    __block UIImage *img = nil;
-    NSString *title = nil;
     
-    if (dialog.type ==  QBChatDialogTypeGroup) {
-        
-        img = [UIImage imageNamed:@"upic_placeholder_details_group"];
-        title = dialog.name;
-    }
-    else if (dialog.type == QBChatDialogTypePrivate) {
-        
-        NSUInteger occupantID = [[QMApi instance] occupantIDForPrivateChatDialog:dialog];
-        QBUUser *user = [[QMApi instance] userWithID:occupantID];
-        title = user.fullName;
-        
-    }
+    __weak typeof(self)weakSelf = self;
     [QMSoundManager playMessageReceivedSound];
-    MPGNotification *newNotification = [MPGNotification notificationWithTitle:title subtitle:message.encodedText backgroundColor:[UIColor lightGrayColor] iconImage:img];
-    [newNotification show];
+    [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
+        if (buttonIndex == 1) {
+            UINavigationController *navigationController = (UINavigationController *)[weakSelf.tabBarController selectedViewController];
+            QMChatViewController *chatController = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"QMChatViewController"];
+            chatController.dialog = dialog;
+            [navigationController pushViewController:chatController animated:YES];
+        }
+    }];
 }
 
 #pragma mark - QMChatDataSourceDelegate

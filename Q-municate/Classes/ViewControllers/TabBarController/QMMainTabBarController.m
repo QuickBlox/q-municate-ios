@@ -137,13 +137,13 @@
     
     if (message.cParamNotificationType > 0) {
         [self.chatDelegate tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:NO];
-        return;
     }
-    if ([self.chatDelegate isKindOfClass:QMChatViewController.class] && [otherDialog isEqual:((QMChatViewController *)self.chatDelegate).dialog]) {
+    else if ([self.chatDelegate isKindOfClass:QMChatViewController.class] && [otherDialog.ID isEqual:((QMChatViewController *)self.chatDelegate).dialog.ID]) {
         [self.chatDelegate tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:NO];
-        return;
     }
-    [self.chatDelegate tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:YES];
+    else {
+        [self.chatDelegate tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:YES];
+    }
 }
 
 
