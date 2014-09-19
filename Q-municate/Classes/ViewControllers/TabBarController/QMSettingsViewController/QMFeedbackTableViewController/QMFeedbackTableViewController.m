@@ -105,7 +105,8 @@
             [weakSelf.navigationController popViewControllerAnimated:YES];
             
         } else if (result == MFMailComposeResultFailed) {
-            [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_ERROR", nil)];
+            
+            [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"QM_STR_MAIL_COMPOSER_ERROR_DESCRIPTION", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) otherButtonTitles:nil] show];
         }
     }];
 }

@@ -54,3 +54,5 @@
 "QM_STR_CONFIRM_REJECT_FRIENDS_REQUEST" = "Do you really want to reject contact request from %@?";
 "QM_STR_CONFIRM_DELETE_CONTACT" = "Do you really want to delete %@ from your contact list?";
 
+"QM_STR_MAIL_COMPOSER_ERROR_DESCRIPTION" = "We can't send your feedback due to misconfigured email account. Please go to Settings app-> Mail,Contact, Calendars and setup it.";
+
