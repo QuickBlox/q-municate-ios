@@ -1,4 +1,4 @@
-//
+    //
 //  QMChatViewController.m
 //  Q-municate
 //
@@ -46,6 +46,7 @@
         
         if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog && [message.cParamDialogID isEqualToString:weakSelf.dialog.ID]) {
             weakSelf.title = message.cParamDialogName;
+            weakSelf.dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
         }
     }];
 }

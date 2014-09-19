@@ -51,6 +51,6 @@
 "QM_STR_CHOOSE_FROM_LIBRARY" = "Choose from Library";
 "QM_STR_CANT_ADD_NEW_FRIEND" = "You can't add new friend, because all existing friends are added in this group chat";
 
-"QM_STR_CONFIRM_REJECT_FRIENDS_REQUEST" = "Do you really what to reject contact request from %@?";
+"QM_STR_CONFIRM_REJECT_FRIENDS_REQUEST" = "Do you really want to reject contact request from %@?";
 "QM_STR_CONFIRM_DELETE_CONTACT" = "Do you really want to delete %@ from your contact list?";
 

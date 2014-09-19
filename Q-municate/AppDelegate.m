@@ -12,15 +12,26 @@
 #import "SVProgressHUD.h"
 #import "QMApi.h"
 
+
+#define DEVELOPMENT 0
+
+#if DEVELOPMENT
+
+// Development
+const NSUInteger kQMApplicationID = 14542;
+NSString *const kQMAuthorizationKey = @"rJqAFphrSnpyZW2";
+NSString *const kQMAuthorizationSecret = @"tTEB2wK-dU8X3Ra";
+NSString *const kQMAcconuntKey = @"2qCrjKYFkYnfRnUiYxLZ";
+
+#else
+
+// Production
 const NSUInteger kQMApplicationID = 13318;
 NSString *const kQMAuthorizationKey = @"WzrAY7vrGmbgFfP";
 NSString *const kQMAuthorizationSecret = @"xS2uerEveGHmEun";
 NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 
-//const NSUInteger kQMApplicationID = 7232;
-//NSString *const kQMAuthorizationKey = @"MpOecRZy-5WsFva";
-//NSString *const kQMAuthorizationSecret = @"dTSLaxDsFKqegD7";
-//NSString *const kQMAcconuntKey = @"LpNmxA2Pq2uyW5qBjHy8";
+#endif
 
 /* ==================================================================== */
 
