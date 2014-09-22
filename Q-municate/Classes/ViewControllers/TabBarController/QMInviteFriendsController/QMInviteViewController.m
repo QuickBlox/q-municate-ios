@@ -57,17 +57,17 @@
             
         } finish:^(MFMailComposeResult result, NSError *error) {
             
-            if (!error && result != MFMailComposeResultFailed && result != MFMailComposeResultCancelled) {
+            if (!error && result == MFMailComposeResultSent) {
                 
                 [weakSelf.dataSource clearABFriendsToInvite];
                 [SVProgressHUD showSuccessWithStatus:@"Success!"];
             }
-            else {
-                if (result == MFMailComposeResultFailed && !error) {
-                    
-                    [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_PLEASE_CHECK_YOUR_EMAIL_SETTINGS", nil)];
-                    [SVProgressHUD showErrorWithStatus:@"Error"];
-                }
+#warning Reachability case needed also!
+            else if (result == MFMailComposeResultFailed && !error) {
+                [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"QM_STR_MAIL_COMPOSER_ERROR_DESCRIPTION_FOR_INVITE", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) otherButtonTitles:nil] show];
+                
+            } else if (result == MFMailComposeResultFailed && error) {
+                [SVProgressHUD showErrorWithStatus:@"Error"];
             }
         }];
     }

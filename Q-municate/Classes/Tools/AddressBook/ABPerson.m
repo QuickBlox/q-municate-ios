@@ -129,13 +129,13 @@
 }
 
 - (BOOL)isEqual:(ABPerson *)other {
-
-    return (other == self || self.recordID == other.recordID) ? YES : NO;
+    BOOL equal = (other == self || self.recordID == other.recordID || [self.emails isEqualToArray:other.emails]) ? YES : NO;
+    return equal;
+//    return (other == self || self.recordID == other.recordID || [self.emails isEqualToArray:other.emails]) ? YES : NO;
 }
 
-- (NSUInteger)hash {
-    
-    return self.recordID;
+- (NSString *)description {
+    return [NSString stringWithFormat:@"%@", [self emails]];
 }
 
 @end

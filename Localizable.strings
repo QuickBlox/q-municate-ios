@@ -56,3 +56,5 @@
 
 "QM_STR_MAIL_COMPOSER_ERROR_DESCRIPTION" = "We can't send your feedback due to misconfigured email account. Please go to Settings app-> Mail,Contact, Calendars and setup it.";
 
+"QM_STR_MAIL_COMPOSER_ERROR_DESCRIPTION_FOR_INVITE" = "We can't send your email invite due to misconfigured email account. Please go to Settings app-> Mail,Contact, Calendars and setup it.";
+

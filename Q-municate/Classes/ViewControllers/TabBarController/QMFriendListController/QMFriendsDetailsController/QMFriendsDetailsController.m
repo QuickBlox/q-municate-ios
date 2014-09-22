@@ -83,6 +83,14 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     }];
     
     [self updateUserStatus];
+    
+#if !QM_AUDIO_VIDEO_ENABLED
+    
+    UITableViewCell *videoChatCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
+    UITableViewCell *audioChatCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
+    [self cells:@[videoChatCell, audioChatCell] setHidden:YES];
+    
+#endif
 }
 
 - (void)updateUserStatus {
@@ -132,12 +140,10 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 #if QM_AUDIO_VIDEO_ENABLED
         case QMCallTypeVideo:[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil]; break;
         case QMCallTypeAudio: [self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil]; break;
-#else
-        case QMCallTypeVideo:
-        case QMCallTypeAudio:[QMAlertsFactory comingSoonAlert]; break;
-#endif
         case QMCallTypeChat: {
-            
+#else
+        case QMCallTypeVideo: {
+#endif
             __weak __typeof(self)weakSelf = self;
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
             [[QMApi instance] createPrivateChatDialogIfNeededWithOpponent:self.selectedUser completion:^(QBChatDialog *chatDialog) {

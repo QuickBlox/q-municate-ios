@@ -111,6 +111,7 @@
         [weakSelf updateTitleInfoForPrivateDialog];
     }];
     
+#if QM_AUDIO_VIDEO_ENABLED
     UIButton *audioButton = [QMChatButtonsFactory audioCall];
     [audioButton addTarget:self action:@selector(audioCallAction) forControlEvents:UIControlEventTouchUpInside];
     
@@ -121,6 +122,10 @@
     UIBarButtonItem *audioCallBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:audioButton];
     
     [self.navigationItem setRightBarButtonItems:@[videoCallBarButtonItem,  audioCallBarButtonItem] animated:YES];
+    
+#else
+    [self.navigationItem setRightBarButtonItem:nil];
+#endif
 }
 
 - (void)configureNavigationBarForGroupChat {

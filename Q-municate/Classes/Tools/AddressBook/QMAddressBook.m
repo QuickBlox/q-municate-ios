@@ -65,14 +65,27 @@
         if (success) {
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.emails.@count > 0"];
             NSArray *contactsWithEmails = [contacts filteredArrayUsingPredicate:predicate];
-            if (contactsWithEmails == nil) {
-                contactsWithEmails = @[];
+            NSArray *filteredContacts = [[self class] filteredArrayForDuplicatesFromArray:contactsWithEmails];
+
+            if (filteredContacts == nil) {
+                filteredContacts = @[];
             }
-            block(contactsWithEmails);
+            block(filteredContacts);
             return;
         }
         block(@[]);
     }];
+}
+
++ (NSArray *)filteredArrayForDuplicatesFromArray:(NSArray *)array
+{
+    NSMutableArray *newArray = [NSMutableArray new];
+    for (ABPerson *person in array) {
+        if (![newArray containsObject:person]) {
+            [newArray addObject:person];
+        }
+    }
+    return [newArray copy];
 }
 
 @end
