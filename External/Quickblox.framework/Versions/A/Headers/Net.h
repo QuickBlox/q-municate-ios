@@ -10,7 +10,6 @@
 #import "Server/QBChat.h"
 #import "Server/QBWebRTCVideoChat.h"
 #import "Server/QBVideoView.h"
-
 #import "Queries/ChatQueries.h"
 
 #import "Answers/Base/QBChatDialogAnswer.h"

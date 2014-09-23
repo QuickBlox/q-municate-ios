@@ -75,6 +75,14 @@
 - (void)chatDidReceivePresenceOfUser:(NSUInteger)userID type:(NSString *)type;
 
 
+/**
+ Fired when received service discovery information
+ 
+ @param features Array of server features
+ */
+- (void)chatDidReceiveServiceDiscoveryInformation:(NSArray *)features;
+
+
 #pragma mark -
 #pragma mark Contact list
 

@@ -138,6 +138,11 @@ typedef enum QBChatServiceError {
  */
 - (QBUUser *)currentUser;
 
+/**
+  Request service discovery information
+ */
+- (BOOL)requestServiceDiscoveryInformation;
+
 
 #pragma mark -
 #pragma mark Contact list
@@ -413,8 +418,8 @@ typedef enum QBChatServiceError {
  @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of QBDialogsPagedResult class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-+ (NSObject<Cancelable> *)dialogsWithDelegate:(NSObject<QBActionStatusDelegate> *)delegate;
-+ (NSObject<Cancelable> *)dialogsWithDelegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context;
++ (NSObject<Cancelable> *)dialogsWithDelegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest dialogsWithSuccessBlock:errorBlock:]' instead.")));
++ (NSObject<Cancelable> *)dialogsWithDelegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest dialogsWithSuccessBlock:errorBlock:]' instead.")));;
 
 
 /**
@@ -424,8 +429,8 @@ typedef enum QBChatServiceError {
  @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of QBDialogsPagedResult class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-+ (NSObject<Cancelable> *)dialogsWithExtendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate;
-+ (NSObject<Cancelable> *)dialogsWithExtendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context;
++ (NSObject<Cancelable> *)dialogsWithExtendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest dialogsForPage:successBlock:errorBlock:]' instead.")));
++ (NSObject<Cancelable> *)dialogsWithExtendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest dialogsForPage:successBlock:errorBlock:]' instead.")));;
 
 
 #pragma mark - 
@@ -438,8 +443,8 @@ typedef enum QBChatServiceError {
  @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of QBChatDialogResult class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-+ (NSObject<Cancelable> *)createDialog:(QBChatDialog *)dialog delegate:(NSObject<QBActionStatusDelegate> *)delegate;
-+ (NSObject<Cancelable> *)createDialog:(QBChatDialog *)dialog delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context;
++ (NSObject<Cancelable> *)createDialog:(QBChatDialog *)dialog delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest createDialog:successBlock:errorBlock:]' instead.")));
++ (NSObject<Cancelable> *)createDialog:(QBChatDialog *)dialog delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest createDialog:successBlock:errorBlock:]' instead.")));;
 
 
 #pragma mark -
@@ -453,8 +458,8 @@ typedef enum QBChatServiceError {
  @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of QBChatDialogResult class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-+ (NSObject<Cancelable> *)updateDialogWithID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate;
-+ (NSObject<Cancelable> *)updateDialogWithID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context;
++ (NSObject<Cancelable> *)updateDialogWithID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest updateDialog:successBlock:errorBlock:]' instead.")));
++ (NSObject<Cancelable> *)updateDialogWithID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest updateDialog:successBlock:errorBlock:]' instead.")));;
 
 
 #pragma mark -
@@ -467,8 +472,8 @@ typedef enum QBChatServiceError {
  @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of QBChatHistoryMessageResult class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-+ (NSObject<Cancelable> *)messagesWithDialogID:(NSString *)dialogID delegate:(NSObject<QBActionStatusDelegate> *)delegate;
-+ (NSObject<Cancelable> *)messagesWithDialogID:(NSString *)dialogID delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context;
++ (NSObject<Cancelable> *)messagesWithDialogID:(NSString *)dialogID delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest messagesWithDialogID:successBlock:errorBlock:]' instead.")));
++ (NSObject<Cancelable> *)messagesWithDialogID:(NSString *)dialogID delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest messagesWithDialogID:successBlock:errorBlock:]' instead.")));;
 
 
 /**
@@ -479,8 +484,8 @@ typedef enum QBChatServiceError {
  @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of QBChatHistoryMessageResult class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-+ (NSObject<Cancelable> *)messagesWithDialogID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate;
-+ (NSObject<Cancelable> *)messagesWithDialogID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context;
++ (NSObject<Cancelable> *)messagesWithDialogID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest messagesWithDialogID:forPage:successBlock:errorBlock:]' instead.")));
++ (NSObject<Cancelable> *)messagesWithDialogID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest messagesWithDialogID:forPage:successBlock:errorBlock:]' instead.")));;
 
 
 #pragma mark -
@@ -493,8 +498,8 @@ typedef enum QBChatServiceError {
  @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of QBChatDialogResult class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-+ (NSObject<Cancelable> *)createMessage:(QBChatHistoryMessage *)message delegate:(NSObject<QBActionStatusDelegate> *)delegate;
-+ (NSObject<Cancelable> *)createMessage:(QBChatHistoryMessage *)message delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context;
++ (NSObject<Cancelable> *)createMessage:(QBChatHistoryMessage *)message delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest createMessage:successBlock:errorBlock:]' instead.")));
++ (NSObject<Cancelable> *)createMessage:(QBChatHistoryMessage *)message delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest createMessage:successBlock:errorBlock:]' instead.")));;
 
 
 #pragma mark -
@@ -507,8 +512,8 @@ typedef enum QBChatServiceError {
  @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of Result class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-+ (NSObject<Cancelable> *)updateMessage:(QBChatHistoryMessage *)message delegate:(NSObject<QBActionStatusDelegate> *)delegate;
-+ (NSObject<Cancelable> *)updateMessage:(QBChatHistoryMessage *)message delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context;
++ (NSObject<Cancelable> *)updateMessage:(QBChatHistoryMessage *)message delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest updateMessage:successBlock:errorBlock:]' instead.")));
++ (NSObject<Cancelable> *)updateMessage:(QBChatHistoryMessage *)message delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest updateMessage:successBlock:errorBlock:]' instead.")));;
 
 
 #pragma mark -
@@ -522,8 +527,8 @@ typedef enum QBChatServiceError {
  @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of Result class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-+ (NSObject<Cancelable> *)markMessagesAsRead:(NSArray *)messagesIDs dialogID:(NSString *)dialogID delegate:(NSObject<QBActionStatusDelegate> *)delegate;
-+ (NSObject<Cancelable> *)markMessagesAsRead:(NSArray *)messagesIDs dialogID:(NSString *)dialogID delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context;
++ (NSObject<Cancelable> *)markMessagesAsRead:(NSArray *)messagesIDs dialogID:(NSString *)dialogID delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest markMessagesAsRead:dialogID:successBlock:errorBlock:]' instead.")));
++ (NSObject<Cancelable> *)markMessagesAsRead:(NSArray *)messagesIDs dialogID:(NSString *)dialogID delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest markMessagesAsRead:dialogID:successBlock:errorBlock:]' instead.")));;
 
 
 #pragma mark -
@@ -536,8 +541,8 @@ typedef enum QBChatServiceError {
  @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of Result class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-+ (NSObject<Cancelable> *)deleteMessageWithID:(NSString *)messageID delegate:(NSObject<QBActionStatusDelegate> *)delegate;
-+ (NSObject<Cancelable> *)deleteMessageWithID:(NSString *)messageID delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context;
++ (NSObject<Cancelable> *)deleteMessageWithID:(NSString *)messageID delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest deleteMessageWithID:successBlock:errorBlock:]' instead.")));
++ (NSObject<Cancelable> *)deleteMessageWithID:(NSString *)messageID delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest deleteMessageWithID:successBlock:errorBlock:]' instead.")));;
 
 
 #pragma mark -

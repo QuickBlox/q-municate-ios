@@ -86,7 +86,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     
     NSString *dialogID = userInfo[@"dialog_id"];
-    
+    QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:dialogID];
     
     ILog(@"Push war received. User info: %@", userInfo);
 }

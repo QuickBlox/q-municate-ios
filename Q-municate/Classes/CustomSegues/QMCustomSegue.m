@@ -7,13 +7,14 @@
 //
 
 #import "QMCustomSegue.h"
-
+#import "AppDelegate.h"
 
 @implementation QMCustomSegue
 
 - (void)perform {
     
-    UIWindow *window = (UIWindow *)[[UIApplication sharedApplication].windows firstObject];
+    AppDelegate *delegate =  (AppDelegate *)[UIApplication sharedApplication].delegate;
+    UIWindow *window = delegate.window;
     window.rootViewController = self.destinationViewController;
 }
 

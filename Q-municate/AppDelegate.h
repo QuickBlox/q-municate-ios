@@ -14,5 +14,6 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) QMIncomingCallHandler *incomingCallService;
+@property (strong, nonatomic) id rootViewController;
 
 @end

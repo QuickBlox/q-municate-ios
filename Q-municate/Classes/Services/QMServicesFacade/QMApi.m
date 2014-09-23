@@ -143,6 +143,18 @@ const NSTimeInterval kQMPresenceTime = 30;
     [self logoutFromChat];
 }
 
+- (void)openChatPageForPushNotification:(NSDictionary *)notification
+{
+    NSString *dialogID = notification[@"dialog_id"];
+    QBChatDialog *dialog = [self chatDialogWithID:dialogID];
+    if (dialog == nil) {
+        return;
+    }
+    UIViewController *dialogsController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"QMChatViewController"];
+    
+    
+}
+
 @end
 
 @implementation NSObject(CurrentUser)
