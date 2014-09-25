@@ -43,6 +43,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 
 - (void)applicationDidBecomeActive:(void(^)(BOOL success))completion;
 - (void)applicationWillResignActive;
+- (void)openChatPageForPushNotification:(NSDictionary *)notification;
 
 - (void)fetchAllHistory:(void(^)(void))completion;
 
@@ -85,6 +86,8 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 @end
 
 @interface QMApi (Messages)
+
+@property (nonatomic, strong) NSDictionary *pushNotification;
 
 - (void)loginChat:(QBChatResultBlock)block;
 - (void)logoutFromChat;

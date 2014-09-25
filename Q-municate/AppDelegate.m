@@ -10,6 +10,7 @@
 #import <Crashlytics/Crashlytics.h>
 #import "QMIncomingCallHandler.h"
 #import "SVProgressHUD.h"
+#import "QMPopoversFactory.h"
 #import "QMApi.h"
 
 
@@ -80,14 +81,17 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     /** Crashlytics */
     [Crashlytics startWithAPIKey:@"7aea78439bec41a9005c7488bb6751c5e33fe270"];
     
+    if (launchOptions != nil) {
+        NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+        [[QMApi instance] setPushNotification:notification];
+    }
     return YES;
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    
-    NSString *dialogID = userInfo[@"dialog_id"];
-    QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:dialogID];
-    
+
+
+    [[QMApi instance] openChatPageForPushNotification:userInfo];
     ILog(@"Push war received. User info: %@", userInfo);
 }
 

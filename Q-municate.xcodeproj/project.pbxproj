@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		243F976519D1C54000BDE124 /* QMPopoversFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 243F976419D1C54000BDE124 /* QMPopoversFactory.m */; };
 		2476BA8119A5D91F00CC666D /* QMUsersUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2476BA8019A5D91F00CC666D /* QMUsersUtils.m */; };
 		2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */; };
 		2494559B19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 2494559A19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m */; };
@@ -237,6 +238,8 @@
 
 /* Begin PBXFileReference section */
 		240CE3AF19A2223A00392E06 /* QMProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMProtocols.h; sourceTree = "<group>"; };
+		243F976319D1C54000BDE124 /* QMPopoversFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMPopoversFactory.h; path = QMPopoversFactory/QMPopoversFactory.h; sourceTree = "<group>"; };
+		243F976419D1C54000BDE124 /* QMPopoversFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMPopoversFactory.m; path = QMPopoversFactory/QMPopoversFactory.m; sourceTree = "<group>"; };
 		2476BA7F19A5D91F00CC666D /* QMUsersUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMUsersUtils.h; path = QMUsersUtils/QMUsersUtils.h; sourceTree = "<group>"; };
 		2476BA8019A5D91F00CC666D /* QMUsersUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMUsersUtils.m; path = QMUsersUtils/QMUsersUtils.m; sourceTree = "<group>"; };
 		2494559619A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+GTMNSStringHTMLAdditions.h"; sourceTree = "<group>"; };
@@ -657,6 +660,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		243F976219D1C4FF00BDE124 /* QMPopoversFactory */ = {
+			isa = PBXGroup;
+			children = (
+				243F976319D1C54000BDE124 /* QMPopoversFactory.h */,
+				243F976419D1C54000BDE124 /* QMPopoversFactory.m */,
+			);
+			name = QMPopoversFactory;
+			sourceTree = "<group>";
+		};
 		2476BA7E19A5D8D300CC666D /* QMUsersUtils */ = {
 			isa = PBXGroup;
 			children = (
@@ -780,6 +792,7 @@
 		55495A1D1993BCC100B7764C /* Factories */ = {
 			isa = PBXGroup;
 			children = (
+				243F976219D1C4FF00BDE124 /* QMPopoversFactory */,
 				55495A1E1993BCC100B7764C /* QMAlertsFactory */,
 				55495A211993BCC100B7764C /* QMMessageBarStyleSheetFactory */,
 			);
@@ -2284,6 +2297,7 @@
 				6943848318E42678001E08A9 /* QMMainTabBarController.m in Sources */,
 				556192CB19891BD70048D112 /* QMGroupDetailsDataSource.m in Sources */,
 				55D8AD9A19AC75FA00DAF79F /* NSPersistentStore+MagicalRecord.m in Sources */,
+				243F976519D1C54000BDE124 /* QMPopoversFactory.m in Sources */,
 				55A8B09E196598A300B5D33B /* QMUsersService.m in Sources */,
 				55D8ADDD19AC76E200DAF79F /* QMAddMembersToGroupController.m in Sources */,
 				55D8ADE219AC76F900DAF79F /* QMChangePasswordVC.m in Sources */,

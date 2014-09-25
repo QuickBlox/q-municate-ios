@@ -18,6 +18,8 @@
 #import "QMMessagesService.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMChatReceiver.h"
+#import "QMPopoversFactory.h"
+#import "QMMainTabBarController.h"
 
 const NSTimeInterval kQMPresenceTime = 30;
 
@@ -150,9 +152,12 @@ const NSTimeInterval kQMPresenceTime = 30;
     if (dialog == nil) {
         return;
     }
-    UIViewController *dialogsController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"QMChatViewController"];
     
-    
+    QMChatViewController *chatController = [QMPopoversFactory chatControllerWithDialogID:dialogID];
+    UIWindow *window = [[UIApplication sharedApplication].windows firstObject];
+    QMMainTabBarController *tabBar = (QMMainTabBarController *)window.rootViewController;
+    UINavigationController *navigationController = (UINavigationController *)[tabBar selectedViewController];
+    [navigationController pushViewController:chatController animated:YES];
 }
 
 @end

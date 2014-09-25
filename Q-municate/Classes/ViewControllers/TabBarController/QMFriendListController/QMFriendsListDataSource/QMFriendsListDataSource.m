@@ -91,7 +91,7 @@
         [[QMChatReceiver instance] contactRequestUsersListChangedWithTarget:self block:^{
             weakSelf.contactRequests = [QMApi instance].contactRequestUsers;
             weakSelf.contactRequestsCount = weakSelf.contactRequests.count;
-            if (weakSelf.viewIsShowed) {
+            if (weakSelf.viewIsShowed && !self.searchIsActive) {
                 [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)] withRowAnimation:UITableViewRowAnimationFade];
             }
         }];
@@ -312,7 +312,7 @@
             [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_OK", nil) andActionBlock:^{
                 //
                 [[QMApi instance] rejectAddContactRequest:user.ID completion:^(BOOL success) {
-                    [weakSelf reloadContactListSectionIfNeeded];
+                   [weakSelf reloadContactListSectionIfNeeded];
                 }];
             }];
         }];
@@ -324,7 +324,7 @@
     self.contactRequests = [QMApi instance].contactRequestUsers;
     self.contactRequestsCount = self.contactRequests.count;
     if (self.viewIsShowed) {
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)] withRowAnimation:UITableViewRowAnimationTop];
     }
 }
 
@@ -335,8 +335,9 @@
     if (!self.searchIsActive) {
         if (searchString.length > 0) {
             [self.tableView setDataSource:nil];
+        } else {
+            [self.tableView setDataSource:self];
         }
-        [self.tableView setDataSource:self];
         self.searchIsActive = YES;
     }
     [self globalSearch:searchString];
@@ -352,6 +353,7 @@
     if (self.searchIsActive) {
         self.searchIsActive = NO;
     }
+    [self.tableView setDataSource:self];
     [self.tableView reloadData];
 }
 

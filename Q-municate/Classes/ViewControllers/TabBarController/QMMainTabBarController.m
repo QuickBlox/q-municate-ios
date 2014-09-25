@@ -50,7 +50,10 @@
             }];
             
         }else {
-            
+            NSDictionary *push = [[QMApi instance] pushNotification];
+            if (push != nil) {
+                [SVProgressHUD show];
+            }
             [[QMApi instance] loginChat:^(BOOL loginSuccess) {
                 [[QMApi instance] subscribeToPushNotificationsForceSettings:NO complete:^(BOOL subscribeToPushNotificationsSuccess) {
                 
@@ -60,7 +63,15 @@
                 }];
                 
                 QMSettingsManager *settings = [QMApi instance].settingsManager;
-                [[QMApi instance] fetchAllHistory:^{}];
+                
+                [[QMApi instance] fetchAllHistory:^{
+                    
+                    if (push != nil) {
+                        [SVProgressHUD dismiss];
+                        [[QMApi instance] openChatPageForPushNotification:push];
+                        [[QMApi instance] setPushNotification:nil];
+                    }
+                }];
                 
                 if (![settings isFirstFacebookLogin]) {
                     

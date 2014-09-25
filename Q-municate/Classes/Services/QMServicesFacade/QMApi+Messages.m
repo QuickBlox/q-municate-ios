@@ -90,4 +90,17 @@
     return [self.messagesService messageHistoryWithDialogID:chatDialog.ID];
 }
 
+
+#pragma mark - Setter & Getter
+
+- (void)setPushNotification:(NSDictionary *)pushNotification
+{
+    [self.messagesService setPushNotification:pushNotification];
+}
+
+- (NSDictionary *)pushNotification
+{
+    return self.messagesService.pushNotification;
+}
+
 @end

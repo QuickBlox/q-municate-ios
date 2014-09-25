@@ -19,6 +19,8 @@ NSString *const kQMSettingsUserStatusKey = @"userStatusKey";
 NSString *const kQMAuthServiceKey = @"QMAuthServiceKey";
 NSString *const kQMLicenceAcceptedKey = @"licence_accepted";
 NSString *const kQMAccountTypeKey = @"accountType";
+NSString *const kQMApplicationEnteredFromPushKey = @"app_entered_from_push";
+
 
 @implementation QMSettingsManager
 
@@ -131,6 +133,7 @@ NSString *const kQMAccountTypeKey = @"accountType";
 {
     return defBool(kQMFirstFacebookLoginKey);
 }
+
 
 #pragma mark - Default Settings
 
