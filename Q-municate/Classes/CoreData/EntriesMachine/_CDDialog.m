@@ -5,10 +5,10 @@
 
 const struct CDDialogAttributes CDDialogAttributes = {
 	.countUnreadMessages = @"countUnreadMessages",
+	.dialogType = @"dialogType",
 	.id = @"id",
 	.name = @"name",
 	.roomJID = @"roomJID",
-	.type = @"type",
 };
 
 const struct CDDialogRelationships CDDialogRelationships = {
@@ -50,8 +50,8 @@ const struct CDDialogFetchedProperties CDDialogFetchedProperties = {
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
-	if ([key isEqualToString:@"typeValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"type"];
+	if ([key isEqualToString:@"dialogTypeValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"dialogType"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -88,6 +88,32 @@ const struct CDDialogFetchedProperties CDDialogFetchedProperties = {
 
 
 
+@dynamic dialogType;
+
+
+
+- (int16_t)dialogTypeValue {
+	NSNumber *result = [self dialogType];
+	return [result shortValue];
+}
+
+- (void)setDialogTypeValue:(int16_t)value_ {
+	[self setDialogType:[NSNumber numberWithShort:value_]];
+}
+
+- (int16_t)primitiveDialogTypeValue {
+	NSNumber *result = [self primitiveDialogType];
+	return [result shortValue];
+}
+
+- (void)setPrimitiveDialogTypeValue:(int16_t)value_ {
+	[self setPrimitiveDialogType:[NSNumber numberWithShort:value_]];
+}
+
+
+
+
+
 @dynamic id;
 
 
@@ -104,32 +130,6 @@ const struct CDDialogFetchedProperties CDDialogFetchedProperties = {
 
 @dynamic roomJID;
 
-
-
-
-
-
-@dynamic type;
-
-
-
-- (int16_t)typeValue {
-	NSNumber *result = [self type];
-	return [result shortValue];
-}
-
-- (void)setTypeValue:(int16_t)value_ {
-	[self setType:[NSNumber numberWithShort:value_]];
-}
-
-- (int16_t)primitiveTypeValue {
-	NSNumber *result = [self primitiveType];
-	return [result shortValue];
-}
-
-- (void)setPrimitiveTypeValue:(int16_t)value_ {
-	[self setPrimitiveType:[NSNumber numberWithShort:value_]];
-}
 
 
 

@@ -8,8 +8,8 @@ const struct CDUserAttributes CDUserAttributes = {
 	.fullName = @"fullName",
 	.id = @"id",
 	.phone = @"phone",
+	.profileType = @"profileType",
 	.status = @"status",
-	.type = @"type",
 };
 
 const struct CDUserRelationships CDUserRelationships = {
@@ -104,14 +104,14 @@ const struct CDUserFetchedProperties CDUserFetchedProperties = {
 
 
 
+@dynamic profileType;
+
+
+
+
+
+
 @dynamic status;
-
-
-
-
-
-
-@dynamic type;
 
 
 

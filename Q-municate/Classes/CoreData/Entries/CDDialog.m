@@ -12,7 +12,7 @@
     
     chatDialog.ID = self.id;
     chatDialog.roomJID = self.roomJID;
-    chatDialog.type = self.type.intValue;
+    chatDialog.type = self.dialogType.intValue;
     chatDialog.name = self.name;
     
     return chatDialog;
@@ -22,7 +22,7 @@
 
     self.id = dialog.ID;
     self.roomJID = dialog.roomJID;
-    self.type = @(dialog.type);
+    self.dialogType = @(dialog.type);
     self.name = dialog.name;    
 }
 
