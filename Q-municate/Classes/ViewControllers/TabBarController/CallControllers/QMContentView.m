@@ -7,6 +7,7 @@
 //
 
 #import "QMContentView.h"
+#import "QMUsersUtils.h"
 
 @interface QMContentView()
 
@@ -46,7 +47,7 @@
 - (void)updateViewWithUser:(QBUUser *)user
 {
     UIImage *placeholder = [UIImage imageNamed:@"upic_call"];
-    NSURL *url = [NSURL URLWithString:user.website];
+    NSURL *url = [QMUsersUtils userAvatarURL:user];
     [self.avatarView setImageWithURL:url
                          placeholder:placeholder
                              options:SDWebImageLowPriority

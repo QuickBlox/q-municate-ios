@@ -9,6 +9,7 @@
 #import "QMChatCell.h"
 #import "NSString+UsedSize.h"
 #import "QMImageView.h"
+#import "QMUsersUtils.h"
 #import "Parus.h"
 
 @interface QMChatCell ()
@@ -329,7 +330,7 @@
     
     if (self.showUserImage) {
         
-        NSURL *url = [NSURL URLWithString:user.website];
+        NSURL *url = [QMUsersUtils userAvatarURL:user];
         UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
         
         [self.userImageView setImageWithURL:url

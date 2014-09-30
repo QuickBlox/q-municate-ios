@@ -36,7 +36,7 @@
 
         QBUUser *user = userData;
         self.titleLabel.text = (user.fullName.length == 0) ? @"" : user.fullName;
-        NSURL *avatarUrl = [NSURL URLWithString:user.website];
+        NSURL *avatarUrl = [NSURL URLWithString:user.avatarURL];
         [self setUserImageWithUrl:avatarUrl];
     }
 }

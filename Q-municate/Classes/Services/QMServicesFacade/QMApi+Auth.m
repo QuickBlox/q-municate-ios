@@ -76,7 +76,7 @@
             
             [weakSelf setAutoLogin:YES withAccountType:QMAccountTypeFacebook];
             
-            if (weakSelf.currentUser.website.length == 0) {
+            if (weakSelf.currentUser.avatarURL.length == 0) {
                 /*Update user image from facebook */
                 [QMFacebookService loadMe:^(NSDictionary<FBGraphUser> *user) {
                     

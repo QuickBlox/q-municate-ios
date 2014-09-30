@@ -21,4 +21,15 @@
     return sortedUsers;
 }
 
++ (NSURL *)userAvatarURL:(QBUUser *)user {
+    NSURL *url = nil;
+#warning Old avatar url logic changed!
+    if (user.avatarURL) {
+        url = [NSURL URLWithString:user.avatarURL];
+    } else {
+        url = [NSURL URLWithString:user.website];
+    }
+    return url;
+}
+
 @end

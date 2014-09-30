@@ -9,6 +9,7 @@
 #import "QMFriendsDetailsController.h"
 #import "QMVideoCallController.h"
 #import "QMChatViewController.h"
+#import "QMUsersUtils.h"
 #import "QMImageView.h"
 #import "QMAlertsFactory.h"
 #import "REAlertView.h"
@@ -59,10 +60,10 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     }
     
     self.fullName.text = self.selectedUser.fullName;
-    self.userDetails.text = self.selectedUser.customData;
+    self.userDetails.text = self.selectedUser.status;
     self.userAvatar.imageViewType = QMImageViewTypeCircle;
     
-    NSURL *url = [NSURL URLWithString:self.selectedUser.website];
+    NSURL *url = [QMUsersUtils userAvatarURL:self.selectedUser];
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
     [self.userAvatar setImageWithURL:url
                          placeholder:placeholder

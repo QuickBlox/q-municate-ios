@@ -62,24 +62,24 @@
                     }
                 }];
                 
-                QMSettingsManager *settings = [QMApi instance].settingsManager;
-                
-                [[QMApi instance] fetchAllHistory:^{
-                    
-                    if (push != nil) {
-                        [SVProgressHUD dismiss];
-                        [[QMApi instance] openChatPageForPushNotification:push];
-                        [[QMApi instance] setPushNotification:nil];
-                    }
-                }];
-                
-                if (![settings isFirstFacebookLogin]) {
-                    
-                    [settings setFirstFacebookLogin:YES];
+                QBUUser *usr = [QMApi instance].currentUser;
+                if (!usr.imported) {
                     [[QMApi instance] importFriendsFromFacebook];
                     [[QMApi instance] importFriendsFromAddressBook];
-                }
+                    usr.imported = YES;
+                    [[QMApi instance] updateUser:usr image:nil progress:nil completion:^(BOOL successed) {}];
+                    
+                } else {
                 
+                    [[QMApi instance] fetchAllHistory:^{
+                        
+                        if (push != nil) {
+                            [SVProgressHUD dismiss];
+                            [[QMApi instance] openChatPageForPushNotification:push];
+                            [[QMApi instance] setPushNotification:nil];
+                        }
+                    }];
+                }
             }];
         }
     }];

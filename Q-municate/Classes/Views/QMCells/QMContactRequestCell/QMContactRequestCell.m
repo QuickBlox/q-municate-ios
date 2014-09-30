@@ -7,6 +7,7 @@
 //
 
 #import "QMContactRequestCell.h"
+#import "QMUsersUtils.h"
 
 @implementation QMContactRequestCell
 
@@ -16,7 +17,7 @@
     
     QBUUser *user = userData;
     self.titleLabel.text = (user.fullName.length == 0) ? @"" : user.fullName;
-    NSURL *avatarUrl = [NSURL URLWithString:user.website];
+    NSURL *avatarUrl = [QMUsersUtils userAvatarURL:user];
     [self setUserImageWithUrl:avatarUrl];
 }
 

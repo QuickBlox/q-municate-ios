@@ -8,6 +8,7 @@
 
 #import "QMFriendListCell.h"
 #import "QMImageView.h"
+#import "QMUsersUtils.h"
 #import "QMApi.h"
 
 @interface QMFriendListCell()
@@ -38,7 +39,7 @@
 
     QBUUser *user = userData;
     self.titleLabel.text = (user.fullName.length == 0) ? @"" : user.fullName;
-    NSURL *avatarUrl = [NSURL URLWithString:user.website];
+    NSURL *avatarUrl = [QMUsersUtils userAvatarURL:user];
     [self setUserImageWithUrl:avatarUrl];
 }
 

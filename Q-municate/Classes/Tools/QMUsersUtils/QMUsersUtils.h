@@ -11,5 +11,6 @@
 @interface QMUsersUtils : NSObject
 
 + (NSArray *)sortUsersByFullname:(NSArray *)users;
++ (NSURL *)userAvatarURL:(QBUUser *)user;
 
 @end

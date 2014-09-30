@@ -145,7 +145,7 @@
         }
         
         if (publicUrl.length > 0) {
-            userInfo.website = publicUrl;
+            userInfo.avatarURL = publicUrl;
         }
         NSString *password = userInfo.password;
         userInfo.password = nil;
