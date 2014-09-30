@@ -48,11 +48,6 @@ typedef NS_ENUM(NSUInteger, QMAccountType) {
  */
 @property (assign, nonatomic) BOOL rememberMe;
 
-/**
- * First facebook login flag. Needed for import FB friends from Quickblox.
- */
-@property (assign, nonatomic, getter = isFirstFacebookLogin) BOOL firstFacebookLogin;
-
 
 - (void)setLogin:(NSString *)login andPassword:(NSString *)password;
 /**

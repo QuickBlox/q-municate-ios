@@ -122,19 +122,6 @@ NSString *const kQMApplicationEnteredFromPushKey = @"app_entered_from_push";
     defSetObject(kQMSettingsUserStatusKey, userStatus);
 }
 
-#pragma mark - First facebook login
-
-- (void)setFirstFacebookLogin:(BOOL)firstFacebookLogin
-{
-    defSetBool(kQMFirstFacebookLoginKey, firstFacebookLogin);
-}
-
-- (BOOL)isFirstFacebookLogin
-{
-    return defBool(kQMFirstFacebookLoginKey);
-}
-
-
 #pragma mark - Default Settings
 
 - (void)defaultSettings {
@@ -146,7 +133,6 @@ NSString *const kQMApplicationEnteredFromPushKey = @"app_entered_from_push";
     self.rememberMe = NO;
     [self setLogin:nil andPassword:nil];
     self.userAgreementAccepted = NO;
-    self.firstFacebookLogin = NO;
     self.accountType = QMAccountTypeNone;
     self.userStatus = nil;
     self.login = nil;
