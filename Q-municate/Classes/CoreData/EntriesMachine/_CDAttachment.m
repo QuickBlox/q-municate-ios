@@ -5,7 +5,7 @@
 
 const struct CDAttachmentAttributes CDAttachmentAttributes = {
 	.id = @"id",
-	.type = @"type",
+	.mimeType = @"mimeType",
 	.url = @"url",
 };
 
@@ -56,7 +56,7 @@ const struct CDAttachmentFetchedProperties CDAttachmentFetchedProperties = {
 
 
 
-@dynamic type;
+@dynamic mimeType;
 
 
 
