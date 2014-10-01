@@ -1,6 +1,7 @@
 
 platform :ios, '7.0'
 xcodeproj 'Q-municate.xcodeproj'
+source 'https://github.com/CocoaPods/Specs.git'
 
 pod 'UIDevice-Hardware', '~> 0.1.3'
 pod 'SVProgressHUD', '~> 1.0'

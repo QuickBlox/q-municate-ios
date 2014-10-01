@@ -1,0 +1,1 @@
+PODS_IDMPHOTOBROWSER_OTHER_LDFLAGS = -framework "MessageUI" -framework "MobileCoreServices" -framework "QuartzCore" -framework "Security" -framework "SystemConfiguration"
