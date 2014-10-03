@@ -106,6 +106,17 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 
 @end
 
+
+@interface QMApi (Notifications)
+
+- (void)sendContactRequestSendNotificationToUser:(QBUUser *)user dialog:(QBChatDialog *)dialog completion:(void(^)(NSError *error))completionBlock;
+- (void)sendContactRequestConfirmNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error))completionBlock;
+- (void)sendContactRequestRejectNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error))completionBlock;
+- (void)sendContactRequestDeleteNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error))completionBlock;
+
+@end
+
+
 @interface QMApi (ChatDialogs)
 
 /**

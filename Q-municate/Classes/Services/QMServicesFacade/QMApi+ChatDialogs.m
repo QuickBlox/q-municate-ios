@@ -101,6 +101,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     
     NSString *notifMessage = [NSString stringWithFormat:@"%@ %@", self.currentUser.fullName, text];
     
+    
     for (QBUUser *recipient in recipients) {
         QBChatMessage *notification = [self notification:type
                                                recipient:recipient

@@ -116,9 +116,6 @@
     }
     
     [self chat:^(QBChat *chat) {
-//        [chat sendMessage:message sentBlock:^(NSError *error) {
-//            completion(error);
-//        }];
        if ( [chat sendMessage:message]) {
            completion(nil);
        };
