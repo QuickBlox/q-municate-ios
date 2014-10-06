@@ -290,7 +290,7 @@
     [[QMApi instance] addUserToContactListRequest:user completion:^(BOOL success) {
         if (success) {
             [[QMApi instance] createPrivateChatDialogIfNeededWithOpponent:user completion:^(QBChatDialog *chatDialog) {
-                [[QMApi instance] sendContactRequestSendNotificationToUser:user dialog:chatDialog completion:nil];
+                [[QMApi instance] sendContactRequestSendNotificationToUser:user dialog:chatDialog completion:^(NSError *error) {}];
             }];
             weakSelf.tUser = user;
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
@@ -306,7 +306,7 @@
     if (accepted) {
         [[QMApi instance] confirmAddContactRequest:user.ID completion:^(BOOL success) {
             [weakSelf reloadContactListSectionIfNeeded];
-            [[QMApi instance] sendContactRequestConfirmNotificationToUser:user completion:nil];
+            [[QMApi instance] sendContactRequestConfirmNotificationToUser:user completion:^(NSError *error) {}];
         }];
     } else {
         
@@ -316,7 +316,7 @@
             [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_OK", nil) andActionBlock:^{
                 //
                 [[QMApi instance] rejectAddContactRequest:user.ID completion:^(BOOL success) {
-                    [[QMApi instance] sendContactRequestRejectNotificationToUser:user completion:nil];
+                    [[QMApi instance] sendContactRequestRejectNotificationToUser:user completion:^(NSError *error) {}];
                     [weakSelf reloadContactListSectionIfNeeded];
                 }];
             }];
