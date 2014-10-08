@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		243F976519D1C54000BDE124 /* QMPopoversFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 243F976419D1C54000BDE124 /* QMPopoversFactory.m */; };
 		2463071D19DDA297003F421E /* QMApi+Notifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 24970BC619DD951600959268 /* QMApi+Notifications.m */; };
+		24722D1A19E3D65F0046ACC4 /* QMChatNotificationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 24722D1819E3D65F0046ACC4 /* QMChatNotificationCell.m */; };
+		24722D1B19E3D65F0046ACC4 /* QMChatNotificationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 24722D1919E3D65F0046ACC4 /* QMChatNotificationCell.xib */; };
 		2476BA8119A5D91F00CC666D /* QMUsersUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2476BA8019A5D91F00CC666D /* QMUsersUtils.m */; };
 		2484683F19D97E6E00E5A106 /* QBUUser+CustomParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 2484683E19D97E6E00E5A106 /* QBUUser+CustomParameters.m */; };
 		2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */; };
@@ -243,6 +245,9 @@
 		240CE3AF19A2223A00392E06 /* QMProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMProtocols.h; sourceTree = "<group>"; };
 		243F976319D1C54000BDE124 /* QMPopoversFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMPopoversFactory.h; path = QMPopoversFactory/QMPopoversFactory.h; sourceTree = "<group>"; };
 		243F976419D1C54000BDE124 /* QMPopoversFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMPopoversFactory.m; path = QMPopoversFactory/QMPopoversFactory.m; sourceTree = "<group>"; };
+		24722D1719E3D65F0046ACC4 /* QMChatNotificationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMChatNotificationCell.h; path = QMChatNotificationCell/QMChatNotificationCell.h; sourceTree = "<group>"; };
+		24722D1819E3D65F0046ACC4 /* QMChatNotificationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMChatNotificationCell.m; path = QMChatNotificationCell/QMChatNotificationCell.m; sourceTree = "<group>"; };
+		24722D1919E3D65F0046ACC4 /* QMChatNotificationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = QMChatNotificationCell.xib; path = QMChatNotificationCell/QMChatNotificationCell.xib; sourceTree = "<group>"; };
 		2476BA7F19A5D91F00CC666D /* QMUsersUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMUsersUtils.h; path = QMUsersUtils/QMUsersUtils.h; sourceTree = "<group>"; };
 		2476BA8019A5D91F00CC666D /* QMUsersUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMUsersUtils.m; path = QMUsersUtils/QMUsersUtils.m; sourceTree = "<group>"; };
 		2484683D19D97E6E00E5A106 /* QBUUser+CustomParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBUUser+CustomParameters.h"; sourceTree = "<group>"; };
@@ -673,6 +678,16 @@
 				243F976419D1C54000BDE124 /* QMPopoversFactory.m */,
 			);
 			name = QMPopoversFactory;
+			sourceTree = "<group>";
+		};
+		24722D1619E3D5E40046ACC4 /* QMChatNotificationCell */ = {
+			isa = PBXGroup;
+			children = (
+				24722D1719E3D65F0046ACC4 /* QMChatNotificationCell.h */,
+				24722D1819E3D65F0046ACC4 /* QMChatNotificationCell.m */,
+				24722D1919E3D65F0046ACC4 /* QMChatNotificationCell.xib */,
+			);
+			name = QMChatNotificationCell;
 			sourceTree = "<group>";
 		};
 		2476BA7E19A5D8D300CC666D /* QMUsersUtils */ = {
@@ -1838,6 +1853,7 @@
 		55F4A3B3196FF0830068EBC3 /* QMCells */ = {
 			isa = PBXGroup;
 			children = (
+				24722D1619E3D5E40046ACC4 /* QMChatNotificationCell */,
 				69007BD119B6190A00E3A925 /* QMNoResultsCell */,
 				55F4A3D3197021580068EBC3 /* QMCheckBoxProtocol.h */,
 				699C414C19AF470C0060859F /* QMContactRequestCell */,
@@ -2187,6 +2203,7 @@
 				55A8B0731965986A00B5D33B /* ringtone.wav in Resources */,
 				55A8B0741965986A00B5D33B /* sent.wav in Resources */,
 				55311ADF1990FEA500C585D5 /* mogen.sh in Resources */,
+				24722D1B19E3D65F0046ACC4 /* QMChatNotificationCell.xib in Resources */,
 				55A8B0711965986A00B5D33B /* end_of_call.wav in Resources */,
 				69007BD319B6193900E3A925 /* QMNoResultsCell.xib in Resources */,
 				69D57E6818ACC11C00A9900A /* Images.xcassets in Resources */,
@@ -2257,6 +2274,7 @@
 				55D963CA196430F300A87ECE /* QMSettingsManager.m in Sources */,
 				55D8ADAF19AC75FA00DAF79F /* MagicalRecordStack.m in Sources */,
 				697BBAD619C1DCA900F7F1D8 /* QMChatSection.m in Sources */,
+				24722D1A19E3D65F0046ACC4 /* QMChatNotificationCell.m in Sources */,
 				55943A0C1941A4AE00BF4312 /* CDDialog.m in Sources */,
 				55A8B0AB1965A66300B5D33B /* QMApi+ChatDialogs.m in Sources */,
 				55D8ADCA19AC767F00DAF79F /* QMSystemMessageCell.m in Sources */,

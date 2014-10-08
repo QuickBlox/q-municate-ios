@@ -34,21 +34,6 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 
 #pragma mark - Create Chat Dialogs
 
-- (void)createChatDialog:(QBChatDialog *)chatDialog occupants:(NSArray *)occupants completion:(QBChatDialogResultBlock)completion {
-    
-    __weak __typeof(self)weakSelf = self;
-    [self.chatDialogsService createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
-        
-        if ([weakSelf checkResult:result]) {
-            [weakSelf.chatDialogsService addDialogToHistory:result.dialog];
-            [weakSelf sendNotificationWithType:QMMessageNotificationTypeCreateDialog
-                                          text:@"created new chat"
-                                  toRecipients:occupants
-                                    chatDialog:result.dialog];
-        }
-        completion(result);
-    }];
-}
 
 - (void)createPrivateChatDialogIfNeededWithOpponent:(QBUUser *)opponent completion:(void(^)(QBChatDialog *chatDialog))completion {
     
@@ -63,7 +48,11 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
         chatDialog.type = QBChatDialogTypePrivate;
         chatDialog.occupantIDs = occupantsIDS;
         
-        [self createChatDialog:chatDialog occupants:occupants completion:^(QBChatDialogResult *result) {
+        __weak typeof (self)weakSelf = self;
+        [self.chatDialogsService createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
+            
+            // send notification here:
+            [weakSelf sendContactRequestSendNotificationToUser:opponent completion:^(NSError *error) {}];
             completion(result.dialog);
         }];
         
@@ -81,7 +70,9 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     chatDialog.occupantIDs = occupantIDs;
     chatDialog.type = QBChatDialogTypeGroup;
     
-    [self createChatDialog:chatDialog occupants:occupants completion:completion];
+    [self.chatDialogsService createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
+        // send notification from here:
+    }];
 }
 
 - (QBChatMessage *)notification:(QMMessageNotificationType)type recipient:(QBUUser *)recipient text:(NSString *)text chatDialog:(QBChatDialog *)chatDialog {
@@ -126,7 +117,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 
         if ([weakSelf checkResult:result]) {
             chatDialog.name = dialogName;
-            [weakSelf sendNotificationWithType:QMMessageNotificationTypeUpdateDialog
+            [weakSelf sendNotificationWithType:QMMessageNotificationTypeUpdateGroupDialog
                                           text:[NSString stringWithFormat:@"New chat name - %@", dialogName]
                                   toRecipients:opponentsWithoutMe chatDialog:chatDialog];
         }
@@ -150,12 +141,12 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
             
             [weakSelf.chatDialogsService addDialogToHistory:result.dialog];
             
-            [weakSelf sendNotificationWithType:QMMessageNotificationTypeCreateDialog
+            [weakSelf sendNotificationWithType:QMMessageNotificationTypeCreateGroupDialog
                                           text:@"Created new dialog"
                                   toRecipients:occupants
                                     chatDialog:result.dialog];
             
-            [weakSelf sendNotificationWithType:QMMessageNotificationTypeUpdateDialog
+            [weakSelf sendNotificationWithType:QMMessageNotificationTypeUpdateGroupDialog
                                           text:@"Added new users"
                                   toRecipients:occupantsToNotify
                                     chatDialog:result.dialog];

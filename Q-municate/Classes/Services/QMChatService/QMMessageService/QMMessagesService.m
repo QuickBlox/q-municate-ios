@@ -65,8 +65,11 @@
 
     __weak __typeof(self)weakSelf = self;
     void (^updateHistory)(QBChatMessage *) = ^(QBChatMessage *message) {
-
-        if (message.recipientID != message.senderID && message.cParamNotificationType == QMMessageNotificationTypeNone) {
+        
+        if (message.recipientID != message.senderID) {
+            if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog && !message.cParamSaveToHistory) {
+                return;
+            }
             [weakSelf addMessageToHistory:message withDialogID:message.cParamDialogID];
         }
     };

@@ -109,7 +109,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 
 @interface QMApi (Notifications)
 
-- (void)sendContactRequestSendNotificationToUser:(QBUUser *)user dialog:(QBChatDialog *)dialog completion:(void(^)(NSError *error))completionBlock;
+- (void)sendContactRequestSendNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error))completionBlock;
 - (void)sendContactRequestConfirmNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error))completionBlock;
 - (void)sendContactRequestRejectNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error))completionBlock;
 - (void)sendContactRequestDeleteNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error))completionBlock;
@@ -215,7 +215,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  
  @param user of user which you would like to add to contact list
  @return*/
-- (void)addUserToContactListRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion;
+- (void)addUserToContactList:(QBUUser *)user completion:(void(^)(BOOL success))completion;
 
 /**
  Remove user from contact list
@@ -223,7 +223,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  @param userID ID of user which you would like to remove from contact list
  @return YES if the request was sent successfully. If not - see log.
  */
-- (void)removeUserFromContactListWithUserID:(NSUInteger)userID completion:(void(^)(BOOL success))completion;
+- (void)removeUserFromContactList:(QBUUser *)user completion:(void(^)(BOOL success))completion;
 
 /**
  Confirm add to contact list request
@@ -231,7 +231,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  @param userID ID of user from which you would like to confirm add to contact request
  @return YES if the request was sent successfully. If not - see log.
  */
-- (void)confirmAddContactRequest:(NSUInteger)userID completion:(void(^)(BOOL success))completion;
+- (void)confirmAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion;
 
 /**
  Reject add to contact list request
@@ -239,7 +239,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  @param userID ID of user from which you would like to reject add to contact request
  @return YES if the request was sent successfully. If not - see log.
  */
-- (void)rejectAddContactRequest:(NSUInteger)userID completion:(void(^)(BOOL success))completion;
+- (void)rejectAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion;
 
 /**
  */

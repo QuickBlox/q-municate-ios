@@ -287,11 +287,9 @@
     QBUUser *user = datasource[indexPath.row];
     
     __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] addUserToContactListRequest:user completion:^(BOOL success) {
+    [[QMApi instance] addUserToContactList:user completion:^(BOOL success) {
         if (success) {
-            [[QMApi instance] createPrivateChatDialogIfNeededWithOpponent:user completion:^(QBChatDialog *chatDialog) {
-                [[QMApi instance] sendContactRequestSendNotificationToUser:user dialog:chatDialog completion:^(NSError *error) {}];
-            }];
+            [[QMApi instance] createPrivateChatDialogIfNeededWithOpponent:user completion:^(QBChatDialog *chatDialog) {}];
             weakSelf.tUser = user;
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         }
@@ -304,9 +302,8 @@
     __weak __typeof(self)weakSelf = self;
 
     if (accepted) {
-        [[QMApi instance] confirmAddContactRequest:user.ID completion:^(BOOL success) {
+        [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success) {
             [weakSelf reloadContactListSectionIfNeeded];
-            [[QMApi instance] sendContactRequestConfirmNotificationToUser:user completion:^(NSError *error) {}];
         }];
     } else {
         
@@ -315,8 +312,7 @@
             [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
             [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_OK", nil) andActionBlock:^{
                 //
-                [[QMApi instance] rejectAddContactRequest:user.ID completion:^(BOOL success) {
-                    [[QMApi instance] sendContactRequestRejectNotificationToUser:user completion:^(NSError *error) {}];
+                [[QMApi instance] rejectAddContactRequest:user completion:^(BOOL success) {
                     [weakSelf reloadContactListSectionIfNeeded];
                 }];
             }];
@@ -347,10 +343,6 @@
     }
     [self globalSearch:searchString];
     return NO;
-}
-
--(void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
-{
 }
 
 - (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller

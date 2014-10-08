@@ -80,6 +80,7 @@ const NSTimeInterval kQMPresenceTime = 30;
 
 - (void)setCurrentUser:(QBUUser *)currentUser {
     self.messagesService.currentUser = currentUser;
+    [self.usersService addUser:currentUser];
 }
 
 - (QBUUser *)currentUser {

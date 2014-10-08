@@ -19,10 +19,11 @@
 
 @implementation QMApi (Users)
 
-- (void)addUserToContactListRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion {
+- (void)addUserToContactList:(QBUUser *)user completion:(void(^)(BOOL success))completion {
 
     [self.messagesService chat:^(QBChat *chat) {
         BOOL success = [chat addUserToContactListRequest:user.ID];
+        [self sendContactRequestSendNotificationToUser:user completion:^(NSError *error) {}];
         if (success) {
             [self.usersService addUser:user];
         }
@@ -30,27 +31,30 @@
     }];
 }
 
-- (void)removeUserFromContactListWithUserID:(NSUInteger)userID completion:(void(^)(BOOL success))completion {
+- (void)removeUserFromContactList:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
     [self.messagesService chat:^(QBChat *chat) {
-        BOOL success = [chat removeUserFromContactList:userID];
+        BOOL success = [chat removeUserFromContactList:user.ID];
+        [self sendContactRequestDeleteNotificationToUser:user completion:^(NSError *error) {}];
         completion(success);
     }];
 }
 
-- (void)confirmAddContactRequest:(NSUInteger)userID completion:(void(^)(BOOL success))completion {
+- (void)confirmAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
     [self.messagesService chat:^(QBChat *chat) {
-        BOOL success = [chat confirmAddContactRequest:userID];
-        [self.usersService.confirmRequestUsersIDs removeObject:@(userID)];
+        BOOL success = [chat confirmAddContactRequest:user.ID];
+        [self sendContactRequestConfirmNotificationToUser:user completion:^(NSError *error) {}];
+        [self.usersService.confirmRequestUsersIDs removeObject:@(user.ID)];
         completion(success);
     }];
 }
 
-- (void)rejectAddContactRequest:(NSUInteger)userID completion:(void(^)(BOOL success))completion {
+- (void)rejectAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     [self.messagesService chat:^(QBChat *chat) {
-        BOOL success = [chat rejectAddContactRequest:userID];
-        [self.usersService.confirmRequestUsersIDs removeObject:@(userID)];
+        BOOL success = [chat rejectAddContactRequest:user.ID];
+        [self sendContactRequestRejectNotificationToUser:user completion:^(NSError *error) {}];
+        [self.usersService.confirmRequestUsersIDs removeObject:@(user.ID)];
         completion(success);
     }];
 }
@@ -210,7 +214,7 @@
             
             // sending contact requests:
             for (QBUUser *user in pagedResult.users) {
-                [weakSelf addUserToContactListRequest:user completion:nil];
+                [weakSelf addUserToContactList:user completion:nil];
             }
         }];
     }];
@@ -241,7 +245,7 @@
             
             // sending contact requests:
             for (QBUUser *user in pagedResult.users) {
-                [weakSelf addUserToContactListRequest:user completion:^(BOOL success) {}];
+                [weakSelf addUserToContactList:user completion:^(BOOL success) {}];
             }
         }];
     }];

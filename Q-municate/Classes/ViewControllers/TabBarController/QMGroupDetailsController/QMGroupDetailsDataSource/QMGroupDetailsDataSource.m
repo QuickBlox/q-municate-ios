@@ -53,7 +53,7 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
         
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
             
-            if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog &&
+            if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog &&
                 [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID])
             {
                 [weakSelf reloadUserData];
@@ -103,7 +103,7 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
 
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     QBUUser *user = self.participants[indexPath.row];
-    [[QMApi instance] addUserToContactListRequest:user completion:^(BOOL success) {
+    [[QMApi instance] addUserToContactList:user completion:^(BOOL success) {
         
     }];
 }

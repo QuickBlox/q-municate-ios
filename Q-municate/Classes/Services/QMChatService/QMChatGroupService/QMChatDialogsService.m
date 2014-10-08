@@ -121,6 +121,22 @@
     return dialogs;
 }
 
+- (QBChatDialog *)createPrivateDialogIfNeededWithNotification:(QBChatMessage *)notification
+{
+    QBChatDialog *dialog = [self chatDialogWithID:notification.cParamDialogID];
+    if (!dialog) {
+        NSAssert(notification.cParamDialogOccupantsIDs, @"Notification param: occupants_ids for private dialog missed. Update case");
+        
+        dialog = [[QBChatDialog alloc] init];
+        dialog.ID = notification.cParamDialogID;
+        dialog.occupantIDs = notification.cParamDialogOccupantsIDs;
+        dialog.type = QBChatDialogTypePrivate;
+        
+        self.dialogs[dialog.ID] = dialog;
+    }
+    return dialog;
+}
+
 - (QBChatDialog *)privateDialogWithOpponentID:(NSUInteger)opponentID {
     
     NSArray *allDialogs = [self dialogHistory];
@@ -139,37 +155,51 @@
     
     QBChatDialog *dialog = self.dialogs[chatMessage.cParamDialogID];
     if (dialog == nil) {
-        NSAssert(!dialog, @"Dialog you are looking for not found.");
+        NSAssert(dialog, @"Dialog you are looking for not found.");
         return;
     }
     
     dialog.name = chatMessage.cParamDialogName;
-//    dialog.occupantIDs = [chatMessage.cParamDialogOccupantsIDs occupantsIDs];
+    dialog.occupantIDs = chatMessage.cParamDialogOccupantsIDs;
 }
 
 - (void)updateOrCreateDialogWithMessage:(QBChatMessage *)message {
     
-    if (message.cParamNotificationType == 3) {
-        return;
-    }
-    NSAssert(message.cParamDialogID, @"Need update this case");
+    NSAssert(message.cParamDialogID, @"Notification without dialog id. Need update this case");
     
-    if (message.cParamNotificationType == QMMessageNotificationTypeCreateDialog) {
-        
-        QBChatDialog *chatDialog = [message chatDialogFromCustomParameters];
-        [self addDialogToHistory:chatDialog];
+    switch (message.cParamNotificationType) {
+        case QMMessageNotificationTypeSendContactRequest:
+        {
+            [self createPrivateDialogIfNeededWithNotification:message];
+        }
+            break;
+            
+        case QMMessageNotificationTypeCreateGroupDialog:
+        {
+            QBChatDialog *chatDialog = [message chatDialogFromCustomParameters];
+            [self addDialogToHistory:chatDialog];
+        }
+            break;
+            
+        case QMMessageNotificationTypeUpdateGroupDialog:
+        {
+            [self updateChatDialogWithChatMessage:message];
+        }
+            break;
+            
+        case QMMessageNotificationTypeNone:
+        {
+            QBChatDialog *dialog = [self chatDialogWithID:message.cParamDialogID];
+            dialog.lastMessageText = message.encodedText;
+            dialog.lastMessageDate = [NSDate dateWithTimeIntervalSince1970:message.cParamDateSent.doubleValue];
+            dialog.unreadMessagesCount++;
+        }
+            break;
+            
+        default:
+            break;
     }
-    else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog) {
-        
-        [self updateChatDialogWithChatMessage:message];
-    }
-    else {
-        
-        QBChatDialog *dialog = [self chatDialogWithID:message.cParamDialogID];
-        dialog.lastMessageText = message.encodedText;
-        dialog.lastMessageDate = [NSDate dateWithTimeIntervalSince1970:message.cParamDateSent.doubleValue];
-        dialog.unreadMessagesCount++;
-    }
+
 }
 
 #pragma mark - Chat Room

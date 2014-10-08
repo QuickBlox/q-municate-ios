@@ -111,7 +111,7 @@ static const char avatarUrlKey;
     
     NSData *jsonData = [string dataUsingEncoding:NSUTF8StringEncoding];
     if (jsonData == nil) {
-        return customParams;
+        return [[NSMutableDictionary alloc] init];
     }
     customParams = [[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error] mutableCopy];
     if (customParams == nil) {

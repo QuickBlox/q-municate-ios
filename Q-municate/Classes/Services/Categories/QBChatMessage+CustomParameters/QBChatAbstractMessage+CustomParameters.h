@@ -10,8 +10,8 @@
 
 typedef NS_ENUM(NSUInteger, QMMessageNotificationType) {
     QMMessageNotificationTypeNone,
-    QMMessageNotificationTypeCreateDialog,
-    QMMessageNotificationTypeUpdateDialog,
+    QMMessageNotificationTypeCreateGroupDialog,
+    QMMessageNotificationTypeUpdateGroupDialog,
     QMMessageNotificationTypeDeliveryMessage,
     
     QMMessageNotificationTypeSendContactRequest,

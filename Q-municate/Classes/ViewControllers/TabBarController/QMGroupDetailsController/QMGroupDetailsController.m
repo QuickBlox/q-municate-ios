@@ -62,7 +62,7 @@
 
     [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
         
-        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog &&
+        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog &&
             [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID]) {
             
             weakSelf.chatDialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];

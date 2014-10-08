@@ -14,35 +14,35 @@
 @implementation QMApi (Notifications)
 
 
-- (void)sendContactRequestSendNotificationToUser:(QBUUser *)user dialog:(QBChatDialog *)dialog completion:(void(^)(NSError *error))completionBlock
+- (void)sendContactRequestSendNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error))completionBlock
 {
-    QBChatMessage *notification = [self notificationForUser:user dialog:dialog];
+    QBChatMessage *notification = [self notificationForUser:user];
     notification.cParamNotificationType = QMMessageNotificationTypeSendContactRequest;
-    [self.messagesService sendMessage:notification withDialogID:dialog.ID saveToHistory:YES completion:completionBlock];
+    [self sendNotification:notification completion:completionBlock];
 }
 
 - (void)sendContactRequestConfirmNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error))completionBlock
 {
-    QBChatMessage *notification = [self notificationForUser:user dialog:nil];
+    QBChatMessage *notification = [self notificationForUser:user];
     notification.cParamNotificationType = QMMessageNotificationTypeConfirmContactRequest;
     [self sendNotification:notification completion:completionBlock];
 }
 
 - (void)sendContactRequestRejectNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error))completionBlock
 {
-    QBChatMessage *notification = [self notificationForUser:user dialog:nil];
+    QBChatMessage *notification = [self notificationForUser:user];
     notification.cParamNotificationType = QMMessageNotificationTypeRejectContactRequest;
     [self sendNotification:notification completion:completionBlock];
 }
 
 - (void)sendContactRequestDeleteNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error))completionBlock
 {
-    QBChatMessage *notification = [self notificationForUser:user dialog:nil];
+    QBChatMessage *notification = [self notificationForUser:user];
     notification.cParamNotificationType = QMMessageNotificationTypeDeleteContactRequest;
     [self sendNotification:notification completion:completionBlock];
 }
 
-- (QBChatMessage *)notificationForUser:(QBUUser *)user dialog:(QBChatDialog *)dialog
+- (QBChatMessage *)notificationForUser:(QBUUser *)user
 {
     QBChatMessage *notification = [QBChatMessage message];
     notification.recipientID = user.ID;
@@ -52,6 +52,7 @@
 - (void)sendNotification:(QBChatMessage *)notification completion:(void(^)(NSError *error))completionBlock
 {
     QBChatDialog *dialog = [self.chatDialogsService privateDialogWithOpponentID:notification.recipientID];
+    NSAssert(dialog, @"Dialog not found. Please ");
     [self.messagesService sendMessage:notification withDialogID:dialog.ID saveToHistory:YES completion:completionBlock];
 }
 

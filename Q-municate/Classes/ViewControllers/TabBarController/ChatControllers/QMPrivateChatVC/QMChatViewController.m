@@ -44,7 +44,7 @@
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
         
-        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog && [message.cParamDialogID isEqualToString:weakSelf.dialog.ID]) {
+        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog && [message.cParamDialogID isEqualToString:weakSelf.dialog.ID]) {
             weakSelf.title = message.cParamDialogName;
             weakSelf.dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
         }
