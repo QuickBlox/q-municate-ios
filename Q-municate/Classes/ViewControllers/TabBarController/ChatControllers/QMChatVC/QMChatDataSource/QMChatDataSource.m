@@ -19,6 +19,10 @@
 #import "QMAttachmentMessageCell.h"
 #import "QMSoundManager.h"
 #import "QMChatSection.h"
+#import "QMChatNotificationCell.h"
+
+
+static NSString *const kChatNotificationCellIdentifier = @"QMContactNotificationCell";
 
 @interface QMChatDataSource()
 

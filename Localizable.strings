@@ -58,3 +58,10 @@
 
 "QM_STR_MAIL_COMPOSER_ERROR_DESCRIPTION_FOR_INVITE" = "We can't send your email invite due to misconfigured email account. Please go to Settings app-> Mail,Contact, Calendars and setup it.";
 
+
+"QM_STR_FRIEND_REQUEST_DID_SEND" = "%@ added %@ to contacts";
+"QM_STR_FRIEND_REQUEST_DID_DELETE" = "%@ deleted %@ from contacts";
+
+"QM_STR_FRIEND_REQUEST_DID_CONFIRM_FOR_ME" = "%@ confirmed %@'s contact request";
+"QM_STR_FRIEND_REQUEST_DID_CONFIRM_FOR_OPPONENT" = "%@ has rejected contact request from %@";
+
