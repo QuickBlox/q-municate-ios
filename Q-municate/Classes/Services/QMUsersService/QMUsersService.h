@@ -16,6 +16,7 @@
 
 - (void)addUsers:(NSArray *)users;
 - (void)addUser:(QBUUser *)user;
+- (void)deleteUser:(QBUUser *)user;
 - (QBUUser *)userWithID:(NSUInteger)userID;
 - (NSArray *)checkExistIds:(NSArray *)ids;
 - (NSArray *)idsFromContactListItems;

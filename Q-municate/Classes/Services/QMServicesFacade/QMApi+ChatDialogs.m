@@ -48,11 +48,9 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
         chatDialog.type = QBChatDialogTypePrivate;
         chatDialog.occupantIDs = occupantsIDS;
         
-        __weak typeof (self)weakSelf = self;
+        __weak typeof(self) weakSelf = self;
         [self.chatDialogsService createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
-            
-            // send notification here:
-            [weakSelf sendContactRequestSendNotificationToUser:opponent completion:^(NSError *error) {}];
+            [weakSelf.chatDialogsService addDialogToHistory:result.dialog];
             completion(result.dialog);
         }];
         

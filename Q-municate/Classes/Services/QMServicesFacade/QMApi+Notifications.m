@@ -51,6 +51,8 @@
 
 - (void)sendNotification:(QBChatMessage *)notification completion:(void(^)(NSError *error))completionBlock
 {
+    
+#error Need to add occupantsIDs to notificaion message
     QBChatDialog *dialog = [self.chatDialogsService privateDialogWithOpponentID:notification.recipientID];
     NSAssert(dialog, @"Dialog not found. Please ");
     [self.messagesService sendMessage:notification withDialogID:dialog.ID saveToHistory:YES completion:completionBlock];

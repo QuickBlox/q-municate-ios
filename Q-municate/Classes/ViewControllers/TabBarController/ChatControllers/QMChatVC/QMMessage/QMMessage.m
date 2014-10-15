@@ -14,6 +14,9 @@
 #import "UIImage+TintColor.h"
 #import "QMApi.h"
 
+#define SYSTEM_MESSAGE_SIZE CGSizeMake(320.0f, 44.0f)
+
+
 typedef NS_ENUM(NSUInteger, QMChatNotificationsType) {
     
     QMChatNotificationsTypeNone,
@@ -22,6 +25,7 @@ typedef NS_ENUM(NSUInteger, QMChatNotificationsType) {
 };
 
 NSString *const kQMNotificationTypeKey = @"notification_type";
+
 
 @interface QMMessage()
 
@@ -50,22 +54,27 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
         self.attachments = historyMessage.attachments;
         
         self.chatDialog = [[QMApi instance] chatDialogWithID:historyMessage.cParamDialogID];
-        
-        NSNumber *notificationType = self.customParameters[kQMNotificationTypeKey];
+        self.cParamNotificationType = historyMessage.cParamNotificationType;
+        if (self.cParamNotificationType > 0 && self.cParamNotificationType != QMMessageNotificationTypeDeliveryMessage) {
+            self.type = QMMessageTypeSystem;
+            return self;
+        }
         
         if (self.attachments.count > 0) {
             
             self.type = QMMessageTypePhoto;
             self.layout = QMMessageAttachmentLayout;
             
-        } else if (notificationType) {
-//            @throw [NSException exceptionWithName:NSInternalInconsistencyException
-//                                           reason:@"Need update it"
-//                                         userInfo:@{}];
-            self.layout = QMMessageBubbleLayout;
-            self.type = QMMessageTypeSystem;
-            
-        } else {
+        }
+//        else if (notificationType) {
+////            @throw [NSException exceptionWithName:NSInternalInconsistencyException
+////                                           reason:@"Need update it"
+////                                         userInfo:@{}];
+//            self.layout = QMMessageBubbleLayout;
+//            self.type = QMMessageTypeSystem;
+//            
+//        }
+        else {
             
             self.type = QMMessageTypeText;
             self.layout = QMMessageQmunicateLayout;
@@ -127,6 +136,9 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
 
 - (CGSize)messageSize {
     
+    if (self.type == QMMessageTypeSystem) {
+        return SYSTEM_MESSAGE_SIZE;
+    }
     if (CGSizeEqualToSize(_messageSize, CGSizeZero)) {
         
         _messageSize = [self calculateMessageSize];

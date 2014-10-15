@@ -21,40 +21,48 @@
 
 - (void)addUserToContactList:(QBUUser *)user completion:(void(^)(BOOL success))completion {
 
+    __weak typeof(self) weakSelf = self;
     [self.messagesService chat:^(QBChat *chat) {
         BOOL success = [chat addUserToContactListRequest:user.ID];
-        [self sendContactRequestSendNotificationToUser:user completion:^(NSError *error) {}];
-        if (success) {
-            [self.usersService addUser:user];
-        }
-        if (completion) completion(success);
+        
+        [weakSelf createPrivateChatDialogIfNeededWithOpponent:user completion:^(QBChatDialog *chatDialog) {
+            [weakSelf sendContactRequestSendNotificationToUser:user completion:^(NSError *error) {}];
+            if (success) {
+                [weakSelf.usersService addUser:user];
+            }
+            if (completion) completion(success);
+        }];
     }];
 }
 
 - (void)removeUserFromContactList:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
+    __weak typeof(self) weakSelf = self;
     [self.messagesService chat:^(QBChat *chat) {
         BOOL success = [chat removeUserFromContactList:user.ID];
-        [self sendContactRequestDeleteNotificationToUser:user completion:^(NSError *error) {}];
+        [weakSelf sendContactRequestDeleteNotificationToUser:user completion:^(NSError *error) {}];
         completion(success);
     }];
 }
 
 - (void)confirmAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
+    __weak typeof(self) weakSelf = self;
     [self.messagesService chat:^(QBChat *chat) {
         BOOL success = [chat confirmAddContactRequest:user.ID];
-        [self sendContactRequestConfirmNotificationToUser:user completion:^(NSError *error) {}];
-        [self.usersService.confirmRequestUsersIDs removeObject:@(user.ID)];
+        [weakSelf sendContactRequestConfirmNotificationToUser:user completion:^(NSError *error) {}];
+        [weakSelf.usersService.confirmRequestUsersIDs removeObject:@(user.ID)];
         completion(success);
     }];
 }
 
 - (void)rejectAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion {
+    
+    __weak typeof(self) weakSelf = self;
     [self.messagesService chat:^(QBChat *chat) {
         BOOL success = [chat rejectAddContactRequest:user.ID];
-        [self sendContactRequestRejectNotificationToUser:user completion:^(NSError *error) {}];
-        [self.usersService.confirmRequestUsersIDs removeObject:@(user.ID)];
+        [weakSelf sendContactRequestRejectNotificationToUser:user completion:^(NSError *error) {}];
+        [weakSelf.usersService.confirmRequestUsersIDs removeObject:@(user.ID)];
         completion(success);
     }];
 }

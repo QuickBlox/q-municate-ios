@@ -345,6 +345,11 @@
     return NO;
 }
 
+- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
+{
+    //
+}
+
 - (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller
 {
     if (self.searchIsActive) {

@@ -108,6 +108,12 @@
     self.users[key] = user;
 }
 
+- (void)deleteUser:(QBUUser *)user
+{
+    NSString *key = [NSString stringWithFormat:@"%d", user.ID];
+    [self.users removeObjectForKey:key];
+}
+
 #pragma mark - FRIEND LIST ROASTER
 
 - (NSObject<Cancelable> *)retrieveUsersWithFacebookIDs:(NSArray *)facebookIDs completion:(QBUUserPagedResultBlock)completion {

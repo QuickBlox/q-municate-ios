@@ -22,7 +22,6 @@
 #import "QMChatNotificationCell.h"
 
 
-static NSString *const kChatNotificationCellIdentifier = @"QMContactNotificationCell";
 
 @interface QMChatDataSource()
 
@@ -64,7 +63,7 @@ static NSString *const kChatNotificationCellIdentifier = @"QMContactNotification
         tableView.dataSource = self;
         [tableView registerClass:[QMTextMessageCell class] forCellReuseIdentifier:QMTextMessageCellID];
         [tableView registerClass:[QMAttachmentMessageCell class] forCellReuseIdentifier:QMAttachmentMessageCellID];
-        [tableView registerClass:[QMSystemMessageCell class] forCellReuseIdentifier:QMSystemMessageCellID];
+        [tableView registerNib:[UINib nibWithNibName:@"QMChatNotificationCell" bundle:nil] forCellReuseIdentifier:kChatNotificationCellID];
         
         __weak __typeof(self)weakSelf = self;
         
@@ -178,7 +177,7 @@ static NSString *const kChatNotificationCellIdentifier = @"QMContactNotification
     
     switch (message.type) {
             
-        case QMMessageTypeSystem: return QMSystemMessageCellID; break;
+        case QMMessageTypeSystem: return kChatNotificationCellID; break;
         case QMMessageTypePhoto: return QMAttachmentMessageCellID; break;
         case QMMessageTypeText: return QMTextMessageCellID; break;
         default: NSAssert(nil, @"Need update this case"); break;
@@ -220,15 +219,20 @@ static NSString *const kChatNotificationCellIdentifier = @"QMContactNotification
     
     QMChatSection *chatSection = self.chatSections[indexPath.section];
     QMMessage *message = chatSection.messages[indexPath.row];
-    QMChatCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIDAtQMMessage:message]];
-    
-    cell.delegate = self;
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIDAtQMMessage:message]];
+    if ([cell isKindOfClass:QMChatNotificationCell.class]) {
+        QMChatNotificationCell *notificationCell = (QMChatNotificationCell *)cell;
+        notificationCell.notification = message;
+        return notificationCell;
+    }
+    QMChatCell *chatCell = (QMChatCell *)cell;
+    chatCell.delegate = self;
     
     BOOL isMe = [QMApi instance].currentUser.ID == message.senderID;
     QBUUser *user = [[QMApi instance] userWithID:message.senderID];
-    [cell setMessage:message user:user isMe:isMe];
+    [chatCell setMessage:message user:user isMe:isMe];
     
-    return cell;
+    return chatCell;
 }
 
 #pragma mark - Send actions
