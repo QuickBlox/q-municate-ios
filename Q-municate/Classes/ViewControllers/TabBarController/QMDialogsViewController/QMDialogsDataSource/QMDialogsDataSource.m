@@ -43,6 +43,7 @@
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
             
             [weakSelf updateGUI];
+            [weakSelf retrieveUserIfNeededWithMessage:message];
         }];
         
         [[QMChatReceiver instance] dialogsHisotryUpdatedWithTarget:self block:^{
@@ -57,6 +58,18 @@
     }
     
     return self;
+}
+
+- (void)retrieveUserIfNeededWithMessage:(QBChatMessage *)message
+{
+    __weak typeof(self)weakSelf = self;
+    if (message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
+        [[QMApi instance] retriveIfNeededUserWithID:message.senderID completion:^(BOOL retrieveWasNeeded) {
+            if (retrieveWasNeeded) {
+                [weakSelf updateGUI];
+            }
+        }];
+    }
 }
 
 - (void)updateGUI {

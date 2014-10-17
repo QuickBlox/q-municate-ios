@@ -23,6 +23,7 @@
     #import "QBChatAbstractMessage+CustomParameters.h"
     #import "QBChatAbstractMessage+TextEncoding.h"
     #import "QBUUser+CustomParameters.h"
+    #import "QBChatDialog+UpdateWithNotification.h"
 
     #import "QMDefinitions.h"
     #import "QMProtocols.h"

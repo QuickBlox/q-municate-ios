@@ -131,6 +131,7 @@
         dialog.ID = notification.cParamDialogID;
         dialog.occupantIDs = notification.cParamDialogOccupantsIDs;
         dialog.type = QBChatDialogTypePrivate;
+        [dialog updateLastMessageInfoWithMessage:notification];
         
         self.dialogs[dialog.ID] = dialog;
     }
@@ -170,7 +171,8 @@
     switch (message.cParamNotificationType) {
         case QMMessageNotificationTypeSendContactRequest:
         {
-            [self createPrivateDialogIfNeededWithNotification:message];
+            QBChatDialog *dialog = [self createPrivateDialogIfNeededWithNotification:message];
+            [dialog updateLastMessageInfoWithMessage:message];
         }
             break;
             
@@ -190,9 +192,7 @@
         case QMMessageNotificationTypeNone:
         {
             QBChatDialog *dialog = [self chatDialogWithID:message.cParamDialogID];
-            dialog.lastMessageText = message.encodedText;
-            dialog.lastMessageDate = [NSDate dateWithTimeIntervalSince1970:message.cParamDateSent.doubleValue];
-            dialog.unreadMessagesCount++;
+            [dialog updateLastMessageInfoWithMessage:message];
         }
             break;
             
@@ -201,6 +201,7 @@
     }
 
 }
+
 
 #pragma mark - Chat Room
 

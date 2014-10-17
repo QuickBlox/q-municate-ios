@@ -9,6 +9,7 @@
 #import "QMApi.h"
 #import "QMMessagesService.h"
 #import "QMChatDialogsService.h"
+#import "QMChatUtils.h"
 
 
 @implementation QMApi (Notifications)
@@ -46,16 +47,33 @@
 {
     QBChatMessage *notification = [QBChatMessage message];
     notification.recipientID = user.ID;
+    notification.senderID = self.messagesService.currentUser.ID;
     return notification;
 }
 
 - (void)sendNotification:(QBChatMessage *)notification completion:(void(^)(NSError *error))completionBlock
 {
-    
-#error Need to add occupantsIDs to notificaion message
     QBChatDialog *dialog = [self.chatDialogsService privateDialogWithOpponentID:notification.recipientID];
     NSAssert(dialog, @"Dialog not found. Please ");
-    [self.messagesService sendMessage:notification withDialogID:dialog.ID saveToHistory:YES completion:completionBlock];
+    if (notification.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
+        notification.cParamDialogOccupantsIDs = dialog.occupantIDs;
+    }
+    QBUUser *sender = [[QMApi instance] userWithID:notification.senderID];
+    QBUUser *recipient = [[QMApi instance] userWithID:notification.recipientID];
+    NSString *notificationText = [QMChatUtils notificationTextForNotificationType:notification.cParamNotificationType];
+    
+    notification.text = [NSString stringWithFormat:notificationText, sender.fullName, recipient.fullName];
+    
+    __weak typeof(self) weakSelf = self;
+    [self.messagesService sendMessage:notification withDialogID:dialog.ID saveToHistory:YES completion:^(NSError *error) {
+        if (!error) {
+            [weakSelf.messagesService addMessageToHistory:notification withDialogID:dialog.ID];
+            [dialog updateLastMessageInfoWithMessage:notification];
+            completionBlock(nil);
+        } else {
+            completionBlock(error);
+        }
+    }];
 }
 
 @end

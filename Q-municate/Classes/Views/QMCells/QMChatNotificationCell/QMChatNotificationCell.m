@@ -8,6 +8,7 @@
 
 #import "QMChatNotificationCell.h"
 #import "QMMessage.h"
+#import "QMChatUtils.h"
 #import "QMApi.h"
 
 @implementation QMChatNotificationCell
@@ -30,7 +31,7 @@
 {
     QBUUser *sender = [[QMApi instance] userWithID:notification.senderID];
     QBUUser *recipient = [[QMApi instance] userWithID:notification.recipientID];
-    NSString *preferredText = [self messageTextForNotificationType:notification.cParamNotificationType];
+    NSString *preferredText = [QMChatUtils notificationTextForNotificationType:notification.cParamNotificationType];
     
     NSString *notificationText = [NSString stringWithFormat:preferredText, sender.fullName, recipient.fullName];
     
@@ -41,42 +42,6 @@
 {
     NSUInteger myID = [QMApi instance].currentUser.ID;
     return (user.ID == myID) ? @"You" : user.fullName;
-}
-
-
-- (NSString *)messageTextForNotificationType:(QMMessageNotificationType)notificationType
-{
-    NSString *messageText = nil;
-    
-    switch (notificationType) {
-        case QMMessageNotificationTypeSendContactRequest:
-        {
-            messageText = NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND", @"{FullName}");
-        }
-            break;
-            
-        case QMMessageNotificationTypeConfirmContactRequest:
-        {
-            messageText = NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_CONFIRM_FOR_ME", @"{FullName}");
-        }
-            break;
-            
-        case QMMessageNotificationTypeRejectContactRequest:
-        {
-            messageText = NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_REJECT_FOR_ME", @"{FullName}");
-        }
-            break;
-            
-        case QMMessageNotificationTypeDeleteContactRequest:
-        {
-            messageText = NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_DELETE", @"{FullName}");
-        }
-            break;
-            
-        default:
-            break;
-    }
-    return messageText;
 }
 
 - (NSDateFormatter *)formatter {

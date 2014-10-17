@@ -148,7 +148,6 @@
         if ([weakSelf checkResult:loginWithFBResult]) {
             
             weakSelf.currentUser = loginWithFBResult.user;
-            [weakSelf.usersService addUser:weakSelf.currentUser];
         }
         completion(loginWithFBResult.success);
     }];
@@ -217,7 +216,6 @@
             
             weakSelf.currentUser = loginResult.user;
             weakSelf.currentUser.password = password;
-            [weakSelf.usersService addUser:weakSelf.currentUser];
             
             if (rememberMe) {
                 weakSelf.settingsManager.rememberMe = rememberMe;

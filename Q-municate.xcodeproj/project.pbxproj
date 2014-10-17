@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		243F976519D1C54000BDE124 /* QMPopoversFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 243F976419D1C54000BDE124 /* QMPopoversFactory.m */; };
+		2444261F19F1106100C9C61A /* QMChatUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2444261E19F1106100C9C61A /* QMChatUtils.m */; };
+		2459B25519F15FBC00A1398C /* QBChatDialog+UpdateWithNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 2459B25419F15FBC00A1398C /* QBChatDialog+UpdateWithNotification.m */; };
 		2463071D19DDA297003F421E /* QMApi+Notifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 24970BC619DD951600959268 /* QMApi+Notifications.m */; };
 		24722D1A19E3D65F0046ACC4 /* QMChatNotificationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 24722D1819E3D65F0046ACC4 /* QMChatNotificationCell.m */; };
 		24722D1B19E3D65F0046ACC4 /* QMChatNotificationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 24722D1919E3D65F0046ACC4 /* QMChatNotificationCell.xib */; };
@@ -245,6 +247,10 @@
 		240CE3AF19A2223A00392E06 /* QMProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMProtocols.h; sourceTree = "<group>"; };
 		243F976319D1C54000BDE124 /* QMPopoversFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMPopoversFactory.h; path = QMPopoversFactory/QMPopoversFactory.h; sourceTree = "<group>"; };
 		243F976419D1C54000BDE124 /* QMPopoversFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMPopoversFactory.m; path = QMPopoversFactory/QMPopoversFactory.m; sourceTree = "<group>"; };
+		2444261D19F1106100C9C61A /* QMChatUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMChatUtils.h; path = QMChatUtils/QMChatUtils.h; sourceTree = "<group>"; };
+		2444261E19F1106100C9C61A /* QMChatUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMChatUtils.m; path = QMChatUtils/QMChatUtils.m; sourceTree = "<group>"; };
+		2459B25319F15FBC00A1398C /* QBChatDialog+UpdateWithNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBChatDialog+UpdateWithNotification.h"; sourceTree = "<group>"; };
+		2459B25419F15FBC00A1398C /* QBChatDialog+UpdateWithNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QBChatDialog+UpdateWithNotification.m"; sourceTree = "<group>"; };
 		24722D1719E3D65F0046ACC4 /* QMChatNotificationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMChatNotificationCell.h; path = QMChatNotificationCell/QMChatNotificationCell.h; sourceTree = "<group>"; };
 		24722D1819E3D65F0046ACC4 /* QMChatNotificationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMChatNotificationCell.m; path = QMChatNotificationCell/QMChatNotificationCell.m; sourceTree = "<group>"; };
 		24722D1919E3D65F0046ACC4 /* QMChatNotificationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = QMChatNotificationCell.xib; path = QMChatNotificationCell/QMChatNotificationCell.xib; sourceTree = "<group>"; };
@@ -680,6 +686,15 @@
 			name = QMPopoversFactory;
 			sourceTree = "<group>";
 		};
+		2444261C19F1103E00C9C61A /* QMChatUtils */ = {
+			isa = PBXGroup;
+			children = (
+				2444261D19F1106100C9C61A /* QMChatUtils.h */,
+				2444261E19F1106100C9C61A /* QMChatUtils.m */,
+			);
+			name = QMChatUtils;
+			sourceTree = "<group>";
+		};
 		24722D1619E3D5E40046ACC4 /* QMChatNotificationCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -1006,6 +1021,7 @@
 		55A8B04F1965986A00B5D33B /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				2444261C19F1103E00C9C61A /* QMChatUtils */,
 				55D8ADF819AC81CD00DAF79F /* QMLicenseAgreement */,
 				2476BA7E19A5D8D300CC666D /* QMUsersUtils */,
 				5524C2CF1998B560007450DB /* QMImagePicker */,
@@ -1128,6 +1144,8 @@
 				55D8AD1A19AC75B700DAF79F /* QMChatDialogsService.h */,
 				55D8AD1B19AC75B700DAF79F /* QMChatDialogsService.m */,
 				55D8AD1C19AC75B700DAF79F /* QMChatReceiver+DialogsHistoryUpdated.m */,
+				2459B25319F15FBC00A1398C /* QBChatDialog+UpdateWithNotification.h */,
+				2459B25419F15FBC00A1398C /* QBChatDialog+UpdateWithNotification.m */,
 			);
 			name = QMChatDialogService;
 			path = QMChatGroupService;
@@ -2419,12 +2437,14 @@
 				693206F11962DFBF00B15EF9 /* QMContentView.m in Sources */,
 				55D8ADDF19AC76E200DAF79F /* QMCreateNewChatController.m in Sources */,
 				551BD88A199103C0006AC667 /* _CDAttachment.m in Sources */,
+				2444261F19F1106100C9C61A /* QMChatUtils.m in Sources */,
 				55D8AD9E19AC75FA00DAF79F /* NSPersistentStoreCoordinator+MagicalRecord.m in Sources */,
 				55D270911940B8D300238D50 /* QMDBStorage+Dialogs.m in Sources */,
 				55D8ADD619AC76AE00DAF79F /* QMKeyboardController.m in Sources */,
 				55CEAB91195DBCFA001A8ED6 /* QMChatInputToolbar.m in Sources */,
 				55D8AD9519AC75FA00DAF79F /* NSManagedObject+MagicalRequests.m in Sources */,
 				55D270931940B8D300238D50 /* QMDBStorage+Users.m in Sources */,
+				2459B25519F15FBC00A1398C /* QBChatDialog+UpdateWithNotification.m in Sources */,
 				55CEA9EE195D835B001A8ED6 /* QMImageView.m in Sources */,
 				559BDFE819618D3D000588FE /* QMSignUpController.m in Sources */,
 				55D8AD9F19AC75FA00DAF79F /* NSArray+MagicalRecord.m in Sources */,

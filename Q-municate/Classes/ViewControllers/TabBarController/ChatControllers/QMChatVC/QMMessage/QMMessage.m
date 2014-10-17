@@ -14,7 +14,7 @@
 #import "UIImage+TintColor.h"
 #import "QMApi.h"
 
-#define SYSTEM_MESSAGE_SIZE CGSizeMake(320.0f, 44.0f)
+#define SYSTEM_MESSAGE_SIZE CGSizeMake(320.0f, 60.0f)
 
 
 typedef NS_ENUM(NSUInteger, QMChatNotificationsType) {

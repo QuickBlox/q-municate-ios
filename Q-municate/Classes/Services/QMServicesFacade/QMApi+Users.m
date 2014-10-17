@@ -126,6 +126,18 @@
     return users;
 }
 
+- (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock
+{
+    QBUUser *user = [self userWithID:userID];
+    if (!user) {
+        [self.usersService retrieveUserWithID:userID completion:^(QBUUserResult *result) {
+            completionBlock(YES);
+        }];
+        return;
+    }
+    completionBlock(NO);
+}
+
 
 #pragma mark - Update current User
 
