@@ -12,6 +12,7 @@
 #import "QMMessage.h"
 #import "QMApi.h"
 #import "SVProgressHUD.h"
+#import "REAlertView.h"
 #import "QMChatReceiver.h"
 #import "QMContentService.h"
 #import "QMTextMessageCell.h"
@@ -19,13 +20,14 @@
 #import "QMAttachmentMessageCell.h"
 #import "QMSoundManager.h"
 #import "QMChatSection.h"
+#import "QMContactRequestView.h"
 #import "QMChatNotificationCell.h"
 
 
 
 @interface QMChatDataSource()
 
-<UITableViewDataSource, QMChatCellDelegate>
+<UITableViewDataSource, QMChatCellDelegate, QMUsersListDelegate>
 
 @property (weak, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *chatSections;
@@ -95,6 +97,19 @@
     }
     
     return self;
+}
+
+- (void)setContactRequestView
+{
+    QMContactRequestView *contactRequestView = [[[NSBundle mainBundle] loadNibNamed:@"QMContactRequestCell" owner:self options:0] firstObject];
+    contactRequestView.delegate = self;
+    contactRequestView.userData = [QMApi instance].currentUser;
+    self.tableView.tableHeaderView = contactRequestView;
+}
+
+- (void)removeContactRequestView
+{
+    self.tableView.tableHeaderView = nil;
 }
 
 - (QMChatSection *)chatSectionForDate:(NSDate *)date
@@ -295,6 +310,33 @@
         }
 #endif
     }
+}
+
+
+#pragma mark - Contact Request Delegate
+
+- (void)contactRequestWasAcceptedForUser:(QBUUser *)user
+{
+    __unused __weak __typeof(self)weakSelf = self;
+    [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success) {
+        // do something:
+        
+    }];
+}
+
+- (void)contactRequestWasRejectedForUser:(QBUUser *)user
+{
+    __unused __weak __typeof(self)weakSelf = self;
+    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
+        alertView.message = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_CONFIRM_REJECT_FRIENDS_REQUEST", @"{User's full name}"),  user.fullName];
+        [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
+        [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_OK", nil) andActionBlock:^{
+            //
+            [[QMApi instance] rejectAddContactRequest:user completion:^(BOOL success) {
+                // do something:
+            }];
+        }];
+    }];
 }
 
 @end

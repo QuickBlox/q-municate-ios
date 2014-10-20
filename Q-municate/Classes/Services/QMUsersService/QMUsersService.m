@@ -48,18 +48,21 @@
         }];
     }];
     
+    [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+        
+        if (message.cParamNotificationType == QMMessageNotificationTypeDeleteContactRequest) {
+            BOOL contactWasDeleted = [weakSelf deleteContactRequestUserID:message.senderID];
+            if (contactWasDeleted) {
+                [[QMChatReceiver instance] contactRequestUsersListChanged];
+            }
+        }
+    }];
+    
     [[QMChatReceiver instance] chatDidReceiveContactAddRequestWithTarget:self block:^(NSUInteger userID) {
         
         [weakSelf.confirmRequestUsersIDs addObject:@(userID)];
-        
-        QBUUser *user = [weakSelf userWithID:userID];
-        
-        if (user != nil) {
-            [[QMChatReceiver instance] contactRequestUsersListChanged];
-            return;
-        }
-        [weakSelf retrieveUserWithID:userID completion:^(QBUUserResult *result) {
-            // show contact requests:
+        [weakSelf retriveIfNeededUserWithID:userID completion:^(BOOL retrieveWasNeeded) {
+            
             [[QMChatReceiver instance] contactRequestUsersListChanged];
         }];
     }];
@@ -114,7 +117,30 @@
     [self.users removeObjectForKey:key];
 }
 
-#pragma mark - FRIEND LIST ROASTER
+- (BOOL)deleteContactRequestUserID:(NSUInteger)contactUserID
+{
+    if ([self.confirmRequestUsersIDs containsObject:@(contactUserID)]) {
+        [self.confirmRequestUsersIDs removeObject:@(contactUserID)];
+        return YES;
+    }
+    return NO;
+}
+
+
+#pragma mark - 
+
+- (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock
+{
+    QBUUser *user = [self userWithID:userID];
+    if (!user) {
+        [self retrieveUserWithID:userID completion:^(QBUUserResult *result) {
+            completionBlock(YES);
+        }];
+        return;
+    }
+    completionBlock(NO);
+}
+
 
 - (NSObject<Cancelable> *)retrieveUsersWithFacebookIDs:(NSArray *)facebookIDs completion:(QBUUserPagedResultBlock)completion {
     return [QBUsers usersWithFacebookIDs:facebookIDs delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];

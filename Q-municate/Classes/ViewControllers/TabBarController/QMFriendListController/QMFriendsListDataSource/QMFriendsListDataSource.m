@@ -10,7 +10,6 @@
 #import "QMFriendListViewController.h"
 #import "QMUsersService.h"
 #import "QMFriendListCell.h"
-#import "QMContactRequestCell.h"
 #import "QMApi.h"
 #import "QMUsersService.h"
 #import "SVProgressHud.h"
@@ -259,7 +258,7 @@
     QMTableViewCell *cell = nil;
     if (indexPath.section == 0) {
         cell = [tableView dequeueReusableCellWithIdentifier:kQMContactRequestCellIdentifier];
-        ((QMContactRequestCell *)cell).delegate = self;
+//        ((QMContactRequestCell *)cell).delegate = self;
     } else {
         cell = [tableView dequeueReusableCellWithIdentifier:kQMFriendsListCellIdentifier];
         ((QMFriendListCell *)cell).delegate = self;
@@ -294,39 +293,6 @@
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         }
     }];
-}
-
-- (void)usersListCell:(QMTableViewCell *)cell requestWasAccepted:(BOOL)accepted
-{
-    QBUUser *user = cell.userData;    
-    __weak __typeof(self)weakSelf = self;
-
-    if (accepted) {
-        [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success) {
-            [weakSelf reloadContactListSectionIfNeeded];
-        }];
-    } else {
-        
-        [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-            alertView.message = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_CONFIRM_REJECT_FRIENDS_REQUEST", @"{User's full name}"),  user.fullName];
-            [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
-            [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_OK", nil) andActionBlock:^{
-                //
-                [[QMApi instance] rejectAddContactRequest:user completion:^(BOOL success) {
-                    [weakSelf reloadContactListSectionIfNeeded];
-                }];
-            }];
-        }];
-    }
-}
-
-- (void)reloadContactListSectionIfNeeded
-{
-    self.contactRequests = [QMApi instance].contactRequestUsers;
-    self.contactRequestsCount = self.contactRequests.count;
-    if (self.viewIsShowed) {
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)] withRowAnimation:UITableViewRowAnimationTop];
-    }
 }
 
 

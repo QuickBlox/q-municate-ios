@@ -168,36 +168,20 @@
     
     NSAssert(message.cParamDialogID, @"Notification without dialog id. Need update this case");
     
-    switch (message.cParamNotificationType) {
-        case QMMessageNotificationTypeSendContactRequest:
-        {
-            QBChatDialog *dialog = [self createPrivateDialogIfNeededWithNotification:message];
-            [dialog updateLastMessageInfoWithMessage:message];
-        }
-            break;
-            
-        case QMMessageNotificationTypeCreateGroupDialog:
-        {
-            QBChatDialog *chatDialog = [message chatDialogFromCustomParameters];
-            [self addDialogToHistory:chatDialog];
-        }
-            break;
-            
-        case QMMessageNotificationTypeUpdateGroupDialog:
-        {
-            [self updateChatDialogWithChatMessage:message];
-        }
-            break;
-            
-        case QMMessageNotificationTypeNone:
-        {
-            QBChatDialog *dialog = [self chatDialogWithID:message.cParamDialogID];
-            [dialog updateLastMessageInfoWithMessage:message];
-        }
-            break;
-            
-        default:
-            break;
+    if (message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
+        QBChatDialog *dialog = [self createPrivateDialogIfNeededWithNotification:message];
+        [dialog updateLastMessageInfoWithMessage:message];
+    }
+    else if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
+        QBChatDialog *chatDialog = [message chatDialogFromCustomParameters];
+        [self addDialogToHistory:chatDialog];
+    }
+    else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog) {
+        [self updateChatDialogWithChatMessage:message];
+    }
+    else {
+        QBChatDialog *dialog = [self chatDialogWithID:message.cParamDialogID];
+        [dialog updateLastMessageInfoWithMessage:message];
     }
 
 }

@@ -15,7 +15,7 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
 
 @interface QMGroupDetailsDataSource ()
 
-<QMUsersListCellDelegate>
+<QMUsersListDelegate>
 
 @property (nonatomic, weak) UITableView *tableView;
 @property (nonatomic, strong) NSArray *participants;

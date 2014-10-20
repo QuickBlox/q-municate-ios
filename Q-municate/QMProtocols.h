@@ -8,6 +8,7 @@
 
 
 @class QMTableViewCell;
+@class QMContactRequestView;
 
 #ifndef Q_municate_Protocols_h
 #define Q_municate_Protocols_h
@@ -18,10 +19,13 @@
 - (void)tabBarChatWithChatMessage:(QBChatMessage *)message chatDialog:(QBChatDialog *)dialog showTMessage:(BOOL)show;
 @end
 
-@protocol QMUsersListCellDelegate <NSObject>
+
+@protocol QMUsersListDelegate <NSObject>
 @optional
 - (void)usersListCell:(QMTableViewCell *)cell pressAddBtn:(UIButton *)sender;
-- (void)usersListCell:(QMTableViewCell *)cell requestWasAccepted:(BOOL)accepted;
+
+- (void)contactRequestWasAcceptedForUser:(QBUUser *)user;
+- (void)contactRequestWasRejectedForUser:(QBUUser *)user;
 
 @end
 
