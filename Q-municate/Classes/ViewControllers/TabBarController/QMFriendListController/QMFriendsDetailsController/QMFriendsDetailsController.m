@@ -172,7 +172,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
         [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
         [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil) andActionBlock:^{
             
-            [[QMApi instance] removeUserFromContactList:weakSelf.selectedUser completion:^(BOOL success) {}];
+            [[QMApi instance] removeUserFromContactList:weakSelf.selectedUser completion:^(BOOL success, QBChatMessage *notification) {}];
             [weakSelf.navigationController popViewControllerAnimated:YES];
         }];
     }];

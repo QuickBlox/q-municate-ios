@@ -19,7 +19,6 @@ static NSString *const kQMContactRequestCellIdentifier = @"QMContactRequestCell"
 @interface QMFriendsListDataSource : NSObject <UITableViewDataSource, UISearchDisplayDelegate, QMUsersListDelegate>
 
 @property (nonatomic, assign) BOOL viewIsShowed;
-@property (assign, nonatomic, readonly) BOOL searchIsActive;
 @property (weak, nonatomic) id <QMFriendsListDataSourceDelegate> delegate;
 
 - (instancetype)initWithTableView:(UITableView *)tableView searchDisplayController:(UISearchDisplayController *)searchDisplayController;

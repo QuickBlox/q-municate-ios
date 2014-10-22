@@ -81,7 +81,10 @@
             
             QBChatDialog *dialogForReceiverMessage = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
             
-            if ([weakSelf.chatDialog isEqual:dialogForReceiverMessage] && message.cParamNotificationType == QMMessageNotificationTypeNone) {
+            if ([weakSelf.chatDialog isEqual:dialogForReceiverMessage] && message.cParamNotificationType != QMMessageNotificationTypeDeliveryMessage) {
+                if (message.cParamNotificationType == QMMessageNotificationTypeDeleteContactRequest || message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
+                    [weakSelf checkForContactRequestFromOpponentWithDialog:weakSelf.chatDialog];
+                }
                 
                 if (message.senderID != [QMApi instance].currentUser.ID) {
                     [QMSoundManager playMessageReceivedSound];
@@ -90,20 +93,34 @@
                 }
                 
             }
-            else if (message.cParamNotificationType == QMMessageNotificationTypeDeliveryMessage ){
-            }
-            
         }];
     }
+    
+    // check for contact request:
+    [self checkForContactRequestFromOpponentWithDialog:self.chatDialog];
     
     return self;
 }
 
-- (void)setContactRequestView
+- (void)checkForContactRequestFromOpponentWithDialog:(QBChatDialog *)dialog
 {
-    QMContactRequestView *contactRequestView = [[[NSBundle mainBundle] loadNibNamed:@"QMContactRequestCell" owner:self options:0] firstObject];
+    QBUUser *contact = [[QMApi instance] userForContactRequestWithPrivateChatDialog:dialog];
+    if (contact) {
+        if (!self.tableView.tableHeaderView) {
+            [self setContactRequestViewForUser:contact];
+        }
+    } else {
+        if (self.tableView.tableHeaderView) {
+            [self removeContactRequestView];
+        }
+    }
+}
+
+- (void)setContactRequestViewForUser:(QBUUser *)user
+{
+    QMContactRequestView *contactRequestView = [[[NSBundle mainBundle] loadNibNamed:@"QMContactRequestView" owner:self options:0] firstObject];
     contactRequestView.delegate = self;
-    contactRequestView.userData = [QMApi instance].currentUser;
+    contactRequestView.userData = user;
     self.tableView.tableHeaderView = contactRequestView;
 }
 
@@ -317,23 +334,27 @@
 
 - (void)contactRequestWasAcceptedForUser:(QBUUser *)user
 {
-    __unused __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success) {
-        // do something:
-        
+    __weak __typeof(self)weakSelf = self;
+    [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success, QBChatMessage *notification) {
+        // delete contact request view:
+        [weakSelf removeContactRequestView];
+        [weakSelf insertNewMessage:notification];
     }];
 }
 
 - (void)contactRequestWasRejectedForUser:(QBUUser *)user
 {
-    __unused __weak __typeof(self)weakSelf = self;
+    __weak __typeof(self)weakSelf = self;
     [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
         alertView.message = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_CONFIRM_REJECT_FRIENDS_REQUEST", @"{User's full name}"),  user.fullName];
         [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
         [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_OK", nil) andActionBlock:^{
             //
-            [[QMApi instance] rejectAddContactRequest:user completion:^(BOOL success) {
-                // do something:
+            [[QMApi instance] rejectAddContactRequest:user completion:^(BOOL success, QBChatMessage *notification) {
+                
+                // delete contact request view:
+                [weakSelf removeContactRequestView];
+                [weakSelf insertNewMessage:notification];
             }];
         }];
     }];

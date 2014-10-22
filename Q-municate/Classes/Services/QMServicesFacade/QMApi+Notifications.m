@@ -15,28 +15,28 @@
 @implementation QMApi (Notifications)
 
 
-- (void)sendContactRequestSendNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error))completionBlock
+- (void)sendContactRequestSendNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock
 {
     QBChatMessage *notification = [self notificationForUser:user];
     notification.cParamNotificationType = QMMessageNotificationTypeSendContactRequest;
     [self sendNotification:notification completion:completionBlock];
 }
 
-- (void)sendContactRequestConfirmNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error))completionBlock
+- (void)sendContactRequestConfirmNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock
 {
     QBChatMessage *notification = [self notificationForUser:user];
     notification.cParamNotificationType = QMMessageNotificationTypeConfirmContactRequest;
     [self sendNotification:notification completion:completionBlock];
 }
 
-- (void)sendContactRequestRejectNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error))completionBlock
+- (void)sendContactRequestRejectNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock
 {
     QBChatMessage *notification = [self notificationForUser:user];
     notification.cParamNotificationType = QMMessageNotificationTypeRejectContactRequest;
     [self sendNotification:notification completion:completionBlock];
 }
 
-- (void)sendContactRequestDeleteNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error))completionBlock
+- (void)sendContactRequestDeleteNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock
 {
     QBChatMessage *notification = [self notificationForUser:user];
     notification.cParamNotificationType = QMMessageNotificationTypeDeleteContactRequest;
@@ -51,7 +51,7 @@
     return notification;
 }
 
-- (void)sendNotification:(QBChatMessage *)notification completion:(void(^)(NSError *error))completionBlock
+- (void)sendNotification:(QBChatMessage *)notification completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock
 {
     QBChatDialog *dialog = [self.chatDialogsService privateDialogWithOpponentID:notification.recipientID];
     NSAssert(dialog, @"Dialog not found. Please ");
@@ -69,10 +69,43 @@
         if (!error) {
             [weakSelf.messagesService addMessageToHistory:notification withDialogID:dialog.ID];
             [dialog updateLastMessageInfoWithMessage:notification];
-            completionBlock(nil);
+            completionBlock(nil, notification);
         } else {
-            completionBlock(error);
+            completionBlock(error, nil);
         }
+    }];
+}
+
+
+#pragma mark - Push Notifications
+
+- (void)sendPushContactRequestNotificationToUser:(QBUUser *)user notificationType:(NSInteger)notificationType
+{
+    // notification type:
+    NSString *messageText = [NSString stringWithFormat:@"You have got contact request from %@", user.fullName];
+    
+    QBMEvent *event = [QBMEvent event];
+    event.notificationType = QBMNotificationTypePush;
+    event.usersIDs = [NSString stringWithFormat:@"%d", user.ID];
+    event.isDevelopmentEnvironment = ![QBSettings isUseProductionEnvironmentForPushNotifications];
+    event.type = QBMEventTypeOneShot;
+    //
+    // custom params
+    NSDictionary  *dictPush = @{@"message" : @"Message received from %",
+                                       @"ios_badge": @"1",
+                                       @"ios_sound": @"default",
+                                       };
+    //
+    NSError *error = nil;
+    NSData *sendData = [NSJSONSerialization dataWithJSONObject:dictPush options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonString = [[NSString alloc] initWithData:sendData encoding:NSUTF8StringEncoding];
+    //
+    event.message = jsonString;
+    
+    [QBRequest createEvent:event successBlock:^(QBResponse *response, NSArray *events) {
+        //
+    } errorBlock:^(QBResponse *response) {
+        //
     }];
 }
 

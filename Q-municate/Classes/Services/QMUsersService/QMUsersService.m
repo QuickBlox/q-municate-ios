@@ -119,7 +119,7 @@
 
 - (BOOL)deleteContactRequestUserID:(NSUInteger)contactUserID
 {
-    if ([self.confirmRequestUsersIDs containsObject:@(contactUserID)]) {
+    if ([self.confirmRequestUsersIDs.allObjects containsObject:@(contactUserID)]) {
         [self.confirmRequestUsersIDs removeObject:@(contactUserID)];
         return YES;
     }

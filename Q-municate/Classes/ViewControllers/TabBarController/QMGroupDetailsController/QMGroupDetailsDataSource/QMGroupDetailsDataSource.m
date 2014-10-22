@@ -103,9 +103,7 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
 
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     QBUUser *user = self.participants[indexPath.row];
-    [[QMApi instance] addUserToContactList:user completion:^(BOOL success) {
-        
-    }];
+    [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {}];
 }
 
 @end

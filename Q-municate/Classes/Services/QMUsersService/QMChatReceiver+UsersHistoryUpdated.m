@@ -23,6 +23,7 @@
 
 - (void)contactRequestUsersListChanged
 {
+#warning Make sure that this case neeeded
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMUsersHistoryUpdated block) {
         block();
     }];

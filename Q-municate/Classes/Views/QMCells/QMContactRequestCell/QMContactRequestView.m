@@ -12,29 +12,6 @@
 
 @implementation QMContactRequestView
 
-- (void)awakeFromNib {
-    self.qmImageView.imageViewType = QMImageViewTypeCircle;
-}
-
-- (void)setUserImageWithUrl:(NSURL *)userImageUrl {
-    
-    UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
-    
-    [self.qmImageView setImageWithURL:userImageUrl
-                          placeholder:placeholder
-                              options:SDWebImageHighPriority
-                             progress:^(NSInteger receivedSize, NSInteger expectedSize) {}
-                       completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
-}
-
-- (void)setUserImage:(UIImage *)image withKey:(NSString *)key {
-    
-    if (!image) {
-        image = [UIImage imageNamed:@"upic-placeholder"];
-    }
-    
-    [self.qmImageView sd_setImage:image withKey:key];
-}
 
 - (void)setUserData:(id)userData {
     if (![_userData isEqual:userData]) {
@@ -42,9 +19,7 @@
     }
     
     QBUUser *user = userData;
-    self.titleLabel.text = (user.fullName.length == 0) ? @"" : user.fullName;
-    NSURL *avatarUrl = [QMUsersUtils userAvatarURL:user];
-    [self setUserImageWithUrl:avatarUrl];
+    self.titleLabel.text = [NSString stringWithFormat:@"%@ would like to chat with you", (user.fullName.length == 0) ? @"Unknown" : user.fullName];
 }
 
 - (IBAction)rejectButtonPressed:(id)sender {

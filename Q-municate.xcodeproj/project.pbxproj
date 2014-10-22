@@ -1874,7 +1874,7 @@
 				24722D1619E3D5E40046ACC4 /* QMChatNotificationCell */,
 				69007BD119B6190A00E3A925 /* QMNoResultsCell */,
 				55F4A3D3197021580068EBC3 /* QMCheckBoxProtocol.h */,
-				699C414C19AF470C0060859F /* QMContactRequestCell */,
+				699C414C19AF470C0060859F /* QMContactRequestView */,
 				55F4A3C0196FF0830068EBC3 /* QMTableViewCell */,
 				55F4A3B4196FF0830068EBC3 /* QMChatListCell */,
 				55F4A3B7196FF0830068EBC3 /* QMFriendListCell */,
@@ -2048,14 +2048,14 @@
 			path = QMPlaceholderTextView;
 			sourceTree = "<group>";
 		};
-		699C414C19AF470C0060859F /* QMContactRequestCell */ = {
+		699C414C19AF470C0060859F /* QMContactRequestView */ = {
 			isa = PBXGroup;
 			children = (
 				699C414D19AF473C0060859F /* QMContactRequestView.h */,
 				699C414E19AF473C0060859F /* QMContactRequestView.m */,
 				6937F91819B5A1D3001858A5 /* QMContactRequestView.xib */,
 			);
-			name = QMContactRequestCell;
+			name = QMContactRequestView;
 			sourceTree = "<group>";
 		};
 		69B72F7C196D37D500ECEE4C /* QMFeedbackTableViewController */ = {
