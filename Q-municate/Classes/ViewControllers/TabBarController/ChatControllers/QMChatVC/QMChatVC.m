@@ -60,6 +60,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
                                                         panGestureRecognizer:self.tableView.panGestureRecognizer
                                                                     delegate:self];
     _showCameraButton = YES;
+    
 }
 
 - (void)dealloc {
@@ -113,6 +114,9 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     
     self.inputToolBar.contentView.rightBarButtonItemWidth = 26;
     self.inputToolBar.contentView.leftBarButtonItemWidth = 26;
+    
+#warning lock test!
+    [self.inputToolBar lock];
 }
 
 - (void)configureChatVC {

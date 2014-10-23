@@ -65,4 +65,15 @@ FOUNDATION_EXPORT const CGFloat kQMChatInputToolbarHeightDefault;
  */
 - (void)toggleSendButtonEnabled;
 
+/**
+ * Lock input bar.
+ */
+- (void)lock;
+
+/**
+ * Unlock input bar.
+ */
+- (void)unlock;
+
+
 @end

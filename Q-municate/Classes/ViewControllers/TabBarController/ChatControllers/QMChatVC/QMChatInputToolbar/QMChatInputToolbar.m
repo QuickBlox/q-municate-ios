@@ -152,4 +152,23 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
     }
 }
 
+
+#pragma mark - Blocking
+
+- (void)lock
+{
+    [self.contentView.textView setAlpha:0.5f];
+    [self.contentView.textView setEditable:NO];
+    [self.contentView.leftBarButtonItem setEnabled:NO];
+    [self.contentView.rightBarButtonItem setEnabled:NO];
+}
+
+- (void)unlock
+{
+    [self.contentView.textView setAlpha:1.0f];
+    [self.contentView.textView setEditable:YES];
+    [self.contentView.leftBarButtonItem setEnabled:YES];
+    [self.contentView.rightBarButtonItem setEnabled:YES];
+}
+
 @end
