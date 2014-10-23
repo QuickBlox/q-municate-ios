@@ -1,22 +1,19 @@
 //
-//  QMContactRequestView.m
+//  QMContactRequestCell.m
 //  Q-municate
 //
 //  Created by Igor Alefirenko on 28/08/2014.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import "QMContactRequestView.h"
-#import "QMImageView.h"
+#import "QMContactRequestCell.h"
 #import "QMUsersUtils.h"
 
-@implementation QMContactRequestView
+@implementation QMContactRequestCell
 
 
 - (void)setUserData:(id)userData {
-    if (![_userData isEqual:userData]) {
-        _userData = userData;
-    }
+    [super setUserData:userData];
     
     QBUUser *user = userData;
     self.titleLabel.text = [NSString stringWithFormat:@"%@ would like to chat with you", (user.fullName.length == 0) ? @"Unknown" : user.fullName];

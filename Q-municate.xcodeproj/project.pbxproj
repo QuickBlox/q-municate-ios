@@ -181,7 +181,7 @@
 		693206EA1962BCC300B15EF9 /* QMBaseCallsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 693206E91962BCC300B15EF9 /* QMBaseCallsController.m */; };
 		693206EE1962C0F600B15EF9 /* QMAudioCallController.m in Sources */ = {isa = PBXBuildFile; fileRef = 693206ED1962C0F600B15EF9 /* QMAudioCallController.m */; };
 		693206F11962DFBF00B15EF9 /* QMContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 693206F01962DFBF00B15EF9 /* QMContentView.m */; };
-		6937F91919B5A1D3001858A5 /* QMContactRequestView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6937F91819B5A1D3001858A5 /* QMContactRequestView.xib */; };
+		6937F91919B5A1D3001858A5 /* QMContactRequestCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6937F91819B5A1D3001858A5 /* QMContactRequestCell.xib */; };
 		693DC42618FFC45900AF46D9 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42518FFC45900AF46D9 /* libsqlite3.dylib */; };
 		693DC42C18FFC58000AF46D9 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */; };
 		693F347B18F554240032891F /* QMIncommingCallSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 693F347A18F554240032891F /* QMIncommingCallSegue.m */; };
@@ -587,7 +587,7 @@
 		693206ED1962C0F600B15EF9 /* QMAudioCallController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMAudioCallController.m; path = QMAudioCallController/QMAudioCallController.m; sourceTree = "<group>"; };
 		693206EF1962DFBF00B15EF9 /* QMContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMContentView.h; sourceTree = "<group>"; };
 		693206F01962DFBF00B15EF9 /* QMContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMContentView.m; sourceTree = "<group>"; };
-		6937F91819B5A1D3001858A5 /* QMContactRequestView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = QMContactRequestView.xib; path = QMContactRequestCell/QMContactRequestView.xib; sourceTree = "<group>"; };
+		6937F91819B5A1D3001858A5 /* QMContactRequestCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = QMContactRequestCell.xib; path = QMContactRequestCell/QMContactRequestCell.xib; sourceTree = "<group>"; };
 		693DC42518FFC45900AF46D9 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
 		693F347918F554240032891F /* QMIncommingCallSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncommingCallSegue.h; sourceTree = "<group>"; };
@@ -603,7 +603,7 @@
 		697E2D4A196EA82400CD2BDE /* QMLicenseAgreementViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMLicenseAgreementViewController.h; path = QMLicenseAgreementViewController/QMLicenseAgreementViewController.h; sourceTree = "<group>"; };
 		697E2D4B196EA82400CD2BDE /* QMLicenseAgreementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMLicenseAgreementViewController.m; path = QMLicenseAgreementViewController/QMLicenseAgreementViewController.m; sourceTree = "<group>"; };
 		698C94F41976D483002C53FA /* QMApi+Calls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Calls.m"; sourceTree = "<group>"; };
-		699C414D19AF473C0060859F /* QMContactRequestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMContactRequestView.h; path = QMContactRequestCell/QMContactRequestView.h; sourceTree = "<group>"; };
+		699C414D19AF473C0060859F /* QMContactRequestCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMContactRequestCell.h; path = QMContactRequestCell/QMContactRequestCell.h; sourceTree = "<group>"; };
 		699C414E19AF473C0060859F /* QMContactRequestView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMContactRequestView.m; path = QMContactRequestCell/QMContactRequestView.m; sourceTree = "<group>"; };
 		69A664DF19BDB57700D3E0C7 /* libxml2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.2.dylib; path = usr/lib/libxml2.2.dylib; sourceTree = SDKROOT; };
 		69CF189418AE1C3C003262EF /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -2051,9 +2051,9 @@
 		699C414C19AF470C0060859F /* QMContactRequestView */ = {
 			isa = PBXGroup;
 			children = (
-				699C414D19AF473C0060859F /* QMContactRequestView.h */,
+				699C414D19AF473C0060859F /* QMContactRequestCell.h */,
 				699C414E19AF473C0060859F /* QMContactRequestView.m */,
-				6937F91819B5A1D3001858A5 /* QMContactRequestView.xib */,
+				6937F91819B5A1D3001858A5 /* QMContactRequestCell.xib */,
 			);
 			name = QMContactRequestView;
 			sourceTree = "<group>";
@@ -2213,7 +2213,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6937F91919B5A1D3001858A5 /* QMContactRequestView.xib in Resources */,
+				6937F91919B5A1D3001858A5 /* QMContactRequestCell.xib in Resources */,
 				55A8B06F1965986A00B5D33B /* busy.wav in Resources */,
 				552E483B199A2711006A25E1 /* QMFriendListCell.xib in Resources */,
 				55A8B0701965986A00B5D33B /* calling.wav in Resources */,

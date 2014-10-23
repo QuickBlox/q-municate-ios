@@ -20,9 +20,11 @@
 #import "QMAttachmentMessageCell.h"
 #import "QMSoundManager.h"
 #import "QMChatSection.h"
-#import "QMContactRequestView.h"
+#import "QMContactRequestCell.h"
 #import "QMChatNotificationCell.h"
 
+
+static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
 
 
 @interface QMChatDataSource()
@@ -66,6 +68,7 @@
         [tableView registerClass:[QMTextMessageCell class] forCellReuseIdentifier:QMTextMessageCellID];
         [tableView registerClass:[QMAttachmentMessageCell class] forCellReuseIdentifier:QMAttachmentMessageCellID];
         [tableView registerNib:[UINib nibWithNibName:@"QMChatNotificationCell" bundle:nil] forCellReuseIdentifier:kChatNotificationCellID];
+        [tableView registerNib:[UINib nibWithNibName:@"QMContactRequestCell" bundle:nil] forCellReuseIdentifier:kQMContactRequestCellID];
         
         __weak __typeof(self)weakSelf = self;
         
@@ -118,10 +121,7 @@
 
 - (void)setContactRequestViewForUser:(QBUUser *)user
 {
-    QMContactRequestView *contactRequestView = [[[NSBundle mainBundle] loadNibNamed:@"QMContactRequestView" owner:self options:0] firstObject];
-    contactRequestView.delegate = self;
-    contactRequestView.userData = user;
-    self.tableView.tableHeaderView = contactRequestView;
+    // тут была вьюшка для хедера таблицы..
 }
 
 - (void)removeContactRequestView
@@ -209,6 +209,7 @@
     
     switch (message.type) {
             
+        case QMMessageTypeContactRequest: return kQMContactRequestCellID; break;
         case QMMessageTypeSystem: return kChatNotificationCellID; break;
         case QMMessageTypePhoto: return QMAttachmentMessageCellID; break;
         case QMMessageTypeText: return QMTextMessageCellID; break;

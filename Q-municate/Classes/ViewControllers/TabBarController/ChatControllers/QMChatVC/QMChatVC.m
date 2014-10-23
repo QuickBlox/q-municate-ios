@@ -114,9 +114,6 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     
     self.inputToolBar.contentView.rightBarButtonItemWidth = 26;
     self.inputToolBar.contentView.leftBarButtonItemWidth = 26;
-    
-#warning lock test!
-//    [self.inputToolBar lock];
 }
 
 - (void)configureChatVC {
