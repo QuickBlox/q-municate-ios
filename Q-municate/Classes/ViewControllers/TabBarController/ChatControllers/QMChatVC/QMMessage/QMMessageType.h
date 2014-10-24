@@ -12,6 +12,5 @@ typedef NS_ENUM (NSInteger, QMMessageType) {
     
     QMMessageTypeText,
     QMMessageTypePhoto,
-    QMMessageTypeSystem,
-    QMMessageTypeContactRequest
+    QMMessageTypeSystem
 };

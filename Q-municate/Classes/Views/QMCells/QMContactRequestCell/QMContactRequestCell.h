@@ -8,13 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "QMTableViewCell.h"
+#import "QMChatCell.h"
 
-
-@interface QMContactRequestCell : QMTableViewCell
+@interface QMContactRequestCell : UITableViewCell
 
 @property (nonatomic, weak) id <QMUsersListDelegate> delegate;
 
-@property (strong, nonatomic) id userData;
+@property (nonatomic, strong) QMMessage *notification;
 
 @end

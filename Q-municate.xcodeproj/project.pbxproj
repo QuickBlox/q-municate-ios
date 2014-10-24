@@ -191,7 +191,7 @@
 		697BBAD619C1DCA900F7F1D8 /* QMChatSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 697BBAD519C1DCA900F7F1D8 /* QMChatSection.m */; };
 		697E2D4C196EA82400CD2BDE /* QMLicenseAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 697E2D4B196EA82400CD2BDE /* QMLicenseAgreementViewController.m */; };
 		698C94F51976D483002C53FA /* QMApi+Calls.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C94F41976D483002C53FA /* QMApi+Calls.m */; };
-		699C414F19AF473C0060859F /* QMContactRequestView.m in Sources */ = {isa = PBXBuildFile; fileRef = 699C414E19AF473C0060859F /* QMContactRequestView.m */; };
+		699C414F19AF473C0060859F /* QMContactRequestCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 699C414E19AF473C0060859F /* QMContactRequestCell.m */; };
 		69A664E019BDB57700D3E0C7 /* libxml2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 69A664DF19BDB57700D3E0C7 /* libxml2.2.dylib */; };
 		69CF189518AE1C3C003262EF /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CF189418AE1C3C003262EF /* CFNetwork.framework */; };
 		69CF189718AE1C49003262EF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CF189618AE1C48003262EF /* SystemConfiguration.framework */; };
@@ -604,7 +604,7 @@
 		697E2D4B196EA82400CD2BDE /* QMLicenseAgreementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMLicenseAgreementViewController.m; path = QMLicenseAgreementViewController/QMLicenseAgreementViewController.m; sourceTree = "<group>"; };
 		698C94F41976D483002C53FA /* QMApi+Calls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Calls.m"; sourceTree = "<group>"; };
 		699C414D19AF473C0060859F /* QMContactRequestCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMContactRequestCell.h; path = QMContactRequestCell/QMContactRequestCell.h; sourceTree = "<group>"; };
-		699C414E19AF473C0060859F /* QMContactRequestView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMContactRequestView.m; path = QMContactRequestCell/QMContactRequestView.m; sourceTree = "<group>"; };
+		699C414E19AF473C0060859F /* QMContactRequestCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMContactRequestCell.m; path = QMContactRequestCell/QMContactRequestCell.m; sourceTree = "<group>"; };
 		69A664DF19BDB57700D3E0C7 /* libxml2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.2.dylib; path = usr/lib/libxml2.2.dylib; sourceTree = SDKROOT; };
 		69CF189418AE1C3C003262EF /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		69CF189618AE1C48003262EF /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -1874,7 +1874,7 @@
 				24722D1619E3D5E40046ACC4 /* QMChatNotificationCell */,
 				69007BD119B6190A00E3A925 /* QMNoResultsCell */,
 				55F4A3D3197021580068EBC3 /* QMCheckBoxProtocol.h */,
-				699C414C19AF470C0060859F /* QMContactRequestView */,
+				699C414C19AF470C0060859F /* QMContactRequestCell */,
 				55F4A3C0196FF0830068EBC3 /* QMTableViewCell */,
 				55F4A3B4196FF0830068EBC3 /* QMChatListCell */,
 				55F4A3B7196FF0830068EBC3 /* QMFriendListCell */,
@@ -2048,14 +2048,14 @@
 			path = QMPlaceholderTextView;
 			sourceTree = "<group>";
 		};
-		699C414C19AF470C0060859F /* QMContactRequestView */ = {
+		699C414C19AF470C0060859F /* QMContactRequestCell */ = {
 			isa = PBXGroup;
 			children = (
 				699C414D19AF473C0060859F /* QMContactRequestCell.h */,
-				699C414E19AF473C0060859F /* QMContactRequestView.m */,
+				699C414E19AF473C0060859F /* QMContactRequestCell.m */,
 				6937F91819B5A1D3001858A5 /* QMContactRequestCell.xib */,
 			);
-			name = QMContactRequestView;
+			name = QMContactRequestCell;
 			sourceTree = "<group>";
 		};
 		69B72F7C196D37D500ECEE4C /* QMFeedbackTableViewController */ = {
@@ -2364,7 +2364,7 @@
 				551BD88C199103C0006AC667 /* _CDMessage.m in Sources */,
 				55D8ADF119AC775C00DAF79F /* QMUploadContentOperation.m in Sources */,
 				55CEAB9D195DBCFA001A8ED6 /* QMFriendListViewController.m in Sources */,
-				699C414F19AF473C0060859F /* QMContactRequestView.m in Sources */,
+				699C414F19AF473C0060859F /* QMContactRequestCell.m in Sources */,
 				551BD88D199103C0006AC667 /* _CDUser.m in Sources */,
 				69D57E6618ACC11C00A9900A /* AppDelegate.m in Sources */,
 				55D8ADC719AC766E00DAF79F /* QMAttachmentMessageCell.m in Sources */,

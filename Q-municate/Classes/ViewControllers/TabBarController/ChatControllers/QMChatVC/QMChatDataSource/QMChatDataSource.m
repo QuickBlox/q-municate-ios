@@ -43,6 +43,8 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
  */
 @property (assign, nonatomic) BOOL automaticallyScrollsToMostRecentMessage;
 
+@property (strong, nonatomic) QMMessage *contactRequestMessage;
+
 @end
 
 @implementation QMChatDataSource
@@ -85,11 +87,12 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
             QBChatDialog *dialogForReceiverMessage = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
             
             if ([weakSelf.chatDialog isEqual:dialogForReceiverMessage] && message.cParamNotificationType != QMMessageNotificationTypeDeliveryMessage) {
-                if (message.cParamNotificationType == QMMessageNotificationTypeDeleteContactRequest || message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
-                    [weakSelf checkForContactRequestFromOpponentWithDialog:weakSelf.chatDialog];
+                
+                if (message.cParamNotificationType == QMMessageNotificationTypeDeleteContactRequest) {
+                    [weakSelf unmarkContactRequestNotification];
                 }
                 
-                if (message.senderID != [QMApi instance].currentUser.ID) {
+                if (message.senderID != [QMApi instance].currentUser.ID) {  // for group chats
                     [QMSoundManager playMessageReceivedSound];
                     
                     [weakSelf insertNewMessage:message];
@@ -99,34 +102,35 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         }];
     }
     
-    // check for contact request:
-    [self checkForContactRequestFromOpponentWithDialog:self.chatDialog];
-    
     return self;
 }
 
-- (void)checkForContactRequestFromOpponentWithDialog:(QBChatDialog *)dialog
+- (void)markContactRequestNotificationIfNeededForChatSection:(QMChatSection *)chatSection
 {
-    QBUUser *contact = [[QMApi instance] userForContactRequestWithPrivateChatDialog:dialog];
-    if (contact) {
-        if (!self.tableView.tableHeaderView) {
-            [self setContactRequestViewForUser:contact];
-        }
-    } else {
-        if (self.tableView.tableHeaderView) {
-            [self removeContactRequestView];
-        }
+    QMMessage *lastMessage = [chatSection.messages lastObject];
+    [self markContactRequestNotificationIfNeeded:lastMessage];
+}
+
+- (void)markContactRequestNotificationIfNeeded:(QMMessage *)notificaion
+{
+    QBUUser *contact = [[QMApi instance] userForContactRequestWithPrivateChatDialog:notificaion.chatDialog];
+    
+    if (notificaion.cParamNotificationType == QMMessageNotificationTypeSendContactRequest && notificaion.senderID == contact.ID) {
+        notificaion.marked = YES;
+        self.contactRequestMessage = notificaion;
     }
 }
 
-- (void)setContactRequestViewForUser:(QBUUser *)user
+- (void)unmarkContactRequestNotification
 {
-    // тут была вьюшка для хедера таблицы..
-}
-
-- (void)removeContactRequestView
-{
-    self.tableView.tableHeaderView = nil;
+    if (self.contactRequestMessage) {
+        self.contactRequestMessage.marked = NO;
+        self.contactRequestMessage = nil;
+        
+        QMChatSection *lastSection  = [self.chatSections lastObject];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:lastSection.messages.count-1 inSection:self.chatSections.count-1];
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
 - (QMChatSection *)chatSectionForDate:(NSDate *)date
@@ -145,6 +149,7 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
 - (void)insertNewMessage:(QBChatMessage *)message {
     
     QMMessage *qmMessage = [self qmMessageWithQbChatHistoryMessage:message];
+    [self markContactRequestNotificationIfNeeded:qmMessage];
     
     QMChatSection *chatSection = [self chatSectionForDate:qmMessage.datetime];
     [chatSection addMessage:qmMessage];
@@ -192,6 +197,9 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         [section addMessage:qmMessage];
         
     }
+    // check last message for contact request notification:
+    [self markContactRequestNotificationIfNeededForChatSection:arrayOfSections.lastObject];
+    
     return arrayOfSections;
 }
 // *******************************************************************************
@@ -209,7 +217,6 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
     
     switch (message.type) {
             
-        case QMMessageTypeContactRequest: return kQMContactRequestCellID; break;
         case QMMessageTypeSystem: return kChatNotificationCellID; break;
         case QMMessageTypePhoto: return QMAttachmentMessageCellID; break;
         case QMMessageTypeText: return QMTextMessageCellID; break;
@@ -252,6 +259,12 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
     
     QMChatSection *chatSection = self.chatSections[indexPath.section];
     QMMessage *message = chatSection.messages[indexPath.row];
+    
+    if (message.marked) {
+        QMContactRequestCell *contactRequestCell = [tableView dequeueReusableCellWithIdentifier:kQMContactRequestCellID];
+        contactRequestCelset
+    }
+    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIDAtQMMessage:message]];
     if ([cell isKindOfClass:QMChatNotificationCell.class]) {
         QMChatNotificationCell *notificationCell = (QMChatNotificationCell *)cell;
@@ -337,8 +350,8 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
 {
     __weak __typeof(self)weakSelf = self;
     [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success, QBChatMessage *notification) {
-        // delete contact request view:
-        [weakSelf removeContactRequestView];
+        
+        [weakSelf unmarkContactRequestNotification];
         [weakSelf insertNewMessage:notification];
     }];
 }
@@ -353,8 +366,7 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
             //
             [[QMApi instance] rejectAddContactRequest:user completion:^(BOOL success, QBChatMessage *notification) {
                 
-                // delete contact request view:
-                [weakSelf removeContactRequestView];
+                [weakSelf unmarkContactRequestNotification];
                 [weakSelf insertNewMessage:notification];
             }];
         }];

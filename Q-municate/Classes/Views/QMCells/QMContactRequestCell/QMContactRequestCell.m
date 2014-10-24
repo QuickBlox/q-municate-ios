@@ -7,17 +7,11 @@
 //
 
 #import "QMContactRequestCell.h"
-#import "QMUsersUtils.h"
+#import "QMApi.h"
 
 @implementation QMContactRequestCell
 
 
-- (void)setUserData:(id)userData {
-    [super setUserData:userData];
-    
-    QBUUser *user = userData;
-    self.titleLabel.text = [NSString stringWithFormat:@"%@ would like to chat with you", (user.fullName.length == 0) ? @"Unknown" : user.fullName];
-}
 
 - (IBAction)rejectButtonPressed:(id)sender {
     if ([self.delegate respondsToSelector:@selector(contactRequestWasRejectedForUser:)]) {

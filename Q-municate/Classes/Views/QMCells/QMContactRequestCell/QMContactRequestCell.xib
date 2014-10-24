@@ -64,7 +64,7 @@
                     <constraint firstAttribute="bottomMargin" secondItem="LJu-h1-uRF" secondAttribute="bottom" constant="2.5" id="xNM-Nb-PKG"/>
                 </constraints>
             </tableViewCellContentView>
-            <point key="canvasLocation" x="-833" y="208"/>
+            <point key="canvasLocation" x="-1059" y="202"/>
         </tableViewCell>
     </objects>
     <resources>

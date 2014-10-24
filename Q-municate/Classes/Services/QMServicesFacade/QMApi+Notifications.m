@@ -82,7 +82,7 @@
 - (void)sendPushContactRequestNotificationToUser:(QBUUser *)user notificationType:(NSInteger)notificationType
 {
     // notification type:
-    NSString *messageText = [NSString stringWithFormat:@"You have got contact request from %@", user.fullName];
+    __unused NSString *messageText = [NSString stringWithFormat:@"You have got contact request from %@", user.fullName];
     
     QBMEvent *event = [QBMEvent event];
     event.notificationType = QBMNotificationTypePush;
