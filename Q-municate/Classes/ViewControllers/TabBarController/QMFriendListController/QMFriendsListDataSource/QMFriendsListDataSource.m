@@ -116,7 +116,7 @@
     
     self.friendList = [QMApi instance].friends;
     if (self.viewIsShowed) {
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView reloadData];
     }
 } 
 

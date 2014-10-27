@@ -151,6 +151,13 @@
     return contact;
 }
 
+- (BOOL)isFriendForChatDialog:(QBChatDialog *)chatDialog
+{
+    NSUInteger occupantID = [self occupantIDForPrivateChatDialog:chatDialog];
+    BOOL isFriend = [self.usersService isFriendWithID:occupantID];
+    return isFriend;
+}
+
 - (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock
 {
     [self.usersService retriveIfNeededUserWithID:userID completion:completionBlock];

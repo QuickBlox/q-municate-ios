@@ -79,10 +79,12 @@
 
 #pragma mark - Push Notifications
 
-- (void)sendPushContactRequestNotificationToUser:(QBUUser *)user notificationType:(NSInteger)notificationType
+- (void)sendPushContactRequestNotificationToUser:(QBUUser *)user notificationType:(QMMessageNotificationType)notificationType
 {
     // notification type:
-    __unused NSString *messageText = [NSString stringWithFormat:@"You have got contact request from %@", user.fullName];
+    NSString *messageText = [QMChatUtils notificationTextForNotificationType:notificationType];
+    QBUUser *me = [QMApi instance].currentUser;
+    NSString *message = [NSString stringWithFormat:messageText, @"You"];
     
     QBMEvent *event = [QBMEvent event];
     event.notificationType = QBMNotificationTypePush;

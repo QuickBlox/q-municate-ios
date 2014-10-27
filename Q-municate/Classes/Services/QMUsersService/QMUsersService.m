@@ -96,6 +96,17 @@
     return user;
 }
 
+- (BOOL)isFriendWithID:(NSUInteger)ID
+{
+    NSArray *contactListItems = [QBChat instance].contactList.contacts;
+    for (QBContactListItem *item in contactListItems) {
+        if (item.userID == ID) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
 - (void)addUsers:(NSArray *)users {
     
     for (QBUUser *user in users) {

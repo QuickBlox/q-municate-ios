@@ -194,6 +194,8 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 @property (strong, nonatomic, readonly) NSArray *friends;
 @property (strong, nonatomic, readonly) NSArray *contactRequestUsers;
 
+- (BOOL)isFriendForChatDialog:(QBChatDialog *)chatDialog;
+
 - (NSArray *)usersWithIDs:(NSArray *)ids;
 - (NSArray *)idsWithUsers:(NSArray *)users;
 - (QBUUser *)userWithID:(NSUInteger)userID;

@@ -38,6 +38,7 @@ FOUNDATION_EXPORT const CGFloat kQMChatInputToolbarHeightDefault;
 
 @end
 
+
 @interface QMChatInputToolbar : UIToolbar
 /**
  *  The object that acts as the delegate of the toolbar.

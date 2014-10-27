@@ -15,5 +15,6 @@
 @property (nonatomic, weak) id <QMUsersListDelegate> delegate;
 
 @property (nonatomic, strong) QMMessage *notification;
+@property (weak, nonatomic) IBOutlet UILabel *fullNameLabel;
 
 @end

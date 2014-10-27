@@ -54,7 +54,7 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
     ILog(@"%@ - %@", NSStringFromSelector(_cmd), self);
 }
 
-- (instancetype)initWithChatDialog:(QBChatDialog *)dialog forTableView:(UITableView *)tableView {
+- (instancetype)initWithChatDialog:(QBChatDialog *)dialog forTableView:(UITableView *)tableView inputBarDelegate:(id <QMChatInputBarLockingProtocol>)inputBarDelegate {
     
     self = [super init];
     
@@ -62,6 +62,7 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         
         self.chatDialog = dialog;
         self.tableView = tableView;
+        self.inputBarDelegate = inputBarDelegate;
         self.chatSections = [NSMutableArray array];
         
         self.automaticallyScrollsToMostRecentMessage = YES;
@@ -88,8 +89,12 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
             
             if ([weakSelf.chatDialog isEqual:dialogForReceiverMessage] && message.cParamNotificationType != QMMessageNotificationTypeDeliveryMessage) {
                 
-                if (message.cParamNotificationType == QMMessageNotificationTypeDeleteContactRequest) {
+                if (message.cParamNotificationType == QMMessageNotificationTypeConfirmContactRequest) {
+                    [weakSelf unlockInputBar];
+                }
+                else if (message.cParamNotificationType == QMMessageNotificationTypeDeleteContactRequest) {
                     [weakSelf unmarkContactRequestNotification];
+                    [weakSelf lockInputBar];
                 }
                 
                 if (message.senderID != [QMApi instance].currentUser.ID) {  // for group chats
@@ -100,6 +105,12 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
                 
             }
         }];
+    }
+    
+    // check for friend. If it's not a friend, lock input bar
+    BOOL isFried = [[QMApi instance] isFriendForChatDialog:self.chatDialog];
+    if (!isFried) {
+        [self lockInputBar];
     }
     
     return self;
@@ -262,7 +273,9 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
     
     if (message.marked) {
         QMContactRequestCell *contactRequestCell = [tableView dequeueReusableCellWithIdentifier:kQMContactRequestCellID];
-        contactRequestCelset
+        contactRequestCell.delegate = self;
+        contactRequestCell.notification = message;
+        return contactRequestCell;
     }
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[self cellIDAtQMMessage:message]];
@@ -353,6 +366,7 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         
         [weakSelf unmarkContactRequestNotification];
         [weakSelf insertNewMessage:notification];
+        [weakSelf unlockInputBar];
     }];
 }
 
@@ -371,6 +385,22 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
             }];
         }];
     }];
+}
+
+#pragma mark - Input Bar Locking
+
+- (void)lockInputBar
+{
+    if ([self.inputBarDelegate respondsToSelector:@selector(inputBarShouldLock)]) {
+        [self.inputBarDelegate inputBarShouldLock];
+    }
+}
+
+- (void)unlockInputBar
+{
+    if ([self.inputBarDelegate respondsToSelector:@selector(inputBarShouldUnlock)]) {
+        [self.inputBarDelegate inputBarShouldUnlock];
+    }
 }
 
 @end

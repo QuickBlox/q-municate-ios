@@ -23,6 +23,9 @@
                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                         </state>
+                        <connections>
+                            <action selector="acceptButtonPressed:" destination="cqg-tO-9Su" eventType="touchUpInside" id="8ir-8K-85N"/>
+                        </connections>
                     </button>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LJu-h1-uRF">
                         <rect key="frame" x="229" y="9" width="38" height="40"/>
@@ -33,6 +36,9 @@
                             <color key="titleColor" red="0.146108774" green="0.146108774" blue="0.146108774" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                         </state>
+                        <connections>
+                            <action selector="rejectButtonPressed:" destination="cqg-tO-9Su" eventType="touchUpInside" id="mla-ud-TvP"/>
+                        </connections>
                     </button>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="devider" translatesAutoresizingMaskIntoConstraints="NO" id="Zv9-Wn-37D">
                         <rect key="frame" x="270" y="9" width="1" height="40"/>
@@ -64,7 +70,10 @@
                     <constraint firstAttribute="bottomMargin" secondItem="LJu-h1-uRF" secondAttribute="bottom" constant="2.5" id="xNM-Nb-PKG"/>
                 </constraints>
             </tableViewCellContentView>
-            <point key="canvasLocation" x="-1059" y="202"/>
+            <connections>
+                <outlet property="fullNameLabel" destination="mJi-f3-LNI" id="620-c4-9iK"/>
+            </connections>
+            <point key="canvasLocation" x="-1179" y="183"/>
         </tableViewCell>
     </objects>
     <resources>

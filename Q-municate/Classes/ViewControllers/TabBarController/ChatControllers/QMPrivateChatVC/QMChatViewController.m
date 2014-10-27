@@ -18,10 +18,11 @@
 #import "QMChatReceiver.h"
 #import "QMOnlineTitle.h"
 #import "IDMPhotoBrowser.h"
+#import "QMChatInputToolbar.h"
 
 @interface QMChatViewController ()
 
-<QMChatDataSourceDelegate>
+<QMChatDataSourceDelegate, QMChatInputBarLockingProtocol>
 
 @property (strong, nonatomic) QMOnlineTitle *onlineTitle;
 
@@ -37,7 +38,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.dataSource = [[QMChatDataSource alloc] initWithChatDialog:self.dialog forTableView:self.tableView];
+    self.dataSource = [[QMChatDataSource alloc] initWithChatDialog:self.dialog forTableView:self.tableView inputBarDelegate:self];
     self.dataSource.delegate = self;
     self.dialog.type == QBChatDialogTypeGroup ? [self configureNavigationBarForGroupChat] : [self configureNavigationBarForPrivateChat];
     
@@ -218,6 +219,19 @@
     IDMPhoto *photo = [IDMPhoto photoWithImage:image];
     IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:@[photo] animatedFromView:fromView];
     [self presentViewController:browser animated:YES completion:nil];
+}
+
+
+#pragma mark - Chat Input Toolbar Lock Delegate
+
+- (void)inputBarShouldLock
+{
+    [self.inputToolBar lock];
+}
+
+- (void)inputBarShouldUnlock
+{
+    [self.inputToolBar unlock];
 }
 
 @end

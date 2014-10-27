@@ -21,6 +21,7 @@
 - (QBUUser *)userWithID:(NSUInteger)userID;
 - (NSArray *)checkExistIds:(NSArray *)ids;
 - (NSArray *)idsFromContactListItems;
+- (BOOL)isFriendWithID:(NSUInteger)ID;
 
 - (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock;
 
