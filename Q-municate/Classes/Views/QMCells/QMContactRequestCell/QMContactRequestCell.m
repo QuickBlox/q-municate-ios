@@ -7,6 +7,7 @@
 //
 
 #import "QMContactRequestCell.h"
+#import "QMChatUtils.h"
 #import "QMApi.h"
 
 @interface QMContactRequestCell()
@@ -25,7 +26,7 @@
         _notification = notification;
     }
     self.opponent = [[QMApi instance] userWithID:notification.senderID];
-    self.fullNameLabel.text = notification.text;
+    self.fullNameLabel.text = [QMChatUtils messageTextForNotification:notification];
 }
 
 

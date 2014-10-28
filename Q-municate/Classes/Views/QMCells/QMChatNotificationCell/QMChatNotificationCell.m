@@ -24,18 +24,7 @@
     }
     
     self.dateLabel.text = [[self formatter] stringFromDate:self.notification.datetime];
-    self.messageLabel.text = [self messageTextForNotification:self.notification];
-}
-
-- (NSString *)messageTextForNotification:(QMMessage *)notification
-{
-    QBUUser *sender = [[QMApi instance] userWithID:notification.senderID];
-    QBUUser *recipient = [[QMApi instance] userWithID:notification.recipientID];
-    NSString *preferredText = [QMChatUtils notificationTextForNotificationType:notification.cParamNotificationType];
-    
-    NSString *notificationText = [NSString stringWithFormat:preferredText, sender.fullName, recipient.fullName];
-    
-    return notificationText;
+    self.messageLabel.text = [QMChatUtils messageTextForNotification:self.notification];
 }
 
 - (NSString *)nameOfUser:(QBUUser *)user

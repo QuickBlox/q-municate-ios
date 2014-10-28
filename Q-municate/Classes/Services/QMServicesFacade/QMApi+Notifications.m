@@ -58,11 +58,7 @@
     if (notification.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
         notification.cParamDialogOccupantsIDs = dialog.occupantIDs;
     }
-    QBUUser *sender = [[QMApi instance] userWithID:notification.senderID];
-    QBUUser *recipient = [[QMApi instance] userWithID:notification.recipientID];
-    NSString *notificationText = [QMChatUtils notificationTextForNotificationType:notification.cParamNotificationType];
-    
-    notification.text = [NSString stringWithFormat:notificationText, sender.fullName, recipient.fullName];
+    notification.text = [QMChatUtils messageTextForNotification:notification];
     
     __weak typeof(self) weakSelf = self;
     [self.messagesService sendMessage:notification withDialogID:dialog.ID saveToHistory:YES completion:^(NSError *error) {
@@ -74,26 +70,23 @@
             completionBlock(error, nil);
         }
     }];
+    [self sendPushContactRequestNotification:notification];
 }
 
 
 #pragma mark - Push Notifications
 
-- (void)sendPushContactRequestNotificationToUser:(QBUUser *)user notificationType:(QMMessageNotificationType)notificationType
+- (void)sendPushContactRequestNotification:(QBChatMessage *)notification
 {
-    // notification type:
-    NSString *messageText = [QMChatUtils notificationTextForNotificationType:notificationType];
-    QBUUser *me = [QMApi instance].currentUser;
-    NSString *message = [NSString stringWithFormat:messageText, @"You"];
-    
+    NSString *message = [QMChatUtils messageTextForPushWithNotification:notification];
     QBMEvent *event = [QBMEvent event];
     event.notificationType = QBMNotificationTypePush;
-    event.usersIDs = [NSString stringWithFormat:@"%d", user.ID];
+    event.usersIDs = [NSString stringWithFormat:@"%d", notification.recipientID];
     event.isDevelopmentEnvironment = ![QBSettings isUseProductionEnvironmentForPushNotifications];
     event.type = QBMEventTypeOneShot;
     //
     // custom params
-    NSDictionary  *dictPush = @{@"message" : @"Message received from %",
+    NSDictionary  *dictPush = @{@"message" : message,
                                        @"ios_badge": @"1",
                                        @"ios_sound": @"default",
                                        };
