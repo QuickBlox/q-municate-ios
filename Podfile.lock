@@ -32,7 +32,7 @@ PODS:
   - SSKeychain (1.2.2)
   - StaticDataTableViewController (2.0.3)
   - SVProgressHUD (1.0)
-  - UIDevice-Hardware (0.1.4)
+  - UIDevice-Hardware (0.1.5)
 
 DEPENDENCIES:
   - AGEmojiKeyboard (~> 0.1.0)
@@ -56,6 +56,6 @@ SPEC CHECKSUMS:
   SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
   StaticDataTableViewController: 171ee35f17f6176baa98ce05c1e4769a628732ad
   SVProgressHUD: 5034c6e22b8c2ca3e09402e48d41ed0340aa1c50
-  UIDevice-Hardware: 7f1d1aba15fa6a65959b449b4a0f8e0f42f674d7
+  UIDevice-Hardware: df983265bb5c6f3f66d63c29841a1d6649b1c8f4
 
 COCOAPODS: 0.34.1
