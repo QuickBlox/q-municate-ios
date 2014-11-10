@@ -35,28 +35,9 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 #pragma mark - Create Chat Dialogs
 
 
-- (void)createPrivateChatDialogIfNeededWithOpponent:(QBUUser *)opponent completion:(void(^)(QBChatDialog *chatDialog))completion {
-    
-    QBChatDialog *dialog = [self.chatDialogsService privateDialogWithOpponentID:opponent.ID];
-    
-    if (!dialog) {
-        
-        NSArray *occupants = @[opponent];
-        NSArray *occupantsIDS = [self idsWithUsers:occupants];
-        
-        QBChatDialog *chatDialog = [[QBChatDialog alloc] init];
-        chatDialog.type = QBChatDialogTypePrivate;
-        chatDialog.occupantIDs = occupantsIDS;
-        
-        __weak typeof(self) weakSelf = self;
-        [self.chatDialogsService createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
-            [weakSelf.chatDialogsService addDialogToHistory:result.dialog];
-            completion(result.dialog);
-        }];
-        
-    } else {
-        completion(dialog);
-    }
+- (void)createPrivateChatDialogIfNeededWithOpponent:(QBUUser *)opponent completion:(void(^)(QBChatDialog *chatDialog))completion
+{
+    [self.chatDialogsService createPrivateChatDialogIfNeededWithOpponent:opponent completion:completion];
 }
 
 - (void)createGroupChatDialogWithName:(NSString *)name occupants:(NSArray *)occupants completion:(QBChatDialogResultBlock)completion {
@@ -179,6 +160,20 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     NSAssert(nil, @"Need update this cace");
     return 0;
 }
+
+- (void)deleteChatDialog:(QBChatDialog *)dialog completion:(void(^)(BOOL success))completionHandler
+{
+    __weak typeof(self)weakSelf = self;
+    [self.chatDialogsService deleteChatDialog:dialog completion:^(BOOL success) {
+        
+        [weakSelf.messagesService deleteMessageHistoryWithChatDialogID:dialog.ID];
+        completionHandler(success);
+    }];
+    
+//    [self.chatDialogsService deleteLocalDialog:dialog];
+//    completionHandler(YES);
+}
+
 
 #pragma mark - Dialogs toos
 

@@ -66,6 +66,9 @@
     __weak __typeof(self)weakSelf = self;
     void (^updateHistory)(QBChatMessage *) = ^(QBChatMessage *message) {
         
+        if (message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
+            return;
+        }
         if (message.recipientID != message.senderID) {
             if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog && !message.cParamSaveToHistory) {
                 return;
@@ -107,6 +110,11 @@
     return messages;
 }
 
+- (void)deleteMessageHistoryWithChatDialogID:(NSString *)dialogID
+{
+    self.history[dialogID] = @[].mutableCopy;
+}
+
 - (void)sendMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID saveToHistory:(BOOL)save completion:(void(^)(NSError *error))completion {
     
     message.cParamDialogID = dialogID;
@@ -143,11 +151,16 @@
     
     __weak __typeof(self)weakSelf = self;
     QBChatHistoryMessageResultBlock echoObject = ^(QBChatHistoryMessageResult *result) {
-        [weakSelf setMessages:result.messages.count ? result.messages.mutableCopy : @[].mutableCopy withDialogID:dialogID];
+        NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"datetime" ascending:YES];
+        NSMutableArray *messages = result.messages.count ? result.messages.mutableCopy : @[].mutableCopy;
+        [messages sortUsingDescriptors:@[descriptor]];
+        [weakSelf setMessages:messages withDialogID:dialogID];
         completion(result);
     };
     
-    [QBChat messagesWithDialogID:dialogID delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:echoObject]];
+    NSMutableDictionary *extendedRequest = @{@"sort_desc": @"date_sent"}.mutableCopy;
+    
+    [QBChat messagesWithDialogID:dialogID extendedRequest:extendedRequest delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:echoObject]];
 }
 
 - (void)messagesWithDialogID:(NSString *)dialogID time:(NSUInteger)time completion:(QBChatHistoryMessageResultBlock)completion {

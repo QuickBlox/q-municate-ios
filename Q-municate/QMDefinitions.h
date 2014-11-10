@@ -15,6 +15,8 @@
 #define QM_AUDIO_VIDEO_ENABLED 0
 #define STAGE_SERVER_IS_ACTIVE 0
 
+#define DELETING_DIALOGS_ENABLED 0
+
 #define IS_HEIGHT_GTE_568 [[UIScreen mainScreen ] bounds].size.height == 568.0f
 #define $(...)  [NSSet setWithObjects:__VA_ARGS__, nil]
 

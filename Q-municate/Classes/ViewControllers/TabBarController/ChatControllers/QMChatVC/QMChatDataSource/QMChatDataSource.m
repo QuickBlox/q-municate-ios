@@ -85,6 +85,9 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
             
+            if (!message.cParamDialogID) {
+                return;
+            }
             QBChatDialog *dialogForReceiverMessage = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
             
             if ([weakSelf.chatDialog isEqual:dialogForReceiverMessage] && message.cParamNotificationType != QMMessageNotificationTypeDeliveryMessage) {
@@ -107,6 +110,10 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         }];
     }
     
+    if (!self.chatDialog || self.chatDialog.type == QBChatDialogTypeGroup) {
+        return self;
+    }
+    
     // check for friend. If it's not a friend, lock input bar
     BOOL isFried = [[QMApi instance] isFriendForChatDialog:self.chatDialog];
     if (!isFried) {
@@ -124,7 +131,10 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
 
 - (void)markContactRequestNotificationIfNeeded:(QMMessage *)notificaion
 {
-    QBUUser *contact = [[QMApi instance] userForContactRequestWithPrivateChatDialog:notificaion.chatDialog];
+    if (self.chatDialog.type != QBChatDialogTypePrivate) {
+        return;
+    }
+    QBUUser *contact = [[QMApi instance] userForContactRequestWithPrivateChatDialog:self.chatDialog];
     
     if (notificaion.cParamNotificationType == QMMessageNotificationTypeSendContactRequest && notificaion.senderID == contact.ID) {
         notificaion.marked = YES;

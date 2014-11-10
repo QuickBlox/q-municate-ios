@@ -48,6 +48,7 @@
     QBChatMessage *notification = [QBChatMessage message];
     notification.recipientID = user.ID;
     notification.senderID = self.messagesService.currentUser.ID;
+    notification.text = @"Contact request";  // ⚠ contact request
     return notification;
 }
 
@@ -58,7 +59,6 @@
     if (notification.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
         notification.cParamDialogOccupantsIDs = dialog.occupantIDs;
     }
-    notification.text = [QMChatUtils messageTextForNotification:notification];
     
     __weak typeof(self) weakSelf = self;
     [self.messagesService sendMessage:notification withDialogID:dialog.ID saveToHistory:YES completion:^(NSError *error) {

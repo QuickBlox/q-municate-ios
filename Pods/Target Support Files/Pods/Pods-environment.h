@@ -69,8 +69,8 @@
 // MPGNotification
 #define COCOAPODS_POD_AVAILABLE_MPGNotification
 #define COCOAPODS_VERSION_MAJOR_MPGNotification 1
-#define COCOAPODS_VERSION_MINOR_MPGNotification 1
-#define COCOAPODS_VERSION_PATCH_MPGNotification 1
+#define COCOAPODS_VERSION_MINOR_MPGNotification 2
+#define COCOAPODS_VERSION_PATCH_MPGNotification 0
 
 // Parus
 #define COCOAPODS_POD_AVAILABLE_Parus

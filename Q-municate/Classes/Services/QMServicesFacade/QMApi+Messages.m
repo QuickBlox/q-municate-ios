@@ -32,7 +32,7 @@
     
     __weak __typeof(self)weakSelf = self;
     [self.messagesService messagesWithDialogID:chatDialog.ID completion:^(QBChatHistoryMessageResult *result) {
-        complete ([weakSelf checkResult:result]);
+        complete ([weakSelf checkResult:result]); 
     }];
 }
 

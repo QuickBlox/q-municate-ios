@@ -20,6 +20,7 @@
 
 - (NSArray *)messageHistoryWithDialogID:(NSString *)dialogID;
 - (void)addMessageToHistory:(QBChatMessage *)message withDialogID:(NSString *)dialogID;
+- (void)deleteMessageHistoryWithChatDialogID:(NSString *)dialogID;
 
 /**
  Send message

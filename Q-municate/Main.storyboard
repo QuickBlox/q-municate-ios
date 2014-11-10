@@ -374,6 +374,7 @@ Line 2</string>
                     <connections>
                         <outlet property="audioChatCell" destination="Mhd-hZ-8rv" id="EPh-La-qcS"/>
                         <outlet property="chatCell" destination="NZK-x3-urI" id="vx0-hm-eF1"/>
+                        <outlet property="deleteContactButton" destination="vRY-C1-ciU" id="hyG-Bb-EdR"/>
                         <outlet property="fullName" destination="N3x-z0-sgu" id="ZEt-RO-Q7x"/>
                         <outlet property="onlineCircle" destination="DYc-v6-U9M" id="epc-R6-pAV"/>
                         <outlet property="phoneCell" destination="u3R-ec-W4i" id="rpF-zI-QGe"/>
@@ -1440,15 +1441,6 @@ Cg
                                                     <rect key="frame" x="10" y="4" width="50" height="50"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </imageView>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="blue_conter" translatesAutoresizingMaskIntoConstraints="NO" id="mcj-3Q-v6K">
-                                                    <rect key="frame" x="37" y="4" width="27" height="19"/>
-                                                </imageView>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="17" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CgZ-1R-iIh">
-                                                    <rect key="frame" x="37" y="4" width="27" height="19"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="red_counter" translatesAutoresizingMaskIntoConstraints="NO" id="seo-Qn-upI">
                                                     <rect key="frame" x="273" y="14" width="35" height="29"/>
                                                 </imageView>
@@ -1462,8 +1454,6 @@ Cg
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="descriptionLabel" destination="xrB-uj-SaW" id="jSR-0Q-Xr2"/>
-                                            <outlet property="groupMembersNumb" destination="CgZ-1R-iIh" id="uuG-um-jph"/>
-                                            <outlet property="groupNumbBackground" destination="mcj-3Q-v6K" id="Ols-3P-NZh"/>
                                             <outlet property="qmImageView" destination="oai-MX-Rq6" id="UIg-c8-4OM"/>
                                             <outlet property="titleLabel" destination="SMq-cL-ZLA" id="joY-Ba-lYF"/>
                                             <outlet property="unreadMsgBackground" destination="seo-Qn-upI" id="T2D-id-hO7"/>
@@ -2912,7 +2902,6 @@ Cg
         <image name="audiocall" width="23" height="23"/>
         <image name="back_counter" width="34" height="22"/>
         <image name="bg" width="320" height="568"/>
-        <image name="blue_conter" width="27" height="19"/>
         <image name="chat" width="21" height="22"/>
         <image name="checkbox_ch" width="16" height="16"/>
         <image name="checkbox_unch" width="16" height="16"/>
@@ -2954,10 +2943,10 @@ Cg
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Gs8-3F-TjX"/>
         <segue reference="A42-kR-3SJ"/>
+        <segue reference="Gs8-3F-TjX"/>
+        <segue reference="sPU-d9-maS"/>
+        <segue reference="M45-HY-t12"/>
         <segue reference="IAo-qy-uHQ"/>
-        <segue reference="hW5-9n-Jcg"/>
-        <segue reference="Xoz-l0-6ya"/>
     </inferredMetricsTieBreakers>
 </document>

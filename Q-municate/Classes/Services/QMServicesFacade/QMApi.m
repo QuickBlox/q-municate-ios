@@ -51,7 +51,7 @@ const NSTimeInterval kQMPresenceTime = 30;
 //        [QBChat instance].autoReconnectEnabled = YES;
         [QBChat instance].streamManagementEnabled = YES;
         
-        [QBChat instance].delegate = [QMChatReceiver instance];
+        [[QBChat instance] addDelegate:[QMChatReceiver instance]];
         servicesFacade.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:kQMPresenceTime
                                                                         target:servicesFacade
                                                                       selector:@selector(sendPresence)

@@ -121,21 +121,38 @@
     return dialogs;
 }
 
-- (QBChatDialog *)createPrivateDialogIfNeededWithNotification:(QBChatMessage *)notification
+- (void)createPrivateChatDialogIfNeededWithOpponent:(QBUUser *)opponent completion:(void(^)(QBChatDialog *chatDialog))completion
 {
-    QBChatDialog *dialog = [self chatDialogWithID:notification.cParamDialogID];
+    [self createPrivateDialogIfNeededWithOpponentID:opponent.ID completion:completion];
+}
+
+- (void)createPrivateDialogIfNeededWithNotification:(QBChatMessage *)notification completion:(void(^)(QBChatDialog *chatDialog))completion
+{
+    [self createPrivateDialogIfNeededWithOpponentID:notification.senderID completion:completion];
+}
+
+- (void)createPrivateDialogIfNeededWithOpponentID:(NSUInteger)opponentID completion:(void(^)(QBChatDialog *chatDialog))completion
+{
+    QBChatDialog __block *dialog = [self privateDialogWithOpponentID:opponentID];
+    
     if (!dialog) {
-        NSAssert(notification.cParamDialogOccupantsIDs, @"Notification param: occupants_ids for private dialog missed. Update case");
         
-        dialog = [[QBChatDialog alloc] init];
-        dialog.ID = notification.cParamDialogID;
-        dialog.occupantIDs = notification.cParamDialogOccupantsIDs;
-        dialog.type = QBChatDialogTypePrivate;
-        [dialog updateLastMessageInfoWithMessage:notification];
+        NSArray *occupantsIDs = @[@(opponentID)];
         
-        self.dialogs[dialog.ID] = dialog;
+        QBChatDialog *chatDialog = [[QBChatDialog alloc] init];
+        chatDialog.type = QBChatDialogTypePrivate;
+        chatDialog.occupantIDs = occupantsIDs;
+        
+        __weak typeof(self) weakSelf = self;
+        [self createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
+            dialog = result.dialog;
+            [weakSelf addDialogToHistory:dialog];
+            completion(dialog);
+        }];
+        
+    } else {
+        completion(dialog);
     }
-    return dialog;
 }
 
 - (QBChatDialog *)privateDialogWithOpponentID:(NSUInteger)opponentID {
@@ -169,8 +186,12 @@
     NSAssert(message.cParamDialogID, @"Notification without dialog id. Need update this case");
     
     if (message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
-        QBChatDialog *dialog = [self createPrivateDialogIfNeededWithNotification:message];
-        [dialog updateLastMessageInfoWithMessage:message];
+        [self createPrivateDialogIfNeededWithNotification:message completion:^(QBChatDialog *chatDialog) {
+            if (chatDialog.unreadMessagesCount == 0) {
+                chatDialog.unreadMessagesCount++;
+            }
+            [[QMChatReceiver instance] postDialogsHistoryUpdated];
+        }];
     }
     else if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
         QBChatDialog *chatDialog = [message chatDialogFromCustomParameters];
@@ -184,6 +205,23 @@
         [dialog updateLastMessageInfoWithMessage:message];
     }
 
+}
+
+- (void)deleteChatDialog:(QBChatDialog *)dialog completion:(void(^)(BOOL success))completionHanlder
+{
+    __weak typeof(self)weakSelf = self;
+    QBChatDialogResultBlock resultBlock = ^(QBChatDialogResult *result){
+        if (result.success) {
+            [weakSelf deleteLocalDialog:dialog];
+        }
+        completionHanlder(result.success);
+    };
+    [QBChat deleteDialogWithID:dialog.ID delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
+}
+
+- (void)deleteLocalDialog:(QBChatDialog *)dialog
+{
+    [self.dialogs removeObjectForKey:dialog.ID];
 }
 
 

@@ -135,6 +135,11 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 - (void)fetchAllDialogs:(void(^)(void))completion;
 
 /**
+ *
+ */
+- (void)deleteChatDialog:(QBChatDialog *)dialog completion:(void(^)(BOOL success))completionHandler;
+
+/**
  Create group chat dialog
  
  @param name - Group chat name.
@@ -195,6 +200,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 @property (strong, nonatomic, readonly) NSArray *contactRequestUsers;
 
 - (BOOL)isFriendForChatDialog:(QBChatDialog *)chatDialog;
+- (BOOL)isFriend:(QBUUser *)user;
 
 - (NSArray *)usersWithIDs:(NSArray *)ids;
 - (NSArray *)idsWithUsers:(NSArray *)users;

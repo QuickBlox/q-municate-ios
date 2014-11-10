@@ -31,6 +31,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 @property (weak, nonatomic) IBOutlet UITableViewCell *audioChatCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *chatCell;
 
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *deleteContactButton;
 @property (weak, nonatomic) IBOutlet QMImageView *userAvatar;
 @property (weak, nonatomic) IBOutlet UILabel *fullName;
 @property (weak, nonatomic) IBOutlet UILabel *userDetails;
@@ -50,7 +51,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 - (void)viewDidLoad {
     
     [super viewDidLoad];
-    self.navigationController.navigationItem.rightBarButtonItem = nil;
+    
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     if (self.selectedUser.phone.length == 0) {
@@ -81,9 +82,12 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:^{
         [weakSelf updateUserStatus];
+        [weakSelf disableDeleteContactButtonIfNeeded];
     }];
     
     [self updateUserStatus];
+    
+    [self disableDeleteContactButtonIfNeeded];
     
 #if !QM_AUDIO_VIDEO_ENABLED
     
@@ -176,6 +180,13 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
             [weakSelf.navigationController popViewControllerAnimated:YES];
         }];
     }];
+}
+    
+
+- (void)disableDeleteContactButtonIfNeeded
+{
+    BOOL isContact = [[QMApi instance] isFriend:self.selectedUser];
+    self.deleteContactButton.enabled = isContact;
 }
 
 @end

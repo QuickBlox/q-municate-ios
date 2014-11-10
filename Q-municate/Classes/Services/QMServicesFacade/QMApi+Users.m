@@ -12,6 +12,7 @@
 #import "QMFacebookService.h"
 #import "QMMessagesService.h"
 #import "QMChatReceiver.h"
+#import "QMChatDialogsService.h"
 #import "QMSettingsManager.h"
 #import "QMAddressBook.h"
 #import "ABPerson.h"
@@ -38,9 +39,18 @@
     
     __weak typeof(self) weakSelf = self;
     [self.messagesService chat:^(QBChat *chat) {
-        BOOL success = [chat removeUserFromContactList:user.ID];
+        BOOL successed = [chat removeUserFromContactList:user.ID];
+        
         [weakSelf sendContactRequestDeleteNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
-            completion(success, notification);
+            // delete chat dialog:
+            QBChatDialog *dialog = [weakSelf.chatDialogsService privateDialogWithOpponentID:user.ID];
+            [weakSelf deleteChatDialog:dialog completion:^(BOOL success) {
+                if (!success) {
+                    completion(success, nil);
+                    return;
+                }
+                completion(successed, notification);
+            }];
         }];
     }];
 }
@@ -156,6 +166,11 @@
     NSUInteger occupantID = [self occupantIDForPrivateChatDialog:chatDialog];
     BOOL isFriend = [self.usersService isFriendWithID:occupantID];
     return isFriend;
+}
+
+- (BOOL)isFriend:(QBUUser *)user
+{
+    return [self.usersService isFriendWithID:user.ID];
 }
 
 - (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock
