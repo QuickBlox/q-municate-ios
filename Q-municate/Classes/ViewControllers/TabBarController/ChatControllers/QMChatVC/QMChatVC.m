@@ -513,9 +513,4 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     [self.inputToolBar.contentView.textView reloadInputViews];
 }
 
-
-#pragma mark - Input Bar Delegate
-
-
-
 @end

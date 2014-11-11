@@ -68,4 +68,15 @@
     return message;
 }
 
++ (NSString *)fullNamesString:(NSArray *)users
+{
+    NSMutableString *mutableString = [NSMutableString new];
+    for (QBUUser *usr in users) {
+        [mutableString appendString:usr.fullName];
+        [mutableString appendString:@", "];
+    }
+    [mutableString deleteCharactersInRange:NSMakeRange(mutableString.length - 3, 2)];
+    return mutableString;
+}
+
 @end

@@ -99,6 +99,7 @@
             newUser.fullName = fullName;
             newUser.email = email;
             newUser.password = password;
+            newUser.tags = [[NSMutableArray alloc] initWithObjects:@"ios", nil];
             
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
             

@@ -55,6 +55,18 @@
     [QBChat dialogsWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
 }
 
+- (void)fetchDialogsWithIDs:(NSArray *)dialogIDs completion:(QBDialogsPagedResultBlock)completion
+{
+    NSString *IDs = [dialogIDs componentsJoinedByString:@","];
+    NSAssert(IDs, @"IDs parsed not correctly from NSArray. Update case");
+    
+    QBDialogsPagedResultBlock resultBlock = ^(QBDialogsPagedResult *result) {
+        
+    };
+    NSMutableDictionary *extendedRequest = @{@"_id[in]":IDs}.mutableCopy;
+    [QBChat dialogsWithExtendedRequest:extendedRequest delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
+}
+
 - (void)createChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
     
 	[QBChat createDialog:chatDialog delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
@@ -98,14 +110,10 @@
     //If dialog type is equal group then need join room
     if (chatDialog.type == QBChatDialogTypeGroup) {
         
-       __unused NSString *roomJID = chatDialog.roomJID;
-        if (!self.rooms[roomJID]) {
-            
-            NSAssert(roomJID, @"Need update this case");
+        if (!chatDialog.chatRoom.isJoined) {
             
             QBChatRoom *room = chatDialog.chatRoom;
             [room joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
-            self.rooms[chatDialog.roomJID] = room;
         }
         
     } else if (chatDialog.type == QBChatDialogTypePrivate) {
@@ -226,14 +234,6 @@
 
 
 #pragma mark - Chat Room
-
-- (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID {
-    
-    QBChatRoom *room = self.rooms[roomJID];
-    NSAssert(room, @"Need update this case");
-
-    return room;
-}
 
 - (void)leaveFromRooms {
     

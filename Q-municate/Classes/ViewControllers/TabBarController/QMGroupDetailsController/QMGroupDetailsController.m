@@ -46,7 +46,7 @@
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatRoomDidReceiveListOfOnlineUsersWithTarget:self block:^(NSArray *users, NSString *roomName) {
         
-        QBChatRoom *chatRoom = [[QMApi instance] chatRoomWithRoomJID:weakSelf.chatDialog.roomJID];
+        QBChatRoom *chatRoom = weakSelf.chatDialog.chatRoom;
         if ([roomName isEqualToString:chatRoom.name]) {
             [weakSelf updateOnlineStatus:users.count];
         }
@@ -54,7 +54,7 @@
     
     [[QMChatReceiver instance] chatRoomDidChangeOnlineUsersWithTarget:self block:^(NSArray *onlineUsers, NSString *roomName) {
         
-        QBChatRoom *chatRoom = [[QMApi instance] chatRoomWithRoomJID:weakSelf.chatDialog.roomJID];
+        QBChatRoom *chatRoom = weakSelf.chatDialog.chatRoom;
         if ([roomName isEqualToString:chatRoom.name]) {
             [weakSelf updateOnlineStatus:onlineUsers.count];
         }
@@ -123,7 +123,7 @@
 
     [self.dataSource reloadDataWithChatDialog:self.chatDialog];
     
-    QBChatRoom *chatRoom = [[QMApi instance] chatRoomWithRoomJID:self.chatDialog.roomJID];
+    QBChatRoom *chatRoom = self.chatDialog.chatRoom;
     [chatRoom requestOnlineUsers];
 }
 

@@ -64,7 +64,7 @@
     
     if (!contactlistItem) {
         status = @"";
-    } else if (contactlistItem.subscriptionState == QBPresenseSubscriptionStateBoth) {
+    } else if (contactlistItem.subscriptionState == QBPresenseSubscriptionStateBoth || contactlistItem.subscriptionState == QBPresenseSubscriptionStateFrom) {
         status = NSLocalizedString(contactlistItem.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
     } else {
         status = NSLocalizedString(@"QM_STR_PENDING", nil);

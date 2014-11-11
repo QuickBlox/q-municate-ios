@@ -67,6 +67,7 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 - (void)chatContactListDidChangeWithTarget:(id)target block:(QMChatContactListDidChange)block;
 - (void)chatContactListDidChange:(QBContactList *)contactList;
 - (void)chatContactListUpdatedWithTarget:(id)target block:(QMChatContactListWillChange)block;
+- (void)chatContactListUpdated;
 - (void)chatDidReceiveContactItemActivityWithTarget:(id)target block:(QMChathatDidReceiveContactItemActivity)block;
 /**
  ChatRoom

@@ -26,7 +26,6 @@
 
 - (QBChatDialog *)privateDialogWithOpponentID:(NSUInteger)opponentID;
 - (QBChatDialog *)chatDialogWithID:(NSString *)dialogID;
-- (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID;
 
 - (void)deleteLocalDialog:(QBChatDialog *)dialog;
 - (void)deleteChatDialog:(QBChatDialog *)dialog completion:(void(^)(BOOL success))completionHanlder;

@@ -29,6 +29,7 @@
         
         [weakSelf createPrivateChatDialogIfNeededWithOpponent:user completion:^(QBChatDialog *chatDialog) {
             [weakSelf sendContactRequestSendNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
+
                 if (completion) completion(success, notification);
             }];
         }];
@@ -202,15 +203,16 @@
     __block QBUUser *userInfo = user;
     __weak __typeof(self)weakSelf = self;
     
-    void (^updateUserProfile)(NSString *) =^(NSString *publicUrl) {
+    void (^updateUserProfile)(QBCBlob *) =^(QBCBlob *blob) {
 
         if (!userInfo) {
             userInfo = weakSelf.currentUser;
         }
         
-        if (publicUrl.length > 0) {
-            userInfo.avatarURL = publicUrl;
+        if (blob.publicUrl.length > 0) {
+            userInfo.avatarURL = blob.publicUrl;
         }
+        userInfo.blobID = blob.ID;
         NSString *password = userInfo.password;
         userInfo.password = nil;
         
@@ -229,7 +231,7 @@
     if (image) {
         [self.contentService uploadJPEGImage:image progress:progress completion:^(QBCFileUploadTaskResult *result) {
             if ([weakSelf checkResult:result]) {
-                updateUserProfile(result.uploadedBlob.publicUrl);
+                updateUserProfile(result.uploadedBlob);
             }
             else {
                 updateUserProfile(nil);                

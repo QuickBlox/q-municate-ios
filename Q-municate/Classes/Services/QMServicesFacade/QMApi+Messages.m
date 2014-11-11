@@ -52,7 +52,7 @@
     
     if (dialog.type == QBChatDialogTypeGroup) {
         
-        QBChatRoom *chatRoom = [self.chatDialogsService chatRoomWithRoomJID:dialog.roomJID];
+        QBChatRoom *chatRoom = dialog.chatRoom;
         [self.messagesService sendChatMessage:message withDialogID:dialog.ID toRoom:chatRoom completion:^{
             finish(message);
         }];

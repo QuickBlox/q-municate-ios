@@ -65,7 +65,8 @@
                 CGPoint point = weakSelf.searchDisplayController.searchResultsTableView.contentOffset;
                 
                 weakSelf.friendList = [QMApi instance].friends;
-                [weakSelf.searchDisplayController.searchResultsTableView reloadData];
+//                [weakSelf.searchDisplayController.searchResultsTableView reloadData];
+                [weakSelf.tableView reloadData];
                 NSUInteger idx = [weakSelf.friendList indexOfObject:weakSelf.tUser];
                 NSUInteger idx2 = [weakSelf.searchResult indexOfObject:weakSelf.tUser];
                
@@ -180,7 +181,7 @@
     
     NSArray *users = [self usersAtSections:section];
     
-    if (self.searchDisplayController.isActive) {
+    if (self.searchDisplayController.isActive && section == 1) {
         return (users.count > 0) ? NSLocalizedString(@"QM_STR_ALL_USERS", nil) : nil;
     }
     return (users.count > 0) ? NSLocalizedString(@"QM_STR_CONTACTS", nil) : nil;
@@ -268,12 +269,13 @@
 - (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
 {
     // needed!
+    [self.tableView setDataSource:nil];
 }
 
 - (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller
 {
     [self.tableView setDataSource:self];
-    [self.tableView reloadData];
+//    [self.tableView reloadData];
 }
 
 @end

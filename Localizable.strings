@@ -75,3 +75,14 @@
 "QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_ME" = "You have deleted %@ from your contacts";
 "QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_OPPONENT" = "%@ has delete you from contacts";
 
+
+
+// *********** GROUP NOTIFICATIONS *****************
+"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT" = "%@ added %@ to group conversation.";
+"QM_STR_UPDATE_GROUP_NAME_TEXT" = "%@ changed group name to %@.";
+"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT" = "%@ has left group conversation.";
+
+
+
+
+

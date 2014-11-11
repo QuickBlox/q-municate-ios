@@ -182,15 +182,6 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 
 - (NSUInteger)occupantIDForPrivateChatDialog:(QBChatDialog *)chatDialog;
 
-/**
- QBChatRoom with roomJID
- 
- @param roomJID
- @result QBChatDialogResult
- */
-
-- (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID;
-
 @end
 
 

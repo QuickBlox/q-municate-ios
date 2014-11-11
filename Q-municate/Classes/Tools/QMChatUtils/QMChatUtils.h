@@ -12,5 +12,6 @@
 
 + (NSString *)messageTextForNotification:(QBChatAbstractMessage *)notification;
 + (NSString *)messageTextForPushWithNotification:(QBChatMessage *)notification;
++ (NSString *)fullNamesString:(NSArray *)users;
 
 @end
