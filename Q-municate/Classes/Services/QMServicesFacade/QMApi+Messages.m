@@ -74,14 +74,17 @@
     [self sendMessage:message toDialog:dialog completion:completion];
 }
 
-- (void)sendAttachment:(NSString *)attachmentUrl toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion {
+- (void)sendAttachment:(QBCBlob *)attachment toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion {
     
     QBChatMessage *message = [[QBChatMessage alloc] init];
     message.text = @"Attachment";
-    QBChatAttachment *attachment = [[QBChatAttachment alloc] init];
-    attachment.url = attachmentUrl;
-    attachment.type = @"image";
-    message.attachments = @[attachment];
+    QBChatAttachment *attach = [[QBChatAttachment alloc] init];
+    attach.url = attachment.publicUrl;
+    attach.type = @"image";
+    attach.name = attachment.name;
+    attach.contentType = attachment.contentType;
+    attach.size = attachment.size;
+    message.attachments = @[attach];
     
     [self sendMessage:message toDialog:dialog completion:completion];
 }
