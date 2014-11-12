@@ -75,7 +75,7 @@
         [mutableString appendString:usr.fullName];
         [mutableString appendString:@", "];
     }
-    [mutableString deleteCharactersInRange:NSMakeRange(mutableString.length - 3, 2)];
+    [mutableString deleteCharactersInRange:NSMakeRange(mutableString.length - 2, 2)];
     return mutableString;
 }
 

@@ -189,6 +189,9 @@ NSString const *kQMCustomParameterDialogOccupantsIDs = @"occupants_ids";
     chatDialog.occupantIDs = self.cParamDialogOccupantsIDs;
     chatDialog.type = self.cParamDialogType.integerValue;
     chatDialog.lastMessageDate = [NSDate dateWithTimeIntervalSince1970:self.cParamDateSent.doubleValue];
+    chatDialog.lastMessageText = self.text;
+    chatDialog.unreadMessagesCount++;
+    chatDialog.lastMessageUserID = self.senderID;
     
     return chatDialog;
 }
