@@ -1,3 +1,4 @@
+
 //
 //  QMFriendsListDataSource.m
 //  Q-municate
@@ -147,11 +148,11 @@
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        if ([weakSelf.searchDisplayController.searchBar.text isEqualToString:tsearch]) {
+        if ([self.searchDisplayController.searchBar.text isEqualToString:tsearch]) {
             
-            if (weakSelf.searchOperation) {
-                [weakSelf.searchOperation cancel];
-                weakSelf.searchOperation = nil;
+            if (self.searchOperation) {
+                [self.searchOperation cancel];
+                self.searchOperation = nil;
             }
             
             PagedRequest *request = [[PagedRequest alloc] init];
@@ -160,7 +161,7 @@
             
             
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-            weakSelf.searchOperation = [[QMApi instance].usersService retrieveUsersWithFullName:searchText pagedRequest:request completion:userPagedBlock];
+            self.searchOperation = [[QMApi instance].usersService retrieveUsersWithFullName:searchText pagedRequest:request completion:userPagedBlock];
         }
     });
 }
