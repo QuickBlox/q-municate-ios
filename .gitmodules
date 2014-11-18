@@ -1,0 +1,3 @@
+[submodule "Q-municate/QMServices"]
+	path = Q-municate/QMServices
+	url = https://bitbucket.org/quickblox/qmunicate-services-ios.git
