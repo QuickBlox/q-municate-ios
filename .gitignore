@@ -23,7 +23,7 @@ DerivedData
 *.hmap
 *.ipa
 
-
+Pods/
 Q-municate/build/
 Q-municate/*.pbxuser
 Q-municate/!default.pbxuser
@@ -39,3 +39,4 @@ Q-municate/profile
 Q-municate/*.moved-aside
 Q-municate/DerivedData
 Q-municate/*.hmap
+contents.xcworkspacedata
