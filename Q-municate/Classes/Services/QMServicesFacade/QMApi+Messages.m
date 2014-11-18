@@ -81,9 +81,9 @@
     QBChatAttachment *attach = [[QBChatAttachment alloc] init];
     attach.url = attachment.publicUrl;
     attach.type = @"image";
-    attach.name = attachment.name;
-    attach.contentType = attachment.contentType;
-    attach.size = attachment.size;
+//    attach.name = attachment.name;
+//    attach.contentType = attachment.contentType;
+//    attach.size = attachment.size;
     message.attachments = @[attach];
     
     [self sendMessage:message toDialog:dialog completion:completion];
