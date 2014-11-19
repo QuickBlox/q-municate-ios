@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "QMUsersUtils.h"
 
-@class QMAuthService;
+@class QMOldAuthService;
 @class QMSettingsManager;
 @class QMFacebookService;
 @class QMUsersService;
@@ -23,7 +23,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 
 @interface QMApi : NSObject
 
-@property (strong, nonatomic, readonly) QMAuthService *authService;
+@property (strong, nonatomic, readonly) QMOldAuthService *authService;
 @property (strong, nonatomic, readonly) QMSettingsManager *settingsManager;
 @property (strong, nonatomic, readonly) QMUsersService *usersService;
 @property (strong, nonatomic, readonly) QMAVCallService *avCallService;

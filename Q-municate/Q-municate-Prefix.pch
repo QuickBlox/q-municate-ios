@@ -28,6 +28,5 @@
     #import "QMDefinitions.h"
     #import "QMProtocols.h"
     #import "Macro.h"
-    #import "MagicalRecord.h"
 
 #endif

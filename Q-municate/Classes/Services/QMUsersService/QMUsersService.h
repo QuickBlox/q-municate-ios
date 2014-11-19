@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "QMBaseService.h"
+#import "QMOldBaseService.h"
 
-@interface QMUsersService : QMBaseService
+@interface QMUsersService : QMOldBaseService
 
 @property (strong, nonatomic) NSMutableArray *contactList;
 @property (strong, nonatomic) NSMutableSet *confirmRequestUsersIDs;

@@ -10,7 +10,7 @@
 
 #import "QMSettingsManager.h"
 #import "QMFacebookService.h"
-#import "QMAuthService.h"
+#import "QMOldAuthService.h"
 #import "QMUsersService.h"
 #import "QMChatDialogsService.h"
 #import "QMContentService.h"
@@ -25,7 +25,7 @@ const NSTimeInterval kQMPresenceTime = 30;
 
 @interface QMApi()
 
-@property (strong, nonatomic) QMAuthService *authService;
+@property (strong, nonatomic) QMOldAuthService *authService;
 @property (strong, nonatomic) QMSettingsManager *settingsManager;
 @property (strong, nonatomic) QMUsersService *usersService;
 @property (strong, nonatomic) QMAVCallService *avCallService;
@@ -67,7 +67,7 @@ const NSTimeInterval kQMPresenceTime = 30;
     self = [super init];
     if (self) {
         self.messagesService = [[QMMessagesService alloc] init];
-        self.authService = [[QMAuthService alloc] init];
+        self.authService = [[QMOldAuthService alloc] init];
         self.usersService = [[QMUsersService alloc] init];
         self.chatDialogsService = [[QMChatDialogsService alloc] init];
         self.settingsManager = [[QMSettingsManager alloc] init];

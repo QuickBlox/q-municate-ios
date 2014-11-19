@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "QMBaseService.h"
+#import "QMOldBaseService.h"
 
-@interface QMChatDialogsService : QMBaseService
+@interface QMChatDialogsService : QMOldBaseService
 
 - (void)fetchAllDialogs:(QBDialogsPagedResultBlock)completion;
 - (void)createChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;

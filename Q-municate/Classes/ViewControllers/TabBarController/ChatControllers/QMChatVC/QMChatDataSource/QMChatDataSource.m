@@ -8,7 +8,6 @@
 //
 
 #import "QMChatDataSource.h"
-#import "QMDBStorage+Messages.h"
 #import "QMMessage.h"
 #import "QMApi.h"
 #import "SVProgressHUD.h"

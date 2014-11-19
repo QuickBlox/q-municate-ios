@@ -7,7 +7,7 @@
 //
 
 #import "QMApi.h"
-#import "QMAuthService.h"
+#import "QMOldAuthService.h"
 #import "QMFacebookService.h"
 #import "QMSettingsManager.h"
 #import "QMUsersService.h"

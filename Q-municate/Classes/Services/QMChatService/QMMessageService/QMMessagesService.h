@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "QMBaseService.h"
+#import "QMOldBaseService.h"
 
-@interface QMMessagesService : QMBaseService
+@interface QMMessagesService : QMOldBaseService
 
 @property (strong, nonatomic) NSDictionary *pushNotification;
 @property (strong, nonatomic) QBUUser *currentUser;
