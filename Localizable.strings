@@ -73,13 +73,14 @@
 "QM_STR_FRIEND_REQUEST_DID_REJECT_FOR_PUSH" = "%@ has rejected your request";
 
 "QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_ME" = "You have deleted %@ from your contacts";
-"QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_OPPONENT" = "%@ has delete you from contacts";
+"QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_OPPONENT" = "%@ has deleted you from their contacts";
 
 
 
 // *********** GROUP NOTIFICATIONS *****************
 "QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT" = "%@ added %@ to group conversation.";
 "QM_STR_UPDATE_GROUP_NAME_TEXT" = "%@ changed group name to %@.";
+"QM_STR_UPDATE_GROUP_AVATAR_TEXT" = "%@ updated group avatar.";
 "QM_STR_LEAVE_GROUP_CONVERSATION_TEXT" = "%@ has left group conversation.";
 
 

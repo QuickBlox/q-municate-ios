@@ -20,10 +20,12 @@
 - (BOOL)deleteContactRequestUserID:(NSUInteger)contactUserID;
 - (QBUUser *)userWithID:(NSUInteger)userID;
 - (NSArray *)checkExistIds:(NSArray *)ids;
+- (NSArray *)usersIDsToFetch:(NSArray *)IDs;
 - (NSArray *)idsFromContactListItems;
 - (BOOL)isFriendWithID:(NSUInteger)ID;
 
 - (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock;
+- (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void(^)(BOOL retrieveWasNeeded))completionBlock;
 
 - (void)retrieveUsersWithIDs:(NSArray *)idsToFetch completion:(void(^)(BOOL updated))completion;
 /**

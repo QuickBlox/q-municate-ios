@@ -11,6 +11,7 @@
 
 typedef void(^QMDialogsHistoryUpdated)(void);
 typedef void(^QMUsersHistoryUpdated)(void);
+typedef void (^QMUsersWasLoadedBlock)(QBChatMessage *message, BOOL usersWasLoaded);
 
 typedef void(^QMChatDidLogin)(BOOL success);
 typedef void(^QMChatDidFailLogin)(NSInteger errorCode);
@@ -114,5 +115,7 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 - (void)usersHistoryUpdatedWithTarget:(id)target block:(QMUsersHistoryUpdated)block;
 - (void)contactRequestUsersListChanged;
 - (void)contactRequestUsersListChangedWithTarget:(id)target block:(QMUsersHistoryUpdated)block;
+- (void)message:(QBChatMessage *)message addedToGroupUsersWasLoaded:(BOOL)wasLoaded;
+- (void)addedToGroupUsersWasLoadedWithTarget:(id)target block:(QMUsersWasLoadedBlock)block;
 
 @end

@@ -83,6 +83,11 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
             
         }];
         
+        [[QMChatReceiver instance] addedToGroupUsersWasLoadedWithTarget:self block:^(QBChatMessage *message, BOOL usersWasLoaded) {
+            // only for group chat messages:
+            [weakSelf insertNewMessage:message];
+        }];
+        
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
             
             if (!message.cParamDialogID) {
@@ -92,7 +97,17 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
             
             if ([weakSelf.chatDialog isEqual:dialogForReceiverMessage] && message.cParamNotificationType != QMMessageNotificationTypeDeliveryMessage) {
                 
-                if (message.cParamNotificationType == QMMessageNotificationTypeConfirmContactRequest) {
+                if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
+                    return;
+                }
+                else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog) {
+                    if (message.cParamDialogOccupantsIDs) {
+                        return;
+                    }
+                    [weakSelf insertNewMessage:message];
+                    return;
+                }
+                else if (message.cParamNotificationType == QMMessageNotificationTypeConfirmContactRequest) {
                     [weakSelf unlockInputBar];
                 }
                 else if (message.cParamNotificationType == QMMessageNotificationTypeDeleteContactRequest) {
@@ -319,7 +334,7 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         
         if (result.success) {
             
-            [[QMApi instance] sendAttachment:result.uploadedBlob.publicUrl toDialog:weakSelf.chatDialog completion:^(QBChatMessage *message) {
+            [[QMApi instance] sendAttachment:result.uploadedBlob toDialog:weakSelf.chatDialog completion:^(QBChatMessage *message) {
                 [weakSelf insertNewMessage:message];
             }];
         }
@@ -400,7 +415,7 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
 #pragma mark - Input Bar Locking
 
 - (void)lockInputBar
-{
+{   
     if ([self.inputBarDelegate respondsToSelector:@selector(inputBarShouldLock)]) {
         [self.inputBarDelegate inputBarShouldLock];
     }

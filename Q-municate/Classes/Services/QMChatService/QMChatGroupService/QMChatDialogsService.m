@@ -184,9 +184,21 @@
         NSAssert(dialog, @"Dialog you are looking for not found.");
         return;
     }
-    
-    dialog.name = chatMessage.cParamDialogName;
-    dialog.occupantIDs = chatMessage.cParamDialogOccupantsIDs;
+    if (chatMessage.cParamDialogRoomPhoto) {
+        dialog.photo = chatMessage.cParamDialogRoomPhoto;
+        
+    } else if (chatMessage.cParamDialogRoomName) {
+        dialog.name = chatMessage.cParamDialogRoomName;
+        
+    } else if (chatMessage.cParamDialogOccupantsIDs) {
+        NSArray *occupantsIDs = [dialog.occupantIDs arrayByAddingObjectsFromArray:chatMessage.cParamDialogOccupantsIDs];
+        dialog.occupantIDs = occupantsIDs;
+        
+    } else if (chatMessage.cParamDialogDeletedID) {
+        NSMutableArray *occupants = [[NSMutableArray alloc] initWithArray:dialog.occupantIDs];
+        [occupants removeObject:chatMessage.cParamDialogDeletedID];
+        dialog.occupantIDs = occupants;
+    }
 }
 
 - (void)updateOrCreateDialogWithMessage:(QBChatMessage *)message {

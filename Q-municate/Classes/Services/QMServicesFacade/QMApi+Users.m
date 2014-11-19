@@ -179,6 +179,11 @@
     [self.usersService retriveIfNeededUserWithID:userID completion:completionBlock];
 }
 
+- (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void (^)(BOOL retrieveWasNeeded))completionBlock
+{
+    [self.usersService retriveIfNeededUsersWithIDs:usersIDs completion:completionBlock];
+}
+
 
 #pragma mark - Update current User
 

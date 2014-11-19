@@ -36,6 +36,19 @@
     }];
 }
 
+- (void)fireEnqueuedMessageForChatRoomWithJID:(NSString *)roomJID
+{
+    if (roomJID == nil) {
+        return;
+    }
+    QBChatMessage *msg = self.messagesService.enqueuedMessages[roomJID];
+    if (msg) {
+        QBChatDialog *dialog = [self chatDialogWithID:msg.cParamDialogID];
+        NSAssert(dialog, @"To fire enqueued messages need chat dialog with chat room");
+        [self sendGroupChatDialogDidCreateNotification:msg toChatDialog:dialog persistent:YES completionBlock:^(QBChatMessage *message) {}];
+    }
+}
+
 - (void)sendMessage:(QBChatMessage *)message toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion {
     
     __weak __typeof(self)weakSelf = self;
@@ -52,16 +65,17 @@
     
     if (dialog.type == QBChatDialogTypeGroup) {
         
-        QBChatRoom *chatRoom = dialog.chatRoom;
-        [self.messagesService sendChatMessage:message withDialogID:dialog.ID toRoom:chatRoom completion:^{
-            finish(message);
+        [self.messagesService sendGroupChatMessage:message toDialog:dialog completion:^(NSError *error){
+            if (!error) {
+                finish(message);
+            }
         }];
         
     } else if (dialog.type == QBChatDialogTypePrivate) {
         
         message.senderID = self.currentUser.ID;
         message.recipientID = [self occupantIDForPrivateChatDialog:dialog];
-        [self.messagesService sendMessage:message  withDialogID:dialog.ID saveToHistory:YES completion:^(NSError *error){
+        [self.messagesService sendPrivateMessage:message toDialog:dialog persistent:YES completion:^(NSError *error) {
             finish(message);
         }];
     }

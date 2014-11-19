@@ -15,6 +15,8 @@
 @implementation QMApi (Notifications)
 
 
+#pragma mark - Private chat notifications
+
 - (void)sendContactRequestSendNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock
 {
     QBChatMessage *notification = [self notificationForUser:user];
@@ -61,16 +63,52 @@
     }
     
     __weak typeof(self) weakSelf = self;
-    [self.messagesService sendMessage:notification withDialogID:dialog.ID saveToHistory:YES completion:^(NSError *error) {
+    [self.messagesService sendPrivateMessage:notification toDialog:dialog persistent:YES completion:^(NSError *error) {
+        
         if (!error) {
             [weakSelf.messagesService addMessageToHistory:notification withDialogID:dialog.ID];
             [dialog updateLastMessageInfoWithMessage:notification];
-            completionBlock(nil, notification);
+            if (completionBlock) completionBlock(nil, notification);
         } else {
-            completionBlock(error, nil);
+            if (completionBlock) completionBlock(error, nil);
         }
     }];
     [self sendPushContactRequestNotification:notification];
+}
+
+
+#pragma mark - Group chat notifications
+
+- (void)sendGroupChatDialogDidCreateNotification:(QBChatMessage *)notification toChatDialog:(QBChatDialog *)chatDialog persistent:(BOOL)persistent completionBlock:(void(^)(QBChatMessage *))completion
+{
+    __weak typeof (self)weakSelf = self;
+    void (^completionBlock)(NSError *) = ^(NSError *error) {
+        if (!error) {
+            [weakSelf.messagesService addMessageToHistory:notification withDialogID:chatDialog.ID];
+            if (completion) completion(notification);
+            return;
+        }
+        if (completion) completion(nil);
+    };
+    
+    notification.cParamNotificationType = QMMessageNotificationTypeCreateGroupDialog;
+    if (!persistent) {
+        [self.messagesService sendPrivateMessage:notification toDialog:chatDialog persistent:persistent completion:completionBlock];
+    } else {
+        [self.messagesService sendGroupChatMessage:notification toDialog:chatDialog completion:completionBlock];
+    }
+}
+
+- (void)sendGroupChatDialogDidUpdateNotification:(QBChatMessage *)notification toChatDialog:(QBChatDialog *)chatDialog completionBlock:(void(^)(QBChatMessage *))completion
+{
+    __weak typeof (self)weakSelf = self;
+    notification.cParamNotificationType = QMMessageNotificationTypeUpdateGroupDialog;
+    [self.messagesService sendGroupChatMessage:notification toDialog:chatDialog completion:^(NSError *error){
+        if (!error) {
+            [weakSelf.messagesService addMessageToHistory:notification withDialogID:chatDialog.ID];
+            if (completion) completion(notification);
+        }
+    }];
 }
 
 

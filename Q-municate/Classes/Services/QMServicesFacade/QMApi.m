@@ -73,6 +73,24 @@ const NSTimeInterval kQMPresenceTime = 30;
         self.settingsManager = [[QMSettingsManager alloc] init];
         self.avCallService = [[QMAVCallService alloc] init];
         self.contentService = [[QMContentService alloc] init];
+        
+        __weak typeof(self)weakSelf = self;
+        [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
+
+            if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
+                [weakSelf retriveUsersForNotificationIfNeeded:message];
+            } else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog) {
+                if (message.cParamDialogOccupantsIDs) {
+                    [weakSelf retriveUsersForNotificationIfNeeded:message];
+                    return;
+                }
+                [weakSelf.messagesService addMessageToHistory:message withDialogID:message.cParamDialogID];
+            }
+        }];
+        
+        [[QMChatReceiver instance] chatRoomDidEnterWithTarget:self block:^(QBChatRoom *room) {
+            [weakSelf fireEnqueuedMessageForChatRoomWithJID:room.JID];
+        }];
     }
     
     return self;
@@ -121,6 +139,15 @@ const NSTimeInterval kQMPresenceTime = 30;
         [weakSelf.usersService retrieveUsersWithIDs:allOccupantIDs completion:^(BOOL updated) {
             completion();
         }];
+    }];
+}
+
+- (void)retriveUsersForNotificationIfNeeded:(QBChatMessage *)notification
+{
+    __weak typeof(self)weakSelf = self;
+    [self retriveIfNeededUsersWithIDs:notification.cParamDialogOccupantsIDs completion:^(BOOL retrieveWasNeeded) {
+        [weakSelf.messagesService addMessageToHistory:notification withDialogID:notification.cParamDialogID];
+        [[QMChatReceiver instance] message:notification addedToGroupUsersWasLoaded:retrieveWasNeeded];
     }];
 }
 

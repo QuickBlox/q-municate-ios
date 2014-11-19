@@ -62,6 +62,7 @@
     [super start];
     
     self.history = [NSMutableDictionary dictionary];
+    self.enqueuedMessages = [NSMutableDictionary new];
 
     __weak __typeof(self)weakSelf = self;
     void (^updateHistory)(QBChatMessage *) = ^(QBChatMessage *message) {
@@ -115,34 +116,39 @@
     self.history[dialogID] = @[].mutableCopy;
 }
 
-- (void)sendMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID saveToHistory:(BOOL)save completion:(void(^)(NSError *error))completion {
+- (void)sendPrivateMessage:(QBChatMessage *)message toDialog:(QBChatDialog *)dialog persistent:(BOOL)persistent completion:(void(^)(NSError *error))completion {
     
-    message.cParamDialogID = dialogID;
+    message.cParamDialogID = dialog.ID;
     message.cParamDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);
     message.text = [message.text gtm_stringByEscapingForHTML];
     
-    if (save) {
+    if (persistent) {
         message.cParamSaveToHistory = @"1";
         message.markable = YES;
     }
     
     [self chat:^(QBChat *chat) {
        if ( [chat sendMessage:message]) {
-           completion(nil);
+          if (completion) completion(nil);
        };
     }];
 }
 
-- (void)sendChatMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID toRoom:(QBChatRoom *)chatRoom completion:(void(^)(void))completion {
+- (void)sendGroupChatMessage:(QBChatMessage *)message toDialog:(QBChatDialog *)dialog completion:(void(^)(NSError *))completion {
     
-    message.cParamDialogID = dialogID;
+    message.cParamDialogID = dialog.ID;
     message.cParamSaveToHistory = @"1";
     message.cParamDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);
     message.text = [message.text gtm_stringByEscapingForHTML];
+    QBChatRoom *chatRoom = dialog.chatRoom;
     
+    if (!chatRoom.isJoined) {
+        if (completion) completion([NSError errorWithDomain:@"Error. Room is not joined" code:0 userInfo:nil]);
+        return;
+    }
     [self chat:^(QBChat *chat) {
         if ([chat sendChatMessage:message toRoom:chatRoom]) {
-            completion();
+            if (completion) completion(nil);
         }
     }];
 }

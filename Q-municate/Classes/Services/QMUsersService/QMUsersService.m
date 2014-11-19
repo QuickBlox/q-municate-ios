@@ -145,11 +145,31 @@
     QBUUser *user = [self userWithID:userID];
     if (!user) {
         [self retrieveUserWithID:userID completion:^(QBUUserResult *result) {
-            completionBlock(YES);
+            if (result.success) {
+                if (completionBlock) completionBlock(YES);
+                return;
+            }
+            if (completionBlock) completionBlock(NO);
         }];
         return;
     }
     completionBlock(NO);
+}
+
+- (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void(^)(BOOL retrieveWasNeeded))completionBlock
+{
+    NSArray *idsToFetch = [self usersIDsToFetch:usersIDs];
+    if (idsToFetch > 0) {
+        [self retriveUsersWithIDs:idsToFetch completion:^(QBUUserPagedResult *pagedResult) {
+            if (pagedResult.success) {
+                if (completionBlock) completionBlock(YES);
+                return;
+            }
+            if (completionBlock) completionBlock(NO);
+        }];
+        return;
+    }
+    if (completionBlock) completionBlock(NO);
 }
 
 
@@ -172,6 +192,19 @@
     }
     
     return [idsToFetch allObjects];
+}
+
+- (NSArray *)usersIDsToFetch:(NSArray *)IDs
+{
+    NSMutableSet *idsToFetch = [NSMutableSet new];
+    
+    for (NSNumber *ID in IDs) {
+        QBUUser *usr = [self userWithID:ID.integerValue];
+        if (!usr) {
+            [idsToFetch addObject:ID];
+        }
+    }
+    return idsToFetch.allObjects;
 }
 
 - (void)retrieveUsersWithIDs:(NSArray *)idsToFetch completion:(void(^)(BOOL updated))completion {
@@ -240,6 +273,19 @@
     };
     
     return [QBUsers userWithID:userID delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
+}
+         
+- (NSObject<Cancelable> *)retriveUsersWithIDs:(NSArray *)usersIDs completion:(QBUUserPagedResultBlock)completion
+{
+    __weak __typeof(self)weakSelf = self;
+    QBUUserPagedResultBlock resultBlock = ^(QBUUserPagedResult *result) {
+        if (result.success) {
+            [weakSelf addUsers:result.users];
+        }
+        completion(result);
+    };
+    NSString *idsToFetch = [usersIDs componentsJoinedByString:@","];
+    return [QBUsers usersWithIDs:idsToFetch delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
 }
 
 - (NSObject<Cancelable> *)retrieveUsersWithEmails:(NSArray *)emails completion:(QBUUserPagedResultBlock)completion {
