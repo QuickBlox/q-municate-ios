@@ -46,7 +46,7 @@
     [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
         
         if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog && [message.cParamDialogID isEqualToString:weakSelf.dialog.ID]) {
-            weakSelf.title = message.cParamDialogName;
+            weakSelf.title = message.cParamDialogRoomName;
             weakSelf.dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
         }
     }];

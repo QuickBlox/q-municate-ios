@@ -13,6 +13,7 @@
 
 @property (strong, nonatomic) NSDictionary *pushNotification;
 @property (strong, nonatomic) QBUUser *currentUser;
+@property (strong, nonatomic) NSMutableDictionary *enqueuedMessages;
 
 - (void)chat:(void(^)(QBChat *chat))chatBlock;
 - (void)loginChat:(QBChatResultBlock)block;
@@ -28,7 +29,7 @@
  @param message QBChatMessage structure which contains message text and recipient id
  @return YES if the request was sent successfully. If not - see log.
  */
-- (void)sendMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID saveToHistory:(BOOL)save completion:(void(^)(NSError *error))completion;
+- (void)sendPrivateMessage:(QBChatMessage *)message toDialog:(QBChatDialog *)dialog persistent:(BOOL)persistent completion:(void(^)(NSError *error))completion;
 
 /**
  Send chat message to room
@@ -37,8 +38,11 @@
  @param room Room to send message
  @return YES if the request was sent successfully. If not - see log.
  */
-- (void)sendChatMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID toRoom:(QBChatRoom *)chatRoom completion:(void(^)(void))completion ;
+- (void)sendGroupChatMessage:(QBChatMessage *)message toDialog:(QBChatDialog *)dialog completion:(void(^)(NSError *))completion;
 
+/**
+ *
+ */
 - (void)messagesWithDialogID:(NSString *)dialogID completion:(QBChatHistoryMessageResultBlock)completion;
 
 @end

@@ -104,6 +104,8 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 - (void)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion;
 - (void)sendAttachment:(QBCBlob *)attachment toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion;
 
+- (void)fireEnqueuedMessageForChatRoomWithJID:(NSString *)roomJID;
+
 @end
 
 
@@ -113,6 +115,9 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 - (void)sendContactRequestConfirmNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
 - (void)sendContactRequestRejectNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
 - (void)sendContactRequestDeleteNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
+
+- (void)sendGroupChatDialogDidCreateNotification:(QBChatMessage *)notification toChatDialog:(QBChatDialog *)chatDialog persistent:(BOOL)persistent completionBlock:(void(^)(QBChatMessage *))completion;
+- (void)sendGroupChatDialogDidUpdateNotification:(QBChatMessage *)notification toChatDialog:(QBChatDialog *)chatDialog completionBlock:(void(^)(QBChatMessage *))completion;
 
 @end
 
@@ -249,7 +254,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  Retrieving user if needed.
  */
 - (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock;
-
+- (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void (^)(BOOL retrieveWasNeeded))completionBlock;
 
 
 
