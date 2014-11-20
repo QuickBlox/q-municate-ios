@@ -18,7 +18,8 @@
 - (void)createPrivateDialogIfNeededWithNotification:(QBChatMessage *)notification completion:(void(^)(QBChatDialog *chatDialog))completion;
 
 - (void)updateChatDialogWithID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest completion:(QBChatDialogResultBlock)completion;
-//- (void)updateChatDialog:(QBChatDialog *)chatDialog;
+
+- (void)updateOrCreateDialogWithMessage:(QBChatMessage *)message isMine:(BOOL)isMine;
 
 - (NSArray *)dialogHistory;
 - (void)addDialogToHistory:(QBChatDialog *)chatDialog;

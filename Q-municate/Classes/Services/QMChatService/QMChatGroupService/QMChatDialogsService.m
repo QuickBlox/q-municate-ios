@@ -25,15 +25,6 @@
     
     self.dialogs = [NSMutableDictionary dictionary];
     self.rooms = [NSMutableDictionary dictionary];
-    
-    __weak __typeof(self)weakSelf = self;
-    [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
-        [weakSelf updateOrCreateDialogWithMessage:message];
-    }];
-    
-    [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-        [weakSelf updateOrCreateDialogWithMessage:message];
-    }];
 }
 
 - (void)stop {
@@ -177,9 +168,8 @@
 }
 
 
-- (void)updateChatDialogWithChatMessage:(QBChatMessage *)chatMessage {
+- (void)updateChatDialog:(QBChatDialog *)dialog withChatMessage:(QBChatMessage *)chatMessage {
     
-    QBChatDialog *dialog = self.dialogs[chatMessage.cParamDialogID];
     if (dialog == nil) {
         NSAssert(dialog, @"Dialog you are looking for not found.");
         return;
@@ -201,7 +191,7 @@
     }
 }
 
-- (void)updateOrCreateDialogWithMessage:(QBChatMessage *)message {
+- (void)updateOrCreateDialogWithMessage:(QBChatMessage *)message isMine:(BOOL)isMine {
     
     NSAssert(message.cParamDialogID, @"Notification without dialog id. Need update this case");
     
@@ -212,19 +202,26 @@
             }
             [[QMChatReceiver instance] postDialogsHistoryUpdated];
         }];
+        return;
     }
-    else if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
-        QBChatDialog *chatDialog = [message chatDialogFromCustomParameters];
-        [self addDialogToHistory:chatDialog];
+    
+    QBChatDialog *dialog = [self chatDialogWithID:message.cParamDialogID];
+    
+     if (!isMine) {
+        if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
+            if (dialog == nil) {
+                dialog = [message chatDialogFromCustomParameters];
+                [self addDialogToHistory:dialog];
+            } else {
+                return;  // to avoid update 2 times last message + badge information
+            }
+        }
+        else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog) {
+            [self updateChatDialog:dialog withChatMessage:message];
+        }
     }
-    else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog) {
-        [self updateChatDialogWithChatMessage:message];
-    }
-    else {
-        QBChatDialog *dialog = [self chatDialogWithID:message.cParamDialogID];
-        [dialog updateLastMessageInfoWithMessage:message];
-    }
-
+    // to all messages:
+    [dialog updateLastMessageInfoWithMessage:message isMine:isMine];
 }
 
 - (void)deleteChatDialog:(QBChatDialog *)dialog completion:(void(^)(BOOL success))completionHanlder

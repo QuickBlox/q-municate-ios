@@ -18,6 +18,8 @@
 - (void)addUser:(QBUUser *)user;
 - (void)deleteUser:(QBUUser *)user;
 - (BOOL)deleteContactRequestUserID:(NSUInteger)contactUserID;
+
+- (NSArray *)idsOfUsers:(NSArray *)users;
 - (QBUUser *)userWithID:(NSUInteger)userID;
 - (NSArray *)checkExistIds:(NSArray *)ids;
 - (NSArray *)usersIDsToFetch:(NSArray *)IDs;

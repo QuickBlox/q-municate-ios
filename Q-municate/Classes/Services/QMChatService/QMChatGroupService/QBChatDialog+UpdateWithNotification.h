@@ -10,6 +10,6 @@
 
 @interface QBChatDialog (UpdateWithNotification)
 
-- (void)updateLastMessageInfoWithMessage:(QBChatMessage *)message;
+- (void)updateLastMessageInfoWithMessage:(QBChatMessage *)message isMine:(BOOL)isMine;
 
 @end

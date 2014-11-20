@@ -75,8 +75,16 @@ const NSTimeInterval kQMPresenceTime = 30;
         self.contentService = [[QMContentService alloc] init];
         
         __weak typeof(self)weakSelf = self;
+        
+        [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+            [weakSelf.chatDialogsService updateOrCreateDialogWithMessage:message isMine:(message.senderID == weakSelf.currentUser.ID)];
+        }];
+        
         [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
 
+            // check for chat dialog:
+            [weakSelf.chatDialogsService updateOrCreateDialogWithMessage:message isMine:(message.senderID == weakSelf.currentUser.ID)];
+            
             if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
                 [weakSelf retriveUsersForNotificationIfNeeded:message];
             } else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog) {
