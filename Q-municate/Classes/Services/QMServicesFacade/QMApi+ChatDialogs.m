@@ -10,6 +10,7 @@
 #import "QMChatDialogsService.h"
 #import "QMApi+Notifications.m"
 #import "QMMessagesService.h"
+#import "QMUsersService.h"
 #import "QMContentService.h"
 #import "QMChatUtils.h"
 
@@ -134,7 +135,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
             NSString *text = [QMChatUtils messageForText:messageTypeText participants:occupants];
             
             [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:occupants text:text toChatDialog:chatDialog];
-            [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"occupants_ids" content:[QMChatUtils fullNamesStringWithoutSpaces:occupants]];
+            [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"occupants_ids" content:[QMChatUtils idsStringWithoutSpaces:occupants]];
             
         }
         completion(result);
@@ -202,7 +203,10 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 - (void)sendGroupChatDialogDidCreateNotificationToAllParticipantsWithText:(NSString *)text occupants:(NSArray *)occupants chatDialog:(QBChatDialog *)chatDialog
 {
     QBChatMessage *groupNotification = [self notificationToRecipient:nil text:text chatDialog:chatDialog];
-    groupNotification.cParamDialogOccupantsIDs = occupants;
+    
+    NSArray *usersIDs = [self.usersService idsOfUsers:occupants];
+    groupNotification.cParamDialogOccupantsIDs = usersIDs;
+    
     
     // put message to queue and when room will be joined, fire:
     self.messagesService.enqueuedMessages[chatDialog.roomJID] = groupNotification;

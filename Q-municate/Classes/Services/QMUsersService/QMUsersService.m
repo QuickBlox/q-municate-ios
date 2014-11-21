@@ -89,6 +89,15 @@
     [self.contactList removeAllObjects];
 }
 
+- (NSArray *)idsOfUsers:(NSArray *)users
+{
+    NSMutableSet *usersIDs = [NSMutableSet new];
+    for (QBUUser *usr in users) {
+        [usersIDs addObject:@(usr.ID)];
+    }
+    return usersIDs.allObjects;
+}
+
 - (QBUUser *)userWithID:(NSUInteger)userID {
     
     NSString *stingID = [NSString stringWithFormat:@"%d", userID];

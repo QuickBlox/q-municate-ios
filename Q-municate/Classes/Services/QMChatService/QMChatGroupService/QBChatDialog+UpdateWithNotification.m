@@ -7,18 +7,17 @@
 //
 
 #import "QBChatDialog+UpdateWithNotification.h"
-#import "QMApi.h"
 
 @implementation QBChatDialog (UpdateWithNotification)
 
-- (void)updateLastMessageInfoWithMessage:(QBChatMessage *)message
+- (void)updateLastMessageInfoWithMessage:(QBChatMessage *)message isMine:(BOOL)isMine
 {
     self.lastMessageText = message.text;
     self.lastMessageDate = message.datetime;
     self.lastMessageUserID = message.senderID;
     
     // if message isn't mine:
-    if (message.senderID != [QMApi instance].currentUser.ID) {
+    if (!isMine) {
         self.unreadMessagesCount++;
     }
 }

@@ -12,7 +12,7 @@
 
 + (NSString *)messageTextForNotification:(QBChatAbstractMessage *)notification;
 + (NSString *)messageTextForPushWithNotification:(QBChatMessage *)notification;
-+ (NSString *)fullNamesStringWithoutSpaces:(NSArray *)users;
++ (NSString *)idsStringWithoutSpaces:(NSArray *)users;
 + (NSString *)messageForText:(NSString *)text participants:(NSArray *)participants;
 
 @end

@@ -67,7 +67,7 @@
         
         if (!error) {
             [weakSelf.messagesService addMessageToHistory:notification withDialogID:dialog.ID];
-            [dialog updateLastMessageInfoWithMessage:notification];
+            [dialog updateLastMessageInfoWithMessage:notification isMine:NO];
             if (completionBlock) completionBlock(nil, notification);
         } else {
             if (completionBlock) completionBlock(error, nil);
