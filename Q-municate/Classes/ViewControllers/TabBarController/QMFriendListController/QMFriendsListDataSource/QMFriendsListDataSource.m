@@ -66,8 +66,8 @@
                 CGPoint point = weakSelf.searchDisplayController.searchResultsTableView.contentOffset;
                 
                 weakSelf.friendList = [QMApi instance].friends;
-//                [weakSelf.searchDisplayController.searchResultsTableView reloadData];
-                [weakSelf.tableView reloadData];
+                [weakSelf.searchDisplayController.searchResultsTableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]   withRowAnimation:UITableViewRowAnimationAutomatic];
+//                [weakSelf.tableView reloadData];
                 NSUInteger idx = [weakSelf.friendList indexOfObject:weakSelf.tUser];
                 NSUInteger idx2 = [weakSelf.searchResult indexOfObject:weakSelf.tUser];
                

@@ -20,6 +20,7 @@
 - (BOOL)deleteContactRequestUserID:(NSUInteger)contactUserID;
 
 - (NSArray *)idsOfUsers:(NSArray *)users;
+- (NSArray *)idsOfContactsOnly;
 - (QBUUser *)userWithID:(NSUInteger)userID;
 - (NSArray *)checkExistIds:(NSArray *)ids;
 - (NSArray *)usersIDsToFetch:(NSArray *)IDs;

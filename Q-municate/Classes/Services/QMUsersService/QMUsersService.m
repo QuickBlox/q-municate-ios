@@ -80,6 +80,15 @@
     return idsToFetch;
 }
 
+- (NSArray *)idsOfContactsOnly {
+    NSMutableSet *IDs = [NSMutableSet new];
+    NSArray *contactItems = [QBChat instance].contactList.contacts;
+    for (QBContactListItem *item in contactItems) {
+        [IDs addObject:@(item.userID)];
+    }
+    return IDs.allObjects;
+}
+
 
 - (void)stop {
     [super stop];

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14A388a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RkR-TS-K9a">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RkR-TS-K9a">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
@@ -1186,7 +1186,7 @@ Line 2</string>
                             <rect key="frame" x="0.0" y="0.0" width="320" height="57"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="goA-cU-Crm">
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="goA-cU-Crm">
                                     <rect key="frame" x="20" y="12" width="280" height="36"/>
                                     <string key="text">Let your other friends know about 
 Q-munication by sending them private invitations.</string>
@@ -1199,6 +1199,12 @@ Q-munication by sending them private invitations.</string>
                                 </imageView>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="goA-cU-Crm" secondAttribute="bottom" constant="9" id="NNw-JL-eoF"/>
+                                <constraint firstAttribute="trailing" secondItem="goA-cU-Crm" secondAttribute="trailing" constant="20" id="Pt6-o0-3sR"/>
+                                <constraint firstItem="goA-cU-Crm" firstAttribute="leading" secondItem="7Gg-ka-ZKh" secondAttribute="leading" constant="20" id="hJE-Fr-10c"/>
+                                <constraint firstItem="goA-cU-Crm" firstAttribute="top" secondItem="7Gg-ka-ZKh" secondAttribute="top" constant="12" id="kAP-oU-jY0"/>
+                            </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="ydF-r6-L5R">
                             <rect key="frame" x="0.0" y="227" width="320" height="3"/>
@@ -2304,7 +2310,7 @@ Cg
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="UjL-PZ-o3L">
-                            <rect key="frame" x="83" y="6" width="154" height="33"/>
+                            <rect key="frame" x="83" y="5.5" width="154" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="License Agreement" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F4j-Am-IFN">
@@ -2833,8 +2839,9 @@ Cg
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d5o-vd-nnk">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="109"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="upic_placeholder_details_group" translatesAutoresizingMaskIntoConstraints="NO" id="1Lq-TE-ZQ2">
+                                    <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="upic_placeholder_details_group" translatesAutoresizingMaskIntoConstraints="NO" id="1Lq-TE-ZQ2" customClass="QMImageView">
                                         <rect key="frame" x="17" y="15" width="60" height="60"/>
+                                        <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="60" id="E8R-qM-ZCz"/>
                                             <constraint firstAttribute="height" constant="60" id="cfU-Q0-te4"/>
@@ -3384,9 +3391,9 @@ Cg
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="qsg-NO-Ors"/>
-        <segue reference="A42-kR-3SJ"/>
-        <segue reference="M45-HY-t12"/>
+        <segue reference="kkU-F4-K0a"/>
+        <segue reference="IAo-qy-uHQ"/>
         <segue reference="sPU-d9-maS"/>
-        <segue reference="VIK-5Z-bdZ"/>
+        <segue reference="M45-HY-t12"/>
     </inferredMetricsTieBreakers>
 </document>

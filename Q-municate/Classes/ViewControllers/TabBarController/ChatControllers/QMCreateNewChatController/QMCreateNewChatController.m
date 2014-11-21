@@ -21,11 +21,11 @@ NSString *const QMChatViewControllerID = @"QMChatViewController";
 
 - (void)viewDidLoad {
     
-    NSArray *unsortedFriends = [[QMApi instance] friends];
-    self.friends = [QMUsersUtils sortUsersByFullname:unsortedFriends];
+    NSArray *unsortedContacts = [[QMApi instance] contactsOnly];
+    self.contacts = [QMUsersUtils sortUsersByFullname:unsortedContacts];
     [super viewDidLoad];
 }
-
+ 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }

@@ -197,7 +197,7 @@
     
     if (message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
         [self createPrivateDialogIfNeededWithNotification:message completion:^(QBChatDialog *chatDialog) {
-            if (chatDialog.unreadMessagesCount == 0) {
+            if (!isMine) {
                 chatDialog.unreadMessagesCount++;
             }
             [[QMChatReceiver instance] postDialogsHistoryUpdated];

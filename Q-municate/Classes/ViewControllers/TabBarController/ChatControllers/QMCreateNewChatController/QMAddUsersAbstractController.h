@@ -12,7 +12,7 @@
 @interface QMAddUsersAbstractController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (strong, nonatomic) NSMutableArray *selectedFriends;
-@property (strong, nonatomic) NSArray *friends;
+@property (strong, nonatomic) NSArray *contacts;
 
 /** Actions */
 - (IBAction)performAction:(UIButton *)sender;

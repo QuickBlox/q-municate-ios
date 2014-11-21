@@ -185,6 +185,8 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  */
 - (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
 
+- (void)changeAvatar:(UIImage *)avatar forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
+
 - (NSUInteger)occupantIDForPrivateChatDialog:(QBChatDialog *)chatDialog;
 
 @end
@@ -193,6 +195,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 @interface QMApi (Users)
 
 @property (strong, nonatomic, readonly) NSArray *friends;
+@property (strong, nonatomic, readonly) NSArray *contactsOnly;
 @property (strong, nonatomic, readonly) NSArray *contactRequestUsers;
 
 - (BOOL)isFriendForChatDialog:(QBChatDialog *)chatDialog;

@@ -88,6 +88,14 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
             [weakSelf insertNewMessage:message];
         }];
         
+        [[QMChatReceiver instance] chatRoomDidEnterWithTarget:self block:^(QBChatRoom *room) {
+            if ([weakSelf.chatDialog.chatRoom isEqual:room]) {
+                if (room.isJoined) {
+                    [weakSelf unlockInputBar];
+                }
+            }
+        }];
+        
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
             
             if (!message.cParamDialogID) {
@@ -98,6 +106,9 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
             if ([weakSelf.chatDialog isEqual:dialogForReceiverMessage] && message.cParamNotificationType != QMMessageNotificationTypeDeliveryMessage) {
                 
                 if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
+                    if (![dialogForReceiverMessage.chatRoom isJoined]) {
+                        [weakSelf lockInputBar];
+                    }
                     return;
                 }
                 else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog) {
