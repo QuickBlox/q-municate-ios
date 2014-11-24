@@ -19,11 +19,9 @@
 #import "QMChatReceiver.h"
 #import "QMServicesManager.h"
 
-
 @interface QMMainTabBarController ()
 
 @end
-
 
 @implementation QMMainTabBarController
 
@@ -35,6 +33,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.chatDelegate = self;
     
     [self customizeTabBar];
@@ -42,53 +41,66 @@
     
     [self subscribeToNotifications];
     
+    void(^fetchData)(void) =^(void) {
+        
+        NSDictionary *push = [[QMApi instance] pushNotification];
+        
+        if (push != nil) {
+            
+            [SVProgressHUD show];
+        }
+        
+        [QM.chatService fetchAllDialogs:^(QBResponse *fetchAllDialogsResponse, NSArray *dialogObjects, NSSet *dialogsUsersIDs)
+         {
+             [QM.contactListService retrieveUsersWithIDs:dialogsUsersIDs.allObjects
+                                              completion:^(QBResponse *responce, QBGeneralResponsePage *page, NSArray *users)
+              {
+                  [SVProgressHUD dismiss];
+                  [[QMApi instance] openChatPageForPushNotification:push];
+                  [[QMApi instance] setPushNotification:nil];
+              }];
+             
+         }];
+        
+        
+        [[QMApi instance] subscribeToPushNotificationsForceSettings:NO
+                                                           complete:^(BOOL subscribeToPushNotificationsSuccess)
+         {
+             if (!subscribeToPushNotificationsSuccess) {
+                 [QMApi instance].settingsManager.pushNotificationsEnabled = NO;
+             }
+         }];
+        
+        
+        if (!QM.profile.userData.imported) {
+            
+            [[QMApi instance] importFriendsFromFacebook];
+            [[QMApi instance] importFriendsFromAddressBook];
+            
+            
+            QM.profile.userData.imported = YES;
+            
+            [QM.profile updateUserWithCompletion:^(BOOL success) {
+            
+            }];
+        }
+    };
+    
     if (!QM.authService.isAuthorized) {
         
         [QM.authService logInWithUser:QM.profile.userData
                            completion:^(QBResponse *response, QBUUser *userProfile)
-        {
-            if (response.success) {
-     
-                NSDictionary *push = [[QMApi instance] pushNotification];
-                
-                if (push != nil) {
-                    
-                    [SVProgressHUD show];
-                }
-                
-                [QM.chatService logIn:^(NSError *error) {
-                    
-//                    [[QMApi instance] subscribeToPushNotificationsForceSettings:NO
-//                                                                       complete:^(BOOL subscribeToPushNotificationsSuccess)
-//                     {
-//                         if (!subscribeToPushNotificationsSuccess) {
-//                             [QMApi instance].settingsManager.pushNotificationsEnabled = NO;
-//                         }
-//                     }];
-                    
-                    QBUUser *usr = [QMApi instance].currentUser;
-                    if (!usr.imported) {
-                        [[QMApi instance] importFriendsFromFacebook];
-                        [[QMApi instance] importFriendsFromAddressBook];
-                        usr.imported = YES;
-                        [[QMApi instance] updateUser:usr image:nil progress:nil completion:^(BOOL successed) {}];
-                        
-                    } else {
-                        
-                        [[QMApi instance] fetchAllHistory:^{
-                            
-                            if (push != nil) {
-                                [SVProgressHUD dismiss];
-                                [[QMApi instance] openChatPageForPushNotification:push];
-                                [[QMApi instance] setPushNotification:nil];
-                            }
-                        }];
-                    }
-
-                    
-                }];
-            }
-        }];
+         {
+             if (response.success) {
+                 
+                 [QM.chatService logIn:^(NSError *error) {
+                     fetchData();
+                 }];
+             }
+         }];
+    }
+    else {
+        fetchData();
     }
 }
 

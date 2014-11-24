@@ -126,18 +126,26 @@ NSString *const kShakeAuthorizationState = @"authorizationState";
                  weakSelf.userData = userData;
                  [weakSelf synchronize];
                  
-                 completion(YES);
+                 if (completion) {
+                     completion(YES);
+                 }
                  
              } errorBlock:^(QBResponse *response) {
                  
-                 completion(NO);
+                 if (completion) {
+                     completion(NO);
+                 }
              }];
 }
 
-- (void) updateUserWithCompletion:(void (^)(BOOL success))completion {
+- (void)updateUserWithCompletion:(void (^)(BOOL success))completion {
     
     NSString *password = self.userData.password;
     self.userData.password = nil;
+    
+    if (self.userData.customDataChanged) {
+        [self.userData syncronize];
+    }
     
     __weak __typeof(self)weakSelf = self;
     [QBRequest updateUser:self.userData
@@ -147,11 +155,14 @@ NSString *const kShakeAuthorizationState = @"authorizationState";
                  weakSelf.userData = updatedUser;
                  [weakSelf synchronize];
                  
-                 completion(YES);
+                 if (completion) {
+                     completion(YES);
+                 };
                  
              } errorBlock:^(QBResponse *response) {
-                 
-                 completion(NO);
+                 if (completion) {
+                     completion(NO);
+                 }
              }];
 }
 
