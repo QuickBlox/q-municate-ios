@@ -27,9 +27,6 @@
     
     [super viewDidLoad];
     [self.splashLogoView setImage:[UIImage imageNamed:IS_HEIGHT_GTE_568 ? @"splash" : @"splash-960"]];
-}
-
-- (void)createSession {
     
     if (QM.profile.userData) {
         

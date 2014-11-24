@@ -2,7 +2,7 @@
 //  QMServicesManager.h
 //  Q-municate
 //
-//  Created by Andrey on 24.11.14.
+//  Created by Andrey Ivanov on 24.11.14.
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
@@ -19,8 +19,8 @@ QMServicesManager *qmServices(void);
 @interface QMServicesManager : NSObject
 
 @property (strong, nonatomic, readonly) QMAuthService *authService;
+@property (strong, nonatomic, readonly) QMChatService *chatService;
+@property (strong, nonatomic, readonly) QMContactListService *contactListService;
 @property (strong, nonatomic, readonly) QMProfile *profile;
-
-+ (instancetype)instance;
 
 @end

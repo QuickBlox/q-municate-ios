@@ -17,6 +17,7 @@
 #import "QMChatDataSource.h"
 #import "QMSettingsManager.h"
 #import "QMChatReceiver.h"
+#import "QMServicesManager.h"
 
 
 @interface QMMainTabBarController ()
@@ -40,49 +41,55 @@
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     
     [self subscribeToNotifications];
-    __weak __typeof(self)weakSelf = self;
     
-    [[QMApi instance] autoLogin:^(BOOL success) {
-        if (!success) {
-            
-            [[QMApi instance] logout:^(BOOL logoutSuccess) {
-                [weakSelf performSegueWithIdentifier:@"SplashSegue" sender:nil];
-            }];
-            
-        }else {
-            NSDictionary *push = [[QMApi instance] pushNotification];
-            if (push != nil) {
-                [SVProgressHUD show];
-            }
-            [[QMApi instance] loginChat:^(BOOL loginSuccess) {
-                [[QMApi instance] subscribeToPushNotificationsForceSettings:NO complete:^(BOOL subscribeToPushNotificationsSuccess) {
+    if (!QM.authService.isAuthorized) {
+        
+        [QM.authService logInWithUser:QM.profile.userData
+                           completion:^(QBResponse *response, QBUUser *userProfile)
+        {
+            if (response.success) {
+     
+                NSDictionary *push = [[QMApi instance] pushNotification];
                 
-                    if (!subscribeToPushNotificationsSuccess) {
-                        [QMApi instance].settingsManager.pushNotificationsEnabled = NO;
-                    }
-                }];
-                
-                QBUUser *usr = [QMApi instance].currentUser;
-                if (!usr.imported) {
-                    [[QMApi instance] importFriendsFromFacebook];
-                    [[QMApi instance] importFriendsFromAddressBook];
-                    usr.imported = YES;
-                    [[QMApi instance] updateUser:usr image:nil progress:nil completion:^(BOOL successed) {}];
+                if (push != nil) {
                     
-                } else {
-                
-                    [[QMApi instance] fetchAllHistory:^{
-                        
-                        if (push != nil) {
-                            [SVProgressHUD dismiss];
-                            [[QMApi instance] openChatPageForPushNotification:push];
-                            [[QMApi instance] setPushNotification:nil];
-                        }
-                    }];
+                    [SVProgressHUD show];
                 }
-            }];
-        }
-    }];
+                
+                [QM.chatService logIn:^(NSError *error) {
+                    
+//                    [[QMApi instance] subscribeToPushNotificationsForceSettings:NO
+//                                                                       complete:^(BOOL subscribeToPushNotificationsSuccess)
+//                     {
+//                         if (!subscribeToPushNotificationsSuccess) {
+//                             [QMApi instance].settingsManager.pushNotificationsEnabled = NO;
+//                         }
+//                     }];
+                    
+                    QBUUser *usr = [QMApi instance].currentUser;
+                    if (!usr.imported) {
+                        [[QMApi instance] importFriendsFromFacebook];
+                        [[QMApi instance] importFriendsFromAddressBook];
+                        usr.imported = YES;
+                        [[QMApi instance] updateUser:usr image:nil progress:nil completion:^(BOOL successed) {}];
+                        
+                    } else {
+                        
+                        [[QMApi instance] fetchAllHistory:^{
+                            
+                            if (push != nil) {
+                                [SVProgressHUD dismiss];
+                                [[QMApi instance] openChatPageForPushNotification:push];
+                                [[QMApi instance] setPushNotification:nil];
+                            }
+                        }];
+                    }
+
+                    
+                }];
+            }
+        }];
+    }
 }
 
 - (void)didReceiveMemoryWarning {

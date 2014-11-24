@@ -117,10 +117,10 @@
                                
                                [self performSegueWithIdentifier:kTabBarSegueIdnetifier
                                                          sender:nil];
-                           }];
-                          
-                          [SVProgressHUD dismiss];
+                           }];    
                       }
+                      
+                      [SVProgressHUD dismiss];
                   }];
              }
          }];

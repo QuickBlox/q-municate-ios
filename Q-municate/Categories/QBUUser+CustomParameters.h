@@ -10,8 +10,11 @@
 
 @interface QBUUser (CustomParameters)
 
-@property (nonatomic, copy) NSString *avatarURL;
-@property (nonatomic, copy) NSString *status;
-@property (nonatomic, assign) BOOL imported;
+@property (strong, nonatomic) NSString *avatarURL;
+@property (strong, nonatomic) NSString *status;
+@property (assign, nonatomic) BOOL imported;
+
+- (BOOL)customDataChanged;
+- (void)syncronize;
 
 @end

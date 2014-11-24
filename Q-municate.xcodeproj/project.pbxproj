@@ -17,6 +17,8 @@
 		2484683F19D97E6E00E5A106 /* QBUUser+CustomParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 2484683E19D97E6E00E5A106 /* QBUUser+CustomParameters.m */; };
 		2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */; };
 		550678BA1A235AE700660A12 /* QMServicesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 550678B91A235AE700660A12 /* QMServicesManager.m */; };
+		550678CB1A237D4B00660A12 /* QMContactListCacheModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 550678C91A237D4B00660A12 /* QMContactListCacheModel.bundle */; };
+		550678CC1A237D4B00660A12 /* QMChatCacheModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 550678CA1A237D4B00660A12 /* QMChatCacheModel.bundle */; };
 		551F8724196E854500DBCA02 /* QMApi+Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 551F8723196E854500DBCA02 /* QMApi+Facebook.m */; };
 		551F8728196EA68900DBCA02 /* QMInviteFriendsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 551F8727196EA68900DBCA02 /* QMInviteFriendsDataSource.m */; };
 		5521401E197FF00900F55373 /* QMIncomingCallHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5521401D197FF00900F55373 /* QMIncomingCallHandler.m */; };
@@ -206,6 +208,8 @@
 		24ECC26419A73587003F5038 /* Macro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macro.h; sourceTree = "<group>"; };
 		550678B81A235AE700660A12 /* QMServicesManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMServicesManager.h; sourceTree = "<group>"; };
 		550678B91A235AE700660A12 /* QMServicesManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMServicesManager.m; sourceTree = "<group>"; };
+		550678C91A237D4B00660A12 /* QMContactListCacheModel.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = QMContactListCacheModel.bundle; path = ../QMServices/QMContactListCache/QMContactListCacheModel.bundle; sourceTree = "<group>"; };
+		550678CA1A237D4B00660A12 /* QMChatCacheModel.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = QMChatCacheModel.bundle; path = ../QMServices/QMChatCache/QMChatCacheModel.bundle; sourceTree = "<group>"; };
 		551F8723196E854500DBCA02 /* QMApi+Facebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Facebook.m"; sourceTree = "<group>"; };
 		551F8726196EA68900DBCA02 /* QMInviteFriendsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMInviteFriendsDataSource.h; sourceTree = "<group>"; };
 		551F8727196EA68900DBCA02 /* QMInviteFriendsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMInviteFriendsDataSource.m; sourceTree = "<group>"; };
@@ -710,6 +714,8 @@
 		556249351A1CD086003D69F1 /* NewFunctionality */ = {
 			isa = PBXGroup;
 			children = (
+				550678C91A237D4B00660A12 /* QMContactListCacheModel.bundle */,
+				550678CA1A237D4B00660A12 /* QMChatCacheModel.bundle */,
 				550678B51A235AC600660A12 /* QMServicesManager */,
 				556249361A1CD086003D69F1 /* QMProfile */,
 			);
@@ -1835,6 +1841,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6937F91919B5A1D3001858A5 /* QMContactRequestCell.xib in Resources */,
+				550678CB1A237D4B00660A12 /* QMContactListCacheModel.bundle in Resources */,
 				55A8B06F1965986A00B5D33B /* busy.wav in Resources */,
 				552E483B199A2711006A25E1 /* QMFriendListCell.xib in Resources */,
 				55A8B0701965986A00B5D33B /* calling.wav in Resources */,
@@ -1848,6 +1855,7 @@
 				55A8B06D1965986A00B5D33B /* README.md in Resources */,
 				55286996199131B5006F92CB /* Localizable.strings in Resources */,
 				5594E4CC199E218800AA0D09 /* ChatIcons.xcassets in Resources */,
+				550678CC1A237D4B00660A12 /* QMChatCacheModel.bundle in Resources */,
 				55A8B0721965986A00B5D33B /* received.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
