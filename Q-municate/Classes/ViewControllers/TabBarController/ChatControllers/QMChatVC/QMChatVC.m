@@ -511,6 +511,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     
     self.inputToolBar.contentView.textView.inputView = nil;
     [self.inputToolBar.contentView.textView reloadInputViews];
+    [self.inputToolBar.contentView.leftBarButtonItem setImage:[UIImage imageNamed:@"ic_smile"] forState:UIControlStateNormal];
 }
 
 @end

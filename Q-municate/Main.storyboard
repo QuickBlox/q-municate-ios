@@ -2951,13 +2951,6 @@ Cg
                                                     <color key="textColor" red="0.58039218189999997" green="0.58039218189999997" blue="0.58039218189999997" alpha="1" colorSpace="deviceRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="online" translatesAutoresizingMaskIntoConstraints="NO" id="3i0-1u-TMr">
-                                                    <rect key="frame" x="268" y="24" width="12" height="12"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="12" id="4dJ-35-zqW"/>
-                                                        <constraint firstAttribute="width" constant="12" id="Qyk-zm-kgc"/>
-                                                    </constraints>
-                                                </imageView>
                                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s5q-cV-dQM">
                                                     <rect key="frame" x="277" y="0.0" width="43" height="59"/>
                                                     <constraints>
@@ -2971,13 +2964,20 @@ Cg
                                                         <action selector="pressAddBtn:" destination="81y-lY-KsM" eventType="touchUpInside" id="Zqr-zC-L6I"/>
                                                     </connections>
                                                 </button>
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="online" translatesAutoresizingMaskIntoConstraints="NO" id="3i0-1u-TMr">
+                                                    <rect key="frame" x="292" y="24" width="12" height="12"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="12" id="4dJ-35-zqW"/>
+                                                        <constraint firstAttribute="width" constant="12" id="Qyk-zm-kgc"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="73o-h7-0EW" secondAttribute="trailing" constant="8" id="549-a4-ydZ"/>
                                                 <constraint firstItem="WbY-wV-ozV" firstAttribute="top" secondItem="P0Y-Yc-ydR" secondAttribute="top" constant="5" id="9tC-Xl-q6T"/>
                                                 <constraint firstItem="3i0-1u-TMr" firstAttribute="top" secondItem="P0Y-Yc-ydR" secondAttribute="top" constant="24" id="FMf-Hb-6Us"/>
                                                 <constraint firstItem="WbY-wV-ozV" firstAttribute="leading" secondItem="P0Y-Yc-ydR" secondAttribute="leading" constant="7" id="Ho1-sx-VLo"/>
-                                                <constraint firstAttribute="trailing" secondItem="3i0-1u-TMr" secondAttribute="trailing" constant="40" id="M5i-nH-WQq"/>
+                                                <constraint firstAttribute="trailing" secondItem="3i0-1u-TMr" secondAttribute="trailing" constant="16" id="M5i-nH-WQq"/>
                                                 <constraint firstAttribute="trailing" secondItem="s5q-cV-dQM" secondAttribute="trailing" id="TrI-9N-c4Z"/>
                                                 <constraint firstItem="s5q-cV-dQM" firstAttribute="top" secondItem="P0Y-Yc-ydR" secondAttribute="top" id="VFW-zx-VqT"/>
                                                 <constraint firstItem="73o-h7-0EW" firstAttribute="leading" secondItem="WbY-wV-ozV" secondAttribute="trailing" constant="8" id="f7R-iI-Jab"/>

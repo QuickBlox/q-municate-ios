@@ -2630,7 +2630,7 @@
 				);
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "4f550f9e-3750-48ce-af57-fbdd2fce9643";
+				PROVISIONING_PROFILE = "1fb14a14-8353-4855-bb2f-fb27e27c5754";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
