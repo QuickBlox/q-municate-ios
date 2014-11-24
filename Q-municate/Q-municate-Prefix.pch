@@ -18,13 +18,9 @@
     #import <MobileCoreServices/MobileCoreServices.h>
     #import <Quickblox/Quickblox.h>
     #import <FacebookSDK/FacebookSDK.h>
-
-
-    #import "QBChatAbstractMessage+CustomParameters.h"
-    #import "QBChatAbstractMessage+TextEncoding.h"
     #import "QBUUser+CustomParameters.h"
     #import "QBChatDialog+UpdateWithNotification.h"
-
+    #import <QMServices.h>
     #import "QMDefinitions.h"
     #import "QMProtocols.h"
     #import "Macro.h"

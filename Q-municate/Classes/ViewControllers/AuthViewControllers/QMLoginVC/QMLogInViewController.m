@@ -11,9 +11,9 @@
 #import "QMLicenseAgreement.h"
 #import "QMSettingsManager.h"
 #import "REAlertView+QMSuccess.h"
-#import "QMApi.h"
 #import "QMSettingsManager.h"
 #import "SVProgressHUD.h"
+#import "QMServicesManager.h"
 
 @interface QMLogInViewController ()
 
@@ -31,77 +31,86 @@
 }
 
 - (void)viewDidLoad {
-    
     [super viewDidLoad];
     
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    [self.navigationController setNavigationBarHidden:NO
+                                             animated:YES];
     self.rememberMeSwitch.on = YES;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
 #pragma mark - Actions
 
 - (IBAction)hideKeyboard:(id)sender {
+    
     [sender resignFirstResponder];
 }
 
-- (IBAction)logIn:(id)sender
-{
+- (IBAction)logIn:(id)sender {
+    
     NSString *email = self.emailField.text;
     NSString *password = self.passwordField.text;
     
-    if (email.length == 0 || password.length == 0) {
+    if (email.length > 4 || password.length > 6) {
+        
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil)
                             actionSuccess:NO];
     }
     else {
         
-        __weak __typeof(self)weakSelf = self;
-        
+        QBUUser *user = [QBUUser user];
+        user.email = email;
+        user.password = password;
         
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         
-        [[QMApi instance] loginWithEmail:email
-                                password:password
-                              rememberMe:weakSelf.rememberMeSwitch.on
-                              completion:^(BOOL success)
-         {
+        [QM.authService logInWithUser:user
+                           completion:^(QBResponse *response, QBUUser *userProfile)
+        {    
              [SVProgressHUD dismiss];
              
-             if (success) {
-                 [[QMApi instance] setAutoLogin:weakSelf.rememberMeSwitch.on
-                                withAccountType:QMAccountTypeEmail];
-                 [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier
-                                               sender:nil];
+             if (response.success) {
+                 
+                 if (self.rememberMeSwitch.on) {
+                     
+                     userProfile.password = password;
+                     [QM.profile synchronizeWithUserData:userProfile];
+                 }
+                 
+                 [self performSegueWithIdentifier:kTabBarSegueIdnetifier
+                                           sender:nil];
              }
          }];
     }
 }
 
-- (IBAction)connectWithFacebook:(id)sender
-{
-    __weak __typeof(self)weakSelf = self;
-    [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL success) {
+- (IBAction)connectWithFacebook:(id)sender {
+    
+    [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self
+                                                        completion:^(BOOL success)
+    {
         if (success) {
-            [weakSelf fireConnectWithFacebook];
-        }
-    }];
-}
-
-- (void)fireConnectWithFacebook
-{
-    __weak __typeof(self)weakSelf = self;
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [[QMApi instance] singUpAndLoginWithFacebook:^(BOOL success) {
-        
-        [SVProgressHUD dismiss];
-        if (success) {
-            [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+            
+            [QM.authService logInWithFacebookSessionToken:@""
+                                               completion:^(QBResponse *response, QBUUser *userProfile)
+             {
+                 [SVProgressHUD dismiss];
+                 
+                 if (response.success) {
+                     
+                     if (self.rememberMeSwitch.on) {
+                         [QM.profile synchronizeWithUserData:userProfile];
+                     }
+                     
+                     [self performSegueWithIdentifier:kTabBarSegueIdnetifier
+                                               sender:nil];
+                 }
+             }];
         }
     }];
 }

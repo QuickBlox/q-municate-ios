@@ -18,6 +18,12 @@ NSString *const kShakeAuthorizationState = @"authorizationState";
 
 @implementation QMProfile
 
++ (instancetype)profile {
+    
+    QMProfile *profile = [[QMProfile alloc] init];
+    return profile;
+}
+
 - (instancetype)init {
     
     self = [super init];

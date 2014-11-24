@@ -16,7 +16,7 @@
 		2476BA8119A5D91F00CC666D /* QMUsersUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2476BA8019A5D91F00CC666D /* QMUsersUtils.m */; };
 		2484683F19D97E6E00E5A106 /* QBUUser+CustomParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 2484683E19D97E6E00E5A106 /* QBUUser+CustomParameters.m */; };
 		2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */; };
-		2494559B19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 2494559A19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m */; };
+		550678BA1A235AE700660A12 /* QMServicesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 550678B91A235AE700660A12 /* QMServicesManager.m */; };
 		551F8724196E854500DBCA02 /* QMApi+Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 551F8723196E854500DBCA02 /* QMApi+Facebook.m */; };
 		551F8728196EA68900DBCA02 /* QMInviteFriendsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 551F8727196EA68900DBCA02 /* QMInviteFriendsDataSource.m */; };
 		5521401E197FF00900F55373 /* QMIncomingCallHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5521401D197FF00900F55373 /* QMIncomingCallHandler.m */; };
@@ -29,14 +29,6 @@
 		55495A221993BCC100B7764C /* QMAlertsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 55495A201993BCC100B7764C /* QMAlertsFactory.m */; };
 		556192CB19891BD70048D112 /* QMGroupDetailsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 556192CA19891BD70048D112 /* QMGroupDetailsDataSource.m */; };
 		556249391A1CD086003D69F1 /* QMProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 556249381A1CD086003D69F1 /* QMProfile.m */; };
-		5562493E1A1CD2D8003D69F1 /* QMServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 5562493D1A1CD2D8003D69F1 /* QMServices.m */; };
-		556249501A1CD470003D69F1 /* libQMAuthService.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 556249491A1CD470003D69F1 /* libQMAuthService.a */; };
-		556249511A1CD470003D69F1 /* libQMBaseService.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5562494A1A1CD470003D69F1 /* libQMBaseService.a */; };
-		556249521A1CD470003D69F1 /* libQMChatCache.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5562494B1A1CD470003D69F1 /* libQMChatCache.a */; };
-		556249531A1CD470003D69F1 /* libQMChatService.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5562494C1A1CD470003D69F1 /* libQMChatService.a */; };
-		556249541A1CD470003D69F1 /* libQMContactListCache.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5562494D1A1CD470003D69F1 /* libQMContactListCache.a */; };
-		556249551A1CD470003D69F1 /* libQMContactListService.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5562494E1A1CD470003D69F1 /* libQMContactListService.a */; };
-		556249561A1CD470003D69F1 /* libQMDBStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5562494F1A1CD470003D69F1 /* libQMDBStorage.a */; };
 		556249681A1CDE36003D69F1 /* QMOldAuthService.m in Sources */ = {isa = PBXBuildFile; fileRef = 556249671A1CDE36003D69F1 /* QMOldAuthService.m */; };
 		556249691A1CE1F3003D69F1 /* QMOldBaseService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD1219AC758C00DAF79F /* QMOldBaseService.m */; };
 		558260A31A1BAAAE00F92F4E /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558260A21A1BAAAE00F92F4E /* Quickblox.framework */; };
@@ -64,6 +56,7 @@
 		55A8B0A819659BA000B5D33B /* QMApi+Messages.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B0A719659BA000B5D33B /* QMApi+Messages.m */; };
 		55A8B0AB1965A66300B5D33B /* QMApi+ChatDialogs.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B0AA1965A66300B5D33B /* QMApi+ChatDialogs.m */; };
 		55A8B0AE1965AD1800B5D33B /* QMApi+Users.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B0AD1965AD1800B5D33B /* QMApi+Users.m */; };
+		55AA62DE1A232BCF00D73089 /* libQMServices.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 55AA62D91A2328A500D73089 /* libQMServices.a */; };
 		55BBA75C19730B960040DB5C /* REMessageUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BBA75B19730B960040DB5C /* REMessageUI.m */; };
 		55BBA760197327AB0040DB5C /* QMDialogsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BBA75F197327AB0040DB5C /* QMDialogsViewController.m */; };
 		55CEA9EE195D835B001A8ED6 /* QMImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CEA9ED195D835B001A8ED6 /* QMImageView.m */; };
@@ -167,6 +160,30 @@
 		FB1A45DF826843BBB501A643 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 67976AC8FFE848A4B85EB2AF /* libPods.a */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		55AA62D81A2328A500D73089 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 55AA62521A2328A400D73089 /* QMServices.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 55013B2A1A1F84E90030C134;
+			remoteInfo = QMServices;
+		};
+		55AA62DA1A2328A500D73089 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 55AA62521A2328A400D73089 /* QMServices.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 55013B2B1A1F84E90030C134;
+			remoteInfo = QMServicesTests;
+		};
+		55AA62DC1A232BC800D73089 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 55AA62521A2328A400D73089 /* QMServices.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 55013A301A1F63910030C134;
+			remoteInfo = QMServices;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		01E0EAD58B177DC530737810 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		240CE3AF19A2223A00392E06 /* QMProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMProtocols.h; sourceTree = "<group>"; };
@@ -185,10 +202,10 @@
 		2484683E19D97E6E00E5A106 /* QBUUser+CustomParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QBUUser+CustomParameters.m"; sourceTree = "<group>"; };
 		2494559619A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+GTMNSStringHTMLAdditions.h"; sourceTree = "<group>"; };
 		2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+GTMNSStringHTMLAdditions.m"; sourceTree = "<group>"; };
-		2494559919A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBChatAbstractMessage+TextEncoding.h"; sourceTree = "<group>"; };
-		2494559A19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QBChatAbstractMessage+TextEncoding.m"; sourceTree = "<group>"; };
 		24970BC619DD951600959268 /* QMApi+Notifications.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Notifications.m"; sourceTree = "<group>"; };
 		24ECC26419A73587003F5038 /* Macro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macro.h; sourceTree = "<group>"; };
+		550678B81A235AE700660A12 /* QMServicesManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMServicesManager.h; sourceTree = "<group>"; };
+		550678B91A235AE700660A12 /* QMServicesManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMServicesManager.m; sourceTree = "<group>"; };
 		551F8723196E854500DBCA02 /* QMApi+Facebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Facebook.m"; sourceTree = "<group>"; };
 		551F8726196EA68900DBCA02 /* QMInviteFriendsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMInviteFriendsDataSource.h; sourceTree = "<group>"; };
 		551F8727196EA68900DBCA02 /* QMInviteFriendsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMInviteFriendsDataSource.m; sourceTree = "<group>"; };
@@ -207,11 +224,8 @@
 		55495A201993BCC100B7764C /* QMAlertsFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAlertsFactory.m; sourceTree = "<group>"; };
 		556192C919891BD70048D112 /* QMGroupDetailsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMGroupDetailsDataSource.h; sourceTree = "<group>"; };
 		556192CA19891BD70048D112 /* QMGroupDetailsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMGroupDetailsDataSource.m; sourceTree = "<group>"; };
-		556248CD1A1C96CC003D69F1 /* QMServices.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = QMServices.xcodeproj; path = QMServices/QMServices.xcodeproj; sourceTree = "<group>"; };
 		556249371A1CD086003D69F1 /* QMProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMProfile.h; sourceTree = "<group>"; };
 		556249381A1CD086003D69F1 /* QMProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMProfile.m; sourceTree = "<group>"; };
-		5562493C1A1CD2D8003D69F1 /* QMServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMServices.h; sourceTree = "<group>"; };
-		5562493D1A1CD2D8003D69F1 /* QMServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMServices.m; sourceTree = "<group>"; };
 		556249491A1CD470003D69F1 /* libQMAuthService.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQMAuthService.a; path = "Q-municate/QMServices/QMAuthService/build/Debug-iphoneos/libQMAuthService.a"; sourceTree = "<group>"; };
 		5562494A1A1CD470003D69F1 /* libQMBaseService.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQMBaseService.a; path = "Q-municate/QMServices/QMBaseService/build/Debug-iphoneos/libQMBaseService.a"; sourceTree = "<group>"; };
 		5562494B1A1CD470003D69F1 /* libQMChatCache.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQMChatCache.a; path = "Q-municate/QMServices/QMChatCache/build/Debug-iphoneos/libQMChatCache.a"; sourceTree = "<group>"; };
@@ -263,6 +277,7 @@
 		55A8B0A719659BA000B5D33B /* QMApi+Messages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Messages.m"; sourceTree = "<group>"; };
 		55A8B0AA1965A66300B5D33B /* QMApi+ChatDialogs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+ChatDialogs.m"; sourceTree = "<group>"; };
 		55A8B0AD1965AD1800B5D33B /* QMApi+Users.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Users.m"; sourceTree = "<group>"; };
+		55AA62521A2328A400D73089 /* QMServices.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = QMServices.xcodeproj; sourceTree = "<group>"; };
 		55BBA75A19730B960040DB5C /* REMessageUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = REMessageUI.h; sourceTree = "<group>"; };
 		55BBA75B19730B960040DB5C /* REMessageUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = REMessageUI.m; sourceTree = "<group>"; };
 		55BBA75E197327AB0040DB5C /* QMDialogsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDialogsViewController.h; sourceTree = "<group>"; };
@@ -456,13 +471,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				556249501A1CD470003D69F1 /* libQMAuthService.a in Frameworks */,
-				556249511A1CD470003D69F1 /* libQMBaseService.a in Frameworks */,
-				556249521A1CD470003D69F1 /* libQMChatCache.a in Frameworks */,
-				556249531A1CD470003D69F1 /* libQMChatService.a in Frameworks */,
-				556249541A1CD470003D69F1 /* libQMContactListCache.a in Frameworks */,
-				556249551A1CD470003D69F1 /* libQMContactListService.a in Frameworks */,
-				556249561A1CD470003D69F1 /* libQMDBStorage.a in Frameworks */,
+				55AA62DE1A232BCF00D73089 /* libQMServices.a in Frameworks */,
 				558260A31A1BAAAE00F92F4E /* Quickblox.framework in Frameworks */,
 				69A664E019BDB57700D3E0C7 /* libxml2.2.dylib in Frameworks */,
 				86FD874D1982512000B6FA43 /* GLKit.framework in Frameworks */,
@@ -537,6 +546,15 @@
 				E0ACA76B4B11E4DB839DD9F3 /* Pods.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		550678B51A235AC600660A12 /* QMServicesManager */ = {
+			isa = PBXGroup;
+			children = (
+				550678B81A235AE700660A12 /* QMServicesManager.h */,
+				550678B91A235AE700660A12 /* QMServicesManager.m */,
+			);
+			path = QMServicesManager;
 			sourceTree = "<group>";
 		};
 		551F8725196EA68900DBCA02 /* QMInviteFriendsDataSource */ = {
@@ -689,17 +707,10 @@
 			path = QMGroupDetailsDataSource;
 			sourceTree = "<group>";
 		};
-		556248CE1A1C96CC003D69F1 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		556249351A1CD086003D69F1 /* NewFunctionality */ = {
 			isa = PBXGroup;
 			children = (
-				5562493B1A1CD2BC003D69F1 /* QMServices */,
+				550678B51A235AC600660A12 /* QMServicesManager */,
 				556249361A1CD086003D69F1 /* QMProfile */,
 			);
 			path = NewFunctionality;
@@ -712,15 +723,6 @@
 				556249381A1CD086003D69F1 /* QMProfile.m */,
 			);
 			path = QMProfile;
-			sourceTree = "<group>";
-		};
-		5562493B1A1CD2BC003D69F1 /* QMServices */ = {
-			isa = PBXGroup;
-			children = (
-				5562493C1A1CD2D8003D69F1 /* QMServices.h */,
-				5562493D1A1CD2D8003D69F1 /* QMServices.m */,
-			);
-			path = QMServices;
 			sourceTree = "<group>";
 		};
 		556249651A1CDE36003D69F1 /* QMAuthService */ = {
@@ -1028,6 +1030,23 @@
 				5524C2D719991308007450DB /* QMChatReceiver+UsersHistoryUpdated.m */,
 			);
 			path = QMUsersService;
+			sourceTree = "<group>";
+		};
+		55AA61701A2328A400D73089 /* QMServices */ = {
+			isa = PBXGroup;
+			children = (
+				55AA62521A2328A400D73089 /* QMServices.xcodeproj */,
+			);
+			path = QMServices;
+			sourceTree = "<group>";
+		};
+		55AA62531A2328A400D73089 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				55AA62D91A2328A500D73089 /* libQMServices.a */,
+				55AA62DB1A2328A500D73089 /* QMServicesTests.xctest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		55BBA75919730B960040DB5C /* REMailCompose */ = {
@@ -1575,8 +1594,6 @@
 				6943849018E42691001E08A9 /* UIImage+Cropper.m */,
 				2494559619A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.h */,
 				2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */,
-				2494559919A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.h */,
-				2494559A19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m */,
 				2484683D19D97E6E00E5A106 /* QBUUser+CustomParameters.h */,
 				2484683E19D97E6E00E5A106 /* QBUUser+CustomParameters.m */,
 			);
@@ -1705,8 +1722,8 @@
 		69D57E5B18ACC11C00A9900A /* Q-municate */ = {
 			isa = PBXGroup;
 			children = (
+				55AA61701A2328A400D73089 /* QMServices */,
 				556249351A1CD086003D69F1 /* NewFunctionality */,
-				556248CD1A1C96CC003D69F1 /* QMServices.xcodeproj */,
 				55943A481A1A137200A0A09E /* Main.storyboard */,
 				69CF18AA18AE3788003262EF /* QMDefinitions.h */,
 				24ECC26419A73587003F5038 /* Macro.h */,
@@ -1738,6 +1755,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 69D57E7E18ACC11C00A9900A /* Build configuration list for PBXNativeTarget "Q-municate" */;
 			buildPhases = (
+				55AA62E71A232DC300D73089 /* ShellScript */,
 				4CF911AA6A0A49948F56AD2E /* Check Pods Manifest.lock */,
 				69D57E4E18ACC11C00A9900A /* Sources */,
 				69D57E4F18ACC11C00A9900A /* Frameworks */,
@@ -1748,6 +1766,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				55AA62DD1A232BC800D73089 /* PBXTargetDependency */,
 			);
 			name = "Q-municate";
 			productName = "Q-municate";
@@ -1782,8 +1801,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 556248CE1A1C96CC003D69F1 /* Products */;
-					ProjectRef = 556248CD1A1C96CC003D69F1 /* QMServices.xcodeproj */;
+					ProductGroup = 55AA62531A2328A400D73089 /* Products */;
+					ProjectRef = 55AA62521A2328A400D73089 /* QMServices.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1792,6 +1811,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		55AA62D91A2328A500D73089 /* libQMServices.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libQMServices.a;
+			remoteRef = 55AA62D81A2328A500D73089 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		55AA62DB1A2328A500D73089 /* QMServicesTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = QMServicesTests.xctest;
+			remoteRef = 55AA62DA1A2328A500D73089 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		69D57E5018ACC11C00A9900A /* Resources */ = {
@@ -1847,6 +1883,19 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		55AA62E71A232DC300D73089 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"+++++++++++ $PROJECT_DIR\"";
+		};
 		F7C9D5C402A745C9BB21C910 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1880,13 +1929,11 @@
 				55D8ADF419AC776A00DAF79F /* REAlertView+QMSuccess.m in Sources */,
 				6943847218E42678001E08A9 /* QMCustomSegue.m in Sources */,
 				55CEAB94195DBCFA001A8ED6 /* QMChatVC.m in Sources */,
-				2494559B19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m in Sources */,
 				55F4A3C9196FF0830068EBC3 /* QMInviteFriendCell.m in Sources */,
 				55CEABA2195DBCFA001A8ED6 /* QMProfileViewController.m in Sources */,
 				55CEAB82195DBCFA001A8ED6 /* QMVideoCallController.m in Sources */,
 				55D8ACFE19AC70B000DAF79F /* QMMessageBarStyleSheetFactory.m in Sources */,
 				55F4A3C7196FF0830068EBC3 /* QMDialogCell.m in Sources */,
-				5562493E1A1CD2D8003D69F1 /* QMServices.m in Sources */,
 				55D8AD0F19AC757900DAF79F /* ABPerson.m in Sources */,
 				55D8ADEB19AC773000DAF79F /* QMCornerButton.m in Sources */,
 				55CEAB9A195DBCFA001A8ED6 /* QMChatViewController.m in Sources */,
@@ -1902,6 +1949,7 @@
 				55A8B06E1965986A00B5D33B /* QMSoundManager.m in Sources */,
 				55CEAB8F195DBCFA001A8ED6 /* QMChatDataSource.m in Sources */,
 				55CEAB9E195DBCFA001A8ED6 /* QMFriendsDetailsController.m in Sources */,
+				550678BA1A235AE700660A12 /* QMServicesManager.m in Sources */,
 				5526D909196D3267003AA9B6 /* QMChatReceiver.m in Sources */,
 				55D8AD1E19AC75B700DAF79F /* QMChatReceiver+DialogsHistoryUpdated.m in Sources */,
 				55CEABA3195DBCFA001A8ED6 /* QMSettingsViewController.m in Sources */,
@@ -1985,6 +2033,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		55AA62DD1A232BC800D73089 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = QMServices;
+			targetProxy = 55AA62DC1A232BC800D73089 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		559327A3199216FB001C4BF8 /* InfoPlist.strings */ = {
@@ -2085,27 +2141,17 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"~/Documents/Quickblox",
-					/Users/andrey/Documents/Quickblox,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Q-municate/Q-municate-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(PROJECT_DIR)/Q-municate/QMServices/**",
 					/usr/include/libxml2,
-					"$(SRCROOT)/QMServices/**",
 				);
 				INFOPLIST_FILE = "Q-municate/Q-municate-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Q-municate/QMServices/QMAuthService/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/Q-municate/QMServices/QMBaseService/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/Q-municate/QMServices/QMChatCache/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/Q-municate/QMServices/QMChatService/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/Q-municate/QMServices/QMContactListCache/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/Q-municate/QMServices/QMContactListService/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/Q-municate/QMServices/QMDBStorage/build/Debug-iphoneos",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -2146,7 +2192,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"~/Documents/Quickblox",
-					/Users/andrey/Documents/Quickblox,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Q-municate/Q-municate-Prefix.pch";
@@ -2157,21 +2202,12 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(PROJECT_DIR)/Q-municate/QMServices/**",
 					/usr/include/libxml2,
-					"$(SRCROOT)/QMServices/**",
 				);
 				INFOPLIST_FILE = "Q-municate/Q-municate-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Q-municate/QMServices/QMAuthService/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/Q-municate/QMServices/QMBaseService/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/Q-municate/QMServices/QMChatCache/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/Q-municate/QMServices/QMChatService/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/Q-municate/QMServices/QMContactListCache/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/Q-municate/QMServices/QMContactListService/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/Q-municate/QMServices/QMDBStorage/build/Debug-iphoneos",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",

@@ -16,6 +16,8 @@
 @property (assign, nonatomic) BOOL pushNotificationsEnabled;
 @property (assign, nonatomic) BOOL userOfflineState;
 
++ (instancetype)profile;
+
 - (BOOL)synchronize;
 - (BOOL)synchronizeWithUserData:(QBUUser *)user;
 

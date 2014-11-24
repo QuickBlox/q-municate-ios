@@ -11,7 +11,6 @@
 #import "QMChatDialogsService.h"
 #import "QMChatUtils.h"
 
-
 @implementation QMApi (Notifications)
 
 

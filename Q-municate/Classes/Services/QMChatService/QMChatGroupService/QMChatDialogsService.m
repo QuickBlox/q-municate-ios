@@ -9,7 +9,7 @@
 #import "QMChatDialogsService.h"
 #import "QBEchoObject.h"
 #import "QMChatReceiver.h"
-//#import "NSString+occupantsIDsFromMessage.h"
+#import <QBChatAbstractMessage+QMCustomParameters.h>
 
 @interface QMChatDialogsService()
 
