@@ -48,6 +48,17 @@ typedef NS_ENUM(NSUInteger, QMAccountType) {
  */
 @property (assign, nonatomic) BOOL rememberMe;
 
+/**
+ * Last activity date. Needed for updating chat dialogs when go back from tray.
+ */
+@property (strong, nonatomic) NSDate *lastActivityDate;
+
+/**
+ * 
+ */
+@property (strong, nonatomic) NSString *dialogWithIDisActive;
+
+
 
 - (void)setLogin:(NSString *)login andPassword:(NSString *)password;
 /**

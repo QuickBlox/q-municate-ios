@@ -36,6 +36,11 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     }];
 }
 
+- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(QBDialogsPagedResultBlock)completion
+{
+    [self.chatDialogsService fetchDialogsWithLastActivityFromDate:date completion:completion];
+}
+
 #pragma mark - Create Chat Dialogs
 
 

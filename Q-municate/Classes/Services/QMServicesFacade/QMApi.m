@@ -35,6 +35,8 @@ const NSTimeInterval kQMPresenceTime = 30;
 @property (strong, nonatomic) QMContentService *contentService;
 @property (strong, nonatomic) NSTimer *presenceTimer;
 
+@property (nonatomic) dispatch_group_t group;
+
 @end
 
 @implementation QMApi
@@ -178,7 +180,29 @@ const NSTimeInterval kQMPresenceTime = 30;
 }
 
 - (void)applicationDidBecomeActive:(void(^)(BOOL success))completion {
-    [self loginChat:completion];
+    _group = dispatch_group_create();
+    dispatch_group_enter(_group);
+    
+    [self fetchDialogsWithLastActivityFromDate:self.settingsManager.lastActivityDate completion:^(QBDialogsPagedResult *result) {
+        dispatch_group_leave(_group);
+    }];
+    
+    dispatch_group_enter(_group);
+    [self loginChat:^(BOOL success) {
+        dispatch_group_leave(_group);
+    }];
+    
+    dispatch_group_notify(_group, dispatch_get_main_queue(), ^{
+        
+        if ([QBChat instance].isLoggedIn) {
+            [self.chatDialogsService joinRooms];
+            [[QMChatReceiver instance] postDialogsHistoryUpdated];
+            
+            [self fetchMessagesForActiveChatIfNeededWithCompletion:^(BOOL fetchWasNeeded) {
+                if (completion) completion(YES);
+            }];
+        }
+    });
 }
 
 - (void)applicationWillResignActive {

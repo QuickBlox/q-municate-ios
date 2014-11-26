@@ -16,6 +16,7 @@
 #import "QMChatButtonsFactory.h"
 #import "AGEmojiKeyBoardView.h"
 #import "QMSoundManager.h"
+#import "QMSettingsManager.h"
 #import "NSString+HasText.h"
 #import "QMApi.h"
 #import "Parus.h"
@@ -61,11 +62,14 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
                                                                     delegate:self];
     _showCameraButton = YES;
     
+    // need for update messages after entering from tray:
+    [[QMApi instance].settingsManager setDialogWithIDisActive:self.dialog.ID];
 }
 
 - (void)dealloc {
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     [self registerForNotifications:NO];
+    [[QMApi instance].settingsManager setDialogWithIDisActive:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

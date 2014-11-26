@@ -94,6 +94,13 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 /**
  */
 - (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete;
+
+
+/** 
+ *
+ */
+- (void)fetchMessagesForActiveChatIfNeededWithCompletion:(void(^)(BOOL fetchWasNeeded))block;
+
 /**
  */
 - (NSArray *)messagesHistoryWithDialog:(QBChatDialog *)chatDialog;
@@ -138,6 +145,11 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  Get all dialogs for current user
  */
 - (void)fetchAllDialogs:(void(^)(void))completion;
+
+/**
+ * Returns updated dialogs and updates exists
+ */
+- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(QBDialogsPagedResultBlock)completion;
 
 /**
  *

@@ -83,6 +83,10 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
             
         }];
         
+        [[QMChatReceiver instance]  messageHistoryWasUpdatedWithTarget:self block:^(BOOL success) {
+            [weakSelf reloadCachedMessages:YES];
+        }];
+        
         [[QMChatReceiver instance] addedToGroupUsersWasLoadedWithTarget:self block:^(QBChatMessage *message, BOOL usersWasLoaded) {
             // only for group chat messages:
             [weakSelf insertNewMessage:message];
@@ -98,12 +102,18 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
             
+            if (message.delayed) {
+                return;
+            }
             if (!message.cParamDialogID) {
                 return;
             }
             QBChatDialog *dialogForReceiverMessage = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
             
             if ([weakSelf.chatDialog isEqual:dialogForReceiverMessage] && message.cParamNotificationType != QMMessageNotificationTypeDeliveryMessage) {
+                
+                // mark message as read:
+                [QBChat markMessagesAsRead:@[message] dialogID:message.cParamDialogID delegate:nil context:nil];
                 
                 if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
                     if (![dialogForReceiverMessage.chatRoom isJoined]) {

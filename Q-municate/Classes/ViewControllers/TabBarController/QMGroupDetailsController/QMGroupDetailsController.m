@@ -70,7 +70,9 @@
     }];
 
     [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-        
+        if (message.delayed) {
+            return;
+        }
         if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog &&
             [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID]) {
             

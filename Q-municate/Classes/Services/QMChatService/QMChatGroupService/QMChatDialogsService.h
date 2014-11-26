@@ -12,6 +12,8 @@
 @interface QMChatDialogsService : QMBaseService
 
 - (void)fetchAllDialogs:(QBDialogsPagedResultBlock)completion;
+- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(QBDialogsPagedResultBlock)completionBlock;
+
 - (void)createChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
 
 - (void)createPrivateChatDialogIfNeededWithOpponent:(QBUUser *)opponent completion:(void(^)(QBChatDialog *chatDialog))completion;
