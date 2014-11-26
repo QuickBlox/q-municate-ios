@@ -10,6 +10,7 @@
 
 @interface QMTasks : NSObject
 
-+ (void)updateData:(void(^)(void))completion;
++ (void)taskLogin:(void(^)(BOOL success))completion;
++ (void)taskFetchDialogsAndUsers:(void(^)(BOOL success))completion;
 
 @end

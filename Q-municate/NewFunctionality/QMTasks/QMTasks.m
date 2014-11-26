@@ -12,61 +12,6 @@
 
 @implementation QMTasks
 
-+ (void)updateData:(void(^)(BOOL updateUserData))completion {
-    
-    void(^fetchData)(void) =^(void) {
-        
-        
-        [[QMApi instance] subscribeToPushNotificationsForceSettings:NO
-                                                           complete:^(BOOL subscribeToPushNotificationsSuccess)
-         {
-             if (!subscribeToPushNotificationsSuccess) {
-                 
-             }
-         }];
-    };
-    
-    [self taskLogin:^(BOOL loginSuccess) {
-        
-        if (loginSuccess) {
-            
-            [self taskFetchDialogsAndUsers:^(BOOL fetchDialogSuccess) {
-                
-                if (fetchDialogSuccess) {
-                    
-                    NSDictionary *push = [[QMApi instance] pushNotification];
-                    
-                    if (push != nil) {
-                        
-                        [[QMApi instance] openChatPageForPushNotification:push];
-                        [[QMApi instance] setPushNotification:nil];
-                    }
-                    
-                    if (!QM.profile.userData.imported) {
-                        
-                        [[QMApi instance] importFriendsFromFacebook];
-                        [[QMApi instance] importFriendsFromAddressBook];
-                        
-                        
-                        QM.profile.userData.imported = YES;
-                        
-                        [QM.profile updateUserWithCompletion:nil];
-                        
-                    }
-                    else {
-                        completion(YES);
-                    }
-                }
-            }];
-        }
-        else {
-            
-        }
-        
-    }];
-    
-}
-
 + (void)taskLogin:(void(^)(BOOL success))completion  {
     
     if (!QM.authService.isAuthorized) {
@@ -76,10 +21,9 @@
          {
              if (response.success) {
                  
-                 [QM.chatService logIn:^(NSError *error)
-                  {
-                      completion(!error);
-                  }];
+                 [QM.chatService logIn:^(NSError *error) {
+                     completion(!error);
+                 }];
              }
              else {
                  completion(NO);
@@ -87,7 +31,10 @@
          }];
     }
     else {
-        completion(YES);
+        
+        [QM.chatService logIn:^(NSError *error) {
+            completion(!error);
+        }];
     }
 }
 
@@ -100,7 +47,7 @@
              [QM.contactListService retrieveUsersWithIDs:dialogsUsersIDs.allObjects
                                               completion:^(QBResponse *retriveUsersResponse, QBGeneralResponsePage *page, NSArray *users)
               {
-                  if (retriveUsersResponse.success) {
+                  if (!retriveUsersResponse || retriveUsersResponse.success) {
                       
                       completion(YES);
                   }
