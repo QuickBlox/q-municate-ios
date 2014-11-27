@@ -9,7 +9,6 @@
 #import "QMFriendListCell.h"
 #import "QMImageView.h"
 #import "QMUsersUtils.h"
-#import "QMApi.h"
 
 @interface QMFriendListCell()
 
@@ -26,17 +25,16 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    /*isFriend - YES*/
     _isFriend = YES;
     self.addToFriendsButton.hidden = self.isFriend;
-    /*isOnlien - NO*/
     self.onlineCircle.hidden = YES;
     self.descriptionLabel.text = NSLocalizedString(@"QM_STR_OFFLINE", nil);
 }
 
 - (void)setUserData:(id)userData {
-    [super setUserData:userData];
 
+    _userData = userData;
+    
     QBUUser *user = userData;
     self.titleLabel.text = (user.fullName.length == 0) ? @"" : user.fullName;
     NSURL *avatarUrl = [QMUsersUtils userAvatarURL:user];
@@ -44,9 +42,6 @@
 }
 
 - (void)setOnline:(BOOL)online {
-    
-    QBUUser *user = self.userData;
-    online = (user.ID == [QMApi instance].currentUser.ID) ? YES : online;
     
     if (_online != online) {
         _online = online;
@@ -56,7 +51,8 @@
 
 - (void)setContactlistItem:(QBContactListItem *)contactlistItem {
 
-    [super setContactlistItem:contactlistItem];
+    _contactlistItem = contactlistItem;
+    
     self.online = contactlistItem.online;
     self.isFriend = contactlistItem ?  YES : NO;
     
@@ -73,9 +69,6 @@
 }
 
 - (void)setIsFriend:(BOOL)isFriend {
-    
-    QBUUser *user = self.userData;
-    isFriend = (user.ID == [QMApi instance].currentUser.ID) ? YES : isFriend;
     
     _isFriend = isFriend;
     
@@ -107,7 +100,9 @@
 - (IBAction)pressAddBtn:(UIButton *)sender {
     
     if ([self.delegate respondsToSelector:@selector(usersListCell:pressAddBtn:)]) {
-        [self.delegate usersListCell:self pressAddBtn:sender];
+        
+        [self.delegate usersListCell:self
+                         pressAddBtn:sender];
     }
 }
 

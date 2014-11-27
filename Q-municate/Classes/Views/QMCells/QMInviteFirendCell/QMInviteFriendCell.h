@@ -13,6 +13,9 @@
 
 @interface QMInviteFriendCell : QMTableViewCell
 
+@property (strong, nonatomic) id userData;
+@property (strong, nonatomic) QBContactListItem *contactlistItem;
+
 @property (assign, nonatomic, getter = isChecked) BOOL check;
 @property (weak, nonatomic) id <QMCheckBoxProtocol> delegate;
 

@@ -31,7 +31,7 @@ QMServicesManager *qmServices(void) {
 
 @interface QMServicesManager()
 
-<QMServiceDataDelegate, QMChatServiceDelegate, QMContactsServiceDelegate>
+<QMServiceDataDelegate, QMChatServiceDelegate, QMContactListServiceDelegate, QMContactListServiceCacheDelegate>
 
 @property (strong, nonatomic) QMAuthService *authService;
 @property (strong, nonatomic) QMChatService *chatService;
@@ -49,14 +49,19 @@ QMServicesManager *qmServices(void) {
     if (self) {
         
         self.profile = [QMProfile profile];
+        
+        [self cacheSetup];
+        
         self.authService = [[QMAuthService alloc] initWithServiceDataDelegate:self];
         self.chatService = [[QMChatService alloc] initWithServiceDataDelegate:self];
-        self.contactListService = [[QMContactListService alloc] initWithServiceDataDelegate:self];
+        
+        self.contactListService = [[QMContactListService alloc] initWithServiceDataDelegate:self
+                                                                              cacheDelegate:self];
         
         [self.chatService addDelegate:self];
         [self.contactListService addDelegate:self];
         
-        [self cacheSetup];
+        
     }
     
     return self;
@@ -120,17 +125,48 @@ QMServicesManager *qmServices(void) {
                                       completion:nil];
 }
 
-#pragma mark - QMContactsServiceDelegate
+#pragma mark - QMContactListServiceCacheDelegate
 
-- (void)contactsServiceContactListDidUpdate {
+- (void)cachedUsers:(QMCacheCollection)block {
+    
+    [[QMContactListCache instance] cachedQBUsers:block];
+}
+
+- (void)cachedContactListItems:(QMCacheCollection)block {
+    
+    [[QMContactListCache instance] cachedQBContactListItems:block];
+}
+
+
+#pragma mark - QMContactListServiceDelegate
+
+- (void)contactListServiceDidLoadCache {
     
 }
 
-- (void)contactsServiceContactRequestUsersListChanged {
+- (void)contactListService:(QMContactListService *)contactListService
+      contactListDidChange:(QBContactList *)contactList {
+
     
 }
 
-- (void)contactsServiceUsersHistoryUpdated {
+- (void)contactListService:(QMContactListService *)contactListService
+        addRequestFromUser:(QBUUser *)user {
+    
+}
+
+- (void)contactListService:(QMContactListService *)contactListService
+                didAddUser:(QBUUser *)user {
+    
+}
+
+- (void)contactListService:(QMContactListService *)contactListService
+               didAddUsers:(NSArray *)users {
+    
+}
+
+- (void)contactListService:(QMContactListService *)contactListService
+             didUpdateUser:(QBUUser *)user {
     
 }
 

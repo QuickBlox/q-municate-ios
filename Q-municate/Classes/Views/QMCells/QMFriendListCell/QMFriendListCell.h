@@ -11,6 +11,9 @@
 
 @interface QMFriendListCell : QMTableViewCell
 
+@property (strong, nonatomic) id userData;
+@property (strong, nonatomic) QBContactListItem *contactlistItem;
+
 @property (strong, nonatomic) NSString *searchText;
 
 @property (weak, nonatomic) id <QMUsersListDelegate>delegate;

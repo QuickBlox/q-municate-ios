@@ -26,8 +26,6 @@
 
 - (void)setUserData:(id)userData {
     
-    [super setUserData:userData];
-    
     if ([userData isKindOfClass:ABPerson.class]) {
         [self configureWithAdressaddressBookUser:userData];
     } else if ([userData conformsToProtocol:@protocol(FBGraphUser)]) {
