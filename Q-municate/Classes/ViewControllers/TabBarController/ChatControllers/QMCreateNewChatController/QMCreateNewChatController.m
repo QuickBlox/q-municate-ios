@@ -9,7 +9,7 @@
 #import "QMCreateNewChatController.h"
 #import "QMChatViewController.h"
 #import "SVProgressHUD.h"
-#import "QMApi.h"
+#import "QMServicesManager.h"
 
 NSString *const QMChatViewControllerID = @"QMChatViewController";
 
@@ -21,8 +21,7 @@ NSString *const QMChatViewControllerID = @"QMChatViewController";
 
 - (void)viewDidLoad {
     
-    NSArray *unsortedFriends = [[QMApi instance] friends];
-    self.friends = [QMUsersUtils sortUsersByFullname:unsortedFriends];
+    self.friends = QM.contactListService.contactListUsers;
     [super viewDidLoad];
 }
 
@@ -40,18 +39,28 @@ NSString *const QMChatViewControllerID = @"QMChatViewController";
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
 
     __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] createGroupChatDialogWithName:chatName occupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
-        
-        if (result.success) {
+
+    [QM.chatService createGroupChatDialogWithName:chatName
+                                        occupants:self.selectedFriends
+                                       completion:^(QBResponse *response, QBChatDialog *createdDialog)
+    {
+        if (response.success) {
             
-            QMChatViewController *chatVC = [weakSelf.storyboard instantiateViewControllerWithIdentifier:QMChatViewControllerID];
-            chatVC.dialog = result.dialog;
+            QMChatViewController *chatViewController =
+            [weakSelf.storyboard instantiateViewControllerWithIdentifier:QMChatViewControllerID];
             
-            NSMutableArray *controllers = weakSelf.navigationController.viewControllers.mutableCopy;
+            chatViewController.dialog = createdDialog;
+            
+            NSMutableArray *controllers =
+            weakSelf.navigationController.viewControllers.mutableCopy;
+            
             [controllers removeLastObject];
-            [controllers addObject:chatVC];
+            [controllers addObject:chatViewController];
             
-            [weakSelf.navigationController setViewControllers:controllers animated:YES];
+            [weakSelf.navigationController setViewControllers:controllers
+                                                     animated:YES];
+        } else {
+            
         }
         
         [SVProgressHUD dismiss];
@@ -66,7 +75,7 @@ NSString *const QMChatViewControllerID = @"QMChatViewController";
         [names addObject:user.fullName];
     }
     
-    [names addObject:[QMApi instance].currentUser.fullName];
+    [names addObject:QM.profile.userData.fullName];
     return [names componentsJoinedByString:@", "];
 }
 

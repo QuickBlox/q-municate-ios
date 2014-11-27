@@ -22,10 +22,12 @@
              if (response.success) {
                  
                  [QM.chatService logIn:^(NSError *error) {
+                     
                      completion(!error);
                  }];
              }
              else {
+                 
                  completion(NO);
              }
          }];
@@ -33,6 +35,7 @@
     else {
         
         [QM.chatService logIn:^(NSError *error) {
+            
             completion(!error);
         }];
     }

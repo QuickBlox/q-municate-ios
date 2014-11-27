@@ -10,8 +10,9 @@
 #import "QMChatViewController.h"
 #import "QMCreateNewChatController.h"
 #import "QMDialogsDataSource.h"
-#import "QMChatReceiver.h"
-#import "QMApi.h"
+//#import "QMChatReceiver.h"
+
+#import "QMServicesManager.h"
 
 static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
@@ -36,6 +37,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     [self.dataSource fetchUnreadDialogsCount];
     [self.tableView reloadData];
@@ -76,8 +78,13 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 #pragma mark - Actions
 
 - (IBAction)createNewDialog:(id)sender {
-    if ([[QMApi instance].friends count] == 0) {
-        [[[UIAlertView alloc] initWithTitle:nil message:@"You don't have any friends for creating new chat." delegate:nil cancelButtonTitle:@"OK"otherButtonTitles:nil] show];
+
+    if (QM.contactListService.contactListUsers.count == 0) {
+        
+        [[[UIAlertView alloc] initWithTitle:nil
+                                    message:@"You don't have any friends for creating new chat."
+                                   delegate:nil
+                          cancelButtonTitle:@"OK"otherButtonTitles:nil] show];
         return;
     }
     [self performSegueWithIdentifier:kCreateNewChatSegueIdentifier sender:nil];

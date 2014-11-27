@@ -67,7 +67,10 @@
 
 #pragma mark - QMContactListServiceDelegate
 
-- (void)contactListService:(QMContactListService *)contactListService didAddUsers:(NSArray *)users {
+- (void)contactListServiceDidLoadCache {
+
+    self.friendList = [self friends];
+    [self.tableView reloadData];
     
 }
 
@@ -90,11 +93,8 @@
 }
 
 - (NSArray *)friends {
-
-    NSArray *friendsIDS = [QM.contactListService.contactListMemoryStorage userIDsFromContactList];
-    NSArray *friends = [QM.contactListService.usersMemoryStorage usersWithIDs:friendsIDS];
     
-    return friends;
+    return [QM.contactListService contactListUsers];
 }
 
 - (void)searchRequestWithSearchText:(NSString *)searchText responcePage:(QBGeneralResponsePage *)responcePage {
@@ -233,7 +233,6 @@
     
     return cell;
 }
-
 
 #pragma mark - QMUsersListCellDelegate
 

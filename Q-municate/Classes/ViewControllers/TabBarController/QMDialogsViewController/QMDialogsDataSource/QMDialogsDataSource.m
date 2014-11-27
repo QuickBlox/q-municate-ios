@@ -9,15 +9,14 @@
 #import "QMDialogsDataSource.h"
 #import "QMDialogCell.h"
 #import "SVProgressHUD.h"
-#import "QMApi.h"
-#import "QMChatReceiver.h"
+#import "QMServicesManager.h"
 
 @interface QMDialogsDataSource()
 
-<UITableViewDataSource>
+<UITableViewDataSource, QMChatServiceDelegate>
 
 @property (weak, nonatomic) UITableView *tableView;
-@property (strong, nonatomic, readonly) NSMutableArray *dialogs;
+@property (strong, nonatomic) NSArray *dialogs;
 @property (assign, nonatomic) NSUInteger unreadDialogsCount;
 
 @end
@@ -27,7 +26,7 @@
 - (void)dealloc {
     
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
+//    [[QMChatReceiver instance] unsubscribeForTarget:self];
 }
 
 - (instancetype)initWithTableView:(UITableView *)tableView {
@@ -37,42 +36,37 @@
         
         self.tableView = tableView;
         self.tableView.dataSource = self;
+        [QM.chatService addDelegate:self];
         
-        __weak __typeof(self)weakSelf = self;
-        
-        [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-            
-            if (!message.cParamDialogID) {
-                return;
-            }
-            [weakSelf updateGUI];
-            [weakSelf retrieveUserIfNeededWithMessage:message];
-        }];
-        
-        [[QMChatReceiver instance] dialogsHisotryUpdatedWithTarget:self block:^{
-            [weakSelf updateGUI];
-        }];
-        
-        [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:^{
-            [weakSelf.tableView reloadData];
-        }];
-        
-        
+//        __weak __typeof(self)weakSelf = self;
+//
+//        [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+//            
+//            if (!message.cParamDialogID) {
+//                return;
+//            }
+//            [weakSelf updateGUI];
+//            [weakSelf retrieveUserIfNeededWithMessage:message];
+//        }];
+//        
+//        [[QMChatReceiver instance] dialogsHisotryUpdatedWithTarget:self block:^{
+//            [weakSelf updateGUI];
+//        }];
+//        
+//        [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:^{
+//            [weakSelf.tableView reloadData];
+//        }];
     }
     
     return self;
 }
 
-- (void)retrieveUserIfNeededWithMessage:(QBChatMessage *)message
-{
-    __weak typeof(self)weakSelf = self;
-    if (message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
-        [[QMApi instance] retriveIfNeededUserWithID:message.senderID completion:^(BOOL retrieveWasNeeded) {
-            if (retrieveWasNeeded) {
-                [weakSelf updateGUI];
-            }
-        }];
-    }
+#pragma mark - QMChatServiceDelegate
+
+- (void)chatService:(QMChatService *)chatService didAddChatDialogs:(NSArray *)chatDialogs {
+    
+    self.dialogs = [QM.chatService.dialogsMemoryStorage dialogsSortByLastMessageDateWithAscending:NO];
+    [self.tableView reloadData];
 }
 
 - (void)updateGUI {
@@ -92,10 +86,7 @@
 
 - (void)fetchUnreadDialogsCount {
     
-    NSArray * dialogs = [[QMApi instance] dialogHistory];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"unreadMessagesCount > 0"];
-    NSArray *result = [dialogs filteredArrayUsingPredicate:predicate];
-    self.unreadDialogsCount = result.count;
+    self.unreadDialogsCount = QM.chatService.dialogsMemoryStorage.unreadDialogs.count;
 }
 
 - (void)insertRowAtIndex:(NSUInteger)index {
@@ -108,11 +99,6 @@
 }
 
 #pragma mark - UITableViewDataSource
-
-- (void)fetchDialog:(void(^)(void))comletion {
-    
-    [[QMApi instance] fetchAllDialogs:comletion];
-}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
@@ -129,15 +115,6 @@
     
     QBChatDialog *dialog = dialogs[indexPath.row];
     return dialog;
-}
-
-- (NSMutableArray *)dialogs {
-    
-    NSMutableArray * dialogs = [[QMApi instance] dialogHistory].mutableCopy;
-    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"lastMessageDate" ascending:NO];
-    [dialogs sortUsingDescriptors:@[sort]];
-    
-    return dialogs;
 }
 
 NSString *const kQMDialogCellID = @"QMDialogCell";
@@ -179,14 +156,15 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
         
         [SVProgressHUD show];
         QBChatDialog *dialog = [self dialogAtIndexPath:indexPath];
-        [[QMApi instance] deleteChatDialog:dialog completion:^(BOOL success) {
-            
-            [SVProgressHUD dismiss];
-            (weakSelf.dialogs.count == 0) ?
-                [tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade] :
-                [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-
-        }];
+        
+//        [[QMApi instance] deleteChatDialog:dialog completion:^(BOOL success) {
+//            
+//            [SVProgressHUD dismiss];
+//            (weakSelf.dialogs.count == 0) ?
+//                [tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade] :
+//                [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//
+//        }];
     }
 }
 @end

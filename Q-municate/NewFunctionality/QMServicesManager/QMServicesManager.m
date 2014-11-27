@@ -139,17 +139,13 @@ QMServicesManager *qmServices(void) {
     [[QMContactListCache instance] contactListItems:block];
 }
 
-
 #pragma mark - QMContactListServiceDelegate
-
-- (void)contactListServiceDidLoadCache {
-    
-}
 
 - (void)contactListService:(QMContactListService *)contactListService
       contactListDidChange:(QBContactList *)contactList {
 
-    
+    [[QMContactListCache instance] insertOrUpdateContactListItemsWithContactList:contactList
+                                                                      completion:nil];
 }
 
 - (void)contactListService:(QMContactListService *)contactListService
@@ -160,11 +156,15 @@ QMServicesManager *qmServices(void) {
 - (void)contactListService:(QMContactListService *)contactListService
                 didAddUser:(QBUUser *)user {
     
+    [[QMContactListCache instance] insertOrUpdateUser:user
+                                           completion:nil];
 }
 
 - (void)contactListService:(QMContactListService *)contactListService
                didAddUsers:(NSArray *)users {
     
+    [[QMContactListCache instance] insertOrUpdateUsers:users
+                                           completion:nil];
 }
 
 - (void)contactListService:(QMContactListService *)contactListService
