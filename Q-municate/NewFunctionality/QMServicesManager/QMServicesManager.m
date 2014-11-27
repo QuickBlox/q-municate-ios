@@ -129,12 +129,14 @@ QMServicesManager *qmServices(void) {
 
 - (void)cachedUsers:(QMCacheCollection)block {
     
-    [[QMContactListCache instance] cachedQBUsers:block];
+    [[QMContactListCache instance] usersSortedBy:nil
+                                       ascending:NO
+                                      completion:block];
 }
 
 - (void)cachedContactListItems:(QMCacheCollection)block {
     
-    [[QMContactListCache instance] cachedQBContactListItems:block];
+    [[QMContactListCache instance] contactListItems:block];
 }
 
 
