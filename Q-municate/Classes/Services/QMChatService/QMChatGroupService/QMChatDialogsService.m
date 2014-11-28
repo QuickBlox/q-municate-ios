@@ -14,7 +14,6 @@
 @interface QMChatDialogsService()
 
 @property (strong, nonatomic) NSMutableDictionary *dialogs;
-@property (strong, nonatomic) NSMutableDictionary *rooms;
 
 @end
 
@@ -24,15 +23,12 @@
     [super start];
     
     self.dialogs = [NSMutableDictionary dictionary];
-    self.rooms = [NSMutableDictionary dictionary];
 }
 
 - (void)stop {
     [super stop];
     
     [[QMChatReceiver instance] unsubscribeForTarget:self];
-    
-    [self.rooms removeAllObjects];
     [self.dialogs removeAllObjects];
 }
 
@@ -55,6 +51,21 @@
         
     };
     NSMutableDictionary *extendedRequest = @{@"_id[in]":IDs}.mutableCopy;
+    [QBChat dialogsWithExtendedRequest:extendedRequest delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
+}
+
+- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(QBDialogsPagedResultBlock)completionBlock
+{
+    NSTimeInterval timeInterval = [date timeIntervalSince1970];
+    NSMutableDictionary *extendedRequest = @{@"last_message_date_sent[gt]":@(timeInterval)}.mutableCopy;
+    
+    __weak typeof(self)weakSelf = self;
+    QBDialogsPagedResultBlock resultBlock = ^(QBDialogsPagedResult *result) {
+        if (result.success) {
+            [weakSelf updateDialogsWithRequested:result.dialogs];
+        }
+        if (completionBlock) completionBlock(result);
+    };
     [QBChat dialogsWithExtendedRequest:extendedRequest delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
 }
 
@@ -112,6 +123,29 @@
     }
     
     self.dialogs[chatDialog.ID] = chatDialog;
+}
+
+- (void)updateDialogsWithRequested:(NSArray *)requestedDialogs
+{
+    if (requestedDialogs.count == 0) {
+        return;
+    }
+    for (QBChatDialog *dialog in requestedDialogs) {
+        QBChatDialog *existedDialog = self.dialogs[dialog.ID];
+        if (!existedDialog) {
+            self.dialogs[existedDialog.ID] = existedDialog;
+            continue;
+        }
+        if (existedDialog.type == QBChatDialogTypeGroup) {
+            existedDialog.occupantIDs = dialog.occupantIDs;
+            existedDialog.name = dialog.name;
+            existedDialog.photo = dialog.photo;
+        }
+        existedDialog.lastMessageDate = dialog.lastMessageDate;
+        existedDialog.lastMessageText = dialog.lastMessageText;
+        existedDialog.lastMessageUserID = dialog.lastMessageUserID;
+        existedDialog.unreadMessagesCount = dialog.unreadMessagesCount;
+    }
 }
 
 - (NSArray *)dialogHistory {
@@ -197,7 +231,7 @@
     
     if (message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
         [self createPrivateDialogIfNeededWithNotification:message completion:^(QBChatDialog *chatDialog) {
-            if (chatDialog.unreadMessagesCount == 0) {
+            if (!isMine) {
                 chatDialog.unreadMessagesCount++;
             }
             [[QMChatReceiver instance] postDialogsHistoryUpdated];
@@ -246,12 +280,11 @@
 
 - (void)leaveFromRooms {
     
-    NSArray *allRooms = [self.rooms allValues];
-    for (QBChatRoom *room in allRooms) {
+    NSArray *dialogs = [self.dialogs allValues];
+    for (QBChatDialog *dialog in dialogs) {
        
-        if (room.isJoined) {
-            [room leaveRoom];
-            [self.rooms removeObjectForKey:room.JID];
+        if (dialog.chatRoom.isJoined) {
+            [dialog.chatRoom leaveRoom];
         }
     }
 }
@@ -261,12 +294,8 @@
     NSArray *allDialogs = [self dialogHistory];
     for (QBChatDialog *dialog in allDialogs) {
         
-        if (dialog.roomJID) {
-            
-            QBChatRoom *room = dialog.chatRoom;
-            [room joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
-
-            self.rooms[dialog.roomJID] = room;
+        if (dialog.roomJID && !dialog.chatRoom.isJoined) {
+            [dialog.chatRoom joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
         }
     }
 }

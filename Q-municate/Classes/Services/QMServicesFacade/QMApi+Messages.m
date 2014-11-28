@@ -9,16 +9,13 @@
 #import "QMApi.h"
 #import "QMMessagesService.h"
 #import "QMChatDialogsService.h"
+#import "QMSettingsManager.h"
+#import "QMChatReceiver.h"
 
 @implementation QMApi (Messages)
 
 - (void)loginChat:(QBChatResultBlock)block {
-    
-    __weak __typeof(self)weakSelf = self;
     [self.messagesService loginChat:^(BOOL success) {
-        if (success) {
-            [weakSelf.chatDialogsService joinRooms];
-        }
         block(success);
     }];
 }
@@ -26,6 +23,7 @@
 - (void)logoutFromChat {
     [self.chatDialogsService leaveFromRooms];
     [self.messagesService logoutChat];
+    [self.settingsManager setLastActivityDate:[NSDate date]];
 }
 
 - (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete {
@@ -34,6 +32,18 @@
     [self.messagesService messagesWithDialogID:chatDialog.ID completion:^(QBChatHistoryMessageResult *result) {
         complete ([weakSelf checkResult:result]); 
     }];
+}
+
+- (void)fetchMessagesForActiveChatIfNeededWithCompletion:(void(^)(BOOL fetchWasNeeded))block
+{
+    if (self.settingsManager.dialogWithIDisActive) {
+        [self.messagesService messagesWithDialogID:self.settingsManager.dialogWithIDisActive completion:^(QBChatHistoryMessageResult *result) {
+            [[QMChatReceiver instance] messageHistoryWasUpdated];
+            if (block) block(YES);
+        }];
+        return;
+    }
+    if (block) block(NO);
 }
 
 - (void)fireEnqueuedMessageForChatRoomWithJID:(NSString *)roomJID

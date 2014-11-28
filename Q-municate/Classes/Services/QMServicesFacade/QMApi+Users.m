@@ -132,6 +132,13 @@
     return allFriends;
 }
 
+- (NSArray *)contactsOnly
+{
+    NSArray *IDs = [self.usersService idsOfContactsOnly];
+    NSArray *contacts = [self usersWithIDs:IDs];
+    return contacts;
+}
+
 - (BOOL)isContactRequestUserWithID:(NSInteger)userID
 {
     for (NSNumber *contactID in self.usersService.confirmRequestUsersIDs) {

@@ -49,7 +49,7 @@
         NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
         QBUUser *opponent = [[QMApi instance] userWithID:opponentID];
         
-        NSURL *url = [NSURL URLWithString:opponent.website];
+        NSURL *url = [NSURL URLWithString:opponent.avatarURL];
         [self setUserImageWithUrl:url];
         
         self.titleLabel.text = opponent.fullName;
@@ -57,7 +57,7 @@
     } else {
         
         UIImage *img = [UIImage imageNamed:@"upic_placeholder_details_group"];
-        [self setUserImage:img withKey:@"upic_placeholder_details_group"];
+        [self.qmImageView setImageWithURL:[NSURL URLWithString:chatDialog.photo] placeholder:img options:SDWebImageCacheMemoryOnly progress:^(NSInteger receivedSize, NSInteger expectedSize) {} completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
         self.titleLabel.text = chatDialog.name;
         self.groupMembersNumb.text = [NSString stringWithFormat:@"%d", chatDialog.occupantIDs.count];
     }

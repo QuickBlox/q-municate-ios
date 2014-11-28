@@ -94,6 +94,13 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 /**
  */
 - (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete;
+
+
+/** 
+ *
+ */
+- (void)fetchMessagesForActiveChatIfNeededWithCompletion:(void(^)(BOOL fetchWasNeeded))block;
+
 /**
  */
 - (NSArray *)messagesHistoryWithDialog:(QBChatDialog *)chatDialog;
@@ -138,6 +145,11 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  Get all dialogs for current user
  */
 - (void)fetchAllDialogs:(void(^)(void))completion;
+
+/**
+ * Returns updated dialogs and updates exists
+ */
+- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(QBDialogsPagedResultBlock)completion;
 
 /**
  *
@@ -185,6 +197,8 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  */
 - (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
 
+- (void)changeAvatar:(UIImage *)avatar forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
+
 - (NSUInteger)occupantIDForPrivateChatDialog:(QBChatDialog *)chatDialog;
 
 @end
@@ -193,6 +207,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 @interface QMApi (Users)
 
 @property (strong, nonatomic, readonly) NSArray *friends;
+@property (strong, nonatomic, readonly) NSArray *contactsOnly;
 @property (strong, nonatomic, readonly) NSArray *contactRequestUsers;
 
 - (BOOL)isFriendForChatDialog:(QBChatDialog *)chatDialog;

@@ -20,6 +20,8 @@ NSString *const kQMAuthServiceKey = @"QMAuthServiceKey";
 NSString *const kQMLicenceAcceptedKey = @"licence_accepted";
 NSString *const kQMAccountTypeKey = @"accountType";
 NSString *const kQMApplicationEnteredFromPushKey = @"app_entered_from_push";
+NSString *const kQMLastActivityDateKey = @"last_activity_date";
+NSString *const kQMDialogWithIDisActiveKey = @"dialog_is_active";
 
 
 @implementation QMSettingsManager
@@ -121,6 +123,19 @@ NSString *const kQMApplicationEnteredFromPushKey = @"app_entered_from_push";
     
     defSetObject(kQMSettingsUserStatusKey, userStatus);
 }
+
+#pragma mark - Last activity date
+
+- (void)setLastActivityDate:(NSDate *)lastActivityDate
+{
+    defSetObject(kQMLastActivityDateKey, lastActivityDate);
+}
+
+- (NSDate *)lastActivityDate
+{
+    return defObject(kQMLastActivityDateKey);
+}
+
 
 #pragma mark - Default Settings
 

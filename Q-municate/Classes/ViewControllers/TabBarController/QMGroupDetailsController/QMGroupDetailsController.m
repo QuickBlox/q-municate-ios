@@ -10,14 +10,18 @@
 #import "QMAddMembersToGroupController.h"
 #import "QMGroupDetailsDataSource.h"
 #import "SVProgressHUD.h"
+#import "QMImageView.h"
+#import "QMImagePicker.h"
 #import "QMApi.h"
+#import "QMContentService.h"
 #import "QMChatReceiver.h"
+#import "UIImage+Cropper.h"
 
 @interface QMGroupDetailsController ()
 
-<UITableViewDelegate>
+<UITableViewDelegate, UIActionSheetDelegate>
 
-@property (weak, nonatomic) IBOutlet UIImageView *groupAvatarView;
+@property (weak, nonatomic) IBOutlet QMImageView *groupAvatarView;
 @property (weak, nonatomic) IBOutlet UITextField *groupNameField;
 @property (weak, nonatomic) IBOutlet UILabel *occupantsCountLabel;
 @property (weak, nonatomic) IBOutlet UILabel *onlineOccupantsCountLabel;
@@ -37,6 +41,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(changeGroupAvatar:)];
+    [self.groupAvatarView addGestureRecognizer:tap];
+    self.groupAvatarView.layer.cornerRadius = self.groupAvatarView.frame.size.width / 2;
+    self.groupAvatarView.layer.masksToBounds = YES;
     
     [self updateGUIWithChatDialog:self.chatDialog];
     
@@ -61,7 +70,9 @@
     }];
 
     [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-        
+        if (message.delayed) {
+            return;
+        }
         if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog &&
             [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID]) {
             
@@ -70,6 +81,7 @@
         }
     }];
 }
+
 
 - (void)updateOnlineStatus:(NSUInteger)online {
     
@@ -94,10 +106,25 @@
         [SVProgressHUD dismiss];
     }];
 }
+
+- (void)changeGroupAvatar:(id)sender {
+    
+    __weak typeof(self)weakSelf = self;
+    [QMImagePicker chooseSourceTypeInVC:self allowsEditing:NO result:^(UIImage *image) {
+        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+        [[QMApi instance] changeAvatar:[image imageByScaleAndCrop:CGSizeMake(900, 900)] forChatDialog:weakSelf.chatDialog completion:^(QBChatDialogResult *result) {
+            if (result.success) {
+                [weakSelf updateGUIWithChatDialog:result.dialog];
+            }
+            [SVProgressHUD dismiss];
+        }];
+    }];
+}
+
 - (IBAction)addFriendsToChat:(id)sender
 {
     // check for friends:
-    NSArray *friends = [[QMApi instance] friends];
+    NSArray *friends = [[QMApi instance] contactsOnly];
     NSArray *usersIDs = [[QMApi instance] idsWithUsers:friends];
     NSArray *friendsIDsToAdd = [self filteredIDs:usersIDs forChatDialog:self.chatDialog];
     
@@ -118,8 +145,12 @@
     NSAssert(self.chatDialog && chatDialog.type == QBChatDialogTypeGroup , @"Need update this case");
 
     self.groupNameField.text = chatDialog.name;
+    if (chatDialog.photo) {
+        [self.groupAvatarView setImageWithURL:[NSURL URLWithString:chatDialog.photo] placeholder:[UIImage imageNamed:@"upic_placeholder_details_group"] options:SDWebImageHighPriority progress:^(NSInteger receivedSize, NSInteger expectedSize) {} completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
+    }
     self.occupantsCountLabel.text = [NSString stringWithFormat:@"%d participants", self.chatDialog.occupantIDs.count];
     self.onlineOccupantsCountLabel.text = [NSString stringWithFormat:@"0/%d online", self.chatDialog.occupantIDs.count];
+    
 
     [self.dataSource reloadDataWithChatDialog:self.chatDialog];
     

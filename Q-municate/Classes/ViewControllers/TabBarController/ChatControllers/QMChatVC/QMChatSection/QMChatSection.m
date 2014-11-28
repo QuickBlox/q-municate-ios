@@ -20,7 +20,6 @@
 
 @implementation QMChatSection
 
-
 - (id)initWithDate:(NSDate *)date
 {
     if (self = [super init]) {
@@ -57,36 +56,43 @@
 - (NSString *)formattedStringFromDate:(NSDate *)date
 {
     NSString *formattedString = nil;
-    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:date];
-    NSDateComponents * currentComponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:[NSDate date]];
     
-    if (components.day == currentComponents.day && components.month == currentComponents.month && components.year == currentComponents.year) {
+    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay |
+                                    NSCalendarUnitMonth |
+                                    NSCalendarUnitYear fromDate:date];
+    
+    NSDateComponents * currentComponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay |
+                                            NSCalendarUnitMonth |
+                                            NSCalendarUnitYear fromDate:[NSDate date]];
+    
+    if ([currentComponents isEqual:components]) {
+        
         formattedString = @"Today";
-    } else if (components.day == currentComponents.day-1 && components.month == currentComponents.month && components.year == currentComponents.year) {
+        
+    }
+    else if (components.day == currentComponents.day - 1 &&
+               components.month == currentComponents.month &&
+               components.year == currentComponents.year) {
+        
         formattedString = @"Yesterday";
-    } else if (components.year == components.year) {
+        
+    }
+    else if (components.year == components.year) {
+        
         formattedString = [NSString stringWithFormat:@"%@ %d", [self monthFromNumber:components.month], components.day];
-    } else {
+    }
+    else {
+        
         formattedString = [NSString stringWithFormat:@"%@ %d %d", [self monthFromNumber:components.month], components.day, components.year];
     }
     return formattedString;
 }
 
-- (NSString *)monthFromNumber:(NSInteger)number
-{
-    NSDictionary *dict = @{@1: @"January",
-                           @2: @"February",
-                           @3: @"March",
-                           @4: @"April",
-                           @5: @"May",
-                           @6: @"June",
-                           @7: @"July",
-                           @8: @"August",
-                           @9: @"September",
-                           @10: @"October",
-                           @11: @"November",
-                           @12: @"December"};
-    return dict[@(number)];
+- (NSString *)monthFromNumber:(NSInteger)number {
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    
+    return dateFormatter.monthSymbols[number];
 }
 
 @end

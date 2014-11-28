@@ -79,10 +79,10 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
 - (IBAction)createNewDialog:(id)sender {
 
-    if (QM.contactListService.contactListUsers.count == 0) {
+    if (QM.contactListService.usersFromContactList.count == 0) {
         
         [[[UIAlertView alloc] initWithTitle:nil
-                                    message:@"You don't have any friends for creating new chat."
+                                    message:@"You don't have any contacts for creating new chat."
                                    delegate:nil
                           cancelButtonTitle:@"OK"otherButtonTitles:nil] show];
         return;

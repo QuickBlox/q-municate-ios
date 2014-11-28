@@ -36,6 +36,11 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     }];
 }
 
+- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(QBDialogsPagedResultBlock)completion
+{
+    [self.chatDialogsService fetchDialogsWithLastActivityFromDate:date completion:completion];
+}
+
 #pragma mark - Create Chat Dialogs
 
 
@@ -93,7 +98,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     }];
 }
 
-- (void)changeAvatar:(UIImage *)avatar forChatDialog:(QBChatDialog *)chatDialog completion:(void (^)(BOOL success))completion
+- (void)changeAvatar:(UIImage *)avatar forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion
 {
     __weak typeof(self)weakSelf = self;
     [self.contentService uploadPNGImage:avatar progress:^(float progress) {
@@ -112,7 +117,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
                 NSString *text = [NSString stringWithFormat:messageTypeText, weakSelf.currentUser.fullName];
                 chatDialog.photo = dialogResult.dialog.photo;
                 [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"room_photo" content:dialogResult.dialog.photo];
-                completion(YES);
+                completion(dialogResult);
             }
         }];
     }];

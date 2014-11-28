@@ -69,7 +69,7 @@
 
 - (void)contactListServiceDidLoadCache {
 
-    self.friendList = QM.contactListService.contactListUsers;
+    self.friendList = QM.contactListService.usersFromContactListSortedByFullName;
     [self.tableView reloadData];
 }
 
@@ -255,7 +255,7 @@
                  
                  CGPoint point = self.searchDisplayController.searchResultsTableView.contentOffset;
                  
-                 self.friendList = QM.contactListService.contactListUsers;
+                 self.friendList = QM.contactListService.usersFromContactListSortedByFullName;
                  
                  [self.searchDisplayController.searchResultsTableView reloadData];
                  

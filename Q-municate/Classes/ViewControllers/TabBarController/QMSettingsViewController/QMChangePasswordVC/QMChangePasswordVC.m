@@ -36,6 +36,7 @@ const NSUInteger kQMMinPasswordLenght = 7;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.changeButton.layer.cornerRadius = 5.0f;
     
     self.settingsManager = [[QMSettingsManager alloc] init];
     

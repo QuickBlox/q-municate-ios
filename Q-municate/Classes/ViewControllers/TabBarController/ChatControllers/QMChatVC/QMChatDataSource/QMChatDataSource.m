@@ -9,10 +9,8 @@
 
 #import "QMChatDataSource.h"
 #import "QMMessage.h"
-#import "QMApi.h"
 #import "SVProgressHUD.h"
 #import "REAlertView.h"
-#import "QMChatReceiver.h"
 #import "QMContentService.h"
 #import "QMTextMessageCell.h"
 #import "QMSystemMessageCell.h"
@@ -21,14 +19,13 @@
 #import "QMChatSection.h"
 #import "QMContactRequestCell.h"
 #import "QMChatNotificationCell.h"
-
+#import "QMServicesManager.h"
 
 static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
 
-
 @interface QMChatDataSource()
 
-<UITableViewDataSource, QMChatCellDelegate, QMUsersListDelegate>
+<UITableViewDataSource, QMChatCellDelegate, QMUsersListDelegate, QMChatServiceDelegate, QMContactListServiceDelegate, QBChatDelegate>
 
 @property (weak, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *chatSections;
@@ -49,11 +46,12 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
 @implementation QMChatDataSource
 
 - (void)dealloc {
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
     ILog(@"%@ - %@", NSStringFromSelector(_cmd), self);
 }
 
-- (instancetype)initWithChatDialog:(QBChatDialog *)dialog forTableView:(UITableView *)tableView inputBarDelegate:(id <QMChatInputBarLockingProtocol>)inputBarDelegate {
+- (instancetype)initWithChatDialog:(QBChatDialog *)dialog
+                      forTableView:(UITableView *)tableView
+                  inputBarDelegate:(id <QMChatInputBarLockingProtocol>)inputBarDelegate {
     
     self = [super init];
     
@@ -67,80 +65,120 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         self.automaticallyScrollsToMostRecentMessage = YES;
         
         tableView.dataSource = self;
-        [tableView registerClass:[QMTextMessageCell class] forCellReuseIdentifier:QMTextMessageCellID];
-        [tableView registerClass:[QMAttachmentMessageCell class] forCellReuseIdentifier:QMAttachmentMessageCellID];
-        [tableView registerNib:[UINib nibWithNibName:@"QMChatNotificationCell" bundle:nil] forCellReuseIdentifier:kChatNotificationCellID];
-        [tableView registerNib:[UINib nibWithNibName:@"QMContactRequestCell" bundle:nil] forCellReuseIdentifier:kQMContactRequestCellID];
         
-        __weak __typeof(self)weakSelf = self;
+        [tableView registerClass:[QMTextMessageCell class]
+          forCellReuseIdentifier:QMTextMessageCellID];
         
-        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-        [[QMApi instance] fetchMessageWithDialog:self.chatDialog complete:^(BOOL success) {
-            
-            [weakSelf reloadCachedMessages:NO];
-            [SVProgressHUD dismiss];
-            
-        }];
+        [tableView registerClass:[QMAttachmentMessageCell class]
+          forCellReuseIdentifier:QMAttachmentMessageCellID];
         
-        [[QMChatReceiver instance] addedToGroupUsersWasLoadedWithTarget:self block:^(QBChatMessage *message, BOOL usersWasLoaded) {
-            // only for group chat messages:
-            [weakSelf insertNewMessage:message];
-        }];
+        [tableView registerNib:[UINib nibWithNibName:@"QMChatNotificationCell" bundle:nil]
+        forCellReuseIdentifier:kChatNotificationCellID];
         
-        [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-            
-            if (!message.cParamDialogID) {
-                return;
-            }
-            QBChatDialog *dialogForReceiverMessage = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
-            
-            if ([weakSelf.chatDialog isEqual:dialogForReceiverMessage] && message.cParamNotificationType != QMMessageNotificationTypeDeliveryMessage) {
-                
-                if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
-                    return;
-                }
-                else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog) {
-                    if (message.cParamDialogOccupantsIDs) {
-                        return;
-                    }
-                    [weakSelf insertNewMessage:message];
-                    return;
-                }
-                else if (message.cParamNotificationType == QMMessageNotificationTypeConfirmContactRequest) {
-                    [weakSelf unlockInputBar];
-                }
-                else if (message.cParamNotificationType == QMMessageNotificationTypeDeleteContactRequest) {
-                    [weakSelf unmarkContactRequestNotification];
-                    [weakSelf lockInputBar];
-                }
-                
-                if (message.senderID != [QMApi instance].currentUser.ID) {  // for group chats
-                    [QMSoundManager playMessageReceivedSound];
-                    
-                    [weakSelf insertNewMessage:message];
-                }
-                
-            }
-        }];
-    }
-    
-    if (!self.chatDialog || self.chatDialog.type == QBChatDialogTypeGroup) {
-        return self;
-    }
-    
-    // check for friend. If it's not a friend, lock input bar
-    BOOL isFried = [[QMApi instance] isFriendForChatDialog:self.chatDialog];
-    if (!isFried) {
-        [self lockInputBar];
+        [tableView registerNib:[UINib nibWithNibName:@"QMContactRequestCell" bundle:nil]
+        forCellReuseIdentifier:kQMContactRequestCellID];
+        
+        [QM.chatService addDelegate:self];
+        [QM.contactListService addDelegate:self];
+        [[QBChat instance] addDelegate:self];
+        
+        if (!self.chatDialog || self.chatDialog.type == QBChatDialogTypeGroup) {
+            return self;
+        }
+        
+        // check for friend. If it's not a friend, lock input bar
+        QBContactListItem *contactListItem =
+        [QM.contactListService.contactListMemoryStorage contactListItemWithUserID:self.chatDialog.recipientID];
+        
+        if (contactListItem) {
+            [self lockInputBar];
+        }
     }
     
     return self;
 }
 
-- (void)markContactRequestNotificationIfNeededForChatSection:(QMChatSection *)chatSection
-{
-    QMMessage *lastMessage = [chatSection.messages lastObject];
-    [self markContactRequestNotificationIfNeeded:lastMessage];
+- (void)updateHistory {
+    
+    __weak __typeof(self)weakSelf = self;
+    [QM.chatService fetchMessageWithDialogID:self.chatDialog.ID
+                                    complete:^(QBResponse *response, NSArray *messages)
+     {
+         [weakSelf reloadCachedMessages:NO];
+     }];
+}
+
+#pragma mark - QMChatServiceDelegate
+
+- (void)chatServiceDidLoadMessagesFromCacheForDialogID:(NSString *)dilaogID {
+    
+    if ([self.chatDialog.ID isEqualToString:dilaogID]) {
+        [self reloadCachedMessages:YES];
+    }
+}
+
+- (void)chatServiceDidAddMessageToHistory:(QBChatMessage *)message forDialog:(QBChatDialog *)dialog {
+    
+    if (message.delayed) {
+        return;
+    }
+    
+    if ([self.chatDialog isEqual:dialog]) {
+        
+        [QBRequest markMessagesAsRead:@[message] dialogID:dialog.ID
+                         successBlock:nil
+                           errorBlock:nil];
+        
+        if (message.senderID != QM.profile.userData.ID) {
+            
+            [QMSoundManager playMessageReceivedSound];
+            [self insertNewMessage:message];
+        }
+        
+        if (message.cParamNotificationType == QMMessageNotificationTypeConfirmContactRequest) {
+            [self unlockInputBar];
+        }
+        else if (message.cParamNotificationType == QMMessageNotificationTypeDeleteContactRequest) {
+            
+            [self unmarkContactRequestNotification];
+            [self lockInputBar];
+        }
+    }
+}
+
+- (void)chatServiceDidReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
+    
+    if ([self.chatDialog isEqual:dialog]) {
+        
+        if (!dialog.chatRoom.isJoined) {
+            [self lockInputBar];
+        }
+    }
+}
+
+- (void)chatServiceDidReceiveNotificationMessage:(QBChatMessage *)message updateDialog:(QBChatDialog *)dialog {
+    
+}
+
+#pragma mark - QMContactListServiceDelegate
+
+- (void)contactListService:(QMContactListService *)contactListService didFinishRetriveUsersForChatDialog:(QBChatDialog *)chatDialog {
+    
+    if ([self.chatDialog.ID isEqualToString:chatDialog.ID]) {
+        [self reloadCachedMessages:YES];
+    }
+}
+
+#pragma mark - QBChatDelegate
+
+- (void)chatRoomDidEnter:(QBChatRoom *)room {
+    
+    if ([self.chatDialog.chatRoom.JID isEqualToString:room.JID]) {
+        
+        if (room.isJoined) {
+            [self unlockInputBar];
+        }
+    }
 }
 
 - (void)markContactRequestNotificationIfNeeded:(QMMessage *)notificaion
@@ -148,12 +186,14 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
     if (self.chatDialog.type != QBChatDialogTypePrivate) {
         return;
     }
-    QBUUser *contact = [[QMApi instance] userForContactRequestWithPrivateChatDialog:self.chatDialog];
     
-    if (notificaion.cParamNotificationType == QMMessageNotificationTypeSendContactRequest && notificaion.senderID == contact.ID) {
-        notificaion.marked = YES;
-        self.contactRequestMessage = notificaion;
-    }
+////    QM.contactListService.
+//    QBUUser *contact = [[QMApi instance] userForContactRequestWithPrivateChatDialog:self.chatDialog];
+//    
+//    if (notificaion.cParamNotificationType == QMMessageNotificationTypeSendContactRequest && notificaion.senderID == contact.ID) {
+//        notificaion.marked = YES;
+//        self.contactRequestMessage = notificaion;
+//    }
 }
 
 - (void)unmarkContactRequestNotification
@@ -191,11 +231,14 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
     
     [self.tableView beginUpdates];
     if (chatSection.messages.count > 1) {
+        
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:chatSection.messages.count-1 inSection:self.chatSections.count-1];
         [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-    } else {
+    }
+    else {
         [self.tableView insertSections:[NSIndexSet indexSetWithIndex:self.chatSections.count-1] withRowAnimation:UITableViewRowAnimationNone];
     }
+    
     [self.tableView endUpdates];
     
     [self scrollToBottomAnimated:YES];
@@ -203,10 +246,10 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
 
 - (void)reloadCachedMessages:(BOOL)animated {
     
-    NSArray *history = [[QMApi instance] messagesHistoryWithDialog:self.chatDialog];
+    NSArray *messages = [QM.chatService.messagesMemoryStorage messagesWithDialogID:self.chatDialog.ID];
     
     [self.chatSections removeAllObjects];
-    self.chatSections = [self sortedChatSectionsFromMessageArray:history];
+    self.chatSections = [self sortedChatSectionsFromMessageArray:messages];
     
     [self.tableView reloadData];
     [self scrollToBottomAnimated:animated];
@@ -220,9 +263,14 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
     NSDate *dateNow = [NSDate date];
     
     for (QBChatHistoryMessage *historyMessage in messagesArray) {
+        
         QMMessage *qmMessage = [self qmMessageWithQbChatHistoryMessage:historyMessage];
-        NSNumber *key = @([QMChatSection daysBetweenDate:historyMessage.datetime andDate:dateNow]);
+        
+        NSNumber *key = @([QMChatSection daysBetweenDate:historyMessage.datetime
+                                                 andDate:dateNow]);
+        
         QMChatSection *section = sectionsDictionary[key];
+        
         if (!section) {
             section = [[QMChatSection alloc] initWithDate:qmMessage.datetime];
             sectionsDictionary[key] = section;
@@ -233,7 +281,10 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         
     }
     // check last message for contact request notification:
-    [self markContactRequestNotificationIfNeededForChatSection:arrayOfSections.lastObject];
+    
+    QMChatSection *section = arrayOfSections.lastObject;
+    QMMessage *lastMessage = [section.messages lastObject];
+    [self markContactRequestNotificationIfNeeded:lastMessage];
     
     return arrayOfSections;
 }
@@ -262,7 +313,7 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
 - (QMMessage *)qmMessageWithQbChatHistoryMessage:(QBChatAbstractMessage *)historyMessage {
     
     QMMessage *message = [[QMMessage alloc] initWithChatHistoryMessage:historyMessage];
-    BOOL fromMe = ([QMApi instance].currentUser.ID == historyMessage.senderID);
+    BOOL fromMe = (QM.profile.userData.ID == historyMessage.senderID);
     
     message.minWidth = fromMe || (message.chatDialog.type == QBChatDialogTypePrivate) ? 78 : -1;
     message.align =  fromMe ? QMMessageContentAlignRight : QMMessageContentAlignLeft;
@@ -308,12 +359,13 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         notificationCell.notification = message;
         return notificationCell;
     }
+    
     QMChatCell *chatCell = (QMChatCell *)cell;
     chatCell.delegate = self;
     
-    BOOL isMe = [QMApi instance].currentUser.ID == message.senderID;
-    QBUUser *user = [[QMApi instance] userWithID:message.senderID];
-    [chatCell setMessage:message user:user isMe:isMe];
+    [chatCell setMessage:message
+                    user:[QM.contactListService.usersMemoryStorage userWithID:message.senderID]
+                    isMe:QM.profile.userData.ID == message.senderID];
     
     return chatCell;
 }
@@ -325,31 +377,31 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
     __weak __typeof(self)weakSelf = self;
     
     [SVProgressHUD showProgress:0 status:nil maskType:SVProgressHUDMaskTypeClear];
-    [[QMApi instance].contentService uploadJPEGImage:image progress:^(float progress) {
-        
-        [SVProgressHUD showProgress:progress status:nil maskType:SVProgressHUDMaskTypeClear];
-        
-    } completion:^(QBCFileUploadTaskResult *result) {
-        
-        if (result.success) {
-            
-            [[QMApi instance] sendAttachment:result.uploadedBlob toDialog:weakSelf.chatDialog completion:^(QBChatMessage *message) {
-                [weakSelf insertNewMessage:message];
-            }];
-        }
-        
-        [SVProgressHUD dismiss];
-    }];
+//    [[QMApi instance].contentService uploadJPEGImage:image progress:^(float progress) {
+//        
+//        [SVProgressHUD showProgress:progress status:nil maskType:SVProgressHUDMaskTypeClear];
+//        
+//    } completion:^(QBCFileUploadTaskResult *result) {
+//        
+//        if (result.success) {
+//            
+//            [[QMApi instance] sendAttachment:result.uploadedBlob toDialog:weakSelf.chatDialog completion:^(QBChatMessage *message) {
+//                [weakSelf insertNewMessage:message];
+//            }];
+//        }
+//        
+//        [SVProgressHUD dismiss];
+//    }];
 }
 
 - (void)sendMessage:(NSString *)text {
     
-    __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] sendText:text toDialog:self.chatDialog completion:^(QBChatMessage *message) {
-        
-        [QMSoundManager playMessageSentSound];
-        [weakSelf insertNewMessage:message];
-    }];
+//    __weak __typeof(self)weakSelf = self;
+//    [[QMApi instance] sendText:text toDialog:self.chatDialog completion:^(QBChatMessage *message) {
+//        
+//        [QMSoundManager playMessageSentSound];
+//        [weakSelf insertNewMessage:message];
+//    }];
 }
 
 #pragma mark - QMChatCellDelegate
@@ -380,18 +432,22 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
     }
 }
 
-
 #pragma mark - Contact Request Delegate
 
 - (void)contactRequestWasAcceptedForUser:(QBUUser *)user
 {
     __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success, QBChatMessage *notification) {
-        
+    
+    [QM.contactListService confirmAddContactRequest:user.ID completion:^(BOOL success) {
         [weakSelf unmarkContactRequestNotification];
-        [weakSelf insertNewMessage:notification];
+//        [weakSelf insertNewMessage:notification];
         [weakSelf unlockInputBar];
     }];
+//    
+//    [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success, QBChatMessage *notification) {
+//        
+//  
+//    }];
 }
 
 - (void)contactRequestWasRejectedForUser:(QBUUser *)user
@@ -402,11 +458,11 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
         [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_OK", nil) andActionBlock:^{
             //
-            [[QMApi instance] rejectAddContactRequest:user completion:^(BOOL success, QBChatMessage *notification) {
-                
-                [weakSelf unmarkContactRequestNotification];
-                [weakSelf insertNewMessage:notification];
-            }];
+//            [[QMApi instance] rejectAddContactRequest:user completion:^(BOOL success, QBChatMessage *notification) {
+//                
+//                [weakSelf unmarkContactRequestNotification];
+//                [weakSelf insertNewMessage:notification];
+//            }];
         }];
     }];
 }
@@ -414,7 +470,7 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
 #pragma mark - Input Bar Locking
 
 - (void)lockInputBar
-{   
+{
     if ([self.inputBarDelegate respondsToSelector:@selector(inputBarShouldLock)]) {
         [self.inputBarDelegate inputBarShouldLock];
     }

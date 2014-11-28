@@ -21,10 +21,10 @@ NSString *const QMChatViewControllerID = @"QMChatViewController";
 
 - (void)viewDidLoad {
     
-    self.friends = QM.contactListService.contactListUsers;
+    self.contacts = QM.contactListService.usersFromContactListSortedByFullName;
     [super viewDidLoad];
 }
-
+ 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }

@@ -38,24 +38,29 @@
         self.tableView.dataSource = self;
         [QM.chatService addDelegate:self];
         
-//        __weak __typeof(self)weakSelf = self;
-//
-//        [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-//            
-//            if (!message.cParamDialogID) {
-//                return;
-//            }
-//            [weakSelf updateGUI];
-//            [weakSelf retrieveUserIfNeededWithMessage:message];
-//        }];
-//        
-//        [[QMChatReceiver instance] dialogsHisotryUpdatedWithTarget:self block:^{
-//            [weakSelf updateGUI];
-//        }];
-//        
-//        [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:^{
-//            [weakSelf.tableView reloadData];
-//        }];
+        __weak __typeof(self)weakSelf = self;
+        
+     /*   [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+            
+            if (message.delayed) {
+                return;
+            }
+            if (!message.cParamDialogID) {
+                return;
+            }
+            [weakSelf updateGUI];
+            [weakSelf retrieveUserIfNeededWithMessage:message];
+        }];
+        
+        [[QMChatReceiver instance] dialogsHisotryUpdatedWithTarget:self block:^{
+            [weakSelf updateGUI];
+        }];
+        
+        [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:^{
+            [weakSelf.tableView reloadData];
+        }];
+        
+        */
     }
     
     return self;
@@ -63,7 +68,7 @@
 
 #pragma mark - QMChatServiceDelegate
 
-- (void)chatServiceDidLoadCache {
+- (void)chatServiceDidLoadDialogsFromCache {
     
     self.dialogs = [QM.chatService.dialogsMemoryStorage dialogsSortByLastMessageDateWithAscending:NO];
     [self.tableView reloadData];
