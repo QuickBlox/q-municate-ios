@@ -17,7 +17,7 @@
 
 #define DELETING_DIALOGS_ENABLED 0
 
-#define IS_HEIGHT_GTE_568 [[UIScreen mainScreen ] bounds].size.height == 568.0f
+#define IS_HEIGHT_GTE_568 [[UIScreen mainScreen ] bounds].size.height >= 568.0f
 #define $(...)  [NSSet setWithObjects:__VA_ARGS__, nil]
 
 #define CHECK_OVERRIDE()\

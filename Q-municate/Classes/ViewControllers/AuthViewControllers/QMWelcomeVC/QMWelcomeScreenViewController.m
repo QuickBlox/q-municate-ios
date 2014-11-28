@@ -13,11 +13,11 @@
 #import "QMSettingsManager.h"
 #import "SVProgressHUD.h"
 #import "REAlertView.h"
+#import "REAlertView+QMSuccess.h"
 
 @interface QMWelcomeScreenViewController ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *bubleImage;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bubleHeight;
 
 - (IBAction)connectWithFacebook:(id)sender;
 
@@ -33,7 +33,6 @@
     
     [super viewDidLoad];
     
-    self.bubleHeight.constant = IS_HEIGHT_GTE_568 ? 244 : 197;
     self.bubleImage.image = [UIImage imageNamed:IS_HEIGHT_GTE_568 ? @"logo_big" : @"logo_big_960"];
     [[QMApi instance].settingsManager defaultSettings];
 }
@@ -77,6 +76,8 @@
         [SVProgressHUD dismiss];
         if (success) {
             [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+        } else {
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FACEBOOK_LOGIN_FALED_ALERT_TEXT", nil) actionSuccess:NO];
         }
     }];
 }

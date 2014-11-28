@@ -102,6 +102,8 @@
         [SVProgressHUD dismiss];
         if (success) {
             [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+        } else {
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FACEBOOK_LOGIN_FALED_ALERT_TEXT", nil) actionSuccess:NO];
         }
     }];
 }

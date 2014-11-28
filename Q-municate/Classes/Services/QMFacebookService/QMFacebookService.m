@@ -209,8 +209,19 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     
     if (!FBSession.activeSession.isOpen) {
         
+        FBSessionState fbState = FBSession.activeSession.state;
+        if (fbState == FBSessionStateClosed || fbState == FBSessionStateClosedLoginFailed) {
+            FBSession *newSession = [[FBSession alloc] initWithPermissions:@[@"public_profile", @"user_friends"]];
+            [FBSession setActiveSession:newSession];
+        }
+        
         [FBSession.activeSession openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
             if (status == FBSessionStateClosed && error == nil) {
+                return;
+            }
+            if (status == FBSessionStateClosedLoginFailed) {
+                [FBSession.activeSession closeAndClearTokenInformation];
+                completion(nil);
                 return;
             }
             
