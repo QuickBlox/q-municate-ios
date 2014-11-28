@@ -22,8 +22,6 @@
 
 @end
 
-
-
 @implementation QMFriendListViewController
 
 - (void)dealloc {
@@ -79,7 +77,6 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-
 #pragma mark - UITableViewDataSource
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -98,21 +95,19 @@
     return [self.dataSource tableView:tableView cellForRowAtIndexPath:indexPath];
 }
 
-
 #pragma mark - UISearchDisplayDelegate
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
     return [self.dataSource searchDisplayController:controller shouldReloadTableForSearchString:searchString];
 }
 
--(void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
-    [self.dataSource searchDisplayControllerWillBeginSearch:controller];
+- (void)searchDisplayController:(UISearchDisplayController *)controller didShowSearchResultsTableView:(UITableView *)tableView {
+    [self.dataSource searchDisplayController:controller didShowSearchResultsTableView:tableView];
 }
 
-- (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
-    [self.dataSource searchDisplayControllerWillEndSearch:controller];
+- (void)searchDisplayController:(UISearchDisplayController *)controller didHideSearchResultsTableView:(UITableView *)tableView {
+    [self.dataSource searchDisplayController:controller didHideSearchResultsTableView:tableView];
 }
-
 
 #pragma mark - prepareForSegue
 
@@ -121,21 +116,23 @@
     if ([segue.identifier isEqualToString:kDetailsSegueIdentifier]) {
         
         NSIndexPath *indexPath = nil;
+        
         if (self.searchDisplayController.isActive) {
             indexPath = [self.searchDisplayController.searchResultsTableView indexPathForSelectedRow];
-        } else {
+        }
+        else {
             indexPath = [self.tableView indexPathForSelectedRow];
         }
+        
         QMFriendsDetailsController *vc = segue.destinationViewController;
         vc.selectedUser = [self.dataSource userAtIndexPath:indexPath];
     }
 }
 
-
 #pragma mark - QMFriendsListDataSourceDelegate
 
-- (void)didChangeContactRequestsCount:(NSUInteger)contactRequestsCount
-{
+- (void)didChangeContactRequestsCount:(NSUInteger)contactRequestsCount {
+    
     NSUInteger idx = [self.tabBarController.viewControllers indexOfObject:self.navigationController];
     if (idx != NSNotFound) {
         UITabBarItem *item = self.tabBarController.tabBar.items[idx];
@@ -143,13 +140,11 @@
     }
 }
 
-
 #pragma mark - QMFriendsTabDelegate
 
-- (void)friendsListTabWasTapped:(UITabBarItem *)tab
-{
+- (void)friendsListTabWasTapped:(UITabBarItem *)tab {
+    
     [self.tableView reloadData];
 }
-
 
 @end

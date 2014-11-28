@@ -19,7 +19,7 @@
 
 <QMContactListServiceDelegate>
 
-@property (strong, nonatomic) NSMutableArray *searchResult;
+@property (strong, nonatomic) NSArray *searchResult;
 @property (strong, nonatomic) NSArray *friendList;
 
 @property (weak, nonatomic) UITableView *tableView;
@@ -69,15 +69,9 @@
 
 - (void)contactListServiceDidLoadCache {
 
-    self.friendList = [self friends];
+    self.friendList = QM.contactListService.contactListUsers;
     [self.tableView reloadData];
-    
 }
-
-
-//- (void)setFriendList:(NSArray *)friendList {
-//    _friendList = [QMUsersUtils sortUsersByFullname:friendList];
-//}
 
 - (NSArray *)friendList {
     
@@ -92,11 +86,6 @@
     return _friendList;
 }
 
-- (NSArray *)friends {
-    
-    return [QM.contactListService contactListUsers];
-}
-
 - (void)searchRequestWithSearchText:(NSString *)searchText responcePage:(QBGeneralResponsePage *)responcePage {
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
@@ -105,7 +94,6 @@
                             page:responcePage
                     successBlock:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users)
      {
-         [self.searchResult removeAllObjects];
          
          NSSortDescriptor *sorter =
          [[NSSortDescriptor alloc] initWithKey:@"fullName"
@@ -117,14 +105,15 @@
          NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.ID != %d", QM.profile.userData.ID];
          NSArray *filtered = [sortedUsers filteredArrayUsingPredicate:predicate];
          
-         [self.searchResult addObjectsFromArray:filtered];
-         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:1];
-         
-         [self.searchDisplayController.searchResultsTableView reloadSections:indexSet
-                                                            withRowAnimation:UITableViewRowAnimationNone];
+         self.searchResult = filtered;
+         [self.searchDisplayController.searchResultsTableView reloadData];
+    
          [SVProgressHUD dismiss];
          
      } errorBlock:^(QBResponse *response) {
+         
+         self.searchResult = nil;
+         [self.searchDisplayController.searchResultsTableView reloadData];
          
          [SVProgressHUD dismiss];
      }];
@@ -134,7 +123,7 @@
     
     if (searchText.length == 0) {
         
-        [self.searchResult removeAllObjects];
+        self.searchResult = nil;
         [self.searchDisplayController.searchResultsTableView reloadData];
     }
     else {
@@ -173,16 +162,24 @@
     
     NSArray *users = [self usersAtSections:section];
     
-    if (self.searchDisplayController.isActive && section == 1) {
-        return (users.count > 0) ? NSLocalizedString(@"QM_STR_ALL_USERS", nil) : nil;
+    if (users.count == 0) {
+        return nil;
     }
-    
-    return (users.count > 0) ? NSLocalizedString(@"QM_STR_CONTACTS", nil) : nil;
+    else if (self.searchDisplayController.isActive && section == 1) {
+        
+        return NSLocalizedString(@"QM_STR_ALL_USERS", nil);
+        
+    } else {
+        
+        return NSLocalizedString(@"QM_STR_CONTACTS", nil);
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
-    return (self.searchDisplayController.isActive) ? 2 : 1;
+    NSInteger numberOfSections = self.searchDisplayController.isActive ? 2 : 1;
+    
+    return numberOfSections;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -190,10 +187,13 @@
     NSArray *users = [self usersAtSections:section];
     
     if (self.searchDisplayController.isActive) {
-        return (users.count > 0) ? users.count : 0;
+        
+        return users.count;
     }
-    
-    return (users.count > 0) ? users.count : 1;
+    else {
+        
+        return users.count ?: 1;
+    }
 }
 
 - (NSArray *)usersAtSections:(NSInteger)section {
@@ -214,8 +214,10 @@
     NSArray *users = [self usersAtSections:indexPath.section];
     
     if (!self.searchDisplayController.isActive) {
+        
         if (users.count == 0) {
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kQMDontHaveAnyFriendsCellIdentifier];
+            
             return cell;
         }
     }
@@ -253,11 +255,9 @@
                  
                  CGPoint point = self.searchDisplayController.searchResultsTableView.contentOffset;
                  
-                 self.friendList = [self friends];
+                 self.friendList = QM.contactListService.contactListUsers;
                  
                  [self.searchDisplayController.searchResultsTableView reloadData];
-                 
-                 [self.tableView reloadData];
                  
                  NSUInteger idx = [self.friendList indexOfObject:user];
                  NSUInteger idx2 = [self.searchResult indexOfObject:user];
@@ -267,12 +267,13 @@
                      point.y += 59;
                      self.searchDisplayController.searchResultsTableView.contentOffset = point;
                      
-                     [SVProgressHUD dismiss];
                  }
              }
              else {
-                 
+                 [self.searchDisplayController.searchResultsTableView reloadData];
              }
+             
+             [SVProgressHUD dismiss];
          }
      }];
 }
@@ -286,15 +287,15 @@
     return NO;
 }
 
-- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
-{
-    // needed!
-    //    [self.tableView setDataSource:nil];
+- (void)searchDisplayController:(UISearchDisplayController *)controller didShowSearchResultsTableView:(UITableView *)tableView {
+    
+    [self.tableView setDataSource:nil];
+    [self.tableView reloadData];
 }
 
-- (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller
-{
-    //    [self.tableView setDataSource:self];
+- (void)searchDisplayController:(UISearchDisplayController *)controller didHideSearchResultsTableView:(UITableView *)tableView {
+    
+    [self.tableView setDataSource:self];
     [self.tableView reloadData];
 }
 

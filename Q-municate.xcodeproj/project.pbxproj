@@ -94,7 +94,6 @@
 		55D8AD1E19AC75B700DAF79F /* QMChatReceiver+DialogsHistoryUpdated.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD1C19AC75B700DAF79F /* QMChatReceiver+DialogsHistoryUpdated.m */; };
 		55D8AD2119AC75C100DAF79F /* QMFacebookService.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD2019AC75C100DAF79F /* QMFacebookService.m */; };
 		55D8ADB519AC761000DAF79F /* QMForgotPasswordTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADB419AC761000DAF79F /* QMForgotPasswordTVC.m */; };
-		55D8ADB819AC762100DAF79F /* QMSearchDisplayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADB719AC762100DAF79F /* QMSearchDisplayController.m */; };
 		55D8ADBB19AC762C00DAF79F /* QMDialogsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADBA19AC762C00DAF79F /* QMDialogsDataSource.m */; };
 		55D8ADBE19AC764500DAF79F /* NSString+HasText.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADBD19AC764500DAF79F /* NSString+HasText.m */; };
 		55D8ADC119AC765400DAF79F /* UIImage+TintColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADC019AC765400DAF79F /* UIImage+TintColor.m */; };
@@ -357,8 +356,6 @@
 		55D8AD2019AC75C100DAF79F /* QMFacebookService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMFacebookService.m; sourceTree = "<group>"; };
 		55D8ADB319AC761000DAF79F /* QMForgotPasswordTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMForgotPasswordTVC.h; sourceTree = "<group>"; };
 		55D8ADB419AC761000DAF79F /* QMForgotPasswordTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMForgotPasswordTVC.m; sourceTree = "<group>"; };
-		55D8ADB619AC762100DAF79F /* QMSearchDisplayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSearchDisplayController.h; sourceTree = "<group>"; };
-		55D8ADB719AC762100DAF79F /* QMSearchDisplayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSearchDisplayController.m; sourceTree = "<group>"; };
 		55D8ADB919AC762C00DAF79F /* QMDialogsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDialogsDataSource.h; sourceTree = "<group>"; };
 		55D8ADBA19AC762C00DAF79F /* QMDialogsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDialogsDataSource.m; sourceTree = "<group>"; };
 		55D8ADBC19AC764500DAF79F /* NSString+HasText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HasText.h"; sourceTree = "<group>"; };
@@ -1436,15 +1433,6 @@
 			path = QMProfileViewController;
 			sourceTree = "<group>";
 		};
-		55D25B22198BBF2100443D0C /* QMSearchDisplayController */ = {
-			isa = PBXGroup;
-			children = (
-				55D8ADB619AC762100DAF79F /* QMSearchDisplayController.h */,
-				55D8ADB719AC762100DAF79F /* QMSearchDisplayController.m */,
-			);
-			path = QMSearchDisplayController;
-			sourceTree = "<group>";
-		};
 		55D8ADF819AC81CD00DAF79F /* QMLicenseAgreement */ = {
 			isa = PBXGroup;
 			children = (
@@ -1580,7 +1568,6 @@
 			children = (
 				6943845F18E42678001E08A9 /* QMMainTabBarController.h */,
 				6943846018E42678001E08A9 /* QMMainTabBarController.m */,
-				55D25B22198BBF2100443D0C /* QMSearchDisplayController */,
 				55BBA75D197327AA0040DB5C /* QMDialogsViewController */,
 				55CEAB12195DBCFA001A8ED6 /* CallControllers */,
 				55CEAB19195DBCFA001A8ED6 /* ChatControllers */,
@@ -2011,7 +1998,6 @@
 				69D57E6218ACC11C00A9900A /* main.m in Sources */,
 				55D8ADC119AC765400DAF79F /* UIImage+TintColor.m in Sources */,
 				559BDFE919618D3D000588FE /* QMSplashViewController.m in Sources */,
-				55D8ADB819AC762100DAF79F /* QMSearchDisplayController.m in Sources */,
 				551F8728196EA68900DBCA02 /* QMInviteFriendsDataSource.m in Sources */,
 				55D8ADE519AC770400DAF79F /* QMFeedbackTableViewController.m in Sources */,
 				5524C2D819991308007450DB /* QMChatReceiver+UsersHistoryUpdated.m in Sources */,

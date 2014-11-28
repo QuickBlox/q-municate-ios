@@ -63,6 +63,12 @@
 
 #pragma mark - QMChatServiceDelegate
 
+- (void)chatServiceDidLoadCache {
+    
+    self.dialogs = [QM.chatService.dialogsMemoryStorage dialogsSortByLastMessageDateWithAscending:NO];
+    [self.tableView reloadData];
+}
+
 - (void)chatService:(QMChatService *)chatService didAddChatDialogs:(NSArray *)chatDialogs {
     
     self.dialogs = [QM.chatService.dialogsMemoryStorage dialogsSortByLastMessageDateWithAscending:NO];

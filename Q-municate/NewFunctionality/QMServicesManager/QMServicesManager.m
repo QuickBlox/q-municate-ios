@@ -31,7 +31,7 @@ QMServicesManager *qmServices(void) {
 
 @interface QMServicesManager()
 
-<QMServiceDataDelegate, QMChatServiceDelegate, QMContactListServiceDelegate, QMContactListServiceCacheDelegate>
+<QMServiceDataDelegate, QMChatServiceDelegate, QMContactListServiceDelegate, QMContactListServiceCacheDelegate, QMChatServiceCacheDelegate >
 
 @property (strong, nonatomic) QMAuthService *authService;
 @property (strong, nonatomic) QMChatService *chatService;
@@ -53,7 +53,9 @@ QMServicesManager *qmServices(void) {
         [self cacheSetup];
         
         self.authService = [[QMAuthService alloc] initWithServiceDataDelegate:self];
-        self.chatService = [[QMChatService alloc] initWithServiceDataDelegate:self];
+        
+        self.chatService = [[QMChatService alloc] initWithServiceDataDelegate:self
+                                                                cacheDelegate:self];
         
         self.contactListService = [[QMContactListService alloc] initWithServiceDataDelegate:self
                                                                               cacheDelegate:self];
@@ -84,12 +86,9 @@ QMServicesManager *qmServices(void) {
 
 #pragma mark - QMChatServiceDelegate
 
-- (void)chatServiceDidDialogsHistoryUpdated {
-    
-}
-
-- (void)chatServiceDidMessagesHistoryUpdated {
-    
+- (void)chatService:(QMChatService *)chatService didAddChatDialogs:(NSArray *)chatDialogs {
+    [[QMChatCache instance] insertOrUpdateDialogs:chatDialogs
+                                       completion:nil];
 }
 
 - (void)chatServiceDidAddMessageToHistory:(QBChatMessage *)message
@@ -123,6 +122,19 @@ QMServicesManager *qmServices(void) {
     
     [[QMChatCache instance] insertOrUpdateDialog:dialog
                                       completion:nil];
+}
+
+#pragma mark - QMChatServiceCacheDelegate
+
+- (void)cachedDialogs:(QMCacheCollection)block {
+    
+    [[QMChatCache instance] dialogsSortedBy:@"lastMessageDate"
+                                  ascending:NO
+                                 completion:block];
+}
+
+- (void)cachedMessagesWithDialogID:(NSString *)dialogID block:(QMCacheCollection)block {
+    
 }
 
 #pragma mark - QMContactListServiceCacheDelegate
