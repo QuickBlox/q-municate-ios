@@ -1016,7 +1016,6 @@
 			children = (
 				55D8ACFF19AC751200DAF79F /* QMMessagesService.h */,
 				55D8AD0019AC751200DAF79F /* QMMessagesService.m */,
-				24D01C3B1A263F0500F9A67D /* QMChatReceiver+Messages.m */,
 			);
 			path = QMMessageService;
 			sourceTree = "<group>";
@@ -1988,7 +1987,6 @@
 				55D8ADC419AC765F00DAF79F /* QMChatButtonsFactory.m in Sources */,
 				55BBA760197327AB0040DB5C /* QMDialogsViewController.m in Sources */,
 				55A8B046196597B400B5D33B /* QMApi.m in Sources */,
-				24D01C3C1A263F0500F9A67D /* QMChatReceiver+Messages.m in Sources */,
 				55A8B0A5196599FA00B5D33B /* QMApi+Auth.m in Sources */,
 				55F4A3C8196FF0830068EBC3 /* QMFriendListCell.m in Sources */,
 				556249391A1CD086003D69F1 /* QMProfile.m in Sources */,
@@ -2162,7 +2160,7 @@
 				INFOPLIST_FILE = "Q-municate/Q-municate-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-lxml2",
@@ -2171,13 +2169,13 @@
 				);
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "4093c31a-2f83-4cd5-a1fa-58920abf30fa";
+				PROVISIONING_PROFILE = "2f888e75-3f1b-43f2-9887-064d719e6886";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "$(inherited)";
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = armv7;
 				WARNING_CFLAGS = (
 					"-Wall",
 					"-Wdeprecated-implementations",
@@ -2227,13 +2225,13 @@
 				);
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "782aa5f2-d31e-4ff9-9e13-a1f41b13ca34";
+				PROVISIONING_PROFILE = "1fb14a14-8353-4855-bb2f-fb27e27c5754";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "$(inherited)";
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = armv7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

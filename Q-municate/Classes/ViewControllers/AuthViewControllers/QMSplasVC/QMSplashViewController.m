@@ -26,7 +26,7 @@
 - (void)viewDidLoad {
     
     [super viewDidLoad];
-    [self.splashLogoView setImage:[UIImage imageNamed:IS_HEIGHT_GTE_568 ? @"splash" : @"splash-960"]];
+    [self.splashLogoView setImage:[UIImage imageNamed:IS_HEIGHT_GTE_568 ? @"bg" : @"splash-960"]];
     
     if (QM.profile.userData) {
         

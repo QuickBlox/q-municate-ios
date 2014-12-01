@@ -8,7 +8,7 @@
 
 #import "QMAddUsersAbstractController.h"
 #import "QMInviteFriendCell.h"
-#import "QMApi.h"
+#import "QMServicesManager.h"
 
 NSString *const kCreateChatCellIdentifier = @"CreateChatCell";
 
@@ -73,7 +73,7 @@ NSString *const kCreateChatCellIdentifier = @"CreateChatCell";
     
     QBUUser *friend = self.contacts[indexPath.row];
     
-    cell.contactlistItem = [[QMApi instance] contactItemWithUserID:friend.ID];
+    cell.contactlistItem = [QM.contactListService.contactListMemoryStorage contactListItemWithUserID:friend.ID];
     cell.userData = friend;
     cell.check = [self.selectedFriends containsObject:friend];
     

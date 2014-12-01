@@ -1467,7 +1467,7 @@ Q-munication by sending them private invitations.</string>
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash" translatesAutoresizingMaskIntoConstraints="NO" id="PCD-hf-H4f">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg" translatesAutoresizingMaskIntoConstraints="NO" id="PCD-hf-H4f">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Ccj-RC-Fcq">
@@ -1490,6 +1490,13 @@ Q-munication by sending them private invitations.</string>
                                     <action selector="pressReconnectBtn:" destination="BXK-2z-A4J" eventType="touchUpInside" id="quT-7n-DDM"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_splash" translatesAutoresizingMaskIntoConstraints="NO" id="XCJ-iY-605">
+                                <rect key="frame" x="91" y="214" width="139" height="139"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="139" id="Ef2-zs-pHG"/>
+                                    <constraint firstAttribute="width" constant="139" id="akh-Fe-ME1"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -1498,8 +1505,10 @@ Q-munication by sending them private invitations.</string>
                             <constraint firstItem="PCD-hf-H4f" firstAttribute="leading" secondItem="oP1-5n-nsc" secondAttribute="leading" id="GdX-pS-aIj"/>
                             <constraint firstItem="PCD-hf-H4f" firstAttribute="top" secondItem="oP1-5n-nsc" secondAttribute="top" id="HUX-i6-x11"/>
                             <constraint firstAttribute="centerX" secondItem="Ccj-RC-Fcq" secondAttribute="centerX" id="Lvo-HW-MqE"/>
+                            <constraint firstItem="PCD-hf-H4f" firstAttribute="centerY" secondItem="XCJ-iY-605" secondAttribute="centerY" constant="0.5" id="NPC-Ts-mBL"/>
                             <constraint firstItem="rLu-Lm-SKe" firstAttribute="centerX" secondItem="Ccj-RC-Fcq" secondAttribute="centerX" constant="-0.5" id="ZcR-ne-c8S"/>
                             <constraint firstItem="Ccj-RC-Fcq" firstAttribute="top" secondItem="rLu-Lm-SKe" secondAttribute="bottom" constant="22" id="aFQ-MO-q3J"/>
+                            <constraint firstItem="PCD-hf-H4f" firstAttribute="centerX" secondItem="XCJ-iY-605" secondAttribute="centerX" constant="-0.5" id="ih9-TF-hXU"/>
                             <constraint firstAttribute="trailing" secondItem="PCD-hf-H4f" secondAttribute="trailing" id="yag-Oj-1dQ"/>
                         </constraints>
                     </view>
@@ -2483,7 +2492,7 @@ Cg
                         <sections>
                             <tableViewSection id="hnv-9l-VGr">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="lnE-gd-yWS">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="80" id="lnE-gd-yWS">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lnE-gd-yWS" id="iyM-qS-H6N">
@@ -2491,22 +2500,22 @@ Cg
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Email" minimumFontSize="17" background="underline" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="uHZ-wV-ADZ">
-                                                    <rect key="frame" x="20" y="7" width="280" height="30"/>
+                                                    <rect key="frame" x="20" y="42" width="280" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="tII-v4-IKz"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
                                                 </textField>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="uHZ-wV-ADZ" firstAttribute="top" secondItem="iyM-qS-H6N" secondAttribute="top" constant="7" id="2a7-Hb-fjZ"/>
+                                                <constraint firstItem="uHZ-wV-ADZ" firstAttribute="top" secondItem="iyM-qS-H6N" secondAttribute="top" constant="42" id="2a7-Hb-fjZ"/>
                                                 <constraint firstAttribute="trailing" secondItem="uHZ-wV-ADZ" secondAttribute="trailing" constant="20" id="OQq-zz-SDi"/>
                                                 <constraint firstItem="uHZ-wV-ADZ" firstAttribute="leading" secondItem="iyM-qS-H6N" secondAttribute="leading" constant="20" id="VKA-cV-Glj"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="641-Oo-4en">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="80" id="641-Oo-4en">
                                         <rect key="frame" x="0.0" y="44" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="641-Oo-4en" id="1wy-E4-8cp">
@@ -2514,7 +2523,7 @@ Cg
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dEK-BY-Ip3" customClass="QMCornerButton">
-                                                    <rect key="frame" x="35" y="0.0" width="250" height="44"/>
+                                                    <rect key="frame" x="35" y="18" width="250" height="44"/>
                                                     <color key="backgroundColor" red="0.0" green="0.74117648599999997" blue="0.24313727020000001" alpha="1" colorSpace="deviceRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="44" id="t9a-n7-MLK"/>
@@ -2530,7 +2539,7 @@ Cg
                                             <constraints>
                                                 <constraint firstItem="dEK-BY-Ip3" firstAttribute="leading" secondItem="1wy-E4-8cp" secondAttribute="leading" constant="35" id="QFR-Ql-29E"/>
                                                 <constraint firstAttribute="trailing" secondItem="dEK-BY-Ip3" secondAttribute="trailing" constant="35" id="gec-ww-mST"/>
-                                                <constraint firstItem="dEK-BY-Ip3" firstAttribute="top" secondItem="1wy-E4-8cp" secondAttribute="top" id="khb-H7-cTi"/>
+                                                <constraint firstItem="dEK-BY-Ip3" firstAttribute="top" secondItem="1wy-E4-8cp" secondAttribute="top" constant="18" id="khb-H7-cTi"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -3372,13 +3381,13 @@ Cg
         <image name="ic_info_top" width="21" height="21"/>
         <image name="login-btn" width="280" height="44"/>
         <image name="logo_big" width="288" height="244"/>
+        <image name="logo_splash" width="139" height="139"/>
         <image name="logo_txt" width="255" height="58"/>
         <image name="mute_on" width="66" height="66"/>
         <image name="new_chat" width="21" height="21"/>
         <image name="online" width="13" height="13"/>
         <image name="red_counter" width="34" height="22"/>
         <image name="signup-btn" width="280" height="44"/>
-        <image name="splash" width="320" height="568"/>
         <image name="switchcam" width="66" height="66"/>
         <image name="tb_chat" width="30" height="30"/>
         <image name="tb_friends" width="30" height="30"/>
@@ -3396,10 +3405,10 @@ Cg
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="qsg-NO-Ors"/>
         <segue reference="kkU-F4-K0a"/>
+        <segue reference="veI-CA-d70"/>
+        <segue reference="IAo-qy-uHQ"/>
         <segue reference="sPU-d9-maS"/>
         <segue reference="M45-HY-t12"/>
-        <segue reference="IAo-qy-uHQ"/>
     </inferredMetricsTieBreakers>
 </document>

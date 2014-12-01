@@ -38,7 +38,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.dataSource = [[QMChatDataSource alloc] initWithChatDialog:self.dialog forTableView:self.tableView inputBarDelegate:self];
+    self.dataSource = [[QMChatDataSource alloc] initWithChatDialog:self.dialog
+                                                      forTableView:self.tableView
+                                                  inputBarDelegate:self];
     self.dataSource.delegate = self;
     self.dialog.type == QBChatDialogTypeGroup ? [self configureNavigationBarForGroupChat] : [self configureNavigationBarForPrivateChat];
     

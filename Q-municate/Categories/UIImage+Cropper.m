@@ -112,7 +112,9 @@
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    return newImage;
+    NSData *imageData = UIImagePNGRepresentation(newImage);
+    UIImage *pngImage = [UIImage imageWithData:imageData];
+    return pngImage;
 }
 
 @end

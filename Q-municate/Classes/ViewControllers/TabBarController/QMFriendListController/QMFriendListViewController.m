@@ -11,7 +11,7 @@
 #import "QMMainTabBarController.h"
 #import "QMFriendListCell.h"
 #import "QMFriendsListDataSource.h"
-#import "QMApi.h"
+#import "QMServicesManager.h"
 
 @interface QMFriendListViewController ()
 
@@ -69,7 +69,8 @@
     }
     
     QBUUser *selectedUser = [self.dataSource userAtIndexPath:indexPath];
-    QBContactListItem *item = [[QMApi instance] contactItemWithUserID:selectedUser.ID];
+
+    QBContactListItem *item = [QM.contactListService.contactListMemoryStorage contactListItemWithUserID:selectedUser.ID];
 
     if (item) {
         [self performSegueWithIdentifier:kDetailsSegueIdentifier sender:nil];

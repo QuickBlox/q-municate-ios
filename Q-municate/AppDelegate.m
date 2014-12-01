@@ -11,7 +11,7 @@
 #import "QMIncomingCallHandler.h"
 #import "SVProgressHUD.h"
 #import "QMPopoversFactory.h"
-#import "QMApi.h"
+//#import "QMApi.h"
 
 
 #define DEVELOPMENT 0
@@ -83,7 +83,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     
     if (launchOptions != nil) {
         NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-        [[QMApi instance] setPushNotification:notification];
+//        [[QMApi instance] setPushNotification:notification];
     }
     return YES;
 }
@@ -91,19 +91,19 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
 
 
-    [[QMApi instance] openChatPageForPushNotification:userInfo];
+//    [[QMApi instance] openChatPageForPushNotification:userInfo];
     ILog(@"Push war received. User info: %@", userInfo);
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    [[QMApi instance] applicationWillResignActive];
+//    [[QMApi instance] applicationWillResignActive];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [[QMApi instance] applicationDidBecomeActive:^(BOOL success) {
-        [SVProgressHUD dismiss];
-    }];
+//    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+//    [[QMApi instance] applicationDidBecomeActive:^(BOOL success) {
+//        [SVProgressHUD dismiss];
+//    }];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

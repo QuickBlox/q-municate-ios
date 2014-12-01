@@ -11,6 +11,7 @@
 #import "SVProgressHUD.h"
 #import "REAlertView.h"
 #import "QMServicesManager.h"
+#import "REAlertView+QMSuccess.h"
 
 @interface QMWelcomeScreenViewController ()
 

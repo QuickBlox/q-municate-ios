@@ -10,9 +10,7 @@
 #import "QMFriendsListDataSource.h"
 #import "QMFriendListViewController.h"
 #import "QMFriendListCell.h"
-#import "QMUsersService.h"
 #import "SVProgressHud.h"
-#import "REAlertView.h"
 #import "QMServicesManager.h"
 
 @interface QMFriendsListDataSource()
@@ -51,14 +49,11 @@
         self.searchDisplayController = searchDisplayController;
         
         [QM.contactListService addDelegate:self];
-    
-        UINib *friendsCellNib = [UINib nibWithNibName:@"QMFriendListCell" bundle:nil];
-        UINib *noResultsCellNib = [UINib nibWithNibName:@"QMNoResultsCell" bundle:nil];
         
-        [searchDisplayController.searchResultsTableView registerNib:friendsCellNib
+        [searchDisplayController.searchResultsTableView registerNib:[UINib nibWithNibName:@"QMFriendListCell" bundle:nil]
                                              forCellReuseIdentifier:kQMFriendsListCellIdentifier];
         
-        [searchDisplayController.searchResultsTableView registerNib:noResultsCellNib
+        [searchDisplayController.searchResultsTableView registerNib:[UINib nibWithNibName:@"QMNoResultsCell" bundle:nil]
                                              forCellReuseIdentifier:kQMDontHaveAnyFriendsCellIdentifier];
     }
     
@@ -106,6 +101,7 @@
          NSArray *filtered = [sortedUsers filteredArrayUsingPredicate:predicate];
          
          self.searchResult = filtered;
+         
          [self.searchDisplayController.searchResultsTableView reloadData];
     
          [SVProgressHUD dismiss];
@@ -246,36 +242,55 @@
     NSArray *datasource = [self usersAtSections:indexPath.section];
     QBUUser *user = datasource[indexPath.row];
     
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    
+    __weak __typeof(self)weakSelf = self;
     [QM.contactListService addUserToContactListRequest:user
                                             completion:^(BOOL success)
      {
          if (success) {
              
-             if (self.searchDisplayController.isActive) {
-                 
-                 CGPoint point = self.searchDisplayController.searchResultsTableView.contentOffset;
-                 
-                 self.friendList = QM.contactListService.usersFromContactListSortedByFullName;
-                 
-                 [self.searchDisplayController.searchResultsTableView reloadData];
-                 
-                 NSUInteger idx = [self.friendList indexOfObject:user];
-                 NSUInteger idx2 = [self.searchResult indexOfObject:user];
-                 
-                 if (idx != NSNotFound && idx2 != NSNotFound) {
-                     
-                     point.y += 59;
-                     self.searchDisplayController.searchResultsTableView.contentOffset = point;
-                     
-                 }
-             }
-             else {
-                 [self.searchDisplayController.searchResultsTableView reloadData];
-             }
+             [QM.chatService createPrivateChatDialogIfNeededWithOpponent:user
+                                                              completion:^(QBResponse *response, QBChatDialog *createdDialog)
+              {
+                  if (success) {
+                      
+                      [weakSelf refreshAfterAddUser:user];
+                      
+                      [SVProgressHUD dismiss];
+                  }
+              }];
+         }
+         else {
              
              [SVProgressHUD dismiss];
          }
      }];
+}
+
+- (void)refreshAfterAddUser:(QBUUser *)user {
+    
+    if (self.searchDisplayController.isActive) {
+        
+        CGPoint point = self.searchDisplayController.searchResultsTableView.contentOffset;
+        
+        self.friendList = QM.contactListService.usersFromContactListSortedByFullName;
+        
+        [self.searchDisplayController.searchResultsTableView reloadData];
+        
+        NSUInteger idx = [self.friendList indexOfObject:user];
+        NSUInteger idx2 = [self.searchResult indexOfObject:user];
+        
+        if (idx != NSNotFound && idx2 != NSNotFound) {
+            
+            point.y += 59;
+            self.searchDisplayController.searchResultsTableView.contentOffset = point;
+            
+        }
+    }
+    else {
+        [self.searchDisplayController.searchResultsTableView reloadData];
+    }
 }
 
 #pragma mark - UISearchDisplayController

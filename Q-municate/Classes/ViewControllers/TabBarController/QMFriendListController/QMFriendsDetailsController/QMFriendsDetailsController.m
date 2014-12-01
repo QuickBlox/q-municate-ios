@@ -14,8 +14,7 @@
 #import "QMAlertsFactory.h"
 #import "REAlertView.h"
 #import "SVProgressHUD.h"
-#import "QMApi.h"
-#import "QMChatReceiver.h"
+#import "QMServicesManager.h"
 
 typedef NS_ENUM(NSUInteger, QMCallType) {
     QMCallTypePhone,
@@ -24,7 +23,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     QMCallTypeChat
 };
 
-@interface QMFriendsDetailsController () <UIActionSheetDelegate>
+@interface QMFriendsDetailsController () <UIActionSheetDelegate, QMContactListServiceDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableViewCell *phoneCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *videoChatCell;
@@ -44,7 +43,6 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 @implementation QMFriendsDetailsController
 
 - (void)dealloc {
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
     NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
@@ -52,11 +50,14 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     
     [super viewDidLoad];
     
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.tableView.tableFooterView =
+    [[UIView alloc] initWithFrame:CGRectZero];
     
     if (self.selectedUser.phone.length == 0) {
+        
         [self.phoneLabel setText:NSLocalizedString(@"QM_STR_NONE", nil)];
-    } else {
+    }
+    else {
         self.phoneLabel.text = self.selectedUser.phone;
     }
     
@@ -66,6 +67,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     
     NSURL *url = [QMUsersUtils userAvatarURL:self.selectedUser];
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
+    
     [self.userAvatar setImageWithURL:url
                          placeholder:placeholder
                              options:SDWebImageHighPriority
@@ -79,14 +81,9 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
          
      }];
     
-    __weak __typeof(self)weakSelf = self;
-    [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:^{
-        [weakSelf updateUserStatus];
-        [weakSelf disableDeleteContactButtonIfNeeded];
-    }];
+    [QM.contactListService addDelegate:self];
     
     [self updateUserStatus];
-    
     [self disableDeleteContactButtonIfNeeded];
     
 #if !QM_AUDIO_VIDEO_ENABLED
@@ -96,6 +93,14 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     [self cells:@[videoChatCell, audioChatCell] setHidden:YES];
     
 #endif
+}
+
+#pragma mark - QMContactListServiceDelegate
+
+- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
+    
+    [self updateUserStatus];
+    [self disableDeleteContactButtonIfNeeded];
 }
 
 - (void)updateUserStatus {
@@ -162,31 +167,40 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
         } break;
             
         default:break;
+        }
     }
-}
-
+    
 #pragma mark - Actions
-
-- (IBAction)removeFromFriends:(id)sender {
     
-    __weak __typeof(self)weakSelf = self;
-    [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
+    - (IBAction)removeFromFriends:(id)sender {
         
-        alertView.message = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_CONFIRM_DELETE_CONTACT", @"{User Full Name}"), self.selectedUser.fullName];
-        [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
-        [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil) andActionBlock:^{
-            
-            [[QMApi instance] removeUserFromContactList:weakSelf.selectedUser completion:^(BOOL success, QBChatMessage *notification) {}];
-            [weakSelf.navigationController popViewControllerAnimated:YES];
-        }];
-    }];
-}
+        __weak __typeof(self)weakSelf = self;
+        [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView)
+         {
+             alertView.message =
+             [NSString stringWithFormat:NSLocalizedString(@"QM_STR_CONFIRM_DELETE_CONTACT", @"{User Full Name}"), self.selectedUser.fullName];
+             
+             [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+                            andActionBlock:^{}];
+             
+             [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil)
+                            andActionBlock:^
+              {
+                  [QM.contactListService removeUserFromContactListWithUserID:weakSelf.selectedUser.ID
+                                                                  completion:^(BOOL success)
+                   {
+                       [weakSelf.navigationController popViewControllerAnimated:YES];
+                   }];
+              }];
+         }];
+    }
     
-
-- (void)disableDeleteContactButtonIfNeeded
-{
-    BOOL isContact = [[QMApi instance] isFriend:self.selectedUser];
-    self.deleteContactButton.enabled = isContact;
-}
-
-@end
+    
+    - (void)disableDeleteContactButtonIfNeeded
+    {
+        QBContactListItem *item = [QM.contactListService.contactListMemoryStorage contactListItemWithUserID:self.selectedUser.ID];
+        
+        self.deleteContactButton.enabled = item ? YES : NO;
+    }
+    
+    @end
