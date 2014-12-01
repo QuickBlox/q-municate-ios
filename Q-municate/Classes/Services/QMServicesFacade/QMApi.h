@@ -18,6 +18,7 @@
 @class QMMessagesService;
 @class QMChatReceiver;
 @class QMContentService;
+@class QMReachability;
 
 typedef NS_ENUM(NSUInteger, QMAccountType);
 
@@ -31,6 +32,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 @property (strong, nonatomic, readonly) QMMessagesService *messagesService;
 @property (strong, nonatomic, readonly) QMChatReceiver *responceService;
 @property (strong, nonatomic, readonly) QMContentService *contentService;
+@property (strong, nonatomic, readonly) QMReachability *internetConnection;
 
 @property (strong, nonatomic, readonly) QBUUser *currentUser;
 

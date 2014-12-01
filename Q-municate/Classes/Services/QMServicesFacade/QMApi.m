@@ -19,6 +19,7 @@
 #import "REAlertView+QMSuccess.h"
 #import "QMChatReceiver.h"
 #import "QMPopoversFactory.h"
+#import "QMSettingsManager.h"
 #import "QMMainTabBarController.h"
 
 const NSTimeInterval kQMPresenceTime = 30;
@@ -180,6 +181,11 @@ const NSTimeInterval kQMPresenceTime = 30;
 }
 
 - (void)applicationDidBecomeActive:(void(^)(BOOL success))completion {
+    
+//    if (!self.internetConnection.isConnected) {
+//        completion(NO);
+//        return;
+//    }
     _group = dispatch_group_create();
     dispatch_group_enter(_group);
     
@@ -216,7 +222,10 @@ const NSTimeInterval kQMPresenceTime = 30;
     if (dialog == nil) {
         return;
     }
-    
+    NSString *dialogWithIDWasEntered = [QMApi instance].settingsManager.dialogWithIDisActive;
+    if ([dialogWithIDWasEntered isEqualToString:dialogID]) {
+        return;
+    }
     QMChatViewController *chatController = [QMPopoversFactory chatControllerWithDialogID:dialogID];
     UIWindow *window = [[UIApplication sharedApplication].windows firstObject];
     QMMainTabBarController *tabBar = (QMMainTabBarController *)window.rootViewController;

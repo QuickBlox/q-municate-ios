@@ -11,6 +11,7 @@
 #import "QMIncomingCallHandler.h"
 #import "SVProgressHUD.h"
 #import "QMPopoversFactory.h"
+#import "REAlertView+QMSuccess.h"
 #import "QMApi.h"
 
 
@@ -100,9 +101,13 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
+    
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] applicationDidBecomeActive:^(BOOL success) {
         [SVProgressHUD dismiss];
+        if (!success) {
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        }
     }];
 }
 
