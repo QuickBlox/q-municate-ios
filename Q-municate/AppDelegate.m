@@ -49,15 +49,18 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     
     UIApplication.sharedApplication.applicationIconBadgeNumber = 0;
     
-    [QBSettings setApplicationID:kQMApplicationID];
-    [QBSettings setAuthorizationKey:kQMAuthorizationKey];
-    [QBSettings setAuthorizationSecret:kQMAuthorizationSecret];
+    // Needed for new API:
+    [QBApplication sharedApplication].applicationId = kQMApplicationID;
+    [QBConnection registerServiceKey:kQMAuthorizationKey];
+    [QBConnection registerServiceSecret:kQMAuthorizationSecret];
+    
     [QBSettings setAccountKey:kQMAcconuntKey];
     [QBSettings setLogLevel:QBLogLevelDebug];
     
     
+    
 #ifndef DEBUG
-    [QBSettings useProductionEnvironmentForPushNotifications:YES];
+    [QBApplication sharedApplication].productionEnvironmentForPushesEnabled = YES;
 #endif
     
     
@@ -131,6 +134,19 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 
     BOOL urlWasIntendedForFacebook = [FBSession.activeSession handleOpenURL:url];
     return urlWasIntendedForFacebook;
+}
+
+
+#pragma mark - PUSH NOTIFICATIONS REGISTRATION
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    if (deviceToken) {
+        if ([QMApi instance].subscriptionBlock) {
+            [QMApi instance].subscriptionBlock(deviceToken);
+        }
+
+    }
 }
 
 @end

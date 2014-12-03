@@ -18,9 +18,12 @@
 #import "QMMessagesService.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMChatReceiver.h"
+#import <Reachability.h>
 #import "QMPopoversFactory.h"
 #import "QMSettingsManager.h"
 #import "QMMainTabBarController.h"
+
+#import <SVProgressHUD.h>
 
 const NSTimeInterval kQMPresenceTime = 30;
 
@@ -34,6 +37,7 @@ const NSTimeInterval kQMPresenceTime = 30;
 @property (strong, nonatomic) QMMessagesService *messagesService;
 @property (strong, nonatomic) QMChatReceiver *responceService;
 @property (strong, nonatomic) QMContentService *contentService;
+@property (strong, nonatomic) Reachability *internetConnection;
 @property (strong, nonatomic) NSTimer *presenceTimer;
 
 @property (nonatomic) dispatch_group_t group;
@@ -76,8 +80,24 @@ const NSTimeInterval kQMPresenceTime = 30;
         self.settingsManager = [[QMSettingsManager alloc] init];
         self.avCallService = [[QMAVCallService alloc] init];
         self.contentService = [[QMContentService alloc] init];
-        
+        self.internetConnection = [Reachability reachabilityForInternetConnection];
+    
         __weak typeof(self)weakSelf = self;
+        
+        self.internetConnection.reachableBlock = ^(Reachability *reachability) {
+            // if internet connection is actice:
+//            if (![[QBChat instance]isLoggedIn]) {
+//                [SVProgressHUD show];
+//                [weakSelf applicationDidBecomeActive:^(BOOL success) {
+//                    [SVProgressHUD dismiss];
+//                }];
+//            }
+        };
+        self.internetConnection.unreachableBlock = ^(Reachability *reachability) {
+            // if there is no internet:r
+            [SVProgressHUD dismiss];
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        };
         
         [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
             [weakSelf.chatDialogsService updateOrCreateDialogWithMessage:message isMine:(message.senderID == weakSelf.currentUser.ID)];
@@ -103,6 +123,8 @@ const NSTimeInterval kQMPresenceTime = 30;
             [weakSelf fireEnqueuedMessageForChatRoomWithJID:room.JID];
         }];
     }
+    
+    [self.internetConnection startNotifier];
     
     return self;
 }
@@ -182,10 +204,6 @@ const NSTimeInterval kQMPresenceTime = 30;
 
 - (void)applicationDidBecomeActive:(void(^)(BOOL success))completion {
     
-//    if (!self.internetConnection.isConnected) {
-//        completion(NO);
-//        return;
-//    }
     _group = dispatch_group_create();
     dispatch_group_enter(_group);
     

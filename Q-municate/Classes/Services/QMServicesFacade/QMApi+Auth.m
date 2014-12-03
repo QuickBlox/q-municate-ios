@@ -12,6 +12,7 @@
 #import "QMSettingsManager.h"
 #import "QMUsersService.h"
 #import "QMMessagesService.h"
+#import "REAlertView+QMSuccess.h"
 
 @implementation QMApi (Auth)
 
@@ -25,10 +26,7 @@
     [QMFacebookService logout];
     [self stopServices];
     
-    [self.authService unSubscribeFromPushNotifications:^(QBMUnregisterSubscriptionTaskResult *result) {
-        
-        completion(YES);
-    }];
+    [self unSubscribeToPushNotifications:completion];
 }
 
 - (void)setAutoLogin:(BOOL)autologin withAccountType:(QMAccountType)accountType {
@@ -122,10 +120,12 @@
     
     if ([self.authService sessionTokenHasExpiredOrNeedCreate]) {
         
-        __weak __typeof(self)weakSelf = self;
-        [weakSelf.authService createSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
-            completion([weakSelf checkResult:result]);
-        }];;
+        [QBRequest createSessionWithSuccessBlock:^(QBResponse *response, QBASession *session) {
+            completion(YES);
+        } errorBlock:^(QBResponse *response) {
+            [REAlertView showAlertWithMessage:response.error.description actionSuccess:NO];
+            completion(NO);
+        }];
     }
     else {
         completion(YES);
@@ -134,9 +134,11 @@
 
 - (void)destroySessionWithCompletion:(void(^)(BOOL success))completion {
     
-    __weak __typeof(self)weakSelf = self;
-    [self.authService destroySessionWithCompletion:^(QBAAuthResult *result) {
-        completion([weakSelf checkResult:result]);
+    [QBRequest destroySessionWithSuccessBlock:^(QBResponse *response) {
+        completion(YES);
+    } errorBlock:^(QBResponse *response) {
+        [REAlertView showAlertWithMessage:response.error.description actionSuccess:NO];
+        completion(NO);
     }];
 }
 
@@ -174,13 +176,37 @@
     
     if (self.settingsManager.pushNotificationsEnabled || force) {
         __weak __typeof(self)weakSelf = self;
-        [self.authService subscribeToPushNotifications:^(QBMRegisterSubscriptionTaskResult *result) {
-            if (result.success && force) {
-                weakSelf.settingsManager.pushNotificationsEnabled = YES;
+        self.subscriptionBlock = ^(NSData *deviceToken) {
+            if (deviceToken) {
+                // Register subscription with device token
+                [QBRequest registerSubscriptionForDeviceToken:deviceToken successBlock:^(QBResponse *response, NSArray *subscriptions) {
+                    // Registration succeded
+                    if (force) {
+                        weakSelf.settingsManager.pushNotificationsEnabled = YES;
+                    }
+                    if (complete) complete(YES);
+                } errorBlock:^(QBError *error) {
+                    // Handle error
+                    [REAlertView showAlertWithMessage:error.description actionSuccess:NO];
+                    if (complete) complete(NO);
+                }];
             }
-            if (complete)
-                complete([weakSelf checkResult:result]);
-        }];
+        };
+        
+        
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+        if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+            
+            [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+            [[UIApplication sharedApplication] registerForRemoteNotifications];
+        }
+        else{
+            [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+        }
+#else
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+#endif
+        
     }
 }
 
@@ -188,17 +214,12 @@
     
     if (self.settingsManager.pushNotificationsEnabled) {
         __weak __typeof(self)weakSelf = self;
-        [self.authService unSubscribeFromPushNotifications:^(QBMUnregisterSubscriptionTaskResult *result) {
-            
-            if (![weakSelf checkResult:result]) {
-                if (complete)
-                    complete(NO);
-            }
-            else {
-                weakSelf.settingsManager.pushNotificationsEnabled = NO;
-                if (complete)
-                    complete(YES);
-            }
+        [QBRequest unregisterSubscriptionWithSuccessBlock:^(QBResponse *response) {
+            weakSelf.settingsManager.pushNotificationsEnabled = NO;
+            if (complete) complete(YES);
+        } errorBlock:^(QBError *error) {
+            [REAlertView showAlertWithMessage:error.description actionSuccess:NO];
+            if (complete) complete(NO);
         }];
     }
 }

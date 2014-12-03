@@ -40,6 +40,7 @@ typedef void (^QBMUnregisterSubscriptionTaskResultBlock)(QBMUnregisterSubscripti
 typedef void (^QBDialogsPagedResultBlock)(QBDialogsPagedResult *result);
 typedef void (^QBChatDialogResultBlock)(QBChatDialogResult *result);
 typedef void (^QBChatHistoryMessageResultBlock)(QBChatHistoryMessageResult *result);
+typedef void (^UIApplicationDeviceTokenBlock)(NSData *deviceToken);
 
 typedef void (^QBResultBlock)(Result *result);
 typedef void (^QBSessionCreationBlock)(BOOL success, NSString *error);
