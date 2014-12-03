@@ -12,6 +12,8 @@
 @interface QMUsersService : QMBaseService
 
 @property (strong, nonatomic) NSMutableArray *contactList;
+#warning HARDFIX: property friendsOnly
+@property (strong, nonatomic) NSMutableArray *friendsOnly;
 @property (strong, nonatomic) NSMutableSet *confirmRequestUsersIDs;
 
 - (void)addUsers:(NSArray *)users;

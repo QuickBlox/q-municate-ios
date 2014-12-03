@@ -21,7 +21,7 @@
 }
 
 - (void)logoutFromChat {
-    [self.chatDialogsService leaveFromRooms];
+//    [self.chatDialogsService leaveFromRooms];
     [self.messagesService logoutChat];
     [self.settingsManager setLastActivityDate:[NSDate date]];
 }

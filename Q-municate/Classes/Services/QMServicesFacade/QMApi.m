@@ -95,8 +95,10 @@ const NSTimeInterval kQMPresenceTime = 30;
         };
         self.internetConnection.unreachableBlock = ^(Reachability *reachability) {
             // if there is no internet:r
-            [SVProgressHUD dismiss];
-            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [SVProgressHUD dismiss];
+                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+            });
         };
         
         [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {

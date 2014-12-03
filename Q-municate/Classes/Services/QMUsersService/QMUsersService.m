@@ -26,6 +26,7 @@
         self.users = [NSMutableDictionary dictionary];
         self.contactList = [NSMutableArray array];
         self.retrivedIds = [NSMutableSet set];
+        self.friendsOnly = [NSMutableArray new];
         
     }
     return self;
@@ -38,10 +39,15 @@
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
         
+        if (!contactList) {
+            return;
+        }
         [weakSelf.contactList removeAllObjects];
+        [weakSelf.friendsOnly removeAllObjects];
         
         [weakSelf.contactList addObjectsFromArray:contactList.pendingApproval];
         [weakSelf.contactList addObjectsFromArray:contactList.contacts];
+        [weakSelf.friendsOnly addObjectsFromArray:contactList.contacts];
         
         [weakSelf retrieveUsersWithIDs:[weakSelf idsFromContactListItems] completion:^(BOOL updated) {
             
@@ -96,6 +102,7 @@
     [[QMChatReceiver instance] unsubscribeForTarget:self];
     [self.users removeAllObjects];
     [self.contactList removeAllObjects];
+    [self.friendsOnly removeAllObjects];
 }
 
 - (NSArray *)idsOfUsers:(NSArray *)users
@@ -116,7 +123,7 @@
 
 - (BOOL)isFriendWithID:(NSUInteger)ID
 {
-    NSArray *contactListItems = [QBChat instance].contactList.contacts;
+    NSArray *contactListItems = self.friendsOnly;
     for (QBContactListItem *item in contactListItems) {
         if (item.userID == ID) {
             return YES;

@@ -133,7 +133,7 @@
     for (QBChatDialog *dialog in requestedDialogs) {
         QBChatDialog *existedDialog = self.dialogs[dialog.ID];
         if (!existedDialog) {
-            self.dialogs[existedDialog.ID] = existedDialog;
+            self.dialogs[dialog.ID] = dialog;
             continue;
         }
         if (existedDialog.type == QBChatDialogTypeGroup) {

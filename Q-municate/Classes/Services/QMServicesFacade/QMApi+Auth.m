@@ -26,7 +26,9 @@
     [QMFacebookService logout];
     [self stopServices];
     
-    [self unSubscribeToPushNotifications:completion];
+    [self unSubscribeToPushNotifications:^(BOOL success) {
+        completion(YES);
+    }];
 }
 
 - (void)setAutoLogin:(BOOL)autologin withAccountType:(QMAccountType)accountType {
