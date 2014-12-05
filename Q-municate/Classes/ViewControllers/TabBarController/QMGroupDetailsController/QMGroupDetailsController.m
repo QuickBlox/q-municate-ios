@@ -16,6 +16,7 @@
 #import "QMContentService.h"
 #import "QMChatReceiver.h"
 #import "UIImage+Cropper.h"
+#import "REActionSheet.h"
 
 @interface QMGroupDetailsController ()
 
@@ -165,6 +166,36 @@
     return [newArray copy];
 }
 
+
+- (void)leaveGroupChat
+{
+    __weak typeof(self)weakSelf = self;
+    [SVProgressHUD show];
+    [[QMApi instance] leaveChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
+        [SVProgressHUD dismiss];
+        if (result.success) {
+            [weakSelf.navigationController popToRootViewControllerAnimated:YES];
+        }
+    }];
+}
+
+#pragma mark - UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 1) {
+        __weak typeof(self)weakSelf = self;
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        [REActionSheet presentActionSheetInView:tableView configuration:^(REActionSheet *actionSheet) {
+            actionSheet.title = @"Are you sure?";
+            [actionSheet addCancelButtonWihtTitle:@"Cancel" andActionBlock:^{}];
+            [actionSheet addDestructiveButtonWithTitle:@"Leave chat" andActionBlock:^{
+                // leave logic:
+                [weakSelf leaveGroupChat];
+            }];
+        }];
+    }
+}
 
 #pragma mark - Segue
 

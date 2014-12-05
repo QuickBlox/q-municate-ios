@@ -2931,7 +2931,7 @@ Cg
                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="QMFriendListCell" rowHeight="59" id="81y-lY-KsM" customClass="QMFriendListCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="QMFriendListCell" rowHeight="59" id="81y-lY-KsM" customClass="QMFriendListCell">
                                         <rect key="frame" x="0.0" y="22" width="320" height="59"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="81y-lY-KsM" id="P0Y-Yc-ydR">
@@ -3009,6 +3009,29 @@ Cg
                                             <outlet property="qmImageView" destination="WbY-wV-ozV" id="UgM-1N-eMn"/>
                                             <outlet property="titleLabel" destination="yB2-C3-nCB" id="Xcn-UH-zxb"/>
                                         </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="QMLeaveChatCell" rowHeight="50" id="MhM-fH-ms1">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="MhM-fH-ms1" id="6pi-A5-0iQ">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Leave chat" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7o1-cz-2CL">
+                                                    <rect key="frame" x="105" y="13" width="110" height="24"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="24" id="91w-7c-efQ"/>
+                                                        <constraint firstAttribute="width" constant="110" id="VnO-IS-sht"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                    <color key="textColor" red="0.87920851934523814" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="centerX" secondItem="7o1-cz-2CL" secondAttribute="centerX" id="RNx-nb-mZ9"/>
+                                                <constraint firstAttribute="centerY" secondItem="7o1-cz-2CL" secondAttribute="centerY" constant="-0.25" id="e8K-f2-VCL"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>

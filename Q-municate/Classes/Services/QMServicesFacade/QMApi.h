@@ -183,7 +183,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  @param chatDialog - chat dialog
  @result QBChatDialogResult
  */
-- (void)leaveWithUserId:(NSUInteger)userID fromChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
+- (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
 
 /**
  Join users to chat dialog

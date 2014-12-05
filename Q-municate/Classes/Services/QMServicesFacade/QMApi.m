@@ -86,12 +86,6 @@ const NSTimeInterval kQMPresenceTime = 30;
         
         self.internetConnection.reachableBlock = ^(Reachability *reachability) {
             // if internet connection is actice:
-//            if (![[QBChat instance]isLoggedIn]) {
-//                [SVProgressHUD show];
-//                [weakSelf applicationDidBecomeActive:^(BOOL success) {
-//                    [SVProgressHUD dismiss];
-//                }];
-//            }
         };
         self.internetConnection.unreachableBlock = ^(Reachability *reachability) {
             // if there is no internet:r
@@ -239,19 +233,29 @@ const NSTimeInterval kQMPresenceTime = 30;
 {
     NSString *dialogID = notification[@"dialog_id"];
     QBChatDialog *dialog = [self chatDialogWithID:dialogID];
+    __weak typeof(self)weakSelf = self;
     if (dialog == nil) {
+        [self fetchDialogsWithLastActivityFromDate:self.settingsManager.lastActivityDate completion:^(QBDialogsPagedResult *result) {
+            [weakSelf openChatPageForPushNotification:notification];
+        }];
         return;
     }
+    [self openChatControllerForDialogWithID:dialogID];
+}
+
+- (void)openChatControllerForDialogWithID:(NSString *)dialogID
+{
     NSString *dialogWithIDWasEntered = [QMApi instance].settingsManager.dialogWithIDisActive;
     if ([dialogWithIDWasEntered isEqualToString:dialogID]) {
         return;
     }
-    QMChatViewController *chatController = [QMPopoversFactory chatControllerWithDialogID:dialogID];
+    UIViewController *chatController = [QMPopoversFactory chatControllerWithDialogID:dialogID];
     UIWindow *window = [[UIApplication sharedApplication].windows firstObject];
     QMMainTabBarController *tabBar = (QMMainTabBarController *)window.rootViewController;
     UINavigationController *navigationController = (UINavigationController *)[tabBar selectedViewController];
     [navigationController pushViewController:chatController animated:YES];
 }
+
 
 @end
 

@@ -13,7 +13,7 @@
 @implementation QMPopoversFactory
 
 
-+ (QMChatViewController *)chatControllerWithDialogID:(NSString *)dialogID
++ (UIViewController *)chatControllerWithDialogID:(NSString *)dialogID
 {
     QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:dialogID];
     

@@ -11,7 +11,8 @@
 #import "QMChatReceiver.h"
 #import "QMApi.h"
 
-NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
+NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
+NSString *const kLeaveChatCellIdentifier = @"QMLeaveChatCell";
 
 @interface QMGroupDetailsDataSource ()
 
@@ -80,15 +81,24 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
     [self.tableView reloadData];
 }
 
+
 #pragma mark - UITableViewDataSource
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 2;
+}
 
-    return self.participants.count;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return (section == 0) ? self.participants.count : 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    if (indexPath.section == 1) {
+        return [tableView dequeueReusableCellWithIdentifier:kLeaveChatCellIdentifier];
+    }
     QMFriendListCell *cell = [tableView dequeueReusableCellWithIdentifier:kFriendsListCellIdentifier];
 
     QBUUser *user = self.participants[indexPath.row];
@@ -99,6 +109,7 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
     
     return cell;
 }
+
 
 #pragma mark - QMFriendListCellDelegate
 

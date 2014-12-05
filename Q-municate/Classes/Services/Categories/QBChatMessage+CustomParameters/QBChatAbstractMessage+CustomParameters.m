@@ -203,8 +203,6 @@ NSString const *kQMCustomParameterDialogDeletedID = @"deleted_id";
         self.cParamRoomJID = chatDialog.roomJID;
         self.cParamDialogRoomName = chatDialog.name;
     }
-    
-    self.cParamDialogType = @(chatDialog.type);
     self.cParamDialogOccupantsIDs = chatDialog.occupantIDs;
 }
 
@@ -215,7 +213,11 @@ NSString const *kQMCustomParameterDialogDeletedID = @"deleted_id";
     chatDialog.roomJID = self.cParamRoomJID;
     chatDialog.name = self.cParamDialogRoomName;
     chatDialog.occupantIDs = self.cParamDialogOccupantsIDs;
-    chatDialog.type = self.cParamDialogType.integerValue;
+    if (self.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
+        chatDialog.type = QBChatDialogTypeGroup;
+    } else if (self.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
+        chatDialog.type = QBChatDialogTypePrivate;
+    }
     
     return chatDialog;
 }

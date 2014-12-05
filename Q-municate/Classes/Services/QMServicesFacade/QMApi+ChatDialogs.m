@@ -1,4 +1,4 @@
-//
+    //
 //  QMApi+ChatDialogs.m
 //  Qmunicate
 //
@@ -147,7 +147,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     }];
 }
 
-- (void)leaveWithUserId:(NSUInteger)userID fromChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
+- (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
     
     NSString *messageTypeText = NSLocalizedString(@"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT", @"{Full name}");
     NSString *text = [NSString stringWithFormat:messageTypeText, self.currentUser.fullName];
@@ -155,11 +155,13 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     [self sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"deleted_id" content:myID];
     
     NSMutableDictionary *extendedRequest = [[NSMutableDictionary alloc] init];
-    extendedRequest[kQMEditDialogExtendedPullOccupantsParameter] = [NSString stringWithFormat:@"%d", userID];
+    extendedRequest[kQMEditDialogExtendedPullOccupantsParameter] = myID;
+    
+    [chatDialog.chatRoom leaveRoom];
     
     [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialogResult *result) {
         if (result.success) {
-            [chatDialog.chatRoom leaveRoom];
+            [self.chatDialogsService deleteLocalDialog:chatDialog];
             completion(result);
         }
     }];

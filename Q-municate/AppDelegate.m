@@ -15,7 +15,7 @@
 #import "QMApi.h"
 
 
-#define DEVELOPMENT 0
+#define DEVELOPMENT 1
 
 #if DEVELOPMENT
 
