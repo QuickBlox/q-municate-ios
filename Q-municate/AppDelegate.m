@@ -16,6 +16,8 @@
 
 
 #define DEVELOPMENT 1
+#define STAGE_SERVER_IS_ACTIVE 0
+
 
 #if DEVELOPMENT
 
@@ -24,6 +26,16 @@ const NSUInteger kQMApplicationID = 14542;
 NSString *const kQMAuthorizationKey = @"rJqAFphrSnpyZW2";
 NSString *const kQMAuthorizationSecret = @"tTEB2wK-dU8X3Ra";
 NSString *const kQMAcconuntKey = @"2qCrjKYFkYnfRnUiYxLZ";
+
+
+
+//// Stage server for E-bay:
+//
+//const NSUInteger kQMApplicationID = 13029;
+//NSString *const kQMAuthorizationKey = @"3mBwAnczNvh-sBK";
+//NSString *const kQMAuthorizationSecret = @"xWP2jgUsQOpxj-6";
+//NSString *const kQMAcconuntKey = @"tLapBNZPeqCHxEA8zApx";
+//NSString *const kQMContentBucket = @"blobs-test-oz";
 
 #else
 
@@ -34,6 +46,7 @@ NSString *const kQMAuthorizationSecret = @"xS2uerEveGHmEun";
 NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 #endif
+
 
 /* ==================================================================== */
 
@@ -65,8 +78,11 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     
     
 #if STAGE_SERVER_IS_ACTIVE == 1
-    [QBSettings setServerApiDomain:@"http://api.stage.quickblox.com"];
+//    [QBSettings setServerApiDomain:@"http://api.stage.quickblox.com"];
+    [QBConnection setApiDomain:@"http://api.stage.quickblox.com" forServiceZone:QBConnectionZoneTypeDevelopment];
+    [QBConnection setServiceZone:QBConnectionZoneTypeDevelopment];
     [QBSettings setServerChatDomain:@"chatstage.quickblox.com"];
+    [QBSettings setContentBucket: kQMContentBucket];
 #endif
     
     /*Configure app appearance*/

@@ -58,6 +58,17 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     chatDialog.occupantIDs = occupantIDs;
     chatDialog.type = QBChatDialogTypeGroup;
     
+//    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+//    params[@"class_name"] = @"ebay1";
+//    params[@"ad_title"] = @"Ford Focus Zetec Climate Tdci 1.8 5dr";
+//    params[@"ad_category"] = @"All Categories > Auto > Ford";
+//    params[@"ad_price"] = @"30 000$";
+//    params[@"ad_expiration"] = @"12 November 2015";
+//    params[@"ad_description"] = @"Blue, 1 owner, 5 seats, Ford Focus 1.8 Zetec Climate Tdci, diesel!! P/x to clear! High mileage but drives well, 1m/1000 mile warranty, price NOT negotiable!";
+//    params[@"ad_link"] = @"http://ford-auto.kh.ua/spec_propozuciya/?bitrix_include_areas=Y&clear_cache=Y&gclid=CO2Qm7q__8ICFVPJtAodgnEAfQ";
+//    params[@"ad_id"] = @"465456487978979870000";
+//    chatDialog.data = params;
+    
     __weak typeof(self)weakSelf = self;
     [self.chatDialogsService createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
         // send notification from here:

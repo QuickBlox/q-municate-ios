@@ -85,7 +85,9 @@
 - (void)addDialogs:(NSArray *)dialogs {
     
     for (QBChatDialog *chatDialog in dialogs) {
-        [self addDialogToHistory:chatDialog];
+        if (chatDialog.type != QBChatDialogTypePublicGroup) {
+            [self addDialogToHistory:chatDialog];
+        }
     }
 }
 

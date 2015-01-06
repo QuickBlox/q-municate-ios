@@ -18,6 +18,7 @@
 		2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */; };
 		2494559B19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 2494559A19A4D0EE00E9352B /* QBChatAbstractMessage+TextEncoding.m */; };
 		24D01C3C1A263F0500F9A67D /* QMChatReceiver+Messages.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D01C3B1A263F0500F9A67D /* QMChatReceiver+Messages.m */; };
+		24F63C141A5C314D0090740F /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24F63C131A5C314D0090740F /* Quickblox.framework */; };
 		24FDA66F199B7A610005662B /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24FDA66E199B7A610005662B /* Crashlytics.framework */; };
 		551BD88A199103C0006AC667 /* _CDAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 551BD883199103C0006AC667 /* _CDAttachment.m */; };
 		551BD88B199103C0006AC667 /* _CDDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 551BD885199103C0006AC667 /* _CDDialog.m */; };
@@ -265,6 +266,7 @@
 		24970BC619DD951600959268 /* QMApi+Notifications.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Notifications.m"; sourceTree = "<group>"; };
 		24D01C3B1A263F0500F9A67D /* QMChatReceiver+Messages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMChatReceiver+Messages.m"; sourceTree = "<group>"; };
 		24ECC26419A73587003F5038 /* Macro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macro.h; sourceTree = "<group>"; };
+		24F63C131A5C314D0090740F /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quickblox.framework; path = External/Quickblox.framework; sourceTree = "<group>"; };
 		24FDA66E199B7A610005662B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = External/Crashlytics.framework; sourceTree = "<group>"; };
 		551BD882199103C0006AC667 /* _CDAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _CDAttachment.h; sourceTree = "<group>"; };
 		551BD883199103C0006AC667 /* _CDAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _CDAttachment.m; sourceTree = "<group>"; };
@@ -645,6 +647,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				24F63C141A5C314D0090740F /* Quickblox.framework in Frameworks */,
 				69A664E019BDB57700D3E0C7 /* libxml2.2.dylib in Frameworks */,
 				86FD874D1982512000B6FA43 /* GLKit.framework in Frameworks */,
 				69CF189D18AE1C6A003262EF /* CoreData.framework in Frameworks */,
@@ -2090,6 +2093,7 @@
 		69D57E5418ACC11C00A9900A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				24F63C131A5C314D0090740F /* Quickblox.framework */,
 				69A664DF19BDB57700D3E0C7 /* libxml2.2.dylib */,
 				24FDA66E199B7A610005662B /* Crashlytics.framework */,
 				86FD874C1982512000B6FA43 /* GLKit.framework */,
