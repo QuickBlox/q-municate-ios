@@ -108,14 +108,16 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
             if (!message.cParamDialogID) {
                 return;
             }
-            QBChatDialog *dialogForReceiverMessage = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
             
-            if ([weakSelf.chatDialog isEqual:dialogForReceiverMessage] && message.cParamNotificationType != QMMessageNotificationTypeDeliveryMessage) {
+            if ([weakSelf.chatDialog.ID isEqualToString:message.cParamDialogID] && message.cParamNotificationType != QMMessageNotificationTypeDeliveryMessage) {
                 
                 // mark message as read:
                 [QBChat markMessagesAsRead:@[message] dialogID:message.cParamDialogID delegate:nil context:nil];
                 
                 if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
+                    
+                    QBChatDialog *dialogForReceiverMessage = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
+                    
                     if (![dialogForReceiverMessage.chatRoom isJoined]) {
                         [weakSelf lockInputBar];
                     }

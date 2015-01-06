@@ -48,8 +48,8 @@
             return;
         }
         if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog && [message.cParamDialogID isEqualToString:weakSelf.dialog.ID]) {
-            weakSelf.title = message.cParamDialogRoomName;
             weakSelf.dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
+            weakSelf.title = weakSelf.dialog.name;
         }
     }];
 }

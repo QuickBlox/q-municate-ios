@@ -79,8 +79,8 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateNormal];
     [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateDisabled];
     
-    [[SVProgressHUD appearance] setHudBackgroundColor:[UIColor colorWithRed:0.046 green:0.377 blue:0.633 alpha:1.000]];
-    [[SVProgressHUD appearance] setHudForegroundColor:[UIColor colorWithWhite:1.000 alpha:1.000]];
+//    [[SVProgressHUD appearance] setHudBackgroundColor:[UIColor colorWithRed:0.046 green:0.377 blue:0.633 alpha:1.000]];
+//    [[SVProgressHUD appearance] setHudForegroundColor:[UIColor colorWithWhite:1.000 alpha:1.000]];
     
     /** Crashlytics */
     [Crashlytics startWithAPIKey:@"7aea78439bec41a9005c7488bb6751c5e33fe270"];

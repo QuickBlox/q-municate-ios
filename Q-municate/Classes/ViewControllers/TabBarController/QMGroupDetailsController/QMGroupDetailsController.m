@@ -111,9 +111,10 @@
 - (void)changeGroupAvatar:(id)sender {
     
     __weak typeof(self)weakSelf = self;
-    [QMImagePicker chooseSourceTypeInVC:self allowsEditing:NO result:^(UIImage *image) {
+    [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
+        
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-        [[QMApi instance] changeAvatar:[image imageByScaleAndCrop:CGSizeMake(900, 900)] forChatDialog:weakSelf.chatDialog completion:^(QBChatDialogResult *result) {
+        [[QMApi instance] changeAvatar:image forChatDialog:weakSelf.chatDialog completion:^(QBChatDialogResult *result) {
             if (result.success) {
                 [weakSelf updateGUIWithChatDialog:result.dialog];
             }

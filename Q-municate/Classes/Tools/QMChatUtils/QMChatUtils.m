@@ -59,7 +59,7 @@
                 messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_UPDATE_GROUP_AVATAR_TEXT", nil), sender.fullName];
             } else if (notification.cParamDialogRoomName) {
                 messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_UPDATE_GROUP_NAME_TEXT", nil), sender.fullName, notification.cParamDialogRoomName];
-            } else if (notification.cParamDialogOccupantsIDs) {
+            } else if (notification.cParamDialogOccupantsIDs.count > 0) {
                 
                 NSArray *users = [[QMApi instance] usersWithIDs:notification.cParamDialogOccupantsIDs];
                 NSString *fullNameString = [self fullNamesString:users];

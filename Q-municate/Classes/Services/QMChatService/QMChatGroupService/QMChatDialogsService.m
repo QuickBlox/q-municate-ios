@@ -214,14 +214,14 @@
     } else if (chatMessage.cParamDialogRoomName) {
         dialog.name = chatMessage.cParamDialogRoomName;
         
-    } else if (chatMessage.cParamDialogOccupantsIDs) {
+    } else if (chatMessage.cParamDialogOccupantsIDs.count > 0) {
         NSArray *occupantsIDs = [dialog.occupantIDs arrayByAddingObjectsFromArray:chatMessage.cParamDialogOccupantsIDs];
         dialog.occupantIDs = occupantsIDs;
         
     } else if (chatMessage.cParamDialogDeletedID) {
-        NSMutableArray *occupants = [[NSMutableArray alloc] initWithArray:dialog.occupantIDs];
-        [occupants removeObject:chatMessage.cParamDialogDeletedID];
-        dialog.occupantIDs = occupants;
+        
+        NSNumber *numb = chatMessage.cParamDialogDeletedID;
+        dialog.occupantIDs = [self occupantsArray:dialog.occupantIDs withoutDeletedOccupantID:chatMessage.cParamDialogDeletedID];
     }
 }
 
@@ -273,6 +273,19 @@
 - (void)deleteLocalDialog:(QBChatDialog *)dialog
 {
     [self.dialogs removeObjectForKey:dialog.ID];
+}
+
+- (NSArray *)occupantsArray:(NSArray *)occupantsIDs withoutDeletedOccupantID:(NSNumber *)deletedOccupantID
+{
+     NSMutableArray *array = [[NSMutableArray alloc] initWithArray:occupantsIDs];
+    NSNumber *delNumb = @(deletedOccupantID.integerValue);
+    for (NSNumber *ID in occupantsIDs) {
+        if ([ID isEqualToNumber:delNumb]) {
+            [array removeObject:ID];
+            return array;
+        }
+    }
+    return occupantsIDs;
 }
 
 

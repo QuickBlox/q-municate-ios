@@ -145,7 +145,7 @@ NSString const *kQMCustomParameterDialogDeletedID = @"deleted_id";
     self.context[kQMCustomParameterDialogDeletedID] = cParamDialogDeletedID;
 }
 
--(NSNumber *)cparamDialogDeletedID
+-(NSNumber *)cParamDialogDeletedID
 {
     return self.context[kQMCustomParameterDialogDeletedID];
 }
