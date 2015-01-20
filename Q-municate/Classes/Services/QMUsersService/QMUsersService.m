@@ -53,17 +53,7 @@
             
         }];
     }];
-    
-    [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
         
-        if (message.cParamNotificationType == QMMessageNotificationTypeDeleteContactRequest) {
-            BOOL contactWasDeleted = [weakSelf deleteContactRequestUserID:message.senderID];
-            if (contactWasDeleted) {
-                [[QMChatReceiver instance] contactRequestUsersListChanged];
-            }
-        }
-    }];
-    
     [[QMChatReceiver instance] chatDidReceiveContactAddRequestWithTarget:self block:^(NSUInteger userID) {
         
         [weakSelf.confirmRequestUsersIDs addObject:@(userID)];
@@ -184,7 +174,7 @@
 - (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void(^)(BOOL retrieveWasNeeded))completionBlock
 {
     NSArray *idsToFetch = [self usersIDsToFetch:usersIDs];
-    if (idsToFetch > 0) {
+    if (idsToFetch.count > 0) {
         [self retriveUsersWithIDs:idsToFetch completion:^(QBUUserPagedResult *pagedResult) {
             if (pagedResult.success) {
                 if (completionBlock) completionBlock(YES);

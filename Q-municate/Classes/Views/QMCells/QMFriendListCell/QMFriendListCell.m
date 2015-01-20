@@ -62,11 +62,11 @@
     
     NSString *status = nil;
     
-    if (!contactlistItem) {
-        status = @"";
-    } else if (contactlistItem.subscriptionState == QBPresenseSubscriptionStateBoth || contactlistItem.subscriptionState == QBPresenseSubscriptionStateFrom) {
+     if (contactlistItem.subscriptionState == QBPresenseSubscriptionStateBoth || contactlistItem.subscriptionState == QBPresenseSubscriptionStateFrom) {
         status = NSLocalizedString(contactlistItem.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
-    } else {
+     } else if (((QBUUser *)self.userData).ID == [QMApi instance].currentUser.ID) {
+         status = NSLocalizedString(@"QM_STR_ONLINE", nil);
+     } else {
         status = NSLocalizedString(@"QM_STR_PENDING", nil);
     }
     self.descriptionLabel.text = status;

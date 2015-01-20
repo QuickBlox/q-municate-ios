@@ -9,11 +9,16 @@
 #import "QMChatDialogsService.h"
 #import "QBEchoObject.h"
 #import "QMChatReceiver.h"
-//#import "NSString+occupantsIDsFromMessage.h"
+
 
 @interface QMChatDialogsService()
 
 @property (strong, nonatomic) NSMutableDictionary *dialogs;
+
+/**
+ * Dictionary of completion blocks when joining chatRoom.
+ */
+@property (strong, nonatomic) NSMutableDictionary *joinRoomCompletionBlockList;
 
 @end
 
@@ -23,6 +28,21 @@
     [super start];
     
     self.dialogs = [NSMutableDictionary dictionary];
+    self.joinRoomCompletionBlockList = [[NSMutableDictionary alloc] init];
+    
+    __weak typeof(self)weakSelf = self;
+    [[QMChatReceiver instance] chatRoomDidEnterWithTarget:self block:^(QBChatRoom *room) {
+        
+        QBChatRoomResultBlock block = weakSelf.joinRoomCompletionBlockList[room.JID];
+        if (block) {
+            [weakSelf.joinRoomCompletionBlockList removeObjectForKey:room.JID];
+            block(room, nil);
+        }
+    }];
+    
+//    [[QMChatReceiver instance] chatRoomDidNotEnterWithTarget:self block:^(NSString *roomName, NSError *error) {
+//        //
+//    }];
 }
 
 - (void)stop {
@@ -30,6 +50,7 @@
     
     [[QMChatReceiver instance] unsubscribeForTarget:self];
     [self.dialogs removeAllObjects];
+    [self.joinRoomCompletionBlockList removeAllObjects];
 }
 
 - (void)fetchAllDialogs:(QBDialogsPagedResultBlock)completion {
@@ -158,21 +179,11 @@
 
 - (void)createPrivateChatDialogIfNeededWithOpponent:(QBUUser *)opponent completion:(void(^)(QBChatDialog *chatDialog))completion
 {
-    [self createPrivateDialogIfNeededWithOpponentID:opponent.ID completion:completion];
-}
-
-- (void)createPrivateDialogIfNeededWithNotification:(QBChatMessage *)notification completion:(void(^)(QBChatDialog *chatDialog))completion
-{
-    [self createPrivateDialogIfNeededWithOpponentID:notification.senderID completion:completion];
-}
-
-- (void)createPrivateDialogIfNeededWithOpponentID:(NSUInteger)opponentID completion:(void(^)(QBChatDialog *chatDialog))completion
-{
-    QBChatDialog __block *dialog = [self privateDialogWithOpponentID:opponentID];
+    QBChatDialog __block *dialog = [self privateDialogWithOpponentID:opponent.ID];
     
     if (!dialog) {
         
-        NSArray *occupantsIDs = @[@(opponentID)];
+        NSArray *occupantsIDs = @[@(opponent.ID)];
         
         QBChatDialog *chatDialog = [[QBChatDialog alloc] init];
         chatDialog.type = QBChatDialogTypePrivate;
@@ -190,6 +201,51 @@
     }
 }
 
+- (void)createPrivateDialogIfNeededWithNotification:(QBChatMessage *)notification completion:(void(^)(QBChatDialog *chatDialog))completion
+{
+    QBChatDialog *dialog = [self privateDialogWithOpponentID:notification.senderID];
+    
+    if (!dialog) {
+        NSAssert(notification, @"Notification for receiving contact request is empty. Update this case");
+        
+        dialog = [[QBChatDialog alloc] init];
+        dialog.ID = notification.cParamDialogID;
+        dialog.type = QBChatDialogTypePrivate;
+        dialog.occupantIDs = @[@(notification.senderID)];
+        [self addDialogToHistory:dialog];
+        
+        __weak typeof(self) weakSelf = self;
+        [self createChatDialog:dialog completion:^(QBChatDialogResult *result) {
+            //
+            [weakSelf addDialogToHistory:result.dialog];
+            completion(dialog);
+        }];
+        
+    } else {
+        completion(dialog);
+    }
+}
+
+- (void)createGroupChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(QBChatDialog *chatDialog))block
+{
+    NSAssert(chatDialog.type == QBChatDialogTypeGroup, @"Creating group dialog with invalid group type(QBChatDialogTypeGroup needed). Update case.");
+    
+    __weak typeof(self)weakSelf = self;
+    [self createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
+        if (result.success) {
+            QBChatDialog *resultDialog = result.dialog;
+            
+            QBChatRoomResultBlock joinRoomBlock = ^(QBChatRoom *chatRoom, NSError *error) {
+                if (block) block(resultDialog);
+            };
+            
+            weakSelf.joinRoomCompletionBlockList[resultDialog.roomJID] = joinRoomBlock;
+            [resultDialog.chatRoom joinRoomWithHistoryAttribute:@{@"maxstanzas":@"0"}];
+        }
+    }];
+    
+}
+
 - (QBChatDialog *)privateDialogWithOpponentID:(NSUInteger)opponentID {
     
     NSArray *allDialogs = [self dialogHistory];
@@ -202,7 +258,6 @@
     
     return dialog;
 }
-
 
 - (void)updateChatDialog:(QBChatDialog *)dialog withChatMessage:(QBChatMessage *)chatMessage {
     
@@ -222,7 +277,6 @@
         
     } else if (chatMessage.cParamDialogDeletedID) {
         
-        NSNumber *numb = chatMessage.cParamDialogDeletedID;
         dialog.occupantIDs = [self occupantsArray:dialog.occupantIDs withoutDeletedOccupantID:chatMessage.cParamDialogDeletedID];
     }
 }

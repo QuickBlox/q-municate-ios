@@ -40,12 +40,12 @@ NSString *const QMChatViewControllerID = @"QMChatViewController";
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
 
     __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] createGroupChatDialogWithName:chatName occupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
+    [[QMApi instance] createGroupChatDialogWithName:chatName occupants:self.selectedFriends completion:^(QBChatDialog *chatDialog) {
         
-        if (result.success) {
+        if (chatDialog) {
             
             QMChatViewController *chatVC = [weakSelf.storyboard instantiateViewControllerWithIdentifier:QMChatViewControllerID];
-            chatVC.dialog = result.dialog;
+            chatVC.dialog = chatDialog;
             
             NSMutableArray *controllers = weakSelf.navigationController.viewControllers.mutableCopy;
             [controllers removeLastObject];

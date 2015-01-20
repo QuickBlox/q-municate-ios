@@ -76,18 +76,21 @@
 "QM_STR_FRIEND_REQUEST_DID_REJECT_FOR_OPPONENT" = "Your request has been rejected";
 "QM_STR_FRIEND_REQUEST_DID_REJECT_FOR_PUSH" = "%@ has rejected your request";
 
-"QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_ME" = "You have deleted %@ from your contacts";
-"QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_OPPONENT" = "%@ has deleted you from their contacts";
+"QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_ME" = "You have deleted %@ from your contact list";
+"QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_OPPONENT" = "%@ has deleted you from the contact list";
 
 
 
 // *********** GROUP NOTIFICATIONS *****************
-"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT" = "%@ added %@ to group conversation.";
-"QM_STR_UPDATE_GROUP_NAME_TEXT" = "%@ changed group name to %@.";
-"QM_STR_UPDATE_GROUP_AVATAR_TEXT" = "%@ updated group avatar.";
+"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT" = "%@ has added %@ to the group chat.";
+"QM_STR_ADD_USERS_TO_EXIST_GROUP_CONVERSATION_TEXT" = "%@ has added %@";
+
+
+"QM_STR_UPDATE_GROUP_NAME_TEXT" = "%@ has changed the chat name to \"%@\".";
+"QM_STR_UPDATE_GROUP_AVATAR_TEXT" = "%@ has changed the chat picture.";
 "QM_STR_LEAVE_GROUP_CONVERSATION_TEXT" = "%@ has left group conversation.";
 
-
+"QM_STR_NOTIFICATION_MESSAGE" = "Notification message";
 
 
 

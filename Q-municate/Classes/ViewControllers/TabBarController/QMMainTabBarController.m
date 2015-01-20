@@ -114,7 +114,9 @@
     
     UIColor *white = [UIColor whiteColor];
     [[UITabBarItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : white} forState:UIControlStateNormal];
-    self.tabBarController.tabBar.tintColor = white;
+    
+    UITabBar *tabBar = self.tabBarController.tabBar;
+    tabBar.tintColor = white;
     
     UIImage *chatImg = [[UIImage imageNamed:@"tb_chat"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     UITabBarItem *firstTab = self.tabBar.items[0];
@@ -146,14 +148,15 @@
 
 - (void)message:(QBChatMessage *)message forOtherDialog:(QBChatDialog *)otherDialog {
     
-    if (message.cParamNotificationType > 0) {
-        [self.chatDelegate tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:NO];
-    }
-    else if ([self.chatDelegate isKindOfClass:QMChatViewController.class] && [otherDialog.ID isEqual:((QMChatViewController *)self.chatDelegate).dialog.ID]) {
-        [self.chatDelegate tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:NO];
-    }
-    else {
-        [self.chatDelegate tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:YES];
+    // if message is not mine:
+    if (message.senderID != [QMApi instance].currentUser.ID) {
+        
+        if ([self.chatDelegate isKindOfClass:QMChatViewController.class] && [otherDialog.ID isEqual:((QMChatViewController *)self.chatDelegate).dialog.ID]) {
+            // don't show popup
+            [self tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:NO];
+        } else {
+            [self tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:YES];
+        }
     }
 }
 

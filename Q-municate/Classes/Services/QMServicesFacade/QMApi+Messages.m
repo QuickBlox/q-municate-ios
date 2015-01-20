@@ -21,7 +21,6 @@
 }
 
 - (void)logoutFromChat {
-//    [self.chatDialogsService leaveFromRooms];
     [self.messagesService logoutChat];
     [self.settingsManager setLastActivityDate:[NSDate date]];
 }
@@ -44,19 +43,6 @@
         return;
     }
     if (block) block(NO);
-}
-
-- (void)fireEnqueuedMessageForChatRoomWithJID:(NSString *)roomJID
-{
-    if (roomJID == nil) {
-        return;
-    }
-    QBChatMessage *msg = self.messagesService.enqueuedMessages[roomJID];
-    if (msg) {
-        QBChatDialog *dialog = [self chatDialogWithID:msg.cParamDialogID];
-        NSAssert(dialog, @"To fire enqueued messages need chat dialog with chat room");
-        [self sendGroupChatDialogDidCreateNotification:msg toChatDialog:dialog persistent:YES completionBlock:^(QBChatMessage *message) {}];
-    }
 }
 
 - (void)sendMessage:(QBChatMessage *)message toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion {

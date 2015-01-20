@@ -33,17 +33,4 @@
     [self subsribeWithTarget:target selector:@selector(contactRequestUsersListChanged) block:block];
 }
 
-- (void)message:(QBChatMessage *)message addedToGroupUsersWasLoaded:(BOOL)wasLoaded
-{
-    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMUsersWasLoadedBlock block) {
-        block(message, wasLoaded);
-    }];
-}
-
-- (void)addedToGroupUsersWasLoadedWithTarget:(id)target block:(QMUsersWasLoadedBlock)block
-{
-    [self subsribeWithTarget:target selector:@selector(message:addedToGroupUsersWasLoaded:) block:block];
-}
-
-
 @end

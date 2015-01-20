@@ -49,7 +49,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     [self.chatDialogsService createPrivateChatDialogIfNeededWithOpponent:opponent completion:completion];
 }
 
-- (void)createGroupChatDialogWithName:(NSString *)name occupants:(NSArray *)occupants completion:(QBChatDialogResultBlock)completion {
+- (void)createGroupChatDialogWithName:(NSString *)name occupants:(NSArray *)occupants completion:(void(^)(QBChatDialog *chatDialog))completion {
     
     NSArray *occupantIDs = [self idsWithUsers:occupants];
     
@@ -58,32 +58,20 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     chatDialog.occupantIDs = occupantIDs;
     chatDialog.type = QBChatDialogTypeGroup;
     
-//    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-//    params[@"class_name"] = @"ebay1";
-//    params[@"ad_title"] = @"Ford Focus Zetec Climate Tdci 1.8 5dr";
-//    params[@"ad_category"] = @"All Categories > Auto > Ford";
-//    params[@"ad_price"] = @"30 000$";
-//    params[@"ad_expiration"] = @"12 November 2015";
-//    params[@"ad_description"] = @"Blue, 1 owner, 5 seats, Ford Focus 1.8 Zetec Climate Tdci, diesel!! P/x to clear! High mileage but drives well, 1m/1000 mile warranty, price NOT negotiable!";
-//    params[@"ad_link"] = @"http://ford-auto.kh.ua/spec_propozuciya/?bitrix_include_areas=Y&clear_cache=Y&gclid=CO2Qm7q__8ICFVPJtAodgnEAfQ";
-//    params[@"ad_id"] = @"465456487978979870000";
-//    chatDialog.data = params;
-    
     __weak typeof(self)weakSelf = self;
-    [self.chatDialogsService createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
-        // send notification from here:
-        NSString *messageTypeText = NSLocalizedString(@"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT", @"{Full name}");
-        NSString *text = [QMChatUtils messageForText:messageTypeText participants:occupants];
-        
-        // send to private:
-        [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:occupants text:text toChatDialog:result.dialog];
-        
-        // send to group:
-        [weakSelf sendGroupChatDialogDidCreateNotificationToAllParticipantsWithText:text occupants:occupants chatDialog:result.dialog];
+    [self.chatDialogsService createGroupChatDialog:chatDialog completion:^(QBChatDialog *dialog) {
         
         // add to history:
-        [weakSelf.chatDialogsService addDialogToHistory:result.dialog];
-        completion(result);
+        [weakSelf.chatDialogsService addDialogToHistory:dialog];
+        
+        // send notification from here:
+        NSString *notificationText = NSLocalizedString(@"QM_STR_NOTIFICATION_MESSAGE", nil);
+        // send to group:
+        [weakSelf sendGroupChatDialogDidCreateNotificationToAllParticipantsWithText:notificationText occupants:dialog.occupantIDs chatDialog:dialog completion:^(QBChatMessage *chatMessage) {
+            // send to private:
+            [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:occupants text:notificationText toChatDialog:dialog];
+            completion(dialog);
+        }];
     }];
 }
 
@@ -101,9 +89,9 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
         if ([weakSelf checkResult:result]) {
             chatDialog.name = dialogName;
             
-            NSString *messageTypeText = NSLocalizedString(@"QM_STR_UPDATE_GROUP_NAME_TEXT", @"{Full name}");
-            NSString *text = [NSString stringWithFormat:messageTypeText, weakSelf.currentUser.fullName, dialogName];
-            [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"room_name" content:dialogName];
+             NSString *notificationText = NSLocalizedString(@"QM_STR_NOTIFICATION_MESSAGE", nil);
+            
+            [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:notificationText toChatDialog:chatDialog updateType:@"room_name" content:dialogName];
         }
         completion(result);
     }];
@@ -124,10 +112,9 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
         [weakSelf.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialogResult *dialogResult) {
             if (dialogResult.success) {
                 // send notification:
-                NSString *messageTypeText = NSLocalizedString(@"QM_STR_UPDATE_GROUP_AVATAR_TEXT", @"{Full name}");
-                NSString *text = [NSString stringWithFormat:messageTypeText, weakSelf.currentUser.fullName];
+                NSString *notificationText = NSLocalizedString(@"QM_STR_NOTIFICATION_MESSAGE", nil);
                 chatDialog.photo = dialogResult.dialog.photo;
-                [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"room_photo" content:dialogResult.dialog.photo];
+                [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:notificationText toChatDialog:chatDialog updateType:@"room_photo" content:dialogResult.dialog.photo];
                 completion(dialogResult);
             }
         }];
@@ -181,7 +168,6 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 - (NSUInteger )occupantIDForPrivateChatDialog:(QBChatDialog *)chatDialog {
     
     NSAssert(chatDialog.type == QBChatDialogTypePrivate, @"Chat dialog type != QBChatDialogTypePrivate");
-    NSAssert(chatDialog.occupantIDs.count == 2, @"Array of user ids in chat. For private chat count = 2");
     
     NSInteger myID = self.currentUser.ID;
     
@@ -218,16 +204,13 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     }
 }
 
-- (void)sendGroupChatDialogDidCreateNotificationToAllParticipantsWithText:(NSString *)text occupants:(NSArray *)occupants chatDialog:(QBChatDialog *)chatDialog
+- (void)sendGroupChatDialogDidCreateNotificationToAllParticipantsWithText:(NSString *)text occupants:(NSArray *)occupants chatDialog:(QBChatDialog *)chatDialog completion:(void(^)(QBChatMessage *chatMessage))block
 {
     QBChatMessage *groupNotification = [self notificationToRecipient:nil text:text chatDialog:chatDialog];
     
-    NSArray *usersIDs = [self.usersService idsOfUsers:occupants];
-    groupNotification.cParamDialogOccupantsIDs = usersIDs;
+    groupNotification.cParamDialogOccupantsIDs = occupants; // occupants IDs received
     
-    
-    // put message to queue and when room will be joined, fire:
-    self.messagesService.enqueuedMessages[chatDialog.roomJID] = groupNotification;
+   [self sendGroupChatDialogDidCreateNotification:groupNotification toChatDialog:chatDialog persistent:YES completionBlock:block];
 }
 
 - (void)sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:(NSString *)text toChatDialog:(QBChatDialog *)chatDialog updateType:(NSString *)updateType content:(NSString *)content

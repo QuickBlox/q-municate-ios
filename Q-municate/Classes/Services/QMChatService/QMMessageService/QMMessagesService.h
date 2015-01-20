@@ -12,8 +12,8 @@
 @interface QMMessagesService : QMBaseService
 
 @property (strong, nonatomic) NSDictionary *pushNotification;
+@property (strong, nonatomic) NSMutableDictionary *messageDeliveryBlockList;
 @property (strong, nonatomic) QBUUser *currentUser;
-@property (strong, nonatomic) NSMutableDictionary *enqueuedMessages;
 
 - (void)chat:(void(^)(QBChat *chat))chatBlock;
 - (void)loginChat:(QBChatResultBlock)block;

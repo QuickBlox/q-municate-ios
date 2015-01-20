@@ -11,10 +11,9 @@
 
 typedef void(^QMDialogsHistoryUpdated)(void);
 typedef void(^QMUsersHistoryUpdated)(void);
-typedef void (^QMUsersWasLoadedBlock)(QBChatMessage *message, BOOL usersWasLoaded);
 
 typedef void(^QMChatDidLogin)(BOOL success);
-typedef void(^QMChatDidFailLogin)(NSInteger errorCode);
+typedef void(^QMChatDidFailLogin)(NSError *error);
 typedef void(^QMChatMessageBlock)(QBChatMessage *message);
 typedef void(^QMChatDidReceivePresenceOfUser)(NSUInteger userID, NSString *type);
 typedef void(^QMChatDidReceiveListOfRooms)(NSArray *rooms);
@@ -59,6 +58,7 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 - (void)chatDidFailWithTarget:(id)target block:(QMChatDidFailLogin)block;
 - (void)chatDidReceiveMessageWithTarget:(id)target block:(QMChatMessageBlock)block;
 - (void)chatAfterDidReceiveMessageWithTarget:(id)target block:(QMChatMessageBlock)block;
+- (void)chatAfterDidReceiveMessage:(QBChatMessage *)message;
 - (void)chatDidNotSendMessageWithTarget:(id)target block:(QMChatMessageBlock)block;
 - (void)chatDidReceivePresenceOfUserWithTarget:(id)target block:(QMChatDidReceivePresenceOfUser)block;
 /**
@@ -115,8 +115,7 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 - (void)usersHistoryUpdatedWithTarget:(id)target block:(QMUsersHistoryUpdated)block;
 - (void)contactRequestUsersListChanged;
 - (void)contactRequestUsersListChangedWithTarget:(id)target block:(QMUsersHistoryUpdated)block;
-- (void)message:(QBChatMessage *)message addedToGroupUsersWasLoaded:(BOOL)wasLoaded;
-- (void)addedToGroupUsersWasLoadedWithTarget:(id)target block:(QMUsersWasLoadedBlock)block;
+
 @end
 
 

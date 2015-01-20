@@ -187,26 +187,6 @@
 }
 
 
-#pragma mark - QMTabBarChatDelegate
-
-- (void)tabBarChatWithChatMessage:(QBChatMessage *)message chatDialog:(QBChatDialog *)dialog showTMessage:(BOOL)show
-{
-    if (!show) {
-        return;
-    }
-    
-    __weak typeof(self)weakSelf = self;
-    [QMSoundManager playMessageReceivedSound];
-    [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
-        if (buttonIndex == 1) {
-            UINavigationController *navigationController = (UINavigationController *)[weakSelf.tabBarController selectedViewController];
-            QMChatViewController *chatController = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"QMChatViewController"];
-            chatController.dialog = dialog;
-            [navigationController pushViewController:chatController animated:YES];
-        }
-    }];
-}
-
 #pragma mark - QMChatDataSourceDelegate
 
 - (void)chatDatasource:(QMChatDataSource *)chatDatasource prepareImageURLAttachement:(NSURL *)imageUrl {

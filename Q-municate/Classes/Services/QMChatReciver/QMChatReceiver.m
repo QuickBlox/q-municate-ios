@@ -200,6 +200,9 @@
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatMessageBlock block) {
         block(message);
     }];
+    if (message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
+        return;
+    }
     [self chatAfterDidReceiveMessage:message];
 }
 
@@ -232,9 +235,9 @@
     [self subsribeWithTarget:target selector:@selector(chatDidFailWithError:) block:block];
 }
 
-- (void)chatDidFailWithError:(NSInteger)code {
+- (void)chatDidFailWithStreamError:(NSError *)error {
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatDidFailLogin block) {
-        block(code);
+        block(error);
     }];
 }
 
@@ -347,11 +350,12 @@
 
 - (void)chatRoomDidReceiveMessage:(QBChatMessage *)message fromRoomJID:(NSString *)roomJID {
     message.text = [message.text gtm_stringByUnescapingFromHTML];
+    if (!message.ID || !message.customParameters) {
+        return;
+    }
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatRoomDidReceiveMessage block) {
         block(message, roomJID);
     }];
-    
-    [self chatAfterDidReceiveMessage:message];
 }
 
 /**

@@ -62,36 +62,15 @@
     [super start];
     
     self.history = [NSMutableDictionary dictionary];
-    self.enqueuedMessages = [NSMutableDictionary new];
-
-    __weak __typeof(self)weakSelf = self;
-    void (^updateHistory)(QBChatMessage *) = ^(QBChatMessage *message) {
-        
-        if (message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
-            return;
-        }
-        if (message.recipientID != message.senderID) {
-            if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog && !message.cParamSaveToHistory) {
-                return;
-            }
-            [weakSelf addMessageToHistory:message withDialogID:message.cParamDialogID];
-        }
-    };
-    
-    [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-        updateHistory(message);
-    }];
-    
-    [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
-        updateHistory(message);
-    }];
+    self.messageDeliveryBlockList = [NSMutableDictionary dictionary];
 }
 
 - (void)stop {
     [super stop];
     
     [[QMChatReceiver instance] unsubscribeForTarget:self];
-    [self.history removeAllObjects];
+    self.history = nil;
+    self.messageDeliveryBlockList = nil;
 }
 
 - (void)setMessages:(NSArray *)messages withDialogID:(NSString *)dialogID {
@@ -146,9 +125,14 @@
         if (completion) completion([NSError errorWithDomain:@"Error. Room is not joined" code:0 userInfo:nil]);
         return;
     }
+    __weak typeof(self)weakSelf = self;
     [self chat:^(QBChat *chat) {
         if ([chat sendChatMessage:message toRoom:chatRoom]) {
-            if (completion) completion(nil);
+            if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
+               if (completion) weakSelf.messageDeliveryBlockList[chatRoom.JID] = completion;
+            } else {
+                if (completion) completion(nil);
+            }
         }
     }];
 }

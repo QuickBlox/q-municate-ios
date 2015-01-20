@@ -68,7 +68,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBConnection registerServiceSecret:kQMAuthorizationSecret];
     
     [QBSettings setAccountKey:kQMAcconuntKey];
-    [QBSettings setLogLevel:QBLogLevelDebug];
+//    [QBSettings setLogLevel:QBLogLevelDebug];
     
     
     
@@ -105,6 +105,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
         NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
         [[QMApi instance] setPushNotification:notification];
     }
+    
     return YES;
 }
 

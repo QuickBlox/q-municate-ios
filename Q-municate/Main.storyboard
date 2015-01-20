@@ -2854,6 +2854,10 @@ Cg
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d5o-vd-nnk">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="109"/>
                                 <subviews>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lDg-Ys-VXU">
+                                        <rect key="frame" x="0.0" y="108" width="320" height="1"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
                                     <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="upic_placeholder_details_group" translatesAutoresizingMaskIntoConstraints="NO" id="1Lq-TE-ZQ2" customClass="QMImageView">
                                         <rect key="frame" x="17" y="15" width="60" height="60"/>
                                         <gestureRecognizers/>
@@ -2925,11 +2929,6 @@ Cg
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="62" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="MCn-dd-abe">
                                 <rect key="frame" x="0.0" y="109" width="320" height="346"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <view key="tableHeaderView" contentMode="scaleToFill" id="lDg-Ys-VXU">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                </view>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="QMFriendListCell" rowHeight="59" id="81y-lY-KsM" customClass="QMFriendListCell">
                                         <rect key="frame" x="0.0" y="22" width="320" height="59"/>
@@ -3428,10 +3427,10 @@ Cg
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="kkU-F4-K0a"/>
         <segue reference="veI-CA-d70"/>
+        <segue reference="kkU-F4-K0a"/>
         <segue reference="IAo-qy-uHQ"/>
-        <segue reference="sPU-d9-maS"/>
-        <segue reference="M45-HY-t12"/>
+        <segue reference="hW5-9n-Jcg"/>
+        <segue reference="Xoz-l0-6ya"/>
     </inferredMetricsTieBreakers>
 </document>

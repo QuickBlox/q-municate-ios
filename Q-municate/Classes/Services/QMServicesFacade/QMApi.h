@@ -115,8 +115,6 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 - (void)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion;
 - (void)sendAttachment:(QBCBlob *)attachment toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion;
 
-- (void)fireEnqueuedMessageForChatRoomWithJID:(NSString *)roomJID;
-
 @end
 
 
@@ -167,7 +165,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  @param ocupants - Array of QBUUser in chat.
  @result QBChatDialogResult
  */
-- (void)createGroupChatDialogWithName:(NSString *)name occupants:(NSArray *)occupants completion:(QBChatDialogResultBlock)completion;
+- (void)createGroupChatDialogWithName:(NSString *)name occupants:(NSArray *)occupants completion:(void(^)(QBChatDialog *chatDialog))completion;
 
 /**
  Create private chat dialog

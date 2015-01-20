@@ -95,15 +95,64 @@ const NSTimeInterval kQMPresenceTime = 30;
             });
         };
         
+        [[QMChatReceiver instance] chatDidFailWithTarget:self block:^(NSError *error) {
+            // some
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        }];
+        
+        
+        // XMPP Chat messaging handling
+        
+        void (^updateHistory)(QBChatMessage *) = ^(QBChatMessage *message) {
+            
+            if (message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
+                return;
+            }
+            if (message.recipientID != message.senderID) {
+                if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog && !message.cParamSaveToHistory) {
+                    return;
+                }
+                [weakSelf.messagesService addMessageToHistory:message withDialogID:message.cParamDialogID];
+            }
+        };
+        
         [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+            // message service update:
+            updateHistory(message);
+            
+            // dialogs service update:
             [weakSelf.chatDialogsService updateOrCreateDialogWithMessage:message isMine:(message.senderID == weakSelf.currentUser.ID)];
+            
+            // fire chatAfterDidReceiveMessage for other cases:
+            if (message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
+                [weakSelf retriveUsersForNotificationIfNeeded:message];
+            }
+            
+            // users
+            if (message.cParamNotificationType == QMMessageNotificationTypeDeleteContactRequest) {
+                BOOL contactWasDeleted = [weakSelf.usersService deleteContactRequestUserID:message.senderID];
+                if (contactWasDeleted) {
+                    [[QMChatReceiver instance] contactRequestUsersListChanged];
+                }
+            }
         }];
         
         [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
 
+            
+            if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
+                void (^DeliveryBlock)(NSError *error) = weakSelf.messagesService.messageDeliveryBlockList[roomJID];
+                if (DeliveryBlock) {
+                    [weakSelf.messagesService.messageDeliveryBlockList removeObjectForKey:roomJID];
+                    DeliveryBlock(nil);
+                }
+            }
+            updateHistory(message);
+            
             // check for chat dialog:
             [weakSelf.chatDialogsService updateOrCreateDialogWithMessage:message isMine:(message.senderID == weakSelf.currentUser.ID)];
             
+            // check users if needed:
             if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
                 [weakSelf retriveUsersForNotificationIfNeeded:message];
             } else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog) {
@@ -112,11 +161,8 @@ const NSTimeInterval kQMPresenceTime = 30;
                     return;
                 }
                 [weakSelf.messagesService addMessageToHistory:message withDialogID:message.cParamDialogID];
+                [[QMChatReceiver instance] chatAfterDidReceiveMessage:message];
             }
-        }];
-        
-        [[QMChatReceiver instance] chatRoomDidEnterWithTarget:self block:^(QBChatRoom *room) {
-            [weakSelf fireEnqueuedMessageForChatRoomWithJID:room.JID];
         }];
     }
     
@@ -174,9 +220,15 @@ const NSTimeInterval kQMPresenceTime = 30;
 - (void)retriveUsersForNotificationIfNeeded:(QBChatMessage *)notification
 {
     __weak typeof(self)weakSelf = self;
-    [self retriveIfNeededUsersWithIDs:notification.cParamDialogOccupantsIDs completion:^(BOOL retrieveWasNeeded) {
+    NSArray *idsToFetch = nil;
+    if (notification.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
+        idsToFetch = @[@(notification.senderID)];
+    } else {
+        idsToFetch = notification.cParamDialogOccupantsIDs;
+    }
+    [self retriveIfNeededUsersWithIDs:idsToFetch completion:^(BOOL retrieveWasNeeded) {
         [weakSelf.messagesService addMessageToHistory:notification withDialogID:notification.cParamDialogID];
-        [[QMChatReceiver instance] message:notification addedToGroupUsersWasLoaded:retrieveWasNeeded];
+        [[QMChatReceiver instance] chatAfterDidReceiveMessage:notification];
     }];
 }
 
@@ -231,6 +283,10 @@ const NSTimeInterval kQMPresenceTime = 30;
 
 - (void)openChatPageForPushNotification:(NSDictionary *)notification
 {
+    if ([QBChat instance].isLoggedIn) {
+        return;
+    }
+    
     NSString *dialogID = notification[@"dialog_id"];
     QBChatDialog *dialog = [self chatDialogWithID:dialogID];
     __weak typeof(self)weakSelf = self;

@@ -73,7 +73,7 @@
             if (completionBlock) completionBlock(error, nil);
         }
     }];
-    [self sendPushContactRequestNotification:notification];
+//    [self sendPushContactRequestNotification:notification];
 }
 
 

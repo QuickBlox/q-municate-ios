@@ -86,11 +86,7 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         [[QMChatReceiver instance]  messageHistoryWasUpdatedWithTarget:self block:^(BOOL success) {
             [weakSelf reloadCachedMessages:YES];
         }];
-        
-        [[QMChatReceiver instance] addedToGroupUsersWasLoadedWithTarget:self block:^(QBChatMessage *message, BOOL usersWasLoaded) {
-            // only for group chat messages:
-            [weakSelf insertNewMessage:message];
-        }];
+
         
         [[QMChatReceiver instance] chatRoomDidEnterWithTarget:self block:^(QBChatRoom *room) {
             if ([weakSelf.chatDialog.chatRoom isEqual:room]) {
@@ -99,6 +95,13 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
                 }
             }
         }];
+        
+        
+/** 
+  * ATTENTION:
+  * QBChatMessages with notification_type = CreateGroupChat will not execute in this block. It will execute in
+  * - addedToGroupUsersWasLoadedWithTarget:block: method.
+*/
         
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
             
@@ -112,7 +115,7 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
             if ([weakSelf.chatDialog.ID isEqualToString:message.cParamDialogID] && message.cParamNotificationType != QMMessageNotificationTypeDeliveryMessage) {
                 
                 // mark message as read:
-                [QBChat markMessagesAsRead:@[message] dialogID:message.cParamDialogID delegate:nil context:nil];
+                [QBRequest markMessagesAsRead:@[message] dialogID:message.cParamDialogID successBlock:nil errorBlock:nil];
                 
                 if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
                     

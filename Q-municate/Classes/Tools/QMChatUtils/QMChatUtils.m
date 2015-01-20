@@ -48,7 +48,19 @@
         case QMMessageNotificationTypeCreateGroupDialog:
         {
             NSArray *users = [[QMApi instance] usersWithIDs:notification.cParamDialogOccupantsIDs];
-            NSString *fullNameString = [self fullNamesString:users];
+#warning HardFix
+            QBUUser *currentUser = [[QMApi instance] userWithID:notification.senderID];
+            for (QBUUser *usr in users) {
+                if (usr.ID == currentUser.ID) {
+                    currentUser = usr;
+                    break;
+                }
+            }
+            
+            NSMutableArray *usersArray = [users mutableCopy];
+            [usersArray removeObject:currentUser];
+            
+            NSString *fullNameString = [self fullNamesString:usersArray];
             messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT", nil), sender.fullName, fullNameString];
         }
             break;
@@ -63,7 +75,7 @@
                 
                 NSArray *users = [[QMApi instance] usersWithIDs:notification.cParamDialogOccupantsIDs];
                 NSString *fullNameString = [self fullNamesString:users];
-                messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT", nil), sender.fullName, fullNameString];
+                messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_ADD_USERS_TO_EXIST_GROUP_CONVERSATION_TEXT", nil), sender.fullName, fullNameString];
                 
             } else if (notification.cParamDialogDeletedID) {
                 QBUUser *leavedUser = [[QMApi instance] userWithID:notification.cParamDialogDeletedID.integerValue];
