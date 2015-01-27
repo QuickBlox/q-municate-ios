@@ -356,6 +356,10 @@
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatRoomDidReceiveMessage block) {
         block(message, roomJID);
     }];
+    
+    if (message.cParamNotificationType <= 0) {
+        [self chatAfterDidReceiveMessage:message];
+    }
 }
 
 /**

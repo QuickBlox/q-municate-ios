@@ -86,22 +86,14 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         [[QMChatReceiver instance]  messageHistoryWasUpdatedWithTarget:self block:^(BOOL success) {
             [weakSelf reloadCachedMessages:YES];
         }];
-
         
         [[QMChatReceiver instance] chatRoomDidEnterWithTarget:self block:^(QBChatRoom *room) {
-            if ([weakSelf.chatDialog.chatRoom isEqual:room]) {
+            if ([weakSelf.chatDialog.chatRoom.JID isEqual:room.JID]) {
                 if (room.isJoined) {
                     [weakSelf unlockInputBar];
                 }
             }
         }];
-        
-        
-/** 
-  * ATTENTION:
-  * QBChatMessages with notification_type = CreateGroupChat will not execute in this block. It will execute in
-  * - addedToGroupUsersWasLoadedWithTarget:block: method.
-*/
         
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
             
@@ -127,9 +119,6 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
                     return;
                 }
                 else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog) {
-                    if (message.cParamDialogOccupantsIDs) {
-                        return;
-                    }
                     [weakSelf insertNewMessage:message];
                     return;
                 }
@@ -151,14 +140,18 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         }];
     }
     
-    if (!self.chatDialog || self.chatDialog.type == QBChatDialogTypeGroup) {
-        return self;
-    }
-    
-    // check for friend. If it's not a friend, lock input bar
-    BOOL isFried = [[QMApi instance] isFriendForChatDialog:self.chatDialog];
-    if (!isFried) {
-        [self lockInputBar];
+    if (self.chatDialog.type == QBChatDialogTypeGroup) {
+        
+        if (!self.chatDialog.chatRoom.isJoined) {
+            [self lockInputBar];
+        }
+        
+    } else {
+        // check for friend. If it's not a friend, lock input bar
+        BOOL isFried = [[QMApi instance] isFriendForChatDialog:self.chatDialog];
+        if (!isFried) {
+            [self lockInputBar];
+        }
     }
     
     return self;

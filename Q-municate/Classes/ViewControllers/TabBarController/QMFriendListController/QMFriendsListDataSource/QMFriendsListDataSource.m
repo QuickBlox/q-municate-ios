@@ -21,14 +21,13 @@
 @interface QMFriendsListDataSource()
 
 
-@property (strong, nonatomic) NSArray *searchResult;
+@property (strong, nonatomic) NSMutableArray *searchResult;
 @property (strong, nonatomic) NSArray *friendList;
 
 @property (weak, nonatomic) UITableView *tableView;
 @property (weak, nonatomic) UISearchDisplayController *searchDisplayController;
 @property (strong, nonatomic) NSObject<Cancelable> *searchOperation;
 
-@property (strong, nonatomic) id tUser;
 @property (assign, nonatomic) NSUInteger contactRequestsCount;
 
 @end
@@ -50,7 +49,7 @@
         
         self.tableView = tableView;
         self.tableView.dataSource = self;
-        self.searchResult = [NSArray array];
+        self.searchResult = [NSMutableArray new];
         
         self.searchDisplayController = searchDisplayController;
         __weak __typeof(self)weakSelf = self;
@@ -63,22 +62,9 @@
             
             if (self.searchDisplayController.isActive) {
                 
-                CGPoint point = weakSelf.searchDisplayController.searchResultsTableView.contentOffset;
-                
                 weakSelf.friendList = [QMApi instance].friends;
+                
                 [weakSelf.searchDisplayController.searchResultsTableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]   withRowAnimation:UITableViewRowAnimationAutomatic];
-//                [weakSelf.tableView reloadData];
-                NSUInteger idx = [weakSelf.friendList indexOfObject:weakSelf.tUser];
-                NSUInteger idx2 = [weakSelf.searchResult indexOfObject:weakSelf.tUser];
-               
-                if (idx != NSNotFound && idx2 != NSNotFound) {
-                    
-                    point .y += 59;
-                    weakSelf.searchDisplayController.searchResultsTableView.contentOffset = point;
-                    
-                    weakSelf.tUser = nil;
-                    [SVProgressHUD dismiss];
-                }
             }
             else {
                 [weakSelf reloadDataSource];
@@ -125,7 +111,7 @@
 - (void)globalSearch:(NSString *)searchText {
     
     if (searchText.length == 0) {
-        self.searchResult = @[];
+        self.searchResult = [NSMutableArray new];
         [self.searchDisplayController.searchResultsTableView reloadData];
         return;
     }
@@ -134,9 +120,11 @@
     QBUUserPagedResultBlock userPagedBlock = ^(QBUUserPagedResult *pagedResult) {
         
         NSArray *users = [QMUsersUtils sortUsersByFullname:pagedResult.users];
-        //Remove current user from search result
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.ID != %d", [QMApi instance].currentUser.ID];
-        weakSelf.searchResult = [users filteredArrayUsingPredicate:predicate];
+        
+        NSMutableArray *filteredUsers = [QMUsersUtils filteredUsers:users withFlterArray:[weakSelf.friendList arrayByAddingObject:[QMApi instance].currentUser]];
+        
+        weakSelf.searchResult = filteredUsers;
+        
         [weakSelf.searchDisplayController.searchResultsTableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
         weakSelf.searchOperation = nil;
         [SVProgressHUD dismiss];
@@ -249,14 +237,14 @@
     NSIndexPath *indexPath = [self.searchDisplayController.searchResultsTableView indexPathForCell:cell];
     NSArray *datasource = [self usersAtSections:indexPath.section];
     QBUUser *user = datasource[indexPath.row];
+    self.searchResult = [QMUsersUtils filteredUsers:self.searchResult withFlterArray:@[user]];
     
-    __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {
-        if (success) {
-            weakSelf.tUser = user;
-//            [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-        }
-    }];
+    BOOL isContactRequest = [[QMApi instance].usersService isContactRequestWithID:user.ID];
+    if (isContactRequest) {
+        [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success, QBChatMessage *notification) {}];
+    } else {
+        [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {}];
+    }
 }
 
 

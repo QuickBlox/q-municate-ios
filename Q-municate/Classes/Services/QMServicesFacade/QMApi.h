@@ -47,7 +47,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 
 - (void)applicationDidBecomeActive:(void(^)(BOOL success))completion;
 - (void)applicationWillResignActive;
-- (void)openChatPageForPushNotification:(NSDictionary *)notification;
+- (void)openChatPageForPushNotification:(NSDictionary *)notification completion:(void(^)(BOOL completed))completionBlock;
 
 - (void)fetchAllHistory:(void(^)(void))completion;
 
@@ -156,6 +156,12 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 /**
  *
  */
+- (void)fetchChatDialogWithID:(NSString *)dialogID completion:(void(^)(QBChatDialog *chatDialog))completion;
+
+
+/**
+ *
+ */
 - (void)deleteChatDialog:(QBChatDialog *)dialog completion:(void(^)(BOOL success))completionHandler;
 
 /**
@@ -234,7 +240,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 /**
  Import friends from Address book which exists in quickblox database.
  */
-- (void)importFriendsFromAddressBook;
+- (void)importFriendsFromAddressBookWithCompletion:(void(^)(BOOL succeded, NSError *error))completionBLock;
 
 /**
  Add user to contact list request

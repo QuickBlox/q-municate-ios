@@ -59,7 +59,7 @@
     }
 }
 
-+ (void)getContactsWithEmailsWithCompletionBlock:(void(^)(NSArray *contactsWithEmails))block
++ (void)getContactsWithEmailsWithCompletionBlock:(AddressBookResult)block
 {
     [QMAddressBook getAllContactsFromAddressBook:^(NSArray *contacts, BOOL success, NSError *error) {
         if (success) {
@@ -70,10 +70,10 @@
             if (filteredContacts == nil) {
                 filteredContacts = @[];
             }
-            block(filteredContacts);
+            block(filteredContacts, YES, nil);
             return;
         }
-        block(@[]);
+        block(@[], NO, error);
     }];
 }
 

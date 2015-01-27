@@ -176,7 +176,7 @@
 
 - (void)subscribeToPushNotificationsForceSettings:(BOOL)force complete:(void(^)(BOOL success))complete {
     
-    if (!self.settingsManager.pushNotificationsEnabled || force) {
+    if (self.settingsManager.pushNotificationsEnabled || force) {
         __weak __typeof(self)weakSelf = self;
         self.subscriptionBlock = ^(NSData *deviceToken) {
             if (deviceToken) {

@@ -68,10 +68,25 @@
     NSString *IDs = [dialogIDs componentsJoinedByString:@","];
     NSAssert(IDs, @"IDs parsed not correctly from NSArray. Update case");
     
+    __weak typeof(self)weakSelf = self;
     QBDialogsPagedResultBlock resultBlock = ^(QBDialogsPagedResult *result) {
-        
+        [weakSelf addDialogs:result.dialogs];
+        completion(result);
     };
     NSMutableDictionary *extendedRequest = @{@"_id[in]":IDs}.mutableCopy;
+    [QBChat dialogsWithExtendedRequest:extendedRequest delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
+}
+
+- (void)fetchDialogWithID:(NSString *)dialogID completion:(void (^)(QBChatDialog *dialog))block
+{
+    __weak typeof(self)weakSelf = self;
+    QBDialogsPagedResultBlock resultBlock = ^(QBDialogsPagedResult *result) {
+        if (result.dialogs.count > 0) {
+            [weakSelf addDialogs:result.dialogs];
+        }
+        block(result.dialogs.firstObject);
+    };
+    NSMutableDictionary *extendedRequest = @{@"_id[in]":dialogID}.mutableCopy;
     [QBChat dialogsWithExtendedRequest:extendedRequest delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
 }
 
@@ -191,8 +206,10 @@
         
         __weak typeof(self) weakSelf = self;
         [self createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
-            dialog = result.dialog;
-            [weakSelf addDialogToHistory:dialog];
+            if (result.success) {
+                dialog = result.dialog;
+                [weakSelf addDialogToHistory:dialog];
+            }
             completion(dialog);
         }];
         

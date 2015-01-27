@@ -156,7 +156,7 @@ const NSTimeInterval kQMPresenceTime = 30;
             if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
                 [weakSelf retriveUsersForNotificationIfNeeded:message];
             } else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog) {
-                if (message.cParamDialogOccupantsIDs) {
+                if (message.cParamDialogOccupantsIDs.count > 0) {
                     [weakSelf retriveUsersForNotificationIfNeeded:message];
                     return;
                 }
@@ -281,9 +281,10 @@ const NSTimeInterval kQMPresenceTime = 30;
     [self logoutFromChat];
 }
 
-- (void)openChatPageForPushNotification:(NSDictionary *)notification
+- (void)openChatPageForPushNotification:(NSDictionary *)notification completion:(void(^)(BOOL completed))completionBlock
 {
     if ([QBChat instance].isLoggedIn) {
+        if (completionBlock) completionBlock(NO);
         return;
     }
     
@@ -291,12 +292,14 @@ const NSTimeInterval kQMPresenceTime = 30;
     QBChatDialog *dialog = [self chatDialogWithID:dialogID];
     __weak typeof(self)weakSelf = self;
     if (dialog == nil) {
-        [self fetchDialogsWithLastActivityFromDate:self.settingsManager.lastActivityDate completion:^(QBDialogsPagedResult *result) {
-            [weakSelf openChatPageForPushNotification:notification];
+        [self fetchChatDialogWithID:dialogID completion:^(QBChatDialog *chatDialog) {
+
+            [weakSelf openChatPageForPushNotification:notification completion:completionBlock];
         }];
         return;
     }
     [self openChatControllerForDialogWithID:dialogID];
+    if (completionBlock) completionBlock(YES);
 }
 
 - (void)openChatControllerForDialogWithID:(NSString *)dialogID

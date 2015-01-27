@@ -122,6 +122,17 @@
     return NO;
 }
 
+- (BOOL)isContactRequestWithID:(NSInteger)ID
+{
+    NSArray *contactRequestsArray = [self.confirmRequestUsersIDs.allObjects copy];
+    for (NSNumber *contactRequestID in contactRequestsArray) {
+        if (ID == contactRequestID.intValue) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
 - (void)addUsers:(NSArray *)users {
     
     for (QBUUser *user in users) {

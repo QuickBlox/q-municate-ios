@@ -50,34 +50,37 @@
             }];
             
         }else {
+            // open app by push notification:
             NSDictionary *push = [[QMApi instance] pushNotification];
             if (push != nil) {
                 [SVProgressHUD show];
-            }
-            [[QMApi instance] loginChat:^(BOOL loginSuccess) {
-                [[QMApi instance] subscribeToPushNotificationsForceSettings:NO complete:^(BOOL subscribeToPushNotificationsSuccess) {
-                
-                    if (!subscribeToPushNotificationsSuccess) {
-                        [QMApi instance].settingsManager.pushNotificationsEnabled = NO;
-                    }
+                [[QMApi instance] openChatPageForPushNotification:push completion:^(BOOL completed) {
+                    [SVProgressHUD dismiss];
                 }];
+                [[QMApi instance] setPushNotification:nil];
+            }
+            
+            // subscribe to push notifications
+            [[QMApi instance] subscribeToPushNotificationsForceSettings:NO complete:^(BOOL subscribeToPushNotificationsSuccess) {
+                
+                if (!subscribeToPushNotificationsSuccess) {
+                    [QMApi instance].settingsManager.pushNotificationsEnabled = NO;
+                }
+            }];
+            
+            [[QMApi instance] loginChat:^(BOOL loginSuccess) {
                 
                 QBUUser *usr = [QMApi instance].currentUser;
                 if (!usr.imported) {
                     [[QMApi instance] importFriendsFromFacebook];
-                    [[QMApi instance] importFriendsFromAddressBook];
+                    [[QMApi instance] importFriendsFromAddressBookWithCompletion:^(BOOL succeded, NSError *error) {}];
                     usr.imported = YES;
                     [[QMApi instance] updateUser:usr image:nil progress:nil completion:^(BOOL successed) {}];
                     
                 } else {
                 
                     [[QMApi instance] fetchAllHistory:^{
-                        
-                        if (push != nil) {
-                            [SVProgressHUD dismiss];
-                            [[QMApi instance] openChatPageForPushNotification:push];
-                            [[QMApi instance] setPushNotification:nil];
-                        }
+                        //
                     }];
                 }
             }];

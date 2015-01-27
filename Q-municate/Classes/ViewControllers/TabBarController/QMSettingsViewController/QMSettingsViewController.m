@@ -80,7 +80,7 @@
 - (IBAction)changePushNotificationValue:(UISwitch *)sender {
 
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    if (sender.on) {
+    if (!sender.on) {
         [[QMApi instance] subscribeToPushNotificationsForceSettings:YES complete:^(BOOL success) {
             [SVProgressHUD dismiss];
         }];

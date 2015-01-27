@@ -30,6 +30,7 @@
         [weakSelf createPrivateChatDialogIfNeededWithOpponent:user completion:^(QBChatDialog *chatDialog) {
             [weakSelf sendContactRequestSendNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
 
+                [[QMChatReceiver instance] postDialogsHistoryUpdated];
                 if (completion) completion(success, notification);
             }];
         }];
@@ -294,33 +295,37 @@
     }];
 }
 
-- (void)importFriendsFromAddressBook
+- (void)importFriendsFromAddressBookWithCompletion:(void(^)(BOOL succeded, NSError *error))completionBLock
 {
     __weak __typeof(self)weakSelf = self;
-    [QMAddressBook getContactsWithEmailsWithCompletionBlock:^(NSArray *contactsWithEmails) {
+    [QMAddressBook getContactsWithEmailsWithCompletionBlock:^(NSArray *contacts, BOOL success, NSError *error) {
         
-        if ([contactsWithEmails count] == 0) {
+        if ([contacts count] == 0) {
+            completionBLock(NO, error);
             return;
         }
         NSMutableArray *emails = [NSMutableArray array];
-        for (ABPerson *person in contactsWithEmails) {
+        for (ABPerson *person in contacts) {
             [emails addObjectsFromArray:person.emails];
         }
         
         // post request for emails to QB server:
         [weakSelf.usersService retrieveUsersWithEmails:emails completion:^(QBUUserPagedResult *pagedResult) {
             if (!pagedResult.success) {
+                completionBLock(NO, nil);
                 return;
             }
             
             if ([pagedResult.users count] == 0) {
+                completionBLock(NO, nil);
                 return;
             }
             
             // sending contact requests:
             for (QBUUser *user in pagedResult.users) {
-                [weakSelf addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {}];
+                [weakSelf addUserToContactList:user completion:^(BOOL successed, QBChatMessage *notification) {}];
             }
+            completionBLock(YES, nil);
         }];
     }];
 }

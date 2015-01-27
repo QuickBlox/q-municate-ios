@@ -24,6 +24,8 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 
 @implementation QMApi (ChatDialogs)
 
+
+
 - (void)fetchAllDialogs:(void(^)(void))completion {
     
     __weak __typeof(self)weakSelf = self;
@@ -40,6 +42,21 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 {
     [self.chatDialogsService fetchDialogsWithLastActivityFromDate:date completion:completion];
 }
+
+- (void)fetchChatDialogWithID:(NSString *)dialogID completion:(void(^)(QBChatDialog *chatDialog))completion
+{
+    __weak typeof(self)weakSelf = self;
+    [self.chatDialogsService fetchDialogWithID:dialogID completion:^(QBChatDialog *dialog) {
+        if (!dialog) {
+            if (completion) completion(dialog);
+            return;
+        }
+        [weakSelf.usersService retriveIfNeededUsersWithIDs:dialog.occupantIDs completion:^(BOOL retrieveWasNeeded) {
+            if (completion) completion(dialog);
+        }];
+    }];
+}
+
 
 #pragma mark - Create Chat Dialogs
 

@@ -66,7 +66,10 @@
         status = NSLocalizedString(contactlistItem.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
      } else if (((QBUUser *)self.userData).ID == [QMApi instance].currentUser.ID) {
          status = NSLocalizedString(@"QM_STR_ONLINE", nil);
-     } else {
+     } else if (!contactlistItem) {
+         status = @"";
+     }
+     else {
         status = NSLocalizedString(@"QM_STR_PENDING", nil);
     }
     self.descriptionLabel.text = status;

@@ -28,6 +28,7 @@
 - (NSArray *)usersIDsToFetch:(NSArray *)IDs;
 - (NSArray *)idsFromContactListItems;
 - (BOOL)isFriendWithID:(NSUInteger)ID;
+- (BOOL)isContactRequestWithID:(NSInteger)ID;
 
 - (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock;
 - (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void(^)(BOOL retrieveWasNeeded))completionBlock;

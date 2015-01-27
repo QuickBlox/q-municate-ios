@@ -13,6 +13,8 @@
 
 - (void)fetchAllDialogs:(QBDialogsPagedResultBlock)completion;
 - (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(QBDialogsPagedResultBlock)completionBlock;
+- (void)fetchDialogWithID:(NSString *)dialogID completion:(void (^)(QBChatDialog *dialog))block;
+- (void)fetchDialogsWithIDs:(NSArray *)dialogIDs completion:(QBDialogsPagedResultBlock)completion;
 
 - (void)createChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
 

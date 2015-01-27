@@ -10,6 +10,7 @@
 
 @implementation QMUsersUtils
 
+
 + (NSArray *)sortUsersByFullname:(NSArray *)users
 {    
     NSSortDescriptor *sorter = [[NSSortDescriptor alloc]
@@ -19,6 +20,19 @@
     NSArray *sortedUsers = [users sortedArrayUsingDescriptors:@[sorter]];
     
     return sortedUsers;
+}
+
++ (NSMutableArray *)filteredUsers:(NSArray *)users withFlterArray:(NSArray *)usersToFilter
+{
+    NSMutableArray *filteredUsrs = users.mutableCopy;
+    for (QBUUser *usr in users) {
+        for (QBUUser *filterUsr in usersToFilter) {
+            if (filterUsr.ID == usr.ID) {
+                [filteredUsrs removeObject:usr];
+            }
+        }
+    }
+    return filteredUsrs;
 }
 
 + (NSURL *)userAvatarURL:(QBUUser *)user {
