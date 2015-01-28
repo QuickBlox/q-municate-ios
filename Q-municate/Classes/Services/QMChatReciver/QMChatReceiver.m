@@ -506,6 +506,22 @@
 }
 
 #pragma mark -
+#pragma mark InternetConnection Notifications
+
+- (void)internetConnectionIsActive:(BOOL)isActive
+{
+    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMInternetConnectionState block){
+        block(isActive);
+    }];
+}
+
+- (void)internetConnectionStateWithTarget:(id)target block:(QMInternetConnectionState)block {
+    [self subsribeWithTarget:target selector:@selector(internetConnectionIsActive:) block:block];
+}
+
+
+
+#pragma mark -
 #pragma mark Video Chat Callbacks
 #pragma mark -
 

@@ -11,6 +11,7 @@
 
 typedef void(^QMDialogsHistoryUpdated)(void);
 typedef void(^QMUsersHistoryUpdated)(void);
+typedef void(^QMInternetConnectionState)(BOOL isActive);
 
 typedef void(^QMChatDidLogin)(BOOL success);
 typedef void(^QMChatDidFailLogin)(NSError *error);
@@ -50,6 +51,16 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 - (void)subsribeWithTarget:(id)target selector:(SEL)selector block:(id)block;
 - (void)executeBloksWithSelector:(SEL)selector enumerateBloks:(void(^)(id block))enumerateBloks;
 
+
+#pragma mark -
+#pragma mark InternetConnection Notifications
+
+- (void)internetConnectionIsActive:(BOOL)isActive;
+- (void)internetConnectionStateWithTarget:(id)target block:(QMInternetConnectionState)block;
+
+
+#pragma mark -
+#pragma mark Chat callbacks
 /**
  ChatService
  */
@@ -61,6 +72,10 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 - (void)chatAfterDidReceiveMessage:(QBChatMessage *)message;
 - (void)chatDidNotSendMessageWithTarget:(id)target block:(QMChatMessageBlock)block;
 - (void)chatDidReceivePresenceOfUserWithTarget:(id)target block:(QMChatDidReceivePresenceOfUser)block;
+
+
+#pragma mark -
+#pragma mark Contact List callbacks
 /**
  ContactList
  */
@@ -70,6 +85,10 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 - (void)chatContactListUpdatedWithTarget:(id)target block:(QMChatContactListWillChange)block;
 - (void)chatContactListUpdated;
 - (void)chatDidReceiveContactItemActivityWithTarget:(id)target block:(QMChathatDidReceiveContactItemActivity)block;
+
+
+#pragma mark -
+#pragma mark Chat Room callbacks
 /**
  ChatRoom
  */

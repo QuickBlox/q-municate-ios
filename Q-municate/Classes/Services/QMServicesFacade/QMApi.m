@@ -84,16 +84,14 @@ const NSTimeInterval kQMPresenceTime = 30;
     
         __weak typeof(self)weakSelf = self;
         
-        self.internetConnection.reachableBlock = ^(Reachability *reachability) {
-            // if internet connection is actice:
-        };
-        self.internetConnection.unreachableBlock = ^(Reachability *reachability) {
-            // if there is no internet:r
+        void (^internetConnectionBlock)(Reachability *reachability) = ^(Reachability *reachability) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [SVProgressHUD dismiss];
-                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+                [[QMChatReceiver instance] internetConnectionIsActive:reachability.isReachable];
             });
         };
+        
+        self.internetConnection.reachableBlock = internetConnectionBlock;
+        self.internetConnection.unreachableBlock = internetConnectionBlock;
         
         [[QMChatReceiver instance] chatDidFailWithTarget:self block:^(NSError *error) {
             // some

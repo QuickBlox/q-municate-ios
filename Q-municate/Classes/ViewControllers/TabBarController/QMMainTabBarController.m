@@ -13,10 +13,12 @@
 #import "MPGNotification.h"
 #import "QMMessageBarStyleSheetFactory.h"
 #import "QMChatViewController.h"
+#import "QMChatDialogsService.h"
 #import "QMSoundManager.h"
 #import "QMChatDataSource.h"
 #import "QMSettingsManager.h"
 #import "QMChatReceiver.h"
+#import "REAlertView+QMSuccess.h"
 
 
 @interface QMMainTabBarController ()
@@ -110,6 +112,23 @@
         }
         QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
         [weakSelf message:message forOtherDialog:dialog];
+    }];
+    
+    // Internet Connection:
+    [[QMChatReceiver instance] internetConnectionStateWithTarget:self block:^(BOOL isActive) {
+        if (isActive) {
+            [SVProgressHUD show];
+            [[QMApi instance]loginChat:^(BOOL success) {
+                [SVProgressHUD dismiss];
+                if (success) {
+                    [[QMApi instance].chatDialogsService joinRooms];
+                    return;
+                }
+                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:success];
+            }];
+        } else {
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:isActive];
+        }
     }];
 }
 
