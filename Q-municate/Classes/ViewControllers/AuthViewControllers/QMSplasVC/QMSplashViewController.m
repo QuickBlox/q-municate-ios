@@ -30,12 +30,20 @@
     
     [super viewDidLoad];
     [self.splashLogoView setImage:[UIImage imageNamed:IS_HEIGHT_GTE_568 ? @"bg" : @"splash-960"]];
+    self.activityIndicator.hidesWhenStopped = YES;
     [self createSession];
 }
 
 - (void)createSession {
     
     self.reconnectBtn.alpha = 0;
+    
+    if (!QMApi.instance.isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        self.reconnectBtn.alpha = 1;
+        return;
+    }
+    
     [self.activityIndicator startAnimating];
 
     __weak __typeof(self)weakSelf = self;

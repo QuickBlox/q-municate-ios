@@ -11,6 +11,7 @@
 #import "QMCreateNewChatController.h"
 #import "QMDialogsDataSource.h"
 #import "QMChatReceiver.h"
+#import "REAlertView+QMSuccess.h"
 #import "QMApi.h"
 
 static NSString *const ChatListCellIdentifier = @"ChatListCell";
@@ -75,9 +76,15 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
 #pragma mark - Actions
 
-- (IBAction)createNewDialog:(id)sender {
+- (IBAction)createNewDialog:(id)sender
+{
+    if (!QMApi.instance.isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
+    
     if ([[QMApi instance].contactsOnly count] == 0) {
-        [[[UIAlertView alloc] initWithTitle:nil message:@"You don't have any contacts for creating new chat." delegate:nil cancelButtonTitle:@"OK"otherButtonTitles:nil] show];
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_ERROR_WHILE_CREATING_NEW_CHAT", nil) actionSuccess:NO];
         return;
     }
     [self performSegueWithIdentifier:kCreateNewChatSegueIdentifier sender:nil];

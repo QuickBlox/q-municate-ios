@@ -151,6 +151,14 @@
     NSMutableDictionary *extendedRequest = @{@"sort_desc": @"date_sent"}.mutableCopy;
     
     [QBChat messagesWithDialogID:dialogID extendedRequest:extendedRequest delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:echoObject]];
+    
+//    QBResponsePage *page = [QBResponsePage responsePageWithLimit:50];
+//    
+//    [QBRequest messagesWithDialogID:dialogID extendedRequest:extendedRequest forPage:page successBlock:^(QBResponse *responce, NSArray *dialogs, QBResponsePage *responcePage) {
+//        //
+//    } errorBlock:^(QBResponse *response) {
+//        //
+//    }];
 }
 
 - (void)messagesWithDialogID:(NSString *)dialogID time:(NSUInteger)time completion:(QBChatHistoryMessageResultBlock)completion {

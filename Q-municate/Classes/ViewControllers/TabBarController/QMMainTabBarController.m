@@ -19,6 +19,7 @@
 #import "QMSettingsManager.h"
 #import "QMChatReceiver.h"
 #import "REAlertView+QMSuccess.h"
+#import "QMDevice.h"
 
 
 @interface QMMainTabBarController ()
@@ -52,6 +53,10 @@
             }];
             
         }else {
+            
+            // show hud and start login to chat:
+            [SVProgressHUD show];
+            
             // open app by push notification:
             NSDictionary *push = [[QMApi instance] pushNotification];
             if (push != nil) {
@@ -70,21 +75,30 @@
                 }
             }];
             
-            [[QMApi instance] loginChat:^(BOOL loginSuccess) {
+            [weakSelf loginToChat];
+        }
+    }];
+}
+
+- (void)loginToChat
+{
+    [[QMApi instance] loginChat:^(BOOL loginSuccess) {
+        
+        QBUUser *usr = [QMApi instance].currentUser;
+        if (!usr.imported) {
+            [[QMApi instance] importFriendsFromFacebook];
+            [[QMApi instance] importFriendsFromAddressBookWithCompletion:^(BOOL succeded, NSError *error) {
                 
-                QBUUser *usr = [QMApi instance].currentUser;
-                if (!usr.imported) {
-                    [[QMApi instance] importFriendsFromFacebook];
-                    [[QMApi instance] importFriendsFromAddressBookWithCompletion:^(BOOL succeded, NSError *error) {}];
-                    usr.imported = YES;
-                    [[QMApi instance] updateUser:usr image:nil progress:nil completion:^(BOOL successed) {}];
-                    
-                } else {
-                
-                    [[QMApi instance] fetchAllHistory:^{
-                        //
-                    }];
-                }
+                // hide progress hud
+                [SVProgressHUD dismiss];
+            }];
+            usr.imported = YES;
+            [[QMApi instance] updateUser:usr image:nil progress:nil completion:^(BOOL successed) {}];
+            
+        } else {
+            
+            [[QMApi instance] fetchAllHistory:^{
+                [SVProgressHUD dismiss];
             }];
         }
     }];
@@ -118,14 +132,7 @@
     [[QMChatReceiver instance] internetConnectionStateWithTarget:self block:^(BOOL isActive) {
         if (isActive) {
             [SVProgressHUD show];
-            [[QMApi instance]loginChat:^(BOOL success) {
-                [SVProgressHUD dismiss];
-                if (success) {
-                    [[QMApi instance].chatDialogsService joinRooms];
-                    return;
-                }
-                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:success];
-            }];
+            [weakSelf loginToChat];
         } else {
             [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:isActive];
         }
@@ -137,8 +144,8 @@
     UIColor *white = [UIColor whiteColor];
     [[UITabBarItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : white} forState:UIControlStateNormal];
     
-    UITabBar *tabBar = self.tabBarController.tabBar;
-    tabBar.tintColor = white;
+//    UITabBar *tabBar = self.tabBarController.tabBar;
+//    tabBar.tintColor = white;
     
     UIImage *chatImg = [[UIImage imageNamed:@"tb_chat"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     UITabBarItem *firstTab = self.tabBar.items[0];
@@ -159,6 +166,15 @@
     UITabBarItem *fourthTab = self.tabBar.items[3];
     fourthTab.image = settingsImg;
     fourthTab.selectedImage = settingsImg;
+    
+    // selection image:
+    UIImage *tabSelectionImage = nil;
+    if ([QMDevice isIphone6] || [QMDevice isIphone6Plus]) {
+        tabSelectionImage = [UIImage imageNamed:@"iphone6_tab_fone"];
+    } else {
+        tabSelectionImage = [UIImage imageNamed:@"tab_fone"];
+    }
+    self.tabBar.selectionIndicatorImage = tabSelectionImage;
     
     for (UINavigationController *navViewController in self.viewControllers ) {
         NSAssert([navViewController isKindOfClass:[UINavigationController class]], @"is not UINavigationController");

@@ -49,6 +49,8 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 - (void)applicationWillResignActive;
 - (void)openChatPageForPushNotification:(NSDictionary *)notification completion:(void(^)(BOOL completed))completionBlock;
 
+- (BOOL)isInternetConnected;
+
 - (void)fetchAllHistory:(void(^)(void))completion;
 
 @end

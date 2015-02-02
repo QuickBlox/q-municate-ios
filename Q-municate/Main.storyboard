@@ -37,7 +37,7 @@
                 <tabBarController definesPresentationContext="YES" id="ExU-yY-FRH" customClass="QMMainTabBarController" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="yaz-Qe-RUt"/>
                     <nil key="simulatedBottomBarMetrics"/>
-                    <tabBar key="tabBar" opaque="NO" contentMode="scaleToFill" translucent="NO" selectionIndicatorImage="Fone" id="mug-V7-qxg">
+                    <tabBar key="tabBar" opaque="NO" contentMode="scaleToFill" translucent="NO" id="mug-V7-qxg">
                         <rect key="frame" x="129" y="330" width="163" height="49"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1470,7 +1470,7 @@ Q-munication by sending them private invitations.</string>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg" translatesAutoresizingMaskIntoConstraints="NO" id="PCD-hf-H4f">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Ccj-RC-Fcq">
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Ccj-RC-Fcq">
                                 <rect key="frame" x="142" y="473" width="37" height="37"/>
                                 <color key="color" red="0.0" green="0.74117648601531982" blue="0.24313727021217346" alpha="1" colorSpace="deviceRGB"/>
                             </activityIndicatorView>
@@ -1951,10 +1951,10 @@ Cg
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bSI-HI-0SC">
-                                <rect key="frame" x="0.0" y="422" width="320" height="60"/>
+                                <rect key="frame" x="0.0" y="422" width="320" height="44"/>
                                 <color key="backgroundColor" red="0.19607844948768616" green="0.74901962280273438" blue="0.15686275064945221" alpha="1" colorSpace="deviceRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="Bg6-QV-bVh"/>
+                                    <constraint firstAttribute="height" constant="44" id="Bg6-QV-bVh"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                 <state key="normal" title="Sign Up with Email">
@@ -1962,20 +1962,6 @@ Cg
                                 </state>
                                 <connections>
                                     <action selector="signUpWithEmail:" destination="vN9-k2-MLz" eventType="touchUpInside" id="8qC-vO-Z4z"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="50" verticalCompressionResistancePriority="50" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LiY-av-v3j">
-                                <rect key="frame" x="0.0" y="488" width="320" height="60"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="2Ya-MD-LSI"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
-                                <state key="normal" title="Already have an account?">
-                                    <color key="titleColor" red="0.0" green="0.38039215686274508" blue="0.72549019607843135" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="pressAlreadyBtn:" destination="vN9-k2-MLz" eventType="touchUpInside" id="EZz-go-5bQ"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_big" translatesAutoresizingMaskIntoConstraints="NO" id="X2a-mx-tHB">
@@ -2000,6 +1986,20 @@ Cg
                                     <action selector="connectWithFacebook:" destination="vN9-k2-MLz" eventType="touchUpInside" id="jTZ-h9-xK2"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="50" verticalCompressionResistancePriority="50" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LiY-av-v3j">
+                                <rect key="frame" x="0.0" y="474" width="320" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="2Ya-MD-LSI"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
+                                <state key="normal" title="Already have an account?">
+                                    <color key="titleColor" red="0.0" green="0.38039215686274508" blue="0.72549019607843135" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="pressAlreadyBtn:" destination="vN9-k2-MLz" eventType="touchUpInside" id="EZz-go-5bQ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -2010,12 +2010,12 @@ Cg
                             <constraint firstAttribute="trailing" secondItem="LpR-45-dqd" secondAttribute="trailing" id="7eD-ej-coY"/>
                             <constraint firstItem="LiY-av-v3j" firstAttribute="leading" secondItem="Zfd-Se-Wif" secondAttribute="leading" id="9UF-Pp-RHR"/>
                             <constraint firstItem="bSI-HI-0SC" firstAttribute="leading" secondItem="Zfd-Se-Wif" secondAttribute="leading" id="IZ7-Jw-Cne"/>
-                            <constraint firstItem="LiY-av-v3j" firstAttribute="top" secondItem="bSI-HI-0SC" secondAttribute="bottom" constant="6" id="LIL-9B-npc"/>
+                            <constraint firstItem="LiY-av-v3j" firstAttribute="top" secondItem="bSI-HI-0SC" secondAttribute="bottom" constant="8" id="LIL-9B-npc"/>
                             <constraint firstItem="hnq-Ge-e1j" firstAttribute="leading" secondItem="Zfd-Se-Wif" secondAttribute="leading" constant="33" id="Oz7-5c-hvI"/>
                             <constraint firstAttribute="trailing" secondItem="bSI-HI-0SC" secondAttribute="trailing" id="PRv-u7-Asw"/>
                             <constraint firstItem="X2a-mx-tHB" firstAttribute="leading" secondItem="Zfd-Se-Wif" secondAttribute="leading" id="SK0-QI-Ra4"/>
                             <constraint firstItem="X2a-mx-tHB" firstAttribute="top" secondItem="Zfd-Se-Wif" secondAttribute="top" id="T6p-yM-BdG"/>
-                            <constraint firstItem="fmD-Ba-LYv" firstAttribute="top" secondItem="LiY-av-v3j" secondAttribute="bottom" constant="20" id="UrQ-M1-4Ky"/>
+                            <constraint firstItem="fmD-Ba-LYv" firstAttribute="top" secondItem="LiY-av-v3j" secondAttribute="bottom" constant="34" id="UrQ-M1-4Ky"/>
                             <constraint firstAttribute="trailing" secondItem="pjU-Ya-5ft" secondAttribute="trailing" id="YbK-F1-hv1"/>
                             <constraint firstItem="pjU-Ya-5ft" firstAttribute="top" secondItem="hnq-Ge-e1j" secondAttribute="bottom" constant="47" id="cQF-0k-QIq"/>
                             <constraint firstItem="LpR-45-dqd" firstAttribute="leading" secondItem="Zfd-Se-Wif" secondAttribute="leading" id="flm-rB-ewh"/>
@@ -2405,11 +2405,12 @@ Cg
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rG7-J9-YxB">
                                 <rect key="frame" x="20" y="214" width="280" height="44"/>
+                                <color key="backgroundColor" red="0.094117647058823528" green="0.71372549019607845" blue="0.11764705882352941" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="hC5-m1-DkL"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
-                                <state key="normal" image="login-btn">
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
+                                <state key="normal" title="Log In">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -2418,11 +2419,12 @@ Cg
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DVA-RP-ekn">
                                 <rect key="frame" x="20" y="281" width="280" height="44"/>
+                                <color key="backgroundColor" red="0.2047338372009474" green="0.29932006190909038" blue="0.58307873603351956" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="W8e-aa-mKf"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <state key="normal" image="fb-btn">
+                                <state key="normal" title="Connect with Facebook" image="ic_fb_white">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -2472,6 +2474,8 @@ Cg
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <connections>
                         <outlet property="emailField" destination="5Ez-y5-q5u" id="Gxa-CH-fz5"/>
+                        <outlet property="facebookLoginButton" destination="DVA-RP-ekn" id="F6u-Jt-BDl"/>
+                        <outlet property="logInButton" destination="rG7-J9-YxB" id="Fwx-yz-u12"/>
                         <outlet property="passwordField" destination="Bwu-ka-L13" id="iwY-g8-jTp"/>
                         <outlet property="rememberMeSwitch" destination="vgj-Wu-SQV" id="xLH-kv-66S"/>
                         <segue destination="ExU-yY-FRH" kind="custom" identifier="TabBarSegue" customClass="QMCustomSegue" id="veI-CA-d70"/>
@@ -3381,7 +3385,6 @@ Cg
         </scene>
     </scenes>
     <resources>
-        <image name="Fone" width="80" height="49"/>
         <image name="add-participants" width="24" height="24"/>
         <image name="add_friend" width="24" height="24"/>
         <image name="answer" width="141" height="66"/>
@@ -3396,12 +3399,10 @@ Cg
         <image name="dynamic" width="66" height="66"/>
         <image name="dynamic_on" width="66" height="66"/>
         <image name="end_btn" width="141" height="66"/>
-        <image name="fb-btn" width="280" height="44"/>
         <image name="fb_ic" width="30" height="30"/>
         <image name="group_placeholder" width="45" height="45"/>
         <image name="ic_fb_white" width="30" height="30"/>
         <image name="ic_info_top" width="21" height="21"/>
-        <image name="login-btn" width="280" height="44"/>
         <image name="logo_big" width="288" height="244"/>
         <image name="logo_splash" width="139" height="139"/>
         <image name="logo_txt" width="255" height="58"/>
@@ -3427,10 +3428,10 @@ Cg
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="veI-CA-d70"/>
+        <segue reference="qsg-NO-Ors"/>
         <segue reference="kkU-F4-K0a"/>
         <segue reference="IAo-qy-uHQ"/>
-        <segue reference="hW5-9n-Jcg"/>
         <segue reference="Xoz-l0-6ya"/>
+        <segue reference="hW5-9n-Jcg"/>
     </inferredMetricsTieBreakers>
 </document>

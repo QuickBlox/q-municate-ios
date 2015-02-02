@@ -155,11 +155,7 @@
             QBChatRoom *room = chatDialog.chatRoom;
             [room joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];
         }
-        
-    } else if (chatDialog.type == QBChatDialogTypePrivate) {
-        
     }
-    
     self.dialogs[chatDialog.ID] = chatDialog;
 }
 

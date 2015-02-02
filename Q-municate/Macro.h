@@ -9,6 +9,8 @@
 #ifndef Q_municate_Macro_h
 #define Q_municate_Macro_h
 
+#define IS_IPHONE_6 [UIScreen]
+
 
 #ifdef DEBUG
 #define ELog(...) do { NSLog(@"%s %@", __PRETTY_FUNCTION__, [NSString stringWithFormat:__VA_ARGS__]); } while(0)

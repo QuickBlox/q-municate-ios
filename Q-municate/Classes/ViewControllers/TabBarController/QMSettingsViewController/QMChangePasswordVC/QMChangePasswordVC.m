@@ -69,6 +69,11 @@ const NSUInteger kQMMinPasswordLenght = 7;
 
 - (IBAction)pressChangeButton:(id)sender {
     
+    if (!QMApi.instance.isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
+    
     NSString *oldPassword = self.settingsManager.password;
     NSString *confirmOldPassword = self.oldPasswordTextField.text;
     NSString *newPassword = self.passwordTextField.text;

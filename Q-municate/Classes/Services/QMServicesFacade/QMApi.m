@@ -55,8 +55,8 @@ const NSTimeInterval kQMPresenceTime = 30;
     dispatch_once(&onceToken, ^{
         servicesFacade = [[self alloc] init];
         [QBChat instance].useMutualSubscriptionForContactList = YES;
-//        [QBChat instance].autoReconnectEnabled = YES;
-        [QBChat instance].streamManagementEnabled = YES;
+        [QBChat instance].autoReconnectEnabled = YES;
+//        [QBChat instance].streamManagementEnabled = YES;
         
         [[QBChat instance] addDelegate:[QMChatReceiver instance]];
         servicesFacade.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:kQMPresenceTime
@@ -238,6 +238,12 @@ const NSTimeInterval kQMPresenceTime = 30;
     
     return result.success;
 }
+
+- (BOOL)isInternetConnected
+{
+    return self.internetConnection.isReachable;
+}
+
 
 #pragma mark - STATUS
 

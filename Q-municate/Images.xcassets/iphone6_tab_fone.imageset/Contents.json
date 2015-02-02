@@ -2,18 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "Fone.png"
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "Fone@2x.png"
+      "filename" : "iphone6_tab_phone@2x.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "Fone@3x-1.png"
+      "filename" : "iphone6_tab_phone@3x.png"
     }
   ],
   "info" : {

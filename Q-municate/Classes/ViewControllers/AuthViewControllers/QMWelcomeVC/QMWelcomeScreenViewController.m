@@ -46,8 +46,12 @@
 
 #pragma mark - Actions
 
-- (IBAction)connectWithFacebook:(id)sender {
-    
+- (IBAction)connectWithFacebook:(id)sender
+{
+    if (!QMApi.instance.isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
     __weak __typeof(self)weakSelf = self;
     [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL success) {
         if (success) {

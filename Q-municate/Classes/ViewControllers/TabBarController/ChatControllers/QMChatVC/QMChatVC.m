@@ -24,6 +24,7 @@
 #import "QMImagePicker.h"
 #import "REActionSheet.h"
 #import "QMChatSection.h"
+#import "REAlertView+QMSuccess.h"
 
 static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
@@ -409,6 +410,11 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 #pragma mark - QMChatInputToolbarDelegate
 
 - (void)chatInputToolbar:(QMChatInputToolbar *)toolbar didPressRightBarButton:(UIButton *)sender {
+    
+    if (!QMApi.instance.isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
     
     if (sender == self.sendButton) {
         

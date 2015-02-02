@@ -69,12 +69,21 @@
     }];
 }
 
-- (IBAction)pressentUserAgreement:(id)sender {
-    
+- (IBAction)pressentUserAgreement:(id)sender
+{
+    if (!QMApi.instance.isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
     [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:nil];
 }
 
-- (IBAction)signUp:(id)sender {
+- (IBAction)signUp:(id)sender
+{
+    if (!QMApi.instance.isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
     [self fireSignUp];
 }
 

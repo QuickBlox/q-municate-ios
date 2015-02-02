@@ -11,6 +11,7 @@
 "QM_STR_CANCEL" = "Cancel";
 "QM_STR_SUCCESS" = "Success";
 "QM_STR_ERROR" = "Error";
+"QM_STR_ERROR_WHILE_CREATING_NEW_CHAT" = "You don't have any contacts for creating new chat.";
 "QM_STR_FACEBOOK_LOGIN_FALED_ALERT_TEXT" = "Something went wrong. Please try again";
 "QM_STR_QMUNICATE_AGREE" = "By clicking Sign Up, you agree to Q-MUNICATE User Agreement.";
 "QM_STR_CALLING" = "Calling...";
