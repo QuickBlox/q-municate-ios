@@ -35,6 +35,16 @@
     [[QMChatReceiver instance] unsubscribeForTarget:self];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if (![[QBChat instance] isLoggedIn]) {
+        // show hud and start login to chat:
+        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.chatDelegate = self;
@@ -53,9 +63,6 @@
             }];
             
         }else {
-            
-            // show hud and start login to chat:
-            [SVProgressHUD show];
             
             // open app by push notification:
             NSDictionary *push = [[QMApi instance] pushNotification];
@@ -165,7 +172,7 @@
     UIImage *settingsImg = [[UIImage imageNamed:@"tb_settings"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     UITabBarItem *fourthTab = self.tabBar.items[3];
     fourthTab.image = settingsImg;
-    fourthTab.selectedImage = settingsImg;
+    fourthTab.selectedImage = settingsImg; 
     
     // selection image:
     UIImage *tabSelectionImage = nil;

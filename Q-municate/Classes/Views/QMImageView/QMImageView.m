@@ -133,13 +133,16 @@
 
 - (UIImage *)transformImage:(UIImage *)image {
     
+    NSData *imageData = UIImagePNGRepresentation(image);
+    UIImage *pngImage = [UIImage imageWithData:imageData];
+    
     if (self.imageViewType == QMImageViewTypeSquare) {
-        return [image imageByScaleAndCrop:self.frame.size];
+        return [pngImage imageByScaleAndCrop:self.frame.size];
     }
     else if (self.imageViewType == QMImageViewTypeCircle) {
-        return [image imageByCircularScaleAndCrop:self.frame.size];
+        return [pngImage imageByCircularScaleAndCrop:self.frame.size];
     } else {
-        return image;
+        return pngImage;
     }
 }
 

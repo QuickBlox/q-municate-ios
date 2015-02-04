@@ -193,6 +193,7 @@
  
     IDMPhoto *photo = [IDMPhoto photoWithURL:imageUrl];
     IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:@[photo]];
+    browser.displayToolbar = NO;
     [self presentViewController:browser animated:YES completion:nil];
 }
 

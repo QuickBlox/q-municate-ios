@@ -80,7 +80,7 @@
                                     </connections>
                                 </searchBar>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="QMFriendListCell" rowHeight="59" id="fHb-73-c3K" customClass="QMFriendListCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="QMFriendListCell" rowHeight="59" id="fHb-73-c3K" customClass="QMFriendListCell">
                                         <rect key="frame" x="0.0" y="66" width="320" height="59"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fHb-73-c3K" id="qSE-ij-B6n">
@@ -1701,7 +1701,7 @@ Cg
                                                     <color key="textColor" red="0.5657838255494505" green="0.5657838255494505" blue="0.5657838255494505" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="group_placeholder" highlightedImage="group_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="oai-MX-Rq6" customClass="QMImageView">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="group_placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="oai-MX-Rq6" customClass="QMImageView">
                                                     <rect key="frame" x="10" y="4" width="50" height="50"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
@@ -2527,7 +2527,7 @@ Cg
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dEK-BY-Ip3" customClass="QMCornerButton">
-                                                    <rect key="frame" x="35" y="18" width="250" height="44"/>
+                                                    <rect key="frame" x="20" y="18" width="280" height="44"/>
                                                     <color key="backgroundColor" red="0.0" green="0.74117648599999997" blue="0.24313727020000001" alpha="1" colorSpace="deviceRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="44" id="t9a-n7-MLK"/>
@@ -2541,8 +2541,8 @@ Cg
                                                 </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="dEK-BY-Ip3" firstAttribute="leading" secondItem="1wy-E4-8cp" secondAttribute="leading" constant="35" id="QFR-Ql-29E"/>
-                                                <constraint firstAttribute="trailing" secondItem="dEK-BY-Ip3" secondAttribute="trailing" constant="35" id="gec-ww-mST"/>
+                                                <constraint firstItem="dEK-BY-Ip3" firstAttribute="leading" secondItem="1wy-E4-8cp" secondAttribute="leading" constant="20" id="QFR-Ql-29E"/>
+                                                <constraint firstAttribute="trailing" secondItem="dEK-BY-Ip3" secondAttribute="trailing" constant="20" id="gec-ww-mST"/>
                                                 <constraint firstItem="dEK-BY-Ip3" firstAttribute="top" secondItem="1wy-E4-8cp" secondAttribute="top" constant="18" id="khb-H7-cTi"/>
                                             </constraints>
                                         </tableViewCellContentView>

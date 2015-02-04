@@ -15,7 +15,7 @@
 #import "QMApi.h"
 
 
-#define DEVELOPMENT 1
+#define DEVELOPMENT 0
 #define STAGE_SERVER_IS_ACTIVE 0
 
 
@@ -105,7 +105,6 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
         NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
         [[QMApi instance] setPushNotification:notification];
     }
-    
     return YES;
 }
 

@@ -547,6 +547,11 @@
     [self chatAfterDidReceiveCallRequestFromUser:userID withSessionID:sessionID conferenceType:conferenceType customParameters:customParameters];
 }
 
+-(void) chatDidReceiveCallRequestFromUser:(NSUInteger)userID withSessionID:(NSString*)sessionID conferenceType:(enum QBVideoChatConferenceType)conferenceType
+{
+    
+}
+
 - (void)chatAfrerDidReceiveCallRequestCustomParametesrWithTarget:(id)target block:(QMChatDidReceiveCallRequestCustomParams)block
 {
     [self subsribeWithTarget:target selector:@selector(chatAfterDidReceiveCallRequestFromUser:withSessionID:conferenceType:customParameters:) block:block];

@@ -8,6 +8,7 @@
 
 #import "UIImage+Cropper.h"
 #include <math.h>
+#import "NSData+ImageContentType.h"
 
 @implementation UIImage (Cropper)
 
@@ -112,9 +113,7 @@
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    NSData *imageData = UIImagePNGRepresentation(newImage);
-    UIImage *pngImage = [UIImage imageWithData:imageData];
-    return pngImage;
+    return newImage;
 }
 
 @end
