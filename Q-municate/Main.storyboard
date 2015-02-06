@@ -65,7 +65,7 @@
                         <viewControllerLayoutGuide type="bottom" id="sjC-z3-JUl"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="PD2-vb-oCL">
-                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="dqG-l5-KjD">
@@ -228,7 +228,7 @@ Your don't have any friends, tap search icon to find them or invite new ones.</s
             <objects>
                 <tableViewController hidesBottomBarWhenPushed="YES" id="B6O-m1-ZGo" customClass="QMFriendsDetailsController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="EcG-xN-W1h">
-                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" id="Mqf-gm-Khj">
@@ -486,6 +486,15 @@ Line 2</string>
                                             <action selector="rightControlTapped:" destination="ouq-Kw-WJb" eventType="touchUpInside" id="aCb-d4-9U2"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hTz-bf-aoH">
+                                        <rect key="frame" x="90" y="491" width="141" height="66"/>
+                                        <state key="normal" image="end_btn">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="stopCallTapped:" destination="ouq-Kw-WJb" eventType="touchUpInside" id="lr5-Qu-hW2"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -502,12 +511,6 @@ Line 2</string>
                                         <color key="textColor" red="0.721078726" green="0.721078726" blue="0.721078726" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="upic_call" translatesAutoresizingMaskIntoConstraints="NO" id="mou-AN-SXe" customClass="QMImageView">
-                                        <rect key="frame" x="94" y="161" width="132" height="132"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="132" id="8gi-yk-ZhT"/>
-                                        </constraints>
-                                    </imageView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="James Cobs" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L9T-tY-3Kn">
                                         <rect key="frame" x="20" y="85" width="280" height="30"/>
                                         <constraints>
@@ -517,6 +520,12 @@ Line 2</string>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="upic_call" translatesAutoresizingMaskIntoConstraints="NO" id="mou-AN-SXe" customClass="QMImageView">
+                                        <rect key="frame" x="94" y="161" width="132" height="132"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="132" id="8gi-yk-ZhT"/>
+                                        </constraints>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -548,15 +557,6 @@ Line 2</string>
                                     <action selector="leftControlTapped:" destination="ouq-Kw-WJb" eventType="touchUpInside" id="pfD-0q-sNR"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hTz-bf-aoH">
-                                <rect key="frame" x="90" y="491" width="141" height="66"/>
-                                <state key="normal" image="end_btn">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="stopCallTapped:" destination="ouq-Kw-WJb" eventType="touchUpInside" id="lr5-Qu-hW2"/>
-                                </connections>
-                            </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="cgB-KY-Zm9">
                                 <rect key="frame" x="211" y="20" width="99" height="117"/>
                                 <constraints>
@@ -567,11 +567,9 @@ Line 2</string>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="cgB-KY-Zm9" firstAttribute="top" secondItem="zdH-fi-T39" secondAttribute="bottom" id="9Nv-D4-ZsX"/>
-                            <constraint firstItem="fvG-tF-pe0" firstAttribute="top" secondItem="hTz-bf-aoH" secondAttribute="bottom" constant="11" id="DbU-hi-oda"/>
                             <constraint firstItem="cgB-KY-Zm9" firstAttribute="top" secondItem="zdH-fi-T39" secondAttribute="bottom" id="LGM-T4-DG6"/>
                             <constraint firstItem="cgB-KY-Zm9" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="NRI-TI-qDt" secondAttribute="leading" constant="211" id="LgK-Ca-glV"/>
                             <constraint firstAttribute="trailing" secondItem="cgB-KY-Zm9" secondAttribute="trailing" constant="10" id="Men-jx-FvF"/>
-                            <constraint firstItem="hTz-bf-aoH" firstAttribute="leading" secondItem="fBp-A2-pHp" secondAttribute="trailing" constant="12" id="Nz9-sp-yp4"/>
                             <constraint firstAttribute="trailing" secondItem="pbH-vY-Jr8" secondAttribute="trailing" id="RBl-uU-T3N"/>
                             <constraint firstItem="pbH-vY-Jr8" firstAttribute="top" secondItem="NRI-TI-qDt" secondAttribute="top" id="a5j-AP-6QV"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="cgB-KY-Zm9" secondAttribute="trailing" constant="10" id="cmY-8U-lrP"/>
@@ -580,7 +578,6 @@ Line 2</string>
                             <constraint firstItem="cgB-KY-Zm9" firstAttribute="leading" secondItem="NRI-TI-qDt" secondAttribute="leading" constant="211" id="fWH-sg-3hp"/>
                             <constraint firstItem="fBp-A2-pHp" firstAttribute="leading" secondItem="NRI-TI-qDt" secondAttribute="leading" constant="12" id="hb8-If-k1i"/>
                             <constraint firstItem="fvG-tF-pe0" firstAttribute="top" secondItem="xKx-9a-k2a" secondAttribute="bottom" id="m3s-Mc-F43"/>
-                            <constraint firstItem="hTz-bf-aoH" firstAttribute="leading" secondItem="fBp-A2-pHp" secondAttribute="trailing" constant="12" id="tIu-G3-GdB"/>
                             <constraint firstItem="xKx-9a-k2a" firstAttribute="leading" secondItem="NRI-TI-qDt" secondAttribute="leading" id="u4w-Of-mi5"/>
                             <constraint firstItem="fvG-tF-pe0" firstAttribute="top" secondItem="fBp-A2-pHp" secondAttribute="bottom" constant="11" id="veX-Wa-IXk"/>
                             <constraint firstAttribute="trailing" secondItem="xKx-9a-k2a" secondAttribute="trailing" id="viq-nh-eeF"/>
@@ -1179,7 +1176,7 @@ Line 2</string>
             <objects>
                 <tableViewController id="scd-jL-KOO" customClass="QMInviteViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="AJz-Ng-Vzt">
-                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" id="7Gg-ka-ZKh">
@@ -1556,7 +1553,7 @@ Q-munication by sending them private invitations.</string>
                         <viewControllerLayoutGuide type="bottom" id="H4y-tD-pqq"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="sOf-z9-noA">
-                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="59" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="uh0-WE-xWZ">
@@ -1813,7 +1810,7 @@ Cg
                         <viewControllerLayoutGuide type="bottom" id="3q7-BX-nci"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="zbc-Zq-fmU">
-                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -2490,7 +2487,7 @@ Cg
             <objects>
                 <tableViewController id="Uz2-In-U2Z" customClass="QMForgotPasswordTVC" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="2kQ-Tq-9iF">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <sections>
@@ -2713,7 +2710,7 @@ Cg
                         <viewControllerLayoutGuide type="bottom" id="AVD-JQ-jkt"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="v8n-WJ-c4f">
-                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="vaa-T0-hBz">
@@ -2852,15 +2849,18 @@ Cg
                         <viewControllerLayoutGuide type="bottom" id="QKx-w1-8E7"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="LzP-d8-BC3">
-                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d5o-vd-nnk">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="109"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lDg-Ys-VXU">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lDg-Ys-VXU">
                                         <rect key="frame" x="0.0" y="108" width="320" height="1"/>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="1" id="puh-Zh-oTD"/>
+                                        </constraints>
                                     </view>
                                     <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="upic_placeholder_details_group" translatesAutoresizingMaskIntoConstraints="NO" id="1Lq-TE-ZQ2" customClass="QMImageView">
                                         <rect key="frame" x="17" y="15" width="60" height="60"/>
@@ -2917,6 +2917,7 @@ Cg
                                     <constraint firstAttribute="trailing" secondItem="7eb-d0-xZ8" secondAttribute="trailing" constant="8" id="3eQ-7R-2su"/>
                                     <constraint firstItem="sbb-sd-Onn" firstAttribute="leading" secondItem="d5o-vd-nnk" secondAttribute="leading" constant="96" id="4K8-SH-BhC"/>
                                     <constraint firstAttribute="height" constant="109" id="6Df-PN-2Mg"/>
+                                    <constraint firstAttribute="trailing" secondItem="lDg-Ys-VXU" secondAttribute="trailing" id="IKT-35-sgM"/>
                                     <constraint firstItem="1Lq-TE-ZQ2" firstAttribute="top" secondItem="d5o-vd-nnk" secondAttribute="top" constant="15" id="JK5-aX-iKa"/>
                                     <constraint firstItem="wF6-lb-P3Y" firstAttribute="leading" secondItem="1Lq-TE-ZQ2" secondAttribute="trailing" constant="19" id="Mxb-fq-k2u"/>
                                     <constraint firstItem="92G-QK-rXf" firstAttribute="leading" secondItem="1Lq-TE-ZQ2" secondAttribute="trailing" constant="19" id="RTv-8x-YmE"/>
@@ -2925,6 +2926,8 @@ Cg
                                     <constraint firstItem="wF6-lb-P3Y" firstAttribute="top" secondItem="d5o-vd-nnk" secondAttribute="top" constant="25" id="b0x-No-cKM"/>
                                     <constraint firstAttribute="trailing" secondItem="92G-QK-rXf" secondAttribute="trailing" constant="40" id="fPa-eu-ExJ"/>
                                     <constraint firstItem="92G-QK-rXf" firstAttribute="top" secondItem="d5o-vd-nnk" secondAttribute="top" constant="48" id="hOG-w8-bjz"/>
+                                    <constraint firstItem="lDg-Ys-VXU" firstAttribute="leading" secondItem="d5o-vd-nnk" secondAttribute="leading" id="jSe-kg-kp2"/>
+                                    <constraint firstItem="lDg-Ys-VXU" firstAttribute="top" secondItem="7eb-d0-xZ8" secondAttribute="bottom" constant="13" id="oGZ-vn-2Oz"/>
                                     <constraint firstItem="7eb-d0-xZ8" firstAttribute="leading" secondItem="d5o-vd-nnk" secondAttribute="leading" constant="119" id="t4a-8T-LPQ"/>
                                     <constraint firstItem="7eb-d0-xZ8" firstAttribute="top" secondItem="92G-QK-rXf" secondAttribute="bottom" constant="10" id="uIe-l1-X2B"/>
                                     <constraint firstItem="1Lq-TE-ZQ2" firstAttribute="leading" secondItem="d5o-vd-nnk" secondAttribute="leading" constant="17" id="yZD-Qn-RF5"/>
@@ -3127,7 +3130,7 @@ Cg
                         <viewControllerLayoutGuide type="bottom" id="dJp-7Z-nUR"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="3Eu-FN-5gi">
-                        <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="kef-62-AYz">
@@ -3428,10 +3431,10 @@ Cg
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="qsg-NO-Ors"/>
         <segue reference="kkU-F4-K0a"/>
+        <segue reference="qsg-NO-Ors"/>
         <segue reference="IAo-qy-uHQ"/>
-        <segue reference="Xoz-l0-6ya"/>
-        <segue reference="hW5-9n-Jcg"/>
+        <segue reference="aeV-0O-de3"/>
+        <segue reference="bOV-zd-nKn"/>
     </inferredMetricsTieBreakers>
 </document>

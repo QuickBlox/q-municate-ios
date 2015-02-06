@@ -165,7 +165,6 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
         if ([QMApi instance].subscriptionBlock) {
             [QMApi instance].subscriptionBlock(deviceToken);
         }
-
     }
 }
 

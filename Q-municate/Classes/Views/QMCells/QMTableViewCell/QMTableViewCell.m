@@ -19,10 +19,6 @@
     [super awakeFromNib];
     
     self.qmImageView.imageViewType = QMImageViewTypeCircle;
-    self.qmImageView.layer.cornerRadius = self.qmImageView.frame.size.width / 2;
-    self.qmImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    self.qmImageView.layer.borderWidth = 1.0f;
-    self.qmImageView.layer.masksToBounds = YES;
 }
 
 - (void)setUserImageWithUrl:(NSURL *)userImageUrl {

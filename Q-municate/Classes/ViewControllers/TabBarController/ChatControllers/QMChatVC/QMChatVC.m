@@ -174,7 +174,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 18)];
     /* Create custom view to display section header... */
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 3, tableView.frame.size.width, 15)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 7, tableView.frame.size.width, 15)];
     [label setFont:[UIFont boldSystemFontOfSize:13]];
     [label setTextColor:[UIColor grayColor]];
     [label setTextAlignment:NSTextAlignmentCenter];

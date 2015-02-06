@@ -109,6 +109,9 @@
 
 + (NSString *)fullNamesString:(NSArray *)users
 {
+    if (users.count == 0) {
+        return @"Unknown users";
+    }
     NSMutableString *mutableString = [NSMutableString new];
     for (QBUUser *usr in users) {
         [mutableString appendString:usr.fullName];
