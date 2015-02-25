@@ -8,15 +8,14 @@
 
 #import "QMProfileViewController.h"
 #import "QMPlaceholderTextView.h"
-#import "QMApi.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMImageView.h"
 #import "SVProgressHUD.h"
-#import "QMContentService.h"
 #import "UIImage+Cropper.h"
 #import "REActionSheet.h"
 #import "QMImagePicker.h"
 #import "QMUsersUtils.h"
+#import "QMServicesManager.h"
 
 @interface QMProfileViewController ()
 
@@ -64,13 +63,14 @@
 
 - (void)updateProfileView {
     
+    QBUUser *currentUser = QM.profile.userData;
     
-    self.fullNameFieldCache = self.currentUser.fullName;
-    self.phoneFieldCache = self.currentUser.phone ?: @"";
-    self.statusTextCache = self.currentUser.status ?: @"";
+    self.fullNameFieldCache = currentUser.fullName;
+    self.phoneFieldCache = currentUser.phone ?: @"";
+    self.statusTextCache = currentUser.status ?: @"";
     
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
-    NSURL *url = [QMUsersUtils userAvatarURL:self.currentUser];
+    NSURL *url = [QMUsersUtils userAvatarURL:currentUser];
     
     [self.avatarView setImageWithURL:url
                          placeholder:placeholder
@@ -81,19 +81,24 @@
                                 
                             }];
     
-    self.fullNameField.text = self.currentUser.fullName;
-    self.emailField.text = self.currentUser.email;
-    self.phoneNumberField.text = self.currentUser.phone;
-    self.statusField.text = self.currentUser.status;
+    self.fullNameField.text = currentUser.fullName;
+    self.emailField.text = currentUser.email;
+    self.phoneNumberField.text = currentUser.phone;
+    self.statusField.text = currentUser.status;
 }
 
 - (IBAction)changeAvatar:(id)sender {
     
     __weak __typeof(self)weakSelf = self;
-    [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
-        
+    
+    [QMImagePicker chooseSourceTypeInVC:self
+                          allowsEditing:YES
+                                 result:^(UIImage *image)
+     {
         weakSelf.avatarImage = image;
-        weakSelf.avatarView.image = [image imageByCircularScaleAndCrop:weakSelf.avatarView.frame.size];
+        weakSelf.avatarView.image =
+        [image imageByCircularScaleAndCrop:weakSelf.avatarView.frame.size];
+         
         [weakSelf setUpdateButtonActivity];
     }];
 }
@@ -113,15 +118,22 @@
     [self.view endEditing:YES];
     
     __weak __typeof(self)weakSelf = self;
+    QBUUser *currentUser = QM.profile.userData;
+
+    currentUser.fullName = weakSelf.fullNameFieldCache;
+    currentUser.phone = weakSelf.phoneFieldCache;
+    currentUser.status = weakSelf.statusTextCache;
     
-    QBUUser *user = weakSelf.currentUser;
-    user.fullName = weakSelf.fullNameFieldCache;
-    user.phone = weakSelf.phoneFieldCache;
-    user.status = weakSelf.statusTextCache;
+    [SVProgressHUD showProgress:0.f
+                         status:nil
+                       maskType:SVProgressHUDMaskTypeClear];
     
-    [SVProgressHUD showProgress:0.f status:nil maskType:SVProgressHUDMaskTypeClear];
-    [[QMApi instance] updateUser:user image:self.avatarImage progress:^(float progress) {
-        [SVProgressHUD showProgress:progress status:nil maskType:SVProgressHUDMaskTypeClear];
+    [QM.profile updateUserWithImage:self.avatarImage
+                           progress:^(float progress) {
+                               
+        [SVProgressHUD showProgress:progress
+                             status:nil
+                           maskType:SVProgressHUDMaskTypeClear];
     } completion:^(BOOL success) {
         
         if (success) {
@@ -129,16 +141,19 @@
             [weakSelf updateProfileView];
             [weakSelf setUpdateButtonActivity];
         }
+        
         [SVProgressHUD dismiss];
     }];
 }
 
 - (BOOL)fieldsWereChanged {
     
+    QBUUser *currentUser = QM.profile.userData;
+    
     if (self.avatarImage) return YES;
-    if (![self.fullNameFieldCache isEqualToString:self.currentUser.fullName]) return YES;
-    if (![self.phoneFieldCache isEqualToString:self.currentUser.phone ?: @""]) return YES;
-    if (![self.statusTextCache isEqualToString:self.currentUser.status ?: @""]) return YES;
+    if (![self.fullNameFieldCache isEqualToString:currentUser.fullName]) return YES;
+    if (![self.phoneFieldCache isEqualToString:currentUser.phone ?: @""]) return YES;
+    if (![self.statusTextCache isEqualToString:currentUser.status ?: @""]) return YES;
     
     return NO;
 }

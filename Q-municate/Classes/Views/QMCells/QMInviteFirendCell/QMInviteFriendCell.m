@@ -8,7 +8,7 @@
 
 #import "QMInviteFriendCell.h"
 #import "ABPerson.h"
-#import "QMApi.h"
+
 
 @interface QMInviteFriendCell()
 
@@ -49,8 +49,9 @@
 - (void)configureWithFBGraphUser:(NSDictionary<FBGraphUser> *)user {
     
     self.titleLabel.text = [NSString stringWithFormat:@"%@ %@", user.first_name, user.last_name];
-    NSURL *url = [[QMApi instance] fbUserImageURLWithUserID:user.id];
-    [self setUserImageWithUrl:url];
+    //TODO Set facebook user image
+//    NSURL *url = [[QMApi instance] fbUserImageURLWithUserID:user.id];
+//    [self setUserImageWithUrl:url];
     self.descriptionLabel.text = NSLocalizedString(@"QM_STR_FACEBOOK", nil);
 }
 

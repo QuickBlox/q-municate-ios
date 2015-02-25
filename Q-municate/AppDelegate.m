@@ -8,31 +8,31 @@
 
 #import "AppDelegate.h"
 #import <Crashlytics/Crashlytics.h>
-#import "QMIncomingCallHandler.h"
 #import "SVProgressHUD.h"
 #import "QMPopoversFactory.h"
-//#import "QMApi.h"
 
-
-#define DEVELOPMENT 0
-
-#if DEVELOPMENT
-
-// Development
+#if Q_MUNICATE_MODE == 0
+/**
+ *  Development Quickblox settings
+ */
 const NSUInteger kQMApplicationID = 14542;
 NSString *const kQMAuthorizationKey = @"rJqAFphrSnpyZW2";
 NSString *const kQMAuthorizationSecret = @"tTEB2wK-dU8X3Ra";
 NSString *const kQMAcconuntKey = @"2qCrjKYFkYnfRnUiYxLZ";
-
-#else
-
-// Production
+#elif Q_MUNICATE_MODE == 1
+/**
+ *  Production Quickblox settings
+ */
 const NSUInteger kQMApplicationID = 13318;
 NSString *const kQMAuthorizationKey = @"WzrAY7vrGmbgFfP";
 NSString *const kQMAuthorizationSecret = @"xS2uerEveGHmEun";
 NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
-
 #endif
+
+/**
+ *  Crashlytics API key
+ */
+NSString *const kQMCrashlyticsAPIKey = @"7aea78439bec41a9005c7488bb6751c5e33fe270";
 
 /* ==================================================================== */
 
@@ -41,19 +41,14 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleDefault;
-#if QM_AUDIO_VIDEO_ENABLED == 1
-    self.incomingCallService = [[QMIncomingCallHandler alloc] init];
-#endif
-    self.window.backgroundColor = [UIColor whiteColor];
-    
     UIApplication.sharedApplication.applicationIconBadgeNumber = 0;
     
-    [QBSettings setApplicationID:kQMApplicationID];
-    [QBSettings setAuthorizationKey:kQMAuthorizationKey];
-    [QBSettings setAuthorizationSecret:kQMAuthorizationSecret];
+    QBApplication.sharedApplication.applicationId = kQMApplicationID;
+    [QBConnection registerServiceKey:kQMAuthorizationKey];
+    [QBConnection registerServiceSecret:kQMAuthorizationSecret];
+    
     [QBSettings setAccountKey:kQMAcconuntKey];
     [QBSettings setLogLevel:QBLogLevelDebug];
-    
     
 #ifndef DEBUG
     [QBSettings useProductionEnvironmentForPushNotifications:YES];
@@ -65,49 +60,28 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBSettings setServerChatDomain:@"chatstage.quickblox.com"];
 #endif
     
+    //TODO: Need move in style config
     /*Configure app appearance*/
     NSDictionary *normalAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:1.000 alpha:0.750]};
     NSDictionary *disabledAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:0.935 alpha:0.260]};
+    NSDictionary *tabBarItemTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
     
+    [[UITabBarItem appearance] setTitleTextAttributes:tabBarItemTextAttributes forState:UIControlStateNormal];
     [[UIBarButtonItem appearance] setTitleTextAttributes:normalAttributes forState:UIControlStateNormal];
     [[UIBarButtonItem appearance] setTitleTextAttributes:disabledAttributes forState:UIControlStateDisabled];
     
     [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateNormal];
     [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateDisabled];
+
+    /**Start Crashlytics */
+    [Crashlytics startWithAPIKey:kQMCrashlyticsAPIKey];
     
-    [[SVProgressHUD appearance] setHudBackgroundColor:[UIColor colorWithRed:0.046 green:0.377 blue:0.633 alpha:1.000]];
-    [[SVProgressHUD appearance] setHudForegroundColor:[UIColor colorWithWhite:1.000 alpha:1.000]];
-    
-    /** Crashlytics */
-    [Crashlytics startWithAPIKey:@"7aea78439bec41a9005c7488bb6751c5e33fe270"];
-    
-    if (launchOptions != nil) {
-        NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-//        [[QMApi instance] setPushNotification:notification];
-    }
     return YES;
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
 
-
-//    [[QMApi instance] openChatPageForPushNotification:userInfo];
     ILog(@"Push war received. User info: %@", userInfo);
-}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-//    [[QMApi instance] applicationWillResignActive];
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-//    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-//    [[QMApi instance] applicationDidBecomeActive:^(BOOL success) {
-//        [SVProgressHUD dismiss];
-//    }];
-}
-
-- (void)applicationWillResignActive:(UIApplication *)application {
-    
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {

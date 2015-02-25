@@ -7,7 +7,6 @@
 //
 
 #import "QMAddMembersToGroupController.h"
-#import "QMApi.h"
 #import "SVProgressHUD.h"
 
 @implementation QMAddMembersToGroupController
@@ -15,12 +14,12 @@
 
 - (void)viewDidLoad {
     
-    NSArray *friends = [[QMApi instance] contactsOnly];
-    NSArray *usersIDs = [[QMApi instance] idsWithUsers:friends];
-    NSArray *friendsIDsToAdd = [self filteredIDs:usersIDs forChatDialog:self.chatDialog];
-    
-    NSArray *toAdd = [[QMApi instance] usersWithIDs:friendsIDsToAdd];
-    self.contacts = [QMUsersUtils sortUsersByFullname:toAdd];
+//    NSArray *friends = [[QMApi instance] contactsOnly];
+//    NSArray *usersIDs = [[QMApi instance] idsWithUsers:friends];
+//    NSArray *friendsIDsToAdd = [self filteredIDs:usersIDs forChatDialog:self.chatDialog];
+//    
+//    NSArray *toAdd = [[QMApi instance] usersWithIDs:friendsIDsToAdd];
+//    self.contacts = [QMUsersUtils sortUsersByFullname:toAdd];
     
     [super viewDidLoad];
 }
@@ -32,14 +31,14 @@
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     
     __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] joinOccupants:self.selectedFriends toChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
-        
-        if (result.success) {
-            [weakSelf.navigationController popViewControllerAnimated:YES];
-        }
-        
-        [SVProgressHUD dismiss];
-    }];
+//    [[QMApi instance] joinOccupants:self.selectedFriends toChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
+//        
+//        if (result.success) {
+//            [weakSelf.navigationController popViewControllerAnimated:YES];
+//        }
+//        
+//        [SVProgressHUD dismiss];
+//    }];
 }
 
 - (NSArray *)filteredIDs:(NSArray *)IDs forChatDialog:(QBChatDialog *)chatDialog

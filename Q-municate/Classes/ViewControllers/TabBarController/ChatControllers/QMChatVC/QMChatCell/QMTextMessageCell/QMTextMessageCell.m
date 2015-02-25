@@ -7,8 +7,6 @@
 //
 
 #import "QMTextMessageCell.h"
-#import "Parus.h"
-#import "QMApi.h"
 
 @interface QMTextMessageCell()
 
@@ -31,10 +29,10 @@
     [self.containerView addSubview:self.textView];
     self.textView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    [self.containerView addConstraints:@[PVLeftOf(self.textView).equalTo.leftOf(self.containerView).asConstraint,
-                                         PVBottomOf(self.textView).equalTo.bottomOf(self.containerView).asConstraint,
-                                         PVTopOf(self.textView).equalTo.topOf(self.containerView).asConstraint,
-                                         PVRightOf(self.textView).equalTo.rightOf(self.containerView).asConstraint]];
+//    [self.containerView addConstraints:@[PVLeftOf(self.textView).equalTo.leftOf(self.containerView).asConstraint,
+//                                         PVBottomOf(self.textView).equalTo.bottomOf(self.containerView).asConstraint,
+//                                         PVTopOf(self.textView).equalTo.topOf(self.containerView).asConstraint,
+//                                         PVRightOf(self.textView).equalTo.rightOf(self.containerView).asConstraint]];
 }
 
 - (void)setMessage:(QMMessage *)message user:(QBUUser *)user isMe:(BOOL)isMe {

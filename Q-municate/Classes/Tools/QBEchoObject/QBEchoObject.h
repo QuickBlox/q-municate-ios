@@ -29,7 +29,7 @@
 
 @class Result;
 
-typedef void (^QBResultBlock)(Result *);
+typedef void (^QBResultBlock)(QBResult *);
 
 @interface QBEchoObject : NSObject<QBActionStatusDelegate>
 

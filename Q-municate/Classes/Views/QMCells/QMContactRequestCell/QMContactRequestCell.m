@@ -8,7 +8,6 @@
 
 #import "QMContactRequestCell.h"
 #import "QMChatUtils.h"
-#import "QMApi.h"
 
 @interface QMContactRequestCell()
 
@@ -25,21 +24,21 @@
     if (![_notification isEqual:notification]) {
         _notification = notification;
     }
-    self.opponent = [[QMApi instance] userWithID:notification.senderID];
+//    self.opponent = [[QMApi instance] userWithID:notification.senderID];
     self.fullNameLabel.text = [QMChatUtils messageTextForNotification:notification];
 }
 
 
 - (IBAction)rejectButtonPressed:(id)sender {
-    if ([self.delegate respondsToSelector:@selector(contactRequestWasRejectedForUser:)]) {
-        [self.delegate contactRequestWasRejectedForUser:self.opponent];
-    }
+//    if ([self.delegate respondsToSelector:@selector(contactRequestWasRejectedForUser:)]) {
+////        [self.delegate contactRequestWasRejectedForUser:self.opponent];
+//    }
 }
 
 - (IBAction)acceptButtonPressed:(id)sender {
-    if ([self.delegate respondsToSelector:@selector(contactRequestWasAcceptedForUser:)]) {
-        [self.delegate contactRequestWasAcceptedForUser:self.opponent];
-    }
+//    if ([self.delegate respondsToSelector:@selector(contactRequestWasAcceptedForUser:)]) {
+////        [self.delegate contactRequestWasAcceptedForUser:self.opponent];
+//    }
 }
 
 @end

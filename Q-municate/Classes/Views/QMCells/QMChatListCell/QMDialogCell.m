@@ -7,7 +7,7 @@
 //
 
 #import "QMDialogCell.h"
-#import "QMApi.h"
+#import "QMServicesManager.h"
 #import "QMImageView.h"
 #import "NSString+GTMNSStringHTMLAdditions.h"
 
@@ -46,8 +46,7 @@
     
     if (!isGroup) {
         
-        NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
-        QBUUser *opponent = [[QMApi instance] userWithID:opponentID];
+        QBUUser *opponent = [QM.contactListService.usersMemoryStorage userWithID:self.dialog.recipientID];
         
         NSURL *url = [NSURL URLWithString:opponent.avatarURL];
         [self setUserImageWithUrl:url];
@@ -57,7 +56,19 @@
     } else {
         
         UIImage *img = [UIImage imageNamed:@"upic_placeholder_details_group"];
-        [self.qmImageView setImageWithURL:[NSURL URLWithString:chatDialog.photo] placeholder:img options:SDWebImageCacheMemoryOnly progress:^(NSInteger receivedSize, NSInteger expectedSize) {} completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
+        
+        [self.qmImageView setImageWithURL:[NSURL URLWithString:chatDialog.photo]
+                              placeholder:img
+                                  options:SDWebImageCacheMemoryOnly
+                                 progress:^(NSInteger receivedSize,
+                                            NSInteger expectedSize){}
+         
+                           completedBlock:^(UIImage *image,
+                                            NSError *error,
+                                            SDImageCacheType cacheType,
+                                            NSURL *imageURL) {
+                           }];
+        
         self.titleLabel.text = chatDialog.name;
         self.groupMembersNumb.text = [NSString stringWithFormat:@"%d", chatDialog.occupantIDs.count];
     }

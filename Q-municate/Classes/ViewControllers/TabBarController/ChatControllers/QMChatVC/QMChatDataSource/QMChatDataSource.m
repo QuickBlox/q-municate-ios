@@ -11,7 +11,6 @@
 #import "QMMessage.h"
 #import "SVProgressHUD.h"
 #import "REAlertView.h"
-#import "QMContentService.h"
 #import "QMTextMessageCell.h"
 #import "QMSystemMessageCell.h"
 #import "QMAttachmentMessageCell.h"
@@ -25,7 +24,7 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
 
 @interface QMChatDataSource()
 
-<UITableViewDataSource, QMChatCellDelegate, QMUsersListDelegate, QMChatServiceDelegate, QMContactListServiceDelegate, QBChatDelegate>
+<UITableViewDataSource, QMChatCellDelegate, QMChatServiceDelegate, QMContactListServiceDelegate, QBChatDelegate>
 
 @property (weak, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *chatSections;

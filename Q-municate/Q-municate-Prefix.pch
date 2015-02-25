@@ -9,7 +9,10 @@
 #ifndef __IPHONE_3_0
 #warning "This project uses features only available in iOS SDK 3.0 and later."
 #endif
-
+/**
+ *  0 - Development, 1 - Prodaction
+ */
+#define Q_MUNICATE_MODE 0
 
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
@@ -19,10 +22,7 @@
     #import <Quickblox/Quickblox.h>
     #import <FacebookSDK/FacebookSDK.h>
     #import "QBUUser+CustomParameters.h"
-    #import "QBChatDialog+UpdateWithNotification.h"
     #import <QMServices.h>
     #import "QMDefinitions.h"
-    #import "QMProtocols.h"
     #import "Macro.h"
-
 #endif

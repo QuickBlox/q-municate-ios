@@ -15,7 +15,7 @@ static NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFrie
 
 @end
 
-@interface QMFriendsListDataSource : NSObject <UITableViewDataSource, UISearchDisplayDelegate, QMUsersListDelegate>
+@interface QMFriendsListDataSource : NSObject <UITableViewDataSource, UISearchDisplayDelegate>
 
 @property (nonatomic, assign) BOOL viewIsShowed;
 @property (weak, nonatomic) id <QMFriendsListDataSourceDelegate> delegate;

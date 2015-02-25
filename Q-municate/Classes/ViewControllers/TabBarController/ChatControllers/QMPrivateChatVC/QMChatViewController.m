@@ -11,11 +11,8 @@
 #import "QMChatDataSource.h"
 #import "QMChatButtonsFactory.h"
 #import "QMGroupDetailsController.h"
-#import "QMBaseCallsController.h"
 #import "QMMessageBarStyleSheetFactory.h"
-#import "QMApi.h"
 #import "QMAlertsFactory.h"
-#import "QMChatReceiver.h"
 #import "QMOnlineTitle.h"
 #import "IDMPhotoBrowser.h"
 #import "QMChatInputToolbar.h"
@@ -32,7 +29,7 @@
 
 - (void)dealloc {
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
+
 }
 
 - (void)viewDidLoad {
@@ -44,16 +41,16 @@
     self.dataSource.delegate = self;
     self.dialog.type == QBChatDialogTypeGroup ? [self configureNavigationBarForGroupChat] : [self configureNavigationBarForPrivateChat];
     
-    __weak __typeof(self)weakSelf = self;
-    [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-        if (message.delayed) {
-            return;
-        }
-        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog && [message.cParamDialogID isEqualToString:weakSelf.dialog.ID]) {
-            weakSelf.title = message.cParamDialogRoomName;
-            weakSelf.dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
-        }
-    }];
+//    __weak __typeof(self)weakSelf = self;
+//    [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+//        if (message.delayed) {
+//            return;
+//        }
+//        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog && [message.cParamDialogID isEqualToString:weakSelf.dialog.ID]) {
+//            weakSelf.title = message.cParamDialogRoomName;
+//            weakSelf.dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
+//        }
+//    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -71,14 +68,14 @@
 
 - (void)updateTitleInfoForPrivateDialog {
     
-    NSUInteger oponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
-    QBUUser *opponent = [[QMApi instance] userWithID:oponentID];
-
-    QBContactListItem *item = [[QMApi instance] contactItemWithUserID:opponent.ID];
-    NSString *status = NSLocalizedString(item.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
-    
-    self.onlineTitle.titleLabel.text = opponent.fullName;
-    self.onlineTitle.statusLabel.text = status;
+//    NSUInteger oponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
+//    QBUUser *opponent = [[QMApi instance] userWithID:oponentID];
+//
+//    QBContactListItem *item = [[QMApi instance] contactItemWithUserID:opponent.ID];
+//    NSString *status = NSLocalizedString(item.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
+//    
+//    self.onlineTitle.titleLabel.text = opponent.fullName;
+//    self.onlineTitle.statusLabel.text = status;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -91,16 +88,12 @@
 
 - (void)setUpTabBarChatDelegate
 {
-    if (self.tabBarController != nil && [self.tabBarController isKindOfClass:QMMainTabBarController.class]) {
-        ((QMMainTabBarController *)self.tabBarController).chatDelegate = self;
-    }
+    
 }
 
 - (void)removeTabBarChatDelegate
 {
-     if (self.tabBarController != nil && [self.tabBarController isKindOfClass:QMMainTabBarController.class]) {
-        ((QMMainTabBarController *)self.tabBarController).chatDelegate = nil;
-     }
+
 }
 
 - (void)configureNavigationBarForPrivateChat {
@@ -112,9 +105,9 @@
     self.navigationItem.titleView = self.onlineTitle;
     
     __weak __typeof(self)weakSelf = self;
-    [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:^{
-        [weakSelf updateTitleInfoForPrivateDialog];
-    }];
+//    [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:^{
+//        [weakSelf updateTitleInfoForPrivateDialog];
+//    }];
     
 #if QM_AUDIO_VIDEO_ENABLED
     UIButton *audioButton = [QMChatButtonsFactory audioCall];
@@ -180,11 +173,9 @@
     }
     else {
         
-        NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
-        QBUUser *opponent = [[QMApi instance] userWithID:opponentID];
+//        NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
+//        QBUUser *opponent = [[QMApi instance] userWithID:opponentID];
         
-        QMBaseCallsController *callsController = segue.destinationViewController;
-        [callsController setOpponent:opponent];
     }
 }
 
@@ -198,7 +189,6 @@
     }
     
     __weak typeof(self)weakSelf = self;
-    [QMSoundManager playMessageReceivedSound];
     [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
         if (buttonIndex == 1) {
             UINavigationController *navigationController = (UINavigationController *)[weakSelf.tabBarController selectedViewController];

@@ -16,6 +16,6 @@
 
 @property (strong, nonatomic) NSString *searchText;
 
-@property (weak, nonatomic) id <QMUsersListDelegate>delegate;
+@property (weak, nonatomic) id delegate;
 
 @end

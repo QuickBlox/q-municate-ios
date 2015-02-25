@@ -7,7 +7,6 @@
 //
 
 #import "QMAttachmentMessageCell.h"
-#import "Parus.h"
 #import "SDWebImageManager.h"
 #import "QMProgressView.h"
 #import "QMImageView.h"
@@ -47,12 +46,12 @@
     self.progressView.alpha = 1;
     
     [self.balloonImageView addSubview:self.progressView];
-    [self.balloonImageView addConstraints:PVGroup(@[
-                                                    
-                                                    PVLeftOf(self.progressView).equalTo.leftOf(self.balloonImageView).asConstraint,
-                                                    PVBottomOf(self.progressView).equalTo.bottomOf(self.balloonImageView).asConstraint,
-                                                    PVTopOf(self.progressView).equalTo.topOf(self.balloonImageView).asConstraint,
-                                                    PVRightOf(self.progressView).equalTo.rightOf(self.balloonImageView).asConstraint]).asArray];
+//    [self.balloonImageView addConstraints:PVGroup(@[
+//                                                    
+//                                                    PVLeftOf(self.progressView).equalTo.leftOf(self.balloonImageView).asConstraint,
+//                                                    PVBottomOf(self.progressView).equalTo.bottomOf(self.balloonImageView).asConstraint,
+//                                                    PVTopOf(self.progressView).equalTo.topOf(self.balloonImageView).asConstraint,
+//                                                    PVRightOf(self.progressView).equalTo.rightOf(self.balloonImageView).asConstraint]).asArray];
     
     
     self.balloonImageView.contentMode = UIViewContentModeScaleAspectFill;

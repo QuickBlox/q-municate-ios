@@ -10,8 +10,7 @@
 #import "REAlertView+QMSuccess.h"
 #import "SVProgressHUD.h"
 #import "SDWebImageManager.h"
-#import "QMApi.h"
-#import "QMSettingsManager.h"
+
 
 @interface QMSettingsViewController ()
 
@@ -29,10 +28,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.pushNotificationSwitch.on = [QMApi instance].settingsManager.pushNotificationsEnabled;
-    if ([QMApi instance].settingsManager.accountType == QMAccountTypeFacebook) {
-        [self cell:self.changePasswordCell setHidden:YES];
-    }
+//    self.pushNotificationSwitch.on = [QMApi instance].settingsManager.pushNotificationsEnabled;
+//    if ([QMApi instance].settingsManager.accountType == QMAccountTypeFacebook) {
+//        [self cell:self.changePasswordCell setHidden:YES];
+//    }
     
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:kSettingsCellBundleVersion];
     self.versionLabel.text = appVersion;
@@ -60,15 +59,15 @@
         [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
             
             alertView.message = NSLocalizedString(@"QM_STR_ARE_YOU_SURE", nil);
-            [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_LOGOUT", nil) andActionBlock:^{
-                
-                [weakSelf pressClearCache:nil];
-                [SVProgressHUD  showWithMaskType:SVProgressHUDMaskTypeClear];
-                [[QMApi instance] logout:^(BOOL success) {
-                    [SVProgressHUD dismiss];
-                    [weakSelf performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
-                }];
-            }];
+//            [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_LOGOUT", nil) andActionBlock:^{
+//                
+//                [weakSelf pressClearCache:nil];
+//                [SVProgressHUD  showWithMaskType:SVProgressHUDMaskTypeClear];
+//                [[QMApi instance] logout:^(BOOL success) {
+//                    [SVProgressHUD dismiss];
+//                    [weakSelf performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
+//                }];
+//            }];
             
             [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
         }];
@@ -80,16 +79,16 @@
 - (IBAction)changePushNotificationValue:(UISwitch *)sender {
 
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    if (sender.on) {
-        [[QMApi instance] subscribeToPushNotificationsForceSettings:YES complete:^(BOOL success) {
-            [SVProgressHUD dismiss];
-        }];
-    }
-    else {
-        [[QMApi instance] unSubscribeToPushNotifications:^(BOOL success) {
-            [SVProgressHUD dismiss];
-        }];
-    }
+//    if (sender.on) {
+//        [[QMApi instance] subscribeToPushNotificationsForceSettings:YES complete:^(BOOL success) {
+//            [SVProgressHUD dismiss];
+//        }];
+//    }
+//    else {
+//        [[QMApi instance] unSubscribeToPushNotifications:^(BOOL success) {
+//            [SVProgressHUD dismiss];
+//        }];
+//    }
     
 }
 

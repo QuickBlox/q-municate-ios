@@ -99,11 +99,11 @@
 
 - (IBAction)pressAddBtn:(UIButton *)sender {
     
-    if ([self.delegate respondsToSelector:@selector(usersListCell:pressAddBtn:)]) {
-        
-        [self.delegate usersListCell:self
-                         pressAddBtn:sender];
-    }
+//    if ([self.delegate respondsToSelector:@selector(usersListCell:pressAddBtn:)]) {
+//        
+//        [self.delegate usersListCell:self
+//                         pressAddBtn:sender];
+//    }
 }
 
 @end

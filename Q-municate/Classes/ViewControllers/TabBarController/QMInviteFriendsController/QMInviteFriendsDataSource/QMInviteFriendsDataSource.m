@@ -10,7 +10,6 @@
 #import "QMInviteFriendCell.h"
 #import "QMInviteStaticCell.h"
 #import "ABPerson.h"
-#import "QMApi.h"
 #import "QMFacebookService.h"
 #import "QMAddressBook.h"
 #import "SVProgressHUD.h"

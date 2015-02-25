@@ -12,7 +12,6 @@
 #import "UIColor+Hex.h"
 #import "SDImageCache.h"
 #import "UIImage+TintColor.h"
-#import "QMApi.h"
 
 #define SYSTEM_MESSAGE_SIZE CGSizeMake(320.0f, 60.0f)
 
@@ -53,7 +52,7 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
         self.customParameters = historyMessage.customParameters;
         self.attachments = historyMessage.attachments;
         
-        self.chatDialog = [[QMApi instance] chatDialogWithID:historyMessage.cParamDialogID];
+//        self.chatDialog = [[QMApi instance] chatDialogWithID:historyMessage.cParamDialogID];
         self.cParamNotificationType = historyMessage.cParamNotificationType;
         if (self.cParamNotificationType > 0 && self.cParamNotificationType != QMMessageNotificationTypeDeliveryMessage) {
             self.type = QMMessageTypeSystem;

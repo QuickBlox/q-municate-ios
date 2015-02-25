@@ -7,7 +7,6 @@
 //
 
 #import "QMFeedbackTableViewController.h"
-#import <UIDevice-Hardware.h>
 #import <MessageUI/MessageUI.h>
 #import "REMessageUI.h"
 #import "REAlertView+QMSuccess.h"
@@ -38,7 +37,7 @@
 - (NSString *)deviceInfo {
     
     UIDevice *device = [UIDevice currentDevice];
-    NSString *modelName = [device modelName];
+//    NSString *modelName = [device modelName];
 
     NSString *systemVersion = [device systemVersion];
     NSString *buildVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:kSettingsCellBundleVersion];

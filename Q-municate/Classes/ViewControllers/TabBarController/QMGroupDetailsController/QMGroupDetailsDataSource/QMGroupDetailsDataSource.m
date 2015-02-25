@@ -8,14 +8,10 @@
 
 #import "QMGroupDetailsDataSource.h"
 #import "QMFriendListCell.h"
-#import "QMChatReceiver.h"
-#import "QMApi.h"
 
 NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
 
 @interface QMGroupDetailsDataSource ()
-
-<QMUsersListDelegate>
 
 @property (nonatomic, weak) UITableView *tableView;
 @property (nonatomic, strong) NSArray *participants;
@@ -28,7 +24,6 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
 
 - (void)dealloc {
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
 }
 
 - (id)initWithTableView:(UITableView *)tableView {
@@ -43,25 +38,25 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
         
         __weak __typeof(self)weakSelf = self;
         
-        [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:^{
-            [weakSelf reloadUserData];
-        }];
-        
-        [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:^{
-            [weakSelf reloadUserData];
-        }];
-        
-        [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-            
-            if (message.delayed) {
-                return;
-            }
-            if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog &&
-                [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID])
-            {
-                [weakSelf reloadUserData];
-            }
-        }];
+//        [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:^{
+//            [weakSelf reloadUserData];
+//        }];
+//        
+//        [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:^{
+//            [weakSelf reloadUserData];
+//        }];
+//        
+//        [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+//            
+//            if (message.delayed) {
+//                return;
+//            }
+//            if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog &&
+//                [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID])
+//            {
+//                [weakSelf reloadUserData];
+//            }
+//        }];
     }
     
     return self;
@@ -75,8 +70,8 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
 
 - (void)reloadUserData {
     
-    NSArray *unsortedParticipants = [[QMApi instance] usersWithIDs:self.chatDialog.occupantIDs];
-    self.participants = [QMUsersUtils sortUsersByFullname:unsortedParticipants];
+//    NSArray *unsortedParticipants = [[QMApi instance] usersWithIDs:self.chatDialog.occupantIDs];
+//    self.participants = [QMUsersUtils sortUsersByFullname:unsortedParticipants];
     [self.tableView reloadData];
 }
 
@@ -94,7 +89,7 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
     QBUUser *user = self.participants[indexPath.row];
     
     cell.userData = user;
-    cell.contactlistItem = [[QMApi instance] contactItemWithUserID:user.ID];
+//    cell.contactlistItem = [[QMApi instance] contactItemWithUserID:user.ID];
     cell.delegate = self;
     
     return cell;
@@ -106,7 +101,7 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
 
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     QBUUser *user = self.participants[indexPath.row];
-    [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {}];
+//    [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {}];
 }
 
 @end

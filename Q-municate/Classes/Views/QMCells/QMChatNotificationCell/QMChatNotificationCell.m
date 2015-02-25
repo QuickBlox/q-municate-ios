@@ -9,7 +9,7 @@
 #import "QMChatNotificationCell.h"
 #import "QMMessage.h"
 #import "QMChatUtils.h"
-#import "QMApi.h"
+#import "QMServicesManager.h"
 
 @implementation QMChatNotificationCell
 
@@ -25,12 +25,6 @@
     
     self.dateLabel.text = [[self formatter] stringFromDate:self.notification.datetime];
     self.messageLabel.text = [QMChatUtils messageTextForNotification:self.notification];
-}
-
-- (NSString *)nameOfUser:(QBUUser *)user
-{
-    NSUInteger myID = [QMApi instance].currentUser.ID;
-    return (user.ID == myID) ? @"You" : user.fullName;
 }
 
 - (NSDateFormatter *)formatter {

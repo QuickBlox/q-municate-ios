@@ -12,9 +12,6 @@
 #import "SVProgressHUD.h"
 #import "QMImageView.h"
 #import "QMImagePicker.h"
-#import "QMApi.h"
-#import "QMContentService.h"
-#import "QMChatReceiver.h"
 #import "UIImage+Cropper.h"
 
 @interface QMGroupDetailsController ()
@@ -35,7 +32,6 @@
 
 - (void)dealloc {
     
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
@@ -51,35 +47,35 @@
     
     self.dataSource = [[QMGroupDetailsDataSource alloc] initWithTableView:self.tableView];
     [self.dataSource reloadDataWithChatDialog:self.chatDialog];
-    
-    __weak __typeof(self)weakSelf = self;
-    [[QMChatReceiver instance] chatRoomDidReceiveListOfOnlineUsersWithTarget:self block:^(NSArray *users, NSString *roomName) {
-        
-        QBChatRoom *chatRoom = weakSelf.chatDialog.chatRoom;
-        if ([roomName isEqualToString:chatRoom.name]) {
-            [weakSelf updateOnlineStatus:users.count];
-        }
-    }];
-    
-    [[QMChatReceiver instance] chatRoomDidChangeOnlineUsersWithTarget:self block:^(NSArray *onlineUsers, NSString *roomName) {
-        
-        QBChatRoom *chatRoom = weakSelf.chatDialog.chatRoom;
-        if ([roomName isEqualToString:chatRoom.name]) {
-            [weakSelf updateOnlineStatus:onlineUsers.count];
-        }
-    }];
-
-    [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-        if (message.delayed) {
-            return;
-        }
-        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog &&
-            [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID]) {
-            
-            weakSelf.chatDialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
-            [weakSelf updateGUIWithChatDialog:weakSelf.chatDialog];
-        }
-    }];
+//    
+//    __weak __typeof(self)weakSelf = self;
+//    [[QMChatReceiver instance] chatRoomDidReceiveListOfOnlineUsersWithTarget:self block:^(NSArray *users, NSString *roomName) {
+//        
+//        QBChatRoom *chatRoom = weakSelf.chatDialog.chatRoom;
+//        if ([roomName isEqualToString:chatRoom.name]) {
+//            [weakSelf updateOnlineStatus:users.count];
+//        }
+//    }];
+//    
+//    [[QMChatReceiver instance] chatRoomDidChangeOnlineUsersWithTarget:self block:^(NSArray *onlineUsers, NSString *roomName) {
+//        
+//        QBChatRoom *chatRoom = weakSelf.chatDialog.chatRoom;
+//        if ([roomName isEqualToString:chatRoom.name]) {
+//            [weakSelf updateOnlineStatus:onlineUsers.count];
+//        }
+//    }];
+//
+//    [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
+//        if (message.delayed) {
+//            return;
+//        }
+//        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog &&
+//            [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID]) {
+//            
+//            weakSelf.chatDialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
+//            [weakSelf updateGUIWithChatDialog:weakSelf.chatDialog];
+//        }
+//    }];
 }
 
 
@@ -100,42 +96,42 @@
 }
 
 - (IBAction)changeDialogName:(id)sender {
-    
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [[QMApi instance] changeChatName:self.groupNameField.text forChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
-        [SVProgressHUD dismiss];
-    }];
+//    
+//    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+//    [[QMApi instance] changeChatName:self.groupNameField.text forChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
+//        [SVProgressHUD dismiss];
+//    }];
 }
 
 - (void)changeGroupAvatar:(id)sender {
     
-    __weak typeof(self)weakSelf = self;
-    [QMImagePicker chooseSourceTypeInVC:self allowsEditing:NO result:^(UIImage *image) {
-        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-        [[QMApi instance] changeAvatar:[image imageByScaleAndCrop:CGSizeMake(900, 900)] forChatDialog:weakSelf.chatDialog completion:^(QBChatDialogResult *result) {
-            if (result.success) {
-                [weakSelf updateGUIWithChatDialog:result.dialog];
-            }
-            [SVProgressHUD dismiss];
-        }];
-    }];
+//    __weak typeof(self)weakSelf = self;
+//    [QMImagePicker chooseSourceTypeInVC:self allowsEditing:NO result:^(UIImage *image) {
+//        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+//        [[QMApi instance] changeAvatar:[image imageByScaleAndCrop:CGSizeMake(900, 900)] forChatDialog:weakSelf.chatDialog completion:^(QBChatDialogResult *result) {
+//            if (result.success) {
+//                [weakSelf updateGUIWithChatDialog:result.dialog];
+//            }
+//            [SVProgressHUD dismiss];
+//        }];
+//    }];
 }
 
 - (IBAction)addFriendsToChat:(id)sender
 {
     // check for friends:
-    NSArray *friends = [[QMApi instance] contactsOnly];
-    NSArray *usersIDs = [[QMApi instance] idsWithUsers:friends];
-    NSArray *friendsIDsToAdd = [self filteredIDs:usersIDs forChatDialog:self.chatDialog];
-    
-    if ([friendsIDsToAdd count] == 0) {
-        [[[UIAlertView alloc] initWithTitle:nil
-                                    message:NSLocalizedString(@"QM_STR_CANT_ADD_NEW_FRIEND", nil)
-                                   delegate:nil
-                          cancelButtonTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
-                          otherButtonTitles:nil] show];
-        return;
-    }
+//    NSArray *friends = [[QMApi instance] contactsOnly];
+//    NSArray *usersIDs = [[QMApi instance] idsWithUsers:friends];
+//    NSArray *friendsIDsToAdd = [self filteredIDs:usersIDs forChatDialog:self.chatDialog];
+//    
+//    if ([friendsIDsToAdd count] == 0) {
+//        [[[UIAlertView alloc] initWithTitle:nil
+//                                    message:NSLocalizedString(@"QM_STR_CANT_ADD_NEW_FRIEND", nil)
+//                                   delegate:nil
+//                          cancelButtonTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+//                          otherButtonTitles:nil] show];
+//        return;
+//    }
     
     [self performSegueWithIdentifier:kQMAddMembersToGroupControllerSegue sender:nil];
 }

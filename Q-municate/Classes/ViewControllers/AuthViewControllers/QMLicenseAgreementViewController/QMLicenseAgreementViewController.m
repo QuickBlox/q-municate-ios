@@ -9,8 +9,7 @@
 #import "QMLicenseAgreementViewController.h"
 #import <SVProgressHUD.h>
 #import "REAlertView.h"
-#import "QMApi.h"
-#import "QMSettingsManager.h"
+#import "QMServicesManager.h"
 
 NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
@@ -38,13 +37,15 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
-    BOOL licenceAccepted = [[QMApi instance].settingsManager userAgreementAccepted];
+    BOOL licenceAccepted = QM.profile.userAgreementAccepted;
     if (licenceAccepted) {
         self.navigationItem.rightBarButtonItem = nil;
     }
     
     [SVProgressHUD show];
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kQMAgreementUrl]];
+    
+    NSURL *licenseUrl = [NSURL URLWithString:kQMAgreementUrl];
+    NSURLRequest *request = [NSURLRequest requestWithURL:licenseUrl];
     [self.webView loadRequest:request];
 }
 
@@ -66,7 +67,7 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
 - (IBAction)acceptLicense:(id)sender {
     
-    [[QMApi instance].settingsManager setUserAgreementAccepted:YES];
+    QM.profile.userAgreementAccepted = YES;
     [self dismissViewControllerSuccess:YES];
 }
 

@@ -7,7 +7,6 @@
 //
 
 #import "QMFriendsDetailsController.h"
-#import "QMVideoCallController.h"
 #import "QMChatViewController.h"
 #import "QMUsersUtils.h"
 #import "QMImageView.h"
@@ -105,12 +104,12 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 
 - (void)updateUserStatus {
     
-    QBContactListItem *item = [[QMApi instance] contactItemWithUserID:self.selectedUser.ID];
+//    QBContactListItem *item = [[QMApi instance] contactItemWithUserID:self.selectedUser.ID];
     
-    if (item) { //friend if YES
-        self.status.text = NSLocalizedString(item.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
-        self.onlineCircle.hidden = item.online ? NO : YES;
-    }
+//    if (item) { //friend if YES
+//        self.status.text = NSLocalizedString(item.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
+//        self.onlineCircle.hidden = item.online ? NO : YES;
+//    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -121,13 +120,13 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     
     if ([segue.identifier isEqualToString:kVideoCallSegueIdentifier]) {
         
-        QMVideoCallController *videoCallVC = segue.destinationViewController;
-        [videoCallVC setOpponent:self.selectedUser];
+//        QMVideoCallController *videoCallVC = segue.destinationViewController;
+//        [videoCallVC setOpponent:self.selectedUser];
         
     } else if ([segue.identifier isEqualToString:kAudioCallSegueIdentifier]) {
         
-        QMVideoCallController *audioCallVC = segue.destinationViewController;
-        [audioCallVC setOpponent:self.selectedUser];
+//        QMVideoCallController *audioCallVC = segue.destinationViewController;
+//        [audioCallVC setOpponent:self.selectedUser];
         
     } else if ([segue.identifier isEqualToString:kChatViewSegueIdentifier]) {
         
@@ -156,13 +155,13 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 #endif
             __weak __typeof(self)weakSelf = self;
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-            [[QMApi instance] createPrivateChatDialogIfNeededWithOpponent:self.selectedUser completion:^(QBChatDialog *chatDialog) {
-                
-                if (chatDialog) {
-                    [weakSelf performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatDialog];
-                }
-                [SVProgressHUD dismiss];
-            }];
+//            [[QMApi instance] createPrivateChatDialogIfNeededWithOpponent:self.selectedUser completion:^(QBChatDialog *chatDialog) {
+//                
+//                if (chatDialog) {
+//                    [weakSelf performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatDialog];
+//                }
+//                [SVProgressHUD dismiss];
+//            }];
             
         } break;
             

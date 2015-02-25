@@ -16,10 +16,7 @@
 #import "QMChatButtonsFactory.h"
 #import "AGEmojiKeyBoardView.h"
 #import "QMSoundManager.h"
-#import "QMSettingsManager.h"
 #import "NSString+HasText.h"
-#import "QMApi.h"
-#import "Parus.h"
 #import "QMHelpers.h"
 #import "QMImagePicker.h"
 #import "REActionSheet.h"
@@ -63,13 +60,13 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     _showCameraButton = YES;
     
     // need for update messages after entering from tray:
-    [[QMApi instance].settingsManager setDialogWithIDisActive:self.dialog.ID];
+//    [[QMApi instance].settingsManager setDialogWithIDisActive:self.dialog.ID];
 }
 
 - (void)dealloc {
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     [self registerForNotifications:NO];
-    [[QMApi instance].settingsManager setDialogWithIDisActive:nil];
+//    [[QMApi instance].settingsManager setDialogWithIDisActive:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -143,19 +140,19 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    self.toolbarHeightConstraint = PVHeightOf(self.inputToolBar).equalTo.constant(kQMChatInputToolbarHeightDefault).asConstraint;
-    self.toolbarBottomLayoutGuide = PVBottomOf(self.inputToolBar).equalTo.bottomOf(self.view).asConstraint;
+//    self.toolbarHeightConstraint = PVHeightOf(self.inputToolBar).equalTo.constant(kQMChatInputToolbarHeightDefault).asConstraint;
+//    self.toolbarBottomLayoutGuide = PVBottomOf(self.inputToolBar).equalTo.bottomOf(self.view).asConstraint;
     
-    [self.view addConstraints:PVGroup(@[
-                                        PVTopOf(self.view).equalTo.topOf(self.tableView),
-                                        PVLeadingOf(self.view).equalTo.leadingOf(self.tableView),
-                                        PVTrailingOf(self.view).equalTo.trailingOf(self.tableView),
-                                        PVTrailingOf(self.view).equalTo.trailingOf(self.inputToolBar),
-                                        PVLeadingOf(self.view).equalTo.leadingOf(self.inputToolBar),
-                                        self.toolbarBottomLayoutGuide,
-                                        self.toolbarHeightConstraint,
-                                        PVTopOf(self.inputToolBar).equalTo.bottomOf(self.tableView),
-                                        ]).asArray];
+//    [self.view addConstraints:PVGroup(@[
+//                                        PVTopOf(self.view).equalTo.topOf(self.tableView),
+//                                        PVLeadingOf(self.view).equalTo.leadingOf(self.tableView),
+//                                        PVTrailingOf(self.view).equalTo.trailingOf(self.tableView),
+//                                        PVTrailingOf(self.view).equalTo.trailingOf(self.inputToolBar),
+//                                        PVLeadingOf(self.view).equalTo.leadingOf(self.inputToolBar),
+//                                        self.toolbarBottomLayoutGuide,
+//                                        self.toolbarHeightConstraint,
+//                                        PVTopOf(self.inputToolBar).equalTo.bottomOf(self.tableView),
+//                                        ]).asArray];
 }
 
 #pragma mark - UITableViewDelegate

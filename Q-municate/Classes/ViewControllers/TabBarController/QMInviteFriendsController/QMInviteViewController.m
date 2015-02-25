@@ -8,7 +8,6 @@
 
 #import "QMInviteViewController.h"
 #import "QMInviteFriendsDataSource.h"
-#import "QMApi.h"
 #import "REMessageUI.h"
 #import "SVProgressHUD.h"
 

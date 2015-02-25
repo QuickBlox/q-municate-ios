@@ -11,8 +11,6 @@
 
 #define QM_TEST 0
 
-
-#define QM_AUDIO_VIDEO_ENABLED 0
 #define STAGE_SERVER_IS_ACTIVE 0
 
 #define DELETING_DIALOGS_ENABLED 0
@@ -41,7 +39,7 @@ typedef void (^QBDialogsPagedResultBlock)(QBDialogsPagedResult *result);
 typedef void (^QBChatDialogResultBlock)(QBChatDialogResult *result);
 typedef void (^QBChatHistoryMessageResultBlock)(QBChatHistoryMessageResult *result);
 
-typedef void (^QBResultBlock)(Result *result);
+typedef void (^QBResultBlock)(QBResult *result);
 typedef void (^QBSessionCreationBlock)(BOOL success, NSString *error);
 typedef void (^QBChatResultBlock)(BOOL success);
 typedef void (^QBChatRoomResultBlock)(QBChatRoom *chatRoom, NSError *error);

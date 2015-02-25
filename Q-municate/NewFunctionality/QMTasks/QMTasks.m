@@ -7,7 +7,6 @@
 //
 
 #import "QMTasks.h"
-#import "QMApi.h"
 #import "QMServicesManager.h"
 
 @implementation QMTasks
@@ -43,12 +42,16 @@
 
 + (void)taskFetchDialogsAndUsers:(void(^)(BOOL success))completion {
     
-    [QM.chatService fetchAllDialogs:^(QBResponse *fetchAllDialogsResponse, NSArray *dialogObjects, NSSet *dialogsUsersIDs)
+    [QM.chatService fetchAllDialogs:^(QBResponse *fetchAllDialogsResponse,
+                                      NSArray *dialogObjects,
+                                      NSSet *dialogsUsersIDs)
      {
          if (fetchAllDialogsResponse.success) {
              
              [QM.contactListService retrieveUsersWithIDs:dialogsUsersIDs.allObjects
-                                              completion:^(QBResponse *retriveUsersResponse, QBGeneralResponsePage *page, NSArray *users)
+                                              completion:^(QBResponse *retriveUsersResponse,
+                                                           QBGeneralResponsePage *page,
+                                                           NSArray *users)
               {
                   if (!retriveUsersResponse || retriveUsersResponse.success) {
                       

@@ -7,7 +7,6 @@
 //
 
 #import "QMChangePasswordVC.h"
-#import "QMSettingsManager.h"
 #import "REAlertView+QMSuccess.h"
 #import "UIImage+TintColor.h"
 #import "SVProgressHUD.h"
@@ -22,7 +21,6 @@ const NSUInteger kQMMinPasswordLenght = 7;
 @property (weak, nonatomic) IBOutlet UITextField *oldPasswordTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
 @property (weak, nonatomic) IBOutlet UIButton *changeButton;
-@property (strong, nonatomic) QMSettingsManager *settingsManager;
 
 @end
 
@@ -35,8 +33,6 @@ const NSUInteger kQMMinPasswordLenght = 7;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.changeButton.layer.cornerRadius = 5.0f;
-    
-    self.settingsManager = [[QMSettingsManager alloc] init];
     
     [self configureChangePasswordVC];
 }
@@ -67,7 +63,7 @@ const NSUInteger kQMMinPasswordLenght = 7;
 
 - (IBAction)pressChangeButton:(id)sender {
     
-    NSString *oldPassword = self.settingsManager.password;
+    NSString *oldPassword = nil;//self.settingsManager.password;
     NSString *confirmOldPassword = self.oldPasswordTextField.text;
     NSString *newPassword = self.passwordTextField.text;
     
