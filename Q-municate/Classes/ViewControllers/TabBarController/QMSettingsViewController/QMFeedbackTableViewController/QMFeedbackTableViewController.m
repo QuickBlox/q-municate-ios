@@ -37,7 +37,7 @@
 - (NSString *)deviceInfo {
     
     UIDevice *device = [UIDevice currentDevice];
-//    NSString *modelName = [device modelName];
+    NSString *modelName = device.model;
 
     NSString *systemVersion = [device systemVersion];
     NSString *buildVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:kSettingsCellBundleVersion];

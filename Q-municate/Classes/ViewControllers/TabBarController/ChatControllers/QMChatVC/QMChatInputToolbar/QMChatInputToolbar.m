@@ -10,7 +10,6 @@
 #import "QMChatToolbarContentView.h"
 #import "QMChatButtonsFactory.h"
 #import "QMPlaceholderTextView.h"
-#import "Parus.h"
 
 const CGFloat kQMChatInputToolbarHeightDefault = 44.0f;
 
@@ -44,13 +43,13 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
     
     QMChatToolbarContentView *contentView = [[QMChatToolbarContentView alloc] init];
     [self addSubview:contentView];
-    
-    [self addConstraints:PVGroup(@[
-                                   PVTopOf(contentView).equalTo.topOf(self).asConstraint,
-                                   PVLeftOf(contentView).equalTo.leftOf(self).asConstraint,
-                                   PVBottomOf(contentView).equalTo.bottomOf(self).asConstraint,
-                                   PVRightOf(contentView).equalTo.rightOf(self).asConstraint,
-                                   ]).asArray];
+//    
+//    [self addConstraints:PVGroup(@[
+//                                   PVTopOf(contentView).equalTo.topOf(self).asConstraint,
+//                                   PVLeftOf(contentView).equalTo.leftOf(self).asConstraint,
+//                                   PVBottomOf(contentView).equalTo.bottomOf(self).asConstraint,
+//                                   PVRightOf(contentView).equalTo.rightOf(self).asConstraint,
+//                                   ]).asArray];
     
     [self updateConstraintsIfNeeded];
     

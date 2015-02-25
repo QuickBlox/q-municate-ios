@@ -10,7 +10,7 @@
 #import "QMInviteFriendCell.h"
 #import "QMInviteStaticCell.h"
 #import "ABPerson.h"
-#import "QMFacebookService.h"
+//#import "QMFacebookService.h"
 #import "QMAddressBook.h"
 #import "SVProgressHUD.h"
 
@@ -74,13 +74,13 @@ const NSUInteger kQMNumberOfSection = 2;
 #pragma mark - fetch user 
 
 - (void)fetchFacebookFriends:(void(^)(void))completion {
-    
-    [[QMApi instance] fbIniviteDialogWithCompletion:^(BOOL success) {
-        if (success) {
-            [SVProgressHUD showSuccessWithStatus:@"Success"];
-            return;
-        }
-    }];
+//    
+//    [[QMApi instance] fbIniviteDialogWithCompletion:^(BOOL success) {
+//        if (success) {
+//            [SVProgressHUD showSuccessWithStatus:@"Success"];
+//            return;
+//        }
+//    }];
 
 }
 
@@ -164,11 +164,11 @@ const NSUInteger kQMNumberOfSection = 2;
     QMInviteFriendCell *cell = [tableView dequeueReusableCellWithIdentifier:kQMInviteFriendCellID];
 
     id userData = [self itemAtIndexPath:indexPath];
-
-    if ([userData isKindOfClass:[QBUUser class]]) {
-        QBUUser *user = userData;
-        cell.contactlistItem = [[QMApi instance] contactItemWithUserID:user.ID];
-    }
+//
+//    if ([userData isKindOfClass:[QBUUser class]]) {
+//        QBUUser *user = userData;
+//        cell.contactlistItem = [[QMApi instance] contactItemWithUserID:user.ID];
+//    }
     
     cell.userData = userData;
     cell.check = [self checkedAtIndexPath:indexPath];

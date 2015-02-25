@@ -8,7 +8,6 @@
 
 #import "QMChatToolbarContentView.h"
 #import "QMPlaceholderTextView.h"
-#import "Parus.h"
 
 @interface QMChatToolbarContentView()
 
@@ -83,25 +82,25 @@
     
     UIView *lView = self.leftBarButtonContainerView;
     UIView *cView = self.textView;
-    UIView *rView = self.rightBarButtonContainerView;
-    
-    self.leftBarButtonContainerViewWidthConstraint = PVWidthOf(lView).equalTo.constant(26).asConstraint;
-    self.rightBarButtonContainerViewWidthConstraint= PVWidthOf(rView).equalTo.constant(26).asConstraint;
-    
-    [self
-     addConstraints:PVGroup(@[
-                              PVLeftOf(lView).equalTo.leftOf(self).plus(margin).asConstraint,
-                              PVLeftOf(cView).equalTo.rightOf(lView).plus(margin).asConstraint,
-                              PVRightOf(cView).equalTo.leftOf(rView).minus(margin).asConstraint,
-                              PVRightOf(rView).equalTo.rightOf(self).minus(margin).asConstraint,
-                              PVBottomOf(lView).equalTo.bottomOf(self).minus(margin).asConstraint,
-                              PVBottomOf(cView).equalTo.bottomOf(self).minus(margin).asConstraint,
-                              PVBottomOf(rView).equalTo.bottomOf(self).minus(margin).asConstraint,
-                              self.rightBarButtonContainerViewWidthConstraint,
-                              self.leftBarButtonContainerViewWidthConstraint,
-                              PVHeightOf(rView).equalTo.constant(32).asConstraint,
-                              PVHeightOf(lView).equalTo.constant(32).asConstraint,
-                              PVTopOf(cView).equalTo.topOf(self).plus(margin).asConstraint]).asArray];
+//    UIView *rView = self.rightBarButtonContainerView;
+//    
+//    self.leftBarButtonContainerViewWidthConstraint = PVWidthOf(lView).equalTo.constant(26).asConstraint;
+//    self.rightBarButtonContainerViewWidthConstraint= PVWidthOf(rView).equalTo.constant(26).asConstraint;
+//    
+//    [self
+//     addConstraints:PVGroup(@[
+//                              PVLeftOf(lView).equalTo.leftOf(self).plus(margin).asConstraint,
+//                              PVLeftOf(cView).equalTo.rightOf(lView).plus(margin).asConstraint,
+//                              PVRightOf(cView).equalTo.leftOf(rView).minus(margin).asConstraint,
+//                              PVRightOf(rView).equalTo.rightOf(self).minus(margin).asConstraint,
+//                              PVBottomOf(lView).equalTo.bottomOf(self).minus(margin).asConstraint,
+//                              PVBottomOf(cView).equalTo.bottomOf(self).minus(margin).asConstraint,
+//                              PVBottomOf(rView).equalTo.bottomOf(self).minus(margin).asConstraint,
+//                              self.rightBarButtonContainerViewWidthConstraint,
+//                              self.leftBarButtonContainerViewWidthConstraint,
+//                              PVHeightOf(rView).equalTo.constant(32).asConstraint,
+//                              PVHeightOf(lView).equalTo.constant(32).asConstraint,
+//                              PVTopOf(cView).equalTo.topOf(self).plus(margin).asConstraint]).asArray];
 }
 
 #pragma mark - Setters
@@ -177,12 +176,12 @@
 
 - (void)pinAllEdgesOfSubview:(UIView *)subview ofView:(UIView *)view {
     
-    [self addConstraints:PVGroup(@[
-                                   PVTopOf(subview).equalTo.topOf(view).asConstraint,
-                                   PVLeftOf(subview).equalTo.leftOf(view).asConstraint,
-                                   PVBottomOf(subview).equalTo.bottomOf(view).asConstraint,
-                                   PVRightOf(subview).equalTo.rightOf(view).asConstraint,
-                                   ]).asArray];
+//    [self addConstraints:PVGroup(@[
+//                                   PVTopOf(subview).equalTo.topOf(view).asConstraint,
+//                                   PVLeftOf(subview).equalTo.leftOf(view).asConstraint,
+//                                   PVBottomOf(subview).equalTo.bottomOf(view).asConstraint,
+//                                   PVRightOf(subview).equalTo.rightOf(view).asConstraint,
+//                                   ]).asArray];
 }
 
 - (void)setRightBarButtonItemWidth:(CGFloat)rightBarButtonItemWidth {

@@ -9,9 +9,7 @@
 #import "QMLogInViewController.h"
 #import "QMWelcomeScreenViewController.h"
 #import "QMLicenseAgreement.h"
-#import "QMSettingsManager.h"
 #import "REAlertView+QMSuccess.h"
-#import "QMSettingsManager.h"
 #import "SVProgressHUD.h"
 #import "QMServicesManager.h"
 
@@ -20,7 +18,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 @property (weak, nonatomic) IBOutlet UISwitch *rememberMeSwitch;
-@property (strong, nonatomic) QMSettingsManager *settingsManager;
 
 @end
 
