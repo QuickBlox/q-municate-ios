@@ -7,7 +7,6 @@
 //
 
 #import "QMChatViewController.h"
-#import "QMMainTabBarController.h"
 #import "QMChatDataSource.h"
 #import "QMChatButtonsFactory.h"
 #import "QMGroupDetailsController.h"

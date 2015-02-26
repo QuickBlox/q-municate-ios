@@ -37,15 +37,14 @@
     
     self.userImage.layer.cornerRadius = self.userImage.frame.size.width / 2;
     self.userImage.layer.masksToBounds = YES;
-    
-    [self.navigationController setNavigationBarHidden:NO
-                                             animated:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
+    [self.navigationController setNavigationBarHidden:NO
+                                             animated:animated];
 }
 
 #pragma mark - Actions
@@ -85,6 +84,7 @@
     }
     else {
         
+        __weak __typeof(self)weakSelf = self;
         [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self
                                                             completion:^(BOOL userAgreementSuccess)
          {
@@ -92,9 +92,9 @@
                  
                  QBUUser *newUser = [QBUUser user];
                  
-                 newUser.fullName = self.fullNameField.text;
-                 newUser.email = self.emailField.text;
-                 newUser.password = self.passwordField.text;
+                 newUser.fullName = weakSelf.fullNameField.text;
+                 newUser.email = weakSelf.emailField.text;
+                 newUser.password = weakSelf.passwordField.text;
                  newUser.tags = @[@"ios"].mutableCopy;
                  
                  [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
@@ -109,13 +109,13 @@
                           //Synchronize user profile
                           [QM.profile synchronizeWithUserData:userProfile];
                           //Upload user image
-                          [QM.profile updateUserWithImage:self.cachedPicture
+                          [QM.profile updateUserWithImage:weakSelf.cachedPicture
                                                  progress:^(float progress)
                            {
                                
                            } completion:^(BOOL success) {
                                
-                               [self performSegueWithIdentifier:kTabBarSegueIdnetifier
+                               [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier
                                                          sender:nil];
                            }];    
                       }

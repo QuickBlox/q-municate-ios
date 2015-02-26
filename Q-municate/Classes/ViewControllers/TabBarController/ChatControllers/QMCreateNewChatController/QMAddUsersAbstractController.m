@@ -51,7 +51,7 @@ NSString *const kCreateChatCellIdentifier = @"CreateChatCell";
 
 /** Override this methods */
 - (IBAction)performAction:(id)sender {
-   CHECK_OVERRIDE();
+
 }
 
 - (IBAction)pressResetButton:(UIButton *)sender {

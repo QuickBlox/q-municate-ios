@@ -16,34 +16,6 @@
 #define DELETING_DIALOGS_ENABLED 0
 
 #define IS_HEIGHT_GTE_568 [[UIScreen mainScreen ] bounds].size.height >= 568.0f
-#define $(...)  [NSSet setWithObjects:__VA_ARGS__, nil]
-
-#define CHECK_OVERRIDE()\
-@throw\
-[NSException exceptionWithName:NSInternalInconsistencyException \
-reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]\
-userInfo:nil]
-
-/*QMContentService*/
-typedef void(^QMContentProgressBlock)(float progress);
-typedef void(^QMCFileUploadTaskResultBlockBlock)(QBCFileUploadTaskResult *result);
-typedef void(^QMCFileDownloadTaskResultBlockBlock)(QBCFileDownloadTaskResult *result);
-typedef void (^QBUUserResultBlock)(QBUUserResult *result);
-typedef void (^QBAAuthResultBlock)(QBAAuthResult *result);
-typedef void (^QBUUserLogInResultBlock)(QBUUserLogInResult *result);
-typedef void (^QBAAuthSessionCreationResultBlock)(QBAAuthSessionCreationResult *result);
-typedef void (^QBUUserPagedResultBlock)(QBUUserPagedResult *pagedResult);
-typedef void (^QBMRegisterSubscriptionTaskResultBlock)(QBMRegisterSubscriptionTaskResult *result);
-typedef void (^QBMUnregisterSubscriptionTaskResultBlock)(QBMUnregisterSubscriptionTaskResult *result);
-typedef void (^QBDialogsPagedResultBlock)(QBDialogsPagedResult *result);
-typedef void (^QBChatDialogResultBlock)(QBChatDialogResult *result);
-typedef void (^QBChatHistoryMessageResultBlock)(QBChatHistoryMessageResult *result);
-
-typedef void (^QBResultBlock)(QBResult *result);
-typedef void (^QBSessionCreationBlock)(BOOL success, NSString *error);
-typedef void (^QBChatResultBlock)(BOOL success);
-typedef void (^QBChatRoomResultBlock)(QBChatRoom *chatRoom, NSError *error);
-typedef void (^QBChatDialogHistoryBlock)(NSMutableArray *chatDialogHistoryArray, NSError *error);
 
 //************** Segue Identifiers *************************
 static NSString *const kTabBarSegueIdnetifier         = @"TabBarSegue";

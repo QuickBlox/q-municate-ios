@@ -22,8 +22,10 @@
 		552E483B199A2711006A25E1 /* QMFriendListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 552E483A199A2711006A25E1 /* QMFriendListCell.xib */; };
 		55495A221993BCC100B7764C /* QMAlertsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 55495A201993BCC100B7764C /* QMAlertsFactory.m */; };
 		554BADC01A23960B00C03B8A /* QMTasks.m in Sources */ = {isa = PBXBuildFile; fileRef = 554BADBF1A23960B00C03B8A /* QMTasks.m */; };
+		5556B5701A9E1DC30032A54D /* QMLinkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5556B56F1A9E1DC30032A54D /* QMLinkViewController.m */; };
 		556192CB19891BD70048D112 /* QMGroupDetailsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 556192CA19891BD70048D112 /* QMGroupDetailsDataSource.m */; };
 		556249391A1CD086003D69F1 /* QMProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 556249381A1CD086003D69F1 /* QMProfile.m */; };
+		556E18B21A9F33B40087BEB9 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 556E18B11A9F33B40087BEB9 /* LaunchScreen.xib */; };
 		558260A31A1BAAAE00F92F4E /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558260A21A1BAAAE00F92F4E /* Quickblox.framework */; };
 		558AE52C196EA7C400AEAC1F /* QMFriendsListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 558AE52B196EA7C400AEAC1F /* QMFriendsListDataSource.m */; };
 		55943A491A1A137200A0A09E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 55943A481A1A137200A0A09E /* Main.storyboard */; };
@@ -106,7 +108,6 @@
 		693DC42618FFC45900AF46D9 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42518FFC45900AF46D9 /* libsqlite3.dylib */; };
 		693DC42C18FFC58000AF46D9 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */; };
 		6943847218E42678001E08A9 /* QMCustomSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943843418E42677001E08A9 /* QMCustomSegue.m */; };
-		6943848318E42678001E08A9 /* QMMainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943846018E42678001E08A9 /* QMMainTabBarController.m */; };
 		6943849418E42691001E08A9 /* UIImage+Cropper.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943849018E42691001E08A9 /* UIImage+Cropper.m */; };
 		697BBAD619C1DCA900F7F1D8 /* QMChatSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 697BBAD519C1DCA900F7F1D8 /* QMChatSection.m */; };
 		697E2D4C196EA82400CD2BDE /* QMLicenseAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 697E2D4B196EA82400CD2BDE /* QMLicenseAgreementViewController.m */; };
@@ -188,6 +189,8 @@
 		55495A201993BCC100B7764C /* QMAlertsFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAlertsFactory.m; sourceTree = "<group>"; };
 		554BADBE1A23960B00C03B8A /* QMTasks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMTasks.h; sourceTree = "<group>"; };
 		554BADBF1A23960B00C03B8A /* QMTasks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMTasks.m; sourceTree = "<group>"; };
+		5556B56E1A9E1DC30032A54D /* QMLinkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLinkViewController.h; sourceTree = "<group>"; };
+		5556B56F1A9E1DC30032A54D /* QMLinkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLinkViewController.m; sourceTree = "<group>"; };
 		556192C919891BD70048D112 /* QMGroupDetailsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMGroupDetailsDataSource.h; sourceTree = "<group>"; };
 		556192CA19891BD70048D112 /* QMGroupDetailsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMGroupDetailsDataSource.m; sourceTree = "<group>"; };
 		556249371A1CD086003D69F1 /* QMProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMProfile.h; sourceTree = "<group>"; };
@@ -199,6 +202,7 @@
 		5562494D1A1CD470003D69F1 /* libQMContactListCache.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQMContactListCache.a; path = "Q-municate/QMServices/QMContactListCache/build/Debug-iphoneos/libQMContactListCache.a"; sourceTree = "<group>"; };
 		5562494E1A1CD470003D69F1 /* libQMContactListService.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQMContactListService.a; path = "Q-municate/QMServices/QMContactListService/build/Debug-iphoneos/libQMContactListService.a"; sourceTree = "<group>"; };
 		5562494F1A1CD470003D69F1 /* libQMDBStorage.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQMDBStorage.a; path = "Q-municate/QMServices/QMDBStorage/build/Debug-iphoneos/libQMDBStorage.a"; sourceTree = "<group>"; };
+		556E18B11A9F33B40087BEB9 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		558260A21A1BAAAE00F92F4E /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quickblox.framework; path = ../../Documents/Quickblox/Quickblox.framework; sourceTree = "<group>"; };
 		558AE52A196EA7C400AEAC1F /* QMFriendsListDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMFriendsListDataSource.h; sourceTree = "<group>"; };
 		558AE52B196EA7C400AEAC1F /* QMFriendsListDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMFriendsListDataSource.m; sourceTree = "<group>"; };
@@ -351,8 +355,6 @@
 		693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
 		6943843318E42677001E08A9 /* QMCustomSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCustomSegue.h; sourceTree = "<group>"; };
 		6943843418E42677001E08A9 /* QMCustomSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMCustomSegue.m; sourceTree = "<group>"; };
-		6943845F18E42678001E08A9 /* QMMainTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMainTabBarController.h; sourceTree = "<group>"; };
-		6943846018E42678001E08A9 /* QMMainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMMainTabBarController.m; sourceTree = "<group>"; };
 		6943848F18E42691001E08A9 /* UIImage+Cropper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Cropper.h"; sourceTree = "<group>"; };
 		6943849018E42691001E08A9 /* UIImage+Cropper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Cropper.m"; sourceTree = "<group>"; };
 		697BBAD419C1DCA900F7F1D8 /* QMChatSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMChatSection.h; path = QMChatSection/QMChatSection.h; sourceTree = "<group>"; };
@@ -1257,8 +1259,6 @@
 		6943845618E42677001E08A9 /* TabBarController */ = {
 			isa = PBXGroup;
 			children = (
-				6943845F18E42678001E08A9 /* QMMainTabBarController.h */,
-				6943846018E42678001E08A9 /* QMMainTabBarController.m */,
 				55BBA75D197327AA0040DB5C /* QMDialogsViewController */,
 				55CEAB12195DBCFA001A8ED6 /* CallControllers */,
 				55CEAB19195DBCFA001A8ED6 /* ChatControllers */,
@@ -1418,11 +1418,14 @@
 		69D57E5B18ACC11C00A9900A /* Q-municate */ = {
 			isa = PBXGroup;
 			children = (
+				556E18B11A9F33B40087BEB9 /* LaunchScreen.xib */,
 				55943A481A1A137200A0A09E /* Main.storyboard */,
 				55CBF04F1A9DCA5B0047C448 /* Auth.storyboard */,
 				55C6EDC31A9C9B1F0099D7B6 /* Users.storyboard */,
 				55C6EDC51A9C9B370099D7B6 /* Settings.storyboard */,
 				55C6EDC11A9C97B90099D7B6 /* Chat.storyboard */,
+				5556B56E1A9E1DC30032A54D /* QMLinkViewController.h */,
+				5556B56F1A9E1DC30032A54D /* QMLinkViewController.m */,
 				55AA61701A2328A400D73089 /* QMServices */,
 				556249351A1CD086003D69F1 /* NewFunctionality */,
 				69CF18AA18AE3788003262EF /* QMDefinitions.h */,
@@ -1552,6 +1555,7 @@
 				5594E4CC199E218800AA0D09 /* ChatIcons.xcassets in Resources */,
 				550678CC1A237D4B00660A12 /* QMChatCacheModel.bundle in Resources */,
 				55A8B0721965986A00B5D33B /* received.wav in Resources */,
+				556E18B21A9F33B40087BEB9 /* LaunchScreen.xib in Resources */,
 				55C6EDC61A9C9B370099D7B6 /* Settings.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1628,6 +1632,7 @@
 				6943849418E42691001E08A9 /* UIImage+Cropper.m in Sources */,
 				55CEAB86195DBCFA001A8ED6 /* UIColor+Hex.m in Sources */,
 				554BADC01A23960B00C03B8A /* QMTasks.m in Sources */,
+				5556B5701A9E1DC30032A54D /* QMLinkViewController.m in Sources */,
 				55D8ADCD19AC768800DAF79F /* QMTextMessageCell.m in Sources */,
 				55CEAB93195DBCFA001A8ED6 /* QMChatLayoutConfigs.m in Sources */,
 				55A8B06E1965986A00B5D33B /* QMSoundManager.m in Sources */,
@@ -1636,7 +1641,6 @@
 				550678BA1A235AE700660A12 /* QMServicesManager.m in Sources */,
 				55CEABA3195DBCFA001A8ED6 /* QMSettingsViewController.m in Sources */,
 				55D8ADEE19AC773B00DAF79F /* QMProgressView.m in Sources */,
-				6943848318E42678001E08A9 /* QMMainTabBarController.m in Sources */,
 				556192CB19891BD70048D112 /* QMGroupDetailsDataSource.m in Sources */,
 				243F976519D1C54000BDE124 /* QMPopoversFactory.m in Sources */,
 				55D8ADDD19AC76E200DAF79F /* QMAddMembersToGroupController.m in Sources */,
@@ -1813,7 +1817,7 @@
 					/usr/include/libxml2,
 				);
 				INFOPLIST_FILE = "Q-municate/Q-municate-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -1869,7 +1873,7 @@
 					/usr/include/libxml2,
 				);
 				INFOPLIST_FILE = "Q-municate/Q-municate-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (

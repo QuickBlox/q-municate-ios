@@ -8,14 +8,13 @@
 
 #import "QMFriendListViewController.h"
 #import "QMFriendsDetailsController.h"
-#import "QMMainTabBarController.h"
 #import "QMFriendListCell.h"
 #import "QMFriendsListDataSource.h"
 #import "QMServicesManager.h"
 
 @interface QMFriendListViewController ()
 
-<UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate, QMFriendsListDataSourceDelegate, QMFriendsTabDelegate>
+<UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate, QMFriendsListDataSourceDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) QMFriendsListDataSource *dataSource;
@@ -32,7 +31,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    ((QMMainTabBarController *)self.tabBarController).tabDelegate = self;
     
 #if kQMSHOW_SEARCH
     [self.tableView setContentOffset:CGPointMake(0, self.searchDisplayController.searchBar.frame.size.height) animated:NO];

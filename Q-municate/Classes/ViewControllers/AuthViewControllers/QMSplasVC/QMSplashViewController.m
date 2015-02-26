@@ -12,22 +12,15 @@
 @interface QMSplashViewController ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *splashLogoView;
-@property (weak, nonatomic) IBOutlet UIButton *reconnectBtn;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 @end
 
 @implementation QMSplashViewController
 
-- (void)dealloc {
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
-}
-
 - (void)viewDidLoad {
     
     [super viewDidLoad];
-    [self.splashLogoView setImage:[UIImage imageNamed:IS_HEIGHT_GTE_568 ? @"bg" : @"splash-960"]];
-    
+
     if (QM.profile.userData) {
         
         [self performSegueWithIdentifier:kTabBarSegueIdnetifier
@@ -38,9 +31,6 @@
         [self performSegueWithIdentifier:kWelcomeScreenSegueIdentifier
                                   sender:nil];
     }
-}
-
-- (IBAction)pressReconnectBtn:(id)sender {
 }
 
 @end

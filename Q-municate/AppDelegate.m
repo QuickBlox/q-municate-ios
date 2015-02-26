@@ -9,7 +9,6 @@
 #import "AppDelegate.h"
 #import <Crashlytics/Crashlytics.h>
 #import "SVProgressHUD.h"
-#import "QMPopoversFactory.h"
 
 #if Q_MUNICATE_MODE == 0
 /**
@@ -34,8 +33,6 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
  */
 NSString *const kQMCrashlyticsAPIKey = @"7aea78439bec41a9005c7488bb6751c5e33fe270";
 
-/* ==================================================================== */
-
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -54,25 +51,11 @@ NSString *const kQMCrashlyticsAPIKey = @"7aea78439bec41a9005c7488bb6751c5e33fe27
     [QBSettings useProductionEnvironmentForPushNotifications:YES];
 #endif
     
-    
 #if STAGE_SERVER_IS_ACTIVE == 1
     [QBSettings setServerApiDomain:@"http://api.stage.quickblox.com"];
     [QBSettings setServerChatDomain:@"chatstage.quickblox.com"];
 #endif
     
-    //TODO: Need move in style config
-    /*Configure app appearance*/
-    NSDictionary *normalAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:1.000 alpha:0.750]};
-    NSDictionary *disabledAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:0.935 alpha:0.260]};
-    NSDictionary *tabBarItemTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
-    
-    [[UITabBarItem appearance] setTitleTextAttributes:tabBarItemTextAttributes forState:UIControlStateNormal];
-    [[UIBarButtonItem appearance] setTitleTextAttributes:normalAttributes forState:UIControlStateNormal];
-    [[UIBarButtonItem appearance] setTitleTextAttributes:disabledAttributes forState:UIControlStateDisabled];
-    
-    [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateNormal];
-    [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateDisabled];
-
     /**Start Crashlytics */
     [Crashlytics startWithAPIKey:kQMCrashlyticsAPIKey];
     
