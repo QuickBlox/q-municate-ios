@@ -7,33 +7,31 @@
 //
 
 #import "QMLicenseAgreement.h"
-
 #import "QMLicenseAgreementViewController.h"
+#import "QMServicesManager.h"
 
 @implementation QMLicenseAgreement
 
 + (void)checkAcceptedUserAgreementInViewController:(UIViewController *)vc completion:(void(^)(BOOL success))completion {
     
-//    BOOL licenceAccepted = [[QMApi instance].settingsManager userAgreementAccepted];
-    
-//    if (licenceAccepted) {
-//        
-//        if (completion) completion(YES);
-//    }
-//    else {
-//        
-//        QMLicenseAgreementViewController *licenceController =
-//        [vc.storyboard instantiateViewControllerWithIdentifier:@"QMLicenceAgreementControllerID"];
-//        
-//        licenceController.licenceCompletionBlock = completion;
-//        
-//        UINavigationController *navViewController =
-//        [[UINavigationController alloc] initWithRootViewController:licenceController];
-//        
-//        [vc presentViewController:navViewController
-//                         animated:YES
-//                       completion:nil];
-//    }
+    if (QM.profile.userAgreementAccepted) {
+        
+        if (completion) completion(YES);
+    }
+    else {
+        
+        QMLicenseAgreementViewController *licenceController =
+        [vc.storyboard instantiateViewControllerWithIdentifier:@"QMLicenceAgreementControllerID"];
+        
+        licenceController.licenceCompletionBlock = completion;
+        
+        UINavigationController *navViewController =
+        [[UINavigationController alloc] initWithRootViewController:licenceController];
+        
+        [vc presentViewController:navViewController
+                         animated:YES
+                       completion:nil];
+    }
 }
 
 @end

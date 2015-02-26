@@ -13,7 +13,6 @@
 		24722D1B19E3D65F0046ACC4 /* QMChatNotificationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 24722D1919E3D65F0046ACC4 /* QMChatNotificationCell.xib */; };
 		2476BA8119A5D91F00CC666D /* QMUsersUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2476BA8019A5D91F00CC666D /* QMUsersUtils.m */; };
 		2484683F19D97E6E00E5A106 /* QBUUser+CustomParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 2484683E19D97E6E00E5A106 /* QBUUser+CustomParameters.m */; };
-		2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */; };
 		550678BA1A235AE700660A12 /* QMServicesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 550678B91A235AE700660A12 /* QMServicesManager.m */; };
 		550678CB1A237D4B00660A12 /* QMContactListCacheModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 550678C91A237D4B00660A12 /* QMContactListCacheModel.bundle */; };
 		550678CC1A237D4B00660A12 /* QMChatCacheModel.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 550678CA1A237D4B00660A12 /* QMChatCacheModel.bundle */; };
@@ -174,8 +173,6 @@
 		2476BA8019A5D91F00CC666D /* QMUsersUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMUsersUtils.m; path = QMUsersUtils/QMUsersUtils.m; sourceTree = "<group>"; };
 		2484683D19D97E6E00E5A106 /* QBUUser+CustomParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBUUser+CustomParameters.h"; sourceTree = "<group>"; };
 		2484683E19D97E6E00E5A106 /* QBUUser+CustomParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QBUUser+CustomParameters.m"; sourceTree = "<group>"; };
-		2494559619A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+GTMNSStringHTMLAdditions.h"; sourceTree = "<group>"; };
-		2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+GTMNSStringHTMLAdditions.m"; sourceTree = "<group>"; };
 		24ECC26419A73587003F5038 /* Macro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macro.h; sourceTree = "<group>"; };
 		550678B81A235AE700660A12 /* QMServicesManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMServicesManager.h; sourceTree = "<group>"; };
 		550678B91A235AE700660A12 /* QMServicesManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMServicesManager.m; sourceTree = "<group>"; };
@@ -1289,8 +1286,6 @@
 			children = (
 				6943848F18E42691001E08A9 /* UIImage+Cropper.h */,
 				6943849018E42691001E08A9 /* UIImage+Cropper.m */,
-				2494559619A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.h */,
-				2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */,
 				2484683D19D97E6E00E5A106 /* QBUUser+CustomParameters.h */,
 				2484683E19D97E6E00E5A106 /* QBUUser+CustomParameters.m */,
 			);
@@ -1680,7 +1675,6 @@
 				55CEAB85195DBCFA001A8ED6 /* NSString+UsedSize.m in Sources */,
 				55D8ADD019AC769500DAF79F /* QMChatToolbarContentView.m in Sources */,
 				558AE52C196EA7C400AEAC1F /* QMFriendsListDataSource.m in Sources */,
-				2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */,
 				55D8ADBB19AC762C00DAF79F /* QMDialogsDataSource.m in Sources */,
 				55D8ADDE19AC76E200DAF79F /* QMAddUsersAbstractController.m in Sources */,
 				55A8B0761965986A00B5D33B /* REAlertView.m in Sources */,

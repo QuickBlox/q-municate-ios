@@ -138,7 +138,7 @@ NSString *const kShakeAuthorizationState = @"authorizationState";
              }];
 }
 
-- (void)updateUserWithCompletion:(void (^)(BOOL success))completion {
+- (void)saveOnServer:(void (^)(BOOL success))completion {
     
     NSString *password = self.userData.password;
     self.userData.password = nil;
@@ -160,15 +160,16 @@ NSString *const kShakeAuthorizationState = @"authorizationState";
                  };
                  
              } errorBlock:^(QBResponse *response) {
+                 
                  if (completion) {
                      completion(NO);
                  }
              }];
 }
 
-- (void)updateUserWithImage:(UIImage *)userImage
-                   progress:(void (^)(float progress))progress
-                 completion:(void (^)(BOOL success))completion {
+- (void)updateUserImage:(UIImage *)userImage
+               progress:(void (^)(float progress))progress
+             completion:(void (^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
     

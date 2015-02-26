@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Welcome Screen View Controller-->
@@ -20,7 +21,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg" translatesAutoresizingMaskIntoConstraints="NO" id="Z50-7W-la2">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </imageView>
-                            <button contentMode="scaleToFill" verticalHuggingPriority="50" verticalCompressionResistancePriority="50" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JTU-mH-Ibb">
+                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="50" verticalCompressionResistancePriority="50" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JTU-mH-Ibb">
                                 <rect key="frame" x="100" y="520" width="400" height="60"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="6lR-LV-qUv"/>
@@ -80,16 +81,16 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="woB-2s-Ny5" firstAttribute="top" secondItem="Z50-7W-la2" secondAttribute="bottom" id="DDU-cM-uB1"/>
+                            <constraint firstItem="Z50-7W-la2" firstAttribute="top" secondItem="gD4-gA-gsp" secondAttribute="bottom" constant="-20" id="3oi-9H-Vvh"/>
                             <constraint firstItem="JTU-mH-Ibb" firstAttribute="bottom" secondItem="C6x-DM-yA4" secondAttribute="bottom" constant="68" id="EAw-dF-8sD"/>
-                            <constraint firstItem="Z50-7W-la2" firstAttribute="leading" secondItem="pE4-U4-ZdR" secondAttribute="leading" id="EgY-uU-po1"/>
                             <constraint firstItem="C6x-DM-yA4" firstAttribute="bottom" secondItem="DQM-sj-4W9" secondAttribute="bottom" constant="68" id="Iw5-36-DRh"/>
-                            <constraint firstItem="Z50-7W-la2" firstAttribute="top" secondItem="pE4-U4-ZdR" secondAttribute="top" id="N7A-fe-uue"/>
-                            <constraint firstAttribute="trailing" secondItem="Z50-7W-la2" secondAttribute="trailing" id="WrQ-eK-yF3"/>
+                            <constraint firstItem="woB-2s-Ny5" firstAttribute="top" secondItem="Z50-7W-la2" secondAttribute="bottom" id="OBd-NY-Mgr"/>
                             <constraint firstAttribute="centerX" secondItem="C6x-DM-yA4" secondAttribute="centerX" id="XLX-Dv-Oqm"/>
                             <constraint firstAttribute="centerX" secondItem="DQM-sj-4W9" secondAttribute="centerX" id="YED-yp-G5O">
                                 <variation key="heightClass=compact-widthClass=regular" constant="-1"/>
                             </constraint>
+                            <constraint firstItem="Z50-7W-la2" firstAttribute="top" secondItem="gD4-gA-gsp" secondAttribute="bottom" constant="-20" id="f3n-lM-Nsg"/>
+                            <constraint firstItem="Z50-7W-la2" firstAttribute="leading" secondItem="pE4-U4-ZdR" secondAttribute="leadingMargin" constant="-16" id="k0W-4W-WO1"/>
                             <constraint firstItem="JTU-mH-Ibb" firstAttribute="bottom" secondItem="wTX-Bo-NIi" secondAttribute="bottom" constant="343" id="sAh-ia-Pkf">
                                 <variation key="heightClass=compact" constant="237"/>
                                 <variation key="heightClass=compact-widthClass=compact" constant="218"/>
@@ -98,6 +99,7 @@
                             </constraint>
                             <constraint firstItem="woB-2s-Ny5" firstAttribute="top" secondItem="JTU-mH-Ibb" secondAttribute="bottom" constant="20" id="wAx-CK-ENS"/>
                             <constraint firstAttribute="centerX" secondItem="JTU-mH-Ibb" secondAttribute="centerX" id="y6g-1o-Dl3"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Z50-7W-la2" secondAttribute="trailing" constant="-16" id="yQf-77-B0b"/>
                             <constraint firstAttribute="centerX" secondItem="wTX-Bo-NIi" secondAttribute="centerX" id="zXN-WV-hr9">
                                 <variation key="heightClass=compact-widthClass=regular" constant="-1.5"/>
                             </constraint>

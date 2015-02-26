@@ -21,16 +21,20 @@
     
     [super viewDidLoad];
 
-    if (QM.profile.userData) {
-        
-        [self performSegueWithIdentifier:kTabBarSegueIdnetifier
-                                  sender:nil];
-    }
-    else {
-        
-        [self performSegueWithIdentifier:kWelcomeScreenSegueIdentifier
-                                  sender:nil];
-    }
+//    if (QM.profile.userData) {
+//        
+//        [self performSegueWithIdentifier:kTabBarSegueIdnetifier
+//                                  sender:nil];
+//    }
+//    else {
+//        [self performSegueWithIdentifier:kWelcomeScreenSegueIdentifier
+//                                  sender:nil];
+//        
+//    }
+    
+    [self performSegueWithIdentifier:kWelcomeScreenSegueIdentifier
+                              sender:nil];
+
 }
 
 @end

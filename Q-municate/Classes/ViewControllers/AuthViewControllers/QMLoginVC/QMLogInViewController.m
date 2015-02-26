@@ -30,15 +30,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.navigationController setNavigationBarHidden:NO
-                                             animated:YES];
     self.rememberMeSwitch.on = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
     
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:NO
+                                             animated:animated];
 }
 
 #pragma mark - Actions
@@ -65,7 +64,7 @@
         user.password = password;
         
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-        
+        __weak __typeof(self)weakSelf = self;
         [QM.authService logInWithUser:user
                            completion:^(QBResponse *response, QBUUser *userProfile)
         {    
@@ -73,13 +72,13 @@
              
              if (response.success) {
                  
-                 if (self.rememberMeSwitch.on) {
+                 if (weakSelf.rememberMeSwitch.on) {
                      
                      userProfile.password = password;
                      [QM.profile synchronizeWithUserData:userProfile];
                  }
                  
-                 [self performSegueWithIdentifier:kTabBarSegueIdnetifier
+                 [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier
                                            sender:nil];
              }
          }];
@@ -92,7 +91,7 @@
                                                         completion:^(BOOL success)
     {
         if (success) {
-            
+            __weak __typeof(self)weakSelf = self;
             [QM.authService logInWithFacebookSessionToken:@""
                                                completion:^(QBResponse *response, QBUUser *userProfile)
              {
@@ -100,11 +99,12 @@
                  
                  if (response.success) {
                      
-                     if (self.rememberMeSwitch.on) {
+                     if (weakSelf.rememberMeSwitch.on) {
+                         
                          [QM.profile synchronizeWithUserData:userProfile];
                      }
                      
-                     [self performSegueWithIdentifier:kTabBarSegueIdnetifier
+                     [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier
                                                sender:nil];
                  }
 				else {
