@@ -20,8 +20,6 @@
 @class QBChatHistoryMessage;
 @class QBPrivacyList;
 
-@class QBWebRTCVideoChat;
-
 /**
  QBChatServiceError enum defines following connection error codes:
  QBChatServiceErrorConnectionRefused - Connection with server is not available
@@ -48,6 +46,9 @@ typedef enum QBChatServiceError {
 /** Enable or disable Stream Management (XEP-0198) */
 @property (nonatomic, assign, getter = isStreamManagementEnabled) BOOL streamManagementEnabled;
 
+/** Enable or disable Stream Resumption (XEP-0198). Works only if streamManagementEnabled=YES. */
+@property (nonatomic, assign, getter = isStreamResumptionEnabled) BOOL streamResumptionEnabled;
+
 /** The timeout value for Stream Management send a message operation */
 @property (nonatomic, assign) int streamManagementSendMessageTimeout;
 
@@ -64,23 +65,39 @@ typedef enum QBChatServiceError {
 /** Array of registered video chat instances */
 @property (readonly) NSMutableArray *registeredVideoChatInstances;
 
-/** Array of registered webrtc video chat instances */
-@property (readonly) NSMutableArray *registeredWebRTCVideoChatInstances;
 
 #pragma mark -
 #pragma mark Multicaste Delegate
 
-/** Adds the given delegate implementation to the list of observers*/
+/** 
+ Adds the given delegate implementation to the list of observers
+ 
+ @param delegate The delegate to add
+ */
 - (void)addDelegate:(id<QBChatDelegate>)delegate;
 
-/** Removes the given delegate implementation from the list of observers*/
+/** 
+ Removes the given delegate implementation from the list of observers
+ 
+ @param delegate The delegate to remove
+ */
 - (void)removeDelegate:(id<QBChatDelegate>)delegate;
 
-/** Removes all delegates*/
+/** Removes all delegates */
 - (void)removeAllDelegates;
 
-/** NSArray of all delegates*/
+/** Array of all delegates*/
 - (NSArray *)delegates;
+
+
+#pragma mark -
+#pragma mark Reconnection
+
+/**
+ Run force reconnect. This method disconnects from chat and runs reconnection logic. Works only if autoReconnectEnabled=YES. Otherwise it does nothing.
+ */
+- (void)forceReconnect;
+
 
 #pragma mark -
 #pragma mark Base Messaging
@@ -117,13 +134,19 @@ typedef enum QBChatServiceError {
 /**
  Send message
  
- @param message QBChatMessage structure which contains message text and recipient id
- @return YES if the request was sent successfully. If not - see log.
+ @param message QBChatMessage instance
+ @return YES if the message was sent. If not - see log.
  */
 - (BOOL)sendMessage:(QBChatMessage *)message;
 
-
-- (BOOL)sendMessage:(QBChatMessage *)message sentBlock:(void (^)(NSError *))sentBlock;
+/**
+ Send message with 'sent' block
+ 
+ @param message QBChatMessage instance
+ @param sentBlock The block which informs whether a message was delivered to server or not. nil if no errors.
+ @return YES if the message was sent. If not - see log.
+ */
+- (BOOL)sendMessage:(QBChatMessage *)message sentBlock:(void (^)(NSError *error))sentBlock;
 
 /**
  Send "Read message" status back to sender
@@ -182,9 +205,10 @@ typedef enum QBChatServiceError {
  Add user to contact list request
  
  @param userID ID of user which you would like to add to contact list
- @return sentBlock block. If not - see NSError instance.
+ @param sentBlock The block which informs whether a request was delivered to server or not. nil if no errors.
+ @return YES if the request was sent. If not - see log.
  */
-- (BOOL)addUserToContactListRequest:(NSUInteger)userID sentBlock:(void (^)(NSError *))sentBlock;
+- (BOOL)addUserToContactListRequest:(NSUInteger)userID sentBlock:(void (^)(NSError *error))sentBlock;
 
 /**
  Remove user from contact list
@@ -198,9 +222,10 @@ typedef enum QBChatServiceError {
  Remove user from contact list
  
  @param userID ID of user which you would like to remove from contact list
- @return sentBlock block. If not - see NSError instance.
+ @param sentBlock The block which informs whether a request was delivered to server or not. nil if no errors.
+ @return YES if the request was sent. If not - see log.
  */
-- (BOOL)removeUserFromContactList:(NSUInteger)userID sentBlock:(void (^)(NSError *))sentBlock;
+- (BOOL)removeUserFromContactList:(NSUInteger)userID sentBlock:(void (^)(NSError *error))sentBlock;
 
 /**
  Confirm add to contact list request
@@ -214,9 +239,10 @@ typedef enum QBChatServiceError {
  Confirm add to contact list request
  
  @param userID ID of user from which you would like to confirm add to contact request
- @return If not - see NSError instance.
+ @param sentBlock The block which informs whether a request was delivered to server or not. nil if no errors.
+ @return YES if the request was sent. If not - see log.
  */
-- (BOOL)confirmAddContactRequest:(NSUInteger)userID sentBlock:(void (^)(NSError *))sentBlock;
+- (BOOL)confirmAddContactRequest:(NSUInteger)userID sentBlock:(void (^)(NSError *error))sentBlock;
 
 /**
  Reject add to contact list request
@@ -230,9 +256,11 @@ typedef enum QBChatServiceError {
  Reject add to contact list request
  
  @param userID ID of user from which you would like to reject add to contact request
- @return If not - see NSError instance.
+ @param sentBlock The block which informs whether a request was delivered to server or not. nil if no errors.
+ @return YES if the request was sent. If not - see log.
  */
-- (BOOL)rejectAddContactRequest:(NSUInteger)userID sentBlock:(void (^)(NSError *))sentBlock;
+- (BOOL)rejectAddContactRequest:(NSUInteger)userID sentBlock:(void (^)(NSError *error))sentBlock;
+
 
 #pragma mark -
 #pragma mark Rooms
@@ -263,14 +291,6 @@ typedef enum QBChatServiceError {
 - (BOOL)leaveRoom:(QBChatRoom *)room;
 
 /**
- Destroy room. You can destroy room only if you are room owner or added to only members room by its owner. QBChatDelegate's method 'chatRoomDidDestroy:' will be called
- 
- @param room Room to destroy
- @return YES if the request was sent successfully. If not - see log.
- */
-- (BOOL)destroyRoom:(QBChatRoom *)room;
-
-/**
  Send chat message to room
  
  @param message Message body
@@ -278,6 +298,15 @@ typedef enum QBChatServiceError {
  @return YES if the request was sent successfully. If not - see log.
  */
 - (BOOL)sendChatMessage:(QBChatMessage *)message toRoom:(QBChatRoom *)room;
+
+/**
+ Send chat message to room, without room join
+ 
+ @param message Message body
+ @param room Room to send message
+ @return YES if the request was sent successfully. If not - see log.
+ */
+- (BOOL)sendChatMessageWithoutJoin:(QBChatMessage *)message toRoom:(QBChatRoom *)room;
 
 /**
  Send presence with parameters to room
@@ -301,62 +330,12 @@ typedef enum QBChatServiceError {
 - (BOOL)sendPresenceWithStatus:(NSString *)status show:(enum QBPresenseShow)show priority:(short)priority customParameters:(NSDictionary *)customParameters toRoom:(QBChatRoom *)room;
 
 /**
- Send request for getting list of public groups. QBChatDelegate's method 'chatDidReceiveListOfRooms:' will be called
- 
- @return YES if the request was sent successfully. If not - see log.
- */
-- (BOOL)requestAllRooms;
-
-/**
- Send request for getting room information. QBChatDelegate's method 'chatRoomDidReceiveInformation:room:' will be called
- 
- @param room Room, which information you need to retrieve
- @return YES if the request was sent successfully. If not - see log.
- */
-- (BOOL)requestRoomInformation:(QBChatRoom *)room;
-
-/**
- Request users who are able to join a room. QBChatDelegate's method 'chatRoomDidReceiveListOfUsers:room:' will be called
- 
- @param room Room
- @return YES if the request was sent successfully. If not - see log.
- */
-- (BOOL)requestRoomUsers:(QBChatRoom *)room;
-
-/**
- Request users with affiliation. QBChatDelegate's method 'chatRoomDidReceiveListOfUsers:room:' will be called
- 
- @param affiliation User's affiliation
- @param room Room
- @return YES if the request was sent successfully. If not - see log.
- */
-- (BOOL)requestRoomUsersWithAffiliation:(NSString *)affiliation room:(QBChatRoom *)room;
-
-/**
  Request users who are joined a room. QBChatDelegate's method 'chatRoomDidReceiveListOfOnlineUsers:room:' will be called
  
  @param room Room
  @return YES if the request was sent successfully. If not - see log.
  */
 - (BOOL)requestRoomOnlineUsers:(QBChatRoom *)room;
-
-/**
- Send request to adding users to room.
- 
- @param usersIDs Array of users' IDs
- @param room Room in which users will be added
- @return YES if the request was sent successfully. If not - see log.
- */
-- (BOOL)addUsers:(NSArray *)usersIDs toRoom:(QBChatRoom *)room;
-
-/**
- Send request to remove users from room
- 
- @param usersIDs Array of users' IDs
- @param room Room from which users will be removed
- @return YES if the request was sent successfully. If not - see log.
- */
-- (BOOL)deleteUsers:(NSArray *)usersIDs fromRoom:(QBChatRoom *)room;
 
 
 #pragma mark -
@@ -383,31 +362,6 @@ typedef enum QBChatServiceError {
  @param videoChat Instance of video chat
  */
 - (void)unregisterVideoChatInstance:(QBVideoChat *)videoChat;
-
-#pragma mark -
-#pragma mark QBWebRTCVideoChat
-
-/**
- Create and register new video chat instance
- 
- @return Autoreleased instance of QBWebRTCVideoChat;
- */
-- (QBWebRTCVideoChat *)createWebRTCVideoChatInstance;
-
-/**
- Create and register new video chat instance with particular session ID
- 
- @param sessionID Video chat session ID
- @return Autoreleased instance of QBWebRTCVideoChat;
- */
-- (QBWebRTCVideoChat *)createAndRegisterWebRTCVideoChatInstanceWithSessionID:(NSString *)sessionID;
-
-/**
- Unregister video chat instance
- 
- @param videoChat Instance of webrtc video chat
- */
-- (void)unregisterWebRTCVideoChatInstance:(QBWebRTCVideoChat *)videoChat;
 
 
 #pragma mark -
@@ -472,10 +426,21 @@ typedef enum QBChatServiceError {
 
 @end
 
+
+#pragma mark -
+#pragma mark Deprecated
+
 @interface QBChat (Deprecated)
 
-/** QBChat delegate for callbacks */
+
+
+/** QBChat delegate for callbacks
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use addDelegate: instead
+ */
 @property (weak, nonatomic) id <QBChatDelegate> delegate __attribute__((deprecated("Use addDelegate: instead")));
+
+
 
 /**
  Send message to room
@@ -488,14 +453,13 @@ typedef enum QBChatServiceError {
  */
 - (BOOL)sendMessage:(NSString *)message toRoom:(QBChatRoom *)room __attribute__((deprecated("Use sendChatMessage:toRoom: instead")));
 
-#pragma mark -
-#pragma mark Rooms
-
 /**
  Create room or join if room with this name already exist. QBChatDelegate's method 'chatRoomDidEnter:' will be called.
  If room name contains (" ") (space) character - it will be replaceed with "_" (underscore) character.
  If room name contains ("),(\),(&),('),(/),(:),(<),(>),(@),((),()),(:),(;)  characters - they will be removed.
  As user room nickname we will use user ID
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use Chat Dialogs API instead.
  
  @param name Room name
  @param isMembersOnly YES if you want to create room that users cannot enter without being on the member list. If set NO - room will be opened for all users
@@ -503,11 +467,13 @@ typedef enum QBChatServiceError {
  @return YES if the request was sent successfully. If not - see log.
  */
 - (BOOL)createOrJoinRoomWithName:(NSString *)name membersOnly:(BOOL)isMembersOnly persistent:(BOOL)isPersistent
- __attribute__((deprecated("use '+[QBRequest createDialog:successBlock:errorBlock]' instead.")));
+ __attribute__((deprecated("Use Chat Dialogs API instead.")));
 
 /**
  Create room or join if room with this JID already exist. QBChatDelegate's method 'chatRoomDidEnter:' will be called.
  As user room nickname we will use user ID
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use Chat Dialogs API instead.
  
  @param roomJID Room JID
  @param isMembersOnly YES if you want to create room that users cannot enter without being on the member list. If set NO - room will be opened for all users
@@ -516,12 +482,14 @@ typedef enum QBChatServiceError {
  @return YES if the request was sent successfully. If not - see log.
  */
 - (BOOL)createOrJoinRoomWithJID:(NSString *)roomJID membersOnly:(BOOL)isMembersOnly persistent:(BOOL)isPersistent historyAttribute:(NSDictionary *)historyAttribute
- __attribute__((deprecated("use '+[QBRequest createDialog:successBlock:errorBlock]' instead.")));
+ __attribute__((deprecated("Use Chat Dialogs API instead.")));
 
 /**
  Create room or join if room with this name already exist. QBChatDelegate's method 'chatRoomDidEnter:' will be called.
  If room name contains (" ") (space) character - it will be replaceed with "_" (underscore) character.
  If room name contains ("),(\),(&),('),(/),(:),(<),(>),(@),((),()),(:),(;)  characters - they will be removed.
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use Chat Dialogs API instead.
  
  @param name Room name
  @param nickname User nickname wich will be used in room
@@ -530,11 +498,12 @@ typedef enum QBChatServiceError {
  @return YES if the request was sent successfully. If not - see log.
  */
 - (BOOL)createOrJoinRoomWithName:(NSString *)name nickname:(NSString *)nickname membersOnly:(BOOL)isMembersOnly persistent:(BOOL)isPersistent
- __attribute__((deprecated("use '+[QBRequest createDialog:successBlock:errorBlock]' instead.")));
-
+ __attribute__((deprecated("Use Chat Dialogs API instead.")));
 
 /**
  Create room or join if room with this JID already exist. QBChatDelegate's method 'chatRoomDidEnter:' will be called.
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use Chat Dialogs API instead.
  
  @param roomJID Room JID
  @param nickname User nickname wich will be used in room
@@ -544,13 +513,86 @@ typedef enum QBChatServiceError {
  @return YES if the request was sent successfully. If not - see log.
  */
 - (BOOL)createOrJoinRoomWithJID:(NSString *)roomJID nickname:(NSString *)nickname membersOnly:(BOOL)isMembersOnly persistent:(BOOL)isPersistent historyAttribute:(NSDictionary *)historyAttribute
- __attribute__((deprecated("use '+[QBRequest createDialog:successBlock:errorBlock]' instead.")));
+ __attribute__((deprecated("Use Chat Dialogs API instead.")));
 
-#pragma mark -
-#pragma mark Retrive Dialogs
+/**
+ Destroy room. You can destroy room only if you are room owner or added to only members room by its owner. QBChatDelegate's method 'chatRoomDidDestroy:' will be called
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use Chat Dialogs API instead.
+ 
+ @param room Room to destroy
+ @return YES if the request was sent successfully. If not - see log.
+ */
+- (BOOL)destroyRoom:(QBChatRoom *)room __attribute__((deprecated("Use Chat Dialogs API instead.")));
+
+/**
+ Send request for getting list of public groups. QBChatDelegate's method 'chatDidReceiveListOfRooms:' will be called
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use Chat Dialogs API instead.
+ 
+ @return YES if the request was sent successfully. If not - see log.
+ */
+- (BOOL)requestAllRooms __attribute__((deprecated("Use Chat Dialogs API instead.")));
+
+/**
+ Send request for getting room information. QBChatDelegate's method 'chatRoomDidReceiveInformation:room:' will be called
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use Chat Dialogs API instead.
+ 
+ @param room Room, which information you need to retrieve
+ @return YES if the request was sent successfully. If not - see log.
+ */
+- (BOOL)requestRoomInformation:(QBChatRoom *)room __attribute__((deprecated("Use Chat Dialogs API instead.")));
+
+/**
+ Request users who are able to join a room. QBChatDelegate's method 'chatRoomDidReceiveListOfUsers:room:' will be called
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use Chat Dialogs API instead.
+ 
+ @param room Room
+ @return YES if the request was sent successfully. If not - see log.
+ */
+- (BOOL)requestRoomUsers:(QBChatRoom *)room __attribute__((deprecated("Use Chat Dialogs API instead.")));
+
+/**
+ Request users with affiliation. QBChatDelegate's method 'chatRoomDidReceiveListOfUsers:room:' will be called
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use Chat Dialogs API instead.
+ 
+ @param affiliation User's affiliation
+ @param room Room
+ @return YES if the request was sent successfully. If not - see log.
+ */
+- (BOOL)requestRoomUsersWithAffiliation:(NSString *)affiliation room:(QBChatRoom *)room __attribute__((deprecated("Use Chat Dialogs API instead.")));
+
+/**
+ Send request to adding users to room.
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use Chat Dialogs API instead.
+ 
+ @param usersIDs Array of users' IDs
+ @param room Room in which users will be added
+ @return YES if the request was sent successfully. If not - see log.
+ */
+- (BOOL)addUsers:(NSArray *)usersIDs toRoom:(QBChatRoom *)room __attribute__((deprecated("Use Chat Dialogs API instead.")));
+
+/**
+ Send request to remove users from room
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use Chat Dialogs API instead.
+ 
+ @param usersIDs Array of users' IDs
+ @param room Room from which users will be removed
+ @return YES if the request was sent successfully. If not - see log.
+ */
+- (BOOL)deleteUsers:(NSArray *)usersIDs fromRoom:(QBChatRoom *)room __attribute__((deprecated("Use Chat Dialogs API instead.")));
+
+
 
 /**
  Retrieve chat dialogs
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use '+[QBRequest dialogsWithSuccessBlock:errorBlock:]' instead.
  
  @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of QBDialogsPagedResult class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
@@ -558,9 +600,10 @@ typedef enum QBChatServiceError {
 + (NSObject<Cancelable> *)dialogsWithDelegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest dialogsWithSuccessBlock:errorBlock:]' instead.")));
 + (NSObject<Cancelable> *)dialogsWithDelegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest dialogsWithSuccessBlock:errorBlock:]' instead.")));
 
-
 /**
  Retrieve chat dialogs, with extended request
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use '+[QBRequest dialogsForPage:extendedRequest:successBlock:errorBlock:]' instead."
  
  @param extendedRequest Extended set of request parameters
  @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of QBDialogsPagedResult class.
@@ -569,12 +612,10 @@ typedef enum QBChatServiceError {
 + (NSObject<Cancelable> *)dialogsWithExtendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest dialogsForPage:extendedRequest:successBlock:errorBlock:]' instead.")));
 + (NSObject<Cancelable> *)dialogsWithExtendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest dialogsForPage:successBlock:errorBlock:]' instead.")));
 
-
-#pragma mark - 
-#pragma mark Create Dialogs
-
 /**
  Create chat dialog
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use '+[QBRequest createDialog:successBlock:errorBlock:]' instead.
  
  @param dialog Entity if a new dialog
  @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of QBChatDialogResult class.
@@ -583,12 +624,10 @@ typedef enum QBChatServiceError {
 + (NSObject<Cancelable> *)createDialog:(QBChatDialog *)dialog delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest createDialog:successBlock:errorBlock:]' instead.")));
 + (NSObject<Cancelable> *)createDialog:(QBChatDialog *)dialog delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest createDialog:successBlock:errorBlock:]' instead.")));
 
-
-#pragma mark -
-#pragma mark Update dialog
-
 /**
  Update existing chat dialog
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use '+[QBRequest updateDialog:successBlock:errorBlock:]' instead.
  
  @param dialogID ID of a dialog to update
  @param extendedRequest Set of parameters to update
@@ -598,12 +637,10 @@ typedef enum QBChatServiceError {
 + (NSObject<Cancelable> *)updateDialogWithID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest updateDialog:successBlock:errorBlock:]' instead.")));
 + (NSObject<Cancelable> *)updateDialogWithID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest updateDialog:successBlock:errorBlock:]' instead.")));
 
-
-#pragma mark -
-#pragma mark Delete dialog
-
 /**
  Delete chat dialog
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:*
  
  @param dialogID ID of a dialog to delete
  @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of QBChatDialogResult class.
@@ -612,12 +649,10 @@ typedef enum QBChatServiceError {
 + (NSObject<Cancelable> *)deleteDialogWithID:(NSString *)dialogID delegate:(NSObject<QBActionStatusDelegate> *)delegate;
 + (NSObject<Cancelable> *)deleteDialogWithID:(NSString *)dialogID delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context;
 
-
-#pragma mark -
-#pragma mark Retrive Messages
-
 /**
  Retrieve all chat messages within particular dialog
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use '+[QBRequest messagesWithDialogID:successBlock:errorBlock:]' instead.
  
  @param dialogID ID of a dialog
  @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of QBChatHistoryMessageResult class.
@@ -626,9 +661,10 @@ typedef enum QBChatServiceError {
 + (NSObject<Cancelable> *)messagesWithDialogID:(NSString *)dialogID delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest messagesWithDialogID:successBlock:errorBlock:]' instead.")));
 + (NSObject<Cancelable> *)messagesWithDialogID:(NSString *)dialogID delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest messagesWithDialogID:successBlock:errorBlock:]' instead.")));
 
-
 /**
  Retrieve all chat messages within particular dialog, with extended request
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use '+[QBRequest messagesWithDialogID:forPage:successBlock:errorBlock:]' instead.
  
  @param dialogID ID of a dialog
  @param extendedRequest Extended set of request parameters
@@ -638,12 +674,10 @@ typedef enum QBChatServiceError {
 + (NSObject<Cancelable> *)messagesWithDialogID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest messagesWithDialogID:forPage:successBlock:errorBlock:]' instead.")));
 + (NSObject<Cancelable> *)messagesWithDialogID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest messagesWithDialogID:forPage:successBlock:errorBlock:]' instead.")));
 
-
-#pragma mark -
-#pragma mark Create message
-
 /**
  Create chat message
+ 
+ @warning *Deprecated in QB iOS SDK 2.1:* Use '+[QBRequest createMessage:successBlock:errorBlock:]' instead.
  
  @param message Entity if a new message
  @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of QBChatDialogResult class.
@@ -652,44 +686,38 @@ typedef enum QBChatServiceError {
 + (NSObject<Cancelable> *)createMessage:(QBChatHistoryMessage *)message delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest createMessage:successBlock:errorBlock:]' instead.")));
 + (NSObject<Cancelable> *)createMessage:(QBChatHistoryMessage *)message delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest createMessage:successBlock:errorBlock:]' instead.")));
 
-
-#pragma mark -
-#pragma mark Update Message
-
 /**
  Update existing chat message - mark it as read
  
+ @warning *Deprecated in QB iOS SDK 2.1:* Use '+[QBRequest updateMessage:successBlock:errorBlock:]' instead.
+ 
  @param message Entity of a chat message to update
- @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of Result class.
+ @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of QBResult class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
 + (NSObject<Cancelable> *)updateMessage:(QBChatHistoryMessage *)message delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest updateMessage:successBlock:errorBlock:]' instead.")));
 + (NSObject<Cancelable> *)updateMessage:(QBChatHistoryMessage *)message delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest updateMessage:successBlock:errorBlock:]' instead.")));
 
-
-#pragma mark -
-#pragma mark Update Messages
-
 /**
  Mark mesasges as read
  
+ @warning *Deprecated in QB iOS SDK 2.1:* Use '+[QBRequest markMessagesAsRead:dialogID:successBlock:errorBlock:]' instead.
+ 
  @param messagesIDs An array of IDs of chat messages to read
  @param dialogID ID of a dialog
- @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of Result class.
+ @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of QBResult class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
 + (NSObject<Cancelable> *)markMessagesAsRead:(NSArray *)messagesIDs dialogID:(NSString *)dialogID delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest markMessagesAsRead:dialogID:successBlock:errorBlock:]' instead.")));
 + (NSObject<Cancelable> *)markMessagesAsRead:(NSArray *)messagesIDs dialogID:(NSString *)dialogID delegate:(NSObject<QBActionStatusDelegate> *)delegate context:(void *)context __attribute__((deprecated("use '+[QBRequest markMessagesAsRead:dialogID:successBlock:errorBlock:]' instead.")));
 
-
-#pragma mark -
-#pragma mark Delete Message
-
 /**
  Delete existing chat message
  
+ @warning *Deprecated in QB iOS SDK 2.1:* Use '+[QBRequest deleteMessageWithID:successBlock:errorBlock:]' instead.
+ 
  @param messageID ID of a message to delete
- @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of Result class.
+ @param delegate An object for callback, must adopt QBActionStatusDelegate protocol. The delegate is retained.  Upon finish of the request, result will be an instance of QBResult class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
 + (NSObject<Cancelable> *)deleteMessageWithID:(NSString *)messageID delegate:(NSObject<QBActionStatusDelegate> *)delegate __attribute__((deprecated("use '+[QBRequest deleteMessageWithID:successBlock:errorBlock:]' instead.")));

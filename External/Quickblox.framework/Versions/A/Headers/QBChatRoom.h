@@ -89,6 +89,11 @@
 - (void)sendMessage:(QBChatMessage *)message;
 
 /**
+ Send message to current room, without join it
+ */
+- (void)sendMessageWithoutJoin:(QBChatMessage *)message;
+
+/**
  Join current room
  */
 - (void)joinRoom;

@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <CoreAudio/CoreAudioTypes.h>
 
 #define kStopVideoChatCallStatus_OpponentDidNotAnswer @"kStopVideoChatCallStatus_OpponentDidNotAnswer"
 #define kStopVideoChatCallStatus_Manually @"kStopVideoChatCallStatus_Manually"
@@ -16,13 +15,14 @@
 /**
  QBChatDelegate protocol definition
  This protocol defines methods signatures for callbacks. Implement this protocol in your class and
- set [QBChat instance].delegate to your implementation instance to receive callbacks from QBChat
+ add [QBChat instance].addDelegate to your implementation instance to receive callbacks from QBChat
  */
 
 @class QBContactList, QBChatRoom, QBChatMessage, QBPrivacyList;
 
 @protocol QBChatDelegate <NSObject>
 @optional
+
 
 #pragma mark -
 #pragma mark Base IM

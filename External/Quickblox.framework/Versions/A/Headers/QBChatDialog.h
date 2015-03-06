@@ -58,4 +58,17 @@
 /** Returns an autoreleased instance of QBChatRoom to join if type = QBChatDialogTypeGroup or QBChatDialogTypePublicGroup. nil otherwise. */
 @property (nonatomic, readonly) QBChatRoom *chatRoom;
 
+
+/** Constructor */
+- (instancetype)initWithDialogID:(NSString *)dialogID;
+
+/** Occupants ids to push to chat dialog. Use for update dialog */
+- (void)setPushOccupantsIDs:(NSArray *)occupantsIDs;
+- (NSArray *)pushOccupantsIDs;
+
+/** Occupants ids to pull. Use for update dialog */
+- (void)setPullOccupantsIDs:(NSArray *)occupantsIDs;
+- (NSArray *)pullOccupantsIDs;
+
+
 @end

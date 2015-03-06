@@ -10,6 +10,5 @@
 #define Quickblox_QBChatHeader_h
 
 #import <Quickblox/QBRequest+QBChat.h>
-#import <Quickblox/QBUpdateDialogParameters.h>
 
 #endif

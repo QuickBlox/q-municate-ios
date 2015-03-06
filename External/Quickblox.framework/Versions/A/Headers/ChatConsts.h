@@ -21,23 +21,31 @@ extern NSString *const kPresenseSubscriptionStateFrom;
 extern NSString *const kPresenseSubscriptionStateBoth;
 
 // video chat control messages
-#define qbvideochat_pattern @"headline"
+#define qbvideochat_pattern @"qbvideochat_"
 #define qbvideochat_call @"qbvideochat_call"
 #define qbvideochat_acceptCall @"qbvideochat_acceptCall"
 #define qbvideochat_rejectCall @"qbvideochat_rejectCall"
 #define qbvideochat_stopCall @"qbvideochat_stopCall"
 #define qbvideochat_sendPublicAddress @"qbvideochat_sendPublicAddress"
-#define qbvideochat_candidate @"qbvideochat_candidate"
-#define qbvideochat_call_parameters_changed @"qbvideochat_callParametersChanged"
-
-#define qbvideochat_signalling_type @"videochat_signaling_type"
-#define qbvideochat_status @"status"
-#define qbvideochat_device_orientation @"device_orientation"
-#define qbvideochat_platform @"platform"
-
 //
 #define qbvideochat_p2pIsNotPossible @"qbvideochat_p2pIsNotPossible"
 #define qbvideochat_sendTURNRelayAddress @"qbvideochat_sendTURNRelayAddress"
+
+
+#define discoItems @"http://jabber.org/protocol/disco#items"
+#define discoInfo @"http://jabber.org/protocol/disco#info"
+#define mucOwner @"http://jabber.org/protocol/muc#owner"
+#define mucAdmin @"http://jabber.org/protocol/muc#admin"
+
+
+#define requestAllRoomsQueryIDPrefix @"561002"
+// 561003
+#define requestRoomInformationQueryIDPrefix @"561004"
+#define requestRoomOnlineUsersQueryIDPrefix @"561005"
+// 561006
+#define requestDestroyRoomQueryIDPrefix @"561007"
+//
+#define requestServiceDiscoveryInformationQueryIDPrefix @"561008"
 
 
 #define qbChatMessageExtraParams @"extraParams"
@@ -47,7 +55,6 @@ extern NSString *const kPresenseSubscriptionStateBoth;
 #define qbChatMessageExtraParamSessionID @"sessionID"
 #define qbChatMessageExtraParamCallType @"callType"
 #define qbChatMessageExtraParamProtocol @"protocol"
-#define qbChatMessageExtraParamSdp @"sdp"
 
 // TCP/UDP video/audio packets tags
 #define sendUDPAudioDataTag 7007

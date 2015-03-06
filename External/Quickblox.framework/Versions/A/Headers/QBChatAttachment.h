@@ -23,13 +23,4 @@
 /** ID of attached element */
 @property (nonatomic, retain) NSString *ID;
 
-/**  */
-@property (nonatomic, retain) NSString *name;
-
-/**  */
-@property (nonatomic, retain) NSString *contentType;
-
-/**  */
-@property (nonatomic) NSUInteger size;
-
 @end

@@ -11,6 +11,7 @@
 
 @class QBChatMessage;
 @class QBChatRoom;
+@class QBXMPPMessage;
 
 @interface QBChatUtils : NSObject
 
@@ -49,6 +50,9 @@
 // Image rotation
 + (CGImageRef)CGImageRotatedByAngle:(CGImageRef)imgRef angle:(CGFloat)angle;
 
+//Extract custom params for headline
++ (NSDictionary *)customParametersFromModuleMessage:(QBXMPPMessage *)moduleMessage;
++ (void)setCustomParametersForModuleMessage:(NSDictionary *)customParameters toXMPPMessage:(QBXMPPMessage *)xmppMessage;
 
 // Extract custom params & attachments
 + (NSMutableDictionary *)customParametersFromXMPPMessage:(id)message;
@@ -57,13 +61,6 @@
 
 // Internet
 + (NSString *)getIPAddress;
-
-
-//WebRTC
-+ (NSString *)preferISAC:(NSString *)origSDP;
-
-+ (NSString *)orientationAsString;
-+ (UIInterfaceOrientation)interfaceOrientationFromString:(NSString *)orientation;
 
 + (void)extractParametersToRequestURL:(NSMutableDictionary *)parameters requestURL:(NSMutableString *)requestURL;
 

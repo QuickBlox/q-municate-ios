@@ -12,7 +12,6 @@
 @class QBResponsePage;
 @class QBChatHistoryMessage;
 @class QBChatDialog;
-@class QBUpdateDialogParameters;
 
 @interface QBRequest (QBChat)
 
@@ -52,12 +51,17 @@
 /**
  Update existing chat dialog
  
- @param updateDialogParameters Set of dialog parameters to update
+ @param dialog. Set of dialog parameters to update
  @param successBlock Block with response and updated chat dialog instances if request succeded
  @param errorBlock Block with response instance if request failed
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-+ (QBRequest *)updateDialog:(QBUpdateDialogParameters *)updateDialogParameters successBlock:(void(^)(QBResponse *response, QBChatDialog *updatedDialog))successBlock errorBlock:(QBRequestErrorBlock)errorBlock;
++ (QBRequest *)updateDialog:(QBChatDialog *)dialog  successBlock:(void (^)(QBResponse *, QBChatDialog *))successBlock errorBlock:(QBRequestErrorBlock)errorBlock;
+
+/**
+ *
+ */
++ (QBRequest *)deleteDialogWithID:(NSString *)dialogID successBlock:(void(^)(QBResponse *responce))successBlock errorBlock:(QBRequestErrorBlock)errorBlock;
 
 /**
  Retrieve first 100 chat messages within particular dialog
@@ -123,5 +127,8 @@
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
 + (QBRequest *)deleteMessageWithID:(NSString *)messageID successBlock:(void(^)(QBResponse *response))successBlock errorBlock:(QBRequestErrorBlock)errorBlock;
+
+
++ (QBRequest *)deleteMessagesWithIDs:(NSArray *)messageIDs successBlock:(void(^)(QBResponse *responce))successBlock errorBlock:(QBRequestErrorBlock)errorBlock;
 
 @end

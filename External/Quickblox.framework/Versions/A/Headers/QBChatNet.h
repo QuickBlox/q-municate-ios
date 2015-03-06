@@ -22,6 +22,3 @@
 #import <Quickblox/QBChatHistoryMessageResult.h>
 #import <Quickblox/QBDialogsPagedResult.h>
 #import <Quickblox/QBChatMessageResult.h>
-
-#import <Quickblox/QBVideoView.h>
-#import <Quickblox/QBWebRTCVideoChat.h>
