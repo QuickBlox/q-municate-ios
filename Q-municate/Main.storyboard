@@ -465,7 +465,7 @@ Line 2</string>
         <!--Video Call Controller-->
         <scene sceneID="F51-fD-lO4">
             <objects>
-                <viewController id="ouq-Kw-WJb" customClass="QMVideoCallController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="VideoCallIdentifier" id="ouq-Kw-WJb" customClass="QMVideoCallController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zdH-fi-T39"/>
                         <viewControllerLayoutGuide type="bottom" id="fvG-tF-pe0"/>
@@ -3263,7 +3263,7 @@ Cg
         <!--Audio Call Controller-->
         <scene sceneID="2UV-Sz-Uky">
             <objects>
-                <viewController id="DrB-Lv-9YV" customClass="QMAudioCallController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AudioCallIdentifier" id="DrB-Lv-9YV" customClass="QMAudioCallController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="4Lt-gF-Zwx"/>
                         <viewControllerLayoutGuide type="bottom" id="mZx-KD-gmG"/>
@@ -3434,7 +3434,7 @@ Cg
         <segue reference="kkU-F4-K0a"/>
         <segue reference="qsg-NO-Ors"/>
         <segue reference="VIK-5Z-bdZ"/>
-        <segue reference="sPU-d9-maS"/>
-        <segue reference="M45-HY-t12"/>
+        <segue reference="aeV-0O-de3"/>
+        <segue reference="bOV-zd-nKn"/>
     </inferredMetricsTieBreakers>
 </document>

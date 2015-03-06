@@ -13,6 +13,8 @@
 
 @interface QMIncomingCallController : UIViewController
 
+@property (weak, nonatomic) QBRTCSession *session;
+
 @property (strong, nonatomic) QMIncomingCallHandler *callsHandler;
 
 @property (assign, nonatomic) NSUInteger opponentID;
