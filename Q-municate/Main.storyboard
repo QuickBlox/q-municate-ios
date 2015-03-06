@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RkR-TS-K9a">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="RkR-TS-K9a">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -3433,8 +3433,8 @@ Cg
     <inferredMetricsTieBreakers>
         <segue reference="kkU-F4-K0a"/>
         <segue reference="qsg-NO-Ors"/>
-        <segue reference="IAo-qy-uHQ"/>
-        <segue reference="aeV-0O-de3"/>
-        <segue reference="bOV-zd-nKn"/>
+        <segue reference="VIK-5Z-bdZ"/>
+        <segue reference="sPU-d9-maS"/>
+        <segue reference="M45-HY-t12"/>
     </inferredMetricsTieBreakers>
 </document>

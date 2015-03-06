@@ -8,9 +8,9 @@ MACHINE_DIR="${PROJECT_DIR}/Q-municate/Classes/CoreData/EntriesMachine"
 INCLUDE_H="${PROJECT_DIR}/Q-municate/Classes/CoreData/ModelIncludes.h"
 
 curVer=`/usr/libexec/PlistBuddy "${INPUT_FILE_PATH}/.xccurrentversion" -c 'print _XCCurrentVersionName'`
-mogenerator = mogenerator
+#mogenerator = mogenerator
 
-#mogenerator=/usr/local/bin/mogenerator
+mogenerator=/usr/local/bin/mogenerator
 
 echo $mogenerator --model \"$COREDATA_DIR/$curVer\" --machine-dir "$MACHINE_DIR/" --human-dir "$HUMAN_DIR/" --includeh "$INCLUDE_H" --template-var arc=true
 $mogenerator --model "${INPUT_FILE_PATH}/$curVer" --machine-dir "$MACHINE_DIR/" --human-dir "$HUMAN_DIR/" --includeh "$INCLUDE_H" --template-var arc=true

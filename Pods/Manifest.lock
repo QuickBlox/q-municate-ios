@@ -1,11 +1,11 @@
 PODS:
   - AFNetworking (2.2.4):
-    - AFNetworking/NSURLConnection
-    - AFNetworking/NSURLSession
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-    - AFNetworking/UIKit
+    - AFNetworking/NSURLConnection (= 2.2.4)
+    - AFNetworking/NSURLSession (= 2.2.4)
+    - AFNetworking/Reachability (= 2.2.4)
+    - AFNetworking/Security (= 2.2.4)
+    - AFNetworking/Serialization (= 2.2.4)
+    - AFNetworking/UIKit (= 2.2.4)
   - AFNetworking/NSURLConnection (2.2.4):
     - AFNetworking/Reachability
     - AFNetworking/Security
@@ -28,7 +28,7 @@ PODS:
   - Parus (1.0)
   - Reachability (3.2)
   - SDWebImage (3.7.1):
-    - SDWebImage/Core
+    - SDWebImage/Core (= 3.7.1)
   - SDWebImage/Core (3.7.1)
   - SSKeychain (1.2.2)
   - StaticDataTableViewController (2.0.3)
@@ -61,4 +61,4 @@ SPEC CHECKSUMS:
   SVProgressHUD: da7a49e789af645d9279ffbca62318945a832438
   UIDevice-Hardware: df983265bb5c6f3f66d63c29841a1d6649b1c8f4
 
-COCOAPODS: 0.34.4
+COCOAPODS: 0.36.0.beta.2
