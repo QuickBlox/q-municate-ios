@@ -42,7 +42,7 @@ typedef void (^QBChatDialogResultBlock)(QBChatDialogResult *result);
 typedef void (^QBChatHistoryMessageResultBlock)(QBChatHistoryMessageResult *result);
 typedef void (^UIApplicationDeviceTokenBlock)(NSData *deviceToken);
 
-typedef void (^QBResultBlock)(Result *result);
+typedef void (^QBResultBlock)(QBResult *result);
 typedef void (^QBSessionCreationBlock)(BOOL success, NSString *error);
 typedef void (^QBChatResultBlock)(BOOL success);
 typedef void (^QBChatRoomResultBlock)(QBChatRoom *chatRoom, NSError *error);

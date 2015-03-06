@@ -111,7 +111,7 @@
     
     __weak __typeof(self)weakSelf = self;
     
-    [weakSelf.usersService resetUserPasswordWithEmail:email completion:^(Result *result) {
+    [weakSelf.usersService resetUserPasswordWithEmail:email completion:^(QBResult *result) {
         completion([weakSelf checkResult:result]);
     }];
 }

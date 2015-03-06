@@ -29,13 +29,13 @@ static QBEchoObject *instance = nil;
     return Block_copy((__bridge void*)originBlock);
 }
 
-- (void)completedWithResult:(Result *)result context:(void *)contextInfo
+- (void)completedWithResult:(QBResult *)result context:(void *)contextInfo
 {
-    ((__bridge void (^)(Result * result))(contextInfo))(result);
+    ((__bridge void (^)(QBResult * result))(contextInfo))(result);
     Block_release(contextInfo);
 }
 
-- (void)completedWithResult:(Result *)result
+- (void)completedWithResult:(QBResult *)result
 {
 	
 }

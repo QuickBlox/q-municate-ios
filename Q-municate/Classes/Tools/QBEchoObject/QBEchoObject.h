@@ -27,9 +27,9 @@
  *
  */
 
-@class Result;
+@class QBResult;
 
-typedef void (^QBResultBlock)(Result *);
+typedef void (^QBResultBlock)(QBResult *);
 
 @interface QBEchoObject : NSObject<QBActionStatusDelegate>
 

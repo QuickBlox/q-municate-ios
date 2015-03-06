@@ -40,7 +40,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 
 + (instancetype)instance;
 
-- (BOOL)checkResult:(Result *)result;
+- (BOOL)checkResult:(QBResult *)result;
 
 - (void)startServices;
 - (void)stopServices;

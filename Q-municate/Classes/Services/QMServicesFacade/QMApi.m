@@ -230,7 +230,7 @@ const NSTimeInterval kQMPresenceTime = 30;
     }];
 }
 
-- (BOOL)checkResult:(Result *)result {
+- (BOOL)checkResult:(QBResult *)result {
     
     if (!result.success) {
         [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
