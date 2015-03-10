@@ -8,7 +8,7 @@
 
 #import "QMAudioCallController.h"
 
-@interface QMAudioCallController ()
+@interface QMAudioCallController ()<QBRTCClientDelegate>
 
 @end
 
@@ -16,13 +16,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [QBRTCClient.instance addDelegate:self];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
 
-#pragma mark - Overriden actions
+#pragma mark - Overridden actions
 
 - (IBAction)leftControlTapped:(id)sender {
     //
@@ -40,7 +41,7 @@
 #pragma mark - Overriden methods
 
 - (void)startCall {
-    [[QMApi instance] callUser:self.opponent.ID opponentView:self.opponentsView conferenceType:QBVideoChatConferenceTypeAudio];
+    [[QMApi instance] callToUser:self.opponentID conferenceType:QBConferenceTypeAudio];
     [QMSoundManager playCallingSound];
 }
 
@@ -51,17 +52,6 @@
 }
 
 #pragma mark - Protocol
-
-- (void)callAcceptedByUser {
-    // stop playing sound:
-    [[QMSoundManager shared] stopAllSounds];
-    [self callStartedWithUser];
-}
-
-- (void)callStartedWithUser {
-    
-    [self startCallDurationTimer];
-}
 
 - (void)callStoppedByOpponentForReason:(NSString *)reason {
     
@@ -79,4 +69,32 @@
     [self.contentView stopTimer];
 }
 
+#pragma mark QBRTCSession delegate -
+
+- (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID{
+    [[QMSoundManager shared] stopAllSounds];
+    [self startCallDurationTimer];
+}
+
+- (void)session:(QBRTCSession *)session disconnectTimeoutForUser:(NSNumber *)userID{
+    [super callStoppedByOpponentForReason:kStopVideoChatCallStatus_OpponentDidNotAnswer];
+}
+
+- (void)session:(QBRTCSession *)session rejectedByUser:(NSNumber *)userID userInfo:(NSDictionary *)userInfo{
+    [super callStoppedByOpponentForReason:kStopVideoChatCallStatus_Manually];
+}
+
+- (void)session:(QBRTCSession *)session disconnectedFromUser:(NSNumber *)userID{
+    [self stopCallDurationTimer];
+    [super callStoppedByOpponentForReason:nil];
+}
+
+- (void)session:(QBRTCSession *)session hungUpByUser:(NSNumber *)userID{
+    [self stopCallDurationTimer];
+    [super callStoppedByOpponentForReason:nil];
+}
+
+- (void)dealloc{
+    [QBRTCClient.instance removeDelegate:self];
+}
 @end

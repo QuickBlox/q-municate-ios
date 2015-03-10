@@ -104,7 +104,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     
     if (item) { //friend if YES
         self.status.text = NSLocalizedString(item.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
-        self.onlineCircle.hidden = item.online ? NO : YES;
+        self.onlineCircle.hidden = !item.online;
     }
 }
 
@@ -114,17 +114,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    if ([segue.identifier isEqualToString:kVideoCallSegueIdentifier]) {
-        
-        QMVideoCallController *videoCallVC = segue.destinationViewController;
-        [videoCallVC setOpponent:self.selectedUser];
-        
-    } else if ([segue.identifier isEqualToString:kAudioCallSegueIdentifier]) {
-        
-        QMVideoCallController *audioCallVC = segue.destinationViewController;
-        [audioCallVC setOpponent:self.selectedUser];
-        
-    } else if ([segue.identifier isEqualToString:kChatViewSegueIdentifier]) {
+    if ([segue.identifier isEqualToString:kChatViewSegueIdentifier]) {
         
         QMChatViewController *chatController = segue.destinationViewController;
         chatController.dialog = sender;
@@ -143,8 +133,8 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
         case QMCallTypePhone: break;
             
 #if QM_AUDIO_VIDEO_ENABLED
-        case QMCallTypeVideo:[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil]; break;
-        case QMCallTypeAudio: [self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil]; break;
+        case QMCallTypeVideo:[[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBConferenceTypeVideo]; break;
+        case QMCallTypeAudio: [[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBConferenceTypeAudio]; break;
         case QMCallTypeChat: {
 #else
         case QMCallTypeVideo: {

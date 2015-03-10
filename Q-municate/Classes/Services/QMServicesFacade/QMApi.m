@@ -9,21 +9,17 @@
 #import "QMApi.h"
 
 #import "QMSettingsManager.h"
-#import "QMFacebookService.h"
 #import "QMAuthService.h"
 #import "QMUsersService.h"
 #import "QMChatDialogsService.h"
 #import "QMContentService.h"
-#import "QMAVCallService.h"
+#import "QMAVCallManager.h"
 #import "QMMessagesService.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMChatReceiver.h"
 #import <Reachability.h>
 #import "QMPopoversFactory.h"
-#import "QMSettingsManager.h"
 #import "QMMainTabBarController.h"
-
-#import <SVProgressHUD.h>
 
 const NSTimeInterval kQMPresenceTime = 30;
 
@@ -32,7 +28,7 @@ const NSTimeInterval kQMPresenceTime = 30;
 @property (strong, nonatomic) QMAuthService *authService;
 @property (strong, nonatomic) QMSettingsManager *settingsManager;
 @property (strong, nonatomic) QMUsersService *usersService;
-@property (strong, nonatomic) QMAVCallService *avCallService;
+@property (strong, nonatomic) QMAVCallManager *avCallManager;
 @property (strong, nonatomic) QMChatDialogsService *chatDialogsService;
 @property (strong, nonatomic) QMMessagesService *messagesService;
 @property (strong, nonatomic) QMChatReceiver *responceService;
@@ -73,12 +69,12 @@ const NSTimeInterval kQMPresenceTime = 30;
     
     self = [super init];
     if (self) {
+        self.avCallManager = [[QMAVCallManager alloc] init];
         self.messagesService = [[QMMessagesService alloc] init];
         self.authService = [[QMAuthService alloc] init];
         self.usersService = [[QMUsersService alloc] init];
         self.chatDialogsService = [[QMChatDialogsService alloc] init];
         self.settingsManager = [[QMSettingsManager alloc] init];
-        self.avCallService = [[QMAVCallService alloc] init];
         self.contentService = [[QMContentService alloc] init];
         self.internetConnection = [Reachability reachabilityForInternetConnection];
     
@@ -188,7 +184,7 @@ const NSTimeInterval kQMPresenceTime = 30;
     [self.messagesService start];
     [self.usersService start];
     [self.chatDialogsService start];
-    [self.avCallService start];
+    [self.avCallManager start];
 }
 
 - (void)stopServices {
@@ -197,7 +193,7 @@ const NSTimeInterval kQMPresenceTime = 30;
     [self.usersService stop];
     [self.chatDialogsService stop];
     [self.messagesService stop];
-    [self.avCallService stop];
+    [self.avCallManager stop];
 }
 
 - (void)fetchAllHistory:(void(^)(void))completion {

@@ -10,7 +10,6 @@
 
 @class QMIncomingCallHandler;
 
-
 @interface QMIncomingCallController : UIViewController
 
 @property (weak, nonatomic) QBRTCSession *session;
@@ -18,7 +17,7 @@
 @property (strong, nonatomic) QMIncomingCallHandler *callsHandler;
 
 @property (assign, nonatomic) NSUInteger opponentID;
-@property (assign, nonatomic) enum QBVideoChatConferenceType callType;
+@property (assign, nonatomic) QBConferenceType callType;
 @property (strong, nonatomic) QBUUser *opponent;
 
 - (void)setCallStatus:(NSString *)callStatus;

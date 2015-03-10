@@ -64,7 +64,7 @@
 
 // Override this method in child:
 - (void)confirmCall {
-    [[QMApi instance] acceptCallFromUser:self.opponent.ID opponentView:self.opponentsView];
+    [[QMApi instance] acceptCall];
 }
 
 // Override this method in child:
@@ -82,7 +82,6 @@
     
 //    self.opponentsView.hidden = YES;
     [QMSoundManager playEndOfCallSound];
-    [self dismissCallsController];
 }
 
 #pragma mark - Calls notifications
@@ -92,18 +91,15 @@
 }
 
 // Override this method in child:
-- (void)callStartedWithUser {
-}
+
 
 - (void)callRejectedByUser {
     
 //    self.opponentsView.hidden = YES;
     
-    
     [self.contentView updateViewWithStatus:NSLocalizedString(@"QM_STR_USER_IS_BUSY", nil)];
     [[QMSoundManager shared] stopAllSounds];
     [QMSoundManager playBusySound];
-    [self dismissCallsController];
 }
 
 - (void)callStoppedByOpponentForReason:(NSString *)reason {
@@ -123,22 +119,6 @@
     } else {
         [self.contentView updateViewWithStatus:NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil)];
         [QMSoundManager playEndOfCallSound];
-    }
-    [self dismissCallsController];
-}
-
-- (void)dismissCallsController {
-    
-    [[QMSoundManager shared] stopAllSounds];
-    
-    if (self.isOpponentCaller) {
-        AppDelegate *delegate = [UIApplication sharedApplication].delegate;
-        [delegate.incomingCallService hideIncomingCallController];
-    }
-    else {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-           [self dismissViewControllerAnimated:YES completion:nil];
-        });
     }
 }
 

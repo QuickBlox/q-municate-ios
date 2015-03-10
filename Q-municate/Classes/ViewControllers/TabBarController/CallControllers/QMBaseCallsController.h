@@ -22,7 +22,7 @@
 
 /** Content View */
 @property (weak, nonatomic) IBOutlet QMContentView *contentView;
-@property (nonatomic, weak)  QBVideoView *opponentsView;
+@property (nonatomic, weak)  QBGLVideoView *opponentsView;
 
 @property (nonatomic, strong) QBUUser *opponent;
 

@@ -14,7 +14,7 @@
 @class QMFacebookService;
 @class QMUsersService;
 @class QMChatDialogsService;
-@class QMAVCallService;
+@class QMAVCallManager;
 @class QMMessagesService;
 @class QMChatReceiver;
 @class QMContentService;
@@ -27,7 +27,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 @property (strong, nonatomic, readonly) QMAuthService *authService;
 @property (strong, nonatomic, readonly) QMSettingsManager *settingsManager;
 @property (strong, nonatomic, readonly) QMUsersService *usersService;
-@property (strong, nonatomic, readonly) QMAVCallService *avCallService;
+@property (strong, nonatomic, readonly) QMAVCallManager *avCallManager;
 @property (strong, nonatomic, readonly) QMChatDialogsService *chatDialogsService;
 @property (strong, nonatomic, readonly) QMMessagesService *messagesService;
 @property (strong, nonatomic, readonly) QMChatReceiver *responceService;
@@ -315,9 +315,9 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  */
 @interface QMApi (Calls)
 
-- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView conferenceType:(enum QBVideoChatConferenceType)conferenceType;
-- (void)acceptCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView;
-- (void)rejectCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView;
+- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBConferenceType)conferenceType;
+- (void)acceptCall;
+- (void)rejectCall;
 - (void)finishCall;
 
 @end

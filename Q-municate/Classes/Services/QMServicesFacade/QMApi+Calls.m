@@ -8,27 +8,28 @@
 
 #import "QMApi.h"
 #import "QMAVCallService.h"
+#import "QMAVCallManager.h"
 
 @implementation QMApi (Calls)
 
-- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView conferenceType:(enum QBVideoChatConferenceType)conferenceType
+- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBConferenceType)conferenceType
 {
-    [self.avCallService callToUser:userID opponentView:opponentView conferenceType:conferenceType];
+    [self.avCallManager callToUsers:@[userID] withConferenceType:conferenceType];
 }
 
-- (void)acceptCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView
+- (void)acceptCall
 {
-    [self.avCallService acceptCallFromUser:userID andOpponentView:opponentView];
+    [self.avCallManager acceptCall];
 }
 
-- (void)rejectCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView
+- (void)rejectCall
 {
-    [self.avCallService rejectCallFromUser:userID andOpponentView:opponentView];
+    [self.avCallManager rejectCall];
 }
 
 - (void)finishCall
 {
-    [self.avCallService finishCallFromOpponent];
+    [self.avCallManager hangUpCall];
 }
 
 @end
