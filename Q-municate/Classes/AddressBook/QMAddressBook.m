@@ -45,11 +45,13 @@
 
                         ABRecordID contactID = ABRecordGetRecordID(ref);
                         
-                        ABPerson *person = [[ABPerson alloc] initWithRecordID:contactID addressBookRef:addressBook];
+                        ABPerson *person = [[ABPerson alloc] initWithRecordID:contactID
+                                                               addressBookRef:addressBook];
                         [persons addObject:person];
                     }
                     CFRelease(peoples);
                 }
+                
                 dispatch_async(dispatch_get_main_queue(), ^{
                     block(persons, YES, nil);
                 });

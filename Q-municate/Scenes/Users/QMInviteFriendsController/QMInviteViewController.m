@@ -11,6 +11,9 @@
 #import "REMessageUI.h"
 #import "SVProgressHUD.h"
 
+NSString const *kMailSubjectString = @"Q-municate";
+NSString const *kMailBodyString = @"<a href='http://quickblox.com/'>Join us in Q-municate!</a>";
+
 @interface QMInviteViewController ()
 
 <QBActionStatusDelegate, MFMailComposeViewControllerDelegate, QMCheckBoxStateDelegate>
@@ -50,8 +53,8 @@
         [REMailComposeViewController present:^(REMailComposeViewController *mailVC) {
             
             [mailVC setToRecipients:abEmails];
-            [mailVC setSubject:kMailSubjectString];
-            [mailVC setMessageBody:kMailBodyString isHTML:YES];
+//            [mailVC setSubject:kMailSubjectString];
+//            [mailVC setMessageBody:kMailBodyString isHTML:YES];
             [weakSelf presentViewController:mailVC animated:YES completion:nil];
             
         } finish:^(MFMailComposeResult result, NSError *error) {
@@ -63,7 +66,12 @@
             }
 #warning Reachability case needed also!
             else if (result == MFMailComposeResultFailed && !error) {
-                [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"QM_STR_MAIL_COMPOSER_ERROR_DESCRIPTION_FOR_INVITE", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) otherButtonTitles:nil] show];
+                
+                [[[UIAlertView alloc] initWithTitle:nil
+                                            message:NSLocalizedString(@"QM_STR_MAIL_COMPOSER_ERROR_DESCRIPTION_FOR_INVITE", nil)
+                                           delegate:nil
+                                  cancelButtonTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+                                  otherButtonTitles:nil] show];
                 
             } else if (result == MFMailComposeResultFailed && error) {
                 [SVProgressHUD showErrorWithStatus:@"Error"];

@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import "QMSignUpController.h"
+#import "QMSignUpVC.h"
 #import "QMLicenseAgreement.h"
 #import "UIImage+Cropper.h"
 #import "REAlertView+QMSuccess.h"
@@ -15,28 +15,21 @@
 #import "REActionSheet.h"
 #import "QMServicesManager.h"
 
-@interface QMSignUpController ()
+@interface QMSignUpVC ()
 
 @property (weak, nonatomic) IBOutlet UITextField *fullNameField;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
-@property (weak, nonatomic) IBOutlet UIImageView *userImage;
+@property (weak, nonatomic) IBOutlet UIButton *chooseUserPictureBtn;
 
 @property (strong, nonatomic) UIImage *cachedPicture;
 
 @end
 
-@implementation QMSignUpController
+@implementation QMSignUpVC
 
 - (void)dealloc {
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    self.userImage.layer.cornerRadius = self.userImage.frame.size.width / 2;
-    self.userImage.layer.masksToBounds = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -62,7 +55,8 @@
                           allowsEditing:YES
                                  result:^(UIImage *image)
      {
-         [weakSelf.userImage setImage:image];
+         [weakSelf.chooseUserPictureBtn setImage:image
+                                        forState:UIControlStateNormal];
          weakSelf.cachedPicture = image;
      }];
 }
@@ -86,8 +80,9 @@
         
         __weak __typeof(self)weakSelf = self;
         [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self
-                                                            completion:^(BOOL userAgreementSuccess)
-         {
+                                                            completion:
+         ^(BOOL userAgreementSuccess) {
+             
              if (userAgreementSuccess) {
                  
                  QBUUser *newUser = [QBUUser user];
@@ -110,14 +105,14 @@
                           [QM.profile synchronizeWithUserData:userProfile];
                           //Upload user image
                           [QM.profile updateUserImage:weakSelf.cachedPicture
-                                                 progress:^(float progress)
+                                             progress:^(float progress)
                            {
                                
                            } completion:^(BOOL success) {
                                
-                               [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier
-                                                         sender:nil];
-                           }];    
+                               [weakSelf performSegueWithIdentifier:kSceneSegueChat
+                                                             sender:nil];
+                           }];
                       }
                       
                       [SVProgressHUD dismiss];

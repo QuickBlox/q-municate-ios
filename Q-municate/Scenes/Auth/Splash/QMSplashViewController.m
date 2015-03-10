@@ -9,32 +9,14 @@
 #import "QMSplashViewController.h"
 #import "QMServicesManager.h"
 
-@interface QMSplashViewController ()
-
-@property (weak, nonatomic) IBOutlet UIImageView *splashLogoView;
-
-@end
-
 @implementation QMSplashViewController
 
 - (void)viewDidLoad {
     
     [super viewDidLoad];
 
-//    if (QM.profile.userData) {
-//        
-//        [self performSegueWithIdentifier:kTabBarSegueIdnetifier
-//                                  sender:nil];
-//    }
-//    else {
-//        [self performSegueWithIdentifier:kWelcomeScreenSegueIdentifier
-//                                  sender:nil];
-//        
-//    }
-    
-    [self performSegueWithIdentifier:kWelcomeScreenSegueIdentifier
+    [self performSegueWithIdentifier:QM.profile.userData ? kSceneSegueChat : kSceneSegueAuth
                               sender:nil];
-
 }
 
 @end

@@ -1,5 +1,5 @@
 //
-//  SplashControllerViewController.h
+//  QMWelcomeScreenViewController.h
 //  Q-municate
 //
 //  Created by Igor Alefirenko on 13/02/2014.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface QMWelcomeScreenViewController : UIViewController
+@interface QMWelcomeVC : UIViewController
 
 @end

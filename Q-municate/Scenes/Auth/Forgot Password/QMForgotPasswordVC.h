@@ -1,5 +1,5 @@
 //
-//  QMForgotPasswordTVC.h
+//  QMForgotPasswordVC.h
 //  Q-municate
 //
 //  Created by Andrey Ivanov on 30.06.14.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface QMForgotPasswordTVC : UITableViewController
+@interface QMForgotPasswordVC : UITableViewController
 
 @end

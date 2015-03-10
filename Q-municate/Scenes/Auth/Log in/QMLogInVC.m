@@ -40,13 +40,6 @@
                                              animated:animated];
 }
 
-#pragma mark - Actions
-
-- (IBAction)hideKeyboard:(id)sender {
-    
-    [sender resignFirstResponder];
-}
-
 - (IBAction)logIn:(id)sender {
     
     NSString *email = self.emailField.text;
@@ -78,42 +71,11 @@
                      [QM.profile synchronizeWithUserData:userProfile];
                  }
                  
-                 [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier
+                 [weakSelf performSegueWithIdentifier:kSceneSegueChat
                                            sender:nil];
              }
          }];
     }
-}
-
-- (IBAction)connectWithFacebook:(id)sender {
-    
-    [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self
-                                                        completion:^(BOOL success)
-    {
-        if (success) {
-            __weak __typeof(self)weakSelf = self;
-            [QM.authService logInWithFacebookSessionToken:@""
-                                               completion:^(QBResponse *response, QBUUser *userProfile)
-             {
-                 [SVProgressHUD dismiss];
-                 
-                 if (response.success) {
-                     
-                     if (weakSelf.rememberMeSwitch.on) {
-                         
-                         [QM.profile synchronizeWithUserData:userProfile];
-                     }
-                     
-                     [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier
-                                               sender:nil];
-                 }
-				else {
-
-					[REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FACEBOOK_LOGIN_FALED_ALERT_TEXT", nil) actionSuccess:NO];
-				}
-             }];
-        }
-    }];
 }
 
 @end

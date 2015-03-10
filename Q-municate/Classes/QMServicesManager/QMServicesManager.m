@@ -12,7 +12,20 @@ const NSTimeInterval kQMPresenceTimeInterval = 45;
 NSString *const kQMChatCacheStoreName = @"QMCahtCacheStorage";
 NSString *const kQMContactListCacheStoreName = @"QMContactListStorage";
 
-QMServicesManager *qmServices(void) {
+@interface QMServicesManager()
+
+<QMServiceDataDelegate, QMChatServiceDelegate, QMContactListServiceDelegate, QMContactListServiceCacheDelegate, QMChatServiceCacheDelegate >
+
+@property (strong, nonatomic) QMAuthService *authService;
+@property (strong, nonatomic) QMChatService *chatService;
+@property (strong, nonatomic) QMContactListService *contactListService;
+@property (strong, nonatomic) QMProfile *profile;
+
+@end
+
+@implementation QMServicesManager
+
++ (instancetype)instance {
     
     static QMServicesManager *_sharedQMServicesManager = nil;
     static dispatch_once_t onceToken;
@@ -29,41 +42,29 @@ QMServicesManager *qmServices(void) {
     return _sharedQMServicesManager;
 }
 
-@interface QMServicesManager()
-
-<QMServiceDataDelegate, QMChatServiceDelegate, QMContactListServiceDelegate, QMContactListServiceCacheDelegate, QMChatServiceCacheDelegate >
-
-@property (strong, nonatomic) QMAuthService *authService;
-@property (strong, nonatomic) QMChatService *chatService;
-@property (strong, nonatomic) QMContactListService *contactListService;
-@property (strong, nonatomic) QMProfile *profile;
-
-@end
-
-@implementation QMServicesManager
-
 - (instancetype)init {
     
     self = [super init];
-   
+    
     if (self) {
         
         self.profile = [QMProfile profile];
         
         [self cacheSetup];
         
-        self.authService = [[QMAuthService alloc] initWithServiceDataDelegate:self];
+        self.authService =
+        [[QMAuthService alloc] initWithServiceDataDelegate:self];
         
-        self.chatService = [[QMChatService alloc] initWithServiceDataDelegate:self
-                                                                cacheDelegate:self];
+        self.chatService =
+        [[QMChatService alloc] initWithServiceDataDelegate:self
+                                             cacheDelegate:self];
         
-        self.contactListService = [[QMContactListService alloc] initWithServiceDataDelegate:self
-                                                                              cacheDelegate:self];
+        self.contactListService =
+        [[QMContactListService alloc] initWithServiceDataDelegate:self
+                                                    cacheDelegate:self];
         
         [self.chatService addDelegate:self];
         [self.contactListService addDelegate:self];
-        
-        
     }
     
     return self;
@@ -155,7 +156,7 @@ QMServicesManager *qmServices(void) {
 
 - (void)contactListService:(QMContactListService *)contactListService
       contactListDidChange:(QBContactList *)contactList {
-
+    
     [[QMContactListCache instance] insertOrUpdateContactListItemsWithContactList:contactList
                                                                       completion:nil];
 }
@@ -176,7 +177,7 @@ QMServicesManager *qmServices(void) {
                didAddUsers:(NSArray *)users {
     
     [[QMContactListCache instance] insertOrUpdateUsers:users
-                                           completion:nil];
+                                            completion:nil];
 }
 
 - (void)contactListService:(QMContactListService *)contactListService

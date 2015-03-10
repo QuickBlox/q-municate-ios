@@ -12,11 +12,13 @@
 
 @class QMServicesManager;
 
-#define QM qmServices()
+#define QM [QMServicesManager instance]
 
 QMServicesManager *qmServices(void);
 
 @interface QMServicesManager : NSObject
+
++ (instancetype)instance;
 
 @property (strong, nonatomic, readonly) QMAuthService *authService;
 @property (strong, nonatomic, readonly) QMChatService *chatService;

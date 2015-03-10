@@ -12,12 +12,13 @@
 #import "REAlertView.h"
 #import "QMServicesManager.h"
 #import "REAlertView+QMSuccess.h"
+#import "QMFacebook.h"
 
-@interface QMWelcomeScreenViewController ()
+@interface QMWelcomeVC ()
 
 @end
 
-@implementation QMWelcomeScreenViewController
+@implementation QMWelcomeVC
 
 - (void)dealloc {
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
@@ -38,38 +39,39 @@
 
 - (IBAction)connectWithFacebook:(id)sender {
     
-    [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self
-                                                        completion:^(BOOL success)
-     {
-         if (success) {
-             
-             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-             
-             [QM.authService logInWithFacebookSessionToken:@""
-                                                completion:^(QBResponse *response, QBUUser *tUser)
-              {
-                  
-                  [SVProgressHUD dismiss];
-                  if (response.success) {
-                      
-                      [self performSegueWithIdentifier:kTabBarSegueIdnetifier
-                                                sender:nil];
-                  }
-              }];
-         }
-     }];
-}
-
-- (IBAction)signUpWithEmail:(id)sender {
-    
-    [self performSegueWithIdentifier:kSignUpSegueIdentifier
-                              sender:nil];
-}
-
-- (IBAction)pressAlreadyBtn:(id)sender {
-    
-    [self performSegueWithIdentifier:kLogInSegueSegueIdentifier
-                              sender:nil];
+    __weak __typeof(self)weakSelf = self;
+    [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL success) {
+        //User acceted user greement
+        if (success) {
+            
+            [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+            // Get facebook session token
+            QMFacebook *facebook = [[QMFacebook alloc] init];
+            [facebook openSession:^(NSString *sessionToken) {
+                
+                if (!sessionToken) {
+                    
+                    [SVProgressHUD showErrorWithStatus:@""];
+                }
+                else {
+                    // Singin or login
+                    [QM.authService logInWithFacebookSessionToken:sessionToken completion:^(QBResponse *response, QBUUser *tUser) {
+                        
+                        [SVProgressHUD dismiss];
+                        if (response.success) {
+                            
+                            [weakSelf performSegueWithIdentifier:kSceneSegueChat
+                                                          sender:nil];
+                        }
+                        else {
+                            
+                            [SVProgressHUD showErrorWithStatus:response.error.error.localizedDescription];
+                        }
+                    }];
+                }
+            }];
+        }
+    }];
 }
 
 @end

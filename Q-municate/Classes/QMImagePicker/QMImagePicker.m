@@ -30,7 +30,6 @@
     QMImagePicker *picker = [[QMImagePicker alloc] init];
     picker.result = result;
     configure(picker);
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     [vc presentViewController:picker animated:YES completion:nil];
 }
 
@@ -49,7 +48,7 @@
     UIImage *image = info[key];
     
     [picker dismissViewControllerAnimated:YES completion:^{
-        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+        
         self.result(image);
         self.result = nil;
     }];
@@ -58,7 +57,6 @@
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     
     [picker dismissViewControllerAnimated:YES completion:^{
-        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
         self.result = nil;
     }];
 }
@@ -76,7 +74,6 @@
             
         } result:result];
     };
-    
     
     [REActionSheet presentActionSheetInView:viewController.view configuration:^(REActionSheet *actionSheet) {
         

@@ -129,12 +129,13 @@
 }
 
 - (BOOL)isEqual:(ABPerson *)other {
-    BOOL equal = (other == self || self.recordID == other.recordID || [self.emails isEqualToArray:other.emails]) ? YES : NO;
+    
+    BOOL equal = (other == self || self.recordID == other.recordID || [self.emails isEqualToArray:other.emails]);
     return equal;
-//    return (other == self || self.recordID == other.recordID || [self.emails isEqualToArray:other.emails]) ? YES : NO;
 }
 
 - (NSString *)description {
+    
     return [NSString stringWithFormat:@"%@", [self emails]];
 }
 

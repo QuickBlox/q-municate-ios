@@ -27,7 +27,6 @@ NSString *const kQMAuthorizationKey = @"WzrAY7vrGmbgFfP";
 NSString *const kQMAuthorizationSecret = @"xS2uerEveGHmEun";
 NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 #endif
-
 /**
  *  Crashlytics API key
  */
@@ -55,7 +54,6 @@ NSString *const kQMCrashlyticsAPIKey = @"7aea78439bec41a9005c7488bb6751c5e33fe27
     [QBSettings setServerApiDomain:@"http://api.stage.quickblox.com"];
     [QBSettings setServerChatDomain:@"chatstage.quickblox.com"];
 #endif
-    
     /**Start Crashlytics */
     [Crashlytics startWithAPIKey:kQMCrashlyticsAPIKey];
     
@@ -63,8 +61,8 @@ NSString *const kQMCrashlyticsAPIKey = @"7aea78439bec41a9005c7488bb6751c5e33fe27
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-
-    ILog(@"Push war received. User info: %@", userInfo);
+    
+    ILog(@"Push war received. User info:%@", userInfo);
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -73,16 +71,22 @@ NSString *const kQMCrashlyticsAPIKey = @"7aea78439bec41a9005c7488bb6751c5e33fe27
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
-
+    
 }
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
-
-    BOOL urlWasIntendedForFacebook = [FBSession.activeSession handleOpenURL:url];
-    return urlWasIntendedForFacebook;
+    
+    BOOL urlWasHandled =
+    [FBAppCall handleOpenURL:url
+           sourceApplication:sourceApplication
+             fallbackHandler:^(FBAppCall *call) {
+                 NSLog(@"Unhandled deep link: %@", url);
+             }];
+    
+    return urlWasHandled;
 }
 
 @end

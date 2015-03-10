@@ -1,5 +1,5 @@
 //
-//  QMForgotPasswordTVC.m
+//  QMForgotPasswordVC.m
 //  Q-municate
 //
 //  Created by Andrey Ivanov on 30.06.14.
@@ -10,14 +10,14 @@
 #import "SVProgressHUD.h"
 #import "REAlertView+QMSuccess.h"
 
-@interface QMForgotPasswordTVC ()
+@interface QMForgotPasswordVC ()
 
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
 @property (weak, nonatomic) IBOutlet UIButton *resetPasswordBtn;
 
 @end
 
-@implementation QMForgotPasswordTVC
+@implementation QMForgotPasswordVC
 
 - (void)dealloc {
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
@@ -30,8 +30,11 @@
     NSString *email = self.emailTextField.text;
     
     if (email.length > 0) {
+        
         [self resetPasswordForMail:email];
-    } else {
+    }
+    else {
+        
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_EMAIL_FIELD_IS_EMPTY", nil) actionSuccess:NO];
     }
 }

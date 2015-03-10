@@ -1,5 +1,5 @@
 //
-//  QMSignUpController.h
+//  QMSignUpVC.h
 //  Q-municate
 //
 //  Created by Igor Alefirenko on 13/02/2014.
@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@class QMWelcomeScreenViewController;
-
-@interface QMSignUpController : UITableViewController
+@interface QMSignUpVC : UITableViewController
 
 @end
