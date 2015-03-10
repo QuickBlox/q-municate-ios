@@ -19,6 +19,8 @@
 #import "QMOnlineTitle.h"
 #import "IDMPhotoBrowser.h"
 #import "QMChatInputToolbar.h"
+#import "QMAudioCallController.h"
+#import "QMVideoCallController.h"
 
 @interface QMChatViewController ()
 
@@ -151,7 +153,8 @@
 #if QM_AUDIO_VIDEO_ENABLED == 0
     [QMAlertsFactory comingSoonAlert];
 #else
-	[self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil];
+    NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
+    [[QMApi instance] callToUser:@(opponentID) conferenceType:QBConferenceTypeAudio];
 #endif
 }
 
@@ -159,7 +162,8 @@
 #if QM_AUDIO_VIDEO_ENABLED == 0
     [QMAlertsFactory comingSoonAlert];
 #else
-	[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil];
+    NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
+    [[QMApi instance] callToUser:@(opponentID) conferenceType:QBConferenceTypeVideo];
 #endif
 }
 

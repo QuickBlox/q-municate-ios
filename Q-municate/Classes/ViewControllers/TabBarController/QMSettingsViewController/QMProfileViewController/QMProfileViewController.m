@@ -76,7 +76,7 @@
                          placeholder:placeholder
                              options:SDWebImageHighPriority
                             progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-                                ILog(@"r - %d; e - %d", receivedSize, expectedSize);
+                                ILog(@"r - %zd; e - %zd", receivedSize, expectedSize);
                             } completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                                 
                             }];
