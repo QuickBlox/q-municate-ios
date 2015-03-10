@@ -8,9 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "QMIncomingCallController.h"
-@interface QMAVCallManager : NSObject<QBRTCClientDelegate>
+#import "QMBaseService.h"
 
-+ (instancetype)instance;
+@interface QMAVCallManager : QMBaseService <QBRTCClientDelegate>
+
+- (void)acceptCall;
+- (void)rejectCall;
+- (void)hangUpCall;
 
 /**
  *  call to users ids
