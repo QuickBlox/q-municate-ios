@@ -26,6 +26,7 @@
 
 @property (nonatomic, strong) QBUUser *opponent;
 
+@property (weak, nonatomic) QBRTCSession *session;
 /** Controls selectors */
 - (IBAction)leftControlTapped:(id)sender;
 - (IBAction)rightControlTapped:(id)sender;

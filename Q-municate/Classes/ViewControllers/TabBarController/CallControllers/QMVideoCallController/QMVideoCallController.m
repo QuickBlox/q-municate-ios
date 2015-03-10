@@ -25,7 +25,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
 }
 
 - (void)didReceiveMemoryWarning {
@@ -53,11 +52,11 @@
 }
 
 
-#pragma mark - Overriden methods
+#pragma mark - Overridden methods
 
 -(void)startCall
 {
-    [[QMApi instance] callUser:self.opponent.ID opponentView:self.opponentsView conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
+    [[QMApi instance] callToUser:@(self.opponent.ID) conferenceType:QBConferenceTypeVideo];
     [QMSoundManager playCallingSound];
 }
 
@@ -84,6 +83,13 @@
     [self.contentView show];
     self.opponentsView.hidden = YES;
     [super callStoppedByOpponentForReason:reason];
+}
+
+- (void)sessionDidClose:(QBRTCSession *)session{
+    __weak __typeof(self) weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [weakSelf dismissViewControllerAnimated:YES completion:nil];
+    });
 }
 
 @end

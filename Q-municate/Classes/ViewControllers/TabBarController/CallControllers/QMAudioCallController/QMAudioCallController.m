@@ -41,7 +41,7 @@
 #pragma mark - Overriden methods
 
 - (void)startCall {
-    [[QMApi instance] callToUser:self.opponentID conferenceType:QBConferenceTypeAudio];
+    [[QMApi instance] callToUser:@(self.opponent.ID) conferenceType:QBConferenceTypeAudio];
     [QMSoundManager playCallingSound];
 }
 

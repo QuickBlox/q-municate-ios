@@ -10,7 +10,4 @@
 
 @interface QMAudioCallController : QMBaseCallsController
 
-@property (weak, nonatomic) QBRTCSession *session;
-@property (strong, nonatomic) NSNumber *opponentID;
-
 @end

@@ -8,7 +8,6 @@
 
 #import "QMBaseCallsController.h"
 
-
-@interface QMVideoCallController : QMBaseCallsController
+@interface QMVideoCallController : QMBaseCallsController<QBRTCClientDelegate>
 
 @end
