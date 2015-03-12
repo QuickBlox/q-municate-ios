@@ -15,12 +15,14 @@
 - (void)perform
 {
     QMIncomingCallController *incommingCallController = (QMIncomingCallController *)self.sourceViewController;
-    QMVideoCallController *callsController = (QMVideoCallController *)self.destinationViewController;
+    QMBaseCallsController *callsController = (QMVideoCallController *)self.destinationViewController;
     [callsController setOpponent:incommingCallController.opponent];
     callsController.isOpponentCaller = YES;
     
-    [incommingCallController addChildViewController:callsController];
-    [incommingCallController.view addSubview:callsController.view];
+    incommingCallController.navigationController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    
+//    [incommingCallController.navigationController transitionFromViewController:incommingCallController toViewController:callsController duration:1.0 options:UIViewAnimationOptionTransitionFlipFromLeft animations:nil completion:nil];
+    [incommingCallController.navigationController setViewControllers:@[callsController] animated:YES];
 }
 
 @end
