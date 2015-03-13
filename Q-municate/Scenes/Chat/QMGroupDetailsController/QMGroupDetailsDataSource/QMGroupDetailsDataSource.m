@@ -8,6 +8,7 @@
 
 #import "QMGroupDetailsDataSource.h"
 #import "QMFriendListCell.h"
+#import "QMServicesManager.h"
 
 NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
 
@@ -15,7 +16,6 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
 
 @property (nonatomic, weak) UITableView *tableView;
 @property (nonatomic, strong) NSArray *participants;
-
 @property (nonatomic, strong) QBChatDialog *chatDialog;
 
 @end
@@ -32,11 +32,10 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
         
         _tableView = tableView;
         
-        
         self.tableView.dataSource = nil;
         self.tableView.dataSource = self;
         
-        __weak __typeof(self)weakSelf = self;
+//        __weak __typeof(self)weakSelf = self;
         
 //        [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:^{
 //            [weakSelf reloadUserData];
@@ -101,7 +100,10 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
 
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     QBUUser *user = self.participants[indexPath.row];
-//    [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {}];
+    
+    [QM.contactListService addUserToContactListRequest:user completion:^(BOOL success) {
+        
+    }];
 }
 
 @end

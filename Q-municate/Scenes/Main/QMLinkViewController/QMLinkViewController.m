@@ -43,6 +43,7 @@
 }
 
 - (BOOL)shouldAutomaticallyForwardAppearanceMethods {
+    
     return YES;
 }
 

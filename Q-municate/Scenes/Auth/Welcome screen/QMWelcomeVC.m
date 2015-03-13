@@ -51,11 +51,14 @@
                 
                 if (!sessionToken) {
                     
-                    [SVProgressHUD showErrorWithStatus:@""];
+                    [SVProgressHUD showErrorWithStatus:@"Facebook error"];
                 }
                 else {
                     // Singin or login
                     [QM.authService logInWithFacebookSessionToken:sessionToken completion:^(QBResponse *response, QBUUser *tUser) {
+                        
+                        //Save profile to keychain
+                        [QM.profile synchronizeWithUserData:tUser];
                         
                         [SVProgressHUD dismiss];
                         if (response.success) {

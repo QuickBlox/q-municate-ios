@@ -82,14 +82,6 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     
     [self updateUserStatus];
     [self disableDeleteContactButtonIfNeeded];
-    
-#if !QM_AUDIO_VIDEO_ENABLED
-    
-    UITableViewCell *videoChatCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
-    UITableViewCell *audioChatCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
-    [self cells:@[videoChatCell, audioChatCell] setHidden:YES];
-    
-#endif
 }
 
 #pragma mark - QMContactListServiceDelegate
@@ -144,14 +136,6 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     switch (indexPath.row) {
         case QMCallTypePhone: break;
             
-#if QM_AUDIO_VIDEO_ENABLED
-        case QMCallTypeVideo:[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil]; break;
-        case QMCallTypeAudio: [self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil]; break;
-        case QMCallTypeChat: {
-#else
-        case QMCallTypeVideo: {
-#endif
-            __weak __typeof(self)weakSelf = self;
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
 //            [[QMApi instance] createPrivateChatDialogIfNeededWithOpponent:self.selectedUser completion:^(QBChatDialog *chatDialog) {
 //                
@@ -160,8 +144,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 //                }
 //                [SVProgressHUD dismiss];
 //            }];
-            
-        } break;
+
             
         default:break;
         }

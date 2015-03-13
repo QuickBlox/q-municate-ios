@@ -294,6 +294,7 @@
 }
 
 #pragma mark - UISearchDisplayController
+#pragma mark UISearchDisplayDelegate
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
     

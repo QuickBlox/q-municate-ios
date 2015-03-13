@@ -72,7 +72,6 @@
 		556E1A021A9F65A50087BEB9 /* REMessageUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E19EC1A9F65A50087BEB9 /* REMessageUI.m */; };
 		556E1A051A9F65B20087BEB9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 556E1A041A9F65B20087BEB9 /* Images.xcassets */; };
 		556E1A591A9F6A630087BEB9 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 556E1A121A9F6A630087BEB9 /* Chat.storyboard */; };
-		556E1A5A1A9F6A630087BEB9 /* QMDialogCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E1A151A9F6A630087BEB9 /* QMDialogCell.m */; };
 		556E1A5B1A9F6A630087BEB9 /* QMChatNotificationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E1A181A9F6A630087BEB9 /* QMChatNotificationCell.m */; };
 		556E1A5C1A9F6A630087BEB9 /* QMChatNotificationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 556E1A191A9F6A630087BEB9 /* QMChatNotificationCell.xib */; };
 		556E1A5D1A9F6A630087BEB9 /* QMChatSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 556E1A1E1A9F6A630087BEB9 /* QMChatSection.m */; };
@@ -100,6 +99,12 @@
 		558260A31A1BAAAE00F92F4E /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 558260A21A1BAAAE00F92F4E /* Quickblox.framework */; };
 		5588C8211AA0C85A0021C8D4 /* QMCornerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5588C8201AA0C85A0021C8D4 /* QMCornerButton.m */; };
 		55AA62DE1A232BCF00D73089 /* libQMServices.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 55AA62D91A2328A500D73089 /* libQMServices.a */; };
+		55AC815A1AB06B13003D2C77 /* QMChatHistoryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AC81591AB06B13003D2C77 /* QMChatHistoryVC.m */; };
+		55AC81621AB06DBA003D2C77 /* QMDialogCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AC81611AB06DBA003D2C77 /* QMDialogCell.m */; };
+		55AC81681AB08E54003D2C77 /* QMChatHistoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AC81661AB08E54003D2C77 /* QMChatHistoryCell.m */; };
+		55AC816A1AB08E9D003D2C77 /* QMChatHistoryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55AC81691AB08E9D003D2C77 /* QMChatHistoryCell.xib */; };
+		55AC81701AB091F1003D2C77 /* QMChatHistoryDatasource.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AC816F1AB091F1003D2C77 /* QMChatHistoryDatasource.m */; };
+		55AC81731AB09202003D2C77 /* QMSearchChatHistoryDatasource.m in Sources */ = {isa = PBXBuildFile; fileRef = 55AC81721AB09202003D2C77 /* QMSearchChatHistoryDatasource.m */; };
 		55E3B71E1AA74D1500ECCC96 /* QMFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 55E3B71D1AA74D1500ECCC96 /* QMFacebook.m */; };
 		690A271518CA0F35003D6B80 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A271418CA0F35003D6B80 /* AddressBook.framework */; };
 		693DC42618FFC45900AF46D9 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42518FFC45900AF46D9 /* libsqlite3.dylib */; };
@@ -274,8 +279,6 @@
 		556E1A041A9F65B20087BEB9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		556E1A061A9F65E70087BEB9 /* Segues.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Segues.h; sourceTree = "<group>"; };
 		556E1A121A9F6A630087BEB9 /* Chat.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Chat.storyboard; sourceTree = "<group>"; };
-		556E1A141A9F6A630087BEB9 /* QMDialogCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDialogCell.h; sourceTree = "<group>"; };
-		556E1A151A9F6A630087BEB9 /* QMDialogCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDialogCell.m; sourceTree = "<group>"; };
 		556E1A171A9F6A630087BEB9 /* QMChatNotificationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatNotificationCell.h; sourceTree = "<group>"; };
 		556E1A181A9F6A630087BEB9 /* QMChatNotificationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatNotificationCell.m; sourceTree = "<group>"; };
 		556E1A191A9F6A630087BEB9 /* QMChatNotificationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QMChatNotificationCell.xib; sourceTree = "<group>"; };
@@ -330,6 +333,17 @@
 		559327A6199216FB001C4BF8 /* Q_municate_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Q_municate_Tests.m; sourceTree = "<group>"; };
 		559327A8199216FB001C4BF8 /* Q-municate Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Q-municate Tests-Prefix.pch"; sourceTree = "<group>"; };
 		55AA62521A2328A400D73089 /* QMServices.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = QMServices.xcodeproj; sourceTree = "<group>"; };
+		55AC81581AB06B13003D2C77 /* QMChatHistoryVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatHistoryVC.h; sourceTree = "<group>"; };
+		55AC81591AB06B13003D2C77 /* QMChatHistoryVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatHistoryVC.m; sourceTree = "<group>"; };
+		55AC81601AB06DBA003D2C77 /* QMDialogCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDialogCell.h; sourceTree = "<group>"; };
+		55AC81611AB06DBA003D2C77 /* QMDialogCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDialogCell.m; sourceTree = "<group>"; };
+		55AC81651AB08E54003D2C77 /* QMChatHistoryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatHistoryCell.h; sourceTree = "<group>"; };
+		55AC81661AB08E54003D2C77 /* QMChatHistoryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatHistoryCell.m; sourceTree = "<group>"; };
+		55AC81691AB08E9D003D2C77 /* QMChatHistoryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QMChatHistoryCell.xib; sourceTree = "<group>"; };
+		55AC816E1AB091F1003D2C77 /* QMChatHistoryDatasource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatHistoryDatasource.h; sourceTree = "<group>"; };
+		55AC816F1AB091F1003D2C77 /* QMChatHistoryDatasource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatHistoryDatasource.m; sourceTree = "<group>"; };
+		55AC81711AB09202003D2C77 /* QMSearchChatHistoryDatasource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSearchChatHistoryDatasource.h; sourceTree = "<group>"; };
+		55AC81721AB09202003D2C77 /* QMSearchChatHistoryDatasource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSearchChatHistoryDatasource.m; sourceTree = "<group>"; };
 		55E3B71C1AA74D1500ECCC96 /* QMFacebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMFacebook.h; sourceTree = "<group>"; };
 		55E3B71D1AA74D1500ECCC96 /* QMFacebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMFacebook.m; sourceTree = "<group>"; };
 		67976AC8FFE848A4B85EB2AF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -415,10 +429,10 @@
 			isa = PBXGroup;
 			children = (
 				556E1A061A9F65E70087BEB9 /* Segues.h */,
+				556E19531A9F65940087BEB9 /* Views */,
 				556E191E1A9F65940087BEB9 /* Main */,
 				556E18C01A9F65930087BEB9 /* Auth */,
 				556E1A111A9F6A630087BEB9 /* Chat */,
-				556E19531A9F65940087BEB9 /* Views */,
 				556E19231A9F65940087BEB9 /* Settings */,
 				556E19301A9F65940087BEB9 /* Users */,
 			);
@@ -971,7 +985,7 @@
 			isa = PBXGroup;
 			children = (
 				556E1A121A9F6A630087BEB9 /* Chat.storyboard */,
-				556E1A131A9F6A630087BEB9 /* QMChatListCell */,
+				55AC81571AB06AC5003D2C77 /* QMChatHistoryVC */,
 				556E1A161A9F6A630087BEB9 /* QMChatNotificationCell */,
 				556E1A1A1A9F6A630087BEB9 /* QMChatVC */,
 				556E1A431A9F6A630087BEB9 /* QMCreateNewChatController */,
@@ -980,15 +994,6 @@
 				556E1A561A9F6A630087BEB9 /* QMPrivateChatVC */,
 			);
 			path = Chat;
-			sourceTree = "<group>";
-		};
-		556E1A131A9F6A630087BEB9 /* QMChatListCell */ = {
-			isa = PBXGroup;
-			children = (
-				556E1A141A9F6A630087BEB9 /* QMDialogCell.h */,
-				556E1A151A9F6A630087BEB9 /* QMDialogCell.m */,
-			);
-			path = QMChatListCell;
 			sourceTree = "<group>";
 		};
 		556E1A161A9F6A630087BEB9 /* QMChatNotificationCell */ = {
@@ -1155,6 +1160,7 @@
 		556E1A4A1A9F6A630087BEB9 /* QMDialogsViewController */ = {
 			isa = PBXGroup;
 			children = (
+				55AC815F1AB06DBA003D2C77 /* QMChatListCell */,
 				556E1A4B1A9F6A630087BEB9 /* QMDialogsDataSource */,
 				556E1A4E1A9F6A630087BEB9 /* QMDialogsViewController.h */,
 				556E1A4F1A9F6A630087BEB9 /* QMDialogsViewController.m */,
@@ -1244,6 +1250,71 @@
 				55AA62DB1A2328A500D73089 /* QMServicesTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		55AC81571AB06AC5003D2C77 /* QMChatHistoryVC */ = {
+			isa = PBXGroup;
+			children = (
+				55AC81581AB06B13003D2C77 /* QMChatHistoryVC.h */,
+				55AC81591AB06B13003D2C77 /* QMChatHistoryVC.m */,
+				55AC816B1AB091D2003D2C77 /* Datasources */,
+				55AC81631AB08E54003D2C77 /* Cells */,
+			);
+			path = QMChatHistoryVC;
+			sourceTree = "<group>";
+		};
+		55AC815F1AB06DBA003D2C77 /* QMChatListCell */ = {
+			isa = PBXGroup;
+			children = (
+				55AC81601AB06DBA003D2C77 /* QMDialogCell.h */,
+				55AC81611AB06DBA003D2C77 /* QMDialogCell.m */,
+			);
+			path = QMChatListCell;
+			sourceTree = "<group>";
+		};
+		55AC81631AB08E54003D2C77 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				55AC81641AB08E54003D2C77 /* QMChatHistoryCell */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		55AC81641AB08E54003D2C77 /* QMChatHistoryCell */ = {
+			isa = PBXGroup;
+			children = (
+				55AC81651AB08E54003D2C77 /* QMChatHistoryCell.h */,
+				55AC81661AB08E54003D2C77 /* QMChatHistoryCell.m */,
+				55AC81691AB08E9D003D2C77 /* QMChatHistoryCell.xib */,
+			);
+			path = QMChatHistoryCell;
+			sourceTree = "<group>";
+		};
+		55AC816B1AB091D2003D2C77 /* Datasources */ = {
+			isa = PBXGroup;
+			children = (
+				55AC816C1AB091D2003D2C77 /* QMChatHistoryDatasource */,
+				55AC816D1AB091D2003D2C77 /* QMSearchChatHistoryDatasource */,
+			);
+			path = Datasources;
+			sourceTree = "<group>";
+		};
+		55AC816C1AB091D2003D2C77 /* QMChatHistoryDatasource */ = {
+			isa = PBXGroup;
+			children = (
+				55AC816E1AB091F1003D2C77 /* QMChatHistoryDatasource.h */,
+				55AC816F1AB091F1003D2C77 /* QMChatHistoryDatasource.m */,
+			);
+			path = QMChatHistoryDatasource;
+			sourceTree = "<group>";
+		};
+		55AC816D1AB091D2003D2C77 /* QMSearchChatHistoryDatasource */ = {
+			isa = PBXGroup;
+			children = (
+				55AC81711AB09202003D2C77 /* QMSearchChatHistoryDatasource.h */,
+				55AC81721AB09202003D2C77 /* QMSearchChatHistoryDatasource.m */,
+			);
+			path = QMSearchChatHistoryDatasource;
 			sourceTree = "<group>";
 		};
 		55E3B71B1AA74D1500ECCC96 /* QMFacebook */ = {
@@ -1371,7 +1442,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = QM;
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0620;
 				ORGANIZATIONNAME = Quickblox;
 				TargetAttributes = {
 					69D57E5118ACC11C00A9900A = {
@@ -1429,6 +1500,7 @@
 				556E1A6A1A9F6A630087BEB9 /* ChatIcons.xcassets in Resources */,
 				556E19F81A9F65A50087BEB9 /* busy.wav in Resources */,
 				556E19F91A9F65A50087BEB9 /* calling.wav in Resources */,
+				55AC816A1AB08E9D003D2C77 /* QMChatHistoryCell.xib in Resources */,
 				556E1A691A9F6A630087BEB9 /* ChatBubbles.xcassets in Resources */,
 				556E19FC1A9F65A50087BEB9 /* ringtone.wav in Resources */,
 				556E19FA1A9F65A50087BEB9 /* end_of_call.wav in Resources */,
@@ -1512,6 +1584,7 @@
 				556E1A711A9F6A630087BEB9 /* QMGroupDetailsDataSource.m in Sources */,
 				556E19671A9F65940087BEB9 /* QMWelcomeVC.m in Sources */,
 				556E19EF1A9F65A50087BEB9 /* QMRootViewControllerSegue.m in Sources */,
+				55AC81681AB08E54003D2C77 /* QMChatHistoryCell.m in Sources */,
 				556E19F41A9F65A50087BEB9 /* QMImagePicker.m in Sources */,
 				556E19651A9F65940087BEB9 /* QMSignUpVC.m in Sources */,
 				556E19F51A9F65A50087BEB9 /* QMProfile.m in Sources */,
@@ -1527,20 +1600,22 @@
 				556E1A701A9F6A630087BEB9 /* QMGroupDetailsController.m in Sources */,
 				55E3B71E1AA74D1500ECCC96 /* QMFacebook.m in Sources */,
 				556E19981A9F65940087BEB9 /* QMOnlineTitle.m in Sources */,
-				556E1A5A1A9F6A630087BEB9 /* QMDialogCell.m in Sources */,
 				556E1A6C1A9F6A630087BEB9 /* QMAddUsersAbstractController.m in Sources */,
+				55AC81701AB091F1003D2C77 /* QMChatHistoryDatasource.m in Sources */,
 				556E1A5E1A9F6A630087BEB9 /* QMMessage.m in Sources */,
 				556E19F21A9F65A50087BEB9 /* QMChatUtils.m in Sources */,
 				556E19871A9F65940087BEB9 /* QMSettingsViewController.m in Sources */,
 				556E19851A9F65940087BEB9 /* QMFeedbackTableViewController.m in Sources */,
 				556E19FF1A9F65A50087BEB9 /* REActionSheet.m in Sources */,
 				556E19661A9F65940087BEB9 /* QMSplashViewController.m in Sources */,
+				55AC81731AB09202003D2C77 /* QMSearchChatHistoryDatasource.m in Sources */,
 				556E19991A9F65940087BEB9 /* QMPlaceholderTextView.m in Sources */,
 				556E19AE1A9F659A0087BEB9 /* NSString+HasText.m in Sources */,
 				556E19FE1A9F65A50087BEB9 /* QMTasks.m in Sources */,
 				556E19F11A9F65A50087BEB9 /* QMPopoversFactory.m in Sources */,
 				556E1A6B1A9F6A630087BEB9 /* QMAddMembersToGroupController.m in Sources */,
 				556E19EE1A9F65A50087BEB9 /* QMAddressBook.m in Sources */,
+				55AC81621AB06DBA003D2C77 /* QMDialogCell.m in Sources */,
 				556E1A661A9F6A630087BEB9 /* QMChatToolbarContentView.m in Sources */,
 				556E19911A9F65940087BEB9 /* QMInviteStaticCell.m in Sources */,
 				556E1A011A9F65A50087BEB9 /* REAlertView.m in Sources */,
@@ -1556,6 +1631,7 @@
 				556E19841A9F65940087BEB9 /* QMChangePasswordVC.m in Sources */,
 				556E19F71A9F65A50087BEB9 /* QMSoundManager.m in Sources */,
 				556E1A6D1A9F6A630087BEB9 /* QMCreateNewChatController.m in Sources */,
+				55AC815A1AB06B13003D2C77 /* QMChatHistoryVC.m in Sources */,
 				556E19AF1A9F659A0087BEB9 /* NSString+UsedSize.m in Sources */,
 				556E198E1A9F65940087BEB9 /* QMFriendsDetailsController.m in Sources */,
 				5588C8211AA0C85A0021C8D4 /* QMCornerButton.m in Sources */,
@@ -1635,7 +1711,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "09c47821-720b-44f6-a905-af7aee05dc11";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s arm64";

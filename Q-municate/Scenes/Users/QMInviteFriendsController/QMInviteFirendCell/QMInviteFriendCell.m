@@ -26,6 +26,7 @@
 
 - (void)setUserData:(id)userData {
     
+    _userData = userData;
     if ([userData isKindOfClass:ABPerson.class]) {
         [self configureWithAdressaddressBookUser:userData];
     } else if ([userData conformsToProtocol:@protocol(FBGraphUser)]) {
@@ -41,6 +42,7 @@
 
 - (void)setContactlistItem:(QBContactListItem *)contactlistItem {
     
+    _contactlistItem = contactlistItem;
     if (contactlistItem) {
         self.descriptionLabel.text = NSLocalizedString(contactlistItem.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
     }

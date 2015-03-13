@@ -61,8 +61,8 @@
                               placeholder:img
                                   options:SDWebImageCacheMemoryOnly
                                  progress:^(NSInteger receivedSize,
-                                            NSInteger expectedSize){}
-         
+                                            NSInteger expectedSize) {
+                                 }
                            completedBlock:^(UIImage *image,
                                             NSError *error,
                                             SDImageCacheType cacheType,
