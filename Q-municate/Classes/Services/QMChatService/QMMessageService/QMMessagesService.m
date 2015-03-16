@@ -171,8 +171,7 @@
     
     NSMutableDictionary *getRequest = [NSMutableDictionary dictionary];
     
-    [getRequest setObject:@(time)
-                   forKey:@"date_send[gt]"];
+    getRequest[@"date_send[gt]"] = @(time);
     
     [QBChat messagesWithDialogID:dialogID extendedRequest:getRequest delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:echoObject]];
 }

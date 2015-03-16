@@ -7,31 +7,113 @@
 //
 
 #import "QMVideoP2PController.h"
+#import "QMAVCallManager.h"
+#import <sys/utsname.h>
 
-@interface QMVideoP2PController ()
 
-@end
 
 @implementation QMVideoP2PController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    QMAVCallManager *av = [QMApi instance].avCallManager ;
+    if( av.localVideoTrack ){
+        self.localVideoTrack = av.localVideoTrack;
+    }
+    if( av.remoteVideoTrack ){
+        self.opponentVideoTrack = av.remoteVideoTrack;
+    }
+    
+    [self.contentView startTimerIfNeeded];
+    [self reloadVideoViews];
+    
+    if([machineName() isEqualToString:@"iPhone3,1"] || [machineName() isEqualToString:@"iPhone3,2"] || [machineName() isEqualToString:@"iPhone3,3"]||[machineName() isEqualToString:@"iPhone4,1"]){
+        self.opponentsVideoViewBottom.constant = -100.0f;
+    }
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)stopCallTapped:(id)sender {
+    [super stopCallTapped:sender];
+    [self hideViewsBeforeDealloc];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)reloadVideoViews {
+    [self.opponentsView setVideoTrack:self.opponentVideoTrack];
+    [self.myView setVideoTrack:self.localVideoTrack];
 }
-*/
+
+- (void)hideViewsBeforeDealloc{
+    [self.myView setVideoTrack:nil];
+    [self.opponentsView setVideoTrack:nil];
+    [self.myView setHidden:YES];
+    [self.opponentsView setHidden:YES];
+}
+
+// to check for 4/4s screen
+NSString* machineName() {
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    
+    return [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+}
+
+- (void)videoTapped:(id)sender{
+    [super videoTapped:sender];
+    if( [self.session videoEnabled] ){
+        [self allowSendingLocalVideoTrack];
+    }
+    else{
+        [self denySendingLocalVideoTrack];
+    }
+}
+
+- (void)allowSendingLocalVideoTrack {
+    // it is a view with cam_off image that we need to display when cam is off
+    [self.camOffView setHidden:YES];
+    [self reloadVideoViews];
+}
+
+- (void)denySendingLocalVideoTrack {
+    [self.session setVideoEnabled:NO];
+    [self.myView setVideoTrack:nil];
+    // it is a view with cam_off image that we need to display when cam is off
+    [self.camOffView setHidden:NO];
+}
+
+#pragma mark QBRTCSession delegate -
+
+- (void)session:(QBRTCSession *)session disconnectedFromUser:(NSNumber *)userID {
+    [super session:session disconnectTimeoutForUser:userID];
+    [self startActivityIndicator];
+}
+
+- (void)session:(QBRTCSession *)session didReceiveLocalVideoTrack:(QBRTCVideoTrack *)videoTrack {
+    [super session:session didReceiveLocalVideoTrack:videoTrack];
+    if( self.disableSendingLocalVideoTrack ){
+        [self denySendingLocalVideoTrack];
+        self.disableSendingLocalVideoTrack = NO;
+    }
+    
+    self.localVideoTrack = videoTrack;
+    [self reloadVideoViews];
+}
+
+- (void)session:(QBRTCSession *)session didReceiveRemoteVideoTrack:(QBRTCVideoTrack *)videoTrack fromUser:(NSNumber *)userID {
+    [super session:session didReceiveRemoteVideoTrack:videoTrack fromUser:userID];
+    self.opponentVideoTrack = videoTrack;
+    [self reloadVideoViews];
+}
+
+- (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID {
+    [super session:session connectedToUser:userID];
+    [[QMSoundManager shared] stopAllSounds];
+    [self stopActivityIndicator];
+}
+
+- (void)session:(QBRTCSession *)session hungUpByUser:(NSNumber *)userID{
+    [self hideViewsBeforeDealloc];
+    [super session:session hungUpByUser:userID];
+}
 
 @end

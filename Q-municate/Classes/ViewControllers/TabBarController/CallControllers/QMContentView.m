@@ -31,21 +31,18 @@
 
 #pragma mark - Show/Hide
 
-- (void)show
-{
+- (void)show {
     [self setHidden:NO];
 }
 
-- (void)hide
-{
+- (void)hide {
     [self setHidden:YES];
 }
 
 
 #pragma mark -
 
-- (void)updateViewWithUser:(QBUUser *)user
-{
+- (void)updateViewWithUser:(QBUUser *)user conferenceType:(QBConferenceType)conferenceType{
     UIImage *placeholder = [UIImage imageNamed:@"upic_call"];
     NSURL *url = [QMUsersUtils userAvatarURL:user];
     [self.avatarView setImageWithURL:url
@@ -57,40 +54,45 @@
      ^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
 
     self.fullNameLabel.text = user.fullName;
-    self.statusLabel.text = NSLocalizedString(@"QM_STR_CALLING", nil);
+    if( conferenceType == QBConferenceTypeAudio ){
+        self.statusLabel.text = NSLocalizedString(@"QM_STR_CALLING", nil);
+    }
+    else{
+        self.statusLabel.text = NSLocalizedString(@"QM_STR_VIDEO_CALLING", nil);
+    }
     
     [self layoutSubviews];
 }
 
-- (void)updateViewWithStatus:(NSString *)status
-{
+- (void)updateViewWithStatus:(NSString *)status {
     self.statusLabel.text = status;
 }
 
-- (void)startTimer
-{
-    // stop if running
+- (void)startTimerIfNeeded {
     if( [_timer isValid] ){
-        [self stopTimer];
+        return;
     }
     _timeInterval = 0;
-    self.statusLabel.text = [NSString stringWithFormat:@"%02u:%05.2f", (int)(_timeInterval/60), fmod(_timeInterval, 60)];
+    self.statusLabel.text = [NSString stringWithFormat:@"%02u:%02u", (int)(_timeInterval/60), (int)fmod(_timeInterval, 60)];
     _timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateStatusLabel) userInfo:nil repeats:YES];
     [_timer fire];
 }
 
-- (void)stopTimer
-{
+- (void)startTimer {
+    // stop if running
+    [self stopTimer];
+    [self startTimerIfNeeded];
+}
+
+- (void)stopTimer {
     [_timer invalidate];
     _timer = nil;
     _timeInterval = 0;
 }
 
 // selector:
-- (void)updateStatusLabel
-{
-    ILog(@"_________TIMER NOW = %f__________", _timeInterval);
-    self.statusLabel.text = [NSString stringWithFormat:@"%02u:%05.2f", (int)(_timeInterval/60), fmod(_timeInterval, 60)];
+- (void)updateStatusLabel {
+    self.statusLabel.text = [NSString stringWithFormat:@"%02u:%02u", (int)(_timeInterval/60), (int)fmod(_timeInterval, 60)];
     _timeInterval++;
 }
 

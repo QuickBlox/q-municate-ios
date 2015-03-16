@@ -15,11 +15,10 @@
 
 /// active view controller
 @property (weak, nonatomic) UIViewController *currentlyPresentedViewController;
-@property (strong, nonatomic) QBRTCSession *session;
 @end
 
-const NSTimeInterval kQBAnswerTimeInterval = 15.f;
-const NSTimeInterval kQBRTCDisconnectTimeInterval = 10.f;
+const NSTimeInterval kQBAnswerTimeInterval = 5*20.f;
+const NSTimeInterval kQBRTCDisconnectTimeInterval = 15*5.f;
 
 NSString *const kAudioCallController = @"AudioCallIdentifier";
 NSString *const kVideoCallController = @"VideoCallIdentifier";
@@ -31,10 +30,13 @@ NSString *const kUserName = @"UserName";
 @implementation QMAVCallManager
 
 - (instancetype)init {
-    
     self = [super init];
     if (self) {
         _mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+        if( IS_IPAD ){
+            self.speakerEnabled = YES;
+        }
+        self.frontCamera = YES;
     }
     
     return self;
@@ -89,6 +91,8 @@ NSString *const kUserName = @"UserName";
 
 - (void)callToUsers:(NSArray *)users withConferenceType:(QBConferenceType)conferenceType{
     
+    assert(users && users.count);
+    
     if (self.session) {
         return;
     }
@@ -103,12 +107,16 @@ NSString *const kUserName = @"UserName";
         QMBaseCallsController *vc = (QMBaseCallsController *)[self.mainStoryboard instantiateViewControllerWithIdentifier:(conferenceType == QBConferenceTypeVideo) ? kVideoCallController : kAudioCallController];
         
         vc.session = self.session;
+        vc.opponent = [[QMApi instance] userWithID:[((NSNumber *)users[0]) unsignedIntegerValue]];
         
-        self.currentlyPresentedViewController = vc;
-        [self.rootViewController presentViewController:vc
+        UINavigationController *navVC = [[UINavigationController alloc] initWithRootViewController:vc];
+        [navVC setNavigationBarHidden:YES];
+        
+        [self.rootViewController presentViewController:navVC
                                               animated:YES
                                             completion:nil];
         [self.session startCall:@{kUserIds: users}];
+        self.currentlyPresentedViewController = navVC;
     }
     else {
         
@@ -126,38 +134,52 @@ NSString *const kUserName = @"UserName";
     }
     
     self.session = session;
-    //[QMSoundManager playRingtoneSound];
+    [QMSoundManager playRingtoneSound];
     
-    QMIncomingCallController *incomingVC =
-    [self.mainStoryboard instantiateViewControllerWithIdentifier:kIncomingCallController];
+    QMIncomingCallController *incomingVC = [self.mainStoryboard instantiateViewControllerWithIdentifier:kIncomingCallController];
     
     incomingVC.session = session;
     incomingVC.opponentID = [session.callerID unsignedIntegerValue];
     incomingVC.callType = session.conferenceType;
     
-    [self.rootViewController presentViewController:incomingVC
+    UINavigationController *navVC = [[UINavigationController alloc] initWithRootViewController:incomingVC];
+    [navVC setNavigationBarHidden:YES];
+    [self.rootViewController presentViewController:navVC
                                           animated:YES
                                         completion:nil];
     
-    self.currentlyPresentedViewController = incomingVC;
+    self.currentlyPresentedViewController = navVC;
 }
 
 - (void)sessionWillClose:(QBRTCSession *)session {
-    
-    NSLog(@"session will close");
+    ILog(@"session will close");
+    [SVProgressHUD dismiss];
 }
 
 - (void)sessionDidClose:(QBRTCSession *)session {
     __weak __typeof(self)weakSelf = self;
-    if (session == self.session ) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            
-            weakSelf.session = nil;
-            if( [weakSelf currentlyPresentedViewController] ){
-                [[weakSelf currentlyPresentedViewController] dismissViewControllerAnimated:YES completion:nil];
-            }
-        });
-    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        weakSelf.session = nil;
+        if( [weakSelf currentlyPresentedViewController] ){
+            [[weakSelf currentlyPresentedViewController] dismissViewControllerAnimated:YES completion:nil];
+        }
+        if( IS_IPAD ){
+            weakSelf.speakerEnabled = YES;
+        }
+        else{
+            weakSelf.speakerEnabled = NO;
+            weakSelf.frontCamera = YES;
+        }
+    });
+}
+
+- (void)session:(QBRTCSession *)session didReceiveLocalVideoTrack:(QBRTCVideoTrack *)videoTrack{
+    self.localVideoTrack = videoTrack;
+}
+
+- (void)session:(QBRTCSession *)session didReceiveRemoteVideoTrack:(QBRTCVideoTrack *)videoTrack fromUser:(NSNumber *)userID{
+    self.remoteVideoTrack = videoTrack;
 }
 
 @end

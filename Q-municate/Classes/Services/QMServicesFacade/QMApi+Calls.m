@@ -7,7 +7,6 @@
 //
 
 #import "QMApi.h"
-#import "QMAVCallService.h"
 #import "QMAVCallManager.h"
 
 @implementation QMApi (Calls)

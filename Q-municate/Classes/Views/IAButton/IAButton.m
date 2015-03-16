@@ -24,7 +24,7 @@ const CGFloat kAnimationLength = 0.15;
     
     self = [super initWithCoder:coder];
     if (self) {
-        self.multipleTouchEnabled = NO;
+        self.exclusiveTouch = YES;
         self.layer.borderWidth = 1.0f;
         [self setDefaultStyles];
         self.backgroundDefaultColor = self.backgroundColor;
@@ -37,7 +37,9 @@ const CGFloat kAnimationLength = 0.15;
     if( self.borderColor == nil ){
         self.borderColor = [UIColor colorWithWhite:0.352 alpha:0.560];
     }
-    self.selectedColor = [UIColor colorWithWhite:1.000 alpha:0.600];
+    if( self.selectedColor == nil ){
+        self.selectedColor = [UIColor colorWithWhite:1.000 alpha:0.600];
+    }
     self.textColor = [UIColor whiteColor];
     self.hightlightedTextColor = [UIColor whiteColor];
     
@@ -65,18 +67,13 @@ const CGFloat kAnimationLength = 0.15;
 
 - (void)performLayout {
     
-    
-    CGFloat max = MAX(self.frame.size.height, self.frame.size.width) * 0.7;
-    
-    self.iconView.frame = CGRectMake(
-                                     CGRectGetMidX(self.bounds) - (max / 2.0),
-                                     CGRectGetMidY(self.bounds) - (max / 2.0),
-                                     max,
-                                     max);
-    [self addSubview:self.iconView];
-    
-    
     self.layer.cornerRadius = self.frame.size.height / 2.0;
+}
+
+- (void)setSelected:(BOOL)selected{
+    [super setSelected:selected];
+    [self tappedBegan];
+    [self tappedEnded];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -88,22 +85,23 @@ const CGFloat kAnimationLength = 0.15;
                           delay:0.0f
                         options:UIViewAnimationOptionCurveEaseIn
                      animations:^{
-                         
-                         CGFloat alpha = 1.0f;
-                         
-                         if (self.isPushed) {
-                             
-                             self.isPressed ^= YES;
-                             alpha = self.isPressed ? 1.f : 0.f;
-                         }
-                         
-                         [weakSelf setHighlighted:YES];
-                         
-                         weakSelf.backgroundColor = weakSelf.selectedColor;
-                         
-                     } completion:^(BOOL finished) {
-                         
-                     }];
+                         [weakSelf tappedBegan];
+                     } completion:nil];
+}
+
+- (void)tappedBegan{
+    [self setHighlighted:YES];
+    self.backgroundColor = self.highlightedColor;
+}
+
+- (void)tappedEnded{
+    [self setHighlighted:NO];
+    if( self.selectedColor && self.selected ){
+        self.backgroundColor = self.selectedColor;
+    }
+    else{
+        self.backgroundColor = self.backgroundDefaultColor;
+    }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -114,19 +112,9 @@ const CGFloat kAnimationLength = 0.15;
     [UIView animateWithDuration:kAnimationLength
                           delay:0.0f
                         options:UIViewAnimationOptionCurveEaseIn | UIViewAnimationOptionAllowUserInteraction
-                     animations:^
-     {
-         
-         CGFloat alpha = 0.0f;
-         
-         if (self.isPushed) {
-             
-             alpha = self.isPressed ? 1.f : 0.f;
-         }
-         
-         [weakSelf setHighlighted:NO];
-         weakSelf.backgroundColor = weakSelf.backgroundDefaultColor;
-         
+                     animations:^{
+                         [weakSelf tappedEnded];
+                 
      } completion:nil];
 }
 
@@ -147,19 +135,6 @@ const CGFloat kAnimationLength = 0.15;
     label.minimumScaleFactor = 1.0;
     
     return label;
-}
-
-#pragma mark - Setters
-
-- (void)setIconView:(UIView *)iconView {
-    
-    if (![_iconView isEqual:iconView]) {
-        
-        iconView.userInteractionEnabled = NO;
-        _iconView = iconView;
-        
-        [self setNeedsDisplay];
-    }
 }
 
 @end

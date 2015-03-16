@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import "QBChatAbstractMessage+CustomParameters.h"
-
 /*Message keys*/
 NSString const *kQMCustomParameterSaveToHistory = @"save_to_history";
 NSString const *kQMCustomParameterNotificationType = @"notification_type";
@@ -180,7 +178,7 @@ NSString const *kQMCustomParameterDialogDeletedID = @"deleted_id";
 }
 
 - (QMMessageNotificationType)cParamNotificationType {
-    return [self.context[kQMCustomParameterNotificationType] integerValue];
+    return (QMMessageNotificationType) [self.context[kQMCustomParameterNotificationType] integerValue];
 }
 
 #pragma mark - cParamMessageDeliveryStatus

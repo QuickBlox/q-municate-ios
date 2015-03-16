@@ -15,13 +15,14 @@
 "QM_STR_FACEBOOK_LOGIN_FALED_ALERT_TEXT" = "Something went wrong. Please try again";
 "QM_STR_QMUNICATE_AGREE" = "By clicking Sign Up, you agree to Q-MUNICATE User Agreement.";
 "QM_STR_CALLING" = "Calling...";
+"QM_STR_VIDEO_CALLING" = "Video Calling...";
 "QM_STR_EMAIL_FIELD_IS_EMPTY" = "Email field is empty";
 "QM_STR_USER_WITH_EMAIL_WASNT_FOUND" = "User with email wasn't found";
 "QM_STR_NONE" = "None";
 "QM_STR_ARE_YOU_SURE" = "Are you sure?";
 "QM_STR_DELETE" = "Delete";
-"QM_STR_INCOMING_VIDEO_CALL" = "Incoming video call";
-"QM_STR_INCOMING_CALL" = "Incoming call";
+"QM_STR_INCOMING_VIDEO_CALL" = "Incoming Video Call";
+"QM_STR_INCOMING_CALL" = "Incoming Call";
 "QM_STR_CONTACT_LIST" = "Contact list";
 "QM_STR_CALL_WAS_CANCELLED" = "Call was cancelled";
 "QM_STR_FACEBOOK" = "Facebook";

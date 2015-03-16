@@ -8,9 +8,7 @@
 
 #import "AppDelegate.h"
 #import <Crashlytics/Crashlytics.h>
-#import "QMIncomingCallHandler.h"
 #import "SVProgressHUD.h"
-#import "QMPopoversFactory.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMApi.h"
 
@@ -56,7 +54,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     
     UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleDefault;
 #if QM_AUDIO_VIDEO_ENABLED == 1
-    self.incomingCallService = [[QMIncomingCallHandler alloc] init];
+    [[QMIncomingCallHandler alloc] init];
 #endif
     self.window.backgroundColor = [UIColor whiteColor];
     

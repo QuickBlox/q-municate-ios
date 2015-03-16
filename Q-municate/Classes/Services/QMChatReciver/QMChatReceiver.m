@@ -525,17 +525,6 @@
 #pragma mark Video Chat Callbacks
 #pragma mark -
 
-/**
- Called in case when opponent is calling to you
- 
- @param userID ID of uopponent
- @param conferenceType Type of conference. 'QBVideoChatConferenceTypeAudioAndVideo' and 'QBVideoChatConferenceTypeAudio' values are available
- @param customParameters Custom caller parameters
- */
-- (void)chatDidReceiveCallRequestCustomParametesrWithTarget:(id)target block:(QMChatDidReceiveCallRequestCustomParams)block {
-    [self subsribeWithTarget:target selector:@selector(chatDidReceiveCallRequestFromUser:withSessionID:conferenceType:customParameters:) block:block];
-}
-
 - (void)chatDidReceiveCallRequestFromUser:(NSUInteger)userID
                             withSessionID:(NSString*)sessionID
                            conferenceType:(enum QBVideoChatConferenceType)conferenceType
@@ -550,11 +539,6 @@
 -(void) chatDidReceiveCallRequestFromUser:(NSUInteger)userID withSessionID:(NSString*)sessionID conferenceType:(enum QBVideoChatConferenceType)conferenceType
 {
     
-}
-
-- (void)chatAfrerDidReceiveCallRequestCustomParametesrWithTarget:(id)target block:(QMChatDidReceiveCallRequestCustomParams)block
-{
-    [self subsribeWithTarget:target selector:@selector(chatAfterDidReceiveCallRequestFromUser:withSessionID:conferenceType:customParameters:) block:block];
 }
 
 - (void)chatAfterDidReceiveCallRequestFromUser:(NSUInteger)userID
@@ -602,11 +586,6 @@
     [self chatAfterCallDidRejectByUser:userID];
 }
 
-- (void)chatAfterCallDidRejectByUserWithTarget:(id)target block:(QMChatCallDidRejectByUser)block
-{
-    [self subsribeWithTarget:target selector:@selector(chatAfterCallDidRejectByUser:) block:block];
-}
-
 - (void)chatAfterCallDidRejectByUser:(NSUInteger)userID
 {
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallDidRejectByUser block) {
@@ -631,10 +610,6 @@
         block(userID, status, customParameters);
     }];
     [self chatAfterCallDidStopByUser:userID status:status];
-}
-
-- (void)chatAfterCallDidStopWithTarget:(id)target block:(QMChatCallDidStopByUser)block {
-    [self subsribeWithTarget:target selector:@selector(chatAfterCallDidStopByUser:status:) block:block];
 }
 
 - (void)chatAfterCallDidStopByUser:(NSUInteger)userID status:(NSString *)status {

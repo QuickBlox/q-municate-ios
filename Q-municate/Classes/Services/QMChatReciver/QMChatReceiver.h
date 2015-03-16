@@ -103,20 +103,6 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 - (void)chatRoomDidChangeOnlineUsersWithTarget:(id)target block:(QMChatRoomDidChangeOnlineUsers)block;
 - (void)chatRoomDidReceiveListOfUsersWithTarget:(id)target block:(QMChatRoomDidReceiveListOfUsers)block;
 - (void)chatRoomDidReceiveListOfOnlineUsersWithTarget:(id)target block:(QMChatRoomDidReceiveListOfOnlineUsers)block;
-/**
- VideoChat
- */
-#pragma mark - AUDIO/VIDEO CALLS
-#pragma mark -
-
-- (void)chatDidReceiveCallRequestCustomParametesrWithTarget:(id)target block:(QMChatDidReceiveCallRequestCustomParams)block;
-- (void)chatAfrerDidReceiveCallRequestCustomParametesrWithTarget:(id)target block:(QMChatDidReceiveCallRequestCustomParams)block;
-- (void)chatCallDidAcceptCustomParametersWithTarget:(id)target block:(QMChatCallDidAcceptByUserCustomParams)block;
-- (void)chatCallDidRejectByUserWithTarget:(id)target block:(QMChatCallDidRejectByUser)block;
-- (void)chatAfterCallDidRejectByUserWithTarget:(id)target block:(QMChatCallDidRejectByUser)block;
-- (void)chatCallDidStopCustomParametersWithTarget:(id)target block:(QMChatCallDidStopByUserCustomParams)block;
-- (void)chatAfterCallDidStopWithTarget:(id)target block:(QMChatCallDidStopByUser)block;
-- (void)chatCallDidStartWithTarget:(id)target block:(QMChathatCallDidStartWithUser)block;
 
 @end
 

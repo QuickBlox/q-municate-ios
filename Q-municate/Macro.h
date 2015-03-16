@@ -10,7 +10,7 @@
 #define Q_municate_Macro_h
 
 #define IS_IPHONE_6 [UIScreen]
-
+#define IS_IPAD ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
 #ifdef DEBUG
 #define ELog(...) do { NSLog(@"%s %@", __PRETTY_FUNCTION__, [NSString stringWithFormat:__VA_ARGS__]); } while(0)

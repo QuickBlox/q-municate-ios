@@ -15,9 +15,11 @@
 @property (nonatomic, weak) IBOutlet UILabel *statusLabel;
 @property (nonatomic, weak) IBOutlet QMImageView *avatarView;
 
-- (void)updateViewWithUser:(QBUUser *)user;
+- (void)updateViewWithUser:(QBUUser *)user conferenceType:(QBConferenceType)conferenceType;
 - (void)updateViewWithStatus:(NSString *)status;
 
+- (void)startTimerIfNeeded;
+// start/restart timer
 - (void)startTimer;
 - (void)stopTimer;
 

@@ -40,7 +40,7 @@ NSString *const kCreateChatCellIdentifier = @"CreateChatCell";
 
 - (void)updateGUI {
     
-    self.title = [NSString stringWithFormat:@"%d Selected", self.selectedFriends.count];
+    self.title = [NSString stringWithFormat:@"%zd Selected", self.selectedFriends.count];
     BOOL enabled = self.selectedFriends.count > 0;
     self.performButton.enabled = enabled;
     self.resetButton.enabled = enabled;
