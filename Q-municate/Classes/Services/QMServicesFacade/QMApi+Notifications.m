@@ -119,7 +119,7 @@
     NSString *message = [QMChatUtils messageTextForPushWithNotification:notification];
     QBMEvent *event = [QBMEvent event];
     event.notificationType = QBMNotificationTypePush;
-    event.usersIDs = [NSString stringWithFormat:@"%d", notification.recipientID];
+    event.usersIDs = [NSString stringWithFormat:@"%zd", notification.recipientID];
     event.isDevelopmentEnvironment = ![QBSettings isUseProductionEnvironmentForPushNotifications];
     event.type = QBMEventTypeOneShot;
     //

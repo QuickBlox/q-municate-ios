@@ -86,7 +86,7 @@
 
 - (void)updateOnlineStatus:(NSUInteger)online {
     
-    NSString *onlineUsersCountText = [NSString stringWithFormat:@"%d/%d online", online, self.chatDialog.occupantIDs.count];
+    NSString *onlineUsersCountText = [NSString stringWithFormat:@"%zd/%zd online", online, self.chatDialog.occupantIDs.count];
     self.onlineOccupantsCountLabel.text = onlineUsersCountText;
 }
 
@@ -150,8 +150,8 @@
     if (chatDialog.photo) {
         [self.groupAvatarView setImageWithURL:[NSURL URLWithString:chatDialog.photo] placeholder:[UIImage imageNamed:@"upic_placeholder_details_group"] options:SDWebImageHighPriority progress:^(NSInteger receivedSize, NSInteger expectedSize) {} completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
     }
-    self.occupantsCountLabel.text = [NSString stringWithFormat:@"%d participants", self.chatDialog.occupantIDs.count];
-    self.onlineOccupantsCountLabel.text = [NSString stringWithFormat:@"0/%d online", self.chatDialog.occupantIDs.count];
+    self.occupantsCountLabel.text = [NSString stringWithFormat:@"%zd participants", self.chatDialog.occupantIDs.count];
+    self.onlineOccupantsCountLabel.text = [NSString stringWithFormat:@"0/%zd online", self.chatDialog.occupantIDs.count];
     
 
     [self.dataSource reloadDataWithChatDialog:self.chatDialog];

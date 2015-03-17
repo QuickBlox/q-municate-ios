@@ -11,8 +11,6 @@
 
 #define QM_TEST 0
 
-
-
 #define QM_AUDIO_VIDEO_ENABLED 1
 
 #define DELETING_DIALOGS_ENABLED 0

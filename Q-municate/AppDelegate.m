@@ -53,9 +53,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleDefault;
-#if QM_AUDIO_VIDEO_ENABLED == 1
-    [[QMIncomingCallHandler alloc] init];
-#endif
+
     self.window.backgroundColor = [UIColor whiteColor];
     
     UIApplication.sharedApplication.applicationIconBadgeNumber = 0;

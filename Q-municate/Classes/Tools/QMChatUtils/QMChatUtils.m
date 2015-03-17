@@ -83,6 +83,10 @@
             }
         }
             break;
+        case QMMessageNotificationTypeUserDidNotAnswer:{
+            
+        }
+            break;
             
         default:
             break;

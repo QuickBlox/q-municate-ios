@@ -16,7 +16,7 @@
 @interface QBChatUtils : NSObject
 
 // QBUser <-> JID
-+ (NSString *)JIDFromCurrentUserID:(NSUInteger)userID;
++ (NSString *)JIDFromCurrentUserID:(NSUInteger)userID resource:(NSString *)resource;
 + (NSString *)JIDFromUserID:(NSUInteger)userID;
 + (NSUInteger)userIDFromJID:(NSString *)jid;
 

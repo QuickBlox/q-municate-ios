@@ -118,6 +118,15 @@ typedef enum QBChatServiceError {
 - (BOOL)loginWithUser:(QBUUser *)user;
 
 /**
+ Authorize on QuickBlox Chat
+ 
+ @param user QBUUser structure represents user's login. Required user's fields: ID, password.
+ @param resource The resource identifier of user.
+ @return YES if the request was sent successfully. If not - see log.
+ */
+- (BOOL)loginWithUser:(QBUUser *)user resource:(NSString *)resource;
+
+/**
  Check if current user logged into Chat
  
  @return YES if user is logged in, NO otherwise

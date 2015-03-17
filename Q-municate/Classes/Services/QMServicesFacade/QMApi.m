@@ -69,7 +69,9 @@ const NSTimeInterval kQMPresenceTime = 30;
     
     self = [super init];
     if (self) {
+#if QM_AUDIO_VIDEO_ENABLED == 1
         self.avCallManager = [[QMAVCallManager alloc] init];
+#endif
         self.messagesService = [[QMMessagesService alloc] init];
         self.authService = [[QMAuthService alloc] init];
         self.usersService = [[QMUsersService alloc] init];
