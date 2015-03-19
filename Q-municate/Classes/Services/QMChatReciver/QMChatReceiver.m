@@ -28,7 +28,7 @@
 - (NSString *)description {
     
     return [NSString stringWithFormat:
-            @"cmd - %@, callback - %@, identfier - %d, targetClass - %@",
+            @"cmd - %@, callback - %@, identfier - %zd, targetClass - %@",
             self.tcmd, self.callback, self.identifier, self.className];
 }
 

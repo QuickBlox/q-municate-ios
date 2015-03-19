@@ -279,7 +279,9 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
             }
         }
         
-        if (shouldNotify) [REAlertView showAlertWithMessage:alertText actionSuccess:NO];
+        if (shouldNotify) {
+            [REAlertView showAlertWithMessage:alertText actionSuccess:NO];
+        }
     }
     sessionBlock(session.accessTokenData.accessToken);
 }

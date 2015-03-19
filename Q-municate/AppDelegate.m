@@ -11,7 +11,7 @@
 #import "SVProgressHUD.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMApi.h"
-
+#import "QMSettingsManager.h"
 
 #define DEVELOPMENT 0
 #define STAGE_SERVER_IS_ACTIVE 0
@@ -66,7 +66,18 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBSettings setAccountKey:kQMAcconuntKey];
 //    [QBSettings setLogLevel:QBLogLevelDebug];
     
-    
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+    if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+        
+        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+    }
+    else{
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+    }
+#else
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+#endif
     
 #ifndef DEBUG
     [QBApplication sharedApplication].productionEnvironmentForPushesEnabled = YES;
@@ -158,8 +169,14 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     if (deviceToken) {
-        if ([QMApi instance].subscriptionBlock) {
-            [QMApi instance].subscriptionBlock(deviceToken);
+        QMApi *api = [QMApi instance];
+        [api setDeviceToken:deviceToken];
+        // temporary fix
+        if( api.settingsManager.pushNotificationsEnabled ) {
+            [api subscribeToPushNotificationsForceSettings:YES complete:nil];
+        }
+        else{
+            [api unSubscribeToPushNotifications:nil];
         }
     }
 }

@@ -90,7 +90,7 @@
         return;
     }
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    if (!sender.on) {
+    if ([sender isOn]) {
         [[QMApi instance] subscribeToPushNotificationsForceSettings:YES complete:^(BOOL success) {
             [SVProgressHUD dismiss];
         }];
