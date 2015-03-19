@@ -10,9 +10,12 @@
 
 @class QMChatDataSource;
 @class QMChatInputToolbar;
+@class QMApi;
 
 @interface QMChatVC : UIViewController
-
+{
+    QMApi *api;
+}
 @property (strong, nonatomic, readonly) UITableView *tableView;
 
 @property (strong, nonatomic) QMChatDataSource *dataSource;

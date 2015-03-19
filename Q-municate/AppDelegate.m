@@ -51,12 +51,11 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    UIApplication.sharedApplication.applicationIconBadgeNumber = 0;
     
     UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleDefault;
 
     self.window.backgroundColor = [UIColor whiteColor];
-    
-    UIApplication.sharedApplication.applicationIconBadgeNumber = 0;
     
     // Needed for new API:
     [QBApplication sharedApplication].applicationId = kQMApplicationID;
@@ -123,6 +122,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
+    UIApplication.sharedApplication.applicationIconBadgeNumber = 0;
     [[QMApi instance] applicationWillResignActive];
 }
 
@@ -169,15 +169,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     if (deviceToken) {
-        QMApi *api = [QMApi instance];
-        [api setDeviceToken:deviceToken];
-        // temporary fix
-        if( api.settingsManager.pushNotificationsEnabled ) {
-            [api subscribeToPushNotificationsForceSettings:YES complete:nil];
-        }
-        else{
-            [api unSubscribeToPushNotifications:nil];
-        }
+        [[QMApi instance] setDeviceToken:deviceToken];
     }
 }
 

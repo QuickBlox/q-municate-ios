@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		144069951AB04309007E6AD0 /* IAButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 144069941AB04309007E6AD0 /* IAButton.m */; };
+		1462FF6A1ABAF772007EFE0C /* QMApi+Permissions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1462FF691ABAF772007EFE0C /* QMApi+Permissions.m */; };
 		14B16A5A1AA9BDBA001EB7D4 /* QuickbloxWebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14B16A591AA9BDBA001EB7D4 /* QuickbloxWebRTC.framework */; };
 		14B16A5D1AA9C00A001EB7D4 /* QMAVCallManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 14B16A5C1AA9C00A001EB7D4 /* QMAVCallManager.m */; };
 		14D834631AB06F5A00300266 /* AVCalls.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14D834621AB06F5A00300266 /* AVCalls.xcassets */; };
@@ -252,6 +253,7 @@
 		01E0EAD58B177DC530737810 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		144069931AB04309007E6AD0 /* IAButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IAButton.h; path = IAButton/IAButton.h; sourceTree = "<group>"; };
 		144069941AB04309007E6AD0 /* IAButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IAButton.m; path = IAButton/IAButton.m; sourceTree = "<group>"; };
+		1462FF691ABAF772007EFE0C /* QMApi+Permissions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Permissions.m"; sourceTree = "<group>"; };
 		14B16A591AA9BDBA001EB7D4 /* QuickbloxWebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickbloxWebRTC.framework; path = External/QuickbloxWebRTC.framework; sourceTree = "<group>"; };
 		14B16A5B1AA9C00A001EB7D4 /* QMAVCallManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAVCallManager.h; sourceTree = "<group>"; };
 		14B16A5C1AA9C00A001EB7D4 /* QMAVCallManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAVCallManager.m; sourceTree = "<group>"; };
@@ -1048,6 +1050,7 @@
 				551F8723196E854500DBCA02 /* QMApi+Facebook.m */,
 				698C94F41976D483002C53FA /* QMApi+Calls.m */,
 				24970BC619DD951600959268 /* QMApi+Notifications.m */,
+				1462FF691ABAF772007EFE0C /* QMApi+Permissions.m */,
 			);
 			path = QMServicesFacade;
 			sourceTree = "<group>";
@@ -2338,6 +2341,7 @@
 				55943A0C1941A4AE00BF4312 /* CDDialog.m in Sources */,
 				55A8B0AB1965A66300B5D33B /* QMApi+ChatDialogs.m in Sources */,
 				55D8ADCA19AC767F00DAF79F /* QMSystemMessageCell.m in Sources */,
+				1462FF6A1ABAF772007EFE0C /* QMApi+Permissions.m in Sources */,
 				55D8ADA319AC75FA00DAF79F /* MagicalRecord+Actions.m in Sources */,
 				2476BA8119A5D91F00CC666D /* QMUsersUtils.m in Sources */,
 				55D8ADA019AC75FA00DAF79F /* NSDictionary+MagicalRecordAdditions.m in Sources */,
@@ -2600,6 +2604,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Q-municate/Q-municate-Prefix.pch";
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/include/libxml2,
@@ -2654,6 +2659,7 @@
 					"COCOAPODS=1",
 					DNDEBUG,
 				);
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/include/libxml2,

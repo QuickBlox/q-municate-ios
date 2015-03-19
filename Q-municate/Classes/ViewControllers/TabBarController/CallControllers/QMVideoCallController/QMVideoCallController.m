@@ -31,7 +31,7 @@ NSString *const kGoToDuringVideoCallControllerSegue= @"goToDuringVideoCallSegueI
 
 - (void)startCall {
     [[QMApi instance] callToUser:@(self.opponent.ID) conferenceType:QBConferenceTypeVideo];
-    [QMSoundManager playCallingSound];
+    
 }
 
 - (void)confirmCall {

@@ -119,7 +119,7 @@ NSString* machineName() {
 
 - (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID {
     [super session:session connectedToUser:userID];
-    [[QMSoundManager shared] stopAllSounds];
+    [[QMSoundManager instance] stopAllSounds];
     [self stopActivityIndicator];
 }
 

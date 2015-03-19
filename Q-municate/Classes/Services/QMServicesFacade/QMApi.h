@@ -327,3 +327,10 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 @property (strong, nonatomic) QBUUser *currentUser;
 
 @end
+
+@interface QMApi (Permissions)
+
+- (void)requestPermissionToCameraWithCompletion:(void(^)(BOOL authorized))completion;
+- (void)requestPermissionToMicrophoneWithCompletion:(void(^)(BOOL granted))completion;
+
+@end

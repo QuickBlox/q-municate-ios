@@ -10,7 +10,7 @@
 #import "QMIncomingCallController.h"
 #import "QMBaseService.h"
 
-@interface QMAVCallManager : QMBaseService <QBRTCClientDelegate>
+@interface QMAVCallManager : QMBaseService <QBRTCClientDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) QBRTCSession *session;
 
@@ -31,5 +31,12 @@
  *  @param conferenceType QBConferenceType
  */
 - (void)callToUsers:(NSArray *)users withConferenceType:(QBConferenceType)conferenceType;
+
+/**
+ *  check permissions and show alert if permissions are denied
+ *
+ *  @param conferenceType QBConferenceType
+ */
+- (void)checkPermissionsWithConferenceType:(QBConferenceType)conferenceType completion:(void(^)(BOOL canContinue))completion;
 
 @end

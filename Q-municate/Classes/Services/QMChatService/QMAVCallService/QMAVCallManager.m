@@ -9,6 +9,8 @@
 #import "QMAVCallManager.h"
 #import "SVProgressHUD.h"
 #import "QMBaseCallsController.h"
+#import "QMApi.h"
+#import "REAlertView+QMSuccess.h"
 
 @interface QMAVCallManager()
 @property (strong, nonatomic, readonly) UIStoryboard *mainStoryboard;
@@ -28,6 +30,10 @@ NSString *const kUserIds = @"UserIds";
 NSString *const kUserName = @"UserName";
 
 @implementation QMAVCallManager
+{
+    QMApi *api;
+    NSTimer *callingSoundTimer;
+}
 
 - (instancetype)init {
     self = [super init];
@@ -38,12 +44,12 @@ NSString *const kUserName = @"UserName";
         }
         self.frontCamera = YES;
     }
-    
     return self;
 }
 
 - (void)start{
     [super start];
+    api = [QMApi instance];
     [QBRTCClient.instance addDelegate:self];
     [QBRTCConfig setDTLSEnabled:YES];
 }
@@ -89,39 +95,88 @@ NSString *const kUserName = @"UserName";
     }
 }
 
-- (void)callToUsers:(NSArray *)users withConferenceType:(QBConferenceType)conferenceType{
-    
-    assert(users && users.count);
-    
-    if (self.session) {
-        return;
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if( alertView.cancelButtonIndex != buttonIndex ){
+         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
     }
+}
 
-    QBRTCSession *session = [QBRTCClient.instance createNewSessionWithOpponents:users
-                                     withConferenceType:conferenceType];
-    
-    if (session) {
+- (void)checkPermissionsWithConferenceType:(QBConferenceType)conferenceType completion:(void(^)(BOOL canContinue))completion {
+    __weak __typeof(self) weakSelf = self;
+    [api requestPermissionToMicrophoneWithCompletion:^(BOOL granted) {
+        if( granted ) {
+            if( conferenceType == QBConferenceTypeAudio ) {
+                if( completion ) {
+                    completion(granted);
+                }
+            }
+            else if( conferenceType == QBConferenceTypeVideo ) {
+                [api requestPermissionToCameraWithCompletion:^(BOOL authorized) {
+                    if( completion ) {
+                        completion(authorized);
+                    }
+                    if( !authorized){
+                        if (&UIApplicationOpenSettingsURLString != NULL) {
+                            [[[UIAlertView alloc] initWithTitle:@"Camera error" message:NSLocalizedString(@"QM_STR_NO_PERMISSIONS_TO_CAMERA", nil) delegate:weakSelf cancelButtonTitle:@"Ok" otherButtonTitles:@"Settings", nil] show];
+                        }
+                        else{
+                            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_NO_PERMISSIONS_TO_CAMERA", nil) actionSuccess:NO];
+                        }
+                    }
+                }];
+            }
+        }
+        else {
+            if (&UIApplicationOpenSettingsURLString != NULL) {
+                [[[UIAlertView alloc] initWithTitle:@"Microphone error" message:NSLocalizedString(@"QM_STR_NO_PERMISSIONS_TO_MICROPHONE", nil)  delegate:weakSelf cancelButtonTitle:@"Ok" otherButtonTitles:@"Settings", nil] show];
+            }
+            else{
+                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_NO_PERMISSIONS_TO_MICROPHONE", nil) actionSuccess:NO];
+            }
+        }
+    }];
+}
+
+- (void)callToUsers:(NSArray *)users withConferenceType:(QBConferenceType)conferenceType{
+    __weak __typeof(self) weakSelf = self;
+    [self checkPermissionsWithConferenceType:conferenceType completion:^(BOOL canContinue) {
         
-        self.session = session;
+        if( !canContinue ){
+            return;
+        }
         
-        QMBaseCallsController *vc = (QMBaseCallsController *)[self.mainStoryboard instantiateViewControllerWithIdentifier:(conferenceType == QBConferenceTypeVideo) ? kVideoCallController : kAudioCallController];
+        assert(users && users.count);
         
-        vc.session = self.session;
-        vc.opponent = [[QMApi instance] userWithID:[((NSNumber *)users[0]) unsignedIntegerValue]];
+        if (weakSelf.session) {
+            return;
+        }
         
-        UINavigationController *navVC = [[UINavigationController alloc] initWithRootViewController:vc];
-        [navVC setNavigationBarHidden:YES];
+        QBRTCSession *session = [QBRTCClient.instance createNewSessionWithOpponents:users
+                                                                 withConferenceType:conferenceType];
         
-        [self.rootViewController presentViewController:navVC
-                                              animated:YES
-                                            completion:nil];
-        [self.session startCall:@{kUserIds: users}];
-        self.currentlyPresentedViewController = navVC;
-    }
-    else {
-        
-        [SVProgressHUD showErrorWithStatus:@"Error creating new session"];
-    }
+        if (session) {
+            [self startPlayingCallingSound];
+            weakSelf.session = session;
+            
+            QMBaseCallsController *vc = (QMBaseCallsController *)[weakSelf.mainStoryboard instantiateViewControllerWithIdentifier:(conferenceType == QBConferenceTypeVideo) ? kVideoCallController : kAudioCallController];
+            
+            vc.session = weakSelf.session;
+            vc.opponent = [[QMApi instance] userWithID:[((NSNumber *)users[0]) unsignedIntegerValue]];
+            
+            UINavigationController *navVC = [[UINavigationController alloc] initWithRootViewController:vc];
+            [navVC setNavigationBarHidden:YES];
+            
+            [weakSelf.rootViewController presentViewController:navVC
+                                                      animated:YES
+                                                    completion:nil];
+            [weakSelf.session startCall:@{kUserIds: users}];
+            weakSelf.currentlyPresentedViewController = navVC;
+        }
+        else {
+            
+            [SVProgressHUD showErrorWithStatus:@"Error creating new session"];
+        }
+    }];
 }
 
 #pragma mark - QBWebRTCChatDelegate
@@ -190,4 +245,47 @@ NSString *const kUserName = @"UserName";
     self.remoteVideoTrack = videoTrack;
 }
 
+- (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID{
+    [self stopAllSounds];
+}
+
+
+# pragma mark Sounds Public methods -
+
+- (void)startPlayingCallingSound {
+    [self stopAllSounds];
+    callingSoundTimer =[NSTimer scheduledTimerWithTimeInterval:[QBRTCConfig dialingTimeInterval]
+                                                        target:self
+                                                      selector:@selector(playCallingSound:)
+                                                      userInfo:nil
+                                                       repeats:YES];
+    [self playCallingSound:nil];
+}
+
+- (void)startPlayingRingtoneSound {
+    [self stopAllSounds];
+    callingSoundTimer =[NSTimer scheduledTimerWithTimeInterval:[QBRTCConfig dialingTimeInterval]
+                                                        target:self
+                                                      selector:@selector(playRingtoneSound:)
+                                                      userInfo:nil
+                                                       repeats:YES];
+    [self playRingtoneSound:nil];
+}
+
+# pragma mark Sounds Private methods -
+- (void)playCallingSound:(id)sender {
+    [QMSoundManager playCallingSound];
+}
+
+- (void)playRingtoneSound:(id)sender {
+    [QMSoundManager playRingtoneSound];
+}
+
+- (void)stopAllSounds {
+    if( callingSoundTimer ){
+        [callingSoundTimer invalidate];
+        callingSoundTimer = nil;
+    }
+    [QMSysPlayer stopAllSounds];
+}
 @end

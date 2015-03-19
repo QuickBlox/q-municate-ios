@@ -11,6 +11,7 @@
 #import "QMImageView.h"
 #import "QMSoundManager.h"
 #import "QMVideoP2PController.h"
+#import "QMAVCallManager.h"
 
 @interface QMIncomingCallController ()<QBRTCClientDelegate>
 
@@ -56,18 +57,22 @@
                           completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
      }];
 
-    [QMSoundManager playRingtoneSound];
 }
 
 #pragma mark - Actions
 
 - (IBAction)acceptCall:(id)sender {
-    [[QMSoundManager shared] stopAllSounds];
-    if (self.callType == QBConferenceTypeVideo) {
-        [self performSegueWithIdentifier:kGoToDuringVideoCallSegueIdentifier sender:self];
-    } else {
-        [self performSegueWithIdentifier:kGoToDuringAudioCallSegueIdentifier sender:nil];
-    }
+    
+    [[[QMApi instance] avCallManager] checkPermissionsWithConferenceType:self.callType completion:^(BOOL canContinue) {
+        if( canContinue ) {
+            [[QMSoundManager instance] stopAllSounds];
+            if (self.callType == QBConferenceTypeVideo) {
+                [self performSegueWithIdentifier:kGoToDuringVideoCallSegueIdentifier sender:self];
+            } else {
+                [self performSegueWithIdentifier:kGoToDuringAudioCallSegueIdentifier sender:nil];
+            }
+        }
+    }];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
@@ -79,20 +84,26 @@
 }
 
 - (IBAction)acceptCallWithVideo:(id)sender {
-    [[QMSoundManager shared] stopAllSounds];
-    [self performSegueWithIdentifier:kGoToDuringVideoCallSegueIdentifier sender:nil];
+    [[QMSoundManager instance] stopAllSounds];
+    [[[QMApi instance] avCallManager] checkPermissionsWithConferenceType:self.callType completion:^(BOOL canContinue) {
+        if( canContinue ) {
+            [[QMSoundManager instance] stopAllSounds];
+            
+            [self performSegueWithIdentifier:kGoToDuringVideoCallSegueIdentifier sender:self];
+        }
+    }];
 }
 
 - (IBAction)declineCall:(id)sender {
     
-    [[QMSoundManager shared] stopAllSounds];
+    [[QMSoundManager instance] stopAllSounds];
     [[QMApi instance] rejectCall];
     [QMSoundManager playEndOfCallSound];
     self.incomingCallLabel.text = NSLocalizedString(@"QM_STR_CALL_WAS_CANCELLED", nil);
 }
 
 - (void)cleanUp {
-    [[QMSoundManager shared] stopAllSounds];
+    [[QMSoundManager instance] stopAllSounds];
     [QBRTCClient.instance removeDelegate:self];
 }
 

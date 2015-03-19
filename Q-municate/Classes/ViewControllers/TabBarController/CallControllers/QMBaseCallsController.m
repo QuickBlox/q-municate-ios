@@ -62,7 +62,7 @@
     
     [self.contentView updateViewWithStatus:NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil)];
     // stop playing sound:
-    [[QMSoundManager shared] stopAllSounds];
+    [[QMSoundManager instance] stopAllSounds];
     [QMSoundManager playEndOfCallSound];
     
     [[QMApi instance] finishCall];
@@ -94,13 +94,13 @@
 
 - (void)callRejectedByUser {
     [self.contentView updateViewWithStatus:NSLocalizedString(@"QM_STR_USER_IS_BUSY", nil)];
-    [[QMSoundManager shared] stopAllSounds];
+    [[QMSoundManager instance] stopAllSounds];
     [QMSoundManager playBusySound];
 }
 
 - (void)callStoppedByOpponentForReason:(NSString *)reason {
     // stop playing sound:
-    [[QMSoundManager shared] stopAllSounds];
+    [[QMSoundManager instance] stopAllSounds];
     [self.contentView stopTimer];
     
     if ([reason isEqualToString:kStopVideoChatCallStatus_OpponentDidNotAnswer]) {
@@ -121,6 +121,7 @@
 - (void)changeSpeakerWithCompletion:(void(^)(BOOL isSpeaker))completion{
     [self.session switchAudioOutput:completion];
 }
+
 - (IBAction)speakerTapped:(id)sender {
     if( isRunning ){
         return;
