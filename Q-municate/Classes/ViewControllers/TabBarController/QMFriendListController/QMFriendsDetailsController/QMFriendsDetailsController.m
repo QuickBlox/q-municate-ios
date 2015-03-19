@@ -16,6 +16,8 @@
 #import "SVProgressHUD.h"
 #import "QMApi.h"
 #import "QMChatReceiver.h"
+#import "REAlertView+QMSuccess.h"
+#import "QMUsersService.h"
 
 typedef NS_ENUM(NSUInteger, QMCallType) {
     QMCallTypePhone,
@@ -42,6 +44,9 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 @end
 
 @implementation QMFriendsDetailsController
+{
+    QMApi *api;
+}
 
 - (void)dealloc {
     [[QMChatReceiver instance] unsubscribeForTarget:self];
@@ -51,6 +56,8 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 - (void)viewDidLoad {
     
     [super viewDidLoad];
+    
+    api = [QMApi instance];
     
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
@@ -123,8 +130,6 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     }
 }
 
-
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -133,8 +138,25 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
         case QMCallTypePhone: break;
             
 #if QM_AUDIO_VIDEO_ENABLED
-        case QMCallTypeVideo:[[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBConferenceTypeVideo]; break;
-        case QMCallTypeAudio: [[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBConferenceTypeAudio]; break;
+        case QMCallTypeVideo:{
+            
+            if( [api.usersService userIDIsInPendingList:self.selectedUser.ID] ) {
+                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
+            }
+            else{
+                [[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBConferenceTypeVideo];
+            }
+        }
+            break;
+        case QMCallTypeAudio: {
+            if( [api.usersService userIDIsInPendingList:self.selectedUser.ID] ) {
+                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
+            }
+            else{
+                [[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBConferenceTypeAudio];
+            }
+        }
+            break;
         case QMCallTypeChat: {
 #else
         case QMCallTypeVideo: {

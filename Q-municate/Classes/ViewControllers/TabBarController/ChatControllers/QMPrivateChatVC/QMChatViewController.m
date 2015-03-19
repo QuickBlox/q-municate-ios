@@ -21,6 +21,9 @@
 #import "QMChatInputToolbar.h"
 #import "QMAudioCallController.h"
 #import "QMVideoCallController.h"
+#import "QMChatToolbarContentView.h"
+#import "QMPlaceholderTextView.h"
+#import "REAlertView+QMSuccess.h"
 
 @interface QMChatViewController ()
 
@@ -153,6 +156,12 @@
 #if QM_AUDIO_VIDEO_ENABLED == 0
     [QMAlertsFactory comingSoonAlert];
 #else
+
+    BOOL callsAllowed = [[[self.inputToolBar contentView] textView] isEditable];
+    if( !callsAllowed ) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
+        return;
+    }
     NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
     [[QMApi instance] callToUser:@(opponentID) conferenceType:QBConferenceTypeAudio];
 #endif
@@ -162,6 +171,11 @@
 #if QM_AUDIO_VIDEO_ENABLED == 0
     [QMAlertsFactory comingSoonAlert];
 #else
+    BOOL callsAllowed = [[[self.inputToolBar contentView] textView] isEditable];
+    if( !callsAllowed ) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
+        return;
+    }
     NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
     [[QMApi instance] callToUser:@(opponentID) conferenceType:QBConferenceTypeVideo];
 #endif

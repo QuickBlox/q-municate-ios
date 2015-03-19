@@ -13,11 +13,14 @@
 
 
 @implementation QMVideoP2PController
+{
+    QMAVCallManager *av;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    QMAVCallManager *av = [QMApi instance].avCallManager ;
+    av = [QMApi instance].avCallManager ;
     if( av.localVideoTrack ){
         self.localVideoTrack = av.localVideoTrack;
     }
@@ -29,7 +32,7 @@
     [self reloadVideoViews];
     
     if([machineName() isEqualToString:@"iPhone3,1"] || [machineName() isEqualToString:@"iPhone3,2"] || [machineName() isEqualToString:@"iPhone3,3"]||[machineName() isEqualToString:@"iPhone4,1"]){
-        self.opponentsVideoViewBottom.constant = -100.0f;
+        self.opponentsVideoViewBottom.constant = -80.0f;
     }
 }
 
@@ -62,9 +65,11 @@ NSString* machineName() {
     [super videoTapped:sender];
     if( [self.session videoEnabled] ){
         [self allowSendingLocalVideoTrack];
+        [self.btnSwitchCamera setUserInteractionEnabled:YES];
     }
     else{
         [self denySendingLocalVideoTrack];
+        [self.btnSwitchCamera setUserInteractionEnabled:NO];
     }
 }
 
@@ -102,6 +107,13 @@ NSString* machineName() {
 - (void)session:(QBRTCSession *)session didReceiveRemoteVideoTrack:(QBRTCVideoTrack *)videoTrack fromUser:(NSNumber *)userID {
     [super session:session didReceiveRemoteVideoTrack:videoTrack fromUser:userID];
     self.opponentVideoTrack = videoTrack;
+    
+    if( !av.isSpeakerEnabled ){
+        [self.session switchAudioOutput:^(BOOL isSpeaker) {
+            av.speakerEnabled = isSpeaker;
+        }];
+    }
+    
     [self reloadVideoViews];
 }
 

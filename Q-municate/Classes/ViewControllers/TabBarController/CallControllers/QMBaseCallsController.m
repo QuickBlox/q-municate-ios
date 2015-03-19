@@ -20,23 +20,24 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     av = [QMApi instance].avCallManager;
     if( av.session ){
         self.session = av.session;
     }
-    
     [QBRTCClient.instance addDelegate:self];
     
     [self subscribeForNotifications];
     !self.isOpponentCaller ? [self startCall] : [self confirmCall];
     
-    [self.contentView updateViewWithUser:self.opponent conferenceType:self.session.conferenceType];
+    [self.contentView updateViewWithUser:self.opponent conferenceType:self.session.conferenceType isOpponentCaller:self.isOpponentCaller];
     [self updateButtonsState];
 }
 
 - (void)updateButtonsState{
     [self.btnMic setSelected:!self.session.audioEnabled];
     [self.btnSwitchCamera setSelected:!av.isFrontCamera];
+    [self.btnSwitchCamera setUserInteractionEnabled:self.session.videoEnabled];
     [self.btnVideo setSelected:!self.session.videoEnabled];
     [self.btnSpeaker setSelected:av.isSpeakerEnabled];
     [self.camOffView setHidden:self.session.videoEnabled];
@@ -117,6 +118,9 @@
     }
 }
 
+- (void)changeSpeakerWithCompletion:(void(^)(BOOL isSpeaker))completion{
+    [self.session switchAudioOutput:completion];
+}
 - (IBAction)speakerTapped:(id)sender {
     if( isRunning ){
         return;
@@ -184,6 +188,10 @@
 }
 
 - (void)sessionWillClose:(QBRTCSession *)session {
+    if( self.session != session ){
+        return;
+    }
+    
     QBRTCConnectionState state = [session connectionStateForUser:@(self.opponent.ID)];
     
     if( state == QBRTCConnectionFailed ){

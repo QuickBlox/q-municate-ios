@@ -31,6 +31,8 @@
 
 /**
  * Set audio session category options
+ 0 for speaker
+ AVAudioSessionCategoryOptionDefaultToSpeaker
  */
 @property (assign, nonatomic) AVAudioSessionCategoryOptions audioCategoryOptions;
 /**

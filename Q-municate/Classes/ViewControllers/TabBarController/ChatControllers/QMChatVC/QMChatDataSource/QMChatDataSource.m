@@ -107,7 +107,7 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
             if ([weakSelf.chatDialog.ID isEqualToString:message.cParamDialogID] && message.cParamNotificationType != QMMessageNotificationTypeDeliveryMessage) {
                 
                 // mark message as read:
-                [QBRequest markMessagesAsRead:@[message] dialogID:message.cParamDialogID successBlock:nil errorBlock:nil];
+                [QBRequest markMessagesAsRead:[NSSet setWithArray:@[message]] dialogID:message.cParamDialogID successBlock:nil errorBlock:nil];
                 
                 if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
                     

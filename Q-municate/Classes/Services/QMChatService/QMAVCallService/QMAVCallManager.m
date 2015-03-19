@@ -17,8 +17,8 @@
 @property (weak, nonatomic) UIViewController *currentlyPresentedViewController;
 @end
 
-const NSTimeInterval kQBAnswerTimeInterval = 5*20.f;
-const NSTimeInterval kQBRTCDisconnectTimeInterval = 15*5.f;
+const NSTimeInterval kQBAnswerTimeInterval = 20.0f;
+const NSTimeInterval kQBRTCDisconnectTimeInterval = 15.0f;
 
 NSString *const kAudioCallController = @"AudioCallIdentifier";
 NSString *const kVideoCallController = @"VideoCallIdentifier";
@@ -152,11 +152,19 @@ NSString *const kUserName = @"UserName";
 }
 
 - (void)sessionWillClose:(QBRTCSession *)session {
+    if( self.session != session ){
+        // may be we rejected someone else call while we are talking with another person
+        return;
+    }
     ILog(@"session will close");
     [SVProgressHUD dismiss];
 }
 
 - (void)sessionDidClose:(QBRTCSession *)session {
+    if( self.session != session ){
+        // may be we rejected someone else call while we are talking with another person
+        return;
+    }
     __weak __typeof(self)weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         

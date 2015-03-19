@@ -97,7 +97,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     NSUInteger idx = [self.tabBarController.viewControllers indexOfObject:self.navigationController];
     if (idx != NSNotFound) {
         UITabBarItem *item = self.tabBarController.tabBar.items[idx];
-        item.badgeValue = unreadDialogsCount > 0 ? [NSString stringWithFormat:@"%d", unreadDialogsCount] : nil;
+        item.badgeValue = unreadDialogsCount > 0 ? [NSString stringWithFormat:@"%zd", unreadDialogsCount] : nil;
     }
 }
 

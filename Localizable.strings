@@ -65,7 +65,7 @@
 
 "QM_STR_MAIL_COMPOSER_ERROR_DESCRIPTION_FOR_INVITE" = "We can't send your email invite due to misconfigured email account. Please go to Settings app-> Mail,Contact, Calendars and setup it.";
 
-
+"QM_STR_CANT_MAKE_CALLS" = "Sorry, you can't make a call until the invitation is accepted";
 
 //  ********** Contact requests notification text: ***************
 "QM_STR_FRIEND_REQUEST_DID_SEND_FOR_ME" = "Your request has been sent";

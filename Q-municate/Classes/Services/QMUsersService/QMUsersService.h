@@ -11,6 +11,7 @@
 
 @interface QMUsersService : QMBaseService
 
+@property (strong, nonatomic) NSMutableArray *contactListPendingApproval;
 @property (strong, nonatomic) NSMutableArray *contactList;
 #warning HARDFIX: property friendsOnly
 @property (strong, nonatomic) NSMutableArray *friendsOnly;
@@ -29,6 +30,9 @@
 - (NSArray *)idsFromContactListItems;
 - (BOOL)isFriendWithID:(NSUInteger)ID;
 - (BOOL)isContactRequestWithID:(NSInteger)ID;
+// friend request has not been accepted yet
+- (BOOL)userIDIsInPendingList:(NSUInteger)userId;
+
 
 - (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock;
 - (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void(^)(BOOL retrieveWasNeeded))completionBlock;

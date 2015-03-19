@@ -26,7 +26,8 @@
         self.users = [NSMutableDictionary dictionary];
         self.contactList = [NSMutableArray array];
         self.retrivedIds = [NSMutableSet set];
-        self.friendsOnly = [NSMutableArray new];
+        self.friendsOnly = [NSMutableArray array];
+        self.contactListPendingApproval = [NSMutableArray array];
         
     }
     return self;
@@ -44,6 +45,8 @@
         }
         [weakSelf.contactList removeAllObjects];
         [weakSelf.friendsOnly removeAllObjects];
+        
+        [weakSelf.contactListPendingApproval addObjectsFromArray:contactList.pendingApproval];
         
         [weakSelf.contactList addObjectsFromArray:contactList.pendingApproval];
         [weakSelf.contactList addObjectsFromArray:contactList.contacts];
@@ -106,7 +109,7 @@
 
 - (QBUUser *)userWithID:(NSUInteger)userID {
     
-    NSString *stingID = [NSString stringWithFormat:@"%d", userID];
+    NSString *stingID = [NSString stringWithFormat:@"%zd", userID];
     QBUUser *user = self.users[stingID];
     return user;
 }
@@ -144,13 +147,13 @@
 
 - (void)addUser:(QBUUser *)user {
     
-    NSString *key = [NSString stringWithFormat:@"%d", user.ID];
+    NSString *key = [NSString stringWithFormat:@"%zd", user.ID];
     self.users[key] = user;
 }
 
 - (void)deleteUser:(QBUUser *)user
 {
-    NSString *key = [NSString stringWithFormat:@"%d", user.ID];
+    NSString *key = [NSString stringWithFormat:@"%zd", user.ID];
     [self.users removeObjectForKey:key];
 }
 
@@ -163,6 +166,15 @@
     return NO;
 }
 
+// friend request has not been accepted yet
+- (BOOL)userIDIsInPendingList:(NSUInteger)userId{
+    for( QBContactListItem *item in [self contactListPendingApproval] ){
+        if( userId == item.userID ){
+            return YES;
+        }
+    }
+    return NO;
+}
 
 #pragma mark - 
 

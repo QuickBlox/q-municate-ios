@@ -97,8 +97,9 @@
 }
 
 - (void)sessionWillClose:(QBRTCSession *)session {
-    
-    [self cleanUp];
+    if( self.session == session ) {
+        [self cleanUp];
+    }
 }
 
 - (void)dealloc {
