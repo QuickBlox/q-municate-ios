@@ -54,7 +54,7 @@ inline void defSetBool(NSString *key, BOOL var) {
     defaultsPostNotification(key);
 }
 
-inline BOOL defInt(NSString *key) {
+inline NSInteger defInt(NSString *key) {
     
     return [defaults() integerForKey:key];
 }
