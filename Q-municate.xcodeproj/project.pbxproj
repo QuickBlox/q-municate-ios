@@ -2596,8 +2596,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/External",
@@ -2676,7 +2675,7 @@
 				);
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "8167ef38-4b98-4550-be1c-167027a7ce74";
+				PROVISIONING_PROFILE = "1a5985cb-ae7a-4dd8-9fdf-eb3e03b7798f";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;

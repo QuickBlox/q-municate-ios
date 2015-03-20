@@ -37,7 +37,15 @@
     
     opponent = [[QMApi instance] userWithID:self.opponentID];
     
-    self.userNameLabel.text = opponent ? opponent.fullName : @"Unknown caller";
+    if( opponent ){
+        self.userNameLabel.text = opponent.fullName;
+    }
+    else if( [[[QMApi instance] avCallManager] callingUserName] ){
+        self.userNameLabel.text = [[[QMApi instance] avCallManager] callingUserName];
+    }
+    else{
+        self.userNameLabel.text = @"Unknown caller";
+    }
  
     if (self.callType == QBConferenceTypeVideo) {
         [self.incomingCallView setHidden:YES];
