@@ -149,8 +149,8 @@
     
     //If dialog type is equal group then need join room
     if (chatDialog.type == QBChatDialogTypeGroup) {
-        
-        if (!chatDialog.chatRoom.isJoined) {
+
+        if (!chatDialog.chatRoom.isJoined && [QBChat instance].isLoggedIn) {
             
             QBChatRoom *room = chatDialog.chatRoom;
             [room joinRoomWithHistoryAttribute:@{@"maxstanzas": @"0"}];

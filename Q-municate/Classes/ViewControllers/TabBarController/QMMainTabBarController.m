@@ -88,7 +88,10 @@
                 }
             }];
             
-            [weakSelf loginToChat];
+            [[QMApi instance] fetchAllHistory:^{
+                [weakSelf loginToChat];
+            }];
+            
         }
     }];
 }
@@ -97,6 +100,7 @@
 {
     [[QMApi instance] loginChat:^(BOOL loginSuccess) {
         
+        [[QMApi instance].chatDialogsService joinRooms];
         QBUUser *usr = [QMApi instance].currentUser;
         if (!usr.imported) {
             [[QMApi instance] importFriendsFromFacebook];
@@ -110,9 +114,6 @@
             
         } else {
             
-            [[QMApi instance] fetchAllHistory:^{
-                [SVProgressHUD dismiss];
-            }];
         }
     }];
 }
