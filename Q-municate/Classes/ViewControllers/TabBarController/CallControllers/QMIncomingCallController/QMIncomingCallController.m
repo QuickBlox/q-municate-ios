@@ -62,15 +62,26 @@
 #pragma mark - Actions
 
 - (IBAction)acceptCall:(id)sender {
-    
+    __weak __typeof(self) weakSelf = self;
     [[[QMApi instance] avCallManager] checkPermissionsWithConferenceType:self.callType completion:^(BOOL canContinue) {
         if( canContinue ) {
             [[QMSoundManager instance] stopAllSounds];
-            if (self.callType == QBConferenceTypeVideo) {
-                [self performSegueWithIdentifier:kGoToDuringVideoCallSegueIdentifier sender:self];
+            if (weakSelf.callType == QBConferenceTypeVideo) {
+                [weakSelf performSegueWithIdentifier:kGoToDuringVideoCallSegueIdentifier sender:weakSelf];
             } else {
-                [self performSegueWithIdentifier:kGoToDuringAudioCallSegueIdentifier sender:nil];
+                [weakSelf performSegueWithIdentifier:kGoToDuringAudioCallSegueIdentifier sender:nil];
             }
+        }
+    }];
+}
+
+- (IBAction)acceptCallWithVideo:(id)sender {
+    __weak __typeof(self) weakSelf = self;
+    [[QMSoundManager instance] stopAllSounds];
+    [[[QMApi instance] avCallManager] checkPermissionsWithConferenceType:self.callType completion:^(BOOL canContinue) {
+        if( canContinue ) {
+            [[QMSoundManager instance] stopAllSounds];
+            [weakSelf performSegueWithIdentifier:kGoToDuringVideoCallSegueIdentifier sender:nil];
         }
     }];
 }
@@ -81,17 +92,6 @@
         QMVideoP2PController *vc = segue.destinationViewController;
         vc.disableSendingLocalVideoTrack = YES;
     }
-}
-
-- (IBAction)acceptCallWithVideo:(id)sender {
-    [[QMSoundManager instance] stopAllSounds];
-    [[[QMApi instance] avCallManager] checkPermissionsWithConferenceType:self.callType completion:^(BOOL canContinue) {
-        if( canContinue ) {
-            [[QMSoundManager instance] stopAllSounds];
-            
-            [self performSegueWithIdentifier:kGoToDuringVideoCallSegueIdentifier sender:self];
-        }
-    }];
 }
 
 - (IBAction)declineCall:(id)sender {

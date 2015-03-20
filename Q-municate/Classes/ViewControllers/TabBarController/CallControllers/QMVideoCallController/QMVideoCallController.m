@@ -30,7 +30,7 @@ NSString *const kGoToDuringVideoCallControllerSegue= @"goToDuringVideoCallSegueI
 }
 
 - (void)startCall {
-    [[QMApi instance] callToUser:@(self.opponent.ID) conferenceType:QBConferenceTypeVideo];
+    [[QMApi instance] callToUser:@(self.opponent.ID) conferenceType:QBConferenceTypeVideo sendPushNotificationIfUserIsOffline:YES];
     
 }
 

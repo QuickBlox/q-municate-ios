@@ -29,8 +29,9 @@
  *
  *  @param users          array of QBUUser instances
  *  @param conferenceType QBConferenceType
+ *  @param pushEnabled is user if offline he will receive a push notifications
  */
-- (void)callToUsers:(NSArray *)users withConferenceType:(QBConferenceType)conferenceType;
+- (void)callToUsers:(NSArray *)users withConferenceType:(QBConferenceType)conferenceType pushEnabled:(BOOL)pushEnabled;
 
 /**
  *  check permissions and show alert if permissions are denied

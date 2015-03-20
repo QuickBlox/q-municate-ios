@@ -316,6 +316,7 @@ typedef NS_ENUM(NSInteger, QMAccountType);
 @interface QMApi (Calls)
 
 - (void)callToUser:(NSNumber *)userID conferenceType:(enum QBConferenceType)conferenceType;
+- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBConferenceType)conferenceType sendPushNotificationIfUserIsOffline:(BOOL)pushEnabled;
 - (void)acceptCall;
 - (void)rejectCall;
 - (void)finishCall;

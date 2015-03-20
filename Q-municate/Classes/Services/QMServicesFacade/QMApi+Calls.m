@@ -13,7 +13,12 @@
 
 - (void)callToUser:(NSNumber *)userID conferenceType:(enum QBConferenceType)conferenceType
 {
-    [self.avCallManager callToUsers:@[userID] withConferenceType:conferenceType];
+    [self callToUser:userID conferenceType:conferenceType sendPushNotificationIfUserIsOffline:YES];
+}
+
+- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBConferenceType)conferenceType sendPushNotificationIfUserIsOffline:(BOOL)pushEnabled
+{
+    [self.avCallManager callToUsers:@[userID] withConferenceType:conferenceType pushEnabled:pushEnabled];
 }
 
 - (void)acceptCall
