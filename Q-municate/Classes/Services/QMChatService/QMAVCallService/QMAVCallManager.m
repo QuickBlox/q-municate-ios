@@ -20,7 +20,7 @@
 @property (weak, nonatomic) UIViewController *currentlyPresentedViewController;
 @end
 
-const NSTimeInterval kQBAnswerTimeInterval = 20.0f;
+const NSTimeInterval kQBAnswerTimeInterval = 40.0f;
 const NSTimeInterval kQBRTCDisconnectTimeInterval = 15.0f;
 
 NSString *const kAudioCallController = @"AudioCallIdentifier";
@@ -238,7 +238,6 @@ NSString *const kUserName = @"UserName";
         // may be we rejected someone else call while we are talking with another person
         return;
     }
-    self.callingUserName = nil;
     __weak __typeof(self)weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         

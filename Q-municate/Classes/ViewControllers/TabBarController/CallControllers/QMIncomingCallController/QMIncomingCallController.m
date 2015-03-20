@@ -40,9 +40,6 @@
     if( opponent ){
         self.userNameLabel.text = opponent.fullName;
     }
-    else if( [[[QMApi instance] avCallManager] callingUserName] ){
-        self.userNameLabel.text = [[[QMApi instance] avCallManager] callingUserName];
-    }
     else{
         self.userNameLabel.text = @"Unknown caller";
     }

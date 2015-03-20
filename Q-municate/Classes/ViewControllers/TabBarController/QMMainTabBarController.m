@@ -100,14 +100,14 @@
 {
     [[QMApi instance] loginChat:^(BOOL loginSuccess) {
         
+        // hide progress hud
+        [SVProgressHUD dismiss];
+        
         [[QMApi instance].chatDialogsService joinRooms];
         QBUUser *usr = [QMApi instance].currentUser;
         if (!usr.imported) {
             [[QMApi instance] importFriendsFromFacebook];
             [[QMApi instance] importFriendsFromAddressBookWithCompletion:^(BOOL succeded, NSError *error) {
-                
-                // hide progress hud
-                [SVProgressHUD dismiss];
             }];
             usr.imported = YES;
             [[QMApi instance] updateUser:usr image:nil progress:nil completion:^(BOOL successed) {}];

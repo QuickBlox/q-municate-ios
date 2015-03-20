@@ -16,7 +16,6 @@
 
 @property (assign, nonatomic, getter=isFrontCamera) BOOL frontCamera;
 @property (assign, nonatomic, getter=isSpeakerEnabled) BOOL speakerEnabled;
-@property (assign, nonatomic) NSString *callingUserName;
 
 @property (strong, nonatomic) QBRTCVideoTrack *localVideoTrack;
 @property (strong, nonatomic) QBRTCVideoTrack *remoteVideoTrack;
