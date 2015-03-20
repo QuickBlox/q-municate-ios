@@ -62,15 +62,17 @@
                 [weakSelf performSegueWithIdentifier:@"SplashSegue" sender:nil];
             }];
             
-        }else {
+        } else {
             
             // open app by push notification:
             NSDictionary *push = [[QMApi instance] pushNotification];
             if (push != nil) {
                 [SVProgressHUD show];
+                
                 [[QMApi instance] openChatPageForPushNotification:push completion:^(BOOL completed) {
                     [SVProgressHUD dismiss];
                 }];
+                
                 [[QMApi instance] setPushNotification:nil];
             }
             

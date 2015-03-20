@@ -62,12 +62,6 @@
             } else {
                 [weakSelf performSegueWithIdentifier:kWelcomeScreenSegueIdentifier sender:nil];
             }
-            if( [[[QMApi instance] settingsManager] pushNotificationsEnabled] ) {
-                [[QMApi instance] subscribeToPushNotificationsForceSettings:YES complete:nil];
-            }
-            else{
-                [[QMApi instance] unSubscribeToPushNotifications:nil];
-            }
         }
     }];
 }

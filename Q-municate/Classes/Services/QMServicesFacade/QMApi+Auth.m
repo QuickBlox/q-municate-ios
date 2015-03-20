@@ -51,11 +51,12 @@
             [self loginWithEmail:email password:password rememberMe:YES completion:completion];
         }
         else if (self.settingsManager.accountType == QMAccountTypeFacebook) {
+            
             [self loginWithFacebook:completion];
         }
         else {
+            
             completion(NO);
-//            NSAssert(nil, @"Need update this case");
         }
     }
     else {
