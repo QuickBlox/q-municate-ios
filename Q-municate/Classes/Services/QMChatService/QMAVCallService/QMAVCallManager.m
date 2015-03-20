@@ -140,17 +140,13 @@ NSString *const kUserName = @"UserName";
 }
 
 - (void)sendPushToUserWithUserID:(NSUInteger)opponentID{
-    
-//    QBContactListItem *item = [[QMApi instance] contactItemWithUserID:opponentID];
-//    if( ![item isOnline] ) {
-        QBMEvent *event = [QBMEvent event];
-        event.isDevelopmentEnvironment =  ![QBSettings isUseProductionEnvironmentForPushNotifications];
-        event.usersIDs = [@(opponentID) stringValue];
-        event.notificationType = QBMNotificationTypePush;
-        event.type = QBMEventTypeOneShot;
-        event.message = [NSString stringWithFormat:@"%@ is calling you", api.currentUser.fullName];
-        [QBRequest createEvent:event successBlock:nil errorBlock:nil];
-//    }
+    QBMEvent *event = [QBMEvent event];
+    event.isDevelopmentEnvironment =  NO;
+    event.usersIDs = [@(opponentID) stringValue];
+    event.notificationType = QBMNotificationTypePush;
+    event.type = QBMEventTypeOneShot;
+    event.message = [NSString stringWithFormat:@"%@ is calling you", api.currentUser.fullName];
+    [QBRequest createEvent:event successBlock:nil errorBlock:nil];
 }
 
 - (void)callToUsers:(NSArray *)users withConferenceType:(QBConferenceType)conferenceType pushEnabled:(BOOL)pushEnabled {
@@ -242,6 +238,7 @@ NSString *const kUserName = @"UserName";
         // may be we rejected someone else call while we are talking with another person
         return;
     }
+    self.callingUserName = nil;
     __weak __typeof(self)weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
