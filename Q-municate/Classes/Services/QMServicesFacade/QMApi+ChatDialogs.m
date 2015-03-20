@@ -45,7 +45,9 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 
 - (void)fetchChatDialogWithID:(NSString *)dialogID completion:(void(^)(QBChatDialog *chatDialog))completion
 {
+    
     __weak typeof(self)weakSelf = self;
+
     [self.chatDialogsService fetchDialogWithID:dialogID completion:^(QBChatDialog *dialog) {
         if (!dialog) {
             if (completion) completion(dialog);

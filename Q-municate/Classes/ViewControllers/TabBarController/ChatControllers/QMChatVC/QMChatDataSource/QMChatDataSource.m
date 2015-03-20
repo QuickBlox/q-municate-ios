@@ -75,6 +75,14 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         
         __weak __typeof(self)weakSelf = self;
         
+        [[QMChatReceiver instance] chatDidLoginWithTarget:self block:^(BOOL success) {
+            
+            if (weakSelf.chatDialog.type == QBChatDialogTypePrivate) {
+                [weakSelf unlockInputBar];
+            }
+            
+        }];
+        
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         [[QMApi instance] fetchMessageWithDialog:self.chatDialog complete:^(BOOL success) {
             

@@ -115,6 +115,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    
     if( userInfo[@"dialog_id"] ){
         [[QMApi instance] openChatPageForPushNotification:userInfo completion:^(BOOL completed) {}];
     }
