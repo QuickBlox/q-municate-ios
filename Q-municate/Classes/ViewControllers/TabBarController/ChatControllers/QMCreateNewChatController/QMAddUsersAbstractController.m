@@ -27,10 +27,10 @@ NSString *const kCreateChatCellIdentifier = @"CreateChatCell";
 #pragma mark - LifeCycle
 
 - (void)viewDidLoad {
+    self.selectedFriends = [NSMutableArray array];
     
     [super viewDidLoad];
     
-    self.selectedFriends = [NSMutableArray array];
     [self updateGUI];
 }
 

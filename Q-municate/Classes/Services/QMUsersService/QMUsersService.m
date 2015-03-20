@@ -80,10 +80,19 @@
 }
 
 - (NSArray *)idsOfContactsOnly {
+    
     NSMutableSet *IDs = [NSMutableSet new];
     NSArray *contactItems = [QBChat instance].contactList.contacts;
+    
     for (QBContactListItem *item in contactItems) {
         [IDs addObject:@(item.userID)];
+    }
+    
+    for (QBContactListItem *item in [QBChat instance].contactList.pendingApproval) {
+        
+        if (item.subscriptionState == QBPresenseSubscriptionStateFrom) {
+            [IDs addObject:@(item.userID)];
+        }
     }
     return IDs.allObjects;
 }
