@@ -114,10 +114,10 @@ NSString *const kUserName = @"UserName";
             }
             else if( conferenceType == QBConferenceTypeVideo ) {
                 [api requestPermissionToCameraWithCompletion:^(BOOL authorized) {
-                    if( completion ) {
+                    if( authorized && completion ) {
                         completion(authorized);
                     }
-                    if( !authorized){
+                    else if( !authorized){
                         if (&UIApplicationOpenSettingsURLString != NULL) {
                             [[[UIAlertView alloc] initWithTitle:@"Camera error" message:NSLocalizedString(@"QM_STR_NO_PERMISSIONS_TO_CAMERA", nil) delegate:weakSelf cancelButtonTitle:@"Ok" otherButtonTitles:@"Settings", nil] show];
                         }
@@ -148,7 +148,7 @@ NSString *const kUserName = @"UserName";
         event.usersIDs = [@(opponentID) stringValue];
         event.notificationType = QBMNotificationTypePush;
         event.type = QBMEventTypeOneShot;
-        event.message = @"aaaa calll!!";
+        event.message = [NSString stringWithFormat:@"%@ is calling you", api.currentUser.fullName];
         [QBRequest createEvent:event successBlock:nil errorBlock:nil];
 //    }
 }

@@ -86,7 +86,7 @@
     }];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // sender is not nil when accepting video call with denying my(local) video track
     if( [segue.identifier isEqualToString:kGoToDuringVideoCallSegueIdentifier] && sender != nil ){
         QMVideoP2PController *vc = segue.destinationViewController;
