@@ -105,13 +105,20 @@ NSString* machineName() {
 }
 
 - (void)session:(QBRTCSession *)session didReceiveRemoteVideoTrack:(QBRTCVideoTrack *)videoTrack fromUser:(NSNumber *)userID {
+    
     [super session:session didReceiveRemoteVideoTrack:videoTrack fromUser:userID];
     self.opponentVideoTrack = videoTrack;
     
-    if( !av.isSpeakerEnabled ){
-        [self.session switchAudioOutput:^(BOOL isSpeaker) {
-            av.speakerEnabled = isSpeaker;
-        }];
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    NSString *category = [audioSession category];
+    NSError *setCategoryError = nil;
+    
+    [audioSession setCategory:category
+                  withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker
+                        error:&setCategoryError];
+    
+    if (!setCategoryError) {
+        av.speakerEnabled = YES;
     }
     
     [self reloadVideoViews];
