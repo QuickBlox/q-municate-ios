@@ -472,11 +472,11 @@ Line 2</string>
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view clipsSubviews="YES" contentMode="scaleAspectFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xKx-9a-k2a" customClass="QBGLVideoView">
+                            <view clipsSubviews="YES" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="xKx-9a-k2a" customClass="QBGLVideoView">
                                 <rect key="frame" x="0.0" y="80" width="320" height="488"/>
                                 <subviews>
                                     <activityIndicatorView hidden="YES" opaque="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="mp9-Ag-8UB">
-                                        <rect key="frame" x="141" y="110" width="37" height="37"/>
+                                        <rect key="frame" x="141" y="225" width="37" height="37"/>
                                     </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -602,7 +602,7 @@ Line 2</string>
                                 </constraints>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="James Cobs" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L9T-tY-3Kn">
-                                <rect key="frame" x="201" y="20" width="99" height="30"/>
+                                <rect key="frame" x="201" y="20" width="98.5" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="xt7-88-Szq"/>
                                 </constraints>
@@ -611,7 +611,7 @@ Line 2</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DLm-F5-tEq">
-                                <rect key="frame" x="260" y="40" width="41" height="30"/>
+                                <rect key="frame" x="260" y="40" width="40.5" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="gEY-0y-Gmc"/>
                                 </constraints>
@@ -628,8 +628,8 @@ Line 2</string>
                             <constraint firstItem="DLm-F5-tEq" firstAttribute="trailing" secondItem="L9T-tY-3Kn" secondAttribute="trailing" constant="0.5" id="KQj-Fq-w4E"/>
                             <constraint firstAttribute="trailingMargin" secondItem="L9T-tY-3Kn" secondAttribute="trailing" constant="4.5" id="Mbl-nV-hmL"/>
                             <constraint firstItem="xKx-9a-k2a" firstAttribute="top" secondItem="NRI-TI-qDt" secondAttribute="top" constant="80" id="S9q-8l-cxI"/>
+                            <constraint firstAttribute="bottom" secondItem="xKx-9a-k2a" secondAttribute="bottom" id="UP1-yM-mk5"/>
                             <constraint firstItem="Ibe-fV-PIq" firstAttribute="top" secondItem="zdH-fi-T39" secondAttribute="bottom" id="UPa-Uj-np8"/>
-                            <constraint firstItem="YzX-7u-vU5" firstAttribute="top" secondItem="xKx-9a-k2a" secondAttribute="bottom" id="bYO-9D-QF6"/>
                             <constraint firstItem="DLm-F5-tEq" firstAttribute="top" secondItem="L9T-tY-3Kn" secondAttribute="bottom" constant="-10" id="eF0-Ir-7xF"/>
                             <constraint firstItem="L9T-tY-3Kn" firstAttribute="top" secondItem="NRI-TI-qDt" secondAttribute="top" constant="20" id="mpr-lO-zpm"/>
                             <constraint firstItem="xKx-9a-k2a" firstAttribute="leading" secondItem="NRI-TI-qDt" secondAttribute="leading" id="u4w-Of-mi5"/>
@@ -651,7 +651,6 @@ Line 2</string>
                         <outlet property="camOffView" destination="Jpk-1n-2Z9" id="Lvj-FG-hYN"/>
                         <outlet property="contentView" destination="NRI-TI-qDt" id="A7i-My-abu"/>
                         <outlet property="myView" destination="Ibe-fV-PIq" id="M6p-8V-W0h"/>
-                        <outlet property="opponentsVideoViewBottom" destination="bYO-9D-QF6" id="A6K-Bz-NMr"/>
                         <outlet property="opponentsView" destination="xKx-9a-k2a" id="iXH-ig-FGU"/>
                     </connections>
                 </viewController>
