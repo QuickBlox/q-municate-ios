@@ -224,6 +224,15 @@ NSString *const kUserName = @"UserName";
 }
 
 - (void)sessionWillClose:(QBRTCSession *)session {
+    
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    NSString *category = [audioSession category];
+    NSError *setCategoryError = nil;
+    
+    [audioSession setCategory:category
+                  withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker
+                        error:&setCategoryError];
+    
     if( self.session != session ){
         // may be we rejected someone else call while we are talking with another person
         return;

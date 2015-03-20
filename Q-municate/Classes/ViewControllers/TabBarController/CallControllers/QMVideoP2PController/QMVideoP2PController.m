@@ -109,6 +109,14 @@ NSString* machineName() {
     [super session:session didReceiveRemoteVideoTrack:videoTrack fromUser:userID];
     self.opponentVideoTrack = videoTrack;
     
+    [self reloadVideoViews];
+}
+
+- (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID {
+    [super session:session connectedToUser:userID];
+    
+    [[QMSoundManager instance] stopAllSounds];
+    
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     NSString *category = [audioSession category];
     NSError *setCategoryError = nil;
@@ -121,12 +129,6 @@ NSString* machineName() {
         av.speakerEnabled = YES;
     }
     
-    [self reloadVideoViews];
-}
-
-- (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID {
-    [super session:session connectedToUser:userID];
-    [[QMSoundManager instance] stopAllSounds];
     [self stopActivityIndicator];
 }
 

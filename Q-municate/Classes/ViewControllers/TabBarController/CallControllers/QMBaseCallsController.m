@@ -10,17 +10,19 @@
 #import "QMChatReceiver.h"
 #import "QMAVCallManager.h"
 
+
 @implementation QMBaseCallsController
 {
     QMAVCallManager *av;
-    BOOL isRunning;
+    AVAudioSessionCategoryOptions categoryOptions;
+    AVAudioSessionCategoryOptions defaultCategoryOptions;
 }
 
 #pragma mark - LifeCycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.btnSpeaker.userInteractionEnabled = NO;
     av = [QMApi instance].avCallManager;
     if( av.session ){
         self.session = av.session;
@@ -44,7 +46,7 @@
 }
 
 - (void)subscribeForNotifications {
-
+    
 }
 
 #pragma mark - Override actions
@@ -122,30 +124,39 @@
     [self.session switchAudioOutput:completion];
 }
 
-- (IBAction)speakerTapped:(id)sender {
-    if( isRunning ){
-        return;
+- (IBAction)speakerTapped:(IAButton *)sender {
+
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    
+    AVAudioSessionCategoryOptions currentOptions = session.categoryOptions;
+    //IPAD
+    if (currentOptions != AVAudioSessionCategoryOptionDefaultToSpeaker) {
+        
+        categoryOptions = AVAudioSessionCategoryOptionDefaultToSpeaker;
+        av.speakerEnabled = YES;
+        [sender setSelected:YES];
     }
-    isRunning = YES;
-    [self.session switchAudioOutput:^(BOOL isSpeaker) {
-        av.speakerEnabled = isSpeaker;
-        [(IAButton *)sender setSelected:isSpeaker];
-        isRunning = NO;
-    }];
+    else {
+        
+        categoryOptions = defaultCategoryOptions;
+        av.speakerEnabled = NO;
+        [sender setSelected:NO];
+    }
+    
+    NSString *category = [session category];
+    NSError *setCategoryError = nil;
+    
+    [session setCategory:category
+             withOptions:categoryOptions
+                   error:&setCategoryError];
 }
 
-- (IBAction)cameraSwitchTapped:(id)sender {
-    if( isRunning ){
-        return;
-    }
-    isRunning = YES;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.session switchCamera:^(BOOL isFrontCamera) {
-            av.frontCamera = isFrontCamera;
-            [(IAButton *)sender setSelected:!isFrontCamera];
-            isRunning = NO;
-        }];
-    });
+- (IBAction)cameraSwitchTapped:(IAButton *)sender {
+
+    [self.session switchCamera:^(BOOL isFrontCamera) {
+        av.frontCamera = isFrontCamera;
+        [sender setSelected:!isFrontCamera];
+    }];
 }
 
 - (IBAction)muteTapped:(id)sender {
@@ -166,6 +177,10 @@
 #pragma mark QBRTCSession delegate -
 
 - (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID {
+    
+    AVAudioSession *as = [AVAudioSession sharedInstance];
+    defaultCategoryOptions = as.categoryOptions;
+    self.btnSpeaker.userInteractionEnabled = YES;
     ILog(@"connectedToUser:%@", userID);
     [self.contentView startTimerIfNeeded];
 }
@@ -189,6 +204,7 @@
 }
 
 - (void)sessionWillClose:(QBRTCSession *)session {
+    
     if( self.session != session ){
         return;
     }
