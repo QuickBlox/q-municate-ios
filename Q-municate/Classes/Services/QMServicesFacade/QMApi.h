@@ -20,7 +20,7 @@
 @class QMContentService;
 @class Reachability;
 
-typedef NS_ENUM(NSUInteger, QMAccountType);
+typedef NS_ENUM(NSInteger, QMAccountType);
 
 @interface QMApi : NSObject
 
