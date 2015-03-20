@@ -10,7 +10,9 @@
 
 @interface QMSearchChatHistoryDatasource : NSObject <UITableViewDataSource>
 
-- (void)addObjects:(NSArray *)objects;
+@property (strong, nonatomic) NSString *searchText;
+
+- (void)setObjects:(NSArray *)objects;
 - (QBGeneralResponsePage *)responsePage;
 - (void)updateCurrentPageWithResponcePage:(QBGeneralResponsePage *)page;
 

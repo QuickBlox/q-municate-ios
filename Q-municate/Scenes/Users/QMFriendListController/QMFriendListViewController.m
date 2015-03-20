@@ -11,6 +11,7 @@
 #import "QMFriendListCell.h"
 #import "QMFriendsListDataSource.h"
 #import "QMServicesManager.h"
+#import "QMNotificationView.h"
 
 @interface QMFriendListViewController ()
 
@@ -50,6 +51,8 @@
 {
     self.dataSource.viewIsShowed = NO;
     [super viewWillDisappear:animated];
+    
+   
 }
 
 #pragma mark - UITableViewDelegate

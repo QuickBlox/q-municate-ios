@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14D87h" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14D98g" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
@@ -80,6 +80,12 @@
                     <constraint firstAttribute="bottom" secondItem="zer-qA-MJo" secondAttribute="bottom" constant="8" id="zHj-D4-Egj"/>
                 </constraints>
             </tableViewCellContentView>
+            <connections>
+                <outlet property="qmImgeView" destination="zer-qA-MJo" id="Fpa-bR-i1O"/>
+                <outlet property="subTitleLabel" destination="Zkd-aj-sJD" id="upm-A5-1CW"/>
+                <outlet property="timeLabel" destination="0ax-sI-TvB" id="QZI-HN-wyh"/>
+                <outlet property="titleLabel" destination="Y2p-7U-miv" id="9BG-lU-4nb"/>
+            </connections>
         </tableViewCell>
     </objects>
     <resources>

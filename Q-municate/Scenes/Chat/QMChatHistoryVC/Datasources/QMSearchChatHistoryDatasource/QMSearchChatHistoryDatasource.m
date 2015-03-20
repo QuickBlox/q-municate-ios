@@ -11,7 +11,7 @@
 
 @interface QMSearchChatHistoryDatasource()
 
-@property (strong, nonatomic) NSArray *datasource;
+@property (strong, nonatomic) NSMutableArray *collection;
 @property (strong, nonatomic) QBGeneralResponsePage *page;
 
 @end
@@ -23,6 +23,7 @@
     self = [super init];
     if (self) {
         
+        self.collection = [NSMutableArray array];
         self.page =
         [QBGeneralResponsePage responsePageWithCurrentPage:1
                                                    perPage:100];
@@ -32,18 +33,24 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    return 10;
+    return self.collection.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     QMChatHistoryCell *cell = [tableView dequeueReusableCellWithIdentifier:@"QMChatHistoryCell" forIndexPath:indexPath];
+    QBUUser *user = self.collection[indexPath.row];
+    
+    [cell setTitle:user.fullName];
+    [cell highlightText:self.searchText];
     
     return cell;
 }
 
-- (void)addObjects:(NSArray *)objects {
+- (void)setObjects:(NSArray *)objects {
     
+    [self.collection removeAllObjects];
+    [self.collection addObjectsFromArray:objects];
 }
 
 - (void)updateCurrentPageWithResponcePage:(QBGeneralResponsePage *)page {

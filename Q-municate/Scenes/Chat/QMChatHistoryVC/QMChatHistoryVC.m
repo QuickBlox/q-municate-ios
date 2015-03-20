@@ -11,15 +11,24 @@
 #import "QMServicesManager.h"
 #import "QMChatHistoryDatasource.h"
 #import "QMSearchChatHistoryDatasource.h"
+#import "QMNotificationView.h"
 
 NSString *const kQMChatHistoryCellIdentifier = @"QMChatHistoryCell";
 
+typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
+    
+    QMSearchScopeButtonIndexLocal,
+    QMSearchScopeButtonIndexGlobal
+};
+
 @interface QMChatHistoryVC ()
 
-<UITableViewDelegate, QMContactListServiceDelegate>
+<UITableViewDelegate, QMContactListServiceDelegate, UISearchBarDelegate, UISearchDisplayDelegate>
 
 @property (strong, nonatomic) IBOutlet QMChatHistoryDatasource *historyDatasource;
 @property (strong, nonatomic) IBOutlet QMSearchChatHistoryDatasource *searchHistoryDatasource;
+@property (weak, nonatomic) QBRequest *searchRequest;
+@property (strong, nonatomic) QMNotificationView *notificationView;
 
 @end
 
@@ -40,6 +49,17 @@ NSString *const kQMChatHistoryCellIdentifier = @"QMChatHistoryCell";
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    self.notificationView = [QMNotificationView showInViewController:self];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.notificationView setTintColor:[UIColor colorWithRed:1.000 green:0.557 blue:0.271 alpha:0.730]];
+    });
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.notificationView setTintColor:[UIColor colorWithRed:1.000 green:0.557 blue:0.271 alpha:0.730]];
+    });
+    
+    self.tableView.contentInset = UIEdgeInsetsMake(30, 0, 0, 0);
 }
 
 #pragma mark - QMContactListServiceDelegate
@@ -60,8 +80,11 @@ NSString *const kQMChatHistoryCellIdentifier = @"QMChatHistoryCell";
     self.tableView.contentOffset = CGPointMake(0, self.searchDisplayController.searchBar.frame.size.height);
     //Add refresh control
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    self.refreshControl.tintColor = [UIColor whiteColor];
     [refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
+    
+
 }
 
 - (void)configureSearchDisplayController {
@@ -75,7 +98,6 @@ NSString *const kQMChatHistoryCellIdentifier = @"QMChatHistoryCell";
     //Register nibs
     UINib *chatHistoryCellNib = [UINib nibWithNibName:@"QMChatHistoryCell" bundle:NSBundle.mainBundle];
     [self.tableView registerNib:chatHistoryCellNib forCellReuseIdentifier:kQMChatHistoryCellIdentifier];
-    
     [self.searchDisplayController.searchResultsTableView registerNib:chatHistoryCellNib forCellReuseIdentifier:kQMChatHistoryCellIdentifier];
 }
 
@@ -95,9 +117,15 @@ NSString *const kQMChatHistoryCellIdentifier = @"QMChatHistoryCell";
     
 }
 
-- (IBAction)pressUserProfileBtn:(id)sender {
+
+- (void)localSearch:(NSString *)searchText {
     
+    [self.searchHistoryDatasource setObjects:nil];
+    self.searchHistoryDatasource.searchText = nil;
+    [self.searchDisplayController.searchResultsTableView reloadData];
 }
+
+#pragma mark - Search
 
 - (void)globalSearch:(NSString *)searchText {
     
@@ -113,30 +141,46 @@ NSString *const kQMChatHistoryCellIdentifier = @"QMChatHistoryCell";
             
             if ([self.searchDisplayController.searchBar.text isEqualToString:tsearch]) {
                 
+                __weak __typeof(self)weakSelf = self;
+                self.searchRequest =
                 [QBRequest usersWithFullName:searchText
                                         page:[self.searchHistoryDatasource responsePage]
                                 successBlock:^(QBResponse *response,
                                                QBGeneralResponsePage *page,
-                                               NSArray *users) {
-                                    
-                                    [self.searchHistoryDatasource addObjects:users];
-                                    [self.searchDisplayController.searchResultsTableView reloadData];
-                                    
-                                } errorBlock:^(QBResponse *response) {
-                                    
-                                    [self.searchDisplayController.searchResultsTableView reloadData];
-                                }];
+                                               NSArray *users)
+                 {
+                     
+                     [weakSelf.searchHistoryDatasource setObjects:users];
+                     weakSelf.searchHistoryDatasource.searchText = searchText;
+                     [weakSelf.searchDisplayController.searchResultsTableView reloadData];
+                     
+                 } errorBlock:^(QBResponse *response) {
+                     
+                     [weakSelf.searchDisplayController.searchResultsTableView reloadData];
+                 }];
             }
         });
     }
 }
 
-#pragma mark - UISearchDisplayController
-#pragma mark UISearchDisplayDelegate
+- (void)beginSearch:(NSString *)searchString selectedScope:(NSInteger)selectedScope {
+    
+    switch (selectedScope) {
+            
+        case QMSearchScopeButtonIndexLocal:
+            [self localSearch:searchString]; break;
+        case QMSearchScopeButtonIndexGlobal:
+            [self globalSearch:searchString]; break;
+        default:break;
+    }
+}
+
+#pragma mark - UISearchDisplayDelegate
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
     
-    [self globalSearch:searchString];
+    [self beginSearch:searchString selectedScope:controller.searchBar.selectedScopeButtonIndex];
+    
     return NO;
 }
 
@@ -150,6 +194,27 @@ NSString *const kQMChatHistoryCellIdentifier = @"QMChatHistoryCell";
     
     [self.tableView setDataSource:self.historyDatasource];
     [self.tableView reloadData];
+}
+
+#pragma mark - Search bar
+
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope  {
+    
+    if (self.searchRequest) {
+        
+        [self.searchRequest cancel];
+    }
+    
+    [self beginSearch:searchBar.text selectedScope:selectedScope];
+}
+
+- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
+    [self.notificationView setVisible:NO animated:NO completion:nil];
+    
+}
+
+- (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller {
+    [self.notificationView setVisible:YES animated:NO completion:nil];
 }
 
 @end
