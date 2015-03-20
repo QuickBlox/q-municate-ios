@@ -176,6 +176,7 @@
 }
 
 - (void)subscribeToPushNotificationsForceSettings:(BOOL)force complete:(void(^)(BOOL success))complete {
+    
     if( !self.deviceToken ){
         if( complete ){
             complete(NO);
@@ -183,7 +184,7 @@
         return;
     }
     
-    if (!self.settingsManager.pushNotificationsEnabled || force) {
+    if (self.settingsManager.pushNotificationsEnabled || force) {
         __weak __typeof(self)weakSelf = self;
         
         // Register subscription with device token
@@ -235,7 +236,8 @@
             }
         }];
     }
-    else{
+    else {
+        
         if( complete ) {
             complete(YES);
         }
