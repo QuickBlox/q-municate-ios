@@ -473,10 +473,10 @@ Line 2</string>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view clipsSubviews="YES" contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="xKx-9a-k2a" customClass="QBGLVideoView">
-                                <rect key="frame" x="0.0" y="80" width="320" height="258"/>
+                                <rect key="frame" x="0.0" y="80" width="320" height="488"/>
                                 <subviews>
                                     <activityIndicatorView hidden="YES" opaque="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="mp9-Ag-8UB">
-                                        <rect key="frame" x="141" y="110" width="37" height="37"/>
+                                        <rect key="frame" x="141" y="225" width="37" height="37"/>
                                     </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -602,7 +602,7 @@ Line 2</string>
                                 </constraints>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="James Cobs" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L9T-tY-3Kn">
-                                <rect key="frame" x="201" y="20" width="99" height="30"/>
+                                <rect key="frame" x="201" y="20" width="98.5" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="xt7-88-Szq"/>
                                 </constraints>
@@ -611,7 +611,7 @@ Line 2</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DLm-F5-tEq">
-                                <rect key="frame" x="260" y="40" width="41" height="30"/>
+                                <rect key="frame" x="260" y="40" width="40.5" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="gEY-0y-Gmc"/>
                                 </constraints>
@@ -629,8 +629,8 @@ Line 2</string>
                             <constraint firstAttribute="trailingMargin" secondItem="L9T-tY-3Kn" secondAttribute="trailing" constant="4.5" id="Mbl-nV-hmL"/>
                             <constraint firstItem="xKx-9a-k2a" firstAttribute="top" secondItem="NRI-TI-qDt" secondAttribute="top" constant="80" id="S9q-8l-cxI"/>
                             <constraint firstItem="Ibe-fV-PIq" firstAttribute="top" secondItem="zdH-fi-T39" secondAttribute="bottom" id="UPa-Uj-np8"/>
-                            <constraint firstItem="YzX-7u-vU5" firstAttribute="top" secondItem="xKx-9a-k2a" secondAttribute="bottom" id="bYO-9D-QF6"/>
                             <constraint firstItem="DLm-F5-tEq" firstAttribute="top" secondItem="L9T-tY-3Kn" secondAttribute="bottom" constant="-10" id="eF0-Ir-7xF"/>
+                            <constraint firstAttribute="bottom" secondItem="xKx-9a-k2a" secondAttribute="bottom" id="kSb-qQ-jDx"/>
                             <constraint firstItem="L9T-tY-3Kn" firstAttribute="top" secondItem="NRI-TI-qDt" secondAttribute="top" constant="20" id="mpr-lO-zpm"/>
                             <constraint firstItem="xKx-9a-k2a" firstAttribute="leading" secondItem="NRI-TI-qDt" secondAttribute="leading" id="u4w-Of-mi5"/>
                             <constraint firstItem="YzX-7u-vU5" firstAttribute="trailing" secondItem="NRI-TI-qDt" secondAttribute="trailing" id="uce-Dp-wW8"/>
@@ -651,7 +651,6 @@ Line 2</string>
                         <outlet property="camOffView" destination="Jpk-1n-2Z9" id="Lvj-FG-hYN"/>
                         <outlet property="contentView" destination="NRI-TI-qDt" id="A7i-My-abu"/>
                         <outlet property="myView" destination="Ibe-fV-PIq" id="M6p-8V-W0h"/>
-                        <outlet property="opponentsVideoViewBottom" destination="bYO-9D-QF6" id="A6K-Bz-NMr"/>
                         <outlet property="opponentsView" destination="xKx-9a-k2a" id="iXH-ig-FGU"/>
                     </connections>
                 </viewController>
@@ -3430,11 +3429,11 @@ Cg
                         <viewControllerLayoutGuide type="bottom" id="dTI-7O-14o"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="nzh-Nz-Pba" customClass="QMContentView">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="James Cobs" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3lx-Rt-Maw">
-                                <rect key="frame" x="78" y="206" width="163.5" height="30"/>
+                                <rect key="frame" x="125" y="206" width="163.5" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="oA8-gr-qNn"/>
                                 </constraints>
@@ -3442,7 +3441,7 @@ Cg
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="agv-aH-z3G">
-                                <rect key="frame" x="139" y="242" width="43" height="30"/>
+                                <rect key="frame" x="186" y="242" width="43" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="Jqh-Nk-fzS"/>
                                 </constraints>
@@ -3451,14 +3450,14 @@ Cg
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="upic_call" translatesAutoresizingMaskIntoConstraints="NO" id="PkM-Ff-bsV" customClass="QMImageView">
-                                <rect key="frame" x="120" y="105" width="80" height="80"/>
+                                <rect key="frame" x="167" y="105" width="80" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="80" id="I3h-Ct-X3k"/>
                                     <constraint firstAttribute="height" constant="80" id="KkE-Jn-3hP"/>
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wr8-Ao-MI8" userLabel="duringCallView">
-                                <rect key="frame" x="0.0" y="358" width="320" height="210"/>
+                                <rect key="frame" x="0.0" y="526" width="414" height="210"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SSH-z5-fRi" userLabel="mic" customClass="IAButton">
                                         <rect key="frame" x="70" y="0.0" width="72" height="72"/>
@@ -3487,7 +3486,7 @@ Cg
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="azB-9x-wpu" userLabel="speaker" customClass="IAButton">
-                                        <rect key="frame" x="170" y="0.0" width="72" height="72"/>
+                                        <rect key="frame" x="264" y="0.0" width="72" height="72"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <state key="normal" image="speaker">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -3509,7 +3508,7 @@ Cg
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="skE-Iw-m2z" userLabel="decline" customClass="IAButton">
-                                        <rect key="frame" x="124" y="114" width="72" height="72"/>
+                                        <rect key="frame" x="171" y="114" width="72" height="72"/>
                                         <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <state key="normal" image="decline">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -3559,7 +3558,7 @@ Cg
                             <outlet property="statusLabel" destination="agv-aH-z3G" id="JrE-88-RTx"/>
                         </connections>
                     </view>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
                     <connections>
                         <outlet property="btnMic" destination="SSH-z5-fRi" id="VtE-wb-a8a"/>
                         <outlet property="btnSpeaker" destination="azB-9x-wpu" id="xWc-lx-2S1"/>

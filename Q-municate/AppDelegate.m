@@ -115,10 +115,10 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-
-
-    [[QMApi instance] openChatPageForPushNotification:userInfo completion:^(BOOL completed) {}];
-    ILog(@"Push war received. User info: %@", userInfo);
+    if( userInfo[@"dialog_id"] ){
+        [[QMApi instance] openChatPageForPushNotification:userInfo completion:^(BOOL completed) {}];
+    }
+    ILog(@"Push was received. User info: %@", userInfo);
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
