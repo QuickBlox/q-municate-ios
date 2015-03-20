@@ -55,7 +55,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     UIApplication.sharedApplication.applicationIconBadgeNumber = 0;
     
     UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleDefault;
-
+    
     self.window.backgroundColor = [UIColor whiteColor];
     
     // Needed for new API:
@@ -118,10 +118,6 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     if( userInfo[@"dialog_id"] ) {
         [[QMApi instance] openChatPageForPushNotification:userInfo completion:^(BOOL completed) {}];
-    }
-    else if( userInfo[@"alert"] && [userInfo[@"alert"] containsString:@"calling you"] ) {
-        NSString *fullName = [userInfo[@"alert"] stringByReplacingOccurrencesOfString:@" is calling you" withString:@""];
-        [[[QMApi instance] avCallManager] setCallingUserName:fullName];
     }
     ILog(@"Push was received. User info: %@", userInfo);
 }
