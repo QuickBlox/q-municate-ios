@@ -66,14 +66,18 @@
             
             // open app by push notification:
             NSDictionary *push = [[QMApi instance] pushNotification];
+        
             if (push != nil) {
-                [SVProgressHUD show];
-                
-                [[QMApi instance] openChatPageForPushNotification:push completion:^(BOOL completed) {
-                    [SVProgressHUD dismiss];
-                }];
-                
-                [[QMApi instance] setPushNotification:nil];
+                if( push[@"dialog_id"] ){
+                    
+                    [SVProgressHUD show];
+                    
+                    [[QMApi instance] openChatPageForPushNotification:push completion:^(BOOL completed) {
+                        [SVProgressHUD dismiss];
+                    }];
+                    
+                    [[QMApi instance] setPushNotification:nil];
+                }
             }
             
             // subscribe to push notifications

@@ -286,22 +286,32 @@ const NSTimeInterval kQMPresenceTime = 30;
 - (void)openChatPageForPushNotification:(NSDictionary *)notification completion:(void(^)(BOOL completed))completionBlock
 {
     if ([QBChat instance].isLoggedIn) {
-        if (completionBlock) completionBlock(NO);
+        
+        if (completionBlock)
+            completionBlock(NO);
+        
         return;
     }
     
     NSString *dialogID = notification[@"dialog_id"];
     QBChatDialog *dialog = [self chatDialogWithID:dialogID];
     __weak typeof(self)weakSelf = self;
+    
     if (dialog == nil) {
+        
         [self fetchChatDialogWithID:dialogID completion:^(QBChatDialog *chatDialog) {
 
             [weakSelf openChatPageForPushNotification:notification completion:completionBlock];
         }];
+        
         return;
+        
+    }else {
+        
+        [self openChatControllerForDialogWithID:dialogID];
+        if (completionBlock) completionBlock(YES);
     }
-    [self openChatControllerForDialogWithID:dialogID];
-    if (completionBlock) completionBlock(YES);
+    
 }
 
 - (void)openChatControllerForDialogWithID:(NSString *)dialogID
