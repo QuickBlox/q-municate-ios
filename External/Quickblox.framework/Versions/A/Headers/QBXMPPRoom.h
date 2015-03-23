@@ -9,7 +9,7 @@
 
 #define requestRoomUsersQueryIDPrefix @"561003"
 
-@interface QBXMPPRoom : QBXMPPModule <NSCopying>
+@interface QBXMPPRoom : QBXMPPModule <NSCoding, NSCopying>
 {
 	NSString *roomJID;
     NSString *naturalLanguageRoomName;
@@ -56,6 +56,7 @@
 - (void)rejectInvitationWithMessage:(NSString *)reasonForRejection;
 
 - (void)requestUsers;
+- (void)requestUsersWithAffiliation:(NSString *)affiliation;
 
 - (void)sendMessage:(QBXMPPMessage *)msg;
 - (void)sendPresenceWithStatus:(NSString *)status;

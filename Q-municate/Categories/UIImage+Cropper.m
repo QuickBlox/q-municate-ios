@@ -8,6 +8,7 @@
 
 #import "UIImage+Cropper.h"
 #include <math.h>
+#import "NSData+ImageContentType.h"
 
 @implementation UIImage (Cropper)
 

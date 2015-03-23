@@ -11,11 +11,11 @@
 
 #define QM_TEST 0
 
+#define QM_AUDIO_VIDEO_ENABLED 1
 
-#define QM_AUDIO_VIDEO_ENABLED 0
-#define STAGE_SERVER_IS_ACTIVE 0
+#define DELETING_DIALOGS_ENABLED 0
 
-#define IS_HEIGHT_GTE_568 [[UIScreen mainScreen ] bounds].size.height == 568.0f
+#define IS_HEIGHT_GTE_568 [[UIScreen mainScreen ] bounds].size.height >= 568.0f
 #define $(...)  [NSSet setWithObjects:__VA_ARGS__, nil]
 
 #define CHECK_OVERRIDE()\
@@ -39,7 +39,7 @@ typedef void (^QBDialogsPagedResultBlock)(QBDialogsPagedResult *result);
 typedef void (^QBChatDialogResultBlock)(QBChatDialogResult *result);
 typedef void (^QBChatHistoryMessageResultBlock)(QBChatHistoryMessageResult *result);
 
-typedef void (^QBResultBlock)(Result *result);
+typedef void (^QBResultBlock)(QBResult *result);
 typedef void (^QBSessionCreationBlock)(BOOL success, NSString *error);
 typedef void (^QBChatResultBlock)(BOOL success);
 typedef void (^QBChatRoomResultBlock)(QBChatRoom *chatRoom, NSError *error);
@@ -54,8 +54,8 @@ static NSString *const kLogInSegueSegueIdentifier     = @"LogInSegue";
 static NSString *const kDetailsSegueIdentifier        = @"DetailsSegue";
 static NSString *const kVideoCallSegueIdentifier      = @"VideoCallSegue";
 static NSString *const kAudioCallSegueIdentifier      = @"AudioCallSegue";
-static NSString *const kStartAudioCallSegueIdentifier = @"StartAudioCallSegue";
-static NSString *const kStartVideoCallSegueIdentifier = @"StartVideoCallSegue";
+static NSString *const kGoToDuringAudioCallSegueIdentifier = @"goToDuringAudioCallSegueIdentifier";
+static NSString *const kGoToDuringVideoCallSegueIdentifier = @"goToDuringVideoCallSegueIdentifier";
 static NSString *const kChatViewSegueIdentifier       = @"ChatViewSegue";
 static NSString *const kIncomingCallIdentifier        = @"IncomingCallIdentifier";
 static NSString *const kProfileSegueIdentifier        = @"ProfileSegue";

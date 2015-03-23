@@ -18,10 +18,16 @@
 #import "QMChatReceiver.h"
 #import "QMOnlineTitle.h"
 #import "IDMPhotoBrowser.h"
+#import "QMChatInputToolbar.h"
+#import "QMAudioCallController.h"
+#import "QMVideoCallController.h"
+#import "QMChatToolbarContentView.h"
+#import "QMPlaceholderTextView.h"
+#import "REAlertView+QMSuccess.h"
 
 @interface QMChatViewController ()
 
-<QMChatDataSourceDelegate>
+<QMChatDataSourceDelegate, QMChatInputBarLockingProtocol>
 
 @property (strong, nonatomic) QMOnlineTitle *onlineTitle;
 
@@ -37,16 +43,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.dataSource = [[QMChatDataSource alloc] initWithChatDialog:self.dialog forTableView:self.tableView];
+    self.dataSource = [[QMChatDataSource alloc] initWithChatDialog:self.dialog forTableView:self.tableView inputBarDelegate:self];
     self.dataSource.delegate = self;
     self.dialog.type == QBChatDialogTypeGroup ? [self configureNavigationBarForGroupChat] : [self configureNavigationBarForPrivateChat];
     
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-        
-        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog && [message.cParamDialogID isEqualToString:weakSelf.dialog.ID]) {
-            weakSelf.title = message.cParamDialogName;
-            weakSelf.dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
+        if (message.delayed) {
+            return;
+        }
+        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog && [message.cParamDialogID isEqualToString:weakSelf.dialog.ID]) {
+            weakSelf.dialog = [api chatDialogWithID:message.cParamDialogID];
+            weakSelf.title = weakSelf.dialog.name;
         }
     }];
 }
@@ -66,10 +74,10 @@
 
 - (void)updateTitleInfoForPrivateDialog {
     
-    NSUInteger oponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
-    QBUUser *opponent = [[QMApi instance] userWithID:oponentID];
+    NSUInteger oponentID = [api occupantIDForPrivateChatDialog:self.dialog];
+    QBUUser *opponent = [api userWithID:oponentID];
 
-    QBContactListItem *item = [[QMApi instance] contactItemWithUserID:opponent.ID];
+    QBContactListItem *item = [api contactItemWithUserID:opponent.ID];
     NSString *status = NSLocalizedString(item.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
     
     self.onlineTitle.titleLabel.text = opponent.fullName;
@@ -138,7 +146,6 @@
 }
 
 - (void)back:(id)sender {
-    
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -148,7 +155,15 @@
 #if QM_AUDIO_VIDEO_ENABLED == 0
     [QMAlertsFactory comingSoonAlert];
 #else
-	[self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil];
+
+    BOOL callsAllowed = [[[self.inputToolBar contentView] textView] isEditable];
+    if( !callsAllowed ) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
+        return;
+    }
+    NSUInteger opponentID = [api occupantIDForPrivateChatDialog:self.dialog];
+    [api callToUser:@(opponentID) conferenceType:QBConferenceTypeAudio];
+    
 #endif
 }
 
@@ -156,7 +171,14 @@
 #if QM_AUDIO_VIDEO_ENABLED == 0
     [QMAlertsFactory comingSoonAlert];
 #else
-	[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil];
+    BOOL callsAllowed = [[[self.inputToolBar contentView] textView] isEditable];
+    if( !callsAllowed ) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
+        return;
+    }
+    
+    NSUInteger opponentID = [api occupantIDForPrivateChatDialog:self.dialog];
+    [api callToUser:@(opponentID) conferenceType:QBConferenceTypeVideo];
 #endif
 }
 
@@ -175,8 +197,8 @@
     }
     else {
         
-        NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
-        QBUUser *opponent = [[QMApi instance] userWithID:opponentID];
+        NSUInteger opponentID = [api occupantIDForPrivateChatDialog:self.dialog];
+        QBUUser *opponent = [api userWithID:opponentID];
         
         QMBaseCallsController *callsController = segue.destinationViewController;
         [callsController setOpponent:opponent];
@@ -184,32 +206,13 @@
 }
 
 
-#pragma mark - QMTabBarChatDelegate
-
-- (void)tabBarChatWithChatMessage:(QBChatMessage *)message chatDialog:(QBChatDialog *)dialog showTMessage:(BOOL)show
-{
-    if (!show) {
-        return;
-    }
-    
-    __weak typeof(self)weakSelf = self;
-    [QMSoundManager playMessageReceivedSound];
-    [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
-        if (buttonIndex == 1) {
-            UINavigationController *navigationController = (UINavigationController *)[weakSelf.tabBarController selectedViewController];
-            QMChatViewController *chatController = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"QMChatViewController"];
-            chatController.dialog = dialog;
-            [navigationController pushViewController:chatController animated:YES];
-        }
-    }];
-}
-
 #pragma mark - QMChatDataSourceDelegate
 
 - (void)chatDatasource:(QMChatDataSource *)chatDatasource prepareImageURLAttachement:(NSURL *)imageUrl {
  
     IDMPhoto *photo = [IDMPhoto photoWithURL:imageUrl];
     IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:@[photo]];
+    browser.displayToolbar = NO;
     [self presentViewController:browser animated:YES completion:nil];
 }
 
@@ -218,6 +221,19 @@
     IDMPhoto *photo = [IDMPhoto photoWithImage:image];
     IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:@[photo] animatedFromView:fromView];
     [self presentViewController:browser animated:YES completion:nil];
+}
+
+
+#pragma mark - Chat Input Toolbar Lock Delegate
+
+- (void)inputBarShouldLock
+{
+    [self.inputToolBar lock];
+}
+
+- (void)inputBarShouldUnlock
+{
+    [self.inputToolBar unlock];
 }
 
 @end

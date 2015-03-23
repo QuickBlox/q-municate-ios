@@ -56,8 +56,6 @@ typedef enum QBXMPPStreamErrorCode XMPPStreamErrorCode;
     //
     UInt64 numberOfStanzasSent;
     UInt64 numberOfStanzasReceived;
-    UInt64 numberOfClientHandledStanza;
-    UInt64 numberOfServerHandledStanza;
     NSString *SM_ID;
 	
     
@@ -96,8 +94,6 @@ typedef enum QBXMPPStreamErrorCode XMPPStreamErrorCode;
 	
 	NSThread *xmppUtilityThread;
 	NSRunLoop *xmppUtilityRunLoop;
-	
-	id userTag;
 }
 
 /**
@@ -256,8 +252,6 @@ typedef enum QBXMPPStreamErrorCode XMPPStreamErrorCode;
 
 @property (readonly) UInt64 numberOfStanzasSent;
 @property (readonly) UInt64 numberOfStanzasReceived;
-@property (readonly) UInt64 numberOfClientHandledStanza;
-@property (readonly) UInt64 numberOfServerHandledStanza;
 @property (readwrite, copy) NSString *SM_ID;
 
 
@@ -287,6 +281,7 @@ typedef enum QBXMPPStreamErrorCode XMPPStreamErrorCode;
 
 
 @property (nonatomic, assign, getter = isStreamManagementEnabled) BOOL streamManagementEnabled;
+@property (nonatomic, assign, getter = isStreamResumptionEnabled) BOOL streamResumptionEnabled;
 
 #endif
 
@@ -475,7 +470,7 @@ typedef enum QBXMPPStreamErrorCode XMPPStreamErrorCode;
 #pragma mark Stream Management
 
 - (BOOL)isStreamManagementSupported;
-- (void)enableStreamManagement;
+- (void)enableStreamManagement:(BOOL)withResumption;
 - (void)requestStreamResumption;
 - (void)sendRequestAcknowledgement;
 - (void)sendRequestAcknowledgementAnswer;

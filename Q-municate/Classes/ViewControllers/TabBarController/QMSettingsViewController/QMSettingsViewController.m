@@ -56,6 +56,11 @@
     
     if (cell == self.logoutCell) {
         
+        if (!QMApi.instance.isInternetConnected) {
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+            return;
+        }
+        
         __weak __typeof(self)weakSelf = self;
         [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
             
@@ -79,8 +84,13 @@
 
 - (IBAction)changePushNotificationValue:(UISwitch *)sender {
 
+    if (!QMApi.instance.isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        self.pushNotificationSwitch.on = !self.pushNotificationSwitch.on;
+        return;
+    }
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    if (sender.on) {
+    if ([sender isOn]) {
         [[QMApi instance] subscribeToPushNotificationsForceSettings:YES complete:^(BOOL success) {
             [SVProgressHUD dismiss];
         }];

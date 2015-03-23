@@ -23,6 +23,7 @@
 
 - (void)contactRequestUsersListChanged
 {
+#warning Make sure that this case neeeded
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMUsersHistoryUpdated block) {
         block();
     }];
@@ -31,6 +32,5 @@
 - (void)contactRequestUsersListChangedWithTarget:(id)target block:(QMUsersHistoryUpdated)block {
     [self subsribeWithTarget:target selector:@selector(contactRequestUsersListChanged) block:block];
 }
-
 
 @end

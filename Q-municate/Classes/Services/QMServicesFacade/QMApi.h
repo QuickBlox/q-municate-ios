@@ -14,36 +14,42 @@
 @class QMFacebookService;
 @class QMUsersService;
 @class QMChatDialogsService;
-@class QMAVCallService;
+@class QMAVCallManager;
 @class QMMessagesService;
 @class QMChatReceiver;
 @class QMContentService;
+@class Reachability;
 
-typedef NS_ENUM(NSUInteger, QMAccountType);
+typedef NS_ENUM(NSInteger, QMAccountType);
 
 @interface QMApi : NSObject
 
 @property (strong, nonatomic, readonly) QMAuthService *authService;
 @property (strong, nonatomic, readonly) QMSettingsManager *settingsManager;
 @property (strong, nonatomic, readonly) QMUsersService *usersService;
-@property (strong, nonatomic, readonly) QMAVCallService *avCallService;
+@property (strong, nonatomic, readonly) QMAVCallManager *avCallManager;
 @property (strong, nonatomic, readonly) QMChatDialogsService *chatDialogsService;
 @property (strong, nonatomic, readonly) QMMessagesService *messagesService;
 @property (strong, nonatomic, readonly) QMChatReceiver *responceService;
 @property (strong, nonatomic, readonly) QMContentService *contentService;
+@property (strong, nonatomic, readonly) Reachability *internetConnection;
 
 @property (strong, nonatomic, readonly) QBUUser *currentUser;
 
+@property (nonatomic, copy) NSData *deviceToken;
+
 + (instancetype)instance;
 
-- (BOOL)checkResult:(Result *)result;
+- (BOOL)checkResult:(QBResult *)result;
 
 - (void)startServices;
 - (void)stopServices;
 
 - (void)applicationDidBecomeActive:(void(^)(BOOL success))completion;
 - (void)applicationWillResignActive;
-- (void)openChatPageForPushNotification:(NSDictionary *)notification;
+- (void)openChatPageForPushNotification:(NSDictionary *)notification completion:(void(^)(BOOL completed))completionBlock;
+
+- (BOOL)isInternetConnected;
 
 - (void)fetchAllHistory:(void(^)(void))completion;
 
@@ -94,6 +100,13 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 /**
  */
 - (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete;
+
+
+/** 
+ *
+ */
+- (void)fetchMessagesForActiveChatIfNeededWithCompletion:(void(^)(BOOL fetchWasNeeded))block;
+
 /**
  */
 - (NSArray *)messagesHistoryWithDialog:(QBChatDialog *)chatDialog;
@@ -102,9 +115,23 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  */
 
 - (void)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion;
-- (void)sendAttachment:(NSString *)attachmentUrl toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion;
+- (void)sendAttachment:(QBCBlob *)attachment toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion;
 
 @end
+
+
+@interface QMApi (Notifications)
+
+- (void)sendContactRequestSendNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
+- (void)sendContactRequestConfirmNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
+- (void)sendContactRequestRejectNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
+- (void)sendContactRequestDeleteNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
+
+- (void)sendGroupChatDialogDidCreateNotification:(QBChatMessage *)notification toChatDialog:(QBChatDialog *)chatDialog persistent:(BOOL)persistent completionBlock:(void(^)(QBChatMessage *))completion;
+- (void)sendGroupChatDialogDidUpdateNotification:(QBChatMessage *)notification toChatDialog:(QBChatDialog *)chatDialog completionBlock:(void(^)(QBChatMessage *))completion;
+
+@end
+
 
 @interface QMApi (ChatDialogs)
 
@@ -124,13 +151,29 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 - (void)fetchAllDialogs:(void(^)(void))completion;
 
 /**
+ * Returns updated dialogs and updates exists
+ */
+- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(QBDialogsPagedResultBlock)completion;
+
+/**
+ *
+ */
+- (void)fetchChatDialogWithID:(NSString *)dialogID completion:(void(^)(QBChatDialog *chatDialog))completion;
+
+
+/**
+ *
+ */
+- (void)deleteChatDialog:(QBChatDialog *)dialog completion:(void(^)(BOOL success))completionHandler;
+
+/**
  Create group chat dialog
  
  @param name - Group chat name.
  @param ocupants - Array of QBUUser in chat.
  @result QBChatDialogResult
  */
-- (void)createGroupChatDialogWithName:(NSString *)name occupants:(NSArray *)occupants completion:(QBChatDialogResultBlock)completion;
+- (void)createGroupChatDialogWithName:(NSString *)name occupants:(NSArray *)occupants completion:(void(^)(QBChatDialog *chatDialog))completion;
 
 /**
  Create private chat dialog
@@ -146,7 +189,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  @param chatDialog - chat dialog
  @result QBChatDialogResult
  */
-- (void)leaveWithUserId:(NSUInteger)userID fromChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
+- (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
 
 /**
  Join users to chat dialog
@@ -164,16 +207,9 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  */
 - (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
 
+- (void)changeAvatar:(UIImage *)avatar forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
+
 - (NSUInteger)occupantIDForPrivateChatDialog:(QBChatDialog *)chatDialog;
-
-/**
- QBChatRoom with roomJID
- 
- @param roomJID
- @result QBChatDialogResult
- */
-
-- (QBChatRoom *)chatRoomWithRoomJID:(NSString *)roomJID;
 
 @end
 
@@ -181,13 +217,22 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 @interface QMApi (Users)
 
 @property (strong, nonatomic, readonly) NSArray *friends;
+@property (strong, nonatomic, readonly) NSArray *contactsOnly;
 @property (strong, nonatomic, readonly) NSArray *contactRequestUsers;
+
+- (BOOL)isFriendForChatDialog:(QBChatDialog *)chatDialog;
+- (BOOL)isFriend:(QBUUser *)user;
 
 - (NSArray *)usersWithIDs:(NSArray *)ids;
 - (NSArray *)idsWithUsers:(NSArray *)users;
 - (QBUUser *)userWithID:(NSUInteger)userID;
 - (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID;
-//- (NSArray *)idsFromContactListItems;
+
+
+/**
+ Opponent for private chat dialog. Only for private chat dialogs.
+ */
+- (QBUUser *)userForContactRequestWithPrivateChatDialog:(QBChatDialog *)chatDialog;
 
 /** 
  Import facebook friends from quickblox database.
@@ -197,14 +242,14 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 /**
  Import friends from Address book which exists in quickblox database.
  */
-- (void)importFriendsFromAddressBook;
+- (void)importFriendsFromAddressBookWithCompletion:(void(^)(BOOL succeded, NSError *error))completionBLock;
 
 /**
  Add user to contact list request
  
  @param user of user which you would like to add to contact list
  @return*/
-- (void)addUserToContactListRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion;
+- (void)addUserToContactList:(QBUUser *)user completion:(void(^)(BOOL success, QBChatMessage *notification))completion;
 
 /**
  Remove user from contact list
@@ -212,7 +257,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  @param userID ID of user which you would like to remove from contact list
  @return YES if the request was sent successfully. If not - see log.
  */
-- (void)removeUserFromContactListWithUserID:(NSUInteger)userID completion:(void(^)(BOOL success))completion;
+- (void)removeUserFromContactList:(QBUUser *)user completion:(void(^)(BOOL success, QBChatMessage *notification))completion;
 
 /**
  Confirm add to contact list request
@@ -220,7 +265,7 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  @param userID ID of user from which you would like to confirm add to contact request
  @return YES if the request was sent successfully. If not - see log.
  */
-- (void)confirmAddContactRequest:(NSUInteger)userID completion:(void(^)(BOOL success))completion;
+- (void)confirmAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success, QBChatMessage *notification))completion;
 
 /**
  Reject add to contact list request
@@ -228,7 +273,15 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  @param userID ID of user from which you would like to reject add to contact request
  @return YES if the request was sent successfully. If not - see log.
  */
-- (void)rejectAddContactRequest:(NSUInteger)userID completion:(void(^)(BOOL success))completion;
+- (void)rejectAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success, QBChatMessage *notification))completion;
+
+/**
+ Retrieving user if needed.
+ */
+- (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock;
+- (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void (^)(BOOL retrieveWasNeeded))completionBlock;
+
+
 
 /**
  */
@@ -262,9 +315,10 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
  */
 @interface QMApi (Calls)
 
-- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView conferenceType:(enum QBVideoChatConferenceType)conferenceType;
-- (void)acceptCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView;
-- (void)rejectCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView;
+- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBConferenceType)conferenceType;
+- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBConferenceType)conferenceType sendPushNotificationIfUserIsOffline:(BOOL)pushEnabled;
+- (void)acceptCall;
+- (void)rejectCall;
 - (void)finishCall;
 
 @end
@@ -272,5 +326,12 @@ typedef NS_ENUM(NSUInteger, QMAccountType);
 @interface NSObject(CurrentUser)
 
 @property (strong, nonatomic) QBUUser *currentUser;
+
+@end
+
+@interface QMApi (Permissions)
+
+- (void)requestPermissionToCameraWithCompletion:(void(^)(BOOL authorized))completion;
+- (void)requestPermissionToMicrophoneWithCompletion:(void(^)(BOOL granted))completion;
 
 @end

@@ -47,6 +47,8 @@ typedef void (^QBRequestErrorBlock)(QBResponse *response);
 
 - (void)addParametersFromDictionary:(NSDictionary *)otherDictionary;
 - (void)addParameter:(id)obj forKey:(NSString *)key;
+- (void)removeParameterForKey:(NSString *)key;
+- (void)extractParametersFromDictionary:(NSDictionary *)parameters;
 
 - (instancetype)initWithCompletionBlock:(QBRequestCompletionBlock)completionBlock;
 - (instancetype)initWithUpdateBlock:(QBRequestStatusUpdateBlock)updateBlock completionBlock:(QBRequestCompletionBlock)completionBlock;

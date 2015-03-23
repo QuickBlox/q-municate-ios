@@ -11,6 +11,6 @@
 
 @interface QMPopoversFactory : NSObject
 
-+ (QMChatViewController *)chatControllerWithDialogID:(NSString *)dialogID;
++ (UIViewController *)chatControllerWithDialogID:(NSString *)dialogID;
 
 @end

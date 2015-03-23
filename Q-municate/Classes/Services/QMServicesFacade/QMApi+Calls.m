@@ -7,28 +7,33 @@
 //
 
 #import "QMApi.h"
-#import "QMAVCallService.h"
+#import "QMAVCallManager.h"
 
 @implementation QMApi (Calls)
 
-- (void)callUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView conferenceType:(enum QBVideoChatConferenceType)conferenceType
+- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBConferenceType)conferenceType
 {
-    [self.avCallService callToUser:userID opponentView:opponentView conferenceType:conferenceType];
+    [self callToUser:userID conferenceType:conferenceType sendPushNotificationIfUserIsOffline:YES];
 }
 
-- (void)acceptCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView
+- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBConferenceType)conferenceType sendPushNotificationIfUserIsOffline:(BOOL)pushEnabled
 {
-    [self.avCallService acceptCallFromUser:userID andOpponentView:opponentView];
+    [self.avCallManager callToUsers:@[userID] withConferenceType:conferenceType pushEnabled:pushEnabled];
 }
 
-- (void)rejectCallFromUser:(NSUInteger)userID opponentView:(QBVideoView *)opponentView
+- (void)acceptCall
 {
-    [self.avCallService rejectCallFromUser:userID andOpponentView:opponentView];
+    [self.avCallManager acceptCall];
+}
+
+- (void)rejectCall
+{
+    [self.avCallManager rejectCall];
 }
 
 - (void)finishCall
 {
-    [self.avCallService finishCallFromOpponent];
+    [self.avCallManager hangUpCall];
 }
 
 @end

@@ -16,6 +16,7 @@
 #import "UIImage+Cropper.h"
 #import "REActionSheet.h"
 #import "QMImagePicker.h"
+#import "QMUsersUtils.h"
 
 @interface QMProfileViewController ()
 
@@ -36,6 +37,7 @@
 @property (nonatomic, strong) UIImage *avatarImage;
 
 @end
+
 
 @implementation QMProfileViewController
 
@@ -65,17 +67,16 @@
     
     self.fullNameFieldCache = self.currentUser.fullName;
     self.phoneFieldCache = self.currentUser.phone ?: @"";
-    self.statusTextCache = self.currentUser.customData ?: @"";
+    self.statusTextCache = self.currentUser.status ?: @"";
     
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
-    NSURL *url = [NSURL URLWithString:self.currentUser.website];
-    
+    NSURL *url = [QMUsersUtils userAvatarURL:self.currentUser];
     
     [self.avatarView setImageWithURL:url
                          placeholder:placeholder
                              options:SDWebImageHighPriority
                             progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-                                ILog(@"r - %d; e - %d", receivedSize, expectedSize);
+                                ILog(@"r - %zd; e - %zd", receivedSize, expectedSize);
                             } completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                                 
                             }];
@@ -83,11 +84,15 @@
     self.fullNameField.text = self.currentUser.fullName;
     self.emailField.text = self.currentUser.email;
     self.phoneNumberField.text = self.currentUser.phone;
-    self.statusField.text = self.currentUser.customData;
+    self.statusField.text = self.currentUser.status;
 }
 
 - (IBAction)changeAvatar:(id)sender {
     
+    if (!QMApi.instance.isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
     __weak __typeof(self)weakSelf = self;
     [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
         
@@ -109,6 +114,11 @@
 
 - (IBAction)saveChanges:(id)sender {
     
+    if (!QMApi.instance.isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
+    
     [self.view endEditing:YES];
     
     __weak __typeof(self)weakSelf = self;
@@ -116,7 +126,7 @@
     QBUUser *user = weakSelf.currentUser;
     user.fullName = weakSelf.fullNameFieldCache;
     user.phone = weakSelf.phoneFieldCache;
-    user.customData = weakSelf.statusTextCache;
+    user.status = weakSelf.statusTextCache;
     
     [SVProgressHUD showProgress:0.f status:nil maskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] updateUser:user image:self.avatarImage progress:^(float progress) {
@@ -137,7 +147,7 @@
     if (self.avatarImage) return YES;
     if (![self.fullNameFieldCache isEqualToString:self.currentUser.fullName]) return YES;
     if (![self.phoneFieldCache isEqualToString:self.currentUser.phone ?: @""]) return YES;
-    if (![self.statusTextCache isEqualToString:self.currentUser.customData ?: @""]) return YES;
+    if (![self.statusTextCache isEqualToString:self.currentUser.status ?: @""]) return YES;
     
     return NO;
 }

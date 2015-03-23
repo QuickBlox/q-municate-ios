@@ -14,23 +14,21 @@
  QBChatRoom structure. Represents chat room entity
  */
 
-@interface QBChatRoom : NSObject <NSCoding, NSCopying>{
-}
-
+@interface QBChatRoom : NSObject <NSCoding, NSCopying>
 /**
  Room name
  */
-@property (readonly) NSString *name;
+@property (strong, nonatomic, readonly) NSString *name;
 
 /**
  Room JID
  */
-@property (readonly) NSString *JID;
+@property (strong, nonatomic, readonly) NSString *JID;
 
 /**
  Is current user joined this room
  */
-@property (readonly) BOOL isJoined;
+@property (assign, nonatomic, readonly) BOOL isJoined;
 
 /**
  Init QBChatRoom instance with name
@@ -91,6 +89,11 @@
 - (void)sendMessage:(QBChatMessage *)message;
 
 /**
+ Send message to current room, without join it
+ */
+- (void)sendMessageWithoutJoin:(QBChatMessage *)message;
+
+/**
  Join current room
  */
 - (void)joinRoom;
@@ -111,6 +114,11 @@
  Request all room's users, users who can join room
  */
 - (void)requestUsers;
+
+/**
+ Request room's users with affiliation
+ */
+- (void)requestUsersWithAffiliation:(NSString *)affiliation;
 
 /**
  Request room's online users

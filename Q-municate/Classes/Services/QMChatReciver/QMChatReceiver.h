@@ -11,9 +11,10 @@
 
 typedef void(^QMDialogsHistoryUpdated)(void);
 typedef void(^QMUsersHistoryUpdated)(void);
+typedef void(^QMInternetConnectionState)(BOOL isActive);
 
 typedef void(^QMChatDidLogin)(BOOL success);
-typedef void(^QMChatDidFailLogin)(NSInteger errorCode);
+typedef void(^QMChatDidFailLogin)(NSError *error);
 typedef void(^QMChatMessageBlock)(QBChatMessage *message);
 typedef void(^QMChatDidReceivePresenceOfUser)(NSUInteger userID, NSString *type);
 typedef void(^QMChatDidReceiveListOfRooms)(NSArray *rooms);
@@ -50,6 +51,16 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 - (void)subsribeWithTarget:(id)target selector:(SEL)selector block:(id)block;
 - (void)executeBloksWithSelector:(SEL)selector enumerateBloks:(void(^)(id block))enumerateBloks;
 
+
+#pragma mark -
+#pragma mark InternetConnection Notifications
+
+- (void)internetConnectionIsActive:(BOOL)isActive;
+- (void)internetConnectionStateWithTarget:(id)target block:(QMInternetConnectionState)block;
+
+
+#pragma mark -
+#pragma mark Chat callbacks
 /**
  ChatService
  */
@@ -58,8 +69,13 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 - (void)chatDidFailWithTarget:(id)target block:(QMChatDidFailLogin)block;
 - (void)chatDidReceiveMessageWithTarget:(id)target block:(QMChatMessageBlock)block;
 - (void)chatAfterDidReceiveMessageWithTarget:(id)target block:(QMChatMessageBlock)block;
+- (void)chatAfterDidReceiveMessage:(QBChatMessage *)message;
 - (void)chatDidNotSendMessageWithTarget:(id)target block:(QMChatMessageBlock)block;
 - (void)chatDidReceivePresenceOfUserWithTarget:(id)target block:(QMChatDidReceivePresenceOfUser)block;
+
+
+#pragma mark -
+#pragma mark Contact List callbacks
 /**
  ContactList
  */
@@ -67,7 +83,12 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 - (void)chatContactListDidChangeWithTarget:(id)target block:(QMChatContactListDidChange)block;
 - (void)chatContactListDidChange:(QBContactList *)contactList;
 - (void)chatContactListUpdatedWithTarget:(id)target block:(QMChatContactListWillChange)block;
+- (void)chatContactListUpdated;
 - (void)chatDidReceiveContactItemActivityWithTarget:(id)target block:(QMChathatDidReceiveContactItemActivity)block;
+
+
+#pragma mark -
+#pragma mark Chat Room callbacks
 /**
  ChatRoom
  */
@@ -82,20 +103,6 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 - (void)chatRoomDidChangeOnlineUsersWithTarget:(id)target block:(QMChatRoomDidChangeOnlineUsers)block;
 - (void)chatRoomDidReceiveListOfUsersWithTarget:(id)target block:(QMChatRoomDidReceiveListOfUsers)block;
 - (void)chatRoomDidReceiveListOfOnlineUsersWithTarget:(id)target block:(QMChatRoomDidReceiveListOfOnlineUsers)block;
-/**
- VideoChat
- */
-#pragma mark - AUDIO/VIDEO CALLS
-#pragma mark -
-
-- (void)chatDidReceiveCallRequestCustomParametesrWithTarget:(id)target block:(QMChatDidReceiveCallRequestCustomParams)block;
-- (void)chatAfrerDidReceiveCallRequestCustomParametesrWithTarget:(id)target block:(QMChatDidReceiveCallRequestCustomParams)block;
-- (void)chatCallDidAcceptCustomParametersWithTarget:(id)target block:(QMChatCallDidAcceptByUserCustomParams)block;
-- (void)chatCallDidRejectByUserWithTarget:(id)target block:(QMChatCallDidRejectByUser)block;
-- (void)chatAfterCallDidRejectByUserWithTarget:(id)target block:(QMChatCallDidRejectByUser)block;
-- (void)chatCallDidStopCustomParametersWithTarget:(id)target block:(QMChatCallDidStopByUserCustomParams)block;
-- (void)chatAfterCallDidStopWithTarget:(id)target block:(QMChatCallDidStopByUser)block;
-- (void)chatCallDidStartWithTarget:(id)target block:(QMChathatCallDidStartWithUser)block;
 
 @end
 
@@ -115,3 +122,12 @@ typedef void(^QMChathatDidReceiveContactItemActivity)(NSUInteger userID, BOOL is
 - (void)contactRequestUsersListChangedWithTarget:(id)target block:(QMUsersHistoryUpdated)block;
 
 @end
+
+
+@interface QMChatReceiver (Messages)
+
+- (void)messageHistoryWasUpdatedWithTarget:(id)target block:(void(^)(BOOL success))block;
+- (void)messageHistoryWasUpdated;
+
+@end
+

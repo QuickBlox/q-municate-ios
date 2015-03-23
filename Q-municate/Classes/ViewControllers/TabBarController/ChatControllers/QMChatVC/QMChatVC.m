@@ -16,6 +16,7 @@
 #import "QMChatButtonsFactory.h"
 #import "AGEmojiKeyBoardView.h"
 #import "QMSoundManager.h"
+#import "QMSettingsManager.h"
 #import "NSString+HasText.h"
 #import "QMApi.h"
 #import "Parus.h"
@@ -23,6 +24,7 @@
 #import "QMImagePicker.h"
 #import "REActionSheet.h"
 #import "QMChatSection.h"
+#import "REAlertView+QMSuccess.h"
 
 static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
@@ -50,8 +52,8 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 @implementation QMChatVC
 
 - (void)viewDidLoad {
-    
     [super viewDidLoad];
+    api = [QMApi instance];
     [self configureChatVC];
     [self registerForNotifications:YES];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
@@ -60,11 +62,15 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
                                                         panGestureRecognizer:self.tableView.panGestureRecognizer
                                                                     delegate:self];
     _showCameraButton = YES;
+    
+    // need for update messages after entering from tray:
+    [api.settingsManager setDialogWithIDisActive:self.dialog.ID];
 }
 
 - (void)dealloc {
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     [self registerForNotifications:NO];
+    [api.settingsManager setDialogWithIDisActive:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -168,7 +174,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 18)];
     /* Create custom view to display section header... */
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 3, tableView.frame.size.width, 15)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 7, tableView.frame.size.width, 15)];
     [label setFont:[UIFont boldSystemFontOfSize:13]];
     [label setTextColor:[UIColor grayColor]];
     [label setTextAlignment:NSTextAlignmentCenter];
@@ -405,6 +411,11 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 - (void)chatInputToolbar:(QMChatInputToolbar *)toolbar didPressRightBarButton:(UIButton *)sender {
     
+    if (!api.isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
+    
     if (sender == self.sendButton) {
         
         NSString *text = self.inputToolBar.contentView.textView.text;
@@ -421,7 +432,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
         [self.view endEditing:YES];
         
         
-        [QMImagePicker chooseSourceTypeInVC:self allowsEditing:NO result:^(UIImage *image) {
+        [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
             [weakSelf.dataSource sendImage:image];
         }];
     }
@@ -510,6 +521,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     
     self.inputToolBar.contentView.textView.inputView = nil;
     [self.inputToolBar.contentView.textView reloadInputViews];
+    [self.inputToolBar.contentView.leftBarButtonItem setImage:[UIImage imageNamed:@"ic_smile"] forState:UIControlStateNormal];
 }
 
 @end

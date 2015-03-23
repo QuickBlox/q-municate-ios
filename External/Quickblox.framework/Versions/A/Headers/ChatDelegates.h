@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <CoreAudio/CoreAudioTypes.h>
 
 #define kStopVideoChatCallStatus_OpponentDidNotAnswer @"kStopVideoChatCallStatus_OpponentDidNotAnswer"
 #define kStopVideoChatCallStatus_Manually @"kStopVideoChatCallStatus_Manually"
@@ -16,13 +15,14 @@
 /**
  QBChatDelegate protocol definition
  This protocol defines methods signatures for callbacks. Implement this protocol in your class and
- set [QBChat instance].delegate to your implementation instance to receive callbacks from QBChat
+ add [QBChat instance].addDelegate to your implementation instance to receive callbacks from QBChat
  */
 
 @class QBContactList, QBChatRoom, QBChatMessage, QBPrivacyList;
 
 @protocol QBChatDelegate <NSObject>
 @optional
+
 
 #pragma mark -
 #pragma mark Base IM
@@ -94,7 +94,7 @@
 - (void)chatDidReceiveContactAddRequestFromUser:(NSUInteger)userID;
 
 /**
- Called in case changing contact list
+ Called in case of changing contact list
  */
 - (void)chatContactListDidChange:(QBContactList *)contactList;
 
@@ -418,13 +418,32 @@
 
 
 #pragma mark -
-#pragma mark Delivery status
+#pragma mark Delivered status
 
 /**
  Called when you received a confirmation about message delivery
+ 
+ @warning *Deprecated in QB iOS SDK 2.0.7:* Use chatDidDeliverMessageWithID: instead
+ 
  @param packetID ID of an original message
  */
-- (void)chatDidDeliverMessageWithPacketID:(NSString *)packetID;
+- (void)chatDidDeliverMessageWithPacketID:(NSString *)packetID __attribute__((deprecated("use 'chatDidDeliverMessageWithID:' instead.")));
+
+/**
+ Called when you received a confirmation about message delivery
+ @param messageID ID of an original message
+ */
+- (void)chatDidDeliverMessageWithID:(NSString *)messageID;
+
+
+#pragma mark -
+#pragma mark Read status
+
+/**
+ Called when you received a confirmation about message read
+ @param messageID ID of an original message
+ */
+- (void)chatDidReadMessageWithID:(NSString *)messageID;
 
 
 #pragma mark -

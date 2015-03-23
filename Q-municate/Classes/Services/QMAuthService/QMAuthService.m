@@ -43,14 +43,6 @@
     }
 }
 
-- (NSObject<Cancelable> *)createSessionWithBlock:(QBAAuthSessionCreationResultBlock)completion {
-    
-    return [QBAuth createSessionWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
-}
-
-- (NSObject<Cancelable> *)destroySessionWithCompletion:(QBAAuthResultBlock)completion {
-    return [QBAuth destroySessionWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
-}
 
 #pragma mark - Authorization
 
@@ -98,16 +90,6 @@
                           accessTokenSecret:nil
                                    delegate:[QBEchoObject instance]
                                     context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
-}
-
-#pragma mark - Push Notifications
-
-- (NSObject<Cancelable> *)subscribeToPushNotifications:(QBMRegisterSubscriptionTaskResultBlock)competion {
-    return [QBMessages TRegisterSubscriptionWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:competion]];
-}
-
-- (NSObject<Cancelable> *)unSubscribeFromPushNotifications:(QBMUnregisterSubscriptionTaskResultBlock)competion {
-    return [QBMessages TUnregisterSubscriptionWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:competion]];
 }
 
 @end

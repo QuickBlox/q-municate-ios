@@ -12,6 +12,7 @@
 #import "QMSettingsManager.h"
 #import "QMUsersService.h"
 #import "QMMessagesService.h"
+#import "REAlertView+QMSuccess.h"
 
 @implementation QMApi (Auth)
 
@@ -25,8 +26,7 @@
     [QMFacebookService logout];
     [self stopServices];
     
-    [self.authService unSubscribeFromPushNotifications:^(QBMUnregisterSubscriptionTaskResult *result) {
-        
+    [self unSubscribeToPushNotifications:^(BOOL success) {
         completion(YES);
     }];
 }
@@ -43,7 +43,7 @@
     
     if (!self.currentUser) {
         
-        if (self.settingsManager.accountType == QMAccountTypeEmail) {
+        if (self.settingsManager.accountType == QMAccountTypeEmail && self.settingsManager.password && self.settingsManager.login) {
             
             NSString *email = self.settingsManager.login;
             NSString *password = self.settingsManager.password;
@@ -51,10 +51,12 @@
             [self loginWithEmail:email password:password rememberMe:YES completion:completion];
         }
         else if (self.settingsManager.accountType == QMAccountTypeFacebook) {
+            
             [self loginWithFacebook:completion];
         }
         else {
-            NSAssert(nil, @"Need update this case");
+            
+            completion(NO);
         }
     }
     else {
@@ -76,7 +78,7 @@
             
             [weakSelf setAutoLogin:YES withAccountType:QMAccountTypeFacebook];
             
-            if (weakSelf.currentUser.website.length == 0) {
+            if (weakSelf.currentUser.avatarURL.length == 0) {
                 /*Update user image from facebook */
                 [QMFacebookService loadMe:^(NSDictionary<FBGraphUser> *user) {
                     
@@ -111,7 +113,7 @@
     
     __weak __typeof(self)weakSelf = self;
     
-    [weakSelf.usersService resetUserPasswordWithEmail:email completion:^(Result *result) {
+    [weakSelf.usersService resetUserPasswordWithEmail:email completion:^(QBResult *result) {
         completion([weakSelf checkResult:result]);
     }];
 }
@@ -122,10 +124,12 @@
     
     if ([self.authService sessionTokenHasExpiredOrNeedCreate]) {
         
-        __weak __typeof(self)weakSelf = self;
-        [weakSelf.authService createSessionWithBlock:^(QBAAuthSessionCreationResult *result) {
-            completion([weakSelf checkResult:result]);
-        }];;
+        [QBRequest createSessionWithSuccessBlock:^(QBResponse *response, QBASession *session) {
+            completion(YES);
+        } errorBlock:^(QBResponse *response) {
+            [REAlertView showAlertWithMessage:response.error.description actionSuccess:NO];
+            completion(NO);
+        }];
     }
     else {
         completion(YES);
@@ -134,9 +138,11 @@
 
 - (void)destroySessionWithCompletion:(void(^)(BOOL success))completion {
     
-    __weak __typeof(self)weakSelf = self;
-    [self.authService destroySessionWithCompletion:^(QBAAuthResult *result) {
-        completion([weakSelf checkResult:result]);
+    [QBRequest destroySessionWithSuccessBlock:^(QBResponse *response) {
+        completion(YES);
+    } errorBlock:^(QBResponse *response) {
+        [REAlertView showAlertWithMessage:response.error.description actionSuccess:NO];
+        completion(NO);
     }];
 }
 
@@ -148,7 +154,6 @@
         if ([weakSelf checkResult:loginWithFBResult]) {
             
             weakSelf.currentUser = loginWithFBResult.user;
-            [weakSelf.usersService addUser:weakSelf.currentUser];
         }
         completion(loginWithFBResult.success);
     }];
@@ -173,15 +178,38 @@
 
 - (void)subscribeToPushNotificationsForceSettings:(BOOL)force complete:(void(^)(BOOL success))complete {
     
+    if( !self.deviceToken ){
+        if( complete ){
+            complete(NO);
+        }
+        return;
+    }
+    
     if (self.settingsManager.pushNotificationsEnabled || force) {
         __weak __typeof(self)weakSelf = self;
-        [self.authService subscribeToPushNotifications:^(QBMRegisterSubscriptionTaskResult *result) {
-            if (result.success && force) {
+        
+        // Register subscription with device token
+        [QBRequest registerSubscriptionForDeviceToken:self.deviceToken successBlock:^(QBResponse *response, NSArray *subscriptions) {
+            // Registration succeded
+            if (force) {
                 weakSelf.settingsManager.pushNotificationsEnabled = YES;
             }
-            if (complete)
-                complete([weakSelf checkResult:result]);
+            if (complete) {
+                complete(YES);
+            };
+        } errorBlock:^(QBError *error) {
+            // Handle error
+            [REAlertView showAlertWithMessage:error.description actionSuccess:NO];
+            if (complete) {
+                complete(NO);
+            };
         }];
+        
+    }
+    else{
+        if( complete ){
+            complete(NO);
+        }
     }
 }
 
@@ -189,18 +217,31 @@
     
     if (self.settingsManager.pushNotificationsEnabled) {
         __weak __typeof(self)weakSelf = self;
-        [self.authService unSubscribeFromPushNotifications:^(QBMUnregisterSubscriptionTaskResult *result) {
-            
-            if (![weakSelf checkResult:result]) {
-                if (complete)
-                    complete(NO);
+        [QBRequest unregisterSubscriptionWithSuccessBlock:^(QBResponse *response) {
+            weakSelf.settingsManager.pushNotificationsEnabled = NO;
+            if (complete) {
+                complete(YES);
             }
-            else {
+        } errorBlock:^(QBError *error) {
+            if( ![error reasons] ) { // success unsubscription
                 weakSelf.settingsManager.pushNotificationsEnabled = NO;
-                if (complete)
+                if (complete) {
                     complete(YES);
+                }
+            }
+            else{
+                ILog(@"%@", error.description);
+                if (complete) {
+                    complete(NO);
+                }
             }
         }];
+    }
+    else {
+        
+        if( complete ) {
+            complete(YES);
+        }
     }
 }
 
@@ -217,7 +258,6 @@
             
             weakSelf.currentUser = loginResult.user;
             weakSelf.currentUser.password = password;
-            [weakSelf.usersService addUser:weakSelf.currentUser];
             
             if (rememberMe) {
                 weakSelf.settingsManager.rememberMe = rememberMe;

@@ -1,70 +1,89 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="QMContactRequestCell" rowHeight="59" id="y2J-4o-qLS" customClass="QMContactRequestCell">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="59"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="QMContactRequestCell" rowHeight="60" id="cqg-tO-9Su" customClass="QMContactRequestCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
             <autoresizingMask key="autoresizingMask"/>
-            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="y2J-4o-qLS" id="KYP-cg-Q57">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="58"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cqg-tO-9Su" id="sgq-Pe-mj6">
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="upic-placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="VLc-KE-n60" customClass="QMImageView">
-                        <rect key="frame" x="10" y="4" width="50" height="50"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </imageView>
-                    <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Leonore Cantly" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x3c-YN-ZVZ">
-                        <rect key="frame" x="68" y="19" width="150" height="19"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BQn-ZD-OVn">
-                        <rect key="frame" x="282" y="9" width="36" height="40"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fTh-AR-zd7">
+                        <rect key="frame" x="275" y="9" width="36" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="36" id="Fts-mS-fhA"/>
+                        </constraints>
                         <state key="normal" image="approve">
                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                         </state>
                         <connections>
-                            <action selector="acceptButtonPressed:" destination="y2J-4o-qLS" eventType="touchUpInside" id="Yqt-e3-YXN"/>
+                            <action selector="acceptButtonPressed:" destination="cqg-tO-9Su" eventType="touchUpInside" id="8ir-8K-85N"/>
                         </connections>
                     </button>
-                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zOE-DR-FfJ">
-                        <rect key="frame" x="236" y="9" width="38" height="40"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LJu-h1-uRF">
+                        <rect key="frame" x="229" y="9" width="38" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="38" id="5dc-gr-I3L"/>
+                        </constraints>
                         <state key="normal" image="reject">
                             <color key="titleColor" red="0.146108774" green="0.146108774" blue="0.146108774" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                         </state>
                         <connections>
-                            <action selector="rejectButtonPressed:" destination="y2J-4o-qLS" eventType="touchUpInside" id="Ldp-yB-iXf"/>
+                            <action selector="rejectButtonPressed:" destination="cqg-tO-9Su" eventType="touchUpInside" id="mla-ud-TvP"/>
                         </connections>
                     </button>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="devider" translatesAutoresizingMaskIntoConstraints="NO" id="SzF-Vo-N2b">
-                        <rect key="frame" x="277" y="9" width="1" height="40"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="devider" translatesAutoresizingMaskIntoConstraints="NO" id="Zv9-Wn-37D">
+                        <rect key="frame" x="270" y="9" width="1" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="1" id="jOA-3N-eZL"/>
+                        </constraints>
                     </imageView>
+                    <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fillipp Meinherz would like to chat with you" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mJi-f3-LNI">
+                        <rect key="frame" x="10" y="9" width="211" height="42"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                        <color key="textColor" red="0.52143787202380953" green="0.52143787202380953" blue="0.52143787202380953" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
-                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                <constraints>
+                    <constraint firstItem="Zv9-Wn-37D" firstAttribute="leading" secondItem="LJu-h1-uRF" secondAttribute="trailing" constant="3" id="7MH-7W-jaK"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="fTh-AR-zd7" secondAttribute="bottom" constant="2.5" id="87K-eT-bhB"/>
+                    <constraint firstItem="LJu-h1-uRF" firstAttribute="leading" secondItem="mJi-f3-LNI" secondAttribute="trailing" constant="8" id="GN5-pk-Vsl"/>
+                    <constraint firstItem="fTh-AR-zd7" firstAttribute="top" secondItem="sgq-Pe-mj6" secondAttribute="topMargin" constant="1" id="HNi-Ou-x0H"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="mJi-f3-LNI" secondAttribute="bottom" constant="0.5" id="LYr-Fa-bZb"/>
+                    <constraint firstItem="Zv9-Wn-37D" firstAttribute="top" secondItem="sgq-Pe-mj6" secondAttribute="topMargin" constant="1" id="PSW-OE-24d"/>
+                    <constraint firstItem="mJi-f3-LNI" firstAttribute="leading" secondItem="sgq-Pe-mj6" secondAttribute="leadingMargin" constant="2" id="b4Y-I5-CjH"/>
+                    <constraint firstItem="fTh-AR-zd7" firstAttribute="leading" secondItem="Zv9-Wn-37D" secondAttribute="trailing" constant="4" id="cS1-px-jJh"/>
+                    <constraint firstItem="mJi-f3-LNI" firstAttribute="top" secondItem="sgq-Pe-mj6" secondAttribute="topMargin" constant="1" id="gd3-e8-UZ1"/>
+                    <constraint firstItem="LJu-h1-uRF" firstAttribute="top" secondItem="sgq-Pe-mj6" secondAttribute="topMargin" constant="1" id="gq9-0f-iMi"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="Zv9-Wn-37D" secondAttribute="bottom" constant="2.5" id="hZr-1r-ON6"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="fTh-AR-zd7" secondAttribute="trailing" constant="1" id="pBz-4i-osS"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="LJu-h1-uRF" secondAttribute="bottom" constant="2.5" id="xNM-Nb-PKG"/>
+                </constraints>
             </tableViewCellContentView>
             <connections>
-                <outlet property="qmImageView" destination="VLc-KE-n60" id="76X-27-wt6"/>
-                <outlet property="titleLabel" destination="x3c-YN-ZVZ" id="yCg-Vm-SQe"/>
+                <outlet property="fullNameLabel" destination="mJi-f3-LNI" id="620-c4-9iK"/>
             </connections>
+            <point key="canvasLocation" x="-1179" y="183"/>
         </tableViewCell>
     </objects>
     <resources>
         <image name="approve" width="22" height="18"/>
         <image name="devider" width="1" height="40"/>
         <image name="reject" width="19" height="18"/>
-        <image name="upic-placeholder" width="64" height="64"/>
     </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
 </document>

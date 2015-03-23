@@ -106,8 +106,8 @@
     if (!imageData) return nil;
     
     NSData *data = (__bridge NSData *)imageData;
-    CFRelease(imageData);
     UIImage *image = [UIImage imageWithData:data];
+    CFRelease(imageData);
     
     return image;
 }

@@ -21,11 +21,11 @@ NSString *const QMChatViewControllerID = @"QMChatViewController";
 
 - (void)viewDidLoad {
     
-    NSArray *unsortedFriends = [[QMApi instance] friends];
-    self.friends = [QMUsersUtils sortUsersByFullname:unsortedFriends];
+    NSArray *unsortedContacts = [[QMApi instance] contactsOnly];
+    self.contacts = [QMUsersUtils sortUsersByFullname:unsortedContacts];
     [super viewDidLoad];
 }
-
+ 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
@@ -40,12 +40,12 @@ NSString *const QMChatViewControllerID = @"QMChatViewController";
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
 
     __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] createGroupChatDialogWithName:chatName occupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
+    [[QMApi instance] createGroupChatDialogWithName:chatName occupants:self.selectedFriends completion:^(QBChatDialog *chatDialog) {
         
-        if (result.success) {
+        if (chatDialog) {
             
             QMChatViewController *chatVC = [weakSelf.storyboard instantiateViewControllerWithIdentifier:QMChatViewControllerID];
-            chatVC.dialog = result.dialog;
+            chatVC.dialog = chatDialog;
             
             NSMutableArray *controllers = weakSelf.navigationController.viewControllers.mutableCopy;
             [controllers removeLastObject];

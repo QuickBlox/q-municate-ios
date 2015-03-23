@@ -62,29 +62,15 @@
     [super start];
     
     self.history = [NSMutableDictionary dictionary];
-
-    __weak __typeof(self)weakSelf = self;
-    void (^updateHistory)(QBChatMessage *) = ^(QBChatMessage *message) {
-
-        if (message.recipientID != message.senderID && message.cParamNotificationType == QMMessageNotificationTypeNone) {
-            [weakSelf addMessageToHistory:message withDialogID:message.cParamDialogID];
-        }
-    };
-    
-    [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-        updateHistory(message);
-    }];
-    
-    [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
-        updateHistory(message);
-    }];
+    self.messageDeliveryBlockList = [NSMutableDictionary dictionary];
 }
 
 - (void)stop {
     [super stop];
     
     [[QMChatReceiver instance] unsubscribeForTarget:self];
-    [self.history removeAllObjects];
+    self.history = nil;
+    self.messageDeliveryBlockList = nil;
 }
 
 - (void)setMessages:(NSArray *)messages withDialogID:(NSString *)dialogID {
@@ -104,37 +90,49 @@
     return messages;
 }
 
-- (void)sendMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID saveToHistory:(BOOL)save completion:(void(^)(NSError *error))completion {
+- (void)deleteMessageHistoryWithChatDialogID:(NSString *)dialogID
+{
+    self.history[dialogID] = @[].mutableCopy;
+}
+
+- (void)sendPrivateMessage:(QBChatMessage *)message toDialog:(QBChatDialog *)dialog persistent:(BOOL)persistent completion:(void(^)(NSError *error))completion {
     
-    message.cParamDialogID = dialogID;
+    message.cParamDialogID = dialog.ID;
     message.cParamDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);
     message.text = [message.text gtm_stringByEscapingForHTML];
     
-    if (save) {
+    if (persistent) {
         message.cParamSaveToHistory = @"1";
         message.markable = YES;
     }
     
     [self chat:^(QBChat *chat) {
-//        [chat sendMessage:message sentBlock:^(NSError *error) {
-//            completion(error);
-//        }];
        if ( [chat sendMessage:message]) {
-           completion(nil);
+          if (completion) completion(nil);
        };
     }];
 }
 
-- (void)sendChatMessage:(QBChatMessage *)message withDialogID:(NSString *)dialogID toRoom:(QBChatRoom *)chatRoom completion:(void(^)(void))completion {
+- (void)sendGroupChatMessage:(QBChatMessage *)message toDialog:(QBChatDialog *)dialog completion:(void(^)(NSError *))completion {
     
-    message.cParamDialogID = dialogID;
+    message.cParamDialogID = dialog.ID;
     message.cParamSaveToHistory = @"1";
     message.cParamDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);
     message.text = [message.text gtm_stringByEscapingForHTML];
+    QBChatRoom *chatRoom = dialog.chatRoom;
     
+    if (!chatRoom.isJoined) {
+        if (completion) completion([NSError errorWithDomain:@"Error. Room is not joined" code:0 userInfo:nil]);
+        return;
+    }
+    __weak typeof(self)weakSelf = self;
     [self chat:^(QBChat *chat) {
         if ([chat sendChatMessage:message toRoom:chatRoom]) {
-            completion();
+            if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
+               if (completion) weakSelf.messageDeliveryBlockList[chatRoom.JID] = completion;
+            } else {
+                if (completion) completion(nil);
+            }
         }
     }];
 }
@@ -143,11 +141,24 @@
     
     __weak __typeof(self)weakSelf = self;
     QBChatHistoryMessageResultBlock echoObject = ^(QBChatHistoryMessageResult *result) {
-        [weakSelf setMessages:result.messages.count ? result.messages.mutableCopy : @[].mutableCopy withDialogID:dialogID];
+        NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"datetime" ascending:YES];
+        NSMutableArray *messages = result.messages.count ? result.messages.mutableCopy : @[].mutableCopy;
+        [messages sortUsingDescriptors:@[descriptor]];
+        [weakSelf setMessages:messages withDialogID:dialogID];
         completion(result);
     };
     
-    [QBChat messagesWithDialogID:dialogID delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:echoObject]];
+    NSMutableDictionary *extendedRequest = @{@"sort_desc": @"date_sent"}.mutableCopy;
+    
+    [QBChat messagesWithDialogID:dialogID extendedRequest:extendedRequest delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:echoObject]];
+    
+//    QBResponsePage *page = [QBResponsePage responsePageWithLimit:50];
+//    
+//    [QBRequest messagesWithDialogID:dialogID extendedRequest:extendedRequest forPage:page successBlock:^(QBResponse *responce, NSArray *dialogs, QBResponsePage *responcePage) {
+//        //
+//    } errorBlock:^(QBResponse *response) {
+//        //
+//    }];
 }
 
 - (void)messagesWithDialogID:(NSString *)dialogID time:(NSUInteger)time completion:(QBChatHistoryMessageResultBlock)completion {
@@ -160,8 +171,7 @@
     
     NSMutableDictionary *getRequest = [NSMutableDictionary dictionary];
     
-    [getRequest setObject:@(time)
-                   forKey:@"date_send[gt]"];
+    getRequest[@"date_send[gt]"] = @(time);
     
     [QBChat messagesWithDialogID:dialogID extendedRequest:getRequest delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:echoObject]];
 }

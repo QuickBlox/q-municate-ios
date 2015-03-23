@@ -9,8 +9,8 @@ extern const struct CDUserAttributes {
 	__unsafe_unretained NSString *fullName;
 	__unsafe_unretained NSString *id;
 	__unsafe_unretained NSString *phone;
+	__unsafe_unretained NSString *profileType;
 	__unsafe_unretained NSString *status;
-	__unsafe_unretained NSString *type;
 } CDUserAttributes;
 
 extern const struct CDUserRelationships {
@@ -86,21 +86,21 @@ extern const struct CDUserFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* profileType;
+
+
+
+//- (BOOL)validateProfileType:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* status;
 
 
 
 //- (BOOL)validateStatus:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* type;
-
-
-
-//- (BOOL)validateType:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -150,14 +150,14 @@ extern const struct CDUserFetchedProperties {
 
 
 
+- (NSString*)primitiveProfileType;
+- (void)setPrimitiveProfileType:(NSString*)value;
+
+
+
+
 - (NSString*)primitiveStatus;
 - (void)setPrimitiveStatus:(NSString*)value;
-
-
-
-
-- (NSString*)primitiveType;
-- (void)setPrimitiveType:(NSString*)value;
 
 
 

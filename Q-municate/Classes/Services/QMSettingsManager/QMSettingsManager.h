@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSUInteger, QMAccountType) {
+typedef NS_ENUM(NSInteger, QMAccountType) {
     QMAccountTypeNone,
     QMAccountTypeEmail,
     QMAccountTypeFacebook
@@ -49,9 +49,15 @@ typedef NS_ENUM(NSUInteger, QMAccountType) {
 @property (assign, nonatomic) BOOL rememberMe;
 
 /**
- * First facebook login flag. Needed for import FB friends from Quickblox.
+ * Last activity date. Needed for updating chat dialogs when go back from tray.
  */
-@property (assign, nonatomic, getter = isFirstFacebookLogin) BOOL firstFacebookLogin;
+@property (strong, nonatomic) NSDate *lastActivityDate;
+
+/**
+ * 
+ */
+@property (strong, nonatomic) NSString *dialogWithIDisActive;
+
 
 
 - (void)setLogin:(NSString *)login andPassword:(NSString *)password;

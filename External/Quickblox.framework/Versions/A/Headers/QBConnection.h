@@ -20,9 +20,9 @@ typedef enum QBConnectionZoneType{
 @interface QBConnection : NSObject
 
 /**
- *Use auto create session
+ *Use auto create session, default - NO
  */
-+ (void)setAutoCreateSessionWithErrorBlock:(void (^)(QBResponse *response))errorBlock;
++ (void)setAutoCreateSessionEnabled:(BOOL)enabled;
 
 #pragma mark - Settings methods
 /**

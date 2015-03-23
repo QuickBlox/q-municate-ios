@@ -27,10 +27,10 @@ NSString *const kCreateChatCellIdentifier = @"CreateChatCell";
 #pragma mark - LifeCycle
 
 - (void)viewDidLoad {
+    self.selectedFriends = [NSMutableArray array];
     
     [super viewDidLoad];
     
-    self.selectedFriends = [NSMutableArray array];
     [self updateGUI];
 }
 
@@ -40,7 +40,7 @@ NSString *const kCreateChatCellIdentifier = @"CreateChatCell";
 
 - (void)updateGUI {
     
-    self.title = [NSString stringWithFormat:@"%d Selected", self.selectedFriends.count];
+    self.title = [NSString stringWithFormat:@"%zd Selected", self.selectedFriends.count];
     BOOL enabled = self.selectedFriends.count > 0;
     self.performButton.enabled = enabled;
     self.resetButton.enabled = enabled;
@@ -64,14 +64,14 @@ NSString *const kCreateChatCellIdentifier = @"CreateChatCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    return self.friends.count;
+    return self.contacts.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     QMInviteFriendCell *cell = [tableView dequeueReusableCellWithIdentifier:kCreateChatCellIdentifier];
     
-    QBUUser *friend = self.friends[indexPath.row];
+    QBUUser *friend = self.contacts[indexPath.row];
     
     cell.contactlistItem = [[QMApi instance] contactItemWithUserID:friend.ID];
     cell.userData = friend;
@@ -85,7 +85,7 @@ NSString *const kCreateChatCellIdentifier = @"CreateChatCell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    QBUUser *checkedUser = self.friends[indexPath.row];
+    QBUUser *checkedUser = self.contacts[indexPath.row];
     
     BOOL contains = [self.selectedFriends containsObject:checkedUser];
     contains ? [self.selectedFriends removeObject:checkedUser] : [self.selectedFriends addObject:checkedUser];

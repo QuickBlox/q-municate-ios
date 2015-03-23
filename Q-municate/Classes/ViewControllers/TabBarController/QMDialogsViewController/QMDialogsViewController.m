@@ -11,6 +11,7 @@
 #import "QMCreateNewChatController.h"
 #import "QMDialogsDataSource.h"
 #import "QMChatReceiver.h"
+#import "REAlertView+QMSuccess.h"
 #import "QMApi.h"
 
 static NSString *const ChatListCellIdentifier = @"ChatListCell";
@@ -75,9 +76,15 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 
 #pragma mark - Actions
 
-- (IBAction)createNewDialog:(id)sender {
-    if ([[QMApi instance].friends count] == 0) {
-        [[[UIAlertView alloc] initWithTitle:nil message:@"You don't have any friends for creating new chat." delegate:nil cancelButtonTitle:@"OK"otherButtonTitles:nil] show];
+- (IBAction)createNewDialog:(id)sender
+{
+    if (!QMApi.instance.isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
+    
+    if ([[QMApi instance].contactsOnly count] == 0) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_ERROR_WHILE_CREATING_NEW_CHAT", nil) actionSuccess:NO];
         return;
     }
     [self performSegueWithIdentifier:kCreateNewChatSegueIdentifier sender:nil];
@@ -90,7 +97,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     NSUInteger idx = [self.tabBarController.viewControllers indexOfObject:self.navigationController];
     if (idx != NSNotFound) {
         UITabBarItem *item = self.tabBarController.tabBar.items[idx];
-        item.badgeValue = unreadDialogsCount > 0 ? [NSString stringWithFormat:@"%d", unreadDialogsCount] : nil;
+        item.badgeValue = unreadDialogsCount > 0 ? [NSString stringWithFormat:@"%zd", unreadDialogsCount] : nil;
     }
 }
 

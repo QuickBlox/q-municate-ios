@@ -8,7 +8,6 @@
 
 static NSString *const kQMFriendsListCellIdentifier = @"QMFriendListCell";
 static NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFriendsCell";
-static NSString *const kQMContactRequestCellIdentifier = @"QMContactRequestCell";
 
 @protocol QMFriendsListDataSourceDelegate <NSObject>
 
@@ -16,10 +15,9 @@ static NSString *const kQMContactRequestCellIdentifier = @"QMContactRequestCell"
 
 @end
 
-@interface QMFriendsListDataSource : NSObject <UITableViewDataSource, UISearchDisplayDelegate, QMUsersListCellDelegate>
+@interface QMFriendsListDataSource : NSObject <UITableViewDataSource, UISearchDisplayDelegate, QMUsersListDelegate>
 
 @property (nonatomic, assign) BOOL viewIsShowed;
-@property (assign, nonatomic, readonly) BOOL searchIsActive;
 @property (weak, nonatomic) id <QMFriendsListDataSourceDelegate> delegate;
 
 - (instancetype)initWithTableView:(UITableView *)tableView searchDisplayController:(UISearchDisplayController *)searchDisplayController;

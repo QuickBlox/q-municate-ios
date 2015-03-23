@@ -26,6 +26,8 @@
         self.users = [NSMutableDictionary dictionary];
         self.contactList = [NSMutableArray array];
         self.retrivedIds = [NSMutableSet set];
+        self.friendsOnly = [NSMutableArray array];
+        self.contactListPendingApproval = [NSMutableArray array];
         
     }
     return self;
@@ -38,28 +40,28 @@
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
         
+        if (!contactList) {
+            return;
+        }
         [weakSelf.contactList removeAllObjects];
+        [weakSelf.friendsOnly removeAllObjects];
+        
+        [weakSelf.contactListPendingApproval addObjectsFromArray:contactList.pendingApproval];
         
         [weakSelf.contactList addObjectsFromArray:contactList.pendingApproval];
         [weakSelf.contactList addObjectsFromArray:contactList.contacts];
+        [weakSelf.friendsOnly addObjectsFromArray:contactList.contacts];
         
         [weakSelf retrieveUsersWithIDs:[weakSelf idsFromContactListItems] completion:^(BOOL updated) {
             
         }];
     }];
-    
+        
     [[QMChatReceiver instance] chatDidReceiveContactAddRequestWithTarget:self block:^(NSUInteger userID) {
         
         [weakSelf.confirmRequestUsersIDs addObject:@(userID)];
-        
-        QBUUser *user = [weakSelf userWithID:userID];
-        
-        if (user != nil) {
-            [[QMChatReceiver instance] contactRequestUsersListChanged];
-            return;
-        }
-        [weakSelf retrieveUserWithID:userID completion:^(QBUUserResult *result) {
-            // show contact requests:
+        [weakSelf retriveIfNeededUserWithID:userID completion:^(BOOL retrieveWasNeeded) {
+            
             [[QMChatReceiver instance] contactRequestUsersListChanged];
         }];
     }];
@@ -77,6 +79,24 @@
     return idsToFetch;
 }
 
+- (NSArray *)idsOfContactsOnly {
+    
+    NSMutableSet *IDs = [NSMutableSet new];
+    NSArray *contactItems = [QBChat instance].contactList.contacts;
+    
+    for (QBContactListItem *item in contactItems) {
+        [IDs addObject:@(item.userID)];
+    }
+    
+    for (QBContactListItem *item in [QBChat instance].contactList.pendingApproval) {
+        
+        if (item.subscriptionState == QBPresenseSubscriptionStateFrom) {
+            [IDs addObject:@(item.userID)];
+        }
+    }
+    return IDs.allObjects;
+}
+
 
 - (void)stop {
     [super stop];
@@ -84,13 +104,45 @@
     [[QMChatReceiver instance] unsubscribeForTarget:self];
     [self.users removeAllObjects];
     [self.contactList removeAllObjects];
+    [self.friendsOnly removeAllObjects];
+}
+
+- (NSArray *)idsOfUsers:(NSArray *)users
+{
+    NSMutableSet *usersIDs = [NSMutableSet new];
+    for (QBUUser *usr in users) {
+        [usersIDs addObject:@(usr.ID)];
+    }
+    return usersIDs.allObjects;
 }
 
 - (QBUUser *)userWithID:(NSUInteger)userID {
     
-    NSString *stingID = [NSString stringWithFormat:@"%d", userID];
+    NSString *stingID = [NSString stringWithFormat:@"%zd", userID];
     QBUUser *user = self.users[stingID];
     return user;
+}
+
+- (BOOL)isFriendWithID:(NSUInteger)ID
+{
+    NSArray *contactListItems = self.friendsOnly;
+    for (QBContactListItem *item in contactListItems) {
+        if (item.userID == ID) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (BOOL)isContactRequestWithID:(NSInteger)ID
+{
+    NSArray *contactRequestsArray = [self.confirmRequestUsersIDs.allObjects copy];
+    for (NSNumber *contactRequestID in contactRequestsArray) {
+        if (ID == contactRequestID.intValue) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (void)addUsers:(NSArray *)users {
@@ -104,11 +156,69 @@
 
 - (void)addUser:(QBUUser *)user {
     
-    NSString *key = [NSString stringWithFormat:@"%d", user.ID];
+    NSString *key = [NSString stringWithFormat:@"%zd", user.ID];
     self.users[key] = user;
 }
 
-#pragma mark - FRIEND LIST ROASTER
+- (void)deleteUser:(QBUUser *)user
+{
+    NSString *key = [NSString stringWithFormat:@"%zd", user.ID];
+    [self.users removeObjectForKey:key];
+}
+
+- (BOOL)deleteContactRequestUserID:(NSUInteger)contactUserID
+{
+    if ([self.confirmRequestUsersIDs.allObjects containsObject:@(contactUserID)]) {
+        [self.confirmRequestUsersIDs removeObject:@(contactUserID)];
+        return YES;
+    }
+    return NO;
+}
+
+// friend request has not been accepted yet
+- (BOOL)userIDIsInPendingList:(NSUInteger)userId{
+    for( QBContactListItem *item in [self contactListPendingApproval] ){
+        if( userId == item.userID ){
+            return YES;
+        }
+    }
+    return NO;
+}
+
+#pragma mark - 
+
+- (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock
+{
+    QBUUser *user = [self userWithID:userID];
+    if (!user) {
+        [self retrieveUserWithID:userID completion:^(QBUUserResult *result) {
+            if (result.success) {
+                if (completionBlock) completionBlock(YES);
+                return;
+            }
+            if (completionBlock) completionBlock(NO);
+        }];
+        return;
+    }
+    completionBlock(NO);
+}
+
+- (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void(^)(BOOL retrieveWasNeeded))completionBlock
+{
+    NSArray *idsToFetch = [self usersIDsToFetch:usersIDs];
+    if (idsToFetch.count > 0) {
+        [self retriveUsersWithIDs:idsToFetch completion:^(QBUUserPagedResult *pagedResult) {
+            if (pagedResult.success) {
+                if (completionBlock) completionBlock(YES);
+                return;
+            }
+            if (completionBlock) completionBlock(NO);
+        }];
+        return;
+    }
+    if (completionBlock) completionBlock(NO);
+}
+
 
 - (NSObject<Cancelable> *)retrieveUsersWithFacebookIDs:(NSArray *)facebookIDs completion:(QBUUserPagedResultBlock)completion {
     return [QBUsers usersWithFacebookIDs:facebookIDs delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
@@ -129,6 +239,19 @@
     }
     
     return [idsToFetch allObjects];
+}
+
+- (NSArray *)usersIDsToFetch:(NSArray *)IDs
+{
+    NSMutableSet *idsToFetch = [NSMutableSet new];
+    
+    for (NSNumber *ID in IDs) {
+        QBUUser *usr = [self userWithID:ID.integerValue];
+        if (!usr) {
+            [idsToFetch addObject:ID];
+        }
+    }
+    return idsToFetch.allObjects;
 }
 
 - (void)retrieveUsersWithIDs:(NSArray *)idsToFetch completion:(void(^)(BOOL updated))completion {
@@ -197,6 +320,19 @@
     };
     
     return [QBUsers userWithID:userID delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
+}
+         
+- (NSObject<Cancelable> *)retriveUsersWithIDs:(NSArray *)usersIDs completion:(QBUUserPagedResultBlock)completion
+{
+    __weak __typeof(self)weakSelf = self;
+    QBUUserPagedResultBlock resultBlock = ^(QBUUserPagedResult *result) {
+        if (result.success) {
+            [weakSelf addUsers:result.users];
+        }
+        completion(result);
+    };
+    NSString *idsToFetch = [usersIDs componentsJoinedByString:@","];
+    return [QBUsers usersWithIDs:idsToFetch delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
 }
 
 - (NSObject<Cancelable> *)retrieveUsersWithEmails:(NSArray *)emails completion:(QBUUserPagedResultBlock)completion {

@@ -28,7 +28,7 @@
 - (NSString *)description {
     
     return [NSString stringWithFormat:
-            @"cmd - %@, callback - %@, identfier - %d, targetClass - %@",
+            @"cmd - %@, callback - %@, identfier - %zd, targetClass - %@",
             self.tcmd, self.callback, self.identifier, self.className];
 }
 
@@ -200,12 +200,20 @@
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatMessageBlock block) {
         block(message);
     }];
+    if (message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
+        return;
+    }
     [self chatAfterDidReceiveMessage:message];
 }
 
-- (void)chatDidDeliverMessageWithPacketID:(NSString *)packetID
+- (void)chatDidDeliverMessageWithID:(NSString *)messageID
 {
-    ILog(@"Message was delivered to user. Message package ID: %@", packetID);
+    ILog(@"Message was delivered to user. Message ID: %@", messageID);
+}
+
+- (void)chatDidReadMessageWithID:(NSString *)messageID
+{
+    
 }
 
 - (void)chatAfterDidReceiveMessageWithTarget:(id)target block:(QMChatMessageBlock)block {
@@ -227,9 +235,9 @@
     [self subsribeWithTarget:target selector:@selector(chatDidFailWithError:) block:block];
 }
 
-- (void)chatDidFailWithError:(NSInteger)code {
+- (void)chatDidFailWithStreamError:(NSError *)error {
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatDidFailLogin block) {
-        block(code);
+        block(error);
     }];
 }
 
@@ -342,11 +350,16 @@
 
 - (void)chatRoomDidReceiveMessage:(QBChatMessage *)message fromRoomJID:(NSString *)roomJID {
     message.text = [message.text gtm_stringByUnescapingFromHTML];
+    if (!message.ID || !message.customParameters) {
+        return;
+    }
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatRoomDidReceiveMessage block) {
         block(message, roomJID);
     }];
     
-    [self chatAfterDidReceiveMessage:message];
+    if (message.cParamNotificationType <= 0) {
+        [self chatAfterDidReceiveMessage:message];
+    }
 }
 
 /**
@@ -493,19 +506,24 @@
 }
 
 #pragma mark -
+#pragma mark InternetConnection Notifications
+
+- (void)internetConnectionIsActive:(BOOL)isActive
+{
+    [self executeBloksWithSelector:_cmd enumerateBloks:^(QMInternetConnectionState block){
+        block(isActive);
+    }];
+}
+
+- (void)internetConnectionStateWithTarget:(id)target block:(QMInternetConnectionState)block {
+    [self subsribeWithTarget:target selector:@selector(internetConnectionIsActive:) block:block];
+}
+
+
+
+#pragma mark -
 #pragma mark Video Chat Callbacks
 #pragma mark -
-
-/**
- Called in case when opponent is calling to you
- 
- @param userID ID of uopponent
- @param conferenceType Type of conference. 'QBVideoChatConferenceTypeAudioAndVideo' and 'QBVideoChatConferenceTypeAudio' values are available
- @param customParameters Custom caller parameters
- */
-- (void)chatDidReceiveCallRequestCustomParametesrWithTarget:(id)target block:(QMChatDidReceiveCallRequestCustomParams)block {
-    [self subsribeWithTarget:target selector:@selector(chatDidReceiveCallRequestFromUser:withSessionID:conferenceType:customParameters:) block:block];
-}
 
 - (void)chatDidReceiveCallRequestFromUser:(NSUInteger)userID
                             withSessionID:(NSString*)sessionID
@@ -518,9 +536,9 @@
     [self chatAfterDidReceiveCallRequestFromUser:userID withSessionID:sessionID conferenceType:conferenceType customParameters:customParameters];
 }
 
-- (void)chatAfrerDidReceiveCallRequestCustomParametesrWithTarget:(id)target block:(QMChatDidReceiveCallRequestCustomParams)block
+-(void) chatDidReceiveCallRequestFromUser:(NSUInteger)userID withSessionID:(NSString*)sessionID conferenceType:(enum QBVideoChatConferenceType)conferenceType
 {
-    [self subsribeWithTarget:target selector:@selector(chatAfterDidReceiveCallRequestFromUser:withSessionID:conferenceType:customParameters:) block:block];
+    
 }
 
 - (void)chatAfterDidReceiveCallRequestFromUser:(NSUInteger)userID
@@ -568,11 +586,6 @@
     [self chatAfterCallDidRejectByUser:userID];
 }
 
-- (void)chatAfterCallDidRejectByUserWithTarget:(id)target block:(QMChatCallDidRejectByUser)block
-{
-    [self subsribeWithTarget:target selector:@selector(chatAfterCallDidRejectByUser:) block:block];
-}
-
 - (void)chatAfterCallDidRejectByUser:(NSUInteger)userID
 {
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatCallDidRejectByUser block) {
@@ -597,10 +610,6 @@
         block(userID, status, customParameters);
     }];
     [self chatAfterCallDidStopByUser:userID status:status];
-}
-
-- (void)chatAfterCallDidStopWithTarget:(id)target block:(QMChatCallDidStopByUser)block {
-    [self subsribeWithTarget:target selector:@selector(chatAfterCallDidStopByUser:status:) block:block];
 }
 
 - (void)chatAfterCallDidStopByUser:(NSUInteger)userID status:(NSString *)status {

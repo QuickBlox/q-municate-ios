@@ -11,11 +11,12 @@
 #import "QMChatReceiver.h"
 #import "QMApi.h"
 
-NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
+NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
+NSString *const kLeaveChatCellIdentifier = @"QMLeaveChatCell";
 
 @interface QMGroupDetailsDataSource ()
 
-<QMUsersListCellDelegate>
+<QMUsersListDelegate>
 
 @property (nonatomic, weak) UITableView *tableView;
 @property (nonatomic, strong) NSArray *participants;
@@ -53,7 +54,10 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
         
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
             
-            if (message.cParamNotificationType == QMMessageNotificationTypeUpdateDialog &&
+            if (message.delayed) {
+                return;
+            }
+            if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog &&
                 [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID])
             {
                 [weakSelf reloadUserData];
@@ -77,15 +81,24 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
     [self.tableView reloadData];
 }
 
+
 #pragma mark - UITableViewDataSource
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 2;
+}
 
-    return self.participants.count;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return (section == 0) ? self.participants.count : 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    if (indexPath.section == 1) {
+        return [tableView dequeueReusableCellWithIdentifier:kLeaveChatCellIdentifier];
+    }
     QMFriendListCell *cell = [tableView dequeueReusableCellWithIdentifier:kFriendsListCellIdentifier];
 
     QBUUser *user = self.participants[indexPath.row];
@@ -97,15 +110,14 @@ NSString * const kFriendsListCellIdentifier = @"QMFriendListCell";
     return cell;
 }
 
+
 #pragma mark - QMFriendListCellDelegate
 
 - (void)usersListCell:(QMFriendListCell *)cell pressAddBtn:(UIButton *)sender {
 
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     QBUUser *user = self.participants[indexPath.row];
-    [[QMApi instance] addUserToContactListRequest:user completion:^(BOOL success) {
-        
-    }];
+    [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {}];
 }
 
 @end

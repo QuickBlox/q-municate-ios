@@ -38,6 +38,7 @@ FOUNDATION_EXPORT const CGFloat kQMChatInputToolbarHeightDefault;
 
 @end
 
+
 @interface QMChatInputToolbar : UIToolbar
 /**
  *  The object that acts as the delegate of the toolbar.
@@ -64,5 +65,16 @@ FOUNDATION_EXPORT const CGFloat kQMChatInputToolbarHeightDefault;
  *  That is, the send button will be enabled if there is text in the `textView`, and disabled otherwise.
  */
 - (void)toggleSendButtonEnabled;
+
+/**
+ * Lock input bar.
+ */
+- (void)lock;
+
+/**
+ * Unlock input bar.
+ */
+- (void)unlock;
+
 
 @end

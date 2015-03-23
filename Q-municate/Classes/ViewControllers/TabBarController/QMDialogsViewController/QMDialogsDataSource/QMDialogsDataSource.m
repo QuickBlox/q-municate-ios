@@ -42,7 +42,14 @@
         
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
             
+            if (message.delayed) {
+                return;
+            }
+            if (!message.cParamDialogID) {
+                return;
+            }
             [weakSelf updateGUI];
+            [weakSelf retrieveUserIfNeededWithMessage:message];
         }];
         
         [[QMChatReceiver instance] dialogsHisotryUpdatedWithTarget:self block:^{
@@ -57,6 +64,18 @@
     }
     
     return self;
+}
+
+- (void)retrieveUserIfNeededWithMessage:(QBChatMessage *)message
+{
+    __weak typeof(self)weakSelf = self;
+    if (message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
+        [[QMApi instance] retriveIfNeededUserWithID:message.senderID completion:^(BOOL retrieveWasNeeded) {
+            if (retrieveWasNeeded) {
+                [weakSelf updateGUI];
+            }
+        }];
+    }
 }
 
 - (void)updateGUI {
@@ -115,11 +134,11 @@
     return dialog;
 }
 
-- (NSArray *)dialogs {
+- (NSMutableArray *)dialogs {
     
-    NSArray * dialogs = [[QMApi instance] dialogHistory];
+    NSMutableArray * dialogs = [[QMApi instance] dialogHistory].mutableCopy;
     NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"lastMessageDate" ascending:NO];
-    dialogs = [dialogs sortedArrayUsingDescriptors:@[sort]];
+    [dialogs sortUsingDescriptors:@[sort]];
     
     return dialogs;
 }
@@ -143,4 +162,34 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
     return cell;
 }
 
+#pragma mark - UITableViewDataSource Editing
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+#if DELETING_DIALOGS_ENABLED
+    return YES;
+#else
+    return NO;
+#endif
+    
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        __weak typeof(self)weakSelf = self;
+        
+        [SVProgressHUD show];
+        QBChatDialog *dialog = [self dialogAtIndexPath:indexPath];
+        [[QMApi instance] deleteChatDialog:dialog completion:^(BOOL success) {
+            
+            [SVProgressHUD dismiss];
+            (weakSelf.dialogs.count == 0) ?
+                [tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade] :
+                [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+
+        }];
+    }
+}
 @end

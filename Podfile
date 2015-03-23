@@ -1,6 +1,7 @@
 
 platform :ios, '7.0'
 xcodeproj 'Q-municate.xcodeproj'
+source 'https://github.com/CocoaPods/Specs.git'
 
 pod 'UIDevice-Hardware', '~> 0.1.3'
 pod 'SVProgressHUD', '~> 1.0'
@@ -11,4 +12,4 @@ pod 'AGEmojiKeyboard', '~> 0.1.0'
 pod 'SDWebImage', '~> 3.6'
 pod 'IDMPhotoBrowser', '~> 1.3.5'
 pod 'MPGNotification', '~> 1.1'
-
+pod 'Reachability', '~> 3.2'

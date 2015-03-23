@@ -8,17 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@class QMIncomingCallHandler;
-
-
 @interface QMIncomingCallController : UIViewController
 
-@property (strong, nonatomic) QMIncomingCallHandler *callsHandler;
+@property (weak, nonatomic) QBRTCSession *session;
 
 @property (assign, nonatomic) NSUInteger opponentID;
-@property (assign, nonatomic) enum QBVideoChatConferenceType callType;
+@property (assign, nonatomic) QBConferenceType callType;
 @property (strong, nonatomic) QBUUser *opponent;
-
-- (void)setCallStatus:(NSString *)callStatus;
 
 @end

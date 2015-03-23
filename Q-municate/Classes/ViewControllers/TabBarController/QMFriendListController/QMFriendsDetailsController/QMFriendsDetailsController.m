@@ -9,12 +9,15 @@
 #import "QMFriendsDetailsController.h"
 #import "QMVideoCallController.h"
 #import "QMChatViewController.h"
+#import "QMUsersUtils.h"
 #import "QMImageView.h"
 #import "QMAlertsFactory.h"
 #import "REAlertView.h"
 #import "SVProgressHUD.h"
 #import "QMApi.h"
 #import "QMChatReceiver.h"
+#import "REAlertView+QMSuccess.h"
+#import "QMUsersService.h"
 
 typedef NS_ENUM(NSUInteger, QMCallType) {
     QMCallTypePhone,
@@ -30,6 +33,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 @property (weak, nonatomic) IBOutlet UITableViewCell *audioChatCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *chatCell;
 
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *deleteContactButton;
 @property (weak, nonatomic) IBOutlet QMImageView *userAvatar;
 @property (weak, nonatomic) IBOutlet UILabel *fullName;
 @property (weak, nonatomic) IBOutlet UILabel *userDetails;
@@ -40,6 +44,9 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 @end
 
 @implementation QMFriendsDetailsController
+{
+    QMApi *api;
+}
 
 - (void)dealloc {
     [[QMChatReceiver instance] unsubscribeForTarget:self];
@@ -49,7 +56,9 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 - (void)viewDidLoad {
     
     [super viewDidLoad];
-    self.navigationController.navigationItem.rightBarButtonItem = nil;
+    
+    api = [QMApi instance];
+    
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     if (self.selectedUser.phone.length == 0) {
@@ -59,10 +68,10 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     }
     
     self.fullName.text = self.selectedUser.fullName;
-    self.userDetails.text = self.selectedUser.customData;
+    self.userDetails.text = self.selectedUser.status;
     self.userAvatar.imageViewType = QMImageViewTypeCircle;
     
-    NSURL *url = [NSURL URLWithString:self.selectedUser.website];
+    NSURL *url = [QMUsersUtils userAvatarURL:self.selectedUser];
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
     [self.userAvatar setImageWithURL:url
                          placeholder:placeholder
@@ -80,9 +89,12 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     __weak __typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:^{
         [weakSelf updateUserStatus];
+        [weakSelf disableDeleteContactButtonIfNeeded];
     }];
     
     [self updateUserStatus];
+    
+    [self disableDeleteContactButtonIfNeeded];
     
 #if !QM_AUDIO_VIDEO_ENABLED
     
@@ -99,7 +111,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     
     if (item) { //friend if YES
         self.status.text = NSLocalizedString(item.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
-        self.onlineCircle.hidden = item.online ? NO : YES;
+        self.onlineCircle.hidden = !item.online;
     }
 }
 
@@ -109,17 +121,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    if ([segue.identifier isEqualToString:kVideoCallSegueIdentifier]) {
-        
-        QMVideoCallController *videoCallVC = segue.destinationViewController;
-        [videoCallVC setOpponent:self.selectedUser];
-        
-    } else if ([segue.identifier isEqualToString:kAudioCallSegueIdentifier]) {
-        
-        QMVideoCallController *audioCallVC = segue.destinationViewController;
-        [audioCallVC setOpponent:self.selectedUser];
-        
-    } else if ([segue.identifier isEqualToString:kChatViewSegueIdentifier]) {
+    if ([segue.identifier isEqualToString:kChatViewSegueIdentifier]) {
         
         QMChatViewController *chatController = segue.destinationViewController;
         chatController.dialog = sender;
@@ -127,8 +129,6 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
         NSAssert([sender isKindOfClass:QBChatDialog.class], @"Need update this case");
     }
 }
-
-
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -138,8 +138,25 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
         case QMCallTypePhone: break;
             
 #if QM_AUDIO_VIDEO_ENABLED
-        case QMCallTypeVideo:[self performSegueWithIdentifier:kVideoCallSegueIdentifier sender:nil]; break;
-        case QMCallTypeAudio: [self performSegueWithIdentifier:kAudioCallSegueIdentifier sender:nil]; break;
+        case QMCallTypeVideo:{
+            
+            if( [api.usersService userIDIsInPendingList:self.selectedUser.ID] ) {
+                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
+            }
+            else{
+                [[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBConferenceTypeVideo];
+            }
+        }
+            break;
+        case QMCallTypeAudio: {
+            if( [api.usersService userIDIsInPendingList:self.selectedUser.ID] ) {
+                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
+            }
+            else{
+                [[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBConferenceTypeAudio];
+            }
+        }
+            break;
         case QMCallTypeChat: {
 #else
         case QMCallTypeVideo: {
@@ -171,10 +188,17 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
         [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
         [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil) andActionBlock:^{
             
-            [[QMApi instance] removeUserFromContactListWithUserID:weakSelf.selectedUser.ID completion:^(BOOL success) {}];
+            [[QMApi instance] removeUserFromContactList:weakSelf.selectedUser completion:^(BOOL success, QBChatMessage *notification) {}];
             [weakSelf.navigationController popViewControllerAnimated:YES];
         }];
     }];
+}
+    
+
+- (void)disableDeleteContactButtonIfNeeded
+{
+    BOOL isContact = [[QMApi instance] isFriend:self.selectedUser];
+    self.deleteContactButton.enabled = isContact;
 }
 
 @end

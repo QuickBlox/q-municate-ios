@@ -10,6 +10,7 @@
 #import "QMInviteFriendsDataSource.h"
 #import "QMApi.h"
 #import "REMessageUI.h"
+#import "REAlertView+QMSuccess.h"
 #import "SVProgressHUD.h"
 
 @interface QMInviteViewController ()
@@ -43,6 +44,11 @@
 #pragma mark - Actions
 
 - (IBAction)sendButtonClicked:(id)sender {
+    
+    if (!QMApi.instance.isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
     
     __weak __typeof(self)weakSelf = self;
     NSArray *abEmails = [weakSelf.dataSource emailsToInvite];

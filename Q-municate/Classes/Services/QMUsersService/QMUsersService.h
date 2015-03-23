@@ -11,14 +11,32 @@
 
 @interface QMUsersService : QMBaseService
 
+@property (strong, nonatomic) NSMutableArray *contactListPendingApproval;
 @property (strong, nonatomic) NSMutableArray *contactList;
+#warning HARDFIX: property friendsOnly
+@property (strong, nonatomic) NSMutableArray *friendsOnly;
 @property (strong, nonatomic) NSMutableSet *confirmRequestUsersIDs;
 
 - (void)addUsers:(NSArray *)users;
 - (void)addUser:(QBUUser *)user;
+- (void)deleteUser:(QBUUser *)user;
+- (BOOL)deleteContactRequestUserID:(NSUInteger)contactUserID;
+
+- (NSArray *)idsOfUsers:(NSArray *)users;
+- (NSArray *)idsOfContactsOnly;
 - (QBUUser *)userWithID:(NSUInteger)userID;
 - (NSArray *)checkExistIds:(NSArray *)ids;
+- (NSArray *)usersIDsToFetch:(NSArray *)IDs;
 - (NSArray *)idsFromContactListItems;
+- (BOOL)isFriendWithID:(NSUInteger)ID;
+- (BOOL)isContactRequestWithID:(NSInteger)ID;
+// friend request has not been accepted yet
+- (BOOL)userIDIsInPendingList:(NSUInteger)userId;
+
+
+- (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock;
+- (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void(^)(BOOL retrieveWasNeeded))completionBlock;
+
 - (void)retrieveUsersWithIDs:(NSArray *)idsToFetch completion:(void(^)(BOOL updated))completion;
 /**
  Retrieve users with facebook ids (max 10 users, for more - use equivalent method with 'pagedRequest' argument)

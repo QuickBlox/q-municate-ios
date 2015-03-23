@@ -6,7 +6,7 @@
 
 extern const struct CDAttachmentAttributes {
 	__unsafe_unretained NSString *id;
-	__unsafe_unretained NSString *type;
+	__unsafe_unretained NSString *mimeType;
 	__unsafe_unretained NSString *url;
 } CDAttachmentAttributes;
 
@@ -46,11 +46,11 @@ extern const struct CDAttachmentFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* type;
+@property (nonatomic, strong) NSString* mimeType;
 
 
 
-//- (BOOL)validateType:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateMimeType:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -89,8 +89,8 @@ extern const struct CDAttachmentFetchedProperties {
 
 
 
-- (NSString*)primitiveType;
-- (void)setPrimitiveType:(NSString*)value;
+- (NSString*)primitiveMimeType;
+- (void)setPrimitiveMimeType:(NSString*)value;
 
 
 

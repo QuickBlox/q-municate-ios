@@ -20,6 +20,8 @@ NSString *const kQMAuthServiceKey = @"QMAuthServiceKey";
 NSString *const kQMLicenceAcceptedKey = @"licence_accepted";
 NSString *const kQMAccountTypeKey = @"accountType";
 NSString *const kQMApplicationEnteredFromPushKey = @"app_entered_from_push";
+NSString *const kQMLastActivityDateKey = @"last_activity_date";
+NSString *const kQMDialogWithIDisActiveKey = @"dialog_is_active";
 
 
 @implementation QMSettingsManager
@@ -122,16 +124,16 @@ NSString *const kQMApplicationEnteredFromPushKey = @"app_entered_from_push";
     defSetObject(kQMSettingsUserStatusKey, userStatus);
 }
 
-#pragma mark - First facebook login
+#pragma mark - Last activity date
 
-- (void)setFirstFacebookLogin:(BOOL)firstFacebookLogin
+- (void)setLastActivityDate:(NSDate *)lastActivityDate
 {
-    defSetBool(kQMFirstFacebookLoginKey, firstFacebookLogin);
+    defSetObject(kQMLastActivityDateKey, lastActivityDate);
 }
 
-- (BOOL)isFirstFacebookLogin
+- (NSDate *)lastActivityDate
 {
-    return defBool(kQMFirstFacebookLoginKey);
+    return defObject(kQMLastActivityDateKey);
 }
 
 
@@ -146,7 +148,6 @@ NSString *const kQMApplicationEnteredFromPushKey = @"app_entered_from_push";
     self.rememberMe = NO;
     [self setLogin:nil andPassword:nil];
     self.userAgreementAccepted = NO;
-    self.firstFacebookLogin = NO;
     self.accountType = QMAccountTypeNone;
     self.userStatus = nil;
     self.login = nil;

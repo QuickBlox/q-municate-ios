@@ -9,6 +9,7 @@
 #import "QMForgotPasswordTVC.h"
 #import "QMApi.h"
 #import "SVProgressHUD.h"
+#import "REAlertView+QMSuccess.h"
 
 @interface QMForgotPasswordTVC ()
 
@@ -31,6 +32,8 @@
     
     if (email.length > 0) {
         [self resetPasswordForMail:email];
+    } else {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_EMAIL_FIELD_IS_EMPTY", nil) actionSuccess:NO];
     }
 }
 
@@ -46,6 +49,7 @@
             [weakSelf.navigationController popViewControllerAnimated:YES];
         }else {
             [SVProgressHUD dismiss];
+//            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_USER_WITH_EMAIL_WASNT_FOUND", nil) actionSuccess:NO];
         }
     }];
 }

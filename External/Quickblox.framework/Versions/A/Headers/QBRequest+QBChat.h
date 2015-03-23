@@ -12,7 +12,6 @@
 @class QBResponsePage;
 @class QBChatHistoryMessage;
 @class QBChatDialog;
-@class QBUpdateDialogParameters;
 
 @interface QBRequest (QBChat)
 
@@ -29,11 +28,15 @@
 /**
  Retrieve chat dialogs for page
  
+ @param page Page with skip and limit
+ @param extendedParameters Set of request parameters
  @param successBlock Block with response instance, arrays of chat dialogs and chat dialogs users IDs and page instance if request succeded
  @param errorBlock Block with response instance if request failed
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-+ (QBRequest *)dialogsForPage:(QBResponsePage *)page successBlock:(void(^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page))successBlock errorBlock:(QBRequestErrorBlock)errorBlock;
++ (QBRequest *)dialogsForPage:(QBResponsePage *)page extendedRequest:(NSDictionary *)extendedRequest
+                 successBlock:(void(^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page))successBlock
+                   errorBlock:(QBRequestErrorBlock)errorBlock;
 
 /**
  Create chat dialog
@@ -48,12 +51,17 @@
 /**
  Update existing chat dialog
  
- @param updateDialogParameters Set of dialog parameters to update
+ @param dialog. Set of dialog parameters to update
  @param successBlock Block with response and updated chat dialog instances if request succeded
  @param errorBlock Block with response instance if request failed
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-+ (QBRequest *)updateDialog:(QBUpdateDialogParameters *)updateDialogParameters successBlock:(void(^)(QBResponse *response, QBChatDialog *updatedDialog))successBlock errorBlock:(QBRequestErrorBlock)errorBlock;
++ (QBRequest *)updateDialog:(QBChatDialog *)dialog  successBlock:(void (^)(QBResponse *, QBChatDialog *))successBlock errorBlock:(QBRequestErrorBlock)errorBlock;
+
+/**
+ *
+ */
++ (QBRequest *)deleteDialogWithID:(NSString *)dialogID successBlock:(void(^)(QBResponse *responce))successBlock errorBlock:(QBRequestErrorBlock)errorBlock;
 
 /**
  Retrieve first 100 chat messages within particular dialog
@@ -69,13 +77,16 @@
  Retrieve chat messages within particular dialog for page
  
  @param dialogID ID of a dialog
+ @param extendedParameters extendedParameters
  @param page response page instance
  @param successBlock Block with response instance and array of chat messages for page if request succeded
  @param errorBlock Block with response instance if request failed
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-+ (QBRequest *)messagesWithDialogID:(NSString *)dialogID forPage:(QBResponsePage *)page successBlock:(void (^)(QBResponse *response, NSArray *messages, QBResponsePage *page))successBlock errorBlock:(QBRequestErrorBlock)errorBlock;
-
++ (QBRequest *)messagesWithDialogID:(NSString *)dialogID extendedRequest:(NSDictionary *) extendedParameters
+                            forPage:(QBResponsePage *)page
+                       successBlock:(void (^)(QBResponse *, NSArray *, QBResponsePage *))successBlock
+                         errorBlock:(QBRequestErrorBlock)errorBlock ;
 /**
  Create chat message
  
@@ -100,12 +111,12 @@
  Mark messages as read
  
  @param dialogID dialog ID
- @param messageIDs array of chat message IDs to mark as read
+ @param messageIDs set of chat message IDs to mark as read
  @param successBlock Block with response instance if request succeded
  @param errorBlock Block with response instance if request failed
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-+ (QBRequest *)markMessagesAsRead:(NSArray *)messageIDs dialogID:(NSString *)dialogID successBlock:(void(^)(QBResponse *response))successBlock errorBlock:(QBRequestErrorBlock)errorBlock;
++ (QBRequest *)markMessagesAsRead:(NSSet *)messageIDs dialogID:(NSString *)dialogID successBlock:(void(^)(QBResponse *response))successBlock errorBlock:(QBRequestErrorBlock)errorBlock;
 
 /**
  Delete existing chat message
@@ -116,5 +127,8 @@
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
 + (QBRequest *)deleteMessageWithID:(NSString *)messageID successBlock:(void(^)(QBResponse *response))successBlock errorBlock:(QBRequestErrorBlock)errorBlock;
+
+
++ (QBRequest *)deleteMessagesWithIDs:(NSSet *)messageIDs successBlock:(void(^)(QBResponse *responce))successBlock errorBlock:(QBRequestErrorBlock)errorBlock;
 
 @end

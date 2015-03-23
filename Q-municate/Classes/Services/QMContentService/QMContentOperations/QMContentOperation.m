@@ -23,7 +23,7 @@
         self.progressHandler(progress);
 }
 
-- (void)completedWithResult:(Result *)result {
+- (void)completedWithResult:(QBResult *)result {
     
     if (self.completionHandler) {
         

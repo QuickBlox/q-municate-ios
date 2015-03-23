@@ -8,6 +8,7 @@
 
 #import "QMFriendListCell.h"
 #import "QMImageView.h"
+#import "QMUsersUtils.h"
 #import "QMApi.h"
 
 @interface QMFriendListCell()
@@ -38,7 +39,7 @@
 
     QBUUser *user = userData;
     self.titleLabel.text = (user.fullName.length == 0) ? @"" : user.fullName;
-    NSURL *avatarUrl = [NSURL URLWithString:user.website];
+    NSURL *avatarUrl = [QMUsersUtils userAvatarURL:user];
     [self setUserImageWithUrl:avatarUrl];
 }
 
@@ -61,11 +62,14 @@
     
     NSString *status = nil;
     
-    if (!contactlistItem) {
-        status = @"";
-    } else if (contactlistItem.subscriptionState == QBPresenseSubscriptionStateBoth) {
+     if (contactlistItem.subscriptionState == QBPresenseSubscriptionStateBoth || contactlistItem.subscriptionState == QBPresenseSubscriptionStateFrom) {
         status = NSLocalizedString(contactlistItem.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
-    } else {
+     } else if (((QBUUser *)self.userData).ID == [QMApi instance].currentUser.ID) {
+         status = NSLocalizedString(@"QM_STR_ONLINE", nil);
+     } else if (!contactlistItem) {
+         status = @"";
+     }
+     else {
         status = NSLocalizedString(@"QM_STR_PENDING", nil);
     }
     self.descriptionLabel.text = status;

@@ -7,43 +7,49 @@
 //
 
 #import "QMIncomingCallController.h"
-#import "QMIncomingCallHandler.h"
-#import "QMChatReceiver.h"
 #import "QMApi.h"
 #import "QMImageView.h"
 #import "QMSoundManager.h"
+#import "QMVideoP2PController.h"
+#import "QMAVCallManager.h"
 
-@interface QMIncomingCallController ()
+@interface QMIncomingCallController ()<QBRTCClientDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *incomingCallLabel;
 @property (weak, nonatomic) IBOutlet QMImageView *userAvatarView;
-@property (weak, nonatomic) IBOutlet UIButton *acceptButton;
-
-@property (copy, nonatomic) NSString *sessionID;
+/// buttons for audio
+@property (weak, nonatomic) IBOutlet UIView *incomingCallView;
+/// buttons for video
+@property (weak, nonatomic) IBOutlet UIView *incomingVideoCallView;
 
 @end
 
 @implementation QMIncomingCallController
 
 @synthesize opponent;
-@synthesize sessionID;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     self.userAvatarView.imageViewType = QMImageViewTypeCircle;
+    
+    [QBRTCClient.instance addDelegate:self];
     
     opponent = [[QMApi instance] userWithID:self.opponentID];
     
-    self.userNameLabel.text = opponent ? opponent.fullName : @"Unknown caller";
+    if( opponent ){
+        self.userNameLabel.text = opponent.fullName;
+    }
+    else{
+        self.userNameLabel.text = @"Unknown caller";
+    }
  
-    if (self.callType == QBVideoChatConferenceTypeAudioAndVideo) {
+    if (self.callType == QBConferenceTypeVideo) {
+        [self.incomingCallView setHidden:YES];
         self.incomingCallLabel.text = NSLocalizedString(@"QM_STR_INCOMING_VIDEO_CALL", nil);
-        [self.acceptButton setImage:[ UIImage imageNamed:@"answer-video"] forState:UIControlStateNormal];
-    } else if (self.callType == QBVideoChatConferenceTypeAudio) {
+    } else if (self.callType == QBConferenceTypeAudio) {
+        [self.incomingVideoCallView setHidden:YES];
         self.incomingCallLabel.text = NSLocalizedString(@"QM_STR_INCOMING_CALL", nil);
-        [self.acceptButton setImage:[ UIImage imageNamed:@"answer"] forState:UIControlStateNormal];
     }
 
     NSURL *url = [NSURL URLWithString:opponent.website];
@@ -56,62 +62,63 @@
                           completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
      }];
 
-
-    [QMSoundManager playRingtoneSound];
-}
-
-- (void)subscribeToNotifications
-{
-    [[QMChatReceiver instance] chatAfterCallDidStopWithTarget:self block:^(NSUInteger userID, NSString *status) {
-        // stop sound and change status label text:
-        [[QMSoundManager shared] stopAllSounds];
-        
-        self.incomingCallLabel.text = NSLocalizedString(@"QM_STR_CALL_WAS_CANCELLED", nil);
-        [QMSoundManager playEndOfCallSound];
-    }];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
-
-- (void)dealloc
-{
-    [[QMSoundManager shared] stopAllSounds];
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
 }
 
 #pragma mark - Actions
 
 - (IBAction)acceptCall:(id)sender {
-    
-    [[QMSoundManager shared] stopAllSounds];
-    if (self.callType == QBVideoChatConferenceTypeAudioAndVideo) {
-        [self performSegueWithIdentifier:kStartVideoCallSegueIdentifier sender:nil];
-    } else {
-        [self performSegueWithIdentifier:kStartAudioCallSegueIdentifier sender:nil];
+    __weak __typeof(self) weakSelf = self;
+    [[[QMApi instance] avCallManager] checkPermissionsWithConferenceType:self.callType completion:^(BOOL canContinue) {
+        if( canContinue ) {
+            [[QMSoundManager instance] stopAllSounds];
+            if (weakSelf.callType == QBConferenceTypeVideo) {
+                [weakSelf performSegueWithIdentifier:kGoToDuringVideoCallSegueIdentifier sender:weakSelf];
+            } else {
+                [weakSelf performSegueWithIdentifier:kGoToDuringAudioCallSegueIdentifier sender:nil];
+            }
+        }
+    }];
+}
+
+- (IBAction)acceptCallWithVideo:(id)sender {
+    __weak __typeof(self) weakSelf = self;
+    [[QMSoundManager instance] stopAllSounds];
+    [[[QMApi instance] avCallManager] checkPermissionsWithConferenceType:self.callType completion:^(BOOL canContinue) {
+        if( canContinue ) {
+            [[QMSoundManager instance] stopAllSounds];
+            [weakSelf performSegueWithIdentifier:kGoToDuringVideoCallSegueIdentifier sender:nil];
+        }
+    }];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // sender is not nil when accepting video call with denying my(local) video track
+    if( [segue.identifier isEqualToString:kGoToDuringVideoCallSegueIdentifier] && sender != nil ){
+        QMVideoP2PController *vc = segue.destinationViewController;
+        vc.disableSendingLocalVideoTrack = YES;
     }
 }
 
 - (IBAction)declineCall:(id)sender {
     
-    [[QMSoundManager shared] stopAllSounds];
-    [[QMApi instance] rejectCallFromUser:opponent ? self.opponent.ID : self.opponentID  opponentView:nil];
+    [[QMSoundManager instance] stopAllSounds];
+    [[QMApi instance] rejectCall];
     [QMSoundManager playEndOfCallSound];
     self.incomingCallLabel.text = NSLocalizedString(@"QM_STR_CALL_WAS_CANCELLED", nil);
-    [self dismissCallsController];
-} 
-
-- (void)dismissCallsController
-{
-    [self.callsHandler hideIncomingCallController];
 }
 
-- (void)setCallStatus:(NSString *)callStatus {
-    
-    if (![self.incomingCallLabel isEqual:callStatus]) {
-        self.incomingCallLabel.text = callStatus;
+- (void)cleanUp {
+    [[QMSoundManager instance] stopAllSounds];
+    [QBRTCClient.instance removeDelegate:self];
+}
+
+- (void)sessionWillClose:(QBRTCSession *)session {
+    if( self.session == session ) {
+        [self cleanUp];
     }
 }
 
+- (void)dealloc {
+    [self cleanUp];
+}
 @end

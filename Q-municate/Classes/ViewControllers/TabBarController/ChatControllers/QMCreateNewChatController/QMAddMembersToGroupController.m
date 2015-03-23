@@ -15,12 +15,12 @@
 
 - (void)viewDidLoad {
     
-    NSArray *friends = [[QMApi instance] friends];
+    NSArray *friends = [[QMApi instance] contactsOnly];
     NSArray *usersIDs = [[QMApi instance] idsWithUsers:friends];
     NSArray *friendsIDsToAdd = [self filteredIDs:usersIDs forChatDialog:self.chatDialog];
     
     NSArray *toAdd = [[QMApi instance] usersWithIDs:friendsIDsToAdd];
-    self.friends = [QMUsersUtils sortUsersByFullname:toAdd];
+    self.contacts = [QMUsersUtils sortUsersByFullname:toAdd];
     
     [super viewDidLoad];
 }

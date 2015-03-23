@@ -46,6 +46,13 @@
  * QMMessageTypeText, QMMessageTypePhoto
  */
 @property (nonatomic, readonly) QMMessageType type;
+
+/**
+ * WARNING! 
+ * Only for notifications with notification type SEND. It means that it's contact request notification.
+ */
+@property (nonatomic, assign) BOOL marked;
+
 /**
  * Align message container
  * Available values:

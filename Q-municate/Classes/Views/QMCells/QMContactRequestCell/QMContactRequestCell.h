@@ -6,10 +6,15 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import "QMTableViewCell.h"
+#import <Foundation/Foundation.h>
 
-@interface QMContactRequestCell : QMTableViewCell
+#import "QMChatCell.h"
 
-@property (nonatomic, weak) id <QMUsersListCellDelegate> delegate;
+@interface QMContactRequestCell : UITableViewCell
+
+@property (nonatomic, weak) id <QMUsersListDelegate> delegate;
+
+@property (nonatomic, strong) QMMessage *notification;
+@property (weak, nonatomic) IBOutlet UILabel *fullNameLabel;
 
 @end

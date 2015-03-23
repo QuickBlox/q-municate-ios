@@ -7,83 +7,60 @@
 //
 
 #import "QMVideoCallController.h"
-#import "QMIncomingCallHandler.h"
-#import "QMImageView.h"
-#import "QMSoundManager.h"
-
-
-@interface QMVideoCallController ()
-
-// Video calls UI
-@property (weak, nonatomic) IBOutlet UIImageView *myView;
-
-@end
+#import "QMAVCallManager.h"
 
 @implementation QMVideoCallController
 
+NSString *const kGoToDuringVideoCallControllerSegue= @"goToDuringVideoCallSegueIdentifier";
 
-- (void)viewDidLoad
-{
+#pragma mark - Overridden methods
+
+- (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    QMAVCallManager *av = [QMApi instance].avCallManager;
+    if( [av localVideoTrack] ){
+        [self.opponentsView setVideoTrack:[av localVideoTrack]];
+    }
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-
-#pragma mark - Controls
-
-- (IBAction)leftControlTapped:(id)sender
-{
-    // Not Implemented
-}
-
-- (IBAction)rightControlTapped:(id)sender
-{
-    // Not Implemented
-}
-
-- (void)stopCallTapped:(id)sender
-{
-    [self.contentView show];
+- (IBAction)stopCallTapped:(id)sender {
     [super stopCallTapped:sender];
+    [self.opponentsView setHidden:YES];
+    [self.opponentsView setVideoTrack:nil];
 }
 
-
-#pragma mark - Overriden methods
-
--(void)startCall
-{
-    [[QMApi instance] callUser:self.opponent.ID opponentView:self.opponentsView conferenceType:QBVideoChatConferenceTypeAudioAndVideo];
-    [QMSoundManager playCallingSound];
+- (void)startCall {
+    [[QMApi instance] callToUser:@(self.opponent.ID) conferenceType:QBConferenceTypeVideo sendPushNotificationIfUserIsOffline:YES];
+    
 }
 
-- (void)confirmCall
-{
+- (void)confirmCall {
     [super confirmCall];
     [self callStartedWithUser];
 }
 
-- (void)callAcceptedByUser
-{
-    // stop playing sound:
-    [[QMSoundManager shared] stopAllSounds];
+- (void)callStartedWithUser {
+    [self.contentView hide];
+    [self.opponentsView setVideoTrack:nil];
+    [self performSegueWithIdentifier:kGoToDuringVideoCallControllerSegue sender:nil];
+}
+
+- (void)callStoppedByOpponentForReason:(NSString *)reason {
+    [self.contentView show];
+    [self.opponentsView setHidden:YES];
+    [super callStoppedByOpponentForReason:reason];
+}
+
+#pragma mark QBRTCSession delegate -
+
+- (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID {
+    [super session:session connectedToUser:userID];
     [self callStartedWithUser];
 }
 
-- (void)callStartedWithUser
-{
-    [self.contentView hide];
-}
-
-- (void)callStoppedByOpponentForReason:(NSString *)reason
-{
-    [self.contentView show];
-    self.opponentsView.hidden = YES;
-    [super callStoppedByOpponentForReason:reason];
+- (void)session:(QBRTCSession *)session didReceiveLocalVideoTrack:(QBRTCVideoTrack *)videoTrack {
+    [super session:session didReceiveLocalVideoTrack:videoTrack];
+    [self.opponentsView setVideoTrack:videoTrack];
 }
 
 @end

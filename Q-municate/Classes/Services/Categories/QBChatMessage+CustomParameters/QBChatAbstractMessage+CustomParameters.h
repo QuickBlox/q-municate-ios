@@ -10,10 +10,14 @@
 
 typedef NS_ENUM(NSUInteger, QMMessageNotificationType) {
     QMMessageNotificationTypeNone,
-    QMMessageNotificationTypeCreateDialog,
-    QMMessageNotificationTypeUpdateDialog,
-    QMMessageNotificationTypeDeliveryMessage
+    QMMessageNotificationTypeCreateGroupDialog,
+    QMMessageNotificationTypeUpdateGroupDialog,
+    QMMessageNotificationTypeDeliveryMessage,
     
+    QMMessageNotificationTypeSendContactRequest,
+    QMMessageNotificationTypeConfirmContactRequest,
+    QMMessageNotificationTypeRejectContactRequest,
+    QMMessageNotificationTypeDeleteContactRequest
 };
 
 @interface QBChatAbstractMessage (CustomParameters)
@@ -26,9 +30,11 @@ typedef NS_ENUM(NSUInteger, QMMessageNotificationType) {
 
 @property (strong, nonatomic) NSString *cParamDialogID;
 @property (strong, nonatomic) NSString *cParamRoomJID;
-@property (strong, nonatomic) NSString *cParamDialogName;
+@property (strong, nonatomic) NSString *cParamDialogRoomName;
+@property (strong, nonatomic) NSString *cParamDialogRoomPhoto;
 @property (strong, nonatomic) NSNumber *cParamDialogType;
 @property (strong, nonatomic) NSArray *cParamDialogOccupantsIDs;
+@property (strong, nonatomic) NSNumber *cParamDialogDeletedID;
 
 - (void)setCustomParametersWithChatDialog:(QBChatDialog *)chatDialog;
 - (QBChatDialog *)chatDialogFromCustomParameters;
