@@ -8,6 +8,7 @@
 
 #import "QMMessageBarStyleSheetFactory.h"
 #import "QMApi.h"
+#import "QBChatAbstractMessage+TextEncoding.h"
 
 
 @implementation QMMessageBarStyleSheetFactory
@@ -15,7 +16,7 @@
 + (void)showMessageBarNotificationWithMessage:(QBChatAbstractMessage *)chatMessage chatDialog:(QBChatDialog *)chatDialog completionBlock:(MPGNotificationButtonHandler)block
 {
     UIImage *img = nil;
-    NSString *title = nil;
+    NSString *title = @"";
     
     if (chatDialog.type ==  QBChatDialogTypeGroup) {
         

@@ -45,6 +45,7 @@
         }
         [weakSelf.contactList removeAllObjects];
         [weakSelf.friendsOnly removeAllObjects];
+        [weakSelf.contactListPendingApproval removeAllObjects];
         
         [weakSelf.contactListPendingApproval addObjectsFromArray:contactList.pendingApproval];
         
