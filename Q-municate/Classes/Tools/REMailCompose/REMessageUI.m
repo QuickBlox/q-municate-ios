@@ -40,10 +40,10 @@
 - (void)mailComposeController:(MFMailComposeViewController *)controller
           didFinishWithResult:(MFMailComposeResult)result
                         error:(NSError *)error {
-    
+    __weak __typeof(self)weakSelf = self;
     [controller dismissViewControllerAnimated:YES completion:^{
-        self.resultBlock(result, error);
-        self.resultBlock = nil;
+        weakSelf.resultBlock(result, error);
+        weakSelf.resultBlock = nil;
     }];
 }
 
@@ -81,10 +81,10 @@
 }
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
-    
+    __weak __typeof(self)weakSelf = self;
     [controller dismissViewControllerAnimated:YES completion:^{
-        self.resultBlock(result);
-        self.resultBlock = nil;
+        weakSelf.resultBlock(result);
+        weakSelf.resultBlock = nil;
     }];
 }
 

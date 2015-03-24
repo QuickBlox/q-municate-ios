@@ -53,13 +53,13 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 }
 
 - (void)dismissViewControllerSuccess:(BOOL)success {
-    
+    __weak __typeof(self)weakSelf = self;
     [self dismissViewControllerAnimated:YES completion:^{
         
-        if(self.licenceCompletionBlock) {
+        if(weakSelf.licenceCompletionBlock) {
             
-            self.licenceCompletionBlock(success);
-            self.licenceCompletionBlock = nil;
+            weakSelf.licenceCompletionBlock(success);
+            weakSelf.licenceCompletionBlock = nil;
         }
     }];
 }

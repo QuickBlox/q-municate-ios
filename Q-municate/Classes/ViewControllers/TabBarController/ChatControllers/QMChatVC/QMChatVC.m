@@ -51,9 +51,15 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 @implementation QMChatVC
 
+- (void)dealloc {
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    [self registerForNotifications:NO];
+    [[QMApi instance].settingsManager setDialogWithIDisActive:nil];
+}
+
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
-    api = [QMApi instance];
     [self configureChatVC];
     [self registerForNotifications:YES];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
@@ -64,13 +70,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     _showCameraButton = YES;
     
     // need for update messages after entering from tray:
-    [api.settingsManager setDialogWithIDisActive:self.dialog.ID];
-}
-
-- (void)dealloc {
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
-    [self registerForNotifications:NO];
-    [api.settingsManager setDialogWithIDisActive:nil];
+    [[QMApi instance].settingsManager setDialogWithIDisActive:self.dialog.ID];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -411,7 +411,7 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
 
 - (void)chatInputToolbar:(QMChatInputToolbar *)toolbar didPressRightBarButton:(UIButton *)sender {
     
-    if (!api.isInternetConnected) {
+    if (![QMApi instance].isInternetConnected) {
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
         return;
     }

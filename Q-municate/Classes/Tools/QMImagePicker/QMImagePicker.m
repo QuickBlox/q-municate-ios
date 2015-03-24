@@ -47,19 +47,19 @@
     
     NSString *key = picker.allowsEditing ? UIImagePickerControllerEditedImage: UIImagePickerControllerOriginalImage;
     UIImage *image = info[key];
-    
+    __weak __typeof(self)weakSelf = self;
     [picker dismissViewControllerAnimated:YES completion:^{
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-        self.result(image);
-        self.result = nil;
+        weakSelf.result(image);
+        weakSelf.result = nil;
     }];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    
+    __weak __typeof(self)weakSelf = self;
     [picker dismissViewControllerAnimated:YES completion:^{
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-        self.result = nil;
+        weakSelf.result = nil;
     }];
 }
 
