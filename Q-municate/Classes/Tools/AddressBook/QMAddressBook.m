@@ -61,11 +61,12 @@
 
 + (void)getContactsWithEmailsWithCompletionBlock:(AddressBookResult)block
 {
+    __weak __typeof(self)weakSelf = self;
     [QMAddressBook getAllContactsFromAddressBook:^(NSArray *contacts, BOOL success, NSError *error) {
         if (success) {
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.emails.@count > 0"];
             NSArray *contactsWithEmails = [contacts filteredArrayUsingPredicate:predicate];
-            NSArray *filteredContacts = [[self class] filteredArrayForDuplicatesFromArray:contactsWithEmails];
+            NSArray *filteredContacts = [[weakSelf class] filteredArrayForDuplicatesFromArray:contactsWithEmails];
 
             if (filteredContacts == nil) {
                 filteredContacts = @[];

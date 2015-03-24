@@ -62,7 +62,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBApplication sharedApplication].applicationId = kQMApplicationID;
     [QBConnection registerServiceKey:kQMAuthorizationKey];
     [QBConnection registerServiceSecret:kQMAuthorizationSecret];
-    
+
     [QBSettings setAccountKey:kQMAcconuntKey];
 //    [QBSettings setLogLevel:QBLogLevelDebug];
     
@@ -129,6 +129,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     
+    [[QMApi instance] openChatPageForPushNotification:@{@"dialog_id" : @"55112c7a535c12bd22014492"} completion:^(BOOL completed) {}];
     if (!QMApi.instance.isInternetConnected) {
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
         return;

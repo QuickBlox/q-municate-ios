@@ -53,7 +53,7 @@
             return;
         }
         if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog && [message.cParamDialogID isEqualToString:weakSelf.dialog.ID]) {
-            weakSelf.dialog = [api chatDialogWithID:message.cParamDialogID];
+            weakSelf.dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
             weakSelf.title = weakSelf.dialog.name;
         }
     }];
@@ -74,10 +74,10 @@
 
 - (void)updateTitleInfoForPrivateDialog {
     
-    NSUInteger oponentID = [api occupantIDForPrivateChatDialog:self.dialog];
-    QBUUser *opponent = [api userWithID:oponentID];
+    NSUInteger oponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
+    QBUUser *opponent = [[QMApi instance] userWithID:oponentID];
 
-    QBContactListItem *item = [api contactItemWithUserID:opponent.ID];
+    QBContactListItem *item = [[QMApi instance] contactItemWithUserID:opponent.ID];
     NSString *status = NSLocalizedString(item.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
     
     self.onlineTitle.titleLabel.text = opponent.fullName;
@@ -161,8 +161,8 @@
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
         return;
     }
-    NSUInteger opponentID = [api occupantIDForPrivateChatDialog:self.dialog];
-    [api callToUser:@(opponentID) conferenceType:QBConferenceTypeAudio];
+    NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
+    [[QMApi instance] callToUser:@(opponentID) conferenceType:QBConferenceTypeAudio];
     
 #endif
 }
@@ -177,8 +177,8 @@
         return;
     }
     
-    NSUInteger opponentID = [api occupantIDForPrivateChatDialog:self.dialog];
-    [api callToUser:@(opponentID) conferenceType:QBConferenceTypeVideo];
+    NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
+    [[QMApi instance] callToUser:@(opponentID) conferenceType:QBConferenceTypeVideo];
 #endif
 }
 
@@ -197,8 +197,8 @@
     }
     else {
         
-        NSUInteger opponentID = [api occupantIDForPrivateChatDialog:self.dialog];
-        QBUUser *opponent = [api userWithID:opponentID];
+        NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
+        QBUUser *opponent = [[QMApi instance] userWithID:opponentID];
         
         QMBaseCallsController *callsController = segue.destinationViewController;
         [callsController setOpponent:opponent];

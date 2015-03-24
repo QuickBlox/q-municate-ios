@@ -44,9 +44,6 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 @end
 
 @implementation QMFriendsDetailsController
-{
-    QMApi *api;
-}
 
 - (void)dealloc {
     [[QMChatReceiver instance] unsubscribeForTarget:self];
@@ -56,8 +53,6 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 - (void)viewDidLoad {
     
     [super viewDidLoad];
-    
-    api = [QMApi instance];
     
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
@@ -140,7 +135,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 #if QM_AUDIO_VIDEO_ENABLED
         case QMCallTypeVideo:{
             
-            if( [api.usersService userIDIsInPendingList:self.selectedUser.ID] ) {
+            if( [[QMApi instance].usersService userIDIsInPendingList:self.selectedUser.ID] ) {
                 [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
             }
             else{
@@ -149,7 +144,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
         }
             break;
         case QMCallTypeAudio: {
-            if( [api.usersService userIDIsInPendingList:self.selectedUser.ID] ) {
+            if( [[QMApi instance].usersService userIDIsInPendingList:self.selectedUser.ID] ) {
                 [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
             }
             else{

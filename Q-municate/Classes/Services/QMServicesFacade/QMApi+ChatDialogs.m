@@ -175,10 +175,10 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     extendedRequest[kQMEditDialogExtendedPullOccupantsParameter] = myID;
     
     [chatDialog.chatRoom leaveRoom];
-    
+    __weak __typeof(self)weakSelf = self;
     [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialogResult *result) {
         if (result.success) {
-            [self.chatDialogsService deleteLocalDialog:chatDialog];
+            [weakSelf.chatDialogsService deleteLocalDialog:chatDialog];
             completion(result);
         }
     }];

@@ -18,6 +18,9 @@
 
 /// active view controller
 @property (weak, nonatomic) UIViewController *currentlyPresentedViewController;
+
+@property (strong, nonatomic) NSTimer *callingSoundTimer;
+
 @end
 
 const NSTimeInterval kQBAnswerTimeInterval = 40.0f;
@@ -32,8 +35,7 @@ NSString *const kUserName = @"UserName";
 
 @implementation QMAVCallManager
 {
-    QMApi *api;
-    NSTimer *callingSoundTimer;
+    
 }
 
 - (instancetype)init {
@@ -50,7 +52,6 @@ NSString *const kUserName = @"UserName";
 
 - (void)start{
     [super start];
-    api = [QMApi instance];
     [QBRTCClient.instance addDelegate:self];
     [QBRTCConfig setDTLSEnabled:YES];
 }
@@ -105,7 +106,7 @@ NSString *const kUserName = @"UserName";
 
 - (void)checkPermissionsWithConferenceType:(QBConferenceType)conferenceType completion:(void(^)(BOOL canContinue))completion {
     __weak __typeof(self) weakSelf = self;
-    [api requestPermissionToMicrophoneWithCompletion:^(BOOL granted) {
+    [[QMApi instance] requestPermissionToMicrophoneWithCompletion:^(BOOL granted) {
         if( granted ) {
             if( conferenceType == QBConferenceTypeAudio ) {
                 if( completion ) {
@@ -113,7 +114,8 @@ NSString *const kUserName = @"UserName";
                 }
             }
             else if( conferenceType == QBConferenceTypeVideo ) {
-                [api requestPermissionToCameraWithCompletion:^(BOOL authorized) {
+                
+                [[QMApi instance] requestPermissionToCameraWithCompletion:^(BOOL authorized) {
                     if( authorized && completion ) {
                         completion(authorized);
                     }
@@ -145,7 +147,7 @@ NSString *const kUserName = @"UserName";
     event.usersIDs = [@(opponentID) stringValue];
     event.notificationType = QBMNotificationTypePush;
     event.type = QBMEventTypeOneShot;
-    event.message = [NSString stringWithFormat:@"%@ is calling you", api.currentUser.fullName];
+    event.message = [NSString stringWithFormat:@"%@ is calling you", [QMApi instance].currentUser.fullName];
     [QBRequest createEvent:event successBlock:nil errorBlock:nil];
 }
 
@@ -167,7 +169,7 @@ NSString *const kUserName = @"UserName";
                                                                  withConferenceType:conferenceType];
         
         if (session) {
-            [self startPlayingCallingSound];
+            [weakSelf startPlayingCallingSound];
             weakSelf.session = session;
             
             QMBaseCallsController *vc = (QMBaseCallsController *)[weakSelf.mainStoryboard instantiateViewControllerWithIdentifier:(conferenceType == QBConferenceTypeVideo) ? kVideoCallController : kAudioCallController];
@@ -180,7 +182,7 @@ NSString *const kUserName = @"UserName";
             [navVC setNavigationBarHidden:YES];
             
             if( pushEnabled ){
-                [self sendPushToUserWithUserID:opponentID];
+                [weakSelf sendPushToUserWithUserID:opponentID];
             }
             
             [weakSelf.rootViewController presentViewController:navVC
@@ -281,7 +283,7 @@ NSString *const kUserName = @"UserName";
 
 - (void)startPlayingCallingSound {
     [self stopAllSounds];
-    callingSoundTimer = [NSTimer scheduledTimerWithTimeInterval:[QBRTCConfig dialingTimeInterval]
+    self.callingSoundTimer = [NSTimer scheduledTimerWithTimeInterval:[QBRTCConfig dialingTimeInterval]
                                                         target:self
                                                       selector:@selector(playCallingSound:)
                                                       userInfo:nil
@@ -290,8 +292,9 @@ NSString *const kUserName = @"UserName";
 }
 
 - (void)startPlayingRingtoneSound {
+    
     [self stopAllSounds];
-    callingSoundTimer = [NSTimer scheduledTimerWithTimeInterval:[QBRTCConfig dialingTimeInterval]
+    self.callingSoundTimer = [NSTimer scheduledTimerWithTimeInterval:[QBRTCConfig dialingTimeInterval]
                                                         target:self
                                                       selector:@selector(playRingtoneSound:)
                                                       userInfo:nil
@@ -310,10 +313,12 @@ NSString *const kUserName = @"UserName";
 }
 
 - (void)stopAllSounds {
-    if( callingSoundTimer ){
-        [callingSoundTimer invalidate];
-        callingSoundTimer = nil;
+    
+    if( self.callingSoundTimer ){
+        [self.callingSoundTimer invalidate];
+        self.callingSoundTimer = nil;
     }
+    
     [QMSysPlayer stopAllSounds];
 }
 @end
