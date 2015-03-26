@@ -265,6 +265,7 @@
 - (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
 {
     [self.tableView setDataSource:nil];
+    [self.tableView reloadData];
 }
 
 - (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller
