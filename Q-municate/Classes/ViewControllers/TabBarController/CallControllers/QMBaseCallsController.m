@@ -13,7 +13,6 @@
 
 @implementation QMBaseCallsController
 {
-    QMAVCallManager *av;
     AVAudioSessionCategoryOptions categoryOptions;
     AVAudioSessionCategoryOptions defaultCategoryOptions;
 }
@@ -23,9 +22,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.btnSpeaker.userInteractionEnabled = NO;
-    av = [QMApi instance].avCallManager;
-    if( av.session ){
-        self.session = av.session;
+
+    if( QMApi.instance.avCallManager.session ){
+        self.session = QMApi.instance.avCallManager.session;
     }
     [QBRTCClient.instance addDelegate:self];
     
@@ -38,10 +37,10 @@
 
 - (void)updateButtonsState{
     [self.btnMic setSelected:!self.session.audioEnabled];
-    [self.btnSwitchCamera setSelected:!av.isFrontCamera];
+    [self.btnSwitchCamera setSelected:!QMApi.instance.avCallManager.isFrontCamera];
     [self.btnSwitchCamera setUserInteractionEnabled:self.session.videoEnabled];
     [self.btnVideo setSelected:!self.session.videoEnabled];
-    [self.btnSpeaker setSelected:av.isSpeakerEnabled];
+    [self.btnSpeaker setSelected:QMApi.instance.avCallManager.isSpeakerEnabled];
     [self.camOffView setHidden:self.session.videoEnabled];
 }
 
@@ -133,13 +132,13 @@
     if (currentOptions != AVAudioSessionCategoryOptionDefaultToSpeaker) {
         
         categoryOptions = AVAudioSessionCategoryOptionDefaultToSpeaker;
-        av.speakerEnabled = YES;
+        QMApi.instance.avCallManager.speakerEnabled = YES;
         [sender setSelected:YES];
     }
     else {
         
         categoryOptions = defaultCategoryOptions;
-        av.speakerEnabled = NO;
+        QMApi.instance.avCallManager.speakerEnabled = NO;
         [sender setSelected:NO];
     }
     
@@ -154,7 +153,7 @@
 - (IBAction)cameraSwitchTapped:(IAButton *)sender {
 
     [self.session switchCamera:^(BOOL isFrontCamera) {
-        av.frontCamera = isFrontCamera;
+        QMApi.instance.avCallManager.frontCamera = isFrontCamera;
         [sender setSelected:!isFrontCamera];
     }];
 }

@@ -10,28 +10,26 @@
 #import "QMAVCallManager.h"
 #import <sys/utsname.h>
 
-
-
 @implementation QMVideoP2PController
-{
-    QMAVCallManager *av;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    av = [QMApi instance].avCallManager ;
-    if( av.localVideoTrack ){
-        self.localVideoTrack = av.localVideoTrack;
+    if( [QMApi instance].avCallManager.localVideoTrack ){
+        self.localVideoTrack = [QMApi instance].avCallManager.localVideoTrack;
     }
-    if( av.remoteVideoTrack ){
-        self.opponentVideoTrack = av.remoteVideoTrack;
+    if( [QMApi instance].avCallManager.remoteVideoTrack ){
+        self.opponentVideoTrack = [QMApi instance].avCallManager.remoteVideoTrack;
     }
     
     [self.contentView startTimerIfNeeded];
     [self reloadVideoViews];
     
-    if([machineName() isEqualToString:@"iPhone3,1"] || [machineName() isEqualToString:@"iPhone3,2"] || [machineName() isEqualToString:@"iPhone3,3"]||[machineName() isEqualToString:@"iPhone4,1"]){
+    if([machineName() isEqualToString:@"iPhone3,1"] ||
+       [machineName() isEqualToString:@"iPhone3,2"] ||
+       [machineName() isEqualToString:@"iPhone3,3"] ||
+       [machineName() isEqualToString:@"iPhone4,1"]) {
+        
         self.opponentsVideoViewBottom.constant = -80.0f;
     }
 }
@@ -126,7 +124,7 @@ NSString* machineName() {
                         error:&setCategoryError];
     
     if (!setCategoryError) {
-        av.speakerEnabled = YES;
+        [QMApi instance].avCallManager.speakerEnabled = YES;
     }
     
     [self stopActivityIndicator];

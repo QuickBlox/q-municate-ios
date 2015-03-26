@@ -49,7 +49,7 @@
         
         self.tableView = tableView;
         self.tableView.dataSource = self;
-        self.searchResult = [NSMutableArray new];
+        self.searchResult = [NSMutableArray array];
         
         self.searchDisplayController = searchDisplayController;
         __weak __typeof(self)weakSelf = self;
@@ -60,7 +60,7 @@
                 return;
             }
             
-            if (self.searchDisplayController.isActive) {
+            if (weakSelf.searchDisplayController.isActive) {
                 
                 weakSelf.friendList = [QMApi instance].friends;
                 
@@ -111,7 +111,7 @@
 - (void)globalSearch:(NSString *)searchText {
     
     if (searchText.length == 0) {
-        self.searchResult = [NSMutableArray new];
+        [self.searchResult removeAllObjects];
         [self.searchDisplayController.searchResultsTableView reloadData];
         return;
     }
@@ -132,11 +132,10 @@
     
     [self.searchDisplayController.searchResultsTableView reloadData];
     
-    __block NSString *tsearch = [searchText copy];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        if ([self.searchDisplayController.searchBar.text isEqualToString:tsearch]) {
+        if ([self.searchDisplayController.searchBar.text isEqualToString:searchText]) {
             
             if (self.searchOperation) {
                 [self.searchOperation cancel];
@@ -226,6 +225,7 @@
     if(self.searchDisplayController.isActive) {
         cell.searchText = self.searchDisplayController.searchBar.text;
     }
+    
     return cell;
 }
 
@@ -237,7 +237,14 @@
     NSIndexPath *indexPath = [self.searchDisplayController.searchResultsTableView indexPathForCell:cell];
     NSArray *datasource = [self usersAtSections:indexPath.section];
     QBUUser *user = datasource[indexPath.row];
-    self.searchResult = [QMUsersUtils filteredUsers:self.searchResult withFlterArray:@[user]];
+    
+    NSInteger idx = [self.searchResult indexOfObject:user];
+    if (idx != NSNotFound) {
+        
+        [self.searchResult removeObject:user];
+        [self.searchDisplayController.searchResultsTableView reloadSections:[NSIndexSet indexSetWithIndex:1]
+                                                           withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
     
     BOOL isContactRequest = [[QMApi instance].usersService isContactRequestWithID:user.ID];
     if (isContactRequest) {
@@ -257,13 +264,12 @@
 
 - (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
 {
-    // needed!
-//    [self.tableView setDataSource:nil];
+    [self.tableView setDataSource:nil];
 }
 
 - (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller
 {
-//    [self.tableView setDataSource:self];
+    [self.tableView setDataSource:self];
     [self reloadDataSource];
     [self.tableView reloadData];
 }

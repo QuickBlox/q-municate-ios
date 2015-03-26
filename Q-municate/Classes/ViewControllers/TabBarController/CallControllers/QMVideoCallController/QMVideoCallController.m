@@ -17,9 +17,9 @@ NSString *const kGoToDuringVideoCallControllerSegue= @"goToDuringVideoCallSegueI
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    QMAVCallManager *av = [QMApi instance].avCallManager;
-    if( [av localVideoTrack] ){
-        [self.opponentsView setVideoTrack:[av localVideoTrack]];
+
+    if( QMApi.instance.avCallManager.localVideoTrack ){
+        [self.opponentsView setVideoTrack:QMApi.instance.avCallManager.localVideoTrack];
     }
 }
 

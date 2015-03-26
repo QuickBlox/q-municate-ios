@@ -36,7 +36,7 @@ typedef NS_ENUM(NSInteger, QMAccountType);
 
 @property (strong, nonatomic, readonly) QBUUser *currentUser;
 
-@property (nonatomic, copy) NSData *deviceToken;
+@property (nonatomic, strong) NSData *deviceToken;
 
 + (instancetype)instance;
 
