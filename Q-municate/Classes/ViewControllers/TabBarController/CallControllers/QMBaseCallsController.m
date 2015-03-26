@@ -60,13 +60,16 @@
 
 - (IBAction)stopCallTapped:(id)sender {
     [self.contentView stopTimer];
-    
+    [[QMApi instance] finishCall];
     [self.contentView updateViewWithStatus:NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil)];
     // stop playing sound:
     [[QMSoundManager instance] stopAllSounds];
-    [QMSoundManager playEndOfCallSound];
     
-    [[QMApi instance] finishCall];
+    // need a delay to give a time to a WebRTC to unload resources
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(300 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
+        [QMSoundManager playEndOfCallSound];
+    });
+    
     [self stopActivityIndicator];
 }
 
@@ -219,7 +222,7 @@
     else if( state == QBRTCConnectionNoAnswer ){
         [self callStoppedByOpponentForReason:kStopVideoChatCallStatus_OpponentDidNotAnswer];
     }
-    else if( state != QBRTCConnectionUnknow ){
+    else if( state != QBRTCConnectionUnknow && state != QBRTCConnectionClosed ){
         [self callStoppedByOpponentForReason:nil];
     }
 }

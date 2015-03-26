@@ -35,8 +35,8 @@
 }
 
 - (void)stopCallTapped:(id)sender {
-    [super stopCallTapped:sender];
     [self hideViewsBeforeDealloc];
+    [super stopCallTapped:sender];
 }
 
 - (void)reloadVideoViews {

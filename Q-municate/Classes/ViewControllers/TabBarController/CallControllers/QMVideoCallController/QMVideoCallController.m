@@ -24,9 +24,10 @@ NSString *const kGoToDuringVideoCallControllerSegue= @"goToDuringVideoCallSegueI
 }
 
 - (IBAction)stopCallTapped:(id)sender {
-    [super stopCallTapped:sender];
     [self.opponentsView setHidden:YES];
     [self.opponentsView setVideoTrack:nil];
+    
+    [super stopCallTapped:sender];
 }
 
 - (void)startCall {
