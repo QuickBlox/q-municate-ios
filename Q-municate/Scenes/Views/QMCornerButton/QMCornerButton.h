@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-
+IB_DESIGNABLE
 @interface QMCornerButton : UIButton
+
+@property (nonatomic) IBInspectable CGFloat cornerRadius;
+@property (nonatomic) IBInspectable NSUInteger borderWidth;
+@property (nonatomic) IBInspectable UIColor *borderColor;
+@property (nonatomic) IBInspectable UIColor *highlightedColor;
 
 @end

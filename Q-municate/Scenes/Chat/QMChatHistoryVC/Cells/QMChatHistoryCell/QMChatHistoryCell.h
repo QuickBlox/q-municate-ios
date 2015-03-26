@@ -6,14 +6,12 @@
 //  Copyright (c) 2015 Quickblox. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "QMSearchCell.h"
 
-@interface QMChatHistoryCell : UITableViewCell
+@interface QMChatHistoryCell : QMSearchCell
 
-- (void)setTitle:(NSString *)title;
 - (void)setSubTitle:(NSString *)subTitle;
 - (void)setTime:(NSString *)time;
 - (void)setImageWithUrl:(NSString *)url;
-- (void)highlightText:(NSString *)text;
 
 @end

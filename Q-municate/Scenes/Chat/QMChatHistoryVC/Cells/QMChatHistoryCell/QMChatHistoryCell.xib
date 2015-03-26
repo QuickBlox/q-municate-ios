@@ -11,7 +11,7 @@
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="QMChatHistoryCell" rowHeight="75" id="XOB-tY-hob" customClass="QMChatHistoryCell">
             <rect key="frame" x="0.0" y="0.0" width="600" height="76"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XOB-tY-hob" id="5vB-zh-WbO">
+            <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XOB-tY-hob" id="5vB-zh-WbO">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="58"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
@@ -41,7 +41,7 @@
                             <constraint firstAttribute="height" constant="21" id="aHo-bq-Plf"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1.02.15" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ax-sI-TvB">
@@ -51,7 +51,7 @@
                             <constraint firstAttribute="height" constant="21" id="Y8k-O5-dBo"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LPr-gy-6Qy">
@@ -86,6 +86,7 @@
                 <outlet property="timeLabel" destination="0ax-sI-TvB" id="QZI-HN-wyh"/>
                 <outlet property="titleLabel" destination="Y2p-7U-miv" id="9BG-lU-4nb"/>
             </connections>
+            <point key="canvasLocation" x="243" y="248"/>
         </tableViewCell>
     </objects>
     <resources>

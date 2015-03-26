@@ -12,6 +12,9 @@
 
 @property (strong, nonatomic) NSString *searchText;
 
+@property (assign, nonatomic) BOOL loading;
+@property (strong, nonatomic, readonly) NSMutableArray *collection;
+
 - (void)setObjects:(NSArray *)objects;
 - (QBGeneralResponsePage *)responsePage;
 - (void)updateCurrentPageWithResponcePage:(QBGeneralResponsePage *)page;

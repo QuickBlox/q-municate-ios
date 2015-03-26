@@ -14,12 +14,12 @@
  * The name of the storyboard that should be linked.
  * This should be set in the Interface Builder identity inspector.
  */
-@property (nonatomic, copy) NSString *storyboardName;
+@property (nonatomic, strong) IBInspectable NSString *storyboardName;
 
 /**
  * (Optional) The identifier of the scene to show.
  * This should be set in the Interface Builder identity inspector.
  */
-@property (nonatomic, copy) NSString *sceneIdentifier;
+@property (nonatomic, strong) IBInspectable NSString *sceneIdentifier;
 
 @end

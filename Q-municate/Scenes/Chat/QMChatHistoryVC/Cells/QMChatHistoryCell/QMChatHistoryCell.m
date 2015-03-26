@@ -11,7 +11,6 @@
 
 @interface QMChatHistoryCell()
 
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *subTitleLabel;
 @property (weak, nonatomic) IBOutlet QMImageView *qmImgeView;
@@ -24,20 +23,18 @@
 
 @implementation QMChatHistoryCell
 
-- (void)awakeFromNib {
-
-    self.timeLabel.text = nil;
-    self.subTitleLabel.text = nil;
-    self.titleLabel.text = nil;
++ (NSString *)cellIdentifier {
+    
+    static NSString *cellIdentifier = @"QMChatHistoryCell";
+    return cellIdentifier;
 }
 
-- (void)setTitle:(NSString *)title {
-    
-    if (![_title isEqualToString:title]) {
+- (void)awakeFromNib {
 
-        _title = title;
-        self.titleLabel.text = _title;
-    }
+    [super awakeFromNib];
+    
+    self.timeLabel.text = nil;
+    self.subTitleLabel.text = nil;
 }
 
 - (void)setSubTitle:(NSString *)subTitle {
@@ -56,18 +53,6 @@
         _title = time;
         self.timeLabel.text = _time;
     }
-}
-
-- (void)highlightText:(NSString *)text {
-    
-    NSMutableAttributedString *attributedString =
-    [[NSMutableAttributedString alloc] initWithString:self.title];
-    
-    [attributedString addAttribute: NSForegroundColorAttributeName
-                 value:[UIColor redColor]
-                 range:[self.title.lowercaseString rangeOfString:text.lowercaseString]];
-    
-    self.titleLabel.attributedText = attributedString;
 }
 
 - (void)setImageWithUrl:(NSString *)url {

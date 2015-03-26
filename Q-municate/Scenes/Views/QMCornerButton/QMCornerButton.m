@@ -10,12 +10,35 @@
 
 @implementation QMCornerButton
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
+- (void)setBorderWidth:(NSUInteger)borderWidth {
     
-    self.layer.borderWidth = 1;
-    self.layer.borderColor = self.titleLabel.textColor.CGColor;
-    self.layer.cornerRadius = 4;
+    _borderWidth = borderWidth;
+    self.layer.borderWidth = borderWidth;
+}
+
+- (void)setBorderColor:(UIColor *)borderColor {
+    
+    _borderColor = borderColor;
+    self.layer.borderColor = borderColor.CGColor;
+}
+
+- (void)setCornerRadius:(CGFloat)cornerRadius {
+    
+    _cornerRadius = cornerRadius;
+    self.layer.cornerRadius = cornerRadius;
+}
+
+- (void)setHighlighted:(BOOL)highlighted {
+    [super setHighlighted:highlighted];
+    
+    if (highlighted) {
+        
+        self.backgroundColor = self.highlightedColor;
+    }
+    else {
+        
+        self.backgroundColor = [UIColor clearColor];
+    }
 }
 
 @end

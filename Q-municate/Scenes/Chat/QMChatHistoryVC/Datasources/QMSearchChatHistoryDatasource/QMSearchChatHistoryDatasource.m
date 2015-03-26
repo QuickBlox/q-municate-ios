@@ -7,7 +7,10 @@
 //
 
 #import "QMSearchChatHistoryDatasource.h"
+
 #import "QMChatHistoryCell.h"
+#import "QMContactCell.h"
+#import "QMSearchStatusCell.h"
 
 @interface QMSearchChatHistoryDatasource()
 
@@ -33,18 +36,35 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
+    if (self.loading && self.collection.count == 0) {
+        return 1;
+    }
+    
     return self.collection.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    QMChatHistoryCell *cell = [tableView dequeueReusableCellWithIdentifier:@"QMChatHistoryCell" forIndexPath:indexPath];
-    QBUUser *user = self.collection[indexPath.row];
-    
-    [cell setTitle:user.fullName];
-    [cell highlightText:self.searchText];
-    
-    return cell;
+    //Loading Cell
+    if (self.loading && self.collection.count == 0) {
+        
+        QMSearchStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:QMSearchStatusCell.cellIdentifier
+                                                                   forIndexPath:indexPath];
+        [cell setTitle:@"Loading.."];
+        cell.showActivityIndicator = YES;
+        
+        return cell;
+    }
+    else {
+        //Contact cell
+        QMContactCell *cell = [tableView dequeueReusableCellWithIdentifier:QMContactCell.cellIdentifier
+                                                              forIndexPath:indexPath];
+        QBUUser *user = self.collection[indexPath.row];
+        [cell setTitle:user.fullName];
+        
+        return cell;
+    }
+
+    return nil;
 }
 
 - (void)setObjects:(NSArray *)objects {
