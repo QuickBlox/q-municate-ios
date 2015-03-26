@@ -214,21 +214,6 @@
                         <rect key="frame" x="0.0" y="64" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <searchBar key="tableHeaderView" contentMode="redraw" searchBarStyle="minimal" placeholder="Search" id="TFT-H5-pIl">
-                            <rect key="frame" x="0.0" y="64" width="600" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <color key="tintColor" red="0.062745098039215685" green="0.35294117647058826" blue="0.63921568627450975" alpha="1" colorSpace="calibratedRGB"/>
-                            <color key="barTintColor" red="0.96862745098039216" green="0.96862745098039216" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
-                            <textInputTraits key="textInputTraits"/>
-                            <scopeButtonTitles>
-                                <string>Local</string>
-                                <string>Global</string>
-                            </scopeButtonTitles>
-                            <connections>
-                                <outlet property="delegate" destination="f0F-bx-ISs" id="OSV-K5-mbT"/>
-                            </connections>
-                        </searchBar>
                         <connections>
                             <outlet property="dataSource" destination="4p9-VT-wnC" id="iBI-Gb-z7I"/>
                             <outlet property="delegate" destination="f0F-bx-ISs" id="aKR-qs-XnK"/>
@@ -257,20 +242,10 @@
                     </navigationItem>
                     <connections>
                         <outlet property="historyDatasource" destination="4p9-VT-wnC" id="xAH-Vq-ZVU"/>
-                        <outlet property="searchDisplayController" destination="tT5-BC-xnp" id="mO2-94-u8d"/>
                         <outlet property="searchHistoryDatasource" destination="84a-qV-Hap" id="NZY-A1-fre"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lND-1Z-Lte" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <searchDisplayController searchResultsTitle="" id="tT5-BC-xnp">
-                    <connections>
-                        <outlet property="delegate" destination="f0F-bx-ISs" id="Mfv-4L-5fo"/>
-                        <outlet property="searchBar" destination="TFT-H5-pIl" id="kDl-Wu-MmG"/>
-                        <outlet property="searchContentsController" destination="f0F-bx-ISs" id="hyC-S9-m07"/>
-                        <outlet property="searchResultsDataSource" destination="84a-qV-Hap" id="3SM-Ds-H7m"/>
-                        <outlet property="searchResultsDelegate" destination="f0F-bx-ISs" id="Yco-Jm-IXg"/>
-                    </connections>
-                </searchDisplayController>
                 <customObject id="4p9-VT-wnC" customClass="QMChatHistoryDatasource"/>
                 <customObject id="84a-qV-Hap" customClass="QMSearchChatHistoryDatasource"/>
             </objects>

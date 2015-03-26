@@ -35,11 +35,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
-    if (self.loading && self.collection.count == 0) {
-        return 1;
-    }
-    
+
     return self.collection.count;
 }
 

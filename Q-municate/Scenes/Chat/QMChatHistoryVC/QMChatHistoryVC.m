@@ -16,6 +16,8 @@
 #import "QMChatHistoryCell.h"
 #import "QMSearchStatusCell.h"
 
+#import "QMSearchController.h"
+
 const NSTimeInterval kQMKeyboardTapTimeInterval = 1.f;
 
 typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
@@ -26,7 +28,7 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
 
 @interface QMChatHistoryVC ()
 
-<UITableViewDelegate, QMContactListServiceDelegate, UISearchBarDelegate, UISearchDisplayDelegate, QMContactCellDelegate>
+<UITableViewDelegate, QMContactListServiceDelegate, UISearchBarDelegate, QMContactCellDelegate, QMSearchResultsUpdating, QMSearchControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet QMChatHistoryDatasource *historyDatasource;
 @property (strong, nonatomic) IBOutlet QMSearchChatHistoryDatasource *searchHistoryDatasource;
@@ -34,6 +36,7 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
 
 @property (weak, nonatomic) QBRequest *searchRequest;
 @property (assign, nonatomic) BOOL globalSearchIsCancelled;
+@property (strong, nonatomic) QMSearchController *searchController;
 
 @end
 
@@ -44,27 +47,11 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self registerNibs];
     [self configureTableView];
-    [self configureSearchDisplayController];
-    self.definesPresentationContext = YES;
-    [QM.contactListService addDelegate:self];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+    [self configureSearchController];
+    [self registerNibs];
     
-//    self.notificationView = [QMNotificationView showInViewController:self];
-//    
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [self.notificationView setTintColor:[UIColor colorWithRed:1.000 green:0.557 blue:0.271 alpha:0.730]];
-//    });
-//    
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [self.notificationView setTintColor:[UIColor colorWithRed:1.000 green:0.557 blue:0.271 alpha:0.730]];
-//    });
-//    
-//    self.tableView.contentInset = UIEdgeInsetsMake(44+20+30, 0, 0, 0);
+    [QM.contactListService addDelegate:self];
 }
 
 #pragma mark - QMContactListServiceDelegate
@@ -87,19 +74,29 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
     self.refreshControl = refreshControl;
 }
 
-- (void)configureSearchDisplayController {
+- (void)configureSearchController {
     
-    self.searchDisplayController.searchResultsTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    self.searchDisplayController.searchResultsTableView.rowHeight = 75;
+    self.definesPresentationContext = YES;
+    self.searchController = [[QMSearchController alloc] initWithContentsController:self];
+    self.searchController.delegate = self;
+    self.searchController.searchResultsUpdater = self;
+    self.searchController.searchResultsTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.searchController.searchResultsTableView.rowHeight = 75;
+    self.searchController.searchResultsDataSource = self.searchHistoryDatasource;
+    self.searchController.searchBar.delegate = self;
+    self.searchController.searchBar.placeholder = @"Search";
+    self.searchController.searchBar.scopeButtonTitles = @[@"Local", @"Global"];
+    
+    self.tableView.tableHeaderView = self.searchController.searchBar;
 }
 
 - (void)registerNibs {
     
     //Register cell
     [QMChatHistoryCell registerForReuseInTableView:self.tableView];
-    [QMChatHistoryCell registerForReuseInTableView:self.searchDisplayController.searchResultsTableView];
-    [QMContactCell registerForReuseInTableView:self.searchDisplayController.searchResultsTableView];
-    [QMSearchStatusCell registerForReuseInTableView:self.searchDisplayController.searchResultsTableView];
+    [QMChatHistoryCell registerForReuseInTableView:self.searchController.searchResultsTableView];
+    [QMContactCell registerForReuseInTableView:self.searchController.searchResultsTableView];
+    [QMSearchStatusCell registerForReuseInTableView:self.searchController.searchResultsTableView];
 }
 
 #pragma mark - Actions
@@ -119,7 +116,7 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
     self.globalSearchIsCancelled = YES;
     [self.searchHistoryDatasource setObjects:nil];
     self.searchHistoryDatasource.searchText = nil;
-    [self.searchDisplayController.searchResultsTableView reloadData];
+    [self.searchController.searchResultsTableView reloadData];
 }
 
 #pragma mark - Search
@@ -131,17 +128,17 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
     if (searchText.length == 0) {
         //Clear datasource
         [self.searchHistoryDatasource setObjects:@[]];
-        [self.searchDisplayController.searchResultsTableView reloadData];
+        [self.searchController.searchResultsTableView reloadData];
     }
     else {
         
         self.searchHistoryDatasource.loading = YES;
-        [self.searchDisplayController.searchResultsTableView reloadData];
+        [self.searchController.searchResultsTableView reloadData];
         
         int64_t keyboadTapTimeInterval = (int64_t)(kQMKeyboardTapTimeInterval * NSEC_PER_SEC);
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, keyboadTapTimeInterval), dispatch_get_main_queue(), ^{
             
-            if ([self.searchDisplayController.searchBar.text isEqualToString:searchText]) {
+            if ([self.searchController.searchBar.text isEqualToString:searchText]) {
                 
                 if (self.globalSearchIsCancelled) {
                     
@@ -160,14 +157,14 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
                      [weakSelf.searchHistoryDatasource setObjects:users];
                      [weakSelf.searchHistoryDatasource setSearchText:searchText];
                      weakSelf.searchHistoryDatasource.loading = NO;
-                     [weakSelf.searchDisplayController.searchResultsTableView reloadData];
+                     [weakSelf.searchController.searchResultsTableView reloadData];
                      weakSelf.searchRequest = nil;
                      
                  } errorBlock:^(QBResponse *response) {
                      
                      weakSelf.searchHistoryDatasource.loading = NO;
                      if (response.status == QBResponseStatusCodeCancelled) {
-                      
+                         
                          NSLog(@"Global search is cancelled");
                      }
                  }];
@@ -180,44 +177,50 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
     
     switch (selectedScope) {
             
-        case QMSearchScopeButtonIndexLocal:
-            [self localSearch:searchString]; break;
-        case QMSearchScopeButtonIndexGlobal:
-            [self globalSearch:searchString]; break;
+        case QMSearchScopeButtonIndexLocal: {
+            [self localSearch:searchString];
+        }
+            break;
+        case QMSearchScopeButtonIndexGlobal: {
+            [self globalSearch:searchString];
+        }
+            break;
         default:break;
     }
 }
 
-#pragma mark - UISearchDisplayDelegate
+//#pragma mark - UISearchDisplayDelegate
+//
+//- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
+//
+//    [self beginSearch:searchString selectedScope:controller.searchBar.selectedScopeButtonIndex];
+//
+//    return NO;
+//}
+//
+//- (void)searchDisplayController:(UISearchDisplayController *)controller didShowSearchResultsTableView:(UITableView *)tableView {
+//
+//    [self.tableView setDataSource:nil];
+//    [self.tableView reloadData];
+//}
+//
+//- (void)searchDisplayController:(UISearchDisplayController *)controller didHideSearchResultsTableView:(UITableView *)tableView {
+//
+//    [self.tableView setDataSource:self.historyDatasource];
+//    [self.tableView reloadData];
+//}
+//
+//- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
+//
+//    [self.notificationView setVisible:NO animated:NO completion:nil];
+//}
+//
+//- (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
+//
+//    [self.notificationView setVisible:YES animated:NO completion:nil];
+//}
 
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
-    
-    [self beginSearch:searchString selectedScope:controller.searchBar.selectedScopeButtonIndex];
-    
-    return NO;
-}
-
-- (void)searchDisplayController:(UISearchDisplayController *)controller didShowSearchResultsTableView:(UITableView *)tableView {
-    
-    [self.tableView setDataSource:nil];
-    [self.tableView reloadData];
-}
-
-- (void)searchDisplayController:(UISearchDisplayController *)controller didHideSearchResultsTableView:(UITableView *)tableView {
-    
-    [self.tableView setDataSource:self.historyDatasource];
-    [self.tableView reloadData];
-}
-
-- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
-
-    [self.notificationView setVisible:NO animated:NO completion:nil];
-}
-
-- (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
-    
-    [self.notificationView setVisible:YES animated:NO completion:nil];
-}
+#pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -240,6 +243,32 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
 #pragma mark - QMContactCellDelegate
 
 - (void)contactCell:(QMContactCell *)contactCell onPressAddBtn:(id)sender {
+    
+}
+
+#pragma mark - QMSearchControllerDelegate
+
+- (void)willPresentSearchController:(QMSearchController *)searchController {
+    
+}
+
+- (void)didPresentSearchController:(QMSearchController *)searchController {
+    
+}
+
+- (void)willDismissSearchController:(QMSearchController *)searchController {
+    
+}
+
+- (void)didDismissSearchController:(QMSearchController *)searchController {
+    
+}
+
+#pragma mark - QMSearchResultsUpdating
+
+- (void)updateSearchResultsForSearchController:(QMSearchController *)searchController {
+    
+    [self beginSearch:searchController.searchBar.text selectedScope:searchController.searchBar.selectedScopeButtonIndex];
     
 }
 
