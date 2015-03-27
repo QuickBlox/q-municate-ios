@@ -46,10 +46,8 @@
 - (void)startCall;
 - (void)confirmCall;
 
-/** Override callbacks in child if needed */
-- (void)callAcceptedByUser;
 - (void)callStartedWithUser;
-- (void)callRejectedByUser;
+
 - (void)callStoppedByOpponentForReason:(NSString *)reason;
 
 - (void)startActivityIndicator;

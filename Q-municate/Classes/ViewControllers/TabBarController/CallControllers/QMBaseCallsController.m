@@ -88,18 +88,8 @@
 #pragma mark - Calls notifications
 
 // Override this method in child:
-- (void)callAcceptedByUser {
-}
-
-// Override this method in child:
 - (void)callStartedWithUser {
     
-}
-
-- (void)callRejectedByUser {
-    [self.contentView updateViewWithStatus:NSLocalizedString(@"QM_STR_USER_IS_BUSY", nil)];
-    [[QMSoundManager instance] stopAllSounds];
-    [QMSoundManager playBusySound];
 }
 
 - (void)callStoppedByOpponentForReason:(NSString *)reason {
@@ -120,10 +110,6 @@
         [self.contentView updateViewWithStatus:NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil)];
         [QMSoundManager playEndOfCallSound];
     }
-}
-
-- (void)changeSpeakerWithCompletion:(void(^)(BOOL isSpeaker))completion{
-    [self.session switchAudioOutput:completion];
 }
 
 - (IBAction)speakerTapped:(IAButton *)sender {
