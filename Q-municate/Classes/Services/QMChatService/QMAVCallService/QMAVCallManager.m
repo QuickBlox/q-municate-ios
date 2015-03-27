@@ -20,6 +20,7 @@
 @property (weak, nonatomic) UIViewController *currentlyPresentedViewController;
 
 @property (strong, nonatomic) NSTimer *callingSoundTimer;
+@property (assign, nonatomic) AVAudioSessionCategoryOptions avCategoryOptions;
 
 @end
 
@@ -34,17 +35,11 @@ NSString *const kUserIds = @"UserIds";
 NSString *const kUserName = @"UserName";
 
 @implementation QMAVCallManager
-{
-    
-}
 
 - (instancetype)init {
     self = [super init];
     if (self) {
         _mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-        if( IS_IPAD ){
-            self.speakerEnabled = YES;
-        }
         self.frontCamera = YES;
     }
     return self;
@@ -153,6 +148,11 @@ NSString *const kUserName = @"UserName";
 
 - (void)callToUsers:(NSArray *)users withConferenceType:(QBConferenceType)conferenceType pushEnabled:(BOOL)pushEnabled {
     __weak __typeof(self) weakSelf = self;
+    
+    [self saveAudioSessionSettings];
+    
+    [self setAudioSessionDefaultToSpeakerIfNeeded]; // to make our ringtone go through the speaker
+    
     [self checkPermissionsWithConferenceType:conferenceType completion:^(BOOL canContinue) {
         
         if( !canContinue ){
@@ -206,8 +206,9 @@ NSString *const kUserName = @"UserName";
         [session rejectCall:@{@"reject" : @"busy"}];
         return;
     }
-    
     self.session = session;
+    [self saveAudioSessionSettings];
+    [self setAudioSessionDefaultToSpeakerIfNeeded];
     [self startPlayingRingtoneSound];
     
     QMIncomingCallController *incomingVC = [self.mainStoryboard instantiateViewControllerWithIdentifier:kIncomingCallController];
@@ -226,15 +227,6 @@ NSString *const kUserName = @"UserName";
 }
 
 - (void)sessionWillClose:(QBRTCSession *)session {
-    
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    NSString *category = [audioSession category];
-    NSError *setCategoryError = nil;
-    
-    [audioSession setCategory:category
-                  withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker
-                        error:&setCategoryError];
-    
     if( self.session != session ){
         // may be we rejected someone else call while we are talking with another person
         return;
@@ -249,6 +241,7 @@ NSString *const kUserName = @"UserName";
         // may be we rejected someone else call while we are talking with another person
         return;
     }
+    [self restoreAudioSessionSettings];
     __weak __typeof(self)weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
@@ -256,11 +249,7 @@ NSString *const kUserName = @"UserName";
         if( [weakSelf currentlyPresentedViewController] ){
             [[weakSelf currentlyPresentedViewController] dismissViewControllerAnimated:YES completion:nil];
         }
-        if( IS_IPAD ){
-            weakSelf.speakerEnabled = YES;
-        }
-        else{
-            weakSelf.speakerEnabled = NO;
+        if( !IS_IPAD ){
             weakSelf.frontCamera = YES;
         }
     });
@@ -278,8 +267,72 @@ NSString *const kUserName = @"UserName";
     [self stopAllSounds];
 }
 
+#pragma mark - AVAudioSession save/restore -
 
-# pragma mark Sounds Public methods -
+- (void)setAvSessionCurrentCategoryOptions:(AVAudioSessionCategoryOptions)avSessionCurrentCategoryOptions {
+    if( _avSessionCurrentCategoryOptions == avSessionCurrentCategoryOptions ){
+        return;
+    }
+    _avSessionCurrentCategoryOptions = avSessionCurrentCategoryOptions;
+
+    AVAudioSession *avSession = [AVAudioSession sharedInstance];
+    
+    NSError *err = nil;
+    [avSession setCategory:avSession.category withOptions:avSessionCurrentCategoryOptions error:&err];
+    if( err ) {
+        ILog(@"%@", err);
+    }
+    [avSession setActive:YES error:nil];
+}
+
+- (void)setAudioSessionDefaultToSpeakerIfNeeded {
+    AVAudioSession *avSession = [AVAudioSession sharedInstance];
+    
+    if( avSession.categoryOptions == AVAudioSessionCategoryOptionDefaultToSpeaker ){
+        return;
+    }
+    
+    NSError *err = nil;
+    [avSession setCategory:avSession.category withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker error:&err];
+    if( err ) {
+        ILog(@"%@", err);
+    }
+}
+
+- (void)setAudioSessionDefaultToHeadphoneIfNeeded {
+    AVAudioSession *avSession = [AVAudioSession sharedInstance];
+    
+    if( avSession.categoryOptions == 0 ){
+        return;
+    }
+    
+    NSError *err = nil;
+    [avSession setCategory:avSession.category withOptions:0 error:&err];
+    if( err ) {
+        ILog(@"%@", err);
+    }
+}
+
+- (void)saveAudioSessionSettings {
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    self.avCategoryOptions = session.categoryOptions;
+    [session setActive:YES error:nil];
+}
+
+- (void)restoreAudioSessionSettings {
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    
+    NSString *category = [session category];
+    
+    NSError *error = nil;
+    [session setCategory:category withOptions:self.avCategoryOptions error:&error];
+    
+    if( error ) {
+        ILog(@"%@", error);
+    }
+}
+
+#pragma mark Sounds Public methods -
 
 - (void)startPlayingCallingSound {
     [self stopAllSounds];

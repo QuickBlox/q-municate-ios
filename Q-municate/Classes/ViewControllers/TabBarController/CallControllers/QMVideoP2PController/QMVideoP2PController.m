@@ -32,6 +32,11 @@
         
         self.opponentsVideoViewBottom.constant = -80.0f;
     }
+    [[[QMApi instance] avCallManager] setAudioSessionDefaultToSpeakerIfNeeded];
+}
+
+- (void)audioSessionRouteChanged:(NSNotification *)notification{
+    [[[QMApi instance] avCallManager] setAudioSessionDefaultToSpeakerIfNeeded];
 }
 
 - (void)stopCallTapped:(id)sender {
@@ -112,25 +117,10 @@ NSString* machineName() {
 
 - (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID {
     [super session:session connectedToUser:userID];
-    
-    [[QMSoundManager instance] stopAllSounds];
-    
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    NSString *category = [audioSession category];
-    NSError *setCategoryError = nil;
-    
-    [audioSession setCategory:category
-                  withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker
-                        error:&setCategoryError];
-    
-    if (!setCategoryError) {
-        [QMApi instance].avCallManager.speakerEnabled = YES;
-    }
-    
     [self stopActivityIndicator];
 }
 
-- (void)session:(QBRTCSession *)session hungUpByUser:(NSNumber *)userID{
+- (void)session:(QBRTCSession *)session hungUpByUser:(NSNumber *)userID {
     [self hideViewsBeforeDealloc];
     [super session:session hungUpByUser:userID];
 }

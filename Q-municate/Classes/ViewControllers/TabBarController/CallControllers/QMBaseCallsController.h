@@ -52,4 +52,9 @@
 
 - (void)startActivityIndicator;
 - (void)stopActivityIndicator;
+
+- (void)audioSessionRouteChanged:(NSNotification *)notification;
+
+- (void)updateButtonsState;
+
 @end

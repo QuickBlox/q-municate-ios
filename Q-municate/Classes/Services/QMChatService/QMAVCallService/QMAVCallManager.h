@@ -15,7 +15,8 @@
 @property (strong, nonatomic) QBRTCSession *session;
 
 @property (assign, nonatomic, getter=isFrontCamera) BOOL frontCamera;
-@property (assign, nonatomic, getter=isSpeakerEnabled) BOOL speakerEnabled;
+
+@property (assign, nonatomic) AVAudioSessionCategoryOptions avSessionCurrentCategoryOptions;
 
 @property (strong, nonatomic) QBRTCVideoTrack *localVideoTrack;
 @property (strong, nonatomic) QBRTCVideoTrack *remoteVideoTrack;
@@ -40,4 +41,6 @@
  */
 - (void)checkPermissionsWithConferenceType:(QBConferenceType)conferenceType completion:(void(^)(BOOL canContinue))completion;
 
+- (void)setAudioSessionDefaultToSpeakerIfNeeded;
+- (void)setAudioSessionDefaultToHeadphoneIfNeeded;
 @end

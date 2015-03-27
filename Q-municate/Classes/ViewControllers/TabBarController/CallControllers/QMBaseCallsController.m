@@ -33,14 +33,23 @@
     
     [self.contentView updateViewWithUser:self.opponent conferenceType:self.session.conferenceType isOpponentCaller:self.isOpponentCaller];
     [self updateButtonsState];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(audioSessionRouteChanged:)
+                                                 name:AVAudioSessionRouteChangeNotification
+                                               object:nil];
 }
 
-- (void)updateButtonsState{
+- (void)audioSessionRouteChanged:(NSNotification *)notification {
+    
+}
+
+- (void)updateButtonsState {
     [self.btnMic setSelected:!self.session.audioEnabled];
     [self.btnSwitchCamera setSelected:!QMApi.instance.avCallManager.isFrontCamera];
     [self.btnSwitchCamera setUserInteractionEnabled:self.session.videoEnabled];
     [self.btnVideo setSelected:!self.session.videoEnabled];
-    [self.btnSpeaker setSelected:QMApi.instance.avCallManager.isSpeakerEnabled];
+    [self.btnSpeaker setSelected:[[AVAudioSession sharedInstance] categoryOptions] == AVAudioSessionCategoryOptionDefaultToSpeaker];
     [self.camOffView setHidden:self.session.videoEnabled];
 }
 
@@ -114,29 +123,18 @@
 
 - (IBAction)speakerTapped:(IAButton *)sender {
 
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    
-    AVAudioSessionCategoryOptions currentOptions = session.categoryOptions;
+    AVAudioSessionCategoryOptions currentOptions = [[AVAudioSession sharedInstance] categoryOptions];
     //IPAD
     if (currentOptions != AVAudioSessionCategoryOptionDefaultToSpeaker) {
-        
         categoryOptions = AVAudioSessionCategoryOptionDefaultToSpeaker;
-        QMApi.instance.avCallManager.speakerEnabled = YES;
         [sender setSelected:YES];
     }
     else {
-        
-        categoryOptions = defaultCategoryOptions;
-        QMApi.instance.avCallManager.speakerEnabled = NO;
+        categoryOptions = 0;
         [sender setSelected:NO];
     }
     
-    NSString *category = [session category];
-    NSError *setCategoryError = nil;
-    
-    [session setCategory:category
-             withOptions:categoryOptions
-                   error:&setCategoryError];
+    [[[QMApi instance] avCallManager] setAvSessionCurrentCategoryOptions:categoryOptions];
 }
 
 - (IBAction)cameraSwitchTapped:(IAButton *)sender {
@@ -165,9 +163,6 @@
 #pragma mark QBRTCSession delegate -
 
 - (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID {
-    
-    AVAudioSession *as = [AVAudioSession sharedInstance];
-    defaultCategoryOptions = as.categoryOptions;
     self.btnSpeaker.userInteractionEnabled = YES;
     ILog(@"connectedToUser:%@", userID);
     [self.contentView startTimerIfNeeded];
@@ -182,7 +177,13 @@
 }
 
 - (void)session:(QBRTCSession *)session rejectedByUser:(NSNumber *)userID userInfo:(NSDictionary *)userInfo {
-    [self callStoppedByOpponentForReason:kStopVideoChatCallStatus_Manually];
+    if( [userID unsignedIntegerValue] != [[[QMApi instance] currentUser] ID]) {
+        // current user not initiated end of call
+        [self callStoppedByOpponentForReason:kStopVideoChatCallStatus_Manually];
+    }
+    else{
+         [self callStoppedByOpponentForReason:nil];
+    }
 }
 
 - (void)session:(QBRTCSession *)session hungUpByUser:(NSNumber *)userID {
@@ -219,6 +220,10 @@
 
 - (void)session:(QBRTCSession *)session didReceiveRemoteVideoTrack:(QBRTCVideoTrack *)videoTrack fromUser:(NSNumber *)userID {
     self.opponentVideoTrack = videoTrack;
+}
+
+- (void)sessionDidClose:(QBRTCSession *)session {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionRouteChangeNotification object:nil];
 }
 
 @end
