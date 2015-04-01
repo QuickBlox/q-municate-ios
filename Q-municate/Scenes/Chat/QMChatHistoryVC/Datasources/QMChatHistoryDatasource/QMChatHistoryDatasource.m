@@ -9,23 +9,7 @@
 #import "QMChatHistoryDatasource.h"
 #import "QMChatHistoryCell.h"
 
-@interface QMChatHistoryDatasource()
-
-@property (strong, nonatomic) NSMutableArray *collection;
-
-@end
-
 @implementation QMChatHistoryDatasource
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        
-        self.collection = [NSMutableArray array];
-    }
-    return self;
-}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
@@ -38,6 +22,8 @@
     QBUUser *user = self.collection[indexPath.row];
 
     [cell setTitle:user.fullName];
+    [cell setTime:@"6.02.15"];
+    [cell setSubTitle:@"Alex Bass: Donec sed odio dui. Nullam id dylor id nibh"];
     
     return cell;
 }

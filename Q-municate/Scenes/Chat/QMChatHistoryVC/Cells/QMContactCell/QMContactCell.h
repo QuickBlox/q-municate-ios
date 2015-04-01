@@ -7,17 +7,14 @@
 //
 
 #import "QMSearchCell.h"
+#import "QMAddContactProtocol.h"
 
 @protocol QMContactCellDelegate;
 
 @interface QMContactCell : QMSearchCell
 
-@property (weak, nonatomic) IBOutlet id <QMContactCellDelegate> delegate;
+@property (strong, nonatomic) QBUUser *contact;
+@property (weak, nonatomic) id <QMAddContactProtocol> delegate;
 
 @end
 
-@protocol QMContactCellDelegate <NSObject>
-
-- (void)contactCell:(QMContactCell *)contactCell onPressAddBtn:(id)sender;
-
-@end

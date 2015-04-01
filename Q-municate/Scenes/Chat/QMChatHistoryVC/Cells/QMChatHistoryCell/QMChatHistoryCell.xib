@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14D98g" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14D127a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -19,7 +18,7 @@
                         <rect key="frame" x="76" y="28" width="486" height="40"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="40" id="g5Y-zo-HLb"/>
+                            <constraint firstAttribute="height" constant="40" id="uEN-BD-Tde"/>
                         </constraints>
                         <string key="text">Alex Bass: Donec Sed odio dui. Nullam id bylor id nbh. Alex Bass: Donec Sed odio dui. Nullam id bylor id nbh. Alex Bass: Donec Sed odio dui. Nullam id bylor id nbh</string>
                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -30,15 +29,15 @@
                         <rect key="frame" x="8" y="7" width="60" height="60"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="60" id="I6V-Cv-0Ia"/>
-                            <constraint firstAttribute="height" constant="60" id="bUf-vG-QAe"/>
+                            <constraint firstAttribute="width" constant="60" id="WQ1-1X-zA2"/>
+                            <constraint firstAttribute="height" constant="60" id="gA0-ry-HTK"/>
                         </constraints>
                     </imageView>
                     <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="James Cobs, Martin Freeman" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y2p-7U-miv">
                         <rect key="frame" x="76" y="7" width="449" height="21"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="21" id="aHo-bq-Plf"/>
+                            <constraint firstAttribute="height" constant="21" id="l4o-2v-QAb"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -47,37 +46,35 @@
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1.02.15" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ax-sI-TvB">
                         <rect key="frame" x="512" y="7" width="80" height="21"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="80" id="CBh-pv-ZRW"/>
-                            <constraint firstAttribute="height" constant="21" id="Y8k-O5-dBo"/>
+                            <constraint firstAttribute="width" constant="80" id="BYs-ye-5Gc"/>
+                            <constraint firstAttribute="height" constant="21" id="FL3-uj-Fte"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="textColor" red="0.49019607843137253" green="0.49019607843137253" blue="0.49019607843137253" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LPr-gy-6Qy">
                         <rect key="frame" x="570" y="45" width="22" height="22"/>
                         <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="22" id="JWF-o0-B2L"/>
-                            <constraint firstAttribute="width" constant="22" id="bMr-E8-KZE"/>
+                            <constraint firstAttribute="width" constant="22" id="bd2-Po-XHq"/>
+                            <constraint firstAttribute="height" constant="22" id="f9b-jl-hD2"/>
                         </constraints>
                     </view>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="LPr-gy-6Qy" firstAttribute="trailing" secondItem="5vB-zh-WbO" secondAttribute="trailingMargin" id="1rI-MU-gVI"/>
-                    <constraint firstItem="zer-qA-MJo" firstAttribute="leading" secondItem="5vB-zh-WbO" secondAttribute="leading" constant="8" id="9Kv-YW-wQf"/>
-                    <constraint firstAttribute="bottomMargin" secondItem="Zkd-aj-sJD" secondAttribute="bottom" constant="-1" id="FLq-Mw-MA7"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="Y2p-7U-miv" secondAttribute="trailing" constant="67" id="Jtz-vw-VRJ"/>
-                    <constraint firstItem="Zkd-aj-sJD" firstAttribute="top" secondItem="0ax-sI-TvB" secondAttribute="bottom" id="NXd-sb-eQa"/>
-                    <constraint firstAttribute="bottom" secondItem="Zkd-aj-sJD" secondAttribute="bottom" constant="7" id="R9d-AE-b9w"/>
-                    <constraint firstItem="Y2p-7U-miv" firstAttribute="leading" secondItem="zer-qA-MJo" secondAttribute="trailing" constant="8" id="SMu-Ue-LTJ"/>
-                    <constraint firstItem="0ax-sI-TvB" firstAttribute="trailing" secondItem="5vB-zh-WbO" secondAttribute="trailingMargin" id="eYX-Bf-OB7"/>
-                    <constraint firstItem="LPr-gy-6Qy" firstAttribute="bottom" secondItem="5vB-zh-WbO" secondAttribute="bottomMargin" id="l8g-bD-ssL"/>
-                    <constraint firstItem="Y2p-7U-miv" firstAttribute="top" secondItem="5vB-zh-WbO" secondAttribute="topMargin" constant="-1" id="nRb-1G-VKW"/>
-                    <constraint firstItem="Zkd-aj-sJD" firstAttribute="leading" secondItem="zer-qA-MJo" secondAttribute="trailing" constant="8" id="s2q-xO-tL6"/>
-                    <constraint firstItem="Zkd-aj-sJD" firstAttribute="top" secondItem="Y2p-7U-miv" secondAttribute="bottom" id="vSs-uu-XoA"/>
-                    <constraint firstItem="LPr-gy-6Qy" firstAttribute="leading" secondItem="Zkd-aj-sJD" secondAttribute="trailing" constant="8" id="vlX-Rj-6bG"/>
-                    <constraint firstAttribute="bottom" secondItem="zer-qA-MJo" secondAttribute="bottom" constant="8" id="zHj-D4-Egj"/>
+                    <constraint firstItem="zer-qA-MJo" firstAttribute="leading" secondItem="5vB-zh-WbO" secondAttribute="leading" constant="8" id="AcG-c5-Leb"/>
+                    <constraint firstItem="0ax-sI-TvB" firstAttribute="top" secondItem="5vB-zh-WbO" secondAttribute="top" constant="7" id="Bqb-rY-PP0"/>
+                    <constraint firstAttribute="trailing" secondItem="LPr-gy-6Qy" secondAttribute="trailing" constant="8" id="HHl-eS-jGT"/>
+                    <constraint firstItem="LPr-gy-6Qy" firstAttribute="leading" secondItem="Zkd-aj-sJD" secondAttribute="trailing" constant="8" id="KJf-xv-wic"/>
+                    <constraint firstItem="Zkd-aj-sJD" firstAttribute="leading" secondItem="zer-qA-MJo" secondAttribute="trailing" constant="8" id="QFC-24-4rD"/>
+                    <constraint firstItem="Y2p-7U-miv" firstAttribute="top" secondItem="5vB-zh-WbO" secondAttribute="top" constant="7" id="QLS-f2-8l0"/>
+                    <constraint firstAttribute="bottom" secondItem="LPr-gy-6Qy" secondAttribute="bottom" constant="8" id="V4W-ns-OFw"/>
+                    <constraint firstItem="Y2p-7U-miv" firstAttribute="leading" secondItem="zer-qA-MJo" secondAttribute="trailing" constant="8" id="bHA-ph-rWD"/>
+                    <constraint firstAttribute="bottom" secondItem="Zkd-aj-sJD" secondAttribute="bottom" constant="7" id="lMd-eh-Dh8"/>
+                    <constraint firstAttribute="trailing" secondItem="0ax-sI-TvB" secondAttribute="trailing" constant="8" id="nSZ-o4-1p4"/>
+                    <constraint firstAttribute="bottom" secondItem="zer-qA-MJo" secondAttribute="bottom" constant="8" id="oLx-1l-Zle"/>
+                    <constraint firstAttribute="trailing" secondItem="Y2p-7U-miv" secondAttribute="trailing" constant="75" id="oOG-Am-X9E"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
@@ -86,7 +83,7 @@
                 <outlet property="timeLabel" destination="0ax-sI-TvB" id="QZI-HN-wyh"/>
                 <outlet property="titleLabel" destination="Y2p-7U-miv" id="9BG-lU-4nb"/>
             </connections>
-            <point key="canvasLocation" x="243" y="248"/>
+            <point key="canvasLocation" x="49" y="61"/>
         </tableViewCell>
     </objects>
     <resources>

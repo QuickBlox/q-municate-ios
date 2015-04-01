@@ -6,17 +6,15 @@
 //  Copyright (c) 2015 Quickblox. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "QMPagedTableViewDatasource.h"
+#import "QMAddContactProtocol.h"
 
-@interface QMSearchChatHistoryDatasource : NSObject <UITableViewDataSource>
+@interface QMSearchChatHistoryDatasource : QMPagedTableViewDatasource
+
+@property (weak, nonatomic) id <QMAddContactProtocol> addContactHandler;
 
 @property (strong, nonatomic) NSString *searchText;
-
 @property (assign, nonatomic) BOOL loading;
-@property (strong, nonatomic, readonly) NSMutableArray *collection;
 
-- (void)setObjects:(NSArray *)objects;
-- (QBGeneralResponsePage *)responsePage;
-- (void)updateCurrentPageWithResponcePage:(QBGeneralResponsePage *)page;
 
 @end

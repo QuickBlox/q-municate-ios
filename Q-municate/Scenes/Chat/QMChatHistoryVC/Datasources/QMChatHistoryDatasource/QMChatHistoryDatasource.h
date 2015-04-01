@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 Quickblox. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "QMTableViewDatasource.h"
 
-@interface QMChatHistoryDatasource : NSObject <UITableViewDataSource>
+@interface QMChatHistoryDatasource : QMTableViewDatasource
 
 @end

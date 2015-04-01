@@ -1,5 +1,5 @@
 //
-//  QMBaseCell.h
+//  QMTableViewCell.h
 //  Q-municate
 //
 //  Created by Andrey Ivanov on 23.03.15.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface QMBaseCell : UITableViewCell
+@interface QMTableViewCell : UITableViewCell
 
 + (void)registerForReuseInTableView:(UITableView *)tableView;
 + (NSString *)cellIdentifier;

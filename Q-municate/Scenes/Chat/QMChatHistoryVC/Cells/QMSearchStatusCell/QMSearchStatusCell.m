@@ -19,6 +19,7 @@
 - (void)awakeFromNib {
     
     [super awakeFromNib];
+    
 
 }
 
@@ -36,5 +37,6 @@
         _showActivityIndicator ? [self.activityIndicator startAnimating] : [self.activityIndicator startAnimating];
     }
 }
+
 
 @end

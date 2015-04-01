@@ -16,7 +16,6 @@
 @property (weak, nonatomic) IBOutlet QMImageView *qmImgeView;
 
 @property (strong, nonatomic) NSString *time;
-@property (strong, nonatomic) NSString *title;
 @property (strong, nonatomic) NSString *subTitle;
 
 @end
@@ -35,6 +34,12 @@
     
     self.timeLabel.text = nil;
     self.subTitleLabel.text = nil;
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+}
+
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
+    
+    [super setHighlighted:highlighted animated:animated];
 }
 
 - (void)setSubTitle:(NSString *)subTitle {
@@ -48,9 +53,9 @@
 
 - (void)setTime:(NSString *)time {
 
-    if (![_title isEqualToString:time]) {
+    if (![_time isEqualToString:time]) {
         
-        _title = time;
+        _time = time;
         self.timeLabel.text = _time;
     }
 }

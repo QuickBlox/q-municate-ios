@@ -28,12 +28,21 @@
 
 #pragma mark - Setters
 
+- (void)setContact:(QBUUser *)contact {
+    
+    if (_contact != contact) {
+        _contact = contact;
+        
+        [self setTitle:_contact.fullName];
+    }
+}
 
 #pragma mark - Actions
 
 - (IBAction)pressAddBtn:(id)sender {
     
-    [self.delegate contactCell:self onPressAddBtn:sender];
+    [self.delegate didAddContact:self.contact];
 }
+
 
 @end
