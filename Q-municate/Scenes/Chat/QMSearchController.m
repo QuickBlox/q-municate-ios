@@ -8,19 +8,11 @@
 
 #import "QMSearchController.h"
 
-#ifdef __IPHONE_8_0
-#define SEARCH_PROTOCOL UISearchResultsUpdating, UISearchControllerDelegate, UISearchDisplayDelegate
-#else
-#define SEARCH_PROTOCOL UISearchDisplayDelegate
-#endif
+@interface QMSearchController()
 
-@interface QMSearchController() <SEARCH_PROTOCOL>
+<UISearchResultsUpdating, UISearchControllerDelegate, UISearchDisplayDelegate>
 
-#ifdef __IPHONE_8_0
-@property (strong, nonatomic) UISearchController *searchController;
-#else
-@property (strong, nonatomic) UISearchDisplayController *searchController;
-#endif
+@property (strong, nonatomic) id searchController;
 
 @end
 
@@ -31,60 +23,69 @@
     self = [super init];
     if (self) {
         
-        [self configureSearchController];
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+            
+            UITableViewController *searchResultViewController = [[UITableViewController alloc] initWithStyle:UITableViewStylePlain];
+            
+            UISearchController *searchController = [[UISearchController alloc] initWithSearchResultsController:searchResultViewController];
+            searchController.delegate = self;
+            searchController.searchResultsUpdater = self;
+            searchController.dimsBackgroundDuringPresentation = NO;
+            [searchController.searchBar sizeToFit];
+            
+            self.searchController = searchController;
+        }
+        else {
+            
+            UISearchBar * searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
+            
+            UISearchDisplayController *searchController =
+            [[UISearchDisplayController alloc] initWithSearchBar:searchBar contentsController:viewController];
+            
+            searchController.delegate = self;
+            [searchController.searchBar sizeToFit];
+            self.searchController = searchController;
+        };
     }
     return self;
 }
 
-- (void)configureSearchController {
-
-#ifdef __IPHONE_8_0
-    
-    UITableViewController *searchResultViewController = [[UITableViewController alloc] initWithStyle:UITableViewStylePlain];
-    
-    UISearchController *searchController = [[UISearchController alloc] initWithSearchResultsController:searchResultViewController];
-    searchController.delegate = self;
-    searchController.searchResultsUpdater = self;
-    searchController.dimsBackgroundDuringPresentation = NO;
-    
-    self.searchController = searchController;
-    [self.searchController.searchBar sizeToFit];
-    
-#else // iOS < 8
-    
-    UISearchBar * searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
-    
-    UISearchDisplayController *searchController =
-    [[UISearchDisplayController alloc] initWithSearchBar:searchBar contentsController:self];
-    
-    searchController.delegate = self;
-    searchController.searchResultsDataSource = self;
-    searchController.searchResultsDelegate = self;
-    
-    self.searchController = searchController;
-
-#endif
-}
-
 #pragma mark - Getters
+
+- (BOOL)isActive {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        
+       return ((UISearchController *)self.searchController).isActive;
+    }
+    else {
+        
+        return ((UISearchDisplayController *)self.searchController).isActive;
+    }
+}
 
 - (UITableView *)searchResultsTableView {
     
-#ifdef __IPHONE_8_0
-    UITableViewController *searchDisplayController = (id)self.searchController.searchResultsController;
-    return searchDisplayController.tableView;
-#else
-    return self.searchDisplayController.searchResultsTableView;
-#endif
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8) {
+        
+        UITableViewController *searchDisplayController = (id)((UISearchController *)self.searchController).searchResultsController;
+        return searchDisplayController.tableView;
+    }
+    else {
+        
+        return ((UISearchDisplayController *)self.searchController).searchResultsTableView;
+    }
 }
 
 - (UISearchBar *)searchBar {
     
-#ifdef __IPHONE_8_0
-    return self.searchController.searchBar;
-#else
-    return self.searchDisplayController.searchBar;
-#endif
+    if ([[[UIDevice currentDevice] systemVersion] integerValue] >= 8) {
+        
+         return ((UISearchController *)self.searchController).searchBar;
+    }
+    else {
+        
+        return ((UISearchDisplayController *)self.searchController).searchBar;
+    }
 }
 
 - (void)reloadSearchResult {
@@ -141,50 +142,41 @@
 // when we start/end showing the search UI
 - (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
     
+    [self.delegate willPresentSearchController:self];
 }
 
 - (void)searchDisplayControllerDidBeginSearch:(UISearchDisplayController *)controller {
     
+    [self.delegate didPresentSearchController:self];
 }
 
 - (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
     
+    [self.delegate willDismissSearchController:self];
 }
 
 - (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller {
     
+    [self.delegate didDismissSearchController:self];
 }
 
-- (void)searchDisplayController:(UISearchDisplayController *)controller didLoadSearchResultsTableView:(UITableView *)tableView {
-    
-}
+- (void)searchDisplayController:(UISearchDisplayController *)controller didLoadSearchResultsTableView:(UITableView *)tableView {}
+- (void)searchDisplayController:(UISearchDisplayController *)controller willUnloadSearchResultsTableView:(UITableView *)tableView {}
+- (void)searchDisplayController:(UISearchDisplayController *)controller willShowSearchResultsTableView:(UITableView *)tableView {}
+- (void)searchDisplayController:(UISearchDisplayController *)controller didShowSearchResultsTableView:(UITableView *)tableView {}
+- (void)searchDisplayController:(UISearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView {}
+- (void)searchDisplayController:(UISearchDisplayController *)controller didHideSearchResultsTableView:(UITableView *)tableView {}
 
-- (void)searchDisplayController:(UISearchDisplayController *)controller willUnloadSearchResultsTableView:(UITableView *)tableView {
-    
-}
-// called when table is shown/hidden
-- (void)searchDisplayController:(UISearchDisplayController *)controller willShowSearchResultsTableView:(UITableView *)tableView {
-    
-}
-
-- (void)searchDisplayController:(UISearchDisplayController *)controller didShowSearchResultsTableView:(UITableView *)tableView {
-    
-}
-
-- (void)searchDisplayController:(UISearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView {
-    
-}
-
-- (void)searchDisplayController:(UISearchDisplayController *)controller didHideSearchResultsTableView:(UITableView *)tableView {
-    
-}
-// return YES to reload table. called when search string/option changes. convenience methods on top UISearchBar delegate methods
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString  {
+    
+    [self.searchResultsUpdater updateSearchResultsForSearchController:self];
     
     return NO;
 }
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption {
+    
+    [self.searchResultsUpdater updateSearchResultsForSearchController:self];
     
     return NO;
 }
