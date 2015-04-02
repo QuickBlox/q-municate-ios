@@ -51,7 +51,6 @@ static void * kQMKeyValueObservingContext = &kQMKeyValueObservingContext;
     [super viewDidLoad];
     [self configureChatVC];
     [self registerForNotifications:YES];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     self.keyboardController = [[QMKeyboardController alloc] initWithTextView:self.inputToolBar.contentView.textView
                                                                  contextView:self.navigationController.view
                                                         panGestureRecognizer:self.tableView.panGestureRecognizer

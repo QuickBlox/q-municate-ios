@@ -11,6 +11,5 @@
 @interface QMTableViewDatasource : NSObject <UITableViewDataSource>
 
 @property (strong, nonatomic, readonly) NSMutableArray *collection;
-- (void)setObjects:(NSArray *)objects;
 
 @end

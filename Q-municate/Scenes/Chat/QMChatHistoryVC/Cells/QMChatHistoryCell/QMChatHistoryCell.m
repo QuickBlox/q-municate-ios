@@ -31,7 +31,7 @@
 - (void)awakeFromNib {
 
     [super awakeFromNib];
-    
+
     self.timeLabel.text = nil;
     self.subTitleLabel.text = nil;
     self.selectionStyle = UITableViewCellSelectionStyleNone;

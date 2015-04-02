@@ -188,10 +188,10 @@
             </objects>
             <point key="canvasLocation" x="-7601" y="-9107"/>
         </scene>
-        <!--View Controller-->
+        <!--Link View Controller-->
         <scene sceneID="RZ7-kQ-ZaL">
             <objects>
-                <viewController storyboardIdentifier="ChatViewController" id="gMg-rq-fEY" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ChatViewController" id="gMg-rq-fEY" customClass="QMLinkViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="i5f-7y-HG7"/>
                         <viewControllerLayoutGuide type="bottom" id="OZu-g8-liM"/>
@@ -201,6 +201,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="storyboardName" value="Settings"/>
+                    </userDefinedRuntimeAttributes>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FWG-zz-82s" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -16,32 +16,47 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     //Loading Cell
-    if (self.loading && self.collection.count == 0) {
+    if ((indexPath.row == (int)self.collection.count) && self.totalEntries != self.loaded) {
         
         QMSearchStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:QMSearchStatusCell.cellIdentifier
                                                                    forIndexPath:indexPath];
-        [cell setTitle:@"Loading.."];
+        NSString *tile = @"Loading..";
+        [cell setTitle:tile];
+        
         cell.showActivityIndicator = YES;
         
         return cell;
     }
+    else if ((indexPath.row == (int)self.collection.count) && self.totalEntries == self.loaded) {
+        
+        QMSearchStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:QMSearchStatusCell.cellIdentifier
+                                                                   forIndexPath:indexPath];
+        
+        NSString *title = [NSString stringWithFormat:@"No more results"];
+        [cell setTitle:title];
+        
+        cell.showActivityIndicator = NO;
+        
+        return cell;
+    }
+    
     else {
         //Contact cell
         QMContactCell *cell = [tableView dequeueReusableCellWithIdentifier:QMContactCell.cellIdentifier
                                                               forIndexPath:indexPath];
         cell.delegate = self.addContactHandler;
         cell.contact = self.collection[indexPath.row];
+        [cell highlightText:self.searchText];
         
         return cell;
     }
-
+    
     return nil;
 }
 
-- (void)setObjects:(NSArray *)objects {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    [self.collection removeAllObjects];
-    [self.collection addObjectsFromArray:objects];
+    return self.collection.count + 1;
 }
 
 @end

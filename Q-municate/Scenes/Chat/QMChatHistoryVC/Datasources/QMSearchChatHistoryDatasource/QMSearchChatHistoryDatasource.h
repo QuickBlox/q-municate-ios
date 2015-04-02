@@ -14,7 +14,5 @@
 @property (weak, nonatomic) id <QMAddContactProtocol> addContactHandler;
 
 @property (strong, nonatomic) NSString *searchText;
-@property (assign, nonatomic) BOOL loading;
-
 
 @end

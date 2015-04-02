@@ -36,10 +36,4 @@
     return nil;
 }
 
-- (void)setObjects:(NSArray *)objects {
-    
-    [self.collection removeAllObjects];
-    [self.collection addObjectsFromArray:objects];
-}
-
 @end

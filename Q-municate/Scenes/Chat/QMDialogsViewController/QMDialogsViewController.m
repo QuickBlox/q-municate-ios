@@ -38,7 +38,6 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     [self.dataSource fetchUnreadDialogsCount];
     [self.tableView reloadData];
 }

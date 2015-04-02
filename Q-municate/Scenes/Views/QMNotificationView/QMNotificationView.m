@@ -39,7 +39,7 @@ const NSTimeInterval kQMNotificationViewDefaultShowDuration = 2.0;
 + (QMNotificationView *)showInViewController:(UIViewController *)viewController {
     
     QMNotificationView *notificationView =
-    [[QMNotificationView alloc] initWithTitle:@"Connect to chat"
+    [[QMNotificationView alloc] initWithTitle:@"Отсутствует подключение к интернету"
                          parentViewController:viewController];
     
     notificationView.tintColor = [UIColor redColor];

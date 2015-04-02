@@ -10,7 +10,11 @@
 
 @interface QMPagedTableViewDatasource : QMTableViewDatasource
 
-- (QBGeneralResponsePage *)responsePage;
+@property (assign, nonatomic, readonly) NSUInteger totalEntries;
+@property (assign, nonatomic, readonly) NSUInteger loaded;
+
+- (void)resetSearch;
+- (QBGeneralResponsePage *)nextPage;
 - (void)updateCurrentPageWithResponcePage:(QBGeneralResponsePage *)page;
 
 @end

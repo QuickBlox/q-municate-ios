@@ -17,10 +17,7 @@
 @implementation QMSearchStatusCell
 
 - (void)awakeFromNib {
-    
     [super awakeFromNib];
-    
-
 }
 
 + (NSString *)cellIdentifier {
@@ -34,9 +31,21 @@
     if (_showActivityIndicator != showActivityIndicator) {
         
         _showActivityIndicator = showActivityIndicator;
-        _showActivityIndicator ? [self.activityIndicator startAnimating] : [self.activityIndicator startAnimating];
+
     }
 }
-
+- (void)layoutSubviews {
+    
+    [super layoutSubviews];
+    
+    if (_showActivityIndicator){
+        
+        [self.activityIndicator startAnimating];
+    }
+    else {
+        
+        [self.activityIndicator stopAnimating];
+    }
+}
 
 @end

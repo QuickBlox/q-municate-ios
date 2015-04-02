@@ -63,10 +63,19 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
 
 #pragma mark - QMContactListServiceDelegate
 
+- (void)stupNotificationView {
+    
+    self.notificationView = [QMNotificationView showInViewController:self];
+    self.notificationView.tintColor = [UIColor colorWithWhite:0.800 alpha:0.380];
+    [self.notificationView setVisible:YES animated:YES completion:^{
+        
+    }];
+}
+
 - (void)contactListServiceDidLoadCache {
     
     NSArray *usersFormCache = [QM.contactListService.usersMemoryStorage unsorterdUsersFromMemoryStorage];
-    [self.historyDatasource setObjects:usersFormCache];
+    [self.historyDatasource.collection addObjectsFromArray:usersFormCache];
     [self.tableView reloadData];
 }
 
@@ -89,6 +98,7 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
     self.definesPresentationContext = YES;
     self.searchController = [[QMSearchController alloc] initWithContentsController:self];
     self.searchController.delegate = self;
+    self.searchController.searchResultsDelegate = self;
     self.searchController.searchResultsUpdater = self;
     self.searchController.searchResultsTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.searchController.searchResultsTableView.rowHeight = 75;
@@ -123,7 +133,7 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
 - (void)localSearch:(NSString *)searchText {
     
     self.globalSearchIsCancelled = YES;
-    [self.searchDatasource setObjects:nil];
+    [self.searchDatasource.collection removeAllObjects];
     self.searchDatasource.searchText = nil;
     [self.searchController.searchResultsTableView reloadData];
 }
@@ -136,14 +146,11 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
     
     if (searchText.length == 0) {
         //Clear datasource
-        [self.searchDatasource setObjects:@[]];
+        [self.searchDatasource.collection removeAllObjects];
         [self.searchController.searchResultsTableView reloadData];
     }
     else {
-        
-        self.searchDatasource.loading = YES;
-        [self.searchController.searchResultsTableView reloadData];
-        
+
         int64_t keyboadTapTimeInterval = (int64_t)(kQMKeyboardTapTimeInterval * NSEC_PER_SEC);
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, keyboadTapTimeInterval), dispatch_get_main_queue(), ^{
             
@@ -155,31 +162,44 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
                     return;
                 }
                 
-                __weak __typeof(self)weakSelf = self;
-                self.searchRequest =
-                [QBRequest usersWithFullName:searchText
-                                        page:[self.searchDatasource responsePage]
-                                successBlock:^(QBResponse *response,
-                                               QBGeneralResponsePage *page,
-                                               NSArray *users)
-                 {
-                     [weakSelf.searchDatasource setObjects:users];
-                     [weakSelf.searchDatasource setSearchText:searchText];
-                     weakSelf.searchDatasource.loading = NO;
-                     [weakSelf.searchController.searchResultsTableView reloadData];
-                     weakSelf.searchRequest = nil;
-                     
-                 } errorBlock:^(QBResponse *response) {
-                     
-                     weakSelf.searchDatasource.loading = NO;
-                     if (response.status == QBResponseStatusCodeCancelled) {
-                         
-                         NSLog(@"Global search is cancelled");
-                     }
-                 }];
+                [self beginSearchWithSearchText:searchText nextPage:NO];
             }
         });
     }
+}
+
+- (void)beginSearchWithSearchText:(NSString *)searchText nextPage:(BOOL)nextPage {
+    
+    if (!nextPage) {
+        [self.searchDatasource resetSearch];
+    }
+    
+    QBGeneralResponsePage *currentPage = [self.searchDatasource nextPage];
+    
+    if (!currentPage) {
+        return;
+    }
+    __weak __typeof(self)weakSelf = self;
+    
+    self.searchRequest =
+    [QBRequest usersWithFullName:searchText
+                            page:currentPage
+                    successBlock:^(QBResponse *response,
+                                   QBGeneralResponsePage *page,
+                                   NSArray *users)
+     {
+         [weakSelf.searchDatasource.collection addObjectsFromArray:users];
+         [weakSelf.searchDatasource setSearchText:searchText];
+         [weakSelf.searchDatasource updateCurrentPageWithResponcePage:page];
+         [weakSelf.searchController.searchResultsTableView reloadData];
+         weakSelf.searchRequest = nil;
+         
+     } errorBlock:^(QBResponse *response) {
+         
+         if (response.status == QBResponseStatusCodeCancelled) {
+             NSLog(@"Global search is cancelled");
+         }
+     }];
 }
 
 - (void)beginSearch:(NSString *)searchString selectedScope:(NSInteger)selectedScope {
@@ -205,7 +225,7 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     
-    [UIView animateWithDuration:0.12 animations:^{
+    [UIView animateWithDuration:0.2 animations:^{
         
         cell.contentView.transform = CGAffineTransformScale(cell.transform, 1, 1);
     } completion:^(BOOL finished) {
@@ -216,14 +236,21 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
     }];
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (tableView == self.searchController.searchResultsTableView) {
+        
+        if (indexPath.row == (int) self.searchDatasource.collection.count && self.searchDatasource.collection.count != 0 ) {
+            
+            [self beginSearchWithSearchText:self.searchController.searchBar.text nextPage:YES];
+        }
+    }
+}
+
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    [UIView animateWithDuration:0.12 animations:^{
-        
-        cell.contentView.transform = CGAffineTransformScale(cell.transform, 0.95, 0.95);
-        
-    }];
+    cell.contentView.transform = CGAffineTransformScale(cell.transform, 0.95, 0.95);
     
     return indexPath;
 }
@@ -283,15 +310,26 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
 
 - (void)updateSearchResultsForSearchController:(QMSearchController *)searchController {
     
-    [self beginSearch:searchController.searchBar.text selectedScope:searchController.searchBar.selectedScopeButtonIndex];
+    [self beginSearch:searchController.searchBar.text
+        selectedScope:searchController.searchBar.selectedScopeButtonIndex];
 }
 
 #pragma mark - QMAddContactProtocol
 
 - (void)didAddContact:(QBUUser *)contact {
-    
-   [QM.contactListService addUserToContactListRequest:contact completion:^(BOOL success) {
-       
+   
+    //Send add contact request and create p2p chat 
+   [QM.contactListService addUserToContactListRequest:contact
+                                           completion:^(BOOL success)
+    {
+       if (success) {
+           
+           [QM.chatService createPrivateChatDialogIfNeededWithOpponent:contact
+                                                            completion:^(QBResponse *response,
+                                                                         QBChatDialog *createdDialog) {
+                                                                
+                                                            }];
+       }
    }];
 }
 
