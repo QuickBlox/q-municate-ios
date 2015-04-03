@@ -1,40 +1,28 @@
 //
-//  QMContactCell.m
+//  QMAddContactCell.m
 //  Q-municate
 //
 //  Created by Andrey Ivanov on 23.03.15.
 //  Copyright (c) 2015 Quickblox. All rights reserved.
 //
 
-#import "QMContactCell.h"
+#import "QMAddContactCell.h"
 #import "QMImageView.h"
 
-@interface QMContactCell()
+@interface QMAddContactCell()
 
 @property (weak, nonatomic) IBOutlet UIButton *addBtn;
-@property (weak, nonatomic) IBOutlet QMImageView *qmImageView;
 
 @end
 
-@implementation QMContactCell
+@implementation QMAddContactCell
 
 #pragma mark - Override
 
 + (NSString *)cellIdentifier {
     
-    static NSString *cellIdentifier = @"QMContactCell";
+    static NSString *cellIdentifier = @"QMAddContactCell";
     return cellIdentifier;
-}
-
-#pragma mark - Setters
-
-- (void)setContact:(QBUUser *)contact {
-    
-    if (_contact != contact) {
-        _contact = contact;
-        
-        [self setTitle:_contact.fullName];
-    }
 }
 
 #pragma mark - Actions
@@ -43,6 +31,5 @@
     
     [self.delegate didAddContact:self.contact];
 }
-
 
 @end

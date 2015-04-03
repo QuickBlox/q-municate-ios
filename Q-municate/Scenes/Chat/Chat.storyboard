@@ -218,7 +218,6 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <connections>
-                            <outlet property="dataSource" destination="4p9-VT-wnC" id="cXV-GC-BTO"/>
                             <outlet property="delegate" destination="f0F-bx-ISs" id="aKR-qs-XnK"/>
                         </connections>
                     </tableView>
@@ -242,25 +241,19 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <connections>
-                        <outlet property="historyDatasource" destination="4p9-VT-wnC" id="xAH-Vq-ZVU"/>
-                        <outlet property="searchDatasource" destination="84a-qV-Hap" id="2R0-iB-B3l"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lND-1Z-Lte" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <customObject id="4p9-VT-wnC" customClass="QMChatHistoryDatasource"/>
-                <customObject id="84a-qV-Hap" customClass="QMSearchChatHistoryDatasource"/>
             </objects>
             <point key="canvasLocation" x="-8536" y="-8364"/>
         </scene>
         <!--New Message-->
         <scene sceneID="b0O-yt-gSF">
             <objects>
-                <tableViewController id="Znz-SH-n9E" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="IEj-eU-1tF">
+                <tableViewController id="Znz-SH-n9E" customClass="QMNewMessageVC" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="IEj-eU-1tF">
                         <rect key="frame" x="0.0" y="64" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="hBQ-OA-GLj">
                                 <autoresizingMask key="autoresizingMask"/>

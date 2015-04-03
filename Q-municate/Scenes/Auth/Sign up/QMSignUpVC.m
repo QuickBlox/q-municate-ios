@@ -80,9 +80,8 @@
         
         __weak __typeof(self)weakSelf = self;
         [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self
-                                                            completion:
-         ^(BOOL userAgreementSuccess) {
-             
+                                                            completion:^(BOOL userAgreementSuccess)
+         {
              if (userAgreementSuccess) {
                  
                  QBUUser *newUser = [QBUUser user];
@@ -95,12 +94,14 @@
                  [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
                  
                  [QM.authService signUpAndLoginWithUser:newUser
-                                             completion:^(QBResponse *response, QBUUser *userProfile)
+                                             completion:^(QBResponse *response,
+                                                          QBUUser *userProfile)
                   {
                       if (response.success) {
                           //Update password data
                           userProfile.password = newUser.password;
-                          [QM.profile setUserAgreementAccepted:userAgreementSuccess];
+                          QM.profile.type = QMProfileTypeEmail;
+                          QM.profile.userAgreementAccepted = userAgreementSuccess;
                           //Synchronize user profile
                           [QM.profile synchronizeWithUserData:userProfile];
                           //Upload user image

@@ -10,6 +10,7 @@
 #import "REAlertView+QMSuccess.h"
 #import "SVProgressHUD.h"
 #import "SDWebImageManager.h"
+#import "QMServicesManager.h"
 
 
 @interface QMSettingsViewController ()
@@ -59,15 +60,17 @@
         [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
             
             alertView.message = NSLocalizedString(@"QM_STR_ARE_YOU_SURE", nil);
-//            [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_LOGOUT", nil) andActionBlock:^{
-//                
-//                [weakSelf pressClearCache:nil];
-//                [SVProgressHUD  showWithMaskType:SVProgressHUDMaskTypeClear];
-//                [[QMApi instance] logout:^(BOOL success) {
-//                    [SVProgressHUD dismiss];
-//                    [weakSelf performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
-//                }];
-//            }];
+            [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_LOGOUT", nil) andActionBlock:^{
+                
+                [weakSelf pressClearCache:nil];
+                [SVProgressHUD  showWithMaskType:SVProgressHUDMaskTypeClear];
+                
+                [QM.authService logOut:^(QBResponse *response) {
+                    
+                    [SVProgressHUD dismiss];
+                    [weakSelf performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
+                }];
+            }];
             
             [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
         }];

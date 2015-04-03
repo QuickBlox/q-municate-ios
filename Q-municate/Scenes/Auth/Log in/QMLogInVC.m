@@ -13,7 +13,7 @@
 #import "SVProgressHUD.h"
 #import "QMServicesManager.h"
 
-@interface QMLogInViewController ()
+@interface QMLogInVC ()
 
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
@@ -21,7 +21,7 @@
 
 @end
 
-@implementation QMLogInViewController
+@implementation QMLogInVC
 
 - (void)dealloc {
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
@@ -67,6 +67,7 @@
                  
                  if (weakSelf.rememberMeSwitch.on) {
                      
+                     QM.profile.type = QMProfileTypeEmail;
                      userProfile.password = password;
                      [QM.profile synchronizeWithUserData:userProfile];
                  }

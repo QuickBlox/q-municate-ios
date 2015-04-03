@@ -55,22 +55,26 @@
                 }
                 else {
                     // Singin or login
-                    [QM.authService logInWithFacebookSessionToken:sessionToken completion:^(QBResponse *response, QBUUser *tUser) {
-                        
-                        //Save profile to keychain
-                        [QM.profile synchronizeWithUserData:tUser];
-                        
-                        [SVProgressHUD dismiss];
-                        if (response.success) {
-                            
-                            [weakSelf performSegueWithIdentifier:kSceneSegueChat
-                                                          sender:nil];
-                        }
-                        else {
-                            
-                            [SVProgressHUD showErrorWithStatus:response.error.error.localizedDescription];
-                        }
-                    }];
+                    [QM.authService logInWithFacebookSessionToken:sessionToken
+                                                       completion:^(QBResponse *response,
+                                                                    QBUUser *tUser)
+                     {
+                         //
+                         QM.profile.type = QMProfileTypeFacebook;
+                         //Save profile to keychain
+                         [QM.profile synchronizeWithUserData:tUser];
+                         
+                         [SVProgressHUD dismiss];
+                         if (response.success) {
+                             
+                             [weakSelf performSegueWithIdentifier:kSceneSegueChat
+                                                           sender:nil];
+                         }
+                         else {
+                             
+                             [SVProgressHUD showErrorWithStatus:response.error.error.localizedDescription];
+                         }
+                     }];
                 }
             }];
         }

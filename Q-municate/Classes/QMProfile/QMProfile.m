@@ -13,14 +13,14 @@
 NSString *const kQMUserDataKey = @"userData";
 NSString *const kQMUserAgreementAcceptedKey = @"userAgreementAccepted";
 NSString *const kQMPushNotificationsEnabled = @"pushNotificationsEnabled";
-NSString *const kShakeUserOfflineState = @"offlineState";
-NSString *const kShakeAuthorizationState = @"authorizationState";
+NSString *const kQMUserProfileType = @"userProfileType";
 
 @implementation QMProfile
 
 + (instancetype)profile {
     
     QMProfile *profile = [[QMProfile alloc] init];
+    
     return profile;
 }
 
@@ -28,6 +28,7 @@ NSString *const kShakeAuthorizationState = @"authorizationState";
     
     self = [super init];
     if (self) {
+        
         [self loadProfile];
     }
     return self;
@@ -90,8 +91,8 @@ NSString *const kShakeAuthorizationState = @"authorizationState";
     
     self.pushNotificationsEnabled = profile.pushNotificationsEnabled;
     self.userAgreementAccepted = profile.userAgreementAccepted;
-    self.userOfflineState = profile.userOfflineState;
     self.userData = profile.userData;
+    self.type = profile.type;
 }
 
 - (BOOL)clearProfile {
@@ -120,22 +121,23 @@ NSString *const kShakeAuthorizationState = @"authorizationState";
     updateUser.password = newPassword;
     
     [QBRequest updateUser:updateUser
-             successBlock:^(QBResponse *response, QBUUser *userData) {
-                 
-                 userData.password = updateUser.password;
-                 weakSelf.userData = userData;
-                 [weakSelf synchronize];
-                 
-                 if (completion) {
-                     completion(YES);
-                 }
-                 
-             } errorBlock:^(QBResponse *response) {
-                 
-                 if (completion) {
-                     completion(NO);
-                 }
-             }];
+             successBlock:^(QBResponse *response,
+                            QBUUser *userData)
+     {
+         userData.password = updateUser.password;
+         weakSelf.userData = userData;
+         [weakSelf synchronize];
+         
+         if (completion) {
+             completion(YES);
+         }
+         
+     } errorBlock:^(QBResponse *response) {
+         
+         if (completion) {
+             completion(NO);
+         }
+     }];
 }
 
 - (void)saveOnServer:(void (^)(BOOL success))completion {
@@ -149,22 +151,24 @@ NSString *const kShakeAuthorizationState = @"authorizationState";
     
     __weak __typeof(self)weakSelf = self;
     [QBRequest updateUser:self.userData
-             successBlock:^(QBResponse *response, QBUUser *updatedUser) {
-                 
-                 updatedUser.password = password;
-                 weakSelf.userData = updatedUser;
-                 [weakSelf synchronize];
-                 
-                 if (completion) {
-                     completion(YES);
-                 };
-                 
-             } errorBlock:^(QBResponse *response) {
-                 
-                 if (completion) {
-                     completion(NO);
-                 }
-             }];
+             successBlock:^(QBResponse *response,
+                            QBUUser *updatedUser)
+     {
+         
+         updatedUser.password = password;
+         weakSelf.userData = updatedUser;
+         [weakSelf synchronize];
+         
+         if (completion) {
+             completion(YES);
+         };
+         
+     } errorBlock:^(QBResponse *response) {
+         
+         if (completion) {
+             completion(NO);
+         }
+     }];
 }
 
 - (void)updateUserImage:(UIImage *)userImage
@@ -185,18 +189,19 @@ NSString *const kShakeAuthorizationState = @"authorizationState";
         userData.password = nil;
         
         [QBRequest updateUser:userData
-                 successBlock:^(QBResponse *response, QBUUser *updatedUser) {
-                     
-                     updatedUser.password = password;
-                     weakSelf.userData = updatedUser;
-                     [weakSelf synchronize];
-                     
-                     completion(YES);
-                     
-                 } errorBlock:^(QBResponse *response) {
-                     
-                     completion(NO);
-                 }];
+                 successBlock:^(QBResponse *response,
+                                QBUUser *updatedUser)
+         {
+             updatedUser.password = password;
+             weakSelf.userData = updatedUser;
+             [weakSelf synchronize];
+             
+             completion(YES);
+             
+         } errorBlock:^(QBResponse *response) {
+             
+             completion(NO);
+         }];
     };
     
     if (userImage) {
@@ -207,18 +212,20 @@ NSString *const kShakeAuthorizationState = @"authorizationState";
                       fileName:@"userImage"
                    contentType:@"image/jpeg"
                       isPublic:YES
-                  successBlock: ^(QBResponse *response, QBCBlob *blob) {
-                      
-                      updateUserProfile(blob.publicUrl);
-                      
-                  } statusBlock:^(QBRequest *request, QBRequestStatus *status) {
-                      
-                      progress(status.percentOfCompletion);
-                      
-                  } errorBlock:^(QBResponse *response) {
-                      
-                      completion(NO);
-                  }];
+                  successBlock:^(QBResponse *response,
+                                 QBCBlob *blob)
+         {
+             updateUserProfile(blob.publicUrl);
+             
+         } statusBlock:^(QBRequest *request,
+                         QBRequestStatus *status)
+         {
+             progress(status.percentOfCompletion);
+             
+         } errorBlock:^(QBResponse *response) {
+             
+             completion(NO);
+         }];
     }
     else {
         
@@ -235,7 +242,7 @@ NSString *const kShakeAuthorizationState = @"authorizationState";
         self.userData = [aDecoder decodeObjectForKey:kQMUserDataKey];
         self.userAgreementAccepted = [aDecoder decodeBoolForKey:kQMUserAgreementAcceptedKey];
         self.pushNotificationsEnabled = [aDecoder decodeBoolForKey:kQMPushNotificationsEnabled];
-        self.userOfflineState = [aDecoder decodeBoolForKey: kShakeUserOfflineState];
+        self.type = [aDecoder decodeIntegerForKey:kQMUserProfileType];
     }
     
     return self;
@@ -246,7 +253,7 @@ NSString *const kShakeAuthorizationState = @"authorizationState";
     [aCoder encodeObject:self.userData forKey:kQMUserDataKey];
     [aCoder encodeBool:self.userAgreementAccepted forKey:kQMUserAgreementAcceptedKey];
     [aCoder encodeBool:self.pushNotificationsEnabled forKey:kQMPushNotificationsEnabled];
-    [aCoder encodeBool:self.userOfflineState forKey:kShakeUserOfflineState];
+    [aCoder encodeInteger:self.type forKey:kQMUserProfileType];
 }
 
 @end

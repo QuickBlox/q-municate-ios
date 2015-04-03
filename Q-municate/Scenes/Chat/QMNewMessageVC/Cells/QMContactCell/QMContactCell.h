@@ -2,19 +2,17 @@
 //  QMContactCell.h
 //  Q-municate
 //
-//  Created by Andrey Ivanov on 23.03.15.
+//  Created by Andrey Ivanov on 03.04.15.
 //  Copyright (c) 2015 Quickblox. All rights reserved.
 //
 
 #import "QMSearchCell.h"
 #import "QMAddContactProtocol.h"
 
-@protocol QMContactCellDelegate;
-
 @interface QMContactCell : QMSearchCell
 
-@property (strong, nonatomic) QBUUser *contact;
 @property (weak, nonatomic) id <QMAddContactProtocol> delegate;
 
-@end
+@property (strong, nonatomic) QBUUser *contact;
 
+@end

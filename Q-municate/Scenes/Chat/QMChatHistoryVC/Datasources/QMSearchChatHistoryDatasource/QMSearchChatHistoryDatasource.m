@@ -9,44 +9,36 @@
 #import "QMSearchChatHistoryDatasource.h"
 
 #import "QMChatHistoryCell.h"
-#import "QMContactCell.h"
+#import "QMAddContactCell.h"
 #import "QMSearchStatusCell.h"
 
 @implementation QMSearchChatHistoryDatasource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     //Loading Cell
-    if ((indexPath.row == (int)self.collection.count) && self.totalEntries != self.loaded) {
-        
+    if ((indexPath.row == (int)self.collection.count) && self.totalEntries != self.loadedEntries) {
+
         QMSearchStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:QMSearchStatusCell.cellIdentifier
                                                                    forIndexPath:indexPath];
-        NSString *tile = @"Loading..";
+
+        NSString *tile = self.totalEntries == self.loadedEntries ? @"No more results": @"Loading...";
         [cell setTitle:tile];
         
-        cell.showActivityIndicator = YES;
-        
-        return cell;
-    }
-    else if ((indexPath.row == (int)self.collection.count) && self.totalEntries == self.loaded) {
-        
-        QMSearchStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:QMSearchStatusCell.cellIdentifier
-                                                                   forIndexPath:indexPath];
-        
-        NSString *title = [NSString stringWithFormat:@"No more results"];
-        [cell setTitle:title];
-        
-        cell.showActivityIndicator = NO;
-        
+        cell.showActivityIndicator = (self.totalEntries != self.loadedEntries);
+
         return cell;
     }
     
     else {
         //Contact cell
-        QMContactCell *cell = [tableView dequeueReusableCellWithIdentifier:QMContactCell.cellIdentifier
+        QMAddContactCell *cell = [tableView dequeueReusableCellWithIdentifier:QMAddContactCell.cellIdentifier
                                                               forIndexPath:indexPath];
+        QBUUser *user = self.collection[indexPath.row -1];
+        cell.contact = user;
         cell.delegate = self.addContactHandler;
-        cell.contact = self.collection[indexPath.row];
-        [cell highlightText:self.searchText];
+        
+        [cell setTitle:user.fullName];
+        [cell highlightTitle:self.searchText];
         
         return cell;
     }

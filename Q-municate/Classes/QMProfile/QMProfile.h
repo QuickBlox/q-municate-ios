@@ -8,13 +8,23 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSInteger, QMProfileType) {
+
+    QMProfileTypeNone,
+    QMProfileTypeEmail,
+    QMProfileTypeLogin,
+    QMProfileTypeFacebook,
+    QMProfileTypeTwitter
+};
+
 @interface QMProfile : NSObject <NSCoding>
 
 @property (strong, nonatomic) QBUUser *userData;
 
 @property (assign, nonatomic) BOOL userAgreementAccepted;
 @property (assign, nonatomic) BOOL pushNotificationsEnabled;
-@property (assign, nonatomic) BOOL userOfflineState;
+
+@property (assign, nonatomic) QMProfileType type;
 
 /**
  *  Creates and returns an user profile. (Automatically loaded from keychain)

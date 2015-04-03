@@ -11,6 +11,7 @@
 @interface QMSearchCell : QMTableViewCell
 
 - (void)setTitle:(NSString *)title;
-- (void)highlightText:(NSString *)text;
+- (void)setSubTitle:(NSString *)subTitle;
+- (void)highlightTitle:(NSString *)title;
 
 @end

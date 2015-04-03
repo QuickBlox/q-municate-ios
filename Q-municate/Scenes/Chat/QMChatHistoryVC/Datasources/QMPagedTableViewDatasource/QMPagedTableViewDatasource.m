@@ -12,7 +12,7 @@
 
 @property (strong, nonatomic) QBGeneralResponsePage *page;
 @property (assign, nonatomic) NSUInteger totalEntries;
-@property (assign, nonatomic) NSUInteger loaded;
+@property (assign, nonatomic) NSUInteger loadedEntries;
 
 @end
 
@@ -25,50 +25,54 @@ const NSUInteger kPerPage = 20;
     self = [super init];
     if (self) {
         
-        self.page =
-        [QBGeneralResponsePage responsePageWithCurrentPage:0
-                                                   perPage:20];
+        self.page = [QBGeneralResponsePage responsePageWithCurrentPage:0 perPage:20];
         self.totalEntries = NSNotFound;
     }
+    
     return self;
 }
 
-- (void)resetSearch {
+- (void)resetPage {
     
+    [self.collection removeAllObjects];
     self.page.currentPage = 0;
-    self.loaded = 0;
+    self.loadedEntries = 0;
     self.totalEntries = NSNotFound;
 }
 
 - (void)updateCurrentPageWithResponcePage:(QBGeneralResponsePage *)page {
     
-    if (self.totalEntries != NSNotFound && self.totalEntries != page.totalEntries) {
-        NSAssert(nil, @"Need update this case");
+    if (self.totalEntries != NSNotFound &&
+        self.totalEntries != page.totalEntries) {
+        
+        NSLog(@"QBGeneralResponsePage.totalentries changed!!!");
+        self.totalEntries = page.totalEntries;
         
     } else if(self.totalEntries == NSNotFound) {
         
         self.totalEntries = page.totalEntries;
     }
         
-    NSUInteger loaded = self.page.currentPage * self.page.perPage;
-    self.loaded = (loaded > page.totalEntries) ? page.totalEntries : loaded;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"object left %d" , page.totalEntries - self.loaded);
-    });
+    NSUInteger loadedEntries = self.page.currentPage * self.page.perPage;
+    self.loadedEntries = (loadedEntries > page.totalEntries) ? page.totalEntries : loadedEntries;
 }
 
 - (QBGeneralResponsePage *)nextPage {
     
-    if (self.loaded == self.totalEntries) {
-        
-        NSLog(@"All object loaded");
+    if (self.loadedEntries == self.totalEntries) {
+        //All entries loaded
         return nil;
     }
     
     self.page.currentPage ++;
     
     return self.page;
+}
+
+- (NSString *)description {
+    
+    return [NSString stringWithFormat:@"Total entries:%ld; loaded entries:%ld; currentPage:%ld",
+            (long)self.totalEntries, (long)self.loadedEntries, self.page.currentPage];
 }
 
 @end

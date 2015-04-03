@@ -8,35 +8,52 @@
 
 #import "QMTasks.h"
 #import "QMServicesManager.h"
+#import "QMFacebook.h"
 
 @implementation QMTasks
 
 + (void)taskLogin:(void(^)(BOOL success))completion  {
     
+    dispatch_block_t success =^{
+        
+        [QM.chatService logIn:^(NSError *error) {
+            completion(error ? NO : YES);
+        }];
+    };
+    
     if (!QM.authService.isAuthorized) {
         
-        [QM.authService logInWithUser:QM.profile.userData
-                           completion:^(QBResponse *response, QBUUser *userProfile)
-         {
-             if (response.success) {
-                 
-                 [QM.chatService logIn:^(NSError *error) {
-                     
-                     completion(!error);
+        if (QM.profile.type == QMProfileTypeFacebook) {
+            
+            QMFacebook *facebook = [[QMFacebook alloc] init];
+            [facebook openSession:^(NSString *sessionToken) {
+                // Singin or login
+                [QM.authService logInWithFacebookSessionToken:sessionToken
+                                                   completion:^(QBResponse *response,
+                                                                QBUUser *tUser)
+                 {
+                     QM.profile.type = QMProfileTypeFacebook;
+                     //Save profile to keychain
+                     [QM.profile synchronizeWithUserData:tUser];
                  }];
-             }
-             else {
-                 
-                 completion(NO);
-             }
-         }];
+            }];
+            
+        } else {
+            
+            [QM.authService logInWithUser:QM.profile.userData
+                               completion:^(QBResponse *response,
+                                            QBUUser *userProfile)
+             {
+                 if (response.success) {
+                     
+                     success();
+                 }
+             }];
+        }
     }
     else {
         
-        [QM.chatService logIn:^(NSError *error) {
-            
-            completion(!error);
-        }];
+        success();
     }
 }
 
@@ -67,7 +84,6 @@
              
              completion(NO);
          }
-         
      }];
 }
 

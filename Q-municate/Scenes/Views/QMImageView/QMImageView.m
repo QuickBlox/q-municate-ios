@@ -39,7 +39,6 @@
 
 - (void)dealloc {
     [self sd_cancelCurrentImageLoad];
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)configure {
@@ -80,36 +79,46 @@
     if (url) {
         
         __weak __typeof(self)weakSelf = self;
-        id <SDWebImageOperation> operation = [self.webManager downloadImageWithURL:url options:options progress:progress completed:
-                                              ^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-                                                  
-                                                  if (!weakSelf) return;
-                                                  dispatch_main_sync_safe(^{
-                                                      
-                                                      if (!weakSelf) return;
-                                                      
-                                                      if (weakSelf) {
-                                                          
-                                                          weakSelf.image = image;
-                                                          [weakSelf setNeedsLayout];
-                                                      }
-                                                      else {
-                                                          
-                                                          if ((options & SDWebImageDelayPlaceholder)) {
-                                                              weakSelf.image = placehoder;
-                                                              [weakSelf setNeedsLayout];
-                                                          }
-                                                      }
-                                                      
-                                                      if (completedBlock && finished) {
-                                                          completedBlock(image, error, cacheType, url);
-                                                      }
-                                                  });
-                                              }];
+        id <SDWebImageOperation> operation =
+        [self.webManager downloadImageWithURL:url
+                                      options:options
+                                     progress:progress
+                                    completed:^(UIImage *image,
+                                                NSError *error,
+                                                SDImageCacheType cacheType,
+                                                BOOL finished,
+                                                NSURL *imageURL)
+         {
+             if (!weakSelf) return;
+             
+             dispatch_main_sync_safe(^{
+                 
+                 if (!weakSelf) return;
+                 
+                 if (weakSelf) {
+                     
+                     weakSelf.image = image;
+                     [weakSelf setNeedsLayout];
+                 }
+                 else {
+                     
+                     if ((options & SDWebImageDelayPlaceholder)) {
+                         weakSelf.image = placehoder;
+                         [weakSelf setNeedsLayout];
+                     }
+                 }
+                 
+                 if (completedBlock && finished) {
+                     completedBlock(image, error, cacheType, url);
+                 }
+             });
+         }];
         
-        [self sd_setImageLoadOperation:operation forKey:@"UIImageViewImageLoad"];
+        [self sd_setImageLoadOperation:operation
+                                forKey:@"UIImageViewImageLoad"];
     }
     else {
+        
         dispatch_main_async_safe(^{
             
             NSError *error =
@@ -138,7 +147,8 @@
     }
     else if (self.imageViewType == QMImageViewTypeCircle) {
         return [image imageByCircularScaleAndCrop:self.frame.size];
-    } else {
+    }
+    else {
         return image;
     }
 }

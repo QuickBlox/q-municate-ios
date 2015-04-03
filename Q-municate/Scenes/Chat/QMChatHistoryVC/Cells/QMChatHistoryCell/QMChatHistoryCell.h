@@ -12,6 +12,5 @@
 
 - (void)setSubTitle:(NSString *)subTitle;
 - (void)setTime:(NSString *)time;
-- (void)setImageWithUrl:(NSString *)url;
 
 @end

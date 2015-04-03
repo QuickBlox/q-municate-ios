@@ -13,7 +13,11 @@
 
 @protocol QMAddContactProtocol <NSObject>
 
+@optional
+
 - (void)didAddContact:(QBUUser *)contact;
+- (void)didSelectContact:(QBUUser *)contact;
+- (void)didDeselectContact:(QBUUser *)contact;
 
 @end
 

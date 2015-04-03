@@ -42,7 +42,7 @@
 
 - (void)drawRect:(CGRect)rect {
     
-    [self drawBadgeViewWithFrame:rect  badgeText:@"1"];
+    [self drawBadgeViewWithFrame:rect  badgeText:@"99+"];
 }
 
 - (void)drawBadgeViewWithFrame:(CGRect)frame

@@ -14,7 +14,7 @@ NSString *const kQMContactListCacheStoreName = @"QMContactListStorage";
 
 @interface QMServicesManager()
 
-<QMServiceDataDelegate, QMChatServiceDelegate, QMContactListServiceDelegate, QMContactListServiceCacheDelegate, QMChatServiceCacheDelegate >
+<QMUserProfileProtocol, QMChatServiceDelegate, QMContactListServiceDelegate, QMContactListServiceCacheDelegate, QMChatServiceCacheDelegate >
 
 @property (strong, nonatomic) QMAuthService *authService;
 @property (strong, nonatomic) QMChatService *chatService;
@@ -50,17 +50,19 @@ NSString *const kQMContactListCacheStoreName = @"QMContactListStorage";
         
         self.profile = [QMProfile profile];
         
-        [self cacheSetup];
+        [QMChatCache setupDBWithStoreNamed:kQMChatCacheStoreName];
+        [QMContactListCache setupDBWithStoreNamed:kQMContactListCacheStoreName];
         
+
         self.authService =
-        [[QMAuthService alloc] initWithServiceDataDelegate:self];
+        [[QMAuthService alloc] initWithUserProfileDataSource:self];
         
         self.chatService =
-        [[QMChatService alloc] initWithServiceDataDelegate:self
+        [[QMChatService alloc] initWithUserProfileDataSource:self
                                              cacheDelegate:self];
         
         self.contactListService =
-        [[QMContactListService alloc] initWithServiceDataDelegate:self
+        [[QMContactListService alloc] initWithUserProfileDataSource:self
                                                     cacheDelegate:self];
         
         [self.chatService addDelegate:self];
@@ -70,19 +72,16 @@ NSString *const kQMContactListCacheStoreName = @"QMContactListStorage";
     return self;
 }
 
-#pragma mark - Cache setup
+#pragma mark - QMUserProfileProtocol
 
-- (void)cacheSetup {
-    
-    [QMChatCache setupDBWithStoreNamed:kQMChatCacheStoreName];
-    [QMContactListCache setupDBWithStoreNamed:kQMContactListCacheStoreName];
-}
-
-#pragma mark - QMServiceDataDelegate
-
-- (QBUUser *)serviceDataCurrentProfile {
+- (QBUUser *)currentUser {
     
     return self.profile.userData;
+}
+
+- (BOOL)userIsAutorized {
+    
+    return self.authService.isAuthorized;
 }
 
 #pragma mark - QMChatServiceDelegate

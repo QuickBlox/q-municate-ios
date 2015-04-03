@@ -22,7 +22,7 @@
 
 + (NSString *)cellIdentifier {
     
-    static NSString *cellIdentifier = @"QMSearchStatusCell";
+    static NSString* cellIdentifier = @"QMSearchStatusCell";
     return cellIdentifier;
 }
 
