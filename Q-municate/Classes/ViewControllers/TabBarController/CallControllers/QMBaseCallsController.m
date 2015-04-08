@@ -6,17 +6,16 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import <AVFoundation/AVFoundation.h>
 #import "QMBaseCallsController.h"
 #import "QMChatReceiver.h"
 #import "QMAVCallManager.h"
 
 
-@interface QMBaseCallsController ()
-@property(nonatomic) AVAudioSessionCategoryOptions categoryOptions;
-@end
-
 @implementation QMBaseCallsController
+{
+    AVAudioSessionCategoryOptions categoryOptions;
+    AVAudioSessionCategoryOptions defaultCategoryOptions;
+}
 
 #pragma mark - LifeCycle
 
@@ -127,15 +126,15 @@
     AVAudioSessionCategoryOptions currentOptions = [[AVAudioSession sharedInstance] categoryOptions];
     //IPAD
     if (currentOptions != AVAudioSessionCategoryOptionDefaultToSpeaker) {
-        self.categoryOptions = AVAudioSessionCategoryOptionDefaultToSpeaker;
+        categoryOptions = AVAudioSessionCategoryOptionDefaultToSpeaker;
         [sender setSelected:YES];
     }
     else {
-        self.categoryOptions = 0;
+        categoryOptions = 0;
         [sender setSelected:NO];
     }
-
-    [[[QMApi instance] avCallManager] setAvSessionCurrentCategoryOptions:self.categoryOptions];
+    
+    [[[QMApi instance] avCallManager] setAvSessionCurrentCategoryOptions:categoryOptions];
 }
 
 - (IBAction)cameraSwitchTapped:(IAButton *)sender {

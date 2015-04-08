@@ -19,6 +19,7 @@
 
 @implementation QMContactRequestCell
 
+
 - (void)setNotification:(QMMessage *)notification
 {
     if (![_notification isEqual:notification]) {

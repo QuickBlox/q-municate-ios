@@ -13,7 +13,6 @@ typedef enum QBPrivacyItemType {
 	USER_ID,
 	GROUP,
 	SUBSCRIPTION,
-    GROUP_USER_ID
 } QBPrivacyItemType;
 
 typedef enum QBPrivacyItemAction {
@@ -26,14 +25,14 @@ typedef enum QBPrivacyItemAction {
 @interface QBPrivacyItem : NSObject
 
 /**
- @param type can be USER_ID, SUBSCRIPTION, GROUP or GROUP_USER_ID
+ @param type can be USER_ID, SUBSCRIPTION or GROUP
  @param valueForType value for type
  @param action can be ALLOW or DENY
  @return QBPrivacyItem instance
  */
 - (instancetype)initWithType:(QBPrivacyItemType)type valueForType:(NSUInteger)valueForType action:(QBPrivacyItemAction)action;
 
-/// type can be USER_ID, SUBSCRIPTION, GROUP OR GROUP_USER_ID( to block user in all group chats )
+/// type can be USER_ID, SUBSCRIPTION or GROUP
 @property (assign) QBPrivacyItemType type;
 
 /// valueForType value for type
