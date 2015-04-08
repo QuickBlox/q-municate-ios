@@ -7,7 +7,6 @@
 //
 
 #import "QMFriendListCell.h"
-#import "QMImageView.h"
 #import "QMUsersUtils.h"
 #import "QMApi.h"
 
@@ -29,7 +28,7 @@
     /*isFriend - YES*/
     _isFriend = YES;
     self.addToFriendsButton.hidden = self.isFriend;
-    /*isOnlien - NO*/
+    /*isOnline - NO*/
     self.onlineCircle.hidden = YES;
     self.descriptionLabel.text = NSLocalizedString(@"QM_STR_OFFLINE", nil);
 }
@@ -58,7 +57,7 @@
 
     [super setContactlistItem:contactlistItem];
     self.online = contactlistItem.online;
-    self.isFriend = contactlistItem ?  YES : NO;
+    self.isFriend = contactlistItem != nil;
     
     NSString *status = nil;
     

@@ -58,6 +58,7 @@
     QBASessionCreationRequest *extendedAuthRequest = [QBASessionCreationRequest request];
     extendedAuthRequest.userEmail = email;
     extendedAuthRequest.userPassword = password;
+    return [QBAuth createSessionWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
     return [QBAuth createSessionWithExtendedRequest:extendedAuthRequest
                                            delegate:[QBEchoObject instance]
                                             context:[QBEchoObject makeBlockForEchoObject:completion]];
@@ -73,6 +74,7 @@
     
     QBASessionCreationRequest *extendedAuthRequest = [QBASessionCreationRequest request];
     extendedAuthRequest.socialProviderAccessToken = accessToken;
+    return [QBAuth createSessionWithDelegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
     return [QBAuth createSessionWithExtendedRequest:extendedAuthRequest
                                            delegate:[QBEchoObject instance]
                                             context:[QBEchoObject makeBlockForEchoObject:completion]];

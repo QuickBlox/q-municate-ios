@@ -35,6 +35,7 @@
 @property (nonatomic, strong) QBUUser *opponent;
 
 @property (weak, nonatomic) QBRTCSession *session;
+
 /** Controls selectors */
 - (IBAction)cameraSwitchTapped:(id)sender;
 - (IBAction)muteTapped:(id)sender;

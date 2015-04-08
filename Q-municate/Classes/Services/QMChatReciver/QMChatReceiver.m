@@ -148,8 +148,31 @@
     [self subsribeWithTarget:target selector:@selector(chatDidLogin) block:block];
 }
 
+- (void)chatDidReceivePrivacyList:(QBPrivacyList *)privacyList{
+    
+}
+
+- (void)chatDidReceivePrivacyListNames:(NSArray *)listNames{
+    
+}
+
+- (void)chatDidSetDefaultPrivacyListWithName:(NSString *)name{
+    
+}
+
+- (void)chatDidSetPrivacyListWithName:(NSString *)name{
+    
+}
 - (void)chatDidLogin {
     ILog(@"Chat Did login");
+    [[QBChat instance] retrievePrivacyListWithName:@"public"];
+
+    QBPrivacyItem *item = [[QBPrivacyItem alloc] initWithType:USER_ID valueForType:13 action:DENY];
+    QBPrivacyList *list = [[QBPrivacyList alloc] initWithName:@"public" items:@[item]];
+    
+    [[QBChat instance] setPrivacyList:list];
+    [[QBChat instance] setDefaultPrivacyListWithName:@"public"];
+    
     [self executeBloksWithSelector:_cmd enumerateBloks:^(QMChatDidLogin block) {
         block(YES);
     }];

@@ -426,6 +426,38 @@ Line 2</string>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChatCell" rowHeight="65" id="5O5-8s-91X" userLabel="BlockCell">
+                                        <rect key="frame" x="0.0" y="321" width="320" height="65"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5O5-8s-91X" id="l44-KQ-P4u">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Block user in all chats" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4rg-S5-CBx">
+                                                    <rect key="frame" x="20" y="21" width="203" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="21" id="efU-PR-A02"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="chat" translatesAutoresizingMaskIntoConstraints="NO" id="6uE-8L-hFd">
+                                                    <rect key="frame" x="288" y="21" width="23" height="22"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="22" id="RBl-3A-jEA"/>
+                                                        <constraint firstAttribute="width" constant="23" id="iBy-M6-dpO"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="6uE-8L-hFd" firstAttribute="top" secondItem="l44-KQ-P4u" secondAttribute="top" constant="21" id="4HY-nd-a7V"/>
+                                                <constraint firstItem="6uE-8L-hFd" firstAttribute="leading" secondItem="4rg-S5-CBx" secondAttribute="trailing" constant="60" id="8g1-pT-olT"/>
+                                                <constraint firstAttribute="trailing" secondItem="6uE-8L-hFd" secondAttribute="trailing" constant="14" id="gB9-MX-kUN"/>
+                                                <constraint firstItem="4rg-S5-CBx" firstAttribute="leading" secondItem="l44-KQ-P4u" secondAttribute="leading" constant="20" id="vQK-xt-tXE"/>
+                                                <constraint firstItem="4rg-S5-CBx" firstAttribute="top" secondItem="l44-KQ-P4u" secondAttribute="top" constant="21" id="yx8-XI-NVr"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>

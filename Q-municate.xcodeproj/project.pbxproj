@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		142864181ACD8F1100F7F160 /* libQuickblox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 142864161ACD8F1100F7F160 /* libQuickblox.a */; };
+		142864191ACD8F1100F7F160 /* libQuickblox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 142864171ACD8F1100F7F160 /* libQuickblox.a */; };
 		144069951AB04309007E6AD0 /* IAButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 144069941AB04309007E6AD0 /* IAButton.m */; };
 		1462FF6A1ABAF772007EFE0C /* QMApi+Permissions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1462FF691ABAF772007EFE0C /* QMApi+Permissions.m */; };
 		14B16A5A1AA9BDBA001EB7D4 /* QuickbloxWebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14B16A591AA9BDBA001EB7D4 /* QuickbloxWebRTC.framework */; };
@@ -17,7 +19,6 @@
 		2444261F19F1106100C9C61A /* QMChatUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2444261E19F1106100C9C61A /* QMChatUtils.m */; };
 		2459B25519F15FBC00A1398C /* QBChatDialog+UpdateWithNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 2459B25419F15FBC00A1398C /* QBChatDialog+UpdateWithNotification.m */; };
 		2463071D19DDA297003F421E /* QMApi+Notifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 24970BC619DD951600959268 /* QMApi+Notifications.m */; };
-		24657EB51A84E6DB00009F91 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24657EB41A84E6DB00009F91 /* Quickblox.framework */; };
 		24657EB71A84E97700009F91 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 24657EB61A84E97700009F91 /* libicucore.dylib */; };
 		24722D1A19E3D65F0046ACC4 /* QMChatNotificationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 24722D1819E3D65F0046ACC4 /* QMChatNotificationCell.m */; };
 		24722D1B19E3D65F0046ACC4 /* QMChatNotificationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 24722D1919E3D65F0046ACC4 /* QMChatNotificationCell.xib */; };
@@ -251,6 +252,8 @@
 
 /* Begin PBXFileReference section */
 		01E0EAD58B177DC530737810 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		142864161ACD8F1100F7F160 /* libQuickblox.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQuickblox.a; path = "../SDK-ios/Framework/build/Debug-iphoneos/libQuickblox.a"; sourceTree = "<group>"; };
+		142864171ACD8F1100F7F160 /* libQuickblox.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libQuickblox.a; path = "../SDK-ios/Framework/build/Debug-iphonesimulator/libQuickblox.a"; sourceTree = "<group>"; };
 		144069931AB04309007E6AD0 /* IAButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IAButton.h; path = IAButton/IAButton.h; sourceTree = "<group>"; };
 		144069941AB04309007E6AD0 /* IAButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IAButton.m; path = IAButton/IAButton.m; sourceTree = "<group>"; };
 		1462FF691ABAF772007EFE0C /* QMApi+Permissions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Permissions.m"; sourceTree = "<group>"; };
@@ -661,9 +664,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				142864181ACD8F1100F7F160 /* libQuickblox.a in Frameworks */,
+				142864191ACD8F1100F7F160 /* libQuickblox.a in Frameworks */,
 				14B16A5A1AA9BDBA001EB7D4 /* QuickbloxWebRTC.framework in Frameworks */,
 				24657EB71A84E97700009F91 /* libicucore.dylib in Frameworks */,
-				24657EB51A84E6DB00009F91 /* Quickblox.framework in Frameworks */,
 				69A664E019BDB57700D3E0C7 /* libxml2.2.dylib in Frameworks */,
 				86FD874D1982512000B6FA43 /* GLKit.framework in Frameworks */,
 				69CF189D18AE1C6A003262EF /* CoreData.framework in Frameworks */,
@@ -2131,6 +2135,8 @@
 		69D57E5418ACC11C00A9900A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				142864161ACD8F1100F7F160 /* libQuickblox.a */,
+				142864171ACD8F1100F7F160 /* libQuickblox.a */,
 				14B16A591AA9BDBA001EB7D4 /* QuickbloxWebRTC.framework */,
 				24657EB61A84E97700009F91 /* libicucore.dylib */,
 				24657EB41A84E6DB00009F91 /* Quickblox.framework */,
@@ -2603,6 +2609,7 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Taras Filatov (6AVH4TA956)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/External",
@@ -2616,8 +2623,12 @@
 				);
 				INFOPLIST_FILE = "Q-municate/Q-municate-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				ONLY_ACTIVE_ARCH = NO;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/seven/Documents/work/SDK-ios/Framework/build/Debug-iphoneos",
+					"/Users/seven/Documents/work/SDK-ios/Framework/build/Debug-iphonesimulator",
+				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-lxml2",
@@ -2626,7 +2637,7 @@
 				);
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "1a5985cb-ae7a-4dd8-9fdf-eb3e03b7798f";
+				PROVISIONING_PROFILE = "2c07eeca-14ad-4118-bfc2-e613dd16309a";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2671,7 +2682,11 @@
 				);
 				INFOPLIST_FILE = "Q-municate/Q-municate-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/seven/Documents/work/SDK-ios/Framework/build/Debug-iphoneos",
+					"/Users/seven/Documents/work/SDK-ios/Framework/build/Debug-iphonesimulator",
+				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
