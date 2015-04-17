@@ -61,9 +61,9 @@ const NSUInteger kQMNumberOfSection = 2;
         self.abStaticCell = [self.tableView dequeueReusableCellWithIdentifier:kQMStaticABCellID];
         self.abStaticCell.delegate = self;
         
-        self.fbStaticCell = [self.tableView dequeueReusableCellWithIdentifier:kQMStaticFBCellID];
+//        self.fbStaticCell = [self.tableView dequeueReusableCellWithIdentifier:kQMStaticFBCellID];
         
-        NSArray *staticCells = @[self.fbStaticCell, self.abStaticCell];
+        NSArray *staticCells = @[/*self.fbStaticCell, */self.abStaticCell];
 
         [self setCollection:staticCells toSection:QMStaticCellsSection];
         [self setCollection:@[].mutableCopy toSection:QMABFriendsToInviteSection];
@@ -326,7 +326,7 @@ const NSUInteger kQMNumberOfSection = 2;
     if (indexPath.section == QMStaticCellsSection) {
         
         switch (indexPath.row) {
-            case 0: [self fetchFacebookFriends:nil]; break;
+            case 0: [self fetchAdressbookFriends:nil]; break;
             case 1:[self fetchAdressbookFriends:nil]; break;
             default:NSAssert(nil, @"Need Update this case"); break;
         }

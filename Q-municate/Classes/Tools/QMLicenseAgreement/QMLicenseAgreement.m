@@ -14,6 +14,8 @@
 @implementation QMLicenseAgreement
 
 + (void)checkAcceptedUserAgreementInViewController:(UIViewController *)vc completion:(void(^)(BOOL success))completion {
+    if(completion) completion(YES);
+    return;
     
     BOOL licenceAccepted = [[QMApi instance].settingsManager userAgreementAccepted];
     
