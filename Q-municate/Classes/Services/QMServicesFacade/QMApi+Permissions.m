@@ -15,7 +15,10 @@
 - (void)requestPermissionToMicrophoneWithCompletion:(void(^)(BOOL granted))completion {
     [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
         if( completion ) {
-            completion(granted);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                completion(granted);
+            });
         }
     }];
 }
