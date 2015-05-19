@@ -123,18 +123,17 @@
 
 - (IBAction)speakerTapped:(IAButton *)sender {
 
-    AVAudioSessionCategoryOptions currentOptions = [[AVAudioSession sharedInstance] categoryOptions];
-    //IPAD
-    if (currentOptions != AVAudioSessionCategoryOptionDefaultToSpeaker) {
-        categoryOptions = AVAudioSessionCategoryOptionDefaultToSpeaker;
-        [sender setSelected:YES];
-    }
-    else {
-        categoryOptions = 0;
-        [sender setSelected:NO];
-    }
-    
-    [[[QMApi instance] avCallManager] setAvSessionCurrentCategoryOptions:categoryOptions];
+	QBSoundRouter *router = [QBSoundRouter instance];
+	QBSoundRoute  currentRoute = [router currentSoundRoute];
+	
+	sender.selected =  currentRoute == QBSoundRouteSpeaker;
+	
+	if( currentRoute == QBSoundRouteSpeaker ){
+		[router setCurrentSoundRoute:QBSoundRouteReceiver];
+	}
+	else{
+		[router setCurrentSoundRoute:QBSoundRouteSpeaker];
+	}
 }
 
 - (IBAction)cameraSwitchTapped:(IAButton *)sender {

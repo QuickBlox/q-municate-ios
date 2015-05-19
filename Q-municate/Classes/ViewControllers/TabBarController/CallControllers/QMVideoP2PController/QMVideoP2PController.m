@@ -32,7 +32,7 @@
         
         self.opponentsVideoViewBottom.constant = -80.0f;
     }
-    [[[QMApi instance] avCallManager] setAudioSessionDefaultToSpeakerIfNeeded];
+	[[QBSoundRouter instance] setCurrentSoundRoute:QBSoundRouteSpeaker];
 }
 - (void)cameraSwitchTapped:(id)sender{
 	[super cameraSwitchTapped:sender];
@@ -45,8 +45,9 @@
 		[self.btnSwitchCamera setUserInteractionEnabled:NO];
 	}
 }
+
 - (void)audioSessionRouteChanged:(NSNotification *)notification{
-    [[[QMApi instance] avCallManager] setAudioSessionDefaultToSpeakerIfNeeded];
+	[[QBSoundRouter instance] setCurrentSoundRoute:QBSoundRouteSpeaker];
 }
 
 - (void)stopCallTapped:(id)sender {

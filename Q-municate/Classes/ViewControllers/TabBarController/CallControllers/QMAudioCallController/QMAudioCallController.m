@@ -30,7 +30,7 @@
         // Me is not a caller
     
         if( [QMApi instance].currentUser.ID != [userID unsignedIntegerValue] ){
-            [[QMApi instance].avCallManager setAudioSessionDefaultToHeadphoneIfNeeded];
+            [[QBSoundRouter instance] setCurrentSoundRoute:QBSoundRouteReceiver];
         }
         [self updateButtonsState];
     }

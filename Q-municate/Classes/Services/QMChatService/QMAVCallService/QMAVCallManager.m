@@ -149,10 +149,8 @@ NSString *const kUserName = @"UserName";
 
 - (void)callToUsers:(NSArray *)users withConferenceType:(QBConferenceType)conferenceType pushEnabled:(BOOL)pushEnabled {
     __weak __typeof(self) weakSelf = self;
-    
-    [self saveAudioSessionSettings];
-    
-    [self setAudioSessionDefaultToSpeakerIfNeeded]; // to make our ringtone go through the speaker
+	[[QBSoundRouter instance] initialize];
+    [[QBSoundRouter instance] setCurrentSoundRoute:QBSoundRouteSpeaker]; // to make our ringtone go through the speaker
     
     [self checkPermissionsWithConferenceType:conferenceType completion:^(BOOL canContinue) {
         
@@ -202,14 +200,14 @@ NSString *const kUserName = @"UserName";
 #pragma mark - QBWebRTCChatDelegate
 
 - (void)didReceiveNewSession:(QBRTCSession *)session userInfo:(NSDictionary *)userInfo{
-    
     if (self.session) {
         [session rejectCall:@{@"reject" : @"busy"}];
         return;
     }
+	[[QBSoundRouter instance] initialize];
+	
     self.session = session;
-    [self saveAudioSessionSettings];
-    [self setAudioSessionDefaultToSpeakerIfNeeded];
+	[[QBSoundRouter instance] setCurrentSoundRoute:QBSoundRouteSpeaker];
     [self startPlayingRingtoneSound];
     
     QMIncomingCallController *incomingVC = [self.mainStoryboard instantiateViewControllerWithIdentifier:kIncomingCallController];
@@ -242,7 +240,7 @@ NSString *const kUserName = @"UserName";
         // may be we rejected someone else call while we are talking with another person
         return;
     }
-    [self restoreAudioSessionSettings];
+	[[QBSoundRouter instance] deinitialize];
     __weak __typeof(self)weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
@@ -267,73 +265,6 @@ NSString *const kUserName = @"UserName";
 - (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID{
     [self stopAllSounds];
 }
-
-#pragma mark - AVAudioSession save/restore -
-
-- (void)setAvSessionCurrentCategoryOptions:(AVAudioSessionCategoryOptions)avSessionCurrentCategoryOptions {
-    if( _avSessionCurrentCategoryOptions == avSessionCurrentCategoryOptions ){
-        return;
-    }
-    _avSessionCurrentCategoryOptions = avSessionCurrentCategoryOptions;
-
-    AVAudioSession *avSession = [AVAudioSession sharedInstance];
-    
-    NSError *err = nil;
-    [avSession setCategory:avSession.category withOptions:avSessionCurrentCategoryOptions error:&err];
-    if( err ) {
-        ILog(@"%@", err);
-    }
-    [avSession setActive:YES error:nil];
-}
-
-- (void)setAudioSessionDefaultToSpeakerIfNeeded {
-    AVAudioSession *avSession = [AVAudioSession sharedInstance];
-    
-    if( avSession.categoryOptions == AVAudioSessionCategoryOptionDefaultToSpeaker ){
-        return;
-    }
-    
-    NSError *err = nil;
-    [avSession setCategory:avSession.category withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker error:&err];
-    if( err ) {
-        ILog(@"%@", err);
-    }
-}
-
-- (void)setAudioSessionDefaultToHeadphoneIfNeeded {
-    AVAudioSession *avSession = [AVAudioSession sharedInstance];
-    
-    if( avSession.categoryOptions == 0 ){
-        return;
-    }
-    
-    NSError *err = nil;
-    [avSession setCategory:avSession.category withOptions:0 error:&err];
-    if( err ) {
-        ILog(@"%@", err);
-    }
-}
-
-- (void)saveAudioSessionSettings {
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    self.avCategoryOptions = session.categoryOptions;
-    [session setActive:YES error:nil];
-}
-
-- (void)restoreAudioSessionSettings {
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    
-    NSString *category = [session category];
-    
-    NSError *error = nil;
-    [session setCategory:category withOptions:self.avCategoryOptions error:&error];
-    
-    if( error ) {
-        ILog(@"%@", error);
-    }
-}
-
-#pragma mark Sounds Public methods -
 
 - (void)startPlayingCallingSound {
     [self stopAllSounds];
