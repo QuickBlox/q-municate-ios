@@ -61,9 +61,9 @@ const NSUInteger kQMNumberOfSection = 2;
         self.abStaticCell = [self.tableView dequeueReusableCellWithIdentifier:kQMStaticABCellID];
         self.abStaticCell.delegate = self;
         
-//        self.fbStaticCell = [self.tableView dequeueReusableCellWithIdentifier:kQMStaticFBCellID];
+        self.fbStaticCell = [self.tableView dequeueReusableCellWithIdentifier:kQMStaticFBCellID];
         
-        NSArray *staticCells = @[/*self.fbStaticCell, */self.abStaticCell];
+        NSArray *staticCells = @[self.fbStaticCell, self.abStaticCell];
 
         [self setCollection:staticCells toSection:QMStaticCellsSection];
         [self setCollection:@[].mutableCopy toSection:QMABFriendsToInviteSection];
@@ -213,12 +213,12 @@ const NSUInteger kQMNumberOfSection = 2;
     return item;
 }
 
-- (NSUInteger)sectionToInviteWihtUserData:(id)data {
+- (NSInteger)sectionToInviteWihtUserData:(id)data {
     
     if ([data isKindOfClass:ABPerson.class]) {
         return QMABFriendsToInviteSection;
     }
-    
+	return -1;
     NSAssert(nil, @"Need update this case");
     return 0;
 }
@@ -266,7 +266,10 @@ const NSUInteger kQMNumberOfSection = 2;
         
         id item = [self itemAtIndexPath:indexPath];
         
-        NSUInteger section = [self sectionToInviteWihtUserData:item];
+        NSInteger section = [self sectionToInviteWihtUserData:item];
+		if (section == -1) {
+			return;
+		}
         NSMutableArray *toInvite = [self collectionAtSection:section];
         cell.isChecked ? [toInvite addObject:item] : [toInvite removeObject:item];
     
@@ -326,7 +329,7 @@ const NSUInteger kQMNumberOfSection = 2;
     if (indexPath.section == QMStaticCellsSection) {
         
         switch (indexPath.row) {
-            case 0: [self fetchAdressbookFriends:nil]; break;
+            case 0: [self fetchFacebookFriends:nil]; break;
             case 1:[self fetchAdressbookFriends:nil]; break;
             default:NSAssert(nil, @"Need Update this case"); break;
         }

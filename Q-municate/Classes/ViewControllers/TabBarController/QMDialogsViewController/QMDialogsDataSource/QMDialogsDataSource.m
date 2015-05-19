@@ -42,9 +42,6 @@
         
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
             
-            if (message.delayed) {
-                return;
-            }
             if (!message.cParamDialogID) {
                 return;
             }

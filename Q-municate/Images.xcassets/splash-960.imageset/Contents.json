@@ -3,11 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "logo AD.png"
+      "filename" : "splash-960.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x"
+      "scale" : "2x",
+      "filename" : "splash-960@2x.png"
     },
     {
       "idiom" : "universal",

@@ -104,8 +104,8 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         }];
         
         [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-            
-            if (message.delayed) {
+			QBChatDialog *ddialog =  [[QMApi instance] chatDialogWithID:message.cParamDialogID];
+            if (ddialog.chatRoom == nil&& message.delayed) {
                 return;
             }
             if (!message.cParamDialogID) {

@@ -230,7 +230,12 @@
         __weak typeof(self) weakSelf = self;
         [self createChatDialog:dialog completion:^(QBChatDialogResult *result) {
             //
-            [weakSelf addDialogToHistory:result.dialog];
+			if( result.dialog != nil ) {
+				[weakSelf addDialogToHistory:result.dialog];
+			}
+			else{
+				[weakSelf addDialogToHistory:dialog];
+			}
             completion(dialog);
         }];
         

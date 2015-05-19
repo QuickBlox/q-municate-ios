@@ -135,10 +135,12 @@
 {
     __weak typeof(self)weakSelf = self;
     [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-        if (message.delayed) {
+	
+		QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
+		
+        if (dialog.chatRoom == nil && message.delayed) {
             return;
         }
-        QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
         [weakSelf message:message forOtherDialog:dialog];
     }];
     

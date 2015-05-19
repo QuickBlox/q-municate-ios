@@ -66,6 +66,7 @@ NSString *const kUserName = @"UserName";
 #pragma mark - Public methods
 
 - (void)acceptCall{
+	[self stopAllSounds];
     if( self.session ){
         [self.session acceptCall:nil];
     }
@@ -200,7 +201,7 @@ NSString *const kUserName = @"UserName";
 
 #pragma mark - QBWebRTCChatDelegate
 
-- (void)didReceiveNewSession:(QBRTCSession *)session {
+- (void)didReceiveNewSession:(QBRTCSession *)session userInfo:(NSDictionary *)userInfo{
     
     if (self.session) {
         [session rejectCall:@{@"reject" : @"busy"}];

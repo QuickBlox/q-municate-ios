@@ -229,9 +229,14 @@ const NSTimeInterval kQMPresenceTime = 30;
 }
 
 - (BOOL)checkResult:(QBResult *)result {
-    
+
     if (!result.success) {
-        [REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
+		if( [result isKindOfClass:[QBUUserLogInResult class]] ){
+			[REAlertView showAlertWithMessage:@"Incorrect Username or Password" actionSuccess:NO];
+		}
+		else{
+			[REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
+		}
     }
     
     return result.success;

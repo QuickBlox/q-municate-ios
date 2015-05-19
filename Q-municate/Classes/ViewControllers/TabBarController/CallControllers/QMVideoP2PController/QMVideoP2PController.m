@@ -34,7 +34,17 @@
     }
     [[[QMApi instance] avCallManager] setAudioSessionDefaultToSpeakerIfNeeded];
 }
-
+- (void)cameraSwitchTapped:(id)sender{
+	[super cameraSwitchTapped:sender];
+	if( [self.session videoEnabled] ){
+		[self allowSendingLocalVideoTrack];
+		[self.btnSwitchCamera setUserInteractionEnabled:YES];
+	}
+	else{
+		[self denySendingLocalVideoTrack];
+		[self.btnSwitchCamera setUserInteractionEnabled:NO];
+	}
+}
 - (void)audioSessionRouteChanged:(NSNotification *)notification{
     [[[QMApi instance] avCallManager] setAudioSessionDefaultToSpeakerIfNeeded];
 }
@@ -73,6 +83,7 @@ NSString* machineName() {
     else{
         [self denySendingLocalVideoTrack];
         [self.btnSwitchCamera setUserInteractionEnabled:NO];
+		[super updateButtonsState];
     }
 }
 
@@ -101,9 +112,8 @@ NSString* machineName() {
     if( self.disableSendingLocalVideoTrack ){
         [self denySendingLocalVideoTrack];
         self.disableSendingLocalVideoTrack = NO;
+		[self updateButtonsState];
     }
-    
-    self.localVideoTrack = videoTrack;
     [self reloadVideoViews];
 }
 
@@ -120,9 +130,9 @@ NSString* machineName() {
     [self stopActivityIndicator];
 }
 
-- (void)session:(QBRTCSession *)session hungUpByUser:(NSNumber *)userID {
+- (void)session:(QBRTCSession *)session hungUpByUser:(NSNumber *)userID  userInfo:(NSDictionary *)userInfo{
     [self hideViewsBeforeDealloc];
-    [super session:session hungUpByUser:userID];
+    [super session:session hungUpByUser:userID userInfo:nil];
 }
 
 @end

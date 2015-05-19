@@ -70,7 +70,7 @@
     __weak __typeof(self) weakSelf = self;
     [[[QMApi instance] avCallManager] checkPermissionsWithConferenceType:self.callType completion:^(BOOL canContinue) {
         if( canContinue ) {
-            [[QMSoundManager instance] stopAllSounds];
+			[[QMSoundManager instance] stopAllSounds];
             if (weakSelf.callType == QBConferenceTypeVideo) {
                 [weakSelf performSegueWithIdentifier:kGoToDuringVideoCallSegueIdentifier sender:weakSelf];
             } else {

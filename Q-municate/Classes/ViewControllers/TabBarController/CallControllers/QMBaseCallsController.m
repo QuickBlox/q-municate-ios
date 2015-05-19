@@ -186,7 +186,7 @@
     }
 }
 
-- (void)session:(QBRTCSession *)session hungUpByUser:(NSNumber *)userID {
+- (void)session:(QBRTCSession *)session hungUpByUser:(NSNumber *)userID userInfo:(NSDictionary *)userInfo{
     [self.contentView stopTimer];
     [self stopActivityIndicator];
     [self callStoppedByOpponentForReason:nil];
