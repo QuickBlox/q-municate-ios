@@ -39,6 +39,7 @@ NSString *const kUserName = @"UserName";
 - (instancetype)init {
     self = [super init];
     if (self) {
+		[QBRTCConfig setDisconnectTimeInterval:kQBRTCDisconnectTimeInterval];
         _mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
         self.frontCamera = YES;
     }

@@ -2233,7 +2233,7 @@
 						DevelopmentTeam = 8885H5G2YX;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
@@ -2682,7 +2682,7 @@
 				);
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "8167ef38-4b98-4550-be1c-167027a7ce74";
+				PROVISIONING_PROFILE = "8bbccd27-3b25-4f54-8fa8-2a780f0d86b7";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;

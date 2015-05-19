@@ -104,7 +104,7 @@ NSString* machineName() {
 #pragma mark QBRTCSession delegate -
 
 - (void)session:(QBRTCSession *)session disconnectedFromUser:(NSNumber *)userID {
-    [super session:session disconnectTimeoutForUser:userID];
+    [super session:session disconnectedFromUser:userID];
     [self startActivityIndicator];
 }
 
