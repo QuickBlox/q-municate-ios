@@ -246,12 +246,12 @@ NSString *const kUserName = @"UserName";
     __weak __typeof(self)weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        weakSelf.session = nil;
-        if( [weakSelf currentlyPresentedViewController] ){
-            [[weakSelf currentlyPresentedViewController] dismissViewControllerAnimated:YES completion:nil];
+        self.session = nil;
+        if( [self currentlyPresentedViewController] ){
+            [[self currentlyPresentedViewController] dismissViewControllerAnimated:YES completion:nil];
         }
         if( !IS_IPAD ){
-            weakSelf.frontCamera = YES;
+            self.frontCamera = YES;
         }
     });
 }
@@ -280,9 +280,11 @@ NSString *const kUserName = @"UserName";
     
     NSError *err = nil;
     [avSession setCategory:avSession.category withOptions:avSessionCurrentCategoryOptions error:&err];
+   
     if( err ) {
         ILog(@"%@", err);
     }
+    
     [avSession setActive:YES error:nil];
 }
 
@@ -295,6 +297,7 @@ NSString *const kUserName = @"UserName";
     
     NSError *err = nil;
     [avSession setCategory:avSession.category withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker error:&err];
+    
     if( err ) {
         ILog(@"%@", err);
     }
@@ -315,12 +318,14 @@ NSString *const kUserName = @"UserName";
 }
 
 - (void)saveAudioSessionSettings {
+    
     AVAudioSession *session = [AVAudioSession sharedInstance];
     self.avCategoryOptions = session.categoryOptions;
     [session setActive:YES error:nil];
 }
 
 - (void)restoreAudioSessionSettings {
+    
     AVAudioSession *session = [AVAudioSession sharedInstance];
     
     NSString *category = [session category];
