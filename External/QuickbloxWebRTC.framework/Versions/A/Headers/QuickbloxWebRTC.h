@@ -19,5 +19,5 @@
 
 //1.0.4
 FOUNDATION_EXPORT NSString *const QuickbloxWebRTCFrameworkVersion;
-//9217
+//9234
 FOUNDATION_EXPORT NSString *const QuickbloxWebRTCRevision;
