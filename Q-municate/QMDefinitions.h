@@ -34,13 +34,13 @@ typedef void (^QBUUserResponseBlock)(QBResponse *response, QBUUser *user);
 //typedef void (^QBAAuthSessionCreationResultBlock)(QBAAuthSessionCreationResult *result);
 //typedef void (^QBUUserPagedResultBlock)(QBUUserPagedResult *pagedResult);
 typedef void (^QBUUserPagedResponseBlock)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users);
-//typedef void (^QBDialogsPagedResultBlock)(QBDialogsPagedResult *result);
-//typedef void (^QBChatDialogResultBlock)(QBChatDialogResult *result);
-//typedef void (^QBChatHistoryMessageResultBlock)(QBChatHistoryMessageResult *result);
+typedef void (^QBDialogsPagedResponseBlock)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page);
+typedef void (^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *createdDialog);
+typedef void (^QBChatHistoryMessageResponseBlock)(QBResponse *response, NSArray *messages, QBResponsePage *responsePage);
 
 typedef void (^QBResponseBlock)(QBResponse *response);
 //typedef void (^QBSessionCreationBlock)(BOOL success, NSString *error);
-//typedef void (^QBChatResultBlock)(BOOL success);
+typedef void (^QBChatResultBlock)(BOOL success);
 //typedef void (^QBChatRoomResultBlock)(QBChatRoom *chatRoom, NSError *error);
 //typedef void (^QBChatDialogHistoryBlock)(NSMutableArray *chatDialogHistoryArray, NSError *error);
 
