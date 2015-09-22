@@ -8,14 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-
-typedef void(^QMTaskResultBlock)(id taskResult);
-
-@interface QMContentOperation : NSOperation <QBActionStatusDelegate>
+@interface QMContentOperation : NSOperation
 
 @property (copy, nonatomic) QMContentProgressBlock progressHandler;
 @property (copy, nonatomic) id completionHandler;
 
-@property (strong, nonatomic) NSObject<Cancelable>*cancelableOperation;
+@property (strong, nonatomic) QBRequest *cancelableRequest;
 
 @end

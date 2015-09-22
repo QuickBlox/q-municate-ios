@@ -1,29 +1,42 @@
 //
 //  QMBaseService.m
-//  Q-municate
+//  QMServices
 //
 //  Created by Andrey Ivanov on 04.08.14.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Copyright (c) 2015 Quickblox. All rights reserved.
 //
 
 #import "QMBaseService.h"
 
+@interface QMBaseService()
+
+@property (weak, nonatomic) id <QMServiceManagerProtocol> serviceManager;
+
+@end
+
 @implementation QMBaseService
 
-@synthesize active = _active;
-
-- (void)start {
+- (instancetype)initWithServiceManager:(id<QMServiceManagerProtocol>)serviceManager {
     
-    NSAssert(self.active == NO, @"Need stop service before start...");
-    self.active = YES;
-    ILog(@"******************** (START %@ SERVICE) ********************", NSStringFromClass(self.class));
+    self = [super init];
+    if (self) {
+        
+        self.serviceManager = serviceManager;
+        NSLog(@"Init - %@ service...", NSStringFromClass(self.class));
+        [self serviceWillStart];
+    }
+    return self;
 }
 
-- (void)stop {
+- (void)serviceWillStart {
     
-    NSAssert(self.active == YES, @"Service dont running..");
-    self.active = NO;
-    ILog(@"******************** (STOP %@ SERVICE )********************", NSStringFromClass(self.class));
+    NSAssert(nil, @"");
+}
+
+#pragma mark - QMMemoryStorageProtocol
+
+- (void)free {
+    
 }
 
 @end

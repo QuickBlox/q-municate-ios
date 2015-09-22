@@ -11,10 +11,10 @@
 
 @interface QMContentService : NSObject
 
-- (void)uploadJPEGImage:(UIImage *)image progress:(QMContentProgressBlock)progress completion:(QMCFileUploadTaskResultBlockBlock)completion;
-- (void)uploadPNGImage:(UIImage *)image progress:(QMContentProgressBlock)progress completion:(QMCFileUploadTaskResultBlockBlock)completion;
+- (void)uploadJPEGImage:(UIImage *)image progress:(QMContentProgressBlock)progress completion:(QMCFileUploadResponseBlock)completion;
+- (void)uploadPNGImage:(UIImage *)image progress:(QMContentProgressBlock)progress completion:(QMCFileUploadResponseBlock)completion;
 
 - (void)downloadFileWithUrl:(NSURL *)url completion:(void(^)(NSData *data))completion;
-- (void)downloadFileWithBlobID:(NSUInteger )blobID progress:(QMContentProgressBlock)progress completion:(QMCFileDownloadTaskResultBlockBlock)completion;
+- (void)downloadFileWithBlobID:(NSUInteger )blobID progress:(QMContentProgressBlock)progress completion:(QMCFileDownloadResponseBlock)completion;
 
 @end

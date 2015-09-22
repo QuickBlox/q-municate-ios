@@ -17,7 +17,7 @@
 @implementation QMDownloadContentOperation
 
 - (instancetype)initWithBlobID:(NSUInteger )blobID {
-    
+
     self = [super init];
     if (self) {
         self.blobID = blobID;
@@ -26,7 +26,24 @@
 }
 
 - (void)main {
-    self.cancelableOperation = [QBContent TDownloadFileWithBlobID:self.blobID delegate:self];
+    
+    self.cancelableRequest = [QBRequest downloadFileWithID:self.blobID
+                                              successBlock:^(QBResponse *response, NSData *fileData) {
+                                                  //
+                                                  if (self.completionHandler) {
+                                                      QMCFileDownloadResponseBlock block = (QMCFileDownloadResponseBlock)self.completionHandler;
+                                                      block(response,fileData);
+                                                  }
+                                              } statusBlock:^(QBRequest *request, QBRequestStatus *status) {
+                                                  //
+                                                  if (self.progressHandler) self.progressHandler(status.percentOfCompletion);
+                                              } errorBlock:^(QBResponse *response) {
+                                                  //
+                                                  if (self.completionHandler) {
+                                                      QMCFileDownloadResponseBlock block = (QMCFileDownloadResponseBlock)self.completionHandler;
+                                                      block(response,nil);
+                                                  }
+                                              }];
 }
 
 @end
