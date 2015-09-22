@@ -8,12 +8,12 @@
 
 #import "QMMessageBarStyleSheetFactory.h"
 #import "QMApi.h"
-#import "QBChatAbstractMessage+TextEncoding.h"
+#import "QBChatMessage+TextEncoding.h"
 
 
 @implementation QMMessageBarStyleSheetFactory
 
-+ (void)showMessageBarNotificationWithMessage:(QBChatAbstractMessage *)chatMessage chatDialog:(QBChatDialog *)chatDialog completionBlock:(MPGNotificationButtonHandler)block
++ (void)showMessageBarNotificationWithMessage:(QBChatMessage *)chatMessage chatDialog:(QBChatDialog *)chatDialog completionBlock:(MPGNotificationButtonHandler)block
 {
     UIImage *img = nil;
     NSString *title = @"";

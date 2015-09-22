@@ -8,11 +8,9 @@
 
 - (QBChatDialog *)toQBChatDialog {
     
-    QBChatDialog *chatDialog = [[QBChatDialog alloc] init];
+    QBChatDialog *chatDialog = [[QBChatDialog alloc] initWithDialogID:self.id type:self.dialogType.intValue];
     
-    chatDialog.ID = self.id;
     chatDialog.roomJID = self.roomJID;
-    chatDialog.type = self.dialogType.intValue;
     chatDialog.name = self.name;
     
     return chatDialog;

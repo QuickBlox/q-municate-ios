@@ -98,13 +98,14 @@
     
     __weak __typeof(self)weakSelf = self;
     
-    [self.authService signUpUser:user completion:^(QBUUserResult *signUpResult) {
-        if (![weakSelf checkResult:signUpResult]) {
-            completion(signUpResult.success);
+    [self.authService signUpUser:user completion:^(QBResponse *response, QBUUser *createdUser) {
+        //
+        if (![weakSelf checkResponse:response withObject:createdUser]) {
+            completion(response.success);
         }
         else {
             [weakSelf setAutoLogin:rememberMe withAccountType:QMAccountTypeEmail];
-            [weakSelf loginWithEmail:user.email password:user.password rememberMe:rememberMe completion:completion];
+            [weakSelf loginWithEmail:createdUser.email password:createdUser.password rememberMe:rememberMe completion:completion];
         }
     }];
 }
@@ -113,8 +114,9 @@
     
     __weak __typeof(self)weakSelf = self;
     
-    [weakSelf.usersService resetUserPasswordWithEmail:email completion:^(QBResult *result) {
-        completion([weakSelf checkResult:result]);
+    [self.usersService resetUserPasswordWithEmail:email completion:^(QBResponse *response) {
+        //
+        completion([weakSelf checkResponse:response withObject:nil]);
     }];
 }
 
@@ -149,13 +151,13 @@
 - (void)logInWithFacebookAccessToken:(NSString *)accessToken completion:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
-    [self.authService logInWithFacebookAccessToken:accessToken completion:^(QBUUserLogInResult *loginWithFBResult) {
-        
-        if ([weakSelf checkResult:loginWithFBResult]) {
+    [self.authService logInWithFacebookAccessToken:accessToken completion:^(QBResponse *response, QBUUser *user) {
+        //
+        if ([weakSelf checkResponse:response withObject:user]) {
             
-            weakSelf.currentUser = loginWithFBResult.user;
+            weakSelf.currentUser = user;
         }
-        completion(loginWithFBResult.success);
+        completion(response.success);
     }];
 }
 
@@ -248,15 +250,15 @@
 - (void)loginWithEmail:(NSString *)email password:(NSString *)password rememberMe:(BOOL)rememberMe completion:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
-    [self.authService logInWithEmail:email password:password completion:^(QBUUserLogInResult *loginResult) {
-        
-        if(![weakSelf checkResult:loginResult]){
+    [self.authService logInWithEmail:email password:password completion:^(QBResponse *response, QBUUser *user) {
+        //
+        if(![weakSelf checkResponse:response withObject:user]){
             
-            completion(loginResult.success);
+            completion(response.success);
         }
         else {
             
-            weakSelf.currentUser = loginResult.user;
+            weakSelf.currentUser = user;
             weakSelf.currentUser.password = password;
             
             if (rememberMe) {
@@ -264,7 +266,7 @@
                 [weakSelf.settingsManager setLogin:email andPassword:password];
             }
             
-            completion(loginResult.success);
+            completion(response.success);
         }
     }];
 }

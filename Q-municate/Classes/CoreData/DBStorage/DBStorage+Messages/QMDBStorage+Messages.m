@@ -43,7 +43,7 @@ NSString *const kCDMessageDatetimePath = @"datetime";
 
 - (void)insertNewMessages:(NSArray *)messages inContext:(NSManagedObjectContext *)context {
     
-    for (QBChatHistoryMessage *chatMessage in messages) {
+    for (QBChatMessage *chatMessage in messages) {
         
         CDMessage *message = [CDMessage MR_createEntityInContext:context];
         [message updateWithQBChatHistoryMessage:chatMessage];
@@ -67,7 +67,7 @@ NSString *const kCDMessageDatetimePath = @"datetime";
     NSMutableArray *qbChatHistoryMessages = [NSMutableArray arrayWithCapacity:cdMessages.count];
     
     for (CDMessage *message in cdMessages) {
-        QBChatHistoryMessage *qbChatHistoryMessage = [message toQBChatHistoryMessage];
+        QBChatMessage *qbChatHistoryMessage = [message toQBChatHistoryMessage];
         [qbChatHistoryMessages addObject:qbChatHistoryMessage];
     }
     
@@ -88,15 +88,15 @@ NSString *const kCDMessageDatetimePath = @"datetime";
     
     //Update/Insert/Delete
     
-    for (QBChatHistoryMessage *historyMessage in qbChatHistoryMessages) {
+    for (QBChatMessage *historyMessage in qbChatHistoryMessages) {
         
         NSInteger idx = [allQBChatHistoryMessagesInCache indexOfObject:historyMessage];
         
         if (idx == NSNotFound) {
             
-            QBChatHistoryMessage *chatHistoryMessageToUpdate = nil;
+            QBChatMessage *chatHistoryMessageToUpdate = nil;
             
-            for (QBChatHistoryMessage *candidateToUpdate in allQBChatHistoryMessagesInCache) {
+            for (QBChatMessage *candidateToUpdate in allQBChatHistoryMessagesInCache) {
                 
                 if ([candidateToUpdate.ID isEqual: historyMessage.ID]) {
                     
@@ -145,7 +145,7 @@ NSString *const kCDMessageDatetimePath = @"datetime";
 
 - (void)insertQBChatHistoryMessages:(NSArray *)qbChatHistoryMessages inContext:(NSManagedObjectContext *)context {
     
-    for (QBChatHistoryMessage *qbChatHistoryMessage in qbChatHistoryMessages) {
+    for (QBChatMessage *qbChatHistoryMessage in qbChatHistoryMessages) {
         CDMessage *messageToInsert = [CDMessage MR_createEntityInContext:context];
         [messageToInsert updateWithQBChatHistoryMessage:qbChatHistoryMessage];
     }
@@ -154,7 +154,7 @@ NSString *const kCDMessageDatetimePath = @"datetime";
 - (void)deleteQBChatHistoryMessages:(NSArray *)qbChatHistoryMessages inContext:(NSManagedObjectContext *)context {
     
     
-    for (QBChatHistoryMessage *qbChatHistoryMessage in qbChatHistoryMessages) {
+    for (QBChatMessage *qbChatHistoryMessage in qbChatHistoryMessages) {
         CDMessage *messageToDelete = [CDMessage MR_findFirstWithPredicate:IS(@"uniqueId", qbChatHistoryMessage.ID)
                                                              inContext:context];
         [messageToDelete MR_deleteEntityInContext:context];
@@ -163,7 +163,7 @@ NSString *const kCDMessageDatetimePath = @"datetime";
 
 - (void)updateQBChatHistoryMessages:(NSArray *)qbChatHistoryMessages inContext:(NSManagedObjectContext *)context {
     
-    for (QBChatHistoryMessage *qbChatHistoryMessage in qbChatHistoryMessages) {
+    for (QBChatMessage *qbChatHistoryMessage in qbChatHistoryMessages) {
         CDMessage *messageToUpdate = [CDMessage MR_findFirstWithPredicate:IS(@"uniqueId", qbChatHistoryMessage.ID)
                                                              inContext:context];
         [messageToUpdate updateWithQBChatHistoryMessage:qbChatHistoryMessage];

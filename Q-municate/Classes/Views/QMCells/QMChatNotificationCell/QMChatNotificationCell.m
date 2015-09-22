@@ -23,7 +23,7 @@
         _notification = notification;
     }
     
-    self.dateLabel.text = [[self formatter] stringFromDate:self.notification.datetime];
+    self.dateLabel.text = [[self formatter] stringFromDate:self.notification.dateSent];
     self.messageLabel.text = [QMChatUtils messageTextForNotification:self.notification];
 }
 

@@ -50,7 +50,7 @@ const NSTimeInterval kQMPresenceTime = 30;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         servicesFacade = [[self alloc] init];
-        [QBChat instance].useMutualSubscriptionForContactList = YES;
+//        [QBChat instance].useMutualSubscriptionForContactList = YES;
         [QBChat instance].autoReconnectEnabled = YES;
 		
         [[QBChat instance] addDelegate:[QMChatReceiver instance]];
@@ -227,18 +227,17 @@ const NSTimeInterval kQMPresenceTime = 30;
     }];
 }
 
-- (BOOL)checkResult:(QBResult *)result {
-
-    if (!result.success) {
-		if( [result isKindOfClass:[QBUUserLogInResult class]] ){
-			[REAlertView showAlertWithMessage:@"Incorrect Username or Password" actionSuccess:NO];
-		}
-		else{
-			[REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
-		}
-    }
+- (BOOL)checkResponse:(QBResponse *)response withObject:(id)object {
     
-    return result.success;
+    if (!response.success) {
+        if( [object isKindOfClass:[QBUUser class]] ){
+            [REAlertView showAlertWithMessage:@"Incorrect Username or Password" actionSuccess:NO];
+        }
+        else{
+            [REAlertView showAlertWithMessage:response.error.error.localizedDescription actionSuccess:NO];
+        }
+    }
+    return response.success;
 }
 
 - (BOOL)isInternetConnected
@@ -261,7 +260,7 @@ const NSTimeInterval kQMPresenceTime = 30;
     _group = dispatch_group_create();
     dispatch_group_enter(_group);
     
-    [self fetchDialogsWithLastActivityFromDate:self.settingsManager.lastActivityDate completion:^(QBDialogsPagedResult *result) {
+    [self fetchDialogsWithLastActivityFromDate:self.settingsManager.lastActivityDate completion:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page) {
         dispatch_group_leave(_group);
     }];
     
@@ -310,7 +309,8 @@ const NSTimeInterval kQMPresenceTime = 30;
         
         return;
         
-    }else {
+    }
+    else {
         
         [self openChatControllerForDialogWithID:dialogID];
         if (completionBlock) completionBlock(YES);

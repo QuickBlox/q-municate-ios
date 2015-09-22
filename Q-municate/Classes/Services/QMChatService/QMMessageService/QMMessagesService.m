@@ -7,7 +7,6 @@
 //
 
 #import "QMMessagesService.h"
-#import "QBEchoObject.h"
 #import "QMChatReceiver.h"
 #import "NSString+GTMNSStringHTMLAdditions.h"
 

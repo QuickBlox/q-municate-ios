@@ -13,7 +13,7 @@
 - (void)updateLastMessageInfoWithMessage:(QBChatMessage *)message isMine:(BOOL)isMine
 {
     self.lastMessageText = message.text;
-    self.lastMessageDate = message.datetime;
+    self.lastMessageDate = message.dateSent;
     self.lastMessageUserID = message.senderID;
     
     // if message isn't mine:

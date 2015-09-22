@@ -214,7 +214,7 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
     QMMessage *qmMessage = [self qmMessageWithQbChatHistoryMessage:message];
     [self markContactRequestNotificationIfNeeded:qmMessage];
     
-    QMChatSection *chatSection = [self chatSectionForDate:qmMessage.datetime];
+    QMChatSection *chatSection = [self chatSectionForDate:qmMessage.dateSent];
     [chatSection addMessage:qmMessage];
     
     [self.tableView beginUpdates];
@@ -247,12 +247,12 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
     NSMutableDictionary *sectionsDictionary = [NSMutableDictionary new];
     NSDate *dateNow = [NSDate date];
     
-    for (QBChatHistoryMessage *historyMessage in messagesArray) {
+    for (QBChatMessage *historyMessage in messagesArray) {
         QMMessage *qmMessage = [self qmMessageWithQbChatHistoryMessage:historyMessage];
-        NSNumber *key = @([QMChatSection daysBetweenDate:historyMessage.datetime andDate:dateNow]);
+        NSNumber *key = @([QMChatSection daysBetweenDate:historyMessage.dateSent andDate:dateNow]);
         QMChatSection *section = sectionsDictionary[key];
         if (!section) {
-            section = [[QMChatSection alloc] initWithDate:qmMessage.datetime];
+            section = [[QMChatSection alloc] initWithDate:qmMessage.dateSent];
             sectionsDictionary[key] = section;
             [arrayOfSections addObject:section];
             
@@ -287,7 +287,7 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
     }
 }
 
-- (QMMessage *)qmMessageWithQbChatHistoryMessage:(QBChatAbstractMessage *)historyMessage {
+- (QMMessage *)qmMessageWithQbChatHistoryMessage:(QBChatMessage *)historyMessage {
     
     QMMessage *message = [[QMMessage alloc] initWithChatHistoryMessage:historyMessage];
     BOOL fromMe = ([QMApi instance].currentUser.ID == historyMessage.senderID);
@@ -357,11 +357,11 @@ static NSString *const kQMContactRequestCellID = @"QMContactRequestCell";
         
         [SVProgressHUD showProgress:progress status:nil maskType:SVProgressHUDMaskTypeClear];
         
-    } completion:^(QBCFileUploadTaskResult *result) {
+    } completion:^(QBResponse *response, QBCBlob *blob) {
         
-        if (result.success) {
+        if (response.success) {
             
-            [[QMApi instance] sendAttachment:result.uploadedBlob toDialog:weakSelf.chatDialog completion:^(QBChatMessage *message) {
+            [[QMApi instance] sendAttachment:blob toDialog:weakSelf.chatDialog completion:^(QBChatMessage *message) {
                 [weakSelf insertNewMessage:message];
             }];
         }

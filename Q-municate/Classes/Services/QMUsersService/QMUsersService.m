@@ -7,7 +7,6 @@
 //
 
 #import "QMUsersService.h"
-#import "QBEchoObject.h"
 #import "QMChatReceiver.h"
 
 @interface QMUsersService()
@@ -192,8 +191,9 @@
 {
     QBUUser *user = [self userWithID:userID];
     if (!user) {
-        [self retrieveUserWithID:userID completion:^(QBUUserResult *result) {
-            if (result.success) {
+        [self retrieveUserWithID:userID completion:^(QBResponse *response, QBUUser *retrievedUser) {
+            //
+            if (response.success) {
                 if (completionBlock) completionBlock(YES);
                 return;
             }

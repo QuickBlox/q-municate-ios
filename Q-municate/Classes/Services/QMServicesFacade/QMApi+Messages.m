@@ -28,15 +28,15 @@
 - (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete {
     
     __weak __typeof(self)weakSelf = self;
-    [self.messagesService messagesWithDialogID:chatDialog.ID completion:^(QBChatHistoryMessageResult *result) {
-        complete ([weakSelf checkResult:result]); 
+    [self.messagesService messagesWithDialogID:chatDialog.ID completion:^(QBResponse *response, NSArray *messages, QBResponsePage *responsePage) {
+        complete ([weakSelf checkResponse:response withObject:nil]);
     }];
 }
 
 - (void)fetchMessagesForActiveChatIfNeededWithCompletion:(void(^)(BOOL fetchWasNeeded))block
 {
     if (self.settingsManager.dialogWithIDisActive) {
-        [self.messagesService messagesWithDialogID:self.settingsManager.dialogWithIDisActive completion:^(QBChatHistoryMessageResult *result) {
+        [self.messagesService messagesWithDialogID:self.settingsManager.dialogWithIDisActive completion:^(QBResponse *response, NSArray *messages, QBResponsePage *responsePage) {
             [[QMChatReceiver instance] messageHistoryWasUpdated];
             if (block) block(YES);
         }];
@@ -54,7 +54,7 @@
         historyMessage.senderID = weakSelf.currentUser.ID;
         [weakSelf.messagesService addMessageToHistory:historyMessage withDialogID:dialog.ID];
         dialog.lastMessageText = historyMessage.encodedText;
-        dialog.lastMessageDate = historyMessage.datetime;
+        dialog.lastMessageDate = historyMessage.dateSent;
         
         completion(message);
     };

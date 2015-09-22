@@ -1,6 +1,6 @@
 #import "_CDMessage.h"
 
 @interface CDMessage : _CDMessage {}
-- (QBChatHistoryMessage *)toQBChatHistoryMessage;
-- (void)updateWithQBChatHistoryMessage:(QBChatHistoryMessage *)message;
+- (QBChatMessage *)toQBChatHistoryMessage;
+- (void)updateWithQBChatHistoryMessage:(QBChatMessage *)message;
 @end

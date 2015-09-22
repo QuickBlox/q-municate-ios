@@ -47,7 +47,7 @@
     
     self.balloonImage =  message.balloonImage;
     
-    self.timeLabel.text = [self.formatter stringFromDate:message.datetime];
+    self.timeLabel.text = [self.formatter stringFromDate:message.dateSent];
     self.timeLabel.textColor = (isMe) ? [UIColor colorWithRed:0.938 green:0.948 blue:0.898 alpha:1.000] : [UIColor grayColor];
 }
 

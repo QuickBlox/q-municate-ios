@@ -26,7 +26,7 @@
 
 @property (weak, nonatomic) UITableView *tableView;
 @property (weak, nonatomic) UISearchDisplayController *searchDisplayController;
-@property (strong, nonatomic) NSObject<Cancelable> *searchOperation;
+@property (strong, nonatomic) QBRequest *searchRequest;
 
 @property (assign, nonatomic) NSUInteger contactRequestsCount;
 
@@ -56,7 +56,7 @@
         
         void (^reloadDatasource)(void) = ^(void) {
             
-            if (weakSelf.searchOperation) {
+            if (weakSelf.searchRequest) {
                 return;
             }
             
@@ -117,16 +117,16 @@
     }
     
     __weak __typeof(self)weakSelf = self;
-    QBUUserPagedResultBlock userPagedBlock = ^(QBUUserPagedResult *pagedResult) {
+    QBUUserPagedResponseBlock userResponseBlock = ^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
         
-        NSArray *users = [QMUsersUtils sortUsersByFullname:pagedResult.users];
+        NSArray *sortedUsers = [QMUsersUtils sortUsersByFullname:users];
         
-        NSMutableArray *filteredUsers = [QMUsersUtils filteredUsers:users withFlterArray:[weakSelf.friendList arrayByAddingObject:[QMApi instance].currentUser]];
+        NSMutableArray *filteredUsers = [QMUsersUtils filteredUsers:sortedUsers withFlterArray:[weakSelf.friendList arrayByAddingObject:[QMApi instance].currentUser]];
         
         weakSelf.searchResult = filteredUsers;
         
         [weakSelf.searchDisplayController.searchResultsTableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
-        weakSelf.searchOperation = nil;
+        weakSelf.searchRequest = nil;
         [SVProgressHUD dismiss];
     };
     
@@ -137,18 +137,17 @@
         
         if ([self.searchDisplayController.searchBar.text isEqualToString:searchText]) {
             
-            if (self.searchOperation) {
-                [self.searchOperation cancel];
-                self.searchOperation = nil;
+            if (self.searchRequest) {
+                [self.searchRequest cancel];
+                self.searchRequest = nil;
             }
             
-            PagedRequest *request = [[PagedRequest alloc] init];
-            request.page = 1;
-            request.perPage = 100;
+            NSUInteger currentPage = 1;
+            NSUInteger perPage = 100;
             
             
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-            self.searchOperation = [[QMApi instance].usersService retrieveUsersWithFullName:searchText pagedRequest:request completion:userPagedBlock];
+            self.searchRequest = [[QMApi instance].usersService retrieveUsersWithFullName:searchText pagedRequest:[QBGeneralResponsePage responsePageWithCurrentPage:currentPage perPage:perPage] completion:userResponseBlock];
         }
     });
 }

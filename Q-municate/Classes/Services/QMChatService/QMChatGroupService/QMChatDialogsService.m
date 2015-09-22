@@ -7,7 +7,6 @@
 //
 
 #import "QMChatDialogsService.h"
-#import "QBEchoObject.h"
 #import "QMChatReceiver.h"
 
 
@@ -130,12 +129,15 @@
     }];
 }
 
-- (void)updateChatDialogWithID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest completion:(QBChatDialogResultBlock)completion {
+- (void)updateChatDialog:(QBChatDialog *)dialog completion:(QBChatDialogResponseBlock)completion {
     
-    [QBChat updateDialogWithID:dialogID
-               extendedRequest:extendedRequest
-                      delegate:[QBEchoObject instance]
-                       context:[QBEchoObject makeBlockForEchoObject:completion]];
+    [QBRequest updateDialog:dialog successBlock:^(QBResponse *response, QBChatDialog *updatedDialog) {
+        //
+        completion(response,updatedDialog);
+    } errorBlock:^(QBResponse *response) {
+        //
+        completion(response,nil);
+    }];
 }
 
 - (void)addDialogs:(NSArray *)dialogs {
@@ -216,14 +218,13 @@
         
         NSArray *occupantsIDs = @[@(opponent.ID)];
         
-        QBChatDialog *chatDialog = [[QBChatDialog alloc] init];
-        chatDialog.type = QBChatDialogTypePrivate;
+        QBChatDialog *chatDialog = [[QBChatDialog alloc] initWithDialogID:nil type:QBChatDialogTypePrivate];
         chatDialog.occupantIDs = occupantsIDs;
         
         __weak typeof(self) weakSelf = self;
-        [self createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
-            if (result.success) {
-                dialog = result.dialog;
+        [self createChatDialog:chatDialog completion:^(QBResponse *response, QBChatDialog *createdDialog) {
+            if (response.success) {
+                dialog = createdDialog;
                 [weakSelf addDialogToHistory:dialog];
             }
             completion(dialog);
@@ -241,21 +242,19 @@
     if (!dialog) {
         NSAssert(notification, @"Notification for receiving contact request is empty. Update this case");
         
-        dialog = [[QBChatDialog alloc] init];
-        dialog.ID = notification.cParamDialogID;
-        dialog.type = QBChatDialogTypePrivate;
+        dialog = [[QBChatDialog alloc] initWithDialogID:notification.cParamDialogID type:QBChatDialogTypePrivate];
         dialog.occupantIDs = @[@(notification.senderID)];
         [self addDialogToHistory:dialog];
         
         __weak typeof(self) weakSelf = self;
-        [self createChatDialog:dialog completion:^(QBChatDialogResult *result) {
+        [self createChatDialog:dialog completion:^(QBResponse *response, QBChatDialog *createdDialog) {
             //
-			if( result.dialog != nil ) {
-				[weakSelf addDialogToHistory:result.dialog];
-			}
-			else{
-				[weakSelf addDialogToHistory:dialog];
-			}
+            if( createdDialog != nil ) {
+                [weakSelf addDialogToHistory:createdDialog];
+            }
+            else{
+                [weakSelf addDialogToHistory:dialog];
+            }
             completion(dialog);
         }];
         
@@ -269,9 +268,10 @@
     NSAssert(chatDialog.type == QBChatDialogTypeGroup, @"Creating group dialog with invalid group type(QBChatDialogTypeGroup needed). Update case.");
     
     __weak typeof(self)weakSelf = self;
-    [self createChatDialog:chatDialog completion:^(QBChatDialogResult *result) {
-        if (result.success) {
-            QBChatDialog *resultDialog = result.dialog;
+    [self createChatDialog:chatDialog completion:^(QBResponse *response, QBChatDialog *createdDialog) {
+        //
+        if (response.success) {
+            QBChatDialog *resultDialog = createdDialog;
             
             QBChatRoomResultBlock joinRoomBlock = ^(QBChatRoom *chatRoom, NSError *error) {
                 if (block) block(resultDialog);
@@ -355,13 +355,14 @@
 - (void)deleteChatDialog:(QBChatDialog *)dialog completion:(void(^)(BOOL success))completionHanlder
 {
     __weak typeof(self)weakSelf = self;
-    QBChatDialogResultBlock resultBlock = ^(QBChatDialogResult *result){
-        if (result.success) {
-            [weakSelf deleteLocalDialog:dialog];
-        }
-        completionHanlder(result.success);
-    };
-    [QBChat deleteDialogWithID:dialog.ID delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
+    [QBRequest deleteDialogWithID:dialog.ID successBlock:^(QBResponse *response) {
+        //
+        [weakSelf deleteLocalDialog:dialog];
+        completionHanlder(response.success);
+    } errorBlock:^(QBResponse *response) {
+        //
+        completionHanlder(response.success);
+    }];
 }
 
 - (void)deleteLocalDialog:(QBChatDialog *)dialog

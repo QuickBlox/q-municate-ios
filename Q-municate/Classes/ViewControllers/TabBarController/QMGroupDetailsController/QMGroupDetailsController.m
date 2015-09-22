@@ -103,7 +103,8 @@
 - (IBAction)changeDialogName:(id)sender {
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [[QMApi instance] changeChatName:self.groupNameField.text forChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
+    [[QMApi instance] changeChatName:self.groupNameField.text forChatDialog:self.chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+        //
         [SVProgressHUD dismiss];
     }];
 }
@@ -114,9 +115,10 @@
     [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
         
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-        [[QMApi instance] changeAvatar:image forChatDialog:weakSelf.chatDialog completion:^(QBChatDialogResult *result) {
-            if (result.success) {
-                [weakSelf updateGUIWithChatDialog:result.dialog];
+        [[QMApi instance] changeAvatar:image forChatDialog:weakSelf.chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+            //
+            if (response.success) {
+                [weakSelf updateGUIWithChatDialog:updatedDialog];
             }
             [SVProgressHUD dismiss];
         }];
@@ -172,9 +174,10 @@
 {
     __weak typeof(self)weakSelf = self;
     [SVProgressHUD show];
-    [[QMApi instance] leaveChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
+    [[QMApi instance] leaveChatDialog:self.chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+        //
         [SVProgressHUD dismiss];
-        if (result.success) {
+        if (response.success) {
             [weakSelf.navigationController popToRootViewControllerAnimated:YES];
         }
     }];

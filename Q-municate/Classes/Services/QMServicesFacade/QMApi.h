@@ -40,7 +40,7 @@ typedef NS_ENUM(NSInteger, QMAccountType);
 
 + (instancetype)instance;
 
-- (BOOL)checkResult:(QBResult *)result;
+- (BOOL)checkResponse:(QBResponse *)response withObject:(id)object;
 
 - (void)startServices;
 - (void)stopServices;
@@ -153,7 +153,7 @@ typedef NS_ENUM(NSInteger, QMAccountType);
 /**
  * Returns updated dialogs and updates exists
  */
-- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(QBDialogsPagedResultBlock)completion;
+- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(QBDialogsPagedResponseBlock)completion;
 
 /**
  *
@@ -189,7 +189,7 @@ typedef NS_ENUM(NSInteger, QMAccountType);
  @param chatDialog - chat dialog
  @result QBChatDialogResult
  */
-- (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
+- (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion;
 
 /**
  Join users to chat dialog
@@ -197,7 +197,7 @@ typedef NS_ENUM(NSInteger, QMAccountType);
  @param occupantsIDs - Array of QBUUser in chat.
  @result QBChatDialogResult
  */
-- (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
+- (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion;
 
 /**
  Join new users to chat
@@ -205,9 +205,9 @@ typedef NS_ENUM(NSInteger, QMAccountType);
  @param dialogName
  @result QBChatDialogResult
  */
-- (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
+- (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion;
 
-- (void)changeAvatar:(UIImage *)avatar forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion;
+- (void)changeAvatar:(UIImage *)avatar forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion;
 
 - (NSUInteger)occupantIDForPrivateChatDialog:(QBChatDialog *)chatDialog;
 

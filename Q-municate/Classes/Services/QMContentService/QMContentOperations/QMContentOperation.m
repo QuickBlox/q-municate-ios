@@ -7,7 +7,6 @@
 //
 
 #import "QMContentOperation.h"
-#import "QBEchoObject.h"
 
 @interface QMContentOperation()
 

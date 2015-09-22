@@ -198,56 +198,57 @@
 - (void)changePasswordForCurrentUser:(QBUUser *)currentUser completion:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
-    [self.usersService updateUser:currentUser withCompletion:^(QBUUserResult *result) {
-        
-        if ([weakSelf checkResult:result]) {
+    QBUpdateUserParameters *params = [[QBUpdateUserParameters alloc] init];
+    params.password = currentUser.password;
+    [self.usersService updateCurrentUser:params withCompletion:^(QBResponse *response, QBUUser *user) {
+        //
+        if ([weakSelf checkResponse:response withObject:user]) {
             
-            weakSelf.currentUser = result.user;
+            weakSelf.currentUser = user;
             weakSelf.currentUser.password = currentUser.password;
             [weakSelf.settingsManager setLogin:currentUser.email andPassword:currentUser.password];
         }
         
-        completion(result.success);
+        completion(response.success);
     }];
 }
 
 - (void)updateUser:(QBUUser *)user image:(UIImage *)image progress:(QMContentProgressBlock)progress completion:(void (^)(BOOL success))completion {
     
-    __block QBUUser *userInfo = user;
+    __block QBUpdateUserParameters *userParams = [[QBUpdateUserParameters alloc] init];
     __weak __typeof(self)weakSelf = self;
     
     void (^updateUserProfile)(QBCBlob *) =^(QBCBlob *blob) {
 
-        if (!userInfo) {
-            userInfo = weakSelf.currentUser;
+        if (!userParams) {
+            userParams = [[QBUpdateUserParameters alloc] init];
         }
         
         if (blob.publicUrl.length > 0) {
-            userInfo.avatarURL = blob.publicUrl;
+            userParams.avatarURL = blob.publicUrl;
         }
-        userInfo.blobID = blob.ID;
-        NSString *password = userInfo.password;
-        userInfo.password = nil;
+        userParams.blobID = blob.ID;
+//        NSString *password = userInfo.password;
+//        userInfo.password = nil;
         
-        [weakSelf.usersService updateUser:userInfo withCompletion:^(QBUUserResult *result) {
-            
-            if ([weakSelf checkResult:result]) {
-                
-                weakSelf.currentUser = result.user;
-                weakSelf.currentUser.password = password;
+        [weakSelf.usersService updateCurrentUser:userParams withCompletion:^(QBResponse *response, QBUUser *user) {
+            //
+            if ([weakSelf checkResponse:response withObject:user]) {
+                weakSelf.currentUser = user;
+                //weakSelf.currentUser.password = password;
             }
             
-            completion(result.success);
+            completion(response.success);
         }];
     };
     
     if (image) {
-        [self.contentService uploadJPEGImage:image progress:progress completion:^(QBCFileUploadTaskResult *result) {
-            if ([weakSelf checkResult:result]) {
-                updateUserProfile(result.uploadedBlob);
+        [self.contentService uploadJPEGImage:image progress:progress completion:^(QBResponse *response, QBCBlob *blob) {
+            if ([weakSelf checkResponse:response withObject:blob]) {
+                updateUserProfile(blob);
             }
             else {
-                updateUserProfile(nil);                
+                updateUserProfile(nil);
             }
         }];
     }
@@ -278,17 +279,17 @@
         if ([facebookFriendsIDs count] == 0) {
             return;
         }
-        [weakSelf.usersService retrieveUsersWithFacebookIDs:facebookFriendsIDs completion:^(QBUUserPagedResult *pagedResult) {
-
-            if (!pagedResult.success) {
+        [weakSelf.usersService retrieveUsersWithFacebookIDs:facebookFriendsIDs completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+            
+            if (!response.success) {
                 return;
             }
-            if ([pagedResult.users count] == 0) {
+            if (page.totalEntries == 0) {
                 return;
             }
             
             // sending contact requests:
-            for (QBUUser *user in pagedResult.users) {
+            for (QBUUser *user in users) {
                 [weakSelf addUserToContactList:user completion:nil];
             }
         }];
@@ -310,19 +311,20 @@
         }
         
         // post request for emails to QB server:
-        [weakSelf.usersService retrieveUsersWithEmails:emails completion:^(QBUUserPagedResult *pagedResult) {
-            if (!pagedResult.success) {
+        [weakSelf.usersService retrieveUsersWithEmails:emails completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+            //
+            if (!response.success) {
                 completionBLock(NO, nil);
                 return;
             }
             
-            if ([pagedResult.users count] == 0) {
+            if ([users count] == 0) {
                 completionBLock(NO, nil);
                 return;
             }
             
             // sending contact requests:
-            for (QBUUser *user in pagedResult.users) {
+            for (QBUUser *user in users) {
                 [weakSelf addUserToContactList:user completion:^(BOOL successed, QBChatMessage *notification) {}];
             }
             completionBLock(YES, nil);

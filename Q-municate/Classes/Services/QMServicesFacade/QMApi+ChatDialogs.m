@@ -29,16 +29,16 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 - (void)fetchAllDialogs:(void(^)(void))completion {
     
     __weak __typeof(self)weakSelf = self;
-    [self.chatDialogsService fetchAllDialogs:^(QBDialogsPagedResult *result) {
-        
-        if ([weakSelf checkResult:result]) {
-            [weakSelf.chatDialogsService addDialogs:result.dialogs];
+    [self.chatDialogsService fetchAllDialogs:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page) {
+        //
+        if ([weakSelf checkResponse:response withObject:nil]) {
+            [weakSelf.chatDialogsService addDialogs:dialogObjects];
             if (completion) completion();
         }
     }];
 }
 
-- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(QBDialogsPagedResultBlock)completion
+- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(QBDialogsPagedResponseBlock)completion
 {
     [self.chatDialogsService fetchDialogsWithLastActivityFromDate:date completion:completion];
 }
@@ -72,10 +72,9 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     
     NSArray *occupantIDs = [self idsWithUsers:occupants];
     
-    QBChatDialog *chatDialog = [[QBChatDialog alloc] init];
+    QBChatDialog *chatDialog = [[QBChatDialog alloc] initWithDialogID:nil type:QBChatDialogTypeGroup];
     chatDialog.name = name;
     chatDialog.occupantIDs = occupantIDs;
-    chatDialog.type = QBChatDialogTypeGroup;
     
     __weak typeof(self)weakSelf = self;
     [self.chatDialogsService createGroupChatDialog:chatDialog completion:^(QBChatDialog *dialog) {
@@ -97,61 +96,57 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 
 #pragma mark - Edit dialog methods
 
-- (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
+- (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion {
     
-    NSMutableDictionary *extendedRequest = [[NSMutableDictionary alloc] init];
-    extendedRequest[kQMEditDialogExtendedNameParameter] = dialogName;
+    chatDialog.name = dialogName;
 
     __weak __typeof(self)weakSelf = self;
-    [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialogResult *result) {
-
-        if ([weakSelf checkResult:result]) {
-            chatDialog.name = dialogName;
-            
-             NSString *notificationText = NSLocalizedString(@"QM_STR_NOTIFICATION_MESSAGE", nil);
+    [self.chatDialogsService updateChatDialog:chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+        //
+        if ([weakSelf checkResponse:response withObject:updatedDialog]) {
+            NSString *notificationText = NSLocalizedString(@"QM_STR_NOTIFICATION_MESSAGE", nil);
             
             [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:notificationText toChatDialog:chatDialog updateType:@"room_name" content:dialogName];
         }
-        completion(result);
+        completion(response,updatedDialog);
+
     }];
 }
 
-- (void)changeAvatar:(UIImage *)avatar forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion
+- (void)changeAvatar:(UIImage *)avatar forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion
 {
     __weak typeof(self)weakSelf = self;
     [self.contentService uploadPNGImage:avatar progress:^(float progress) {
         //
-    } completion:^(QBCFileUploadTaskResult *result) {
+    } completion:^(QBResponse *response, QBCBlob *blob) {
         // update chat dialog:
-        if (!result.success) {
+        if (!response.success) {
             return;
         }
-        NSMutableDictionary *extendedRequest = [NSMutableDictionary new];
-        extendedRequest[@"photo"] = result.uploadedBlob.publicUrl;
-        [weakSelf.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialogResult *dialogResult) {
-            if (dialogResult.success) {
+        chatDialog.photo = blob.publicUrl;
+        [weakSelf.chatDialogsService updateChatDialog:chatDialog completion:^(QBResponse *dialogUpdateResponse, QBChatDialog *updatedDialog) {
+            //
+            if (dialogUpdateResponse.success) {
                 // send notification:
                 NSString *notificationText = NSLocalizedString(@"QM_STR_NOTIFICATION_MESSAGE", nil);
-                chatDialog.photo = dialogResult.dialog.photo;
-                [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:notificationText toChatDialog:chatDialog updateType:@"room_photo" content:dialogResult.dialog.photo];
-                completion(dialogResult);
+                [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:notificationText toChatDialog:chatDialog updateType:@"room_photo" content:updatedDialog.photo];
+                completion(dialogUpdateResponse,updatedDialog);
             }
+
         }];
     }];
 }
 
-- (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
+- (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion {
     
     NSArray *occupantsToJoinIDs = [self idsWithUsers:occupants];
-    
-    NSMutableDictionary *extendedRequest = [[NSMutableDictionary alloc] init];
-    extendedRequest[kQMEditDialogExtendedPushOccupantsParameter] = occupantsToJoinIDs;
+    chatDialog.occupantIDs = occupantsToJoinIDs;
     
     __weak __typeof(self)weakSelf = self;
-    [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialogResult *result) {
-        
-        if ([weakSelf checkResult:result]) {
-            [weakSelf.chatDialogsService addDialogToHistory:result.dialog];
+    [self.chatDialogsService updateChatDialog:chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+        //
+        if ([weakSelf checkResponse:response withObject:updatedDialog]) {
+            [weakSelf.chatDialogsService addDialogToHistory:updatedDialog];
             
             NSString *messageTypeText = NSLocalizedString(@"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT", @"{Full name}");
             NSString *text = [QMChatUtils messageForText:messageTypeText participants:occupants];
@@ -160,26 +155,34 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
             [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"occupants_ids" content:[QMChatUtils idsStringWithoutSpaces:occupants]];
             
         }
-        completion(result);
+        completion(response,updatedDialog);
     }];
 }
 
-- (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResultBlock)completion {
+- (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion {
     
     NSString *messageTypeText = NSLocalizedString(@"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT", @"{Full name}");
     NSString *text = [NSString stringWithFormat:messageTypeText, self.currentUser.fullName];
     NSString *myID = [NSString stringWithFormat:@"%lu", (unsigned long)self.currentUser.ID];
     [self sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"deleted_id" content:myID];
     
-    NSMutableDictionary *extendedRequest = [[NSMutableDictionary alloc] init];
-    extendedRequest[kQMEditDialogExtendedPullOccupantsParameter] = myID;
+//    NSMutableDictionary *extendedRequest = [[NSMutableDictionary alloc] init];
+//    extendedRequest[kQMEditDialogExtendedPullOccupantsParameter] = myID;
+    NSMutableArray *occupantsWithoutCurrentUser = [NSMutableArray array];
+    for (NSNumber *identifier in chatDialog.occupantIDs) {
+        if (![identifier isEqualToNumber:@(self.currentUser.ID)]) {
+            [occupantsWithoutCurrentUser addObject:identifier];
+        }
+    }
+    chatDialog.occupantIDs = occupantsWithoutCurrentUser;
     
     [chatDialog.chatRoom leaveRoom];
     __weak __typeof(self)weakSelf = self;
-    [self.chatDialogsService updateChatDialogWithID:chatDialog.ID extendedRequest:extendedRequest completion:^(QBChatDialogResult *result) {
-        if (result.success) {
+    [self.chatDialogsService updateChatDialog:chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+        //
+        if (response.success) {
             [weakSelf.chatDialogsService deleteLocalDialog:chatDialog];
-            completion(result);
+            completion(response,updatedDialog);
         }
     }];
 }

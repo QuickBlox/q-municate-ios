@@ -10,7 +10,7 @@
 #import "QMChatLayoutConfigs.h"
 #import "QMMessageType.h"
 
-@interface QMMessage : QBChatHistoryMessage
+@interface QMMessage : QBChatMessage
 /**
  * Attributes for attributed message text
  */
@@ -67,6 +67,6 @@
 
 @property (nonatomic, readonly) NSString *encodingText;
 
-- (instancetype)initWithChatHistoryMessage:(QBChatAbstractMessage *)historyMessage;
+- (instancetype)initWithChatHistoryMessage:(QBChatMessage *)historyMessage;
 
 @end

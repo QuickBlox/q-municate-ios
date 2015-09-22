@@ -39,7 +39,7 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
 @implementation QMMessage
 
 
-- (instancetype)initWithChatHistoryMessage:(QBChatAbstractMessage *)historyMessage {
+- (instancetype)initWithChatHistoryMessage:(QBChatMessage *)historyMessage {
     
     self = [super init];
     if (self) {
@@ -49,7 +49,7 @@ NSString *const kQMNotificationTypeKey = @"notification_type";
         self.ID = historyMessage.ID;
         self.recipientID = historyMessage.recipientID;
         self.senderID = historyMessage.senderID;
-        self.datetime = historyMessage.datetime;
+        self.dateSent = historyMessage.dateSent;
         self.customParameters = historyMessage.customParameters;
         self.attachments = historyMessage.attachments;
         

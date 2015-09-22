@@ -12,7 +12,7 @@
 @implementation QMChatUtils
 
 
-+ (NSString *)messageTextForNotification:(QBChatAbstractMessage *)notification
++ (NSString *)messageTextForNotification:(QBChatMessage *)notification
 {
     NSString *messageText = nil;
     QBUUser *sender = [[QMApi instance] userWithID:notification.senderID];

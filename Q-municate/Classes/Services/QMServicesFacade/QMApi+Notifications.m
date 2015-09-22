@@ -120,7 +120,7 @@
     QBMEvent *event = [QBMEvent event];
     event.notificationType = QBMNotificationTypePush;
     event.usersIDs = [NSString stringWithFormat:@"%zd", notification.recipientID];
-    event.isDevelopmentEnvironment = ![QBSettings isUseProductionEnvironmentForPushNotifications];
+    //event.isDevelopmentEnvironment = ![QBSettings isUseProductionEnvironmentForPushNotifications];
     event.type = QBMEventTypeOneShot;
     //
     // custom params

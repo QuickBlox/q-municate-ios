@@ -77,7 +77,7 @@
         insets = layout.rightBalloon.imageCapInsets;
     }
     
-    self.timeLabel.text = [self.formatter stringFromDate:message.datetime];
+    self.timeLabel.text = [self.formatter stringFromDate:message.dateSent];
     
     UIImage *maskImage = message.balloonImage;
     

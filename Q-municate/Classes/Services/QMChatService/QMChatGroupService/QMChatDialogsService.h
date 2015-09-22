@@ -22,7 +22,7 @@
 - (void)createPrivateDialogIfNeededWithNotification:(QBChatMessage *)notification completion:(void(^)(QBChatDialog *chatDialog))completion;
 - (void)createGroupChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(QBChatDialog *chatDialog))block;
 
-- (void)updateChatDialogWithID:(NSString *)dialogID extendedRequest:(NSMutableDictionary *)extendedRequest completion:(QBChatDialogResultBlock)completion;
+- (void)updateChatDialog:(QBChatDialog *)dialog completion:(QBChatDialogResponseBlock)completion;
 
 - (void)updateOrCreateDialogWithMessage:(QBChatMessage *)message isMine:(BOOL)isMine;
 

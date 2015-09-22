@@ -208,7 +208,7 @@
     else if( state == QBRTCConnectionNoAnswer ){
         [self callStoppedByOpponentForReason:kStopVideoChatCallStatus_OpponentDidNotAnswer];
     }
-    else if( state != QBRTCConnectionUnknow && state != QBRTCConnectionClosed ){
+    else if( state != QBRTCConnectionUnknown && state != QBRTCConnectionClosed ){
         [self callStoppedByOpponentForReason:nil];
     }
 }
