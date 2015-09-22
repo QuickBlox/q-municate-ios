@@ -21,9 +21,10 @@
     #import <FacebookSDK/FacebookSDK.h>
 
 
-    #import "QBChatAbstractMessage+CustomParameters.h"
-    #import "QBChatAbstractMessage+TextEncoding.h"
+    #import "QBChatMessage+CustomParameters.h"
+    #import "QBChatMessage+TextEncoding.h"
     #import "QBUUser+CustomParameters.h"
+    #import "QBUpdateUserParameters+CustomParameters.h"
     #import "QBChatDialog+UpdateWithNotification.h"
 
     #import "QMDefinitions.h"

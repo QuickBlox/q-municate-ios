@@ -47,7 +47,7 @@
  @param completion finish of the request, result will be an instance of QBUUserPagedResult class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-- (NSObject<Cancelable> *)retrieveUsersWithFacebookIDs:(NSArray *)facebookIDs completion:(QBUUserPagedResultBlock)completion;
+- (QBRequest *)retrieveUsersWithFacebookIDs:(NSArray *)facebookIDs completion:(QBUUserPagedResponseBlock)completion;
 
 /**
 Retrieve users with ids (with extended set of pagination parameters)
@@ -59,7 +59,7 @@ Type of Result - QBUUserPagedResult
 @param completion finish of the request, result will be an instance of QBUUserPagedResult class.
 @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
 */
-- (NSObject<Cancelable> *)retrieveUsersWithIDs:(NSArray *)ids pagedRequest:(PagedRequest *)pagedRequest completion:(QBUUserPagedResultBlock)completion;
+- (QBRequest *)retrieveUsersWithIDs:(NSArray *)ids pagedRequest:(QBGeneralResponsePage *)pagedRequest completion:(QBUUserPagedResponseBlock)completion;
 
 /**
  Retrieve all Users for current account (with extended set of pagination parameters)
@@ -70,7 +70,7 @@ Type of Result - QBUUserPagedResult
  @param completion finish of the request, result will be an instance of QBUUserPagedResult class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-- (NSObject<Cancelable> *)retrieveUsersWithPagedRequest:(PagedRequest *)pagedRequest completion:(QBUUserPagedResultBlock)completion;
+//- (QBRequest *)retrieveUsersWithPagedRequest:(PagedRequest *)pagedRequest completion:(QBUUserPagedResultBlock)completion;
 
 /**
  Retrieve Users by full name for current account (with extended set of pagination parameters)
@@ -82,7 +82,7 @@ Type of Result - QBUUserPagedResult
  @param completion  finish of the request, result will be an instance of QBUUserPagedResult class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-- (NSObject<Cancelable> *)retrieveUsersWithFullName:(NSString *)fullName pagedRequest:(PagedRequest *)pagedRequest completion:(QBUUserPagedResultBlock)completion;
+- (QBRequest *)retrieveUsersWithFullName:(NSString *)fullName pagedRequest:(QBGeneralResponsePage *)pagedRequest completion:(QBUUserPagedResponseBlock)completion;
 
 /**
  Retrieve Users by full name for current account (with extended set of pagination parameters)
@@ -94,7 +94,8 @@ Type of Result - QBUUserPagedResult
  @param completion  finish of the request, result will be an instance of QBUUserPagedResult class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-- (NSObject<Cancelable> *)retrieveUserWithID:(NSUInteger)userID completion:(QBUUserResultBlock)completion;
+- (QBRequest *)retrieveUserWithID:(NSUInteger)userID completion:(QBUUserResponseBlock)completion;
+
 /**
  Retrieve users with email (max 10 users, for more - use equivalent method with 'pagedRequest' argument)
  
@@ -104,19 +105,19 @@ Type of Result - QBUUserPagedResult
  @param completion finish of the request, result will be an instance of QBUUserPagedResult class.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-- (NSObject<Cancelable> *)retrieveUsersWithEmails:(NSArray *)emails completion:(QBUUserPagedResultBlock)completion;
+- (QBRequest *)retrieveUsersWithEmails:(NSArray *)emails completion:(QBUUserPagedResponseBlock)completion;
 /**
  Reset user's password. User with this email will retrieve email instruction for reset password.
  Type of Result - Result
  @param email User's email
  */
 
-- (NSObject<Cancelable> *)resetUserPasswordWithEmail:(NSString *)email completion:(QBResultBlock)completion;
+- (QBRequest *)resetUserPasswordWithEmail:(NSString *)email completion:(QBResponseBlock)completion;
 /**
  Update User
  Type of Result - QBUUserResult
  @param user An instance of QBUUser, describing the user to be edited.
  */
-- (NSObject<Cancelable> *)updateUser:(QBUUser *)user withCompletion:(QBUUserResultBlock)completion;
+- (QBRequest *)updateCurrentUser:(QBUpdateUserParameters *)params withCompletion:(QBUUserResponseBlock)completion;
 
 @end

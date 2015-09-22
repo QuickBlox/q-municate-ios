@@ -26,24 +26,21 @@ userInfo:nil]
 
 /*QMContentService*/
 typedef void(^QMContentProgressBlock)(float progress);
-//typedef void(^QMCFileUploadTaskResultBlockBlock)(QBCFileUploadTaskResult *result);
 typedef void(^QMCFileUploadResponseBlock)(QBResponse *response, QBCBlob *blob);
-//typedef void(^QMCFileDownloadTaskResultBlockBlock)(QBCFileDownloadTaskResult *result);
 typedef void(^QMCFileDownloadResponseBlock)(QBResponse *response, NSData *fileData);
-//typedef void (^QBUUserResultBlock)(QBUUserResult *result);
+typedef void (^QBUUserResponseBlock)(QBResponse *response, QBUUser *user);
 //typedef void (^QBAAuthResultBlock)(QBAAuthResult *result);
 //typedef void (^QBUUserLogInResultBlock)(QBUUserLogInResult *result);
 //typedef void (^QBAAuthSessionCreationResultBlock)(QBAAuthSessionCreationResult *result);
 //typedef void (^QBUUserPagedResultBlock)(QBUUserPagedResult *pagedResult);
-//typedef void (^QBMRegisterSubscriptionTaskResultBlock)(QBMRegisterSubscriptionTaskResult *result);
-//typedef void (^QBMUnregisterSubscriptionTaskResultBlock)(QBMUnregisterSubscriptionTaskResult *result);
+typedef void (^QBUUserPagedResponseBlock)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users);
 //typedef void (^QBDialogsPagedResultBlock)(QBDialogsPagedResult *result);
 //typedef void (^QBChatDialogResultBlock)(QBChatDialogResult *result);
 //typedef void (^QBChatHistoryMessageResultBlock)(QBChatHistoryMessageResult *result);
 
-//typedef void (^QBResultBlock)(QBResult *result);
+typedef void (^QBResponseBlock)(QBResponse *response);
 //typedef void (^QBSessionCreationBlock)(BOOL success, NSString *error);
-typedef void (^QBChatResultBlock)(BOOL success);
+//typedef void (^QBChatResultBlock)(BOOL success);
 //typedef void (^QBChatRoomResultBlock)(QBChatRoom *chatRoom, NSError *error);
 //typedef void (^QBChatDialogHistoryBlock)(NSMutableArray *chatDialogHistoryArray, NSError *error);
 

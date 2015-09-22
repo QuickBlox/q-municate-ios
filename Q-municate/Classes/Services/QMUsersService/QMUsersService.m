@@ -208,8 +208,8 @@
 {
     NSArray *idsToFetch = [self usersIDsToFetch:usersIDs];
     if (idsToFetch.count > 0) {
-        [self retriveUsersWithIDs:idsToFetch completion:^(QBUUserPagedResult *pagedResult) {
-            if (pagedResult.success) {
+        [self retriveUsersWithIDs:idsToFetch completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+            if (response.success) {
                 if (completionBlock) completionBlock(YES);
                 return;
             }
@@ -221,8 +221,16 @@
 }
 
 
-- (NSObject<Cancelable> *)retrieveUsersWithFacebookIDs:(NSArray *)facebookIDs completion:(QBUUserPagedResultBlock)completion {
-    return [QBUsers usersWithFacebookIDs:facebookIDs delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
+- (QBRequest *)retrieveUsersWithFacebookIDs:(NSArray *)facebookIDs completion:(QBUUserPagedResponseBlock)completion {
+    NSUInteger currentPage = 1;
+    NSUInteger perPage = facebookIDs.count < 100 ? facebookIDs.count : 100;
+    return [QBRequest usersWithFacebookIDs:facebookIDs page:[QBGeneralResponsePage responsePageWithCurrentPage:currentPage perPage:perPage] successBlock:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+        //
+        completion(response,page,users);
+    } errorBlock:^(QBResponse *response) {
+        //
+        completion(response,nil,nil);
+    }];
 }
 
 - (NSArray *)checkExistIds:(NSArray *)ids {
@@ -264,93 +272,119 @@
         completion(NO);
     } else {
         
-        PagedRequest *pagedRequest = [[PagedRequest alloc] init];
-        pagedRequest.page = 1;
-        pagedRequest.perPage = filteredIDs.count < 100 ? filteredIDs.count : 100;
+        NSUInteger currentPage = 1;
+        NSUInteger perPage = filteredIDs.count < 100 ? filteredIDs.count : 100;
+        QBGeneralResponsePage *pagedRequest = [QBGeneralResponsePage responsePageWithCurrentPage:currentPage perPage:perPage];
         
         __weak __typeof(self)weakSelf = self;
-        [self retrieveUsersWithIDs:filteredIDs pagedRequest:pagedRequest completion:^(QBUUserPagedResult *pagedResult) {
-            [weakSelf addUsers:pagedResult.users];
+        [self retrieveUsersWithIDs:filteredIDs pagedRequest:pagedRequest completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+            [weakSelf addUsers:users];
             completion(YES);
         }];
     }
 }
 
-- (NSObject<Cancelable> *)retrieveUsersWithIDs:(NSArray *)ids pagedRequest:(PagedRequest *)pagedRequest completion:(QBUUserPagedResultBlock)completion {
+- (QBRequest *)retrieveUsersWithIDs:(NSArray *)ids pagedRequest:(QBGeneralResponsePage *)pagedRequest completion:(QBUUserPagedResponseBlock)completion {
     
-    NSString *joinedIds = [ids componentsJoinedByString:@","];
     [self.retrivedIds addObjectsFromArray:ids];
     
     __weak __typeof(self)weakSelf = self;
-    QBUUserPagedResultBlock resultBlock = ^(QBUUserPagedResult *pagedResult) {
-        
-        for (QBUUser *user in pagedResult.users) {
+    return [QBRequest usersWithIDs:ids page:pagedRequest successBlock:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+        //
+        for (QBUUser *user in users) {
             [weakSelf.retrivedIds removeObject:@(user.ID)];
         }
-        completion(pagedResult);
-    };
-    
-    return [QBUsers usersWithIDs:joinedIds pagedRequest:pagedRequest
-                        delegate:[QBEchoObject instance]
-                         context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
+        completion(response,page,users);
+    } errorBlock:^(QBResponse *response) {
+        //
+        completion(response,nil,nil);
+    }];
 }
 
-- (NSObject<Cancelable> *)retrieveUsersWithPagedRequest:(PagedRequest*)pagedRequest completion:(QBUUserPagedResultBlock)completion {
+//- (QBRequest *)retrieveUsersWithPagedRequest:(QBGeneralResponsePage*)pagedRequest completion:(QBUUserPagedResponseBlock)completion {
+//    
+//    
+//    return [QBUsers usersWithPagedRequest:pagedRequest
+//                                 delegate:[QBEchoObject instance]
+//                                  context:[QBEchoObject makeBlockForEchoObject:completion]];
+//}
+
+- (QBRequest *)retrieveUsersWithFullName:(NSString *)fullName pagedRequest:(QBGeneralResponsePage *)pagedRequest completion:(QBUUserPagedResponseBlock)completion {
     
-    return [QBUsers usersWithPagedRequest:pagedRequest
-                                 delegate:[QBEchoObject instance]
-                                  context:[QBEchoObject makeBlockForEchoObject:completion]];
+    return [QBRequest usersWithFullName:fullName page:pagedRequest successBlock:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+        //
+        completion(response,page,users);
+    } errorBlock:^(QBResponse *response) {
+        //
+        completion(response,nil,nil);
+    }];
 }
 
-- (NSObject<Cancelable> *)retrieveUsersWithFullName:(NSString *)fullName pagedRequest:(PagedRequest *)pagedRequest completion:(QBUUserPagedResultBlock)completion {
-    
-    return [QBUsers usersWithFullName:fullName
-                         pagedRequest:pagedRequest
-                             delegate:[QBEchoObject instance]
-                              context:[QBEchoObject makeBlockForEchoObject:completion]];
-}
-
-- (NSObject<Cancelable> *)retrieveUserWithID:(NSUInteger)userID completion:(QBUUserResultBlock)completion {
+- (QBRequest *)retrieveUserWithID:(NSUInteger)userID completion:(QBUUserResponseBlock)completion {
     
     __weak __typeof(self)weakSelf = self;
-    QBUUserResultBlock resultBlock = ^(QBUUserResult *result) {
-        if (result.success) {
-            [weakSelf addUser:result.user];
+    QBUUserResponseBlock responseBlock = ^(QBResponse *response, QBUUser *user) {
+        if (response.success) {
+            [weakSelf addUser:user];
         }
-        completion(result);
+        completion(response,user);
     };
     
-    return [QBUsers userWithID:userID delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
+    return [QBRequest userWithID:userID successBlock:responseBlock
+                      errorBlock:^(QBResponse *response) {
+                          //
+                          completion(response,nil);
+            }];
 }
          
-- (NSObject<Cancelable> *)retriveUsersWithIDs:(NSArray *)usersIDs completion:(QBUUserPagedResultBlock)completion
+- (QBRequest *)retriveUsersWithIDs:(NSArray *)usersIDs completion:(QBUUserPagedResponseBlock)completion
 {
     __weak __typeof(self)weakSelf = self;
-    QBUUserPagedResultBlock resultBlock = ^(QBUUserPagedResult *result) {
-        if (result.success) {
-            [weakSelf addUsers:result.users];
+    QBUUserPagedResponseBlock responseBlock = ^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+        if (response.success) {
+            [weakSelf addUsers:users];
         }
-        completion(result);
+        completion(response,page,users);
     };
-    NSString *idsToFetch = [usersIDs componentsJoinedByString:@","];
-    return [QBUsers usersWithIDs:idsToFetch delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:resultBlock]];
+
+    return [QBRequest usersWithIDs:usersIDs page:[QBGeneralResponsePage responsePageWithCurrentPage:1 perPage:100] successBlock:responseBlock
+                        errorBlock:^(QBResponse *response) {
+                            //
+                            completion(response,nil,nil);
+            }];
 }
 
-- (NSObject<Cancelable> *)retrieveUsersWithEmails:(NSArray *)emails completion:(QBUUserPagedResultBlock)completion {
+- (QBRequest *)retrieveUsersWithEmails:(NSArray *)emails completion:(QBUUserPagedResponseBlock)completion {
     
-    return [QBUsers usersWithEmails:emails
-                           delegate:[QBEchoObject instance]
-                            context:[QBEchoObject makeBlockForEchoObject:completion]];
+    return [QBRequest usersWithEmails:emails successBlock:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+        //
+        completion(response,page,users);
+    } errorBlock:^(QBResponse *response) {
+        //
+        completion(response,nil,nil);
+    }];
 }
 
-- (NSObject<Cancelable> *)resetUserPasswordWithEmail:(NSString *)email completion:(QBResultBlock)completion {
+- (QBRequest *)resetUserPasswordWithEmail:(NSString *)email completion:(QBResponseBlock)completion {
 
-    return [QBUsers resetUserPasswordWithEmail:email delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
+    return [QBRequest resetUserPasswordWithEmail:email successBlock:^(QBResponse *response) {
+        //
+        completion(response);
+    } errorBlock:^(QBResponse *response) {
+        //
+        completion(response);
+    }];
 }
 
-- (NSObject<Cancelable> *)updateUser:(QBUUser *)user withCompletion:(QBUUserResultBlock)completion {
+- (QBRequest *)updateCurrentUser:(QBUpdateUserParameters *)params withCompletion:(QBUUserResponseBlock)completion {
     
-    return [QBUsers updateUser:user delegate:[QBEchoObject instance] context:[QBEchoObject makeBlockForEchoObject:completion]];
+    return [QBRequest updateCurrentUser:params successBlock:^(QBResponse *response, QBUUser *updatedUser) {
+        //
+        completion(response,updatedUser);
+    } errorBlock:^(QBResponse *response) {
+        //
+        completion(response,nil);
+    }];
 }
 
 @end
