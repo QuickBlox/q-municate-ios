@@ -19,11 +19,6 @@ typedef enum QBConnectionZoneType{
 
 @interface QBConnection : NSObject
 
-/**
- *Use auto create session, default - NO
- */
-+ (void)setAutoCreateSessionEnabled:(BOOL)enabled;
-
 #pragma mark - Settings methods
 /**
 * Setting API Key for Quickblox API
@@ -47,6 +42,13 @@ typedef enum QBConnectionZoneType{
 + (void)setServiceZone:(QBConnectionZoneType)serviceZone;
 
 /**
+ *  Return current Service Zone
+ *
+ *  @param serviceZone - Service Zone. One from QBConnectionZoneType. Default - QBConnectionZoneTypeAutomatic
+ */
++ (QBConnectionZoneType)currentServiceZone;
+
+/**
 * A Boolean value indicating whether the manager is enabled.
 
 * If YES, the manager will change status bar network activity indicator according to network operation notifications it receives. The default value is NO.
@@ -66,5 +68,11 @@ typedef enum QBConnectionZoneType{
 */
 + (void)setApiDomain:(NSString *)apiDomain forServiceZone:(enum QBConnectionZoneType)zone;
 
+/**
+ *  Returns Api Domain for current zone
+ *
+ *  @return NSString value of Api Domain
+ */
++ (NSString *)currentApiDomain;
 
 @end
