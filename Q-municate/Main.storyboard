@@ -1863,10 +1863,10 @@ Cg
             </objects>
             <point key="canvasLocation" x="-3406" y="-9060"/>
         </scene>
-        <!--Chat View Controller-->
+        <!--ChatVC-->
         <scene sceneID="zPm-bv-kk9">
             <objects>
-                <viewController storyboardIdentifier="QMChatViewController" hidesBottomBarWhenPushed="YES" id="zpv-I5-i7g" customClass="QMChatViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="QMChatVC" hidesBottomBarWhenPushed="YES" id="zpv-I5-i7g" customClass="QMChatVC" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="vdc-hh-O2N"/>
                         <viewControllerLayoutGuide type="bottom" id="3q7-BX-nci"/>

@@ -48,6 +48,8 @@
 {
     self.dataSource.viewIsShowed = YES;
     [super viewWillAppear:animated];
+    
+    [self.dataSource reloadDataSource];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

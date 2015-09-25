@@ -8,7 +8,7 @@
 
 #import "QMFriendsDetailsController.h"
 #import "QMVideoCallController.h"
-#import "QMChatViewController.h"
+#import "QMChatVC.h"
 #import "QMUsersUtils.h"
 #import "QMImageView.h"
 #import "QMAlertsFactory.h"
@@ -24,7 +24,11 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     QMCallTypeChat
 };
 
-@interface QMFriendsDetailsController () <UIActionSheetDelegate>
+@interface QMFriendsDetailsController ()
+<
+UIActionSheetDelegate,
+QMContactListServiceDelegate
+>
 
 @property (weak, nonatomic) IBOutlet UITableViewCell *phoneCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *videoChatCell;
@@ -109,7 +113,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     
     if ([segue.identifier isEqualToString:kChatViewSegueIdentifier]) {
         
-        QMChatViewController *chatController = segue.destinationViewController;
+        QMChatVC *chatController = segue.destinationViewController;
         chatController.dialog = sender;
         
         NSAssert([sender isKindOfClass:QBChatDialog.class], @"Need update this case");
@@ -185,6 +189,13 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 {
     BOOL isContact = [[QMApi instance] isFriend:self.selectedUser];
     self.deleteContactButton.enabled = isContact;
+}
+    
+#pragma mark Contact List Serice Delegate
+    
+- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
+    [self updateUserStatus];
+    [self disableDeleteContactButtonIfNeeded];
 }
 
 @end

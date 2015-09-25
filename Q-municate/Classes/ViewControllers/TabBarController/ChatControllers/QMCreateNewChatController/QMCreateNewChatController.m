@@ -7,12 +7,12 @@
 //
 
 #import "QMCreateNewChatController.h"
-#import "QMChatViewController.h"
+#import "QMChatVC.h"
 #import "SVProgressHUD.h"
 #import "QMApi.h"
 #import "QMUsersUtils.h"
 
-NSString *const QMChatViewControllerID = @"QMChatViewController";
+NSString *const QMChatViewControllerID = @"QMChatVC";
 
 @implementation QMCreateNewChatController
 
@@ -45,7 +45,7 @@ NSString *const QMChatViewControllerID = @"QMChatViewController";
         
         if (chatDialog) {
             
-            QMChatViewController *chatVC = [weakSelf.storyboard instantiateViewControllerWithIdentifier:QMChatViewControllerID];
+            QMChatVC *chatVC = [weakSelf.storyboard instantiateViewControllerWithIdentifier:QMChatViewControllerID];
             chatVC.dialog = chatDialog;
             
             NSMutableArray *controllers = weakSelf.navigationController.viewControllers.mutableCopy;

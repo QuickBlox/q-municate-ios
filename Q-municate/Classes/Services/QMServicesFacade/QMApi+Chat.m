@@ -147,10 +147,10 @@ static const NSUInteger kQMDialogsPageLimit = 10;
 
 - (void)createGroupChatDialogWithName:(NSString *)name occupants:(NSArray *)occupants completion:(void(^)(QBChatDialog *chatDialog))completion {
     
-    NSArray *occupantIDs = [self idsWithUsers:occupants];
+    //NSArray *occupantIDs = [self idsWithUsers:occupants];
     
     __weak typeof(self)weakSelf = self;
-    [self.chatService createGroupChatDialogWithName:name photo:nil occupants:occupantIDs completion:^(QBResponse *response, QBChatDialog *createdDialog) {
+    [self.chatService createGroupChatDialogWithName:name photo:nil occupants:occupants completion:^(QBResponse *response, QBChatDialog *createdDialog) {
         
         // send notification from here:
         NSString *notificationText = NSLocalizedString(@"QM_STR_NOTIFICATION_MESSAGE", nil);
@@ -293,6 +293,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
 {
     QBChatMessage *groupNotification = [self notificationToRecipient:nil text:text chatDialog:chatDialog];
     
+    [groupNotification updateCustomParametersWithDialog:[[QBChatDialog alloc] initWithDialogID:chatDialog.ID type:chatDialog.type]];
     groupNotification.dialog.occupantIDs = occupants; // occupants IDs received
     
     [self sendGroupChatDialogDidCreateNotification:groupNotification toChatDialog:chatDialog persistent:YES completionBlock:block];

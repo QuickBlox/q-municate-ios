@@ -36,6 +36,7 @@
 
 - (void)autoLogin:(void(^)(BOOL success))completion {
     
+#warning Current user and session always exists, need to check somehow if user logged in or not
     //if (!self.currentUser) {
         
         if (self.settingsManager.accountType == QMAccountTypeEmail && self.settingsManager.password && self.settingsManager.login) {

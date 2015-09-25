@@ -12,7 +12,7 @@
 #import "QMImageView.h"
 #import "MPGNotification.h"
 #import "QMMessageBarStyleSheetFactory.h"
-#import "QMChatViewController.h"
+#import "QMChatVC.h"
 #import "QMSoundManager.h"
 #import "QMSettingsManager.h"
 #import "REAlertView+QMSuccess.h"
@@ -176,7 +176,7 @@
     // if message is not mine:
     if (message.senderID != [QMApi instance].currentUser.ID) {
         
-        if ([self.chatDelegate isKindOfClass:QMChatViewController.class] && [otherDialog.ID isEqual:((QMChatViewController *)self.chatDelegate).dialog.ID]) {
+        if ([self.chatDelegate isKindOfClass:QMChatVC.class] && [otherDialog.ID isEqual:((QMChatVC *)self.chatDelegate).dialog.ID]) {
             // don't show popup
             [self tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:NO];
         } else {
@@ -199,7 +199,7 @@
     [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
         if (buttonIndex == 1) {
             UINavigationController *navigationController = (UINavigationController *)[weakSelf selectedViewController];
-            QMChatViewController *chatController = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"QMChatViewController"];
+            QMChatVC *chatController = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"QMChatVC"];
             chatController.dialog = dialog;
             [navigationController pushViewController:chatController animated:YES];
         }

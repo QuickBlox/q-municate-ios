@@ -17,6 +17,9 @@
 
 
 @interface QMFriendsListDataSource()
+<
+QMContactListServiceDelegate
+>
 
 
 @property (strong, nonatomic) NSMutableArray *searchResult;
@@ -42,30 +45,11 @@
         
         self.tableView = tableView;
         self.tableView.dataSource = self;
+        [[QMApi instance].contactListService addDelegate:self];
         self.searchResult = [NSMutableArray array];
         
         self.searchDisplayController = searchDisplayController;
-        __weak __typeof(self)weakSelf = self;
-        
-        void (^reloadDatasource)(void) = ^(void) {
-            
-            if (weakSelf.searchRequest) {
-                return;
-            }
-            
-            if (weakSelf.searchDisplayController.isActive) {
-                
-                weakSelf.friendList = [QMApi instance].friends;
-                
-                [weakSelf.searchDisplayController.searchResultsTableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]   withRowAnimation:UITableViewRowAnimationAutomatic];
-            }
-            else {
-                [weakSelf reloadDataSource];
-            }
-        };
-        
-        
-        
+
         UINib *friendsCellNib = [UINib nibWithNibName:@"QMFriendListCell" bundle:nil];
         UINib *noResultsCellNib = [UINib nibWithNibName:@"QMNoResultsCell" bundle:nil];
         
@@ -264,6 +248,24 @@
     [self.tableView setDataSource:self];
     [self reloadDataSource];
     [self.tableView reloadData];
+}
+
+#pragma mark Contact List Serice Delegate
+
+- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
+    if (self.searchRequest) {
+        return;
+    }
+    
+    if (self.searchDisplayController.isActive) {
+        
+        self.friendList = [QMApi instance].friends;
+        
+        [self.searchDisplayController.searchResultsTableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]   withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+    else {
+        [self reloadDataSource];
+    }
 }
 
 @end

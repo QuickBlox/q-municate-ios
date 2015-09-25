@@ -56,6 +56,7 @@
 {
     QBChatDialog *dialog = [self.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:notification.recipientID];
     NSAssert(dialog, @"Dialog not found");
+    [notification updateCustomParametersWithDialog:[[QBChatDialog alloc] initWithDialogID:nil type:QBChatDialogTypePrivate]];
     if (notification.messageType == QMMessageTypeContactRequest) {
         notification.dialog.occupantIDs = dialog.occupantIDs;
     }

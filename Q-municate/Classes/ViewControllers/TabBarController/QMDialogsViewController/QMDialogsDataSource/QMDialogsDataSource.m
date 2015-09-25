@@ -12,8 +12,13 @@
 #import "QMApi.h"
 
 @interface QMDialogsDataSource()
+<
+UITableViewDataSource,
+QMChatServiceDelegate,
+QMChatConnectionDelegate,
+QMContactListServiceDelegate
+>
 
-<UITableViewDataSource>
 
 @property (weak, nonatomic) UITableView *tableView;
 @property (strong, nonatomic, readonly) NSMutableArray *dialogs;
@@ -27,7 +32,8 @@
     
     self = [super init];
     if (self) {
-        
+        [[QMApi instance].chatService addDelegate:self];
+        [[QMApi instance].contactListService addDelegate:self];
         self.tableView = tableView;
         self.tableView.dataSource = self;
     }
@@ -161,4 +167,42 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
         }];
     }
 }
+
+#pragma mark -
+#pragma mark Chat Service Delegate
+
+- (void)chatService:(QMChatService *)chatService didAddChatDialogsToMemoryStorage:(NSArray *)chatDialogs {
+    [self updateGUI];
+}
+
+- (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
+    [self updateGUI];
+}
+
+- (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
+    [self updateGUI];
+}
+
+- (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
+    [self updateGUI];
+}
+
+- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+    [self updateGUI];
+}
+
+- (void)chatService:(QMChatService *)chatService didAddMessagesToMemoryStorage:(NSArray *)messages forDialogID:(NSString *)dialogID {
+    [self updateGUI];
+}
+
+- (void)chatService:(QMChatService *)chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)chatDialogID {
+    [self updateGUI];
+}
+
+#pragma mark Contact List Serice Delegate
+
+- (void)contactListService:(QMContactListService *)contactListService didAddUsers:(NSArray *)users {
+    [self.tableView reloadData];
+}
+
 @end
