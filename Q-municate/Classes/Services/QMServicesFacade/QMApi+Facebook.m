@@ -1,9 +1,9 @@
 //
 //  QMApi+Facebook.m
-//  Qmunicate
+//  Q-municate
 //
-//  Created by Andrey Ivanov on 10.07.14.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Vitaliy Gorbachov on 9/24/15.
+//  Copyright © 2015 Quickblox. All rights reserved.
 //
 
 #import "QMApi.h"
@@ -22,7 +22,7 @@
 }
 
 - (void)fbInviteUsersWithIDs:(NSArray *)ids copmpletion:(void(^)(NSError *error))completion {
-
+    
     NSString *strIds = [ids componentsJoinedByString:@","];
     [QMFacebookService shareToUsers:strIds completion:completion];
 }
@@ -33,7 +33,7 @@
 
 - (void)fbIniviteDialogWithCompletion:(void(^)(BOOL success))completion {
     
-   [QMFacebookService inviteFriendsWithCompletion:completion];
+    [QMFacebookService inviteFriendsWithCompletion:completion];
 }
 
 @end

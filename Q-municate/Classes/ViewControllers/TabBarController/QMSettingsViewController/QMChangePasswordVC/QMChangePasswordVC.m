@@ -9,7 +9,6 @@
 #import "QMChangePasswordVC.h"
 #import "QMSettingsManager.h"
 #import "QMAuthService.h"
-#import "QMUsersService.h"
 #import "REAlertView+QMSuccess.h"
 #import "UIImage+TintColor.h"
 #import "SVProgressHUD.h"

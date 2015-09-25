@@ -41,6 +41,11 @@ typedef void (^QBChatResultBlock)(BOOL success);
 typedef void (^QBChatRoomResultBlock)(QBChatRoom *chatRoom, NSError *error);
 //typedef void (^QBChatDialogHistoryBlock)(NSMutableArray *chatDialogHistoryArray, NSError *error);
 
+//************** QMApi *************************
+
+static NSString *const kChatCacheNameKey = @"q-municate";
+static NSString *const kContactListCacheNameKey = @"q-municate-contacts";
+
 //************** Segue Identifiers *************************
 static NSString *const kTabBarSegueIdnetifier         = @"TabBarSegue";
 static NSString *const kSplashSegueIdentifier         = @"SplashSegue";

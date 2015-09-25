@@ -1,17 +1,15 @@
 //
 //  QMApi+Auth.m
-//  Qmunicate
+//  Q-municate
 //
-//  Created by Andrey Ivanov on 03.07.14.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Vitaliy Gorbachov on 9/24/15.
+//  Copyright © 2015 Quickblox. All rights reserved.
 //
 
 #import "QMApi.h"
-#import "QMAuthService.h"
+#import <QMAuthService.h>
 #import "QMFacebookService.h"
 #import "QMSettingsManager.h"
-#import "QMUsersService.h"
-#import "QMMessagesService.h"
 #import "REAlertView+QMSuccess.h"
 
 @implementation QMApi (Auth)
@@ -20,11 +18,10 @@
 
 - (void)logout:(void(^)(BOOL success))completion {
     
-    [self.messagesService logoutChat];
-    self.currentUser = nil;
+    [self.chatService logoutChat];
+    //self.currentUser = nil;
     [self.settingsManager clearSettings];
     [QMFacebookService logout];
-    [self stopServices];
     
     [self unSubscribeToPushNotifications:^(BOOL success) {
         completion(YES);
@@ -39,9 +36,7 @@
 
 - (void)autoLogin:(void(^)(BOOL success))completion {
     
-    [self startServices];
-    
-    if (!self.currentUser) {
+    //if (!self.currentUser) {
         
         if (self.settingsManager.accountType == QMAccountTypeEmail && self.settingsManager.password && self.settingsManager.login) {
             
@@ -58,11 +53,11 @@
             
             completion(NO);
         }
-    }
-    else {
-        
-        completion(YES);
-    }
+//    }
+//    else {
+//        
+//        completion(YES);
+//    }
 }
 
 - (void)singUpAndLoginWithFacebook:(void(^)(BOOL success))completion {
@@ -98,14 +93,17 @@
     
     __weak __typeof(self)weakSelf = self;
     
-    [self.authService signUpUser:user completion:^(QBResponse *response, QBUUser *createdUser) {
+    [self.authService signUpAndLoginWithUser:user completion:^(QBResponse *response, QBUUser *userProfile) {
         //
-        if (![weakSelf checkResponse:response withObject:createdUser]) {
+        if (![weakSelf checkResponse:response withObject:userProfile]) {
             completion(response.success);
         }
         else {
             [weakSelf setAutoLogin:rememberMe withAccountType:QMAccountTypeEmail];
-            [weakSelf loginWithEmail:createdUser.email password:createdUser.password rememberMe:rememberMe completion:completion];
+            if (rememberMe) {
+                weakSelf.settingsManager.rememberMe = rememberMe;
+                [weakSelf.settingsManager setLogin:user.email andPassword:user.password];
+            }
         }
     }];
 }
@@ -113,8 +111,8 @@
 - (void)resetUserPassordWithEmail:(NSString *)email completion:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
-    
-    [self.usersService resetUserPasswordWithEmail:email completion:^(QBResponse *response) {
+
+    [self.contactListService resetUserPasswordWithEmail:email completion:^(QBResponse *response) {
         //
         completion([weakSelf checkResponse:response withObject:nil]);
     }];
@@ -122,41 +120,12 @@
 
 #pragma mark - Private methods
 
-- (void)createSessionWithBlock:(void(^)(BOOL success))completion {
-    
-    if ([self.authService sessionTokenHasExpiredOrNeedCreate]) {
-        
-        [QBRequest createSessionWithSuccessBlock:^(QBResponse *response, QBASession *session) {
-            completion(YES);
-        } errorBlock:^(QBResponse *response) {
-            [REAlertView showAlertWithMessage:response.error.description actionSuccess:NO];
-            completion(NO);
-        }];
-    }
-    else {
-        completion(YES);
-    }
-}
-
-- (void)destroySessionWithCompletion:(void(^)(BOOL success))completion {
-    
-    [QBRequest destroySessionWithSuccessBlock:^(QBResponse *response) {
-        completion(YES);
-    } errorBlock:^(QBResponse *response) {
-        [REAlertView showAlertWithMessage:response.error.description actionSuccess:NO];
-        completion(NO);
-    }];
-}
-
 - (void)logInWithFacebookAccessToken:(NSString *)accessToken completion:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
-    [self.authService logInWithFacebookAccessToken:accessToken completion:^(QBResponse *response, QBUUser *user) {
+    [self.authService logInWithFacebookSessionToken:accessToken completion:^(QBResponse *response, QBUUser *userProfile) {
         //
-        if ([weakSelf checkResponse:response withObject:user]) {
-            
-            weakSelf.currentUser = user;
-        }
+        [weakSelf checkResponse:response withObject:userProfile];
         completion(response.success);
     }];
 }
@@ -189,9 +158,16 @@
     
     if (self.settingsManager.pushNotificationsEnabled || force) {
         __weak __typeof(self)weakSelf = self;
+
+        NSString *deviceIdentifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
         
-        // Register subscription with device token
-        [QBRequest registerSubscriptionForDeviceToken:self.deviceToken successBlock:^(QBResponse *response, NSArray *subscriptions) {
+        // subscribing for push notifications
+        QBMSubscription *subscription = [QBMSubscription subscription];
+        subscription.notificationChannel = QBMNotificationChannelAPNS;
+        subscription.deviceUDID = deviceIdentifier;
+        subscription.deviceToken = self.deviceToken;
+        
+        [QBRequest createSubscription:subscription successBlock:^(QBResponse *response, NSArray *objects) {
             // Registration succeded
             if (force) {
                 weakSelf.settingsManager.pushNotificationsEnabled = YES;
@@ -199,14 +175,13 @@
             if (complete) {
                 complete(YES);
             };
-        } errorBlock:^(QBError *error) {
+        } errorBlock:^(QBResponse *response) {
             // Handle error
-            [REAlertView showAlertWithMessage:error.description actionSuccess:NO];
+            [REAlertView showAlertWithMessage:response.error.description actionSuccess:NO];
             if (complete) {
                 complete(NO);
             };
         }];
-        
     }
     else{
         if( complete ){
@@ -219,12 +194,15 @@
     
     if (self.settingsManager.pushNotificationsEnabled) {
         __weak __typeof(self)weakSelf = self;
-        [QBRequest unregisterSubscriptionWithSuccessBlock:^(QBResponse *response) {
+        NSString *deviceIdentifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+        [QBRequest unregisterSubscriptionForUniqueDeviceIdentifier:deviceIdentifier successBlock:^(QBResponse *response) {
+            //
             weakSelf.settingsManager.pushNotificationsEnabled = NO;
             if (complete) {
                 complete(YES);
             }
         } errorBlock:^(QBError *error) {
+            //
             if( ![error reasons] ) { // success unsubscription
                 weakSelf.settingsManager.pushNotificationsEnabled = NO;
                 if (complete) {
@@ -237,6 +215,7 @@
                     complete(NO);
                 }
             }
+
         }];
     }
     else {
@@ -250,15 +229,18 @@
 - (void)loginWithEmail:(NSString *)email password:(NSString *)password rememberMe:(BOOL)rememberMe completion:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
-    [self.authService logInWithEmail:email password:password completion:^(QBResponse *response, QBUUser *user) {
+    
+    QBUUser *loginUser = [QBUUser user];
+    loginUser.email =       email;
+    loginUser.password =    password;
+    
+    [self.authService logInWithUser:loginUser completion:^(QBResponse *response, QBUUser *userProfile) {
         //
-        if(![weakSelf checkResponse:response withObject:user]){
+        if(![weakSelf checkResponse:response withObject:userProfile]){
             
             completion(response.success);
         }
         else {
-            
-            weakSelf.currentUser = user;
             weakSelf.currentUser.password = password;
             
             if (rememberMe) {

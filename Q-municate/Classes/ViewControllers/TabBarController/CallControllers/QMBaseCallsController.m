@@ -7,7 +7,6 @@
 //
 
 #import "QMBaseCallsController.h"
-#import "QMChatReceiver.h"
 #import "QMAVCallManager.h"
 
 
@@ -155,7 +154,6 @@
 }
 
 - (void)dealloc {
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
     [QBRTCClient.instance removeDelegate:self];
 }
 

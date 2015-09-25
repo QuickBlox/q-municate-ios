@@ -10,7 +10,6 @@
 #import "QMDialogCell.h"
 #import "SVProgressHUD.h"
 #import "QMApi.h"
-#import "QMChatReceiver.h"
 
 @interface QMDialogsDataSource()
 
@@ -24,12 +23,6 @@
 
 @implementation QMDialogsDataSource
 
-- (void)dealloc {
-    
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
-}
-
 - (instancetype)initWithTableView:(UITableView *)tableView {
     
     self = [super init];
@@ -37,27 +30,6 @@
         
         self.tableView = tableView;
         self.tableView.dataSource = self;
-        
-        __weak __typeof(self)weakSelf = self;
-        
-        [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-            
-            if (!message.cParamDialogID) {
-                return;
-            }
-            [weakSelf updateGUI];
-            [weakSelf retrieveUserIfNeededWithMessage:message];
-        }];
-        
-        [[QMChatReceiver instance] dialogsHisotryUpdatedWithTarget:self block:^{
-            [weakSelf updateGUI];
-        }];
-        
-        [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:^{
-            [weakSelf.tableView reloadData];
-        }];
-        
-        
     }
     
     return self;
@@ -66,7 +38,7 @@
 - (void)retrieveUserIfNeededWithMessage:(QBChatMessage *)message
 {
     __weak typeof(self)weakSelf = self;
-    if (message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
+    if (message.messageType == QMMessageTypeContactRequest) {
         [[QMApi instance] retriveIfNeededUserWithID:message.senderID completion:^(BOOL retrieveWasNeeded) {
             if (retrieveWasNeeded) {
                 [weakSelf updateGUI];

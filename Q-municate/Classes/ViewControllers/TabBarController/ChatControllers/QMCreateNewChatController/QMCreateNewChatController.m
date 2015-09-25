@@ -10,6 +10,7 @@
 #import "QMChatViewController.h"
 #import "SVProgressHUD.h"
 #import "QMApi.h"
+#import "QMUsersUtils.h"
 
 NSString *const QMChatViewControllerID = @"QMChatViewController";
 

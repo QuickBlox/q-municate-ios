@@ -46,14 +46,14 @@ NSString *const kUserName = @"UserName";
     return self;
 }
 
-- (void)start{
-    [super start];
+- (void)serviceWillStart{
+    //[super serviceWillStart];
     [QBRTCClient.instance addDelegate:self];
     [QBRTCConfig setDTLSEnabled:YES];
 }
 
 - (void)stop{
-    [super stop];
+    //[super stop];
     [QBRTCClient.instance removeDelegate:self];
 }
 

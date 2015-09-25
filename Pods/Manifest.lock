@@ -19,20 +19,23 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - AGEmojiKeyboard (0.1.0)
-  - DACircularProgress (2.2.0)
+  - DACircularProgress (2.3.1)
   - IDMPhotoBrowser (1.3.5):
     - AFNetworking (~> 2.2.3)
     - DACircularProgress (~> 2.2)
     - SVProgressHUD (~> 1.0)
-  - MPGNotification (1.2)
+  - MPGNotification (1.2.2)
   - Parus (1.0)
+  - QMServices (0.2)
+  - QuickBlox (2.4.1)
   - Reachability (3.2)
-  - SDWebImage (3.7.1):
-    - SDWebImage/Core (= 3.7.1)
-  - SDWebImage/Core (3.7.1)
-  - SSKeychain (1.2.2)
-  - StaticDataTableViewController (2.0.3)
-  - SVProgressHUD (1.1.2)
+  - SDWebImage (3.7.3):
+    - SDWebImage/Core (= 3.7.3)
+  - SDWebImage/Core (3.7.3)
+  - SSKeychain (1.2.3)
+  - StaticDataTableViewController (2.0.5)
+  - SVProgressHUD (1.1.3)
+  - TTTAttributedLabel (1.13.4)
   - UIDevice-Hardware (0.1.5)
 
 DEPENDENCIES:
@@ -40,25 +43,40 @@ DEPENDENCIES:
   - IDMPhotoBrowser (~> 1.3.5)
   - MPGNotification (~> 1.1)
   - Parus (~> 1.0)
+  - QMServices (from `QMServicesDevelopment.podspec`)
+  - QuickBlox
   - Reachability (~> 3.2)
   - SDWebImage (~> 3.6)
   - SSKeychain (~> 1.2.2)
   - StaticDataTableViewController (~> 2.0.3)
   - SVProgressHUD (~> 1.0)
+  - TTTAttributedLabel (~> 1.13)
   - UIDevice-Hardware (~> 0.1.3)
 
-SPEC CHECKSUMS:
-  AFNetworking: ab63e259fe91eef4519b371ef0a4955af0e73e64
-  AGEmojiKeyboard: dd58fd8520856094b5dd64ebb001703df85815e6
-  DACircularProgress: 3b41941891a56dc6aa17971f5322a9a38a6f446e
-  IDMPhotoBrowser: d691bcdf470553e165f8eb982c5cd8e9a58bcdef
-  MPGNotification: 0b93e5466a007593228595a10e8dd7b9848185ca
-  Parus: 4ed2c119d86103e160a3820d81564c08cf330eb0
-  Reachability: 1ef8adf5c4e3d362f96515d4278f68dad3c26930
-  SDWebImage: 116e88633b5b416ea0ca4b334a4ac59cf72dd38d
-  SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
-  StaticDataTableViewController: 171ee35f17f6176baa98ce05c1e4769a628732ad
-  SVProgressHUD: da7a49e789af645d9279ffbca62318945a832438
-  UIDevice-Hardware: df983265bb5c6f3f66d63c29841a1d6649b1c8f4
+EXTERNAL SOURCES:
+  QMServices:
+    :podspec: QMServicesDevelopment.podspec
 
-COCOAPODS: 0.36.0.beta.2
+CHECKOUT OPTIONS:
+  QMServices:
+    :commit: 51595f57b13b0ab6ec6793ea97c41d1f444a6927
+    :git: https://github.com/QuickBlox/q-municate-services-ios.git
+
+SPEC CHECKSUMS:
+  AFNetworking: caca0799b310f0c3bf1fc1af45145fc96972bcab
+  AGEmojiKeyboard: e19cf4168b114d2e494e53fe8dc042d8bf011cc9
+  DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
+  IDMPhotoBrowser: 6699a8d8b6c036a60c58ba7c281b2f5761d970ac
+  MPGNotification: 3498a406844e17e36963536fe76ccb78270b06d5
+  Parus: e8eeec5e596e59fea3e3129775e5ddf2e5c0b4eb
+  QMServices: 181d36029021b65881d6e9878680eb4db5b7baa2
+  QuickBlox: 289371af62a6ea0ea58896f1823d84c261b21e73
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
+  SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
+  StaticDataTableViewController: 7ea8d7bc8c7f0a4e9255a320224462c7346c1d4a
+  SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
+  TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
+  UIDevice-Hardware: b3695e58e0385155932e7889c32ed12e844e14a3
+
+COCOAPODS: 0.38.2

@@ -1,57 +1,83 @@
 //
-//  QMServicesFacade.h
-//  Qmunicate
+//  QMApi.h
+//  Q-municate
 //
-//  Created by Andrey Ivanov on 01.07.14.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Vitaliy Gorbachov on 9/24/15.
+//  Copyright © 2015 Quickblox. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import "QMUsersUtils.h"
+#import <QMServices.h>
 
-@class QMAuthService;
 @class QMSettingsManager;
-@class QMFacebookService;
-@class QMUsersService;
-@class QMChatDialogsService;
 @class QMAVCallManager;
-@class QMMessagesService;
-@class QMChatReceiver;
 @class QMContentService;
 @class Reachability;
 
 typedef NS_ENUM(NSInteger, QMAccountType);
 
-@interface QMApi : NSObject
+@interface QMApi : NSObject <QMServiceManagerProtocol,
+                             QMChatServiceCacheDataSource,
+                             QMChatServiceDelegate,
+                             QMChatConnectionDelegate,
+                             QMContactListServiceDelegate,
+                             QMContactListServiceCacheDataSource>
 
-@property (strong, nonatomic, readonly) QMAuthService *authService;
+@property (nonatomic, strong) NSDictionary *pushNotification;
+
+/**
+ *  REST authentication service.
+ */
+@property (strong, nonatomic, readonly) QMAuthService* authService;
+
+/**
+ *  Chat service.
+ */
+@property (strong, nonatomic, readonly) QMChatService* chatService;
+
+/**
+ *  Contact list service.
+ */
+@property (strong, nonatomic, readonly) QMContactListService* contactListService;
+
+/**
+ *  Settings manager.
+ */
 @property (strong, nonatomic, readonly) QMSettingsManager *settingsManager;
-@property (strong, nonatomic, readonly) QMUsersService *usersService;
+
+/**
+ *  Audio video call manager.
+ */
 @property (strong, nonatomic, readonly) QMAVCallManager *avCallManager;
-@property (strong, nonatomic, readonly) QMChatDialogsService *chatDialogsService;
-@property (strong, nonatomic, readonly) QMMessagesService *messagesService;
-@property (strong, nonatomic, readonly) QMChatReceiver *responceService;
+
+/**
+ *  Custom content service.
+ */
 @property (strong, nonatomic, readonly) QMContentService *contentService;
+
+/**
+ *  Reachability manager.
+ */
 @property (strong, nonatomic, readonly) Reachability *internetConnection;
 
+/**
+ *  Current user.
+ */
 @property (strong, nonatomic, readonly) QBUUser *currentUser;
 
 @property (nonatomic, strong) NSData *deviceToken;
 
 + (instancetype)instance;
 
+- (void)fetchAllHistory:(void(^)(void))completion;
+
 - (BOOL)checkResponse:(QBResponse *)response withObject:(id)object;
 
-- (void)startServices;
-- (void)stopServices;
+- (BOOL)isInternetConnected;
 
 - (void)applicationDidBecomeActive:(void(^)(BOOL success))completion;
 - (void)applicationWillResignActive;
 - (void)openChatPageForPushNotification:(NSDictionary *)notification completion:(void(^)(BOOL completed))completionBlock;
-
-- (BOOL)isInternetConnected;
-
-- (void)fetchAllHistory:(void(^)(void))completion;
 
 @end
 
@@ -59,7 +85,6 @@ typedef NS_ENUM(NSInteger, QMAccountType);
 
 - (void)autoLogin:(void(^)(BOOL success))completion;
 
-- (void)createSessionWithBlock:(void(^)(BOOL success))completion;
 - (void)setAutoLogin:(BOOL)autologin withAccountType:(QMAccountType)accountType;
 
 - (void)signUpAndLoginWithUser:(QBUUser *)user rememberMe:(BOOL)rememberMe completion:(void(^)(BOOL success))completion;
@@ -91,9 +116,23 @@ typedef NS_ENUM(NSInteger, QMAccountType);
 
 @end
 
-@interface QMApi (Messages)
+@interface QMApi (Notifications)
 
-@property (nonatomic, strong) NSDictionary *pushNotification;
+- (void)sendContactRequestSendNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
+- (void)sendContactRequestConfirmNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
+- (void)sendContactRequestRejectNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
+- (void)sendContactRequestDeleteNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
+
+- (void)sendGroupChatDialogDidCreateNotification:(QBChatMessage *)notification toChatDialog:(QBChatDialog *)chatDialog persistent:(BOOL)persistent completionBlock:(void(^)(QBChatMessage *))completion;
+- (void)sendGroupChatDialogDidUpdateNotification:(QBChatMessage *)notification toChatDialog:(QBChatDialog *)chatDialog completionBlock:(void(^)(QBChatMessage *))completion;
+
+@end
+
+@interface QMApi (Chat)
+
+/**
+ *  Messages
+ */
 
 - (void)loginChat:(QBChatResultBlock)block;
 - (void)logoutFromChat;
@@ -102,7 +141,7 @@ typedef NS_ENUM(NSInteger, QMAccountType);
 - (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete;
 
 
-/** 
+/**
  *
  */
 - (void)fetchMessagesForActiveChatIfNeededWithCompletion:(void(^)(BOOL fetchWasNeeded))block;
@@ -117,23 +156,9 @@ typedef NS_ENUM(NSInteger, QMAccountType);
 - (void)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion;
 - (void)sendAttachment:(QBCBlob *)attachment toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion;
 
-@end
-
-
-@interface QMApi (Notifications)
-
-- (void)sendContactRequestSendNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
-- (void)sendContactRequestConfirmNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
-- (void)sendContactRequestRejectNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
-- (void)sendContactRequestDeleteNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
-
-- (void)sendGroupChatDialogDidCreateNotification:(QBChatMessage *)notification toChatDialog:(QBChatDialog *)chatDialog persistent:(BOOL)persistent completionBlock:(void(^)(QBChatMessage *))completion;
-- (void)sendGroupChatDialogDidUpdateNotification:(QBChatMessage *)notification toChatDialog:(QBChatDialog *)chatDialog completionBlock:(void(^)(QBChatMessage *))completion;
-
-@end
-
-
-@interface QMApi (ChatDialogs)
+/**
+ *  ChatDialog
+ */
 
 /**
  return cached dialogs
@@ -200,6 +225,11 @@ typedef NS_ENUM(NSInteger, QMAccountType);
 - (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion;
 
 /**
+ *  Join group dialogs
+ */
+- (void)joinGroupDialogs;
+
+/**
  Join new users to chat
  
  @param dialogName
@@ -212,7 +242,6 @@ typedef NS_ENUM(NSInteger, QMAccountType);
 - (NSUInteger)occupantIDForPrivateChatDialog:(QBChatDialog *)chatDialog;
 
 @end
-
 
 @interface QMApi (Users)
 
@@ -227,6 +256,7 @@ typedef NS_ENUM(NSInteger, QMAccountType);
 - (NSArray *)idsWithUsers:(NSArray *)users;
 - (QBUUser *)userWithID:(NSUInteger)userID;
 - (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID;
+- (BOOL)isContactRequestUserWithID:(NSInteger)userID;
 
 
 /**
@@ -234,7 +264,7 @@ typedef NS_ENUM(NSInteger, QMAccountType);
  */
 - (QBUUser *)userForContactRequestWithPrivateChatDialog:(QBChatDialog *)chatDialog;
 
-/** 
+/**
  Import facebook friends from quickblox database.
  */
 - (void)importFriendsFromFacebook;
@@ -310,8 +340,8 @@ typedef NS_ENUM(NSInteger, QMAccountType);
 
 @end
 
-/** 
- Calls interface 
+/**
+ Calls interface
  */
 @interface QMApi (Calls)
 
@@ -323,15 +353,15 @@ typedef NS_ENUM(NSInteger, QMAccountType);
 
 @end
 
-@interface NSObject(CurrentUser)
-
-@property (strong, nonatomic) QBUUser *currentUser;
-
-@end
-
 @interface QMApi (Permissions)
 
 - (void)requestPermissionToCameraWithCompletion:(void(^)(BOOL authorized))completion;
 - (void)requestPermissionToMicrophoneWithCompletion:(void(^)(BOOL granted))completion;
+
+@end
+
+@interface NSObject(CurrentUser)
+
+@property (strong, nonatomic) QBUUser *currentUser;
 
 @end

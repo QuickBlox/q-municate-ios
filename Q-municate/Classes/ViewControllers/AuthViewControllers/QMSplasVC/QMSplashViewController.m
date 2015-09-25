@@ -46,24 +46,15 @@
     
     [self.activityIndicator startAnimating];
 
-    __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] createSessionWithBlock:^(BOOL success) {
+    QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
+    BOOL rememberMe = settingsManager.rememberMe;
+    
+    if (rememberMe) {
+        [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+    } else {
+        [self performSegueWithIdentifier:kWelcomeScreenSegueIdentifier sender:nil];
+    }
 
-        if (!success) {
-            [weakSelf reconnect];
-        }
-        else {
-            
-            QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
-            BOOL rememberMe = settingsManager.rememberMe;
-            
-            if (rememberMe) {
-                [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
-            } else {
-                [weakSelf performSegueWithIdentifier:kWelcomeScreenSegueIdentifier sender:nil];
-            }
-        }
-    }];
 }
 
 - (void)reconnect {

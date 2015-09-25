@@ -13,11 +13,8 @@
 #import "MPGNotification.h"
 #import "QMMessageBarStyleSheetFactory.h"
 #import "QMChatViewController.h"
-#import "QMChatDialogsService.h"
 #import "QMSoundManager.h"
-#import "QMChatDataSource.h"
 #import "QMSettingsManager.h"
-#import "QMChatReceiver.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMDevice.h"
 
@@ -28,12 +25,6 @@
 
 
 @implementation QMMainTabBarController
-
-
-- (void)dealloc
-{
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
-}
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -103,7 +94,7 @@
         // hide progress hud
         [SVProgressHUD dismiss];
         
-        [[QMApi instance].chatDialogsService joinRooms];
+        [[QMApi instance] joinGroupDialogs];
         QBUUser *usr = [QMApi instance].currentUser;
         if (!usr.imported) {
             [[QMApi instance] importFriendsFromFacebook];
@@ -133,26 +124,6 @@
 
 - (void)subscribeToNotifications
 {
-    __weak typeof(self)weakSelf = self;
-    [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-	
-		QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
-		
-        if (dialog.chatRoom == nil && message.delayed) {
-            return;
-        }
-        [weakSelf message:message forOtherDialog:dialog];
-    }];
-    
-    // Internet Connection:
-    [[QMChatReceiver instance] internetConnectionStateWithTarget:self block:^(BOOL isActive) {
-        if (isActive) {
-            [SVProgressHUD show];
-            [weakSelf loginToChat];
-        } else {
-            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:isActive];
-        }
-    }];
 }
 
 - (void)customizeTabBar {

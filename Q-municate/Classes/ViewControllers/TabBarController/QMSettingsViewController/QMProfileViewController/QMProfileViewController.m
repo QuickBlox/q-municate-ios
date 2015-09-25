@@ -26,7 +26,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *fullNameField;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *phoneNumberField;
-@property (weak, nonatomic) IBOutlet QMPlaceholderTextView *statusField;
+@property (weak, nonatomic) IBOutlet QMPlaceHolderTextView *statusField;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *updateProfileButton;
 
 @property (strong, nonatomic) NSString *fullNameFieldCache;

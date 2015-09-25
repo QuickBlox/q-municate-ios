@@ -10,7 +10,6 @@
 #import "QMChatViewController.h"
 #import "QMCreateNewChatController.h"
 #import "QMDialogsDataSource.h"
-#import "QMChatReceiver.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMApi.h"
 

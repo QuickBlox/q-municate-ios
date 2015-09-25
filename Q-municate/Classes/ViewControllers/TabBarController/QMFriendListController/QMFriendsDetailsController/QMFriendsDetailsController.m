@@ -15,9 +15,7 @@
 #import "REAlertView.h"
 #import "SVProgressHUD.h"
 #import "QMApi.h"
-#import "QMChatReceiver.h"
 #import "REAlertView+QMSuccess.h"
-#import "QMUsersService.h"
 
 typedef NS_ENUM(NSUInteger, QMCallType) {
     QMCallTypePhone,
@@ -46,7 +44,6 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 @implementation QMFriendsDetailsController
 
 - (void)dealloc {
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
     NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
@@ -80,12 +77,6 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
      ^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
          
      }];
-    
-    __weak __typeof(self)weakSelf = self;
-    [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:^{
-        [weakSelf updateUserStatus];
-        [weakSelf disableDeleteContactButtonIfNeeded];
-    }];
     
     [self updateUserStatus];
     
@@ -135,21 +126,21 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 #if QM_AUDIO_VIDEO_ENABLED
         case QMCallTypeVideo:{
             
-            if( [[QMApi instance].usersService userIDIsInPendingList:self.selectedUser.ID] ) {
-                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
-            }
-            else{
+//            if( [[QMApi instance].usersService userIDIsInPendingList:self.selectedUser.ID] ) {
+//                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
+//            }
+//            else{
                 [[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBConferenceTypeVideo];
-            }
+//            }
         }
             break;
         case QMCallTypeAudio: {
-            if( [[QMApi instance].usersService userIDIsInPendingList:self.selectedUser.ID] ) {
-                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
-            }
-            else{
+//            if( [[QMApi instance].usersService userIDIsInPendingList:self.selectedUser.ID] ) {
+//                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
+//            }
+//            else{
                 [[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBConferenceTypeAudio];
-            }
+//            }
         }
             break;
         case QMCallTypeChat: {

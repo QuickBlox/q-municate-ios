@@ -9,12 +9,10 @@
 
 #import "QMFriendsListDataSource.h"
 #import "QMFriendListViewController.h"
-#import "QMUsersService.h"
 #import "QMFriendListCell.h"
 #import "QMApi.h"
-#import "QMUsersService.h"
+#import "QMUsersUtils.h"
 #import "SVProgressHud.h"
-#import "QMChatReceiver.h"
 #import "REAlertView.h"
 
 
@@ -35,11 +33,6 @@
 @implementation QMFriendsListDataSource
 
 @synthesize friendList = _friendList;
-
-- (void)dealloc {
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
-}
 
 - (instancetype)initWithTableView:(UITableView *)tableView searchDisplayController:(UISearchDisplayController *)searchDisplayController
 {
@@ -71,8 +64,7 @@
             }
         };
         
-        [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:reloadDatasource];
-        [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:reloadDatasource];
+        
         
         UINib *friendsCellNib = [UINib nibWithNibName:@"QMFriendListCell" bundle:nil];
         UINib *noResultsCellNib = [UINib nibWithNibName:@"QMNoResultsCell" bundle:nil];
@@ -147,7 +139,7 @@
             
             
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-            self.searchRequest = [[QMApi instance].usersService retrieveUsersWithFullName:searchText pagedRequest:[QBGeneralResponsePage responsePageWithCurrentPage:currentPage perPage:perPage] completion:userResponseBlock];
+            self.searchRequest = [[QMApi instance].contactListService retrieveUsersWithFullName:searchText pagedRequest:[QBGeneralResponsePage responsePageWithCurrentPage:currentPage perPage:perPage] completion:userResponseBlock];
         }
     });
 }
@@ -245,7 +237,7 @@
                                                            withRowAnimation:UITableViewRowAnimationAutomatic];
     }
     
-    BOOL isContactRequest = [[QMApi instance].usersService isContactRequestWithID:user.ID];
+    BOOL isContactRequest = [[QMApi instance] isContactRequestUserWithID:user.ID];
     if (isContactRequest) {
         [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success, QBChatMessage *notification) {}];
     } else {

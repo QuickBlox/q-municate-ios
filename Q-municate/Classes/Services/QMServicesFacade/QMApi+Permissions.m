@@ -1,9 +1,9 @@
 //
-//  NSObject+QMApi_Permissions.m
+//  QMApi+Permissions.m
 //  Q-municate
 //
-//  Created by Anton Sokolchenko on 3/19/15.
-//  Copyright (c) 2015 Quickblox. All rights reserved.
+//  Created by Vitaliy Gorbachov on 9/24/15.
+//  Copyright © 2015 Quickblox. All rights reserved.
 //
 
 #import "QMApi.h"
@@ -41,11 +41,11 @@
     } else if(authStatus == AVAuthorizationStatusNotDetermined){
         // not determined?!
         [AVCaptureDevice requestAccessForMediaType:mediaType completionHandler:^(BOOL granted) {
-                if( completion ){
-					dispatch_async(dispatch_get_main_queue(), ^{
-						completion(granted);
-					});
-                }
+            if( completion ){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(granted);
+                });
+            }
         }];
     } else {
         if( completion ){

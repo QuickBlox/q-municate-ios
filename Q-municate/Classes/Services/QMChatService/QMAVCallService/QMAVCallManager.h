@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "QMIncomingCallController.h"
-#import "QMBaseService.h"
+#import <QMBaseService.h>
 
 @interface QMAVCallManager : QMBaseService <QBRTCClientDelegate, UIAlertViewDelegate>
 

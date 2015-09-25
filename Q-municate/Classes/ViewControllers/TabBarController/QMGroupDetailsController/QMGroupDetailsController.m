@@ -14,7 +14,6 @@
 #import "QMImagePicker.h"
 #import "QMApi.h"
 #import "QMContentService.h"
-#import "QMChatReceiver.h"
 #import "UIImage+Cropper.h"
 #import "REActionSheet.h"
 
@@ -36,7 +35,6 @@
 
 - (void)dealloc {
     
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
@@ -52,35 +50,6 @@
     
     self.dataSource = [[QMGroupDetailsDataSource alloc] initWithTableView:self.tableView];
     [self.dataSource reloadDataWithChatDialog:self.chatDialog];
-    
-    __weak __typeof(self)weakSelf = self;
-    [[QMChatReceiver instance] chatRoomDidReceiveListOfOnlineUsersWithTarget:self block:^(NSArray *users, NSString *roomName) {
-        
-        QBChatRoom *chatRoom = weakSelf.chatDialog.chatRoom;
-        if ([roomName isEqualToString:chatRoom.name]) {
-            [weakSelf updateOnlineStatus:users.count];
-        }
-    }];
-    
-    [[QMChatReceiver instance] chatRoomDidChangeOnlineUsersWithTarget:self block:^(NSArray *onlineUsers, NSString *roomName) {
-        
-        QBChatRoom *chatRoom = weakSelf.chatDialog.chatRoom;
-        if ([roomName isEqualToString:chatRoom.name]) {
-            [weakSelf updateOnlineStatus:onlineUsers.count];
-        }
-    }];
-
-    [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-        if (message.delayed) {
-            return;
-        }
-        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog &&
-            [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID]) {
-            
-            weakSelf.chatDialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
-            [weakSelf updateGUIWithChatDialog:weakSelf.chatDialog];
-        }
-    }];
 }
 
 

@@ -9,6 +9,7 @@
 #import "QMAddMembersToGroupController.h"
 #import "QMApi.h"
 #import "SVProgressHUD.h"
+#import "QMUsersUtils.h"
 
 @implementation QMAddMembersToGroupController
 
