@@ -93,7 +93,7 @@
     return [ids allObjects];
 }
 
-- (QBUUser *)userWithID:(NSUInteger)userID { 
+- (QBUUser *)userWithID:(NSUInteger)userID {
     return [self.contactListService.usersMemoryStorage userWithID:userID];
 }
 

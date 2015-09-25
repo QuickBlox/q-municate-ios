@@ -81,6 +81,7 @@
 		55F4A3C9196FF0830068EBC3 /* QMInviteFriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F4A3BD196FF0830068EBC3 /* QMInviteFriendCell.m */; };
 		55F4A3CA196FF0830068EBC3 /* QMInviteStaticCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F4A3BF196FF0830068EBC3 /* QMInviteStaticCell.m */; };
 		55F4A3D2196FF0D80068EBC3 /* QMTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F4A3D1196FF0D80068EBC3 /* QMTableViewCell.m */; };
+		5818C7E91BB5E6E4002C620E /* MessageStatusStringBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5818C7E81BB5E6E4002C620E /* MessageStatusStringBuilder.m */; settings = {ASSET_TAGS = (); }; };
 		58200B311BB17A3D00EEC8B7 /* QBUpdateUserParameters+CustomParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 58200B301BB17A3D00EEC8B7 /* QBUpdateUserParameters+CustomParameters.m */; settings = {ASSET_TAGS = (); }; };
 		5861E25D1BB40D7E00C9EB68 /* QMApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 5861E25C1BB40D7E00C9EB68 /* QMApi.m */; settings = {ASSET_TAGS = (); }; };
 		589F40991BB03DA30054FA22 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 589F40981BB03DA30054FA22 /* Fabric.framework */; settings = {ASSET_TAGS = (); }; };
@@ -303,6 +304,8 @@
 		55F4A3D0196FF0D80068EBC3 /* QMTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMTableViewCell.h; sourceTree = "<group>"; };
 		55F4A3D1196FF0D80068EBC3 /* QMTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMTableViewCell.m; sourceTree = "<group>"; };
 		55F4A3D3197021580068EBC3 /* QMCheckBoxProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMCheckBoxProtocol.h; sourceTree = "<group>"; };
+		5818C7E71BB5E6E3002C620E /* MessageStatusStringBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageStatusStringBuilder.h; path = MessageStatusStringBuilder/MessageStatusStringBuilder.h; sourceTree = "<group>"; };
+		5818C7E81BB5E6E4002C620E /* MessageStatusStringBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageStatusStringBuilder.m; path = MessageStatusStringBuilder/MessageStatusStringBuilder.m; sourceTree = "<group>"; };
 		58200B2F1BB17A3D00EEC8B7 /* QBUpdateUserParameters+CustomParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBUpdateUserParameters+CustomParameters.h"; sourceTree = "<group>"; };
 		58200B301BB17A3D00EEC8B7 /* QBUpdateUserParameters+CustomParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QBUpdateUserParameters+CustomParameters.m"; sourceTree = "<group>"; };
 		5861E25B1BB40D7E00C9EB68 /* QMApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMApi.h; sourceTree = "<group>"; };
@@ -900,6 +903,7 @@
 		55CEAB19195DBCFA001A8ED6 /* ChatControllers */ = {
 			isa = PBXGroup;
 			children = (
+				5818C7E31BB5CB2C002C620E /* MessageStatusStringBuilder */,
 				58CEA1BD1BB5917100B866DD /* QMChatButtonsFactory */,
 				58CEA13F1BB5524C00B866DD /* QMChatVC */,
 				55CEAB5A195DBCFA001A8ED6 /* QMCreateNewChatController */,
@@ -1090,6 +1094,15 @@
 				55F4A3D1196FF0D80068EBC3 /* QMTableViewCell.m */,
 			);
 			path = QMTableViewCell;
+			sourceTree = "<group>";
+		};
+		5818C7E31BB5CB2C002C620E /* MessageStatusStringBuilder */ = {
+			isa = PBXGroup;
+			children = (
+				5818C7E71BB5E6E3002C620E /* MessageStatusStringBuilder.h */,
+				5818C7E81BB5E6E4002C620E /* MessageStatusStringBuilder.m */,
+			);
+			name = MessageStatusStringBuilder;
 			sourceTree = "<group>";
 		};
 		58200B551BB181E900EEC8B7 /* QMAVCallService */ = {
@@ -1538,6 +1551,7 @@
 				55F4A3D2196FF0D80068EBC3 /* QMTableViewCell.m in Sources */,
 				55D8AD0419AC753600DAF79F /* QMImagePicker.m in Sources */,
 				693F347B18F554240032891F /* QMIncommingCallSegue.m in Sources */,
+				5818C7E91BB5E6E4002C620E /* MessageStatusStringBuilder.m in Sources */,
 				55D8AD1019AC757900DAF79F /* QMAddressBook.m in Sources */,
 				55F4A3CA196FF0830068EBC3 /* QMInviteStaticCell.m in Sources */,
 				69D57E6218ACC11C00A9900A /* main.m in Sources */,

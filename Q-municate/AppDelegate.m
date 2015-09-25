@@ -85,8 +85,8 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     
     
 #if STAGE_SERVER_IS_ACTIVE == 1
-//    [QBSettings setServerApiDomain:@"http://api.stage.quickblox.com"];
-    [QBConnection setApiDomain:@"http://api.stage.quickblox.com" forServiceZone:QBConnectionZoneTypeDevelopment];
+//    [QBSettings setServerApiDomain:@"https://api.stage.quickblox.com"];
+    [QBConnection setApiDomain:@"https://api.stage.quickblox.com" forServiceZone:QBConnectionZoneTypeDevelopment];
     [QBConnection setServiceZone:QBConnectionZoneTypeDevelopment];
     [QBSettings setServerChatDomain:@"chatstage.quickblox.com"];
     [QBSettings setContentBucket: kQMContentBucket];
