@@ -20,6 +20,10 @@
 #import "QMPlaceholderTextView.h"
 #import "REAlertView+QMSuccess.h"
 #import <SVProgressHUD.h>
+#import "QMChatUtils.h"
+#import "QMUsersUtils.h"
+#import "QMImageView.h"
+#import <QuartzCore/QuartzCore.h>
 
 // new chat controller
 #import "UIImage+QM.h"
@@ -29,7 +33,7 @@
 #import "QMChatAttachmentOutgoingCell.h"
 #import "QMChatAttachmentCell.h"
 #import "QMCollectionViewFlowLayoutInvalidationContext.h"
-#import "MessageStatusStringBuilder.h"
+#import "QMMessageStatusStringBuilder.h"
 
 // old chat controller
 //#import "QMChatToolbarContentView.h"
@@ -44,7 +48,7 @@ static const NSUInteger widthPadding = 40.0f;
 
 @property (nonatomic, weak) QBUUser* opponentUser;
 @property (nonatomic, strong) id<NSObject> observerDidBecomeActive;
-@property (nonatomic, strong) MessageStatusStringBuilder* stringBuilder;
+@property (nonatomic, strong) QMMessageStatusStringBuilder* stringBuilder;
 @property (nonatomic, strong) NSMapTable* attachmentCells;
 @property (nonatomic, readonly) UIImagePickerController* pickerController;
 @property (nonatomic, assign) BOOL shouldHoldScrollOnCollectionView;
@@ -102,9 +106,9 @@ static const NSUInteger widthPadding = 40.0f;
 //    self.inputToolbar.contentView.backgroundColor = [UIColor whiteColor];
     self.inputToolbar.contentView.textView.placeHolder = @"Message";
     
-    self.stringBuilder = [MessageStatusStringBuilder new];
+    self.showLoadEarlierMessagesHeader = YES; // need to check if this label is needed or not
     
-    //self.showLoadEarlierMessagesHeader = YES;
+    self.stringBuilder = [QMMessageStatusStringBuilder new];
 
     self.dialog.type == QBChatDialogTypeGroup ? [self configureNavigationBarForGroupChat] : [self configureNavigationBarForPrivateChat];
     
@@ -172,6 +176,7 @@ static const NSUInteger widthPadding = 40.0f;
     // Retrieving message from Quickblox REST history and cache.
     [[QMApi instance].chatService messagesWithChatDialogID:self.dialog.ID completion:^(QBResponse *response, NSArray *messages) {
         if (response.success) {
+
             if (showingProgress && !self.isSendingAttachment) {
                 [SVProgressHUD dismiss];
             }
@@ -419,13 +424,7 @@ static const NSUInteger widthPadding = 40.0f;
 
 - (Class)viewClassForItem:(QBChatMessage *)item
 {
-    if (item.senderID == QMMessageTypeContactRequest) {
-        if (item.senderID != self.senderID) {
-            return [QMChatContactRequestCell class];
-        }
-    } else if (item.senderID == QMMessageTypeRejectContactRequest) {
-        return [QMChatNotificationCell class];
-    } else if (item.senderID == QMMessageTypeAcceptContactRequest) {
+    if (item.isNotificatonMessage) {
         return [QMChatNotificationCell class];
     } else {
         if (item.senderID != self.senderID) {
@@ -449,6 +448,28 @@ static const NSUInteger widthPadding = 40.0f;
 
 - (NSAttributedString *)attributedStringForItem:(QBChatMessage *)messageItem {
 
+    if (messageItem.isNotificatonMessage) {
+        //
+        NSString *dateString = messageItem.dateSent ? [[self timeStampWithDate:messageItem.dateSent] stringByAppendingString:@"\n"] : @"";
+        NSString *notificationMessageString = [QMChatUtils messageTextForNotification:messageItem];
+        NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:[dateString stringByAppendingString:notificationMessageString]];
+        [attrStr addAttribute:NSFontAttributeName
+                        value:[UIFont systemFontOfSize:12.0f]
+                        range:NSMakeRange(0, dateString.length-1)];
+        [attrStr addAttribute:NSForegroundColorAttributeName
+                        value:[UIColor blackColor]
+                        range:NSMakeRange(0, dateString.length-1)];
+        
+        [attrStr addAttribute:NSFontAttributeName
+                        value:[UIFont boldSystemFontOfSize:14.0f]
+                        range:NSMakeRange(dateString.length, notificationMessageString.length)];
+        [attrStr addAttribute:NSForegroundColorAttributeName
+                        value:[UIColor colorWithRed:113.0f/255.0f green:113.0f/255.0f blue:113.0f/255.0f alpha:1.0f]
+                        range:NSMakeRange(dateString.length, notificationMessageString.length)];
+        
+        return attrStr;
+    }
+    
     UIColor *textColor = [messageItem senderID] == self.senderID ? [UIColor whiteColor] : [UIColor blackColor];
     UIFont *font = [UIFont fontWithName:@"HelveticaNeue" size:16.0f] ;
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor, NSFontAttributeName:font};
@@ -460,11 +481,11 @@ static const NSUInteger widthPadding = 40.0f;
 
 - (NSAttributedString *)topLabelAttributedStringForItem:(QBChatMessage *)messageItem {
     
-    UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:16.0f];
-    
     if ([messageItem senderID] == self.senderID || self.dialog.type == QBChatDialogTypePrivate) {
         return nil;
     }
+    
+    UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:16.0f];
     
     NSString *topLabelText = self.opponentUser.fullName != nil ? self.opponentUser.fullName : self.opponentUser.login;
     
@@ -481,8 +502,8 @@ static const NSUInteger widthPadding = 40.0f;
 
 - (NSAttributedString *)bottomLabelAttributedStringForItem:(QBChatMessage *)messageItem {
     
-    UIColor *textColor = [messageItem senderID] == self.senderID ? [UIColor colorWithWhite:1 alpha:0.7f] : [UIColor colorWithWhite:0.000 alpha:0.7f];
-    UIFont *font = [UIFont fontWithName:@"HelveticaNeue" size:13.0f];
+    UIColor *textColor = [messageItem senderID] == self.senderID ? [UIColor colorWithWhite:1 alpha:0.8f] : [UIColor colorWithWhite:0.000 alpha:0.4f];
+    UIFont *font = [UIFont systemFontOfSize:12.0f];
     
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor, NSFontAttributeName:font};
     NSString* text = messageItem.dateSent ? [self timeStampWithDate:messageItem.dateSent] : @"";
@@ -530,8 +551,7 @@ static const NSUInteger widthPadding = 40.0f;
     NSAttributedString *attributedString = [NSAttributedString new];
     if ([item senderID] == self.senderID) {
         attributedString = [self bottomLabelAttributedStringForItem:item];
-    }
-    else {
+    } else {
         if (self.dialog.type != QBChatDialogTypePrivate) {
             attributedString = [self topLabelAttributedStringForItem:item];
         }
@@ -556,6 +576,11 @@ static const NSUInteger widthPadding = 40.0f;
         __typeof(self) strongSelf = weakSelf;
         
         strongSelf.shouldHoldScrollOnCollectionView = NO;
+        
+        QBChatMessage *oldestMessage = [[QMApi instance].chatService.messagesMemoryStorage oldestMessageForDialogID:self.dialog.ID];
+        if ([[messages lastObject] isEqual:oldestMessage] || messages.count == 0) {
+            strongSelf.showLoadEarlierMessagesHeader = NO;
+        }
     }];
 }
 
@@ -574,6 +599,7 @@ static const NSUInteger widthPadding = 40.0f;
     Class viewClass = [self viewClassForItem:self.items[indexPath.row]];
     
     if (viewClass == [QMChatAttachmentIncomingCell class] || viewClass == [QMChatAttachmentOutgoingCell class]) return;
+    
     [UIPasteboard generalPasteboard].string = message.text;
 }
 
@@ -620,6 +646,9 @@ static const NSUInteger widthPadding = 40.0f;
         }
         layoutModel.spaceBetweenTopLabelAndTextView = 5.0f;
         layoutModel.avatarSize = (CGSize){50.0, 50.0};
+    } else if (class == [QMChatNotificationCell class]) {
+        
+        layoutModel.spaceBetweenTopLabelAndTextView = 5.0f;
     }
     
     layoutModel.spaceBetweenTextViewAndBottomLabel = 5.0f;
@@ -634,11 +663,35 @@ static const NSUInteger widthPadding = 40.0f;
     [(QMChatCell *)cell containerView].highlightColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     
     if ([cell isKindOfClass:[QMChatOutgoingCell class]] || [cell isKindOfClass:[QMChatAttachmentOutgoingCell class]]) {
-        [(QMChatIncomingCell *)cell containerView].bgColor = [UIColor colorWithRed:23.0f / 255.0f green:209.0f / 255.0f blue:75.0f / 255.0f alpha:1.0f];
+        [(QMChatOutgoingCell *)cell containerView].bgColor = [UIColor colorWithRed:23.0f / 255.0f green:209.0f / 255.0f blue:75.0f / 255.0f alpha:1.0f];
     } else if ([cell isKindOfClass:[QMChatIncomingCell class]] || [cell isKindOfClass:[QMChatAttachmentIncomingCell class]]) {
-        [(QMChatOutgoingCell *)cell containerView].bgColor = [UIColor colorWithRed:226.0f / 255.0f green:235.0f / 255.0f blue:242.0f / 255.0f alpha:1.0f];
+        [(QMChatIncomingCell *)cell containerView].bgColor = [UIColor colorWithRed:226.0f / 255.0f green:235.0f / 255.0f blue:242.0f / 255.0f alpha:1.0f];
+        
+        /**
+         *  Setting opponent avatar
+         */
+#warning Still not loading correct image. Need to fix
+        QBChatMessage* message = self.items[indexPath.row];
+        QBUUser *sender = [[QMApi instance] userWithID:message.senderID];
+        NSURL *userImageUrl = [NSURL URLWithString:[sender.avatarURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
+        
+        QMImageView *avatarView = [QMImageView new];
+        [avatarView setImageWithURL:userImageUrl
+                        placeholder:placeholder
+                            options:SDWebImageHighPriority
+                           progress:^(NSInteger receivedSize, NSInteger expectedSize) {}
+                     completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
+        
+        QMChatIncomingCell *chatCell = (QMChatIncomingCell *)cell;
+        chatCell.avatarImage.image = avatarView.image;
+        
+        //
+        chatCell.avatarImage.backgroundColor = self.collectionView.backgroundColor;
+        
+    } else if ([cell isKindOfClass:[QMChatNotificationCell class]]) {
+        [(QMChatNotificationCell *)cell containerView].bgColor = self.collectionView.backgroundColor;
     }
-    
     if ([cell conformsToProtocol:@protocol(QMChatAttachmentCell)]) {
         QBChatMessage* message = self.items[indexPath.row];
         if (message.attachments != nil) {
