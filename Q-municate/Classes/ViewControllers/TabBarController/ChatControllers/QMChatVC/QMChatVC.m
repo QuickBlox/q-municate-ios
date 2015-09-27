@@ -98,9 +98,6 @@ static const NSUInteger widthPadding = 40.0f;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSUInteger oponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
-    self.opponentUser = [[QMApi instance] userWithID:oponentID];
-    
     // chat appearance
     self.collectionView.backgroundColor = [UIColor whiteColor];
 //    self.inputToolbar.contentView.backgroundColor = [UIColor whiteColor];
@@ -110,7 +107,18 @@ static const NSUInteger widthPadding = 40.0f;
     
     self.stringBuilder = [QMMessageStatusStringBuilder new];
 
-    self.dialog.type == QBChatDialogTypeGroup ? [self configureNavigationBarForGroupChat] : [self configureNavigationBarForPrivateChat];
+    if (self.dialog.type == QBChatDialogTypePrivate) {
+        NSUInteger oponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
+        self.opponentUser = [[QMApi instance] userWithID:oponentID];
+        [self configureNavigationBarForPrivateChat];
+        if (![[QMApi instance] isFriend:self.opponentUser] || [[QBChat instance].contactList pendingApproval].count > 0) {
+            self.inputToolbar.hidden = YES;
+        }
+        [self updateTitleInfoForPrivateDialog];
+    } else {
+        [self configureNavigationBarForGroupChat];
+        self.title = self.dialog.name;
+    }
     
     // Retrieving messages from memory storage.
     self.items = [[[QMApi instance].chatService.messagesMemoryStorage messagesWithDialogID:self.dialog.ID] mutableCopy];
@@ -136,19 +144,6 @@ static const NSUInteger widthPadding = 40.0f;
         __typeof(self) strongSelf = weakSelf;
         [strongSelf updateTitleInfoForPrivateDialog];
     }];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    [self setUpTabBarChatDelegate];
-    
-    if (self.dialog.type == QBChatDialogTypeGroup) {
-        self.title = self.dialog.name;
-    }
-    else if (self.dialog.type == QBChatDialogTypePrivate) {
-        
-        [self updateTitleInfoForPrivateDialog];
-    }
 }
 
 - (void)refreshMessagesShowingProgress:(BOOL)showingProgress {
@@ -202,6 +197,8 @@ static const NSUInteger widthPadding = 40.0f;
     
     [[QMApi instance].chatService addDelegate:self];
     [QMApi instance].chatService.chatAttachmentService.delegate = self;
+    [[QMApi instance].contactListService addDelegate:self];
+    self.actionsHandler = self; // contact request delegate
     
     __weak __typeof(self) weakSelf = self;
     self.observerDidBecomeActive = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
@@ -233,6 +230,11 @@ static const NSUInteger widthPadding = 40.0f;
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self setUpTabBarChatDelegate];
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [self removeTabBarChatDelegate];
@@ -241,6 +243,8 @@ static const NSUInteger widthPadding = 40.0f;
     [super viewWillDisappear:animated];
     
     [[QMApi instance].chatService removeDelegate:self];
+    [[QMApi instance].contactListService removeDelegate:self];
+    self.actionsHandler = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self.observerDidBecomeActive];
     [[NSNotificationCenter defaultCenter] removeObserver:self.observerDidEnterBackground];
     
@@ -425,7 +429,14 @@ static const NSUInteger widthPadding = 40.0f;
 - (Class)viewClassForItem:(QBChatMessage *)item
 {
     if (item.isNotificatonMessage) {
-        return [QMChatNotificationCell class];
+        
+        if (item.messageType == QMMessageTypeContactRequest && item.senderID != self.senderID && ![[QMApi instance] isFriend:self.opponentUser]) {
+            return [QMChatContactRequestCell class];
+        }
+        else {
+            return [QMChatNotificationCell class];
+        }
+        
     } else {
         if (item.senderID != self.senderID) {
             if ((item.attachments != nil && item.attachments.count > 0) || item.attachmentStatus != QMMessageAttachmentStatusNotLoaded) {
@@ -491,7 +502,11 @@ static const NSUInteger widthPadding = 40.0f;
     
     if (self.dialog.type != QBChatDialogTypePrivate) {
         QBUUser* user = [[QMApi instance] userWithID:messageItem.senderID];
-        topLabelText = (user != nil) ? user.login : [NSString stringWithFormat:@"%lu",(unsigned long)messageItem.senderID];
+        if (user != nil) {
+            topLabelText = user.fullName != nil ? user.fullName : user.login;
+        } else {
+            topLabelText = [NSString stringWithFormat:@"%lu",(unsigned long)messageItem.senderID];
+        }
     }
     
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:[UIColor colorWithRed:0 green:122.0f / 255.0f blue:1.0f alpha:1.000], NSFontAttributeName:font};
@@ -673,7 +688,7 @@ static const NSUInteger widthPadding = 40.0f;
 #warning Still not loading correct image. Need to fix
         QBChatMessage* message = self.items[indexPath.row];
         QBUUser *sender = [[QMApi instance] userWithID:message.senderID];
-        NSURL *userImageUrl = [NSURL URLWithString:[sender.avatarURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSURL *userImageUrl = [NSURL URLWithString:[sender.avatarUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
         
         QMImageView *avatarView = [QMImageView new];
@@ -689,8 +704,8 @@ static const NSUInteger widthPadding = 40.0f;
         //
         chatCell.avatarImage.backgroundColor = self.collectionView.backgroundColor;
         
-    } else if ([cell isKindOfClass:[QMChatNotificationCell class]]) {
-        [(QMChatNotificationCell *)cell containerView].bgColor = self.collectionView.backgroundColor;
+    } else if ([cell isKindOfClass:[QMChatNotificationCell class]] || [cell isKindOfClass:[QMChatContactRequestCell class]]) {
+        [(QMChatCell *)cell containerView].bgColor = self.collectionView.backgroundColor;
     }
     if ([cell conformsToProtocol:@protocol(QMChatAttachmentCell)]) {
         QBChatMessage* message = self.items[indexPath.row];
@@ -747,7 +762,7 @@ static const NSUInteger widthPadding = 40.0f;
 #pragma mark - QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
-    if ([self.dialog.ID isEqualToString:dialogID]) {
+        if ([self.dialog.ID isEqualToString:dialogID]) {
         // Retrieving messages from memory strorage.
         self.items = [[chatService.messagesMemoryStorage messagesWithDialogID:dialogID] mutableCopy];
         [self refreshCollectionView];
@@ -941,6 +956,35 @@ static const NSUInteger widthPadding = 40.0f;
     return resizedImage;
 }
 
+#pragma mark Contact List Serice Delegate
+
+- (void)contactListService:(QMContactListService *)contactListService didUpdateUser:(QBUUser *)user {
+    
+    if (self.dialog.type == QBChatDialogTypePrivate) {
+        if([[QMApi instance] isFriend:self.opponentUser] || [[QBChat instance].contactList pendingApproval].count == 0) {
+            self.inputToolbar.hidden = NO;
+        }
+        [self updateTitleInfoForPrivateDialog];
+    }
+}
+
+#pragma mark QMChatActionsHandler protocol
+
+- (void)chatContactRequestDidAccept:(BOOL)accept sender:(id)sender {
+    if (accept) {
+        [[QMApi instance] confirmAddContactRequest:self.opponentUser completion:^(BOOL success) {
+            //
+            self.inputToolbar.hidden = NO;
+            [self refreshCollectionView];
+        }];
+    }
+    else {
+        [[QMApi instance] rejectAddContactRequest:self.opponentUser completion:^(BOOL success) {
+            //
+            [self refreshCollectionView];
+        }];
+    }
+}
 
 #pragma mark - QMChatDataSourceDelegate
 

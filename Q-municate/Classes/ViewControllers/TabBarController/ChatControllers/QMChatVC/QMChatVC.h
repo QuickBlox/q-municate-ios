@@ -17,7 +17,9 @@ UITextViewDelegate,
 QMChatAttachmentServiceDelegate,
 UIImagePickerControllerDelegate,
 UINavigationControllerDelegate,
-UIActionSheetDelegate
+UIActionSheetDelegate,
+QMContactListServiceDelegate,
+QMChatActionsHandler
 >
 
 - (void)refreshMessagesShowingProgress:(BOOL)showingProgress;

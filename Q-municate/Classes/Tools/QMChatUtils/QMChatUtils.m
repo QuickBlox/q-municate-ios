@@ -77,9 +77,9 @@
                 NSString *fullNameString = [self fullNamesString:users];
                 messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_ADD_USERS_TO_EXIST_GROUP_CONVERSATION_TEXT", nil), sender.fullName, fullNameString];
                 
-//            } else if (notification.dialog) {
-//                QBUUser *leavedUser = [[QMApi instance] userWithID:notification.cParamDialogDeletedID.integerValue];
-//                messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT", nil), leavedUser.fullName];
+            } else if (notification.customParameters[kQMNotificationUserDeletedID]) {
+                QBUUser *leavedUser = [[QMApi instance] userWithID:[notification.customParameters[kQMNotificationUserDeletedID] integerValue]];
+                messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT", nil), leavedUser.fullName];
             }
         }
             break;

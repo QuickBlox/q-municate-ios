@@ -51,26 +51,24 @@
     }];
 }
 
-- (void)confirmAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success, QBChatMessage *notification))completion {
+- (void)confirmAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
-    __weak typeof(self) weakSelf = self;
     [self.contactListService acceptContactRequest:user.ID completion:^(BOOL success) {
         //
-        [weakSelf sendContactRequestConfirmNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
-            //[weakSelf.usersService deleteContactRequestUserID:user.ID];
-            completion(success, notification);
+        [self.chatService notifyOponentAboutAcceptingContactRequest:YES opponentID:user.ID completion:^(NSError *error) {
+            //
+            completion(error == nil ? YES : NO);
         }];
     }];
 }
 
-- (void)rejectAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success, QBChatMessage *notification))completion {
+- (void)rejectAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
-    __weak typeof(self) weakSelf = self;
     [self.contactListService rejectContactRequest:user.ID completion:^(BOOL success) {
         //
-        [weakSelf sendContactRequestRejectNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
-            //[weakSelf.usersService deleteContactRequestUserID:user.ID];
-            completion(success, notification);
+        [self.chatService notifyOponentAboutAcceptingContactRequest:NO opponentID:user.ID completion:^(NSError *error) {
+            //
+            completion(error == nil ? YES : NO);
         }];
     }];
 }
@@ -143,6 +141,7 @@
 //    NSArray *ids = [self.usersService.confirmRequestUsersIDs allObjects];
 //    NSArray *users = [self usersWithIDs:ids];
 //    return users;
+    
     return nil;
 }
 
@@ -230,7 +229,7 @@
         }
         
         if (blob.publicUrl.length > 0) {
-            userInfo.avatarURL = blob.publicUrl;
+            userInfo.avatarUrl = blob.publicUrl;
         }
         userInfo.blobID = blob.ID;
         NSString *password = userInfo.password;

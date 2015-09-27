@@ -49,7 +49,7 @@
         NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
         QBUUser *opponent = [[QMApi instance] userWithID:opponentID];
         
-        NSURL *url = [NSURL URLWithString:opponent.avatarURL];
+        NSURL *url = [NSURL URLWithString:opponent.avatarUrl];
         [self setUserImageWithUrl:url];
         
         self.titleLabel.text = opponent.fullName;

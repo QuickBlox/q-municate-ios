@@ -119,12 +119,7 @@ typedef NS_ENUM(NSInteger, QMAccountType);
 @interface QMApi (Notifications)
 
 - (void)sendContactRequestSendNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
-- (void)sendContactRequestConfirmNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
-- (void)sendContactRequestRejectNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
 - (void)sendContactRequestDeleteNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
-
-- (void)sendGroupChatDialogDidCreateNotification:(QBChatMessage *)notification toChatDialog:(QBChatDialog *)chatDialog persistent:(BOOL)persistent completionBlock:(void(^)(QBChatMessage *))completion;
-- (void)sendGroupChatDialogDidUpdateNotification:(QBChatMessage *)notification toChatDialog:(QBChatDialog *)chatDialog completionBlock:(void(^)(QBChatMessage *))completion;
 
 @end
 
@@ -295,7 +290,7 @@ typedef NS_ENUM(NSInteger, QMAccountType);
  @param userID ID of user from which you would like to confirm add to contact request
  @return YES if the request was sent successfully. If not - see log.
  */
-- (void)confirmAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success, QBChatMessage *notification))completion;
+- (void)confirmAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion;
 
 /**
  Reject add to contact list request
@@ -303,7 +298,7 @@ typedef NS_ENUM(NSInteger, QMAccountType);
  @param userID ID of user from which you would like to reject add to contact request
  @return YES if the request was sent successfully. If not - see log.
  */
-- (void)rejectAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success, QBChatMessage *notification))completion;
+- (void)rejectAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion;
 
 /**
  Retrieving user if needed.

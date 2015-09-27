@@ -11,7 +11,6 @@
 #import "QMBaseCallsController.h"
 #import "QMApi.h"
 #import "REAlertView+QMSuccess.h"
-#import "QBUUser+CustomParameters.h"
 
 @interface QMAVCallManager()
 @property (strong, nonatomic, readonly) UIStoryboard *mainStoryboard;
@@ -50,11 +49,6 @@ NSString *const kUserName = @"UserName";
     //[super serviceWillStart];
     [QBRTCClient.instance addDelegate:self];
     [QBRTCConfig setDTLSEnabled:YES];
-}
-
-- (void)stop{
-    //[super stop];
-    [QBRTCClient.instance removeDelegate:self];
 }
 
 #pragma mark - RootViewController

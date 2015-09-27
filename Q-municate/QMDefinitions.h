@@ -41,7 +41,7 @@ typedef void (^QBChatResultBlock)(BOOL success);
 typedef void (^QBChatRoomResultBlock)(QBChatRoom *chatRoom, NSError *error);
 //typedef void (^QBChatDialogHistoryBlock)(NSMutableArray *chatDialogHistoryArray, NSError *error);
 
-//************** QMApi *************************
+//************** CoreData *************************
 
 static NSString *const kChatCacheNameKey = @"q-municate";
 static NSString *const kContactListCacheNameKey = @"q-municate-contacts";
@@ -71,5 +71,6 @@ static NSString *const kSettingsCellBundleVersion = @"CFBundleVersion";
 
 static NSString *const kMailSubjectString               = @"Q-municate";
 static NSString *const kMailBodyString                  = @"<a href='http://quickblox.com/'>Join us in Q-municate!</a>";
+static NSString *const kQMNotificationUserDeletedID     = @"deleted_id";
 
 #endif

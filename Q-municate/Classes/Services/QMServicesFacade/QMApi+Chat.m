@@ -282,44 +282,25 @@ static const NSUInteger kQMDialogsPageLimit = 10;
 
 - (void)sendGroupChatDialogDidCreateNotificationToUsers:(NSArray *)users text:(NSString *)text toChatDialog:(QBChatDialog *)chatDialog {
     
-    for (QBUUser *recipient in users) {
-        QBChatMessage *notification = [self notificationToRecipient:recipient text:text chatDialog:chatDialog];
-        [notification updateCustomParametersWithDialog:chatDialog];
-        [self sendGroupChatDialogDidCreateNotification:notification toChatDialog:chatDialog persistent:NO completionBlock:^(QBChatMessage *msg) {}];
-    }
+    [self.chatService notifyUsersWithIDs:users aboutAddingToDialog:chatDialog];
 }
 
 - (void)sendGroupChatDialogDidCreateNotificationToAllParticipantsWithText:(NSString *)text occupants:(NSArray *)occupants chatDialog:(QBChatDialog *)chatDialog completion:(void(^)(QBChatMessage *chatMessage))block
 {
-    QBChatMessage *groupNotification = [self notificationToRecipient:nil text:text chatDialog:chatDialog];
-    
-    [groupNotification updateCustomParametersWithDialog:[[QBChatDialog alloc] initWithDialogID:chatDialog.ID type:chatDialog.type]];
-    groupNotification.dialog.occupantIDs = occupants; // occupants IDs received
-    
-    [self sendGroupChatDialogDidCreateNotification:groupNotification toChatDialog:chatDialog persistent:YES completionBlock:block];
+    [self.chatService notifyUsersWithIDs:occupants aboutAddingToDialog:chatDialog];
 }
 
 - (void)sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:(NSString *)text toChatDialog:(QBChatDialog *)chatDialog updateType:(NSString *)updateType content:(NSString *)content
 {
-    QBChatMessage *groupNotification = [self notificationToRecipient:nil text:text chatDialog:chatDialog];
+    NSMutableDictionary *customParams = [NSMutableDictionary new];
     if (updateType != nil && content != nil) {
-        groupNotification.customParameters[updateType] = content;  // fast fix
+        [customParams setObject:content forKey:updateType]; // fast fix
     }
-    [self sendGroupChatDialogDidUpdateNotification:groupNotification toChatDialog:chatDialog completionBlock:^(QBChatMessage *msg) {}];
+    
+    [self.chatService notifyAboutUpdateDialog:chatDialog occupantsCustomParameters:customParams notificationText:text completion:^(NSError *error) {
+        //
+    }];
 }
-
-- (QBChatMessage *)notificationToRecipient:(QBUUser *)recipient text:(NSString *)text chatDialog:(QBChatDialog *)chatDialog {
-    
-    QBChatMessage *msg = [QBChatMessage message];
-    
-    msg.recipientID = recipient.ID;
-    msg.text = text;
-    msg.customDateSent = @((NSInteger)CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970);
-    [msg updateCustomParametersWithDialog:[[QBChatDialog alloc] initWithDialogID:chatDialog.ID type:chatDialog.type]];
-    
-    return msg;
-}
-
 
 #pragma mark - Dialogs toos
 

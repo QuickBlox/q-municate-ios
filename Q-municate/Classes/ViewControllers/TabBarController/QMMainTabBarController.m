@@ -39,11 +39,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.chatDelegate = self;
+    [[QMApi instance].chatService addDelegate:self];
     
     [self customizeTabBar];
     [self.navigationController setNavigationBarHidden:YES animated:NO];
-    
-    [self subscribeToNotifications];
+
     __weak __typeof(self)weakSelf = self;
     
     [[QMApi instance] autoLogin:^(BOOL success) {
@@ -96,11 +96,11 @@
         
         [[QMApi instance] joinGroupDialogs];
         QBUUser *usr = [QMApi instance].currentUser;
-        if (!usr.imported) {
+        if (!usr.isImport) {
             [[QMApi instance] importFriendsFromFacebook];
             [[QMApi instance] importFriendsFromAddressBookWithCompletion:^(BOOL succeded, NSError *error) {
             }];
-            usr.imported = YES;
+            usr.isImport = YES;
             [[QMApi instance] updateUser:usr image:nil progress:nil completion:^(BOOL successed) {}];
             
         } else {
@@ -120,10 +120,6 @@
         return;
     }
     _chatDelegate = chatDelegate;
-}
-
-- (void)subscribeToNotifications
-{
 }
 
 - (void)customizeTabBar {
@@ -176,12 +172,12 @@
     // if message is not mine:
     if (message.senderID != [QMApi instance].currentUser.ID) {
         
-        if ([self.chatDelegate isKindOfClass:QMChatVC.class] && [otherDialog.ID isEqual:((QMChatVC *)self.chatDelegate).dialog.ID]) {
-            // don't show popup
-            [self tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:NO];
-        } else {
+//        if ([self.chatDelegate isKindOfClass:QMChatVC.class] && [otherDialog.ID isEqual:((QMChatVC *)self.chatDelegate).dialog.ID]) {
+//            // don't show popup
+//            [self tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:NO];
+//        } else {
             [self tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:YES];
-        }
+//        }
     }
 }
 
@@ -218,6 +214,27 @@
             [self.tabDelegate friendsListTabWasTapped:item];
         }
     }
+}
+
+#pragma mark -
+#pragma mark Chat Service Delegate
+
+//- (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
+//    
+//    if (message.delayed) {
+//        return;
+//    }
+//    [self message:message forOtherDialog:dialog];
+//}
+
+- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+    
+    QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:dialogID];
+    
+    if (message.delayed) {
+        return;
+    }
+    [self message:message forOtherDialog:dialog];
 }
 
 @end
