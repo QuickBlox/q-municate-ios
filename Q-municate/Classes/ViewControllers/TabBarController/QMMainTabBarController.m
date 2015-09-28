@@ -156,23 +156,6 @@
     }
 }
 
-#pragma mark - QMChatDataSourceDelegate
-
-- (void)message:(QBChatMessage *)message forOtherDialog:(QBChatDialog *)otherDialog {
-    
-    // if message is not mine:
-    if (message.senderID != [QMApi instance].currentUser.ID) {
-        
-//        if ([self.chatDelegate isKindOfClass:QMChatVC.class] && [otherDialog.ID isEqual:((QMChatVC *)self.chatDelegate).dialog.ID]) {
-//            // don't show popup
-//            [self tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:NO];
-//        } else {
-            [self tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:YES];
-//        }
-    }
-}
-
-
 #pragma mark - QMTabBarChatDelegate
 
 - (void)tabBarChatWithChatMessage:(QBChatMessage *)message chatDialog:(QBChatDialog *)dialog showTMessage:(BOOL)show

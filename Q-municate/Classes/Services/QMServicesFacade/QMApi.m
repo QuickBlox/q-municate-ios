@@ -270,7 +270,7 @@ const NSTimeInterval kQMPresenceTime = 30;
             UIViewController *chatController = [QMPopoversFactory chatControllerWithDialogID:dialogID];
             UIWindow *window = [[UIApplication sharedApplication].windows firstObject];
             QMMainTabBarController *tabBar = (QMMainTabBarController *)window.rootViewController;
-            UINavigationController *navigationController = (UINavigationController *)[tabBar presentedViewController];
+            UINavigationController *navigationController = (UINavigationController *)[tabBar selectedViewController];
             [navigationController pushViewController:chatController animated:YES];
         }
     }];

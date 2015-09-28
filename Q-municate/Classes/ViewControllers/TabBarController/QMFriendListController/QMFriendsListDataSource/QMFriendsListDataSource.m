@@ -268,4 +268,20 @@ QMContactListServiceDelegate
     }
 }
 
+- (void)contactListService:(QMContactListService *)contactListService didUpdateUser:(QBUUser *)user {
+    if (self.searchRequest) {
+        return;
+    }
+    
+    if (self.searchDisplayController.isActive) {
+        
+        self.friendList = [QMApi instance].friends;
+        
+        [self.searchDisplayController.searchResultsTableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]   withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+    else {
+        [self reloadDataSource];
+    }
+}
+
 @end

@@ -687,21 +687,17 @@ static const NSUInteger widthPadding = 40.0f;
         /**
          *  Setting opponent avatar
          */
-#warning Still not loading correct image. Need to fix
         QBChatMessage* message = self.items[indexPath.row];
         QBUUser *sender = [[QMApi instance] userWithID:message.senderID];
         NSURL *userImageUrl = [QMUsersUtils userAvatarURL:sender];
         UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
         
-        QMImageView *avatarView = [QMImageView new];
-        [avatarView setImageWithURL:userImageUrl
-                        placeholder:placeholder
-                            options:SDWebImageHighPriority
-                           progress:^(NSInteger receivedSize, NSInteger expectedSize) {}
-                     completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
-        
-        [(QMChatIncomingCell *)cell avatarView].image = avatarView.image;
-        [(QMChatIncomingCell *)cell avatarView].backgroundColor = self.collectionView.backgroundColor;
+        [[(QMChatCell *)cell avatarView] setImageWithURL:userImageUrl
+                                             placeholder:placeholder
+                                                 options:SDWebImageHighPriority
+                                                progress:^(NSInteger receivedSize, NSInteger expectedSize) {}
+                                          completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
+        [(QMChatCell *)cell avatarView].imageViewType = QMImageViewTypeCircle;
         
     } else if ([cell isKindOfClass:[QMChatNotificationCell class]] || [cell isKindOfClass:[QMChatContactRequestCell class]]) {
         [(QMChatCell *)cell containerView].bgColor = self.collectionView.backgroundColor;
@@ -876,6 +872,7 @@ static const NSUInteger widthPadding = 40.0f;
         [cell updateLoadingProgress:progress];
     }
 }
+
 
 #pragma mark - UITextViewDelegate
 
