@@ -123,16 +123,18 @@
     
     __weak __typeof(self)weakSelf = self;
     
-    QBUUser *user = weakSelf.currentUser;
-    user.fullName = weakSelf.fullNameFieldCache;
-    user.phone = weakSelf.phoneFieldCache;
-    user.status = weakSelf.statusTextCache;
+    QBUpdateUserParameters *params = [QBUpdateUserParameters new];
+    params.customData = self.currentUser.customData;
+    params.fullName = self.fullNameFieldCache;
+    params.phone = self.phoneFieldCache;
+    params.status = self.statusTextCache;
     
     [SVProgressHUD showProgress:0.f status:nil maskType:SVProgressHUDMaskTypeClear];
-    [[QMApi instance] updateUser:user image:self.avatarImage progress:^(float progress) {
+    [[QMApi instance] updateCurrentUser:params image:self.avatarImage progress:^(float progress) {
+        //
         [SVProgressHUD showProgress:progress status:nil maskType:SVProgressHUDMaskTypeClear];
     } completion:^(BOOL success) {
-        
+        //
         if (success) {
             weakSelf.avatarImage = nil;
             [weakSelf updateProfileView];

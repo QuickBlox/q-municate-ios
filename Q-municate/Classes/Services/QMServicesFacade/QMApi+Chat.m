@@ -294,7 +294,8 @@ static const NSUInteger kQMDialogsPageLimit = 10;
 {
     NSMutableDictionary *customParams = [NSMutableDictionary new];
     if (updateType != nil && content != nil) {
-        [customParams setObject:content forKey:updateType]; // fast fix
+#warning FastßFix
+        [customParams setObject:content forKey:updateType];
     }
     
     [self.chatService notifyAboutUpdateDialog:chatDialog occupantsCustomParameters:customParams notificationText:text completion:^(NSError *error) {

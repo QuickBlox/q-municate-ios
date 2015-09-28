@@ -16,12 +16,9 @@
 
 @interface QMMainTabBarController : UITabBarController
 <
-QMTabBarChatDelegate,
-QMChatServiceDelegate,
-QMChatConnectionDelegate
+QMTabBarChatDelegate
 >
 
-@property (nonatomic, weak) id <QMTabBarChatDelegate> chatDelegate;
 @property (nonatomic, weak) id <QMFriendsTabDelegate> tabDelegate;
 
 @end

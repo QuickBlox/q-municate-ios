@@ -111,9 +111,11 @@ static const NSUInteger widthPadding = 40.0f;
         NSUInteger oponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
         self.opponentUser = [[QMApi instance] userWithID:oponentID];
         [self configureNavigationBarForPrivateChat];
-        if (![[QMApi instance] isFriend:self.opponentUser] || [[QBChat instance].contactList pendingApproval].count > 0) {
+        
+        if ([[QBChat instance].contactList pendingApproval].count > 0) {
             self.inputToolbar.hidden = YES;
         }
+        
         [self updateTitleInfoForPrivateDialog];
     } else {
         [self configureNavigationBarForGroupChat];
@@ -257,16 +259,16 @@ static const NSUInteger widthPadding = 40.0f;
 
 - (void)setUpTabBarChatDelegate
 {
-    if (self.tabBarController != nil && [self.tabBarController isKindOfClass:QMMainTabBarController.class]) {
-        ((QMMainTabBarController *)self.tabBarController).chatDelegate = self;
-    }
+//    if (self.tabBarController != nil && [self.tabBarController isKindOfClass:QMMainTabBarController.class]) {
+//        ((QMMainTabBarController *)self.tabBarController).chatDelegate = self;
+//    }
 }
 
 - (void)removeTabBarChatDelegate
 {
-    if (self.tabBarController != nil && [self.tabBarController isKindOfClass:QMMainTabBarController.class]) {
-        ((QMMainTabBarController *)self.tabBarController).chatDelegate = nil;
-    }
+//    if (self.tabBarController != nil && [self.tabBarController isKindOfClass:QMMainTabBarController.class]) {
+//        ((QMMainTabBarController *)self.tabBarController).chatDelegate = nil;
+//    }
 }
 
 - (void)configureNavigationBarForPrivateChat {
@@ -688,7 +690,7 @@ static const NSUInteger widthPadding = 40.0f;
 #warning Still not loading correct image. Need to fix
         QBChatMessage* message = self.items[indexPath.row];
         QBUUser *sender = [[QMApi instance] userWithID:message.senderID];
-        NSURL *userImageUrl = [NSURL URLWithString:[sender.avatarUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSURL *userImageUrl = [QMUsersUtils userAvatarURL:sender];
         UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
         
         QMImageView *avatarView = [QMImageView new];
@@ -698,11 +700,8 @@ static const NSUInteger widthPadding = 40.0f;
                            progress:^(NSInteger receivedSize, NSInteger expectedSize) {}
                      completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
         
-        QMChatIncomingCell *chatCell = (QMChatIncomingCell *)cell;
-        chatCell.avatarImage.image = avatarView.image;
-        
-        //
-        chatCell.avatarImage.backgroundColor = self.collectionView.backgroundColor;
+        [(QMChatIncomingCell *)cell avatarView].image = avatarView.image;
+        [(QMChatIncomingCell *)cell avatarView].backgroundColor = self.collectionView.backgroundColor;
         
     } else if ([cell isKindOfClass:[QMChatNotificationCell class]] || [cell isKindOfClass:[QMChatContactRequestCell class]]) {
         [(QMChatCell *)cell containerView].bgColor = self.collectionView.backgroundColor;

@@ -200,79 +200,77 @@
 
 #pragma mark - Update current User
 
-- (void)changePasswordForCurrentUser:(QBUUser *)currentUser completion:(void(^)(BOOL success))completion {
+- (void)changePasswordForCurrentUser:(QBUpdateUserParameters *)updateParams completion:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
-    QBUpdateUserParameters *params = [QBUpdateUserParameters new];
-    params.password = currentUser.password;
-//    [self.usersService updateCurrentUser:params withCompletion:^(QBResponse *response, QBUUser *user) {
-//        //
-//        if ([weakSelf checkResponse:response withObject:user]) {
-//
-//            weakSelf.currentUser.password = currentUser.password;
-//            [weakSelf.settingsManager setLogin:currentUser.email andPassword:currentUser.password];
-//        }
-//        
-//        completion(response.success);
-//    }];
+    [QBRequest updateCurrentUser:updateParams successBlock:^(QBResponse *response, QBUUser *user) {
+        //
+        if (response.success) {
+            weakSelf.currentUser.password = updateParams.password;
+            [weakSelf.settingsManager setLogin:user.email andPassword:updateParams.password];
+        }
+        completion(response.success);
+    } errorBlock:^(QBResponse *response) {
+        //
+        completion(response.success);
+    }];
 }
 
-- (void)updateUser:(QBUUser *)user image:(UIImage *)image progress:(QMContentProgressBlock)progress completion:(void (^)(BOOL success))completion {
+- (void)updateCurrentUser:(QBUpdateUserParameters *)updateParams image:(UIImage *)image progress:(QMContentProgressBlock)progress completion:(void (^)(BOOL success))completion {
     
-    __block QBUUser *userInfo = user;
+    __block QBUpdateUserParameters *params = updateParams;
     __weak __typeof(self)weakSelf = self;
     
     void (^updateUserProfile)(QBCBlob *) =^(QBCBlob *blob) {
         
-        if (!userInfo) {
-            userInfo = weakSelf.currentUser;
+        if (!params) {
+            params = [QBUpdateUserParameters new];
+            params.customData = weakSelf.currentUser.customData;
         }
         
         if (blob.publicUrl.length > 0) {
-            userInfo.avatarUrl = blob.publicUrl;
+            params.avatarUrl = blob.publicUrl;
         }
-        userInfo.blobID = blob.ID;
-        NSString *password = userInfo.password;
-        userInfo.password = nil;
-        
-//        [weakSelf.usersService updateUser:userInfo withCompletion:^(QBUUserResult *result) {
-//            
-//            if ([weakSelf checkResult:result]) {
-//                
-//                weakSelf.currentUser = result.user;
-//                weakSelf.currentUser.password = password;
-//            }
-//            
-//            completion(result.success);
-//        }];
+        params.blobID = blob.ID;
+
+        [QBRequest updateCurrentUser:params successBlock:^(QBResponse *response, QBUUser *updatedUser) {
+            //
+            if (response.success) {
+                weakSelf.currentUser.password = updatedUser.password;
+            }
+            completion(response.success);
+        } errorBlock:^(QBResponse *response) {
+            //
+            completion(response.success);
+        }];
     };
     
-//    if (image) {
-//        [self.contentService uploadJPEGImage:image progress:progress completion:^(QBCFileUploadTaskResult *result) {
-//            if ([weakSelf checkResult:result]) {
-//                updateUserProfile(result.uploadedBlob);
-//            }
-//            else {
-//                updateUserProfile(nil);
-//            }
-//        }];
-//    }
-//    else {
-//        updateUserProfile(nil);
-//    }
+    if (image) {
+        [self.contentService uploadJPEGImage:image progress:progress completion:^(QBResponse *response, QBCBlob *blob) {
+            //
+            if (response.success) {
+                updateUserProfile(blob);
+            }
+            else {
+                updateUserProfile(nil);
+            }
+        }];
+    }
+    else {
+        updateUserProfile(nil);
+    }
 }
 
-- (void)updateUser:(QBUUser *)user imageUrl:(NSURL *)imageUrl progress:(QMContentProgressBlock)progress completion:(void (^)(BOOL success))completion {
+- (void)updateCurrentUser:(QBUpdateUserParameters *)params imageUrl:(NSURL *)imageUrl progress:(QMContentProgressBlock)progress completion:(void (^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
     [self.contentService downloadFileWithUrl:imageUrl completion:^(NSData *data) {
         if (data) {
             UIImage *image = [UIImage imageWithData:data];
-            [weakSelf updateUser:user image:image progress:progress completion:completion];
+            [weakSelf updateCurrentUser:params image:image progress:progress completion:completion];
         }
     }];
 }
-
 
 #pragma mark - Import friends
 

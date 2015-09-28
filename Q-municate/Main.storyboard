@@ -34,7 +34,7 @@
         <!--Main Tab Bar Controller-->
         <scene sceneID="7vw-5C-LQY">
             <objects>
-                <tabBarController definesPresentationContext="YES" id="ExU-yY-FRH" customClass="QMMainTabBarController" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="QMMainTabBarController" definesPresentationContext="YES" id="ExU-yY-FRH" customClass="QMMainTabBarController" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="yaz-Qe-RUt"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" opaque="NO" contentMode="scaleToFill" translucent="NO" id="mug-V7-qxg">
@@ -3775,9 +3775,9 @@ Cg
         <image name="videocall" width="22" height="13"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="A42-kR-3SJ"/>
+        <segue reference="e7V-c0-doK"/>
+        <segue reference="kkU-F4-K0a"/>
         <segue reference="qsg-NO-Ors"/>
         <segue reference="IAo-qy-uHQ"/>
-        <segue reference="e7V-c0-doK"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -79,8 +79,7 @@
                 [QMFacebookService loadMe:^(NSDictionary<FBGraphUser> *user) {
                     
                     NSURL *userImageUrl = [QMFacebookService userImageUrlWithUserID:user.id];
-                    [weakSelf updateUser:weakSelf.currentUser imageUrl:userImageUrl progress:nil completion:completion];
-                    
+                    [weakSelf updateCurrentUser:nil imageUrl:userImageUrl progress:nil completion:completion];
                 }];
             }
             else {

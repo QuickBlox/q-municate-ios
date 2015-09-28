@@ -13,6 +13,4 @@
  */
 @interface QMChatIncomingCell : QMChatCell
 
-@property (unsafe_unretained, nonatomic) IBOutlet UIImageView *avatarImage;
-
 @end

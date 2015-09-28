@@ -16,6 +16,9 @@
 #import "QMPopoversFactory.h"
 #import "QMMainTabBarController.h"
 
+#import "QMMessageBarStyleSheetFactory.h"
+#import "QMSoundManager.h"
+
 #import <_CDMessage.h>
 #import <_CDDialog.h>
 
@@ -260,10 +263,17 @@ const NSTimeInterval kQMPresenceTime = 30;
             dialogName = user.login;
         }
     }
-    
-#warning replace message banner with used
-    //    [[TWMessageBarManager sharedInstance] hideAll];
-    //    [[TWMessageBarManager sharedInstance] showMessageWithTitle:dialogName description:message.text type:TWMessageBarMessageTypeInfo];
+
+    [QMSoundManager playMessageReceivedSound];
+    [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
+        if (buttonIndex == 1) {
+            UIViewController *chatController = [QMPopoversFactory chatControllerWithDialogID:dialogID];
+            UIWindow *window = [[UIApplication sharedApplication].windows firstObject];
+            QMMainTabBarController *tabBar = (QMMainTabBarController *)window.rootViewController;
+            UINavigationController *navigationController = (UINavigationController *)[tabBar presentedViewController];
+            [navigationController pushViewController:chatController animated:YES];
+        }
+    }];
 }
 
 - (void)handleErrorResponse:(QBResponse *)response {
@@ -278,10 +288,8 @@ const NSTimeInterval kQMPresenceTime = 30;
     else if( response.status == 0 ) { // bad gateway, server error
         errorMessage = @"Connection network error, please try again";
     }
-    
-    #warning replace message banner with used
-//    [[TWMessageBarManager sharedInstance] hideAll];
-//    [[TWMessageBarManager sharedInstance] showMessageWithTitle:@"Errors" description:errorMessage type:TWMessageBarMessageTypeError];
+
+    [REAlertView showAlertWithMessage:errorMessage actionSuccess:NO];
 }
 
 #pragma mark QMChatServiceCache delegate

@@ -38,8 +38,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.chatDelegate = self;
-    [[QMApi instance].chatService addDelegate:self];
     
     [self customizeTabBar];
     [self.navigationController setNavigationBarHidden:YES animated:NO];
@@ -101,7 +99,9 @@
             [[QMApi instance] importFriendsFromAddressBookWithCompletion:^(BOOL succeded, NSError *error) {
             }];
             usr.isImport = YES;
-            [[QMApi instance] updateUser:usr image:nil progress:nil completion:^(BOOL successed) {}];
+            QBUpdateUserParameters *params = [QBUpdateUserParameters new];
+            params.customData = usr.customData;
+            [[QMApi instance] updateCurrentUser:params image:nil progress:nil completion:^(BOOL success) {}];
             
         } else {
             
@@ -111,15 +111,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-}
-
-- (void)setChatDelegate:(id)chatDelegate
-{
-    if (chatDelegate == nil) {
-        _chatDelegate = self;
-        return;
-    }
-    _chatDelegate = chatDelegate;
 }
 
 - (void)customizeTabBar {
@@ -214,27 +205,6 @@
             [self.tabDelegate friendsListTabWasTapped:item];
         }
     }
-}
-
-#pragma mark -
-#pragma mark Chat Service Delegate
-
-//- (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
-//    
-//    if (message.delayed) {
-//        return;
-//    }
-//    [self message:message forOtherDialog:dialog];
-//}
-
-- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
-    
-    QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:dialogID];
-    
-    if (message.delayed) {
-        return;
-    }
-    [self message:message forOtherDialog:dialog];
 }
 
 @end

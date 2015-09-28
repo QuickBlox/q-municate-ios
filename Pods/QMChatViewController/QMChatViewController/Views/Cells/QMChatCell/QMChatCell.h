@@ -104,6 +104,11 @@ typedef struct QMChatLayoutModel QMChatCellLayoutModel;
 @property (weak, nonatomic, readonly) UIImage *avatarImageView;
 
 /**
+ *  Property to set avatar view
+ */
+@property (unsafe_unretained, nonatomic) IBOutlet UIImageView *avatarView;
+
+/**
  *  Returns chat message attributed label.
  *
  *  @warning You should not try to manipulate any properties of this view, for example adjusting

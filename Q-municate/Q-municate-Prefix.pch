@@ -20,6 +20,7 @@
     #import <QuickbloxWebRTC/QuickbloxWebRTC.h>
     #import <FacebookSDK/FacebookSDK.h>
 
+    #import "QBUpdateUserParameters+CustomData.h"
     #import "QBChatMessage+TextEncoding.h"
 
     #import "QMChatService+CustomMethods.h"
