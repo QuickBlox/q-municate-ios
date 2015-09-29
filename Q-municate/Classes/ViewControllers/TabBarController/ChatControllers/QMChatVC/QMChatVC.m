@@ -103,8 +103,6 @@ static const NSUInteger widthPadding = 40.0f;
 //    self.inputToolbar.contentView.backgroundColor = [UIColor whiteColor];
     self.inputToolbar.contentView.textView.placeHolder = @"Message";
     
-    self.showLoadEarlierMessagesHeader = YES; // need to check if this label is needed or not
-    
     self.stringBuilder = [QMMessageStatusStringBuilder new];
 
     if (self.dialog.type == QBChatDialogTypePrivate) {
@@ -177,6 +175,13 @@ static const NSUInteger widthPadding = 40.0f;
             if (showingProgress && !self.isSendingAttachment) {
                 [SVProgressHUD dismiss];
             }
+            
+            QBChatMessage *oldestMessage = [[QMApi instance].chatService.messagesMemoryStorage oldestMessageForDialogID:self.dialog.ID];
+            if (![[self.items lastObject] isEqual:oldestMessage] && self.items > 0) {
+                self.showLoadEarlierMessagesHeader = YES;
+                [self scrollToBottomAnimated:NO];
+            }
+            
         } else {
             [SVProgressHUD showErrorWithStatus:@"Can not refresh messages"];
             NSLog(@"can not refresh messages: %@", response.error.error);
@@ -216,9 +221,6 @@ static const NSUInteger widthPadding = 40.0f;
         [strongSelf fireStopTypingIfNecessary];
     }];
     
-    // Saving currently opened dialog.
-    //[QMApi instance].currentDialogID = self.dialog.ID;
-    
     if ([self.items count] > 0) {
         if (self.dialog.type != QBChatDialogTypePrivate) {
             [self refreshMessagesShowingProgress:YES];
@@ -234,12 +236,10 @@ static const NSUInteger widthPadding = 40.0f;
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self setUpTabBarChatDelegate];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [self removeTabBarChatDelegate];
     self.dialog.unreadMessagesCount = 0;
     
     [super viewWillDisappear:animated];
@@ -252,23 +252,6 @@ static const NSUInteger widthPadding = 40.0f;
     
     // Deletes typing blocks.
     [self.dialog clearTypingStatusBlocks];
-    
-    // Resetting currently opened dialog.
-//    [ServicesManager instance].currentDialogID = nil;
-}
-
-- (void)setUpTabBarChatDelegate
-{
-//    if (self.tabBarController != nil && [self.tabBarController isKindOfClass:QMMainTabBarController.class]) {
-//        ((QMMainTabBarController *)self.tabBarController).chatDelegate = self;
-//    }
-}
-
-- (void)removeTabBarChatDelegate
-{
-//    if (self.tabBarController != nil && [self.tabBarController isKindOfClass:QMMainTabBarController.class]) {
-//        ((QMMainTabBarController *)self.tabBarController).chatDelegate = nil;
-//    }
 }
 
 - (void)configureNavigationBarForPrivateChat {
