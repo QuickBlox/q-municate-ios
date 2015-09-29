@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "QMChatViewController.h"
+#import <QMChatViewController.h>
 
 @interface QMChatVC : QMChatViewController <
 QMTabBarChatDelegate,

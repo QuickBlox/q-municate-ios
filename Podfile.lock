@@ -26,6 +26,22 @@ PODS:
     - SVProgressHUD (~> 1.0)
   - MPGNotification (1.2.2)
   - Parus (1.0)
+  - QMChatViewController (0.1):
+    - QMChatViewController/Categories (= 0.1)
+    - QMChatViewController/KeyboardViewController (= 0.1)
+    - QMChatViewController/Protocols (= 0.1)
+    - QMChatViewController/Views (= 0.1)
+    - TTTAttributedLabel (~> 1.13)
+  - QMChatViewController/Categories (0.1):
+    - TTTAttributedLabel (~> 1.13)
+  - QMChatViewController/KeyboardViewController (0.1):
+    - TTTAttributedLabel (~> 1.13)
+  - QMChatViewController/Protocols (0.1):
+    - TTTAttributedLabel (~> 1.13)
+  - QMChatViewController/Views (0.1):
+    - QMChatViewController/Categories
+    - QMChatViewController/Protocols
+    - TTTAttributedLabel (~> 1.13)
   - QMServices (0.2)
   - QuickBlox (2.4.2)
   - Reachability (3.2)
@@ -43,6 +59,7 @@ DEPENDENCIES:
   - IDMPhotoBrowser (~> 1.3.5)
   - MPGNotification (~> 1.1)
   - Parus (~> 1.0)
+  - QMChatViewController (from `QMChatViewControllerDevelopment.podspec`)
   - QMServices (from `QMServicesDevelopment.podspec`)
   - QuickBlox
   - Reachability (~> 3.2)
@@ -54,10 +71,15 @@ DEPENDENCIES:
   - UIDevice-Hardware (~> 0.1.3)
 
 EXTERNAL SOURCES:
+  QMChatViewController:
+    :podspec: QMChatViewControllerDevelopment.podspec
   QMServices:
     :podspec: QMServicesDevelopment.podspec
 
 CHECKOUT OPTIONS:
+  QMChatViewController:
+    :commit: 20426844888b24d723c592538101b28e7484f62a
+    :git: https://github.com/QuickBlox/QMChatViewController-ios.git
   QMServices:
     :commit: 51595f57b13b0ab6ec6793ea97c41d1f444a6927
     :git: https://github.com/QuickBlox/q-municate-services-ios.git
@@ -69,6 +91,7 @@ SPEC CHECKSUMS:
   IDMPhotoBrowser: 6699a8d8b6c036a60c58ba7c281b2f5761d970ac
   MPGNotification: 3498a406844e17e36963536fe76ccb78270b06d5
   Parus: e8eeec5e596e59fea3e3129775e5ddf2e5c0b4eb
+  QMChatViewController: 3fc6dfb17551cb15717dee862d4a93300873315a
   QMServices: 181d36029021b65881d6e9878680eb4db5b7baa2
   QuickBlox: de87faa39689affe2ec9ce8a282021456100ca21
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96

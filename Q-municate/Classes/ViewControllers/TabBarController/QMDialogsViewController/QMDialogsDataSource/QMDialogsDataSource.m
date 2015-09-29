@@ -111,9 +111,7 @@ QMContactListServiceDelegate
 
 - (NSMutableArray *)dialogs {
     
-    NSMutableArray * dialogs = [[QMApi instance] dialogHistory].mutableCopy;
-    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"lastMessageDate" ascending:NO];
-    [dialogs sortUsingDescriptors:@[sort]];
+    NSMutableArray *dialogs = [[QMApi instance].chatService.dialogsMemoryStorage dialogsSortByLastMessageDateWithAscending:NO].mutableCopy;
     
     return dialogs;
 }
@@ -177,22 +175,10 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 
 - (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
     [self updateGUI];
-    [[QMApi instance] retriveIfNeededUsersWithIDs:chatDialog.occupantIDs completion:^(BOOL retrieveWasNeeded) {
-        //
-        if (retrieveWasNeeded) {
-            [self updateGUI];
-        }
-    }];
 }
 
 - (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
     [self updateGUI];
-    [[QMApi instance] retriveIfNeededUsersWithIDs:chatDialog.occupantIDs completion:^(BOOL retrieveWasNeeded) {
-        //
-        if (retrieveWasNeeded) {
-            [self updateGUI];
-        }
-    }];
 }
 
 - (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {

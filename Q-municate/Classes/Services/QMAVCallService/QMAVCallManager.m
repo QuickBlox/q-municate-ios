@@ -38,15 +38,14 @@ NSString *const kUserName = @"UserName";
 - (instancetype)init {
     self = [super init];
     if (self) {
-		[QBRTCConfig setDisconnectTimeInterval:kQBRTCDisconnectTimeInterval];
-        _mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+        [QBRTCConfig setDisconnectTimeInterval:kQBRTCDisconnectTimeInterval];
+        _mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         self.frontCamera = YES;
     }
     return self;
 }
 
-- (void)serviceWillStart{
-    //[super serviceWillStart];
+- (void)serviceWillStart {
     [QBRTCClient.instance addDelegate:self];
     [QBRTCConfig setDTLSEnabled:YES];
 }
@@ -61,7 +60,7 @@ NSString *const kUserName = @"UserName";
 #pragma mark - Public methods
 
 - (void)acceptCall{
-	[self stopAllSounds];
+    [self stopAllSounds];
     if( self.session ){
         [self.session acceptCall:nil];
     }
@@ -91,7 +90,7 @@ NSString *const kUserName = @"UserName";
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if( alertView.cancelButtonIndex != buttonIndex ){
-         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
     }
 }
 
@@ -144,10 +143,11 @@ NSString *const kUserName = @"UserName";
 
 - (void)callToUsers:(NSArray *)users withConferenceType:(QBConferenceType)conferenceType pushEnabled:(BOOL)pushEnabled {
     __weak __typeof(self) weakSelf = self;
-	[[QBSoundRouter instance] initialize];
+    [[QBSoundRouter instance] initialize];
     [[QBSoundRouter instance] setCurrentSoundRoute:QBSoundRouteSpeaker]; // to make our ringtone go through the speaker
     
     [self checkPermissionsWithConferenceType:conferenceType completion:^(BOOL canContinue) {
+        __typeof(weakSelf)strongSelf = weakSelf;
         
         if( !canContinue ){
             return;
@@ -155,7 +155,7 @@ NSString *const kUserName = @"UserName";
         
         assert(users && users.count);
         
-        if (weakSelf.session) {
+        if (strongSelf.session) {
             return;
         }
         
@@ -163,27 +163,27 @@ NSString *const kUserName = @"UserName";
                                                                  withConferenceType:conferenceType];
         
         if (session) {
-            [weakSelf startPlayingCallingSound];
-            weakSelf.session = session;
+            [strongSelf startPlayingCallingSound];
+            strongSelf.session = session;
             
-            QMBaseCallsController *vc = (QMBaseCallsController *)[weakSelf.mainStoryboard instantiateViewControllerWithIdentifier:(conferenceType == QBConferenceTypeVideo) ? kVideoCallController : kAudioCallController];
+            QMBaseCallsController *vc = (QMBaseCallsController *)[strongSelf.mainStoryboard instantiateViewControllerWithIdentifier:(conferenceType == QBConferenceTypeVideo) ? kVideoCallController : kAudioCallController];
             
             NSUInteger opponentID = [((NSNumber *)users[0]) unsignedIntegerValue];
-            vc.session = weakSelf.session;
+            vc.session = strongSelf.session;
             vc.opponent = [[QMApi instance] userWithID:opponentID];
             
             UINavigationController *navVC = [[UINavigationController alloc] initWithRootViewController:vc];
             [navVC setNavigationBarHidden:YES];
             
             if( pushEnabled ){
-                [weakSelf sendPushToUserWithUserID:opponentID];
+                [strongSelf sendPushToUserWithUserID:opponentID];
             }
             
-            [weakSelf.rootViewController presentViewController:navVC
+            [strongSelf.rootViewController presentViewController:navVC
                                                       animated:YES
                                                     completion:nil];
-            [weakSelf.session startCall:@{kUserIds: users}];
-            weakSelf.currentlyPresentedViewController = navVC;
+            [strongSelf.session startCall:@{kUserIds: users}];
+            strongSelf.currentlyPresentedViewController = navVC;
         }
         else {
             
@@ -199,10 +199,10 @@ NSString *const kUserName = @"UserName";
         [session rejectCall:@{@"reject" : @"busy"}];
         return;
     }
-	[[QBSoundRouter instance] initialize];
-	
+    [[QBSoundRouter instance] initialize];
+    
     self.session = session;
-	[[QBSoundRouter instance] setCurrentSoundRoute:QBSoundRouteSpeaker];
+    [[QBSoundRouter instance] setCurrentSoundRoute:QBSoundRouteSpeaker];
     [self startPlayingRingtoneSound];
     
     QMIncomingCallController *incomingVC = [self.mainStoryboard instantiateViewControllerWithIdentifier:kIncomingCallController];
@@ -235,7 +235,7 @@ NSString *const kUserName = @"UserName";
         // may be we rejected someone else call while we are talking with another person
         return;
     }
-	[[QBSoundRouter instance] deinitialize];
+    [[QBSoundRouter instance] deinitialize];
     __weak __typeof(self)weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
@@ -264,10 +264,10 @@ NSString *const kUserName = @"UserName";
 - (void)startPlayingCallingSound {
     [self stopAllSounds];
     self.callingSoundTimer = [NSTimer scheduledTimerWithTimeInterval:[QBRTCConfig dialingTimeInterval]
-                                                        target:self
-                                                      selector:@selector(playCallingSound:)
-                                                      userInfo:nil
-                                                       repeats:YES];
+                                                              target:self
+                                                            selector:@selector(playCallingSound:)
+                                                            userInfo:nil
+                                                             repeats:YES];
     [self playCallingSound:nil];
 }
 
@@ -275,10 +275,10 @@ NSString *const kUserName = @"UserName";
     
     [self stopAllSounds];
     self.callingSoundTimer = [NSTimer scheduledTimerWithTimeInterval:[QBRTCConfig dialingTimeInterval]
-                                                        target:self
-                                                      selector:@selector(playRingtoneSound:)
-                                                      userInfo:nil
-                                                       repeats:YES];
+                                                              target:self
+                                                            selector:@selector(playRingtoneSound:)
+                                                            userInfo:nil
+                                                             repeats:YES];
     [self playRingtoneSound:nil];
 }
 
