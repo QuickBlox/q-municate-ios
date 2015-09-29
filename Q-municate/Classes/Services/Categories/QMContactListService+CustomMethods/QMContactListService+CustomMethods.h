@@ -13,16 +13,9 @@ typedef void (^QBResponseBlock)(QBResponse *response);
 
 @interface QMContactListService(CustomMethods)
 
-/**
- *  IDs of contact in current chat instance.
- */
-- (NSArray *)idsOfContactsOnly;
-
 - (void)retrieveUsersWithFacebookIDs:(NSArray *)facebookIDs completion:(QBUUserPagedResponseBlock)completion;
 
 - (void)retrieveUsersWithEmails:(NSArray *)emails completion:(QBUUserPagedResponseBlock)completion;
-
-- (void)resetUserPasswordWithEmail:(NSString *)email completion:(QBResponseBlock)completion;
 
 - (QBRequest *)retrieveUsersWithFullName:(NSString *)searchText pagedRequest:(QBGeneralResponsePage *)page completion:(QBUUserPagedResponseBlock)completion;
 

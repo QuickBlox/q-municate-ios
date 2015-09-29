@@ -177,7 +177,8 @@ static const NSUInteger widthPadding = 40.0f;
             }
             
             QBChatMessage *oldestMessage = [[QMApi instance].chatService.messagesMemoryStorage oldestMessageForDialogID:self.dialog.ID];
-            if (![[self.items lastObject] isEqual:oldestMessage] && self.items > 0) {
+            NSArray *test = messages;
+            if (self.items > 0 && ![self.items.firstObject isEqual:oldestMessage]) {
                 self.showLoadEarlierMessagesHeader = YES;
                 [self scrollToBottomAnimated:NO];
             }
@@ -903,6 +904,7 @@ static const NSUInteger widthPadding = 40.0f;
         QBChatMessage* message = [QBChatMessage new];
         message.senderID = strongSelf.senderID;
         message.dialogID = strongSelf.dialog.ID;
+        message.dateSent = [NSDate date];
         
         // Sending attachment to dialog.
         [[QMApi instance].chatService.chatAttachmentService sendMessage:message
@@ -946,7 +948,14 @@ static const NSUInteger widthPadding = 40.0f;
         if([[QMApi instance] isFriend:self.opponentUser] || [[QBChat instance].contactList pendingApproval].count == 0) {
             self.inputToolbar.hidden = NO;
         }
-        [self updateTitleInfoForPrivateDialog];
+    }
+}
+
+- (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
+    if (self.dialog.type == QBChatDialogTypePrivate) {
+        if (self.opponentUser.ID == userID) {
+            [self updateTitleInfoForPrivateDialog];
+        }
     }
 }
 

@@ -26,16 +26,21 @@
     }];
 }
 
-- (void)updateChatDialog:(QBChatDialog *)dialog completion:(QBChatDialogResponseBlock)completion {
+- (void)changeDialogAvatar:(NSString *)avatarPublicUrl forChatDialog:(QBChatDialog *)chatDialog completion:(void (^)(QBResponse *response, QBChatDialog *updatedDialog))completion {
     
+    if (chatDialog.type == QBChatDialogTypePrivate) return;
+    
+    chatDialog.photo = avatarPublicUrl;
     __weak __typeof(self)weakSelf = self;
-    [QBRequest updateDialog:dialog successBlock:^(QBResponse *response, QBChatDialog *chatDialog) {
+    [QBRequest updateDialog:chatDialog successBlock:^(QBResponse *response, QBChatDialog *dialog) {
         //
-        [weakSelf.dialogsMemoryStorage addChatDialog:chatDialog andJoin:NO onJoin:nil];
-        if (completion) completion(response,chatDialog);
+        [weakSelf.dialogsMemoryStorage addChatDialog:dialog andJoin:NO onJoin:nil];
+        
+        if (completion) completion(response,dialog);
     } errorBlock:^(QBResponse *response) {
         //
         [weakSelf.serviceManager handleErrorResponse:response];
+
         if (completion) completion(response,nil);
     }];
 }

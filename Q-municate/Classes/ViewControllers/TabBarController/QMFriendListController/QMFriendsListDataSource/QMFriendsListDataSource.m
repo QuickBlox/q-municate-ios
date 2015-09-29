@@ -60,6 +60,10 @@ QMContactListServiceDelegate
     return self;
 }
 
+- (void)dealloc {
+    [[QMApi instance].contactListService removeDelegate:self];
+}
+
 - (void)setFriendList:(NSArray *)friendList {
     _friendList = [QMUsersUtils sortUsersByFullname:friendList];
 }
@@ -135,6 +139,22 @@ QMContactListServiceDelegate
         if ([self.delegate respondsToSelector:@selector(didChangeContactRequestsCount:)]) {
             [self.delegate didChangeContactRequestsCount:_contactRequestsCount];
         }
+    }
+}
+
+- (void)updateView {
+    if (self.searchRequest) {
+        return;
+    }
+    
+    if (self.searchDisplayController.isActive) {
+        
+        self.friendList = [QMApi instance].friends;
+        
+        [self.searchDisplayController.searchResultsTableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]   withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+    else {
+        [self reloadDataSource];
     }
 }
 
@@ -252,36 +272,16 @@ QMContactListServiceDelegate
 
 #pragma mark Contact List Serice Delegate
 
+- (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
+    [self updateView];
+}
+
 - (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
-    if (self.searchRequest) {
-        return;
-    }
-    
-    if (self.searchDisplayController.isActive) {
-        
-        self.friendList = [QMApi instance].friends;
-        
-        [self.searchDisplayController.searchResultsTableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]   withRowAnimation:UITableViewRowAnimationAutomatic];
-    }
-    else {
-        [self reloadDataSource];
-    }
+    [self updateView];
 }
 
 - (void)contactListService:(QMContactListService *)contactListService didUpdateUser:(QBUUser *)user {
-    if (self.searchRequest) {
-        return;
-    }
-    
-    if (self.searchDisplayController.isActive) {
-        
-        self.friendList = [QMApi instance].friends;
-        
-        [self.searchDisplayController.searchResultsTableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]   withRowAnimation:UITableViewRowAnimationAutomatic];
-    }
-    else {
-        [self reloadDataSource];
-    }
+    [self updateView];
 }
 
 @end

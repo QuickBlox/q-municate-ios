@@ -607,6 +607,7 @@
 			children = (
 				558AE52A196EA7C400AEAC1F /* QMFriendsListDataSource.h */,
 				558AE52B196EA7C400AEAC1F /* QMFriendsListDataSource.m */,
+				55CEAB6F195DBCFA001A8ED6 /* QMFriendsDetailsController */,
 			);
 			path = QMFriendsListDataSource;
 			sourceTree = "<group>";
@@ -921,7 +922,6 @@
 				55CEAB6D195DBCFA001A8ED6 /* QMFriendListViewController.h */,
 				55CEAB6E195DBCFA001A8ED6 /* QMFriendListViewController.m */,
 				558AE529196EA7C400AEAC1F /* QMFriendsListDataSource */,
-				55CEAB6F195DBCFA001A8ED6 /* QMFriendsDetailsController */,
 			);
 			path = QMFriendListController;
 			sourceTree = "<group>";
@@ -932,7 +932,8 @@
 				55CEAB70195DBCFA001A8ED6 /* QMFriendsDetailsController.h */,
 				55CEAB71195DBCFA001A8ED6 /* QMFriendsDetailsController.m */,
 			);
-			path = QMFriendsDetailsController;
+			name = QMFriendsDetailsController;
+			path = ../QMFriendsDetailsController;
 			sourceTree = "<group>";
 		};
 		55CEAB72195DBCFA001A8ED6 /* QMGroupDetailsController */ = {

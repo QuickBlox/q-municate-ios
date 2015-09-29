@@ -109,12 +109,13 @@
 }
 
 - (void)resetUserPassordWithEmail:(NSString *)email completion:(void(^)(BOOL success))completion {
-    
-    __weak __typeof(self)weakSelf = self;
 
-    [self.contactListService resetUserPasswordWithEmail:email completion:^(QBResponse *response) {
+    [QBRequest resetUserPasswordWithEmail:email successBlock:^(QBResponse *response) {
         //
-        completion([weakSelf checkResponse:response withObject:nil]);
+        completion(response.success);
+    } errorBlock:^(QBResponse *response) {
+        //
+        completion(response.success);
     }];
 }
 

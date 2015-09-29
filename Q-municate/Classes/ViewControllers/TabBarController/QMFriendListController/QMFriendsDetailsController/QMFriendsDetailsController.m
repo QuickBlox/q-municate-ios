@@ -95,6 +95,18 @@ QMContactListServiceDelegate
 #endif
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [[QMApi instance].contactListService addDelegate:self];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [[QMApi instance].contactListService removeDelegate:self];
+}
+
 - (void)updateUserStatus {
     
     QBContactListItem *item = [[QMApi instance] contactItemWithUserID:self.selectedUser.ID];
@@ -193,9 +205,16 @@ QMContactListServiceDelegate
     
 #pragma mark Contact List Serice Delegate
     
+- (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
+    [self updateUserStatus];
+}
+    
 - (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
     [self updateUserStatus];
-    [self disableDeleteContactButtonIfNeeded];
+}
+    
+- (void)contactListService:(QMContactListService *)contactListService didUpdateUser:(QBUUser *)user {
+    [self updateUserStatus];
 }
 
 @end

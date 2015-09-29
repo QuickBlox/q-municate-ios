@@ -27,6 +27,6 @@ typedef void (^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *up
  *  @param dialog     dialog to update
  *  @param completion completion block with response
  */
-- (void)updateChatDialog:(QBChatDialog *)dialog completion:(QBChatDialogResponseBlock)completion;
+- (void)changeDialogAvatar:(NSString *)avatarPublicUrl forChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(QBResponse *response, QBChatDialog *updatedDialog))completion;
 
 @end

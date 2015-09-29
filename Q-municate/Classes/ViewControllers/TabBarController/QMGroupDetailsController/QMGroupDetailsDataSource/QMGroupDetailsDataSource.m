@@ -32,8 +32,6 @@ NSString *const kLeaveChatCellIdentifier = @"QMLeaveChatCell";
     if (self = [super init]) {
         
         _tableView = tableView;
-        
-        
         self.tableView.dataSource = nil;
         self.tableView.dataSource = self;
     }

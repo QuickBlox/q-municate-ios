@@ -249,6 +249,10 @@ const NSTimeInterval kQMPresenceTime = 30;
 {
     if ([[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) return;
     
+    if (message.isNotificatonMessage) return;
+    
+    if (message.delayed) return;
+    
     if (message.senderID == self.currentUser.ID) return;
     
     NSString* dialogName = @"New message";

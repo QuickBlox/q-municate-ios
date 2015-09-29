@@ -155,11 +155,10 @@ static const NSUInteger kQMDialogsPageLimit = 10;
         // send notification from here:
         NSString *notificationText = NSLocalizedString(@"QM_STR_NOTIFICATION_MESSAGE", nil);
         // send to group:
-        [weakSelf sendGroupChatDialogDidCreateNotificationToAllParticipantsWithText:notificationText occupants:createdDialog.occupantIDs chatDialog:createdDialog completion:^(QBChatMessage *chatMessage) {
-            // send to private:
-            [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:occupants text:notificationText toChatDialog:createdDialog];
-            completion(createdDialog);
-        }];
+        [weakSelf sendGroupChatDialogDidCreateNotificationToAllParticipantsWithText:notificationText occupants:createdDialog.occupantIDs chatDialog:createdDialog];
+        // send to private:
+        [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:createdDialog.occupantIDs text:notificationText toChatDialog:createdDialog];
+        completion(createdDialog);
     }];
 }
 
@@ -191,9 +190,8 @@ static const NSUInteger kQMDialogsPageLimit = 10;
         if (!response.success) {
             return;
         }
-        chatDialog.photo = blob.publicUrl;
         
-        [weakSelf.chatService updateChatDialog:chatDialog completion:^(QBResponse *updateResponse, QBChatDialog *updatedDialog) {
+        [weakSelf.chatService changeDialogAvatar:blob.publicUrl forChatDialog:chatDialog completion:^(QBResponse *updateResponse, QBChatDialog *updatedDialog) {
             //
             if (updateResponse.success) {
                 // send notification:
@@ -218,7 +216,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
             NSString *messageTypeText = NSLocalizedString(@"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT", @"{Full name}");
             NSString *text = [QMChatUtils messageForText:messageTypeText participants:occupants];
             
-            [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:occupants text:text toChatDialog:chatDialog];
+            [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:updatedDialog.occupantIDs text:text toChatDialog:chatDialog];
             [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"occupants_ids" content:[QMChatUtils idsStringWithoutSpaces:occupants]];
             
         }
@@ -285,8 +283,9 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     [self.chatService notifyUsersWithIDs:users aboutAddingToDialog:chatDialog];
 }
 
-- (void)sendGroupChatDialogDidCreateNotificationToAllParticipantsWithText:(NSString *)text occupants:(NSArray *)occupants chatDialog:(QBChatDialog *)chatDialog completion:(void(^)(QBChatMessage *chatMessage))block
+- (void)sendGroupChatDialogDidCreateNotificationToAllParticipantsWithText:(NSString *)text occupants:(NSArray *)occupants chatDialog:(QBChatDialog *)chatDialog
 {
+    
     [self.chatService notifyUsersWithIDs:occupants aboutAddingToDialog:chatDialog];
 }
 
@@ -294,7 +293,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
 {
     NSMutableDictionary *customParams = [NSMutableDictionary new];
     if (updateType != nil && content != nil) {
-#warning FastßFix
+#warning Fast Fix
         [customParams setObject:content forKey:updateType];
     }
     
