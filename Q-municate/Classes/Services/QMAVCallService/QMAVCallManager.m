@@ -13,7 +13,6 @@
 #import "REAlertView+QMSuccess.h"
 
 @interface QMAVCallManager()
-@property (strong, nonatomic, readonly) UIStoryboard *mainStoryboard;
 
 /// active view controller
 @property (weak, nonatomic) UIViewController *currentlyPresentedViewController;
@@ -39,7 +38,6 @@ NSString *const kUserName = @"UserName";
     self = [super init];
     if (self) {
         [QBRTCConfig setDisconnectTimeInterval:kQBRTCDisconnectTimeInterval];
-        _mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         self.frontCamera = YES;
     }
     return self;
@@ -166,7 +164,7 @@ NSString *const kUserName = @"UserName";
             [strongSelf startPlayingCallingSound];
             strongSelf.session = session;
             
-            QMBaseCallsController *vc = (QMBaseCallsController *)[strongSelf.mainStoryboard instantiateViewControllerWithIdentifier:(conferenceType == QBConferenceTypeVideo) ? kVideoCallController : kAudioCallController];
+            QMBaseCallsController *vc = (QMBaseCallsController *)[[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:(conferenceType == QBConferenceTypeVideo) ? kVideoCallController : kAudioCallController];
             
             NSUInteger opponentID = [((NSNumber *)users[0]) unsignedIntegerValue];
             vc.session = strongSelf.session;
@@ -205,7 +203,7 @@ NSString *const kUserName = @"UserName";
     [[QBSoundRouter instance] setCurrentSoundRoute:QBSoundRouteSpeaker];
     [self startPlayingRingtoneSound];
     
-    QMIncomingCallController *incomingVC = [self.mainStoryboard instantiateViewControllerWithIdentifier:kIncomingCallController];
+    QMIncomingCallController *incomingVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallController];
     
     incomingVC.session = session;
     incomingVC.opponentID = [session.callerID unsignedIntegerValue];

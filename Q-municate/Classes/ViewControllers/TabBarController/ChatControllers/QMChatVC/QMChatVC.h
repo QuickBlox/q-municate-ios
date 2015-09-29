@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <QMChatViewController.h>
 
-@interface QMChatVC : QMChatViewController <
+@interface QMChatVC : QMChatViewController
+<
 QMTabBarChatDelegate,
 QMChatServiceDelegate,
 QMChatConnectionDelegate,
@@ -19,7 +20,8 @@ UIImagePickerControllerDelegate,
 UINavigationControllerDelegate,
 UIActionSheetDelegate,
 QMContactListServiceDelegate,
-QMChatActionsHandler
+QMChatActionsHandler,
+QMChatCellDelegate
 >
 
 - (void)refreshMessagesShowingProgress:(BOOL)showingProgress;

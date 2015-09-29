@@ -677,6 +677,8 @@ static const NSUInteger widthPadding = 40.0f;
 {
     [super collectionView:collectionView configureCell:cell forIndexPath:indexPath];
     
+    [(QMChatCell *)cell setDelegate:self];
+    
     [(QMChatCell *)cell containerView].highlightColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     
     if ([cell isKindOfClass:[QMChatOutgoingCell class]] || [cell isKindOfClass:[QMChatAttachmentOutgoingCell class]]) {
@@ -982,34 +984,26 @@ static const NSUInteger widthPadding = 40.0f;
     }
 }
 
-#pragma mark - QMChatDataSourceDelegate
+#pragma mark QMChatCellDelegate
 
-//- (void)chatDatasource:(QMChatDataSource *)chatDatasource prepareImageURLAttachement:(NSURL *)imageUrl {
-//    
-//    IDMPhoto *photo = [IDMPhoto photoWithURL:imageUrl];
-//    IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:@[photo]];
-//    browser.displayToolbar = NO;
-//    [self presentViewController:browser animated:YES completion:nil];
-//}
-//
-//- (void)chatDatasource:(QMChatDataSource *)chatDatasource prepareImageAttachement:(UIImage *)image fromView:(UIView *)fromView {
-//    
-//    IDMPhoto *photo = [IDMPhoto photoWithImage:image];
-//    IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:@[photo] animatedFromView:fromView];
-//    [self presentViewController:browser animated:YES completion:nil];
-//}
+- (void)chatCell:(QMChatCell *)cell didTapAtPosition:(CGPoint)position {
+}
 
+- (void)chatCell:(QMChatCell *)cell didPerformAction:(SEL)action withSender:(id)sender {
+}
 
-#pragma mark - Chat Input Toolbar Lock Delegate
+- (void)chatCellDidTapContainer:(QMChatCell *)cell {
+    if ([cell isKindOfClass:[QMChatAttachmentIncomingCell class]] || [cell isKindOfClass:[QMChatAttachmentOutgoingCell class]]) {
+        UIImage *attachmentImage = [(QMChatAttachmentIncomingCell *)cell attachmentImageView].image;
+        if (attachmentImage != nil) {
+            IDMPhoto *photo = [IDMPhoto photoWithImage:attachmentImage];
+            IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:@[photo]];
+            [self presentViewController:browser animated:YES completion:nil];
+        }
+    }
+}
 
-//- (void)inputBarShouldLock
-//{
-//    [self.inputToolbar lock];
-//}
-//
-//- (void)inputBarShouldUnlock
-//{
-//    [self.inputToolbar unlock];
-//}
+- (void)chatCellDidTapAvatar:(QMChatCell *)cell {
+}
 
 @end
