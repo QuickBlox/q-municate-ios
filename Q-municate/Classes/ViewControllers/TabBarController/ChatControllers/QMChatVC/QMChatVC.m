@@ -402,6 +402,7 @@ static const NSUInteger widthPadding = 40.0f;
     message.markable = YES;
     message.readIDs = @[@(self.senderID)];
     message.dialogID = self.dialog.ID;
+    message.dateSent = date;
     
     // Sending message.
     [[QMApi instance].chatService sendMessage:message toDialogId:self.dialog.ID save:YES completion:nil];
