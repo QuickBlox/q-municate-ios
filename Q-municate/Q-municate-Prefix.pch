@@ -23,9 +23,11 @@
     #import "QBUpdateUserParameters+CustomData.h"
     #import "QBChatMessage+TextEncoding.h"
 
-    #import "QMChatViewController.h"
-
     #import "QMDefinitions.h"
     #import "QMProtocols.h"
     #import "Macro.h"
+
+    // temporarily
+    #import "QMChatService+CustomMethods.h"
+    #import "QMContactListService+CustomMethods.h"
 #endif

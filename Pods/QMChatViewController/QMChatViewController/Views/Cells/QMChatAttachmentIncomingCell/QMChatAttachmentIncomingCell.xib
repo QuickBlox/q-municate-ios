@@ -110,7 +110,7 @@
                 <outlet property="attachmentImageView" destination="Fa7-ju-G0X" id="Sxm-ts-iD6"/>
                 <outlet property="avatarContainerViewHeightConstraint" destination="J2q-9c-eau" id="y0W-dP-1Lh"/>
                 <outlet property="avatarContainerViewWidthConstraint" destination="kjR-IO-Rpj" id="OZ9-vt-YNN"/>
-                <outlet property="avatarView" destination="9r3-Wm-17e" id="Ocz-2E-b1X"/>
+                <outlet property="avatarView" destination="9r3-Wm-17e" id="Enn-0n-c1J"/>
                 <outlet property="bottomLabel" destination="4Tj-AD-mYY" id="new-qI-SJh"/>
                 <outlet property="containerView" destination="X4d-J3-f3R" id="PGD-cW-pr4"/>
                 <outlet property="containerWidthConstraint" destination="q3d-xO-tGz" id="VmK-ch-bod"/>

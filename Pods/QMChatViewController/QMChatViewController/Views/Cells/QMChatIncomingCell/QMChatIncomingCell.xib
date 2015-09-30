@@ -119,7 +119,7 @@
             <connections>
                 <outlet property="avatarContainerViewHeightConstraint" destination="k76-lq-EWW" id="KiD-XX-AP2"/>
                 <outlet property="avatarContainerViewWidthConstraint" destination="zVA-fi-2bt" id="wkW-g4-JZT"/>
-                <outlet property="avatarView" destination="L8j-KZ-jCD" id="RMc-ll-773"/>
+                <outlet property="avatarView" destination="L8j-KZ-jCD" id="iCl-28-vuM"/>
                 <outlet property="bottomLabel" destination="sp9-fQ-dGT" id="WMF-R7-pVN"/>
                 <outlet property="bottomLableHeightConstraint" destination="cbV-gS-CjC" id="ZAZ-Bc-cEm"/>
                 <outlet property="containerView" destination="lux-vg-6Z5" id="AK5-pz-Tza"/>

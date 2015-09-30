@@ -8,6 +8,7 @@
 
 #import "QMChatCell.h"
 #import "QMChatCellLayoutAttributes.h"
+#import "QMImageView.h"
 #import "TTTAttributedLabel.h"
 
 static NSMutableSet *_qmChatCellMenuActions = nil;
@@ -95,6 +96,7 @@ static NSMutableSet *_qmChatCellMenuActions = nil;
     self.containerView.backgroundColor = [UIColor clearColor];
     self.avatarView.backgroundColor = [UIColor clearColor];
 #endif
+
     
     UITapGestureRecognizer *tap =
     [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];

@@ -169,13 +169,4 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  */
 - (void)contactListService:(QMContactListService *)contactListService didUpdateUser:(QBUUser *)user;
 
-/**
- *  Is called when contact list service did recieve some activity changes of userID
- *
- *  @param userID   id of user
- *  @param isOnline online status for user
- *  @param status   custom status for user
- */
-- (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status;
-
 @end

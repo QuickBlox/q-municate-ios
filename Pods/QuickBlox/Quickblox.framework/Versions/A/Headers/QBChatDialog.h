@@ -9,20 +9,15 @@
 #import <Foundation/Foundation.h>
 #import "ChatEnums.h"
 
-extern NSString* const QBChatDialogJoinPrefix;
-extern NSString* const QBChatDialogLeavePrefix;
-extern NSString* const QBChatDialogOnlineUsersPrefix;
-extern NSString* const QBChatDialogOnJoinFailedPrefix;
-extern NSString* const QBChatDialogIsTypingPrefix;
-extern NSString* const QBChatDialogStopTypingPrefix;
-
-typedef void(^QBChatDialogStatusBlock)() ;
-typedef void(^QBChatDialogRequestOnlineUsersBlock)(NSMutableArray* onlineUsers) ;
+typedef void(^QBChatDialogStatusBlock)();
+typedef void(^QBChatDialogRequestOnlineUsersBlock)(NSMutableArray* onlineUsers);
 typedef void(^QBChatDialogJoinFailedBlock)(NSError* error);
 typedef void(^QBChatDialogIsTypingBlock)(NSUInteger userID);
 typedef void(^QBChatDialogStoppedTypingBlock)(NSUInteger userID);
+typedef void(^QBChatDialogOccupantJoinBlock)(NSUInteger userID);
+typedef void(^QBChatDialogOccupantLeaveBlock)(NSUInteger userID);
+typedef void(^QBChatDialogOccupantUpdateBlock)(NSUInteger userID);
 
-@class QBChatRoom;
 @class QBChatMessage;
 @interface QBChatDialog : NSObject <NSCoding, NSCopying>
 
@@ -104,6 +99,25 @@ typedef void(^QBChatDialogStoppedTypingBlock)(NSUInteger userID);
 @property (nonatomic, copy) QBChatDialogStoppedTypingBlock onUserStoppedTyping;
 - (void)setOnUserStoppedTyping:(QBChatDialogStoppedTypingBlock)anOnUserStoppedTyping;
 
+/**
+ *  Fired when occupant joined to dialog.
+ */
+@property (nonatomic, copy) QBChatDialogOccupantJoinBlock onJoinOccupant;
+- (void)setOnJoinOccupant:(QBChatDialogOccupantJoinBlock)onJoinOccupant;
+
+/**
+ *  Fired when occupant left dialog.
+ */
+@property (nonatomic, copy) QBChatDialogOccupantLeaveBlock onLeaveOccupant;
+- (void)setOnLeaveOccupant:(QBChatDialogOccupantLeaveBlock)onLeaveOccupant;
+
+/**
+ *  Fired when occupant was update in dialog.
+ */
+@property (nonatomic, copy) QBChatDialogOccupantUpdateBlock onUpdateOccupant;
+- (void)setOnUpdateOccupant:(QBChatDialogOccupantUpdateBlock)onUpdateOccupant;
+
+
 /** Constructor */
 - (instancetype)initWithDialogID:(NSString *)dialogID type:(enum QBChatDialogType)type;
 
@@ -168,6 +182,11 @@ typedef void(^QBChatDialogStoppedTypingBlock)(NSUInteger userID);
  */
 - (BOOL)leave;
 
+/**
+ *  Clears dialog occupants status blocks. Call this method if you don't want to recieve join/leave/update for this dialog.
+ */
+- (void)clearDialogOccupantsStatusBlock;
+
 #pragma mark - Users status
 
 /**
@@ -193,12 +212,5 @@ typedef void(^QBChatDialogStoppedTypingBlock)(NSUInteger userID);
  *  Clears typing status blocks. Call this method if you don't want to recieve typing statuses for this dialog.
  */
 - (void)clearTypingStatusBlocks;
-
-@end
-
-@interface QBChatDialog (Deprecated)
-
-/** Returns an autoreleased instance of QBChatRoom to join if type = QBChatDialogTypeGroup or QBChatDialogTypePublicGroup. nil otherwise. */
-@property (nonatomic, readonly) QBChatRoom *chatRoom;
 
 @end
