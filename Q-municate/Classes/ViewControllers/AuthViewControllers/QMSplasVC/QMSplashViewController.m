@@ -31,6 +31,7 @@
     [super viewDidLoad];
     [self.splashLogoView setImage:[UIImage imageNamed:IS_HEIGHT_GTE_568 ? @"bg" : @"splash-960"]];
     self.activityIndicator.hidesWhenStopped = YES;
+    [self.activityIndicator startAnimating];
     [self createSession];
 }
 
@@ -43,8 +44,6 @@
         self.reconnectBtn.alpha = 1;
         return;
     }
-    
-    [self.activityIndicator startAnimating];
 
     QMSettingsManager *settingsManager = [[QMSettingsManager alloc] init];
     BOOL rememberMe = settingsManager.rememberMe;

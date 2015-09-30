@@ -36,30 +36,21 @@
 
 - (void)autoLogin:(void(^)(BOOL success))completion {
     
-#warning Current user and session always exists, need to check somehow if user logged in or not
-    //if (!self.currentUser) {
+    if (self.settingsManager.accountType == QMAccountTypeEmail && self.settingsManager.password && self.settingsManager.login) {
         
-        if (self.settingsManager.accountType == QMAccountTypeEmail && self.settingsManager.password && self.settingsManager.login) {
-            
-            NSString *email = self.settingsManager.login;
-            NSString *password = self.settingsManager.password;
-            
-            [self loginWithEmail:email password:password rememberMe:YES completion:completion];
-        }
-        else if (self.settingsManager.accountType == QMAccountTypeFacebook) {
-            
-            [self loginWithFacebook:completion];
-        }
-        else {
-            
-            completion(NO);
-        }
-//    }
-//    else {
-//        
-//        completion(YES);
-//    }
-}
+        NSString *email = self.settingsManager.login;
+        NSString *password = self.settingsManager.password;
+        
+        [self loginWithEmail:email password:password rememberMe:YES completion:completion];
+    }
+    else if (self.settingsManager.accountType == QMAccountTypeFacebook) {
+        
+        [self loginWithFacebook:completion];
+    }
+    else {
+        
+        completion(NO);
+    }}
 
 - (void)singUpAndLoginWithFacebook:(void(^)(BOOL success))completion {
     
@@ -95,16 +86,17 @@
     
     [self.authService signUpAndLoginWithUser:user completion:^(QBResponse *response, QBUUser *userProfile) {
         //
-        if (![weakSelf checkResponse:response withObject:userProfile]) {
-            completion(response.success);
-        }
-        else {
+        if (response.success) {
             [weakSelf setAutoLogin:rememberMe withAccountType:QMAccountTypeEmail];
             if (rememberMe) {
                 weakSelf.settingsManager.rememberMe = rememberMe;
                 [weakSelf.settingsManager setLogin:user.email andPassword:user.password];
             }
         }
+        else {
+            [weakSelf handleErrorResponse:response];
+        }
+        completion(response.success);
     }];
 }
 
@@ -126,7 +118,9 @@
     __weak __typeof(self)weakSelf = self;
     [self.authService logInWithFacebookSessionToken:accessToken completion:^(QBResponse *response, QBUUser *userProfile) {
         //
-        [weakSelf checkResponse:response withObject:userProfile];
+        if (!response.success) {
+            [weakSelf handleErrorResponse:response];
+        }
         completion(response.success);
     }];
 }
@@ -237,20 +231,18 @@
     
     [self.authService logInWithUser:loginUser completion:^(QBResponse *response, QBUUser *userProfile) {
         //
-        if(![weakSelf checkResponse:response withObject:userProfile]){
-            
-            completion(response.success);
-        }
-        else {
+        if (response.success) {
             weakSelf.currentUser.password = password;
             
             if (rememberMe) {
                 weakSelf.settingsManager.rememberMe = rememberMe;
                 [weakSelf.settingsManager setLogin:email andPassword:password];
             }
-            
-            completion(response.success);
         }
+        else {
+            [weakSelf handleErrorResponse:response];
+        }
+        completion(response.success);
     }];
 }
 

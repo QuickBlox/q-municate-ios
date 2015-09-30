@@ -71,7 +71,7 @@ typedef NS_ENUM(NSInteger, QMAccountType);
 
 - (void)fetchAllHistory:(void(^)(void))completion;
 
-- (BOOL)checkResponse:(QBResponse *)response withObject:(id)object;
+- (void)handleErrorResponse:(QBResponse *)response;
 
 - (BOOL)isInternetConnected;
 

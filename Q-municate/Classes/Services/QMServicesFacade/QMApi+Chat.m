@@ -42,7 +42,10 @@
     __weak __typeof(self)weakSelf = self;
     [self.chatService messagesWithChatDialogID:chatDialog.ID completion:^(QBResponse *response, NSArray *messages) {
         //
-        complete([weakSelf checkResponse:response withObject:messages]);
+        if (!response.status) {
+            [weakSelf handleErrorResponse:response];
+        }
+        complete(response.status);
     }];
 }
 
@@ -170,10 +173,13 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     __weak __typeof(self)weakSelf = self;
     [self.chatService changeDialogName:dialogName forChatDialog:chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
         //
-        if ([weakSelf checkResponse:response withObject:nil]) {
+        if (response.status) {
             NSString *notificationText = NSLocalizedString(@"QM_STR_NOTIFICATION_MESSAGE", nil);
             
             [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:notificationText toChatDialog:updatedDialog updateType:@"room_name" content:dialogName];
+        }
+        else {
+            [weakSelf handleErrorResponse:response];
         }
         completion(response,updatedDialog);
     }];
@@ -212,13 +218,15 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     __weak __typeof(self)weakSelf = self;
     [self.chatService joinOccupantsWithIDs:occupantsToJoinIDs toChatDialog:chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
         //
-        if ([weakSelf checkResponse:response withObject:updatedDialog]) {
+        if (response.status) {
             NSString *messageTypeText = NSLocalizedString(@"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT", @"{Full name}");
             NSString *text = [QMChatUtils messageForText:messageTypeText participants:occupants];
             
             [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:updatedDialog.occupantIDs text:text toChatDialog:chatDialog];
             [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"occupants_ids" content:[QMChatUtils idsStringWithoutSpaces:occupants]];
-            
+        }
+        else {
+            [weakSelf handleErrorResponse:response];
         }
         completion(response,updatedDialog);
     }];

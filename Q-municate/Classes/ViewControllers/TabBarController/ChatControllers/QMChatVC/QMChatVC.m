@@ -23,6 +23,7 @@
 #import "QMChatUtils.h"
 #import "QMUsersUtils.h"
 #import "QMImageView.h"
+#import "QMSettingsManager.h"
 
 // new chat controller
 #import "UIImage+QM.h"
@@ -207,6 +208,8 @@ static const NSUInteger widthPadding = 40.0f;
 {
     [super viewWillAppear:animated];
     
+    [[QMApi instance].settingsManager setDialogWithIDisActive:self.dialog.ID];
+    
     [[QMApi instance].chatService addDelegate:self];
     [QMApi instance].chatService.chatAttachmentService.delegate = self;
     [[QMApi instance].contactListService addDelegate:self];
@@ -246,6 +249,8 @@ static const NSUInteger widthPadding = 40.0f;
 - (void)viewWillDisappear:(BOOL)animated
 {
     self.dialog.unreadMessagesCount = 0;
+    
+    [[QMApi instance].settingsManager setDialogWithIDisActive:nil];
     
     [super viewWillDisappear:animated];
     

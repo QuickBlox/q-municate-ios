@@ -9,18 +9,16 @@
 #import "QMLogInViewController.h"
 #import "QMWelcomeScreenViewController.h"
 #import "QMLicenseAgreement.h"
-#import "QMSettingsManager.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMApi.h"
-#import "QMSettingsManager.h"
 #import "SVProgressHUD.h"
+#import "QMSettingsManager.h"
 
 @interface QMLogInViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 @property (weak, nonatomic) IBOutlet UISwitch *rememberMeSwitch;
-@property (strong, nonatomic) QMSettingsManager *settingsManager;
 @property (weak, nonatomic) IBOutlet UIButton *logInButton;
 @property (weak, nonatomic) IBOutlet UIButton *facebookLoginButton;
 

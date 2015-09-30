@@ -122,20 +122,6 @@ const NSTimeInterval kQMPresenceTime = 30;
     }];
 }
 
--(BOOL)checkResponse:(QBResponse *)response withObject:(id)object {
-    
-    if (!response.success) {
-        if( [object isKindOfClass:[QBUUser class]] ){
-            [REAlertView showAlertWithMessage:@"Incorrect Username or Password" actionSuccess:NO];
-        }
-        else{
-            [REAlertView showAlertWithMessage:response.error.description actionSuccess:NO];
-        }
-    }
-    
-    return response.success;
-}
-
 - (BOOL)isInternetConnected {
     
     return self.internetConnection.isReachable;
@@ -285,12 +271,28 @@ const NSTimeInterval kQMPresenceTime = 30;
     if (![self isAuthorized]) return;
     NSString *errorMessage = [[response.error description] stringByReplacingOccurrencesOfString:@"(" withString:@""];
     errorMessage = [errorMessage stringByReplacingOccurrencesOfString:@")" withString:@""];
-    
-    if( response.status == 502 ) { // bad gateway, server error
-        errorMessage = @"Bad Gateway, please try again";
-    }
-    else if( response.status == 0 ) { // bad gateway, server error
-        errorMessage = @"Connection network error, please try again";
+
+    switch (response.status) {
+        case QBResponseStatusCodeServerError:{
+            errorMessage = @"Bad Gateway, please try again";
+            break;
+        }
+        case QBResponseStatusCodeUnknown: {
+            errorMessage = @"Connection network error, please try again";
+            break;
+        }
+        case QBResponseStatusCodeUnAuthorized: {
+            errorMessage = @"Incorrect Username or Password";
+            break;
+        }
+        case QBResponseStatusCodeValidationFailed: {
+            errorMessage = @"Incorrect Username or Password";
+            break;
+        }
+        default: {
+            errorMessage = @"Unknown error";
+            break;
+        }
     }
 
     [REAlertView showAlertWithMessage:errorMessage actionSuccess:NO];

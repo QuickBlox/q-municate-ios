@@ -12,7 +12,7 @@
 #import "QMApi.h"
 #import "QMSettingsManager.h"
 
-NSString *const kQMAgreementUrl = @"https://q-municate.com/agreement";
+NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
 @interface QMLicenseAgreementViewController ()
 
