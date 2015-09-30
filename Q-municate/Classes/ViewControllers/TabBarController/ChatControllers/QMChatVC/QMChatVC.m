@@ -112,12 +112,7 @@ static const NSUInteger widthPadding = 40.0f;
         
         // hiding inpun bar and call buttons if users are not friends
         if ([[QBChat instance].contactList pendingApproval].count > 0 || ![[QMApi instance] isFriend:self.opponentUser]) {
-            self.inputToolbar.hidden = YES;
-#if QM_AUDIO_VIDEO_ENABLED
-            for (UIBarButtonItem *item in self.navigationItem.rightBarButtonItems) {
-                item.enabled = NO;
-            }
-#endif
+            [self setChatAvailable:NO];
         }
         
         [self updateTitleInfoForPrivateDialog];
@@ -302,6 +297,17 @@ static const NSUInteger widthPadding = 40.0f;
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+- (void)setChatAvailable:(BOOL)available {
+    self.inputToolbar.hidden = !available;
+#if QM_AUDIO_VIDEO_ENABLED
+    if (self.dialog.type == QBChatDialogTypePrivate) {
+        for (UIBarButtonItem *item in self.navigationItem.rightBarButtonItems) {
+            item.enabled = available;
+        }
+    }
+#endif
+}
+
 #pragma mark - Nav Buttons Actions
 
 - (void)audioCallAction {
@@ -464,7 +470,8 @@ static const NSUInteger widthPadding = 40.0f;
     if (messageItem.isNotificatonMessage) {
         //
         NSString *dateString = messageItem.dateSent ? [[self timeStampWithDate:messageItem.dateSent] stringByAppendingString:@"\n"] : @"";
-        NSString *notificationMessageString = [QMChatUtils messageTextForNotification:messageItem];
+        NSString *notificationMessageString = [[NSString alloc] init];
+        notificationMessageString = messageItem.messageType == QMMessageTypeUpdateGroupDialog ? messageItem.text : [QMChatUtils messageTextForNotification:messageItem];
         NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:[dateString stringByAppendingString:notificationMessageString]];
         [attrStr addAttribute:NSFontAttributeName
                         value:[UIFont systemFontOfSize:12.0f]
@@ -813,65 +820,35 @@ static const NSUInteger widthPadding = 40.0f;
 
 - (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
     if (message.messageType == QMMessageTypeAcceptContactRequest) {
-        self.inputToolbar.hidden = NO;
-#if QM_AUDIO_VIDEO_ENABLED
-        for (UIBarButtonItem *item in self.navigationItem.rightBarButtonItems) {
-            item.enabled = YES;
-        }
-#endif
+        [self setChatAvailable:YES];
     }
     else if (message.messageType == QMMessageTypeDeleteContactRequest) {
-        self.inputToolbar.hidden = YES;
-#if QM_AUDIO_VIDEO_ENABLED
-        for (UIBarButtonItem *item in self.navigationItem.rightBarButtonItems) {
-            item.enabled = NO;
-        }
-#endif
+        [self setChatAvailable:NO];
     }
 }
 
 #pragma mark - QMChatConnectionDelegate
-
-- (void)chatServiceChatDidConnect:(QMChatService *)chatService
-{
-    [SVProgressHUD showSuccessWithStatus:@"Chat connected!" maskType:SVProgressHUDMaskTypeClear];
-    [SVProgressHUD showWithStatus:@"Logging in to chat..." maskType:SVProgressHUDMaskTypeClear];
-}
-
-- (void)chatServiceChatDidReconnect:(QMChatService *)chatService
-{
-    [SVProgressHUD showSuccessWithStatus:@"Chat reconnected!" maskType:SVProgressHUDMaskTypeClear];
-    [SVProgressHUD showWithStatus:@"Logging in to chat..." maskType:SVProgressHUDMaskTypeClear];
-}
-
-- (void)chatServiceChatDidAccidentallyDisconnect:(QMChatService *)chatService
-{
-    [SVProgressHUD showErrorWithStatus:@"Chat disconnected!"];
-}
 
 - (void)chatServiceChatDidLogin
 {
     if (self.dialog.type != QBChatDialogTypePrivate) {
         [self refreshMessagesShowingProgress:YES];
     }
-    
-    [SVProgressHUD showSuccessWithStatus:@"Logged in!"];
-    
+
     for (QBChatMessage* message in self.unreadMessages) {
         [self sendReadStatusForMessage:message];
     }
     
     self.unreadMessages = nil;
-}
-
-- (void)chatServiceChatDidNotLoginWithError:(NSError *)error
-{
-    [SVProgressHUD showErrorWithStatus:@"Unable to login to chat!"];
-}
-
-- (void)chatServiceChatDidFailWithStreamError:(NSError *)error
-{
-    [SVProgressHUD showErrorWithStatus:@"Error: No Internet Connection! "];
+    
+    if (self.dialog.type == QBChatDialogTypePrivate) {
+        if ([[QBChat instance].contactList pendingApproval].count > 0 || ![[QMApi instance] isFriend:self.opponentUser]) {
+            [self setChatAvailable:NO];
+        }
+        else {
+            [self setChatAvailable:YES];
+        }
+    }
 }
 
 #pragma mark - QMChatAttachmentServiceDelegate

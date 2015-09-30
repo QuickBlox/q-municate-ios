@@ -64,26 +64,6 @@
             messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT", nil), sender.fullName, fullNameString];
         }
             break;
-            
-        case QMMessageTypeUpdateGroupDialog:
-        {
-            if (notification.dialog.photo) {
-                messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_UPDATE_GROUP_AVATAR_TEXT", nil), sender.fullName];
-            } else if (notification.dialog.name) {
-                messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_UPDATE_GROUP_NAME_TEXT", nil), sender.fullName, notification.dialog.name];
-            } else if (notification.dialog.occupantIDs.count > 0) {
-                
-                NSArray *users = [[QMApi instance] usersWithIDs:notification.dialog.occupantIDs];
-                NSString *fullNameString = [self fullNamesString:users];
-                messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_ADD_USERS_TO_EXIST_GROUP_CONVERSATION_TEXT", nil), sender.fullName, fullNameString];
-                
-            } else if (notification.customParameters[kQMNotificationUserDeletedID]) {
-                QBUUser *leavedUser = [[QMApi instance] userWithID:[notification.customParameters[kQMNotificationUserDeletedID] integerValue]];
-                messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT", nil), leavedUser.fullName];
-            }
-        }
-            break;
-            
         default:
             break;
     }

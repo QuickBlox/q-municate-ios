@@ -26,10 +26,12 @@
     if (readIDs.count > 0 || deliveredIDs.count > 0) {
         NSMutableString* statusString = [NSMutableString string];
 
-        if (message.attachments.count > 0) {
-            readIDs.count > 1 ? [statusString appendFormat:@"Seen: %lu", (unsigned long)readIDs.count] : [statusString appendFormat:@"Seen"];
-        } else {
-            readIDs.count > 1 ? [statusString appendFormat:@"Read: %lu", (unsigned long)readIDs.count] : [statusString appendFormat:@"Read"];
+        if (readIDs.count > 0) {
+            if (message.attachments.count > 0) {
+                readIDs.count > 1 ? [statusString appendFormat:@"Seen: %lu", (unsigned long)readIDs.count] : [statusString appendFormat:@"Seen"];
+            } else {
+                readIDs.count > 1 ? [statusString appendFormat:@"Read: %lu", (unsigned long)readIDs.count] : [statusString appendFormat:@"Read"];
+            }
         }
 
         if (deliveredIDs.count > 0) {

@@ -174,9 +174,10 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     [self.chatService changeDialogName:dialogName forChatDialog:chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
         //
         if (response.status) {
-            NSString *notificationText = NSLocalizedString(@"QM_STR_NOTIFICATION_MESSAGE", nil);
+            NSString *notificationText = NSLocalizedString(@"QM_STR_UPDATE_GROUP_NAME_TEXT", nil);
+            NSString *text = [NSString stringWithFormat:notificationText, self.currentUser.fullName, dialogName];
             
-            [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:notificationText toChatDialog:updatedDialog updateType:@"room_name" content:dialogName];
+            [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:updatedDialog updateType:@"room_name" content:dialogName];
         }
         else {
             [weakSelf handleErrorResponse:response];
@@ -201,9 +202,11 @@ static const NSUInteger kQMDialogsPageLimit = 10;
             //
             if (updateResponse.success) {
                 // send notification:
-                NSString *notificationText = NSLocalizedString(@"QM_STR_NOTIFICATION_MESSAGE", nil);
+                NSString *notificationText = NSLocalizedString(@"QM_STR_UPDATE_GROUP_AVATAR_TEXT", @"{Full name}");
+                NSString *text = [NSString stringWithFormat:notificationText, self.currentUser.fullName];
+                
                 chatDialog.photo = updatedDialog.photo;
-                [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:notificationText toChatDialog:chatDialog updateType:@"room_photo" content:updatedDialog.photo];
+                [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"room_photo" content:updatedDialog.photo];
                 completion(updateResponse, updatedDialog);
             }
 

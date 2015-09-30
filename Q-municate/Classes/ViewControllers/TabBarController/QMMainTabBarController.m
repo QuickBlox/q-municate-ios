@@ -17,12 +17,12 @@
 #import "QMSettingsManager.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMDevice.h"
+#import "QMPopoversFactory.h"
 
 
 @interface QMMainTabBarController ()
 
 @end
-
 
 @implementation QMMainTabBarController
 
@@ -38,6 +38,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [[QMApi instance].chatService addDelegate:self];
     
     [self customizeTabBar];
     [self.navigationController setNavigationBarHidden:YES animated:NO];
@@ -156,27 +157,41 @@
     }
 }
 
-#pragma mark - QMTabBarChatDelegate
-
-- (void)tabBarChatWithChatMessage:(QBChatMessage *)message chatDialog:(QBChatDialog *)dialog showTMessage:(BOOL)show
+- (void)showNotificationForMessage:(QBChatMessage *)message inDialogID:(NSString *)dialogID
 {
-    if (!show) {
-        return;
+    if ([[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) return;
+    
+    if (message.isNotificatonMessage) return;
+    
+    if (message.delayed) return;
+    
+    if (message.senderID == self.currentUser.ID) return;
+    
+    NSString* dialogName = @"New message";
+    
+    QBChatDialog* dialog = [[QMApi instance].chatService.dialogsMemoryStorage chatDialogWithID:dialogID];
+    
+    if (dialog.type != QBChatDialogTypePrivate) {
+        dialogName = dialog.name;
+    } else {
+        QBUUser* user = [[QMApi instance].contactListService.usersMemoryStorage userWithID:dialog.recipientID];
+        if (user != nil) {
+            dialogName = user.login;
+        }
     }
+    
     [QMSoundManager playMessageReceivedSound];
     
-    __weak typeof(self) weakSelf = self;
+    __weak __typeof(self)weakSelf = self;
     [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
         if (buttonIndex == 1) {
+            
             UINavigationController *navigationController = (UINavigationController *)[weakSelf selectedViewController];
-            QMChatVC *chatController = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"QMChatVC"];
-            chatController.dialog = dialog;
+            UIViewController *chatController = [QMPopoversFactory chatControllerWithDialogID:dialogID];
             [navigationController pushViewController:chatController animated:YES];
         }
     }];
-    
 }
-
 
 #pragma mark - QMTabBarDelegate
 
@@ -188,6 +203,47 @@
             [self.tabDelegate friendsListTabWasTapped:item];
         }
     }
+}
+
+#pragma mark - QMChatServiceDelegate
+
+- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+    [self showNotificationForMessage:message inDialogID:dialogID];
+}
+
+
+#pragma mark - QMChatConnectionDelegate
+
+- (void)chatServiceChatDidConnect:(QMChatService *)chatService
+{
+    [SVProgressHUD showSuccessWithStatus:@"Chat connected!" maskType:SVProgressHUDMaskTypeClear];
+    [SVProgressHUD showWithStatus:@"Logging in to chat..." maskType:SVProgressHUDMaskTypeClear];
+}
+
+- (void)chatServiceChatDidReconnect:(QMChatService *)chatService
+{
+    [SVProgressHUD showSuccessWithStatus:@"Chat reconnected!" maskType:SVProgressHUDMaskTypeClear];
+    [SVProgressHUD showWithStatus:@"Logging in to chat..." maskType:SVProgressHUDMaskTypeClear];
+}
+
+- (void)chatServiceChatDidAccidentallyDisconnect:(QMChatService *)chatService
+{
+    [SVProgressHUD showErrorWithStatus:@"Chat disconnected!"];
+}
+
+- (void)chatServiceChatDidLogin
+{
+    [SVProgressHUD showSuccessWithStatus:@"Logged in!"];
+}
+
+- (void)chatServiceChatDidNotLoginWithError:(NSError *)error
+{
+    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"Did not login with error: %@", [error description]]];
+}
+
+- (void)chatServiceChatDidFailWithStreamError:(NSError *)error
+{
+    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"Chat failed with error: %@", [error description]]];
 }
 
 @end

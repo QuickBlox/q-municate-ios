@@ -231,41 +231,6 @@ const NSTimeInterval kQMPresenceTime = 30;
     return self.authService.isAuthorized;
 }
 
-- (void)showNotificationForMessage:(QBChatMessage *)message inDialogID:(NSString *)dialogID
-{
-    if ([[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) return;
-    
-    if (message.isNotificatonMessage) return;
-    
-    if (message.delayed) return;
-    
-    if (message.senderID == self.currentUser.ID) return;
-    
-    NSString* dialogName = @"New message";
-    
-    QBChatDialog* dialog = [self.chatService.dialogsMemoryStorage chatDialogWithID:dialogID];
-    
-    if (dialog.type != QBChatDialogTypePrivate) {
-        dialogName = dialog.name;
-    } else {
-        QBUUser* user = [self.contactListService.usersMemoryStorage userWithID:dialog.recipientID];
-        if (user != nil) {
-            dialogName = user.login;
-        }
-    }
-
-    [QMSoundManager playMessageReceivedSound];
-    [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
-        if (buttonIndex == 1) {
-            UIViewController *chatController = [QMPopoversFactory chatControllerWithDialogID:dialogID];
-            UIWindow *window = [[UIApplication sharedApplication].windows firstObject];
-            QMMainTabBarController *tabBar = (QMMainTabBarController *)window.rootViewController;
-            UINavigationController *navigationController = (UINavigationController *)[tabBar selectedViewController];
-            [navigationController pushViewController:chatController animated:YES];
-        }
-    }];
-}
-
 - (void)handleErrorResponse:(QBResponse *)response {
     
     if (![self isAuthorized]) return;
@@ -273,26 +238,21 @@ const NSTimeInterval kQMPresenceTime = 30;
     errorMessage = [errorMessage stringByReplacingOccurrencesOfString:@")" withString:@""];
 
     switch (response.status) {
-        case QBResponseStatusCodeServerError:{
+        case QBResponseStatusCodeServerError:
             errorMessage = @"Bad Gateway, please try again";
             break;
-        }
-        case QBResponseStatusCodeUnknown: {
+        case QBResponseStatusCodeUnknown:
             errorMessage = @"Connection network error, please try again";
             break;
-        }
-        case QBResponseStatusCodeUnAuthorized: {
+        case QBResponseStatusCodeUnAuthorized:
             errorMessage = @"Incorrect Username or Password";
             break;
-        }
-        case QBResponseStatusCodeValidationFailed: {
+        case QBResponseStatusCodeValidationFailed:
             errorMessage = @"Incorrect Username or Password";
             break;
-        }
-        default: {
+        default:
             errorMessage = @"Unknown error";
             break;
-        }
     }
 
     [REAlertView showAlertWithMessage:errorMessage actionSuccess:NO];
@@ -314,7 +274,6 @@ const NSTimeInterval kQMPresenceTime = 30;
 
 - (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
     [QMChatCache.instance insertOrUpdateMessage:message withDialogId:dialogID completion:nil];
-    [self showNotificationForMessage:message inDialogID:dialogID];
 }
 
 - (void)chatService:(QMChatService *)chatService didAddMessagesToMemoryStorage:(NSArray *)messages forDialogID:(NSString *)dialogID {
@@ -329,7 +288,7 @@ const NSTimeInterval kQMPresenceTime = 30;
     [QMChatCache.instance deleteDialogWithID:chatDialogID completion:nil];
 }
 
-- (void)chatService:(QMChatService *)chatService  didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
+- (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
     NSAssert(message.dialogID == dialog.ID, @"must be equal");
     
     [QMChatCache.instance insertOrUpdateMessage:message withDialogId:dialog.ID completion:nil];

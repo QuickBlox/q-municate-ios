@@ -70,6 +70,7 @@
                 [weakSelf pressClearCache:nil];
                 [SVProgressHUD  showWithMaskType:SVProgressHUDMaskTypeClear];
                 [[QMApi instance] logout:^(BOOL success) {
+                    [[QMApi instance].settingsManager clearSettings];
                     [SVProgressHUD dismiss];
                     [weakSelf performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
                 }];

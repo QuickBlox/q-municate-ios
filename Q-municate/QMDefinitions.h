@@ -69,8 +69,9 @@ static NSString *const kSettingsCellBundleVersion = @"CFBundleVersion";
 
 //******************** USER DEFAULTS KEYS *****************
 
-static NSString *const kMailSubjectString               = @"Q-municate";
-static NSString *const kMailBodyString                  = @"<a href='http://quickblox.com/'>Join us in Q-municate!</a>";
-static NSString *const kQMNotificationUserDeletedID     = @"deleted_id";
-
+static NSString *const kMailSubjectString                = @"Q-municate";
+static NSString *const kMailBodyString                   = @"<a href='http://quickblox.com/'>Join us in Q-municate!</a>";
+static NSString *const kQMNotificationUserDeletedID      = @"deleted_id";
+static NSString *const kQMNotificationUserAddedOccupants = @"new_occupants";
+static NSString *const kQMNotificationRoomPhoto          = @"room_photo";
 #endif
