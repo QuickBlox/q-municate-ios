@@ -253,6 +253,7 @@ typedef NS_ENUM(NSInteger, QMAccountType);
 - (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID;
 - (BOOL)isContactRequestUserWithID:(NSInteger)userID;
 
+- (BOOL)userIDIsInPendingList:(NSUInteger)userID;
 
 /**
  Opponent for private chat dialog. Only for private chat dialogs.

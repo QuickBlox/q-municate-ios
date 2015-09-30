@@ -11,7 +11,6 @@
 
 @interface QMChatVC : QMChatViewController
 <
-QMTabBarChatDelegate,
 QMChatServiceDelegate,
 QMChatConnectionDelegate,
 UITextViewDelegate,

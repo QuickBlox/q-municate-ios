@@ -28,18 +28,10 @@ userInfo:nil]
 typedef void(^QMContentProgressBlock)(float progress);
 typedef void(^QMCFileUploadResponseBlock)(QBResponse *response, QBCBlob *blob);
 typedef void(^QMCFileDownloadResponseBlock)(QBResponse *response, NSData *fileData);
-typedef void (^QBUUserResponseBlock)(QBResponse *response, QBUUser *user);
-typedef void (^QBUUserLogInResponseBlock)(QBResponse *response, QBUUser *user);
 typedef void (^QBUUserPagedResponseBlock)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users);
 typedef void (^QBDialogsPagedResponseBlock)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page);
 typedef void (^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *updatedDialog);
-typedef void (^QBChatHistoryMessageResponseBlock)(QBResponse *response, NSArray *messages, QBResponsePage *responsePage);
-
-typedef void (^QBResponseBlock)(QBResponse *response);
-//typedef void (^QBSessionCreationBlock)(BOOL success, NSString *error);
 typedef void (^QBChatResultBlock)(BOOL success);
-typedef void (^QBChatRoomResultBlock)(QBChatRoom *chatRoom, NSError *error);
-//typedef void (^QBChatDialogHistoryBlock)(NSMutableArray *chatDialogHistoryArray, NSError *error);
 
 //************** CoreData *************************
 
@@ -71,7 +63,5 @@ static NSString *const kSettingsCellBundleVersion = @"CFBundleVersion";
 
 static NSString *const kMailSubjectString                = @"Q-municate";
 static NSString *const kMailBodyString                   = @"<a href='http://quickblox.com/'>Join us in Q-municate!</a>";
-static NSString *const kQMNotificationUserDeletedID      = @"deleted_id";
-static NSString *const kQMNotificationUserAddedOccupants = @"new_occupants";
-static NSString *const kQMNotificationRoomPhoto          = @"room_photo";
+
 #endif

@@ -163,6 +163,14 @@
     return nil;
 }
 
+- (BOOL)userIDIsInPendingList:(NSUInteger)userID {
+    QBContactListItem *contactlistItem = [self.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
+    if (contactlistItem.subscriptionState == QBPresenseSubscriptionStateBoth || contactlistItem.subscriptionState == QBPresenseSubscriptionStateFrom) {
+        return NO;
+    }
+    return YES;
+}
+
 - (QBUUser *)userForContactRequestWithPrivateChatDialog:(QBChatDialog *)chatDialog
 {
     NSAssert(chatDialog.type == QBChatDialogTypePrivate, @"Dialog is not private. Private dialog needed.");

@@ -36,26 +36,30 @@
 
 - (void)autoLogin:(void(^)(BOOL success))completion {
     
-    if (self.settingsManager.accountType == QMAccountTypeEmail && self.settingsManager.password && self.settingsManager.login) {
-        
-        NSString *email = self.settingsManager.login;
-        NSString *password = self.settingsManager.password;
-        
-        [self loginWithEmail:email password:password rememberMe:YES completion:completion];
-    }
-    else if (self.settingsManager.accountType == QMAccountTypeFacebook) {
-        
-        [self loginWithFacebook:completion];
+    if (!self.isAuthorized) {
+        if (self.settingsManager.accountType == QMAccountTypeEmail && self.settingsManager.password && self.settingsManager.login) {
+            
+            NSString *email = self.settingsManager.login;
+            NSString *password = self.settingsManager.password;
+            
+            [self loginWithEmail:email password:password rememberMe:YES completion:completion];
+        }
+        else if (self.settingsManager.accountType == QMAccountTypeFacebook) {
+            
+            [self loginWithFacebook:completion];
+        }
+        else {
+            
+            completion(NO);
+        }
     }
     else {
-        
-        completion(NO);
-    }}
-
+        completion(YES);
+    }
+}
 - (void)singUpAndLoginWithFacebook:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
-    /*create QBSession*/
     [self loginWithFacebook:^(BOOL success) {
         
         if (!success) {

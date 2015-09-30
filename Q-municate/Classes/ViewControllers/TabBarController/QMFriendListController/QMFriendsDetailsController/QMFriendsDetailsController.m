@@ -142,21 +142,21 @@ QMContactListServiceDelegate
 #if QM_AUDIO_VIDEO_ENABLED
         case QMCallTypeVideo:{
             
-//            if( [[QMApi instance].usersService userIDIsInPendingList:self.selectedUser.ID] ) {
-//                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
-//            }
-//            else{
+            if( [[QMApi instance] userIDIsInPendingList:self.selectedUser.ID] ) {
+                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
+            }
+            else{
                 [[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBConferenceTypeVideo];
-//            }
+            }
         }
             break;
         case QMCallTypeAudio: {
-//            if( [[QMApi instance].usersService userIDIsInPendingList:self.selectedUser.ID] ) {
-//                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
-//            }
-//            else{
+            if( [[QMApi instance] userIDIsInPendingList:self.selectedUser.ID] ) {
+                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
+            }
+            else{
                 [[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBConferenceTypeAudio];
-//            }
+            }
         }
             break;
         case QMCallTypeChat: {

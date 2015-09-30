@@ -16,7 +16,6 @@
 
 @interface QMMainTabBarController : UITabBarController
 <
-QMTabBarChatDelegate,
 QMChatServiceDelegate,
 QMChatConnectionDelegate
 >

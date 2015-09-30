@@ -7,6 +7,7 @@
 //
 
 #import "QMUsersUtils.h"
+#import <QBUUser+CustomData.h>
 
 @implementation QMUsersUtils
 

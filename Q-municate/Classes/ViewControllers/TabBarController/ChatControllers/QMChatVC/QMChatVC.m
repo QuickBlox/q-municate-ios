@@ -100,10 +100,11 @@ static const NSUInteger widthPadding = 40.0f;
     
     // chat appearance
     self.collectionView.backgroundColor = [UIColor whiteColor];
-//    self.inputToolbar.contentView.backgroundColor = [UIColor whiteColor];
     self.inputToolbar.contentView.textView.placeHolder = @"Message";
     
     self.stringBuilder = [QMMessageStatusStringBuilder new];
+    
+    self.showLoadEarlierMessagesHeader = YES;
 
     if (self.dialog.type == QBChatDialogTypePrivate) {
         NSUInteger oponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
@@ -175,12 +176,6 @@ static const NSUInteger widthPadding = 40.0f;
 
             if (showingProgress && !self.isSendingAttachment) {
                 [SVProgressHUD dismiss];
-            }
-            
-            QBChatMessage *oldestMessage = [[QMApi instance].chatService.messagesMemoryStorage oldestMessageForDialogID:self.dialog.ID];
-            if (self.items > 0 && ![self.items.firstObject isEqual:oldestMessage]) {
-                self.showLoadEarlierMessagesHeader = YES;
-                [self scrollToBottomAnimated:NO];
             }
             
         } else {
