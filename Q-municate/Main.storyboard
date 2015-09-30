@@ -2855,7 +2855,7 @@ Cg
                                             <constraint firstAttribute="width" constant="25" id="sEf-HY-e4f"/>
                                         </constraints>
                                     </imageView>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="333/400 online" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7eb-d0-xZ8">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0/0 online" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7eb-d0-xZ8">
                                         <rect key="frame" x="119" y="74" width="193" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="GRk-6n-d8c"/>

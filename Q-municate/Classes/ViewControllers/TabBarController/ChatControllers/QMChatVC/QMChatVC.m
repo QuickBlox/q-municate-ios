@@ -23,7 +23,6 @@
 #import "QMChatUtils.h"
 #import "QMUsersUtils.h"
 #import "QMImageView.h"
-#import <QuartzCore/QuartzCore.h>
 
 // new chat controller
 #import "UIImage+QM.h"
@@ -110,8 +109,14 @@ static const NSUInteger widthPadding = 40.0f;
         self.opponentUser = [[QMApi instance] userWithID:oponentID];
         [self configureNavigationBarForPrivateChat];
         
-        if ([[QBChat instance].contactList pendingApproval].count > 0) {
+        // hiding inpun bar and call buttons if users are not friends
+        if ([[QBChat instance].contactList pendingApproval].count > 0 || ![[QMApi instance] isFriend:self.opponentUser]) {
             self.inputToolbar.hidden = YES;
+#if QM_AUDIO_VIDEO_ENABLED
+            for (UIBarButtonItem *item in self.navigationItem.rightBarButtonItems) {
+                item.enabled = NO;
+            }
+#endif
         }
         
         [self updateTitleInfoForPrivateDialog];
@@ -177,7 +182,6 @@ static const NSUInteger widthPadding = 40.0f;
             }
             
             QBChatMessage *oldestMessage = [[QMApi instance].chatService.messagesMemoryStorage oldestMessageForDialogID:self.dialog.ID];
-            NSArray *test = messages;
             if (self.items > 0 && ![self.items.firstObject isEqual:oldestMessage]) {
                 self.showLoadEarlierMessagesHeader = YES;
                 [self scrollToBottomAnimated:NO];
@@ -418,7 +422,13 @@ static const NSUInteger widthPadding = 40.0f;
     if (item.isNotificatonMessage) {
         
         if (item.messageType == QMMessageTypeContactRequest && item.senderID != self.senderID && ![[QMApi instance] isFriend:self.opponentUser]) {
-            return [QMChatContactRequestCell class];
+            QBChatMessage *latestMessage = [[QMApi instance].chatService.messagesMemoryStorage lastMessageFromDialogID:self.dialog.ID];
+            
+            if ([item isEqual:latestMessage]) {
+                return [QMChatContactRequestCell class];
+            }
+            
+            return [QMChatNotificationCell class];
         }
         else {
             return [QMChatNotificationCell class];
@@ -776,7 +786,6 @@ static const NSUInteger widthPadding = 40.0f;
     }
 }
 
-
 - (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog{
     if( [self.dialog.ID isEqualToString:chatDialog.ID] ) {
         self.dialog = chatDialog;
@@ -794,6 +803,25 @@ static const NSUInteger widthPadding = 40.0f;
             [self.collectionView.collectionViewLayout invalidateLayoutWithContext:context];
             [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
         }
+    }
+}
+
+- (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
+    if (message.messageType == QMMessageTypeAcceptContactRequest) {
+        self.inputToolbar.hidden = NO;
+#if QM_AUDIO_VIDEO_ENABLED
+        for (UIBarButtonItem *item in self.navigationItem.rightBarButtonItems) {
+            item.enabled = YES;
+        }
+#endif
+    }
+    else if (message.messageType == QMMessageTypeDeleteContactRequest) {
+        self.inputToolbar.hidden = YES;
+#if QM_AUDIO_VIDEO_ENABLED
+        for (UIBarButtonItem *item in self.navigationItem.rightBarButtonItems) {
+            item.enabled = NO;
+        }
+#endif
     }
 }
 
@@ -962,17 +990,29 @@ static const NSUInteger widthPadding = 40.0f;
 #pragma mark QMChatActionsHandler protocol
 
 - (void)chatContactRequestDidAccept:(BOOL)accept sender:(id)sender {
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     if (accept) {
         [[QMApi instance] confirmAddContactRequest:self.opponentUser completion:^(BOOL success) {
             //
+            [SVProgressHUD dismiss];
             self.inputToolbar.hidden = NO;
+#if QM_AUDIO_VIDEO_ENABLED
+            for (UIBarButtonItem *item in self.navigationItem.rightBarButtonItems) {
+                item.enabled = YES;
+            }
+#endif
+            [self refreshMessagesShowingProgress:NO];
             [self refreshCollectionView];
         }];
     }
     else {
+        __weak __typeof(self)weakSelf = self;
         [[QMApi instance] rejectAddContactRequest:self.opponentUser completion:^(BOOL success) {
             //
-            [self refreshCollectionView];
+            [[QMApi instance] deleteChatDialog:self.dialog completion:^(BOOL succeed) {
+                [weakSelf.navigationController popViewControllerAnimated:YES];
+                [SVProgressHUD dismiss];
+            }];
         }];
     }
 }
