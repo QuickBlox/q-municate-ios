@@ -161,13 +161,6 @@ AGEmojiKeyboardViewDelegate
 
 - (void)refreshMessagesShowingProgress:(BOOL)showingProgress {
 
-    if (self.dialog.type != QBChatDialogTypePrivate && !self.dialog.isJoined && [QBChat instance].isLoggedIn) {
-        
-        [[QMApi instance].chatService joinToGroupDialog:self.dialog failed:^(NSError *error) {
-            NSLog(@"Failed to join room with error: %@", error.localizedDescription);
-        }];
-    }
-    
     if (showingProgress && !self.isSendingAttachment) {
         [SVProgressHUD showWithStatus:@"Refreshing..." maskType:SVProgressHUDMaskTypeClear];
     }
@@ -222,12 +215,7 @@ AGEmojiKeyboardViewDelegate
     }];
     
     if ([self.items count] > 0) {
-        if (self.dialog.type != QBChatDialogTypePrivate) {
-            [self refreshMessagesShowingProgress:YES];
-        }
-        else {
-            [self refreshMessagesShowingProgress:NO];
-        }
+        [self refreshMessagesShowingProgress:NO];
     }
     else {
         [self refreshMessagesShowingProgress:YES];
@@ -804,12 +792,7 @@ AGEmojiKeyboardViewDelegate
 
 - (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog{
     if( [self.dialog.ID isEqualToString:chatDialog.ID] ) {
-//        [self.dialog leave];
-//        [chatDialog leave];
         self.dialog = chatDialog;
-//        if (self.dialog.type != QBChatDialogTypePrivate) {
-//            [self refreshMessagesShowingProgress:YES];
-//        }
     }
 }
 
@@ -835,7 +818,8 @@ AGEmojiKeyboardViewDelegate
 - (void)chatServiceChatDidLogin
 {
     if (self.dialog.type != QBChatDialogTypePrivate) {
-        [self refreshMessagesShowingProgress:YES];
+        [self refreshMessagesShowingProgress:NO];
+        //
     }
 
     for (QBChatMessage* message in self.unreadMessages) {

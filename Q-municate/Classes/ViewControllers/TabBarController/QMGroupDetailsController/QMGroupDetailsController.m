@@ -210,16 +210,12 @@
 
 - (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
     if ([chatDialog.ID isEqualToString:self.chatDialog.ID]) {
-//        [self.chatDialog leave];
-//        [chatDialog leave];
         [self updateGUIWithChatDialog:chatDialog];
     }
 }
 
 - (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
     if ([chatDialog.ID isEqualToString:self.chatDialog.ID]) {
-//        [self.chatDialog leave];
-//        [chatDialog leave];
         [self updateGUIWithChatDialog:chatDialog];
     }
 }

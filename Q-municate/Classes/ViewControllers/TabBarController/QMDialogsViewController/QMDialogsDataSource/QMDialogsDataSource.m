@@ -174,13 +174,10 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 }
 
 - (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
-    [[QMApi instance] fetchAllHistory:^{
-        if (chatDialog.type != QBChatDialogTypePrivate) {
-            [[QMApi instance].chatService joinToGroupDialog:chatDialog failed:^(NSError *error) {
-                NSLog(@"Failed to join group dialog with error: %@", error.localizedDescription);
-            }];
-        }
+    [[QMApi instance] fetchAllDialogs:^{
+        [[QMApi instance] joinGroupDialogs];
     }];
+    
     [self updateGUI];
 }
 
@@ -209,6 +206,14 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 
 - (void)contactListService:(QMContactListService *)contactListService didAddUsers:(NSArray *)users {
     [self.tableView reloadData];
+}
+
+#pragma mark Chat Connection Delegate
+
+- (void)chatServiceChatDidLogin {
+    [[QMApi instance] fetchAllDialogs:^{
+        [[QMApi instance] joinGroupDialogs];
+    }];
 }
 
 @end
