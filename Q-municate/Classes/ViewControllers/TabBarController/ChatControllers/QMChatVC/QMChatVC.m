@@ -24,8 +24,9 @@
 #import "QMUsersUtils.h"
 #import "QMImageView.h"
 #import "QMSettingsManager.h"
+#import "AGEmojiKeyBoardView.h"
 
-// new chat controller
+// chat controller
 #import "UIImage+QM.h"
 #import "UIColor+QM.h"
 #import <TTTAttributedLabel.h>
@@ -34,15 +35,17 @@
 #import "QMChatAttachmentCell.h"
 #import "QMCollectionViewFlowLayoutInvalidationContext.h"
 #import "QMMessageStatusStringBuilder.h"
-
-// old chat controller
-//#import "QMChatToolbarContentView.h"
-//#import "QMChatInputToolbar.h"
 #import "QMChatButtonsFactory.h"
 
-static const NSUInteger widthPadding = 40.0f;
+static const NSUInteger widthPadding  = 40.0f;
+static const CGFloat emojiButtonSize  = 30.0f;
+static const NSInteger emojiButtonTag = 100;
 
 @interface QMChatVC ()
+<
+AGEmojiKeyboardViewDataSource,
+AGEmojiKeyboardViewDelegate
+>
 
 @property (strong, nonatomic) QMOnlineTitle *onlineTitle;
 
@@ -59,6 +62,7 @@ static const NSUInteger widthPadding = 40.0f;
 
 @property (nonatomic, assign) BOOL isSendingAttachment;
 
+@property (nonatomic, strong) UIButton *emojiButton;
 
 @end
 
@@ -105,16 +109,21 @@ static const NSUInteger widthPadding = 40.0f;
     self.stringBuilder = [QMMessageStatusStringBuilder new];
     
     self.showLoadEarlierMessagesHeader = YES;
+    
+    // emoji button init
+    self.emojiButton = [QMChatButtonsFactory emojiButton];
+    self.emojiButton.tag = emojiButtonTag;
+    [self.emojiButton addTarget:self action:@selector(showEmojiKeyboard) forControlEvents:UIControlEventTouchUpInside];
+    [self.emojiButton setFrame:CGRectMake(self.inputToolbar.contentView.bounds.size.width-self.inputToolbar.contentView.rightBarButtonItemWidth-5.0f, 0, emojiButtonSize, emojiButtonSize)];
+    [self.inputToolbar.contentView.textView addSubview:self.emojiButton];
+    UIBezierPath *emojiPath = [UIBezierPath bezierPathWithRect:self.emojiButton.frame];
+    self.inputToolbar.contentView.textView.textContainer.exclusionPaths = @[emojiPath];
 
+    //
     if (self.dialog.type == QBChatDialogTypePrivate) {
         NSUInteger oponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
         self.opponentUser = [[QMApi instance] userWithID:oponentID];
         [self configureNavigationBarForPrivateChat];
-        
-        // hiding inpun bar and call buttons if users are not friends
-        if ([[QBChat instance].contactList pendingApproval].count > 0 || ![[QMApi instance] isFriend:self.opponentUser]) {
-            [self setChatAvailable:NO];
-        }
         
         [self updateTitleInfoForPrivateDialog];
     } else {
@@ -132,37 +141,30 @@ static const NSUInteger widthPadding = 40.0f;
     [self refreshCollectionView];
     
     // Handling 'typing' status.
-    __weak typeof(self)weakSelf = self;
-    [self.dialog setOnUserIsTyping:^(NSUInteger userID) {
-        __typeof(self) strongSelf = weakSelf;
-        if ([QBSession currentSession].currentUser.ID == userID) {
-            return;
-        }
-        strongSelf.title = @"typing...";
-    }];
-    
-    // Handling user stopped typing.
-    [self.dialog setOnUserStoppedTyping:^(NSUInteger userID) {
-        __typeof(self) strongSelf = weakSelf;
-        [strongSelf updateTitleInfoForPrivateDialog];
-    }];
+    if (self.dialog.type == QBChatDialogTypePrivate) {
+        __weak typeof(self)weakSelf = self;
+        [self.dialog setOnUserIsTyping:^(NSUInteger userID) {
+            __typeof(self) strongSelf = weakSelf;
+            if ([QBSession currentSession].currentUser.ID == userID) {
+                return;
+            }
+            strongSelf.title = @"typing...";
+        }];
+        
+        // Handling user stopped typing.
+        [self.dialog setOnUserStoppedTyping:^(NSUInteger userID) {
+            __typeof(self) strongSelf = weakSelf;
+            [strongSelf updateTitleInfoForPrivateDialog];
+        }];
+    }
 }
 
 - (void)refreshMessagesShowingProgress:(BOOL)showingProgress {
-    
+
     if (self.dialog.type != QBChatDialogTypePrivate && !self.dialog.isJoined && [QBChat instance].isLoggedIn) {
-        // in order to join/rejoin group dialog it must be up to date with the server one
-        [[QMApi instance].chatService loadDialogWithID:self.dialog.ID completion:^(QBChatDialog *loadedDialog) {
-            //
-            if (loadedDialog != nil) {
-                [[QMApi instance].chatService joinToGroupDialog:loadedDialog failed:^(NSError *error) {
-                    NSLog(@"Failed to join room with error: %@", error.localizedDescription);
-                }];
-            }
-            else {
-                // dialog was not found, let dialogcontroller handle it
-                [self.navigationController popViewControllerAnimated:NO];
-            }
+        
+        [[QMApi instance].chatService joinToGroupDialog:self.dialog failed:^(NSError *error) {
+            NSLog(@"Failed to join room with error: %@", error.localizedDescription);
         }];
     }
     
@@ -292,23 +294,17 @@ static const NSUInteger widthPadding = 40.0f;
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)setChatAvailable:(BOOL)available {
-    self.inputToolbar.hidden = !available;
-#if QM_AUDIO_VIDEO_ENABLED
-    if (self.dialog.type == QBChatDialogTypePrivate) {
-        for (UIBarButtonItem *item in self.navigationItem.rightBarButtonItems) {
-            item.enabled = available;
-        }
-    }
-#endif
-}
-
 #pragma mark - Nav Buttons Actions
 
 - (void)audioCallAction {
 #if QM_AUDIO_VIDEO_ENABLED == 0
     [QMAlertsFactory comingSoonAlert];
 #else
+    
+    if( [[QMApi instance] userIDIsInPendingList:self.opponentUser.ID] ) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
+        return;
+    }
     
     BOOL callsAllowed = [[[self.inputToolbar contentView] textView] isEditable];
     if( !callsAllowed ) {
@@ -325,6 +321,12 @@ static const NSUInteger widthPadding = 40.0f;
 #if QM_AUDIO_VIDEO_ENABLED == 0
     [QMAlertsFactory comingSoonAlert];
 #else
+    
+    if( [[QMApi instance] userIDIsInPendingList:self.opponentUser.ID] ) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
+        return;
+    }
+
     BOOL callsAllowed = [[[self.inputToolbar contentView] textView] isEditable];
     if( !callsAllowed ) {
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
@@ -405,6 +407,13 @@ static const NSUInteger widthPadding = 40.0f;
 {
     if (self.typingTimer != nil) {
         [self fireStopTypingIfNecessary];
+    }
+    
+    if (self.dialog.type == QBChatDialogTypePrivate) {
+        if ([[QMApi instance] userIDIsInPendingList:self.opponentUser.ID]) {
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
+            return;
+        }
     }
     
     QBChatMessage *message = [QBChatMessage message];
@@ -795,7 +804,12 @@ static const NSUInteger widthPadding = 40.0f;
 
 - (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog{
     if( [self.dialog.ID isEqualToString:chatDialog.ID] ) {
+//        [self.dialog leave];
+//        [chatDialog leave];
         self.dialog = chatDialog;
+//        if (self.dialog.type != QBChatDialogTypePrivate) {
+//            [self refreshMessagesShowingProgress:YES];
+//        }
     }
 }
 
@@ -814,12 +828,6 @@ static const NSUInteger widthPadding = 40.0f;
 }
 
 - (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
-    if (message.messageType == QMMessageTypeAcceptContactRequest) {
-        [self setChatAvailable:YES];
-    }
-    else if (message.messageType == QMMessageTypeDeleteContactRequest) {
-        [self setChatAvailable:NO];
-    }
 }
 
 #pragma mark - QMChatConnectionDelegate
@@ -835,15 +843,6 @@ static const NSUInteger widthPadding = 40.0f;
     }
     
     self.unreadMessages = nil;
-    
-    if (self.dialog.type == QBChatDialogTypePrivate) {
-        if ([[QBChat instance].contactList pendingApproval].count > 0 || ![[QMApi instance] isFriend:self.opponentUser]) {
-            [self setChatAvailable:NO];
-        }
-        else {
-            [self setChatAvailable:YES];
-        }
-    }
 }
 
 #pragma mark - QMChatAttachmentServiceDelegate
@@ -1014,6 +1013,95 @@ static const NSUInteger widthPadding = 40.0f;
 }
 
 - (void)chatCellDidTapAvatar:(QMChatCell *)cell {
+}
+
+#pragma mark - Emoji
+
+- (void)showEmojiKeyboard {
+    
+    if ([self.inputToolbar.contentView.textView.inputView isKindOfClass:[AGEmojiKeyboardView class]]) {
+        
+        UIButton *emojiButton = (UIButton *)[self.inputToolbar.contentView viewWithTag:emojiButtonTag];
+        [emojiButton setImage:[UIImage imageNamed:@"ic_smile"] forState:UIControlStateNormal];
+
+        self.inputToolbar.contentView.textView.inputView = nil;
+        [self.inputToolbar.contentView.textView reloadInputViews];
+        
+        [self scrollToBottomAnimated:NO];
+        
+    } else {
+        
+        UIButton *emojiButton = (UIButton *)[self.inputToolbar.contentView viewWithTag:emojiButtonTag];
+        [emojiButton setImage:[UIImage imageNamed:@"keyboard_icon"] forState:UIControlStateNormal];
+        
+        AGEmojiKeyboardView *emojiKeyboardView = [[AGEmojiKeyboardView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 216) dataSource:self];
+        emojiKeyboardView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        emojiKeyboardView.delegate = self;
+        emojiKeyboardView.tintColor = [UIColor colorWithRed:0.678 green:0.762 blue:0.752 alpha:1.000];
+        
+        self.inputToolbar.contentView.textView.inputView = emojiKeyboardView;
+        [self.inputToolbar.contentView.textView reloadInputViews];
+        [self.inputToolbar.contentView.textView becomeFirstResponder];
+    }
+}
+
+- (NSArray *)sectionsImages {
+    return @[@"😊", @"😊", @"🎍", @"🐶", @"🏠", @"🕘", @"Back"];
+}
+
+- (UIImage *)randomImage:(NSInteger)categoryImage {
+    
+    CGSize size = CGSizeMake(30, 30);
+    UIGraphicsBeginImageContextWithOptions(size , NO, 0);
+    
+    NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
+    [attributes setObject:[UIFont systemFontOfSize:27] forKey:NSFontAttributeName];
+    NSString * sectionImage = self.sectionsImages[categoryImage];
+    [sectionImage drawInRect:CGRectMake(0, 0, 30, 30) withAttributes:attributes];
+    
+    
+    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return img;
+}
+
+
+#pragma mark - Emoji Data source
+
+- (UIImage *)emojiKeyboardView:(AGEmojiKeyboardView *)emojiKeyboardView imageForSelectedCategory:(AGEmojiKeyboardViewCategoryImage)category {
+    UIImage *img = [self randomImage:category];
+    
+    return [img imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+}
+
+- (UIImage *)emojiKeyboardView:(AGEmojiKeyboardView *)emojiKeyboardView imageForNonSelectedCategory:(AGEmojiKeyboardViewCategoryImage)category {
+    UIImage *img = [self randomImage:category];
+    return [img imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+}
+
+- (UIImage *)backSpaceButtonImageForEmojiKeyboardView:(AGEmojiKeyboardView *)emojiKeyboardView {
+    UIImage *img = [UIImage imageNamed:@"keyboard_icon"];
+    return [img imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+}
+
+#pragma mark - Emoji Delegate
+
+- (void)emojiKeyBoardView:(AGEmojiKeyboardView *)emojiKeyBoardView didUseEmoji:(NSString *)emoji {
+    
+    NSString *textViewString = self.inputToolbar.contentView.textView.text;
+    self.inputToolbar.contentView.textView.text = [textViewString stringByAppendingString:emoji];
+    [self textViewDidChange:self.inputToolbar.contentView.textView];
+}
+
+- (void)emojiKeyBoardViewDidPressBackSpace:(AGEmojiKeyboardView *)emojiKeyBoardView {
+    
+    self.inputToolbar.contentView.textView.inputView = nil;
+    [self.inputToolbar.contentView.textView reloadInputViews];
+    
+    UIButton *emojiButton = (UIButton *)[self.inputToolbar.contentView viewWithTag:emojiButtonTag];
+    [emojiButton setImage:[UIImage imageNamed:@"ic_smile"] forState:UIControlStateNormal];
+    
+    [self scrollToBottomAnimated:NO];
 }
 
 @end

@@ -132,7 +132,7 @@
     }
     self.occupantsCountLabel.text = [NSString stringWithFormat:@"%zd participants", self.chatDialog.occupantIDs.count];
 
-    [self.dataSource reloadDataWithChatDialog:self.chatDialog];
+    [self.dataSource reloadDataWithChatDialog:chatDialog];
     
     [self.chatDialog requestOnlineUsers];
     
@@ -208,8 +208,18 @@
 
 #pragma mark Chat Service Delegate
 
+- (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
+    if ([chatDialog.ID isEqualToString:self.chatDialog.ID]) {
+//        [self.chatDialog leave];
+//        [chatDialog leave];
+        [self updateGUIWithChatDialog:chatDialog];
+    }
+}
+
 - (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
     if ([chatDialog.ID isEqualToString:self.chatDialog.ID]) {
+//        [self.chatDialog leave];
+//        [chatDialog leave];
         [self updateGUIWithChatDialog:chatDialog];
     }
 }

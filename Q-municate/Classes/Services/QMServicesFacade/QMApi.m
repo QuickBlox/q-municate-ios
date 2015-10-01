@@ -251,7 +251,7 @@ const NSTimeInterval kQMPresenceTime = 30;
             errorMessage = @"Incorrect Username or Password";
             break;
         default:
-            errorMessage = @"Unknown error";
+            errorMessage = @"Error. Please check your internet connection";
             break;
     }
 

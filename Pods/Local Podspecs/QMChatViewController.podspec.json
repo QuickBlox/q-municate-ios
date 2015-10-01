@@ -25,11 +25,18 @@
   ],
   "requires_arc": true,
   "xcconfig": {
-    "FRAMEWORK_SEARCH_PATHS": "$(PODS_ROOT)/../../Framework"
+    "FRAMEWORK_SEARCH_PATHS": "$(PODS_ROOT)/QuickBlox/"
   },
+  "prefix_header_contents": "#import <Quickblox/Quickblox.h>",
   "dependencies": {
+    "QuickBlox": [
+      "~> 2.3"
+    ],
     "TTTAttributedLabel": [
       "~> 1.13"
+    ],
+    "SDWebImage": [
+      "~> 3.6"
     ]
   },
   "subspecs": [

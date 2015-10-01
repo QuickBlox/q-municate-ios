@@ -1,5 +1,5 @@
 
-platform :ios, '7.0'
+platform :ios, '8.1'
 xcodeproj 'Q-municate.xcodeproj'
 source 'https://github.com/CocoaPods/Specs.git'
 
@@ -15,5 +15,8 @@ pod 'MPGNotification', '~> 1.1'
 pod 'Reachability', '~> 3.2'
 pod 'QuickBlox'
 pod 'TTTAttributedLabel', '~> 1.13'
-pod 'QMChatViewController', :podspec => 'QMChatViewController.podspec'
-pod 'QMServices', :podspec => 'QMServices.podspec'
+#pod 'QMChatViewController', :podspec => 'QMChatViewController.podspec'
+#pod 'QMServices', :podspec => 'QMServices.podspec'
+#For development pods
+pod 'QMServices', :git => 'https://github.com/QuickBlox/q-municate-services-ios.git', :branch => 'feature/QBIOSSDK-421'
+pod 'QMChatViewController', :git => 'https://github.com/QuickBlox/QMChatViewController-ios.git', :branch => 'development'

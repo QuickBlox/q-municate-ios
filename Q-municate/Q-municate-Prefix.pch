@@ -27,7 +27,9 @@
     #import "QMProtocols.h"
     #import "Macro.h"
 
-    // temporarily
-    #import "QMChatService+CustomMethods.h"
-    #import "QMContactListService+CustomMethods.h"
+#warning Development pods headers only, remove this after
+    // remove this
+    #import <QMChatViewController.h>
+    #import <QMServices.h>
+
 #endif

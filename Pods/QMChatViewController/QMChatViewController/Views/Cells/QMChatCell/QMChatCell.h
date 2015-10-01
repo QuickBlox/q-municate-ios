@@ -10,6 +10,7 @@
 #import "QMChatContainerView.h"
 #import "TTTAttributedLabel.h"
 #import "QMChatCellLayoutAttributes.h"
+#import "QMImageView.h"
 
 struct QMChatLayoutModel {
     

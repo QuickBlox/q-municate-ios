@@ -1,6 +1,6 @@
 {
   "name": "QMServices",
-  "version": "0.2.1",
+  "version": "0.2",
   "summary": "Easy-to-use services for Quickblox SDK, for speeding up development of iOS chat applications.",
   "homepage": "https://github.com/QuickBlox/q-municate-services-ios",
   "license": {
@@ -8,46 +8,29 @@
     "file": "LICENSE.txt"
   },
   "authors": {
-    "Gleb Ustimenko": "gleb.ustimenko@injoit.com"
+    "Andrey Moskvin": "andrey.moskvin@quickblox.com"
   },
   "platforms": {
     "ios": "7.0"
   },
   "source": {
     "git": "https://github.com/QuickBlox/q-municate-services-ios.git",
-    "tag": "0.2.1"
+    "tag": "0.2"
   },
   "source_files": [
     "Classes",
     "**/*.{h,m}"
   ],
   "exclude_files": "Pods",
+  "frameworks": "CoreData",
   "requires_arc": true,
-  "ios": {
-    "frameworks": [
-      "MobileCoreServices",
-      "SystemConfiguration",
-      "AVFoundation",
-      "CoreVideo",
-      "Accelerate",
-      "CoreMedia",
-      "AudioToolbox",
-      "CoreLocation",
-      "CoreData",
-      "CoreGraphics",
-      "CFNetwork",
-      "UIKit"
-    ]
-  },
-  "libraries": [
-    "resolv",
-    "xml2",
-    "stdc++",
-    "z"
-  ],
   "xcconfig": {
-    "HEADER_SEARCH_PATHS": "/usr/include/libxml2",
-    "FRAMEWORK_SEARCH_PATHS": "$(PODS_ROOT)/../../Framework"
+    "FRAMEWORK_SEARCH_PATHS": "$(PODS_ROOT)/QuickBlox/"
+  },
+  "dependencies": {
+    "QuickBlox": [
+      "~> 2.4"
+    ]
   },
   "prefix_header_contents": "#import <Quickblox/Quickblox.h>\n#import <CoreData/CoreData.h>\n#import <Quickblox/QBMulticastDelegate.h>",
   "resource_bundles": {

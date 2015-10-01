@@ -628,7 +628,7 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
 	__weak __typeof(self)weakSelf = self;
 	[QBRequest updateDialog:chatDialog successBlock:^(QBResponse *response, QBChatDialog *updatedDialog) {
         
-		[weakSelf.dialogsMemoryStorage addChatDialog:updatedDialog andJoin:NO onJoin:nil];
+		[weakSelf.dialogsMemoryStorage addChatDialog:updatedDialog andJoin:YES onJoin:nil];
 		
 		if (completion) {
 			completion(response, updatedDialog);
@@ -644,6 +644,27 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
 	}];
 }
 
+- (void)changeDialogAvatar:(NSString *)avatarPublicUrl forChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(QBResponse *response, QBChatDialog *updatedDialog))completion {
+
+    NSAssert(avatarPublicUrl != nil, @"avatarPublicUrl can't be nil");
+    NSAssert(chatDialog != nil, @"Dialog can't be nil");
+    
+    chatDialog.photo = avatarPublicUrl;
+    
+    __weak __typeof(self)weakSelf = self;
+    [QBRequest updateDialog:chatDialog successBlock:^(QBResponse *response, QBChatDialog *dialog) {
+        //
+        [weakSelf.dialogsMemoryStorage addChatDialog:dialog andJoin:YES onJoin:nil];
+        
+        if (completion) completion(response,dialog);
+    } errorBlock:^(QBResponse *response) {
+        //
+        [weakSelf.serviceManager handleErrorResponse:response];
+        
+        if (completion) completion(response,nil);
+    }];
+}
+
 - (void)joinOccupantsWithIDs:(NSArray *)ids toChatDialog:(QBChatDialog *)chatDialog
 				  completion:(void(^)(QBResponse *response, QBChatDialog *updatedDialog))completion {
 	
@@ -653,7 +674,7 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
 	
 	[QBRequest updateDialog:chatDialog successBlock:^(QBResponse *response, QBChatDialog *updatedDialog) {
 
-		[weakSelf.dialogsMemoryStorage addChatDialog:updatedDialog andJoin:NO onJoin:nil];
+		[weakSelf.dialogsMemoryStorage addChatDialog:updatedDialog andJoin:YES onJoin:nil];
 		
 		if (completion) {
 			completion(response, updatedDialog);
@@ -822,27 +843,11 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
     if ([self.cacheDataSource respondsToSelector:@selector(cachedDialogWithID:completion:)]) {
         NSAssert([QBSession currentSession].currentUser != nil, @"Current user must be non nil!");
         
-        //__weak __typeof(self)weakSelf = self;
         [self.cacheDataSource cachedDialogWithID:dialogID completion:^(QBChatDialog *dialog) {
-            /*if (dialog == nil) {
-                [weakSelf loadDialogWithID:dialogID completion:^(QBChatDialog *loadedDialog) {
-                    if (completion) {
-                        completion(loadedDialog);
-                    }
-                }];
-            }
-            else {
-                if (completion) completion(dialog);
-            }*/
             if (completion) completion(dialog);
         }];
     }
     else {
-        /*[self loadDialogWithID:dialogID completion:^(QBChatDialog *loadedDialog) {
-            if (completion) {
-                completion(loadedDialog);
-            }
-        }];*/
         if (completion) {
             completion(nil);
         }
@@ -869,6 +874,31 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
         if (completion) {
             completion(nil);
         }
+    }];
+}
+
+- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(void (^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page))completion
+{
+    NSTimeInterval timeInterval = [date timeIntervalSince1970];
+    NSMutableDictionary *extendedRequest = @{@"last_message_date_sent[gt]":@(timeInterval)}.mutableCopy;
+    
+    __weak typeof(self)weakSelf = self;
+    
+    [QBRequest dialogsForPage:[QBResponsePage responsePageWithLimit:1 skip:0] extendedRequest:extendedRequest successBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page) {
+        //
+        
+        [weakSelf.dialogsMemoryStorage addChatDialogs:dialogObjects andJoin:YES];
+        
+        if ([weakSelf.multicastDelegate respondsToSelector:@selector(chatService:didAddChatDialogsToMemoryStorage:)]) {
+            [weakSelf.multicastDelegate chatService:weakSelf didAddChatDialogsToMemoryStorage:dialogObjects];
+        }
+        
+        if (completion) {
+            completion(response,dialogObjects,dialogsUsersIDs,page);
+        }
+    } errorBlock:^(QBResponse *response) {
+        //
+        completion(response,nil,nil,nil);
     }];
 }
 

@@ -252,6 +252,16 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     NSString *messageTypeText = NSLocalizedString(@"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT", @"{Full name}");
     NSString *text = [NSString stringWithFormat:messageTypeText, self.currentUser.fullName];
     NSString *myID = [NSString stringWithFormat:@"%lu", (unsigned long)self.currentUser.ID];
+    
+    // remove current user from occupants
+    NSMutableArray *occupantsWithoutCurrentUser = [NSMutableArray array];
+    for (NSNumber *identifier in chatDialog.occupantIDs) {
+        if (![identifier isEqualToNumber:@(QMApi.instance.currentUser.ID)]) {
+            [occupantsWithoutCurrentUser addObject:identifier];
+        }
+    }
+    chatDialog.occupantIDs = [occupantsWithoutCurrentUser copy];
+    
     [self sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"deleted_id" content:myID];
     
     [chatDialog leave];

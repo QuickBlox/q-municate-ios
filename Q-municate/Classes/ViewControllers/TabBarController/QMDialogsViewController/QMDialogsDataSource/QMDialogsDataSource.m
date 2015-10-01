@@ -185,7 +185,6 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 }
 
 - (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
-    [[QMApi instance] fetchAllDialogs:nil];
     [self updateGUI];
 }
 
