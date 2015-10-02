@@ -15,9 +15,9 @@ pod 'MPGNotification', '~> 1.1'
 pod 'Reachability', '~> 3.2'
 pod 'QuickBlox'
 pod 'TTTAttributedLabel', '~> 1.13'
-#pod 'QMChatViewController', :podspec => 'QMChatViewController.podspec'
+pod 'QMChatViewController', '~> 0.2.3'
 #pod 'QMServices', :podspec => 'QMServices.podspec'
 
 #For development pods
-pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
+#pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
 pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'

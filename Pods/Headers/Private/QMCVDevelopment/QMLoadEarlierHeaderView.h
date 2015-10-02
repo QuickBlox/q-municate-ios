@@ -1,1 +1,0 @@
-../../../../../QMChatViewController-ios/QMChatViewController/Views/ReusableViews/LoadEarlierHeaderView/QMLoadEarlierHeaderView.h
