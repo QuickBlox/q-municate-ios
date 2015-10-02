@@ -38,8 +38,8 @@
 #import "QMChatButtonsFactory.h"
 
 static const NSUInteger widthPadding  = 40.0f;
-static const CGFloat emojiButtonSize  = 30.0f;
-static const NSInteger emojiButtonTag = 100;
+static const CGFloat kQMEmojiButtonSize  = 30.0f;
+static const NSInteger kQMEmojiButtonTag = 100;
 
 @interface QMChatVC ()
 <
@@ -113,13 +113,7 @@ AGEmojiKeyboardViewDelegate
     self.showLoadEarlierMessagesHeader = YES;
     
     // emoji button init
-    self.emojiButton = [QMChatButtonsFactory emojiButton];
-    self.emojiButton.tag = emojiButtonTag;
-    [self.emojiButton addTarget:self action:@selector(showEmojiKeyboard) forControlEvents:UIControlEventTouchUpInside];
-    [self.emojiButton setFrame:CGRectMake(self.inputToolbar.contentView.bounds.size.width-self.inputToolbar.contentView.rightBarButtonItemWidth-5.0f, -1.0f, emojiButtonSize, emojiButtonSize)];
-    [self.inputToolbar.contentView.textView addSubview:self.emojiButton];
-    UIBezierPath *emojiPath = [UIBezierPath bezierPathWithRect:self.emojiButton.frame];
-    self.inputToolbar.contentView.textView.textContainer.exclusionPaths = @[emojiPath];
+    [self configureEmojiButton];
 
     //
     if (self.dialog.type == QBChatDialogTypePrivate) {
@@ -1020,21 +1014,36 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark - Emoji
 
+- (void)configureEmojiButton {
+    // init
+    self.emojiButton = [QMChatButtonsFactory emojiButton];
+    self.emojiButton.tag = kQMEmojiButtonTag;
+    [self.emojiButton addTarget:self action:@selector(showEmojiKeyboard) forControlEvents:UIControlEventTouchUpInside];
+
+    // appearance
+    [self.emojiButton setFrame:CGRectMake(self.inputToolbar.contentView.bounds.size.width-self.inputToolbar.contentView.rightBarButtonItemWidth-5.0f, -1.0f, kQMEmojiButtonSize, kQMEmojiButtonSize)];
+    [self.inputToolbar.contentView.textView addSubview:self.emojiButton];
+    
+    // adding bezier path
+    UIBezierPath *emojiPath = [UIBezierPath bezierPathWithRect:self.emojiButton.frame];
+    self.inputToolbar.contentView.textView.textContainer.exclusionPaths = @[emojiPath];
+}
+
 - (void)showEmojiKeyboard {
     
     if ([self.inputToolbar.contentView.textView.inputView isKindOfClass:[AGEmojiKeyboardView class]]) {
         
-        UIButton *emojiButton = (UIButton *)[self.inputToolbar.contentView viewWithTag:emojiButtonTag];
+        UIButton *emojiButton = (UIButton *)[self.inputToolbar.contentView viewWithTag:kQMEmojiButtonTag];
         [emojiButton setImage:[UIImage imageNamed:@"ic_smile"] forState:UIControlStateNormal];
 
         self.inputToolbar.contentView.textView.inputView = nil;
         [self.inputToolbar.contentView.textView reloadInputViews];
         
-        [self scrollToBottomAnimated:NO];
+        [self scrollToBottomAnimated:YES];
         
     } else {
         
-        UIButton *emojiButton = (UIButton *)[self.inputToolbar.contentView viewWithTag:emojiButtonTag];
+        UIButton *emojiButton = (UIButton *)[self.inputToolbar.contentView viewWithTag:kQMEmojiButtonTag];
         [emojiButton setImage:[UIImage imageNamed:@"keyboard_icon"] forState:UIControlStateNormal];
         
         AGEmojiKeyboardView *emojiKeyboardView = [[AGEmojiKeyboardView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 216) dataSource:self];
@@ -1101,10 +1110,10 @@ AGEmojiKeyboardViewDelegate
     self.inputToolbar.contentView.textView.inputView = nil;
     [self.inputToolbar.contentView.textView reloadInputViews];
     
-    UIButton *emojiButton = (UIButton *)[self.inputToolbar.contentView viewWithTag:emojiButtonTag];
+    UIButton *emojiButton = (UIButton *)[self.inputToolbar.contentView viewWithTag:kQMEmojiButtonTag];
     [emojiButton setImage:[UIImage imageNamed:@"ic_smile"] forState:UIControlStateNormal];
     
-    [self scrollToBottomAnimated:NO];
+    [self scrollToBottomAnimated:YES];
 }
 
 @end
