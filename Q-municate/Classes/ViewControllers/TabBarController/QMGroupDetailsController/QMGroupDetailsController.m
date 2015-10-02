@@ -29,6 +29,8 @@
 
 @property (strong, nonatomic) QMGroupDetailsDataSource *dataSource;
 
+@property (nonatomic, assign) BOOL shouldNotUnsubFromServices;
+
 @end
 
 @implementation QMGroupDetailsController
@@ -64,7 +66,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+    self.shouldNotUnsubFromServices = NO;
+
     [[QMApi instance].contactListService addDelegate:self];
     [[QMApi instance].chatService addDelegate:self];
 }
@@ -74,8 +77,10 @@
     [self.view endEditing:YES];
     [super viewWillDisappear:animated];
     
-    [[QMApi instance].contactListService removeDelegate:self];
-    [[QMApi instance].chatService removeDelegate:self];
+    if (!self.shouldNotUnsubFromServices) {
+        [[QMApi instance].contactListService removeDelegate:self];
+        [[QMApi instance].chatService removeDelegate:self];
+    }
 }
 
 - (IBAction)changeDialogName:(id)sender {
@@ -134,13 +139,12 @@
 
     [self.dataSource reloadDataWithChatDialog:chatDialog];
     
-    [self.chatDialog requestOnlineUsers];
-    
     QBChatDialogRequestOnlineUsersBlock onReceiveListOfOnlineUsers = ^(NSMutableArray* onlineUsers) {
         [self updateOnlineStatus:onlineUsers.count];
     };
     [self.chatDialog setOnReceiveListOfOnlineUsers:onReceiveListOfOnlineUsers];
-    [self.chatDialog onReceiveListOfOnlineUsers];
+    //[self.chatDialog onReceiveListOfOnlineUsers];
+    [self.chatDialog requestOnlineUsers];
 }
 
 - (NSArray *)filteredIDs:(NSArray *)IDs forChatDialog:(QBChatDialog *)chatDialog
@@ -149,7 +153,6 @@
     [newArray removeObjectsInArray:chatDialog.occupantIDs];
     return [newArray copy];
 }
-
 
 - (void)leaveGroupChat
 {
@@ -187,6 +190,8 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if ([segue.identifier isEqualToString:kQMAddMembersToGroupControllerSegue]) {
+        self.shouldNotUnsubFromServices = YES;
+        
         QMAddMembersToGroupController *addMembersVC = segue.destinationViewController;
         addMembersVC.chatDialog = self.chatDialog;
     }

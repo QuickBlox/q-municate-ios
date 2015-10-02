@@ -158,8 +158,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
         // send to group:
         [weakSelf sendGroupChatDialogDidCreateNotificationToAllParticipantsWithText:notificationText occupants:createdDialog.occupantIDs chatDialog:createdDialog];
 
-        [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:createdDialog.occupantIDs text:notificationText toChatDialog:createdDialog];
-//        [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:notificationText toChatDialog:createdDialog updateType:nil content:nil];
+        [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:createdDialog.occupantIDs toChatDialog:createdDialog];
 
         completion(createdDialog);
     }];
@@ -225,8 +224,8 @@ static const NSUInteger kQMDialogsPageLimit = 10;
             NSString *messageTypeText = NSLocalizedString(@"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT", @"{Full name}");
             NSString *text = [QMChatUtils messageForText:messageTypeText participants:occupants];
             
-            [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:updatedDialog.occupantIDs text:text toChatDialog:chatDialog];
-            [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"occupants_ids" content:[QMChatUtils idsStringWithoutSpaces:occupants]];
+            [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:[QMChatUtils idsArray:occupants] toChatDialog:updatedDialog];
+            [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"occupants_ids" content:[updatedDialog.occupantIDs componentsJoinedByString:@","]];
         }
         else {
             [weakSelf handleErrorResponse:response];
@@ -264,7 +263,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     
     [self sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"deleted_id" content:myID];
     
-    [chatDialog leave];
+    //[chatDialog leave];
     [self.chatService deleteDialogWithID:chatDialog.ID completion:^(QBResponse *response) {
         //
         completion(response,nil);
@@ -299,7 +298,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
 
 #pragma mark - Notifications
 
-- (void)sendGroupChatDialogDidCreateNotificationToUsers:(NSArray *)users text:(NSString *)text toChatDialog:(QBChatDialog *)chatDialog {
+- (void)sendGroupChatDialogDidCreateNotificationToUsers:(NSArray *)users toChatDialog:(QBChatDialog *)chatDialog {
     
     [self.chatService notifyUsersWithIDs:users aboutAddingToDialog:chatDialog];
 }

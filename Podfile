@@ -17,6 +17,7 @@ pod 'QuickBlox'
 pod 'TTTAttributedLabel', '~> 1.13'
 #pod 'QMChatViewController', :podspec => 'QMChatViewController.podspec'
 #pod 'QMServices', :podspec => 'QMServices.podspec'
+
 #For development pods
-pod 'QMServices', :git => 'https://github.com/QuickBlox/q-municate-services-ios.git', :branch => 'feature/QBIOSSDK-421'
-pod 'QMChatViewController', :git => 'https://github.com/QuickBlox/QMChatViewController-ios.git', :branch => 'development'
+pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
+pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'

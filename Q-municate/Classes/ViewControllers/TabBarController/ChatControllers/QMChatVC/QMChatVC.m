@@ -64,6 +64,8 @@ AGEmojiKeyboardViewDelegate
 
 @property (nonatomic, strong) UIButton *emojiButton;
 
+@property (nonatomic, assign) BOOL shouldUpdateDialogAfterReturnFromGroupInfo;
+
 @end
 
 @implementation QMChatVC
@@ -114,7 +116,7 @@ AGEmojiKeyboardViewDelegate
     self.emojiButton = [QMChatButtonsFactory emojiButton];
     self.emojiButton.tag = emojiButtonTag;
     [self.emojiButton addTarget:self action:@selector(showEmojiKeyboard) forControlEvents:UIControlEventTouchUpInside];
-    [self.emojiButton setFrame:CGRectMake(self.inputToolbar.contentView.bounds.size.width-self.inputToolbar.contentView.rightBarButtonItemWidth-5.0f, 0, emojiButtonSize, emojiButtonSize)];
+    [self.emojiButton setFrame:CGRectMake(self.inputToolbar.contentView.bounds.size.width-self.inputToolbar.contentView.rightBarButtonItemWidth-5.0f, -1.0f, emojiButtonSize, emojiButtonSize)];
     [self.inputToolbar.contentView.textView addSubview:self.emojiButton];
     UIBezierPath *emojiPath = [UIBezierPath bezierPathWithRect:self.emojiButton.frame];
     self.inputToolbar.contentView.textView.textContainer.exclusionPaths = @[emojiPath];
@@ -192,6 +194,21 @@ AGEmojiKeyboardViewDelegate
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    if (self.shouldUpdateDialogAfterReturnFromGroupInfo) {
+        QBChatDialog *updatedDialog = [[QMApi instance].chatService.dialogsMemoryStorage chatDialogWithID:self.dialog.ID];
+        if (updatedDialog != nil) {
+            self.dialog = updatedDialog;
+            [[QMApi instance].chatService joinToGroupDialog:self.dialog failed:^(NSError *error) {
+                //
+                NSLog(@"Failed to join group dialog, because: %@", error.localizedDescription);
+            }];
+        }
+        else {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+        self.shouldUpdateDialogAfterReturnFromGroupInfo = NO;
+    }
     
     [[QMApi instance].settingsManager setDialogWithIDisActive:self.dialog.ID];
     
@@ -335,6 +352,8 @@ AGEmojiKeyboardViewDelegate
     
     [self.view endEditing:YES];
     if ([segue.identifier isEqualToString:kGroupDetailsSegueIdentifier]) {
+        
+        self.shouldUpdateDialogAfterReturnFromGroupInfo = YES;
         
         QMGroupDetailsController *groupDetailVC = segue.destinationViewController;
         groupDetailVC.chatDialog = self.dialog;

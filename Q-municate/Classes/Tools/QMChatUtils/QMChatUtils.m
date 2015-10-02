@@ -118,4 +118,14 @@
     return [NSString stringWithFormat:text, [QMApi instance].currentUser.fullName, addedUsersNames];
 }
 
++ (NSArray *)idsArray:(NSArray *)users {
+    NSMutableArray *usersIds = [NSMutableArray array];
+    
+    for (QBUUser *user in users) {
+        [usersIds addObject:@(user.ID)];
+    }
+    
+    return usersIds;
+}
+
 @end

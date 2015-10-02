@@ -1,0 +1,1 @@
+../../../../../QMChatViewController-ios/QMChatViewController/Views/CollectionView/Layout/QMChatCellLayoutAttributes.h

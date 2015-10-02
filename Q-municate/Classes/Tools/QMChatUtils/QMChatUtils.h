@@ -14,5 +14,6 @@
 + (NSString *)messageTextForPushWithNotification:(QBChatMessage *)notification;
 + (NSString *)idsStringWithoutSpaces:(NSArray *)users;
 + (NSString *)messageForText:(NSString *)text participants:(NSArray *)participants;
++ (NSArray *)idsArray:(NSArray *)users;
 
 @end
