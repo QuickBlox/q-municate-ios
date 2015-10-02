@@ -27,9 +27,5 @@
     #import "QMProtocols.h"
     #import "Macro.h"
 
-#warning Development pods headers only, remove this if you are using production pods
-    // remove this
-    #import <QMChatViewController.h>
     #import <QMServices.h>
-
 #endif
