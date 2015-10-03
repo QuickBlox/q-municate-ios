@@ -13,7 +13,6 @@
 #import "QMAddressBook.h"
 #import "ABPerson.h"
 
-
 @implementation QMApi (Users)
 
 - (void)addUserToContactList:(QBUUser *)user completion:(void(^)(BOOL success, QBChatMessage *notification))completion {
@@ -72,11 +71,6 @@
         }];
     }];
 }
-
-/**
- @param QBUUser ID
- @return QBContactListItem from chaced contactList
- */
 
 - (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID {
     return [self.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
@@ -144,23 +138,16 @@
 
 - (BOOL)isContactRequestUserWithID:(NSInteger)userID
 {
-//    
-//    for (NSNumber *contactID in self.usersService.confirmRequestUsersIDs) {
-//        if (contactID.intValue == userID) {
-//            return YES;
-//        }
-//    }
-    return NO;
-}
-
-- (NSArray *)contactRequestUsers
-{
-//    [self.contactListService]
-//    NSArray *ids = [self.usersService.confirmRequestUsersIDs allObjects];
-//    NSArray *users = [self usersWithIDs:ids];
-//    return users;
+    QBChatDialog *privateDialog = [self.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:userID];
+    if (privateDialog == nil) return NO;
     
-    return nil;
+    QBChatMessage *lastMessage = [self.chatService.messagesMemoryStorage lastMessageFromDialogID:privateDialog.ID];
+    if (lastMessage.messageType == QMMessageTypeContactRequest) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
 }
 
 - (BOOL)userIDIsInPendingList:(NSUInteger)userID {
@@ -169,27 +156,6 @@
         return NO;
     }
     return YES;
-}
-
-- (QBUUser *)userForContactRequestWithPrivateChatDialog:(QBChatDialog *)chatDialog
-{
-    NSAssert(chatDialog.type == QBChatDialogTypePrivate, @"Dialog is not private. Private dialog needed.");
-    QBUUser *contact = nil;
-    NSInteger occupantID = [self occupantIDForPrivateChatDialog:chatDialog];
-    
-    BOOL isContactRequest = [self isContactRequestUserWithID:occupantID];
-    if (isContactRequest) {
-        contact = [self userWithID:occupantID];
-    }
-    return contact;
-}
-
-- (BOOL)isFriendForChatDialog:(QBChatDialog *)chatDialog
-{
-    NSUInteger occupantID = [self occupantIDForPrivateChatDialog:chatDialog];
-
-    BOOL isFriend = [self isFriend:[self.contactListService.usersMemoryStorage userWithID:occupantID]];
-    return isFriend;
 }
 
 - (BOOL)isFriend:(QBUUser *)user
@@ -325,13 +291,13 @@
     }];
 }
 
-- (void)importFriendsFromAddressBookWithCompletion:(void(^)(BOOL succeded, NSError *error))completionBLock
+- (void)importFriendsFromAddressBookWithCompletion:(void(^)(BOOL succeded, NSError *error))completionBlock
 {
     __weak __typeof(self)weakSelf = self;
     [QMAddressBook getContactsWithEmailsWithCompletionBlock:^(NSArray *contacts, BOOL success, NSError *error) {
         
         if ([contacts count] == 0) {
-            completionBLock(NO, error);
+            completionBlock(NO, error);
             return;
         }
         NSMutableArray *emails = [NSMutableArray array];
@@ -343,12 +309,12 @@
         [weakSelf.contactListService retrieveUsersWithEmails:emails completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
             //
             if (!response.success) {
-                completionBLock(NO, nil);
+                completionBlock(NO, nil);
                 return;
             }
             
             if ([users count] == 0) {
-                completionBLock(NO, nil);
+                completionBlock(NO, nil);
                 return;
             }
             
@@ -356,7 +322,7 @@
             for (QBUUser *user in users) {
                 [weakSelf addUserToContactList:user completion:^(BOOL successed, QBChatMessage *notification) {}];
             }
-            completionBLock(YES, nil);
+            completionBlock(YES, nil);
         }];
     }];
 }

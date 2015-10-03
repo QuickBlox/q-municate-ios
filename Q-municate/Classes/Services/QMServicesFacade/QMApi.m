@@ -32,13 +32,7 @@ const NSTimeInterval kQMPresenceTime = 30;
 @property (strong, nonatomic) QMContentService *contentService;
 @property (strong, nonatomic) Reachability *internetConnection;
 @property (strong, nonatomic) NSTimer *presenceTimer;
-
-@property (nonatomic) dispatch_group_t group; // ???
-
-/**
- *  Logout group for synchronous completion.
- */
-@property (nonatomic, strong) dispatch_group_t logoutGroup;
+@property (nonatomic) dispatch_group_t group;
 
 @end
 
@@ -82,7 +76,6 @@ const NSTimeInterval kQMPresenceTime = 30;
         _contentService = [[QMContentService alloc] init];
         _internetConnection = [Reachability reachabilityForInternetConnection];
         [_chatService addDelegate:self];
-        _logoutGroup = dispatch_group_create();
     }
     
     [self.internetConnection startNotifier];
@@ -94,9 +87,6 @@ const NSTimeInterval kQMPresenceTime = 30;
 }
 
 - (void)fetchAllHistory:(void(^)(void))completion {
-    /**
-     Feach Dialogs
-     */
     __weak __typeof(self)weakSelf = self;
     [self fetchAllDialogs:^{
         
@@ -233,6 +223,8 @@ const NSTimeInterval kQMPresenceTime = 30;
 
 - (void)handleErrorResponse:(QBResponse *)response {
     
+    NSAssert(!response.success, @"Error handling is available only if response success value is False");
+    
     if (![self isAuthorized]) return;
     NSString *errorMessage = [[response.error description] stringByReplacingOccurrencesOfString:@"(" withString:@""];
     errorMessage = [errorMessage stringByReplacingOccurrencesOfString:@")" withString:@""];
@@ -251,7 +243,7 @@ const NSTimeInterval kQMPresenceTime = 30;
             errorMessage = @"Incorrect Username or Password";
             break;
         default:
-            errorMessage = @"Error. Please check your internet connection";
+            errorMessage = @"Something went wrong. Please check your internet connection";
             break;
     }
 

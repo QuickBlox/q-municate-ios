@@ -20,7 +20,7 @@
 
 #pragma mark - Messages
 
-- (void)loginChat:(QBChatResultBlock)block {
+- (void)loginChat:(void(^)(BOOL success))block {
     [self.chatService logIn:^(NSError *error) {
         //
         if (error != nil) {
@@ -37,18 +37,6 @@
     [self.settingsManager setLastActivityDate:[NSDate date]];
 }
 
-- (void)fetchMessageWithDialog:(QBChatDialog *)chatDialog complete:(void(^)(BOOL success))complete {
-    
-    __weak __typeof(self)weakSelf = self;
-    [self.chatService messagesWithChatDialogID:chatDialog.ID completion:^(QBResponse *response, NSArray *messages) {
-        //
-        if (!response.status) {
-            [weakSelf handleErrorResponse:response];
-        }
-        complete(response.status);
-    }];
-}
-
 - (void)fetchMessagesForActiveChatIfNeededWithCompletion:(void(^)(BOOL fetchWasNeeded))block
 {
     if (self.settingsManager.dialogWithIDisActive) {
@@ -59,37 +47,6 @@
         return;
     }
     if (block) block(NO);
-}
-
-- (void)sendMessage:(QBChatMessage *)message toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion {
-    
-    [self.chatService sendMessage:message toDialog:dialog save:YES completion:^(NSError *error) {
-        //
-        completion(message);
-    }];
-}
-
-- (void)sendText:(NSString *)text toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion {
-    
-    QBChatMessage *message = [[QBChatMessage alloc] init];
-    message.text = text;
-    [self sendMessage:message toDialog:dialog completion:completion];
-}
-
-- (void)sendAttachment:(QBCBlob *)attachment toDialog:(QBChatDialog *)dialog completion:(void(^)(QBChatMessage * message))completion {
-    
-    QBChatMessage *message = [[QBChatMessage alloc] init];
-    message.text = @"Attachment";
-    QBChatAttachment *attach = [[QBChatAttachment alloc] init];
-    attach.url = attachment.publicUrl;
-    attach.type = @"image";
-    message.attachments = @[attach];
-    
-    [self sendMessage:message toDialog:dialog completion:completion];
-}
-
-- (NSArray *)messagesHistoryWithDialog:(QBChatDialog *)chatDialog {
-    return [self.chatService.messagesMemoryStorage messagesWithDialogID:chatDialog.ID];
 }
 
 /**
@@ -172,7 +129,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     __weak __typeof(self)weakSelf = self;
     [self.chatService changeDialogName:dialogName forChatDialog:chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
         //
-        if (response.status) {
+        if (response.success) {
             NSString *notificationText = NSLocalizedString(@"QM_STR_UPDATE_GROUP_NAME_TEXT", nil);
             NSString *text = [NSString stringWithFormat:notificationText, self.currentUser.fullName, dialogName];
             
@@ -220,11 +177,11 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     __weak __typeof(self)weakSelf = self;
     [self.chatService joinOccupantsWithIDs:occupantsToJoinIDs toChatDialog:chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
         //
-        if (response.status) {
+        if (response.success) {
             NSString *messageTypeText = NSLocalizedString(@"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT", @"{Full name}");
             NSString *text = [QMChatUtils messageForText:messageTypeText participants:occupants];
             
-            [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:[QMChatUtils idsArray:occupants] toChatDialog:updatedDialog];
+            [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:[self idsWithUsers:occupants] toChatDialog:updatedDialog];
             [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"occupants_ids" content:[updatedDialog.occupantIDs componentsJoinedByString:@","]];
         }
         else {
@@ -263,7 +220,6 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     
     [self sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"deleted_id" content:myID];
     
-    //[chatDialog leave];
     [self.chatService deleteDialogWithID:chatDialog.ID completion:^(QBResponse *response) {
         //
         completion(response,nil);
@@ -313,7 +269,6 @@ static const NSUInteger kQMDialogsPageLimit = 10;
 {
     NSMutableDictionary *customParams = [NSMutableDictionary new];
     if (updateType != nil && content != nil) {
-#warning Fast Fix
         [customParams setObject:content forKey:updateType];
     }
     

@@ -10,8 +10,6 @@
 
 @interface QMChatButtonsFactory : NSObject
 
-+ (UIButton *)sendButton;
-+ (UIButton *)cameraButton;
 + (UIButton *)emojiButton;
 + (UIButton *)groupInfo;
 + (UIButton *)audioCall;

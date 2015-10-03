@@ -47,8 +47,8 @@
             
         case QMMessageTypeCreateGroupDialog:
         {
+#warning not in use
             NSArray *users = [[QMApi instance] usersWithIDs:notification.dialog.occupantIDs];
-#warning HardFix
             QBUUser *currentUser = [[QMApi instance] userWithID:notification.senderID];
             for (QBUUser *usr in users) {
                 if (usr.ID == currentUser.ID) {
@@ -116,16 +116,6 @@
 {
     NSString *addedUsersNames = [self fullNamesString:participants];
     return [NSString stringWithFormat:text, [QMApi instance].currentUser.fullName, addedUsersNames];
-}
-
-+ (NSArray *)idsArray:(NSArray *)users {
-    NSMutableArray *usersIds = [NSMutableArray array];
-    
-    for (QBUUser *user in users) {
-        [usersIds addObject:@(user.ID)];
-    }
-    
-    return usersIds;
 }
 
 @end
