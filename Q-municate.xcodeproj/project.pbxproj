@@ -76,6 +76,7 @@
 		55F4A3C9196FF0830068EBC3 /* QMInviteFriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F4A3BD196FF0830068EBC3 /* QMInviteFriendCell.m */; };
 		55F4A3CA196FF0830068EBC3 /* QMInviteStaticCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F4A3BF196FF0830068EBC3 /* QMInviteStaticCell.m */; };
 		55F4A3D2196FF0D80068EBC3 /* QMTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F4A3D1196FF0D80068EBC3 /* QMTableViewCell.m */; };
+		580D34DF1BBFF5850034813A /* UIImage+fixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 580D34DE1BBFF5850034813A /* UIImage+fixOrientation.m */; settings = {ASSET_TAGS = (); }; };
 		581C2C4F1BB6B4740047CEA6 /* QMMessageStatusStringBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2C4E1BB6B4740047CEA6 /* QMMessageStatusStringBuilder.m */; settings = {ASSET_TAGS = (); }; };
 		5861E25D1BB40D7E00C9EB68 /* QMApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 5861E25C1BB40D7E00C9EB68 /* QMApi.m */; settings = {ASSET_TAGS = (); }; };
 		589407B41BB958DE00C1CA78 /* QBUpdateUserParameters+CustomData.m in Sources */ = {isa = PBXBuildFile; fileRef = 589407B31BB958DE00C1CA78 /* QBUpdateUserParameters+CustomData.m */; settings = {ASSET_TAGS = (); }; };
@@ -287,6 +288,8 @@
 		55F4A3D0196FF0D80068EBC3 /* QMTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMTableViewCell.h; sourceTree = "<group>"; };
 		55F4A3D1196FF0D80068EBC3 /* QMTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMTableViewCell.m; sourceTree = "<group>"; };
 		55F4A3D3197021580068EBC3 /* QMCheckBoxProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMCheckBoxProtocol.h; sourceTree = "<group>"; };
+		580D34DD1BBFF5850034813A /* UIImage+fixOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+fixOrientation.h"; sourceTree = "<group>"; };
+		580D34DE1BBFF5850034813A /* UIImage+fixOrientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+fixOrientation.m"; sourceTree = "<group>"; };
 		581C2C4D1BB6B4740047CEA6 /* QMMessageStatusStringBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMMessageStatusStringBuilder.h; path = QMMessageStatusStringBuilder/QMMessageStatusStringBuilder.h; sourceTree = "<group>"; };
 		581C2C4E1BB6B4740047CEA6 /* QMMessageStatusStringBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMMessageStatusStringBuilder.m; path = QMMessageStatusStringBuilder/QMMessageStatusStringBuilder.m; sourceTree = "<group>"; };
 		5861E25B1BB40D7E00C9EB68 /* QMApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMApi.h; sourceTree = "<group>"; };
@@ -1156,6 +1159,8 @@
 		6943848C18E42691001E08A9 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				580D34DD1BBFF5850034813A /* UIImage+fixOrientation.h */,
+				580D34DE1BBFF5850034813A /* UIImage+fixOrientation.m */,
 				2494559619A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.h */,
 				2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */,
 				58E81F1C1BB142AC00D29962 /* QBChatMessage+TextEncoding.h */,
@@ -1487,6 +1492,7 @@
 				2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */,
 				55493694198677B0007F2CF1 /* QMContentOperation.m in Sources */,
 				55D8ADBB19AC762C00DAF79F /* QMDialogsDataSource.m in Sources */,
+				580D34DF1BBFF5850034813A /* UIImage+fixOrientation.m in Sources */,
 				55D8ADDE19AC76E200DAF79F /* QMAddUsersAbstractController.m in Sources */,
 				58CEA1C91BB595C700B866DD /* QMAVCallManager.m in Sources */,
 				55A8B0761965986A00B5D33B /* REAlertView.m in Sources */,
@@ -1535,7 +1541,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1574,7 +1580,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1625,7 +1631,7 @@
 				);
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "c7a437b9-fa34-4469-8502-19863b7a04f3";
+				PROVISIONING_PROFILE = "";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
