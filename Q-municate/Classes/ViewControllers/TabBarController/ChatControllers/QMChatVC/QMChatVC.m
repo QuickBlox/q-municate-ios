@@ -431,7 +431,6 @@ AGEmojiKeyboardViewDelegate
     
     [self finishSendingMessageAnimated:YES];
 }
-
 #pragma mark - Cell classes
 
 - (Class)viewClassForItem:(QBChatMessage *)item
@@ -603,14 +602,8 @@ AGEmojiKeyboardViewDelegate
     __weak typeof(self)weakSelf = self;
     // Getting earlier messages for chat dialog identifier.
     [[QMApi instance].chatService earlierMessagesWithChatDialogID:self.dialog.ID completion:^(QBResponse *response, NSArray *messages) {
-        __typeof(self) strongSelf = weakSelf;
         
-        strongSelf.shouldHoldScrollOnCollectionView = NO;
-        
-        QBChatMessage *oldestMessage = [[QMApi instance].chatService.messagesMemoryStorage oldestMessageForDialogID:self.dialog.ID];
-        if ([[messages lastObject] isEqual:oldestMessage] || messages.count == 0) {
-            strongSelf.showLoadEarlierMessagesHeader = NO;
-        }
+        weakSelf.shouldHoldScrollOnCollectionView = NO;
     }];
 }
 
