@@ -77,7 +77,7 @@
             }
         }];
     }
-
+    
 }
 
 - (void)changeSendButtonEnableForCheckedUsersCount:(NSInteger)checkedUsersCount
