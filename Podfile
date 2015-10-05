@@ -15,7 +15,7 @@ pod 'MPGNotification', '~> 1.1'
 pod 'Reachability', '~> 3.2'
 pod 'QuickBlox'
 pod 'TTTAttributedLabel', '~> 1.13'
-pod 'QMChatViewController', '~> 0.2.3'
+pod 'QMChatViewController', '~> 0.2.4'
 pod 'QMServices', '~> 0.2.2'
 
 #For development pods

@@ -26,27 +26,27 @@ PODS:
     - SVProgressHUD (~> 1.0)
   - MPGNotification (1.2.4)
   - Parus (1.0)
-  - QMChatViewController (0.2.3):
-    - QMChatViewController/Categories (= 0.2.3)
-    - QMChatViewController/KeyboardViewController (= 0.2.3)
-    - QMChatViewController/Protocols (= 0.2.3)
-    - QMChatViewController/Views (= 0.2.3)
+  - QMChatViewController (0.2.4):
+    - QMChatViewController/Categories (= 0.2.4)
+    - QMChatViewController/KeyboardViewController (= 0.2.4)
+    - QMChatViewController/Protocols (= 0.2.4)
+    - QMChatViewController/Views (= 0.2.4)
     - QuickBlox (~> 2.3)
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (~> 1.13)
-  - QMChatViewController/Categories (0.2.3):
+  - QMChatViewController/Categories (0.2.4):
     - QuickBlox (~> 2.3)
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (~> 1.13)
-  - QMChatViewController/KeyboardViewController (0.2.3):
+  - QMChatViewController/KeyboardViewController (0.2.4):
     - QuickBlox (~> 2.3)
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (~> 1.13)
-  - QMChatViewController/Protocols (0.2.3):
+  - QMChatViewController/Protocols (0.2.4):
     - QuickBlox (~> 2.3)
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (~> 1.13)
-  - QMChatViewController/Views (0.2.3):
+  - QMChatViewController/Views (0.2.4):
     - QMChatViewController/Categories
     - QMChatViewController/Protocols
     - QuickBlox (~> 2.3)
@@ -70,7 +70,7 @@ DEPENDENCIES:
   - IDMPhotoBrowser (~> 1.3.5)
   - MPGNotification (~> 1.1)
   - Parus (~> 1.0)
-  - QMChatViewController (~> 0.2.3)
+  - QMChatViewController (~> 0.2.4)
   - QMServices (~> 0.2.2)
   - QuickBlox
   - Reachability (~> 3.2)
@@ -88,7 +88,7 @@ SPEC CHECKSUMS:
   IDMPhotoBrowser: 6699a8d8b6c036a60c58ba7c281b2f5761d970ac
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   Parus: e8eeec5e596e59fea3e3129775e5ddf2e5c0b4eb
-  QMChatViewController: ec1901995037addadc9b58b75f53e8682d1d17ef
+  QMChatViewController: dae121ae3c2e487bc58cd75ebb6783db0ef956cc
   QMServices: 67cd4931d73893816aab42537d0ceefccd24ade5
   QuickBlox: 989adf5e7fac59a87cdb339187975cdf097e69ed
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
