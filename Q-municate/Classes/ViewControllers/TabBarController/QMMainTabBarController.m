@@ -103,9 +103,6 @@
             QBUpdateUserParameters *params = [QBUpdateUserParameters new];
             params.customData = usr.customData;
             [[QMApi instance] updateCurrentUser:params image:nil progress:nil completion:^(BOOL success) {}];
-            
-        } else {
-            
         }
     }];
 }
