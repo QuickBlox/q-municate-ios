@@ -10,11 +10,15 @@
 #import "QMDialogCell.h"
 #import "SVProgressHUD.h"
 #import "QMApi.h"
-#import "QMChatReceiver.h"
 
 @interface QMDialogsDataSource()
+<
+UITableViewDataSource,
+QMChatServiceDelegate,
+QMChatConnectionDelegate,
+QMContactListServiceDelegate
+>
 
-<UITableViewDataSource>
 
 @property (weak, nonatomic) UITableView *tableView;
 @property (strong, nonatomic, readonly) NSMutableArray *dialogs;
@@ -24,40 +28,14 @@
 
 @implementation QMDialogsDataSource
 
-- (void)dealloc {
-    
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
-}
-
 - (instancetype)initWithTableView:(UITableView *)tableView {
     
     self = [super init];
     if (self) {
-        
+        [[QMApi instance].chatService addDelegate:self];
+        [[QMApi instance].contactListService addDelegate:self];
         self.tableView = tableView;
         self.tableView.dataSource = self;
-        
-        __weak __typeof(self)weakSelf = self;
-        
-        [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-            
-            if (!message.cParamDialogID) {
-                return;
-            }
-            [weakSelf updateGUI];
-            [weakSelf retrieveUserIfNeededWithMessage:message];
-        }];
-        
-        [[QMChatReceiver instance] dialogsHisotryUpdatedWithTarget:self block:^{
-            [weakSelf updateGUI];
-        }];
-        
-        [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:^{
-            [weakSelf.tableView reloadData];
-        }];
-        
-        
     }
     
     return self;
@@ -66,7 +44,7 @@
 - (void)retrieveUserIfNeededWithMessage:(QBChatMessage *)message
 {
     __weak typeof(self)weakSelf = self;
-    if (message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
+    if (message.messageType == QMMessageTypeContactRequest) {
         [[QMApi instance] retriveIfNeededUserWithID:message.senderID completion:^(BOOL retrieveWasNeeded) {
             if (retrieveWasNeeded) {
                 [weakSelf updateGUI];
@@ -133,9 +111,7 @@
 
 - (NSMutableArray *)dialogs {
     
-    NSMutableArray * dialogs = [[QMApi instance] dialogHistory].mutableCopy;
-    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"lastMessageDate" ascending:NO];
-    [dialogs sortUsingDescriptors:@[sort]];
+    NSMutableArray *dialogs = [[QMApi instance].chatService.dialogsMemoryStorage dialogsSortByLastMessageDateWithAscending:NO].mutableCopy;
     
     return dialogs;
 }
@@ -189,4 +165,55 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
         }];
     }
 }
+
+#pragma mark -
+#pragma mark Chat Service Delegate
+
+- (void)chatService:(QMChatService *)chatService didAddChatDialogsToMemoryStorage:(NSArray *)chatDialogs {
+    [self updateGUI];
+}
+
+- (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
+    [[QMApi instance] fetchAllDialogs:^{
+        [[QMApi instance] joinGroupDialogs];
+    }];
+    
+    [self updateGUI];
+}
+
+- (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
+    [self updateGUI];
+}
+
+- (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
+    [self updateGUI];
+    [self retrieveUserIfNeededWithMessage:message];
+}
+
+- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+    [self updateGUI];
+}
+
+- (void)chatService:(QMChatService *)chatService didAddMessagesToMemoryStorage:(NSArray *)messages forDialogID:(NSString *)dialogID {
+    [self updateGUI];
+}
+
+- (void)chatService:(QMChatService *)chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)chatDialogID {
+    [self updateGUI];
+}
+
+#pragma mark Contact List Serice Delegate
+
+- (void)contactListService:(QMContactListService *)contactListService didAddUsers:(NSArray *)users {
+    [self.tableView reloadData];
+}
+
+#pragma mark Chat Connection Delegate
+
+- (void)chatServiceChatDidLogin {
+    [[QMApi instance] fetchAllDialogs:^{
+        [[QMApi instance] joinGroupDialogs];
+    }];
+}
+
 @end

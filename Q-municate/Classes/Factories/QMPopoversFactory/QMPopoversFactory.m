@@ -7,7 +7,7 @@
 //
 
 #import "QMPopoversFactory.h"
-#import "QMChatViewController.h"
+#import "QMChatVC.h"
 #import "QMApi.h"
 
 @implementation QMPopoversFactory
@@ -17,7 +17,7 @@
 {
     QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:dialogID];
     
-    QMChatViewController *chatVC = (QMChatViewController *)[[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"QMChatViewController"];
+    QMChatVC *chatVC = (QMChatVC *)[[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"QMChatVC"];
     chatVC.dialog = dialog;
     return chatVC;
 }

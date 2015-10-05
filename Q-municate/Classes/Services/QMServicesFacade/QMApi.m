@@ -1,41 +1,37 @@
 //
-//  QMServicesFacade.m
-//  Qmunicate
+//  QMApi.m
+//  Q-municate
 //
-//  Created by Andrey Ivanov on 01.07.14.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Vitaliy Gorbachov on 9/24/15.
+//  Copyright © 2015 Quickblox. All rights reserved.
 //
 
 #import "QMApi.h"
 
 #import "QMSettingsManager.h"
-#import "QMAuthService.h"
-#import "QMUsersService.h"
-#import "QMChatDialogsService.h"
-#import "QMContentService.h"
 #import "QMAVCallManager.h"
-#import "QMMessagesService.h"
-#import "REAlertView+QMSuccess.h"
-#import "QMChatReceiver.h"
+#import "QMContentService.h"
 #import <Reachability.h>
+#import "REAlertView+QMSuccess.h"
 #import "QMPopoversFactory.h"
 #import "QMMainTabBarController.h"
+
+#import "QMMessageBarStyleSheetFactory.h"
+#import "QMSoundManager.h"
+
+#import <_CDMessage.h>
+#import <_CDDialog.h>
 
 const NSTimeInterval kQMPresenceTime = 30;
 
 @interface QMApi()
 
-@property (strong, nonatomic) QMAuthService *authService;
 @property (strong, nonatomic) QMSettingsManager *settingsManager;
-@property (strong, nonatomic) QMUsersService *usersService;
+@property (strong, nonatomic) QMContactListService* contactListService;
 @property (strong, nonatomic) QMAVCallManager *avCallManager;
-@property (strong, nonatomic) QMChatDialogsService *chatDialogsService;
-@property (strong, nonatomic) QMMessagesService *messagesService;
-@property (strong, nonatomic) QMChatReceiver *responceService;
 @property (strong, nonatomic) QMContentService *contentService;
 @property (strong, nonatomic) Reachability *internetConnection;
 @property (strong, nonatomic) NSTimer *presenceTimer;
-
 @property (nonatomic) dispatch_group_t group;
 
 @end
@@ -50,10 +46,9 @@ const NSTimeInterval kQMPresenceTime = 30;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         servicesFacade = [[self alloc] init];
-        [QBChat instance].useMutualSubscriptionForContactList = YES;
+        //[QBChat instance].useMutualSubscriptionForContactList = YES;
         [QBChat instance].autoReconnectEnabled = YES;
-		
-        [[QBChat instance] addDelegate:[QMChatReceiver instance]];
+
         servicesFacade.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:kQMPresenceTime
                                                                         target:servicesFacade
                                                                       selector:@selector(sendPresence)
@@ -65,148 +60,40 @@ const NSTimeInterval kQMPresenceTime = 30;
 }
 
 - (instancetype)init {
-    
     self = [super init];
     if (self) {
+        
 #if QM_AUDIO_VIDEO_ENABLED == 1
-        self.avCallManager = [[QMAVCallManager alloc] init];
+        _avCallManager = [[QMAVCallManager alloc] initWithServiceManager:self];
 #endif
-        self.messagesService = [[QMMessagesService alloc] init];
-        self.authService = [[QMAuthService alloc] init];
-        self.usersService = [[QMUsersService alloc] init];
-        self.chatDialogsService = [[QMChatDialogsService alloc] init];
-        self.settingsManager = [[QMSettingsManager alloc] init];
-        self.contentService = [[QMContentService alloc] init];
-        self.internetConnection = [Reachability reachabilityForInternetConnection];
-    
-        __weak typeof(self)weakSelf = self;
-        
-        void (^internetConnectionBlock)(Reachability *reachability) = ^(Reachability *reachability) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[QMChatReceiver instance] internetConnectionIsActive:reachability.isReachable];
-            });
-        };
-        
-        self.internetConnection.reachableBlock = internetConnectionBlock;
-        self.internetConnection.unreachableBlock = internetConnectionBlock;
-        
-        [[QMChatReceiver instance] chatDidFailWithTarget:self block:^(NSError *error) {
-            // some
-            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
-        }];
-        
-        
-        // XMPP Chat messaging handling
-        
-        void (^updateHistory)(QBChatMessage *) = ^(QBChatMessage *message) {
-            
-            if (message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
-                return;
-            }
-            if (message.recipientID != message.senderID) {
-                if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog && !message.cParamSaveToHistory) {
-                    return;
-                }
-                [weakSelf.messagesService addMessageToHistory:message withDialogID:message.cParamDialogID];
-            }
-        };
-        
-        [[QMChatReceiver instance] chatDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-            // message service update:
-            updateHistory(message);
-            
-            // dialogs service update:
-            [weakSelf.chatDialogsService updateOrCreateDialogWithMessage:message isMine:(message.senderID == weakSelf.currentUser.ID)];
-            
-            // fire chatAfterDidReceiveMessage for other cases:
-            if (message.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
-                [weakSelf retriveUsersForNotificationIfNeeded:message];
-            }
-            
-            // users
-            if (message.cParamNotificationType == QMMessageNotificationTypeDeleteContactRequest) {
-                BOOL contactWasDeleted = [weakSelf.usersService deleteContactRequestUserID:message.senderID];
-                if (contactWasDeleted) {
-                    [[QMChatReceiver instance] contactRequestUsersListChanged];
-                }
-            }
-        }];
-        
-        [[QMChatReceiver instance] chatRoomDidReceiveMessageWithTarget:self block:^(QBChatMessage *message, NSString *roomJID) {
-
-            
-            if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
-                void (^DeliveryBlock)(NSError *error) = weakSelf.messagesService.messageDeliveryBlockList[roomJID];
-                if (DeliveryBlock) {
-                    [weakSelf.messagesService.messageDeliveryBlockList removeObjectForKey:roomJID];
-                    DeliveryBlock(nil);
-                }
-            }
-            updateHistory(message);
-            
-            // check for chat dialog:
-            [weakSelf.chatDialogsService updateOrCreateDialogWithMessage:message isMine:(message.senderID == weakSelf.currentUser.ID)];
-            
-            // check users if needed:
-            if (message.cParamNotificationType == QMMessageNotificationTypeCreateGroupDialog) {
-                [weakSelf retriveUsersForNotificationIfNeeded:message];
-            } else if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog) {
-                if (message.cParamDialogOccupantsIDs.count > 0) {
-                    [weakSelf retriveUsersForNotificationIfNeeded:message];
-                    return;
-                }
-                [weakSelf.messagesService addMessageToHistory:message withDialogID:message.cParamDialogID];
-                [[QMChatReceiver instance] chatAfterDidReceiveMessage:message];
-            }
-        }];
+        _authService = [[QMAuthService alloc] initWithServiceManager:self];
+        [QMChatCache setupDBWithStoreNamed:kChatCacheNameKey];
+        [QMChatCache instance].messagesLimitPerDialog = 10;
+        _chatService = [[QMChatService alloc] initWithServiceManager:self cacheDataSource:self];
+        [QMContactListCache setupDBWithStoreNamed:kContactListCacheNameKey];
+        _contactListService = [[QMContactListService alloc] initWithServiceManager:self cacheDataSource:self];
+        _settingsManager = [[QMSettingsManager alloc] init];
+        _contentService = [[QMContentService alloc] init];
+        _internetConnection = [Reachability reachabilityForInternetConnection];
+        [_chatService addDelegate:self];
     }
     
     [self.internetConnection startNotifier];
-    
     return self;
 }
 
-- (void)setCurrentUser:(QBUUser *)currentUser {
-    self.messagesService.currentUser = currentUser;
-    if (!currentUser) {
-        [self.usersService deleteUser:currentUser];
-    } else {
-        [self.usersService addUser:currentUser];
-    }
-}
-
 - (QBUUser *)currentUser {
-    return self.messagesService.currentUser;
-}
-
-- (void)startServices {
-    
-    [self.authService start];
-    [self.messagesService start];
-    [self.usersService start];
-    [self.chatDialogsService start];
-    [self.avCallManager start];
-}
-
-- (void)stopServices {
-    
-    [self.authService stop];
-    [self.usersService stop];
-    [self.chatDialogsService stop];
-    [self.messagesService stop];
-    [self.avCallManager stop];
+    return [QBSession currentSession].currentUser;
 }
 
 - (void)fetchAllHistory:(void(^)(void))completion {
-    /**
-     Feach Dialogs
-     */
     __weak __typeof(self)weakSelf = self;
     [self fetchAllDialogs:^{
         
         NSArray *allOccupantIDs = [weakSelf allOccupantIDsFromDialogsHistory];
         
-        [weakSelf.usersService retrieveUsersWithIDs:allOccupantIDs completion:^(BOOL updated) {
+        [weakSelf.contactListService retrieveUsersWithIDs:allOccupantIDs forceDownload:NO completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+            //
             completion();
         }];
     }];
@@ -214,38 +101,21 @@ const NSTimeInterval kQMPresenceTime = 30;
 
 - (void)retriveUsersForNotificationIfNeeded:(QBChatMessage *)notification
 {
-    __weak typeof(self)weakSelf = self;
     NSArray *idsToFetch = nil;
-    if (notification.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
+    if (notification.messageType == QMMessageTypeContactRequest) {
         idsToFetch = @[@(notification.senderID)];
     } else {
-        idsToFetch = notification.cParamDialogOccupantsIDs;
+        idsToFetch = notification.dialog.occupantIDs;
     }
     [self retriveIfNeededUsersWithIDs:idsToFetch completion:^(BOOL retrieveWasNeeded) {
-        [weakSelf.messagesService addMessageToHistory:notification withDialogID:notification.cParamDialogID];
-        [[QMChatReceiver instance] chatAfterDidReceiveMessage:notification];
+
     }];
 }
 
-- (BOOL)checkResult:(QBResult *)result {
-
-    if (!result.success) {
-		if( [result isKindOfClass:[QBUUserLogInResult class]] ){
-			[REAlertView showAlertWithMessage:@"Incorrect Username or Password" actionSuccess:NO];
-		}
-		else{
-			[REAlertView showAlertWithMessage:result.errors.lastObject actionSuccess:NO];
-		}
-    }
+- (BOOL)isInternetConnected {
     
-    return result.success;
-}
-
-- (BOOL)isInternetConnected
-{
     return self.internetConnection.isReachable;
 }
-
 
 #pragma mark - STATUS
 
@@ -261,7 +131,8 @@ const NSTimeInterval kQMPresenceTime = 30;
     _group = dispatch_group_create();
     dispatch_group_enter(_group);
     
-    [self fetchDialogsWithLastActivityFromDate:self.settingsManager.lastActivityDate completion:^(QBDialogsPagedResult *result) {
+    [self fetchDialogsWithLastActivityFromDate:self.settingsManager.lastActivityDate completion:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page) {
+        //
         dispatch_group_leave(_group);
     }];
     
@@ -273,8 +144,7 @@ const NSTimeInterval kQMPresenceTime = 30;
     dispatch_group_notify(_group, dispatch_get_main_queue(), ^{
         
         if ([QBChat instance].isLoggedIn) {
-            [self.chatDialogsService joinRooms];
-            [[QMChatReceiver instance] postDialogsHistoryUpdated];
+            [self joinGroupDialogs];
             
             [self fetchMessagesForActiveChatIfNeededWithCompletion:^(BOOL fetchWasNeeded) {
                 if (completion) completion(YES);
@@ -304,7 +174,7 @@ const NSTimeInterval kQMPresenceTime = 30;
     if (dialog == nil) {
         
         [self fetchChatDialogWithID:dialogID completion:^(QBChatDialog *chatDialog) {
-
+            
             [weakSelf openChatPageForPushNotification:notification completion:completionBlock];
         }];
         
@@ -331,6 +201,111 @@ const NSTimeInterval kQMPresenceTime = 30;
     [navigationController pushViewController:chatController animated:YES];
 }
 
+#pragma mark QMContactListServiceCacheDelegate delegate
+
+- (void)cachedUsers:(QMCacheCollection)block {
+    [QMContactListCache.instance usersSortedBy:@"id" ascending:YES completion:block];
+}
+
+- (void)cachedContactListItems:(QMCacheCollection)block {
+    [QMContactListCache.instance contactListItems:block];
+}
+
+#pragma mark QMContactListServiceDelegate protocol
+
+
+
+#pragma mark QMServicesManagerProtocol
+
+- (BOOL)isAuthorized {
+    return self.authService.isAuthorized;
+}
+
+- (void)handleErrorResponse:(QBResponse *)response {
+    
+    NSAssert(!response.success, @"Error handling is available only if response success value is False");
+    
+    if (![self isAuthorized]) return;
+    NSString *errorMessage = [[response.error description] stringByReplacingOccurrencesOfString:@"(" withString:@""];
+    errorMessage = [errorMessage stringByReplacingOccurrencesOfString:@")" withString:@""];
+
+    switch (response.status) {
+        case QBResponseStatusCodeServerError:
+            errorMessage = @"Bad Gateway, please try again";
+            break;
+        case QBResponseStatusCodeUnknown:
+            errorMessage = @"Connection network error, please try again";
+            break;
+        case QBResponseStatusCodeUnAuthorized:
+            errorMessage = @"Incorrect Username or Password";
+            break;
+        case QBResponseStatusCodeValidationFailed:
+            errorMessage = @"Incorrect Username or Password";
+            break;
+        default:
+            errorMessage = @"Something went wrong. Please check your internet connection";
+            break;
+    }
+
+    [REAlertView showAlertWithMessage:errorMessage actionSuccess:NO];
+}
+
+#pragma mark QMChatServiceCache delegate
+
+- (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
+    [QMChatCache.instance insertOrUpdateDialog:chatDialog completion:nil];
+}
+
+- (void)chatService:(QMChatService *)chatService didAddChatDialogsToMemoryStorage:(NSArray *)chatDialogs {
+    [QMChatCache.instance insertOrUpdateDialogs:chatDialogs completion:nil];
+}
+
+- (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
+    [QMChatCache.instance insertOrUpdateDialog:chatDialog completion:nil];
+}
+
+- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+    [QMChatCache.instance insertOrUpdateMessage:message withDialogId:dialogID completion:nil];
+}
+
+- (void)chatService:(QMChatService *)chatService didAddMessagesToMemoryStorage:(NSArray *)messages forDialogID:(NSString *)dialogID {
+    [QMChatCache.instance insertOrUpdateMessages:messages withDialogId:dialogID completion:nil];
+}
+
+- (void)chatService:(QMChatService *)chatService didUpdateMessage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+    [QMChatCache.instance insertOrUpdateMessage:message withDialogId:dialogID completion:nil];
+}
+
+- (void)chatService:(QMChatService *)chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)chatDialogID {
+    [QMChatCache.instance deleteDialogWithID:chatDialogID completion:nil];
+}
+
+- (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
+    NSAssert(message.dialogID == dialog.ID, @"must be equal");
+    
+    [QMChatCache.instance insertOrUpdateMessage:message withDialogId:dialog.ID completion:nil];
+    [QMChatCache.instance insertOrUpdateDialog:dialog completion:nil];
+}
+
+#pragma mark QMChatServiceCacheDataSource
+
+- (void)cachedDialogs:(QMCacheCollection)block {
+    [QMChatCache.instance dialogsSortedBy:CDDialogAttributes.lastMessageDate ascending:YES completion:^(NSArray *dialogs) {
+        block(dialogs);
+    }];
+}
+
+- (void)cachedDialogWithID:(NSString *)dialogID completion:(void (^)(QBChatDialog *dialog))completion {
+    [QMChatCache.instance dialogByID:dialogID completion:^(QBChatDialog *cachedDialog) {
+        completion(cachedDialog);
+    }];
+}
+
+- (void)cachedMessagesWithDialogID:(NSString *)dialogID block:(QMCacheCollection)block {
+    [QMChatCache.instance messagesWithDialogId:dialogID sortedBy:CDMessageAttributes.messageID ascending:YES completion:^(NSArray *array) {
+        block(array);
+    }];
+}
 
 @end
 
@@ -339,7 +314,7 @@ const NSTimeInterval kQMPresenceTime = 30;
 @dynamic currentUser;
 
 - (QBUUser *)currentUser {
-   return [[QMApi instance] currentUser];
+    return [[QMApi instance] currentUser];
 }
 
 @end

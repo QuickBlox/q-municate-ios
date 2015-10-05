@@ -9,6 +9,7 @@
 #import "QMAddMembersToGroupController.h"
 #import "QMApi.h"
 #import "SVProgressHUD.h"
+#import "QMUsersUtils.h"
 
 @implementation QMAddMembersToGroupController
 
@@ -32,11 +33,12 @@
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     
     __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] joinOccupants:self.selectedFriends toChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
-        
-        if (result.success) {
+    [[QMApi instance] joinOccupants:self.selectedFriends toChatDialog:self.chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+        //
+        if (response.success) {
             [weakSelf.navigationController popViewControllerAnimated:YES];
         }
+        
         
         [SVProgressHUD dismiss];
     }];

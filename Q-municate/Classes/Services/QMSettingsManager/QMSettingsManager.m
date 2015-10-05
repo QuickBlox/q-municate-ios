@@ -11,7 +11,6 @@
 #import "NSUserDefaultsHelper.h"
 #import "SSKeychain.h"
 #import "QMApi.h"
-#import "QMUsersService.h"
 
 NSString *const kQMSettingsLoginKey = @"loginKey";
 NSString *const kQMSettingsRememberMeKey = @"rememberMeKey";

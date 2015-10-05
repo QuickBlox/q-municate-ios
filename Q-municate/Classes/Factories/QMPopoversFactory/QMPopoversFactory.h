@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-@class QMChatViewController;
+@class QMChatVC;
 
 @interface QMPopoversFactory : NSObject
 

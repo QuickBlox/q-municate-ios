@@ -12,32 +12,32 @@
 @implementation QMChatUtils
 
 
-+ (NSString *)messageTextForNotification:(QBChatAbstractMessage *)notification
++ (NSString *)messageTextForNotification:(QBChatMessage *)notification
 {
     NSString *messageText = nil;
     QBUUser *sender = [[QMApi instance] userWithID:notification.senderID];
     QBUUser *recipient = [[QMApi instance] userWithID:notification.recipientID];
     
-    switch (notification.cParamNotificationType) {
-        case QMMessageNotificationTypeSendContactRequest:
+    switch (notification.messageType) {
+        case QMMessageTypeContactRequest:
         {
             messageText = (notification.senderID == QMApi.instance.currentUser.ID) ?  NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_ME",nil) : [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", @"{FullName}"), sender.fullName];
         }
             break;
             
-        case QMMessageNotificationTypeConfirmContactRequest:
+        case QMMessageTypeAcceptContactRequest:
         {
             messageText = (notification.senderID == QMApi.instance.currentUser.ID) ? NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_CONFIRM_FOR_ME", nil) : NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_CONFIRM_FOR_OPPONENT", nil);
         }
             break;
             
-        case QMMessageNotificationTypeRejectContactRequest:
+        case QMMessageTypeRejectContactRequest:
         {
             messageText = (notification.senderID == QMApi.instance.currentUser.ID) ? NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_REJECT_FOR_ME",nil) : NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_REJECT_FOR_OPPONENT", nil);
         }
             break;
             
-        case QMMessageNotificationTypeDeleteContactRequest:
+        case QMMessageTypeDeleteContactRequest:
         {
             messageText = (notification.senderID == QMApi.instance.currentUser.ID) ?
             [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_ME", @"{FullName}"), recipient.fullName] :
@@ -45,10 +45,10 @@
         }
             break;
             
-        case QMMessageNotificationTypeCreateGroupDialog:
+        case QMMessageTypeCreateGroupDialog:
         {
-            NSArray *users = [[QMApi instance] usersWithIDs:notification.cParamDialogOccupantsIDs];
-#warning HardFix
+#warning not in use
+            NSArray *users = [[QMApi instance] usersWithIDs:notification.dialog.occupantIDs];
             QBUUser *currentUser = [[QMApi instance] userWithID:notification.senderID];
             for (QBUUser *usr in users) {
                 if (usr.ID == currentUser.ID) {
@@ -64,26 +64,6 @@
             messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT", nil), sender.fullName, fullNameString];
         }
             break;
-            
-        case QMMessageNotificationTypeUpdateGroupDialog:
-        {
-            if (notification.cParamDialogRoomPhoto) {
-                messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_UPDATE_GROUP_AVATAR_TEXT", nil), sender.fullName];
-            } else if (notification.cParamDialogRoomName) {
-                messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_UPDATE_GROUP_NAME_TEXT", nil), sender.fullName, notification.cParamDialogRoomName];
-            } else if (notification.cParamDialogOccupantsIDs.count > 0) {
-                
-                NSArray *users = [[QMApi instance] usersWithIDs:notification.cParamDialogOccupantsIDs];
-                NSString *fullNameString = [self fullNamesString:users];
-                messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_ADD_USERS_TO_EXIST_GROUP_CONVERSATION_TEXT", nil), sender.fullName, fullNameString];
-                
-            } else if (notification.cParamDialogDeletedID) {
-                QBUUser *leavedUser = [[QMApi instance] userWithID:notification.cParamDialogDeletedID.integerValue];
-                messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT", nil), leavedUser.fullName];
-            }
-        }
-            break;
-            
         default:
             break;
     }
@@ -94,13 +74,13 @@
 {
     NSString *message = nil;
     QBUUser *sender = [[QMApi instance] userWithID:notification.senderID];
-    if (notification.cParamNotificationType == QMMessageNotificationTypeSendContactRequest) {
+    if (notification.messageType == QMMessageTypeContactRequest) {
         message = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", @"{FullName}"), sender.fullName];
-    } else if (notification.cParamNotificationType == QMMessageNotificationTypeConfirmContactRequest) {
+    } else if (notification.messageType == QMMessageTypeAcceptContactRequest) {
         message = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_CONFIRM_FOR_PUSH", @"{FullName}"), sender.fullName];
-    } else if (notification.cParamNotificationType == QMMessageNotificationTypeRejectContactRequest) {
+    } else if (notification.messageType == QMMessageTypeRejectContactRequest) {
         message = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_REJECT_FOR_PUSH", @"{FullName}"), sender.fullName];
-    } else if (notification.cParamNotificationType == QMMessageNotificationTypeDeleteContactRequest) {
+    } else if (notification.messageType == QMMessageTypeDeleteContactRequest) {
         message = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_OPPONENT", @"{FullName}"), sender.fullName];
     }
     

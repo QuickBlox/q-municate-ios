@@ -50,6 +50,13 @@
     [super viewWillAppear:animated];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self.dataSource reloadDataSource];
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     self.dataSource.viewIsShowed = NO;

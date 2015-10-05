@@ -1,5 +1,5 @@
 
-platform :ios, '7.0'
+platform :ios, '8.1'
 xcodeproj 'Q-municate.xcodeproj'
 source 'https://github.com/CocoaPods/Specs.git'
 
@@ -13,3 +13,11 @@ pod 'SDWebImage', '~> 3.6'
 pod 'IDMPhotoBrowser', '~> 1.3.5'
 pod 'MPGNotification', '~> 1.1'
 pod 'Reachability', '~> 3.2'
+pod 'QuickBlox'
+pod 'TTTAttributedLabel', '~> 1.13'
+pod 'QMChatViewController', '~> 0.2.3'
+#pod 'QMServices', :podspec => 'QMServices.podspec'
+
+#For development pods
+#pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
+pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'

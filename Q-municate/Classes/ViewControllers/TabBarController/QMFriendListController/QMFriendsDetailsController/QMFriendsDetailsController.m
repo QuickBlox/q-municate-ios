@@ -8,16 +8,14 @@
 
 #import "QMFriendsDetailsController.h"
 #import "QMVideoCallController.h"
-#import "QMChatViewController.h"
+#import "QMChatVC.h"
 #import "QMUsersUtils.h"
 #import "QMImageView.h"
 #import "QMAlertsFactory.h"
 #import "REAlertView.h"
 #import "SVProgressHUD.h"
 #import "QMApi.h"
-#import "QMChatReceiver.h"
 #import "REAlertView+QMSuccess.h"
-#import "QMUsersService.h"
 
 typedef NS_ENUM(NSUInteger, QMCallType) {
     QMCallTypePhone,
@@ -26,7 +24,11 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     QMCallTypeChat
 };
 
-@interface QMFriendsDetailsController () <UIActionSheetDelegate>
+@interface QMFriendsDetailsController ()
+<
+UIActionSheetDelegate,
+QMContactListServiceDelegate
+>
 
 @property (weak, nonatomic) IBOutlet UITableViewCell *phoneCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *videoChatCell;
@@ -46,7 +48,6 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 @implementation QMFriendsDetailsController
 
 - (void)dealloc {
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
     NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
@@ -81,12 +82,6 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
          
      }];
     
-    __weak __typeof(self)weakSelf = self;
-    [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:^{
-        [weakSelf updateUserStatus];
-        [weakSelf disableDeleteContactButtonIfNeeded];
-    }];
-    
     [self updateUserStatus];
     
     [self disableDeleteContactButtonIfNeeded];
@@ -98,6 +93,18 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     [self cells:@[videoChatCell, audioChatCell] setHidden:YES];
     
 #endif
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [[QMApi instance].contactListService addDelegate:self];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [[QMApi instance].contactListService removeDelegate:self];
 }
 
 - (void)updateUserStatus {
@@ -118,7 +125,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
     
     if ([segue.identifier isEqualToString:kChatViewSegueIdentifier]) {
         
-        QMChatViewController *chatController = segue.destinationViewController;
+        QMChatVC *chatController = segue.destinationViewController;
         chatController.dialog = sender;
         
         NSAssert([sender isKindOfClass:QBChatDialog.class], @"Need update this case");
@@ -135,7 +142,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 #if QM_AUDIO_VIDEO_ENABLED
         case QMCallTypeVideo:{
             
-            if( [[QMApi instance].usersService userIDIsInPendingList:self.selectedUser.ID] ) {
+            if( [[QMApi instance] userIDIsInPendingList:self.selectedUser.ID] ) {
                 [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
             }
             else{
@@ -144,7 +151,7 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
         }
             break;
         case QMCallTypeAudio: {
-            if( [[QMApi instance].usersService userIDIsInPendingList:self.selectedUser.ID] ) {
+            if( [[QMApi instance] userIDIsInPendingList:self.selectedUser.ID] ) {
                 [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
             }
             else{
@@ -194,6 +201,20 @@ typedef NS_ENUM(NSUInteger, QMCallType) {
 {
     BOOL isContact = [[QMApi instance] isFriend:self.selectedUser];
     self.deleteContactButton.enabled = isContact;
+}
+    
+#pragma mark Contact List Serice Delegate
+    
+- (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
+    [self updateUserStatus];
+}
+    
+- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
+    [self updateUserStatus];
+}
+    
+- (void)contactListService:(QMContactListService *)contactListService didUpdateUser:(QBUUser *)user {
+    [self updateUserStatus];
 }
 
 @end

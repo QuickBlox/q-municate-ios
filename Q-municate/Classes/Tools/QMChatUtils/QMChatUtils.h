@@ -10,7 +10,7 @@
 
 @interface QMChatUtils : NSObject
 
-+ (NSString *)messageTextForNotification:(QBChatAbstractMessage *)notification;
++ (NSString *)messageTextForNotification:(QBChatMessage *)notification;
 + (NSString *)messageTextForPushWithNotification:(QBChatMessage *)notification;
 + (NSString *)idsStringWithoutSpaces:(NSArray *)users;
 + (NSString *)messageForText:(NSString *)text participants:(NSArray *)participants;

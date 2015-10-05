@@ -8,8 +8,8 @@
 
 #import "QMGroupDetailsDataSource.h"
 #import "QMFriendListCell.h"
-#import "QMChatReceiver.h"
 #import "QMApi.h"
+#import "QMUsersUtils.h"
 
 NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
 NSString *const kLeaveChatCellIdentifier = @"QMLeaveChatCell";
@@ -27,42 +27,13 @@ NSString *const kLeaveChatCellIdentifier = @"QMLeaveChatCell";
 
 @implementation QMGroupDetailsDataSource
 
-- (void)dealloc {
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
-}
-
 - (id)initWithTableView:(UITableView *)tableView {
 
     if (self = [super init]) {
         
         _tableView = tableView;
-        
-        
         self.tableView.dataSource = nil;
         self.tableView.dataSource = self;
-        
-        __weak __typeof(self)weakSelf = self;
-        
-        [[QMChatReceiver instance] usersHistoryUpdatedWithTarget:self block:^{
-            [weakSelf reloadUserData];
-        }];
-        
-        [[QMChatReceiver instance] chatContactListUpdatedWithTarget:self block:^{
-            [weakSelf reloadUserData];
-        }];
-        
-        [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-            
-            if (message.delayed) {
-                return;
-            }
-            if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog &&
-                [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID])
-            {
-                [weakSelf reloadUserData];
-            }
-        }];
     }
     
     return self;

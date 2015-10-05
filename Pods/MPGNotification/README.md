@@ -3,7 +3,7 @@ MPGNotification
 
 MPGNotifications is an iOS control that allows you to display in-app interactive notifications that are fully customisable to suit your needs.
 
-Available via [Cocoapods](http://cocoapods.org/): `pod 'MPGNotification', '~> 1.1'`
+Available via [Cocoapods](http://cocoapods.org/): `pod 'MPGNotification', '~> 1.2'`
 
 ![MPGNotification Screenshot](https://s3.amazonaws.com/evilapples/stash/MPGNotification.png)
 
@@ -115,6 +115,9 @@ All properties must be set *BEFORE* `show` or `showWithButtonHandler:` is called
 // Allows 'swipe to dismiss' action on the Notification, similar to iOS Push Notifications.
 // Default: YES
 @property (nonatomic) BOOL swipeToDismissEnabled;
+
+// Allows full-screen messages on iPad. Defaults to NO, similar to iOS Push Notifications.
+@property (nonatomic) BOOL fullWidthMessages;
 
 // To set the title color of the notification.
 // Default: [UIColor whiteColor]

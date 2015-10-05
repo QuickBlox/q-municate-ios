@@ -19,20 +19,49 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - AGEmojiKeyboard (0.1.0)
-  - DACircularProgress (2.2.0)
+  - DACircularProgress (2.3.1)
   - IDMPhotoBrowser (1.3.5):
     - AFNetworking (~> 2.2.3)
     - DACircularProgress (~> 2.2)
     - SVProgressHUD (~> 1.0)
-  - MPGNotification (1.2)
+  - MPGNotification (1.2.4)
   - Parus (1.0)
+  - QMChatViewController (0.2.3):
+    - QMChatViewController/Categories (= 0.2.3)
+    - QMChatViewController/KeyboardViewController (= 0.2.3)
+    - QMChatViewController/Protocols (= 0.2.3)
+    - QMChatViewController/Views (= 0.2.3)
+    - QuickBlox (~> 2.3)
+    - SDWebImage (~> 3.6)
+    - TTTAttributedLabel (~> 1.13)
+  - QMChatViewController/Categories (0.2.3):
+    - QuickBlox (~> 2.3)
+    - SDWebImage (~> 3.6)
+    - TTTAttributedLabel (~> 1.13)
+  - QMChatViewController/KeyboardViewController (0.2.3):
+    - QuickBlox (~> 2.3)
+    - SDWebImage (~> 3.6)
+    - TTTAttributedLabel (~> 1.13)
+  - QMChatViewController/Protocols (0.2.3):
+    - QuickBlox (~> 2.3)
+    - SDWebImage (~> 3.6)
+    - TTTAttributedLabel (~> 1.13)
+  - QMChatViewController/Views (0.2.3):
+    - QMChatViewController/Categories
+    - QMChatViewController/Protocols
+    - QuickBlox (~> 2.3)
+    - SDWebImage (~> 3.6)
+    - TTTAttributedLabel (~> 1.13)
+  - QMServicesDevelopment (0.2.1)
+  - QuickBlox (2.4.3)
   - Reachability (3.2)
-  - SDWebImage (3.7.1):
-    - SDWebImage/Core (= 3.7.1)
-  - SDWebImage/Core (3.7.1)
-  - SSKeychain (1.2.2)
-  - StaticDataTableViewController (2.0.3)
-  - SVProgressHUD (1.1.2)
+  - SDWebImage (3.7.3):
+    - SDWebImage/Core (= 3.7.3)
+  - SDWebImage/Core (3.7.3)
+  - SSKeychain (1.2.3)
+  - StaticDataTableViewController (2.0.5)
+  - SVProgressHUD (1.1.3)
+  - TTTAttributedLabel (1.13.4)
   - UIDevice-Hardware (0.1.5)
 
 DEPENDENCIES:
@@ -40,25 +69,37 @@ DEPENDENCIES:
   - IDMPhotoBrowser (~> 1.3.5)
   - MPGNotification (~> 1.1)
   - Parus (~> 1.0)
+  - QMChatViewController (~> 0.2.3)
+  - QMServicesDevelopment (from `../q-municate-services-ios/`)
+  - QuickBlox
   - Reachability (~> 3.2)
   - SDWebImage (~> 3.6)
   - SSKeychain (~> 1.2.2)
   - StaticDataTableViewController (~> 2.0.3)
   - SVProgressHUD (~> 1.0)
+  - TTTAttributedLabel (~> 1.13)
   - UIDevice-Hardware (~> 0.1.3)
 
-SPEC CHECKSUMS:
-  AFNetworking: ab63e259fe91eef4519b371ef0a4955af0e73e64
-  AGEmojiKeyboard: dd58fd8520856094b5dd64ebb001703df85815e6
-  DACircularProgress: 3b41941891a56dc6aa17971f5322a9a38a6f446e
-  IDMPhotoBrowser: d691bcdf470553e165f8eb982c5cd8e9a58bcdef
-  MPGNotification: 0b93e5466a007593228595a10e8dd7b9848185ca
-  Parus: 4ed2c119d86103e160a3820d81564c08cf330eb0
-  Reachability: 1ef8adf5c4e3d362f96515d4278f68dad3c26930
-  SDWebImage: 116e88633b5b416ea0ca4b334a4ac59cf72dd38d
-  SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
-  StaticDataTableViewController: 171ee35f17f6176baa98ce05c1e4769a628732ad
-  SVProgressHUD: da7a49e789af645d9279ffbca62318945a832438
-  UIDevice-Hardware: df983265bb5c6f3f66d63c29841a1d6649b1c8f4
+EXTERNAL SOURCES:
+  QMServicesDevelopment:
+    :path: ../q-municate-services-ios/
 
-COCOAPODS: 0.36.0.beta.2
+SPEC CHECKSUMS:
+  AFNetworking: caca0799b310f0c3bf1fc1af45145fc96972bcab
+  AGEmojiKeyboard: e19cf4168b114d2e494e53fe8dc042d8bf011cc9
+  DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
+  IDMPhotoBrowser: 6699a8d8b6c036a60c58ba7c281b2f5761d970ac
+  MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
+  Parus: e8eeec5e596e59fea3e3129775e5ddf2e5c0b4eb
+  QMChatViewController: ec1901995037addadc9b58b75f53e8682d1d17ef
+  QMServicesDevelopment: dfcbc65bfdf2e7a7d75cdd73cbe08a40cd7fab26
+  QuickBlox: 989adf5e7fac59a87cdb339187975cdf097e69ed
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
+  SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
+  StaticDataTableViewController: 7ea8d7bc8c7f0a4e9255a320224462c7346c1d4a
+  SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
+  TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
+  UIDevice-Hardware: b3695e58e0385155932e7889c32ed12e844e14a3
+
+COCOAPODS: 0.38.2

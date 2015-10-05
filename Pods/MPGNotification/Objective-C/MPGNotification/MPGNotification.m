@@ -33,6 +33,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+static const CGFloat kMaximumNotificationWidth = 512;
+
 static const CGFloat kNotificationHeight = 64;
 static const CGFloat kIconImageSize = 32.0;
 static const NSTimeInterval kLinearAnimationTime = 0.25;
@@ -73,6 +75,7 @@ static const CGFloat kColorAdjustmentLight = 0.35;
 // state
 @property (nonatomic) BOOL notificationRevealed;
 @property (nonatomic) BOOL notificationDragged;
+@property (nonatomic) BOOL notificationDestroyed;
 
 // other
 @property (nonatomic, strong) UIDynamicAnimator *animator;
@@ -90,7 +93,7 @@ static const CGFloat kColorAdjustmentLight = 0.35;
     // If the App has a keyWindow, get it, else get the 'top'-most window in the App's hierarchy.
     UIWindow *window = [self _topAppWindow];
 
-    // Now get the 'top'-most object in that window and use its width for the Notification.
+    // Now get the 'top'-most object in that window and use its width for the Notification
     UIView *topSubview = [[window subviews] lastObject];
     CGRect notificationFrame = CGRectMake(0, 0, CGRectGetWidth(topSubview.bounds), kNotificationHeight);
     
@@ -152,10 +155,16 @@ static const CGFloat kColorAdjustmentLight = 0.35;
     static const CGFloat kPaddingX = 5;
     CGFloat notificationWidth = CGRectGetWidth(self.bounds);
     
+    CGFloat maxWidth = 0.5 * (notificationWidth - kMaximumNotificationWidth);
+    CGFloat contentPaddingX = (self.fullWidthMessages) ? 0 : MAX(0,maxWidth);
+    
     // ICON IMAGE
     static const CGFloat kIconPaddingY = 15;
     
-    self.iconImageView.frame = CGRectMake(kPaddingX, kIconPaddingY, kIconImageSize, kIconImageSize);
+    self.iconImageView.frame = CGRectMake(contentPaddingX + kPaddingX,
+                                          kIconPaddingY,
+                                          kIconImageSize,
+                                          kIconImageSize);
     
     
     // BUTTONS
@@ -169,8 +178,8 @@ static const CGFloat kColorAdjustmentLight = 0.35;
     static const CGFloat kCloseButtonWidth = 25;
     static const CGFloat kCloseButtonHeight = 30;
     
-    CGFloat buttonOriginX = notificationWidth - kButtonOriginXOffset;
-    CGFloat closeButtonOriginX = notificationWidth - kCloseButtonOriginXOffset;
+    CGFloat buttonOriginX = notificationWidth - kButtonOriginXOffset - contentPaddingX;
+    CGFloat closeButtonOriginX = notificationWidth - kCloseButtonOriginXOffset - contentPaddingX;
     
     CGFloat firstButtonOriginY = (self.secondButton) ? 6 : 17;
     CGFloat buttonHeight = (self.firstButton && self.secondButton) ? 25 : 30;
@@ -184,16 +193,15 @@ static const CGFloat kColorAdjustmentLight = 0.35;
     // TITLE LABEL
     NSParameterAssert(self.title);
     
-    static const CGFloat kTitleLabelPaddingX = 8;
     static const CGFloat kTitleLabelHeight = 20;
     
-    CGFloat textPaddingX = (self.iconImage) ? CGRectGetMaxX(self.iconImageView.frame) + kTitleLabelPaddingX : kPaddingX + 5;
-    CGFloat textTrailingX = (self.firstButton) ? CGRectGetWidth(self.bounds) - CGRectGetMinX(self.firstButton.frame) + 9 : 20;
+    CGFloat textPaddingX = (self.iconImage) ? CGRectGetMaxX(self.iconImageView.frame) + kPaddingX : contentPaddingX + kPaddingX + 5;
+    CGFloat textTrailingX = (self.firstButton) ? CGRectGetWidth(self.bounds) - CGRectGetMinX(self.firstButton.frame) + 9 : contentPaddingX + 20;
     CGFloat textWidth = notificationWidth - (textPaddingX + textTrailingX);
     
     // expected subtitle calculations
     static const CGFloat kSubtitleHeight = 50;
-    CGSize expectedSubtitleSize;
+    CGSize expectedSubtitleSize = CGSizeZero;
     
     // use new sizeWithAttributes: if possible
     SEL selector = NSSelectorFromString(@"sizeWithAttributes:");
@@ -516,26 +524,11 @@ static const CGFloat kColorAdjustmentLight = 0.35;
 - (void)_showNotification {
     
     // Called to display the initiliased notification on screen.
-    
+   
+    self.notificationDestroyed = NO; 
     self.notificationRevealed = YES;
     
-    if (self.hostViewController) {
-        
-        [self.hostViewController.view addSubview:self];
-        
-    } else {
-        
-        UIWindow *window = [self _topAppWindow];
-        
-        self.windowLevel = [[[[UIApplication sharedApplication] delegate] window] windowLevel];
-        
-        // Update windowLevel to make sure status bar does not interfere with the notification
-        [[[[UIApplication sharedApplication] delegate] window] setWindowLevel:UIWindowLevelStatusBar+1];
-        
-        // add the notification to the screen
-        [window.subviews.lastObject addSubview:self];
-        
-    }
+    [self _setupNotificationViews];
     
     switch (self.animationType) {
         case MPGNotificationAnimationTypeLinear: {
@@ -605,7 +598,7 @@ static const CGFloat kColorAdjustmentLight = 0.35;
 
 - (void)_dismissAnimated:(BOOL)animated {
     
-    //Call this method to dismiss the notification. The notification will dismiss in the same animation as it appeared on screen. If the 'animated' variable is set NO, the notification will disappear without any animation.
+    // Call this method to dismiss the notification. The notification will dismiss in the same animation as it appeared on screen. If the 'animated' variable is set NO, the notification will disappear without any animation.
     CGRect viewBounds = [self.superview bounds];
     if (animated) {
         
@@ -694,7 +687,7 @@ static const CGFloat kColorAdjustmentLight = 0.35;
     
     if (self.duration > 0) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if (self.notificationDragged == NO) {
+            if (self.notificationDragged == NO && self.notificationDestroyed == NO) {
                 [self _dismissAnimated:YES];
             }
         });
@@ -724,16 +717,20 @@ static const CGFloat kColorAdjustmentLight = 0.35;
 
 - (void)_destroyNotification {
     
-    if (self.hostViewController == nil) {
-        [[[[UIApplication sharedApplication] delegate] window] setWindowLevel:self.windowLevel];
+    if (!self.notificationDestroyed) {
+        self.notificationDestroyed = YES;
+        
+        if (self.hostViewController == nil) {
+            [[[[UIApplication sharedApplication] delegate] window] setWindowLevel:self.windowLevel];
+        }
+        
+        [self _dismissBlockHandler];
+        
+        self.animator.delegate = nil;
+        self.animator = nil;
+        
+        [self removeFromSuperview];
     }
-    
-    [self _dismissBlockHandler];
-    
-    self.animator.delegate = nil;
-    self.animator = nil;
-    
-    [self removeFromSuperview];
     
 }
 
@@ -758,6 +755,34 @@ static const CGFloat kColorAdjustmentLight = 0.35;
         self.dismissHandler(self);
         self.dismissHandler = nil;
     }
+}
+
+- (void)_setupNotificationViews {
+    
+    if (self.hostViewController) {
+        
+        [self.hostViewController.view addSubview:self];
+        
+    } else {
+        
+        UIWindow *window = [self _topAppWindow];
+        
+        self.windowLevel = [[[[UIApplication sharedApplication] delegate] window] windowLevel];
+        
+        // Update windowLevel to make sure status bar does not interfere with the notification
+        [[[[UIApplication sharedApplication] delegate] window] setWindowLevel:UIWindowLevelStatusBar+1];
+        
+        // add the notification to the screen
+        [window.subviews.lastObject addSubview:self];
+        
+    }
+    
+    UIView *superview = self.superview;
+    self.frame = CGRectMake(0, 0, CGRectGetWidth(superview.bounds), kNotificationHeight);
+    self.contentSize = CGSizeMake(CGRectGetWidth(self.bounds), 2 * CGRectGetHeight(self.bounds));
+    self.backgroundView.frame = self.bounds;
+    
+    
 }
 
 @end

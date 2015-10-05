@@ -7,10 +7,9 @@
 //
 
 #import "QMDialogsViewController.h"
-#import "QMChatViewController.h"
+#import "QMChatVC.h"
 #import "QMCreateNewChatController.h"
 #import "QMDialogsDataSource.h"
-#import "QMChatReceiver.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMApi.h"
 
@@ -64,7 +63,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     
     if ([segue.identifier isEqualToString:kChatViewSegueIdentifier]) {
         
-        QMChatViewController *chatController = segue.destinationViewController;
+        QMChatVC *chatController = segue.destinationViewController;
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         QBChatDialog *dialog = [self.dataSource dialogAtIndexPath:indexPath];
         chatController.dialog = dialog;

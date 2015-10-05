@@ -1,9 +1,9 @@
 //
 //  QMApi+Calls.m
-//  Qmunicate
+//  Q-municate
 //
-//  Created by Igor Alefirenko on 16/07/2014.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Vitaliy Gorbachov on 9/24/15.
+//  Copyright © 2015 Quickblox. All rights reserved.
 //
 
 #import "QMApi.h"

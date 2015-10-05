@@ -14,13 +14,12 @@
 #import "QMImagePicker.h"
 #import "QMApi.h"
 #import "QMContentService.h"
-#import "QMChatReceiver.h"
 #import "UIImage+Cropper.h"
 #import "REActionSheet.h"
 
 @interface QMGroupDetailsController ()
 
-<UITableViewDelegate, UIActionSheetDelegate>
+<UITableViewDelegate, UIActionSheetDelegate, QMContactListServiceDelegate, QMChatServiceDelegate, QMChatConnectionDelegate>
 
 @property (weak, nonatomic) IBOutlet QMImageView *groupAvatarView;
 @property (weak, nonatomic) IBOutlet UITextField *groupNameField;
@@ -30,13 +29,14 @@
 
 @property (strong, nonatomic) QMGroupDetailsDataSource *dataSource;
 
+@property (nonatomic, assign) BOOL shouldNotUnsubFromServices;
+
 @end
 
 @implementation QMGroupDetailsController
 
 - (void)dealloc {
     
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
@@ -51,38 +51,8 @@
     [self updateGUIWithChatDialog:self.chatDialog];
     
     self.dataSource = [[QMGroupDetailsDataSource alloc] initWithTableView:self.tableView];
-    [self.dataSource reloadDataWithChatDialog:self.chatDialog];
-    
-    __weak __typeof(self)weakSelf = self;
-    [[QMChatReceiver instance] chatRoomDidReceiveListOfOnlineUsersWithTarget:self block:^(NSArray *users, NSString *roomName) {
-        
-        QBChatRoom *chatRoom = weakSelf.chatDialog.chatRoom;
-        if ([roomName isEqualToString:chatRoom.name]) {
-            [weakSelf updateOnlineStatus:users.count];
-        }
-    }];
-    
-    [[QMChatReceiver instance] chatRoomDidChangeOnlineUsersWithTarget:self block:^(NSArray *onlineUsers, NSString *roomName) {
-        
-        QBChatRoom *chatRoom = weakSelf.chatDialog.chatRoom;
-        if ([roomName isEqualToString:chatRoom.name]) {
-            [weakSelf updateOnlineStatus:onlineUsers.count];
-        }
-    }];
-
-    [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-        if (message.delayed) {
-            return;
-        }
-        if (message.cParamNotificationType == QMMessageNotificationTypeUpdateGroupDialog &&
-            [message.cParamDialogID isEqualToString:weakSelf.chatDialog.ID]) {
-            
-            weakSelf.chatDialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
-            [weakSelf updateGUIWithChatDialog:weakSelf.chatDialog];
-        }
-    }];
+    [self updateGUIWithChatDialog:self.chatDialog];
 }
-
 
 - (void)updateOnlineStatus:(NSUInteger)online {
     
@@ -94,16 +64,30 @@
     [super didReceiveMemoryWarning];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.shouldNotUnsubFromServices = NO;
+
+    [[QMApi instance].contactListService addDelegate:self];
+    [[QMApi instance].chatService addDelegate:self];
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     
     [self.view endEditing:YES];
     [super viewWillDisappear:animated];
+    
+    if (!self.shouldNotUnsubFromServices) {
+        [[QMApi instance].contactListService removeDelegate:self];
+        [[QMApi instance].chatService removeDelegate:self];
+    }
 }
 
 - (IBAction)changeDialogName:(id)sender {
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [[QMApi instance] changeChatName:self.groupNameField.text forChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
+    [[QMApi instance] changeChatName:self.groupNameField.text forChatDialog:self.chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+        //
         [SVProgressHUD dismiss];
     }];
 }
@@ -114,9 +98,10 @@
     [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
         
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-        [[QMApi instance] changeAvatar:image forChatDialog:weakSelf.chatDialog completion:^(QBChatDialogResult *result) {
-            if (result.success) {
-                [weakSelf updateGUIWithChatDialog:result.dialog];
+        [[QMApi instance] changeAvatar:image forChatDialog:weakSelf.chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+            //
+            if (response.success) {
+                [weakSelf updateGUIWithChatDialog:updatedDialog];
             }
             [SVProgressHUD dismiss];
         }];
@@ -151,13 +136,15 @@
         [self.groupAvatarView setImageWithURL:[NSURL URLWithString:chatDialog.photo] placeholder:[UIImage imageNamed:@"upic_placeholder_details_group"] options:SDWebImageHighPriority progress:^(NSInteger receivedSize, NSInteger expectedSize) {} completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
     }
     self.occupantsCountLabel.text = [NSString stringWithFormat:@"%zd participants", self.chatDialog.occupantIDs.count];
-    self.onlineOccupantsCountLabel.text = [NSString stringWithFormat:@"0/%zd online", self.chatDialog.occupantIDs.count];
-    
 
-    [self.dataSource reloadDataWithChatDialog:self.chatDialog];
+    [self.dataSource reloadDataWithChatDialog:chatDialog];
     
-    QBChatRoom *chatRoom = self.chatDialog.chatRoom;
-    [chatRoom requestOnlineUsers];
+    QBChatDialogRequestOnlineUsersBlock onReceiveListOfOnlineUsers = ^(NSMutableArray* onlineUsers) {
+        [self updateOnlineStatus:onlineUsers.count];
+    };
+    [self.chatDialog setOnReceiveListOfOnlineUsers:onReceiveListOfOnlineUsers];
+    //[self.chatDialog onReceiveListOfOnlineUsers];
+    [self.chatDialog requestOnlineUsers];
 }
 
 - (NSArray *)filteredIDs:(NSArray *)IDs forChatDialog:(QBChatDialog *)chatDialog
@@ -167,14 +154,14 @@
     return [newArray copy];
 }
 
-
 - (void)leaveGroupChat
 {
     __weak typeof(self)weakSelf = self;
     [SVProgressHUD show];
-    [[QMApi instance] leaveChatDialog:self.chatDialog completion:^(QBChatDialogResult *result) {
+    [[QMApi instance] leaveChatDialog:self.chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+        //
         [SVProgressHUD dismiss];
-        if (result.success) {
+        if (response.success) {
             [weakSelf.navigationController popToRootViewControllerAnimated:YES];
         }
     }];
@@ -203,8 +190,38 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if ([segue.identifier isEqualToString:kQMAddMembersToGroupControllerSegue]) {
+        self.shouldNotUnsubFromServices = YES;
+        
         QMAddMembersToGroupController *addMembersVC = segue.destinationViewController;
         addMembersVC.chatDialog = self.chatDialog;
+    }
+}
+
+#pragma mark Contact List Serice Delegate
+
+- (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
+    [self updateGUIWithChatDialog:self.chatDialog];
+}
+
+- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
+    [self updateGUIWithChatDialog:self.chatDialog];
+}
+
+- (void)contactListService:(QMContactListService *)contactListService didUpdateUser:(QBUUser *)user {
+    [self updateGUIWithChatDialog:self.chatDialog];
+}
+
+#pragma mark Chat Service Delegate
+
+- (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
+    if ([chatDialog.ID isEqualToString:self.chatDialog.ID]) {
+        [self updateGUIWithChatDialog:chatDialog];
+    }
+}
+
+- (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
+    if ([chatDialog.ID isEqualToString:self.chatDialog.ID]) {
+        [self updateGUIWithChatDialog:chatDialog];
     }
 }
 

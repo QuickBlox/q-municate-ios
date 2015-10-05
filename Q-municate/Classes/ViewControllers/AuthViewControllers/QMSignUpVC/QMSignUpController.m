@@ -125,9 +125,11 @@
                     if (weakSelf.cachedPicture) {
                         
                         [SVProgressHUD showProgress:0.f status:nil maskType:SVProgressHUDMaskTypeClear];
-                        [[QMApi instance] updateUser:nil image:weakSelf.cachedPicture progress:^(float progress) {
+                        [[QMApi instance] updateCurrentUser:nil image:weakSelf.cachedPicture progress:^(float progress) {
+                            //
                             [SVProgressHUD showProgress:progress status:nil maskType:SVProgressHUDMaskTypeClear];
-                        } completion:^(BOOL updateUserSuccess) {
+                        } completion:^(BOOL success) {
+                            //
                             presentTabBar();
                         }];
                     }

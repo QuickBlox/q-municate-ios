@@ -38,11 +38,26 @@
 
 - (void)main {
     
-    self.cancelableOperation = [QBContent TUploadFile:self.data
-                                             fileName:self.fileName
-                                          contentType:self.contentType
-                                             isPublic:self.public
-                                             delegate:self];
+    self.cancelableRequest = [QBRequest TUploadFile:self.data
+                                           fileName:self.fileName
+                                        contentType:self.contentType
+                                           isPublic:self.public
+                                       successBlock:^(QBResponse *response, QBCBlob *blob) {
+                                           //
+                                           if (self.completionHandler) {
+                                               QMCFileUploadResponseBlock block = (QMCFileUploadResponseBlock)self.completionHandler;
+                                               block(response,blob);
+                                           }
+                                       } statusBlock:^(QBRequest *request, QBRequestStatus *status) {
+                                           //
+                                           if (self.progressHandler) self.progressHandler(status.percentOfCompletion);
+                                       } errorBlock:^(QBResponse *response) {
+                                           //
+                                           if (self.completionHandler) {
+                                               QMCFileUploadResponseBlock block = (QMCFileUploadResponseBlock)self.completionHandler;
+                                               block(response,nil);
+                                           }
+                                       }];
 }
 
 @end

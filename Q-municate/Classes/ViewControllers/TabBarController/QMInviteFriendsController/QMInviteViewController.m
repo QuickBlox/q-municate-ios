@@ -15,7 +15,7 @@
 
 @interface QMInviteViewController ()
 
-<QBActionStatusDelegate, MFMailComposeViewControllerDelegate, QMCheckBoxStateDelegate>
+<MFMailComposeViewControllerDelegate, QMCheckBoxStateDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sendButton;
 

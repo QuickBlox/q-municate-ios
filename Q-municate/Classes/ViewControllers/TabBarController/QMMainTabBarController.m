@@ -12,28 +12,19 @@
 #import "QMImageView.h"
 #import "MPGNotification.h"
 #import "QMMessageBarStyleSheetFactory.h"
-#import "QMChatViewController.h"
-#import "QMChatDialogsService.h"
+#import "QMChatVC.h"
 #import "QMSoundManager.h"
-#import "QMChatDataSource.h"
 #import "QMSettingsManager.h"
-#import "QMChatReceiver.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMDevice.h"
+#import "QMPopoversFactory.h"
 
 
 @interface QMMainTabBarController ()
 
 @end
 
-
 @implementation QMMainTabBarController
-
-
-- (void)dealloc
-{
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
-}
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -47,12 +38,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.chatDelegate = self;
+    [[QMApi instance].chatService addDelegate:self];
     
     [self customizeTabBar];
     [self.navigationController setNavigationBarHidden:YES animated:NO];
-    
-    [self subscribeToNotifications];
+
     __weak __typeof(self)weakSelf = self;
     
     [[QMApi instance] autoLogin:^(BOOL success) {
@@ -103,14 +93,16 @@
         // hide progress hud
         [SVProgressHUD dismiss];
         
-        [[QMApi instance].chatDialogsService joinRooms];
+        [[QMApi instance] joinGroupDialogs];
         QBUUser *usr = [QMApi instance].currentUser;
-        if (!usr.imported) {
+        if (!usr.isImport) {
             [[QMApi instance] importFriendsFromFacebook];
             [[QMApi instance] importFriendsFromAddressBookWithCompletion:^(BOOL succeded, NSError *error) {
             }];
-            usr.imported = YES;
-            [[QMApi instance] updateUser:usr image:nil progress:nil completion:^(BOOL successed) {}];
+            usr.isImport = YES;
+            QBUpdateUserParameters *params = [QBUpdateUserParameters new];
+            params.customData = usr.customData;
+            [[QMApi instance] updateCurrentUser:params image:nil progress:nil completion:^(BOOL success) {}];
             
         } else {
             
@@ -120,39 +112,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-}
-
-- (void)setChatDelegate:(id)chatDelegate
-{
-    if (chatDelegate == nil) {
-        _chatDelegate = self;
-        return;
-    }
-    _chatDelegate = chatDelegate;
-}
-
-- (void)subscribeToNotifications
-{
-    __weak typeof(self)weakSelf = self;
-    [[QMChatReceiver instance] chatAfterDidReceiveMessageWithTarget:self block:^(QBChatMessage *message) {
-	
-		QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:message.cParamDialogID];
-		
-        if (dialog.chatRoom == nil && message.delayed) {
-            return;
-        }
-        [weakSelf message:message forOtherDialog:dialog];
-    }];
-    
-    // Internet Connection:
-    [[QMChatReceiver instance] internetConnectionStateWithTarget:self block:^(BOOL isActive) {
-        if (isActive) {
-            [SVProgressHUD show];
-            [weakSelf loginToChat];
-        } else {
-            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:isActive];
-        }
-    }];
 }
 
 - (void)customizeTabBar {
@@ -198,44 +157,41 @@
     }
 }
 
-#pragma mark - QMChatDataSourceDelegate
-
-- (void)message:(QBChatMessage *)message forOtherDialog:(QBChatDialog *)otherDialog {
+- (void)showNotificationForMessage:(QBChatMessage *)message inDialogID:(NSString *)dialogID
+{
+    if ([[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) return;
     
-    // if message is not mine:
-    if (message.senderID != [QMApi instance].currentUser.ID) {
-        
-        if ([self.chatDelegate isKindOfClass:QMChatViewController.class] && [otherDialog.ID isEqual:((QMChatViewController *)self.chatDelegate).dialog.ID]) {
-            // don't show popup
-            [self tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:NO];
-        } else {
-            [self tabBarChatWithChatMessage:message chatDialog:otherDialog showTMessage:YES];
+    if (message.isNotificatonMessage) return;
+    
+    if (message.delayed) return;
+    
+    if (message.senderID == self.currentUser.ID) return;
+    
+    NSString* dialogName = @"New message";
+    
+    QBChatDialog* dialog = [[QMApi instance].chatService.dialogsMemoryStorage chatDialogWithID:dialogID];
+    
+    if (dialog.type != QBChatDialogTypePrivate) {
+        dialogName = dialog.name;
+    } else {
+        QBUUser* user = [[QMApi instance].contactListService.usersMemoryStorage userWithID:dialog.recipientID];
+        if (user != nil) {
+            dialogName = user.login;
         }
     }
-}
-
-
-#pragma mark - QMTabBarChatDelegate
-
-- (void)tabBarChatWithChatMessage:(QBChatMessage *)message chatDialog:(QBChatDialog *)dialog showTMessage:(BOOL)show
-{
-    if (!show) {
-        return;
-    }
+    
     [QMSoundManager playMessageReceivedSound];
     
-    __weak typeof(self) weakSelf = self;
+    __weak __typeof(self)weakSelf = self;
     [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
         if (buttonIndex == 1) {
+            
             UINavigationController *navigationController = (UINavigationController *)[weakSelf selectedViewController];
-            QMChatViewController *chatController = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"QMChatViewController"];
-            chatController.dialog = dialog;
+            UIViewController *chatController = [QMPopoversFactory chatControllerWithDialogID:dialogID];
             [navigationController pushViewController:chatController animated:YES];
         }
     }];
-    
 }
-
 
 #pragma mark - QMTabBarDelegate
 
@@ -247,6 +203,47 @@
             [self.tabDelegate friendsListTabWasTapped:item];
         }
     }
+}
+
+#pragma mark - QMChatServiceDelegate
+
+- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+    [self showNotificationForMessage:message inDialogID:dialogID];
+}
+
+
+#pragma mark - QMChatConnectionDelegate
+
+- (void)chatServiceChatDidConnect:(QMChatService *)chatService
+{
+    [SVProgressHUD showSuccessWithStatus:@"Chat connected!" maskType:SVProgressHUDMaskTypeClear];
+    [SVProgressHUD showWithStatus:@"Logging in to chat..." maskType:SVProgressHUDMaskTypeClear];
+}
+
+- (void)chatServiceChatDidReconnect:(QMChatService *)chatService
+{
+    [SVProgressHUD showSuccessWithStatus:@"Chat reconnected!" maskType:SVProgressHUDMaskTypeClear];
+    [SVProgressHUD showWithStatus:@"Logging in to chat..." maskType:SVProgressHUDMaskTypeClear];
+}
+
+- (void)chatServiceChatDidAccidentallyDisconnect:(QMChatService *)chatService
+{
+    [SVProgressHUD showErrorWithStatus:@"Chat disconnected!"];
+}
+
+- (void)chatServiceChatDidLogin
+{
+    [SVProgressHUD showSuccessWithStatus:@"Logged in!"];
+}
+
+- (void)chatServiceChatDidNotLoginWithError:(NSError *)error
+{
+    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"Did not login with error: %@", [error description]]];
+}
+
+- (void)chatServiceChatDidFailWithStreamError:(NSError *)error
+{
+    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"Chat failed with error: %@", [error description]]];
 }
 
 @end

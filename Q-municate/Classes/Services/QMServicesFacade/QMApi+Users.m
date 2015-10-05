@@ -1,36 +1,28 @@
 //
 //  QMApi+Users.m
-//  Qmunicate
+//  Q-municate
 //
-//  Created by Andrey Ivanov on 03.07.14.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Vitaliy Gorbachov on 9/24/15.
+//  Copyright © 2015 Quickblox. All rights reserved.
 //
 
 #import "QMApi.h"
-#import "QMUsersService.h"
 #import "QMContentService.h"
 #import "QMFacebookService.h"
-#import "QMMessagesService.h"
-#import "QMChatReceiver.h"
-#import "QMChatDialogsService.h"
 #import "QMSettingsManager.h"
 #import "QMAddressBook.h"
 #import "ABPerson.h"
 
-
 @implementation QMApi (Users)
 
 - (void)addUserToContactList:(QBUUser *)user completion:(void(^)(BOOL success, QBChatMessage *notification))completion {
-
+    
     __weak typeof(self) weakSelf = self;
-    [self.messagesService chat:^(QBChat *chat) {
-        [weakSelf.usersService addUser:user];
-        BOOL success = [chat addUserToContactListRequest:user.ID];
-        
+    [self.contactListService addUserToContactListRequest:user completion:^(BOOL success) {
+        //
         [weakSelf createPrivateChatDialogIfNeededWithOpponent:user completion:^(QBChatDialog *chatDialog) {
             [weakSelf sendContactRequestSendNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
-
-                [[QMChatReceiver instance] postDialogsHistoryUpdated];
+                
                 if (completion) completion(success, notification);
             }];
         }];
@@ -40,67 +32,52 @@
 - (void)removeUserFromContactList:(QBUUser *)user completion:(void(^)(BOOL success, QBChatMessage *notification))completion {
     
     __weak typeof(self) weakSelf = self;
-    [self.messagesService chat:^(QBChat *chat) {
-        BOOL successed = [chat removeUserFromContactList:user.ID];
+    [self.contactListService removeUserFromContactListWithUserID:user.ID completion:^(BOOL success) {
+        //
         
         [weakSelf sendContactRequestDeleteNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
             // delete chat dialog:
-            QBChatDialog *dialog = [weakSelf.chatDialogsService privateDialogWithOpponentID:user.ID];
-            [weakSelf deleteChatDialog:dialog completion:^(BOOL success) {
-                if (!success) {
-                    completion(success, nil);
+            QBChatDialog *dialog = [weakSelf.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
+            [weakSelf deleteChatDialog:dialog completion:^(BOOL succeed) {
+                if (!succeed) {
+                    completion(succeed, nil);
                     return;
                 }
-                completion(successed, notification);
+                completion(success, notification);
             }];
         }];
+
     }];
 }
 
-- (void)confirmAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success, QBChatMessage *notification))completion {
+- (void)confirmAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
-    __weak typeof(self) weakSelf = self;
-    [self.messagesService chat:^(QBChat *chat) {
-        BOOL success = [chat confirmAddContactRequest:user.ID];
-        [weakSelf sendContactRequestConfirmNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
-            [weakSelf.usersService deleteContactRequestUserID:user.ID];
-            completion(success, notification);
+    [self.contactListService acceptContactRequest:user.ID completion:^(BOOL success) {
+        //
+        [self.chatService notifyOponentAboutAcceptingContactRequest:YES opponentID:user.ID completion:^(NSError *error) {
+            //
+            completion(error == nil ? YES : NO);
         }];
     }];
 }
 
-- (void)rejectAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success, QBChatMessage *notification))completion {
+- (void)rejectAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
-    __weak typeof(self) weakSelf = self;
-    [self.messagesService chat:^(QBChat *chat) {
-        BOOL success = [chat rejectAddContactRequest:user.ID];
-        [weakSelf sendContactRequestRejectNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
-            [weakSelf.usersService deleteContactRequestUserID:user.ID];
-            completion(success, notification);
+    [self.contactListService rejectContactRequest:user.ID completion:^(BOOL success) {
+        //
+        [self.chatService notifyOponentAboutAcceptingContactRequest:NO opponentID:user.ID completion:^(NSError *error) {
+            //
+            completion(error == nil ? YES : NO);
         }];
     }];
 }
-
-/**
- @param QBUUser ID
- @return QBContactListItem from chaced contactList
- */
 
 - (QBContactListItem *)contactItemWithUserID:(NSUInteger)userID {
-    
-    NSArray *contacts = self.usersService.contactList;
-    for (QBContactListItem *item in contacts) {
-        
-        if (item.userID == userID) {
-            return item;
-        }
-    }
-    
-    return nil;
+    return [self.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
 }
 
 - (NSArray *)idsWithUsers:(NSArray *)users {
-
+    
     NSMutableSet *ids = [NSMutableSet set];
     for (QBUUser *user in users) {
         [ids addObject:@(user.ID)];
@@ -109,11 +86,11 @@
 }
 
 - (QBUUser *)userWithID:(NSUInteger)userID {
-    return [self.usersService userWithID:userID];
+    return [self.contactListService.usersMemoryStorage userWithID:userID];
 }
 
 - (NSArray *)usersWithIDs:(NSArray *)ids {
-
+    
     NSMutableArray *allFriends = [NSMutableArray array];
     for (NSNumber * friendID in ids) {
         QBUUser *user = [self userWithID:friendID.integerValue];
@@ -127,127 +104,147 @@
 
 - (NSArray *)friends {
     
-    NSArray *ids = [self.usersService idsFromContactListItems];
+    NSArray *ids = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
     NSArray *allFriends = [self usersWithIDs:ids];
     
     return allFriends;
 }
 
+- (NSArray *)idsOfContactsOnly {
+    
+    NSMutableSet *IDs = [NSMutableSet new];
+    NSArray *contactItems = [QBChat instance].contactList.contacts;
+    
+    for (QBContactListItem *item in contactItems) {
+        [IDs addObject:@(item.userID)];
+    }
+    
+    for (QBContactListItem *item in [QBChat instance].contactList.pendingApproval) {
+        
+        if (item.subscriptionState == QBPresenseSubscriptionStateFrom) {
+            [IDs addObject:@(item.userID)];
+        }
+    }
+    return IDs.allObjects;
+}
+
 - (NSArray *)contactsOnly
 {
-    NSArray *IDs = [self.usersService idsOfContactsOnly];
+    
+    NSArray *IDs = [self idsOfContactsOnly];
     NSArray *contacts = [self usersWithIDs:IDs];
     return contacts;
 }
 
 - (BOOL)isContactRequestUserWithID:(NSInteger)userID
 {
-    for (NSNumber *contactID in self.usersService.confirmRequestUsersIDs) {
-        if (contactID.intValue == userID) {
-            return YES;
-        }
-    }
-    return NO;
-}
-
-- (NSArray *)contactRequestUsers
-{
-    NSArray *ids = [self.usersService.confirmRequestUsersIDs allObjects];
-    NSArray *users = [self usersWithIDs:ids];
-    return users;
-}
-
-- (QBUUser *)userForContactRequestWithPrivateChatDialog:(QBChatDialog *)chatDialog
-{
-    NSAssert(chatDialog.type == QBChatDialogTypePrivate, @"Dialog is not private. Private dialog needed.");
-    QBUUser *contact = nil;
-    NSInteger occupantID = [self occupantIDForPrivateChatDialog:chatDialog];
+    QBChatDialog *privateDialog = [self.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:userID];
+    if (privateDialog == nil) return NO;
     
-    BOOL isContactRequest = [self isContactRequestUserWithID:occupantID];
-    if (isContactRequest) {
-        contact = [self userWithID:occupantID];
+    QBChatMessage *lastMessage = [self.chatService.messagesMemoryStorage lastMessageFromDialogID:privateDialog.ID];
+    if (lastMessage.messageType == QMMessageTypeContactRequest) {
+        return YES;
     }
-    return contact;
+    else {
+        return NO;
+    }
 }
 
-- (BOOL)isFriendForChatDialog:(QBChatDialog *)chatDialog
-{
-    NSUInteger occupantID = [self occupantIDForPrivateChatDialog:chatDialog];
-    BOOL isFriend = [self.usersService isFriendWithID:occupantID];
-    return isFriend;
+- (BOOL)userIDIsInPendingList:(NSUInteger)userID {
+    QBContactListItem *contactlistItem = [self.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
+    if (contactlistItem.subscriptionState == QBPresenseSubscriptionStateBoth || contactlistItem.subscriptionState == QBPresenseSubscriptionStateFrom) {
+        return NO;
+    }
+    return YES;
 }
 
 - (BOOL)isFriend:(QBUUser *)user
 {
-    return [self.usersService isFriendWithID:user.ID];
+    NSArray *friends = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
+    for (NSUInteger i = 0; i < friends.count; i++) {
+        if ([friends[i]  isEqual: @(user.ID)]) return YES;
+    }
+    return NO;
 }
 
 - (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock
 {
-    [self.usersService retriveIfNeededUserWithID:userID completion:completionBlock];
+    [self.contactListService retrieveUsersWithIDs:@[@(userID)] forceDownload:NO completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+        if (response != nil) {
+            completionBlock(YES);
+            return;
+        }
+        completionBlock(NO);
+    }];
 }
 
 - (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void (^)(BOOL retrieveWasNeeded))completionBlock
 {
-    [self.usersService retriveIfNeededUsersWithIDs:usersIDs completion:completionBlock];
+    [self.contactListService retrieveUsersWithIDs:usersIDs forceDownload:NO completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+        if (response != nil) {
+            completionBlock(YES);
+            return;
+        }
+        completionBlock(NO);
+    }];
 }
 
 
 #pragma mark - Update current User
 
-- (void)changePasswordForCurrentUser:(QBUUser *)currentUser completion:(void(^)(BOOL success))completion {
+- (void)changePasswordForCurrentUser:(QBUpdateUserParameters *)updateParams completion:(void(^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
-    [self.usersService updateUser:currentUser withCompletion:^(QBUUserResult *result) {
-        
-        if ([weakSelf checkResult:result]) {
-            
-            weakSelf.currentUser = result.user;
-            weakSelf.currentUser.password = currentUser.password;
-            [weakSelf.settingsManager setLogin:currentUser.email andPassword:currentUser.password];
+    [QBRequest updateCurrentUser:updateParams successBlock:^(QBResponse *response, QBUUser *user) {
+        //
+        if (response.success) {
+            weakSelf.currentUser.password = updateParams.password;
+            [weakSelf.settingsManager setLogin:user.email andPassword:updateParams.password];
         }
-        
-        completion(result.success);
+        completion(response.success);
+    } errorBlock:^(QBResponse *response) {
+        //
+        completion(response.success);
     }];
 }
 
-- (void)updateUser:(QBUUser *)user image:(UIImage *)image progress:(QMContentProgressBlock)progress completion:(void (^)(BOOL success))completion {
+- (void)updateCurrentUser:(QBUpdateUserParameters *)updateParams image:(UIImage *)image progress:(QMContentProgressBlock)progress completion:(void (^)(BOOL success))completion {
     
-    __block QBUUser *userInfo = user;
+    __block QBUpdateUserParameters *params = updateParams;
     __weak __typeof(self)weakSelf = self;
     
     void (^updateUserProfile)(QBCBlob *) =^(QBCBlob *blob) {
-
-        if (!userInfo) {
-            userInfo = weakSelf.currentUser;
+        
+        if (!params) {
+            params = [QBUpdateUserParameters new];
+            params.customData = weakSelf.currentUser.customData;
         }
         
         if (blob.publicUrl.length > 0) {
-            userInfo.avatarURL = blob.publicUrl;
+            params.avatarUrl = blob.publicUrl;
         }
-        userInfo.blobID = blob.ID;
-        NSString *password = userInfo.password;
-        userInfo.password = nil;
-        
-        [weakSelf.usersService updateUser:userInfo withCompletion:^(QBUUserResult *result) {
-            
-            if ([weakSelf checkResult:result]) {
-                
-                weakSelf.currentUser = result.user;
-                weakSelf.currentUser.password = password;
+        params.blobID = blob.ID;
+
+        [QBRequest updateCurrentUser:params successBlock:^(QBResponse *response, QBUUser *updatedUser) {
+            //
+            if (response.success) {
+                weakSelf.currentUser.password = updatedUser.password;
             }
-            
-            completion(result.success);
+            completion(response.success);
+        } errorBlock:^(QBResponse *response) {
+            //
+            completion(response.success);
         }];
     };
     
     if (image) {
-        [self.contentService uploadJPEGImage:image progress:progress completion:^(QBCFileUploadTaskResult *result) {
-            if ([weakSelf checkResult:result]) {
-                updateUserProfile(result.uploadedBlob);
+        [self.contentService uploadJPEGImage:image progress:progress completion:^(QBResponse *response, QBCBlob *blob) {
+            //
+            if (response.success) {
+                updateUserProfile(blob);
             }
             else {
-                updateUserProfile(nil);                
+                updateUserProfile(nil);
             }
         }];
     }
@@ -256,17 +253,16 @@
     }
 }
 
-- (void)updateUser:(QBUUser *)user imageUrl:(NSURL *)imageUrl progress:(QMContentProgressBlock)progress completion:(void (^)(BOOL success))completion {
+- (void)updateCurrentUser:(QBUpdateUserParameters *)params imageUrl:(NSURL *)imageUrl progress:(QMContentProgressBlock)progress completion:(void (^)(BOOL success))completion {
     
     __weak __typeof(self)weakSelf = self;
     [self.contentService downloadFileWithUrl:imageUrl completion:^(NSData *data) {
         if (data) {
             UIImage *image = [UIImage imageWithData:data];
-            [weakSelf updateUser:user image:image progress:progress completion:completion];
+            [weakSelf updateCurrentUser:params image:image progress:progress completion:completion];
         }
     }];
 }
-
 
 #pragma mark - Import friends
 
@@ -278,30 +274,30 @@
         if ([facebookFriendsIDs count] == 0) {
             return;
         }
-        [weakSelf.usersService retrieveUsersWithFacebookIDs:facebookFriendsIDs completion:^(QBUUserPagedResult *pagedResult) {
-
-            if (!pagedResult.success) {
+        [weakSelf.contactListService retrieveUsersWithFacebookIDs:facebookFriendsIDs completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+            //
+            if (!response.success) {
                 return;
             }
-            if ([pagedResult.users count] == 0) {
+            if ([users count] == 0) {
                 return;
             }
             
             // sending contact requests:
-            for (QBUUser *user in pagedResult.users) {
+            for (QBUUser *user in users) {
                 [weakSelf addUserToContactList:user completion:nil];
             }
         }];
     }];
 }
 
-- (void)importFriendsFromAddressBookWithCompletion:(void(^)(BOOL succeded, NSError *error))completionBLock
+- (void)importFriendsFromAddressBookWithCompletion:(void(^)(BOOL succeded, NSError *error))completionBlock
 {
     __weak __typeof(self)weakSelf = self;
     [QMAddressBook getContactsWithEmailsWithCompletionBlock:^(NSArray *contacts, BOOL success, NSError *error) {
         
         if ([contacts count] == 0) {
-            completionBLock(NO, error);
+            completionBlock(NO, error);
             return;
         }
         NSMutableArray *emails = [NSMutableArray array];
@@ -310,22 +306,23 @@
         }
         
         // post request for emails to QB server:
-        [weakSelf.usersService retrieveUsersWithEmails:emails completion:^(QBUUserPagedResult *pagedResult) {
-            if (!pagedResult.success) {
-                completionBLock(NO, nil);
+        [weakSelf.contactListService retrieveUsersWithEmails:emails completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+            //
+            if (!response.success) {
+                completionBlock(NO, nil);
                 return;
             }
             
-            if ([pagedResult.users count] == 0) {
-                completionBLock(NO, nil);
+            if ([users count] == 0) {
+                completionBlock(NO, nil);
                 return;
             }
             
             // sending contact requests:
-            for (QBUUser *user in pagedResult.users) {
+            for (QBUUser *user in users) {
                 [weakSelf addUserToContactList:user completion:^(BOOL successed, QBChatMessage *notification) {}];
             }
-            completionBLock(YES, nil);
+            completionBlock(YES, nil);
         }];
     }];
 }

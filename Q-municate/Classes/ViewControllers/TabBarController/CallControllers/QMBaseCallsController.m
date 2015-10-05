@@ -7,7 +7,6 @@
 //
 
 #import "QMBaseCallsController.h"
-#import "QMChatReceiver.h"
 #import "QMAVCallManager.h"
 
 
@@ -155,7 +154,6 @@
 }
 
 - (void)dealloc {
-    [[QMChatReceiver instance] unsubscribeForTarget:self];
     [QBRTCClient.instance removeDelegate:self];
 }
 
@@ -208,7 +206,7 @@
     else if( state == QBRTCConnectionNoAnswer ){
         [self callStoppedByOpponentForReason:kStopVideoChatCallStatus_OpponentDidNotAnswer];
     }
-    else if( state != QBRTCConnectionUnknow && state != QBRTCConnectionClosed ){
+    else if( state != QBRTCConnectionUnknown && state != QBRTCConnectionClosed ){
         [self callStoppedByOpponentForReason:nil];
     }
 }

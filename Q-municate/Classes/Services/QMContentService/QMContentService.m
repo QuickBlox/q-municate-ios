@@ -32,7 +32,7 @@ NSString *const kQMDefaultImageName = @"image";
 
 - (void)uploadJPEGImage:(UIImage *)image
                progress:(QMContentProgressBlock)progress
-             completion:(QMCFileUploadTaskResultBlockBlock)completion {
+             completion:(QMCFileUploadResponseBlock)completion {
     
     NSData *data = UIImageJPEGRepresentation(image, 0.4);
     [self uploadData:data
@@ -44,7 +44,7 @@ NSString *const kQMDefaultImageName = @"image";
 
 - (void)uploadPNGImage:(UIImage *)image
               progress:(QMContentProgressBlock)progress
-            completion:(QMCFileUploadTaskResultBlockBlock)completion {
+            completion:(QMCFileUploadResponseBlock)completion {
     
     NSData *data = UIImagePNGRepresentation(image);
     [self uploadData:data fileName:@"image"
@@ -59,13 +59,13 @@ NSString *const kQMDefaultImageName = @"image";
        contentType:(NSString *)contentType
           isPublic:(BOOL)isPublic
           progress:(QMContentProgressBlock)progress
-        completion:(QMCFileUploadTaskResultBlockBlock)completion {
+        completion:(QMCFileUploadResponseBlock)completion {
     
     QMUploadContentOperation *uploadOperation =
     [[QMUploadContentOperation alloc] initWithUploadFile:data
                                                 fileName:fileName
                                              contentType:contentType
-                                                isPublic:YES];
+                                                isPublic:isPublic];
     uploadOperation.progressHandler = progress;
     uploadOperation.completionHandler = completion;
     
@@ -74,7 +74,7 @@ NSString *const kQMDefaultImageName = @"image";
 
 - (void)downloadFileWithBlobID:(NSUInteger )blobID
                       progress:(QMContentProgressBlock)progress
-                    completion:(QMCFileDownloadTaskResultBlockBlock)completion {
+                    completion:(QMCFileDownloadResponseBlock)completion {
     
     QMDownloadContentOperation *downloadOperation =
     [[QMDownloadContentOperation alloc] initWithBlobID:blobID];
