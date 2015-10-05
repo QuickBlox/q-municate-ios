@@ -19,7 +19,26 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - AGEmojiKeyboard (0.1.0)
+  - Bolts (1.3.0):
+    - Bolts/AppLinks (= 1.3.0)
+    - Bolts/Tasks (= 1.3.0)
+  - Bolts/AppLinks (1.3.0):
+    - Bolts/Tasks
+  - Bolts/Tasks (1.3.0)
   - DACircularProgress (2.3.1)
+  - FBSDKCoreKit (4.6.0):
+    - Bolts (~> 1.1)
+    - FBSDKCoreKit/arc (= 4.6.0)
+    - FBSDKCoreKit/no-arc (= 4.6.0)
+  - FBSDKCoreKit/arc (4.6.0):
+    - Bolts (~> 1.1)
+  - FBSDKCoreKit/no-arc (4.6.0):
+    - Bolts (~> 1.1)
+    - FBSDKCoreKit/arc
+  - FBSDKLoginKit (4.6.0):
+    - FBSDKCoreKit
+  - FBSDKShareKit (4.6.0):
+    - FBSDKCoreKit
   - IDMPhotoBrowser (1.3.5):
     - AFNetworking (~> 2.2.3)
     - DACircularProgress (~> 2.2)
@@ -67,6 +86,9 @@ PODS:
 
 DEPENDENCIES:
   - AGEmojiKeyboard (~> 0.1.0)
+  - FBSDKCoreKit
+  - FBSDKLoginKit
+  - FBSDKShareKit
   - IDMPhotoBrowser (~> 1.3.5)
   - MPGNotification (~> 1.1)
   - Parus (~> 1.0)
@@ -84,7 +106,11 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   AFNetworking: caca0799b310f0c3bf1fc1af45145fc96972bcab
   AGEmojiKeyboard: e19cf4168b114d2e494e53fe8dc042d8bf011cc9
+  Bolts: 805a4a87413e49d4a0c2b7d469084cbc46b09342
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
+  FBSDKCoreKit: 9954492d90c5fd65ae831395697a1660360d61f1
+  FBSDKLoginKit: 3d07febbfa884b9878cacba54f705bb41f07d4b6
+  FBSDKShareKit: f474f1123791e215d0299b98b3ee92ddd9187d86
   IDMPhotoBrowser: 6699a8d8b6c036a60c58ba7c281b2f5761d970ac
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   Parus: e8eeec5e596e59fea3e3129775e5ddf2e5c0b4eb

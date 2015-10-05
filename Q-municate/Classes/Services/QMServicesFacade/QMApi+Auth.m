@@ -71,9 +71,9 @@
             
             if (weakSelf.currentUser.avatarUrl.length == 0) {
                 /*Update user image from facebook */
-                [QMFacebookService loadMe:^(NSDictionary<FBGraphUser> *user) {
+                [QMFacebookService loadMe:^(NSDictionary *user) {
                     
-                    NSURL *userImageUrl = [QMFacebookService userImageUrlWithUserID:user.id];
+                    NSURL *userImageUrl = [QMFacebookService userImageUrlWithUserID:[user valueForKey:@"ID"]];
                     [weakSelf updateCurrentUser:nil imageUrl:userImageUrl progress:nil completion:completion];
                 }];
             }

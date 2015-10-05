@@ -72,12 +72,12 @@
 
 - (void)signInWithFacebook {
     
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+//    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     
     __weak __typeof(self)weakSelf = self;
     [[QMApi instance] singUpAndLoginWithFacebook:^(BOOL success) {
         
-        [SVProgressHUD dismiss];
+//        [SVProgressHUD dismiss];
         if (success) {
             [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
         } else {
