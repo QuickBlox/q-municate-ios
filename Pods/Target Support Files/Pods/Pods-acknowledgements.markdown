@@ -429,7 +429,7 @@ before any court of competent jurisdiction.  QuickBlox, as used herein, shall me
 Injoit Ltd, as well as its successors and assigns.
 
 
-## QMServicesDevelopment
+## QMServices
 
 The Q-municate project is distributed by Injoit Ltd (QuickBlox) under Dual Licensing scheme. You have two following options:
 

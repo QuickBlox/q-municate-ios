@@ -1,1 +1,0 @@
-../../../../../q-municate-services-ios/QMAuthService/QMAuthService/QMAuthService.h

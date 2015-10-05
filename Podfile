@@ -16,8 +16,8 @@ pod 'Reachability', '~> 3.2'
 pod 'QuickBlox'
 pod 'TTTAttributedLabel', '~> 1.13'
 pod 'QMChatViewController', '~> 0.2.3'
-#pod 'QMServices', :podspec => 'QMServices.podspec'
+pod 'QMServices', '~> 0.2.2'
 
 #For development pods
 #pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
-pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
+#pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
