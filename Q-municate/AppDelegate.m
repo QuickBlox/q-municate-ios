@@ -13,6 +13,7 @@
 #import "QMApi.h"
 #import "QMSettingsManager.h"
 #import "QMAVCallManager.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #define DEVELOPMENT 0
 #define STAGE_SERVER_IS_ACTIVE 0
@@ -112,7 +113,8 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
         NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
         [[QMApi instance] setPushNotification:notification];
     }
-    return YES;
+    return [[FBSDKApplicationDelegate sharedInstance] application:application
+                                    didFinishLaunchingWithOptions:launchOptions];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
@@ -148,7 +150,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     
-    [FBSession.activeSession handleDidBecomeActive];
+    [FBSDKAppEvents activateApp];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -160,7 +162,11 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
 
-    BOOL urlWasIntendedForFacebook = [FBSession.activeSession handleOpenURL:url];
+    BOOL urlWasIntendedForFacebook = [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                                                    openURL:url
+                                                                          sourceApplication:sourceApplication
+                                                                                 annotation:annotation
+                                      ];
     return urlWasIntendedForFacebook;
 }
 

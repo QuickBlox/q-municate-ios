@@ -30,14 +30,14 @@
     
     if ([userData isKindOfClass:ABPerson.class]) {
         [self configureWithAdressaddressBookUser:userData];
-    } else if ([userData conformsToProtocol:@protocol(FBGraphUser)]) {
-        [self configureWithFBGraphUser:userData];
     } else if ([userData isKindOfClass:[QBUUser class]]) {
 
         QBUUser *user = userData;
         self.titleLabel.text = (user.fullName.length == 0) ? @"" : user.fullName;
         NSURL *avatarUrl = [NSURL URLWithString:user.avatarUrl];
         [self setUserImageWithUrl:avatarUrl];
+    } else {
+        [self configureWithFBGraphUser:userData];
     }
 }
 
@@ -48,10 +48,10 @@
     }
 }
 
-- (void)configureWithFBGraphUser:(NSDictionary<FBGraphUser> *)user {
+- (void)configureWithFBGraphUser:(NSDictionary *)user {
     
-    self.titleLabel.text = [NSString stringWithFormat:@"%@ %@", user.first_name, user.last_name];
-    NSURL *url = [[QMApi instance] fbUserImageURLWithUserID:user.id];
+    self.titleLabel.text = [NSString stringWithFormat:@"%@ %@", [user valueForKey:@"first_name"], [user valueForKey:@"last_name"]];
+    NSURL *url = [[QMApi instance] fbUserImageURLWithUserID:[user valueForKey:@"ID"]];
     [self setUserImageWithUrl:url];
     self.descriptionLabel.text = NSLocalizedString(@"QM_STR_FACEBOOK", nil);
 }

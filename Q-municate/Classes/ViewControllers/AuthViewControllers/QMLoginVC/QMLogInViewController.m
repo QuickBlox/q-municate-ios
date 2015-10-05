@@ -108,10 +108,10 @@
 - (void)fireConnectWithFacebook
 {
     __weak __typeof(self)weakSelf = self;
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+//    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] singUpAndLoginWithFacebook:^(BOOL success) {
         
-        [SVProgressHUD dismiss];
+//        [SVProgressHUD dismiss];
         if (success) {
             [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
         } else {

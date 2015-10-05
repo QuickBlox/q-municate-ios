@@ -35,7 +35,7 @@
 
 /**
  */
-+ (void)loadMe:(void(^)(NSDictionary<FBGraphUser> *user))completion;
++ (void)loadMe:(void(^)(NSDictionary *user))completion;
 
 /**
  */
