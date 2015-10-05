@@ -58,7 +58,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     
     self.window.backgroundColor = [UIColor whiteColor];
     
-    // Needed for new API:
+    // QB Settings
     [QBApplication sharedApplication].applicationId = kQMApplicationID;
     [QBConnection registerServiceKey:kQMAuthorizationKey];
     [QBConnection registerServiceSecret:kQMAuthorizationSecret];
@@ -106,7 +106,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QMApi instance];
     
     /** Crashlytics */
-    //[Crashlytics startWithAPIKey:@"7aea78439bec41a9005c7488bb6751c5e33fe270"];
+    [Crashlytics startWithAPIKey:@"7aea78439bec41a9005c7488bb6751c5e33fe270"];
     
     if (launchOptions != nil) {
         NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];

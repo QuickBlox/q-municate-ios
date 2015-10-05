@@ -44,9 +44,6 @@
     QBChatDialog *dialog = [self.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:notification.recipientID];
     NSAssert(dialog, @"Dialog not found");
     [notification updateCustomParametersWithDialog:dialog];
-//    if (notification.messageType == QMMessageTypeContactRequest) {
-//        notification.dialog.occupantIDs = dialog.occupantIDs;
-//    }
     
     [self.chatService sendMessage:notification type:notification.messageType toDialog:dialog save:YES saveToStorage:YES completion:^(NSError *error) {
         //
@@ -68,7 +65,6 @@
     QBMEvent *event = [QBMEvent event];
     event.notificationType = QBMNotificationTypePush;
     event.usersIDs = [NSString stringWithFormat:@"%zd", notification.recipientID];
-    //event.isDevelopmentEnvironment = ![QBSettings isUseProductionEnvironmentForPushNotifications];
     event.type = QBMEventTypeOneShot;
     //
     // custom params

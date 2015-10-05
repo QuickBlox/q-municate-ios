@@ -25,6 +25,7 @@
 #import "QMImageView.h"
 #import "QMSettingsManager.h"
 #import "AGEmojiKeyBoardView.h"
+#import "UIImage+fixOrientation.h"
 
 // chat controller
 #import "UIImage+QM.h"
@@ -38,7 +39,7 @@
 #import "QMChatButtonsFactory.h"
 
 static const NSUInteger widthPadding  = 40.0f;
-static const CGFloat kQMEmojiButtonSize  = 30.0f;
+static const CGFloat kQMEmojiButtonSize  = 45.0f;
 static const NSInteger kQMEmojiButtonTag = 100;
 
 @interface QMChatVC ()
@@ -430,7 +431,6 @@ AGEmojiKeyboardViewDelegate
     
     [self finishSendingMessageAnimated:YES];
 }
-
 #pragma mark - Cell classes
 
 - (Class)viewClassForItem:(QBChatMessage *)item
@@ -602,14 +602,8 @@ AGEmojiKeyboardViewDelegate
     __weak typeof(self)weakSelf = self;
     // Getting earlier messages for chat dialog identifier.
     [[QMApi instance].chatService earlierMessagesWithChatDialogID:self.dialog.ID completion:^(QBResponse *response, NSArray *messages) {
-        __typeof(self) strongSelf = weakSelf;
         
-        strongSelf.shouldHoldScrollOnCollectionView = NO;
-        
-        QBChatMessage *oldestMessage = [[QMApi instance].chatService.messagesMemoryStorage oldestMessageForDialogID:self.dialog.ID];
-        if ([[messages lastObject] isEqual:oldestMessage] || messages.count == 0) {
-            strongSelf.showLoadEarlierMessagesHeader = NO;
-        }
+        weakSelf.shouldHoldScrollOnCollectionView = NO;
     }];
 }
 
@@ -897,7 +891,7 @@ AGEmojiKeyboardViewDelegate
         __typeof(self) strongSelf = weakSelf;
         UIImage* newImage = image;
         if (strongSelf.pickerController.sourceType == UIImagePickerControllerSourceTypeCamera) {
-            //newImage = [newImage fixOrientation];
+            newImage = [newImage fixOrientation];
         }
         
         UIImage* resizedImage = [strongSelf resizedImageFromImage:newImage];
@@ -943,15 +937,6 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark Contact List Serice Delegate
 
-- (void)contactListService:(QMContactListService *)contactListService didUpdateUser:(QBUUser *)user {
-    
-    if (self.dialog.type == QBChatDialogTypePrivate) {
-        if([[QMApi instance] isFriend:self.opponentUser] || [[QBChat instance].contactList pendingApproval].count == 0) {
-            self.inputToolbar.hidden = NO;
-        }
-    }
-}
-
 - (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
     if (self.dialog.type == QBChatDialogTypePrivate) {
         if (self.opponentUser.ID == userID) {
@@ -968,12 +953,6 @@ AGEmojiKeyboardViewDelegate
         [[QMApi instance] confirmAddContactRequest:self.opponentUser completion:^(BOOL success) {
             //
             [SVProgressHUD dismiss];
-            self.inputToolbar.hidden = NO;
-#if QM_AUDIO_VIDEO_ENABLED
-            for (UIBarButtonItem *item in self.navigationItem.rightBarButtonItems) {
-                item.enabled = YES;
-            }
-#endif
             [self refreshMessagesShowingProgress:NO];
             [self refreshCollectionView];
         }];
@@ -1021,11 +1000,27 @@ AGEmojiKeyboardViewDelegate
     [self.emojiButton addTarget:self action:@selector(showEmojiKeyboard) forControlEvents:UIControlEventTouchUpInside];
 
     // appearance
-    [self.emojiButton setFrame:CGRectMake(self.inputToolbar.contentView.bounds.size.width-self.inputToolbar.contentView.rightBarButtonItemWidth-5.0f, -1.0f, kQMEmojiButtonSize, kQMEmojiButtonSize)];
-    [self.inputToolbar.contentView.textView addSubview:self.emojiButton];
+    self.emojiButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.inputToolbar.contentView addSubview:self.emojiButton];
+    
+    CGFloat emojiButtonSpacing = kQMEmojiButtonSize/3.0f;
+    
+    [self.inputToolbar.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[emojiButton(==size)]|"
+                                                                                          options:0
+                                                                                          metrics:@{@"size" : @(kQMEmojiButtonSize)}
+                                                                                            views:@{@"emojiButton" : self.emojiButton}]];
+    [self.inputToolbar.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[emojiButton]-spacing-[rightBarButton]"
+                                                                                          options:0
+                                                                                          metrics:@{@"spacing" : @(emojiButtonSpacing)}
+                                                                                            views:@{@"emojiButton"    : self.emojiButton,
+                                                                                                    @"rightBarButton" : self.inputToolbar.contentView.rightBarButtonItem}]];
     
     // adding bezier path
-    UIBezierPath *emojiPath = [UIBezierPath bezierPathWithRect:self.emojiButton.frame];
+    CGFloat contentViewWidth    = self.inputToolbar.contentView.frame.size.width;
+    CGFloat rightBarButtonItemWidth = self.inputToolbar.contentView.rightBarButtonItemWidth;
+    CGFloat rightBarButtonItemY = self.inputToolbar.contentView.rightBarButtonItem.frame.origin.y;
+    
+    UIBezierPath *emojiPath = [UIBezierPath bezierPathWithRect:CGRectMake(contentViewWidth-rightBarButtonItemWidth-emojiButtonSpacing, rightBarButtonItemY, kQMEmojiButtonSize, kQMEmojiButtonSize/2.0f)];
     self.inputToolbar.contentView.textView.textContainer.exclusionPaths = @[emojiPath];
 }
 
