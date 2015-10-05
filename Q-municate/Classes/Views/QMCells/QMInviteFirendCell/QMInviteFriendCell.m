@@ -51,7 +51,7 @@
 - (void)configureWithFBGraphUser:(NSDictionary *)user {
     
     self.titleLabel.text = [NSString stringWithFormat:@"%@ %@", [user valueForKey:@"first_name"], [user valueForKey:@"last_name"]];
-    NSURL *url = [[QMApi instance] fbUserImageURLWithUserID:[user valueForKey:@"ID"]];
+    NSURL *url = [[QMApi instance] fbUserImageURLWithUserID:[user valueForKey:@"id"]];
     [self setUserImageWithUrl:url];
     self.descriptionLabel.text = NSLocalizedString(@"QM_STR_FACEBOOK", nil);
 }

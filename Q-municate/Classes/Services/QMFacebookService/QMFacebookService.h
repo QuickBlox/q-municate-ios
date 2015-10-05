@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol FBSDKAppInviteDialogDelegate;
+
 @interface QMFacebookService : NSObject
 /**
  */
@@ -15,7 +17,7 @@
 
 /**
  */
-+ (void)inviteFriendsWithCompletion:(void(^)(BOOL success))completion;
++ (void)inviteFriendsWithDelegate:(id<FBSDKAppInviteDialogDelegate>)delegate;
 
 /**
  */
@@ -28,10 +30,6 @@
 /**
  */
 + (NSURL *)userImageUrlWithUserID:(NSString *)userID;
-
-/**
- */
-+ (void)shareToUsers:(NSString *)usersIDs completion:(void(^)(NSError *error))completion;
 
 /**
  */

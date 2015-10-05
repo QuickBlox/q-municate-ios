@@ -12,10 +12,6 @@
 #import <FBSDKShareKit/FBSDKShareKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
-@interface QMFacebookService() <FBSDKAppInviteDialogDelegate>
-
-@end
-
 @implementation QMFacebookService 
 
 NSString *const kQMHomeUrl = @"http://q-municate.com";
@@ -42,45 +38,10 @@ NSString *const kQMDataKey = @"data";
         NSMutableArray *array = [NSMutableArray arrayWithCapacity:facebookFriends.count];
         
         for (NSDictionary *user in facebookFriends) {
-            [array addObject:[user valueForKey:@"ID"]];
+            [array addObject:[user valueForKey:@"id"]];
         }
         completion(array);
     }];
-}
-
-+ (void)shareToUsers:(NSString *)usersIDs completion:(void(^)(NSError *error))completion {
-    
-    NSDictionary *postParams = @{
-                                 @"link"        : kQMHomeUrl,
-                                 @"picture"     : kQMLogoUrl,
-                                 @"name"        : kQMAppName,
-                                 @"caption"     : kQMAppName,
-                                 @"description" : @"",
-                                 @"place"       : @"155021662189",
-                                 @"message"     : NSLocalizedString(@"QM_STR_DEAR_FRIEND", nil),
-                                 @"tags"        : usersIDs
-                                 };
-    
-    NSDictionary *shareProperties = @{
-                                      @"og:url"         : kQMHomeUrl,
-                                      @"og:image"       : kQMLogoUrl,
-                                      @"og:site_name"        : kQMAppName,
-                                      //@"caption"     : kQMAppName,
-                                      @"og:description" : @"",
-                                      //@"place"       : @"155021662189",
-                                      //@"message"     : NSLocalizedString(@"QM_STR_DEAR_FRIEND", nil),
-                                      //@"tags"        : usersIDs
-                                 };
-    
-    FBSDKShareOpenGraphObject *shareObject = [FBSDKShareOpenGraphObject objectWithProperties:postParams];
-    
-    
-//    [FBRequestConnection startWithGraphPath:@"me/feed"
-//                                 parameters:postParams
-//                                 HTTPMethod:@"POST"
-//                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-//                              completion(error);
-//                          }];
 }
 
 NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/picture?height=100&width=100&access_token=%@";
@@ -103,68 +64,14 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     }];
 }
 
-+ (void)inviteFriendsWithCompletion:(void(^)(BOOL success))completion {
++ (void)inviteFriendsWithDelegate:(id<FBSDKAppInviteDialogDelegate>)delegate {
     
     FBSDKAppInviteContent *content =[[FBSDKAppInviteContent alloc] init];
     content.appLinkURL = [NSURL URLWithString:kQMHomeUrl];
-    //optionally set previewImageURL
     content.appInvitePreviewImageURL = [NSURL URLWithString:kQMLogoUrl];
     
-    // present the dialog. Assumes self implements protocol `FBSDKAppInviteDialogDelegate`
-    [FBSDKAppInviteDialog showWithContent:content
-                                 delegate:self];
-    
-//    [FBWebDialogs presentRequestsDialogModallyWithSession:nil
-//                                                  message:NSLocalizedString(@"QM_STR_DEAR_FRIEND", nil)
-//                                                    title:kQMAppName
-//                                               parameters:nil
-//                                                  handler:
-//     ^(FBWebDialogResult result, NSURL *resultURL, NSError *error) {
-//         
-//         if (error) {
-//             // Error launching the dialog or sending the request.
-//             ILog(@"Error sending request.");
-//             completion(NO);
-//             
-//         } else {
-//             
-//             //Indicates that the dialog operation was not completed.
-//             //This occurs in cases such as the closure of the web-view
-//             //using the X in the upper left corner.
-//             
-//             if (result == FBWebDialogResultDialogNotCompleted) {
-//                 ILog(@"User canceled request.");
-//                 completion(NO);
-//             } else {
-//                 // Handle the send request callback
-//                 NSDictionary *urlParams = [self parseURLParams:[resultURL query]];
-//                 if (![urlParams valueForKey:@"request"]) {
-//                     // User clicked the Cancel button
-//                     ILog(@"User canceled request.");
-//                 } else {
-//                     // User clicked the Send button
-//                     __unused NSString *requestID = [urlParams valueForKey:@"request"];
-//                     ILog(@"Request ID: %@", requestID);
-//                     completion(YES);
-//                 }
-//             }
-//         }
-//     }];
-}
-
-+ (NSDictionary*)parseURLParams:(NSString *)query {
-    
-    NSArray *pairs = [query componentsSeparatedByString:@"&"];
-    NSMutableDictionary *params = @{}.mutableCopy;
-    
-    for (NSString *pair in pairs) {
-        
-        NSArray *kv = [pair componentsSeparatedByString:@"="];
-        NSString *val = [kv[1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        params[kv[0]] = val;
-    }
-    
-    return params;
+    // present the dialog. Assumes delegate implements protocol `FBSDKAppInviteDialogDelegate`
+    [FBSDKAppInviteDialog showFromViewController:nil withContent:content delegate:delegate];
 }
 
 + (void)logout {
@@ -200,14 +107,6 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     else {
         completion(session.tokenString);
     }
-}
-
-- (void)appInviteDialog:(FBSDKAppInviteDialog *)appInviteDialog didCompleteWithResults:(NSDictionary *)results {
-    
-}
-
-- (void)appInviteDialog:(FBSDKAppInviteDialog *)appInviteDialog didFailWithError:(NSError *)error {
-    
 }
 
 @end

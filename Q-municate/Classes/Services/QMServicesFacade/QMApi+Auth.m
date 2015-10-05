@@ -73,7 +73,7 @@
                 /*Update user image from facebook */
                 [QMFacebookService loadMe:^(NSDictionary *user) {
                     
-                    NSURL *userImageUrl = [QMFacebookService userImageUrlWithUserID:[user valueForKey:@"ID"]];
+                    NSURL *userImageUrl = [QMFacebookService userImageUrlWithUserID:[user valueForKey:@"id"]];
                     [weakSelf updateCurrentUser:nil imageUrl:userImageUrl progress:nil completion:completion];
                 }];
             }
