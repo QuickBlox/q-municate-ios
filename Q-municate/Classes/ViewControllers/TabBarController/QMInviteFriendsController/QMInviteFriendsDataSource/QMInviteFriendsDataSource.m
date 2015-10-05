@@ -15,6 +15,8 @@
 #import "QMAddressBook.h"
 #import "SVProgressHUD.h"
 
+#import <FBSDKShareKit/FBSDKShareKit.h>
+
 typedef NS_ENUM(NSUInteger, QMCollectionGroup) {
     
     QMStaticCellsSection = 0,
@@ -32,7 +34,7 @@ const NSUInteger kQMNumberOfSection = 2;
 
 @interface QMInviteFriendsDataSource()
 
-<UITableViewDataSource, QMCheckBoxProtocol, QMCheckBoxStateDelegate>
+<UITableViewDataSource, QMCheckBoxProtocol, QMCheckBoxStateDelegate, FBSDKAppInviteDialogDelegate>
 
 @property (weak, nonatomic) UITableView *tableView;
 
@@ -76,13 +78,7 @@ const NSUInteger kQMNumberOfSection = 2;
 
 - (void)fetchFacebookFriends:(void(^)(void))completion {
     
-    [[QMApi instance] fbIniviteDialogWithCompletion:^(BOOL success) {
-        if (success) {
-            [SVProgressHUD showSuccessWithStatus:@"Success"];
-            return;
-        }
-    }];
-
+    [[QMApi instance] fbInviteDialogWithDelegate:self];
 }
 
 - (void)fetchAdressbookFriends:(void(^)(void))completion {
@@ -97,6 +93,16 @@ const NSUInteger kQMNumberOfSection = 2;
         if (completion) completion();
         
     }];
+}
+
+#pragma mark FBSDKAppInviteDialogDelegate
+
+- (void)appInviteDialog:(FBSDKAppInviteDialog *)appInviteDialog didCompleteWithResults:(NSDictionary *)results {
+    [SVProgressHUD showSuccessWithStatus:@"Success"];
+}
+
+- (void)appInviteDialog:(FBSDKAppInviteDialog *)appInviteDialog didFailWithError:(NSError *)error {
+    [SVProgressHUD showSuccessWithStatus:[NSString stringWithFormat:@"Error: %@", error.localizedDescription]];
 }
 
 #pragma mark - setters

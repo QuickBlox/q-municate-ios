@@ -13,6 +13,8 @@
 @class QMContentService;
 @class Reachability;
 
+@protocol FBSDKAppInviteDialogDelegate;
+
 typedef NS_ENUM(NSInteger, QMAccountType);
 
 /*** Completion blocks ***/
@@ -539,9 +541,10 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 /**
  *  Invite friends from facebook.
  *
- *  @param completion   completion block with success status
+ *  @param controller   UIViewController instance of controller to present dialog in
+ *  @param delegate     delegate protocol
  */
-- (void)fbIniviteDialogWithCompletion:(void(^)(BOOL success))completion;
+- (void)fbInviteDialogWithDelegate:(id<FBSDKAppInviteDialogDelegate>)delegate;
 
 /**
  *  Facebook user image url.
@@ -558,14 +561,6 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  *  @param completion   completion block with array of facebook friends
  */
 - (void)fbFriends:(void(^)(NSArray *fbFriends))completion;
-
-/**
- *  Invite facebook users with ids.
- *
- *  @param ids          array of facebook users ids
- *  @param completion   completion block with error if necessary or nil
- */
-- (void)fbInviteUsersWithIDs:(NSArray *)ids copmpletion:(void(^)(NSError *error))completion;
 
 @end
 

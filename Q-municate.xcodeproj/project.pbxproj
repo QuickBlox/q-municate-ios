@@ -118,7 +118,6 @@
 		69CF18A918AE1C9F003262EF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CF18A818AE1C9F003262EF /* Security.framework */; };
 		69D15CC118AE1714001E0480 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D15CC018AE1714001E0480 /* libresolv.dylib */; };
 		69D15CC318AE1721001E0480 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D15CC218AE1721001E0480 /* libz.dylib */; };
-		69D4184918D09B630046C629 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D4184818D09B630046C629 /* FacebookSDK.framework */; };
 		69D57E5618ACC11C00A9900A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D57E5518ACC11C00A9900A /* Foundation.framework */; };
 		69D57E5818ACC11C00A9900A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D57E5718ACC11C00A9900A /* CoreGraphics.framework */; };
 		69D57E5A18ACC11C00A9900A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D57E5918ACC11C00A9900A /* UIKit.framework */; };
@@ -348,7 +347,6 @@
 		69D15CBE18AE1708001E0480 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		69D15CC018AE1714001E0480 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
 		69D15CC218AE1721001E0480 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		69D4184818D09B630046C629 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = External/FacebookSDK.framework; sourceTree = "<group>"; };
 		69D57E5218ACC11C00A9900A /* Q-municate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Q-municate.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		69D57E5518ACC11C00A9900A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		69D57E5718ACC11C00A9900A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -381,7 +379,6 @@
 				693DC42618FFC45900AF46D9 /* libsqlite3.dylib in Frameworks */,
 				69DB5EF518E31D6400277226 /* MessageUI.framework in Frameworks */,
 				690A271518CA0F35003D6B80 /* AddressBook.framework in Frameworks */,
-				69D4184918D09B630046C629 /* FacebookSDK.framework in Frameworks */,
 				69CF18A918AE1C9F003262EF /* Security.framework in Frameworks */,
 				69CF18A718AE1C98003262EF /* AVFoundation.framework in Frameworks */,
 				69CF18A518AE1C8D003262EF /* CoreVideo.framework in Frameworks */,
@@ -1225,7 +1222,6 @@
 				693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */,
 				693DC42518FFC45900AF46D9 /* libsqlite3.dylib */,
 				69DB5EF418E31D6400277226 /* MessageUI.framework */,
-				69D4184818D09B630046C629 /* FacebookSDK.framework */,
 				690A271418CA0F35003D6B80 /* AddressBook.framework */,
 				69CF18A818AE1C9F003262EF /* Security.framework */,
 				69CF18A618AE1C98003262EF /* AVFoundation.framework */,
@@ -1529,6 +1525,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1546,7 +1543,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "c7a437b9-fa34-4469-8502-19863b7a04f3";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1567,7 +1564,9 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
+				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1578,7 +1577,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PROVISIONING_PROFILE = "3bd8d855-670b-4475-bd44-61f71ebe0828";
+				PROVISIONING_PROFILE = "e72be3a3-6ef6-4658-a8af-66e250332625";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1593,6 +1592,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1618,7 +1618,7 @@
 				);
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "c7a437b9-fa34-4469-8502-19863b7a04f3";
+				PROVISIONING_PROFILE = "";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1644,8 +1644,9 @@
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
+				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1676,7 +1677,7 @@
 				);
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "3bd8d855-670b-4475-bd44-61f71ebe0828";
+				PROVISIONING_PROFILE = "e72be3a3-6ef6-4658-a8af-66e250332625";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;

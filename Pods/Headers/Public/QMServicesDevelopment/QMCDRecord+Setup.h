@@ -1,1 +1,0 @@
-../../../../../q-municate-services-ios/QMDBStorage/QMDBStorage/QMCDRecord/QMCDRecord/QMCDRecord+Setup.h

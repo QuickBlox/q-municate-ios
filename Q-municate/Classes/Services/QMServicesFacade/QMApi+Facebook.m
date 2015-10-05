@@ -21,19 +21,13 @@
     return [QMFacebookService userImageUrlWithUserID:userID];
 }
 
-- (void)fbInviteUsersWithIDs:(NSArray *)ids copmpletion:(void(^)(NSError *error))completion {
-    
-    NSString *strIds = [ids componentsJoinedByString:@","];
-    [QMFacebookService shareToUsers:strIds completion:completion];
-}
-
 - (void)fbLogout {
     [QMFacebookService logout];
 }
 
-- (void)fbIniviteDialogWithCompletion:(void(^)(BOOL success))completion {
+- (void)fbInviteDialogWithDelegate:(id<FBSDKAppInviteDialogDelegate>)delegate {
     
-    [QMFacebookService inviteFriendsWithCompletion:completion];
+    [QMFacebookService inviteFriendsWithDelegate:delegate];
 }
 
 @end

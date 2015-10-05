@@ -1,1 +1,0 @@
-../../../../../q-municate-services-ios/QMChatService/QMChatService/Categories/QMChatService+AttachmentService.h
