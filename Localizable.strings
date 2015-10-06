@@ -100,5 +100,9 @@
 
 "QM_STR_NOTIFICATION_MESSAGE" = "Notification message";
 
+// *********** Error handling ***********
+"QM_STR_EMAIL_ERROR" = "Email %@";
+"QM_STR_FULL_NAME_ERROR" = "Full name %@";
+"QM_STR_PASSWORD_ERROR" = "Password %@";
 
 
