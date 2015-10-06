@@ -158,6 +158,11 @@ QMContactListServiceDelegate
     }
 }
 
+- (void)reloadSearchData {
+    [self reloadDataSource];
+    [self globalSearch:self.searchDisplayController.searchBar.text];
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -244,13 +249,11 @@ QMContactListServiceDelegate
     BOOL isContactRequest = [[QMApi instance] isContactRequestUserWithID:user.ID];
     if (isContactRequest) {
         [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success) {
-            [self reloadDataSource];
-            [self globalSearch:self.searchDisplayController.searchBar.text];
+            [self reloadSearchData];
         }];
     } else {
         [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {
-            [self reloadDataSource];
-            [self globalSearch:self.searchDisplayController.searchBar.text];
+            [self reloadSearchData];
         }];
     }
 }
