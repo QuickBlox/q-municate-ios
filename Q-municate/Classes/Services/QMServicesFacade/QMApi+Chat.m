@@ -101,7 +101,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
 {
     [self.chatService createPrivateChatDialogWithOpponent:opponent completion:^(QBResponse *response, QBChatDialog *createdDialog) {
         //
-        completion(createdDialog);
+        if (completion) completion(createdDialog);
     }];
 }
 
@@ -110,14 +110,12 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     __weak typeof(self)weakSelf = self;
     [self.chatService createGroupChatDialogWithName:name photo:nil occupants:occupants completion:^(QBResponse *response, QBChatDialog *createdDialog) {
         
-        // send notification from here:
-        NSString *notificationText = NSLocalizedString(@"QM_STR_NOTIFICATION_MESSAGE", nil);
-        // send to group:
-        [weakSelf sendGroupChatDialogDidCreateNotificationToAllParticipantsWithText:notificationText occupants:createdDialog.occupantIDs chatDialog:createdDialog];
-
+        NSString *messageTypeText = NSLocalizedString(@"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT", @"{Full name}");
+        NSString *text = [QMChatUtils messageForText:messageTypeText participants:occupants];
+        
         [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:createdDialog.occupantIDs toChatDialog:createdDialog];
-
-        completion(createdDialog);
+        [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:createdDialog updateType:@"occupants_ids" content:[createdDialog.occupantIDs componentsJoinedByString:@","]];
+        if (completion) completion(createdDialog);
     }];
 }
 
@@ -135,10 +133,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
             
             [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:updatedDialog updateType:@"room_name" content:dialogName];
         }
-        else {
-            [weakSelf handleErrorResponse:response];
-        }
-        completion(response,updatedDialog);
+        if (completion) completion(response,updatedDialog);
     }];
 }
 
@@ -163,7 +158,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
                 
                 chatDialog.photo = updatedDialog.photo;
                 [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"room_photo" content:updatedDialog.photo];
-                completion(updateResponse, updatedDialog);
+                if (completion) completion(updateResponse, updatedDialog);
             }
 
         }];
@@ -184,10 +179,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
             [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:[self idsWithUsers:occupants] toChatDialog:updatedDialog];
             [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"occupants_ids" content:[updatedDialog.occupantIDs componentsJoinedByString:@","]];
         }
-        else {
-            [weakSelf handleErrorResponse:response];
-        }
-        completion(response,updatedDialog);
+        if (completion) completion(response,updatedDialog);
     }];
 }
 
@@ -218,11 +210,11 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     }
     chatDialog.occupantIDs = [occupantsWithoutCurrentUser copy];
     
+    __weak __typeof(self)weakSelf = self;
     [self sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"deleted_id" content:myID];
-    
-    [self.chatService deleteDialogWithID:chatDialog.ID completion:^(QBResponse *response) {
+    [weakSelf.chatService deleteDialogWithID:chatDialog.ID completion:^(QBResponse *response) {
         //
-        completion(response,nil);
+        if (completion) completion(response,nil);
     }];
 }
 
@@ -257,12 +249,6 @@ static const NSUInteger kQMDialogsPageLimit = 10;
 - (void)sendGroupChatDialogDidCreateNotificationToUsers:(NSArray *)users toChatDialog:(QBChatDialog *)chatDialog {
     
     [self.chatService notifyUsersWithIDs:users aboutAddingToDialog:chatDialog];
-}
-
-- (void)sendGroupChatDialogDidCreateNotificationToAllParticipantsWithText:(NSString *)text occupants:(NSArray *)occupants chatDialog:(QBChatDialog *)chatDialog
-{
-    
-    [self.chatService notifyUsersWithIDs:occupants aboutAddingToDialog:chatDialog];
 }
 
 - (void)sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:(NSString *)text toChatDialog:(QBChatDialog *)chatDialog updateType:(NSString *)updateType content:(NSString *)content
