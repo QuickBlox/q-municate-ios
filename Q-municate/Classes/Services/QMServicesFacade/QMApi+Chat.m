@@ -101,7 +101,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
 {
     [self.chatService createPrivateChatDialogWithOpponent:opponent completion:^(QBResponse *response, QBChatDialog *createdDialog) {
         //
-        completion(createdDialog);
+        if (completion) completion(createdDialog);
     }];
 }
 
@@ -114,11 +114,8 @@ static const NSUInteger kQMDialogsPageLimit = 10;
         NSString *text = [QMChatUtils messageForText:messageTypeText participants:occupants];
         
         [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:createdDialog.occupantIDs toChatDialog:createdDialog];
-        [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:createdDialog updateType:@"occupants_ids" content:[createdDialog.occupantIDs componentsJoinedByString:@","] completion:^(BOOL success) {
-            //
-        }];
-        createdDialog.lastMessageDate = [NSDate date];
-        completion(createdDialog);
+        [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:createdDialog updateType:@"occupants_ids" content:[createdDialog.occupantIDs componentsJoinedByString:@","]];
+        if (completion) completion(createdDialog);
     }];
 }
 
@@ -134,12 +131,9 @@ static const NSUInteger kQMDialogsPageLimit = 10;
             NSString *notificationText = NSLocalizedString(@"QM_STR_UPDATE_GROUP_NAME_TEXT", nil);
             NSString *text = [NSString stringWithFormat:notificationText, self.currentUser.fullName, dialogName];
             
-            [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:updatedDialog updateType:@"room_name" content:dialogName completion:nil];
+            [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:updatedDialog updateType:@"room_name" content:dialogName];
         }
-        else {
-            [weakSelf handleErrorResponse:response];
-        }
-        completion(response,updatedDialog);
+        if (completion) completion(response,updatedDialog);
     }];
 }
 
@@ -163,8 +157,8 @@ static const NSUInteger kQMDialogsPageLimit = 10;
                 NSString *text = [NSString stringWithFormat:notificationText, self.currentUser.fullName];
                 
                 chatDialog.photo = updatedDialog.photo;
-                [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"room_photo" content:updatedDialog.photo completion:nil];
-                completion(updateResponse, updatedDialog);
+                [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"room_photo" content:updatedDialog.photo];
+                if (completion) completion(updateResponse, updatedDialog);
             }
 
         }];
@@ -183,12 +177,9 @@ static const NSUInteger kQMDialogsPageLimit = 10;
             NSString *text = [QMChatUtils messageForText:messageTypeText participants:occupants];
             
             [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:[self idsWithUsers:occupants] toChatDialog:updatedDialog];
-            [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"occupants_ids" content:[updatedDialog.occupantIDs componentsJoinedByString:@","] completion:nil];
+            [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"occupants_ids" content:[updatedDialog.occupantIDs componentsJoinedByString:@","]];
         }
-        else {
-            [weakSelf handleErrorResponse:response];
-        }
-        completion(response,updatedDialog);
+        if (completion) completion(response,updatedDialog);
     }];
 }
 
@@ -220,12 +211,10 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     chatDialog.occupantIDs = [occupantsWithoutCurrentUser copy];
     
     __weak __typeof(self)weakSelf = self;
-    [self sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"deleted_id" content:myID completion:^(BOOL success) {
+    [self sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"deleted_id" content:myID];
+    [weakSelf.chatService deleteDialogWithID:chatDialog.ID completion:^(QBResponse *response) {
         //
-        [weakSelf.chatService deleteDialogWithID:chatDialog.ID completion:^(QBResponse *response) {
-            //
-            completion(response,nil);
-        }];
+        if (completion) completion(response,nil);
     }];
 }
 
@@ -262,7 +251,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     [self.chatService notifyUsersWithIDs:users aboutAddingToDialog:chatDialog];
 }
 
-- (void)sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:(NSString *)text toChatDialog:(QBChatDialog *)chatDialog updateType:(NSString *)updateType content:(NSString *)content completion:(void(^)(BOOL success))completion
+- (void)sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:(NSString *)text toChatDialog:(QBChatDialog *)chatDialog updateType:(NSString *)updateType content:(NSString *)content
 {
     NSMutableDictionary *customParams = [NSMutableDictionary new];
     if (updateType != nil && content != nil) {
@@ -271,7 +260,6 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     
     [self.chatService notifyAboutUpdateDialog:chatDialog occupantsCustomParameters:customParams notificationText:text completion:^(NSError *error) {
         //
-        error == nil ? completion(YES) : completion(NO);
     }];
 }
 
