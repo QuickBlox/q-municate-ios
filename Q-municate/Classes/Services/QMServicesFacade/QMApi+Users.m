@@ -224,11 +224,12 @@
             params.avatarUrl = blob.publicUrl;
         }
         params.blobID = blob.ID;
-
+        NSString *password = weakSelf.currentUser.password;
+        
         [QBRequest updateCurrentUser:params successBlock:^(QBResponse *response, QBUUser *updatedUser) {
             //
             if (response.success) {
-                weakSelf.currentUser.password = updatedUser.password;
+                weakSelf.currentUser.password = password;
             }
             completion(response.success);
         } errorBlock:^(QBResponse *response) {
