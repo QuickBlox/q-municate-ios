@@ -940,7 +940,7 @@ AGEmojiKeyboardViewDelegate
 - (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
     if (self.dialog.type == QBChatDialogTypePrivate) {
         if (self.opponentUser.ID == userID) {
-            [self updateTitleInfoForPrivateDialog];
+            self.onlineTitle.statusLabel.text = NSLocalizedString(isOnline ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);;
         }
     }
 }
