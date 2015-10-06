@@ -104,5 +104,9 @@
 "QM_STR_EMAIL_ERROR" = "Email %@";
 "QM_STR_FULL_NAME_ERROR" = "Full name %@";
 "QM_STR_PASSWORD_ERROR" = "Password %@";
+"QM_STR_BAD_GATEWAY_ERROR" = "Bad Gateway, please try again";
+"QM_STR_CONNECTION_NETWORK_ERROR" = "Connection network error, please try again";
+"QM_STR_INCORRECT_USER_DATA_ERROR" = "Incorrect Username or Password";
+"QM_STR_UNKNOWN_ERROR" = "Something went wrong. Please try again";
 
 

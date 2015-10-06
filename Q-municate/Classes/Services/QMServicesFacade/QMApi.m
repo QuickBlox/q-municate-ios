@@ -234,19 +234,19 @@ static NSString *const kQMErrorPasswordKey = @"password";
     
     switch (statusCode) {
         case QBResponseStatusCodeServerError:
-            errorString = @"Bad Gateway, please try again";
+            errorString = NSLocalizedString(@"QM_STR_BAD_GATEWAY_ERROR", nil);
             break;
         case QBResponseStatusCodeUnknown:
-            errorString = @"Connection network error, please try again";
+            errorString = NSLocalizedString(@"QM_STR_CONNECTION_NETWORK_ERROR", nil);
             break;
         case QBResponseStatusCodeUnAuthorized:
-            errorString = @"Incorrect Username or Password";
+            errorString = NSLocalizedString(@"QM_STR_INCORRECT_USER_DATA_ERROR", nil);
             break;
         case QBResponseStatusCodeValidationFailed:
-            errorString = @"Incorrect Username or Password";
+            errorString = NSLocalizedString(@"QM_STR_INCORRECT_USER_DATA_ERROR", nil);
             break;
         default:
-            errorString = @"Something went wrong. Please try again";
+            errorString = NSLocalizedString(@"QM_STR_UNKNOWN_ERROR", nil);
             break;
     }
     
