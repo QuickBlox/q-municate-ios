@@ -243,9 +243,15 @@ QMContactListServiceDelegate
     
     BOOL isContactRequest = [[QMApi instance] isContactRequestUserWithID:user.ID];
     if (isContactRequest) {
-        [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success) {}];
+        [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success) {
+            [self reloadDataSource];
+            [self globalSearch:self.searchDisplayController.searchBar.text];
+        }];
     } else {
-        [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {}];
+        [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {
+            [self reloadDataSource];
+            [self globalSearch:self.searchDisplayController.searchBar.text];
+        }];
     }
 }
 
