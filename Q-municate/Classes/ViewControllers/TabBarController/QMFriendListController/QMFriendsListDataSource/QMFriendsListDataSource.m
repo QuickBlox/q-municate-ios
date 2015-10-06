@@ -86,6 +86,9 @@ QMContactListServiceDelegate
     if (self.viewIsShowed) {
         [self.tableView reloadData];
     }
+    if (self.searchDisplayController.isActive) {
+        [self globalSearch:self.searchDisplayController.searchBar.text];
+    }
 } 
 
 - (void)globalSearch:(NSString *)searchText {
@@ -156,11 +159,6 @@ QMContactListServiceDelegate
     else {
         [self reloadDataSource];
     }
-}
-
-- (void)reloadSearchData {
-    [self reloadDataSource];
-    [self globalSearch:self.searchDisplayController.searchBar.text];
 }
 
 #pragma mark - UITableViewDataSource
@@ -249,11 +247,11 @@ QMContactListServiceDelegate
     BOOL isContactRequest = [[QMApi instance] isContactRequestUserWithID:user.ID];
     if (isContactRequest) {
         [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success) {
-            [self reloadSearchData];
+            [self reloadDataSource];
         }];
     } else {
         [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {
-            [self reloadSearchData];
+            [self reloadDataSource];
         }];
     }
 }
