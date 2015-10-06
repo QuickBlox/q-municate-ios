@@ -186,6 +186,7 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 }
 
 - (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
+    
     [self updateGUI];
     [self retrieveUserIfNeededWithMessage:message];
 }

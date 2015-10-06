@@ -78,10 +78,7 @@
                 }
             }];
             
-            [[QMApi instance] fetchAllHistory:^{
-                [weakSelf loginToChat];
-            }];
-            
+            [weakSelf loginToChat];
         }
     }];
 }
@@ -92,8 +89,7 @@
         
         // hide progress hud
         [SVProgressHUD dismiss];
-        
-        [[QMApi instance] joinGroupDialogs];
+
         QBUUser *usr = [QMApi instance].currentUser;
         if (!usr.isImport) {
             [[QMApi instance] importFriendsFromFacebook];
