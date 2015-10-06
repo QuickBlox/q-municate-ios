@@ -24,6 +24,11 @@
 
 const NSTimeInterval kQMPresenceTime = 30;
 
+static NSString *const kQMErrorKey         = @"errors";
+static NSString *const kQMErrorEmailKey    = @"email";
+static NSString *const kQMErrorFullNameKey = @"full_name";
+static NSString *const kQMErrorPasswordKey = @"password";
+
 @interface QMApi()
 
 @property (strong, nonatomic) QMSettingsManager *settingsManager;
@@ -201,6 +206,53 @@ const NSTimeInterval kQMPresenceTime = 30;
     [navigationController pushViewController:chatController animated:YES];
 }
 
+- (NSString *)errorStringFromArray:(NSArray *)errorArray {
+    NSString *errorString = [[NSString alloc] init];
+    
+    for (NSUInteger i = 0; i < errorArray.count; ++i) {
+        if (i > 0) {
+            errorString = [errorString stringByAppendingString:@" and "];
+        }
+        errorString = [errorString stringByAppendingString:errorArray[i]];
+    }
+    
+    return errorString;
+}
+
+- (NSString *)appendErrorString:(NSString *)errorString toMessageString:(NSString *)messageString {
+    if (messageString.length > 0) {
+        messageString = [messageString stringByAppendingString:@"\n"];
+    }
+    
+    messageString = [messageString stringByAppendingString:errorString];
+    
+    return messageString;
+}
+
+- (NSString *)errorStringFromResponseStatus:(QBResponseStatusCode)statusCode {
+    NSString *errorString = [[NSString alloc] init];
+    
+    switch (statusCode) {
+        case QBResponseStatusCodeServerError:
+            errorString = NSLocalizedString(@"QM_STR_BAD_GATEWAY_ERROR", nil);
+            break;
+        case QBResponseStatusCodeUnknown:
+            errorString = NSLocalizedString(@"QM_STR_CONNECTION_NETWORK_ERROR", nil);
+            break;
+        case QBResponseStatusCodeUnAuthorized:
+            errorString = NSLocalizedString(@"QM_STR_INCORRECT_USER_DATA_ERROR", nil);
+            break;
+        case QBResponseStatusCodeValidationFailed:
+            errorString = NSLocalizedString(@"QM_STR_INCORRECT_USER_DATA_ERROR", nil);
+            break;
+        default:
+            errorString = NSLocalizedString(@"QM_STR_UNKNOWN_ERROR", nil);
+            break;
+    }
+    
+    return errorString;
+}
+
 #pragma mark QMContactListServiceCacheDelegate delegate
 
 - (void)cachedUsers:(QMCacheCollection)block {
@@ -210,10 +262,6 @@ const NSTimeInterval kQMPresenceTime = 30;
 - (void)cachedContactListItems:(QMCacheCollection)block {
     [QMContactListCache.instance contactListItems:block];
 }
-
-#pragma mark QMContactListServiceDelegate protocol
-
-
 
 #pragma mark QMServicesManagerProtocol
 
@@ -225,28 +273,42 @@ const NSTimeInterval kQMPresenceTime = 30;
     
     NSAssert(!response.success, @"Error handling is available only if response success value is False");
     
-    if (![self isAuthorized]) return;
-    NSString *errorMessage = [[response.error description] stringByReplacingOccurrencesOfString:@"(" withString:@""];
-    errorMessage = [errorMessage stringByReplacingOccurrencesOfString:@")" withString:@""];
-
-    switch (response.status) {
-        case QBResponseStatusCodeServerError:
-            errorMessage = @"Bad Gateway, please try again";
-            break;
-        case QBResponseStatusCodeUnknown:
-            errorMessage = @"Connection network error, please try again";
-            break;
-        case QBResponseStatusCodeUnAuthorized:
-            errorMessage = @"Incorrect Username or Password";
-            break;
-        case QBResponseStatusCodeValidationFailed:
-            errorMessage = @"Incorrect Username or Password";
-            break;
-        default:
-            errorMessage = @"Something went wrong. Please check your internet connection";
-            break;
+    NSString *errorMessage = [[NSString alloc] init];
+    
+    if (self.isAuthorized) {
+        errorMessage = [self errorStringFromResponseStatus:response.status];
     }
-
+    else {
+        
+        id errorReasons = response.error.reasons[kQMErrorKey];
+        
+        if ([errorReasons isKindOfClass:[NSDictionary class]]) {
+            //
+            if (errorReasons[kQMErrorEmailKey]) {
+                
+                NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_EMAIL_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorEmailKey]]];
+                errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
+                
+            }
+            if (errorReasons[kQMErrorFullNameKey]) {
+                
+                NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FULL_NAME_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorFullNameKey]]];
+                errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
+                
+            }
+            if (errorReasons[kQMErrorPasswordKey]) {
+                
+                NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_PASSWORD_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorPasswordKey]]];
+                errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
+                
+            }
+        }
+        else {
+            errorMessage = [self errorStringFromResponseStatus:response.status];
+        }
+        
+    }
+    
     [REAlertView showAlertWithMessage:errorMessage actionSuccess:NO];
 }
 
