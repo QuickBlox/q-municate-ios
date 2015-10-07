@@ -114,7 +114,9 @@ static const NSUInteger kQMDialogsPageLimit = 10;
         NSString *text = [QMChatUtils messageForText:messageTypeText participants:occupants];
         
         [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:createdDialog.occupantIDs toChatDialog:createdDialog];
-        [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:createdDialog updateType:@"occupants_ids" content:[createdDialog.occupantIDs componentsJoinedByString:@","]];
+        NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+        NSString *dateString = [NSString stringWithFormat:@"%lli",[@(floor(now)) longLongValue]];
+        [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:createdDialog updateType:@"room_last_message_date" content:dateString];
         if (completion) completion(createdDialog);
     }];
 }
