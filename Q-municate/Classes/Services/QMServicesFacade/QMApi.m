@@ -163,15 +163,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
 }
 
 - (void)openChatPageForPushNotification:(NSDictionary *)notification completion:(void(^)(BOOL completed))completionBlock
-{
-    if ([QBChat instance].isLoggedIn) {
-        
-        if (completionBlock)
-            completionBlock(NO);
-        
-        return;
-    }
-    
+{    
     NSString *dialogID = notification[@"dialog_id"];
     QBChatDialog *dialog = [self chatDialogWithID:dialogID];
     __weak typeof(self)weakSelf = self;

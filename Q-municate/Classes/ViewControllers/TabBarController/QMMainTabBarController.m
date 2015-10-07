@@ -54,22 +54,6 @@
             
         } else {
             
-            // open app by push notification:
-            NSDictionary *push = [[QMApi instance] pushNotification];
-        
-            if (push != nil) {
-                if( push[@"dialog_id"] ){
-                    
-                    [SVProgressHUD show];
-                    
-                    [[QMApi instance] openChatPageForPushNotification:push completion:^(BOOL completed) {
-                        [SVProgressHUD dismiss];
-                    }];
-                    
-                    [[QMApi instance] setPushNotification:nil];
-                }
-            }
-            
             // subscribe to push notifications
             [[QMApi instance] subscribeToPushNotificationsForceSettings:NO complete:^(BOOL subscribeToPushNotificationsSuccess) {
                 
@@ -103,6 +87,22 @@
             QBUpdateUserParameters *params = [QBUpdateUserParameters new];
             params.customData = usr.customData;
             [[QMApi instance] updateCurrentUser:params image:nil progress:nil completion:^(BOOL success) {}];
+        }
+        
+        // open app by push notification:
+        NSDictionary *push = [[QMApi instance] pushNotification];
+        
+        if (push != nil) {
+            if( push[@"dialog_id"] ){
+                
+                [SVProgressHUD show];
+                
+                [[QMApi instance] openChatPageForPushNotification:push completion:^(BOOL completed) {
+                    [SVProgressHUD dismiss];
+                }];
+                
+                [[QMApi instance] setPushNotification:nil];
+            }
         }
     }];
 }
@@ -182,10 +182,11 @@
     __weak __typeof(self)weakSelf = self;
     [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
         if (buttonIndex == 1) {
-            
-            UINavigationController *navigationController = (UINavigationController *)[weakSelf selectedViewController];
-            UIViewController *chatController = [QMPopoversFactory chatControllerWithDialogID:dialogID];
-            [navigationController pushViewController:chatController animated:YES];
+            if (![[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) {
+                UINavigationController *navigationController = (UINavigationController *)[weakSelf selectedViewController];
+                UIViewController *chatController = [QMPopoversFactory chatControllerWithDialogID:dialogID];
+                [navigationController pushViewController:chatController animated:YES];
+            }
         }
     }];
 }
