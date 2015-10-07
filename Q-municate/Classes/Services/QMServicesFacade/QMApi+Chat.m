@@ -113,10 +113,8 @@ static const NSUInteger kQMDialogsPageLimit = 10;
         NSString *messageTypeText = NSLocalizedString(@"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT", @"{Full name}");
         NSString *text = [QMChatUtils messageForText:messageTypeText participants:occupants];
         
-        [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:createdDialog.occupantIDs toChatDialog:createdDialog];
-        NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-        NSString *dateString = [NSString stringWithFormat:@"%lli",[@(floor(now)) longLongValue]];
-        [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:createdDialog updateType:@"room_last_message_date" content:dateString];
+        createdDialog.lastMessageDate = [NSDate date];
+        [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:createdDialog.occupantIDs toChatDialog:createdDialog withMessage:text];
         if (completion) completion(createdDialog);
     }];
 }
@@ -178,7 +176,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
             NSString *messageTypeText = NSLocalizedString(@"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT", @"{Full name}");
             NSString *text = [QMChatUtils messageForText:messageTypeText participants:occupants];
             
-            [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:[self idsWithUsers:occupants] toChatDialog:updatedDialog];
+            [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:[self idsWithUsers:occupants] toChatDialog:updatedDialog withMessage:nil];
             [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"occupants_ids" content:[updatedDialog.occupantIDs componentsJoinedByString:@","]];
         }
         if (completion) completion(response,updatedDialog);
@@ -248,9 +246,17 @@ static const NSUInteger kQMDialogsPageLimit = 10;
 
 #pragma mark - Notifications
 
-- (void)sendGroupChatDialogDidCreateNotificationToUsers:(NSArray *)users toChatDialog:(QBChatDialog *)chatDialog {
+- (void)sendGroupChatDialogDidCreateNotificationToUsers:(NSArray *)users toChatDialog:(QBChatDialog *)chatDialog withMessage:(NSString *)text {
     
     [self.chatService notifyUsersWithIDs:users aboutAddingToDialog:chatDialog];
+    
+    if (text != nil) {
+        QBChatMessage *message = [QBChatMessage message];
+        message.text = text;
+        message.dateSent = [NSDate date];
+        [message updateCustomParametersWithDialog:chatDialog];
+        [self.chatService sendMessage:message type:QMMessageTypeUpdateGroupDialog toDialog:chatDialog save:YES saveToStorage:YES completion:nil];
+    }
 }
 
 - (void)sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:(NSString *)text toChatDialog:(QBChatDialog *)chatDialog updateType:(NSString *)updateType content:(NSString *)content
