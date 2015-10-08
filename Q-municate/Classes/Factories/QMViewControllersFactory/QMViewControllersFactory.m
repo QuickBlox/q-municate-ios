@@ -6,11 +6,11 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import "QMPopoversFactory.h"
+#import "QMViewControllersFactory.h"
 #import "QMChatVC.h"
 #import "QMApi.h"
 
-@implementation QMPopoversFactory
+@implementation QMViewControllersFactory
 
 
 + (UIViewController *)chatControllerWithDialogID:(NSString *)dialogID

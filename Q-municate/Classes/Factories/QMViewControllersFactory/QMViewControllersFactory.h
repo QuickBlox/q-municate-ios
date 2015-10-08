@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 @class QMChatVC;
 
-@interface QMPopoversFactory : NSObject
+@interface QMViewControllersFactory : NSObject
 
 + (UIViewController *)chatControllerWithDialogID:(NSString *)dialogID;
 
