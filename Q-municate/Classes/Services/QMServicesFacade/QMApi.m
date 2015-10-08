@@ -13,7 +13,7 @@
 #import "QMContentService.h"
 #import <Reachability.h>
 #import "REAlertView+QMSuccess.h"
-#import "QMPopoversFactory.h"
+#import "QMViewControllersFactory.h"
 #import "QMMainTabBarController.h"
 
 #import "QMMessageBarStyleSheetFactory.h"
@@ -191,7 +191,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
     if ([dialogWithIDWasEntered isEqualToString:dialogID]) {
         return;
     }
-    UIViewController *chatController = [QMPopoversFactory chatControllerWithDialogID:dialogID];
+    UIViewController *chatController = [QMViewControllersFactory chatControllerWithDialogID:dialogID];
     UIWindow *window = [[UIApplication sharedApplication].windows firstObject];
     QMMainTabBarController *tabBar = (QMMainTabBarController *)window.rootViewController;
     UINavigationController *navigationController = (UINavigationController *)[tabBar selectedViewController];

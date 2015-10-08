@@ -17,7 +17,7 @@
 #import "QMSettingsManager.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMDevice.h"
-#import "QMPopoversFactory.h"
+#import "QMViewControllersFactory.h"
 
 
 @interface QMMainTabBarController ()
@@ -184,7 +184,7 @@
         if (buttonIndex == 1) {
             if (![[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) {
                 UINavigationController *navigationController = (UINavigationController *)[weakSelf selectedViewController];
-                UIViewController *chatController = [QMPopoversFactory chatControllerWithDialogID:dialogID];
+                UIViewController *chatController = [QMViewControllersFactory chatControllerWithDialogID:dialogID];
                 [navigationController pushViewController:chatController animated:YES];
             }
         }
