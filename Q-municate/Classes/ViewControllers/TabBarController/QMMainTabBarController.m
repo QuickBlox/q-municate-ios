@@ -211,23 +211,16 @@
 - (void)chatServiceChatDidConnect:(QMChatService *)chatService
 {
     [SVProgressHUD showSuccessWithStatus:@"Chat connected!" maskType:SVProgressHUDMaskTypeClear];
-    [SVProgressHUD showWithStatus:@"Logging in to chat..." maskType:SVProgressHUDMaskTypeClear];
 }
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)chatService
 {
     [SVProgressHUD showSuccessWithStatus:@"Chat reconnected!" maskType:SVProgressHUDMaskTypeClear];
-    [SVProgressHUD showWithStatus:@"Logging in to chat..." maskType:SVProgressHUDMaskTypeClear];
 }
 
 - (void)chatServiceChatDidAccidentallyDisconnect:(QMChatService *)chatService
 {
     [SVProgressHUD showErrorWithStatus:@"Chat disconnected!"];
-}
-
-- (void)chatServiceChatDidLogin
-{
-    [SVProgressHUD showSuccessWithStatus:@"Logged in!"];
 }
 
 - (void)chatServiceChatDidNotLoginWithError:(NSError *)error

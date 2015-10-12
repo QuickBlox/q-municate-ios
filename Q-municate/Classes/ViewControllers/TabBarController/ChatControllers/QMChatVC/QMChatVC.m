@@ -124,6 +124,10 @@ AGEmojiKeyboardViewDelegate
         
         [self updateTitleInfoForPrivateDialog];
     } else {
+        if (!self.dialog.isJoined) {
+            [self.dialog join];
+        }
+        
         [self configureNavigationBarForGroupChat];
         self.title = self.dialog.name;
     }
@@ -194,6 +198,7 @@ AGEmojiKeyboardViewDelegate
         QBChatDialog *updatedDialog = [[QMApi instance].chatService.dialogsMemoryStorage chatDialogWithID:self.dialog.ID];
         if (updatedDialog != nil) {
             self.dialog = updatedDialog;
+            self.title = self.dialog.name;
             [[QMApi instance].chatService joinToGroupDialog:self.dialog failed:^(NSError *error) {
                 //
                 NSLog(@"Failed to join group dialog, because: %@", error.localizedDescription);
