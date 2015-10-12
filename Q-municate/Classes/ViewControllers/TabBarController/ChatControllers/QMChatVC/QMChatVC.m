@@ -124,6 +124,10 @@ AGEmojiKeyboardViewDelegate
         
         [self updateTitleInfoForPrivateDialog];
     } else {
+        if (!self.dialog.isJoined) {
+            [self.dialog join];
+        }
+        
         [self configureNavigationBarForGroupChat];
         self.title = self.dialog.name;
     }
