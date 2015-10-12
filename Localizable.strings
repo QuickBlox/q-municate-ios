@@ -96,7 +96,7 @@
 
 "QM_STR_UPDATE_GROUP_NAME_TEXT" = "%@ has changed the chat name to \"%@\".";
 "QM_STR_UPDATE_GROUP_AVATAR_TEXT" = "%@ has changed the chat picture.";
-"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT" = "%@ has left group conversation.";
+"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT" = "%@ has left group chat.";
 
 "QM_STR_NOTIFICATION_MESSAGE" = "Notification message";
 
