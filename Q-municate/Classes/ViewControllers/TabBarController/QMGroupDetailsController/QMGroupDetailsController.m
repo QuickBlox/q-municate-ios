@@ -93,7 +93,8 @@
 }
 
 - (void)changeGroupAvatar:(id)sender {
-    
+    [self.view endEditing:YES];
+
     __weak typeof(self)weakSelf = self;
     [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
         
