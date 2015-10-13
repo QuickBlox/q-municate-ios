@@ -141,6 +141,30 @@
 
 #pragma mark - Retrive users
 
+- (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock
+{
+    [self retriveIfNeededUsersWithIDs:@[@(userID)] completion:completionBlock];
+}
+
+- (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void (^)(BOOL retrieveWasNeeded))completionBlock
+{
+    NSArray *memoryStorageUsers = [self.usersMemoryStorage usersWithIDs:usersIDs];
+    
+    if (memoryStorageUsers.count != usersIDs.count) {
+        NSMutableArray *mutableUsersIDs = usersIDs.mutableCopy;
+        for (QBUUser *user in memoryStorageUsers) {
+            [mutableUsersIDs removeObject:@(user.ID)];
+        }
+        
+        [self retrieveUsersWithIDs:mutableUsersIDs forceDownload:YES completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+            if (completionBlock) completionBlock(YES);
+        }];
+    }
+    else {
+        if (completionBlock) completionBlock(NO);
+    }
+}
+
 - (void)retrieveUsersWithIDs:(NSArray *)ids forceDownload:(BOOL)forceDownload completion:(void(^)(QBResponse *response, QBGeneralResponsePage *page, NSArray * users))completion {
 	
 	if (ids.count == 0) {
