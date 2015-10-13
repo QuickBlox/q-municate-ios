@@ -48,8 +48,6 @@
     self.groupAvatarView.layer.cornerRadius = self.groupAvatarView.frame.size.width / 2;
     self.groupAvatarView.layer.masksToBounds = YES;
     
-    [self updateGUIWithChatDialog:self.chatDialog];
-    
     self.dataSource = [[QMGroupDetailsDataSource alloc] initWithTableView:self.tableView];
     [self updateGUIWithChatDialog:self.chatDialog];
 }
