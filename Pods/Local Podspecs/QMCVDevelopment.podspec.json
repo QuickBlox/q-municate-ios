@@ -25,7 +25,7 @@
   ],
   "requires_arc": true,
   "xcconfig": {
-    "FRAMEWORK_SEARCH_PATHS": "$(PODS_ROOT)/../../Framework"
+    "FRAMEWORK_SEARCH_PATHS": "$(PODS_ROOT)/../../Framework $(PODS_ROOT)/../External"
   },
   "dependencies": {
     "TTTAttributedLabel": [

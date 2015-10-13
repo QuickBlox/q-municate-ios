@@ -95,10 +95,11 @@ static NSString* attachmentPath(QBChatAttachment *attachment) {
         return;
     }
     
-    NSUInteger attachmentID = attachment.ID.integerValue;
+    NSString *attachmentID = attachment.ID;
+    NSCharacterSet *notDigits = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
     
-    if (attachmentID != 0) {
-        [QBRequest downloadFileWithID:attachmentID successBlock:^(QBResponse *response, NSData *fileData) {
+    if ([attachmentID rangeOfCharacterFromSet:notDigits].location == NSNotFound) {
+        [QBRequest downloadFileWithID:attachmentID.integerValue successBlock:^(QBResponse *response, NSData *fileData) {
             
             UIImage *image = [UIImage imageWithData:fileData];
             NSError *error;
@@ -121,35 +122,27 @@ static NSString* attachmentPath(QBChatAttachment *attachment) {
     }
     else {
         // Support for attachments that were send with old chat attachment service
-        // old chat attachment service used url for attachments instead of blobID
-        NSMutableDictionary *errorDetails = [NSMutableDictionary dictionary];
-        [errorDetails setValue:@"Attachment not found" forKey:NSLocalizedDescriptionKey];
-        NSError *errorNotFound = [NSError errorWithDomain:[[NSBundle mainBundle] bundleIdentifier] code:404 userInfo:errorDetails];
-        
-        if (attachment.url == nil) {
-            if (completion) completion(errorNotFound,nil);
-            return;
-        }
-        
-        NSURL *attachmentURL = [NSURL URLWithString:attachment.url];
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSData *fileData = [NSData dataWithContentsOfURL:attachmentURL];
-            dispatch_async(dispatch_get_main_queue(), ^{
+        // old chat attachment service used UID for attachments instead of blobID
+        [QBRequest downloadFileWithUID:attachment.ID successBlock:^(QBResponse * _Nonnull response, NSData * _Nonnull fileData) {
+            
+            UIImage *image = [UIImage imageWithData:fileData];
+            NSError *error;
+            
+            [self saveImageData:fileData chatAttachment:attachment error:&error];
+            
+            if (completion) completion(error, image);
 
-                if (fileData == nil) {
-                    if (completion) completion(errorNotFound,nil);
-                }
-                else {
-                    NSError *error;
-                    UIImage *image = [UIImage imageWithData:fileData];
-                    
-                    [self saveImageData:fileData chatAttachment:attachment error:&error];
-                    
-                    if (completion) completion(error,image);
-                }
-            });
-        });
+        } statusBlock:^(QBRequest * _Nonnull request, QBRequestStatus * _Nullable status) {
+            
+            if ([self.delegate respondsToSelector:@selector(chatAttachmentService:didChangeLoadingProgress:forChatAttachment:)]) {
+                [self.delegate chatAttachmentService:self didChangeLoadingProgress:status.percentOfCompletion forChatAttachment:attachment];
+            }
+            
+        } errorBlock:^(QBResponse * _Nonnull response) {
+            
+            if (completion) completion(response.error.error, nil);
+            
+        }];
     }
 }
 

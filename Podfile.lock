@@ -107,10 +107,10 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
-    :commit: b12b7676d3bcf88937f7960e025926fb2c71ce20
+    :commit: b6bc2af797bbb00a05a60e1949a5eb7afb0bf0c2
     :git: https://github.com/QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: 2ca94ec40a21a3b75c592275ec14f6a2c6ea351e
+    :commit: 9f938fa7a5175dc34b64bbc42c13c33d77ca5f7b
     :git: https://github.com/QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
@@ -124,8 +124,8 @@ SPEC CHECKSUMS:
   IDMPhotoBrowser: 6699a8d8b6c036a60c58ba7c281b2f5761d970ac
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   Parus: e8eeec5e596e59fea3e3129775e5ddf2e5c0b4eb
-  QMCVDevelopment: 98d25c8fc6a531bcbbacf58c9f3b8a324e525078
-  QMServicesDevelopment: 8dbff6850ab6a0a1a45bee031df76ad81ce05a57
+  QMCVDevelopment: 750ffd0c0f1be84eb659635a142aa3fb94be07ee
+  QMServicesDevelopment: 6de5f0f4467c9214014fb8d778ccc4d4aa71833c
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d

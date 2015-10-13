@@ -44,7 +44,7 @@
   ],
   "xcconfig": {
     "HEADER_SEARCH_PATHS": "/usr/include/libxml2",
-    "FRAMEWORK_SEARCH_PATHS": "$(PODS_ROOT)/../../Framework"
+    "FRAMEWORK_SEARCH_PATHS": "(PODS_ROOT)/../../Framework $(PODS_ROOT)/../External"
   },
   "prefix_header_contents": "#import <Quickblox/Quickblox.h>\n#import <CoreData/CoreData.h>\n#import <Quickblox/QBMulticastDelegate.h>",
   "resource_bundles": {
