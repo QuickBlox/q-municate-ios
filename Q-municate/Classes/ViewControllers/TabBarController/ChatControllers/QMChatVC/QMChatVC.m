@@ -440,6 +440,22 @@ AGEmojiKeyboardViewDelegate
     
     [self finishSendingMessageAnimated:YES];
 }
+
+- (void)didPressAccessoryButton:(UIButton *)sender {
+    if (self.dialog.type == QBChatDialogTypePrivate) {
+        if (![[QMApi instance] isFriend:self.opponentUser]) {
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
+            return;
+        }
+        if ([[QMApi instance] userIDIsInPendingList:self.opponentUser.ID]) {
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
+            return;
+        }
+    }
+    
+    [super didPressAccessoryButton:sender];
+}
+
 #pragma mark - Cell classes
 
 - (Class)viewClassForItem:(QBChatMessage *)item
