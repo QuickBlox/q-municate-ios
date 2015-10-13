@@ -47,9 +47,12 @@ NSString *const kLeaveChatCellIdentifier = @"QMLeaveChatCell";
 
 - (void)reloadUserData {
     
-    NSArray *unsortedParticipants = [[QMApi instance] usersWithIDs:self.chatDialog.occupantIDs];
-    self.participants = [QMUsersUtils sortUsersByFullname:unsortedParticipants];
-    [self.tableView reloadData];
+    [[QMApi instance].contactListService retriveIfNeededUsersWithIDs:self.chatDialog.occupantIDs completion:^(BOOL retrieveWasNeeded) {
+        //
+        NSArray *unsortedParticipants = [[QMApi instance] usersWithIDs:self.chatDialog.occupantIDs];
+        self.participants = [QMUsersUtils sortUsersByFullname:unsortedParticipants];
+        [self.tableView reloadData];
+    }];
 }
 
 
