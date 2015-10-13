@@ -86,6 +86,9 @@ QMContactListServiceDelegate
     if (self.viewIsShowed) {
         [self.tableView reloadData];
     }
+    if (self.searchDisplayController.isActive) {
+        [self globalSearch:self.searchDisplayController.searchBar.text];
+    }
 } 
 
 - (void)globalSearch:(NSString *)searchText {
@@ -243,9 +246,13 @@ QMContactListServiceDelegate
     
     BOOL isContactRequest = [[QMApi instance] isContactRequestUserWithID:user.ID];
     if (isContactRequest) {
-        [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success) {}];
+        [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success) {
+            [self reloadDataSource];
+        }];
     } else {
-        [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {}];
+        [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {
+            [self reloadDataSource];
+        }];
     }
 }
 
@@ -271,10 +278,6 @@ QMContactListServiceDelegate
 }
 
 #pragma mark Contact List Serice Delegate
-
-- (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
-    [self updateView];
-}
 
 - (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
     [self updateView];

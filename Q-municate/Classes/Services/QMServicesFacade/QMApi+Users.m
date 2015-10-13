@@ -152,7 +152,7 @@
 
 - (BOOL)userIDIsInPendingList:(NSUInteger)userID {
     QBContactListItem *contactlistItem = [self.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
-    if (contactlistItem.subscriptionState == QBPresenseSubscriptionStateBoth || contactlistItem.subscriptionState == QBPresenseSubscriptionStateFrom) {
+    if (contactlistItem.subscriptionState != QBPresenseSubscriptionStateNone) {
         return NO;
     }
     return YES;
@@ -182,10 +182,10 @@
 {
     [self.contactListService retrieveUsersWithIDs:usersIDs forceDownload:NO completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
         if (response != nil) {
-            completionBlock(YES);
+            if (completionBlock) completionBlock(YES);
             return;
         }
-        completionBlock(NO);
+        if (completionBlock) completionBlock(NO);
     }];
 }
 
@@ -224,11 +224,12 @@
             params.avatarUrl = blob.publicUrl;
         }
         params.blobID = blob.ID;
-
+        NSString *password = weakSelf.currentUser.password;
+        
         [QBRequest updateCurrentUser:params successBlock:^(QBResponse *response, QBUUser *updatedUser) {
             //
             if (response.success) {
-                weakSelf.currentUser.password = updatedUser.password;
+                weakSelf.currentUser.password = password;
             }
             completion(response.success);
         } errorBlock:^(QBResponse *response) {

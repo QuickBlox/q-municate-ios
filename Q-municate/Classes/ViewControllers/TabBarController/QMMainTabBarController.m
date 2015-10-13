@@ -17,7 +17,7 @@
 #import "QMSettingsManager.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMDevice.h"
-#import "QMPopoversFactory.h"
+#import "QMViewControllersFactory.h"
 
 
 @interface QMMainTabBarController ()
@@ -54,22 +54,6 @@
             
         } else {
             
-            // open app by push notification:
-            NSDictionary *push = [[QMApi instance] pushNotification];
-        
-            if (push != nil) {
-                if( push[@"dialog_id"] ){
-                    
-                    [SVProgressHUD show];
-                    
-                    [[QMApi instance] openChatPageForPushNotification:push completion:^(BOOL completed) {
-                        [SVProgressHUD dismiss];
-                    }];
-                    
-                    [[QMApi instance] setPushNotification:nil];
-                }
-            }
-            
             // subscribe to push notifications
             [[QMApi instance] subscribeToPushNotificationsForceSettings:NO complete:^(BOOL subscribeToPushNotificationsSuccess) {
                 
@@ -78,10 +62,7 @@
                 }
             }];
             
-            [[QMApi instance] fetchAllHistory:^{
-                [weakSelf loginToChat];
-            }];
-            
+            [weakSelf loginToChat];
         }
     }];
 }
@@ -92,8 +73,7 @@
         
         // hide progress hud
         [SVProgressHUD dismiss];
-        
-        [[QMApi instance] joinGroupDialogs];
+
         QBUUser *usr = [QMApi instance].currentUser;
         if (!usr.isImport) {
             [[QMApi instance] importFriendsFromFacebook];
@@ -103,6 +83,22 @@
             QBUpdateUserParameters *params = [QBUpdateUserParameters new];
             params.customData = usr.customData;
             [[QMApi instance] updateCurrentUser:params image:nil progress:nil completion:^(BOOL success) {}];
+        }
+        
+        // open app by push notification:
+        NSDictionary *push = [[QMApi instance] pushNotification];
+        
+        if (push != nil) {
+            if( push[@"dialog_id"] ){
+                
+                [SVProgressHUD show];
+                
+                [[QMApi instance] openChatPageForPushNotification:push completion:^(BOOL completed) {
+                    [SVProgressHUD dismiss];
+                }];
+                
+                [[QMApi instance] setPushNotification:nil];
+            }
         }
     }];
 }
@@ -160,8 +156,6 @@
     
     if (message.isNotificatonMessage) return;
     
-    if (message.delayed) return;
-    
     if (message.senderID == self.currentUser.ID) return;
     
     NSString* dialogName = @"New message";
@@ -182,10 +176,11 @@
     __weak __typeof(self)weakSelf = self;
     [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
         if (buttonIndex == 1) {
-            
-            UINavigationController *navigationController = (UINavigationController *)[weakSelf selectedViewController];
-            UIViewController *chatController = [QMPopoversFactory chatControllerWithDialogID:dialogID];
-            [navigationController pushViewController:chatController animated:YES];
+            if (![[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) {
+                UINavigationController *navigationController = (UINavigationController *)[weakSelf selectedViewController];
+                UIViewController *chatController = [QMViewControllersFactory chatControllerWithDialogID:dialogID];
+                [navigationController pushViewController:chatController animated:YES];
+            }
         }
     }];
 }
@@ -214,23 +209,16 @@
 - (void)chatServiceChatDidConnect:(QMChatService *)chatService
 {
     [SVProgressHUD showSuccessWithStatus:@"Chat connected!" maskType:SVProgressHUDMaskTypeClear];
-    [SVProgressHUD showWithStatus:@"Logging in to chat..." maskType:SVProgressHUDMaskTypeClear];
 }
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)chatService
 {
     [SVProgressHUD showSuccessWithStatus:@"Chat reconnected!" maskType:SVProgressHUDMaskTypeClear];
-    [SVProgressHUD showWithStatus:@"Logging in to chat..." maskType:SVProgressHUDMaskTypeClear];
 }
 
 - (void)chatServiceChatDidAccidentallyDisconnect:(QMChatService *)chatService
 {
     [SVProgressHUD showErrorWithStatus:@"Chat disconnected!"];
-}
-
-- (void)chatServiceChatDidLogin
-{
-    [SVProgressHUD showSuccessWithStatus:@"Logged in!"];
 }
 
 - (void)chatServiceChatDidNotLoginWithError:(NSError *)error

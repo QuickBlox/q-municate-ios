@@ -71,7 +71,7 @@
     [[QMApi instance].contactListService addDelegate:self];
     [[QMApi instance].chatService addDelegate:self];
 }
-
+  
 - (void)viewWillDisappear:(BOOL)animated {
     
     [self.view endEditing:YES];
@@ -93,15 +93,16 @@
 }
 
 - (void)changeGroupAvatar:(id)sender {
-    
+    [self.view endEditing:YES];
+
     __weak typeof(self)weakSelf = self;
     [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
-        
+        __typeof(weakSelf)strongSelf = weakSelf;
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-        [[QMApi instance] changeAvatar:image forChatDialog:weakSelf.chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+        [[QMApi instance] changeAvatar:image forChatDialog:strongSelf.chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
             //
             if (response.success) {
-                [weakSelf updateGUIWithChatDialog:updatedDialog];
+                [strongSelf.groupAvatarView sd_setImage:image withKey:updatedDialog.photo];
             }
             [SVProgressHUD dismiss];
         }];

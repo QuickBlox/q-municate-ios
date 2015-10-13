@@ -7,7 +7,7 @@
 //
 
 #import "QMCreateNewChatController.h"
-#import "QMPopoversFactory.h"
+#import "QMViewControllersFactory.h"
 #import "SVProgressHUD.h"
 #import "QMApi.h"
 #import "QMUsersUtils.h"
@@ -45,7 +45,7 @@ NSString *const QMChatViewControllerID = @"QMChatVC";
         
         if (chatDialog != nil) {
             
-            UIViewController *chatVC = [QMPopoversFactory chatControllerWithDialogID:chatDialog.ID];
+            UIViewController *chatVC = [QMViewControllersFactory chatControllerWithDialogID:chatDialog.ID];
             
             NSMutableArray *controllers = weakSelf.navigationController.viewControllers.mutableCopy;
             [controllers removeLastObject];

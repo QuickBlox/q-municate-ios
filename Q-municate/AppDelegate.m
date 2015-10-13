@@ -113,15 +113,18 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
         NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
         [[QMApi instance] setPushNotification:notification];
     }
+
     return [[FBSDKApplicationDelegate sharedInstance] application:application
                                     didFinishLaunchingWithOptions:launchOptions];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    if( userInfo[@"dialog_id"] ) {
-        [[QMApi instance] openChatPageForPushNotification:userInfo completion:^(BOOL completed) {}];
+    if ([application applicationState] == UIApplicationStateInactive) {
+        if( userInfo[@"dialog_id"] ) {
+            [[QMApi instance] openChatPageForPushNotification:userInfo completion:^(BOOL completed) {}];
+        }
+        ILog(@"Push was received. User info: %@", userInfo);
     }
-    ILog(@"Push was received. User info: %@", userInfo);
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {

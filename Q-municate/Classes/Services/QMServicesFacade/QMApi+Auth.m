@@ -119,9 +119,6 @@
                 [weakSelf.settingsManager setLogin:user.email andPassword:user.password];
             }
         }
-        else {
-            [weakSelf handleErrorResponse:response];
-        }
         completion(response.success);
     }];
 }
@@ -264,9 +261,6 @@
                 weakSelf.settingsManager.rememberMe = rememberMe;
                 [weakSelf.settingsManager setLogin:email andPassword:password];
             }
-        }
-        else {
-            [weakSelf handleErrorResponse:response];
         }
         completion(response.success);
     }];

@@ -124,6 +124,10 @@ AGEmojiKeyboardViewDelegate
         
         [self updateTitleInfoForPrivateDialog];
     } else {
+        if (!self.dialog.isJoined) {
+            [self.dialog join];
+        }
+        
         [self configureNavigationBarForGroupChat];
         self.title = self.dialog.name;
     }
@@ -194,6 +198,7 @@ AGEmojiKeyboardViewDelegate
         QBChatDialog *updatedDialog = [[QMApi instance].chatService.dialogsMemoryStorage chatDialogWithID:self.dialog.ID];
         if (updatedDialog != nil) {
             self.dialog = updatedDialog;
+            self.title = self.dialog.name;
             [[QMApi instance].chatService joinToGroupDialog:self.dialog failed:^(NSError *error) {
                 //
                 NSLog(@"Failed to join group dialog, because: %@", error.localizedDescription);
@@ -412,6 +417,10 @@ AGEmojiKeyboardViewDelegate
     }
     
     if (self.dialog.type == QBChatDialogTypePrivate) {
+        if (![[QMApi instance] isFriend:self.opponentUser]) {
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
+            return;
+        }
         if ([[QMApi instance] userIDIsInPendingList:self.opponentUser.ID]) {
             [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
             return;
@@ -940,7 +949,7 @@ AGEmojiKeyboardViewDelegate
 - (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
     if (self.dialog.type == QBChatDialogTypePrivate) {
         if (self.opponentUser.ID == userID) {
-            [self updateTitleInfoForPrivateDialog];
+            self.onlineTitle.statusLabel.text = NSLocalizedString(isOnline ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
         }
     }
 }
