@@ -36,6 +36,7 @@
     notification.recipientID = user.ID;
     notification.senderID = self.currentUser.ID;
     notification.text = @"Contact request";  // contact request
+    notification.dateSent = [NSDate date];
     return notification;
 }
 
