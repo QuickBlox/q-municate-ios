@@ -49,7 +49,7 @@
             [weakSelf.navigationController popViewControllerAnimated:YES];
         }else {
             [SVProgressHUD dismiss];
-//            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_USER_WITH_EMAIL_WASNT_FOUND", nil) actionSuccess:NO];
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_USER_WITH_EMAIL_WASNT_FOUND", nil) actionSuccess:NO];
         }
     }];
 }
