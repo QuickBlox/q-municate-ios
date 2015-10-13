@@ -156,8 +156,6 @@
     
     if (message.isNotificatonMessage) return;
     
-    if (message.delayed) return;
-    
     if (message.senderID == self.currentUser.ID) return;
     
     NSString* dialogName = @"New message";

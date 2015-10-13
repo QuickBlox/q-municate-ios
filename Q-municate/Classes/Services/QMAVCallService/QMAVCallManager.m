@@ -131,7 +131,6 @@ NSString *const kUserName = @"UserName";
 
 - (void)sendPushToUserWithUserID:(NSUInteger)opponentID{
     QBMEvent *event = [QBMEvent event];
-    event.isDevelopmentEnvironment =  NO;
     event.usersIDs = [@(opponentID) stringValue];
     event.notificationType = QBMNotificationTypePush;
     event.type = QBMEventTypeOneShot;
