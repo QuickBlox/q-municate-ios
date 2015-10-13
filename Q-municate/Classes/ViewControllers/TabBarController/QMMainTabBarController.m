@@ -154,7 +154,7 @@
 {
     if ([[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) return;
     
-    if (message.isNotificatonMessage) return;
+    if ( message.isNotificatonMessage && message.messageType != QMMessageTypeUpdateGroupDialog ) return;
     
     if (message.senderID == self.currentUser.ID) return;
     
