@@ -155,9 +155,8 @@ static const NSUInteger kQMDialogsPageLimit = 10;
                 // send notification:
                 NSString *notificationText = NSLocalizedString(@"QM_STR_UPDATE_GROUP_AVATAR_TEXT", @"{Full name}");
                 NSString *text = [NSString stringWithFormat:notificationText, self.currentUser.fullName];
-                
-                chatDialog.photo = updatedDialog.photo;
-                [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"room_photo" content:updatedDialog.photo];
+
+                [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:updatedDialog updateType:nil content:nil];
                 if (completion) completion(updateResponse, updatedDialog);
             }
 
