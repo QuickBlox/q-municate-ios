@@ -15,6 +15,7 @@
 #import "QMApi.h"
 
 const NSUInteger kQMMinPasswordLenght = 7;
+const NSUInteger kQMMaxPasswordLenght = 40;
 
 @interface QMChangePasswordVC ()
 
@@ -81,9 +82,13 @@ const NSUInteger kQMMinPasswordLenght = 7;
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) actionSuccess:NO];
 		[SVProgressHUD dismiss];
     }
-    else if (newPassword.length < kQMMinPasswordLenght) {
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_PASSWORD_IS_TOO_SHORT", nil) actionSuccess:NO];
-		[SVProgressHUD dismiss];
+    else if (newPassword.length <= kQMMinPasswordLenght) {
+        [REAlertView showAlertWithMessage:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_PASSWORD_IS_TOO_SHORT", nil), (long)kQMMinPasswordLenght] actionSuccess:NO];
+        [SVProgressHUD dismiss];
+    }
+    else if (newPassword.length > kQMMaxPasswordLenght) {
+        [REAlertView showAlertWithMessage:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_PASSWORD_IS_TOO_LONG", nil), (long)kQMMaxPasswordLenght] actionSuccess:NO];
+        [SVProgressHUD dismiss];
     }
     else if (![oldPassword isEqualToString:confirmOldPassword]) {
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_WRONG_OLD_PASSWORD", nil) actionSuccess:NO];
