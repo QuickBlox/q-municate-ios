@@ -167,29 +167,6 @@
     return NO;
 }
 
-- (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock
-{
-    [self.contactListService retrieveUsersWithIDs:@[@(userID)] forceDownload:NO completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
-        if (response != nil) {
-            completionBlock(YES);
-            return;
-        }
-        completionBlock(NO);
-    }];
-}
-
-- (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void (^)(BOOL retrieveWasNeeded))completionBlock
-{
-    [self.contactListService retrieveUsersWithIDs:usersIDs forceDownload:NO completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
-        if (response != nil) {
-            completionBlock(YES);
-            return;
-        }
-        completionBlock(NO);
-    }];
-}
-
-
 #pragma mark - Update current User
 
 - (void)changePasswordForCurrentUser:(QBUpdateUserParameters *)updateParams completion:(void(^)(BOOL success))completion {

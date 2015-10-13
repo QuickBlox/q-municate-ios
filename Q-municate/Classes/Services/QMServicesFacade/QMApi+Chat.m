@@ -62,8 +62,10 @@ static const NSUInteger kQMDialogsPageLimit = 10;
 
 - (void)fetchAllDialogs:(void(^)(void))completion {
     
+    __weak __typeof(self)weakSelf = self;
     [self.chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
         //
+        [weakSelf.contactListService retriveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:nil];
     } completion:^(QBResponse *response) {
         //
         if (completion) completion();
