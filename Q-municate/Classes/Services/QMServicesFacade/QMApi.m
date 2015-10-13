@@ -112,7 +112,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
     } else {
         idsToFetch = notification.dialog.occupantIDs;
     }
-    [self retriveIfNeededUsersWithIDs:idsToFetch completion:^(BOOL retrieveWasNeeded) {
+    [self.contactListService retriveIfNeededUsersWithIDs:idsToFetch completion:^(BOOL retrieveWasNeeded) {
 
     }];
 }
