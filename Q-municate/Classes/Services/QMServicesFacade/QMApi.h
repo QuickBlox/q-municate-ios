@@ -482,22 +482,6 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 - (void)rejectAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion;
 
 /**
- *  Retrieving user if needed.
- *
- *  @param userID       id of user to retrieve
- *  @param completion   completion block with boolean value YES if retrieve was needed
- */
-- (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock;
-
-/**
- *  Retrieving users if needed.
- *
- *  @param userIDs      array of users ids to retrieve
- *  @param completion   completion block with boolean value YES if retrieve was needed
- */
-- (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void (^)(BOOL retrieveWasNeeded))completionBlock;
-
-/**
  *  Updating current user with params and image.
  *
  *  @param updateParams     QBUpdateUserParameters instance of parameters to update
