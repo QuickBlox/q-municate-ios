@@ -50,7 +50,7 @@ AGEmojiKeyboardViewDelegate
 
 @property (strong, nonatomic) QMOnlineTitle *onlineTitle;
 
-@property (nonatomic, weak) QBUUser* opponentUser;
+@property (nonatomic, strong) QBUUser* opponentUser;
 @property (nonatomic, strong) id<NSObject> observerDidBecomeActive;
 @property (nonatomic, strong) QMMessageStatusStringBuilder* stringBuilder;
 @property (nonatomic, strong) NSMapTable* attachmentCells;
