@@ -182,10 +182,10 @@
 {
     [self.contactListService retrieveUsersWithIDs:usersIDs forceDownload:NO completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
         if (response != nil) {
-            completionBlock(YES);
+            if (completionBlock) completionBlock(YES);
             return;
         }
-        completionBlock(NO);
+        if (completionBlock) completionBlock(NO);
     }];
 }
 
