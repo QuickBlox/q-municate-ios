@@ -18,6 +18,7 @@
 #import "REAlertView+QMSuccess.h"
 #import "QMDevice.h"
 #import "QMViewControllersFactory.h"
+#import "QMChatUtils.h"
 
 
 @interface QMMainTabBarController () <QMNotificationHandlerDelegate>
@@ -147,28 +148,24 @@
 - (void)showNotificationForMessage:(QBChatMessage *)message inDialogID:(NSString *)dialogID
 {
     if ([[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) return;
-    
-    if ( message.isNotificatonMessage && message.messageType != QMMessageTypeUpdateGroupDialog ) return;
-    
+
     if (message.senderID == self.currentUser.ID) return;
-    
-    NSString* dialogName = @"New message";
     
     QBChatDialog* dialog = [[QMApi instance].chatService.dialogsMemoryStorage chatDialogWithID:dialogID];
     
-    if (dialog.type != QBChatDialogTypePrivate) {
-        dialogName = dialog.name;
-    } else {
-        QBUUser* user = [[QMApi instance].contactListService.usersMemoryStorage userWithID:dialog.recipientID];
-        if (user != nil) {
-            dialogName = user.login;
-        }
+    NSString *messageText = [NSString string];
+    
+    if (message.isNotificatonMessage && message.messageType != QMMessageTypeUpdateGroupDialog) {
+        messageText = [QMChatUtils messageTextForNotification:message];
+    }
+    else {
+        messageText = message.encodedText;
     }
     
     [QMSoundManager playMessageReceivedSound];
     
     __weak __typeof(self)weakSelf = self;
-    [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
+    [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessageText:messageText chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
         if (buttonIndex == 1) {
             if (![[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) {
                 UINavigationController *navigationController = (UINavigationController *)[weakSelf selectedViewController];
