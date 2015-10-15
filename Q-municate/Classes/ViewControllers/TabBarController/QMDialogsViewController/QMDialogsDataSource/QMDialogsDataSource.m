@@ -212,10 +212,8 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 #pragma mark Chat Connection Delegate
 
 - (void)chatServiceChatDidLogin {
-    [SVProgressHUD showWithStatus:@"Loading dialogs" maskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] fetchAllDialogs:^{
         [[QMApi instance] joinGroupDialogs];
-        [SVProgressHUD dismiss];
     }];
 }
 
