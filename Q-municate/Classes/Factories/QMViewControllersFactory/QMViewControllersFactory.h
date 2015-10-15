@@ -1,5 +1,5 @@
 //
-//  QMPopoversFactory.h
+//  QMViewControllersFactory.h
 //  Q-municate
 //
 //  Created by Igor Alefirenko on 23.09.14.
@@ -12,5 +12,7 @@
 @interface QMViewControllersFactory : NSObject
 
 + (UIViewController *)chatControllerWithDialogID:(NSString *)dialogID;
+
++ (UIViewController *)chatControllerWithDialog:(QBChatDialog *)dialog;
 
 @end

@@ -162,42 +162,6 @@ static NSString *const kQMErrorPasswordKey = @"password";
     [self logoutFromChat];
 }
 
-- (void)openChatPageForPushNotification:(NSDictionary *)notification completion:(void(^)(BOOL completed))completionBlock
-{    
-    NSString *dialogID = notification[@"dialog_id"];
-    QBChatDialog *dialog = [self chatDialogWithID:dialogID];
-    __weak typeof(self)weakSelf = self;
-    
-    if (dialog == nil) {
-        
-        [self fetchChatDialogWithID:dialogID completion:^(QBChatDialog *chatDialog) {
-            
-            [weakSelf openChatPageForPushNotification:notification completion:completionBlock];
-        }];
-        
-        return;
-        
-    }else {
-        
-        [self openChatControllerForDialogWithID:dialogID];
-        if (completionBlock) completionBlock(YES);
-    }
-    
-}
-
-- (void)openChatControllerForDialogWithID:(NSString *)dialogID
-{
-    NSString *dialogWithIDWasEntered = [QMApi instance].settingsManager.dialogWithIDisActive;
-    if ([dialogWithIDWasEntered isEqualToString:dialogID]) {
-        return;
-    }
-    UIViewController *chatController = [QMViewControllersFactory chatControllerWithDialogID:dialogID];
-    UIWindow *window = [[UIApplication sharedApplication].windows firstObject];
-    QMMainTabBarController *tabBar = (QMMainTabBarController *)window.rootViewController;
-    UINavigationController *navigationController = (UINavigationController *)[tabBar selectedViewController];
-    [navigationController pushViewController:chatController animated:YES];
-}
-
 - (NSString *)errorStringFromArray:(NSArray *)errorArray {
     NSString *errorString = [[NSString alloc] init];
     
