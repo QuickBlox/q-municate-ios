@@ -142,7 +142,7 @@ QMContactListServiceDelegate
 #if QM_AUDIO_VIDEO_ENABLED
         case QMCallTypeVideo:{
             
-            if( [[QMApi instance] userIDIsInPendingList:self.selectedUser.ID] ) {
+            if( ![[QMApi instance] isFriend:self.selectedUser] || [[QMApi instance] userIDIsInPendingList:self.selectedUser.ID] ) {
                 [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
             }
             else{
@@ -151,7 +151,7 @@ QMContactListServiceDelegate
         }
             break;
         case QMCallTypeAudio: {
-            if( [[QMApi instance] userIDIsInPendingList:self.selectedUser.ID] ) {
+            if( ![[QMApi instance] isFriend:self.selectedUser] || [[QMApi instance] userIDIsInPendingList:self.selectedUser.ID] ) {
                 [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
             }
             else{

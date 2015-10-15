@@ -306,7 +306,7 @@ AGEmojiKeyboardViewDelegate
     [QMAlertsFactory comingSoonAlert];
 #else
     
-    if( [[QMApi instance] userIDIsInPendingList:self.opponentUser.ID] ) {
+    if( ![[QMApi instance] isFriend:self.opponentUser] || [[QMApi instance] userIDIsInPendingList:self.opponentUser.ID] ) {
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
         return;
     }
@@ -327,7 +327,7 @@ AGEmojiKeyboardViewDelegate
     [QMAlertsFactory comingSoonAlert];
 #else
     
-    if( [[QMApi instance] userIDIsInPendingList:self.opponentUser.ID] ) {
+    if( ![[QMApi instance] isFriend:self.opponentUser] || [[QMApi instance] userIDIsInPendingList:self.opponentUser.ID] ) {
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
         return;
     }

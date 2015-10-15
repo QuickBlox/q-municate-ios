@@ -8,12 +8,11 @@
 
 #import "QMMessageBarStyleSheetFactory.h"
 #import "QMApi.h"
-#import "QBChatMessage+TextEncoding.h"
 
 
 @implementation QMMessageBarStyleSheetFactory
 
-+ (void)showMessageBarNotificationWithMessage:(QBChatMessage *)chatMessage chatDialog:(QBChatDialog *)chatDialog completionBlock:(MPGNotificationButtonHandler)block
++ (void)showMessageBarNotificationWithMessageText:(NSString *)messageText chatDialog:(QBChatDialog *)chatDialog completionBlock:(MPGNotificationButtonHandler)block
 {
     UIImage *img = nil;
     NSString *title = @"";
@@ -31,7 +30,7 @@
         img = [UIImage imageNamed:@"upic_placeholderr"];
     }
 
-    MPGNotification *newNotification = [MPGNotification notificationWithTitle:title subtitle:chatMessage.encodedText backgroundColor:[UIColor colorWithRed:0.32 green:0.33 blue:0.34 alpha:0.86] iconImage:img];
+    MPGNotification *newNotification = [MPGNotification notificationWithTitle:title subtitle:messageText backgroundColor:[UIColor colorWithRed:0.32 green:0.33 blue:0.34 alpha:0.86] iconImage:img];
     [newNotification setButtonConfiguration:MPGNotificationButtonConfigrationOneButton withButtonTitles:@[@"Reply"]];
     newNotification.duration = 2.0;
     

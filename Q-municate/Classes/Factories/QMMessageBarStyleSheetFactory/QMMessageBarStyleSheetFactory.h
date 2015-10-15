@@ -11,6 +11,6 @@
 
 @interface QMMessageBarStyleSheetFactory : NSObject
 
-+ (void)showMessageBarNotificationWithMessage:(QBChatMessage *)chatMessage chatDialog:(QBChatDialog *)chatDialog completionBlock:(MPGNotificationButtonHandler)block;
++ (void)showMessageBarNotificationWithMessageText:(NSString *)messageText chatDialog:(QBChatDialog *)chatDialog completionBlock:(MPGNotificationButtonHandler)block;
 
 @end
