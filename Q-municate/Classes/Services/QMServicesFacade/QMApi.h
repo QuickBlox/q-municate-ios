@@ -109,14 +109,6 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 - (void)applicationDidBecomeActive:(void(^)(BOOL success))completion;
 - (void)applicationWillResignActive;
 
-/**
- *  Handling push notification and opening dialog from push.
- *
- *  @param norification     dictionary instance with norification params
- *  @param completionBlock  completion block with status
- */
-- (void)openChatPageForPushNotification:(NSDictionary *)notification completion:(void(^)(BOOL completed))completionBlock;
-
 @end
 
 
