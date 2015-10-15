@@ -2931,7 +2931,7 @@ Cg
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Online" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Yx-1B-eVy">
-                                                    <rect key="frame" x="65" y="28" width="210" height="17"/>
+                                                    <rect key="frame" x="65" y="30" width="210" height="17"/>
                                                     <animations/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
@@ -2964,8 +2964,8 @@ Cg
                                                 <constraint firstItem="GYw-wv-ius" firstAttribute="top" secondItem="hlC-13-Hu2" secondAttribute="top" constant="10" id="3Ze-wp-Ycc"/>
                                                 <constraint firstItem="4Yx-1B-eVy" firstAttribute="leading" secondItem="Eif-gx-xTe" secondAttribute="trailing" constant="5" id="4Ex-RM-b5c"/>
                                                 <constraint firstAttribute="trailing" secondItem="GB5-jQ-Wm2" secondAttribute="trailing" constant="20" id="78m-NG-EXG"/>
+                                                <constraint firstItem="4Yx-1B-eVy" firstAttribute="top" secondItem="GYw-wv-ius" secondAttribute="bottom" constant="1" id="DS7-UA-q1b"/>
                                                 <constraint firstItem="flF-4h-2bK" firstAttribute="leading" secondItem="4Yx-1B-eVy" secondAttribute="trailing" constant="9" id="KLD-i8-BkS"/>
-                                                <constraint firstItem="4Yx-1B-eVy" firstAttribute="top" secondItem="hlC-13-Hu2" secondAttribute="top" constant="28" id="OGa-HR-dV8"/>
                                                 <constraint firstItem="Eif-gx-xTe" firstAttribute="top" secondItem="hlC-13-Hu2" secondAttribute="top" constant="4" id="OQM-AY-4BH"/>
                                                 <constraint firstItem="flF-4h-2bK" firstAttribute="leading" secondItem="GYw-wv-ius" secondAttribute="trailing" constant="9" id="QHm-TT-HqV"/>
                                                 <constraint firstItem="GYw-wv-ius" firstAttribute="leading" secondItem="Eif-gx-xTe" secondAttribute="trailing" constant="5" id="VD0-eZ-Doj"/>
