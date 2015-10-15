@@ -149,8 +149,6 @@
 {
     if ([[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) return;
 
-    if (message.senderID == self.currentUser.ID) return;
-    
     QBChatDialog* dialog = [[QMApi instance].chatService.dialogsMemoryStorage chatDialogWithID:dialogID];
     
     NSString *messageText = [NSString string];
@@ -212,7 +210,9 @@
 #pragma mark - QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
-    [self showNotificationForMessage:message inDialogID:dialogID];
+    if (message.senderID != self.currentUser.ID) {
+        [self showNotificationForMessage:message inDialogID:dialogID];
+    }
 }
 
 
