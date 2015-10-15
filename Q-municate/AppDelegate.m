@@ -14,6 +14,7 @@
 #import "QMSettingsManager.h"
 #import "QMAVCallManager.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "QMViewControllersFactory.h"
 
 #define DEVELOPMENT 0
 #define STAGE_SERVER_IS_ACTIVE 0
@@ -49,6 +50,10 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 
 /* ==================================================================== */
+
+@interface AppDelegate () <QMNotificationHandlerDelegate>
+
+@end
 
 @implementation AppDelegate
 
@@ -120,8 +125,13 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     if ([application applicationState] == UIApplicationStateInactive) {
-        if( userInfo[@"dialog_id"] ) {
-            [[QMApi instance] openChatPageForPushNotification:userInfo completion:^(BOOL completed) {}];
+        NSString *dialogID = userInfo[kPushNotificationDialogIDKey];
+        if (dialogID != nil) {
+            NSString *dialogWithIDWasEntered = [QMApi instance].settingsManager.dialogWithIDisActive;
+            if ([dialogWithIDWasEntered isEqualToString:dialogID]) return;
+            
+            [[QMApi instance] setPushNotification:userInfo];
+            [[QMApi instance] handlePushNotificationWithDelegate:self];
         }
         ILog(@"Push was received. User info: %@", userInfo);
     }
@@ -181,6 +191,22 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     if (deviceToken) {
         [[QMApi instance] setDeviceToken:deviceToken];
     }
+}
+
+#pragma mark - QMNotificationHandlerDelegate protocol
+
+- (void)notificationHandlerDidSucceedFetchingDialog:(QBChatDialog *)chatDialog {
+    UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
+    
+    UIViewController *chatVC = [QMViewControllersFactory chatControllerWithDialog:chatDialog];
+    
+    NSString *dialogWithIDWasEntered = [QMApi instance].settingsManager.dialogWithIDisActive;
+    if (dialogWithIDWasEntered != nil) {
+        // some chat already opened, return to dialogs view controller first
+        [navigationController popViewControllerAnimated:NO];
+    }
+    
+    [navigationController pushViewController:chatVC animated:YES];
 }
 
 @end

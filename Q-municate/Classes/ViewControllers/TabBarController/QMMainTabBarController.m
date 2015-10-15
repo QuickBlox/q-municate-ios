@@ -20,7 +20,7 @@
 #import "QMViewControllersFactory.h"
 
 
-@interface QMMainTabBarController ()
+@interface QMMainTabBarController () <QMNotificationHandlerDelegate>
 
 @end
 
@@ -89,15 +89,9 @@
         NSDictionary *push = [[QMApi instance] pushNotification];
         
         if (push != nil) {
-            if( push[@"dialog_id"] ){
-                
+            if( push[kPushNotificationDialogIDKey] ){
                 [SVProgressHUD show];
-                
-                [[QMApi instance] openChatPageForPushNotification:push completion:^(BOOL completed) {
-                    [SVProgressHUD dismiss];
-                }];
-                
-                [[QMApi instance] setPushNotification:nil];
+                [[QMApi instance] handlePushNotificationWithDelegate:self];
             }
         }
     }];
@@ -183,6 +177,27 @@
             }
         }
     }];
+}
+
+#pragma mark - QMNotificationHandlerDelegate protocol
+
+- (void)notificationHandlerDidStartLoadingDialogFromServer {
+    [SVProgressHUD showWithStatus:@"Loading dialog..." maskType:SVProgressHUDMaskTypeClear];
+}
+
+- (void)notificationHandlerDidFinishLoadingDialogFromServer {
+    [SVProgressHUD dismiss];
+}
+
+- (void)notificationHandlerDidSucceedFetchingDialog:(QBChatDialog *)chatDialog {
+    [SVProgressHUD dismiss];
+    UINavigationController *navigationController = (UINavigationController *)[self selectedViewController];
+    UIViewController *chatController = [QMViewControllersFactory chatControllerWithDialog:chatDialog];
+    [navigationController pushViewController:chatController animated:YES];
+}
+
+- (void)notificationHandlerDidFailFetchingDialog {
+    [SVProgressHUD showErrorWithStatus:@"Dialog was not found"];
 }
 
 #pragma mark - QMTabBarDelegate

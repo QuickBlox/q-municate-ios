@@ -208,6 +208,11 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 - (void)sendContactRequestSendNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
 - (void)sendContactRequestDeleteNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
 
+/*
+ *  Handle push notification method
+ */
+- (void)handlePushNotificationWithDelegate:(id<QMNotificationHandlerDelegate>)delegate;
+
 @end
 
 
