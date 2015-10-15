@@ -10,6 +10,7 @@
 #import "QMFriendListCell.h"
 #import "QMApi.h"
 #import "QMUsersUtils.h"
+#import <SVProgressHUD.h>
 
 NSString *const kFriendsListCellIdentifier = @"QMFriendListCell";
 NSString *const kLeaveChatCellIdentifier = @"QMLeaveChatCell";
@@ -89,9 +90,12 @@ NSString *const kLeaveChatCellIdentifier = @"QMLeaveChatCell";
 
 - (void)usersListCell:(QMFriendListCell *)cell pressAddBtn:(UIButton *)sender {
 
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     QBUUser *user = self.participants[indexPath.row];
-    [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {}];
+    [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {
+        [SVProgressHUD dismiss];
+    }];
 }
 
 @end
