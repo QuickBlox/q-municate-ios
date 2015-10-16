@@ -196,7 +196,8 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 #pragma mark - QMNotificationHandlerDelegate protocol
 
 - (void)notificationHandlerDidSucceedFetchingDialog:(QBChatDialog *)chatDialog {
-    UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
+    UITabBarController *rootController = [(UITabBarController *)self.window.rootViewController selectedViewController];
+    UINavigationController *navigationController = (UINavigationController *)rootController;
     
     UIViewController *chatVC = [QMViewControllersFactory chatControllerWithDialog:chatDialog];
     

@@ -151,6 +151,9 @@
 
     QBChatDialog* dialog = [[QMApi instance].chatService.dialogsMemoryStorage chatDialogWithID:dialogID];
     
+    // delayed property working correcrtly for private chat messages only
+    if (message.delayed && dialog.type == QBChatDialogTypePrivate) return;
+    
     NSString *messageText = [NSString string];
     
     if (message.isNotificatonMessage && message.messageType != QMMessageTypeUpdateGroupDialog) {
