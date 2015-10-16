@@ -38,9 +38,10 @@
 #import "QMMessageStatusStringBuilder.h"
 #import "QMChatButtonsFactory.h"
 
-static const NSUInteger widthPadding  = 40.0f;
-static const CGFloat kQMEmojiButtonSize  = 45.0f;
-static const NSInteger kQMEmojiButtonTag = 100;
+static const NSUInteger widthPadding                         = 40.0f;
+static const CGFloat kQMEmojiButtonSize                      = 45.0f;
+static const NSInteger kQMEmojiButtonTag                     = 100;
+static const CGFloat kQMInputToolbarTextContainerInsetRight  = 25.0f;
 
 @interface QMChatVC ()
 <
@@ -1030,7 +1031,7 @@ AGEmojiKeyboardViewDelegate
     
     CGFloat emojiButtonSpacing = kQMEmojiButtonSize/3.0f;
     
-    [self.inputToolbar.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[emojiButton(==size)]|"
+    [self.inputToolbar.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[emojiButton(==size)]|"
                                                                                           options:0
                                                                                           metrics:@{@"size" : @(kQMEmojiButtonSize)}
                                                                                             views:@{@"emojiButton" : self.emojiButton}]];
@@ -1039,14 +1040,12 @@ AGEmojiKeyboardViewDelegate
                                                                                           metrics:@{@"spacing" : @(emojiButtonSpacing)}
                                                                                             views:@{@"emojiButton"    : self.emojiButton,
                                                                                                     @"rightBarButton" : self.inputToolbar.contentView.rightBarButtonItem}]];
-    
-    // adding bezier path
-    CGFloat contentViewWidth    = self.inputToolbar.contentView.frame.size.width;
-    CGFloat rightBarButtonItemWidth = self.inputToolbar.contentView.rightBarButtonItemWidth;
-    CGFloat rightBarButtonItemY = self.inputToolbar.contentView.rightBarButtonItem.frame.origin.y;
-    
-    UIBezierPath *emojiPath = [UIBezierPath bezierPathWithRect:CGRectMake(contentViewWidth-rightBarButtonItemWidth-emojiButtonSpacing, rightBarButtonItemY, kQMEmojiButtonSize, kQMEmojiButtonSize/2.0f)];
-    self.inputToolbar.contentView.textView.textContainer.exclusionPaths = @[emojiPath];
+
+    // changing textContainerInset to restrict text entering on emoji button
+    self.inputToolbar.contentView.textView.textContainerInset = UIEdgeInsetsMake(self.inputToolbar.contentView.textView.textContainerInset.top,
+                                                                                 self.inputToolbar.contentView.textView.textContainerInset.left,
+                                                                                 self.inputToolbar.contentView.textView.textContainerInset.bottom,
+                                                                                 kQMInputToolbarTextContainerInsetRight);
 }
 
 - (void)showEmojiKeyboard {
