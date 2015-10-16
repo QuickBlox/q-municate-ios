@@ -1034,7 +1034,7 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
 
 - (void)notifyOponentAboutAcceptingContactRequest:(BOOL)accept opponentID:(NSUInteger)opponentID completion:(void(^)(NSError *error))completion {
     
-    QBChatMessage *message = [self privateMessageWithRecipientID:opponentID text:accept ? @"Accept contact request" : @"Reject contact request" save:YES];
+    QBChatMessage *message = [self privateMessageWithRecipientID:opponentID text:@"Contact request" save:YES];
     
     message.messageType = accept ? QMMessageTypeAcceptContactRequest : QMMessageTypeRejectContactRequest;
     
@@ -1052,6 +1052,7 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
 	QBChatMessage *message = [QBChatMessage message];
 	message.recipientID = recipientID;
 	message.senderID = self.serviceManager.currentUser.ID;
+    message.text = text;
 	message.customDateSent = self.dateSendTimeInterval;
 	
 	if (save) {
