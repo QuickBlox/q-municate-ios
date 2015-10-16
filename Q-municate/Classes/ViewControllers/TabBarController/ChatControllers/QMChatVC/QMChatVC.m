@@ -661,7 +661,7 @@ AGEmojiKeyboardViewDelegate
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateFormat = @"HH:mm";
+        dateFormatter.dateFormat = @"dd.MM.yy HH:mm";
     });
     
     NSString *timeStamp = [dateFormatter stringFromDate:date];
