@@ -52,6 +52,11 @@
     self.webManager.delegate = self;
 }
 
+- (void)layoutIfNeeded {
+    [super layoutIfNeeded];
+    self.layer.cornerRadius = self.frame.size.width / 2;
+}
+
 - (void)setImageWithURL:(NSURL *)url
             placeholder:(UIImage *)placehoder
                 options:(SDWebImageOptions)options

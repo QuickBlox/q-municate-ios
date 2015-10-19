@@ -669,6 +669,8 @@ AGEmojiKeyboardViewDelegate
     return timeStamp;
 }
 
+#pragma mark - ChatCollectionViewDelegate
+
 - (QMChatCellLayoutModel)collectionView:(QMChatCollectionView *)collectionView layoutModelAtIndexPath:(NSIndexPath *)indexPath {
     QMChatCellLayoutModel layoutModel = [super collectionView:collectionView layoutModelAtIndexPath:indexPath];
     
