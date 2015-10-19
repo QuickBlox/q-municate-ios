@@ -217,4 +217,10 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
     }];
 }
 
+- (void)chatServiceChatDidReconnect:(QMChatService *)chatService {
+    [[QMApi instance] fetchAllDialogs:^{
+        [[QMApi instance] joinGroupDialogs];
+    }];
+}
+
 @end
