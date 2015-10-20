@@ -18,7 +18,6 @@
 #import "REAlertView+QMSuccess.h"
 #import "QMDevice.h"
 #import "QMViewControllersFactory.h"
-#import "QMChatUtils.h"
 
 
 @interface QMMainTabBarController () <QMNotificationHandlerDelegate>
@@ -150,23 +149,17 @@
     if ([[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) return;
 
     QBChatDialog* dialog = [[QMApi instance].chatService.dialogsMemoryStorage chatDialogWithID:dialogID];
+    if (dialog == nil) {
+        dialog = message.dialog;
+    }
     
     // delayed property working correcrtly for private chat messages only
     if (message.delayed && dialog.type == QBChatDialogTypePrivate) return;
     
-    NSString *messageText = [NSString string];
-    
-    if (message.isNotificatonMessage && message.messageType != QMMessageTypeUpdateGroupDialog) {
-        messageText = [QMChatUtils messageTextForNotification:message];
-    }
-    else {
-        messageText = message.encodedText;
-    }
-    
     [QMSoundManager playMessageReceivedSound];
     
     __weak __typeof(self)weakSelf = self;
-    [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessageText:messageText chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
+    [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
         if (buttonIndex == 1) {
             if (![[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) {
                 UINavigationController *navigationController = (UINavigationController *)[weakSelf selectedViewController];
