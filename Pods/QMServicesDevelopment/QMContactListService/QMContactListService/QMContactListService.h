@@ -66,7 +66,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param userID       id of user to retrieve
  *  @param completion   completion block with boolean value YES if retrieve was needed
  */
-- (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock;
+- (void)retrieveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock;
 
 /**
  *  Retrieving users if needed.
@@ -74,7 +74,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param userIDs      array of users ids to retrieve
  *  @param completion   completion block with boolean value YES if retrieve was needed
  */
-- (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void (^)(BOOL retrieveWasNeeded))completionBlock;
+- (void)retrieveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void (^)(BOOL retrieveWasNeeded))completionBlock;
 
 /**
  *  Retrieve users with ids (with extended set of pagination parameters)

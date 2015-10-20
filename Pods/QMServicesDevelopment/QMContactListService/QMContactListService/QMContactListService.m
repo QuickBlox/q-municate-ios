@@ -141,12 +141,12 @@
 
 #pragma mark - Retrive users
 
-- (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock
+- (void)retrieveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock
 {
-    [self retriveIfNeededUsersWithIDs:@[@(userID)] completion:completionBlock];
+    [self retrieveIfNeededUsersWithIDs:@[@(userID)] completion:completionBlock];
 }
 
-- (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void (^)(BOOL retrieveWasNeeded))completionBlock
+- (void)retrieveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void (^)(BOOL retrieveWasNeeded))completionBlock
 {
     NSArray *memoryStorageUsers = [self.usersMemoryStorage usersWithIDs:usersIDs];
     

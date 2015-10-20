@@ -98,7 +98,7 @@
         //
         if (chatDialog != nil) {
             //
-            [weakSelf.contactListService retriveIfNeededUsersWithIDs:chatDialog.occupantIDs completion:^(BOOL retrieveWasNeeded) {
+            [weakSelf.contactListService retrieveIfNeededUsersWithIDs:chatDialog.occupantIDs completion:^(BOOL retrieveWasNeeded) {
                 //
                 if ([delegate respondsToSelector:@selector(notificationHandlerDidSucceedFetchingDialog:)]) {
                     [delegate notificationHandlerDidSucceedFetchingDialog:chatDialog];
@@ -117,7 +117,7 @@
                 }
                 if (loadedDialog != nil) {
                     //
-                    [weakSelf.contactListService retriveIfNeededUsersWithIDs:chatDialog.occupantIDs completion:^(BOOL retrieveWasNeeded) {
+                    [weakSelf.contactListService retrieveIfNeededUsersWithIDs:chatDialog.occupantIDs completion:^(BOOL retrieveWasNeeded) {
                         //
                         if ([delegate respondsToSelector:@selector(notificationHandlerDidSucceedFetchingDialog:)]) {
                             [delegate notificationHandlerDidSucceedFetchingDialog:loadedDialog];
