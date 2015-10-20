@@ -150,10 +150,6 @@ static NSString *const kQMErrorPasswordKey = @"password";
         
         if ([QBChat instance].isLoggedIn) {
             [self joinGroupDialogs];
-            
-            [self fetchMessagesForActiveChatIfNeededWithCompletion:^(BOOL fetchWasNeeded) {
-                if (completion) completion(YES);
-            }];
         }
     });
 }
@@ -269,6 +265,12 @@ static NSString *const kQMErrorPasswordKey = @"password";
 }
 
 #pragma mark QMChatServiceCache delegate
+
+- (void)chatService:(QMChatService *)chatService didLoadChatDialogsFromCache:(NSArray *)dialogs withUsers:(NSSet *)dialogsUsersIDs {
+    [self.contactListService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:^(BOOL retrieveWasNeeded) {
+        //
+    }];
+}
 
 - (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
     [QMChatCache.instance insertOrUpdateDialog:chatDialog completion:nil];

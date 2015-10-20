@@ -86,15 +86,17 @@
             [[QMApi instance] updateCurrentUser:params image:nil progress:nil completion:^(BOOL success) {}];
         }
         
-        // open app by push notification:
-        NSDictionary *push = [[QMApi instance] pushNotification];
-        
-        if (push != nil) {
-            if( push[kPushNotificationDialogIDKey] ){
-                [SVProgressHUD show];
-                [[QMApi instance] handlePushNotificationWithDelegate:self];
+        [[QMApi instance] fetchAllDialogs:^{
+            // open chat if app was launched by push notifications
+            NSDictionary *push = [[QMApi instance] pushNotification];
+            
+            if (push != nil) {
+                if( push[kPushNotificationDialogIDKey] ){
+                    [SVProgressHUD show];
+                    [[QMApi instance] handlePushNotificationWithDelegate:self];
+                }
             }
-        }
+        }];
     }];
 }
 

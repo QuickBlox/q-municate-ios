@@ -227,14 +227,6 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  */
 - (void)logoutFromChat;
 
-/**
- *  Fetching messages for active chat if needed.
- *
- *  @param block    completion block with YES boolean value if fetching was needed
- */
-- (void)fetchMessagesForActiveChatIfNeededWithCompletion:(void(^)(BOOL fetchWasNeeded))block;
-
-
 /*** Chat Dialogs ***/
 
 /**
