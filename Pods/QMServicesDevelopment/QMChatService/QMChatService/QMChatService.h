@@ -318,6 +318,15 @@ typedef void(^QMCacheCollection)(NSArray *collection);
 @optional
 
 /**
+ *  Is called when ChatDialogs did load from cache.
+ *
+ *  @param chatService      instance
+ *  @param dialogs          array of QBChatDialogs loaded from cache
+ *  @param dialogsUsersIDs  all users from all ChatDialogs
+ */
+- (void)chatService:(QMChatService *)chatService didLoadChatDialogsFromCache:(NSArray *)dialogs withUsers:(NSSet *)dialogsUsersIDs;
+
+/**
  *  Is called when messages did load from cache for some dialog.
  *
  *  @param chatService instance

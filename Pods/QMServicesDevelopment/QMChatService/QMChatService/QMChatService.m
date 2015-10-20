@@ -55,6 +55,8 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
 		
 		self.presenceTimerInterval = 45.0;
 		self.automaticallySendPresences = YES;
+        
+        if ([QBSession currentSession].currentUser != nil) [self loadCachedDialogsWithCompletion:nil];
     }
 	
 	return self;
@@ -96,6 +98,15 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
 			if ([weakSelf.multicastDelegate respondsToSelector:@selector(chatService:didAddChatDialogsToMemoryStorage:)]) {
 				[weakSelf.multicastDelegate chatService:weakSelf didAddChatDialogsToMemoryStorage:collection];
 			}
+            
+            NSMutableSet *dialogsUsersIDs = [NSMutableSet set];
+            for (QBChatDialog *dialog in userDialogs) {
+                [dialogsUsersIDs addObjectsFromArray:dialog.occupantIDs];
+            }
+            if ([weakSelf.multicastDelegate respondsToSelector:@selector(chatService:didLoadChatDialogsFromCache:withUsers:)]) {
+                [weakSelf.multicastDelegate chatService:weakSelf didLoadChatDialogsFromCache:userDialogs withUsers:dialogsUsersIDs.copy];
+            }
+            
             if (completion) {
                 completion();
             }
