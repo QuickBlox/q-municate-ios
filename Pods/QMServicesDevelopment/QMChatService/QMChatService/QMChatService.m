@@ -286,7 +286,7 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
 	QBUUser *user = self.serviceManager.currentUser;
     NSAssert(user != nil, @"User must be already allocated!");
 	
-	if (QBChat.instance.isLoggedIn) {
+	if (QBChat.instance.isConnected) {
 		if( self.chatSuccessBlock != nil ){
 			self.chatSuccessBlock(nil);
 		}
@@ -295,8 +295,11 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
 		
 		QBChat.instance.autoReconnectEnabled = YES;
 		QBChat.instance.streamManagementEnabled = YES;
-		[QBChat.instance loginWithUser:user];
+		[QBChat.instance connectWithUser:user];
 		
+        if( self.chatSuccessBlock != nil ){
+            self.chatSuccessBlock(nil);
+        }
 	}
 }
 
@@ -304,8 +307,8 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
 	
 	[self stopSendPresence];
 	
-	if (QBChat.instance.isLoggedIn) {
-		[QBChat.instance logout];
+	if (QBChat.instance.isConnected) {
+		[QBChat.instance disconnect];
 	}
 }
 

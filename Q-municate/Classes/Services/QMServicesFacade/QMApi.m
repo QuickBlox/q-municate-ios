@@ -12,6 +12,7 @@
 #import "QMAVCallManager.h"
 #import "QMContentService.h"
 #import <Reachability.h>
+#import <SVProgressHUD.h>
 #import "REAlertView+QMSuccess.h"
 #import "QMViewControllersFactory.h"
 #import "QMMainTabBarController.h"
@@ -37,7 +38,6 @@ static NSString *const kQMErrorPasswordKey = @"password";
 @property (strong, nonatomic) QMContentService *contentService;
 @property (strong, nonatomic) Reachability *internetConnection;
 @property (strong, nonatomic) NSTimer *presenceTimer;
-@property (nonatomic) dispatch_group_t group;
 
 @end
 
@@ -81,6 +81,24 @@ static NSString *const kQMErrorPasswordKey = @"password";
         _contentService = [[QMContentService alloc] init];
         _internetConnection = [Reachability reachabilityForInternetConnection];
         [_chatService addDelegate:self];
+        
+        __weak __typeof(self)weakSelf = self;
+        void (^internetConnectionReachable)(Reachability *reachability) = ^(Reachability *reachability) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (weakSelf.isAuthorized) {
+                    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+                    [weakSelf applicationDidBecomeActive:nil];
+                }
+            });
+        };
+        void (^internetConnectionNotReachable)(Reachability *reachability) = ^(Reachability *reachability) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil) maskType:SVProgressHUDMaskTypeNone];
+            });
+        };
+        
+        self.internetConnection.reachableBlock = internetConnectionReachable;
+        self.internetConnection.unreachableBlock = internetConnectionNotReachable;
     }
     
     [self.internetConnection startNotifier];
@@ -133,25 +151,29 @@ static NSString *const kQMErrorPasswordKey = @"password";
 
 - (void)applicationDidBecomeActive:(void(^)(BOOL success))completion {
     
-    _group = dispatch_group_create();
-    dispatch_group_enter(_group);
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_group_enter(group);
     
     __weak __typeof(self)weakSelf = self;
     [self.chatService fetchDialogsWithLastActivityFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:nil completionBlock:^(QBResponse *response) {
         //
         weakSelf.settingsManager.lastActivityDate = [NSDate date];
-        dispatch_group_leave(_group);
+        dispatch_group_leave(group);
     }];
     
-    dispatch_group_enter(_group);
+    dispatch_group_enter(group);
     [self loginChat:^(BOOL success) {
-        dispatch_group_leave(_group);
+        dispatch_group_leave(group);
     }];
     
-    dispatch_group_notify(_group, dispatch_get_main_queue(), ^{
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
         
         if ([QBChat instance].isLoggedIn) {
             [self joinGroupDialogs];
+            if (completion) completion(YES);
+        }
+        else {
+            if (completion) completion(NO);
         }
     });
 }
