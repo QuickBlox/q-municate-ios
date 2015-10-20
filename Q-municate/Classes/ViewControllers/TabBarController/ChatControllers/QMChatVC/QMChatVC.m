@@ -618,7 +618,14 @@ AGEmojiKeyboardViewDelegate
         attributedString = [self bottomLabelAttributedStringForItem:item];
     } else {
         if (self.dialog.type != QBChatDialogTypePrivate) {
-            attributedString = [self topLabelAttributedStringForItem:item];
+            CGSize topLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:[self topLabelAttributedStringForItem:item]
+                                                           withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
+                                                    limitedToNumberOfLines:0];
+            CGSize bottomLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:[self bottomLabelAttributedStringForItem:item]
+                                                           withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
+                                                    limitedToNumberOfLines:0];
+            
+            return topLabelSize.width > bottomLabelSize.width ? topLabelSize.width : bottomLabelSize.width;
         }
         else {
             attributedString = [self bottomLabelAttributedStringForItem:item];
