@@ -30,6 +30,9 @@ typedef void(^QMCFileUploadResponseBlock)(QBResponse *response, QBCBlob *blob);
 typedef void(^QMCFileDownloadResponseBlock)(QBResponse *response, NSData *fileData);
 typedef void(^QBUUserPagedResponseBlock)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users);
 
+/*ChatDialogs constants*/
+static const NSUInteger kQMDialogsPageLimit = 10;
+
 //******************** CoreData ********************
 
 static NSString *const kChatCacheNameKey                    = @"q-municate";

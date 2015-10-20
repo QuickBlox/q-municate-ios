@@ -136,8 +136,10 @@ static NSString *const kQMErrorPasswordKey = @"password";
     _group = dispatch_group_create();
     dispatch_group_enter(_group);
     
-    [self fetchDialogsWithLastActivityFromDate:self.settingsManager.lastActivityDate completion:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page) {
+    __weak __typeof(self)weakSelf = self;
+    [self.chatService fetchDialogsWithLastActivityFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:nil completionBlock:^(QBResponse *response) {
         //
+        weakSelf.settingsManager.lastActivityDate = [NSDate date];
         dispatch_group_leave(_group);
     }];
     

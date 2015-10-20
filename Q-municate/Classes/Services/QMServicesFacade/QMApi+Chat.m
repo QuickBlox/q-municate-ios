@@ -46,19 +46,18 @@
 NSString const *kQMEditDialogExtendedNameParameter = @"name";
 NSString const *kQMEditDialogExtendedPushOccupantsParameter = @"push[occupants_ids][]";
 NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupants_ids][]";
-static const NSUInteger kQMDialogsPageLimit = 10;
 
 - (void)fetchAllDialogs:(void(^)(void))completion {
 
     __weak __typeof(self)weakSelf = self;
     if (self.settingsManager.lastActivityDate != nil) {
-        [self fetchDialogsWithLastActivityFromDate:self.settingsManager.lastActivityDate completion:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page) {
+        [self.chatService fetchDialogsWithLastActivityFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
             //
-            [weakSelf.contactListService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:^(BOOL retrieveWasNeeded) {
-                //
-                weakSelf.settingsManager.lastActivityDate = [NSDate date];
-                if (completion) completion();
-            }];
+            [weakSelf.contactListService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:nil];
+        } completionBlock:^(QBResponse *response) {
+            //
+            weakSelf.settingsManager.lastActivityDate = [NSDate date];
+            if (completion) completion();
         }];
     }
     else {
@@ -71,11 +70,6 @@ static const NSUInteger kQMDialogsPageLimit = 10;
             if (completion) completion();
         }];
     }
-}
-
-- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(QBDialogsPagedResponseBlock)completion
-{
-    [self.chatService fetchDialogsWithLastActivityFromDate:date completion:completion];
 }
 
 - (void)fetchChatDialogWithID:(NSString *)dialogID completion:(void(^)(QBChatDialog *chatDialog))completion

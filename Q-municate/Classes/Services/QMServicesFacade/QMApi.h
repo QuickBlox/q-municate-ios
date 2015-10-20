@@ -260,14 +260,6 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 - (void)fetchAllDialogs:(void(^)(void))completion;
 
 /**
- *  Fetching all dialogs with last activity from requested date.
- *
- *  @param date         date to fetch dialogs with last activity from
- *  @param completion   completion with QBDialogsPagedResponseBlock block
- */
-- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(QBDialogsPagedResponseBlock)completion;
-
-/**
  *  Fetching dialog with requested ID and retrieving its users.
  *
  *  @param dialogID     id of dialog to return

@@ -432,7 +432,7 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
             [self.dialogsMemoryStorage addChatDialog:chatDialogToUpdate andJoin:NO onJoin:nil];
             
             if ([self.multicastDelegate respondsToSelector:@selector(chatService:didAddChatDialogToMemoryStorage:)]) {
-                [self.multicastDelegate chatService:self didAddChatDialogToMemoryStorage:message.dialog];
+                [self.multicastDelegate chatService:self didAddChatDialogToMemoryStorage:chatDialogToUpdate];
             }
         }
 	}
@@ -510,7 +510,7 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
         
 		[QBRequest dialogsForPage:responsePage extendedRequest:extendedRequest successBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page) {
             
-			[weakSelf.dialogsMemoryStorage addChatDialogs:dialogObjects andJoin:NO];
+			[weakSelf.dialogsMemoryStorage addChatDialogs:dialogObjects andJoin:YES];
 			
 			if ([weakSelf.multicastDelegate respondsToSelector:@selector(chatService:didAddChatDialogsToMemoryStorage:)]) {
 				[weakSelf.multicastDelegate chatService:weakSelf didAddChatDialogsToMemoryStorage:dialogObjects];
@@ -911,28 +911,20 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
     }];
 }
 
-- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(void (^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page))completion
+- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date
+                                andPageLimit:(NSUInteger)limit
+                              iterationBlock:(void(^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop))iteration
+                             completionBlock:(void (^)(QBResponse *response))completion
 {
     NSTimeInterval timeInterval = [date timeIntervalSince1970];
-    NSMutableDictionary *extendedRequest = @{@"last_message_date_sent[gt]":@(timeInterval)}.mutableCopy;
+    NSMutableDictionary *extendedRequest = @{@"updated_at[gt]":@(timeInterval)}.mutableCopy;
     
-    __weak typeof(self)weakSelf = self;
-    
-    [QBRequest dialogsForPage:[QBResponsePage responsePageWithLimit:1 skip:0] extendedRequest:extendedRequest successBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page) {
+    [self allDialogsWithPageLimit:limit extendedRequest:extendedRequest iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
         //
-        
-        [weakSelf.dialogsMemoryStorage addChatDialogs:dialogObjects andJoin:YES];
-        
-        if ([weakSelf.multicastDelegate respondsToSelector:@selector(chatService:didAddChatDialogsToMemoryStorage:)]) {
-            [weakSelf.multicastDelegate chatService:weakSelf didAddChatDialogsToMemoryStorage:dialogObjects];
-        }
-        
-        if (completion) {
-            completion(response,dialogObjects,dialogsUsersIDs,page);
-        }
-    } errorBlock:^(QBResponse *response) {
+        if (iteration) iteration(response,dialogObjects,dialogsUsersIDs,stop);
+    } completion:^(QBResponse *response) {
         //
-        completion(response,nil,nil,nil);
+        if (completion) completion(response);
     }];
 }
 

@@ -253,10 +253,12 @@ typedef void(^QMCacheCollection)(NSArray *collection);
 /**
  *  Fetch dialog with last activity date from date
  *
- *  @param date date to fetch dialogs from
- *  @param completion Block with response, dialogs, dialogs users and page if request succeded or response only if failed
+ *  @param date         date to fetch dialogs from
+ *  @param limit        page limit
+ *  @param iteration    iteration block with dialogs for pages
+ *  @param completion   Block with response when fetching finished
  */
-- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(void (^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page))completion;
+- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date andPageLimit:(NSUInteger)limit iterationBlock:(void(^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop))iteration completionBlock:(void (^)(QBResponse *response))completion;
 
 #pragma mark Send message
 
