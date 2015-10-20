@@ -417,6 +417,11 @@ AGEmojiKeyboardViewDelegate
         [self fireStopTypingIfNecessary];
     }
     
+    if (![QMApi instance].isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
+    
     if (self.dialog.type == QBChatDialogTypePrivate) {
         if (![[QMApi instance] isFriend:self.opponentUser]) {
             [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
@@ -443,6 +448,11 @@ AGEmojiKeyboardViewDelegate
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender {
+    if (![QMApi instance].isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
+    
     if (self.dialog.type == QBChatDialogTypePrivate) {
         if (![[QMApi instance] isFriend:self.opponentUser]) {
             [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
@@ -850,11 +860,10 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark - QMChatConnectionDelegate
 
-- (void)chatServiceChatDidLogin
+- (void)refreshAndReadMessages;
 {
     if (self.dialog.type != QBChatDialogTypePrivate) {
         [self refreshMessagesShowingProgress:NO];
-        //
     }
 
     for (QBChatMessage* message in self.unreadMessages) {
@@ -862,6 +871,14 @@ AGEmojiKeyboardViewDelegate
     }
     
     self.unreadMessages = nil;
+}
+
+- (void)chatServiceChatDidConnect:(QMChatService *)chatService {
+    [self refreshAndReadMessages];
+}
+
+- (void)chatServiceChatDidReconnect:(QMChatService *)chatService {
+    [self refreshAndReadMessages];
 }
 
 #pragma mark - QMChatAttachmentServiceDelegate

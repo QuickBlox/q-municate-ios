@@ -249,6 +249,11 @@ static NSString *const kQMErrorPasswordKey = @"password";
     
     NSAssert(!response.success, @"Error handling is available only if response success value is False");
     
+    if (!self.isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
+    
     NSString *errorMessage = [[NSString alloc] init];
     
     if (self.isAuthorized) {
