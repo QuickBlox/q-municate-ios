@@ -12,6 +12,7 @@
 #import "QMAVCallManager.h"
 #import "QMContentService.h"
 #import <Reachability.h>
+#import <SVProgressHUD.h>
 #import "REAlertView+QMSuccess.h"
 #import "QMViewControllersFactory.h"
 #import "QMMainTabBarController.h"
@@ -37,7 +38,6 @@ static NSString *const kQMErrorPasswordKey = @"password";
 @property (strong, nonatomic) QMContentService *contentService;
 @property (strong, nonatomic) Reachability *internetConnection;
 @property (strong, nonatomic) NSTimer *presenceTimer;
-@property (nonatomic) dispatch_group_t group;
 
 @end
 
@@ -81,6 +81,24 @@ static NSString *const kQMErrorPasswordKey = @"password";
         _contentService = [[QMContentService alloc] init];
         _internetConnection = [Reachability reachabilityForInternetConnection];
         [_chatService addDelegate:self];
+        
+        __weak __typeof(self)weakSelf = self;
+        void (^internetConnectionReachable)(Reachability *reachability) = ^(Reachability *reachability) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (weakSelf.isAuthorized) {
+                    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+                    [weakSelf applicationDidBecomeActive:nil];
+                }
+            });
+        };
+        void (^internetConnectionNotReachable)(Reachability *reachability) = ^(Reachability *reachability) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil) maskType:SVProgressHUDMaskTypeNone];
+            });
+        };
+        
+        self.internetConnection.reachableBlock = internetConnectionReachable;
+        self.internetConnection.unreachableBlock = internetConnectionNotReachable;
     }
     
     [self.internetConnection startNotifier];
@@ -112,7 +130,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
     } else {
         idsToFetch = notification.dialog.occupantIDs;
     }
-    [self.contactListService retriveIfNeededUsersWithIDs:idsToFetch completion:^(BOOL retrieveWasNeeded) {
+    [self.contactListService retrieveIfNeededUsersWithIDs:idsToFetch completion:^(BOOL retrieveWasNeeded) {
 
     }];
 }
@@ -133,27 +151,29 @@ static NSString *const kQMErrorPasswordKey = @"password";
 
 - (void)applicationDidBecomeActive:(void(^)(BOOL success))completion {
     
-    _group = dispatch_group_create();
-    dispatch_group_enter(_group);
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_group_enter(group);
     
-    [self fetchDialogsWithLastActivityFromDate:self.settingsManager.lastActivityDate completion:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page) {
+    __weak __typeof(self)weakSelf = self;
+    [self.chatService fetchDialogsUpdatedFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:nil completionBlock:^(QBResponse *response) {
         //
-        dispatch_group_leave(_group);
+        weakSelf.settingsManager.lastActivityDate = [NSDate date];
+        dispatch_group_leave(group);
     }];
     
-    dispatch_group_enter(_group);
+    dispatch_group_enter(group);
     [self loginChat:^(BOOL success) {
-        dispatch_group_leave(_group);
+        dispatch_group_leave(group);
     }];
     
-    dispatch_group_notify(_group, dispatch_get_main_queue(), ^{
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
         
         if ([QBChat instance].isLoggedIn) {
             [self joinGroupDialogs];
-            
-            [self fetchMessagesForActiveChatIfNeededWithCompletion:^(BOOL fetchWasNeeded) {
-                if (completion) completion(YES);
-            }];
+            if (completion) completion(YES);
+        }
+        else {
+            if (completion) completion(NO);
         }
     });
 }
@@ -229,6 +249,11 @@ static NSString *const kQMErrorPasswordKey = @"password";
     
     NSAssert(!response.success, @"Error handling is available only if response success value is False");
     
+    if (!self.isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
+    
     NSString *errorMessage = [[NSString alloc] init];
     
     if (self.isAuthorized) {
@@ -270,6 +295,12 @@ static NSString *const kQMErrorPasswordKey = @"password";
 
 #pragma mark QMChatServiceCache delegate
 
+- (void)chatService:(QMChatService *)chatService didLoadChatDialogsFromCache:(NSArray *)dialogs withUsers:(NSSet *)dialogsUsersIDs {
+    [self.contactListService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:^(BOOL retrieveWasNeeded) {
+        //
+    }];
+}
+
 - (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
     [QMChatCache.instance insertOrUpdateDialog:chatDialog completion:nil];
 }
@@ -299,7 +330,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
 }
 
 - (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
-    NSAssert(message.dialogID == dialog.ID, @"must be equal");
+    NSAssert([message.dialogID isEqualToString:dialog.ID], @"must be equal");
     
     [QMChatCache.instance insertOrUpdateMessage:message withDialogId:dialog.ID completion:nil];
     [QMChatCache.instance insertOrUpdateDialog:dialog completion:nil];

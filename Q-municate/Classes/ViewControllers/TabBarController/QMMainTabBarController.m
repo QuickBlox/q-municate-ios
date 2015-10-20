@@ -70,9 +70,6 @@
 - (void)loginToChat
 {
     [[QMApi instance] loginChat:^(BOOL loginSuccess) {
-        
-        // hide progress hud
-        [SVProgressHUD dismiss];
 
         QBUUser *usr = [QMApi instance].currentUser;
         if (!usr.isImport) {
@@ -85,15 +82,18 @@
             [[QMApi instance] updateCurrentUser:params image:nil progress:nil completion:^(BOOL success) {}];
         }
         
-        // open app by push notification:
-        NSDictionary *push = [[QMApi instance] pushNotification];
-        
-        if (push != nil) {
-            if( push[kPushNotificationDialogIDKey] ){
-                [SVProgressHUD show];
-                [[QMApi instance] handlePushNotificationWithDelegate:self];
+        [[QMApi instance] fetchAllDialogs:^{
+            [[QMApi instance] joinGroupDialogs];
+            // open chat if app was launched by push notifications
+            NSDictionary *push = [[QMApi instance] pushNotification];
+            
+            if (push != nil) {
+                if( push[kPushNotificationDialogIDKey] ){
+                    [SVProgressHUD show];
+                    [[QMApi instance] handlePushNotificationWithDelegate:self];
+                }
             }
-        }
+        }];
     }];
 }
 
@@ -216,27 +216,26 @@
 
 - (void)chatServiceChatDidConnect:(QMChatService *)chatService
 {
-    [SVProgressHUD showSuccessWithStatus:@"Chat connected!" maskType:SVProgressHUDMaskTypeClear];
+    [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil) maskType:SVProgressHUDMaskTypeClear];
 }
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)chatService
 {
-    [SVProgressHUD showSuccessWithStatus:@"Chat reconnected!" maskType:SVProgressHUDMaskTypeClear];
-}
-
-- (void)chatServiceChatDidAccidentallyDisconnect:(QMChatService *)chatService
-{
-    [SVProgressHUD showErrorWithStatus:@"Chat disconnected!"];
+    [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil) maskType:SVProgressHUDMaskTypeClear];
 }
 
 - (void)chatServiceChatDidNotLoginWithError:(NSError *)error
 {
-    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"Did not login with error: %@", [error description]]];
+    if ([[QMApi instance] isInternetConnected]) {
+        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription]];
+    }
 }
 
 - (void)chatServiceChatDidFailWithStreamError:(NSError *)error
 {
-    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"Chat failed with error: %@", [error description]]];
+    if ([[QMApi instance] isInternetConnected]) {
+        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_STREAM_ERROR", nil), error.localizedDescription]];
+    }
 }
 
 @end

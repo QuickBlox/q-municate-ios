@@ -302,46 +302,43 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark - Nav Buttons Actions
 
-- (void)audioCallAction {
+- (BOOL)callsAllowed {
 #if QM_AUDIO_VIDEO_ENABLED == 0
     [QMAlertsFactory comingSoonAlert];
+    return NO;
 #else
+    if (![QMApi instance].isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return NO;
+    }
     
     if( ![[QMApi instance] isFriend:self.opponentUser] || [[QMApi instance] userIDIsInPendingList:self.opponentUser.ID] ) {
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
-        return;
+        return NO;
     }
     
     BOOL callsAllowed = [[[self.inputToolbar contentView] textView] isEditable];
     if( !callsAllowed ) {
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
-        return;
+        return NO;
     }
-    NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
-    [[QMApi instance] callToUser:@(opponentID) conferenceType:QBConferenceTypeAudio];
     
+    return YES;
 #endif
 }
 
-- (void)videoCallAction {
-#if QM_AUDIO_VIDEO_ENABLED == 0
-    [QMAlertsFactory comingSoonAlert];
-#else
+- (void)audioCallAction {
+    if (![self callsAllowed]) return;
     
-    if( ![[QMApi instance] isFriend:self.opponentUser] || [[QMApi instance] userIDIsInPendingList:self.opponentUser.ID] ) {
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
-        return;
-    }
+    NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
+    [[QMApi instance] callToUser:@(opponentID) conferenceType:QBConferenceTypeAudio];
+}
 
-    BOOL callsAllowed = [[[self.inputToolbar contentView] textView] isEditable];
-    if( !callsAllowed ) {
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
-        return;
-    }
+- (void)videoCallAction {
+    if (![self callsAllowed]) return;
     
     NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
     [[QMApi instance] callToUser:@(opponentID) conferenceType:QBConferenceTypeVideo];
-#endif
 }
 
 - (void)groupInfoNavButtonAction {
@@ -417,6 +414,11 @@ AGEmojiKeyboardViewDelegate
         [self fireStopTypingIfNecessary];
     }
     
+    if (![QMApi instance].isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
+    
     if (self.dialog.type == QBChatDialogTypePrivate) {
         if (![[QMApi instance] isFriend:self.opponentUser]) {
             [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
@@ -443,6 +445,11 @@ AGEmojiKeyboardViewDelegate
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender {
+    if (![QMApi instance].isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
+    
     if (self.dialog.type == QBChatDialogTypePrivate) {
         if (![[QMApi instance] isFriend:self.opponentUser]) {
             [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
@@ -857,11 +864,10 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark - QMChatConnectionDelegate
 
-- (void)chatServiceChatDidLogin
+- (void)refreshAndReadMessages;
 {
     if (self.dialog.type != QBChatDialogTypePrivate) {
         [self refreshMessagesShowingProgress:NO];
-        //
     }
 
     for (QBChatMessage* message in self.unreadMessages) {
@@ -869,6 +875,14 @@ AGEmojiKeyboardViewDelegate
     }
     
     self.unreadMessages = nil;
+}
+
+- (void)chatServiceChatDidConnect:(QMChatService *)chatService {
+    [self refreshAndReadMessages];
+}
+
+- (void)chatServiceChatDidReconnect:(QMChatService *)chatService {
+    [self refreshAndReadMessages];
 }
 
 #pragma mark - QMChatAttachmentServiceDelegate

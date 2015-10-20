@@ -45,7 +45,7 @@ QMContactListServiceDelegate
 {
     __weak typeof(self)weakSelf = self;
     if (message.messageType == QMMessageTypeContactRequest) {
-        [[QMApi instance].contactListService retriveIfNeededUserWithID:message.senderID completion:^(BOOL retrieveWasNeeded) {
+        [[QMApi instance].contactListService retrieveIfNeededUserWithID:message.senderID completion:^(BOOL retrieveWasNeeded) {
             if (retrieveWasNeeded) {
                 [weakSelf updateGUI];
             }
@@ -111,7 +111,7 @@ QMContactListServiceDelegate
 
 - (NSMutableArray *)dialogs {
     
-    NSMutableArray *dialogs = [[QMApi instance].chatService.dialogsMemoryStorage dialogsSortByLastMessageDateWithAscending:NO].mutableCopy;
+    NSMutableArray *dialogs = [[QMApi instance].chatService.dialogsMemoryStorage dialogsSortByUpdatedAtWithAscending:NO].mutableCopy;
     
     return dialogs;
 }
@@ -203,20 +203,6 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 
 - (void)contactListService:(QMContactListService *)contactListService didAddUsers:(NSArray *)users {
     [self.tableView reloadData];
-}
-
-#pragma mark Chat Connection Delegate
-
-- (void)chatServiceChatDidLogin {
-    [[QMApi instance] fetchAllDialogs:^{
-        [[QMApi instance] joinGroupDialogs];
-    }];
-}
-
-- (void)chatServiceChatDidReconnect:(QMChatService *)chatService {
-    [[QMApi instance] fetchAllDialogs:^{
-        [[QMApi instance] joinGroupDialogs];
-    }];
 }
 
 @end

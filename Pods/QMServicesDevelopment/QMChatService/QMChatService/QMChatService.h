@@ -253,10 +253,12 @@ typedef void(^QMCacheCollection)(NSArray *collection);
 /**
  *  Fetch dialog with last activity date from date
  *
- *  @param date date to fetch dialogs from
- *  @param completion Block with response, dialogs, dialogs users and page if request succeded or response only if failed
+ *  @param date         date to fetch dialogs from
+ *  @param limit        page limit
+ *  @param iteration    iteration block with dialogs for pages
+ *  @param completion   Block with response when fetching finished
  */
-- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(void (^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page))completion;
+- (void)fetchDialogsUpdatedFromDate:(NSDate *)date andPageLimit:(NSUInteger)limit iterationBlock:(void(^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop))iteration completionBlock:(void (^)(QBResponse *response))completion;
 
 #pragma mark Send message
 
@@ -316,6 +318,15 @@ typedef void(^QMCacheCollection)(NSArray *collection);
 
 @protocol QMChatServiceDelegate <NSObject>
 @optional
+
+/**
+ *  Is called when ChatDialogs did load from cache.
+ *
+ *  @param chatService      instance
+ *  @param dialogs          array of QBChatDialogs loaded from cache
+ *  @param dialogsUsersIDs  all users from all ChatDialogs
+ */
+- (void)chatService:(QMChatService *)chatService didLoadChatDialogsFromCache:(NSArray *)dialogs withUsers:(NSSet *)dialogsUsersIDs;
 
 /**
  *  Is called when messages did load from cache for some dialog.

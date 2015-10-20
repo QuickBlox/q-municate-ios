@@ -37,18 +37,6 @@
     [self.settingsManager setLastActivityDate:[NSDate date]];
 }
 
-- (void)fetchMessagesForActiveChatIfNeededWithCompletion:(void(^)(BOOL fetchWasNeeded))block
-{
-    if (self.settingsManager.dialogWithIDisActive) {
-        [self.chatService messagesWithChatDialogID:self.settingsManager.dialogWithIDisActive completion:^(QBResponse *response, NSArray *messages) {
-            //
-            if (block) block(YES);
-        }];
-        return;
-    }
-    if (block) block(NO);
-}
-
 /**
  *  ChatDialog
  */
@@ -58,23 +46,30 @@
 NSString const *kQMEditDialogExtendedNameParameter = @"name";
 NSString const *kQMEditDialogExtendedPushOccupantsParameter = @"push[occupants_ids][]";
 NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupants_ids][]";
-static const NSUInteger kQMDialogsPageLimit = 10;
 
 - (void)fetchAllDialogs:(void(^)(void))completion {
-    
-    __weak __typeof(self)weakSelf = self;
-    [self.chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
-        //
-        [weakSelf.contactListService retriveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:nil];
-    } completion:^(QBResponse *response) {
-        //
-        if (completion) completion();
-    }];
-}
 
-- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(QBDialogsPagedResponseBlock)completion
-{
-    [self.chatService fetchDialogsWithLastActivityFromDate:date completion:completion];
+    __weak __typeof(self)weakSelf = self;
+    if (self.settingsManager.lastActivityDate != nil) {
+        [self.chatService fetchDialogsUpdatedFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
+            //
+            [weakSelf.contactListService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:nil];
+        } completionBlock:^(QBResponse *response) {
+            //
+            weakSelf.settingsManager.lastActivityDate = [NSDate date];
+            if (completion) completion();
+        }];
+    }
+    else {
+        [self.chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
+            //
+            [weakSelf.contactListService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:nil];
+        } completion:^(QBResponse *response) {
+            //
+            weakSelf.settingsManager.lastActivityDate = [NSDate date];
+            if (completion) completion();
+        }];
+    }
 }
 
 - (void)fetchChatDialogWithID:(NSString *)dialogID completion:(void(^)(QBChatDialog *chatDialog))completion
