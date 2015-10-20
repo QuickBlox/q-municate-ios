@@ -51,7 +51,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 
     __weak __typeof(self)weakSelf = self;
     if (self.settingsManager.lastActivityDate != nil) {
-        [self.chatService fetchDialogsWithLastActivityFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
+        [self.chatService fetchDialogsUpdatedFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
             //
             [weakSelf.contactListService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:nil];
         } completionBlock:^(QBResponse *response) {

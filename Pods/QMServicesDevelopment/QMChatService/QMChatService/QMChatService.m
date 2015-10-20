@@ -914,10 +914,10 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
     }];
 }
 
-- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date
-                                andPageLimit:(NSUInteger)limit
-                              iterationBlock:(void(^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop))iteration
-                             completionBlock:(void (^)(QBResponse *response))completion
+- (void)fetchDialogsUpdatedFromDate:(NSDate *)date
+                       andPageLimit:(NSUInteger)limit
+                     iterationBlock:(void(^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop))iteration
+                    completionBlock:(void (^)(QBResponse *response))completion
 {
     NSTimeInterval timeInterval = [date timeIntervalSince1970];
     NSMutableDictionary *extendedRequest = @{@"updated_at[gt]":@(timeInterval)}.mutableCopy;
