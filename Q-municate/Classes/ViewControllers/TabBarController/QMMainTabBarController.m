@@ -87,6 +87,7 @@
         }
         
         [[QMApi instance] fetchAllDialogs:^{
+            [[QMApi instance] joinGroupDialogs];
             // open chat if app was launched by push notifications
             NSDictionary *push = [[QMApi instance] pushNotification];
             

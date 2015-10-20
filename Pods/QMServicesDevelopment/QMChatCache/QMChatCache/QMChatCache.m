@@ -133,7 +133,7 @@ static QMChatCache *_chatCacheInstance = nil;
                 
                 QBChatDialog *tDialog = [cachedDialog toQBChatDialog];
                 
-                if (![dialog isEqual:tDialog]) {
+                if (![dialog.updatedAt isEqual:tDialog.updatedAt]) {
                     
                     [toUpdate addObject:dialog];
                 }
