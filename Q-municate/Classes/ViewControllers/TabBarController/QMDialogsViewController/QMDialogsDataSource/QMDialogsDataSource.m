@@ -174,10 +174,6 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 }
 
 - (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
-    [[QMApi instance] fetchAllDialogs:^{
-        [[QMApi instance] joinGroupDialogs];
-    }];
-    
     [self updateGUI];
 }
 
@@ -212,6 +208,12 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 #pragma mark Chat Connection Delegate
 
 - (void)chatServiceChatDidLogin {
+    [[QMApi instance] fetchAllDialogs:^{
+        [[QMApi instance] joinGroupDialogs];
+    }];
+}
+
+- (void)chatServiceChatDidReconnect:(QMChatService *)chatService {
     [[QMApi instance] fetchAllDialogs:^{
         [[QMApi instance] joinGroupDialogs];
     }];

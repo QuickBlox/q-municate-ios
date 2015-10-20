@@ -3165,7 +3165,7 @@ Cg
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Online" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="73o-h7-0EW">
-                                                    <rect key="frame" x="65" y="30" width="247" height="17"/>
+                                                    <rect key="frame" x="65" y="31" width="247" height="17"/>
                                                     <animations/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
@@ -3208,8 +3208,8 @@ Cg
                                                 <constraint firstAttribute="trailing" secondItem="s5q-cV-dQM" secondAttribute="trailing" id="TrI-9N-c4Z"/>
                                                 <constraint firstItem="s5q-cV-dQM" firstAttribute="top" secondItem="P0Y-Yc-ydR" secondAttribute="top" id="VFW-zx-VqT"/>
                                                 <constraint firstItem="73o-h7-0EW" firstAttribute="leading" secondItem="WbY-wV-ozV" secondAttribute="trailing" constant="8" id="f7R-iI-Jab"/>
+                                                <constraint firstItem="73o-h7-0EW" firstAttribute="top" secondItem="P0Y-Yc-ydR" secondAttribute="topMargin" constant="23" id="gdA-Ph-v6f"/>
                                                 <constraint firstItem="yB2-C3-nCB" firstAttribute="leading" secondItem="WbY-wV-ozV" secondAttribute="trailing" constant="8" id="jUm-gF-oTM"/>
-                                                <constraint firstItem="73o-h7-0EW" firstAttribute="top" secondItem="P0Y-Yc-ydR" secondAttribute="top" constant="30" id="rTi-eD-2yT"/>
                                                 <constraint firstItem="yB2-C3-nCB" firstAttribute="top" secondItem="P0Y-Yc-ydR" secondAttribute="top" constant="11" id="toh-d1-9HD"/>
                                                 <constraint firstAttribute="trailing" secondItem="yB2-C3-nCB" secondAttribute="trailing" constant="8" id="vPP-L8-86a"/>
                                             </constraints>
