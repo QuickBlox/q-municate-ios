@@ -56,7 +56,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
             [weakSelf.contactListService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:nil];
         } completionBlock:^(QBResponse *response) {
             //
-            weakSelf.settingsManager.lastActivityDate = [NSDate date];
+            if (response != nil && response.success) weakSelf.settingsManager.lastActivityDate = [NSDate date];
             if (completion) completion();
         }];
     }
@@ -66,7 +66,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
             [weakSelf.contactListService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:nil];
         } completion:^(QBResponse *response) {
             //
-            weakSelf.settingsManager.lastActivityDate = [NSDate date];
+            if (response != nil && response.success) weakSelf.settingsManager.lastActivityDate = [NSDate date];
             if (completion) completion();
         }];
     }
