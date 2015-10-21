@@ -87,11 +87,6 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 + (instancetype)instance;
 
 /**
- *  Fetching all dialogs history and users that are involved in it
- */
-- (void)fetchAllHistory:(void(^)(void))completion;
-
-/**
  *  Handling response if error. Only available for responses with status value False.
  *
  *  @param response     QBResponse instance to handle

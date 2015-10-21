@@ -87,11 +87,6 @@ QMContactListServiceDelegate
 
 #pragma mark - UITableViewDataSource
 
-- (void)fetchDialog:(void(^)(void))comletion {
-    
-    [[QMApi instance] fetchAllDialogs:comletion];
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     NSUInteger count = self.dialogs.count;

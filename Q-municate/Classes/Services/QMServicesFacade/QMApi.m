@@ -109,19 +109,6 @@ static NSString *const kQMErrorPasswordKey = @"password";
     return [QBSession currentSession].currentUser;
 }
 
-- (void)fetchAllHistory:(void(^)(void))completion {
-    __weak __typeof(self)weakSelf = self;
-    [self fetchAllDialogs:^{
-        
-        NSArray *allOccupantIDs = [weakSelf allOccupantIDsFromDialogsHistory];
-        
-        [weakSelf.contactListService retrieveUsersWithIDs:allOccupantIDs forceDownload:NO completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
-            //
-            completion();
-        }];
-    }];
-}
-
 - (void)retriveUsersForNotificationIfNeeded:(QBChatMessage *)notification
 {
     NSArray *idsToFetch = nil;
