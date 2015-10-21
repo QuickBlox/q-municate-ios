@@ -402,6 +402,31 @@ AGEmojiKeyboardViewDelegate
     [self.dialog sendUserStoppedTyping];
 }
 
+- (BOOL)messageSendingAllowed {
+    if (![QMApi instance].isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return NO;
+    }
+    
+    if (![QBChat instance].isConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:NO];
+        return NO;
+    }
+    
+    if (self.dialog.type == QBChatDialogTypePrivate) {
+        if (![[QMApi instance] isFriend:self.opponentUser]) {
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
+            return NO;
+        }
+        if ([[QMApi instance] userIDIsInPendingList:self.opponentUser.ID]) {
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
+            return NO;
+        }
+    }
+    
+    return YES;
+}
+
 #pragma mark Tool bar Actions
 
 - (void)didPressSendButton:(UIButton *)button
@@ -414,21 +439,7 @@ AGEmojiKeyboardViewDelegate
         [self fireStopTypingIfNecessary];
     }
     
-    if (![QMApi instance].isInternetConnected) {
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
-        return;
-    }
-    
-    if (self.dialog.type == QBChatDialogTypePrivate) {
-        if (![[QMApi instance] isFriend:self.opponentUser]) {
-            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
-            return;
-        }
-        if ([[QMApi instance] userIDIsInPendingList:self.opponentUser.ID]) {
-            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
-            return;
-        }
-    }
+    if (![self messageSendingAllowed]) return;
     
     QBChatMessage *message = [QBChatMessage message];
     message.text = text;
@@ -445,21 +456,7 @@ AGEmojiKeyboardViewDelegate
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender {
-    if (![QMApi instance].isInternetConnected) {
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
-        return;
-    }
-    
-    if (self.dialog.type == QBChatDialogTypePrivate) {
-        if (![[QMApi instance] isFriend:self.opponentUser]) {
-            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
-            return;
-        }
-        if ([[QMApi instance] userIDIsInPendingList:self.opponentUser.ID]) {
-            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
-            return;
-        }
-    }
+    if (![self messageSendingAllowed]) return;
     
     [super didPressAccessoryButton:sender];
 }
