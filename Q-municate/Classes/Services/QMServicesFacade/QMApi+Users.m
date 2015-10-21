@@ -244,20 +244,22 @@
 
 #pragma mark - Import friends
 
-- (void)importFriendsFromFacebook
-{
+- (void)importFriendsFromFacebook:(void (^)(BOOL))completion {
     __weak __typeof(self)weakSelf = self;
     [QMFacebookService fetchMyFriendsIDs:^(NSArray *facebookFriendsIDs) {
         
         if ([facebookFriendsIDs count] == 0) {
+            if (completion) completion(NO);
             return;
         }
         [weakSelf.contactListService retrieveUsersWithFacebookIDs:facebookFriendsIDs completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
             //
             if (!response.success) {
+                if (completion) completion(NO);
                 return;
             }
             if ([users count] == 0) {
+                if (completion) completion(NO);
                 return;
             }
             
@@ -265,6 +267,7 @@
             for (QBUUser *user in users) {
                 [weakSelf addUserToContactList:user completion:nil];
             }
+            if (completion) completion(YES);
         }];
     }];
 }

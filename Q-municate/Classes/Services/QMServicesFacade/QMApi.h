@@ -421,7 +421,7 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 /**
  *  Import facebook friends from quickblox database.
  */
-- (void)importFriendsFromFacebook;
+- (void)importFriendsFromFacebook:(void(^)(BOOL success))completion;
 
 /**
  *  Import friends from Address book which exists in quickblox database.
