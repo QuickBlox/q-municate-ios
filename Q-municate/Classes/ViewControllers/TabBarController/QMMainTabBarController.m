@@ -73,13 +73,24 @@
 
         QBUUser *usr = [QMApi instance].currentUser;
         if (!usr.isImport) {
-            [[QMApi instance] importFriendsFromFacebook];
-            [[QMApi instance] importFriendsFromAddressBookWithCompletion:^(BOOL succeded, NSError *error) {
+            dispatch_group_t group = dispatch_group_create();
+            dispatch_group_enter(group);
+            [[QMApi instance] importFriendsFromFacebook:^(BOOL success) {
+                //
+                dispatch_group_leave(group);
             }];
-            usr.isImport = YES;
-            QBUpdateUserParameters *params = [QBUpdateUserParameters new];
-            params.customData = usr.customData;
-            [[QMApi instance] updateCurrentUser:params image:nil progress:nil completion:^(BOOL success) {}];
+            dispatch_group_enter(group);
+            [[QMApi instance] importFriendsFromAddressBookWithCompletion:^(BOOL succeded, NSError *error) {
+                //
+                dispatch_group_leave(group);
+            }];
+            dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+                //
+                usr.isImport = YES;
+                QBUpdateUserParameters *params = [QBUpdateUserParameters new];
+                params.customData = usr.customData;
+                [[QMApi instance] updateCurrentUser:params image:nil progress:nil completion:^(BOOL success) {}];
+            });
         }
         
         [[QMApi instance] fetchAllDialogs:^{
