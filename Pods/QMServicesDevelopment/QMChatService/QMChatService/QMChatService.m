@@ -296,10 +296,6 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
 		QBChat.instance.autoReconnectEnabled = YES;
 		QBChat.instance.streamManagementEnabled = YES;
 		[QBChat.instance connectWithUser:user];
-		
-        if( self.chatSuccessBlock != nil ){
-            self.chatSuccessBlock(nil);
-        }
 	}
 }
 
