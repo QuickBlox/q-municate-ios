@@ -93,17 +93,18 @@
             });
         }
         
+        // open chat if app was launched by push notifications
+        NSDictionary *push = [[QMApi instance] pushNotification];
+        
+        if (push != nil) {
+            if( push[kPushNotificationDialogIDKey] ){
+                [SVProgressHUD show];
+                [[QMApi instance] handlePushNotificationWithDelegate:self];
+            }
+        }
+        
         [[QMApi instance] fetchAllDialogs:^{
             [[QMApi instance] joinGroupDialogs];
-            // open chat if app was launched by push notifications
-            NSDictionary *push = [[QMApi instance] pushNotification];
-            
-            if (push != nil) {
-                if( push[kPushNotificationDialogIDKey] ){
-                    [SVProgressHUD show];
-                    [[QMApi instance] handlePushNotificationWithDelegate:self];
-                }
-            }
         }];
     }];
 }
