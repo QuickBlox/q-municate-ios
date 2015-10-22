@@ -84,13 +84,10 @@
                 //
                 dispatch_group_leave(group);
             }];
-            dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-                //
-                usr.isImport = YES;
-                QBUpdateUserParameters *params = [QBUpdateUserParameters new];
-                params.customData = usr.customData;
-                [[QMApi instance] updateCurrentUser:params image:nil progress:nil completion:^(BOOL success) {}];
-            });
+            usr.isImport = YES;
+            QBUpdateUserParameters *params = [QBUpdateUserParameters new];
+            params.customData = usr.customData;
+            [[QMApi instance] updateCurrentUser:params image:nil progress:nil completion:^(BOOL success) {}];
         }
         
         // open chat if app was launched by push notifications
