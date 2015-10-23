@@ -1,0 +1,1 @@
+../../../../../q-municate-services-ios/QMUsersCache/QMUsersCache/CoreData/EntriesMachine/_CDUser.h

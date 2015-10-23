@@ -15,7 +15,7 @@ pod 'MPGNotification', '~> 1.1'
 pod 'Reachability', '~> 3.2'
 pod 'TTTAttributedLabel', '~> 1.13'
 pod 'QMChatViewController'
-pod 'QMServices'
+pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
 
 #Facebook
 pod 'FBSDKCoreKit', '~> 4.7.0'
