@@ -182,7 +182,7 @@ Notification with text "Please wait, Q-municate app is searching for your friend
             }
      }];
      [[QMApi instance] importFriendsFromAddressBookWithCompletion:^(BOOL succeded, NSError *error) {
-            if (success) {
+            if (succeded) {
                 // do something...
             }
      }];
