@@ -152,7 +152,7 @@
 
 - (BOOL)userIDIsInPendingList:(NSUInteger)userID {
     QBContactListItem *contactlistItem = [self.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
-    if (contactlistItem.subscriptionState == QBPresenseSubscriptionStateBoth || contactlistItem.subscriptionState == QBPresenseSubscriptionStateFrom) {
+    if (contactlistItem.subscriptionState != QBPresenseSubscriptionStateNone) {
         return NO;
     }
     return YES;
@@ -166,29 +166,6 @@
     }
     return NO;
 }
-
-- (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock
-{
-    [self.contactListService retrieveUsersWithIDs:@[@(userID)] forceDownload:NO completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
-        if (response != nil) {
-            completionBlock(YES);
-            return;
-        }
-        completionBlock(NO);
-    }];
-}
-
-- (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void (^)(BOOL retrieveWasNeeded))completionBlock
-{
-    [self.contactListService retrieveUsersWithIDs:usersIDs forceDownload:NO completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
-        if (response != nil) {
-            completionBlock(YES);
-            return;
-        }
-        completionBlock(NO);
-    }];
-}
-
 
 #pragma mark - Update current User
 
@@ -224,11 +201,12 @@
             params.avatarUrl = blob.publicUrl;
         }
         params.blobID = blob.ID;
-
+        NSString *password = weakSelf.currentUser.password;
+        
         [QBRequest updateCurrentUser:params successBlock:^(QBResponse *response, QBUUser *updatedUser) {
             //
             if (response.success) {
-                weakSelf.currentUser.password = updatedUser.password;
+                weakSelf.currentUser.password = password;
             }
             completion(response.success);
         } errorBlock:^(QBResponse *response) {
@@ -266,20 +244,22 @@
 
 #pragma mark - Import friends
 
-- (void)importFriendsFromFacebook
-{
+- (void)importFriendsFromFacebook:(void (^)(BOOL))completion {
     __weak __typeof(self)weakSelf = self;
     [QMFacebookService fetchMyFriendsIDs:^(NSArray *facebookFriendsIDs) {
         
         if ([facebookFriendsIDs count] == 0) {
+            if (completion) completion(NO);
             return;
         }
         [weakSelf.contactListService retrieveUsersWithFacebookIDs:facebookFriendsIDs completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
             //
             if (!response.success) {
+                if (completion) completion(NO);
                 return;
             }
             if ([users count] == 0) {
+                if (completion) completion(NO);
                 return;
             }
             
@@ -287,6 +267,7 @@
             for (QBUUser *user in users) {
                 [weakSelf addUserToContactList:user completion:nil];
             }
+            if (completion) completion(YES);
         }];
     }];
 }

@@ -253,10 +253,12 @@ typedef void(^QMCacheCollection)(NSArray *collection);
 /**
  *  Fetch dialog with last activity date from date
  *
- *  @param date date to fetch dialogs from
- *  @param completion Block with response, dialogs, dialogs users and page if request succeded or response only if failed
+ *  @param date         date to fetch dialogs from
+ *  @param limit        page limit
+ *  @param iteration    iteration block with dialogs for pages
+ *  @param completion   Block with response when fetching finished
  */
-- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(void (^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page))completion;
+- (void)fetchDialogsUpdatedFromDate:(NSDate *)date andPageLimit:(NSUInteger)limit iterationBlock:(void(^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop))iteration completionBlock:(void (^)(QBResponse *response))completion;
 
 #pragma mark Send message
 
@@ -282,6 +284,28 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @return YES if the message was sent. If not - see log.
  */
 - (BOOL)sendMessage:(QBChatMessage *)message toDialogId:(NSString *)dialogID save:(BOOL)save completion:(void (^)(NSError *))completion;
+
+#pragma mark - read messages
+
+/**
+ *  Sending read status for message and updating unreadMessageCount for dialog in cache
+ *
+ *  @param message  QBChatMessage instance to mark as read
+ *  @param dialogID ID of dialog to update
+ *
+ *  @return read message success status
+ */
+- (BOOL)readMessage:(QBChatMessage *)message forDialogID:(NSString *)dialogID;
+
+/**
+ *  Sending read status for messages and updating unreadMessageCount for dialog in cache
+ *
+ *  @param messages Array of QBChatMessage instances to mark as read
+ *  @param dialogID ID of dialog to update
+ *
+ *  @return read messages success status
+ */
+- (BOOL)readMessages:(NSArray<QBChatMessage *> *)messages forDialogID:(NSString *)dialogID;
 
 @end
 
@@ -316,6 +340,15 @@ typedef void(^QMCacheCollection)(NSArray *collection);
 
 @protocol QMChatServiceDelegate <NSObject>
 @optional
+
+/**
+ *  Is called when ChatDialogs did load from cache.
+ *
+ *  @param chatService      instance
+ *  @param dialogs          array of QBChatDialogs loaded from cache
+ *  @param dialogsUsersIDs  all users from all ChatDialogs
+ */
+- (void)chatService:(QMChatService *)chatService didLoadChatDialogsFromCache:(NSArray *)dialogs withUsers:(NSSet *)dialogsUsersIDs;
 
 /**
  *  Is called when messages did load from cache for some dialog.

@@ -87,7 +87,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     if (!session) {
         FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
         [loginManager
-         logInWithReadPermissions: @[@"public_profile", @"user_friends"]
+         logInWithReadPermissions: @[@"email", @"public_profile", @"user_friends"]
          handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
              if (error) {
                  NSLog(@"Process error");

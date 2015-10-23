@@ -121,6 +121,7 @@ static NSMutableSet *_qmChatCellMenuActions = nil;
     
     [self updateConstraint:self.avatarContainerViewHeightConstraint withConstant:customAttributes.avatarSize.height];
     [self updateConstraint:self.avatarContainerViewWidthConstraint withConstant:customAttributes.avatarSize.width];
+    [self.avatarView layoutIfNeeded];
     
     [self updateConstraint:self.containerWidthConstraint withConstant:customAttributes.containerSize.width];
     

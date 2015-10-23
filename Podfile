@@ -13,15 +13,17 @@ pod 'SDWebImage', '~> 3.6'
 pod 'IDMPhotoBrowser', '~> 1.3.5'
 pod 'MPGNotification', '~> 1.1'
 pod 'Reachability', '~> 3.2'
-pod 'QuickBlox'
 pod 'TTTAttributedLabel', '~> 1.13'
-pod 'QMChatViewController', '~> 0.2.4'
-pod 'QMServices', '~> 0.2.2'
+pod 'QMChatViewController'
+pod 'QMServices'
+
 #Facebook
-pod 'FBSDKCoreKit'
-pod 'FBSDKShareKit'
-pod 'FBSDKLoginKit'
+pod 'FBSDKCoreKit', '~> 4.7.0'
+pod 'FBSDKShareKit', '~> 4.7.0'
+pod 'FBSDKLoginKit', '~> 4.7.0'
 
 #For development pods
 #pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
 #pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
+#pod 'QMCVDevelopment', :git => 'https://github.com/QuickBlox/QMChatViewController-ios.git', :branch => 'development'
+#pod 'QMServicesDevelopment', :git => 'https://github.com/QuickBlox/q-municate-services-ios.git', :branch => 'development'

@@ -14,6 +14,7 @@
 #import "QMSettingsManager.h"
 #import "QMAVCallManager.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "QMViewControllersFactory.h"
 
 #define DEVELOPMENT 0
 #define STAGE_SERVER_IS_ACTIVE 0
@@ -49,6 +50,10 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 
 /* ==================================================================== */
+
+@interface AppDelegate () <QMNotificationHandlerDelegate>
+
+@end
 
 @implementation AppDelegate
 
@@ -113,15 +118,23 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
         NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
         [[QMApi instance] setPushNotification:notification];
     }
+
     return [[FBSDKApplicationDelegate sharedInstance] application:application
                                     didFinishLaunchingWithOptions:launchOptions];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    if( userInfo[@"dialog_id"] ) {
-        [[QMApi instance] openChatPageForPushNotification:userInfo completion:^(BOOL completed) {}];
+    if ([application applicationState] == UIApplicationStateInactive) {
+        NSString *dialogID = userInfo[kPushNotificationDialogIDKey];
+        if (dialogID != nil) {
+            NSString *dialogWithIDWasEntered = [QMApi instance].settingsManager.dialogWithIDisActive;
+            if ([dialogWithIDWasEntered isEqualToString:dialogID]) return;
+            
+            [[QMApi instance] setPushNotification:userInfo];
+            [[QMApi instance] handlePushNotificationWithDelegate:self];
+        }
+        ILog(@"Push was received. User info: %@", userInfo);
     }
-    ILog(@"Push was received. User info: %@", userInfo);
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
@@ -139,9 +152,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
         return;
     }
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [[QMApi instance] applicationDidBecomeActive:^(BOOL success) {
-        [SVProgressHUD dismiss];
-    }];
+    [[QMApi instance] applicationDidBecomeActive:^(BOOL success) {}];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -178,6 +189,23 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     if (deviceToken) {
         [[QMApi instance] setDeviceToken:deviceToken];
     }
+}
+
+#pragma mark - QMNotificationHandlerDelegate protocol
+
+- (void)notificationHandlerDidSucceedFetchingDialog:(QBChatDialog *)chatDialog {
+    UITabBarController *rootController = [(UITabBarController *)self.window.rootViewController selectedViewController];
+    UINavigationController *navigationController = (UINavigationController *)rootController;
+    
+    UIViewController *chatVC = [QMViewControllersFactory chatControllerWithDialog:chatDialog];
+    
+    NSString *dialogWithIDWasEntered = [QMApi instance].settingsManager.dialogWithIDisActive;
+    if (dialogWithIDWasEntered != nil) {
+        // some chat already opened, return to dialogs view controller first
+        [navigationController popViewControllerAnimated:NO];
+    }
+    
+    [navigationController pushViewController:chatVC animated:YES];
 }
 
 @end

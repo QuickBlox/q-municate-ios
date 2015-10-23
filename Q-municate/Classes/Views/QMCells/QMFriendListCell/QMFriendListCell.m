@@ -29,7 +29,7 @@
     /*isFriend - YES*/
     _isFriend = YES;
     self.addToFriendsButton.hidden = self.isFriend;
-    /*isOnlien - NO*/
+    /*isOnline - NO*/
     self.onlineCircle.hidden = YES;
     self.descriptionLabel.text = NSLocalizedString(@"QM_STR_OFFLINE", nil);
 }
@@ -62,7 +62,7 @@
     
     NSString *status = nil;
     
-     if (contactlistItem.subscriptionState == QBPresenseSubscriptionStateBoth || contactlistItem.subscriptionState == QBPresenseSubscriptionStateFrom) {
+     if (contactlistItem.subscriptionState == QBPresenseSubscriptionStateBoth || contactlistItem.subscriptionState == QBPresenseSubscriptionStateTo) {
         status = NSLocalizedString(contactlistItem.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
      } else if (((QBUUser *)self.userData).ID == [QMApi instance].currentUser.ID) {
          status = NSLocalizedString(@"QM_STR_ONLINE", nil);

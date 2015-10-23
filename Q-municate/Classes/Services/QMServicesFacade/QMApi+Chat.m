@@ -37,18 +37,6 @@
     [self.settingsManager setLastActivityDate:[NSDate date]];
 }
 
-- (void)fetchMessagesForActiveChatIfNeededWithCompletion:(void(^)(BOOL fetchWasNeeded))block
-{
-    if (self.settingsManager.dialogWithIDisActive) {
-        [self.chatService messagesWithChatDialogID:self.settingsManager.dialogWithIDisActive completion:^(QBResponse *response, NSArray *messages) {
-            //
-            if (block) block(YES);
-        }];
-        return;
-    }
-    if (block) block(NO);
-}
-
 /**
  *  ChatDialog
  */
@@ -58,21 +46,30 @@
 NSString const *kQMEditDialogExtendedNameParameter = @"name";
 NSString const *kQMEditDialogExtendedPushOccupantsParameter = @"push[occupants_ids][]";
 NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupants_ids][]";
-static const NSUInteger kQMDialogsPageLimit = 10;
 
 - (void)fetchAllDialogs:(void(^)(void))completion {
-    
-    [self.chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
-        //
-    } completion:^(QBResponse *response) {
-        //
-        if (completion) completion();
-    }];
-}
 
-- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(QBDialogsPagedResponseBlock)completion
-{
-    [self.chatService fetchDialogsWithLastActivityFromDate:date completion:completion];
+    __weak __typeof(self)weakSelf = self;
+    if (self.settingsManager.lastActivityDate != nil) {
+        [self.chatService fetchDialogsUpdatedFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
+            //
+            [weakSelf.contactListService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:nil];
+        } completionBlock:^(QBResponse *response) {
+            //
+            if (response != nil && response.success) weakSelf.settingsManager.lastActivityDate = [NSDate date];
+            if (completion) completion();
+        }];
+    }
+    else {
+        [self.chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
+            //
+            [weakSelf.contactListService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:nil];
+        } completion:^(QBResponse *response) {
+            //
+            if (response != nil && response.success) weakSelf.settingsManager.lastActivityDate = [NSDate date];
+            if (completion) completion();
+        }];
+    }
 }
 
 - (void)fetchChatDialogWithID:(NSString *)dialogID completion:(void(^)(QBChatDialog *chatDialog))completion
@@ -101,7 +98,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
 {
     [self.chatService createPrivateChatDialogWithOpponent:opponent completion:^(QBResponse *response, QBChatDialog *createdDialog) {
         //
-        completion(createdDialog);
+        if (completion) completion(createdDialog);
     }];
 }
 
@@ -110,14 +107,12 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     __weak typeof(self)weakSelf = self;
     [self.chatService createGroupChatDialogWithName:name photo:nil occupants:occupants completion:^(QBResponse *response, QBChatDialog *createdDialog) {
         
-        // send notification from here:
-        NSString *notificationText = NSLocalizedString(@"QM_STR_NOTIFICATION_MESSAGE", nil);
-        // send to group:
-        [weakSelf sendGroupChatDialogDidCreateNotificationToAllParticipantsWithText:notificationText occupants:createdDialog.occupantIDs chatDialog:createdDialog];
-
-        [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:createdDialog.occupantIDs toChatDialog:createdDialog];
-
-        completion(createdDialog);
+        NSString *messageTypeText = NSLocalizedString(@"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT", @"{Full name}");
+        NSString *text = [QMChatUtils messageForText:messageTypeText participants:occupants];
+        
+        createdDialog.lastMessageDate = [NSDate date];
+        [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:createdDialog.occupantIDs toChatDialog:createdDialog withMessage:text];
+        if (completion) completion(createdDialog);
     }];
 }
 
@@ -135,10 +130,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
             
             [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:updatedDialog updateType:@"room_name" content:dialogName];
         }
-        else {
-            [weakSelf handleErrorResponse:response];
-        }
-        completion(response,updatedDialog);
+        if (completion) completion(response,updatedDialog);
     }];
 }
 
@@ -160,10 +152,9 @@ static const NSUInteger kQMDialogsPageLimit = 10;
                 // send notification:
                 NSString *notificationText = NSLocalizedString(@"QM_STR_UPDATE_GROUP_AVATAR_TEXT", @"{Full name}");
                 NSString *text = [NSString stringWithFormat:notificationText, self.currentUser.fullName];
-                
-                chatDialog.photo = updatedDialog.photo;
-                [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"room_photo" content:updatedDialog.photo];
-                completion(updateResponse, updatedDialog);
+
+                [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:updatedDialog updateType:nil content:nil];
+                if (completion) completion(updateResponse, updatedDialog);
             }
 
         }];
@@ -181,13 +172,10 @@ static const NSUInteger kQMDialogsPageLimit = 10;
             NSString *messageTypeText = NSLocalizedString(@"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT", @"{Full name}");
             NSString *text = [QMChatUtils messageForText:messageTypeText participants:occupants];
             
-            [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:[self idsWithUsers:occupants] toChatDialog:updatedDialog];
+            [weakSelf sendGroupChatDialogDidCreateNotificationToUsers:[self idsWithUsers:occupants] toChatDialog:updatedDialog withMessage:nil];
             [weakSelf sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"occupants_ids" content:[updatedDialog.occupantIDs componentsJoinedByString:@","]];
         }
-        else {
-            [weakSelf handleErrorResponse:response];
-        }
-        completion(response,updatedDialog);
+        if (completion) completion(response,updatedDialog);
     }];
 }
 
@@ -218,11 +206,11 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     }
     chatDialog.occupantIDs = [occupantsWithoutCurrentUser copy];
     
+    __weak __typeof(self)weakSelf = self;
     [self sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:text toChatDialog:chatDialog updateType:@"deleted_id" content:myID];
-    
-    [self.chatService deleteDialogWithID:chatDialog.ID completion:^(QBResponse *response) {
+    [weakSelf.chatService deleteDialogWithID:chatDialog.ID completion:^(QBResponse *response) {
         //
-        completion(response,nil);
+        if (completion) completion(response,nil);
     }];
 }
 
@@ -254,15 +242,17 @@ static const NSUInteger kQMDialogsPageLimit = 10;
 
 #pragma mark - Notifications
 
-- (void)sendGroupChatDialogDidCreateNotificationToUsers:(NSArray *)users toChatDialog:(QBChatDialog *)chatDialog {
+- (void)sendGroupChatDialogDidCreateNotificationToUsers:(NSArray *)users toChatDialog:(QBChatDialog *)chatDialog withMessage:(NSString *)text {
     
     [self.chatService notifyUsersWithIDs:users aboutAddingToDialog:chatDialog];
-}
-
-- (void)sendGroupChatDialogDidCreateNotificationToAllParticipantsWithText:(NSString *)text occupants:(NSArray *)occupants chatDialog:(QBChatDialog *)chatDialog
-{
     
-    [self.chatService notifyUsersWithIDs:occupants aboutAddingToDialog:chatDialog];
+    if (text != nil) {
+        QBChatMessage *message = [QBChatMessage message];
+        message.text = text;
+        message.dateSent = [NSDate date];
+        [message updateCustomParametersWithDialog:chatDialog];
+        [self.chatService sendMessage:message type:QMMessageTypeUpdateGroupDialog toDialog:chatDialog save:YES saveToStorage:YES completion:nil];
+    }
 }
 
 - (void)sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:(NSString *)text toChatDialog:(QBChatDialog *)chatDialog updateType:(NSString *)updateType content:(NSString *)content

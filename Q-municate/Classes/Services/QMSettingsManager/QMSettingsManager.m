@@ -152,6 +152,7 @@ NSString *const kQMDialogWithIDisActiveKey = @"dialog_is_active";
     self.accountType = QMAccountTypeNone;
     self.userStatus = nil;
     self.login = nil;
+    self.lastActivityDate = nil;
 }
 
 @end

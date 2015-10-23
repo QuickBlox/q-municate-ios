@@ -1,5 +1,5 @@
 //
-//  QMPopoversFactory.h
+//  QMViewControllersFactory.h
 //  Q-municate
 //
 //  Created by Igor Alefirenko on 23.09.14.
@@ -9,8 +9,10 @@
 #import <Foundation/Foundation.h>
 @class QMChatVC;
 
-@interface QMPopoversFactory : NSObject
+@interface QMViewControllersFactory : NSObject
 
 + (UIViewController *)chatControllerWithDialogID:(NSString *)dialogID;
+
++ (UIViewController *)chatControllerWithDialog:(QBChatDialog *)dialog;
 
 @end

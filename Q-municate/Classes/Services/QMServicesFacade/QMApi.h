@@ -87,11 +87,6 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 + (instancetype)instance;
 
 /**
- *  Fetching all dialogs history and users that are involved in it
- */
-- (void)fetchAllHistory:(void(^)(void))completion;
-
-/**
  *  Handling response if error. Only available for responses with status value False.
  *
  *  @param response     QBResponse instance to handle
@@ -108,14 +103,6 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  */
 - (void)applicationDidBecomeActive:(void(^)(BOOL success))completion;
 - (void)applicationWillResignActive;
-
-/**
- *  Handling push notification and opening dialog from push.
- *
- *  @param norification     dictionary instance with norification params
- *  @param completionBlock  completion block with status
- */
-- (void)openChatPageForPushNotification:(NSDictionary *)notification completion:(void(^)(BOOL completed))completionBlock;
 
 @end
 
@@ -208,6 +195,11 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 - (void)sendContactRequestSendNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
 - (void)sendContactRequestDeleteNotificationToUser:(QBUUser *)user completion:(void(^)(NSError *error, QBChatMessage *notification))completionBlock;
 
+/*
+ *  Handle push notification method
+ */
+- (void)handlePushNotificationWithDelegate:(id<QMNotificationHandlerDelegate>)delegate;
+
 @end
 
 
@@ -229,14 +221,6 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  *  Loggin out from chat.
  */
 - (void)logoutFromChat;
-
-/**
- *  Fetching messages for active chat if needed.
- *
- *  @param block    completion block with YES boolean value if fetching was needed
- */
-- (void)fetchMessagesForActiveChatIfNeededWithCompletion:(void(^)(BOOL fetchWasNeeded))block;
-
 
 /*** Chat Dialogs ***/
 
@@ -269,14 +253,6 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  *  @param completion   completion block
  */
 - (void)fetchAllDialogs:(void(^)(void))completion;
-
-/**
- *  Fetching all dialogs with last activity from requested date.
- *
- *  @param date         date to fetch dialogs with last activity from
- *  @param completion   completion with QBDialogsPagedResponseBlock block
- */
-- (void)fetchDialogsWithLastActivityFromDate:(NSDate *)date completion:(QBDialogsPagedResponseBlock)completion;
 
 /**
  *  Fetching dialog with requested ID and retrieving its users.
@@ -440,7 +416,7 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 /**
  *  Import facebook friends from quickblox database.
  */
-- (void)importFriendsFromFacebook;
+- (void)importFriendsFromFacebook:(void(^)(BOOL success))completion;
 
 /**
  *  Import friends from Address book which exists in quickblox database.
@@ -480,22 +456,6 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  *  @param completion   completion block with success status
  */
 - (void)rejectAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion;
-
-/**
- *  Retrieving user if needed.
- *
- *  @param userID       id of user to retrieve
- *  @param completion   completion block with boolean value YES if retrieve was needed
- */
-- (void)retriveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock;
-
-/**
- *  Retrieving users if needed.
- *
- *  @param userIDs      array of users ids to retrieve
- *  @param completion   completion block with boolean value YES if retrieve was needed
- */
-- (void)retriveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void (^)(BOOL retrieveWasNeeded))completionBlock;
 
 /**
  *  Updating current user with params and image.

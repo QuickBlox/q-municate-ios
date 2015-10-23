@@ -8,12 +8,12 @@
 
 #import "QMMessageBarStyleSheetFactory.h"
 #import "QMApi.h"
-#import "QBChatMessage+TextEncoding.h"
+#import "QMChatUtils.h"
 
 
 @implementation QMMessageBarStyleSheetFactory
 
-+ (void)showMessageBarNotificationWithMessage:(QBChatMessage *)chatMessage chatDialog:(QBChatDialog *)chatDialog completionBlock:(MPGNotificationButtonHandler)block
++ (void)showMessageBarNotificationWithMessage:(QBChatMessage *)message chatDialog:(QBChatDialog *)chatDialog completionBlock:(MPGNotificationButtonHandler)block
 {
     UIImage *img = nil;
     NSString *title = @"";
@@ -25,13 +25,20 @@
     }
     else if (chatDialog.type == QBChatDialogTypePrivate) {
         
-        NSUInteger occupantID = [[QMApi instance] occupantIDForPrivateChatDialog:chatDialog];
-        QBUUser *user = [[QMApi instance] userWithID:occupantID];
+        QBUUser *user = [[QMApi instance] userWithID:message.senderID];
         title = user.fullName;
         img = [UIImage imageNamed:@"upic_placeholderr"];
     }
+    
+    NSString *messageText = [NSString string];
+    if (message.isNotificatonMessage && message.messageType != QMMessageTypeUpdateGroupDialog) {
+        messageText = [QMChatUtils messageTextForNotification:message];
+    }
+    else {
+        messageText = message.encodedText;
+    }
 
-    MPGNotification *newNotification = [MPGNotification notificationWithTitle:title subtitle:chatMessage.encodedText backgroundColor:[UIColor colorWithRed:0.32 green:0.33 blue:0.34 alpha:0.86] iconImage:img];
+    MPGNotification *newNotification = [MPGNotification notificationWithTitle:title subtitle:messageText backgroundColor:[UIColor colorWithRed:0.32 green:0.33 blue:0.34 alpha:0.86] iconImage:img];
     [newNotification setButtonConfiguration:MPGNotificationButtonConfigrationOneButton withButtonTitles:@[@"Reply"]];
     newNotification.duration = 2.0;
     

@@ -30,11 +30,13 @@
 "QM_STR_FILL_IN_ALL_THE_FIELDS" = "Fill in all the fields";
 "QM_STR_PASSWORD_CHANGED" = "Password changed";
 "QM_STR_CHECK_INTERNET_CONNECTION" = "Please, check your internet connection";
+"QM_STR_LOST_INTERNET_CONNECTION" = "Lost internet connection";
 "QM_STR_CHAT_SERVER_UNAVAILABLE" = "Chat service is temporary unavaliable";
 "QM_STR_ONLINE" = "Online";
 "QM_STR_OFFLINE" = "Offline";
 "QM_STR_PENDING" = "Pending";
-"QM_STR_PASSWORD_IS_TOO_SHORT" = "Password is too short";
+"QM_STR_PASSWORD_IS_TOO_SHORT" = "Password must be more than %ld characters";
+"QM_STR_PASSWORD_IS_TOO_LONG" = "Password mustn’t be more than %ld characters";
 "QM_STR_USER_CREATED_GROUP_CONVERSATION" = "created a group conversation";
 "QM_STR_USER_CREATED_PRIVATE_CHAT" = "created new chat";
 "QM_STR_MESSAGE_WAS_SENT_TO_YOUR_EMAIL" = "Message was sent to your email. Check it";
@@ -87,7 +89,11 @@
 "QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_ME" = "You have deleted %@ from your contact list";
 "QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_OPPONENT" = "%@ has deleted you from the contact list";
 
-
+// *********** CHAT CONNECTION *****************
+"QM_STR_CHAT_CONNECTED" = "Connected";
+"QM_STR_CHAT_RECONNECTED" = "Reconnected";
+"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR" = "Chat failed to connect: %@";
+"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_STREAM_ERROR" = "Chat failed to connect with stream error: %@";
 
 // *********** GROUP NOTIFICATIONS *****************
 "QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT" = "%@ has added %@ to the group chat.";
@@ -96,9 +102,17 @@
 
 "QM_STR_UPDATE_GROUP_NAME_TEXT" = "%@ has changed the chat name to \"%@\".";
 "QM_STR_UPDATE_GROUP_AVATAR_TEXT" = "%@ has changed the chat picture.";
-"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT" = "%@ has left group conversation.";
+"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT" = "%@ has left group chat.";
 
 "QM_STR_NOTIFICATION_MESSAGE" = "Notification message";
 
+// *********** Error handling ***********
+"QM_STR_EMAIL_ERROR" = "Email %@";
+"QM_STR_FULL_NAME_ERROR" = "Full name %@";
+"QM_STR_PASSWORD_ERROR" = "Password %@";
+"QM_STR_BAD_GATEWAY_ERROR" = "Bad Gateway, please try again";
+"QM_STR_CONNECTION_NETWORK_ERROR" = "Connection network error, please try again";
+"QM_STR_INCORRECT_USER_DATA_ERROR" = "Incorrect Username or Password";
+"QM_STR_UNKNOWN_ERROR" = "Something went wrong. Please try again";
 
 

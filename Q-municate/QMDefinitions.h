@@ -30,6 +30,9 @@ typedef void(^QMCFileUploadResponseBlock)(QBResponse *response, QBCBlob *blob);
 typedef void(^QMCFileDownloadResponseBlock)(QBResponse *response, NSData *fileData);
 typedef void(^QBUUserPagedResponseBlock)(QBResponse *response, QBGeneralResponsePage *page, NSArray *users);
 
+/*ChatDialogs constants*/
+static const NSUInteger kQMDialogsPageLimit = 10;
+
 //******************** CoreData ********************
 
 static NSString *const kChatCacheNameKey                    = @"q-municate";
@@ -57,5 +60,8 @@ static NSString *const kSettingsCellBundleVersion           = @"CFBundleVersion"
 //******************** USER DEFAULTS KEYS ********************
 static NSString *const kMailSubjectString                   = @"Q-municate";
 static NSString *const kMailBodyString                      = @"<a href='http://quickblox.com/'>Join us in Q-municate!</a>";
+
+//******************** PUSH NOTIFICATIONS ********************
+static NSString *const kPushNotificationDialogIDKey         = @"dialog_id";
 
 #endif

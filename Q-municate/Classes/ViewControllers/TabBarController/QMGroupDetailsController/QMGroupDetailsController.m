@@ -48,10 +48,17 @@
     self.groupAvatarView.layer.cornerRadius = self.groupAvatarView.frame.size.width / 2;
     self.groupAvatarView.layer.masksToBounds = YES;
     
-    [self updateGUIWithChatDialog:self.chatDialog];
-    
     self.dataSource = [[QMGroupDetailsDataSource alloc] initWithTableView:self.tableView];
     [self updateGUIWithChatDialog:self.chatDialog];
+}
+
+- (void)requestOnlineUsers {
+    __weak __typeof(self)weakSelf = self;
+    [self.chatDialog setOnReceiveListOfOnlineUsers:^(NSMutableArray<NSNumber *> * _Nullable onlineUsers) {
+        //
+        [weakSelf updateOnlineStatus:onlineUsers.count];
+    }];
+    [self.chatDialog requestOnlineUsers];
 }
 
 - (void)updateOnlineStatus:(NSUInteger)online {
@@ -71,7 +78,7 @@
     [[QMApi instance].contactListService addDelegate:self];
     [[QMApi instance].chatService addDelegate:self];
 }
-
+  
 - (void)viewWillDisappear:(BOOL)animated {
     
     [self.view endEditing:YES];
@@ -93,15 +100,16 @@
 }
 
 - (void)changeGroupAvatar:(id)sender {
-    
+    [self.view endEditing:YES];
+
     __weak typeof(self)weakSelf = self;
     [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
-        
+        __typeof(weakSelf)strongSelf = weakSelf;
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-        [[QMApi instance] changeAvatar:image forChatDialog:weakSelf.chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+        [[QMApi instance] changeAvatar:image forChatDialog:strongSelf.chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
             //
             if (response.success) {
-                [weakSelf updateGUIWithChatDialog:updatedDialog];
+                [strongSelf.groupAvatarView sd_setImage:image withKey:updatedDialog.photo];
             }
             [SVProgressHUD dismiss];
         }];
@@ -127,24 +135,22 @@
     [self performSegueWithIdentifier:kQMAddMembersToGroupControllerSegue sender:nil];
 }
 
+- (void)updateGUI {
+    [self.dataSource reloadUserData];
+    [self requestOnlineUsers];
+}
+
 - (void)updateGUIWithChatDialog:(QBChatDialog *)chatDialog {
     
-    NSAssert(self.chatDialog && chatDialog.type == QBChatDialogTypeGroup , @"Need update this case");
-
+    NSAssert(self.chatDialog && chatDialog.type == QBChatDialogTypeGroup , @"chatDialog can't be nil and must be group type");
     self.groupNameField.text = chatDialog.name;
     if (chatDialog.photo) {
         [self.groupAvatarView setImageWithURL:[NSURL URLWithString:chatDialog.photo] placeholder:[UIImage imageNamed:@"upic_placeholder_details_group"] options:SDWebImageHighPriority progress:^(NSInteger receivedSize, NSInteger expectedSize) {} completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
     }
-    self.occupantsCountLabel.text = [NSString stringWithFormat:@"%zd participants", self.chatDialog.occupantIDs.count];
-
     [self.dataSource reloadDataWithChatDialog:chatDialog];
-    
-    QBChatDialogRequestOnlineUsersBlock onReceiveListOfOnlineUsers = ^(NSMutableArray* onlineUsers) {
-        [self updateOnlineStatus:onlineUsers.count];
-    };
-    [self.chatDialog setOnReceiveListOfOnlineUsers:onReceiveListOfOnlineUsers];
-    //[self.chatDialog onReceiveListOfOnlineUsers];
-    [self.chatDialog requestOnlineUsers];
+    self.chatDialog = chatDialog;
+    self.occupantsCountLabel.text = [NSString stringWithFormat:@"%zd participants", self.chatDialog.occupantIDs.count];
+    [self requestOnlineUsers];
 }
 
 - (NSArray *)filteredIDs:(NSArray *)IDs forChatDialog:(QBChatDialog *)chatDialog
@@ -200,15 +206,13 @@
 #pragma mark Contact List Serice Delegate
 
 - (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
-    [self updateGUIWithChatDialog:self.chatDialog];
+    if ([self.chatDialog.occupantIDs containsObject:@(userID)]) {
+        [self updateGUI];
+    }
 }
 
 - (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
-    [self updateGUIWithChatDialog:self.chatDialog];
-}
-
-- (void)contactListService:(QMContactListService *)contactListService didUpdateUser:(QBUUser *)user {
-    [self updateGUIWithChatDialog:self.chatDialog];
+    [self updateGUI];
 }
 
 #pragma mark Chat Service Delegate

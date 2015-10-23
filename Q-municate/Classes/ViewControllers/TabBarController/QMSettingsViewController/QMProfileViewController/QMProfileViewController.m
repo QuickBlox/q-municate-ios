@@ -88,7 +88,8 @@
 }
 
 - (IBAction)changeAvatar:(id)sender {
-    
+    [self.view endEditing:YES];
+
     if (!QMApi.instance.isInternetConnected) {
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
         return;

@@ -125,8 +125,7 @@
     [self retrieveUsersWithIDs:[self.contactListMemoryStorage userIDsFromContactList]
 				 forceDownload:NO completion:^(QBResponse *responce, QBGeneralResponsePage *page, NSArray *users)
      {
-         if (responce.success) {
-             
+         if (users.count > 0) {
              if ([weakSelf.multicastDelegate respondsToSelector:@selector(contactListService:contactListDidChange:)]) {
                  [weakSelf.multicastDelegate contactListService:self contactListDidChange:contactList];
              }
@@ -141,6 +140,30 @@
 }
 
 #pragma mark - Retrive users
+
+- (void)retrieveIfNeededUserWithID:(NSUInteger)userID completion:(void(^)(BOOL retrieveWasNeeded))completionBlock
+{
+    [self retrieveIfNeededUsersWithIDs:@[@(userID)] completion:completionBlock];
+}
+
+- (void)retrieveIfNeededUsersWithIDs:(NSArray *)usersIDs completion:(void (^)(BOOL retrieveWasNeeded))completionBlock
+{
+    NSArray *memoryStorageUsers = [self.usersMemoryStorage usersWithIDs:usersIDs];
+    
+    if (memoryStorageUsers.count != usersIDs.count) {
+        NSMutableArray *mutableUsersIDs = usersIDs.mutableCopy;
+        for (QBUUser *user in memoryStorageUsers) {
+            [mutableUsersIDs removeObject:@(user.ID)];
+        }
+        
+        [self retrieveUsersWithIDs:mutableUsersIDs forceDownload:YES completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+            if (completionBlock) completionBlock(YES);
+        }];
+    }
+    else {
+        if (completionBlock) completionBlock(NO);
+    }
+}
 
 - (void)retrieveUsersWithIDs:(NSArray *)ids forceDownload:(BOOL)forceDownload completion:(void(^)(QBResponse *response, QBGeneralResponsePage *page, NSArray * users))completion {
 	

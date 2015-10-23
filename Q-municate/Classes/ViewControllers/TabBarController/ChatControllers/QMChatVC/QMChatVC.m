@@ -38,9 +38,10 @@
 #import "QMMessageStatusStringBuilder.h"
 #import "QMChatButtonsFactory.h"
 
-static const NSUInteger widthPadding  = 40.0f;
-static const CGFloat kQMEmojiButtonSize  = 45.0f;
-static const NSInteger kQMEmojiButtonTag = 100;
+static const NSUInteger widthPadding                         = 40.0f;
+static const CGFloat kQMEmojiButtonSize                      = 45.0f;
+static const NSInteger kQMEmojiButtonTag                     = 100;
+static const CGFloat kQMInputToolbarTextContainerInsetRight  = 25.0f;
 
 @interface QMChatVC ()
 <
@@ -50,7 +51,7 @@ AGEmojiKeyboardViewDelegate
 
 @property (strong, nonatomic) QMOnlineTitle *onlineTitle;
 
-@property (nonatomic, weak) QBUUser* opponentUser;
+@property (nonatomic, copy) QBUUser* opponentUser;
 @property (nonatomic, strong) id<NSObject> observerDidBecomeActive;
 @property (nonatomic, strong) QMMessageStatusStringBuilder* stringBuilder;
 @property (nonatomic, strong) NSMapTable* attachmentCells;
@@ -124,6 +125,10 @@ AGEmojiKeyboardViewDelegate
         
         [self updateTitleInfoForPrivateDialog];
     } else {
+        if (!self.dialog.isJoined) {
+            [self.dialog join];
+        }
+        
         [self configureNavigationBarForGroupChat];
         self.title = self.dialog.name;
     }
@@ -194,6 +199,7 @@ AGEmojiKeyboardViewDelegate
         QBChatDialog *updatedDialog = [[QMApi instance].chatService.dialogsMemoryStorage chatDialogWithID:self.dialog.ID];
         if (updatedDialog != nil) {
             self.dialog = updatedDialog;
+            self.title = self.dialog.name;
             [[QMApi instance].chatService joinToGroupDialog:self.dialog failed:^(NSError *error) {
                 //
                 NSLog(@"Failed to join group dialog, because: %@", error.localizedDescription);
@@ -234,14 +240,8 @@ AGEmojiKeyboardViewDelegate
     }
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-
 - (void)viewWillDisappear:(BOOL)animated
 {
-    self.dialog.unreadMessagesCount = 0;
-    
     [[QMApi instance].settingsManager setDialogWithIDisActive:nil];
     
     [super viewWillDisappear:animated];
@@ -296,46 +296,43 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark - Nav Buttons Actions
 
-- (void)audioCallAction {
+- (BOOL)callsAllowed {
 #if QM_AUDIO_VIDEO_ENABLED == 0
     [QMAlertsFactory comingSoonAlert];
+    return NO;
 #else
+    if (![QMApi instance].isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return NO;
+    }
     
-    if( [[QMApi instance] userIDIsInPendingList:self.opponentUser.ID] ) {
+    if( ![[QMApi instance] isFriend:self.opponentUser] || [[QMApi instance] userIDIsInPendingList:self.opponentUser.ID] ) {
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
-        return;
+        return NO;
     }
     
     BOOL callsAllowed = [[[self.inputToolbar contentView] textView] isEditable];
     if( !callsAllowed ) {
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
-        return;
+        return NO;
     }
-    NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
-    [[QMApi instance] callToUser:@(opponentID) conferenceType:QBConferenceTypeAudio];
     
+    return YES;
 #endif
 }
 
-- (void)videoCallAction {
-#if QM_AUDIO_VIDEO_ENABLED == 0
-    [QMAlertsFactory comingSoonAlert];
-#else
+- (void)audioCallAction {
+    if (![self callsAllowed]) return;
     
-    if( [[QMApi instance] userIDIsInPendingList:self.opponentUser.ID] ) {
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
-        return;
-    }
+    NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
+    [[QMApi instance] callToUser:@(opponentID) conferenceType:QBConferenceTypeAudio];
+}
 
-    BOOL callsAllowed = [[[self.inputToolbar contentView] textView] isEditable];
-    if( !callsAllowed ) {
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
-        return;
-    }
+- (void)videoCallAction {
+    if (![self callsAllowed]) return;
     
     NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
     [[QMApi instance] callToUser:@(opponentID) conferenceType:QBConferenceTypeVideo];
-#endif
 }
 
 - (void)groupInfoNavButtonAction {
@@ -368,9 +365,7 @@ AGEmojiKeyboardViewDelegate
 - (void)sendReadStatusForMessage:(QBChatMessage *)message
 {
     if (message.senderID != [QBSession currentSession].currentUser.ID && ![message.readIDs containsObject:@(self.senderID)]) {
-        message.markable = YES;
-        // Sending read message status.
-        if (![[QBChat instance] readMessage:message]) {
+        if (![[QMApi instance].chatService readMessage:message forDialogID:self.dialog.ID]) {
             NSLog(@"Problems while marking message as read!");
         }
         else {
@@ -384,9 +379,7 @@ AGEmojiKeyboardViewDelegate
 - (void)readMessages:(NSArray *)messages forDialogID:(NSString *)dialogID
 {
     if ([QBChat instance].isLoggedIn) {
-        for (QBChatMessage* message in messages) {
-            [self sendReadStatusForMessage:message];
-        }
+        [[QMApi instance].chatService readMessages:messages forDialogID:dialogID];
     } else {
         self.unreadMessages = messages;
     }
@@ -397,6 +390,31 @@ AGEmojiKeyboardViewDelegate
     [self.typingTimer invalidate];
     self.typingTimer = nil;
     [self.dialog sendUserStoppedTyping];
+}
+
+- (BOOL)messageSendingAllowed {
+    if (![QMApi instance].isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return NO;
+    }
+    
+    if (![QBChat instance].isConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:NO];
+        return NO;
+    }
+    
+    if (self.dialog.type == QBChatDialogTypePrivate) {
+        if (![[QMApi instance] isFriend:self.opponentUser]) {
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
+            return NO;
+        }
+        if ([[QMApi instance] userIDIsInPendingList:self.opponentUser.ID]) {
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
+            return NO;
+        }
+    }
+    
+    return YES;
 }
 
 #pragma mark Tool bar Actions
@@ -411,12 +429,7 @@ AGEmojiKeyboardViewDelegate
         [self fireStopTypingIfNecessary];
     }
     
-    if (self.dialog.type == QBChatDialogTypePrivate) {
-        if ([[QMApi instance] userIDIsInPendingList:self.opponentUser.ID]) {
-            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
-            return;
-        }
-    }
+    if (![self messageSendingAllowed]) return;
     
     QBChatMessage *message = [QBChatMessage message];
     message.text = text;
@@ -431,6 +444,13 @@ AGEmojiKeyboardViewDelegate
     
     [self finishSendingMessageAnimated:YES];
 }
+
+- (void)didPressAccessoryButton:(UIButton *)sender {
+    if (![self messageSendingAllowed]) return;
+    
+    [super didPressAccessoryButton:sender];
+}
+
 #pragma mark - Cell classes
 
 - (Class)viewClassForItem:(QBChatMessage *)item
@@ -582,7 +602,14 @@ AGEmojiKeyboardViewDelegate
         attributedString = [self bottomLabelAttributedStringForItem:item];
     } else {
         if (self.dialog.type != QBChatDialogTypePrivate) {
-            attributedString = [self topLabelAttributedStringForItem:item];
+            CGSize topLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:[self topLabelAttributedStringForItem:item]
+                                                           withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
+                                                    limitedToNumberOfLines:0];
+            CGSize bottomLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:[self bottomLabelAttributedStringForItem:item]
+                                                           withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
+                                                    limitedToNumberOfLines:0];
+            
+            return topLabelSize.width > bottomLabelSize.width ? topLabelSize.width : bottomLabelSize.width;
         }
         else {
             attributedString = [self bottomLabelAttributedStringForItem:item];
@@ -635,13 +662,15 @@ AGEmojiKeyboardViewDelegate
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateFormat = @"HH:mm";
+        dateFormatter.dateFormat = @"dd.MM.yy HH:mm";
     });
     
     NSString *timeStamp = [dateFormatter stringFromDate:date];
     
     return timeStamp;
 }
+
+#pragma mark - ChatCollectionViewDelegate
 
 - (QMChatCellLayoutModel)collectionView:(QMChatCollectionView *)collectionView layoutModelAtIndexPath:(NSIndexPath *)indexPath {
     QMChatCellLayoutModel layoutModel = [super collectionView:collectionView layoutModelAtIndexPath:indexPath];
@@ -812,7 +841,10 @@ AGEmojiKeyboardViewDelegate
             QMCollectionViewFlowLayoutInvalidationContext* context = [QMCollectionViewFlowLayoutInvalidationContext context];
             context.invalidateFlowLayoutMessagesCache = YES;
             [self.collectionView.collectionViewLayout invalidateLayoutWithContext:context];
-            [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
+            
+            if ([self.collectionView numberOfItemsInSection:0] != 0) {
+                [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
+            }
         }
     }
 }
@@ -822,11 +854,10 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark - QMChatConnectionDelegate
 
-- (void)chatServiceChatDidLogin
+- (void)refreshAndReadMessages;
 {
     if (self.dialog.type != QBChatDialogTypePrivate) {
         [self refreshMessagesShowingProgress:NO];
-        //
     }
 
     for (QBChatMessage* message in self.unreadMessages) {
@@ -834,6 +865,14 @@ AGEmojiKeyboardViewDelegate
     }
     
     self.unreadMessages = nil;
+}
+
+- (void)chatServiceChatDidConnect:(QMChatService *)chatService {
+    [self refreshAndReadMessages];
+}
+
+- (void)chatServiceChatDidReconnect:(QMChatService *)chatService {
+    [self refreshAndReadMessages];
 }
 
 #pragma mark - QMChatAttachmentServiceDelegate
@@ -940,7 +979,7 @@ AGEmojiKeyboardViewDelegate
 - (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
     if (self.dialog.type == QBChatDialogTypePrivate) {
         if (self.opponentUser.ID == userID) {
-            [self updateTitleInfoForPrivateDialog];
+            self.onlineTitle.statusLabel.text = NSLocalizedString(isOnline ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
         }
     }
 }
@@ -1005,7 +1044,7 @@ AGEmojiKeyboardViewDelegate
     
     CGFloat emojiButtonSpacing = kQMEmojiButtonSize/3.0f;
     
-    [self.inputToolbar.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[emojiButton(==size)]|"
+    [self.inputToolbar.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[emojiButton(==size)]|"
                                                                                           options:0
                                                                                           metrics:@{@"size" : @(kQMEmojiButtonSize)}
                                                                                             views:@{@"emojiButton" : self.emojiButton}]];
@@ -1014,14 +1053,12 @@ AGEmojiKeyboardViewDelegate
                                                                                           metrics:@{@"spacing" : @(emojiButtonSpacing)}
                                                                                             views:@{@"emojiButton"    : self.emojiButton,
                                                                                                     @"rightBarButton" : self.inputToolbar.contentView.rightBarButtonItem}]];
-    
-    // adding bezier path
-    CGFloat contentViewWidth    = self.inputToolbar.contentView.frame.size.width;
-    CGFloat rightBarButtonItemWidth = self.inputToolbar.contentView.rightBarButtonItemWidth;
-    CGFloat rightBarButtonItemY = self.inputToolbar.contentView.rightBarButtonItem.frame.origin.y;
-    
-    UIBezierPath *emojiPath = [UIBezierPath bezierPathWithRect:CGRectMake(contentViewWidth-rightBarButtonItemWidth-emojiButtonSpacing, rightBarButtonItemY, kQMEmojiButtonSize, kQMEmojiButtonSize/2.0f)];
-    self.inputToolbar.contentView.textView.textContainer.exclusionPaths = @[emojiPath];
+
+    // changing textContainerInset to restrict text entering on emoji button
+    self.inputToolbar.contentView.textView.textContainerInset = UIEdgeInsetsMake(self.inputToolbar.contentView.textView.textContainerInset.top,
+                                                                                 self.inputToolbar.contentView.textView.textContainerInset.left,
+                                                                                 self.inputToolbar.contentView.textView.textContainerInset.bottom,
+                                                                                 kQMInputToolbarTextContainerInsetRight);
 }
 
 - (void)showEmojiKeyboard {

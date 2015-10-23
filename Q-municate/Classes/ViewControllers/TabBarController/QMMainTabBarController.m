@@ -17,10 +17,10 @@
 #import "QMSettingsManager.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMDevice.h"
-#import "QMPopoversFactory.h"
+#import "QMViewControllersFactory.h"
 
 
-@interface QMMainTabBarController ()
+@interface QMMainTabBarController () <QMNotificationHandlerDelegate>
 
 @end
 
@@ -54,22 +54,6 @@
             
         } else {
             
-            // open app by push notification:
-            NSDictionary *push = [[QMApi instance] pushNotification];
-        
-            if (push != nil) {
-                if( push[@"dialog_id"] ){
-                    
-                    [SVProgressHUD show];
-                    
-                    [[QMApi instance] openChatPageForPushNotification:push completion:^(BOOL completed) {
-                        [SVProgressHUD dismiss];
-                    }];
-                    
-                    [[QMApi instance] setPushNotification:nil];
-                }
-            }
-            
             // subscribe to push notifications
             [[QMApi instance] subscribeToPushNotificationsForceSettings:NO complete:^(BOOL subscribeToPushNotificationsSuccess) {
                 
@@ -78,10 +62,7 @@
                 }
             }];
             
-            [[QMApi instance] fetchAllHistory:^{
-                [weakSelf loginToChat];
-            }];
-            
+            [weakSelf loginToChat];
         }
     }];
 }
@@ -89,21 +70,39 @@
 - (void)loginToChat
 {
     [[QMApi instance] loginChat:^(BOOL loginSuccess) {
-        
-        // hide progress hud
-        [SVProgressHUD dismiss];
-        
-        [[QMApi instance] joinGroupDialogs];
+
         QBUUser *usr = [QMApi instance].currentUser;
         if (!usr.isImport) {
-            [[QMApi instance] importFriendsFromFacebook];
+            dispatch_group_t group = dispatch_group_create();
+            dispatch_group_enter(group);
+            [[QMApi instance] importFriendsFromFacebook:^(BOOL success) {
+                //
+                dispatch_group_leave(group);
+            }];
+            dispatch_group_enter(group);
             [[QMApi instance] importFriendsFromAddressBookWithCompletion:^(BOOL succeded, NSError *error) {
+                //
+                dispatch_group_leave(group);
             }];
             usr.isImport = YES;
             QBUpdateUserParameters *params = [QBUpdateUserParameters new];
             params.customData = usr.customData;
             [[QMApi instance] updateCurrentUser:params image:nil progress:nil completion:^(BOOL success) {}];
         }
+        
+        // open chat if app was launched by push notifications
+        NSDictionary *push = [[QMApi instance] pushNotification];
+        
+        if (push != nil) {
+            if( push[kPushNotificationDialogIDKey] ){
+                [SVProgressHUD show];
+                [[QMApi instance] handlePushNotificationWithDelegate:self];
+            }
+        }
+        
+        [[QMApi instance] fetchAllDialogs:^{
+            [[QMApi instance] joinGroupDialogs];
+        }];
     }];
 }
 
@@ -157,37 +156,48 @@
 - (void)showNotificationForMessage:(QBChatMessage *)message inDialogID:(NSString *)dialogID
 {
     if ([[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) return;
-    
-    if (message.isNotificatonMessage) return;
-    
-    if (message.delayed) return;
-    
-    if (message.senderID == self.currentUser.ID) return;
-    
-    NSString* dialogName = @"New message";
-    
+
     QBChatDialog* dialog = [[QMApi instance].chatService.dialogsMemoryStorage chatDialogWithID:dialogID];
-    
-    if (dialog.type != QBChatDialogTypePrivate) {
-        dialogName = dialog.name;
-    } else {
-        QBUUser* user = [[QMApi instance].contactListService.usersMemoryStorage userWithID:dialog.recipientID];
-        if (user != nil) {
-            dialogName = user.login;
-        }
+    if (dialog == nil) {
+        dialog = message.dialog;
     }
+    
+    // delayed property working correcrtly for private chat messages only
+    if (message.delayed && dialog.type == QBChatDialogTypePrivate) return;
     
     [QMSoundManager playMessageReceivedSound];
     
     __weak __typeof(self)weakSelf = self;
     [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
         if (buttonIndex == 1) {
-            
-            UINavigationController *navigationController = (UINavigationController *)[weakSelf selectedViewController];
-            UIViewController *chatController = [QMPopoversFactory chatControllerWithDialogID:dialogID];
-            [navigationController pushViewController:chatController animated:YES];
+            if (![[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) {
+                UINavigationController *navigationController = (UINavigationController *)[weakSelf selectedViewController];
+                UIViewController *chatController = [QMViewControllersFactory chatControllerWithDialogID:dialogID];
+                [navigationController pushViewController:chatController animated:YES];
+            }
         }
     }];
+}
+
+#pragma mark - QMNotificationHandlerDelegate protocol
+
+- (void)notificationHandlerDidStartLoadingDialogFromServer {
+    [SVProgressHUD showWithStatus:@"Loading dialog..." maskType:SVProgressHUDMaskTypeClear];
+}
+
+- (void)notificationHandlerDidFinishLoadingDialogFromServer {
+    [SVProgressHUD dismiss];
+}
+
+- (void)notificationHandlerDidSucceedFetchingDialog:(QBChatDialog *)chatDialog {
+    [SVProgressHUD dismiss];
+    UINavigationController *navigationController = (UINavigationController *)[self selectedViewController];
+    UIViewController *chatController = [QMViewControllersFactory chatControllerWithDialog:chatDialog];
+    [navigationController pushViewController:chatController animated:YES];
+}
+
+- (void)notificationHandlerDidFailFetchingDialog {
+    [SVProgressHUD showErrorWithStatus:@"Dialog was not found"];
 }
 
 #pragma mark - QMTabBarDelegate
@@ -205,7 +215,9 @@
 #pragma mark - QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
-    [self showNotificationForMessage:message inDialogID:dialogID];
+    if (message.senderID != self.currentUser.ID) {
+        [self showNotificationForMessage:message inDialogID:dialogID];
+    }
 }
 
 
@@ -213,34 +225,26 @@
 
 - (void)chatServiceChatDidConnect:(QMChatService *)chatService
 {
-    [SVProgressHUD showSuccessWithStatus:@"Chat connected!" maskType:SVProgressHUDMaskTypeClear];
-    [SVProgressHUD showWithStatus:@"Logging in to chat..." maskType:SVProgressHUDMaskTypeClear];
+    [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil) maskType:SVProgressHUDMaskTypeClear];
 }
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)chatService
 {
-    [SVProgressHUD showSuccessWithStatus:@"Chat reconnected!" maskType:SVProgressHUDMaskTypeClear];
-    [SVProgressHUD showWithStatus:@"Logging in to chat..." maskType:SVProgressHUDMaskTypeClear];
-}
-
-- (void)chatServiceChatDidAccidentallyDisconnect:(QMChatService *)chatService
-{
-    [SVProgressHUD showErrorWithStatus:@"Chat disconnected!"];
-}
-
-- (void)chatServiceChatDidLogin
-{
-    [SVProgressHUD showSuccessWithStatus:@"Logged in!"];
+    [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil) maskType:SVProgressHUDMaskTypeClear];
 }
 
 - (void)chatServiceChatDidNotLoginWithError:(NSError *)error
 {
-    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"Did not login with error: %@", [error description]]];
+    if ([[QMApi instance] isInternetConnected]) {
+        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription]];
+    }
 }
 
 - (void)chatServiceChatDidFailWithStreamError:(NSError *)error
 {
-    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:@"Chat failed with error: %@", [error description]]];
+    if ([[QMApi instance] isInternetConnected]) {
+        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_STREAM_ERROR", nil), error.localizedDescription]];
+    }
 }
 
 @end

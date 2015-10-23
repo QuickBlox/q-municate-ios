@@ -36,6 +36,7 @@
     notification.recipientID = user.ID;
     notification.senderID = self.currentUser.ID;
     notification.text = @"Contact request";  // contact request
+    notification.dateSent = [NSDate date];
     return notification;
 }
 
@@ -83,6 +84,54 @@
         //
     } errorBlock:^(QBResponse *response) {
         //
+    }];
+}
+
+- (void)handlePushNotificationWithDelegate:(id<QMNotificationHandlerDelegate>)delegate {
+    if (self.pushNotification == nil) return;
+    
+    NSString *dialogID = self.pushNotification[kPushNotificationDialogIDKey];
+    self.pushNotification = nil;
+    
+    __weak __typeof(self)weakSelf = self;
+    [self.chatService fetchDialogWithID:dialogID completion:^(QBChatDialog *chatDialog) {
+        //
+        if (chatDialog != nil) {
+            //
+            [weakSelf.contactListService retrieveIfNeededUsersWithIDs:chatDialog.occupantIDs completion:^(BOOL retrieveWasNeeded) {
+                //
+                if ([delegate respondsToSelector:@selector(notificationHandlerDidSucceedFetchingDialog:)]) {
+                    [delegate notificationHandlerDidSucceedFetchingDialog:chatDialog];
+                }
+            }];
+        }
+        else {
+            //
+            if ([delegate respondsToSelector:@selector(notificationHandlerDidStartLoadingDialogFromServer)]) {
+                [delegate notificationHandlerDidStartLoadingDialogFromServer];
+            }
+            [weakSelf.chatService loadDialogWithID:dialogID completion:^(QBChatDialog *loadedDialog) {
+                //
+                if ([delegate respondsToSelector:@selector(notificationHandlerDidFinishLoadingDialogFromServer)]) {
+                    [delegate notificationHandlerDidFinishLoadingDialogFromServer];
+                }
+                if (loadedDialog != nil) {
+                    //
+                    [weakSelf.contactListService retrieveIfNeededUsersWithIDs:chatDialog.occupantIDs completion:^(BOOL retrieveWasNeeded) {
+                        //
+                        if ([delegate respondsToSelector:@selector(notificationHandlerDidSucceedFetchingDialog:)]) {
+                            [delegate notificationHandlerDidSucceedFetchingDialog:loadedDialog];
+                        }
+                    }];
+                }
+                else {
+                    //
+                    if ([delegate respondsToSelector:@selector(notificationHandlerDidFailFetchingDialog)]) {
+                        [delegate notificationHandlerDidFailFetchingDialog];
+                    }
+                }
+            }];
+        }
     }];
 }
 

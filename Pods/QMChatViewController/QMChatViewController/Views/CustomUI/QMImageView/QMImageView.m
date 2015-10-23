@@ -50,20 +50,11 @@
     
     self.webManager = [[SDWebImageManager alloc] init];
     self.webManager.delegate = self;
-    
-    __weak __typeof(self)weakSelf = self;
-    [self.webManager setCacheKeyFilter:^(NSURL *t_url) {
-        NSString *key = [weakSelf keyWithURL:t_url size:weakSelf.frame.size];
-        return key;
-    }];
 }
 
-- (NSString *)keyWithURL:(NSURL *)url size:(CGSize)size {
-    
-    NSString* prefix = NSStringFromCGSize(size);
-    NSString *key = [NSString stringWithFormat:@"%@-forSize-%@", url.absoluteString, prefix];
-    
-    return key;
+- (void)layoutIfNeeded {
+    [super layoutIfNeeded];
+    self.layer.cornerRadius = self.frame.size.width / 2;
 }
 
 - (void)setImageWithURL:(NSURL *)url
