@@ -43,13 +43,13 @@ Please note all these features are available in open source code, so you can cus
 
 ## Software Environment
 
-The IOS application runs on the phones with screen sizes varying between 4 and 5.5 inches, with IOS 8.1 and above onboard.
-The IOS App is developed as native IOS application.
-Web component is based on QuickBlox platform.
-The App and Web panel has English language interface.
-The App works only in Portrait screen mode.
-The App uses Quickblox framework 2.4.6.
-The App uses our [QMServices](https://github.com/QuickBlox/q-municate-services-ios "QMServices") and [QMChatViewController](https://github.com/QuickBlox/QMChatViewController-ios "QMChatViewController").
+* The IOS application runs on the phones with screen sizes varying between 4 and 5.5 inches, with IOS 8.1 and above onboard.
+* The IOS App is developed as native IOS application.
+* Web component is based on QuickBlox platform.
+* The App and Web panel has English language interface.
+* The App works only in Portrait screen mode.
+* The App uses Quickblox framework v2.4.6.
+* The App uses our [QMServices](https://github.com/QuickBlox/q-municate-services-ios "QMServices") and [QMChatViewController](https://github.com/QuickBlox/QMChatViewController-ios "QMChatViewController").
 
 _______
 
