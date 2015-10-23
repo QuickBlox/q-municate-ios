@@ -138,12 +138,8 @@
 
 - (void)logInWithFacebookAccessToken:(NSString *)accessToken completion:(void(^)(BOOL success))completion {
     
-    __weak __typeof(self)weakSelf = self;
     [self.authService logInWithFacebookSessionToken:accessToken completion:^(QBResponse *response, QBUUser *userProfile) {
         //
-        if (!response.success) {
-            [weakSelf handleErrorResponse:response];
-        }
         completion(response.success);
     }];
 }
