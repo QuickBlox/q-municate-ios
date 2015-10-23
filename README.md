@@ -43,11 +43,13 @@ Please note all these features are available in open source code, so you can cus
 
 ## Software Environment
 
-The IOS application runs on the phones with screen sizes varying between 4 and 5 inches, with IOS 7 and above till IOS  7.1.2 onboard.
-The IOS App is developed as native IOS application.
-Web component is based on QuickBlox platform.
-The App and Web panel has English language interface.
-The App works only in Portrait screen mode
+* The IOS application runs on the phones with screen sizes varying between 4 and 5.5 inches, with IOS 8.1 and above onboard.
+* The IOS App is developed as native IOS application.
+* Web component is based on QuickBlox platform.
+* The App and Web panel has English language interface.
+* The App works only in Portrait screen mode.
+* The App uses Quickblox framework v2.4.6.
+* The App uses our [QMServices](https://github.com/QuickBlox/q-municate-services-ios "QMServices") and [QMChatViewController](https://github.com/QuickBlox/QMChatViewController-ios "QMChatViewController").
 
 _______
 
@@ -82,7 +84,8 @@ Sign Up Page allows to create new QM user.
 * Password – text/numeric/symbolic field 8-40 chars (should contain alphanumeric and punctuation characters only) , mandatory
 
 #### Buttons:
-* Back button - redirects user to pre-login page * Choose user picture – all area and button is tappable/ clickable. After tap/click will be opened a gallery with images to choose, not mandatory. App will create round image from the center part of the selected image automatically.
+* Back button - redirects user to pre-login page
+* Choose user picture – all area and button is tappable/ clickable. After tap/click will be opened a gallery with images to choose, not mandatory. App will create round image from the center part of the selected image automatically.
 * Sign up – if all fields are filled in correctly, then user is navigated to Friends Page.
 Data validation will be done on the server. (Validation process is the same as for Login page) 
 * User Agreement- redirects user to User Agreement page
@@ -152,13 +155,14 @@ Tapping on Forgot password link a predefined email from the server will be sent 
 
 #### The code:
 
-        [[QMApi instance] loginWithUser:user completion:^(BOOL success) {
-            
+        [[QMApi instance] loginWithEmail:email
+                                password:password
+                              rememberMe:rememberMe
+                              completion:^(BOOL success) {
             if (success) {
                 // do something...
             }
         }];
-}
 
 
 
@@ -172,8 +176,16 @@ Notification with text "Please wait, Q-municate app is searching for your friend
 #### The code:
 
 
-     [[QMApi instance] importFriendsFromFacebook];
-     [[QMApi instance] importFriendsFromAddressBook];
+     [[QMApi instance] importFriendsFromFacebook:^(BOOL success) {
+            if (success) {
+                // do something...
+            }
+     }];
+     [[QMApi instance] importFriendsFromAddressBookWithCompletion:^(BOOL succeded, NSError *error) {
+            if (succeded) {
+                // do something...
+            }
+     }];
 
 
 
@@ -194,24 +206,6 @@ For each contact will be shown full name, avatar image, short text message (stat
 Search bar is shown on top of the contacts list
 
 Side bar will be shown during first app login. 
-
-#### The code:
-
-    // updating Friends list
-    __weak __typeof(self)weakSelf = self;
-    [[QMChatReceiver instance] chatContactListDidChangeWithTarget:self block:^(QBContactList *contactList) {
-        [weakSelf.contactList removeAllObjects];
-        [weakSelf.contactList addObjectsFromArray:contactList.pendingApproval];
-        [weakSelf.contactList addObjectsFromArray:contactList.contacts];
-    }];
-
-    // inviting User to list
-        [[QMChatReceiver instance] chatDidReceiveContactAddRequestWithTarget:self block:^(NSUInteger userID) {
-            BOOL success = [[QMApi instance] confirmAddContactRequest:userID];
-            if (success) {
-                // do something..
-            }
-        }];
 
 
 #### Step 5.1. Tab bar
@@ -239,13 +233,11 @@ A list of friends, listed in alphabetical order.
 
 #### The code:
 
-    QBUUserPagedResultBlock userPagedBlock = ^(QBUUserPagedResult *pagedResult) {
-
-        if (pagedResult.success) {
+    [[QMApi instance].contactListService retrieveUsersWithFullName:searchText pagedRequest:[QBGeneralResponsePage responsePageWithCurrentPage:currentPage perPage:perPage] completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+        if (response.success) {
             // do something...
-        }
-    };
-	[[QMApi instance].usersService retrieveUsersWithFullName:self.searchText pagedRequest:request completion:userPagedBlock];
+         }
+    }];
 
 
 ### Step 6. Details Page
@@ -403,23 +395,6 @@ Timestamp – device time and date should be used
 - Message field – text/numeric/symbolic field 
 - Back button returns to the Chats page 
 
-#### The code:
-
-	// creating Private Chat
-            [[QMApi instance] createPrivateChatDialogIfNeededWithOpponent:self.selectedUser completion:^(QBChatDialog *chatDialog) {
-                if (chatDialog) {
-                    // do something...
-                }
-            }];
-
-        // sending Private Message
-        [[QMApi instance] sendText:text toDialog:chatDialog];
-
-        // sending Private Message With Attach Image
-        [[QMApi instance] sendAttachment:attachmentUrl toDialog:chatDialog completion:^(QBChatMessage *message) {
-                // do something...
-            }];
-
 
 
 ### Step 11. Group chat page
@@ -448,31 +423,10 @@ Timestamp – device time and date should be used
 * Message field – text/numeric/symbolic field 512 chars max
 * Back button returns to the Chats page 
 
-#### The code:
 
-    // creating Group Chat
+### Step 12. Calls
 
-    [[QMApi instance] createGroupChatDialogWithName:chatName ocupants:self.selectedFriends completion:^(QBChatDialogResult *result) {
-        
-        if (result.success) {
-            // do something...
-
-       // sending Group Message
-	
-	QBChatMessage *message = [[QMApi instance] sendText:text toDialog:chatDialog];
-		}
-    }];
-
-
-       // sending Group Message With Attach Image
-               [[QMApi instance] sendAttachment:attachmentUrl toDialog:chatDialog completion:^(QBChatMessage *message) {
-                // do something...
-            }];
-
-
-### Step 12. Calls (Coming soon)
-
-### Audio call (Coming soon)
+### Audio call
 ![step_4(2).png](https://bitbucket.org/repo/rMnaz8/images/2813259661-step_4%282%29.png)
 
 #### Audio Call Page features:
@@ -491,7 +445,7 @@ Can be enabled by tapping it once more
 
 
 
-### Video call (Coming soon):
+### Video call:
 ![step_3(2).png](https://bitbucket.org/repo/rMnaz8/images/2190095292-step_3%282%29.png) 
 
 ### Video Chat Page features (
@@ -548,11 +502,11 @@ App will create round image from the center part of the selected image automatic
 
 #### The code:
 
-    QBUUser *myProfile = [QMApi instance].currentUser;
-    myProfile.password = newPassword;
-    myProfile.oldPassword = oldPassword;
+    QBUpdateUserParameters *params = [QBUpdateUserParameters new];
+    params.password = newPassword;
+    params.oldPassword = oldPassword;
     
-    [[QMApi instance] changePasswordForCurrentUser:myProfile completion:^(BOOL success) {
+    [[QMApi instance] changePasswordForCurrentUser:params completion:^(BOOL success) {
         
         if (success) {
              // do something:
@@ -566,11 +520,11 @@ App will create round image from the center part of the selected image automatic
 
 If you want to build your own app using Q-municate as a basis, please do the following:
 
- 1. Download the project from here (Bitbucket)
+ 1. Download the project from here (Github)
  2. Register a QuickBlox account (if you don't have one yet): http://admin.quickblox.com/register
- 3. Log in to QuickBlox admin panel [http://admin.quickblox.com/signin]http://admin.quickblox.com/signin
+ 3. Log in to QuickBlox admin panel: http://admin.quickblox.com/signin
  4. Create a new app
  5. Click on the app title in the list to reveal the app details:
    ![App credentials](http://files.quickblox.com/app_credentials.png)
- 6. Copy credentials (App ID, Authorization key, Authorization secret) into your Q-municate project code in Consts.java<br />
+ 6. Copy credentials (App ID, Authorization key, Authorization secret) into your Q-municate project code in AppDelegate.m<br />
  7. Enjoy!
