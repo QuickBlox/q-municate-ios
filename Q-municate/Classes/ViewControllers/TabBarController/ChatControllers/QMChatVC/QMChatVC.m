@@ -240,14 +240,8 @@ AGEmojiKeyboardViewDelegate
     }
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-
 - (void)viewWillDisappear:(BOOL)animated
 {
-    self.dialog.unreadMessagesCount = 0;
-    
     [[QMApi instance].settingsManager setDialogWithIDisActive:nil];
     
     [super viewWillDisappear:animated];
@@ -371,9 +365,7 @@ AGEmojiKeyboardViewDelegate
 - (void)sendReadStatusForMessage:(QBChatMessage *)message
 {
     if (message.senderID != [QBSession currentSession].currentUser.ID && ![message.readIDs containsObject:@(self.senderID)]) {
-        message.markable = YES;
-        // Sending read message status.
-        if (![[QBChat instance] readMessage:message]) {
+        if (![[QMApi instance].chatService readMessage:message forDialogID:self.dialog.ID]) {
             NSLog(@"Problems while marking message as read!");
         }
         else {
@@ -387,9 +379,7 @@ AGEmojiKeyboardViewDelegate
 - (void)readMessages:(NSArray *)messages forDialogID:(NSString *)dialogID
 {
     if ([QBChat instance].isLoggedIn) {
-        for (QBChatMessage* message in messages) {
-            [self sendReadStatusForMessage:message];
-        }
+        [[QMApi instance].chatService readMessages:messages forDialogID:dialogID];
     } else {
         self.unreadMessages = messages;
     }
@@ -851,7 +841,10 @@ AGEmojiKeyboardViewDelegate
             QMCollectionViewFlowLayoutInvalidationContext* context = [QMCollectionViewFlowLayoutInvalidationContext context];
             context.invalidateFlowLayoutMessagesCache = YES;
             [self.collectionView.collectionViewLayout invalidateLayoutWithContext:context];
-            [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
+            
+            if ([self.collectionView numberOfItemsInSection:0] != 0) {
+                [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
+            }
         }
     }
 }
