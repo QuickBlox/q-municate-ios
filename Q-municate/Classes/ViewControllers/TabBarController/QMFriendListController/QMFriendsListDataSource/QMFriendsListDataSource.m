@@ -27,7 +27,7 @@ QMContactListServiceDelegate
 
 @property (weak, nonatomic) UITableView *tableView;
 @property (weak, nonatomic) UISearchDisplayController *searchDisplayController;
-@property (strong, nonatomic) QBRequest *searchRequest;
+@property (strong, nonatomic) QMCancellationToken *searchToken;
 
 @property (assign, nonatomic) NSUInteger contactRequestsCount;
 
@@ -109,7 +109,7 @@ QMContactListServiceDelegate
         weakSelf.searchResult = filteredUsers;
         
         [weakSelf.searchDisplayController.searchResultsTableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
-        weakSelf.searchRequest = nil;
+
         [SVProgressHUD dismiss];
     };
     
@@ -120,17 +120,26 @@ QMContactListServiceDelegate
         
         if ([self.searchDisplayController.searchBar.text isEqualToString:searchText]) {
             
-            if (self.searchRequest) {
-                [self.searchRequest cancel];
-                self.searchRequest = nil;
+            if (self.searchToken) {
+                [self.searchToken cancel];
             }
             
             NSUInteger currentPage = 1;
             NSUInteger perPage = 100;
             
-            
+            self.searchToken = [QMCancellationToken new];
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-            self.searchRequest = [[QMApi instance].contactListService retrieveUsersWithFullName:searchText pagedRequest:[QBGeneralResponsePage responsePageWithCurrentPage:currentPage perPage:perPage] completion:userResponseBlock];
+            [[[QMApi instance].usersService retrieveUsersWithFullName:searchText
+                                                         pagedRequest:[QBGeneralResponsePage responsePageWithCurrentPage:currentPage perPage:perPage]
+                                                    cancellationToken:self.searchToken]
+             continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+                
+                if (task.isCompleted){
+                    if (userResponseBlock) userResponseBlock(nil, nil, task.result);
+                }
+                
+                return nil;
+            }];
         }
     });
 }
@@ -146,9 +155,10 @@ QMContactListServiceDelegate
 }
 
 - (void)updateView {
-    if (self.searchRequest) {
-        return;
-    }
+    
+//    if (self.searchToken) {
+//        return;
+//    }
     
     if (self.searchDisplayController.isActive) {
         

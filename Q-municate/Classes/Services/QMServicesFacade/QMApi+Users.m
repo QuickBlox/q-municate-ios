@@ -86,7 +86,7 @@
 }
 
 - (QBUUser *)userWithID:(NSUInteger)userID {
-    return [self.contactListService.usersMemoryStorage userWithID:userID];
+    return [self.usersService.usersMemoryStorage userWithID:userID];
 }
 
 - (NSArray *)usersWithIDs:(NSArray *)ids {
@@ -252,22 +252,23 @@
             if (completion) completion(NO);
             return;
         }
-        [weakSelf.contactListService retrieveUsersWithFacebookIDs:facebookFriendsIDs completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+        [[weakSelf.usersService retrieveUsersWithFacebookIDs:facebookFriendsIDs ] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
             //
-            if (!response.success) {
+            if (task.error != nil) {
                 if (completion) completion(NO);
-                return;
+                return nil;
             }
-            if ([users count] == 0) {
+            if ([task.result count] == 0) {
                 if (completion) completion(NO);
-                return;
+                return nil;
             }
             
             // sending contact requests:
-            for (QBUUser *user in users) {
+            for (QBUUser *user in task.result) {
                 [weakSelf addUserToContactList:user completion:nil];
             }
             if (completion) completion(YES);
+            return nil;
         }];
     }];
 }
@@ -287,23 +288,26 @@
         }
         
         // post request for emails to QB server:
-        [weakSelf.contactListService retrieveUsersWithEmails:emails completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+        [[weakSelf.usersService retrieveUsersWithEmails:emails] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
             //
-            if (!response.success) {
-                completionBlock(NO, nil);
-                return;
+            if (task.error != nil) {
+                if (completionBlock) completionBlock(NO, nil);
+                return nil;
             }
             
-            if ([users count] == 0) {
-                completionBlock(NO, nil);
-                return;
+            if ([task.result count] == 0) {
+                if (completionBlock) completionBlock(NO, nil);
+                return nil;
             }
             
             // sending contact requests:
-            for (QBUUser *user in users) {
-                [weakSelf addUserToContactList:user completion:^(BOOL successed, QBChatMessage *notification) {}];
+            for (QBUUser *user in task.result) {
+                [weakSelf addUserToContactList:user completion:nil];
             }
-            completionBlock(YES, nil);
+            
+            if (completionBlock) completionBlock(YES, nil);
+            
+            return nil;
         }];
     }];
 }

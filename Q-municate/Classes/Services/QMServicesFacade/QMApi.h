@@ -29,7 +29,9 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
                              QMChatServiceDelegate,
                              QMChatConnectionDelegate,
                              QMContactListServiceDelegate,
-                             QMContactListServiceCacheDataSource>
+                             QMContactListServiceCacheDataSource,
+                             QMUsersServiceCacheDataSource,
+                             QMUsersServiceDelegate>
 
 /**
  *  REST authentication service.
@@ -45,6 +47,9 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  *  Contact list service.
  */
 @property (strong, nonatomic, readonly) QMContactListService* contactListService;
+
+// Users service.
+@property (strong, nonatomic, readonly) QMUsersService* usersService;
 
 /**
  *  Settings manager.

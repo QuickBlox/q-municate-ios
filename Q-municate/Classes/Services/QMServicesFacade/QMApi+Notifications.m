@@ -98,11 +98,13 @@
         //
         if (chatDialog != nil) {
             //
-            [weakSelf.contactListService retrieveIfNeededUsersWithIDs:chatDialog.occupantIDs completion:^(BOOL retrieveWasNeeded) {
+            [[weakSelf.usersService retrieveIfNeededUsersWithIDs:chatDialog.occupantIDs] continueWithBlock:^id(BFTask *task) {
                 //
                 if ([delegate respondsToSelector:@selector(notificationHandlerDidSucceedFetchingDialog:)]) {
                     [delegate notificationHandlerDidSucceedFetchingDialog:chatDialog];
                 }
+
+                return nil;
             }];
         }
         else {
@@ -117,11 +119,12 @@
                 }
                 if (loadedDialog != nil) {
                     //
-                    [weakSelf.contactListService retrieveIfNeededUsersWithIDs:chatDialog.occupantIDs completion:^(BOOL retrieveWasNeeded) {
+                    [[weakSelf.usersService retrieveIfNeededUsersWithIDs:chatDialog.occupantIDs] continueWithBlock:^id(BFTask *task) {
                         //
                         if ([delegate respondsToSelector:@selector(notificationHandlerDidSucceedFetchingDialog:)]) {
                             [delegate notificationHandlerDidSucceedFetchingDialog:loadedDialog];
                         }
+                        return nil;
                     }];
                 }
                 else {
