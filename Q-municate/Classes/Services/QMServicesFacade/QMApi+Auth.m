@@ -45,7 +45,7 @@
     dispatch_group_notify(logoutGroup, dispatch_get_main_queue(), ^{
         __typeof(self)strongSelf = weakSelf;
         [strongSelf unSubscribeToPushNotifications:^(BOOL success) {
-            completion(YES);
+            if (completion) completion(YES);
         }];
     });
 }
@@ -72,11 +72,11 @@
         }
         else {
             
-            completion(NO);
+            if (completion) completion(NO);
         }
     }
     else {
-        completion(YES);
+        if (completion) completion(YES);
     }
 }
 - (void)singUpAndLoginWithFacebook:(void(^)(BOOL success))completion {
@@ -85,7 +85,7 @@
     [self loginWithFacebook:^(BOOL success) {
         
         if (!success) {
-            completion(success);
+            if (completion) completion(success);
         }
         else {
             
@@ -100,7 +100,7 @@
                 }];
             }
             else {
-                completion(YES);
+                if (completion) completion(YES);
             }
         }
     }];
@@ -119,7 +119,7 @@
                 [weakSelf.settingsManager setLogin:user.email andPassword:user.password];
             }
         }
-        completion(response.success);
+        if (completion) completion(response.success);
     }];
 }
 
@@ -127,10 +127,10 @@
 
     [QBRequest resetUserPasswordWithEmail:email successBlock:^(QBResponse *response) {
         //
-        completion(response.success);
+        if (completion) completion(response.success);
     } errorBlock:^(QBResponse *response) {
         //
-        completion(response.success);
+        if (completion) completion(response.success);
     }];
 }
 
@@ -140,7 +140,7 @@
     
     [self.authService logInWithFacebookSessionToken:accessToken completion:^(QBResponse *response, QBUUser *userProfile) {
         //
-        completion(response.success);
+        if (completion) completion(response.success);
     }];
 }
 
@@ -150,12 +150,12 @@
     __weak __typeof(self)weakSelf = self;
     [QMFacebookService connectToFacebook:^(NSString *sessionToken) {
         if (!sessionToken) {
-            completion(NO);
+            if (completion) completion(NO);
         }
         else {
             /*Longin with Social provider*/
             [weakSelf logInWithFacebookAccessToken:sessionToken completion:^(BOOL successLoginWithFacebook) {
-                completion(successLoginWithFacebook);
+                if (completion) completion(successLoginWithFacebook);
             }];
         }
     }];
@@ -258,7 +258,7 @@
                 [weakSelf.settingsManager setLogin:email andPassword:password];
             }
         }
-        completion(response.success);
+        if (completion) completion(response.success);
     }];
 }
 
