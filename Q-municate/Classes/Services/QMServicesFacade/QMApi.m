@@ -356,6 +356,14 @@ static NSString *const kQMErrorPasswordKey = @"password";
     [QMUsersCache.instance insertOrUpdateUsers:users];
 }
 
+#pragma mark - QMContactListDidChange
+
+- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList
+{
+    [self.usersService retrieveUsersWithIDs:[self.contactListService.contactListMemoryStorage userIDsFromContactList]
+                              forceDownload:NO];
+}
+
 @end
 
 @implementation NSObject(CurrentUser)

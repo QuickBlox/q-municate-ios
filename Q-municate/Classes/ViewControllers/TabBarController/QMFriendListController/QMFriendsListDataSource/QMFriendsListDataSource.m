@@ -115,27 +115,25 @@ QMContactListServiceDelegate
     
     [self.searchDisplayController.searchResultsTableView reloadData];
     
-    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        if ([self.searchDisplayController.searchBar.text isEqualToString:searchText]) {
+        __typeof(self) strongSelf = weakSelf;
+        if ([strongSelf.searchDisplayController.searchBar.text isEqualToString:searchText]) {
             
-            if (self.searchToken) {
-                [self.searchToken cancel];
+#warning Cancellation token not implemented
+            if (strongSelf.searchToken) {
+                [strongSelf.searchToken cancel];
             }
             
             NSUInteger currentPage = 1;
             NSUInteger perPage = 100;
-            
-            self.searchToken = [QMCancellationToken new];
+            strongSelf.searchToken = [QMCancellationToken new];
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
             [[[QMApi instance].usersService retrieveUsersWithFullName:searchText
                                                          pagedRequest:[QBGeneralResponsePage responsePageWithCurrentPage:currentPage perPage:perPage]
-                                                    cancellationToken:self.searchToken]
-             continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
-                
-                if (task.isCompleted){
+                                                    cancellationToken:strongSelf.searchToken] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+                if (task.isCompleted) {
                     if (userResponseBlock) userResponseBlock(nil, nil, task.result);
+                    strongSelf.searchToken = nil;
                 }
                 
                 return nil;
@@ -156,9 +154,9 @@ QMContactListServiceDelegate
 
 - (void)updateView {
     
-//    if (self.searchToken) {
-//        return;
-//    }
+    if (self.searchToken) {
+        return;
+    }
     
     if (self.searchDisplayController.isActive) {
         
