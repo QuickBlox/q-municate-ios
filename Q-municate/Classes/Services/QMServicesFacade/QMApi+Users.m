@@ -277,6 +277,7 @@
 {
     __weak __typeof(self)weakSelf = self;
     [QMAddressBook getContactsWithEmailsWithCompletionBlock:^(NSArray *contacts, BOOL success, NSError *error) {
+        __typeof(self) strongSelf = weakSelf;
         
         if ([contacts count] == 0) {
             completionBlock(NO, error);
@@ -288,7 +289,7 @@
         }
         
         // post request for emails to QB server:
-        [[weakSelf.usersService retrieveUsersWithEmails:emails] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+        [[strongSelf.usersService retrieveUsersWithEmails:emails] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
             //
             if (task.error != nil) {
                 if (completionBlock) completionBlock(NO, nil);
