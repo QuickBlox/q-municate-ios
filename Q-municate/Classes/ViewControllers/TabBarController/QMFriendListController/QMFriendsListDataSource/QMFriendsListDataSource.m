@@ -128,9 +128,9 @@ QMContactListServiceDelegate
             NSUInteger perPage = 100;
             strongSelf.searchToken = [QMCancellationToken new];
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-            [[[QMApi instance].usersService retrieveUsersWithFullName:searchText
-                                                         pagedRequest:[QBGeneralResponsePage responsePageWithCurrentPage:currentPage perPage:perPage]
-                                                    cancellationToken:strongSelf.searchToken] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+            [[[QMApi instance].usersService searchUsersWithFullName:searchText
+                                                       pagedRequest:[QBGeneralResponsePage responsePageWithCurrentPage:currentPage perPage:perPage]
+                                                  cancellationToken:strongSelf.searchToken] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
                 if (task.isCompleted) {
                     if (userResponseBlock) userResponseBlock(nil, nil, task.result);
                     strongSelf.searchToken = nil;

@@ -252,7 +252,7 @@
             if (completion) completion(NO);
             return;
         }
-        [[weakSelf.usersService retrieveUsersWithFacebookIDs:facebookFriendsIDs ] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+        [[weakSelf.usersService retrieveUsersWithFacebookIDs:facebookFriendsIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
             //
             if (task.error != nil) {
                 if (completion) completion(NO);

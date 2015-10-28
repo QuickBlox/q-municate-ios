@@ -83,7 +83,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
             if (completion) completion(dialog);
             return;
         }
-        [[weakSelf.usersService retrieveUsersWithIDs:dialog.occupantIDs forceDownload:NO] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+        [[weakSelf.usersService retrieveIfNeededUsersWithIDs:dialog.occupantIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
             if (completion) completion(dialog);
             return nil;
         }];

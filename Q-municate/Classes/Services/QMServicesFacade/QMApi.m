@@ -360,8 +360,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
 
 - (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList
 {
-    [self.usersService retrieveUsersWithIDs:[self.contactListService.contactListMemoryStorage userIDsFromContactList]
-                              forceDownload:NO];
+    [self.usersService retrieveIfNeededUsersWithIDs:[self.contactListService.contactListMemoryStorage userIDsFromContactList]];
 }
 
 @end
