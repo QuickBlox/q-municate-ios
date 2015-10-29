@@ -43,6 +43,11 @@ PODS:
     - AFNetworking (~> 2.2.3)
     - DACircularProgress (~> 2.2)
     - SVProgressHUD (~> 1.0)
+  - libextobjc/EXTKeyPathCoding (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTScope (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/RuntimeExtensions (0.4.1)
   - MPGNotification (1.2.4)
   - Parus (1.0)
   - QMChatViewController (0.2.5):
@@ -73,6 +78,8 @@ PODS:
     - TTTAttributedLabel (~> 1.13)
   - QMServicesDevelopment (0.2.5):
     - Bolts (= 1.3.0)
+    - libextobjc/EXTKeyPathCoding (= 0.4.1)
+    - libextobjc/EXTScope (= 0.4.1)
   - QuickBlox (2.4.6)
   - Reachability (3.2)
   - SDWebImage (3.7.3):
@@ -115,10 +122,11 @@ SPEC CHECKSUMS:
   FBSDKLoginKit: 028c5a205990441123764609fe795e65027c447f
   FBSDKShareKit: 1f927bb05e4d36a99d5d5bf2f4b1ff294ce3e15c
   IDMPhotoBrowser: 6699a8d8b6c036a60c58ba7c281b2f5761d970ac
+  libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   Parus: e8eeec5e596e59fea3e3129775e5ddf2e5c0b4eb
   QMChatViewController: 12687df60adf52236e3ca5de399b04e33f2cfaea
-  QMServicesDevelopment: 17b32755d81ef73be7737d2c1239fc44e50206bb
+  QMServicesDevelopment: e949a7a1408f07fd6e3a8e4fcae74e417ab01a7e
   QuickBlox: e7da3190be29e14aab5105bf87ad80a80fbf396e
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
