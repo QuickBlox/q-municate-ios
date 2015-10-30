@@ -100,7 +100,8 @@ DEPENDENCIES:
   - MPGNotification (~> 1.1)
   - Parus (~> 1.0)
   - QMChatViewController
-  - QMServicesDevelopment (from `../q-municate-services-ios/`)
+  - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`,
+    branch `feature/QBIOSSDK-469`)
   - Reachability (~> 3.2)
   - SDWebImage (~> 3.6)
   - SSKeychain (~> 1.2.2)
@@ -111,7 +112,13 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   QMServicesDevelopment:
-    :path: ../q-municate-services-ios/
+    :branch: feature/QBIOSSDK-469
+    :git: git@github.com:QuickBlox/q-municate-services-ios.git
+
+CHECKOUT OPTIONS:
+  QMServicesDevelopment:
+    :commit: 357d118a5c3f5da8d3213b0f5d570497e67bf451
+    :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
   AFNetworking: caca0799b310f0c3bf1fc1af45145fc96972bcab
