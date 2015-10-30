@@ -98,7 +98,7 @@
         //
         if (chatDialog != nil) {
             //
-            [[weakSelf.usersService retrieveIfNeededUsersWithIDs:chatDialog.occupantIDs] continueWithBlock:^id(BFTask *task) {
+            [[weakSelf.usersService retrieveUsersWithIDs:chatDialog.occupantIDs] continueWithBlock:^id(BFTask *task) {
                 //
                 if ([delegate respondsToSelector:@selector(notificationHandlerDidSucceedFetchingDialog:)]) {
                     [delegate notificationHandlerDidSucceedFetchingDialog:chatDialog];
@@ -119,7 +119,7 @@
                 }
                 if (loadedDialog != nil) {
                     //
-                    [[weakSelf.usersService retrieveIfNeededUsersWithIDs:chatDialog.occupantIDs] continueWithBlock:^id(BFTask *task) {
+                    [[weakSelf.usersService retrieveUsersWithIDs:chatDialog.occupantIDs] continueWithBlock:^id(BFTask *task) {
                         //
                         if ([delegate respondsToSelector:@selector(notificationHandlerDidSucceedFetchingDialog:)]) {
                             [delegate notificationHandlerDidSucceedFetchingDialog:loadedDialog];

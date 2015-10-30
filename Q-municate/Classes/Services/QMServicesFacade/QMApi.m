@@ -123,7 +123,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
     } else {
         idsToFetch = notification.dialog.occupantIDs;
     }
-    [self.usersService retrieveIfNeededUsersWithIDs:idsToFetch];
+    [self.usersService retrieveUsersWithIDs:idsToFetch];
 }
 
 - (BOOL)isInternetConnected {
@@ -291,7 +291,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
 #pragma mark QMChatServiceCache delegate
 
 - (void)chatService:(QMChatService *)chatService didLoadChatDialogsFromCache:(NSArray *)dialogs withUsers:(NSSet *)dialogsUsersIDs {
-    [self.usersService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects]];
+    [self.usersService retrieveUsersWithIDs:[dialogsUsersIDs allObjects]];
 }
 
 - (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
@@ -360,7 +360,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
 
 - (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList
 {
-    [self.usersService retrieveIfNeededUsersWithIDs:[self.contactListService.contactListMemoryStorage userIDsFromContactList]];
+    [self.usersService retrieveUsersWithIDs:[self.contactListService.contactListMemoryStorage userIDsFromContactList]];
 }
 
 @end

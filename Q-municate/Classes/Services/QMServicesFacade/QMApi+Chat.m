@@ -53,7 +53,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     if (self.settingsManager.lastActivityDate != nil) {
         [self.chatService fetchDialogsUpdatedFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
             //
-            [weakSelf.usersService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects]];
+            [weakSelf.usersService retrieveUsersWithIDs:[dialogsUsersIDs allObjects]];
         } completionBlock:^(QBResponse *response) {
             //
             if (response != nil && response.success) weakSelf.settingsManager.lastActivityDate = [NSDate date];
@@ -63,7 +63,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     else {
         [self.chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
             //
-            [weakSelf.usersService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects]];
+            [weakSelf.usersService retrieveUsersWithIDs:[dialogsUsersIDs allObjects]];
         } completion:^(QBResponse *response) {
             //
             if (response != nil && response.success) weakSelf.settingsManager.lastActivityDate = [NSDate date];
@@ -83,7 +83,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
             if (completion) completion(dialog);
             return;
         }
-        [[weakSelf.usersService retrieveIfNeededUsersWithIDs:dialog.occupantIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+        [[weakSelf.usersService retrieveUsersWithIDs:dialog.occupantIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
             if (completion) completion(dialog);
             return nil;
         }];
