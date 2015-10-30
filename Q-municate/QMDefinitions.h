@@ -37,6 +37,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
 
 static NSString *const kChatCacheNameKey                    = @"q-municate";
 static NSString *const kContactListCacheNameKey             = @"q-municate-contacts";
+static NSString *const kUsersCacheNameKey                   = @"qb-users-cache";
 
 //******************** Segue Identifiers ********************
 static NSString *const kTabBarSegueIdnetifier               = @"TabBarSegue";

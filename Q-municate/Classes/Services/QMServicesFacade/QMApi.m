@@ -76,6 +76,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
         [QMChatCache setupDBWithStoreNamed:kChatCacheNameKey];
         [QMChatCache instance].messagesLimitPerDialog = 10;
         _chatService = [[QMChatService alloc] initWithServiceManager:self cacheDataSource:self];
+        
         [QMContactListCache setupDBWithStoreNamed:kContactListCacheNameKey];
         _contactListService = [[QMContactListService alloc] initWithServiceManager:self cacheDataSource:self];
         _settingsManager = [[QMSettingsManager alloc] init];
@@ -83,7 +84,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
         _internetConnection = [Reachability reachabilityForInternetConnection];
         [_chatService addDelegate:self];
         
-        [QMUsersCache setupDBWithStoreNamed:@"q_municate_users_storage"];
+        [QMUsersCache setupDBWithStoreNamed:kUsersCacheNameKey];
         _usersService = [[QMUsersService alloc] initWithServiceManager:self cacheDataSource:self];
         [_usersService addDelegate:self];
         _usersService.usersMemoryStorage.delegate = self.contactListService;
