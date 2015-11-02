@@ -14,14 +14,6 @@
 #import <Reachability.h>
 #import <SVProgressHUD.h>
 #import "REAlertView+QMSuccess.h"
-#import "QMViewControllersFactory.h"
-#import "QMMainTabBarController.h"
-
-#import "QMMessageBarStyleSheetFactory.h"
-#import "QMSoundManager.h"
-
-#import <_CDMessage.h>
-#import <_CDDialog.h>
 
 const NSTimeInterval kQMPresenceTime = 30;
 
