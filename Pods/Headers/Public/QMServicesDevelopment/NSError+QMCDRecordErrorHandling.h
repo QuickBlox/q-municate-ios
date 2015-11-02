@@ -1,0 +1,1 @@
+../../../../../q-municate-services-ios/QMDBStorage/QMDBStorage/QMCDRecord/Categories/Foundation/NSError+QMCDRecordErrorHandling.h
