@@ -16,38 +16,21 @@
 
 #pragma mark Public methods
 
-- (void)logout:(void(^)(BOOL success))completion {
+- (void)logoutWithCompletion:(void(^)(BOOL success))completion {
     
     __weak typeof(self)weakSelf = self;
     
-    dispatch_group_t logoutGroup = dispatch_group_create();
-    dispatch_group_enter(logoutGroup);
-    [self.authService logOut:^(QBResponse *response) {
-        __typeof(self) strongSelf = weakSelf;
-        [strongSelf.chatService logoutChat];
-        [strongSelf.chatService free];
-        dispatch_group_leave(logoutGroup);
-    }];
-    
-    dispatch_group_enter(logoutGroup);
-    [[QMChatCache instance] deleteAllDialogs:^{
-        dispatch_group_leave(logoutGroup);
-    }];
-    
-    dispatch_group_enter(logoutGroup);
-    [[QMChatCache instance] deleteAllMessages:^{
-        dispatch_group_leave(logoutGroup);
-    }];
-    
-    [self.settingsManager clearSettings];
-    [QMFacebookService logout];
-    
-    dispatch_group_notify(logoutGroup, dispatch_get_main_queue(), ^{
-        __typeof(self)strongSelf = weakSelf;
+    [super logoutWithCompletion:^{
+        //
+        __typeof(weakSelf)strongSelf = weakSelf;
+        
+        [strongSelf.settingsManager clearSettings];
+        [QMFacebookService logout];
+        
         [strongSelf unSubscribeToPushNotifications:^(BOOL success) {
             if (completion) completion(YES);
         }];
-    });
+    }];
 }
 
 - (void)setAutoLogin:(BOOL)autologin withAccountType:(QMAccountType)accountType {

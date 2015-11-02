@@ -48,7 +48,8 @@
     [[QMApi instance] autoLogin:^(BOOL success) {
         if (!success) {
             
-            [[QMApi instance] logout:^(BOOL logoutSuccess) {
+            [[QMApi instance] logoutWithCompletion:^(BOOL succeed) {
+                //
                 [weakSelf performSegueWithIdentifier:@"SplashSegue" sender:nil];
             }];
             

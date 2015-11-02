@@ -130,7 +130,7 @@
                         [[QMApi instance] updateCurrentUser:nil image:weakSelf.cachedPicture progress:^(float progress) {
                             //
                             [SVProgressHUD showProgress:progress status:nil maskType:SVProgressHUDMaskTypeClear];
-                        } completion:^(BOOL success) {
+                        } completion:^(BOOL succeed) {
                             //
                             presentTabBar();
                         }];
