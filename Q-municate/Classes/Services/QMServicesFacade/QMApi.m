@@ -61,8 +61,8 @@ static NSString *const kQMErrorPasswordKey = @"password";
         _avCallManager = [[QMAVCallManager alloc] initWithServiceManager:self];
 #endif
         
-        [QMChatCache setupDBWithStoreNamed:kChatCacheNameKey];
-        [QMChatCache instance].messagesLimitPerDialog = 10;
+//        [QMChatCache setupDBWithStoreNamed:kChatCacheNameKey];
+//        [QMChatCache instance].messagesLimitPerDialog = 10;
         [QMContactListCache setupDBWithStoreNamed:kContactListCacheNameKey];
         _contactListService = [[QMContactListService alloc] initWithServiceManager:self cacheDataSource:self];
         _settingsManager = [[QMSettingsManager alloc] init];
