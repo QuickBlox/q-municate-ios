@@ -195,12 +195,12 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  *
  *  @param block    completion block with success status
  */
-- (void)loginChat:(void(^)(BOOL success))block;
+- (void)connectChat:(void(^)(BOOL success))block;
 
 /**
  *  Loggin out from chat.
  */
-- (void)logoutFromChat;
+- (void)disconnectFromChat;
 
 /*** Chat Dialogs ***/
 

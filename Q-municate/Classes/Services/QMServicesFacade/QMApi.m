@@ -103,7 +103,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
 
 - (void)sendPresence {
     
-    if ([[QBChat instance] isLoggedIn]) {
+    if ([[QBChat instance] isConnected]) {
         [[QBChat instance] sendPresence];
     }
 }
@@ -121,7 +121,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
     }];
     
     dispatch_group_enter(group);
-    [self loginChat:^(BOOL success) {
+    [self connectChat:^(BOOL success) {
         dispatch_group_leave(group);
     }];
     
@@ -138,7 +138,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
 }
 
 - (void)applicationWillResignActive {
-    [self logoutFromChat];
+    [self disconnectFromChat];
 }
 
 - (NSString *)errorStringFromArray:(NSArray *)errorArray {
