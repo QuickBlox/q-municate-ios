@@ -87,7 +87,8 @@ DEPENDENCIES:
   - Parus (~> 1.0)
   - QMCVDevelopment (from `https://github.com/QuickBlox/QMChatViewController-ios.git`,
     branch `development`)
-  - QMServicesDevelopment (from `../q-municate-services-ios/`)
+  - QMServicesDevelopment (from `https://github.com/QuickBlox/q-municate-services-ios.git`,
+    branch `development`)
   - Reachability (~> 3.2)
   - SDWebImage (~> 3.6)
   - SSKeychain (~> 1.2.2)
@@ -101,12 +102,16 @@ EXTERNAL SOURCES:
     :branch: development
     :git: https://github.com/QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :path: ../q-municate-services-ios/
+    :branch: development
+    :git: https://github.com/QuickBlox/q-municate-services-ios.git
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
     :commit: 21c96daa17b1e63499a3b8996db0866b12c1b778
     :git: https://github.com/QuickBlox/QMChatViewController-ios.git
+  QMServicesDevelopment:
+    :commit: bb09e2430f31710c6a06cf786d78d6859ad8efdc
+    :git: https://github.com/QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
   AFNetworking: caca0799b310f0c3bf1fc1af45145fc96972bcab
