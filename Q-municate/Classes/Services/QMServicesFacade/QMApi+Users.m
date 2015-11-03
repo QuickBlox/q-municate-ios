@@ -40,10 +40,10 @@
             QBChatDialog *dialog = [weakSelf.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
             [weakSelf deleteChatDialog:dialog completion:^(BOOL succeed) {
                 if (!succeed) {
-                    completion(succeed, nil);
+                    if (completion) completion(succeed, nil);
                     return;
                 }
-                completion(success, notification);
+                if (completion) completion(success, notification);
             }];
         }];
 
@@ -56,7 +56,7 @@
         //
         [self.chatService notifyOponentAboutAcceptingContactRequest:YES opponentID:user.ID completion:^(NSError *error) {
             //
-            completion(error == nil ? YES : NO);
+            if (completion) completion(error == nil ? YES : NO);
         }];
     }];
 }
@@ -67,7 +67,7 @@
         //
         [self.chatService notifyOponentAboutAcceptingContactRequest:NO opponentID:user.ID completion:^(NSError *error) {
             //
-            completion(error == nil ? YES : NO);
+            if (completion) completion(error == nil ? YES : NO);
         }];
     }];
 }
@@ -178,10 +178,10 @@
             weakSelf.currentUser.password = updateParams.password;
             [weakSelf.settingsManager setLogin:user.email andPassword:updateParams.password];
         }
-        completion(response.success);
+        if (completion) completion(response.success);
     } errorBlock:^(QBResponse *response) {
         //
-        completion(response.success);
+        if (completion) completion(response.success);
     }];
 }
 
@@ -208,10 +208,10 @@
             if (response.success) {
                 weakSelf.currentUser.password = password;
             }
-            completion(response.success);
+            if (completion) completion(response.success);
         } errorBlock:^(QBResponse *response) {
             //
-            completion(response.success);
+            if (completion) completion(response.success);
         }];
     };
     

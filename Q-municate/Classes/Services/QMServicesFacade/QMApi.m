@@ -14,14 +14,6 @@
 #import <Reachability.h>
 #import <SVProgressHUD.h>
 #import "REAlertView+QMSuccess.h"
-#import "QMViewControllersFactory.h"
-#import "QMMainTabBarController.h"
-
-#import "QMMessageBarStyleSheetFactory.h"
-#import "QMSoundManager.h"
-
-#import <_CDMessage.h>
-#import <_CDDialog.h>
 
 const NSTimeInterval kQMPresenceTime = 30;
 
@@ -44,15 +36,12 @@ static NSString *const kQMErrorPasswordKey = @"password";
 
 @implementation QMApi
 
-@dynamic currentUser;
-
 + (instancetype)instance {
     
     static QMApi *servicesFacade = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         servicesFacade = [[self alloc] init];
-        //[QBChat instance].useMutualSubscriptionForContactList = YES;
         [QBChat instance].autoReconnectEnabled = YES;
 
         servicesFacade.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:kQMPresenceTime
@@ -72,22 +61,16 @@ static NSString *const kQMErrorPasswordKey = @"password";
 #if QM_AUDIO_VIDEO_ENABLED == 1
         _avCallManager = [[QMAVCallManager alloc] initWithServiceManager:self];
 #endif
-        _authService = [[QMAuthService alloc] initWithServiceManager:self];
-        [QMChatCache setupDBWithStoreNamed:kChatCacheNameKey];
-        [QMChatCache instance].messagesLimitPerDialog = 10;
-        _chatService = [[QMChatService alloc] initWithServiceManager:self cacheDataSource:self];
         
+//        [QMChatCache setupDBWithStoreNamed:kChatCacheNameKey];
+//        [QMChatCache instance].messagesLimitPerDialog = 10;
         [QMContactListCache setupDBWithStoreNamed:kContactListCacheNameKey];
         _contactListService = [[QMContactListService alloc] initWithServiceManager:self cacheDataSource:self];
         _settingsManager = [[QMSettingsManager alloc] init];
         _contentService = [[QMContentService alloc] init];
         _internetConnection = [Reachability reachabilityForInternetConnection];
-        [_chatService addDelegate:self];
         
-        [QMUsersCache setupDBWithStoreNamed:kUsersCacheNameKey];
-        _usersService = [[QMUsersService alloc] initWithServiceManager:self cacheDataSource:self];
-        [_usersService addDelegate:self];
-        _usersService.usersMemoryStorage.delegate = self.contactListService;
+        [self.chatService addDelegate:self];
         
         __weak __typeof(self)weakSelf = self;
         void (^internetConnectionReachable)(Reachability *reachability) = ^(Reachability *reachability) {
@@ -112,21 +95,6 @@ static NSString *const kQMErrorPasswordKey = @"password";
     return self;
 }
 
-- (QBUUser *)currentUser {
-    return [QBSession currentSession].currentUser;
-}
-
-- (void)retriveUsersForNotificationIfNeeded:(QBChatMessage *)notification
-{
-    NSArray *idsToFetch = nil;
-    if (notification.messageType == QMMessageTypeContactRequest) {
-        idsToFetch = @[@(notification.senderID)];
-    } else {
-        idsToFetch = notification.dialog.occupantIDs;
-    }
-    [self.usersService retrieveUsersWithIDs:idsToFetch];
-}
-
 - (BOOL)isInternetConnected {
     
     return self.internetConnection.isReachable;
@@ -136,7 +104,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
 
 - (void)sendPresence {
     
-    if ([[QBChat instance] isLoggedIn]) {
+    if ([[QBChat instance] isConnected]) {
         [[QBChat instance] sendPresence];
     }
 }
@@ -154,7 +122,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
     }];
     
     dispatch_group_enter(group);
-    [self loginChat:^(BOOL success) {
+    [self connectChat:^(BOOL success) {
         dispatch_group_leave(group);
     }];
     
@@ -171,7 +139,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
 }
 
 - (void)applicationWillResignActive {
-    [self logoutFromChat];
+    [self disconnectFromChat];
 }
 
 - (NSString *)errorStringFromArray:(NSArray *)errorArray {
@@ -289,79 +257,10 @@ static NSString *const kQMErrorPasswordKey = @"password";
     [REAlertView showAlertWithMessage:errorMessage actionSuccess:NO];
 }
 
-#pragma mark QMChatServiceCache delegate
+#pragma mark QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)chatService didLoadChatDialogsFromCache:(NSArray *)dialogs withUsers:(NSSet *)dialogsUsersIDs {
     [self.usersService retrieveUsersWithIDs:[dialogsUsersIDs allObjects]];
-}
-
-- (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
-    [QMChatCache.instance insertOrUpdateDialog:chatDialog completion:nil];
-}
-
-- (void)chatService:(QMChatService *)chatService didAddChatDialogsToMemoryStorage:(NSArray *)chatDialogs {
-    [QMChatCache.instance insertOrUpdateDialogs:chatDialogs completion:nil];
-}
-
-- (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
-    [QMChatCache.instance insertOrUpdateDialog:chatDialog completion:nil];
-}
-
-- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
-    [QMChatCache.instance insertOrUpdateMessage:message withDialogId:dialogID completion:nil];
-}
-
-- (void)chatService:(QMChatService *)chatService didAddMessagesToMemoryStorage:(NSArray *)messages forDialogID:(NSString *)dialogID {
-    [QMChatCache.instance insertOrUpdateMessages:messages withDialogId:dialogID completion:nil];
-}
-
-- (void)chatService:(QMChatService *)chatService didUpdateMessage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
-    [QMChatCache.instance insertOrUpdateMessage:message withDialogId:dialogID completion:nil];
-}
-
-- (void)chatService:(QMChatService *)chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)chatDialogID {
-    [QMChatCache.instance deleteDialogWithID:chatDialogID completion:nil];
-}
-
-- (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
-    NSAssert([message.dialogID isEqualToString:dialog.ID], @"must be equal");
-    
-    [QMChatCache.instance insertOrUpdateMessage:message withDialogId:dialog.ID completion:nil];
-    [QMChatCache.instance insertOrUpdateDialog:dialog completion:nil];
-}
-
-#pragma mark QMChatServiceCacheDataSource
-
-- (void)cachedDialogs:(QMCacheCollection)block {
-    [QMChatCache.instance dialogsSortedBy:CDDialogAttributes.lastMessageDate ascending:YES completion:^(NSArray *dialogs) {
-        block(dialogs);
-    }];
-}
-
-- (void)cachedDialogWithID:(NSString *)dialogID completion:(void (^)(QBChatDialog *dialog))completion {
-    [QMChatCache.instance dialogByID:dialogID completion:^(QBChatDialog *cachedDialog) {
-        completion(cachedDialog);
-    }];
-}
-
-- (void)cachedMessagesWithDialogID:(NSString *)dialogID block:(QMCacheCollection)block {
-    [QMChatCache.instance messagesWithDialogId:dialogID sortedBy:CDMessageAttributes.messageID ascending:YES completion:^(NSArray *array) {
-        block(array);
-    }];
-}
-
-#pragma mark - QMUsersServiceDelegate
-
-- (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)users
-{
-    [QMUsersCache.instance insertOrUpdateUsers:users];
-}
-
-#pragma mark - QMContactListDidChange
-
-- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList
-{
-    [self.usersService retrieveUsersWithIDs:[self.contactListService.contactListMemoryStorage userIDsFromContactList]];
 }
 
 @end
@@ -371,7 +270,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
 @dynamic currentUser;
 
 - (QBUUser *)currentUser {
-    return [[QMApi instance] currentUser];
+    return [QBSession currentSession].currentUser;
 }
 
 @end

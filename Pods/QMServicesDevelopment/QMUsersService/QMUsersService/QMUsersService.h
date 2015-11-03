@@ -23,9 +23,9 @@
 @property (strong, nonatomic, readonly) QMUsersMemoryStorage *usersMemoryStorage;
 
 /**
- *  Init with service data delegate and contact list cache protocol.
+ *  Init with service data delegate and users cache protocol.
  *
- *  @param serviceDataDelegate instance confirmed id<QMServiceDataDelegate> protocol
+ *  @param serviceDataDelegate   instance confirmed id<QMServiceDataDelegate> protocol
  *  @param cacheDataSource       instance confirmed id<QMUsersServiceCacheDataSource> protocol
  *
  *  @return QMContactListService instance
@@ -34,65 +34,75 @@
                        cacheDataSource:(id<QMUsersServiceCacheDataSource>)cacheDataSource;
 
 /**
- *  Add instance that confirms contact list service multicaste protocol
+ *  Add instance that confirms users service multicaste protocol.
  *
- *  @param delegate instance that confirms id<QMContactListServiceDelegate> protocol
+ *  @param delegate instance that confirms id<QMUsersServiceDelegate> protocol
  */
 - (void)addDelegate:(id <QMUsersServiceDelegate>)delegate;
 
 /**
- *  Remove instance that confirms contact list service multicaste protocol
+ *  Remove instance that confirms users service multicaste protocol.
  *
- *  @param delegate instance that confirms id<QMContactListServiceDelegate> protocol
+ *  @param delegate instance that confirms id<QMUsersServiceDelegate> protocol
  */
 - (void)removeDelegate:(id <QMUsersServiceDelegate>)delegate;
 
 #pragma mark - Intelligent fetch
 
 /**
- *  Retrieving user if needed.
+ *  Retrieve user with id.
  *
- *  @param userID       id of user to retrieve
- *  @param completion   completion block with boolean value YES if retrieve was needed
+ *  @param userID   id of user to retreive
+ *
+ *  @return BFTask with QBUUser as a result
  */
 - (BFTask<QBUUser *> *)retrieveUserWithID:(NSUInteger)userID;
 
 /**
- *  Retrieving users if needed.
+ *  Retrieve users with ids.
  *
- *  @param userIDs      array of users ids to retrieve
- *  @param completion   completion block with boolean value YES if retrieve was needed
+ *  @param userIDs  array of user ids
+ *
+ *  @return BFTask with NSArray of QBUUser instances as a result
  */
 - (BFTask<NSArray<QBUUser *> *> *)retrieveUsersWithIDs:(NSArray<NSNumber *> *)usersIDs;
 
 /**
- *  Retrieve users with emails
+ *  Retrieve users with emails.
  *
- *  @param emails     emails to search users with
- *  @param completion Block with response, page and users instances if request succeded
+ *  @param emails   array of user emails
+ *
+ *  @return BFTask with NSArray of QBUUser instances as a result
  */
 - (BFTask<NSArray<QBUUser *> *> *)retrieveUsersWithEmails:(NSArray<NSString *> *)emails;
 
 /**
- *  Retrieve users with facebook ids (with extended set of pagination parameters)
+ *  Retrieve users with facebook ids.
  *
- *  @param facebookIDs facebook ids to search
- *  @param completion  Block with response, page and users instances if request succeded
+ *  @param facebookIDs  array of user facebook ids
+ *
+ *  @return BFTask with NSArray of QBUUser instances as a result
  */
 - (BFTask<NSArray<QBUUser *> *> *)retrieveUsersWithFacebookIDs:(NSArray<NSString *> *)facebookIDs;
 
+/**
+ *  Retrieve users with logins.
+ *
+ *  @param logins   array of user logins
+ *
+ *  @return BFTask with NSArray of QBUUser instances as a result
+ */
 - (BFTask<NSArray<QBUUser *> *> *)retrieveUsersWithLogins:(NSArray<NSString *> *)logins;
 
 
 #pragma mark - Search
 
 /**
- *  Retrieve users with full name
+ *  Search for users with full name.
  *
- *  @param  searchText string with full name
- *  @param  pagedRequest extended set of pagination parameters
+ *  @param searchText   user full name
  *
- *  @return QBRequest cancelable instance
+ *  @return BFTask with NSArray of QBUUser instances as a result
  */
 - (BFTask<NSArray<QBUUser *> *> *)searchUsersWithFullName:(NSString *)searchText;
 
@@ -101,14 +111,14 @@
 #pragma mark - Protocols
 
 /**
- *  Data source for QMContactList Service
+ *  Data source for QMUsersService
  */
 
 @protocol QMUsersServiceCacheDataSource <NSObject>
 @required
 
 /**
- * Is called when chat service will start. Need to use for inserting initial data QMUsersMemoryStorage
+ *  Is called when users service will start. Need to use for inserting initial data QMUsersMemoryStorage.
  *
  *  @param block Block for provide QBUUsers collection
  */
@@ -120,6 +130,12 @@
 
 @optional
 
+/**
+ *  Is called when users were added to QMUsersService.
+ *
+ *  @param usersService     QMUsersService instance
+ *  @param user             NSArray of QBUUser instances as users
+ */
 - (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)user;
 
 @end

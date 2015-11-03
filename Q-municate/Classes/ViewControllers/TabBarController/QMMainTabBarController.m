@@ -50,7 +50,8 @@
     [[QMApi instance] autoLogin:^(BOOL success) {
         if (!success) {
             
-            [[QMApi instance] logout:^(BOOL logoutSuccess) {
+            [[QMApi instance] logoutWithCompletion:^(BOOL succeed) {
+                //
                 [weakSelf performSegueWithIdentifier:@"SplashSegue" sender:nil];
             }];
             
@@ -64,14 +65,14 @@
                 }
             }];
             
-            [weakSelf loginToChat];
+            [weakSelf connectToChat];
         }
     }];
 }
 
-- (void)loginToChat
+- (void)connectToChat
 {
-    [[QMApi instance] loginChat:^(BOOL loginSuccess) {
+    [[QMApi instance] connectChat:^(BOOL loginSuccess) {
 
         QBUUser *usr = [QMApi instance].currentUser;
         if (!usr.isImport) {
