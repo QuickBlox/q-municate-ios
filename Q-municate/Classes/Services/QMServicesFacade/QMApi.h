@@ -24,22 +24,7 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 /**
  *  Q-municate services manager
  */
-@interface QMApi : NSObject <QMServiceManagerProtocol,
-                             QMChatServiceCacheDataSource,
-                             QMChatServiceDelegate,
-                             QMChatConnectionDelegate,
-                             QMContactListServiceDelegate,
-                             QMContactListServiceCacheDataSource>
-
-/**
- *  REST authentication service.
- */
-@property (strong, nonatomic, readonly) QMAuthService* authService;
-
-/**
- *  Chat service.
- */
-@property (strong, nonatomic, readonly) QMChatService* chatService;
+@interface QMApi : QMServicesManager <QMContactListServiceCacheDataSource, QMChatServiceDelegate, QMChatConnectionDelegate>
 
 /**
  *  Contact list service.
@@ -65,11 +50,6 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  *  Reachability manager.
  */
 @property (strong, nonatomic, readonly) Reachability *internetConnection;
-
-/**
- *  Current user.
- */
-@property (strong, nonatomic, readonly) QBUUser *currentUser;
 
 /**
  *  Current device token for push notifications.
@@ -165,7 +145,7 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  *
  *  @param completion   completion block with success status
  */
-- (void)logout:(void(^)(BOOL success))completion;
+- (void)logoutWithCompletion:(void(^)(BOOL success))completion;
 
 /**
  *  Resetting user's password.
@@ -215,12 +195,12 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  *
  *  @param block    completion block with success status
  */
-- (void)loginChat:(void(^)(BOOL success))block;
+- (void)connectChat:(void(^)(BOOL success))block;
 
 /**
  *  Loggin out from chat.
  */
-- (void)logoutFromChat;
+- (void)disconnectFromChat;
 
 /*** Chat Dialogs ***/
 

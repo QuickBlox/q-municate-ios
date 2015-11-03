@@ -90,7 +90,7 @@ NSString *const kQMDefaultImageName = @"image";
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSData *data = [NSData dataWithContentsOfURL:url];
         dispatch_async(dispatch_get_main_queue(), ^{
-            completion(data);
+            if (completion) completion(data);
         });
     });
 }

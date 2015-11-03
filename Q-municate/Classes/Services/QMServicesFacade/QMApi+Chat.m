@@ -20,8 +20,8 @@
 
 #pragma mark - Messages
 
-- (void)loginChat:(void(^)(BOOL success))block {
-    [self.chatService logIn:^(NSError *error) {
+- (void)connectChat:(void(^)(BOOL success))block {
+    [self.chatService connectWithCompletionBlock:^(NSError * _Nullable error) {
         //
         if (error != nil) {
             block(YES);
@@ -32,9 +32,11 @@
     }];
 }
 
-- (void)logoutFromChat {
-    [self.chatService logoutChat];
-    [self.settingsManager setLastActivityDate:[NSDate date]];
+- (void)disconnectFromChat {
+    [self.chatService disconnectWithCompletionBlock:^(NSError * _Nullable error) {
+        //
+        [self.settingsManager setLastActivityDate:[NSDate date]];
+    }];
 }
 
 /**
@@ -56,7 +58,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
             [weakSelf.contactListService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:nil];
         } completionBlock:^(QBResponse *response) {
             //
-            if (response != nil && response.success) weakSelf.settingsManager.lastActivityDate = [NSDate date];
+            if (weakSelf.isAuthorized && response.success) weakSelf.settingsManager.lastActivityDate = [NSDate date];
             if (completion) completion();
         }];
     }
@@ -66,7 +68,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
             [weakSelf.contactListService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:nil];
         } completion:^(QBResponse *response) {
             //
-            if (response != nil && response.success) weakSelf.settingsManager.lastActivityDate = [NSDate date];
+            if (weakSelf.isAuthorized && response.success) weakSelf.settingsManager.lastActivityDate = [NSDate date];
             if (completion) completion();
         }];
     }
@@ -184,8 +186,11 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     for (QBChatDialog* dialog in allDialogs) {
         if (dialog.type != QBChatDialogTypePrivate) {
             // Joining to group chat dialogs.
-            [self.chatService joinToGroupDialog:dialog failed:^(NSError *error) {
-                NSLog(@"Failed to join room with error: %@", error.localizedDescription);
+            [self.chatService joinToGroupDialog:dialog completion:^(NSError * _Nullable error) {
+                //
+                if (error != nil) {
+                    NSLog(@"Failed to join room with error: %@", error.localizedDescription);
+                }
             }];
         }
     }
@@ -235,7 +240,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 {
     [self.chatService deleteDialogWithID:dialog.ID completion:^(QBResponse *response) {
         //
-        completionHandler(response.success);
+        if (completionHandler) completionHandler(response.success);
     }];
 }
 

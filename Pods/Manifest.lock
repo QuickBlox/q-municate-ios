@@ -26,18 +26,18 @@ PODS:
     - Bolts/Tasks
   - Bolts/Tasks (1.4.0)
   - DACircularProgress (2.3.1)
-  - FBSDKCoreKit (4.7.0):
+  - FBSDKCoreKit (4.7.1):
     - Bolts (~> 1.1)
-    - FBSDKCoreKit/arc (= 4.7.0)
-    - FBSDKCoreKit/no-arc (= 4.7.0)
-  - FBSDKCoreKit/arc (4.7.0):
+    - FBSDKCoreKit/arc (= 4.7.1)
+    - FBSDKCoreKit/no-arc (= 4.7.1)
+  - FBSDKCoreKit/arc (4.7.1):
     - Bolts (~> 1.1)
-  - FBSDKCoreKit/no-arc (4.7.0):
+  - FBSDKCoreKit/no-arc (4.7.1):
     - Bolts (~> 1.1)
     - FBSDKCoreKit/arc
-  - FBSDKLoginKit (4.7.0.1):
+  - FBSDKLoginKit (4.7.1):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.7.0):
+  - FBSDKShareKit (4.7.1):
     - FBSDKCoreKit
   - IDMPhotoBrowser (1.3.5):
     - AFNetworking (~> 2.2.3)
@@ -45,35 +45,28 @@ PODS:
     - SVProgressHUD (~> 1.0)
   - MPGNotification (1.2.4)
   - Parus (1.0)
-  - QMChatViewController (0.2.5):
-    - QMChatViewController/Categories (= 0.2.5)
-    - QMChatViewController/KeyboardViewController (= 0.2.5)
-    - QMChatViewController/Protocols (= 0.2.5)
-    - QMChatViewController/Views (= 0.2.5)
-    - QuickBlox (~> 2.3)
+  - QMCVDevelopment (0.2.5):
+    - QMCVDevelopment/Categories (= 0.2.5)
+    - QMCVDevelopment/KeyboardViewController (= 0.2.5)
+    - QMCVDevelopment/Protocols (= 0.2.5)
+    - QMCVDevelopment/Views (= 0.2.5)
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (~> 1.13)
-  - QMChatViewController/Categories (0.2.5):
-    - QuickBlox (~> 2.3)
+  - QMCVDevelopment/Categories (0.2.5):
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (~> 1.13)
-  - QMChatViewController/KeyboardViewController (0.2.5):
-    - QuickBlox (~> 2.3)
+  - QMCVDevelopment/KeyboardViewController (0.2.5):
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (~> 1.13)
-  - QMChatViewController/Protocols (0.2.5):
-    - QuickBlox (~> 2.3)
+  - QMCVDevelopment/Protocols (0.2.5):
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (~> 1.13)
-  - QMChatViewController/Views (0.2.5):
-    - QMChatViewController/Categories
-    - QMChatViewController/Protocols
-    - QuickBlox (~> 2.3)
+  - QMCVDevelopment/Views (0.2.5):
+    - QMCVDevelopment/Categories
+    - QMCVDevelopment/Protocols
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (~> 1.13)
-  - QMServices (0.2.5):
-    - QuickBlox (~> 2.4)
-  - QuickBlox (2.4.6)
+  - QMServicesDevelopment (0.2.5)
   - Reachability (3.2)
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
@@ -92,8 +85,9 @@ DEPENDENCIES:
   - IDMPhotoBrowser (~> 1.3.5)
   - MPGNotification (~> 1.1)
   - Parus (~> 1.0)
-  - QMChatViewController
-  - QMServices
+  - QMCVDevelopment (from `https://github.com/QuickBlox/QMChatViewController-ios.git`,
+    branch `development`)
+  - QMServicesDevelopment (from `../q-municate-services-ios/`)
   - Reachability (~> 3.2)
   - SDWebImage (~> 3.6)
   - SSKeychain (~> 1.2.2)
@@ -102,20 +96,31 @@ DEPENDENCIES:
   - TTTAttributedLabel (~> 1.13)
   - UIDevice-Hardware (~> 0.1.3)
 
+EXTERNAL SOURCES:
+  QMCVDevelopment:
+    :branch: development
+    :git: https://github.com/QuickBlox/QMChatViewController-ios.git
+  QMServicesDevelopment:
+    :path: ../q-municate-services-ios/
+
+CHECKOUT OPTIONS:
+  QMCVDevelopment:
+    :commit: 21c96daa17b1e63499a3b8996db0866b12c1b778
+    :git: https://github.com/QuickBlox/QMChatViewController-ios.git
+
 SPEC CHECKSUMS:
   AFNetworking: caca0799b310f0c3bf1fc1af45145fc96972bcab
   AGEmojiKeyboard: e19cf4168b114d2e494e53fe8dc042d8bf011cc9
   Bolts: 0e9bce58b9b9f5e8a7a4d47b16d2fabec289072b
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
-  FBSDKCoreKit: eb580bfc2040ad44f4c0b4f4d0befb1d35bce59c
-  FBSDKLoginKit: 028c5a205990441123764609fe795e65027c447f
-  FBSDKShareKit: 1f927bb05e4d36a99d5d5bf2f4b1ff294ce3e15c
+  FBSDKCoreKit: 9141b70960a37930850370495fe565f4a27ac141
+  FBSDKLoginKit: c11ed3c2833472db3bb4a4aecf27af4a6f69b173
+  FBSDKShareKit: 213adf63e073f41a346b0e7a689805880dc5150e
   IDMPhotoBrowser: 6699a8d8b6c036a60c58ba7c281b2f5761d970ac
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   Parus: e8eeec5e596e59fea3e3129775e5ddf2e5c0b4eb
-  QMChatViewController: 12687df60adf52236e3ca5de399b04e33f2cfaea
-  QMServices: a80462aeed3c4a2b9d68c4c7452ea2bda528742a
-  QuickBlox: e7da3190be29e14aab5105bf87ad80a80fbf396e
+  QMCVDevelopment: c214377e5983e4577e608b7e37c88e338febb5e7
+  QMServicesDevelopment: 68a73ccaea931ef4b982616381f60733a9529035
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d

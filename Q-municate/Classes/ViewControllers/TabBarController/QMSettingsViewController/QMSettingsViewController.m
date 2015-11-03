@@ -69,7 +69,8 @@
                 
                 [weakSelf pressClearCache:nil];
                 [SVProgressHUD  showWithMaskType:SVProgressHUDMaskTypeClear];
-                [[QMApi instance] logout:^(BOOL success) {
+                [[QMApi instance] logoutWithCompletion:^(BOOL success) {
+                    //
                     [SVProgressHUD dismiss];
                     [weakSelf performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
                 }];

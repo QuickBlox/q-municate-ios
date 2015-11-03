@@ -439,8 +439,13 @@ AGEmojiKeyboardViewDelegate
     message.dialogID = self.dialog.ID;
     message.dateSent = date;
     
-    // Sending message.
-    [[QMApi instance].chatService sendMessage:message toDialogId:self.dialog.ID save:YES completion:nil];
+    // Sending message
+    [[QMApi instance].chatService sendMessage:message type:QMMessageTypeText toDialogID:self.dialog.ID saveToHistory:YES saveToStorage:YES completion:^(NSError * _Nullable error) {
+        //
+        if (error != nil) {
+            [REAlertView showAlertWithMessage:error.localizedRecoverySuggestion actionSuccess:NO];
+        }
+    }];
     
     [self finishSendingMessageAnimated:YES];
 }
