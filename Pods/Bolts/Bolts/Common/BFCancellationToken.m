@@ -33,12 +33,10 @@
 #pragma mark - Initializer
 
 - (instancetype)init {
-    self = [super init];
-    if (!self) return nil;
-
-    _registrations = [NSMutableArray array];
-    _lock = [NSObject new];
-
+    if (self = [super init]) {
+        _registrations = [NSMutableArray array];
+        _lock = [NSObject new];
+    }
     return self;
 }
 

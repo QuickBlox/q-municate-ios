@@ -28,8 +28,7 @@ NSString *const kQMDataKey = @"data";
             NSArray *myFriends = error ? @[] : [result objectForKey:kQMDataKey];
             if (completion) completion(myFriends);
          }];
-    }
-    else {
+    } else {
         if (completion) completion(@[]);
     }
 }

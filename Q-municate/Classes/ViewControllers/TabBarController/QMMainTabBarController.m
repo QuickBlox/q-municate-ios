@@ -22,6 +22,8 @@
 
 @interface QMMainTabBarController () <QMNotificationHandlerDelegate>
 
+@property (nonatomic, strong) dispatch_group_t importGroup;
+
 @end
 
 @implementation QMMainTabBarController
@@ -74,21 +76,25 @@
 
         QBUUser *usr = [QMApi instance].currentUser;
         if (!usr.isImport) {
-            dispatch_group_t group = dispatch_group_create();
-            dispatch_group_enter(group);
+            self.importGroup = dispatch_group_create();
+            dispatch_group_enter(self.importGroup);
             [[QMApi instance] importFriendsFromFacebook:^(BOOL success) {
                 //
-                dispatch_group_leave(group);
+                dispatch_group_leave(self.importGroup);
             }];
-            dispatch_group_enter(group);
+            dispatch_group_enter(self.importGroup);
             [[QMApi instance] importFriendsFromAddressBookWithCompletion:^(BOOL succeded, NSError *error) {
                 //
-                dispatch_group_leave(group);
+                dispatch_group_leave(self.importGroup);
             }];
-            usr.isImport = YES;
-            QBUpdateUserParameters *params = [QBUpdateUserParameters new];
-            params.customData = usr.customData;
-            [[QMApi instance] updateCurrentUser:params image:nil progress:nil completion:^(BOOL success) {}];
+        
+            dispatch_group_notify(self.importGroup, dispatch_get_main_queue(), ^{
+                //
+                usr.isImport = YES;
+                QBUpdateUserParameters *params = [QBUpdateUserParameters new];
+                params.customData = usr.customData;
+                [[QMApi instance] updateCurrentUser:params image:nil progress:nil completion:^(BOOL success) {}];
+            });
         }
         
         // open chat if app was launched by push notifications

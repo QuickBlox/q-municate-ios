@@ -246,7 +246,6 @@ static NSString *const BFWebViewAppLinkResolverShouldFallbackKey = @"should_fall
             platformData = @[ appLinkDict[BFWebViewAppLinkResolverIPhoneKey] ?: @{},
                               appLinkDict[BFWebViewAppLinkResolverIOSKey] ?: @{} ];
             break;
-        case UIUserInterfaceIdiomUnspecified:
         default:
             // Future-proofing. Other User Interface idioms should only hit ios.
             platformData = @[ appLinkDict[BFWebViewAppLinkResolverIOSKey] ?: @{} ];

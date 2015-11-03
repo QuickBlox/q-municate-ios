@@ -28,6 +28,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
 @property (strong, nonatomic) QMContactListService* contactListService;
 @property (strong, nonatomic) QMAVCallManager *avCallManager;
 @property (strong, nonatomic) QMContentService *contentService;
+@property (strong, nonatomic) QMUsersService* usersService;
 @property (strong, nonatomic) Reachability *internetConnection;
 @property (strong, nonatomic) NSTimer *presenceTimer;
 
@@ -191,7 +192,11 @@ static NSString *const kQMErrorPasswordKey = @"password";
 #pragma mark QMContactListServiceCacheDelegate delegate
 
 - (void)cachedUsers:(QMCacheCollection)block {
-    [QMContactListCache.instance usersSortedBy:@"id" ascending:YES completion:block];
+    [[QMUsersCache.instance usersSortedBy:@"id" ascending:YES] continueWithExecutor:[BFExecutor mainThreadExecutor]
+                                                                          withBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+                                                                              if (block) block(task.result);
+                                                                              return nil;
+                                                                          }];
 }
 
 - (void)cachedContactListItems:(QMCacheCollection)block {
@@ -255,9 +260,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
 #pragma mark QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)chatService didLoadChatDialogsFromCache:(NSArray *)dialogs withUsers:(NSSet *)dialogsUsersIDs {
-    [self.contactListService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:^(BOOL retrieveWasNeeded) {
-        //
-    }];
+    [self.usersService retrieveUsersWithIDs:[dialogsUsersIDs allObjects]];
 }
 
 @end

@@ -43,13 +43,11 @@ NSString *const BFTaskMultipleExceptionsException = @"BFMultipleExceptionsExcept
 #pragma mark - Initializer
 
 - (instancetype)init {
-    self = [super init];
-    if (!self) return nil;
-
-    _lock = [[NSObject alloc] init];
-    _condition = [[NSCondition alloc] init];
-    _callbacks = [NSMutableArray array];
-
+    if (self = [super init]) {
+        _lock = [[NSObject alloc] init];
+        _condition = [[NSCondition alloc] init];
+        _callbacks = [NSMutableArray array];
+    }
     return self;
 }
 

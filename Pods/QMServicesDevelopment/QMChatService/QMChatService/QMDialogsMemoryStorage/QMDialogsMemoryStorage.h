@@ -57,6 +57,15 @@
 - (QBChatDialog *)chatDialogWithID:(NSString *)dialogID;
 
 /**
+ *  Find dialog in memory storage by room name
+ *
+ *  @param roomName room name
+ *
+ *  @return QBChatDialog instance
+ */
+- (QBChatDialog *)chatDialogWithRoomName:(NSString *)roomName;
+
+/**
  *  Find private dialog in memory storage by opponent ID
  *
  *  @param opponentID opponent ID

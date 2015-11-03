@@ -37,11 +37,9 @@
 }
 
 - (instancetype)init {
-    self = [super init];
-    if (!self) return nil;
-
-    _lock = [NSObject new];
-    
+    if (self = [super init]) {
+        _lock = [NSObject new];
+    }
     return self;
 }
 

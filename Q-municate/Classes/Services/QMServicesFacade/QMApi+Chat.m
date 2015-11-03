@@ -55,7 +55,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     if (self.settingsManager.lastActivityDate != nil) {
         [self.chatService fetchDialogsUpdatedFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
             //
-            [weakSelf.contactListService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:nil];
+            [weakSelf.usersService retrieveUsersWithIDs:[dialogsUsersIDs allObjects]];
         } completionBlock:^(QBResponse *response) {
             //
             if (weakSelf.isAuthorized && response.success) weakSelf.settingsManager.lastActivityDate = [NSDate date];
@@ -65,7 +65,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     else {
         [self.chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
             //
-            [weakSelf.contactListService retrieveIfNeededUsersWithIDs:[dialogsUsersIDs allObjects] completion:nil];
+            [weakSelf.usersService retrieveUsersWithIDs:[dialogsUsersIDs allObjects]];
         } completion:^(QBResponse *response) {
             //
             if (weakSelf.isAuthorized && response.success) weakSelf.settingsManager.lastActivityDate = [NSDate date];
@@ -85,9 +85,9 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
             if (completion) completion(dialog);
             return;
         }
-        [weakSelf.contactListService retrieveUsersWithIDs:dialog.occupantIDs forceDownload:NO completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
-            //
+        [[weakSelf.usersService retrieveUsersWithIDs:dialog.occupantIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
             if (completion) completion(dialog);
+            return nil;
         }];
     }];
 }

@@ -27,9 +27,10 @@ QMContactListServiceDelegate
 
 @property (weak, nonatomic) UITableView *tableView;
 @property (weak, nonatomic) UISearchDisplayController *searchDisplayController;
-@property (strong, nonatomic) QBRequest *searchRequest;
 
 @property (assign, nonatomic) NSUInteger contactRequestsCount;
+
+@property (strong, nonatomic) NSTimer* timer;
 
 @end
 
@@ -87,13 +88,13 @@ QMContactListServiceDelegate
         [self.tableView reloadData];
     }
     if (self.searchDisplayController.isActive) {
-        [self globalSearch:self.searchDisplayController.searchBar.text];
+        [self globalSearch];
     }
 } 
 
-- (void)globalSearch:(NSString *)searchText {
-    
-    if (searchText.length == 0) {
+- (void)globalSearch
+{
+    if (self.searchDisplayController.searchBar.text.length == 0) {
         [self.searchResult removeAllObjects];
         [self.searchDisplayController.searchResultsTableView reloadData];
         return;
@@ -109,30 +110,21 @@ QMContactListServiceDelegate
         weakSelf.searchResult = filteredUsers;
         
         [weakSelf.searchDisplayController.searchResultsTableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
-        weakSelf.searchRequest = nil;
+
         [SVProgressHUD dismiss];
     };
     
     [self.searchDisplayController.searchResultsTableView reloadData];
     
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        if ([self.searchDisplayController.searchBar.text isEqualToString:searchText]) {
-            
-            if (self.searchRequest) {
-                [self.searchRequest cancel];
-                self.searchRequest = nil;
-            }
-            
-            NSUInteger currentPage = 1;
-            NSUInteger perPage = 100;
-            
-            
-            [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-            self.searchRequest = [[QMApi instance].contactListService retrieveUsersWithFullName:searchText pagedRequest:[QBGeneralResponsePage responsePageWithCurrentPage:currentPage perPage:perPage] completion:userResponseBlock];
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    [[[QMApi instance].usersService searchUsersWithFullName:self.searchDisplayController.searchBar.text]
+     continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+         if (task.isCompleted) {
+            if (userResponseBlock) userResponseBlock(nil, nil, task.result);
         }
-    });
+        
+        return nil;
+    }];
 }
 
 - (void)setContactRequestsCount:(NSUInteger)contactRequestsCount
@@ -146,10 +138,6 @@ QMContactListServiceDelegate
 }
 
 - (void)updateView {
-    if (self.searchRequest) {
-        return;
-    }
-    
     if (self.searchDisplayController.isActive) {
         
         self.friendList = [QMApi instance].friends;
@@ -260,7 +248,9 @@ QMContactListServiceDelegate
 #pragma mark - UISearchDisplayController
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
-    [self globalSearch:searchString];
+    [self.timer invalidate];
+    
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.6 target:self selector:@selector(globalSearch) userInfo:nil repeats:NO];
     return NO;
 }
 
