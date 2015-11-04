@@ -260,7 +260,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
 #pragma mark QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)chatService didLoadChatDialogsFromCache:(NSArray *)dialogs withUsers:(NSSet *)dialogsUsersIDs {
-    [self.usersService retrieveUsersWithIDs:[dialogsUsersIDs allObjects]];
+    [self.usersService getUsersWithIDs:[dialogsUsersIDs allObjects]];
 }
 
 @end

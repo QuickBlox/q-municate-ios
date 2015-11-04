@@ -421,8 +421,11 @@ Message is automatically added to **QMMessagesMemoryStorage** class.
 
 
 ```objective-c
-[QMServicesManager.instance.contactListService retrieveUsersWithIDs:@[@(2308497)] completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
-	// handle users
+[[[QMServicesManager instance].usersService getUsersWithIDs:@[@(2308497), @(2308498)]] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+        if (task.error == nil) {
+            // handle users
+        }
+        return nil;
 }];
 ```
 
@@ -1058,51 +1061,115 @@ Fetch user ids from contact list memory storage.
 
 This class is responsible for operations with users and uses [BFTasks](https://github.com/BoltsFramework/Bolts-iOS "Bolts-iOS").
 
-Get user with id:
+Load users to memory storage from disc cache.
 
 ```objective-c
 
-- (BFTask<QBUUser *> *)retrieveUserWithID:(NSUInteger)userID;
+- (BFTask<NSArray<QBUUser *> *> *)loadFromCache;
 
 ```
 
-Get users with ids:
+Get user by id:
 
 ```objective-c
 
-- (BFTask<NSArray<QBUUser *> *> *)retrieveUsersWithIDs:(NSArray<NSNumber *> *)usersIDs;
+- (BFTask<QBUUser *> *)getUserWithID:(NSUInteger)userID;
 
 ```
 
-Get users with emails:
+Get users by ids:
 
 ```objective-c
 
-- (BFTask<NSArray<QBUUser *> *> *)retrieveUsersWithEmails:(NSArray<NSString *> *)emails;
+- (BFTask<NSArray<QBUUser *> *> *)getUsersWithIDs:(NSArray<NSNumber *> *)usersIDs;
 
 ```
 
-Get users with facebook ids:
+Get users by ids with extended pagination parameters:
 
 ```objective-c
 
-- (BFTask<NSArray<QBUUser *> *> *)retrieveUsersWithFacebookIDs:(NSArray<NSString *> *)facebookIDs;
+- (BFTask<NSArray<QBUUser *> *> *)getUsersWithIDs:(NSArray<NSNumber *> *)usersIDs page:(QBGeneralResponsePage *)page;
 
 ```
 
-Get users with logins:
+Get users by emails:
 
 ```objective-c
 
-- (BFTask<NSArray<QBUUser *> *> *)retrieveUsersWithLogins:(NSArray<NSString *> *)logins;
+- (BFTask<NSArray<QBUUser *> *> *)getUsersWithEmails:(NSArray<NSString *> *)emails;
 
 ```
 
-Search for users with full name:
+Get users by emails with extended pagination parameters:
+
+```objective-c
+
+- (BFTask<NSArray<QBUUser *> *> *)getUsersWithEmails:(NSArray<NSString *> *)emails page:(QBGeneralResponsePage *)page;
+
+```
+
+Get users by facebook ids:
+
+```objective-c
+
+- (BFTask<NSArray<QBUUser *> *> *)getUsersWithFacebookIDs:(NSArray<NSString *> *)facebookIDs;
+
+```
+
+Get users by facebook ids with extended pagination parameters:
+
+```objective-c
+
+- (BFTask<NSArray<QBUUser *> *> *)getUsersWithFacebookIDs:(NSArray<NSString *> *)facebookIDs page:(QBGeneralResponsePage *)page;
+
+```
+
+Get users by logins:
+
+```objective-c
+
+- (BFTask<NSArray<QBUUser *> *> *)getUsersWithLogins:(NSArray<NSString *> *)logins;
+
+```
+
+Get users by logins with extended pagination parameters:
+
+```objective-c
+
+- (BFTask<NSArray<QBUUser *> *> *)getUsersWithLogins:(NSArray<NSString *> *)logins page:(QBGeneralResponsePage *)page;
+
+```
+
+Search for users by full name:
 
 ```objective-c
 
 - (BFTask<NSArray<QBUUser *> *> *)searchUsersWithFullName:(NSString *)searchText;
+
+```
+
+Search for users by full name with extended pagination parameters:
+
+```objective-c
+
+- (BFTask<NSArray<QBUUser *> *> *)searchUsersWithFullName:(NSString *)searchText page:(QBGeneralResponsePage *)page;
+
+```
+
+Search for users by tags:
+
+```objective-c
+
+- (BFTask<NSArray<QBUUser *> *> *)searchUsersWithTags:(NSArray<NSString *> *)tags;
+
+```
+
+Search for users by tags with extended pagination parameters:
+
+```objective-c
+
+- (BFTask<NSArray<QBUUser *> *> *)searchUsersWithTags:(NSArray<NSString *> *)tags page:(QBGeneralResponsePage *)page;
 
 ```
 

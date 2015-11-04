@@ -45,7 +45,7 @@ QMContactListServiceDelegate
 {
     __weak typeof(self)weakSelf = self;
     if (message.messageType == QMMessageTypeContactRequest) {
-        [[[QMApi instance].usersService retrieveUserWithID:message.senderID] continueWithSuccessBlock:^id(BFTask *task) {
+        [[[QMApi instance].usersService getUserWithID:message.senderID] continueWithSuccessBlock:^id(BFTask *task) {
             [weakSelf updateGUI];
             return nil;
         }];

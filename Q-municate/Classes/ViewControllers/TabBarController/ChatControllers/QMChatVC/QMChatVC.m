@@ -365,21 +365,24 @@ AGEmojiKeyboardViewDelegate
 - (void)sendReadStatusForMessage:(QBChatMessage *)message
 {
     if (message.senderID != [QBSession currentSession].currentUser.ID && ![message.readIDs containsObject:@(self.senderID)]) {
-        if (![[QMApi instance].chatService readMessage:message forDialogID:self.dialog.ID]) {
-            NSLog(@"Problems while marking message as read!");
-        }
-        else {
-            if ([UIApplication sharedApplication].applicationIconBadgeNumber > 0) {
-                [UIApplication sharedApplication].applicationIconBadgeNumber--;
+        [[QMApi instance].chatService readMessage:message completion:^(NSError * _Nullable error) {
+            //
+            if (error != nil) {
+                NSLog(@"Problems while marking message as read! Error: %@", error);
             }
-        }
+            else {
+                if ([UIApplication sharedApplication].applicationIconBadgeNumber > 0) {
+                    [UIApplication sharedApplication].applicationIconBadgeNumber--;
+                }
+            }
+        }];
     }
 }
 
 - (void)readMessages:(NSArray *)messages forDialogID:(NSString *)dialogID
 {
     if ([QBChat instance].isLoggedIn) {
-        [[QMApi instance].chatService readMessages:messages forDialogID:dialogID];
+        [[QMApi instance].chatService readMessages:messages forDialogID:dialogID completion:nil];
     } else {
         self.unreadMessages = messages;
     }
@@ -438,7 +441,7 @@ AGEmojiKeyboardViewDelegate
     message.readIDs = @[@(self.senderID)];
     message.dialogID = self.dialog.ID;
     message.dateSent = date;
-    
+
     // Sending message
     [[QMApi instance].chatService sendMessage:message type:QMMessageTypeText toDialogID:self.dialog.ID saveToHistory:YES saveToStorage:YES completion:^(NSError * _Nullable error) {
         //
@@ -799,7 +802,7 @@ AGEmojiKeyboardViewDelegate
 #pragma mark - QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
-        if ([self.dialog.ID isEqualToString:dialogID]) {
+    if ([self.dialog.ID isEqualToString:dialogID]) {
         // Retrieving messages from memory strorage.
         self.items = [[chatService.messagesMemoryStorage messagesWithDialogID:dialogID] mutableCopy];
         [self refreshCollectionView];

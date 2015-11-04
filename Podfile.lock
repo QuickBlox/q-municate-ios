@@ -96,7 +96,7 @@ DEPENDENCIES:
   - QMCVDevelopment (from `https://github.com/QuickBlox/QMChatViewController-ios.git`,
     branch `development`)
   - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`,
-    branch `development`)
+    branch `feature/QBIOSSDK-500`)
   - Reachability (~> 3.2)
   - SDWebImage (~> 3.6)
   - SSKeychain (~> 1.2.2)
@@ -110,7 +110,7 @@ EXTERNAL SOURCES:
     :branch: development
     :git: https://github.com/QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :branch: development
+    :branch: feature/QBIOSSDK-500
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 CHECKOUT OPTIONS:
@@ -118,7 +118,7 @@ CHECKOUT OPTIONS:
     :commit: 21c96daa17b1e63499a3b8996db0866b12c1b778
     :git: https://github.com/QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: d6e6c9638fc6d99de713c065aed99c5316dfd3e9
+    :commit: 22870dc8fa59baa6e3df7748335e50764d7cff60
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
@@ -143,4 +143,4 @@ SPEC CHECKSUMS:
   TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
   UIDevice-Hardware: de848ac4b53de555f70ff1a32877454d221c71d1
 
-COCOAPODS: 0.39.0
+COCOAPODS: 0.38.2
