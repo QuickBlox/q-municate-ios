@@ -252,7 +252,7 @@
             if (completion) completion(NO);
             return;
         }
-        [[weakSelf.usersService retrieveUsersWithFacebookIDs:facebookFriendsIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+        [[weakSelf.usersService getUsersWithFacebookIDs:facebookFriendsIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
             //
             if (task.error != nil) {
                 if (completion) completion(NO);
@@ -289,7 +289,7 @@
         }
         
         // post request for emails to QB server:
-        [[strongSelf.usersService retrieveUsersWithEmails:emails] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+        [[strongSelf.usersService getUsersWithEmails:emails] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
             //
             if (task.error != nil) {
                 if (completionBlock) completionBlock(NO, nil);
