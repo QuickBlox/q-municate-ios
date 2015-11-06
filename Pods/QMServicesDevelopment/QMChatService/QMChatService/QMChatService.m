@@ -1063,21 +1063,18 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
 
     [dialog sendMessage:message completionBlock:^(NSError * _Nullable error) {
         //
-        if (error != nil) {
-            if (completion) completion(error);
-        }
-        else {
-            if (saveToStorage) {
-                [self.messagesMemoryStorage addMessage:message forDialogID:dialog.ID];
-                
-                if ([self.multicastDelegate respondsToSelector:@selector(chatService:didAddMessageToMemoryStorage:forDialogID:)]) {
-                    [self.multicastDelegate chatService:self didAddMessageToMemoryStorage:message forDialogID:dialog.ID];
-                }
-                if ([self.multicastDelegate respondsToSelector:@selector(chatService:didUpdateChatDialogInMemoryStorage:)]) {
-                    [self.multicastDelegate chatService:self didUpdateChatDialogInMemoryStorage:dialog];
-                }
+        if (error == nil && saveToStorage) {
+            [self.messagesMemoryStorage addMessage:message forDialogID:dialog.ID];
+            
+            if ([self.multicastDelegate respondsToSelector:@selector(chatService:didAddMessageToMemoryStorage:forDialogID:)]) {
+                [self.multicastDelegate chatService:self didAddMessageToMemoryStorage:message forDialogID:dialog.ID];
+            }
+            if ([self.multicastDelegate respondsToSelector:@selector(chatService:didUpdateChatDialogInMemoryStorage:)]) {
+                [self.multicastDelegate chatService:self didUpdateChatDialogInMemoryStorage:dialog];
             }
         }
+        
+        if (completion) completion(error);
     }];
 }
 
