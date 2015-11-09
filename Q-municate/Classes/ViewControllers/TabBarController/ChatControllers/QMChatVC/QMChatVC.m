@@ -591,6 +591,12 @@ AGEmojiKeyboardViewDelegate
                                                                   withConstraints:CGSizeMake(MIN(200, maxWidth), CGFLOAT_MAX)
                                                            limitedToNumberOfLines:0];
         size = CGSizeMake(MIN(200, maxWidth), 200 + ceilf(bottomLabelSize.height));
+    } else if (viewClass == [QMChatNotificationCell class]) {
+        NSAttributedString *attributedString = [self attributedStringForItem:item];
+        
+        size = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
+                                                withConstraints:CGSizeMake(maxWidth, CGFLOAT_MAX)
+                                         limitedToNumberOfLines:3];
     } else {
         NSAttributedString *attributedString = [self attributedStringForItem:item];
         
