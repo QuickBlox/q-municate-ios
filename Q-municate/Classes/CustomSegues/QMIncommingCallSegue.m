@@ -17,7 +17,6 @@
     QMIncomingCallController *incommingCallController = (QMIncomingCallController *)self.sourceViewController;
     QMBaseCallsController *callsController = (QMVideoCallController *)self.destinationViewController;
     [callsController setOpponent:incommingCallController.opponent];
-    callsController.isOpponentCaller = YES;
     
     incommingCallController.navigationController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     

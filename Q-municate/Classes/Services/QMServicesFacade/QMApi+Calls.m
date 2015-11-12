@@ -11,12 +11,12 @@
 
 @implementation QMApi (Calls)
 
-- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBConferenceType)conferenceType
+- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBRTCConferenceType)conferenceType
 {
     [self callToUser:userID conferenceType:conferenceType sendPushNotificationIfUserIsOffline:YES];
 }
 
-- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBConferenceType)conferenceType sendPushNotificationIfUserIsOffline:(BOOL)pushEnabled
+- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBRTCConferenceType)conferenceType sendPushNotificationIfUserIsOffline:(BOOL)pushEnabled
 {
     [self.avCallManager callToUsers:@[userID] withConferenceType:conferenceType pushEnabled:pushEnabled];
 }

@@ -514,9 +514,9 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 @interface QMApi (Calls)
 
 /* Call to users with conference type. */
-- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBConferenceType)conferenceType;
+- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBRTCConferenceType)conferenceType;
 /* Call to users with conference type and send push notification */
-- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBConferenceType)conferenceType sendPushNotificationIfUserIsOffline:(BOOL)pushEnabled;
+- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBRTCConferenceType)conferenceType sendPushNotificationIfUserIsOffline:(BOOL)pushEnabled;
 /* Accept call */
 - (void)acceptCall;
 /* Reject call */

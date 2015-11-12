@@ -11,12 +11,11 @@
 
 @interface QMVideoP2PController : QMBaseCallsController
 
-@property (weak, nonatomic) IBOutlet QBGLVideoView *opponentsView;
-@property (weak, nonatomic) IBOutlet QBGLVideoView *myView;
+@property (weak, nonatomic) IBOutlet QBRTCRemoteVideoView *opponentsView;
+@property (weak, nonatomic) IBOutlet UIView *myView;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *opponentsVideoViewBottom;
 
-/// will disable sending local video track after invoking
-/// - (void)session:(QBRTCSession *)session didReceiveLocalVideoTrack
 @property (assign, nonatomic) BOOL disableSendingLocalVideoTrack;
+
 @end

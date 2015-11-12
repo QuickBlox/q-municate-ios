@@ -12,13 +12,16 @@
 
 @interface QMAVCallManager : QMBaseService <QBRTCClientDelegate, UIAlertViewDelegate>
 
+/** QBRTC **/
 @property (strong, nonatomic) QBRTCSession *session;
-
-@property (assign, nonatomic, getter=isFrontCamera) BOOL frontCamera;
-
-@property (strong, nonatomic) QBRTCVideoTrack *localVideoTrack;
+@property (strong, nonatomic) QBRTCCameraCapture *cameraCapture;
 @property (strong, nonatomic) QBRTCVideoTrack *remoteVideoTrack;
 
+/** Custom properties **/
+@property (assign, nonatomic, getter=isFrontCamera) BOOL frontCamera;
+@property (assign, nonatomic, getter=isOpponentCaller) BOOL opponentCaller;
+
+/** Call handling **/
 - (void)acceptCall;
 - (void)rejectCall;
 - (void)hangUpCall;
@@ -30,13 +33,23 @@
  *  @param conferenceType QBConferenceType
  *  @param pushEnabled is user if offline he will receive a push notifications
  */
-- (void)callToUsers:(NSArray *)users withConferenceType:(QBConferenceType)conferenceType pushEnabled:(BOOL)pushEnabled;
+- (void)callToUsers:(NSArray *)users withConferenceType:(QBRTCConferenceType)conferenceType pushEnabled:(BOOL)pushEnabled;
 
 /**
  *  check permissions and show alert if permissions are denied
  *
  *  @param conferenceType QBConferenceType
  */
-- (void)checkPermissionsWithConferenceType:(QBConferenceType)conferenceType completion:(void(^)(BOOL canContinue))completion;
+- (void)checkPermissionsWithConferenceType:(QBRTCConferenceType)conferenceType completion:(void(^)(BOOL canContinue))completion;
+
+/**
+ *  If camera capture not exist allocating and starting session
+ */
+- (void)startCameraCapture;
+
+/**
+ *  If camera capture exist stopping session and dellocating it
+ */
+- (void)stopCameraCapture;
 
 @end

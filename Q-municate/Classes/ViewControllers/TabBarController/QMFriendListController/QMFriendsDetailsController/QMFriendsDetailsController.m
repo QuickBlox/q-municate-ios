@@ -146,7 +146,7 @@ QMContactListServiceDelegate
                 [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
             }
             else{
-                [[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBConferenceTypeVideo];
+                [[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBRTCConferenceTypeVideo];
             }
         }
             break;
@@ -155,7 +155,7 @@ QMContactListServiceDelegate
                 [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
             }
             else{
-                [[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBConferenceTypeAudio];
+                [[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBRTCConferenceTypeAudio];
             }
         }
             break;

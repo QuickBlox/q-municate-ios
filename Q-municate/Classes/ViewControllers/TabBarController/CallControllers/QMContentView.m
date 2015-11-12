@@ -42,7 +42,7 @@
 
 #pragma mark -
 
-- (void)updateViewWithUser:(QBUUser *)user conferenceType:(QBConferenceType)conferenceType isOpponentCaller:(BOOL)isOpponentCaller {
+- (void)updateViewWithUser:(QBUUser *)user conferenceType:(QBRTCConferenceType)conferenceType isOpponentCaller:(BOOL)isOpponentCaller {
     UIImage *placeholder = [UIImage imageNamed:@"upic_call"];
     NSURL *url = [QMUsersUtils userAvatarURL:user];
     [self.avatarView setImageWithURL:url
@@ -59,7 +59,7 @@
     if( isOpponentCaller ){
         self.statusLabel.text = NSLocalizedString(@"QM_STR_CONNECTING", nil);
     }
-    else if( conferenceType == QBConferenceTypeAudio ) {
+    else if( conferenceType == QBRTCConferenceTypeAudio ) {
         self.statusLabel.text = isOpponentCaller ? NSLocalizedString(@"QM_STR_CONNECTING", nil) : NSLocalizedString(@"QM_STR_CALLING", nil);
     }
     else{
