@@ -17,31 +17,21 @@ NSString *const kGoToDuringVideoCallControllerSegue= @"goToDuringVideoCallSegueI
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    if( QMApi.instance.avCallManager.localVideoTrack ){
-        [self.opponentsView setVideoTrack:QMApi.instance.avCallManager.localVideoTrack];
+    
+    if (self.session.conferenceType == QBRTCConferenceTypeVideo) {
+        [self.opponentsView layoutIfNeeded];
+        [QMApi instance].avCallManager.cameraCapture.previewLayer.frame = self.opponentsView.bounds;
+        [self.opponentsView.layer insertSublayer:[QMApi instance].avCallManager.cameraCapture.previewLayer atIndex:0];
     }
 }
 
 - (IBAction)stopCallTapped:(id)sender {
     [self.opponentsView setHidden:YES];
-    [self.opponentsView setVideoTrack:nil];
-    
     [super stopCallTapped:sender];
-}
-
-- (void)startCall {
-    [[QMApi instance] callToUser:@(self.opponent.ID) conferenceType:QBConferenceTypeVideo sendPushNotificationIfUserIsOffline:YES];
-}
-
-- (void)confirmCall {
-    [super confirmCall];
-    [self callStartedWithUser];
 }
 
 - (void)callStartedWithUser {
     [self.contentView hide];
-    [self.opponentsView setVideoTrack:nil];
     [self performSegueWithIdentifier:kGoToDuringVideoCallControllerSegue sender:nil];
 }
 
@@ -54,13 +44,17 @@ NSString *const kGoToDuringVideoCallControllerSegue= @"goToDuringVideoCallSegueI
 #pragma mark QBRTCSession delegate -
 
 - (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID {
-    [super session:session connectedToUser:userID];
-    [self callStartedWithUser];
+    
+    if (session == self.session) {
+        [self callStartedWithUser];
+    }
 }
 
-- (void)session:(QBRTCSession *)session didReceiveLocalVideoTrack:(QBRTCVideoTrack *)videoTrack {
-    [super session:session didReceiveLocalVideoTrack:videoTrack];
-    [self.opponentsView setVideoTrack:videoTrack];
+- (void)session:(QBRTCSession *)session receivedRemoteVideoTrack:(QBRTCVideoTrack *)videoTrack fromUser:(NSNumber *)userID {
+    
+    if (session == self.session) {
+        [self.opponentsView setVideoTrack:videoTrack];
+    }
 }
 
 @end

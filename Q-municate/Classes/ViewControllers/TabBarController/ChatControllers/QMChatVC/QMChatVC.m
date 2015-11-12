@@ -325,14 +325,14 @@ AGEmojiKeyboardViewDelegate
     if (![self callsAllowed]) return;
     
     NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
-    [[QMApi instance] callToUser:@(opponentID) conferenceType:QBConferenceTypeAudio];
+    [[QMApi instance] callToUser:@(opponentID) conferenceType:QBRTCConferenceTypeAudio];
 }
 
 - (void)videoCallAction {
     if (![self callsAllowed]) return;
     
     NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
-    [[QMApi instance] callToUser:@(opponentID) conferenceType:QBConferenceTypeVideo];
+    [[QMApi instance] callToUser:@(opponentID) conferenceType:QBRTCConferenceTypeVideo];
 }
 
 - (void)groupInfoNavButtonAction {

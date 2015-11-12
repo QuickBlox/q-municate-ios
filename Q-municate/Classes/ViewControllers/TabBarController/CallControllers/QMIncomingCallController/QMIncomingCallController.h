@@ -13,7 +13,7 @@
 @property (weak, nonatomic) QBRTCSession *session;
 
 @property (assign, nonatomic) NSUInteger opponentID;
-@property (assign, nonatomic) QBConferenceType callType;
+@property (assign, nonatomic) QBRTCConferenceType callType;
 @property (strong, nonatomic) QBUUser *opponent;
 
 @end

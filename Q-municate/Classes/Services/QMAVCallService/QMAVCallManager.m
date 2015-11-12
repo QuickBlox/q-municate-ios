@@ -10,6 +10,7 @@
 #import "SVProgressHUD.h"
 #import "QMBaseCallsController.h"
 #import "QMApi.h"
+#import "QMDevice.h"
 #import "REAlertView+QMSuccess.h"
 
 @interface QMAVCallManager()
@@ -22,8 +23,9 @@
 
 @end
 
-const NSTimeInterval kQBAnswerTimeInterval = 40.0f;
-const NSTimeInterval kQBRTCDisconnectTimeInterval = 15.0f;
+const NSTimeInterval kQBAnswerTimeInterval = 60.f;
+const NSTimeInterval kQBRTCDisconnectTimeInterval = 30.f;
+const NSTimeInterval kQBDialingTimeInterval = 5.f;
 
 NSString *const kAudioCallController = @"AudioCallIdentifier";
 NSString *const kVideoCallController = @"VideoCallIdentifier";
@@ -37,14 +39,17 @@ NSString *const kUserName = @"UserName";
 - (instancetype)init {
     self = [super init];
     if (self) {
+        [QBRTCConfig setAnswerTimeInterval:kQBAnswerTimeInterval];
         [QBRTCConfig setDisconnectTimeInterval:kQBRTCDisconnectTimeInterval];
+        [QBRTCConfig setDialingTimeInterval:kQBDialingTimeInterval];
+        
         self.frontCamera = YES;
     }
     return self;
 }
 
 - (void)serviceWillStart {
-    [QBRTCClient.instance addDelegate:self];
+    [[QBRTCClient instance] addDelegate:self];
     [QBRTCConfig setDTLSEnabled:YES];
 }
 
@@ -92,16 +97,16 @@ NSString *const kUserName = @"UserName";
     }
 }
 
-- (void)checkPermissionsWithConferenceType:(QBConferenceType)conferenceType completion:(void(^)(BOOL canContinue))completion {
+- (void)checkPermissionsWithConferenceType:(QBRTCConferenceType)conferenceType completion:(void(^)(BOOL canContinue))completion {
     __weak __typeof(self) weakSelf = self;
     [[QMApi instance] requestPermissionToMicrophoneWithCompletion:^(BOOL granted) {
         if( granted ) {
-            if( conferenceType == QBConferenceTypeAudio ) {
+            if( conferenceType == QBRTCConferenceTypeAudio ) {
                 if( completion ) {
                     completion(granted);
                 }
             }
-            else if( conferenceType == QBConferenceTypeVideo ) {
+            else if( conferenceType == QBRTCConferenceTypeVideo ) {
                 
                 [[QMApi instance] requestPermissionToCameraWithCompletion:^(BOOL authorized) {
                     if( authorized && completion ) {
@@ -138,10 +143,10 @@ NSString *const kUserName = @"UserName";
     [QBRequest createEvent:event successBlock:nil errorBlock:nil];
 }
 
-- (void)callToUsers:(NSArray *)users withConferenceType:(QBConferenceType)conferenceType pushEnabled:(BOOL)pushEnabled {
+- (void)callToUsers:(NSArray *)users withConferenceType:(QBRTCConferenceType)conferenceType pushEnabled:(BOOL)pushEnabled {
     __weak __typeof(self) weakSelf = self;
-    [[QBSoundRouter instance] initialize];
-    [[QBSoundRouter instance] setCurrentSoundRoute:QBSoundRouteSpeaker]; // to make our ringtone go through the speaker
+    [[QBRTCSoundRouter instance] initialize];
+    [[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker]; // to make our ringtone go through the speaker
     
     [self checkPermissionsWithConferenceType:conferenceType completion:^(BOOL canContinue) {
         __typeof(weakSelf)strongSelf = weakSelf;
@@ -160,10 +165,13 @@ NSString *const kUserName = @"UserName";
                                                                  withConferenceType:conferenceType];
         
         if (session) {
+            self.opponentCaller = NO;
+            self.frontCamera = YES;
+            
             [strongSelf startPlayingCallingSound];
             strongSelf.session = session;
             
-            QMBaseCallsController *vc = (QMBaseCallsController *)[[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:(conferenceType == QBConferenceTypeVideo) ? kVideoCallController : kAudioCallController];
+            QMBaseCallsController *vc = (QMBaseCallsController *)[[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:(conferenceType == QBRTCConferenceTypeVideo) ? kVideoCallController : kAudioCallController];
             
             NSUInteger opponentID = [((NSNumber *)users[0]) unsignedIntegerValue];
             vc.session = strongSelf.session;
@@ -189,23 +197,64 @@ NSString *const kUserName = @"UserName";
     }];
 }
 
+- (void)startCameraCapture {
+    if (self.session.conferenceType != QBRTCConferenceTypeVideo) return;
+    
+    if (self.cameraCapture == nil) {
+        QBRTCVideoFormat *videoFormat = [[QBRTCVideoFormat alloc] init];
+        videoFormat.frameRate = 30;
+        videoFormat.pixelFormat = QBRTCPixelFormat420f;
+        
+        CGFloat videoWidth;
+        CGFloat videoHeight;
+        
+        if ([QMDevice isIphone6Plus]) {
+            videoWidth = 640.;
+            videoHeight = 480.;
+        } else if ([QMDevice isIphone6]) {
+            videoWidth = 480.;
+            videoHeight = 360.;
+        } else {
+            videoWidth = 352.;
+            videoHeight = 288.;
+        }
+        videoFormat.width = videoWidth;
+        videoFormat.height = videoHeight;
+        
+        // QBRTCCameraCapture class used to capture frames using AVFoundation APIs
+        self.cameraCapture = [[QBRTCCameraCapture alloc] initWithVideoFormat:videoFormat position:AVCaptureDevicePositionFront]; // or AVCaptureDevicePositionBack
+        
+        [self.cameraCapture startSession];
+    }
+}
+
+- (void)stopCameraCapture {
+    if (self.cameraCapture != nil) {
+        [self.cameraCapture stopSession];
+        self.cameraCapture = nil;
+    }
+}
+
 #pragma mark - QBWebRTCChatDelegate
 
-- (void)didReceiveNewSession:(QBRTCSession *)session userInfo:(NSDictionary *)userInfo{
+- (void)didReceiveNewSession:(QBRTCSession *)session userInfo:(NSDictionary *)userInfo {
     if (self.session) {
         [session rejectCall:@{@"reject" : @"busy"}];
         return;
     }
-    [[QBSoundRouter instance] initialize];
+    self.opponentCaller = YES;
+    self.frontCamera = YES;
+    
+    [[QBRTCSoundRouter instance] initialize];
     
     self.session = session;
-    [[QBSoundRouter instance] setCurrentSoundRoute:QBSoundRouteSpeaker];
+    [[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker];
     [self startPlayingRingtoneSound];
     
     QMIncomingCallController *incomingVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallController];
     
     incomingVC.session = session;
-    incomingVC.opponentID = [session.callerID unsignedIntegerValue];
+    incomingVC.opponentID = [session.opponentsIDs.firstObject unsignedIntegerValue];
     incomingVC.callType = session.conferenceType;
     
     UINavigationController *navVC = [[UINavigationController alloc] initWithRootViewController:incomingVC];
@@ -232,7 +281,11 @@ NSString *const kUserName = @"UserName";
         // may be we rejected someone else call while we are talking with another person
         return;
     }
-    [[QBSoundRouter instance] deinitialize];
+    
+    [[QBRTCSoundRouter instance] deinitialize];
+    
+    [self stopCameraCapture];
+    
     __weak __typeof(self)weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
@@ -246,16 +299,23 @@ NSString *const kUserName = @"UserName";
     });
 }
 
-- (void)session:(QBRTCSession *)session didReceiveLocalVideoTrack:(QBRTCVideoTrack *)videoTrack{
-    self.localVideoTrack = videoTrack;
+- (void)session:(QBRTCSession *)session initializedLocalMediaStream:(QBRTCMediaStream *)mediaStream {
+    
+    session.localMediaStream.videoTrack.videoCapture = self.cameraCapture;
 }
 
-- (void)session:(QBRTCSession *)session didReceiveRemoteVideoTrack:(QBRTCVideoTrack *)videoTrack fromUser:(NSNumber *)userID{
-    self.remoteVideoTrack = videoTrack;
+- (void)session:(QBRTCSession *)session receivedRemoteVideoTrack:(QBRTCVideoTrack *)videoTrack fromUser:(NSNumber *)userID {
+    
+    if (session == self.session) {
+        self.remoteVideoTrack = videoTrack;
+    }
 }
 
-- (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID{
-    [self stopAllSounds];
+- (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID {
+    
+    if (session == self.session) {
+        [self stopAllSounds];
+    }
 }
 
 - (void)startPlayingCallingSound {

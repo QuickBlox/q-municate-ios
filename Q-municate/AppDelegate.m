@@ -65,12 +65,14 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     self.window.backgroundColor = [UIColor whiteColor];
     
     // QB Settings
-    [QBApplication sharedApplication].applicationId = kQMApplicationID;
-    [QBConnection registerServiceKey:kQMAuthorizationKey];
-    [QBConnection registerServiceSecret:kQMAuthorizationSecret];
-
+    [QBSettings setApplicationID:kQMApplicationID];
+    [QBSettings setAuthKey:kQMAuthorizationKey];
+    [QBSettings setAuthSecret:kQMAuthorizationSecret];
     [QBSettings setAccountKey:kQMAcconuntKey];
-//    [QBSettings setLogLevel:QBLogLevelDebug];
+//    [QBSettings setLogLevel:QBLogLevelNothing];
+    
+    //QuickbloxWebRTC preferences
+    [QBRTCClient initializeRTC];
     
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
     if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {

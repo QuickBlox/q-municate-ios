@@ -44,10 +44,10 @@
         self.userNameLabel.text = @"Unknown caller";
     }
  
-    if (self.callType == QBConferenceTypeVideo) {
+    if (self.callType == QBRTCConferenceTypeVideo) {
         [self.incomingCallView setHidden:YES];
         self.incomingCallLabel.text = NSLocalizedString(@"QM_STR_INCOMING_VIDEO_CALL", nil);
-    } else if (self.callType == QBConferenceTypeAudio) {
+    } else if (self.callType == QBRTCConferenceTypeAudio) {
         [self.incomingVideoCallView setHidden:YES];
         self.incomingCallLabel.text = NSLocalizedString(@"QM_STR_INCOMING_CALL", nil);
     }
@@ -66,12 +66,17 @@
 
 #pragma mark - Actions
 
+- (void)confirmCall {
+    [[QMApi instance] acceptCall];
+}
+
 - (IBAction)acceptCall:(id)sender {
     __weak __typeof(self) weakSelf = self;
     [[[QMApi instance] avCallManager] checkPermissionsWithConferenceType:self.callType completion:^(BOOL canContinue) {
         if( canContinue ) {
+            [weakSelf confirmCall];
 			[[QMSoundManager instance] stopAllSounds];
-            if (weakSelf.callType == QBConferenceTypeVideo) {
+            if (weakSelf.callType == QBRTCConferenceTypeVideo) {
                 [weakSelf performSegueWithIdentifier:kGoToDuringVideoCallSegueIdentifier sender:weakSelf];
             } else {
                 [weakSelf performSegueWithIdentifier:kGoToDuringAudioCallSegueIdentifier sender:nil];
@@ -85,6 +90,7 @@
     [[QMSoundManager instance] stopAllSounds];
     [[[QMApi instance] avCallManager] checkPermissionsWithConferenceType:self.callType completion:^(BOOL canContinue) {
         if( canContinue ) {
+            [weakSelf confirmCall];
             [[QMSoundManager instance] stopAllSounds];
             [weakSelf performSegueWithIdentifier:kGoToDuringVideoCallSegueIdentifier sender:nil];
         }
