@@ -65,12 +65,11 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     self.window.backgroundColor = [UIColor whiteColor];
     
     // QB Settings
-    [QBApplication sharedApplication].applicationId = kQMApplicationID;
-    [QBConnection registerServiceKey:kQMAuthorizationKey];
-    [QBConnection registerServiceSecret:kQMAuthorizationSecret];
-
+    [QBSettings setApplicationID:kQMApplicationID];
+    [QBSettings setAuthKey:kQMAuthorizationKey];
+    [QBSettings setAuthSecret:kQMAuthorizationSecret];
     [QBSettings setAccountKey:kQMAcconuntKey];
-    [QBSettings setLogLevel:QBLogLevelNothing];
+//    [QBSettings setLogLevel:QBLogLevelNothing];
     
     //QuickbloxWebRTC preferences
     [QBRTCClient initializeRTC];
