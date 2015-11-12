@@ -243,6 +243,7 @@ NSString *const kUserName = @"UserName";
         return;
     }
     self.opponentCaller = YES;
+    self.frontCamera = YES;
     
     [[QBRTCSoundRouter instance] initialize];
     
