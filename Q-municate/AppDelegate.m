@@ -87,11 +87,6 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
 #endif
     
-#ifndef DEBUG
-    [QBApplication sharedApplication].productionEnvironmentForPushesEnabled = YES;
-#endif
-    
-    
 #if STAGE_SERVER_IS_ACTIVE == 1
 //    [QBSettings setServerApiDomain:@"https://api.stage.quickblox.com"];
     [QBConnection setApiDomain:@"https://api.stage.quickblox.com" forServiceZone:QBConnectionZoneTypeDevelopment];
