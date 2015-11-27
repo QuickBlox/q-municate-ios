@@ -128,8 +128,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
     
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
         
-        if ([QBChat instance].isLoggedIn) {
-            [self joinGroupDialogs];
+        if ([QBChat instance].isConnected) {
             if (completion) completion(YES);
         }
         else {

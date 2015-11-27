@@ -288,11 +288,6 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 - (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion;
 
 /**
- *  Join all group chats that are exist in history.
- */
-- (void)joinGroupDialogs;
-
-/**
  *  Changing group chat name.
  *
  *  @param dialogName   new group chat name

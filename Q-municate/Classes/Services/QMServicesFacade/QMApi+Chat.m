@@ -184,21 +184,6 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     }];
 }
 
-- (void)joinGroupDialogs {
-    NSArray *allDialogs = [self dialogHistory];
-    for (QBChatDialog* dialog in allDialogs) {
-        if (dialog.type != QBChatDialogTypePrivate) {
-            // Joining to group chat dialogs.
-            [self.chatService joinToGroupDialog:dialog completion:^(NSError * _Nullable error) {
-                //
-                if (error != nil) {
-                    NSLog(@"Failed to join room with error: %@", error.localizedDescription);
-                }
-            }];
-        }
-    }
-}
-
 - (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion {
     
     NSString *messageTypeText = NSLocalizedString(@"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT", @"{Full name}");
@@ -252,15 +237,13 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 
 - (void)sendGroupChatDialogDidCreateNotificationToUsers:(NSArray *)users toChatDialog:(QBChatDialog *)chatDialog withMessage:(NSString *)text {
     
-    [self.chatService notifyUsersWithIDs:users aboutAddingToDialog:chatDialog];
-    
-    if (text != nil) {
-        QBChatMessage *message = [QBChatMessage message];
-        message.text = text;
-        message.dateSent = [NSDate date];
-        [message updateCustomParametersWithDialog:chatDialog];
-        [self.chatService sendMessage:message type:QMMessageTypeUpdateGroupDialog toDialog:chatDialog save:YES saveToStorage:YES completion:nil];
-    }
+    __weak __typeof(self)weakSelf = self;
+    [self.chatService sendSystemMessageAboutAddingToDialog:chatDialog toUsersIDs:users completion:^(NSError * _Nullable error) {
+        //
+        if (text != nil && error == nil) {
+            [weakSelf.chatService sendMessageAboutUpdateDialog:chatDialog withNotificationText:text customParameters:nil completion:nil];
+        }
+    }];
 }
 
 - (void)sendGroupChatDialogDidUpdateNotificationToAllParticipantsWithText:(NSString *)text toChatDialog:(QBChatDialog *)chatDialog updateType:(NSString *)updateType content:(NSString *)content
