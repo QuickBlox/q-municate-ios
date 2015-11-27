@@ -33,9 +33,12 @@
 }
 
 - (void)disconnectFromChat {
+    __weak __typeof(self)weakSelf = self;
     [self.chatService disconnectWithCompletionBlock:^(NSError * _Nullable error) {
         //
-        [self.settingsManager setLastActivityDate:[NSDate date]];
+        if (error == nil) {
+            [weakSelf.settingsManager setLastActivityDate:[NSDate date]];
+        }
     }];
 }
 
