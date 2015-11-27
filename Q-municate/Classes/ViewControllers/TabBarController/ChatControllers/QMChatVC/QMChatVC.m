@@ -511,12 +511,10 @@ AGEmojiKeyboardViewDelegate
 
     if (messageItem.isNotificatonMessage) {
         //
-//        NSString *dateString = messageItem.dateSent ? [[self timeStampWithDate:messageItem.dateSent] stringByAppendingString:@"\n"] : @"";
-        NSString *notificationMessageString = [[NSString alloc] init];
-        notificationMessageString = messageItem.messageType == QMMessageTypeUpdateGroupDialog ? messageItem.text : [QMChatUtils messageTextForNotification:messageItem];
+        NSString *notificationMessageString = notificationMessageString = messageItem.messageType == QMMessageTypeUpdateGroupDialog ? messageItem.text : [QMChatUtils messageTextForNotification:messageItem];
         
         UIColor *textColor = [UIColor colorWithRed:113.0f/255.0f green:113.0f/255.0f blue:113.0f/255.0f alpha:1.0f];
-        UIFont *font = [UIFont boldSystemFontOfSize:14.0f];
+        UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:14.0f];
         NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor, NSFontAttributeName:font};
         NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:notificationMessageString attributes:attributes];
         
