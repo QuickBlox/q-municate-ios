@@ -32,7 +32,7 @@
 {
     [super viewDidAppear:animated];
     
-    if (![[QBChat instance] isLoggedIn]) {
+    if (![[QBChat instance] isConnected]) {
         // show hud and start login to chat:
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     }
@@ -107,9 +107,7 @@
             }
         }
         
-        [[QMApi instance] fetchAllDialogs:^{
-            [[QMApi instance] joinGroupDialogs];
-        }];
+        [[QMApi instance] fetchAllDialogs:nil];
     }];
 }
 

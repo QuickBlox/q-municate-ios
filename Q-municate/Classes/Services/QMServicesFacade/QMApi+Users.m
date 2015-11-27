@@ -52,9 +52,10 @@
 
 - (void)confirmAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
+    __weak __typeof(self)weakSelf = self;
     [self.contactListService acceptContactRequest:user.ID completion:^(BOOL success) {
         //
-        [self.chatService notifyOponentAboutAcceptingContactRequest:YES opponentID:user.ID completion:^(NSError *error) {
+        [weakSelf.chatService sendMessageAboutAcceptingContactRequest:YES toOpponentID:user.ID completion:^(NSError * _Nullable error) {
             //
             if (completion) completion(error == nil ? YES : NO);
         }];
@@ -63,9 +64,10 @@
 
 - (void)rejectAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
+    __weak __typeof(self)weakSelf = self;
     [self.contactListService rejectContactRequest:user.ID completion:^(BOOL success) {
         //
-        [self.chatService notifyOponentAboutAcceptingContactRequest:NO opponentID:user.ID completion:^(NSError *error) {
+        [weakSelf.chatService sendMessageAboutAcceptingContactRequest:NO toOpponentID:user.ID completion:^(NSError * _Nullable error) {
             //
             if (completion) completion(error == nil ? YES : NO);
         }];
