@@ -14,7 +14,6 @@ NSString const *kQMCustomParameterSaveToHistory = @"save_to_history";
 NSString const *kQMCustomParameterMessageType = @"notification_type";
 NSString const *kQMCustomParameterChatMessageID = @"chat_message_id";
 NSString const *kQMCustomParameterDateSent = @"date_sent";
-NSString const *kQMCustomParameterChatMessageDeliveryStatus = @"message_delivery_status_read";
 /*Dialogs keys*/
 NSString const *kQMCustomParameterDialogID = @"dialog_id";
 NSString const *kQMCustomParameterRoomJID = @"room_jid";
