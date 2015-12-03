@@ -160,7 +160,7 @@ AGEmojiKeyboardViewDelegate
             
             __typeof(weakSelf)strongSelf = weakSelf;
             if ([messages count] > 0) [strongSelf insertMessagesToTheBottomAnimated:messages];
-            if (!self.isSendingAttachment) [SVProgressHUD dismiss];
+            if (!strongSelf.isSendingAttachment) [SVProgressHUD dismiss];
             
         } else {
             [SVProgressHUD showErrorWithStatus:@"Can not refresh messages"];
@@ -449,13 +449,10 @@ AGEmojiKeyboardViewDelegate
     message.dateSent = date;
 
     // Sending message
-    __weak __typeof(self)weakSelf = self;
     [[QMApi instance].chatService sendMessage:message toDialogID:self.dialog.ID saveToHistory:YES saveToStorage:YES completion:^(NSError *error) {
         //
         if (error != nil) {
             [REAlertView showAlertWithMessage:error.localizedRecoverySuggestion actionSuccess:NO];
-        } else {
-            [weakSelf insertMessageToTheBottomAnimated:message];
         }
     }];
     
@@ -745,11 +742,6 @@ AGEmojiKeyboardViewDelegate
         if (message.attachments != nil) {
             QBChatAttachment* attachment = message.attachments.firstObject;
             
-            BOOL shouldLoadFile = YES;
-            if ([self.attachmentCells objectForKey:attachment.ID] != nil) {
-                shouldLoadFile = NO;
-            }
-            
             NSMutableArray* keysToRemove = [NSMutableArray array];
             
             NSEnumerator* enumerator = [self.attachmentCells keyEnumerator];
@@ -768,13 +760,11 @@ AGEmojiKeyboardViewDelegate
             [self.attachmentCells setObject:cell forKey:attachment.ID];
             [(UICollectionViewCell<QMChatAttachmentCell> *)cell setAttachmentID:attachment.ID];
             
-            if (!shouldLoadFile) return;
-            
             __weak typeof(self)weakSelf = self;
             // Getting image from chat attachment service.
-            [[QMApi instance].chatService.chatAttachmentService getImageForChatAttachment:attachment completion:^(NSError *error, UIImage *image) {
-                __typeof(self) strongSelf = weakSelf;
-                
+            [[QMApi instance].chatService.chatAttachmentService getImageForAttachmentMessage:message completion:^(NSError *error, UIImage *image) {
+                //
+                __typeof(weakSelf)strongSelf = weakSelf;
                 if ([(UICollectionViewCell<QMChatAttachmentCell> *)cell attachmentID] != attachment.ID) return;
                 
                 [strongSelf.attachmentCells removeObjectForKey:attachment.ID];
@@ -819,7 +809,7 @@ AGEmojiKeyboardViewDelegate
 
 - (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
     if ([self.dialog.ID isEqualToString:dialogID]) {
-        // Inserting message received from XMPP
+        // Inserting message received from XMPP or sent by self
         [self insertMessageToTheBottomAnimated:message];
     }
 }
@@ -832,7 +822,7 @@ AGEmojiKeyboardViewDelegate
 
 - (void)chatService:(QMChatService *)chatService didUpdateMessage:(QBChatMessage *)message forDialogID:(NSString *)dialogID
 {
-    if ([self.dialog.ID isEqualToString:dialogID]) {
+    if ([self.dialog.ID isEqualToString:dialogID] && message.senderID == self.senderID) {
         [self updateMessage:message];
     }
 }
@@ -859,13 +849,9 @@ AGEmojiKeyboardViewDelegate
 
 - (void)chatAttachmentService:(QMChatAttachmentService *)chatAttachmentService didChangeAttachmentStatus:(QMMessageAttachmentStatus)status forMessage:(QBChatMessage *)message
 {
-    if (message.dialogID == self.dialog.ID) {
+    if ([message.dialogID isEqualToString:self.dialog.ID]) {
         
-        if (status == QMMessageAttachmentStatusLoading && message.senderID == self.senderID) {
-            [self insertMessageToTheBottomAnimated:message];
-        } else {
-            [self updateMessage:message];
-        }
+        [self updateMessage:message];
     }
 }
 
@@ -925,19 +911,20 @@ AGEmojiKeyboardViewDelegate
         UIImage* resizedImage = [strongSelf resizedImageFromImage:newImage];
         
         // Sending attachment to dialog.
-        [[QMApi instance].chatService.chatAttachmentService sendMessage:message
-                                                                         toDialog:strongSelf.dialog
-                                                                  withChatService:[QMApi instance].chatService
-                                                                withAttachedImage:resizedImage completion:^(NSError *error) {
-                                                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                                                        if (error != nil) {
-                                                                            [SVProgressHUD showErrorWithStatus:error.localizedDescription];
-                                                                        } else {
-                                                                            [SVProgressHUD showSuccessWithStatus:@"Completed"];
-                                                                        }
-                                                                        strongSelf.isSendingAttachment = NO;
-                                                                    });
-                                                                }];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[QMApi instance].chatService sendAttachmentMessage:message
+                                                       toDialog:strongSelf.dialog
+                                            withAttachmentImage:resizedImage
+                                                     completion:^(NSError * _Nullable error) {
+                                                         //
+                                                         if (error != nil) {
+                                                             [SVProgressHUD showErrorWithStatus:error.localizedDescription];
+                                                         } else {
+                                                             [SVProgressHUD showSuccessWithStatus:@"Completed"];
+                                                         }
+                                                         strongSelf.isSendingAttachment = NO;
+                                                     }];
+        });
     });
 }
 
