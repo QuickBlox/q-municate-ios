@@ -164,10 +164,10 @@
 {
     __weak typeof(self)weakSelf = self;
     [SVProgressHUD show];
-    [[QMApi instance] leaveChatDialog:self.chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+    [[QMApi instance] leaveChatDialog:self.chatDialog completion:^(NSError * _Nullable error) {
         //
         [SVProgressHUD dismiss];
-        if (response.success) {
+        if (error == nil) {
             [weakSelf.navigationController popToRootViewControllerAnimated:YES];
         }
     }];

@@ -508,7 +508,7 @@ AGEmojiKeyboardViewDelegate
 
     if (messageItem.isNotificatonMessage) {
         //
-        NSString *notificationMessageString = notificationMessageString = messageItem.messageType == QMMessageTypeUpdateGroupDialog ? messageItem.text : [QMChatUtils messageTextForNotification:messageItem];
+        NSString *notificationMessageString = [QMChatUtils messageTextForNotification:messageItem];
         
         UIColor *textColor = [UIColor colorWithRed:113.0f/255.0f green:113.0f/255.0f blue:113.0f/255.0f alpha:1.0f];
         UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:14.0f];

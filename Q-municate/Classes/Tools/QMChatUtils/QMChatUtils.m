@@ -45,23 +45,35 @@
         }
             break;
             
-        case QMMessageTypeCreateGroupDialog:
+        case QMMessageTypeUpdateGroupDialog:
         {
-#warning not in use
-            NSArray *users = [[QMApi instance] usersWithIDs:notification.dialog.occupantIDs];
-            QBUUser *currentUser = [[QMApi instance] userWithID:notification.senderID];
-            for (QBUUser *usr in users) {
-                if (usr.ID == currentUser.ID) {
-                    currentUser = usr;
+            switch (notification.dialogUpdateType) {
+                case QMDialogUpdateTypeName:
+                    messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_UPDATE_GROUP_NAME_TEXT", nil), sender.fullName, notification.dialogName];
                     break;
+                    
+                case QMDialogUpdateTypePhoto:
+                    messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_UPDATE_GROUP_AVATAR_TEXT", nil), sender.fullName];
+                    break;
+                    
+                case QMDialogUpdateTypeOccupants:
+                {
+                    if (notification.addedOccupantsIDs) {
+                        
+                        NSArray *users = [[QMApi instance] usersWithIDs:notification.addedOccupantsIDs];
+                        NSString *fullNameString = [self fullNamesString:users];
+                        messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_ADD_USERS_TO_EXIST_GROUP_CONVERSATION_TEXT", nil), sender.fullName, fullNameString];
+                    } else if (notification.deletedOccupantsIDs) {
+                        
+                        QBUUser *leavedUser = [[QMApi instance] userWithID:[[notification.deletedOccupantsIDs firstObject] integerValue]];
+                        messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT", nil), leavedUser.fullName];
+                    }
                 }
+                    
+                    break;
+                default:
+                    break;
             }
-            
-            NSMutableArray *usersArray = [users mutableCopy];
-            [usersArray removeObject:currentUser];
-            
-            NSString *fullNameString = [self fullNamesString:usersArray];
-            messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT", nil), sender.fullName, fullNameString];
         }
             break;
         default:

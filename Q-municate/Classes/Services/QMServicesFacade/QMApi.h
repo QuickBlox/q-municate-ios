@@ -274,9 +274,9 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  *  Leaving group chat.
  *
  *  @param chatDialog   QBChatDialog instance to leave
- *  @param completion   completion with QBChatDialogResponseBlock block
+ *  @param completion   completion with failure error
  */
-- (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion;
+- (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatCompletionBlock)completion;
 
 /**
  *  Adding users to group chat.
