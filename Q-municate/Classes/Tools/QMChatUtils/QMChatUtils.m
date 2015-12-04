@@ -58,12 +58,12 @@
                     
                 case QMDialogUpdateTypeOccupants:
                 {
-                    if (notification.addedOccupantsIDs) {
+                    if ([notification.addedOccupantsIDs count] > 0) {
                         
                         NSArray *users = [[QMApi instance] usersWithIDs:notification.addedOccupantsIDs];
                         NSString *fullNameString = [self fullNamesString:users];
                         messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_ADD_USERS_TO_EXIST_GROUP_CONVERSATION_TEXT", nil), sender.fullName, fullNameString];
-                    } else if (notification.deletedOccupantsIDs) {
+                    } else if ([notification.deletedOccupantsIDs count] > 0) {
                         
                         QBUUser *leavedUser = [[QMApi instance] userWithID:[[notification.deletedOccupantsIDs firstObject] integerValue]];
                         messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT", nil), leavedUser.fullName];
