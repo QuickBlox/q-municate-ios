@@ -969,9 +969,9 @@ AGEmojiKeyboardViewDelegate
         [[QMApi instance] confirmAddContactRequest:self.opponentUser completion:^(BOOL success) {
             //
             [SVProgressHUD dismiss];
-            [self refreshMessagesShowingProgress:NO];
-            [self.collectionView reloadData];
-            [self scrollToBottomAnimated:NO];
+            NSIndexPath *indexPath = [self.collectionView indexPathForCell:sender];
+            QBChatMessage *crMessage = [self messageForIndexPath:indexPath];
+            [self deleteMessage:crMessage];
         }];
     }
     else {
