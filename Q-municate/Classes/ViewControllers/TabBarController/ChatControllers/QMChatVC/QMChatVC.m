@@ -676,11 +676,6 @@ AGEmojiKeyboardViewDelegate
 - (QMChatCellLayoutModel)collectionView:(QMChatCollectionView *)collectionView layoutModelAtIndexPath:(NSIndexPath *)indexPath {
     QMChatCellLayoutModel layoutModel = [super collectionView:collectionView layoutModelAtIndexPath:indexPath];
     
-    if (self.dialog.type == QBChatDialogTypePrivate) {
-        layoutModel.topLabelHeight = 0.0;
-    }
-    
-    
     QBChatMessage *item = [self messageForIndexPath:indexPath];
     Class class = [self viewClassForItem:item];
     
@@ -694,9 +689,16 @@ AGEmojiKeyboardViewDelegate
         layoutModel.bottomLabelHeight = ceilf(size.height);
     } else if (class == [QMChatAttachmentIncomingCell class] ||
                class == [QMChatIncomingCell class]) {
+        
         if (self.dialog.type != QBChatDialogTypePrivate) {
-            layoutModel.topLabelHeight = 20.0f;
+            
+            NSAttributedString *topLabelString = [self topLabelAttributedStringForItem:item];
+            CGSize size = [TTTAttributedLabel sizeThatFitsAttributedString:topLabelString
+                                                           withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
+                                                    limitedToNumberOfLines:0];
+            layoutModel.topLabelHeight = size.height;
         }
+        
         layoutModel.spaceBetweenTopLabelAndTextView = 5.0f;
         layoutModel.avatarSize = (CGSize){50.0, 50.0};
     } else if (class == [QMChatNotificationCell class]) {
