@@ -676,10 +676,7 @@ AGEmojiKeyboardViewDelegate
 - (QMChatCellLayoutModel)collectionView:(QMChatCollectionView *)collectionView layoutModelAtIndexPath:(NSIndexPath *)indexPath {
     QMChatCellLayoutModel layoutModel = [super collectionView:collectionView layoutModelAtIndexPath:indexPath];
     
-    if (self.dialog.type == QBChatDialogTypePrivate) {
-        layoutModel.topLabelHeight = 0.0;
-    }
-    
+    layoutModel.topLabelHeight = 0.0f;
     
     QBChatMessage *item = [self messageForIndexPath:indexPath];
     Class class = [self viewClassForItem:item];
@@ -694,9 +691,16 @@ AGEmojiKeyboardViewDelegate
         layoutModel.bottomLabelHeight = ceilf(size.height);
     } else if (class == [QMChatAttachmentIncomingCell class] ||
                class == [QMChatIncomingCell class]) {
+        
         if (self.dialog.type != QBChatDialogTypePrivate) {
-            layoutModel.topLabelHeight = 20.0f;
+            
+            NSAttributedString *topLabelString = [self topLabelAttributedStringForItem:item];
+            CGSize size = [TTTAttributedLabel sizeThatFitsAttributedString:topLabelString
+                                                           withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
+                                                    limitedToNumberOfLines:0];
+            layoutModel.topLabelHeight = size.height;
         }
+        
         layoutModel.spaceBetweenTopLabelAndTextView = 5.0f;
         layoutModel.avatarSize = (CGSize){50.0, 50.0};
     } else if (class == [QMChatNotificationCell class]) {
@@ -965,9 +969,11 @@ AGEmojiKeyboardViewDelegate
         [[QMApi instance] confirmAddContactRequest:self.opponentUser completion:^(BOOL success) {
             //
             [SVProgressHUD dismiss];
-            [self refreshMessagesShowingProgress:NO];
-            [self.collectionView reloadData];
-            [self scrollToBottomAnimated:NO];
+            NSIndexPath *indexPath = [self.collectionView indexPathForCell:sender];
+            QBChatMessage *crMessage = [self messageForIndexPath:indexPath];
+            
+            [self.collectionView.collectionViewLayout removeSizeFromCacheForItemID:crMessage.ID];
+            [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
         }];
     }
     else {
