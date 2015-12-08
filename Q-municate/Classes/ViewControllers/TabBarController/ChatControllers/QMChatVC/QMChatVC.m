@@ -971,7 +971,9 @@ AGEmojiKeyboardViewDelegate
             [SVProgressHUD dismiss];
             NSIndexPath *indexPath = [self.collectionView indexPathForCell:sender];
             QBChatMessage *crMessage = [self messageForIndexPath:indexPath];
-            [self deleteMessage:crMessage];
+            
+            [self.collectionView.collectionViewLayout removeSizeFromCacheForItemID:crMessage.ID];
+            [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
         }];
     }
     else {
