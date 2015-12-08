@@ -72,7 +72,6 @@
 + (QB_NONNULL QBCBlob *)blob;
 
 /** Get file's public url (available within Internet), if blob is public.
- @warning *Deprecated in 2.6.1.* Use 'publicUrlForFileUID:' instead.
  @return Public url to file
  */
 - (QB_NULLABLE NSString *)publicUrl;
@@ -87,6 +86,7 @@
 + (QB_NULLABLE NSString *)publicUrlForFileUID:(QB_NONNULL NSString *)fileUID;
 
 /** Get file's public url (available within Internet) by ID.
+ @warning *Deprecated in 2.6.1.* Use 'publicUrlForFileUID:' instead.
  @return Public url to file
  */
 + (QB_NULLABLE NSString *)publicUrlForID:(NSUInteger)ID;
