@@ -3601,10 +3601,10 @@ Cg
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="James Cobs" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C3V-mT-W5i">
-                                <rect key="frame" x="20" y="206" width="280" height="30"/>
+                                <rect key="frame" x="20" y="206" width="280" height="35"/>
                                 <animations/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="5DJ-3l-Dxc"/>
+                                    <constraint firstAttribute="height" constant="35" id="KcX-sH-iE3"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <nil key="highlightedColor"/>
@@ -3835,10 +3835,10 @@ Cg
                                 </constraints>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="James Cobs" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MVP-fT-4tk">
-                                <rect key="frame" x="77" y="206" width="165" height="30"/>
+                                <rect key="frame" x="77" y="206" width="165" height="35"/>
                                 <animations/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="J65-4h-uuF"/>
+                                    <constraint firstAttribute="height" constant="35" id="O6G-TL-weT"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -4014,9 +4014,9 @@ Cg
         <image name="videocall" width="22" height="13"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="e7V-c0-doK"/>
-        <segue reference="kkU-F4-K0a"/>
         <segue reference="qsg-NO-Ors"/>
+        <segue reference="kkU-F4-K0a"/>
         <segue reference="IAo-qy-uHQ"/>
+        <segue reference="e7V-c0-doK"/>
     </inferredMetricsTieBreakers>
 </document>
