@@ -194,16 +194,21 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 /*** Messages ***/
 
 /**
- *  Loggin in to chat.
+ *  Connecting to the chat.
  *
  *  @param block    completion block with success status
  */
 - (void)connectChat:(void(^)(BOOL success))block;
 
 /**
- *  Loggin out from chat.
+ *  Disconnecting from the chat.
  */
 - (void)disconnectFromChat;
+
+/**
+ *  Disconnecting from the chat if there is no active call.
+ */
+- (void)disconnectFromChatIfNeeded;
 
 /*** Chat Dialogs ***/
 

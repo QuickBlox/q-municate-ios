@@ -145,7 +145,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     if (!QMApi.instance.currentUser) {
         return;
     }
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    if (![QBChat instance].isConnected) [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] applicationDidBecomeActive:^(BOOL success) {}];
 }
 

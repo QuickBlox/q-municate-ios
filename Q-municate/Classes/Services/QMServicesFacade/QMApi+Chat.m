@@ -10,6 +10,7 @@
 #import "QMSettingsManager.h"
 #import "QMApi+Notifications.m"
 #import "QMContentService.h"
+#import "QMAVCallManager.h"
 #import "QMChatUtils.h"
 
 @implementation QMApi (Chat)
@@ -40,6 +41,13 @@
             [weakSelf.settingsManager setLastActivityDate:[NSDate date]];
         }
     }];
+}
+
+- (void)disconnectFromChatIfNeeded {
+    
+    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground && !self.avCallManager.hasActiveCall && [[QBChat instance] isConnected]) {
+        [self disconnectFromChat];
+    }
 }
 
 /**
