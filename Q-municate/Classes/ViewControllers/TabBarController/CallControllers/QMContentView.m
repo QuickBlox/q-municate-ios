@@ -9,10 +9,12 @@
 #import "QMContentView.h"
 #import "QMUsersUtils.h"
 
+const NSTimeInterval kRefreshTimeInterval = 1.f;
+
 @interface QMContentView()
 
 @property (nonatomic, strong, readonly) NSTimer *timer;
-@property (nonatomic, assign) double_t timeInterval;
+@property (nonatomic, assign) NSTimeInterval timeInterval;
 
 @end
 
@@ -77,9 +79,9 @@
     if( [_timer isValid] ){
         return;
     }
-    _timeInterval = 0;
-    self.statusLabel.text = [NSString stringWithFormat:@"%02u:%02u", (int)(_timeInterval/60), (int)fmod(_timeInterval, 60)];
-    _timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateStatusLabel) userInfo:nil repeats:YES];
+    _timeInterval = 0.0f;
+    self.statusLabel.text = [self stringWithTimeDuration:self.timeInterval];
+    _timer = [NSTimer scheduledTimerWithTimeInterval:kRefreshTimeInterval target:self selector:@selector(updateStatusLabel) userInfo:nil repeats:YES];
     [_timer fire];
 }
 
@@ -92,13 +94,25 @@
 - (void)stopTimer {
     [_timer invalidate];
     _timer = nil;
-    _timeInterval = 0;
+    _timeInterval = 0.0f;
 }
 
 // selector:
 - (void)updateStatusLabel {
-    self.statusLabel.text = [NSString stringWithFormat:@"%02u:%02u", (int)(_timeInterval/60), (int)fmod(_timeInterval, 60)];
-    _timeInterval++;
+    self.timeInterval += kRefreshTimeInterval;
+    self.statusLabel.text = [self stringWithTimeDuration:self.timeInterval];
+}
+
+#pragma mark - Helper
+
+- (NSString *)stringWithTimeDuration:(NSTimeInterval )timeDuration {
+    
+    NSInteger minutes = timeDuration / 60;
+    NSInteger seconds = (NSInteger)timeDuration % 60;
+    
+    NSString *timeStr = [NSString stringWithFormat:@"%ld:%02ld", (long)minutes, (long)seconds];
+    
+    return timeStr;
 }
 
 @end
