@@ -12,6 +12,7 @@
 #import "QMSoundManager.h"
 #import "QMVideoP2PController.h"
 #import "QMAVCallManager.h"
+#import "QMUsersUtils.h"
 
 @interface QMIncomingCallController ()<QBRTCClientDelegate>
 
@@ -52,7 +53,7 @@
         self.incomingCallLabel.text = NSLocalizedString(@"QM_STR_INCOMING_CALL", nil);
     }
 
-    NSURL *url = [NSURL URLWithString:opponent.website];
+    NSURL *url = [QMUsersUtils userAvatarURL:opponent];
     UIImage *placeholder = [UIImage imageNamed:@"upic_call"];
     
     [self.userAvatarView setImageWithURL:url
