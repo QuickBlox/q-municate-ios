@@ -183,10 +183,13 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     [self.chatService joinOccupantsWithIDs:occupantsToJoinIDs toChatDialog:chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
         //
         if (response.success) {
-            
-            [weakSelf.chatService sendNotificationMessageAboutAddingOccupants:occupantsToJoinIDs toDialog:updatedDialog completion:^(NSError * _Nullable error) {
+            __typeof(weakSelf)strongSelf = weakSelf;
+            [strongSelf.chatService sendSystemMessageAboutAddingToDialog:chatDialog toUsersIDs:occupantsToJoinIDs completion:^(NSError * _Nullable systemMessageError) {
                 //
-                if (completion) completion(response,updatedDialog);
+                [strongSelf.chatService sendNotificationMessageAboutAddingOccupants:occupantsToJoinIDs toDialog:updatedDialog completion:^(NSError * _Nullable notificationError) {
+                    //
+                    if (completion) completion(response,updatedDialog);
+                }];
             }];
         } else {
             completion (response, nil);
