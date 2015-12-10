@@ -224,12 +224,12 @@ AGEmojiKeyboardViewDelegate
     }];
     
     // Retrieving messages
-    if ([[self storedMessages] count] > 0) {
-        
+    if ([[self storedMessages] count] > 0 && self.totalMessagesCount == 0) {
+        // inserting all messages from memory storage
         [self insertMessagesToTheBottomAnimated:[self storedMessages]];
         [self refreshMessagesShowingProgress:NO];
     } else {
-        [SVProgressHUD showWithStatus:@"Refreshing..." maskType:SVProgressHUDMaskTypeClear];
+        if (self.totalMessagesCount == 0) [SVProgressHUD showWithStatus:@"Refreshing..." maskType:SVProgressHUDMaskTypeClear];
         
         [[QMApi instance] cachedMessagesWithDialogID:self.dialog.ID block:^(NSArray *collection) {
             //
