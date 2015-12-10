@@ -824,6 +824,10 @@ AGEmojiKeyboardViewDelegate
 - (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog{
     if( [self.dialog.ID isEqualToString:chatDialog.ID] ) {
         self.dialog = chatDialog;
+        
+        if (self.dialog.type != QBChatDialogTypePrivate) {
+            self.title = self.dialog.name;
+        }
     }
 }
 
