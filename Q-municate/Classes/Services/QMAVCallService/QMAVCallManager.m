@@ -254,7 +254,7 @@ NSString *const kUserName = @"UserName";
     QMIncomingCallController *incomingVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallController];
     
     incomingVC.session = session;
-    incomingVC.opponentID = [session.opponentsIDs.firstObject unsignedIntegerValue];
+    incomingVC.opponentID = [session.initiatorID unsignedIntegerValue];
     incomingVC.callType = session.conferenceType;
     
     UINavigationController *navVC = [[UINavigationController alloc] initWithRootViewController:incomingVC];
