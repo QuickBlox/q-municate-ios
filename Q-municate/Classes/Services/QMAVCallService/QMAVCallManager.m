@@ -60,12 +60,25 @@ NSString *const kUserName = @"UserName";
     return UIApplication.sharedApplication.delegate.window.rootViewController;
 }
 
+#pragma mark - properties
+
+- (void)setHasActiveCall:(BOOL)hasActiveCall {
+    if (_hasActiveCall != hasActiveCall) {
+        _hasActiveCall = hasActiveCall;
+        
+        if (!_hasActiveCall) {
+            [[QMApi instance] disconnectFromChatIfNeeded];
+        }
+    }
+}
+
 #pragma mark - Public methods
 
 - (void)acceptCall{
     [self stopAllSounds];
     if( self.session ){
         [self.session acceptCall:nil];
+        self.hasActiveCall = YES;
     }
     else{
         NSLog(@"error in -acceptCall: session does not exists");
@@ -188,6 +201,7 @@ NSString *const kUserName = @"UserName";
                                                       animated:YES
                                                     completion:nil];
             [strongSelf.session startCall:@{kUserIds: users}];
+            strongSelf.hasActiveCall = YES;
             strongSelf.currentlyPresentedViewController = navVC;
         }
         else {
@@ -285,6 +299,7 @@ NSString *const kUserName = @"UserName";
     [[QBRTCSoundRouter instance] deinitialize];
     
     [self stopCameraCapture];
+    self.hasActiveCall = NO;
     
     __weak __typeof(self)weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

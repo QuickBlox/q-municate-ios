@@ -138,7 +138,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
 }
 
 - (void)applicationWillResignActive {
-    [self disconnectFromChat];
+    [self disconnectFromChatIfNeeded];
 }
 
 - (NSString *)errorStringFromArray:(NSArray *)errorArray {

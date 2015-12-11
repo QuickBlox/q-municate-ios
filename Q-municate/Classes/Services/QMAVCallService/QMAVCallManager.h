@@ -21,13 +21,18 @@
 @property (assign, nonatomic, getter=isFrontCamera) BOOL frontCamera;
 @property (assign, nonatomic, getter=isOpponentCaller) BOOL opponentCaller;
 
+/**
+ *  Indicates whether we have an active call or not
+ */
+@property (assign, nonatomic) BOOL hasActiveCall;
+
 /** Call handling **/
 - (void)acceptCall;
 - (void)rejectCall;
 - (void)hangUpCall;
 
 /**
- *  call to users ids
+ *  Call to users with IDs.
  *
  *  @param users          array of QBUUser instances
  *  @param conferenceType QBConferenceType
@@ -36,19 +41,19 @@
 - (void)callToUsers:(NSArray *)users withConferenceType:(QBRTCConferenceType)conferenceType pushEnabled:(BOOL)pushEnabled;
 
 /**
- *  check permissions and show alert if permissions are denied
+ *  Check permissions and show alert if permissions are denied.
  *
  *  @param conferenceType QBConferenceType
  */
 - (void)checkPermissionsWithConferenceType:(QBRTCConferenceType)conferenceType completion:(void(^)(BOOL canContinue))completion;
 
 /**
- *  If camera capture not exist allocating and starting session
+ *  If camera capture not exist allocating and starting session.
  */
 - (void)startCameraCapture;
 
 /**
- *  If camera capture exist stopping session and dellocating it
+ *  If camera capture exist stopping session and dellocating it.
  */
 - (void)stopCameraCapture;
 
