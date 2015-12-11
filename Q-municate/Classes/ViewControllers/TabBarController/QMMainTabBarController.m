@@ -221,10 +221,21 @@
 
 - (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
     if (message.senderID != self.currentUser.ID) {
-        [self showNotificationForMessage:message inDialogID:dialogID];
+        
+        if (message.messageType == QMMessageTypeContactRequest) {
+            // download user for contact request if needed
+            __weak __typeof(self)weakSelf = self;
+            [[[QMApi instance].usersService getUserWithID:message.senderID] continueWithBlock:^id(BFTask<QBUUser *> *task) {
+                //
+                [weakSelf showNotificationForMessage:message inDialogID:dialogID];
+                return nil;
+            }];
+        } else {
+            
+            [self showNotificationForMessage:message inDialogID:dialogID];
+        }
     }
 }
-
 
 #pragma mark - QMChatConnectionDelegate
 
