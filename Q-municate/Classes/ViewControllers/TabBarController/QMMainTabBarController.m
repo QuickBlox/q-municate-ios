@@ -238,7 +238,7 @@
     [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil) maskType:SVProgressHUDMaskTypeClear];
 }
 
-- (void)chatServiceChatDidNotLoginWithError:(NSError *)error
+- (void)chatService:(QMChatService *)chatService chatDidNotConnectWithError:(NSError *)error
 {
     if ([[QMApi instance] isInternetConnected]) {
         [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription]];
