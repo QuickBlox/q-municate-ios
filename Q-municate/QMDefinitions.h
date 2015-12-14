@@ -65,4 +65,7 @@ static NSString *const kMailBodyString                      = @"<a href='http://
 //******************** PUSH NOTIFICATIONS ********************
 static NSString *const kPushNotificationDialogIDKey         = @"dialog_id";
 
+//***************** GROUP CHAT NOTIFICATIONS *****************
+static NSString *const kDialogsUpdateNotificationMessage    = @"Notification message";
+
 #endif

@@ -127,10 +127,13 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
             
             [strongSelf.chatService sendSystemMessageAboutAddingToDialog:createdDialog toUsersIDs:occupantsIDs completion:^(NSError * _Nullable systemMessageError) {
                 //
-                [strongSelf.chatService sendNotificationMessageAboutAddingOccupants:occupantsIDs toDialog:createdDialog completion:^(NSError * _Nullable notificationError) {
-                    //
-                    if (completion) completion(createdDialog);
-                }];
+                [strongSelf.chatService sendNotificationMessageAboutAddingOccupants:occupants
+                                                                           toDialog:createdDialog
+                                                               withNotificationText:kDialogsUpdateNotificationMessage
+                                                                         completion:^(NSError * _Nullable error) {
+                                                                             //
+                                                                             if (completion) completion(createdDialog);
+                                                                         }];
             }];
         } else {
             if (completion) completion(nil);
@@ -148,9 +151,11 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
         //
         if (response.success) {
             
-            [weakSelf.chatService sendNotificationMessageAboutChangingDialogName:updatedDialog completion:^(NSError * _Nullable error) {
-                //
-            }];
+            [weakSelf.chatService sendNotificationMessageAboutChangingDialogName:updatedDialog
+                                                            withNotificationText:kDialogsUpdateNotificationMessage
+                                                                      completion:^(NSError * _Nullable error) {
+                                                                          //
+                                                                      }];
         }
         if (completion) completion(response,updatedDialog);
     }];
@@ -173,10 +178,12 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
             //
             if (updateResponse.success) {
                 // send notification:
-                [strongSelf.chatService sendNotificationMessageAboutChangingDialogPhoto:updatedDialog completion:^(NSError * _Nullable error) {
-                    //
-                    if (completion) completion(updateResponse, updatedDialog);
-                }];
+                [strongSelf.chatService sendNotificationMessageAboutChangingDialogPhoto:updatedDialog
+                                                                   withNotificationText:kDialogsUpdateNotificationMessage
+                                                                             completion:^(NSError * _Nullable error) {
+                                                                                 //
+                                                                                 if (completion) completion(updateResponse, updatedDialog);
+                                                                             }];
             }
 
         }];
@@ -194,10 +201,13 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
             __typeof(weakSelf)strongSelf = weakSelf;
             [strongSelf.chatService sendSystemMessageAboutAddingToDialog:chatDialog toUsersIDs:occupantsToJoinIDs completion:^(NSError * _Nullable systemMessageError) {
                 //
-                [strongSelf.chatService sendNotificationMessageAboutAddingOccupants:occupantsToJoinIDs toDialog:updatedDialog completion:^(NSError * _Nullable notificationError) {
-                    //
-                    if (completion) completion(response,updatedDialog);
-                }];
+                [strongSelf.chatService sendNotificationMessageAboutAddingOccupants:occupantsToJoinIDs
+                                                                           toDialog:updatedDialog
+                                                               withNotificationText:kDialogsUpdateNotificationMessage
+                                                                         completion:^(NSError * _Nullable error) {
+                                                                             //
+                                                                             if (completion) completion(response,updatedDialog);
+                                                                         }];
             }];
         } else {
             completion (response, nil);
@@ -208,17 +218,19 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
 - (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatCompletionBlock)completion {
     
     __weak __typeof(self)weakSelf = self;
-    [self.chatService sendNotificationMessageAboutLeavingDialog:chatDialog completion:^(NSError * _Nullable error) {
-        //
-        if (error == nil) {
-            [weakSelf.chatService deleteDialogWithID:chatDialog.ID completion:^(QBResponse *response) {
-                //
-                if (completion) completion(response.error.error);
-            }];
-        } else {
-            if (completion) completion(error);
-        }
-    }];
+    [self.chatService sendNotificationMessageAboutLeavingDialog:chatDialog
+                                           withNotificationText:kDialogsUpdateNotificationMessage
+                                                     completion:^(NSError * _Nullable error) {
+                                                         //
+                                                         if (error == nil) {
+                                                             [weakSelf.chatService deleteDialogWithID:chatDialog.ID completion:^(QBResponse *response) {
+                                                                 //
+                                                                 if (completion) completion(response.error.error);
+                                                             }];
+                                                         } else {
+                                                             if (completion) completion(error);
+                                                         }
+                                                     }];
 }
 
 - (NSUInteger )occupantIDForPrivateChatDialog:(QBChatDialog *)chatDialog {
