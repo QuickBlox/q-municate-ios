@@ -41,17 +41,6 @@ QMContactListServiceDelegate
     return self;
 }
 
-- (void)retrieveUserIfNeededWithMessage:(QBChatMessage *)message
-{
-    __weak typeof(self)weakSelf = self;
-    if (message.messageType == QMMessageTypeContactRequest) {
-        [[[QMApi instance].usersService getUserWithID:message.senderID] continueWithSuccessBlock:^id(BFTask *task) {
-            [weakSelf updateGUI];
-            return nil;
-        }];
-    }
-}
-
 - (void)updateGUI {
     
     [self.tableView reloadData];
@@ -178,7 +167,6 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 - (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
     
     [self updateGUI];
-    [self retrieveUserIfNeededWithMessage:message];
 }
 
 - (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
