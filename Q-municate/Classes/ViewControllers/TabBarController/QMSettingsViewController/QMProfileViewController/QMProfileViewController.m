@@ -114,7 +114,9 @@
 }
 
 - (BOOL)checkFullNameField {
-    if (self.fullNameFieldCache.length < 3 || self.fullNameFieldCache.length > 50) return NO;
+    
+    NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
+    if (self.fullNameFieldCache.length < 3 || self.fullNameFieldCache.length > 50 || [[self.fullNameFieldCache stringByTrimmingCharactersInSet:whiteSpaceSet] length] == 0) return NO;
     
     if ([self.fullNameFieldCache containsString:@"<"]) return NO;
     if ([self.fullNameFieldCache containsString:@">"]) return NO;
