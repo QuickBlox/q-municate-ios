@@ -127,7 +127,7 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
             
             [strongSelf.chatService sendSystemMessageAboutAddingToDialog:createdDialog toUsersIDs:occupantsIDs completion:^(NSError * _Nullable systemMessageError) {
                 //
-                [strongSelf.chatService sendNotificationMessageAboutAddingOccupants:occupants
+                [strongSelf.chatService sendNotificationMessageAboutAddingOccupants:occupantsIDs
                                                                            toDialog:createdDialog
                                                                withNotificationText:kDialogsUpdateNotificationMessage
                                                                          completion:^(NSError * _Nullable error) {
