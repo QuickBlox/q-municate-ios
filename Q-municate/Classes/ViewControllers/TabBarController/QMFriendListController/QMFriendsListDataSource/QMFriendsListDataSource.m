@@ -15,12 +15,12 @@
 #import "SVProgressHud.h"
 #import "REAlertView.h"
 
+static const NSUInteger kQMUsersPageLimit = 50;
 
 @interface QMFriendsListDataSource()
 <
 QMContactListServiceDelegate
 >
-
 
 @property (strong, nonatomic) NSMutableArray *searchResult;
 @property (strong, nonatomic) NSArray *friendList;
@@ -31,6 +31,9 @@ QMContactListServiceDelegate
 @property (assign, nonatomic) NSUInteger contactRequestsCount;
 
 @property (strong, nonatomic) NSTimer* timer;
+
+@property (assign, nonatomic) NSUInteger currentPage;
+@property (assign, nonatomic) BOOL shouldLoadMore;
 
 @end
 
@@ -88,9 +91,10 @@ QMContactListServiceDelegate
         [self.tableView reloadData];
     }
     if (self.searchDisplayController.isActive) {
+        self.currentPage = 1;
         [self globalSearch];
     }
-} 
+}
 
 - (void)globalSearch
 {
@@ -101,26 +105,36 @@ QMContactListServiceDelegate
     }
     
     __weak __typeof(self)weakSelf = self;
-    QBUUserPagedResponseBlock userResponseBlock = ^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+    void (^userResponseBlock)(NSArray *users) = ^void(NSArray *users) {
+        
+        if ([users count] < kQMUsersPageLimit) {
+            weakSelf.shouldLoadMore = NO;
+        } else {
+            weakSelf.shouldLoadMore = YES;
+        }
         
         NSArray *sortedUsers = [QMUsersUtils sortUsersByFullname:users];
         
         NSMutableArray *filteredUsers = [QMUsersUtils filteredUsers:sortedUsers withFlterArray:[weakSelf.friendList arrayByAddingObject:[QMApi instance].currentUser]];
         
-        weakSelf.searchResult = filteredUsers;
+        if (weakSelf.currentPage > 1) {
+            [weakSelf.searchResult addObjectsFromArray:filteredUsers];
+        } else {
+            weakSelf.searchResult = filteredUsers;
+        }
         
-        [weakSelf.searchDisplayController.searchResultsTableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+        [weakSelf.searchDisplayController.searchResultsTableView reloadData];
 
         [SVProgressHUD dismiss];
     };
     
-    [self.searchDisplayController.searchResultsTableView reloadData];
+    QBGeneralResponsePage *page = [QBGeneralResponsePage responsePageWithCurrentPage:self.currentPage perPage:kQMUsersPageLimit];
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [[[QMApi instance].usersService searchUsersWithFullName:self.searchDisplayController.searchBar.text]
-     continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
-         if (task.isCompleted) {
-            if (userResponseBlock) userResponseBlock(nil, nil, task.result);
+    [[[QMApi instance].usersService searchUsersWithFullName:self.searchDisplayController.searchBar.text page:page] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+        //
+        if (task.isCompleted) {
+            if (userResponseBlock) userResponseBlock(task.result);
         }
         
         return nil;
@@ -212,9 +226,16 @@ QMContactListServiceDelegate
         cell.searchText = self.searchDisplayController.searchBar.text;
     }
     
+    if (tableView == self.searchDisplayController.searchResultsTableView && indexPath.section == 1 && indexPath.row == [tableView numberOfRowsInSection:1] - 1) {
+        // last row in search results section
+        if (self.shouldLoadMore) {
+            self.currentPage++;
+            [self globalSearch];
+        }
+    }
+    
     return cell;
 }
-
 
 #pragma mark - QMUsersListCellDelegate
 
@@ -228,19 +249,13 @@ QMContactListServiceDelegate
     if (idx != NSNotFound) {
         
         [self.searchResult removeObject:user];
-        [self.searchDisplayController.searchResultsTableView reloadSections:[NSIndexSet indexSetWithIndex:1]
-                                                           withRowAnimation:UITableViewRowAnimationAutomatic];
     }
     
     BOOL isContactRequest = [[QMApi instance] isContactRequestUserWithID:user.ID];
     if (isContactRequest) {
-        [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success) {
-            [self reloadDataSource];
-        }];
+        [[QMApi instance] confirmAddContactRequest:user completion:nil];
     } else {
-        [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {
-            [self reloadDataSource];
-        }];
+        [[QMApi instance] addUserToContactList:user completion:nil];
     }
 }
 
@@ -250,6 +265,7 @@ QMContactListServiceDelegate
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
     [self.timer invalidate];
     
+    self.currentPage = 1;
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.6 target:self selector:@selector(globalSearch) userInfo:nil repeats:NO];
     return NO;
 }
@@ -257,14 +273,13 @@ QMContactListServiceDelegate
 - (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
 {
     [self.tableView setDataSource:nil];
-    [self.tableView reloadData];
+    [self reloadDataSource];
 }
 
 - (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller
 {
     [self.tableView setDataSource:self];
     [self reloadDataSource];
-    [self.tableView reloadData];
 }
 
 #pragma mark Contact List Serice Delegate

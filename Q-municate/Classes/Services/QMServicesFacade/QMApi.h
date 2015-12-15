@@ -31,9 +31,6 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  */
 @property (strong, nonatomic, readonly) QMContactListService* contactListService;
 
-// Users service.
-@property (strong, nonatomic, readonly) QMUsersService* usersService;
-
 /**
  *  Settings manager.
  */
