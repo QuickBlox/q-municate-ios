@@ -528,3 +528,7 @@ If you want to build your own app using Q-municate as a basis, please do the fol
    ![App credentials](http://files.quickblox.com/app_credentials.png)
  6. Copy credentials (App ID, Authorization key, Authorization secret) into your Q-municate project code in AppDelegate.m<br />
  7. Enjoy!
+ 
+# License
+Apache License
+Version 2.0
