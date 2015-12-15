@@ -162,6 +162,9 @@ const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
         [self startSendPresence];
     }
     
+    // Enabling carbons for chat
+    [QBSettings setCarbonsEnabled:YES];
+    
     if ([self.multicastDelegate respondsToSelector:@selector(chatServiceChatDidConnect:)]) {
         [self.multicastDelegate chatServiceChatDidConnect:self];
     }

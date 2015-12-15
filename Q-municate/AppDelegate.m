@@ -71,9 +71,6 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBSettings setAccountKey:kQMAcconuntKey];
 //    [QBSettings setLogLevel:QBLogLevelNothing];
     
-    // Enabling carbons for chat
-    [QBSettings setCarbonsEnabled:YES];
-    
     //QuickbloxWebRTC preferences
     [QBRTCClient initializeRTC];
     
