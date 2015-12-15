@@ -24,6 +24,4 @@ static NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFrie
 - (NSArray *)usersAtSections:(NSInteger)section;
 - (QBUUser *)userAtIndexPath:(NSIndexPath *)indexPath;
 
-- (void)reloadDataSource;
-
 @end
