@@ -157,7 +157,13 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 }
 
 - (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
-    [self updateGUI];
+    
+    [[[QMApi instance].usersService getUsersWithIDs:chatDialog.occupantIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+        //
+        [self updateGUI];
+        
+        return nil;
+    }];
 }
 
 - (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
@@ -165,7 +171,6 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 }
 
 - (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
-    
     [self updateGUI];
 }
 
