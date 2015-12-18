@@ -89,6 +89,8 @@ static NSString *const kQMErrorPasswordKey = @"password";
         
         self.internetConnection.reachableBlock = internetConnectionReachable;
         self.internetConnection.unreachableBlock = internetConnectionNotReachable;
+        
+        [self.usersService loadFromCache];
     }
     
     [self.internetConnection startNotifier];
