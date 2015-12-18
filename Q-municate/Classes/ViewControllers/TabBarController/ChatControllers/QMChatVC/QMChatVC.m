@@ -821,7 +821,17 @@ AGEmojiKeyboardViewDelegate
 - (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
     if ([self.dialog.ID isEqualToString:dialogID]) {
         // Inserting message received from XMPP or sent by self
-        [self insertMessageToTheBottomAnimated:message];
+        if (message.dialogUpdateType == QMDialogUpdateTypeOccupants && message.addedOccupantsIDs.count > 0) {
+            __weak __typeof(self)weakSelf = self;
+            [[[QMApi instance].usersService getUsersWithIDs:message.addedOccupantsIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+                //
+                [weakSelf insertMessageToTheBottomAnimated:message];
+                return nil;
+            }];
+        } else {
+            
+            [self insertMessageToTheBottomAnimated:message];
+        }
     }
 }
 
