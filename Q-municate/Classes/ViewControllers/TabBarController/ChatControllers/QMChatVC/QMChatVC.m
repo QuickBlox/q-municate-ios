@@ -563,7 +563,7 @@ AGEmojiKeyboardViewDelegate
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor, NSFontAttributeName:font};
     NSString* text = messageItem.dateSent ? [self timeStampWithDate:messageItem.dateSent] : @"";
     if ([messageItem senderID] == self.senderID) {
-        text = [NSString stringWithFormat:@"%@\n%@", text, [self.stringBuilder statusFromMessage:messageItem]];
+        text = [NSString stringWithFormat:@"%@\n%@", text, [self.stringBuilder statusFromMessage:messageItem forDialogType:self.dialog.type]];
     }
     NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:text
                                                                                 attributes:attributes];
