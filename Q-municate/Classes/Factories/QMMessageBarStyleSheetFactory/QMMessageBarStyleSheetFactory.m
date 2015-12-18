@@ -31,7 +31,7 @@
     }
     
     NSString *messageText = [NSString string];
-    if (message.isNotificatonMessage && message.messageType != QMMessageTypeUpdateGroupDialog) {
+    if (message.isNotificatonMessage) {
         messageText = [QMChatUtils messageTextForNotification:message];
     }
     else {
