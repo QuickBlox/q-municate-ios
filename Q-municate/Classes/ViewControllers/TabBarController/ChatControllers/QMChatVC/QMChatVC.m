@@ -113,6 +113,7 @@ AGEmojiKeyboardViewDelegate
     
     self.stringBuilder = [QMMessageStatusStringBuilder new];
     self.detailedCells = [NSMutableSet set];
+    self.attachmentCells = [NSMapTable strongToWeakObjectsMapTable];
     
     // emoji button init
     [self configureEmojiButton];
