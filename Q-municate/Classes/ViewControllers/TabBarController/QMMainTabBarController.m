@@ -184,6 +184,15 @@
     }];
 }
 
+- (void)getUsersIfNeeded:(NSArray *)users andShowNotificationForMessage:(QBChatMessage *)message {
+    __weak __typeof(self)weakSelf = self;
+    [[[QMApi instance].usersService getUsersWithIDs:message.addedOccupantsIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+        //
+        [weakSelf showNotificationForMessage:message inDialogID:message.dialogID];
+        return nil;
+    }];
+}
+
 #pragma mark - QMNotificationHandlerDelegate protocol
 
 - (void)notificationHandlerDidStartLoadingDialogFromServer {
@@ -224,12 +233,10 @@
         
         if (message.messageType == QMMessageTypeContactRequest) {
             // download user for contact request if needed
-            __weak __typeof(self)weakSelf = self;
-            [[[QMApi instance].usersService getUserWithID:message.senderID] continueWithBlock:^id(BFTask<QBUUser *> *task) {
-                //
-                [weakSelf showNotificationForMessage:message inDialogID:dialogID];
-                return nil;
-            }];
+            [self getUsersIfNeeded:@[@(message.senderID)] andShowNotificationForMessage:message];
+        } else if (message.dialogUpdateType == QMDialogUpdateTypeOccupants && message.addedOccupantsIDs.count > 0) {
+            // download users for added occupants if needed
+            [self getUsersIfNeeded:message.addedOccupantsIDs andShowNotificationForMessage:message];
         } else {
             
             [self showNotificationForMessage:message inDialogID:dialogID];
