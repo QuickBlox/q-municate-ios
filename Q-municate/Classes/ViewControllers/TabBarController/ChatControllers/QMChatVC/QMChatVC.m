@@ -65,6 +65,8 @@ AGEmojiKeyboardViewDelegate
 @property (nonatomic, assign) BOOL shouldUpdateDialogAfterReturnFromGroupInfo;
 @property (nonatomic, assign) BOOL isSendingAttachment;
 
+@property (nonatomic, strong) NSMutableSet *detailedCells;
+
 @end
 
 @implementation QMChatVC
@@ -110,6 +112,7 @@ AGEmojiKeyboardViewDelegate
     self.inputToolbar.contentView.textView.placeHolder = @"Message";
     
     self.stringBuilder = [QMMessageStatusStringBuilder new];
+    self.detailedCells = [NSMutableSet set];
     
     // emoji button init
     [self configureEmojiButton];
@@ -609,28 +612,24 @@ AGEmojiKeyboardViewDelegate
     
     QBChatMessage *item = [self messageForIndexPath:indexPath];
     
-    NSAttributedString *attributedString = [NSAttributedString new];
-    if ([item senderID] == self.senderID) {
-        attributedString = [self bottomLabelAttributedStringForItem:item];
-    } else {
-        if (self.dialog.type != QBChatDialogTypePrivate) {
-            CGSize topLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:[self topLabelAttributedStringForItem:item]
-                                                           withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
-                                                    limitedToNumberOfLines:0];
-            CGSize bottomLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:[self bottomLabelAttributedStringForItem:item]
-                                                           withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
-                                                    limitedToNumberOfLines:0];
-            
-            return topLabelSize.width > bottomLabelSize.width ? topLabelSize.width : bottomLabelSize.width;
-        }
-        else {
-            attributedString = [self bottomLabelAttributedStringForItem:item];
-        }
+    CGSize size = CGSizeZero;
+    if ([self.detailedCells containsObject:item.ID]) {
+        
+        size = [TTTAttributedLabel sizeThatFitsAttributedString:[self bottomLabelAttributedStringForItem:item]
+                                                withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
+                                         limitedToNumberOfLines:0];
     }
     
-    CGSize size = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
-                                                   withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
-                                            limitedToNumberOfLines:0];
+    if (self.dialog.type != QBChatDialogTypePrivate) {
+        
+        CGSize topLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:[self topLabelAttributedStringForItem:item]
+                                                               withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
+                                                        limitedToNumberOfLines:0];
+        
+        if (topLabelSize.width > size.width) {
+            size = topLabelSize;
+        }
+    }
     
     return size.width;
 }
@@ -683,12 +682,8 @@ AGEmojiKeyboardViewDelegate
     
     if (class == [QMChatOutgoingCell class] ||
         class == [QMChatAttachmentOutgoingCell class]) {
-        NSAttributedString* bottomAttributedString = [self bottomLabelAttributedStringForItem:item];
-        CGSize size = [TTTAttributedLabel sizeThatFitsAttributedString:bottomAttributedString
-                                                       withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
-                                                limitedToNumberOfLines:0];
+        
         layoutModel.avatarSize = (CGSize){0.0, 0.0};
-        layoutModel.bottomLabelHeight = ceilf(size.height);
     } else if (class == [QMChatAttachmentIncomingCell class] ||
                class == [QMChatIncomingCell class]) {
         
@@ -707,6 +702,14 @@ AGEmojiKeyboardViewDelegate
         
         layoutModel.spaceBetweenTopLabelAndTextView = 5.0f;
     }
+    
+    CGSize size = CGSizeZero;
+    if ([self.detailedCells containsObject:item.ID] || class == [QMChatAttachmentIncomingCell class] || class == [QMChatAttachmentOutgoingCell class]) {
+        size = [TTTAttributedLabel sizeThatFitsAttributedString:[self bottomLabelAttributedStringForItem:item]
+                                                withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
+                                         limitedToNumberOfLines:0];
+    }
+    layoutModel.bottomLabelHeight = ceilf(size.height);
     
     layoutModel.spaceBetweenTextViewAndBottomLabel = 5.0f;
     
@@ -1001,13 +1004,26 @@ AGEmojiKeyboardViewDelegate
 }
 
 - (void)chatCellDidTapContainer:(QMChatCell *)cell {
-    if ([cell isKindOfClass:[QMChatAttachmentIncomingCell class]] || [cell isKindOfClass:[QMChatAttachmentOutgoingCell class]]) {
+    if ([cell conformsToProtocol:@protocol(QMChatAttachmentCell)]) {
         UIImage *attachmentImage = [(QMChatAttachmentIncomingCell *)cell attachmentImageView].image;
         if (attachmentImage != nil) {
             IDMPhoto *photo = [IDMPhoto photoWithImage:attachmentImage];
             IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:@[photo]];
             [self presentViewController:browser animated:YES completion:nil];
         }
+    } else if ([cell isKindOfClass:[QMChatOutgoingCell class]] || [cell isKindOfClass:[QMChatIncomingCell class]]) {
+        
+        NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+        QBChatMessage *currentMessage = [self messageForIndexPath:indexPath];
+        
+        if ([self.detailedCells containsObject:currentMessage.ID]) {
+            [self.detailedCells removeObject:currentMessage.ID];
+        } else {
+            [self.detailedCells addObject:currentMessage.ID];
+        }
+        
+        [self.collectionView.collectionViewLayout removeSizeFromCacheForItemID:currentMessage.ID];
+        [self.collectionView performBatchUpdates:nil completion:nil];
     }
 }
 
