@@ -280,21 +280,15 @@ NSString *const kUserName = @"UserName";
     self.currentlyPresentedViewController = navVC;
 }
 
-- (void)sessionWillClose:(QBRTCSession *)session {
-    if( self.session != session ){
-        // may be we rejected someone else call while we are talking with another person
-        return;
-    }
-    [self stopAllSounds];
-    ILog(@"session will close");
-    [SVProgressHUD dismiss];
-}
-
 - (void)sessionDidClose:(QBRTCSession *)session {
     if( self.session != session ){
         // may be we rejected someone else call while we are talking with another person
         return;
     }
+    
+    [self stopAllSounds];
+    ILog(@"session will close");
+    [SVProgressHUD dismiss];
     
     [[QBRTCSoundRouter instance] deinitialize];
     

@@ -202,12 +202,7 @@
     }
 }
 
-- (void)sessionWillClose:(QBRTCSession *)session {
-    
-    if( self.session != session ){
-        return;
-    }
-    
+- (void)sessionDidClose:(QBRTCSession *)session {
     QBRTCConnectionState state = [session connectionStateForUser:@(self.opponent.ID)];
     
     if( state == QBRTCConnectionFailed ){
@@ -222,9 +217,7 @@
     else if( state != QBRTCConnectionUnknown && state != QBRTCConnectionClosed ){
         [self callStoppedByOpponentForReason:nil];
     }
-}
-
-- (void)sessionDidClose:(QBRTCSession *)session {
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionRouteChangeNotification object:nil];
 }
 

@@ -119,7 +119,7 @@
     [QBRTCClient.instance removeDelegate:self];
 }
 
-- (void)sessionWillClose:(QBRTCSession *)session {
+- (void)sessionDidClose:(QBRTCSession *)session {
     if( self.session == session ) {
         [self cleanUp];
     }
