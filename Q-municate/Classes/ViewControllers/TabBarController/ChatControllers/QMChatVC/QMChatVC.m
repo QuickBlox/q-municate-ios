@@ -207,9 +207,6 @@ AGEmojiKeyboardViewDelegate
     }
     
     [[QMApi instance].settingsManager setDialogWithIDisActive:self.dialog.ID];
-    
-    [[QMApi instance].chatService addDelegate:self];
-    [QMApi instance].chatService.chatAttachmentService.delegate = self;
     [[QMApi instance].contactListService addDelegate:self];
     self.actionsHandler = self; // contact request delegate
     
@@ -230,7 +227,7 @@ AGEmojiKeyboardViewDelegate
     // Retrieving messages
     if ([[self storedMessages] count] > 0 && self.totalMessagesCount == 0) {
         // inserting all messages from memory storage
-        [self insertMessagesToTheBottomAnimated:[self storedMessages]];
+        [self updateDataSourceWithMessages:[self storedMessages]];
         [self refreshMessagesShowingProgress:NO];
     } else {
         if (self.totalMessagesCount == 0) [SVProgressHUD showWithStatus:@"Refreshing..." maskType:SVProgressHUDMaskTypeClear];
@@ -245,6 +242,17 @@ AGEmojiKeyboardViewDelegate
             [strongSelf refreshMessagesShowingProgress:NO];
         }];
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    if (self.totalMessagesCount != [self storedMessages].count) {
+        [self insertMessagesToTheBottomAnimated:[self storedMessages]];
+    }
+    
+    [[QMApi instance].chatService addDelegate:self];
+    [QMApi instance].chatService.chatAttachmentService.delegate = self;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
