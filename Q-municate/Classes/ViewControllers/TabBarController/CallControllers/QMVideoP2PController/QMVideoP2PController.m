@@ -97,7 +97,6 @@ NSString* machineName() {
 }
 
 - (void)denySendingLocalVideoTrack {
-//    [self.session.localMediaStream.videoTrack setEnabled:NO];
     [[self.myView.layer.sublayers objectAtIndex:0] removeFromSuperlayer];
     // it is a view with cam_off image that we need to display when cam is off
     [self.camOffView setHidden:NO];
@@ -116,7 +115,6 @@ NSString* machineName() {
     
     if (session == self.session) {
         self.opponentVideoTrack = videoTrack;
-        
         [self.opponentsView setVideoTrack:self.opponentVideoTrack];
     }
 }

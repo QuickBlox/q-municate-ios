@@ -151,12 +151,6 @@
 - (IBAction)videoTapped:(id)sender {
     [self.session.localMediaStream.videoTrack setEnabled:!self.session.localMediaStream.videoTrack.enabled];
     
-    if (self.session.localMediaStream.videoTrack.enabled) {
-        [[QMApi instance].avCallManager.cameraCapture startSession];
-    } else {
-        [[QMApi instance].avCallManager.cameraCapture stopSession];
-    }
-    
     [(IAButton *)sender setSelected:!self.session.localMediaStream.videoTrack.enabled];
 }
 
