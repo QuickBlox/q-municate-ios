@@ -125,7 +125,11 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
             if ([dialogWithIDWasEntered isEqualToString:dialogID]) return;
             
             [[QMApi instance] setPushNotification:userInfo];
-            [[QMApi instance] handlePushNotificationWithDelegate:self];
+            
+            // calling dispatch async for push notification handling to have priority in main queue
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[QMApi instance] handlePushNotificationWithDelegate:self];
+            });
         }
         ILog(@"Push was received. User info: %@", userInfo);
     }
