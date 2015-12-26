@@ -195,9 +195,9 @@ AGEmojiKeyboardViewDelegate
         if (updatedDialog != nil) {
             self.dialog = updatedDialog;
             self.title = self.dialog.name;
-            [[QMApi instance].chatService joinToGroupDialog:self.dialog failed:^(NSError *error) {
+            [[QMApi instance].chatService joinToGroupDialog:self.dialog completion:^(NSError * _Nullable error) {
                 //
-                NSLog(@"Failed to join group dialog, because: %@", error.localizedDescription);
+                if (error != nil) NSLog(@"Failed to join group dialog, because: %@", error.localizedDescription);
             }];
         }
         else {
