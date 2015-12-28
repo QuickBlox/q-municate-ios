@@ -278,7 +278,7 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
         return;
     }
     
-    NSMutableArray *sectionsToInsert = [NSMutableArray array];
+    NSUInteger sectionsToInsert = 0;
     NSMutableArray *indexPathToInsert = [NSMutableArray array];
     
     for (QBChatMessage *message in messages) {
@@ -292,11 +292,18 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
         
         if ([message.dateSent timeIntervalSinceDate:[firstSection firstMessageDate]] > self.timeIntervalBetweenSections || firstSection == nil) {
             
+            // move previous sections
+            NSArray *indexPathToInsert_t = [indexPathToInsert copy];
+            for (NSIndexPath *indexPath in indexPathToInsert_t) {
+                NSIndexPath *updatedIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section + 1];
+                [indexPathToInsert replaceObjectAtIndex:[indexPathToInsert indexOfObject:indexPath] withObject:updatedIndexPath];
+            }
+            
             QMChatSection* newSection = [QMChatSection chatSectionWithMessage:message];
             [self.chatSections insertObject:newSection atIndex:0];
             
             sectionIndex = [self.chatSections indexOfObject:newSection];
-            [sectionsToInsert addObject:@(sectionIndex)];
+            sectionsToInsert++;
         } else {
             [firstSection.messages insertObject:message atIndex:0];
         }
@@ -306,7 +313,10 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
 
     }
     
-    NSIndexSet *sectionsIndexSet = [self indexSetForSectionsToInsert:sectionsToInsert];
+    NSMutableIndexSet *sectionsIndexSet = [NSMutableIndexSet indexSet];
+    for (NSUInteger i = 0; i < sectionsToInsert; i++) {
+        [sectionsIndexSet addIndex:i];
+    }
     
     __weak __typeof(self)weakSelf = self;
     [self.collectionView performBatchUpdates:^{
