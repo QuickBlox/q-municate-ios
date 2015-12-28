@@ -20,11 +20,14 @@
     __weak typeof(self) weakSelf = self;
     [self.contactListService addUserToContactListRequest:user completion:^(BOOL success) {
         //
-        [weakSelf createPrivateChatDialogIfNeededWithOpponent:user completion:^(QBChatDialog *chatDialog) {
+        [[weakSelf.chatService createPrivateChatDialogWithOpponent:user] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+            //
             [weakSelf sendContactRequestSendNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
                 
-                if (completion) completion(success, notification);
+                if (completion) completion(task.isCompleted, notification);
             }];
+            
+            return nil;
         }];
     }];
 }

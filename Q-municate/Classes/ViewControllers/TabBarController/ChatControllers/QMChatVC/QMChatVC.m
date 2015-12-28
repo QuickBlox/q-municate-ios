@@ -159,17 +159,18 @@ AGEmojiKeyboardViewDelegate
     
     __weak __typeof(self)weakSelf = self;
     // Retrieving message from Quickblox REST history and cache.
-    [[QMApi instance].chatService messagesWithChatDialogID:self.dialog.ID completion:^(QBResponse *response, NSArray *messages) {
-        if (response.success) {
+    [[[QMApi instance].chatService messagesWithChatDialogID:self.dialog.ID] continueWithBlock:^id _Nullable(BFTask<NSArray<QBChatMessage *> *> * _Nonnull task) {
+        //
+        if (task.error != nil) {
+            [SVProgressHUD showErrorWithStatus:@"Can not refresh messages"];
+            NSLog(@"can not refresh messages: %@", task.error);
+        } else {
             
             __typeof(weakSelf)strongSelf = weakSelf;
-            if ([messages count] > 0) [strongSelf insertMessagesToTheBottomAnimated:messages];
+            if ([task.result count] > 0) [strongSelf insertMessagesToTheBottomAnimated:task.result];
             if (!strongSelf.isSendingAttachment) [SVProgressHUD dismiss];
-            
-        } else {
-            [SVProgressHUD showErrorWithStatus:@"Can not refresh messages"];
-            NSLog(@"can not refresh messages: %@", response.error.error);
         }
+        return nil;
     }];
 }
 

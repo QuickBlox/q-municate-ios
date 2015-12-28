@@ -56,10 +56,6 @@
 
 #pragma mark - ChatDialog
 
-NSString const *kQMEditDialogExtendedNameParameter = @"name";
-NSString const *kQMEditDialogExtendedPushOccupantsParameter = @"push[occupants_ids][]";
-NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupants_ids][]";
-
 - (void)fetchAllDialogs:(void(^)(void))completion {
 
     __weak __typeof(self)weakSelf = self;
@@ -85,83 +81,62 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
     }
 }
 
-- (void)fetchChatDialogWithID:(NSString *)dialogID completion:(void(^)(QBChatDialog *chatDialog))completion
-{
-    
-    __weak typeof(self)weakSelf = self;
-    
-    [self.chatService fetchDialogWithID:dialogID completion:^(QBChatDialog *dialog) {
-        //
-        if (!dialog) {
-            if (completion) completion(dialog);
-            return;
-        }
-        [[weakSelf.usersService getUsersWithIDs:dialog.occupantIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
-            if (completion) completion(dialog);
-            return nil;
-        }];
-    }];
-}
-
-
 #pragma mark - Create Chat Dialogs
-
-
-- (void)createPrivateChatDialogIfNeededWithOpponent:(QBUUser *)opponent completion:(void(^)(QBChatDialog *chatDialog))completion
-{
-    [self.chatService createPrivateChatDialogWithOpponent:opponent completion:^(QBResponse *response, QBChatDialog *createdDialog) {
-        //
-        if (completion) completion(createdDialog);
-    }];
-}
 
 - (void)createGroupChatDialogWithName:(NSString *)name occupants:(NSArray *)occupants completion:(void(^)(QBChatDialog *chatDialog))completion {
     
     __weak typeof(self)weakSelf = self;
-    [self.chatService createGroupChatDialogWithName:name photo:nil occupants:occupants completion:^(QBResponse *response, QBChatDialog *createdDialog) {
-        
-        if (response.success) {
+    [[self.chatService createGroupChatDialogWithName:name photo:nil occupants:occupants] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+        //
+        if (task.error != nil) {
+            
+            if (completion) completion(nil);
+        } else {
             
             __typeof(weakSelf)strongSelf = weakSelf;
             NSArray *occupantsIDs = [strongSelf idsWithUsers:occupants];
             
-            [strongSelf.chatService sendSystemMessageAboutAddingToDialog:createdDialog toUsersIDs:occupantsIDs completion:^(NSError * _Nullable systemMessageError) {
+            [strongSelf.chatService sendSystemMessageAboutAddingToDialog:task.result toUsersIDs:occupantsIDs completion:^(NSError *systemMessageError) {
                 //
                 [strongSelf.chatService sendNotificationMessageAboutAddingOccupants:occupantsIDs
-                                                                           toDialog:createdDialog
+                                                                           toDialog:task.result
                                                                withNotificationText:kDialogsUpdateNotificationMessage
-                                                                         completion:^(NSError * _Nullable error) {
+                                                                         completion:^(NSError *error) {
                                                                              //
-                                                                             if (completion) completion(createdDialog);
+                                                                             if (completion) completion(task.result);
                                                                          }];
             }];
-        } else {
-            if (completion) completion(nil);
+            
         }
+        
+        return nil;
     }];
 }
 
 
 #pragma mark - Edit dialog methods
 
-- (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion {
+- (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(void (^)(QBChatDialog *updatedDialog))completion {
     
     __weak __typeof(self)weakSelf = self;
-    [self.chatService changeDialogName:dialogName forChatDialog:chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+    [[self.chatService changeDialogName:dialogName forChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
         //
-        if (response.success) {
-            
-            [weakSelf.chatService sendNotificationMessageAboutChangingDialogName:updatedDialog
+        if (task.error != nil) {
+            if (completion) completion(nil);
+        } else {
+            [weakSelf.chatService sendNotificationMessageAboutChangingDialogName:task.result
                                                             withNotificationText:kDialogsUpdateNotificationMessage
                                                                       completion:^(NSError * _Nullable error) {
                                                                           //
                                                                       }];
+            if (completion) completion(task.result);
         }
-        if (completion) completion(response,updatedDialog);
+        
+        return nil;
     }];
 }
 
-- (void)changeAvatar:(UIImage *)avatar forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion
+- (void)changeAvatar:(UIImage *)avatar forChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(QBChatDialog *updatedDialog))completion
 {
     __weak typeof(self)weakSelf = self;
     [self.contentService uploadPNGImage:avatar progress:^(float progress) {
@@ -174,44 +149,49 @@ NSString const *kQMEditDialogExtendedPullOccupantsParameter = @"pull_all[occupan
         }
         
         __typeof(weakSelf)strongSelf = weakSelf;
-        [strongSelf.chatService changeDialogAvatar:blob.publicUrl forChatDialog:chatDialog completion:^(QBResponse *updateResponse, QBChatDialog *updatedDialog) {
+        [[strongSelf.chatService changeDialogAvatar:blob.publicUrl forChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
             //
-            if (updateResponse.success) {
-                // send notification:
-                [strongSelf.chatService sendNotificationMessageAboutChangingDialogPhoto:updatedDialog
+            if (task.error != nil) {
+                if (completion) completion(nil);
+            } else {
+                [strongSelf.chatService sendNotificationMessageAboutChangingDialogPhoto:task.result
                                                                    withNotificationText:kDialogsUpdateNotificationMessage
                                                                              completion:^(NSError * _Nullable error) {
                                                                                  //
-                                                                                 if (completion) completion(updateResponse, updatedDialog);
                                                                              }];
+                if (completion) completion(task.result);
             }
-
+            
+            return nil;
         }];
     }];
 }
 
-- (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion {
+- (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(QBChatDialog *updatedDialog))completion {
     
     NSArray *occupantsToJoinIDs = [self idsWithUsers:occupants];
     
     __weak __typeof(self)weakSelf = self;
-    [self.chatService joinOccupantsWithIDs:occupantsToJoinIDs toChatDialog:chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+    [[self.chatService joinOccupantsWithIDs:occupantsToJoinIDs toChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
         //
-        if (response.success) {
+        if (task.error != nil) {
+            if (completion) completion(nil);
+        } else {
+            
             __typeof(weakSelf)strongSelf = weakSelf;
             [strongSelf.chatService sendSystemMessageAboutAddingToDialog:chatDialog toUsersIDs:occupantsToJoinIDs completion:^(NSError * _Nullable systemMessageError) {
                 //
                 [strongSelf.chatService sendNotificationMessageAboutAddingOccupants:occupantsToJoinIDs
-                                                                           toDialog:updatedDialog
+                                                                           toDialog:task.result
                                                                withNotificationText:kDialogsUpdateNotificationMessage
                                                                          completion:^(NSError * _Nullable error) {
                                                                              //
-                                                                             if (completion) completion(response,updatedDialog);
                                                                          }];
+                if (completion) completion(task.result);
             }];
-        } else {
-            completion (response, nil);
         }
+        
+        return nil;
     }];
 }
 

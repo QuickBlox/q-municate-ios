@@ -165,12 +165,17 @@ QMContactListServiceDelegate
 #endif
             __weak __typeof(self)weakSelf = self;
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-            [[QMApi instance] createPrivateChatDialogIfNeededWithOpponent:self.selectedUser completion:^(QBChatDialog *chatDialog) {
-                
-                if (chatDialog) {
-                    [weakSelf performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatDialog];
+            
+            [[[QMApi instance].chatService createPrivateChatDialogWithOpponent:self.selectedUser] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+                //
+                if (task.error != nil) {
+                    [SVProgressHUD showErrorWithStatus:task.error.localizedRecoverySuggestion];
+                } else {
+                    [weakSelf performSegueWithIdentifier:kChatViewSegueIdentifier sender:task.result];
+                    [SVProgressHUD dismiss];
                 }
-                [SVProgressHUD dismiss];
+                
+                return nil;
             }];
             
         } break;

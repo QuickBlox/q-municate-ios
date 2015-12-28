@@ -96,48 +96,51 @@
     NSString *dialogID = self.pushNotification[kPushNotificationDialogIDKey];
     self.pushNotification = nil;
     
-    __weak __typeof(self)weakSelf = self;
-    [self.chatService fetchDialogWithID:dialogID completion:^(QBChatDialog *chatDialog) {
+    @weakify(self);
+    [[[self.chatService fetchDialogWithID:dialogID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
         //
-        if (chatDialog != nil) {
-            //
-            [[weakSelf.usersService getUsersWithIDs:chatDialog.occupantIDs] continueWithBlock:^id(BFTask *task) {
+        @strongify(self);
+        if (task.result != nil) {
+            // load users if needed
+            [[self.usersService getUsersWithIDs:task.result.occupantIDs] continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull usersTask) {
                 //
                 if ([delegate respondsToSelector:@selector(notificationHandlerDidSucceedFetchingDialog:)]) {
-                    [delegate notificationHandlerDidSucceedFetchingDialog:chatDialog];
+                    [delegate notificationHandlerDidSucceedFetchingDialog:task.result];
                 }
-
+                return nil;
+            }];
+            
+            return nil;
+        }
+        
+        if ([delegate respondsToSelector:@selector(notificationHandlerDidStartLoadingDialogFromServer)]) {
+            [delegate notificationHandlerDidStartLoadingDialogFromServer];
+        }
+        
+        return [self.chatService loadDialogWithID:dialogID];
+    }] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+        //
+        if ([delegate respondsToSelector:@selector(notificationHandlerDidFinishLoadingDialogFromServer)]) {
+            [delegate notificationHandlerDidFinishLoadingDialogFromServer];
+        }
+        
+        if (task.error != nil || task.result == nil) {
+            if ([delegate respondsToSelector:@selector(notificationHandlerDidFailFetchingDialog)]) {
+                [delegate notificationHandlerDidFailFetchingDialog];
+            }
+        } else {
+            @strongify(self);
+            [[self.usersService getUsersWithIDs:task.result.occupantIDs] continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull usersTask) {
+                //
+                if ([delegate respondsToSelector:@selector(notificationHandlerDidSucceedFetchingDialog:)]) {
+                    [delegate notificationHandlerDidSucceedFetchingDialog:task.result];
+                }
+                
                 return nil;
             }];
         }
-        else {
-            //
-            if ([delegate respondsToSelector:@selector(notificationHandlerDidStartLoadingDialogFromServer)]) {
-                [delegate notificationHandlerDidStartLoadingDialogFromServer];
-            }
-            [weakSelf.chatService loadDialogWithID:dialogID completion:^(QBChatDialog *loadedDialog) {
-                //
-                if ([delegate respondsToSelector:@selector(notificationHandlerDidFinishLoadingDialogFromServer)]) {
-                    [delegate notificationHandlerDidFinishLoadingDialogFromServer];
-                }
-                if (loadedDialog != nil) {
-                    //
-                    [[weakSelf.usersService getUsersWithIDs:chatDialog.occupantIDs] continueWithBlock:^id(BFTask *task) {
-                        //
-                        if ([delegate respondsToSelector:@selector(notificationHandlerDidSucceedFetchingDialog:)]) {
-                            [delegate notificationHandlerDidSucceedFetchingDialog:loadedDialog];
-                        }
-                        return nil;
-                    }];
-                }
-                else {
-                    //
-                    if ([delegate respondsToSelector:@selector(notificationHandlerDidFailFetchingDialog)]) {
-                        [delegate notificationHandlerDidFailFetchingDialog];
-                    }
-                }
-            }];
-        }
+        
+        return nil;
     }];
 }
 
