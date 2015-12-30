@@ -8,7 +8,6 @@
 
 #import "QMApi.h"
 #import "QMSettingsManager.h"
-#import "QMApi+Notifications.m"
 #import "QMContentService.h"
 #import "QMAVCallManager.h"
 #import "QMChatUtils.h"
