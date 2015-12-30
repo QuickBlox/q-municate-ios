@@ -25,7 +25,7 @@
 - (void)setBadgeCount:(NSUInteger)badgeCount {
     _badgeCount = badgeCount;
 
-    self.badgeCounter.text = [NSString stringWithFormat:@"%d", badgeCount];
+    self.badgeCounter.text = [NSString stringWithFormat:@"%tu", badgeCount];
 }
 
 - (void)setCheck:(BOOL)check {
