@@ -40,10 +40,10 @@
             QBChatDialog *dialog = [weakSelf.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
             [weakSelf deleteChatDialog:dialog completion:^(BOOL succeed) {
                 if (!succeed) {
-                    completion(succeed, nil);
+                    if (completion) completion(succeed, nil);
                     return;
                 }
-                completion(success, notification);
+                if (completion) completion(success, notification);
             }];
         }];
 
@@ -52,22 +52,24 @@
 
 - (void)confirmAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
+    __weak __typeof(self)weakSelf = self;
     [self.contactListService acceptContactRequest:user.ID completion:^(BOOL success) {
         //
-        [self.chatService notifyOponentAboutAcceptingContactRequest:YES opponentID:user.ID completion:^(NSError *error) {
+        [weakSelf.chatService sendMessageAboutAcceptingContactRequest:YES toOpponentID:user.ID completion:^(NSError * _Nullable error) {
             //
-            completion(error == nil ? YES : NO);
+            if (completion) completion(error == nil ? YES : NO);
         }];
     }];
 }
 
 - (void)rejectAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
+    __weak __typeof(self)weakSelf = self;
     [self.contactListService rejectContactRequest:user.ID completion:^(BOOL success) {
         //
-        [self.chatService notifyOponentAboutAcceptingContactRequest:NO opponentID:user.ID completion:^(NSError *error) {
+        [weakSelf.chatService sendMessageAboutAcceptingContactRequest:NO toOpponentID:user.ID completion:^(NSError * _Nullable error) {
             //
-            completion(error == nil ? YES : NO);
+            if (completion) completion(error == nil ? YES : NO);
         }];
     }];
 }
@@ -86,7 +88,7 @@
 }
 
 - (QBUUser *)userWithID:(NSUInteger)userID {
-    return [self.contactListService.usersMemoryStorage userWithID:userID];
+    return [self.usersService.usersMemoryStorage userWithID:userID];
 }
 
 - (NSArray *)usersWithIDs:(NSArray *)ids {
@@ -178,10 +180,10 @@
             weakSelf.currentUser.password = updateParams.password;
             [weakSelf.settingsManager setLogin:user.email andPassword:updateParams.password];
         }
-        completion(response.success);
+        if (completion) completion(response.success);
     } errorBlock:^(QBResponse *response) {
         //
-        completion(response.success);
+        if (completion) completion(response.success);
     }];
 }
 
@@ -208,10 +210,10 @@
             if (response.success) {
                 weakSelf.currentUser.password = password;
             }
-            completion(response.success);
+            if (completion) completion(response.success);
         } errorBlock:^(QBResponse *response) {
             //
-            completion(response.success);
+            if (completion) completion(response.success);
         }];
     };
     
@@ -252,22 +254,23 @@
             if (completion) completion(NO);
             return;
         }
-        [weakSelf.contactListService retrieveUsersWithFacebookIDs:facebookFriendsIDs completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+        [[weakSelf.usersService getUsersWithFacebookIDs:facebookFriendsIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
             //
-            if (!response.success) {
+            if (task.error != nil) {
                 if (completion) completion(NO);
-                return;
+                return nil;
             }
-            if ([users count] == 0) {
+            if ([task.result count] == 0) {
                 if (completion) completion(NO);
-                return;
+                return nil;
             }
             
             // sending contact requests:
-            for (QBUUser *user in users) {
+            for (QBUUser *user in task.result) {
                 [weakSelf addUserToContactList:user completion:nil];
             }
             if (completion) completion(YES);
+            return nil;
         }];
     }];
 }
@@ -276,6 +279,7 @@
 {
     __weak __typeof(self)weakSelf = self;
     [QMAddressBook getContactsWithEmailsWithCompletionBlock:^(NSArray *contacts, BOOL success, NSError *error) {
+        __typeof(self) strongSelf = weakSelf;
         
         if ([contacts count] == 0) {
             completionBlock(NO, error);
@@ -287,23 +291,26 @@
         }
         
         // post request for emails to QB server:
-        [weakSelf.contactListService retrieveUsersWithEmails:emails completion:^(QBResponse *response, QBGeneralResponsePage *page, NSArray *users) {
+        [[strongSelf.usersService getUsersWithEmails:emails] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
             //
-            if (!response.success) {
-                completionBlock(NO, nil);
-                return;
+            if (task.error != nil) {
+                if (completionBlock) completionBlock(NO, nil);
+                return nil;
             }
             
-            if ([users count] == 0) {
-                completionBlock(NO, nil);
-                return;
+            if ([task.result count] == 0) {
+                if (completionBlock) completionBlock(NO, nil);
+                return nil;
             }
             
             // sending contact requests:
-            for (QBUUser *user in users) {
-                [weakSelf addUserToContactList:user completion:^(BOOL successed, QBChatMessage *notification) {}];
+            for (QBUUser *user in task.result) {
+                [weakSelf addUserToContactList:user completion:nil];
             }
-            completionBlock(YES, nil);
+            
+            if (completionBlock) completionBlock(YES, nil);
+            
+            return nil;
         }];
     }];
 }

@@ -76,6 +76,8 @@
 		580D34DF1BBFF5850034813A /* UIImage+fixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 580D34DE1BBFF5850034813A /* UIImage+fixOrientation.m */; };
 		580D34E21BC027BD0034813A /* QMSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580D34E11BC027BD0034813A /* QMSplashViewController.m */; };
 		581C2C4F1BB6B4740047CEA6 /* QMMessageStatusStringBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 581C2C4E1BB6B4740047CEA6 /* QMMessageStatusStringBuilder.m */; };
+		581DA1D01BF3732900F75D8B /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1CF1BF3732900F75D8B /* libc++.tbd */; };
+		581DA1D21BF373A100F75D8B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1D11BF373A100F75D8B /* VideoToolbox.framework */; };
 		5861E25D1BB40D7E00C9EB68 /* QMApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 5861E25C1BB40D7E00C9EB68 /* QMApi.m */; };
 		589407B41BB958DE00C1CA78 /* QBUpdateUserParameters+CustomData.m in Sources */ = {isa = PBXBuildFile; fileRef = 589407B31BB958DE00C1CA78 /* QBUpdateUserParameters+CustomData.m */; };
 		589F40991BB03DA30054FA22 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 589F40981BB03DA30054FA22 /* Fabric.framework */; };
@@ -86,13 +88,13 @@
 		58B414AE1BB44AB000613892 /* QMApi+Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B414AD1BB44AB000613892 /* QMApi+Facebook.m */; };
 		58B414B01BB44AF700613892 /* QMApi+Calls.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B414AF1BB44AF700613892 /* QMApi+Calls.m */; };
 		58B414B21BB44B4400613892 /* QMApi+Permissions.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B414B11BB44B4400613892 /* QMApi+Permissions.m */; };
+		58CCD2AE1BE778DD00E99C16 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58CCD2AD1BE778DD00E99C16 /* Quickblox.framework */; };
 		58CEA1BB1BB553C400B866DD /* UIImage+TintColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CEA1BA1BB553C400B866DD /* UIImage+TintColor.m */; };
 		58CEA1C31BB591A200B866DD /* QMChatButtonsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CEA1C21BB591A200B866DD /* QMChatButtonsFactory.m */; };
 		58CEA1C61BB5957C00B866DD /* QMChatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CEA1C51BB5957C00B866DD /* QMChatVC.m */; };
 		58CEA1C91BB595C700B866DD /* QMAVCallManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CEA1C81BB595C700B866DD /* QMAVCallManager.m */; };
 		58D1CED91BC668DD00591EA9 /* QMViewControllersFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1CED81BC668DD00591EA9 /* QMViewControllersFactory.m */; };
 		58D81C231BBA86920046B550 /* QuickbloxWebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D81C221BBA86920046B550 /* QuickbloxWebRTC.framework */; };
-		58E81F1E1BB142AC00D29962 /* QBChatMessage+TextEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 58E81F1D1BB142AC00D29962 /* QBChatMessage+TextEncoding.m */; };
 		69007BD319B6193900E3A925 /* QMNoResultsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69007BD219B6193900E3A925 /* QMNoResultsCell.xib */; };
 		690A271518CA0F35003D6B80 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A271418CA0F35003D6B80 /* AddressBook.framework */; };
 		693206EA1962BCC300B15EF9 /* QMBaseCallsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 693206E91962BCC300B15EF9 /* QMBaseCallsController.m */; };
@@ -286,6 +288,8 @@
 		580D34E11BC027BD0034813A /* QMSplashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMSplashViewController.m; path = "Q-municate/Classes/ViewControllers/AuthViewControllers/QMSplashVC/QMSplashViewController.m"; sourceTree = SOURCE_ROOT; };
 		581C2C4D1BB6B4740047CEA6 /* QMMessageStatusStringBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMMessageStatusStringBuilder.h; path = QMMessageStatusStringBuilder/QMMessageStatusStringBuilder.h; sourceTree = "<group>"; };
 		581C2C4E1BB6B4740047CEA6 /* QMMessageStatusStringBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMMessageStatusStringBuilder.m; path = QMMessageStatusStringBuilder/QMMessageStatusStringBuilder.m; sourceTree = "<group>"; };
+		581DA1CF1BF3732900F75D8B /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		581DA1D11BF373A100F75D8B /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		5861E25B1BB40D7E00C9EB68 /* QMApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMApi.h; sourceTree = "<group>"; };
 		5861E25C1BB40D7E00C9EB68 /* QMApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMApi.m; sourceTree = "<group>"; };
 		589407B21BB958DE00C1CA78 /* QBUpdateUserParameters+CustomData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBUpdateUserParameters+CustomData.h"; sourceTree = "<group>"; };
@@ -298,6 +302,7 @@
 		58B414AD1BB44AB000613892 /* QMApi+Facebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Facebook.m"; sourceTree = "<group>"; };
 		58B414AF1BB44AF700613892 /* QMApi+Calls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Calls.m"; sourceTree = "<group>"; };
 		58B414B11BB44B4400613892 /* QMApi+Permissions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Permissions.m"; sourceTree = "<group>"; };
+		58CCD2AD1BE778DD00E99C16 /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quickblox.framework; path = External/Quickblox.framework; sourceTree = "<group>"; };
 		58CEA1B91BB553C400B866DD /* UIImage+TintColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+TintColor.h"; sourceTree = "<group>"; };
 		58CEA1BA1BB553C400B866DD /* UIImage+TintColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+TintColor.m"; sourceTree = "<group>"; };
 		58CEA1C11BB591A200B866DD /* QMChatButtonsFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMChatButtonsFactory.h; path = QMChatButtonsFactory/QMChatButtonsFactory.h; sourceTree = "<group>"; };
@@ -309,8 +314,6 @@
 		58D1CED71BC668DD00591EA9 /* QMViewControllersFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMViewControllersFactory.h; path = QMViewControllersFactory/QMViewControllersFactory.h; sourceTree = "<group>"; };
 		58D1CED81BC668DD00591EA9 /* QMViewControllersFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMViewControllersFactory.m; path = QMViewControllersFactory/QMViewControllersFactory.m; sourceTree = "<group>"; };
 		58D81C221BBA86920046B550 /* QuickbloxWebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickbloxWebRTC.framework; path = External/QuickbloxWebRTC.framework; sourceTree = "<group>"; };
-		58E81F1C1BB142AC00D29962 /* QBChatMessage+TextEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBChatMessage+TextEncoding.h"; sourceTree = "<group>"; };
-		58E81F1D1BB142AC00D29962 /* QBChatMessage+TextEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QBChatMessage+TextEncoding.m"; sourceTree = "<group>"; };
 		58F437691BBC21810041C08D /* QMProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMProtocols.h; sourceTree = "<group>"; };
 		67976AC8FFE848A4B85EB2AF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		69007BD219B6193900E3A925 /* QMNoResultsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = QMNoResultsCell.xib; path = QMNoResultsCell/QMNoResultsCell.xib; sourceTree = "<group>"; };
@@ -369,6 +372,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				581DA1D21BF373A100F75D8B /* VideoToolbox.framework in Frameworks */,
+				581DA1D01BF3732900F75D8B /* libc++.tbd in Frameworks */,
+				58CCD2AE1BE778DD00E99C16 /* Quickblox.framework in Frameworks */,
 				24657EB71A84E97700009F91 /* libicucore.dylib in Frameworks */,
 				69A664E019BDB57700D3E0C7 /* libxml2.2.dylib in Frameworks */,
 				86FD874D1982512000B6FA43 /* GLKit.framework in Frameworks */,
@@ -1148,8 +1154,6 @@
 				580D34DE1BBFF5850034813A /* UIImage+fixOrientation.m */,
 				2494559619A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.h */,
 				2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */,
-				58E81F1C1BB142AC00D29962 /* QBChatMessage+TextEncoding.h */,
-				58E81F1D1BB142AC00D29962 /* QBChatMessage+TextEncoding.m */,
 				58CEA1B91BB553C400B866DD /* UIImage+TintColor.h */,
 				58CEA1BA1BB553C400B866DD /* UIImage+TintColor.m */,
 				589407B21BB958DE00C1CA78 /* QBUpdateUserParameters+CustomData.h */,
@@ -1212,6 +1216,9 @@
 		69D57E5418ACC11C00A9900A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				581DA1D11BF373A100F75D8B /* VideoToolbox.framework */,
+				581DA1CF1BF3732900F75D8B /* libc++.tbd */,
+				58CCD2AD1BE778DD00E99C16 /* Quickblox.framework */,
 				58D81C221BBA86920046B550 /* QuickbloxWebRTC.framework */,
 				24657EB61A84E97700009F91 /* libicucore.dylib */,
 				69A664DF19BDB57700D3E0C7 /* libxml2.2.dylib */,
@@ -1306,7 +1313,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = QM;
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = Quickblox;
 				TargetAttributes = {
 					69D57E5118ACC11C00A9900A = {
@@ -1448,7 +1455,6 @@
 				5861E25D1BB40D7E00C9EB68 /* QMApi.m in Sources */,
 				55CEABA0195DBCFA001A8ED6 /* QMInviteViewController.m in Sources */,
 				559BDFEA19618D3D000588FE /* QMWelcomeScreenViewController.m in Sources */,
-				58E81F1E1BB142AC00D29962 /* QBChatMessage+TextEncoding.m in Sources */,
 				55BBA760197327AB0040DB5C /* QMDialogsViewController.m in Sources */,
 				144069951AB04309007E6AD0 /* IAButton.m in Sources */,
 				55F4A3C8196FF0830068EBC3 /* QMFriendListCell.m in Sources */,
@@ -1527,6 +1533,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1577,7 +1584,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				PROVISIONING_PROFILE = "e72be3a3-6ef6-4658-a8af-66e250332625";
+				PROVISIONING_PROFILE = "5a0222f4-0cc9-49d2-bbeb-6bd82d6c47a0";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1587,7 +1594,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 01E0EAD58B177DC530737810 /* Pods.debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1616,6 +1622,7 @@
 					"-lstdc++",
 				);
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
 				PRODUCT_NAME = "Q-municate";
 				PROVISIONING_PROFILE = "";
 				REZ_SEARCH_PATHS = "$(inherited)";
@@ -1640,7 +1647,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E0ACA76B4B11E4DB839DD9F3 /* Pods.release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
@@ -1674,8 +1680,9 @@
 					"-lstdc++",
 				);
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "e72be3a3-6ef6-4658-a8af-66e250332625";
+				PROVISIONING_PROFILE = "5a0222f4-0cc9-49d2-bbeb-6bd82d6c47a0";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;

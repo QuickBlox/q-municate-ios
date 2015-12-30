@@ -113,6 +113,18 @@
     [sender resignFirstResponder];
 }
 
+- (BOOL)checkFullNameField {
+    
+    NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
+    if (self.fullNameFieldCache.length < 3 || self.fullNameFieldCache.length > 50 || [[self.fullNameFieldCache stringByTrimmingCharactersInSet:whiteSpaceSet] length] == 0) return NO;
+    
+    if ([self.fullNameFieldCache containsString:@"<"]) return NO;
+    if ([self.fullNameFieldCache containsString:@">"]) return NO;
+    if ([self.fullNameFieldCache containsString:@";"]) return NO;
+    
+    return YES;
+}
+
 - (IBAction)saveChanges:(id)sender {
     
     if (!QMApi.instance.isInternetConnected) {
@@ -121,6 +133,11 @@
     }
     
     [self.view endEditing:YES];
+    
+    if (![self checkFullNameField]) {
+        [REAlertView showAlertWithMessage:@"Full name field must be 3-50 characters and can't contain '<', '>' and ';'" actionSuccess:NO];
+        return;
+    }
     
     __weak __typeof(self)weakSelf = self;
     

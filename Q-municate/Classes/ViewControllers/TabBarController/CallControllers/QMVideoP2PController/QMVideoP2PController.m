@@ -14,16 +14,23 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.myView layoutIfNeeded];
+    [QMApi instance].avCallManager.cameraCapture.previewLayer.frame = self.myView.bounds;
     
-    if( [QMApi instance].avCallManager.localVideoTrack ){
-        self.localVideoTrack = [QMApi instance].avCallManager.localVideoTrack;
+    if (!self.disableSendingLocalVideoTrack) {
+        [self.myView.layer insertSublayer:[QMApi instance].avCallManager.cameraCapture.previewLayer atIndex:0];
+    } else {
+        self.session.localMediaStream.videoTrack.enabled = NO;
     }
+    
+    [super updateButtonsState];
+    
     if( [QMApi instance].avCallManager.remoteVideoTrack ){
         self.opponentVideoTrack = [QMApi instance].avCallManager.remoteVideoTrack;
     }
     
     [self.contentView startTimerIfNeeded];
-    [self reloadVideoViews];
+    [self.opponentsView setVideoTrack:self.opponentVideoTrack];
     
     if([machineName() isEqualToString:@"iPhone3,1"] ||
        [machineName() isEqualToString:@"iPhone3,2"] ||
@@ -32,11 +39,12 @@
         
         self.opponentsVideoViewBottom.constant = -80.0f;
     }
-	[[QBSoundRouter instance] setCurrentSoundRoute:QBSoundRouteSpeaker];
+	[[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker];
 }
+
 - (void)cameraSwitchTapped:(id)sender{
 	[super cameraSwitchTapped:sender];
-	if( [self.session videoEnabled] ){
+	if( self.session.localMediaStream.videoTrack.enabled ){
 		[self allowSendingLocalVideoTrack];
 		[self.btnSwitchCamera setUserInteractionEnabled:YES];
 	}
@@ -47,7 +55,7 @@
 }
 
 - (void)audioSessionRouteChanged:(NSNotification *)notification{
-	[[QBSoundRouter instance] setCurrentSoundRoute:QBSoundRouteSpeaker];
+	[[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker];
 }
 
 - (void)stopCallTapped:(id)sender {
@@ -55,13 +63,7 @@
     [super stopCallTapped:sender];
 }
 
-- (void)reloadVideoViews {
-    [self.opponentsView setVideoTrack:self.opponentVideoTrack];
-    [self.myView setVideoTrack:self.localVideoTrack];
-}
-
-- (void)hideViewsBeforeDealloc{
-    [self.myView setVideoTrack:nil];
+- (void)hideViewsBeforeDealloc {
     [self.opponentsView setVideoTrack:nil];
     [self.myView setHidden:YES];
     [self.opponentsView setHidden:YES];
@@ -77,7 +79,7 @@ NSString* machineName() {
 
 - (void)videoTapped:(id)sender{
     [super videoTapped:sender];
-    if( [self.session videoEnabled] ){
+    if( self.session.localMediaStream.videoTrack.enabled ){
         [self allowSendingLocalVideoTrack];
         [self.btnSwitchCamera setUserInteractionEnabled:YES];
     }
@@ -91,12 +93,11 @@ NSString* machineName() {
 - (void)allowSendingLocalVideoTrack {
     // it is a view with cam_off image that we need to display when cam is off
     [self.camOffView setHidden:YES];
-    [self reloadVideoViews];
+    [self.myView.layer insertSublayer:[QMApi instance].avCallManager.cameraCapture.previewLayer atIndex:0];
 }
 
 - (void)denySendingLocalVideoTrack {
-    [self.session setVideoEnabled:NO];
-    [self.myView setVideoTrack:nil];
+    [[self.myView.layer.sublayers objectAtIndex:0] removeFromSuperlayer];
     // it is a view with cam_off image that we need to display when cam is off
     [self.camOffView setHidden:NO];
 }
@@ -104,36 +105,32 @@ NSString* machineName() {
 #pragma mark QBRTCSession delegate -
 
 - (void)session:(QBRTCSession *)session disconnectedFromUser:(NSNumber *)userID {
-    [super session:session disconnectedFromUser:userID];
-    [self startActivityIndicator];
-}
-
-- (void)session:(QBRTCSession *)session didReceiveLocalVideoTrack:(QBRTCVideoTrack *)videoTrack {
-    [super session:session didReceiveLocalVideoTrack:videoTrack];
-    if( self.disableSendingLocalVideoTrack ){
-        [self denySendingLocalVideoTrack];
-        self.disableSendingLocalVideoTrack = NO;
-		[self updateButtonsState];
+    
+    if (session == self.session) {
+        [self startActivityIndicator];
     }
-    [self reloadVideoViews];
 }
 
-- (void)session:(QBRTCSession *)session didReceiveRemoteVideoTrack:(QBRTCVideoTrack *)videoTrack fromUser:(NSNumber *)userID {
+- (void)session:(QBRTCSession *)session receivedRemoteVideoTrack:(QBRTCVideoTrack *)videoTrack fromUser:(NSNumber *)userID {
     
-    [super session:session didReceiveRemoteVideoTrack:videoTrack fromUser:userID];
-    self.opponentVideoTrack = videoTrack;
-    
-    [self reloadVideoViews];
+    if (session == self.session) {
+        self.opponentVideoTrack = videoTrack;
+        [self.opponentsView setVideoTrack:self.opponentVideoTrack];
+    }
 }
 
 - (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID {
-    [super session:session connectedToUser:userID];
-    [self stopActivityIndicator];
+    
+    if (session == self.session) {
+        [self stopActivityIndicator];
+    }
 }
 
 - (void)session:(QBRTCSession *)session hungUpByUser:(NSNumber *)userID  userInfo:(NSDictionary *)userInfo{
-    [self hideViewsBeforeDealloc];
-    [super session:session hungUpByUser:userID userInfo:nil];
+    
+    if (session == self.session) {
+        [self hideViewsBeforeDealloc];
+    }
 }
 
 @end

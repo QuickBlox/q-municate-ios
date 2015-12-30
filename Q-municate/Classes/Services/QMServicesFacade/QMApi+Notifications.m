@@ -46,16 +46,19 @@
     NSAssert(dialog, @"Dialog not found");
     [notification updateCustomParametersWithDialog:dialog];
     
-    [self.chatService sendMessage:notification type:notification.messageType toDialog:dialog save:YES saveToStorage:YES completion:^(NSError *error) {
+    __weak __typeof(self)weakSelf = self;
+    [self.chatService sendMessage:notification type:notification.messageType toDialog:dialog saveToHistory:YES saveToStorage:YES completion:^(NSError * _Nullable error) {
         //
         if (!error) {
+            if (notification.messageType == QMMessageTypeContactRequest) {
+                [weakSelf sendPushContactRequestNotification:notification];
+            }
+            
             if (completionBlock) completionBlock(nil, notification);
         } else {
             if (completionBlock) completionBlock(error, nil);
         }
     }];
-
-    //    [self sendPushContactRequestNotification:notification];
 }
 
 #pragma mark - Push Notifications
@@ -98,11 +101,13 @@
         //
         if (chatDialog != nil) {
             //
-            [weakSelf.contactListService retrieveIfNeededUsersWithIDs:chatDialog.occupantIDs completion:^(BOOL retrieveWasNeeded) {
+            [[weakSelf.usersService getUsersWithIDs:chatDialog.occupantIDs] continueWithBlock:^id(BFTask *task) {
                 //
                 if ([delegate respondsToSelector:@selector(notificationHandlerDidSucceedFetchingDialog:)]) {
                     [delegate notificationHandlerDidSucceedFetchingDialog:chatDialog];
                 }
+
+                return nil;
             }];
         }
         else {
@@ -117,11 +122,12 @@
                 }
                 if (loadedDialog != nil) {
                     //
-                    [weakSelf.contactListService retrieveIfNeededUsersWithIDs:chatDialog.occupantIDs completion:^(BOOL retrieveWasNeeded) {
+                    [[weakSelf.usersService getUsersWithIDs:chatDialog.occupantIDs] continueWithBlock:^id(BFTask *task) {
                         //
                         if ([delegate respondsToSelector:@selector(notificationHandlerDidSucceedFetchingDialog:)]) {
                             [delegate notificationHandlerDidSucceedFetchingDialog:loadedDialog];
                         }
+                        return nil;
                     }];
                 }
                 else {

@@ -56,17 +56,16 @@ AGEmojiKeyboardViewDelegate
 @property (nonatomic, strong) QMMessageStatusStringBuilder* stringBuilder;
 @property (nonatomic, strong) NSMapTable* attachmentCells;
 @property (nonatomic, readonly) UIImagePickerController* pickerController;
-@property (nonatomic, assign) BOOL shouldHoldScrollOnCollectionView;
 @property (nonatomic, strong) NSTimer* typingTimer;
 @property (nonatomic, strong) id observerDidEnterBackground;
 
 @property (nonatomic, strong) NSArray* unreadMessages;
-
-@property (nonatomic, assign) BOOL isSendingAttachment;
-
 @property (nonatomic, strong) UIButton *emojiButton;
 
 @property (nonatomic, assign) BOOL shouldUpdateDialogAfterReturnFromGroupInfo;
+@property (nonatomic, assign) BOOL isSendingAttachment;
+
+@property (nonatomic, strong) NSMutableSet *detailedCells;
 
 @end
 
@@ -83,12 +82,6 @@ AGEmojiKeyboardViewDelegate
     return _pickerController;
 }
 
-- (void)refreshCollectionView
-{
-    [self.collectionView reloadData];
-    [self scrollToBottomAnimated:NO];
-}
-
 #pragma mark - Override
 
 - (NSUInteger)senderID
@@ -101,6 +94,14 @@ AGEmojiKeyboardViewDelegate
     return [QMApi instance].currentUser.fullName;
 }
 
+- (NSTimeInterval)timeIntervalBetweenSections {
+    return 300.0f;
+}
+
+- (CGFloat)heightForSectionHeader {
+    return 40.0f;
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad {
@@ -111,36 +112,25 @@ AGEmojiKeyboardViewDelegate
     self.inputToolbar.contentView.textView.placeHolder = @"Message";
     
     self.stringBuilder = [QMMessageStatusStringBuilder new];
-    
-    self.showLoadEarlierMessagesHeader = YES;
+    self.detailedCells = [NSMutableSet set];
+    self.attachmentCells = [NSMapTable strongToWeakObjectsMapTable];
     
     // emoji button init
     [self configureEmojiButton];
 
-    //
+    // Configuring title
     if (self.dialog.type == QBChatDialogTypePrivate) {
+        
         NSUInteger oponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
         self.opponentUser = [[QMApi instance] userWithID:oponentID];
         [self configureNavigationBarForPrivateChat];
         
         [self updateTitleInfoForPrivateDialog];
     } else {
-        if (!self.dialog.isJoined) {
-            [self.dialog join];
-        }
         
         [self configureNavigationBarForGroupChat];
         self.title = self.dialog.name;
     }
-    
-    // Retrieving messages from memory storage.
-    self.items = [[[QMApi instance].chatService.messagesMemoryStorage messagesWithDialogID:self.dialog.ID] mutableCopy];
-    
-    QMCollectionViewFlowLayoutInvalidationContext* context = [QMCollectionViewFlowLayoutInvalidationContext context];
-    context.invalidateFlowLayoutMessagesCache = YES;
-    [self.collectionView.collectionViewLayout invalidateLayoutWithContext:context];
-    
-    [self refreshCollectionView];
     
     // Handling 'typing' status.
     if (self.dialog.type == QBChatDialogTypePrivate) {
@@ -162,18 +152,19 @@ AGEmojiKeyboardViewDelegate
 }
 
 - (void)refreshMessagesShowingProgress:(BOOL)showingProgress {
-
+    
     if (showingProgress && !self.isSendingAttachment) {
         [SVProgressHUD showWithStatus:@"Refreshing..." maskType:SVProgressHUDMaskTypeClear];
     }
     
+    __weak __typeof(self)weakSelf = self;
     // Retrieving message from Quickblox REST history and cache.
     [[QMApi instance].chatService messagesWithChatDialogID:self.dialog.ID completion:^(QBResponse *response, NSArray *messages) {
         if (response.success) {
-
-            if (showingProgress && !self.isSendingAttachment) {
-                [SVProgressHUD dismiss];
-            }
+            
+            __typeof(weakSelf)strongSelf = weakSelf;
+            if ([messages count] > 0) [strongSelf insertMessagesToTheBottomAnimated:messages];
+            if (!strongSelf.isSendingAttachment) [SVProgressHUD dismiss];
             
         } else {
             [SVProgressHUD showErrorWithStatus:@"Can not refresh messages"];
@@ -191,6 +182,10 @@ AGEmojiKeyboardViewDelegate
     self.onlineTitle.statusLabel.text = status;
 }
 
+- (NSArray *)storedMessages {
+    return [[QMApi instance].chatService.messagesMemoryStorage messagesWithDialogID:self.dialog.ID];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -200,9 +195,9 @@ AGEmojiKeyboardViewDelegate
         if (updatedDialog != nil) {
             self.dialog = updatedDialog;
             self.title = self.dialog.name;
-            [[QMApi instance].chatService joinToGroupDialog:self.dialog failed:^(NSError *error) {
+            [[QMApi instance].chatService joinToGroupDialog:self.dialog completion:^(NSError * _Nullable error) {
                 //
-                NSLog(@"Failed to join group dialog, because: %@", error.localizedDescription);
+                if (error != nil) NSLog(@"Failed to join group dialog, because: %@", error.localizedDescription);
             }];
         }
         else {
@@ -212,9 +207,6 @@ AGEmojiKeyboardViewDelegate
     }
     
     [[QMApi instance].settingsManager setDialogWithIDisActive:self.dialog.ID];
-    
-    [[QMApi instance].chatService addDelegate:self];
-    [QMApi instance].chatService.chatAttachmentService.delegate = self;
     [[QMApi instance].contactListService addDelegate:self];
     self.actionsHandler = self; // contact request delegate
     
@@ -222,7 +214,7 @@ AGEmojiKeyboardViewDelegate
     self.observerDidBecomeActive = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
         __typeof(self) strongSelf = weakSelf;
         
-        if ([[QBChat instance] isLoggedIn]) {
+        if ([[QBChat instance] isConnected]) {
             [strongSelf refreshMessagesShowingProgress:NO];
         }
     }];
@@ -232,12 +224,35 @@ AGEmojiKeyboardViewDelegate
         [strongSelf fireStopTypingIfNecessary];
     }];
     
-    if ([self.items count] > 0) {
+    // Retrieving messages
+    if ([[self storedMessages] count] > 0 && self.totalMessagesCount == 0) {
+        // inserting all messages from memory storage
+        [self updateDataSourceWithMessages:[self storedMessages]];
         [self refreshMessagesShowingProgress:NO];
+    } else {
+        if (self.totalMessagesCount == 0) [SVProgressHUD showWithStatus:@"Refreshing..." maskType:SVProgressHUDMaskTypeClear];
+        
+        [[QMApi instance] cachedMessagesWithDialogID:self.dialog.ID block:^(NSArray *collection) {
+            //
+            __typeof(weakSelf)strongSelf = weakSelf;
+            if ([collection count] > 0) {
+                [strongSelf insertMessagesToTheBottomAnimated:collection];
+            }
+            
+            [strongSelf refreshMessagesShowingProgress:NO];
+        }];
     }
-    else {
-        [self refreshMessagesShowingProgress:YES];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    if ([self storedMessages].count > 0 && self.totalMessagesCount != [self storedMessages].count) {
+        [self insertMessagesToTheBottomAnimated:[self storedMessages]];
     }
+    
+    [[QMApi instance].chatService addDelegate:self];
+    [QMApi instance].chatService.chatAttachmentService.delegate = self;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -325,14 +340,14 @@ AGEmojiKeyboardViewDelegate
     if (![self callsAllowed]) return;
     
     NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
-    [[QMApi instance] callToUser:@(opponentID) conferenceType:QBConferenceTypeAudio];
+    [[QMApi instance] callToUser:@(opponentID) conferenceType:QBRTCConferenceTypeAudio];
 }
 
 - (void)videoCallAction {
     if (![self callsAllowed]) return;
     
     NSUInteger opponentID = [[QMApi instance] occupantIDForPrivateChatDialog:self.dialog];
-    [[QMApi instance] callToUser:@(opponentID) conferenceType:QBConferenceTypeVideo];
+    [[QMApi instance] callToUser:@(opponentID) conferenceType:QBRTCConferenceTypeVideo];
 }
 
 - (void)groupInfoNavButtonAction {
@@ -364,22 +379,27 @@ AGEmojiKeyboardViewDelegate
 
 - (void)sendReadStatusForMessage:(QBChatMessage *)message
 {
-    if (message.senderID != [QBSession currentSession].currentUser.ID && ![message.readIDs containsObject:@(self.senderID)]) {
-        if (![[QMApi instance].chatService readMessage:message forDialogID:self.dialog.ID]) {
-            NSLog(@"Problems while marking message as read!");
-        }
-        else {
-            if ([UIApplication sharedApplication].applicationIconBadgeNumber > 0) {
-                [UIApplication sharedApplication].applicationIconBadgeNumber--;
+    if (message.senderID != self.senderID && ![message.readIDs containsObject:@(self.senderID)]) {
+        [[QMApi instance].chatService readMessage:message completion:^(NSError *error) {
+            //
+            if (error != nil) {
+                NSLog(@"Problems while marking message as read! Error: %@", error);
             }
-        }
+            else {
+                if ([UIApplication sharedApplication].applicationIconBadgeNumber > 0) {
+                    [UIApplication sharedApplication].applicationIconBadgeNumber--;
+                }
+            }
+        }];
     }
 }
 
-- (void)readMessages:(NSArray *)messages forDialogID:(NSString *)dialogID
+- (void)readMessages:(NSArray *)messages
 {
-    if ([QBChat instance].isLoggedIn) {
-        [[QMApi instance].chatService readMessages:messages forDialogID:dialogID];
+    if ([QBChat instance].isConnected) {
+        [[QMApi instance].chatService readMessages:messages forDialogID:self.dialog.ID completion:^(NSError *error) {
+            //
+        }];
     } else {
         self.unreadMessages = messages;
     }
@@ -435,12 +455,18 @@ AGEmojiKeyboardViewDelegate
     message.text = text;
     message.senderID = senderId;
     message.markable = YES;
+    message.deliveredIDs = @[@(self.senderID)];
     message.readIDs = @[@(self.senderID)];
     message.dialogID = self.dialog.ID;
     message.dateSent = date;
-    
-    // Sending message.
-    [[QMApi instance].chatService sendMessage:message toDialogId:self.dialog.ID save:YES completion:nil];
+
+    // Sending message
+    [[QMApi instance].chatService sendMessage:message toDialogID:self.dialog.ID saveToHistory:YES saveToStorage:YES completion:^(NSError *error) {
+        //
+        if (error != nil) {
+            [REAlertView showAlertWithMessage:error.localizedRecoverySuggestion actionSuccess:NO];
+        }
+    }];
     
     [self finishSendingMessageAnimated:YES];
 }
@@ -494,32 +520,24 @@ AGEmojiKeyboardViewDelegate
 
     if (messageItem.isNotificatonMessage) {
         //
-        NSString *dateString = messageItem.dateSent ? [[self timeStampWithDate:messageItem.dateSent] stringByAppendingString:@"\n"] : @"";
-        NSString *notificationMessageString = [[NSString alloc] init];
-        notificationMessageString = messageItem.messageType == QMMessageTypeUpdateGroupDialog ? messageItem.text : [QMChatUtils messageTextForNotification:messageItem];
-        NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:[dateString stringByAppendingString:notificationMessageString]];
-        [attrStr addAttribute:NSFontAttributeName
-                        value:[UIFont systemFontOfSize:12.0f]
-                        range:NSMakeRange(0, dateString.length-1)];
-        [attrStr addAttribute:NSForegroundColorAttributeName
-                        value:[UIColor blackColor]
-                        range:NSMakeRange(0, dateString.length-1)];
+        NSString *notificationMessageString = [QMChatUtils messageTextForNotification:messageItem];
+        if (notificationMessageString == nil) {
+            notificationMessageString = messageItem.encodedText;
+        }
         
-        [attrStr addAttribute:NSFontAttributeName
-                        value:[UIFont boldSystemFontOfSize:14.0f]
-                        range:NSMakeRange(dateString.length, notificationMessageString.length)];
-        [attrStr addAttribute:NSForegroundColorAttributeName
-                        value:[UIColor colorWithRed:113.0f/255.0f green:113.0f/255.0f blue:113.0f/255.0f alpha:1.0f]
-                        range:NSMakeRange(dateString.length, notificationMessageString.length)];
+        UIColor *textColor = [UIColor colorWithRed:113.0f/255.0f green:113.0f/255.0f blue:113.0f/255.0f alpha:1.0f];
+        UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:14.0f];
+        NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor, NSFontAttributeName:font};
+        NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:notificationMessageString attributes:attributes];
         
         return attrStr;
     }
     
     UIColor *textColor = [messageItem senderID] == self.senderID ? [UIColor whiteColor] : [UIColor blackColor];
-    UIFont *font = [UIFont fontWithName:@"HelveticaNeue" size:16.0f] ;
+    UIFont *font = [UIFont fontWithName:@"HelveticaNeue" size:16.0f];
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor, NSFontAttributeName:font};
     
-    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:messageItem.text ? messageItem.text : @"" attributes:attributes];
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:messageItem.text ? messageItem.encodedText : @"" attributes:attributes];
     
     return attrStr;
 }
@@ -557,7 +575,7 @@ AGEmojiKeyboardViewDelegate
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor, NSFontAttributeName:font};
     NSString* text = messageItem.dateSent ? [self timeStampWithDate:messageItem.dateSent] : @"";
     if ([messageItem senderID] == self.senderID) {
-        text = [NSString stringWithFormat:@"%@\n%@", text, [self.stringBuilder statusFromMessage:messageItem]];
+        text = [NSString stringWithFormat:@"%@\n%@", text, [self.stringBuilder statusFromMessage:messageItem forDialogType:self.dialog.type]];
     }
     NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:text
                                                                                 attributes:attributes];
@@ -569,7 +587,7 @@ AGEmojiKeyboardViewDelegate
 
 - (CGSize)collectionView:(QMChatCollectionView *)collectionView dynamicSizeAtIndexPath:(NSIndexPath *)indexPath maxWidth:(CGFloat)maxWidth {
     
-    QBChatMessage *item = self.items[indexPath.item];
+    QBChatMessage *item = [self messageForIndexPath:indexPath];
     Class viewClass = [self viewClassForItem:item];
     CGSize size = CGSizeZero;
     
@@ -582,6 +600,12 @@ AGEmojiKeyboardViewDelegate
                                                                   withConstraints:CGSizeMake(MIN(200, maxWidth), CGFLOAT_MAX)
                                                            limitedToNumberOfLines:0];
         size = CGSizeMake(MIN(200, maxWidth), 200 + ceilf(bottomLabelSize.height));
+    } else if (viewClass == [QMChatNotificationCell class]) {
+        NSAttributedString *attributedString = [self attributedStringForItem:item];
+        
+        size = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
+                                                withConstraints:CGSizeMake(maxWidth, CGFLOAT_MAX)
+                                         limitedToNumberOfLines:3];
     } else {
         NSAttributedString *attributedString = [self attributedStringForItem:item];
         
@@ -595,48 +619,33 @@ AGEmojiKeyboardViewDelegate
 
 - (CGFloat)collectionView:(QMChatCollectionView *)collectionView minWidthAtIndexPath:(NSIndexPath *)indexPath {
     
-    QBChatMessage *item = self.items[indexPath.item];
+    QBChatMessage *item = [self messageForIndexPath:indexPath];
     
-    NSAttributedString *attributedString = [NSAttributedString new];
-    if ([item senderID] == self.senderID) {
-        attributedString = [self bottomLabelAttributedStringForItem:item];
-    } else {
-        if (self.dialog.type != QBChatDialogTypePrivate) {
-            CGSize topLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:[self topLabelAttributedStringForItem:item]
-                                                           withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
-                                                    limitedToNumberOfLines:0];
-            CGSize bottomLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:[self bottomLabelAttributedStringForItem:item]
-                                                           withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
-                                                    limitedToNumberOfLines:0];
-            
-            return topLabelSize.width > bottomLabelSize.width ? topLabelSize.width : bottomLabelSize.width;
-        }
-        else {
-            attributedString = [self bottomLabelAttributedStringForItem:item];
-        }
+    CGSize size = CGSizeZero;
+    if ([self.detailedCells containsObject:item.ID]) {
+        
+        size = [TTTAttributedLabel sizeThatFitsAttributedString:[self bottomLabelAttributedStringForItem:item]
+                                                withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
+                                         limitedToNumberOfLines:0];
     }
     
-    CGSize size = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
-                                                   withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
-                                            limitedToNumberOfLines:0];
+    if (self.dialog.type != QBChatDialogTypePrivate) {
+        
+        CGSize topLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:[self topLabelAttributedStringForItem:item]
+                                                               withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
+                                                        limitedToNumberOfLines:0];
+        
+        if (topLabelSize.width > size.width) {
+            size = topLabelSize;
+        }
+    }
     
     return size.width;
 }
 
-- (void)collectionView:(QMChatCollectionView *)collectionView header:(QMLoadEarlierHeaderView *)headerView didTapLoadEarlierMessagesButton:(UIButton *)sender
-{
-    self.shouldHoldScrollOnCollectionView = YES;
-    __weak typeof(self)weakSelf = self;
-    // Getting earlier messages for chat dialog identifier.
-    [[QMApi instance].chatService earlierMessagesWithChatDialogID:self.dialog.ID completion:^(QBResponse *response, NSArray *messages) {
-        
-        weakSelf.shouldHoldScrollOnCollectionView = NO;
-    }];
-}
-
 - (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
 {
-    Class viewClass = [self viewClassForItem:self.items[indexPath.row]];
+    Class viewClass = [self viewClassForItem:[self messageForIndexPath:indexPath]];
     if (viewClass == [QMChatAttachmentIncomingCell class] || viewClass == [QMChatAttachmentOutgoingCell class]) return NO;
     
     return [super collectionView:collectionView canPerformAction:action forItemAtIndexPath:indexPath withSender:sender];
@@ -644,9 +653,9 @@ AGEmojiKeyboardViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
 {
-    QBChatMessage* message = self.items[indexPath.row];
+    QBChatMessage* message = [self messageForIndexPath:indexPath];
     
-    Class viewClass = [self viewClassForItem:self.items[indexPath.row]];
+    Class viewClass = [self viewClassForItem:message];
     
     if (viewClass == [QMChatAttachmentIncomingCell class] || viewClass == [QMChatAttachmentOutgoingCell class]) return;
     
@@ -662,7 +671,7 @@ AGEmojiKeyboardViewDelegate
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateFormat = @"dd.MM.yy HH:mm";
+        dateFormatter.dateFormat = @"HH:mm";
     });
     
     NSString *timeStamp = [dateFormatter stringFromDate:date];
@@ -675,33 +684,41 @@ AGEmojiKeyboardViewDelegate
 - (QMChatCellLayoutModel)collectionView:(QMChatCollectionView *)collectionView layoutModelAtIndexPath:(NSIndexPath *)indexPath {
     QMChatCellLayoutModel layoutModel = [super collectionView:collectionView layoutModelAtIndexPath:indexPath];
     
-    if (self.dialog.type == QBChatDialogTypePrivate) {
-        layoutModel.topLabelHeight = 0.0;
-    }
+    layoutModel.topLabelHeight = 0.0f;
     
-    
-    QBChatMessage* item = self.items[indexPath.row];
+    QBChatMessage *item = [self messageForIndexPath:indexPath];
     Class class = [self viewClassForItem:item];
     
     if (class == [QMChatOutgoingCell class] ||
         class == [QMChatAttachmentOutgoingCell class]) {
-        NSAttributedString* bottomAttributedString = [self bottomLabelAttributedStringForItem:item];
-        CGSize size = [TTTAttributedLabel sizeThatFitsAttributedString:bottomAttributedString
-                                                       withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
-                                                limitedToNumberOfLines:0];
+        
         layoutModel.avatarSize = (CGSize){0.0, 0.0};
-        layoutModel.bottomLabelHeight = ceilf(size.height);
     } else if (class == [QMChatAttachmentIncomingCell class] ||
                class == [QMChatIncomingCell class]) {
+        
         if (self.dialog.type != QBChatDialogTypePrivate) {
-            layoutModel.topLabelHeight = 20.0f;
+            
+            NSAttributedString *topLabelString = [self topLabelAttributedStringForItem:item];
+            CGSize size = [TTTAttributedLabel sizeThatFitsAttributedString:topLabelString
+                                                           withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
+                                                    limitedToNumberOfLines:1];
+            layoutModel.topLabelHeight = size.height;
         }
+        
         layoutModel.spaceBetweenTopLabelAndTextView = 5.0f;
         layoutModel.avatarSize = (CGSize){50.0, 50.0};
     } else if (class == [QMChatNotificationCell class]) {
         
         layoutModel.spaceBetweenTopLabelAndTextView = 5.0f;
     }
+    
+    CGSize size = CGSizeZero;
+    if ([self.detailedCells containsObject:item.ID] || class == [QMChatAttachmentIncomingCell class] || class == [QMChatAttachmentOutgoingCell class]) {
+        size = [TTTAttributedLabel sizeThatFitsAttributedString:[self bottomLabelAttributedStringForItem:item]
+                                                withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
+                                         limitedToNumberOfLines:0];
+    }
+    layoutModel.bottomLabelHeight = ceilf(size.height);
     
     layoutModel.spaceBetweenTextViewAndBottomLabel = 5.0f;
     
@@ -724,7 +741,7 @@ AGEmojiKeyboardViewDelegate
         /**
          *  Setting opponent avatar
          */
-        QBChatMessage* message = self.items[indexPath.row];
+        QBChatMessage* message = [self messageForIndexPath:indexPath];
         QBUUser *sender = [[QMApi instance] userWithID:message.senderID];
         NSURL *userImageUrl = [QMUsersUtils userAvatarURL:sender];
         UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
@@ -740,14 +757,9 @@ AGEmojiKeyboardViewDelegate
         [(QMChatCell *)cell containerView].bgColor = self.collectionView.backgroundColor;
     }
     if ([cell conformsToProtocol:@protocol(QMChatAttachmentCell)]) {
-        QBChatMessage* message = self.items[indexPath.row];
+        QBChatMessage* message = [self messageForIndexPath:indexPath];
         if (message.attachments != nil) {
             QBChatAttachment* attachment = message.attachments.firstObject;
-            
-            BOOL shouldLoadFile = YES;
-            if ([self.attachmentCells objectForKey:attachment.ID] != nil) {
-                shouldLoadFile = NO;
-            }
             
             NSMutableArray* keysToRemove = [NSMutableArray array];
             
@@ -767,13 +779,11 @@ AGEmojiKeyboardViewDelegate
             [self.attachmentCells setObject:cell forKey:attachment.ID];
             [(UICollectionViewCell<QMChatAttachmentCell> *)cell setAttachmentID:attachment.ID];
             
-            if (!shouldLoadFile) return;
-            
             __weak typeof(self)weakSelf = self;
             // Getting image from chat attachment service.
-            [[QMApi instance].chatService.chatAttachmentService getImageForChatAttachment:attachment completion:^(NSError *error, UIImage *image) {
-                __typeof(self) strongSelf = weakSelf;
-                
+            [[QMApi instance].chatService.chatAttachmentService getImageForAttachmentMessage:message completion:^(NSError *error, UIImage *image) {
+                //
+                __typeof(weakSelf)strongSelf = weakSelf;
                 if ([(UICollectionViewCell<QMChatAttachmentCell> *)cell attachmentID] != attachment.ID) return;
                 
                 [strongSelf.attachmentCells removeObjectForKey:attachment.ID];
@@ -791,37 +801,44 @@ AGEmojiKeyboardViewDelegate
     }
 }
 
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    NSInteger lastSection = [self.collectionView numberOfSections] - 1;
+    if (indexPath.section == lastSection && indexPath.item == [self.collectionView numberOfItemsInSection:lastSection] - 1) {
+        // the very first message
+        // load more if exists
+        __weak typeof(self)weakSelf = self;
+        // Getting earlier messages for chat dialog identifier.
+        [[[QMApi instance].chatService loadEarlierMessagesWithChatDialogID:self.dialog.ID] continueWithBlock:^id(BFTask<NSArray<QBChatMessage *> *> *task) {
+            
+            if (task.result.count > 0) {
+                [weakSelf insertMessagesToTheTopAnimated:task.result];
+            }
+            
+            return nil;
+        }];
+    }
+    
+    // marking message as read if needed
+    QBChatMessage *itemMessage = [self messageForIndexPath:indexPath];
+    [self sendReadStatusForMessage:itemMessage];
+}
+
 #pragma mark - QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
-        if ([self.dialog.ID isEqualToString:dialogID]) {
-        // Retrieving messages from memory strorage.
-        self.items = [[chatService.messagesMemoryStorage messagesWithDialogID:dialogID] mutableCopy];
-        [self refreshCollectionView];
-        
-        [self sendReadStatusForMessage:message];
-    }
-}
-
-- (void)chatService:(QMChatService *)chatService didAddMessagesToMemoryStorage:(NSArray *)messages forDialogID:(NSString *)dialogID
-{
     if ([self.dialog.ID isEqualToString:dialogID]) {
-        [self readMessages:messages forDialogID:dialogID];
-        self.items = [[chatService.messagesMemoryStorage messagesWithDialogID:dialogID] mutableCopy];
-        
-        if (self.shouldHoldScrollOnCollectionView) {
-            CGFloat bottomOffset = self.collectionView.contentSize.height - self.collectionView.contentOffset.y;
-            [CATransaction begin];
-            [CATransaction setDisableActions:YES];
-            
-            [self.collectionView reloadData];
-            [self.collectionView performBatchUpdates:nil completion:nil];
-            
-            self.collectionView.contentOffset = (CGPoint){0, self.collectionView.contentSize.height - bottomOffset};
-            
-            [CATransaction commit];
+        // Inserting message received from XMPP or sent by self
+        if (message.dialogUpdateType == QMDialogUpdateTypeOccupants && message.addedOccupantsIDs.count > 0) {
+            __weak __typeof(self)weakSelf = self;
+            [[[QMApi instance].usersService getUsersWithIDs:message.addedOccupantsIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+                //
+                [weakSelf insertMessageToTheBottomAnimated:message];
+                return nil;
+            }];
         } else {
-            [self refreshCollectionView];
+            
+            [self insertMessageToTheBottomAnimated:message];
         }
     }
 }
@@ -829,41 +846,27 @@ AGEmojiKeyboardViewDelegate
 - (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog{
     if( [self.dialog.ID isEqualToString:chatDialog.ID] ) {
         self.dialog = chatDialog;
+        
+        if (self.dialog.type != QBChatDialogTypePrivate) {
+            self.title = self.dialog.name;
+        }
     }
 }
 
 - (void)chatService:(QMChatService *)chatService didUpdateMessage:(QBChatMessage *)message forDialogID:(NSString *)dialogID
 {
-    if ([self.dialog.ID isEqualToString:dialogID]) {
-        self.items = [[chatService.messagesMemoryStorage messagesWithDialogID:dialogID] mutableCopy];
-        NSUInteger index = [self.items indexOfObject:message];
-        if (index != NSNotFound) {
-            QMCollectionViewFlowLayoutInvalidationContext* context = [QMCollectionViewFlowLayoutInvalidationContext context];
-            context.invalidateFlowLayoutMessagesCache = YES;
-            [self.collectionView.collectionViewLayout invalidateLayoutWithContext:context];
-            
-            if ([self.collectionView numberOfItemsInSection:0] != 0) {
-                [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
-            }
-        }
+    if ([self.dialog.ID isEqualToString:dialogID] && message.senderID == self.senderID) {
+        [self updateMessage:message];
     }
-}
-
-- (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
 }
 
 #pragma mark - QMChatConnectionDelegate
 
 - (void)refreshAndReadMessages;
 {
-    if (self.dialog.type != QBChatDialogTypePrivate) {
-        [self refreshMessagesShowingProgress:NO];
-    }
-
-    for (QBChatMessage* message in self.unreadMessages) {
-        [self sendReadStatusForMessage:message];
-    }
+    [self refreshMessagesShowingProgress:YES];
     
+    [self readMessages:self.unreadMessages];
     self.unreadMessages = nil;
 }
 
@@ -879,10 +882,9 @@ AGEmojiKeyboardViewDelegate
 
 - (void)chatAttachmentService:(QMChatAttachmentService *)chatAttachmentService didChangeAttachmentStatus:(QMMessageAttachmentStatus)status forMessage:(QBChatMessage *)message
 {
-    if (message.dialogID == self.dialog.ID) {
-        // Retrieving messages for dialog from memory storage.
-        self.items = [[[QMApi instance].chatService.messagesMemoryStorage messagesWithDialogID:self.dialog.ID] mutableCopy];
-        [self refreshCollectionView];
+    if ([message.dialogID isEqualToString:self.dialog.ID]) {
+        
+        [self updateMessage:message];
     }
 }
 
@@ -923,11 +925,17 @@ AGEmojiKeyboardViewDelegate
 - (void)didPickAttachmentImage:(UIImage *)image
 {
     self.isSendingAttachment = YES;
+    
     [SVProgressHUD showWithStatus:@"Uploading attachment" maskType:SVProgressHUDMaskTypeClear];
+    
+    QBChatMessage* message = [QBChatMessage new];
+    message.senderID = self.senderID;
+    message.dialogID = self.dialog.ID;
+    message.dateSent = [NSDate date];
     
     __weak typeof(self)weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        __typeof(self) strongSelf = weakSelf;
+        __typeof(weakSelf)strongSelf = weakSelf;
         UIImage* newImage = image;
         if (strongSelf.pickerController.sourceType == UIImagePickerControllerSourceTypeCamera) {
             newImage = [newImage fixOrientation];
@@ -935,26 +943,21 @@ AGEmojiKeyboardViewDelegate
         
         UIImage* resizedImage = [strongSelf resizedImageFromImage:newImage];
         
-        QBChatMessage* message = [QBChatMessage new];
-        message.senderID = strongSelf.senderID;
-        message.dialogID = strongSelf.dialog.ID;
-        message.dateSent = [NSDate date];
-        
         // Sending attachment to dialog.
-        [[QMApi instance].chatService.chatAttachmentService sendMessage:message
-                                                                         toDialog:strongSelf.dialog
-                                                                  withChatService:[QMApi instance].chatService
-                                                                withAttachedImage:resizedImage completion:^(NSError *error) {
-                                                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                                                        if (error != nil) {
-                                                                            [SVProgressHUD showErrorWithStatus:error.localizedDescription];
-                                                                        } else {
-                                                                            [SVProgressHUD showSuccessWithStatus:@"Completed"];
-
-                                                                        }
-                                                                        weakSelf.isSendingAttachment = NO;
-                                                                    });
-                                                                }];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[QMApi instance].chatService sendAttachmentMessage:message
+                                                       toDialog:strongSelf.dialog
+                                            withAttachmentImage:resizedImage
+                                                     completion:^(NSError * _Nullable error) {
+                                                         //
+                                                         if (error != nil) {
+                                                             [SVProgressHUD showErrorWithStatus:error.localizedDescription];
+                                                         } else {
+                                                             [SVProgressHUD showSuccessWithStatus:@"Completed"];
+                                                         }
+                                                         strongSelf.isSendingAttachment = NO;
+                                                     }];
+        });
     });
 }
 
@@ -966,7 +969,7 @@ AGEmojiKeyboardViewDelegate
     
     UIGraphicsBeginImageContext(newSize);
     
-    [image drawInRect:(CGRect){0, 0, newSize.width, newSize.height}];
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
     UIImage* resizedImage = UIGraphicsGetImageFromCurrentImageContext();
     
     UIGraphicsEndImageContext();
@@ -992,8 +995,11 @@ AGEmojiKeyboardViewDelegate
         [[QMApi instance] confirmAddContactRequest:self.opponentUser completion:^(BOOL success) {
             //
             [SVProgressHUD dismiss];
-            [self refreshMessagesShowingProgress:NO];
-            [self refreshCollectionView];
+            NSIndexPath *indexPath = [self.collectionView indexPathForCell:sender];
+            QBChatMessage *crMessage = [self messageForIndexPath:indexPath];
+            
+            [self.collectionView.collectionViewLayout removeSizeFromCacheForItemID:crMessage.ID];
+            [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
         }];
     }
     else {
@@ -1017,13 +1023,26 @@ AGEmojiKeyboardViewDelegate
 }
 
 - (void)chatCellDidTapContainer:(QMChatCell *)cell {
-    if ([cell isKindOfClass:[QMChatAttachmentIncomingCell class]] || [cell isKindOfClass:[QMChatAttachmentOutgoingCell class]]) {
+    if ([cell conformsToProtocol:@protocol(QMChatAttachmentCell)]) {
         UIImage *attachmentImage = [(QMChatAttachmentIncomingCell *)cell attachmentImageView].image;
         if (attachmentImage != nil) {
             IDMPhoto *photo = [IDMPhoto photoWithImage:attachmentImage];
             IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:@[photo]];
             [self presentViewController:browser animated:YES completion:nil];
         }
+    } else if ([cell isKindOfClass:[QMChatOutgoingCell class]] || [cell isKindOfClass:[QMChatIncomingCell class]]) {
+        
+        NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+        QBChatMessage *currentMessage = [self messageForIndexPath:indexPath];
+        
+        if ([self.detailedCells containsObject:currentMessage.ID]) {
+            [self.detailedCells removeObject:currentMessage.ID];
+        } else {
+            [self.detailedCells addObject:currentMessage.ID];
+        }
+        
+        [self.collectionView.collectionViewLayout removeSizeFromCacheForItemID:currentMessage.ID];
+        [self.collectionView performBatchUpdates:nil completion:nil];
     }
 }
 

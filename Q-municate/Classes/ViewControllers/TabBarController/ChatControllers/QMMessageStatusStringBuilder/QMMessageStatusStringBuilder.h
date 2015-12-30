@@ -13,6 +13,6 @@
  */
 @interface QMMessageStatusStringBuilder : NSObject
 
-- (NSString *)statusFromMessage:(QBChatMessage *)message;
+- (NSString *)statusFromMessage:(QBChatMessage *)message forDialogType:(QBChatDialogType)dialogType;
 
 @end

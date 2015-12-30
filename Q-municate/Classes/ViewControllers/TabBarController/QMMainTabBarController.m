@@ -22,6 +22,8 @@
 
 @interface QMMainTabBarController () <QMNotificationHandlerDelegate>
 
+@property (nonatomic, strong) dispatch_group_t importGroup;
+
 @end
 
 @implementation QMMainTabBarController
@@ -30,7 +32,7 @@
 {
     [super viewDidAppear:animated];
     
-    if (![[QBChat instance] isLoggedIn]) {
+    if (![[QBChat instance] isConnected]) {
         // show hud and start login to chat:
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     }
@@ -48,7 +50,8 @@
     [[QMApi instance] autoLogin:^(BOOL success) {
         if (!success) {
             
-            [[QMApi instance] logout:^(BOOL logoutSuccess) {
+            [[QMApi instance] logoutWithCompletion:^(BOOL succeed) {
+                //
                 [weakSelf performSegueWithIdentifier:@"SplashSegue" sender:nil];
             }];
             
@@ -62,32 +65,36 @@
                 }
             }];
             
-            [weakSelf loginToChat];
+            [weakSelf connectToChat];
         }
     }];
 }
 
-- (void)loginToChat
+- (void)connectToChat
 {
-    [[QMApi instance] loginChat:^(BOOL loginSuccess) {
+    [[QMApi instance] connectChat:^(BOOL loginSuccess) {
 
         QBUUser *usr = [QMApi instance].currentUser;
         if (!usr.isImport) {
-            dispatch_group_t group = dispatch_group_create();
-            dispatch_group_enter(group);
+            self.importGroup = dispatch_group_create();
+            dispatch_group_enter(self.importGroup);
             [[QMApi instance] importFriendsFromFacebook:^(BOOL success) {
                 //
-                dispatch_group_leave(group);
+                dispatch_group_leave(self.importGroup);
             }];
-            dispatch_group_enter(group);
+            dispatch_group_enter(self.importGroup);
             [[QMApi instance] importFriendsFromAddressBookWithCompletion:^(BOOL succeded, NSError *error) {
                 //
-                dispatch_group_leave(group);
+                dispatch_group_leave(self.importGroup);
             }];
-            usr.isImport = YES;
-            QBUpdateUserParameters *params = [QBUpdateUserParameters new];
-            params.customData = usr.customData;
-            [[QMApi instance] updateCurrentUser:params image:nil progress:nil completion:^(BOOL success) {}];
+        
+            dispatch_group_notify(self.importGroup, dispatch_get_main_queue(), ^{
+                //
+                usr.isImport = YES;
+                QBUpdateUserParameters *params = [QBUpdateUserParameters new];
+                params.customData = usr.customData;
+                [[QMApi instance] updateCurrentUser:params image:nil progress:nil completion:^(BOOL success) {}];
+            });
         }
         
         // open chat if app was launched by push notifications
@@ -100,9 +107,7 @@
             }
         }
         
-        [[QMApi instance] fetchAllDialogs:^{
-            [[QMApi instance] joinGroupDialogs];
-        }];
+        [[QMApi instance] fetchAllDialogs:nil];
     }];
 }
 
@@ -179,6 +184,15 @@
     }];
 }
 
+- (void)getUsersIfNeeded:(NSArray *)users andShowNotificationForMessage:(QBChatMessage *)message {
+    __weak __typeof(self)weakSelf = self;
+    [[[QMApi instance].usersService getUsersWithIDs:users] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+        //
+        [weakSelf showNotificationForMessage:message inDialogID:message.dialogID];
+        return nil;
+    }];
+}
+
 #pragma mark - QMNotificationHandlerDelegate protocol
 
 - (void)notificationHandlerDidStartLoadingDialogFromServer {
@@ -216,10 +230,19 @@
 
 - (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
     if (message.senderID != self.currentUser.ID) {
-        [self showNotificationForMessage:message inDialogID:dialogID];
+        
+        if (message.messageType == QMMessageTypeContactRequest) {
+            // download user for contact request if needed
+            [self getUsersIfNeeded:@[@(message.senderID)] andShowNotificationForMessage:message];
+        } else if (message.dialogUpdateType == QMDialogUpdateTypeOccupants && message.addedOccupantsIDs.count > 0) {
+            // download users for added occupants if needed
+            [self getUsersIfNeeded:message.addedOccupantsIDs andShowNotificationForMessage:message];
+        } else {
+            
+            [self showNotificationForMessage:message inDialogID:dialogID];
+        }
     }
 }
-
 
 #pragma mark - QMChatConnectionDelegate
 
@@ -233,7 +256,7 @@
     [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil) maskType:SVProgressHUDMaskTypeClear];
 }
 
-- (void)chatServiceChatDidNotLoginWithError:(NSError *)error
+- (void)chatService:(QMChatService *)chatService chatDidNotConnectWithError:(NSError *)error
 {
     if ([[QMApi instance] isInternetConnected]) {
         [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription]];

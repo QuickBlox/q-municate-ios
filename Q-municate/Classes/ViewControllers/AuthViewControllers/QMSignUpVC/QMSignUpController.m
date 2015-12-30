@@ -95,7 +95,8 @@
     NSString *email = self.emailField.text;
     NSString *password = self.passwordField.text;
     
-    if (fullName.length == 0 || password.length == 0 || email.length == 0) {
+    NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
+    if (fullName.length == 0 || password.length == 0 || email.length == 0 || [[fullName stringByTrimmingCharactersInSet:whiteSpaceSet] length] == 0) {
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) actionSuccess:NO];
         return;
     }
@@ -130,7 +131,7 @@
                         [[QMApi instance] updateCurrentUser:nil image:weakSelf.cachedPicture progress:^(float progress) {
                             //
                             [SVProgressHUD showProgress:progress status:nil maskType:SVProgressHUDMaskTypeClear];
-                        } completion:^(BOOL success) {
+                        } completion:^(BOOL succeed) {
                             //
                             presentTabBar();
                         }];

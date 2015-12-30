@@ -16,7 +16,7 @@
 UITableViewDataSource,
 QMChatServiceDelegate,
 QMChatConnectionDelegate,
-QMContactListServiceDelegate
+QMUsersServiceDelegate
 >
 
 
@@ -33,24 +33,12 @@ QMContactListServiceDelegate
     self = [super init];
     if (self) {
         [[QMApi instance].chatService addDelegate:self];
-        [[QMApi instance].contactListService addDelegate:self];
+        [[QMApi instance].usersService addDelegate:self];
         self.tableView = tableView;
         self.tableView.dataSource = self;
     }
     
     return self;
-}
-
-- (void)retrieveUserIfNeededWithMessage:(QBChatMessage *)message
-{
-    __weak typeof(self)weakSelf = self;
-    if (message.messageType == QMMessageTypeContactRequest) {
-        [[QMApi instance].contactListService retrieveIfNeededUserWithID:message.senderID completion:^(BOOL retrieveWasNeeded) {
-            if (retrieveWasNeeded) {
-                [weakSelf updateGUI];
-            }
-        }];
-    }
 }
 
 - (void)updateGUI {
@@ -169,7 +157,13 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 }
 
 - (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
-    [self updateGUI];
+    
+    [[[QMApi instance].usersService getUsersWithIDs:chatDialog.occupantIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+        //
+        [self updateGUI];
+        
+        return nil;
+    }];
 }
 
 - (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
@@ -177,9 +171,7 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 }
 
 - (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
-    
     [self updateGUI];
-    [self retrieveUserIfNeededWithMessage:message];
 }
 
 - (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
@@ -196,7 +188,7 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 
 #pragma mark Contact List Serice Delegate
 
-- (void)contactListService:(QMContactListService *)contactListService didAddUsers:(NSArray *)users {
+- (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)user {
     [self.tableView reloadData];
 }
 

@@ -26,8 +26,10 @@ NSString *const kQMDataKey = @"data";
         
         [friendsRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
             NSArray *myFriends = error ? @[] : [result objectForKey:kQMDataKey];
-            completion(myFriends);
+            if (completion) completion(myFriends);
          }];
+    } else {
+        if (completion) completion(@[]);
     }
 }
 
@@ -40,7 +42,7 @@ NSString *const kQMDataKey = @"data";
         for (NSDictionary *user in facebookFriends) {
             [array addObject:[user valueForKey:@"id"]];
         }
-        completion(array);
+        if (completion) completion(array);
     }];
 }
 
@@ -60,7 +62,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     
     [friendsRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
         //
-        completion(result);
+        if (completion) completion(result);
     }];
 }
 
@@ -105,7 +107,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
          }];
     }
     else {
-        completion(session.tokenString);
+        if (completion) completion(session.tokenString);
     }
 }
 

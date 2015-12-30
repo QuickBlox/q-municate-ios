@@ -9,7 +9,7 @@
 #import "QMMessageBarStyleSheetFactory.h"
 #import "QMApi.h"
 #import "QMChatUtils.h"
-
+#import <SDWebImageManager.h>
 
 @implementation QMMessageBarStyleSheetFactory
 
@@ -20,18 +20,19 @@
     
     if (chatDialog.type ==  QBChatDialogTypeGroup) {
         
-        img = [UIImage imageNamed:@"upic_placeholder_details_group"];
+        img = [self imageForKey:chatDialog.photo withPlaceHolder:[UIImage imageNamed:@"upic_placeholder_details_group"]];
         title = chatDialog.name;
     }
     else if (chatDialog.type == QBChatDialogTypePrivate) {
         
         QBUUser *user = [[QMApi instance] userWithID:message.senderID];
+        
         title = user.fullName;
-        img = [UIImage imageNamed:@"upic_placeholderr"];
+        img = [self imageForKey:user.avatarUrl withPlaceHolder:[UIImage imageNamed:@"upic_placeholderr"]];
     }
     
     NSString *messageText = [NSString string];
-    if (message.isNotificatonMessage && message.messageType != QMMessageTypeUpdateGroupDialog) {
+    if (message.isNotificatonMessage) {
         messageText = [QMChatUtils messageTextForNotification:message];
     }
     else {
@@ -46,6 +47,14 @@
     [newNotification show];
 }
 
-
++ (UIImage *)imageForKey:(NSString *)key withPlaceHolder:(UIImage *)placeHolder{
+    
+    UIImage *image = [[[SDWebImageManager sharedManager] imageCache] imageFromDiskCacheForKey:key];
+    if (image == nil) {
+        image = placeHolder;
+    }
+    
+    return image;
+}
 
 @end

@@ -18,8 +18,6 @@
 <MFMailComposeViewControllerDelegate, QMCheckBoxStateDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sendButton;
-
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) QMInviteFriendsDataSource *dataSource;
 
 @end
@@ -68,7 +66,7 @@
                 [weakSelf.dataSource clearABFriendsToInvite];
                 [SVProgressHUD showSuccessWithStatus:@"Success!"];
             }
-#warning Reachability case needed also!
+// TODO: Reachability case
             else if (result == MFMailComposeResultFailed && !error) {
                 [[[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"QM_STR_MAIL_COMPOSER_ERROR_DESCRIPTION_FOR_INVITE", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) otherButtonTitles:nil] show];
                 

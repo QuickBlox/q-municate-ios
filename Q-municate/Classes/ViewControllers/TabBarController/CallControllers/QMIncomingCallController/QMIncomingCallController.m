@@ -12,6 +12,7 @@
 #import "QMSoundManager.h"
 #import "QMVideoP2PController.h"
 #import "QMAVCallManager.h"
+#import "QMUsersUtils.h"
 
 @interface QMIncomingCallController ()<QBRTCClientDelegate>
 
@@ -44,15 +45,15 @@
         self.userNameLabel.text = @"Unknown caller";
     }
  
-    if (self.callType == QBConferenceTypeVideo) {
+    if (self.callType == QBRTCConferenceTypeVideo) {
         [self.incomingCallView setHidden:YES];
         self.incomingCallLabel.text = NSLocalizedString(@"QM_STR_INCOMING_VIDEO_CALL", nil);
-    } else if (self.callType == QBConferenceTypeAudio) {
+    } else if (self.callType == QBRTCConferenceTypeAudio) {
         [self.incomingVideoCallView setHidden:YES];
         self.incomingCallLabel.text = NSLocalizedString(@"QM_STR_INCOMING_CALL", nil);
     }
 
-    NSURL *url = [NSURL URLWithString:opponent.website];
+    NSURL *url = [QMUsersUtils userAvatarURL:opponent];
     UIImage *placeholder = [UIImage imageNamed:@"upic_call"];
     
     [self.userAvatarView setImageWithURL:url
@@ -66,12 +67,17 @@
 
 #pragma mark - Actions
 
+- (void)confirmCall {
+    [[QMApi instance] acceptCall];
+}
+
 - (IBAction)acceptCall:(id)sender {
     __weak __typeof(self) weakSelf = self;
     [[[QMApi instance] avCallManager] checkPermissionsWithConferenceType:self.callType completion:^(BOOL canContinue) {
         if( canContinue ) {
+            [weakSelf confirmCall];
 			[[QMSoundManager instance] stopAllSounds];
-            if (weakSelf.callType == QBConferenceTypeVideo) {
+            if (weakSelf.callType == QBRTCConferenceTypeVideo) {
                 [weakSelf performSegueWithIdentifier:kGoToDuringVideoCallSegueIdentifier sender:weakSelf];
             } else {
                 [weakSelf performSegueWithIdentifier:kGoToDuringAudioCallSegueIdentifier sender:nil];
@@ -85,6 +91,7 @@
     [[QMSoundManager instance] stopAllSounds];
     [[[QMApi instance] avCallManager] checkPermissionsWithConferenceType:self.callType completion:^(BOOL canContinue) {
         if( canContinue ) {
+            [weakSelf confirmCall];
             [[QMSoundManager instance] stopAllSounds];
             [weakSelf performSegueWithIdentifier:kGoToDuringVideoCallSegueIdentifier sender:nil];
         }
@@ -112,7 +119,7 @@
     [QBRTCClient.instance removeDelegate:self];
 }
 
-- (void)sessionWillClose:(QBRTCSession *)session {
+- (void)sessionDidClose:(QBRTCSession *)session {
     if( self.session == session ) {
         [self cleanUp];
     }

@@ -24,22 +24,7 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 /**
  *  Q-municate services manager
  */
-@interface QMApi : NSObject <QMServiceManagerProtocol,
-                             QMChatServiceCacheDataSource,
-                             QMChatServiceDelegate,
-                             QMChatConnectionDelegate,
-                             QMContactListServiceDelegate,
-                             QMContactListServiceCacheDataSource>
-
-/**
- *  REST authentication service.
- */
-@property (strong, nonatomic, readonly) QMAuthService* authService;
-
-/**
- *  Chat service.
- */
-@property (strong, nonatomic, readonly) QMChatService* chatService;
+@interface QMApi : QMServicesManager <QMContactListServiceCacheDataSource, QMChatServiceDelegate, QMChatConnectionDelegate>
 
 /**
  *  Contact list service.
@@ -65,11 +50,6 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  *  Reachability manager.
  */
 @property (strong, nonatomic, readonly) Reachability *internetConnection;
-
-/**
- *  Current user.
- */
-@property (strong, nonatomic, readonly) QBUUser *currentUser;
 
 /**
  *  Current device token for push notifications.
@@ -165,7 +145,7 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  *
  *  @param completion   completion block with success status
  */
-- (void)logout:(void(^)(BOOL success))completion;
+- (void)logoutWithCompletion:(void(^)(BOOL success))completion;
 
 /**
  *  Resetting user's password.
@@ -211,16 +191,21 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 /*** Messages ***/
 
 /**
- *  Loggin in to chat.
+ *  Connecting to the chat.
  *
  *  @param block    completion block with success status
  */
-- (void)loginChat:(void(^)(BOOL success))block;
+- (void)connectChat:(void(^)(BOOL success))block;
 
 /**
- *  Loggin out from chat.
+ *  Disconnecting from the chat.
  */
-- (void)logoutFromChat;
+- (void)disconnectFromChat;
+
+/**
+ *  Disconnecting from the chat if there is no active call.
+ */
+- (void)disconnectFromChatIfNeeded;
 
 /*** Chat Dialogs ***/
 
@@ -291,9 +276,9 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  *  Leaving group chat.
  *
  *  @param chatDialog   QBChatDialog instance to leave
- *  @param completion   completion with QBChatDialogResponseBlock block
+ *  @param completion   completion with failure error
  */
-- (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion;
+- (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatCompletionBlock)completion;
 
 /**
  *  Adding users to group chat.
@@ -303,11 +288,6 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  *  @param completion   completion with QBChatDialogResponseBlock block
  */
 - (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion;
-
-/**
- *  Join all group chats that are exist in history.
- */
-- (void)joinGroupDialogs;
 
 /**
  *  Changing group chat name.
@@ -531,9 +511,9 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 @interface QMApi (Calls)
 
 /* Call to users with conference type. */
-- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBConferenceType)conferenceType;
+- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBRTCConferenceType)conferenceType;
 /* Call to users with conference type and send push notification */
-- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBConferenceType)conferenceType sendPushNotificationIfUserIsOffline:(BOOL)pushEnabled;
+- (void)callToUser:(NSNumber *)userID conferenceType:(enum QBRTCConferenceType)conferenceType sendPushNotificationIfUserIsOffline:(BOOL)pushEnabled;
 /* Accept call */
 - (void)acceptCall;
 /* Reject call */

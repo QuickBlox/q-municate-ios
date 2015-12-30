@@ -20,18 +20,21 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.btnMic.enabled = NO;
+    [[QBRTCClient instance] addDelegate:self];
+    
     self.btnSpeaker.userInteractionEnabled = NO;
 
-    if( QMApi.instance.avCallManager.session ){
-        self.session = QMApi.instance.avCallManager.session;
+    if( [QMApi instance].avCallManager.session ){
+        self.session = [QMApi instance].avCallManager.session;
     }
-    [QBRTCClient.instance addDelegate:self];
     
-    [self subscribeForNotifications];
-    !self.isOpponentCaller ? [self startCall] : [self confirmCall];
+    if (self.session.conferenceType == QBRTCConferenceTypeVideo) {
+        [[QMApi instance].avCallManager startCameraCapture];
+    }
     
-    [self.contentView updateViewWithUser:self.opponent conferenceType:self.session.conferenceType isOpponentCaller:self.isOpponentCaller];
-    [self updateButtonsState];
+    [self.contentView updateViewWithUser:self.opponent conferenceType:self.session.conferenceType isOpponentCaller:[[QMApi instance].avCallManager isOpponentCaller]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(audioSessionRouteChanged:)
@@ -39,32 +42,21 @@
                                                object:nil];
 }
 
+/** Override in subclasses **/
 - (void)audioSessionRouteChanged:(NSNotification *)notification {
     
 }
 
 - (void)updateButtonsState {
-    [self.btnMic setSelected:!self.session.audioEnabled];
+    [self.btnMic setSelected:!self.session.localMediaStream.audioTrack.enabled];
     [self.btnSwitchCamera setSelected:!QMApi.instance.avCallManager.isFrontCamera];
-    [self.btnSwitchCamera setUserInteractionEnabled:self.session.videoEnabled];
-    [self.btnVideo setSelected:!self.session.videoEnabled];
+    [self.btnSwitchCamera setUserInteractionEnabled:self.session.localMediaStream.videoTrack.enabled];
+    [self.btnVideo setSelected:!self.session.localMediaStream.videoTrack.enabled];
     [self.btnSpeaker setSelected:[[AVAudioSession sharedInstance] categoryOptions] == AVAudioSessionCategoryOptionDefaultToSpeaker];
-    [self.camOffView setHidden:self.session.videoEnabled];
-}
-
-- (void)subscribeForNotifications {
-    
+    [self.camOffView setHidden:self.session.localMediaStream.videoTrack.enabled];
 }
 
 #pragma mark - Override actions
-
-// Override this method in child:
-- (void)startCall{}
-
-// Override this method in child:
-- (void)confirmCall {
-    [[QMApi instance] acceptCall];
-}
 
 - (IBAction)stopCallTapped:(id)sender {
     [self.contentView stopTimer];
@@ -95,11 +87,6 @@
 
 #pragma mark - Calls notifications
 
-// Override this method in child:
-- (void)callStartedWithUser {
-    
-}
-
 - (void)callStoppedByOpponentForReason:(NSString *)reason {
     // stop playing sound:
     [[QMSoundManager instance] stopAllSounds];
@@ -122,35 +109,50 @@
 
 - (IBAction)speakerTapped:(IAButton *)sender {
 
-	QBSoundRouter *router = [QBSoundRouter instance];
-	QBSoundRoute  currentRoute = [router currentSoundRoute];
+	QBRTCSoundRouter *router = [QBRTCSoundRouter instance];
+	QBRTCSoundRoute  currentRoute = [router currentSoundRoute];
 	
-	sender.selected =  currentRoute == QBSoundRouteSpeaker;
+	sender.selected =  currentRoute == QBRTCSoundRouteSpeaker;
 	
-	if( currentRoute == QBSoundRouteSpeaker ){
-		[router setCurrentSoundRoute:QBSoundRouteReceiver];
+	if( currentRoute == QBRTCSoundRouteSpeaker ){
+		[router setCurrentSoundRoute:QBRTCSoundRouteReceiver];
 	}
 	else{
-		[router setCurrentSoundRoute:QBSoundRouteSpeaker];
+		[router setCurrentSoundRoute:QBRTCSoundRouteSpeaker];
 	}
 }
 
 - (IBAction)cameraSwitchTapped:(IAButton *)sender {
 
-    [self.session switchCamera:^(BOOL isFrontCamera) {
-        QMApi.instance.avCallManager.frontCamera = isFrontCamera;
-        [sender setSelected:!isFrontCamera];
-    }];
+    AVCaptureDevicePosition position = [[QMApi instance].avCallManager.cameraCapture currentPosition];
+    AVCaptureDevicePosition newPosition = position == AVCaptureDevicePositionBack ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
+    
+    if ([[QMApi instance].avCallManager.cameraCapture hasCameraForPosition:newPosition]) {
+        
+        if (newPosition == AVCaptureDevicePositionFront) {
+            
+            [QMApi instance].avCallManager.frontCamera = YES;
+        }
+        else if(newPosition == AVCaptureDevicePositionBack) {
+            
+            [QMApi instance].avCallManager.frontCamera = NO;
+        }
+        
+        [[QMApi instance].avCallManager.cameraCapture selectCameraPosition:newPosition];
+    }
+
+    [sender setSelected:![QMApi instance].avCallManager.frontCamera];
 }
 
 - (IBAction)muteTapped:(id)sender {
-    [self.session setAudioEnabled:!self.session.audioEnabled];
-    [(IAButton *)sender setSelected:!self.session.audioEnabled];
+    [self.session.localMediaStream.audioTrack setEnabled:!self.session.localMediaStream.audioTrack.enabled];
+    [(IAButton *)sender setSelected:!self.session.localMediaStream.audioTrack.enabled];
 }
 
 - (IBAction)videoTapped:(id)sender {
-    [self.session setVideoEnabled:!self.session.videoEnabled];
-    [(IAButton *)sender setSelected:!self.session.videoEnabled];
+    [self.session.localMediaStream.videoTrack setEnabled:!self.session.localMediaStream.videoTrack.enabled];
+    
+    [(IAButton *)sender setSelected:!self.session.localMediaStream.videoTrack.enabled];
 }
 
 - (void)dealloc {
@@ -169,32 +171,33 @@
     ILog(@"disconnectedFromUser:%@", userID);
 }
 
-- (void)session:(QBRTCSession *)session disconnectTimeoutForUser:(NSNumber *)userID {
+- (void)session:(QBRTCSession *)session disconnectedByTimeoutFromUser:(NSNumber *)userID {
     ILog(@"disconnectTimeoutForUser:%@", userID);
 }
 
 - (void)session:(QBRTCSession *)session rejectedByUser:(NSNumber *)userID userInfo:(NSDictionary *)userInfo {
-    if( [userID unsignedIntegerValue] != [[[QMApi instance] currentUser] ID]) {
-        // current user not initiated end of call
-        [self callStoppedByOpponentForReason:kStopVideoChatCallStatus_Manually];
-    }
-    else{
-         [self callStoppedByOpponentForReason:nil];
+    
+    if (session == self.session) {
+        if( [userID unsignedIntegerValue] != [[[QMApi instance] currentUser] ID]) {
+            // current user not initiated end of call
+            [self callStoppedByOpponentForReason:kStopVideoChatCallStatus_Manually];
+        }
+        else{
+            [self callStoppedByOpponentForReason:nil];
+        }
     }
 }
 
 - (void)session:(QBRTCSession *)session hungUpByUser:(NSNumber *)userID userInfo:(NSDictionary *)userInfo{
-    [self.contentView stopTimer];
-    [self stopActivityIndicator];
-    [self callStoppedByOpponentForReason:nil];
+    
+    if (session == self.session) {
+        [self.contentView stopTimer];
+        [self stopActivityIndicator];
+        [self callStoppedByOpponentForReason:nil];
+    }
 }
 
-- (void)sessionWillClose:(QBRTCSession *)session {
-    
-    if( self.session != session ){
-        return;
-    }
-    
+- (void)sessionDidClose:(QBRTCSession *)session {
     QBRTCConnectionState state = [session connectionStateForUser:@(self.opponent.ID)];
     
     if( state == QBRTCConnectionFailed ){
@@ -209,18 +212,13 @@
     else if( state != QBRTCConnectionUnknown && state != QBRTCConnectionClosed ){
         [self callStoppedByOpponentForReason:nil];
     }
-}
-
-- (void)session:(QBRTCSession *)session didReceiveLocalVideoTrack:(QBRTCVideoTrack *)videoTrack {
-    self.localVideoTrack = videoTrack;
-}
-
-- (void)session:(QBRTCSession *)session didReceiveRemoteVideoTrack:(QBRTCVideoTrack *)videoTrack fromUser:(NSNumber *)userID {
-    self.opponentVideoTrack = videoTrack;
-}
-
-- (void)sessionDidClose:(QBRTCSession *)session {
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionRouteChangeNotification object:nil];
+}
+
+- (void)session:(QBRTCSession *)session initializedLocalMediaStream:(QBRTCMediaStream *)mediaStream {
+    self.btnMic.enabled = YES;
+    [self updateButtonsState];
 }
 
 @end

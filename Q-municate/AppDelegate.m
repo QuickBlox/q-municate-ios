@@ -65,12 +65,14 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     self.window.backgroundColor = [UIColor whiteColor];
     
     // QB Settings
-    [QBApplication sharedApplication].applicationId = kQMApplicationID;
-    [QBConnection registerServiceKey:kQMAuthorizationKey];
-    [QBConnection registerServiceSecret:kQMAuthorizationSecret];
-
+    [QBSettings setApplicationID:kQMApplicationID];
+    [QBSettings setAuthKey:kQMAuthorizationKey];
+    [QBSettings setAuthSecret:kQMAuthorizationSecret];
     [QBSettings setAccountKey:kQMAcconuntKey];
-//    [QBSettings setLogLevel:QBLogLevelDebug];
+//    [QBSettings setLogLevel:QBLogLevelNothing];
+    
+    //QuickbloxWebRTC preferences
+    [QBRTCClient initializeRTC];
     
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
     if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
@@ -84,11 +86,6 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 #else
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
 #endif
-    
-#ifndef DEBUG
-    [QBApplication sharedApplication].productionEnvironmentForPushesEnabled = YES;
-#endif
-    
     
 #if STAGE_SERVER_IS_ACTIVE == 1
 //    [QBSettings setServerApiDomain:@"https://api.stage.quickblox.com"];
@@ -107,9 +104,6 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     
     [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateNormal];
     [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateDisabled];
-    
-    // Fire services:
-    [QMApi instance];
     
     /** Crashlytics */
     [Crashlytics startWithAPIKey:@"7aea78439bec41a9005c7488bb6751c5e33fe270"];
@@ -131,7 +125,11 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
             if ([dialogWithIDWasEntered isEqualToString:dialogID]) return;
             
             [[QMApi instance] setPushNotification:userInfo];
-            [[QMApi instance] handlePushNotificationWithDelegate:self];
+            
+            // calling dispatch async for push notification handling to have priority in main queue
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[QMApi instance] handlePushNotificationWithDelegate:self];
+            });
         }
         ILog(@"Push was received. User info: %@", userInfo);
     }
@@ -151,7 +149,7 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     if (!QMApi.instance.currentUser) {
         return;
     }
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    if (![QBChat instance].isConnected) [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     [[QMApi instance] applicationDidBecomeActive:^(BOOL success) {}];
 }
 
