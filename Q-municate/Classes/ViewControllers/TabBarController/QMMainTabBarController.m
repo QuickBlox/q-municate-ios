@@ -186,7 +186,7 @@
 
 - (void)getUsersIfNeeded:(NSArray *)users andShowNotificationForMessage:(QBChatMessage *)message {
     __weak __typeof(self)weakSelf = self;
-    [[[QMApi instance].usersService getUsersWithIDs:message.addedOccupantsIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+    [[[QMApi instance].usersService getUsersWithIDs:users] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
         //
         [weakSelf showNotificationForMessage:message inDialogID:message.dialogID];
         return nil;

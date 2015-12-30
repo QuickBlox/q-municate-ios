@@ -1313,7 +1313,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = QM;
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = Quickblox;
 				TargetAttributes = {
 					69D57E5118ACC11C00A9900A = {
@@ -1533,6 +1533,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1593,7 +1594,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 01E0EAD58B177DC530737810 /* Pods.debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1622,6 +1622,7 @@
 					"-lstdc++",
 				);
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
 				PRODUCT_NAME = "Q-municate";
 				PROVISIONING_PROFILE = "";
 				REZ_SEARCH_PATHS = "$(inherited)";
@@ -1646,7 +1647,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E0ACA76B4B11E4DB839DD9F3 /* Pods.release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
@@ -1680,6 +1680,7 @@
 					"-lstdc++",
 				);
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
 				PRODUCT_NAME = "Q-municate";
 				PROVISIONING_PROFILE = "5a0222f4-0cc9-49d2-bbeb-6bd82d6c47a0";
 				REZ_SEARCH_PATHS = "$(inherited)";

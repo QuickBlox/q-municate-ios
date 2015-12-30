@@ -20,6 +20,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.btnMic.enabled = NO;
     [[QBRTCClient instance] addDelegate:self];
     
     self.btnSpeaker.userInteractionEnabled = NO;
@@ -33,7 +35,6 @@
     }
     
     [self.contentView updateViewWithUser:self.opponent conferenceType:self.session.conferenceType isOpponentCaller:[[QMApi instance].avCallManager isOpponentCaller]];
-    [self updateButtonsState];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(audioSessionRouteChanged:)
@@ -213,6 +214,11 @@
     }
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionRouteChangeNotification object:nil];
+}
+
+- (void)session:(QBRTCSession *)session initializedLocalMediaStream:(QBRTCMediaStream *)mediaStream {
+    self.btnMic.enabled = YES;
+    [self updateButtonsState];
 }
 
 @end

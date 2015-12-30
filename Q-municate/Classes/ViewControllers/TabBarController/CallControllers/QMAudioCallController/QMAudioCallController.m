@@ -19,8 +19,8 @@
     if( [[QMApi instance].avCallManager isOpponentCaller] ){
         // Me is not a caller
     
-        if( [QMApi instance].currentUser.ID != [userID unsignedIntegerValue] ){
-            [[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteReceiver];
+        if( [QMApi instance].currentUser.ID != [userID unsignedIntegerValue] ) {
+            [[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker];
         }
         [self updateButtonsState];
     }

@@ -16,7 +16,7 @@
 UITableViewDataSource,
 QMChatServiceDelegate,
 QMChatConnectionDelegate,
-QMContactListServiceDelegate
+QMUsersServiceDelegate
 >
 
 
@@ -33,7 +33,7 @@ QMContactListServiceDelegate
     self = [super init];
     if (self) {
         [[QMApi instance].chatService addDelegate:self];
-        [[QMApi instance].contactListService addDelegate:self];
+        [[QMApi instance].usersService addDelegate:self];
         self.tableView = tableView;
         self.tableView.dataSource = self;
     }
@@ -188,7 +188,7 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 
 #pragma mark Contact List Serice Delegate
 
-- (void)contactListService:(QMContactListService *)contactListService didAddUsers:(NSArray *)users {
+- (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)user {
     [self.tableView reloadData];
 }
 
