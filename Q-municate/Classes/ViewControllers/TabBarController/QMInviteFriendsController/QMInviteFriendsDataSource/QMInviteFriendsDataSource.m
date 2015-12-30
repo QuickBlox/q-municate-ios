@@ -191,7 +191,7 @@ const NSUInteger kQMNumberOfSection = 2;
  */
 - (NSString *)keyAtSection:(NSUInteger)section {
     
-    NSString *sectionKey = [NSString stringWithFormat:@"section - %d", section];
+    NSString *sectionKey = [NSString stringWithFormat:@"section - %tu", section];
     return sectionKey;
 }
 

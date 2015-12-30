@@ -42,7 +42,7 @@
     self.descriptionLabel.text =  [chatDialog.lastMessageText gtm_stringByUnescapingFromHTML];
     self.groupMembersNumb.hidden = self.groupNumbBackground.hidden = !isGroup;
     self.unreadMsgBackground.hidden = self.unreadMsgNumb.hidden = (chatDialog.unreadMessagesCount == 0);
-    self.unreadMsgNumb.text = [NSString stringWithFormat:@"%d", chatDialog.unreadMessagesCount];
+    self.unreadMsgNumb.text = [NSString stringWithFormat:@"%tu", chatDialog.unreadMessagesCount];
     
     if (!isGroup) {
         
@@ -59,7 +59,7 @@
         UIImage *img = [UIImage imageNamed:@"upic_placeholder_details_group"];
         [self.qmImageView setImageWithURL:[NSURL URLWithString:chatDialog.photo] placeholder:img options:SDWebImageCacheMemoryOnly progress:^(NSInteger receivedSize, NSInteger expectedSize) {} completedBlock:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {}];
         self.titleLabel.text = chatDialog.name;
-        self.groupMembersNumb.text = [NSString stringWithFormat:@"%d", chatDialog.occupantIDs.count];
+        self.groupMembersNumb.text = [NSString stringWithFormat:@"%tu", chatDialog.occupantIDs.count];
     }
 }
 

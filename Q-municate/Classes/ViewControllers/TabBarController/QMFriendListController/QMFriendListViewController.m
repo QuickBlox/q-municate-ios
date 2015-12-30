@@ -144,7 +144,7 @@
     NSUInteger idx = [self.tabBarController.viewControllers indexOfObject:self.navigationController];
     if (idx != NSNotFound) {
         UITabBarItem *item = self.tabBarController.tabBar.items[idx];
-        item.badgeValue = contactRequestsCount > 0 ? [NSString stringWithFormat:@"%d", contactRequestsCount] : nil;
+        item.badgeValue = contactRequestsCount > 0 ? [NSString stringWithFormat:@"%tu", contactRequestsCount] : nil;
     }
 }
 

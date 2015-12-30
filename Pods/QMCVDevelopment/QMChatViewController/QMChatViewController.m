@@ -310,7 +310,7 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
         
         [indexPathToInsert addObject:[NSIndexPath indexPathForRow:0
                                                         inSection:sectionIndex]];
-
+        
     }
     
     NSMutableIndexSet *sectionsIndexSet = [NSMutableIndexSet indexSet];

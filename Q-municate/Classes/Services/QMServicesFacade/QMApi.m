@@ -28,7 +28,6 @@ static NSString *const kQMErrorPasswordKey = @"password";
 @property (strong, nonatomic) QMContactListService* contactListService;
 @property (strong, nonatomic) QMAVCallManager *avCallManager;
 @property (strong, nonatomic) QMContentService *contentService;
-@property (strong, nonatomic) QMUsersService* usersService;
 @property (strong, nonatomic) Reachability *internetConnection;
 @property (strong, nonatomic) NSTimer *presenceTimer;
 
