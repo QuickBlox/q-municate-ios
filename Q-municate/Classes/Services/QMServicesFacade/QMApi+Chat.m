@@ -8,7 +8,6 @@
 
 #import "QMApi.h"
 #import "QMSettingsManager.h"
-#import "QMApi+Notifications.m"
 #import "QMContentService.h"
 #import "QMAVCallManager.h"
 #import "QMChatUtils.h"
@@ -88,60 +87,46 @@
 
 - (void)createGroupChatDialogWithName:(NSString *)name occupants:(NSArray *)occupants completion:(void(^)(QBChatDialog *chatDialog))completion {
     
-    __weak typeof(self)weakSelf = self;
-    [[self.chatService createGroupChatDialogWithName:name photo:nil occupants:occupants] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
-        //
-        if (task.error != nil) {
-            
+    __block QBChatDialog *chatDialog = nil;
+    NSArray *occupantsIDs = [self idsWithUsers:occupants];
+    
+    @weakify(self);
+    [[[self.chatService createGroupChatDialogWithName:name photo:nil occupants:occupants] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+        @strongify(self);
+        if (task.isFaulted) {
             if (completion) completion(nil);
+            return nil;
         } else {
-            
-            __typeof(weakSelf)strongSelf = weakSelf;
-            NSArray *occupantsIDs = [strongSelf idsWithUsers:occupants];
-            
-            [strongSelf.chatService sendSystemMessageAboutAddingToDialog:task.result toUsersIDs:occupantsIDs completion:^(NSError *systemMessageError) {
-                //
-                [strongSelf.chatService sendNotificationMessageAboutAddingOccupants:occupantsIDs
-                                                                           toDialog:task.result
-                                                               withNotificationText:kDialogsUpdateNotificationMessage
-                                                                         completion:^(NSError *error) {
-                                                                             //
-                                                                             if (completion) completion(task.result);
-                                                                         }];
-            }];
-            
+            if (completion) completion(task.result);
+            chatDialog = task.result;
+            return [self.chatService sendSystemMessageAboutAddingToDialog:chatDialog toUsersIDs:occupantsIDs];
         }
-        
-        return nil;
+    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        @strongify(self);
+        return [self.chatService sendNotificationMessageAboutAddingOccupants:occupantsIDs toDialog:chatDialog withNotificationText:kDialogsUpdateNotificationMessage];
     }];
 }
-
 
 #pragma mark - Edit dialog methods
 
 - (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(void (^)(QBChatDialog *updatedDialog))completion {
     
-    __weak __typeof(self)weakSelf = self;
+    @weakify(self);
     [[self.chatService changeDialogName:dialogName forChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
-        //
-        if (task.error != nil) {
+        @strongify(self);
+        if (task.isFaulted) {
             if (completion) completion(nil);
+            return nil;
         } else {
-            [weakSelf.chatService sendNotificationMessageAboutChangingDialogName:task.result
-                                                            withNotificationText:kDialogsUpdateNotificationMessage
-                                                                      completion:^(NSError * _Nullable error) {
-                                                                          //
-                                                                      }];
             if (completion) completion(task.result);
+            return [self.chatService sendNotificationMessageAboutChangingDialogName:task.result withNotificationText:kDialogsUpdateNotificationMessage];
         }
-        
-        return nil;
     }];
 }
 
 - (void)changeAvatar:(UIImage *)avatar forChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(QBChatDialog *updatedDialog))completion
 {
-    __weak typeof(self)weakSelf = self;
+    @weakify(self);
     [self.contentService uploadPNGImage:avatar progress:^(float progress) {
         //
     } completion:^(QBResponse *response, QBCBlob *blob) {
@@ -151,50 +136,40 @@
             return;
         }
         
-        __typeof(weakSelf)strongSelf = weakSelf;
-        [[strongSelf.chatService changeDialogAvatar:blob.publicUrl forChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+        @strongify(self);
+        [[self.chatService changeDialogAvatar:blob.publicUrl forChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
             //
-            if (task.error != nil) {
+            if (task.isFaulted) {
                 if (completion) completion(nil);
+                return nil;
             } else {
-                [strongSelf.chatService sendNotificationMessageAboutChangingDialogPhoto:task.result
-                                                                   withNotificationText:kDialogsUpdateNotificationMessage
-                                                                             completion:^(NSError * _Nullable error) {
-                                                                                 //
-                                                                             }];
                 if (completion) completion(task.result);
+                return [self.chatService sendNotificationMessageAboutChangingDialogPhoto:task.result withNotificationText:kDialogsUpdateNotificationMessage];
             }
-            
-            return nil;
         }];
     }];
 }
 
 - (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(QBChatDialog *updatedDialog))completion {
     
+    __block QBChatDialog *dialog = nil;
     NSArray *occupantsToJoinIDs = [self idsWithUsers:occupants];
     
-    __weak __typeof(self)weakSelf = self;
-    [[self.chatService joinOccupantsWithIDs:occupantsToJoinIDs toChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+    @weakify(self);
+    [[[self.chatService joinOccupantsWithIDs:occupantsToJoinIDs toChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
         //
-        if (task.error != nil) {
+        if (task.isFaulted) {
             if (completion) completion(nil);
+            return nil;
         } else {
-            
-            __typeof(weakSelf)strongSelf = weakSelf;
-            [strongSelf.chatService sendSystemMessageAboutAddingToDialog:chatDialog toUsersIDs:occupantsToJoinIDs completion:^(NSError * _Nullable systemMessageError) {
-                //
-                [strongSelf.chatService sendNotificationMessageAboutAddingOccupants:occupantsToJoinIDs
-                                                                           toDialog:task.result
-                                                               withNotificationText:kDialogsUpdateNotificationMessage
-                                                                         completion:^(NSError * _Nullable error) {
-                                                                             //
-                                                                         }];
-                if (completion) completion(task.result);
-            }];
+            @strongify(self);
+            dialog = task.result;
+            if (completion) completion(task.result);
+            return [self.chatService sendSystemMessageAboutAddingToDialog:dialog toUsersIDs:occupantsToJoinIDs];
         }
-        
-        return nil;
+    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        @strongify(self);
+        return [self.chatService sendNotificationMessageAboutAddingOccupants:occupantsToJoinIDs toDialog:dialog withNotificationText:kDialogsUpdateNotificationMessage];
     }];
 }
 

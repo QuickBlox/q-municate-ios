@@ -383,16 +383,17 @@ AGEmojiKeyboardViewDelegate
 - (void)sendReadStatusForMessage:(QBChatMessage *)message
 {
     if (message.senderID != self.senderID && ![message.readIDs containsObject:@(self.senderID)]) {
-        [[QMApi instance].chatService readMessage:message completion:^(NSError *error) {
+        [[[QMApi instance].chatService readMessage:message] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
             //
-            if (error != nil) {
-                NSLog(@"Problems while marking message as read! Error: %@", error);
-            }
-            else {
+            if (task.isFaulted) {
+                NSLog(@"Problems while marking message as read! Error: %@", task.error);
+            } else {
                 if ([UIApplication sharedApplication].applicationIconBadgeNumber > 0) {
                     [UIApplication sharedApplication].applicationIconBadgeNumber--;
                 }
             }
+            
+            return nil;
         }];
     }
 }
@@ -400,9 +401,7 @@ AGEmojiKeyboardViewDelegate
 - (void)readMessages:(NSArray *)messages
 {
     if ([QBChat instance].isConnected) {
-        [[QMApi instance].chatService readMessages:messages forDialogID:self.dialog.ID completion:^(NSError *error) {
-            //
-        }];
+        [[QMApi instance].chatService readMessages:messages forDialogID:self.dialog.ID];
     } else {
         self.unreadMessages = messages;
     }
@@ -464,11 +463,12 @@ AGEmojiKeyboardViewDelegate
     message.dateSent = date;
 
     // Sending message
-    [[QMApi instance].chatService sendMessage:message toDialogID:self.dialog.ID saveToHistory:YES saveToStorage:YES completion:^(NSError *error) {
+    [[[QMApi instance].chatService sendMessage:message toDialogID:self.dialog.ID saveToHistory:YES saveToStorage:YES] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         //
-        if (error != nil) {
-            [REAlertView showAlertWithMessage:error.localizedRecoverySuggestion actionSuccess:NO];
+        if (task.isFaulted) {
+            [REAlertView showAlertWithMessage:task.error.localizedRecoverySuggestion actionSuccess:NO];
         }
+        return nil;
     }];
     
     [self finishSendingMessageAnimated:YES];
@@ -936,30 +936,30 @@ AGEmojiKeyboardViewDelegate
     message.dialogID = self.dialog.ID;
     message.dateSent = [NSDate date];
     
-    __weak typeof(self)weakSelf = self;
+    @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        __typeof(weakSelf)strongSelf = weakSelf;
+        @strongify(self);
         UIImage* newImage = image;
-        if (strongSelf.pickerController.sourceType == UIImagePickerControllerSourceTypeCamera) {
+        if (self.pickerController.sourceType == UIImagePickerControllerSourceTypeCamera) {
             newImage = [newImage fixOrientation];
         }
         
-        UIImage* resizedImage = [strongSelf resizedImageFromImage:newImage];
+        UIImage* resizedImage = [self resizedImageFromImage:newImage];
         
         // Sending attachment to dialog.
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[QMApi instance].chatService sendAttachmentMessage:message
-                                                       toDialog:strongSelf.dialog
-                                            withAttachmentImage:resizedImage
-                                                     completion:^(NSError * _Nullable error) {
-                                                         //
-                                                         if (error != nil) {
-                                                             [SVProgressHUD showErrorWithStatus:error.localizedDescription];
-                                                         } else {
-                                                             [SVProgressHUD showSuccessWithStatus:@"Completed"];
-                                                         }
-                                                         strongSelf.isSendingAttachment = NO;
-                                                     }];
+            [[[QMApi instance].chatService sendAttachmentMessage:message
+                                                        toDialog:self.dialog
+                                             withAttachmentImage:resizedImage] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+                //
+                if (task.isFaulted) {
+                    [SVProgressHUD showErrorWithStatus:task.error.localizedDescription];
+                } else {
+                    [SVProgressHUD showSuccessWithStatus:@"Completed"];
+                }
+                self.isSendingAttachment = NO;
+                return nil;
+            }];
         });
     });
 }
