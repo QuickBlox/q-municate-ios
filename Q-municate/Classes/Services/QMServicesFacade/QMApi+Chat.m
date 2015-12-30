@@ -22,24 +22,24 @@
 #pragma mark - Messages
 
 - (void)connectChat:(void(^)(BOOL success))block {
-    [self.chatService connectWithCompletionBlock:^(NSError * _Nullable error) {
+    [[self.chatService connect] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         //
-        if (error != nil) {
-            block(YES);
+        if (block) {
+            block(task.isFaulted ? NO : YES);
         }
-        else {
-            block(NO);
-        }
+        return nil;
     }];
 }
 
 - (void)disconnectFromChat {
-    __weak __typeof(self)weakSelf = self;
-    [self.chatService disconnectWithCompletionBlock:^(NSError * _Nullable error) {
+    @weakify(self);
+    [[self.chatService disconnect] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         //
-        if (error == nil) {
-            [weakSelf.settingsManager setLastActivityDate:[NSDate date]];
+        if (task.isCompleted) {
+            @strongify(self);
+            [self.settingsManager setLastActivityDate:[NSDate date]];
         }
+        return nil;
     }];
 }
 
@@ -58,25 +58,28 @@
 
 - (void)fetchAllDialogs:(void(^)(void))completion {
 
-    __weak __typeof(self)weakSelf = self;
+    @weakify(self);
     if (self.settingsManager.lastActivityDate != nil) {
-        [self.chatService fetchDialogsUpdatedFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
-            //
-            [weakSelf.usersService getUsersWithIDs:[dialogsUsersIDs allObjects]];
-        } completionBlock:^(QBResponse *response) {
-            //
-            if (weakSelf.isAuthorized && response.success) weakSelf.settingsManager.lastActivityDate = [NSDate date];
+        [[self.chatService fetchDialogsUpdatedFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
+            @strongify(self);
+            [self.usersService getUsersWithIDs:[dialogsUsersIDs allObjects]];
+        }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+            @strongify(self);
+            if (self.isAuthorized && task.isCompleted) self.settingsManager.lastActivityDate = [NSDate date];
             if (completion) completion();
+            return nil;
         }];
     }
     else {
-        [self.chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
+        [[self.chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
+            @strongify(self);
+            [self.usersService getUsersWithIDs:[dialogsUsersIDs allObjects]];
+        }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
             //
-            [weakSelf.usersService getUsersWithIDs:[dialogsUsersIDs allObjects]];
-        } completion:^(QBResponse *response) {
-            //
-            if (weakSelf.isAuthorized && response.success) weakSelf.settingsManager.lastActivityDate = [NSDate date];
+            @strongify(self);
+            if (self.isAuthorized && task.isCompleted) self.settingsManager.lastActivityDate = [NSDate date];
             if (completion) completion();
+            return nil;
         }];
     }
 }
@@ -197,20 +200,21 @@
 
 - (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatCompletionBlock)completion {
     
-    __weak __typeof(self)weakSelf = self;
-    [self.chatService sendNotificationMessageAboutLeavingDialog:chatDialog
-                                           withNotificationText:kDialogsUpdateNotificationMessage
-                                                     completion:^(NSError * _Nullable error) {
-                                                         //
-                                                         if (error == nil) {
-                                                             [weakSelf.chatService deleteDialogWithID:chatDialog.ID completion:^(QBResponse *response) {
-                                                                 //
-                                                                 if (completion) completion(response.error.error);
-                                                             }];
-                                                         } else {
-                                                             if (completion) completion(error);
-                                                         }
-                                                     }];
+    @weakify(self);
+    [[[self.chatService sendNotificationMessageAboutLeavingDialog:chatDialog withNotificationText:kDialogsUpdateNotificationMessage] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        //
+        if (task.isFaulted) {
+            if (completion) completion(task.error);
+            return nil;
+        } else {
+            @strongify(self);
+            return [self.chatService deleteDialogWithID:chatDialog.ID];
+        }
+    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        //
+        if (completion) completion(task.error);
+        return nil;
+    }];
 }
 
 - (NSUInteger )occupantIDForPrivateChatDialog:(QBChatDialog *)chatDialog {
@@ -228,14 +232,6 @@
     
     NSAssert(nil, @"Need update this case");
     return 0;
-}
-
-- (void)deleteChatDialog:(QBChatDialog *)dialog completion:(void(^)(BOOL success))completionHandler
-{
-    [self.chatService deleteDialogWithID:dialog.ID completion:^(QBResponse *response) {
-        //
-        if (completionHandler) completionHandler(response.success);
-    }];
 }
 
 #pragma mark - Dialogs toos

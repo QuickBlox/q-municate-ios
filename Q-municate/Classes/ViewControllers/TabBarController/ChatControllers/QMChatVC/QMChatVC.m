@@ -196,9 +196,11 @@ AGEmojiKeyboardViewDelegate
         if (updatedDialog != nil) {
             self.dialog = updatedDialog;
             self.title = self.dialog.name;
-            [[QMApi instance].chatService joinToGroupDialog:self.dialog completion:^(NSError * _Nullable error) {
+            [[[QMApi instance].chatService joinToGroupDialog:self.dialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
                 //
-                if (error != nil) NSLog(@"Failed to join group dialog, because: %@", error.localizedDescription);
+                if (task.isFaulted) NSLog(@"Failed to join group dialog, because: %@", task.error.localizedDescription);
+                
+                return nil;
             }];
         }
         else {
@@ -1004,12 +1006,14 @@ AGEmojiKeyboardViewDelegate
         }];
     }
     else {
-        __weak __typeof(self)weakSelf = self;
         [[QMApi instance] rejectAddContactRequest:self.opponentUser completion:^(BOOL success) {
             //
-            [[QMApi instance] deleteChatDialog:self.dialog completion:^(BOOL succeed) {
-                [weakSelf.navigationController popViewControllerAnimated:YES];
+            @weakify(self);
+            [[[QMApi instance].chatService deleteDialogWithID:self.dialog.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+                @strongify(self);
+                [self.navigationController popViewControllerAnimated:YES];
                 [SVProgressHUD dismiss];
+                return nil;
             }];
         }];
     }

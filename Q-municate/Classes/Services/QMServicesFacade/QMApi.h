@@ -239,14 +239,6 @@ typedef void(^QBDialogsPagedResponseBlock)(QBResponse *response, NSArray *dialog
 - (void)fetchAllDialogs:(void(^)(void))completion;
 
 /**
- *  Deleting dialog.
- *
- *  @param dialog       QBChatDialog instance to delete
- *  @param completion   completion block with success status
- */
-- (void)deleteChatDialog:(QBChatDialog *)dialog completion:(void(^)(BOOL success))completionHandler;
-
-/**
  *  Creating group chat.
  *
  *  @param name         name of new group chat
