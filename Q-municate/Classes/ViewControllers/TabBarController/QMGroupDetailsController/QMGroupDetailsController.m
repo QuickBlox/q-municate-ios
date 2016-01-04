@@ -93,7 +93,8 @@
 - (IBAction)changeDialogName:(id)sender {
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [[QMApi instance] changeChatName:self.groupNameField.text forChatDialog:self.chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+    
+    [[QMApi instance] changeChatName:self.groupNameField.text forChatDialog:self.chatDialog completion:^(QBChatDialog *updatedDialog) {
         //
         [SVProgressHUD dismiss];
     }];
@@ -106,9 +107,9 @@
     [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
         __typeof(weakSelf)strongSelf = weakSelf;
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-        [[QMApi instance] changeAvatar:image forChatDialog:strongSelf.chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+        [[QMApi instance] changeAvatar:image forChatDialog:strongSelf.chatDialog completion:^(QBChatDialog *updatedDialog) {
             //
-            if (response.success) {
+            if (updatedDialog != nil) {
                 [strongSelf.groupAvatarView sd_setImage:image withKey:updatedDialog.photo];
             }
             [SVProgressHUD dismiss];
