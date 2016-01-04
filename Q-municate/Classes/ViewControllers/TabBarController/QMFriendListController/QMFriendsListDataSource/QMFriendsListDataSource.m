@@ -15,7 +15,8 @@
 #import "SVProgressHud.h"
 #import "REAlertView.h"
 
-static const NSUInteger kQMUsersPageLimit = 50;
+static const NSUInteger kQMUsersPageLimit       = 50;
+static const NSUInteger kQMGlobalSearchCharsMin = 3;
 
 @interface QMFriendsListDataSource()
 <
@@ -98,33 +99,33 @@ QMContactListServiceDelegate
 
 - (void)globalSearch
 {
-    if (self.searchDisplayController.searchBar.text.length == 0) {
+    if (self.searchDisplayController.searchBar.text.length < kQMGlobalSearchCharsMin) {
         [self.searchResult removeAllObjects];
         [self.searchDisplayController.searchResultsTableView reloadData];
         return;
     }
     
-    __weak __typeof(self)weakSelf = self;
+    @weakify(self);
     void (^userResponseBlock)(NSArray *users) = ^void(NSArray *users) {
-        
+        @strongify(self);
         if ([users count] < kQMUsersPageLimit) {
-            weakSelf.shouldLoadMore = NO;
+            self.shouldLoadMore = NO;
         } else {
-            weakSelf.shouldLoadMore = YES;
+            self.shouldLoadMore = YES;
         }
         
         NSArray *sortedUsers = [QMUsersUtils sortUsersByFullname:users];
         
-        NSMutableArray *filteredUsers = [QMUsersUtils filteredUsers:sortedUsers withFlterArray:[weakSelf.friendList arrayByAddingObject:[QMApi instance].currentUser]];
+        NSMutableArray *filteredUsers = [QMUsersUtils filteredUsers:sortedUsers withFlterArray:[self.friendList arrayByAddingObject:[QMApi instance].currentUser]];
         
-        if (weakSelf.currentPage > 1) {
-            [weakSelf.searchResult addObjectsFromArray:filteredUsers];
+        if (self.currentPage > 1) {
+            [self.searchResult addObjectsFromArray:filteredUsers];
         } else {
-            weakSelf.searchResult = filteredUsers;
+            self.searchResult = filteredUsers;
         }
         
-        [weakSelf.searchDisplayController.searchResultsTableView reloadData];
-
+        [self.searchDisplayController.searchResultsTableView reloadData];
+        
         [SVProgressHUD dismiss];
     };
     
