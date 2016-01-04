@@ -63,7 +63,6 @@ AGEmojiKeyboardViewDelegate
 @property (nonatomic, strong) UIButton *emojiButton;
 
 @property (nonatomic, assign) BOOL shouldUpdateDialogAfterReturnFromGroupInfo;
-@property (nonatomic, assign) BOOL isSendingAttachment;
 
 @property (nonatomic, strong) NSMutableSet *detailedCells;
 
@@ -153,22 +152,20 @@ AGEmojiKeyboardViewDelegate
 
 - (void)refreshMessagesShowingProgress:(BOOL)showingProgress {
     
-    if (showingProgress && !self.isSendingAttachment) {
+    if (showingProgress) {
         [SVProgressHUD showWithStatus:@"Refreshing..." maskType:SVProgressHUDMaskTypeClear];
     }
     
-    __weak __typeof(self)weakSelf = self;
+    @weakify(self);
     // Retrieving message from Quickblox REST history and cache.
     [[[QMApi instance].chatService messagesWithChatDialogID:self.dialog.ID] continueWithBlock:^id _Nullable(BFTask<NSArray<QBChatMessage *> *> * _Nonnull task) {
-        //
         if (task.error != nil) {
             [SVProgressHUD showErrorWithStatus:@"Can not refresh messages"];
             NSLog(@"can not refresh messages: %@", task.error);
         } else {
-            
-            __typeof(weakSelf)strongSelf = weakSelf;
-            if ([task.result count] > 0) [strongSelf insertMessagesToTheBottomAnimated:task.result];
-            if (!strongSelf.isSendingAttachment) [SVProgressHUD dismiss];
+            @strongify(self);
+            if ([task.result count] > 0) [self insertMessagesToTheBottomAnimated:task.result];
+            [SVProgressHUD dismiss];
         }
         return nil;
     }];
@@ -899,6 +896,20 @@ AGEmojiKeyboardViewDelegate
     }
 }
 
+- (void)chatAttachmentService:(QMChatAttachmentService *)chatAttachmentService didChangeUploadingProgress:(CGFloat)progress forMessage:(QBChatMessage *)message
+{
+    UICollectionViewCell<QMChatAttachmentCell>* cell = [self.attachmentCells objectForKey:message.ID];
+    
+    if (cell == nil && progress < 1.0f) {
+        NSIndexPath *indexPath = [self indexPathForMessage:message];
+        cell = (UICollectionViewCell <QMChatAttachmentCell> *)[self.collectionView cellForItemAtIndexPath:indexPath];
+        [self.attachmentCells setObject:cell forKey:message.ID];
+    }
+    
+    if (cell != nil) {
+        [cell updateLoadingProgress:progress];
+    }
+}
 
 #pragma mark - UITextViewDelegate
 
@@ -927,10 +938,6 @@ AGEmojiKeyboardViewDelegate
 
 - (void)didPickAttachmentImage:(UIImage *)image
 {
-    self.isSendingAttachment = YES;
-    
-    [SVProgressHUD showWithStatus:@"Uploading attachment" maskType:SVProgressHUDMaskTypeClear];
-    
     QBChatMessage* message = [QBChatMessage new];
     message.senderID = self.senderID;
     message.dialogID = self.dialog.ID;
@@ -952,12 +959,14 @@ AGEmojiKeyboardViewDelegate
                                                         toDialog:self.dialog
                                              withAttachmentImage:resizedImage] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
                 //
+                [self.attachmentCells removeObjectForKey:message.ID];
                 if (task.isFaulted) {
                     [SVProgressHUD showErrorWithStatus:task.error.localizedDescription];
-                } else {
-                    [SVProgressHUD showSuccessWithStatus:@"Completed"];
+                    
+                    // perform local attachment deleting
+                    [[QMApi instance].chatService deleteMessageLocally:message];
+                    [self deleteMessage:message];
                 }
-                self.isSendingAttachment = NO;
                 return nil;
             }];
         });
