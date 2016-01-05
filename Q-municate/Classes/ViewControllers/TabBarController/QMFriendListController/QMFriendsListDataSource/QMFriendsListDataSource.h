@@ -23,5 +23,6 @@ static NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFrie
 - (instancetype)initWithTableView:(UITableView *)tableView searchDisplayController:(UISearchDisplayController *)searchDisplayController;
 - (NSArray *)usersAtSections:(NSInteger)section;
 - (QBUUser *)userAtIndexPath:(NSIndexPath *)indexPath;
+- (void)reloadDataSource;
 
 @end

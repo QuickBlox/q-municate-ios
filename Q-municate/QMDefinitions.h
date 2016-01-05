@@ -62,10 +62,9 @@ static NSString *const kSettingsCellBundleVersion           = @"CFBundleVersion"
 static NSString *const kMailSubjectString                   = @"Q-municate";
 static NSString *const kMailBodyString                      = @"<a href='http://quickblox.com/'>Join us in Q-municate!</a>";
 
-//******************** PUSH NOTIFICATIONS ********************
+//******************** NOTIFICATIONS ********************
 static NSString *const kPushNotificationDialogIDKey         = @"dialog_id";
-
-//***************** GROUP CHAT NOTIFICATIONS *****************
 static NSString *const kDialogsUpdateNotificationMessage    = @"Notification message";
+static NSString *const kUsersLoadingFinishedNotifications   = @"kUsersLoadingFinishedNotifications";
 
 #endif

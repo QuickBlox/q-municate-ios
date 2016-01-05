@@ -107,7 +107,7 @@
             }
         }
         
-        [[QMApi instance] fetchAllDialogs:nil];
+        [[QMApi instance] fetchAllData:nil];
     }];
 }
 

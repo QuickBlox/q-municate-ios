@@ -41,6 +41,8 @@
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.dataSource = [[QMFriendsListDataSource alloc] initWithTableView:self.tableView searchDisplayController:self.searchDisplayController];
     self.dataSource.delegate = self;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDataSourceAndUnsubscribeFromNotification) name:kUsersLoadingFinishedNotifications object:[QMApi instance]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -54,7 +56,6 @@
     self.dataSource.viewIsShowed = NO;
     [super viewWillDisappear:animated];
 }
-
 
 #pragma mark - UITableViewDelegate
 
@@ -142,5 +143,11 @@
     }
 }
 
+#pragma mark - Helpers
+
+- (void)refreshDataSourceAndUnsubscribeFromNotification {
+    [self.dataSource reloadDataSource];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kUsersLoadingFinishedNotifications object:[QMApi instance]];
+}
 
 @end

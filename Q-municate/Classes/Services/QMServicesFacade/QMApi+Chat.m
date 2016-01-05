@@ -55,25 +55,34 @@
 
 #pragma mark - ChatDialog
 
-- (void)fetchAllDialogs:(void(^)(void))completion {
+- (void)fetchAllData:(void(^)(void))completion {
 
+    __block NSMutableArray *usersLoadingTasks = [NSMutableArray array];
+    
     @weakify(self);
     void (^iterationBlock)(QBResponse *, NSArray *, NSSet *, BOOL *) = ^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
         @strongify(self);
-        [self.usersService getUsersWithIDs:[dialogsUsersIDs allObjects]];
+        
+        [usersLoadingTasks addObject:[self.usersService getUsersWithIDs:[dialogsUsersIDs allObjects]]];
     };
     BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull task) {
         @strongify(self);
         if (self.isAuthorized && task.isCompleted) self.settingsManager.lastActivityDate = [NSDate date];
         if (completion) completion();
+        
+        return [BFTask taskForCompletionOfAllTasks:usersLoadingTasks.copy];
+    };
+    BFContinuationBlock notificationBlock = ^id _Nullable(BFTask * _Nonnull task) {
+        @strongify(self);
+        [[NSNotificationCenter defaultCenter] postNotificationName:kUsersLoadingFinishedNotifications object:self userInfo:nil];
         return nil;
     };
     
     if (self.settingsManager.lastActivityDate != nil) {
-        [[self.chatService fetchDialogsUpdatedFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:iterationBlock] continueWithBlock:completionBlock];
+        [[[self.chatService fetchDialogsUpdatedFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:iterationBlock] continueWithBlock:completionBlock] continueWithBlock:notificationBlock];
     }
     else {
-        [[self.chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:iterationBlock] continueWithBlock:completionBlock];
+        [[[self.chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:iterationBlock] continueWithBlock:completionBlock] continueWithBlock:notificationBlock];;
     }
 }
 
