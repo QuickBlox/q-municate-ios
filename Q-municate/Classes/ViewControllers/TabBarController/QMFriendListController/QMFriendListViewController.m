@@ -15,7 +15,7 @@
 
 @interface QMFriendListViewController ()
 
-<UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate, QMFriendsListDataSourceDelegate, QMFriendsTabDelegate>
+<UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate, QMFriendsListDataSourceDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) QMFriendsListDataSource *dataSource;
@@ -34,7 +34,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    ((QMMainTabBarController *)self.tabBarController).tabDelegate = self;
     
 #if kQMSHOW_SEARCH
     [self.tableView setContentOffset:CGPointMake(0, self.searchDisplayController.searchBar.frame.size.height) animated:NO];
@@ -42,6 +41,8 @@
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.dataSource = [[QMFriendsListDataSource alloc] initWithTableView:self.tableView searchDisplayController:self.searchDisplayController];
     self.dataSource.delegate = self;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDataSourceAndUnsubscribeFromNotification) name:kUsersLoadingFinishedNotifications object:[QMApi instance]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -50,17 +51,11 @@
     [super viewWillAppear:animated];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
-
 - (void)viewWillDisappear:(BOOL)animated
 {
     self.dataSource.viewIsShowed = NO;
     [super viewWillDisappear:animated];
 }
-
 
 #pragma mark - UITableViewDelegate
 
@@ -148,13 +143,11 @@
     }
 }
 
+#pragma mark - Helpers
 
-#pragma mark - QMFriendsTabDelegate
-
-- (void)friendsListTabWasTapped:(UITabBarItem *)tab
-{
-    [self.tableView reloadData];
+- (void)refreshDataSourceAndUnsubscribeFromNotification {
+    [self.dataSource reloadDataSource];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kUsersLoadingFinishedNotifications object:[QMApi instance]];
 }
-
 
 @end

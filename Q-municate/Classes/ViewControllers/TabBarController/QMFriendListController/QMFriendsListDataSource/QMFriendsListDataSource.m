@@ -285,11 +285,11 @@ QMContactListServiceDelegate
 
 #pragma mark Contact List Serice Delegate
 
-- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
+- (void)contactListServiceDidLoadCache {
     [self updateView];
 }
 
-- (void)contactListService:(QMContactListService *)contactListService didUpdateUser:(QBUUser *)user {
+- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
     [self updateView];
 }
 

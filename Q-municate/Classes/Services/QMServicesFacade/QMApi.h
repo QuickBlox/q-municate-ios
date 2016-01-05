@@ -232,11 +232,11 @@ typedef void(^QBDialogsPagedResponseBlock)(QBResponse *response, NSArray *dialog
 - (QBChatDialog *)chatDialogWithID:(NSString *)dialogID;
 
 /**
- *  Fetching all dialogs for current user.
+ *  Fetching all dialogs for current user and all users in dialogs.
  *
  *  @param completion   completion block
  */
-- (void)fetchAllDialogs:(void(^)(void))completion;
+- (void)fetchAllData:(void(^)(void))completion;
 
 /**
  *  Creating group chat.

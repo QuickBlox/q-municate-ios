@@ -107,7 +107,7 @@
             }
         }
         
-        [[QMApi instance] fetchAllDialogs:nil];
+        [[QMApi instance] fetchAllData:nil];
     }];
 }
 
@@ -119,29 +119,6 @@
     
     UIColor *white = [UIColor whiteColor];
     [[UITabBarItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : white} forState:UIControlStateNormal];
-    
-//    UITabBar *tabBar = self.tabBarController.tabBar;
-//    tabBar.tintColor = white;
-    
-    UIImage *chatImg = [[UIImage imageNamed:@"tb_chat"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    UITabBarItem *firstTab = self.tabBar.items[0];
-    firstTab.image = chatImg;
-    firstTab.selectedImage = chatImg;
-    
-    UIImage *friendsImg = [[UIImage imageNamed:@"tb_friends"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    UITabBarItem *chatTab = self.tabBar.items[1];
-    chatTab.image = friendsImg;
-    chatTab.selectedImage = friendsImg;
-    
-    UIImage *inviteImg = [[UIImage imageNamed:@"tb_invite"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    UITabBarItem *inviteTab = self.tabBar.items[2];
-    inviteTab.image = inviteImg;
-    inviteTab.selectedImage = inviteImg;
-    
-    UIImage *settingsImg = [[UIImage imageNamed:@"tb_settings"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    UITabBarItem *fourthTab = self.tabBar.items[3];
-    fourthTab.image = settingsImg;
-    fourthTab.selectedImage = settingsImg; 
     
     // selection image:
     UIImage *tabSelectionImage = nil;
@@ -212,18 +189,6 @@
 
 - (void)notificationHandlerDidFailFetchingDialog {
     [SVProgressHUD showErrorWithStatus:@"Dialog was not found"];
-}
-
-#pragma mark - QMTabBarDelegate
-
-- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
-{
-    UITabBarItem *neededTab = tabBar.items[1];
-    if ([item isEqual:neededTab]) {
-        if ([self.tabDelegate respondsToSelector:@selector(friendsListTabWasTapped:)]) {
-            [self.tabDelegate friendsListTabWasTapped:item];
-        }
-    }
 }
 
 #pragma mark - QMChatServiceDelegate
