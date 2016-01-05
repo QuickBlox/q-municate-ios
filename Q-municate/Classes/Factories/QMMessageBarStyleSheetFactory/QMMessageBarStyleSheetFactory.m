@@ -31,7 +31,7 @@
         img = [self imageForKey:user.avatarUrl withPlaceHolder:[UIImage imageNamed:@"upic_placeholderr"]];
     }
     
-    NSString *messageText = [NSString string];
+    NSString *messageText = nil;
     if (message.isNotificatonMessage) {
         messageText = [QMChatUtils messageTextForNotification:message];
     }

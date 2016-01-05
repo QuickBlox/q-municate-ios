@@ -166,7 +166,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
 }
 
 - (NSString *)errorStringFromResponseStatus:(QBResponseStatusCode)statusCode {
-    NSString *errorString = [[NSString alloc] init];
+    NSString *errorString = nil;
     
     switch (statusCode) {
         case QBResponseStatusCodeServerError:
