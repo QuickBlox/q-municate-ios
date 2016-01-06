@@ -33,7 +33,7 @@
  *  @param attachment loaded QBChatAttachment
  */
 - (void)chatAttachmentService:(QMChatAttachmentService *)chatAttachmentService didChangeLoadingProgress:(CGFloat)progress forChatAttachment:(QBChatAttachment *)attachment;
-@optional
+
 /**
  *  Is called when chat attachment service did change Uploading progress for attachment in message.
  *  Used for display loading progress.
