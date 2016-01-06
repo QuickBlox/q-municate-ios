@@ -110,6 +110,7 @@
         [[QMApi instance] changeAvatar:image forChatDialog:strongSelf.chatDialog completion:^(QBChatDialog *updatedDialog) {
             //
             if (updatedDialog != nil) {
+                strongSelf.groupAvatarView.imageViewType = QMImageViewTypeCircle;
                 [strongSelf.groupAvatarView sd_setImage:image withKey:updatedDialog.photo];
             }
             [SVProgressHUD dismiss];
