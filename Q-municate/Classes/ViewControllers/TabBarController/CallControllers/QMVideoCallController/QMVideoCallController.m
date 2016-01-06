@@ -17,6 +17,7 @@ NSString *const kGoToDuringVideoCallControllerSegue= @"goToDuringVideoCallSegueI
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.btnMic.enabled = NO;
     
     if (self.session.conferenceType == QBRTCConferenceTypeVideo) {
         [self.opponentsView layoutIfNeeded];
