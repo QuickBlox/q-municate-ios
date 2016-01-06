@@ -74,7 +74,7 @@
     QBContactListItem *item = [[QMApi instance] contactItemWithUserID:selectedUser.ID];
 
     if (item) {
-        [self performSegueWithIdentifier:kDetailsSegueIdentifier sender:nil];
+        [self performSegueWithIdentifier:kQMSceneSegueFriendDetails sender:nil];
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
@@ -118,7 +118,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    if ([segue.identifier isEqualToString:kDetailsSegueIdentifier]) {
+    if ([segue.identifier isEqualToString:kQMSceneSegueFriendDetails]) {
         
         NSIndexPath *indexPath = nil;
         if (self.searchDisplayController.isActive) {

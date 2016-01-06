@@ -134,7 +134,7 @@
         return;
     }
     
-    [self performSegueWithIdentifier:kQMAddMembersToGroupControllerSegue sender:nil];
+    [self performSegueWithIdentifier:kQMSceneSegueGroupMembersAdd sender:nil];
 }
 
 - (void)updateGUI {
@@ -197,7 +197,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    if ([segue.identifier isEqualToString:kQMAddMembersToGroupControllerSegue]) {
+    if ([segue.identifier isEqualToString:kQMSceneSegueGroupMembersAdd]) {
         self.shouldNotUnsubFromServices = YES;
         
         QMAddMembersToGroupController *addMembersVC = segue.destinationViewController;

@@ -352,13 +352,13 @@ AGEmojiKeyboardViewDelegate
 
 - (void)groupInfoNavButtonAction {
     
-    [self performSegueWithIdentifier:kGroupDetailsSegueIdentifier sender:nil];
+    [self performSegueWithIdentifier:kQMSceneSegueGroupDetails sender:nil];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     [self.view endEditing:YES];
-    if ([segue.identifier isEqualToString:kGroupDetailsSegueIdentifier]) {
+    if ([segue.identifier isEqualToString:kQMSceneSegueGroupDetails]) {
         
         self.shouldUpdateDialogAfterReturnFromGroupInfo = YES;
         

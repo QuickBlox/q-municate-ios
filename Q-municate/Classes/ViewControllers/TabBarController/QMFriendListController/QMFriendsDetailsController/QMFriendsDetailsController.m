@@ -171,7 +171,7 @@ QMContactListServiceDelegate
                 if (task.error != nil) {
                     [SVProgressHUD showErrorWithStatus:task.error.localizedRecoverySuggestion];
                 } else {
-                    [weakSelf performSegueWithIdentifier:kChatViewSegueIdentifier sender:task.result];
+                    [weakSelf performSegueWithIdentifier:kQMSceneSegueChat sender:task.result];
                     [SVProgressHUD dismiss];
                 }
                 

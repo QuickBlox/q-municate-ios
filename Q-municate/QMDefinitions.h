@@ -40,22 +40,12 @@ static NSString *const kContactListCacheNameKey             = @"q-municate-conta
 static NSString *const kUsersCacheNameKey                   = @"qb-users-cache";
 
 //******************** Segue Identifiers ********************
-static NSString *const kTabBarSegueIdnetifier               = @"TabBarSegue";
-static NSString *const kSplashSegueIdentifier               = @"SplashSegue";
-static NSString *const kWelcomeScreenSegueIdentifier        = @"WelcomeScreenSegue";
-static NSString *const kSignUpSegueIdentifier               = @"SignUpSegue";
-static NSString *const kLogInSegueSegueIdentifier           = @"LogInSegue";
-static NSString *const kDetailsSegueIdentifier              = @"DetailsSegue";
 static NSString *const kVideoCallSegueIdentifier            = @"VideoCallSegue";
 static NSString *const kAudioCallSegueIdentifier            = @"AudioCallSegue";
 static NSString *const kGoToDuringAudioCallSegueIdentifier  = @"goToDuringAudioCallSegueIdentifier";
 static NSString *const kGoToDuringVideoCallSegueIdentifier  = @"goToDuringVideoCallSegueIdentifier";
 static NSString *const kChatViewSegueIdentifier             = @"ChatViewSegue";
 static NSString *const kIncomingCallIdentifier              = @"IncomingCallIdentifier";
-static NSString *const kProfileSegueIdentifier              = @"ProfileSegue";
-static NSString *const kCreateNewChatSegueIdentifier        = @"CreateNewChatSegue";
-static NSString *const kGroupDetailsSegueIdentifier         = @"GroupDetailsSegue";
-static NSString *const kQMAddMembersToGroupControllerSegue  = @"QMAddMembersToGroupControllerSegue";
 static NSString *const kSettingsCellBundleVersion           = @"CFBundleVersion";
 
 //******************** USER DEFAULTS KEYS ********************

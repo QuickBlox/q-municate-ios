@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="bKY-DK-nee">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <scenes>
+        <!--Splash View Controller-->
+        <scene sceneID="coi-fO-T4a">
+            <objects>
+                <viewController modalTransitionStyle="flipHorizontal" id="bKY-DK-nee" customClass="QMSplashViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="aw5-FH-71P"/>
+                        <viewControllerLayoutGuide type="bottom" id="KRL-4V-bI6"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="BWA-Jh-VHm">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Dmo-oF-sWJ">
+                                <rect key="frame" x="282" y="505" width="37" height="37"/>
+                                <color key="color" red="0.0" green="0.74117648599999997" blue="0.24313727020000001" alpha="1" colorSpace="deviceRGB"/>
+                            </activityIndicatorView>
+                            <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZZF-ok-FpV">
+                                <rect key="frame" x="226" y="453" width="148" height="30"/>
+                                <color key="backgroundColor" red="0.0" green="0.74117648599999997" blue="0.24313727020000001" alpha="1" colorSpace="deviceRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="RMP-7t-vzN"/>
+                                    <constraint firstAttribute="width" constant="148" id="fX8-qu-i3s"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Reconnect">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="pressReconnectBtn:" destination="bKY-DK-nee" eventType="touchUpInside" id="WKv-fh-azb"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="logo_splash" translatesAutoresizingMaskIntoConstraints="NO" id="yWC-xQ-rBd">
+                                <rect key="frame" x="235" y="230" width="139" height="139"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="139" id="biX-Lf-fR8"/>
+                                    <constraint firstAttribute="width" constant="139" id="vRJ-ME-vk0"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="KRL-4V-bI6" firstAttribute="top" secondItem="Dmo-oF-sWJ" secondAttribute="bottom" constant="58" id="Hq8-bz-0Zg"/>
+                            <constraint firstItem="ZZF-ok-FpV" firstAttribute="centerX" secondItem="Dmo-oF-sWJ" secondAttribute="centerX" constant="-0.5" id="Sy7-OL-QkL"/>
+                            <constraint firstItem="Dmo-oF-sWJ" firstAttribute="top" secondItem="ZZF-ok-FpV" secondAttribute="bottom" constant="22" id="kvW-2H-nec"/>
+                            <constraint firstAttribute="centerX" secondItem="Dmo-oF-sWJ" secondAttribute="centerX" id="lVi-O3-aDX"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="FNq-5Y-cZb"/>
+                    <connections>
+                        <outlet property="activityIndicator" destination="Dmo-oF-sWJ" id="BNX-Jv-L84"/>
+                        <outlet property="reconnectBtn" destination="ZZF-ok-FpV" id="Hlw-h5-8p9"/>
+                        <segue destination="Yrb-OW-ClR" kind="custom" identifier="SceneSegueAuth" customClass="QMRootViewControllerSegue" id="L5w-3y-ho4"/>
+                        <segue destination="gAD-m6-Ld6" kind="custom" identifier="SceneSegueMain" customClass="QMRootViewControllerSegue" id="zPs-3i-Tp7"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YmA-DO-nZe" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-6057" y="-8390"/>
+        </scene>
+        <!--Link View Controller-->
+        <scene sceneID="P0z-CC-8hb">
+            <objects>
+                <viewController id="Yrb-OW-ClR" customClass="QMLinkViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="AQw-av-4Uq"/>
+                        <viewControllerLayoutGuide type="bottom" id="uUE-zd-DWU"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="TRu-io-gDq">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="storyboardName" value="Auth"/>
+                    </userDefinedRuntimeAttributes>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fHw-dU-nPD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-5027" y="-8791"/>
+        </scene>
+        <!--Link View Controller-->
+        <scene sceneID="BmZ-4d-Ft2">
+            <objects>
+                <viewController id="gAD-m6-Ld6" customClass="QMLinkViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="vmd-bz-8WO"/>
+                        <viewControllerLayoutGuide type="bottom" id="RFs-rA-gwA"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="nBa-ji-nQa">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="storyboardName" value="Main"/>
+                    </userDefinedRuntimeAttributes>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WAb-cc-OG3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-5027" y="-7970"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="logo_splash" width="139" height="139"/>
+    </resources>
+</document>

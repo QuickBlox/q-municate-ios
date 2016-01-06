@@ -72,7 +72,7 @@
                 [[QMApi instance] logoutWithCompletion:^(BOOL success) {
                     //
                     [SVProgressHUD dismiss];
-                    [weakSelf performSegueWithIdentifier:kSplashSegueIdentifier sender:nil];
+                    [weakSelf performSegueWithIdentifier:kQMSceneSegueStart sender:nil];
                 }];
             }];
             

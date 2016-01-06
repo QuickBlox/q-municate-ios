@@ -27,4 +27,6 @@
     #import "Macro.h"
 
     #import <QMServices.h>
+
+    #import "SegueIdentifiers.h"
 #endif

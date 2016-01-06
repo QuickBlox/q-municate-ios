@@ -60,23 +60,13 @@
     }];
 }
 
-- (IBAction)signUpWithEmail:(id)sender
-{
-    [self performSegueWithIdentifier:kSignUpSegueIdentifier sender:nil];
-}
-
-- (IBAction)pressAlreadyBtn:(id)sender
-{
-    [self performSegueWithIdentifier:kLogInSegueSegueIdentifier sender:nil];
-}
-
 - (void)signInWithFacebook {
 
     __weak __typeof(self)weakSelf = self;
     [[QMApi instance] singUpAndLoginWithFacebook:^(BOOL success) {
 
         if (success) {
-            [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+            [weakSelf performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
         } else {
             [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FACEBOOK_LOGIN_FALED_ALERT_TEXT", nil) actionSuccess:NO];
         }
