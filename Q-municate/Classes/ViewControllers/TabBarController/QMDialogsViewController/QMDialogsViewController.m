@@ -55,13 +55,13 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
     
     QBChatDialog *dialog = [self.dataSource dialogAtIndexPath:indexPath];
     if (dialog) {
-        [self performSegueWithIdentifier:kChatViewSegueIdentifier sender:nil];
+        [self performSegueWithIdentifier:kQMSceneSegueChat sender:nil];
     }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    if ([segue.identifier isEqualToString:kChatViewSegueIdentifier]) {
+    if ([segue.identifier isEqualToString:kQMSceneSegueChat]) {
         
         QMChatVC *chatController = segue.destinationViewController;
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
@@ -86,7 +86,7 @@ static NSString *const ChatListCellIdentifier = @"ChatListCell";
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_ERROR_WHILE_CREATING_NEW_CHAT", nil) actionSuccess:NO];
         return;
     }
-    [self performSegueWithIdentifier:kCreateNewChatSegueIdentifier sender:nil];
+    [self performSegueWithIdentifier:kQMSceneSegueCreateChat sender:nil];
 }
 
 #pragma mark - QMDialogsDataSourceDelegate

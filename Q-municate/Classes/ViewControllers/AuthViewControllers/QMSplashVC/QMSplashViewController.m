@@ -49,9 +49,9 @@
     BOOL rememberMe = settingsManager.rememberMe;
     
     if (rememberMe) {
-        [self performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+        [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
     } else {
-        [self performSegueWithIdentifier:kWelcomeScreenSegueIdentifier sender:nil];
+        [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
     }
 
 }

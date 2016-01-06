@@ -84,7 +84,7 @@
              if (success) {
                  [[QMApi instance] setAutoLogin:weakSelf.rememberMeSwitch.on
                                 withAccountType:QMAccountTypeEmail];
-                 [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier
+                 [weakSelf performSegueWithIdentifier:kQMSceneSegueMain
                                                sender:nil];
              }
          }];
@@ -111,7 +111,7 @@
     [[QMApi instance] singUpAndLoginWithFacebook:^(BOOL success) {
 
         if (success) {
-            [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+            [weakSelf performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
         } else {
             [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FACEBOOK_LOGIN_FALED_ALERT_TEXT", nil) actionSuccess:NO];
         }

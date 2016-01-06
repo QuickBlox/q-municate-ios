@@ -184,7 +184,7 @@ NSString *const kUserName = @"UserName";
             [strongSelf startPlayingCallingSound];
             strongSelf.session = session;
             
-            QMBaseCallsController *vc = (QMBaseCallsController *)[[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:(conferenceType == QBRTCConferenceTypeVideo) ? kVideoCallController : kAudioCallController];
+            QMBaseCallsController *vc = (QMBaseCallsController *)[[UIStoryboard storyboardWithName:@"Calls" bundle:nil] instantiateViewControllerWithIdentifier:(conferenceType == QBRTCConferenceTypeVideo) ? kVideoCallController : kAudioCallController];
             
             NSUInteger opponentID = [((NSNumber *)users[0]) unsignedIntegerValue];
             vc.session = strongSelf.session;
@@ -265,7 +265,7 @@ NSString *const kUserName = @"UserName";
     [[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker];
     [self startPlayingRingtoneSound];
     
-    QMIncomingCallController *incomingVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallController];
+    QMIncomingCallController *incomingVC = [[UIStoryboard storyboardWithName:@"Calls" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallController];
     
     incomingVC.session = session;
     incomingVC.opponentID = [session.initiatorID unsignedIntegerValue];

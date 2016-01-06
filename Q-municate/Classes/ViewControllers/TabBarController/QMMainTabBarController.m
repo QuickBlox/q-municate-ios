@@ -52,7 +52,7 @@
             
             [[QMApi instance] logoutWithCompletion:^(BOOL succeed) {
                 //
-                [weakSelf performSegueWithIdentifier:@"SplashSegue" sender:nil];
+                [weakSelf performSegueWithIdentifier:kQMSceneSegueStart sender:nil];
             }];
             
         } else {
@@ -130,8 +130,8 @@
     self.tabBar.selectionIndicatorImage = tabSelectionImage;
     
     for (UINavigationController *navViewController in self.viewControllers ) {
-        NSAssert([navViewController isKindOfClass:[UINavigationController class]], @"is not UINavigationController");
-        [navViewController.viewControllers makeObjectsPerformSelector:@selector(view)];
+//        NSAssert([navViewController isKindOfClass:[UINavigationController class]], @"is not UINavigationController");
+//        [navViewController.viewControllers makeObjectsPerformSelector:@selector(view)];
     }
 }
 

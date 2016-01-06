@@ -118,7 +118,7 @@
             void (^presentTabBar)(void) = ^(void) {
                 
                 [SVProgressHUD dismiss];
-                [weakSelf performSegueWithIdentifier:kTabBarSegueIdnetifier sender:nil];
+                [weakSelf performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
             };
             
             [[QMApi instance] signUpAndLoginWithUser:newUser rememberMe:YES completion:^(BOOL success) {

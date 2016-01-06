@@ -17,7 +17,7 @@
 {
     QBChatDialog *dialog = [[QMApi instance] chatDialogWithID:dialogID];
     
-    QMChatVC *chatVC = (QMChatVC *)[[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"QMChatVC"];
+    QMChatVC *chatVC = (QMChatVC *)[[UIStoryboard storyboardWithName:@"Chat" bundle:nil] instantiateViewControllerWithIdentifier:@"QMChatVC"];
     chatVC.dialog = dialog;
     return chatVC;
 }
@@ -25,7 +25,7 @@
 
 + (UIViewController *)chatControllerWithDialog:(QBChatDialog *)dialog
 {
-    QMChatVC *chatVC = (QMChatVC *)[[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"QMChatVC"];
+    QMChatVC *chatVC = (QMChatVC *)[[UIStoryboard storyboardWithName:@"Chat" bundle:nil] instantiateViewControllerWithIdentifier:@"QMChatVC"];
     chatVC.dialog = dialog;
     return chatVC;
 }
