@@ -8,7 +8,7 @@
 
 #import "QMApi.h"
 #import "QMContentService.h"
-#import "QMFacebookService.h"
+#import "QMFacebook.h"
 #import "QMSettingsManager.h"
 #import "QMAddressBook.h"
 #import "ABPerson.h"
@@ -249,7 +249,7 @@
 
 - (void)importFriendsFromFacebook:(void (^)(BOOL))completion {
     __weak __typeof(self)weakSelf = self;
-    [QMFacebookService fetchMyFriendsIDs:^(NSArray *facebookFriendsIDs) {
+    [QMFacebook fetchMyFriendsIDs:^(NSArray *facebookFriendsIDs) {
         
         if ([facebookFriendsIDs count] == 0) {
             if (completion) completion(NO);

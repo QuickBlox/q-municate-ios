@@ -11,7 +11,7 @@
 #import "QMInviteStaticCell.h"
 #import "ABPerson.h"
 #import "QMApi.h"
-#import "QMFacebookService.h"
+#import "QMFacebook.h"
 #import "QMAddressBook.h"
 #import "SVProgressHUD.h"
 
