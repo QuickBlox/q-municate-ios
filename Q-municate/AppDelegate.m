@@ -60,8 +60,6 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     UIApplication.sharedApplication.applicationIconBadgeNumber = 0;
     
-    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleDefault;
-    
     self.window.backgroundColor = [UIColor whiteColor];
     
     // QB Settings
