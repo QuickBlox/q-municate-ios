@@ -1,42 +1,39 @@
 //
-//  QMFacebookService.h
+//  QMFacebook.h
 //  Q-municate
 //
-//  Created by Igor Alefirenko on 26/03/2014.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Vitaliy Gorbachov on 1/8/16.
+//  Copyright © 2016 Quickblox. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
 @protocol FBSDKAppInviteDialogDelegate;
 
-@interface QMFacebookService : NSObject
 /**
+ *  This class provides interface for facebook SDK.
  */
-+ (void)connectToFacebook:(void(^)(NSString *sessionToken))completion;
+@interface QMFacebook : NSObject
 
-/**
- */
+
++ (BFTask QB_GENERIC(NSString *) *)connect;
+
+
 + (void)inviteFriendsWithDelegate:(id<FBSDKAppInviteDialogDelegate>)delegate;
 
-/**
- */
+
 + (void)fetchMyFriends:(void(^)(NSArray *facebookFriends))completion;
 
-/**
- */
+
 + (void)fetchMyFriendsIDs:(void(^)(NSArray *facebookFriendsIDs))completion;
 
-/**
- */
+
 + (NSURL *)userImageUrlWithUserID:(NSString *)userID;
 
-/**
- */
-+ (void)loadMe:(void(^)(NSDictionary *user))completion;
 
-/**
- */
++ (BFTask QB_GENERIC(NSDictionary *) *)loadMe;
+
+
 + (void)logout;
 
 @end

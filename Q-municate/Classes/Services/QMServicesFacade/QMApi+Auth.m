@@ -8,7 +8,7 @@
 
 #import "QMApi.h"
 #import <QMAuthService.h>
-#import "QMFacebookService.h"
+#import "QMFacebook.h"
 #import "QMSettingsManager.h"
 #import "REAlertView+QMSuccess.h"
 
@@ -25,7 +25,7 @@
         __typeof(weakSelf)strongSelf = weakSelf;
         
         [strongSelf.settingsManager clearSettings];
-        [QMFacebookService logout];
+        [QMFacebook logout];
         
         [strongSelf unSubscribeToPushNotifications:^(BOOL success) {
             if (completion) completion(YES);
@@ -76,11 +76,11 @@
             
             if (weakSelf.currentUser.avatarUrl.length == 0) {
                 /*Update user image from facebook */
-                [QMFacebookService loadMe:^(NSDictionary *user) {
-                    
-                    NSURL *userImageUrl = [QMFacebookService userImageUrlWithUserID:[user valueForKey:@"id"]];
-                    [weakSelf updateCurrentUser:nil imageUrl:userImageUrl progress:nil completion:completion];
-                }];
+//                [QMFacebook loadMe:^(NSDictionary *user) {
+//                    
+//                    NSURL *userImageUrl = [QMFacebook userImageUrlWithUserID:[user valueForKey:@"id"]];
+//                    [weakSelf updateCurrentUser:nil imageUrl:userImageUrl progress:nil completion:completion];
+//                }];
             }
             else {
                 if (completion) completion(YES);
@@ -131,17 +131,18 @@
     
     /*open facebook session*/
     __weak __typeof(self)weakSelf = self;
-    [QMFacebookService connectToFacebook:^(NSString *sessionToken) {
-        if (!sessionToken) {
-            if (completion) completion(NO);
-        }
-        else {
-            /*Longin with Social provider*/
-            [weakSelf logInWithFacebookAccessToken:sessionToken completion:^(BOOL successLoginWithFacebook) {
-                if (completion) completion(successLoginWithFacebook);
-            }];
-        }
-    }];
+    
+//    [QMFacebook connectToFacebook:^(NSString *sessionToken) {
+//        if (!sessionToken) {
+//            if (completion) completion(NO);
+//        }
+//        else {
+//            /*Longin with Social provider*/
+//            [weakSelf logInWithFacebookAccessToken:sessionToken completion:^(BOOL successLoginWithFacebook) {
+//                if (completion) completion(successLoginWithFacebook);
+//            }];
+//        }
+//    }];
 }
 
 - (void)subscribeToPushNotificationsForceSettings:(BOOL)force complete:(void(^)(BOOL success))complete {
