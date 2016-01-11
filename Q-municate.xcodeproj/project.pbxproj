@@ -22,7 +22,7 @@
 		55495A221993BCC100B7764C /* QMAlertsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 55495A201993BCC100B7764C /* QMAlertsFactory.m */; };
 		556192CB19891BD70048D112 /* QMGroupDetailsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 556192CA19891BD70048D112 /* QMGroupDetailsDataSource.m */; };
 		558AE52C196EA7C400AEAC1F /* QMFriendsListDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 558AE52B196EA7C400AEAC1F /* QMFriendsListDataSource.m */; };
-		559BDFE819618D3D000588FE /* QMSignUpController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE019618D3D000588FE /* QMSignUpController.m */; };
+		559BDFE819618D3D000588FE /* QMSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE019618D3D000588FE /* QMSignUpViewController.m */; };
 		559BDFEA19618D3D000588FE /* QMWelcomeScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE619618D3D000588FE /* QMWelcomeScreenViewController.m */; };
 		55A8B06B1965986A00B5D33B /* NSUserDefaultsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B0551965986A00B5D33B /* NSUserDefaultsHelper.m */; };
 		55A8B06E1965986A00B5D33B /* QMSoundManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B05C1965986A00B5D33B /* QMSoundManager.m */; };
@@ -174,8 +174,8 @@
 		559327A4199216FB001C4BF8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		559327A6199216FB001C4BF8 /* Q_municate_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Q_municate_Tests.m; sourceTree = "<group>"; };
 		559327A8199216FB001C4BF8 /* Q-municate Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Q-municate Tests-Prefix.pch"; sourceTree = "<group>"; };
-		559BDFDF19618D3D000588FE /* QMSignUpController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSignUpController.h; sourceTree = "<group>"; };
-		559BDFE019618D3D000588FE /* QMSignUpController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSignUpController.m; sourceTree = "<group>"; };
+		559BDFDF19618D3D000588FE /* QMSignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSignUpViewController.h; sourceTree = "<group>"; };
+		559BDFE019618D3D000588FE /* QMSignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSignUpViewController.m; sourceTree = "<group>"; };
 		559BDFE519618D3D000588FE /* QMWelcomeScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMWelcomeScreenViewController.h; sourceTree = "<group>"; };
 		559BDFE619618D3D000588FE /* QMWelcomeScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMWelcomeScreenViewController.m; sourceTree = "<group>"; };
 		55A8B0541965986A00B5D33B /* NSUserDefaultsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSUserDefaultsHelper.h; sourceTree = "<group>"; };
@@ -611,8 +611,8 @@
 		559BDFDE19618D3D000588FE /* QMSignUpVC */ = {
 			isa = PBXGroup;
 			children = (
-				559BDFDF19618D3D000588FE /* QMSignUpController.h */,
-				559BDFE019618D3D000588FE /* QMSignUpController.m */,
+				559BDFDF19618D3D000588FE /* QMSignUpViewController.h */,
+				559BDFE019618D3D000588FE /* QMSignUpViewController.m */,
 			);
 			name = QMSignUpVC;
 			path = ../Classes/ViewControllers/AuthViewControllers/QMSignUpVC;
@@ -1133,11 +1133,11 @@
 			isa = PBXGroup;
 			children = (
 				584277B31C3D374400CDE35B /* Auth.storyboard */,
+				697E2D49196EA7E500CD2BDE /* QMLicenseAgreementVC */,
 				559BDFE419618D3D000588FE /* QMWelcomeVC */,
-				697E2D49196EA7E500CD2BDE /* QMLicenseAgreementViewController */,
-				559BDFEC19618F24000588FE /* QMForgotPasswordTVC */,
 				559BDFDB19618D3D000588FE /* QMLoginVC */,
 				559BDFDE19618D3D000588FE /* QMSignUpVC */,
+				559BDFEC19618F24000588FE /* QMForgotPasswordTVC */,
 			);
 			name = Auth;
 			sourceTree = "<group>";
@@ -1312,13 +1312,13 @@
 			name = Classes;
 			sourceTree = "<group>";
 		};
-		697E2D49196EA7E500CD2BDE /* QMLicenseAgreementViewController */ = {
+		697E2D49196EA7E500CD2BDE /* QMLicenseAgreementVC */ = {
 			isa = PBXGroup;
 			children = (
 				697E2D4A196EA82400CD2BDE /* QMLicenseAgreementViewController.h */,
 				697E2D4B196EA82400CD2BDE /* QMLicenseAgreementViewController.m */,
 			);
-			name = QMLicenseAgreementViewController;
+			name = QMLicenseAgreementVC;
 			path = ../Classes/ViewControllers/AuthViewControllers;
 			sourceTree = "<group>";
 		};
@@ -1637,7 +1637,7 @@
 				55D8ADDF19AC76E200DAF79F /* QMCreateNewChatController.m in Sources */,
 				2444261F19F1106100C9C61A /* QMChatUtils.m in Sources */,
 				58B414A31BB42D0900613892 /* QMApi+Chat.m in Sources */,
-				559BDFE819618D3D000588FE /* QMSignUpController.m in Sources */,
+				559BDFE819618D3D000588FE /* QMSignUpViewController.m in Sources */,
 				5842779E1C3D336300CDE35B /* QMFriendListCell.m in Sources */,
 				55CEAB81195DBCFA001A8ED6 /* QMIncomingCallController.m in Sources */,
 				580B3B571C3FF89F00345081 /* QMTasks.m in Sources */,
