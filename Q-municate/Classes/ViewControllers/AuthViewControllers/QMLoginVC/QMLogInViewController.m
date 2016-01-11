@@ -19,8 +19,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 @property (weak, nonatomic) IBOutlet UISwitch *rememberMeSwitch;
-@property (weak, nonatomic) IBOutlet UIButton *logInButton;
-@property (weak, nonatomic) IBOutlet UIButton *facebookLoginButton;
 
 @end
 
@@ -30,30 +28,26 @@
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
-- (void)viewDidLoad {
+- (void)viewWillAppear:(BOOL)animated {
     
-    [super viewDidLoad];
-    
-    self.logInButton.layer.cornerRadius = 10.0f;
-    self.logInButton.layer.masksToBounds = YES;
-    
-    self.facebookLoginButton.layer.cornerRadius = 10.0f;
-    self.facebookLoginButton.layer.masksToBounds = YES;
-    
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
-    self.rememberMeSwitch.on = YES;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
     [super viewWillAppear:animated];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 #pragma mark - Actions
 
-- (IBAction)hideKeyboard:(id)sender {
-    [sender resignFirstResponder];
+- (IBAction)done:(id)sender {
+    
+    if (self.emailField.text.length == 0 || self.passwordField.text.length == 0) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) actionSuccess:NO];
+    } else {
+        
+        QBUUser *user = [QBUUser user];
+        user.email    = self.emailField.text;
+        user.password = self.passwordField.text;
+        
+        
+    }
 }
 
 - (IBAction)logIn:(id)sender
@@ -89,33 +83,6 @@
              }
          }];
     }
-}
-
-- (IBAction)connectWithFacebook:(id)sender
-{
-    if (!QMApi.instance.isInternetConnected) {
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
-        return;
-    }
-    __weak __typeof(self)weakSelf = self;
-    [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL success) {
-        if (success) {
-            [weakSelf fireConnectWithFacebook];
-        }
-    }];
-}
-
-- (void)fireConnectWithFacebook
-{
-    __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] singUpAndLoginWithFacebook:^(BOOL success) {
-
-        if (success) {
-            [weakSelf performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
-        } else {
-            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FACEBOOK_LOGIN_FALED_ALERT_TEXT", nil) actionSuccess:NO];
-        }
-    }];
 }
 
 @end

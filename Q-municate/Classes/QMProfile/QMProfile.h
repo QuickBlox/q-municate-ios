@@ -14,6 +14,8 @@
 @interface QMProfile : NSObject <NSCoding>
 
 @property (strong, nonatomic, QB_NULLABLE_PROPERTY) QBUUser *userData;
+@property (assign, nonatomic) BOOL rememberMe;
+
 @property (assign, nonatomic) BOOL userAgreementAccepted;
 @property (assign, nonatomic) BOOL pushNotificationsEnabled;
 

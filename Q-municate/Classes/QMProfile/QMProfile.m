@@ -43,6 +43,10 @@ NSString *const kQMAppExists                = @"QMAppExists";
 - (BOOL)synchronize {
     NSParameterAssert(self.userData);
     
+    if (!self.rememberMe) {
+        return NO;
+    }
+    
     __block BOOL success = NO;
     
     @weakify(self);

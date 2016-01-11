@@ -9,6 +9,7 @@
 #import "QMServicesManager.h"
 
 @class Reachability;
+@class QMProfile;
 
 /**
  *  This class represents basic control on QMServices.
@@ -24,6 +25,8 @@
  *  Reachability manager.
  */
 @property (strong, nonatomic, readonly) Reachability *internetConnection;
+
+@property (strong, nonatomic, readonly) QMProfile *currentProfile;
 
 /**
  *  QMCore shared instance.

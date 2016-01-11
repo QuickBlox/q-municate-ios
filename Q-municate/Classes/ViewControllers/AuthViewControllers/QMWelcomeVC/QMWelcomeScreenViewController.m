@@ -26,7 +26,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
 }
 
 #pragma mark - Actions
@@ -44,8 +44,6 @@
 
 - (void)chainFacebookConnect {
     
-    QMProfile *currentProfile = [QMProfile currentProfile];
-    
     @weakify(self);
     [[[[[[[QMFacebook connect] continueWithBlock:^id _Nullable(BFTask<NSString *> * _Nonnull task) {
         // Facebook connect
@@ -56,7 +54,7 @@
             @strongify(self);
             [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
             
-            [currentProfile synchronizeWithUserData:task.result];
+            [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
             if (task.result.avatarUrl.length == 0) return [QMFacebook loadMe];
         } else {
             //
@@ -78,7 +76,7 @@
         return [QMTasks taskUpdateCurrentUser:updateParameters];
     }] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         // Syncronize profile
-        [currentProfile synchronizeWithUserData:task.result];
+        [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
         return nil;
     }];
 }

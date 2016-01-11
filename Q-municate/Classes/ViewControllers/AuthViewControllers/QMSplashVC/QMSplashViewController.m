@@ -7,6 +7,7 @@
 //
 
 #import "QMSplashViewController.h"
+#import "QMCore.h"
 #import "QMProfile.h"
 
 @implementation QMSplashViewController
@@ -19,8 +20,7 @@
     
     [super viewDidLoad];
     
-    QMProfile *currentProfile = [QMProfile currentProfile];
-    [self performSegueWithIdentifier:currentProfile.userData != nil ? kQMSceneSegueMain : kQMSceneSegueAuth
+    [self performSegueWithIdentifier:[QMCore instance].currentProfile.userData != nil ? kQMSceneSegueMain : kQMSceneSegueAuth
                               sender:nil];
 }
 
