@@ -32,4 +32,6 @@
 
 - (BOOL)clearProfile;
 
+- (BFTask QB_GENERIC(QBUUser *) *)updateUserImage:(UIImage *)userImage progress:(QMContentProgressBlock)progress;
+
 @end

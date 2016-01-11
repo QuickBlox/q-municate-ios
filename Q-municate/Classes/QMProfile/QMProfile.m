@@ -7,6 +7,8 @@
 //
 
 #import "QMProfile.h"
+#import "QMContent.h"
+#import "QMTasks.h"
 #import <SSKeychain.h>
 
 NSString *const kQMUserDataKey              = @"userData";
@@ -108,6 +110,38 @@ NSString *const kQMAppExists                = @"QMAppExists";
     self.userAgreementAccepted = NO;
     
     return success;
+}
+
+#pragma mark - User updates
+
+- (BFTask *)updateUserImage:(UIImage *)userImage progress:(QMContentProgressBlock)progress {
+    
+    BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
+    
+    @weakify(self);
+    [[[QMContent uploadJPEGImage:userImage progress:nil] continueWithBlock:^id _Nullable(BFTask<QBCBlob *> * _Nonnull task) {
+        //
+        if (!task.isFaulted) {
+            QBUpdateUserParameters *userParams = [QBUpdateUserParameters new];
+            userParams.avatarUrl = task.result.isPublic ? task.result.publicUrl : task.result.privateUrl;
+            return [QMTasks taskUpdateCurrentUser:userParams];
+        } else {
+            [source setError:task.error];
+        }
+        return nil;
+    }] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+        //
+        if (task.isFaulted) {
+            [source setError:task.error];
+        } else {
+            @strongify(self);
+            [self synchronizeWithUserData:task.result];
+            [source setResult:task.result];
+        }
+        return nil;
+    }];
+    
+    return source.task;
 }
 
 #pragma mark - Keychain
