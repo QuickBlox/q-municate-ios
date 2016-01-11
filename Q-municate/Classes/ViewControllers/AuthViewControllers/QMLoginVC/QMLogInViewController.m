@@ -7,12 +7,10 @@
 //
 
 #import "QMLogInViewController.h"
-#import "QMWelcomeScreenViewController.h"
-#import "QMLicenseAgreement.h"
 #import "REAlertView+QMSuccess.h"
-#import "QMApi.h"
 #import "SVProgressHUD.h"
-#import "QMSettingsManager.h"
+#import "QMCore.h"
+#import "QMProfile.h"
 
 @interface QMLogInViewController ()
 
@@ -46,42 +44,19 @@
         user.email    = self.emailField.text;
         user.password = self.passwordField.text;
         
-        
-    }
-}
-
-- (IBAction)logIn:(id)sender
-{
-    if (!QMApi.instance.isInternetConnected) {
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
-        return;
-    }
-    NSString *email = self.emailField.text;
-    NSString *password = self.passwordField.text;
-    
-    if (email.length == 0 || password.length == 0) {
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) actionSuccess:NO];
-    }
-    else {
-        
-        __weak __typeof(self)weakSelf = self;
+        [QMCore instance].currentProfile.rememberMe = self.rememberMeSwitch.isOn;
         
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-        
-        [[QMApi instance] loginWithEmail:email
-                                password:password
-                              rememberMe:weakSelf.rememberMeSwitch.on
-                              completion:^(BOOL success)
-         {
-             [SVProgressHUD dismiss];
-             
-             if (success) {
-                 [[QMApi instance] setAutoLogin:weakSelf.rememberMeSwitch.on
-                                withAccountType:QMAccountTypeEmail];
-                 [weakSelf performSegueWithIdentifier:kQMSceneSegueMain
-                                               sender:nil];
-             }
-         }];
+        @weakify(self);
+        [[[QMCore instance].authService loginWithUser:user] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+            @strongify(self);
+            [SVProgressHUD dismiss];
+            if (!task.isFaulted) {
+                [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
+                [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
+            }
+            return nil;
+        }];
     }
 }
 
