@@ -24,11 +24,9 @@
  */
 + (QB_NONNULL instancetype)currentProfile;
 
-- (BOOL)synchronize;
+//- (BOOL)synchronize;
 
 - (BOOL)synchronizeWithUserData:(QB_NONNULL QBUUser *)userData;
-
-- (void)loadProfile;
 
 - (BOOL)clearProfile;
 

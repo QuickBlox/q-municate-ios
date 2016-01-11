@@ -9,14 +9,35 @@
 #import "QMProfile.h"
 #import <SSKeychain.h>
 
-NSString *const kQMUserDataKey = @"userData";
+NSString *const kQMUserDataKey              = @"userData";
 NSString *const kQMUserAgreementAcceptedKey = @"userAgreementAccepted";
 NSString *const kQMPushNotificationsEnabled = @"pushNotificationsEnabled";
+NSString *const kQMAppExists                = @"QMAppExists";
 
 @implementation QMProfile
 
 + (instancetype)currentProfile {
     return [[self alloc] init];
+}
+
+- (instancetype)init {
+    self = [super init];
+    
+    if (self) {
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        
+        [self loadProfile];
+        
+        BOOL exist = [defaults boolForKey:kQMAppExists];
+        
+        if (_userData != nil && !exist) {
+            
+            [self clearProfile];
+        }
+    }
+    
+    return self;
 }
 
 - (BOOL)synchronize {
@@ -31,6 +52,12 @@ NSString *const kQMPushNotificationsEnabled = @"pushNotificationsEnabled";
         NSError *error = nil;
         success = [query save:&error];
     }];
+    
+    if (success) {
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setBool:YES forKey:kQMAppExists];
+    }
     
     return success;
 }
@@ -96,9 +123,10 @@ NSString *const kQMPushNotificationsEnabled = @"pushNotificationsEnabled";
 
 #pragma mark - NSCoding
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
     
-    if (self = [super init]){
+    if (self) {
         
         self.userData = [aDecoder decodeObjectForKey:kQMUserDataKey];
         self.userAgreementAccepted = [aDecoder decodeBoolForKey:kQMUserAgreementAcceptedKey];
