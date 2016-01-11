@@ -26,7 +26,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
 }
 
 #pragma mark - Actions
@@ -44,23 +44,20 @@
 
 - (void)chainFacebookConnect {
     
-    QMProfile *currentProfile = [QMProfile currentProfile];
-    
     @weakify(self);
     [[[[[[[QMFacebook connect] continueWithBlock:^id _Nullable(BFTask<NSString *> * _Nonnull task) {
         // Facebook connect
-        return task.isCompleted ? [[QMCore instance].authService loginWithFacebookSessionToken:task.result] : nil;
+        return task.isFaulted ? nil : [[QMCore instance].authService loginWithFacebookSessionToken:task.result];
     }] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         //
-        if (task.isCompleted) {
+        if (task.isFaulted) {
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FACEBOOK_LOGIN_FALED_ALERT_TEXT", nil) actionSuccess:NO];
+        } else {
             @strongify(self);
             [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
             
-            [currentProfile synchronizeWithUserData:task.result];
+            [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
             if (task.result.avatarUrl.length == 0) return [QMFacebook loadMe];
-        } else {
-            //
-            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FACEBOOK_LOGIN_FALED_ALERT_TEXT", nil) actionSuccess:NO];
         }
         
         return nil;
@@ -78,7 +75,7 @@
         return [QMTasks taskUpdateCurrentUser:updateParameters];
     }] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         // Syncronize profile
-        [currentProfile synchronizeWithUserData:task.result];
+        [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
         return nil;
     }];
 }

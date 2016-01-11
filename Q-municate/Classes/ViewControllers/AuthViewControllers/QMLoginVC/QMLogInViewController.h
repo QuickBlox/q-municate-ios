@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface QMLogInViewController : UIViewController
+@interface QMLogInViewController : UITableViewController
 
 @end

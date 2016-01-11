@@ -9,6 +9,7 @@
 #import "QMCore.h"
 
 #import <Reachability.h>
+#import "QMProfile.h"
 
 @implementation QMCore
 
@@ -30,6 +31,8 @@
         // Contact list service init
         [QMContactListCache setupDBWithStoreNamed:kContactListCacheNameKey];
         _contactListService = [[QMContactListService alloc] initWithServiceManager:self cacheDataSource:self];
+        
+        _currentProfile = [QMProfile currentProfile];
         
         // Reachability init
 //        _internetConnection = [Reachability reachabilityForInternetConnection];
