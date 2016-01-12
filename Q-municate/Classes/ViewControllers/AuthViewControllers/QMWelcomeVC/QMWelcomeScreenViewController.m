@@ -18,6 +18,7 @@
 #import "QMTasks.h"
 
 #import <DigitsKit/DigitsKit.h>
+#import "QMDigitsConfigurationFactory.h"
 
 @implementation QMWelcomeScreenViewController
 
@@ -87,7 +88,7 @@
 
 - (void)performDigitsLogin {
     @weakify(self);
-    [[Digits sharedInstance] authenticateWithCompletion:^(DGTSession *session, NSError *error) {
+    [[Digits sharedInstance] authenticateWithViewController:nil configuration:[QMDigitsConfigurationFactory qmunicateThemeConfiguration] completion:^(DGTSession *session, NSError *error) {
         @strongify(self);
         // twitter digits auth
         if (error.userInfo.count > 0) {
