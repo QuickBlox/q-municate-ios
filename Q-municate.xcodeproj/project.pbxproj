@@ -49,7 +49,7 @@
 		55D8AD0F19AC757900DAF79F /* ABPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD0C19AC757900DAF79F /* ABPerson.m */; };
 		55D8AD1019AC757900DAF79F /* QMAddressBook.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD0E19AC757900DAF79F /* QMAddressBook.m */; };
 		55D8AD1619AC759C00DAF79F /* QMDownloadContentOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD1519AC759C00DAF79F /* QMDownloadContentOperation.m */; };
-		55D8ADB519AC761000DAF79F /* QMForgotPasswordTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADB419AC761000DAF79F /* QMForgotPasswordTVC.m */; };
+		55D8ADB519AC761000DAF79F /* QMForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADB419AC761000DAF79F /* QMForgotPasswordViewController.m */; };
 		55D8ADBB19AC762C00DAF79F /* QMDialogsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADBA19AC762C00DAF79F /* QMDialogsDataSource.m */; };
 		55D8ADDD19AC76E200DAF79F /* QMAddMembersToGroupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADD819AC76E200DAF79F /* QMAddMembersToGroupController.m */; };
 		55D8ADDE19AC76E200DAF79F /* QMAddUsersAbstractController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADDA19AC76E200DAF79F /* QMAddUsersAbstractController.m */; };
@@ -222,8 +222,8 @@
 		55D8AD0E19AC757900DAF79F /* QMAddressBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAddressBook.m; sourceTree = "<group>"; };
 		55D8AD1419AC759C00DAF79F /* QMDownloadContentOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDownloadContentOperation.h; sourceTree = "<group>"; };
 		55D8AD1519AC759C00DAF79F /* QMDownloadContentOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDownloadContentOperation.m; sourceTree = "<group>"; };
-		55D8ADB319AC761000DAF79F /* QMForgotPasswordTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMForgotPasswordTVC.h; sourceTree = "<group>"; };
-		55D8ADB419AC761000DAF79F /* QMForgotPasswordTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMForgotPasswordTVC.m; sourceTree = "<group>"; };
+		55D8ADB319AC761000DAF79F /* QMForgotPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMForgotPasswordViewController.h; sourceTree = "<group>"; };
+		55D8ADB419AC761000DAF79F /* QMForgotPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMForgotPasswordViewController.m; sourceTree = "<group>"; };
 		55D8ADB919AC762C00DAF79F /* QMDialogsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDialogsDataSource.h; sourceTree = "<group>"; };
 		55D8ADBA19AC762C00DAF79F /* QMDialogsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDialogsDataSource.m; sourceTree = "<group>"; };
 		55D8ADD719AC76E200DAF79F /* QMAddMembersToGroupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAddMembersToGroupController.h; sourceTree = "<group>"; };
@@ -598,23 +598,23 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		559BDFDB19618D3D000588FE /* QMLoginVC */ = {
+		559BDFDB19618D3D000588FE /* Login screen */ = {
 			isa = PBXGroup;
 			children = (
 				5889AAE41C43CEB400997A40 /* QMLogInViewController.h */,
 				5889AAE51C43CEB400997A40 /* QMLogInViewController.m */,
 			);
-			name = QMLoginVC;
+			name = "Login screen";
 			path = ../Classes/ViewControllers/AuthViewControllers/QMLoginVC;
 			sourceTree = "<group>";
 		};
-		559BDFDE19618D3D000588FE /* QMSignUpVC */ = {
+		559BDFDE19618D3D000588FE /* Sign Up screen */ = {
 			isa = PBXGroup;
 			children = (
 				559BDFDF19618D3D000588FE /* QMSignUpViewController.h */,
 				559BDFE019618D3D000588FE /* QMSignUpViewController.m */,
 			);
-			name = QMSignUpVC;
+			name = "Sign Up screen";
 			path = ../Classes/ViewControllers/AuthViewControllers/QMSignUpVC;
 			sourceTree = "<group>";
 		};
@@ -628,23 +628,23 @@
 			path = Classes/ViewControllers/AuthViewControllers/QMSplasVC;
 			sourceTree = "<group>";
 		};
-		559BDFE419618D3D000588FE /* QMWelcomeVC */ = {
+		559BDFE419618D3D000588FE /* Welcome screen */ = {
 			isa = PBXGroup;
 			children = (
 				559BDFE519618D3D000588FE /* QMWelcomeScreenViewController.h */,
 				559BDFE619618D3D000588FE /* QMWelcomeScreenViewController.m */,
 			);
-			name = QMWelcomeVC;
+			name = "Welcome screen";
 			path = ../Classes/ViewControllers/AuthViewControllers/QMWelcomeVC;
 			sourceTree = "<group>";
 		};
-		559BDFEC19618F24000588FE /* QMForgotPasswordTVC */ = {
+		559BDFEC19618F24000588FE /* Forgot password */ = {
 			isa = PBXGroup;
 			children = (
-				55D8ADB319AC761000DAF79F /* QMForgotPasswordTVC.h */,
-				55D8ADB419AC761000DAF79F /* QMForgotPasswordTVC.m */,
+				55D8ADB319AC761000DAF79F /* QMForgotPasswordViewController.h */,
+				55D8ADB419AC761000DAF79F /* QMForgotPasswordViewController.m */,
 			);
-			name = QMForgotPasswordTVC;
+			name = "Forgot password";
 			path = ../Classes/ViewControllers/AuthViewControllers/QMForgotPasswordTVC;
 			sourceTree = "<group>";
 		};
@@ -1133,11 +1133,11 @@
 			isa = PBXGroup;
 			children = (
 				584277B31C3D374400CDE35B /* Auth.storyboard */,
-				697E2D49196EA7E500CD2BDE /* QMLicenseAgreementVC */,
-				559BDFE419618D3D000588FE /* QMWelcomeVC */,
-				559BDFDB19618D3D000588FE /* QMLoginVC */,
-				559BDFDE19618D3D000588FE /* QMSignUpVC */,
-				559BDFEC19618F24000588FE /* QMForgotPasswordTVC */,
+				697E2D49196EA7E500CD2BDE /* License Agreement */,
+				559BDFE419618D3D000588FE /* Welcome screen */,
+				559BDFDB19618D3D000588FE /* Login screen */,
+				559BDFDE19618D3D000588FE /* Sign Up screen */,
+				559BDFEC19618F24000588FE /* Forgot password */,
 			);
 			name = Auth;
 			sourceTree = "<group>";
@@ -1312,13 +1312,13 @@
 			name = Classes;
 			sourceTree = "<group>";
 		};
-		697E2D49196EA7E500CD2BDE /* QMLicenseAgreementVC */ = {
+		697E2D49196EA7E500CD2BDE /* License Agreement */ = {
 			isa = PBXGroup;
 			children = (
 				697E2D4A196EA82400CD2BDE /* QMLicenseAgreementViewController.h */,
 				697E2D4B196EA82400CD2BDE /* QMLicenseAgreementViewController.m */,
 			);
-			name = QMLicenseAgreementVC;
+			name = "License Agreement";
 			path = ../Classes/ViewControllers/AuthViewControllers;
 			sourceTree = "<group>";
 		};
@@ -1610,7 +1610,7 @@
 				584277A51C3D336300CDE35B /* QMOnlineTitle.m in Sources */,
 				55A8B06B1965986A00B5D33B /* NSUserDefaultsHelper.m in Sources */,
 				55495A221993BCC100B7764C /* QMAlertsFactory.m in Sources */,
-				55D8ADB519AC761000DAF79F /* QMForgotPasswordTVC.m in Sources */,
+				55D8ADB519AC761000DAF79F /* QMForgotPasswordViewController.m in Sources */,
 				693206EA1962BCC300B15EF9 /* QMBaseCallsController.m in Sources */,
 				558AE52C196EA7C400AEAC1F /* QMFriendsListDataSource.m in Sources */,
 				5842779C1C3D336300CDE35B /* IAButton.m in Sources */,
