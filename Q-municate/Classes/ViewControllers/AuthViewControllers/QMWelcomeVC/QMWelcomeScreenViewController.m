@@ -42,6 +42,9 @@
     }];
 }
 
+- (IBAction)connectWithPhoneNumber:(id)sender {
+}
+
 - (void)chainFacebookConnect {
     
     @weakify(self);
