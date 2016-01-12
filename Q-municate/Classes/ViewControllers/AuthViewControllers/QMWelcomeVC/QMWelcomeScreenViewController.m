@@ -47,7 +47,7 @@
     @weakify(self);
     [[[[[QMFacebook connect] continueWithBlock:^id _Nullable(BFTask<NSString *> * _Nonnull task) {
         // Facebook connect
-        return task.isFaulted ? nil : [[QMCore instance].authService loginWithFacebookSessionToken:task.result];
+        return task.result == nil ? nil : [[QMCore instance].authService loginWithFacebookSessionToken:task.result];
     }] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         //
         if (task.isFaulted) {
