@@ -71,7 +71,7 @@
 
 - (IBAction)pressentUserAgreement:(id)sender {
     
-    [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:nil];
+    [QMLicenseAgreement presentUserAgreementInViewController:self completion:nil];
 }
 
 - (IBAction)done:(id)sender {

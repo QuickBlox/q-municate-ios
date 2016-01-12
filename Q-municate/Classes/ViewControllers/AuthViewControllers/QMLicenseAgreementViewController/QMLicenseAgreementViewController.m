@@ -9,8 +9,8 @@
 #import "QMLicenseAgreementViewController.h"
 #import <SVProgressHUD.h>
 #import "REAlertView.h"
-#import "QMApi.h"
-#import "QMSettingsManager.h"
+#import "QMCore.h"
+#import "QMProfile.h"
 
 NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
@@ -32,13 +32,7 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:0.048 green:0.361 blue:0.606 alpha:1.000];
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    self.navigationController.navigationBar.translucent = NO;
-    
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    
-    BOOL licenceAccepted = [[QMApi instance].settingsManager userAgreementAccepted];
+    BOOL licenceAccepted = [QMCore instance].currentProfile.userAgreementAccepted;
     if (licenceAccepted) {
         self.navigationItem.rightBarButtonItem = nil;
     }
@@ -69,7 +63,7 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
 - (IBAction)acceptLicense:(id)sender {
     
-    [[QMApi instance].settingsManager setUserAgreementAccepted:YES];
+    [[QMCore instance].currentProfile setUserAgreementAccepted:YES];
     [self dismissViewControllerSuccess:YES];
 }
 
