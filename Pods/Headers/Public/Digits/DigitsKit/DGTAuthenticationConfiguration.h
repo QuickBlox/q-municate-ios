@@ -1,0 +1,1 @@
+../../../../Digits/iOS/DigitsKit.framework/Headers/DGTAuthenticationConfiguration.h

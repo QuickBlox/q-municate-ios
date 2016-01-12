@@ -59,6 +59,7 @@ install_resource()
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "AGEmojiKeyboard/Resources/EmojisList.plist"
+  install_resource "Digits/iOS/DigitsKit.framework/Versions/A/Resources/DigitsKitResources.bundle"
   install_resource "IDMPhotoBrowser/Classes/IDMPhotoBrowser.bundle"
   install_resource "IDMPhotoBrowser/Classes/IDMPBLocalizations.bundle"
   install_resource "QMCVDevelopment/QMChatViewController/en.lproj/QMChatViewController.xib"
@@ -78,6 +79,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_resource "AGEmojiKeyboard/Resources/EmojisList.plist"
+  install_resource "Digits/iOS/DigitsKit.framework/Versions/A/Resources/DigitsKitResources.bundle"
   install_resource "IDMPhotoBrowser/Classes/IDMPhotoBrowser.bundle"
   install_resource "IDMPhotoBrowser/Classes/IDMPBLocalizations.bundle"
   install_resource "QMCVDevelopment/QMChatViewController/en.lproj/QMChatViewController.xib"

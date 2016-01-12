@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import <Crashlytics/Crashlytics.h>
 #import "SVProgressHUD.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMApi.h"
@@ -15,6 +14,10 @@
 #import "QMAVCallManager.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "QMViewControllersFactory.h"
+
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+#import <DigitsKit/DigitsKit.h>
 
 #define DEVELOPMENT 0
 #define STAGE_SERVER_IS_ACTIVE 0
@@ -98,8 +101,8 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateNormal];
     [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateDisabled];
     
-    /** Crashlytics */
-    [Crashlytics startWithAPIKey:@"7aea78439bec41a9005c7488bb6751c5e33fe270"];
+    /** Fabric */
+    [Fabric with:@[CrashlyticsKit, DigitsKit]];
     
     if (launchOptions != nil) {
         NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
