@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "SDWebImageManager.h"
-
+IB_DESIGNABLE
 typedef NS_ENUM(NSUInteger, QMImageViewType) {
     QMImageViewTypeNone,
     QMImageViewTypeCircle,
@@ -20,6 +20,7 @@ typedef NS_ENUM(NSUInteger, QMImageViewType) {
  Default QMUserImageViewType QMUserImageViewTypeNone
  */
 @property (assign, nonatomic) QMImageViewType imageViewType;
+@property (nonatomic) IBInspectable CGFloat borderWidth;
 
 - (void)sd_setImage:(UIImage *)image withKey:(NSString *)key;
 - (void)setImageWithURL:(NSURL *)url

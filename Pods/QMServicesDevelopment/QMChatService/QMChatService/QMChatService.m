@@ -587,6 +587,7 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
 
 - (void)createPrivateChatDialogWithOpponentID:(NSUInteger)opponentID
                                  completion:(void(^)(QBResponse *response, QBChatDialog *createdDialog))completion {
+    NSAssert(opponentID > 0, @"Incorrect user ID");
     
     QBChatDialog *dialog = [self.dialogsMemoryStorage privateChatDialogWithOpponentID:opponentID];
     
