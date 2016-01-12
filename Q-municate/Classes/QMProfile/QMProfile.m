@@ -144,6 +144,21 @@ NSString *const kQMAppExists                = @"QMAppExists";
     return source.task;
 }
 
+- (BFTask *)resetPasswordForEmail:(NSString *)email {
+    
+    BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
+    
+    [QBRequest resetUserPasswordWithEmail:email successBlock:^(QBResponse * _Nonnull response) {
+        //
+        [source setResult:nil];
+    } errorBlock:^(QBResponse * _Nonnull response) {
+        //
+        [source setError:response.error.error];
+    }];
+    
+    return source.task;
+}
+
 #pragma mark - Keychain
 
 - (void)keychainQuery:(void(^)(SSKeychainQuery *query))keychainQueryBlock {

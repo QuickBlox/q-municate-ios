@@ -32,6 +32,7 @@
 
 - (BOOL)clearProfile;
 
-- (BFTask QB_GENERIC(QBUUser *) *)updateUserImage:(UIImage *)userImage progress:(QMContentProgressBlock)progress;
+- (QB_NONNULL BFTask QB_GENERIC(QBUUser *) *)updateUserImage:(QB_NONNULL UIImage *)userImage progress:(QB_NULLABLE QMContentProgressBlock)progress;
+- (QB_NONNULL BFTask *)resetPasswordForEmail:(QB_NONNULL NSString *)email;
 
 @end
