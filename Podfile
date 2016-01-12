@@ -21,6 +21,12 @@ pod 'FBSDKCoreKit', '~> 4.7.0'
 pod 'FBSDKShareKit', '~> 4.7.0'
 pod 'FBSDKLoginKit', '~> 4.7.0'
 
+#Twitter
+pod 'Fabric', '~> 1.6'
+pod 'Crashlytics', '~> 3.5'
+pod 'Digits', '~> 1.15'
+pod 'TwitterCore', '~> 1.15'
+
 #For development pods
 #pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
 #pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
