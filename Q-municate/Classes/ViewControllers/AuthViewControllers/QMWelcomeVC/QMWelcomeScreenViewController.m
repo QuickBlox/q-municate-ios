@@ -45,7 +45,7 @@
 - (void)chainFacebookConnect {
     
     @weakify(self);
-    [[[[[[[QMFacebook connect] continueWithBlock:^id _Nullable(BFTask<NSString *> * _Nonnull task) {
+    [[[[[QMFacebook connect] continueWithBlock:^id _Nullable(BFTask<NSString *> * _Nonnull task) {
         // Facebook connect
         return task.isFaulted ? nil : [[QMCore instance].authService loginWithFacebookSessionToken:task.result];
     }] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
@@ -67,16 +67,7 @@
         return [QMContent downloadImageWithUrl:userImageUrl];
     }] continueWithSuccessBlock:^id _Nullable(BFTask<UIImage *> * _Nonnull task) {
         // uploading image to content module
-        return [QMContent uploadJPEGImage:task.result progress:nil];
-    }] continueWithSuccessBlock:^id _Nullable(BFTask<QBCBlob *> * _Nonnull task) {
-        // updating current user
-        QBUpdateUserParameters *updateParameters = [QBUpdateUserParameters new];
-        updateParameters.avatarUrl = task.result.isPublic ? task.result.publicUrl : task.result.privateUrl;
-        return [QMTasks taskUpdateCurrentUser:updateParameters];
-    }] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
-        // Syncronize profile
-        [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
-        return nil;
+        return [[QMCore instance].currentProfile updateUserImage:task.result progress:nil];
     }];
 }
 

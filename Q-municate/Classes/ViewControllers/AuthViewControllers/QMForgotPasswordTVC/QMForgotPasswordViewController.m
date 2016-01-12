@@ -6,19 +6,19 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import "QMForgotPasswordTVC.h"
-#import "QMApi.h"
+#import "QMForgotPasswordViewController.h"
 #import "SVProgressHUD.h"
 #import "REAlertView+QMSuccess.h"
+#import "QMCore.h"
+#import "QMProfile.h"
 
-@interface QMForgotPasswordTVC ()
+@interface QMForgotPasswordViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
-@property (weak, nonatomic) IBOutlet UIButton *resetPasswordBtn;
 
 @end
 
-@implementation QMForgotPasswordTVC
+@implementation QMForgotPasswordViewController
 
 - (void)dealloc {
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
@@ -41,16 +41,18 @@
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
 
-    __weak __typeof(self)weakSelf = self;
-    [[QMApi instance] resetUserPassordWithEmail:emailString completion:^(BOOL success) {
-
-        if (success) {
-            [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_MESSAGE_WAS_SENT_TO_YOUR_EMAIL", nil)];
-            [weakSelf.navigationController popViewControllerAnimated:YES];
-        }else {
+    @weakify(self);
+    [[[QMCore instance].currentProfile resetPasswordForEmail:emailString] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull task) {
+        //
+        if (task.isFaulted) {
             [SVProgressHUD dismiss];
             [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_USER_WITH_EMAIL_WASNT_FOUND", nil) actionSuccess:NO];
+        } else {
+            @strongify(self);
+            [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_MESSAGE_WAS_SENT_TO_YOUR_EMAIL", nil)];
+            [self.navigationController popViewControllerAnimated:YES];
         }
+        return nil;
     }];
 }
 

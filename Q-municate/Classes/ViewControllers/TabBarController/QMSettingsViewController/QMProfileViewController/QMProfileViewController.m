@@ -95,12 +95,12 @@
         return;
     }
     __weak __typeof(self)weakSelf = self;
-    [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
-        
-        weakSelf.avatarImage = image;
-        weakSelf.avatarView.image = [image imageByCircularScaleAndCrop:weakSelf.avatarView.frame.size];
-        [weakSelf setUpdateButtonActivity];
-    }];
+//    [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
+//        
+//        weakSelf.avatarImage = image;
+//        weakSelf.avatarView.image = [image imageByCircularScaleAndCrop:weakSelf.avatarView.frame.size];
+//        [weakSelf setUpdateButtonActivity];
+//    }];
 }
 
 - (void)setUpdateButtonActivity {

@@ -104,18 +104,18 @@
     [self.view endEditing:YES];
 
     __weak typeof(self)weakSelf = self;
-    [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
-        __typeof(weakSelf)strongSelf = weakSelf;
-        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-        [[QMApi instance] changeAvatar:image forChatDialog:strongSelf.chatDialog completion:^(QBChatDialog *updatedDialog) {
-            //
-            if (updatedDialog != nil) {
-                strongSelf.groupAvatarView.imageViewType = QMImageViewTypeCircle;
-                [strongSelf.groupAvatarView sd_setImage:image withKey:updatedDialog.photo];
-            }
-            [SVProgressHUD dismiss];
-        }];
-    }];
+//    [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
+//        __typeof(weakSelf)strongSelf = weakSelf;
+//        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+//        [[QMApi instance] changeAvatar:image forChatDialog:strongSelf.chatDialog completion:^(QBChatDialog *updatedDialog) {
+//            //
+//            if (updatedDialog != nil) {
+//                strongSelf.groupAvatarView.imageViewType = QMImageViewTypeCircle;
+//                [strongSelf.groupAvatarView sd_setImage:image withKey:updatedDialog.photo];
+//            }
+//            [SVProgressHUD dismiss];
+//        }];
+//    }];
 }
 
 - (IBAction)addFriendsToChat:(id)sender

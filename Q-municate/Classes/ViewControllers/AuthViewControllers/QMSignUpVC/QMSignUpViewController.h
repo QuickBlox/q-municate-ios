@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@class QMWelcomeScreenViewController;
-
-@interface QMSignUpController : UITableViewController
+@interface QMSignUpViewController : UITableViewController
 
 @end

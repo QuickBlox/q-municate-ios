@@ -90,7 +90,7 @@ static NSString * const kQMContentImageFileName                    = @"image";
     
     [[self downloadFileWithUrl:url] continueWithBlock:^id _Nullable(BFTask<NSData *> * _Nonnull task) {
         //
-        task.isCompleted ? [source setResult:[UIImage imageWithData:task.result]] : [source setError:task.error];
+        task.isFaulted ? [source setError:task.error] : [source setResult:[UIImage imageWithData:task.result]];
         return nil;
     }];
     
