@@ -7,7 +7,6 @@
 //
 
 #import "QMForgotPasswordViewController.h"
-#import "QMApi.h"
 #import "SVProgressHUD.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMCore.h"
