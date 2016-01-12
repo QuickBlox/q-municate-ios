@@ -7,7 +7,8 @@
 //
 
 #import "QMDigitsConfigurationFactory.h"
-#import <DigitsKit/DigitsKit.h>
+#import <DGTAuthenticationConfiguration.h>
+#import <DGTAppearance.h>
 
 @implementation QMDigitsConfigurationFactory
 
