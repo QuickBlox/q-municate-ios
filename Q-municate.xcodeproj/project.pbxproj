@@ -14,7 +14,6 @@
 		2476BA8119A5D91F00CC666D /* QMUsersUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2476BA8019A5D91F00CC666D /* QMUsersUtils.m */; };
 		2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */; };
 		24DC50E81A7F9E88002C6E29 /* QMDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DC50E71A7F9E88002C6E29 /* QMDevice.m */; };
-		24FDA66F199B7A610005662B /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24FDA66E199B7A610005662B /* Crashlytics.framework */; };
 		551F8728196EA68900DBCA02 /* QMInviteFriendsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 551F8727196EA68900DBCA02 /* QMInviteFriendsDataSource.m */; };
 		55286996199131B5006F92CB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55286995199131B5006F92CB /* Localizable.strings */; };
 		5549368E19867738007F2CF1 /* QMContentService.m in Sources */ = {isa = PBXBuildFile; fileRef = 5549368C19867738007F2CF1 /* QMContentService.m */; };
@@ -91,7 +90,6 @@
 		5861E25D1BB40D7E00C9EB68 /* QMApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 5861E25C1BB40D7E00C9EB68 /* QMApi.m */; };
 		5889AAE61C43CEB400997A40 /* QMLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5889AAE51C43CEB400997A40 /* QMLogInViewController.m */; };
 		589407B41BB958DE00C1CA78 /* QBUpdateUserParameters+CustomData.m in Sources */ = {isa = PBXBuildFile; fileRef = 589407B31BB958DE00C1CA78 /* QBUpdateUserParameters+CustomData.m */; };
-		589F40991BB03DA30054FA22 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 589F40981BB03DA30054FA22 /* Fabric.framework */; };
 		58B414A11BB424DB00613892 /* QMApi+Auth.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B414A01BB424DB00613892 /* QMApi+Auth.m */; };
 		58B414A31BB42D0900613892 /* QMApi+Chat.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B414A21BB42D0900613892 /* QMApi+Chat.m */; };
 		58B414A51BB4327900613892 /* QMApi+Notifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B414A41BB4327900613892 /* QMApi+Notifications.m */; };
@@ -156,7 +154,6 @@
 		24DC50E61A7F9E88002C6E29 /* QMDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMDevice.h; path = QMDevice/QMDevice.h; sourceTree = "<group>"; };
 		24DC50E71A7F9E88002C6E29 /* QMDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMDevice.m; path = QMDevice/QMDevice.m; sourceTree = "<group>"; };
 		24ECC26419A73587003F5038 /* Macro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macro.h; sourceTree = "<group>"; };
-		24FDA66E199B7A610005662B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = External/Crashlytics.framework; sourceTree = "<group>"; };
 		551F8726196EA68900DBCA02 /* QMInviteFriendsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMInviteFriendsDataSource.h; sourceTree = "<group>"; };
 		551F8727196EA68900DBCA02 /* QMInviteFriendsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMInviteFriendsDataSource.m; sourceTree = "<group>"; };
 		55286995199131B5006F92CB /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
@@ -298,7 +295,6 @@
 		5889AAE51C43CEB400997A40 /* QMLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLogInViewController.m; sourceTree = "<group>"; };
 		589407B21BB958DE00C1CA78 /* QBUpdateUserParameters+CustomData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBUpdateUserParameters+CustomData.h"; sourceTree = "<group>"; };
 		589407B31BB958DE00C1CA78 /* QBUpdateUserParameters+CustomData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QBUpdateUserParameters+CustomData.m"; sourceTree = "<group>"; };
-		589F40981BB03DA30054FA22 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fabric.framework; path = External/Fabric.framework; sourceTree = "<group>"; };
 		58B414A01BB424DB00613892 /* QMApi+Auth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Auth.m"; sourceTree = "<group>"; };
 		58B414A21BB42D0900613892 /* QMApi+Chat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Chat.m"; sourceTree = "<group>"; };
 		58B414A41BB4327900613892 /* QMApi+Notifications.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QMApi+Notifications.m"; sourceTree = "<group>"; };
@@ -382,7 +378,6 @@
 				69A664E019BDB57700D3E0C7 /* libxml2.2.dylib in Frameworks */,
 				86FD874D1982512000B6FA43 /* GLKit.framework in Frameworks */,
 				69CF189D18AE1C6A003262EF /* CoreData.framework in Frameworks */,
-				24FDA66F199B7A610005662B /* Crashlytics.framework in Frameworks */,
 				693DC42C18FFC58000AF46D9 /* libstdc++.6.0.9.dylib in Frameworks */,
 				58D81C231BBA86920046B550 /* QuickbloxWebRTC.framework in Frameworks */,
 				693DC42618FFC45900AF46D9 /* libsqlite3.dylib in Frameworks */,
@@ -397,7 +392,6 @@
 				69CF189B18AE1C63003262EF /* CoreLocation.framework in Frameworks */,
 				69D57E5818ACC11C00A9900A /* CoreGraphics.framework in Frameworks */,
 				69CF189918AE1C52003262EF /* MobileCoreServices.framework in Frameworks */,
-				589F40991BB03DA30054FA22 /* Fabric.framework in Frameworks */,
 				69CF189718AE1C49003262EF /* SystemConfiguration.framework in Frameworks */,
 				69CF189518AE1C3C003262EF /* CFNetwork.framework in Frameworks */,
 				69D15CC318AE1721001E0480 /* libz.dylib in Frameworks */,
@@ -1360,8 +1354,6 @@
 				58D81C221BBA86920046B550 /* QuickbloxWebRTC.framework */,
 				24657EB61A84E97700009F91 /* libicucore.dylib */,
 				69A664DF19BDB57700D3E0C7 /* libxml2.2.dylib */,
-				589F40981BB03DA30054FA22 /* Fabric.framework */,
-				24FDA66E199B7A610005662B /* Crashlytics.framework */,
 				86FD874C1982512000B6FA43 /* GLKit.framework */,
 				86FD874A1982510700B6FA43 /* OpenGLES.framework */,
 				693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */,
@@ -1430,7 +1422,6 @@
 				69D57E4F18ACC11C00A9900A /* Frameworks */,
 				69D57E5018ACC11C00A9900A /* Resources */,
 				F7C9D5C402A745C9BB21C910 /* Copy Pods Resources */,
-				248D44C6199B6CF4000EADA2 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1507,19 +1498,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		248D44C6199B6CF4000EADA2 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "./External/Crashlytics.framework/run 7aea78439bec41a9005c7488bb6751c5e33fe270 343e58f13448a59778de3a8f630a0bd4a03803d1ae397818fbe2e76c66d09398";
-		};
 		4CF911AA6A0A49948F56AD2E /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
