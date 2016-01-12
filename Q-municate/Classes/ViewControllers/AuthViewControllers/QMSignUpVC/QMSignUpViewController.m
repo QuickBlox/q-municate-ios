@@ -15,8 +15,13 @@
 #import "REActionSheet.h"
 
 #import <QMImageView.h>
+#import "QMCore.h"
+#import "QMProfile.h"
+#import "QMContent.h"
 
 @interface QMSignUpViewController ()
+
+<QMImagePickerResultHandler>
 
 @property (weak, nonatomic) IBOutlet UITextField *fullNameField;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
@@ -64,26 +69,13 @@
     }];
 }
 
-- (IBAction)pressentUserAgreement:(id)sender
-{
-    if (!QMApi.instance.isInternetConnected) {
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
-        return;
-    }
+- (IBAction)pressentUserAgreement:(id)sender {
+    
     [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:nil];
 }
 
-- (IBAction)signUp:(id)sender
-{
-    if (!QMApi.instance.isInternetConnected) {
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
-        return;
-    }
-    [self fireSignUp];
-}
-
-- (void)fireSignUp
-{
+- (IBAction)done:(id)sender {
+    
     NSString *fullName = self.fullNameField.text;
     NSString *email = self.emailField.text;
     NSString *password = self.passwordField.text;
@@ -93,52 +85,59 @@
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) actionSuccess:NO];
         return;
     }
-    
-    __weak __typeof(self)weakSelf = self;
+
+    @weakify(self);
     [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL userAgreementSuccess) {
-        
+        @strongify(self);
         if (userAgreementSuccess) {
-            
             QBUUser *newUser = [QBUUser user];
-            
             newUser.fullName = fullName;
-            newUser.email = email;
+            newUser.email    = email;
             newUser.password = password;
-            newUser.tags = [[NSMutableArray alloc] initWithObjects:@"ios", nil];
-            
-            [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+            newUser.tags = @[@"ios"].mutableCopy;
             
             void (^presentTabBar)(void) = ^(void) {
                 
                 [SVProgressHUD dismiss];
-                [weakSelf performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
+                [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
             };
             
-            [[QMApi instance] signUpAndLoginWithUser:newUser rememberMe:YES completion:^(BOOL success) {
-                
-                if (success) {
+            [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+            [QMCore instance].currentProfile.userAgreementAccepted = userAgreementSuccess;
+            
+            [[[[QMCore instance].authService signUpAndLoginWithUser:newUser] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+                //
+                if (!task.isFaulted) {
+                    [QMCore instance].currentProfile.rememberMe = YES;
                     
-                    if (weakSelf.cachedPicture) {
-                        
+                    if (self.selectedImage != nil) {
                         [SVProgressHUD showProgress:0.f status:nil maskType:SVProgressHUDMaskTypeClear];
-                        [[QMApi instance] updateCurrentUser:nil image:weakSelf.cachedPicture progress:^(float progress) {
+                        return [[QMCore instance].currentProfile updateUserImage:self.selectedImage progress:^(float progress) {
                             //
                             [SVProgressHUD showProgress:progress status:nil maskType:SVProgressHUDMaskTypeClear];
-                        } completion:^(BOOL succeed) {
-                            //
-                            presentTabBar();
                         }];
-                    }
-                    else {
+                    } else {
+                        [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
                         presentTabBar();
                     }
                 }
-                else {
-                    [SVProgressHUD dismiss];
-                }
+                return nil;
+            }] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+                // saving picture to the cache
+                [self.userImage sd_setImage:self.selectedImage withKey:task.result.avatarUrl];
+                presentTabBar();
+                return nil;
             }];
         }
     }];
+}
+
+#pragma mark - QMImagePickerResultHandler
+
+- (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo {
+    
+    self.selectedImage = photo;
+    [self.userImage setImage:photo];
 }
 
 @end
