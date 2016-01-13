@@ -103,6 +103,8 @@
 	<array>
 		<string>audio</string>
 	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>Launch Screen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Start</string>
 	<key>UIRequiredDeviceCapabilities</key>
