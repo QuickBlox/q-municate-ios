@@ -28,11 +28,15 @@
 
 @property (strong, nonatomic, readonly) QMProfile *currentProfile;
 
+@property (strong, nonatomic) NSDate *lastActivityDate;
+
 /**
  *  QMCore shared instance.
  *
  *  @return QMCore singleton
  */
 + (instancetype)instance;
+
+- (BFTask *)logout;
 
 @end
