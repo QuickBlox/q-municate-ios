@@ -11,10 +11,11 @@
 #import "QMTasks.h"
 #import <SSKeychain.h>
 
-NSString *const kQMUserDataKey              = @"userData";
+NSString *const kQMUserDataKey = @"userData";
+NSString *const kQMAccountType = @"accountType";
 NSString *const kQMUserAgreementAcceptedKey = @"userAgreementAccepted";
 NSString *const kQMPushNotificationsEnabled = @"pushNotificationsEnabled";
-NSString *const kQMAppExists                = @"QMAppExists";
+NSString *const kQMAppExists = @"QMAppExists";
 
 @implementation QMProfile
 
@@ -45,7 +46,7 @@ NSString *const kQMAppExists                = @"QMAppExists";
 - (BOOL)synchronize {
     NSParameterAssert(self.userData);
     
-    if (!self.rememberMe) {
+    if (self.skipSync) {
         return NO;
     }
     
@@ -79,9 +80,8 @@ NSString *const kQMAppExists                = @"QMAppExists";
 - (void)loadProfile {
     
     __block QMProfile *profile = nil;
-    
+
     [self keychainQuery:^(SSKeychainQuery *query) {
-        
         NSError *error = nil;
         BOOL success = [query fetch:&error];
         
@@ -90,6 +90,7 @@ NSString *const kQMAppExists                = @"QMAppExists";
         }
     }];
     
+    self.accountType = profile.accountType;
     self.pushNotificationsEnabled = profile.pushNotificationsEnabled;
     self.userAgreementAccepted = profile.userAgreementAccepted;
     self.userData = profile.userData;
@@ -106,6 +107,7 @@ NSString *const kQMAppExists                = @"QMAppExists";
     }];
     
     self.userData = nil;
+    self.accountType = QMAccountTypeNone;
     self.pushNotificationsEnabled = YES;
     self.userAgreementAccepted = NO;
     
@@ -182,6 +184,7 @@ NSString *const kQMAppExists                = @"QMAppExists";
     if (self) {
         
         self.userData = [aDecoder decodeObjectForKey:kQMUserDataKey];
+        self.accountType = [aDecoder decodeIntegerForKey:kQMAccountType];
         self.userAgreementAccepted = [aDecoder decodeBoolForKey:kQMUserAgreementAcceptedKey];
         self.pushNotificationsEnabled = [aDecoder decodeBoolForKey:kQMPushNotificationsEnabled];
     }
@@ -192,6 +195,7 @@ NSString *const kQMAppExists                = @"QMAppExists";
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     
     [aCoder encodeObject:self.userData forKey:kQMUserDataKey];
+    [aCoder encodeInteger:self.accountType forKey:kQMAccountType];
     [aCoder encodeBool:self.userAgreementAccepted forKey:kQMUserAgreementAcceptedKey];
     [aCoder encodeBool:self.pushNotificationsEnabled forKey:kQMPushNotificationsEnabled];
 }
