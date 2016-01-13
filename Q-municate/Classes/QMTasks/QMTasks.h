@@ -14,5 +14,7 @@
 @interface QMTasks : NSObject
 
 + (BFTask QB_GENERIC(QBUUser *) *)taskUpdateCurrentUser:(QBUpdateUserParameters *)updateParameters;
++ (BFTask QB_GENERIC(QBUUser *) *)taskAutoLogin;
++ (BFTask *)taskFetchAllData;
 
 @end
