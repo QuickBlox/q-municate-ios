@@ -23,7 +23,7 @@
 
 + (NSString *)cellIdentifier {
     
-    return @"QMChatHistoryCell";
+    return @"QMDialogCell";
 }
 
 - (void)awakeFromNib {
@@ -51,6 +51,11 @@
         _badgeText = badgeText;
         self.badgeView.badgeText = badgeText;
     }
+}
+
+- (void)setBadgeHidden:(BOOL)badgeHidden {
+    
+    self.badgeView.hidden = badgeHidden;
 }
 
 @end

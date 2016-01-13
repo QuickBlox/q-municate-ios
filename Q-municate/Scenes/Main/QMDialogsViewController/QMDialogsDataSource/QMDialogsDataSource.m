@@ -36,10 +36,20 @@
     NSString *time = [self.dateFormatter stringFromDate:chatDialog.lastMessageDate];
     [cell setTime:time];
     [cell setBody:chatDialog.lastMessageText];
-    [cell setBadgeText:[NSString stringWithFormat:@"%@",
-                        chatDialog.unreadMessagesCount >= 99 ? @"99+" : @(chatDialog.unreadMessagesCount)]];
+    if (chatDialog.unreadMessagesCount > 0) {
+        [cell setBadgeHidden:NO];
+        [cell setBadgeText:[NSString stringWithFormat:@"%@",
+                            chatDialog.unreadMessagesCount >= 99 ? @"99+" : @(chatDialog.unreadMessagesCount)]];
+    } else {
+        [cell setBadgeHidden:YES];
+    }
     
     return cell;
+}
+
+- (NSMutableArray *)items {
+    
+    return [[QMCore instance].chatService.dialogsMemoryStorage dialogsSortByLastMessageDateWithAscending:NO].mutableCopy;
 }
 
 #pragma mark - Helpers

@@ -8,7 +8,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="76" id="KGk-i7-Jjw" customClass="QMDialogCell">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="QMDialogCell" rowHeight="76" id="KGk-i7-Jjw" customClass="QMDialogCell">
             <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
@@ -43,12 +43,6 @@
                         <color key="textColor" red="0.5607843137254902" green="0.55686274509803924" blue="0.58039215686274503" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Sem Dolor Iceptos Purus" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9c8-45-Cej">
-                        <rect key="frame" x="75" y="37" width="214" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" red="0.5607843137254902" green="0.55686274509803924" blue="0.58039215686274503" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nQa-Vn-uST" customClass="QMBadgeView">
                         <rect key="frame" x="334" y="37" width="33" height="22"/>
                         <constraints>
@@ -61,23 +55,32 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sem Dolor Iceptos Purus" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2KS-J6-1Xb">
+                        <rect key="frame" x="75" y="37" width="251" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.56078431370000004" green="0.5568627451" blue="0.58039215690000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailingMargin" secondItem="Nvi-hP-x1i" secondAttribute="trailing" id="0js-Ga-Eht"/>
                     <constraint firstItem="QAa-eV-rYp" firstAttribute="leading" secondItem="IIG-JG-hYb" secondAttribute="trailing" constant="8" id="0wD-8E-VfU"/>
                     <constraint firstItem="nQa-Vn-uST" firstAttribute="top" secondItem="Nvi-hP-x1i" secondAttribute="bottom" constant="2" id="C6m-dV-BOV"/>
                     <constraint firstItem="QAa-eV-rYp" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="7" id="FkT-8Y-wfn"/>
+                    <constraint firstItem="2KS-J6-1Xb" firstAttribute="leading" secondItem="IIG-JG-hYb" secondAttribute="trailing" constant="8" id="HKU-gq-OVE"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="2KS-J6-1Xb" secondAttribute="bottom" constant="9" id="IHn-SV-BIm"/>
                     <constraint firstAttribute="leadingMargin" secondItem="IIG-JG-hYb" secondAttribute="leading" id="UXe-s8-otP"/>
                     <constraint firstItem="Nvi-hP-x1i" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="7" id="X60-wW-8pe"/>
                     <constraint firstItem="Nvi-hP-x1i" firstAttribute="leading" secondItem="QAa-eV-rYp" secondAttribute="trailing" constant="8" id="qjb-Tr-dwe"/>
                     <constraint firstAttribute="trailingMargin" secondItem="nQa-Vn-uST" secondAttribute="trailing" id="tKS-Wx-RDB"/>
+                    <constraint firstItem="nQa-Vn-uST" firstAttribute="leading" secondItem="2KS-J6-1Xb" secondAttribute="trailing" constant="8" id="tyb-uD-Ka2"/>
                     <constraint firstItem="IIG-JG-hYb" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="vxc-gk-fjy"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
                 <outlet property="avatarImage" destination="IIG-JG-hYb" id="Ff8-Ct-6GS"/>
                 <outlet property="badgeView" destination="nQa-Vn-uST" id="e6U-mM-C3a"/>
-                <outlet property="bodyLabel" destination="9c8-45-Cej" id="6ey-fD-7Ur"/>
+                <outlet property="bodyLabel" destination="2KS-J6-1Xb" id="rKG-14-H7w"/>
                 <outlet property="timeLabel" destination="Nvi-hP-x1i" id="7BJ-5Z-Y0b"/>
                 <outlet property="titleLabel" destination="QAa-eV-rYp" id="n6z-A6-Wtu"/>
             </connections>

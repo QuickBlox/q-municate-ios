@@ -14,4 +14,6 @@
 - (void)setTime:(NSString *)time;
 - (void)setBadgeText:(NSString *)badgeText;
 
+- (void)setBadgeHidden:(BOOL)badgeHidden;
+
 @end
