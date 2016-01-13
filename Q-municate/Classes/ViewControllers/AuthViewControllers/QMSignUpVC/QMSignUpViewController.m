@@ -124,8 +124,10 @@
                 return nil;
             }] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
                 // saving picture to the cache
-                [self.userImage sd_setImage:self.selectedImage withKey:task.result.avatarUrl];
-                presentTabBar();
+                if (task.result != nil) {
+                    [self.userImage sd_setImage:self.selectedImage withKey:task.result.avatarUrl];
+                    presentTabBar();
+                }
                 return nil;
             }];
         }
