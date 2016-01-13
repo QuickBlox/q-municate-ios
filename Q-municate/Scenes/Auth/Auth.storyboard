@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IHp-4T-p7b">
-                                <rect key="frame" x="186" y="243" width="228" height="38"/>
+                                <rect key="frame" x="186" y="198" width="228" height="38"/>
                                 <attributedString key="attributedText">
                                     <fragment content="Q-MUNICATE">
                                         <attributes>
@@ -32,7 +32,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Your own Chat!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="942-eX-Uid">
-                                <rect key="frame" x="239" y="284" width="123" height="21"/>
+                                <rect key="frame" x="239" y="239" width="123" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="0.0" green="0.74901960784313726" blue="0.15686274509803921" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -46,40 +46,8 @@
                                     <segue destination="HjW-ae-ZF3" kind="show" id="XEg-xA-CBF"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="logo_splash" translatesAutoresizingMaskIntoConstraints="NO" id="7TM-2z-vDk">
-                                <rect key="frame" x="240" y="80" width="120" height="120"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="120" id="lAS-V7-Vtd"/>
-                                    <constraint firstAttribute="width" constant="120" id="uLh-wV-cmC"/>
-                                </constraints>
-                            </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="31s-MW-KrK" customClass="QMCornerButton">
-                                <rect key="frame" x="156" y="465" width="288" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="Ee6-vs-a8g"/>
-                                    <constraint firstAttribute="width" constant="288" id="V02-0A-QEV"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <state key="normal" title="Sign Up with Email">
-                                    <color key="titleColor" red="0.50196078430000002" green="0.50196078430000002" blue="0.50196078430000002" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                        <color key="value" red="0.50196078430000002" green="0.50196078430000002" blue="0.50196078430000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="4"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <integer key="value" value="1"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <segue destination="Fg5-73-ITO" kind="show" id="MIK-bX-sVq"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zay-wU-nJD" customClass="QMCornerButton">
-                                <rect key="frame" x="156" y="413" width="288" height="44"/>
+                                <rect key="frame" x="156" y="436" width="288" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="c51-uH-9hh"/>
                                     <constraint firstAttribute="width" constant="288" id="lBt-pb-OK2"/>
@@ -104,7 +72,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sLn-jI-3vb" customClass="QMCornerButton">
-                                <rect key="frame" x="156" y="361" width="288" height="44"/>
+                                <rect key="frame" x="156" y="384" width="288" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="288" id="iX2-aP-3jz"/>
                                     <constraint firstAttribute="height" constant="44" id="vj0-dz-gBM"/>
@@ -128,23 +96,55 @@
                                     <action selector="connectWithFacebook:" destination="ncs-B4-uAJ" eventType="touchUpInside" id="Zu8-DB-fir"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="logo_splash" translatesAutoresizingMaskIntoConstraints="NO" id="1kf-EG-1D1">
+                                <rect key="frame" x="240" y="35" width="120" height="120"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="RAY-xl-jFc"/>
+                                    <constraint firstAttribute="height" constant="120" id="ztn-93-spI"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CnV-B1-3Zt" customClass="QMCornerButton">
+                                <rect key="frame" x="156" y="488" width="288" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="JTK-sy-OFe"/>
+                                    <constraint firstAttribute="width" constant="288" id="v2L-1k-DBc"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Sign Up with Email">
+                                    <color key="titleColor" red="0.50196078430000002" green="0.50196078430000002" blue="0.50196078430000002" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" red="0.50196078430000002" green="0.50196078430000002" blue="0.50196078430000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <segue destination="Fg5-73-ITO" kind="show" id="PgV-dk-pgW"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="7TM-2z-vDk" firstAttribute="centerX" secondItem="475-ep-E1w" secondAttribute="centerX" id="5VQ-pg-bTd"/>
+                            <constraint firstItem="CnV-B1-3Zt" firstAttribute="centerX" secondItem="475-ep-E1w" secondAttribute="centerX" id="G10-1N-VJH"/>
                             <constraint firstItem="IHp-4T-p7b" firstAttribute="centerX" secondItem="475-ep-E1w" secondAttribute="centerX" id="HaS-zW-OHT"/>
-                            <constraint firstItem="31s-MW-KrK" firstAttribute="centerX" secondItem="475-ep-E1w" secondAttribute="centerX" id="Koa-w5-8mu"/>
                             <constraint firstItem="MJC-V5-HT2" firstAttribute="top" secondItem="Ci9-NV-DYr" secondAttribute="bottom" constant="20" id="NP6-fq-1Fm"/>
-                            <constraint firstItem="IHp-4T-p7b" firstAttribute="top" secondItem="7TM-2z-vDk" secondAttribute="bottom" constant="43" id="ONa-Jy-whg"/>
                             <constraint firstItem="942-eX-Uid" firstAttribute="top" secondItem="IHp-4T-p7b" secondAttribute="bottom" constant="3" id="PCt-qJ-ObV"/>
-                            <constraint firstItem="31s-MW-KrK" firstAttribute="top" secondItem="zay-wU-nJD" secondAttribute="bottom" constant="8" id="UJi-Lc-D6h"/>
+                            <constraint firstItem="IHp-4T-p7b" firstAttribute="top" secondItem="1kf-EG-1D1" secondAttribute="bottom" constant="43" id="Pvu-RT-FS1"/>
                             <constraint firstItem="942-eX-Uid" firstAttribute="centerX" secondItem="475-ep-E1w" secondAttribute="centerX" id="XtA-W2-lYf"/>
-                            <constraint firstItem="7TM-2z-vDk" firstAttribute="top" secondItem="7EK-ya-RJg" secondAttribute="bottom" constant="60" id="bg4-7t-XGn"/>
+                            <constraint firstItem="1kf-EG-1D1" firstAttribute="top" secondItem="7EK-ya-RJg" secondAttribute="bottom" constant="15" id="fbW-YU-2Ml"/>
                             <constraint firstItem="sLn-jI-3vb" firstAttribute="centerX" secondItem="475-ep-E1w" secondAttribute="centerX" id="feI-hR-bNE"/>
                             <constraint firstItem="Ci9-NV-DYr" firstAttribute="centerX" secondItem="475-ep-E1w" secondAttribute="centerX" id="igC-sO-ZRQ"/>
-                            <constraint firstItem="Ci9-NV-DYr" firstAttribute="top" secondItem="31s-MW-KrK" secondAttribute="bottom" constant="41" id="itR-mR-8QV"/>
+                            <constraint firstItem="1kf-EG-1D1" firstAttribute="centerX" secondItem="475-ep-E1w" secondAttribute="centerX" id="p3n-J4-g9d"/>
+                            <constraint firstItem="Ci9-NV-DYr" firstAttribute="top" secondItem="CnV-B1-3Zt" secondAttribute="bottom" constant="18" id="sdV-wi-G0Z"/>
                             <constraint firstItem="zay-wU-nJD" firstAttribute="centerX" secondItem="475-ep-E1w" secondAttribute="centerX" id="tVa-hg-NeH"/>
                             <constraint firstItem="zay-wU-nJD" firstAttribute="top" secondItem="sLn-jI-3vb" secondAttribute="bottom" constant="8" id="vz3-aQ-ITi"/>
+                            <constraint firstItem="CnV-B1-3Zt" firstAttribute="top" secondItem="zay-wU-nJD" secondAttribute="bottom" constant="8" id="xh1-Rh-BCo"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="jrH-Jb-hwh"/>
@@ -167,7 +167,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="ncs-B4-uAJ" kind="relationship" relationship="rootViewController" id="cCq-R2-KAd"/>
+                        <segue destination="ncs-B4-uAJ" kind="relationship" relationship="rootViewController" id="7Zo-ad-X3T"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1C3-NW-qzX" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -482,7 +482,6 @@
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ART-Z7-4uu">
                                                     <rect key="frame" x="239" y="25" width="123" height="18"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="123" id="YxN-3K-v4M"/>
                                                         <constraint firstAttribute="height" constant="18" id="hXy-3z-cOu"/>
                                                     </constraints>
                                                     <state key="normal" title="Forgot password?">
@@ -666,6 +665,6 @@
         <image name="upic_avatarholder" width="73" height="72"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Jxp-6o-ED2"/>
+        <segue reference="AYJ-Gz-fC0"/>
     </inferredMetricsTieBreakers>
 </document>
