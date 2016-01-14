@@ -12,6 +12,6 @@
 
 + (UIImage *)placeholderWithFrame:(CGRect)frame
                             title:(NSString *)title
-                           userID:(NSUInteger)userID;
+                               ID:(NSUInteger)ID;
 
 @end

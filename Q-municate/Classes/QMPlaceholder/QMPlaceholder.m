@@ -56,7 +56,7 @@
 
 + (UIImage *)placeholderWithFrame:(CGRect)frame
                             title:(NSString *)title
-                           userID:(NSUInteger)userID
+                               ID:(NSUInteger)ID
 {
     
     NSString *key = [NSString stringWithFormat:@"%@ %@", title, NSStringFromCGSize(frame.size)];
@@ -72,7 +72,7 @@
         //// Oval Drawing
         UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect:frame];
         
-        UIColor *userColor = [QMPlaceholder instance].colors[userID % 10];
+        UIColor *userColor = [QMPlaceholder instance].colors[ID % 10];
         [userColor setFill];
         [ovalPath fill];
         
@@ -99,6 +99,8 @@
         //Get image
         UIImage *ovalImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
+        
+        [[QMPlaceholder instance].cache setObject:ovalImage forKey:key];
         
         return ovalImage;
     }
