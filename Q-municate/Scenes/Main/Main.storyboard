@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -119,6 +120,41 @@
                                     <outlet property="titleLabel" destination="yeY-AA-xDJ" id="y7V-Q2-fcd"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="QMPlaceholderCell" rowHeight="420" id="mQr-un-WzV" customClass="QMDialogCell">
+                                <rect key="frame" x="0.0" y="168" width="600" height="420"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mQr-un-WzV" id="cUp-X3-4V4">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="419"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="m_empty_dialogs" translatesAutoresizingMaskIntoConstraints="NO" id="j58-Ui-l80">
+                                            <rect key="frame" x="206" y="140" width="189" height="279"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" secondItem="j58-Ui-l80" secondAttribute="height" multiplier="21:31" id="bQD-Oq-Bt5"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aKf-z0-z6p">
+                                            <rect key="frame" x="206" y="8" width="189" height="67"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="189" id="J5z-Br-xLH"/>
+                                                <constraint firstAttribute="height" constant="67" id="LmY-Xd-kyV"/>
+                                            </constraints>
+                                            <string key="text">You’re all alone
+out here.</string>
+                                            <fontDescription key="fontDescription" type="system" pointSize="26"/>
+                                            <color key="textColor" red="0.2901960784" green="0.2901960784" blue="0.2901960784" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="j58-Ui-l80" firstAttribute="top" secondItem="aKf-z0-z6p" secondAttribute="bottom" constant="65" id="7v4-Wz-mG6"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="j58-Ui-l80" secondAttribute="bottom" constant="-8" id="dz1-DN-tGO"/>
+                                        <constraint firstItem="aKf-z0-z6p" firstAttribute="centerX" secondItem="cUp-X3-4V4" secondAttribute="centerX" id="qmr-gn-Ggv"/>
+                                        <constraint firstItem="j58-Ui-l80" firstAttribute="centerX" secondItem="cUp-X3-4V4" secondAttribute="centerX" id="yon-Bg-SpJ"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="NSU-QC-v0B" id="Vhb-5z-ade"/>
@@ -153,4 +189,7 @@
             <point key="canvasLocation" x="-6834" y="-8364"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="m_empty_dialogs" width="180" height="265"/>
+    </resources>
 </document>

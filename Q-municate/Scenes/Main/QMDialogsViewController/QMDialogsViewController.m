@@ -8,6 +8,7 @@
 
 #import "QMDialogsViewController.h"
 #import "QMDialogsDataSource.h"
+#import "QMPlaceholderDataSource.h"
 #import "QMCore.h"
 #import "QMTasks.h"
 #import <SVProgressHUD.h>
@@ -25,6 +26,7 @@ UITableViewDelegate
  *  Data sources
  */
 @property (strong, nonatomic) QMDialogsDataSource *dialogsDataSource;
+@property (strong, nonatomic) QMPlaceholderDataSource *placeholderDataSource;
 
 @end
 
@@ -32,10 +34,13 @@ UITableViewDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
+    // Hide empty separators
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
     // Data sources init
     self.dialogsDataSource = [[QMDialogsDataSource alloc] init];
-    self.tableView.dataSource = self.dialogsDataSource;
+    self.placeholderDataSource  = [[QMPlaceholderDataSource alloc] init];
     self.tableView.delegate = self;
     
     // Subscribing delegates
@@ -44,7 +49,7 @@ UITableViewDelegate
     
     // auto login user
     @weakify(self);
-    [[[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+    [[[[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         @strongify(self);
         
         if (task.isFaulted) {
@@ -62,7 +67,16 @@ UITableViewDelegate
     }] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull task) {
         
         return [QMTasks taskFetchAllData];
+    }] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull task) {
+        @strongify(self);
+        self.tableView.dataSource = self.dialogsDataSource.items.count > 0 ? self.dialogsDataSource : self.placeholderDataSource;
+        return nil;
     }];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -74,44 +88,67 @@ UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    return 76;
+    return self.dialogsDataSource.items.count > 0 ? 76 : tableView.frame.size.height - self.navigationController.navigationBar.frame.size.height - [UIApplication sharedApplication].statusBarFrame.size.height;
 }
 
 #pragma mark - QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)chatService didAddChatDialogsToMemoryStorage:(NSArray *)chatDialogs {
+    
+    [self checkIfDialogsDataSource];
     [self.tableView reloadData];
 }
 
 - (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
+    
+    [self checkIfDialogsDataSource];
     [self.tableView reloadData];
 }
 
 - (void)chatService:(QMChatService *)chatService didAddMessagesToMemoryStorage:(NSArray<QBChatMessage *> *)messages forDialogID:(NSString *)dialogID {
+    
     [self.tableView reloadData];
 }
 
 - (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+    
     [self.tableView reloadData];
 }
 
 - (void)chatService:(QMChatService *)chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)chatDialogID {
+    
+    if (self.dialogsDataSource.items.count == 0) {
+        self.tableView.dataSource = self.placeholderDataSource;
+    }
     [self.tableView reloadData];
 }
 
 - (void)chatService:(QMChatService *)chatService didLoadChatDialogsFromCache:(NSArray *)dialogs withUsers:(NSSet *)dialogsUsersIDs {
+    
+    if (dialogs.count > 0) {
+        self.tableView.dataSource = self.dialogsDataSource;
+    }
     [self.tableView reloadData];
 }
 
 - (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
+    
     [self.tableView reloadData];
 }
 
 - (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
+    
     [self.tableView reloadData];
 }
 
 #pragma mark - QMUsersServiceDelegate
+
+- (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)user {
+    
+    if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
+        [self.tableView reloadData];
+    }
+}
 
 #pragma mark - QMChatConnectionDelegate
 
@@ -127,16 +164,25 @@ UITableViewDelegate
 
 - (void)chatService:(QMChatService *)chatService chatDidNotConnectWithError:(NSError *)error
 {
-//    if ([[QMApi instance] isInternetConnected]) {
-        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription]];
-//    }
+    //    if ([[QMApi instance] isInternetConnected]) {
+    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription]];
+    //    }
 }
 
 - (void)chatServiceChatDidFailWithStreamError:(NSError *)error
 {
-//    if ([[QMApi instance] isInternetConnected]) {
-        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_STREAM_ERROR", nil), error.localizedDescription]];
-//    }
+    //    if ([[QMApi instance] isInternetConnected]) {
+    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_STREAM_ERROR", nil), error.localizedDescription]];
+    //    }
+}
+
+#pragma mark - Helpers
+
+- (void)checkIfDialogsDataSource {
+    
+    if (![self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
+        self.tableView.dataSource = self.dialogsDataSource;
+    }
 }
 
 @end
