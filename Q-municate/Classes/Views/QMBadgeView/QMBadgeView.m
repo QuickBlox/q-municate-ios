@@ -38,20 +38,18 @@
     self.cornerRadius = self.frame.size.height/2;
     self.glosEnabled = NO;
     self.borderWidth = 0;
-    self.badgeText = @"";
+    self.badgeNumber = 0;
+    
+    self.layer.shouldRasterize = YES;
 }
 
 - (void)drawRect:(CGRect)rect {
     
-    [self drawBadgeViewWithFrame:rect badgeText:self.badgeText];
+    [self drawBadgeViewWithFrame:rect badgeNumber:self.badgeNumber];
 }
 
 - (void)drawBadgeViewWithFrame:(CGRect)frame
-                     badgeText:(NSString*)badgeText {
-    
-    if (badgeText.length == 0) {
-        return;
-    }
+                   badgeNumber:(NSUInteger)badgeNumber {
     
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -112,11 +110,13 @@
     
     NSDictionary* badgeFontAttributes = @{
                                           NSFontAttributeName:[UIFont fontWithName: @"Helvetica"
-                                                                              size:badgeRect.size.height *0.5],
+                                                                              size:badgeRect.size.height * 0.69],
                                           NSForegroundColorAttributeName: self.badgeTextColor,
                                           NSParagraphStyleAttributeName: badgeStyle
                                           };
     
+    NSString *badgeText = [NSString stringWithFormat:@"%@",
+                           badgeNumber > 99 ? @"99+" : @(badgeNumber)];
     [badgeText drawInRect:CGRectOffset(badgeRect,
                                        0,
                                        (CGRectGetHeight(badgeRect) - [badgeText boundingRectWithSize:badgeRect.size
@@ -159,11 +159,19 @@
 
 #pragma mark - Setters
 
-- (void)setBadgeText:(NSString *)badgeText {
+- (void)setBadgeNumber:(NSUInteger)badgeNumber {
     
-    _badgeText = badgeText;
+    if (self.hideOnZeroValue && badgeNumber == 0) {
+        self.hidden = YES;
+        return;
+    }
     
-    [self setNeedsDisplay];
+    if (_badgeNumber != badgeNumber) {
+        
+        self.hidden = NO;
+        _badgeNumber = badgeNumber;
+        [self setNeedsDisplay];
+    }
 }
 
 

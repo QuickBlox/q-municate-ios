@@ -13,6 +13,7 @@ IB_DESIGNABLE
 
 @property (assign, nonatomic) IBInspectable NSUInteger cornerRadius;
 @property (assign, nonatomic) IBInspectable NSUInteger borderWidth;
-@property (strong, nonatomic) IBInspectable NSString *badgeText;
+@property (assign, nonatomic) IBInspectable NSUInteger badgeNumber;
+@property (assign, nonatomic) IBInspectable BOOL hideOnZeroValue;
 
 @end
