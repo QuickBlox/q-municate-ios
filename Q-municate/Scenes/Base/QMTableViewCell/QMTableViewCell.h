@@ -10,6 +10,8 @@
 
 @interface QMTableViewCell : UITableViewCell
 
+@property (assign, nonatomic) NSUInteger userID;
+
 + (void)registerForReuseInTableView:(UITableView *)tableView;
 + (NSString *)cellIdentifier;
 + (CGFloat)height;

@@ -84,6 +84,7 @@
 		584277DC1C3FE5BC00CDE35B /* QMCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277DB1C3FE5BC00CDE35B /* QMCore.m */; };
 		584277E01C3FED0E00CDE35B /* QMContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277DF1C3FED0E00CDE35B /* QMContent.m */; };
 		585DE45F1C4686060068E03E /* QMErrorsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 585DE45E1C4686060068E03E /* QMErrorsFactory.m */; };
+		585DE4631C46A8390068E03E /* QMPlaceholder.m in Sources */ = {isa = PBXBuildFile; fileRef = 585DE4621C46A8390068E03E /* QMPlaceholder.m */; };
 		5861E25D1BB40D7E00C9EB68 /* QMApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 5861E25C1BB40D7E00C9EB68 /* QMApi.m */; };
 		5877D6C41C45470400938E5D /* QMDigitsConfigurationFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 5877D6C31C45470400938E5D /* QMDigitsConfigurationFactory.m */; };
 		5877D6C61C466B2D00938E5D /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5877D6C51C466B2D00938E5D /* Launch Screen.storyboard */; };
@@ -289,6 +290,8 @@
 		584277DF1C3FED0E00CDE35B /* QMContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMContent.m; path = Classes/QMContent/QMContent.m; sourceTree = "<group>"; };
 		585DE45D1C4686060068E03E /* QMErrorsFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMErrorsFactory.h; path = QMErrorsFactory/QMErrorsFactory.h; sourceTree = "<group>"; };
 		585DE45E1C4686060068E03E /* QMErrorsFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMErrorsFactory.m; path = QMErrorsFactory/QMErrorsFactory.m; sourceTree = "<group>"; };
+		585DE4611C46A8390068E03E /* QMPlaceholder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMPlaceholder.h; path = Classes/QMPlaceholder/QMPlaceholder.h; sourceTree = "<group>"; };
+		585DE4621C46A8390068E03E /* QMPlaceholder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMPlaceholder.m; path = Classes/QMPlaceholder/QMPlaceholder.m; sourceTree = "<group>"; };
 		5861E25B1BB40D7E00C9EB68 /* QMApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMApi.h; sourceTree = "<group>"; };
 		5861E25C1BB40D7E00C9EB68 /* QMApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMApi.m; sourceTree = "<group>"; };
 		5877D6C21C45470400938E5D /* QMDigitsConfigurationFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMDigitsConfigurationFactory.h; path = QMDigitsConfigurationFactory/QMDigitsConfigurationFactory.h; sourceTree = "<group>"; };
@@ -1229,6 +1232,15 @@
 			name = QMErrorsFactory;
 			sourceTree = "<group>";
 		};
+		585DE4601C46A8170068E03E /* QMPlaceholder */ = {
+			isa = PBXGroup;
+			children = (
+				585DE4611C46A8390068E03E /* QMPlaceholder.h */,
+				585DE4621C46A8390068E03E /* QMPlaceholder.m */,
+			);
+			name = QMPlaceholder;
+			sourceTree = "<group>";
+		};
 		5877D6C11C4546ED00938E5D /* QMDigitsConfigurationFactory */ = {
 			isa = PBXGroup;
 			children = (
@@ -1357,6 +1369,7 @@
 		695F4B2118B60A62006C9DA5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				585DE4601C46A8170068E03E /* QMPlaceholder */,
 				580B3B541C3FF88500345081 /* QMTasks */,
 				584277DD1C3FECF400CDE35B /* QMContent */,
 				584277D91C3FE58900CDE35B /* QMCore */,
@@ -1649,6 +1662,7 @@
 				584277BF1C3D42BB00CDE35B /* QMLinkViewController.m in Sources */,
 				55CEAB9F195DBCFA001A8ED6 /* QMGroupDetailsController.m in Sources */,
 				584277A01C3D336300CDE35B /* QMInviteFriendCell.m in Sources */,
+				585DE4631C46A8390068E03E /* QMPlaceholder.m in Sources */,
 				584277D11C3FBD1600CDE35B /* QMProfile.m in Sources */,
 				55BBA75C19730B960040DB5C /* REMessageUI.m in Sources */,
 				55D8ADF119AC775C00DAF79F /* QMUploadContentOperation.m in Sources */,

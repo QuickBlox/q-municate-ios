@@ -26,11 +26,13 @@
             
             [cell setTitle:recipient.fullName];
             [cell setAvatarWithUrl:recipient.avatarUrl];
+            [cell setUserID:chatDialog.recipientID];
         }
     } else {
         
         [cell setTitle:chatDialog.name];
         [cell setAvatarWithUrl:chatDialog.photo];
+        [cell setUserID:chatDialog.userID];
     }
     
     NSString *time = [self.dateFormatter stringFromDate:chatDialog.lastMessageDate];

@@ -7,6 +7,7 @@
 //
 
 #import "QMTableViewCell.h"
+#import "QMPlaceholder.h"
 #import <QMImageView.h>
 
 @interface QMTableViewCell ()
@@ -66,10 +67,10 @@
         
         self.avatarUrl = avatarUrl;
         
-        UIImage *placeHolder = nil;
+        UIImage *placeholder = [QMPlaceholder placeholderWithFrame:self.avatarImage.bounds title:self.title userID:self.userID];
         
         [self.avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl]
-                              placeholder:placeHolder
+                              placeholder:placeholder
                                   options:SDWebImageLowPriority
                                  progress:nil
                            completedBlock:nil];
