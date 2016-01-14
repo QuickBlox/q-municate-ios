@@ -12,8 +12,6 @@
 @interface QMDialogCell : QMTableViewCell
 
 - (void)setTime:(NSString *)time;
-- (void)setBadgeText:(NSString *)badgeText;
-
-- (void)setBadgeHidden:(BOOL)badgeHidden;
+- (void)setBadgeNumber:(NSUInteger)badgeNumber;
 
 @end

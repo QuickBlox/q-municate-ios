@@ -15,7 +15,7 @@
 @property (weak, nonatomic) IBOutlet QMBadgeView *badgeView;
 
 @property (strong, nonatomic) NSString *time;
-@property (strong, nonatomic) NSString *badgeText;
+@property (assign, nonatomic) NSUInteger badgeNumber;
 
 @end
 
@@ -33,6 +33,10 @@
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
+- (UIEdgeInsets)layoutMargins {
+    return UIEdgeInsetsZero;
+}
+
 #pragma mark - Setters
 
 - (void)setTime:(NSString *)time {
@@ -44,18 +48,13 @@
     }
 }
 
-- (void)setBadgeText:(NSString *)badgeText {
+- (void)setBadgeNumber:(NSUInteger)badgeNumber {
     
-    if (![_badgeText isEqualToString:badgeText]) {
+    if (_badgeNumber != badgeNumber) {
         
-        _badgeText = badgeText;
-        self.badgeView.badgeText = badgeText;
+        _badgeNumber = badgeNumber;
+        self.badgeView.badgeNumber = badgeNumber;
     }
-}
-
-- (void)setBadgeHidden:(BOOL)badgeHidden {
-    
-    self.badgeView.hidden = badgeHidden;
 }
 
 @end

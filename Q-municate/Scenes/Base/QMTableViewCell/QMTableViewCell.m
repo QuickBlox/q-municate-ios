@@ -67,7 +67,7 @@
         
         self.avatarUrl = avatarUrl;
         
-        UIImage *placeholder = [QMPlaceholder placeholderWithFrame:self.avatarImage.bounds title:self.title userID:self.userID];
+        UIImage *placeholder = [QMPlaceholder placeholderWithFrame:self.avatarImage.bounds title:self.title ID:self.placeholderID];
         
         [self.avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl]
                               placeholder:placeholder

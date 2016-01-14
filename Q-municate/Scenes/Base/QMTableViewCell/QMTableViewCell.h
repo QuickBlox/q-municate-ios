@@ -10,7 +10,7 @@
 
 @interface QMTableViewCell : UITableViewCell
 
-@property (assign, nonatomic) NSUInteger userID;
+@property (assign, nonatomic) NSUInteger placeholderID;
 
 + (void)registerForReuseInTableView:(UITableView *)tableView;
 + (NSString *)cellIdentifier;

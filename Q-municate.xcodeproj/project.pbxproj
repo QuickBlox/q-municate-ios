@@ -93,7 +93,6 @@
 		5877D6D41C46709A00938E5D /* QMTableViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 5877D6D31C46709A00938E5D /* QMTableViewDataSource.m */; };
 		5877D6DA1C46720600938E5D /* QMTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5877D6D91C46720600938E5D /* QMTableViewCell.m */; };
 		5877D6DE1C46728200938E5D /* QMDialogCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5877D6DC1C46728200938E5D /* QMDialogCell.m */; };
-		5877D6DF1C46728200938E5D /* QMDialogCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5877D6DD1C46728200938E5D /* QMDialogCell.xib */; };
 		5877D6E31C4675B900938E5D /* QMBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5877D6E21C4675B900938E5D /* QMBadgeView.m */; };
 		5889AAE61C43CEB400997A40 /* QMLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5889AAE51C43CEB400997A40 /* QMLogInViewController.m */; };
 		589407B41BB958DE00C1CA78 /* QBUpdateUserParameters+CustomData.m in Sources */ = {isa = PBXBuildFile; fileRef = 589407B31BB958DE00C1CA78 /* QBUpdateUserParameters+CustomData.m */; };
@@ -307,7 +306,6 @@
 		5877D6D91C46720600938E5D /* QMTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMTableViewCell.m; path = "Q-municate/Scenes/Base/QMTableViewCell/QMTableViewCell.m"; sourceTree = SOURCE_ROOT; };
 		5877D6DB1C46728200938E5D /* QMDialogCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMDialogCell.h; path = "Q-municate/Scenes/Main/QMDialogsViewController/Cells/QMDialogCell/QMDialogCell.h"; sourceTree = SOURCE_ROOT; };
 		5877D6DC1C46728200938E5D /* QMDialogCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMDialogCell.m; path = "Q-municate/Scenes/Main/QMDialogsViewController/Cells/QMDialogCell/QMDialogCell.m"; sourceTree = SOURCE_ROOT; };
-		5877D6DD1C46728200938E5D /* QMDialogCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = QMDialogCell.xib; path = "Q-municate/Scenes/Main/QMDialogsViewController/Cells/QMDialogCell/QMDialogCell.xib"; sourceTree = SOURCE_ROOT; };
 		5877D6E11C4675B900938E5D /* QMBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMBadgeView.h; path = QMBadgeView/QMBadgeView.h; sourceTree = "<group>"; };
 		5877D6E21C4675B900938E5D /* QMBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMBadgeView.m; path = QMBadgeView/QMBadgeView.m; sourceTree = "<group>"; };
 		5889AAE41C43CEB400997A40 /* QMLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLogInViewController.h; sourceTree = "<group>"; };
@@ -1292,7 +1290,6 @@
 			children = (
 				5877D6DB1C46728200938E5D /* QMDialogCell.h */,
 				5877D6DC1C46728200938E5D /* QMDialogCell.m */,
-				5877D6DD1C46728200938E5D /* QMDialogCell.xib */,
 			);
 			name = QMDialogCell;
 			sourceTree = "<group>";
@@ -1554,7 +1551,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5877D6DF1C46728200938E5D /* QMDialogCell.xib in Resources */,
 				55A8B06F1965986A00B5D33B /* busy.wav in Resources */,
 				584277C71C3D46D000CDE35B /* Settings.storyboard in Resources */,
 				584277CD1C3D495D00CDE35B /* Calls.storyboard in Resources */,
