@@ -10,7 +10,6 @@
 #import "QMDialogsDataSource.h"
 #import "QMCore.h"
 #import "QMTasks.h"
-#import "QMDialogCell.h"
 #import <SVProgressHUD.h>
 
 @interface QMDialogsViewController ()
@@ -33,8 +32,7 @@ UITableViewDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self registerNibs];
+
     // Data sources init
     self.dialogsDataSource = [[QMDialogsDataSource alloc] init];
     self.tableView.dataSource = self.dialogsDataSource;
@@ -70,13 +68,6 @@ UITableViewDelegate
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - Helpers
-
-- (void)registerNibs {
-    
-    [QMDialogCell registerForReuseInTableView:self.tableView];
 }
 
 #pragma mark - UITableViewDelegate

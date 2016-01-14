@@ -25,26 +25,20 @@
             NSParameterAssert(recipient.fullName);
             
             [cell setTitle:recipient.fullName];
+            cell.placeholderID = chatDialog.recipientID;
             [cell setAvatarWithUrl:recipient.avatarUrl];
-            [cell setUserID:chatDialog.recipientID];
         }
     } else {
         
         [cell setTitle:chatDialog.name];
+        cell.placeholderID = chatDialog.ID.hash;
         [cell setAvatarWithUrl:chatDialog.photo];
-        [cell setUserID:chatDialog.userID];
     }
     
-    NSString *time = [self.dateFormatter stringFromDate:chatDialog.lastMessageDate];
+    NSString *time = [self.dateFormatter stringFromDate:chatDialog.updatedAt];
     [cell setTime:time];
     [cell setBody:chatDialog.lastMessageText];
-    if (chatDialog.unreadMessagesCount > 0) {
-        [cell setBadgeHidden:NO];
-        [cell setBadgeText:[NSString stringWithFormat:@"%@",
-                            chatDialog.unreadMessagesCount >= 99 ? @"99+" : @(chatDialog.unreadMessagesCount)]];
-    } else {
-        [cell setBadgeHidden:YES];
-    }
+    [cell setBadgeNumber:chatDialog.unreadMessagesCount];
     
     return cell;
 }
