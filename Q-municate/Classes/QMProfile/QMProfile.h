@@ -8,13 +8,21 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSInteger, QMAccountType) {
+    QMAccountTypeNone,
+    QMAccountTypeEmail,
+    QMAccountTypeFacebook,
+    QMAccountTypeDigits
+};
+
 /**
  *  This class provides profile.
  */
 @interface QMProfile : NSObject <NSCoding>
 
 @property (strong, nonatomic, QB_NULLABLE_PROPERTY) QBUUser *userData;
-@property (assign, nonatomic) BOOL rememberMe;
+@property (assign, nonatomic) QMAccountType accountType;
+@property (assign, nonatomic) BOOL skipSync;
 
 @property (assign, nonatomic) BOOL userAgreementAccepted;
 @property (assign, nonatomic) BOOL pushNotificationsEnabled;

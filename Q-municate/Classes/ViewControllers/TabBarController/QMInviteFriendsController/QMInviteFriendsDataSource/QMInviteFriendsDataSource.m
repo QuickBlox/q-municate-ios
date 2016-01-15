@@ -175,10 +175,10 @@ const NSUInteger kQMNumberOfSection = 2;
 
     if ([userData isKindOfClass:[QBUUser class]]) {
         QBUUser *user = userData;
-        cell.contactlistItem = [[QMApi instance] contactItemWithUserID:user.ID];
+//        cell.contactlistItem = [[QMApi instance] contactItemWithUserID:user.ID];
     }
     
-    cell.userData = userData;
+//    cell.userData = userData;
     cell.check = [self checkedAtIndexPath:indexPath];
     cell.delegate = self;
     

@@ -23,47 +23,47 @@
     
     self.activeCheckbox.hidden = YES;
 }
-
-- (void)setUserData:(id)userData {
-    
-    [super setUserData:userData];
-    
-    if ([userData isKindOfClass:ABPerson.class]) {
-        [self configureWithAdressaddressBookUser:userData];
-    } else if ([userData isKindOfClass:[QBUUser class]]) {
-
-        QBUUser *user = userData;
-        self.titleLabel.text = (user.fullName.length == 0) ? @"" : user.fullName;
-        NSURL *avatarUrl = [NSURL URLWithString:user.avatarUrl];
-        [self setUserImageWithUrl:avatarUrl];
-    } else {
-        [self configureWithFBGraphUser:userData];
-    }
-}
-
-- (void)setContactlistItem:(QBContactListItem *)contactlistItem {
-    
-    if (contactlistItem) {
-        self.descriptionLabel.text = NSLocalizedString(contactlistItem.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
-    }
-}
-
-- (void)configureWithFBGraphUser:(NSDictionary *)user {
-    
-    self.titleLabel.text = [NSString stringWithFormat:@"%@ %@", [user valueForKey:@"first_name"], [user valueForKey:@"last_name"]];
-    NSURL *url = [[QMApi instance] fbUserImageURLWithUserID:[user valueForKey:@"id"]];
-    [self setUserImageWithUrl:url];
-    self.descriptionLabel.text = NSLocalizedString(@"QM_STR_FACEBOOK", nil);
-}
-
-- (void)configureWithAdressaddressBookUser:(ABPerson *)addressBookUser {
-    
-    self.titleLabel.text = addressBookUser.fullName;
-    self.descriptionLabel.text = NSLocalizedString(@"QM_STR_CONTACT_LIST", nil);
-    
-    UIImage *image = addressBookUser.image;
-    [self setUserImage:image withKey:addressBookUser.fullName];
-}
+//
+//- (void)setUserData:(id)userData {
+//    
+//    [super setUserData:userData];
+//    
+//    if ([userData isKindOfClass:ABPerson.class]) {
+//        [self configureWithAdressaddressBookUser:userData];
+//    } else if ([userData isKindOfClass:[QBUUser class]]) {
+//
+//        QBUUser *user = userData;
+//        self.titleLabel.text = (user.fullName.length == 0) ? @"" : user.fullName;
+//        NSURL *avatarUrl = [NSURL URLWithString:user.avatarUrl];
+//        [self setUserImageWithUrl:avatarUrl];
+//    } else {
+//        [self configureWithFBGraphUser:userData];
+//    }
+//}
+//
+//- (void)setContactlistItem:(QBContactListItem *)contactlistItem {
+//    
+//    if (contactlistItem) {
+//        self.descriptionLabel.text = NSLocalizedString(contactlistItem.online ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
+//    }
+//}
+//
+//- (void)configureWithFBGraphUser:(NSDictionary *)user {
+//    
+//    self.titleLabel.text = [NSString stringWithFormat:@"%@ %@", [user valueForKey:@"first_name"], [user valueForKey:@"last_name"]];
+//    NSURL *url = [[QMApi instance] fbUserImageURLWithUserID:[user valueForKey:@"id"]];
+//    [self setUserImageWithUrl:url];
+//    self.descriptionLabel.text = NSLocalizedString(@"QM_STR_FACEBOOK", nil);
+//}
+//
+//- (void)configureWithAdressaddressBookUser:(ABPerson *)addressBookUser {
+//    
+//    self.titleLabel.text = addressBookUser.fullName;
+//    self.descriptionLabel.text = NSLocalizedString(@"QM_STR_CONTACT_LIST", nil);
+//    
+//    UIImage *image = addressBookUser.image;
+//    [self setUserImage:image withKey:addressBookUser.fullName];
+//}
 
 - (void)setCheck:(BOOL)check {
     

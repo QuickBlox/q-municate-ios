@@ -220,8 +220,8 @@ QMContactListServiceDelegate
     QBUUser *user = users[indexPath.row];
     
     QBContactListItem *item = [[QMApi instance] contactItemWithUserID:user.ID];
-    cell.contactlistItem = item;
-    cell.userData = user;
+//    cell.contactlistItem = item;
+//    cell.userData = user;
     
     if(self.searchDisplayController.isActive) {
         cell.searchText = self.searchDisplayController.searchBar.text;

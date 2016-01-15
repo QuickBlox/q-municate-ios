@@ -44,7 +44,7 @@
         user.email    = self.emailField.text;
         user.password = self.passwordField.text;
         
-        [QMCore instance].currentProfile.rememberMe = self.rememberMeSwitch.isOn;
+        [QMCore instance].currentProfile.skipSync = !self.rememberMeSwitch.isOn;
         
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         @weakify(self);
@@ -53,6 +53,7 @@
             [SVProgressHUD dismiss];
             if (!task.isFaulted) {
                 [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
+                [[QMCore instance].currentProfile setAccountType:QMAccountTypeEmail];
                 [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
             }
             return nil;

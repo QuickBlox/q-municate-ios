@@ -68,6 +68,7 @@
         } else if (task.result != nil) {
             @strongify(self);
             [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
+            [[QMCore instance].currentProfile setAccountType:QMAccountTypeFacebook];
             [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
             
             if (task.result.avatarUrl.length == 0) {
@@ -107,6 +108,7 @@
                 // login with twitter digits to REST
                 if (!task.isFaulted) {
                     [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
+                    [[QMCore instance].currentProfile setAccountType:QMAccountTypeDigits];
                     [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
                 }
                 return nil;

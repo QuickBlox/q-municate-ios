@@ -7,12 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "QMProfile.h"
 
-typedef NS_ENUM(NSInteger, QMAccountType) {
-    QMAccountTypeNone,
-    QMAccountTypeEmail,
-    QMAccountTypeFacebook
-};
 
 @interface QMSettingsManager : NSObject
 

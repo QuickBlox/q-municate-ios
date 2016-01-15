@@ -108,8 +108,7 @@
             [[[[QMCore instance].authService signUpAndLoginWithUser:newUser] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
                 //
                 if (!task.isFaulted) {
-                    [QMCore instance].currentProfile.rememberMe = YES;
-                    
+                    [[QMCore instance].currentProfile setAccountType:QMAccountTypeEmail];
                     if (self.selectedImage != nil) {
                         [SVProgressHUD showProgress:0.f status:nil maskType:SVProgressHUDMaskTypeClear];
                         return [[QMCore instance].currentProfile updateUserImage:self.selectedImage progress:^(float progress) {
@@ -124,8 +123,10 @@
                 return nil;
             }] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
                 // saving picture to the cache
-                [self.userImage sd_setImage:self.selectedImage withKey:task.result.avatarUrl];
-                presentTabBar();
+                if (task.result != nil) {
+                    [self.userImage setImage:self.selectedImage withKey:task.result.avatarUrl];
+                    presentTabBar();
+                }
                 return nil;
             }];
         }
