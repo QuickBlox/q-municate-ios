@@ -80,8 +80,8 @@ NSString *const kLeaveChatCellIdentifier = @"QMLeaveChatCell";
 
     QBUUser *user = self.participants[indexPath.row];
     
-    cell.userData = user;
-    cell.contactlistItem = [[QMApi instance] contactItemWithUserID:user.ID];
+//    cell.userData = user;
+//    cell.contactlistItem = [[QMApi instance] contactItemWithUserID:user.ID];
     cell.delegate = self;
     
     return cell;

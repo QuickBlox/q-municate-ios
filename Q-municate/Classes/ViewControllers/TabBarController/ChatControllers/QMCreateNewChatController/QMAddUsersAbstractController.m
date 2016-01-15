@@ -73,8 +73,8 @@ NSString *const kCreateChatCellIdentifier = @"CreateChatCell";
     
     QBUUser *friend = self.contacts[indexPath.row];
     
-    cell.contactlistItem = [[QMApi instance] contactItemWithUserID:friend.ID];
-    cell.userData = friend;
+//    cell.contactlistItem = [[QMApi instance] contactItemWithUserID:friend.ID];
+//    cell.userData = friend;
     cell.check = [self.selectedFriends containsObject:friend];
     
     return cell;
