@@ -325,35 +325,35 @@
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="72"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gu7-Xa-qcZ">
-                                                    <rect key="frame" x="202" y="56" width="197" height="16"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aif-po-2Q5">
+                                                    <rect key="frame" x="202" y="51" width="197" height="16"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="197" id="hPN-q7-J3r"/>
-                                                        <constraint firstAttribute="height" constant="16" id="yj2-4g-gUT"/>
+                                                        <constraint firstAttribute="height" constant="16" id="EQo-ZZ-xgQ"/>
+                                                        <constraint firstAttribute="width" constant="197" id="uk2-Wd-r7c"/>
                                                     </constraints>
                                                     <state key="normal" title="Q-municate User Agreement">
-                                                        <color key="titleColor" red="0.0" green="0.52156862745098043" blue="0.75686274509803919" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <color key="titleColor" red="0.0" green="0.52156862749999999" blue="0.75686274509999996" alpha="1" colorSpace="calibratedRGB"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="pressentUserAgreement:" destination="Fg5-73-ITO" eventType="touchUpInside" id="yLe-DN-uZP"/>
+                                                        <action selector="pressentUserAgreement:" destination="Fg5-73-ITO" eventType="touchUpInside" id="kOn-Np-xZV"/>
                                                     </connections>
                                                 </button>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="By clicking Done, you agree to" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ncp-1F-Wtm">
-                                                    <rect key="frame" x="195" y="34" width="210" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="By clicking Done, you agree to" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7dG-DR-lK8">
+                                                    <rect key="frame" x="195" y="29" width="210" height="21"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="21" id="fJc-Ld-L6Z"/>
-                                                        <constraint firstAttribute="width" constant="210" id="gWT-Xm-CZs"/>
+                                                        <constraint firstAttribute="height" constant="21" id="lcV-zs-zhn"/>
+                                                        <constraint firstAttribute="width" constant="210" id="rde-v5-TEs"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                    <color key="textColor" red="0.64313725490196072" green="0.66666666666666663" blue="0.70196078431372544" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <color key="textColor" red="0.64313725489999995" green="0.66666666669999997" blue="0.70196078429999997" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="Gu7-Xa-qcZ" firstAttribute="top" secondItem="Ncp-1F-Wtm" secondAttribute="bottom" constant="1" id="5jR-ER-EX5"/>
-                                                <constraint firstItem="Gu7-Xa-qcZ" firstAttribute="centerX" secondItem="jKc-pz-oF5" secondAttribute="centerX" id="7rF-PU-ITv"/>
-                                                <constraint firstItem="Ncp-1F-Wtm" firstAttribute="centerX" secondItem="jKc-pz-oF5" secondAttribute="centerX" id="Qh5-Xf-9hA"/>
-                                                <constraint firstItem="Ncp-1F-Wtm" firstAttribute="top" secondItem="jKc-pz-oF5" secondAttribute="topMargin" constant="26" id="ujF-F8-s76"/>
+                                                <constraint firstItem="7dG-DR-lK8" firstAttribute="centerX" secondItem="jKc-pz-oF5" secondAttribute="centerX" id="DmG-Up-IO2"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="aif-po-2Q5" secondAttribute="bottom" constant="-3" id="bPI-1h-v1r"/>
+                                                <constraint firstItem="aif-po-2Q5" firstAttribute="centerX" secondItem="jKc-pz-oF5" secondAttribute="centerX" id="buS-ZR-YVW"/>
+                                                <constraint firstItem="aif-po-2Q5" firstAttribute="top" secondItem="7dG-DR-lK8" secondAttribute="bottom" constant="1" id="hbx-N0-HGK"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -665,6 +665,6 @@
         <image name="upic_avatarholder" width="73" height="72"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="AYJ-Gz-fC0"/>
+        <segue reference="Jxp-6o-ED2"/>
     </inferredMetricsTieBreakers>
 </document>

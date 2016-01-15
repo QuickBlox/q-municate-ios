@@ -124,7 +124,7 @@
             }] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
                 // saving picture to the cache
                 if (task.result != nil) {
-//                    [self.userImage sd_setImage:self.selectedImage withKey:task.result.avatarUrl];
+                    [self.userImage setImage:self.selectedImage withKey:task.result.avatarUrl];
                     presentTabBar();
                 }
                 return nil;
