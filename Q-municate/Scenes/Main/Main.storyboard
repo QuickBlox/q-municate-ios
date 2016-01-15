@@ -161,8 +161,51 @@ out here.</string>
                             <outlet property="delegate" destination="NSU-QC-v0B" id="LWD-c2-p15"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="l23-on-5eH"/>
+                    <navigationItem key="navigationItem" id="l23-on-5eH">
+                        <nil key="title"/>
+                        <barButtonItem key="leftBarButtonItem" image="ic_settings" id="d3Y-P0-XSf"/>
+                        <view key="titleView" opaque="NO" contentMode="scaleToFill" id="wRe-Va-Lui" customClass="QMTitleView">
+                            <rect key="frame" x="250" y="6" width="100" height="33"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ksM-J9-hmF">
+                                    <rect key="frame" x="48" y="6" width="44" height="21"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" red="0.01176470588" green="0.01176470588" blue="0.01176470588" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tCL-mz-ad4" customClass="QMImageView">
+                                    <rect key="frame" x="8" y="0.0" width="32" height="32"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="32" id="XWB-u1-QSN"/>
+                                        <constraint firstAttribute="width" constant="32" id="wwx-TO-YpM"/>
+                                    </constraints>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                            <real key="value" value="0.0"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </imageView>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="ksM-J9-hmF" secondAttribute="trailing" constant="8" id="0Cg-qU-3qL"/>
+                                <constraint firstItem="tCL-mz-ad4" firstAttribute="leading" secondItem="wRe-Va-Lui" secondAttribute="leading" constant="8" id="Hp3-no-eS3"/>
+                                <constraint firstItem="ksM-J9-hmF" firstAttribute="leading" secondItem="tCL-mz-ad4" secondAttribute="trailing" constant="8" id="ltx-aD-r49"/>
+                            </constraints>
+                            <connections>
+                                <action selector="didPressProfileTitle:" destination="NSU-QC-v0B" eventType="touchUpInside" id="keJ-WL-AeS"/>
+                                <outlet property="avatarLeftConstraint" destination="Hp3-no-eS3" id="60D-Ig-2qd"/>
+                                <outlet property="avatarView" destination="tCL-mz-ad4" id="ti0-9D-2Ri"/>
+                                <outlet property="labelLeftConstraint" destination="ltx-aD-r49" id="FW1-bk-EHG"/>
+                                <outlet property="labelRightConstraint" destination="0Cg-qU-3qL" id="0ir-Oz-m9q"/>
+                                <outlet property="textLabel" destination="ksM-J9-hmF" id="tGJ-fq-GLg"/>
+                            </connections>
+                        </view>
+                        <barButtonItem key="rightBarButtonItem" image="ic_new" id="ekF-vr-TqV"/>
+                    </navigationItem>
                     <connections>
+                        <outlet property="titleView" destination="wRe-Va-Lui" id="nmC-7w-CRN"/>
                         <segue destination="GGd-RU-mxU" kind="custom" identifier="SceneSegueAuth" customClass="QMRootViewControllerSegue" id="O5H-Pl-5ur"/>
                     </connections>
                 </tableViewController>
@@ -190,6 +233,8 @@ out here.</string>
         </scene>
     </scenes>
     <resources>
+        <image name="ic_new" width="32" height="32"/>
+        <image name="ic_settings" width="32" height="32"/>
         <image name="m_empty_dialogs" width="180" height="265"/>
     </resources>
 </document>

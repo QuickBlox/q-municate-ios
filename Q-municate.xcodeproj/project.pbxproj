@@ -111,6 +111,7 @@
 		58CEA1C91BB595C700B866DD /* QMAVCallManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CEA1C81BB595C700B866DD /* QMAVCallManager.m */; };
 		58D1CED91BC668DD00591EA9 /* QMViewControllersFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1CED81BC668DD00591EA9 /* QMViewControllersFactory.m */; };
 		58D81C231BBA86920046B550 /* QuickbloxWebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D81C221BBA86920046B550 /* QuickbloxWebRTC.framework */; };
+		58E343881C491AAA00439E93 /* QMTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58E343871C491AAA00439E93 /* QMTitleView.m */; };
 		690A271518CA0F35003D6B80 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A271418CA0F35003D6B80 /* AddressBook.framework */; };
 		693206EA1962BCC300B15EF9 /* QMBaseCallsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 693206E91962BCC300B15EF9 /* QMBaseCallsController.m */; };
 		693206EE1962C0F600B15EF9 /* QMAudioCallController.m in Sources */ = {isa = PBXBuildFile; fileRef = 693206ED1962C0F600B15EF9 /* QMAudioCallController.m */; };
@@ -334,6 +335,8 @@
 		58D1CED71BC668DD00591EA9 /* QMViewControllersFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMViewControllersFactory.h; path = QMViewControllersFactory/QMViewControllersFactory.h; sourceTree = "<group>"; };
 		58D1CED81BC668DD00591EA9 /* QMViewControllersFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMViewControllersFactory.m; path = QMViewControllersFactory/QMViewControllersFactory.m; sourceTree = "<group>"; };
 		58D81C221BBA86920046B550 /* QuickbloxWebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickbloxWebRTC.framework; path = External/QuickbloxWebRTC.framework; sourceTree = "<group>"; };
+		58E343861C491AAA00439E93 /* QMTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMTitleView.h; path = QMTitleView/QMTitleView.h; sourceTree = "<group>"; };
+		58E343871C491AAA00439E93 /* QMTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMTitleView.m; path = QMTitleView/QMTitleView.m; sourceTree = "<group>"; };
 		58F437691BBC21810041C08D /* QMProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMProtocols.h; sourceTree = "<group>"; };
 		67976AC8FFE848A4B85EB2AF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		690A271418CA0F35003D6B80 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
@@ -1019,6 +1022,7 @@
 		5842777F1C3D336300CDE35B /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				58E343801C49190400439E93 /* QMTitleView */,
 				5877D6E01C46759A00938E5D /* QMBadgeView */,
 				584277801C3D336300CDE35B /* IAButton */,
 				584277831C3D336300CDE35B /* QMCells */,
@@ -1349,6 +1353,15 @@
 				58CEA1C21BB591A200B866DD /* QMChatButtonsFactory.m */,
 			);
 			name = QMChatButtonsFactory;
+			sourceTree = "<group>";
+		};
+		58E343801C49190400439E93 /* QMTitleView */ = {
+			isa = PBXGroup;
+			children = (
+				58E343861C491AAA00439E93 /* QMTitleView.h */,
+				58E343871C491AAA00439E93 /* QMTitleView.m */,
+			);
+			name = QMTitleView;
 			sourceTree = "<group>";
 		};
 		693206EB1962C0B500B15EF9 /* QMAudioCallController */ = {
@@ -1717,6 +1730,7 @@
 				580D34DF1BBFF5850034813A /* UIImage+fixOrientation.m in Sources */,
 				584277DC1C3FE5BC00CDE35B /* QMCore.m in Sources */,
 				55D8ADDE19AC76E200DAF79F /* QMAddUsersAbstractController.m in Sources */,
+				58E343881C491AAA00439E93 /* QMTitleView.m in Sources */,
 				58CEA1C91BB595C700B866DD /* QMAVCallManager.m in Sources */,
 				55A8B0761965986A00B5D33B /* REAlertView.m in Sources */,
 				58B414AE1BB44AB000613892 /* QMApi+Facebook.m in Sources */,

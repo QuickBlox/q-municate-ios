@@ -11,6 +11,9 @@
 #import "QMPlaceholderDataSource.h"
 #import "QMCore.h"
 #import "QMTasks.h"
+#import "QMProfile.h"
+#import "QMTitleView.h"
+
 #import <SVProgressHUD.h>
 
 @interface QMDialogsViewController ()
@@ -27,6 +30,8 @@ UITableViewDelegate
  */
 @property (strong, nonatomic) QMDialogsDataSource *dialogsDataSource;
 @property (strong, nonatomic) QMPlaceholderDataSource *placeholderDataSource;
+
+@property (weak, nonatomic) IBOutlet QMTitleView *titleView;
 
 @end
 
@@ -46,6 +51,12 @@ UITableViewDelegate
     // Subscribing delegates
     [[QMCore instance].chatService addDelegate:self];
     [[QMCore instance].usersService addDelegate:self];
+    
+    // Profile title view
+    QBUUser *currentUser = [QMCore instance].currentProfile.userData;
+    [self.titleView setText:currentUser.fullName];
+    self.titleView.placeholderID = currentUser.ID;
+    [self.titleView setAvatarUrl:currentUser.avatarUrl];
     
     // auto login user
     @weakify(self);
@@ -89,6 +100,12 @@ UITableViewDelegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return self.dialogsDataSource.items.count > 0 ? 76 : tableView.frame.size.height - self.navigationController.navigationBar.frame.size.height - [UIApplication sharedApplication].statusBarFrame.size.height;
+}
+
+#pragma mark - Actions
+
+- (IBAction)didPressProfileTitle:(id)sender {
+    
 }
 
 #pragma mark - QMChatServiceDelegate
