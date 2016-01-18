@@ -11,6 +11,8 @@
 #import "QMCore.h"
 #import "QMChatUtils.h"
 
+#import <SVProgressHUD.h>
+
 @implementation QMDialogsDataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -53,15 +55,24 @@
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
+        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         QBChatDialog *chatDialog = self.items[indexPath.row];
         
         if (chatDialog.type == QBChatDialogTypeGroup) {
             
             chatDialog.occupantIDs = [QMChatUtils occupantsWithoutCurrentUser:chatDialog.occupantIDs];
-            [[QMCore instance] leaveChatDialog:chatDialog];
+            [[[QMCore instance] leaveChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+                
+                [SVProgressHUD dismiss];
+                return nil;
+            }];
         } else {
             // private and public group chats
-            [[QMCore instance].chatService deleteDialogWithID:chatDialog.ID];
+            [[[QMCore instance].chatService deleteDialogWithID:chatDialog.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+                
+                [SVProgressHUD dismiss];
+                return nil;
+            }];
         }
     }
 }
