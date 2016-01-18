@@ -30,7 +30,6 @@
     [super awakeFromNib];
     
     _timeLabel.text = nil;
-    self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
 - (UIEdgeInsets)layoutMargins {

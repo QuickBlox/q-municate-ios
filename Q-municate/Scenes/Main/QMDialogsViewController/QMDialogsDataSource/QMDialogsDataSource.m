@@ -9,6 +9,9 @@
 #import "QMDialogsDataSource.h"
 #import "QMDialogCell.h"
 #import "QMCore.h"
+#import "QMChatUtils.h"
+
+#import <SVProgressHUD.h>
 
 @implementation QMDialogsDataSource
 
@@ -41,6 +44,37 @@
     [cell setBadgeNumber:chatDialog.unreadMessagesCount];
     
     return cell;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+        QBChatDialog *chatDialog = self.items[indexPath.row];
+        
+        if (chatDialog.type == QBChatDialogTypeGroup) {
+            
+            chatDialog.occupantIDs = [QMChatUtils occupantsWithoutCurrentUser:chatDialog.occupantIDs];
+            [[[QMCore instance] leaveChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+                
+                [SVProgressHUD dismiss];
+                return nil;
+            }];
+        } else {
+            // private and public group chats
+            [[[QMCore instance].chatService deleteDialogWithID:chatDialog.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+                
+                [SVProgressHUD dismiss];
+                return nil;
+            }];
+        }
+    }
 }
 
 - (NSMutableArray *)items {
