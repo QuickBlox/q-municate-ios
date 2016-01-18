@@ -25,12 +25,12 @@ PODS:
   - Bolts/AppLinks (1.5.0):
     - Bolts/Tasks
   - Bolts/Tasks (1.5.0)
-  - Crashlytics (3.5.0):
-    - Fabric (~> 1.6.0)
+  - Crashlytics (3.6.0):
+    - Fabric (~> 1.6.3)
   - DACircularProgress (2.3.1)
   - Digits (1.15.1):
     - TwitterCore (= 1.15.1)
-  - Fabric (1.6.2)
+  - Fabric (1.6.3)
   - FBSDKCoreKit (4.7.1):
     - Bolts (~> 1.1)
     - FBSDKCoreKit/arc (= 4.7.1)
@@ -132,7 +132,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
-    :commit: dd734b2b76ffd0396e2da34a9b4c1827f71af92d
+    :commit: 74f5c78fca84f947c2b9d67a12fb4892e8576e30
     :git: https://github.com/QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
     :commit: 896c0d92d3c196bd82de644247f7d7aa704ce4df
@@ -142,10 +142,10 @@ SPEC CHECKSUMS:
   AFNetworking: caca0799b310f0c3bf1fc1af45145fc96972bcab
   AGEmojiKeyboard: e19cf4168b114d2e494e53fe8dc042d8bf011cc9
   Bolts: 722ab9a4f8b50fc4ed1b9998a5a7a2b3f16d80b4
-  Crashlytics: fabfd45d0e8b8dc936c682b97e302b9a49a1c827
+  Crashlytics: e4e8d02914f2608fbc7bf42b1a7af838b0db67a2
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   Digits: 369c517143ab4f9f35d77628540493a2042f8cc2
-  Fabric: e8296d4a1abb3c5eed770cc86b311c862f51d340
+  Fabric: cbe0ca6c9531bba17910052f6f105fcbc5fa7f67
   FBSDKCoreKit: 9141b70960a37930850370495fe565f4a27ac141
   FBSDKLoginKit: c11ed3c2833472db3bb4a4aecf27af4a6f69b173
   FBSDKShareKit: 213adf63e073f41a346b0e7a689805880dc5150e
