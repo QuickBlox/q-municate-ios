@@ -9,6 +9,7 @@
 #import "QMDialogsDataSource.h"
 #import "QMDialogCell.h"
 #import "QMCore.h"
+#import "QMChatUtils.h"
 
 @implementation QMDialogsDataSource
 
@@ -41,6 +42,28 @@
     [cell setBadgeNumber:chatDialog.unreadMessagesCount];
     
     return cell;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        QBChatDialog *chatDialog = self.items[indexPath.row];
+        
+        if (chatDialog.type == QBChatDialogTypeGroup) {
+            
+            chatDialog.occupantIDs = [QMChatUtils occupantsWithoutCurrentUser:chatDialog.occupantIDs];
+            [[QMCore instance] leaveChatDialog:chatDialog];
+        } else {
+            // private and public group chats
+            [[QMCore instance].chatService deleteDialogWithID:chatDialog.ID];
+        }
+    }
 }
 
 - (NSMutableArray *)items {
