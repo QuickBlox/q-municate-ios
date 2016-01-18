@@ -39,4 +39,6 @@
 
 - (BFTask *)logout;
 
+- (BFTask *)leaveChatDialog:(QBChatDialog *)chatDialog;
+
 @end

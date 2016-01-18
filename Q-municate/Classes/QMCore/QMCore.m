@@ -82,6 +82,22 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
     return source.task;
 }
 
+#pragma mark - Notifications
+
+- (BFTask *)leaveChatDialog:(QBChatDialog *)chatDialog {
+    
+    @weakify(self);
+    return [[self.chatService sendNotificationMessageAboutLeavingDialog:chatDialog withNotificationText:kDialogsUpdateNotificationMessage] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        
+        if (!task.isFaulted) {
+            @strongify(self);
+            return [self.chatService deleteDialogWithID:chatDialog.ID];
+        }
+        
+        return nil;
+    }];
+}
+
 #pragma mark - Last activity date
 
 - (void)setLastActivityDate:(NSDate *)lastActivityDate
