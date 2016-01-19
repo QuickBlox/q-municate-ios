@@ -139,7 +139,7 @@ AGEmojiKeyboardViewDelegate
             if ([QBSession currentSession].currentUser.ID == userID) {
                 return;
             }
-            strongSelf.title = @"typing...";
+            strongSelf.onlineTitle.titleLabel.text = @"typing...";
         }];
         
         // Handling user stopped typing.
