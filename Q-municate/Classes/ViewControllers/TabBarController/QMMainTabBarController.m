@@ -44,7 +44,7 @@
     
     [self customizeTabBar];
     [self.navigationController setNavigationBarHidden:YES animated:NO];
-
+    
     __weak __typeof(self)weakSelf = self;
     
     [[QMApi instance] autoLogin:^(BOOL success) {
@@ -73,7 +73,7 @@
 - (void)connectToChat
 {
     [[QMApi instance] connectChat:^(BOOL loginSuccess) {
-
+        
         QBUUser *usr = [QMApi instance].currentUser;
         if (!usr.isImport) {
             self.importGroup = dispatch_group_create();
@@ -87,7 +87,7 @@
                 //
                 dispatch_group_leave(self.importGroup);
             }];
-        
+            
             dispatch_group_notify(self.importGroup, dispatch_get_main_queue(), ^{
                 //
                 usr.isImport = YES;
@@ -138,7 +138,7 @@
 - (void)showNotificationForMessage:(QBChatMessage *)message inDialogID:(NSString *)dialogID
 {
     if ([[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) return;
-
+    
     QBChatDialog* dialog = [[QMApi instance].chatService.dialogsMemoryStorage chatDialogWithID:dialogID];
     if (dialog == nil) {
         dialog = message.dialog;

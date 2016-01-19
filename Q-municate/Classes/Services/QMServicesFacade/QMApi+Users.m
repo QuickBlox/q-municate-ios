@@ -26,7 +26,7 @@
         @strongify(self);
         [self sendContactRequestSendNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
             
-            if (completion) completion(task.isCompleted, notification);
+            if (completion) completion(!task.isFaulted, notification);
         }];
         return nil;
     }];
@@ -43,7 +43,7 @@
         @strongify(self);
         [self sendContactRequestDeleteNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
             //
-            if (completion) completion(task.isCompleted, notification);
+            if (completion) completion(!task.isFaulted, notification);
         }];
         return nil;
     }];
