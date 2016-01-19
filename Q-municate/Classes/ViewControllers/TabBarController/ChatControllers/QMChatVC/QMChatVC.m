@@ -133,19 +133,20 @@ AGEmojiKeyboardViewDelegate
     
     // Handling 'typing' status.
     if (self.dialog.type == QBChatDialogTypePrivate) {
-        __weak typeof(self)weakSelf = self;
+        
+        @weakify(self);
         [self.dialog setOnUserIsTyping:^(NSUInteger userID) {
-            __typeof(self) strongSelf = weakSelf;
+            @strongify(self);
             if ([QBSession currentSession].currentUser.ID == userID) {
                 return;
             }
-            strongSelf.title = @"typing...";
+            self.onlineTitle.statusLabel.text = NSLocalizedString(@"QM_STR_TYPING", nil);
         }];
         
         // Handling user stopped typing.
         [self.dialog setOnUserStoppedTyping:^(NSUInteger userID) {
-            __typeof(self) strongSelf = weakSelf;
-            [strongSelf updateTitleInfoForPrivateDialog];
+            @strongify(self);
+            [self updateTitleInfoForPrivateDialog];
         }];
     }
 }
