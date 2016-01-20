@@ -257,7 +257,9 @@ static NSString* attachmentPath(QBChatAttachment *attachment) {
             NSError *error;
             
             [self saveImageData:fileData chatAttachment:attachment error:&error];
-            [self.attachmentsStorage setObject:image forKey:attachmentID];
+            if (image != nil) {
+                [self.attachmentsStorage setObject:image forKey:attachmentID];
+            }
             
             [self changeMessageAttachmentStatus:QMMessageAttachmentStatusLoaded forMessage:attachmentMessage];
             

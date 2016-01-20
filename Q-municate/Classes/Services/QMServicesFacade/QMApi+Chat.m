@@ -76,23 +76,14 @@
         @strongify(self);
         [[NSNotificationCenter defaultCenter] postNotificationName:kUsersLoadingFinishedNotifications object:self userInfo:nil];
         
-        NSDate *lastUpdatedAt = [QMApi instance].settingsManager.usersLastUpdatedAt;
-        return lastUpdatedAt != nil ? [self.usersService updateUsersByLastUpdatedAt:lastUpdatedAt] : nil;
-    };
-    BFContinuationBlock cachedUsersUpdateBlock = ^id _Nullable(BFTask * _Nonnull task) {
-        
-        if (!task.isFaulted) {
-            [QMApi instance].settingsManager.usersLastUpdatedAt = [NSDate date];
-        }
-        
         return nil;
     };
     
     if (self.settingsManager.lastActivityDate != nil) {
-        [[[[self.chatService fetchDialogsUpdatedFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:iterationBlock] continueWithBlock:completionBlock] continueWithBlock:notificationBlock] continueWithBlock:cachedUsersUpdateBlock];
+        [[[self.chatService fetchDialogsUpdatedFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:iterationBlock] continueWithBlock:completionBlock] continueWithBlock:notificationBlock];
     }
     else {
-        [[[[self.chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:iterationBlock] continueWithBlock:completionBlock] continueWithBlock:notificationBlock] continueWithBlock:cachedUsersUpdateBlock];
+        [[[self.chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:iterationBlock] continueWithBlock:completionBlock] continueWithBlock:notificationBlock];
     }
 }
 
