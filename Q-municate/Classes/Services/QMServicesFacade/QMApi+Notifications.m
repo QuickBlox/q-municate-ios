@@ -110,7 +110,7 @@
                 return nil;
             }];
             
-            return nil;
+            return [BFTask cancelledTask];
         }
         
         if ([delegate respondsToSelector:@selector(notificationHandlerDidStartLoadingDialogFromServer)]) {
@@ -120,6 +120,8 @@
         return [self.chatService loadDialogWithID:dialogID];
     }] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
         //
+        if (task.isCancelled) return nil;
+        
         if ([delegate respondsToSelector:@selector(notificationHandlerDidFinishLoadingDialogFromServer)]) {
             [delegate notificationHandlerDidFinishLoadingDialogFromServer];
         }

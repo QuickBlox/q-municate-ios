@@ -134,7 +134,7 @@ QMContactListServiceDelegate
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     [[[QMApi instance].usersService searchUsersWithFullName:self.searchDisplayController.searchBar.text page:page] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
         //
-        if (task.isCompleted) {
+        if (!task.isFaulted) {
             if (userResponseBlock) userResponseBlock(task.result);
         }
         
