@@ -35,16 +35,18 @@
 - (void)removeUserFromContactList:(QBUUser *)user completion:(void(^)(BOOL success, QBChatMessage *notification))completion {
     
     @weakify(self);
-    [[[self.contactListService removeUserFromContactListWithUserID:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+    [[self.contactListService removeUserFromContactListWithUserID:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         @strongify(self);
         QBChatDialog *dialog = [self.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
-        return [self.chatService deleteDialogWithID:dialog.ID];
-    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-        @strongify(self);
         [self sendContactRequestDeleteNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
-            //
-            if (completion) completion(!task.isFaulted, notification);
+            
+            [[self.chatService deleteDialogWithID:dialog.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull deleteTask) {
+                
+                if (completion) completion(!task.isFaulted, notification);
+                return nil;
+            }];
         }];
+        
         return nil;
     }];
 }
