@@ -111,7 +111,7 @@
             //
             if (updatedDialog != nil) {
                 strongSelf.groupAvatarView.imageViewType = QMImageViewTypeCircle;
-                [strongSelf.groupAvatarView sd_setImage:image withKey:updatedDialog.photo];
+                [strongSelf.groupAvatarView setImage:image withKey:updatedDialog.photo];
             }
             [SVProgressHUD dismiss];
         }];
