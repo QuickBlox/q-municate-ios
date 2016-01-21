@@ -52,7 +52,6 @@ AGEmojiKeyboardViewDelegate
 @property (strong, nonatomic) QMOnlineTitle *onlineTitle;
 
 @property (nonatomic, copy) QBUUser* opponentUser;
-@property (nonatomic, strong) id<NSObject> observerDidBecomeActive;
 @property (nonatomic, strong) QMMessageStatusStringBuilder* stringBuilder;
 @property (nonatomic, strong) NSMapTable* attachmentCells;
 @property (nonatomic, readonly) UIImagePickerController* pickerController;
@@ -62,13 +61,14 @@ AGEmojiKeyboardViewDelegate
 @property (nonatomic, strong) NSArray* unreadMessages;
 @property (nonatomic, strong) UIButton *emojiButton;
 
-@property (nonatomic, assign) BOOL shouldUpdateDialogAfterReturnFromGroupInfo;
-
 @property (nonatomic, strong) NSMutableSet *detailedCells;
+@property (assign, nonatomic, readonly) BOOL isAppear;
 
 @end
 
 @implementation QMChatVC
+
+@dynamic isAppear;
 
 @synthesize pickerController = _pickerController;
 
@@ -79,6 +79,11 @@ AGEmojiKeyboardViewDelegate
         _pickerController.delegate = self;
     }
     return _pickerController;
+}
+
+- (BOOL)isAppear {
+    
+    return self.isViewLoaded && self.view.window;
 }
 
 #pragma mark - Override
@@ -116,7 +121,7 @@ AGEmojiKeyboardViewDelegate
     
     // emoji button init
     [self configureEmojiButton];
-
+    
     // Configuring title
     if (self.dialog.type == QBChatDialogTypePrivate) {
         
@@ -160,10 +165,12 @@ AGEmojiKeyboardViewDelegate
     @weakify(self);
     // Retrieving message from Quickblox REST history and cache.
     [[[QMApi instance].chatService messagesWithChatDialogID:self.dialog.ID] continueWithBlock:^id _Nullable(BFTask<NSArray<QBChatMessage *> *> * _Nonnull task) {
+        
         if (task.error != nil) {
             [SVProgressHUD showErrorWithStatus:@"Can not refresh messages"];
             NSLog(@"can not refresh messages: %@", task.error);
-        } else {
+        }
+        else {
             @strongify(self);
             if ([task.result count] > 0) [self insertMessagesToTheBottomAnimated:task.result];
             [SVProgressHUD dismiss];
@@ -189,71 +196,38 @@ AGEmojiKeyboardViewDelegate
 {
     [super viewWillAppear:animated];
     
-    if (self.shouldUpdateDialogAfterReturnFromGroupInfo) {
-        QBChatDialog *updatedDialog = [[QMApi instance].chatService.dialogsMemoryStorage chatDialogWithID:self.dialog.ID];
-        if (updatedDialog != nil) {
-            self.dialog = updatedDialog;
-            self.title = self.dialog.name;
-            [[[QMApi instance].chatService joinToGroupDialog:self.dialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-                //
-                if (task.isFaulted) NSLog(@"Failed to join group dialog, because: %@", task.error.localizedDescription);
-                
-                return nil;
-            }];
-        }
-        else {
-            [self.navigationController popViewControllerAnimated:YES];
-        }
-        self.shouldUpdateDialogAfterReturnFromGroupInfo = NO;
-    }
-    
-    [[QMApi instance].settingsManager setDialogWithIDisActive:self.dialog.ID];
+    [[QMApi instance].chatService addDelegate:self];
+    [QMApi instance].chatService.chatAttachmentService.delegate = self;
     [[QMApi instance].contactListService addDelegate:self];
-    self.actionsHandler = self; // contact request delegate
     
-    __weak __typeof(self) weakSelf = self;
-    self.observerDidBecomeActive = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        __typeof(self) strongSelf = weakSelf;
-        
-        if ([[QBChat instance] isConnected]) {
-            [strongSelf refreshMessagesShowingProgress:NO];
-        }
-    }];
-    
-    self.observerDidEnterBackground = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidEnterBackgroundNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        __typeof(self) strongSelf = weakSelf;
-        [strongSelf fireStopTypingIfNecessary];
-    }];
-    
-    // Retrieving messages
     if ([[self storedMessages] count] > 0 && self.totalMessagesCount == 0) {
         // inserting all messages from memory storage
         [self updateDataSourceWithMessages:[self storedMessages]];
-        [self refreshMessagesShowingProgress:NO];
-    } else {
-        if (self.totalMessagesCount == 0) [SVProgressHUD showWithStatus:@"Refreshing..." maskType:SVProgressHUDMaskTypeClear];
+    }
+    else {
         
-        [[QMApi instance] cachedMessagesWithDialogID:self.dialog.ID block:^(NSArray *collection) {
-            //
-            __typeof(weakSelf)strongSelf = weakSelf;
-            if ([collection count] > 0) {
-                [strongSelf insertMessagesToTheBottomAnimated:collection];
-            }
-            
-            [strongSelf refreshMessagesShowingProgress:NO];
-        }];
-    }
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    if ([self storedMessages].count > 0 && self.totalMessagesCount != [self storedMessages].count) {
-        [self insertMessagesToTheBottomAnimated:[self storedMessages]];
+        if (self.totalMessagesCount == 0)
+            [SVProgressHUD showWithStatus:@"Refreshing..." maskType:SVProgressHUDMaskTypeClear];
     }
     
-    [[QMApi instance].chatService addDelegate:self];
-    [QMApi instance].chatService.chatAttachmentService.delegate = self;
+    [self refreshMessagesShowingProgress:NO];
+    
+    if (self.dialog.type != QBChatDialogTypePrivate) {
+        self.title = self.dialog.name;
+    }
+    
+    [[QMApi instance].settingsManager setDialogWithIDisActive:self.dialog.ID];
+    
+    self.actionsHandler = self; // contact request delegate
+    
+    __weak __typeof(self) weakSelf = self;
+    
+    self.observerDidEnterBackground = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidEnterBackgroundNotification
+                                                                                        object:nil
+                                                                                         queue:nil
+                                                                                    usingBlock:^(NSNotification *note) {
+                                                                                        [weakSelf fireStopTypingIfNecessary];
+                                                                                    }];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -265,7 +239,6 @@ AGEmojiKeyboardViewDelegate
     [[QMApi instance].chatService removeDelegate:self];
     [[QMApi instance].contactListService removeDelegate:self];
     self.actionsHandler = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self.observerDidBecomeActive];
     [[NSNotificationCenter defaultCenter] removeObserver:self.observerDidEnterBackground];
     
     // Deletes typing blocks.
@@ -360,8 +333,6 @@ AGEmojiKeyboardViewDelegate
     
     [self.view endEditing:YES];
     if ([segue.identifier isEqualToString:kGroupDetailsSegueIdentifier]) {
-        
-        self.shouldUpdateDialogAfterReturnFromGroupInfo = YES;
         
         QMGroupDetailsController *groupDetailVC = segue.destinationViewController;
         groupDetailVC.chatDialog = self.dialog;
@@ -459,7 +430,7 @@ AGEmojiKeyboardViewDelegate
     message.readIDs = @[@(self.senderID)];
     message.dialogID = self.dialog.ID;
     message.dateSent = date;
-
+    
     // Sending message
     [[[QMApi instance].chatService sendMessage:message toDialogID:self.dialog.ID saveToHistory:YES saveToStorage:YES] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         //
@@ -518,7 +489,7 @@ AGEmojiKeyboardViewDelegate
 #pragma mark - Strings builder
 
 - (NSAttributedString *)attributedStringForItem:(QBChatMessage *)messageItem {
-
+    
     if (messageItem.isNotificatonMessage) {
         //
         NSString *notificationMessageString = [QMChatUtils messageTextForNotification:messageItem];
@@ -827,8 +798,24 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark - QMChatServiceDelegate
 
-- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+- (void)chatService:(QMChatService *)chatService didLoadMessagesFromCache:(NSArray *)messages forDialogID:(NSString *)dialogID {
+    
     if ([self.dialog.ID isEqualToString:dialogID]) {
+        
+        if (self.isAppear) {
+            
+            [self insertMessagesToTheBottomAnimated:messages];
+        } else {
+            
+            [self updateDataSourceWithMessages:messages];
+        }
+    }
+}
+
+- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+    
+    if ([self.dialog.ID isEqualToString:dialogID]) {
+        
         // Inserting message received from XMPP or sent by self
         if (message.dialogUpdateType == QMDialogUpdateTypeOccupants && message.addedOccupantsIDs.count > 0) {
             __weak __typeof(self)weakSelf = self;
@@ -844,13 +831,11 @@ AGEmojiKeyboardViewDelegate
     }
 }
 
-- (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog{
-    if( [self.dialog.ID isEqualToString:chatDialog.ID] ) {
-        self.dialog = chatDialog;
+- (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
+    
+    if (self.dialog.type != QBChatDialogTypePrivate && [self.dialog.ID isEqualToString:chatDialog.ID]) {
         
-        if (self.dialog.type != QBChatDialogTypePrivate) {
-            self.title = self.dialog.name;
-        }
+        self.title = self.dialog.name;
     }
 }
 
@@ -1071,7 +1056,7 @@ AGEmojiKeyboardViewDelegate
     self.emojiButton = [QMChatButtonsFactory emojiButton];
     self.emojiButton.tag = kQMEmojiButtonTag;
     [self.emojiButton addTarget:self action:@selector(showEmojiKeyboard) forControlEvents:UIControlEventTouchUpInside];
-
+    
     // appearance
     self.emojiButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self.inputToolbar.contentView addSubview:self.emojiButton];
@@ -1087,7 +1072,7 @@ AGEmojiKeyboardViewDelegate
                                                                                           metrics:@{@"spacing" : @(emojiButtonSpacing)}
                                                                                             views:@{@"emojiButton"    : self.emojiButton,
                                                                                                     @"rightBarButton" : self.inputToolbar.contentView.rightBarButtonItem}]];
-
+    
     // changing textContainerInset to restrict text entering on emoji button
     self.inputToolbar.contentView.textView.textContainerInset = UIEdgeInsetsMake(self.inputToolbar.contentView.textView.textContainerInset.top,
                                                                                  self.inputToolbar.contentView.textView.textContainerInset.left,
@@ -1101,7 +1086,7 @@ AGEmojiKeyboardViewDelegate
         
         UIButton *emojiButton = (UIButton *)[self.inputToolbar.contentView viewWithTag:kQMEmojiButtonTag];
         [emojiButton setImage:[UIImage imageNamed:@"ic_smile"] forState:UIControlStateNormal];
-
+        
         self.inputToolbar.contentView.textView.inputView = nil;
         [self.inputToolbar.contentView.textView reloadInputViews];
         
