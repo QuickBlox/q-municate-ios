@@ -45,8 +45,7 @@
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(changeGroupAvatar:)];
     [self.groupAvatarView addGestureRecognizer:tap];
-    self.groupAvatarView.layer.cornerRadius = self.groupAvatarView.frame.size.width / 2;
-    self.groupAvatarView.layer.masksToBounds = YES;
+    self.groupAvatarView.imageViewType = QMImageViewTypeCircle;
     
     self.dataSource = [[QMGroupDetailsDataSource alloc] initWithTableView:self.tableView];
     [self updateGUIWithChatDialog:self.chatDialog];
@@ -110,7 +109,6 @@
         [[QMApi instance] changeAvatar:image forChatDialog:strongSelf.chatDialog completion:^(QBChatDialog *updatedDialog) {
             //
             if (updatedDialog != nil) {
-                strongSelf.groupAvatarView.imageViewType = QMImageViewTypeCircle;
                 [strongSelf.groupAvatarView setImage:image withKey:updatedDialog.photo];
             }
             [SVProgressHUD dismiss];
