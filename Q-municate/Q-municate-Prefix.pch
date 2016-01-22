@@ -27,4 +27,5 @@
     #import "Macro.h"
 
     #import <QMServices.h>
+    #import <EXTScope.h>
 #endif

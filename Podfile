@@ -13,6 +13,7 @@ pod 'IDMPhotoBrowser', '~> 1.3.5'
 pod 'MPGNotification', '~> 1.1'
 pod 'Reachability', '~> 3.2'
 pod 'TTTAttributedLabel', '~> 1.13'
+pod 'libextobjc/EXTScope', '~> 0.4.1'
 #pod 'QMChatViewController'
 #pod 'QMServices'
 
