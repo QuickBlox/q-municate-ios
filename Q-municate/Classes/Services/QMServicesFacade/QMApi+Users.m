@@ -126,7 +126,7 @@
     
     for (QBContactListItem *item in [QBChat instance].contactList.pendingApproval) {
         
-        if (item.subscriptionState == QBPresenseSubscriptionStateFrom) {
+        if (item.subscriptionState == QBPresenceSubscriptionStateFrom) {
             [IDs addObject:@(item.userID)];
         }
     }
@@ -157,7 +157,7 @@
 
 - (BOOL)userIDIsInPendingList:(NSUInteger)userID {
     QBContactListItem *contactlistItem = [self.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
-    if (contactlistItem.subscriptionState != QBPresenseSubscriptionStateNone) {
+    if (contactlistItem.subscriptionState != QBPresenceSubscriptionStateNone) {
         return NO;
     }
     return YES;
