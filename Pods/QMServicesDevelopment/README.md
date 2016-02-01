@@ -90,12 +90,14 @@ Navigate to your project's settings, then select the target you wish to add QMSe
 
 Navigate to **Build Settings**, then search for **Header Search Paths** and double-click it to edit
 
-Add a new item using **+**: `"$(SRCROOT)/Vendor/QMServices/QMServices"` and ensure that it is set to *recursive*
+Add a new item using **+**: `"$(SRCROOT)/Vendor/QMServices"` and ensure that it is set to *recursive*
 
 Navigate to **Build Settings**, then search for **Framework Search Paths** and double-click it to edit
 
-> ** NOTE**: By default, the Quickblox and Bolts frameworks are set to `../../../Frameworks`.
-> To change the path, you need to open Quickblox.xcconfig file and replace `../../../Frameworks` with your path to the Quickblox.framework and Bolts.framework.
+Add a new item using **+**: `"$(SRCROOT)/Vendor/QMServices/Frameworks"`
+
+> ** NOTE**: By default, *QMServices* subprojects reference Quickblox and Bolts frameworks at `../Frameworks`.
+> To change the path, you need to open Quickblox.xcconfig file and replace `../Frameworks` with your path to the Quickblox.framework and Bolts.framework.
 
 > ** NOTE** Please be aware that if you've set Xcode's **Link Frameworks Automatically** to **No** then you may need to add the Quickblox.framework, CoreData.framework to your project on iOS, as UIKit does not include Core Data by default. On OS X, Cocoa includes Core Data.
 
