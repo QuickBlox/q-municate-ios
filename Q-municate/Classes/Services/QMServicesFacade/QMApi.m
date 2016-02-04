@@ -73,10 +73,14 @@ static NSString *const kQMErrorPasswordKey = @"password";
         
         __weak __typeof(self)weakSelf = self;
         void (^internetConnectionReachable)(Reachability *reachability) = ^(Reachability *reachability) {
+            __typeof(weakSelf)strongSelf = weakSelf;
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (weakSelf.isAuthorized) {
+                if (strongSelf.isAuthorized) {
                     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-                    [weakSelf applicationDidBecomeActive:nil];
+                    [strongSelf.chatService fetchDialogsUpdatedFromDate:strongSelf.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:nil completionBlock:^(QBResponse *response) {
+                        
+                        strongSelf.settingsManager.lastActivityDate = [NSDate date];
+                    }];
                 }
             });
         };
