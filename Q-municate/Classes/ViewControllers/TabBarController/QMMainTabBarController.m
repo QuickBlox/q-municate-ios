@@ -228,11 +228,4 @@
     }
 }
 
-- (void)chatServiceChatDidFailWithStreamError:(NSError *)error
-{
-    if ([[QMApi instance] isInternetConnected]) {
-        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_STREAM_ERROR", nil), error.localizedDescription]];
-    }
-}
-
 @end
