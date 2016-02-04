@@ -69,7 +69,8 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBSettings setAuthKey:kQMAuthorizationKey];
     [QBSettings setAuthSecret:kQMAuthorizationSecret];
     [QBSettings setAccountKey:kQMAccountKey];
-//    [QBSettings setLogLevel:QBLogLevelNothing];
+    [QBSettings setLogLevel:QBLogLevelDebug];
+    [QBSettings enableXMPPLogging];
     
     //QuickbloxWebRTC preferences
     [QBRTCClient initializeRTC];
