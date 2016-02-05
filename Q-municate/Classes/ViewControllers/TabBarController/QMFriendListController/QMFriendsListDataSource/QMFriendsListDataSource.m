@@ -14,6 +14,7 @@
 #import "QMUsersUtils.h"
 #import "SVProgressHud.h"
 #import "REAlertView.h"
+#import "REAlertView+QMSuccess.h"
 
 static const NSUInteger kQMUsersPageLimit       = 50;
 static const NSUInteger kQMGlobalSearchCharsMin = 3;
@@ -242,6 +243,11 @@ QMContactListServiceDelegate
 
 - (void)usersListCell:(QMFriendListCell *)cell pressAddBtn:(UIButton *)sender {
     
+    if (![QMApi instance].isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
+    
     NSIndexPath *indexPath = [self.searchDisplayController.searchResultsTableView indexPathForCell:cell];
     NSArray *datasource = [self usersAtSections:indexPath.section];
     QBUUser *user = datasource[indexPath.row];
@@ -252,11 +258,22 @@ QMContactListServiceDelegate
         [self.searchResult removeObject:user];
     }
     
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     BOOL isContactRequest = [[QMApi instance] isContactRequestUserWithID:user.ID];
     if (isContactRequest) {
-        [[QMApi instance] confirmAddContactRequest:user completion:nil];
+        [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success) {
+            
+            if (success) {
+                [SVProgressHUD showSuccessWithStatus:nil];
+            }
+        }];
     } else {
-        [[QMApi instance] addUserToContactList:user completion:nil];
+        [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {
+            
+            if (success) {
+                [SVProgressHUD showSuccessWithStatus:nil];
+            }
+        }];
     }
 }
 
