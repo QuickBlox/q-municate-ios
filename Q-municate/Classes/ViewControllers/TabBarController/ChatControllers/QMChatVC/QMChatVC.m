@@ -10,7 +10,6 @@
 #import "QMMainTabBarController.h"
 #import "QMGroupDetailsController.h"
 #import "QMBaseCallsController.h"
-#import "QMMessageBarStyleSheetFactory.h"
 #import "QMApi.h"
 #import "QMAlertsFactory.h"
 #import "QMOnlineTitle.h"
