@@ -204,17 +204,8 @@ AGEmojiKeyboardViewDelegate
         // inserting all messages from memory storage
         [self updateDataSourceWithMessages:[self storedMessages]];
     }
-    else {
-        
-        if (self.totalMessagesCount == 0)
-            [SVProgressHUD showWithStatus:@"Refreshing..." maskType:SVProgressHUDMaskTypeClear];
-    }
     
-    [self refreshMessagesShowingProgress:NO];
-    
-    if (self.dialog.type != QBChatDialogTypePrivate) {
-        self.title = self.dialog.name;
-    }
+    [self refreshMessagesShowingProgress:self.totalMessagesCount == 0 ? YES : NO];
     
     [[QMApi instance].settingsManager setDialogWithIDisActive:self.dialog.ID];
     
@@ -236,8 +227,6 @@ AGEmojiKeyboardViewDelegate
     
     [super viewWillDisappear:animated];
     
-    [[QMApi instance].chatService removeDelegate:self];
-    [[QMApi instance].contactListService removeDelegate:self];
     self.actionsHandler = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self.observerDidEnterBackground];
     
@@ -272,7 +261,6 @@ AGEmojiKeyboardViewDelegate
 
 - (void)configureNavigationBarForGroupChat {
     
-    self.title = self.dialog.name;
     UIButton *groupInfoButton = [QMChatButtonsFactory groupInfo];
     [groupInfoButton addTarget:self action:@selector(groupInfoNavButtonAction) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *groupInfoBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:groupInfoButton];
