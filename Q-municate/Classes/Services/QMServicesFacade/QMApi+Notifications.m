@@ -8,8 +8,9 @@
 
 #import "QMApi.h"
 #import "QMChatUtils.h"
+#import "MPGNotification.h"
+#import <SDWebImageManager.h>
 #import <QMChatService+AttachmentService.h>
-
 
 @implementation QMApi (Notifications)
 
@@ -144,6 +145,57 @@
         
         return nil;
     }];
+}
+
+#pragma mark - Alerts
+
+- (void)showMessageBarNotificationWithMessage:(QBChatMessage *)message chatDialog:(QBChatDialog *)chatDialog completionBlock:(MPGNotificationButtonHandler)block
+{
+    UIImage *img = nil;
+    NSString *title = @"";
+    
+    if (chatDialog.type ==  QBChatDialogTypeGroup) {
+        
+        img = [self imageForKey:chatDialog.photo withPlaceHolder:[UIImage imageNamed:@"upic_placeholder_details_group"]];
+        title = chatDialog.name;
+    }
+    else if (chatDialog.type == QBChatDialogTypePrivate) {
+        
+        QBUUser *user = [self userWithID:message.senderID];
+        
+        title = user.fullName;
+        img = [self imageForKey:user.avatarUrl withPlaceHolder:[UIImage imageNamed:@"upic_placeholderr"]];
+    }
+    
+    NSString *messageText = nil;
+    if (message.isNotificatonMessage) {
+        messageText = [QMChatUtils messageTextForNotification:message];
+    }
+    else {
+        messageText = message.encodedText;
+    }
+    
+    if (self.messageNotification != nil) {
+        
+        [self.messageNotification dismissWithAnimation:NO];
+    }
+    
+    self.messageNotification = [MPGNotification notificationWithTitle:title subtitle:messageText backgroundColor:[UIColor colorWithRed:0.32 green:0.33 blue:0.34 alpha:0.86] iconImage:img];
+    [self.messageNotification setButtonConfiguration:MPGNotificationButtonConfigrationOneButton withButtonTitles:@[@"Reply"]];
+    self.messageNotification.duration = 2.0;
+    
+    self.messageNotification.buttonHandler = block;
+    [self.messageNotification show];
+}
+
+- (UIImage *)imageForKey:(NSString *)key withPlaceHolder:(UIImage *)placeHolder{
+    
+    UIImage *image = [[[SDWebImageManager sharedManager] imageCache] imageFromDiskCacheForKey:key];
+    if (image == nil) {
+        image = placeHolder;
+    }
+    
+    return image;
 }
 
 @end

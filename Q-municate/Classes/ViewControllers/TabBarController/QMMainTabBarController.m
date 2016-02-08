@@ -11,7 +11,6 @@
 #import "QMApi.h"
 #import "QMImageView.h"
 #import "MPGNotification.h"
-#import "QMMessageBarStyleSheetFactory.h"
 #import "QMChatVC.h"
 #import "QMSoundManager.h"
 #import "QMSettingsManager.h"
@@ -150,7 +149,8 @@
     [QMSoundManager playMessageReceivedSound];
     
     __weak __typeof(self)weakSelf = self;
-    [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
+    [[QMApi instance] showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
+        
         if (buttonIndex == 1) {
             if (![[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) {
                 UINavigationController *navigationController = (UINavigationController *)[weakSelf selectedViewController];

@@ -7,11 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MPGNotification.h>
 
 @class QMSettingsManager;
 @class QMAVCallManager;
 @class QMContentService;
 @class Reachability;
+@class MPGNotification;
 
 @protocol FBSDKAppInviteDialogDelegate;
 
@@ -59,6 +61,8 @@ typedef void(^QBDialogsPagedResponseBlock)(QBResponse *response, NSArray *dialog
  *  Push notification dictionary
  */
 @property (nonatomic, strong) NSDictionary *pushNotification;
+
+@property (nonatomic, strong) MPGNotification *messageNotification;
 
 /**
  *  QMApi class shared instance
@@ -178,6 +182,8 @@ typedef void(^QBDialogsPagedResponseBlock)(QBResponse *response, NSArray *dialog
  *  Handle push notification method
  */
 - (void)handlePushNotificationWithDelegate:(id<QMNotificationHandlerDelegate>)delegate;
+
+- (void)showMessageBarNotificationWithMessage:(QBChatMessage *)message chatDialog:(QBChatDialog *)chatDialog completionBlock:(MPGNotificationButtonHandler)block;
 
 @end
 
