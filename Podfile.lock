@@ -76,7 +76,7 @@ PODS:
     - QMCVDevelopment/Protocols
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (~> 1.13)
-  - QMServicesDevelopment (0.3.5):
+  - QMServicesDevelopment (0.3.6):
     - Bolts (= 1.5.0)
   - Reachability (3.2)
   - SDWebImage (3.7.5):
@@ -121,7 +121,7 @@ CHECKOUT OPTIONS:
     :commit: 74f5c78fca84f947c2b9d67a12fb4892e8576e30
     :git: https://github.com/QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: 97073569bcbe045d4cd910e1d5a7a6e7464aed02
+    :commit: 1d97d0643bae72f5602e46bce6141ca64c518113
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
@@ -136,7 +136,7 @@ SPEC CHECKSUMS:
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   QMCVDevelopment: 3e9e615f02bf3a7cb87801729f512a484d61c9b8
-  QMServicesDevelopment: 60e7e5309fba6a28f586c92091aa08296ee8e061
+  QMServicesDevelopment: 3424ab8cd83c4d17c2aeff2b51da617a0b70e39c
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 69c6303e3348fba97e03f65d65d4fbc26740f461
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
