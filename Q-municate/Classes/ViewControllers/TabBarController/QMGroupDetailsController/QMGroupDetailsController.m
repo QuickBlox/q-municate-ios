@@ -29,8 +29,6 @@
 
 @property (strong, nonatomic) QMGroupDetailsDataSource *dataSource;
 
-@property (nonatomic, assign) BOOL shouldNotUnsubFromServices;
-
 @end
 
 @implementation QMGroupDetailsController
@@ -72,7 +70,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.shouldNotUnsubFromServices = NO;
 
     [[QMApi instance].contactListService addDelegate:self];
     [[QMApi instance].chatService addDelegate:self];
@@ -82,11 +79,6 @@
     
     [self.view endEditing:YES];
     [super viewWillDisappear:animated];
-    
-    if (!self.shouldNotUnsubFromServices) {
-        [[QMApi instance].contactListService removeDelegate:self];
-        [[QMApi instance].chatService removeDelegate:self];
-    }
 }
 
 - (IBAction)changeDialogName:(id)sender {
@@ -196,7 +188,6 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if ([segue.identifier isEqualToString:kQMAddMembersToGroupControllerSegue]) {
-        self.shouldNotUnsubFromServices = YES;
         
         QMAddMembersToGroupController *addMembersVC = segue.destinationViewController;
         addMembersVC.chatDialog = self.chatDialog;
