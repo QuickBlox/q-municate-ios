@@ -17,8 +17,9 @@
 
 const NSTimeInterval kQMPresenceTime = 30;
 
-static NSString *const kQMErrorKey         = @"errors";
-static NSString *const kQMErrorEmailKey    = @"email";
+static NSString *const kQMErrorKey = @"errors";
+static NSString *const kQMBaseKey = @"base";
+static NSString *const kQMErrorEmailKey = @"email";
 static NSString *const kQMErrorFullNameKey = @"full_name";
 static NSString *const kQMErrorPasswordKey = @"password";
 
@@ -224,12 +225,19 @@ static NSString *const kQMErrorPasswordKey = @"password";
     
     NSString *errorMessage = [[NSString alloc] init];
     
+    id errorReasons = response.error.reasons[kQMErrorKey];
+    
     if (self.isAuthorized) {
-        errorMessage = [self errorStringFromResponseStatus:response.status];
+        
+        if ([errorReasons isKindOfClass:[NSDictionary class]] && errorReasons[kQMBaseKey] != nil) {
+            
+            errorMessage = [errorReasons[kQMBaseKey] firstObject];
+        } else {
+            
+            errorMessage = [self errorStringFromResponseStatus:response.status];
+        }
     }
     else {
-        
-        id errorReasons = response.error.reasons[kQMErrorKey];
         
         if ([errorReasons isKindOfClass:[NSDictionary class]]) {
             //
