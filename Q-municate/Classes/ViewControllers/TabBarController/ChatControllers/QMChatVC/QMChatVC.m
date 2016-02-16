@@ -61,13 +61,10 @@ AGEmojiKeyboardViewDelegate
 @property (nonatomic, strong) UIButton *emojiButton;
 
 @property (nonatomic, strong) NSMutableSet *detailedCells;
-@property (assign, nonatomic, readonly) BOOL isAppear;
 
 @end
 
 @implementation QMChatVC
-
-@dynamic isAppear;
 
 @synthesize pickerController = _pickerController;
 
@@ -80,11 +77,6 @@ AGEmojiKeyboardViewDelegate
     return _pickerController;
 }
 
-- (BOOL)isAppear {
-    
-    return self.isViewLoaded && self.view.window;
-}
-
 #pragma mark - Override
 
 - (NSUInteger)senderID
@@ -95,10 +87,6 @@ AGEmojiKeyboardViewDelegate
 - (NSString *)senderDisplayName
 {
     return [QMApi instance].currentUser.fullName;
-}
-
-- (NSTimeInterval)timeIntervalBetweenSections {
-    return 300.0f;
 }
 
 - (CGFloat)heightForSectionHeader {
