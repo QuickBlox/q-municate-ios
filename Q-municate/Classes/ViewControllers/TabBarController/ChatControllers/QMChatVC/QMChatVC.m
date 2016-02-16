@@ -520,7 +520,12 @@ AGEmojiKeyboardViewDelegate
         }
     }
     
-    NSDictionary *attributes = @{ NSForegroundColorAttributeName:[UIColor colorWithRed:0 green:122.0f / 255.0f blue:1.0f alpha:1.000], NSFontAttributeName:font};
+    // setting the paragraph style lineBreakMode to NSLineBreakByTruncatingTail in order to TTTAttributedLabel cut the line in a correct way
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+    NSDictionary *attributes = @{ NSForegroundColorAttributeName:[UIColor colorWithRed:0 green:122.0f / 255.0f blue:1.0f alpha:1.000], NSFontAttributeName:font,
+                                  NSParagraphStyleAttributeName: paragraphStyle};
+    
     NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:topLabelText attributes:attributes];
     
     return attrStr;
@@ -567,10 +572,16 @@ AGEmojiKeyboardViewDelegate
                                          limitedToNumberOfLines:3];
     } else {
         NSAttributedString *attributedString = [self attributedStringForItem:item];
+        NSAttributedString *topLabelAttributedString = [self topLabelAttributedStringForItem:item];
         
-        size = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
-                                                withConstraints:CGSizeMake(maxWidth, CGFLOAT_MAX)
-                                         limitedToNumberOfLines:0];
+        CGSize attributedStringSize = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
+                                                                       withConstraints:CGSizeMake(maxWidth, CGFLOAT_MAX)
+                                                                limitedToNumberOfLines:0];
+        CGSize topLabelAttributedStringSize = [TTTAttributedLabel sizeThatFitsAttributedString:topLabelAttributedString
+                                                                               withConstraints:CGSizeMake(maxWidth, CGFLOAT_MAX)
+                                                                        limitedToNumberOfLines:1];
+        
+        size = attributedStringSize.width > topLabelAttributedStringSize.width ? attributedStringSize : topLabelAttributedStringSize;
     }
     
     return size;
@@ -592,7 +603,7 @@ AGEmojiKeyboardViewDelegate
         
         CGSize topLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:[self topLabelAttributedStringForItem:item]
                                                                withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - widthPadding, CGFLOAT_MAX)
-                                                        limitedToNumberOfLines:0];
+                                                        limitedToNumberOfLines:1];
         
         if (topLabelSize.width > size.width) {
             size = topLabelSize;
