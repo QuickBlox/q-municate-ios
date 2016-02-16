@@ -560,16 +560,10 @@ AGEmojiKeyboardViewDelegate
                                          limitedToNumberOfLines:3];
     } else {
         NSAttributedString *attributedString = [self attributedStringForItem:item];
-        NSAttributedString *topLabelAttributedString = [self topLabelAttributedStringForItem:item];
         
-        CGSize attributedStringSize = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
+        size = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
                                                                        withConstraints:CGSizeMake(maxWidth, CGFLOAT_MAX)
                                                                 limitedToNumberOfLines:0];
-        CGSize topLabelAttributedStringSize = [TTTAttributedLabel sizeThatFitsAttributedString:topLabelAttributedString
-                                                                               withConstraints:CGSizeMake(maxWidth, CGFLOAT_MAX)
-                                                                        limitedToNumberOfLines:1];
-        
-        size = attributedStringSize.width > topLabelAttributedStringSize.width ? attributedStringSize : topLabelAttributedStringSize;
     }
     
     return size;
@@ -649,6 +643,7 @@ AGEmojiKeyboardViewDelegate
     QMChatCellLayoutModel layoutModel = [super collectionView:collectionView layoutModelAtIndexPath:indexPath];
     
     layoutModel.topLabelHeight = 0.0f;
+    layoutModel.maxWidthMarginSpace = 20.0f;
     
     QBChatMessage *item = [self.chatSectionManager messageForIndexPath:indexPath];
     Class class = [self viewClassForItem:item];
