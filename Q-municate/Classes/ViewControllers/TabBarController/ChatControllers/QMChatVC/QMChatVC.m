@@ -605,7 +605,13 @@ AGEmojiKeyboardViewDelegate
 - (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
 {
     Class viewClass = [self viewClassForItem:[self.chatSectionManager messageForIndexPath:indexPath]];
-    if (viewClass == [QMChatAttachmentIncomingCell class] || viewClass == [QMChatAttachmentOutgoingCell class]) return NO;
+    if (viewClass == [QMChatAttachmentIncomingCell class]
+        || viewClass == [QMChatAttachmentOutgoingCell class]
+        || viewClass == [QMChatNotificationCell class]
+        || viewClass == [QMChatContactRequestCell class]){
+        
+        return NO;
+    }
     
     return [super collectionView:collectionView canPerformAction:action forItemAtIndexPath:indexPath withSender:sender];
 }
