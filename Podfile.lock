@@ -96,7 +96,7 @@ DEPENDENCIES:
   - IDMPhotoBrowser (~> 1.3.5)
   - libextobjc/EXTScope (~> 0.4.1)
   - MPGNotification (~> 1.1)
-  - QMCVDevelopment (from `https://github.com/QuickBlox/QMChatViewController-ios.git`,
+  - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`,
     branch `development`)
   - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`,
     branch `development`)
@@ -111,15 +111,15 @@ DEPENDENCIES:
 EXTERNAL SOURCES:
   QMCVDevelopment:
     :branch: development
-    :git: https://github.com/QuickBlox/QMChatViewController-ios.git
+    :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
     :branch: development
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
-    :commit: 74f5c78fca84f947c2b9d67a12fb4892e8576e30
-    :git: https://github.com/QuickBlox/QMChatViewController-ios.git
+    :commit: 8ca2fe90dd21b7e77557370273fcd3e7b5188812
+    :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
     :commit: 1d97d0643bae72f5602e46bce6141ca64c518113
     :git: git@github.com:QuickBlox/q-municate-services-ios.git

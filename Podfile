@@ -25,5 +25,5 @@ pod 'FBSDKLoginKit', '~> 4.7.0'
 #For development pods
 #pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
 #pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
-pod 'QMCVDevelopment', :git => 'https://github.com/QuickBlox/QMChatViewController-ios.git', :branch => 'feature/QBIOSSDK-684'
-pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'feature/QMUN-1625'
+pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'development'
+pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'development'

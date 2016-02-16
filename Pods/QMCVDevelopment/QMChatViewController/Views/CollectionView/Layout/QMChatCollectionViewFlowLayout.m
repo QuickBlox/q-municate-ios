@@ -259,7 +259,7 @@
         CGFloat minWidth = [self.chatCollectionView.delegate collectionView:self.chatCollectionView minWidthAtIndexPath:indexPath];
         minWidth += horizontalContainerInsets;
         
-        finalSize = CGSizeMake(MAX(finalWidth, minWidth), finalCellHeight);
+        finalSize = CGSizeMake(MIN(MAX(finalWidth, minWidth), maximumWidth), finalCellHeight);
     }
     else {
         
