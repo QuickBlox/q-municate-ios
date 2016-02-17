@@ -55,12 +55,13 @@ AGEmojiKeyboardViewDelegate
 @property (nonatomic, strong) NSMapTable* attachmentCells;
 @property (nonatomic, readonly) UIImagePickerController* pickerController;
 @property (nonatomic, strong) NSTimer* typingTimer;
-@property (nonatomic, strong) id observerDidEnterBackground;
+@property (nonatomic, strong) id observerWillResignActive;
 
 @property (nonatomic, strong) NSArray* unreadMessages;
 @property (nonatomic, strong) UIButton *emojiButton;
 
 @property (nonatomic, strong) NSMutableSet *detailedCells;
+@property (nonatomic, assign) BOOL isOpponentTyping;
 
 @end
 
@@ -129,15 +130,22 @@ AGEmojiKeyboardViewDelegate
         @weakify(self);
         [self.dialog setOnUserIsTyping:^(NSUInteger userID) {
             @strongify(self);
-            if ([QBSession currentSession].currentUser.ID == userID) {
+            if (self.currentUser.ID == userID) {
                 return;
             }
+            
+            self.isOpponentTyping = YES;
             self.onlineTitle.statusLabel.text = NSLocalizedString(@"QM_STR_TYPING", nil);
         }];
         
         // Handling user stopped typing.
         [self.dialog setOnUserStoppedTyping:^(NSUInteger userID) {
             @strongify(self);
+            if (self.currentUser.ID == userID) {
+                return;
+            }
+            
+            self.isOpponentTyping = NO;
             [self updateTitleInfoForPrivateDialog];
         }];
     }
@@ -198,13 +206,13 @@ AGEmojiKeyboardViewDelegate
     
     self.actionsHandler = self; // contact request delegate
     
-    __weak __typeof(self) weakSelf = self;
-    
-    self.observerDidEnterBackground = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidEnterBackgroundNotification
+    @weakify(self);
+    self.observerWillResignActive = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillResignActiveNotification
                                                                                         object:nil
                                                                                          queue:nil
                                                                                     usingBlock:^(NSNotification *note) {
-                                                                                        [weakSelf fireStopTypingIfNecessary];
+                                                                                        @strongify(self);
+                                                                                        [self fireStopTypingIfNecessary];
                                                                                     }];
 }
 
@@ -215,7 +223,7 @@ AGEmojiKeyboardViewDelegate
     [super viewWillDisappear:animated];
     
     self.actionsHandler = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self.observerDidEnterBackground];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.observerWillResignActive];
     
     // Deletes typing blocks.
     [self.dialog clearTypingStatusBlocks];
@@ -880,8 +888,13 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark - UITextViewDelegate
 
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
-{
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    
+    if (![QBChat instance].isConnected) {
+        
+        return YES;
+    }
+    
     if (self.typingTimer) {
         [self.typingTimer invalidate];
         self.typingTimer = nil;
@@ -894,8 +907,7 @@ AGEmojiKeyboardViewDelegate
     return YES;
 }
 
-- (void)textViewDidEndEditing:(UITextView *)textView
-{
+- (void)textViewDidEndEditing:(UITextView *)textView {
     [super textViewDidEndEditing:textView];
     
     [self fireStopTypingIfNecessary];
@@ -960,7 +972,7 @@ AGEmojiKeyboardViewDelegate
 
 - (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
     if (self.dialog.type == QBChatDialogTypePrivate) {
-        if (self.opponentUser.ID == userID) {
+        if (self.opponentUser.ID == userID && !self.isOpponentTyping) {
             self.onlineTitle.statusLabel.text = NSLocalizedString(isOnline ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
         }
     }
