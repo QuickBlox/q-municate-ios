@@ -971,14 +971,15 @@ AGEmojiKeyboardViewDelegate
 - (void)chatContactRequestDidAccept:(BOOL)accept sender:(id)sender {
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     if (accept) {
+        
+        NSIndexPath *indexPath = [self.collectionView indexPathForCell:sender];
+        QBChatMessage *crMessage = [self.chatSectionManager messageForIndexPath:indexPath];
+        
         [[QMApi instance] confirmAddContactRequest:self.opponentUser completion:^(BOOL success) {
             //
             [SVProgressHUD dismiss];
-            NSIndexPath *indexPath = [self.collectionView indexPathForCell:sender];
-            QBChatMessage *crMessage = [self.chatSectionManager messageForIndexPath:indexPath];
             
-            [self.collectionView.collectionViewLayout removeSizeFromCacheForItemID:crMessage.ID];
-            [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+            [self.chatSectionManager updateMessage:crMessage];
         }];
     }
     else {
