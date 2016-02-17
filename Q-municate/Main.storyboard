@@ -2915,16 +2915,6 @@ Cg
                                                         <constraint firstAttribute="width" constant="50" id="kdP-gQ-xSe"/>
                                                     </constraints>
                                                 </imageView>
-                                                <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Leonore Cantly" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yB2-C3-nCB">
-                                                    <rect key="frame" x="65" y="11" width="247" height="21"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="21" id="1lu-Oh-wey"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                                 <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Online" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="73o-h7-0EW">
                                                     <rect key="frame" x="65" y="31" width="247" height="17"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2955,6 +2945,16 @@ Cg
                                                         <constraint firstAttribute="width" constant="12" id="Qyk-zm-kgc"/>
                                                     </constraints>
                                                 </imageView>
+                                                <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Leonore Cantly" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h5o-CZ-ryI">
+                                                    <rect key="frame" x="65" y="11" width="219" height="21"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="21" id="Ij3-eB-sCY"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="73o-h7-0EW" secondAttribute="trailing" constant="8" id="549-a4-ydZ"/>
@@ -2964,11 +2964,11 @@ Cg
                                                 <constraint firstAttribute="trailing" secondItem="3i0-1u-TMr" secondAttribute="trailing" constant="16" id="M5i-nH-WQq"/>
                                                 <constraint firstAttribute="trailing" secondItem="s5q-cV-dQM" secondAttribute="trailing" id="TrI-9N-c4Z"/>
                                                 <constraint firstItem="s5q-cV-dQM" firstAttribute="top" secondItem="P0Y-Yc-ydR" secondAttribute="top" id="VFW-zx-VqT"/>
+                                                <constraint firstItem="h5o-CZ-ryI" firstAttribute="top" secondItem="P0Y-Yc-ydR" secondAttribute="topMargin" constant="3" id="aW7-7h-RpD"/>
                                                 <constraint firstItem="73o-h7-0EW" firstAttribute="leading" secondItem="WbY-wV-ozV" secondAttribute="trailing" constant="8" id="f7R-iI-Jab"/>
                                                 <constraint firstItem="73o-h7-0EW" firstAttribute="top" secondItem="P0Y-Yc-ydR" secondAttribute="topMargin" constant="23" id="gdA-Ph-v6f"/>
-                                                <constraint firstItem="yB2-C3-nCB" firstAttribute="leading" secondItem="WbY-wV-ozV" secondAttribute="trailing" constant="8" id="jUm-gF-oTM"/>
-                                                <constraint firstItem="yB2-C3-nCB" firstAttribute="top" secondItem="P0Y-Yc-ydR" secondAttribute="top" constant="11" id="toh-d1-9HD"/>
-                                                <constraint firstAttribute="trailing" secondItem="yB2-C3-nCB" secondAttribute="trailing" constant="8" id="vPP-L8-86a"/>
+                                                <constraint firstItem="h5o-CZ-ryI" firstAttribute="leading" secondItem="WbY-wV-ozV" secondAttribute="trailing" constant="8" id="nbl-KF-QbT"/>
+                                                <constraint firstItem="s5q-cV-dQM" firstAttribute="leading" secondItem="h5o-CZ-ryI" secondAttribute="trailing" constant="-7" id="vhL-aD-oBv"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
@@ -2976,7 +2976,7 @@ Cg
                                             <outlet property="descriptionLabel" destination="73o-h7-0EW" id="PE6-Rg-7dP"/>
                                             <outlet property="onlineCircle" destination="3i0-1u-TMr" id="akQ-A2-nxX"/>
                                             <outlet property="qmImageView" destination="WbY-wV-ozV" id="UgM-1N-eMn"/>
-                                            <outlet property="titleLabel" destination="yB2-C3-nCB" id="Xcn-UH-zxb"/>
+                                            <outlet property="titleLabel" destination="h5o-CZ-ryI" id="RkX-F4-qhB"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="QMLeaveChatCell" rowHeight="50" id="MhM-fH-ms1">
