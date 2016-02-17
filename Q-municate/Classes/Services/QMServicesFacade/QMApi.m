@@ -240,24 +240,31 @@ static NSString *const kQMErrorPasswordKey = @"password";
     else {
         
         if ([errorReasons isKindOfClass:[NSDictionary class]]) {
-            //
-            if (errorReasons[kQMErrorEmailKey]) {
+            
+            if (errorReasons[kQMBaseKey] != nil) {
                 
-                NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_EMAIL_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorEmailKey]]];
-                errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
-                
+                errorMessage = [errorReasons[kQMBaseKey] firstObject];
             }
-            if (errorReasons[kQMErrorFullNameKey]) {
+            else {
                 
-                NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FULL_NAME_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorFullNameKey]]];
-                errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
-                
-            }
-            if (errorReasons[kQMErrorPasswordKey]) {
-                
-                NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_PASSWORD_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorPasswordKey]]];
-                errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
-                
+                if (errorReasons[kQMErrorEmailKey]) {
+                    
+                    NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_EMAIL_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorEmailKey]]];
+                    errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
+                    
+                }
+                if (errorReasons[kQMErrorFullNameKey]) {
+                    
+                    NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FULL_NAME_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorFullNameKey]]];
+                    errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
+                    
+                }
+                if (errorReasons[kQMErrorPasswordKey]) {
+                    
+                    NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_PASSWORD_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorPasswordKey]]];
+                    errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
+                    
+                }
             }
         }
         else {
