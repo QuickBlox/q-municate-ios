@@ -888,11 +888,11 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark - UITextViewDelegate
 
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+- (void)sendIsTypingStatus {
     
     if (![QBChat instance].isConnected) {
         
-        return YES;
+        return;
     }
     
     if (self.typingTimer) {
@@ -903,6 +903,11 @@ AGEmojiKeyboardViewDelegate
     }
     
     self.typingTimer = [NSTimer scheduledTimerWithTimeInterval:4.0 target:self selector:@selector(fireStopTypingIfNecessary) userInfo:nil repeats:NO];
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    
+    [self sendIsTypingStatus];
     
     return YES;
 }
@@ -1145,6 +1150,7 @@ AGEmojiKeyboardViewDelegate
 
 - (void)emojiKeyBoardView:(AGEmojiKeyboardView *)emojiKeyBoardView didUseEmoji:(NSString *)emoji {
     
+    [self sendIsTypingStatus];
     NSString *textViewString = self.inputToolbar.contentView.textView.text;
     self.inputToolbar.contentView.textView.text = [textViewString stringByAppendingString:emoji];
     [self textViewDidChange:self.inputToolbar.contentView.textView];
