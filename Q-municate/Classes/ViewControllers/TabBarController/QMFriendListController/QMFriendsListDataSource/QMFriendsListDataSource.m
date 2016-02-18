@@ -89,12 +89,15 @@ QMContactListServiceDelegate
 - (void)reloadDataSource {
     
     self.friendList = [QMApi instance].friends;
-    if (self.viewIsShowed) {
-        [self.tableView reloadData];
-    }
+    
     if (self.searchDisplayController.isActive) {
+        
         self.currentPage = 1;
         [self globalSearch];
+    }
+    else {
+        
+        [self.tableView reloadData];
     }
 }
 
