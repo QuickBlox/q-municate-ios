@@ -601,8 +601,8 @@ Line 2</string>
                                     <constraint firstItem="3we-Wv-Zwb" firstAttribute="leading" secondItem="iL5-ll-gB7" secondAttribute="trailing" constant="29" id="y1N-bz-IDt"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="James Cobs" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L9T-tY-3Kn">
-                                <rect key="frame" x="201" y="20" width="99" height="30"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="James Cobs" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L9T-tY-3Kn">
+                                <rect key="frame" x="99" y="20" width="201" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="xt7-88-Szq"/>
                                 </constraints>
@@ -625,6 +625,7 @@ Line 2</string>
                             <constraint firstItem="YzX-7u-vU5" firstAttribute="bottom" secondItem="NRI-TI-qDt" secondAttribute="bottom" id="2er-IP-Wm3"/>
                             <constraint firstItem="YzX-7u-vU5" firstAttribute="leading" secondItem="NRI-TI-qDt" secondAttribute="leading" id="75p-hb-Ria"/>
                             <constraint firstItem="Ibe-fV-PIq" firstAttribute="leading" secondItem="NRI-TI-qDt" secondAttribute="leading" constant="16" id="Gbd-vd-nJJ"/>
+                            <constraint firstItem="L9T-tY-3Kn" firstAttribute="leading" secondItem="Jpk-1n-2Z9" secondAttribute="trailing" constant="8" id="JU8-TN-2ys"/>
                             <constraint firstItem="DLm-F5-tEq" firstAttribute="trailing" secondItem="L9T-tY-3Kn" secondAttribute="trailing" constant="0.5" id="KQj-Fq-w4E"/>
                             <constraint firstAttribute="trailingMargin" secondItem="L9T-tY-3Kn" secondAttribute="trailing" constant="4.5" id="Mbl-nV-hmL"/>
                             <constraint firstItem="xKx-9a-k2a" firstAttribute="top" secondItem="NRI-TI-qDt" secondAttribute="top" constant="80" id="S9q-8l-cxI"/>
