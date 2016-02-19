@@ -38,7 +38,7 @@
         image = [UIImage imageNamed:@"upic-placeholder"];
     }
     
-    [self.qmImageView sd_setImage:image withKey:key];
+    [self.qmImageView setImage:image withKey:key];
 }
 
 @end

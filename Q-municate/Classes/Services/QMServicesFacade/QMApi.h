@@ -7,11 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MPGNotification.h>
 
 @class QMSettingsManager;
 @class QMAVCallManager;
 @class QMContentService;
 @class Reachability;
+@class MPGNotification;
 
 @protocol FBSDKAppInviteDialogDelegate;
 
@@ -19,7 +21,6 @@ typedef NS_ENUM(NSInteger, QMAccountType);
 
 /*** Completion blocks ***/
 typedef void(^QBDialogsPagedResponseBlock)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, QBResponsePage *page);
-typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *updatedDialog);
 
 /**
  *  Q-municate services manager
@@ -60,6 +61,8 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  *  Push notification dictionary
  */
 @property (nonatomic, strong) NSDictionary *pushNotification;
+
+@property (nonatomic, strong) MPGNotification *messageNotification;
 
 /**
  *  QMApi class shared instance
@@ -180,6 +183,8 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  */
 - (void)handlePushNotificationWithDelegate:(id<QMNotificationHandlerDelegate>)delegate;
 
+- (void)showMessageBarNotificationWithMessage:(QBChatMessage *)message chatDialog:(QBChatDialog *)chatDialog completionBlock:(MPGNotificationButtonHandler)block;
+
 @end
 
 
@@ -233,27 +238,11 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
 - (QBChatDialog *)chatDialogWithID:(NSString *)dialogID;
 
 /**
- *  Fetching all dialogs for current user.
+ *  Fetching all dialogs for current user and all users in dialogs.
  *
  *  @param completion   completion block
  */
-- (void)fetchAllDialogs:(void(^)(void))completion;
-
-/**
- *  Fetching dialog with requested ID and retrieving its users.
- *
- *  @param dialogID     id of dialog to return
- *  @param completion   completion block with QBChatDialog instance with requested id
- */
-- (void)fetchChatDialogWithID:(NSString *)dialogID completion:(void(^)(QBChatDialog *chatDialog))completion;
-
-/**
- *  Deleting dialog.
- *
- *  @param dialog       QBChatDialog instance to delete
- *  @param completion   completion block with success status
- */
-- (void)deleteChatDialog:(QBChatDialog *)dialog completion:(void(^)(BOOL success))completionHandler;
+- (void)fetchAllData:(void(^)(void))completion;
 
 /**
  *  Creating group chat.
@@ -263,14 +252,6 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  *  @oaram completion   completion block with created QBChatDialog instance
  */
 - (void)createGroupChatDialogWithName:(NSString *)name occupants:(NSArray *)occupants completion:(void(^)(QBChatDialog *chatDialog))completion;
-
-/**
- *  Creating private dialog.
- *
- *  @param opponent     QBUUser instance of user to chat with
- *  @param completion   completion block with created QBChatDialog instance
- */
-- (void)createPrivateChatDialogIfNeededWithOpponent:(QBUUser *)opponent completion:(void(^)(QBChatDialog *chatDialog))completion;
 
 /**
  *  Leaving group chat.
@@ -285,27 +266,27 @@ typedef void(^QBChatDialogResponseBlock)(QBResponse *response, QBChatDialog *upd
  *
  *  @param occupants    array of QBUUser instances of users to add to group chat
  *  @param chatDialog   QBChatDialog instance of group chat to add users to
- *  @param completion   completion with QBChatDialogResponseBlock block
+ *  @param completion   completion block with updated dialog
  */
-- (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion;
+- (void)joinOccupants:(NSArray *)occupants toChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(QBChatDialog *updatedDialog))completion;
 
 /**
  *  Changing group chat name.
  *
  *  @param dialogName   new group chat name
  *  @param chatDialog   QBChatDialog instance of chat to update
- *  @param completion   completion with QBChatDialogResponseBlock block
+ *  @param completion   completion block with updated dialog
  */
-- (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion;
+- (void)changeChatName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(QBChatDialog *updatedDialog))completion;
 
 /**
  *  Changing group chat avatar.
  *
  *  @param avatar       UIImage instance of avatar to update
  *  @param chatDialog   QBChatDialog instance of dialog to update
- *  @param completion   completion with QBChatDialogResponseBlock block
+ *  @param completion   completion block with updated dialog
  */
-- (void)changeAvatar:(UIImage *)avatar forChatDialog:(QBChatDialog *)chatDialog completion:(QBChatDialogResponseBlock)completion;
+- (void)changeAvatar:(UIImage *)avatar forChatDialog:(QBChatDialog *)chatDialog completion:(void(^)(QBChatDialog *updatedDialog))completion;
 
 /**
  *  Opponent id in private dialog.

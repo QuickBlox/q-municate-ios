@@ -11,7 +11,6 @@
 #import "QMApi.h"
 #import "QMImageView.h"
 #import "MPGNotification.h"
-#import "QMMessageBarStyleSheetFactory.h"
 #import "QMChatVC.h"
 #import "QMSoundManager.h"
 #import "QMSettingsManager.h"
@@ -44,7 +43,7 @@
     
     [self customizeTabBar];
     [self.navigationController setNavigationBarHidden:YES animated:NO];
-
+    
     __weak __typeof(self)weakSelf = self;
     
     [[QMApi instance] autoLogin:^(BOOL success) {
@@ -73,7 +72,7 @@
 - (void)connectToChat
 {
     [[QMApi instance] connectChat:^(BOOL loginSuccess) {
-
+        
         QBUUser *usr = [QMApi instance].currentUser;
         if (!usr.isImport) {
             self.importGroup = dispatch_group_create();
@@ -87,7 +86,7 @@
                 //
                 dispatch_group_leave(self.importGroup);
             }];
-        
+            
             dispatch_group_notify(self.importGroup, dispatch_get_main_queue(), ^{
                 //
                 usr.isImport = YES;
@@ -107,7 +106,7 @@
             }
         }
         
-        [[QMApi instance] fetchAllDialogs:nil];
+        [[QMApi instance] fetchAllData:nil];
     }];
 }
 
@@ -119,29 +118,6 @@
     
     UIColor *white = [UIColor whiteColor];
     [[UITabBarItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : white} forState:UIControlStateNormal];
-    
-//    UITabBar *tabBar = self.tabBarController.tabBar;
-//    tabBar.tintColor = white;
-    
-    UIImage *chatImg = [[UIImage imageNamed:@"tb_chat"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    UITabBarItem *firstTab = self.tabBar.items[0];
-    firstTab.image = chatImg;
-    firstTab.selectedImage = chatImg;
-    
-    UIImage *friendsImg = [[UIImage imageNamed:@"tb_friends"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    UITabBarItem *chatTab = self.tabBar.items[1];
-    chatTab.image = friendsImg;
-    chatTab.selectedImage = friendsImg;
-    
-    UIImage *inviteImg = [[UIImage imageNamed:@"tb_invite"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    UITabBarItem *inviteTab = self.tabBar.items[2];
-    inviteTab.image = inviteImg;
-    inviteTab.selectedImage = inviteImg;
-    
-    UIImage *settingsImg = [[UIImage imageNamed:@"tb_settings"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    UITabBarItem *fourthTab = self.tabBar.items[3];
-    fourthTab.image = settingsImg;
-    fourthTab.selectedImage = settingsImg; 
     
     // selection image:
     UIImage *tabSelectionImage = nil;
@@ -161,7 +137,7 @@
 - (void)showNotificationForMessage:(QBChatMessage *)message inDialogID:(NSString *)dialogID
 {
     if ([[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) return;
-
+    
     QBChatDialog* dialog = [[QMApi instance].chatService.dialogsMemoryStorage chatDialogWithID:dialogID];
     if (dialog == nil) {
         dialog = message.dialog;
@@ -173,7 +149,8 @@
     [QMSoundManager playMessageReceivedSound];
     
     __weak __typeof(self)weakSelf = self;
-    [QMMessageBarStyleSheetFactory showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
+    [[QMApi instance] showMessageBarNotificationWithMessage:message chatDialog:dialog completionBlock:^(MPGNotification *notification, NSInteger buttonIndex) {
+        
         if (buttonIndex == 1) {
             if (![[QMApi instance].settingsManager.dialogWithIDisActive isEqualToString:dialogID]) {
                 UINavigationController *navigationController = (UINavigationController *)[weakSelf selectedViewController];
@@ -214,18 +191,6 @@
     [SVProgressHUD showErrorWithStatus:@"Dialog was not found"];
 }
 
-#pragma mark - QMTabBarDelegate
-
-- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
-{
-    UITabBarItem *neededTab = tabBar.items[1];
-    if ([item isEqual:neededTab]) {
-        if ([self.tabDelegate respondsToSelector:@selector(friendsListTabWasTapped:)]) {
-            [self.tabDelegate friendsListTabWasTapped:item];
-        }
-    }
-}
-
 #pragma mark - QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
@@ -260,13 +225,6 @@
 {
     if ([[QMApi instance] isInternetConnected]) {
         [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription]];
-    }
-}
-
-- (void)chatServiceChatDidFailWithStreamError:(NSError *)error
-{
-    if ([[QMApi instance] isInternetConnected]) {
-        [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_STREAM_ERROR", nil), error.localizedDescription]];
     }
 }
 

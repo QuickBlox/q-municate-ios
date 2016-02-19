@@ -134,17 +134,17 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
-        __weak typeof(self)weakSelf = self;
-        
         [SVProgressHUD show];
         QBChatDialog *dialog = [self dialogAtIndexPath:indexPath];
-        [[QMApi instance] deleteChatDialog:dialog completion:^(BOOL success) {
-            
+        
+        @weakify(self);
+        [[[QMApi instance].chatService deleteDialogWithID:dialog.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+            @strongify(self);
             [SVProgressHUD dismiss];
-            (weakSelf.dialogs.count == 0) ?
-                [tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade] :
-                [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-
+            (self.dialogs.count == 0) ?
+            [tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade] :
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            return nil;
         }];
     }
 }
@@ -167,6 +167,10 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 }
 
 - (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
+    [self updateGUI];
+}
+
+- (void)chatService:(QMChatService *)chatService didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)dialogs {
     [self updateGUI];
 }
 

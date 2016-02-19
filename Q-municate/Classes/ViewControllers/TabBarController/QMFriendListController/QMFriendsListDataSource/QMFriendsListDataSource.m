@@ -14,8 +14,10 @@
 #import "QMUsersUtils.h"
 #import "SVProgressHud.h"
 #import "REAlertView.h"
+#import "REAlertView+QMSuccess.h"
 
-static const NSUInteger kQMUsersPageLimit = 50;
+static const NSUInteger kQMUsersPageLimit       = 50;
+static const NSUInteger kQMGlobalSearchCharsMin = 3;
 
 @interface QMFriendsListDataSource()
 <
@@ -87,44 +89,47 @@ QMContactListServiceDelegate
 - (void)reloadDataSource {
     
     self.friendList = [QMApi instance].friends;
-    if (self.viewIsShowed) {
-        [self.tableView reloadData];
-    }
+    
     if (self.searchDisplayController.isActive) {
+        
         self.currentPage = 1;
         [self globalSearch];
+    }
+    else {
+        
+        [self.tableView reloadData];
     }
 }
 
 - (void)globalSearch
 {
-    if (self.searchDisplayController.searchBar.text.length == 0) {
+    if (self.searchDisplayController.searchBar.text.length < kQMGlobalSearchCharsMin) {
         [self.searchResult removeAllObjects];
         [self.searchDisplayController.searchResultsTableView reloadData];
         return;
     }
     
-    __weak __typeof(self)weakSelf = self;
+    @weakify(self);
     void (^userResponseBlock)(NSArray *users) = ^void(NSArray *users) {
-        
+        @strongify(self);
         if ([users count] < kQMUsersPageLimit) {
-            weakSelf.shouldLoadMore = NO;
+            self.shouldLoadMore = NO;
         } else {
-            weakSelf.shouldLoadMore = YES;
+            self.shouldLoadMore = YES;
         }
         
         NSArray *sortedUsers = [QMUsersUtils sortUsersByFullname:users];
         
-        NSMutableArray *filteredUsers = [QMUsersUtils filteredUsers:sortedUsers withFlterArray:[weakSelf.friendList arrayByAddingObject:[QMApi instance].currentUser]];
+        NSMutableArray *filteredUsers = [QMUsersUtils filteredUsers:sortedUsers withFlterArray:[self.friendList arrayByAddingObject:[QMApi instance].currentUser]];
         
-        if (weakSelf.currentPage > 1) {
-            [weakSelf.searchResult addObjectsFromArray:filteredUsers];
+        if (self.currentPage > 1) {
+            [self.searchResult addObjectsFromArray:filteredUsers];
         } else {
-            weakSelf.searchResult = filteredUsers;
+            self.searchResult = filteredUsers;
         }
         
-        [weakSelf.searchDisplayController.searchResultsTableView reloadData];
-
+        [self.searchDisplayController.searchResultsTableView reloadData];
+        
         [SVProgressHUD dismiss];
     };
     
@@ -241,6 +246,11 @@ QMContactListServiceDelegate
 
 - (void)usersListCell:(QMFriendListCell *)cell pressAddBtn:(UIButton *)sender {
     
+    if (![QMApi instance].isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
+    
     NSIndexPath *indexPath = [self.searchDisplayController.searchResultsTableView indexPathForCell:cell];
     NSArray *datasource = [self usersAtSections:indexPath.section];
     QBUUser *user = datasource[indexPath.row];
@@ -251,11 +261,22 @@ QMContactListServiceDelegate
         [self.searchResult removeObject:user];
     }
     
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     BOOL isContactRequest = [[QMApi instance] isContactRequestUserWithID:user.ID];
     if (isContactRequest) {
-        [[QMApi instance] confirmAddContactRequest:user completion:nil];
+        [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success) {
+            
+            if (success) {
+                [SVProgressHUD showSuccessWithStatus:nil];
+            }
+        }];
     } else {
-        [[QMApi instance] addUserToContactList:user completion:nil];
+        [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {
+            
+            if (success) {
+                [SVProgressHUD showSuccessWithStatus:nil];
+            }
+        }];
     }
 }
 
@@ -284,11 +305,11 @@ QMContactListServiceDelegate
 
 #pragma mark Contact List Serice Delegate
 
-- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
+- (void)contactListServiceDidLoadCache {
     [self updateView];
 }
 
-- (void)contactListService:(QMContactListService *)contactListService didUpdateUser:(QBUUser *)user {
+- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
     [self updateView];
 }
 

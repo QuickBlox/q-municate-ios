@@ -21,7 +21,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.btnMic.enabled = NO;
     [[QBRTCClient instance] addDelegate:self];
     
     self.btnSpeaker.userInteractionEnabled = NO;

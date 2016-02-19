@@ -29,8 +29,6 @@
 
 @property (strong, nonatomic) QMGroupDetailsDataSource *dataSource;
 
-@property (nonatomic, assign) BOOL shouldNotUnsubFromServices;
-
 @end
 
 @implementation QMGroupDetailsController
@@ -45,8 +43,7 @@
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(changeGroupAvatar:)];
     [self.groupAvatarView addGestureRecognizer:tap];
-    self.groupAvatarView.layer.cornerRadius = self.groupAvatarView.frame.size.width / 2;
-    self.groupAvatarView.layer.masksToBounds = YES;
+    self.groupAvatarView.imageViewType = QMImageViewTypeCircle;
     
     self.dataSource = [[QMGroupDetailsDataSource alloc] initWithTableView:self.tableView];
     [self updateGUIWithChatDialog:self.chatDialog];
@@ -73,7 +70,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.shouldNotUnsubFromServices = NO;
 
     [[QMApi instance].contactListService addDelegate:self];
     [[QMApi instance].chatService addDelegate:self];
@@ -83,17 +79,13 @@
     
     [self.view endEditing:YES];
     [super viewWillDisappear:animated];
-    
-    if (!self.shouldNotUnsubFromServices) {
-        [[QMApi instance].contactListService removeDelegate:self];
-        [[QMApi instance].chatService removeDelegate:self];
-    }
 }
 
 - (IBAction)changeDialogName:(id)sender {
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [[QMApi instance] changeChatName:self.groupNameField.text forChatDialog:self.chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+    
+    [[QMApi instance] changeChatName:self.groupNameField.text forChatDialog:self.chatDialog completion:^(QBChatDialog *updatedDialog) {
         //
         [SVProgressHUD dismiss];
     }];
@@ -106,10 +98,10 @@
     [QMImagePicker chooseSourceTypeInVC:self allowsEditing:YES result:^(UIImage *image) {
         __typeof(weakSelf)strongSelf = weakSelf;
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-        [[QMApi instance] changeAvatar:image forChatDialog:strongSelf.chatDialog completion:^(QBResponse *response, QBChatDialog *updatedDialog) {
+        [[QMApi instance] changeAvatar:image forChatDialog:strongSelf.chatDialog completion:^(QBChatDialog *updatedDialog) {
             //
-            if (response.success) {
-                [strongSelf.groupAvatarView sd_setImage:image withKey:updatedDialog.photo];
+            if (updatedDialog != nil) {
+                [strongSelf.groupAvatarView setImage:image withKey:updatedDialog.photo];
             }
             [SVProgressHUD dismiss];
         }];
@@ -196,7 +188,6 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if ([segue.identifier isEqualToString:kQMAddMembersToGroupControllerSegue]) {
-        self.shouldNotUnsubFromServices = YES;
         
         QMAddMembersToGroupController *addMembersVC = segue.destinationViewController;
         addMembersVC.chatDialog = self.chatDialog;

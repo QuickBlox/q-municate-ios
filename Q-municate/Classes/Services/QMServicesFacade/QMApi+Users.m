@@ -17,60 +17,63 @@
 
 - (void)addUserToContactList:(QBUUser *)user completion:(void(^)(BOOL success, QBChatMessage *notification))completion {
     
-    __weak typeof(self) weakSelf = self;
-    [self.contactListService addUserToContactListRequest:user completion:^(BOOL success) {
+    @weakify(self);
+    [[[self.contactListService addUserToContactListRequest:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        @strongify(self);
+        return [self.chatService createPrivateChatDialogWithOpponent:user];
+    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         //
-        [weakSelf createPrivateChatDialogIfNeededWithOpponent:user completion:^(QBChatDialog *chatDialog) {
-            [weakSelf sendContactRequestSendNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
-                
-                if (completion) completion(success, notification);
-            }];
+        @strongify(self);
+        [self sendContactRequestSendNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
+            
+            if (completion) completion(!task.isFaulted, notification);
         }];
+        return nil;
     }];
 }
 
 - (void)removeUserFromContactList:(QBUUser *)user completion:(void(^)(BOOL success, QBChatMessage *notification))completion {
     
-    __weak typeof(self) weakSelf = self;
-    [self.contactListService removeUserFromContactListWithUserID:user.ID completion:^(BOOL success) {
-        //
-        
-        [weakSelf sendContactRequestDeleteNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
-            // delete chat dialog:
-            QBChatDialog *dialog = [weakSelf.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
-            [weakSelf deleteChatDialog:dialog completion:^(BOOL succeed) {
-                if (!succeed) {
-                    if (completion) completion(succeed, nil);
-                    return;
-                }
-                if (completion) completion(success, notification);
+    @weakify(self);
+    [[self.contactListService removeUserFromContactListWithUserID:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        @strongify(self);
+        QBChatDialog *dialog = [self.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
+        [self sendContactRequestDeleteNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
+            
+            [[self.chatService deleteDialogWithID:dialog.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull deleteTask) {
+                
+                if (completion) completion(!task.isFaulted, notification);
+                return nil;
             }];
         }];
-
+        
+        return nil;
     }];
 }
 
 - (void)confirmAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
-    __weak __typeof(self)weakSelf = self;
-    [self.contactListService acceptContactRequest:user.ID completion:^(BOOL success) {
+    @weakify(self);
+    [[[self.contactListService acceptContactRequest:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        @strongify(self);
+        return [self.chatService sendMessageAboutAcceptingContactRequest:YES toOpponentID:user.ID];
+    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         //
-        [weakSelf.chatService sendMessageAboutAcceptingContactRequest:YES toOpponentID:user.ID completion:^(NSError * _Nullable error) {
-            //
-            if (completion) completion(error == nil ? YES : NO);
-        }];
+        if (completion) completion(task.isFaulted ? NO : YES);
+        return nil;
     }];
 }
 
 - (void)rejectAddContactRequest:(QBUUser *)user completion:(void(^)(BOOL success))completion {
     
-    __weak __typeof(self)weakSelf = self;
-    [self.contactListService rejectContactRequest:user.ID completion:^(BOOL success) {
+    @weakify(self);
+    [[[self.contactListService rejectContactRequest:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        @strongify(self);
+        return [self.chatService sendMessageAboutAcceptingContactRequest:NO toOpponentID:user.ID];
+    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         //
-        [weakSelf.chatService sendMessageAboutAcceptingContactRequest:NO toOpponentID:user.ID completion:^(NSError * _Nullable error) {
-            //
-            if (completion) completion(error == nil ? YES : NO);
-        }];
+        if (completion) completion(task.isFaulted ? NO : YES);
+        return nil;
     }];
 }
 
@@ -123,7 +126,7 @@
     
     for (QBContactListItem *item in [QBChat instance].contactList.pendingApproval) {
         
-        if (item.subscriptionState == QBPresenseSubscriptionStateFrom) {
+        if (item.subscriptionState == QBPresenceSubscriptionStateFrom) {
             [IDs addObject:@(item.userID)];
         }
     }
@@ -154,7 +157,7 @@
 
 - (BOOL)userIDIsInPendingList:(NSUInteger)userID {
     QBContactListItem *contactlistItem = [self.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
-    if (contactlistItem.subscriptionState != QBPresenseSubscriptionStateNone) {
+    if (contactlistItem.subscriptionState != QBPresenceSubscriptionStateNone) {
         return NO;
     }
     return YES;

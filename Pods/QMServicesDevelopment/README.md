@@ -20,7 +20,9 @@
 	- [Fetching users](#fetching-users)
 	- [Subclass of QMServicesManager example](#qmservices-example)
 	- [QMAuthService](#qmauthservice)
+		- [QMAuthService + Bolts](#qmauthservice--bolts)
 	- [QMChatService](#qmauthservice)
+		- [QMChatService + Bolts](#qmchatservice--bolts)
 		- [QMDialogsMemoryStorage](#qmdialogsmemorystorage)
 		- [QMMessagesMemoryStorage](#qmmessagesmemorystorage)
 		- [QMChatAttachmentService](#qmchatattachmentservice)
@@ -43,16 +45,19 @@ Easy-to-use services for Quickblox SDK, for speeding up development of iOS chat 
 * High level API for Chat features including authentication service for logging to Quickblox REST and XMPP
 * Inbox persistent storage for messages, dialogs and users
 * Inbox memory storage for messages, dialogs and users
+* Bolts version of all methods. See [Bolts-iOS](https://github.com/BoltsFramework/Bolts-iOS "Bolts-iOS"") for more information.
 
 # Requirements
 
 - Xcode 6+
 - ARC
-- Quickblox SDK 2.5+
+- Quickblox iOS SDK
+- Bolts-iOS
 
 # Dependencies
 
-- Quickblox SDK 2.5+
+- [Quickblox](https://github.com/QuickBlox/quickblox-ios-sdk 'Quickblox iOS SDK') SDK 2.5+
+- [Bolts](https://github.com/BoltsFramework/Bolts-iOS 'Bolts-iOS') 1.5.0+
 
 # Installation
 
@@ -62,34 +67,43 @@ There are several ways to add **QMServices** to your project. They are described
 
 You can install **QMServices** using Cocoapods just by adding following line in your Podfile:
 
+```
 pod 'QMServices'
+```
 
 ## 2. Using an Xcode subproject
 
 Xcode sub-projects allow your project to use and build QMServices as an implicit dependency.
 
 Add QMServices to your project as a Git submodule:
+
 ```
 $ cd MyXcodeProjectFolder
 $ git submodule add https://github.com/QuickBlox/q-municate-services-ios.git Vendor/QMServices
-$ git commit -m "Add QMServices submodule"
+$ git commit -m "Added QMServices submodule"
 ```
-Drag `Vendor/QMServices/QMServices ` into your existing Xcode project.
+
+This will add QMServices as a submodule and download Bolts as dependency.
+Drag `Vendor/QMServices/QMServices.xcodeproj ` into your existing Xcode project.
 
 Navigate to your project's settings, then select the target you wish to add QMServices to.
 
 Navigate to **Build Settings**, then search for **Header Search Paths** and double-click it to edit
 
-Add a new item using **+**: `"$(SRCROOT)/Vendor/QMServices/QMServices"` and ensure that it is set to *recursive*
+Add a new item using **+**: `"$(SRCROOT)/Vendor/QMServices"` and ensure that it is set to *recursive*
 
 Navigate to **Build Settings**, then search for **Framework Search Paths** and double-click it to edit
 
-> ** NOTE**: By default, the Quickblox framework is set to `~/Documents/Quickblox`.
-> To change the path to Quickblox.framework, you need to open Quickblox.xcconfig file and replace `~/Documents/Quickblox` with your path to the Quickblox.framework.
+Add a new item using **+**: `"$(SRCROOT)/Vendor/QMServices/Frameworks"`
+
+> ** NOTE**: By default, *QMServices* subprojects reference Quickblox and Bolts frameworks at `../Frameworks`.
+> To change the path, you need to open Quickblox.xcconfig file and replace `../Frameworks` with your path to the Quickblox.framework and Bolts.framework.
 
 > ** NOTE** Please be aware that if you've set Xcode's **Link Frameworks Automatically** to **No** then you may need to add the Quickblox.framework, CoreData.framework to your project on iOS, as UIKit does not include Core Data by default. On OS X, Cocoa includes Core Data.
 
-Remember, that you have to link *QMServices* in **Target Dependencies** and in **Link Binary with Libraries**.
+Now navigate to QMServices.xcodeproj subproject, open **Build Settings**, search for **Framework Search Paths** and locate Quickblox and Bolts frameworks folder there.
+Remember, that you have to link *QMServices* in **Target Dependencies** and *libQMServices.a* in **Link Binary with Libraries**.
+Don't forget to add Quickblox and Bolts frameworks to your project.
 
 ### Bundle generation
 **NOTE:** You can skip this step if you do not use dialogs, messages and users memory and disc storage.
@@ -578,6 +592,42 @@ Logout user from Quickblox.
 
 ```
 
+### QMAuthService + Bolts 
+
+QMAuthService also has all methods implemented using BFTasks.
+
+Sign up user and log's in to Quickblox using Bolts.
+
+```objective-c
+
+- (BFTask *)signUpAndLoginWithUser:(QBUUser *)user;
+
+```
+
+Login user to Quickblox using Bolts.
+
+```objective-c
+
+- (BFTask *)loginWithUser:(QBUUser *)user;
+
+```
+
+Login with facebook session token using Bolts.
+
+```objective-c
+
+- (BFTask *)loginWithFacebookSessionToken:(NSString *)sessionToken;
+
+```
+
+Logout user from Quickblox using Bolts.
+
+```objective-c
+
+- (BFTask *)logout;
+
+```
+
 ## QMChatService
 
 This class is responsible for operation with messages and dialogs.
@@ -855,6 +905,218 @@ Send read status for messages and update unreadMessageCount for dialog in storag
 ```objective-c
 
 - (void)readMessages:(NSArray<QBChatMessage *> *)messages forDialogID:(NSString *)dialogID completion:(QBChatCompletionBlock)completion;
+
+```
+
+### QMChatService + Bolts 
+
+QMChatService also has all methods implemented using BFTasks.
+
+Connect user to Quickblox chat using Bolts.
+
+```objective-c
+
+- (BFTask *)connect;
+
+```
+
+Disconnect user from Quickblox chat using Bolts.
+
+```objective-c
+
+- (BFTask *)disconnect;
+
+```
+
+Join user to group dialog using Bolts.
+
+```objective-c
+
+- (BFTask *)joinToGroupDialog:(QBChatDialog *)dialog;
+
+```
+
+Create group chat dialog with occupants on Quickblox using Bolts.
+
+```objective-c
+
+- (BFTask *)createGroupChatDialogWithName:(NSString *)name photo:(NSString *)photo occupants:(NSArray *)occupants;
+
+```
+
+Create private chat dialog with opponent on Quickblox using Bolts.
+
+```objective-c
+
+- (BFTask *)createPrivateChatDialogWithOpponent:(QBUUser *)opponent;
+
+```
+
+Change dialog name using Bolts.
+
+```objective-c
+
+- (BFTask *)changeDialogName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog;
+
+```
+
+Change dialog avatar using Bolts.
+
+```objective-c
+
+- (BFTask *)changeDialogAvatar:(NSString *)avatarPublicUrl forChatDialog:(QBChatDialog *)chatDialog;
+
+```
+
+Add occupants to dialog using Bolts.
+
+``` objective-c
+
+- (BFTask *)joinOccupantsWithIDs:(NSArray *)ids toChatDialog:(QBChatDialog *)chatDialog;
+
+```
+
+Deletes dialog on service and in cache using Bolts.
+
+```objective-c
+
+- (BFTask *)deleteDialogWithID:(NSString *)dialogID;
+
+```
+
+Recursively fetch all dialogs from Quickblox using Bolts.
+
+```objective-c
+
+- (BFTask *)allDialogsWithPageLimit:(NSUInteger)limit
+                    extendedRequest:(NSDictionary *)extendedRequest
+                     iterationBlock:(void(^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop))interationBlock;
+
+```
+
+Send system message to users about adding to dialog with dialog inside using Bolts.
+
+```objective-c
+
+- (BFTask *)sendSystemMessageAboutAddingToDialog:(QBChatDialog *)chatDialog
+                                      toUsersIDs:(NSArray *)usersIDs;
+
+```
+
+Send message about accepting or rejecting contact requst using Bolts.
+
+```objective-c
+
+- (BFTask *)sendMessageAboutAcceptingContactRequest:(BOOL)accept
+                                       toOpponentID:(NSUInteger)opponentID;
+
+```
+
+Sending notification message about adding occupants to specific dialog using Bolts.
+
+```objective-c
+
+- (BFTask *)sendNotificationMessageAboutAddingOccupants:(NSArray *)occupantsIDs
+                                               toDialog:(QBChatDialog *)chatDialog
+                                   withNotificationText:(NSString *)notificationText;
+                                         
+```
+
+Sending notification message about leaving dialog using Bolts.
+
+```objective-c
+
+- (BFTask *)sendNotificationMessageAboutLeavingDialog:(QBChatDialog *)chatDialog
+                                 withNotificationText:(NSString *)notificationText;
+                                         
+```
+
+Sending notification message about changing dialog photo using Bolts.
+
+```objective-c
+
+- (BFTask *)sendNotificationMessageAboutChangingDialogPhoto:(QBChatDialog *)chatDialog
+                                       withNotificationText:(NSString *)notificationText;
+                                         
+```
+
+Sending notification message about changing dialog name using Bolts.
+
+```objective-c
+
+- (BFTask *)sendNotificationMessageAboutChangingDialogName:(QBChatDialog *)chatDialog
+                                      withNotificationText:(NSString *)notificationText;
+                                         
+```
+
+Fetches messages with chat dialog ID using Bolts.
+
+```objective-c
+
+- (BFTask *)messagesWithChatDialogID:(NSString *)chatDialogID;
+
+```
+
+Fetch dialog with dialog identifier using Bolts.
+
+```objective-c
+
+- (BFTask *)fetchDialogWithID:(NSString *)dialogID;
+
+```
+
+Load dialog with dialog identifier from Quickblox server and save to local storage using Bolts.
+
+```objective-c
+
+- (BFTask *)loadDialogWithID:(NSString *)dialogID;
+
+```
+
+Fetch dialogs updated from date using Bolts.
+
+```objective-c
+
+- (BFTask *)fetchDialogsUpdatedFromDate:(NSDate *)date
+                           andPageLimit:(NSUInteger)limit
+                         iterationBlock:(void(^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop))iteration;
+
+```
+
+Send message to dialog using Bolts.
+
+```objective-c
+
+- (BFTask *)sendMessage:(QBChatMessage *)message
+               toDialog:(QBChatDialog *)dialog
+          saveToHistory:(BOOL)saveToHistory
+          saveToStorage:(BOOL)saveToStorage;
+
+```
+
+Send attachment message to dialog using Bolts.
+
+```objective-c
+
+- (BFTask *)sendAttachmentMessage:(QBChatMessage *)attachmentMessage
+                         toDialog:(QBChatDialog *)dialog
+              withAttachmentImage:(UIImage *)image;
+
+```
+
+Mark message as delivered using Bolts.
+
+```objective-c
+
+- (BFTask *)markMessageAsDelivered:(QBChatMessage *)message;
+
+```
+
+Send read status for message and update unreadMessageCount for dialog in storage using Bolts.
+
+```objective-c
+
+- (BFTask *)readMessage:(QBChatMessage *)message;
 
 ```
 

@@ -132,6 +132,21 @@ QMContactListServiceDelegate
     }
 }
 
+- (BOOL)isCallAllowed {
+    
+    if (![QMApi instance].isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return NO;
+    }
+    
+    if( ![[QMApi instance] isFriend:self.selectedUser] || [[QMApi instance] userIDIsInPendingList:self.selectedUser.ID] ) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
+        return NO;
+    }
+    
+    return YES;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -142,19 +157,13 @@ QMContactListServiceDelegate
 #if QM_AUDIO_VIDEO_ENABLED
         case QMCallTypeVideo:{
             
-            if( ![[QMApi instance] isFriend:self.selectedUser] || [[QMApi instance] userIDIsInPendingList:self.selectedUser.ID] ) {
-                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
-            }
-            else{
+            if ([self isCallAllowed]) {
                 [[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBRTCConferenceTypeVideo];
             }
         }
             break;
         case QMCallTypeAudio: {
-            if( ![[QMApi instance] isFriend:self.selectedUser] || [[QMApi instance] userIDIsInPendingList:self.selectedUser.ID] ) {
-                [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO];
-            }
-            else{
+            if([self isCallAllowed]) {
                 [[QMApi instance] callToUser:@(self.selectedUser.ID) conferenceType:QBRTCConferenceTypeAudio];
             }
         }
@@ -165,12 +174,17 @@ QMContactListServiceDelegate
 #endif
             __weak __typeof(self)weakSelf = self;
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-            [[QMApi instance] createPrivateChatDialogIfNeededWithOpponent:self.selectedUser completion:^(QBChatDialog *chatDialog) {
-                
-                if (chatDialog) {
-                    [weakSelf performSegueWithIdentifier:kChatViewSegueIdentifier sender:chatDialog];
+            
+            [[[QMApi instance].chatService createPrivateChatDialogWithOpponent:self.selectedUser] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+                //
+                if (task.error != nil) {
+                    [SVProgressHUD showErrorWithStatus:task.error.localizedRecoverySuggestion];
+                } else {
+                    [weakSelf performSegueWithIdentifier:kChatViewSegueIdentifier sender:task.result];
+                    [SVProgressHUD dismiss];
                 }
-                [SVProgressHUD dismiss];
+                
+                return nil;
             }];
             
         } break;

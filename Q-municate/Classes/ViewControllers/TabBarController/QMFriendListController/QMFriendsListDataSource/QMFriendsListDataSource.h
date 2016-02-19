@@ -17,11 +17,11 @@ static NSString *const kQMDontHaveAnyFriendsCellIdentifier = @"QMDontHaveAnyFrie
 
 @interface QMFriendsListDataSource : NSObject <UITableViewDataSource, UISearchDisplayDelegate, QMUsersListDelegate>
 
-@property (nonatomic, assign) BOOL viewIsShowed;
 @property (weak, nonatomic) id <QMFriendsListDataSourceDelegate> delegate;
 
 - (instancetype)initWithTableView:(UITableView *)tableView searchDisplayController:(UISearchDisplayController *)searchDisplayController;
 - (NSArray *)usersAtSections:(NSInteger)section;
 - (QBUUser *)userAtIndexPath:(NSIndexPath *)indexPath;
+- (void)reloadDataSource;
 
 @end

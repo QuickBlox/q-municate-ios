@@ -11,6 +11,11 @@
 
 @implementation QMAudioCallController
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.btnMic.enabled = NO;
+}
+
 #pragma mark - Overridden methods
 
 - (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID{

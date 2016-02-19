@@ -240,11 +240,12 @@
         
         CGFloat horizontalInsetsTotal = horizontalContainerInsets + spacingBetweenAvatarAndBubble;
         
-        CGFloat maximumWidth = self.itemWidth - layoutModel.avatarSize.width - horizontalInsetsTotal;
+        CGFloat maximumWidth = self.itemWidth - layoutModel.avatarSize.width - layoutModel.maxWidthMarginSpace;
+        NSAssert(maximumWidth >= 0, @"Maximum width cannot be a negative nuber. Please check your maxWidthMarginSpace value.");
         
         CGSize dynamicSize = [self.chatCollectionView.delegate collectionView:self.chatCollectionView
                                                        dynamicSizeAtIndexPath:indexPath
-                                                                     maxWidth:maximumWidth];
+                                                                     maxWidth:maximumWidth - horizontalInsetsTotal];
         CGFloat verticalContainerInsets =
         layoutModel.containerInsets.top + layoutModel.containerInsets.bottom +
         layoutModel.topLabelHeight + layoutModel.bottomLabelHeight;
@@ -254,12 +255,12 @@
         CGFloat finalWidth = dynamicSize.width + horizontalInsetsTotal;
         
         CGFloat cellHeight = dynamicSize.height + verticalContainerInsets + additionalSpace;
-        CGFloat finalCellHeigh = MAX(cellHeight, layoutModel.avatarSize.height);
+        CGFloat finalCellHeight = MAX(cellHeight, layoutModel.avatarSize.height);
         
-        CGFloat minWidht = [self.chatCollectionView.delegate collectionView:self.chatCollectionView minWidthAtIndexPath:indexPath];
-        minWidht+=horizontalContainerInsets;
+        CGFloat minWidth = [self.chatCollectionView.delegate collectionView:self.chatCollectionView minWidthAtIndexPath:indexPath];
+        minWidth += horizontalContainerInsets;
         
-        finalSize = CGSizeMake(MAX(finalWidth, minWidht), finalCellHeigh);
+        finalSize = CGSizeMake(MIN(MAX(finalWidth, minWidth), maximumWidth), finalCellHeight);
     }
     else {
         

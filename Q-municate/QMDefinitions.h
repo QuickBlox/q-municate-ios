@@ -58,14 +58,18 @@ static NSString *const kGroupDetailsSegueIdentifier         = @"GroupDetailsSegu
 static NSString *const kQMAddMembersToGroupControllerSegue  = @"QMAddMembersToGroupControllerSegue";
 static NSString *const kSettingsCellBundleVersion           = @"CFBundleVersion";
 
+static NSString *const kStopVideoChatCallStatus_OpponentDidNotAnswer = @"kStopVideoChatCallStatus_OpponentDidNotAnswer";
+static NSString *const kStopVideoChatCallStatus_Manually = @"kStopVideoChatCallStatus_Manually";
+static NSString *const kStopVideoChatCallStatus_Cancel = @"kStopVideoChatCallStatus_Cancel";
+static NSString *const kStopVideoChatCallStatus_BadConnection = @"kStopVideoChatCallStatus_BadConnection";
+
 //******************** USER DEFAULTS KEYS ********************
 static NSString *const kMailSubjectString                   = @"Q-municate";
 static NSString *const kMailBodyString                      = @"<a href='http://quickblox.com/'>Join us in Q-municate!</a>";
 
-//******************** PUSH NOTIFICATIONS ********************
+//******************** NOTIFICATIONS ********************
 static NSString *const kPushNotificationDialogIDKey         = @"dialog_id";
-
-//***************** GROUP CHAT NOTIFICATIONS *****************
 static NSString *const kDialogsUpdateNotificationMessage    = @"Notification message";
+static NSString *const kUsersLoadingFinishedNotifications   = @"kUsersLoadingFinishedNotifications";
 
 #endif
