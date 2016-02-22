@@ -94,7 +94,6 @@
 		58CEA1C91BB595C700B866DD /* QMAVCallManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CEA1C81BB595C700B866DD /* QMAVCallManager.m */; };
 		58D1CED91BC668DD00591EA9 /* QMViewControllersFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D1CED81BC668DD00591EA9 /* QMViewControllersFactory.m */; };
 		58D81C231BBA86920046B550 /* QuickbloxWebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D81C221BBA86920046B550 /* QuickbloxWebRTC.framework */; };
-		69007BD319B6193900E3A925 /* QMNoResultsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 69007BD219B6193900E3A925 /* QMNoResultsCell.xib */; };
 		690A271518CA0F35003D6B80 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A271418CA0F35003D6B80 /* AddressBook.framework */; };
 		693206EA1962BCC300B15EF9 /* QMBaseCallsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 693206E91962BCC300B15EF9 /* QMBaseCallsController.m */; };
 		693206EE1962C0F600B15EF9 /* QMAudioCallController.m in Sources */ = {isa = PBXBuildFile; fileRef = 693206ED1962C0F600B15EF9 /* QMAudioCallController.m */; };
@@ -313,7 +312,6 @@
 		58D81C221BBA86920046B550 /* QuickbloxWebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickbloxWebRTC.framework; path = External/QuickbloxWebRTC.framework; sourceTree = "<group>"; };
 		58F437691BBC21810041C08D /* QMProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMProtocols.h; sourceTree = "<group>"; };
 		67976AC8FFE848A4B85EB2AF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		69007BD219B6193900E3A925 /* QMNoResultsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = QMNoResultsCell.xib; path = QMNoResultsCell/QMNoResultsCell.xib; sourceTree = "<group>"; };
 		690A271418CA0F35003D6B80 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		693206E81962BCC300B15EF9 /* QMBaseCallsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMBaseCallsController.h; sourceTree = "<group>"; };
 		693206E91962BCC300B15EF9 /* QMBaseCallsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMBaseCallsController.m; sourceTree = "<group>"; };
@@ -980,7 +978,6 @@
 		55F4A3B3196FF0830068EBC3 /* QMCells */ = {
 			isa = PBXGroup;
 			children = (
-				69007BD119B6190A00E3A925 /* QMNoResultsCell */,
 				55F4A3D3197021580068EBC3 /* QMCheckBoxProtocol.h */,
 				55F4A3C0196FF0830068EBC3 /* QMTableViewCell */,
 				55F4A3B4196FF0830068EBC3 /* QMChatListCell */,
@@ -1064,14 +1061,6 @@
 				58CEA1C21BB591A200B866DD /* QMChatButtonsFactory.m */,
 			);
 			name = QMChatButtonsFactory;
-			sourceTree = "<group>";
-		};
-		69007BD119B6190A00E3A925 /* QMNoResultsCell */ = {
-			isa = PBXGroup;
-			children = (
-				69007BD219B6193900E3A925 /* QMNoResultsCell.xib */,
-			);
-			name = QMNoResultsCell;
 			sourceTree = "<group>";
 		};
 		693206EB1962C0B500B15EF9 /* QMAudioCallController */ = {
@@ -1344,7 +1333,6 @@
 				55943A491A1A137200A0A09E /* Main.storyboard in Resources */,
 				55A8B0711965986A00B5D33B /* end_of_call.wav in Resources */,
 				14D834631AB06F5A00300266 /* AVCalls.xcassets in Resources */,
-				69007BD319B6193900E3A925 /* QMNoResultsCell.xib in Resources */,
 				69D57E6818ACC11C00A9900A /* Images.xcassets in Resources */,
 				55286996199131B5006F92CB /* Localizable.strings in Resources */,
 				55A8B0721965986A00B5D33B /* received.wav in Resources */,

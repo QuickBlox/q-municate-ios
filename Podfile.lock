@@ -47,36 +47,36 @@ PODS:
     - libextobjc/RuntimeExtensions
   - libextobjc/RuntimeExtensions (0.4.1)
   - MPGNotification (1.2.4)
-  - QMCVDevelopment (0.3.3):
-    - QMCVDevelopment/Categories (= 0.3.3)
-    - QMCVDevelopment/KeyboardViewController (= 0.3.3)
-    - QMCVDevelopment/Protocols (= 0.3.3)
-    - QMCVDevelopment/QMChatSection (= 0.3.3)
-    - QMCVDevelopment/Utils (= 0.3.3)
-    - QMCVDevelopment/Views (= 0.3.3)
+  - QMCVDevelopment (0.3.4):
+    - QMCVDevelopment/Categories (= 0.3.4)
+    - QMCVDevelopment/KeyboardViewController (= 0.3.4)
+    - QMCVDevelopment/Protocols (= 0.3.4)
+    - QMCVDevelopment/QMChatSection (= 0.3.4)
+    - QMCVDevelopment/Utils (= 0.3.4)
+    - QMCVDevelopment/Views (= 0.3.4)
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (~> 1.13)
-  - QMCVDevelopment/Categories (0.3.3):
+  - QMCVDevelopment/Categories (0.3.4):
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (~> 1.13)
-  - QMCVDevelopment/KeyboardViewController (0.3.3):
+  - QMCVDevelopment/KeyboardViewController (0.3.4):
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (~> 1.13)
-  - QMCVDevelopment/Protocols (0.3.3):
+  - QMCVDevelopment/Protocols (0.3.4):
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (~> 1.13)
-  - QMCVDevelopment/QMChatSection (0.3.3):
+  - QMCVDevelopment/QMChatSection (0.3.4):
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (~> 1.13)
-  - QMCVDevelopment/Utils (0.3.3):
+  - QMCVDevelopment/Utils (0.3.4):
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (~> 1.13)
-  - QMCVDevelopment/Views (0.3.3):
+  - QMCVDevelopment/Views (0.3.4):
     - QMCVDevelopment/Categories
     - QMCVDevelopment/Protocols
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (~> 1.13)
-  - QMServicesDevelopment (0.3.6):
+  - QMServicesDevelopment (0.3.7):
     - Bolts (= 1.5.0)
   - Reachability (3.2)
   - SDWebImage (3.7.5):
@@ -118,10 +118,10 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
-    :commit: 97aa68251ed46f4230bbb4075a1abc1f22d1001f
+    :commit: 8fc15b89f11fb289fb149bd1b5bec842444640fc
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: f1cac0834b5d452f579e7541b013af4adcb99c0c
+    :commit: b35e99c08dd36dd3b74fa945bd24fa9941f348fe
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
@@ -135,8 +135,8 @@ SPEC CHECKSUMS:
   IDMPhotoBrowser: 6699a8d8b6c036a60c58ba7c281b2f5761d970ac
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
-  QMCVDevelopment: 3e9e615f02bf3a7cb87801729f512a484d61c9b8
-  QMServicesDevelopment: 3424ab8cd83c4d17c2aeff2b51da617a0b70e39c
+  QMCVDevelopment: 7588e2e2b02d41f12cb2b34c4f708d698200e6cc
+  QMServicesDevelopment: 7e90fd5b370463384214b8064cce3edcc7007c2a
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 69c6303e3348fba97e03f65d65d4fbc26740f461
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d

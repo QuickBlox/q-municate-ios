@@ -86,7 +86,6 @@
     return [self.dataSource tableView:tableView cellForRowAtIndexPath:indexPath];
 }
 
-
 #pragma mark - UISearchDisplayDelegate
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
