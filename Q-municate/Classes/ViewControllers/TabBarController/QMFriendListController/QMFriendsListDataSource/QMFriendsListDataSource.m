@@ -87,14 +87,12 @@ QMContactListServiceDelegate
     
     self.friendList = [QMApi instance].friends;
     
+    [self.tableView reloadData];
+    
     if (self.searchDisplayController.isActive) {
         
         self.currentPage = 1;
         [self globalSearch];
-    }
-    else {
-        
-        [self.tableView reloadData];
     }
 }
 
@@ -288,13 +286,15 @@ QMContactListServiceDelegate
     return NO;
 }
 
-- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
-{
+- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
+    
+    [self.tableView setDataSource:nil];
     [self reloadDataSource];
 }
 
-- (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller
-{
+- (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
+    
+    [self.tableView setDataSource:self];
     [self reloadDataSource];
 }
 
