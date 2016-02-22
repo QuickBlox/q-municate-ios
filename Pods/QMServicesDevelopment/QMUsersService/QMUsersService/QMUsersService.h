@@ -205,11 +205,19 @@
 @optional
 
 /**
+ *  Is called when users were loaded from cache to memory storage
+ *
+ *  @param usersService QMUsersService instance
+ *  @param users        NSArray of QBUUser instances as users
+ */
+- (void)usersService:(QMUsersService *)usersService didLoadUsersFromCache:(NSArray QB_GENERIC(QBUUser *) *)users;
+
+/**
  *  Is called when users were added to QMUsersService.
  *
  *  @param usersService     QMUsersService instance
  *  @param user             NSArray of QBUUser instances as users
  */
-- (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray QB_GENERIC(QBUUser *) *)user;
+- (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray QB_GENERIC(QBUUser *) *)users;
 
 @end

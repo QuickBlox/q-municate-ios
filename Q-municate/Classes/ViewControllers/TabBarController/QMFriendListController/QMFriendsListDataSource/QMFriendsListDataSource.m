@@ -56,11 +56,8 @@ QMContactListServiceDelegate
         
         self.searchDisplayController = searchDisplayController;
 
-        UINib *friendsCellNib = [UINib nibWithNibName:@"QMFriendListCell" bundle:nil];
-        UINib *noResultsCellNib = [UINib nibWithNibName:@"QMNoResultsCell" bundle:nil];
-        
+        UINib *friendsCellNib = [UINib nibWithNibName:kQMFriendsListCellIdentifier bundle:nil];
         [searchDisplayController.searchResultsTableView registerNib:friendsCellNib forCellReuseIdentifier:kQMFriendsListCellIdentifier];
-        [searchDisplayController.searchResultsTableView registerNib:noResultsCellNib forCellReuseIdentifier:kQMDontHaveAnyFriendsCellIdentifier];
     }
     
     return self;
@@ -227,7 +224,7 @@ QMContactListServiceDelegate
     cell.contactlistItem = item;
     cell.userData = user;
     
-    if(self.searchDisplayController.isActive) {
+    if (self.searchDisplayController.isActive) {
         cell.searchText = self.searchDisplayController.searchBar.text;
     }
     
@@ -293,13 +290,11 @@ QMContactListServiceDelegate
 
 - (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
 {
-    [self.tableView setDataSource:nil];
     [self reloadDataSource];
 }
 
 - (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller
 {
-    [self.tableView setDataSource:self];
     [self reloadDataSource];
 }
 

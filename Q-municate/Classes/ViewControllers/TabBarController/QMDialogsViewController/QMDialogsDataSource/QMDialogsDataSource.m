@@ -159,7 +159,7 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 - (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
     
     [[[QMApi instance].usersService getUsersWithIDs:chatDialog.occupantIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
-        //
+        
         [self updateGUI];
         
         return nil;
@@ -191,6 +191,10 @@ NSString *const kQMDontHaveAnyChatsCellID = @"QMDontHaveAnyChatsCell";
 }
 
 #pragma mark Contact List Serice Delegate
+
+- (void)usersService:(QMUsersService *)usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)users {
+    [self.tableView reloadData];
+}
 
 - (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)user {
     [self.tableView reloadData];
