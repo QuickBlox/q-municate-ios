@@ -218,6 +218,6 @@
  *  @param usersService     QMUsersService instance
  *  @param user             NSArray of QBUUser instances as users
  */
-- (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray QB_GENERIC(QBUUser *) *)users;
+- (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray QB_GENERIC(QBUUser *) *)user;
 
 @end
