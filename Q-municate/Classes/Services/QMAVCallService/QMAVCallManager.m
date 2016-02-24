@@ -12,6 +12,7 @@
 #import "QMApi.h"
 #import "QMDevice.h"
 #import "REAlertView+QMSuccess.h"
+#import <mach/mach.h>
 
 @interface QMAVCallManager()
 
@@ -219,18 +220,18 @@ NSString *const kUserName = @"UserName";
         videoFormat.frameRate = 30;
         videoFormat.pixelFormat = QBRTCPixelFormat420f;
         
-        CGFloat videoWidth;
-        CGFloat videoHeight;
+        NSUInteger videoWidth;
+        NSUInteger videoHeight;
         
         if ([QMDevice isIphone6Plus]) {
-            videoWidth = 640.;
-            videoHeight = 480.;
+            videoWidth = 640;
+            videoHeight = 480;
         } else if ([QMDevice isIphone6]) {
-            videoWidth = 480.;
-            videoHeight = 360.;
+            videoWidth = 480;
+            videoHeight = 360;
         } else {
-            videoWidth = 352.;
-            videoHeight = 288.;
+            videoWidth = 352;
+            videoHeight = 288;
         }
         videoFormat.width = videoWidth;
         videoFormat.height = videoHeight;
@@ -249,7 +250,91 @@ NSString *const kUserName = @"UserName";
     }
 }
 
+#pragma mark - Statistic
+
+NSInteger QBRTCGetCpuUsagePercentage() {
+    // Create an array of thread ports for the current task.
+    const task_t task = mach_task_self();
+    thread_act_array_t thread_array;
+    mach_msg_type_number_t thread_count;
+    if (task_threads(task, &thread_array, &thread_count) != KERN_SUCCESS) {
+        return -1;
+    }
+    
+    // Sum cpu usage from all threads.
+    float cpu_usage_percentage = 0;
+    thread_basic_info_data_t thread_info_data = {};
+    mach_msg_type_number_t thread_info_count;
+    for (size_t i = 0; i < thread_count; ++i) {
+        thread_info_count = THREAD_BASIC_INFO_COUNT;
+        kern_return_t ret = thread_info(thread_array[i],
+                                        THREAD_BASIC_INFO,
+                                        (thread_info_t)&thread_info_data,
+                                        &thread_info_count);
+        if (ret == KERN_SUCCESS) {
+            cpu_usage_percentage +=
+            100.f * (float)thread_info_data.cpu_usage / TH_USAGE_SCALE;
+        }
+    }
+    
+    // Dealloc the created array.
+    vm_deallocate(task, (vm_address_t)thread_array,
+                  sizeof(thread_act_t) * thread_count);
+    return lroundf(cpu_usage_percentage);
+}
+
 #pragma mark - QBWebRTCChatDelegate
+
+- (void)session:(QBRTCSession *)session updatedStatsReport:(QBRTCStatsReport *)report forUserID:(NSNumber *)userID {
+    
+    NSMutableString *result = [NSMutableString string];
+    NSString *systemStatsFormat = @"(cpu)%ld%%\n";
+    [result appendString:[NSString stringWithFormat:systemStatsFormat,
+                          (long)QBRTCGetCpuUsagePercentage()]];
+    
+    // Connection stats.
+    NSString *connStatsFormat = @"CN %@ms | %@->%@/%@ | (s)%@ | (r)%@\n";
+    [result appendString:[NSString stringWithFormat:connStatsFormat,
+                          report.connectionRoundTripTime,
+                          report.localCandidateType, report.remoteCandidateType, report.transportType,
+                          report.connectionSendBitrate, report.connectionReceivedBitrate]];
+    
+    if (session.conferenceType == QBRTCConferenceTypeVideo) {
+        
+        // Video send stats.
+        NSString *videoSendFormat = @"VS (input) %@x%@@%@fps | (sent) %@x%@@%@fps\n"
+        "VS (enc) %@/%@ | (sent) %@/%@ | %@ms | %@\n";
+        [result appendString:[NSString stringWithFormat:videoSendFormat,
+                              report.videoSendInputWidth, report.videoSendInputHeight, report.videoSendInputFps,
+                              report.videoSendWidth, report.videoSendHeight, report.videoSendFps,
+                              report.actualEncodingBitrate, report.targetEncodingBitrate,
+                              report.videoSendBitrate, report.availableSendBandwidth,
+                              report.videoSendEncodeMs,
+                              report.videoSendCodec]];
+        
+        // Video receive stats.
+        NSString *videoReceiveFormat =
+        @"VR (recv) %@x%@@%@fps | (decoded)%@ | (output)%@fps | %@/%@ | %@ms\n";
+        [result appendString:[NSString stringWithFormat:videoReceiveFormat,
+                              report.videoReceivedWidth, report.videoReceivedHeight, report.videoReceivedFps,
+                              report.videoReceivedDecodedFps,
+                              report.videoReceivedOutputFps,
+                              report.videoReceivedBitrate, report.availableReceiveBandwidth,
+                              report.videoReceivedDecodeMs]];
+    }
+    // Audio send stats.
+    NSString *audioSendFormat = @"AS %@ | %@\n";
+    [result appendString:[NSString stringWithFormat:audioSendFormat,
+                          report.audioSendBitrate, report.audioSendCodec]];
+    
+    // Audio receive stats.
+    NSString *audioReceiveFormat = @"AR %@ | %@ | %@ms | (expandrate)%@";
+    [result appendString:[NSString stringWithFormat:audioReceiveFormat,
+                          report.audioReceivedBitrate, report.audioReceivedCodec, report.audioReceivedCurrentDelay,
+                          report.audioReceivedExpandRate]];
+    
+    NSLog(@"%@", result);
+}
 
 - (void)didReceiveNewSession:(QBRTCSession *)session userInfo:(NSDictionary *)userInfo {
     if (self.session) {
@@ -323,6 +408,7 @@ NSString *const kUserName = @"UserName";
 - (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID {
     
     if (session == self.session) {
+        
         [self stopAllSounds];
     }
 }
