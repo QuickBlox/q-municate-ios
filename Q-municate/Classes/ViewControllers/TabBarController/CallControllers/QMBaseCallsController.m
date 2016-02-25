@@ -34,16 +34,6 @@
     }
     
     [self.contentView updateViewWithUser:self.opponent conferenceType:self.session.conferenceType isOpponentCaller:[[QMApi instance].avCallManager isOpponentCaller]];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(audioSessionRouteChanged:)
-                                                 name:AVAudioSessionRouteChangeNotification
-                                               object:nil];
-}
-
-/** Override in subclasses **/
-- (void)audioSessionRouteChanged:(NSNotification *)notification {
-    
 }
 
 - (void)updateButtonsState {
@@ -152,10 +142,6 @@
     [self.session.localMediaStream.videoTrack setEnabled:!self.session.localMediaStream.videoTrack.enabled];
     
     [(IAButton *)sender setSelected:!self.session.localMediaStream.videoTrack.enabled];
-}
-
-- (void)dealloc {
-    [QBRTCClient.instance removeDelegate:self];
 }
 
 #pragma mark QBRTCSession delegate -

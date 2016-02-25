@@ -39,7 +39,6 @@
         
         self.opponentsVideoViewBottom.constant = -80.0f;
     }
-	[[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker];
 }
 
 - (void)cameraSwitchTapped:(id)sender{
@@ -52,10 +51,6 @@
 		[self denySendingLocalVideoTrack];
 		[self.btnSwitchCamera setUserInteractionEnabled:NO];
 	}
-}
-
-- (void)audioSessionRouteChanged:(NSNotification *)notification{
-	[[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker];
 }
 
 - (void)stopCallTapped:(id)sender {

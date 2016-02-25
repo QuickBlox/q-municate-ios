@@ -7,6 +7,7 @@
 //
 
 #import "QMAudioCallController.h"
+#import "QMApi.h"
 #import "QMAVCallManager.h"
 
 @implementation QMAudioCallController
@@ -23,11 +24,9 @@
     
     if( [[QMApi instance].avCallManager isOpponentCaller] ){
         // Me is not a caller
-    
-        if( [QMApi instance].currentUser.ID != [userID unsignedIntegerValue] ) {
-            [[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker];
-        }
+        
         [self updateButtonsState];
     }
 }
+
 @end
