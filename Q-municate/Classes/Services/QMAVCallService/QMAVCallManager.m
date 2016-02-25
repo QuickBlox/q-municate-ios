@@ -40,6 +40,7 @@ NSString *const kUserName = @"UserName";
 - (instancetype)init {
     self = [super init];
     if (self) {
+        
         [QBRTCConfig setAnswerTimeInterval:kQBAnswerTimeInterval];
         [QBRTCConfig setDisconnectTimeInterval:kQBRTCDisconnectTimeInterval];
         [QBRTCConfig setDialingTimeInterval:kQBDialingTimeInterval];
@@ -50,8 +51,8 @@ NSString *const kUserName = @"UserName";
 }
 
 - (void)serviceWillStart {
+    
     [[QBRTCClient instance] addDelegate:self];
-    [QBRTCConfig setDTLSEnabled:YES];
 }
 
 #pragma mark - RootViewController
@@ -75,32 +76,40 @@ NSString *const kUserName = @"UserName";
 
 #pragma mark - Public methods
 
-- (void)acceptCall{
+- (void)acceptCall {
+    
     [self stopAllSounds];
-    if( self.session ){
+    
+    if(self.session){
+        
         [self.session acceptCall:nil];
         self.hasActiveCall = YES;
     }
-    else{
+    else {
         NSLog(@"error in -acceptCall: session does not exists");
     }
 }
 
-- (void)rejectCall{
+- (void)rejectCall {
+    
     [self stopAllSounds];
-    if( self.session ){
+    
+    if(self.session) {
+        
         [self.session rejectCall:@{@"reject" : @"busy"}];
     }
-    else{
+    else {
         NSLog(@"error in -rejectCall: session does not exists");
     }
 }
 
-- (void)hangUpCall{
-    if( self.session ){
+- (void)hangUpCall {
+    
+    if(self.session) {
+        
         [self.session hangUp:@{@"session" : @"hang up"}];
     }
-    else{
+    else {
         NSLog(@"error in -rejectCall: session does not exists");
     }
 }
@@ -159,8 +168,6 @@ NSString *const kUserName = @"UserName";
 
 - (void)callToUsers:(NSArray *)users withConferenceType:(QBRTCConferenceType)conferenceType pushEnabled:(BOOL)pushEnabled {
     __weak __typeof(self) weakSelf = self;
-    [[QBRTCSoundRouter instance] initialize];
-    [[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker]; // to make our ringtone go through the speaker
     
     [self checkPermissionsWithConferenceType:conferenceType completion:^(BOOL canContinue) {
         __typeof(weakSelf)strongSelf = weakSelf;
@@ -182,7 +189,11 @@ NSString *const kUserName = @"UserName";
             self.opponentCaller = NO;
             self.frontCamera = YES;
             
+            [[QBRTCSoundRouter instance] initialize];
+            [[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker]; // to make our ringtone go through the speaker
+            
             [strongSelf startPlayingCallingSound];
+            
             strongSelf.session = session;
             
             QMBaseCallsController *vc = (QMBaseCallsController *)[[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:(conferenceType == QBRTCConferenceTypeVideo) ? kVideoCallController : kAudioCallController];
@@ -347,7 +358,6 @@ NSInteger QBRTCGetCpuUsagePercentage() {
     [[QBRTCSoundRouter instance] initialize];
     
     self.session = session;
-    [[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker];
     [self startPlayingRingtoneSound];
     
     QMIncomingCallController *incomingVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:kIncomingCallController];
@@ -437,16 +447,19 @@ NSInteger QBRTCGetCpuUsagePercentage() {
 # pragma mark Sounds Private methods -
 
 - (void)playCallingSound:(id)sender {
+    
     [QMSoundManager playCallingSound];
 }
 
 - (void)playRingtoneSound:(id)sender {
+    
     [QMSoundManager playRingtoneSound];
 }
 
 - (void)stopAllSounds {
     
-    if( self.callingSoundTimer ){
+    if(self.callingSoundTimer) {
+        
         [self.callingSoundTimer invalidate];
         self.callingSoundTimer = nil;
     }
