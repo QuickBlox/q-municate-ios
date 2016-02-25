@@ -25,6 +25,7 @@
 #import "QMSettingsManager.h"
 #import "AGEmojiKeyBoardView.h"
 #import "UIImage+fixOrientation.h"
+#import "QMSoundManager.h"
 
 // chat controller
 #import "UIImage+QM.h"
@@ -420,6 +421,11 @@ AGEmojiKeyboardViewDelegate
         if (task.isFaulted) {
             [REAlertView showAlertWithMessage:task.error.localizedRecoverySuggestion actionSuccess:NO];
         }
+        else {
+            
+            [QMSoundManager playMessageSentSound];
+        }
+        
         return nil;
     }];
     
