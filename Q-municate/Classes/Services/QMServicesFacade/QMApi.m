@@ -127,6 +127,18 @@ static NSString *const kQMErrorPasswordKey = @"password";
         dispatch_group_leave(group);
     }];
     
+    BOOL accountTypeNotEmail = self.settingsManager.accountType != QMAccountTypeEmail;
+    BOOL sessionHasExpired = [[NSDate date] timeIntervalSinceDate:[QBSession currentSession].sessionExpirationDate] >= 0;
+    
+    if (accountTypeNotEmail && sessionHasExpired) {
+        // need to update session to have a valid token
+        dispatch_group_enter(group);
+        [self loginWithFacebook:^(BOOL success) {
+            
+            dispatch_group_leave(group);
+        }];
+    }
+    
     dispatch_group_enter(group);
     [self connectChat:^(BOOL success) {
         dispatch_group_leave(group);
