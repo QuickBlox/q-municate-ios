@@ -47,7 +47,7 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBRTCClient initializeRTC];
     [QBRTCConfig setICEServers:[self quickbloxICE]];
     [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecISAC;
-    [QBRTCConfig setStatsReportTimeInterval:0.0f];
+    [QBRTCConfig setStatsReportTimeInterval:0.0f]; // set to 1.0f to enable stats report
     
     if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
         
