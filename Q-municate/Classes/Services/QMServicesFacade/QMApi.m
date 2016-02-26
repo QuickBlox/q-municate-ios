@@ -130,20 +130,20 @@ static NSString *const kQMErrorPasswordKey = @"password";
             [QBSession currentSession].currentUser.password = [QBSession currentSession].sessionDetails.token;
         }
         
-        dispatch_group_leave(group);
-    }];
-    
-    dispatch_group_enter(group);
-    [self connectChat:^(BOOL success) {
-        dispatch_group_leave(group);
+        [strongSelf connectChat:^(BOOL success) {
+            
+            dispatch_group_leave(group);
+        }];
     }];
     
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
         
         if ([QBChat instance].isConnected) {
+            
             if (completion) completion(YES);
         }
         else {
+            
             if (completion) completion(NO);
         }
     });
