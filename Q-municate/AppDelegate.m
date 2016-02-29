@@ -16,40 +16,11 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "QMViewControllersFactory.h"
 
-#define DEVELOPMENT 0
-#define STAGE_SERVER_IS_ACTIVE 0
-
-
-#if DEVELOPMENT
-
-// Development
-const NSUInteger kQMApplicationID = 14542;
-NSString *const kQMAuthorizationKey = @"rJqAFphrSnpyZW2";
-NSString *const kQMAuthorizationSecret = @"tTEB2wK-dU8X3Ra";
-NSString *const kQMAccountKey = @"2qCrjKYFkYnfRnUiYxLZ";
-
-
-
-//// Stage server for E-bay:
-//
-//const NSUInteger kQMApplicationID = 13029;
-//NSString *const kQMAuthorizationKey = @"3mBwAnczNvh-sBK";
-//NSString *const kQMAuthorizationSecret = @"xWP2jgUsQOpxj-6";
-//NSString *const kQMAccountKey = @"tLapBNZPeqCHxEA8zApx";
-//NSString *const kQMContentBucket = @"blobs-test-oz";
-
-#else
-
 // Production
 const NSUInteger kQMApplicationID = 13318;
 NSString *const kQMAuthorizationKey = @"WzrAY7vrGmbgFfP";
 NSString *const kQMAuthorizationSecret = @"xS2uerEveGHmEun";
 NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
-
-#endif
-
-
-/* ==================================================================== */
 
 @interface AppDelegate () <QMNotificationHandlerDelegate>
 
@@ -74,8 +45,10 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     
     //QuickbloxWebRTC preferences
     [QBRTCClient initializeRTC];
+    [QBRTCConfig setICEServers:[self quickbloxICE]];
+    [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecISAC;
+    [QBRTCConfig setStatsReportTimeInterval:0.0f]; // set to 1.0f to enable stats report
     
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
     if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
         
         [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
@@ -84,17 +57,6 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     else{
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
     }
-#else
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
-#endif
-    
-#if STAGE_SERVER_IS_ACTIVE == 1
-//    [QBSettings setServerApiDomain:@"https://api.stage.quickblox.com"];
-    [QBConnection setApiDomain:@"https://api.stage.quickblox.com" forServiceZone:QBConnectionZoneTypeDevelopment];
-    [QBConnection setServiceZone:QBConnectionZoneTypeDevelopment];
-    [QBSettings setServerChatDomain:@"chatstage.quickblox.com"];
-    [QBSettings setContentBucket: kQMContentBucket];
-#endif
     
     /*Configure app appearance*/
     NSDictionary *normalAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:1.000 alpha:0.750]};
@@ -205,6 +167,42 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     }
     
     [navigationController pushViewController:chatVC animated:YES];
+}
+
+#pragma mark - ICE servers
+
+- (NSArray *)quickbloxICE {
+    
+    NSString *password = @"baccb97ba2d92d71e26eb9886da5f1e0";
+    NSString *userName = @"quickblox";
+    
+    NSArray *urls = @[
+                      @"turn.quickblox.com",            //USA
+                      @"turnsingapore.quickblox.com",   //Singapore
+                      @"turnireland.quickblox.com"      //Ireland
+                      ];
+    
+    NSMutableArray *result = [NSMutableArray arrayWithCapacity:urls.count];
+    
+    for (NSString *url in urls) {
+        
+        QBRTCICEServer *stunServer = [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"stun:%@", url]
+                                                          username:@""
+                                                          password:@""];
+        
+        
+        QBRTCICEServer *turnUDPServer = [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"turn:%@:3478?transport=udp", url]
+                                                             username:userName
+                                                             password:password];
+        
+        QBRTCICEServer *turnTCPServer = [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"turn:%@:3478?transport=tcp", url]
+                                                             username:userName
+                                                             password:password];
+        
+        [result addObjectsFromArray:@[stunServer, turnTCPServer, turnUDPServer]];
+    }
+    
+    return result;
 }
 
 @end

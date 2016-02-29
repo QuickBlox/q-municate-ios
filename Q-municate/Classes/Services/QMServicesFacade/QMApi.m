@@ -122,22 +122,28 @@ static NSString *const kQMErrorPasswordKey = @"password";
     
     __weak __typeof(self)weakSelf = self;
     [self.chatService fetchDialogsUpdatedFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:nil completionBlock:^(QBResponse *response) {
-        //
-        weakSelf.settingsManager.lastActivityDate = [NSDate date];
-        dispatch_group_leave(group);
-    }];
-    
-    dispatch_group_enter(group);
-    [self connectChat:^(BOOL success) {
-        dispatch_group_leave(group);
+        __typeof(weakSelf)strongSelf = weakSelf;
+        strongSelf.settingsManager.lastActivityDate = [NSDate date];
+        
+        if (strongSelf.settingsManager.accountType != QMAccountTypeEmail) {
+            // need to update session to have a valid token
+            [QBSession currentSession].currentUser.password = [QBSession currentSession].sessionDetails.token;
+        }
+        
+        [strongSelf connectChat:^(BOOL success) {
+            
+            dispatch_group_leave(group);
+        }];
     }];
     
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
         
         if ([QBChat instance].isConnected) {
+            
             if (completion) completion(YES);
         }
         else {
+            
             if (completion) completion(NO);
         }
     });
