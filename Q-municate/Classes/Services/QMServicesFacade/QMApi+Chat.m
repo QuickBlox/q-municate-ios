@@ -34,7 +34,7 @@
     @weakify(self);
     [[self.chatService disconnect] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         //
-        if (task.isCompleted) {
+        if (!task.isFaulted) {
             @strongify(self);
             [self.settingsManager setLastActivityDate:[NSDate date]];
         }
@@ -75,6 +75,7 @@
     BFContinuationBlock notificationBlock = ^id _Nullable(BFTask * _Nonnull task) {
         @strongify(self);
         [[NSNotificationCenter defaultCenter] postNotificationName:kUsersLoadingFinishedNotifications object:self userInfo:nil];
+        
         return nil;
     };
     
@@ -82,7 +83,7 @@
         [[[self.chatService fetchDialogsUpdatedFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:iterationBlock] continueWithBlock:completionBlock] continueWithBlock:notificationBlock];
     }
     else {
-        [[[self.chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:iterationBlock] continueWithBlock:completionBlock] continueWithBlock:notificationBlock];;
+        [[[self.chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:iterationBlock] continueWithBlock:completionBlock] continueWithBlock:notificationBlock];
     }
 }
 
@@ -98,13 +99,13 @@
         @strongify(self);
         if (task.isFaulted) {
             if (completion) completion(nil);
-            return nil;
+            return [BFTask cancelledTask];
         } else {
             if (completion) completion(task.result);
             chatDialog = task.result;
             return [self.chatService sendSystemMessageAboutAddingToDialog:chatDialog toUsersIDs:occupantsIDs];
         }
-    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+    }] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull task) {
         @strongify(self);
         return [self.chatService sendNotificationMessageAboutAddingOccupants:occupantsIDs toDialog:chatDialog withNotificationText:kDialogsUpdateNotificationMessage];
     }];
@@ -163,14 +164,14 @@
         //
         if (task.isFaulted) {
             if (completion) completion(nil);
-            return nil;
+            return [BFTask cancelledTask];
         } else {
             @strongify(self);
             dialog = task.result;
             if (completion) completion(task.result);
             return [self.chatService sendSystemMessageAboutAddingToDialog:dialog toUsersIDs:occupantsToJoinIDs];
         }
-    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+    }] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull task) {
         @strongify(self);
         return [self.chatService sendNotificationMessageAboutAddingOccupants:occupantsToJoinIDs toDialog:dialog withNotificationText:kDialogsUpdateNotificationMessage];
     }];
@@ -179,19 +180,19 @@
 - (void)leaveChatDialog:(QBChatDialog *)chatDialog completion:(QBChatCompletionBlock)completion {
     
     @weakify(self);
-    [[[self.chatService sendNotificationMessageAboutLeavingDialog:chatDialog withNotificationText:kDialogsUpdateNotificationMessage] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+    [[self.chatService sendNotificationMessageAboutLeavingDialog:chatDialog withNotificationText:kDialogsUpdateNotificationMessage] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         //
         if (task.isFaulted) {
             if (completion) completion(task.error);
             return nil;
         } else {
             @strongify(self);
-            return [self.chatService deleteDialogWithID:chatDialog.ID];
+            return [[self.chatService deleteDialogWithID:chatDialog.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull deleteTask) {
+                
+                if (completion) completion(task.error);
+                return nil;
+            }];
         }
-    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-        //
-        if (completion) completion(task.error);
-        return nil;
     }];
 }
 

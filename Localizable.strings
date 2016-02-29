@@ -34,6 +34,7 @@
 "QM_STR_CHAT_SERVER_UNAVAILABLE" = "Chat service is temporary unavaliable";
 "QM_STR_ONLINE" = "Online";
 "QM_STR_OFFLINE" = "Offline";
+"QM_STR_TYPING" = "typing...";
 "QM_STR_PENDING" = "Pending";
 "QM_STR_PASSWORD_IS_TOO_SHORT" = "Password must be more than %ld characters";
 "QM_STR_PASSWORD_IS_TOO_LONG" = "Password mustn’t be more than %ld characters";

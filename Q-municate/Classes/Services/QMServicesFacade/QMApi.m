@@ -17,8 +17,9 @@
 
 const NSTimeInterval kQMPresenceTime = 30;
 
-static NSString *const kQMErrorKey         = @"errors";
-static NSString *const kQMErrorEmailKey    = @"email";
+static NSString *const kQMErrorKey = @"errors";
+static NSString *const kQMBaseKey = @"base";
+static NSString *const kQMErrorEmailKey = @"email";
 static NSString *const kQMErrorFullNameKey = @"full_name";
 static NSString *const kQMErrorPasswordKey = @"password";
 
@@ -73,10 +74,14 @@ static NSString *const kQMErrorPasswordKey = @"password";
         
         __weak __typeof(self)weakSelf = self;
         void (^internetConnectionReachable)(Reachability *reachability) = ^(Reachability *reachability) {
+            __typeof(weakSelf)strongSelf = weakSelf;
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (weakSelf.isAuthorized) {
+                if (strongSelf.isAuthorized) {
                     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-                    [weakSelf applicationDidBecomeActive:nil];
+                    [strongSelf.chatService fetchDialogsUpdatedFromDate:strongSelf.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:nil completionBlock:^(QBResponse *response) {
+                        
+                        strongSelf.settingsManager.lastActivityDate = [NSDate date];
+                    }];
                 }
             });
         };
@@ -117,22 +122,28 @@ static NSString *const kQMErrorPasswordKey = @"password";
     
     __weak __typeof(self)weakSelf = self;
     [self.chatService fetchDialogsUpdatedFromDate:self.settingsManager.lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:nil completionBlock:^(QBResponse *response) {
-        //
-        weakSelf.settingsManager.lastActivityDate = [NSDate date];
-        dispatch_group_leave(group);
-    }];
-    
-    dispatch_group_enter(group);
-    [self connectChat:^(BOOL success) {
-        dispatch_group_leave(group);
+        __typeof(weakSelf)strongSelf = weakSelf;
+        strongSelf.settingsManager.lastActivityDate = [NSDate date];
+        
+        if (strongSelf.settingsManager.accountType != QMAccountTypeEmail) {
+            // need to update session to have a valid token
+            [QBSession currentSession].currentUser.password = [QBSession currentSession].sessionDetails.token;
+        }
+        
+        [strongSelf connectChat:^(BOOL success) {
+            
+            dispatch_group_leave(group);
+        }];
     }];
     
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
         
         if ([QBChat instance].isConnected) {
+            
             if (completion) completion(YES);
         }
         else {
+            
             if (completion) completion(NO);
         }
     });
@@ -220,32 +231,46 @@ static NSString *const kQMErrorPasswordKey = @"password";
     
     NSString *errorMessage = [[NSString alloc] init];
     
+    id errorReasons = response.error.reasons[kQMErrorKey];
+    
     if (self.isAuthorized) {
-        errorMessage = [self errorStringFromResponseStatus:response.status];
+        
+        if ([errorReasons isKindOfClass:[NSDictionary class]] && errorReasons[kQMBaseKey] != nil) {
+            
+            errorMessage = [errorReasons[kQMBaseKey] firstObject];
+        } else {
+            
+            errorMessage = [self errorStringFromResponseStatus:response.status];
+        }
     }
     else {
         
-        id errorReasons = response.error.reasons[kQMErrorKey];
-        
         if ([errorReasons isKindOfClass:[NSDictionary class]]) {
-            //
-            if (errorReasons[kQMErrorEmailKey]) {
+            
+            if (errorReasons[kQMBaseKey] != nil) {
                 
-                NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_EMAIL_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorEmailKey]]];
-                errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
-                
+                errorMessage = [errorReasons[kQMBaseKey] firstObject];
             }
-            if (errorReasons[kQMErrorFullNameKey]) {
+            else {
                 
-                NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FULL_NAME_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorFullNameKey]]];
-                errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
-                
-            }
-            if (errorReasons[kQMErrorPasswordKey]) {
-                
-                NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_PASSWORD_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorPasswordKey]]];
-                errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
-                
+                if (errorReasons[kQMErrorEmailKey]) {
+                    
+                    NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_EMAIL_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorEmailKey]]];
+                    errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
+                    
+                }
+                if (errorReasons[kQMErrorFullNameKey]) {
+                    
+                    NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FULL_NAME_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorFullNameKey]]];
+                    errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
+                    
+                }
+                if (errorReasons[kQMErrorPasswordKey]) {
+                    
+                    NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_PASSWORD_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorPasswordKey]]];
+                    errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
+                    
+                }
             }
         }
         else {

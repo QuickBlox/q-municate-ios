@@ -55,7 +55,7 @@ typedef enum QBConnectionZoneType{
 /// Enable or disable message carbons
 + (void)setCarbonsEnabled:(BOOL)carbonsEnabled;
 
-/// Enable or disable Stream Resumption (XEP-0198). Works only if streamManagementEnabled=YES
+/// Enable or disable Stream Resumption (XEP-0198).
 + (void)setStreamResumptionEnabled:(BOOL)streamResumptionEnabled;
 
 /// Set timeout value for Stream Management send a message operation
@@ -183,12 +183,12 @@ typedef enum QBConnectionZoneType{
 + (void)setLogLevel:(QBLogLevel)logLevel;
 
 /**
- *  Enables XMPP Framework logging to console. By default is disabled.
+ *  Enables full XMPP Framework logging to console. By default is disabled.
  */
 + (void)enableXMPPLogging;
 
 /**
- *   Disables XMPP Framework logging to console.
+ *   Disables full XMPP Framework logging to console.
  */
 + (void)disableXMPPLogging;
 

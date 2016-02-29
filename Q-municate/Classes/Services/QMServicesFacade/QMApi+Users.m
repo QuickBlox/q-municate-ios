@@ -26,7 +26,7 @@
         @strongify(self);
         [self sendContactRequestSendNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
             
-            if (completion) completion(task.isCompleted, notification);
+            if (completion) completion(!task.isFaulted, notification);
         }];
         return nil;
     }];
@@ -35,16 +35,18 @@
 - (void)removeUserFromContactList:(QBUUser *)user completion:(void(^)(BOOL success, QBChatMessage *notification))completion {
     
     @weakify(self);
-    [[[self.contactListService removeUserFromContactListWithUserID:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+    [[self.contactListService removeUserFromContactListWithUserID:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         @strongify(self);
         QBChatDialog *dialog = [self.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
-        return [self.chatService deleteDialogWithID:dialog.ID];
-    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-        @strongify(self);
         [self sendContactRequestDeleteNotificationToUser:user completion:^(NSError *error, QBChatMessage *notification) {
-            //
-            if (completion) completion(task.isCompleted, notification);
+            
+            [[self.chatService deleteDialogWithID:dialog.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull deleteTask) {
+                
+                if (completion) completion(!task.isFaulted, notification);
+                return nil;
+            }];
         }];
+        
         return nil;
     }];
 }
@@ -124,7 +126,7 @@
     
     for (QBContactListItem *item in [QBChat instance].contactList.pendingApproval) {
         
-        if (item.subscriptionState == QBPresenseSubscriptionStateFrom) {
+        if (item.subscriptionState == QBPresenceSubscriptionStateFrom) {
             [IDs addObject:@(item.userID)];
         }
     }
@@ -155,7 +157,7 @@
 
 - (BOOL)userIDIsInPendingList:(NSUInteger)userID {
     QBContactListItem *contactlistItem = [self.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
-    if (contactlistItem.subscriptionState != QBPresenseSubscriptionStateNone) {
+    if (contactlistItem.subscriptionState != QBPresenceSubscriptionStateNone) {
         return NO;
     }
     return YES;

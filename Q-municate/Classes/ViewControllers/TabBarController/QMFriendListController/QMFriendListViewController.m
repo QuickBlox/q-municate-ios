@@ -45,18 +45,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDataSourceAndUnsubscribeFromNotification) name:kUsersLoadingFinishedNotifications object:[QMApi instance]];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    self.dataSource.viewIsShowed = YES;
-    [super viewWillAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    self.dataSource.viewIsShowed = NO;
-    [super viewWillDisappear:animated];
-}
-
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -97,7 +85,6 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     return [self.dataSource tableView:tableView cellForRowAtIndexPath:indexPath];
 }
-
 
 #pragma mark - UISearchDisplayDelegate
 

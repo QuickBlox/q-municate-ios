@@ -18,41 +18,28 @@
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import <DigitsKit/DigitsKit.h>
-
-#define DEVELOPMENT 0
-#define STAGE_SERVER_IS_ACTIVE 0
+#import <Flurry.h>
 
 
-#if DEVELOPMENT
+#define DEVELOPMENT 1
 
-// Development
-const NSUInteger kQMApplicationID = 14542;
-NSString *const kQMAuthorizationKey = @"rJqAFphrSnpyZW2";
-NSString *const kQMAuthorizationSecret = @"tTEB2wK-dU8X3Ra";
-NSString *const kQMAcconuntKey = @"2qCrjKYFkYnfRnUiYxLZ";
-
-
-
-//// Stage server for E-bay:
-//
-//const NSUInteger kQMApplicationID = 13029;
-//NSString *const kQMAuthorizationKey = @"3mBwAnczNvh-sBK";
-//NSString *const kQMAuthorizationSecret = @"xWP2jgUsQOpxj-6";
-//NSString *const kQMAcconuntKey = @"tLapBNZPeqCHxEA8zApx";
-//NSString *const kQMContentBucket = @"blobs-test-oz";
-
-#else
+#if DEVELOPMENT == 0
 
 // Production
 const NSUInteger kQMApplicationID = 13318;
 NSString *const kQMAuthorizationKey = @"WzrAY7vrGmbgFfP";
 NSString *const kQMAuthorizationSecret = @"xS2uerEveGHmEun";
-NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
+NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
+
+#else
+
+// Development
+const NSUInteger kQMApplicationID = 36125;
+NSString *const kQMAuthorizationKey = @"gOGVNO4L9cBwkPE";
+NSString *const kQMAuthorizationSecret = @"JdqsMHCjHVYkVxV";
+NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 #endif
-
-
-/* ==================================================================== */
 
 @interface AppDelegate () <QMNotificationHandlerDelegate>
 
@@ -69,13 +56,22 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBSettings setApplicationID:kQMApplicationID];
     [QBSettings setAuthKey:kQMAuthorizationKey];
     [QBSettings setAuthSecret:kQMAuthorizationSecret];
-    [QBSettings setAccountKey:kQMAcconuntKey];
-//    [QBSettings setLogLevel:QBLogLevelNothing];
+    [QBSettings setAccountKey:kQMAccountKey];
+    
+#if DEVELOPMENT == 0
+    [QBSettings setLogLevel:QBLogLevelNothing];
+    [QBSettings disableXMPPLogging];
+#else
+    [QBSettings setLogLevel:QBLogLevelDebug];
+    [QBSettings enableXMPPLogging];
+#endif
     
     //QuickbloxWebRTC preferences
     [QBRTCClient initializeRTC];
+    [QBRTCConfig setICEServers:[self quickbloxICE]];
+    [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecISAC;
+    [QBRTCConfig setStatsReportTimeInterval:0.0f]; // set to 1.0f to enable stats report
     
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
     if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
         
         [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
@@ -84,25 +80,14 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     else{
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
     }
-#else
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
-#endif
-    
-#if STAGE_SERVER_IS_ACTIVE == 1
-//    [QBSettings setServerApiDomain:@"https://api.stage.quickblox.com"];
-    [QBConnection setApiDomain:@"https://api.stage.quickblox.com" forServiceZone:QBConnectionZoneTypeDevelopment];
-    [QBConnection setServiceZone:QBConnectionZoneTypeDevelopment];
-    [QBSettings setServerChatDomain:@"chatstage.quickblox.com"];
-    [QBSettings setContentBucket: kQMContentBucket];
-#endif
     
     /*Configure app appearance*/
-    
     [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateNormal];
     [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateDisabled];
     
-    /** Fabric */
+    /** extra frameworks */
     [Fabric with:@[CrashlyticsKit, DigitsKit]];
+    [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
     
     if (launchOptions != nil) {
         NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
@@ -200,6 +185,42 @@ NSString *const kQMAcconuntKey = @"6Qyiz3pZfNsex1Enqnp7";
     }
     
     [navigationController pushViewController:chatVC animated:YES];
+}
+
+#pragma mark - ICE servers
+
+- (NSArray *)quickbloxICE {
+    
+    NSString *password = @"baccb97ba2d92d71e26eb9886da5f1e0";
+    NSString *userName = @"quickblox";
+    
+    NSArray *urls = @[
+                      @"turn.quickblox.com",            //USA
+                      @"turnsingapore.quickblox.com",   //Singapore
+                      @"turnireland.quickblox.com"      //Ireland
+                      ];
+    
+    NSMutableArray *result = [NSMutableArray arrayWithCapacity:urls.count];
+    
+    for (NSString *url in urls) {
+        
+        QBRTCICEServer *stunServer = [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"stun:%@", url]
+                                                          username:@""
+                                                          password:@""];
+        
+        
+        QBRTCICEServer *turnUDPServer = [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"turn:%@:3478?transport=udp", url]
+                                                             username:userName
+                                                             password:password];
+        
+        QBRTCICEServer *turnTCPServer = [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"turn:%@:3478?transport=tcp", url]
+                                                             username:userName
+                                                             password:password];
+        
+        [result addObjectsFromArray:@[stunServer, turnTCPServer, turnUDPServer]];
+    }
+    
+    return result;
 }
 
 @end
