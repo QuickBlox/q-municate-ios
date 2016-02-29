@@ -16,6 +16,9 @@
 
 #import <SVProgressHUD.h>
 
+static NSString *const kQMLocalSearchString = @"Local";
+static NSString *const kQMGlobalSearchString = @"Global";
+
 @interface QMDialogsViewController ()
 
 <
@@ -32,6 +35,7 @@ UITableViewDelegate
 @property (strong, nonatomic) QMPlaceholderDataSource *placeholderDataSource;
 
 @property (weak, nonatomic) IBOutlet QMTitleView *titleView;
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 
 @end
 
@@ -47,6 +51,9 @@ UITableViewDelegate
     self.dialogsDataSource = [[QMDialogsDataSource alloc] init];
     self.placeholderDataSource  = [[QMPlaceholderDataSource alloc] init];
     self.tableView.delegate = self;
+    
+    // search bar implementation
+    self.searchBar.scopeButtonTitles = @[kQMLocalSearchString, kQMGlobalSearchString];
     
     // Subscribing delegates
     [[QMCore instance].chatService addDelegate:self];
