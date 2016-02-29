@@ -17,11 +17,25 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "QMViewControllersFactory.h"
 
+#define DEVELOPMENT 1
+
+#if DEVELOPMENT == 0
+
 // Production
 const NSUInteger kQMApplicationID = 13318;
 NSString *const kQMAuthorizationKey = @"WzrAY7vrGmbgFfP";
 NSString *const kQMAuthorizationSecret = @"xS2uerEveGHmEun";
 NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
+
+#else
+
+// Development
+const NSUInteger kQMApplicationID = 36125;
+NSString *const kQMAuthorizationKey = @"gOGVNO4L9cBwkPE";
+NSString *const kQMAuthorizationSecret = @"JdqsMHCjHVYkVxV";
+NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
+
+#endif
 
 @interface AppDelegate () <QMNotificationHandlerDelegate>
 
@@ -41,8 +55,14 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBSettings setAuthKey:kQMAuthorizationKey];
     [QBSettings setAuthSecret:kQMAuthorizationSecret];
     [QBSettings setAccountKey:kQMAccountKey];
+    
+#if DEVELOPMENT == 0
+    [QBSettings setLogLevel:QBLogLevelNothing];
+    [QBSettings disableXMPPLogging];
+#else
     [QBSettings setLogLevel:QBLogLevelDebug];
     [QBSettings enableXMPPLogging];
+#endif
     
     //QuickbloxWebRTC preferences
     [QBRTCClient initializeRTC];
