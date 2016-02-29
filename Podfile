@@ -14,6 +14,7 @@ pod 'MPGNotification', '~> 1.1'
 pod 'Reachability', '~> 3.2'
 pod 'TTTAttributedLabel', '~> 1.13'
 pod 'libextobjc/EXTScope', '~> 0.4.1'
+pod 'Flurry-iOS-SDK/FlurrySDK', '~> 7.1.0'
 #pod 'QMChatViewController'
 #pod 'QMServices'
 

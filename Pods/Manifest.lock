@@ -39,6 +39,7 @@ PODS:
     - FBSDKCoreKit
   - FBSDKShareKit (4.7.1):
     - FBSDKCoreKit
+  - Flurry-iOS-SDK/FlurrySDK (7.1.1)
   - IDMPhotoBrowser (1.3.5):
     - AFNetworking (~> 2.2.3)
     - DACircularProgress (~> 2.2)
@@ -93,6 +94,7 @@ DEPENDENCIES:
   - FBSDKCoreKit (~> 4.7.0)
   - FBSDKLoginKit (~> 4.7.0)
   - FBSDKShareKit (~> 4.7.0)
+  - Flurry-iOS-SDK/FlurrySDK (~> 7.1.0)
   - IDMPhotoBrowser (~> 1.3.5)
   - libextobjc/EXTScope (~> 0.4.1)
   - MPGNotification (~> 1.1)
@@ -132,6 +134,7 @@ SPEC CHECKSUMS:
   FBSDKCoreKit: 9141b70960a37930850370495fe565f4a27ac141
   FBSDKLoginKit: c11ed3c2833472db3bb4a4aecf27af4a6f69b173
   FBSDKShareKit: 213adf63e073f41a346b0e7a689805880dc5150e
+  Flurry-iOS-SDK: 83fd4f40ae66e80d122fd2f6698f0e0c31021a63
   IDMPhotoBrowser: 6699a8d8b6c036a60c58ba7c281b2f5761d970ac
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61

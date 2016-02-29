@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import <Crashlytics/Crashlytics.h>
+#import <Flurry.h>
 #import "SVProgressHUD.h"
 #import "REAlertView+QMSuccess.h"
 #import "QMApi.h"
@@ -68,8 +69,9 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateNormal];
     [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateDisabled];
     
-    /** Crashlytics */
+    /** extra frameworks */
     [Crashlytics startWithAPIKey:@"7aea78439bec41a9005c7488bb6751c5e33fe270"];
+    [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
     
     if (launchOptions != nil) {
         NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
