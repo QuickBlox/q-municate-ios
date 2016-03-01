@@ -28,6 +28,24 @@
             </objects>
             <point key="canvasLocation" x="-5966" y="-9389"/>
         </scene>
+        <!--Search Results Controller-->
+        <scene sceneID="lyv-ls-D9N">
+            <objects>
+                <tableViewController id="sTV-DU-Zfc" customClass="QMSearchResultsController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="hMb-DO-vB5">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <outlet property="dataSource" destination="sTV-DU-Zfc" id="eQo-6O-Qho"/>
+                            <outlet property="delegate" destination="sTV-DU-Zfc" id="yK5-Qy-mkA"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gII-Jj-LMY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4782" y="-8364"/>
+        </scene>
         <!--Dialogs View Controller-->
         <scene sceneID="XsO-zK-SPy">
             <objects>
@@ -37,96 +55,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        <searchBar key="tableHeaderView" contentMode="redraw" id="Sr8-KN-jff">
-                            <rect key="frame" x="0.0" y="64" width="600" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                            <textInputTraits key="textInputTraits"/>
-                        </searchBar>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="QMDialogCell" rowHeight="76" id="ftH-H5-J8f" customClass="QMDialogCell">
-                                <rect key="frame" x="0.0" y="136" width="600" height="76"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ftH-H5-J8f" id="IWv-0p-2vl">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="75"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XO1-1m-0sQ" customClass="QMImageView">
-                                            <rect key="frame" x="8" y="8" width="59" height="59"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="59" id="714-vl-pot"/>
-                                                <constraint firstAttribute="height" constant="59" id="d9r-R6-jfg"/>
-                                            </constraints>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                    <real key="value" value="0.0"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
-                                        </imageView>
-                                        <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Paul Jones, Amber Jenkins, Andrea Newman" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yeY-AA-xDJ">
-                                            <rect key="frame" x="75" y="15" width="439" height="21"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="99.99.99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0PF-XN-PbN">
-                                            <rect key="frame" x="522" y="15" width="70" height="20"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="20" id="HXB-6w-NCy"/>
-                                                <constraint firstAttribute="width" constant="70" id="V4g-yg-fPe"/>
-                                            </constraints>
-                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                            <color key="textColor" red="0.56078431370000004" green="0.5568627451" blue="0.58039215690000001" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sql-hz-qDi" customClass="QMBadgeView">
-                                            <rect key="frame" x="557" y="37" width="35" height="24"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="24" id="NcS-j8-sp1"/>
-                                                <constraint firstAttribute="width" constant="35" id="a59-sS-Jdc"/>
-                                            </constraints>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                    <integer key="value" value="6"/>
-                                                </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="boolean" keyPath="hideOnZeroValue" value="YES"/>
-                                            </userDefinedRuntimeAttributes>
-                                        </view>
-                                        <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sem Dolor Iceptos Purus" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z7x-SV-EOb">
-                                            <rect key="frame" x="75" y="37" width="474" height="21"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" red="0.56078431370000004" green="0.5568627451" blue="0.58039215690000001" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstAttribute="bottomMargin" secondItem="Z7x-SV-EOb" secondAttribute="bottom" constant="9" id="0PB-4F-HMq"/>
-                                        <constraint firstItem="Sql-hz-qDi" firstAttribute="top" secondItem="0PF-XN-PbN" secondAttribute="bottom" constant="2" id="2iU-cW-wSa"/>
-                                        <constraint firstItem="yeY-AA-xDJ" firstAttribute="leading" secondItem="XO1-1m-0sQ" secondAttribute="trailing" constant="8" id="5v3-pb-y6y"/>
-                                        <constraint firstItem="0PF-XN-PbN" firstAttribute="top" secondItem="IWv-0p-2vl" secondAttribute="topMargin" constant="7" id="Iqc-iZ-VGB"/>
-                                        <constraint firstItem="XO1-1m-0sQ" firstAttribute="centerY" secondItem="IWv-0p-2vl" secondAttribute="centerY" id="NJd-7w-YxH"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="0PF-XN-PbN" secondAttribute="trailing" id="Qum-BF-jOW"/>
-                                        <constraint firstItem="Z7x-SV-EOb" firstAttribute="leading" secondItem="XO1-1m-0sQ" secondAttribute="trailing" constant="8" id="ZaZ-RB-Rc3"/>
-                                        <constraint firstItem="0PF-XN-PbN" firstAttribute="leading" secondItem="yeY-AA-xDJ" secondAttribute="trailing" constant="8" id="aVP-Av-WiJ"/>
-                                        <constraint firstAttribute="leadingMargin" secondItem="XO1-1m-0sQ" secondAttribute="leading" id="dbK-bN-weD"/>
-                                        <constraint firstItem="yeY-AA-xDJ" firstAttribute="top" secondItem="IWv-0p-2vl" secondAttribute="topMargin" constant="7" id="lGf-Z3-lvL"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="Sql-hz-qDi" secondAttribute="trailing" id="pSL-mm-Cyh"/>
-                                        <constraint firstItem="Sql-hz-qDi" firstAttribute="leading" secondItem="Z7x-SV-EOb" secondAttribute="trailing" constant="8" id="pfg-hA-BH4"/>
-                                    </constraints>
-                                </tableViewCellContentView>
-                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                <connections>
-                                    <outlet property="avatarImage" destination="XO1-1m-0sQ" id="xTb-0x-nsl"/>
-                                    <outlet property="badgeView" destination="Sql-hz-qDi" id="F7w-WM-9z2"/>
-                                    <outlet property="bodyLabel" destination="Z7x-SV-EOb" id="HDJ-b7-cuX"/>
-                                    <outlet property="timeLabel" destination="0PF-XN-PbN" id="52A-rj-MMq"/>
-                                    <outlet property="titleLabel" destination="yeY-AA-xDJ" id="y7V-Q2-fcd"/>
-                                </connections>
-                            </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="QMPlaceholderCell" rowHeight="420" id="mQr-un-WzV" customClass="QMDialogCell">
-                                <rect key="frame" x="0.0" y="212" width="600" height="420"/>
+                                <rect key="frame" x="0.0" y="92" width="600" height="420"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mQr-un-WzV" id="cUp-X3-4V4">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="419"/>
@@ -210,7 +141,6 @@ out here.</string>
                         <barButtonItem key="rightBarButtonItem" image="ic_new" id="ekF-vr-TqV"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="searchBar" destination="Sr8-KN-jff" id="d8a-lk-hI1"/>
                         <outlet property="titleView" destination="wRe-Va-Lui" id="nmC-7w-CRN"/>
                         <segue destination="GGd-RU-mxU" kind="custom" identifier="SceneSegueAuth" customClass="QMRootViewControllerSegue" id="O5H-Pl-5ur"/>
                     </connections>
