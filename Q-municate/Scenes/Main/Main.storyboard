@@ -28,24 +28,6 @@
             </objects>
             <point key="canvasLocation" x="-5966" y="-9389"/>
         </scene>
-        <!--Search Results Controller-->
-        <scene sceneID="lyv-ls-D9N">
-            <objects>
-                <tableViewController id="sTV-DU-Zfc" customClass="QMSearchResultsController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="hMb-DO-vB5">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <connections>
-                            <outlet property="dataSource" destination="sTV-DU-Zfc" id="eQo-6O-Qho"/>
-                            <outlet property="delegate" destination="sTV-DU-Zfc" id="yK5-Qy-mkA"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="gII-Jj-LMY" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-4782" y="-8364"/>
-        </scene>
         <!--Dialogs View Controller-->
         <scene sceneID="XsO-zK-SPy">
             <objects>

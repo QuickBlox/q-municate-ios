@@ -9,6 +9,12 @@
 #import "QMDialogsViewController.h"
 #import "QMDialogsDataSource.h"
 #import "QMPlaceholderDataSource.h"
+#import "QMLocalSearchDataSource.h"
+#import "QMGlobalSearchDataSource.h"
+#import "QMSearchResultsController.h"
+#import "QMDialogCell.h"
+#import "QMContactCell.h"
+
 #import "QMCore.h"
 #import "QMTasks.h"
 #import "QMProfile.h"
@@ -16,8 +22,11 @@
 
 #import <SVProgressHUD.h>
 
-static NSString *const kQMLocalSearchString = @"Local";
-static NSString *const kQMGlobalSearchString = @"Global";
+typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
+    
+    QMSearchScopeButtonIndexLocal,
+    QMSearchScopeButtonIndexGlobal
+};
 
 @interface QMDialogsViewController ()
 
@@ -25,7 +34,10 @@ static NSString *const kQMGlobalSearchString = @"Global";
 QMUsersServiceDelegate,
 QMChatServiceDelegate,
 QMChatConnectionDelegate,
-UITableViewDelegate
+UITableViewDelegate,
+UISearchControllerDelegate,
+UISearchBarDelegate,
+UISearchResultsUpdating
 >
 
 /**
@@ -33,9 +45,12 @@ UITableViewDelegate
  */
 @property (strong, nonatomic) QMDialogsDataSource *dialogsDataSource;
 @property (strong, nonatomic) QMPlaceholderDataSource *placeholderDataSource;
+@property (strong, nonatomic) QMLocalSearchDataSource *localSearchDataSource;
+@property (strong, nonatomic) QMGlobalSearchDataSource *globalSearchDataSource;
 
 @property (weak, nonatomic) IBOutlet QMTitleView *titleView;
-@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (strong, nonatomic) UISearchController *searchController;
+@property (strong, nonatomic) QMSearchResultsController *searchResultsController;
 
 @end
 
@@ -44,16 +59,29 @@ UITableViewDelegate
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self registerNibs];
+    
     // Hide empty separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     // Data sources init
     self.dialogsDataSource = [[QMDialogsDataSource alloc] init];
     self.placeholderDataSource  = [[QMPlaceholderDataSource alloc] init];
+    self.localSearchDataSource = [[QMLocalSearchDataSource alloc] init];
+    self.globalSearchDataSource = [[QMGlobalSearchDataSource alloc] init];
     self.tableView.delegate = self;
     
-    // search bar implementation
-    self.searchBar.scopeButtonTitles = @[kQMLocalSearchString, kQMGlobalSearchString];
+    // search implementation
+    self.searchResultsController = [[QMSearchResultsController alloc] init];
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:self.searchResultsController];
+    self.searchController.searchBar.scopeButtonTitles = @[NSLocalizedString(@"QM_STR_LOCAL_SEARCH", nil), NSLocalizedString(@"QM_STR_GLOBAL_SEARCH", nil)];
+    self.searchController.searchBar.placeholder = NSLocalizedString(@"QM_STR_SEARCH_BAR_PLACEHOLDER", nil);
+    self.searchController.searchResultsUpdater = self;
+    self.searchController.delegate = self;
+    self.searchController.searchBar.delegate = self;
+    self.searchController.dimsBackgroundDuringPresentation = YES;
+    self.definesPresentationContext = YES;
+    self.tableView.tableHeaderView = self.searchController.searchBar;
     
     // Subscribing delegates
     [[QMCore instance].chatService addDelegate:self];
@@ -88,6 +116,7 @@ UITableViewDelegate
     }] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull task) {
         @strongify(self);
         self.tableView.dataSource = self.dialogsDataSource.items.count > 0 ? self.dialogsDataSource : self.placeholderDataSource;
+        [self.tableView reloadData];
         return nil;
     }];
 }
@@ -120,6 +149,54 @@ UITableViewDelegate
 
 - (IBAction)didPressProfileTitle:(id)sender {
     
+}
+
+#pragma mark - UISearchControllerDelegate
+
+- (void)willPresentSearchController:(UISearchController *)searchController {
+    
+    self.searchResultsController.tableView.dataSource = self.localSearchDataSource;
+    [self.searchResultsController.tableView reloadData];
+}
+
+#pragma mark - UISearchBarDelegate
+
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
+    
+    if (selectedScope == QMSearchScopeButtonIndexLocal) {
+        
+        self.searchResultsController.tableView.dataSource = self.localSearchDataSource;
+    }
+    else if (selectedScope == QMSearchScopeButtonIndexGlobal) {
+        
+        self.searchResultsController.tableView.dataSource = self.globalSearchDataSource;
+    }
+    else {
+        
+        NSAssert(nil, @"Unknown selected scope");
+    }
+    
+    [self.searchResultsController.tableView reloadData];
+}
+
+#pragma mark - UISearchResultsUpdating
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    
+    NSString *searchString = searchController.searchBar.text;
+    
+    if (searchController.searchBar.selectedScopeButtonIndex == QMSearchScopeButtonIndexLocal) {
+        
+        [self.searchResultsController localSearch:searchString];
+    }
+    else if (searchController.searchBar.selectedScopeButtonIndex == QMSearchScopeButtonIndexGlobal) {
+        
+        [self.searchResultsController globalSearch:searchString];
+    }
+    else {
+        
+        NSAssert(nil, @"Unknown selected scope");
+    }
 }
 
 #pragma mark - QMChatServiceDelegate
@@ -174,6 +251,13 @@ UITableViewDelegate
 
 #pragma mark - QMUsersServiceDelegate
 
+- (void)usersService:(QMUsersService *)usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)users {
+    
+    if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
+        [self.tableView reloadData];
+    }
+}
+
 - (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)user {
     
     if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
@@ -214,6 +298,14 @@ UITableViewDelegate
     if (![self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
         self.tableView.dataSource = self.dialogsDataSource;
     }
+}
+
+#pragma mark - Register nibs
+
+- (void)registerNibs {
+    
+    [QMDialogCell registerForReuseInTableView:self.tableView];
+    [QMContactCell registerForReuseInTableView:self.tableView];
 }
 
 @end
