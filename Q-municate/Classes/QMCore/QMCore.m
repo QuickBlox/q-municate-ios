@@ -98,6 +98,43 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
     }];
 }
 
+#pragma mark - Users
+
+- (NSArray *)friends {
+    
+    NSArray *ids = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
+    NSArray *allFriends = [self.usersService.usersMemoryStorage usersWithIDs:ids];
+    
+    return allFriends;
+}
+
+- (NSArray *)idsOfContactsOnly {
+    
+    NSMutableSet *IDs = [NSMutableSet new];
+    NSArray *contactItems = [QBChat instance].contactList.contacts;
+    
+    for (QBContactListItem *item in contactItems) {
+        [IDs addObject:@(item.userID)];
+    }
+    
+    // hardfix for broken contact list until fixed
+    for (QBContactListItem *item in [QBChat instance].contactList.pendingApproval) {
+        
+        if (item.subscriptionState == QBPresenceSubscriptionStateFrom) {
+            [IDs addObject:@(item.userID)];
+        }
+    }
+    //
+    
+    return IDs.allObjects;
+}
+
+- (BOOL)isFriendWithUser:(QBUUser *)user {
+    
+    NSArray *ids = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
+    return [ids containsObject:@(user.ID)];
+}
+
 #pragma mark - Last activity date
 
 - (void)setLastActivityDate:(NSDate *)lastActivityDate

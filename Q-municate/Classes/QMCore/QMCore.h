@@ -37,6 +37,10 @@
  */
 + (instancetype)instance;
 
+- (NSArray *)friends;
+- (NSArray *)idsOfContactsOnly;
+- (BOOL)isFriendWithUser:(QBUUser *)user;
+
 - (BFTask *)logout;
 
 - (BFTask *)leaveChatDialog:(QBChatDialog *)chatDialog;
