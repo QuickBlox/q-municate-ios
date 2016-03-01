@@ -129,3 +129,8 @@
 "QM_STR_READ_BY_NAMES_STATUS" = "Read: %@";
 "QM_STR_DELIVERED_TO_AMOUNT_PEOPLE_STATUS" = "Delivered to %tu people";
 "QM_STR_DELIVERED_TO_NAMES_STATUS" = "Delivered: %@";
+
+// *********** Dialogs Screen ***********
+"QM_STR_LOCAL_SEARCH" = "Local";
+"QM_STR_GLOBAL_SEARCH" = "Global";
+"QM_STR_SEARCH_BAR_PLACEHOLDER" = "Search";
