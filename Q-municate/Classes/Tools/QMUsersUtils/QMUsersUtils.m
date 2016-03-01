@@ -41,4 +41,16 @@
     return url;
 }
 
++ (NSArray *)idsOfUsers:(NSArray *)users {
+    
+    NSMutableArray *ids = [NSMutableArray array];
+    
+    for (QBUUser *user in users) {
+        
+        [ids addObject:@(user.ID)];
+    }
+    
+    return ids.copy;
+}
+
 @end
