@@ -1162,7 +1162,6 @@
 				584277BC1C3D42BB00CDE35B /* QMLinkViewController */,
 				5877D6D11C46705E00938E5D /* QMTableViewDataSource */,
 				5877D6D71C4671E500938E5D /* QMTableViewCell */,
-				58D8475D1C849A75000C40BA /* QMSearchResultsController */,
 			);
 			name = Base;
 			sourceTree = "<group>";
@@ -1253,6 +1252,7 @@
 			children = (
 				5877D6C81C466DE600938E5D /* QMDialogsViewController.h */,
 				5877D6C91C466DE600938E5D /* QMDialogsViewController.m */,
+				58D8475D1C849A75000C40BA /* QMSearchResultsController */,
 				5885E0791C47F5AD0081A5E9 /* Data sources */,
 				5877D6D51C46710600938E5D /* Cells */,
 			);
