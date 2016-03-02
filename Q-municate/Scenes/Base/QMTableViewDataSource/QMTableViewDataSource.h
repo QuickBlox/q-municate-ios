@@ -16,6 +16,8 @@
 
 @property (strong, nonatomic) NSMutableArray *items;
 
+- (instancetype)initWithSearchDataProvider:(QMSearchDataProvider *)searchDataProvider;
+
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 - (void)addItems:(NSArray *)items;

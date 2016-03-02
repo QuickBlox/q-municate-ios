@@ -7,6 +7,7 @@
 //
 
 #import "QMTableViewDatasource.h"
+#import "QMSearchDataProvider.h"
 
 @implementation QMTableViewDataSource
 
@@ -17,6 +18,19 @@
         
         _items = [NSMutableArray array];
     }
+    return self;
+}
+
+- (instancetype)initWithSearchDataProvider:(QMSearchDataProvider *)searchDataProvider {
+    
+    self = [self init];
+    
+    if (self) {
+        
+        _searchDataProvider = searchDataProvider;
+        _searchDataProvider.dataSource = self;
+    }
+    
     return self;
 }
 

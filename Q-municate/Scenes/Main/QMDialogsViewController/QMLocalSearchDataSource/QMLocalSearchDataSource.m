@@ -18,18 +18,6 @@
 
 @implementation QMLocalSearchDataSource
 
-- (instancetype)init {
-    
-    self = [super init];
-    
-    if (self) {
-        
-        self.searchDataProvider = [[QMLocalSearchDataProvider alloc] initWithDataSource:self];
-    }
-    
-    return self;
-}
-
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     switch (indexPath.section) {

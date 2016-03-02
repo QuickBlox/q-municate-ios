@@ -10,18 +10,6 @@
 
 @implementation QMSearchDataProvider
 
-- (instancetype)initWithDataSource:(QMTableViewDataSource *)dataSource {
-    
-    self = [super init];
-    
-    if (self) {
-        
-        _dataSource = dataSource;
-    }
-    
-    return self;
-}
-
 - (void)performSearch:(NSString *)searchText {
     
     if ([self.delegate respondsToSelector:@selector(searchDataProviderDidFinishDataFetching:)]) {

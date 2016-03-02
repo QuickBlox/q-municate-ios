@@ -8,8 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "QMSearchProtocols.h"
+#import "QMSearchDataProvider.h"
 
-@interface QMSearchResultsController : UITableViewController <QMSearchProtocol>
+@interface QMSearchResultsController : UITableViewController
+
+<
+QMSearchProtocol,
+QMSearchDataProviderDelegate
+>
 
 - (void)performSearch:(NSString *)searchText;
 

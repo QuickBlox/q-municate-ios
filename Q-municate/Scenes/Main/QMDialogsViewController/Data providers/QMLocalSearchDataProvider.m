@@ -25,9 +25,9 @@ QMContactListServiceDelegate
 
 @implementation QMLocalSearchDataProvider
 
-- (instancetype)initWithDataSource:(QMTableViewDataSource *)dataSource {
+- (instancetype)init {
     
-    self = [super initWithDataSource:dataSource];
+    self = [super init];
     
     if (self) {
         

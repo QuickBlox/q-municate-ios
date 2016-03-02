@@ -15,6 +15,7 @@
 #import "QMDialogCell.h"
 #import "QMContactCell.h"
 #import "QMSearchDataProvider.h"
+#import "QMLocalSearchDataProvider.h"
 
 #import "QMCore.h"
 #import "QMTasks.h"
@@ -51,7 +52,7 @@ UISearchResultsUpdating
 
 @property (weak, nonatomic) IBOutlet QMTitleView *titleView;
 @property (strong, nonatomic) UISearchController *searchController;
-@property (strong, nonatomic) QMSearchResultsController <QMSearchDataProviderDelegate> *searchResultsController;
+@property (strong, nonatomic) QMSearchResultsController *searchResultsController;
 
 @end
 
@@ -93,16 +94,18 @@ UISearchResultsUpdating
     
     self.dialogsDataSource = [[QMDialogsDataSource alloc] init];
     self.placeholderDataSource  = [[QMPlaceholderDataSource alloc] init];
-    self.localSearchDataSource = [[QMLocalSearchDataSource alloc] init];
+    
+    self.searchResultsController = [[QMSearchResultsController alloc] init];
+    QMLocalSearchDataProvider *localSearchDataProvider = [[QMLocalSearchDataProvider alloc] init];
+    localSearchDataProvider.delegate = self.searchResultsController;
+    
+    self.localSearchDataSource = [[QMLocalSearchDataSource alloc] initWithSearchDataProvider:localSearchDataProvider];
     self.globalSearchDataSource = [[QMGlobalSearchDataSource alloc] init];
+    
     self.tableView.delegate = self;
 }
 
 - (void)configureSearch {
-    
-    self.searchResultsController = (QMSearchResultsController <QMSearchDataProviderDelegate> *)[[QMSearchResultsController alloc] init];
-    self.localSearchDataSource.searchDataProvider.delegate = self.searchResultsController;
-//    self.globalSearchDataSource.searchDataProvider.delegate = self.searchResultsController;
     
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:self.searchResultsController];
     self.searchController.searchBar.scopeButtonTitles = @[NSLocalizedString(@"QM_STR_LOCAL_SEARCH", nil), NSLocalizedString(@"QM_STR_GLOBAL_SEARCH", nil)];

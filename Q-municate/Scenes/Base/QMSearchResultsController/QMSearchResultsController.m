@@ -22,8 +22,7 @@ static const NSUInteger kQMUsersPageLimit       = 50;
 @interface QMSearchResultsController ()
 
 <
-UITableViewDelegate,
-QMSearchDataProviderDelegate
+UITableViewDelegate
 >
 
 @end

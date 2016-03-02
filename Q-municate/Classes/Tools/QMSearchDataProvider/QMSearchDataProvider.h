@@ -24,8 +24,6 @@
 
 @property (weak, nonatomic) id<QMSearchDataProviderDelegate> delegate;
 
-- (instancetype)initWithDataSource:(QMTableViewDataSource *)dataSource;
-
 - (void)performSearch:(NSString *)searchText;
 
 @end
