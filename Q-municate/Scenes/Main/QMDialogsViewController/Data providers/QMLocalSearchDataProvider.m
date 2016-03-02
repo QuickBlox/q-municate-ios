@@ -63,23 +63,13 @@ QMContactListServiceDelegate
         NSArray *contactsSearchResult = [self.friends filteredArrayUsingPredicate:usersSearchPredicate];
         
         // dialogs local search
-        NSMutableArray *dialogsSearchResult = [NSMutableArray array];
         
-        NSArray *idsOfContacts = [[QMCore instance] idsOfUsers:contactsSearchResult];
-        for (NSNumber *userID in idsOfContacts) {
-            
-            QBChatDialog *privateDialog = [[QMCore instance].chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:[userID unsignedIntegerValue]];
-            if (privateDialog != nil) {
-                
-                [dialogsSearchResult addObject:privateDialog];
-            }
-        }
         
         NSSortDescriptor *dialogsSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kQMDialogsSearchDescriptorKey ascending:NO];
         NSArray *dialogs = [[QMCore instance].chatService.dialogsMemoryStorage dialogsWithSortDescriptors:@[dialogsSortDescriptor]];
         
         NSPredicate *dialogsSearchPredicate = [NSPredicate predicateWithFormat:@"SELF.name CONTAINS[cd] %@", searchText];
-        [dialogsSearchResult addObjectsFromArray:[dialogs filteredArrayUsingPredicate:dialogsSearchPredicate]];
+        NSMutableArray *dialogsSearchResult = [NSMutableArray arrayWithArray:[dialogs filteredArrayUsingPredicate:dialogsSearchPredicate]];
         
         [dataSource setContacts:contactsSearchResult.mutableCopy];
         [dataSource setDialogs:dialogsSearchResult];
