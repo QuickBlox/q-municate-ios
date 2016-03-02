@@ -14,7 +14,12 @@
 /**
  *  This class represents basic control on QMServices.
  */
-@interface QMCore : QMServicesManager <QMContactListServiceCacheDataSource>
+@interface QMCore : QMServicesManager
+
+<
+QMContactListServiceCacheDataSource,
+QMContactListServiceDelegate
+>
 
 /**
  *  Contact list service.

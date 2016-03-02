@@ -40,6 +40,7 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
         // Contact list service init
         [QMContactListCache setupDBWithStoreNamed:kContactListCacheNameKey];
         _contactListService = [[QMContactListService alloc] initWithServiceManager:self cacheDataSource:self];
+        [_contactListService addDelegate:self];
         
         // Profile init
         _currentProfile = [QMProfile currentProfile];
@@ -174,7 +175,15 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
 #pragma mark QMContactListServiceCacheDelegate delegate
 
 - (void)cachedContactListItems:(QMCacheCollection)block {
+    
     [[QMContactListCache instance] contactListItems:block];
+}
+
+#pragma mark - QMContactListServiceDelegate
+
+- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
+    
+    [[QMContactListCache instance] insertOrUpdateContactListItemsWithContactList:contactList completion:nil];
 }
 
 @end
