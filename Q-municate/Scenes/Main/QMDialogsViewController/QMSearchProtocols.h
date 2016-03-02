@@ -8,16 +8,21 @@
 
 @class QMTableViewDataSource;
 @protocol QMLocalSearchDataSourceProtocol;
+@protocol QMGlobalSearchDataSourceProtocol;
 
 @protocol QMSearchProtocol <NSObject>
 
-- (QMTableViewDataSource <QMLocalSearchDataSourceProtocol> *)searchDataSource;
+- (QMTableViewDataSource <QMLocalSearchDataSourceProtocol, QMGlobalSearchDataSourceProtocol> *)searchDataSource;
 
 @end
 
-@protocol QMLocalSearchDataSourceProtocol <NSObject>
+@protocol QMLocalSearchDataSourceProtocol <QMSearchProtocol>
 
 @property (strong, nonatomic) NSMutableArray *contacts;
 @property (strong, nonatomic) NSMutableArray *dialogs;
+
+@end
+
+@protocol QMGlobalSearchDataSourceProtocol <QMSearchProtocol>
 
 @end
