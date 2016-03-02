@@ -66,17 +66,17 @@ UISearchResultsUpdating
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     // Data sources init
-    [self initDataSources];
+    [self configureDataSources];
     
     // search implementation
-    [self initSearch];
+    [self configureSearch];
     
     // Subscribing delegates
     [[QMCore instance].chatService addDelegate:self];
     [[QMCore instance].usersService addDelegate:self];
     
     // Profile title view
-    [self initProfileTitleView];
+    [self configureProfileTitleView];
     
     // auto login user
     [self performAutoLoginAndFetchData];
@@ -89,7 +89,7 @@ UISearchResultsUpdating
 
 #pragma mark - Init methods
 
-- (void)initDataSources {
+- (void)configureDataSources {
     
     self.dialogsDataSource = [[QMDialogsDataSource alloc] init];
     self.placeholderDataSource  = [[QMPlaceholderDataSource alloc] init];
@@ -98,7 +98,7 @@ UISearchResultsUpdating
     self.tableView.delegate = self;
 }
 
-- (void)initSearch {
+- (void)configureSearch {
     
     self.searchResultsController = (QMSearchResultsController <QMSearchDataProviderDelegate> *)[[QMSearchResultsController alloc] init];
     self.localSearchDataSource.searchDataProvider.delegate = self.searchResultsController;
@@ -115,7 +115,7 @@ UISearchResultsUpdating
     self.tableView.tableHeaderView = self.searchController.searchBar;
 }
 
-- (void)initProfileTitleView {
+- (void)configureProfileTitleView {
     
     QBUUser *currentUser = [QMCore instance].currentProfile.userData;
     [self.titleView setText:currentUser.fullName];
