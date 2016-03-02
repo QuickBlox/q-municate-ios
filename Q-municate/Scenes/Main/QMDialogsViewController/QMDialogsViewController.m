@@ -65,13 +65,40 @@ UISearchResultsUpdating
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     // Data sources init
+    [self initDataSources];
+    
+    // search implementation
+    [self initSearch];
+    
+    // Subscribing delegates
+    [[QMCore instance].chatService addDelegate:self];
+    [[QMCore instance].usersService addDelegate:self];
+    
+    // Profile title view
+    [self initProfileTitleView];
+    
+    // auto login user
+    [self performAutoLoginAndFetchData];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Init methods
+
+- (void)initDataSources {
+    
     self.dialogsDataSource = [[QMDialogsDataSource alloc] init];
     self.placeholderDataSource  = [[QMPlaceholderDataSource alloc] init];
     self.localSearchDataSource = [[QMLocalSearchDataSource alloc] init];
     self.globalSearchDataSource = [[QMGlobalSearchDataSource alloc] init];
     self.tableView.delegate = self;
+}
+
+- (void)initSearch {
     
-    // search implementation
     self.searchResultsController = [[QMSearchResultsController alloc] init];
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:self.searchResultsController];
     self.searchController.searchBar.scopeButtonTitles = @[NSLocalizedString(@"QM_STR_LOCAL_SEARCH", nil), NSLocalizedString(@"QM_STR_GLOBAL_SEARCH", nil)];
@@ -82,18 +109,18 @@ UISearchResultsUpdating
     self.searchController.dimsBackgroundDuringPresentation = YES;
     self.definesPresentationContext = YES;
     self.tableView.tableHeaderView = self.searchController.searchBar;
+}
+
+- (void)initProfileTitleView {
     
-    // Subscribing delegates
-    [[QMCore instance].chatService addDelegate:self];
-    [[QMCore instance].usersService addDelegate:self];
-    
-    // Profile title view
     QBUUser *currentUser = [QMCore instance].currentProfile.userData;
     [self.titleView setText:currentUser.fullName];
     self.titleView.placeholderID = currentUser.ID;
     [self.titleView setAvatarUrl:currentUser.avatarUrl];
+}
+
+- (void)performAutoLoginAndFetchData {
     
-    // auto login user
     @weakify(self);
     [[[[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         @strongify(self);
@@ -121,11 +148,6 @@ UISearchResultsUpdating
     }];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -140,7 +162,7 @@ UISearchResultsUpdating
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    return self.dialogsDataSource.items.count > 0 ? 76 : tableView.frame.size.height - self.navigationController.navigationBar.frame.size.height - [UIApplication sharedApplication].statusBarFrame.size.height;
+    return self.dialogsDataSource.items.count > 0 ? [QMDialogCell height] : tableView.frame.size.height - self.navigationController.navigationBar.frame.size.height - [UIApplication sharedApplication].statusBarFrame.size.height;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
