@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "QMSearchProtocols.h"
 
-@interface QMSearchResultsController : UITableViewController
+@interface QMSearchResultsController : UITableViewController <QMSearchProtocol>
 
-- (void)localSearch:(NSString *)searchText;
-
-- (void)globalSearch:(NSString *)searchText;
+- (void)performSearch:(NSString *)searchText;
 
 @end

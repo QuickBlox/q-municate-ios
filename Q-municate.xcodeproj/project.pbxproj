@@ -346,6 +346,7 @@
 		58D8476E1C85BB36000C40BA /* QMContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMContactCell.h; path = "Q-municate/Scenes/Main/QMDialogsViewController/Cells/QMContactCell/QMContactCell.h"; sourceTree = SOURCE_ROOT; };
 		58D8476F1C85BB36000C40BA /* QMContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMContactCell.m; path = "Q-municate/Scenes/Main/QMDialogsViewController/Cells/QMContactCell/QMContactCell.m"; sourceTree = SOURCE_ROOT; };
 		58D847711C85BBAB000C40BA /* QMContactCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = QMContactCell.xib; path = "Q-municate/Scenes/Main/QMDialogsViewController/Cells/QMContactCell/QMContactCell.xib"; sourceTree = SOURCE_ROOT; };
+		58D8477C1C86FD53000C40BA /* QMSearchProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = QMSearchProtocols.h; path = "Q-municate/Scenes/Main/QMDialogsViewController/QMSearchProtocols.h"; sourceTree = SOURCE_ROOT; };
 		58E343861C491AAA00439E93 /* QMTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMTitleView.h; path = QMTitleView/QMTitleView.h; sourceTree = "<group>"; };
 		58E343871C491AAA00439E93 /* QMTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMTitleView.m; path = QMTitleView/QMTitleView.m; sourceTree = "<group>"; };
 		58F437691BBC21810041C08D /* QMProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMProtocols.h; sourceTree = "<group>"; };
@@ -1364,6 +1365,7 @@
 		58D8475D1C849A75000C40BA /* QMSearchResultsController */ = {
 			isa = PBXGroup;
 			children = (
+				58D8477C1C86FD53000C40BA /* QMSearchProtocols.h */,
 				58D8475E1C849AA4000C40BA /* QMSearchResultsController.h */,
 				58D8475F1C849AA4000C40BA /* QMSearchResultsController.m */,
 			);

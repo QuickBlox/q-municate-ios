@@ -186,20 +186,7 @@ UISearchResultsUpdating
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     
-    NSString *searchString = searchController.searchBar.text;
-    
-    if (searchController.searchBar.selectedScopeButtonIndex == QMSearchScopeButtonIndexLocal) {
-        
-        [self.searchResultsController localSearch:searchString];
-    }
-    else if (searchController.searchBar.selectedScopeButtonIndex == QMSearchScopeButtonIndexGlobal) {
-        
-        [self.searchResultsController globalSearch:searchString];
-    }
-    else {
-        
-        NSAssert(nil, @"Unknown selected scope");
-    }
+    [self.searchResultsController performSearch:searchController.searchBar.text];
 }
 
 #pragma mark - QMChatServiceDelegate

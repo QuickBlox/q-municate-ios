@@ -64,13 +64,19 @@ QMContactListServiceDelegate
 
 #pragma mark Search methods
 
-- (void)localSearch:(NSString *)searchText {
+- (void)performSearch:(NSString *)searchText {
     
-    NSMutableArray *searchItems = [(QMTableViewDataSource *)self.tableView.dataSource items];
+    BOOL isLocalSearch = [self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)];
+    
+    isLocalSearch ? [self localSearch:searchText] : [self globalSearch:searchText];
+}
+
+- (void)localSearch:(NSString *)searchText {
     
     if (searchText.length == 0) {
         
-        [searchItems removeAllObjects];
+        [self.searchDataSource.contacts removeAllObjects];
+        [self.searchDataSource.dialogs removeAllObjects];
         [self.tableView reloadData];
         return;
     }
@@ -101,8 +107,8 @@ QMContactListServiceDelegate
         NSPredicate *dialogsSearchPredicate = [NSPredicate predicateWithFormat:@"SELF.name CONTAINS[cd] %@", searchText];
         [dialogsSearchResult addObjectsFromArray:[dialogs filteredArrayUsingPredicate:dialogsSearchPredicate]];
         
-        [(QMLocalSearchDataSource *)self.tableView.dataSource setContacts:contactsSearchResult];
-        [(QMLocalSearchDataSource *)self.tableView.dataSource setDialogs:dialogsSearchResult.copy];
+        [self.searchDataSource setContacts:contactsSearchResult.mutableCopy];
+        [self.searchDataSource setDialogs:dialogsSearchResult];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
@@ -126,7 +132,7 @@ QMContactListServiceDelegate
     
     // performing global search
     NSString *searchText = timer.userInfo;
-    NSMutableArray *searchItems = [(QMTableViewDataSource *)self.tableView.dataSource items];
+    NSMutableArray *searchItems = self.searchDataSource.items;
     
     if (searchText.length < kQMGlobalSearchCharsMin) {
         
@@ -152,7 +158,7 @@ QMContactListServiceDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if ([self.tableView.dataSource isKindOfClass:[QMLocalSearchDataSource class]]) {
+    if ([self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
         
         switch (indexPath.section) {
             case 0:
@@ -179,6 +185,13 @@ QMContactListServiceDelegate
     
     [QMDialogCell registerForReuseInTableView:self.tableView];
     [QMContactCell registerForReuseInTableView:self.tableView];
+}
+
+#pragma mark - QMSearchProtocol
+
+- (QMTableViewDataSource<QMLocalSearchDataSourceProtocol> *)searchDataSource {
+    
+    return (id)self.tableView.dataSource;
 }
 
 #pragma mark - 
