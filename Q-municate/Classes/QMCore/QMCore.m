@@ -108,6 +108,17 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
     return allFriends;
 }
 
+- (NSArray *)friendsSortedByFullName {
+    
+    NSSortDescriptor *sorter = [[NSSortDescriptor alloc]
+                                initWithKey:@"fullName"
+                                ascending:YES
+                                selector:@selector(localizedCaseInsensitiveCompare:)];
+    NSArray *sortedUsers = [[self friends] sortedArrayUsingDescriptors:@[sorter]];
+    
+    return sortedUsers;
+}
+
 - (NSArray *)idsOfContactsOnly {
     
     NSMutableSet *IDs = [NSMutableSet new];
@@ -133,6 +144,18 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
     
     NSArray *ids = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
     return [ids containsObject:@(user.ID)];
+}
+
+- (NSArray *)idsOfUsers:(NSArray *)users {
+    
+    NSMutableArray *ids = [NSMutableArray array];
+    
+    for (QBUUser *user in users) {
+        
+        [ids addObject:@(user.ID)];
+    }
+    
+    return ids.copy;
 }
 
 #pragma mark - Last activity date

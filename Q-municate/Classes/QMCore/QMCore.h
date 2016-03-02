@@ -38,8 +38,10 @@
 + (instancetype)instance;
 
 - (NSArray *)friends;
+- (NSArray *)friendsSortedByFullName;
 - (NSArray *)idsOfContactsOnly;
 - (BOOL)isFriendWithUser:(QBUUser *)user;
+- (NSArray *)idsOfUsers:(NSArray *)users;
 
 - (BFTask *)logout;
 
