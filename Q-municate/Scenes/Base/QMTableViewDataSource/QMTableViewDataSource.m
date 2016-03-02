@@ -21,19 +21,6 @@
     return self;
 }
 
-- (instancetype)initWithSearchDataProvider:(QMSearchDataProvider *)searchDataProvider {
-    
-    self = [self init];
-    
-    if (self) {
-        
-        _searchDataProvider = searchDataProvider;
-        _searchDataProvider.dataSource = self;
-    }
-    
-    return self;
-}
-
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return 0.0f;

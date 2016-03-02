@@ -117,6 +117,7 @@
 		58D847721C85BBAB000C40BA /* QMContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58D847711C85BBAB000C40BA /* QMContactCell.xib */; };
 		58D847811C871469000C40BA /* QMSearchDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D847801C871469000C40BA /* QMSearchDataProvider.m */; };
 		58D847861C871BDB000C40BA /* QMLocalSearchDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D847851C871BDB000C40BA /* QMLocalSearchDataProvider.m */; };
+		58D8478C1C873F58000C40BA /* QMSearchDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D8478B1C873F58000C40BA /* QMSearchDataSource.m */; };
 		58E343881C491AAA00439E93 /* QMTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58E343871C491AAA00439E93 /* QMTitleView.m */; };
 		690A271518CA0F35003D6B80 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A271418CA0F35003D6B80 /* AddressBook.framework */; };
 		693206EA1962BCC300B15EF9 /* QMBaseCallsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 693206E91962BCC300B15EF9 /* QMBaseCallsController.m */; };
@@ -353,6 +354,8 @@
 		58D847801C871469000C40BA /* QMSearchDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMSearchDataProvider.m; path = QMSearchDataProvider/QMSearchDataProvider.m; sourceTree = "<group>"; };
 		58D847841C871BDB000C40BA /* QMLocalSearchDataProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMLocalSearchDataProvider.h; path = "Q-municate/Scenes/Main/QMDialogsViewController/Data providers/QMLocalSearchDataProvider.h"; sourceTree = SOURCE_ROOT; };
 		58D847851C871BDB000C40BA /* QMLocalSearchDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMLocalSearchDataProvider.m; path = "Q-municate/Scenes/Main/QMDialogsViewController/Data providers/QMLocalSearchDataProvider.m"; sourceTree = SOURCE_ROOT; };
+		58D8478A1C873F58000C40BA /* QMSearchDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMSearchDataSource.h; path = "Q-municate/Scenes/Base/QMSearchDataSource/QMSearchDataSource.h"; sourceTree = SOURCE_ROOT; };
+		58D8478B1C873F58000C40BA /* QMSearchDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMSearchDataSource.m; path = "Q-municate/Scenes/Base/QMSearchDataSource/QMSearchDataSource.m"; sourceTree = SOURCE_ROOT; };
 		58E343861C491AAA00439E93 /* QMTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMTitleView.h; path = QMTitleView/QMTitleView.h; sourceTree = "<group>"; };
 		58E343871C491AAA00439E93 /* QMTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMTitleView.m; path = QMTitleView/QMTitleView.m; sourceTree = "<group>"; };
 		58F437691BBC21810041C08D /* QMProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMProtocols.h; sourceTree = "<group>"; };
@@ -1169,6 +1172,7 @@
 				584277BC1C3D42BB00CDE35B /* QMLinkViewController */,
 				5877D6D11C46705E00938E5D /* QMTableViewDataSource */,
 				5877D6D71C4671E500938E5D /* QMTableViewCell */,
+				58D847891C873F0A000C40BA /* QMSearchDataSource */,
 			);
 			name = Base;
 			sourceTree = "<group>";
@@ -1446,6 +1450,15 @@
 			children = (
 			);
 			name = QMGlobalSearchDataProvider;
+			sourceTree = "<group>";
+		};
+		58D847891C873F0A000C40BA /* QMSearchDataSource */ = {
+			isa = PBXGroup;
+			children = (
+				58D8478A1C873F58000C40BA /* QMSearchDataSource.h */,
+				58D8478B1C873F58000C40BA /* QMSearchDataSource.m */,
+			);
+			name = QMSearchDataSource;
 			sourceTree = "<group>";
 		};
 		58E343801C49190400439E93 /* QMTitleView */ = {
@@ -1755,6 +1768,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58D8478C1C873F58000C40BA /* QMSearchDataSource.m in Sources */,
 				697E2D4C196EA82400CD2BDE /* QMLicenseAgreementViewController.m in Sources */,
 				55D963CA196430F300A87ECE /* QMSettingsManager.m in Sources */,
 				2476BA8119A5D91F00CC666D /* QMUsersUtils.m in Sources */,

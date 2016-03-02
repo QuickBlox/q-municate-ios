@@ -6,8 +6,8 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMTableViewDataSource.h"
+#import "QMSearchDataSource.h"
 
-@interface QMGlobalSearchDataSource : QMTableViewDataSource
+@interface QMGlobalSearchDataSource : QMSearchDataSource
 
 @end

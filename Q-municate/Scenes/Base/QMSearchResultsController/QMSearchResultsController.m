@@ -84,7 +84,7 @@ UITableViewDelegate
 
 #pragma mark - QMSearchProtocol
 
-- (QMTableViewDataSource *)searchDataSource {
+- (QMSearchDataSource *)searchDataSource {
     
     return (id)self.tableView.dataSource;
 }

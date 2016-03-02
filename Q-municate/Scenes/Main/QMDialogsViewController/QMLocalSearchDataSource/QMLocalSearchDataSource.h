@@ -7,10 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "QMTableViewDataSource.h"
 #import "QMSearchProtocols.h"
+#import "QMSearchDataSource.h"
 
-@interface QMLocalSearchDataSource : QMTableViewDataSource <QMLocalSearchDataSourceProtocol>
+@interface QMLocalSearchDataSource : QMSearchDataSource <QMLocalSearchDataSourceProtocol>
 
 @property (strong, nonatomic) NSMutableArray *contacts;
 @property (strong, nonatomic) NSMutableArray *dialogs;

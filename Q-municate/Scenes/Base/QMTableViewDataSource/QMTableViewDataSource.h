@@ -12,11 +12,7 @@
 
 @interface QMTableViewDataSource : NSObject <UITableViewDataSource>
 
-@property (strong, nonatomic) QMSearchDataProvider *searchDataProvider;
-
 @property (strong, nonatomic) NSMutableArray *items;
-
-- (instancetype)initWithSearchDataProvider:(QMSearchDataProvider *)searchDataProvider;
 
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 
