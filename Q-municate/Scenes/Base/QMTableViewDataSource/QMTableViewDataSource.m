@@ -7,6 +7,7 @@
 //
 
 #import "QMTableViewDatasource.h"
+#import "QMSearchDataProvider.h"
 
 @implementation QMTableViewDataSource
 
@@ -18,6 +19,11 @@
         _items = [NSMutableArray array];
     }
     return self;
+}
+
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return 0.0f;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

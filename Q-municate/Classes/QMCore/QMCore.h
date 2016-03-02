@@ -14,7 +14,12 @@
 /**
  *  This class represents basic control on QMServices.
  */
-@interface QMCore : QMServicesManager <QMContactListServiceCacheDataSource>
+@interface QMCore : QMServicesManager
+
+<
+QMContactListServiceCacheDataSource,
+QMContactListServiceDelegate
+>
 
 /**
  *  Contact list service.
@@ -36,6 +41,12 @@
  *  @return QMCore singleton
  */
 + (instancetype)instance;
+
+- (NSArray *)friends;
+- (NSArray *)friendsSortedByFullName;
+- (NSArray *)idsOfContactsOnly;
+- (BOOL)isFriendWithUser:(QBUUser *)user;
+- (NSArray *)idsOfUsers:(NSArray *)users;
 
 - (BFTask *)logout;
 

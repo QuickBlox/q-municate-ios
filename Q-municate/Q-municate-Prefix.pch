@@ -22,11 +22,11 @@
     #import "QBUpdateUserParameters+CustomData.h"
     #import "QBChatMessage+TextEncoding.h"
 
+    #import "SegueIdentifiers.h"
     #import "QMDefinitions.h"
     #import "QMProtocols.h"
     #import "Macro.h"
 
     #import <QMServices.h>
-
-    #import "SegueIdentifiers.h"
+    #import <EXTScope.h>
 #endif

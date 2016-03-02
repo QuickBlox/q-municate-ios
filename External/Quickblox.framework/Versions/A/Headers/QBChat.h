@@ -18,17 +18,6 @@
 @class QBChatDialog;
 @class QBPrivacyList;
 
-/**
- QBChatServiceError enum defines following connection error codes:
- QBChatServiceErrorConnectionRefused - Connection with server is not available
- QBChatServiceErrorConnectionClosed  - Chat service suddenly became unavailable
- QBChatServiceErrorConnectionTimeout - Connection with server timed out
- */
-typedef enum QBChatServiceError {
-    QBChatServiceErrorConnectionClosed = 1,
-    QBChatServiceErrorConnectionTimeout
-} QBChatServiceError;
-
 /** QBChat class declaration. */
 /** Overview */
 /** This class is the main entry point to work with Quickblox Chat API. */
@@ -44,13 +33,6 @@ typedef enum QBChatServiceError {
  *  @warning *Deprecated in QB iOS SDK 2.5.0:* Use [QBSettings setCarbonsEnabled:] instead.
  */
 @property (nonatomic, assign, getter = isCarbonsEnabled) BOOL carbonsEnabled DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.5. Use [QBSettings setCarbonsEnabled:] instead");
-
-/**
- *  Enable or disable Stream Management (XEP-0198)
- *
- *  @warning *Deprecated in QB iOS SDK 2.5.0:* Stream management is enabled by default.
- */
-@property (nonatomic, readonly, assign, getter = isStreamManagementEnabled) BOOL streamManagementEnabled DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.5. Stream management is enabled by default");
 
 /**
  *  Enable or disable Stream Resumption (XEP-0198). Works only if streamManagementEnabled=YES.
@@ -154,7 +136,7 @@ typedef enum QBChatServiceError {
 + (QB_NONNULL instancetype)instance;
 
 /**
- *  Connect to QuicBlox Chat with completion.
+ *  Connect to QuickBlox Chat with completion.
  *
  *  @param user       QBUUser structure represents user's login. Required user's fields: ID, password.
  *  @param completion Completion block with failure error.

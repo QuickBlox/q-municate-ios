@@ -42,39 +42,36 @@
     QBChatDialog *dialog = self.dialogs[chatDialog.ID];
     
     if (dialog != nil) {
-        dialog.createdAt            = chatDialog.createdAt;
-        dialog.updatedAt            = chatDialog.updatedAt;
-        dialog.name                 = chatDialog.name;
-        dialog.photo                = chatDialog.photo;
-        dialog.lastMessageDate      = chatDialog.lastMessageDate;
-        dialog.lastMessageUserID    = chatDialog.lastMessageUserID;
-        dialog.unreadMessagesCount  = chatDialog.unreadMessagesCount;
-        dialog.occupantIDs          = chatDialog.occupantIDs;
-        dialog.data                 = chatDialog.data;
         
-        if (dialog.isJoined) {
-            if (completion) completion(dialog,nil);
-            return;
-        }
+        dialog.createdAt = chatDialog.createdAt;
+        dialog.updatedAt = chatDialog.updatedAt;
+        dialog.name = chatDialog.name;
+        dialog.photo = chatDialog.photo;
+        dialog.lastMessageDate = chatDialog.lastMessageDate;
+        dialog.lastMessageUserID = chatDialog.lastMessageUserID;
+        dialog.lastMessageText = chatDialog.lastMessageText;
+        dialog.unreadMessagesCount = chatDialog.unreadMessagesCount;
+        dialog.occupantIDs = chatDialog.occupantIDs;
+        dialog.data = chatDialog.data;
     }
     else {
+        
         self.dialogs[chatDialog.ID] = chatDialog;
     }
     
     NSAssert(chatDialog.type != 0, @"Chat type is not defined");
-    if( chatDialog.type == QBChatDialogTypeGroup || chatDialog.type == QBChatDialogTypePublicGroup ){
-        NSAssert(chatDialog.roomJID != nil, @"Chat JID must exists for group chat");
-    }
     
-    if (join && chatDialog.type != QBChatDialogTypePrivate) {
+    if (chatDialog.type != QBChatDialogTypePrivate && !chatDialog.isJoined && join) {
+        
         [chatDialog joinWithCompletionBlock:^(NSError *error) {
-            //
+            
             if (completion) {
                 completion(chatDialog,error);
             }
         }];
     }
     else {
+        
         if (completion) completion(chatDialog, nil);
     }
 }
@@ -110,6 +107,25 @@
     return dialog;
 }
 
+- (NSArray *)chatDialogsWithUsersIDs:(NSArray *)usersIDs {
+    
+    NSArray *dialogs = [self.dialogs allValues];
+    
+    NSMutableArray *result = [NSMutableArray array];
+    NSSet *usersIDsSet = [NSSet setWithArray:usersIDs];
+    
+    for (QBChatDialog *dialog in dialogs) {
+        
+        NSMutableSet *occupantIDs = [NSMutableSet setWithArray:dialog.occupantIDs];
+        if ([occupantIDs intersectsSet:usersIDsSet]) {
+            
+            [result addObject:dialog];
+        }
+    }
+    
+    return result.copy;
+}
+
 - (NSArray *)unsortedDialogs {
     
     NSArray *dialogs = [self.dialogs allValues];
@@ -123,7 +139,7 @@
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"unreadMessagesCount > 0"];
     NSArray *result = [self.dialogs.allValues filteredArrayUsingPredicate:predicate];
-
+    
     return result;
 }
 

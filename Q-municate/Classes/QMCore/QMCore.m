@@ -40,6 +40,7 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
         // Contact list service init
         [QMContactListCache setupDBWithStoreNamed:kContactListCacheNameKey];
         _contactListService = [[QMContactListService alloc] initWithServiceManager:self cacheDataSource:self];
+        [_contactListService addDelegate:self];
         
         // Profile init
         _currentProfile = [QMProfile currentProfile];
@@ -98,6 +99,66 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
     }];
 }
 
+#pragma mark - Users
+
+- (NSArray *)friends {
+    
+    NSArray *ids = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
+    NSArray *allFriends = [self.usersService.usersMemoryStorage usersWithIDs:ids];
+    
+    return allFriends;
+}
+
+- (NSArray *)friendsSortedByFullName {
+    
+    NSSortDescriptor *sorter = [[NSSortDescriptor alloc]
+                                initWithKey:@"fullName"
+                                ascending:YES
+                                selector:@selector(localizedCaseInsensitiveCompare:)];
+    NSArray *sortedUsers = [[self friends] sortedArrayUsingDescriptors:@[sorter]];
+    
+    return sortedUsers;
+}
+
+- (NSArray *)idsOfContactsOnly {
+    
+    NSMutableSet *IDs = [NSMutableSet new];
+    NSArray *contactItems = [QBChat instance].contactList.contacts;
+    
+    for (QBContactListItem *item in contactItems) {
+        [IDs addObject:@(item.userID)];
+    }
+    
+    // hardfix for broken contact list until fixed
+    for (QBContactListItem *item in [QBChat instance].contactList.pendingApproval) {
+        
+        if (item.subscriptionState == QBPresenceSubscriptionStateFrom) {
+            [IDs addObject:@(item.userID)];
+        }
+    }
+    //
+    
+    return IDs.allObjects;
+}
+
+- (BOOL)isFriendWithUser:(QBUUser *)user {
+    
+    NSArray *ids = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
+    return [ids containsObject:@(user.ID)];
+}
+
+- (NSArray *)idsOfUsers:(NSArray *)users {
+    
+    NSMutableArray *ids = [NSMutableArray array];
+    
+    for (QBUUser *user in users) {
+        
+        [ids addObject:@(user.ID)];
+    }
+    
+    return ids.copy;
+}
+
 #pragma mark - Last activity date
 
 - (void)setLastActivityDate:(NSDate *)lastActivityDate
@@ -114,7 +175,15 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
 #pragma mark QMContactListServiceCacheDelegate delegate
 
 - (void)cachedContactListItems:(QMCacheCollection)block {
+    
     [[QMContactListCache instance] contactListItems:block];
+}
+
+#pragma mark - QMContactListServiceDelegate
+
+- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
+    
+    [[QMContactListCache instance] insertOrUpdateContactListItemsWithContactList:contactList completion:nil];
 }
 
 @end

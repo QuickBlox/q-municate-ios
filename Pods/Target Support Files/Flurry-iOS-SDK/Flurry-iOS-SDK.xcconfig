@@ -1,0 +1,2 @@
+FLURRY_IOS_SDK_LIBRARY_SEARCH_PATHS = "$(PODS_ROOT)/Flurry-iOS-SDK/Flurry"
+FLURRY_IOS_SDK_OTHER_LDFLAGS = -l"Flurry_7.1.1" -framework "Foundation" -framework "Security" -framework "SystemConfiguration" -framework "UIKit"

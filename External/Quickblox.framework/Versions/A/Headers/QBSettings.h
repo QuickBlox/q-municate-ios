@@ -55,7 +55,7 @@ typedef enum QBConnectionZoneType{
 /// Enable or disable message carbons
 + (void)setCarbonsEnabled:(BOOL)carbonsEnabled;
 
-/// Enable or disable Stream Resumption (XEP-0198). Works only if streamManagementEnabled=YES
+/// Enable or disable Stream Resumption (XEP-0198).
 + (void)setStreamResumptionEnabled:(BOOL)streamResumptionEnabled;
 
 /// Set timeout value for Stream Management send a message operation
@@ -183,12 +183,12 @@ typedef enum QBConnectionZoneType{
 + (void)setLogLevel:(QBLogLevel)logLevel;
 
 /**
- *  Enables XMPP Framework logging to console. By default is disabled.
+ *  Enables full XMPP Framework logging to console. By default is disabled.
  */
 + (void)enableXMPPLogging;
 
 /**
- *   Disables XMPP Framework logging to console.
+ *   Disables full XMPP Framework logging to console.
  */
 + (void)disableXMPPLogging;
 
@@ -209,5 +209,21 @@ typedef enum QBConnectionZoneType{
  *  @return Your NSURLSessionConfiguration object.
  */
 + (QB_NULLABLE NSURLSessionConfiguration *)sessionConfiguration;
+
+/**
+ *  Enable or Disable chat DNS Lookup cache for current chat endpoint
+ *
+ *  Caches DNS lookup for chat api endpoint.
+ *
+ *  @param enable YES / NO. Defaults NO
+ */
++ (void)setChatDNSLookupCacheEnabled:(BOOL)enabled;
+
+/**
+ *  Get Chat DNS lookup cache enabled state
+ *
+ *  @return YES if cache is enabled, NO if cache is disabled.
+ */
++ (BOOL)isChatDNSLookupCacheEnabled;
 
 @end

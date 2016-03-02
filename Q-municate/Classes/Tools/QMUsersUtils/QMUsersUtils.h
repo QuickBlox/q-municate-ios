@@ -13,5 +13,6 @@
 + (NSArray *)sortUsersByFullname:(NSArray *)users;
 + (NSMutableArray *)filteredUsers:(NSArray *)users withFlterArray:(NSArray *)usersToFilter;
 + (NSURL *)userAvatarURL:(QBUUser *)user;
++ (NSArray *)idsOfUsers:(NSArray *)users;
 
 @end

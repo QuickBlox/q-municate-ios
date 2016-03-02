@@ -33,7 +33,7 @@ typedef void(^QBChatDialogOccupantUpdateBlock)(NSUInteger userID);
 @property (nonatomic, retain, QB_NULLABLE_PROPERTY) NSDate *updatedAt;
 
 /** Room JID. If private chat, room JID will be nil */
-@property (nonatomic, retain, QB_NULLABLE_PROPERTY) NSString *roomJID;
+@property (nonatomic, retain, readonly, QB_NULLABLE_PROPERTY) NSString *roomJID;
 
 /** Chat type: Private/Group/PublicGroup */
 @property (nonatomic, readonly) QBChatDialogType type;
@@ -65,7 +65,7 @@ typedef void(^QBChatDialogOccupantUpdateBlock)(NSUInteger userID);
 /** Dialog owner */
 @property (nonatomic, assign) NSUInteger userID;
 
-/** ID of a recipient if type = QBChatDialogTypePrivate. -1 otherwise.  */
+/** ID of a recipient if type = QBChatDialogTypePrivate. -1 otherwise. Will always return -1 if QBSession currentUser is nil.  */
 @property (nonatomic, readonly) NSInteger recipientID;
 
 /**
@@ -244,6 +244,13 @@ typedef void(^QBChatDialogOccupantUpdateBlock)(NSUInteger userID);
 #pragma mark - Now typing
 
 /**
+ *  Available only for 'Enterprise' clients.*
+ *  
+ *  Send is typing message to occupants.
+ */
+- (void)sendUserIsTypingWithoutJoin;
+
+/**
  *  Send is typing message to occupants.
  */
 - (void)sendUserIsTyping;
@@ -252,6 +259,13 @@ typedef void(^QBChatDialogOccupantUpdateBlock)(NSUInteger userID);
  *  Send stopped typing message to occupants.
  */
 - (void)sendUserStoppedTyping;
+
+/**
+ *  Available only for 'Enterprise' clients.*
+ *
+ *  Send stopped typing message to occupants.
+ */
+- (void)sendUserStoppedTypingWithoutJoin;
 
 /**
  *  Clears typing status blocks. Call this method if you don't want to recieve typing statuses for this dialog.

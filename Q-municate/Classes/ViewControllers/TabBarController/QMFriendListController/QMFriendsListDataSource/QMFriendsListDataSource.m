@@ -14,6 +14,7 @@
 #import "QMUsersUtils.h"
 #import "SVProgressHud.h"
 #import "REAlertView.h"
+#import "REAlertView+QMSuccess.h"
 
 static const NSUInteger kQMUsersPageLimit       = 50;
 static const NSUInteger kQMGlobalSearchCharsMin = 3;
@@ -55,11 +56,8 @@ QMContactListServiceDelegate
         
         self.searchDisplayController = searchDisplayController;
 
-        UINib *friendsCellNib = [UINib nibWithNibName:@"QMFriendListCell" bundle:nil];
-        UINib *noResultsCellNib = [UINib nibWithNibName:@"QMNoResultsCell" bundle:nil];
-        
+        UINib *friendsCellNib = [UINib nibWithNibName:kQMFriendsListCellIdentifier bundle:nil];
         [searchDisplayController.searchResultsTableView registerNib:friendsCellNib forCellReuseIdentifier:kQMFriendsListCellIdentifier];
-        [searchDisplayController.searchResultsTableView registerNib:noResultsCellNib forCellReuseIdentifier:kQMDontHaveAnyFriendsCellIdentifier];
     }
     
     return self;
@@ -88,10 +86,11 @@ QMContactListServiceDelegate
 - (void)reloadDataSource {
     
     self.friendList = [QMApi instance].friends;
-    if (self.viewIsShowed) {
-        [self.tableView reloadData];
-    }
+    
+    [self.tableView reloadData];
+    
     if (self.searchDisplayController.isActive) {
+        
         self.currentPage = 1;
         [self globalSearch];
     }
@@ -223,7 +222,7 @@ QMContactListServiceDelegate
 //    cell.contactlistItem = item;
 //    cell.userData = user;
     
-    if(self.searchDisplayController.isActive) {
+    if (self.searchDisplayController.isActive) {
         cell.searchText = self.searchDisplayController.searchBar.text;
     }
     
@@ -242,6 +241,11 @@ QMContactListServiceDelegate
 
 - (void)usersListCell:(QMFriendListCell *)cell pressAddBtn:(UIButton *)sender {
     
+    if (![QMApi instance].isInternetConnected) {
+        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+        return;
+    }
+    
     NSIndexPath *indexPath = [self.searchDisplayController.searchResultsTableView indexPathForCell:cell];
     NSArray *datasource = [self usersAtSections:indexPath.section];
     QBUUser *user = datasource[indexPath.row];
@@ -252,11 +256,22 @@ QMContactListServiceDelegate
         [self.searchResult removeObject:user];
     }
     
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     BOOL isContactRequest = [[QMApi instance] isContactRequestUserWithID:user.ID];
     if (isContactRequest) {
-        [[QMApi instance] confirmAddContactRequest:user completion:nil];
+        [[QMApi instance] confirmAddContactRequest:user completion:^(BOOL success) {
+            
+            if (success) {
+                [SVProgressHUD showSuccessWithStatus:nil];
+            }
+        }];
     } else {
-        [[QMApi instance] addUserToContactList:user completion:nil];
+        [[QMApi instance] addUserToContactList:user completion:^(BOOL success, QBChatMessage *notification) {
+            
+            if (success) {
+                [SVProgressHUD showSuccessWithStatus:nil];
+            }
+        }];
     }
 }
 
@@ -271,14 +286,14 @@ QMContactListServiceDelegate
     return NO;
 }
 
-- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller
-{
+- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
+    
     [self.tableView setDataSource:nil];
     [self reloadDataSource];
 }
 
-- (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller
-{
+- (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
+    
     [self.tableView setDataSource:self];
     [self reloadDataSource];
 }
