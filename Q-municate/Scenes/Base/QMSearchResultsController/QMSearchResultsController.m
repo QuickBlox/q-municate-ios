@@ -17,6 +17,7 @@
 static const NSTimeInterval kQMGlobalSearchTimeInterval = 0.6f;
 static const NSUInteger kQMGlobalSearchCharsMin = 3;
 static const NSUInteger kQMUsersPageLimit       = 50;
+static NSString *const kQMDialogsSearchDescriptorKey = @"name";
 
 @interface QMSearchResultsController ()
 
@@ -49,11 +50,12 @@ QMContactListServiceDelegate
     return self;
 }
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
+- (void)viewDidLoad {
+    [super viewDidLoad];
     
     self.tableView.delegate = self;
     
+    [[QMCore instance].contactListService addDelegate:self];
     self.friends = [QMCore instance].friendsSortedByFullName;
     
     // Hide empty separators
@@ -73,32 +75,40 @@ QMContactListServiceDelegate
         return;
     }
     
-    // contacts local search
-    NSPredicate *usersSearchPredicate = [NSPredicate predicateWithFormat:@"SELF.fullName CONTAINS[cd] %@", searchText];
-    NSArray *contactsSearchResult = [self.friends filteredArrayUsingPredicate:usersSearchPredicate];
-    
-    // dialogs local search
-    NSMutableArray *dialogsSearchResult = [NSMutableArray array];
-    
-    NSArray *idsOfContacts = [[QMCore instance] idsOfUsers:contactsSearchResult];
-    for (NSNumber *userID in idsOfContacts) {
+    @weakify(self);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        @strongify(self);
+        // contacts local search
+        NSPredicate *usersSearchPredicate = [NSPredicate predicateWithFormat:@"SELF.fullName CONTAINS[cd] %@", searchText];
+        NSArray *contactsSearchResult = [self.friends filteredArrayUsingPredicate:usersSearchPredicate];
         
-        QBChatDialog *privateDialog = [[QMCore instance].chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:[userID unsignedIntegerValue]];
-        if (privateDialog != nil) {
+        // dialogs local search
+        NSMutableArray *dialogsSearchResult = [NSMutableArray array];
+        
+        NSArray *idsOfContacts = [[QMCore instance] idsOfUsers:contactsSearchResult];
+        for (NSNumber *userID in idsOfContacts) {
             
-            [dialogsSearchResult addObject:privateDialog];
+            QBChatDialog *privateDialog = [[QMCore instance].chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:[userID unsignedIntegerValue]];
+            if (privateDialog != nil) {
+                
+                [dialogsSearchResult addObject:privateDialog];
+            }
         }
-    }
-    
-    NSArray *dialogs = [QMCore instance].chatService.dialogsMemoryStorage.unsortedDialogs;
-    
-    NSPredicate *dialogsSearchPredicate = [NSPredicate predicateWithFormat:@"SELF.name CONTAINS[cd] %@", searchText];
-    [dialogsSearchResult addObjectsFromArray:[dialogs filteredArrayUsingPredicate:dialogsSearchPredicate]];
-    
-    [(QMLocalSearchDataSource *)self.tableView.dataSource setContacts:contactsSearchResult];
-    [(QMLocalSearchDataSource *)self.tableView.dataSource setDialogs:dialogsSearchResult.copy];
-    
-    [self.tableView reloadData];
+        
+        NSSortDescriptor *dialogsSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kQMDialogsSearchDescriptorKey ascending:NO];
+        NSArray *dialogs = [[QMCore instance].chatService.dialogsMemoryStorage dialogsWithSortDescriptors:@[dialogsSortDescriptor]];
+        
+        NSPredicate *dialogsSearchPredicate = [NSPredicate predicateWithFormat:@"SELF.name CONTAINS[cd] %@", searchText];
+        [dialogsSearchResult addObjectsFromArray:[dialogs filteredArrayUsingPredicate:dialogsSearchPredicate]];
+        
+        [(QMLocalSearchDataSource *)self.tableView.dataSource setContacts:contactsSearchResult];
+        [(QMLocalSearchDataSource *)self.tableView.dataSource setDialogs:dialogsSearchResult.copy];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [self.tableView reloadData];
+        });
+    });
 }
 
 - (void)globalSearch:(NSString *)searchText {
