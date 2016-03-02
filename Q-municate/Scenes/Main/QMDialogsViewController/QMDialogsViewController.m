@@ -132,7 +132,10 @@ UISearchResultsUpdating
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    QBChatDialog *chatDialog = self.dialogsDataSource.items[indexPath.row];
+    if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
+        
+        QBChatDialog *chatDialog = self.dialogsDataSource.items[indexPath.row];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {

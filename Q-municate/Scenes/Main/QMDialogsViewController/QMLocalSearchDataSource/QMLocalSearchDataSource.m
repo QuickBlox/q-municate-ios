@@ -27,6 +27,7 @@
         
         QBUUser *user = self.contacts[indexPath.row];
         
+        cell.placeholderID = user.ID;
         [cell setAvatarWithUrl:user.avatarUrl];
         [cell setTitle:user.fullName];
         
