@@ -45,7 +45,7 @@ QMContactListServiceDelegate
         return;
     }
     
-    QMTableViewDataSource <QMLocalSearchDataSourceProtocol> *dataSource = (id)self.dataSource;
+    QMSearchDataSource <QMLocalSearchDataSourceProtocol> *dataSource = (id)self.dataSource;
     
     if (searchText.length == 0) {
         

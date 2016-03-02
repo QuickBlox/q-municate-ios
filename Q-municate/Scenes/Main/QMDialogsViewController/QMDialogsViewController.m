@@ -96,6 +96,7 @@ UISearchResultsUpdating
     self.placeholderDataSource  = [[QMPlaceholderDataSource alloc] init];
     
     self.searchResultsController = [[QMSearchResultsController alloc] init];
+    
     QMLocalSearchDataProvider *localSearchDataProvider = [[QMLocalSearchDataProvider alloc] init];
     localSearchDataProvider.delegate = self.searchResultsController;
     

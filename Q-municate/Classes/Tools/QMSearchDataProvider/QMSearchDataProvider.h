@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "QMTableViewDataSource.h"
+#import "QMSearchDataSource.h"
 #import "QMSearchProtocols.h"
 
 @class QMSearchDataProvider;
@@ -20,7 +20,7 @@
 
 @interface QMSearchDataProvider : NSObject
 
-@property (weak, nonatomic) QMTableViewDataSource *dataSource;
+@property (weak, nonatomic) QMSearchDataSource *dataSource;
 
 @property (weak, nonatomic) id<QMSearchDataProviderDelegate> delegate;
 
