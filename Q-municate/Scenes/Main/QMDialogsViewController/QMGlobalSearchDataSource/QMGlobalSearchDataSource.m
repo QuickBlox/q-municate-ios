@@ -7,7 +7,13 @@
 //
 
 #import "QMGlobalSearchDataSource.h"
+#import "QMContactCell.h"
 
 @implementation QMGlobalSearchDataSource
+
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return [QMContactCell height];
+}
 
 @end

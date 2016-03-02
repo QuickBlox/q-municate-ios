@@ -21,6 +21,11 @@
     return @"QMChatCell";
 }
 
++ (CGFloat)height {
+    
+    return 50.0f;
+}
+
 #pragma mark - setters
 
 - (void)setIsUserFriend:(BOOL)isUserFriend {

@@ -20,6 +20,11 @@
     return self;
 }
 
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return 0.0f;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     return self.items.count;

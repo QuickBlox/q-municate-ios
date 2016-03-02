@@ -17,6 +17,21 @@
 
 @implementation QMLocalSearchDataSource
 
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    switch (indexPath.section) {
+        case 0:
+            return [QMContactCell height];
+            
+        case 1:
+            return [QMDialogCell height];
+            
+        default:
+            NSAssert(nil, @"Unexpected seciton");
+            return 0.0f;
+    }
+}
+
 #pragma mark - UITableViewDataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

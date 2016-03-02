@@ -15,6 +15,11 @@
 
 @implementation QMDialogsDataSource
 
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return [QMDialogCell height];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     QMDialogCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMDialogCell cellIdentifier] forIndexPath:indexPath];

@@ -158,25 +158,7 @@ QMContactListServiceDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if ([self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
-        
-        switch (indexPath.section) {
-            case 0:
-                
-                return 50;
-                
-            case 1:
-                
-                return 72;
-                
-            default:
-                return 0;
-        }
-    }
-    else {
-        
-        return 50;
-    }
+    return [self.searchDataSource heightForRowAtIndexPath:indexPath];
 }
 
 #pragma mark - Register nibs

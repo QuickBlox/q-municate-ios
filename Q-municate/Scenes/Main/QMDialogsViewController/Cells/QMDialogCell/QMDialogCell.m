@@ -26,6 +26,11 @@
     return @"QMDialogCell";
 }
 
++ (CGFloat)height {
+    
+    return 72.0f;
+}
+
 - (void)awakeFromNib {
     [super awakeFromNib];
     
