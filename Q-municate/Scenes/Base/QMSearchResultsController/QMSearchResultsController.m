@@ -26,8 +26,6 @@ UITableViewDelegate,
 QMSearchDataProviderDelegate
 >
 
-@property (strong, nonatomic) QMLocalSearchDataProvider *localSearchDataProvider;
-
 @end
 
 @implementation QMSearchResultsController
@@ -37,9 +35,6 @@ QMSearchDataProviderDelegate
     if (self = [super init]) {
         
         [self registerNibs];
-        
-        _localSearchDataProvider = [[QMLocalSearchDataProvider alloc] init];
-        _localSearchDataProvider.delegate = self;
     }
     
     return self;
@@ -58,18 +53,7 @@ QMSearchDataProviderDelegate
 
 - (void)performSearch:(NSString *)searchText {
     
-    if ([self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
-        
-        [self.localSearchDataProvider performSearch:searchText withDataSource:self.searchDataSource];
-    }
-    else if ([self.searchDataSource conformsToProtocol:@protocol(QMGlobalSearchDataSourceProtocol)]) {
-        
-        
-    }
-    else {
-        
-        NSAssert(nil, @"Unexpected data source.");
-    }
+    [self.searchDataSource.searchDataProvider performSearch:searchText];
 }
 
 #pragma mark - QMSearchDataProviderDelegate
@@ -101,7 +85,7 @@ QMSearchDataProviderDelegate
 
 #pragma mark - QMSearchProtocol
 
-- (QMTableViewDataSource<QMLocalSearchDataSourceProtocol, QMGlobalSearchDataSourceProtocol> *)searchDataSource {
+- (QMTableViewDataSource *)searchDataSource {
     
     return (id)self.tableView.dataSource;
 }

@@ -14,6 +14,7 @@
 #import "QMSearchResultsController.h"
 #import "QMDialogCell.h"
 #import "QMContactCell.h"
+#import "QMSearchDataProvider.h"
 
 #import "QMCore.h"
 #import "QMTasks.h"
@@ -50,7 +51,7 @@ UISearchResultsUpdating
 
 @property (weak, nonatomic) IBOutlet QMTitleView *titleView;
 @property (strong, nonatomic) UISearchController *searchController;
-@property (strong, nonatomic) QMSearchResultsController *searchResultsController;
+@property (strong, nonatomic) QMSearchResultsController <QMSearchDataProviderDelegate> *searchResultsController;
 
 @end
 
@@ -99,7 +100,10 @@ UISearchResultsUpdating
 
 - (void)initSearch {
     
-    self.searchResultsController = [[QMSearchResultsController alloc] init];
+    self.searchResultsController = (QMSearchResultsController <QMSearchDataProviderDelegate> *)[[QMSearchResultsController alloc] init];
+    self.localSearchDataSource.searchDataProvider.delegate = self.searchResultsController;
+//    self.globalSearchDataSource.searchDataProvider.delegate = self.searchResultsController;
+    
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:self.searchResultsController];
     self.searchController.searchBar.scopeButtonTitles = @[NSLocalizedString(@"QM_STR_LOCAL_SEARCH", nil), NSLocalizedString(@"QM_STR_GLOBAL_SEARCH", nil)];
     self.searchController.searchBar.placeholder = NSLocalizedString(@"QM_STR_SEARCH_BAR_PLACEHOLDER", nil);

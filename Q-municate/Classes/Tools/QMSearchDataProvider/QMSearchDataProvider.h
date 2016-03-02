@@ -20,9 +20,12 @@
 
 @interface QMSearchDataProvider : NSObject
 
+@property (weak, nonatomic) QMTableViewDataSource *dataSource;
+
 @property (weak, nonatomic) id<QMSearchDataProviderDelegate> delegate;
 
-- (void)performSearch:(NSString *)searchText
-       withDataSource:(id<QMSearchProtocol>)dataSource;
+- (instancetype)initWithDataSource:(QMTableViewDataSource *)dataSource;
+
+- (void)performSearch:(NSString *)searchText;
 
 @end

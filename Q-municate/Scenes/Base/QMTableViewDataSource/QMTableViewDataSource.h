@@ -8,7 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+@class QMSearchDataProvider;
+
 @interface QMTableViewDataSource : NSObject <UITableViewDataSource>
+
+@property (strong, nonatomic) QMSearchDataProvider *searchDataProvider;
 
 @property (strong, nonatomic) NSMutableArray *items;
 

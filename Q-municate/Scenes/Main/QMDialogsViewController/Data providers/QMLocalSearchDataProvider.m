@@ -7,6 +7,7 @@
 //
 
 #import "QMLocalSearchDataProvider.h"
+#import "QMLocalSearchDataSource.h"
 #import "QMSearchProtocols.h"
 #import "QMCore.h"
 
@@ -24,25 +25,27 @@ QMContactListServiceDelegate
 
 @implementation QMLocalSearchDataProvider
 
-- (instancetype)init {
+- (instancetype)initWithDataSource:(QMTableViewDataSource *)dataSource {
     
-    self = [super init];
+    self = [super initWithDataSource:dataSource];
     
     if (self) {
         
-        _friends = [QMCore instance].friendsSortedByFullName;
         [[QMCore instance].contactListService addDelegate:self];
+        _friends = [QMCore instance].friendsSortedByFullName;
     }
     
     return self;
 }
 
-- (void)performSearch:(NSString *)searchText withDataSource:(id<QMLocalSearchDataSourceProtocol>)dataSource {
+- (void)performSearch:(NSString *)searchText {
     
-    if (![dataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
+    if (![self.dataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
         
         return;
     }
+    
+    QMTableViewDataSource <QMLocalSearchDataSourceProtocol> *dataSource = (id)self.dataSource;
     
     if (searchText.length == 0) {
         

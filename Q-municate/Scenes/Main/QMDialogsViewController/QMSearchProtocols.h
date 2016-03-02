@@ -7,12 +7,11 @@
 //
 
 @class QMTableViewDataSource;
-@protocol QMLocalSearchDataSourceProtocol;
-@protocol QMGlobalSearchDataSourceProtocol;
 
 @protocol QMSearchProtocol <NSObject>
 
-- (QMTableViewDataSource <QMLocalSearchDataSourceProtocol, QMGlobalSearchDataSourceProtocol> *)searchDataSource;
+@optional
+- (QMTableViewDataSource *)searchDataSource;
 
 @end
 

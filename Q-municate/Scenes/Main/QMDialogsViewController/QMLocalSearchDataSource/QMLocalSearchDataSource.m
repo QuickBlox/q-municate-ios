@@ -10,12 +10,25 @@
 #import "QMDialogCell.h"
 #import "QMContactCell.h"
 #import "QMCore.h"
+#import "QMLocalSearchDataProvider.h"
 
 @interface QMLocalSearchDataSource ()
 
 @end
 
 @implementation QMLocalSearchDataSource
+
+- (instancetype)init {
+    
+    self = [super init];
+    
+    if (self) {
+        
+        self.searchDataProvider = [[QMLocalSearchDataProvider alloc] initWithDataSource:self];
+    }
+    
+    return self;
+}
 
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
