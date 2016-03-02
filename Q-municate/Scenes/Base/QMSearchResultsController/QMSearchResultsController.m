@@ -10,7 +10,6 @@
 #import "QMTableViewDataSource.h"
 #import "QMLocalSearchDataSource.h"
 #import "QMCore.h"
-#import "QMUsersUtils.h"
 
 #import "QMDialogCell.h"
 #import "QMContactCell.h"
@@ -22,8 +21,12 @@ static const NSUInteger kQMUsersPageLimit       = 50;
 @interface QMSearchResultsController ()
 
 <
-UITableViewDelegate
+UITableViewDelegate,
+QMContactListServiceDelegate
 >
+
+// local search
+@property (strong, nonatomic) NSArray *friends;
 
 // global search timer
 @property (strong, nonatomic) NSTimer *timer;
@@ -51,6 +54,8 @@ UITableViewDelegate
     
     self.tableView.delegate = self;
     
+    self.friends = [QMCore instance].friendsSortedByFullName;
+    
     // Hide empty separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
 }
@@ -69,14 +74,13 @@ UITableViewDelegate
     }
     
     // contacts local search
-    NSArray *friends = [QMCore instance].friends;
     NSPredicate *usersSearchPredicate = [NSPredicate predicateWithFormat:@"SELF.fullName CONTAINS[cd] %@", searchText];
-    NSArray *contactsSearchResult = [QMUsersUtils sortUsersByFullname:[friends filteredArrayUsingPredicate:usersSearchPredicate]];
+    NSArray *contactsSearchResult = [self.friends filteredArrayUsingPredicate:usersSearchPredicate];
     
     // dialogs local search
     NSMutableArray *dialogsSearchResult = [NSMutableArray array];
     
-    NSArray *idsOfContacts = [QMUsersUtils idsOfUsers:contactsSearchResult];
+    NSArray *idsOfContacts = [[QMCore instance] idsOfUsers:contactsSearchResult];
     for (NSNumber *userID in idsOfContacts) {
         
         QBChatDialog *privateDialog = [[QMCore instance].chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:[userID unsignedIntegerValue]];
@@ -165,6 +169,28 @@ UITableViewDelegate
     
     [QMDialogCell registerForReuseInTableView:self.tableView];
     [QMContactCell registerForReuseInTableView:self.tableView];
+}
+
+#pragma mark - 
+
+#pragma mark - QMContactListServiceDelegate
+
+- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
+    
+    self.friends = [QMCore instance].friendsSortedByFullName;
+    [self.tableView reloadData];
+}
+
+- (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
+    
+    self.friends = [QMCore instance].friendsSortedByFullName;
+    [self.tableView reloadData];
+}
+
+- (void)contactListServiceDidLoadCache {
+    
+    self.friends = [QMCore instance].friendsSortedByFullName;
+    [self.tableView reloadData];
 }
 
 @end
