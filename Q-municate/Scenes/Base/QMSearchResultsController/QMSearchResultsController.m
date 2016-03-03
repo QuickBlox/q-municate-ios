@@ -15,10 +15,6 @@
 #import "QMDialogCell.h"
 #import "QMContactCell.h"
 
-static const NSTimeInterval kQMGlobalSearchTimeInterval = 0.6f;
-static const NSUInteger kQMGlobalSearchCharsMin = 3;
-static const NSUInteger kQMUsersPageLimit       = 50;
-
 @interface QMSearchResultsController ()
 
 <
