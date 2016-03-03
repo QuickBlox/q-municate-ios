@@ -16,6 +16,7 @@
 #import "QMContactCell.h"
 #import "QMSearchDataProvider.h"
 #import "QMLocalSearchDataProvider.h"
+#import "QMGlobalSearchDataProvider.h"
 
 #import "QMCore.h"
 #import "QMTasks.h"
@@ -100,8 +101,11 @@ UISearchResultsUpdating
     QMLocalSearchDataProvider *localSearchDataProvider = [[QMLocalSearchDataProvider alloc] init];
     localSearchDataProvider.delegate = self.searchResultsController;
     
+    QMGlobalSearchDataProvider *globalSearchDataProvider = [[QMGlobalSearchDataProvider alloc] init];
+    globalSearchDataProvider.delegate = self.searchResultsController;
+    
     self.localSearchDataSource = [[QMLocalSearchDataSource alloc] initWithSearchDataProvider:localSearchDataProvider];
-    self.globalSearchDataSource = [[QMGlobalSearchDataSource alloc] init];
+    self.globalSearchDataSource = [[QMGlobalSearchDataSource alloc] initWithSearchDataProvider:globalSearchDataProvider];
     
     self.tableView.delegate = self;
 }
