@@ -10,14 +10,14 @@
 
 @interface QMTableViewCell : UITableViewCell
 
-@property (assign, nonatomic) NSUInteger placeholderID;
-
 + (void)registerForReuseInTableView:(UITableView *)tableView;
 + (NSString *)cellIdentifier;
 + (CGFloat)height;
 
-- (void)setAvatarWithUrl:(NSString *)avatarUrl;
-- (void)setTitle:(NSString *)title;
+- (void)setTitle:(NSString *)title
+   placeholderID:(NSUInteger)placeholderID
+       avatarUrl:(NSString *)avatarUrl;
+
 - (void)setBody:(NSString *)body;
 
 @end

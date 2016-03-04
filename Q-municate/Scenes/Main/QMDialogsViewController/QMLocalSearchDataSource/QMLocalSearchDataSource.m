@@ -43,9 +43,7 @@
         
         QBUUser *user = self.contacts[indexPath.row];
         
-        cell.placeholderID = user.ID;
-        [cell setAvatarWithUrl:user.avatarUrl];
-        [cell setTitle:user.fullName];
+        [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
         
         QBContactListItem *item = [[QMCore instance].contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
         [cell setContactListItem:item];
@@ -64,15 +62,11 @@
             if (recipient != nil) {
                 NSParameterAssert(recipient.fullName);
                 
-                [cell setTitle:recipient.fullName];
-                cell.placeholderID = chatDialog.recipientID;
-                [cell setAvatarWithUrl:recipient.avatarUrl];
+                [cell setTitle:recipient.fullName placeholderID:chatDialog.recipientID avatarUrl:recipient.avatarUrl];
             }
         } else {
             
-            [cell setTitle:chatDialog.name];
-            cell.placeholderID = chatDialog.ID.hash;
-            [cell setAvatarWithUrl:chatDialog.photo];
+            [cell setTitle:chatDialog.name placeholderID:chatDialog.ID.hash avatarUrl:chatDialog.photo];
         }
         
         NSString *time = [self.dateFormatter stringFromDate:chatDialog.updatedAt];

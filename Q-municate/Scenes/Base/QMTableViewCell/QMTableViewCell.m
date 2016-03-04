@@ -22,6 +22,7 @@
 /**
  *  Cached values
  */
+@property (assign, nonatomic) NSUInteger placeholderID;
 @property (strong, nonatomic) NSString *avatarUrl;
 @property (strong, nonatomic) NSString *title;
 @property (strong, nonatomic) NSString *body;
@@ -61,7 +62,18 @@
 
 #pragma mark - Setters
 
-- (void)setAvatarWithUrl:(NSString *)avatarUrl {
+- (void)setTitle:(NSString *)title placeholderID:(NSUInteger)placeholderID avatarUrl:(NSString *)avatarUrl {
+    
+    if (![_title isEqualToString:title]) {
+        
+        _title = title;
+        self.titleLabel.text = title;
+    }
+    
+    if (!_placeholderID != placeholderID) {
+        
+        _placeholderID = placeholderID;
+    }
     
     if (![self.avatarUrl isEqualToString:avatarUrl]) {
         
@@ -74,15 +86,6 @@
                                   options:SDWebImageLowPriority
                                  progress:nil
                            completedBlock:nil];
-    }
-}
-
-- (void)setTitle:(NSString *)title {
-    
-    if (![_title isEqualToString:title]) {
-        
-        _title = title;
-        self.titleLabel.text = title;
     }
 }
 

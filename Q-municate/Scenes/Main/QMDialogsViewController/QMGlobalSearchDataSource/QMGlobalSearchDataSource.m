@@ -25,9 +25,7 @@
     
     QBUUser *user = self.items[indexPath.row];
     
-    cell.placeholderID = user.ID;
-    [cell setAvatarWithUrl:user.avatarUrl];
-    [cell setTitle:user.fullName];
+    [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
     
     QBContactListItem *item = [[QMCore instance].contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
     [cell setContactListItem:item];
