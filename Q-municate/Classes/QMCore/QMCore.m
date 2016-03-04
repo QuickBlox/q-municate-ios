@@ -184,6 +184,9 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
 - (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
     
     [[QMContactListCache instance] insertOrUpdateContactListItemsWithContactList:contactList completion:nil];
+    
+    // load users if needed
+    [[QMCore instance].usersService getUsersWithIDs:self.contactListService.contactListMemoryStorage.userIDsFromContactList];
 }
 
 @end
