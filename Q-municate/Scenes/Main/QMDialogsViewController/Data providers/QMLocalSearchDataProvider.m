@@ -17,7 +17,9 @@ static NSString *const kQMDialogsSearchDescriptorKey = @"name";
 
 <
 QMContactListServiceDelegate,
-QMUsersServiceDelegate
+QMUsersServiceDelegate,
+QMChatServiceDelegate,
+QMChatConnectionDelegate
 >
 
 @property (strong, nonatomic) NSArray *friends;
@@ -32,6 +34,7 @@ QMUsersServiceDelegate
     
     if (self) {
         
+        [[QMCore instance].chatService addDelegate:self];
         [[QMCore instance].contactListService addDelegate:self];
         [[QMCore instance].usersService addDelegate:self];
         _friends = [QMCore instance].friendsSortedByFullName;
@@ -87,6 +90,38 @@ QMUsersServiceDelegate
         
         [self.delegate searchDataProviderDidFinishDataFetching:self];
     }
+}
+
+#pragma mark - QMChatServiceDelegate
+
+- (void)chatService:(QMChatService *)chatService didAddMessagesToMemoryStorage:(NSArray<QBChatMessage *> *)messages forDialogID:(NSString *)dialogID {
+    
+    [self callDelegate];
+}
+
+- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+    
+    [self callDelegate];
+}
+
+- (void)chatService:(QMChatService *)chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)chatDialogID {
+    
+    [self callDelegate];
+}
+
+- (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
+    
+    [self callDelegate];
+}
+
+- (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
+    
+    [self callDelegate];
+}
+
+- (void)chatService:(QMChatService *)chatService didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)dialogs {
+    
+    [self callDelegate];
 }
 
 #pragma mark - QMContactListServiceDelegate
