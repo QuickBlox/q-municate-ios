@@ -17,9 +17,7 @@ static NSString *const kQMDialogsSearchDescriptorKey = @"name";
 
 <
 QMContactListServiceDelegate,
-QMUsersServiceDelegate,
-QMChatServiceDelegate,
-QMChatConnectionDelegate
+QMUsersServiceDelegate
 >
 
 @property (strong, nonatomic) NSArray *friends;
@@ -34,7 +32,6 @@ QMChatConnectionDelegate
     
     if (self) {
         
-        [[QMCore instance].chatService addDelegate:self];
         [[QMCore instance].contactListService addDelegate:self];
         [[QMCore instance].usersService addDelegate:self];
         _friends = [QMCore instance].friendsSortedByFullName;
@@ -92,56 +89,21 @@ QMChatConnectionDelegate
     }
 }
 
-#pragma mark - QMChatServiceDelegate
-
-- (void)chatService:(QMChatService *)chatService didAddMessagesToMemoryStorage:(NSArray<QBChatMessage *> *)messages forDialogID:(NSString *)dialogID {
-    
-    [self callDelegate];
-}
-
-- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
-    
-    [self callDelegate];
-}
-
-- (void)chatService:(QMChatService *)chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)chatDialogID {
-    
-    [self callDelegate];
-}
-
-- (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
-    
-    [self callDelegate];
-}
-
-- (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
-    
-    [self callDelegate];
-}
-
-- (void)chatService:(QMChatService *)chatService didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)dialogs {
-    
-    [self callDelegate];
-}
-
 #pragma mark - QMContactListServiceDelegate
 
 - (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
     
     self.friends = [QMCore instance].friendsSortedByFullName;
-    [self callDelegate];
 }
 
 - (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
     
     self.friends = [QMCore instance].friendsSortedByFullName;
-    [self callDelegate];
 }
 
 - (void)contactListServiceDidLoadCache {
     
     self.friends = [QMCore instance].friendsSortedByFullName;
-    [self callDelegate];
 }
 
 #pragma mark - QMUsersServiceDelegate
@@ -149,13 +111,11 @@ QMChatConnectionDelegate
 - (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)user {
     
     self.friends = [QMCore instance].friendsSortedByFullName;
-    [self callDelegate];
 }
 
 - (void)usersService:(QMUsersService *)usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)users {
     
     self.friends = [QMCore instance].friendsSortedByFullName;
-    [self callDelegate];
 }
 
 @end
