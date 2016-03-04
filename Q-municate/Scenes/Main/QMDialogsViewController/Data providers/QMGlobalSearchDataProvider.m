@@ -46,6 +46,8 @@ static const NSUInteger kQMUsersPageLimit = 50;
         return;
     }
     
+    [self.timer invalidate];
+    
     if (searchText.length < kQMGlobalSearchCharsMin) {
         
         [self.dataSource.items removeAllObjects];
@@ -63,6 +65,15 @@ static const NSUInteger kQMUsersPageLimit = 50;
         self.cachedSearchText = searchText.copy;
         self.responsePage.currentPage = 1;
     }
+    
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:kQMGlobalSearchTimeInterval
+                                                  target:self
+                                                selector:@selector(globalSearch)
+                                                userInfo:nil
+                                                 repeats:NO];
+}
+
+- (void)globalSearch {
     
     self.globalSearchCancellationTokenSource = [BFCancellationTokenSource cancellationTokenSource];
     
