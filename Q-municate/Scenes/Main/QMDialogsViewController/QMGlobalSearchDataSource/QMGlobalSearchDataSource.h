@@ -8,7 +8,8 @@
 
 #import "QMSearchDataSource.h"
 #import "QMSearchProtocols.h"
+#import "QMGlobalSearchDataProvider.h"
 
-@interface QMGlobalSearchDataSource : QMSearchDataSource <QMGlobalSearchDataSourceProtocol>
+@interface QMGlobalSearchDataSource : QMSearchDataSource <QMGlobalSearchDataSourceProtocol, QMGlobalSearchDataProviderProtocol>
 
 @end

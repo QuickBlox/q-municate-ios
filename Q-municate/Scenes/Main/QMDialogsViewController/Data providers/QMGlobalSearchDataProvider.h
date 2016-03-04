@@ -10,4 +10,12 @@
 
 @interface QMGlobalSearchDataProvider : QMSearchDataProvider
 
+- (void)nextPage;
+
+@end
+
+@protocol QMGlobalSearchDataProviderProtocol <NSObject>
+
+- (QMGlobalSearchDataProvider *)globalSearchDataProvider;
+
 @end

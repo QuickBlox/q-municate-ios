@@ -15,12 +15,13 @@ static const NSUInteger kQMUsersPageLimit = 50;
 
 @interface QMGlobalSearchDataProvider ()
 
-@property (weak, nonatomic) BFTask *globalSearchTask;
 @property (strong, nonatomic) BFCancellationTokenSource *globalSearchCancellationTokenSource;
 
 @property (strong, nonatomic) NSTimer* timer;
-@property (assign, nonatomic) NSUInteger currentPage;
+
+@property (strong, nonatomic) QBGeneralResponsePage *responsePage;
 @property (assign, nonatomic) BOOL shouldLoadMore;
+@property (strong, nonatomic) NSString *cachedSearchText;
 
 @end
 
@@ -32,7 +33,7 @@ static const NSUInteger kQMUsersPageLimit = 50;
     
     if (self) {
         
-        _globalSearchCancellationTokenSource = [BFCancellationTokenSource cancellationTokenSource];
+        _responsePage = [QBGeneralResponsePage responsePageWithCurrentPage:1 perPage:kQMUsersPageLimit];
     }
     
     return self;
@@ -52,18 +53,25 @@ static const NSUInteger kQMUsersPageLimit = 50;
         return;
     }
     
-    if (self.globalSearchTask && !self.globalSearchTask.isCompleted) {
+    if (self.globalSearchCancellationTokenSource) {
         // cancel existing task if in progress
         [self.globalSearchCancellationTokenSource cancel];
-        self.globalSearchTask = nil;
     }
     
-    QBGeneralResponsePage *page = [QBGeneralResponsePage responsePageWithCurrentPage:self.currentPage perPage:kQMUsersPageLimit];
+    if (![searchText isEqualToString:self.cachedSearchText]) {
+        
+        self.cachedSearchText = searchText.copy;
+        self.responsePage.currentPage = 1;
+    }
+    
+    self.globalSearchCancellationTokenSource = [BFCancellationTokenSource cancellationTokenSource];
     
     @weakify(self);
-    self.globalSearchTask = [[[QMCore instance].usersService searchUsersWithFullName:searchText page:page] continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull task) {
+    [[[QMCore instance].usersService searchUsersWithFullName:self.cachedSearchText page:self.responsePage] continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull task) {
         @strongify(self);
         if (task.isCompleted) {
+            
+            self.globalSearchCancellationTokenSource = nil;
             
             if (task.result.count < kQMUsersPageLimit) {
                 
@@ -76,7 +84,7 @@ static const NSUInteger kQMUsersPageLimit = 50;
             
             NSArray *sortedUsers = [self sortUsersByFullname:task.result];
             
-            if (self.currentPage > 1) {
+            if (self.responsePage.currentPage > 1) {
                 
                 [self.dataSource addItems:sortedUsers];
             }
@@ -97,6 +105,17 @@ static const NSUInteger kQMUsersPageLimit = 50;
     if ([self.delegate respondsToSelector:@selector(searchDataProviderDidFinishDataFetching:)]) {
         
         [self.delegate searchDataProviderDidFinishDataFetching:self];
+    }
+}
+
+#pragma mark - Pagination
+
+- (void)nextPage {
+    
+    if (self.shouldLoadMore) {
+        
+        self.responsePage.currentPage++;
+        [self performSearch:self.cachedSearchText];
     }
 }
 

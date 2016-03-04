@@ -32,7 +32,19 @@
     BOOL isFriend = [[QMCore instance] isFriendWithUser:user];
     [cell setIsUserFriend:isFriend];
     
+    if (indexPath.row == [tableView numberOfRowsInSection:0] - 1) {
+        
+        [self.globalSearchDataProvider nextPage];
+    }
+    
     return cell;
+}
+
+#pragma mark - QMGlobalSearchDataProvider
+
+- (QMGlobalSearchDataProvider *)globalSearchDataProvider {
+    
+    return (id)self.searchDataProvider;
 }
 
 @end
