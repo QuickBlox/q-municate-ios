@@ -10,6 +10,6 @@
 
 @interface QMContactCell : QMTableViewCell
 
-- (void)setIsUserFriend:(BOOL)isUserFriend;
+- (void)setContactListItem:(QBContactListItem *)contactListItem;
 
 @end

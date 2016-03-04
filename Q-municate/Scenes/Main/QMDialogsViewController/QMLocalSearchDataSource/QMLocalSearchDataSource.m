@@ -47,8 +47,8 @@
         [cell setAvatarWithUrl:user.avatarUrl];
         [cell setTitle:user.fullName];
         
-        BOOL isFriend = [[QMCore instance] isFriendWithUser:user];
-        [cell setIsUserFriend:isFriend];
+        QBContactListItem *item = [[QMCore instance].contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
+        [cell setContactListItem:item];
         
         return cell;
     }
