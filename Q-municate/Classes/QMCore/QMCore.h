@@ -52,4 +52,9 @@ QMContactListServiceDelegate
 
 - (BFTask *)leaveChatDialog:(QBChatDialog *)chatDialog;
 
+#pragma mark - Contacts management
+
+- (BFTask *)addUserToContactList:(QBUUser *)user;
+- (BFTask *)confirmAddContactRequest:(QBUUser *)user;
+
 @end

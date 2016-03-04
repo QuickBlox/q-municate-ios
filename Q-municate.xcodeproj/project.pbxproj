@@ -121,6 +121,7 @@
 		58D8478F1C8886D8000C40BA /* QMGlobalSearchDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D8478E1C8886D8000C40BA /* QMGlobalSearchDataProvider.m */; };
 		58D847931C89A9FE000C40BA /* QMNoResultsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D847921C89A9FE000C40BA /* QMNoResultsCell.m */; };
 		58D847951C89AA39000C40BA /* QMNoResultsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58D847941C89AA38000C40BA /* QMNoResultsCell.xib */; };
+		58D847991C89B22F000C40BA /* QMNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D847981C89B22F000C40BA /* QMNotifications.m */; };
 		58E343881C491AAA00439E93 /* QMTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58E343871C491AAA00439E93 /* QMTitleView.m */; };
 		690A271518CA0F35003D6B80 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A271418CA0F35003D6B80 /* AddressBook.framework */; };
 		693206EA1962BCC300B15EF9 /* QMBaseCallsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 693206E91962BCC300B15EF9 /* QMBaseCallsController.m */; };
@@ -364,6 +365,8 @@
 		58D847911C89A9FE000C40BA /* QMNoResultsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMNoResultsCell.h; path = "Q-municate/Scenes/Main/QMDialogsViewController/Cells/QMNoResultsCell/QMNoResultsCell.h"; sourceTree = SOURCE_ROOT; };
 		58D847921C89A9FE000C40BA /* QMNoResultsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMNoResultsCell.m; path = "Q-municate/Scenes/Main/QMDialogsViewController/Cells/QMNoResultsCell/QMNoResultsCell.m"; sourceTree = SOURCE_ROOT; };
 		58D847941C89AA38000C40BA /* QMNoResultsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = QMNoResultsCell.xib; path = "Q-municate/Scenes/Main/QMDialogsViewController/Cells/QMNoResultsCell/QMNoResultsCell.xib"; sourceTree = SOURCE_ROOT; };
+		58D847971C89B22F000C40BA /* QMNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMNotifications.h; path = Classes/QMNotifications/QMNotifications.h; sourceTree = "<group>"; };
+		58D847981C89B22F000C40BA /* QMNotifications.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMNotifications.m; path = Classes/QMNotifications/QMNotifications.m; sourceTree = "<group>"; };
 		58E343861C491AAA00439E93 /* QMTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMTitleView.h; path = QMTitleView/QMTitleView.h; sourceTree = "<group>"; };
 		58E343871C491AAA00439E93 /* QMTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMTitleView.m; path = QMTitleView/QMTitleView.m; sourceTree = "<group>"; };
 		58F437691BBC21810041C08D /* QMProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMProtocols.h; sourceTree = "<group>"; };
@@ -1482,6 +1485,15 @@
 			name = QMNoResultsCell;
 			sourceTree = "<group>";
 		};
+		58D847961C89B1FB000C40BA /* QMNotifications */ = {
+			isa = PBXGroup;
+			children = (
+				58D847971C89B22F000C40BA /* QMNotifications.h */,
+				58D847981C89B22F000C40BA /* QMNotifications.m */,
+			);
+			name = QMNotifications;
+			sourceTree = "<group>";
+		};
 		58E343801C49190400439E93 /* QMTitleView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1527,6 +1539,7 @@
 		695F4B2118B60A62006C9DA5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				58D847961C89B1FB000C40BA /* QMNotifications */,
 				58D847821C871949000C40BA /* Base */,
 				58D8477D1C87138F000C40BA /* QMProtocols */,
 				585DE4601C46A8170068E03E /* QMPlaceholder */,
@@ -1812,6 +1825,7 @@
 				55A8B06E1965986A00B5D33B /* QMSoundManager.m in Sources */,
 				55CEAB9E195DBCFA001A8ED6 /* QMFriendsDetailsController.m in Sources */,
 				58CEA1C61BB5957C00B866DD /* QMChatVC.m in Sources */,
+				58D847991C89B22F000C40BA /* QMNotifications.m in Sources */,
 				584277A41C3D336300CDE35B /* QMCornerButton.m in Sources */,
 				55CEABA3195DBCFA001A8ED6 /* QMSettingsViewController.m in Sources */,
 				6943848318E42678001E08A9 /* QMMainTabBarController.m in Sources */,

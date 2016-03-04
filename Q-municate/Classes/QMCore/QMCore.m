@@ -10,6 +10,8 @@
 #import <Reachability.h>
 #import "QMProfile.h"
 #import "QMFacebook.h"
+#import "QMNotifications.h"
+#import <QMChatService+AttachmentService.h>
 #import <DigitsKit/DigitsKit.h>
 
 NSString *const kQMLastActivityDateKey = @"last_activity_date";
@@ -170,6 +172,39 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
 - (NSDate *)lastActivityDate
 {
     return [self.defaults objectForKey:kQMLastActivityDateKey];
+}
+
+#pragma mark - Contacts management
+
+- (BFTask *)addUserToContactList:(QBUUser *)user {
+    
+    @weakify(self);
+    return [[[self.contactListService addUserToContactListRequest:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        @strongify(self);
+        return [self.chatService createPrivateChatDialogWithOpponent:user];
+    }] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+        @strongify(self);
+        QBChatMessage *chatMessage = [QMNotifications contactRequestNotificationForUser:user withChatDialog:task.result];
+        [self.chatService sendMessage:chatMessage
+                                 type:chatMessage.messageType
+                             toDialog:task.result
+                        saveToHistory:YES
+                        saveToStorage:YES
+                           completion:nil];
+        
+        NSString *notificationMessage = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", @"{FullName}"), [QBSession currentSession].currentUser.fullName];
+        
+        return [QMNotifications sendPushNotificationToUser:user withText:notificationMessage];
+    }];
+}
+
+- (BFTask *)confirmAddContactRequest:(QBUUser *)user {
+    
+    @weakify(self);
+    return [[self.contactListService acceptContactRequest:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        @strongify(self);
+        return [self.chatService sendMessageAboutAcceptingContactRequest:YES toOpponentID:user.ID];
+    }];
 }
 
 #pragma mark QMContactListServiceCacheDelegate delegate
