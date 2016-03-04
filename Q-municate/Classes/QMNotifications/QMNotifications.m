@@ -8,6 +8,7 @@
 
 #import "QMNotifications.h"
 #import "QMCore.h"
+#import "QMProfile.h"
 
 @implementation QMNotifications
 
@@ -15,7 +16,7 @@
     
     QBChatMessage *notification = [QBChatMessage message];
     notification.recipientID = user.ID;
-    notification.senderID = [QBSession currentSession].currentUser.ID;
+    notification.senderID = [QMCore instance].currentProfile.userData.ID;
     notification.text = @"Contact request";  // contact request
     notification.dateSent = [NSDate date];
     notification.messageType = QMMessageTypeContactRequest;

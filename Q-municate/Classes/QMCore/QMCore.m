@@ -192,7 +192,7 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
                         saveToStorage:YES
                            completion:nil];
         
-        NSString *notificationMessage = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", @"{FullName}"), [QBSession currentSession].currentUser.fullName];
+        NSString *notificationMessage = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", @"{FullName}"), self.currentProfile.userData.fullName];
         
         return [QMNotifications sendPushNotificationToUser:user withText:notificationMessage];
     }];
