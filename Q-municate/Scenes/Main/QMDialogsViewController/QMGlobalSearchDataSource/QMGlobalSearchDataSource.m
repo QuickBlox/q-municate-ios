@@ -10,6 +10,12 @@
 #import "QMContactCell.h"
 #import "QMCore.h"
 
+@interface QMGlobalSearchDataSource ()
+
+@property (strong, nonatomic) BFTask *addUserTask;
+
+@end
+
 @implementation QMGlobalSearchDataSource
 
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -29,6 +35,8 @@
     
     QBContactListItem *item = [[QMCore instance].contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
     [cell setContactListItem:item];
+    [cell setUserID:user.ID];
+    cell.delegate = self;
     
     if (indexPath.row == [tableView numberOfRowsInSection:0] - 1) {
         
@@ -43,6 +51,36 @@
 - (QMGlobalSearchDataProvider *)globalSearchDataProvider {
     
     return (id)self.searchDataProvider;
+}
+
+#pragma mark - QMContactCellDelegate
+
+- (void)contactCell:(QMContactCell *)contactCell didTapAddButton:(UIButton *)sender {
+    
+    if (self.addUserTask) {
+        
+        return;
+    }
+    
+    QBUUser *user = [[QMCore instance].usersService.usersMemoryStorage userWithID:contactCell.userID];
+    
+    QBContactListItem *contactListItem = contactCell.contactListItem;
+    
+    @weakify(self);
+    BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull task) {
+        @strongify(self);
+        self.addUserTask = nil;
+        return nil;
+    };
+    
+    if (contactListItem.subscriptionState == QBPresenceSubscriptionStateFrom) {
+        
+        self.addUserTask = [[[QMCore instance].contactListService acceptContactRequest:user.ID] continueWithBlock:completionBlock];
+    }
+    else {
+        
+        self.addUserTask = [[[QMCore instance].contactListService addUserToContactListRequest:user] continueWithBlock:completionBlock];
+    }
 }
 
 @end

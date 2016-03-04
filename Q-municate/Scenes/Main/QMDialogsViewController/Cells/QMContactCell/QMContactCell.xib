@@ -34,6 +34,9 @@
                             <constraint firstAttribute="width" constant="20" id="TOf-vP-pa9"/>
                         </constraints>
                         <state key="normal" image="add_friend"/>
+                        <connections>
+                            <action selector="didTapAddButton:" destination="APp-P0-Kot" eventType="touchUpInside" id="vLk-h9-i3k"/>
+                        </connections>
                     </button>
                     <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Anthony Tucker" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="smJ-6U-6Ij">
                         <rect key="frame" x="64" y="14" width="216" height="21"/>

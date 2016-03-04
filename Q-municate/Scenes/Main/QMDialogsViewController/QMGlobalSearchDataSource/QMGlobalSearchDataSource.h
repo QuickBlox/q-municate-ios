@@ -9,7 +9,8 @@
 #import "QMSearchDataSource.h"
 #import "QMSearchProtocols.h"
 #import "QMGlobalSearchDataProvider.h"
+#import "QMContactCell.h"
 
-@interface QMGlobalSearchDataSource : QMSearchDataSource <QMGlobalSearchDataSourceProtocol, QMGlobalSearchDataProviderProtocol>
+@interface QMGlobalSearchDataSource : QMSearchDataSource <QMGlobalSearchDataSourceProtocol, QMGlobalSearchDataProviderProtocol, QMContactCellDelegate>
 
 @end
