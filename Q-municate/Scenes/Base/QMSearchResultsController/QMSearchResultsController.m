@@ -164,11 +164,6 @@ QMChatConnectionDelegate
 
 #pragma mark - QMUsersServiceDelegate
 
-//- (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)user {
-//    
-//    [self.tableView reloadData];
-//}
-
 - (void)usersService:(QMUsersService *)usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)users {
     
     [self.tableView reloadData];

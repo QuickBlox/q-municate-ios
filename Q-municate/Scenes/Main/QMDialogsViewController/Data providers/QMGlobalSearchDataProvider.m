@@ -9,9 +9,9 @@
 #import "QMGlobalSearchDataProvider.h"
 #import "QMCore.h"
 
-static const NSTimeInterval kQMGlobalSearchTimeInterval = 0.6f;
-static const NSUInteger kQMGlobalSearchCharsMin = 3;
-static const NSUInteger kQMUsersPageLimit = 50;
+const NSTimeInterval kQMGlobalSearchTimeInterval = 0.6f;
+const NSUInteger kQMGlobalSearchCharsMin = 3;
+const NSUInteger kQMUsersPageLimit = 50;
 
 @interface QMGlobalSearchDataProvider ()
 
