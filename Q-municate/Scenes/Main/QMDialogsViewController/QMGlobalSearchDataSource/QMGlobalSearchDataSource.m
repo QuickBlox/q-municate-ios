@@ -8,6 +8,7 @@
 
 #import "QMGlobalSearchDataSource.h"
 #import "QMContactCell.h"
+#import "QMNoResultsCell.h"
 #import "QMCore.h"
 
 @interface QMGlobalSearchDataSource ()
@@ -20,13 +21,21 @@
 
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    return [QMContactCell height];
+    return self.items.count > 0 ? [QMContactCell height] : [QMNoResultsCell height];
 }
 
 #pragma mark - UITableViewDataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    if (self.items.count == 0) {
+        
+        QMNoResultsCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMNoResultsCell cellIdentifier] forIndexPath:indexPath];
+        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        return cell;
+    }
+    
+    tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     QMContactCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMContactCell cellIdentifier] forIndexPath:indexPath];
     
     QBUUser *user = self.items[indexPath.row];
@@ -44,6 +53,11 @@
     }
     
     return cell;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    return self.items.count > 0 ? self.items.count : 1;
 }
 
 #pragma mark - QMGlobalSearchDataProvider

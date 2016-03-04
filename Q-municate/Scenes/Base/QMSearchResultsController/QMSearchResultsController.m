@@ -14,6 +14,7 @@
 
 #import "QMDialogCell.h"
 #import "QMContactCell.h"
+#import "QMNoResultsCell.h"
 
 @interface QMSearchResultsController ()
 
@@ -84,6 +85,7 @@ QMChatConnectionDelegate
     
     [QMDialogCell registerForReuseInTableView:self.tableView];
     [QMContactCell registerForReuseInTableView:self.tableView];
+    [QMNoResultsCell registerForReuseInTableView:self.tableView];
 }
 
 #pragma mark - QMSearchProtocol

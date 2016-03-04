@@ -9,6 +9,7 @@
 #import "QMLocalSearchDataSource.h"
 #import "QMDialogCell.h"
 #import "QMContactCell.h"
+#import "QMNoResultsCell.h"
 #import "QMCore.h"
 #import "QMLocalSearchDataProvider.h"
 
@@ -20,24 +21,25 @@
 
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    switch (indexPath.section) {
-        case 0:
-            return [QMContactCell height];
-            
-        case 1:
-            return [QMDialogCell height];
-            
-        default:
-            NSAssert(nil, @"Unexpected seciton");
-            return 0.0f;
+    if (indexPath.section == 0 && self.contacts.count > 0) {
+        
+        return [QMContactCell height];
+    }
+    else if (indexPath.section == 1 && self.dialogs.count > 0) {
+        
+        return [QMDialogCell height];
+    }
+    else {
+        
+        return [QMNoResultsCell height];
     }
 }
 
 #pragma mark - UITableViewDataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (indexPath.section == 0) {
+
+    if (indexPath.section == 0 && self.contacts.count > 0) {
         
         QMContactCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMContactCell cellIdentifier] forIndexPath:indexPath];
         
@@ -50,7 +52,7 @@
         
         return cell;
     }
-    else if (indexPath.section == 1) {
+    else if (indexPath.section == 1 && self.dialogs.count > 0) {
         
         QMDialogCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMDialogCell cellIdentifier] forIndexPath:indexPath];
         QBChatDialog *chatDialog = self.dialogs[indexPath.row];
@@ -78,8 +80,8 @@
     }
     else {
         
-        NSAssert(nil, @"Unexpected section");
-        return nil;
+        QMNoResultsCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMNoResultsCell cellIdentifier] forIndexPath:indexPath];
+        return cell;
     }
 }
 
@@ -93,11 +95,11 @@
     switch (section) {
         case 0:
             
-            return self.contacts.count > 0 ? self.contacts.count : 0;
+            return self.contacts.count > 0 ? self.contacts.count : 1;
             
         case 1:
             
-            return self.dialogs.count > 0 ? self.dialogs.count : 0;
+            return self.dialogs.count > 0 ? self.dialogs.count : 1;
             
         default:
             NSAssert(nil, @"Unexpected section");
