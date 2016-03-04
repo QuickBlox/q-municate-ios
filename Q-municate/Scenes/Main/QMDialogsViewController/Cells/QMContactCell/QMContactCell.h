@@ -8,8 +8,18 @@
 
 #import "QMTableViewCell.h"
 
+@class QMContactCell;
+
+@protocol QMContactCellDelegate <NSObject>
+
+- (void)contactCell:(QMContactCell *)contactCell didTapAddButton:(UIButton *)sender;
+
+@end
+
 @interface QMContactCell : QMTableViewCell
 
-- (void)setIsUserFriend:(BOOL)isUserFriend;
+@property (strong, nonatomic) QBContactListItem *contactListItem;
+@property (assign, nonatomic) NSUInteger userID;
+@property (weak, nonatomic) id<QMContactCellDelegate> delegate;
 
 @end

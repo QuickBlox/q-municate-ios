@@ -14,15 +14,16 @@
 
 #import "QMDialogCell.h"
 #import "QMContactCell.h"
-
-static const NSTimeInterval kQMGlobalSearchTimeInterval = 0.6f;
-static const NSUInteger kQMGlobalSearchCharsMin = 3;
-static const NSUInteger kQMUsersPageLimit       = 50;
+#import "QMNoResultsCell.h"
 
 @interface QMSearchResultsController ()
 
 <
-UITableViewDelegate
+UITableViewDelegate,
+QMContactListServiceDelegate,
+QMUsersServiceDelegate,
+QMChatServiceDelegate,
+QMChatConnectionDelegate
 >
 
 @end
@@ -34,6 +35,10 @@ UITableViewDelegate
     if (self = [super init]) {
         
         [self registerNibs];
+        
+        [[QMCore instance].chatService addDelegate:self];
+        [[QMCore instance].contactListService addDelegate:self];
+        [[QMCore instance].usersService addDelegate:self];
     }
     
     return self;
@@ -80,6 +85,7 @@ UITableViewDelegate
     
     [QMDialogCell registerForReuseInTableView:self.tableView];
     [QMContactCell registerForReuseInTableView:self.tableView];
+    [QMNoResultsCell registerForReuseInTableView:self.tableView];
 }
 
 #pragma mark - QMSearchProtocol
@@ -87,6 +93,80 @@ UITableViewDelegate
 - (QMSearchDataSource *)searchDataSource {
     
     return (id)self.tableView.dataSource;
+}
+
+#pragma mark - QMChatServiceDelegate
+
+- (void)chatService:(QMChatService *)chatService didAddMessagesToMemoryStorage:(NSArray<QBChatMessage *> *)messages forDialogID:(NSString *)dialogID {
+    
+    if ([self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
+        
+        [self.tableView reloadData];
+    }
+}
+
+- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+    
+    if ([self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
+        
+        [self.tableView reloadData];
+    }
+}
+
+- (void)chatService:(QMChatService *)chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)chatDialogID {
+    
+    if ([self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
+        
+        [self.tableView reloadData];
+    }
+}
+
+- (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
+    
+    if ([self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
+        
+        [self.tableView reloadData];
+    }
+}
+
+- (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
+    
+    if ([self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
+        
+        [self.tableView reloadData];
+    }
+}
+
+- (void)chatService:(QMChatService *)chatService didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)dialogs {
+    
+    if ([self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
+        
+        [self.tableView reloadData];
+    }
+}
+
+#pragma mark - QMContactListServiceDelegate
+
+- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
+    
+    [self.tableView reloadData];
+}
+
+- (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
+    
+    [self.tableView reloadData];
+}
+
+- (void)contactListServiceDidLoadCache {
+    
+    [self.tableView reloadData];
+}
+
+#pragma mark - QMUsersServiceDelegate
+
+- (void)usersService:(QMUsersService *)usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)users {
+    
+    [self.tableView reloadData];
 }
 
 @end

@@ -32,15 +32,11 @@
         if (recipient != nil) {
             NSParameterAssert(recipient.fullName);
             
-            [cell setTitle:recipient.fullName];
-            cell.placeholderID = chatDialog.recipientID;
-            [cell setAvatarWithUrl:recipient.avatarUrl];
+            [cell setTitle:recipient.fullName placeholderID:chatDialog.recipientID avatarUrl:recipient.avatarUrl];
         }
     } else {
         
-        [cell setTitle:chatDialog.name];
-        cell.placeholderID = chatDialog.ID.hash;
-        [cell setAvatarWithUrl:chatDialog.photo];
+        [cell setTitle:chatDialog.name placeholderID:chatDialog.ID.hash avatarUrl:chatDialog.photo];
     }
     
     NSString *time = [self.dateFormatter stringFromDate:chatDialog.updatedAt];

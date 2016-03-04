@@ -16,7 +16,8 @@ static NSString *const kQMDialogsSearchDescriptorKey = @"name";
 @interface QMLocalSearchDataProvider ()
 
 <
-QMContactListServiceDelegate
+QMContactListServiceDelegate,
+QMUsersServiceDelegate
 >
 
 @property (strong, nonatomic) NSArray *friends;
@@ -32,6 +33,7 @@ QMContactListServiceDelegate
     if (self) {
         
         [[QMCore instance].contactListService addDelegate:self];
+        [[QMCore instance].usersService addDelegate:self];
         _friends = [QMCore instance].friendsSortedByFullName;
     }
     
@@ -63,8 +65,6 @@ QMContactListServiceDelegate
         NSArray *contactsSearchResult = [self.friends filteredArrayUsingPredicate:usersSearchPredicate];
         
         // dialogs local search
-        
-        
         NSSortDescriptor *dialogsSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kQMDialogsSearchDescriptorKey ascending:NO];
         NSArray *dialogs = [[QMCore instance].chatService.dialogsMemoryStorage dialogsWithSortDescriptors:@[dialogsSortDescriptor]];
         
@@ -102,6 +102,18 @@ QMContactListServiceDelegate
 }
 
 - (void)contactListServiceDidLoadCache {
+    
+    self.friends = [QMCore instance].friendsSortedByFullName;
+}
+
+#pragma mark - QMUsersServiceDelegate
+
+- (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)user {
+    
+    self.friends = [QMCore instance].friendsSortedByFullName;
+}
+
+- (void)usersService:(QMUsersService *)usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)users {
     
     self.friends = [QMCore instance].friendsSortedByFullName;
 }

@@ -11,6 +11,7 @@
 @interface QMContactCell ()
 
 @property (weak, nonatomic) IBOutlet UIButton *addFriendButton;
+@property (weak, nonatomic) IBOutlet UIImageView *onlineCircle;
 
 @end
 
@@ -28,11 +29,28 @@
 
 #pragma mark - setters
 
-- (void)setIsUserFriend:(BOOL)isUserFriend {
+- (void)setContactListItem:(QBContactListItem *)contactListItem {
     
-    self.addFriendButton.hidden = isUserFriend;
+    _contactListItem = contactListItem;
+    
+    BOOL isFriend = contactListItem ? YES : NO;
+    self.addFriendButton.hidden = isFriend;
+    
+    if (isFriend) {
+        
+        BOOL isOnline = contactListItem.online;
+        self.onlineCircle.hidden = !isOnline;
+    }
 }
 
 #pragma mark - action
+
+- (IBAction)didTapAddButton:(id)sender {
+    
+    if ([self.delegate respondsToSelector:@selector(contactCell:didTapAddButton:)]) {
+        
+        [self.delegate contactCell:self didTapAddButton:sender];
+    }
+}
 
 @end
