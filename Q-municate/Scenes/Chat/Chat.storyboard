@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="c78-ul-YFT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="eLB-De-ceb">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--ChatVC-->
+        <!--View Controller-->
         <scene sceneID="9mx-ZL-UPD">
             <objects>
-                <viewController storyboardIdentifier="QMChatVC" hidesBottomBarWhenPushed="YES" id="c78-ul-YFT" customClass="QMChatVC" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="QMChatVC11" hidesBottomBarWhenPushed="YES" id="c78-ul-YFT" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="AwL-JU-hbl"/>
                         <viewControllerLayoutGuide type="bottom" id="CXT-mp-AtF"/>
@@ -31,6 +31,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bXb-bX-LtL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-2170" y="-8365"/>
+        </scene>
+        <!--ChatVC-->
+        <scene sceneID="Bdn-Hp-5KN">
+            <objects>
+                <viewController storyboardIdentifier="QMChatVC" title="ChatVC" id="eLB-De-ceb" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="B6a-if-JV8"/>
+                        <viewControllerLayoutGuide type="bottom" id="k7j-Hr-gSr"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="1wb-Cw-zUc">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qbq-PY-EAV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2170" y="-7653"/>
         </scene>
         <!--Group Details-->
         <scene sceneID="gI1-Tt-68R">
@@ -411,10 +429,10 @@
     </scenes>
     <resources>
         <image name="add-participants" width="24" height="24"/>
-        <image name="add_friend" width="24" height="24"/>
+        <image name="add_friend" width="20" height="20"/>
         <image name="checkbox_ch" width="16" height="16"/>
         <image name="checkbox_unch" width="16" height="16"/>
-        <image name="ic_info_top" width="21" height="21"/>
+        <image name="ic_info_top" width="120" height="120"/>
         <image name="online" width="13" height="13"/>
         <image name="upic-placeholder" width="64" height="64"/>
         <image name="upic_placeholder_details_group" width="58" height="58"/>

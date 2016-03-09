@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="9xL-cI-ja2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="9xL-cI-ja2">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -7,10 +7,10 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Link View Controller-->
+        <!--Auth-->
         <scene sceneID="7FY-UJ-4PO">
             <objects>
-                <viewController id="GGd-RU-mxU" customClass="QMLinkViewController" sceneMemberID="viewController">
+                <viewController title="Auth" id="GGd-RU-mxU" customClass="QMLinkViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="oRR-ux-DBo"/>
                         <viewControllerLayoutGuide type="bottom" id="1mu-bs-esr"/>
@@ -125,11 +125,34 @@ out here.</string>
                     <connections>
                         <outlet property="titleView" destination="wRe-Va-Lui" id="nmC-7w-CRN"/>
                         <segue destination="GGd-RU-mxU" kind="custom" identifier="SceneSegueAuth" customClass="QMRootViewControllerSegue" id="O5H-Pl-5ur"/>
+                        <segue destination="pxP-uO-JQG" kind="custom" identifier="SceneSegueChat" customClass="QMLinkSegue" id="4xP-fr-hbh"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7lV-91-Vld" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-6005" y="-8364"/>
+        </scene>
+        <!--Chat-->
+        <scene sceneID="naz-mX-XEo">
+            <objects>
+                <viewController title="Chat" id="pxP-uO-JQG" customClass="QMLinkViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="c03-LJ-4fG"/>
+                        <viewControllerLayoutGuide type="bottom" id="34o-lV-xar"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ei9-4U-6Wx">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="storyboardName" value="Chat"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="sceneIdentifier" value="QMChatVC"/>
+                    </userDefinedRuntimeAttributes>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cvc-0a-gfX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-5104" y="-8364"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="WdT-1A-Xk8">
@@ -151,8 +174,8 @@ out here.</string>
         </scene>
     </scenes>
     <resources>
-        <image name="ic_new" width="32" height="32"/>
-        <image name="ic_settings" width="32" height="32"/>
+        <image name="ic_new" width="23" height="23"/>
+        <image name="ic_settings" width="23" height="23"/>
         <image name="m_empty_dialogs" width="180" height="265"/>
     </resources>
 </document>
