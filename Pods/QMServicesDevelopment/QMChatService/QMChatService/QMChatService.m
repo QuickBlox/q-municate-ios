@@ -424,28 +424,40 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
                     chatDialogToUpdate.occupantIDs = message.dialog.occupantIDs;
                 }
             }
-            
             // new custom parameters handling
-            if (message.dialogUpdatedAt != nil && [chatDialogToUpdate.updatedAt compare:message.dialogUpdatedAt] == NSOrderedAscending) {
+            else if (message.dialogUpdateType != QMDialogUpdateTypeNone) {
                 
-                switch (message.dialogUpdateType) {
-                    case QMDialogUpdateTypeName:
-                        chatDialogToUpdate.name = message.dialogName;
-                        break;
-                        
-                    case QMDialogUpdateTypePhoto:
-                        chatDialogToUpdate.photo = message.dialogPhoto;
-                        break;
-                        
-                    case QMDialogUpdateTypeOccupants:
-                        chatDialogToUpdate.occupantIDs = message.currentOccupantsIDs;
-                        break;
-                        
-                    default:
-                        break;
+                NSDate *updatedAt = nil;
+                if (message.deletedOccupantsIDs.count > 0) {
+                    // using date sent of message due to dialogUpdatedAt being not server synchronized when user is leaving
+                    updatedAt = message.dateSent;
+                }
+                else {
+                    
+                    updatedAt = message.dialogUpdatedAt;
                 }
                 
-                chatDialogToUpdate.updatedAt = message.dialogUpdatedAt;
+                if ([chatDialogToUpdate.updatedAt compare:updatedAt] == NSOrderedAscending) {
+                    
+                    switch (message.dialogUpdateType) {
+                        case QMDialogUpdateTypeName:
+                            chatDialogToUpdate.name = message.dialogName;
+                            break;
+                            
+                        case QMDialogUpdateTypePhoto:
+                            chatDialogToUpdate.photo = message.dialogPhoto;
+                            break;
+                            
+                        case QMDialogUpdateTypeOccupants:
+                            chatDialogToUpdate.occupantIDs = message.currentOccupantsIDs;
+                            break;
+                            
+                        default:
+                            break;
+                    }
+                    
+                    chatDialogToUpdate.updatedAt = updatedAt;
+                }
             }
             
             chatDialogToUpdate.lastMessageText = message.encodedText;
