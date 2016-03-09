@@ -13,7 +13,7 @@
 #import "QMSettingsManager.h"
 #import "QMAVCallManager.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import "QMViewControllersFactory.h"
+#import "QMChatVC.h"
 
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
@@ -177,7 +177,7 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     UITabBarController *rootController = [(UITabBarController *)self.window.rootViewController selectedViewController];
     UINavigationController *navigationController = (UINavigationController *)rootController;
     
-    UIViewController *chatVC = [QMViewControllersFactory chatControllerWithDialog:chatDialog];
+    UIViewController *chatVC = [QMChatVC chatViewControllerWithChatDialog:chatDialog];
     
     NSString *dialogWithIDWasEntered = [QMApi instance].settingsManager.dialogWithIDisActive;
     if (dialogWithIDWasEntered != nil) {
