@@ -83,6 +83,7 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     }
     
     /*Configure app appearance*/
+    [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:13.0f/255.0f green:112.0f/255.0f blue:179.0f/255.0f alpha:1.0f]];
     [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateNormal];
     [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateDisabled];
     
