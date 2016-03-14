@@ -172,7 +172,7 @@
         messageText = [QMChatUtils messageTextForNotification:message];
     }
     else {
-        messageText = message.encodedText;
+//        messageText = message.encodedText;
     }
     
     if (self.messageNotification != nil) {
