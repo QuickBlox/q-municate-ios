@@ -466,8 +466,16 @@ AGEmojiKeyboardViewDelegate
             message = messageItem.text;
         }
         
-        textColor = [UIColor colorWithRed:113.0f/255.0f green:113.0f/255.0f blue:113.0f/255.0f alpha:1.0f];
-        font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:14.0f];
+        if (messageItem.messageType == QMMessageTypeContactRequest) {
+            
+            textColor = [UIColor blackColor];
+            font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17.0f];
+        }
+        else {
+            
+            textColor = [UIColor whiteColor];
+            font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:13.0f];
+        }
     }
     else {
         
@@ -619,6 +627,11 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark - QMChatCollectionViewDelegate
 
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+    
+    return 8.0f;
+}
+
 - (QMChatCellLayoutModel)collectionView:(QMChatCollectionView *)collectionView layoutModelAtIndexPath:(NSIndexPath *)indexPath {
     QMChatCellLayoutModel layoutModel = [super collectionView:collectionView layoutModelAtIndexPath:indexPath];
     
@@ -671,16 +684,18 @@ AGEmojiKeyboardViewDelegate
 {
     [super collectionView:collectionView configureCell:cell forIndexPath:indexPath];
     
-    [(QMChatCell *)cell setDelegate:self];
-    [(QMChatCell *)cell containerView].highlightColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    QMChatCell *currentCell = (QMChatCell *)cell;
+    
+    currentCell.delegate = self;
+    currentCell.containerView.highlightColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     
     if ([cell isKindOfClass:[QMChatOutgoingCell class]] || [cell isKindOfClass:[QMChatAttachmentOutgoingCell class]]) {
         
-        [(QMChatOutgoingCell *)cell containerView].bgColor = [UIColor colorWithRed:23.0f / 255.0f green:208.0f / 255.0f blue:75.0f / 255.0f alpha:1.0f];
+        currentCell.containerView.bgColor = [UIColor colorWithRed:23.0f / 255.0f green:208.0f / 255.0f blue:75.0f / 255.0f alpha:1.0f];
     }
     else if ([cell isKindOfClass:[QMChatIncomingCell class]] || [cell isKindOfClass:[QMChatAttachmentIncomingCell class]]) {
         
-        [(QMChatIncomingCell *)cell containerView].bgColor = [UIColor whiteColor];
+        currentCell.containerView.bgColor = [UIColor whiteColor];
         
         /**
          *  Setting opponent avatar
@@ -701,9 +716,14 @@ AGEmojiKeyboardViewDelegate
         avatarView.imageViewType = QMImageViewTypeCircle;
         
     }
-    else if ([cell isKindOfClass:[QMChatNotificationCell class]] || [cell isKindOfClass:[QMChatContactRequestCell class]]) {
+    else if ([cell isKindOfClass:[QMChatNotificationCell class]]) {
         
-        [(QMChatCell *)cell containerView].bgColor = self.collectionView.backgroundColor;
+        currentCell.containerView.bgColor = [UIColor colorWithRed:188.0f/255.0f green:185.0f/255.0f blue:168.0f/255.0f alpha:1.0f];
+        currentCell.userInteractionEnabled = NO;
+    }
+    else if ([cell isKindOfClass:[QMChatContactRequestCell class]]) {
+        
+        currentCell.containerView.bgColor = [UIColor whiteColor];
     }
     
     if ([cell conformsToProtocol:@protocol(QMChatAttachmentCell)]) {
@@ -1028,9 +1048,9 @@ AGEmojiKeyboardViewDelegate
         
         if (attachmentImage != nil) {
 #warning need to implement self photo browser
-//            IDMPhoto *photo = [IDMPhoto photoWithImage:attachmentImage];
-//            IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:@[photo]];
-//            [self presentViewController:browser animated:YES completion:nil];
+            //            IDMPhoto *photo = [IDMPhoto photoWithImage:attachmentImage];
+            //            IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:@[photo]];
+            //            [self presentViewController:browser animated:YES completion:nil];
         }
     }
     else if ([cell isKindOfClass:[QMChatOutgoingCell class]] || [cell isKindOfClass:[QMChatIncomingCell class]]) {
