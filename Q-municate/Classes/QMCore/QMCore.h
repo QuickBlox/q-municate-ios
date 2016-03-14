@@ -35,6 +35,8 @@ QMContactListServiceDelegate
 
 @property (strong, nonatomic) NSDate *lastActivityDate;
 
+@property (strong, nonatomic) NSString *activeDialogID;
+
 /**
  *  QMCore shared instance.
  *
@@ -45,7 +47,7 @@ QMContactListServiceDelegate
 - (NSArray *)friends;
 - (NSArray *)friendsSortedByFullName;
 - (NSArray *)idsOfContactsOnly;
-- (BOOL)isFriendWithUser:(QBUUser *)user;
+- (BOOL)isFriendWithUserID:(NSUInteger)userID;
 - (NSArray *)idsOfUsers:(NSArray *)users;
 
 - (BFTask *)logout;
@@ -56,5 +58,7 @@ QMContactListServiceDelegate
 
 - (BFTask *)addUserToContactList:(QBUUser *)user;
 - (BFTask *)confirmAddContactRequest:(QBUUser *)user;
+- (BOOL)isUserOnline:(NSUInteger)userID;
+- (NSString *)fullNameForUserID:(NSUInteger)userID;
 
 @end

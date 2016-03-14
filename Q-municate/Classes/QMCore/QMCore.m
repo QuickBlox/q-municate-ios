@@ -143,10 +143,10 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
     return IDs.allObjects;
 }
 
-- (BOOL)isFriendWithUser:(QBUUser *)user {
+- (BOOL)isFriendWithUserID:(NSUInteger)userID {
     
     NSArray *ids = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
-    return [ids containsObject:@(user.ID)];
+    return [ids containsObject:@(userID)];
 }
 
 - (NSArray *)idsOfUsers:(NSArray *)users {
@@ -205,6 +205,22 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
         @strongify(self);
         return [self.chatService sendMessageAboutAcceptingContactRequest:YES toOpponentID:user.ID];
     }];
+}
+
+- (BOOL)isUserOnline:(NSUInteger)userID {
+    
+    QBContactListItem *item = [self.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
+    
+    return item.isOnline;
+}
+
+- (NSString *)fullNameForUserID:(NSUInteger)userID {
+    
+    QBUUser *user = [self.usersService.usersMemoryStorage userWithID:userID];
+    
+    NSString *fullName = user.fullName != nil ? user.fullName : [NSString stringWithFormat:@"%tu", userID];
+    
+    return fullName;
 }
 
 #pragma mark QMContactListServiceCacheDelegate delegate
