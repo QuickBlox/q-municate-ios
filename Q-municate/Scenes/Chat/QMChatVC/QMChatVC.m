@@ -464,7 +464,7 @@ AGEmojiKeyboardViewDelegate
     }
     
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor, NSFontAttributeName:font};
-    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:message attributes:attributes];
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:message != nil ? message : @"" attributes:attributes];
     
     return attributedString;
 }
