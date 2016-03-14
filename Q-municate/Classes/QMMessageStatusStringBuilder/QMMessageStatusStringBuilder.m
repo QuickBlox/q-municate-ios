@@ -81,7 +81,7 @@ static NSString *const  kQMQBUUserFullNameKeyPathKey = @"fullName";
     switch (notification.messageType) {
         case QMMessageTypeContactRequest:
         {
-            messageText = (notification.senderID == [QMCore instance].currentUser.ID) ?  NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_ME",nil) : [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", @"{FullName}"), sender.fullName];
+            messageText = (notification.senderID == [QMCore instance].currentUser.ID) ?  NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_ME",nil) : [NSString stringWithFormat:@"%@\n%@", sender.fullName != nil ? sender.fullName : @(notification.senderID), NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", nil)];
         }
             break;
             

@@ -141,6 +141,9 @@ AGEmojiKeyboardViewDelegate
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // top layout inset for collection view
+    self.topContentAdditionalInset = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
+    
     // setting up chat controller
     self.collectionView.backgroundColor = [UIColor colorWithRed:237.0f/255.0f green:230.0f/255.0f blue:211.0f/255.0f alpha:1.0f];
     self.inputToolbar.contentView.textView.placeHolder = NSLocalizedString(@"QM_STR_INPUTTOOLBAR_PLACEHOLDER", nil);
@@ -466,7 +469,8 @@ AGEmojiKeyboardViewDelegate
             message = messageItem.text;
         }
         
-        if (messageItem.messageType == QMMessageTypeContactRequest) {
+        Class viewClass = [self viewClassForItem:messageItem];
+        if (viewClass == [QMChatContactRequestCell class]) {
             
             textColor = [UIColor blackColor];
             font = [UIFont systemFontOfSize:17.0f];
@@ -484,7 +488,11 @@ AGEmojiKeyboardViewDelegate
         font = [UIFont systemFontOfSize:16.0f];
     }
     
-    NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor, NSFontAttributeName:font};
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = 8.0f;
+    NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor,
+                                  NSFontAttributeName:font,
+                                  NSParagraphStyleAttributeName:paragraphStyle};
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:message != nil ? message : @"" attributes:attributes];
     
     return attributedString;
@@ -724,6 +732,8 @@ AGEmojiKeyboardViewDelegate
     else if ([cell isKindOfClass:[QMChatContactRequestCell class]]) {
         
         currentCell.containerView.bgColor = [UIColor whiteColor];
+        currentCell.layer.cornerRadius = 8;
+        currentCell.clipsToBounds = YES;
     }
     
     if ([cell conformsToProtocol:@protocol(QMChatAttachmentCell)]) {

@@ -79,7 +79,7 @@
 "QM_STR_NOT_AUTHORIZED_TO_USE_MICROPHONE" = "This app is not authorized to use Microphone";
 //  ********** Contact requests notification text: ***************
 "QM_STR_FRIEND_REQUEST_DID_SEND_FOR_ME" = "Your request has been sent";
-"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT" = "%@ has sent a request to you";
+"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT" = "would like to chat with you";
 
 "QM_STR_FRIEND_REQUEST_DID_CONFIRM_FOR_ME" = "You have accepted a request";
 "QM_STR_FRIEND_REQUEST_DID_CONFIRM_FOR_OPPONENT" = "Your request has been accepted";
