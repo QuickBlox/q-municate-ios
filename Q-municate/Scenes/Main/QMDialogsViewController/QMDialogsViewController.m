@@ -276,6 +276,15 @@ UISearchResultsUpdating
 
 - (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
     
+    if (message.messageType == QMMessageTypeContactRequest) {
+        
+        [[QMCore instance].usersService getUserWithID:message.senderID];
+    }
+    else if (message.addedOccupantsIDs.count > 0) {
+        
+        [[QMCore instance].usersService getUsersWithIDs:message.addedOccupantsIDs];
+    }
+    
     [self.tableView reloadData];
 }
 
