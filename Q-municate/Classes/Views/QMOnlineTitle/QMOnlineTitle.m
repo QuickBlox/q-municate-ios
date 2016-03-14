@@ -25,17 +25,17 @@
                                                                     0,
                                                                     self.frame.size.width,
                                                                     self.frame.size.height/2)];
-        self.titleLabel.font = [UIFont boldSystemFontOfSize:17];
+        self.titleLabel.font = [UIFont systemFontOfSize:17.0f];
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
-        self.titleLabel.textColor = [UIColor whiteColor];
+        self.titleLabel.textColor = [UIColor blackColor];
 
         self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,
                                                                      self.frame.size.height/2,
                                                                      self.frame.size.width,
                                                                      self.frame.size.height/2)];
-        self.statusLabel.font = [UIFont systemFontOfSize:14];
+        self.statusLabel.font = [UIFont systemFontOfSize:11.0f];
         self.statusLabel.textAlignment = NSTextAlignmentCenter;
-        self.statusLabel.textColor = [UIColor colorWithWhite:1.000 alpha:0.760];
+        self.statusLabel.textColor = [UIColor colorWithRed:143.0f/255.0f green:142.0f/255.0f blue:148.0f/255.0f alpha:1.0f];
         self.statusLabel.text = @"Offline";
         
         [self addSubview:self.titleLabel];

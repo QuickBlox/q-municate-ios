@@ -28,7 +28,9 @@ const NSInteger kQMEmojiButtonTag = 100;
 const CGFloat kQMEmojiButtonSize = 45.0f;
 const CGFloat kQMInputToolbarTextContainerInsetRight = 25.0f;
 const CGFloat kQMAttachmentCellSize = 200.0f;
-const NSUInteger kQMWidthPadding = 40.0f;
+const CGFloat kQMWidthPadding = 40.0f;
+const CGFloat kQMAvatarSize = 28.0f;
+const CGFloat kQMGroupAvatarSize = 36.0f;
 
 @interface QMChatVC ()
 
@@ -162,16 +164,18 @@ AGEmojiKeyboardViewDelegate
     [[QMCore instance].contactListService addDelegate:self];
     self.actionsHandler = self;
     
+    @weakify(self);
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
         // set up opponent full name
         self.onlineTitle.titleLabel.text = [[QMCore instance] fullNameForUserID:self.chatDialog.recipientID];
+        BOOL isOpponentOnline = [[QMCore instance] isUserOnline:self.chatDialog.recipientID];
+        [self setOpponentOnlineStatus:isOpponentOnline];
         
         // configuring call buttons for opponent
         [self configureCallButtons];
         
         // handling typing status
-        @weakify(self);
         [self.chatDialog setOnUserIsTyping:^(NSUInteger userID) {
             @strongify(self);
             if (self.senderID == userID) {
@@ -190,14 +194,27 @@ AGEmojiKeyboardViewDelegate
             }
             
             self.isOpponentTyping = NO;
-            BOOL isOpponentOnline = [[QMCore instance] isUserOnline:self.chatDialog.recipientID];
-            [self setOpponentOnlineStatus:isOpponentOnline];
+            BOOL isOnline = [[QMCore instance] isUserOnline:self.chatDialog.recipientID];
+            [self setOpponentOnlineStatus:isOnline];
         }];
     }
     else {
         
         // set up dialog name
         self.onlineTitle.titleLabel.text = self.chatDialog.name;
+        self.onlineTitle.statusLabel.text = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_GROUP_CHAT_STATUS_STRING", nil), self.chatDialog.occupantIDs.count, 0];
+        [self configureGroupChatAvatar];
+        [self updateGroupChatOnlineStatus];
+        
+        [self.chatDialog setOnJoinOccupant:^(NSUInteger userID) {
+            @strongify(self);
+            [self updateGroupChatOnlineStatus];
+        }];
+        
+        [self.chatDialog setOnLeaveOccupant:^(NSUInteger userID) {
+            @strongify(self);
+            [self updateGroupChatOnlineStatus];
+        }];
     }
     
     // inserting messages
@@ -231,8 +248,9 @@ AGEmojiKeyboardViewDelegate
     
     [[NSNotificationCenter defaultCenter] removeObserver:self.observerWillResignActive];
     
-    // Deletes typing blocks.
+    // Delete blocks.
     [self.chatDialog clearTypingStatusBlocks];
+    [self.chatDialog clearDialogOccupantsStatusBlock];
 }
 
 #pragma mark - Helpers & Utility
@@ -478,7 +496,7 @@ AGEmojiKeyboardViewDelegate
     
     UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:16.0f];
     
-    QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:self.chatDialog.recipientID];
+    QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:messageItem.senderID];
     NSString *topLabelText = [NSString stringWithFormat:@"%@", opponentUser.fullName != nil ? opponentUser.fullName : @(messageItem.senderID)];
     
     // setting the paragraph style lineBreakMode to NSLineBreakByTruncatingTail
@@ -619,7 +637,7 @@ AGEmojiKeyboardViewDelegate
     if (class == [QMChatOutgoingCell class] ||
         class == [QMChatAttachmentOutgoingCell class]) {
         
-        layoutModel.avatarSize = (CGSize){0.0, 0.0};
+        layoutModel.avatarSize = CGSizeZero;
     }
     else if (class == [QMChatAttachmentIncomingCell class] ||
              class == [QMChatIncomingCell class]) {
@@ -634,7 +652,7 @@ AGEmojiKeyboardViewDelegate
         }
         
         layoutModel.spaceBetweenTopLabelAndTextView = 5.0f;
-        layoutModel.avatarSize = (CGSize){50.0, 50.0};
+        layoutModel.avatarSize = CGSizeMake(kQMAvatarSize, kQMAvatarSize);
         
     } else if (class == [QMChatNotificationCell class]) {
         
@@ -663,11 +681,11 @@ AGEmojiKeyboardViewDelegate
     
     if ([cell isKindOfClass:[QMChatOutgoingCell class]] || [cell isKindOfClass:[QMChatAttachmentOutgoingCell class]]) {
         
-        [(QMChatOutgoingCell *)cell containerView].bgColor = [UIColor colorWithRed:23.0f / 255.0f green:209.0f / 255.0f blue:75.0f / 255.0f alpha:1.0f];
+        [(QMChatOutgoingCell *)cell containerView].bgColor = [UIColor colorWithRed:23.0f / 255.0f green:208.0f / 255.0f blue:75.0f / 255.0f alpha:1.0f];
     }
     else if ([cell isKindOfClass:[QMChatIncomingCell class]] || [cell isKindOfClass:[QMChatAttachmentIncomingCell class]]) {
         
-        [(QMChatIncomingCell *)cell containerView].bgColor = [UIColor colorWithRed:226.0f / 255.0f green:235.0f / 255.0f blue:242.0f / 255.0f alpha:1.0f];
+        [(QMChatIncomingCell *)cell containerView].bgColor = [UIColor whiteColor];
         
         /**
          *  Setting opponent avatar
@@ -823,7 +841,33 @@ AGEmojiKeyboardViewDelegate
 
 - (void)configureGroupChatAvatar {
     
-    // set group chat avatar to right bar button avatar here
+    // chat avatar
+    QMImageView *imageView = [[QMImageView alloc] initWithFrame:CGRectMake(0.0f,
+                                                                           0.0f,
+                                                                           kQMGroupAvatarSize,
+                                                                           kQMGroupAvatarSize)];
+    
+    UIImage *placeholder = [QMPlaceholder placeholderWithFrame:imageView.bounds title:self.chatDialog.name ID:self.chatDialog.ID.hash];
+    NSURL *avatarURL = [NSURL URLWithString:self.chatDialog.photo];
+    
+    [imageView setImageWithURL:avatarURL
+                   placeholder:placeholder
+                       options:SDWebImageLowPriority
+                      progress:nil
+                completedBlock:nil];
+    
+    UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:imageView];
+    self.navigationItem.rightBarButtonItem = rightBarButtonItem;
+}
+
+- (void)updateGroupChatOnlineStatus {
+    
+    // chat status string
+    @weakify(self);
+    [self.chatDialog requestOnlineUsersWithCompletionBlock:^(NSMutableArray<NSNumber *> * _Nullable onlineUsers, NSError * _Nullable error) {
+        @strongify(self);
+        self.onlineTitle.statusLabel.text = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_GROUP_CHAT_STATUS_STRING", nil), self.chatDialog.occupantIDs.count, onlineUsers.count];
+    }];
 }
 
 - (void)setOpponentOnlineStatus:(BOOL)isOnline {
@@ -932,7 +976,7 @@ AGEmojiKeyboardViewDelegate
     
     if (self.chatDialog.type == QBChatDialogTypePrivate && self.chatDialog.recipientID == (NSInteger)userID && !self.isOpponentTyping) {
         
-        self.onlineTitle.statusLabel.text = NSLocalizedString(isOnline ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
+        [self setOpponentOnlineStatus:isOnline];
     }
 }
 
