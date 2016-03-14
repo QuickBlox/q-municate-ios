@@ -17,6 +17,7 @@
 #import "QMSearchDataProvider.h"
 #import "QMLocalSearchDataProvider.h"
 #import "QMGlobalSearchDataProvider.h"
+#import "QMChatVC.h"
 
 #import "QMCore.h"
 #import "QMTasks.h"
@@ -169,6 +170,7 @@ UISearchResultsUpdating
     if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
         
         QBChatDialog *chatDialog = self.dialogsDataSource.items[indexPath.row];
+        [self performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
     }
 }
 
@@ -186,6 +188,15 @@ UISearchResultsUpdating
 
 - (IBAction)didPressProfileTitle:(id)sender {
     
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    if ([segue.identifier isEqualToString:kQMSceneSegueChat]) {
+        
+        QMChatVC *chatViewController = segue.destinationViewController;
+        chatViewController.chatDialog = sender;
+    }
 }
 
 #pragma mark - UISearchControllerDelegate
