@@ -14,13 +14,13 @@
 "BUTTON_SENT_CONF_CODE" = "Sent confirmation code";
 
 /* Footnote disclaimer for send confirmation code screen */
-"FOOTNOTE_SEND_CONF_CODE" = "By tapping \"Send confirmation code\" above, <a href=\"https://www.digits.com\">Digits by Twitter</a> will send you an SMS to confirm your phone number. Message & data rates may apply.";
+"FOOTNOTE_SEND_CONF_CODE" = "By tapping “Send confirmation code” above, <a href=\"https://www.digits.com\">Digits by Twitter</a> will send you an SMS to confirm your phone number. On the next screen, you can choose “Resend Code” to initiate another SMS or “Call me” to initiate a phone call to confirm your phone number. Message, call, & data rates may apply.";
 
 /* Footnote disclaimer for call me to send a confirmation code screen */
-"FOOTNOTE_CONF_CODE_CALL_ME" = "By tapping \"Call me\" above, <a href=\"https://www.digits.com\">Digits by Twitter</a> will send you a voice call to confirm your phone number. Call & data rates may apply.";
+"FOOTNOTE_CONF_CODE_CALL_ME" = "By tapping “Call me” above, <a href=\"https://www.digits.com\">Digits by Twitter</a> will send you a voice call to confirm your phone number. Call & data rates may apply.";
 
 /* Description that email is being added to a user's Digits profile  */
-"FOOTNOTE_EMAIL_DISCLOSURE" =  "You agree that this app and <a href=\"https://www.digits.com/settings\">all apps listed in your Digits account</a> can access this email address and their users can discover you by email.";
+"FOOTNOTE_EMAIL_DISCLOSURE" =  "By tapping “Continue” above, you are adding this email to your Digits account. You agree that this app and <a href=\"https://www.digits.com/settings\">all apps listed in your Digits account</a> can access this email address and that their users can discover you by email.";
 
 /* Label before confirmation code input field */
 "LABEL_ENTER_CONF_CODE" = "We sent you a 6-digit code.";
@@ -65,13 +65,13 @@
 "BUTTON_RESEND_CONF_CODE" = "Resend code";
 
 /* Footnote when creating account */
-"FOOTNOTE_CREATE_ACCOUNT" = "By tapping \"Create account\" above, you agree to the <a href=\"https://twitter.com/tos\">Terms of Service</a>, <a href=\"https://twitter.com/privacy\">Privacy Policy</a>, and <a href=\"https://support.twitter.com/articles/20170514\">Cookies Policy</a> of <a href=\"https://www.digits.com\">Digits by Twitter</a>, to share your phone number with %@, and that other users of %@ can discover you by phone number.";
+"FOOTNOTE_CREATE_ACCOUNT" = "By tapping “Create account” above, you agree to the <a href=\"https://twitter.com/tos\">Terms of Service</a>, <a href=\"https://twitter.com/privacy\">Privacy Policy</a>, and <a href=\"https://support.twitter.com/articles/20170514\">Cookies Use</a> of <a href=\"https://www.digits.com\">Digits by Twitter</a>, to share your phone number with %@, and that other users of %@ can discover you by phone number.";
 
 /* Footnote when logging into an existing account */
-"FOOTNOTE_LOGIN" = "By tapping \"Continue\", your <a href=\"https://www.digits.com/settings\">Digits phone number and/or email address</a> will be shared with %@ and other users of %@ can discover you by phone number and/or email.";
+"FOOTNOTE_LOGIN" = "By tapping “Continue” above, your <a href=\"https://www.digits.com/settings\">Digits phone number and/or email address</a> will be shared with %@ and other users of %@ can discover you by phone number and/or email.";
 
 /* Footnote when logging into an existing account but the terms of service have changed */
-"FOOTNOTE_TOS_UPDATE" = "By tapping \"Continue\", you agree to the Terms of Service, Privacy Policy, and Cookies Policy of Digits by Twitter, to share your <a href=\"https://www.digits.com/settings\">Digits phone number and/or email address</a> with %@, and that other users of %@ can discover you by phone number and/or email.";
+"FOOTNOTE_TOS_UPDATE" = "By tapping “Continue” above, you agree to the updated <a href=\"https://twitter.com/tos\">Terms of Service</a>, <a href=\"https://twitter.com/privacy\">Privacy Policy</a>, and <a href=\"https://support.twitter.com/articles/20170514\">Cookies Use</a> of <a href=\"https://www.digits.com\">Digits by Twitter</a>, to share your <a href=\"https://www.digits.com/settings\">Digits phone number and/or email address</a> with %@, and that other users of %@ can discover you by phone number and/or email.";
 
 /* Text to be inserted when the name of the app is unknown in the sentence: "... other users of [app name] can discover you..." */
 "PARTIAL_FOOTNOTE_THIS_APP" = "this app";
