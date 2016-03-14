@@ -85,6 +85,30 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
     return source.task;
 }
 
+#pragma mark - Chat Connection
+
+- (BFTask *)disconnectFromChat {
+    @weakify(self);
+    return [[self.chatService disconnect] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        @strongify(self);
+        if (!task.isFaulted) {
+            
+            self.lastActivityDate = [NSDate date];
+        }
+        
+        return nil;
+    }];
+}
+
+- (BFTask *)disconnectFromChatIfNeeded {
+#warning TODO: implement disconnect if needed during active call
+    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground /*&& !self.avCallManager.hasActiveCall*/ && [[QBChat instance] isConnected]) {
+        return [self disconnectFromChat];
+    }
+    
+    return nil;
+}
+
 #pragma mark - Notifications
 
 - (BFTask *)leaveChatDialog:(QBChatDialog *)chatDialog {

@@ -44,6 +44,9 @@ QMContactListServiceDelegate
  */
 + (instancetype)instance;
 
+- (BFTask *)disconnectFromChat;
+- (BFTask *)disconnectFromChatIfNeeded;
+
 - (NSArray *)friends;
 - (NSArray *)friendsSortedByFullName;
 - (NSArray *)idsOfContactsOnly;
