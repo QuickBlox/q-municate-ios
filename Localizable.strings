@@ -137,3 +137,4 @@
 
 // *********** Chat Screen ***********
 "QM_STR_INPUTTOOLBAR_PLACEHOLDER" = "Message";
+"QM_STR_GROUP_CHAT_STATUS_STRING" = "%tu members, %tu online";
