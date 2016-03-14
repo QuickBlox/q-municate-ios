@@ -56,7 +56,6 @@
 		584277A01C3D336300CDE35B /* QMInviteFriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5842778E1C3D336300CDE35B /* QMInviteFriendCell.m */; };
 		584277A11C3D336300CDE35B /* QMInviteStaticCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277901C3D336300CDE35B /* QMInviteStaticCell.m */; };
 		584277A41C3D336300CDE35B /* QMCornerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277981C3D336300CDE35B /* QMCornerButton.m */; };
-		584277A51C3D336300CDE35B /* QMOnlineTitle.m in Sources */ = {isa = PBXBuildFile; fileRef = 5842779B1C3D336300CDE35B /* QMOnlineTitle.m */; };
 		584277B01C3D35D600CDE35B /* QMLinkSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277AF1C3D35D600CDE35B /* QMLinkSegue.m */; };
 		584277B41C3D374400CDE35B /* Auth.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 584277B31C3D374400CDE35B /* Auth.storyboard */; };
 		584277B91C3D401C00CDE35B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 584277B81C3D401C00CDE35B /* Main.storyboard */; };
@@ -241,8 +240,6 @@
 		584277901C3D336300CDE35B /* QMInviteStaticCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMInviteStaticCell.m; sourceTree = "<group>"; };
 		584277971C3D336300CDE35B /* QMCornerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCornerButton.h; sourceTree = "<group>"; };
 		584277981C3D336300CDE35B /* QMCornerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMCornerButton.m; sourceTree = "<group>"; };
-		5842779A1C3D336300CDE35B /* QMOnlineTitle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMOnlineTitle.h; sourceTree = "<group>"; };
-		5842779B1C3D336300CDE35B /* QMOnlineTitle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMOnlineTitle.m; sourceTree = "<group>"; };
 		584277AE1C3D35D600CDE35B /* QMLinkSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLinkSegue.h; sourceTree = "<group>"; };
 		584277AF1C3D35D600CDE35B /* QMLinkSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLinkSegue.m; sourceTree = "<group>"; };
 		584277B11C3D36EA00CDE35B /* SegueIdentifiers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SegueIdentifiers.h; path = "Q-municate/Scenes/SegueIdentifiers.h"; sourceTree = SOURCE_ROOT; };
@@ -909,7 +906,6 @@
 				584277801C3D336300CDE35B /* IAButton */,
 				584277831C3D336300CDE35B /* QMCells */,
 				584277961C3D336300CDE35B /* QMCornerButton */,
-				584277991C3D336300CDE35B /* QMOnlineTitle */,
 			);
 			name = Views;
 			path = "Q-municate/Classes/Views";
@@ -962,15 +958,6 @@
 				584277981C3D336300CDE35B /* QMCornerButton.m */,
 			);
 			path = QMCornerButton;
-			sourceTree = "<group>";
-		};
-		584277991C3D336300CDE35B /* QMOnlineTitle */ = {
-			isa = PBXGroup;
-			children = (
-				5842779A1C3D336300CDE35B /* QMOnlineTitle.h */,
-				5842779B1C3D336300CDE35B /* QMOnlineTitle.m */,
-			);
-			path = QMOnlineTitle;
 			sourceTree = "<group>";
 		};
 		584277A61C3D337900CDE35B /* Start */ = {
@@ -1706,7 +1693,6 @@
 				55D8ADE519AC770400DAF79F /* QMFeedbackTableViewController.m in Sources */,
 				55D8AD0719AC756000DAF79F /* REActionSheet.m in Sources */,
 				14D834671AB0903900300266 /* QMVideoP2PController.m in Sources */,
-				584277A51C3D336300CDE35B /* QMOnlineTitle.m in Sources */,
 				55A8B06B1965986A00B5D33B /* NSUserDefaultsHelper.m in Sources */,
 				55495A221993BCC100B7764C /* QMAlertsFactory.m in Sources */,
 				55D8ADB519AC761000DAF79F /* QMForgotPasswordViewController.m in Sources */,
