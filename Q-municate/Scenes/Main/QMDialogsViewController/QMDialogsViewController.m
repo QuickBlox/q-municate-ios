@@ -22,7 +22,7 @@
 #import "QMCore.h"
 #import "QMTasks.h"
 #import "QMProfile.h"
-#import "QMTitleView.h"
+#import "QMProfileTitleView.h"
 
 #import <SVProgressHUD.h>
 
@@ -52,7 +52,7 @@ UISearchResultsUpdating
 @property (strong, nonatomic) QMLocalSearchDataSource *localSearchDataSource;
 @property (strong, nonatomic) QMGlobalSearchDataSource *globalSearchDataSource;
 
-@property (weak, nonatomic) IBOutlet QMTitleView *titleView;
+@property (weak, nonatomic) IBOutlet QMProfileTitleView *titleView;
 @property (strong, nonatomic) UISearchController *searchController;
 @property (strong, nonatomic) QMSearchResultsController *searchResultsController;
 
