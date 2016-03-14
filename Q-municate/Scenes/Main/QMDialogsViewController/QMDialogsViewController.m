@@ -52,7 +52,7 @@ UISearchResultsUpdating
 @property (strong, nonatomic) QMLocalSearchDataSource *localSearchDataSource;
 @property (strong, nonatomic) QMGlobalSearchDataSource *globalSearchDataSource;
 
-@property (weak, nonatomic) IBOutlet QMProfileTitleView *titleView;
+@property (weak, nonatomic) IBOutlet QMProfileTitleView *profileTitleView;
 @property (strong, nonatomic) UISearchController *searchController;
 @property (strong, nonatomic) QMSearchResultsController *searchResultsController;
 
@@ -127,9 +127,9 @@ UISearchResultsUpdating
 - (void)configureProfileTitleView {
     
     QBUUser *currentUser = [QMCore instance].currentProfile.userData;
-    [self.titleView setText:currentUser.fullName];
-    self.titleView.placeholderID = currentUser.ID;
-    [self.titleView setAvatarUrl:currentUser.avatarUrl];
+    [self.profileTitleView setText:currentUser.fullName];
+    self.profileTitleView.placeholderID = currentUser.ID;
+    [self.profileTitleView setAvatarUrl:currentUser.avatarUrl];
 }
 
 - (void)performAutoLoginAndFetchData {
@@ -341,6 +341,14 @@ UISearchResultsUpdating
     
     [QMDialogCell registerForReuseInTableView:self.tableView];
     [QMContactCell registerForReuseInTableView:self.tableView];
+}
+
+#pragma mark - Transition size
+
+- (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
+    
+    [self.profileTitleView sizeToFit];
 }
 
 @end

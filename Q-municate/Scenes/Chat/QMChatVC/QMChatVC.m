@@ -8,7 +8,6 @@
 
 #import "QMChatVC.h"
 #import "QMCore.h"
-#import "QMOnlineTitle.h"
 #import "QMProfile.h"
 #import "QMMessageStatusStringBuilder.h"
 #import "QMPlaceholder.h"
@@ -16,6 +15,7 @@
 #import "QMSoundManager.h"
 #import "QMImagePicker.h"
 #import "REActionSheet.h"
+#import "QMOnlineTitleView.h"
 
 // helpers
 #import "QMChatButtonsFactory.h"
@@ -62,7 +62,7 @@ AGEmojiKeyboardViewDelegate
 /**
  *  Navigation bar online title
  */
-@property (strong, nonatomic) QMOnlineTitle *onlineTitle;
+@property (weak, nonatomic) IBOutlet QMOnlineTitleView *onlineTitleView;
 
 /**
  *  Determines whether opponent is typing now
@@ -144,11 +144,6 @@ AGEmojiKeyboardViewDelegate
     // setting up chat controller
     self.collectionView.backgroundColor = [UIColor colorWithRed:237.0f/255.0f green:230.0f/255.0f blue:211.0f/255.0f alpha:1.0f];
     self.inputToolbar.contentView.textView.placeHolder = NSLocalizedString(@"QM_STR_INPUTTOOLBAR_PLACEHOLDER", nil);
-    self.onlineTitle = [[QMOnlineTitle alloc] initWithFrame:CGRectMake(0.0f,
-                                                                       0.0f,
-                                                                       150.0f,
-                                                                       self.navigationController.navigationBar.frame.size.height)];
-    self.navigationItem.titleView = self.onlineTitle;
     
     // setting up properties
     self.detailedCells = [NSMutableSet set];
@@ -168,7 +163,7 @@ AGEmojiKeyboardViewDelegate
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
         // set up opponent full name
-        self.onlineTitle.titleLabel.text = [[QMCore instance] fullNameForUserID:self.chatDialog.recipientID];
+        [self.onlineTitleView setTitle:[[QMCore instance] fullNameForUserID:self.chatDialog.recipientID]];
         BOOL isOpponentOnline = [[QMCore instance] isUserOnline:self.chatDialog.recipientID];
         [self setOpponentOnlineStatus:isOpponentOnline];
         
@@ -183,7 +178,7 @@ AGEmojiKeyboardViewDelegate
             }
             
             self.isOpponentTyping = YES;
-            self.onlineTitle.statusLabel.text = NSLocalizedString(@"QM_STR_TYPING", nil);
+            [self.onlineTitleView setStatus:NSLocalizedString(@"QM_STR_TYPING", nil)];
         }];
         
         // Handling user stopped typing.
@@ -201,8 +196,8 @@ AGEmojiKeyboardViewDelegate
     else {
         
         // set up dialog name
-        self.onlineTitle.titleLabel.text = self.chatDialog.name;
-        self.onlineTitle.statusLabel.text = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_GROUP_CHAT_STATUS_STRING", nil), self.chatDialog.occupantIDs.count, 0];
+        [self.onlineTitleView setTitle:self.chatDialog.name];
+        [self.onlineTitleView setStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_GROUP_CHAT_STATUS_STRING", nil), self.chatDialog.occupantIDs.count, 0]];
         [self configureGroupChatAvatar];
         [self updateGroupChatOnlineStatus];
         
@@ -846,6 +841,7 @@ AGEmojiKeyboardViewDelegate
                                                                            0.0f,
                                                                            kQMGroupAvatarSize,
                                                                            kQMGroupAvatarSize)];
+    imageView.imageViewType = QMImageViewTypeCircle;
     
     UIImage *placeholder = [QMPlaceholder placeholderWithFrame:imageView.bounds title:self.chatDialog.name ID:self.chatDialog.ID.hash];
     NSURL *avatarURL = [NSURL URLWithString:self.chatDialog.photo];
@@ -866,14 +862,14 @@ AGEmojiKeyboardViewDelegate
     @weakify(self);
     [self.chatDialog requestOnlineUsersWithCompletionBlock:^(NSMutableArray<NSNumber *> * _Nullable onlineUsers, NSError * _Nullable error) {
         @strongify(self);
-        self.onlineTitle.statusLabel.text = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_GROUP_CHAT_STATUS_STRING", nil), self.chatDialog.occupantIDs.count, onlineUsers.count];
+        [self.onlineTitleView setStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_GROUP_CHAT_STATUS_STRING", nil), self.chatDialog.occupantIDs.count, onlineUsers.count]];
     }];
 }
 
 - (void)setOpponentOnlineStatus:(BOOL)isOnline {
     
     NSString *status = NSLocalizedString(isOnline ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
-    self.onlineTitle.statusLabel.text = status;
+    [self.onlineTitleView setStatus:status];
 }
 
 #pragma mark - QMChatServiceDelegate
@@ -909,7 +905,7 @@ AGEmojiKeyboardViewDelegate
     
     if (self.chatDialog.type != QBChatDialogTypePrivate && [self.chatDialog.ID isEqualToString:chatDialog.ID]) {
         
-        self.onlineTitle.titleLabel.text = self.chatDialog.name;
+        [self.onlineTitleView setTitle:self.chatDialog.name];
     }
 }
 
@@ -1251,6 +1247,14 @@ AGEmojiKeyboardViewDelegate
     [emojiButton setImage:[UIImage imageNamed:@"ic_smile"] forState:UIControlStateNormal];
     
     [self scrollToBottomAnimated:YES];
+}
+
+#pragma mark - Transition size
+
+- (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
+    
+    [self.onlineTitleView sizeToFit];
 }
 
 @end

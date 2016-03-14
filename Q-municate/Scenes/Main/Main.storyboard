@@ -87,7 +87,7 @@ out here.</string>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ksM-J9-hmF">
-                                    <rect key="frame" x="48" y="6" width="44" height="21"/>
+                                    <rect key="frame" x="48" y="6" width="44" height="19"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" red="0.01176470588" green="0.01176470588" blue="0.01176470588" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -123,9 +123,9 @@ out here.</string>
                         <barButtonItem key="rightBarButtonItem" image="ic_new" id="ekF-vr-TqV"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="titleView" destination="wRe-Va-Lui" id="nmC-7w-CRN"/>
+                        <outlet property="profileTitleView" destination="wRe-Va-Lui" id="A6l-zk-zJV"/>
                         <segue destination="GGd-RU-mxU" kind="custom" identifier="SceneSegueAuth" customClass="QMRootViewControllerSegue" id="O5H-Pl-5ur"/>
-                        <segue destination="pxP-uO-JQG" kind="custom" identifier="SceneSegueChat" customClass="QMLinkSegue" id="4xP-fr-hbh"/>
+                        <segue destination="GHP-Ej-YG9" kind="show" identifier="SceneSegueChat" id="M6I-F2-D1O"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7lV-91-Vld" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -133,26 +133,12 @@ out here.</string>
             <point key="canvasLocation" x="-6005" y="-8364"/>
         </scene>
         <!--Chat-->
-        <scene sceneID="naz-mX-XEo">
+        <scene sceneID="zLf-RD-p3s">
             <objects>
-                <viewController title="Chat" id="pxP-uO-JQG" customClass="QMLinkViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="c03-LJ-4fG"/>
-                        <viewControllerLayoutGuide type="bottom" id="34o-lV-xar"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="ei9-4U-6Wx">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="storyboardName" value="Chat"/>
-                        <userDefinedRuntimeAttribute type="string" keyPath="sceneIdentifier" value="QMChatVC"/>
-                    </userDefinedRuntimeAttributes>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="cvc-0a-gfX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewControllerPlaceholder storyboardName="Chat" id="GHP-Ej-YG9" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IiI-Bc-mlG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5104" y="-8364"/>
+            <point key="canvasLocation" x="-5304.5" y="-8364"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="WdT-1A-Xk8">

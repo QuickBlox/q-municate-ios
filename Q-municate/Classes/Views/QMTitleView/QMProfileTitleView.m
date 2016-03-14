@@ -49,12 +49,17 @@
         _text = text;
         self.textLabel.text = text;
         
-        [self.textLabel sizeToFit];
         [self sizeToFit];
     }
 }
 
 #pragma mark - Overrides
+
+- (void)sizeToFit {
+    
+    [self.textLabel sizeToFit];
+    [super sizeToFit];
+}
 
 - (CGSize)sizeThatFits:(CGSize)size {
     
