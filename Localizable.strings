@@ -134,3 +134,6 @@
 "QM_STR_LOCAL_SEARCH" = "Local";
 "QM_STR_GLOBAL_SEARCH" = "Global";
 "QM_STR_SEARCH_BAR_PLACEHOLDER" = "Search";
+
+// *********** Chat Screen ***********
+"QM_STR_INPUTTOOLBAR_PLACEHOLDER" = "Message";
