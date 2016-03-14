@@ -469,19 +469,19 @@ AGEmojiKeyboardViewDelegate
         if (messageItem.messageType == QMMessageTypeContactRequest) {
             
             textColor = [UIColor blackColor];
-            font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17.0f];
+            font = [UIFont systemFontOfSize:17.0f];
         }
         else {
             
             textColor = [UIColor whiteColor];
-            font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:13.0f];
+            font = [UIFont systemFontOfSize:13.0f];
         }
     }
     else {
         
         message = messageItem.text;
         textColor = messageItem.senderID == self.senderID ? [UIColor whiteColor] : [UIColor blackColor];
-        font = [UIFont fontWithName:@"HelveticaNeue" size:16.0f];
+        font = [UIFont systemFontOfSize:16.0f];
     }
     
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor, NSFontAttributeName:font};
@@ -497,7 +497,7 @@ AGEmojiKeyboardViewDelegate
         return nil;
     }
     
-    UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:16.0f];
+    UIFont *font = [UIFont systemFontOfSize:15.0f];
     
     QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:messageItem.senderID];
     NSString *topLabelText = [NSString stringWithFormat:@"%@", opponentUser.fullName != nil ? opponentUser.fullName : @(messageItem.senderID)];
