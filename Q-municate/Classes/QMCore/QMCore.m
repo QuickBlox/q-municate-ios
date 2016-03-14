@@ -149,6 +149,13 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
     return [ids containsObject:@(userID)];
 }
 
+- (BOOL)userIDIsInPendingList:(NSUInteger)userID {
+    
+    QBContactListItem *contactlistItem = [self.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
+    
+    return contactlistItem.subscriptionState != QBPresenceSubscriptionStateBoth ? YES : NO;
+}
+
 - (NSArray *)idsOfUsers:(NSArray *)users {
     
     NSMutableArray *ids = [NSMutableArray array];
@@ -204,6 +211,15 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
     return [[self.contactListService acceptContactRequest:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         @strongify(self);
         return [self.chatService sendMessageAboutAcceptingContactRequest:YES toOpponentID:user.ID];
+    }];
+}
+
+- (BFTask *)rejectAddContactRequest:(QBUUser *)user {
+    
+    @weakify(self);
+    return [[self.contactListService rejectContactRequest:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        @strongify(self);
+        return [self.chatService sendMessageAboutAcceptingContactRequest:NO toOpponentID:user.ID];
     }];
 }
 

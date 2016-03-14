@@ -49,6 +49,7 @@ QMContactListServiceDelegate
 - (NSArray *)idsOfContactsOnly;
 - (BOOL)isFriendWithUserID:(NSUInteger)userID;
 - (NSArray *)idsOfUsers:(NSArray *)users;
+- (BOOL)userIDIsInPendingList:(NSUInteger)userID;
 
 - (BFTask *)logout;
 
@@ -58,6 +59,7 @@ QMContactListServiceDelegate
 
 - (BFTask *)addUserToContactList:(QBUUser *)user;
 - (BFTask *)confirmAddContactRequest:(QBUUser *)user;
+- (BFTask *)rejectAddContactRequest:(QBUUser *)user;
 - (BOOL)isUserOnline:(NSUInteger)userID;
 - (NSString *)fullNameForUserID:(NSUInteger)userID;
 
