@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="9xL-cI-ja2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="9xL-cI-ja2">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -7,10 +7,10 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Link View Controller-->
+        <!--Auth-->
         <scene sceneID="7FY-UJ-4PO">
             <objects>
-                <viewController id="GGd-RU-mxU" customClass="QMLinkViewController" sceneMemberID="viewController">
+                <viewController title="Auth" id="GGd-RU-mxU" customClass="QMLinkViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="oRR-ux-DBo"/>
                         <viewControllerLayoutGuide type="bottom" id="1mu-bs-esr"/>
@@ -82,12 +82,12 @@ out here.</string>
                     <navigationItem key="navigationItem" id="l23-on-5eH">
                         <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" image="ic_settings" id="d3Y-P0-XSf"/>
-                        <view key="titleView" opaque="NO" contentMode="scaleToFill" id="wRe-Va-Lui" customClass="QMTitleView">
+                        <view key="titleView" opaque="NO" contentMode="scaleToFill" id="wRe-Va-Lui" customClass="QMProfileTitleView">
                             <rect key="frame" x="250" y="6" width="100" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ksM-J9-hmF">
-                                    <rect key="frame" x="48" y="6" width="44" height="21"/>
+                                    <rect key="frame" x="48" y="6" width="44" height="19"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" red="0.01176470588" green="0.01176470588" blue="0.01176470588" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -123,13 +123,22 @@ out here.</string>
                         <barButtonItem key="rightBarButtonItem" image="ic_new" id="ekF-vr-TqV"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="titleView" destination="wRe-Va-Lui" id="nmC-7w-CRN"/>
+                        <outlet property="profileTitleView" destination="wRe-Va-Lui" id="A6l-zk-zJV"/>
                         <segue destination="GGd-RU-mxU" kind="custom" identifier="SceneSegueAuth" customClass="QMRootViewControllerSegue" id="O5H-Pl-5ur"/>
+                        <segue destination="GHP-Ej-YG9" kind="show" identifier="SceneSegueChat" id="M6I-F2-D1O"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7lV-91-Vld" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-6005" y="-8364"/>
+        </scene>
+        <!--Chat-->
+        <scene sceneID="zLf-RD-p3s">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Chat" id="GHP-Ej-YG9" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IiI-Bc-mlG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-5304.5" y="-8364"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="WdT-1A-Xk8">
@@ -151,8 +160,8 @@ out here.</string>
         </scene>
     </scenes>
     <resources>
-        <image name="ic_new" width="32" height="32"/>
-        <image name="ic_settings" width="32" height="32"/>
+        <image name="ic_new" width="23" height="23"/>
+        <image name="ic_settings" width="23" height="23"/>
         <image name="m_empty_dialogs" width="180" height="265"/>
     </resources>
 </document>

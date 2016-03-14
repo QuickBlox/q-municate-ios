@@ -85,6 +85,30 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
     return source.task;
 }
 
+#pragma mark - Chat Connection
+
+- (BFTask *)disconnectFromChat {
+    @weakify(self);
+    return [[self.chatService disconnect] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        @strongify(self);
+        if (!task.isFaulted) {
+            
+            self.lastActivityDate = [NSDate date];
+        }
+        
+        return nil;
+    }];
+}
+
+- (BFTask *)disconnectFromChatIfNeeded {
+#warning TODO: implement disconnect if needed during active call
+    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground /*&& !self.avCallManager.hasActiveCall*/ && [[QBChat instance] isConnected]) {
+        return [self disconnectFromChat];
+    }
+    
+    return nil;
+}
+
 #pragma mark - Notifications
 
 - (BFTask *)leaveChatDialog:(QBChatDialog *)chatDialog {
@@ -143,10 +167,17 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
     return IDs.allObjects;
 }
 
-- (BOOL)isFriendWithUser:(QBUUser *)user {
+- (BOOL)isFriendWithUserID:(NSUInteger)userID {
     
     NSArray *ids = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
-    return [ids containsObject:@(user.ID)];
+    return [ids containsObject:@(userID)];
+}
+
+- (BOOL)userIDIsInPendingList:(NSUInteger)userID {
+    
+    QBContactListItem *contactlistItem = [self.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
+    
+    return contactlistItem.subscriptionState != QBPresenceSubscriptionStateBoth ? YES : NO;
 }
 
 - (NSArray *)idsOfUsers:(NSArray *)users {
@@ -205,6 +236,31 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
         @strongify(self);
         return [self.chatService sendMessageAboutAcceptingContactRequest:YES toOpponentID:user.ID];
     }];
+}
+
+- (BFTask *)rejectAddContactRequest:(QBUUser *)user {
+    
+    @weakify(self);
+    return [[self.contactListService rejectContactRequest:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        @strongify(self);
+        return [self.chatService sendMessageAboutAcceptingContactRequest:NO toOpponentID:user.ID];
+    }];
+}
+
+- (BOOL)isUserOnline:(NSUInteger)userID {
+    
+    QBContactListItem *item = [self.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
+    
+    return item.isOnline;
+}
+
+- (NSString *)fullNameForUserID:(NSUInteger)userID {
+    
+    QBUUser *user = [self.usersService.usersMemoryStorage userWithID:userID];
+    
+    NSString *fullName = user.fullName != nil ? user.fullName : [NSString stringWithFormat:@"%tu", userID];
+    
+    return fullName;
 }
 
 #pragma mark QMContactListServiceCacheDelegate delegate

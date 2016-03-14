@@ -17,11 +17,12 @@
 #import "QMSearchDataProvider.h"
 #import "QMLocalSearchDataProvider.h"
 #import "QMGlobalSearchDataProvider.h"
+#import "QMChatVC.h"
 
 #import "QMCore.h"
 #import "QMTasks.h"
 #import "QMProfile.h"
-#import "QMTitleView.h"
+#import "QMProfileTitleView.h"
 
 #import <SVProgressHUD.h>
 
@@ -51,7 +52,7 @@ UISearchResultsUpdating
 @property (strong, nonatomic) QMLocalSearchDataSource *localSearchDataSource;
 @property (strong, nonatomic) QMGlobalSearchDataSource *globalSearchDataSource;
 
-@property (weak, nonatomic) IBOutlet QMTitleView *titleView;
+@property (weak, nonatomic) IBOutlet QMProfileTitleView *profileTitleView;
 @property (strong, nonatomic) UISearchController *searchController;
 @property (strong, nonatomic) QMSearchResultsController *searchResultsController;
 
@@ -126,9 +127,9 @@ UISearchResultsUpdating
 - (void)configureProfileTitleView {
     
     QBUUser *currentUser = [QMCore instance].currentProfile.userData;
-    [self.titleView setText:currentUser.fullName];
-    self.titleView.placeholderID = currentUser.ID;
-    [self.titleView setAvatarUrl:currentUser.avatarUrl];
+    [self.profileTitleView setText:currentUser.fullName];
+    self.profileTitleView.placeholderID = currentUser.ID;
+    [self.profileTitleView setAvatarUrl:currentUser.avatarUrl];
 }
 
 - (void)performAutoLoginAndFetchData {
@@ -169,6 +170,7 @@ UISearchResultsUpdating
     if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
         
         QBChatDialog *chatDialog = self.dialogsDataSource.items[indexPath.row];
+        [self performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
     }
 }
 
@@ -186,6 +188,15 @@ UISearchResultsUpdating
 
 - (IBAction)didPressProfileTitle:(id)sender {
     
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    if ([segue.identifier isEqualToString:kQMSceneSegueChat]) {
+        
+        QMChatVC *chatViewController = segue.destinationViewController;
+        chatViewController.chatDialog = sender;
+    }
 }
 
 #pragma mark - UISearchControllerDelegate
@@ -265,6 +276,15 @@ UISearchResultsUpdating
 
 - (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
     
+    if (message.messageType == QMMessageTypeContactRequest) {
+        
+        [[QMCore instance].usersService getUserWithID:message.senderID];
+    }
+    else if (message.addedOccupantsIDs.count > 0) {
+        
+        [[QMCore instance].usersService getUsersWithIDs:message.addedOccupantsIDs];
+    }
+    
     [self.tableView reloadData];
 }
 
@@ -330,6 +350,14 @@ UISearchResultsUpdating
     
     [QMDialogCell registerForReuseInTableView:self.tableView];
     [QMContactCell registerForReuseInTableView:self.tableView];
+}
+
+#pragma mark - Transition size
+
+- (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
+    
+    [self.profileTitleView sizeToFit];
 }
 
 @end
