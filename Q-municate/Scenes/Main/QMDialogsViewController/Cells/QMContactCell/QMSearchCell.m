@@ -11,7 +11,6 @@
 @interface QMSearchCell ()
 
 @property (weak, nonatomic) IBOutlet UIButton *addFriendButton;
-@property (weak, nonatomic) IBOutlet UIImageView *onlineCircle;
 
 @end
 
@@ -35,12 +34,6 @@
     
     BOOL isFriend = contactListItem ? YES : NO;
     self.addFriendButton.hidden = isFriend;
-    
-    if (isFriend) {
-        
-        BOOL isOnline = contactListItem.online;
-        self.onlineCircle.hidden = !isOnline;
-    }
 }
 
 #pragma mark - action

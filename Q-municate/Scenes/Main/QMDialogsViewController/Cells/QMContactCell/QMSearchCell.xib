@@ -45,31 +45,20 @@
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="online" translatesAutoresizingMaskIntoConstraints="NO" id="eHa-cF-jcp">
-                        <rect key="frame" x="292" y="19" width="12" height="12"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="12" id="28o-cs-VeG"/>
-                            <constraint firstAttribute="width" constant="12" id="IGN-dB-dSM"/>
-                        </constraints>
-                    </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailingMargin" secondItem="ySZ-73-k8Y" secondAttribute="trailing" constant="4" id="2Hq-Qs-7w0"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="eHa-cF-jcp" secondAttribute="trailing" constant="8" id="BRe-lF-46e"/>
                     <constraint firstItem="ySZ-73-k8Y" firstAttribute="leading" secondItem="smJ-6U-6Ij" secondAttribute="trailing" constant="8" id="ITH-uZ-qQd"/>
                     <constraint firstItem="JDk-Dx-SLZ" firstAttribute="centerY" secondItem="PRk-BP-UPc" secondAttribute="centerY" id="eCb-rd-jTL"/>
                     <constraint firstItem="smJ-6U-6Ij" firstAttribute="leading" secondItem="JDk-Dx-SLZ" secondAttribute="trailing" constant="12" id="lgM-y0-4C6"/>
                     <constraint firstItem="JDk-Dx-SLZ" firstAttribute="leading" secondItem="PRk-BP-UPc" secondAttribute="leadingMargin" constant="4" id="qrr-5n-sfZ"/>
                     <constraint firstItem="ySZ-73-k8Y" firstAttribute="centerY" secondItem="PRk-BP-UPc" secondAttribute="centerY" id="vnq-J6-Bck"/>
                     <constraint firstItem="smJ-6U-6Ij" firstAttribute="centerY" secondItem="PRk-BP-UPc" secondAttribute="centerY" id="xPU-6z-bBY"/>
-                    <constraint firstItem="eHa-cF-jcp" firstAttribute="centerY" secondItem="PRk-BP-UPc" secondAttribute="centerY" id="yP4-u4-D3G"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
                 <outlet property="addFriendButton" destination="ySZ-73-k8Y" id="1Qq-sf-vkq"/>
                 <outlet property="avatarImage" destination="JDk-Dx-SLZ" id="jh1-cW-fdV"/>
-                <outlet property="onlineCircle" destination="eHa-cF-jcp" id="baq-W9-TOu"/>
                 <outlet property="titleLabel" destination="smJ-6U-6Ij" id="5jm-TI-tWK"/>
             </connections>
             <point key="canvasLocation" x="349" y="365"/>
@@ -77,6 +66,5 @@
     </objects>
     <resources>
         <image name="add_friend" width="20" height="20"/>
-        <image name="online" width="13" height="13"/>
     </resources>
 </document>
