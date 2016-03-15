@@ -13,7 +13,7 @@
 #import "QMGlobalSearchDataSource.h"
 #import "QMSearchResultsController.h"
 #import "QMDialogCell.h"
-#import "QMContactCell.h"
+#import "QMSearchCell.h"
 #import "QMSearchDataProvider.h"
 #import "QMLocalSearchDataProvider.h"
 #import "QMGlobalSearchDataProvider.h"
@@ -349,7 +349,7 @@ UISearchResultsUpdating
 - (void)registerNibs {
     
     [QMDialogCell registerForReuseInTableView:self.tableView];
-    [QMContactCell registerForReuseInTableView:self.tableView];
+    [QMSearchCell registerForReuseInTableView:self.tableView];
 }
 
 #pragma mark - Transition size

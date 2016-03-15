@@ -8,7 +8,7 @@
 
 #import "QMLocalSearchDataSource.h"
 #import "QMDialogCell.h"
-#import "QMContactCell.h"
+#import "QMSearchCell.h"
 #import "QMNoResultsCell.h"
 #import "QMCore.h"
 #import "QMLocalSearchDataProvider.h"
@@ -23,7 +23,7 @@
     
     if (indexPath.section == 0 && self.contacts.count > 0) {
         
-        return [QMContactCell height];
+        return [QMSearchCell height];
     }
     else if (indexPath.section == 1 && self.dialogs.count > 0) {
         
@@ -39,9 +39,10 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 
+    tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     if (indexPath.section == 0 && self.contacts.count > 0) {
         
-        QMContactCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMContactCell cellIdentifier] forIndexPath:indexPath];
+        QMSearchCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMSearchCell cellIdentifier] forIndexPath:indexPath];
         
         QBUUser *user = self.contacts[indexPath.row];
         

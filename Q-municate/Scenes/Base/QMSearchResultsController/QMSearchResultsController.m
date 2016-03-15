@@ -13,7 +13,7 @@
 #import "QMLocalSearchDataProvider.h"
 
 #import "QMDialogCell.h"
-#import "QMContactCell.h"
+#import "QMSearchCell.h"
 #import "QMNoResultsCell.h"
 
 @interface QMSearchResultsController ()
@@ -84,7 +84,7 @@ QMChatConnectionDelegate
 - (void)registerNibs {
     
     [QMDialogCell registerForReuseInTableView:self.tableView];
-    [QMContactCell registerForReuseInTableView:self.tableView];
+    [QMSearchCell registerForReuseInTableView:self.tableView];
     [QMNoResultsCell registerForReuseInTableView:self.tableView];
 }
 
