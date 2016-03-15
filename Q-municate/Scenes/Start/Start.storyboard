@@ -33,8 +33,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="FNq-5Y-cZb"/>
                     <connections>
-                        <segue destination="Yrb-OW-ClR" kind="custom" identifier="SceneSegueAuth" customClass="QMRootViewControllerSegue" id="L5w-3y-ho4"/>
-                        <segue destination="gAD-m6-Ld6" kind="custom" identifier="SceneSegueMain" customClass="QMRootViewControllerSegue" id="zPs-3i-Tp7"/>
+                        <segue destination="Td3-dH-14S" kind="show" identifier="SceneSegueMain" id="96H-5Z-6xM"/>
+                        <segue destination="xpX-4R-zvj" kind="show" identifier="SceneSegueAuth" id="scu-v2-wga"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YmA-DO-nZe" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -42,46 +42,20 @@
             <point key="canvasLocation" x="-6057" y="-8390"/>
         </scene>
         <!--Auth-->
-        <scene sceneID="P0z-CC-8hb">
+        <scene sceneID="hb0-Nm-JxI">
             <objects>
-                <viewController title="Auth" id="Yrb-OW-ClR" customClass="QMLinkViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="AQw-av-4Uq"/>
-                        <viewControllerLayoutGuide type="bottom" id="uUE-zd-DWU"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="TRu-io-gDq">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="storyboardName" value="Auth"/>
-                    </userDefinedRuntimeAttributes>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="fHw-dU-nPD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewControllerPlaceholder storyboardName="Auth" id="xpX-4R-zvj" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XzZ-6k-l1l" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5027" y="-8791"/>
+            <point key="canvasLocation" x="-5467.5" y="-8549"/>
         </scene>
         <!--Main-->
-        <scene sceneID="BmZ-4d-Ft2">
+        <scene sceneID="g8c-1S-ghs">
             <objects>
-                <viewController title="Main" id="gAD-m6-Ld6" customClass="QMLinkViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="vmd-bz-8WO"/>
-                        <viewControllerLayoutGuide type="bottom" id="RFs-rA-gwA"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="nBa-ji-nQa">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="storyboardName" value="Main"/>
-                    </userDefinedRuntimeAttributes>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="WAb-cc-OG3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewControllerPlaceholder storyboardName="Main" id="Td3-dH-14S" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZKU-Uq-Qcv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5027" y="-7970"/>
+            <point key="canvasLocation" x="-5467" y="-8233"/>
         </scene>
     </scenes>
     <resources>

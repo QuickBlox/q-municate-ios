@@ -56,11 +56,9 @@
 		584277A01C3D336300CDE35B /* QMInviteFriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5842778E1C3D336300CDE35B /* QMInviteFriendCell.m */; };
 		584277A11C3D336300CDE35B /* QMInviteStaticCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277901C3D336300CDE35B /* QMInviteStaticCell.m */; };
 		584277A41C3D336300CDE35B /* QMCornerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277981C3D336300CDE35B /* QMCornerButton.m */; };
-		584277B01C3D35D600CDE35B /* QMLinkSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277AF1C3D35D600CDE35B /* QMLinkSegue.m */; };
 		584277B41C3D374400CDE35B /* Auth.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 584277B31C3D374400CDE35B /* Auth.storyboard */; };
 		584277B91C3D401C00CDE35B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 584277B81C3D401C00CDE35B /* Main.storyboard */; };
 		584277BB1C3D404A00CDE35B /* Start.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 584277BA1C3D404A00CDE35B /* Start.storyboard */; };
-		584277BF1C3D42BB00CDE35B /* QMLinkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277BE1C3D42BB00CDE35B /* QMLinkViewController.m */; };
 		584277C31C3D44AB00CDE35B /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 584277C21C3D44AB00CDE35B /* Chat.storyboard */; };
 		584277C71C3D46D000CDE35B /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 584277C61C3D46D000CDE35B /* Settings.storyboard */; };
 		584277CD1C3D495D00CDE35B /* Calls.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 584277CC1C3D495D00CDE35B /* Calls.storyboard */; };
@@ -118,7 +116,6 @@
 		693DC42618FFC45900AF46D9 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42518FFC45900AF46D9 /* libsqlite3.dylib */; };
 		693DC42C18FFC58000AF46D9 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */; };
 		693F347B18F554240032891F /* QMIncommingCallSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 693F347A18F554240032891F /* QMIncommingCallSegue.m */; };
-		6943847218E42678001E08A9 /* QMRootViewControllerSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6943843418E42677001E08A9 /* QMRootViewControllerSegue.m */; };
 		697E2D4C196EA82400CD2BDE /* QMLicenseAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 697E2D4B196EA82400CD2BDE /* QMLicenseAgreementViewController.m */; };
 		69A664E019BDB57700D3E0C7 /* libxml2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 69A664DF19BDB57700D3E0C7 /* libxml2.2.dylib */; };
 		69CF189518AE1C3C003262EF /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69CF189418AE1C3C003262EF /* CFNetwork.framework */; };
@@ -240,14 +237,10 @@
 		584277901C3D336300CDE35B /* QMInviteStaticCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMInviteStaticCell.m; sourceTree = "<group>"; };
 		584277971C3D336300CDE35B /* QMCornerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCornerButton.h; sourceTree = "<group>"; };
 		584277981C3D336300CDE35B /* QMCornerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMCornerButton.m; sourceTree = "<group>"; };
-		584277AE1C3D35D600CDE35B /* QMLinkSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLinkSegue.h; sourceTree = "<group>"; };
-		584277AF1C3D35D600CDE35B /* QMLinkSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLinkSegue.m; sourceTree = "<group>"; };
 		584277B11C3D36EA00CDE35B /* SegueIdentifiers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SegueIdentifiers.h; path = "Q-municate/Scenes/SegueIdentifiers.h"; sourceTree = SOURCE_ROOT; };
 		584277B31C3D374400CDE35B /* Auth.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Auth.storyboard; path = "Q-municate/Scenes/Auth/Auth.storyboard"; sourceTree = SOURCE_ROOT; };
 		584277B81C3D401C00CDE35B /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = "Q-municate/Scenes/Main/Main.storyboard"; sourceTree = SOURCE_ROOT; };
 		584277BA1C3D404A00CDE35B /* Start.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Start.storyboard; path = Scenes/Start/Start.storyboard; sourceTree = "<group>"; };
-		584277BD1C3D42BB00CDE35B /* QMLinkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLinkViewController.h; sourceTree = "<group>"; };
-		584277BE1C3D42BB00CDE35B /* QMLinkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLinkViewController.m; sourceTree = "<group>"; };
 		584277C21C3D44AB00CDE35B /* Chat.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Chat.storyboard; path = "Q-municate/Scenes/Chat/Chat.storyboard"; sourceTree = SOURCE_ROOT; };
 		584277C61C3D46D000CDE35B /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Settings.storyboard; path = "Q-municate/Scenes/Settings/Settings.storyboard"; sourceTree = SOURCE_ROOT; };
 		584277CC1C3D495D00CDE35B /* Calls.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Calls.storyboard; path = "Q-municate/Scenes/InviteFriends/Calls.storyboard"; sourceTree = SOURCE_ROOT; };
@@ -346,8 +339,6 @@
 		693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
 		693F347918F554240032891F /* QMIncommingCallSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMIncommingCallSegue.h; sourceTree = "<group>"; };
 		693F347A18F554240032891F /* QMIncommingCallSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMIncommingCallSegue.m; sourceTree = "<group>"; };
-		6943843318E42677001E08A9 /* QMRootViewControllerSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMRootViewControllerSegue.h; sourceTree = "<group>"; };
-		6943843418E42677001E08A9 /* QMRootViewControllerSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMRootViewControllerSegue.m; sourceTree = "<group>"; };
 		697E2D4A196EA82400CD2BDE /* QMLicenseAgreementViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMLicenseAgreementViewController.h; path = QMLicenseAgreementViewController/QMLicenseAgreementViewController.h; sourceTree = "<group>"; };
 		697E2D4B196EA82400CD2BDE /* QMLicenseAgreementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMLicenseAgreementViewController.m; path = QMLicenseAgreementViewController/QMLicenseAgreementViewController.m; sourceTree = "<group>"; };
 		69A664DF19BDB57700D3E0C7 /* libxml2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.2.dylib; path = usr/lib/libxml2.2.dylib; sourceTree = SDKROOT; };
@@ -992,16 +983,6 @@
 			name = Main;
 			sourceTree = "<group>";
 		};
-		584277BC1C3D42BB00CDE35B /* QMLinkViewController */ = {
-			isa = PBXGroup;
-			children = (
-				584277BD1C3D42BB00CDE35B /* QMLinkViewController.h */,
-				584277BE1C3D42BB00CDE35B /* QMLinkViewController.m */,
-			);
-			name = QMLinkViewController;
-			path = ../Scenes/Start/QMLinkViewController;
-			sourceTree = "<group>";
-		};
 		584277C11C3D449300CDE35B /* Chat */ = {
 			isa = PBXGroup;
 			children = (
@@ -1014,7 +995,6 @@
 		584277C41C3D46AC00CDE35B /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				584277BC1C3D42BB00CDE35B /* QMLinkViewController */,
 				5877D6D11C46705E00938E5D /* QMTableViewDataSource */,
 				5877D6D71C4671E500938E5D /* QMTableViewCell */,
 				58D847891C873F0A000C40BA /* QMSearchDataSource */,
@@ -1358,12 +1338,8 @@
 		6943843218E42677001E08A9 /* CustomSegues */ = {
 			isa = PBXGroup;
 			children = (
-				6943843318E42677001E08A9 /* QMRootViewControllerSegue.h */,
-				6943843418E42677001E08A9 /* QMRootViewControllerSegue.m */,
 				693F347918F554240032891F /* QMIncommingCallSegue.h */,
 				693F347A18F554240032891F /* QMIncommingCallSegue.m */,
-				584277AE1C3D35D600CDE35B /* QMLinkSegue.h */,
-				584277AF1C3D35D600CDE35B /* QMLinkSegue.m */,
 			);
 			name = CustomSegues;
 			path = Classes/CustomSegues;
@@ -1653,7 +1629,6 @@
 				55D963CA196430F300A87ECE /* QMSettingsManager.m in Sources */,
 				2476BA8119A5D91F00CC666D /* QMUsersUtils.m in Sources */,
 				55D8ADF419AC776A00DAF79F /* REAlertView+QMSuccess.m in Sources */,
-				6943847218E42678001E08A9 /* QMRootViewControllerSegue.m in Sources */,
 				55CEABA2195DBCFA001A8ED6 /* QMProfileViewController.m in Sources */,
 				58B414B21BB44B4400613892 /* QMApi+Permissions.m in Sources */,
 				58B414A11BB424DB00613892 /* QMApi+Auth.m in Sources */,
@@ -1674,7 +1649,6 @@
 				5877D6E31C4675B900938E5D /* QMBadgeView.m in Sources */,
 				584277E01C3FED0E00CDE35B /* QMContent.m in Sources */,
 				55D8ADE219AC76F900DAF79F /* QMChangePasswordVC.m in Sources */,
-				584277BF1C3D42BB00CDE35B /* QMLinkViewController.m in Sources */,
 				584277A01C3D336300CDE35B /* QMInviteFriendCell.m in Sources */,
 				585DE4631C46A8390068E03E /* QMPlaceholder.m in Sources */,
 				584277D11C3FBD1600CDE35B /* QMProfile.m in Sources */,
@@ -1719,7 +1693,6 @@
 				58D8478F1C8886D8000C40BA /* QMGlobalSearchDataProvider.m in Sources */,
 				58D847581C848272000C40BA /* QMLocalSearchDataSource.m in Sources */,
 				55D8ADFB19AC833300DAF79F /* QMLicenseAgreement.m in Sources */,
-				584277B01C3D35D600CDE35B /* QMLinkSegue.m in Sources */,
 				58D847681C85A1DB000C40BA /* QMGlobalSearchDataSource.m in Sources */,
 				5877D6C41C45470400938E5D /* QMDigitsConfigurationFactory.m in Sources */,
 				58CEA1BB1BB553C400B866DD /* UIImage+TintColor.m in Sources */,

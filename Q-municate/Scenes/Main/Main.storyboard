@@ -8,25 +8,12 @@
     </dependencies>
     <scenes>
         <!--Auth-->
-        <scene sceneID="7FY-UJ-4PO">
+        <scene sceneID="paj-6C-2yq">
             <objects>
-                <viewController title="Auth" id="GGd-RU-mxU" customClass="QMLinkViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="oRR-ux-DBo"/>
-                        <viewControllerLayoutGuide type="bottom" id="1mu-bs-esr"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="EDg-AM-kXT">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="storyboardName" value="Auth"/>
-                    </userDefinedRuntimeAttributes>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="r8D-Vr-XmM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewControllerPlaceholder storyboardName="Auth" id="GF2-VD-d6E" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DrV-qf-tZG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5966" y="-9389"/>
+            <point key="canvasLocation" x="-5554.5" y="-8751"/>
         </scene>
         <!--Dialogs View Controller-->
         <scene sceneID="XsO-zK-SPy">
@@ -124,8 +111,8 @@ out here.</string>
                     </navigationItem>
                     <connections>
                         <outlet property="profileTitleView" destination="wRe-Va-Lui" id="A6l-zk-zJV"/>
-                        <segue destination="GGd-RU-mxU" kind="custom" identifier="SceneSegueAuth" customClass="QMRootViewControllerSegue" id="O5H-Pl-5ur"/>
                         <segue destination="GHP-Ej-YG9" kind="show" identifier="SceneSegueChat" id="M6I-F2-D1O"/>
+                        <segue destination="GF2-VD-d6E" kind="show" identifier="SceneSegueAuth" id="rdg-hB-dKR"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7lV-91-Vld" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -138,7 +125,7 @@ out here.</string>
                 <viewControllerPlaceholder storyboardName="Chat" id="GHP-Ej-YG9" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IiI-Bc-mlG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5304.5" y="-8364"/>
+            <point key="canvasLocation" x="-5450.5" y="-8680"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="WdT-1A-Xk8">

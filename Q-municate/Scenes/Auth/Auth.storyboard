@@ -149,7 +149,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="jrH-Jb-hwh"/>
                     <connections>
-                        <segue destination="WF3-g9-U0R" kind="custom" identifier="SceneSegueMain" customClass="QMRootViewControllerSegue" id="AYJ-Gz-fC0"/>
+                        <segue destination="LAN-DZ-jv6" kind="show" identifier="SceneSegueMain" id="7KE-cg-4Nx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mKT-ox-R94" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -173,27 +173,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1C3-NW-qzX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-5194" y="-7958"/>
-        </scene>
-        <!--Main-->
-        <scene sceneID="ms3-GZ-Wb3">
-            <objects>
-                <viewController title="Main" id="WF3-g9-U0R" customClass="QMLinkViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="mZE-bG-wzs"/>
-                        <viewControllerLayoutGuide type="bottom" id="u0F-IL-Ooj"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="rQN-Dp-SWt">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="storyboardName" value="Main"/>
-                    </userDefinedRuntimeAttributes>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="zSl-Qz-4Te" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-2560" y="-7958"/>
         </scene>
         <!--Sign Up-->
         <scene sceneID="Vf9-Eg-Kyj">
@@ -377,12 +356,20 @@
                         <outlet property="fullNameField" destination="bFr-FZ-NjP" id="V1f-WJ-S8j"/>
                         <outlet property="passwordField" destination="ArR-4V-Yed" id="HPy-Wt-o5P"/>
                         <outlet property="userImage" destination="0gc-y1-DZZ" id="3XN-0P-BLU"/>
-                        <segue destination="WF3-g9-U0R" kind="custom" identifier="SceneSegueMain" customClass="QMRootViewControllerSegue" id="Jxp-6o-ED2"/>
+                        <segue destination="LAN-DZ-jv6" kind="show" identifier="SceneSegueMain" id="bgN-Pd-7wa"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cua-Sl-ePV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-3414" y="-8403"/>
+        </scene>
+        <!--Main-->
+        <scene sceneID="GJ7-gp-EDB">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Main" id="LAN-DZ-jv6" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="duS-HS-4lV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2713" y="-7935"/>
         </scene>
         <!--Log In-->
         <scene sceneID="Wvk-iV-Y7o">
@@ -517,7 +504,7 @@
                         <outlet property="emailField" destination="Ylu-Uf-kzC" id="9Y2-bE-1lD"/>
                         <outlet property="passwordField" destination="Y5X-mP-cj0" id="nDD-VP-0Gg"/>
                         <outlet property="rememberMeSwitch" destination="v6u-Kq-ldm" id="reO-aq-MPT"/>
-                        <segue destination="WF3-g9-U0R" kind="custom" identifier="SceneSegueMain" customClass="QMRootViewControllerSegue" id="ds4-tc-Wkj"/>
+                        <segue destination="LAN-DZ-jv6" kind="show" identifier="SceneSegueMain" id="Mgd-KP-8Lo"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ayx-Ne-ZRd" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -665,6 +652,6 @@
         <image name="upic_avatarholder" width="73" height="72"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="ds4-tc-Wkj"/>
+        <segue reference="Mgd-KP-8Lo"/>
     </inferredMetricsTieBreakers>
 </document>

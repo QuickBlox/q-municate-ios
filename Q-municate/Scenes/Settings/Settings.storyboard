@@ -1,31 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wSm-vZ-K5k">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wSm-vZ-K5k">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <scenes>
-        <!--Link View Controller-->
-        <scene sceneID="U0k-iP-4eq">
-            <objects>
-                <viewController id="U0Y-gk-uPa" customClass="QMLinkViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="jEA-5h-4qA"/>
-                        <viewControllerLayoutGuide type="bottom" id="c0m-Ba-dHk"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="ykW-Pg-5Vg">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="storyboardName" value="Start"/>
-                    </userDefinedRuntimeAttributes>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="vtX-Tj-gJ5" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-3020" y="-10709"/>
-        </scene>
         <!--Settings-->
         <scene sceneID="Fla-2u-yke">
             <objects>
@@ -254,7 +233,6 @@
                         <outlet property="profileCell" destination="EDU-QV-wK6" id="iFw-K5-KMi"/>
                         <outlet property="pushNotificationSwitch" destination="pN9-ui-Gvw" id="HIm-qs-pJw"/>
                         <outlet property="versionLabel" destination="QFf-aA-UFu" id="FOm-fb-9bR"/>
-                        <segue destination="U0Y-gk-uPa" kind="custom" identifier="SceneSegueStart" customClass="QMRootViewControllerSegue" id="8wz-jd-uci"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gdx-9T-gFX" userLabel="First Responder" sceneMemberID="firstResponder"/>
