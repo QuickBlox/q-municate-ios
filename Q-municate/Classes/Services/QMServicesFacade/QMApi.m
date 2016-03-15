@@ -42,7 +42,6 @@ static NSString *const kQMErrorPasswordKey = @"password";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         servicesFacade = [[self alloc] init];
-        [QBChat instance].autoReconnectEnabled = YES;
 
         servicesFacade.presenceTimer = [NSTimer scheduledTimerWithTimeInterval:kQMPresenceTime
                                                                         target:servicesFacade
