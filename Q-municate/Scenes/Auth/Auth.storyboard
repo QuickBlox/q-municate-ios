@@ -149,7 +149,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="jrH-Jb-hwh"/>
                     <connections>
-                        <segue destination="LAN-DZ-jv6" kind="show" identifier="SceneSegueMain" id="7KE-cg-4Nx"/>
+                        <segue destination="LAN-DZ-jv6" kind="show" identifier="SceneSegueMain" customClass="QMRootViewControllerSegue" id="7KE-cg-4Nx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mKT-ox-R94" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -356,7 +356,7 @@
                         <outlet property="fullNameField" destination="bFr-FZ-NjP" id="V1f-WJ-S8j"/>
                         <outlet property="passwordField" destination="ArR-4V-Yed" id="HPy-Wt-o5P"/>
                         <outlet property="userImage" destination="0gc-y1-DZZ" id="3XN-0P-BLU"/>
-                        <segue destination="LAN-DZ-jv6" kind="show" identifier="SceneSegueMain" id="bgN-Pd-7wa"/>
+                        <segue destination="LAN-DZ-jv6" kind="show" identifier="SceneSegueMain" customClass="QMRootViewControllerSegue" id="bgN-Pd-7wa"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cua-Sl-ePV" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -504,7 +504,7 @@
                         <outlet property="emailField" destination="Ylu-Uf-kzC" id="9Y2-bE-1lD"/>
                         <outlet property="passwordField" destination="Y5X-mP-cj0" id="nDD-VP-0Gg"/>
                         <outlet property="rememberMeSwitch" destination="v6u-Kq-ldm" id="reO-aq-MPT"/>
-                        <segue destination="LAN-DZ-jv6" kind="show" identifier="SceneSegueMain" id="Mgd-KP-8Lo"/>
+                        <segue destination="LAN-DZ-jv6" kind="show" identifier="SceneSegueMain" customClass="QMRootViewControllerSegue" id="Mgd-KP-8Lo"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ayx-Ne-ZRd" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -652,6 +652,6 @@
         <image name="upic_avatarholder" width="73" height="72"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="7KE-cg-4Nx"/>
+        <segue reference="Mgd-KP-8Lo"/>
     </inferredMetricsTieBreakers>
 </document>

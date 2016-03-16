@@ -20,6 +20,7 @@
 // helpers
 #import "QMChatButtonsFactory.h"
 #import "UIImage+fixOrientation.h"
+#import <QMDateUtils.h>
 
 // external
 #import "AGEmojiKeyBoardView.h"
@@ -569,7 +570,7 @@ AGEmojiKeyboardViewDelegate
         
         size = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
                                                 withConstraints:CGSizeMake(maxWidth, CGFLOAT_MAX)
-                                         limitedToNumberOfLines:3];
+                                         limitedToNumberOfLines:0];
     }
     else {
         
@@ -897,8 +898,27 @@ AGEmojiKeyboardViewDelegate
 }
 
 - (void)setOpponentOnlineStatus:(BOOL)isOnline {
+    NSAssert(self.chatDialog.type == QBChatDialogTypePrivate, nil);
     
-    NSString *status = NSLocalizedString(isOnline ? @"QM_STR_ONLINE": @"QM_STR_OFFLINE", nil);
+    NSString *status = nil;
+    
+    if (isOnline) {
+        
+        status = NSLocalizedString(@"QM_STR_ONLINE", nil);
+    }
+    else {
+        
+        QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:self.chatDialog.recipientID];
+        if (opponentUser && opponentUser.lastRequestAt) {
+            
+            status = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"QM_STR_LAST_SEEN", nil), [QMDateUtils formattedLastSeenString:opponentUser.lastRequestAt withTimePrefix:NSLocalizedString(@"QM_STR_TIME_PREFIX", nil)]];
+        }
+        else {
+            
+            status = NSLocalizedString(@"QM_STR_OFFLINE", nil);
+        }
+    }
+    
     [self.onlineTitleView setStatus:status];
 }
 

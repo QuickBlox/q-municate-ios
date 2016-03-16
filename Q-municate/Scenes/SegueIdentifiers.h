@@ -18,4 +18,4 @@ static NSString *const kQMSceneSegueFriendDetails   = @"SceneSegueFriendDetails"
 static NSString *const kQMSceneSegueGroupDetails    = @"SceneSegueGroupDetails";
 static NSString *const kQMSceneSegueGroupMembersAdd = @"SceneSegueGroupMembersAdd";
 static NSString *const kQMSceneSegueProfile         = @"SceneSegueProfile";
-static NSString *const kQMSceneSegueCreateChat      = @"SceneSegueCreateChat";
+static NSString *const kQMSceneSegueNewMessage      = @"SceneSegueNewMessage";

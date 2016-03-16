@@ -8,7 +8,7 @@
 
 #import "QMPlaceholderDataSource.h"
 
-static NSString *const kQMPlaceHolderCell = @"QMPlaceholderCell";
+NSString *const kQMPlaceHolderCell = @"QMPlaceholderCell";
 
 @implementation QMPlaceholderDataSource
 
