@@ -20,7 +20,7 @@ QMContactListServiceDelegate,
 QMUsersServiceDelegate
 >
 
-@property (strong, nonatomic) NSArray *friends;
+@property (strong, nonatomic) NSArray *contacts;
 
 @end
 
@@ -34,7 +34,7 @@ QMUsersServiceDelegate
         
         [[QMCore instance].contactListService addDelegate:self];
         [[QMCore instance].usersService addDelegate:self];
-        _friends = [QMCore instance].friendsSortedByFullName;
+        _contacts = [QMCore instance].allContactsSortedByFullName;
     }
     
     return self;
@@ -62,7 +62,7 @@ QMUsersServiceDelegate
         @strongify(self);
         // contacts local search
         NSPredicate *usersSearchPredicate = [NSPredicate predicateWithFormat:@"SELF.fullName CONTAINS[cd] %@", searchText];
-        NSArray *contactsSearchResult = [self.friends filteredArrayUsingPredicate:usersSearchPredicate];
+        NSArray *contactsSearchResult = [self.contacts filteredArrayUsingPredicate:usersSearchPredicate];
         
         // dialogs local search
         NSSortDescriptor *dialogsSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kQMDialogsSearchDescriptorKey ascending:NO];
@@ -93,29 +93,29 @@ QMUsersServiceDelegate
 
 - (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
     
-    self.friends = [QMCore instance].friendsSortedByFullName;
+    self.contacts = [QMCore instance].allContactsSortedByFullName;
 }
 
 - (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
     
-    self.friends = [QMCore instance].friendsSortedByFullName;
+    self.contacts = [QMCore instance].allContactsSortedByFullName;
 }
 
 - (void)contactListServiceDidLoadCache {
     
-    self.friends = [QMCore instance].friendsSortedByFullName;
+    self.contacts = [QMCore instance].allContactsSortedByFullName;
 }
 
 #pragma mark - QMUsersServiceDelegate
 
 - (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)user {
     
-    self.friends = [QMCore instance].friendsSortedByFullName;
+    self.contacts = [QMCore instance].allContactsSortedByFullName;
 }
 
 - (void)usersService:(QMUsersService *)usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)users {
     
-    self.friends = [QMCore instance].friendsSortedByFullName;
+    self.contacts = [QMCore instance].allContactsSortedByFullName;
 }
 
 @end
