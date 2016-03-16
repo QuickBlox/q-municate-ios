@@ -84,14 +84,7 @@ const NSUInteger kQMUsersPageLimit = 50;
             
             self.globalSearchCancellationTokenSource = nil;
             
-            if (task.result.count < kQMUsersPageLimit) {
-                
-                self.shouldLoadMore = NO;
-            }
-            else {
-                
-                self.shouldLoadMore = YES;
-            }
+            self.shouldLoadMore = task.result.count >= kQMUsersPageLimit;
             
             NSArray *sortedUsers = [self sortUsersByFullname:task.result];
             
