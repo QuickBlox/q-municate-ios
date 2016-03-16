@@ -13,7 +13,7 @@
                 <viewControllerPlaceholder storyboardName="Auth" id="GF2-VD-d6E" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DrV-qf-tZG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5554.5" y="-8751"/>
+            <point key="canvasLocation" x="-5552.5" y="-8747"/>
         </scene>
         <!--Dialogs View Controller-->
         <scene sceneID="XsO-zK-SPy">
@@ -107,7 +107,11 @@ out here.</string>
                                 <outlet property="textLabel" destination="ksM-J9-hmF" id="tGJ-fq-GLg"/>
                             </connections>
                         </view>
-                        <barButtonItem key="rightBarButtonItem" image="ic_new" id="ekF-vr-TqV"/>
+                        <barButtonItem key="rightBarButtonItem" image="ic_new" id="ekF-vr-TqV">
+                            <connections>
+                                <segue destination="l2U-UR-Tid" kind="show" identifier="SceneSegueNewMessage" id="gTp-WW-8nn"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="profileTitleView" destination="wRe-Va-Lui" id="A6l-zk-zJV"/>
@@ -125,7 +129,56 @@ out here.</string>
                 <viewControllerPlaceholder storyboardName="Chat" id="GHP-Ej-YG9" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IiI-Bc-mlG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5450.5" y="-8680"/>
+            <point key="canvasLocation" x="-5470.5" y="-8669"/>
+        </scene>
+        <!--New Message-->
+        <scene sceneID="I2X-12-W1l">
+            <objects>
+                <tableViewController id="l2U-UR-Tid" customClass="QMNewMessageViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="210" sectionHeaderHeight="28" sectionFooterHeight="28" id="dZP-u0-OZq">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="QMNoContactsCell" rowHeight="210" id="ves-NL-BnK" customClass="QMNoContactsCell">
+                                <rect key="frame" x="0.0" y="92" width="600" height="210"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ves-NL-BnK" id="spv-Nq-U1g">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="209"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="You don't have any contacts." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zov-f8-fUk">
+                                            <rect key="frame" x="193" y="175" width="214" height="26"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottomMargin" secondItem="Zov-f8-fUk" secondAttribute="bottom" id="eoe-u9-gCg"/>
+                                        <constraint firstItem="Zov-f8-fUk" firstAttribute="centerX" secondItem="spv-Nq-U1g" secondAttribute="centerX" id="wNy-xr-dax"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="titleLabel" destination="Zov-f8-fUk" id="AHk-ak-Rmv"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="l2U-UR-Tid" id="HLk-9h-xOb"/>
+                            <outlet property="delegate" destination="l2U-UR-Tid" id="gPE-mE-zqg"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="New Message" id="UTA-cT-Rog">
+                        <barButtonItem key="rightBarButtonItem" image="users" id="rxm-fp-eTY"/>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="GHP-Ej-YG9" kind="show" identifier="SceneSegueChat" id="YNN-gw-X19"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4UZ-r9-MXb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-5018" y="-8342"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="WdT-1A-Xk8">
@@ -150,5 +203,9 @@ out here.</string>
         <image name="ic_new" width="23" height="23"/>
         <image name="ic_settings" width="23" height="23"/>
         <image name="m_empty_dialogs" width="180" height="265"/>
+        <image name="users" width="20" height="20"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="YNN-gw-X19"/>
+    </inferredMetricsTieBreakers>
 </document>
