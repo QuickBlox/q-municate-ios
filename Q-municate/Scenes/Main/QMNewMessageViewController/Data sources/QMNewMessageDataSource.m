@@ -14,23 +14,11 @@
 
 NSString *const kQMQBUUserFullNameKeyPath = @"fullName";
 
-@interface QMNewMessageDataSource ()
-
-@property (strong, nonatomic) NSDictionary *alphabetizedDictionary;
-@property (strong, nonatomic) NSArray *sectionIndexTitles;
-
-@end
-
 @implementation QMNewMessageDataSource
 
 #pragma mark - methods
 
 - (QBUUser *)userAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (self.sectionIndexTitles.count == 0) {
-        
-        return nil;
-    }
     
     NSString *sectionIndexTitle = self.sectionIndexTitles[indexPath.section];
     return self.alphabetizedDictionary[sectionIndexTitle][indexPath.row];

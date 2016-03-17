@@ -7,7 +7,6 @@
 //
 
 #import "QMSearchResultsController.h"
-#import "QMTableViewDataSource.h"
 #import "QMLocalSearchDataSource.h"
 #import "QMCore.h"
 #import "QMLocalSearchDataProvider.h"
