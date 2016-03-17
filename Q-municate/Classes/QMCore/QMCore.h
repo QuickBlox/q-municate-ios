@@ -47,9 +47,9 @@ QMContactListServiceDelegate
 - (BFTask *)disconnectFromChat;
 - (BFTask *)disconnectFromChatIfNeeded;
 
+- (NSArray *)allContacts;
+- (NSArray *)allContactsSortedByFullName;
 - (NSArray *)friends;
-- (NSArray *)friendsSortedByFullName;
-- (NSArray *)idsOfContactsOnly;
 - (BOOL)isFriendWithUserID:(NSUInteger)userID;
 - (NSArray *)idsOfUsers:(NSArray *)users;
 - (BOOL)userIDIsInPendingList:(NSUInteger)userID;

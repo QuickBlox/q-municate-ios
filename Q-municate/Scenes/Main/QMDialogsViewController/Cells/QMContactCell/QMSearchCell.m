@@ -6,20 +6,19 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMContactCell.h"
+#import "QMSearchCell.h"
 
-@interface QMContactCell ()
+@interface QMSearchCell ()
 
 @property (weak, nonatomic) IBOutlet UIButton *addFriendButton;
-@property (weak, nonatomic) IBOutlet UIImageView *onlineCircle;
 
 @end
 
-@implementation QMContactCell
+@implementation QMSearchCell
 
 + (NSString *)cellIdentifier {
     
-    return @"QMChatCell";
+    return @"QMSearchCell";
 }
 
 + (CGFloat)height {
@@ -35,21 +34,15 @@
     
     BOOL isFriend = contactListItem ? YES : NO;
     self.addFriendButton.hidden = isFriend;
-    
-    if (isFriend) {
-        
-        BOOL isOnline = contactListItem.online;
-        self.onlineCircle.hidden = !isOnline;
-    }
 }
 
 #pragma mark - action
 
 - (IBAction)didTapAddButton:(id)sender {
     
-    if ([self.delegate respondsToSelector:@selector(contactCell:didTapAddButton:)]) {
+    if ([self.delegate respondsToSelector:@selector(searchCell:didTapAddButton:)]) {
         
-        [self.delegate contactCell:self didTapAddButton:sender];
+        [self.delegate searchCell:self didTapAddButton:sender];
     }
 }
 

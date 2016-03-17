@@ -7,7 +7,7 @@
 //
 
 #import "QMGlobalSearchDataSource.h"
-#import "QMContactCell.h"
+#import "QMSearchCell.h"
 #import "QMNoResultsCell.h"
 #import "QMCore.h"
 
@@ -21,7 +21,7 @@
 
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    return self.items.count > 0 ? [QMContactCell height] : [QMNoResultsCell height];
+    return self.items.count > 0 ? [QMSearchCell height] : [QMNoResultsCell height];
 }
 
 #pragma mark - UITableViewDataSource
@@ -36,7 +36,7 @@
     }
     
     tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    QMContactCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMContactCell cellIdentifier] forIndexPath:indexPath];
+    QMSearchCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMSearchCell cellIdentifier] forIndexPath:indexPath];
     
     QBUUser *user = self.items[indexPath.row];
     
@@ -69,16 +69,16 @@
 
 #pragma mark - QMContactCellDelegate
 
-- (void)contactCell:(QMContactCell *)contactCell didTapAddButton:(UIButton *)sender {
+- (void)searchCell:(QMSearchCell *)searchCell didTapAddButton:(UIButton *)sender {
     
     if (self.addUserTask) {
         
         return;
     }
     
-    QBUUser *user = [[QMCore instance].usersService.usersMemoryStorage userWithID:contactCell.userID];
+    QBUUser *user = [[QMCore instance].usersService.usersMemoryStorage userWithID:searchCell.userID];
     
-    QBContactListItem *contactListItem = contactCell.contactListItem;
+    QBContactListItem *contactListItem = searchCell.contactListItem;
     
     @weakify(self);
     BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull task) {

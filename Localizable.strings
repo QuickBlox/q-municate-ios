@@ -32,8 +32,6 @@
 "QM_STR_CHECK_INTERNET_CONNECTION" = "Please, check your internet connection";
 "QM_STR_LOST_INTERNET_CONNECTION" = "Lost internet connection";
 "QM_STR_CHAT_SERVER_UNAVAILABLE" = "Chat service is temporary unavaliable";
-"QM_STR_ONLINE" = "Online";
-"QM_STR_OFFLINE" = "Offline";
 "QM_STR_TYPING" = "typing...";
 "QM_STR_PENDING" = "Pending";
 "QM_STR_PASSWORD_IS_TOO_SHORT" = "Password must be more than %ld characters";
@@ -135,6 +133,17 @@
 "QM_STR_GLOBAL_SEARCH" = "Global";
 "QM_STR_SEARCH_BAR_PLACEHOLDER" = "Search";
 
+// *********** New Message Screen ***********
+"QM_STR_NEW_MESSAGE_SCREEN" = "New Message";
+"QM_STR_NO_CONTACTS" = "You don't have any contacts.";
+
 // *********** Chat Screen ***********
 "QM_STR_INPUTTOOLBAR_PLACEHOLDER" = "Message";
 "QM_STR_GROUP_CHAT_STATUS_STRING" = "%tu members, %tu online";
+
+// *********** User Status ***********
+"QM_STR_ONLINE" = "Online";
+"QM_STR_OFFLINE" = "Offline";
+"QM_STR_LAST_SEEN" = "Last seen";
+"QM_STR_TIME_PREFIX" = "at";
+"QM_STR_UNKNOWN_USER" = "Unknown user";

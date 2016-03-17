@@ -8,18 +8,18 @@
 
 #import "QMTableViewCell.h"
 
-@class QMContactCell;
+@class QMSearchCell;
 
-@protocol QMContactCellDelegate <NSObject>
+@protocol QMSearchCellDelegate <NSObject>
 
-- (void)contactCell:(QMContactCell *)contactCell didTapAddButton:(UIButton *)sender;
+- (void)searchCell:(QMSearchCell *)searchCell didTapAddButton:(UIButton *)sender;
 
 @end
 
-@interface QMContactCell : QMTableViewCell
+@interface QMSearchCell : QMTableViewCell
 
 @property (strong, nonatomic) QBContactListItem *contactListItem;
 @property (assign, nonatomic) NSUInteger userID;
-@property (weak, nonatomic) id<QMContactCellDelegate> delegate;
+@property (weak, nonatomic) id<QMSearchCellDelegate> delegate;
 
 @end

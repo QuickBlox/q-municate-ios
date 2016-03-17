@@ -127,7 +127,7 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
 
 #pragma mark - Users
 
-- (NSArray *)friends {
+- (NSArray *)allContacts {
     
     NSArray *ids = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
     NSArray *allFriends = [self.usersService.usersMemoryStorage usersWithIDs:ids];
@@ -135,36 +135,36 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
     return allFriends;
 }
 
-- (NSArray *)friendsSortedByFullName {
+- (NSArray *)allContactsSortedByFullName {
     
     NSSortDescriptor *sorter = [[NSSortDescriptor alloc]
                                 initWithKey:@"fullName"
                                 ascending:YES
                                 selector:@selector(localizedCaseInsensitiveCompare:)];
-    NSArray *sortedUsers = [[self friends] sortedArrayUsingDescriptors:@[sorter]];
+    NSArray *sortedUsers = [[self allContacts] sortedArrayUsingDescriptors:@[sorter]];
     
     return sortedUsers;
 }
 
-- (NSArray *)idsOfContactsOnly {
+- (NSArray *)friends {
     
-    NSMutableSet *IDs = [NSMutableSet new];
-    NSArray *contactItems = [QBChat instance].contactList.contacts;
+    NSMutableArray *friends = [NSMutableArray array];
+    NSArray *allContactsIDs = self.contactListService.contactListMemoryStorage.userIDsFromContactList;
     
-    for (QBContactListItem *item in contactItems) {
-        [IDs addObject:@(item.userID)];
-    }
-    
-    // hardfix for broken contact list until fixed
-    for (QBContactListItem *item in [QBChat instance].contactList.pendingApproval) {
+    for (NSNumber *userID in allContactsIDs) {
         
-        if (item.subscriptionState == QBPresenceSubscriptionStateFrom) {
-            [IDs addObject:@(item.userID)];
+        QBContactListItem *item = [self.contactListService.contactListMemoryStorage contactListItemWithUserID:userID.integerValue];
+        if (item.subscriptionState == QBPresenceSubscriptionStateBoth) {
+            
+            QBUUser *user = [self.usersService.usersMemoryStorage userWithID:userID.integerValue];
+            if (user) {
+                
+                [friends addObject:user];
+            }
         }
     }
-    //
     
-    return IDs.allObjects;
+    return friends.copy;
 }
 
 - (BOOL)isFriendWithUserID:(NSUInteger)userID {

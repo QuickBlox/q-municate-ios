@@ -89,6 +89,15 @@
     }
 }
 
+- (void)setTitle:(NSString *)title {
+    
+    if (![_title isEqualToString:title]) {
+        
+        _title = title;
+        self.titleLabel.text = title;
+    }
+}
+
 - (void)setBody:(NSString *)body {
     
     if (![_body isEqualToString:body]) {
