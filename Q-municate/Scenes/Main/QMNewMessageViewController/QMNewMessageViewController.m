@@ -8,20 +8,37 @@
 
 #import "QMNewMessageViewController.h"
 #import "QMNewMessageDataSource.h"
-#import "QMContactCell.h"
+#import "QMNewMessageSearchDataSource.h"
 #import "QMCore.h"
 #import "QMChatVC.h"
+#import "QMNewMessageSearchDataProvider.h"
+
+#import "QMContactCell.h"
+#import "QMNoContactsCell.h"
+#import "QMNoResultsCell.h"
 
 @interface QMNewMessageViewController ()
 
 <
 UITableViewDelegate,
 QMContactListServiceDelegate,
-QMUsersServiceDelegate
+QMUsersServiceDelegate,
+
+QMSearchProtocol,
+QMSearchDataProviderDelegate,
+
+UISearchControllerDelegate,
+UISearchResultsUpdating
 >
 
 @property (strong, nonatomic) UISearchController *searchController;
+
+/**
+ *  Data sources
+ */
 @property (strong, nonatomic) QMNewMessageDataSource *dataSource;
+@property (strong, nonatomic) QMNewMessageSearchDataSource *contactsSearchDataSource;
+
 @property (weak, nonatomic) BFTask *dialogCreationTask;
 
 @end
@@ -48,8 +65,7 @@ QMUsersServiceDelegate
     [self configureSearch];
     
     // setting up data source
-    self.dataSource = [[QMNewMessageDataSource alloc] init];
-    self.tableView.dataSource = self.dataSource;
+    [self configureDataSources];
     
     // filling data source
     [self updateItemsFromContactList];
@@ -57,14 +73,24 @@ QMUsersServiceDelegate
 
 - (void)configureSearch {
     
-    self.searchController = [[UISearchController alloc] initWithSearchResultsController:self];
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     self.searchController.searchBar.placeholder = NSLocalizedString(@"QM_STR_SEARCH_BAR_PLACEHOLDER", nil);
     self.searchController.searchResultsUpdater = self;
     self.searchController.delegate = self;
-    self.searchController.searchBar.delegate = self;
-    self.searchController.dimsBackgroundDuringPresentation = YES;
+    self.searchController.dimsBackgroundDuringPresentation = NO;
     self.definesPresentationContext = YES;
     self.tableView.tableHeaderView = self.searchController.searchBar;
+}
+
+- (void)configureDataSources {
+    
+    self.dataSource = [[QMNewMessageDataSource alloc] init];
+    self.tableView.dataSource = self.dataSource;
+    
+    QMNewMessageSearchDataProvider *searchDataProvider = [[QMNewMessageSearchDataProvider alloc] init];
+    searchDataProvider.delegate = self;
+    
+    self.contactsSearchDataSource = [[QMNewMessageSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider];
 }
 
 #pragma mark - UITableViewDelegate
@@ -84,25 +110,43 @@ QMUsersServiceDelegate
     
     QBUUser *user = [self.dataSource userAtIndexPath:indexPath];
     
-    if (user != nil) {
+    QBChatDialog *privateDialog = [[QMCore instance].chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
+    
+    if (privateDialog != nil) {
         
-        QBChatDialog *privateDialog = [[QMCore instance].chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
-        
-        if (privateDialog != nil) {
-            
-            [self performSegueWithIdentifier:kQMSceneSegueChat sender:privateDialog];
-        }
-        else {
-            
-            @weakify(self);
-            self.dialogCreationTask = [[[QMCore instance].chatService createPrivateChatDialogWithOpponent:user] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
-                @strongify(self);
-                [self performSegueWithIdentifier:kQMSceneSegueChat sender:task.result];
-                
-                return nil;
-            }];
-        }
+        [self performSegueWithIdentifier:kQMSceneSegueChat sender:privateDialog];
     }
+    else {
+        
+        @weakify(self);
+        self.dialogCreationTask = [[[QMCore instance].chatService createPrivateChatDialogWithOpponent:user] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+            @strongify(self);
+            [self performSegueWithIdentifier:kQMSceneSegueChat sender:task.result];
+            
+            return nil;
+        }];
+    }
+}
+
+#pragma mark - UISearchControllerDelegate
+
+- (void)willPresentSearchController:(UISearchController *)searchController {
+    
+    self.tableView.dataSource = self.contactsSearchDataSource;
+    [self.tableView reloadData];
+}
+
+- (void)willDismissSearchController:(UISearchController *)searchController {
+    
+    self.tableView.dataSource = self.dataSource;
+    [self.tableView reloadData];
+}
+
+#pragma mark - UISearchResultsUpdating
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    
+    [self.searchDataSource.searchDataProvider performSearch:searchController.searchBar.text];
 }
 
 #pragma mark - Helpers
@@ -150,11 +194,30 @@ QMUsersServiceDelegate
     [self.tableView reloadData];
 }
 
+#pragma mark - QMSearchDataProviderDelegate
+
+- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)searchDataProvider {
+    
+    if ([self.tableView.dataSource conformsToProtocol:@protocol(QMNewMessageSearchDataSourceProtocol)]) {
+        
+        [self.tableView reloadData];
+    }
+}
+
+#pragma mark - QMSearchProtocol
+
+- (QMSearchDataProvider *)searchDataSource {
+    
+    return (id)self.tableView.dataSource;
+}
+
 #pragma mark - Nib registration
 
 - (void)registerNibs {
     
     [QMContactCell registerForReuseInTableView:self.tableView];
+    [QMNoContactsCell registerForReuseInTableView:self.tableView];
+    [QMNoResultsCell registerForReuseInTableView:self.tableView];
 }
 
 @end

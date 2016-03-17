@@ -25,3 +25,7 @@
 @protocol QMGlobalSearchDataSourceProtocol <QMSearchProtocol>
 
 @end
+
+@protocol QMNewMessageSearchDataSourceProtocol <QMSearchProtocol>
+
+@end
