@@ -275,21 +275,6 @@ AGEmojiKeyboardViewDelegate
     }];
 }
 
-- (NSString *)timeStampWithDate:(NSDate *)date {
-    
-    static NSDateFormatter *dateFormatter = nil;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateFormat = @"HH:mm";
-    });
-    
-    NSString *timeStamp = [dateFormatter stringFromDate:date];
-    
-    return timeStamp;
-}
-
 - (void)readMessage:(QBChatMessage *)message {
     
     if (message.senderID != self.senderID && ![message.readIDs containsObject:@(self.senderID)]) {
@@ -530,7 +515,7 @@ AGEmojiKeyboardViewDelegate
     UIFont *font = [UIFont systemFontOfSize:12.0f];
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor, NSFontAttributeName:font};
     
-    NSString* text = messageItem.dateSent ? [self timeStampWithDate:messageItem.dateSent] : @"";
+    NSString* text = messageItem.dateSent ? [QMDateUtils formatDateForTimeRange:messageItem.dateSent] : @"";
     
     if ([messageItem senderID] == self.senderID) {
         text = [NSString stringWithFormat:@"%@\n%@", text, [self.messageStatusStringBuilder statusFromMessage:messageItem forDialogType:self.chatDialog
