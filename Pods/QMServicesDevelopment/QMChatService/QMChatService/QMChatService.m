@@ -840,7 +840,7 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
         }
     } errorBlock:^(QBResponse *response) {
         //
-        if (response.status == QBResponseStatusCodeNotFound || response.status == QBResponseStatusCodeForbidden) {
+        if (response.status == QBResponseStatusCodeNotFound || response.status == 403) {
             [weakSelf.dialogsMemoryStorage deleteChatDialogWithID:dialogId];
             
             if ([weakSelf.multicastDelegate respondsToSelector:@selector(chatService:didDeleteChatDialogWithIDFromMemoryStorage:)]) {
