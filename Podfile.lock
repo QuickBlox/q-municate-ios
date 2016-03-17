@@ -131,10 +131,10 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
-    :commit: 1ab2a284879d4d688193b1cb1e448a5df5cc7376
+    :commit: e6e42b60119485e91ab5842c75ec324dfab30928
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: d48db73bd0c062c9e16c37b3482baae161bb2bfb
+    :commit: 30d9679a9d0d40a4ce3817f5aebed4e00aea01da
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:

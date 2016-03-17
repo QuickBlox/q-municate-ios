@@ -9,6 +9,7 @@
         <attribute name="facebookID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fullName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="lastRequestAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="login" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="tags" optional="YES" attributeType="String" syncable="YES"/>
@@ -17,6 +18,6 @@
         <attribute name="website" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="CDUser" positionX="-45" positionY="0" width="128" height="255"/>
+        <element name="CDUser" positionX="-45" positionY="0" width="128" height="270"/>
     </elements>
 </model>
