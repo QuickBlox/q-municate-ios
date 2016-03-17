@@ -12,6 +12,7 @@
 
 @property (strong, nonatomic) NSDictionary *alphabetizedDictionary;
 @property (strong, nonatomic) NSArray *sectionIndexTitles;
+@property (assign, nonatomic, readonly) BOOL isEmpty;
 
 - (QBUUser *)userAtIndexPath:(NSIndexPath *)indexPath;
 

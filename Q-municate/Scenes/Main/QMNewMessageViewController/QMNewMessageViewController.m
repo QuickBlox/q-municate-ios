@@ -40,6 +40,9 @@ UISearchResultsUpdating
 @property (strong, nonatomic) QMNewMessageSearchDataSource *contactsSearchDataSource;
 
 @property (weak, nonatomic) BFTask *dialogCreationTask;
+@property (strong, nonatomic) NSArray *friends;
+
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *createGroupButton;
 
 @end
 
@@ -153,8 +156,10 @@ UISearchResultsUpdating
 
 - (void)updateItemsFromContactList {
     
-    NSArray *friendsUsers = [QMCore instance].friends;
-    [self.dataSource replaceItems:friendsUsers];
+    self.friends = [QMCore instance].friends;
+    [self.dataSource replaceItems:self.friends];
+    
+    self.createGroupButton.enabled = self.friends.count > 0;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -216,7 +221,6 @@ UISearchResultsUpdating
 - (void)registerNibs {
     
     [QMContactCell registerForReuseInTableView:self.tableView];
-    [QMNoContactsCell registerForReuseInTableView:self.tableView];
     [QMNoResultsCell registerForReuseInTableView:self.tableView];
 }
 

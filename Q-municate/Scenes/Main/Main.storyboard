@@ -173,6 +173,7 @@ out here.</string>
                         <barButtonItem key="rightBarButtonItem" image="users" id="rxm-fp-eTY"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="createGroupButton" destination="rxm-fp-eTY" id="BgB-wd-RMw"/>
                         <segue destination="GHP-Ej-YG9" kind="show" identifier="SceneSegueChat" customClass="QMReplaceViewControllerSegue" id="YNN-gw-X19"/>
                     </connections>
                 </tableViewController>

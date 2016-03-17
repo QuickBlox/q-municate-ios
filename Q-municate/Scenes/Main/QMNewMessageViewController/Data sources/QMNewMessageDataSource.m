@@ -103,4 +103,11 @@ NSString *const kQMQBUUserFullNameKeyPath = @"fullName";
     return self.alphabetizedDictionary.allValues.mutableCopy;
 }
 
+#pragma mark - getters
+
+- (BOOL)isEmpty {
+    
+    return self.sectionIndexTitles.count == 0;
+}
+
 @end
