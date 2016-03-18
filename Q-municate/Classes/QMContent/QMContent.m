@@ -8,9 +8,8 @@
 
 #import "QMContent.h"
 
-static const NSUInteger kQMContentMaxConcurrentOperationQueueCount = 3;
-static const CGFloat    kQMContentUploadJPEGCompressionQuality     = 0.4f;
-static NSString * const kQMContentImageFileName                    = @"image";
+const CGFloat kQMContentUploadJPEGCompressionQuality = 0.4f;
+NSString *const kQMContentImageFileName = @"image";
 
 @implementation QMContent
 
@@ -30,7 +29,7 @@ static NSString * const kQMContentImageFileName                    = @"image";
 }
 
 + (BFTask *)uploadPNGImage:(UIImage *)image
-              progress:(QMContentProgressBlock)progress
+                  progress:(QMContentProgressBlock)progress
 {
     
     NSData *data = UIImagePNGRepresentation(image);
