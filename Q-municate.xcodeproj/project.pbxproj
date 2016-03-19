@@ -51,10 +51,6 @@
 		581DA1D01BF3732900F75D8B /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1CF1BF3732900F75D8B /* libc++.tbd */; };
 		581DA1D21BF373A100F75D8B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1D11BF373A100F75D8B /* VideoToolbox.framework */; };
 		5842779C1C3D336300CDE35B /* IAButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277821C3D336300CDE35B /* IAButton.m */; };
-		5842779E1C3D336300CDE35B /* QMFriendListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5842778A1C3D336300CDE35B /* QMFriendListCell.m */; };
-		5842779F1C3D336300CDE35B /* QMFriendListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5842778B1C3D336300CDE35B /* QMFriendListCell.xib */; };
-		584277A01C3D336300CDE35B /* QMInviteFriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5842778E1C3D336300CDE35B /* QMInviteFriendCell.m */; };
-		584277A11C3D336300CDE35B /* QMInviteStaticCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277901C3D336300CDE35B /* QMInviteStaticCell.m */; };
 		584277A41C3D336300CDE35B /* QMCornerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277981C3D336300CDE35B /* QMCornerButton.m */; };
 		584277B41C3D374400CDE35B /* Auth.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 584277B31C3D374400CDE35B /* Auth.storyboard */; };
 		584277B91C3D401C00CDE35B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 584277B81C3D401C00CDE35B /* Main.storyboard */; };
@@ -242,14 +238,6 @@
 		581DA1D11BF373A100F75D8B /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		584277811C3D336300CDE35B /* IAButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAButton.h; sourceTree = "<group>"; };
 		584277821C3D336300CDE35B /* IAButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IAButton.m; sourceTree = "<group>"; };
-		584277871C3D336300CDE35B /* QMCheckBoxProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCheckBoxProtocol.h; sourceTree = "<group>"; };
-		584277891C3D336300CDE35B /* QMFriendListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMFriendListCell.h; sourceTree = "<group>"; };
-		5842778A1C3D336300CDE35B /* QMFriendListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMFriendListCell.m; sourceTree = "<group>"; };
-		5842778B1C3D336300CDE35B /* QMFriendListCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QMFriendListCell.xib; sourceTree = "<group>"; };
-		5842778D1C3D336300CDE35B /* QMInviteFriendCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMInviteFriendCell.h; sourceTree = "<group>"; };
-		5842778E1C3D336300CDE35B /* QMInviteFriendCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMInviteFriendCell.m; sourceTree = "<group>"; };
-		5842778F1C3D336300CDE35B /* QMInviteStaticCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMInviteStaticCell.h; sourceTree = "<group>"; };
-		584277901C3D336300CDE35B /* QMInviteStaticCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMInviteStaticCell.m; sourceTree = "<group>"; };
 		584277971C3D336300CDE35B /* QMCornerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCornerButton.h; sourceTree = "<group>"; };
 		584277981C3D336300CDE35B /* QMCornerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMCornerButton.m; sourceTree = "<group>"; };
 		584277B11C3D36EA00CDE35B /* SegueIdentifiers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SegueIdentifiers.h; path = "Q-municate/Scenes/SegueIdentifiers.h"; sourceTree = SOURCE_ROOT; };
@@ -922,6 +910,7 @@
 				584277B11C3D36EA00CDE35B /* SegueIdentifiers.h */,
 				584277C41C3D46AC00CDE35B /* Base */,
 				5842777F1C3D336300CDE35B /* Views */,
+				584A6DAF1C9DB38000B7D641 /* Cells */,
 				584277A61C3D337900CDE35B /* Start */,
 				584277B21C3D372800CDE35B /* Auth */,
 				584277B51C3D3F7000CDE35B /* Main */,
@@ -940,7 +929,6 @@
 				58E343801C49190400439E93 /* QMProfileTitleView */,
 				5877D6E01C46759A00938E5D /* QMBadgeView */,
 				584277801C3D336300CDE35B /* IAButton */,
-				584277831C3D336300CDE35B /* QMCells */,
 				584277961C3D336300CDE35B /* QMCornerButton */,
 			);
 			name = Views;
@@ -954,37 +942,6 @@
 				584277821C3D336300CDE35B /* IAButton.m */,
 			);
 			path = IAButton;
-			sourceTree = "<group>";
-		};
-		584277831C3D336300CDE35B /* QMCells */ = {
-			isa = PBXGroup;
-			children = (
-				584277871C3D336300CDE35B /* QMCheckBoxProtocol.h */,
-				584277881C3D336300CDE35B /* QMFriendListCell */,
-				5842778C1C3D336300CDE35B /* QMInviteFirendCell */,
-			);
-			path = QMCells;
-			sourceTree = "<group>";
-		};
-		584277881C3D336300CDE35B /* QMFriendListCell */ = {
-			isa = PBXGroup;
-			children = (
-				584277891C3D336300CDE35B /* QMFriendListCell.h */,
-				5842778A1C3D336300CDE35B /* QMFriendListCell.m */,
-				5842778B1C3D336300CDE35B /* QMFriendListCell.xib */,
-			);
-			path = QMFriendListCell;
-			sourceTree = "<group>";
-		};
-		5842778C1C3D336300CDE35B /* QMInviteFirendCell */ = {
-			isa = PBXGroup;
-			children = (
-				5842778D1C3D336300CDE35B /* QMInviteFriendCell.h */,
-				5842778E1C3D336300CDE35B /* QMInviteFriendCell.m */,
-				5842778F1C3D336300CDE35B /* QMInviteStaticCell.h */,
-				584277901C3D336300CDE35B /* QMInviteStaticCell.m */,
-			);
-			path = QMInviteFirendCell;
 			sourceTree = "<group>";
 		};
 		584277961C3D336300CDE35B /* QMCornerButton */ = {
@@ -1113,6 +1070,19 @@
 			name = QMAlphabetizedDataSource;
 			sourceTree = "<group>";
 		};
+		584A6DAF1C9DB38000B7D641 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				589D4CFA1C981BD6005F1E76 /* QMContactCell */,
+				5897928A1C998C1F00CC6438 /* QMNoContactsCell */,
+				589792BA1C9C3DDA00CC6438 /* QMSelectableContactCell */,
+				58D847901C89A9D6000C40BA /* QMNoResultsCell */,
+				58D8476D1C85BABF000C40BA /* QMSearchCell */,
+				5877D6D61C46713300938E5D /* QMDialogCell */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
 		585DE45C1C4685F10068E03E /* QMErrorsFactory */ = {
 			isa = PBXGroup;
 			children = (
@@ -1148,7 +1118,6 @@
 				58D8475D1C849A75000C40BA /* QMSearchResultsController */,
 				58D847831C8719C0000C40BA /* Data providers */,
 				5885E0791C47F5AD0081A5E9 /* Data sources */,
-				5877D6D51C46710600938E5D /* Cells */,
 			);
 			name = QMDialogsViewController;
 			sourceTree = "<group>";
@@ -1169,16 +1138,6 @@
 				5877D6D31C46709A00938E5D /* QMTableViewDataSource.m */,
 			);
 			name = QMTableViewDataSource;
-			sourceTree = "<group>";
-		};
-		5877D6D51C46710600938E5D /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-				58D847901C89A9D6000C40BA /* QMNoResultsCell */,
-				58D8476D1C85BABF000C40BA /* QMSearchCell */,
-				5877D6D61C46713300938E5D /* QMDialogCell */,
-			);
-			name = Cells;
 			sourceTree = "<group>";
 		};
 		5877D6D61C46713300938E5D /* QMDialogCell */ = {
@@ -1227,15 +1186,6 @@
 				5885E07C1C47F5FC0081A5E9 /* QMPlaceholderDataSource.m */,
 			);
 			name = QMPlaceholderDataSource;
-			sourceTree = "<group>";
-		};
-		589792891C998A8100CC6438 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-				589D4CFA1C981BD6005F1E76 /* QMContactCell */,
-				5897928A1C998C1F00CC6438 /* QMNoContactsCell */,
-			);
-			name = Cells;
 			sourceTree = "<group>";
 		};
 		5897928A1C998C1F00CC6438 /* QMNoContactsCell */ = {
@@ -1299,7 +1249,6 @@
 				589792B31C9C3C1F00CC6438 /* QMGroupContactListViewController.h */,
 				589792B41C9C3C1F00CC6438 /* QMGroupContactListViewController.m */,
 				589792B61C9C3C3D00CC6438 /* QMGroupContactListDataSource */,
-				589792BA1C9C3DDA00CC6438 /* QMSelectableContactCell */,
 			);
 			name = QMGroupContactListViewController;
 			sourceTree = "<group>";
@@ -1329,7 +1278,6 @@
 				589D4CF41C9816E9005F1E76 /* QMNewMessageViewController.m */,
 				5897929A1C9AA61F00CC6438 /* Data sources */,
 				5897929F1C9AA66700CC6438 /* QMNewMessageSearchDataProvider */,
-				589792891C998A8100CC6438 /* Cells */,
 			);
 			name = QMNewMessageViewController;
 			sourceTree = "<group>";
@@ -1738,7 +1686,6 @@
 				55A8B06F1965986A00B5D33B /* busy.wav in Resources */,
 				584277C71C3D46D000CDE35B /* Settings.storyboard in Resources */,
 				584277CD1C3D495D00CDE35B /* Calls.storyboard in Resources */,
-				5842779F1C3D336300CDE35B /* QMFriendListCell.xib in Resources */,
 				584277BB1C3D404A00CDE35B /* Start.storyboard in Resources */,
 				55A8B0701965986A00B5D33B /* calling.wav in Resources */,
 				55A8B0731965986A00B5D33B /* ringtone.wav in Resources */,
@@ -1843,7 +1790,6 @@
 				584277E01C3FED0E00CDE35B /* QMContent.m in Sources */,
 				55D8ADE219AC76F900DAF79F /* QMChangePasswordVC.m in Sources */,
 				589D4CF11C98158E005F1E76 /* QMRootViewControllerSegue.m in Sources */,
-				584277A01C3D336300CDE35B /* QMInviteFriendCell.m in Sources */,
 				585DE4631C46A8390068E03E /* QMPlaceholder.m in Sources */,
 				584277D11C3FBD1600CDE35B /* QMProfile.m in Sources */,
 				55BBA75C19730B960040DB5C /* REMessageUI.m in Sources */,
@@ -1906,10 +1852,8 @@
 				5877D6CE1C46702400938E5D /* QMDialogsDataSource.m in Sources */,
 				559BDFE819618D3D000588FE /* QMSignUpViewController.m in Sources */,
 				585DE45F1C4686060068E03E /* QMErrorsFactory.m in Sources */,
-				5842779E1C3D336300CDE35B /* QMFriendListCell.m in Sources */,
 				55CEAB81195DBCFA001A8ED6 /* QMIncomingCallController.m in Sources */,
 				580B3B571C3FF89F00345081 /* QMTasks.m in Sources */,
-				584277A11C3D336300CDE35B /* QMInviteStaticCell.m in Sources */,
 				5897929E1C9AA65400CC6438 /* QMNewMessageSearchDataSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
