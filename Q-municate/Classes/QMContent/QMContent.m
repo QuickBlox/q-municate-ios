@@ -8,8 +8,8 @@
 
 #import "QMContent.h"
 
-const CGFloat kQMContentUploadJPEGCompressionQuality = 0.4f;
-NSString *const kQMContentImageFileName = @"image";
+static const CGFloat kQMContentUploadJPEGCompressionQuality = 0.4f;
+static NSString *const kQMContentImageFileName = @"image";
 
 @implementation QMContent
 

@@ -10,8 +10,7 @@
 #import "QMCore.h"
 #import "QMProfile.h"
 
-static const NSUInteger kQMStatusStringNamesLimit    = 5;
-static NSString *const  kQMQBUUserFullNameKeyPathKey = @"fullName";
+static const NSUInteger kQMStatusStringNamesLimit = 5;
 
 @implementation QMMessageStatusStringBuilder
 

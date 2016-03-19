@@ -25,13 +25,13 @@
 // external
 #import "AGEmojiKeyBoardView.h"
 
-const NSInteger kQMEmojiButtonTag = 100;
-const CGFloat kQMEmojiButtonSize = 45.0f;
-const CGFloat kQMInputToolbarTextContainerInsetRight = 25.0f;
-const CGFloat kQMAttachmentCellSize = 200.0f;
-const CGFloat kQMWidthPadding = 40.0f;
-const CGFloat kQMAvatarSize = 28.0f;
-const CGFloat kQMGroupAvatarSize = 36.0f;
+static const NSInteger kQMEmojiButtonTag = 100;
+static const CGFloat kQMEmojiButtonSize = 45.0f;
+static const CGFloat kQMInputToolbarTextContainerInsetRight = 25.0f;
+static const CGFloat kQMAttachmentCellSize = 200.0f;
+static const CGFloat kQMWidthPadding = 40.0f;
+static const CGFloat kQMAvatarSize = 28.0f;
+static const CGFloat kQMGroupAvatarSize = 36.0f;
 
 @interface QMChatVC ()
 
