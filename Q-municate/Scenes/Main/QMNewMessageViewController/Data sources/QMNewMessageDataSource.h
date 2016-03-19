@@ -6,13 +6,9 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMSearchDataSource.h"
+#import "QMAlphabetizedDataSource.h"
 
-@interface QMNewMessageDataSource : QMSearchDataSource
-
-@property (strong, nonatomic) NSDictionary *alphabetizedDictionary;
-@property (strong, nonatomic) NSArray *sectionIndexTitles;
-@property (assign, nonatomic, readonly) BOOL isEmpty;
+@interface QMNewMessageDataSource : QMAlphabetizedDataSource
 
 - (QBUUser *)userAtIndexPath:(NSIndexPath *)indexPath;
 

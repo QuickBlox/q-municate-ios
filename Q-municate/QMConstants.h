@@ -9,6 +9,6 @@
 #ifndef QMConstants_h
 #define QMConstants_h
 
-static NSString *const  kQMQBUUserFullNameKeyPathKey = @"fullName";
+static NSString *const kQMQBUUserFullNameKeyPathKey = @"fullName";
 
 #endif /* QMConstants_h */

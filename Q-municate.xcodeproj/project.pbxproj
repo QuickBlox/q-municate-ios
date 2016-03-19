@@ -66,6 +66,7 @@
 		584277D51C3FCFBA00CDE35B /* QMFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277D41C3FCFBA00CDE35B /* QMFacebook.m */; };
 		584277DC1C3FE5BC00CDE35B /* QMCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277DB1C3FE5BC00CDE35B /* QMCore.m */; };
 		584277E01C3FED0E00CDE35B /* QMContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277DF1C3FED0E00CDE35B /* QMContent.m */; };
+		584A6D971C9D9D9F00B7D641 /* QMAlphabetizedDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 584A6D961C9D9D9F00B7D641 /* QMAlphabetizedDataSource.m */; };
 		585DE45F1C4686060068E03E /* QMErrorsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 585DE45E1C4686060068E03E /* QMErrorsFactory.m */; };
 		585DE4631C46A8390068E03E /* QMPlaceholder.m in Sources */ = {isa = PBXBuildFile; fileRef = 585DE4621C46A8390068E03E /* QMPlaceholder.m */; };
 		5861E25D1BB40D7E00C9EB68 /* QMApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 5861E25C1BB40D7E00C9EB68 /* QMApi.m */; };
@@ -267,6 +268,8 @@
 		584277DE1C3FED0E00CDE35B /* QMContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMContent.h; path = Classes/QMContent/QMContent.h; sourceTree = "<group>"; };
 		584277DF1C3FED0E00CDE35B /* QMContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMContent.m; path = Classes/QMContent/QMContent.m; sourceTree = "<group>"; };
 		584A6D931C9D9AA700B7D641 /* QMConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMConstants.h; sourceTree = "<group>"; };
+		584A6D951C9D9D9F00B7D641 /* QMAlphabetizedDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMAlphabetizedDataSource.h; path = "Q-municate/Scenes/Base/QMAlphabetizedDataSource/QMAlphabetizedDataSource.h"; sourceTree = SOURCE_ROOT; };
+		584A6D961C9D9D9F00B7D641 /* QMAlphabetizedDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMAlphabetizedDataSource.m; path = "Q-municate/Scenes/Base/QMAlphabetizedDataSource/QMAlphabetizedDataSource.m"; sourceTree = SOURCE_ROOT; };
 		585DE45D1C4686060068E03E /* QMErrorsFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMErrorsFactory.h; path = QMErrorsFactory/QMErrorsFactory.h; sourceTree = "<group>"; };
 		585DE45E1C4686060068E03E /* QMErrorsFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMErrorsFactory.m; path = QMErrorsFactory/QMErrorsFactory.m; sourceTree = "<group>"; };
 		585DE4611C46A8390068E03E /* QMPlaceholder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMPlaceholder.h; path = Classes/QMPlaceholder/QMPlaceholder.h; sourceTree = "<group>"; };
@@ -1042,6 +1045,7 @@
 				5877D6D11C46705E00938E5D /* QMTableViewDataSource */,
 				5877D6D71C4671E500938E5D /* QMTableViewCell */,
 				58D847891C873F0A000C40BA /* QMSearchDataSource */,
+				584A6D941C9D9D4B00B7D641 /* QMAlphabetizedDataSource */,
 			);
 			name = Base;
 			sourceTree = "<group>";
@@ -1098,6 +1102,15 @@
 				584277DF1C3FED0E00CDE35B /* QMContent.m */,
 			);
 			name = QMContent;
+			sourceTree = "<group>";
+		};
+		584A6D941C9D9D4B00B7D641 /* QMAlphabetizedDataSource */ = {
+			isa = PBXGroup;
+			children = (
+				584A6D951C9D9D9F00B7D641 /* QMAlphabetizedDataSource.h */,
+				584A6D961C9D9D9F00B7D641 /* QMAlphabetizedDataSource.m */,
+			);
+			name = QMAlphabetizedDataSource;
 			sourceTree = "<group>";
 		};
 		585DE45C1C4685F10068E03E /* QMErrorsFactory */ = {
@@ -1881,6 +1894,7 @@
 				55D8ADFB19AC833300DAF79F /* QMLicenseAgreement.m in Sources */,
 				58D847681C85A1DB000C40BA /* QMGlobalSearchDataSource.m in Sources */,
 				589D4CF91C981888005F1E76 /* QMNewMessageDataSource.m in Sources */,
+				584A6D971C9D9D9F00B7D641 /* QMAlphabetizedDataSource.m in Sources */,
 				5877D6C41C45470400938E5D /* QMDigitsConfigurationFactory.m in Sources */,
 				58CEA1BB1BB553C400B866DD /* UIImage+TintColor.m in Sources */,
 				584277D51C3FCFBA00CDE35B /* QMFacebook.m in Sources */,

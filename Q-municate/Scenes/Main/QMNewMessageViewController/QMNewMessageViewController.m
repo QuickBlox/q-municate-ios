@@ -40,7 +40,6 @@ UISearchResultsUpdating
 @property (strong, nonatomic) QMNewMessageSearchDataSource *contactsSearchDataSource;
 
 @property (weak, nonatomic) BFTask *dialogCreationTask;
-@property (strong, nonatomic) NSArray *friends;
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *createGroupButton;
 
@@ -72,6 +71,12 @@ UISearchResultsUpdating
     
     // filling data source
     [self updateItemsFromContactList];
+    
+    // Back button style for next in navigation stack view controllers
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"QM_STR_BACK", nil)
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:nil
+                                                                            action:nil];
 }
 
 - (void)configureSearch {
@@ -87,20 +92,20 @@ UISearchResultsUpdating
 
 - (void)configureDataSources {
     
-    self.dataSource = [[QMNewMessageDataSource alloc] init];
+    self.dataSource = [[QMNewMessageDataSource alloc] initWithKeyPath:kQMQBUUserFullNameKeyPathKey];
     self.tableView.dataSource = self.dataSource;
     
     QMNewMessageSearchDataProvider *searchDataProvider = [[QMNewMessageSearchDataProvider alloc] init];
     searchDataProvider.delegate = self;
     
-    self.contactsSearchDataSource = [[QMNewMessageSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider];
+    self.contactsSearchDataSource = [[QMNewMessageSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider usingKeyPath:kQMQBUUserFullNameKeyPathKey];
 }
 
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    return [self.dataSource heightForRowAtIndexPath:indexPath];
+    return [self.searchDataSource heightForRowAtIndexPath:indexPath];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -156,10 +161,10 @@ UISearchResultsUpdating
 
 - (void)updateItemsFromContactList {
     
-    self.friends = [QMCore instance].friends;
-    [self.dataSource replaceItems:self.friends];
+    NSArray *friends = [QMCore instance].friends;
+    [self.dataSource replaceItems:friends];
     
-    self.createGroupButton.enabled = self.friends.count > 0;
+    self.createGroupButton.enabled = friends.count > 0;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
