@@ -7,9 +7,33 @@
 //
 
 #import "QMSelectableContactCell.h"
+#import <QuartzCore/QuartzCore.h>
 
-static NSString *const kQMCheckMarkDeselectedImage = @"checkmark_deselected";
-static NSString *const kQMCheckMarkSelectedImage = @"checkmark_selected";
+static UIImage *selectedCheckImage() {
+    
+    static UIImage *image = nil;
+    
+    if (image == nil) {
+        
+        UIImage *rawImage = [UIImage imageNamed:@"checkmark_selected"];
+        image = [rawImage stretchableImageWithLeftCapWidth:(int)(rawImage.size.width / 2) topCapHeight:0];
+    }
+    
+    return image;
+}
+
+static UIImage *deselectedCheckImage() {
+    
+    static UIImage *image = nil;
+    
+    if (image == nil) {
+        
+        UIImage *rawImage = [UIImage imageNamed:@"checkmark_deselected"];
+        image = [rawImage stretchableImageWithLeftCapWidth:(int)(rawImage.size.width / 2) topCapHeight:0];
+    }
+    
+    return image;
+}
 
 @interface QMSelectableContactCell ()
 
@@ -33,7 +57,14 @@ static NSString *const kQMCheckMarkSelectedImage = @"checkmark_selected";
 - (void)setChecked:(BOOL)checked {
     
     _checked = checked;
-    self.checkmarkImageView.image = [UIImage imageNamed:checked ? kQMCheckMarkSelectedImage : kQMCheckMarkDeselectedImage];
+    
+    self.checkmarkImageView.image = checked ? selectedCheckImage() : deselectedCheckImage();
+    CATransition *transition = [CATransition animation];
+    transition.duration = 0.25f;
+    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    transition.type = kCATransitionFade;
+    
+    [self.checkmarkImageView.layer addAnimation:transition forKey:nil];
 }
 
 @end
