@@ -372,20 +372,20 @@ AGEmojiKeyboardViewDelegate
         return;
     }
     
-    // hiding keyboard
-    [self.view endEditing:YES];
-    
     [REActionSheet presentActionSheetInView:self.view configuration:^(REActionSheet *actionSheet) {
         
-        [actionSheet addButtonWithTitle:@"Take image" andActionBlock:^{
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"QM_STR_TAKE_IMAGE", nil) andActionBlock:^{
             [QMImagePicker takePhotoInViewController:self resultHandler:self];
         }];
         
-        [actionSheet addButtonWithTitle:@"Choose from library" andActionBlock:^{
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"QM_STR_CHOOSE_FROM_LIBRARY", nil) andActionBlock:^{
             [QMImagePicker choosePhotoInViewController:self resultHandler:self];
         }];
+        
+        [actionSheet addCancelButtonWihtTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{
+            
+        }];
     }];
-    
 }
 
 #pragma mark - Cells view classes

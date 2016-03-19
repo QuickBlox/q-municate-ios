@@ -41,7 +41,7 @@
  *  @param searchDataProvider search data provider to perform search filter on data source
  *  @param keyPath            keypath that will be used to alphabetize data source
  *
- *  @see QMSearchDataProvider class implementation for more info.
+ *  @see QMSearchDataProvider class implementation for more information.
  *
  *  @return QMAlphabetizedDataSource instance
  */
