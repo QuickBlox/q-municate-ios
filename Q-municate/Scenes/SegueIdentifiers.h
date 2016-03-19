@@ -10,12 +10,13 @@
  *  Segue identifiers that used in project
  */
 
-static NSString *const kQMSceneSegueAuth            = @"SceneSegueAuth";
-static NSString *const kQMSceneSegueChat            = @"SceneSegueChat";
-static NSString *const kQMSceneSegueMain            = @"SceneSegueMain";
-static NSString *const kQMSceneSegueStart           = @"SceneSegueStart";
-static NSString *const kQMSceneSegueFriendDetails   = @"SceneSegueFriendDetails";
-static NSString *const kQMSceneSegueGroupDetails    = @"SceneSegueGroupDetails";
-static NSString *const kQMSceneSegueGroupMembersAdd = @"SceneSegueGroupMembersAdd";
-static NSString *const kQMSceneSegueProfile         = @"SceneSegueProfile";
-static NSString *const kQMSceneSegueNewMessage      = @"SceneSegueNewMessage";
+static NSString *const kQMSceneSegueAuth                = @"SceneSegueAuth";
+static NSString *const kQMSceneSegueChat                = @"SceneSegueChat";
+static NSString *const kQMSceneSegueMain                = @"SceneSegueMain";
+static NSString *const kQMSceneSegueStart               = @"SceneSegueStart";
+static NSString *const kQMSceneSegueFriendDetails       = @"SceneSegueFriendDetails";
+static NSString *const kQMSceneSegueGroupDetails        = @"SceneSegueGroupDetails";
+static NSString *const kQMSceneSegueGroupMembersAdd     = @"SceneSegueGroupMembersAdd";
+static NSString *const kQMSceneSegueProfile             = @"SceneSegueProfile";
+static NSString *const kQMSceneSegueNewMessage          = @"SceneSegueNewMessage";
+static NSString *const kQMSceneSegueGroupContactList    = @"SceneSegueGroupContactList";
