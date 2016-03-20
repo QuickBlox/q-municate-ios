@@ -68,6 +68,7 @@ UISearchResultsUpdating
     // filling data source
     [self updateItemsFromContactList];
     
+    
     // Back button style for next in navigation stack view controllers
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"QM_STR_BACK", nil)
                                                                              style:UIBarButtonItemStylePlain

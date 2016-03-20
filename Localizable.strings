@@ -8,7 +8,6 @@
 "QM_STR_OK" = "Ok";
 "QM_STR_COMING_SOON" = "Coming soon";
 "QM_STR_LOGOUT" = "Log Out";
-"QM_STR_CANCEL" = "Cancel";
 "QM_STR_SUCCESS" = "Success";
 "QM_STR_ERROR" = "Error";
 "QM_STR_ERROR_WHILE_CREATING_NEW_CHAT" = "You don't have any contacts for creating new chat.";
@@ -137,6 +136,10 @@
 "QM_STR_NEW_MESSAGE_SCREEN" = "New Message";
 "QM_STR_NO_CONTACTS" = "You don't have any contacts.";
 
+// *********** New Group Screen ***********
+"QM_STR_NAME_FIELD_PLACEHOLDER" = "Group name";
+"QM_STR_TAG_FIELD_PLACEHOLDER" = "Add people:";
+
 // *********** Chat Screen ***********
 "QM_STR_INPUTTOOLBAR_PLACEHOLDER" = "Message";
 "QM_STR_GROUP_CHAT_STATUS_STRING" = "%tu members, %tu online";
@@ -147,3 +150,11 @@
 "QM_STR_LAST_SEEN" = "Last seen";
 "QM_STR_TIME_PREFIX" = "at";
 "QM_STR_UNKNOWN_USER" = "Unknown user";
+
+// *********** Navigation ***********
+"QM_STR_BACK" = "Back";
+
+// *********** Image picker ***********
+"QM_STR_TAKE_IMAGE" = "Take image";
+"QM_STR_CHOOSE_FROM_LIBRARY" = "Choose from library";
+"QM_STR_CANCEL" = "Cancel";
