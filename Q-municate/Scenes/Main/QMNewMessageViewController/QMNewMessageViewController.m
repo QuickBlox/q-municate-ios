@@ -98,6 +98,11 @@ UISearchResultsUpdating
     self.contactsSearchDataSource = [[QMNewMessageSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider usingKeyPath:kQMQBUUserFullNameKeyPathKey];
 }
 
+- (void)dealloc {
+    
+    [self.searchController.view removeFromSuperview];
+}
+
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
