@@ -34,7 +34,8 @@
 
 #pragma mark - Actions
 
-- (IBAction)connectWithFacebook:(id)sender {
+- (IBAction)connectWithFacebook:(id)__unused sender {
+    
     @weakify(self);
     [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL success) {
         // License agreement check
@@ -45,7 +46,8 @@
     }];
 }
 
-- (IBAction)connectWithPhoneNumber:(id)sender {
+- (IBAction)connectWithPhoneNumber:(id)__unused sender {
+    
     @weakify(self);
     [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL success) {
         // License agreement check
@@ -57,6 +59,7 @@
 }
 
 - (void)chainFacebookConnect {
+    
     @weakify(self);
     [[[QMFacebook connect] continueWithBlock:^id _Nullable(BFTask<NSString *> * _Nonnull task) {
         // Facebook connect
@@ -88,6 +91,7 @@
 }
 
 - (void)performDigitsLogin {
+    
     @weakify(self);
     [[Digits sharedInstance] authenticateWithViewController:nil configuration:[QMDigitsConfigurationFactory qmunicateThemeConfiguration] completion:^(DGTSession *session, NSError *error) {
         @strongify(self);

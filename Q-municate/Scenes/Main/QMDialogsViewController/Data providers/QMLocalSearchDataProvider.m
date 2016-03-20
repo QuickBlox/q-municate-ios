@@ -89,16 +89,7 @@ QMUsersServiceDelegate
 
 #pragma mark - QMContactListServiceDelegate
 
-- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
-    
-    self.contacts = [QMCore instance].allContactsSortedByFullName;
-    if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
-        
-        [self.delegate searchDataProvider:self didUpdateData:self.contacts];
-    }
-}
-
-- (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
+- (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
     
     self.contacts = [QMCore instance].allContactsSortedByFullName;
     if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
@@ -118,7 +109,7 @@ QMUsersServiceDelegate
 
 #pragma mark - QMUsersServiceDelegate
 
-- (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)user {
+- (void)usersService:(QMUsersService *)__unused usersService didAddUsers:(NSArray<QBUUser *> *)__unused user {
     
     self.contacts = [QMCore instance].allContactsSortedByFullName;
     if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
@@ -127,7 +118,7 @@ QMUsersServiceDelegate
     }
 }
 
-- (void)usersService:(QMUsersService *)usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)users {
+- (void)usersService:(QMUsersService *)__unused usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
     self.contacts = [QMCore instance].allContactsSortedByFullName;
     if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {

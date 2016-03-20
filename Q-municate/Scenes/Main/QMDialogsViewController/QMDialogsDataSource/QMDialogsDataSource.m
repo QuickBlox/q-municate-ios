@@ -16,7 +16,7 @@
 
 @implementation QMDialogsDataSource
 
-- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     
     return [QMDialogCell height];
 }
@@ -52,12 +52,12 @@
     return cell;
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+- (BOOL)tableView:(UITableView *)__unused tableView canEditRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     
     return YES;
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)__unused tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
@@ -67,14 +67,14 @@
         if (chatDialog.type == QBChatDialogTypeGroup) {
             
             chatDialog.occupantIDs = [QMChatUtils occupantsWithoutCurrentUser:chatDialog.occupantIDs];
-            [[[QMCore instance] leaveChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+            [[[QMCore instance] leaveChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
                 
                 [SVProgressHUD dismiss];
                 return nil;
             }];
         } else {
             // private and public group chats
-            [[[QMCore instance].chatService deleteDialogWithID:chatDialog.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+            [[[QMCore instance].chatService deleteDialogWithID:chatDialog.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
                 
                 [SVProgressHUD dismiss];
                 return nil;

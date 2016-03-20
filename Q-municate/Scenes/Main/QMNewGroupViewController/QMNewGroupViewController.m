@@ -94,18 +94,18 @@ QMTagFieldViewDelegate
         
         return [[QMCore instance].chatService sendSystemMessageAboutAddingToDialog:chatDialog toUsersIDs:occupantsIDs];
         
-    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         
         return [[QMCore instance].chatService sendNotificationMessageAboutAddingOccupants:occupantsIDs toDialog:chatDialog withNotificationText:kQMDialogsUpdateNotificationMessage];
     }];
 }
 
-- (IBAction)nameFieldDidChange:(UITextField *)sender {
+- (IBAction)nameFieldDidChange:(UITextField *)__unused sender {
     
     [self updateNextButtonState];
 }
 
-- (void)imageViewDidTap:(QMImageView *)imageView {
+- (void)imageViewDidTap:(QMImageView *)__unused imageView {
     
     [REActionSheet presentActionSheetInView:self.view configuration:^(REActionSheet *actionSheet) {
         
@@ -146,7 +146,7 @@ QMTagFieldViewDelegate
 
 #pragma mark - QMImagePickerResultHandler
 
-- (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo {
+- (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
     self.selectedImage = photo;
     [self.avatarImageView applyImage:photo];
@@ -154,14 +154,14 @@ QMTagFieldViewDelegate
 
 #pragma mark - QMGroupContactListViewControllerDelegate
 
-- (void)groupContactListViewController:(QMGroupContactListViewController *)groupContactListViewController didDeselectUser:(QBUUser *)deselectedUser {
+- (void)groupContactListViewController:(QMGroupContactListViewController *)__unused groupContactListViewController didDeselectUser:(QBUUser *)deselectedUser {
     
     [self.tagFieldView removeTagWithID:deselectedUser];
     
     [self updateNextButtonState];
 }
 
-- (void)groupContactListViewController:(QMGroupContactListViewController *)groupContactListViewController didSelectUser:(QBUUser *)selectedUser {
+- (void)groupContactListViewController:(QMGroupContactListViewController *)__unused groupContactListViewController didSelectUser:(QBUUser *)selectedUser {
     
     [self.tagFieldView addTag:selectedUser.fullName tagID:selectedUser animated:YES];
     [self.tagFieldView scrollToTextField:YES];
@@ -171,19 +171,19 @@ QMTagFieldViewDelegate
 
 #pragma mark - QMTagFieldViewDelegate
 
-- (void)tagFieldView:(QMTagFieldView *)tagFieldView didDeleteTagWithID:(id)tagID {
+- (void)tagFieldView:(QMTagFieldView *)__unused tagFieldView didDeleteTagWithID:(id)tagID {
     
     [self.groupContactListViewController deselectUser:tagID];
     
     [self updateNextButtonState];
 }
 
-- (void)tagFieldView:(QMTagFieldView *)tagFieldView didChangeHeight:(CGFloat)height {
+- (void)tagFieldView:(QMTagFieldView *)__unused tagFieldView didChangeHeight:(CGFloat)height {
     
     self.tagFieldViewHeightConstraint.constant = height;
 }
 
-- (void)tagFieldView:(QMTagFieldView *)tagFieldView didChangeText:(NSString *)text {
+- (void)tagFieldView:(QMTagFieldView *)__unused tagFieldView didChangeText:(NSString *)text {
     
     [self.groupContactListViewController performSearch:text];
 }

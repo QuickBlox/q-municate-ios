@@ -19,7 +19,7 @@
     
     BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
     
-    [QBRequest updateCurrentUser:updateParameters successBlock:^(QBResponse * _Nonnull response, QBUUser * _Nullable user) {
+    [QBRequest updateCurrentUser:updateParameters successBlock:^(QBResponse * _Nonnull __unused response, QBUUser * _Nullable user) {
         
         [source setResult:user];
     } errorBlock:^(QBResponse * _Nonnull response) {
@@ -93,7 +93,7 @@
     
     __block NSMutableArray *usersLoadingTasks = [NSMutableArray array];
     
-    void (^iterationBlock)(QBResponse *, NSArray *, NSSet *, BOOL *) = ^(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop) {
+    void (^iterationBlock)(QBResponse *, NSArray *, NSSet *, BOOL *) = ^(QBResponse *__unused response, NSArray *__unused dialogObjects, NSSet *__unused dialogsUsersIDs, BOOL *__unused stop) {
         
         [usersLoadingTasks addObject:[[QMCore instance].usersService getUsersWithIDs:[dialogsUsersIDs allObjects]]];
     };

@@ -102,14 +102,14 @@ QMSearchDataProviderDelegate
     }
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)__unused tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return [self.dataSource heightForRowAtIndexPath:indexPath];
 }
 
 #pragma mark - QMSearchDataProviderDelegate
 
-- (void)searchDataProvider:(QMSearchDataProvider *)searchDataProvider didUpdateData:(NSArray *)data {
+- (void)searchDataProvider:(QMSearchDataProvider *)__unused searchDataProvider didUpdateData:(NSArray *)data {
     
     // update selected users
     NSArray *enumerateSelectedUsers = self.dataSource.selectedUsers.allObjects;
@@ -129,7 +129,7 @@ QMSearchDataProviderDelegate
     [self.tableView reloadData];
 }
 
-- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)searchDataProvider {
+- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
     
     [self.tableView reloadData];
 }

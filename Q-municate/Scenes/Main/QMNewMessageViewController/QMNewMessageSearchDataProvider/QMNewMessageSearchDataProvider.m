@@ -74,7 +74,7 @@ QMUsersServiceDelegate
 
 #pragma mark - QMUsersServiceDelegate
 
-- (void)usersService:(QMUsersService *)usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)users {
+- (void)usersService:(QMUsersService *)__unused usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
     self.friends = [QMCore instance].friends;
     [self performSearch:self.cachedSearchText];
@@ -85,7 +85,7 @@ QMUsersServiceDelegate
     }
 }
 
-- (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)user {
+- (void)usersService:(QMUsersService *)__unused usersService didAddUsers:(NSArray<QBUUser *> *)__unused user {
     
     self.friends = [QMCore instance].friends;
     [self performSearch:self.cachedSearchText];
@@ -109,7 +109,7 @@ QMUsersServiceDelegate
     }
 }
 
-- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
+- (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
     
     self.friends = [QMCore instance].friends;
     [self performSearch:self.cachedSearchText];

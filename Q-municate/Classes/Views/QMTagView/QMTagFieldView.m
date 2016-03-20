@@ -616,12 +616,12 @@
     }
 }
 
-- (void)textFieldDidBecomeFirstResponder:(QMTextField *)textField {
+- (void)textFieldDidBecomeFirstResponder:(QMTextField *)__unused textField {
     
     [self setNeedsLayout];
 }
 
-- (void)textFieldDidResignFirstResponder:(QMTextField *)textField {
+- (void)textFieldDidResignFirstResponder:(QMTextField *)__unused textField {
     
     if (self.tagAnimations == nil) {
         

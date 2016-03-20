@@ -42,7 +42,8 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
     [self.webView loadRequest:request];
 }
 
-- (IBAction)done:(id)sender {
+- (IBAction)done:(id)__unused sender {
+    
     [self dismissViewControllerSuccess:NO];
 }
 
@@ -61,7 +62,7 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
     }];
 }
 
-- (IBAction)acceptLicense:(id)sender {
+- (IBAction)acceptLicense:(id)__unused sender {
     
     [[QMCore instance].currentProfile setUserAgreementAccepted:YES];
     [self dismissViewControllerSuccess:YES];
@@ -69,12 +70,13 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
 #pragma mark - UIWebViewDelegate
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
+- (void)webViewDidFinishLoad:(UIWebView *)__unused webView {
     
     [SVProgressHUD dismiss];
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+- (void)webView:(UIWebView *)__unused webView didFailLoadWithError:(NSError *)error {
+    
     [SVProgressHUD showErrorWithStatus:error.localizedDescription];
 }
 

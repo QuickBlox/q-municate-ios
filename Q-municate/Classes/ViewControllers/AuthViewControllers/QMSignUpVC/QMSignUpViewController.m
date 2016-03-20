@@ -74,22 +74,22 @@ QMImageViewDelegate
     }];
 }
 
-- (IBAction)chooseUserPicture:(id)sender {
+- (IBAction)chooseUserPicture:(id)__unused sender {
     
     [self avatarPressAction];
 }
 
-- (void)imageViewDidTap:(QMImageView *)imageView {
+- (void)imageViewDidTap:(QMImageView *)__unused imageView {
     
     [self avatarPressAction];
 }
 
-- (IBAction)pressentUserAgreement:(id)sender {
+- (IBAction)pressentUserAgreement:(id)__unused sender {
     
     [QMLicenseAgreement presentUserAgreementInViewController:self completion:nil];
 }
 
-- (IBAction)done:(id)sender {
+- (IBAction)done:(id)__unused sender {
     
     NSString *fullName = self.fullNameField.text;
     NSString *email = self.emailField.text;
@@ -150,7 +150,7 @@ QMImageViewDelegate
 
 #pragma mark - QMImagePickerResultHandler
 
-- (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo {
+- (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
     self.selectedImage = photo;
     [self.userImage applyImage:photo];

@@ -26,7 +26,7 @@
 
 #pragma mark - actions
 
-- (IBAction)pressResetPasswordBtn:(id)sender {
+- (IBAction)pressResetPasswordBtn:(id)__unused sender {
     
     NSString *email = self.emailTextField.text;
     

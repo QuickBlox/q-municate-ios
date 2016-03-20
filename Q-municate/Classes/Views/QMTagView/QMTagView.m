@@ -85,7 +85,7 @@ static UIImage *tokenBackgroundHighlightedImage() {
     
     [self setTitle:label forState:UIControlStateNormal];
     
-    self.preferredWidth = [label sizeWithFont:self.titleLabel.font].width + 10;
+    self.preferredWidth = [label sizeWithAttributes:@{NSFontAttributeName : self.titleLabel.font}].width + 10;
 }
 
 #pragma mark - Getters

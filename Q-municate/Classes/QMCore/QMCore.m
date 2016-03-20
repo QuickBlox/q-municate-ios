@@ -210,7 +210,7 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
 - (BFTask *)addUserToContactList:(QBUUser *)user {
     
     @weakify(self);
-    return [[[self.contactListService addUserToContactListRequest:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+    return [[[self.contactListService addUserToContactListRequest:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         @strongify(self);
         return [self.chatService createPrivateChatDialogWithOpponent:user];
     }] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
@@ -232,7 +232,7 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
 - (BFTask *)confirmAddContactRequest:(QBUUser *)user {
     
     @weakify(self);
-    return [[self.contactListService acceptContactRequest:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+    return [[self.contactListService acceptContactRequest:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         @strongify(self);
         return [self.chatService sendMessageAboutAcceptingContactRequest:YES toOpponentID:user.ID];
     }];
@@ -241,7 +241,7 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
 - (BFTask *)rejectAddContactRequest:(QBUUser *)user {
     
     @weakify(self);
-    return [[self.contactListService rejectContactRequest:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+    return [[self.contactListService rejectContactRequest:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         @strongify(self);
         return [self.chatService sendMessageAboutAcceptingContactRequest:NO toOpponentID:user.ID];
     }];
@@ -272,7 +272,7 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
 
 #pragma mark - QMContactListServiceDelegate
 
-- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
+- (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)contactList {
     
     [[QMContactListCache instance] insertOrUpdateContactListItemsWithContactList:contactList completion:nil];
     

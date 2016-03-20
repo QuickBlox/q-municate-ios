@@ -48,7 +48,7 @@
     //
     event.message = jsonString;
     
-    [QBRequest createEvent:event successBlock:^(QBResponse *response, NSArray *events) {
+    [QBRequest createEvent:event successBlock:^(QBResponse *__unused response, NSArray *__unused events) {
         
         [source setResult:nil];
     } errorBlock:^(QBResponse *response) {

@@ -135,7 +135,7 @@ static NSString * const kQMSoundManagerSettingKey = @"kQMSoundManagerSettingKey"
 
 #pragma mark - Did Receive Memory Warning Notification
 
-- (void)didReceiveMemoryWarningNotification:(NSNotification *)notification {
+- (void)didReceiveMemoryWarningNotification:(NSNotification *)__unused notification {
     
     [self.sounds removeAllObjects];
 }

@@ -22,7 +22,7 @@
 
 #pragma mark - UITableViewDataSource
 
-- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     
     return self.isEmpty ? [QMNoContactsCell height] : [QMContactCell height];
 }

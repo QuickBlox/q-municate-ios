@@ -13,7 +13,7 @@
 
 @implementation QMNewMessageSearchDataSource
 
-- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     
     return self.isEmpty ? [QMNoResultsCell height] : [QMContactCell height];
 }

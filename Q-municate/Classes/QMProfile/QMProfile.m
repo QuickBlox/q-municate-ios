@@ -121,8 +121,8 @@ NSString *const kQMAppExists = @"QMAppExists";
     BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
     
     @weakify(self);
-    [[[QMContent uploadJPEGImage:userImage progress:nil] continueWithBlock:^id _Nullable(BFTask<QBCBlob *> * _Nonnull task) {
-        //
+    [[[QMContent uploadJPEGImage:userImage progress:progress] continueWithBlock:^id _Nullable(BFTask<QBCBlob *> * _Nonnull task) {
+        
         if (!task.isFaulted) {
             QBUpdateUserParameters *userParams = [QBUpdateUserParameters new];
             userParams.avatarUrl = task.result.isPublic ? task.result.publicUrl : task.result.privateUrl;
@@ -132,7 +132,7 @@ NSString *const kQMAppExists = @"QMAppExists";
         }
         return nil;
     }] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
-        //
+        
         if (task.isFaulted) {
             [source setError:task.error];
         } else {
@@ -150,11 +150,11 @@ NSString *const kQMAppExists = @"QMAppExists";
     
     BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
     
-    [QBRequest resetUserPasswordWithEmail:email successBlock:^(QBResponse * _Nonnull response) {
-        //
+    [QBRequest resetUserPasswordWithEmail:email successBlock:^(QBResponse * _Nonnull __unused response) {
+        
         [source setResult:nil];
     } errorBlock:^(QBResponse * _Nonnull response) {
-        //
+        
         [source setError:response.error.error];
     }];
     

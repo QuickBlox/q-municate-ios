@@ -11,8 +11,8 @@
 IB_DESIGNABLE
 @interface QMBadgeView : UIView
 
-@property (assign, nonatomic) IBInspectable NSUInteger cornerRadius;
-@property (assign, nonatomic) IBInspectable NSUInteger borderWidth;
+@property (assign, nonatomic) IBInspectable CGFloat cornerRadius;
+@property (assign, nonatomic) IBInspectable CGFloat borderWidth;
 @property (assign, nonatomic) IBInspectable NSUInteger badgeNumber;
 @property (assign, nonatomic) IBInspectable BOOL hideOnZeroValue;
 

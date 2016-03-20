@@ -105,7 +105,7 @@ UISearchResultsUpdating
 
 #pragma mark - UITableViewDelegate
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)__unused tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return [self.searchDataSource heightForRowAtIndexPath:indexPath];
 }
@@ -140,13 +140,13 @@ UISearchResultsUpdating
 
 #pragma mark - UISearchControllerDelegate
 
-- (void)willPresentSearchController:(UISearchController *)searchController {
+- (void)willPresentSearchController:(UISearchController *)__unused searchController {
     
     self.tableView.dataSource = self.contactsSearchDataSource;
     [self.tableView reloadData];
 }
 
-- (void)willDismissSearchController:(UISearchController *)searchController {
+- (void)willDismissSearchController:(UISearchController *)__unused searchController {
     
     self.tableView.dataSource = self.dataSource;
     [self.tableView reloadData];
@@ -180,7 +180,7 @@ UISearchResultsUpdating
 
 #pragma mark - QMSearchDataProviderDelegate
 
-- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)searchDataProvider {
+- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
     
     if ([self.tableView.dataSource conformsToProtocol:@protocol(QMNewMessageSearchDataSourceProtocol)]) {
         
@@ -188,7 +188,7 @@ UISearchResultsUpdating
     }
 }
 
-- (void)searchDataProvider:(QMSearchDataProvider *)searchDataProvider didUpdateData:(NSArray *)data {
+- (void)searchDataProvider:(QMSearchDataProvider *)__unused searchDataProvider didUpdateData:(NSArray *)__unused data {
     
     if (![self.tableView.dataSource conformsToProtocol:@protocol(QMNewMessageSearchDataSourceProtocol)]) {
         
