@@ -9,8 +9,6 @@
 #import "AppDelegate.h"
 #import "SVProgressHUD.h"
 #import "REAlertView+QMSuccess.h"
-#import "QMSettingsManager.h"
-#import "QMAVCallManager.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "QMChatVC.h"
 #import "QMCore.h"
