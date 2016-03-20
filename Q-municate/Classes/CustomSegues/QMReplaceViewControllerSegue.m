@@ -12,15 +12,22 @@
 
 -(void)perform {
     
+    // Grab Variables for readability
     UIViewController *sourceViewController = (UIViewController*)[self sourceViewController];
     UIViewController *destinationController = (UIViewController*)[self destinationViewController];
     UINavigationController *navigationController = sourceViewController.navigationController;
-    [navigationController pushViewController:destinationController animated:YES];
     
-    // remove source view controller from  navigation stack
-    NSMutableArray *mutableVC = navigationController.viewControllers.mutableCopy;
-    [mutableVC removeObject:sourceViewController];
-    navigationController.viewControllers = mutableVC.copy;
+    if (navigationController.viewControllers != nil) {
+        
+        // Get a changeable copy of the stack
+        NSMutableArray *controllerStack = navigationController.viewControllers.mutableCopy;
+        
+        // Replace the source controller with the destination controller, wherever the source may be
+        [controllerStack replaceObjectAtIndex:[controllerStack indexOfObject:sourceViewController] withObject:destinationController];
+        
+        // Assign the updated stack with animation
+        [navigationController setViewControllers:controllerStack animated:YES];
+    }
 }
 
 @end
