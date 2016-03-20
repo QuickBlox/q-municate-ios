@@ -48,23 +48,25 @@ static UIImage *deselectedCheckImage() {
     return @"QMSelectableContactCell";
 }
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    
-    self.checked = NO;
-}
-
 - (void)setChecked:(BOOL)checked {
     
     _checked = checked;
-    
     self.checkmarkImageView.image = checked ? selectedCheckImage() : deselectedCheckImage();
-    CATransition *transition = [CATransition animation];
-    transition.duration = 0.25f;
-    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    transition.type = kCATransitionFade;
+}
+
+- (void)setChecked:(BOOL)checked animated:(BOOL)animated {
     
-    [self.checkmarkImageView.layer addAnimation:transition forKey:nil];
+    self.checked = checked;
+    
+    if (animated) {
+        
+        CATransition *transition = [CATransition animation];
+        transition.duration = 0.2f;
+        transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+        transition.type = kCATransitionFade;
+        
+        [self.checkmarkImageView.layer addAnimation:transition forKey:nil];
+    }
 }
 
 @end

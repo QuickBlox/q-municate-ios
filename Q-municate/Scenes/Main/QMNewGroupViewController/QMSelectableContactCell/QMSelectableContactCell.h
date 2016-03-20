@@ -12,4 +12,6 @@
 
 @property (assign, nonatomic) BOOL checked;
 
+- (void)setChecked:(BOOL)checked animated:(BOOL)animated;
+
 @end
