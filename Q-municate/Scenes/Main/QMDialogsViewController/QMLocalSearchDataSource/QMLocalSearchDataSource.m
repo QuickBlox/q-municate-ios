@@ -12,6 +12,7 @@
 #import "QMNoResultsCell.h"
 #import "QMCore.h"
 #import "QMLocalSearchDataProvider.h"
+#import <QMDateUtils.h>
 
 @interface QMLocalSearchDataSource ()
 
@@ -72,7 +73,7 @@
             [cell setTitle:chatDialog.name placeholderID:chatDialog.ID.hash avatarUrl:chatDialog.photo];
         }
         
-        NSString *time = [self.dateFormatter stringFromDate:chatDialog.updatedAt];
+        NSString *time = [QMDateUtils formattedShortDateString:chatDialog.updatedAt];
         [cell setTime:time];
         [cell setBody:chatDialog.lastMessageText];
         [cell setBadgeNumber:chatDialog.unreadMessagesCount];
@@ -121,21 +122,6 @@
             NSAssert(nil, @"Unexpected section");
             return nil;
     }
-}
-
-#pragma mark - Helpers
-
-- (NSDateFormatter *)dateFormatter {
-    
-    static dispatch_once_t onceToken;
-    static NSDateFormatter *_dateFormatter = nil;
-    dispatch_once(&onceToken, ^{
-        _dateFormatter = [[NSDateFormatter alloc] init];
-        _dateFormatter.dateFormat = @"dd.MM.yy";
-        
-    });
-    
-    return _dateFormatter;
 }
 
 @end

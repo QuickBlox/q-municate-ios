@@ -129,7 +129,7 @@ out here.</string>
                 <viewControllerPlaceholder storyboardName="Chat" id="GHP-Ej-YG9" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IiI-Bc-mlG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5470.5" y="-8669"/>
+            <point key="canvasLocation" x="-4570.5" y="-8999"/>
         </scene>
         <!--New Message-->
         <scene sceneID="I2X-12-W1l">
@@ -282,6 +282,7 @@ out here.</string>
                         <outlet property="nextButton" destination="LPH-Gt-XRe" id="OZo-8u-lVi"/>
                         <outlet property="tagFieldView" destination="Z3o-LG-wKC" id="mD3-gs-n7V"/>
                         <outlet property="tagFieldViewHeightConstraint" destination="qM2-8X-fCh" id="5aE-LW-UaW"/>
+                        <segue destination="GHP-Ej-YG9" kind="custom" identifier="SceneSegueChat" customClass="QMReplaceViewControllerSegue" id="io2-9H-ZNL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="awA-Ev-nni" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -396,6 +397,6 @@ out here.</string>
         <image name="users" width="20" height="20"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="YNN-gw-X19"/>
+        <segue reference="io2-9H-ZNL"/>
     </inferredMetricsTieBreakers>
 </document>

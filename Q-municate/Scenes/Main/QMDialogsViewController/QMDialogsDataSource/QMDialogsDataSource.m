@@ -10,6 +10,7 @@
 #import "QMDialogCell.h"
 #import "QMCore.h"
 #import "QMChatUtils.h"
+#import <QMDateUtils.h>
 
 #import <SVProgressHUD.h>
 
@@ -43,7 +44,7 @@
         [cell setTitle:chatDialog.name placeholderID:chatDialog.ID.hash avatarUrl:chatDialog.photo];
     }
     
-    NSString *time = [self.dateFormatter stringFromDate:chatDialog.updatedAt];
+    NSString *time = [QMDateUtils formattedShortDateString:chatDialog.updatedAt];
     [cell setTime:time];
     [cell setBody:chatDialog.lastMessageText];
     [cell setBadgeNumber:chatDialog.unreadMessagesCount];
@@ -85,21 +86,6 @@
 - (NSMutableArray *)items {
     
     return [[QMCore instance].chatService.dialogsMemoryStorage dialogsSortByLastMessageDateWithAscending:NO].mutableCopy;
-}
-
-#pragma mark - Helpers
-
-- (NSDateFormatter *)dateFormatter {
-    
-    static dispatch_once_t onceToken;
-    static NSDateFormatter *_dateFormatter = nil;
-    dispatch_once(&onceToken, ^{
-        _dateFormatter = [[NSDateFormatter alloc] init];
-        _dateFormatter.dateFormat = @"dd.MM.yy";
-        
-    });
-    
-    return _dateFormatter;
 }
 
 @end
