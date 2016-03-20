@@ -138,7 +138,7 @@ UISearchResultsUpdating
     [[[[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         @strongify(self);
         
-        if (task.isFaulted) {
+        if (task.isFaulted && task.error.code != -1009) {
             [[[QMCore instance] logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
                 
                 [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];

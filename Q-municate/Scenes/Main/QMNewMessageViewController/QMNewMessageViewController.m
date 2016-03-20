@@ -39,8 +39,6 @@ UISearchResultsUpdating
 
 @property (weak, nonatomic) BFTask *dialogCreationTask;
 
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *createGroupButton;
-
 @end
 
 @implementation QMNewMessageViewController
@@ -67,7 +65,6 @@ UISearchResultsUpdating
     
     // filling data source
     [self updateItemsFromContactList];
-    
     
     // Back button style for next in navigation stack view controllers
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"QM_STR_BACK", nil)
@@ -166,7 +163,7 @@ UISearchResultsUpdating
     NSArray *friends = [QMCore instance].friends;
     [self.dataSource replaceItems:friends];
     
-    self.createGroupButton.enabled = friends.count > 0;
+    self.navigationItem.rightBarButtonItem.enabled = friends.count > 0;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

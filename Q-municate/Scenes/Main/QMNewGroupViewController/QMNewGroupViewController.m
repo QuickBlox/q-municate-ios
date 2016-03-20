@@ -30,7 +30,6 @@ QMTagFieldViewDelegate
 @property (weak, nonatomic) IBOutlet QMImageView *avatarImageView;
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
 @property (weak, nonatomic) IBOutlet QMTagFieldView *tagFieldView;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *nextButton;
 
 @property (strong, nonatomic) UIImage *selectedImage;
 @property (weak, nonatomic) BFTask *dialogCreationTask;
@@ -44,7 +43,7 @@ QMTagFieldViewDelegate
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.nextButton.enabled = NO;
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     
     // setting up avatar image view
     self.avatarImageView.imageViewType = QMImageViewTypeCircle;
@@ -141,7 +140,7 @@ QMTagFieldViewDelegate
     
     BOOL nextAllowed = self.tagFieldView.tagIDs.count > 0 && self.nameTextField.text.length > 0;
     
-    self.nextButton.enabled = nextAllowed;
+    self.navigationItem.rightBarButtonItem.enabled = nextAllowed;
 }
 
 #pragma mark - QMImagePickerResultHandler

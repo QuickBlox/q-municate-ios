@@ -177,7 +177,6 @@ out here.</string>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="createGroupButton" destination="rxm-fp-eTY" id="BgB-wd-RMw"/>
                         <segue destination="GHP-Ej-YG9" kind="custom" identifier="SceneSegueChat" customClass="QMReplaceViewControllerSegue" id="YNN-gw-X19"/>
                     </connections>
                 </tableViewController>
@@ -197,7 +196,7 @@ out here.</string>
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1hh-Y8-HEi">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1hh-Y8-HEi">
                                 <rect key="frame" x="0.0" y="64" width="600" height="143"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HRg-cL-xkz">
@@ -251,7 +250,7 @@ out here.</string>
                                     <constraint firstItem="Z3o-LG-wKC" firstAttribute="bottom" secondItem="1hh-Y8-HEi" secondAttribute="bottom" priority="750" id="oK6-nt-LS6"/>
                                 </constraints>
                             </view>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="29q-nG-vSL">
+                            <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="29q-nG-vSL">
                                 <rect key="frame" x="0.0" y="207" width="600" height="393"/>
                                 <connections>
                                     <segue destination="DcJ-yr-2ZD" kind="embed" identifier="SceneSegueGroupContactList" id="1h6-fl-kkL"/>
@@ -279,7 +278,6 @@ out here.</string>
                     <connections>
                         <outlet property="avatarImageView" destination="fK4-Lm-e6Y" id="1eB-gj-dTf"/>
                         <outlet property="nameTextField" destination="1We-aI-4rQ" id="VaR-o6-NRV"/>
-                        <outlet property="nextButton" destination="LPH-Gt-XRe" id="OZo-8u-lVi"/>
                         <outlet property="tagFieldView" destination="Z3o-LG-wKC" id="mD3-gs-n7V"/>
                         <outlet property="tagFieldViewHeightConstraint" destination="qM2-8X-fCh" id="5aE-LW-UaW"/>
                         <segue destination="GHP-Ej-YG9" kind="custom" identifier="SceneSegueChat" customClass="QMReplaceViewControllerSegue" id="io2-9H-ZNL"/>
@@ -397,6 +395,6 @@ out here.</string>
         <image name="users" width="20" height="20"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="io2-9H-ZNL"/>
+        <segue reference="YNN-gw-X19"/>
     </inferredMetricsTieBreakers>
 </document>
