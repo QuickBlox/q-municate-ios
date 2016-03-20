@@ -10,5 +10,6 @@
 #define QMConstants_h
 
 static NSString *const kQMQBUUserFullNameKeyPathKey = @"fullName";
+static NSString *const kQMDialogsUpdateNotificationMessage = @"Notification message";
 
 #endif /* QMConstants_h */
