@@ -53,7 +53,10 @@ QMUsersServiceDelegate
         
         [dataSource.contacts removeAllObjects];
         [dataSource.dialogs removeAllObjects];
-        [self callDelegate];
+        if ([self.delegate respondsToSelector:@selector(searchDataProviderDidFinishDataFetching:)]) {
+            
+            [self.delegate searchDataProviderDidFinishDataFetching:self];
+        }
         return;
     }
     
@@ -76,17 +79,12 @@ QMUsersServiceDelegate
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            [self callDelegate];
+            if ([self.delegate respondsToSelector:@selector(searchDataProviderDidFinishDataFetching:)]) {
+                
+                [self.delegate searchDataProviderDidFinishDataFetching:self];
+            }
         });
     });
-}
-
-- (void)callDelegate {
-    
-    if ([self.delegate respondsToSelector:@selector(searchDataProviderDidFinishDataFetching:)]) {
-        
-        [self.delegate searchDataProviderDidFinishDataFetching:self];
-    }
 }
 
 #pragma mark - QMContactListServiceDelegate
@@ -94,16 +92,28 @@ QMUsersServiceDelegate
 - (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
     
     self.contacts = [QMCore instance].allContactsSortedByFullName;
+    if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
+        
+        [self.delegate searchDataProvider:self didUpdateData:self.contacts];
+    }
 }
 
 - (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
     
     self.contacts = [QMCore instance].allContactsSortedByFullName;
+    if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
+        
+        [self.delegate searchDataProvider:self didUpdateData:self.contacts];
+    }
 }
 
 - (void)contactListServiceDidLoadCache {
     
     self.contacts = [QMCore instance].allContactsSortedByFullName;
+    if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
+        
+        [self.delegate searchDataProvider:self didUpdateData:self.contacts];
+    }
 }
 
 #pragma mark - QMUsersServiceDelegate
@@ -111,11 +121,19 @@ QMUsersServiceDelegate
 - (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)user {
     
     self.contacts = [QMCore instance].allContactsSortedByFullName;
+    if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
+        
+        [self.delegate searchDataProvider:self didUpdateData:self.contacts];
+    }
 }
 
 - (void)usersService:(QMUsersService *)usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)users {
     
     self.contacts = [QMCore instance].allContactsSortedByFullName;
+    if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
+        
+        [self.delegate searchDataProvider:self didUpdateData:self.contacts];
+    }
 }
 
 @end

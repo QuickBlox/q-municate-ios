@@ -21,8 +21,6 @@
 
 <
 UITableViewDelegate,
-QMContactListServiceDelegate,
-QMUsersServiceDelegate,
 
 QMSearchProtocol,
 QMSearchDataProviderDelegate,
@@ -60,8 +58,6 @@ UISearchResultsUpdating
     
     // subscribing delegates
     self.tableView.delegate = self;
-    [[QMCore instance].contactListService addDelegate:self];
-    [[QMCore instance].usersService addDelegate:self];
     
     // search implementation
     [self configureSearch];
@@ -176,34 +172,6 @@ UISearchResultsUpdating
     }
 }
 
-#pragma mark - QMContactListServiceDelegate
-
-- (void)contactListServiceDidLoadCache {
-    
-    [self updateItemsFromContactList];
-    [self.tableView reloadData];
-}
-
-- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
-    
-    [self updateItemsFromContactList];
-    [self.tableView reloadData];
-}
-
-#pragma mark - QMUsersServiceDelegate
-
-- (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)user {
-    
-    [self updateItemsFromContactList];
-    [self.tableView reloadData];
-}
-
-- (void)usersService:(QMUsersService *)usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)users {
-    
-    [self updateItemsFromContactList];
-    [self.tableView reloadData];
-}
-
 #pragma mark - QMSearchDataProviderDelegate
 
 - (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)searchDataProvider {
@@ -214,9 +182,19 @@ UISearchResultsUpdating
     }
 }
 
+- (void)searchDataProvider:(QMSearchDataProvider *)searchDataProvider didUpdateData:(NSArray *)data {
+    
+    if (![self.tableView.dataSource conformsToProtocol:@protocol(QMNewMessageSearchDataSourceProtocol)]) {
+        
+        [self updateItemsFromContactList];
+    }
+    
+    [self.tableView reloadData];
+}
+
 #pragma mark - QMSearchProtocol
 
-- (QMSearchDataProvider *)searchDataSource {
+- (QMSearchDataSource *)searchDataSource {
     
     return (id)self.tableView.dataSource;
 }

@@ -17,8 +17,6 @@ QMContactListServiceDelegate,
 QMUsersServiceDelegate
 >
 
-@property (strong, nonatomic) NSArray *friends;
-
 @property (strong, nonatomic) NSString *cachedSearchText;
 
 @end
@@ -41,11 +39,6 @@ QMUsersServiceDelegate
 
 - (void)performSearch:(NSString *)searchText {
     
-    if (![self.dataSource conformsToProtocol:@protocol(QMNewMessageSearchDataSourceProtocol)]) {
-        
-        return;
-    }
-    
     if (![_cachedSearchText isEqualToString:searchText]) {
         
         _cachedSearchText = searchText;
@@ -54,7 +47,10 @@ QMUsersServiceDelegate
     if (searchText.length == 0) {
         
         [self.dataSource replaceItems:self.friends];
-        [self callDelegate];
+        if ([self.delegate respondsToSelector:@selector(searchDataProviderDidFinishDataFetching:)]) {
+            
+            [self.delegate searchDataProviderDidFinishDataFetching:self];
+        }
         return;
     }
     
@@ -68,17 +64,12 @@ QMUsersServiceDelegate
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            [self callDelegate];
+            if ([self.delegate respondsToSelector:@selector(searchDataProviderDidFinishDataFetching:)]) {
+                
+                [self.delegate searchDataProviderDidFinishDataFetching:self];
+            }
         });
     });
-}
-
-- (void)callDelegate {
-    
-    if ([self.delegate respondsToSelector:@selector(searchDataProviderDidFinishDataFetching:)]) {
-        
-        [self.delegate searchDataProviderDidFinishDataFetching:self];
-    }
 }
 
 #pragma mark - QMUsersServiceDelegate
@@ -87,12 +78,22 @@ QMUsersServiceDelegate
     
     self.friends = [QMCore instance].friends;
     [self performSearch:self.cachedSearchText];
+    
+    if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
+        
+        [self.delegate searchDataProvider:self didUpdateData:self.friends];
+    }
 }
 
 - (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)user {
     
     self.friends = [QMCore instance].friends;
     [self performSearch:self.cachedSearchText];
+    
+    if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
+        
+        [self.delegate searchDataProvider:self didUpdateData:self.friends];
+    }
 }
 
 #pragma mark - QMContactListDelegate
@@ -101,12 +102,22 @@ QMUsersServiceDelegate
     
     self.friends = [QMCore instance].friends;
     [self performSearch:self.cachedSearchText];
+    
+    if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
+        
+        [self.delegate searchDataProvider:self didUpdateData:self.friends];
+    }
 }
 
 - (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
     
     self.friends = [QMCore instance].friends;
     [self performSearch:self.cachedSearchText];
+    
+    if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
+        
+        [self.delegate searchDataProvider:self didUpdateData:self.friends];
+    }
 }
 
 @end

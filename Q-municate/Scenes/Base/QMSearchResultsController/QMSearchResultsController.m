@@ -19,8 +19,6 @@
 
 <
 UITableViewDelegate,
-QMContactListServiceDelegate,
-QMUsersServiceDelegate,
 QMChatServiceDelegate,
 QMChatConnectionDelegate
 >
@@ -36,8 +34,6 @@ QMChatConnectionDelegate
         [self registerNibs];
         
         [[QMCore instance].chatService addDelegate:self];
-        [[QMCore instance].contactListService addDelegate:self];
-        [[QMCore instance].usersService addDelegate:self];
     }
     
     return self;
@@ -62,6 +58,11 @@ QMChatConnectionDelegate
 #pragma mark - QMSearchDataProviderDelegate
 
 - (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)searchDataProvider {
+    
+    [self.tableView reloadData];
+}
+
+- (void)searchDataProvider:(QMSearchDataProvider *)searchDataProvider didUpdateData:(NSArray *)data {
     
     [self.tableView reloadData];
 }
@@ -142,30 +143,6 @@ QMChatConnectionDelegate
         
         [self.tableView reloadData];
     }
-}
-
-#pragma mark - QMContactListServiceDelegate
-
-- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
-    
-    [self.tableView reloadData];
-}
-
-- (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
-    
-    [self.tableView reloadData];
-}
-
-- (void)contactListServiceDidLoadCache {
-    
-    [self.tableView reloadData];
-}
-
-#pragma mark - QMUsersServiceDelegate
-
-- (void)usersService:(QMUsersService *)usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)users {
-    
-    [self.tableView reloadData];
 }
 
 @end

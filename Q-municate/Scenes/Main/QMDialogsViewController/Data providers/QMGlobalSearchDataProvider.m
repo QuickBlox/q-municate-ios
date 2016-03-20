@@ -51,7 +51,10 @@ const NSUInteger kQMUsersPageLimit = 50;
     if (searchText.length < kQMGlobalSearchCharsMin) {
         
         [self.dataSource.items removeAllObjects];
-        [self callDelegate];
+        if ([self.delegate respondsToSelector:@selector(searchDataProviderDidFinishDataFetching:)]) {
+            
+            [self.delegate searchDataProviderDidFinishDataFetching:self];
+        }
         return;
     }
     
@@ -97,19 +100,14 @@ const NSUInteger kQMUsersPageLimit = 50;
                 [self.dataSource replaceItems:sortedUsers];
             }
             
-            [self callDelegate];
+            if ([self.delegate respondsToSelector:@selector(searchDataProviderDidFinishDataFetching:)]) {
+                
+                [self.delegate searchDataProviderDidFinishDataFetching:self];
+            }
         }
         
         return nil;
     } cancellationToken:self.globalSearchCancellationTokenSource.token];
-}
-
-- (void)callDelegate {
-    
-    if ([self.delegate respondsToSelector:@selector(searchDataProviderDidFinishDataFetching:)]) {
-        
-        [self.delegate searchDataProviderDidFinishDataFetching:self];
-    }
 }
 
 #pragma mark - Pagination

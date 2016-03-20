@@ -15,6 +15,7 @@
 @protocol QMSearchDataProviderDelegate <NSObject>
 
 - (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)searchDataProvider;
+- (void)searchDataProvider:(QMSearchDataProvider *)searchDataProvider didUpdateData:(NSArray *)data;
 
 @end
 
