@@ -14,6 +14,7 @@
 
 - (void)groupContactListViewController:(QMGroupContactListViewController *)groupContactListViewController didSelectUser:(QBUUser *)selectedUser;
 - (void)groupContactListViewController:(QMGroupContactListViewController *)groupContactListViewController didDeselectUser:(QBUUser *)deselectedUser;
+- (void)groupContactListViewController:(QMGroupContactListViewController *)groupContactListViewController didScrollContactList:(UIScrollView *)scrollView;
 
 @end
 

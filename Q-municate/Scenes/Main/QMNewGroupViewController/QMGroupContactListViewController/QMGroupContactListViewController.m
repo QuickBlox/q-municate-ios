@@ -17,6 +17,7 @@
 
 <
 UITableViewDelegate,
+UIScrollViewDelegate,
 QMSearchDataProviderDelegate
 >
 
@@ -105,6 +106,24 @@ QMSearchDataProviderDelegate
 - (CGFloat)tableView:(UITableView *)__unused tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return [self.dataSource heightForRowAtIndexPath:indexPath];
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    
+    if ([self.delegate respondsToSelector:@selector(groupContactListViewController:didScrollContactList:)]) {
+        
+        [self.delegate groupContactListViewController:self didScrollContactList:scrollView];
+    }
+}
+
+- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
+    
+    if ([self.delegate respondsToSelector:@selector(groupContactListViewController:didScrollContactList:)]) {
+        
+        [self.delegate groupContactListViewController:self didScrollContactList:scrollView];
+    }
 }
 
 #pragma mark - QMSearchDataProviderDelegate

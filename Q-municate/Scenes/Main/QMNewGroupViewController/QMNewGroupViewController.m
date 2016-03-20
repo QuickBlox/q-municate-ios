@@ -169,6 +169,11 @@ QMTagFieldViewDelegate
     [self updateNextButtonState];
 }
 
+- (void)groupContactListViewController:(QMGroupContactListViewController *)__unused groupContactListViewController didScrollContactList:(UIScrollView *)__unused scrollView {
+    
+    [self.view endEditing:YES];
+}
+
 #pragma mark - QMTagFieldViewDelegate
 
 - (void)tagFieldView:(QMTagFieldView *)__unused tagFieldView didDeleteTagWithID:(id)tagID {
