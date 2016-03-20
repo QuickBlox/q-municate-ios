@@ -85,7 +85,7 @@
 - (void)setHighlighted:(BOOL)highlighted {
     [super setHighlighted:highlighted];
     
-    [UIView animateWithDuration:0.2 animations:^{
+    [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
         
         self.layer.opacity = highlighted ? 0.6f : 1.0f;
         

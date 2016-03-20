@@ -11,5 +11,6 @@
 
 static NSString *const kQMQBUUserFullNameKeyPathKey = @"fullName";
 static NSString *const kQMDialogsUpdateNotificationMessage = @"Notification message";
+static const CGFloat kQMBaseAnimationDuration = 0.2f;
 
 #endif /* QMConstants_h */

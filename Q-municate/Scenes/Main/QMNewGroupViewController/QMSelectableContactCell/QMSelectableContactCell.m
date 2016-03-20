@@ -61,7 +61,7 @@ static UIImage *deselectedCheckImage() {
     if (animated) {
         
         CATransition *transition = [CATransition animation];
-        transition.duration = 0.2f;
+        transition.duration = kQMBaseAnimationDuration;
         transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
         transition.type = kCATransitionFade;
         

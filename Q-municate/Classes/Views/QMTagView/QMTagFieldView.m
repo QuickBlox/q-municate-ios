@@ -130,7 +130,7 @@
         }
         
         @weakify(self);
-        [UIView animateWithDuration:0.2 animations:^{
+        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
             @strongify(self);
             
             for (QMTagView *tagView in enumerateTagsList) {
@@ -235,7 +235,7 @@
             [tagView resignFirstResponder];
         }
         
-        [UIView animateWithDuration:0.2 animations:^{
+        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
             
             tagView.transform = CGAffineTransformMakeScale(0.1f, 0.1f);
             tagView.alpha = 0.0f;
@@ -393,7 +393,7 @@
         self.textField.alpha = 0.0f;
         
         @weakify(self);
-        [UIView animateWithDuration:0.2 animations:^{
+        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
             @strongify(self);
             self.textField.alpha = 1.0f;
         }];
@@ -468,7 +468,7 @@
     else {
         
         @weakify(self);
-        [UIView animateWithDuration:0.2 animations:^{
+        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
             @strongify(self);
             [self.scrollView setContentOffset:contentOffset animated:NO];
         }];
