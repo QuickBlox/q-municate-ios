@@ -519,7 +519,12 @@
     }
     
     [tagView removeFromSuperview];
+    
+    // disabling scrolling before performing becomeFirstResponder
+    // to get rid of unwanted behaviour of content offset resetting
+    self.scrollView.scrollEnabled = NO;
     [self.textField becomeFirstResponder];
+    self.scrollView.scrollEnabled = YES;
     
     [self setNeedsLayout];
     
