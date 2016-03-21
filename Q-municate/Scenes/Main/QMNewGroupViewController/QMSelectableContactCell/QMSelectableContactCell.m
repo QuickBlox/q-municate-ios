@@ -56,7 +56,7 @@ static UIImage *deselectedCheckImage() {
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-//    
+    
     self.checkmarkImageView.image = deselectedCheckImage();
 }
 
