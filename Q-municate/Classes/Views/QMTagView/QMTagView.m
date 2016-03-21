@@ -102,16 +102,15 @@ static UIImage *tokenBackgroundHighlightedImage() {
     return YES;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wundeclared-selector"
-
 - (BOOL)becomeFirstResponder {
     
     if ([super becomeFirstResponder]) {
         
-        if ([self.superview.superview respondsToSelector:@selector(highlightTag:)]) {
+        self.selected = YES;
+        
+        if ([self.delegate respondsToSelector:@selector(tagViewDidBecomeFirstResponder:)]) {
             
-            [self.superview.superview performSelector:@selector(highlightTag:) withObject:self];
+            [self.delegate tagViewDidBecomeFirstResponder:self];
         }
         
         return YES;
@@ -124,9 +123,11 @@ static UIImage *tokenBackgroundHighlightedImage() {
     
     if ([super resignFirstResponder]) {
         
-        if ([self.superview.superview respondsToSelector:@selector(unhighlightTag:)]) {
+        self.selected = NO;
+        
+        if ([self.delegate respondsToSelector:@selector(tagViewDidResignFirstResponder:)]) {
             
-            [self.superview.superview performSelector:@selector(unhighlightTag:) withObject:self];
+            [self.delegate tagViewDidResignFirstResponder:self];
         }
         
         return YES;
@@ -139,13 +140,11 @@ static UIImage *tokenBackgroundHighlightedImage() {
 
 - (void)deleteBackward {
     
-    if ([self.superview.superview respondsToSelector:@selector(deleteTag:)]) {
+    if ([self.delegate respondsToSelector:@selector(tagViewDidPressBackspace:)]) {
         
-        [self.superview.superview performSelector:@selector(deleteTag:) withObject:self];
+        [self.delegate tagViewDidPressBackspace:self];
     }
 }
-
-#pragma clang diagnostic pop
 
 - (BOOL)hasText {
     

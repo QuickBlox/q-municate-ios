@@ -24,7 +24,7 @@
 
 @end
 
-@interface QMTagFieldView () <QMTextFieldDelegate>
+@interface QMTagFieldView () <QMTextFieldDelegate, QMTagViewDelegate, UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) NSMutableDictionary *tagAnimations;
 @property (strong, nonatomic) NSMutableArray *tagsList;
@@ -83,6 +83,7 @@
     
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapRecognized:)];
     tapRecognizer.cancelsTouchesInView = NO;
+    tapRecognizer.delegate = self;
     [_scrollView addGestureRecognizer:tapRecognizer];
     
     _textField = [[QMTextField alloc] initWithFrame:CGRectMake(0, 0, 10, 42)];
@@ -187,6 +188,7 @@
     QMTagView *tagView = [[QMTagView alloc] initWithFrame:CGRectMake(0, 0, 20, 28)];
     tagView.label = title;
     tagView.tagID = tagID;
+    tagView.delegate = self;
     
     [self.tagsList addObject:tagView];
     [self.scrollView addSubview:tagView];
@@ -475,9 +477,9 @@
     }
 }
 
-#pragma mark - External UI actions
+#pragma mark - QMTagViewDelegate
 
-- (void)highlightTag:(QMTagView *)tagView {
+- (void)tagViewDidBecomeFirstResponder:(QMTagView *)tagView {
     
     NSArray *enumerateTagsList = self.tagsList.copy;
     for (QMTagView *view in enumerateTagsList) {
@@ -489,14 +491,10 @@
         }
     }
     
-    tagView.selected = YES;
-    
     [self setNeedsLayout];
 }
 
-- (void)unhighlightTag:(QMTagView *)tagView {
-    
-    tagView.selected = NO;
+- (void)tagViewDidResignFirstResponder:(QMTagView *)__unused tagView {
     
     if (self.tagAnimations == nil) {
         
@@ -506,15 +504,15 @@
     [self setNeedsLayout];
 }
 
-- (void)deleteTag:(QMTagView *)tagView {
+- (void)tagViewDidPressBackspace:(QMTagView *)tagView {
     
     NSInteger index = -1;
     NSArray *enumerateTagsList = self.tagsList.copy;
     for (QMTagView *view in enumerateTagsList) {
         index++;
         
-        if (view == tagView)
-        {
+        if (view == tagView) {
+            
             [self.tagsList removeObjectAtIndex:index];
             break;
         }
@@ -639,6 +637,15 @@
         
         [self.textField becomeFirstResponder];
     }
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)__unused gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    // disabling touch gesture trigger for every single tag view
+    BOOL isTagView = [touch.view isKindOfClass:[QMTagView class]];
+    
+    return !isTagView;
 }
 
 @end

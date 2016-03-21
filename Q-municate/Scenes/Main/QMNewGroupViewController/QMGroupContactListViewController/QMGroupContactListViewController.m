@@ -59,12 +59,15 @@ QMSearchDataProviderDelegate
     
     [self.dataSource deselectUser:user];
     
-    // perform animated check if cell is visible
-    for (QMSelectableContactCell *cell in self.tableView.visibleCells) {
+    // perform animated check if cell is visible and data soruce is not empty
+    if (!self.dataSource.isEmpty) {
         
-        if (cell.userID == user.ID) {
+        for (QMSelectableContactCell *cell in self.tableView.visibleCells) {
             
-            [cell setChecked:NO animated:YES];
+            if (cell.userID == user.ID) {
+                
+                [cell setChecked:NO animated:YES];
+            }
         }
     }
 }
