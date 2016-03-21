@@ -14,8 +14,12 @@ static UIImage *tokenBackgroundImage() {
     
     if (image == nil) {
         
-        UIImage *rawImage = [UIImage imageNamed:@"TokenBackground"];
-        image = [rawImage stretchableImageWithLeftCapWidth:(int)(rawImage.size.width / 2) topCapHeight:0];
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            
+            UIImage *rawImage = [UIImage imageNamed:@"TokenBackground"];
+            image = [rawImage stretchableImageWithLeftCapWidth:(NSInteger)(rawImage.size.width / 2) topCapHeight:0];
+        });
     }
     
     return image;
@@ -26,8 +30,12 @@ static UIImage *tokenBackgroundHighlightedImage() {
     static UIImage *image = nil;
     if (image == nil) {
         
-        UIImage *rawImage = [UIImage imageNamed:@"TokenBackground_Highlighted"];
-        image = [rawImage stretchableImageWithLeftCapWidth:(int)(rawImage.size.width / 2) topCapHeight:0];
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            
+            UIImage *rawImage = [UIImage imageNamed:@"TokenBackground_Highlighted"];
+            image = [rawImage stretchableImageWithLeftCapWidth:(NSInteger)(rawImage.size.width / 2) topCapHeight:0];
+        });
     }
     
     return image;
@@ -81,11 +89,14 @@ static UIImage *tokenBackgroundHighlightedImage() {
 
 - (void)setLabel:(NSString *)label {
     
-    _label = label;
-    
-    [self setTitle:label forState:UIControlStateNormal];
-    
-    self.preferredWidth = [label sizeWithAttributes:@{NSFontAttributeName : self.titleLabel.font}].width + 10;
+    if (![_label isEqualToString:label]) {
+        
+        _label = label;
+        
+        [self setTitle:label forState:UIControlStateNormal];
+        
+        self.preferredWidth = [label sizeWithAttributes:@{NSFontAttributeName : self.titleLabel.font}].width + 10;
+    }
 }
 
 #pragma mark - Getters

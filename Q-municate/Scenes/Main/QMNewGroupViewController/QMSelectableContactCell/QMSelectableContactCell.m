@@ -15,8 +15,11 @@ static UIImage *selectedCheckImage() {
     
     if (image == nil) {
         
-        UIImage *rawImage = [UIImage imageNamed:@"checkmark_selected"];
-        image = [rawImage stretchableImageWithLeftCapWidth:(int)(rawImage.size.width / 2) topCapHeight:0];
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            
+            image = [UIImage imageNamed:@"checkmark_selected"];
+        });
     }
     
     return image;
@@ -28,8 +31,11 @@ static UIImage *deselectedCheckImage() {
     
     if (image == nil) {
         
-        UIImage *rawImage = [UIImage imageNamed:@"checkmark_deselected"];
-        image = [rawImage stretchableImageWithLeftCapWidth:(int)(rawImage.size.width / 2) topCapHeight:0];
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            
+            image = [UIImage imageNamed:@"checkmark_deselected"];
+        });
     }
     
     return image;
@@ -48,24 +54,36 @@ static UIImage *deselectedCheckImage() {
     return @"QMSelectableContactCell";
 }
 
+- (void)awakeFromNib {
+    [super awakeFromNib];
+//    
+    self.checkmarkImageView.image = deselectedCheckImage();
+}
+
 - (void)setChecked:(BOOL)checked {
     
-    _checked = checked;
-    self.checkmarkImageView.image = checked ? selectedCheckImage() : deselectedCheckImage();
+    if (_checked != checked) {
+        
+        _checked = checked;
+        self.checkmarkImageView.image = checked ? selectedCheckImage() : deselectedCheckImage();
+    }
 }
 
 - (void)setChecked:(BOOL)checked animated:(BOOL)animated {
     
-    self.checked = checked;
-    
-    if (animated) {
+    if (_checked != checked) {
         
-        CATransition *transition = [CATransition animation];
-        transition.duration = kQMBaseAnimationDuration;
-        transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-        transition.type = kCATransitionFade;
+        self.checked = checked;
         
-        [self.checkmarkImageView.layer addAnimation:transition forKey:nil];
+        if (animated) {
+            
+            CATransition *transition = [CATransition animation];
+            transition.duration = kQMBaseAnimationDuration;
+            transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+            transition.type = kCATransitionFade;
+            
+            [self.checkmarkImageView.layer addAnimation:transition forKey:nil];
+        }
     }
 }
 

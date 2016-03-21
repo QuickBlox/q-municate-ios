@@ -333,7 +333,7 @@ out here.</string>
                                             <color key="textColor" red="0.56078431370000004" green="0.5568627451" blue="0.58039215690000001" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark_deselected" translatesAutoresizingMaskIntoConstraints="NO" id="3L6-1F-n0w">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3L6-1F-n0w">
                                             <rect key="frame" x="16" y="15" width="20" height="20"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="20" id="Y7S-ix-qpE"/>
@@ -386,7 +386,6 @@ out here.</string>
         </scene>
     </scenes>
     <resources>
-        <image name="checkmark_deselected" width="20" height="20"/>
         <image name="group_placeholder" width="60" height="60"/>
         <image name="ic_new" width="23" height="23"/>
         <image name="ic_settings" width="23" height="23"/>

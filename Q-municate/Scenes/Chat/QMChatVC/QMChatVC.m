@@ -373,8 +373,10 @@ AGEmojiKeyboardViewDelegate
         return;
     }
     
+    @weakify(self);
     [REActionSheet presentActionSheetInView:self.view configuration:^(REActionSheet *actionSheet) {
         
+        @strongify(self);
         [actionSheet addButtonWithTitle:NSLocalizedString(@"QM_STR_TAKE_IMAGE", nil) andActionBlock:^{
             [QMImagePicker takePhotoInViewController:self resultHandler:self];
         }];
