@@ -880,7 +880,7 @@ AGEmojiKeyboardViewDelegate
     [self.chatDialog requestOnlineUsersWithCompletionBlock:^(NSMutableArray<NSNumber *> * _Nullable onlineUsers, NSError * _Nullable __unused error) {
         @strongify(self);
         
-        if (error != nil) {
+        if (error == nil) {
             
             [self.onlineTitleView setStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_GROUP_CHAT_STATUS_STRING", nil), self.chatDialog.occupantIDs.count, onlineUsers.count]];
         }
