@@ -13,14 +13,14 @@
 
 @implementation QMNewMessageSearchDataSource
 
-- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     
-    return self.sectionIndexTitles.count > 0 ? [QMContactCell height] : [QMNoResultsCell height];
+    return self.isEmpty ? [QMNoResultsCell height] : [QMContactCell height];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (self.sectionIndexTitles.count == 0) {
+    if (self.isEmpty) {
         
         QMNoResultsCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMNoResultsCell cellIdentifier] forIndexPath:indexPath];
         tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -30,10 +30,7 @@
     tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     QMContactCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMContactCell cellIdentifier] forIndexPath:indexPath];
     
-    NSString *sectionKey = self.sectionIndexTitles[indexPath.section];
-    NSArray *contacts = self.alphabetizedDictionary[sectionKey];
-    QBUUser *user = contacts[indexPath.row];
-    
+    QBUUser *user = [self userAtIndexPath:indexPath];
     [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
     
     QBContactListItem *item = [[QMCore instance].contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];

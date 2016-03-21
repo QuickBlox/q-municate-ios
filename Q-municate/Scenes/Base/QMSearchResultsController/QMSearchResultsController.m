@@ -19,8 +19,6 @@
 
 <
 UITableViewDelegate,
-QMContactListServiceDelegate,
-QMUsersServiceDelegate,
 QMChatServiceDelegate,
 QMChatConnectionDelegate
 >
@@ -36,8 +34,6 @@ QMChatConnectionDelegate
         [self registerNibs];
         
         [[QMCore instance].chatService addDelegate:self];
-        [[QMCore instance].contactListService addDelegate:self];
-        [[QMCore instance].usersService addDelegate:self];
     }
     
     return self;
@@ -61,7 +57,12 @@ QMChatConnectionDelegate
 
 #pragma mark - QMSearchDataProviderDelegate
 
-- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)searchDataProvider {
+- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
+    
+    [self.tableView reloadData];
+}
+
+- (void)searchDataProvider:(QMSearchDataProvider *)__unused searchDataProvider didUpdateData:(NSArray *)__unused data {
     
     [self.tableView reloadData];
 }
@@ -73,7 +74,7 @@ QMChatConnectionDelegate
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)__unused tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return [self.searchDataSource heightForRowAtIndexPath:indexPath];
 }
@@ -96,7 +97,7 @@ QMChatConnectionDelegate
 
 #pragma mark - QMChatServiceDelegate
 
-- (void)chatService:(QMChatService *)chatService didAddMessagesToMemoryStorage:(NSArray<QBChatMessage *> *)messages forDialogID:(NSString *)dialogID {
+- (void)chatService:(QMChatService *)__unused chatService didAddMessagesToMemoryStorage:(NSArray<QBChatMessage *> *)__unused messages forDialogID:(NSString *)__unused dialogID {
     
     if ([self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
         
@@ -104,7 +105,7 @@ QMChatConnectionDelegate
     }
 }
 
-- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+- (void)chatService:(QMChatService *)__unused chatService didAddMessageToMemoryStorage:(QBChatMessage *)__unused message forDialogID:(NSString *)__unused dialogID {
     
     if ([self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
         
@@ -112,7 +113,7 @@ QMChatConnectionDelegate
     }
 }
 
-- (void)chatService:(QMChatService *)chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)chatDialogID {
+- (void)chatService:(QMChatService *)__unused chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)__unused chatDialogID {
     
     if ([self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
         
@@ -120,7 +121,7 @@ QMChatConnectionDelegate
     }
 }
 
-- (void)chatService:(QMChatService *)chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog {
+- (void)chatService:(QMChatService *)__unused chatService didReceiveNotificationMessage:(QBChatMessage *)__unused message createDialog:(QBChatDialog *)__unused dialog {
     
     if ([self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
         
@@ -128,7 +129,7 @@ QMChatConnectionDelegate
     }
 }
 
-- (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
+- (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)__unused chatDialog {
     
     if ([self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
         
@@ -136,36 +137,12 @@ QMChatConnectionDelegate
     }
 }
 
-- (void)chatService:(QMChatService *)chatService didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)dialogs {
+- (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)__unused dialogs {
     
     if ([self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
         
         [self.tableView reloadData];
     }
-}
-
-#pragma mark - QMContactListServiceDelegate
-
-- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
-    
-    [self.tableView reloadData];
-}
-
-- (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
-    
-    [self.tableView reloadData];
-}
-
-- (void)contactListServiceDidLoadCache {
-    
-    [self.tableView reloadData];
-}
-
-#pragma mark - QMUsersServiceDelegate
-
-- (void)usersService:(QMUsersService *)usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)users {
-    
-    [self.tableView reloadData];
 }
 
 @end

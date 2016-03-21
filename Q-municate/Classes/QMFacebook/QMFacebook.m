@@ -27,21 +27,27 @@ NSString *const kQMDataKey = @"data";
     
     if (!session) {
         FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
-        [loginManager
-         logInWithReadPermissions: @[@"email", @"public_profile", @"user_friends"]
-         handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-             if (error) {
-                 [source setError:error];
-             } else if (result.isCancelled) {
-                 
-                 [source cancel];
-                 
-             } else {
-                 [source setResult:result.token.tokenString];
-             }
-         }];
+        [loginManager logInWithReadPermissions:@[@"email", @"public_profile", @"user_friends"]
+                            fromViewController:nil
+                                       handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+                                           
+                                           if (error) {
+                                               
+                                               [source setError:error];
+                                           }
+                                           else if (result.isCancelled) {
+                                               
+                                               [source cancel];
+                                               
+                                           }
+                                           else {
+                                               
+                                               [source setResult:result.token.tokenString];
+                                           }
+                                       }];
     }
     else {
+        
         [source setResult:session.tokenString];
     }
     
@@ -53,7 +59,7 @@ NSString *const kQMDataKey = @"data";
     if ([FBSDKAccessToken currentAccessToken]) {
         FBSDKGraphRequest *friendsRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/friends" parameters:nil];
         
-        [friendsRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+        [friendsRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *__unused connection, id result, NSError *error) {
             NSArray *myFriends = error ? @[] : [result objectForKey:kQMDataKey];
             if (completion) completion(myFriends);
         }];
@@ -91,7 +97,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     
     FBSDKGraphRequest *friendsRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
     
-    [friendsRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    [friendsRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *__unused connection, id result, NSError *error) {
         //
         error != nil ? [source setError:error] : [source setResult:result];
     }];

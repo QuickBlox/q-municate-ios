@@ -19,7 +19,7 @@
 
 @implementation QMGlobalSearchDataSource
 
-- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     
     return self.items.count > 0 ? [QMSearchCell height] : [QMNoResultsCell height];
 }
@@ -55,7 +55,7 @@
     return cell;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)__unused tableView numberOfRowsInSection:(NSInteger)__unused section {
     
     return self.items.count > 0 ? self.items.count : 1;
 }
@@ -69,7 +69,7 @@
 
 #pragma mark - QMContactCellDelegate
 
-- (void)searchCell:(QMSearchCell *)searchCell didTapAddButton:(UIButton *)sender {
+- (void)searchCell:(QMSearchCell *)searchCell didTapAddButton:(UIButton *)__unused sender {
     
     if (self.addUserTask) {
         
@@ -81,7 +81,7 @@
     QBContactListItem *contactListItem = searchCell.contactListItem;
     
     @weakify(self);
-    BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull task) {
+    BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull __unused task) {
         @strongify(self);
         self.addUserTask = nil;
         return nil;

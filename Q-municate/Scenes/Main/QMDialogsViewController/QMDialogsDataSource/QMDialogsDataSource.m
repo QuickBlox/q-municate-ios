@@ -10,12 +10,13 @@
 #import "QMDialogCell.h"
 #import "QMCore.h"
 #import "QMChatUtils.h"
+#import <QMDateUtils.h>
 
 #import <SVProgressHUD.h>
 
 @implementation QMDialogsDataSource
 
-- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     
     return [QMDialogCell height];
 }
@@ -43,7 +44,7 @@
         [cell setTitle:chatDialog.name placeholderID:chatDialog.ID.hash avatarUrl:chatDialog.photo];
     }
     
-    NSString *time = [self.dateFormatter stringFromDate:chatDialog.updatedAt];
+    NSString *time = [QMDateUtils formattedShortDateString:chatDialog.updatedAt];
     [cell setTime:time];
     [cell setBody:chatDialog.lastMessageText];
     [cell setBadgeNumber:chatDialog.unreadMessagesCount];
@@ -51,12 +52,12 @@
     return cell;
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+- (BOOL)tableView:(UITableView *)__unused tableView canEditRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     
     return YES;
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)__unused tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
@@ -66,14 +67,14 @@
         if (chatDialog.type == QBChatDialogTypeGroup) {
             
             chatDialog.occupantIDs = [QMChatUtils occupantsWithoutCurrentUser:chatDialog.occupantIDs];
-            [[[QMCore instance] leaveChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+            [[[QMCore instance] leaveChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
                 
                 [SVProgressHUD dismiss];
                 return nil;
             }];
         } else {
             // private and public group chats
-            [[[QMCore instance].chatService deleteDialogWithID:chatDialog.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+            [[[QMCore instance].chatService deleteDialogWithID:chatDialog.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
                 
                 [SVProgressHUD dismiss];
                 return nil;
@@ -85,21 +86,6 @@
 - (NSMutableArray *)items {
     
     return [[QMCore instance].chatService.dialogsMemoryStorage dialogsSortByLastMessageDateWithAscending:NO].mutableCopy;
-}
-
-#pragma mark - Helpers
-
-- (NSDateFormatter *)dateFormatter {
-    
-    static dispatch_once_t onceToken;
-    static NSDateFormatter *_dateFormatter = nil;
-    dispatch_once(&onceToken, ^{
-        _dateFormatter = [[NSDateFormatter alloc] init];
-        _dateFormatter.dateFormat = @"dd.MM.yy";
-        
-    });
-    
-    return _dateFormatter;
 }
 
 @end

@@ -36,6 +36,8 @@
 
 + (void)presentActionSheetInView:(UIView *)view configuration:(REActionSheetBlock)configuration {
     
+    // hiding keyboard
+    [view endEditing:YES];
 	REActionSheet* actionSheet = [[REActionSheet alloc] init];
 	configuration(actionSheet);
 	[actionSheet showInView:view];

@@ -10,4 +10,6 @@
 
 @interface QMNewMessageSearchDataProvider : QMSearchDataProvider
 
+@property (strong, nonatomic) NSArray *friends;
+
 @end

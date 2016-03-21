@@ -75,7 +75,11 @@
 - (void)setHighlighted:(BOOL)highlighted {
     [super setHighlighted:highlighted];
     
-    self.alpha = highlighted ? 0.3f : 1.0f;
+    [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
+        
+        self.layer.opacity = highlighted ? 0.6f : 1.0f;
+        
+    } completion:nil];
 }
 
 @end

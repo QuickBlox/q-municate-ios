@@ -10,7 +10,7 @@
 
 @implementation QMSearchDataProvider
 
-- (void)performSearch:(NSString *)searchText {
+- (void)performSearch:(NSString *)__unused searchText {
     
     if ([self.delegate respondsToSelector:@selector(searchDataProviderDidFinishDataFetching:)]) {
         

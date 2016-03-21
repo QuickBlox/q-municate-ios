@@ -21,7 +21,10 @@
 
 @interface QMSignUpViewController ()
 
-<QMImagePickerResultHandler>
+<
+QMImagePickerResultHandler,
+QMImageViewDelegate
+>
 
 @property (weak, nonatomic) IBOutlet UITextField *fullNameField;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
@@ -42,6 +45,7 @@
     [super viewDidLoad];
     
     self.userImage.imageViewType = QMImageViewTypeCircle;
+    self.userImage.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -52,29 +56,42 @@
 
 #pragma mark - Actions
 
-- (IBAction)chooseUserPicture:(id)sender {
+- (void)avatarPressAction {
     
-    // hiding keyboard
-    [self.view endEditing:YES];
-    
+    @weakify(self);
     [REActionSheet presentActionSheetInView:self.view configuration:^(REActionSheet *actionSheet) {
         
-        [actionSheet addButtonWithTitle:@"Take image" andActionBlock:^{
+        @strongify(self);
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"QM_STR_TAKE_IMAGE", nil) andActionBlock:^{
             [QMImagePicker takePhotoInViewController:self resultHandler:self];
         }];
         
-        [actionSheet addButtonWithTitle:@"Choose from library" andActionBlock:^{
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"QM_STR_CHOOSE_FROM_LIBRARY", nil) andActionBlock:^{
             [QMImagePicker choosePhotoInViewController:self resultHandler:self];
+        }];
+        
+        [actionSheet addCancelButtonWihtTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{
+            
         }];
     }];
 }
 
-- (IBAction)pressentUserAgreement:(id)sender {
+- (IBAction)chooseUserPicture:(id)__unused sender {
+    
+    [self avatarPressAction];
+}
+
+- (void)imageViewDidTap:(QMImageView *)__unused imageView {
+    
+    [self avatarPressAction];
+}
+
+- (IBAction)pressentUserAgreement:(id)__unused sender {
     
     [QMLicenseAgreement presentUserAgreementInViewController:self completion:nil];
 }
 
-- (IBAction)done:(id)sender {
+- (IBAction)done:(id)__unused sender {
     
     NSString *fullName = self.fullNameField.text;
     NSString *email = self.emailField.text;
@@ -135,10 +152,10 @@
 
 #pragma mark - QMImagePickerResultHandler
 
-- (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo {
+- (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
     self.selectedImage = photo;
-    [self.userImage setImage:photo];
+    [self.userImage applyImage:photo];
 }
 
 @end

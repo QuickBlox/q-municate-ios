@@ -34,7 +34,7 @@
 
 #pragma mark - Actions
 
-- (IBAction)done:(id)sender {
+- (IBAction)done:(id)__unused sender {
     
     if (self.emailField.text.length == 0 || self.passwordField.text.length == 0) {
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) actionSuccess:NO];

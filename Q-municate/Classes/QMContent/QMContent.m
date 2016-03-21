@@ -8,9 +8,8 @@
 
 #import "QMContent.h"
 
-static const NSUInteger kQMContentMaxConcurrentOperationQueueCount = 3;
-static const CGFloat    kQMContentUploadJPEGCompressionQuality     = 0.4f;
-static NSString * const kQMContentImageFileName                    = @"image";
+static const CGFloat kQMContentUploadJPEGCompressionQuality = 0.4f;
+static NSString *const kQMContentImageFileName = @"image";
 
 @implementation QMContent
 
@@ -30,7 +29,7 @@ static NSString * const kQMContentImageFileName                    = @"image";
 }
 
 + (BFTask *)uploadPNGImage:(UIImage *)image
-              progress:(QMContentProgressBlock)progress
+                  progress:(QMContentProgressBlock)progress
 {
     
     NSData *data = UIImagePNGRepresentation(image);
@@ -54,14 +53,14 @@ static NSString * const kQMContentImageFileName                    = @"image";
                   fileName:fileName
                contentType:contentType
                   isPublic:isPublic
-              successBlock:^(QBResponse * _Nonnull response, QBCBlob * _Nonnull blob) {
-                  //
+              successBlock:^(QBResponse * _Nonnull __unused response, QBCBlob * _Nonnull blob) {
+                  
                   [source setResult:blob];
-              } statusBlock:^(QBRequest * _Nonnull request, QBRequestStatus * _Nullable status) {
-                  //
+              } statusBlock:^(QBRequest * _Nonnull __unused request, QBRequestStatus * _Nullable status) {
+                  
                   if (progress) progress(status.percentOfCompletion);
               } errorBlock:^(QBResponse * _Nonnull response) {
-                  //
+                  
                   [source setError:response.error.error];
               }];
     

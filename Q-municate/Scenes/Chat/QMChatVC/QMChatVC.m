@@ -25,13 +25,13 @@
 // external
 #import "AGEmojiKeyBoardView.h"
 
-const NSInteger kQMEmojiButtonTag = 100;
-const CGFloat kQMEmojiButtonSize = 45.0f;
-const CGFloat kQMInputToolbarTextContainerInsetRight = 25.0f;
-const CGFloat kQMAttachmentCellSize = 200.0f;
-const CGFloat kQMWidthPadding = 40.0f;
-const CGFloat kQMAvatarSize = 28.0f;
-const CGFloat kQMGroupAvatarSize = 36.0f;
+static const NSInteger kQMEmojiButtonTag = 100;
+static const CGFloat kQMEmojiButtonSize = 45.0f;
+static const CGFloat kQMInputToolbarTextContainerInsetRight = 25.0f;
+static const CGFloat kQMAttachmentCellSize = 200.0f;
+static const CGFloat kQMWidthPadding = 40.0f;
+static const CGFloat kQMAvatarSize = 28.0f;
+static const CGFloat kQMGroupAvatarSize = 36.0f;
 
 @interface QMChatVC ()
 
@@ -205,12 +205,12 @@ AGEmojiKeyboardViewDelegate
         [self configureGroupChatAvatar];
         [self updateGroupChatOnlineStatus];
         
-        [self.chatDialog setOnJoinOccupant:^(NSUInteger userID) {
+        [self.chatDialog setOnJoinOccupant:^(NSUInteger __unused userID) {
             @strongify(self);
             [self updateGroupChatOnlineStatus];
         }];
         
-        [self.chatDialog setOnLeaveOccupant:^(NSUInteger userID) {
+        [self.chatDialog setOnLeaveOccupant:^(NSUInteger __unused userID) {
             @strongify(self);
             [self updateGroupChatOnlineStatus];
         }];
@@ -235,7 +235,7 @@ AGEmojiKeyboardViewDelegate
     self.observerWillResignActive = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillResignActiveNotification
                                                                                       object:nil
                                                                                        queue:nil
-                                                                                  usingBlock:^(NSNotification * _Nonnull note) {
+                                                                                  usingBlock:^(NSNotification * _Nonnull __unused note) {
                                                                                       
                                                                                       @strongify(self);
                                                                                       [self stopTyping];
@@ -322,7 +322,7 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark - Toolbar actions
 
-- (void)didPressSendButton:(UIButton *)button
+- (void)didPressSendButton:(UIButton *)__unused button
            withMessageText:(NSString *)text
                   senderId:(NSUInteger)senderId
          senderDisplayName:(NSString *)senderDisplayName
@@ -341,6 +341,7 @@ AGEmojiKeyboardViewDelegate
     QBChatMessage *message = [QBChatMessage message];
     message.text = text;
     message.senderID = senderId;
+    message.senderNick = senderDisplayName;
     message.markable = YES;
     message.deliveredIDs = @[@(self.senderID)];
     message.readIDs = @[@(self.senderID)];
@@ -365,27 +366,29 @@ AGEmojiKeyboardViewDelegate
     [self finishSendingMessageAnimated:YES];
 }
 
-- (void)didPressAccessoryButton:(UIButton *)sender {
+- (void)didPressAccessoryButton:(UIButton *)__unused sender {
     
     if (![self messageSendingAllowed]) {
         
         return;
     }
     
-    // hiding keyboard
-    [self.view endEditing:YES];
-    
+    @weakify(self);
     [REActionSheet presentActionSheetInView:self.view configuration:^(REActionSheet *actionSheet) {
         
-        [actionSheet addButtonWithTitle:@"Take image" andActionBlock:^{
+        @strongify(self);
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"QM_STR_TAKE_IMAGE", nil) andActionBlock:^{
             [QMImagePicker takePhotoInViewController:self resultHandler:self];
         }];
         
-        [actionSheet addButtonWithTitle:@"Choose from library" andActionBlock:^{
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"QM_STR_CHOOSE_FROM_LIBRARY", nil) andActionBlock:^{
             [QMImagePicker choosePhotoInViewController:self resultHandler:self];
         }];
+        
+        [actionSheet addCancelButtonWihtTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{
+            
+        }];
     }];
-    
 }
 
 #pragma mark - Cells view classes
@@ -530,7 +533,7 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark - Collection View Datasource
 
-- (CGSize)collectionView:(QMChatCollectionView *)collectionView dynamicSizeAtIndexPath:(NSIndexPath *)indexPath maxWidth:(CGFloat)maxWidth {
+- (CGSize)collectionView:(QMChatCollectionView *)__unused collectionView dynamicSizeAtIndexPath:(NSIndexPath *)indexPath maxWidth:(CGFloat)maxWidth {
     
     QBChatMessage *item = [self.chatSectionManager messageForIndexPath:indexPath];
     Class viewClass = [self viewClassForItem:item];
@@ -547,7 +550,7 @@ AGEmojiKeyboardViewDelegate
         CGSize bottomLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
                                                                   withConstraints:CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), CGFLOAT_MAX)
                                                            limitedToNumberOfLines:0];
-        size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), kQMAttachmentCellSize + ceilf(bottomLabelSize.height));
+        size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), kQMAttachmentCellSize + ceil(bottomLabelSize.height));
     }
     else if (viewClass == [QMChatNotificationCell class]) {
         
@@ -577,14 +580,14 @@ AGEmojiKeyboardViewDelegate
     if ([self.detailedCells containsObject:item.ID]) {
         
         size = [TTTAttributedLabel sizeThatFitsAttributedString:[self bottomLabelAttributedStringForItem:item]
-                                                withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - kQMWidthPadding, CGFLOAT_MAX)
+                                                withConstraints:CGSizeMake(CGRectGetWidth(collectionView.frame) - kQMWidthPadding, CGFLOAT_MAX)
                                          limitedToNumberOfLines:0];
     }
     
     if (self.chatDialog.type != QBChatDialogTypePrivate) {
         
         CGSize topLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:[self topLabelAttributedStringForItem:item]
-                                                               withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - kQMWidthPadding, CGFLOAT_MAX)
+                                                               withConstraints:CGSizeMake(CGRectGetWidth(collectionView.frame) - kQMWidthPadding, CGFLOAT_MAX)
                                                         limitedToNumberOfLines:1];
         
         if (topLabelSize.width > size.width) {
@@ -612,7 +615,7 @@ AGEmojiKeyboardViewDelegate
     return [super collectionView:collectionView canPerformAction:action forItemAtIndexPath:indexPath withSender:sender];
 }
 
-- (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
+- (void)collectionView:(UICollectionView *)__unused collectionView performAction:(SEL)__unused action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)__unused sender {
     
     QBChatMessage* message = [self.chatSectionManager messageForIndexPath:indexPath];
     
@@ -621,7 +624,7 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark - QMChatCollectionViewDelegate
 
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+- (CGFloat)collectionView:(UICollectionView *)__unused collectionView layout:(UICollectionViewLayout *)__unused collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)__unused section {
     
     return 8.0f;
 }
@@ -669,7 +672,7 @@ AGEmojiKeyboardViewDelegate
                                          limitedToNumberOfLines:0];
     }
     
-    layoutModel.bottomLabelHeight = ceilf(size.height);
+    layoutModel.bottomLabelHeight = ceil(size.height);
     
     return layoutModel;
 }
@@ -770,10 +773,10 @@ AGEmojiKeyboardViewDelegate
     }
 }
 
-- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)__unused cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSInteger lastSection = [self.collectionView numberOfSections] - 1;
-    if (indexPath.section == lastSection && indexPath.item == [self.collectionView numberOfItemsInSection:lastSection] - 1) {
+    NSInteger lastSection = [collectionView numberOfSections] - 1;
+    if (indexPath.section == lastSection && indexPath.item == [collectionView numberOfItemsInSection:lastSection] - 1) {
         // the very first message
         // load more if exists
         @weakify(self);
@@ -876,9 +879,13 @@ AGEmojiKeyboardViewDelegate
     
     // chat status string
     @weakify(self);
-    [self.chatDialog requestOnlineUsersWithCompletionBlock:^(NSMutableArray<NSNumber *> * _Nullable onlineUsers, NSError * _Nullable error) {
+    [self.chatDialog requestOnlineUsersWithCompletionBlock:^(NSMutableArray<NSNumber *> * _Nullable onlineUsers, NSError * _Nullable __unused error) {
         @strongify(self);
-        [self.onlineTitleView setStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_GROUP_CHAT_STATUS_STRING", nil), self.chatDialog.occupantIDs.count, onlineUsers.count]];
+        
+        if (error == nil) {
+            
+            [self.onlineTitleView setStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_GROUP_CHAT_STATUS_STRING", nil), self.chatDialog.occupantIDs.count, onlineUsers.count]];
+        }
     }];
 }
 
@@ -909,7 +916,7 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark - QMChatServiceDelegate
 
-- (void)chatService:(QMChatService *)chatService didLoadMessagesFromCache:(NSArray *)messages forDialogID:(NSString *)dialogID {
+- (void)chatService:(QMChatService *)__unused chatService didLoadMessagesFromCache:(NSArray *)messages forDialogID:(NSString *)dialogID {
     
     if ([self.chatDialog.ID isEqualToString:dialogID]) {
         
@@ -917,7 +924,7 @@ AGEmojiKeyboardViewDelegate
     }
 }
 
-- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+- (void)chatService:(QMChatService *)__unused chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
     
     if ([self.chatDialog.ID isEqualToString:dialogID]) {
         
@@ -926,7 +933,7 @@ AGEmojiKeyboardViewDelegate
         
         if (message.dialogUpdateType == QMDialogUpdateTypeOccupants && message.addedOccupantsIDs.count > 0) {
             @weakify(self);
-            [[[QMCore instance].usersService getUsersWithIDs:message.addedOccupantsIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *task) {
+            [[[QMCore instance].usersService getUsersWithIDs:message.addedOccupantsIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *__unused task) {
                 @strongify(self);
                 [self.chatSectionManager updateMessage:message];
                 
@@ -936,7 +943,7 @@ AGEmojiKeyboardViewDelegate
     }
 }
 
-- (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
+- (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
     
     if (self.chatDialog.type != QBChatDialogTypePrivate && [self.chatDialog.ID isEqualToString:chatDialog.ID]) {
         
@@ -944,7 +951,7 @@ AGEmojiKeyboardViewDelegate
     }
 }
 
-- (void)chatService:(QMChatService *)chatService didUpdateMessage:(QBChatMessage *)message forDialogID:(NSString *)dialogID
+- (void)chatService:(QMChatService *)__unused chatService didUpdateMessage:(QBChatMessage *)message forDialogID:(NSString *)dialogID
 {
     if ([self.chatDialog.ID isEqualToString:dialogID] && message.senderID == self.senderID) {
         // self-sending attachments
@@ -954,19 +961,19 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark - QMChatConnectionDelegate
 
-- (void)chatServiceChatDidConnect:(QMChatService *)chatService {
+- (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
     
     [self refreshMessages];
 }
 
-- (void)chatServiceChatDidReconnect:(QMChatService *)chatService {
+- (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
     
     [self refreshMessages];
 }
 
 #pragma mark - QMChatAttachmentServiceDelegate
 
-- (void)chatAttachmentService:(QMChatAttachmentService *)chatAttachmentService didChangeAttachmentStatus:(QMMessageAttachmentStatus)status forMessage:(QBChatMessage *)message {
+- (void)chatAttachmentService:(QMChatAttachmentService *)__unused chatAttachmentService didChangeAttachmentStatus:(QMMessageAttachmentStatus)status forMessage:(QBChatMessage *)message {
     
     if (status != QMMessageAttachmentStatusNotLoaded && [message.dialogID isEqualToString:self.chatDialog.ID]) {
         
@@ -974,7 +981,7 @@ AGEmojiKeyboardViewDelegate
     }
 }
 
-- (void)chatAttachmentService:(QMChatAttachmentService *)chatAttachmentService didChangeLoadingProgress:(CGFloat)progress forChatAttachment:(QBChatAttachment *)attachment {
+- (void)chatAttachmentService:(QMChatAttachmentService *)__unused chatAttachmentService didChangeLoadingProgress:(CGFloat)progress forChatAttachment:(QBChatAttachment *)attachment {
     
     UICollectionViewCell<QMChatAttachmentCell>* cell = [self.attachmentCells objectForKey:attachment.ID];
     
@@ -984,7 +991,7 @@ AGEmojiKeyboardViewDelegate
     }
 }
 
-- (void)chatAttachmentService:(QMChatAttachmentService *)chatAttachmentService didChangeUploadingProgress:(CGFloat)progress forMessage:(QBChatMessage *)message {
+- (void)chatAttachmentService:(QMChatAttachmentService *)__unused chatAttachmentService didChangeUploadingProgress:(CGFloat)progress forMessage:(QBChatMessage *)message {
     
     UICollectionViewCell<QMChatAttachmentCell>* cell = [self.attachmentCells objectForKey:message.ID];
     
@@ -1003,7 +1010,7 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark Contact List Serice Delegate
 
-- (void)contactListService:(QMContactListService *)contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)status {
+- (void)contactListService:(QMContactListService *)__unused contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)__unused status {
     
     if (self.chatDialog.type == QBChatDialogTypePrivate && self.chatDialog.recipientID == (NSInteger)userID && !self.isOpponentTyping) {
         
@@ -1030,7 +1037,7 @@ AGEmojiKeyboardViewDelegate
         QBChatMessage *currentMessage = [self.chatSectionManager messageForIndexPath:indexPath];
         
         @weakify(self);
-        self.contactRequestTask = [[[QMCore instance] confirmAddContactRequest:opponentUser] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull task) {
+        self.contactRequestTask = [[[QMCore instance] confirmAddContactRequest:opponentUser] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             @strongify(self);
             // success block only
             [self.chatSectionManager updateMessage:currentMessage];
@@ -1041,10 +1048,10 @@ AGEmojiKeyboardViewDelegate
     else {
         
         @weakify(self);
-        self.contactRequestTask = [[[[QMCore instance] rejectAddContactRequest:opponentUser] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull task) {
+        self.contactRequestTask = [[[[QMCore instance] rejectAddContactRequest:opponentUser] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             
             return [[QMCore instance].chatService deleteDialogWithID:self.chatDialog.ID];
-        }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             @strongify(self);
             [self.navigationController popViewControllerAnimated:YES];
             
@@ -1087,18 +1094,18 @@ AGEmojiKeyboardViewDelegate
     }
 }
 
-- (void)chatCellDidTapAvatar:(QMChatCell *)cell {
+- (void)__unused chatCellDidTapAvatar:(QMChatCell *)__unused cell {
 }
 
-- (void)chatCell:(QMChatCell *)cell didTapAtPosition:(CGPoint)position {
+- (void)__unused chatCell:(QMChatCell *)__unused cell didTapAtPosition:(CGPoint)__unused position {
 }
 
-- (void)chatCell:(QMChatCell *)cell didPerformAction:(SEL)action withSender:(id)sender {
+- (void)__unused chatCell:(QMChatCell *)__unused cell didPerformAction:(SEL)__unused action withSender:(id)__unused sender {
 }
 
 #pragma mark - UITextViewDelegate
 
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+- (BOOL)textView:(UITextView *)__unused textView shouldChangeTextInRange:(NSRange)__unused range replacementText:(NSString *)__unused text {
     
     [self sendIsTypingStatus];
     
@@ -1248,32 +1255,32 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark - Emoji Data source
 
-- (UIImage *)emojiKeyboardView:(AGEmojiKeyboardView *)emojiKeyboardView imageForSelectedCategory:(AGEmojiKeyboardViewCategoryImage)category {
+- (UIImage *)emojiKeyboardView:(AGEmojiKeyboardView *)__unused emojiKeyboardView imageForSelectedCategory:(AGEmojiKeyboardViewCategoryImage)category {
     UIImage *img = [self randomImage:category];
     
     return [img imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 }
 
-- (UIImage *)emojiKeyboardView:(AGEmojiKeyboardView *)emojiKeyboardView imageForNonSelectedCategory:(AGEmojiKeyboardViewCategoryImage)category {
+- (UIImage *)emojiKeyboardView:(AGEmojiKeyboardView *)__unused emojiKeyboardView imageForNonSelectedCategory:(AGEmojiKeyboardViewCategoryImage)category {
     UIImage *img = [self randomImage:category];
     return [img imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 }
 
-- (UIImage *)backSpaceButtonImageForEmojiKeyboardView:(AGEmojiKeyboardView *)emojiKeyboardView {
+- (UIImage *)backSpaceButtonImageForEmojiKeyboardView:(AGEmojiKeyboardView *)__unused emojiKeyboardView {
     UIImage *img = [UIImage imageNamed:@"keyboard_icon"];
     return [img imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 }
 
 #pragma mark - Emoji Delegate
 
-- (void)emojiKeyBoardView:(AGEmojiKeyboardView *)emojiKeyBoardView didUseEmoji:(NSString *)emoji {
+- (void)emojiKeyBoardView:(AGEmojiKeyboardView *)__unused emojiKeyBoardView didUseEmoji:(NSString *)emoji {
     
     NSString *textViewString = self.inputToolbar.contentView.textView.text;
     self.inputToolbar.contentView.textView.text = [textViewString stringByAppendingString:emoji];
     [self textViewDidChange:self.inputToolbar.contentView.textView];
 }
 
-- (void)emojiKeyBoardViewDidPressBackSpace:(AGEmojiKeyboardView *)emojiKeyBoardView {
+- (void)emojiKeyBoardViewDidPressBackSpace:(AGEmojiKeyboardView *)__unused emojiKeyBoardView {
     
     self.inputToolbar.contentView.textView.inputView = nil;
     [self.inputToolbar.contentView.textView reloadInputViews];

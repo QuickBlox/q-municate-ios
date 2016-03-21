@@ -21,8 +21,6 @@
 
 <
 UITableViewDelegate,
-QMContactListServiceDelegate,
-QMUsersServiceDelegate,
 
 QMSearchProtocol,
 QMSearchDataProviderDelegate,
@@ -40,9 +38,6 @@ UISearchResultsUpdating
 @property (strong, nonatomic) QMNewMessageSearchDataSource *contactsSearchDataSource;
 
 @property (weak, nonatomic) BFTask *dialogCreationTask;
-@property (strong, nonatomic) NSArray *friends;
-
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *createGroupButton;
 
 @end
 
@@ -61,8 +56,6 @@ UISearchResultsUpdating
     
     // subscribing delegates
     self.tableView.delegate = self;
-    [[QMCore instance].contactListService addDelegate:self];
-    [[QMCore instance].usersService addDelegate:self];
     
     // search implementation
     [self configureSearch];
@@ -72,6 +65,12 @@ UISearchResultsUpdating
     
     // filling data source
     [self updateItemsFromContactList];
+    
+    // Back button style for next in navigation stack view controllers
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"QM_STR_BACK", nil)
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:nil
+                                                                            action:nil];
 }
 
 - (void)configureSearch {
@@ -87,20 +86,25 @@ UISearchResultsUpdating
 
 - (void)configureDataSources {
     
-    self.dataSource = [[QMNewMessageDataSource alloc] init];
+    self.dataSource = [[QMNewMessageDataSource alloc] initWithKeyPath:kQMQBUUserFullNameKeyPathKey];
     self.tableView.dataSource = self.dataSource;
     
     QMNewMessageSearchDataProvider *searchDataProvider = [[QMNewMessageSearchDataProvider alloc] init];
     searchDataProvider.delegate = self;
     
-    self.contactsSearchDataSource = [[QMNewMessageSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider];
+    self.contactsSearchDataSource = [[QMNewMessageSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider usingKeyPath:kQMQBUUserFullNameKeyPathKey];
+}
+
+- (void)dealloc {
+    
+    [self.searchController.view removeFromSuperview];
 }
 
 #pragma mark - UITableViewDelegate
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)__unused tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    return [self.dataSource heightForRowAtIndexPath:indexPath];
+    return [self.searchDataSource heightForRowAtIndexPath:indexPath];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -133,13 +137,13 @@ UISearchResultsUpdating
 
 #pragma mark - UISearchControllerDelegate
 
-- (void)willPresentSearchController:(UISearchController *)searchController {
+- (void)willPresentSearchController:(UISearchController *)__unused searchController {
     
     self.tableView.dataSource = self.contactsSearchDataSource;
     [self.tableView reloadData];
 }
 
-- (void)willDismissSearchController:(UISearchController *)searchController {
+- (void)willDismissSearchController:(UISearchController *)__unused searchController {
     
     self.tableView.dataSource = self.dataSource;
     [self.tableView reloadData];
@@ -156,10 +160,10 @@ UISearchResultsUpdating
 
 - (void)updateItemsFromContactList {
     
-    self.friends = [QMCore instance].friends;
-    [self.dataSource replaceItems:self.friends];
+    NSArray *friends = [QMCore instance].friends;
+    [self.dataSource replaceItems:friends];
     
-    self.createGroupButton.enabled = self.friends.count > 0;
+    self.navigationItem.rightBarButtonItem.enabled = friends.count > 0;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -171,37 +175,9 @@ UISearchResultsUpdating
     }
 }
 
-#pragma mark - QMContactListServiceDelegate
-
-- (void)contactListServiceDidLoadCache {
-    
-    [self updateItemsFromContactList];
-    [self.tableView reloadData];
-}
-
-- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
-    
-    [self updateItemsFromContactList];
-    [self.tableView reloadData];
-}
-
-#pragma mark - QMUsersServiceDelegate
-
-- (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)user {
-    
-    [self updateItemsFromContactList];
-    [self.tableView reloadData];
-}
-
-- (void)usersService:(QMUsersService *)usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)users {
-    
-    [self updateItemsFromContactList];
-    [self.tableView reloadData];
-}
-
 #pragma mark - QMSearchDataProviderDelegate
 
-- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)searchDataProvider {
+- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
     
     if ([self.tableView.dataSource conformsToProtocol:@protocol(QMNewMessageSearchDataSourceProtocol)]) {
         
@@ -209,9 +185,19 @@ UISearchResultsUpdating
     }
 }
 
+- (void)searchDataProvider:(QMSearchDataProvider *)__unused searchDataProvider didUpdateData:(NSArray *)__unused data {
+    
+    if (![self.tableView.dataSource conformsToProtocol:@protocol(QMNewMessageSearchDataSourceProtocol)]) {
+        
+        [self updateItemsFromContactList];
+    }
+    
+    [self.tableView reloadData];
+}
+
 #pragma mark - QMSearchProtocol
 
-- (QMSearchDataProvider *)searchDataSource {
+- (QMSearchDataSource *)searchDataSource {
     
     return (id)self.tableView.dataSource;
 }

@@ -33,8 +33,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="FNq-5Y-cZb"/>
                     <connections>
-                        <segue destination="Td3-dH-14S" kind="show" identifier="SceneSegueMain" customClass="QMRootViewControllerSegue" id="96H-5Z-6xM"/>
-                        <segue destination="xpX-4R-zvj" kind="show" identifier="SceneSegueAuth" customClass="QMRootViewControllerSegue" id="scu-v2-wga"/>
+                        <segue destination="Td3-dH-14S" kind="custom" identifier="SceneSegueMain" customClass="QMRootViewControllerSegue" id="96H-5Z-6xM"/>
+                        <segue destination="xpX-4R-zvj" kind="custom" identifier="SceneSegueAuth" customClass="QMRootViewControllerSegue" id="scu-v2-wga"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YmA-DO-nZe" userLabel="First Responder" sceneMemberID="firstResponder"/>

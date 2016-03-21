@@ -21,17 +21,17 @@
     return self;
 }
 
-- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     
     return 0.0f;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)__unused tableView numberOfRowsInSection:(NSInteger)__unused section {
     
     return self.items.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)__unused tableView cellForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     
     return nil;
 }

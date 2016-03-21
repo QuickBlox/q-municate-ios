@@ -12,7 +12,7 @@ NSString *const kQMPlaceHolderCell = @"QMPlaceholderCell";
 
 @implementation QMPlaceholderDataSource
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)__unused tableView numberOfRowsInSection:(NSInteger)__unused section {
     
     return 1;
 }
