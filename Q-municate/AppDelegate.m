@@ -24,19 +24,18 @@
 
 #if DEVELOPMENT == 0
 
+// Production
+const NSUInteger kQMApplicationID = 13318;
+NSString *const kQMAuthorizationKey = @"WzrAY7vrGmbgFfP";
+NSString *const kQMAuthorizationSecret = @"xS2uerEveGHmEun";
+NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
+
+#else
 
 // Development
 const NSUInteger kQMApplicationID = 36125;
 NSString *const kQMAuthorizationKey = @"gOGVNO4L9cBwkPE";
 NSString *const kQMAuthorizationSecret = @"JdqsMHCjHVYkVxV";
-NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
-
-#else
-
-// Production
-const NSUInteger kQMApplicationID = 13318;
-NSString *const kQMAuthorizationKey = @"WzrAY7vrGmbgFfP";
-NSString *const kQMAuthorizationSecret = @"xS2uerEveGHmEun";
 NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 #endif
@@ -90,7 +89,7 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     
     /** extra frameworks */
     [Fabric with:@[CrashlyticsKit, DigitsKit]];
-//    [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
+    [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
     
     if (launchOptions != nil) {
         NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
