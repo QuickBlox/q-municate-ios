@@ -71,7 +71,7 @@
 		5897928D1C998C4A00CC6438 /* QMNoContactsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5897928C1C998C4A00CC6438 /* QMNoContactsCell.m */; };
 		589792991C99941400CC6438 /* QMAlphabetizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 589792981C99941400CC6438 /* QMAlphabetizer.m */; };
 		5897929E1C9AA65400CC6438 /* QMNewMessageSearchDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 5897929D1C9AA65400CC6438 /* QMNewMessageSearchDataSource.m */; };
-		589792A21C9AA69B00CC6438 /* QMNewMessageSearchDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 589792A11C9AA69B00CC6438 /* QMNewMessageSearchDataProvider.m */; };
+		589792A21C9AA69B00CC6438 /* QMContactsSearchDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 589792A11C9AA69B00CC6438 /* QMContactsSearchDataProvider.m */; };
 		589792A51C9AF45A00CC6438 /* QMReplaceViewControllerSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 589792A41C9AF45A00CC6438 /* QMReplaceViewControllerSegue.m */; };
 		589792B11C9C391600CC6438 /* QMNewGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 589792B01C9C391600CC6438 /* QMNewGroupViewController.m */; };
 		589792B51C9C3C1F00CC6438 /* QMGroupContactListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 589792B41C9C3C1F00CC6438 /* QMGroupContactListViewController.m */; };
@@ -251,8 +251,8 @@
 		589792981C99941400CC6438 /* QMAlphabetizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMAlphabetizer.m; path = Classes/QMAlphabetizer/QMAlphabetizer.m; sourceTree = "<group>"; };
 		5897929C1C9AA65400CC6438 /* QMNewMessageSearchDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMNewMessageSearchDataSource.h; path = "Q-municate/Scenes/Main/QMNewMessageViewController/Data sources/QMNewMessageSearchDataSource/QMNewMessageSearchDataSource.h"; sourceTree = SOURCE_ROOT; };
 		5897929D1C9AA65400CC6438 /* QMNewMessageSearchDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMNewMessageSearchDataSource.m; path = "Q-municate/Scenes/Main/QMNewMessageViewController/Data sources/QMNewMessageSearchDataSource/QMNewMessageSearchDataSource.m"; sourceTree = SOURCE_ROOT; };
-		589792A01C9AA69B00CC6438 /* QMNewMessageSearchDataProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMNewMessageSearchDataProvider.h; path = "Q-municate/Scenes/Main/QMNewMessageViewController/QMNewMessageSearchDataProvider/QMNewMessageSearchDataProvider.h"; sourceTree = SOURCE_ROOT; };
-		589792A11C9AA69B00CC6438 /* QMNewMessageSearchDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMNewMessageSearchDataProvider.m; path = "Q-municate/Scenes/Main/QMNewMessageViewController/QMNewMessageSearchDataProvider/QMNewMessageSearchDataProvider.m"; sourceTree = SOURCE_ROOT; };
+		589792A01C9AA69B00CC6438 /* QMContactsSearchDataProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMContactsSearchDataProvider.h; path = "Q-municate/Scenes/Main/QMNewMessageViewController/QMNewMessageSearchDataProvider/QMContactsSearchDataProvider.h"; sourceTree = SOURCE_ROOT; };
+		589792A11C9AA69B00CC6438 /* QMContactsSearchDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMContactsSearchDataProvider.m; path = "Q-municate/Scenes/Main/QMNewMessageViewController/QMNewMessageSearchDataProvider/QMContactsSearchDataProvider.m"; sourceTree = SOURCE_ROOT; };
 		589792A31C9AF45A00CC6438 /* QMReplaceViewControllerSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMReplaceViewControllerSegue.h; sourceTree = "<group>"; };
 		589792A41C9AF45A00CC6438 /* QMReplaceViewControllerSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMReplaceViewControllerSegue.m; sourceTree = "<group>"; };
 		589792AF1C9C391600CC6438 /* QMNewGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMNewGroupViewController.h; path = "Q-municate/Scenes/Main/QMNewGroupViewController/QMNewGroupViewController.h"; sourceTree = SOURCE_ROOT; };
@@ -766,6 +766,7 @@
 				5877D6C71C466D9500938E5D /* QMDialogsViewController */,
 				589D4CF21C981667005F1E76 /* QMNewMessageViewController */,
 				589792AE1C9C38DD00CC6438 /* QMNewGroupViewController */,
+				5897929F1C9AA66700CC6438 /* QMContactsSearchDataProvider */,
 			);
 			name = Main;
 			sourceTree = "<group>";
@@ -1042,13 +1043,13 @@
 			name = QMNewMessageSearchDataSource;
 			sourceTree = "<group>";
 		};
-		5897929F1C9AA66700CC6438 /* QMNewMessageSearchDataProvider */ = {
+		5897929F1C9AA66700CC6438 /* QMContactsSearchDataProvider */ = {
 			isa = PBXGroup;
 			children = (
-				589792A01C9AA69B00CC6438 /* QMNewMessageSearchDataProvider.h */,
-				589792A11C9AA69B00CC6438 /* QMNewMessageSearchDataProvider.m */,
+				589792A01C9AA69B00CC6438 /* QMContactsSearchDataProvider.h */,
+				589792A11C9AA69B00CC6438 /* QMContactsSearchDataProvider.m */,
 			);
-			name = QMNewMessageSearchDataProvider;
+			name = QMContactsSearchDataProvider;
 			sourceTree = "<group>";
 		};
 		589792AE1C9C38DD00CC6438 /* QMNewGroupViewController */ = {
@@ -1086,7 +1087,6 @@
 				589D4CF31C9816E9005F1E76 /* QMNewMessageViewController.h */,
 				589D4CF41C9816E9005F1E76 /* QMNewMessageViewController.m */,
 				5897929A1C9AA61F00CC6438 /* Data sources */,
-				5897929F1C9AA66700CC6438 /* QMNewMessageSearchDataProvider */,
 			);
 			name = QMNewMessageViewController;
 			sourceTree = "<group>";
@@ -1590,7 +1590,7 @@
 				580D34DF1BBFF5850034813A /* UIImage+fixOrientation.m in Sources */,
 				589792991C99941400CC6438 /* QMAlphabetizer.m in Sources */,
 				584277DC1C3FE5BC00CDE35B /* QMCore.m in Sources */,
-				589792A21C9AA69B00CC6438 /* QMNewMessageSearchDataProvider.m in Sources */,
+				589792A21C9AA69B00CC6438 /* QMContactsSearchDataProvider.m in Sources */,
 				58E343881C491AAA00439E93 /* QMProfileTitleView.m in Sources */,
 				55A8B0761965986A00B5D33B /* REAlertView.m in Sources */,
 				58D847601C849AA4000C40BA /* QMSearchResultsController.m in Sources */,

@@ -11,7 +11,7 @@
 #import "QMNewMessageSearchDataSource.h"
 #import "QMCore.h"
 #import "QMChatVC.h"
-#import "QMNewMessageSearchDataProvider.h"
+#import "QMContactsSearchDataProvider.h"
 
 #import "QMContactCell.h"
 #import "QMNoContactsCell.h"
@@ -89,7 +89,7 @@ UISearchResultsUpdating
     self.dataSource = [[QMNewMessageDataSource alloc] initWithKeyPath:kQMQBUUserFullNameKeyPathKey];
     self.tableView.dataSource = self.dataSource;
     
-    QMNewMessageSearchDataProvider *searchDataProvider = [[QMNewMessageSearchDataProvider alloc] init];
+    QMContactsSearchDataProvider *searchDataProvider = [[QMContactsSearchDataProvider alloc] init];
     searchDataProvider.delegate = self;
     
     self.contactsSearchDataSource = [[QMNewMessageSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider usingKeyPath:kQMQBUUserFullNameKeyPathKey];

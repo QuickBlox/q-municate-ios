@@ -8,7 +8,7 @@
 
 #import "QMGroupContactListViewController.h"
 #import "QMGroupContactListSearchDataSource.h"
-#import "QMNewMessageSearchDataProvider.h"
+#import "QMContactsSearchDataProvider.h"
 
 #import "QMSelectableContactCell.h"
 #import "QMNoResultsCell.h"
@@ -44,7 +44,7 @@ QMSearchDataProviderDelegate
 
 - (void)configureDataSources {
     
-    QMNewMessageSearchDataProvider *dataProvider = [[QMNewMessageSearchDataProvider alloc] init];
+    QMContactsSearchDataProvider *dataProvider = [[QMContactsSearchDataProvider alloc] init];
     dataProvider.delegate = self;
     
     self.dataSource = [[QMGroupContactListSearchDataSource alloc] initWithSearchDataProvider:dataProvider usingKeyPath:kQMQBUUserFullNameKeyPathKey];

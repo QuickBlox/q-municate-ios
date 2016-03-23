@@ -1,16 +1,16 @@
 //
-//  QMNewMessageSearchDataProvider.m
+//  QMContactsSearchDataProvider.m
 //  Q-municate
 //
 //  Created by Vitaliy Gorbachov on 3/17/16.
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMNewMessageSearchDataProvider.h"
+#import "QMContactsSearchDataProvider.h"
 #import "QMSearchProtocols.h"
 #import "QMCore.h"
 
-@interface QMNewMessageSearchDataProvider ()
+@interface QMContactsSearchDataProvider ()
 
 <
 QMContactListServiceDelegate,
@@ -21,7 +21,7 @@ QMUsersServiceDelegate
 
 @end
 
-@implementation QMNewMessageSearchDataProvider
+@implementation QMContactsSearchDataProvider
 
 - (instancetype)init {
     
