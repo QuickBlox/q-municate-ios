@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
@@ -56,6 +56,7 @@
                     <constraint firstItem="smJ-6U-6Ij" firstAttribute="centerY" secondItem="PRk-BP-UPc" secondAttribute="centerY" id="xPU-6z-bBY"/>
                 </constraints>
             </tableViewCellContentView>
+            <inset key="separatorInset" minX="12" minY="0.0" maxX="0.0" maxY="0.0"/>
             <connections>
                 <outlet property="addFriendButton" destination="ySZ-73-k8Y" id="1Qq-sf-vkq"/>
                 <outlet property="avatarImage" destination="JDk-Dx-SLZ" id="jh1-cW-fdV"/>

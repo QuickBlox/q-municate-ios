@@ -201,30 +201,17 @@ UISearchResultsUpdating
 
 #pragma mark - UISearchControllerDelegate
 
-- (void)willPresentSearchController:(UISearchController *)__unused searchController {
+- (void)willPresentSearchController:(UISearchController *)searchController {
     
-    self.searchResultsController.tableView.dataSource = self.localSearchDataSource;
-    [self.searchResultsController.tableView reloadData];
+    [self updateDataSourceByScope:searchController.searchBar.selectedScopeButtonIndex];
 }
 
 #pragma mark - UISearchBarDelegate
 
 - (void)searchBar:(UISearchBar *)__unused searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
     
-    if (selectedScope == QMSearchScopeButtonIndexLocal) {
-        
-        self.searchResultsController.tableView.dataSource = self.localSearchDataSource;
-    }
-    else if (selectedScope == QMSearchScopeButtonIndexGlobal) {
-        
-        self.searchResultsController.tableView.dataSource = self.globalSearchDataSource;
-    }
-    else {
-        
-        NSAssert(nil, @"Unknown selected scope");
-    }
-    
-    [self.searchResultsController.tableView reloadData];
+    [self updateDataSourceByScope:selectedScope];
+    [self.searchResultsController performSearch:self.searchController.searchBar.text];
 }
 
 #pragma mark - UISearchResultsUpdating
@@ -342,6 +329,24 @@ UISearchResultsUpdating
     if (![self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
         self.tableView.dataSource = self.dialogsDataSource;
     }
+}
+
+- (void)updateDataSourceByScope:(NSUInteger)selectedScope {
+    
+    if (selectedScope == QMSearchScopeButtonIndexLocal) {
+        
+        self.searchResultsController.tableView.dataSource = self.localSearchDataSource;
+    }
+    else if (selectedScope == QMSearchScopeButtonIndexGlobal) {
+        
+        self.searchResultsController.tableView.dataSource = self.globalSearchDataSource;
+    }
+    else {
+        
+        NSAssert(nil, @"Unknown selected scope");
+    }
+    
+    [self.searchResultsController.tableView reloadData];
 }
 
 #pragma mark - Register nibs
