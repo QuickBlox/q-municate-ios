@@ -16,11 +16,16 @@
 @protocol QMTextFieldDelegate <UITextFieldDelegate>
 
 /**
- *  Notifying about backspace button being pressed.
+ *  Protocol methods down below are required to be implemented
+ */
+@required
+
+/**
+ *  Notifying about text field will delete backwards.
  *
  *  @param textField QMTextField instance
  */
-- (void)textFieldDidPressBackspace:(QMTextField *)textField;
+- (void)textFieldWillDeleteBackwards:(QMTextField *)textField;
 
 /**
  *  Notifying about text field did become first responder.

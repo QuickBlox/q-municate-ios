@@ -46,11 +46,11 @@
         
         if (animated) {
             
-            @weakify(self);
-            [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
-                @strongify(self);
-                 self.placeholderLabel.alpha = showPlaceholder ? 1.0f : 0.0f;
-             }];
+            __weak __typeof(self)weakSelf = self;
+            [UIView animateWithDuration:0.2f animations:^{
+                
+                weakSelf.placeholderLabel.alpha = showPlaceholder ? 1.0f : 0.0f;
+            }];
         }
         else {
             
@@ -70,12 +70,13 @@
 #pragma mark - UIKeyInput
 
 - (void)deleteBackward {
-    [super deleteBackward];
     
-    if ([self.delegate respondsToSelector:@selector(textFieldDidPressBackspace:)]) {
+    if (self.delegate != nil) {
         
-        [self.delegate textFieldDidPressBackspace:self];
+        [self.delegate textFieldWillDeleteBackwards:self];
     }
+    
+    [super deleteBackward];
 }
 
 #pragma mark - UIResponder
@@ -84,7 +85,7 @@
     
     if ([super becomeFirstResponder]) {
         
-        if ([self.delegate respondsToSelector:@selector(textFieldDidBecomeFirstResponder:)]) {
+        if (self.delegate != nil) {
             
             [self.delegate textFieldDidBecomeFirstResponder:self];
         }
@@ -99,7 +100,7 @@
     
     if ([super resignFirstResponder]) {
         
-        if ([self.delegate respondsToSelector:@selector(textFieldDidResignFirstResponder:)]) {
+        if (self.delegate != nil) {
             
             [self.delegate textFieldDidResignFirstResponder:self];
         }

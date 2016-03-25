@@ -16,6 +16,11 @@
 @protocol QMTagViewDelegate <NSObject>
 
 /**
+ *  Protocol methods down below are required to be implemented
+ */
+@required
+
+/**
  *  Notifying about tag view become first responder.
  *
  *  @param tagView QMTagView instance
@@ -30,11 +35,11 @@
 - (void)tagViewDidResignFirstResponder:(QMTagView *)tagView;
 
 /**
- *  Notifying about tag view press backspace.
+ *  Notifying about tag view did delete backwards.
  *
  *  @param tagView QMTagView instance
  */
-- (void)tagViewDidPressBackspace:(QMTagView *)tagView;
+- (void)tagViewDidDeleteBackwards:(QMTagView *)tagView;
 
 @end
 

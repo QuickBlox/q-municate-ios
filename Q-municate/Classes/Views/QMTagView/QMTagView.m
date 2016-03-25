@@ -12,15 +12,12 @@ static UIImage *tokenBackgroundImage() {
     
     static UIImage *image = nil;
     
-    if (image == nil) {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            
-            UIImage *rawImage = [UIImage imageNamed:@"TokenBackground"];
-            image = [rawImage stretchableImageWithLeftCapWidth:(NSInteger)(rawImage.size.width / 2) topCapHeight:0];
-        });
-    }
+        UIImage *rawImage = [UIImage imageNamed:@"qm-bg-tag"];
+        image = [rawImage stretchableImageWithLeftCapWidth:(NSInteger)(rawImage.size.width / 2) topCapHeight:0];
+    });
     
     return image;
 }
@@ -28,15 +25,13 @@ static UIImage *tokenBackgroundImage() {
 static UIImage *tokenBackgroundHighlightedImage() {
     
     static UIImage *image = nil;
-    if (image == nil) {
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            
-            UIImage *rawImage = [UIImage imageNamed:@"TokenBackground_Highlighted"];
-            image = [rawImage stretchableImageWithLeftCapWidth:(NSInteger)(rawImage.size.width / 2) topCapHeight:0];
-        });
-    }
+        UIImage *rawImage = [UIImage imageNamed:@"qm-bg-tag-highlighted"];
+        image = [rawImage stretchableImageWithLeftCapWidth:(NSInteger)(rawImage.size.width / 2) topCapHeight:0];
+    });
     
     return image;
 }
@@ -119,7 +114,7 @@ static UIImage *tokenBackgroundHighlightedImage() {
         
         self.selected = YES;
         
-        if ([self.delegate respondsToSelector:@selector(tagViewDidBecomeFirstResponder:)]) {
+        if (self.delegate != nil) {
             
             [self.delegate tagViewDidBecomeFirstResponder:self];
         }
@@ -136,7 +131,7 @@ static UIImage *tokenBackgroundHighlightedImage() {
         
         self.selected = NO;
         
-        if ([self.delegate respondsToSelector:@selector(tagViewDidResignFirstResponder:)]) {
+        if (self.delegate != nil) {
             
             [self.delegate tagViewDidResignFirstResponder:self];
         }
@@ -151,9 +146,9 @@ static UIImage *tokenBackgroundHighlightedImage() {
 
 - (void)deleteBackward {
     
-    if ([self.delegate respondsToSelector:@selector(tagViewDidPressBackspace:)]) {
+    if (self.delegate != nil) {
         
-        [self.delegate tagViewDidPressBackspace:self];
+        [self.delegate tagViewDidDeleteBackwards:self];
     }
 }
 
@@ -162,7 +157,7 @@ static UIImage *tokenBackgroundHighlightedImage() {
     return NO;
 }
 
-- (void)insertText:(NSString *)__unused text {
+- (void)__unused insertText:(NSString *)__unused text {
     
 }
 

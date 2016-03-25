@@ -16,6 +16,11 @@
 @protocol QMTagFieldViewDelegate <NSObject>
 
 /**
+ *  Protocol methods down below are required to be implemented
+ */
+@required
+
+/**
  *  Notifying about tag view height changes.
  *
  *  @param tagFieldView QMTagFieldView instance
@@ -43,6 +48,9 @@
  */
 - (void)tagFieldView:(QMTagFieldView *)tagFieldView didDeleteTagWithID:(id)tagID;
 
+/**
+ *  Protocol methods down below are optional and can be ignored
+ */
 @optional
 
 /**

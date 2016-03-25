@@ -22,9 +22,14 @@
     return YES;
 }
 
+- (void)scrollRectToVisible:(CGRect)__unused rect animated:(BOOL)__unused animated {
+    // disabling auto scrolling to text field
+    // after text field become first responder by not calling super
+}
+
 @end
 
-@interface QMTagFieldView () <QMTextFieldDelegate, QMTagViewDelegate, UIGestureRecognizerDelegate>
+@interface QMTagFieldView () <QMTextFieldDelegate, QMTagViewDelegate>
 
 @property (strong, nonatomic) NSMutableDictionary *tagAnimations;
 @property (strong, nonatomic) NSMutableArray *tagsList;
@@ -83,7 +88,6 @@
     
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapRecognized:)];
     tapRecognizer.cancelsTouchesInView = NO;
-    tapRecognizer.delegate = self;
     [_scrollView addGestureRecognizer:tapRecognizer];
     
     _textField = [[QMTextField alloc] initWithFrame:CGRectMake(0, 0, 10, 42)];
@@ -130,9 +134,8 @@
             }
         }
         
-        @weakify(self);
-        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
-            @strongify(self);
+        __weak __typeof(self)weakSelf = self;
+        [UIView animateWithDuration:0.2f animations:^{
             
             for (QMTagView *tagView in enumerateTagsList) {
                 
@@ -141,7 +144,7 @@
                     continue;
                 }
                 
-                NSNumber *nAnimation = [self.tagAnimations objectForKey:tagView.tagID];
+                NSNumber *nAnimation = [weakSelf.tagAnimations objectForKey:tagView.tagID];
                 if (nAnimation != nil) {
                     
                     tagView.transform = CGAffineTransformIdentity;
@@ -237,7 +240,7 @@
             [tagView resignFirstResponder];
         }
         
-        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
+        [UIView animateWithDuration:0.2f animations:^{
             
             tagView.transform = CGAffineTransformMakeScale(0.1f, 0.1f);
             tagView.alpha = 0.0f;
@@ -306,11 +309,11 @@
     [self insertSubview:temporaryImageViewContainer aboveSubview:self.scrollView];
     self.scrollView.alpha = 0.0f;
     
-    @weakify(self);
+    __weak __typeof(self)weakSelf = self;
     [UIView animateWithDuration:duration animations:^{
-        @strongify(self);
+        
         temporaryImageView.alpha = 0.0f;
-        self.scrollView.alpha = 1.0f;
+        weakSelf.scrollView.alpha = 1.0f;
         
     } completion:^(__unused BOOL finished) {
         
@@ -394,10 +397,10 @@
         
         self.textField.alpha = 0.0f;
         
-        @weakify(self);
-        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
-            @strongify(self);
-            self.textField.alpha = 1.0f;
+        __weak __typeof(self)weakSelf = self;
+        [UIView animateWithDuration:0.2f animations:^{
+            
+            weakSelf.textField.alpha = 1.0f;
         }];
     }
     
@@ -434,7 +437,7 @@
     
     if (MIN(currentLine + 1, self.maxNumberOfLines) != MIN(self.currentNumberOfLines, self.maxNumberOfLines)) {
         
-        if ([self.delegate respondsToSelector:@selector(tagFieldView:didChangeHeight:)]) {
+        if (self.delegate != nil) {
             
             [self.delegate tagFieldView:self didChangeHeight:_lineHeight * MIN(currentLine + 1, _maxNumberOfLines) + MAX(0, currentLine) * _lineSpacing + _linePadding * 2];
         }
@@ -469,10 +472,10 @@
     }
     else {
         
-        @weakify(self);
-        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
-            @strongify(self);
-            [self.scrollView setContentOffset:contentOffset animated:NO];
+        __weak __typeof(self)weakSelf = self;
+        [UIView animateWithDuration:0.2f animations:^{
+            
+            [weakSelf.scrollView setContentOffset:contentOffset animated:NO];
         }];
     }
 }
@@ -504,7 +507,7 @@
     [self setNeedsLayout];
 }
 
-- (void)tagViewDidPressBackspace:(QMTagView *)tagView {
+- (void)tagViewDidDeleteBackwards:(QMTagView *)tagView {
     
     NSInteger index = -1;
     NSArray *enumerateTagsList = self.tagsList.copy;
@@ -519,16 +522,11 @@
     }
     
     [tagView removeFromSuperview];
-    
-    // disabling scrolling before performing becomeFirstResponder
-    // to get rid of unwanted behaviour of content offset resetting
-    self.scrollView.scrollEnabled = NO;
     [self.textField becomeFirstResponder];
-    self.scrollView.scrollEnabled = YES;
     
     [self setNeedsLayout];
     
-    if ([self.delegate respondsToSelector:@selector(tagFieldView:didDeleteTagWithID:)]) {
+    if (self.delegate != nil) {
         
         [self.delegate tagFieldView:self didDeleteTagWithID:tagView.tagID];
     }
@@ -553,7 +551,7 @@
             [self.textField setShowPlaceholder:YES animated:YES];
         }
         
-        if ([self.delegate respondsToSelector:@selector(tagFieldView:didChangeText:)]) {
+        if (self.delegate != nil) {
             
             [self.delegate tagFieldView:self didChangeText:textField.text];
         }
@@ -568,10 +566,10 @@
         
         self.textField.hidden = YES;
         
-        @weakify(self);
+        __weak __typeof(self)weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
-            @strongify(self);
-            self.textField.hidden = NO;
+            
+            weakSelf.textField.hidden = NO;
         });
     }
     
@@ -582,7 +580,7 @@
     
     [self scrollToTextField:YES];
     
-    if ([self.delegate respondsToSelector:@selector(tagFieldView:didChangeText:)]) {
+    if (self.delegate != nil) {
         
         [self.delegate tagFieldView:self didChangeText:textField.text];
     }
@@ -611,7 +609,7 @@
     return YES;
 }
 
-- (void)textFieldDidPressBackspace:(QMTextField *)textField {
+- (void)textFieldWillDeleteBackwards:(QMTextField *)textField {
     
     if (self.tagsList.count != 0 && textField.text.length == 0) {
         
@@ -642,15 +640,6 @@
         
         [self.textField becomeFirstResponder];
     }
-}
-
-#pragma mark - UIGestureRecognizerDelegate
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)__unused gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    // disabling touch gesture trigger for every single tag view
-    BOOL isTagView = [touch.view isKindOfClass:[QMTagView class]];
-    
-    return !isTagView;
 }
 
 @end
