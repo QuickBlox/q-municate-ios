@@ -47,9 +47,8 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    UIApplication.sharedApplication.applicationIconBadgeNumber = 0;
     
-    self.window.backgroundColor = [UIColor whiteColor];
+    application.applicationIconBadgeNumber = 0;
     
     // QB Settings
     [QBSettings setApplicationID:kQMApplicationID];
@@ -82,10 +81,12 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
     }
     
-    /*Configure app appearance*/
-    [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:13.0f/255.0f green:112.0f/255.0f blue:179.0f/255.0f alpha:1.0f]];
-    [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateNormal];
-    [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateDisabled];
+    /**
+     *  Configure app appearance
+     */
+    UIColor *mainColor = [UIColor colorWithRed:13.0f/255.0f green:112.0f/255.0f blue:179.0f/255.0f alpha:1.0f];
+    [[UINavigationBar appearance] setTintColor:mainColor];
+    [[UISearchBar appearance] setTintColor:mainColor];
     
     /** extra frameworks */
     [Fabric with:@[CrashlyticsKit, DigitsKit]];
