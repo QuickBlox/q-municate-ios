@@ -46,11 +46,11 @@
         
         if (animated) {
             
-            __weak __typeof(self)weakSelf = self;
-            [UIView animateWithDuration:0.2f animations:^{
-                
-                weakSelf.placeholderLabel.alpha = showPlaceholder ? 1.0f : 0.0f;
-            }];
+            @weakify(self);
+            [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
+                @strongify(self);
+                 self.placeholderLabel.alpha = showPlaceholder ? 1.0f : 0.0f;
+             }];
         }
         else {
             

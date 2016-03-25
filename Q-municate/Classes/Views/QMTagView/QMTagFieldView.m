@@ -134,8 +134,9 @@
             }
         }
         
-        __weak __typeof(self)weakSelf = self;
-        [UIView animateWithDuration:0.2f animations:^{
+        @weakify(self);
+        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
+            @strongify(self);
             
             for (QMTagView *tagView in enumerateTagsList) {
                 
@@ -144,7 +145,7 @@
                     continue;
                 }
                 
-                NSNumber *nAnimation = [weakSelf.tagAnimations objectForKey:tagView.tagID];
+                NSNumber *nAnimation = [self.tagAnimations objectForKey:tagView.tagID];
                 if (nAnimation != nil) {
                     
                     tagView.transform = CGAffineTransformIdentity;
@@ -240,7 +241,7 @@
             [tagView resignFirstResponder];
         }
         
-        [UIView animateWithDuration:0.2f animations:^{
+        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
             
             tagView.transform = CGAffineTransformMakeScale(0.1f, 0.1f);
             tagView.alpha = 0.0f;
@@ -309,11 +310,11 @@
     [self insertSubview:temporaryImageViewContainer aboveSubview:self.scrollView];
     self.scrollView.alpha = 0.0f;
     
-    __weak __typeof(self)weakSelf = self;
+    @weakify(self);
     [UIView animateWithDuration:duration animations:^{
-        
+        @strongify(self);
         temporaryImageView.alpha = 0.0f;
-        weakSelf.scrollView.alpha = 1.0f;
+        self.scrollView.alpha = 1.0f;
         
     } completion:^(__unused BOOL finished) {
         
@@ -397,10 +398,10 @@
         
         self.textField.alpha = 0.0f;
         
-        __weak __typeof(self)weakSelf = self;
-        [UIView animateWithDuration:0.2f animations:^{
-            
-            weakSelf.textField.alpha = 1.0f;
+        @weakify(self);
+        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
+            @strongify(self);
+            self.textField.alpha = 1.0f;
         }];
     }
     
@@ -472,10 +473,10 @@
     }
     else {
         
-        __weak __typeof(self)weakSelf = self;
-        [UIView animateWithDuration:0.2f animations:^{
-            
-            [weakSelf.scrollView setContentOffset:contentOffset animated:NO];
+        @weakify(self);
+        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
+            @strongify(self);
+            [self.scrollView setContentOffset:contentOffset animated:NO];
         }];
     }
 }
@@ -566,10 +567,10 @@
         
         self.textField.hidden = YES;
         
-        __weak __typeof(self)weakSelf = self;
+        @weakify(self);
         dispatch_async(dispatch_get_main_queue(), ^{
-            
-            weakSelf.textField.hidden = NO;
+            @strongify(self);
+            self.textField.hidden = NO;
         });
     }
     
