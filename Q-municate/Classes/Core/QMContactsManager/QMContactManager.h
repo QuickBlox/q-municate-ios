@@ -16,7 +16,7 @@
 @interface QMContactManager : QMBaseService
 
 /**
- *  Add user to contact list and send chat and push notification
+ *  Add user to contact list and send chat and push notification.
  *
  *  @param user user to add to contact list
  *
@@ -25,7 +25,7 @@
 - (BFTask *)addUserToContactList:(QBUUser *)user;
 
 /**
- *  Confirm add user to contact list and send notification
+ *  Confirm add user to contact list and send notification.
  *
  *  @param user user to confirm adding
  *
@@ -34,13 +34,22 @@
 - (BFTask *)confirmAddContactRequest:(QBUUser *)user;
 
 /**
- *  Reject add user to contact list and send notification
+ *  Reject add user to contact list and send notification.
  *
  *  @param user user to reject adding
  *
  *  @return BFTask with all performed tasks
  */
 - (BFTask *)rejectAddContactRequest:(QBUUser *)user;
+
+/**
+ *  Remove user from contact list and send notification.
+ *
+ *  @param user user to remove from contact list
+ *
+ *  @return BFTask with all performed tasks
+ */
+- (BFTask *)removeUserFromContactList:(QBUUser *)user;
 
 /**
  *  Full name of user ID.
@@ -59,14 +68,14 @@
 - (NSArray <QBUUser *> *)allContacts;
 
 /**
- *  All contacts from contact list sorted by full name
+ *  All contacts from contact list sorted by full name.
  *
  *  @return all contacts that are existent in contact list sorted by fullName field
  */
 - (NSArray <QBUUser *> *)allContactsSortedByFullName;
 
 /**
- *  All friends from contact list
+ *  All friends from contact list.
  *
  *  @return all friends from contact list (only with subscription state Both)
  */
@@ -82,7 +91,7 @@
 - (NSArray <NSNumber *> *)idsOfUsers:(NSArray <QBUUser *> *)users;
 
 /**
- *  Determines whether user with ID is friend
+ *  Determines whether user with ID is friend.
  *
  *  @param userID opponent user ID
  *
@@ -91,7 +100,7 @@
 - (BOOL)isFriendWithUserID:(NSUInteger)userID;
 
 /**
- *  Determines whether user with ID is in pending list
+ *  Determines whether user with ID is in pending list.
  *
  *  @param userID opponent user ID
  *
@@ -100,7 +109,7 @@
 - (BOOL)isUserIDInPendingList:(NSUInteger)userID;
 
 /**
- *  Determines whether awaiting for approval from user with ID
+ *  Determines whether awaiting for approval from user with ID.
  *
  *  @param userID opponent user ID
  *
@@ -109,7 +118,7 @@
 - (BOOL)isAwaitingForApprovalFromUserID:(NSUInteger)userID;
 
 /**
- *  Determines whether user with ID is online
+ *  Determines whether user with ID is online.
  *
  *  @param userID opponent user ID
  *

@@ -66,6 +66,26 @@
     }];
 }
 
+- (BFTask *)removeUserFromContactList:(QBUUser *)user {
+    
+    @weakify(self);
+    return [[self.serviceManager.contactListService removeUserFromContactListWithUserID:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        @strongify(self);
+        QBChatDialog *chatDialog = [self.serviceManager.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
+        QBChatMessage *notificationMessage = [self.serviceManager.notificationManager removeContactNotificationForUser:user];
+        
+        [self.serviceManager.chatService sendMessage:notificationMessage
+                                                type:notificationMessage.messageType
+                                            toDialog:chatDialog
+                                       saveToHistory:NO
+                                       saveToStorage:NO
+                                          completion:nil];
+        
+        return [self.serviceManager.chatService deleteDialogWithID:chatDialog.ID];
+    }];
+
+}
+
 #pragma mark - Users
 
 - (NSString *)fullNameForUserID:(NSUInteger)userID {
