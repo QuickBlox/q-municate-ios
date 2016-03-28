@@ -114,10 +114,7 @@ static UIImage *tokenBackgroundHighlightedImage() {
         
         self.selected = YES;
         
-        if (self.delegate != nil) {
-            
-            [self.delegate tagViewDidBecomeFirstResponder:self];
-        }
+        [self.delegate tagViewDidBecomeFirstResponder:self];
         
         return YES;
     }
@@ -131,10 +128,7 @@ static UIImage *tokenBackgroundHighlightedImage() {
         
         self.selected = NO;
         
-        if (self.delegate != nil) {
-            
-            [self.delegate tagViewDidResignFirstResponder:self];
-        }
+        [self.delegate tagViewDidResignFirstResponder:self];
         
         return YES;
     }
@@ -146,10 +140,7 @@ static UIImage *tokenBackgroundHighlightedImage() {
 
 - (void)deleteBackward {
     
-    if (self.delegate != nil) {
-        
-        [self.delegate tagViewDidDeleteBackwards:self];
-    }
+    [self.delegate tagViewDidDeleteBackwards:self];
 }
 
 - (BOOL)hasText {

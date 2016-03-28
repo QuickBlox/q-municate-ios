@@ -71,10 +71,7 @@
 
 - (void)deleteBackward {
     
-    if (self.delegate != nil) {
-        
-        [self.delegate textFieldWillDeleteBackwards:self];
-    }
+    [self.delegate textFieldWillDeleteBackwards:self];
     
     [super deleteBackward];
 }
@@ -85,10 +82,7 @@
     
     if ([super becomeFirstResponder]) {
         
-        if (self.delegate != nil) {
-            
-            [self.delegate textFieldDidBecomeFirstResponder:self];
-        }
+        [self.delegate textFieldDidBecomeFirstResponder:self];
         
         return YES;
     }
@@ -100,10 +94,7 @@
     
     if ([super resignFirstResponder]) {
         
-        if (self.delegate != nil) {
-            
-            [self.delegate textFieldDidResignFirstResponder:self];
-        }
+        [self.delegate textFieldDidResignFirstResponder:self];
         
         return YES;
     }

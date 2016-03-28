@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class QMTagView;
 
 /**
@@ -51,7 +53,7 @@
 /**
  *  Delegate instance that conforms to QMTagViewDelegate protocol.
  */
-@property (weak, nonatomic) id <QMTagViewDelegate>delegate;
+@property (weak, nonatomic, nullable) id <QMTagViewDelegate>delegate;
 
 /**
  *  Title label of tag
@@ -70,4 +72,9 @@
  */
 @property (strong, nonatomic) id tagID;
 
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
+
 @end
+
+NS_ASSUME_NONNULL_END

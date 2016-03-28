@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class QMTextField;
 
 /**
@@ -51,12 +53,15 @@
 /**
  *  QMTextFieldDelegate that also conforms to UITextFieldDelegate
  */
-@property (weak, nonatomic) id <QMTextFieldDelegate, UITextFieldDelegate>delegate;
+@property (weak, nonatomic, nullable) id <QMTextFieldDelegate, UITextFieldDelegate>delegate;
 
 /**
  *  Custom placeholder label
  */
 @property (strong, nonatomic) UILabel *placeholderLabel;
+
+- (nullable instancetype)init NS_UNAVAILABLE;
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
 
 /**
  *  Changing placeholder shown state.
@@ -67,3 +72,5 @@
 - (void)setShowPlaceholder:(BOOL)showPlaceholder animated:(BOOL)animated;
 
 @end
+
+NS_ASSUME_NONNULL_END

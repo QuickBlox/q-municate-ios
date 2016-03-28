@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class QMTagFieldView;
 
 /**
@@ -72,7 +74,7 @@
 /**
  *  Delegate instance that conforms to QMTagFieldViewDelegate protocol
  */
-@property (weak, nonatomic) id<QMTagFieldViewDelegate> delegate;
+@property (weak, nonatomic, nullable) id<QMTagFieldViewDelegate> delegate;
 
 /**
  *  Scroll view
@@ -82,7 +84,7 @@
 /**
  *  Text field placeholder
  */
-@property (strong, nonatomic) NSString *placeholder;
+@property (strong, nonatomic, nullable) NSString *placeholder;
 
 /**
  *  Line of tags height.
@@ -112,6 +114,9 @@
  *  Number of already visible lines.
  */
 @property (assign, nonatomic) NSInteger currentNumberOfLines;
+
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
 
 /**
  *  Preferred height for tag view.
@@ -186,3 +191,5 @@
 - (void)removeTagsAtIndexes:(NSIndexSet *)indexSet;
 
 @end
+
+NS_ASSUME_NONNULL_END

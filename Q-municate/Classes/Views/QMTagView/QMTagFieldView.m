@@ -228,7 +228,7 @@
         }
     }
     
-    return array;
+    return array.copy;
 }
 
 - (void)removeTagsAtIndexes:(NSIndexSet *)indexSet {
@@ -438,10 +438,7 @@
     
     if (MIN(currentLine + 1, self.maxNumberOfLines) != MIN(self.currentNumberOfLines, self.maxNumberOfLines)) {
         
-        if (self.delegate != nil) {
-            
-            [self.delegate tagFieldView:self didChangeHeight:_lineHeight * MIN(currentLine + 1, _maxNumberOfLines) + MAX(0, currentLine) * _lineSpacing + _linePadding * 2];
-        }
+        [self.delegate tagFieldView:self didChangeHeight:_lineHeight * MIN(currentLine + 1, _maxNumberOfLines) + MAX(0, currentLine) * _lineSpacing + _linePadding * 2];
     }
     else if (currentLine + 1 > self.currentNumberOfLines) {
         
@@ -527,10 +524,7 @@
     
     [self setNeedsLayout];
     
-    if (self.delegate != nil) {
-        
-        [self.delegate tagFieldView:self didDeleteTagWithID:tagView.tagID];
-    }
+    [self.delegate tagFieldView:self didDeleteTagWithID:tagView.tagID];
     
     if (self.tagsList.count == 0) {
         
@@ -552,10 +546,7 @@
             [self.textField setShowPlaceholder:YES animated:YES];
         }
         
-        if (self.delegate != nil) {
-            
-            [self.delegate tagFieldView:self didChangeText:textField.text];
-        }
+        [self.delegate tagFieldView:self didChangeText:textField.text];
         
         if (wasEmpty != textField.text.length == 0 &&
             [self.delegate respondsToSelector:@selector(tagFieldView:didChangeSearchStatus:byClearingTextField:)]) {
@@ -581,10 +572,7 @@
     
     [self scrollToTextField:YES];
     
-    if (self.delegate != nil) {
-        
-        [self.delegate tagFieldView:self didChangeText:textField.text];
-    }
+    [self.delegate tagFieldView:self didChangeText:textField.text];
     
     if (self.wasEmpty != textField.text.length == 0 &&
         [self.delegate respondsToSelector:@selector(tagFieldView:didChangeSearchStatus:byClearingTextField:)]) {
