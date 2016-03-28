@@ -31,7 +31,7 @@ QMUsersServiceDelegate
         
         [[QMCore instance].contactListService addDelegate:self];
         [[QMCore instance].usersService addDelegate:self];
-        _friends = [QMCore instance].friends;
+        _friends = [QMCore instance].contactManager.friends;
     }
     
     return self;
@@ -76,7 +76,7 @@ QMUsersServiceDelegate
 
 - (void)usersService:(QMUsersService *)__unused usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
-    self.friends = [QMCore instance].friends;
+    self.friends = [QMCore instance].contactManager.friends;
     [self performSearch:self.cachedSearchText];
     
     if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
@@ -87,7 +87,7 @@ QMUsersServiceDelegate
 
 - (void)usersService:(QMUsersService *)__unused usersService didAddUsers:(NSArray<QBUUser *> *)__unused user {
     
-    self.friends = [QMCore instance].friends;
+    self.friends = [QMCore instance].contactManager.friends;
     [self performSearch:self.cachedSearchText];
     
     if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
@@ -100,7 +100,7 @@ QMUsersServiceDelegate
 
 - (void)contactListServiceDidLoadCache {
     
-    self.friends = [QMCore instance].friends;
+    self.friends = [QMCore instance].contactManager.friends;
     [self performSearch:self.cachedSearchText];
     
     if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
@@ -111,7 +111,7 @@ QMUsersServiceDelegate
 
 - (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
     
-    self.friends = [QMCore instance].friends;
+    self.friends = [QMCore instance].contactManager.friends;
     [self performSearch:self.cachedSearchText];
     
     if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {

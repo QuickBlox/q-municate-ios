@@ -83,7 +83,7 @@ QMTagFieldViewDelegate
 
 - (BFTask *)createGroupChatWithPhotoURL:(NSString *)photoURL {
     
-    NSArray *occupantsIDs = [[QMCore instance] idsOfUsers:self.tagFieldView.tagIDs];
+    NSArray *occupantsIDs = [[QMCore instance].contactManager idsOfUsers:self.tagFieldView.tagIDs];
     __block QBChatDialog *chatDialog = nil;
     
     return [[[[QMCore instance].chatService createGroupChatDialogWithName:self.nameTextField.text photo:photoURL occupants:self.tagFieldView.tagIDs] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {

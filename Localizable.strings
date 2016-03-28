@@ -17,9 +17,7 @@
 "QM_STR_VIDEO_CALLING" = "Video Calling...";
 "QM_STR_EMAIL_FIELD_IS_EMPTY" = "Email field is empty";
 "QM_STR_USER_WITH_EMAIL_WASNT_FOUND" = "User with email wasn't found";
-"QM_STR_NONE" = "None";
 "QM_STR_ARE_YOU_SURE" = "Are you sure?";
-"QM_STR_DELETE" = "Delete";
 "QM_STR_INCOMING_VIDEO_CALL" = "Incoming Video Call";
 "QM_STR_INCOMING_CALL" = "Incoming Call";
 "QM_STR_CONTACT_LIST" = "Contact list";
@@ -61,7 +59,6 @@
 "QM_STR_PHONE_VERIFICATION" = "Phone verification";
 
 "QM_STR_CONFIRM_REJECT_FRIENDS_REQUEST" = "Do you really want to reject contact request from %@?";
-"QM_STR_CONFIRM_DELETE_CONTACT" = "Do you really want to delete %@ from your contact list?";
 
 "QM_STR_MAIL_COMPOSER_ERROR_DESCRIPTION" = "We can't send your feedback due to misconfigured email account. Please go to Settings app-> Mail,Contact, Calendars and setup it.";
 
@@ -74,6 +71,7 @@
 "QM_STR_NO_PERMISSIONS_TO_MICROPHONE" = "The app doesn't have access to the microphone, please go to settings";
 "QM_STR_NOT_AUTHORIZED_TO_USE_CAMERA" = "This app is not authorized to use Camera";
 "QM_STR_NOT_AUTHORIZED_TO_USE_MICROPHONE" = "This app is not authorized to use Microphone";
+
 //  ********** Contact requests notification text: ***************
 "QM_STR_FRIEND_REQUEST_DID_SEND_FOR_ME" = "Your request has been sent";
 "QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT" = "would like to chat with you";
@@ -158,3 +156,9 @@
 "QM_STR_TAKE_IMAGE" = "Take image";
 "QM_STR_CHOOSE_FROM_LIBRARY" = "Choose from library";
 "QM_STR_CANCEL" = "Cancel";
+
+// *********** User info ***********
+"QM_STR_NONE" = "none";
+"QM_STR_CONFIRM_DELETE_CONTACT" = "Do you really want to delete %@ from your contact list?";
+"QM_STR_DELETE" = "Delete";
+

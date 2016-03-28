@@ -10,10 +10,18 @@
 #import "QMLocalSearchDataSource.h"
 #import "QMCore.h"
 #import "QMLocalSearchDataProvider.h"
+#import "QMUserInfoViewController.h"
+#import "QMChatVC.h"
 
 #import "QMDialogCell.h"
 #import "QMSearchCell.h"
 #import "QMNoResultsCell.h"
+
+typedef NS_ENUM(NSUInteger, QMLocalSearchSection) {
+    
+    QMLocalSearchSectionUsers,
+    QMLocalSearchSectionDialogs
+};
 
 @interface QMSearchResultsController ()
 
@@ -23,13 +31,17 @@ QMChatServiceDelegate,
 QMChatConnectionDelegate
 >
 
+@property (weak, nonatomic) UINavigationController *dialogsNavigationController;
+
 @end
 
 @implementation QMSearchResultsController
 
-- (instancetype)init {
+- (instancetype)initWithNavigationController:(UINavigationController *)navigationController {
     
     if (self = [super init]) {
+        
+        _dialogsNavigationController = navigationController;
         
         [self registerNibs];
         
@@ -41,8 +53,6 @@ QMChatConnectionDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.tableView.delegate = self;
     
     // Hide empty separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -67,11 +77,59 @@ QMChatConnectionDelegate
     [self.tableView reloadData];
 }
 
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    
+    [self.delegate searchResultsController:self willBeginScrollResults:scrollView];
+}
+
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    UIViewController *pushViewController = nil;
+    
+    if ([self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
+        
+        switch (indexPath.section) {
+            case QMLocalSearchSectionUsers: {
+                
+                NSArray *contacts = [(id <QMLocalSearchDataSourceProtocol>)self.searchDataSource contacts];
+                QBUUser *user = contacts[indexPath.row];
+                
+                pushViewController = [QMUserInfoViewController userInfoViewControllerWithUser:user];
+                break;
+            }
+                
+            case QMLocalSearchSectionDialogs: {
+                
+                NSArray *dialogs = [(id <QMLocalSearchDataSourceProtocol>)self.searchDataSource dialogs];
+                QBChatDialog *chatDialog = dialogs[indexPath.row];
+                
+                pushViewController = [QMChatVC chatViewControllerWithChatDialog:chatDialog];
+                break;
+            }
+                
+            default:
+                NSAssert(nil, @"Unexpected section");
+        }
+    }
+    else if ([self.searchDataSource conformsToProtocol:@protocol(QMGlobalSearchDataSourceProtocol)]) {
+        
+        QBUUser *user = self.searchDataSource.items[indexPath.row];
+        pushViewController = [QMUserInfoViewController userInfoViewControllerWithUser:user];
+    }
+    else {
+        
+        NSAssert(nil, @"Unexpected data source!");
+    }
+    
+    [self.dialogsNavigationController pushViewController:pushViewController animated:YES];
+    
+    [self.delegate searchResultsController:self didPushViewController:pushViewController];
 }
 
 - (CGFloat)tableView:(UITableView *)__unused tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {

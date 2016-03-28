@@ -34,7 +34,7 @@ QMUsersServiceDelegate
         
         [[QMCore instance].contactListService addDelegate:self];
         [[QMCore instance].usersService addDelegate:self];
-        _contacts = [QMCore instance].allContactsSortedByFullName;
+        _contacts = [QMCore instance].contactManager.allContactsSortedByFullName;
     }
     
     return self;
@@ -91,7 +91,7 @@ QMUsersServiceDelegate
 
 - (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
     
-    self.contacts = [QMCore instance].allContactsSortedByFullName;
+    self.contacts = [QMCore instance].contactManager.allContactsSortedByFullName;
     if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
         
         [self.delegate searchDataProvider:self didUpdateData:self.contacts];
@@ -100,7 +100,7 @@ QMUsersServiceDelegate
 
 - (void)contactListServiceDidLoadCache {
     
-    self.contacts = [QMCore instance].allContactsSortedByFullName;
+    self.contacts = [QMCore instance].contactManager.allContactsSortedByFullName;
     if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
         
         [self.delegate searchDataProvider:self didUpdateData:self.contacts];
@@ -111,7 +111,7 @@ QMUsersServiceDelegate
 
 - (void)usersService:(QMUsersService *)__unused usersService didAddUsers:(NSArray<QBUUser *> *)__unused user {
     
-    self.contacts = [QMCore instance].allContactsSortedByFullName;
+    self.contacts = [QMCore instance].contactManager.allContactsSortedByFullName;
     if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
         
         [self.delegate searchDataProvider:self didUpdateData:self.contacts];
@@ -120,7 +120,7 @@ QMUsersServiceDelegate
 
 - (void)usersService:(QMUsersService *)__unused usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
-    self.contacts = [QMCore instance].allContactsSortedByFullName;
+    self.contacts = [QMCore instance].contactManager.allContactsSortedByFullName;
     if ([self.delegate respondsToSelector:@selector(searchDataProvider:didUpdateData:)]) {
         
         [self.delegate searchDataProvider:self didUpdateData:self.contacts];

@@ -89,11 +89,11 @@
     
     if (contactListItem.subscriptionState == QBPresenceSubscriptionStateFrom) {
         
-        self.addUserTask = [[[QMCore instance] confirmAddContactRequest:user] continueWithBlock:completionBlock];
+        self.addUserTask = [[[QMCore instance].contactManager confirmAddContactRequest:user] continueWithBlock:completionBlock];
     }
     else {
         
-        self.addUserTask = [[[QMCore instance] addUserToContactList:user] continueWithBlock:completionBlock];
+        self.addUserTask = [[[QMCore instance].contactManager addUserToContactList:user] continueWithBlock:completionBlock];
     }
 }
 

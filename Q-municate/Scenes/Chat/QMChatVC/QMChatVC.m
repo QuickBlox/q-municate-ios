@@ -8,7 +8,6 @@
 
 #import "QMChatVC.h"
 #import "QMCore.h"
-#import "QMProfile.h"
 #import "QMMessageStatusStringBuilder.h"
 #import "QMPlaceholder.h"
 #import "REAlertView+QMSuccess.h"
@@ -16,6 +15,7 @@
 #import "QMImagePicker.h"
 #import "REActionSheet.h"
 #import "QMOnlineTitleView.h"
+#import "QMUserInfoViewController.h"
 
 // helpers
 #import "QMChatButtonsFactory.h"
@@ -103,9 +103,12 @@ AGEmojiKeyboardViewDelegate
 
 #pragma mark - Static methods
 
-+ (QMChatVC *)chatViewControllerWithChatDialog:(QBChatDialog *)chatDialog {
++ (instancetype)chatViewControllerWithChatDialog:(QBChatDialog *)chatDialog {
     
-    return [[QMChatVC alloc] initWithChatDialog:chatDialog];
+    QMChatVC *chatVC = [[UIStoryboard storyboardWithName:kQMChatStoryboard bundle:nil] instantiateViewControllerWithIdentifier:NSStringFromClass([self class])];
+    chatVC.chatDialog = chatDialog;
+    
+    return chatVC;
 }
 
 #pragma mark - QMChatViewController data source overrides
@@ -126,18 +129,6 @@ AGEmojiKeyboardViewDelegate
 }
 
 #pragma mark - Life cycle
-
-- (instancetype)initWithChatDialog:(QBChatDialog *)chatDialog {
-    
-    self = [super init];
-    
-    if (self) {
-        
-        _chatDialog = chatDialog;
-    }
-    
-    return self;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -167,8 +158,8 @@ AGEmojiKeyboardViewDelegate
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
         // set up opponent full name
-        [self.onlineTitleView setTitle:[[QMCore instance] fullNameForUserID:self.chatDialog.recipientID]];
-        BOOL isOpponentOnline = [[QMCore instance] isUserOnline:self.chatDialog.recipientID];
+        [self.onlineTitleView setTitle:[[QMCore instance].contactManager fullNameForUserID:self.chatDialog.recipientID]];
+        BOOL isOpponentOnline = [[QMCore instance].contactManager isUserOnlineWithID:self.chatDialog.recipientID];
         [self setOpponentOnlineStatus:isOpponentOnline];
         
         // configuring call buttons for opponent
@@ -193,7 +184,7 @@ AGEmojiKeyboardViewDelegate
             }
             
             self.isOpponentTyping = NO;
-            BOOL isOnline = [[QMCore instance] isUserOnline:self.chatDialog.recipientID];
+            BOOL isOnline = [[QMCore instance].contactManager isUserOnlineWithID:self.chatDialog.recipientID];
             [self setOpponentOnlineStatus:isOnline];
         }];
     }
@@ -304,13 +295,7 @@ AGEmojiKeyboardViewDelegate
     
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
-        if (![[QMCore instance] isFriendWithUserID:self.chatDialog.recipientID]) {
-            
-            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
-            return NO;
-        }
-        
-        if ([[QMCore instance] userIDIsInPendingList:self.chatDialog.recipientID]) {
+        if (![[QMCore instance].contactManager isFriendWithUserID:self.chatDialog.recipientID]) {
             
             [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
             return NO;
@@ -325,9 +310,9 @@ AGEmojiKeyboardViewDelegate
 - (void)didPressSendButton:(UIButton *)__unused button
            withMessageText:(NSString *)text
                   senderId:(NSUInteger)senderId
-         senderDisplayName:(NSString *)senderDisplayName
-                      date:(NSDate *)date
-{
+         senderDisplayName:(NSString *)__unused senderDisplayName
+                      date:(NSDate *)date {
+    
     if (self.typingTimer != nil) {
         
         [self stopTyping];
@@ -338,10 +323,10 @@ AGEmojiKeyboardViewDelegate
         return;
     }
     
+#warning need to implement custom full name field in order to send full name as meta data of message
     QBChatMessage *message = [QBChatMessage message];
     message.text = text;
     message.senderID = senderId;
-    message.senderNick = senderDisplayName;
     message.markable = YES;
     message.deliveredIDs = @[@(self.senderID)];
     message.readIDs = @[@(self.senderID)];
@@ -398,7 +383,7 @@ AGEmojiKeyboardViewDelegate
     if (item.isNotificatonMessage) {
         
         NSUInteger opponentID = self.chatDialog.recipientID;
-        BOOL isFriend = [[QMCore instance] isFriendWithUserID:opponentID];
+        BOOL isFriend = [[QMCore instance].contactManager isFriendWithUserID:opponentID];
         
         if (item.messageType == QMMessageTypeContactRequest && item.senderID != self.senderID && !isFriend) {
             
@@ -415,7 +400,7 @@ AGEmojiKeyboardViewDelegate
         
         if (item.senderID != self.senderID) {
             
-            if (item.isMediaMessage || item.attachmentStatus != QMMessageAttachmentStatusNotLoaded) {
+            if (item.isMediaMessage && item.attachmentStatus != QMMessageAttachmentStatusError) {
                 
                 return [QMChatAttachmentIncomingCell class];
             }
@@ -426,7 +411,7 @@ AGEmojiKeyboardViewDelegate
         }
         else {
             
-            if (item.isMediaMessage || item.attachmentStatus != QMMessageAttachmentStatusNotLoaded) {
+            if (item.isMediaMessage && item.attachmentStatus != QMMessageAttachmentStatusError) {
                 
                 return [QMChatAttachmentOutgoingCell class];
             }
@@ -825,7 +810,42 @@ AGEmojiKeyboardViewDelegate
     self.typingTimer = [NSTimer scheduledTimerWithTimeInterval:4.0 target:self selector:@selector(stopTyping) userInfo:nil repeats:NO];
 }
 
-#pragma mark - Calls
+#pragma mark - Actions
+
+- (void)performInfoViewControllerForUserID:(NSUInteger)userID {
+    
+    QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:userID];
+    
+    if (opponentUser == nil) {
+        
+        opponentUser = [QBUUser user];
+        opponentUser.ID = userID;
+        opponentUser.fullName = NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil);
+    }
+    
+    [self performSegueWithIdentifier:KQMSceneSegueUserInfo sender:opponentUser];
+}
+
+- (IBAction)onlineTitlePressed {
+    
+    if (self.chatDialog.type == QBChatDialogTypePrivate) {
+        
+        [self performInfoViewControllerForUserID:self.chatDialog.recipientID];
+    }
+    else {
+        
+        // open group info vc
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    if ([segue.identifier isEqualToString:KQMSceneSegueUserInfo]) {
+        
+        QMUserInfoViewController *userInfoVC = segue.destinationViewController;
+        userInfoVC.user = sender;
+    }
+}
 
 - (void)audioCallAction {
     
@@ -1028,7 +1048,6 @@ AGEmojiKeyboardViewDelegate
         return;
     }
     
-    
     QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:self.chatDialog.recipientID];
     
     if (accept) {
@@ -1037,7 +1056,7 @@ AGEmojiKeyboardViewDelegate
         QBChatMessage *currentMessage = [self.chatSectionManager messageForIndexPath:indexPath];
         
         @weakify(self);
-        self.contactRequestTask = [[[QMCore instance] confirmAddContactRequest:opponentUser] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        self.contactRequestTask = [[[QMCore instance].contactManager confirmAddContactRequest:opponentUser] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             @strongify(self);
             // success block only
             [self.chatSectionManager updateMessage:currentMessage];
@@ -1048,7 +1067,7 @@ AGEmojiKeyboardViewDelegate
     else {
         
         @weakify(self);
-        self.contactRequestTask = [[[[QMCore instance] rejectAddContactRequest:opponentUser] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        self.contactRequestTask = [[[[QMCore instance].contactManager rejectAddContactRequest:opponentUser] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             
             return [[QMCore instance].chatService deleteDialogWithID:self.chatDialog.ID];
         }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
@@ -1157,8 +1176,8 @@ AGEmojiKeyboardViewDelegate
     });
 }
 
-- (UIImage *)resizedImageFromImage:(UIImage *)image
-{
+- (UIImage *)resizedImageFromImage:(UIImage *)image {
+    
     CGFloat largestSide = image.size.width > image.size.height ? image.size.width : image.size.height;
     CGFloat scaleCoefficient = largestSide / 560.0f;
     CGSize newSize = CGSizeMake(image.size.width / scaleCoefficient, image.size.height / scaleCoefficient);

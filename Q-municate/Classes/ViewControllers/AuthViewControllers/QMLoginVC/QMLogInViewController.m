@@ -10,7 +10,6 @@
 #import "REAlertView+QMSuccess.h"
 #import "SVProgressHUD.h"
 #import "QMCore.h"
-#import "QMProfile.h"
 
 @interface QMLogInViewController ()
 

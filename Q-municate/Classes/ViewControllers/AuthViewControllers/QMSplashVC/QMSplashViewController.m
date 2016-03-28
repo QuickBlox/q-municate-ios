@@ -8,7 +8,6 @@
 
 #import "QMSplashViewController.h"
 #import "QMCore.h"
-#import "QMProfile.h"
 
 @implementation QMSplashViewController
 

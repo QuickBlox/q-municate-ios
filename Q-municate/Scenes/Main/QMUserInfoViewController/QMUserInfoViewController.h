@@ -1,29 +1,29 @@
 //
-//  QMChatVC.h
+//  QMUserInfoViewController.h
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/9/16.
+//  Created by Vitaliy Gorbachov on 3/23/16.
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMChatViewController.h"
+#import <UIKit/UIKit.h>
 
 /**
- *  Chat view controller.
+ *  User info table view controller.
  */
-@interface QMChatVC : QMChatViewController
+@interface QMUserInfoViewController : UITableViewController
 
 /**
- *  Chat dialog.
+ *  User to show info for. Must have a valid user ID.
  */
-@property (strong, nonatomic, nonnull) QBChatDialog *chatDialog;
+@property (strong, nonatomic, nonnull) QBUUser *user;
 
 /**
  *  Init.
  *
  *  @warning Unavailable. Use 'chatViewControllerWithChatDialog:' instead.
  *
- *  @return QMChatVC new instance.
+ *  @return QMUserInfoViewController new instance.
  */
 - (nullable instancetype)init NS_UNAVAILABLE;
 
@@ -34,7 +34,7 @@
  *
  *  @warning Unavailable. Use 'chatViewControllerWithChatDialog:' instead.
  *
- *  @return QMChatVC new instance.
+ *  @return QMUserInfoViewController new instance.
  */
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder NS_UNAVAILABLE;
 
@@ -46,17 +46,17 @@
  *
  *  @warning Unavailable. Use 'chatViewControllerWithChatDialog:' instead.
  *
- *  @return QMChatVC new instance.
+ *  @return QMUserInfoViewController new instance.
  */
 - (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
 
 /**
- *  Chat view controller with chat dialog.
+ *  User info view controller instance with user.
  *
- *  @param chatDialog chat dialog
+ *  @param user user to instantinate view controller with.
  *
- *  @return QMChatViewController new instance.
+ *  @return QMUserInfoViewController instantiated instance.
  */
-+ (nullable instancetype)chatViewControllerWithChatDialog:(nonnull QBChatDialog *)chatDialog;
++ (nullable instancetype)userInfoViewControllerWithUser:(nonnull QBUUser *)user;
 
 @end

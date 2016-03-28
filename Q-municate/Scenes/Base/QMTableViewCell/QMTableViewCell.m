@@ -70,14 +70,11 @@
         self.titleLabel.text = title;
     }
     
-    if (!_placeholderID != placeholderID) {
+    if (_placeholderID != placeholderID || ![_avatarUrl isEqualToString:avatarUrl]) {
         
         _placeholderID = placeholderID;
-    }
-    
-    if (![self.avatarUrl isEqualToString:avatarUrl]) {
         
-        self.avatarUrl = avatarUrl;
+        _avatarUrl = avatarUrl;
         
         UIImage *placeholder = [QMPlaceholder placeholderWithFrame:self.avatarImage.bounds title:self.title ID:self.placeholderID];
         

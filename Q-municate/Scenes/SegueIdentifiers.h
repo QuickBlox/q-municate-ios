@@ -20,3 +20,4 @@ static NSString *const kQMSceneSegueGroupMembersAdd     = @"SceneSegueGroupMembe
 static NSString *const kQMSceneSegueProfile             = @"SceneSegueProfile";
 static NSString *const kQMSceneSegueNewMessage          = @"SceneSegueNewMessage";
 static NSString *const kQMSceneSegueGroupContactList    = @"SceneSegueGroupContactList";
+static NSString *const KQMSceneSegueUserInfo            = @"SceneSegueUserInfo";

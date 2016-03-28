@@ -1,32 +1,50 @@
 //
-//  QMNotifications.m
+//  QMNotificationManager.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/4/16.
+//  Created by Vitaliy Gorbachov on 3/26/16.
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMNotifications.h"
+#import "QMNotificationManager.h"
 #import "QMCore.h"
-#import "QMProfile.h"
+#import "QMNotificationPanel.h"
 
-@implementation QMNotifications
+@interface QMNotificationManager ()
 
-+ (QBChatMessage *)contactRequestNotificationForUser:(QBUUser *)user withChatDialog:(QBChatDialog *)chatDialog {
+@property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
+
+@end
+
+@implementation QMNotificationManager
+
+@dynamic serviceManager;
+
+- (void)serviceWillStart {
     
-    QBChatMessage *notification = [QBChatMessage message];
-    notification.recipientID = user.ID;
-    notification.senderID = [QMCore instance].currentProfile.userData.ID;
-    notification.text = @"Contact request";  // contact request
-    notification.dateSent = [NSDate date];
+}
+
+#pragma mark - Instances
+
+- (QBChatMessage *)contactRequestNotificationForUser:(QBUUser *)user {
+    
+    QBChatMessage *notification = notificationForUser(user);
     notification.messageType = QMMessageTypeContactRequest;
-    
-    [notification updateCustomParametersWithDialog:chatDialog];
     
     return notification;
 }
 
-+ (BFTask *)sendPushNotificationToUser:(QBUUser *)user withText:(NSString *)text {
+- (QBChatMessage *)removeContactNotificationForUser:(QBUUser *)user {
+    
+    QBChatMessage *notification = notificationForUser(user);
+    notification.messageType = QMMessageTypeDeleteContactRequest;
+    
+    return notification;
+}
+
+#pragma mark - Notification management
+
+- (BFTask *)sendPushNotificationToUser:(QBUUser *)user withText:(NSString *)text {
     
     BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
     
@@ -35,17 +53,17 @@
     event.notificationType = QBMNotificationTypePush;
     event.usersIDs = [NSString stringWithFormat:@"%zd", user.ID];
     event.type = QBMEventTypeOneShot;
-    //
+    
     // custom params
     NSDictionary  *dictPush = @{@"message" : message,
                                 @"ios_badge": @"1",
                                 @"ios_sound": @"default",
                                 };
-    //
+    
     NSError *error = nil;
     NSData *sendData = [NSJSONSerialization dataWithJSONObject:dictPush options:NSJSONWritingPrettyPrinted error:&error];
     NSString *jsonString = [[NSString alloc] initWithData:sendData encoding:NSUTF8StringEncoding];
-    //
+    
     event.message = jsonString;
     
     [QBRequest createEvent:event successBlock:^(QBResponse *__unused response, NSArray *__unused events) {
@@ -57,6 +75,18 @@
     }];
     
     return source.task;
+}
+
+#pragma mark - Helpers
+
+static inline QBChatMessage *notificationForUser(QBUUser *user) {
+    
+    QBChatMessage *notification = [QBChatMessage message];
+    notification.recipientID = user.ID;
+    notification.text = kQMContactRequestNotificationMessage;
+    notification.dateSent = [NSDate date];
+    
+    return notification;
 }
 
 @end
