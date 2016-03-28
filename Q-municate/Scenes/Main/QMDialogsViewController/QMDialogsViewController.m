@@ -37,6 +37,9 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
 QMUsersServiceDelegate,
 QMChatServiceDelegate,
 QMChatConnectionDelegate,
+
+QMSearchResultsControllerDelegate,
+
 UITableViewDelegate,
 UISearchControllerDelegate,
 UISearchBarDelegate,
@@ -91,7 +94,8 @@ UISearchResultsUpdating
     self.dialogsDataSource = [[QMDialogsDataSource alloc] init];
     self.placeholderDataSource  = [[QMPlaceholderDataSource alloc] init];
     
-    self.searchResultsController = [[QMSearchResultsController alloc] init];
+    self.searchResultsController = [[QMSearchResultsController alloc] initWithNavigationController:self.navigationController];
+    self.searchResultsController.delegate = self;
     
     QMLocalSearchDataProvider *localSearchDataProvider = [[QMLocalSearchDataProvider alloc] init];
     localSearchDataProvider.delegate = self.searchResultsController;
@@ -309,11 +313,16 @@ UISearchResultsUpdating
     //    }
 }
 
-- (void)chatServiceChatDidFailWithStreamError:(NSError *)error
-{
-    //    if ([[QMApi instance] isInternetConnected]) {
-    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_STREAM_ERROR", nil), error.localizedDescription]];
-    //    }
+#pragma mark - QMSearchResultsControllerDelegate
+
+- (void)searchResultsController:(QMSearchResultsController *)__unused searchResultsController willBeginScrollResults:(UIScrollView *)__unused scrollView {
+    
+    [self.searchController.searchBar resignFirstResponder];
+}
+
+- (void)searchResultsController:(QMSearchResultsController *)__unused searchResultsController didPushViewController:(UIViewController *)__unused viewController {
+    
+    [self.searchController.searchBar resignFirstResponder];
 }
 
 #pragma mark - Helpers
