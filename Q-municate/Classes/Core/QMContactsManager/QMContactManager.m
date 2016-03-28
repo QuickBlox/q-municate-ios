@@ -34,7 +34,7 @@
         return [self.serviceManager.chatService createPrivateChatDialogWithOpponent:user];
     }] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
         @strongify(self);
-        QBChatMessage *chatMessage = [self.serviceManager.notificationManager contactRequestNotificationForUser:user withChatDialog:task.result];
+        QBChatMessage *chatMessage = [self.serviceManager.notificationManager contactRequestNotificationForUser:user];
         [self.serviceManager.chatService sendMessage:chatMessage
                                                  type:chatMessage.messageType
                                              toDialog:task.result
@@ -42,7 +42,7 @@
                                         saveToStorage:YES
                                            completion:nil];
         
-        NSString *notificationMessage = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", @"{FullName}"), self.serviceManager.currentProfile.userData.fullName];
+        NSString *notificationMessage = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", nil), self.serviceManager.currentProfile.userData.fullName];
         
         return [self.serviceManager.notificationManager sendPushNotificationToUser:user withText:notificationMessage];
     }];
