@@ -8,6 +8,8 @@
 
 #import "QMSearchDataSource.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  *  This class represent alphabetized data source using a specific key path of objects, set to items.
  *  It is also can be used as a search data source.
@@ -21,8 +23,8 @@
 
 #pragma mark - Unavailable constructors
 
-- (instancetype _Nullable)init NS_UNAVAILABLE;
-- (instancetype _Nullable)initWithSearchDataProvider:(QMSearchDataProvider * _Nonnull)searchDataProvider NS_UNAVAILABLE;
+- (nullable instancetype)init NS_UNAVAILABLE;
+- (nullable instancetype)initWithSearchDataProvider:(QMSearchDataProvider *)searchDataProvider NS_UNAVAILABLE;
 
 #pragma mark - Class construction
 
@@ -33,7 +35,7 @@
  *
  *  @return QMAlphabetizedDataSource instance
  */
-- (instancetype _Nullable)initWithKeyPath:(NSString * _Nonnull) keyPath;
+- (nullable instancetype)initWithKeyPath:(NSString *) keyPath;
 
 /**
  *  Init QMAlphabetizedDataSource using a search data provider and a specific key path.
@@ -45,7 +47,7 @@
  *
  *  @return QMAlphabetizedDataSource instance
  */
-- (instancetype _Nullable)initWithSearchDataProvider:(QMSearchDataProvider * _Nonnull)searchDataProvider usingKeyPath:(NSString * _Nonnull)keyPath;
+- (nullable instancetype)initWithSearchDataProvider:(QMSearchDataProvider *)searchDataProvider usingKeyPath:(NSString *)keyPath;
 
 #pragma mark - Methods
 
@@ -56,6 +58,8 @@
  *
  *  @return specific object, that is existent at index path
  */
-- (id _Nullable)objectAtIndexPath:(NSIndexPath * _Nonnull)indexPath;
+- (nullable id)objectAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
+
+NS_ASSUME_NONNULL_END

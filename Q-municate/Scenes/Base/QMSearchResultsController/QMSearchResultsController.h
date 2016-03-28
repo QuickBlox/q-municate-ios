@@ -10,6 +10,8 @@
 #import "QMSearchProtocols.h"
 #import "QMSearchDataProvider.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class QMSearchResultsController;
 
 /**
@@ -28,7 +30,7 @@
  *  @param searchResultsController QMSearchResultsController instance.
  *  @param scrollView              scroll view instance
  */
-- (void)searchResultsController:(nonnull QMSearchResultsController *)searchResultsController willBeginScrollResults:(nonnull UIScrollView *)scrollView;
+- (void)searchResultsController:(QMSearchResultsController *)searchResultsController willBeginScrollResults:(UIScrollView *)scrollView;
 
 /**
  *  Notifying about search result controller pushed new view controller
@@ -36,7 +38,7 @@
  *  @param searchResultsController QMSearchResultsController instance.
  *  @param viewController          view controller that was pushed
  */
-- (void)searchResultsController:(nonnull QMSearchResultsController *)searchResultsController didPushViewController:(nonnull UIViewController *)viewController;
+- (void)searchResultsController:(QMSearchResultsController *)searchResultsController didPushViewController:(UIViewController *)viewController;
 
 @end
 
@@ -70,7 +72,7 @@ QMSearchDataProviderDelegate
  *
  *  @return QMSearchResultsController new instance.
  */
-- (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder NS_UNAVAILABLE;
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
 
 /**
  *  Init with nib name and bundle.
@@ -82,7 +84,7 @@ QMSearchDataProviderDelegate
  *
  *  @return QMSearchResultsController new instance.
  */
-- (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
+- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
 
 /**
  *  Init with style.
@@ -93,7 +95,7 @@ QMSearchDataProviderDelegate
  *
  *  @return QMSearchResultsController new instance.
  */
-- (nonnull instancetype)initWithStyle:(UITableViewStyle)style NS_UNAVAILABLE;
+- (instancetype)initWithStyle:(UITableViewStyle)style NS_UNAVAILABLE;
 
 /**
  *  Init with navigation controller.
@@ -102,7 +104,7 @@ QMSearchDataProviderDelegate
  *
  *  @return QMSearchResultsController new instance.
  */
-- (nullable instancetype)initWithNavigationController:(nonnull UINavigationController *)navigationController;
+- (nullable instancetype)initWithNavigationController:(UINavigationController *)navigationController;
 
 /**
  *  Perform search.
@@ -112,3 +114,5 @@ QMSearchDataProviderDelegate
 - (void)performSearch:(nullable NSString *)searchText;
 
 @end
+
+NS_ASSUME_NONNULL_END

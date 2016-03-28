@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, QMAccountType) {
     QMAccountTypeNone,
     QMAccountTypeEmail,
@@ -20,7 +22,7 @@ typedef NS_ENUM(NSInteger, QMAccountType) {
  */
 @interface QMProfile : NSObject <NSCoding>
 
-@property (strong, nonatomic, QB_NULLABLE_PROPERTY) QBUUser *userData;
+@property (strong, nonatomic, nullable) QBUUser *userData;
 @property (assign, nonatomic) QMAccountType accountType;
 @property (assign, nonatomic) BOOL skipSync;
 
@@ -32,15 +34,17 @@ typedef NS_ENUM(NSInteger, QMAccountType) {
  *
  *  @return current profile
  */
-+ (QB_NONNULL instancetype)currentProfile;
++ (nullable instancetype)currentProfile;
 
 //- (BOOL)synchronize;
 
-- (BOOL)synchronizeWithUserData:(QB_NONNULL QBUUser *)userData;
+- (BOOL)synchronizeWithUserData:(QBUUser *)userData;
 
 - (BOOL)clearProfile;
 
-- (QB_NONNULL BFTask QB_GENERIC(QBUUser *) *)updateUserImage:(QB_NONNULL UIImage *)userImage progress:(QB_NULLABLE QMContentProgressBlock)progress;
-- (QB_NONNULL BFTask *)resetPasswordForEmail:(QB_NONNULL NSString *)email;
+- (BFTask <QBUUser *> *)updateUserImage:(UIImage *)userImage progress:(nullable QMContentProgressBlock)progress;
+- (BFTask *)resetPasswordForEmail:(NSString *)email;
 
 @end
+
+NS_ASSUME_NONNULL_END

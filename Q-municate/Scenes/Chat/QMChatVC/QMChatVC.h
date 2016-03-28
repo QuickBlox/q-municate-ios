@@ -8,6 +8,8 @@
 
 #import "QMChatViewController.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  *  Chat view controller.
  */
@@ -16,39 +18,11 @@
 /**
  *  Chat dialog.
  */
-@property (strong, nonatomic, nonnull) QBChatDialog *chatDialog;
+@property (strong, nonatomic) QBChatDialog *chatDialog;
 
-/**
- *  Init.
- *
- *  @warning Unavailable. Use 'chatViewControllerWithChatDialog:' instead.
- *
- *  @return QMChatVC new instance.
- */
 - (nullable instancetype)init NS_UNAVAILABLE;
-
-/**
- *  Init with coder.
- *
- *  @param aDecoder a decoder
- *
- *  @warning Unavailable. Use 'chatViewControllerWithChatDialog:' instead.
- *
- *  @return QMChatVC new instance.
- */
-- (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder NS_UNAVAILABLE;
-
-/**
- *  Init with nib name and bundle.
- *
- *  @param nibNameOrNil   nib name
- *  @param nibBundleOrNil nib bundle
- *
- *  @warning Unavailable. Use 'chatViewControllerWithChatDialog:' instead.
- *
- *  @return QMChatVC new instance.
- */
-- (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
+- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
 
 /**
  *  Chat view controller with chat dialog.
@@ -57,6 +31,8 @@
  *
  *  @return QMChatViewController new instance.
  */
-+ (nullable instancetype)chatViewControllerWithChatDialog:(nonnull QBChatDialog *)chatDialog;
++ (nullable instancetype)chatViewControllerWithChatDialog:(QBChatDialog *)chatDialog;
 
 @end
+
+NS_ASSUME_NONNULL_END
