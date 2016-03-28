@@ -19,6 +19,38 @@
 @property (strong, nonatomic, nonnull) QBUUser *user;
 
 /**
+ *  Init.
+ *
+ *  @warning Unavailable. Use 'chatViewControllerWithChatDialog:' instead.
+ *
+ *  @return QMUserInfoViewController new instance.
+ */
+- (nullable instancetype)init NS_UNAVAILABLE;
+
+/**
+ *  Init with coder.
+ *
+ *  @param aDecoder a decoder
+ *
+ *  @warning Unavailable. Use 'chatViewControllerWithChatDialog:' instead.
+ *
+ *  @return QMUserInfoViewController new instance.
+ */
+- (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder NS_UNAVAILABLE;
+
+/**
+ *  Init with nib name and bundle.
+ *
+ *  @param nibNameOrNil   nib name
+ *  @param nibBundleOrNil nib bundle
+ *
+ *  @warning Unavailable. Use 'chatViewControllerWithChatDialog:' instead.
+ *
+ *  @return QMUserInfoViewController new instance.
+ */
+- (nonnull instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
+
+/**
  *  User info view controller instance with user.
  *
  *  @param user user to instantinate view controller with.
