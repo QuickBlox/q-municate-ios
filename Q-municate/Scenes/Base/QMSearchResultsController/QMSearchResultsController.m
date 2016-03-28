@@ -81,10 +81,7 @@ QMChatConnectionDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     
-    if (self.delegate != nil) {
-        
-        [self.delegate searchResultsController:self willBeginScrollResults:scrollView];
-    }
+    [self.delegate searchResultsController:self willBeginScrollResults:scrollView];
 }
 
 #pragma mark - UITableViewDelegate
@@ -132,10 +129,7 @@ QMChatConnectionDelegate
     
     [self.dialogsNavigationController pushViewController:pushViewController animated:YES];
     
-    if (self.delegate != nil) {
-        
-        [self.delegate searchResultsController:self didPushViewController:pushViewController];
-    }
+    [self.delegate searchResultsController:self didPushViewController:pushViewController];
 }
 
 - (CGFloat)tableView:(UITableView *)__unused tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
