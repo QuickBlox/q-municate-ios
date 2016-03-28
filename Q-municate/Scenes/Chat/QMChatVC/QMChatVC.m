@@ -8,7 +8,6 @@
 
 #import "QMChatVC.h"
 #import "QMCore.h"
-#import "QMProfile.h"
 #import "QMMessageStatusStringBuilder.h"
 #import "QMPlaceholder.h"
 #import "REAlertView+QMSuccess.h"

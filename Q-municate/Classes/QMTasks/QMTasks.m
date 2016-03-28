@@ -8,7 +8,6 @@
 
 #import "QMTasks.h"
 #import "QMCore.h"
-#import "QMProfile.h"
 #import "QMErrorsFactory.h"
 #import "QMFacebook.h"
 #import <DigitsKit/DigitsKit.h>

@@ -8,7 +8,6 @@
 
 #import "QMMessageStatusStringBuilder.h"
 #import "QMCore.h"
-#import "QMProfile.h"
 
 static const NSUInteger kQMStatusStringNamesLimit = 5;
 

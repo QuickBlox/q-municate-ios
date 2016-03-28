@@ -8,7 +8,6 @@
 
 #import "QMLicenseAgreement.h"
 #import "QMCore.h"
-#import "QMProfile.h"
 #import "QMLicenseAgreementViewController.h"
 
 @implementation QMLicenseAgreement

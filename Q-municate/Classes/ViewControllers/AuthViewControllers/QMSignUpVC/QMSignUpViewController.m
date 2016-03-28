@@ -16,7 +16,6 @@
 
 #import <QMImageView.h>
 #import "QMCore.h"
-#import "QMProfile.h"
 #import "QMContent.h"
 
 @interface QMSignUpViewController ()

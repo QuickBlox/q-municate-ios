@@ -13,7 +13,6 @@
 
 #import "QMFacebook.h"
 #import "QMCore.h"
-#import "QMProfile.h"
 #import "QMContent.h"
 #import "QMTasks.h"
 

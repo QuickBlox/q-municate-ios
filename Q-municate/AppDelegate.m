@@ -7,12 +7,10 @@
 //
 
 #import "AppDelegate.h"
-#import "SVProgressHUD.h"
 #import "REAlertView+QMSuccess.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "QMChatVC.h"
 #import "QMCore.h"
-#import "QMProfile.h"
 
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>

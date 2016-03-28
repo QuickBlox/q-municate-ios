@@ -21,7 +21,6 @@
 
 #import "QMCore.h"
 #import "QMTasks.h"
-#import "QMProfile.h"
 #import "QMProfileTitleView.h"
 
 #import <SVProgressHUD.h>
@@ -83,11 +82,6 @@ UISearchResultsUpdating
     
     // auto login user
     [self performAutoLoginAndFetchData];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Init methods
