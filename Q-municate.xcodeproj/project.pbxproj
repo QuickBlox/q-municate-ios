@@ -33,6 +33,7 @@
 		55D8ADB519AC761000DAF79F /* QMForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADB419AC761000DAF79F /* QMForgotPasswordViewController.m */; };
 		55D8ADF419AC776A00DAF79F /* REAlertView+QMSuccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADF319AC776A00DAF79F /* REAlertView+QMSuccess.m */; };
 		55D8ADFB19AC833300DAF79F /* QMLicenseAgreement.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADFA19AC833300DAF79F /* QMLicenseAgreement.m */; };
+		580590FD1CA548130055BC2F /* QMContactManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 580590FC1CA548130055BC2F /* QMContactManager.m */; };
 		580B3B571C3FF89F00345081 /* QMTasks.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B3B561C3FF89F00345081 /* QMTasks.m */; };
 		580D34DF1BBFF5850034813A /* UIImage+fixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 580D34DE1BBFF5850034813A /* UIImage+fixOrientation.m */; };
 		580D34E21BC027BD0034813A /* QMSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580D34E11BC027BD0034813A /* QMSplashViewController.m */; };
@@ -182,6 +183,8 @@
 		55D8ADF319AC776A00DAF79F /* REAlertView+QMSuccess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "REAlertView+QMSuccess.m"; sourceTree = "<group>"; };
 		55D8ADF919AC833300DAF79F /* QMLicenseAgreement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLicenseAgreement.h; sourceTree = "<group>"; };
 		55D8ADFA19AC833300DAF79F /* QMLicenseAgreement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLicenseAgreement.m; sourceTree = "<group>"; };
+		580590FB1CA548130055BC2F /* QMContactManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMContactManager.h; path = Classes/Core/QMContactsManager/QMContactManager.h; sourceTree = "<group>"; };
+		580590FC1CA548130055BC2F /* QMContactManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMContactManager.m; path = Classes/Core/QMContactsManager/QMContactManager.m; sourceTree = "<group>"; };
 		580B3B551C3FF89F00345081 /* QMTasks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMTasks.h; path = Classes/QMTasks/QMTasks.h; sourceTree = "<group>"; };
 		580B3B561C3FF89F00345081 /* QMTasks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMTasks.m; path = Classes/QMTasks/QMTasks.m; sourceTree = "<group>"; };
 		580D34DD1BBFF5850034813A /* UIImage+fixOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+fixOrientation.h"; sourceTree = "<group>"; };
@@ -639,6 +642,24 @@
 			path = QMLicenseAgreement;
 			sourceTree = "<group>";
 		};
+		580590F91CA547EC0055BC2F /* QMCore */ = {
+			isa = PBXGroup;
+			children = (
+				584277DA1C3FE5BC00CDE35B /* QMCore.h */,
+				584277DB1C3FE5BC00CDE35B /* QMCore.m */,
+			);
+			name = QMCore;
+			sourceTree = "<group>";
+		};
+		580590FA1CA547F30055BC2F /* QMContactManager */ = {
+			isa = PBXGroup;
+			children = (
+				580590FB1CA548130055BC2F /* QMContactManager.h */,
+				580590FC1CA548130055BC2F /* QMContactManager.m */,
+			);
+			name = QMContactManager;
+			sourceTree = "<group>";
+		};
 		580B3B541C3FF88500345081 /* QMTasks */ = {
 			isa = PBXGroup;
 			children = (
@@ -826,13 +847,13 @@
 			name = QMFacebook;
 			sourceTree = "<group>";
 		};
-		584277D91C3FE58900CDE35B /* QMCore */ = {
+		584277D91C3FE58900CDE35B /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				584277DA1C3FE5BC00CDE35B /* QMCore.h */,
-				584277DB1C3FE5BC00CDE35B /* QMCore.m */,
+				580590F91CA547EC0055BC2F /* QMCore */,
+				580590FA1CA547F30055BC2F /* QMContactManager */,
 			);
-			name = QMCore;
+			name = Core;
 			sourceTree = "<group>";
 		};
 		584277DD1C3FECF400CDE35B /* QMContent */ = {
@@ -1281,6 +1302,7 @@
 		695F4B2118B60A62006C9DA5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				584277D91C3FE58900CDE35B /* Core */,
 				589792961C99937F00CC6438 /* QMAlphabetizer */,
 				58FA41641C96B1E300E61586 /* QMMessageStatusStringBuilder */,
 				58C64D041C90697400F1387B /* QMChatButtonsFactory */,
@@ -1289,7 +1311,6 @@
 				585DE4601C46A8170068E03E /* QMPlaceholder */,
 				580B3B541C3FF88500345081 /* QMTasks */,
 				584277DD1C3FECF400CDE35B /* QMContent */,
-				584277D91C3FE58900CDE35B /* QMCore */,
 				584277D21C3FCFA100CDE35B /* QMFacebook */,
 				584277CE1C3FBCF500CDE35B /* QMProfile */,
 				6943843218E42677001E08A9 /* CustomSegues */,
@@ -1558,6 +1579,7 @@
 				5885E07D1C47F5FC0081A5E9 /* QMPlaceholderDataSource.m in Sources */,
 				5877D6E31C4675B900938E5D /* QMBadgeView.m in Sources */,
 				584277E01C3FED0E00CDE35B /* QMContent.m in Sources */,
+				580590FD1CA548130055BC2F /* QMContactManager.m in Sources */,
 				589D4CF11C98158E005F1E76 /* QMRootViewControllerSegue.m in Sources */,
 				585DE4631C46A8390068E03E /* QMPlaceholder.m in Sources */,
 				584277D11C3FBD1600CDE35B /* QMProfile.m in Sources */,

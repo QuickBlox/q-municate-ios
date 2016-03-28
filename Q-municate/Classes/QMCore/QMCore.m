@@ -8,13 +8,11 @@
 
 #import "QMCore.h"
 #import <Reachability.h>
-#import "QMProfile.h"
 #import "QMFacebook.h"
 #import "QMNotifications.h"
-#import <QMChatService+AttachmentService.h>
 #import <DigitsKit/DigitsKit.h>
 
-NSString *const kQMLastActivityDateKey = @"last_activity_date";
+static NSString *const kQMLastActivityDateKey = @"last_activity_date";
 
 @interface QMCore ()
 
@@ -29,6 +27,7 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
     static QMCore *core = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        
         core = [[self alloc] init];
     });
     
@@ -49,6 +48,9 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
         
         // Users cache init
         [self.usersService loadFromCache];
+        
+        // managers
+        _contactManager = [[QMContactManager alloc] initWithServiceManager:self];
         
         // Reachability init
 //        _internetConnection = [Reachability reachabilityForInternetConnection];
@@ -125,73 +127,6 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
     }];
 }
 
-#pragma mark - Users
-
-- (NSArray *)allContacts {
-    
-    NSArray *ids = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
-    NSArray *allFriends = [self.usersService.usersMemoryStorage usersWithIDs:ids];
-    
-    return allFriends;
-}
-
-- (NSArray *)allContactsSortedByFullName {
-    
-    NSSortDescriptor *sorter = [[NSSortDescriptor alloc]
-                                initWithKey:@"fullName"
-                                ascending:YES
-                                selector:@selector(localizedCaseInsensitiveCompare:)];
-    NSArray *sortedUsers = [[self allContacts] sortedArrayUsingDescriptors:@[sorter]];
-    
-    return sortedUsers;
-}
-
-- (NSArray *)friends {
-    
-    NSMutableArray *friends = [NSMutableArray array];
-    NSArray *allContactsIDs = self.contactListService.contactListMemoryStorage.userIDsFromContactList;
-    
-    for (NSNumber *userID in allContactsIDs) {
-        
-        QBContactListItem *item = [self.contactListService.contactListMemoryStorage contactListItemWithUserID:userID.integerValue];
-        if (item.subscriptionState == QBPresenceSubscriptionStateBoth) {
-            
-            QBUUser *user = [self.usersService.usersMemoryStorage userWithID:userID.integerValue];
-            if (user) {
-                
-                [friends addObject:user];
-            }
-        }
-    }
-    
-    return friends.copy;
-}
-
-- (BOOL)isFriendWithUserID:(NSUInteger)userID {
-    
-    NSArray *ids = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
-    return [ids containsObject:@(userID)];
-}
-
-- (BOOL)userIDIsInPendingList:(NSUInteger)userID {
-    
-    QBContactListItem *contactlistItem = [self.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
-    
-    return contactlistItem.subscriptionState != QBPresenceSubscriptionStateBoth ? YES : NO;
-}
-
-- (NSArray *)idsOfUsers:(NSArray *)users {
-    
-    NSMutableArray *ids = [NSMutableArray array];
-    
-    for (QBUUser *user in users) {
-        
-        [ids addObject:@(user.ID)];
-    }
-    
-    return ids.copy;
-}
-
 #pragma mark - Last activity date
 
 - (void)setLastActivityDate:(NSDate *)lastActivityDate
@@ -203,64 +138,6 @@ NSString *const kQMLastActivityDateKey = @"last_activity_date";
 - (NSDate *)lastActivityDate
 {
     return [self.defaults objectForKey:kQMLastActivityDateKey];
-}
-
-#pragma mark - Contacts management
-
-- (BFTask *)addUserToContactList:(QBUUser *)user {
-    
-    @weakify(self);
-    return [[[self.contactListService addUserToContactListRequest:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        @strongify(self);
-        return [self.chatService createPrivateChatDialogWithOpponent:user];
-    }] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
-        @strongify(self);
-        QBChatMessage *chatMessage = [QMNotifications contactRequestNotificationForUser:user withChatDialog:task.result];
-        [self.chatService sendMessage:chatMessage
-                                 type:chatMessage.messageType
-                             toDialog:task.result
-                        saveToHistory:YES
-                        saveToStorage:YES
-                           completion:nil];
-        
-        NSString *notificationMessage = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", @"{FullName}"), self.currentProfile.userData.fullName];
-        
-        return [QMNotifications sendPushNotificationToUser:user withText:notificationMessage];
-    }];
-}
-
-- (BFTask *)confirmAddContactRequest:(QBUUser *)user {
-    
-    @weakify(self);
-    return [[self.contactListService acceptContactRequest:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        @strongify(self);
-        return [self.chatService sendMessageAboutAcceptingContactRequest:YES toOpponentID:user.ID];
-    }];
-}
-
-- (BFTask *)rejectAddContactRequest:(QBUUser *)user {
-    
-    @weakify(self);
-    return [[self.contactListService rejectContactRequest:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        @strongify(self);
-        return [self.chatService sendMessageAboutAcceptingContactRequest:NO toOpponentID:user.ID];
-    }];
-}
-
-- (BOOL)isUserOnline:(NSUInteger)userID {
-    
-    QBContactListItem *item = [self.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
-    
-    return item.isOnline;
-}
-
-- (NSString *)fullNameForUserID:(NSUInteger)userID {
-    
-    QBUUser *user = [self.usersService.usersMemoryStorage userWithID:userID];
-    
-    NSString *fullName = user.fullName != nil ? user.fullName : [NSString stringWithFormat:@"%tu", userID];
-    
-    return fullName;
 }
 
 #pragma mark QMContactListServiceCacheDelegate delegate

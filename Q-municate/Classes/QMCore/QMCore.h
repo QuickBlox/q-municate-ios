@@ -8,8 +8,10 @@
 
 #import "QMServicesManager.h"
 
+#import "QMProfile.h"
+
+#import "QMContactManager.h"
 @class Reachability;
-@class QMProfile;
 
 /**
  *  This class represents basic control on QMServices.
@@ -25,6 +27,11 @@ QMContactListServiceDelegate
  *  Contact list service.
  */
 @property (strong, nonatomic, readonly) QMContactListService* contactListService;
+
+/**
+ *  Contacts manager.
+ */
+@property (strong, nonatomic, readonly) QMContactManager *contactManager;
 
 /**
  *  Reachability manager.
@@ -47,23 +54,10 @@ QMContactListServiceDelegate
 - (BFTask *)disconnectFromChat;
 - (BFTask *)disconnectFromChatIfNeeded;
 
-- (NSArray *)allContacts;
-- (NSArray *)allContactsSortedByFullName;
-- (NSArray *)friends;
-- (BOOL)isFriendWithUserID:(NSUInteger)userID;
-- (NSArray *)idsOfUsers:(NSArray *)users;
-- (BOOL)userIDIsInPendingList:(NSUInteger)userID;
+
 
 - (BFTask *)logout;
 
 - (BFTask *)leaveChatDialog:(QBChatDialog *)chatDialog;
-
-#pragma mark - Contacts management
-
-- (BFTask *)addUserToContactList:(QBUUser *)user;
-- (BFTask *)confirmAddContactRequest:(QBUUser *)user;
-- (BFTask *)rejectAddContactRequest:(QBUUser *)user;
-- (BOOL)isUserOnline:(NSUInteger)userID;
-- (NSString *)fullNameForUserID:(NSUInteger)userID;
 
 @end
