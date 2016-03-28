@@ -74,7 +74,7 @@ QMContactListServiceDelegate
     [[QMCore instance].contactListService addDelegate:self];
     
     // update info table
-    [self updateInfo];
+    [self performUpdate];
     
     if (self.user.lastRequestAt == nil) {
         
@@ -84,7 +84,7 @@ QMContactListServiceDelegate
             
             @strongify(self);
             self.user = task.result;
-            [self updateInfo];
+            [self performUpdate];
             [self.tableView reloadData];
             
             return nil;
@@ -92,14 +92,27 @@ QMContactListServiceDelegate
     }
 }
 
-#pragma mark - Helpers
+#pragma mark - Methods
 
-- (void)updateInfo {
+- (void)performUpdate {
     
     [self.hiddenSections removeAllIndexes];
     
+    [self updateFullName];
+    [self updateAvatarImage];
+    [self updateUserIteractions];
+    [self updateLastSeen];
+    [self updateStatus];
+    [self updateInfo];
+}
+
+- (void)updateFullName {
+    
     // Full name
     self.fullNameLabel.text = self.user.fullName;
+}
+
+- (void)updateAvatarImage {
     
     // Avatar
     UIImage *placeholder = [QMPlaceholder placeholderWithFrame:self.avatarImageView.bounds title:self.user.fullName ID:self.user.ID];
@@ -108,9 +121,9 @@ QMContactListServiceDelegate
                                   options:SDWebImageHighPriority
                                  progress:nil
                            completedBlock:nil];
-    
-    // contact list item
-    QBContactListItem *contactListItem = [[QMCore instance].contactListService.contactListMemoryStorage contactListItemWithUserID:self.user.ID];
+}
+
+- (void)updateUserIteractions {
     
     BOOL isFriend = [[QMCore instance].contactManager isFriendWithUserID:self.user.ID];
     if (isFriend) {
@@ -127,9 +140,13 @@ QMContactListServiceDelegate
             [self.hiddenSections addIndex:QMUserInfoSectionAddAction];
         }
     }
+}
+
+- (void)updateLastSeen {
     
     // Last seen
-    if (contactListItem.isOnline) {
+    BOOL isOnline = [[QMCore instance].contactManager isUserOnlineWithID:self.user.ID];
+    if (isOnline) {
         
         self.lastSeenLabel.text = NSLocalizedString(@"QM_STR_ONLINE", nil);
     }
@@ -141,6 +158,9 @@ QMContactListServiceDelegate
         
         self.lastSeenLabel.text = NSLocalizedString(@"QM_STR_OFFLINE", nil);
     }
+}
+
+- (void)updateStatus {
     
     // Status
     if (self.user.status.length > 0) {
@@ -151,6 +171,9 @@ QMContactListServiceDelegate
         
         [self.hiddenSections addIndex:QMUserInfoSectionStatus];
     }
+}
+
+- (void)updateInfo {
     
     if (self.user.email.length > 0 || self.user.phone.length > 0) {
         
@@ -174,7 +197,8 @@ QMContactListServiceDelegate
     
     @weakify(self);
     [self.navigationController.viewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * _Nonnull obj, NSUInteger __unused idx, BOOL * _Nonnull stop) {
-        
+        // enumerating through all view controllers due to
+        // navigation stack could have more than one chat view controller
         @strongify(self);
         if ([obj isKindOfClass:[QMChatVC class]]) {
             
@@ -229,6 +253,11 @@ QMContactListServiceDelegate
 
 - (IBAction)removeContactButtonPressed {
     
+    if (self.task) {
+        // task in progress
+        return;
+    }
+    
     @weakify(self);
     [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
         
@@ -237,12 +266,7 @@ QMContactListServiceDelegate
         [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
         [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil) andActionBlock:^{
             
-            [[[QMCore instance].contactManager removeUserFromContactList:self.user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-                
-                [self updateInfo];
-                [self.tableView reloadData];
-                return nil;
-            }];
+            self.task = [[QMCore instance].contactManager removeUserFromContactList:self.user];
         }];
     }];
 }
@@ -254,14 +278,7 @@ QMContactListServiceDelegate
         return;
     }
     
-    @weakify(self);
-    self.task = [[[QMCore instance].contactManager addUserToContactList:self.user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        
-        @strongify(self);
-        [self updateInfo];
-        [self.tableView reloadData];
-        return nil;
-    }];
+    self.task = [[QMCore instance].contactManager addUserToContactList:self.user];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -299,13 +316,13 @@ QMContactListServiceDelegate
 
 - (void)contactListServiceDidLoadCache {
     
-    [self updateInfo];
+    [self performUpdate];
     [self.tableView reloadData];
 }
 
 - (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
     
-    [self updateInfo];
+    [self performUpdate];
     [self.tableView reloadData];
 }
 
