@@ -20,10 +20,6 @@
 
 @dynamic serviceManager;
 
-- (void)serviceWillStart {
-    
-}
-
 #pragma mark - Contacts management
 
 - (BFTask *)addUserToContactList:(QBUUser *)user {
@@ -36,11 +32,11 @@
         @strongify(self);
         QBChatMessage *chatMessage = [self.serviceManager.notificationManager contactRequestNotificationForUser:user];
         [self.serviceManager.chatService sendMessage:chatMessage
-                                                 type:chatMessage.messageType
-                                             toDialog:task.result
-                                        saveToHistory:YES
-                                        saveToStorage:YES
-                                           completion:nil];
+                                                type:chatMessage.messageType
+                                            toDialog:task.result
+                                       saveToHistory:YES
+                                       saveToStorage:YES
+                                          completion:nil];
         
         NSString *notificationMessage = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", nil), self.serviceManager.currentProfile.userData.fullName];
         
@@ -83,7 +79,7 @@
         
         return [self.serviceManager.chatService deleteDialogWithID:chatDialog.ID];
     }];
-
+    
 }
 
 #pragma mark - Users
@@ -92,7 +88,7 @@
     
     QBUUser *user = [self.serviceManager.usersService.usersMemoryStorage userWithID:userID];
     
-    NSString *fullName = user.fullName != nil ? user.fullName : [NSString stringWithFormat:@"%tu", userID];
+    NSString *fullName = user.fullName ?: [NSString stringWithFormat:@"%tu", userID];
     
     return fullName;
 }
@@ -107,10 +103,9 @@
 
 - (NSArray *)allContactsSortedByFullName {
     
-    NSSortDescriptor *sorter = [[NSSortDescriptor alloc]
-                                initWithKey:kQMQBUUserFullNameKeyPathKey
-                                ascending:YES
-                                selector:@selector(localizedCaseInsensitiveCompare:)];
+    NSSortDescriptor *sorter = [[NSSortDescriptor alloc] initWithKey:kQMQBUUserFullNameKeyPathKey
+                                                           ascending:YES
+                                                            selector:@selector(localizedCaseInsensitiveCompare:)];
     NSArray *sortedUsers = [[self allContacts] sortedArrayUsingDescriptors:@[sorter]];
     
     return sortedUsers;
@@ -118,15 +113,14 @@
 
 - (NSArray *)friends {
     
-    NSMutableArray *friends = [NSMutableArray array];
-    NSArray *allContactsIDs = self.serviceManager.contactListService.contactListMemoryStorage.userIDsFromContactList;
+    NSArray *allContactListItems = self.serviceManager.contactListService.contactListMemoryStorage.allContactListItems;
+    NSMutableArray *friends = [NSMutableArray arrayWithCapacity:allContactListItems.count];
     
-    for (NSNumber *userID in allContactsIDs) {
+    for (QBContactListItem *item in allContactListItems) {
         
-        QBContactListItem *item = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:userID.integerValue];
         if (item.subscriptionState == QBPresenceSubscriptionStateBoth) {
             
-            QBUUser *user = [self.serviceManager.usersService.usersMemoryStorage userWithID:userID.integerValue];
+            QBUUser *user = [self.serviceManager.usersService.usersMemoryStorage userWithID:item.userID];
             if (user) {
                 
                 [friends addObject:user];
@@ -139,7 +133,7 @@
 
 - (NSArray *)idsOfUsers:(NSArray *)users {
     
-    NSMutableArray *ids = [NSMutableArray array];
+    NSMutableArray *ids = [NSMutableArray arrayWithCapacity:users.count];
     
     for (QBUUser *user in users) {
         
