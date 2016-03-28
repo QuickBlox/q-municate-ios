@@ -17,6 +17,12 @@
 #import "QMSearchCell.h"
 #import "QMNoResultsCell.h"
 
+typedef NS_ENUM(NSUInteger, QMLocalSearchSection) {
+    
+    QMLocalSearchSectionUsers,
+    QMLocalSearchSectionDialogs
+};
+
 @interface QMSearchResultsController ()
 
 <
@@ -75,7 +81,7 @@ QMChatConnectionDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     
-    if ([self.delegate respondsToSelector:@selector(searchResultsController:willBeginScrollResults:)]) {
+    if (self.delegate != nil) {
         
         [self.delegate searchResultsController:self willBeginScrollResults:scrollView];
     }
@@ -92,7 +98,7 @@ QMChatConnectionDelegate
     if ([self.searchDataSource conformsToProtocol:@protocol(QMLocalSearchDataSourceProtocol)]) {
         
         switch (indexPath.section) {
-            case 0: {
+            case QMLocalSearchSectionUsers: {
                 
                 NSArray *contacts = [(id <QMLocalSearchDataSourceProtocol>)self.searchDataSource contacts];
                 QBUUser *user = contacts[indexPath.row];
@@ -101,7 +107,7 @@ QMChatConnectionDelegate
                 break;
             }
                 
-            case 1: {
+            case QMLocalSearchSectionDialogs: {
                 
                 NSArray *dialogs = [(id <QMLocalSearchDataSourceProtocol>)self.searchDataSource dialogs];
                 QBChatDialog *chatDialog = dialogs[indexPath.row];
@@ -126,7 +132,7 @@ QMChatConnectionDelegate
     
     [self.dialogsNavigationController pushViewController:pushViewController animated:YES];
     
-    if ([self.delegate respondsToSelector:@selector(searchResultsController:didPushViewController:)]) {
+    if (self.delegate != nil) {
         
         [self.delegate searchResultsController:self didPushViewController:pushViewController];
     }
