@@ -9,6 +9,9 @@
 #ifndef QMConstants_h
 #define QMConstants_h
 
+// storyboards
+static NSString *const kQMChatStoryboard = @"Chat";
+
 static NSString *const kQMQBUUserFullNameKeyPathKey = @"fullName";
 static NSString *const kQMDialogsUpdateNotificationMessage = @"Notification message";
 static NSString *const kQMContactRequestNotificationMessage = @"Contact request";
