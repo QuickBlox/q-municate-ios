@@ -23,8 +23,6 @@
 #import "QMTasks.h"
 #import "QMProfileTitleView.h"
 
-#import <SVProgressHUD.h>
-
 typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
     
     QMSearchScopeButtonIndexLocal,
@@ -37,6 +35,9 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
 QMUsersServiceDelegate,
 QMChatServiceDelegate,
 QMChatConnectionDelegate,
+
+QMSearchResultsControllerDelegate,
+
 UITableViewDelegate,
 UISearchControllerDelegate,
 UISearchBarDelegate,
@@ -91,7 +92,8 @@ UISearchResultsUpdating
     self.dialogsDataSource = [[QMDialogsDataSource alloc] init];
     self.placeholderDataSource  = [[QMPlaceholderDataSource alloc] init];
     
-    self.searchResultsController = [[QMSearchResultsController alloc] init];
+    self.searchResultsController = [[QMSearchResultsController alloc] initWithNavigationController:self.navigationController];
+    self.searchResultsController.delegate = self;
     
     QMLocalSearchDataProvider *localSearchDataProvider = [[QMLocalSearchDataProvider alloc] init];
     localSearchDataProvider.delegate = self.searchResultsController;
@@ -128,11 +130,14 @@ UISearchResultsUpdating
 
 - (void)performAutoLoginAndFetchData {
     
+    [[QMCore instance].notificationManager showLoadingNotificationWithMessage:NSLocalizedString(@"QM_STR_CONNECTING", nil)];
+    
     @weakify(self);
     [[[[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         @strongify(self);
         
-        if (task.isFaulted && task.error.code != -1009) {
+        if (task.isFaulted && task.error.code == NSNotFound) {
+#warning FIND INVALID PASSWORD OR USER DOESNT EXIST CODE ERROR AND PUT IT HERE!
             [[[QMCore instance] logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
                 
                 [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
@@ -279,6 +284,7 @@ UISearchResultsUpdating
 - (void)usersService:(QMUsersService *)__unused usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
     if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
+        
         [self.tableView reloadData];
     }
 }
@@ -286,34 +292,40 @@ UISearchResultsUpdating
 - (void)usersService:(QMUsersService *)__unused usersService didAddUsers:(NSArray<QBUUser *> *)__unused user {
     
     if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
+        
         [self.tableView reloadData];
     }
 }
 
 #pragma mark - QMChatConnectionDelegate
 
-- (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService
-{
-    [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil) maskType:SVProgressHUDMaskTypeClear];
+- (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
+    
+    [[QMCore instance].notificationManager showSuccessNotificationWithMessage:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil) timeUntilDismiss:2.0f];
 }
 
-- (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService
-{
-    [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil) maskType:SVProgressHUDMaskTypeClear];
+- (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
+    
+    [[QMCore instance].notificationManager showSuccessNotificationWithMessage:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil) timeUntilDismiss:2.0f];
 }
 
-- (void)chatService:(QMChatService *)__unused chatService chatDidNotConnectWithError:(NSError *)error
-{
+- (void)chatService:(QMChatService *)__unused chatService chatDidNotConnectWithError:(NSError *)error {
+    
     //    if ([[QMApi instance] isInternetConnected]) {
-    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription]];
+    [[QMCore instance].notificationManager showErrorNotificationWithMessage:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription] timeUntilDismiss:0.0f];
     //    }
 }
 
-- (void)chatServiceChatDidFailWithStreamError:(NSError *)error
-{
-    //    if ([[QMApi instance] isInternetConnected]) {
-    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_STREAM_ERROR", nil), error.localizedDescription]];
-    //    }
+#pragma mark - QMSearchResultsControllerDelegate
+
+- (void)searchResultsController:(QMSearchResultsController *)__unused searchResultsController willBeginScrollResults:(UIScrollView *)__unused scrollView {
+    
+    [self.searchController.searchBar resignFirstResponder];
+}
+
+- (void)searchResultsController:(QMSearchResultsController *)__unused searchResultsController didPushViewController:(UIViewController *)__unused viewController {
+    
+    [self.searchController.searchBar resignFirstResponder];
 }
 
 #pragma mark - Helpers
