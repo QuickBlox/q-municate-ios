@@ -42,7 +42,6 @@
 "QM_STR_BAD_CONNECTION" = "Bad connection";
 "QM_STR_USER_DOESNT_ANSWER" = "User doesn't answer";
 "QM_STR_CALL_WAS_STOPPED" = "Call was stopped";
-"QM_STR_CONNECTING" = "Connecting...";
 "QM_STR_THANKS" = "Thanks!";
 "QM_STR_BUG" = "Bug";
 "QM_STR_IMPROVEMENT" = "Improvement";
@@ -86,12 +85,6 @@
 
 "QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_ME" = "You have deleted %@ from your contact list";
 "QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_OPPONENT" = "%@ has deleted you from the contact list";
-
-// *********** CHAT CONNECTION *****************
-"QM_STR_CHAT_CONNECTED" = "Connected";
-"QM_STR_CHAT_RECONNECTED" = "Reconnected";
-"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR" = "Chat failed to connect: %@";
-"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_STREAM_ERROR" = "Chat failed to connect with stream error: %@";
 
 // *********** GROUP NOTIFICATIONS *****************
 "QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT" = "%@ has added %@ to the group chat.";
@@ -162,3 +155,12 @@
 "QM_STR_CONFIRM_DELETE_CONTACT" = "Do you really want to delete %@ from your contact list?";
 "QM_STR_DELETE" = "Delete";
 
+// *********** Connection ***********
+"QM_STR_CONNECTING" = "Connecting";
+"QM_STR_CHAT_CONNECTED" = "Connected";
+"QM_STR_CHAT_RECONNECTED" = "Reconnected";
+"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR" = "Chat failed to connect: %@";
+"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_STREAM_ERROR" = "Chat failed to connect with stream error: %@";
+"QM_STR_SIGNING_UP" = "Signing up";
+"QM_STR_SIGNING_IN" = "Signing in";
+"QM_STR_LOADING" = "Loading";

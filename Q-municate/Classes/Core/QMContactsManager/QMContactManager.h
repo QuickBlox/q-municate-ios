@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class QMCore;
 
 /**
@@ -72,7 +74,7 @@
  *
  *  @return all contacts that are existent in contact list sorted by fullName field
  */
-- (NSArray <QBUUser *> *)allContactsSortedByFullName;
+- (nullable NSArray <QBUUser *> *)allContactsSortedByFullName;
 
 /**
  *  All friends from contact list.
@@ -127,3 +129,5 @@
 - (BOOL)isUserOnlineWithID:(NSUInteger)userID;
 
 @end
+
+NS_ASSUME_NONNULL_END

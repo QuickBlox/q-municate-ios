@@ -7,13 +7,13 @@
 //
 
 #import "QMForgotPasswordViewController.h"
-#import "SVProgressHUD.h"
-#import "REAlertView+QMSuccess.h"
 #import "QMCore.h"
 
 @interface QMForgotPasswordViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
+
+@property (weak, nonatomic) BFTask *task;
 
 @end
 
@@ -27,30 +27,40 @@
 
 - (IBAction)pressResetPasswordBtn:(id)__unused sender {
     
+    if (self.task != nil) {
+        // task in progress
+        return;
+    }
+    
     NSString *email = self.emailTextField.text;
     
     if (email.length > 0) {
+        
         [self resetPasswordForMail:email];
-    } else {
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_EMAIL_FIELD_IS_EMPTY", nil) actionSuccess:NO];
+    }
+    else {
+        
+        [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_EMAIL_FIELD_IS_EMPTY", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
     }
 }
 
 - (void)resetPasswordForMail:(NSString *)emailString {
-    
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
 
+    [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
     @weakify(self);
-    [[[QMCore instance].currentProfile resetPasswordForEmail:emailString] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull task) {
-        //
+    self.task = [[[QMCore instance].currentProfile resetPasswordForEmail:emailString] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        
+        @strongify(self);
         if (task.isFaulted) {
-            [SVProgressHUD dismiss];
-            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_USER_WITH_EMAIL_WASNT_FOUND", nil) actionSuccess:NO];
-        } else {
-            @strongify(self);
-            [SVProgressHUD showSuccessWithStatus:NSLocalizedString(@"QM_STR_MESSAGE_WAS_SENT_TO_YOUR_EMAIL", nil)];
+            
+            [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeFailed message:NSLocalizedString(@"QM_STR_USER_WITH_EMAIL_WASNT_FOUND", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+        }
+        else {
+            
+            [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_MESSAGE_WAS_SENT_TO_YOUR_EMAIL", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
             [self.navigationController popViewControllerAnimated:YES];
         }
+        
         return nil;
     }];
 }

@@ -746,7 +746,7 @@ AGEmojiKeyboardViewDelegate
                 
                 if (error != nil) {
                     
-#warning need to handle error here after some kind of hud implementation
+                    [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion timeUntilDismiss:kQMDefaultNotificationDismissTime];
                 }
                 else if (image != nil) {
                     
@@ -1041,7 +1041,6 @@ AGEmojiKeyboardViewDelegate
 #pragma mark QMChatActionsHandler protocol
 
 - (void)chatContactRequestDidAccept:(BOOL)accept sender:(id)sender {
-#warning implement some kind of notification (not progress hud) for user
     
     if (self.contactRequestTask) {
         // task in progress
@@ -1049,6 +1048,8 @@ AGEmojiKeyboardViewDelegate
     }
     
     QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:self.chatDialog.recipientID];
+    
+    [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
     
     if (accept) {
         
@@ -1058,7 +1059,7 @@ AGEmojiKeyboardViewDelegate
         @weakify(self);
         self.contactRequestTask = [[[QMCore instance].contactManager confirmAddContactRequest:opponentUser] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             @strongify(self);
-            // success block only
+            [[QMCore instance].notificationManager dismissNotification];
             [self.chatSectionManager updateMessage:currentMessage];
             
             return nil;
@@ -1072,6 +1073,7 @@ AGEmojiKeyboardViewDelegate
             return [[QMCore instance].chatService deleteDialogWithID:self.chatDialog.ID];
         }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             @strongify(self);
+            [[QMCore instance].notificationManager dismissNotification];
             [self.navigationController popViewControllerAnimated:YES];
             
             return nil;
@@ -1164,7 +1166,8 @@ AGEmojiKeyboardViewDelegate
                 //
                 [self.attachmentCells removeObjectForKey:message.ID];
                 if (task.isFaulted) {
-#warning need to implement error showing
+                    
+                    [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeFailed message:task.error.localizedRecoverySuggestion timeUntilDismiss:kQMDefaultNotificationDismissTime];
                     
                     // perform local attachment deleting
                     [[QMCore instance].chatService deleteMessageLocally:message];

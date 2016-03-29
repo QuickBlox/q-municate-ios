@@ -7,8 +7,6 @@
 //
 
 #import "QMLogInViewController.h"
-#import "REAlertView+QMSuccess.h"
-#import "SVProgressHUD.h"
 #import "QMCore.h"
 
 @interface QMLogInViewController ()
@@ -16,6 +14,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 @property (weak, nonatomic) IBOutlet UISwitch *rememberMeSwitch;
+
+@property (weak, nonatomic) BFTask *task;
 
 @end
 
@@ -35,22 +35,32 @@
 
 - (IBAction)done:(id)__unused sender {
     
+    if (self.task != nil) {
+        // task in progress
+        return;
+    }
+    
     if (self.emailField.text.length == 0 || self.passwordField.text.length == 0) {
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) actionSuccess:NO];
-    } else {
+        
+        [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+    }
+    else {
         
         QBUUser *user = [QBUUser user];
-        user.email    = self.emailField.text;
+        user.email = self.emailField.text;
         user.password = self.passwordField.text;
         
         [QMCore instance].currentProfile.skipSync = !self.rememberMeSwitch.isOn;
         
-        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+        [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_SIGNING_IN", nil) timeUntilDismiss:0];
+        
         @weakify(self);
-        [[[QMCore instance].authService loginWithUser:user] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+        self.task = [[[QMCore instance].authService loginWithUser:user] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+            
             @strongify(self);
-            [SVProgressHUD dismiss];
             if (!task.isFaulted) {
+                [[QMCore instance].notificationManager dismissNotification];
+                
                 [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
                 [[QMCore instance].currentProfile setAccountType:QMAccountTypeEmail];
                 [[QMCore instance].currentProfile synchronizeWithUserData:task.result];

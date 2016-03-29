@@ -127,6 +127,7 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     if ([QMCore instance].currentProfile.userData) {
         
 #warning TODO: login to chat and fetch dialogs
+        [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) timeUntilDismiss:0];
         [[QMCore instance].chatService connect];
     }
 }
