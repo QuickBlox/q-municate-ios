@@ -9,8 +9,6 @@
 #import "QMSignUpViewController.h"
 #import "QMLicenseAgreement.h"
 #import "UIImage+Cropper.h"
-#import "REAlertView+QMSuccess.h"
-#import "SVProgressHUD.h"
 #import "QMImagePicker.h"
 #import "REActionSheet.h"
 
@@ -31,6 +29,7 @@ QMImageViewDelegate
 @property (weak, nonatomic) IBOutlet QMImageView *userImage;
 
 @property (strong, nonatomic) UIImage *selectedImage;
+@property (weak, nonatomic) BFTask *task;
 
 @end
 
@@ -92,18 +91,25 @@ QMImageViewDelegate
 
 - (IBAction)done:(id)__unused sender {
     
+    if (self.task != nil) {
+        // task in progress
+        return;
+    }
+    
     NSString *fullName = self.fullNameField.text;
     NSString *email = self.emailField.text;
     NSString *password = self.passwordField.text;
     
     NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
     if (fullName.length == 0 || password.length == 0 || email.length == 0 || [[fullName stringByTrimmingCharactersInSet:whiteSpaceSet] length] == 0) {
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) actionSuccess:NO];
+        
+        [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
         return;
     }
 
     @weakify(self);
     [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL userAgreementSuccess) {
+        
         @strongify(self);
         if (userAgreementSuccess) {
             QBUUser *newUser = [QBUUser user];
@@ -114,24 +120,25 @@ QMImageViewDelegate
             
             void (^presentTabBar)(void) = ^(void) {
                 
-                [SVProgressHUD dismiss];
+                [[QMCore instance].notificationManager dismissNotification];
                 [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
             };
             
-            [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+            [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_SIGNING_UP", nil) timeUntilDismiss:0];
             [QMCore instance].currentProfile.userAgreementAccepted = userAgreementSuccess;
             
-            [[[[QMCore instance].authService signUpAndLoginWithUser:newUser] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
-                //
+            self.task = [[[[QMCore instance].authService signUpAndLoginWithUser:newUser] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+                
                 if (!task.isFaulted) {
+                    
                     [[QMCore instance].currentProfile setAccountType:QMAccountTypeEmail];
                     if (self.selectedImage != nil) {
-                        [SVProgressHUD showProgress:0.f status:nil maskType:SVProgressHUDMaskTypeClear];
-                        return [[QMCore instance].currentProfile updateUserImage:self.selectedImage progress:^(float progress) {
-                            //
-                            [SVProgressHUD showProgress:progress status:nil maskType:SVProgressHUDMaskTypeClear];
-                        }];
-                    } else {
+                        
+                        return [[QMCore instance].currentProfile updateUserImage:self.selectedImage progress:nil];
+                    }
+                    else {
+                        
+                        task.result.password = newUser.password;
                         [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
                         presentTabBar();
                     }
@@ -140,9 +147,11 @@ QMImageViewDelegate
             }] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
                 // saving picture to the cache
                 if (task.result != nil) {
+                    
                     [self.userImage setImage:self.selectedImage withKey:task.result.avatarUrl];
                     presentTabBar();
                 }
+                
                 return nil;
             }];
         }

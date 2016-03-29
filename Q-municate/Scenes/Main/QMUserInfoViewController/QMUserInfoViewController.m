@@ -78,11 +78,14 @@ QMContactListServiceDelegate
     
     if (self.user.lastRequestAt == nil) {
         
+        [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+        
         // get user from server
         @weakify(self);
         [[[QMCore instance].usersService getUserWithID:self.user.ID] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
             
             @strongify(self);
+            [[QMCore instance].notificationManager dismissNotification];
             self.user = task.result;
             [self performUpdate];
             [self.tableView reloadData];
@@ -230,9 +233,11 @@ QMContactListServiceDelegate
             return;
         }
         
+        [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
         self.task = [[[QMCore instance].chatService createPrivateChatDialogWithOpponentID:self.user.ID] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
             
             @strongify(self);
+            [[QMCore instance].notificationManager dismissNotification];
             [self performSegueWithIdentifier:kQMSceneSegueChat sender:task.result];
             return nil;
         }];
@@ -266,7 +271,12 @@ QMContactListServiceDelegate
         [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
         [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil) andActionBlock:^{
             
-            self.task = [[QMCore instance].contactManager removeUserFromContactList:self.user];
+            [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+            self.task = [[[QMCore instance].contactManager removeUserFromContactList:self.user] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+                
+                [[QMCore instance].notificationManager dismissNotification];
+                return nil;
+            }];
         }];
     }];
 }
@@ -278,7 +288,12 @@ QMContactListServiceDelegate
         return;
     }
     
-    self.task = [[QMCore instance].contactManager addUserToContactList:self.user];
+    [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+    self.task = [[[QMCore instance].contactManager addUserToContactList:self.user] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        
+        [[QMCore instance].notificationManager dismissNotification];
+        return nil;
+    }];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
