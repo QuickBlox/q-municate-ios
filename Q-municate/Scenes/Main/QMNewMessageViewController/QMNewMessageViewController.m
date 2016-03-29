@@ -115,7 +115,7 @@ UISearchResultsUpdating
         return;
     }
     
-    QBUUser *user = [self.dataSource userAtIndexPath:indexPath];
+    QBUUser *user = [(id <QMNewMessageSearchDataSourceProtocol>)self.searchDataSource userAtIndexPath:indexPath];
     
     QBChatDialog *privateDialog = [[QMCore instance].chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
     
