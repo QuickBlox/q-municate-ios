@@ -8,11 +8,12 @@
 
 #import "QMNotificationManager.h"
 #import "QMCore.h"
-#import "QMNotificationPanel.h"
 
 @interface QMNotificationManager ()
 
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
+
+@property (strong, nonatomic) QMNotificationPanel *notificationPanel;
 
 @end
 
@@ -22,6 +23,7 @@
 
 - (void)serviceWillStart {
     
+    self.notificationPanel = [[QMNotificationPanel alloc] init];
 }
 
 #pragma mark - Instances
@@ -40,6 +42,21 @@
     notification.messageType = QMMessageTypeDeleteContactRequest;
     
     return notification;
+}
+
+#pragma mark - Notificaiton panel
+
+- (void)showNotificationWithType:(QMNotificationPanelType)notificationType message:(NSString *)message timeUntilDismiss:(NSTimeInterval)timeUntilDismiss {
+    
+    self.notificationPanel.timeUntilDismiss = timeUntilDismiss;
+    
+    UINavigationController *navigationController = (UINavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController;
+    [self.notificationPanel showNotificationWithType:notificationType belowNavigation:navigationController message:message];
+}
+
+- (void)dismissNotification {
+    
+    [self.notificationPanel dismissNotification];
 }
 
 #pragma mark - Notification management
