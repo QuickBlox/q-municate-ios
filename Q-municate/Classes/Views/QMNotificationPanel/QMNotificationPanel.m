@@ -10,6 +10,8 @@
 #import "QMNotificationPanelView.h"
 
 static const NSUInteger kQMAnimationsCount = 4;
+static const CGFloat kQMDefaultNotificationViewHeight = 44.0f;
+static const CGFloat kQMFadeAnimationHeightShift = 10.0f;
 
 typedef void(^animationBlock)(BOOL);
 
@@ -35,7 +37,7 @@ typedef void(^animationBlock)(BOOL);
     if (self) {
         
         _enableTapDismiss = YES;
-        _timeUntilDismiss = 2.0f;
+        _timeUntilDismiss = kQMDefaultNotificationDismissTime;
     }
     
     return self;
@@ -94,7 +96,7 @@ typedef void(^animationBlock)(BOOL);
     [self.animationBlocks addObject:^(BOOL __unused finished){
         
         @strongify(self);
-        [UIView animateWithDuration:0.2f animations:^{
+        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
             
             self.view.alpha = 1.0f;
             self.view.frame = CGRectMake(0.0f,
@@ -114,7 +116,7 @@ typedef void(^animationBlock)(BOOL);
             return;
         }
         
-        [UIView animateWithDuration:0.2f animations:^{
+        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
             
             self.view.frame = CGRectMake(0.0f,
                                          self.verticalSpace,
@@ -178,10 +180,13 @@ typedef void(^animationBlock)(BOOL);
 
 - (QMNotificationPanelView *)notificationPanelViewWithType:(QMNotificationPanelType)type message:(NSString *)message {
     
-    CGFloat height = 44.0f;
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
     
-    QMNotificationPanelView *notificationPanelView = [[QMNotificationPanelView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, width, height) notificationPanelType:type];
+    QMNotificationPanelView *notificationPanelView = [[QMNotificationPanelView alloc] initWithFrame:CGRectMake(0,
+                                                                                                               0,
+                                                                                                               width,
+                                                                                                               kQMDefaultNotificationViewHeight)
+                                                                              notificationPanelType:type];
     notificationPanelView.message = message;
     
     return notificationPanelView;
@@ -195,10 +200,10 @@ typedef void(^animationBlock)(BOOL);
     }
     
     CGRect frame = self.view.frame;
-    frame.size.height -= 10;
+    frame.size.height -= kQMFadeAnimationHeightShift;
     
     @weakify(self);
-    [UIView animateWithDuration:0.2f animations:^{
+    [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
         
         @strongify(self);
         self.view.alpha = 0.0f;

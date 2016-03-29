@@ -28,7 +28,7 @@ QMContactListServiceDelegate
 /**
  *  Contact list service.
  */
-@property (strong, nonatomic, readonly) QMContactListService* contactListService;
+@property (strong, nonatomic, readonly) QMContactListService *contactListService;
 
 /**
  *  Contacts manager.
