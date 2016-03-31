@@ -1303,14 +1303,6 @@
 			name = QMProfileTitleView;
 			sourceTree = "<group>";
 		};
-		58F86ED31CA2DD0800DA4758 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				58F86ED41CA2DD0E00DA4758 /* QMColors */,
-			);
-			name = Utils;
-			sourceTree = "<group>";
-		};
 		58F86ED81CA2EF0600DA4758 /* QMUserInfoViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -1364,7 +1356,6 @@
 			isa = PBXGroup;
 			children = (
 				584277D91C3FE58900CDE35B /* Core */,
-				58F86ED31CA2DD0800DA4758 /* Utils */,
 				589792961C99937F00CC6438 /* QMAlphabetizer */,
 				58FA41641C96B1E300E61586 /* QMMessageStatusStringBuilder */,
 				58C64D041C90697400F1387B /* QMChatButtonsFactory */,
