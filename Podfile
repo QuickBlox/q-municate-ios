@@ -5,7 +5,6 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 pod 'UIDevice-Hardware', '~> 0.1.3'
 pod 'SVProgressHUD', '~> 1.0'
-pod 'StaticDataTableViewController', '~> 2.0.3'
 pod 'SSKeychain', '~> 1.2.2'
 pod 'AGEmojiKeyboard', '~> 0.1.0'
 pod 'SDWebImage', '~> 3.6'
