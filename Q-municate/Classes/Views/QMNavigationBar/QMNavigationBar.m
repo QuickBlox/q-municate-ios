@@ -21,32 +21,20 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    NSArray *classNamesToReposition = @[@"UINavigationButton", @"_UINavigationBarBackIndicatorView", @"UINavigationItemButtonView", NSStringFromClass([QMImageView class])];
+    NSArray *classNamesToReposition = @[@"_UINavigationBarBackground"];
     
-    for (UIView *view in self.subviews) {
+    for (UIView *view in [self subviews]) {
         
         if ([classNamesToReposition containsObject:NSStringFromClass([view class])]) {
             
+            CGRect bounds = [self bounds];
             CGRect frame = [view frame];
-            frame.origin.y -= CGRectGetHeight(self.notificationView.frame);
-            if (frame.origin.y < 0) {
-                
-                continue;
-            }
+            
+            CGFloat statusBarHeight = CGRectGetHeight([UIApplication sharedApplication].statusBarFrame);
+            frame.origin.y = bounds.origin.y + CGRectGetHeight(self.notificationView.frame) - statusBarHeight;
+            frame.size.height = bounds.size.height + statusBarHeight;
             
             [view setFrame:frame];
-            
-#warning Back button title still not in correct Y dimension
-            if ([view class] == NSClassFromString(@"UINavigationItemButtonView")) {
-                
-                [view.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger __unused idx, BOOL * _Nonnull __unused stop) {
-                    
-                    CGRect newFrame = [obj frame];
-                    newFrame.origin.y = frame.origin.y;
-                    
-                    [obj setFrame:newFrame];
-                }];
-            }
         }
     }
 }
@@ -61,7 +49,8 @@
         frame.origin.y += frame.size.height;
         subview.frame = frame;
         
-        [self updateAppearance];
+        [self sizeToFit];
+        [self setTransform:CGAffineTransformMakeTranslation(0, -(CGRectGetHeight(self.notificationView.frame)))];
     }
 }
 
@@ -71,19 +60,16 @@
     if (subview.tag == kQMNotificationPanelTag) {
         self.notificationView = nil;
         
-        [self updateAppearance];
-    }
-}
-
-- (void)updateAppearance {
-    
-    [self setTitleVerticalPositionAdjustment:-CGRectGetHeight(self.notificationView.frame) forBarMetrics:UIBarMetricsDefault];
-    
-    [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
-        
+        [self setTransform:CGAffineTransformMakeTranslation(0, -(CGRectGetHeight(self.notificationView.frame)))];
         [self sizeToFit];
-        [self.window.rootViewController.viewIfLoaded layoutSubviews];
-    }];
+        
+        @weakify(self);
+        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
+            
+            @strongify(self);
+            [self.window.rootViewController.viewIfLoaded layoutSubviews];
+        }];
+    }
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
