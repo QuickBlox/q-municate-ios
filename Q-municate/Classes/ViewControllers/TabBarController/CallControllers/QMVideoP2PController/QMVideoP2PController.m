@@ -15,11 +15,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.myView layoutIfNeeded];
+    
     [QMApi instance].avCallManager.cameraCapture.previewLayer.frame = self.myView.bounds;
     
     if (!self.disableSendingLocalVideoTrack) {
+        
         [self.myView.layer insertSublayer:[QMApi instance].avCallManager.cameraCapture.previewLayer atIndex:0];
-    } else {
+    }
+    else {
         self.session.localMediaStream.videoTrack.enabled = NO;
     }
     
@@ -29,7 +32,7 @@
         self.opponentVideoTrack = [QMApi instance].avCallManager.remoteVideoTrack;
     }
     
-    [self.contentView startTimerIfNeeded];
+    
     [self.opponentsView setVideoTrack:self.opponentVideoTrack];
     
     if([machineName() isEqualToString:@"iPhone3,1"] ||
@@ -117,6 +120,8 @@ NSString* machineName() {
 - (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID {
     
     if (session == self.session) {
+        
+        [self.contentView startTimerIfNeeded];
         [self stopActivityIndicator];
     }
 }

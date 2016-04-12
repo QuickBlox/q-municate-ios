@@ -44,11 +44,17 @@ NSString *const kGoToDuringVideoCallControllerSegue= @"goToDuringVideoCallSegueI
 
 #pragma mark QBRTCSession delegate -
 
-- (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID {
+- (void)session:(QBRTCSession *)session startedConnectingToUser:(NSNumber *)userID {
     
     if (session == self.session) {
+        
         [self callStartedWithUser];
     }
+}
+
+- (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID {
+    
+  
 }
 
 - (void)session:(QBRTCSession *)session receivedRemoteVideoTrack:(QBRTCVideoTrack *)videoTrack fromUser:(NSNumber *)userID {
