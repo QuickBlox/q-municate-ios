@@ -56,6 +56,7 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBSettings setAccountKey:kQMAccountKey];
     [QBSettings setChatDNSLookupCacheEnabled:YES];
     [QBSettings setAutoReconnectEnabled:YES];
+    [QBSettings setCarbonsEnabled:YES];
     
 #if DEVELOPMENT == 0
     [QBSettings setLogLevel:QBLogLevelNothing];
