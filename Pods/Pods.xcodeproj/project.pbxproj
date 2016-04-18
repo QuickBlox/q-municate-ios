@@ -247,6 +247,19 @@
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
+		<key>0204D1BBCED18319F62ADAAE6DD9AC35</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.xcdatamodel</string>
+			<key>path</key>
+			<string>QMModel2.xcdatamodel</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
 		<key>0222A7892CFCD52CCF39CC5BBCC5D5BC</key>
 		<dict>
 			<key>includeInIndex</key>
@@ -583,6 +596,19 @@
 					<string>Public</string>
 				</array>
 			</dict>
+		</dict>
+		<key>04F42B95724951F8CAF3E1B7FD506EEB</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.xcdatamodel</string>
+			<key>path</key>
+			<string>QMUsersModel.xcdatamodel</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
 		</dict>
 		<key>04F6492DF0B7A5669B29FD4F7C390666</key>
 		<dict>
@@ -3575,19 +3601,6 @@
 			<key>remoteInfo</key>
 			<string>TTTAttributedLabel</string>
 		</dict>
-		<key>20ABBDBD5E0E5E3A9A55C8A3B0D86565</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.xcdatamodel</string>
-			<key>path</key>
-			<string>QMUsersModel.xcdatamodel</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
 		<key>20CA33378056E289649C0616BF5C5E08</key>
 		<dict>
 			<key>fileRef</key>
@@ -3735,25 +3748,6 @@
 			<string>SDWebImage/SDWebImageDownloader.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
-		</dict>
-		<key>226CFCBDE6B7B9F718633AB2D05FA75E</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>AFAC18058A76AD458F73032879B7037D</string>
-			</array>
-			<key>currentVersion</key>
-			<string>AFAC18058A76AD458F73032879B7037D</string>
-			<key>isa</key>
-			<string>XCVersionGroup</string>
-			<key>name</key>
-			<string>QMContactListModel.xcdatamodeld</string>
-			<key>path</key>
-			<string>QMContactListCache/QMContactListCache/CoreData/QMContactListModel.xcdatamodeld</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-			<key>versionGroupType</key>
-			<string>wrapper.xcdatamodel</string>
 		</dict>
 		<key>2281024F8FCE2DD3A425B06430E843AC</key>
 		<dict>
@@ -9063,19 +9057,6 @@
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 		</dict>
-		<key>5CEEB0202067FA153BD572949D5F73A9</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.xcdatamodel</string>
-			<key>path</key>
-			<string>QMModel2.xcdatamodel</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
 		<key>5D0FC22788BA84099EB22E65AE2DDE54</key>
 		<dict>
 			<key>includeInIndex</key>
@@ -9144,7 +9125,7 @@
 		<key>5E411C59678F4FAD78347F252CD6C334</key>
 		<dict>
 			<key>fileRef</key>
-			<string>610CB7FAF299A6521CC5A33908DBA83A</string>
+			<string>861E4BBA548BB0C3F7C77D29E2808385</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 		</dict>
@@ -9479,26 +9460,6 @@
 			<string>5BE1CDBB9F79D885E146D95ACF3C633D</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
-		</dict>
-		<key>610CB7FAF299A6521CC5A33908DBA83A</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>20ABBDBD5E0E5E3A9A55C8A3B0D86565</string>
-				<string>9DCD808EB7E6E9A2E8A083E6EFCD36EB</string>
-			</array>
-			<key>currentVersion</key>
-			<string>9DCD808EB7E6E9A2E8A083E6EFCD36EB</string>
-			<key>isa</key>
-			<string>XCVersionGroup</string>
-			<key>name</key>
-			<string>QMUsersModel.xcdatamodeld</string>
-			<key>path</key>
-			<string>QMUsersCache/QMUsersCache/CoreData/QMUsersModel.xcdatamodeld</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-			<key>versionGroupType</key>
-			<string>wrapper.xcdatamodel</string>
 		</dict>
 		<key>6122E62C2D510746296B21C47A0626E9</key>
 		<dict>
@@ -10055,19 +10016,6 @@
 			<string>6693D26490A0A9BEB463B5FF5DCE7F2C</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
-		</dict>
-		<key>675570915BD0EE54767D0734F184E008</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.xcdatamodel</string>
-			<key>path</key>
-			<string>QMModel.xcdatamodel</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
 		</dict>
 		<key>676B2434623290E3ADCD6D3C5CF2610D</key>
 		<dict>
@@ -11186,21 +11134,6 @@
 			<string>D0176CBAF2D3EBE10178A0712522F396</string>
 			<key>remoteInfo</key>
 			<string>SDWebImage</string>
-		</dict>
-		<key>70BDE7CA36705492C0C743BA212429F2</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>FCDA979FB7F580B72B14A8C1F7E8C9C1</string>
-				<string>226CFCBDE6B7B9F718633AB2D05FA75E</string>
-				<string>610CB7FAF299A6521CC5A33908DBA83A</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Resources</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
 		</dict>
 		<key>70CCACD1C4D3ECC5D062E9C940DFDFD6</key>
 		<dict>
@@ -13263,6 +13196,26 @@
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 		</dict>
+		<key>861E4BBA548BB0C3F7C77D29E2808385</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>04F42B95724951F8CAF3E1B7FD506EEB</string>
+				<string>E3B2D531FD74F3CB767D9583A3723263</string>
+			</array>
+			<key>currentVersion</key>
+			<string>E3B2D531FD74F3CB767D9583A3723263</string>
+			<key>isa</key>
+			<string>XCVersionGroup</string>
+			<key>name</key>
+			<string>QMUsersModel.xcdatamodeld</string>
+			<key>path</key>
+			<string>QMUsersCache/QMUsersCache/CoreData/QMUsersModel.xcdatamodeld</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+			<key>versionGroupType</key>
+			<string>wrapper.xcdatamodel</string>
+		</dict>
 		<key>86444AC2A924F63C45BEC54A0DDB7E8E</key>
 		<dict>
 			<key>fileRef</key>
@@ -14119,6 +14072,25 @@
 			<string>4E286D373D75563CE26E479A68203892</string>
 			<key>remoteInfo</key>
 			<string>FBSDKLoginKit</string>
+		</dict>
+		<key>8C44B20F4B07ACC6B6A7359EFEC08B2D</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>9CDCAF68782B76866F95219A84F3011F</string>
+			</array>
+			<key>currentVersion</key>
+			<string>9CDCAF68782B76866F95219A84F3011F</string>
+			<key>isa</key>
+			<string>XCVersionGroup</string>
+			<key>name</key>
+			<string>QMContactListModel.xcdatamodeld</string>
+			<key>path</key>
+			<string>QMContactListCache/QMContactListCache/CoreData/QMContactListModel.xcdatamodeld</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+			<key>versionGroupType</key>
+			<string>wrapper.xcdatamodel</string>
 		</dict>
 		<key>8C4CF80696F6068FCFFB726DEEE3F92A</key>
 		<dict>
@@ -15744,6 +15716,19 @@
 			<key>runOnlyForDeploymentPostprocessing</key>
 			<string>0</string>
 		</dict>
+		<key>9CDCAF68782B76866F95219A84F3011F</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.xcdatamodel</string>
+			<key>path</key>
+			<string>QMModel.xcdatamodel</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
 		<key>9CEFF03855C3A31496DC64D0F4823C7C</key>
 		<dict>
 			<key>includeInIndex</key>
@@ -15794,19 +15779,6 @@
 			<string>Release</string>
 			<key>isa</key>
 			<string>XCConfigurationList</string>
-		</dict>
-		<key>9DCD808EB7E6E9A2E8A083E6EFCD36EB</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.xcdatamodel</string>
-			<key>path</key>
-			<string>QMUsersModel2.xcdatamodel</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
 		</dict>
 		<key>9DD312BAD93531792934E2D9715658B5</key>
 		<dict>
@@ -16047,6 +16019,27 @@
 			<string>C157CED8708A35FAA433FD5B5564C58A</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
+		</dict>
+		<key>A0C5B47436C1F609230F30B655C224CD</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>FAD4805422C5BE60CBC0FB4BAACEA82E</string>
+				<string>0204D1BBCED18319F62ADAAE6DD9AC35</string>
+				<string>BE0FF6AA7F7F83C589C86C09754ED928</string>
+			</array>
+			<key>currentVersion</key>
+			<string>BE0FF6AA7F7F83C589C86C09754ED928</string>
+			<key>isa</key>
+			<string>XCVersionGroup</string>
+			<key>name</key>
+			<string>QMChatServiceModel.xcdatamodeld</string>
+			<key>path</key>
+			<string>QMChatCache/QMChatCache/CoreData/QMChatServiceModel.xcdatamodeld</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+			<key>versionGroupType</key>
+			<string>wrapper.xcdatamodel</string>
 		</dict>
 		<key>A0D9C7FEEDA83FD032CA883C9B61D952</key>
 		<dict>
@@ -16755,6 +16748,13 @@
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
+		<key>A876B240B567D9D9FF20EB75A95C7804</key>
+		<dict>
+			<key>fileRef</key>
+			<string>A0C5B47436C1F609230F30B655C224CD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
 		<key>A8A46AB2C1566A388CA3EE7626FEF360</key>
 		<dict>
 			<key>explicitFileType</key>
@@ -17447,19 +17447,6 @@
 					<string>Public</string>
 				</array>
 			</dict>
-		</dict>
-		<key>AFAC18058A76AD458F73032879B7037D</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.xcdatamodel</string>
-			<key>path</key>
-			<string>QMModel.xcdatamodel</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
 		</dict>
 		<key>AFADC8B8CF9709A1D72EC087524E7FE6</key>
 		<dict>
@@ -18693,6 +18680,19 @@
 				</array>
 			</dict>
 		</dict>
+		<key>BE0FF6AA7F7F83C589C86C09754ED928</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.xcdatamodel</string>
+			<key>path</key>
+			<string>QMModel3.xcdatamodel</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
 		<key>BE546ABFE58135E9826D8064BB06471D</key>
 		<dict>
 			<key>isa</key>
@@ -18806,6 +18806,21 @@
 			<string>FBSDKShareConstants.h</string>
 			<key>path</key>
 			<string>FBSDKShareKit/FBSDKShareKit/FBSDKShareConstants.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BFA2033F42CCB2CE87B8EF9EE94B439D</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>A0C5B47436C1F609230F30B655C224CD</string>
+				<string>8C44B20F4B07ACC6B6A7359EFEC08B2D</string>
+				<string>861E4BBA548BB0C3F7C77D29E2808385</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Resources</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -20911,13 +20926,6 @@
 			<key>isa</key>
 			<string>XCConfigurationList</string>
 		</dict>
-		<key>D75030B79C25FC291EFE925CABE3515A</key>
-		<dict>
-			<key>fileRef</key>
-			<string>FCDA979FB7F580B72B14A8C1F7E8C9C1</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
 		<key>D75833F042453FBF713EEB9D81F0589A</key>
 		<dict>
 			<key>includeInIndex</key>
@@ -21484,7 +21492,7 @@
 		<key>DDEC64FF1AE03B7D81EA0776337AFAEA</key>
 		<dict>
 			<key>fileRef</key>
-			<string>226CFCBDE6B7B9F718633AB2D05FA75E</string>
+			<string>8C44B20F4B07ACC6B6A7359EFEC08B2D</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 		</dict>
@@ -22160,6 +22168,19 @@
 			<string>XCBuildConfiguration</string>
 			<key>name</key>
 			<string>Release</string>
+		</dict>
+		<key>E3B2D531FD74F3CB767D9583A3723263</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.xcdatamodel</string>
+			<key>path</key>
+			<string>QMUsersModel2.xcdatamodel</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
 		</dict>
 		<key>E3ECE8F0D2AF87520D323414CBA9EBC6</key>
 		<dict>
@@ -24811,7 +24832,7 @@
 				<string>23D3E554B8CBA6EC847C7CC1C93F34E3</string>
 				<string>551E81A55839F6BC2FEF6691DEDE7784</string>
 				<string>8B8FFDDFC83A5DC984942721A800CF54</string>
-				<string>70BDE7CA36705492C0C743BA212429F2</string>
+				<string>BFA2033F42CCB2CE87B8EF9EE94B439D</string>
 				<string>93F2F2FCB1128E49DE8B189571E2D582</string>
 			</array>
 			<key>isa</key>
@@ -24881,6 +24902,19 @@
 			<string>9036E5B1C7873554B67EB336A6EAC370</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
+		</dict>
+		<key>FAD4805422C5BE60CBC0FB4BAACEA82E</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.xcdatamodel</string>
+			<key>path</key>
+			<string>QMModel.xcdatamodel</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
 		</dict>
 		<key>FAEC6B0350D7BA2D9526759B6F27C2C6</key>
 		<dict>
@@ -25160,26 +25194,6 @@
 			<string>XCBuildConfiguration</string>
 			<key>name</key>
 			<string>Release</string>
-		</dict>
-		<key>FCDA979FB7F580B72B14A8C1F7E8C9C1</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>675570915BD0EE54767D0734F184E008</string>
-				<string>5CEEB0202067FA153BD572949D5F73A9</string>
-			</array>
-			<key>currentVersion</key>
-			<string>5CEEB0202067FA153BD572949D5F73A9</string>
-			<key>isa</key>
-			<string>XCVersionGroup</string>
-			<key>name</key>
-			<string>QMChatServiceModel.xcdatamodeld</string>
-			<key>path</key>
-			<string>QMChatCache/QMChatCache/CoreData/QMChatServiceModel.xcdatamodeld</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-			<key>versionGroupType</key>
-			<string>wrapper.xcdatamodel</string>
 		</dict>
 		<key>FCFA52E52EC3AAC6918988AA5AEEFC23</key>
 		<dict>
@@ -25461,7 +25475,7 @@
 			<string>2147483647</string>
 			<key>files</key>
 			<array>
-				<string>D75030B79C25FC291EFE925CABE3515A</string>
+				<string>A876B240B567D9D9FF20EB75A95C7804</string>
 			</array>
 			<key>isa</key>
 			<string>PBXResourcesBuildPhase</string>
