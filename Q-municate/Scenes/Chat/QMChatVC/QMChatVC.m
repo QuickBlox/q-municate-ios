@@ -1168,7 +1168,7 @@ AGEmojiKeyboardViewDelegate
                 [self.attachmentCells removeObjectForKey:message.ID];
                 if (task.isFaulted) {
                     
-                    [QMNotification showNotificationWithType:QMNotificationPanelTypeFailed message:task.error.localizedRecoverySuggestion timeUntilDismiss:kQMDefaultNotificationDismissTime];
+                    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeFailed message:task.error.localizedRecoverySuggestion timeUntilDismiss:kQMDefaultNotificationDismissTime];
                     
                     // perform local attachment deleting
                     [[QMCore instance].chatService deleteMessageLocally:message];
