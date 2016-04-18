@@ -14,11 +14,18 @@
 
 + (void)showNotificationWithType:(QMNotificationPanelType)notificationType message:(NSString *)message timeUntilDismiss:(NSTimeInterval)timeUntilDismiss {
     
-    [notificationPanel() dismissNotificationAnimated:NO];
+    BOOL hasActiveNotification = notificationPanel().hasActiveNotification;
+    BOOL animated = !hasActiveNotification;
+    
+    if (hasActiveNotification) {
+        
+        [notificationPanel() dismissNotificationAnimated:animated];
+    }
+    
     notificationPanel().timeUntilDismiss = timeUntilDismiss;
     
     UINavigationController *navigationController = (UINavigationController *)[[UIApplication sharedApplication].windows.firstObject rootViewController];
-    [notificationPanel() showNotificationWithType:notificationType byInsertingInNavigationBar:navigationController.navigationBar message:message];
+    [notificationPanel() showNotificationWithType:notificationType byInsertingInNavigationBar:navigationController.navigationBar message:message animated:animated];
 }
 
 + (void)dismissNotification {

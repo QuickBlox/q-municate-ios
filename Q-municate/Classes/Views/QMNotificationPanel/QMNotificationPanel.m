@@ -7,22 +7,17 @@
 //
 
 #import "QMNotificationPanel.h"
-#import "QMNotificationPanelView.h"
+#import "QMNotificationPanelUtils.h"
 
-static const NSUInteger kQMAnimationsCount = 4;
 static const CGFloat kQMDefaultNotificationViewHeight = 44.0f;
 static const CGFloat kQMFadeAnimationHeightShift = 10.0f;
-
-typedef void(^animationBlock)(BOOL);
 
 @interface QMNotificationPanel ()
 
 @property (strong, nonatomic) UIView *view;
-@property (strong, nonatomic) UIView *innerView;
 @property (strong, nonatomic) UITapGestureRecognizer *tapGesture;
 @property (assign, nonatomic) CGFloat verticalSpace;
 
-@property (strong, nonatomic) NSMutableArray *animationBlocks;
 @property (strong, nonatomic) NSTimer *timer;
 
 @end
@@ -45,88 +40,52 @@ typedef void(^animationBlock)(BOOL);
 
 #pragma mark - Methods
 
-- (void)showNotificationWithView:(UIView *)view inView:(UIView *)innerView {
+- (void)showNotificationWithView:(UIView *)view inView:(UIView *)innerView animated:(BOOL)animated {
     
-    [self reset];
+    [self resetAnimated:NO];
     
     CGFloat width = innerView.frame.size.width;
     CGFloat height = view.frame.size.height;
-    CGFloat top = (-height / 2.0f) + self.verticalSpace;
+    CGFloat top = self.verticalSpace;
     
     self.view = [[UIView alloc] init];
+    self.view.tag = kQMNotificationPanelTag;
     
     self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didRecognizedTap:)];
     [self.view addGestureRecognizer:self.tapGesture];
     
-    self.view.alpha = 0.0f;
-    self.view.frame = CGRectMake(0.0f,
+    self.view.alpha = 0;
+    self.view.frame = CGRectMake(0,
                                  top,
                                  width,
                                  height);
-    self.view.backgroundColor = [UIColor clearColor];
+    self.view.backgroundColor = clearColor();
     [self.view addSubview:view];
     [self.view bringSubviewToFront:view];
     
-    [innerView addSubview:self.view];
-    
-    // Perform animation chain
-    self.animationBlocks = [NSMutableArray arrayWithCapacity:kQMAnimationsCount];
+    view.autoresizingMask = self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     @weakify(self);
     
-    animationBlock (^performNextAnimation)() = ^{
+    if (animated) {
+        
+        [innerView addSubview:self.view];
+    }
+    else {
+        
+        [UIView performWithoutAnimation:^{
+            
+            @strongify(self);
+            [innerView addSubview:self.view];
+        }];
+    }
+    
+    [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
         
         @strongify(self);
-        if (self.animationBlocks.count > 0) {
-            
-            animationBlock block = (animationBlock)self.animationBlocks.firstObject;
-            [self.animationBlocks removeObjectAtIndex:0];
-            
-            return block;
-        }
-        else {
-            
-            return ^(BOOL __unused finished) {
-                
-                self.animationBlocks = nil;
-            };
-        }
-    };
-    
-    [self.animationBlocks addObject:^(BOOL __unused finished){
+        self.view.alpha = 1.0f;
         
-        @strongify(self);
-        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
-            
-            self.view.alpha = 1.0f;
-            self.view.frame = CGRectMake(0.0f,
-                                         self.verticalSpace,
-                                         width,
-                                         height + 5);
-            
-        } completion:performNextAnimation()];
-    }];
-    
-    [self.animationBlocks addObject:^(BOOL __unused finished){
-        
-        @strongify(self);
-        if (self.view == nil) {
-            
-            self.animationBlocks = nil;
-            return;
-        }
-        
-        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
-            
-            self.view.frame = CGRectMake(0.0f,
-                                         self.verticalSpace,
-                                         width,
-                                         height);
-            
-        } completion:performNextAnimation()];
-    }];
-    
-    [self.animationBlocks addObject:^(BOOL finished){
+    } completion:^(BOOL finished) {
         
         @strongify(self);
         if (self.timeUntilDismiss > 0 && finished) {
@@ -135,33 +94,47 @@ typedef void(^animationBlock)(BOOL);
             self.timer = [NSTimer scheduledTimerWithTimeInterval:self.timeUntilDismiss target:self selector:@selector(animateFade) userInfo:nil repeats:NO];
         }
     }];
-    
-    // execute the first block in the queue
-    performNextAnimation()(YES);
 }
 
-- (void)showNotificationWithType:(QMNotificationPanelType)notificationType inView:(UIView *)innerView message:(NSString *)message {
+- (void)showNotificationWithType:(QMNotificationPanelType)notificationType inView:(UIView *)innerView message:(NSString *)message animated:(BOOL)animated {
     
-    self.verticalSpace = 0.0f;
+    self.verticalSpace = 0;
     QMNotificationPanelView *notificationPanelView = [self notificationPanelViewWithType:notificationType message:message];
     
-    [self showNotificationWithView:notificationPanelView inView:innerView];
+    [self showNotificationWithView:notificationPanelView inView:innerView animated:animated];
 }
 
-- (void)showNotificationWithType:(QMNotificationPanelType)notificationType belowNavigation:(UINavigationController *)navigationController message:(NSString *)message {
+- (void)showNotificationWithType:(QMNotificationPanelType)notificationType belowNavigation:(UINavigationController *)navigationController message:(NSString *)message animated:(BOOL)animated {
     
-    self.verticalSpace = navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
+    self.verticalSpace = CGRectGetHeight(navigationController.navigationBar.frame);
+    
     QMNotificationPanelView *notificationPanelView = [self notificationPanelViewWithType:notificationType message:message];
     
-    [self showNotificationWithView:notificationPanelView inView:navigationController.view];
+    [self showNotificationWithView:notificationPanelView inView:navigationController.view animated:animated];
 }
 
-- (void)dismissNotification {
+- (void)showNotificationWithType:(QMNotificationPanelType)notificationType byInsertingInNavigationBar:(UINavigationBar *)navigationBar message:(NSString *)message animated:(BOOL)animated {
     
-    if ([self reset]) {
+    self.verticalSpace = CGRectGetHeight(navigationBar.frame);
+    
+    QMNotificationPanelView *notificationPanelView = [self notificationPanelViewWithType:notificationType message:message];
+    
+    [self showNotificationWithView:notificationPanelView inView:navigationBar animated:animated];
+}
+
+- (void)dismissNotificationAnimated:(BOOL)animated {
+    
+    if ([self resetAnimated:animated] && [self.delegate respondsToSelector:@selector(notificationPanelDidDismiss:)]) {
         
         [self.delegate notificationPanelDidDismiss:self];
     }
+}
+
+#pragma mark - Getters
+
+- (BOOL)hasActiveNotification {
+    
+    return _view != nil;
 }
 
 #pragma mark - Actions
@@ -170,10 +143,13 @@ typedef void(^animationBlock)(BOOL);
     
     if (self.isTapDismissEnabled) {
         
-        [self dismissNotification];
+        [self dismissNotificationAnimated:YES];
     }
     
-    [self.delegate notificationPanel:self didRecognizedTap:recognizer];
+    if ([self.delegate respondsToSelector:@selector(notificationPanel:didRecognizedTap:)]) {
+        
+        [self.delegate notificationPanel:self didRecognizedTap:recognizer];
+    }
 }
 
 #pragma mark - Helpers
@@ -206,25 +182,38 @@ typedef void(^animationBlock)(BOOL);
     [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
         
         @strongify(self);
-        self.view.alpha = 0.0f;
+        self.view.alpha = 0;
         self.view.frame = frame;
         
     } completion:^(BOOL __unused finished) {
         
         @strongify(self);
-        [self dismissNotification];
+        [self dismissNotificationAnimated:YES];
     }];
 }
 
-- (BOOL)reset {
+- (BOOL)resetAnimated:(BOOL)animated {
     
     if (self.view != nil) {
         
         [self.timer invalidate];
         self.timer = nil;
-        self.animationBlocks = nil;
         [self.view removeGestureRecognizer:self.tapGesture];
-        [self.view removeFromSuperview];
+        
+        if (animated) {
+            
+            [self.view removeFromSuperview];
+        }
+        else {
+            
+            @weakify(self);
+            [UIView performWithoutAnimation:^{
+                
+                @strongify(self);
+                [self.view removeFromSuperview];
+            }];
+        }
+        
         self.view = nil;
         
         return YES;
