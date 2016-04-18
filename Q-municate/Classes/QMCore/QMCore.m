@@ -175,7 +175,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
         
     }
     
-    [QMNotification showNotificationWithType:QMNotificationPanelTypeFailed message:errorMessage timeUntilDismiss:kQMDefaultNotificationDismissTime];
+    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeFailed message:errorMessage timeUntilDismiss:kQMDefaultNotificationDismissTime];
 }
 
 #pragma mark - Auth methods

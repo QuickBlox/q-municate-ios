@@ -747,7 +747,7 @@ AGEmojiKeyboardViewDelegate
                 
                 if (error != nil) {
                     
-                    [QMNotification showNotificationWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion timeUntilDismiss:kQMDefaultNotificationDismissTime];
+                    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion timeUntilDismiss:kQMDefaultNotificationDismissTime];
                 }
                 else if (image != nil) {
                     
@@ -1050,7 +1050,7 @@ AGEmojiKeyboardViewDelegate
     
     QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:self.chatDialog.recipientID];
     
-    [QMNotification showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
     
     if (accept) {
         
@@ -1060,7 +1060,7 @@ AGEmojiKeyboardViewDelegate
         @weakify(self);
         self.contactRequestTask = [[[QMCore instance].contactManager confirmAddContactRequest:opponentUser] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             @strongify(self);
-            [QMNotification dismissNotification];
+            [QMNotification dismissNotificationPanel];
             [self.chatSectionManager updateMessage:currentMessage];
             
             return nil;
@@ -1074,7 +1074,7 @@ AGEmojiKeyboardViewDelegate
             return [[QMCore instance].chatService deleteDialogWithID:self.chatDialog.ID];
         }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             @strongify(self);
-            [QMNotification dismissNotification];
+            [QMNotification dismissNotificationPanel];
             [self.navigationController popViewControllerAnimated:YES];
             
             return nil;

@@ -126,12 +126,12 @@ UISearchResultsUpdating
     }
     else {
         
-        [QMNotification showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
         
         @weakify(self);
         self.dialogCreationTask = [[[QMCore instance].chatService createPrivateChatDialogWithOpponent:user] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
             @strongify(self);
-            [QMNotification dismissNotification];
+            [QMNotification dismissNotificationPanel];
             [self performSegueWithIdentifier:kQMSceneSegueChat sender:task.result];
             
             return nil;

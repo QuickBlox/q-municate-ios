@@ -43,7 +43,7 @@
     
     if (self.emailField.text.length == 0 || self.passwordField.text.length == 0) {
         
-        [QMNotification showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
     }
     else {
         
@@ -53,14 +53,14 @@
         
         [QMCore instance].currentProfile.skipSync = !self.rememberMeSwitch.isOn;
         
-        [QMNotification showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_SIGNING_IN", nil) timeUntilDismiss:0];
+        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_SIGNING_IN", nil) timeUntilDismiss:0];
         
         @weakify(self);
         self.task = [[[QMCore instance].authService loginWithUser:user] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
             
             @strongify(self);
             if (!task.isFaulted) {
-                [QMNotification dismissNotification];
+                [QMNotification dismissNotificationPanel];
                 
                 [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
                 [[QMCore instance].currentProfile setAccountType:QMAccountTypeEmail];

@@ -68,7 +68,7 @@ QMTagFieldViewDelegate
         return;
     }
     
-    [QMNotification showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
     if (self.selectedImage != nil) {
         
         self.dialogCreationTask = [[QMContent uploadJPEGImage:self.selectedImage progress:nil] continueWithSuccessBlock:^id _Nullable(BFTask<QBCBlob *> * _Nonnull task) {
@@ -90,7 +90,7 @@ QMTagFieldViewDelegate
     
     return [[[[QMCore instance].chatService createGroupChatDialogWithName:self.nameTextField.text photo:photoURL occupants:self.tagFieldView.tagIDs] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
         
-        [QMNotification dismissNotification];
+        [QMNotification dismissNotificationPanel];
         
         chatDialog = task.result;
         [self performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];

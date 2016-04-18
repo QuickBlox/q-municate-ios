@@ -41,13 +41,13 @@
     }
     else {
         
-        [QMNotification showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_EMAIL_FIELD_IS_EMPTY", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_EMAIL_FIELD_IS_EMPTY", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
     }
 }
 
 - (void)resetPasswordForMail:(NSString *)emailString {
 
-    [QMNotification showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
     
     @weakify(self);
     self.task = [[[QMCore instance].currentProfile resetPasswordForEmail:emailString] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
@@ -55,11 +55,11 @@
         @strongify(self);
         if (task.isFaulted) {
             
-            [QMNotification showNotificationWithType:QMNotificationPanelTypeFailed message:NSLocalizedString(@"QM_STR_USER_WITH_EMAIL_WASNT_FOUND", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+            [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeFailed message:NSLocalizedString(@"QM_STR_USER_WITH_EMAIL_WASNT_FOUND", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
         }
         else {
             
-            [QMNotification showNotificationWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_MESSAGE_WAS_SENT_TO_YOUR_EMAIL", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+            [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_MESSAGE_WAS_SENT_TO_YOUR_EMAIL", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
             [self.navigationController popViewControllerAnimated:YES];
         }
         

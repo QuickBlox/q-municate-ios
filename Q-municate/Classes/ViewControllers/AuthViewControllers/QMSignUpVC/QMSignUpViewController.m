@@ -104,7 +104,7 @@ QMImageViewDelegate
     NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
     if (fullName.length == 0 || password.length == 0 || email.length == 0 || [[fullName stringByTrimmingCharactersInSet:whiteSpaceSet] length] == 0) {
         
-        [QMNotification showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
         return;
     }
 
@@ -121,11 +121,11 @@ QMImageViewDelegate
             
             void (^presentTabBar)(void) = ^(void) {
                 
-                [QMNotification dismissNotification];
+                [QMNotification dismissNotificationPanel];
                 [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
             };
             
-            [QMNotification showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_SIGNING_UP", nil) timeUntilDismiss:0];
+            [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_SIGNING_UP", nil) timeUntilDismiss:0];
             [QMCore instance].currentProfile.userAgreementAccepted = userAgreementSuccess;
             
             self.task = [[[[QMCore instance].authService signUpAndLoginWithUser:newUser] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {

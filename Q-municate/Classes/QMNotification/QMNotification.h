@@ -22,12 +22,12 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @see QMNotificationPanelType
  */
-+ (void)showNotificationWithType:(QMNotificationPanelType)notificationType message:(nullable NSString *)message timeUntilDismiss:(NSTimeInterval)timeUntilDismiss;
++ (void)showNotificationPanelWithType:(QMNotificationPanelType)notificationType message:(nullable NSString *)message timeUntilDismiss:(NSTimeInterval)timeUntilDismiss;
 
 /**
  *  Dismiss current notification panel.
  */
-+ (void)dismissNotification;
++ (void)dismissNotificationPanel;
 
 /**
  *  Send push notification for user with text.

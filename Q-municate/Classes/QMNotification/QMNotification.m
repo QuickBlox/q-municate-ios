@@ -12,7 +12,7 @@
 
 #pragma mark - Notificaiton panel
 
-+ (void)showNotificationWithType:(QMNotificationPanelType)notificationType message:(NSString *)message timeUntilDismiss:(NSTimeInterval)timeUntilDismiss {
++ (void)showNotificationPanelWithType:(QMNotificationPanelType)notificationType message:(NSString *)message timeUntilDismiss:(NSTimeInterval)timeUntilDismiss {
     
     BOOL hasActiveNotification = notificationPanel().hasActiveNotification;
     BOOL animated = !hasActiveNotification;
@@ -28,7 +28,7 @@
     [notificationPanel() showNotificationWithType:notificationType byInsertingInNavigationBar:navigationController.navigationBar message:message animated:animated];
 }
 
-+ (void)dismissNotification {
++ (void)dismissNotificationPanel {
     
     [notificationPanel() dismissNotificationAnimated:YES];
 }
