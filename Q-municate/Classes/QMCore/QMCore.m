@@ -56,7 +56,6 @@ static NSString *const kQMErrorPasswordKey = @"password";
         
         // managers
         _contactManager = [[QMContactManager alloc] initWithServiceManager:self];
-        _notificationManager = [[QMNotificationManager alloc] initWithServiceManager:self];
         
         // Reachability init
 //        _internetConnection = [Reachability reachabilityForInternetConnection];

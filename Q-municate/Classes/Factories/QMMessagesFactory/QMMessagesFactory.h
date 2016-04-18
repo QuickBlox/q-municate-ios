@@ -1,19 +1,16 @@
 //
-//  QMNotificationManager.h
+//  QMMessagesFactory.h
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/26/16.
+//  Created by Vitaliy Gorbachov on 4/18/16.
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMBaseService.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- *  This class represents basic notification managing and tasks.
- */
-@interface QMNotificationManager : QMBaseService
+@interface QMMessagesFactory : NSObject
 
 /**
  *  Contact request notification message instance.
@@ -22,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return QBChatMessage notification instance
  */
-- (QBChatMessage *)contactRequestNotificationForUser:(QBUUser *)user;
++ (QBChatMessage *)contactRequestNotificationForUser:(QBUUser *)user;
 
 /**
  *  Remove contact notification message instance.
@@ -31,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return QBChatMessage notification instance
  */
-- (QBChatMessage *)removeContactNotificationForUser:(QBUUser *)user;
++ (QBChatMessage *)removeContactNotificationForUser:(QBUUser *)user;
 
 @end
 

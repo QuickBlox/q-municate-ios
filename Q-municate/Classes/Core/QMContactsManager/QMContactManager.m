@@ -9,6 +9,7 @@
 #import "QMContactManager.h"
 #import "QMCore.h"
 #import "QMNotification.h"
+#import "QMMessagesFactory.h"
 #import <QMChatService+AttachmentService.h>
 
 @interface QMContactManager ()
@@ -31,7 +32,7 @@
         return [self.serviceManager.chatService createPrivateChatDialogWithOpponent:user];
     }] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
         @strongify(self);
-        QBChatMessage *chatMessage = [self.serviceManager.notificationManager contactRequestNotificationForUser:user];
+        QBChatMessage *chatMessage = [QMMessagesFactory contactRequestNotificationForUser:user];
         [self.serviceManager.chatService sendMessage:chatMessage
                                                 type:chatMessage.messageType
                                             toDialog:task.result
@@ -69,7 +70,7 @@
     return [[self.serviceManager.contactListService removeUserFromContactListWithUserID:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         @strongify(self);
         QBChatDialog *chatDialog = [self.serviceManager.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
-        QBChatMessage *notificationMessage = [self.serviceManager.notificationManager removeContactNotificationForUser:user];
+        QBChatMessage *notificationMessage = [QMMessagesFactory removeContactNotificationForUser:user];
         
         [self.serviceManager.chatService sendMessage:notificationMessage
                                                 type:notificationMessage.messageType

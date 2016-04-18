@@ -11,7 +11,6 @@
 #import "QMProfile.h"
 
 #import "QMContactManager.h"
-#import "QMNotificationManager.h"
 
 @class Reachability;
 
@@ -35,10 +34,6 @@ QMContactListServiceDelegate
  */
 @property (strong, nonatomic, readonly) QMContactManager *contactManager;
 
-/**
- *  Notifications manager
- */
-@property (strong, nonatomic, readonly) QMNotificationManager *notificationManager;
 
 /**
  *  Reachability manager.
