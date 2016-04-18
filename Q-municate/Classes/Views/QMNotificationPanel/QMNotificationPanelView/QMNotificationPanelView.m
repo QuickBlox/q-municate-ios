@@ -10,7 +10,7 @@
 #import "QMNotificationPanelUtils.h"
 
 static const CGFloat kQMVerticalSpace = 8.0f;
-static const CGFloat kQMHorizontalSpace = 8.0f;
+static const CGFloat kQMHorizontalSpace = 4.5f;
 static const CGFloat kQMIconSize = 26.0f;
 
 @interface QMNotificationPanelView ()
