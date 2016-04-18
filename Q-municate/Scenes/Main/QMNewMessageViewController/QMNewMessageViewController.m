@@ -10,6 +10,7 @@
 #import "QMNewMessageDataSource.h"
 #import "QMNewMessageSearchDataSource.h"
 #import "QMCore.h"
+#import "QMNotification.h"
 #import "QMChatVC.h"
 #import "QMContactsSearchDataProvider.h"
 
@@ -125,12 +126,12 @@ UISearchResultsUpdating
     }
     else {
         
-        [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+        [QMNotification showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
         
         @weakify(self);
         self.dialogCreationTask = [[[QMCore instance].chatService createPrivateChatDialogWithOpponent:user] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
             @strongify(self);
-            [[QMCore instance].notificationManager dismissNotification];
+            [QMNotification dismissNotification];
             [self performSegueWithIdentifier:kQMSceneSegueChat sender:task.result];
             
             return nil;

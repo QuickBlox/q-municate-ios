@@ -20,6 +20,7 @@
 #import "QMChatVC.h"
 
 #import "QMCore.h"
+#import "QMNotification.h"
 #import "QMTasks.h"
 #import "QMProfileTitleView.h"
 
@@ -130,7 +131,7 @@ UISearchResultsUpdating
 
 - (void)performAutoLoginAndFetchData {
     
-    [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) timeUntilDismiss:0];
+    [QMNotification showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) timeUntilDismiss:0];
     
     @weakify(self);
     [[[[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
@@ -189,6 +190,10 @@ UISearchResultsUpdating
 #pragma mark - Actions
 
 - (IBAction)didPressProfileTitle:(id)__unused sender {
+    
+}
+
+- (IBAction)didPressSettingsButton:(UIBarButtonItem *)__unused sender {
     
 }
 
@@ -304,18 +309,18 @@ UISearchResultsUpdating
 
 - (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
     
-    [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+    [QMNotification showNotificationWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
 }
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
     
-    [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+    [QMNotification showNotificationWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
 }
 
 - (void)chatService:(QMChatService *)__unused chatService chatDidNotConnectWithError:(NSError *)error {
     
     //    if ([[QMApi instance] isInternetConnected]) {
-    [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeFailed message:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription] timeUntilDismiss:0];
+    [QMNotification showNotificationWithType:QMNotificationPanelTypeFailed message:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription] timeUntilDismiss:0];
     //    }
 }
 

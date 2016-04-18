@@ -14,6 +14,7 @@
 
 #import <QMImageView.h>
 #import "QMCore.h"
+#import "QMNotification.h"
 #import "QMContent.h"
 
 @interface QMSignUpViewController ()
@@ -103,7 +104,7 @@ QMImageViewDelegate
     NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
     if (fullName.length == 0 || password.length == 0 || email.length == 0 || [[fullName stringByTrimmingCharactersInSet:whiteSpaceSet] length] == 0) {
         
-        [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+        [QMNotification showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
         return;
     }
 
@@ -120,11 +121,11 @@ QMImageViewDelegate
             
             void (^presentTabBar)(void) = ^(void) {
                 
-                [[QMCore instance].notificationManager dismissNotification];
+                [QMNotification dismissNotification];
                 [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
             };
             
-            [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_SIGNING_UP", nil) timeUntilDismiss:0];
+            [QMNotification showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_SIGNING_UP", nil) timeUntilDismiss:0];
             [QMCore instance].currentProfile.userAgreementAccepted = userAgreementSuccess;
             
             self.task = [[[[QMCore instance].authService signUpAndLoginWithUser:newUser] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {

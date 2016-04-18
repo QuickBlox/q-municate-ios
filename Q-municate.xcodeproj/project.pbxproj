@@ -37,6 +37,7 @@
 		580B3B571C3FF89F00345081 /* QMTasks.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B3B561C3FF89F00345081 /* QMTasks.m */; };
 		580D34DF1BBFF5850034813A /* UIImage+fixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 580D34DE1BBFF5850034813A /* UIImage+fixOrientation.m */; };
 		580D34E21BC027BD0034813A /* QMSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580D34E11BC027BD0034813A /* QMSplashViewController.m */; };
+		580FEBEA1CC4EF8E000AED72 /* QMNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 580FEBE91CC4EF8E000AED72 /* QMNotification.m */; };
 		581DA1D01BF3732900F75D8B /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1CF1BF3732900F75D8B /* libc++.tbd */; };
 		581DA1D21BF373A100F75D8B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1D11BF373A100F75D8B /* VideoToolbox.framework */; };
 		5842779C1C3D336300CDE35B /* IAButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277821C3D336300CDE35B /* IAButton.m */; };
@@ -104,6 +105,7 @@
 		58D847931C89A9FE000C40BA /* QMNoResultsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D847921C89A9FE000C40BA /* QMNoResultsCell.m */; };
 		58D847951C89AA39000C40BA /* QMNoResultsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58D847941C89AA38000C40BA /* QMNoResultsCell.xib */; };
 		58E343881C491AAA00439E93 /* QMProfileTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58E343871C491AAA00439E93 /* QMProfileTitleView.m */; };
+		58E398B01CAE943F0053BA4D /* QMNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 58E398AF1CAE943F0053BA4D /* QMNavigationBar.m */; };
 		58F86EDB1CA2EF6C00DA4758 /* QMUserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F86EDA1CA2EF6C00DA4758 /* QMUserInfoViewController.m */; };
 		58FA41671C96B21200E61586 /* QMMessageStatusStringBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FA41661C96B21200E61586 /* QMMessageStatusStringBuilder.m */; };
 		58FA416B1C96E19400E61586 /* QMOnlineTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FA416A1C96E19400E61586 /* QMOnlineTitleView.m */; };
@@ -195,6 +197,8 @@
 		580D34DE1BBFF5850034813A /* UIImage+fixOrientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+fixOrientation.m"; sourceTree = "<group>"; };
 		580D34E01BC027BD0034813A /* QMSplashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMSplashViewController.h; path = "Q-municate/Classes/ViewControllers/AuthViewControllers/QMSplashVC/QMSplashViewController.h"; sourceTree = SOURCE_ROOT; };
 		580D34E11BC027BD0034813A /* QMSplashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMSplashViewController.m; path = "Q-municate/Classes/ViewControllers/AuthViewControllers/QMSplashVC/QMSplashViewController.m"; sourceTree = SOURCE_ROOT; };
+		580FEBE81CC4EF8E000AED72 /* QMNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMNotification.h; path = Classes/QMNotification/QMNotification.h; sourceTree = "<group>"; };
+		580FEBE91CC4EF8E000AED72 /* QMNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMNotification.m; path = Classes/QMNotification/QMNotification.m; sourceTree = "<group>"; };
 		581DA1CF1BF3732900F75D8B /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		581DA1D11BF373A100F75D8B /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		584277811C3D336300CDE35B /* IAButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAButton.h; sourceTree = "<group>"; };
@@ -317,6 +321,8 @@
 		58D847941C89AA38000C40BA /* QMNoResultsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = QMNoResultsCell.xib; path = "Q-municate/Scenes/Main/QMDialogsViewController/Cells/QMNoResultsCell/QMNoResultsCell.xib"; sourceTree = SOURCE_ROOT; };
 		58E343861C491AAA00439E93 /* QMProfileTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMProfileTitleView.h; path = QMTitleView/QMProfileTitleView.h; sourceTree = "<group>"; };
 		58E343871C491AAA00439E93 /* QMProfileTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMProfileTitleView.m; path = QMTitleView/QMProfileTitleView.m; sourceTree = "<group>"; };
+		58E398AE1CAE943F0053BA4D /* QMNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMNavigationBar.h; path = QMNavigationBar/QMNavigationBar.h; sourceTree = "<group>"; };
+		58E398AF1CAE943F0053BA4D /* QMNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMNavigationBar.m; path = QMNavigationBar/QMNavigationBar.m; sourceTree = "<group>"; };
 		58F437691BBC21810041C08D /* QMProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMProtocols.h; sourceTree = "<group>"; };
 		58F86ED91CA2EF6C00DA4758 /* QMUserInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMUserInfoViewController.h; path = "Q-municate/Scenes/Main/QMUserInfoViewController/QMUserInfoViewController.h"; sourceTree = SOURCE_ROOT; };
 		58F86EDA1CA2EF6C00DA4758 /* QMUserInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMUserInfoViewController.m; path = "Q-municate/Scenes/Main/QMUserInfoViewController/QMUserInfoViewController.m"; sourceTree = SOURCE_ROOT; };
@@ -690,6 +696,15 @@
 			name = QMTasks;
 			sourceTree = "<group>";
 		};
+		580FEBE41CC4EF16000AED72 /* QMNotification */ = {
+			isa = PBXGroup;
+			children = (
+				580FEBE81CC4EF8E000AED72 /* QMNotification.h */,
+				580FEBE91CC4EF8E000AED72 /* QMNotification.m */,
+			);
+			name = QMNotification;
+			sourceTree = "<group>";
+		};
 		584277781C3D32ED00CDE35B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -754,6 +769,7 @@
 				5877D6E01C46759A00938E5D /* QMBadgeView */,
 				584277801C3D336300CDE35B /* IAButton */,
 				584277961C3D336300CDE35B /* QMCornerButton */,
+				58E398B11CAE94450053BA4D /* QMNavigationBar */,
 			);
 			name = Views;
 			path = "Q-municate/Classes/Views";
@@ -1303,6 +1319,15 @@
 			name = QMProfileTitleView;
 			sourceTree = "<group>";
 		};
+		58E398B11CAE94450053BA4D /* QMNavigationBar */ = {
+			isa = PBXGroup;
+			children = (
+				58E398AE1CAE943F0053BA4D /* QMNavigationBar.h */,
+				58E398AF1CAE943F0053BA4D /* QMNavigationBar.m */,
+			);
+			name = QMNavigationBar;
+			sourceTree = "<group>";
+		};
 		58F86ED81CA2EF0600DA4758 /* QMUserInfoViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -1362,6 +1387,7 @@
 				58D8477D1C87138F000C40BA /* QMProtocols */,
 				585DE4601C46A8170068E03E /* QMPlaceholder */,
 				580B3B541C3FF88500345081 /* QMTasks */,
+				580FEBE41CC4EF16000AED72 /* QMNotification */,
 				584277DD1C3FECF400CDE35B /* QMContent */,
 				584277D21C3FCFA100CDE35B /* QMFacebook */,
 				584277CE1C3FBCF500CDE35B /* QMProfile */,
@@ -1613,9 +1639,11 @@
 			files = (
 				58F86EDB1CA2EF6C00DA4758 /* QMUserInfoViewController.m in Sources */,
 				58D8478C1C873F58000C40BA /* QMSearchDataSource.m in Sources */,
+				580FEBEA1CC4EF8E000AED72 /* QMNotification.m in Sources */,
 				697E2D4C196EA82400CD2BDE /* QMLicenseAgreementViewController.m in Sources */,
 				58FA416B1C96E19400E61586 /* QMOnlineTitleView.m in Sources */,
 				588CF1061CA6C01200B23C00 /* QMNotificationPanelView.m in Sources */,
+				58E398B01CAE943F0053BA4D /* QMNavigationBar.m in Sources */,
 				2476BA8119A5D91F00CC666D /* QMUsersUtils.m in Sources */,
 				588CF10D1CA6C83600B23C00 /* QMNotificationPanel.m in Sources */,
 				55D8ADF419AC776A00DAF79F /* REAlertView+QMSuccess.m in Sources */,
