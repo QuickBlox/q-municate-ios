@@ -1722,6 +1722,7 @@
 				55D8ADFB19AC833300DAF79F /* QMLicenseAgreement.m in Sources */,
 				58D847681C85A1DB000C40BA /* QMGlobalSearchDataSource.m in Sources */,
 				589D4CF91C981888005F1E76 /* QMNewMessageDataSource.m in Sources */,
+				580FEBF61CC50423000AED72 /* QMMessagesFactory.m in Sources */,
 				584A6D971C9D9D9F00B7D641 /* QMAlphabetizedDataSource.m in Sources */,
 				5877D6C41C45470400938E5D /* QMDigitsConfigurationFactory.m in Sources */,
 				58CEA1BB1BB553C400B866DD /* UIImage+TintColor.m in Sources */,
