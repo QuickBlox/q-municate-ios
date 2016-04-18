@@ -9,6 +9,7 @@
 #import "QMCore.h"
 #import <Reachability.h>
 #import "QMFacebook.h"
+#import "QMNotification.h"
 #import <DigitsKit/DigitsKit.h>
 
 static NSString *const kQMLastActivityDateKey = @"last_activity_date";
@@ -55,7 +56,6 @@ static NSString *const kQMErrorPasswordKey = @"password";
         
         // managers
         _contactManager = [[QMContactManager alloc] initWithServiceManager:self];
-        _notificationManager = [[QMNotificationManager alloc] initWithServiceManager:self];
         
         // Reachability init
 //        _internetConnection = [Reachability reachabilityForInternetConnection];
@@ -175,7 +175,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
         
     }
     
-    [self.notificationManager showNotificationWithType:QMNotificationPanelTypeFailed message:errorMessage timeUntilDismiss:kQMDefaultNotificationDismissTime];
+    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeFailed message:errorMessage timeUntilDismiss:kQMDefaultNotificationDismissTime];
 }
 
 #pragma mark - Auth methods

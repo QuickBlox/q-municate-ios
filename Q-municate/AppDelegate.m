@@ -11,6 +11,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "QMChatVC.h"
 #import "QMCore.h"
+#import "QMNotification.h"
 
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
@@ -55,6 +56,7 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBSettings setAccountKey:kQMAccountKey];
     [QBSettings setChatDNSLookupCacheEnabled:YES];
     [QBSettings setAutoReconnectEnabled:YES];
+    [QBSettings setCarbonsEnabled:YES];
     
 #if DEVELOPMENT == 0
     [QBSettings setLogLevel:QBLogLevelNothing];
@@ -127,7 +129,7 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     if ([QMCore instance].currentProfile.userData) {
         
 #warning TODO: login to chat and fetch dialogs
-        [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) timeUntilDismiss:0];
+        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) timeUntilDismiss:0];
         [[QMCore instance].chatService connect];
     }
 }

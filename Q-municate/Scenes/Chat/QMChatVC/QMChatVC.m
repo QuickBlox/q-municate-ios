@@ -8,6 +8,7 @@
 
 #import "QMChatVC.h"
 #import "QMCore.h"
+#import "QMNotification.h"
 #import "QMMessageStatusStringBuilder.h"
 #import "QMPlaceholder.h"
 #import "REAlertView+QMSuccess.h"
@@ -746,7 +747,7 @@ AGEmojiKeyboardViewDelegate
                 
                 if (error != nil) {
                     
-                    [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion timeUntilDismiss:kQMDefaultNotificationDismissTime];
+                    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion timeUntilDismiss:kQMDefaultNotificationDismissTime];
                 }
                 else if (image != nil) {
                     
@@ -1049,7 +1050,7 @@ AGEmojiKeyboardViewDelegate
     
     QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:self.chatDialog.recipientID];
     
-    [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
     
     if (accept) {
         
@@ -1059,7 +1060,7 @@ AGEmojiKeyboardViewDelegate
         @weakify(self);
         self.contactRequestTask = [[[QMCore instance].contactManager confirmAddContactRequest:opponentUser] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             @strongify(self);
-            [[QMCore instance].notificationManager dismissNotification];
+            [QMNotification dismissNotificationPanel];
             [self.chatSectionManager updateMessage:currentMessage];
             
             return nil;
@@ -1073,7 +1074,7 @@ AGEmojiKeyboardViewDelegate
             return [[QMCore instance].chatService deleteDialogWithID:self.chatDialog.ID];
         }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             @strongify(self);
-            [[QMCore instance].notificationManager dismissNotification];
+            [QMNotification dismissNotificationPanel];
             [self.navigationController popViewControllerAnimated:YES];
             
             return nil;
@@ -1167,7 +1168,7 @@ AGEmojiKeyboardViewDelegate
                 [self.attachmentCells removeObjectForKey:message.ID];
                 if (task.isFaulted) {
                     
-                    [[QMCore instance].notificationManager showNotificationWithType:QMNotificationPanelTypeFailed message:task.error.localizedRecoverySuggestion timeUntilDismiss:kQMDefaultNotificationDismissTime];
+                    [QMNotification showNotificationWithType:QMNotificationPanelTypeFailed message:task.error.localizedRecoverySuggestion timeUntilDismiss:kQMDefaultNotificationDismissTime];
                     
                     // perform local attachment deleting
                     [[QMCore instance].chatService deleteMessageLocally:message];
