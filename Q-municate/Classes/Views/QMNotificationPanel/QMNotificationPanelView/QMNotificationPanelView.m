@@ -34,9 +34,7 @@ static const CGFloat kQMIconSize = 26.0f;
     if (self) {
         
         [self configureBlurWithFrame:frame backgroundColor:color(notificationPanelType)];
-        
         [self configureIconWithNotificationType:notificationPanelType];
-        
         [self configureTextLabelWithFrame:frame];
     }
     
@@ -112,6 +110,13 @@ static const CGFloat kQMIconSize = 26.0f;
             self.bgColorView.frame = self.frame;
         }
     }
+}
+
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    
+    self.visualEffectView.frame = frame;
+    self.bgColorView.frame = frame;
 }
 
 #pragma mark - Helpers
