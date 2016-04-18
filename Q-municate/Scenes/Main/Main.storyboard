@@ -32,13 +32,13 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="419"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="m_empty_dialogs" translatesAutoresizingMaskIntoConstraints="NO" id="j58-Ui-l80">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="m_empty_dialogs" translatesAutoresizingMaskIntoConstraints="NO" id="j58-Ui-l80">
                                             <rect key="frame" x="210" y="153" width="180" height="266"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="j58-Ui-l80" secondAttribute="height" multiplier="21:31" id="bQD-Oq-Bt5"/>
                                             </constraints>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aKf-z0-z6p">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aKf-z0-z6p">
                                             <rect key="frame" x="206" y="21" width="189" height="67"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="189" id="J5z-Br-xLH"/>
@@ -68,7 +68,11 @@ out here.</string>
                     </tableView>
                     <navigationItem key="navigationItem" id="l23-on-5eH">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" image="ic_settings" id="d3Y-P0-XSf"/>
+                        <barButtonItem key="leftBarButtonItem" image="ic_settings" id="d3Y-P0-XSf">
+                            <connections>
+                                <action selector="didPressSettingsButton:" destination="NSU-QC-v0B" id="dNJ-YA-aAb"/>
+                            </connections>
+                        </barButtonItem>
                         <view key="titleView" opaque="NO" contentMode="scaleToFill" id="wRe-Va-Lui" customClass="QMProfileTitleView">
                             <rect key="frame" x="250" y="6" width="100" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -292,7 +296,7 @@ out here.</string>
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="9xL-cI-ja2" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="CUw-mC-eLz">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="CUw-mC-eLz" customClass="QMNavigationBar">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -303,7 +307,7 @@ out here.</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mEU-iJ-jaN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-6834" y="-8364"/>
+            <point key="canvasLocation" x="-6827" y="-8342"/>
         </scene>
         <!--Group Contact List View Controller-->
         <scene sceneID="9Sy-5M-RTY">
@@ -394,6 +398,6 @@ out here.</string>
         <image name="users" width="20" height="20"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="io2-9H-ZNL"/>
+        <segue reference="M6I-F2-D1O"/>
     </inferredMetricsTieBreakers>
 </document>
