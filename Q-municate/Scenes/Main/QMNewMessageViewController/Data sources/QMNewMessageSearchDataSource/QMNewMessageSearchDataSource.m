@@ -32,10 +32,7 @@
     
     QBUUser *user = [self userAtIndexPath:indexPath];
     [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
-    
-    QBContactListItem *item = [[QMCore instance].contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
-    [cell setContactListItem:item];
-    [cell setUserID:user.ID];
+    [cell setUser:user];
     
     return cell;
 }

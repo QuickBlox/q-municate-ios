@@ -18,8 +18,7 @@
 
 @interface QMSearchCell : QMTableViewCell
 
-@property (strong, nonatomic) QBContactListItem *contactListItem;
-@property (assign, nonatomic) NSUInteger userID;
 @property (weak, nonatomic) id<QMSearchCellDelegate> delegate;
+@property (strong, nonatomic) QBUUser *user;
 
 @end

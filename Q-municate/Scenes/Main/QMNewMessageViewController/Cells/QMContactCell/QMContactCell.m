@@ -19,19 +19,19 @@
 
 #pragma mark - setters
 
-- (void)setContactListItem:(QBContactListItem *)contactListItem {
-    [super setContactListItem:contactListItem];
+- (void)setUser:(QBUUser *)user {
+    [super setUser:user];
     
+    QBContactListItem *contactListItem = [[QMCore instance].contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
     NSString *status = nil;
     
-    if (contactListItem.isOnline) {
+    if (user.ID == [QMCore instance].currentProfile.userData.ID || contactListItem.isOnline) {
         
         status = NSLocalizedString(@"QM_STR_ONLINE", nil);
     }
     else {
         
-        QBUUser *user = [[QMCore instance].usersService.usersMemoryStorage userWithID:contactListItem.userID];
-        if (user && user.lastRequestAt) {
+        if (user.lastRequestAt) {
             
             status = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"QM_STR_LAST_SEEN", nil), [QMDateUtils formattedLastSeenString:user.lastRequestAt withTimePrefix:NSLocalizedString(@"QM_STR_TIME_PREFIX", nil)]];
         }

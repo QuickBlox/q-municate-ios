@@ -13,7 +13,7 @@
 
 @interface QMGlobalSearchDataSource ()
 
-@property (strong, nonatomic) BFTask *addUserTask;
+@property (weak, nonatomic) BFTask *addUserTask;
 
 @end
 
@@ -41,10 +41,8 @@
     QBUUser *user = self.items[indexPath.row];
     
     [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
+    [cell setUser:user];
     
-    QBContactListItem *item = [[QMCore instance].contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
-    [cell setContactListItem:item];
-    [cell setUserID:user.ID];
     cell.delegate = self;
     
     if (indexPath.row == [tableView numberOfRowsInSection:0] - 1) {
@@ -76,24 +74,15 @@
         return;
     }
     
-    QBUUser *user = [[QMCore instance].usersService.usersMemoryStorage userWithID:searchCell.userID];
-    
-    QBContactListItem *contactListItem = searchCell.contactListItem;
-    
-    @weakify(self);
-    BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull __unused task) {
-        @strongify(self);
-        self.addUserTask = nil;
-        return nil;
-    };
+    QBContactListItem *contactListItem = [[QMCore instance].contactListService.contactListMemoryStorage contactListItemWithUserID:searchCell.user.ID];
     
     if (contactListItem.subscriptionState == QBPresenceSubscriptionStateFrom) {
         
-        self.addUserTask = [[[QMCore instance].contactManager confirmAddContactRequest:user] continueWithBlock:completionBlock];
+        self.addUserTask = [[QMCore instance].contactManager confirmAddContactRequest:searchCell.user];
     }
     else {
         
-        self.addUserTask = [[[QMCore instance].contactManager addUserToContactList:user] continueWithBlock:completionBlock];
+        self.addUserTask = [[QMCore instance].contactManager addUserToContactList:searchCell.user];
     }
 }
 

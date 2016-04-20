@@ -64,7 +64,7 @@ QMSearchDataProviderDelegate
         
         for (QMSelectableContactCell *cell in self.tableView.visibleCells) {
             
-            if (cell.userID == user.ID) {
+            if (cell.user.ID == user.ID) {
                 
                 [cell setChecked:NO animated:YES];
             }

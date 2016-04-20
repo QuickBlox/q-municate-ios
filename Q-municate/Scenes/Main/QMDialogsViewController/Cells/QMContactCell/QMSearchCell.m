@@ -7,6 +7,7 @@
 //
 
 #import "QMSearchCell.h"
+#import "QMCore.h"
 
 @interface QMSearchCell ()
 
@@ -23,12 +24,23 @@
 
 #pragma mark - setters
 
-- (void)setContactListItem:(QBContactListItem *)contactListItem {
+- (void)setUser:(QBUUser *)user {
     
-    _contactListItem = contactListItem;
-    
-    BOOL isFriend = contactListItem ? YES : NO;
-    self.addFriendButton.hidden = isFriend;
+    if (![_user isEqual:user]) {
+        
+        _user = user;
+        
+        if (user.ID == [QMCore instance].currentProfile.userData.ID) {
+            
+            self.addFriendButton.hidden = YES;
+            return;
+        }
+        
+        QBContactListItem *contactListItem = [[QMCore instance].contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
+        
+        BOOL isFriend = contactListItem ? YES : NO;
+        self.addFriendButton.hidden = isFriend;
+    }
 }
 
 #pragma mark - action
