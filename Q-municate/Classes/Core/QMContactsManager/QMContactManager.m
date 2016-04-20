@@ -165,7 +165,7 @@
     
     QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
     
-    return contactListItem.subscriptionState == QBPresenceSubscriptionStateTo;
+    return contactListItem.subscriptionState == QBPresenceSubscriptionStateNone;
 }
 
 - (BOOL)isUserOnlineWithID:(NSUInteger)userID {
