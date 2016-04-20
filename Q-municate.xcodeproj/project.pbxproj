@@ -41,6 +41,7 @@
 		580FEBF61CC50423000AED72 /* QMMessagesFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 580FEBF51CC50423000AED72 /* QMMessagesFactory.m */; };
 		581DA1D01BF3732900F75D8B /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1CF1BF3732900F75D8B /* libc++.tbd */; };
 		581DA1D21BF373A100F75D8B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1D11BF373A100F75D8B /* VideoToolbox.framework */; };
+		5839F26E1CC531AD0055EBF8 /* QMBaseTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839F26D1CC531AD0055EBF8 /* QMBaseTitleView.m */; };
 		5842779C1C3D336300CDE35B /* IAButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277821C3D336300CDE35B /* IAButton.m */; };
 		584277A41C3D336300CDE35B /* QMCornerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277981C3D336300CDE35B /* QMCornerButton.m */; };
 		584277B41C3D374400CDE35B /* Auth.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 584277B31C3D374400CDE35B /* Auth.storyboard */; };
@@ -203,6 +204,8 @@
 		580FEBF51CC50423000AED72 /* QMMessagesFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMMessagesFactory.m; path = QMMessagesFactory/QMMessagesFactory.m; sourceTree = "<group>"; };
 		581DA1CF1BF3732900F75D8B /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		581DA1D11BF373A100F75D8B /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		5839F26C1CC531AD0055EBF8 /* QMBaseTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMBaseTitleView.h; path = "Q-municate/Scenes/Base/QMBaseTitleView/QMBaseTitleView.h"; sourceTree = SOURCE_ROOT; };
+		5839F26D1CC531AD0055EBF8 /* QMBaseTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMBaseTitleView.m; path = "Q-municate/Scenes/Base/QMBaseTitleView/QMBaseTitleView.m"; sourceTree = SOURCE_ROOT; };
 		584277811C3D336300CDE35B /* IAButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAButton.h; sourceTree = "<group>"; };
 		584277821C3D336300CDE35B /* IAButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IAButton.m; sourceTree = "<group>"; };
 		584277971C3D336300CDE35B /* QMCornerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCornerButton.h; sourceTree = "<group>"; };
@@ -706,6 +709,15 @@
 			name = QMMessagesFactory;
 			sourceTree = "<group>";
 		};
+		5839F26B1CC531800055EBF8 /* QMBaseTitleView */ = {
+			isa = PBXGroup;
+			children = (
+				5839F26C1CC531AD0055EBF8 /* QMBaseTitleView.h */,
+				5839F26D1CC531AD0055EBF8 /* QMBaseTitleView.m */,
+			);
+			name = QMBaseTitleView;
+			sourceTree = "<group>";
+		};
 		584277781C3D32ED00CDE35B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -842,6 +854,7 @@
 		584277C41C3D46AC00CDE35B /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				5839F26B1CC531800055EBF8 /* QMBaseTitleView */,
 				58D8477E1C87139D000C40BA /* QMSearchDataProvider */,
 				5877D6D11C46705E00938E5D /* QMTableViewDataSource */,
 				5877D6D71C4671E500938E5D /* QMTableViewCell */,
@@ -1699,6 +1712,7 @@
 				55D8ADB519AC761000DAF79F /* QMForgotPasswordViewController.m in Sources */,
 				5877D6DE1C46728200938E5D /* QMDialogCell.m in Sources */,
 				5877D6D41C46709A00938E5D /* QMTableViewDataSource.m in Sources */,
+				5839F26E1CC531AD0055EBF8 /* QMBaseTitleView.m in Sources */,
 				5897928D1C998C4A00CC6438 /* QMNoContactsCell.m in Sources */,
 				5842779C1C3D336300CDE35B /* IAButton.m in Sources */,
 				589407B41BB958DE00C1CA78 /* QBUpdateUserParameters+CustomData.m in Sources */,
