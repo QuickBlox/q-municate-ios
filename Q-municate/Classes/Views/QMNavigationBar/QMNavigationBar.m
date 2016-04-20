@@ -56,7 +56,7 @@
         [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
             
             @strongify(self);
-            [self.window.rootViewController.viewIfLoaded layoutSubviews];
+            [self.window.rootViewController.view layoutSubviews];
         }];
     }
 }
@@ -74,7 +74,7 @@
         [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
             
             @strongify(self);
-            [self.window.rootViewController.viewIfLoaded layoutSubviews];
+            [self.window.rootViewController.view layoutSubviews];
         }];
     }
 }
