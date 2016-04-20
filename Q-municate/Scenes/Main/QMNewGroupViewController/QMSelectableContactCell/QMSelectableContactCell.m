@@ -49,11 +49,6 @@ static UIImage *deselectedCheckImage() {
 
 @implementation QMSelectableContactCell
 
-+ (NSString *)cellIdentifier {
-    
-    return @"QMSelectableContactCell";
-}
-
 - (void)awakeFromNib {
     [super awakeFromNib];
     

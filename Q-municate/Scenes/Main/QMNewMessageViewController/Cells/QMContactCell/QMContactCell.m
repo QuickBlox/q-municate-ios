@@ -12,11 +12,6 @@
 
 @implementation QMContactCell
 
-+ (NSString *)cellIdentifier {
-    
-    return @"QMContactCell";
-}
-
 + (CGFloat)height {
     
     return 50.0f;

@@ -16,11 +16,6 @@
 
 @implementation QMSearchCell
 
-+ (NSString *)cellIdentifier {
-    
-    return @"QMSearchCell";
-}
-
 + (CGFloat)height {
     
     return 50.0f;
