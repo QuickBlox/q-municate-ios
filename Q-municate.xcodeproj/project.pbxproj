@@ -88,6 +88,7 @@
 		589D4CF91C981888005F1E76 /* QMNewMessageDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 589D4CF81C981888005F1E76 /* QMNewMessageDataSource.m */; };
 		589D4CFD1C981D44005F1E76 /* QMContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 589D4CFC1C981D44005F1E76 /* QMContactCell.m */; };
 		589D4CFF1C981D74005F1E76 /* QMContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 589D4CFE1C981D74005F1E76 /* QMContactCell.xib */; };
+		58B3C9CD1CB52C4600B08A27 /* QMShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B3C9CC1CB52C4600B08A27 /* QMShadowView.m */; };
 		58C64D031C905F9800F1387B /* QMChatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C64D021C905F9800F1387B /* QMChatVC.m */; };
 		58C64D071C90699A00F1387B /* QMChatButtonsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C64D061C90699A00F1387B /* QMChatButtonsFactory.m */; };
 		58CCD2AE1BE778DD00E99C16 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58CCD2AD1BE778DD00E99C16 /* Quickblox.framework */; };
@@ -293,6 +294,8 @@
 		589D4CFB1C981D44005F1E76 /* QMContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMContactCell.h; path = "Q-municate/Scenes/Main/QMNewMessageViewController/Cells/QMContactCell/QMContactCell.h"; sourceTree = SOURCE_ROOT; };
 		589D4CFC1C981D44005F1E76 /* QMContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMContactCell.m; path = "Q-municate/Scenes/Main/QMNewMessageViewController/Cells/QMContactCell/QMContactCell.m"; sourceTree = SOURCE_ROOT; };
 		589D4CFE1C981D74005F1E76 /* QMContactCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = QMContactCell.xib; path = "Q-municate/Scenes/Main/QMNewMessageViewController/Cells/QMContactCell/QMContactCell.xib"; sourceTree = SOURCE_ROOT; };
+		58B3C9CB1CB52C4600B08A27 /* QMShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMShadowView.h; path = QMShadowView/QMShadowView.h; sourceTree = "<group>"; };
+		58B3C9CC1CB52C4600B08A27 /* QMShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMShadowView.m; path = QMShadowView/QMShadowView.m; sourceTree = "<group>"; };
 		58C64D011C905F9800F1387B /* QMChatVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMChatVC.h; path = "Q-municate/Scenes/Chat/QMChatVC/QMChatVC.h"; sourceTree = SOURCE_ROOT; };
 		58C64D021C905F9800F1387B /* QMChatVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMChatVC.m; path = "Q-municate/Scenes/Chat/QMChatVC/QMChatVC.m"; sourceTree = SOURCE_ROOT; };
 		58C64D051C90699A00F1387B /* QMChatButtonsFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMChatButtonsFactory.h; path = Classes/QMChatButtonsFactory/QMChatButtonsFactory.h; sourceTree = "<group>"; };
@@ -786,6 +789,7 @@
 				584277801C3D336300CDE35B /* IAButton */,
 				584277961C3D336300CDE35B /* QMCornerButton */,
 				58E398B11CAE94450053BA4D /* QMNavigationBar */,
+				58B3C9CE1CB52C9D00B08A27 /* QMShadowView */,
 			);
 			name = Views;
 			path = "Q-municate/Classes/Views";
@@ -1215,6 +1219,15 @@
 				589D4CFC1C981D44005F1E76 /* QMContactCell.m */,
 			);
 			name = QMContactCell;
+			sourceTree = "<group>";
+		};
+		58B3C9CE1CB52C9D00B08A27 /* QMShadowView */ = {
+			isa = PBXGroup;
+			children = (
+				58B3C9CB1CB52C4600B08A27 /* QMShadowView.h */,
+				58B3C9CC1CB52C4600B08A27 /* QMShadowView.m */,
+			);
+			name = QMShadowView;
 			sourceTree = "<group>";
 		};
 		58C64D041C90697400F1387B /* QMChatButtonsFactory */ = {
@@ -1684,6 +1697,7 @@
 				580FEBEA1CC4EF8E000AED72 /* QMNotification.m in Sources */,
 				697E2D4C196EA82400CD2BDE /* QMLicenseAgreementViewController.m in Sources */,
 				58FA416B1C96E19400E61586 /* QMOnlineTitleView.m in Sources */,
+				58B3C9CD1CB52C4600B08A27 /* QMShadowView.m in Sources */,
 				588CF1061CA6C01200B23C00 /* QMNotificationPanelView.m in Sources */,
 				58E398B01CAE943F0053BA4D /* QMNavigationBar.m in Sources */,
 				2476BA8119A5D91F00CC666D /* QMUsersUtils.m in Sources */,
