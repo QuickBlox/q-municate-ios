@@ -1,0 +1,94 @@
+//
+//  QMGroupHeaderView.m
+//  Q-municate
+//
+//  Created by Vitaliy Gorbachov on 4/18/16.
+//  Copyright © 2016 Quickblox. All rights reserved.
+//
+
+#import "QMGroupHeaderView.h"
+#import "QMShadowView.h"
+#import "QMPlaceholder.h"
+#import <QMImageView.h>
+
+static UIColor *highlightedColor() {
+    
+    static UIColor *color = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        color = [UIColor colorWithRed:227.0f/255.0f green:227.0f/255.0f blue:227.0f/255.0f alpha:1.0f];
+    });
+    
+    return color;
+}
+
+static UIColor *defaultColor() {
+    
+    static UIColor *color = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        color = [UIColor whiteColor];
+    });
+    
+    return color;
+}
+
+@interface QMGroupHeaderView ()
+
+@property (weak, nonatomic) IBOutlet QMImageView *avatarImage;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+
+@property (strong, nonatomic) NSString *title;
+
+@end
+
+@implementation QMGroupHeaderView
+
+#pragma mark - Overrides
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    
+    self.avatarImage.imageViewType = QMImageViewTypeCircle;
+    
+    QMShadowView *shadowView = [[QMShadowView alloc] initWithFrame:CGRectMake(0,
+                                                                              CGRectGetHeight(self.frame) - kQMShadowViewHeight,
+                                                                              CGRectGetWidth(self.frame),
+                                                                              kQMShadowViewHeight)];
+    [self addSubview:shadowView];
+}
+
+- (void)setHighlighted:(BOOL)highlighted {
+    [super setHighlighted:highlighted];
+    
+    [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
+        
+        self.backgroundColor = highlighted ? highlightedColor() : defaultColor();
+        
+    } completion:nil];
+}
+
+#pragma mark - Methods
+
+- (void)setTitle:(NSString *)title avatarUrl:(NSString *)avatarUrl placeholderID:(NSUInteger)placeholderID {
+    
+    if (![_title isEqualToString:title]) {
+        
+        _title = title;
+        
+        self.titleLabel.text = title;
+    }
+    
+    UIImage *placeholder = [QMPlaceholder placeholderWithFrame:self.avatarImage.bounds title:title ID:placeholderID];
+    [self.avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl]
+                          placeholder:placeholder
+                              options:SDWebImageLowPriority
+                             progress:nil
+                       completedBlock:nil];
+}
+
+@end
