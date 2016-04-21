@@ -9,7 +9,6 @@
 #import "QMGroupHeaderView.h"
 #import "QMShadowView.h"
 #import "QMPlaceholder.h"
-#import <QMImageView.h>
 
 static UIColor *highlightedColor() {
     
@@ -37,7 +36,7 @@ static UIColor *defaultColor() {
     return color;
 }
 
-@interface QMGroupHeaderView ()
+@interface QMGroupHeaderView () <QMImageViewDelegate>
 
 @property (weak, nonatomic) IBOutlet QMImageView *avatarImage;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
@@ -89,6 +88,13 @@ static UIColor *defaultColor() {
                               options:SDWebImageLowPriority
                              progress:nil
                        completedBlock:nil];
+}
+
+#pragma mark - QMImageViewDelegate
+
+- (void)imageViewDidTap:(QMImageView *)imageView {
+    
+    [self.delegate groupHeaderView:self didTapAvatar:imageView];
 }
 
 @end
