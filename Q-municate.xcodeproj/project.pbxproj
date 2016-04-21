@@ -39,6 +39,7 @@
 		580D34E21BC027BD0034813A /* QMSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580D34E11BC027BD0034813A /* QMSplashViewController.m */; };
 		580FEBEA1CC4EF8E000AED72 /* QMNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 580FEBE91CC4EF8E000AED72 /* QMNotification.m */; };
 		580FEBF61CC50423000AED72 /* QMMessagesFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 580FEBF51CC50423000AED72 /* QMMessagesFactory.m */; };
+		581BAC8E1CAD8DD900E0567D /* QMColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 581BAC8D1CAD8DD900E0567D /* QMColors.m */; };
 		581DA1D01BF3732900F75D8B /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1CF1BF3732900F75D8B /* libc++.tbd */; };
 		581DA1D21BF373A100F75D8B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1D11BF373A100F75D8B /* VideoToolbox.framework */; };
 		5839F26E1CC531AD0055EBF8 /* QMBaseTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839F26D1CC531AD0055EBF8 /* QMBaseTitleView.m */; };
@@ -205,6 +206,8 @@
 		580FEBE91CC4EF8E000AED72 /* QMNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMNotification.m; path = Classes/QMNotification/QMNotification.m; sourceTree = "<group>"; };
 		580FEBF41CC50423000AED72 /* QMMessagesFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMMessagesFactory.h; path = QMMessagesFactory/QMMessagesFactory.h; sourceTree = "<group>"; };
 		580FEBF51CC50423000AED72 /* QMMessagesFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMMessagesFactory.m; path = QMMessagesFactory/QMMessagesFactory.m; sourceTree = "<group>"; };
+		581BAC8C1CAD8DD900E0567D /* QMColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMColors.h; path = Classes/Utils/QMColors/QMColors.h; sourceTree = "<group>"; };
+		581BAC8D1CAD8DD900E0567D /* QMColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMColors.m; path = Classes/Utils/QMColors/QMColors.m; sourceTree = "<group>"; };
 		581DA1CF1BF3732900F75D8B /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		581DA1D11BF373A100F75D8B /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		5839F26C1CC531AD0055EBF8 /* QMBaseTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMBaseTitleView.h; path = "Q-municate/Scenes/Base/QMBaseTitleView/QMBaseTitleView.h"; sourceTree = SOURCE_ROOT; };
@@ -716,6 +719,23 @@
 				580FEBF51CC50423000AED72 /* QMMessagesFactory.m */,
 			);
 			name = QMMessagesFactory;
+			sourceTree = "<group>";
+		};
+		581BAC8A1CAD8DC300E0567D /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				581BAC8B1CAD8DCA00E0567D /* QMColors */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
+		581BAC8B1CAD8DCA00E0567D /* QMColors */ = {
+			isa = PBXGroup;
+			children = (
+				581BAC8C1CAD8DD900E0567D /* QMColors.h */,
+				581BAC8D1CAD8DD900E0567D /* QMColors.m */,
+			);
+			name = QMColors;
 			sourceTree = "<group>";
 		};
 		5839F26B1CC531800055EBF8 /* QMBaseTitleView */ = {
@@ -1432,6 +1452,7 @@
 		695F4B2118B60A62006C9DA5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				581BAC8A1CAD8DC300E0567D /* Utils */,
 				584277D91C3FE58900CDE35B /* Core */,
 				589792961C99937F00CC6438 /* QMAlphabetizer */,
 				58FA41641C96B1E300E61586 /* QMMessageStatusStringBuilder */,
@@ -1786,6 +1807,7 @@
 				58D847701C85BB36000C40BA /* QMSearchCell.m in Sources */,
 				2444261F19F1106100C9C61A /* QMChatUtils.m in Sources */,
 				5877D6CE1C46702400938E5D /* QMDialogsDataSource.m in Sources */,
+				581BAC8E1CAD8DD900E0567D /* QMColors.m in Sources */,
 				559BDFE819618D3D000588FE /* QMSignUpViewController.m in Sources */,
 				585DE45F1C4686060068E03E /* QMErrorsFactory.m in Sources */,
 				5839F2761CC533A30055EBF8 /* QMGroupHeaderView.m in Sources */,
