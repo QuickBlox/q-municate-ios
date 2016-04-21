@@ -92,6 +92,7 @@
 		589D4CFF1C981D74005F1E76 /* QMContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 589D4CFE1C981D74005F1E76 /* QMContactCell.xib */; };
 		58B3C9C81CB4044000B08A27 /* QMTableSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B3C9C71CB4044000B08A27 /* QMTableSectionHeaderView.m */; };
 		58B3C9CD1CB52C4600B08A27 /* QMShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B3C9CC1CB52C4600B08A27 /* QMShadowView.m */; };
+		58B550751CC7BFBA00C93F93 /* QMSelectableContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58B550741CC7BFBA00C93F93 /* QMSelectableContactCell.xib */; };
 		58C64D031C905F9800F1387B /* QMChatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C64D021C905F9800F1387B /* QMChatVC.m */; };
 		58C64D071C90699A00F1387B /* QMChatButtonsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C64D061C90699A00F1387B /* QMChatButtonsFactory.m */; };
 		58CCD2AE1BE778DD00E99C16 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58CCD2AD1BE778DD00E99C16 /* Quickblox.framework */; };
@@ -305,6 +306,7 @@
 		58B3C9C71CB4044000B08A27 /* QMTableSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMTableSectionHeaderView.m; path = QMTableSectionHeaderView/QMTableSectionHeaderView.m; sourceTree = "<group>"; };
 		58B3C9CB1CB52C4600B08A27 /* QMShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMShadowView.h; path = QMShadowView/QMShadowView.h; sourceTree = "<group>"; };
 		58B3C9CC1CB52C4600B08A27 /* QMShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMShadowView.m; path = QMShadowView/QMShadowView.m; sourceTree = "<group>"; };
+		58B550741CC7BFBA00C93F93 /* QMSelectableContactCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = QMSelectableContactCell.xib; path = "Q-municate/Scenes/Cells/QMSelectableContactCell/QMSelectableContactCell.xib"; sourceTree = SOURCE_ROOT; };
 		58C64D011C905F9800F1387B /* QMChatVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMChatVC.h; path = "Q-municate/Scenes/Chat/QMChatVC/QMChatVC.h"; sourceTree = SOURCE_ROOT; };
 		58C64D021C905F9800F1387B /* QMChatVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMChatVC.m; path = "Q-municate/Scenes/Chat/QMChatVC/QMChatVC.m"; sourceTree = SOURCE_ROOT; };
 		58C64D051C90699A00F1387B /* QMChatButtonsFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMChatButtonsFactory.h; path = Classes/QMChatButtonsFactory/QMChatButtonsFactory.h; sourceTree = "<group>"; };
@@ -1659,6 +1661,7 @@
 				58D847641C85A02B000C40BA /* QMDialogCell.xib in Resources */,
 				55A8B0741965986A00B5D33B /* sent.wav in Resources */,
 				584277C31C3D44AB00CDE35B /* Chat.storyboard in Resources */,
+				58B550751CC7BFBA00C93F93 /* QMSelectableContactCell.xib in Resources */,
 				584277B41C3D374400CDE35B /* Auth.storyboard in Resources */,
 				55A8B0711965986A00B5D33B /* end_of_call.wav in Resources */,
 				5877D6C61C466B2D00938E5D /* Launch Screen.storyboard in Resources */,

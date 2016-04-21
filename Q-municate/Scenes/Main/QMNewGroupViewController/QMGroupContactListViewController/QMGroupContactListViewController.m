@@ -160,6 +160,7 @@ QMSearchDataProviderDelegate
 
 - (void)registerNibs {
     
+    [QMSelectableContactCell registerForReuseInTableView:self.tableView];
     [QMNoResultsCell registerForReuseInTableView:self.tableView];
 }
 

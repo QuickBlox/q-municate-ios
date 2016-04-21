@@ -317,67 +317,6 @@ out here.</string>
                         <rect key="frame" x="0.0" y="0.0" width="600" height="393"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="QMSelectableContactCell" rowHeight="50" id="H5L-Ol-Kft" customClass="QMSelectableContactCell">
-                                <rect key="frame" x="0.0" y="28" width="600" height="50"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="H5L-Ol-Kft" id="buc-gr-Zyq">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="49"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Adam44" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vBi-VD-sBq">
-                                            <rect key="frame" x="100" y="7" width="70" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Last seen" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Ba-5O-8Pj">
-                                            <rect key="frame" x="100" y="29" width="61" height="14"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <color key="textColor" red="0.56078431370000004" green="0.5568627451" blue="0.58039215690000001" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3L6-1F-n0w">
-                                            <rect key="frame" x="16" y="15" width="20" height="20"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="20" id="Y7S-ix-qpE"/>
-                                                <constraint firstAttribute="width" constant="20" id="zbf-fT-oc9"/>
-                                            </constraints>
-                                        </imageView>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3U7-dA-0An" customClass="QMImageView">
-                                            <rect key="frame" x="52" y="5" width="40" height="40"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="40" id="7Up-J1-dRb"/>
-                                                <constraint firstAttribute="width" constant="40" id="v6L-1N-6YC"/>
-                                            </constraints>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                    <real key="value" value="0.0"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
-                                        </imageView>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="6Ba-5O-8Pj" firstAttribute="leading" secondItem="3U7-dA-0An" secondAttribute="trailing" constant="8" id="2Io-mv-58D"/>
-                                        <constraint firstItem="3U7-dA-0An" firstAttribute="leading" secondItem="3L6-1F-n0w" secondAttribute="trailing" constant="16" id="8YN-jR-FbB"/>
-                                        <constraint firstItem="vBi-VD-sBq" firstAttribute="top" secondItem="buc-gr-Zyq" secondAttribute="topMargin" constant="-1" id="SCx-KO-ag0"/>
-                                        <constraint firstItem="3L6-1F-n0w" firstAttribute="leading" secondItem="buc-gr-Zyq" secondAttribute="leadingMargin" constant="8" id="Srs-Th-h8E"/>
-                                        <constraint firstItem="3U7-dA-0An" firstAttribute="centerY" secondItem="buc-gr-Zyq" secondAttribute="centerY" id="U6s-K9-x7P"/>
-                                        <constraint firstItem="6Ba-5O-8Pj" firstAttribute="top" secondItem="vBi-VD-sBq" secondAttribute="bottom" constant="1" id="Uaz-ye-1oE"/>
-                                        <constraint firstItem="3L6-1F-n0w" firstAttribute="centerY" secondItem="buc-gr-Zyq" secondAttribute="centerY" id="eZh-ye-qZ0"/>
-                                        <constraint firstItem="6Ba-5O-8Pj" firstAttribute="top" secondItem="vBi-VD-sBq" secondAttribute="bottom" constant="1" id="hEt-fT-shk"/>
-                                        <constraint firstItem="vBi-VD-sBq" firstAttribute="leading" secondItem="3U7-dA-0An" secondAttribute="trailing" constant="8" id="in4-JP-SJE"/>
-                                    </constraints>
-                                </tableViewCellContentView>
-                                <inset key="separatorInset" minX="52" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                <connections>
-                                    <outlet property="avatarImage" destination="3U7-dA-0An" id="pYT-ky-G4I"/>
-                                    <outlet property="bodyLabel" destination="6Ba-5O-8Pj" id="bGz-uI-lzd"/>
-                                    <outlet property="checkmarkImageView" destination="3L6-1F-n0w" id="auV-z1-3aT"/>
-                                    <outlet property="titleLabel" destination="vBi-VD-sBq" id="fTq-9l-dvw"/>
-                                </connections>
-                            </tableViewCell>
-                        </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="DcJ-yr-2ZD" id="tEs-Zv-doK"/>
                             <outlet property="delegate" destination="DcJ-yr-2ZD" id="G4j-MY-iif"/>
@@ -398,6 +337,6 @@ out here.</string>
         <image name="users" width="20" height="20"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="M6I-F2-D1O"/>
+        <segue reference="io2-9H-ZNL"/>
     </inferredMetricsTieBreakers>
 </document>
