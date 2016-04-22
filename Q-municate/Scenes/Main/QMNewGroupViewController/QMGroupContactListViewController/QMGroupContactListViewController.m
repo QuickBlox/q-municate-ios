@@ -37,9 +37,6 @@ QMSearchDataProviderDelegate
     
     // setting up data sources
     [self configureDataSources];
-    
-    // setting up delegate
-    self.tableView.delegate = self;
 }
 
 - (void)configureDataSources {
@@ -131,7 +128,14 @@ QMSearchDataProviderDelegate
 
 #pragma mark - QMSearchDataProviderDelegate
 
+- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
+    
+    [self.tableView reloadData];
+}
+
 - (void)searchDataProvider:(QMSearchDataProvider *)__unused searchDataProvider didUpdateData:(NSArray *)data {
+    
+    [self.dataSource replaceItems:data];
     
     // update selected users
     NSArray *enumerateSelectedUsers = self.dataSource.selectedUsers.allObjects;
@@ -147,11 +151,6 @@ QMSearchDataProviderDelegate
             }
         }
     }
-    
-    [self.tableView reloadData];
-}
-
-- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
     
     [self.tableView reloadData];
 }
