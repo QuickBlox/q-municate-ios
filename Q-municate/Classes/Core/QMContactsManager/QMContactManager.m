@@ -133,6 +133,22 @@
     return friends.copy;
 }
 
+- (NSArray *)friendsByExcludingUsersWithIDs:(NSArray *)userIDs {
+    
+    NSArray *friends = self.friends;
+    NSMutableArray *mutableUsers = friends.mutableCopy;
+    
+    for (QBUUser *user in friends) {
+        
+        if ([userIDs containsObject:@(user.ID)]) {
+            
+            [mutableUsers removeObject:user];
+        }
+    }
+    
+    return mutableUsers.copy;
+}
+
 - (NSArray *)idsOfUsers:(NSArray *)users {
     
     NSMutableArray *ids = [NSMutableArray arrayWithCapacity:users.count];

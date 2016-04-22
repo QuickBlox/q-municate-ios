@@ -84,6 +84,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray <QBUUser *> *)friends;
 
 /**
+ *  Friends by excluding some users with ids.
+ *
+ *  @param userIDs user ids to exclude from.
+ *
+ *  @return friends without exlcuded users
+ */
+- (NSArray <QBUUser *> *)friendsByExcludingUsersWithIDs:(NSArray <NSNumber *> *)userIDs;
+
+/**
  *  Ids of users from array.
  *
  *  @param users array of QBUUser instances
