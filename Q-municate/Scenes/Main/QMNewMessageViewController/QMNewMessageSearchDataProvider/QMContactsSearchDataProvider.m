@@ -23,6 +23,8 @@ QMUsersServiceDelegate
 
 @implementation QMContactsSearchDataProvider
 
+#pragma mark - Construction
+
 - (instancetype)init {
     
     self = [super init];
@@ -36,6 +38,8 @@ QMUsersServiceDelegate
     
     return self;
 }
+
+#pragma mark - Methods
 
 - (void)performSearch:(NSString *)searchText {
     

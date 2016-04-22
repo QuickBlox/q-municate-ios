@@ -45,6 +45,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic, nullable) id<QMGroupHeaderViewDelegate> delegate;
 
 /**
+ *  Avatar Image View.
+ */
+@property (weak, nonatomic) IBOutlet QMImageView *avatarImage;
+
+/**
  *  Set title and avatar for group using avatar url if existent and placeholder ID.
  *
  *  @param title         name of group chat

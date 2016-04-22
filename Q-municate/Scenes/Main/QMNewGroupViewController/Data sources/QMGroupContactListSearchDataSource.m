@@ -81,6 +81,7 @@
 - (void)setSelected:(BOOL)selected userAtIndexPath:(NSIndexPath *)indexPath {
     
     QBUUser *selectedUser = [self userAtIndexPath:indexPath];
+    
     if (selected) {
         
         [self.selectedUsers addObject:selectedUser];

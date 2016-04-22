@@ -137,15 +137,6 @@ QMChatConnectionDelegate
     return [self.searchDataSource heightForRowAtIndexPath:indexPath];
 }
 
-#pragma mark - Register nibs
-
-- (void)registerNibs {
-    
-    [QMDialogCell registerForReuseInTableView:self.tableView];
-    [QMSearchCell registerForReuseInTableView:self.tableView];
-    [QMNoResultsCell registerForReuseInTableView:self.tableView];
-}
-
 #pragma mark - QMSearchProtocol
 
 - (QMSearchDataSource *)searchDataSource {
@@ -201,6 +192,15 @@ QMChatConnectionDelegate
         
         [self.tableView reloadData];
     }
+}
+
+#pragma mark - Register nibs
+
+- (void)registerNibs {
+    
+    [QMDialogCell registerForReuseInTableView:self.tableView];
+    [QMSearchCell registerForReuseInTableView:self.tableView];
+    [QMNoResultsCell registerForReuseInTableView:self.tableView];
 }
 
 @end

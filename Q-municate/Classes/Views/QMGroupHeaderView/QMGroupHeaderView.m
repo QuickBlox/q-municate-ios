@@ -38,7 +38,6 @@ static UIColor *defaultColor() {
 
 @interface QMGroupHeaderView () <QMImageViewDelegate>
 
-@property (weak, nonatomic) IBOutlet QMImageView *avatarImage;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 
 @property (strong, nonatomic) NSString *title;
@@ -53,6 +52,7 @@ static UIColor *defaultColor() {
     [super awakeFromNib];
     
     self.avatarImage.imageViewType = QMImageViewTypeCircle;
+    self.avatarImage.delegate = self;
     
     QMShadowView *shadowView = [[QMShadowView alloc] initWithFrame:CGRectMake(0,
                                                                               CGRectGetHeight(self.frame) - kQMShadowViewHeight,

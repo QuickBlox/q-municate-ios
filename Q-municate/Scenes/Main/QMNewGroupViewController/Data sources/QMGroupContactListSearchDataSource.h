@@ -19,7 +19,7 @@
 /**
  *  Set of selected users (readonly).
  */
-@property (strong, nonatomic, readonly) NSMutableSet *selectedUsers;
+@property (strong, nonatomic, readonly) NSMutableSet <QBUUser *> *selectedUsers;
 
 /**
  *  Determines whether user at index path is selected or not.
