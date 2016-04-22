@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BFTask *)disconnectFromChatIfNeeded;
 
 /**
- *  Add users to group chat dialog.
+ *  Add users to group chat dialog and send notification message.
  *
  *  @param users      array of QBUUser instances
  *  @param chatDialog group chat dialog instance
@@ -43,7 +43,17 @@ NS_ASSUME_NONNULL_BEGIN
 - (BFTask *)addUsers:(NSArray <QBUUser *> *)users toGroupChatDialog:(QBChatDialog *)chatDialog;
 
 /**
- *  Leave group chat dialog and send notification in it.
+ *  Change group chat dialog avatar and send notification message.
+ *
+ *  @param avatar     avatar image
+ *  @param chatDialog chat dialog to update
+ *
+ *  @return task with result
+ */
+- (BFTask *)changeAvatar:(UIImage *)avatar forGroupChatDialog:(QBChatDialog *)chatDialog;
+
+/**
+ *  Leave group chat dialog and send notification message.
  *
  *  @param chatDialog group chat dialog to leave
  *

@@ -8,6 +8,7 @@
 
 #import "QMChatManager.h"
 #import "QMCore.h"
+#import "QMContent.h"
 
 @interface QMChatManager ()
 
@@ -64,8 +65,25 @@
     }];
 }
 
+- (BFTask *)changeAvatar:(UIImage *)avatar forGroupChatDialog:(QBChatDialog *)chatDialog {
+    NSAssert(chatDialog.type == QBChatDialogTypeGroup, @"Chat dialog must be group type!");
+    
+    @weakify(self);
+    return [[[QMContent uploadPNGImage:avatar progress:nil] continueWithSuccessBlock:^id _Nullable(BFTask<QBCBlob *> * _Nonnull task) {
+        
+        @strongify(self);
+        NSString *url = task.result.publicUrl ?: task.result.privateUrl;
+        return [self.serviceManager.chatService changeDialogAvatar:url forChatDialog:chatDialog];
+    }] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+        
+        @strongify(self);
+        [self.serviceManager.chatService sendNotificationMessageAboutChangingDialogPhoto:task.result withNotificationText:kQMDialogsUpdateNotificationMessage];
+        return nil;
+    }];
+}
+
 - (BFTask *)leaveChatDialog:(QBChatDialog *)chatDialog {
-    NSAssert(chatDialog.type != QBChatDialogTypePrivate, @"Dialog type must be group!");
+    NSAssert(chatDialog.type == QBChatDialogTypeGroup, @"Chat dialog must be group type!");
     
     @weakify(self);
     return [[self.serviceManager.chatService sendNotificationMessageAboutLeavingDialog:chatDialog withNotificationText:kQMDialogsUpdateNotificationMessage] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
