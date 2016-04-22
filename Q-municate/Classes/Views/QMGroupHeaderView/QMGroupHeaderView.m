@@ -23,19 +23,6 @@ static UIColor *highlightedColor() {
     return color;
 }
 
-static UIColor *defaultColor() {
-    
-    static UIColor *color = nil;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        color = [UIColor whiteColor];
-    });
-    
-    return color;
-}
-
 @interface QMGroupHeaderView () <QMImageViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
@@ -66,7 +53,7 @@ static UIColor *defaultColor() {
     
     [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
         
-        self.backgroundColor = highlighted ? highlightedColor() : defaultColor();
+        self.backgroundColor = highlighted ? highlightedColor() : [UIColor whiteColor];
         
     } completion:nil];
 }
