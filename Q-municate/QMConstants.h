@@ -13,6 +13,8 @@
 static NSString *const kQMChatStoryboard = @"Chat";
 
 static NSString *const kQMQBUUserFullNameKeyPathKey = @"fullName";
+static NSString *const kQMQBUUserIDKeyPath = @"ID";
+
 static NSString *const kQMDialogsUpdateNotificationMessage = @"Notification message";
 static NSString *const kQMContactRequestNotificationMessage = @"Contact request";
 
