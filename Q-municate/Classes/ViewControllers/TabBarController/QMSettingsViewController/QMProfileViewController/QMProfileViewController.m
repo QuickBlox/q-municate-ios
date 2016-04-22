@@ -17,6 +17,7 @@
 #import "REActionSheet.h"
 #import "QMImagePicker.h"
 #import "QMUsersUtils.h"
+#import <QBUUser+CustomData.h>
 
 @interface QMProfileViewController ()
 
@@ -28,11 +29,12 @@
 @property (weak, nonatomic) IBOutlet UITextField *phoneNumberField;
 @property (weak, nonatomic) IBOutlet QMPlaceHolderTextView *statusField;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *updateProfileButton;
+@property (weak, nonatomic) IBOutlet UISwitch *isProfileSearchableSwitch;
 
 @property (strong, nonatomic) NSString *fullNameFieldCache;
 @property (copy, nonatomic) NSString *phoneFieldCache;
 @property (copy, nonatomic) NSString *statusTextCache;
-
+@property (assign, nonatomic) BOOL isSearchableCache;
 
 @property (nonatomic, strong) UIImage *avatarImage;
 
@@ -63,12 +65,13 @@
 }
 
 - (void)updateProfileView {
-    
+  
     
     self.fullNameFieldCache = self.currentUser.fullName;
     self.phoneFieldCache = self.currentUser.phone ?: @"";
     self.statusTextCache = self.currentUser.status ?: @"";
-    
+    self.isSearchableCache = self.currentUser.isSearchable;
+  
     UIImage *placeholder = [UIImage imageNamed:@"upic-placeholder"];
     NSURL *url = [QMUsersUtils userAvatarURL:self.currentUser];
     
@@ -85,6 +88,7 @@
     self.emailField.text = self.currentUser.email;
     self.phoneNumberField.text = self.currentUser.phone;
     self.statusField.text = self.currentUser.status;
+    [self.isProfileSearchableSwitch setOn:self.currentUser.isSearchable animated:NO];
 }
 
 - (IBAction)changeAvatar:(id)sender {
@@ -140,7 +144,8 @@
     }
     
     __weak __typeof(self)weakSelf = self;
-    
+  
+    self.currentUser.isSearchable = self.isSearchableCache;
     QBUpdateUserParameters *params = [QBUpdateUserParameters new];
     params.customData = self.currentUser.customData;
     params.fullName = self.fullNameFieldCache;
@@ -168,8 +173,20 @@
     if (![self.fullNameFieldCache isEqualToString:self.currentUser.fullName]) return YES;
     if (![self.phoneFieldCache isEqualToString:self.currentUser.phone ?: @""]) return YES;
     if (![self.statusTextCache isEqualToString:self.currentUser.status ?: @""]) return YES;
-    
+    if (self.isSearchableCache != self.currentUser.isSearchable) return YES;
+  
     return NO;
+}
+
+- (IBAction)changeProfileSearchableValue:(UISwitch *)sender
+{
+  if (!QMApi.instance.isInternetConnected)
+  {
+    [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
+    return;
+  }
+  self.isSearchableCache = sender.isOn;
+  [self setUpdateButtonActivity];
 }
 
 #pragma mark - UITextFieldDelegate & UITextViewDelegate

@@ -12,6 +12,7 @@
 NSString *const kQMAvatarUrlKey = @"avatar_url";
 NSString *const kQMStatusKey = @"status";
 NSString *const kQMIsImportKey = @"is_import";
+NSString *const kQMIsSearchableKey = @"is_searchable";
 
 @interface QBUUser (QMAssociatedObject)
 
@@ -77,6 +78,7 @@ NSString *const kQMIsImportKey = @"is_import";
 @dynamic avatarUrl;
 @dynamic status;
 @dynamic isImport;
+@dynamic isSearchable;
 
 #pragma mark - Is import
 
@@ -90,6 +92,22 @@ NSString *const kQMIsImportKey = @"is_import";
     
     NSNumber *isImprot = self.context[kQMIsImportKey];
     return isImprot.boolValue;
+}
+
+#pragma mark - Is searchable
+
+- (void)setIsSearchable:(BOOL)isSearchable
+{
+  self.context[kQMIsSearchableKey] = @(isSearchable);
+  [self syncronize];
+}
+
+- (BOOL)isSearchable
+{
+  NSNumber *isSearchable = self.context[kQMIsSearchableKey];
+  if (isSearchable == nil)
+    return YES;
+  return isSearchable.boolValue;
 }
 
 #pragma mark - Status
