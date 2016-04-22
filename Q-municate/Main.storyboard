@@ -1163,8 +1163,44 @@ Line 2</string>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="50" id="nAe-I0-rFg">
+                                        <rect key="frame" x="0.0" y="283" width="320" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nAe-I0-rFg" id="Iev-5C-pJa">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Show Profile in Global Search" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jHV-rV-2Sf">
+                                                    <rect key="frame" x="20" y="-7" width="233" height="49"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="49" id="x2q-mx-5uc"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h7Q-db-uc7">
+                                                    <rect key="frame" x="256" y="2" width="51" height="31"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="49" id="Juu-o7-Ram"/>
+                                                        <constraint firstAttribute="height" constant="31" id="idn-55-eiR"/>
+                                                    </constraints>
+                                                    <connections>
+                                                        <action selector="changeProfileSearchableValue:" destination="pjK-pp-4QI" eventType="valueChanged" id="Tb6-Zc-wE2"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="h7Q-db-uc7" firstAttribute="centerY" secondItem="jHV-rV-2Sf" secondAttribute="centerY" id="Iyh-31-qA3"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="h7Q-db-uc7" secondAttribute="trailing" constant="7" id="dlN-Er-bH5"/>
+                                                <constraint firstItem="jHV-rV-2Sf" firstAttribute="leading" secondItem="Iev-5C-pJa" secondAttribute="leadingMargin" constant="12" id="drj-OX-bax"/>
+                                                <constraint firstItem="h7Q-db-uc7" firstAttribute="centerY" secondItem="Iev-5C-pJa" secondAttribute="centerY" constant="-7" id="h4P-N9-HwK"/>
+                                                <constraint firstItem="h7Q-db-uc7" firstAttribute="leading" secondItem="jHV-rV-2Sf" secondAttribute="trailing" constant="3" id="q3h-sf-6oe"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="100" id="flF-YW-f4v">
-                                        <rect key="frame" x="0.0" y="283" width="320" height="100"/>
+                                        <rect key="frame" x="0.0" y="333" width="320" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="flF-YW-f4v" id="JWV-Jh-1j3">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
@@ -1204,6 +1240,7 @@ Line 2</string>
                         <outlet property="avatarView" destination="ke3-0u-LyM" id="YU5-Zv-lNQ"/>
                         <outlet property="emailField" destination="2CO-I0-WcE" id="ifn-jM-TTP"/>
                         <outlet property="fullNameField" destination="9fL-c9-U3Z" id="Gcw-Fp-OXq"/>
+                        <outlet property="isProfileSearchableSwitch" destination="h7Q-db-uc7" id="RYt-Us-JR9"/>
                         <outlet property="phoneNumberField" destination="XYZ-bQ-Hhz" id="os2-Jz-zzA"/>
                         <outlet property="statusField" destination="xlW-Om-x7C" id="yXe-Mj-n6L"/>
                         <outlet property="updateProfileButton" destination="iMN-3L-JaH" id="c0j-MH-SUZ"/>

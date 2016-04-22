@@ -13,5 +13,6 @@
 @property (strong, nonatomic) NSString *avatarUrl;
 @property (strong, nonatomic) NSString *status;
 @property (assign, nonatomic) BOOL isImport;
+@property (assign, nonatomic) BOOL isSearchable;
 
 @end

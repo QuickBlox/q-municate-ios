@@ -23,6 +23,19 @@
     return sortedUsers;
 }
 
++ (NSMutableArray *)removeUnsearchableUsers:(NSArray *)users
+{
+    NSMutableArray *filteredUsers = users.mutableCopy;
+    for (QBUUser *user in users)
+    {
+      if (!user.isSearchable)
+      {
+        [filteredUsers removeObject:user];
+      }
+    }
+    return filteredUsers;
+}
+
 + (NSMutableArray *)filteredUsers:(NSArray *)users withFlterArray:(NSArray *)usersToFilter
 {
     NSMutableArray *filteredUsrs = users.mutableCopy;

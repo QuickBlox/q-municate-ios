@@ -115,7 +115,7 @@ QMContactListServiceDelegate
         
         NSArray *sortedUsers = [QMUsersUtils sortUsersByFullname:users];
         
-        NSMutableArray *filteredUsers = [QMUsersUtils filteredUsers:sortedUsers withFlterArray:[self.friendList arrayByAddingObject:[QMApi instance].currentUser]];
+        NSMutableArray *filteredUsers = [QMUsersUtils removeUnsearchableUsers:[QMUsersUtils filteredUsers:sortedUsers withFlterArray:[self.friendList arrayByAddingObject:[QMApi instance].currentUser]]];
         
         if (self.currentPage > 1) {
             [self.searchResult addObjectsFromArray:filteredUsers];
