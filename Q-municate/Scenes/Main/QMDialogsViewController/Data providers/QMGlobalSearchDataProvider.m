@@ -51,10 +51,8 @@ const NSUInteger kQMUsersPageLimit = 50;
     if (searchText.length < kQMGlobalSearchCharsMin) {
         
         [self.dataSource.items removeAllObjects];
-        if ([self.delegate respondsToSelector:@selector(searchDataProviderDidFinishDataFetching:)]) {
-            
-            [self.delegate searchDataProviderDidFinishDataFetching:self];
-        }
+        [self.delegate searchDataProviderDidFinishDataFetching:self];
+        
         return;
     }
     
@@ -100,10 +98,7 @@ const NSUInteger kQMUsersPageLimit = 50;
                 [self.dataSource replaceItems:sortedUsers];
             }
             
-            if ([self.delegate respondsToSelector:@selector(searchDataProviderDidFinishDataFetching:)]) {
-                
-                [self.delegate searchDataProviderDidFinishDataFetching:self];
-            }
+            [self.delegate searchDataProviderDidFinishDataFetching:self];
         }
         
         return nil;
