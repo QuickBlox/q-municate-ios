@@ -10,12 +10,7 @@
 #import "QMSearchCell.h"
 #import "QMNoResultsCell.h"
 #import "QMCore.h"
-
-@interface QMGlobalSearchDataSource ()
-
-@property (weak, nonatomic) BFTask *addUserTask;
-
-@end
+#import "QMSearchCell.h"
 
 @implementation QMGlobalSearchDataSource
 
@@ -39,11 +34,12 @@
     QMSearchCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMSearchCell cellIdentifier] forIndexPath:indexPath];
     
     QBUUser *user = self.items[indexPath.row];
-    
     [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
-    [cell setUser:user];
     
-    cell.delegate = self;
+    BOOL isRequestRequired = [[QMCore instance].contactManager isRequestRequiredToUserWithID:user.ID];
+    [cell setAddButtonVisible:isRequestRequired];
+    
+    cell.didAddUserBlock = self.didAddUserBlock;
     
     if (indexPath.row == [tableView numberOfRowsInSection:0] - 1) {
         
@@ -63,27 +59,6 @@
 - (QMGlobalSearchDataProvider *)globalSearchDataProvider {
     
     return (id)self.searchDataProvider;
-}
-
-#pragma mark - QMContactCellDelegate
-
-- (void)searchCell:(QMSearchCell *)searchCell didTapAddButton:(UIButton *)__unused sender {
-    
-    if (self.addUserTask) {
-        
-        return;
-    }
-    
-    QBContactListItem *contactListItem = [[QMCore instance].contactListService.contactListMemoryStorage contactListItemWithUserID:searchCell.user.ID];
-    
-    if (contactListItem.subscriptionState == QBPresenceSubscriptionStateFrom) {
-        
-        self.addUserTask = [[QMCore instance].contactManager confirmAddContactRequest:searchCell.user];
-    }
-    else {
-        
-        self.addUserTask = [[QMCore instance].contactManager addUserToContactList:searchCell.user];
-    }
 }
 
 @end

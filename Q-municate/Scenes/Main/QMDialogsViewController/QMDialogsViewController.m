@@ -57,6 +57,8 @@ UISearchResultsUpdating
 @property (strong, nonatomic) UISearchController *searchController;
 @property (strong, nonatomic) QMSearchResultsController *searchResultsController;
 
+@property (weak, nonatomic) BFTask *addUserTask;
+
 @end
 
 @implementation QMDialogsViewController
@@ -104,6 +106,25 @@ UISearchResultsUpdating
     
     self.localSearchDataSource = [[QMLocalSearchDataSource alloc] initWithSearchDataProvider:localSearchDataProvider];
     self.globalSearchDataSource = [[QMGlobalSearchDataSource alloc] initWithSearchDataProvider:globalSearchDataProvider];
+    
+    @weakify(self);
+    self.globalSearchDataSource.didAddUserBlock = ^(UITableViewCell *cell) {
+        
+        @strongify(self);
+        if (self.addUserTask) {
+            // task in progress
+            return;
+        }
+        
+        NSIndexPath *indexPath = [self.searchResultsController.tableView indexPathForCell:cell];
+        QBUUser *user = self.globalSearchDataSource.items[indexPath.row];
+        
+        self.addUserTask = [[[QMCore instance].contactManager addUserToContactList:user] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+            
+            [self.searchResultsController.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            return nil;
+        }];
+    };
     
     self.tableView.delegate = self;
 }

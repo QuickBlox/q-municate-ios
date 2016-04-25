@@ -39,13 +39,16 @@
                         <color key="textColor" red="0.5607843137254902" green="0.55686274509803924" blue="0.58039215686274503" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qDm-la-nIg">
+                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qDm-la-nIg">
                         <rect key="frame" x="327" y="14" width="20" height="22"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="H42-u4-G2i"/>
                             <constraint firstAttribute="width" constant="20" id="c1l-fa-a05"/>
                         </constraints>
                         <state key="normal" image="add_friend"/>
+                        <connections>
+                            <action selector="didTapAddButton" destination="Q1M-Ce-rPf" eventType="touchUpInside" id="KCt-ub-3q9"/>
+                        </connections>
                     </button>
                 </subviews>
                 <constraints>

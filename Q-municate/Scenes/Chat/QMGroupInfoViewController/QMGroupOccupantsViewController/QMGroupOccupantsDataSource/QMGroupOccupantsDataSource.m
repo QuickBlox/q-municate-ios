@@ -7,6 +7,7 @@
 //
 
 #import "QMGroupOccupantsDataSource.h"
+#import "QMCore.h"
 
 #import "QMContactCell.h"
 #import "QMAddMemberCell.h"
@@ -74,7 +75,14 @@ static const NSUInteger kQMNumberOfSections = 1;
         
         QBUUser *user = self.items[indexPath.row - kQMNumberOfStaticCellsBeforeOccupantsList];
         [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
-        [cell setUser:user];
+        
+        BOOL isRequestRequired = [[QMCore instance].contactManager isRequestRequiredToUserWithID:user.ID];
+        [cell setAddButtonVisible:isRequestRequired];
+        
+        NSString *onlineStatus = [[QMCore instance].contactManager onlineStatusForUser:user];
+        [cell setBody:onlineStatus];
+        
+        cell.didAddUserBlock = self.didAddUserBlock;
         
         return cell;
     }

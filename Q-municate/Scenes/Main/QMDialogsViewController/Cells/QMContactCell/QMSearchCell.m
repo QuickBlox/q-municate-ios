@@ -24,33 +24,16 @@
 
 #pragma mark - setters
 
-- (void)setUser:(QBUUser *)user {
+- (void)setAddButtonVisible:(BOOL)visible {
     
-    if (![_user isEqual:user]) {
-        
-        _user = user;
-        
-        if (user.ID == [QMCore instance].currentProfile.userData.ID) {
-            
-            self.addFriendButton.hidden = YES;
-            return;
-        }
-        
-        QBContactListItem *contactListItem = [[QMCore instance].contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
-        
-        BOOL isFriend = contactListItem ? YES : NO;
-        self.addFriendButton.hidden = isFriend;
-    }
+    self.addFriendButton.hidden = !visible;
 }
-
+ 
 #pragma mark - action
 
-- (IBAction)didTapAddButton:(id)sender {
+- (IBAction)didTapAddButton {
     
-    if ([self.delegate respondsToSelector:@selector(searchCell:didTapAddButton:)]) {
-        
-        [self.delegate searchCell:self didTapAddButton:sender];
-    }
+    self.didAddUserBlock(self);
 }
 
 @end

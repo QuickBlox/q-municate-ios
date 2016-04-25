@@ -46,9 +46,7 @@
         QMSearchCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMSearchCell cellIdentifier] forIndexPath:indexPath];
         
         QBUUser *user = self.contacts[indexPath.row];
-        
         [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
-        [cell setUser:user];
         
         return cell;
     }

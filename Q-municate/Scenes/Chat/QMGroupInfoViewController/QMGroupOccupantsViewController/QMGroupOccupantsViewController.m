@@ -29,7 +29,8 @@ QMUsersServiceDelegate
 
 @property (strong, nonatomic) QMGroupOccupantsDataSource *dataSource;
 
-@property (weak, nonatomic) BFTask *task;
+@property (weak, nonatomic) BFTask *leaveTask;
+@property (weak, nonatomic) BFTask *addUserTask;
 
 @end
 
@@ -47,8 +48,7 @@ QMUsersServiceDelegate
     self.tableView.backgroundColor = QMTableViewBackgroundColor();
     
     // configure data sources
-    self.dataSource = [[QMGroupOccupantsDataSource alloc] init];
-    self.tableView.dataSource = self.dataSource;
+    [self configureDataSource];
     
     // subscribe for delegates
     [[QMCore instance].chatService addDelegate:self];
@@ -57,6 +57,32 @@ QMUsersServiceDelegate
     
     // configure data
     [self updateOccupants];
+}
+
+- (void)configureDataSource {
+    
+    self.dataSource = [[QMGroupOccupantsDataSource alloc] init];
+    self.tableView.dataSource = self.dataSource;
+    
+    @weakify(self);
+    self.dataSource.didAddUserBlock = ^(UITableViewCell *cell) {
+        
+        @strongify(self);
+        if (self.addUserTask) {
+            // task in progress
+            return;
+        }
+        
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+        NSUInteger userIndex = [self.dataSource userIndexForIndexPath:indexPath];
+        QBUUser *user = self.dataSource.items[userIndex];
+        
+        self.addUserTask = [[[QMCore instance].contactManager addUserToContactList:user] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+            
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            return nil;
+        }];
+    };
 }
 
 #pragma mark - Methods
@@ -94,7 +120,7 @@ QMUsersServiceDelegate
     }
     else if (indexPath.row == self.dataSource.leaveChatCellIndex) {
         
-        if (self.task) {
+        if (self.leaveTask) {
             // task in progress
             return;
         }
@@ -111,7 +137,7 @@ QMUsersServiceDelegate
                                                                         message:NSLocalizedString(@"QM_STR_LOADING", nil)
                                                                timeUntilDismiss:0];
                 
-                self.task = [[[QMCore instance].chatManager leaveChatDialog:self.chatDialog] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+                self.leaveTask = [[[QMCore instance].chatManager leaveChatDialog:self.chatDialog] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
                     
                     [QMNotification dismissNotificationPanel];
                     [self.navigationController popToRootViewControllerAnimated:YES];

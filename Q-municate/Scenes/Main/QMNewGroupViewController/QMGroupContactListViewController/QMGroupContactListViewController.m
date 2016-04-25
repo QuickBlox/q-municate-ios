@@ -61,7 +61,10 @@ QMSearchDataProviderDelegate
         
         for (QMSelectableContactCell *cell in self.tableView.visibleCells) {
             
-            if (cell.user.ID == user.ID) {
+            NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+            QBUUser *cellUser = [self.dataSource userAtIndexPath:indexPath];
+            
+            if (cellUser.ID == user.ID) {
                 
                 [cell setChecked:NO animated:YES];
             }

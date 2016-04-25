@@ -9,6 +9,7 @@
 #import "QMGroupContactListSearchDataSource.h"
 #import "QMNoResultsCell.h"
 #import "QMSelectableContactCell.h"
+#import "QMCore.h"
 
 @interface QMGroupContactListSearchDataSource ()
 
@@ -63,7 +64,9 @@
     
     QBUUser *user = [self userAtIndexPath:indexPath];
     [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
-    cell.user = user;
+    
+    NSString *onlineStatus = [[QMCore instance].contactManager onlineStatusForUser:user];
+    [cell setBody:onlineStatus];
     
     cell.checked = [self.selectedUsers containsObject:user];
     
