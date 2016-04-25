@@ -82,32 +82,34 @@ QMUsersServiceDelegate
     });
 }
 
-#pragma mark - QMContactListServiceDelegate
-
-- (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
+- (void)updateContacts {
     
     self.contacts = [QMCore instance].contactManager.allContactsSortedByFullName;
     [self.delegate searchDataProvider:self didUpdateData:self.contacts];
 }
 
+#pragma mark - QMContactListServiceDelegate
+
+- (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
+    
+    [self updateContacts];
+}
+
 - (void)contactListServiceDidLoadCache {
     
-    self.contacts = [QMCore instance].contactManager.allContactsSortedByFullName;
-    [self.delegate searchDataProvider:self didUpdateData:self.contacts];
+    [self updateContacts];
 }
 
 #pragma mark - QMUsersServiceDelegate
 
 - (void)usersService:(QMUsersService *)__unused usersService didAddUsers:(NSArray<QBUUser *> *)__unused user {
     
-    self.contacts = [QMCore instance].contactManager.allContactsSortedByFullName;
-    [self.delegate searchDataProvider:self didUpdateData:self.contacts];
+    [self updateContacts];
 }
 
 - (void)usersService:(QMUsersService *)__unused usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
-    self.contacts = [QMCore instance].contactManager.allContactsSortedByFullName;
-    [self.delegate searchDataProvider:self didUpdateData:self.contacts];
+    [self updateContacts];
 }
 
 @end
