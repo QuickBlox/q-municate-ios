@@ -9,6 +9,9 @@
 #import "QMTableSectionHeaderView.h"
 #import "QMColors.h"
 
+static const CGFloat kQMTitleLabelX = 16.0f;
+static const CGFloat kQMTitleLabelY = 10.0f;
+
 static UIColor *labelTextColor() {
     
     static UIColor *color = nil;
@@ -58,24 +61,29 @@ static UIFont *labelFont() {
         self.backgroundColor = QMTableViewBackgroundColor();
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         
-        [self configureTitleLabel];
+        [self addSubview:self.titleLabel];
     }
     
     return self;
 }
 
-- (void)configureTitleLabel {
+#pragma mark - Getters
+
+- (UILabel *)titleLabel {
     
-    _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(16.0f,
-                                                            10.0f,
-                                                            0,
-                                                            0)];
-    _titleLabel.font = labelFont();
-    _titleLabel.textColor = labelTextColor();
-    _titleLabel.numberOfLines = 1;
-    _titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    if (_titleLabel == nil) {
+        
+        _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(kQMTitleLabelX,
+                                                                kQMTitleLabelY,
+                                                                0,
+                                                                0)];
+        _titleLabel.font = labelFont();
+        _titleLabel.textColor = labelTextColor();
+        _titleLabel.numberOfLines = 1;
+        _titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    }
     
-    [self addSubview:_titleLabel];
+    return _titleLabel;
 }
 
 #pragma mark - Setters
