@@ -11,6 +11,7 @@
 #import "QMNotification.h"
 #import "QMMessagesFactory.h"
 #import <QMChatService+AttachmentService.h>
+#import <QMDateUtils.h>
 
 @interface QMContactManager ()
 
@@ -26,24 +27,33 @@
 
 - (BFTask *)addUserToContactList:(QBUUser *)user {
     
-    @weakify(self);
-    return [[[self.serviceManager.contactListService addUserToContactListRequest:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        @strongify(self);
-        return [self.serviceManager.chatService createPrivateChatDialogWithOpponent:user];
-    }] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
-        @strongify(self);
-        QBChatMessage *chatMessage = [QMMessagesFactory contactRequestNotificationForUser:user];
-        [self.serviceManager.chatService sendMessage:chatMessage
-                                                type:chatMessage.messageType
-                                            toDialog:task.result
-                                       saveToHistory:YES
-                                       saveToStorage:YES
-                                          completion:nil];
+    QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
+    
+    if (contactListItem.subscriptionState == QBPresenceSubscriptionStateFrom) {
         
-        NSString *notificationMessage = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", nil), self.serviceManager.currentProfile.userData.fullName];
+        return [self confirmAddContactRequest:user];
+    }
+    else {
         
-        return [QMNotification sendPushNotificationToUser:user withText:notificationMessage];
-    }];
+        @weakify(self);
+        return [[[self.serviceManager.contactListService addUserToContactListRequest:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+            @strongify(self);
+            return [self.serviceManager.chatService createPrivateChatDialogWithOpponent:user];
+        }] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+            @strongify(self);
+            QBChatMessage *chatMessage = [QMMessagesFactory contactRequestNotificationForUser:user];
+            [self.serviceManager.chatService sendMessage:chatMessage
+                                                    type:chatMessage.messageType
+                                                toDialog:task.result
+                                           saveToHistory:YES
+                                           saveToStorage:YES
+                                              completion:nil];
+            
+            NSString *notificationMessage = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", nil), self.serviceManager.currentProfile.userData.fullName];
+            
+            return [QMNotification sendPushNotificationToUser:user withText:notificationMessage];
+        }];
+    }
 }
 
 - (BFTask *)confirmAddContactRequest:(QBUUser *)user {
@@ -161,9 +171,38 @@
     return ids.copy;
 }
 
+- (NSString *)onlineStatusForUser:(QBUUser *)user {
+    
+    QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
+    NSString *status = nil;
+    
+    if (user.ID == self.serviceManager.currentProfile.userData.ID || contactListItem.isOnline) {
+        
+        status = NSLocalizedString(@"QM_STR_ONLINE", nil);
+    }
+    else {
+        
+        if (user.lastRequestAt) {
+            
+            status = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"QM_STR_LAST_SEEN", nil), [QMDateUtils formattedLastSeenString:user.lastRequestAt withTimePrefix:NSLocalizedString(@"QM_STR_TIME_PREFIX", nil)]];
+        }
+        else {
+            
+            status = NSLocalizedString(@"QM_STR_OFFLINE", nil);
+        }
+    }
+    
+    return status;
+}
+
 #pragma mark - States
 
 - (BOOL)isFriendWithUserID:(NSUInteger)userID {
+    
+    if (userID == self.serviceManager.currentProfile.userData.ID) {
+        
+        return YES;
+    }
     
     QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
     

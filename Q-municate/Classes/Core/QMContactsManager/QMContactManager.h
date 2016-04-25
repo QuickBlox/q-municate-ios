@@ -18,22 +18,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface QMContactManager : QMBaseService
 
 /**
- *  Add user to contact list and send chat and push notification.
+ *  Add user to contact list or confirm already existent request and send chat and push notification.
  *
  *  @param user user to add to contact list
  *
  *  @return BFTask with all performed tasks
  */
 - (BFTask *)addUserToContactList:(QBUUser *)user;
-
-/**
- *  Confirm add user to contact list and send notification.
- *
- *  @param user user to confirm adding
- *
- *  @return BFTask with all performed tasks
- */
-- (BFTask *)confirmAddContactRequest:(QBUUser *)user;
 
 /**
  *  Reject add user to contact list and send notification.
@@ -100,6 +91,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return array of user ids
  */
 - (NSArray <NSNumber *> *)idsOfUsers:(NSArray <QBUUser *> *)users;
+
+- (NSString *)onlineStatusForUser:(QBUUser *)user;
 
 /**
  *  Determines whether user with ID is friend.
