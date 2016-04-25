@@ -104,6 +104,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isFriendWithUserID:(NSUInteger)userID;
 
 /**
+ *  Determines whether send add request to user is required or not.
+ *
+ *  @param userID opponent user ID
+ *
+ *  @return is sending add request required
+ */
+- (BOOL)isRequestRequiredToUserWithID:(NSUInteger)userID;
+
+/**
  *  Determines whether user with ID is in pending list.
  *
  *  @param userID opponent user ID

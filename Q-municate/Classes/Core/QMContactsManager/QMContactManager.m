@@ -209,6 +209,11 @@
     return contactListItem.subscriptionState == QBPresenceSubscriptionStateBoth;
 }
 
+- (BOOL)isRequestRequiredToUserWithID:(NSUInteger)userID {
+    
+    return ![self isFriendWithUserID:userID] && ![self isAwaitingForApprovalFromUserID:userID];
+}
+
 - (BOOL)isUserIDInPendingList:(NSUInteger)userID {
     
     QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];

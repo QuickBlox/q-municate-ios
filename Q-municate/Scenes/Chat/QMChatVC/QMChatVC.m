@@ -1094,7 +1094,7 @@ QMImageViewDelegate
         QBChatMessage *currentMessage = [self.chatSectionManager messageForIndexPath:indexPath];
         
         @weakify(self);
-        self.contactRequestTask = [[[QMCore instance].contactManager confirmAddContactRequest:opponentUser] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        self.contactRequestTask = [[[QMCore instance].contactManager addUserToContactList:opponentUser] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             @strongify(self);
             [QMNotification dismissNotificationPanel];
             [self.chatSectionManager updateMessage:currentMessage];
