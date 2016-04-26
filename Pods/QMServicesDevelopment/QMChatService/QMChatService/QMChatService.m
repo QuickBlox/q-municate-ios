@@ -1334,26 +1334,6 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
     });
 }
 
-- (void)sendMessageAboutUpdateDialog:(QBChatDialog *)updatedDialog
-                withNotificationText:(NSString *)notificationText
-                    customParameters:(NSDictionary *)customParameters
-                          completion:(QBChatCompletionBlock)completion
-{
-    NSParameterAssert(updatedDialog);
-    
-    QBChatMessage *message = [QBChatMessage message];
-    message.text = notificationText;
-    
-    [message updateCustomParametersWithDialog:updatedDialog];
-    
-    if (customParameters)
-    {
-        [message.customParameters addEntriesFromDictionary:customParameters];
-    }
-    
-    [self sendMessage:message type:QMMessageTypeUpdateGroupDialog toDialog:updatedDialog saveToHistory:YES saveToStorage:YES completion:completion];
-}
-
 - (void)sendMessageAboutAcceptingContactRequest:(BOOL)accept
                                    toOpponentID:(NSUInteger)opponentID
                                      completion:(QBChatCompletionBlock)completion
