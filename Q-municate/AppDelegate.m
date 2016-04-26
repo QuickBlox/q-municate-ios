@@ -120,8 +120,9 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    UIApplication.sharedApplication.applicationIconBadgeNumber = 0;
-    [[QMCore instance] disconnectFromChatIfNeeded];
+    
+    application.applicationIconBadgeNumber = 0;
+    [[QMCore instance].chatManager disconnectFromChatIfNeeded];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
