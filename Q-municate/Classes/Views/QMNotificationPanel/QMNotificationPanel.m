@@ -7,7 +7,6 @@
 //
 
 #import "QMNotificationPanel.h"
-#import "QMNotificationPanelUtils.h"
 
 static const CGFloat kQMDefaultNotificationViewHeight = 36.0f;
 static const CGFloat kQMFadeAnimationHeightShift = 10.0f;
@@ -59,7 +58,7 @@ static const CGFloat kQMFadeAnimationHeightShift = 10.0f;
                                  top,
                                  width,
                                  height);
-    self.view.backgroundColor = clearColor();
+    self.view.backgroundColor = [UIColor clearColor];
     [self.view addSubview:view];
     [self.view bringSubviewToFront:view];
     

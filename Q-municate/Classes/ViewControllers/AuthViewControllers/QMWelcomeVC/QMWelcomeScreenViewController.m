@@ -96,8 +96,11 @@
         @strongify(self);
         // twitter digits auth
         if (error.userInfo.count > 0) {
+            
             [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FACEBOOK_LOGIN_FALED_ALERT_TEXT", nil) actionSuccess:NO];
-        } else {
+        }
+        else {
+            
             DGTOAuthSigning *oauthSigning = [[DGTOAuthSigning alloc] initWithAuthConfig:[Digits sharedInstance].authConfig
                                                                             authSession:session];
             
@@ -114,6 +117,7 @@
                     [[QMCore instance].currentProfile setAccountType:QMAccountTypeDigits];
                     [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
                 }
+                
                 return nil;
             }];
         }

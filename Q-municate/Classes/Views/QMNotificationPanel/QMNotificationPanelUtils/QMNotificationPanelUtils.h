@@ -23,8 +23,6 @@ UIImage *failImage();
  *
  *  @return representative color
  */
-UIColor *clearColor();
-UIColor *whiteColor();
 UIColor *successColor();
 UIColor *warningColor();
 UIColor *failedColor();

@@ -39,16 +39,16 @@
         self.cache.countLimit = 200;
         
         self.colors =
-        @[[UIColor colorWithRed:1.000 green:0.588 blue:0.000 alpha:1.000],
-          [UIColor colorWithRed:0.267 green:0.859 blue:0.369 alpha:1.000],
-          [UIColor colorWithRed:0.329 green:0.780 blue:0.988 alpha:1.000],
-          [UIColor colorWithRed:1.000 green:0.176 blue:0.333 alpha:1.000],
-          [UIColor colorWithRed:0.608 green:0.184 blue:0.682 alpha:1.000],
-          [UIColor colorWithRed:0.082 green:0.584 blue:0.533 alpha:1.000],
-          [UIColor colorWithRed:0.000 green:0.478 blue:1.000 alpha:1.000],
-          [UIColor colorWithRed:0.804 green:0.855 blue:0.286 alpha:1.000],
-          [UIColor colorWithRed:0.122 green:0.737 blue:0.823 alpha:1.000],
-          [UIColor colorWithRed:0.251 green:0.329 blue:0.698 alpha:1.000]];
+        @[[UIColor colorWithRed:1.0f green:0.588f blue:0 alpha:1.0f],
+          [UIColor colorWithRed:0.267f green:0.859f blue:0.369f alpha:1.0f],
+          [UIColor colorWithRed:0.329f green:0.780f blue:0.988f alpha:1.0f],
+          [UIColor colorWithRed:1.0f green:0.176f blue:0.333f alpha:1.0f],
+          [UIColor colorWithRed:0.608f green:0.184f blue:0.682f alpha:1.0f],
+          [UIColor colorWithRed:0.082f green:0.584f blue:0.533f alpha:1.0f],
+          [UIColor colorWithRed:0 green:0.478f blue:1.0f alpha:1.0f],
+          [UIColor colorWithRed:0.804f green:0.855f blue:0.286f alpha:1.0f],
+          [UIColor colorWithRed:0.122f green:0.737f blue:0.823f alpha:1.0f],
+          [UIColor colorWithRed:0.251f green:0.329f blue:0.698f alpha:1.0f]];
     }
     
     return self;

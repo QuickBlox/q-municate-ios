@@ -29,11 +29,11 @@
     [super awakeFromNib];
     
     self.backgroundColor = UIColor.clearColor;
-    self.badgeTextColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 1];
-    self.badgeBGColor = [UIColor colorWithRed:0.063 green:0.353 blue:0.639 alpha:1.000];
-    self.borderColor = [UIColor colorWithRed: 0.219 green: 0.51 blue: 0.753 alpha: 1];
-    self.gradientB = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0];
-    self.gradientA = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 1];
+    self.badgeTextColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
+    self.badgeBGColor = [UIColor colorWithRed:0.063f green:0.353f blue:0.639f alpha:1.0f];
+    self.borderColor = [UIColor colorWithRed: 0.219f green: 0.51f blue: 0.753f alpha: 1.0f];
+    self.gradientB = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0];
+    self.gradientA = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
     
     self.cornerRadius = self.frame.size.height/2;
     self.glosEnabled = NO;

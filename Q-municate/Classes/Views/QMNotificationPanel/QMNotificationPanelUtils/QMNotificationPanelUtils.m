@@ -51,32 +51,6 @@ UIImage *failImage() {
 
 #pragma mark - Colors
 
-UIColor *clearColor() {
-    
-    static UIColor *color = nil;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        color = [UIColor clearColor];
-    });
-    
-    return color;
-}
-
-UIColor *whiteColor() {
-    
-    static UIColor *color = nil;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        color = [UIColor whiteColor];
-    });
-    
-    return color;
-}
-
 UIColor *successColor() {
     
     static UIColor *color = nil;

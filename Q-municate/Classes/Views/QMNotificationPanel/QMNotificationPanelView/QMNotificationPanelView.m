@@ -60,7 +60,7 @@ static const CGFloat kQMIconSize = 26.0f;
         
         // init activity indicator
         UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(kQMVerticalSpace, kQMHorizontalSpace, kQMIconSize, kQMIconSize)];
-        activityIndicatorView.backgroundColor = clearColor();
+        activityIndicatorView.backgroundColor = [UIColor clearColor];
         [activityIndicatorView startAnimating];
         [self addSubview:activityIndicatorView];
     }
@@ -68,7 +68,7 @@ static const CGFloat kQMIconSize = 26.0f;
         
         // init image view
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(kQMVerticalSpace, kQMHorizontalSpace, kQMIconSize, kQMIconSize)];
-        imageView.backgroundColor = clearColor();
+        imageView.backgroundColor = [UIColor clearColor];
         imageView.image = image(notificationPanelType);
         [self addSubview:imageView];
     }
@@ -79,7 +79,7 @@ static const CGFloat kQMIconSize = 26.0f;
     CGFloat textLabelX = kQMVerticalSpace + kQMIconSize + kQMVerticalSpace;
     _textLabel = [[UILabel alloc] initWithFrame:CGRectMake(textLabelX, kQMHorizontalSpace, frame.size.width - textLabelX - kQMHorizontalSpace, 26.0f)];
     _textLabel.userInteractionEnabled = YES;
-    _textLabel.textColor = whiteColor();
+    _textLabel.textColor = [UIColor whiteColor];
     _textLabel.numberOfLines = 0;
     [self addSubview:_textLabel];
 }

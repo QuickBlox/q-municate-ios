@@ -18,7 +18,7 @@
     
     DGTAppearance *appearance = [[DGTAppearance alloc] init];
     appearance.logoImage = [UIImage imageNamed:@"logo_splash"];
-    appearance.headerFont = [UIFont systemFontOfSize:17];
+    appearance.headerFont = [UIFont systemFontOfSize:17.0f];
     appearance.accentColor = [UIColor colorWithRed:0 green:191.0f/255.0f blue:40.0f/255.0f alpha:1.0f];
     
     configuration.appearance = appearance;
