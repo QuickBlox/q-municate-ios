@@ -49,11 +49,12 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     
     application.applicationIconBadgeNumber = 0;
     
-    // QB Settings
+    // Quickblox settings
     [QBSettings setApplicationID:kQMApplicationID];
     [QBSettings setAuthKey:kQMAuthorizationKey];
     [QBSettings setAuthSecret:kQMAuthorizationSecret];
     [QBSettings setAccountKey:kQMAccountKey];
+    
     [QBSettings setChatDNSLookupCacheEnabled:YES];
     [QBSettings setAutoReconnectEnabled:YES];
     [QBSettings setCarbonsEnabled:YES];
@@ -66,32 +67,26 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBSettings enableXMPPLogging];
 #endif
     
-    //QuickbloxWebRTC preferences
+    // QuickbloxWebRTC settings
     [QBRTCClient initializeRTC];
     [QBRTCConfig setICEServers:[self quickbloxICE]];
     [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecISAC;
     [QBRTCConfig setStatsReportTimeInterval:0.0f]; // set to 1.0f to enable stats report
     
-    if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-        
-        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
-        [[UIApplication sharedApplication] registerForRemoteNotifications];
-    }
-    else{
-        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
-    }
+    // Registering for remote notifications
+    [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
     
-    /**
-     *  Configure app appearance
-     */
+    // Configuring app appearance
     UIColor *mainColor = [UIColor colorWithRed:13.0f/255.0f green:112.0f/255.0f blue:179.0f/255.0f alpha:1.0f];
     [[UINavigationBar appearance] setTintColor:mainColor];
     [[UISearchBar appearance] setTintColor:mainColor];
     
-    /** extra frameworks */
+    // Configuring external frameworks
     [Fabric with:@[CrashlyticsKit, DigitsKit]];
     [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
     
+    // Handling push notifications if needed
     if (launchOptions != nil) {
         NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
 //        [[QMApi instance] setPushNotification:notification];
