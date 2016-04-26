@@ -82,14 +82,4 @@
     return size;
 }
 
-- (void)setHighlighted:(BOOL)highlighted {
-    [super setHighlighted:highlighted];
-    
-    [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
-        
-        self.layer.opacity = highlighted ? 0.6f : 1.0f;
-        
-    } completion:nil];
-}
-
 @end

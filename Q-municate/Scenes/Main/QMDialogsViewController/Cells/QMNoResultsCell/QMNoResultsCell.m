@@ -10,11 +10,6 @@
 
 @implementation QMNoResultsCell
 
-+ (NSString *)cellIdentifier {
-    
-    return @"QMNoResultsCell";
-}
-
 + (CGFloat)height {
     
     return 82.0f;

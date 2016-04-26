@@ -6,10 +6,9 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import <QMImageView.h>
+#import "QMBaseTitleView.h"
 
-@interface QMProfileTitleView : UIControl
+@interface QMProfileTitleView : QMBaseTitleView
 
 @property (assign, nonatomic) NSUInteger placeholderID;
 

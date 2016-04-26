@@ -17,6 +17,7 @@
 #import "REActionSheet.h"
 #import "QMOnlineTitleView.h"
 #import "QMUserInfoViewController.h"
+#import "QMGroupInfoViewController.h"
 
 // helpers
 #import "QMChatButtonsFactory.h"
@@ -48,7 +49,9 @@ QMChatCellDelegate,
 QMImagePickerResultHandler,
 
 AGEmojiKeyboardViewDataSource,
-AGEmojiKeyboardViewDelegate
+AGEmojiKeyboardViewDelegate,
+
+QMImageViewDelegate
 >
 
 /**
@@ -95,6 +98,11 @@ AGEmojiKeyboardViewDelegate
  *  Contact request task
  */
 @property (weak, nonatomic) BFTask *contactRequestTask;
+
+/**
+ *  Group avatar image view
+ */
+@property (strong, nonatomic) QMImageView *groupAvatarImageView;
 
 @end
 
@@ -255,7 +263,7 @@ AGEmojiKeyboardViewDelegate
     
     @weakify(self);
     // Retrieving message from Quickblox REST history and cache.
-    [[[QMCore instance].chatService messagesWithChatDialogID:self.chatDialog.ID] continueWithBlock:^id _Nullable(BFTask<NSArray<QBChatMessage *> *> * _Nonnull task) {
+    [[[QMCore instance].chatService messagesWithChatDialogID:self.chatDialog.ID] continueWithSuccessBlock:^id _Nullable(BFTask<NSArray<QBChatMessage *> *> * _Nonnull task) {
         @strongify(self);
         
         if ([task.result count] > 0) {
@@ -835,7 +843,7 @@ AGEmojiKeyboardViewDelegate
     }
     else {
         
-        // open group info vc
+        [self performSegueWithIdentifier:KQMSceneSegueGroupInfo sender:self.chatDialog];
     }
 }
 
@@ -845,6 +853,11 @@ AGEmojiKeyboardViewDelegate
         
         QMUserInfoViewController *userInfoVC = segue.destinationViewController;
         userInfoVC.user = sender;
+    }
+    else if ([segue.identifier isEqualToString:KQMSceneSegueGroupInfo]) {
+        
+        QMGroupInfoViewController *groupInfoVC = segue.destinationViewController;
+        groupInfoVC.chatDialog = sender;
     }
 }
 
@@ -877,23 +890,29 @@ AGEmojiKeyboardViewDelegate
 - (void)configureGroupChatAvatar {
     
     // chat avatar
-    QMImageView *imageView = [[QMImageView alloc] initWithFrame:CGRectMake(0.0f,
-                                                                           0.0f,
-                                                                           kQMGroupAvatarSize,
-                                                                           kQMGroupAvatarSize)];
-    imageView.imageViewType = QMImageViewTypeCircle;
+    self.groupAvatarImageView = [[QMImageView alloc] initWithFrame:CGRectMake(0.0f,
+                                                                              0.0f,
+                                                                              kQMGroupAvatarSize,
+                                                                              kQMGroupAvatarSize)];
+    self.groupAvatarImageView.imageViewType = QMImageViewTypeCircle;
+    self.groupAvatarImageView.delegate = self;
     
-    UIImage *placeholder = [QMPlaceholder placeholderWithFrame:imageView.bounds title:self.chatDialog.name ID:self.chatDialog.ID.hash];
+    UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.groupAvatarImageView];
+    self.navigationItem.rightBarButtonItem = rightBarButtonItem;
+    
+    [self updateGroupAvatarImage];
+}
+
+- (void)updateGroupAvatarImage {
+    
+    UIImage *placeholder = [QMPlaceholder placeholderWithFrame:self.groupAvatarImageView.bounds title:self.chatDialog.name ID:self.chatDialog.ID.hash];
     NSURL *avatarURL = [NSURL URLWithString:self.chatDialog.photo];
     
-    [imageView setImageWithURL:avatarURL
-                   placeholder:placeholder
-                       options:SDWebImageLowPriority
-                      progress:nil
-                completedBlock:nil];
-    
-    UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:imageView];
-    self.navigationItem.rightBarButtonItem = rightBarButtonItem;
+    [self.groupAvatarImageView setImageWithURL:avatarURL
+                                   placeholder:placeholder
+                                       options:SDWebImageLowPriority
+                                      progress:nil
+                                completedBlock:nil];
 }
 
 - (void)updateGroupChatOnlineStatus {
@@ -935,6 +954,13 @@ AGEmojiKeyboardViewDelegate
     [self.onlineTitleView setStatus:status];
 }
 
+#pragma mark - QMImageViewDelegate
+
+- (void)imageViewDidTap:(QMImageView *)__unused imageView {
+    
+    [self performSegueWithIdentifier:KQMSceneSegueGroupInfo sender:self.chatDialog];
+}
+
 #pragma mark - QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)__unused chatService didLoadMessagesFromCache:(NSArray *)messages forDialogID:(NSString *)dialogID {
@@ -969,6 +995,16 @@ AGEmojiKeyboardViewDelegate
     if (self.chatDialog.type != QBChatDialogTypePrivate && [self.chatDialog.ID isEqualToString:chatDialog.ID]) {
         
         [self.onlineTitleView setTitle:self.chatDialog.name];
+        [self updateGroupAvatarImage];
+    }
+}
+
+- (void)chatService:(QMChatService *)__unused chatService didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
+    
+    if (self.chatDialog.type != QBChatDialogTypePrivate && [chatDialogs containsObject:self.chatDialog]) {
+        
+        [self.onlineTitleView setTitle:self.chatDialog.name];
+        [self updateGroupAvatarImage];
     }
 }
 
@@ -1058,7 +1094,7 @@ AGEmojiKeyboardViewDelegate
         QBChatMessage *currentMessage = [self.chatSectionManager messageForIndexPath:indexPath];
         
         @weakify(self);
-        self.contactRequestTask = [[[QMCore instance].contactManager confirmAddContactRequest:opponentUser] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        self.contactRequestTask = [[[QMCore instance].contactManager addUserToContactList:opponentUser] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             @strongify(self);
             [QMNotification dismissNotificationPanel];
             [self.chatSectionManager updateMessage:currentMessage];
@@ -1116,7 +1152,19 @@ AGEmojiKeyboardViewDelegate
     }
 }
 
-- (void)__unused chatCellDidTapAvatar:(QMChatCell *)__unused cell {
+- (void)chatCellDidTapAvatar:(QMChatCell *)cell {
+    
+    if (self.chatDialog.type == QBChatDialogTypePrivate) {
+        
+        [self performInfoViewControllerForUserID:self.chatDialog.recipientID];
+    }
+    else {
+        
+        NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+        QBChatMessage *chatMessage = [self.chatSectionManager messageForIndexPath:indexPath];
+        
+        [self performInfoViewControllerForUserID:chatMessage.senderID];
+    }
 }
 
 - (void)__unused chatCell:(QMChatCell *)__unused cell didTapAtPosition:(CGPoint)__unused position {

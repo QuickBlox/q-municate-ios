@@ -11,6 +11,7 @@
 #import "QMProfile.h"
 
 #import "QMContactManager.h"
+#import "QMChatManager.h"
 
 @class Reachability;
 
@@ -34,6 +35,10 @@ QMContactListServiceDelegate
  */
 @property (strong, nonatomic, readonly) QMContactManager *contactManager;
 
+/**
+ *  Chat manager.
+ */
+@property (strong, nonatomic, readonly) QMChatManager *chatManager;
 
 /**
  *  Reachability manager.
@@ -53,13 +58,6 @@ QMContactListServiceDelegate
  */
 + (instancetype)instance;
 
-- (BFTask *)disconnectFromChat;
-- (BFTask *)disconnectFromChatIfNeeded;
-
-
-
 - (BFTask *)logout;
-
-- (BFTask *)leaveChatDialog:(QBChatDialog *)chatDialog;
 
 @end

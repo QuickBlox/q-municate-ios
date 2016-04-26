@@ -124,6 +124,7 @@ static const NSUInteger kQMStatusStringNamesLimit = 5;
                     } else if ([notification.deletedOccupantsIDs count] > 0) {
                         
                         QBUUser *leavedUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:[[notification.deletedOccupantsIDs firstObject] integerValue]];
+                        
                         messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT", nil), leavedUser.fullName];
                     }
                 }

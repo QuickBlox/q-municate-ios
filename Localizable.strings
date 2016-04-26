@@ -155,6 +155,10 @@
 "QM_STR_CONFIRM_DELETE_CONTACT" = "Do you really want to delete %@ from your contact list?";
 "QM_STR_DELETE" = "Delete";
 
+// *********** Group info ***********
+"QM_STR_MEMBERS" = "MEMBERS";
+"QM_STR_CONFIRM_LEAVE" = "Do you really want to leave %@?";
+
 // *********** Connection ***********
 "QM_STR_CONNECTING" = "Connecting";
 "QM_STR_CHAT_CONNECTED" = "Connected";

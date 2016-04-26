@@ -64,13 +64,11 @@
     
     QBUUser *user = [self userAtIndexPath:indexPath];
     [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
-    cell.userID = user.ID;
+    
+    NSString *onlineStatus = [[QMCore instance].contactManager onlineStatusForUser:user];
+    [cell setBody:onlineStatus];
     
     cell.checked = [self.selectedUsers containsObject:user];
-    
-    QBContactListItem *item = [[QMCore instance].contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
-    [cell setContactListItem:item];
-    [cell setUserID:user.ID];
     
     return cell;
 }
@@ -86,6 +84,7 @@
 - (void)setSelected:(BOOL)selected userAtIndexPath:(NSIndexPath *)indexPath {
     
     QBUUser *selectedUser = [self userAtIndexPath:indexPath];
+    
     if (selected) {
         
         [self.selectedUsers addObject:selectedUser];

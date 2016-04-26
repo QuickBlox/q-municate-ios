@@ -8,18 +8,26 @@
 
 #import "QMTableViewCell.h"
 
-@class QMSearchCell;
+NS_ASSUME_NONNULL_BEGIN
 
-@protocol QMSearchCellDelegate <NSObject>
-
-- (void)searchCell:(QMSearchCell *)searchCell didTapAddButton:(UIButton *)sender;
-
-@end
-
+/**
+ *  QMSearchCell class interface.
+ *  Used as base cell for users.
+ */
 @interface QMSearchCell : QMTableViewCell
 
-@property (strong, nonatomic) QBContactListItem *contactListItem;
-@property (assign, nonatomic) NSUInteger userID;
-@property (weak, nonatomic) id<QMSearchCellDelegate> delegate;
+/**
+ *  Add user block action.
+ */
+@property (copy, nonatomic) void (^didAddUserBlock)();
+
+/**
+ *  Set add friend button visible.
+ *
+ *  @param visible wheter add button should be visible or not
+ */
+- (void)setAddButtonVisible:(BOOL)visible;
 
 @end
+
+NS_ASSUME_NONNULL_END

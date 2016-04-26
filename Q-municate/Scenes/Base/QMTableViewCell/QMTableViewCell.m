@@ -45,7 +45,7 @@
 
 + (NSString *)cellIdentifier {
     
-    return nil;
+    return NSStringFromClass([self class]);
 }
 
 + (CGFloat)height {

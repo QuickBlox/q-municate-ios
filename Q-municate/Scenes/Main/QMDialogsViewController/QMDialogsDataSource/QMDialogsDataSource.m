@@ -67,7 +67,7 @@
         if (chatDialog.type == QBChatDialogTypeGroup) {
             
             chatDialog.occupantIDs = [QMChatUtils occupantsWithoutCurrentUser:chatDialog.occupantIDs];
-            [[[QMCore instance] leaveChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+            [[[QMCore instance].chatManager leaveChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
                 
                 [SVProgressHUD dismiss];
                 return nil;

@@ -46,11 +46,7 @@
         QMSearchCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMSearchCell cellIdentifier] forIndexPath:indexPath];
         
         QBUUser *user = self.contacts[indexPath.row];
-        
         [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
-        
-        QBContactListItem *item = [[QMCore instance].contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
-        [cell setContactListItem:item];
         
         return cell;
     }

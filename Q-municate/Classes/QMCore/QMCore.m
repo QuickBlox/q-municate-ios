@@ -56,6 +56,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
         
         // managers
         _contactManager = [[QMContactManager alloc] initWithServiceManager:self];
+        _chatManager = [[QMChatManager alloc] initWithServiceManager:self];
         
         // Reachability init
 //        _internetConnection = [Reachability reachabilityForInternetConnection];
@@ -202,46 +203,6 @@ static NSString *const kQMErrorPasswordKey = @"password";
     }];
     
     return source.task;
-}
-
-#pragma mark - Chat Connection
-
-- (BFTask *)disconnectFromChat {
-    @weakify(self);
-    return [[self.chatService disconnect] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-        @strongify(self);
-        if (!task.isFaulted) {
-            
-            self.lastActivityDate = [NSDate date];
-        }
-        
-        return nil;
-    }];
-}
-
-- (BFTask *)disconnectFromChatIfNeeded {
-#warning TODO: implement disconnect if needed during active call
-    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground /*&& !self.avCallManager.hasActiveCall*/ && [[QBChat instance] isConnected]) {
-        return [self disconnectFromChat];
-    }
-    
-    return nil;
-}
-
-#pragma mark - Notifications
-
-- (BFTask *)leaveChatDialog:(QBChatDialog *)chatDialog {
-    
-    @weakify(self);
-    return [[self.chatService sendNotificationMessageAboutLeavingDialog:chatDialog withNotificationText:kDialogsUpdateNotificationMessage] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-        
-        if (!task.isFaulted) {
-            @strongify(self);
-            return [self.chatService deleteDialogWithID:chatDialog.ID];
-        }
-        
-        return nil;
-    }];
 }
 
 #pragma mark - Last activity date

@@ -27,7 +27,7 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </imageView>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ySZ-73-k8Y">
+                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ySZ-73-k8Y">
                         <rect key="frame" x="288" y="14" width="20" height="22"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="QMV-uu-Z8q"/>
@@ -35,7 +35,7 @@
                         </constraints>
                         <state key="normal" image="add_friend"/>
                         <connections>
-                            <action selector="didTapAddButton:" destination="APp-P0-Kot" eventType="touchUpInside" id="vLk-h9-i3k"/>
+                            <action selector="didTapAddButton" destination="APp-P0-Kot" eventType="touchUpInside" id="iA6-hv-zKR"/>
                         </connections>
                     </button>
                     <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Anthony Tucker" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="smJ-6U-6Ij">

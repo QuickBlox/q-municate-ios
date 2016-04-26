@@ -21,11 +21,6 @@
 
 @implementation QMDialogCell
 
-+ (NSString *)cellIdentifier {
-    
-    return @"QMDialogCell";
-}
-
 + (CGFloat)height {
     
     return 72.0f;
@@ -38,6 +33,7 @@
 }
 
 - (UIEdgeInsets)layoutMargins {
+    
     return UIEdgeInsetsZero;
 }
 

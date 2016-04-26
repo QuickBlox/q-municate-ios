@@ -7,6 +7,7 @@
 //
 
 #import "QMSearchCell.h"
+#import "QMCore.h"
 
 @interface QMSearchCell ()
 
@@ -16,11 +17,6 @@
 
 @implementation QMSearchCell
 
-+ (NSString *)cellIdentifier {
-    
-    return @"QMSearchCell";
-}
-
 + (CGFloat)height {
     
     return 50.0f;
@@ -28,22 +24,16 @@
 
 #pragma mark - setters
 
-- (void)setContactListItem:(QBContactListItem *)contactListItem {
+- (void)setAddButtonVisible:(BOOL)visible {
     
-    _contactListItem = contactListItem;
-    
-    BOOL isFriend = contactListItem ? YES : NO;
-    self.addFriendButton.hidden = isFriend;
+    self.addFriendButton.hidden = !visible;
 }
-
+ 
 #pragma mark - action
 
-- (IBAction)didTapAddButton:(id)sender {
+- (IBAction)didTapAddButton {
     
-    if ([self.delegate respondsToSelector:@selector(searchCell:didTapAddButton:)]) {
-        
-        [self.delegate searchCell:self didTapAddButton:sender];
-    }
+    self.didAddUserBlock(self);
 }
 
 @end

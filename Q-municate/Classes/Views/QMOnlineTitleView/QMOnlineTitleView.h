@@ -6,9 +6,9 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "QMBaseTitleView.h"
 
-@interface QMOnlineTitleView : UIControl
+@interface QMOnlineTitleView : QMBaseTitleView
 
 - (void)setTitle:(NSString *)title;
 - (void)setStatus:(NSString *)status;

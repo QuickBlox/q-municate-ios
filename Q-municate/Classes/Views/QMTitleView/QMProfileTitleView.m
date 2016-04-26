@@ -8,6 +8,7 @@
 
 #import "QMProfileTitleView.h"
 #import "QMPlaceholder.h"
+#import <QMImageView.h>
 
 @interface QMProfileTitleView ()
 
@@ -70,16 +71,6 @@
     
     size.width = width + self.avatarLeftConstraint.constant + self.labelLeftConstraint.constant + self.labelRightConstraint.constant;
     return size;
-}
-
-- (void)setHighlighted:(BOOL)highlighted {
-    [super setHighlighted:highlighted];
-    
-    [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
-        
-        self.layer.opacity = highlighted ? 0.6f : 1.0f;
-        
-    } completion:nil];
 }
 
 @end

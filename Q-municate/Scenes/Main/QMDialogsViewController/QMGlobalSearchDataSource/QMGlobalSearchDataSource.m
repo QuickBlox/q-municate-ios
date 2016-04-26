@@ -10,12 +10,7 @@
 #import "QMSearchCell.h"
 #import "QMNoResultsCell.h"
 #import "QMCore.h"
-
-@interface QMGlobalSearchDataSource ()
-
-@property (strong, nonatomic) BFTask *addUserTask;
-
-@end
+#import "QMSearchCell.h"
 
 @implementation QMGlobalSearchDataSource
 
@@ -39,13 +34,12 @@
     QMSearchCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMSearchCell cellIdentifier] forIndexPath:indexPath];
     
     QBUUser *user = self.items[indexPath.row];
-    
     [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
     
-    QBContactListItem *item = [[QMCore instance].contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
-    [cell setContactListItem:item];
-    [cell setUserID:user.ID];
-    cell.delegate = self;
+    BOOL isRequestRequired = [[QMCore instance].contactManager isRequestRequiredToUserWithID:user.ID];
+    [cell setAddButtonVisible:isRequestRequired];
+    
+    cell.didAddUserBlock = self.didAddUserBlock;
     
     if (indexPath.row == [tableView numberOfRowsInSection:0] - 1) {
         
@@ -65,36 +59,6 @@
 - (QMGlobalSearchDataProvider *)globalSearchDataProvider {
     
     return (id)self.searchDataProvider;
-}
-
-#pragma mark - QMContactCellDelegate
-
-- (void)searchCell:(QMSearchCell *)searchCell didTapAddButton:(UIButton *)__unused sender {
-    
-    if (self.addUserTask) {
-        
-        return;
-    }
-    
-    QBUUser *user = [[QMCore instance].usersService.usersMemoryStorage userWithID:searchCell.userID];
-    
-    QBContactListItem *contactListItem = searchCell.contactListItem;
-    
-    @weakify(self);
-    BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull __unused task) {
-        @strongify(self);
-        self.addUserTask = nil;
-        return nil;
-    };
-    
-    if (contactListItem.subscriptionState == QBPresenceSubscriptionStateFrom) {
-        
-        self.addUserTask = [[[QMCore instance].contactManager confirmAddContactRequest:user] continueWithBlock:completionBlock];
-    }
-    else {
-        
-        self.addUserTask = [[[QMCore instance].contactManager addUserToContactList:user] continueWithBlock:completionBlock];
-    }
 }
 
 @end
