@@ -216,6 +216,14 @@ UISearchResultsUpdating
 
 - (IBAction)didPressSettingsButton:(UIBarButtonItem *)__unused sender {
     
+#warning TEMP SOLUTION: logout on settings button :D
+    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+    [[[QMCore instance] logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
+        
+        [QMNotification dismissNotificationPanel];
+        [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
+        return nil;
+    }];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
