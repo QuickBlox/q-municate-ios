@@ -197,6 +197,8 @@ static NSString *const kQMErrorPasswordKey = @"password";
             [[Digits sharedInstance] logOut];
         }
         
+        self.lastActivityDate = nil;
+        
         [self.currentProfile clearProfile];
         
         [source setResult:nil];
