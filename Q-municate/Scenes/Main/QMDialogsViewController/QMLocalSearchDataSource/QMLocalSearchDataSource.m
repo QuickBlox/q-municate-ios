@@ -47,6 +47,7 @@
         
         QBUUser *user = self.contacts[indexPath.row];
         [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
+        [cell setAddButtonVisible:NO]; //local search user is always in contact list
         
         return cell;
     }
