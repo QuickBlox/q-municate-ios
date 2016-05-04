@@ -166,13 +166,13 @@
         return;
     }
     
+    self.hidden = NO;
+    
     if (_badgeNumber != badgeNumber) {
         
-        self.hidden = NO;
         _badgeNumber = badgeNumber;
         [self setNeedsDisplay];
     }
 }
-
 
 @end
