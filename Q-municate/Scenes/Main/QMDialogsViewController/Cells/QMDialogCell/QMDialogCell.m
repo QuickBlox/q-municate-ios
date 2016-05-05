@@ -32,11 +32,6 @@
     _timeLabel.text = nil;
 }
 
-- (UIEdgeInsets)layoutMargins {
-    
-    return UIEdgeInsetsZero;
-}
-
 #pragma mark - Setters
 
 - (void)setTime:(NSString *)time {

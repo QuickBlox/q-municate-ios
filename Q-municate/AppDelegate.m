@@ -78,9 +78,10 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [[UIApplication sharedApplication] registerForRemoteNotifications];
     
     // Configuring app appearance
-    UIColor *mainColor = [UIColor colorWithRed:13.0f/255.0f green:112.0f/255.0f blue:179.0f/255.0f alpha:1.0f];
-    [[UINavigationBar appearance] setTintColor:mainColor];
-    [[UISearchBar appearance] setTintColor:mainColor];
+    UIColor *mainTintColor = [UIColor colorWithRed:13.0f/255.0f green:112.0f/255.0f blue:179.0f/255.0f alpha:1.0f];
+    [[UINavigationBar appearance] setTintColor:mainTintColor];
+    [[UISearchBar appearance] setTintColor:mainTintColor];
+    [[UITabBar appearance] setTintColor:mainTintColor];
     
     // Configuring external frameworks
     [Fabric with:@[CrashlyticsKit, DigitsKit]];
