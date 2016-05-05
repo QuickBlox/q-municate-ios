@@ -21,7 +21,6 @@
 
 #import "QMCore.h"
 #import "QMNotification.h"
-#import "QMTasks.h"
 #import "QMProfileTitleView.h"
 
 typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
@@ -63,6 +62,13 @@ UISearchResultsUpdating
 
 @implementation QMDialogsViewController
 
+#pragma mark - Life cycle
+
++ (instancetype)dialogsViewController {
+    
+    return [[UIStoryboard storyboardWithName:kQMMainStoryboard bundle:nil] instantiateViewControllerWithIdentifier:NSStringFromClass([self class])];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -83,9 +89,6 @@ UISearchResultsUpdating
     
     // Profile title view
     [self configureProfileTitleView];
-    
-    // auto login user
-    [self performAutoLoginAndFetchData];
 }
 
 #pragma mark - Init methods
@@ -148,41 +151,6 @@ UISearchResultsUpdating
     [self.profileTitleView setText:currentUser.fullName];
     self.profileTitleView.placeholderID = currentUser.ID;
     [self.profileTitleView setAvatarUrl:currentUser.avatarUrl];
-}
-
-- (void)performAutoLoginAndFetchData {
-    
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) timeUntilDismiss:0];
-    
-    @weakify(self);
-    [[[[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
-        @strongify(self);
-        
-        if (task.isFaulted && (task.error.code == QBResponseStatusCodeUnknown
-                               || task.error.code == QBResponseStatusCodeForbidden
-                               || task.error.code == QBResponseStatusCodeNotFound
-                               || task.error.code == QBResponseStatusCodeUnAuthorized
-                               || task.error.code == QBResponseStatusCodeValidationFailed)) {
-            [[[QMCore instance] logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
-                
-                [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
-                return nil;
-            }];
-            
-            return [BFTask cancelledTask];
-        } else {
-            
-            return [[QMCore instance].chatService connect];
-        }
-    }] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        
-        return [QMTasks taskFetchAllData];
-    }] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        @strongify(self);
-        self.tableView.dataSource = self.dialogsDataSource.items.count > 0 ? self.dialogsDataSource : self.placeholderDataSource;
-        [self.tableView reloadData];
-        return nil;
-    }];
 }
 
 #pragma mark - UITableViewDelegate

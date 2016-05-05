@@ -10,7 +10,9 @@
 #define QMConstants_h
 
 // storyboards
+static NSString *const kQMMainStoryboard = @"Main";
 static NSString *const kQMChatStoryboard = @"Chat";
+static NSString *const kQMSettingsStoryboard = @"Settings";
 
 static NSString *const kQMQBUUserFullNameKeyPathKey = @"fullName";
 static NSString *const kQMQBUUserIDKeyPath = @"ID";

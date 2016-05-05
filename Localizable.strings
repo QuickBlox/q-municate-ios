@@ -168,3 +168,7 @@
 "QM_STR_SIGNING_UP" = "Signing up";
 "QM_STR_SIGNING_IN" = "Signing in";
 "QM_STR_LOADING" = "Loading";
+
+// *********** Tab bar ***********
+"QM_STR_CHATS" = "Chats";
+"QM_STR_SETTINGS" = "Settings";
