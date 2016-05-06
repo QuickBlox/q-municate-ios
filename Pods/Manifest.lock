@@ -25,6 +25,8 @@ PODS:
   - FBSDKShareKit (4.7.1):
     - FBSDKCoreKit
   - Flurry-iOS-SDK/FlurrySDK (7.1.1)
+  - libextobjc/EXTKeyPathCoding (0.4.1):
+    - libextobjc/RuntimeExtensions
   - libextobjc/EXTScope (0.4.1):
     - libextobjc/RuntimeExtensions
   - libextobjc/RuntimeExtensions (0.4.1)
@@ -80,6 +82,7 @@ DEPENDENCIES:
   - FBSDKLoginKit (~> 4.7.0)
   - FBSDKShareKit (~> 4.7.0)
   - Flurry-iOS-SDK/FlurrySDK (~> 7.1.0)
+  - libextobjc/EXTKeyPathCoding (~> 0.4.1)
   - libextobjc/EXTScope (~> 0.4.1)
   - MPGNotification (~> 1.1)
   - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`,

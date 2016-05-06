@@ -226,7 +226,7 @@ QMUsersServiceDelegate
 
 - (void)usersService:(QMUsersService *)__unused usersService didAddUsers:(NSArray<QBUUser *> *)user {
     
-    NSArray *idsOfUsers = [user valueForKeyPath:kQMQBUUserIDKeyPath];
+    NSArray *idsOfUsers = [user valueForKeyPath:@keypath(QBUUser.new, ID)];
     
     if ([self.chatDialog.occupantIDs containsObjectFromArray:idsOfUsers]) {
         

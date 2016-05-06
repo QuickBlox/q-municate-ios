@@ -41,7 +41,7 @@ static const NSUInteger kQMStatusStringNamesLimit = 5;
             } else {
                 
                 NSArray *users = [[QMCore instance].usersService.usersMemoryStorage usersWithIDs:readIDs];
-                NSMutableArray *readNames = [users valueForKeyPath:kQMQBUUserFullNameKeyPathKey];
+                NSMutableArray *readNames = [users valueForKeyPath:@keypath(QBUUser.new, fullName)];
                 
                 NSString *localizedString = NSLocalizedString(message.isMediaMessage ? @"QM_STR_SEEN_BY_NAMES_STATUS" : @"QM_STR_READ_BY_NAMES_STATUS", nil);
                 [statusString appendFormat:localizedString, [readNames componentsJoinedByString:@", "]];
@@ -58,7 +58,7 @@ static const NSUInteger kQMStatusStringNamesLimit = 5;
             } else {
                 
                 NSArray *users = [[QMCore instance].usersService.usersMemoryStorage usersWithIDs:deliveredIDs];
-                NSMutableArray *deliveredNames = [users valueForKeyPath:kQMQBUUserFullNameKeyPathKey];
+                NSMutableArray *deliveredNames = [users valueForKeyPath:@keypath(QBUUser.new, fullName)];
                 
                 [statusString appendFormat:NSLocalizedString(@"QM_STR_DELIVERED_TO_NAMES_STATUS", nil), [deliveredNames componentsJoinedByString:@", "]];
             }

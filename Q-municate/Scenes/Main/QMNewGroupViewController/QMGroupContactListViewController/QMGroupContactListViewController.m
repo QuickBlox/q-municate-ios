@@ -44,7 +44,7 @@ QMSearchDataProviderDelegate
     QMContactsSearchDataProvider *dataProvider = [[QMContactsSearchDataProvider alloc] init];
     dataProvider.delegate = self;
     
-    self.dataSource = [[QMGroupContactListSearchDataSource alloc] initWithSearchDataProvider:dataProvider usingKeyPath:kQMQBUUserFullNameKeyPathKey];
+    self.dataSource = [[QMGroupContactListSearchDataSource alloc] initWithSearchDataProvider:dataProvider usingKeyPath:@keypath(QBUUser.new, fullName)];
     self.tableView.dataSource = self.dataSource;
     
     [self.dataSource replaceItems:dataProvider.friends];

@@ -29,4 +29,5 @@
 
     #import <QMServices.h>
     #import <EXTScope.h>
+    #import <EXTKeyPathCoding.h>
 #endif

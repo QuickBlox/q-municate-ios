@@ -66,7 +66,7 @@ UISearchResultsUpdating
     self.dataProvider = [[QMGroupAddUsersSearchDataProvider alloc] initWithExcludedUserIDs:self.cachedOccupantIDs];
     self.dataProvider.delegate = self;
     
-    self.dataSource = [[QMGroupContactListSearchDataSource alloc] initWithSearchDataProvider:self.dataProvider usingKeyPath:kQMQBUUserFullNameKeyPathKey];
+    self.dataSource = [[QMGroupContactListSearchDataSource alloc] initWithSearchDataProvider:self.dataProvider usingKeyPath:@keypath(QBUUser.new, fullName)];
     self.tableView.dataSource = self.dataSource;
     
     [self replaceUsers];

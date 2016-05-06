@@ -37,9 +37,12 @@
         
         @weakify(self);
         return [[[self.serviceManager.contactListService addUserToContactListRequest:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+            
             @strongify(self);
             return [self.serviceManager.chatService createPrivateChatDialogWithOpponent:user];
+            
         }] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+            
             @strongify(self);
             QBChatMessage *chatMessage = [QMMessagesFactory contactRequestNotificationForUser:user];
             [self.serviceManager.chatService sendMessage:chatMessage
@@ -115,7 +118,7 @@
 
 - (NSArray *)allContactsSortedByFullName {
     
-    NSSortDescriptor *sorter = [[NSSortDescriptor alloc] initWithKey:kQMQBUUserFullNameKeyPathKey
+    NSSortDescriptor *sorter = [[NSSortDescriptor alloc] initWithKey:@keypath(QBUUser.new, fullName)
                                                            ascending:YES
                                                             selector:@selector(localizedCaseInsensitiveCompare:)];
     NSArray *sortedUsers = [[self allContacts] sortedArrayUsingDescriptors:@[sorter]];
