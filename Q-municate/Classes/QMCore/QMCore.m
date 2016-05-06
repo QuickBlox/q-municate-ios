@@ -201,7 +201,10 @@ static NSString *const kQMErrorPasswordKey = @"password";
         
         [self.currentProfile clearProfile];
         
-        [source setResult:nil];
+        [[QMContactListCache instance] deleteContactList:^{
+            
+            [source setResult:nil];
+        }];
     }];
     
     return source.task;
