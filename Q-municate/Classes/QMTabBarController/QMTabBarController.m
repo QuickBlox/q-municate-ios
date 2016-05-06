@@ -23,8 +23,33 @@ static const CGFloat kQMTabBarHeight = 49.0f;
 @implementation QMTabBarController
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
     
     [self.view addSubview:self.tabBar];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    if ([self respondsToSelector:@selector(topLayoutGuide)]
+        && [self.selectedViewController.view isKindOfClass:[UIScrollView class]]) {
+        
+        UIScrollView *scrollView = (UIScrollView *)self.selectedViewController.view;
+        UIEdgeInsets currentInsets = scrollView.contentInset;
+        
+        if (self.navigationController.navigationBar.isTranslucent) {
+            
+            currentInsets.top = self.topLayoutGuide.length;
+        }
+        
+        if (self.tabBar.isTranslucent) {
+            
+            currentInsets.bottom = CGRectGetHeight(self.tabBar.frame);
+        }
+        
+        scrollView.contentInset = currentInsets;
+        scrollView.scrollIndicatorInsets = currentInsets;
+    }
 }
 
 #pragma mark - Getters
@@ -119,15 +144,10 @@ static const CGFloat kQMTabBarHeight = 49.0f;
     
     [self addChildViewController:self.selectedViewController];
     
-    if (self.tabBar.isTranslucent && [self.selectedViewController.view isKindOfClass:[UITableView class]]) {
+    if ([self.selectedViewController.view isKindOfClass:[UIScrollView class]]
+        && self.tabBar.isTranslucent) {
         
-        // configuring tableview insets for transculent tabbar
-        [self.selectedViewController.view setFrame:self.view.frame];
-        
-        UITableView *tableView = (UITableView *)self.selectedViewController.view;
-        UIEdgeInsets tableViewInsets = tableView.contentInset;
-        tableViewInsets.bottom = CGRectGetHeight(self.tabBar.frame);
-        tableView.contentInset = tableViewInsets;
+        [self.selectedViewController.view setFrame:self.view.bounds];
     }
     else {
         
@@ -140,7 +160,6 @@ static const CGFloat kQMTabBarHeight = 49.0f;
     [self.selectedViewController didMoveToParentViewController:self];
     
     [self updateNavigationItem:self.selectedViewController.navigationItem];
-    
     [self setNeedsStatusBarAppearanceUpdate];
 }
 
