@@ -11,21 +11,28 @@
 #import "QMTasks.h"
 #import <SSKeychain.h>
 
-NSString *const kQMUserDataKey = @"userData";
-NSString *const kQMAccountType = @"accountType";
-NSString *const kQMUserAgreementAcceptedKey = @"userAgreementAccepted";
-NSString *const kQMPushNotificationsEnabled = @"pushNotificationsEnabled";
-NSString *const kQMAppExists = @"QMAppExists";
+static NSString *const kQMUserDataKey = @"userData";
+static NSString *const kQMAccountType = @"accountType";
+static NSString *const kQMUserAgreementAcceptedKey = @"userAgreementAccepted";
+static NSString *const kQMPushNotificationsEnabled = @"pushNotificationsEnabled";
+static NSString *const kQMAppExists = @"QMAppExists";
+
+@interface QMProfile ()
+
+@property (strong, nonatomic, readwrite) QBUUser *userData;
+
+@end
 
 @implementation QMProfile
 
 + (instancetype)currentProfile {
+    
     return [[self alloc] init];
 }
 
 - (instancetype)init {
-    self = [super init];
     
+    self = [super init];
     if (self) {
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -74,6 +81,11 @@ NSString *const kQMAppExists = @"QMAppExists";
     self.userData = userData;
     BOOL success = [self synchronize];
     
+    if (success) {
+        
+        [self.delegate profile:self didUpdateUserData:userData];
+    }
+    
     return success;
 }
 
@@ -112,53 +124,6 @@ NSString *const kQMAppExists = @"QMAppExists";
     self.userAgreementAccepted = NO;
     
     return success;
-}
-
-#pragma mark - User updates
-
-- (BFTask *)updateUserImage:(UIImage *)userImage progress:(QMContentProgressBlock)progress {
-    
-    BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
-    
-    @weakify(self);
-    [[[QMContent uploadJPEGImage:userImage progress:progress] continueWithBlock:^id _Nullable(BFTask<QBCBlob *> * _Nonnull task) {
-        
-        if (!task.isFaulted) {
-            QBUpdateUserParameters *userParams = [QBUpdateUserParameters new];
-            userParams.avatarUrl = task.result.isPublic ? task.result.publicUrl : task.result.privateUrl;
-            return [QMTasks taskUpdateCurrentUser:userParams];
-        } else {
-            [source setError:task.error];
-        }
-        return nil;
-    }] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
-        
-        if (task.isFaulted) {
-            [source setError:task.error];
-        } else {
-            @strongify(self);
-            [self synchronizeWithUserData:task.result];
-            [source setResult:task.result];
-        }
-        return nil;
-    }];
-    
-    return source.task;
-}
-
-- (BFTask *)resetPasswordForEmail:(NSString *)email {
-    
-    BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
-    
-    [QBRequest resetUserPasswordWithEmail:email successBlock:^(QBResponse * _Nonnull __unused response) {
-        
-        [source setResult:nil];
-    } errorBlock:^(QBResponse * _Nonnull response) {
-        
-        [source setError:response.error.error];
-    }];
-    
-    return source.task;
 }
 
 #pragma mark - Keychain

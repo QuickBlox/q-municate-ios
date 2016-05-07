@@ -16,6 +16,7 @@
 #import "QMCore.h"
 #import "QMNotification.h"
 #import "QMContent.h"
+#import "QMTasks.h"
 
 @interface QMSignUpViewController ()
 
@@ -92,6 +93,8 @@ QMImageViewDelegate
 
 - (IBAction)done:(id)__unused sender {
     
+    [self.view endEditing:YES];
+    
     if (self.task != nil) {
         // task in progress
         return;
@@ -128,22 +131,22 @@ QMImageViewDelegate
             [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_SIGNING_UP", nil) timeUntilDismiss:0];
             [QMCore instance].currentProfile.userAgreementAccepted = userAgreementSuccess;
             
-            self.task = [[[[QMCore instance].authService signUpAndLoginWithUser:newUser] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+            self.task = [[[[QMCore instance].authService signUpAndLoginWithUser:newUser] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
                 
-                if (!task.isFaulted) {
+                [[QMCore instance].currentProfile setAccountType:QMAccountTypeEmail];
+                
+                task.result.password = newUser.password;
+                [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
+                
+                if (self.selectedImage != nil) {
                     
-                    [[QMCore instance].currentProfile setAccountType:QMAccountTypeEmail];
-                    if (self.selectedImage != nil) {
-                        
-                        return [[QMCore instance].currentProfile updateUserImage:self.selectedImage progress:nil];
-                    }
-                    else {
-                        
-                        task.result.password = newUser.password;
-                        [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
-                        presentTabBar();
-                    }
+                    return [QMTasks taskUpdateCurrentUserImage:self.selectedImage progress:nil];
                 }
+                else {
+                    
+                    presentTabBar();
+                }
+                
                 return nil;
             }] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
                 // saving picture to the cache
