@@ -10,7 +10,7 @@
 #import "QMColors.h"
 
 static const CGFloat kQMTitleLabelX = 16.0f;
-static const CGFloat kQMTitleLabelY = 10.0f;
+static const CGFloat kQMTitleLabelY = 22.0f;
 
 static UIColor *labelTextColor() {
     
@@ -46,11 +46,6 @@ static UIFont *labelFont() {
 
 @implementation QMTableSectionHeaderView
 
-+ (CGFloat)preferredHeight {
-    
-    return 32.0f;
-}
-
 #pragma mark - Construction
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -74,7 +69,7 @@ static UIFont *labelFont() {
     if (_titleLabel == nil) {
         
         _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(kQMTitleLabelX,
-                                                                kQMTitleLabelY,
+                                                                CGRectGetHeight(self.frame) - kQMTitleLabelY,
                                                                 0,
                                                                 0)];
         _titleLabel.font = labelFont();

@@ -21,7 +21,6 @@
 
 #import "QMCore.h"
 #import "QMNotification.h"
-#import "QMProfileTitleView.h"
 
 typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
     
