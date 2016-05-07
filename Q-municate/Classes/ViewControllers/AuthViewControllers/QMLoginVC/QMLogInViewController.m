@@ -36,6 +36,8 @@
 
 - (IBAction)done:(id)__unused sender {
     
+    [self.view endEditing:YES];
+    
     if (self.task != nil) {
         // task in progress
         return;
