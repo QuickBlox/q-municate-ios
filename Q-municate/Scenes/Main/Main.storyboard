@@ -32,17 +32,10 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="419"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="m_empty_dialogs" translatesAutoresizingMaskIntoConstraints="NO" id="j58-Ui-l80">
-                                            <rect key="frame" x="210" y="153" width="180" height="266"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TbN-aD-Lc2">
+                                            <rect key="frame" x="214" y="40" width="173" height="63"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" secondItem="j58-Ui-l80" secondAttribute="height" multiplier="21:31" id="bQD-Oq-Bt5"/>
-                                            </constraints>
-                                        </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aKf-z0-z6p">
-                                            <rect key="frame" x="206" y="21" width="189" height="67"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="189" id="J5z-Br-xLH"/>
-                                                <constraint firstAttribute="height" constant="67" id="LmY-Xd-kyV"/>
+                                                <constraint firstAttribute="width" secondItem="TbN-aD-Lc2" secondAttribute="height" multiplier="173:63" id="y8X-CM-ILi"/>
                                             </constraints>
                                             <string key="text">You’re all alone
 out here.</string>
@@ -50,12 +43,19 @@ out here.</string>
                                             <color key="textColor" red="0.2901960784" green="0.2901960784" blue="0.2901960784" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="m_empty_dialogs" translatesAutoresizingMaskIntoConstraints="NO" id="mob-8S-GOu">
+                                            <rect key="frame" x="211" y="154" width="178" height="265"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" secondItem="mob-8S-GOu" secondAttribute="height" multiplier="29:43" id="KIQ-BZ-quZ"/>
+                                            </constraints>
+                                        </imageView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="j58-Ui-l80" firstAttribute="top" secondItem="aKf-z0-z6p" secondAttribute="bottom" constant="65" id="7v4-Wz-mG6"/>
-                                        <constraint firstAttribute="bottomMargin" secondItem="j58-Ui-l80" secondAttribute="bottom" constant="-8" id="dz1-DN-tGO"/>
-                                        <constraint firstItem="aKf-z0-z6p" firstAttribute="centerX" secondItem="cUp-X3-4V4" secondAttribute="centerX" id="qmr-gn-Ggv"/>
-                                        <constraint firstItem="j58-Ui-l80" firstAttribute="centerX" secondItem="cUp-X3-4V4" secondAttribute="centerX" id="yon-Bg-SpJ"/>
+                                        <constraint firstItem="TbN-aD-Lc2" firstAttribute="centerX" secondItem="cUp-X3-4V4" secondAttribute="centerX" id="1qZ-OU-A8U"/>
+                                        <constraint firstItem="TbN-aD-Lc2" firstAttribute="top" secondItem="cUp-X3-4V4" secondAttribute="topMargin" constant="32" id="MV0-WB-5eg"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="mob-8S-GOu" secondAttribute="bottom" constant="-8" id="Q36-wI-uIm"/>
+                                        <constraint firstItem="mob-8S-GOu" firstAttribute="top" secondItem="TbN-aD-Lc2" secondAttribute="bottom" priority="751" constant="51" id="sRq-92-Pe7"/>
+                                        <constraint firstItem="mob-8S-GOu" firstAttribute="centerX" secondItem="cUp-X3-4V4" secondAttribute="centerX" id="wTR-Sx-3bE"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -114,8 +114,8 @@ out here.</string>
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="209"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="You don't have any contacts." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zov-f8-fUk">
-                                            <rect key="frame" x="193" y="175" width="214" height="26"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You don't have any contacts." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zov-f8-fUk">
+                                            <rect key="frame" x="194" y="180" width="213" height="21"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
@@ -163,7 +163,7 @@ out here.</string>
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1hh-Y8-HEi">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1hh-Y8-HEi">
                                 <rect key="frame" x="0.0" y="64" width="600" height="143"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HRg-cL-xkz">
@@ -217,7 +217,7 @@ out here.</string>
                                     <constraint firstItem="Z3o-LG-wKC" firstAttribute="bottom" secondItem="1hh-Y8-HEi" secondAttribute="bottom" priority="750" id="oK6-nt-LS6"/>
                                 </constraints>
                             </view>
-                            <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="29q-nG-vSL">
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="29q-nG-vSL">
                                 <rect key="frame" x="0.0" y="207" width="600" height="393"/>
                                 <connections>
                                     <segue destination="DcJ-yr-2ZD" kind="embed" identifier="SceneSegueGroupContactList" id="1h6-fl-kkL"/>
@@ -242,6 +242,7 @@ out here.</string>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="avatarImageView" destination="fK4-Lm-e6Y" id="1eB-gj-dTf"/>
                         <outlet property="nameTextField" destination="1We-aI-4rQ" id="VaR-o6-NRV"/>
