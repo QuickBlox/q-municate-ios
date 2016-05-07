@@ -151,7 +151,7 @@
 "QM_STR_CANCEL" = "Cancel";
 
 // *********** User info ***********
-"QM_STR_NONE" = "none";
+"QM_STR_NONE" = "None";
 "QM_STR_CONFIRM_DELETE_CONTACT" = "Do you really want to delete %@ from your contact list?";
 "QM_STR_DELETE" = "Delete";
 
@@ -172,3 +172,11 @@
 // *********** Tab bar ***********
 "QM_STR_CHATS" = "Chats";
 "QM_STR_SETTINGS" = "Settings";
+
+// *********** Update user ***********
+"QM_STR_EMAIL" = "Email";
+"QM_STR_EMAIL_DESCRIPTION" = "Email should look like an email address\n3-∞ characters\nMandatory";
+"QM_STR_FULLNAME" = "Full name";
+"QM_STR_FULLNAME_DESCRIPTION" = "Full name is text/numeric field, could contain everything except '<', '>', ';'.\n3-50 characters.\nMandatory.";
+"QM_STR_STATUS" = "Status";
+"QM_STR_STATUS_DESCRIPTION" = "Short text message that will be displayed in your profile.";

@@ -13,7 +13,7 @@
 
 - (void)perform {
     
-    AppDelegate *delegate =  (AppDelegate *)[UIApplication sharedApplication].delegate;
+    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     delegate.window.rootViewController = self.destinationViewController;
 }
 

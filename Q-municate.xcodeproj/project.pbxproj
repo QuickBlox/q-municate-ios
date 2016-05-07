@@ -102,8 +102,10 @@
 		58B3C9D61CB6827600B08A27 /* NSArray+Intersection.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B3C9D51CB6827600B08A27 /* NSArray+Intersection.m */; };
 		58B550731CC79C8500C93F93 /* QMGroupAddUsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B550721CC79C8500C93F93 /* QMGroupAddUsersViewController.m */; };
 		58B550751CC7BFBA00C93F93 /* QMSelectableContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58B550741CC7BFBA00C93F93 /* QMSelectableContactCell.xib */; };
+		58BB52631CDA3EA300869FA9 /* QMSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BB52621CDA3EA300869FA9 /* QMSettingsViewController.m */; };
 		58BB52671CDB439300869FA9 /* QMTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BB52661CDB439300869FA9 /* QMTabBarController.m */; };
 		58BB526F1CDB650A00869FA9 /* QMMainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BB526E1CDB650A00869FA9 /* QMMainTabBarController.m */; };
+		58C261F41CDC926000AA9CF2 /* QMUpdateUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C261F31CDC926000AA9CF2 /* QMUpdateUserViewController.m */; };
 		58C64D031C905F9800F1387B /* QMChatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C64D021C905F9800F1387B /* QMChatVC.m */; };
 		58C64D071C90699A00F1387B /* QMChatButtonsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C64D061C90699A00F1387B /* QMChatButtonsFactory.m */; };
 		58CCD2AE1BE778DD00E99C16 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58CCD2AD1BE778DD00E99C16 /* Quickblox.framework */; };
@@ -121,7 +123,6 @@
 		58D8478F1C8886D8000C40BA /* QMGlobalSearchDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D8478E1C8886D8000C40BA /* QMGlobalSearchDataProvider.m */; };
 		58D847931C89A9FE000C40BA /* QMNoResultsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D847921C89A9FE000C40BA /* QMNoResultsCell.m */; };
 		58D847951C89AA39000C40BA /* QMNoResultsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58D847941C89AA38000C40BA /* QMNoResultsCell.xib */; };
-		58E343881C491AAA00439E93 /* QMProfileTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58E343871C491AAA00439E93 /* QMProfileTitleView.m */; };
 		58E398B01CAE943F0053BA4D /* QMNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 58E398AF1CAE943F0053BA4D /* QMNavigationBar.m */; };
 		58F398091CB7DE91006C1D5E /* QMChatManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F398081CB7DE91006C1D5E /* QMChatManager.m */; };
 		58F86EDB1CA2EF6C00DA4758 /* QMUserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F86EDA1CA2EF6C00DA4758 /* QMUserInfoViewController.m */; };
@@ -336,10 +337,14 @@
 		58B550711CC79C8500C93F93 /* QMGroupAddUsersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMGroupAddUsersViewController.h; path = "Q-municate/Scenes/Chat/QMGroupInfoViewController/QMGroupOccupantsViewController/QMGroupAddUsersViewController/QMGroupAddUsersViewController.h"; sourceTree = SOURCE_ROOT; };
 		58B550721CC79C8500C93F93 /* QMGroupAddUsersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMGroupAddUsersViewController.m; path = "Q-municate/Scenes/Chat/QMGroupInfoViewController/QMGroupOccupantsViewController/QMGroupAddUsersViewController/QMGroupAddUsersViewController.m"; sourceTree = SOURCE_ROOT; };
 		58B550741CC7BFBA00C93F93 /* QMSelectableContactCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = QMSelectableContactCell.xib; path = "Q-municate/Scenes/Cells/QMSelectableContactCell/QMSelectableContactCell.xib"; sourceTree = SOURCE_ROOT; };
+		58BB52611CDA3EA300869FA9 /* QMSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMSettingsViewController.h; path = "Q-municate/Scenes/Settings/QMSettingsViewController/QMSettingsViewController.h"; sourceTree = SOURCE_ROOT; };
+		58BB52621CDA3EA300869FA9 /* QMSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMSettingsViewController.m; path = "Q-municate/Scenes/Settings/QMSettingsViewController/QMSettingsViewController.m"; sourceTree = SOURCE_ROOT; };
 		58BB52651CDB439300869FA9 /* QMTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMTabBarController.h; path = Classes/QMTabBarController/QMTabBarController.h; sourceTree = "<group>"; };
 		58BB52661CDB439300869FA9 /* QMTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMTabBarController.m; path = Classes/QMTabBarController/QMTabBarController.m; sourceTree = "<group>"; };
 		58BB526D1CDB650A00869FA9 /* QMMainTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMMainTabBarController.h; path = "Q-municate/Scenes/Main/QMMainTabBarController/QMMainTabBarController.h"; sourceTree = SOURCE_ROOT; };
 		58BB526E1CDB650A00869FA9 /* QMMainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMMainTabBarController.m; path = "Q-municate/Scenes/Main/QMMainTabBarController/QMMainTabBarController.m"; sourceTree = SOURCE_ROOT; };
+		58C261F21CDC926000AA9CF2 /* QMUpdateUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMUpdateUserViewController.h; path = "Q-municate/Scenes/Settings/QMUpdateUserViewController/QMUpdateUserViewController.h"; sourceTree = SOURCE_ROOT; };
+		58C261F31CDC926000AA9CF2 /* QMUpdateUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMUpdateUserViewController.m; path = "Q-municate/Scenes/Settings/QMUpdateUserViewController/QMUpdateUserViewController.m"; sourceTree = SOURCE_ROOT; };
 		58C64D011C905F9800F1387B /* QMChatVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMChatVC.h; path = "Q-municate/Scenes/Chat/QMChatVC/QMChatVC.h"; sourceTree = SOURCE_ROOT; };
 		58C64D021C905F9800F1387B /* QMChatVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMChatVC.m; path = "Q-municate/Scenes/Chat/QMChatVC/QMChatVC.m"; sourceTree = SOURCE_ROOT; };
 		58C64D051C90699A00F1387B /* QMChatButtonsFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMChatButtonsFactory.h; path = Classes/QMChatButtonsFactory/QMChatButtonsFactory.h; sourceTree = "<group>"; };
@@ -370,8 +375,6 @@
 		58D847911C89A9FE000C40BA /* QMNoResultsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMNoResultsCell.h; path = "Q-municate/Scenes/Main/QMDialogsViewController/Cells/QMNoResultsCell/QMNoResultsCell.h"; sourceTree = SOURCE_ROOT; };
 		58D847921C89A9FE000C40BA /* QMNoResultsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMNoResultsCell.m; path = "Q-municate/Scenes/Main/QMDialogsViewController/Cells/QMNoResultsCell/QMNoResultsCell.m"; sourceTree = SOURCE_ROOT; };
 		58D847941C89AA38000C40BA /* QMNoResultsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = QMNoResultsCell.xib; path = "Q-municate/Scenes/Main/QMDialogsViewController/Cells/QMNoResultsCell/QMNoResultsCell.xib"; sourceTree = SOURCE_ROOT; };
-		58E343861C491AAA00439E93 /* QMProfileTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMProfileTitleView.h; path = QMTitleView/QMProfileTitleView.h; sourceTree = "<group>"; };
-		58E343871C491AAA00439E93 /* QMProfileTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMProfileTitleView.m; path = QMTitleView/QMProfileTitleView.m; sourceTree = "<group>"; };
 		58E398AE1CAE943F0053BA4D /* QMNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMNavigationBar.h; path = QMNavigationBar/QMNavigationBar.h; sourceTree = "<group>"; };
 		58E398AF1CAE943F0053BA4D /* QMNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMNavigationBar.m; path = QMNavigationBar/QMNavigationBar.m; sourceTree = "<group>"; };
 		58F398071CB7DE91006C1D5E /* QMChatManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMChatManager.h; path = Classes/Core/QMChatManager/QMChatManager.h; sourceTree = "<group>"; };
@@ -866,7 +869,6 @@
 				588CF0FE1CA6BF5500B23C00 /* QMNotificationPanel */,
 				584A6DB01C9DB7C400B7D641 /* QMTagFieldView */,
 				58FA41681C96E15D00E61586 /* QMOnlineTitleView */,
-				58E343801C49190400439E93 /* QMProfileTitleView */,
 				5877D6E01C46759A00938E5D /* QMBadgeView */,
 				584277801C3D336300CDE35B /* IAButton */,
 				584277961C3D336300CDE35B /* QMCornerButton */,
@@ -959,6 +961,8 @@
 			isa = PBXGroup;
 			children = (
 				584277C61C3D46D000CDE35B /* Settings.storyboard */,
+				58BB52601CDA3E7A00869FA9 /* QMSettingsViewController */,
+				58C261F11CDC91BB00AA9CF2 /* QMUpdateUserViewController */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -1402,6 +1406,15 @@
 			name = NSArray;
 			sourceTree = "<group>";
 		};
+		58BB52601CDA3E7A00869FA9 /* QMSettingsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				58BB52611CDA3EA300869FA9 /* QMSettingsViewController.h */,
+				58BB52621CDA3EA300869FA9 /* QMSettingsViewController.m */,
+			);
+			name = QMSettingsViewController;
+			sourceTree = "<group>";
+		};
 		58BB52641CDB437800869FA9 /* QMTabBarController */ = {
 			isa = PBXGroup;
 			children = (
@@ -1418,6 +1431,15 @@
 				58BB526E1CDB650A00869FA9 /* QMMainTabBarController.m */,
 			);
 			name = QMMainTabBarController;
+			sourceTree = "<group>";
+		};
+		58C261F11CDC91BB00AA9CF2 /* QMUpdateUserViewController */ = {
+			isa = PBXGroup;
+			children = (
+				58C261F21CDC926000AA9CF2 /* QMUpdateUserViewController.h */,
+				58C261F31CDC926000AA9CF2 /* QMUpdateUserViewController.m */,
+			);
+			name = QMUpdateUserViewController;
 			sourceTree = "<group>";
 		};
 		58C64D041C90697400F1387B /* QMChatButtonsFactory */ = {
@@ -1528,15 +1550,6 @@
 				58D847921C89A9FE000C40BA /* QMNoResultsCell.m */,
 			);
 			name = QMNoResultsCell;
-			sourceTree = "<group>";
-		};
-		58E343801C49190400439E93 /* QMProfileTitleView */ = {
-			isa = PBXGroup;
-			children = (
-				58E343861C491AAA00439E93 /* QMProfileTitleView.h */,
-				58E343871C491AAA00439E93 /* QMProfileTitleView.m */,
-			);
-			name = QMProfileTitleView;
 			sourceTree = "<group>";
 		};
 		58E398B11CAE94450053BA4D /* QMNavigationBar */ = {
@@ -1917,8 +1930,10 @@
 				585DE4631C46A8390068E03E /* QMPlaceholder.m in Sources */,
 				584277D11C3FBD1600CDE35B /* QMProfile.m in Sources */,
 				55BBA75C19730B960040DB5C /* REMessageUI.m in Sources */,
+				58BB52631CDA3EA300869FA9 /* QMSettingsViewController.m in Sources */,
 				58B550731CC79C8500C93F93 /* QMGroupAddUsersViewController.m in Sources */,
 				584A6DC91C9DEBC200B7D641 /* QMTextField.m in Sources */,
+				58C261F41CDC926000AA9CF2 /* QMUpdateUserViewController.m in Sources */,
 				69D57E6618ACC11C00A9900A /* AppDelegate.m in Sources */,
 				5877D6CA1C466DE600938E5D /* QMDialogsViewController.m in Sources */,
 				58D847811C871469000C40BA /* QMSearchDataProvider.m in Sources */,
@@ -1954,7 +1969,6 @@
 				584277DC1C3FE5BC00CDE35B /* QMCore.m in Sources */,
 				58B3C9C01CB3F9F100B08A27 /* QMAddMemberCell.m in Sources */,
 				589792A21C9AA69B00CC6438 /* QMContactsSearchDataProvider.m in Sources */,
-				58E343881C491AAA00439E93 /* QMProfileTitleView.m in Sources */,
 				58B3C9C81CB4044000B08A27 /* QMTableSectionHeaderView.m in Sources */,
 				55A8B0761965986A00B5D33B /* REAlertView.m in Sources */,
 				58D847601C849AA4000C40BA /* QMSearchResultsController.m in Sources */,
