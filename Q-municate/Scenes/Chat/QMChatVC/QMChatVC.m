@@ -16,6 +16,7 @@
 #import "QMImagePicker.h"
 #import "REActionSheet.h"
 #import "QMOnlineTitleView.h"
+#import "QMColors.h"
 #import "QMUserInfoViewController.h"
 #import "QMGroupInfoViewController.h"
 
@@ -146,7 +147,7 @@ QMImageViewDelegate
     self.topContentAdditionalInset = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
     
     // setting up chat controller
-    self.collectionView.backgroundColor = [UIColor colorWithRed:237.0f/255.0f green:230.0f/255.0f blue:211.0f/255.0f alpha:1.0f];
+    self.collectionView.backgroundColor = QMChatBackgroundColor();
     self.inputToolbar.contentView.textView.placeHolder = NSLocalizedString(@"QM_STR_INPUTTOOLBAR_PLACEHOLDER", nil);
     
     // setting up properties
@@ -298,6 +299,7 @@ QMImageViewDelegate
 - (BOOL)messageSendingAllowed {
     
     if (![QBChat instance].isConnected) {
+        
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:NO];
         return NO;
     }
@@ -497,7 +499,7 @@ QMImageViewDelegate
     // in order to let TTTAttributedLabel cut the line in a correct way
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
-    NSDictionary *attributes = @{ NSForegroundColorAttributeName:[UIColor colorWithRed:0 green:122.0f / 255.0f blue:1.0f alpha:1.000],
+    NSDictionary *attributes = @{ NSForegroundColorAttributeName:QMChatTopLabelColor(),
                                   NSFontAttributeName:font,
                                   NSParagraphStyleAttributeName: paragraphStyle};
     
@@ -508,7 +510,7 @@ QMImageViewDelegate
 
 - (NSAttributedString *)bottomLabelAttributedStringForItem:(QBChatMessage *)messageItem {
     
-    UIColor *textColor = [messageItem senderID] == self.senderID ? [UIColor colorWithWhite:1 alpha:0.8f] : [UIColor colorWithWhite:0.000 alpha:0.4f];
+    UIColor *textColor = [messageItem senderID] == self.senderID ? QMChatOutgoingBottomLabelColor() : QMChatIncomingBottomLabelColor();
     UIFont *font = [UIFont systemFontOfSize:12.0f];
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor, NSFontAttributeName:font};
     
@@ -671,18 +673,17 @@ QMImageViewDelegate
     return layoutModel;
 }
 
-- (void)collectionView:(QMChatCollectionView *)collectionView configureCell:(UICollectionViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
-{
+- (void)collectionView:(QMChatCollectionView *)collectionView configureCell:(UICollectionViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
     [super collectionView:collectionView configureCell:cell forIndexPath:indexPath];
     
     QMChatCell *currentCell = (QMChatCell *)cell;
     
     currentCell.delegate = self;
-    currentCell.containerView.highlightColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    currentCell.containerView.highlightColor = QMChatCellHighlightedColor();
     
     if ([cell isKindOfClass:[QMChatOutgoingCell class]] || [cell isKindOfClass:[QMChatAttachmentOutgoingCell class]]) {
         
-        currentCell.containerView.bgColor = [UIColor colorWithRed:23.0f / 255.0f green:208.0f / 255.0f blue:75.0f / 255.0f alpha:1.0f];
+        currentCell.containerView.bgColor = QMChatOutgoingCellColor();
     }
     else if ([cell isKindOfClass:[QMChatIncomingCell class]] || [cell isKindOfClass:[QMChatAttachmentIncomingCell class]]) {
         
@@ -709,7 +710,7 @@ QMImageViewDelegate
     }
     else if ([cell isKindOfClass:[QMChatNotificationCell class]]) {
         
-        currentCell.containerView.bgColor = [UIColor colorWithRed:188.0f/255.0f green:185.0f/255.0f blue:168.0f/255.0f alpha:1.0f];
+        currentCell.containerView.bgColor = QMChatNotificationCellColor();
         currentCell.userInteractionEnabled = NO;
     }
     else if ([cell isKindOfClass:[QMChatContactRequestCell class]]) {
@@ -1295,7 +1296,7 @@ QMImageViewDelegate
         AGEmojiKeyboardView *emojiKeyboardView = [[AGEmojiKeyboardView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 216) dataSource:self];
         emojiKeyboardView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         emojiKeyboardView.delegate = self;
-        emojiKeyboardView.tintColor = [UIColor colorWithRed:0.678 green:0.762 blue:0.752 alpha:1.000];
+        emojiKeyboardView.tintColor = QMChatEmojiiKeyboardTintColor();
         
         self.inputToolbar.contentView.textView.inputView = emojiKeyboardView;
         [self.inputToolbar.contentView.textView reloadInputViews];
