@@ -10,11 +10,12 @@
 #import "QMNotification.h"
 #import "QMTasks.h"
 #import "QMCore.h"
+#import "QMChatVC.h"
 
 #import "QMDialogsViewController.h"
 #import "QMSettingsViewController.h"
 
-@interface QMMainTabBarController ()
+@interface QMMainTabBarController () <QMPushNotificationManagerDelegate>
 
 @property (strong, nonatomic) BFTask *autoLoginTask;
 
@@ -74,9 +75,24 @@
         }
         else {
             
+            if ([QMCore instance].pushNotificationManager.pushNotification != nil) {
+                
+                [[QMCore instance].pushNotificationManager handlePushNotificationWithDelegate:self];
+            }
+            
             return [[QMCore instance].chatService connect];
         }
     }];
+}
+
+#pragma mark - QMPushNotificationManagerDelegate
+
+- (void)pushNotificationManager:(QMPushNotificationManager *)__unused pushNotificationManager didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
+    
+    UINavigationController *navigationController = (UINavigationController *)[[UIApplication sharedApplication].windows.firstObject rootViewController];
+    
+    QMChatVC *chatVC = [QMChatVC chatViewControllerWithChatDialog:chatDialog];
+    [navigationController pushViewController:chatVC animated:YES];
 }
 
 @end

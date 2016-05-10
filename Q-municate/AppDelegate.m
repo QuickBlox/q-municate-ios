@@ -147,8 +147,8 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     BOOL urlWasIntendedForFacebook = [[FBSDKApplicationDelegate sharedInstance] application:application
                                                                                     openURL:url
                                                                           sourceApplication:sourceApplication
-                                                                                 annotation:annotation
-                                      ];
+                                                                                 annotation:annotation];
+    
     return urlWasIntendedForFacebook;
 }
 
