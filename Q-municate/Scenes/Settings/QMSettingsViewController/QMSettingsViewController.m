@@ -44,10 +44,14 @@ QMImagePickerResultHandler
 
 @property (weak, nonatomic) IBOutlet QMImageView *avatarImageView;
 @property (weak, nonatomic) IBOutlet UILabel *fullNameLabel;
+@property (weak, nonatomic) IBOutlet UISwitch *pushNotificationSwitch;
 
 @property (weak, nonatomic) IBOutlet UILabel *phoneLabel;
 @property (weak, nonatomic) IBOutlet UILabel *emailLabel;
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
+
+@property (weak, nonatomic) BFTask *subscribeTask;
+@property (weak, nonatomic) BFTask *logoutTask;
 
 @end
 
@@ -70,6 +74,7 @@ QMImagePickerResultHandler
     
     // configure user data
     [self configureUserData:[QMCore instance].currentProfile.userData];
+    self.pushNotificationSwitch.on = [QMCore instance].currentProfile.pushNotificationsEnabled;
     
     // subscribe to delegates
     [QMCore instance].currentProfile.delegate = self;
@@ -101,6 +106,32 @@ QMImagePickerResultHandler
         
         QMUpdateUserViewController *updateUserVC = segue.destinationViewController;
         updateUserVC.updateUserField = [sender unsignedIntegerValue];
+    }
+}
+
+- (IBAction)pushNotificationSwitchPressed:(UISwitch *)sender {
+    
+    if (self.subscribeTask) {
+        // task is in progress
+        return;
+    }
+    
+    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+    
+    BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull __unused task) {
+        
+        [QMNotification dismissNotificationPanel];
+        
+        return nil;
+    };
+    
+    if (sender.isOn) {
+        
+        self.subscribeTask = [[[QMCore instance].pushNotificationManager subscribeForPushNotifications] continueWithBlock:completionBlock];
+    }
+    else {
+        
+        self.subscribeTask = [[[QMCore instance].pushNotificationManager unSubscribeFromPushNotifications] continueWithBlock:completionBlock];
     }
 }
 
@@ -142,8 +173,14 @@ QMImagePickerResultHandler
             
         case QMSettingsSectionLogout:
             
+            if (self.logoutTask) {
+                // task is in progress
+                return;
+            }
+            
             [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
-            [[[QMCore instance] logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
+            
+            self.logoutTask = [[[QMCore instance] logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
                 
                 [QMNotification dismissNotificationPanel];
                 [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];

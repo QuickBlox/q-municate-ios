@@ -39,7 +39,7 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 #endif
 
-@interface AppDelegate () <QMNotificationHandlerDelegate>
+@interface AppDelegate () <QMPushNotificationManagerDelegate>
 
 @end
 
@@ -89,30 +89,34 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     
     // Handling push notifications if needed
     if (launchOptions != nil) {
-        NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-//        [[QMApi instance] setPushNotification:notification];
+        
+        NSDictionary *pushNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+        [QMCore instance].pushNotificationManager.pushNotification = pushNotification;
     }
-
+    
     return [[FBSDKApplicationDelegate sharedInstance] application:application
                                     didFinishLaunchingWithOptions:launchOptions];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-//    if ([application applicationState] == UIApplicationStateInactive) {
-//        NSString *dialogID = userInfo[kPushNotificationDialogIDKey];
-//        if (dialogID != nil) {
-//            NSString *dialogWithIDWasEntered = [QMApi instance].settingsManager.dialogWithIDisActive;
-//            if ([dialogWithIDWasEntered isEqualToString:dialogID]) return;
-//            
-//            [[QMApi instance] setPushNotification:userInfo];
-//            
-//            // calling dispatch async for push notification handling to have priority in main queue
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                [[QMApi instance] handlePushNotificationWithDelegate:self];
-//            });
-//        }
-//        ILog(@"Push was received. User info: %@", userInfo);
-//    }
+    
+    if (application.applicationState == UIApplicationStateInactive) {
+        
+        NSString *dialogID = userInfo[kQMPushNotificationDialogIDKey];
+        NSString *activeDialogID = [QMCore instance].activeDialogID;
+        if ([dialogID isEqualToString:activeDialogID]) {
+            // dialog is already active
+            return;
+        }
+        
+        [QMCore instance].pushNotificationManager.pushNotification = userInfo;
+        
+        // calling dispatch async for push notification handling to have priority in main queue
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [[QMCore instance].pushNotificationManager handlePushNotificationWithDelegate:self];
+        });
+    }
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
@@ -121,17 +125,16 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [[QMCore instance].chatManager disconnectFromChatIfNeeded];
 }
 
-- (void)applicationWillEnterForeground:(UIApplication *)application {
+- (void)applicationWillEnterForeground:(UIApplication *)__unused application {
     
     if ([QMCore instance].currentProfile.userData) {
         
-#warning TODO: login to chat and fetch dialogs
         [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) timeUntilDismiss:0];
         [[QMCore instance].chatService connect];
     }
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application {
+- (void)applicationDidBecomeActive:(UIApplication *)__unused application {
     
     [FBSDKAppEvents activateApp];
 }
@@ -140,7 +143,7 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
-
+    
     BOOL urlWasIntendedForFacebook = [[FBSDKApplicationDelegate sharedInstance] application:application
                                                                                     openURL:url
                                                                           sourceApplication:sourceApplication
@@ -152,28 +155,25 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 #pragma mark - PUSH NOTIFICATIONS REGISTRATION
 
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
-{
-//    if (deviceToken) {
-//        [[QMApi instance] setDeviceToken:deviceToken];
-//    }
+- (void)application:(UIApplication *)__unused application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    
+    [QMCore instance].pushNotificationManager.deviceToken = deviceToken;
 }
 
-#pragma mark - QMNotificationHandlerDelegate protocol
+#pragma mark - QMPushNotificationManagerDelegate protocol
 
-- (void)notificationHandlerDidSucceedFetchingDialog:(QBChatDialog *)chatDialog {
-//    UITabBarController *rootController = [(UITabBarController *)self.window.rootViewController selectedViewController];
-//    UINavigationController *navigationController = (UINavigationController *)rootController;
-//    
-//    UIViewController *chatVC = [QMChatVC chatViewControllerWithChatDialog:chatDialog];
-//    
-//    NSString *dialogWithIDWasEntered = [QMApi instance].settingsManager.dialogWithIDisActive;
-//    if (dialogWithIDWasEntered != nil) {
-//        // some chat already opened, return to dialogs view controller first
-//        [navigationController popViewControllerAnimated:NO];
-//    }
-//    
-//    [navigationController pushViewController:chatVC animated:YES];
+- (void)pushNotificationManager:(QMPushNotificationManager *)__unused pushNotificationManager didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
+    
+    UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
+    
+    NSString *activeDialogID = [QMCore instance].activeDialogID;
+    if ([chatDialog.ID isEqualToString:activeDialogID]) {
+        // dialog is already active
+        return;
+    }
+    
+    QMChatVC *chatVC = [QMChatVC chatViewControllerWithChatDialog:chatDialog];
+    [navigationController pushViewController:chatVC animated:YES];
 }
 
 #pragma mark - ICE servers

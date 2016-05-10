@@ -92,7 +92,7 @@
             }
         }
         
-        return nil;
+        return [[QMCore instance].pushNotificationManager subscribeForPushNotifications];
     }];
 }
 
@@ -136,8 +136,7 @@
                 
                 [[QMCore instance].currentProfile synchronizeWithUserData:user];
                 
-                return nil;
-                
+                return [[QMCore instance].pushNotificationManager subscribeForPushNotifications];
             }];
         }
     }];

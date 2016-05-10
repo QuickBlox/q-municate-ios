@@ -145,15 +145,18 @@ QMImageViewDelegate
                 else {
                     
                     presentTabBar();
+                    
+                    return [[QMCore instance].pushNotificationManager subscribeForPushNotifications];
                 }
                 
-                return nil;
             }] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
                 // saving picture to the cache
                 if (task.result != nil) {
                     
                     [self.userImage setImage:self.selectedImage withKey:task.result.avatarUrl];
                     presentTabBar();
+                    
+                    return [[QMCore instance].pushNotificationManager subscribeForPushNotifications];
                 }
                 
                 return nil;

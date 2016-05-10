@@ -246,6 +246,8 @@ QMImageViewDelegate
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
+    [QMCore instance].activeDialogID = nil;
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self.observerWillResignActive];
     
     // Delete blocks.

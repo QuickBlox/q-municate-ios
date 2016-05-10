@@ -58,17 +58,16 @@
         [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_SIGNING_IN", nil) timeUntilDismiss:0];
         
         @weakify(self);
-        self.task = [[[QMCore instance].authService loginWithUser:user] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+        self.task = [[[QMCore instance].authService loginWithUser:user] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
             
             @strongify(self);
-            if (!task.isFaulted) {
-                [QMNotification dismissNotificationPanel];
-                
-                [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
-                [[QMCore instance].currentProfile setAccountType:QMAccountTypeEmail];
-                [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
-            }
-            return nil;
+            [QMNotification dismissNotificationPanel];
+            
+            [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
+            [[QMCore instance].currentProfile setAccountType:QMAccountTypeEmail];
+            [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
+            
+            return [[QMCore instance].pushNotificationManager subscribeForPushNotifications];
         }];
     }
 }

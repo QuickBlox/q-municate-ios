@@ -162,6 +162,9 @@
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IyZ-dX-dvJ">
                                                     <rect key="frame" x="535" y="6" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="pushNotificationSwitchPressed:" destination="AE4-sG-E4W" eventType="valueChanged" id="tQs-6o-Vgo"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                             <constraints>
@@ -257,6 +260,7 @@
                         <outlet property="emailLabel" destination="rv5-7K-NoI" id="PY8-6N-zez"/>
                         <outlet property="fullNameLabel" destination="8Az-6g-1gg" id="lpH-FS-l68"/>
                         <outlet property="phoneLabel" destination="FpR-CY-Ily" id="SOw-BE-GqJ"/>
+                        <outlet property="pushNotificationSwitch" destination="IyZ-dX-dvJ" id="qGl-s2-sDs"/>
                         <outlet property="statusLabel" destination="wZW-FL-Ch7" id="5fH-XE-fh0"/>
                         <segue destination="wnD-Fc-JNZ" kind="show" identifier="SceneSegueUpdateUser" id="4Rk-Pw-3wO"/>
                         <segue destination="Uhc-uh-aMp" kind="custom" identifier="SceneSegueAuth" customClass="QMRootViewControllerSegue" id="5G2-EH-bMW"/>

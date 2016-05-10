@@ -56,7 +56,7 @@
     [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) timeUntilDismiss:0];
     
     @weakify(self);
-    self.autoLoginTask = [[[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+    self.autoLoginTask = [[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         @strongify(self);
         
         if (task.isFaulted && (task.error.code == QBResponseStatusCodeUnknown
@@ -70,15 +70,12 @@
                 return nil;
             }];
             
-            return [BFTask cancelledTask];
+            return nil;
         }
         else {
             
             return [[QMCore instance].chatService connect];
         }
-    }] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull task) {
-        
-        return task.isCancelled ? nil : [QMTasks taskFetchAllData];
     }];
 }
 
