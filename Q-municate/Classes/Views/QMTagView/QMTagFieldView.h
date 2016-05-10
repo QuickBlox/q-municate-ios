@@ -72,17 +72,17 @@ NS_ASSUME_NONNULL_BEGIN
 @interface QMTagFieldView : UIView
 
 /**
- *  Delegate instance that conforms to QMTagFieldViewDelegate protocol
+ *  Delegate instance that conforms to QMTagFieldViewDelegate protocol.
  */
 @property (weak, nonatomic, nullable) id<QMTagFieldViewDelegate> delegate;
 
 /**
- *  Scroll view
+ *  Scroll view.
  */
 @property (strong, nonatomic) UIScrollView *scrollView;
 
 /**
- *  Text field placeholder
+ *  Text field placeholder.
  */
 @property (strong, nonatomic, nullable) NSString *placeholder;
 

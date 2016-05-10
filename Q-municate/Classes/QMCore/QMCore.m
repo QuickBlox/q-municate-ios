@@ -19,6 +19,8 @@ static NSString *const kQMErrorEmailKey = @"email";
 static NSString *const kQMErrorFullNameKey = @"full_name";
 static NSString *const kQMErrorPasswordKey = @"password";
 
+static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
+
 @interface QMCore ()
 
 @property (strong, nonatomic) NSUserDefaults *defaults;
@@ -44,7 +46,7 @@ static NSString *const kQMErrorPasswordKey = @"password";
     
     if (self) {
         // Contact list service init
-        [QMContactListCache setupDBWithStoreNamed:kContactListCacheNameKey];
+        [QMContactListCache setupDBWithStoreNamed:kQMContactListCacheNameKey];
         _contactListService = [[QMContactListService alloc] initWithServiceManager:self cacheDataSource:self];
         [_contactListService addDelegate:self];
         

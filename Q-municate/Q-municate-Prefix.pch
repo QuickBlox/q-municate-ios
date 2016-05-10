@@ -22,10 +22,7 @@
     #import "QBUpdateUserParameters+CustomData.h"
 
     #import "SegueIdentifiers.h"
-    #import "QMDefinitions.h"
     #import "QMConstants.h"
-    #import "QMProtocols.h"
-    #import "Macro.h"
 
     #import <QMServices.h>
     #import <EXTScope.h>

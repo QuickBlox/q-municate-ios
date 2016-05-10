@@ -13,6 +13,8 @@
 #import "QMContent.h"
 #import <DigitsKit/DigitsKit.h>
 
+static const NSUInteger kQMDialogsPageLimit = 10;
+
 @implementation QMTasks
 
 #pragma mark - User management

@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return BFTask with QBUUser as a result
  */
-+ (BFTask <QBUUser *> *)taskUpdateCurrentUserImage:(UIImage *)userImage progress:(nullable QMContentProgressBlock)progress;
++ (BFTask <QBUUser *> *)taskUpdateCurrentUserImage:(UIImage *)userImage progress:(nullable void(^)(float progress))progress;
 
 /**
  *  Reset password for email.
