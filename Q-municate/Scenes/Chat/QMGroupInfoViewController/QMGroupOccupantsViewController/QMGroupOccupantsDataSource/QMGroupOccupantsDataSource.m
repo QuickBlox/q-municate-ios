@@ -76,7 +76,7 @@ static const NSUInteger kQMNumberOfSections = 1;
         QBUUser *user = self.items[indexPath.row - kQMNumberOfStaticCellsBeforeOccupantsList];
         [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
         
-        BOOL isRequestRequired = [[QMCore instance].contactManager isRequestRequiredToUserWithID:user.ID];
+        BOOL isRequestRequired = ![[QMCore instance].contactManager isContactListItemExistentForUserWithID:user.ID];
         [cell setAddButtonVisible:isRequestRequired];
         
         NSString *onlineStatus = [[QMCore instance].contactManager onlineStatusForUser:user];

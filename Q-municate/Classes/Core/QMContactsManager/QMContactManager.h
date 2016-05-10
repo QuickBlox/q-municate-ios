@@ -92,6 +92,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSArray <NSNumber *> *)idsOfUsers:(NSArray <QBUUser *> *)users;
 
+/**
+ *  Online status string for user.
+ *
+ *  @param user user instance
+ *
+ *  @return string with online status
+ */
 - (NSString *)onlineStatusForUser:(QBUUser *)user;
 
 /**
@@ -104,31 +111,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isFriendWithUserID:(NSUInteger)userID;
 
 /**
- *  Determines whether send add request to user is required or not.
+ *  Whether contact list item is existent for a specific user ID.
  *
- *  @param userID opponent user ID
+ *  @param userID user ID to check contact list item for
  *
- *  @return is sending add request required
+ *  @return whether contact list item existent
  */
-- (BOOL)isRequestRequiredToUserWithID:(NSUInteger)userID;
-
-/**
- *  Determines whether user with ID is in pending list.
- *
- *  @param userID opponent user ID
- *
- *  @return is user with ID in pending list
- */
-- (BOOL)isUserIDInPendingList:(NSUInteger)userID;
-
-/**
- *  Determines whether awaiting for approval from user with ID.
- *
- *  @param userID opponent user ID
- *
- *  @return is awaiting for approval from user with ID
- */
-- (BOOL)isAwaitingForApprovalFromUserID:(NSUInteger)userID;
+- (BOOL)isContactListItemExistentForUserWithID:(NSUInteger)userID;
 
 /**
  *  Determines whether user with ID is online.

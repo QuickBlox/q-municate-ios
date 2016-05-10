@@ -209,26 +209,14 @@
     
     QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
     
-    return contactListItem.subscriptionState == QBPresenceSubscriptionStateBoth;
+    return contactListItem != nil && contactListItem.subscriptionState != QBPresenceSubscriptionStateNone;
 }
 
-- (BOOL)isRequestRequiredToUserWithID:(NSUInteger)userID {
-    
-    return ![self isFriendWithUserID:userID] && ![self isAwaitingForApprovalFromUserID:userID];
-}
-
-- (BOOL)isUserIDInPendingList:(NSUInteger)userID {
+- (BOOL)isContactListItemExistentForUserWithID:(NSUInteger)userID {
     
     QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
     
-    return contactListItem.subscriptionState == QBPresenceSubscriptionStateFrom;
-}
-
-- (BOOL)isAwaitingForApprovalFromUserID:(NSUInteger)userID {
-    
-    QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
-    
-    return contactListItem.subscriptionState == QBPresenceSubscriptionStateNone;
+    return contactListItem != nil;
 }
 
 - (BOOL)isUserOnlineWithID:(NSUInteger)userID {

@@ -36,7 +36,7 @@
     QBUUser *user = self.items[indexPath.row];
     [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
     
-    BOOL isRequestRequired = [[QMCore instance].contactManager isRequestRequiredToUserWithID:user.ID];
+    BOOL isRequestRequired = ![[QMCore instance].contactManager isContactListItemExistentForUserWithID:user.ID];
     [cell setAddButtonVisible:isRequestRequired];
     
     cell.didAddUserBlock = self.didAddUserBlock;
