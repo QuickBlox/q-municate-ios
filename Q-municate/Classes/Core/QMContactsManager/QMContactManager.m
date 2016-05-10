@@ -27,9 +27,15 @@
 
 - (BFTask *)addUserToContactList:(QBUUser *)user {
     
+    // determine whether we have already received contact request from user or not
+    QBChatDialog *chatDialog = [self.serviceManager.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
+    QBChatMessage *lastMessage = [self.serviceManager.chatService.messagesMemoryStorage lastMessageFromDialogID:chatDialog.ID];
+    
     QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
     
-    if (contactListItem.subscriptionState == QBPresenceSubscriptionStateFrom) {
+    if (lastMessage.messageType == QMMessageTypeContactRequest
+        && lastMessage.senderID != self.serviceManager.currentProfile.userData.ID
+        && contactListItem == nil) {
         
         return [self confirmAddContactRequest:user];
     }

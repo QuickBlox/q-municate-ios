@@ -336,7 +336,6 @@ QMImageViewDelegate
         return;
     }
     
-#warning need to implement custom full name field in order to send full name as meta data of message
     QBChatMessage *message = [QBChatMessage message];
     message.text = text;
     message.senderID = senderId;
