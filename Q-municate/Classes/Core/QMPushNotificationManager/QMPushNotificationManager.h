@@ -6,6 +6,8 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
+#import "QMBaseService.h"
+
 @class QMPushNotificationManager;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -21,9 +23,10 @@ NS_ASSUME_NONNULL_BEGIN
 @required
 
 /**
- *  Is called when dialog fetching is complete and ready to return requested dialog
+ *  Notifying about chat dialog fetching been completed.
  *
- *  @param chatDialog QBChatDialog instance. Successfully fetched dialog
+ *  @param pushNotificationManager QMPushNotificationManager instance
+ *  @param chatDialog              successfully fetched chat dialog
  */
 - (void)pushNotificationManager:(QMPushNotificationManager *)pushNotificationManager didSucceedFetchingDialog:(QBChatDialog *)chatDialog;
 
@@ -33,19 +36,24 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 /**
- *  Is called when dialog was not found nor in memory storage nor in cache
- *  and NotificationHandler started requesting dialog from server
+ *  Notifying about push notification manager did start loading dialog from server.
+ *
+ *  @param pushNotificationManager QMPushNotificationManager instance
  */
 - (void)pushNotificationManagerDidStartLoadingDialogFromServer:(QMPushNotificationManager *)pushNotificationManager;
 
 /**
- *  Is called when dialog request from server was completed
+ *  Notifying about push notification manager did finish loading dialog from server.
+ *
+ *  @param pushNotificationManager QMPushNotificationManager instance
  */
 - (void)pushNotificationManagerDidFinishLoadingDialogFromServer:(QMPushNotificationManager *)pushNotificationManager;
 
 /**
- *  Is called when dialog was not found in both memory storage and cache
- *  and server request return nil
+ *  Notifying about unsuccessful chat dialog fetching.
+ *
+ *  @param pushNotificationManager QMPushNotificationManager instance
+ *  @param error                   error instance
  */
 - (void)pushNotificationManager:(QMPushNotificationManager *)pushNotificationManager didFailFetchingDialogWithError:(NSError *)error;
 
