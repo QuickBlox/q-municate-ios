@@ -25,6 +25,8 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 
 @property (strong, nonatomic) NSUserDefaults *defaults;
 
+@property (strong, nonatomic) dispatch_group_t logoutGroup;
+
 @end
 
 @implementation QMCore
@@ -65,6 +67,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 //        _internetConnection = [Reachability reachabilityForInternetConnection];
         
         _defaults = [NSUserDefaults standardUserDefaults];
+        _logoutGroup = dispatch_group_create();
     }
     
     return self;
@@ -200,14 +203,25 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
             [[Digits sharedInstance] logOut];
         }
         
-        self.lastActivityDate = nil;
+        dispatch_group_enter(self.logoutGroup);
+        [[self.pushNotificationManager unSubscribeFromPushNotifications] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+            
+            dispatch_group_leave(self.logoutGroup);
+            return nil;
+        }];
         
-        [self.currentProfile clearProfile];
-        
+        dispatch_group_enter(self.logoutGroup);
         [[QMContactListCache instance] deleteContactList:^{
             
-            [source setResult:nil];
+            dispatch_group_leave(self.logoutGroup);
         }];
+        
+        dispatch_group_notify(self.logoutGroup, dispatch_get_main_queue(), ^{
+            
+            self.lastActivityDate = nil;
+            [self.currentProfile clearProfile];
+            [source setResult:nil];
+        });
     }];
     
     return source.task;
