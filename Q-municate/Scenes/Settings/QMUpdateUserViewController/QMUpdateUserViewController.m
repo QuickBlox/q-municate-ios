@@ -17,10 +17,10 @@
 @interface QMUpdateUserViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *textField;
-@property (weak, nonatomic) IBOutlet UILabel *infoField;
 
 @property (copy, nonatomic) NSString *keyPath;
 @property (copy, nonatomic) NSString *cachedValue;
+@property (copy, nonatomic) NSString *bottomText;
 @property (weak, nonatomic) BFTask *task;
 
 @end
@@ -53,35 +53,42 @@
     switch (self.updateUserField) {
             
         case QMUpdateUserFieldFullName:
-            self.keyPath = @keypath(QBUUser.new, fullName);
-            self.title =
-            self.textField.placeholder = NSLocalizedString(@"QM_STR_FULLNAME", nil);
-            self.cachedValue =
-            self.textField.text = currentUser.fullName;
-            self.infoField.text = NSLocalizedString(@"QM_STR_FULLNAME_DESCRIPTION", nil);
+            [self configureWithKeyPath:@keypath(QBUUser.new, fullName)
+                                 title:NSLocalizedString(@"QM_STR_FULLNAME", nil)
+                                  text:currentUser.fullName
+                            bottomText:NSLocalizedString(@"QM_STR_FULLNAME_DESCRIPTION", nil)];
             break;
             
         case QMUpdateUserFieldEmail:
-            self.keyPath = @keypath(QBUUser.new, email);
-            self.title =
-            self.textField.placeholder = NSLocalizedString(@"QM_STR_EMAIL", nil);
-            self.cachedValue =
-            self.textField.text = currentUser.email;
-            self.infoField.text = NSLocalizedString(@"QM_STR_EMAIL_DESCRIPTION", nil);
+            [self configureWithKeyPath:@keypath(QBUUser.new, email)
+                                 title:NSLocalizedString(@"QM_STR_EMAIL", nil)
+                                  text:currentUser.email
+                            bottomText:NSLocalizedString(@"QM_STR_EMAIL_DESCRIPTION", nil)];
             break;
             
         case QMUpdateUserFieldStatus:
-            self.keyPath = @keypath(QBUUser.new, status);
-            self.title =
-            self.textField.placeholder = NSLocalizedString(@"QM_STR_STATUS", nil);
-            self.cachedValue =
-            self.textField.text = currentUser.status;
-            self.infoField.text = NSLocalizedString(@"QM_STR_STATUS_DESCRIPTION", nil);
+            [self configureWithKeyPath:@keypath(QBUUser.new, status)
+                                 title:NSLocalizedString(@"QM_STR_STATUS", nil)
+                                  text:currentUser.status
+                            bottomText:NSLocalizedString(@"QM_STR_STATUS_DESCRIPTION", nil)];
             break;
             
         case QMUpdateUserFieldNone:
             break;
     }
+}
+
+- (void)configureWithKeyPath:(NSString *)keyPath
+                       title:(NSString *)title
+                        text:(NSString *)text
+                  bottomText:(NSString *)bottomText {
+    
+    self.keyPath = keyPath;
+    self.title =
+    self.textField.placeholder = title;
+    self.cachedValue =
+    self.textField.text = text;
+    self.bottomText = bottomText;
 }
 
 #pragma mark - Actions
@@ -116,27 +123,23 @@
 
 #pragma mark - UITableViewDataSource
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (NSString *)tableView:(UITableView *)__unused tableView titleForFooterInSection:(NSInteger)__unused section {
     
-    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
-    UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
-    
-    QMShadowView *topShadow = [[QMShadowView alloc]
-                               initWithFrame:CGRectMake(0,
-                                                        0,
-                                                        CGRectGetWidth(cell.frame),
-                                                        kQMShadowViewHeight)];
-    QMShadowView *bottomShadow = [[QMShadowView alloc]
-                                  initWithFrame:CGRectMake(0,
-                                                           CGRectGetHeight(cell.frame) - kQMShadowViewHeight,
-                                                           CGRectGetWidth(cell.frame),
-                                                           kQMShadowViewHeight)];
-    
-    [cell.contentView addSubview:topShadow];
-    [cell.contentView addSubview:bottomShadow];
-    
-    return cell;
+    switch (self.updateUserField) {
+            
+        case QMUpdateUserFieldFullName:
+            return NSLocalizedString(@"QM_STR_FULLNAME_DESCRIPTION", nil);
+            
+        case QMUpdateUserFieldEmail:
+            return NSLocalizedString(@"QM_STR_EMAIL_DESCRIPTION", nil);
+            
+        case QMUpdateUserFieldStatus:
+            return NSLocalizedString(@"QM_STR_STATUS_DESCRIPTION", nil);
+            
+        case QMUpdateUserFieldNone:
+            return nil;
+            break;
+    }
 }
 
 @end

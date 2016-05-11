@@ -274,32 +274,14 @@
         <scene sceneID="7DJ-f3-Ayg">
             <objects>
                 <tableViewController id="wnD-Fc-JNZ" customClass="QMUpdateUserViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="bjN-4A-Mjy">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="bjN-4A-Mjy">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" id="Rzk-rr-f7X">
                             <rect key="frame" x="0.0" y="64" width="600" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                        </view>
-                        <view key="tableFooterView" contentMode="scaleToFill" id="lfE-wN-6sa">
-                            <rect key="frame" x="0.0" y="138" width="600" height="365"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Life is strange" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K70-zC-BQE">
-                                    <rect key="frame" x="16" y="8" width="568" height="18"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                    <color key="textColor" red="0.64313725489999995" green="0.66666666669999997" blue="0.70196078429999997" alpha="1" colorSpace="calibratedRGB"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
-                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                            <constraints>
-                                <constraint firstItem="K70-zC-BQE" firstAttribute="top" secondItem="lfE-wN-6sa" secondAttribute="top" constant="8" id="Wkx-ML-CXv"/>
-                                <constraint firstAttribute="trailing" secondItem="K70-zC-BQE" secondAttribute="trailing" constant="16" id="rTx-oA-lbC"/>
-                                <constraint firstItem="K70-zC-BQE" firstAttribute="leading" secondItem="lfE-wN-6sa" secondAttribute="leading" constant="16" id="zci-6U-Pqk"/>
-                            </constraints>
                         </view>
                         <sections>
                             <tableViewSection id="VG4-Af-z4w">
@@ -344,7 +326,6 @@
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
-                        <outlet property="infoField" destination="K70-zC-BQE" id="Mxm-lb-VTm"/>
                         <outlet property="textField" destination="7Vn-Js-Fhp" id="554-Qg-x1X"/>
                     </connections>
                 </tableViewController>
