@@ -44,14 +44,17 @@
     
     self.serviceManager.currentProfile.pushNotificationsEnabled = YES;
     
+    @weakify(self);
     [QBRequest createSubscription:subscription successBlock:^(QBResponse * _Nonnull __unused response, NSArray<QBMSubscription *> * _Nullable __unused objects) {
         
+        @strongify(self);
         [self.serviceManager.currentProfile synchronize];
         
         [source setResult:nil];
         
     } errorBlock:^(QBResponse * _Nonnull response) {
         
+        @strongify(self);
         self.serviceManager.currentProfile.pushNotificationsEnabled = NO;
         [source setError:response.error.error];
     }];
