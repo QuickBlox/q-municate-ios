@@ -9,11 +9,22 @@
 #ifndef QMConstants_h
 #define QMConstants_h
 
-// storyboards
-static NSString *const kQMChatStoryboard = @"Chat";
+#ifdef DEBUG
 
-static NSString *const kQMQBUUserFullNameKeyPathKey = @"fullName";
-static NSString *const kQMQBUUserIDKeyPath = @"ID";
+#define ILog(...) do { NSLog(@"%s %@", __PRETTY_FUNCTION__, [NSString stringWithFormat:__VA_ARGS__]); } while(0)
+
+#else
+
+#define ILog(...) do { } while (0)
+
+#endif
+
+// storyboards
+static NSString *const kQMMainStoryboard = @"Main";
+static NSString *const kQMChatStoryboard = @"Chat";
+static NSString *const kQMSettingsStoryboard = @"Settings";
+
+static NSString *const kQMPushNotificationDialogIDKey = @"dialog_id";
 
 static NSString *const kQMDialogsUpdateNotificationMessage = @"Notification message";
 static NSString *const kQMContactRequestNotificationMessage = @"Contact request";

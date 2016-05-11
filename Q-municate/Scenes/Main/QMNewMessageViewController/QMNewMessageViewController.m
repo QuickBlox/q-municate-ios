@@ -88,13 +88,13 @@ UISearchResultsUpdating
 
 - (void)configureDataSources {
     
-    self.dataSource = [[QMNewMessageDataSource alloc] initWithKeyPath:kQMQBUUserFullNameKeyPathKey];
+    self.dataSource = [[QMNewMessageDataSource alloc] initWithKeyPath:@keypath(QBUUser.new, fullName)];
     self.tableView.dataSource = self.dataSource;
     
     QMContactsSearchDataProvider *searchDataProvider = [[QMContactsSearchDataProvider alloc] init];
     searchDataProvider.delegate = self;
     
-    self.contactsSearchDataSource = [[QMNewMessageSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider usingKeyPath:kQMQBUUserFullNameKeyPathKey];
+    self.contactsSearchDataSource = [[QMNewMessageSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider usingKeyPath:@keypath(QBUUser.new, fullName)];
 }
 
 - (void)dealloc {

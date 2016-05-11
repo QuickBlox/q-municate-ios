@@ -10,3 +10,13 @@
 
 // Background colors
 UIColor *QMTableViewBackgroundColor();
+
+// Chat colors
+UIColor *QMChatBackgroundColor();
+UIColor *QMChatTopLabelColor();
+UIColor *QMChatIncomingBottomLabelColor();
+UIColor *QMChatOutgoingBottomLabelColor();
+UIColor *QMChatCellHighlightedColor();
+UIColor *QMChatOutgoingCellColor();
+UIColor *QMChatNotificationCellColor();
+UIColor *QMChatEmojiiKeyboardTintColor();

@@ -18,11 +18,9 @@
 #import "QMLocalSearchDataProvider.h"
 #import "QMGlobalSearchDataProvider.h"
 #import "QMChatVC.h"
-
+#import "QMTasks.h"
 #import "QMCore.h"
 #import "QMNotification.h"
-#import "QMTasks.h"
-#import "QMProfileTitleView.h"
 
 typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
     
@@ -53,7 +51,6 @@ UISearchResultsUpdating
 @property (strong, nonatomic) QMLocalSearchDataSource *localSearchDataSource;
 @property (strong, nonatomic) QMGlobalSearchDataSource *globalSearchDataSource;
 
-@property (weak, nonatomic) IBOutlet QMProfileTitleView *profileTitleView;
 @property (strong, nonatomic) UISearchController *searchController;
 @property (strong, nonatomic) QMSearchResultsController *searchResultsController;
 
@@ -62,6 +59,13 @@ UISearchResultsUpdating
 @end
 
 @implementation QMDialogsViewController
+
+#pragma mark - Life cycle
+
++ (instancetype)dialogsViewController {
+    
+    return [[UIStoryboard storyboardWithName:kQMMainStoryboard bundle:nil] instantiateViewControllerWithIdentifier:NSStringFromClass([self class])];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -80,12 +84,11 @@ UISearchResultsUpdating
     // Subscribing delegates
     [[QMCore instance].chatService addDelegate:self];
     [[QMCore instance].usersService addDelegate:self];
+}
+
+- (void)dealloc {
     
-    // Profile title view
-    [self configureProfileTitleView];
-    
-    // auto login user
-    [self performAutoLoginAndFetchData];
+    [self.searchController.view removeFromSuperview];
 }
 
 #pragma mark - Init methods
@@ -94,6 +97,8 @@ UISearchResultsUpdating
     
     self.dialogsDataSource = [[QMDialogsDataSource alloc] init];
     self.placeholderDataSource  = [[QMPlaceholderDataSource alloc] init];
+    
+    self.tableView.dataSource = self.placeholderDataSource;
     
     self.searchResultsController = [[QMSearchResultsController alloc] initWithNavigationController:self.navigationController];
     self.searchResultsController.delegate = self;
@@ -125,8 +130,6 @@ UISearchResultsUpdating
             return nil;
         }];
     };
-    
-    self.tableView.delegate = self;
 }
 
 - (void)configureSearch {
@@ -140,49 +143,6 @@ UISearchResultsUpdating
     self.searchController.dimsBackgroundDuringPresentation = YES;
     self.definesPresentationContext = YES;
     self.tableView.tableHeaderView = self.searchController.searchBar;
-}
-
-- (void)configureProfileTitleView {
-    
-    QBUUser *currentUser = [QMCore instance].currentProfile.userData;
-    [self.profileTitleView setText:currentUser.fullName];
-    self.profileTitleView.placeholderID = currentUser.ID;
-    [self.profileTitleView setAvatarUrl:currentUser.avatarUrl];
-}
-
-- (void)performAutoLoginAndFetchData {
-    
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) timeUntilDismiss:0];
-    
-    @weakify(self);
-    [[[[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
-        @strongify(self);
-        
-        if (task.isFaulted && (task.error.code == QBResponseStatusCodeUnknown
-                               || task.error.code == QBResponseStatusCodeForbidden
-                               || task.error.code == QBResponseStatusCodeNotFound
-                               || task.error.code == QBResponseStatusCodeUnAuthorized
-                               || task.error.code == QBResponseStatusCodeValidationFailed)) {
-            [[[QMCore instance] logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
-                
-                [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
-                return nil;
-            }];
-            
-            return [BFTask cancelledTask];
-        } else {
-            
-            return [[QMCore instance].chatService connect];
-        }
-    }] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        
-        return [QMTasks taskFetchAllData];
-    }] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        @strongify(self);
-        self.tableView.dataSource = self.dialogsDataSource.items.count > 0 ? self.dialogsDataSource : self.placeholderDataSource;
-        [self.tableView reloadData];
-        return nil;
-    }];
 }
 
 #pragma mark - UITableViewDelegate
@@ -200,7 +160,7 @@ UISearchResultsUpdating
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     
-    return self.dialogsDataSource.items.count > 0 ? [QMDialogCell height] : tableView.frame.size.height - self.navigationController.navigationBar.frame.size.height - [UIApplication sharedApplication].statusBarFrame.size.height;
+    return self.dialogsDataSource.items.count > 0 ? [QMDialogCell height] : CGRectGetHeight(tableView.bounds) - tableView.contentInset.top - tableView.contentInset.bottom;
 }
 
 - (NSString *)tableView:(UITableView *)__unused tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
@@ -209,22 +169,6 @@ UISearchResultsUpdating
 }
 
 #pragma mark - Actions
-
-- (IBAction)didPressProfileTitle:(id)__unused sender {
-    
-}
-
-- (IBAction)didPressSettingsButton:(UIBarButtonItem *)__unused sender {
-    
-#warning TEMP SOLUTION: logout on settings button :D
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
-    [[[QMCore instance] logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
-        
-        [QMNotification dismissNotificationPanel];
-        [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
-        return nil;
-    }];
-}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
@@ -338,19 +282,21 @@ UISearchResultsUpdating
 
 - (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
     
+    [QMTasks taskFetchAllData];
+    
     [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
 }
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
+    
+    [QMTasks taskFetchAllData];
     
     [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
 }
 
 - (void)chatService:(QMChatService *)__unused chatService chatDidNotConnectWithError:(NSError *)error {
     
-    //    if ([[QMApi instance] isInternetConnected]) {
     [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeFailed message:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription] timeUntilDismiss:0];
-    //    }
 }
 
 #pragma mark - QMSearchResultsControllerDelegate
@@ -399,14 +345,6 @@ UISearchResultsUpdating
     
     [QMDialogCell registerForReuseInTableView:self.tableView];
     [QMSearchCell registerForReuseInTableView:self.tableView];
-}
-
-#pragma mark - Transition size
-
-- (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-    [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
-    
-    [self.profileTitleView sizeToFit];
 }
 
 @end

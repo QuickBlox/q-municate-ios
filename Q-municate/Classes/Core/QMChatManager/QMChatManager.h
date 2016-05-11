@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return task with result
  */
-- (BFTask *)disconnectFromChatIfNeeded;
+- (nullable BFTask *)disconnectFromChatIfNeeded;
 
 /**
  *  Add users to group chat dialog and send notification message.

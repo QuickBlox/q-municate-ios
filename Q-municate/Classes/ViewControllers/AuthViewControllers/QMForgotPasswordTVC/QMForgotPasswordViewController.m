@@ -7,7 +7,7 @@
 //
 
 #import "QMForgotPasswordViewController.h"
-#import "QMCore.h"
+#import "QMTasks.h"
 #import "QMNotification.h"
 
 @interface QMForgotPasswordViewController ()
@@ -50,7 +50,7 @@
     [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
     
     @weakify(self);
-    self.task = [[[QMCore instance].currentProfile resetPasswordForEmail:emailString] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+    self.task = [[QMTasks taskResetPasswordForEmail:emailString] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         
         @strongify(self);
         if (task.isFaulted) {

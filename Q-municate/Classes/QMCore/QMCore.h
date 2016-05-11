@@ -12,6 +12,7 @@
 
 #import "QMContactManager.h"
 #import "QMChatManager.h"
+#import "QMPushNotificationManager.h"
 
 @class Reachability;
 
@@ -39,6 +40,11 @@ QMContactListServiceDelegate
  *  Chat manager.
  */
 @property (strong, nonatomic, readonly) QMChatManager *chatManager;
+
+/**
+ *  Push notification manager.
+ */
+@property (strong, nonatomic, readonly) QMPushNotificationManager *pushNotificationManager;
 
 /**
  *  Reachability manager.

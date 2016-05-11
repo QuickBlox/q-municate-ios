@@ -18,6 +18,8 @@
 #import "NSArray+Intersection.h"
 #import "REAlertView.h"
 
+static const CGFloat kQMSectionHeaderHeight = 32.0f;
+
 @interface QMGroupOccupantsViewController ()
 
 <
@@ -165,7 +167,7 @@ QMUsersServiceDelegate
     QMTableSectionHeaderView *headerView = [[QMTableSectionHeaderView alloc] initWithFrame:CGRectMake(0,
                                                                                                       0,
                                                                                                       CGRectGetWidth(tableView.frame),
-                                                                                                      [QMTableSectionHeaderView preferredHeight])];
+                                                                                                      kQMSectionHeaderHeight)];
     
     headerView.title = [NSString stringWithFormat:@"%tu %@", self.chatDialog.occupantIDs.count, NSLocalizedString(@"QM_STR_MEMBERS", nil)];
     
@@ -174,7 +176,7 @@ QMUsersServiceDelegate
 
 - (CGFloat)tableView:(UITableView *)__unused tableView heightForHeaderInSection:(NSInteger)__unused section {
     
-    return [QMTableSectionHeaderView preferredHeight];
+    return kQMSectionHeaderHeight;
 }
 
 - (CGFloat)tableView:(UITableView *)__unused tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -226,7 +228,7 @@ QMUsersServiceDelegate
 
 - (void)usersService:(QMUsersService *)__unused usersService didAddUsers:(NSArray<QBUUser *> *)user {
     
-    NSArray *idsOfUsers = [user valueForKeyPath:kQMQBUUserIDKeyPath];
+    NSArray *idsOfUsers = [user valueForKeyPath:@keypath(QBUUser.new, ID)];
     
     if ([self.chatDialog.occupantIDs containsObjectFromArray:idsOfUsers]) {
         

@@ -27,9 +27,15 @@
 
 - (BFTask *)addUserToContactList:(QBUUser *)user {
     
+    // determine whether we have already received contact request from user or not
+    QBChatDialog *chatDialog = [self.serviceManager.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
+    QBChatMessage *lastMessage = [self.serviceManager.chatService.messagesMemoryStorage lastMessageFromDialogID:chatDialog.ID];
+    
     QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
     
-    if (contactListItem.subscriptionState == QBPresenceSubscriptionStateFrom) {
+    if (lastMessage.messageType == QMMessageTypeContactRequest
+        && lastMessage.senderID != self.serviceManager.currentProfile.userData.ID
+        && contactListItem == nil) {
         
         return [self confirmAddContactRequest:user];
     }
@@ -37,9 +43,12 @@
         
         @weakify(self);
         return [[[self.serviceManager.contactListService addUserToContactListRequest:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+            
             @strongify(self);
             return [self.serviceManager.chatService createPrivateChatDialogWithOpponent:user];
+            
         }] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+            
             @strongify(self);
             QBChatMessage *chatMessage = [QMMessagesFactory contactRequestNotificationForUser:user];
             [self.serviceManager.chatService sendMessage:chatMessage
@@ -115,7 +124,7 @@
 
 - (NSArray *)allContactsSortedByFullName {
     
-    NSSortDescriptor *sorter = [[NSSortDescriptor alloc] initWithKey:kQMQBUUserFullNameKeyPathKey
+    NSSortDescriptor *sorter = [[NSSortDescriptor alloc] initWithKey:@keypath(QBUUser.new, fullName)
                                                            ascending:YES
                                                             selector:@selector(localizedCaseInsensitiveCompare:)];
     NSArray *sortedUsers = [[self allContacts] sortedArrayUsingDescriptors:@[sorter]];
@@ -206,26 +215,14 @@
     
     QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
     
-    return contactListItem.subscriptionState == QBPresenceSubscriptionStateBoth;
+    return contactListItem != nil && contactListItem.subscriptionState != QBPresenceSubscriptionStateNone;
 }
 
-- (BOOL)isRequestRequiredToUserWithID:(NSUInteger)userID {
-    
-    return ![self isFriendWithUserID:userID] && ![self isAwaitingForApprovalFromUserID:userID];
-}
-
-- (BOOL)isUserIDInPendingList:(NSUInteger)userID {
+- (BOOL)isContactListItemExistentForUserWithID:(NSUInteger)userID {
     
     QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
     
-    return contactListItem.subscriptionState == QBPresenceSubscriptionStateFrom;
-}
-
-- (BOOL)isAwaitingForApprovalFromUserID:(NSUInteger)userID {
-    
-    QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
-    
-    return contactListItem.subscriptionState == QBPresenceSubscriptionStateNone;
+    return contactListItem != nil;
 }
 
 - (BOOL)isUserOnlineWithID:(NSUInteger)userID {

@@ -25,6 +25,8 @@ typedef NS_ENUM(NSUInteger, QMUserInfoSection) {
     QMUserInfoSectionAddAction
 };
 
+#warning DELETE ACTION SHOULD BE SEPARATE
+
 @interface QMUserInfoViewController ()
 
 <
@@ -138,7 +140,7 @@ QMContactListServiceDelegate
         
         [self.hiddenSections addIndex:QMUserInfoSectionContactInteractions];
         
-        BOOL isAwaitingForApproval = [[QMCore instance].contactManager isAwaitingForApprovalFromUserID:self.user.ID];
+        BOOL isAwaitingForApproval = [[QMCore instance].contactManager isContactListItemExistentForUserWithID:self.user.ID];
         if (isAwaitingForApproval) {
             
             [self.hiddenSections addIndex:QMUserInfoSectionAddAction];

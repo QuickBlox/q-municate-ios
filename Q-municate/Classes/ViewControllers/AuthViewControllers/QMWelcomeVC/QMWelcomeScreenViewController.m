@@ -63,29 +63,36 @@
     [[[QMFacebook connect] continueWithBlock:^id _Nullable(BFTask<NSString *> * _Nonnull task) {
         // Facebook connect
         return task.isFaulted || task.isCancelled ? nil : [[QMCore instance].authService loginWithFacebookSessionToken:task.result];
+        
     }] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
-        //
+        
         if (task.isFaulted) {
+            
             [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FACEBOOK_LOGIN_FALED_ALERT_TEXT", nil) actionSuccess:NO];
-        } else if (task.result != nil) {
+            
+        }
+        else if (task.result != nil) {
+            
             @strongify(self);
             [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
             [[QMCore instance].currentProfile setAccountType:QMAccountTypeFacebook];
             [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
             
             if (task.result.avatarUrl.length == 0) {
+                
                 return [[[QMFacebook loadMe] continueWithSuccessBlock:^id _Nullable(BFTask<NSDictionary *> * _Nonnull loadTask) {
                     // downloading user avatar from url
                     NSURL *userImageUrl = [QMFacebook userImageUrlWithUserID:loadTask.result[@"id"]];
                     return [QMContent downloadImageWithUrl:userImageUrl];
+                    
                 }] continueWithSuccessBlock:^id _Nullable(BFTask<UIImage *> * _Nonnull imageTask) {
                     // uploading image to content module
-                    return [[QMCore instance].currentProfile updateUserImage:imageTask.result progress:nil];
+                    return [QMTasks taskUpdateCurrentUserImage:imageTask.result progress:nil];
                 }];
             }
         }
         
-        return nil;
+        return [[QMCore instance].pushNotificationManager subscribeForPushNotifications];
     }];
 }
 
@@ -110,15 +117,26 @@
                 return;
             }
             
-            [[[QMCore instance].authService loginWithTwitterDigitsAuthHeaders:authHeaders] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
-                // login with twitter digits to REST
-                if (!task.isFaulted) {
-                    [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
-                    [[QMCore instance].currentProfile setAccountType:QMAccountTypeDigits];
-                    [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
+            [[[QMCore instance].authService loginWithTwitterDigitsAuthHeaders:authHeaders] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+                
+                [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
+                
+                [[QMCore instance].currentProfile setAccountType:QMAccountTypeDigits];
+                
+                QBUUser *user = task.result;
+                if (user.fullName.length == 0) {
+                    // setting phone as user full name
+                    user.fullName = user.phone;
+                    
+                    QBUpdateUserParameters *updateUserParams = [QBUpdateUserParameters new];
+                    updateUserParams.fullName = user.fullName;
+                    
+                    return [QMTasks taskUpdateCurrentUser:updateUserParams];
                 }
                 
-                return nil;
+                [[QMCore instance].currentProfile synchronizeWithUserData:user];
+                
+                return [[QMCore instance].pushNotificationManager subscribeForPushNotifications];
             }];
         }
     }];

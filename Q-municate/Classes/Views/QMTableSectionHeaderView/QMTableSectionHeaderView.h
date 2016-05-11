@@ -12,6 +12,4 @@
 
 @property (strong, nonatomic) NSString *title;
 
-+ (CGFloat)preferredHeight;
-
 @end

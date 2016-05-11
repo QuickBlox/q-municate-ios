@@ -10,15 +10,23 @@
 #import "QMCore.h"
 #import "QMErrorsFactory.h"
 #import "QMFacebook.h"
+#import "QMContent.h"
 #import <DigitsKit/DigitsKit.h>
 
+static const NSUInteger kQMDialogsPageLimit = 10;
+
 @implementation QMTasks
+
+#pragma mark - User management
 
 + (BFTask *)taskUpdateCurrentUser:(QBUpdateUserParameters *)updateParameters {
     
     BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
     
     [QBRequest updateCurrentUser:updateParameters successBlock:^(QBResponse * _Nonnull __unused response, QBUUser * _Nullable user) {
+        
+        user.password = [QMCore instance].currentProfile.userData.password;
+        [[QMCore instance].currentProfile synchronizeWithUserData:user];
         
         [source setResult:user];
     } errorBlock:^(QBResponse * _Nonnull response) {
@@ -28,6 +36,34 @@
     
     return source.task;
 }
+
++ (BFTask *)taskUpdateCurrentUserImage:(UIImage *)userImage progress:(QMContentProgressBlock)progress {
+    
+    return [[QMContent uploadJPEGImage:userImage progress:progress] continueWithSuccessBlock:^id _Nullable(BFTask<QBCBlob *> * _Nonnull task) {
+        
+        QBUpdateUserParameters *userParams = [QBUpdateUserParameters new];
+        userParams.avatarUrl = task.result.isPublic ? task.result.publicUrl : task.result.privateUrl;
+        
+        return [QMTasks taskUpdateCurrentUser:userParams];
+    }];
+}
+
++ (BFTask *)taskResetPasswordForEmail:(NSString *)email {
+    
+    BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
+    
+    [QBRequest resetUserPasswordWithEmail:email successBlock:^(QBResponse * _Nonnull __unused response) {
+        
+        [source setResult:nil];
+    } errorBlock:^(QBResponse * _Nonnull response) {
+        
+        [source setError:response.error.error];
+    }];
+    
+    return source.task;
+}
+
+#pragma mark - Data tasks
 
 + (BFTask *)taskAutoLogin {
     
@@ -90,12 +126,13 @@
 
 + (BFTask *)taskFetchAllData {
     
-    __block NSMutableArray *usersLoadingTasks = [NSMutableArray array];
+    NSMutableArray *usersLoadingTasks = [NSMutableArray array];
     
-    void (^iterationBlock)(QBResponse *, NSArray *, NSSet *, BOOL *) = ^(QBResponse *__unused response, NSArray *__unused dialogObjects, NSSet *__unused dialogsUsersIDs, BOOL *__unused stop) {
+    void (^iterationBlock)(QBResponse *, NSArray *, NSSet *, BOOL *) = ^(QBResponse *__unused response, NSArray *__unused dialogObjects, NSSet *dialogsUsersIDs, BOOL *__unused stop) {
         
         [usersLoadingTasks addObject:[[QMCore instance].usersService getUsersWithIDs:[dialogsUsersIDs allObjects]]];
     };
+    
     BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull task) {
         if ([QMCore instance].isAuthorized && !task.isFaulted) [QMCore instance].lastActivityDate = [NSDate date];
         
@@ -103,9 +140,11 @@
     };
     
     if ([QMCore instance].lastActivityDate != nil) {
+        
         return [[[QMCore instance].chatService fetchDialogsUpdatedFromDate:[QMCore instance].lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:iterationBlock] continueWithBlock:completionBlock];
     }
     else {
+        
         return [[[QMCore instance].chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:iterationBlock] continueWithBlock:completionBlock];
     }
 }

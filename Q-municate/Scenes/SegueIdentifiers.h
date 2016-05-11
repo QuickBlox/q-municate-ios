@@ -22,3 +22,4 @@ static NSString *const KQMSceneSegueUserInfo            = @"SceneSegueUserInfo";
 static NSString *const KQMSceneSegueGroupInfo           = @"SceneSegueGroupInfo";
 static NSString *const KQMSceneSegueGroupOccupants      = @"SceneSegueGroupOccupants";
 static NSString *const kQMSceneSegueGroupAddUsers       = @"SceneSegueGroupAddUsers";
+static NSString *const kQMSceneSegueUpdateUser          = @"SceneSegueUpdateUser";
