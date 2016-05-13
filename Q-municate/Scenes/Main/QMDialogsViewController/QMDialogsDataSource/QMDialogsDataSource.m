@@ -9,7 +9,6 @@
 #import "QMDialogsDataSource.h"
 #import "QMDialogCell.h"
 #import "QMCore.h"
-#import "QMChatUtils.h"
 #import <QMDateUtils.h>
 
 #import <SVProgressHUD.h>
@@ -66,7 +65,7 @@
         
         if (chatDialog.type == QBChatDialogTypeGroup) {
             
-            chatDialog.occupantIDs = [QMChatUtils occupantsWithoutCurrentUser:chatDialog.occupantIDs];
+            chatDialog.occupantIDs = [[QMCore instance].contactManager occupantsWithoutCurrentUser:chatDialog.occupantIDs];
             [[[QMCore instance].chatManager leaveChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
                 
                 [SVProgressHUD dismiss];

@@ -93,6 +93,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray <NSNumber *> *)idsOfUsers:(NSArray <QBUUser *> *)users;
 
 /**
+ *  Array of user IDs by excluding current user ID.
+ *
+ *  @param occupantIDs array of user ids
+ *
+ *  @return array of user ids without current user
+ */
+- (NSArray <NSNumber *> *)occupantsWithoutCurrentUser:(NSArray <NSNumber *> *)occupantIDs;
+
+/**
  *  Online status string for user.
  *
  *  @param user user instance

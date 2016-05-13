@@ -7,16 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2444261F19F1106100C9C61A /* QMChatUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2444261E19F1106100C9C61A /* QMChatUtils.m */; };
 		24657EB71A84E97700009F91 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 24657EB61A84E97700009F91 /* libicucore.dylib */; };
-		2476BA8119A5D91F00CC666D /* QMUsersUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 2476BA8019A5D91F00CC666D /* QMUsersUtils.m */; };
 		2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */; };
-		24DC50E81A7F9E88002C6E29 /* QMDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DC50E71A7F9E88002C6E29 /* QMDevice.m */; };
 		55286996199131B5006F92CB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55286995199131B5006F92CB /* Localizable.strings */; };
 		55495A221993BCC100B7764C /* QMAlertsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 55495A201993BCC100B7764C /* QMAlertsFactory.m */; };
 		559BDFE819618D3D000588FE /* QMSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE019618D3D000588FE /* QMSignUpViewController.m */; };
 		559BDFEA19618D3D000588FE /* QMWelcomeScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE619618D3D000588FE /* QMWelcomeScreenViewController.m */; };
-		55A8B06B1965986A00B5D33B /* NSUserDefaultsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B0551965986A00B5D33B /* NSUserDefaultsHelper.m */; };
 		55A8B06E1965986A00B5D33B /* QMSoundManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B05C1965986A00B5D33B /* QMSoundManager.m */; };
 		55A8B06F1965986A00B5D33B /* busy.wav in Resources */ = {isa = PBXBuildFile; fileRef = 55A8B05E1965986A00B5D33B /* busy.wav */; };
 		55A8B0701965986A00B5D33B /* calling.wav in Resources */ = {isa = PBXBuildFile; fileRef = 55A8B05F1965986A00B5D33B /* calling.wav */; };
@@ -44,7 +40,6 @@
 		581DA1D21BF373A100F75D8B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1D11BF373A100F75D8B /* VideoToolbox.framework */; };
 		5839F26E1CC531AD0055EBF8 /* QMBaseTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839F26D1CC531AD0055EBF8 /* QMBaseTitleView.m */; };
 		5839F2761CC533A30055EBF8 /* QMGroupHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839F2751CC533A30055EBF8 /* QMGroupHeaderView.m */; };
-		5842779C1C3D336300CDE35B /* IAButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277821C3D336300CDE35B /* IAButton.m */; };
 		584277A41C3D336300CDE35B /* QMCornerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277981C3D336300CDE35B /* QMCornerButton.m */; };
 		584277B41C3D374400CDE35B /* Auth.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 584277B31C3D374400CDE35B /* Auth.storyboard */; };
 		584277B91C3D401C00CDE35B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 584277B81C3D401C00CDE35B /* Main.storyboard */; };
@@ -160,15 +155,9 @@
 
 /* Begin PBXFileReference section */
 		01E0EAD58B177DC530737810 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		2444261D19F1106100C9C61A /* QMChatUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMChatUtils.h; path = QMChatUtils/QMChatUtils.h; sourceTree = "<group>"; };
-		2444261E19F1106100C9C61A /* QMChatUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMChatUtils.m; path = QMChatUtils/QMChatUtils.m; sourceTree = "<group>"; };
 		24657EB61A84E97700009F91 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
-		2476BA7F19A5D91F00CC666D /* QMUsersUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMUsersUtils.h; path = QMUsersUtils/QMUsersUtils.h; sourceTree = "<group>"; };
-		2476BA8019A5D91F00CC666D /* QMUsersUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMUsersUtils.m; path = QMUsersUtils/QMUsersUtils.m; sourceTree = "<group>"; };
 		2494559619A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+GTMNSStringHTMLAdditions.h"; sourceTree = "<group>"; };
 		2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+GTMNSStringHTMLAdditions.m"; sourceTree = "<group>"; };
-		24DC50E61A7F9E88002C6E29 /* QMDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMDevice.h; path = QMDevice/QMDevice.h; sourceTree = "<group>"; };
-		24DC50E71A7F9E88002C6E29 /* QMDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMDevice.m; path = QMDevice/QMDevice.m; sourceTree = "<group>"; };
 		55286995199131B5006F92CB /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		55495A1F1993BCC100B7764C /* QMAlertsFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAlertsFactory.h; sourceTree = "<group>"; };
 		55495A201993BCC100B7764C /* QMAlertsFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAlertsFactory.m; sourceTree = "<group>"; };
@@ -180,8 +169,6 @@
 		559BDFE019618D3D000588FE /* QMSignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSignUpViewController.m; sourceTree = "<group>"; };
 		559BDFE519618D3D000588FE /* QMWelcomeScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMWelcomeScreenViewController.h; sourceTree = "<group>"; };
 		559BDFE619618D3D000588FE /* QMWelcomeScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMWelcomeScreenViewController.m; sourceTree = "<group>"; };
-		55A8B0541965986A00B5D33B /* NSUserDefaultsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSUserDefaultsHelper.h; sourceTree = "<group>"; };
-		55A8B0551965986A00B5D33B /* NSUserDefaultsHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSUserDefaultsHelper.m; sourceTree = "<group>"; };
 		55A8B05B1965986A00B5D33B /* QMSoundManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSoundManager.h; sourceTree = "<group>"; };
 		55A8B05C1965986A00B5D33B /* QMSoundManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSoundManager.m; sourceTree = "<group>"; };
 		55A8B05E1965986A00B5D33B /* busy.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = busy.wav; sourceTree = "<group>"; };
@@ -228,8 +215,6 @@
 		5839F26D1CC531AD0055EBF8 /* QMBaseTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMBaseTitleView.m; path = "Q-municate/Scenes/Base/QMBaseTitleView/QMBaseTitleView.m"; sourceTree = SOURCE_ROOT; };
 		5839F2741CC533A30055EBF8 /* QMGroupHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMGroupHeaderView.h; path = QMGroupHeaderView/QMGroupHeaderView.h; sourceTree = "<group>"; };
 		5839F2751CC533A30055EBF8 /* QMGroupHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMGroupHeaderView.m; path = QMGroupHeaderView/QMGroupHeaderView.m; sourceTree = "<group>"; };
-		584277811C3D336300CDE35B /* IAButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAButton.h; sourceTree = "<group>"; };
-		584277821C3D336300CDE35B /* IAButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IAButton.m; sourceTree = "<group>"; };
 		584277971C3D336300CDE35B /* QMCornerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCornerButton.h; sourceTree = "<group>"; };
 		584277981C3D336300CDE35B /* QMCornerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMCornerButton.m; sourceTree = "<group>"; };
 		584277B11C3D36EA00CDE35B /* SegueIdentifiers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SegueIdentifiers.h; path = "Q-municate/Scenes/SegueIdentifiers.h"; sourceTree = SOURCE_ROOT; };
@@ -464,33 +449,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2444261C19F1103E00C9C61A /* QMChatUtils */ = {
-			isa = PBXGroup;
-			children = (
-				2444261D19F1106100C9C61A /* QMChatUtils.h */,
-				2444261E19F1106100C9C61A /* QMChatUtils.m */,
-			);
-			name = QMChatUtils;
-			sourceTree = "<group>";
-		};
-		2476BA7E19A5D8D300CC666D /* QMUsersUtils */ = {
-			isa = PBXGroup;
-			children = (
-				2476BA7F19A5D91F00CC666D /* QMUsersUtils.h */,
-				2476BA8019A5D91F00CC666D /* QMUsersUtils.m */,
-			);
-			name = QMUsersUtils;
-			sourceTree = "<group>";
-		};
-		24DC50E51A7F9E56002C6E29 /* QMDevice */ = {
-			isa = PBXGroup;
-			children = (
-				24DC50E61A7F9E88002C6E29 /* QMDevice.h */,
-				24DC50E71A7F9E88002C6E29 /* QMDevice.m */,
-			);
-			name = QMDevice;
-			sourceTree = "<group>";
-		};
 		533F8DC685AAE9904FDA11F3 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -611,15 +569,11 @@
 		55A8B04F1965986A00B5D33B /* Tools */ = {
 			isa = PBXGroup;
 			children = (
-				24DC50E51A7F9E56002C6E29 /* QMDevice */,
-				2444261C19F1103E00C9C61A /* QMChatUtils */,
 				55D8ADF819AC81CD00DAF79F /* QMLicenseAgreement */,
-				2476BA7E19A5D8D300CC666D /* QMUsersUtils */,
 				5524C2CF1998B560007450DB /* QMImagePicker */,
 				5524C2CB1998B3DB007450DB /* REActionSheet */,
 				55BBA75919730B960040DB5C /* REMailCompose */,
 				55A8B0501965986A00B5D33B /* AddressBook */,
-				55A8B0531965986A00B5D33B /* NSUserDefaults */,
 				55A8B05A1965986A00B5D33B /* QMSoundManager */,
 				55A8B0641965986A00B5D33B /* REAlertView */,
 			);
@@ -636,15 +590,6 @@
 				55D8AD0E19AC757900DAF79F /* QMAddressBook.m */,
 			);
 			path = AddressBook;
-			sourceTree = "<group>";
-		};
-		55A8B0531965986A00B5D33B /* NSUserDefaults */ = {
-			isa = PBXGroup;
-			children = (
-				55A8B0541965986A00B5D33B /* NSUserDefaultsHelper.h */,
-				55A8B0551965986A00B5D33B /* NSUserDefaultsHelper.m */,
-			);
-			path = NSUserDefaults;
 			sourceTree = "<group>";
 		};
 		55A8B05A1965986A00B5D33B /* QMSoundManager */ = {
@@ -870,7 +815,6 @@
 				584A6DB01C9DB7C400B7D641 /* QMTagFieldView */,
 				58FA41681C96E15D00E61586 /* QMOnlineTitleView */,
 				5877D6E01C46759A00938E5D /* QMBadgeView */,
-				584277801C3D336300CDE35B /* IAButton */,
 				584277961C3D336300CDE35B /* QMCornerButton */,
 				58E398B11CAE94450053BA4D /* QMNavigationBar */,
 				58B3C9CE1CB52C9D00B08A27 /* QMShadowView */,
@@ -878,15 +822,6 @@
 			name = Views;
 			path = "Q-municate/Classes/Views";
 			sourceTree = SOURCE_ROOT;
-		};
-		584277801C3D336300CDE35B /* IAButton */ = {
-			isa = PBXGroup;
-			children = (
-				584277811C3D336300CDE35B /* IAButton.h */,
-				584277821C3D336300CDE35B /* IAButton.m */,
-			);
-			path = IAButton;
-			sourceTree = "<group>";
 		};
 		584277961C3D336300CDE35B /* QMCornerButton */ = {
 			isa = PBXGroup;
@@ -1914,7 +1849,6 @@
 				58B3C9CD1CB52C4600B08A27 /* QMShadowView.m in Sources */,
 				588CF1061CA6C01200B23C00 /* QMNotificationPanelView.m in Sources */,
 				58E398B01CAE943F0053BA4D /* QMNavigationBar.m in Sources */,
-				2476BA8119A5D91F00CC666D /* QMUsersUtils.m in Sources */,
 				588CF10D1CA6C83600B23C00 /* QMNotificationPanel.m in Sources */,
 				55D8ADF419AC776A00DAF79F /* REAlertView+QMSuccess.m in Sources */,
 				584A6DD61C9E222A00B7D641 /* QMGroupContactListSearchDataSource.m in Sources */,
@@ -1953,7 +1887,6 @@
 				589D4CFD1C981D44005F1E76 /* QMContactCell.m in Sources */,
 				69D57E6218ACC11C00A9900A /* main.m in Sources */,
 				55D8AD0719AC756000DAF79F /* REActionSheet.m in Sources */,
-				55A8B06B1965986A00B5D33B /* NSUserDefaultsHelper.m in Sources */,
 				55495A221993BCC100B7764C /* QMAlertsFactory.m in Sources */,
 				55D8ADB519AC761000DAF79F /* QMForgotPasswordViewController.m in Sources */,
 				58B3C9B41CB3ECF700B08A27 /* QMGroupInfoViewController.m in Sources */,
@@ -1961,10 +1894,8 @@
 				5877D6D41C46709A00938E5D /* QMTableViewDataSource.m in Sources */,
 				5839F26E1CC531AD0055EBF8 /* QMBaseTitleView.m in Sources */,
 				5897928D1C998C4A00CC6438 /* QMNoContactsCell.m in Sources */,
-				5842779C1C3D336300CDE35B /* IAButton.m in Sources */,
 				589407B41BB958DE00C1CA78 /* QBUpdateUserParameters+CustomData.m in Sources */,
 				58C64D071C90699A00F1387B /* QMChatButtonsFactory.m in Sources */,
-				24DC50E81A7F9E88002C6E29 /* QMDevice.m in Sources */,
 				58D847861C871BDB000C40BA /* QMLocalSearchDataProvider.m in Sources */,
 				58B3C9D21CB6717200B08A27 /* QMSeparatorCell.m in Sources */,
 				5877D6DA1C46720600938E5D /* QMTableViewCell.m in Sources */,
@@ -1997,7 +1928,6 @@
 				584277D51C3FCFBA00CDE35B /* QMFacebook.m in Sources */,
 				58C64D031C905F9800F1387B /* QMChatVC.m in Sources */,
 				58D847701C85BB36000C40BA /* QMSearchCell.m in Sources */,
-				2444261F19F1106100C9C61A /* QMChatUtils.m in Sources */,
 				58B3C9B81CB3ED8000B08A27 /* QMGroupOccupantsViewController.m in Sources */,
 				5877D6CE1C46702400938E5D /* QMDialogsDataSource.m in Sources */,
 				581BAC8E1CAD8DD900E0567D /* QMColors.m in Sources */,
