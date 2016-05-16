@@ -247,12 +247,41 @@ QMContactListServiceDelegate
     }
 }
 
+- (BOOL)callAllowed {
+    
+    if (![QMCore instance].isInternetConnected) {
+        
+        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+        return NO;
+    }
+    
+    if (![QBChat instance].isConnected) {
+        
+        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeFailed message:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+        return NO;
+    }
+    
+    return YES;
+}
+
 - (IBAction)audioCallButtonPressed {
-#warning TODO: audio call
+    
+    if (![self callAllowed]) {
+        
+        return;
+    }
+    
+    [[QMCore instance].callManager callToUserWithID:self.user.ID conferenceType:QBRTCConferenceTypeAudio];
 }
 
 - (IBAction)videoCallButtonPressed {
-#warning TODO: video call
+    
+    if (![self callAllowed]) {
+        
+        return;
+    }
+    
+    [[QMCore instance].callManager callToUserWithID:self.user.ID conferenceType:QBRTCConferenceTypeVideo];
 }
 
 - (IBAction)deleteChatHistoryButtonPressed {
