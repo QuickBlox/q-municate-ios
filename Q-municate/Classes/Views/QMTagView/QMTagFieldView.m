@@ -548,7 +548,7 @@
         
         [self.delegate tagFieldView:self didChangeText:textField.text];
         
-        if (wasEmpty != textField.text.length == 0 &&
+        if (wasEmpty != (textField.text.length == 0) &&
             [self.delegate respondsToSelector:@selector(tagFieldView:didChangeSearchStatus:byClearingTextField:)]) {
             
             [self.delegate tagFieldView:self didChangeSearchStatus:[self searchIsActive] byClearingTextField:YES];
@@ -574,7 +574,7 @@
     
     [self.delegate tagFieldView:self didChangeText:textField.text];
     
-    if (self.wasEmpty != textField.text.length == 0 &&
+    if (self.wasEmpty != (textField.text.length == 0) &&
         [self.delegate respondsToSelector:@selector(tagFieldView:didChangeSearchStatus:byClearingTextField:)]) {
         
         [self.delegate tagFieldView:self didChangeSearchStatus:[self searchIsActive] byClearingTextField:YES];

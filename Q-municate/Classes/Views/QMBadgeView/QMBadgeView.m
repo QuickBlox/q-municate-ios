@@ -110,7 +110,7 @@
     
     NSDictionary* badgeFontAttributes = @{
                                           NSFontAttributeName:[UIFont fontWithName: @"Helvetica"
-                                                                              size:badgeRect.size.height * 0.69],
+                                                                              size:badgeRect.size.height * 0.69f],
                                           NSForegroundColorAttributeName: self.badgeTextColor,
                                           NSParagraphStyleAttributeName: badgeStyle
                                           };
@@ -129,7 +129,7 @@
     if (self.glosEnabled) {
         
         //// Gradient Declarations
-        CGFloat gradientLocations[] = {0, 0.26, 1};
+        CGFloat gradientLocations[] = {0, 0.26f, 1.0f};
         CGGradientRef gradient = CGGradientCreateWithColors(colorSpace,
                                                             (__bridge CFArrayRef)@[(id)self.gradientA.CGColor,
                                                                                    (id)[UIColor colorWithRed:1 green:1 blue:1 alpha:0.5].CGColor,

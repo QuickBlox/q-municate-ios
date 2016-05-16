@@ -136,7 +136,7 @@ UIColor *QMChatEmojiiKeyboardTintColor() {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
-        color = [UIColor colorWithRed:0.678 green:0.762 blue:0.752 alpha:1.000];
+        color = [UIColor colorWithRed:0.678f green:0.762f blue:0.752f alpha:1.0f];
     });
     
     return color;

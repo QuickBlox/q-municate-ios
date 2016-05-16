@@ -17,76 +17,52 @@ static const CGFloat kQMVideoCallDeclineButtonWidth = 147.0f;
 
 + (UIButton *)acceptButton {
     
-    static UIButton *acceptButton = nil;
+    UIButton *acceptButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
+                                                                        0,
+                                                                        kQMButtonSizeBig,
+                                                                        kQMButtonSizeBig)];
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        acceptButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
-                                                                  0,
-                                                                  kQMButtonSizeBig,
-                                                                  kQMButtonSizeBig)];
-        
-        [acceptButton setImage:[UIImage imageNamed:@"qm-ic-accept"]
-                      forState:UIControlStateNormal];
-    });
+    [acceptButton setImage:[UIImage imageNamed:@"qm-ic-accept"]
+                  forState:UIControlStateNormal];
     
     return acceptButton;
 }
 
 + (UIButton *)acceptVideoCallButton {
     
-    static UIButton *acceptVideoCallButton = nil;
+    UIButton *acceptVideoCallButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
+                                                                                 0,
+                                                                                 kQMButtonSizeBig,
+                                                                                 kQMButtonSizeBig)];
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        acceptVideoCallButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
-                                                                           0,
-                                                                           kQMButtonSizeBig,
-                                                                           kQMButtonSizeBig)];
-        
-        [acceptVideoCallButton setImage:[UIImage imageNamed:@"qm-ic-accept-video"]
-                               forState:UIControlStateNormal];
-    });
+    [acceptVideoCallButton setImage:[UIImage imageNamed:@"qm-ic-accept-video"]
+                           forState:UIControlStateNormal];
     
     return acceptVideoCallButton;
 }
 
 + (UIButton *)declineButton {
     
-    static UIButton *declineButton = nil;
+    UIButton *declineButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
+                                                                         0,
+                                                                         kQMButtonSizeBig,
+                                                                         kQMButtonSizeBig)];
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        declineButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
-                                                                   0,
-                                                                   kQMButtonSizeBig,
-                                                                   kQMButtonSizeBig)];
-        
-        [declineButton setImage:[UIImage imageNamed:@"qm-ic-decline"]
-                       forState:UIControlStateNormal];
-    });
+    [declineButton setImage:[UIImage imageNamed:@"qm-ic-decline"]
+                   forState:UIControlStateNormal];
     
     return declineButton;
 }
 
 + (UIButton *)declineVideoCallButton {
     
-    static UIButton *declineVideoCallButton = nil;
+    UIButton *declineVideoCallButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
+                                                                                  0,
+                                                                                  kQMVideoCallDeclineButtonWidth,
+                                                                                  kQMButtonSizeSmall)];
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        declineVideoCallButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
-                                                                            0,
-                                                                            kQMVideoCallDeclineButtonWidth,
-                                                                            kQMButtonSizeSmall)];
-        
-        [declineVideoCallButton setImage:[UIImage imageNamed:@"qm-ic-decline-video"]
-                                forState:UIControlStateNormal];
-    });
+    [declineVideoCallButton setImage:[UIImage imageNamed:@"qm-ic-decline-video"]
+                            forState:UIControlStateNormal];
     
     
     return declineVideoCallButton;
@@ -94,110 +70,80 @@ static const CGFloat kQMVideoCallDeclineButtonWidth = 147.0f;
 
 + (UIButton *)muteAudioCallButton {
     
-    static UIButton *muteAudioCallButton = nil;
+    UIButton *muteAudioCallButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
+                                                                               0,
+                                                                               kQMButtonSizeBig,
+                                                                               kQMButtonSizeBig)];
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        muteAudioCallButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
-                                                                         0,
-                                                                         kQMButtonSizeBig,
-                                                                         kQMButtonSizeBig)];
-        
-        [muteAudioCallButton setImage:[UIImage imageNamed:@"qm-ic-mute"]
-                             forState:UIControlStateNormal];
-        
-        [muteAudioCallButton setImage:[UIImage imageNamed:@"qm-ic-mute-selected"]
-                             forState:UIControlStateSelected];
-    });
+    [muteAudioCallButton setImage:[UIImage imageNamed:@"qm-ic-mute"]
+                         forState:UIControlStateNormal];
+    
+    [muteAudioCallButton setImage:[UIImage imageNamed:@"qm-ic-mute-selected"]
+                         forState:UIControlStateSelected];
     
     return muteAudioCallButton;
 }
 
 + (UIButton *)muteVideoCallButton {
     
-    static UIButton *muteVideoCallButton = nil;
+    UIButton *muteVideoCallButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
+                                                                               0,
+                                                                               kQMButtonSizeSmall,
+                                                                               kQMButtonSizeSmall)];
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        muteVideoCallButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
-                                                                         0,
-                                                                         kQMButtonSizeSmall,
-                                                                         kQMButtonSizeSmall)];
-        
-        [muteVideoCallButton setImage:[UIImage imageNamed:@"qm-ic-mute"]
-                             forState:UIControlStateNormal];
-        
-        [muteVideoCallButton setImage:[UIImage imageNamed:@"qm-ic-mute-selected"]
-                             forState:UIControlStateSelected];
-    });
+    [muteVideoCallButton setImage:[UIImage imageNamed:@"qm-ic-mute"]
+                         forState:UIControlStateNormal];
+    
+    [muteVideoCallButton setImage:[UIImage imageNamed:@"qm-ic-mute-selected"]
+                         forState:UIControlStateSelected];
     
     return muteVideoCallButton;
 }
 
 + (UIButton *)speakerButton {
     
-    static UIButton *speakerButton = nil;
+    UIButton *speakerButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
+                                                                         0,
+                                                                         kQMButtonSizeBig,
+                                                                         kQMButtonSizeBig)];
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        speakerButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
-                                                                   0,
-                                                                   kQMButtonSizeBig,
-                                                                   kQMButtonSizeBig)];
-        
-        [speakerButton setImage:[UIImage imageNamed:@"qm-ic-speaker"]
-                       forState:UIControlStateNormal];
-        
-        [speakerButton setImage:[UIImage imageNamed:@"qm-ic-speaker-selected"]
-                       forState:UIControlStateSelected];
-    });
+    [speakerButton setImage:[UIImage imageNamed:@"qm-ic-speaker"]
+                   forState:UIControlStateNormal];
+    
+    [speakerButton setImage:[UIImage imageNamed:@"qm-ic-speaker-selected"]
+                   forState:UIControlStateSelected];
     
     return speakerButton;
 }
 
 + (UIButton *)cameraButton {
     
-    static UIButton *cameraButton = nil;
+    UIButton *cameraButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
+                                                                        0,
+                                                                        kQMButtonSizeSmall,
+                                                                        kQMButtonSizeSmall)];
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        cameraButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
-                                                                  0,
-                                                                  kQMButtonSizeSmall,
-                                                                  kQMButtonSizeSmall)];
-        
-        [cameraButton setImage:[UIImage imageNamed:@"qm-ic-camera"]
-                      forState:UIControlStateNormal];
-        
-        [cameraButton setImage:[UIImage imageNamed:@"qm-ic-camera-selected"]
-                      forState:UIControlStateSelected];
-    });
+    [cameraButton setImage:[UIImage imageNamed:@"qm-ic-camera"]
+                  forState:UIControlStateNormal];
+    
+    [cameraButton setImage:[UIImage imageNamed:@"qm-ic-camera-selected"]
+                  forState:UIControlStateSelected];
     
     return cameraButton;
 }
 
 + (UIButton *)cameraRotationButton {
     
-    static UIButton *cameraRotationButton = nil;
+    UIButton *cameraRotationButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
+                                                                                0,
+                                                                                kQMButtonSizeSmall,
+                                                                                kQMButtonSizeSmall)];
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        cameraRotationButton = [[UIButton alloc] initWithFrame:CGRectMake(0,
-                                                                          0,
-                                                                          kQMButtonSizeSmall,
-                                                                          kQMButtonSizeSmall)];
-        
-        [cameraRotationButton setImage:[UIImage imageNamed:@"qm-ic-camera-rotation"]
-                              forState:UIControlStateNormal];
-        
-        [cameraRotationButton setImage:[UIImage imageNamed:@"qm-ic-camera-rotation-selected"]
-                              forState:UIControlStateSelected];
-    });
+    [cameraRotationButton setImage:[UIImage imageNamed:@"qm-ic-camera-rotation"]
+                          forState:UIControlStateNormal];
+    
+    [cameraRotationButton setImage:[UIImage imageNamed:@"qm-ic-camera-rotation-selected"]
+                          forState:UIControlStateSelected];
     
     return cameraRotationButton;
 }

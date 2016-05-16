@@ -130,7 +130,9 @@ QMImageViewDelegate
 
 - (NSString *)senderDisplayName {
     
-    return [QMCore instance].currentProfile.userData.fullName;
+    QBUUser *currentUser = [QMCore instance].currentProfile.userData;
+    
+    return currentUser.fullName ?: [NSString stringWithFormat:@"%tu", currentUser.ID];
 }
 
 - (CGFloat)heightForSectionHeader {
