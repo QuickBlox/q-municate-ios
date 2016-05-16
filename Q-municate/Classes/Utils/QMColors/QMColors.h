@@ -10,6 +10,7 @@
 
 // Background colors
 UIColor *QMTableViewBackgroundColor();
+UIColor *QMVideoCallBackgroundColor();
 
 // Chat colors
 UIColor *QMChatBackgroundColor();

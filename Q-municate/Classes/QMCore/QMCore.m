@@ -62,15 +62,42 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         _contactManager = [[QMContactManager alloc] initWithServiceManager:self];
         _chatManager = [[QMChatManager alloc] initWithServiceManager:self];
         _pushNotificationManager = [[QMPushNotificationManager alloc] initWithServiceManager:self];
+        _callManager = [[QMCallManager alloc] initWithServiceManager:self];
         
         // Reachability init
-//        _internetConnection = [Reachability reachabilityForInternetConnection];
+        [self configureReachability];
         
+        // other initializations
         _defaults = [NSUserDefaults standardUserDefaults];
         _logoutGroup = dispatch_group_create();
     }
     
     return self;
+}
+
+- (void)configureReachability {
+    
+    _internetConnection = [Reachability reachabilityForInternetConnection];
+    
+    // setting reachable block
+    [_internetConnection setReachableBlock:^(Reachability __unused *reachability) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) timeUntilDismiss:0];
+        });
+    }];
+    
+    // setting unreachable block
+    [_internetConnection setUnreachableBlock:^(Reachability __unused *reachability) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+        });
+    }];
+    
+    [_internetConnection startNotifier];
 }
 
 #pragma mark - Error handling
@@ -126,60 +153,61 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     
     NSAssert(!response.success, @"Error handling is available only if response success value is False");
     
-#warning reachablity here
-    //    if (!self.isInternetConnected) {
-    //        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
-    //        return;
-    //    }
-    
     NSString *errorMessage = [[NSString alloc] init];
     
-    id errorReasons = response.error.reasons[kQMErrorKey];
-    
-    if (self.isAuthorized) {
+    if (!self.isInternetConnected) {
         
-        if ([errorReasons isKindOfClass:[NSDictionary class]] && errorReasons[kQMBaseKey] != nil) {
-            
-            errorMessage = [errorReasons[kQMBaseKey] firstObject];
-        } else {
-            
-            errorMessage = [self errorStringFromResponseStatus:response.status];
-        }
+        errorMessage = NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil);
     }
     else {
         
-        if ([errorReasons isKindOfClass:[NSDictionary class]]) {
+        id errorReasons = response.error.reasons[kQMErrorKey];
+        
+        if (self.isAuthorized) {
             
-            if (errorReasons[kQMBaseKey] != nil) {
+            if ([errorReasons isKindOfClass:[NSDictionary class]] && errorReasons[kQMBaseKey] != nil) {
                 
                 errorMessage = [errorReasons[kQMBaseKey] firstObject];
-            }
-            else {
+            } else {
                 
-                if (errorReasons[kQMErrorEmailKey]) {
-                    
-                    NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_EMAIL_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorEmailKey]]];
-                    errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
-                    
-                }
-                if (errorReasons[kQMErrorFullNameKey]) {
-                    
-                    NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FULL_NAME_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorFullNameKey]]];
-                    errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
-                    
-                }
-                if (errorReasons[kQMErrorPasswordKey]) {
-                    
-                    NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_PASSWORD_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorPasswordKey]]];
-                    errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
-                    
-                }
+                errorMessage = [self errorStringFromResponseStatus:response.status];
             }
         }
         else {
-            errorMessage = [self errorStringFromResponseStatus:response.status];
+            
+            if ([errorReasons isKindOfClass:[NSDictionary class]]) {
+                
+                if (errorReasons[kQMBaseKey] != nil) {
+                    
+                    errorMessage = [errorReasons[kQMBaseKey] firstObject];
+                }
+                else {
+                    
+                    if (errorReasons[kQMErrorEmailKey]) {
+                        
+                        NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_EMAIL_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorEmailKey]]];
+                        errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
+                        
+                    }
+                    if (errorReasons[kQMErrorFullNameKey]) {
+                        
+                        NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FULL_NAME_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorFullNameKey]]];
+                        errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
+                        
+                    }
+                    if (errorReasons[kQMErrorPasswordKey]) {
+                        
+                        NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_PASSWORD_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorPasswordKey]]];
+                        errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
+                        
+                    }
+                }
+            }
+            else {
+                
+                errorMessage = [self errorStringFromResponseStatus:response.status];
+            }
         }
-        
     }
     
     [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeFailed message:errorMessage timeUntilDismiss:kQMDefaultNotificationDismissTime];
@@ -255,6 +283,13 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     
     // load users if needed
     [[QMCore instance].usersService getUsersWithIDs:self.contactListService.contactListMemoryStorage.userIDsFromContactList];
+}
+
+#pragma mark - Helpers
+
+- (BOOL)isInternetConnected {
+    
+    return self.internetConnection.isReachable;
 }
 
 @end

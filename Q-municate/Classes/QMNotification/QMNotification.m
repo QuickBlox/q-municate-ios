@@ -60,6 +60,7 @@
     [QBRequest createEvent:event successBlock:^(QBResponse *__unused response, NSArray *__unused events) {
         
         [source setResult:nil];
+        
     } errorBlock:^(QBResponse *response) {
         
         [source setError:response.error.error];

@@ -165,7 +165,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last seen yesterday at 12:32" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lie-Yl-gML">
-                                    <rect key="frame" x="101" y="50" width="207" height="20"/>
+                                    <rect key="frame" x="101" y="50" width="491" height="20"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                     <color key="textColor" red="0.64313725489999995" green="0.66666666669999997" blue="0.70588235290000001" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -178,7 +178,7 @@
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alex Bass" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="okB-ir-EUT">
-                                    <rect key="frame" x="101" y="24" width="74" height="21"/>
+                                    <rect key="frame" x="101" y="24" width="491" height="21"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -187,8 +187,10 @@
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="okB-ir-EUT" firstAttribute="leading" secondItem="6lh-1S-OeF" secondAttribute="trailing" constant="12" id="1uj-7Z-lCl"/>
+                                <constraint firstAttribute="trailing" secondItem="okB-ir-EUT" secondAttribute="trailing" constant="8" id="FZq-A7-NKN"/>
                                 <constraint firstItem="6lh-1S-OeF" firstAttribute="leading" secondItem="rQD-y7-GiQ" secondAttribute="leading" constant="16" id="KPl-La-Uaj"/>
                                 <constraint firstItem="6lh-1S-OeF" firstAttribute="top" secondItem="rQD-y7-GiQ" secondAttribute="top" constant="11" id="SZL-Vl-VnA"/>
+                                <constraint firstAttribute="trailing" secondItem="Lie-Yl-gML" secondAttribute="trailing" constant="8" id="f8S-dK-lvK"/>
                                 <constraint firstItem="okB-ir-EUT" firstAttribute="top" secondItem="rQD-y7-GiQ" secondAttribute="top" constant="24" id="mMM-0s-sJb"/>
                                 <constraint firstItem="Lie-Yl-gML" firstAttribute="leading" secondItem="6lh-1S-OeF" secondAttribute="trailing" constant="12" id="peo-Br-8C0"/>
                                 <constraint firstItem="Lie-Yl-gML" firstAttribute="top" secondItem="okB-ir-EUT" secondAttribute="bottom" constant="5" id="t6l-iq-UTy"/>

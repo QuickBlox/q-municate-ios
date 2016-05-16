@@ -180,6 +180,15 @@
     return ids.copy;
 }
 
+- (NSArray *)occupantsWithoutCurrentUser:(NSArray *)occupantIDs {
+    
+    NSMutableArray *occupantsWithoutCurrentUser = occupantIDs.mutableCopy;
+    
+    [occupantsWithoutCurrentUser removeObject:@(self.serviceManager.currentProfile.userData.ID)];
+    
+    return occupantsWithoutCurrentUser.copy;
+}
+
 - (NSString *)onlineStatusForUser:(QBUUser *)user {
     
     QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];

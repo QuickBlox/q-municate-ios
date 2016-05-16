@@ -35,8 +35,7 @@
 
 - (BFTask *)disconnectFromChatIfNeeded {
     
-#warning TODO: implement disconnect if needed during active call
-    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground /*&& !self.avCallManager.hasActiveCall*/ && [[QBChat instance] isConnected]) {
+    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground && !self.serviceManager.callManager.hasActiveCall && [[QBChat instance] isConnected]) {
         
         return [self disconnectFromChat];
     }

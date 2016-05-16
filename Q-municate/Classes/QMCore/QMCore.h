@@ -13,6 +13,7 @@
 #import "QMContactManager.h"
 #import "QMChatManager.h"
 #import "QMPushNotificationManager.h"
+#import "QMCallManager.h"
 
 @class Reachability;
 
@@ -32,7 +33,7 @@ QMContactListServiceDelegate
 @property (strong, nonatomic, readonly) QMContactListService *contactListService;
 
 /**
- *  Contacts manager.
+ *  Contact manager.
  */
 @property (strong, nonatomic, readonly) QMContactManager *contactManager;
 
@@ -47,10 +48,20 @@ QMContactListServiceDelegate
 @property (strong, nonatomic, readonly) QMPushNotificationManager *pushNotificationManager;
 
 /**
+ *  Call notification manager.
+ */
+@property (strong, nonatomic, readonly) QMCallManager *callManager;
+
+/**
  *  Reachability manager.
  */
 @property (strong, nonatomic, readonly) Reachability *internetConnection;
 
+/**
+ *  Current profile.
+ *
+ *  @see QMProfile class.
+ */
 @property (strong, nonatomic, readonly) QMProfile *currentProfile;
 
 @property (strong, nonatomic) NSDate *lastActivityDate;
@@ -63,6 +74,8 @@ QMContactListServiceDelegate
  *  @return QMCore singleton
  */
 + (instancetype)instance;
+
+- (BOOL)isInternetConnected;
 
 - (BFTask *)logout;
 

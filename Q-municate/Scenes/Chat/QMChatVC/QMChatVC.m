@@ -300,6 +300,12 @@ QMImageViewDelegate
 
 - (BOOL)messageSendingAllowed {
     
+    if (![QMCore instance].isInternetConnected) {
+        
+        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+        return NO;
+    }
+    
     if (![QBChat instance].isConnected) {
         
         [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:NO];
@@ -865,12 +871,22 @@ QMImageViewDelegate
 
 - (void)audioCallAction {
     
-#warning TODO: audio call
+    if (![self messageSendingAllowed]) {
+        
+        return;
+    }
+    
+    [[QMCore instance].callManager callToUserWithID:self.chatDialog.recipientID conferenceType:QBRTCConferenceTypeAudio];
 }
 
 - (void)videoCallAction {
     
-#warning TODO: video call
+    if (![self messageSendingAllowed]) {
+        
+        return;
+    }
+    
+    [[QMCore instance].callManager callToUserWithID:self.chatDialog.recipientID conferenceType:QBRTCConferenceTypeVideo];
 }
 
 #pragma mark - Configuring

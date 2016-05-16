@@ -23,6 +23,19 @@ UIColor *QMTableViewBackgroundColor() {
     return color;
 }
 
+UIColor *QMVideoCallBackgroundColor() {
+    
+    static UIColor *color = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        color = [UIColor colorWithRed:46.0f/255.0f green:46.0f/255.0f blue:46.0f/255.0f alpha:1.0f];
+    });
+    
+    return color;
+}
+
 #pragma mark - Chat colors
 
 UIColor *QMChatBackgroundColor() {

@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#define QMSysPlayer [QMSoundManager instance]
-
 #import <Foundation/Foundation.h>
 
 @interface QMSoundManager : NSObject
@@ -51,4 +49,5 @@
 + (void)playRingtoneSound;
 + (void)playMessageReceivedSound;
 + (void)playMessageSentSound;
+
 @end
