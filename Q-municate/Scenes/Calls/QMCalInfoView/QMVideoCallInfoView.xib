@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="QMCallInfoView">
+            <rect key="frame" x="0.0" y="0.0" width="504" height="79"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Baverly Mitchell" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BPR-cp-5BJ">
+                    <rect key="frame" x="346" y="16" width="142" height="24"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2:59" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oKI-zd-BIE">
+                    <rect key="frame" x="452" y="43" width="36" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="BPR-cp-5BJ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="G3q-I8-P7E"/>
+                <constraint firstAttribute="trailing" secondItem="BPR-cp-5BJ" secondAttribute="trailing" constant="16" id="UIL-RX-wrB"/>
+                <constraint firstItem="oKI-zd-BIE" firstAttribute="top" secondItem="BPR-cp-5BJ" secondAttribute="bottom" constant="3" id="bzk-Xw-91U"/>
+                <constraint firstAttribute="trailing" secondItem="oKI-zd-BIE" secondAttribute="trailing" constant="16" id="iSk-tB-ued"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="bottomLabel" destination="oKI-zd-BIE" id="Gug-Zz-w8S"/>
+                <outlet property="fullNameLabel" destination="BPR-cp-5BJ" id="zLk-GD-UYO"/>
+            </connections>
+            <point key="canvasLocation" x="445" y="236.5"/>
+        </view>
+    </objects>
+</document>
