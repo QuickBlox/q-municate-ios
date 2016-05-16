@@ -62,6 +62,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         _contactManager = [[QMContactManager alloc] initWithServiceManager:self];
         _chatManager = [[QMChatManager alloc] initWithServiceManager:self];
         _pushNotificationManager = [[QMPushNotificationManager alloc] initWithServiceManager:self];
+        _callManager = [[QMCallManager alloc] initWithServiceManager:self];
         
         // Reachability init
 //        _internetConnection = [Reachability reachabilityForInternetConnection];

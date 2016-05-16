@@ -13,21 +13,16 @@
 "QM_STR_ERROR_WHILE_CREATING_NEW_CHAT" = "You don't have any contacts for creating new chat.";
 "QM_STR_FACEBOOK_LOGIN_FALED_ALERT_TEXT" = "Something went wrong. Please try again";
 "QM_STR_QMUNICATE_AGREE" = "By clicking Sign Up, you agree to Q-MUNICATE User Agreement.";
-"QM_STR_CALLING" = "Calling...";
-"QM_STR_VIDEO_CALLING" = "Video Calling...";
 "QM_STR_EMAIL_FIELD_IS_EMPTY" = "Email field is empty";
 "QM_STR_USER_WITH_EMAIL_WASNT_FOUND" = "User with email wasn't found";
 "QM_STR_ARE_YOU_SURE" = "Are you sure?";
-"QM_STR_INCOMING_VIDEO_CALL" = "Incoming Video Call";
-"QM_STR_INCOMING_CALL" = "Incoming Call";
 "QM_STR_CONTACT_LIST" = "Contact list";
-"QM_STR_CALL_WAS_CANCELLED" = "Call was cancelled";
 "QM_STR_FACEBOOK" = "Facebook";
 "QM_STR_WRONG_OLD_PASSWORD" = "Wrong old password";
 "QM_STR_FILL_IN_ALL_THE_FIELDS" = "Fill in all the fields";
 "QM_STR_PASSWORD_CHANGED" = "Password changed";
 "QM_STR_CHECK_INTERNET_CONNECTION" = "Please, check your internet connection";
-"QM_STR_LOST_INTERNET_CONNECTION" = "Lost internet connection";
+
 "QM_STR_CHAT_SERVER_UNAVAILABLE" = "Chat service is temporary unavaliable";
 "QM_STR_TYPING" = "typing...";
 "QM_STR_PENDING" = "Pending";
@@ -38,10 +33,6 @@
 "QM_STR_MESSAGE_WAS_SENT_TO_YOUR_EMAIL" = "Message was sent to your email. Check it";
 "QM_STR_INVITATION_WAS_POSTED_TO_WALL" = "Invitation was posted to wall.";
 "QM_STR_PLEASE_CHECK_YOUR_EMAIL_SETTINGS" = "Please check your email settings";
-"QM_STR_USER_IS_BUSY" = "User is busy";
-"QM_STR_BAD_CONNECTION" = "Bad connection";
-"QM_STR_USER_DOESNT_ANSWER" = "User doesn't answer";
-"QM_STR_CALL_WAS_STOPPED" = "Call was stopped";
 "QM_STR_THANKS" = "Thanks!";
 "QM_STR_BUG" = "Bug";
 "QM_STR_IMPROVEMENT" = "Improvement";
@@ -65,9 +56,6 @@
 
 "QM_STR_CANT_MAKE_CALLS" = "Sorry, you can't make a call until the invitation is accepted";
 "QM_STR_CANT_SEND_MESSAGES" = "Sorry, you can't send messages until the invitation is accepted";
-
-"QM_STR_NO_PERMISSIONS_TO_CAMERA" = "Sorry, you can't make a call until the invitation is accepted";
-"QM_STR_NO_PERMISSIONS_TO_MICROPHONE" = "The app doesn't have access to the microphone, please go to settings";
 "QM_STR_NOT_AUTHORIZED_TO_USE_CAMERA" = "This app is not authorized to use Camera";
 "QM_STR_NOT_AUTHORIZED_TO_USE_MICROPHONE" = "This app is not authorized to use Microphone";
 
@@ -168,6 +156,7 @@
 "QM_STR_SIGNING_UP" = "Signing up";
 "QM_STR_SIGNING_IN" = "Signing in";
 "QM_STR_LOADING" = "Loading";
+"QM_STR_LOST_INTERNET_CONNECTION" = "Lost internet connection";
 
 // *********** Tab bar ***********
 "QM_STR_CHATS" = "Chats";
@@ -180,3 +169,18 @@
 "QM_STR_FULLNAME_DESCRIPTION" = "Full name is text/numeric field, could contain everything except '<', '>', ';'.\n3-50 characters.\nMandatory.";
 "QM_STR_STATUS" = "Status";
 "QM_STR_STATUS_DESCRIPTION" = "Short text message that will be displayed in your profile.";
+
+// *********** Calls ***********
+"QM_STR_INCOMING_CALL" = "Incoming Call";
+"QM_STR_INCOMING_VIDEO_CALL" = "Incoming Video Call";
+"QM_STR_CALLING" = "Calling";
+"QM_STR_VIDEO_CALLING" = "Video Calling";
+"QM_STR_MICROPHONE_ERROR" = "Microphone error";
+"QM_STR_CAMERA_ERROR" = "Camera error";
+"QM_STR_NO_PERMISSIONS_TO_MICROPHONE" = "The app doesn't have access to the microphone, please go to settings";
+"QM_STR_NO_PERMISSIONS_TO_CAMERA" = "The app doesn't have access to the camera, please go to settings";
+"QM_STR_CALL_WAS_CANCELLED" = "Call was cancelled";
+"QM_STR_USER_IS_BUSY" = "User is busy";
+"QM_STR_BAD_CONNECTION" = "Bad connection";
+"QM_STR_CALL_WAS_STOPPED" = "Call was stopped";
+"QM_STR_USER_DOESNT_ANSWER" = "User doesn't answer";
