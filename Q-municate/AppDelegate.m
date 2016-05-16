@@ -69,7 +69,7 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     
     // QuickbloxWebRTC settings
     [QBRTCClient initializeRTC];
-    [QBRTCConfig setICEServers:[self quickbloxICE]];
+    [QBRTCConfig setICEServers:[[QMCore instance].callManager quickbloxICE]];
     [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecISAC;
     [QBRTCConfig setStatsReportTimeInterval:0.0f]; // set to 1.0f to enable stats report
     
@@ -127,7 +127,7 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 - (void)applicationWillEnterForeground:(UIApplication *)__unused application {
     
-    if ([QMCore instance].currentProfile.userData) {
+    if ([QMCore instance].currentProfile.userData && ![QBChat instance].isConnected) {
         
         [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) timeUntilDismiss:0];
         [[QMCore instance].chatService connect];
@@ -174,42 +174,6 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     
     QMChatVC *chatVC = [QMChatVC chatViewControllerWithChatDialog:chatDialog];
     [navigationController pushViewController:chatVC animated:YES];
-}
-
-#pragma mark - ICE servers
-
-- (NSArray *)quickbloxICE {
-    
-    NSString *password = @"baccb97ba2d92d71e26eb9886da5f1e0";
-    NSString *userName = @"quickblox";
-    
-    NSArray *urls = @[
-                      @"turn.quickblox.com",            //USA
-                      @"turnsingapore.quickblox.com",   //Singapore
-                      @"turnireland.quickblox.com"      //Ireland
-                      ];
-    
-    NSMutableArray *result = [NSMutableArray arrayWithCapacity:urls.count];
-    
-    for (NSString *url in urls) {
-        
-        QBRTCICEServer *stunServer = [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"stun:%@", url]
-                                                          username:@""
-                                                          password:@""];
-        
-        
-        QBRTCICEServer *turnUDPServer = [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"turn:%@:3478?transport=udp", url]
-                                                             username:userName
-                                                             password:password];
-        
-        QBRTCICEServer *turnTCPServer = [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"turn:%@:3478?transport=tcp", url]
-                                                             username:userName
-                                                             password:password];
-        
-        [result addObjectsFromArray:@[stunServer, turnTCPServer, turnUDPServer]];
-    }
-    
-    return result;
 }
 
 @end
