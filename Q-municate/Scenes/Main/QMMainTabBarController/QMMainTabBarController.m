@@ -11,11 +11,18 @@
 #import "QMTasks.h"
 #import "QMCore.h"
 #import "QMChatVC.h"
+#import "QMSoundManager.h"
 
 #import "QMDialogsViewController.h"
 #import "QMSettingsViewController.h"
 
-@interface QMMainTabBarController () <QMPushNotificationManagerDelegate>
+@interface QMMainTabBarController ()
+
+<
+QMPushNotificationManagerDelegate,
+QMChatServiceDelegate,
+QMChatConnectionDelegate
+>
 
 @property (strong, nonatomic) BFTask *autoLoginTask;
 
@@ -27,6 +34,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // subscribing for delegates
+    [[QMCore instance].chatService addDelegate:self];
     
     // configuring tab bar items
     [self configureTabBarItems];
@@ -85,6 +95,41 @@
     }];
 }
 
+#pragma mark - Notification
+
+- (void)showNotificationForMessage:(QBChatMessage *)chatMessage {
+    
+    if (chatMessage.dialogID == nil) {
+        // message missing dialog ID
+        NSAssert(nil, @"Message should contain dialog ID.");
+        return;
+    }
+    
+    if ([[QMCore instance].activeDialogID isEqualToString:chatMessage.dialogID]) {
+        // dialog is already on screen
+        return;
+    }
+    
+    QBChatDialog *chatDialog = [[QMCore instance].chatService.dialogsMemoryStorage chatDialogWithID:chatMessage.dialogID];
+    
+    if (chatMessage.delayed && chatDialog.type == QBChatDialogTypePrivate) {
+        // no reason to display private delayed messages
+        // group chat messages are always considered delayed
+        return;
+    }
+    
+    [QMSoundManager playMessageReceivedSound];
+    
+    [QMNotification showMessageNotificationWithMessage:chatMessage buttonHandler:^(MPGNotification * __unused notification, NSInteger buttonIndex) {
+        
+        if (buttonIndex == 1) {
+            
+            QMChatVC *chatVC = [QMChatVC chatViewControllerWithChatDialog:chatDialog];
+            [self.navigationController pushViewController:chatVC animated:YES];
+        }
+    }];
+}
+
 #pragma mark - QMPushNotificationManagerDelegate
 
 - (void)pushNotificationManager:(QMPushNotificationManager *)__unused pushNotificationManager didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
@@ -93,6 +138,46 @@
     
     QMChatVC *chatVC = [QMChatVC chatViewControllerWithChatDialog:chatDialog];
     [navigationController pushViewController:chatVC animated:YES];
+}
+
+#pragma mark - QMChatServiceDelegate
+
+- (void)chatService:(QMChatService *)__unused chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)__unused dialogID {
+    
+    if (message.messageType == QMMessageTypeContactRequest) {
+        
+        [[[QMCore instance].usersService getUserWithID:message.senderID] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
+            
+            [self showNotificationForMessage:message];
+            
+            return nil;
+        }];
+    }
+    else {
+        
+        [self showNotificationForMessage:message];
+    }
+}
+
+#pragma mark - QMChatConnectionDelegate
+
+- (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
+    
+    [QMTasks taskFetchAllData];
+    
+    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+}
+
+- (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
+    
+    [QMTasks taskFetchAllData];
+    
+    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+}
+
+- (void)chatService:(QMChatService *)__unused chatService chatDidNotConnectWithError:(NSError *)error {
+    
+    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeFailed message:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription] timeUntilDismiss:0];
 }
 
 @end

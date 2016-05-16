@@ -67,6 +67,7 @@
 		5868B06D1CE9C6ED004F9233 /* QMCallInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5868B06A1CE9C6ED004F9233 /* QMCallInfoView.xib */; };
 		5868B06E1CE9C6ED004F9233 /* QMVideoCallInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5868B06B1CE9C6ED004F9233 /* QMVideoCallInfoView.xib */; };
 		5868B0711CE9C6FC004F9233 /* QMCallToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5868B0701CE9C6FC004F9233 /* QMCallToolbar.m */; };
+		5868B0741CE9DF5E004F9233 /* QMMessageNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 5868B0731CE9DF5E004F9233 /* QMMessageNotification.m */; };
 		5877D6C41C45470400938E5D /* QMDigitsConfigurationFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 5877D6C31C45470400938E5D /* QMDigitsConfigurationFactory.m */; };
 		5877D6C61C466B2D00938E5D /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5877D6C51C466B2D00938E5D /* Launch Screen.storyboard */; };
 		5877D6CA1C466DE600938E5D /* QMDialogsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5877D6C91C466DE600938E5D /* QMDialogsViewController.m */; };
@@ -272,6 +273,8 @@
 		5868B06B1CE9C6ED004F9233 /* QMVideoCallInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = QMVideoCallInfoView.xib; path = "Q-municate/Scenes/Calls/QMCalInfoView/QMVideoCallInfoView.xib"; sourceTree = SOURCE_ROOT; };
 		5868B06F1CE9C6FC004F9233 /* QMCallToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMCallToolbar.h; path = "Q-municate/Scenes/Calls/QMCallToolbar/QMCallToolbar.h"; sourceTree = SOURCE_ROOT; };
 		5868B0701CE9C6FC004F9233 /* QMCallToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMCallToolbar.m; path = "Q-municate/Scenes/Calls/QMCallToolbar/QMCallToolbar.m"; sourceTree = SOURCE_ROOT; };
+		5868B0721CE9DF5E004F9233 /* QMMessageNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMMessageNotification.h; path = Classes/QMNotification/QMMessageNotification.h; sourceTree = "<group>"; };
+		5868B0731CE9DF5E004F9233 /* QMMessageNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMMessageNotification.m; path = Classes/QMNotification/QMMessageNotification.m; sourceTree = "<group>"; };
 		5877D6C21C45470400938E5D /* QMDigitsConfigurationFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMDigitsConfigurationFactory.h; path = QMDigitsConfigurationFactory/QMDigitsConfigurationFactory.h; sourceTree = "<group>"; };
 		5877D6C31C45470400938E5D /* QMDigitsConfigurationFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMDigitsConfigurationFactory.m; path = QMDigitsConfigurationFactory/QMDigitsConfigurationFactory.m; sourceTree = "<group>"; };
 		5877D6C51C466B2D00938E5D /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
@@ -720,6 +723,8 @@
 			children = (
 				580FEBE81CC4EF8E000AED72 /* QMNotification.h */,
 				580FEBE91CC4EF8E000AED72 /* QMNotification.m */,
+				5868B0721CE9DF5E004F9233 /* QMMessageNotification.h */,
+				5868B0731CE9DF5E004F9233 /* QMMessageNotification.m */,
 			);
 			name = QMNotification;
 			sourceTree = "<group>";
@@ -2009,6 +2014,7 @@
 				588CF1021CA6BF8200B23C00 /* QMNotificationPanelUtils.m in Sources */,
 				589792991C99941400CC6438 /* QMAlphabetizer.m in Sources */,
 				58BB526F1CDB650A00869FA9 /* QMMainTabBarController.m in Sources */,
+				5868B0741CE9DF5E004F9233 /* QMMessageNotification.m in Sources */,
 				584277DC1C3FE5BC00CDE35B /* QMCore.m in Sources */,
 				58B3C9C01CB3F9F100B08A27 /* QMAddMemberCell.m in Sources */,
 				589792A21C9AA69B00CC6438 /* QMContactsSearchDataProvider.m in Sources */,

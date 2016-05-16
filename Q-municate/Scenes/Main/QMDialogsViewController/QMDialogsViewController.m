@@ -18,7 +18,6 @@
 #import "QMLocalSearchDataProvider.h"
 #import "QMGlobalSearchDataProvider.h"
 #import "QMChatVC.h"
-#import "QMTasks.h"
 #import "QMCore.h"
 #import "QMNotification.h"
 
@@ -276,27 +275,6 @@ UISearchResultsUpdating
         
         [self.tableView reloadData];
     }
-}
-
-#pragma mark - QMChatConnectionDelegate
-
-- (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
-    
-    [QMTasks taskFetchAllData];
-    
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
-}
-
-- (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
-    
-    [QMTasks taskFetchAllData];
-    
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
-}
-
-- (void)chatService:(QMChatService *)__unused chatService chatDidNotConnectWithError:(NSError *)error {
-    
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeFailed message:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription] timeUntilDismiss:0];
 }
 
 #pragma mark - QMSearchResultsControllerDelegate

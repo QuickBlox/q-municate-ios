@@ -8,9 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import "QMNotificationPanel.h"
+#import "MPGNotification.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ *  QMNotification class interface.
+ *  Used as overall main notification handling class.
+ */
 @interface QMNotification : NSObject
 
 /**
@@ -28,6 +33,14 @@ NS_ASSUME_NONNULL_BEGIN
  *  Dismiss current notification panel.
  */
 + (void)dismissNotificationPanel;
+
+/**
+ *  Show message notification for message.
+ *
+ *  @param chatMessage   chat message
+ *  @param buttonHandler button handler blocks
+ */
++ (void)showMessageNotificationWithMessage:(QBChatMessage *)chatMessage buttonHandler:(MPGNotificationButtonHandler)buttonHandler;
 
 /**
  *  Send push notification for user with text.
