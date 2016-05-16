@@ -7,8 +7,8 @@
 //
 
 #import "QMNewMessageViewController.h"
-#import "QMNewMessageDataSource.h"
-#import "QMNewMessageSearchDataSource.h"
+#import "QMContactsDataSource.h"
+#import "QMContactsSearchDataSource.h"
 #import "QMCore.h"
 #import "QMNotification.h"
 #import "QMChatVC.h"
@@ -35,8 +35,8 @@ UISearchResultsUpdating
 /**
  *  Data sources
  */
-@property (strong, nonatomic) QMNewMessageDataSource *dataSource;
-@property (strong, nonatomic) QMNewMessageSearchDataSource *contactsSearchDataSource;
+@property (strong, nonatomic) QMContactsDataSource *dataSource;
+@property (strong, nonatomic) QMContactsSearchDataSource *contactsSearchDataSource;
 
 @property (weak, nonatomic) BFTask *dialogCreationTask;
 
@@ -88,13 +88,13 @@ UISearchResultsUpdating
 
 - (void)configureDataSources {
     
-    self.dataSource = [[QMNewMessageDataSource alloc] initWithKeyPath:@keypath(QBUUser.new, fullName)];
+    self.dataSource = [[QMContactsDataSource alloc] initWithKeyPath:@keypath(QBUUser.new, fullName)];
     self.tableView.dataSource = self.dataSource;
     
     QMContactsSearchDataProvider *searchDataProvider = [[QMContactsSearchDataProvider alloc] init];
     searchDataProvider.delegate = self;
     
-    self.contactsSearchDataSource = [[QMNewMessageSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider usingKeyPath:@keypath(QBUUser.new, fullName)];
+    self.contactsSearchDataSource = [[QMContactsSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider usingKeyPath:@keypath(QBUUser.new, fullName)];
 }
 
 - (void)dealloc {
@@ -117,7 +117,7 @@ UISearchResultsUpdating
         return;
     }
     
-    QBUUser *user = [(id <QMNewMessageSearchDataSourceProtocol>)self.searchDataSource userAtIndexPath:indexPath];
+    QBUUser *user = [(id <QMContactsSearchDataSourceProtocol>)self.searchDataSource userAtIndexPath:indexPath];
     
     QBChatDialog *privateDialog = [[QMCore instance].chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
     
@@ -184,7 +184,7 @@ UISearchResultsUpdating
 
 - (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
     
-    if ([self.tableView.dataSource conformsToProtocol:@protocol(QMNewMessageSearchDataSourceProtocol)]) {
+    if ([self.tableView.dataSource conformsToProtocol:@protocol(QMContactsSearchDataSourceProtocol)]) {
         
         [self.tableView reloadData];
     }
@@ -192,7 +192,7 @@ UISearchResultsUpdating
 
 - (void)searchDataProvider:(QMSearchDataProvider *)__unused searchDataProvider didUpdateData:(NSArray *)__unused data {
     
-    if (![self.tableView.dataSource conformsToProtocol:@protocol(QMNewMessageSearchDataSourceProtocol)]) {
+    if (![self.tableView.dataSource conformsToProtocol:@protocol(QMContactsSearchDataSourceProtocol)]) {
         
         [self updateItemsFromContactList];
     }
@@ -213,6 +213,7 @@ UISearchResultsUpdating
     
     [QMContactCell registerForReuseInTableView:self.tableView];
     [QMNoResultsCell registerForReuseInTableView:self.tableView];
+    [QMNoContactsCell registerForReuseInTableView:self.tableView];
 }
 
 @end

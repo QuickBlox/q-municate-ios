@@ -26,7 +26,7 @@
 
 @end
 
-@protocol QMNewMessageSearchDataSourceProtocol <QMSearchProtocol>
+@protocol QMContactsSearchDataSourceProtocol <QMSearchProtocol>
 
 @optional
 /**
