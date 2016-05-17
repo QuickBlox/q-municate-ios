@@ -13,7 +13,7 @@
                 <viewControllerPlaceholder storyboardName="Auth" id="GF2-VD-d6E" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DrV-qf-tZG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4792.5" y="-8860"/>
+            <point key="canvasLocation" x="-4044.5" y="-8684"/>
         </scene>
         <!--Chats-->
         <scene sceneID="XsO-zK-SPy">
@@ -66,6 +66,7 @@ out here.</string>
                             <outlet property="delegate" destination="NSU-QC-v0B" id="LWD-c2-p15"/>
                         </connections>
                     </tableView>
+                    <tabBarItem key="tabBarItem" title="Chats" image="qm-tb-chats" id="l6Z-lD-4Rv"/>
                     <navigationItem key="navigationItem" title="Chats" id="l23-on-5eH">
                         <barButtonItem key="rightBarButtonItem" image="ic_new" id="ekF-vr-TqV">
                             <connections>
@@ -80,7 +81,28 @@ out here.</string>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7lV-91-Vld" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4245" y="-8326"/>
+            <point key="canvasLocation" x="-3433" y="-8286"/>
+        </scene>
+        <!--Contacts-->
+        <scene sceneID="254-c6-fPB">
+            <objects>
+                <tableViewController storyboardIdentifier="QMContactsViewController" id="ooG-kT-BRd" customClass="QMContactsViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="3Bk-es-2df">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <outlet property="dataSource" destination="ooG-kT-BRd" id="fkI-MF-oOt"/>
+                            <outlet property="delegate" destination="ooG-kT-BRd" id="ACw-s3-pUP"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" title="Contacts" image="qm-tb-contacts" id="fYc-rl-dnk"/>
+                    <navigationItem key="navigationItem" title="Contacts" id="Rgq-z1-5jm"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wvx-23-OaM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3433" y="-7581"/>
         </scene>
         <!--Chat-->
         <scene sceneID="ZFP-kw-9Sl">
@@ -88,7 +110,7 @@ out here.</string>
                 <viewControllerPlaceholder storyboardName="Chat" id="WAe-wf-Lqf" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pd2-6h-MLf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3668.5" y="-8517"/>
+            <point key="canvasLocation" x="-2960.5" y="-8833"/>
         </scene>
         <!--Chat-->
         <scene sceneID="zLf-RD-p3s">
@@ -96,7 +118,7 @@ out here.</string>
                 <viewControllerPlaceholder storyboardName="Chat" id="GHP-Ej-YG9" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IiI-Bc-mlG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2626.5" y="-8749"/>
+            <point key="canvasLocation" x="-2018.5" y="-8833"/>
         </scene>
         <!--New Message-->
         <scene sceneID="I2X-12-W1l">
@@ -106,31 +128,6 @@ out here.</string>
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="QMNoContactsCell" rowHeight="210" id="ves-NL-BnK" customClass="QMNoContactsCell">
-                                <rect key="frame" x="0.0" y="92" width="600" height="210"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ves-NL-BnK" id="spv-Nq-U1g">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="209"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You don't have any contacts." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zov-f8-fUk">
-                                            <rect key="frame" x="194" y="180" width="213" height="21"/>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstAttribute="bottomMargin" secondItem="Zov-f8-fUk" secondAttribute="bottom" id="eoe-u9-gCg"/>
-                                        <constraint firstItem="Zov-f8-fUk" firstAttribute="centerX" secondItem="spv-Nq-U1g" secondAttribute="centerX" id="wNy-xr-dax"/>
-                                    </constraints>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="titleLabel" destination="Zov-f8-fUk" id="AHk-ak-Rmv"/>
-                                </connections>
-                            </tableViewCell>
-                        </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="l2U-UR-Tid" id="HLk-9h-xOb"/>
                             <outlet property="delegate" destination="l2U-UR-Tid" id="gPE-mE-zqg"/>
@@ -149,7 +146,7 @@ out here.</string>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4UZ-r9-MXb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3078" y="-8332"/>
+            <point key="canvasLocation" x="-2498" y="-8286"/>
         </scene>
         <!--New Group-->
         <scene sceneID="4aX-VB-eah">
@@ -253,7 +250,7 @@ out here.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="awA-Ev-nni" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2185" y="-8326"/>
+            <point key="canvasLocation" x="-1469" y="-8278"/>
         </scene>
         <!--Chat-->
         <scene sceneID="frT-FU-kFP">
@@ -261,7 +258,7 @@ out here.</string>
                 <viewControllerPlaceholder storyboardName="Chat" id="WRM-Jt-Awi" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="17n-WP-DTM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1645.5" y="-8326"/>
+            <point key="canvasLocation" x="-973.5" y="-8398"/>
         </scene>
         <!--Group Contact List View Controller-->
         <scene sceneID="9Sy-5M-RTY">
@@ -279,29 +276,41 @@ out here.</string>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eCa-Ob-Akn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2185" y="-7581.5"/>
+            <point key="canvasLocation" x="-1469" y="-7581.5"/>
         </scene>
-        <!--Main Tab Bar Controller-->
-        <scene sceneID="v8Z-Ew-7Xh">
+        <!--Tab BarVC-->
+        <scene sceneID="ZVl-Pg-Gvu">
             <objects>
-                <viewController id="Fux-kn-YHI" customClass="QMMainTabBarController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="fd2-9N-STo"/>
-                        <viewControllerLayoutGuide type="bottom" id="wZ1-in-wwx"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8Ht-ng-Sv9">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="dvW-qF-Ijc"/>
+                <tabBarController id="Rsx-Bb-MAV" customClass="QMTabBarVC" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="Ag3-4N-6Na"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="50y-0d-JdD">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
                     <connections>
-                        <segue destination="GF2-VD-d6E" kind="custom" identifier="SceneSegueAuth" customClass="QMRootViewControllerSegue" id="ZxX-2D-uL9"/>
+                        <segue destination="NSU-QC-v0B" kind="relationship" relationship="viewControllers" id="UKH-Dz-h3s"/>
+                        <segue destination="ooG-kT-BRd" kind="relationship" relationship="viewControllers" id="Gvg-Ux-PQa"/>
+                        <segue destination="GF2-VD-d6E" kind="custom" identifier="SceneSegueAuth" customClass="QMRootViewControllerSegue" id="kwM-37-H6e"/>
+                        <segue destination="W7Z-nM-mgl" kind="relationship" relationship="viewControllers" id="Hnn-tU-PjV"/>
                     </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="wsm-0F-9Dl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vu5-LM-YXf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5245" y="-8332"/>
+            <point key="canvasLocation" x="-4519" y="-7989"/>
+        </scene>
+        <!--Settings-->
+        <scene sceneID="7KQ-aW-jk8">
+            <objects>
+                <viewController storyboardIdentifier="Settings" id="W7Z-nM-mgl" customClass="QMLinkViewController" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Settings" image="qm-tb-settings" id="YBg-8g-Bau"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="storyboardName" value="Settings"/>
+                    </userDefinedRuntimeAttributes>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8eK-Qf-eVp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4519" y="-6988"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="i0z-RU-cDN">
@@ -314,18 +323,21 @@ out here.</string>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="Fux-kn-YHI" kind="relationship" relationship="rootViewController" id="CgC-zm-nzo"/>
+                        <segue destination="Rsx-Bb-MAV" kind="relationship" relationship="rootViewController" id="6sF-RX-rYD"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IHc-v6-kRr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-6057" y="-8332"/>
+            <point key="canvasLocation" x="-5511" y="-7989"/>
         </scene>
     </scenes>
     <resources>
         <image name="group_placeholder" width="60" height="60"/>
         <image name="ic_new" width="23" height="23"/>
         <image name="m_empty_dialogs" width="180" height="265"/>
+        <image name="qm-tb-chats" width="22" height="22"/>
+        <image name="qm-tb-contacts" width="21" height="21"/>
+        <image name="qm-tb-settings" width="24" height="24"/>
         <image name="underline" width="1" height="30"/>
         <image name="users" width="20" height="20"/>
     </resources>

@@ -15,10 +15,7 @@
 
 @end
 
-@protocol QMLocalSearchDataSourceProtocol <QMSearchProtocol>
-
-@property (strong, nonatomic) NSMutableArray *contacts;
-@property (strong, nonatomic) NSMutableArray *dialogs;
+@protocol QMDialogsSearchDataSourceProtocol <QMSearchProtocol>
 
 @end
 
