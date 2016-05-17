@@ -49,7 +49,7 @@ static NSString *const kQMSoundManagerSettingKey = @"kQMSoundManagerSettingKey";
     self = [super init];
     if (self) {
         
-        self.on = YES;
+        _on = YES;
         
         _sounds = [NSMutableDictionary dictionary];
         

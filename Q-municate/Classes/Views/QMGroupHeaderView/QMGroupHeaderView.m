@@ -27,7 +27,7 @@ static UIColor *highlightedColor() {
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 
-@property (strong, nonatomic) NSString *title;
+@property (copy, nonatomic) NSString *title;
 
 @end
 

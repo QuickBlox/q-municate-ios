@@ -14,7 +14,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet QMBadgeView *badgeView;
 
-@property (strong, nonatomic) NSString *time;
+@property (copy, nonatomic) NSString *time;
 @property (assign, nonatomic) NSUInteger badgeNumber;
 
 @end
@@ -38,7 +38,7 @@
     
     if (![_time isEqualToString:time]) {
         
-        _time = time;
+        _time = [time copy];
         self.timeLabel.text = time;
     }
 }

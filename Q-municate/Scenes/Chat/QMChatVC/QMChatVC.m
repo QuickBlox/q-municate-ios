@@ -842,7 +842,7 @@ QMImageViewDelegate
         opponentUser.fullName = NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil);
     }
     
-    [self performSegueWithIdentifier:KQMSceneSegueUserInfo sender:opponentUser];
+    [self performSegueWithIdentifier:kQMSceneSegueUserInfo sender:opponentUser];
 }
 
 - (IBAction)onlineTitlePressed {
@@ -859,7 +859,7 @@ QMImageViewDelegate
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    if ([segue.identifier isEqualToString:KQMSceneSegueUserInfo]) {
+    if ([segue.identifier isEqualToString:kQMSceneSegueUserInfo]) {
         
         QMUserInfoViewController *userInfoVC = segue.destinationViewController;
         userInfoVC.user = sender;

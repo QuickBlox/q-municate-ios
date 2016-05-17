@@ -14,6 +14,11 @@
 
 @implementation QMGlobalSearchDataSource
 
+- (id)objectAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return self.items[indexPath.row];
+}
+
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     
     return self.items.count > 0 ? [QMSearchCell height] : [QMNoResultsCell height];

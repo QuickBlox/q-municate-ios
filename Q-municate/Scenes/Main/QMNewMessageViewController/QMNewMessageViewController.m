@@ -21,8 +21,6 @@
 @interface QMNewMessageViewController ()
 
 <
-UITableViewDelegate,
-
 QMSearchProtocol,
 QMSearchDataProviderDelegate,
 
@@ -44,6 +42,13 @@ UISearchResultsUpdating
 
 @implementation QMNewMessageViewController
 
+- (void)dealloc {
+    
+    [self.searchController.view removeFromSuperview];
+    
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -51,12 +56,6 @@ UISearchResultsUpdating
     
     // Hide empty separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    
-    // setting up
-    self.navigationItem.title = NSLocalizedString(@"QM_STR_NEW_MESSAGE_SCREEN", nil);
-    
-    // subscribing delegates
-    self.tableView.delegate = self;
     
     // search implementation
     [self configureSearch];
@@ -95,11 +94,6 @@ UISearchResultsUpdating
     searchDataProvider.delegate = self;
     
     self.contactsSearchDataSource = [[QMContactsSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider usingKeyPath:@keypath(QBUUser.new, fullName)];
-}
-
-- (void)dealloc {
-    
-    [self.searchController.view removeFromSuperview];
 }
 
 #pragma mark - UITableViewDelegate

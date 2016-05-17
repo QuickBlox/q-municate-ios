@@ -64,8 +64,6 @@ static const CGFloat kQMFadeAnimationHeightShift = 10.0f;
     
     view.autoresizingMask = self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
-    @weakify(self);
-    
     if (animated) {
         
         [innerView addSubview:self.view];
@@ -74,25 +72,21 @@ static const CGFloat kQMFadeAnimationHeightShift = 10.0f;
         
         [UIView performWithoutAnimation:^{
             
-            @strongify(self);
             [innerView addSubview:self.view];
         }];
     }
     
     [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
         
-        @strongify(self);
         self.view.alpha = 1.0f;
         
-    } completion:^(BOOL finished) {
-        
-        @strongify(self);
-        if (self.timeUntilDismiss > 0 && finished) {
-            
-            // fade animation
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:self.timeUntilDismiss target:self selector:@selector(animateFade) userInfo:nil repeats:NO];
-        }
     }];
+    
+    if (self.timeUntilDismiss > 0) {
+        
+        // fade animation
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:self.timeUntilDismiss + kQMBaseAnimationDuration target:self selector:@selector(animateFade) userInfo:nil repeats:NO];
+    }
 }
 
 - (void)showNotificationWithType:(QMNotificationPanelType)notificationType inView:(UIView *)innerView message:(NSString *)message animated:(BOOL)animated {
@@ -177,26 +171,24 @@ static const CGFloat kQMFadeAnimationHeightShift = 10.0f;
     CGRect frame = self.view.frame;
     frame.size.height -= kQMFadeAnimationHeightShift;
     
-    @weakify(self);
     [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
         
-        @strongify(self);
         self.view.alpha = 0;
         self.view.frame = frame;
         
     } completion:^(BOOL __unused finished) {
         
-        @strongify(self);
         [self dismissNotificationAnimated:YES];
     }];
 }
 
 - (BOOL)resetAnimated:(BOOL)animated {
     
+    [self.timer invalidate];
+    self.timer = nil;
+    
     if (self.view != nil) {
         
-        [self.timer invalidate];
-        self.timer = nil;
         [self.view removeGestureRecognizer:self.tapGesture];
         
         if (animated) {
@@ -205,10 +197,8 @@ static const CGFloat kQMFadeAnimationHeightShift = 10.0f;
         }
         else {
             
-            @weakify(self);
             [UIView performWithoutAnimation:^{
                 
-                @strongify(self);
                 [self.view removeFromSuperview];
             }];
         }

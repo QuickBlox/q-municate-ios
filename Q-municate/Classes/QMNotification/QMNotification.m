@@ -32,6 +32,7 @@ static const CGFloat kQMMessageNotificationIconImageSize = 32.0;
     notificationPanel().timeUntilDismiss = timeUntilDismiss;
     
     UINavigationController *navigationController = (UINavigationController *)[[UIApplication sharedApplication].windows.firstObject rootViewController];
+    
     [notificationPanel() showNotificationWithType:notificationType byInsertingInNavigationBar:navigationController.navigationBar message:message animated:animated];
 }
 

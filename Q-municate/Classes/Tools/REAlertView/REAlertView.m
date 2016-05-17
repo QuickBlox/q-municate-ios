@@ -21,7 +21,8 @@
     
     self = [super init];
     if (self) {
-		self.buttonActions = @[].mutableCopy;
+		
+        _buttonActions = @[].mutableCopy;
 		self.delegate = self;
     }
     return self;

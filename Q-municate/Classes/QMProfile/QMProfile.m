@@ -148,10 +148,10 @@ static NSString *const kQMAppExists = @"QMAppExists";
     
     if (self) {
         
-        self.userData = [aDecoder decodeObjectForKey:kQMUserDataKey];
-        self.accountType = [aDecoder decodeIntegerForKey:kQMAccountType];
-        self.userAgreementAccepted = [aDecoder decodeBoolForKey:kQMUserAgreementAcceptedKey];
-        self.pushNotificationsEnabled = [aDecoder decodeBoolForKey:kQMPushNotificationsEnabled];
+        _userData = [aDecoder decodeObjectForKey:kQMUserDataKey];
+        _accountType = [aDecoder decodeIntegerForKey:kQMAccountType];
+        _userAgreementAccepted = [aDecoder decodeBoolForKey:kQMUserAgreementAcceptedKey];
+        _pushNotificationsEnabled = [aDecoder decodeBoolForKey:kQMPushNotificationsEnabled];
     }
     
     return self;

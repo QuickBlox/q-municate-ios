@@ -95,7 +95,7 @@ NSString *const kQMIsImportUpdateKey = @"is_import";
 
 - (void)setStatus:(NSString *)status {
     
-    self.context[kQMStatusUpdateKey] = status;
+    self.context[kQMStatusUpdateKey] = [status copy];
     [self syncronize];
 }
 
@@ -108,7 +108,7 @@ NSString *const kQMIsImportUpdateKey = @"is_import";
 
 - (void)setAvatarUrl:(NSString *)avatarUrl {
     
-    self.context[kQMAvatarUrlUpdateKey] = avatarUrl;
+    self.context[kQMAvatarUrlUpdateKey] = [avatarUrl copy];
     [self syncronize];
 }
 

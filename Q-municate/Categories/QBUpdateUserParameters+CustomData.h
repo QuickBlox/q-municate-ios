@@ -10,8 +10,8 @@
 
 @interface QBUpdateUserParameters (CustomData)
 
-@property (strong, nonatomic) NSString *avatarUrl;
-@property (strong, nonatomic) NSString *status;
+@property (copy, nonatomic) NSString *avatarUrl;
+@property (copy, nonatomic) NSString *status;
 @property (assign, nonatomic) BOOL isImport;
 
 @end
