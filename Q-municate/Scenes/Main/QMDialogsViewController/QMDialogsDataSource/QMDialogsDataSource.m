@@ -10,6 +10,7 @@
 #import "QMDialogCell.h"
 #import "QMCore.h"
 #import <QMDateUtils.h>
+#import "REAlertView.h"
 
 #import <SVProgressHUD.h>
 
@@ -60,25 +61,37 @@
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
-        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-        QBChatDialog *chatDialog = self.items[indexPath.row];
-        
-        if (chatDialog.type == QBChatDialogTypeGroup) {
+        @weakify(self);
+        [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
             
-            chatDialog.occupantIDs = [[QMCore instance].contactManager occupantsWithoutCurrentUser:chatDialog.occupantIDs];
-            [[[QMCore instance].chatManager leaveChatDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+            @strongify(self);
+            
+            QBChatDialog *chatDialog = self.items[indexPath.row];
+            alertView.message = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_CONFIRM_DELETE_DIALOG", nil), chatDialog.name];
+            [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{
                 
-                [SVProgressHUD dismiss];
-                return nil;
+                [tableView setEditing:NO animated:YES];
             }];
-        } else {
-            // private and public group chats
-            [[[QMCore instance].chatService deleteDialogWithID:chatDialog.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+            
+            [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil) andActionBlock:^{
                 
-                [SVProgressHUD dismiss];
-                return nil;
+                BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull __unused task) {
+                    
+                    [SVProgressHUD dismiss];
+                    return nil;
+                };
+                
+                [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+                if (chatDialog.type == QBChatDialogTypeGroup) {
+                    
+                    chatDialog.occupantIDs = [[QMCore instance].contactManager occupantsWithoutCurrentUser:chatDialog.occupantIDs];
+                    [[[QMCore instance].chatManager leaveChatDialog:chatDialog] continueWithBlock:completionBlock];
+                } else {
+                    // private and public group chats
+                    [[[QMCore instance].chatService deleteDialogWithID:chatDialog.ID] continueWithBlock:completionBlock];
+                }
             }];
-        }
+        }];
     }
 }
 

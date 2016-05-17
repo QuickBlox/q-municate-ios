@@ -112,6 +112,7 @@
 "QM_STR_LOCAL_SEARCH" = "Local";
 "QM_STR_GLOBAL_SEARCH" = "Global";
 "QM_STR_SEARCH_BAR_PLACEHOLDER" = "Search";
+"QM_STR_CONFIRM_DELETE_DIALOG" = "Do you really want to delete %@?";
 
 // *********** New Message Screen ***********
 "QM_STR_NEW_MESSAGE_SCREEN" = "New Message";

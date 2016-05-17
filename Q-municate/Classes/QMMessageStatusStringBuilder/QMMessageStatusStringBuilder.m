@@ -143,17 +143,22 @@ static const NSUInteger kQMStatusStringNamesLimit = 5;
 
 #pragma mark - Helpers
 
-- (NSString *)fullNamesString:(NSArray *)users
-{
+- (NSString *)fullNamesString:(NSArray *)users {
+    
     if (users.count == 0) {
+        
         return @"Unknown users";
     }
+    
     NSMutableString *mutableString = [NSMutableString new];
+    
     for (QBUUser *usr in users) {
-        [mutableString appendString:usr.fullName];
+        [mutableString appendString:usr.fullName ?: [NSString stringWithFormat:@"%tu", usr.ID]];
         [mutableString appendString:@", "];
     }
+    
     [mutableString deleteCharactersInRange:NSMakeRange(mutableString.length - 2, 2)];
+    
     return mutableString;
 }
 
