@@ -187,12 +187,12 @@ out here.</string>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstItem="1We-aI-4rQ" firstAttribute="centerY" secondItem="HRg-cL-xkz" secondAttribute="centerY" id="08F-4N-EhI"/>
-                                            <constraint firstItem="fK4-Lm-e6Y" firstAttribute="centerY" secondItem="HRg-cL-xkz" secondAttribute="centerY" id="SZy-3K-Ps1"/>
+                                            <constraint firstItem="1We-aI-4rQ" firstAttribute="trailing" secondItem="HRg-cL-xkz" secondAttribute="trailing" id="DVN-N2-9ht"/>
+                                            <constraint firstItem="1We-aI-4rQ" firstAttribute="leading" secondItem="fK4-Lm-e6Y" secondAttribute="trailing" constant="12" id="P3f-QB-5Yj"/>
                                             <constraint firstAttribute="height" constant="76" id="Yja-WJ-sIy"/>
-                                            <constraint firstAttribute="trailing" secondItem="1We-aI-4rQ" secondAttribute="trailing" id="gwf-Rv-zaj"/>
-                                            <constraint firstItem="fK4-Lm-e6Y" firstAttribute="leading" secondItem="HRg-cL-xkz" secondAttribute="leading" constant="12" id="kD1-zJ-Xhc"/>
-                                            <constraint firstItem="1We-aI-4rQ" firstAttribute="leading" secondItem="fK4-Lm-e6Y" secondAttribute="trailing" constant="12" id="kXp-hJ-Czb"/>
+                                            <constraint firstItem="fK4-Lm-e6Y" firstAttribute="leading" secondItem="HRg-cL-xkz" secondAttribute="leading" constant="12" id="bx8-P6-G5E"/>
+                                            <constraint firstItem="fK4-Lm-e6Y" firstAttribute="centerY" secondItem="HRg-cL-xkz" secondAttribute="centerY" id="fgy-Pt-jBt"/>
+                                            <constraint firstItem="1We-aI-4rQ" firstAttribute="centerY" secondItem="fK4-Lm-e6Y" secondAttribute="centerY" id="l3l-rz-8hh"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z3o-LG-wKC" customClass="QMTagFieldView">

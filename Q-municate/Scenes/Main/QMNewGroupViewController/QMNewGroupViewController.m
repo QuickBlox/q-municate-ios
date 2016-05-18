@@ -17,13 +17,16 @@
 #import "QMChatVC.h"
 #import "QMContent.h"
 
+static const CGFloat kQMNameFieldRightPadding = 12.0f;
+
 @interface QMNewGroupViewController ()
 
 <
 QMImagePickerResultHandler,
 QMImageViewDelegate,
 QMGroupContactListViewControllerDelegate,
-QMTagFieldViewDelegate
+QMTagFieldViewDelegate,
+UITextFieldDelegate
 >
 
 @property (weak, nonatomic) QMGroupContactListViewController *groupContactListViewController;
@@ -52,6 +55,14 @@ QMTagFieldViewDelegate
     
     // setting up name text field
     self.nameTextField.placeholder = NSLocalizedString(@"QM_STR_NAME_FIELD_PLACEHOLDER", nil);
+    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0,
+                                                                   0,
+                                                                   kQMNameFieldRightPadding,
+                                                                   CGRectGetHeight(self.nameTextField.frame))];
+    self.nameTextField.rightView = paddingView;
+    self.nameTextField.rightViewMode = UITextFieldViewModeAlways;
+    // subscribing to delegate in order to hide keyboard on return
+    self.nameTextField.delegate = self;
     
     // tag field
     self.tagFieldView.placeholder = NSLocalizedString(@"QM_STR_TAG_FIELD_PLACEHOLDER", nil);
@@ -196,6 +207,14 @@ QMTagFieldViewDelegate
 - (void)tagFieldView:(QMTagFieldView *)__unused tagFieldView didChangeText:(NSString *)text {
     
     [self.groupContactListViewController performSearch:text];
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    // hiding keyboard for chat name text field
+    [textField resignFirstResponder];
+    return YES;
 }
 
 @end
