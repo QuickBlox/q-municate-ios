@@ -39,7 +39,6 @@
 "QM_STR_SUGGESTION" = "Suggestion";
 "QM_STR_DEAR_FRIEND" = "Dear friend, use Q-municate application to reach me! Download it here: http://q-municate.com";
 "QM_STR_YOUR _SURRENT_SESSION_IS_NO_LONGER_VALID" = "Your current session is no longer valid. Please log in again.";
-"QM_STR_CONTACTS" = "My Contacts";
 "QM_STR_ALL_USERS" = "All users";
 "QM_STR_REQUESTS" = "REQUESTS";
 "QM_STR_TAKE_NEW_PHOTO" = "Take New Photo";
@@ -113,6 +112,7 @@
 "QM_STR_LOCAL_SEARCH" = "Local";
 "QM_STR_GLOBAL_SEARCH" = "Global";
 "QM_STR_SEARCH_BAR_PLACEHOLDER" = "Search";
+"QM_STR_CONFIRM_DELETE_DIALOG" = "Do you really want to delete %@?";
 
 // *********** New Message Screen ***********
 "QM_STR_NEW_MESSAGE_SCREEN" = "New Message";
@@ -163,6 +163,7 @@
 
 // *********** Tab bar ***********
 "QM_STR_CHATS" = "Chats";
+"QM_STR_CONTACTS" = "Contacts";
 "QM_STR_SETTINGS" = "Settings";
 
 // *********** Update user ***********

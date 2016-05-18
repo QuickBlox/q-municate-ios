@@ -49,17 +49,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable instancetype)initWithSearchDataProvider:(QMSearchDataProvider *)searchDataProvider usingKeyPath:(NSString *)keyPath;
 
-#pragma mark - Methods
-
-/**
- *  Object at index path.
- *
- *  @param indexPath index path
- *
- *  @return specific object, that is existent at index path
- */
-- (nullable id)objectAtIndexPath:(NSIndexPath *)indexPath;
-
 @end
 
 NS_ASSUME_NONNULL_END

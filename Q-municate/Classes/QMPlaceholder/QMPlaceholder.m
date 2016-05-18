@@ -34,11 +34,11 @@
     self = [super init];
     if (self) {
         
-        self.cache = [[NSCache alloc] init];
-        self.cache.name = @"QMUserPlaceholer.cache";
-        self.cache.countLimit = 200;
+        _cache = [[NSCache alloc] init];
+        _cache.name = @"QMUserPlaceholer.cache";
+        _cache.countLimit = 200;
         
-        self.colors =
+        _colors =
         @[[UIColor colorWithRed:1.0f green:0.588f blue:0 alpha:1.0f],
           [UIColor colorWithRed:0.267f green:0.859f blue:0.369f alpha:1.0f],
           [UIColor colorWithRed:0.329f green:0.780f blue:0.988f alpha:1.0f],

@@ -14,6 +14,8 @@
 
 @property (strong, nonatomic) NSMutableArray *items;
 
+- (id)objectAtIndexPath:(NSIndexPath *)indexPath;
+
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 - (void)addItems:(NSArray *)items;

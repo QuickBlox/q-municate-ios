@@ -68,12 +68,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Current device token. Used for subscribing for push notifications.
  */
-@property (strong, nonatomic, nullable) NSData *deviceToken;
+@property (copy, nonatomic, nullable) NSData *deviceToken;
 
 /**
  *  Push notification User info dictionary.
  */
-@property (strong, nonatomic, nullable) NSDictionary *pushNotification;
+@property (copy, nonatomic, nullable) NSDictionary *pushNotification;
 
 /**
  *  Subscribe for push notifications.

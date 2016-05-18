@@ -1,24 +1,23 @@
 //
-//  QMMainTabBarController.m
+//  QMTabBarVC.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 5/5/16.
+//  Created by Vitaliy Gorbachov on 5/17/16.
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMMainTabBarController.h"
+#import "QMTabBarVC.h"
 #import "QMNotification.h"
 #import "QMTasks.h"
 #import "QMCore.h"
 #import "QMChatVC.h"
 #import "QMSoundManager.h"
 
-#import "QMDialogsViewController.h"
-#import "QMSettingsViewController.h"
-
-@interface QMMainTabBarController ()
+@interface QMTabBarVC ()
 
 <
+UITabBarControllerDelegate,
+
 QMPushNotificationManagerDelegate,
 QMChatServiceDelegate,
 QMChatConnectionDelegate
@@ -28,38 +27,29 @@ QMChatConnectionDelegate
 
 @end
 
-@implementation QMMainTabBarController
-
-#pragma mark - Lifecycle
+@implementation QMTabBarVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // Do any additional setup after loading the view.
     
     // subscribing for delegates
     [[QMCore instance].chatService addDelegate:self];
-    
-    // configuring tab bar items
-    [self configureTabBarItems];
+    self.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    if (self.navigationItem.title == nil) {
+        
+        [self updateNavigationItem:self.selectedViewController.navigationItem];
+    }
+    
     if (self.autoLoginTask == nil) {
         
         [self performAutoLoginAndFetchData];
     }
-}
-
-- (void)configureTabBarItems {
-    
-    [self addBarItemWithTitle:NSLocalizedString(@"QM_STR_CHATS", nil)
-                        image:[UIImage imageNamed:@"qm-tb-chats"]
-               viewController:[QMDialogsViewController dialogsViewController]];
-    
-    [self addBarItemWithTitle:NSLocalizedString(@"QM_STR_SETTINGS", nil)
-                        image:[UIImage imageNamed:@"qm-tb-settings"]
-               viewController:[QMSettingsViewController settingsViewController]];
 }
 
 - (void)performAutoLoginAndFetchData {
@@ -93,6 +83,18 @@ QMChatConnectionDelegate
             return [[QMCore instance].chatService connect];
         }
     }];
+}
+
+#pragma mark - Helpers
+
+- (void)updateNavigationItem:(UINavigationItem *)navigationItem {
+    
+    self.navigationItem.title = navigationItem.title;
+    self.navigationItem.titleView = navigationItem.titleView;
+    self.navigationItem.prompt = navigationItem.prompt;
+    self.navigationItem.leftBarButtonItems = navigationItem.leftBarButtonItems;
+    self.navigationItem.rightBarButtonItems = navigationItem.rightBarButtonItems;
+    self.navigationItem.backBarButtonItem = navigationItem.backBarButtonItem;
 }
 
 #pragma mark - Notification
@@ -130,6 +132,13 @@ QMChatConnectionDelegate
     }];
 }
 
+#pragma mark - QMTabBarDelegate
+
+- (void)tabBarController:(UITabBarController *)__unused tabBarController didSelectViewController:(UIViewController *)viewController {
+    
+    [self updateNavigationItem:viewController.navigationItem];
+}
+
 #pragma mark - QMPushNotificationManagerDelegate
 
 - (void)pushNotificationManager:(QMPushNotificationManager *)__unused pushNotificationManager didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
@@ -143,6 +152,11 @@ QMChatConnectionDelegate
 #pragma mark - QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)__unused chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)__unused dialogID {
+    
+    if (message.senderID == [QMCore instance].currentProfile.userData.ID) {
+        // no need to handle notification for self message
+        return;
+    }
     
     if (message.messageType == QMMessageTypeContactRequest) {
         

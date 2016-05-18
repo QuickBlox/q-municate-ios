@@ -21,7 +21,7 @@ const NSUInteger kQMUsersPageLimit = 50;
 
 @property (strong, nonatomic) QBGeneralResponsePage *responsePage;
 @property (assign, nonatomic) BOOL shouldLoadMore;
-@property (strong, nonatomic) NSString *cachedSearchText;
+@property (copy, nonatomic) NSString *cachedSearchText;
 
 @end
 

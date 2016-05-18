@@ -66,7 +66,7 @@ QMContactListServiceDelegate
 
 @property (strong, nonatomic) NSDate *lastActivityDate;
 
-@property (strong, nonatomic) NSString *activeDialogID;
+@property (copy, nonatomic) NSString *activeDialogID;
 
 /**
  *  QMCore shared instance.

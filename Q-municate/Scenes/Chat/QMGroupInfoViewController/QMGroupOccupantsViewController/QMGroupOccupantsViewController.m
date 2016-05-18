@@ -99,7 +99,7 @@ QMUsersServiceDelegate
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    if ([segue.identifier isEqualToString:KQMSceneSegueUserInfo]) {
+    if ([segue.identifier isEqualToString:kQMSceneSegueUserInfo]) {
         
         QMUserInfoViewController *userInfoVC = segue.destinationViewController;
         userInfoVC.user = sender;
@@ -158,7 +158,7 @@ QMUsersServiceDelegate
             return;
         }
         
-        [self performSegueWithIdentifier:KQMSceneSegueUserInfo sender:user];
+        [self performSegueWithIdentifier:kQMSceneSegueUserInfo sender:user];
     }
 }
 

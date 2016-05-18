@@ -1,38 +1,28 @@
 //
-//  QMNewMessageDataSource.m
+//  QMContactsSearchDataSource.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/15/16.
+//  Created by Vitaliy Gorbachov on 3/17/16.
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMNewMessageDataSource.h"
+#import "QMContactsSearchDataSource.h"
+#import "QMNoResultsCell.h"
 #import "QMContactCell.h"
-#import "QMNoContactsCell.h"
 #import "QMCore.h"
 
-@implementation QMNewMessageDataSource
-
-#pragma mark - methods
-
-- (QBUUser *)userAtIndexPath:(NSIndexPath *)indexPath {
-    
-    return [self objectAtIndexPath:indexPath];
-}
-
-#pragma mark - UITableViewDataSource
+@implementation QMContactsSearchDataSource
 
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     
-    return self.isEmpty ? [QMNoContactsCell height] : [QMContactCell height];
+    return self.isEmpty ? [QMNoResultsCell height] : [QMContactCell height];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (self.isEmpty) {
         
-        QMNoContactsCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMNoContactsCell cellIdentifier] forIndexPath:indexPath];
-        [cell setTitle:NSLocalizedString(@"QM_STR_NO_CONTACTS", nil)];
+        QMNoResultsCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMNoResultsCell cellIdentifier] forIndexPath:indexPath];
         tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         return cell;
     }

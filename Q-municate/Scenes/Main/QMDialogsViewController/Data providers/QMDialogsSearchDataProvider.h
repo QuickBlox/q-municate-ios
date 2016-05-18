@@ -1,5 +1,5 @@
 //
-//  QMLocalSearchDataProvider.h
+//  QMDialogsSearchDataProvider.h
 //  Q-municate
 //
 //  Created by Vitaliy Gorbachov on 3/2/16.
@@ -8,6 +8,6 @@
 
 #import "QMSearchDataProvider.h"
 
-@interface QMLocalSearchDataProvider : QMSearchDataProvider
+@interface QMDialogsSearchDataProvider : QMSearchDataProvider
 
 @end

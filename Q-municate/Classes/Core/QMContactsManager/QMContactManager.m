@@ -139,7 +139,7 @@
     
     for (QBContactListItem *item in allContactListItems) {
         
-        if (item.subscriptionState == QBPresenceSubscriptionStateBoth) {
+        if (item.subscriptionState != QBPresenceSubscriptionStateNone) {
             
             QBUUser *user = [self.serviceManager.usersService.usersMemoryStorage userWithID:item.userID];
             if (user) {

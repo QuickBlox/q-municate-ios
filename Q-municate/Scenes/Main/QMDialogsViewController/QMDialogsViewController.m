@@ -7,25 +7,17 @@
 //
 
 #import "QMDialogsViewController.h"
+#import "QMSearchResultsController.h"
 #import "QMDialogsDataSource.h"
 #import "QMPlaceholderDataSource.h"
-#import "QMLocalSearchDataSource.h"
-#import "QMGlobalSearchDataSource.h"
-#import "QMSearchResultsController.h"
+#import "QMDialogsSearchDataSource.h"
 #import "QMDialogCell.h"
-#import "QMSearchCell.h"
+#import "QMNoResultsCell.h"
 #import "QMSearchDataProvider.h"
-#import "QMLocalSearchDataProvider.h"
-#import "QMGlobalSearchDataProvider.h"
+#import "QMDialogsSearchDataProvider.h"
 #import "QMChatVC.h"
 #import "QMCore.h"
 #import "QMNotification.h"
-
-typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
-    
-    QMSearchScopeButtonIndexLocal,
-    QMSearchScopeButtonIndexGlobal
-};
 
 @interface QMDialogsViewController ()
 
@@ -34,24 +26,22 @@ QMUsersServiceDelegate,
 QMChatServiceDelegate,
 QMChatConnectionDelegate,
 
-QMSearchResultsControllerDelegate,
-
 UITableViewDelegate,
 UISearchControllerDelegate,
-UISearchBarDelegate,
-UISearchResultsUpdating
+UISearchResultsUpdating,
+
+QMSearchResultsControllerDelegate
 >
+
+@property (strong, nonatomic) UISearchController *searchController;
+@property (strong, nonatomic) QMSearchResultsController *searchResultsController;
 
 /**
  *  Data sources
  */
 @property (strong, nonatomic) QMDialogsDataSource *dialogsDataSource;
 @property (strong, nonatomic) QMPlaceholderDataSource *placeholderDataSource;
-@property (strong, nonatomic) QMLocalSearchDataSource *localSearchDataSource;
-@property (strong, nonatomic) QMGlobalSearchDataSource *globalSearchDataSource;
-
-@property (strong, nonatomic) UISearchController *searchController;
-@property (strong, nonatomic) QMSearchResultsController *searchResultsController;
+@property (strong, nonatomic) QMDialogsSearchDataSource *dialogsSearchDataSource;
 
 @property (weak, nonatomic) BFTask *addUserTask;
 
@@ -66,31 +56,71 @@ UISearchResultsUpdating
     return [[UIStoryboard storyboardWithName:kQMMainStoryboard bundle:nil] instantiateViewControllerWithIdentifier:NSStringFromClass([self class])];
 }
 
+- (void)dealloc {
+    
+    [self.searchController.view removeFromSuperview];
+    
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self registerNibs];
+    self.tableView.contentInset = UIEdgeInsetsMake(0,
+                                                   0,
+                                                   CGRectGetHeight(self.tabBarController.tabBar.frame),
+                                                   0);
     
     // Hide empty separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
+    // search implementation
+    [self configureSearch];
+    
     // Data sources init
     [self configureDataSources];
     
-    // search implementation
-    [self configureSearch];
+    // registering nibs for current VC and search results VC
+    [self registerNibs];
     
     // Subscribing delegates
     [[QMCore instance].chatService addDelegate:self];
     [[QMCore instance].usersService addDelegate:self];
 }
 
-- (void)dealloc {
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     
-    [self.searchController.view removeFromSuperview];
+    if (self.searchController.isActive) {
+        
+        [self.navigationController setNavigationBarHidden:YES animated:YES];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    if (self.searchController.isActive) {
+        
+        [self.navigationController setNavigationBarHidden:NO animated:NO];
+    }
 }
 
 #pragma mark - Init methods
+
+- (void)configureSearch {
+    
+    self.searchResultsController = [[QMSearchResultsController alloc] init];
+    self.searchResultsController.delegate = self;
+    
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:self.searchResultsController];
+    self.searchController.searchBar.placeholder = NSLocalizedString(@"QM_STR_SEARCH_BAR_PLACEHOLDER", nil);
+    self.searchController.searchResultsUpdater = self;
+    self.searchController.delegate = self;
+    self.searchController.dimsBackgroundDuringPresentation = YES;
+    self.definesPresentationContext = YES;
+    self.tableView.tableHeaderView = self.searchController.searchBar;
+}
 
 - (void)configureDataSources {
     
@@ -99,49 +129,10 @@ UISearchResultsUpdating
     
     self.tableView.dataSource = self.placeholderDataSource;
     
-    self.searchResultsController = [[QMSearchResultsController alloc] initWithNavigationController:self.navigationController];
-    self.searchResultsController.delegate = self;
+    QMDialogsSearchDataProvider *searchDataProvider = [[QMDialogsSearchDataProvider alloc] init];
+    searchDataProvider.delegate = self.searchResultsController;
     
-    QMLocalSearchDataProvider *localSearchDataProvider = [[QMLocalSearchDataProvider alloc] init];
-    localSearchDataProvider.delegate = self.searchResultsController;
-    
-    QMGlobalSearchDataProvider *globalSearchDataProvider = [[QMGlobalSearchDataProvider alloc] init];
-    globalSearchDataProvider.delegate = self.searchResultsController;
-    
-    self.localSearchDataSource = [[QMLocalSearchDataSource alloc] initWithSearchDataProvider:localSearchDataProvider];
-    self.globalSearchDataSource = [[QMGlobalSearchDataSource alloc] initWithSearchDataProvider:globalSearchDataProvider];
-    
-    @weakify(self);
-    self.globalSearchDataSource.didAddUserBlock = ^(UITableViewCell *cell) {
-        
-        @strongify(self);
-        if (self.addUserTask) {
-            // task in progress
-            return;
-        }
-        
-        NSIndexPath *indexPath = [self.searchResultsController.tableView indexPathForCell:cell];
-        QBUUser *user = self.globalSearchDataSource.items[indexPath.row];
-        
-        self.addUserTask = [[[QMCore instance].contactManager addUserToContactList:user] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-            
-            [self.searchResultsController.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            return nil;
-        }];
-    };
-}
-
-- (void)configureSearch {
-    
-    self.searchController = [[UISearchController alloc] initWithSearchResultsController:self.searchResultsController];
-    self.searchController.searchBar.scopeButtonTitles = @[NSLocalizedString(@"QM_STR_LOCAL_SEARCH", nil), NSLocalizedString(@"QM_STR_GLOBAL_SEARCH", nil)];
-    self.searchController.searchBar.placeholder = NSLocalizedString(@"QM_STR_SEARCH_BAR_PLACEHOLDER", nil);
-    self.searchController.searchResultsUpdater = self;
-    self.searchController.delegate = self;
-    self.searchController.searchBar.delegate = self;
-    self.searchController.dimsBackgroundDuringPresentation = YES;
-    self.definesPresentationContext = YES;
-    self.tableView.tableHeaderView = self.searchController.searchBar;
+    self.dialogsSearchDataSource = [[QMDialogsSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider];
 }
 
 #pragma mark - UITableViewDelegate
@@ -157,9 +148,9 @@ UISearchResultsUpdating
     }
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    return self.dialogsDataSource.items.count > 0 ? [QMDialogCell height] : CGRectGetHeight(tableView.bounds) - tableView.contentInset.top - tableView.contentInset.bottom;
+    return self.dialogsDataSource.items.count > 0 ? [self.dialogsDataSource heightForRowAtIndexPath:indexPath] : CGRectGetHeight(tableView.bounds) - tableView.contentInset.top - tableView.contentInset.bottom;
 }
 
 - (NSString *)tableView:(UITableView *)__unused tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
@@ -180,24 +171,35 @@ UISearchResultsUpdating
 
 #pragma mark - UISearchControllerDelegate
 
-- (void)willPresentSearchController:(UISearchController *)searchController {
+- (void)willPresentSearchController:(UISearchController *)__unused searchController {
     
-    [self updateDataSourceByScope:searchController.searchBar.selectedScopeButtonIndex];
+    self.searchResultsController.tableView.dataSource = self.dialogsSearchDataSource;
+    
+    self.tabBarController.tabBar.hidden = YES;
 }
 
-#pragma mark - UISearchBarDelegate
-
-- (void)searchBar:(UISearchBar *)__unused searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
+- (void)willDismissSearchController:(UISearchController *)__unused searchController {
     
-    [self updateDataSourceByScope:selectedScope];
-    [self.searchResultsController performSearch:self.searchController.searchBar.text];
+    self.tabBarController.tabBar.hidden = NO;
 }
 
 #pragma mark - UISearchResultsUpdating
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     
-    [self.searchResultsController performSearch:searchController.searchBar.text];
+    [self.dialogsSearchDataSource.searchDataProvider performSearch:searchController.searchBar.text];
+}
+
+#pragma mark - QMSearchResultsControllerDelegate
+
+- (void)searchResultsController:(QMSearchResultsController *)__unused searchResultsController willBeginScrollResults:(UIScrollView *)__unused scrollView {
+    
+    [self.searchController.searchBar endEditing:YES];
+}
+
+- (void)searchResultsController:(QMSearchResultsController *)__unused searchResultsController didSelectObject:(id)object {
+    
+    [self performSegueWithIdentifier:kQMSceneSegueChat sender:object];
 }
 
 #pragma mark - QMChatServiceDelegate
@@ -277,18 +279,6 @@ UISearchResultsUpdating
     }
 }
 
-#pragma mark - QMSearchResultsControllerDelegate
-
-- (void)searchResultsController:(QMSearchResultsController *)__unused searchResultsController willBeginScrollResults:(UIScrollView *)__unused scrollView {
-    
-    [self.searchController.searchBar resignFirstResponder];
-}
-
-- (void)searchResultsController:(QMSearchResultsController *)__unused searchResultsController didPushViewController:(UIViewController *)__unused viewController {
-    
-    [self.searchController.searchBar resignFirstResponder];
-}
-
 #pragma mark - Helpers
 
 - (void)checkIfDialogsDataSource {
@@ -299,30 +289,14 @@ UISearchResultsUpdating
     }
 }
 
-- (void)updateDataSourceByScope:(NSUInteger)selectedScope {
-    
-    if (selectedScope == QMSearchScopeButtonIndexLocal) {
-        
-        self.searchResultsController.tableView.dataSource = self.localSearchDataSource;
-    }
-    else if (selectedScope == QMSearchScopeButtonIndexGlobal) {
-        
-        self.searchResultsController.tableView.dataSource = self.globalSearchDataSource;
-    }
-    else {
-        
-        NSAssert(nil, @"Unknown selected scope");
-    }
-    
-    [self.searchResultsController.tableView reloadData];
-}
-
 #pragma mark - Register nibs
 
 - (void)registerNibs {
     
     [QMDialogCell registerForReuseInTableView:self.tableView];
-    [QMSearchCell registerForReuseInTableView:self.tableView];
+    [QMDialogCell registerForReuseInTableView:self.searchResultsController.tableView];
+    
+    [QMNoResultsCell registerForReuseInTableView:self.searchResultsController.tableView];
 }
 
 @end

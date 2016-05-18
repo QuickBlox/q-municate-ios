@@ -1,5 +1,5 @@
 //
-//  QMNewMessageDataSource.h
+//  QMContactsDataSource.h
 //  Q-municate
 //
 //  Created by Vitaliy Gorbachov on 3/15/16.
@@ -8,6 +8,6 @@
 
 #import "QMAlphabetizedDataSource.h"
 
-@interface QMNewMessageDataSource : QMAlphabetizedDataSource
+@interface QMContactsDataSource : QMAlphabetizedDataSource
 
 @end

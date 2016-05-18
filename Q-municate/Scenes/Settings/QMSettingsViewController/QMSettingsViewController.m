@@ -65,6 +65,11 @@ QMImagePickerResultHandler
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.tableView.contentInset = UIEdgeInsetsMake(0,
+                                                   0,
+                                                   CGRectGetHeight(self.tabBarController.tabBar.frame),
+                                                   0);
+    
     self.avatarImageView.imageViewType = QMImageViewTypeCircle;
     // Hide empty separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];

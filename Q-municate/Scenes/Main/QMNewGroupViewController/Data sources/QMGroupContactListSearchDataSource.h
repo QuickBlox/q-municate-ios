@@ -6,7 +6,7 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMNewMessageSearchDataSource.h"
+#import "QMContactsSearchDataSource.h"
 #import "QMSearchProtocols.h"
 
 /**
@@ -14,7 +14,7 @@
  *
  *  @see QMAlphabetizedDataSource class for more information.
  */
-@interface QMGroupContactListSearchDataSource : QMNewMessageSearchDataSource
+@interface QMGroupContactListSearchDataSource : QMContactsSearchDataSource
 
 /**
  *  Set of selected users (readonly).

@@ -11,7 +11,7 @@
 
 @interface QMAlphabetizedDataSource ()
 
-@property (strong, nonatomic) NSString *keyPath;
+@property (copy, nonatomic) NSString *keyPath;
 
 @property (strong, nonatomic) NSDictionary *alphabetizedDictionary;
 @property (strong, nonatomic) NSArray *sectionIndexTitles;
@@ -27,7 +27,7 @@
     self = [super init];
     if (self) {
         
-        _keyPath = keyPath;
+        _keyPath = [keyPath copy];
     }
     
     return self;
