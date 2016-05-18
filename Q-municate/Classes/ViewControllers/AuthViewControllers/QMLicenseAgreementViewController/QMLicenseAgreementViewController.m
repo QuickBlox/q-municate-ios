@@ -13,9 +13,7 @@
 
 NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
-@interface QMLicenseAgreementViewController ()
-
-<UIWebViewDelegate>
+@interface QMLicenseAgreementViewController () <UIWebViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *acceptButton;
@@ -25,7 +23,8 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 @implementation QMLicenseAgreementViewController
 
 - (void)dealloc {
-    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {
@@ -33,10 +32,11 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
     
     BOOL licenceAccepted = [QMCore instance].currentProfile.userAgreementAccepted;
     if (licenceAccepted) {
+        
         self.navigationItem.rightBarButtonItem = nil;
     }
     
-    [SVProgressHUD show];
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kQMAgreementUrl]];
     [self.webView loadRequest:request];
 }
@@ -50,13 +50,14 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     
-    __weak __typeof(self)weakSelf = self;
+    @weakify(self);
     [self dismissViewControllerAnimated:YES completion:^{
         
-        if(weakSelf.licenceCompletionBlock) {
+        @strongify(self);
+        if (self.licenceCompletionBlock) {
             
-            weakSelf.licenceCompletionBlock(success);
-            weakSelf.licenceCompletionBlock = nil;
+            self.licenceCompletionBlock(success);
+            self.licenceCompletionBlock = nil;
         }
     }];
 }

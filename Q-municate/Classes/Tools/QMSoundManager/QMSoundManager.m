@@ -98,7 +98,7 @@ static NSString *const kQMSoundManagerSettingKey = @"kQMSoundManagerSettingKey";
         
         if (error) {
             
-            NSLog(@"%@",[error localizedDescription]);
+            ILog(@"%@",[error localizedDescription]);
         }
         else {
             

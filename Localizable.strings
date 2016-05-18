@@ -11,7 +11,6 @@
 "QM_STR_SUCCESS" = "Success";
 "QM_STR_ERROR" = "Error";
 "QM_STR_ERROR_WHILE_CREATING_NEW_CHAT" = "You don't have any contacts for creating new chat.";
-"QM_STR_FACEBOOK_LOGIN_FALED_ALERT_TEXT" = "Something went wrong. Please try again";
 "QM_STR_QMUNICATE_AGREE" = "By clicking Sign Up, you agree to Q-MUNICATE User Agreement.";
 "QM_STR_EMAIL_FIELD_IS_EMPTY" = "Email field is empty";
 "QM_STR_USER_WITH_EMAIL_WASNT_FOUND" = "User with email wasn't found";
@@ -188,3 +187,7 @@
 "QM_STR_BAD_CONNECTION" = "Bad connection";
 "QM_STR_CALL_WAS_STOPPED" = "Call was stopped";
 "QM_STR_USER_DOESNT_ANSWER" = "User doesn't answer";
+
+// *********** Welcome screen ***********
+"QM_STR_LOGIN_WITH_FACEBOOK" = "Login with Facebook";
+"QM_STR_LOGIN_WITH_EMAIL" = "Login with Email";

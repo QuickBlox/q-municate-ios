@@ -18,9 +18,9 @@ pod 'Flurry-iOS-SDK/FlurrySDK', '~> 7.1.0'
 #pod 'QMServices'
 
 #Facebook
-pod 'FBSDKCoreKit', '~> 4.7.0'
-pod 'FBSDKShareKit', '~> 4.7.0'
-pod 'FBSDKLoginKit', '~> 4.7.0'
+pod 'FBSDKCoreKit', '~> 4.11.0'
+pod 'FBSDKShareKit', '~> 4.11.0'
+pod 'FBSDKLoginKit', '~> 4.11.0'
 
 #Twitter
 pod 'Fabric', '~> 1.6'

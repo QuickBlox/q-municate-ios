@@ -10,14 +10,19 @@
 #import "QMLicenseAgreement.h"
 #import "REAlertView.h"
 #import "REAlertView+QMSuccess.h"
+#import <SVProgressHUD.h>
 
 #import "QMFacebook.h"
 #import "QMCore.h"
 #import "QMContent.h"
 #import "QMTasks.h"
 
+#import "REActionSheet.h"
+
 #import <DigitsKit/DigitsKit.h>
 #import "QMDigitsConfigurationFactory.h"
+
+static NSString *const kQMFacebookIDField = @"id";
 
 @implementation QMWelcomeScreenViewController
 
@@ -33,19 +38,7 @@
 
 #pragma mark - Actions
 
-- (IBAction)connectWithFacebook:(id)__unused sender {
-    
-    @weakify(self);
-    [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL success) {
-        // License agreement check
-        if (success) {
-            @strongify(self);
-            [self chainFacebookConnect];
-        }
-    }];
-}
-
-- (IBAction)connectWithPhoneNumber:(id)__unused sender {
+- (IBAction)connectWithPhone {
     
     @weakify(self);
     [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL success) {
@@ -57,19 +50,55 @@
     }];
 }
 
+- (IBAction)connectWithOtherMethods {
+    
+    @weakify(self);
+    [REActionSheet presentActionSheetInView:self.view configuration:^(REActionSheet *actionSheet) {
+        
+        @strongify(self);
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"QM_STR_LOGIN_WITH_FACEBOOK", nil) andActionBlock:^{
+            
+            [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL success) {
+                // License agreement check
+                if (success) {
+                    
+                    [self chainFacebookConnect];
+                }
+            }];
+        }];
+        
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"QM_STR_LOGIN_WITH_EMAIL", nil) andActionBlock:^{
+            
+            [self performSegueWithIdentifier:kQMSceneSegueLogin sender:nil];
+        }];
+        
+        [actionSheet addCancelButtonWihtTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{
+            
+        }];
+    }];
+}
+
 - (void)chainFacebookConnect {
     
     @weakify(self);
     [[[QMFacebook connect] continueWithBlock:^id _Nullable(BFTask<NSString *> * _Nonnull task) {
         // Facebook connect
-        return task.isFaulted || task.isCancelled ? nil : [[QMCore instance].authService loginWithFacebookSessionToken:task.result];
+        if (task.isFaulted || task.isCancelled) {
+            
+            return nil;
+        }
+        
+        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+        
+        return [[QMCore instance].authService loginWithFacebookSessionToken:task.result];
         
     }] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         
+        [SVProgressHUD dismiss];
+        
         if (task.isFaulted) {
             
-            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FACEBOOK_LOGIN_FALED_ALERT_TEXT", nil) actionSuccess:NO];
-            
+            [QMFacebook logout];
         }
         else if (task.result != nil) {
             
@@ -82,7 +111,7 @@
                 
                 return [[[QMFacebook loadMe] continueWithSuccessBlock:^id _Nullable(BFTask<NSDictionary *> * _Nonnull loadTask) {
                     // downloading user avatar from url
-                    NSURL *userImageUrl = [QMFacebook userImageUrlWithUserID:loadTask.result[@"id"]];
+                    NSURL *userImageUrl = [QMFacebook userImageUrlWithUserID:loadTask.result[kQMFacebookIDField]];
                     return [QMContent downloadImageWithUrl:userImageUrl];
                     
                 }] continueWithSuccessBlock:^id _Nullable(BFTask<UIImage *> * _Nonnull imageTask) {
@@ -90,9 +119,11 @@
                     return [QMTasks taskUpdateCurrentUserImage:imageTask.result progress:nil];
                 }];
             }
+            
+            return [[QMCore instance].pushNotificationManager subscribeForPushNotifications];
         }
         
-        return [[QMCore instance].pushNotificationManager subscribeForPushNotifications];
+        return nil;
     }];
 }
 
@@ -104,7 +135,7 @@
         // twitter digits auth
         if (error.userInfo.count > 0) {
             
-            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_FACEBOOK_LOGIN_FALED_ALERT_TEXT", nil) actionSuccess:NO];
+            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_UNKNOWN_ERROR", nil) actionSuccess:NO];
         }
         else {
             

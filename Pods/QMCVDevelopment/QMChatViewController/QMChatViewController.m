@@ -27,7 +27,7 @@ static NSString *const kQMItemsInsertKey    = @"kQMItemsInsertKey";
 
 static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
 
-@interface QMChatViewController () <QMInputToolbarDelegate, QMKeyboardControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate, UIScrollViewDelegate, QMChatSectionManagerDelegate>
+@interface QMChatViewController () <QMInputToolbarDelegate, QMKeyboardControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate, UIScrollViewDelegate, QMChatSectionManagerDelegate,UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet QMChatCollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet QMInputToolbar *inputToolbar;
@@ -729,12 +729,23 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
     [textView resignFirstResponder];
 }
 
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1 && &UIApplicationOpenSettingsURLString != NULL) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+    }
+}
+
 #pragma mark - UIActionSheetDelegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 0 && [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        
         self.pickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
-        [self presentViewController:self.pickerController animated:YES completion:nil];
+        [self checkAuthorizationStatusForCamera];
+        
     } else if (buttonIndex == 1 && [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
         self.pickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         [self presentViewController:self.pickerController animated:YES completion:nil];
@@ -1147,6 +1158,62 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
                                                                           action:@selector(handleInteractivePopGestureRecognizer:)];
         }
     }
+}
+
+- (void)checkAuthorizationStatusForCamera {
+    
+    AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    switch (status) {
+        case AVAuthorizationStatusNotDetermined: {
+            
+            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (granted) {
+                        [self presentViewController:self.pickerController animated:YES completion:nil];
+                    }
+                    else {
+                        [self showAlertForCameraAccess];
+                    }
+                });
+
+            }];
+            break;
+        }
+        case AVAuthorizationStatusRestricted: {
+            [self showAlertForCameraAccess];
+            break;
+        }
+        case AVAuthorizationStatusDenied: {
+            [self showAlertForCameraAccess];
+            break;
+        }
+        case AVAuthorizationStatusAuthorized: {
+            [self presentViewController:self.pickerController animated:YES completion:nil];
+            break;
+        }
+    }
+}
+
+
+- (void)showAlertForCameraAccess {
+    
+    NSString * title = NSLocalizedString(@"Camera Access Disabled", nil);
+    NSString * message = NSLocalizedString(@"You can allow access to Camera in Settings", nil);
+    
+    NSString *reqSysVer = @"8.0";
+    NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
+    
+    BOOL isIOS8 =  ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending);
+
+    NSString * otherButtonTitle = isIOS8 ? NSLocalizedString(@"Open Settings", nil) : nil;
+    
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:title
+                                                     message:message
+                                                    delegate:self
+                                           cancelButtonTitle:NSLocalizedString(@"SA_STR_CANCEL", nil)
+                                           otherButtonTitles:otherButtonTitle,nil];
+    
+    [alert show];
 }
 
 @end

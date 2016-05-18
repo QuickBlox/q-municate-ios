@@ -161,7 +161,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
                     [mutableString appendString:@"\n"];
                 }
                 
-                [mutableString deleteCharactersInRange:NSMakeRange(mutableString.length - 2, 2)];
+                [mutableString deleteCharactersInRange:NSMakeRange(mutableString.length - 1, 1)];
             }
             
             errorMessage = mutableString.copy;

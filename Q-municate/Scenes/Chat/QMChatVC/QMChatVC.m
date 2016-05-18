@@ -288,7 +288,7 @@ QMImageViewDelegate
             
             if (task.isFaulted) {
                 
-                NSLog(@"Problems while marking message as read! Error: %@", task.error);
+                ILog(@"Problems while marking message as read! Error: %@", task.error);
             }
             else if ([UIApplication sharedApplication].applicationIconBadgeNumber > 0) {
                 
