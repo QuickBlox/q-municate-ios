@@ -11,6 +11,7 @@
  */
 
 static NSString *const kQMSceneSegueAuth                = @"SceneSegueAuth";
+static NSString *const kQMSceneSegueLogin               = @"SceneSegueLogin";
 static NSString *const kQMSceneSegueChat                = @"SceneSegueChat";
 static NSString *const kQMSceneSegueMain                = @"SceneSegueMain";
 static NSString *const kQMSceneSegueStart               = @"SceneSegueStart";

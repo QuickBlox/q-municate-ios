@@ -12,6 +12,8 @@
 #import "QMPlaceholder.h"
 #import "QMMessageStatusStringBuilder.h"
 #import "QMMessageNotification.h"
+#import "REAlertView.h"
+#import "REAlertView+QMSuccess.h"
 
 static const CGFloat kQMMessageNotificationIconImageSize = 32.0;
 
@@ -33,7 +35,14 @@ static const CGFloat kQMMessageNotificationIconImageSize = 32.0;
     
     UINavigationController *navigationController = (UINavigationController *)[[UIApplication sharedApplication].windows.firstObject rootViewController];
     
-    [notificationPanel() showNotificationWithType:notificationType byInsertingInNavigationBar:navigationController.navigationBar message:message animated:animated];
+    if (navigationController.isNavigationBarHidden) {
+        
+        [REAlertView showAlertWithMessage:message actionSuccess:notificationType == QMNotificationPanelTypeSuccess ? YES : NO];
+    }
+    else {
+        
+        [notificationPanel() showNotificationWithType:notificationType byInsertingInNavigationBar:navigationController.navigationBar message:message animated:animated];
+    }
 }
 
 + (void)dismissNotificationPanel {

@@ -8,7 +8,19 @@
 
 #import "QMCornerButton.h"
 
+@interface QMCornerButton ()
+
+@property (strong, nonatomic) UIColor *bgColor;
+
+@end
+
 @implementation QMCornerButton
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    
+    self.bgColor = self.backgroundColor;
+}
 
 - (void)setBorderWidth:(NSUInteger)borderWidth {
     
@@ -37,7 +49,7 @@
     }
     else {
         
-        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = self.bgColor;
     }
 }
 

@@ -35,10 +35,16 @@
                                     <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
                                         <integer key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="highlightedColor">
+                                        <color key="value" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
+                                    </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                        <color key="value" red="0.6705882353" green="0.6705882353" blue="0.6705882353" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="value" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="connectWithOtherMethods" destination="ncs-B4-uAJ" eventType="touchUpInside" id="G4S-Du-GMx"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kys-2n-ThW" customClass="QMCornerButton">
                                 <rect key="frame" x="24" y="417" width="552" height="44"/>
@@ -57,10 +63,16 @@
                                     <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
                                         <integer key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="highlightedColor">
+                                        <color key="value" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
+                                    </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                        <color key="value" red="0.15686274510000001" green="0.79215686269999996" blue="0.2901960784" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="value" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="connectWithPhone" destination="ncs-B4-uAJ" eventType="touchUpInside" id="1vZ-vE-e1D"/>
+                                </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gLv-b0-MwQ" userLabel="Logo View">
                                 <rect key="frame" x="180" y="89" width="240" height="240"/>
@@ -207,6 +219,7 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <segue destination="LAN-DZ-jv6" kind="custom" identifier="SceneSegueMain" customClass="QMRootViewControllerSegue" id="7KE-cg-4Nx"/>
+                        <segue destination="HjW-ae-ZF3" kind="show" identifier="SceneSegueLogin" id="cOz-fv-4sO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mKT-ox-R94" userLabel="First Responder" sceneMemberID="firstResponder"/>

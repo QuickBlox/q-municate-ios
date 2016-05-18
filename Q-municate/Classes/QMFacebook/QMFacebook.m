@@ -19,6 +19,8 @@ NSString *const kQMLogoUrl = @"https://files.quickblox.com/ic_launcher.png";
 NSString *const kQMAppName = @"Q-municate";
 NSString *const kQMDataKey = @"data";
 
+static NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/picture?height=100&width=100&access_token=%@";
+
 + (BFTask *)connect {
     
     BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
@@ -26,9 +28,12 @@ NSString *const kQMDataKey = @"data";
     FBSDKAccessToken *session = [FBSDKAccessToken currentAccessToken];
     
     if (!session) {
+        
+        UINavigationController *navigationController = (UINavigationController *)[[UIApplication sharedApplication].windows.firstObject rootViewController];
+        
         FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
         [loginManager logInWithReadPermissions:@[@"email", @"public_profile", @"user_friends"]
-                            fromViewController:nil
+                            fromViewController:navigationController
                                        handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                            
                                            if (error) {
@@ -81,8 +86,6 @@ NSString *const kQMDataKey = @"data";
     }];
 }
 
-NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/picture?height=100&width=100&access_token=%@";
-
 + (NSURL *)userImageUrlWithUserID:(NSString *)userID {
     
     FBSDKAccessToken *session = [FBSDKAccessToken currentAccessToken];
@@ -98,7 +101,7 @@ NSString *const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/pictu
     FBSDKGraphRequest *friendsRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
     
     [friendsRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *__unused connection, id result, NSError *error) {
-        //
+        
         error != nil ? [source setError:error] : [source setResult:result];
     }];
     
