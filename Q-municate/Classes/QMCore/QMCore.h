@@ -64,8 +64,6 @@ QMContactListServiceDelegate
  */
 @property (strong, nonatomic, readonly) QMProfile *currentProfile;
 
-@property (strong, nonatomic) NSDate *lastActivityDate;
-
 @property (copy, nonatomic) NSString *activeDialogID;
 
 /**

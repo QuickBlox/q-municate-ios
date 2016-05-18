@@ -19,8 +19,6 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 
 @interface QMCore ()
 
-@property (strong, nonatomic) NSUserDefaults *defaults;
-
 @property (strong, nonatomic) dispatch_group_t logoutGroup;
 
 @end
@@ -64,7 +62,6 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         [self configureReachability];
         
         // other initializations
-        _defaults = [NSUserDefaults standardUserDefaults];
         _logoutGroup = dispatch_group_create();
     }
     
@@ -204,26 +201,12 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         
         dispatch_group_notify(self.logoutGroup, dispatch_get_main_queue(), ^{
             
-            self.lastActivityDate = nil;
             [self.currentProfile clearProfile];
             [source setResult:nil];
         });
     }];
     
     return source.task;
-}
-
-#pragma mark - Last activity date
-
-- (void)setLastActivityDate:(NSDate *)lastActivityDate
-{
-    [self.defaults setObject:lastActivityDate forKey:kQMLastActivityDateKey];
-    [self.defaults synchronize];
-}
-
-- (NSDate *)lastActivityDate
-{
-    return [self.defaults objectForKey:kQMLastActivityDateKey];
 }
 
 #pragma mark QMContactListServiceCacheDelegate delegate

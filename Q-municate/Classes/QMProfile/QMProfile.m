@@ -15,6 +15,7 @@ static NSString *const kQMUserDataKey = @"userData";
 static NSString *const kQMAccountType = @"accountType";
 static NSString *const kQMUserAgreementAcceptedKey = @"userAgreementAccepted";
 static NSString *const kQMPushNotificationsEnabled = @"pushNotificationsEnabled";
+static NSString *const kQMLastDialogsFetchingDate = @"lastDialogsFetchingDate";
 static NSString *const kQMAppExists = @"QMAppExists";
 
 @interface QMProfile ()
@@ -106,6 +107,7 @@ static NSString *const kQMAppExists = @"QMAppExists";
     self.pushNotificationsEnabled = profile.pushNotificationsEnabled;
     self.userAgreementAccepted = profile.userAgreementAccepted;
     self.userData = profile.userData;
+    self.lastDialogsFetchingDate = profile.lastDialogsFetchingDate;
 }
 
 - (BOOL)clearProfile {
@@ -122,6 +124,7 @@ static NSString *const kQMAppExists = @"QMAppExists";
     self.accountType = QMAccountTypeNone;
     self.pushNotificationsEnabled = YES;
     self.userAgreementAccepted = NO;
+    self.lastDialogsFetchingDate = nil;
     
     return success;
 }
@@ -152,6 +155,7 @@ static NSString *const kQMAppExists = @"QMAppExists";
         _accountType = [aDecoder decodeIntegerForKey:kQMAccountType];
         _userAgreementAccepted = [aDecoder decodeBoolForKey:kQMUserAgreementAcceptedKey];
         _pushNotificationsEnabled = [aDecoder decodeBoolForKey:kQMPushNotificationsEnabled];
+        _lastDialogsFetchingDate = [aDecoder decodeObjectForKey:kQMLastDialogsFetchingDate];
     }
     
     return self;
@@ -163,6 +167,7 @@ static NSString *const kQMAppExists = @"QMAppExists";
     [aCoder encodeInteger:self.accountType forKey:kQMAccountType];
     [aCoder encodeBool:self.userAgreementAccepted forKey:kQMUserAgreementAcceptedKey];
     [aCoder encodeBool:self.pushNotificationsEnabled forKey:kQMPushNotificationsEnabled];
+    [aCoder encodeObject:self.lastDialogsFetchingDate forKey:kQMLastDialogsFetchingDate];
 }
 
 @end

@@ -135,14 +135,20 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     };
     
     BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull task) {
-        if ([QMCore instance].isAuthorized && !task.isFaulted) [QMCore instance].lastActivityDate = [NSDate date];
+        
+        if ([QMCore instance].isAuthorized && !task.isFaulted) {
+            
+            [QMCore instance].currentProfile.lastDialogsFetchingDate = [NSDate date];
+            [[QMCore instance].currentProfile synchronize];
+        }
         
         return [BFTask taskForCompletionOfAllTasks:usersLoadingTasks.copy];
     };
     
-    if ([QMCore instance].lastActivityDate != nil) {
+    NSDate *lastDialogsFetchingDate = [QMCore instance].currentProfile.lastDialogsFetchingDate;
+    if (lastDialogsFetchingDate != nil) {
         
-        return [[[QMCore instance].chatService fetchDialogsUpdatedFromDate:[QMCore instance].lastActivityDate andPageLimit:kQMDialogsPageLimit iterationBlock:iterationBlock] continueWithBlock:completionBlock];
+        return [[[QMCore instance].chatService fetchDialogsUpdatedFromDate:lastDialogsFetchingDate andPageLimit:kQMDialogsPageLimit iterationBlock:iterationBlock] continueWithBlock:completionBlock];
     }
     else {
         

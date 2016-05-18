@@ -91,6 +91,11 @@ typedef NS_ENUM(NSInteger, QMAccountType) {
 @property (assign, nonatomic) BOOL pushNotificationsEnabled;
 
 /**
+ *  Last dialogs fetching date with QBRequest from server.
+ */
+@property (strong, nonatomic, nullable) NSDate *lastDialogsFetchingDate;
+
+/**
  *  Returns loaded current profile with user.
  *
  *  @return current profile

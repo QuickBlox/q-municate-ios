@@ -27,7 +27,8 @@
     return [[self.serviceManager.chatService disconnect] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         
         @strongify(self);
-        self.serviceManager.lastActivityDate = [NSDate date];
+        self.serviceManager.currentProfile.lastDialogsFetchingDate = [NSDate date];
+        [self.serviceManager.currentProfile synchronize];
         
         return nil;
     }];
