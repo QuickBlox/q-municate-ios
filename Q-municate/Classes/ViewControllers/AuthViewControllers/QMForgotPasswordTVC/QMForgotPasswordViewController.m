@@ -24,6 +24,12 @@
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [self.emailTextField becomeFirstResponder];
+}
+
 #pragma mark - actions
 
 - (IBAction)pressResetPasswordBtn:(id)__unused sender {
