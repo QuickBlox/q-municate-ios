@@ -34,7 +34,7 @@ static const CGFloat kQMInputToolbarTextContainerInsetRight = 25.0f;
 static const CGFloat kQMAttachmentCellSize = 200.0f;
 static const CGFloat kQMWidthPadding = 40.0f;
 static const CGFloat kQMAvatarSize = 28.0f;
-static const CGFloat kQMGroupAvatarSize = 36.0f;
+static const CGFloat kQMGroupAvatarSize = 30.0f;
 
 @interface QMChatVC ()
 

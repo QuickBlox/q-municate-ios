@@ -25,13 +25,13 @@
                             <rect key="frame" x="204" y="6" width="192" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Quickblox main channel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rb0-4v-W2R">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Quickblox main channel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rb0-4v-W2R">
                                     <rect key="frame" x="1" y="0.0" width="190" height="21"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4 members, 2 online" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cfy-a8-bOT">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="4 members, 2 online" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cfy-a8-bOT">
                                     <rect key="frame" x="1" y="23" width="190" height="14"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                     <color key="textColor" red="0.5607843137254902" green="0.55686274509803924" blue="0.58039215686274503" alpha="1" colorSpace="calibratedRGB"/>
@@ -41,6 +41,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="rb0-4v-W2R" secondAttribute="trailing" constant="1" id="0oc-aZ-juj"/>
+                                <constraint firstAttribute="bottom" secondItem="Cfy-a8-bOT" secondAttribute="bottom" id="Bjr-gF-ijz"/>
                                 <constraint firstItem="Cfy-a8-bOT" firstAttribute="leading" secondItem="zBY-5r-ya1" secondAttribute="leading" constant="1" id="WU4-sh-qeF"/>
                                 <constraint firstItem="rb0-4v-W2R" firstAttribute="top" secondItem="zBY-5r-ya1" secondAttribute="top" id="aLR-FE-6dz"/>
                                 <constraint firstItem="rb0-4v-W2R" firstAttribute="leading" secondItem="zBY-5r-ya1" secondAttribute="leading" constant="1" id="apP-ef-Zk9"/>
