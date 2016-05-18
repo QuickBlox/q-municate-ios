@@ -261,6 +261,11 @@ QMSearchResultsControllerDelegate
     [self.tableView reloadData];
 }
 
+- (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)__unused dialogs {
+    
+    [self.tableView reloadData];
+}
+
 #pragma mark - QMUsersServiceDelegate
 
 - (void)usersService:(QMUsersService *)__unused usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
