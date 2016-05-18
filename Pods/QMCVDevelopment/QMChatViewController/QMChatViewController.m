@@ -21,14 +21,13 @@
 #import "UIImage+QM.h"
 #import "QMHeaderCollectionReusableView.h"
 #import "TTTAttributedLabel.h"
-#import <AVFoundation/AVFoundation.h>
 
 static NSString *const kQMSectionsInsertKey = @"kQMSectionsInsertKey";
 static NSString *const kQMItemsInsertKey    = @"kQMItemsInsertKey";
 
 static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
 
-@interface QMChatViewController () <QMInputToolbarDelegate, QMKeyboardControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate, UIScrollViewDelegate, QMChatSectionManagerDelegate, UIAlertViewDelegate>
+@interface QMChatViewController () <QMInputToolbarDelegate, QMKeyboardControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIActionSheetDelegate, UIScrollViewDelegate, QMChatSectionManagerDelegate>
 
 @property (weak, nonatomic) IBOutlet QMChatCollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet QMInputToolbar *inputToolbar;
@@ -41,6 +40,8 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
 @property (strong, nonatomic) NSIndexPath *selectedIndexPathForMenu;
 @property (assign, nonatomic) BOOL isObserving;
 @property (strong, nonatomic) NSTimer* timer;
+@property BOOL scrollDirectionIsUP;
+@property (nonatomic, assign) CGFloat lastContentOffset;
 
 @end
 
@@ -176,17 +177,43 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
 #pragma mark - QMChatSectionManagerDelegate
 
 - (void)chatSectionManager:(QMChatSectionManager *)chatSectionManager didInsertSections:(NSIndexSet *)sectionsIndexSet andItems:(NSArray *)itemsIndexPaths animated:(BOOL)animated {
+
+    
+    BOOL shouldCancelScrolling = animated ? [self shouldCancelScrollingForItemIndexPaths:itemsIndexPaths] : NO;
     
     __weak __typeof(self)weakSelf = self;
-    dispatch_block_t performUpdate = ^{
     
+    dispatch_block_t performUpdate = ^{
+        
         __typeof(weakSelf)strongSelf = weakSelf;
+        
+        CGFloat bottomOffset = 0.0;
+        
+        if (shouldCancelScrolling) {
+            
+            bottomOffset = strongSelf.collectionView.contentSize.height - strongSelf.collectionView.contentOffset.y;
+            
+            [CATransaction begin];
+            [CATransaction setDisableActions:YES];
+        }
+        
+        
         [strongSelf.collectionView performBatchUpdates:^{
             
-            if ([sectionsIndexSet count] > 0) [strongSelf.collectionView insertSections:sectionsIndexSet];
+            if ([sectionsIndexSet count] > 0) {
+                [strongSelf.collectionView insertSections:sectionsIndexSet];
+            }
+            
             [strongSelf.collectionView insertItemsAtIndexPaths:itemsIndexPaths];
             
-        } completion:nil];
+        } completion:^(BOOL finished) {
+            
+            if (shouldCancelScrolling) {
+                strongSelf.collectionView.contentOffset = CGPointMake(0, strongSelf.collectionView.contentSize.height - bottomOffset);
+                [CATransaction commit];
+            }
+        }];
+        
     };
     
     if (animated) {
@@ -248,7 +275,7 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
 
 - (void)insertMessagesToTheTopAnimated:(NSArray *)messages {
     NSParameterAssert(messages);
-
+    
     [self.chatSectionManager addMessages:messages];
 }
 
@@ -265,8 +292,8 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
 }
 
 - (void)insertMessagesToTheBottomAnimated:(NSArray *)messages {
-	NSAssert([messages count] > 0, @"Array must contain messages!");
-	
+    NSAssert([messages count] > 0, @"Array must contain messages!");
+    
     [self.chatSectionManager addMessages:messages];
 }
 
@@ -276,7 +303,7 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
 }
 
 - (void)updateMessages:(NSArray *)messages {
-	
+    
     [self.chatSectionManager updateMessages:messages];
 }
 
@@ -335,8 +362,8 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
     
     [self addActionToInteractivePopGestureRecognizer:NO];
     
-	[self removeObservers];
-	[self.keyboardController endListeningForKeyboard];
+    [self removeObservers];
+    [self.keyboardController endListeningForKeyboard];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -543,7 +570,7 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
     cell.transform = self.collectionView.transform;
     
     [self collectionView:collectionView configureCell:cell forIndexPath:indexPath];
-    
+
     return cell;
 }
 
@@ -706,10 +733,8 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 0 && [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-        
         self.pickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
-        [self checkAuthorizationStatusForCamera];
-        
+        [self presentViewController:self.pickerController animated:YES completion:nil];
     } else if (buttonIndex == 1 && [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
         self.pickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         [self presentViewController:self.pickerController animated:YES completion:nil];
@@ -729,14 +754,6 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
     [picker dismissViewControllerAnimated:YES completion:NULL];
-}
-
-#pragma mark - UIAlertViewDelegate
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1 && &UIApplicationOpenSettingsURLString != NULL) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-    }
 }
 
 #pragma mark - Notifications
@@ -988,6 +1005,25 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
 
 #pragma mark - Utilities
 
+- (BOOL)shouldCancelScrollingForItemIndexPaths:(NSArray*)indexPathes {
+    
+    NSSet * visibleInxexPathes= [NSSet setWithArray:self.collectionView.indexPathsForVisibleItems];
+    //Index path of the first cell - last message
+    NSIndexPath *pathToLastMessage = [NSIndexPath indexPathForRow:0 inSection:0];
+    
+    if  ([visibleInxexPathes containsObject:pathToLastMessage]) {
+        
+        return NO;
+    }
+    
+    NSArray* sortedIndexPaths = [visibleInxexPathes.allObjects sortedArrayUsingSelector:@selector(compare:)];
+    NSIndexPath * firstVisibleIndexPath = [sortedIndexPaths firstObject];
+    
+    NSComparisonResult result = [[indexPathes lastObject] compare:firstVisibleIndexPath];
+    
+    return result == NSOrderedAscending;
+}
+
 - (NSTimeInterval)timeIntervalBetweenSections {
     
     return self.chatSectionManager.timeIntervalBetweenSections;
@@ -1111,55 +1147,6 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
                                                                           action:@selector(handleInteractivePopGestureRecognizer:)];
         }
     }
-}
-
-- (void)checkAuthorizationStatusForCamera {
-    
-    AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-    switch (status) {
-        case AVAuthorizationStatusNotDetermined: {
-            
-            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
-                if (granted) {
-                    [self presentViewController:self.pickerController animated:YES completion:nil];
-                }
-                else {
-                    [self showAlertForCameraAccess];
-                }
-            }];
-            break;
-        }
-        case AVAuthorizationStatusRestricted: {
-            [self showAlertForCameraAccess];
-            break;
-        }
-        case AVAuthorizationStatusDenied: {
-            [self showAlertForCameraAccess];
-            break;
-        }
-        case AVAuthorizationStatusAuthorized: {
-            [self presentViewController:self.pickerController animated:YES completion:nil];
-            break;
-        }
-    }
-}
-
-
-- (void)showAlertForCameraAccess {
-    
-    NSString * title = NSLocalizedString(@"Camera Access Disabled", nil);
-    NSString * message = NSLocalizedString(@"You can allow access to Camera in Settings", nil);
-    
-    BOOL isIOS8 = [[UIDevice currentDevice].systemVersion compare:@"8.0" options:NSNumericSearch] == NSOrderedAscending;
-    NSString * otherButtonTitle = isIOS8 ? NSLocalizedString(@"Open Settings", nil) : nil;
-    
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:title
-                                                     message:message
-                                                    delegate:self
-                                           cancelButtonTitle:NSLocalizedString(@"SA_STR_CANCEL", nil)
-                                           otherButtonTitles:otherButtonTitle,nil];
-    
-    [alert show];
 }
 
 @end

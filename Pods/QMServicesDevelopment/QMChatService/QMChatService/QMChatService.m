@@ -955,9 +955,18 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
                                    completion(response, sortedMessages);
                                }
                            } errorBlock:^(QBResponse *response) {
+                               
                                // case where we may have deleted dialog from another device
-                               if( response.status != QBResponseStatusCodeNotFound ) {
-                                   [strongSelf.serviceManager handleErrorResponse:response];
+                               if (response.status == QBResponseStatusCodeNotFound || response.status == 403) {
+                                   [weakSelf.dialogsMemoryStorage deleteChatDialogWithID:chatDialogID];
+                                   
+                                   if ([weakSelf.multicastDelegate respondsToSelector:@selector(chatService:didDeleteChatDialogWithIDFromMemoryStorage:)]) {
+                                       [weakSelf.multicastDelegate chatService:weakSelf didDeleteChatDialogWithIDFromMemoryStorage:chatDialogID];
+                                   }
+                               }
+                               else {
+                                   
+                                   [weakSelf.serviceManager handleErrorResponse:response];
                                }
                                
                                if (completion) {
