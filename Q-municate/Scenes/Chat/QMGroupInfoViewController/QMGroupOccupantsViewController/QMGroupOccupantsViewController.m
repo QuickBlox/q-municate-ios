@@ -17,6 +17,7 @@
 #import "QMUserInfoViewController.h"
 #import "NSArray+Intersection.h"
 #import "REAlertView.h"
+#import <SVProgressHUD.h>
 
 static const CGFloat kQMSectionHeaderHeight = 32.0f;
 
@@ -75,13 +76,21 @@ QMUsersServiceDelegate
             return;
         }
         
+        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+        
         NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
         NSUInteger userIndex = [self.dataSource userIndexForIndexPath:indexPath];
         QBUUser *user = self.dataSource.items[userIndex];
         
-        self.addUserTask = [[[QMCore instance].contactManager addUserToContactList:user] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        self.addUserTask = [[[QMCore instance].contactManager addUserToContactList:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             
-            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [SVProgressHUD dismiss];
+            
+            if (!task.isFaulted) {
+                
+                [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            }
+            
             return nil;
         }];
     };

@@ -23,6 +23,8 @@
 #import "QMNoResultsCell.h"
 #import "QMSearchCell.h"
 
+#import <SVProgressHUD.h>
+
 typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
     
     QMSearchScopeButtonIndexLocal,
@@ -143,12 +145,17 @@ UISearchBarDelegate
             return;
         }
         
+        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+        
         NSIndexPath *indexPath = [self.searchResultsController.tableView indexPathForCell:cell];
         QBUUser *user = self.globalSearchDataSource.items[indexPath.row];
         
-        self.addUserTask = [[[QMCore instance].contactManager addUserToContactList:user] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        self.addUserTask = [[[QMCore instance].contactManager addUserToContactList:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             
-            if (self.searchController.isActive
+            [SVProgressHUD dismiss];
+            
+            if (!task.isFaulted
+                && self.searchController.isActive
                 && [self.searchResultsController.tableView.dataSource conformsToProtocol:@protocol(QMGlobalSearchDataSourceProtocol)]) {
                 
                 [self.searchResultsController.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
