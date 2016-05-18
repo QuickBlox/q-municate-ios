@@ -23,9 +23,9 @@
  *  Cached values
  */
 @property (assign, nonatomic) NSUInteger placeholderID;
-@property (strong, nonatomic) NSString *avatarUrl;
-@property (strong, nonatomic) NSString *title;
-@property (strong, nonatomic) NSString *body;
+@property (copy, nonatomic) NSString *avatarUrl;
+@property (copy, nonatomic) NSString *title;
+@property (copy, nonatomic) NSString *body;
 
 @end
 
@@ -66,7 +66,7 @@
     
     if (![_title isEqualToString:title]) {
         
-        _title = title;
+        _title = [title copy];
         self.titleLabel.text = title;
     }
     
@@ -74,7 +74,7 @@
         
         _placeholderID = placeholderID;
         
-        _avatarUrl = avatarUrl;
+        _avatarUrl = [avatarUrl copy];
         
         UIImage *placeholder = [QMPlaceholder placeholderWithFrame:self.avatarImage.bounds title:self.title ID:self.placeholderID];
         
@@ -90,7 +90,7 @@
     
     if (![_title isEqualToString:title]) {
         
-        _title = title;
+        _title = [title copy];
         self.titleLabel.text = title;
     }
 }
@@ -99,7 +99,7 @@
     
     if (![_body isEqualToString:body]) {
         
-        _body = body;
+        _body = [body copy];
         self.bodyLabel.text = body;
     }
 }

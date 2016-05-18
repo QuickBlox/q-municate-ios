@@ -13,8 +13,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
 
-@property (strong, nonatomic) NSString *title;
-@property (strong, nonatomic) NSString *status;
+@property (copy, nonatomic) NSString *title;
+@property (copy, nonatomic) NSString *status;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *titleLabelLeadingConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *titleLabelTrailingConstraint;
@@ -30,7 +30,7 @@
     
     if (![_title isEqualToString:title]) {
         
-        _title = title;
+        _title = [title copy];
         self.titleLabel.text = title;
         
         [self sizeToFit];
@@ -41,7 +41,7 @@
     
     if (![_status isEqualToString:status]) {
         
-        _status = status;
+        _status = [status copy];
         self.statusLabel.text = status;
         
         [self sizeToFit];

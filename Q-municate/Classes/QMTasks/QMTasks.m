@@ -31,6 +31,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
         [source setResult:user];
     } errorBlock:^(QBResponse * _Nonnull response) {
         
+        [[QMCore instance] handleErrorResponse:response];
         [source setError:response.error.error];
     }];
     

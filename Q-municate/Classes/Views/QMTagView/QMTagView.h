@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Title label of tag
  */
-@property (strong, nonatomic) NSString *label;
+@property (copy, nonatomic) NSString *label;
 
 /**
  *  Calculated preferred width

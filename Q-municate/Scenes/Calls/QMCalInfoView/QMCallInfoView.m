@@ -74,7 +74,7 @@ static NSString *const kQMVideoCallInfoXibName = @"QMVideoCallInfoView";
     
     if (![_bottomText isEqualToString:bottomText]) {
         
-        _bottomText = bottomText;
+        _bottomText = [bottomText copy];
         self.bottomLabel.text = bottomText;
     }
 }

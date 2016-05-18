@@ -64,7 +64,7 @@ static UIColor *highlightedColor() {
     
     if (![_title isEqualToString:title]) {
         
-        _title = title;
+        _title = [title copy];
         
         self.titleLabel.text = title;
     }

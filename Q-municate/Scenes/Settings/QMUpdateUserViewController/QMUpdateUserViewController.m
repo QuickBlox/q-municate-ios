@@ -14,6 +14,8 @@
 #import "QMTasks.h"
 #import "QMNotification.h"
 
+static const NSUInteger kQMFullNameFieldMinLength = 3;
+
 @interface QMUpdateUserViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *textField;
@@ -100,6 +102,11 @@
         return;
     }
     
+    if (![self updateAllowed]) {
+        
+        return;
+    }
+    
     QBUpdateUserParameters *updateUserParams = [QBUpdateUserParameters new];
     [updateUserParams setValue:self.textField.text forKeyPath:self.keyPath];
     
@@ -121,25 +128,26 @@
     self.navigationItem.rightBarButtonItem.enabled = ![sender.text isEqualToString:self.cachedValue];
 }
 
+#pragma mark - Helpers
+
+- (BOOL)updateAllowed {
+    
+    NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
+    if ([[self.textField.text stringByTrimmingCharactersInSet:whiteSpaceSet] length] == 0
+        || (self.updateUserField == QMUpdateUserFieldFullName && self.textField.text.length < kQMFullNameFieldMinLength)) {
+        
+        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+        return NO;
+    }
+    
+    return YES;
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSString *)tableView:(UITableView *)__unused tableView titleForFooterInSection:(NSInteger)__unused section {
     
-    switch (self.updateUserField) {
-            
-        case QMUpdateUserFieldFullName:
-            return NSLocalizedString(@"QM_STR_FULLNAME_DESCRIPTION", nil);
-            
-        case QMUpdateUserFieldEmail:
-            return NSLocalizedString(@"QM_STR_EMAIL_DESCRIPTION", nil);
-            
-        case QMUpdateUserFieldStatus:
-            return NSLocalizedString(@"QM_STR_STATUS_DESCRIPTION", nil);
-            
-        case QMUpdateUserFieldNone:
-            return nil;
-            break;
-    }
+    return self.bottomText;
 }
 
 @end

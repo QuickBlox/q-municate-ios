@@ -61,7 +61,7 @@ QMUsersServiceDelegate
     
     if (![_cachedSearchText isEqualToString:searchText]) {
         
-        _cachedSearchText = searchText;
+        self.cachedSearchText = searchText;
     }
     
     if (searchText.length == 0) {

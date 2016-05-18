@@ -84,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Text field placeholder.
  */
-@property (strong, nonatomic, nullable) NSString *placeholder;
+@property (copy, nonatomic, nullable) NSString *placeholder;
 
 /**
  *  Line of tags height.

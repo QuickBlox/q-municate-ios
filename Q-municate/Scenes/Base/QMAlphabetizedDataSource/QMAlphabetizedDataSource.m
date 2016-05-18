@@ -38,7 +38,7 @@
     self = [super initWithSearchDataProvider:searchDataProvider];
     if (self) {
         
-        _keyPath = keyPath;
+        _keyPath = [keyPath copy];
     }
     
     return self;

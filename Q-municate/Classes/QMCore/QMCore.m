@@ -14,10 +14,6 @@
 
 static NSString *const kQMLastActivityDateKey = @"last_activity_date";
 static NSString *const kQMErrorKey = @"errors";
-static NSString *const kQMBaseKey = @"base";
-static NSString *const kQMErrorEmailKey = @"email";
-static NSString *const kQMErrorFullNameKey = @"full_name";
-static NSString *const kQMErrorPasswordKey = @"password";
 
 static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 
@@ -102,58 +98,41 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 
 #pragma mark - Error handling
 
-- (NSString *)errorStringFromArray:(NSArray *)errorArray {
-    NSString *errorString = [[NSString alloc] init];
-    
-    for (NSUInteger i = 0; i < errorArray.count; ++i) {
-        if (i > 0) {
-            errorString = [errorString stringByAppendingString:@" and "];
-        }
-        errorString = [errorString stringByAppendingString:errorArray[i]];
-    }
-    
-    return errorString;
-}
-
-- (NSString *)appendErrorString:(NSString *)errorString toMessageString:(NSString *)messageString {
-    if (messageString.length > 0) {
-        messageString = [messageString stringByAppendingString:@"\n"];
-    }
-    
-    messageString = [messageString stringByAppendingString:errorString];
-    
-    return messageString;
-}
-
 - (NSString *)errorStringFromResponseStatus:(QBResponseStatusCode)statusCode {
-    NSString *errorString = nil;
     
     switch (statusCode) {
         case QBResponseStatusCodeServerError:
-            errorString = NSLocalizedString(@"QM_STR_BAD_GATEWAY_ERROR", nil);
-            break;
+            return NSLocalizedString(@"QM_STR_BAD_GATEWAY_ERROR", nil);
+            
         case QBResponseStatusCodeUnknown:
-            errorString = NSLocalizedString(@"QM_STR_CONNECTION_NETWORK_ERROR", nil);
-            break;
+            return NSLocalizedString(@"QM_STR_CONNECTION_NETWORK_ERROR", nil);
+            
         case QBResponseStatusCodeUnAuthorized:
-            errorString = NSLocalizedString(@"QM_STR_INCORRECT_USER_DATA_ERROR", nil);
-            break;
-        case QBResponseStatusCodeValidationFailed:
-            errorString = NSLocalizedString(@"QM_STR_INCORRECT_USER_DATA_ERROR", nil);
-            break;
+            return NSLocalizedString(@"QM_STR_INCORRECT_USER_DATA_ERROR", nil);
+            
         default:
-            errorString = NSLocalizedString(@"QM_STR_UNKNOWN_ERROR", nil);
-            break;
+            return nil;
+    }
+}
+
+- (void)loopErrorArray:(NSArray *)errorArray forMutableString:(NSMutableString *)mutableString {
+    
+    for (NSString *errStr in errorArray) {
+        
+        if (errStr != nil) {
+            
+            [mutableString appendString:errStr];
+            [mutableString appendString:@", "];
+        }
     }
     
-    return errorString;
+    [mutableString deleteCharactersInRange:NSMakeRange(mutableString.length - 2, 2)];
 }
 
 - (void)handleErrorResponse:(QBResponse *)response {
+    NSAssert(!response.success, @"Error handling is valid only for unsuccessful response.");
     
-    NSAssert(!response.success, @"Error handling is available only if response success value is False");
-    
-    NSString *errorMessage = [[NSString alloc] init];
+    NSString *errorMessage = nil;
     
     if (!self.isInternetConnected) {
         
@@ -161,52 +140,31 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     }
     else {
         
-        id errorReasons = response.error.reasons[kQMErrorKey];
+        errorMessage = [self errorStringFromResponseStatus:response.status];
         
-        if (self.isAuthorized) {
+        if (errorMessage == nil) {
             
-            if ([errorReasons isKindOfClass:[NSDictionary class]] && errorReasons[kQMBaseKey] != nil) {
-                
-                errorMessage = [errorReasons[kQMBaseKey] firstObject];
-            } else {
-                
-                errorMessage = [self errorStringFromResponseStatus:response.status];
-            }
-        }
-        else {
+            id errorReasons = response.error.reasons[kQMErrorKey];
             
-            if ([errorReasons isKindOfClass:[NSDictionary class]]) {
+            NSMutableString *mutableString = [NSMutableString new];
+            if ([errorReasons isKindOfClass:[NSArray class]]) {
                 
-                if (errorReasons[kQMBaseKey] != nil) {
-                    
-                    errorMessage = [errorReasons[kQMBaseKey] firstObject];
-                }
-                else {
-                    
-                    if (errorReasons[kQMErrorEmailKey]) {
-                        
-                        NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_EMAIL_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorEmailKey]]];
-                        errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
-                        
-                    }
-                    if (errorReasons[kQMErrorFullNameKey]) {
-                        
-                        NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FULL_NAME_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorFullNameKey]]];
-                        errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
-                        
-                    }
-                    if (errorReasons[kQMErrorPasswordKey]) {
-                        
-                        NSString *errorString = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_PASSWORD_ERROR", nil), [self errorStringFromArray:errorReasons[kQMErrorPasswordKey]]];
-                        errorMessage = [self appendErrorString:errorString toMessageString:errorMessage];
-                        
-                    }
-                }
+                [self loopErrorArray:errorReasons forMutableString:mutableString];
             }
-            else {
+            else if ([errorReasons isKindOfClass:[NSDictionary class]]) {
                 
-                errorMessage = [self errorStringFromResponseStatus:response.status];
+                for (NSString *key in [errorReasons allKeys]) {
+                    
+                    [mutableString appendString:key];
+                    [mutableString appendString:@" "];
+                    [self loopErrorArray:errorReasons[key] forMutableString:mutableString];
+                    [mutableString appendString:@"\n"];
+                }
+                
+                [mutableString deleteCharactersInRange:NSMakeRange(mutableString.length - 2, 2)];
             }
+            
+            errorMessage = mutableString.copy;
         }
     }
     

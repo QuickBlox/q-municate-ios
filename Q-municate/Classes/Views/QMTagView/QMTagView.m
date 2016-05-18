@@ -86,11 +86,11 @@ static UIImage *tokenBackgroundHighlightedImage() {
     
     if (![_label isEqualToString:label]) {
         
-        _label = label;
+        _label = [label copy];
         
-        [self setTitle:label forState:UIControlStateNormal];
+        [self setTitle:_label forState:UIControlStateNormal];
         
-        self.preferredWidth = [label sizeWithAttributes:@{NSFontAttributeName : self.titleLabel.font}].width + 10;
+        self.preferredWidth = [_label sizeWithAttributes:@{NSFontAttributeName : self.titleLabel.font}].width + 10;
     }
 }
 

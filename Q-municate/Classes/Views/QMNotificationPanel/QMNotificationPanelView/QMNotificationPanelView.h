@@ -40,7 +40,7 @@ typedef NS_ENUM(NSUInteger, QMNotificationPanelType) {
 /**
  *  Notification panel view message.
  */
-@property (strong, nonatomic, nullable) NSString *message;
+@property (copy, nonatomic, nullable) NSString *message;
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;

@@ -162,7 +162,7 @@
 
 - (void)setPlaceholder:(NSString *)placeholder {
     
-    _placeholder = placeholder;
+    _placeholder = [placeholder copy];
     _textField.placeholderLabel.text = _placeholder;
     [_textField.placeholderLabel sizeToFit];
 }

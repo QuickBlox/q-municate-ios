@@ -90,12 +90,14 @@ static const CGFloat kQMIconSize = 26.0f;
     
     if (![_message isEqualToString:message]) {
         
-        _message = message;
+        _message = [message copy];
         
         self.textLabel.text = message;
         
         CGFloat width = [self.textLabel.text sizeWithAttributes:@{NSFontAttributeName : self.textLabel.font}].width;
-        if (width > self.textLabel.bounds.size.width) {
+        CGFloat labelWidth = CGRectGetWidth(self.textLabel.bounds);
+        
+        if (width > labelWidth) {
             // Text label and base view needs to be resized
             [self.textLabel sizeToFit];
             

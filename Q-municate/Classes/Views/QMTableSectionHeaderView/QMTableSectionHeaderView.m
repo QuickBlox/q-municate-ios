@@ -87,7 +87,7 @@ static UIFont *labelFont() {
     
     if (![_title isEqualToString:title]) {
         
-        _title = title;
+        _title = [title copy];
         
         self.titleLabel.text = title;
         [self.titleLabel sizeToFit];
