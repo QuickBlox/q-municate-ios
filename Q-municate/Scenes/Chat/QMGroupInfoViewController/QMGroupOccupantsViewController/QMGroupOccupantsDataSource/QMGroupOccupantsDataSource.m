@@ -77,6 +77,12 @@ static const NSUInteger kQMNumberOfSections = 1;
         [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
         
         BOOL isRequestRequired = ![[QMCore instance].contactManager isContactListItemExistentForUserWithID:user.ID];
+        
+        if ([QMCore instance].currentProfile.userData.ID == user.ID) {
+            
+            isRequestRequired = NO;
+        }
+        
         [cell setAddButtonVisible:isRequestRequired];
         
         NSString *onlineStatus = [[QMCore instance].contactManager onlineStatusForUser:user];
