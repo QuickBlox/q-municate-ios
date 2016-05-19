@@ -11,7 +11,6 @@
 		2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */; };
 		55286996199131B5006F92CB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55286995199131B5006F92CB /* Localizable.strings */; };
 		55495A221993BCC100B7764C /* QMAlertsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 55495A201993BCC100B7764C /* QMAlertsFactory.m */; };
-		559BDFE819618D3D000588FE /* QMSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE019618D3D000588FE /* QMSignUpViewController.m */; };
 		559BDFEA19618D3D000588FE /* QMWelcomeScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE619618D3D000588FE /* QMWelcomeScreenViewController.m */; };
 		55A8B06E1965986A00B5D33B /* QMSoundManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B05C1965986A00B5D33B /* QMSoundManager.m */; };
 		55A8B06F1965986A00B5D33B /* busy.wav in Resources */ = {isa = PBXBuildFile; fileRef = 55A8B05E1965986A00B5D33B /* busy.wav */; };
@@ -176,8 +175,6 @@
 		559327A4199216FB001C4BF8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		559327A6199216FB001C4BF8 /* Q_municate_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Q_municate_Tests.m; sourceTree = "<group>"; };
 		559327A8199216FB001C4BF8 /* Q-municate Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Q-municate Tests-Prefix.pch"; sourceTree = "<group>"; };
-		559BDFDF19618D3D000588FE /* QMSignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSignUpViewController.h; sourceTree = "<group>"; };
-		559BDFE019618D3D000588FE /* QMSignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSignUpViewController.m; sourceTree = "<group>"; };
 		559BDFE519618D3D000588FE /* QMWelcomeScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMWelcomeScreenViewController.h; sourceTree = "<group>"; };
 		559BDFE619618D3D000588FE /* QMWelcomeScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMWelcomeScreenViewController.m; sourceTree = "<group>"; };
 		55A8B05B1965986A00B5D33B /* QMSoundManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSoundManager.h; sourceTree = "<group>"; };
@@ -558,16 +555,6 @@
 			path = ../Classes/ViewControllers/AuthViewControllers/QMLoginVC;
 			sourceTree = "<group>";
 		};
-		559BDFDE19618D3D000588FE /* Sign Up screen */ = {
-			isa = PBXGroup;
-			children = (
-				559BDFDF19618D3D000588FE /* QMSignUpViewController.h */,
-				559BDFE019618D3D000588FE /* QMSignUpViewController.m */,
-			);
-			name = "Sign Up screen";
-			path = ../Classes/ViewControllers/AuthViewControllers/QMSignUpVC;
-			sourceTree = "<group>";
-		};
 		559BDFE119618D3D000588FE /* QMSplashViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -879,7 +866,6 @@
 				697E2D49196EA7E500CD2BDE /* License Agreement */,
 				559BDFE419618D3D000588FE /* Welcome screen */,
 				559BDFDB19618D3D000588FE /* Login screen */,
-				559BDFDE19618D3D000588FE /* Sign Up screen */,
 				559BDFEC19618F24000588FE /* Forgot password */,
 			);
 			name = Auth;
@@ -2093,7 +2079,6 @@
 				58B3C9B81CB3ED8000B08A27 /* QMGroupOccupantsViewController.m in Sources */,
 				5877D6CE1C46702400938E5D /* QMDialogsDataSource.m in Sources */,
 				581BAC8E1CAD8DD900E0567D /* QMColors.m in Sources */,
-				559BDFE819618D3D000588FE /* QMSignUpViewController.m in Sources */,
 				585DE45F1C4686060068E03E /* QMErrorsFactory.m in Sources */,
 				58A6392D1CEB78D000D682C4 /* QMLinkViewController.m in Sources */,
 				5839F2761CC533A30055EBF8 /* QMGroupHeaderView.m in Sources */,
