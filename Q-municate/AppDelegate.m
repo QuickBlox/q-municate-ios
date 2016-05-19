@@ -11,7 +11,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "QMChatVC.h"
 #import "QMCore.h"
-#import "QMNotification.h"
 
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
@@ -129,7 +128,6 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     
     if ([QMCore instance].currentProfile.userData && ![QBChat instance].isConnected) {
         
-        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) timeUntilDismiss:0];
         [[QMCore instance].chatService connect];
     }
 }
