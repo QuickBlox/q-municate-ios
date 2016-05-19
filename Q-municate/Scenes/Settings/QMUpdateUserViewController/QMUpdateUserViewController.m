@@ -139,9 +139,13 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
 
 - (BOOL)updateAllowed {
     
+    if (self.updateUserField == QMUpdateUserFieldStatus) {
+        
+        return YES;
+    }
+    
     NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
-    if ([[self.textField.text stringByTrimmingCharactersInSet:whiteSpaceSet] length] == 0
-        || (self.updateUserField == QMUpdateUserFieldFullName && self.textField.text.length < kQMFullNameFieldMinLength)) {
+    if ([[self.textField.text stringByTrimmingCharactersInSet:whiteSpaceSet] length] < kQMFullNameFieldMinLength) {
         
         [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) duration:kQMDefaultNotificationDismissTime];
         return NO;

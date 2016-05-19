@@ -175,7 +175,8 @@ QMContactListServiceDelegate
 - (void)updateStatus {
     
     // Status
-    if (self.user.status.length > 0) {
+    NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
+    if ([[self.user.status stringByTrimmingCharactersInSet:whiteSpaceSet] length] > 0) {
         
         self.statusLabel.text = self.user.status;
     }
