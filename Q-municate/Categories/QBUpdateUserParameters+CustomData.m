@@ -58,7 +58,7 @@ NSString *const kQMIsImportUpdateKey = @"is_import";
     }
 }
 
-- (void)syncronize {
+- (void)synchronize {
     
     NSError *error = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.context
@@ -82,7 +82,7 @@ NSString *const kQMIsImportUpdateKey = @"is_import";
 - (void)setIsImport:(BOOL)isImport {
     
     self.context[kQMIsImportUpdateKey] = @(isImport);
-    [self syncronize];
+    [self synchronize];
 }
 
 - (BOOL)isImport {
@@ -96,7 +96,7 @@ NSString *const kQMIsImportUpdateKey = @"is_import";
 - (void)setStatus:(NSString *)status {
     
     self.context[kQMStatusUpdateKey] = [status copy];
-    [self syncronize];
+    [self synchronize];
 }
 
 - (NSString *)status {
@@ -109,7 +109,7 @@ NSString *const kQMIsImportUpdateKey = @"is_import";
 - (void)setAvatarUrl:(NSString *)avatarUrl {
     
     self.context[kQMAvatarUrlUpdateKey] = [avatarUrl copy];
-    [self syncronize];
+    [self synchronize];
 }
 
 - (NSString *)avatarUrl {

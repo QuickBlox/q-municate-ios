@@ -108,6 +108,7 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
     }
     
     QBUpdateUserParameters *updateUserParams = [QBUpdateUserParameters new];
+    updateUserParams.customData = [QMCore instance].currentProfile.userData.customData;
     [updateUserParams setValue:self.textField.text forKeyPath:self.keyPath];
     
     [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];

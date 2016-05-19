@@ -43,6 +43,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     return [[QMContent uploadJPEGImage:userImage progress:progress] continueWithSuccessBlock:^id _Nullable(BFTask<QBCBlob *> * _Nonnull task) {
         
         QBUpdateUserParameters *userParams = [QBUpdateUserParameters new];
+        userParams.customData = [QMCore instance].currentProfile.userData.customData;
         userParams.avatarUrl = task.result.isPublic ? task.result.publicUrl : task.result.privateUrl;
         
         return [QMTasks taskUpdateCurrentUser:userParams];
