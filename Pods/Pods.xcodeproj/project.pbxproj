@@ -483,13 +483,6 @@
 				</array>
 			</dict>
 		</dict>
-		<key>04AAC1865C240ECE9944FAA2E8415D38</key>
-		<dict>
-			<key>fileRef</key>
-			<string>BBE83323BA79B50445E36E973C721528</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
 		<key>04C242AD9DB121607B89441935D7F5AD</key>
 		<dict>
 			<key>includeInIndex</key>
@@ -3255,7 +3248,7 @@
 			<string>FB8A731327F04FAAFD234D4D125D79F8</string>
 			<key>buildPhases</key>
 			<array>
-				<string>90575588E3F98A9D430ED867D5159D4E</string>
+				<string>E6B47E57E5A06A7F634FB91F9CA60E5A</string>
 				<string>9598DF79D7F9A45BD34C5DA2B4EBF94F</string>
 				<string>C86B4829C87A07BA08F22424FAE9CD38</string>
 			</array>
@@ -10842,18 +10835,6 @@
 				</array>
 			</dict>
 		</dict>
-		<key>7C0D4F9350FB2128B30860AAC9276947</key>
-		<dict>
-			<key>fileRef</key>
-			<string>49A9D0F07EB821467F328DF00E075219</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-			<key>settings</key>
-			<dict>
-				<key>COMPILER_FLAGS</key>
-				<string>-DOS_OBJECT_USE_OBJC=0</string>
-			</dict>
-		</dict>
 		<key>7C18FC218269AFB0426021CE9CA28CCC</key>
 		<dict>
 			<key>fileRef</key>
@@ -10948,6 +10929,13 @@
 			<string>QMChatService/QMChatService/QMChatAttachmentService.m</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7CD681C760CB5097D7AE170B0C44ADE1</key>
+		<dict>
+			<key>fileRef</key>
+			<string>BBE83323BA79B50445E36E973C721528</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
 		</dict>
 		<key>7CE8FAE33F86FA67B5E6F570368FC10F</key>
 		<dict>
@@ -12837,20 +12825,6 @@
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>90575588E3F98A9D430ED867D5159D4E</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>04AAC1865C240ECE9944FAA2E8415D38</string>
-				<string>7C0D4F9350FB2128B30860AAC9276947</string>
-			</array>
-			<key>isa</key>
-			<string>PBXSourcesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
 		<key>90579E82868AB8F2B2EF8996FE278178</key>
 		<dict>
 			<key>fileRef</key>
@@ -14443,6 +14417,13 @@
 			<string>FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphAction.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
+		</dict>
+		<key>A07BB29123A976A2B9ECD7CFAFB82B03</key>
+		<dict>
+			<key>fileRef</key>
+			<string>49A9D0F07EB821467F328DF00E075219</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
 		</dict>
 		<key>A0D9C7FEEDA83FD032CA883C9B61D952</key>
 		<dict>
@@ -20722,6 +20703,20 @@
 			<array>
 				<string>86CEE99D9BE39EE6EA4EC442B0AC1636</string>
 				<string>D77A56AB196CEF5B26B2F605B3EDCB8B</string>
+			</array>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>E6B47E57E5A06A7F634FB91F9CA60E5A</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>7CD681C760CB5097D7AE170B0C44ADE1</string>
+				<string>A07BB29123A976A2B9ECD7CFAFB82B03</string>
 			</array>
 			<key>isa</key>
 			<string>PBXSourcesBuildPhase</string>
