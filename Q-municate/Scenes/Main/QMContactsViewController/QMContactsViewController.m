@@ -80,36 +80,17 @@ QMContactListServiceDelegate
     [[QMCore instance].contactListService addDelegate:self];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    if (self.searchController.isActive) {
-        
-        [self.navigationController setNavigationBarHidden:YES animated:YES];
-    }
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
-    if (self.searchController.isActive) {
-        
-        [self.navigationController setNavigationBarHidden:NO animated:NO];
-    }
-}
-
 - (void)configureSearch {
     
     self.searchResultsController = [[QMSearchResultsController alloc] init];
     self.searchResultsController.delegate = self;
     
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:self.searchResultsController];
-    self.searchController.searchBar.scopeButtonTitles = @[NSLocalizedString(@"QM_STR_LOCAL_SEARCH", nil), NSLocalizedString(@"QM_STR_GLOBAL_SEARCH", nil)];
     self.searchController.searchBar.placeholder = NSLocalizedString(@"QM_STR_SEARCH_BAR_PLACEHOLDER", nil);
     self.searchController.searchBar.delegate = self;
     self.searchController.searchResultsUpdater = self;
     self.searchController.delegate = self;
-    self.searchController.dimsBackgroundDuringPresentation = YES;
+    self.searchController.dimsBackgroundDuringPresentation = NO;
     self.definesPresentationContext = YES;
     [self.searchController.searchBar sizeToFit]; // iOS8 searchbar sizing
     self.tableView.tableHeaderView = self.searchController.searchBar;
@@ -193,6 +174,14 @@ QMContactListServiceDelegate
 #pragma mark - UISearchControllerDelegate
 
 - (void)willPresentSearchController:(UISearchController *)__unused searchController {
+    
+    if (self.searchController.searchBar.scopeButtonTitles.count == 0) {
+        // there is an Apple bug when first time configuring search bar scope buttons
+        // will be displayed no matter what with minimal searchbar
+        // to fix this adding scope buttons right before user activates search bar
+        self.searchController.searchBar.showsScopeBar = NO;
+        self.searchController.searchBar.scopeButtonTitles = @[NSLocalizedString(@"QM_STR_LOCAL_SEARCH", nil), NSLocalizedString(@"QM_STR_GLOBAL_SEARCH", nil)];
+    }
     
     [self updateDataSourceByScope:searchController.searchBar.selectedScopeButtonIndex];
 }

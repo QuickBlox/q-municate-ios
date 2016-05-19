@@ -11,6 +11,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "QMChatVC.h"
 #import "QMCore.h"
+#import "QMImages.h"
 
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
@@ -81,6 +82,11 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [[UINavigationBar appearance] setTintColor:mainTintColor];
     [[UISearchBar appearance] setTintColor:mainTintColor];
     [[UITabBar appearance] setTintColor:mainTintColor];
+    
+    // Configuring searchbar appearance
+    [[UISearchBar appearance] setSearchBarStyle:UISearchBarStyleMinimal];
+    [[UISearchBar appearance] setBarTintColor:[UIColor whiteColor]];
+    [[UISearchBar appearance] setBackgroundImage:QMStatusBarBackgroundImage() forBarPosition:0 barMetrics:UIBarMetricsDefault];
     
     // Configuring external frameworks
     [Fabric with:@[CrashlyticsKit, DigitsKit]];

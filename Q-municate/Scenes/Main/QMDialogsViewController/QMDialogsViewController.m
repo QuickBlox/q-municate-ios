@@ -93,7 +93,7 @@ QMSearchResultsControllerDelegate
     self.searchController.searchBar.placeholder = NSLocalizedString(@"QM_STR_SEARCH_BAR_PLACEHOLDER", nil);
     self.searchController.searchResultsUpdater = self;
     self.searchController.delegate = self;
-    self.searchController.dimsBackgroundDuringPresentation = YES;
+    self.searchController.dimsBackgroundDuringPresentation = NO;
     self.definesPresentationContext = YES;
     [self.searchController.searchBar sizeToFit]; // iOS8 searchbar sizing
     self.tableView.tableHeaderView = self.searchController.searchBar;
