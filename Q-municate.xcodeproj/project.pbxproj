@@ -134,6 +134,7 @@
 		58F86EDB1CA2EF6C00DA4758 /* QMUserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F86EDA1CA2EF6C00DA4758 /* QMUserInfoViewController.m */; };
 		58FA41671C96B21200E61586 /* QMMessageStatusStringBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FA41661C96B21200E61586 /* QMMessageStatusStringBuilder.m */; };
 		58FA416B1C96E19400E61586 /* QMOnlineTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FA416A1C96E19400E61586 /* QMOnlineTitleView.m */; };
+		58FAAE891CEDC4720081EABA /* UINavigationController+QMNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FAAE881CEDC4720081EABA /* UINavigationController+QMNotification.m */; };
 		690A271518CA0F35003D6B80 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A271418CA0F35003D6B80 /* AddressBook.framework */; };
 		693DC42618FFC45900AF46D9 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42518FFC45900AF46D9 /* libsqlite3.dylib */; };
 		693DC42C18FFC58000AF46D9 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */; };
@@ -400,6 +401,8 @@
 		58FA41661C96B21200E61586 /* QMMessageStatusStringBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMMessageStatusStringBuilder.m; path = Classes/QMMessageStatusStringBuilder/QMMessageStatusStringBuilder.m; sourceTree = "<group>"; };
 		58FA41691C96E19400E61586 /* QMOnlineTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMOnlineTitleView.h; path = QMOnlineTitleView/QMOnlineTitleView.h; sourceTree = "<group>"; };
 		58FA416A1C96E19400E61586 /* QMOnlineTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMOnlineTitleView.m; path = QMOnlineTitleView/QMOnlineTitleView.m; sourceTree = "<group>"; };
+		58FAAE871CEDC4720081EABA /* UINavigationController+QMNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UINavigationController+QMNotification.h"; path = "UINavigationController/UINavigationController+QMNotification.h"; sourceTree = "<group>"; };
+		58FAAE881CEDC4720081EABA /* UINavigationController+QMNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UINavigationController+QMNotification.m"; path = "UINavigationController/UINavigationController+QMNotification.m"; sourceTree = "<group>"; };
 		67976AC8FFE848A4B85EB2AF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		690A271418CA0F35003D6B80 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		693DC42518FFC45900AF46D9 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -1682,6 +1685,15 @@
 			name = QMOnlineTitleView;
 			sourceTree = "<group>";
 		};
+		58FAAE861CEDC3E50081EABA /* UINavigationController */ = {
+			isa = PBXGroup;
+			children = (
+				58FAAE871CEDC4720081EABA /* UINavigationController+QMNotification.h */,
+				58FAAE881CEDC4720081EABA /* UINavigationController+QMNotification.m */,
+			);
+			name = UINavigationController;
+			sourceTree = "<group>";
+		};
 		6943843218E42677001E08A9 /* CustomSegues */ = {
 			isa = PBXGroup;
 			children = (
@@ -1697,6 +1709,7 @@
 		6943848C18E42691001E08A9 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				58FAAE861CEDC3E50081EABA /* UINavigationController */,
 				58B3C9D31CB681F400B08A27 /* NSArray */,
 				5842777A1C3D331D00CDE35B /* UIImage */,
 				5842777B1C3D332700CDE35B /* NSString */,
@@ -2045,6 +2058,7 @@
 				58C64D071C90699A00F1387B /* QMChatButtonsFactory.m in Sources */,
 				58D847861C871BDB000C40BA /* QMDialogsSearchDataProvider.m in Sources */,
 				58B3C9D21CB6717200B08A27 /* QMSeparatorCell.m in Sources */,
+				58FAAE891CEDC4720081EABA /* UINavigationController+QMNotification.m in Sources */,
 				5877D6DA1C46720600938E5D /* QMTableViewCell.m in Sources */,
 				2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */,
 				580D34DF1BBFF5850034813A /* UIImage+fixOrientation.m in Sources */,
