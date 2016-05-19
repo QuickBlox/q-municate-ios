@@ -27,28 +27,29 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </imageView>
+                    <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Anthony Tucker" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="smJ-6U-6Ij">
+                        <rect key="frame" x="64" y="14" width="208" height="21"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ySZ-73-k8Y">
-                        <rect key="frame" x="288" y="14" width="20" height="22"/>
+                        <rect key="frame" x="280" y="0.0" width="40" height="49"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="22" id="QMV-uu-Z8q"/>
-                            <constraint firstAttribute="width" constant="20" id="TOf-vP-pa9"/>
+                            <constraint firstAttribute="width" constant="40" id="3ld-aP-62B"/>
                         </constraints>
                         <state key="normal" image="add_friend"/>
                         <connections>
                             <action selector="didTapAddButton" destination="APp-P0-Kot" eventType="touchUpInside" id="iA6-hv-zKR"/>
                         </connections>
                     </button>
-                    <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Anthony Tucker" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="smJ-6U-6Ij">
-                        <rect key="frame" x="64" y="14" width="216" height="21"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailingMargin" secondItem="ySZ-73-k8Y" secondAttribute="trailing" constant="4" id="2Hq-Qs-7w0"/>
+                    <constraint firstItem="ySZ-73-k8Y" firstAttribute="top" secondItem="PRk-BP-UPc" secondAttribute="topMargin" constant="-8" id="644-jX-3s9"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="ySZ-73-k8Y" secondAttribute="trailing" constant="-8" id="7Qf-Vs-ZMh"/>
                     <constraint firstItem="ySZ-73-k8Y" firstAttribute="leading" secondItem="smJ-6U-6Ij" secondAttribute="trailing" constant="8" id="ITH-uZ-qQd"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="ySZ-73-k8Y" secondAttribute="bottom" constant="-8" id="Ywi-Vb-9ge"/>
                     <constraint firstItem="JDk-Dx-SLZ" firstAttribute="centerY" secondItem="PRk-BP-UPc" secondAttribute="centerY" id="eCb-rd-jTL"/>
                     <constraint firstItem="smJ-6U-6Ij" firstAttribute="leading" secondItem="JDk-Dx-SLZ" secondAttribute="trailing" constant="12" id="lgM-y0-4C6"/>
                     <constraint firstItem="JDk-Dx-SLZ" firstAttribute="leading" secondItem="PRk-BP-UPc" secondAttribute="leadingMargin" constant="4" id="qrr-5n-sfZ"/>
