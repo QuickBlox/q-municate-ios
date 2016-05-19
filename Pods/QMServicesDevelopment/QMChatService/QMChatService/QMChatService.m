@@ -283,6 +283,11 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
     else {
         [QBSettings setAutoReconnectEnabled:YES];
         
+        if ([self.multicastDelegate respondsToSelector:@selector(chatServiceChatHasStartedConnecting:)]) {
+            
+            [self.multicastDelegate chatServiceChatHasStartedConnecting:self];
+        }
+        
         QBUUser *user = self.serviceManager.currentUser;
         [[QBChat instance] connectWithUser:user completion:completion];
     }
