@@ -118,6 +118,7 @@ UISearchBarDelegate
     self.searchController.delegate = self;
     self.searchController.dimsBackgroundDuringPresentation = YES;
     self.definesPresentationContext = YES;
+    [self.searchController.searchBar sizeToFit]; // iOS8 searchbar sizing
     self.tableView.tableHeaderView = self.searchController.searchBar;
 }
 
