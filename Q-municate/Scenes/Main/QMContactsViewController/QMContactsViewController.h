@@ -12,6 +12,4 @@
 
 @interface QMContactsViewController : UITableViewController <QMSearchProtocol>
 
-+ (instancetype)contactsViewController;
-
 @end

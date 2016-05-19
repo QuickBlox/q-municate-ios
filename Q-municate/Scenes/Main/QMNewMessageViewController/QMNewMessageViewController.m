@@ -10,7 +10,7 @@
 #import "QMContactsDataSource.h"
 #import "QMContactsSearchDataSource.h"
 #import "QMCore.h"
-#import "QMNotification.h"
+#import "UINavigationController+QMNotification.h"
 #import "QMChatVC.h"
 #import "QMContactsSearchDataProvider.h"
 
@@ -82,6 +82,7 @@ UISearchResultsUpdating
     self.searchController.delegate = self;
     self.searchController.dimsBackgroundDuringPresentation = NO;
     self.definesPresentationContext = YES;
+    [self.searchController.searchBar sizeToFit]; // iOS8 searchbar sizing
     self.tableView.tableHeaderView = self.searchController.searchBar;
 }
 
@@ -121,13 +122,20 @@ UISearchResultsUpdating
     }
     else {
         
-        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+        [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+        
+        __weak UINavigationController *navigationController = self.navigationController;
         
         @weakify(self);
-        self.dialogCreationTask = [[[QMCore instance].chatService createPrivateChatDialogWithOpponent:user] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+        self.dialogCreationTask = [[[QMCore instance].chatService createPrivateChatDialogWithOpponent:user] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+            
             @strongify(self);
-            [QMNotification dismissNotificationPanel];
-            [self performSegueWithIdentifier:kQMSceneSegueChat sender:task.result];
+            [navigationController dismissNotificationPanel];
+            
+            if (!task.isFaulted) {
+                
+                [self performSegueWithIdentifier:kQMSceneSegueChat sender:task.result];
+            }
             
             return nil;
         }];

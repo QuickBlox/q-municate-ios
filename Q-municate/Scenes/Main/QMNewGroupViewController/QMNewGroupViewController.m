@@ -13,7 +13,7 @@
 #import <QMImageView.h>
 #import "QMTagFieldView.h"
 #import "QMCore.h"
-#import "QMNotification.h"
+#import "UINavigationController+QMNotification.h"
 #import "QMChatVC.h"
 #import "QMContent.h"
 
@@ -79,13 +79,23 @@ UITextFieldDelegate
         return;
     }
     
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     if (self.selectedImage != nil) {
         
-        self.dialogCreationTask = [[QMContent uploadJPEGImage:self.selectedImage progress:nil] continueWithSuccessBlock:^id _Nullable(BFTask<QBCBlob *> * _Nonnull task) {
+        __weak UINavigationController *navigationController = self.navigationController;
+        
+        self.dialogCreationTask = [[QMContent uploadJPEGImage:self.selectedImage progress:nil] continueWithBlock:^id _Nullable(BFTask<QBCBlob *> * _Nonnull task) {
             
-            [self.avatarImageView setImage:self.avatarImageView.image withKey:task.result.publicUrl];
-            return [self createGroupChatWithPhotoURL:task.result.publicUrl];
+            if (!task.isFaulted) {
+                
+                [self.avatarImageView setImage:self.avatarImageView.image withKey:task.result.publicUrl];
+                return [self createGroupChatWithPhotoURL:task.result.publicUrl];
+            }
+            else {
+                
+                [navigationController dismissNotificationPanel];
+                return nil;
+            }
         }];
     }
     else {
@@ -99,18 +109,28 @@ UITextFieldDelegate
     NSArray *occupantsIDs = [[QMCore instance].contactManager idsOfUsers:self.tagFieldView.tagIDs];
     __block QBChatDialog *chatDialog = nil;
     
-    return [[[[QMCore instance].chatService createGroupChatDialogWithName:self.nameTextField.text photo:photoURL occupants:self.tagFieldView.tagIDs] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+    __weak UINavigationController *navigationController = self.navigationController;
+    
+    @weakify(self);
+    return [[[[QMCore instance].chatService createGroupChatDialogWithName:self.nameTextField.text photo:photoURL occupants:self.tagFieldView.tagIDs] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
         
-        [QMNotification dismissNotificationPanel];
+        @strongify(self);
+        [navigationController dismissNotificationPanel];
         
-        chatDialog = task.result;
-        [self performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
+        if (!task.isFaulted) {
+            
+            chatDialog = task.result;
+            [self performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
+            
+            return [[QMCore instance].chatService sendSystemMessageAboutAddingToDialog:chatDialog toUsersIDs:occupantsIDs];
+            
+        }
         
-        return [[QMCore instance].chatService sendSystemMessageAboutAddingToDialog:chatDialog toUsersIDs:occupantsIDs];
+        return [BFTask cancelledTask];
         
     }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         
-        return [[QMCore instance].chatService sendNotificationMessageAboutAddingOccupants:occupantsIDs toDialog:chatDialog withNotificationText:kQMDialogsUpdateNotificationMessage];
+        return task.isCancelled ? nil : [[QMCore instance].chatService sendNotificationMessageAboutAddingOccupants:occupantsIDs toDialog:chatDialog withNotificationText:kQMDialogsUpdateNotificationMessage];
     }];
 }
 

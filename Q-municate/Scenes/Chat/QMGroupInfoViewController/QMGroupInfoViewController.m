@@ -10,7 +10,7 @@
 #import "QMGroupOccupantsViewController.h"
 #import "QMGroupHeaderView.h"
 #import "QMCore.h"
-#import "QMNotification.h"
+#import "UINavigationController+QMNotification.h"
 
 #import "QMPlaceholder.h"
 #import "QMImagePicker.h"
@@ -82,12 +82,18 @@ QMImagePickerResultHandler
 
 - (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     
-    [[[QMCore instance].chatManager changeAvatar:photo forGroupChatDialog:self.chatDialog] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+    __weak UINavigationController *navigationController = self.navigationController;
+    
+    [[[QMCore instance].chatManager changeAvatar:photo forGroupChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         
-        [self.headerView.avatarImage setImage:photo withKey:self.chatDialog.photo];
-        [QMNotification dismissNotificationPanel];
+        [navigationController dismissNotificationPanel];
+        if (!task.isFaulted) {
+            
+            [self.headerView.avatarImage setImage:photo withKey:self.chatDialog.photo];
+        }
+        
         return nil;
     }];
 }

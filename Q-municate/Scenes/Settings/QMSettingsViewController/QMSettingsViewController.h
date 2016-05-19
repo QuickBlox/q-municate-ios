@@ -10,6 +10,4 @@
 
 @interface QMSettingsViewController : UITableViewController
 
-+ (instancetype)settingsViewController;
-
 @end

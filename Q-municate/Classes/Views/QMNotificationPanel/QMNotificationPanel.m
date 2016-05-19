@@ -79,7 +79,6 @@ static const CGFloat kQMFadeAnimationHeightShift = 10.0f;
     [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
         
         self.view.alpha = 1.0f;
-        
     }];
     
     if (self.timeUntilDismiss > 0) {
@@ -168,18 +167,7 @@ static const CGFloat kQMFadeAnimationHeightShift = 10.0f;
         return;
     }
     
-    CGRect frame = self.view.frame;
-    frame.size.height -= kQMFadeAnimationHeightShift;
-    
-    [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
-        
-        self.view.alpha = 0;
-        self.view.frame = frame;
-        
-    } completion:^(BOOL __unused finished) {
-        
-        [self dismissNotificationAnimated:YES];
-    }];
+    [self dismissNotificationAnimated:YES];
 }
 
 - (BOOL)resetAnimated:(BOOL)animated {
@@ -193,14 +181,14 @@ static const CGFloat kQMFadeAnimationHeightShift = 10.0f;
         
         if (animated) {
             
-            [self.view removeFromSuperview];
-        }
-        else {
-            
-            [UIView performWithoutAnimation:^{
+            [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
                 
                 [self.view removeFromSuperview];
             }];
+        }
+        else {
+            
+            [self.view removeFromSuperview];
         }
         
         self.view = nil;

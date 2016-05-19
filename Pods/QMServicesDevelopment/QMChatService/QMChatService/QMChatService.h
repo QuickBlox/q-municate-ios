@@ -957,6 +957,13 @@ typedef void(^QMCacheCollection)(NSArray *QB_NULLABLE_S collection);
 @optional
 
 /**
+ *  Called when chat service did start connecting to the chat.
+ *
+ *  @param chatService QMChatService instance
+ */
+- (void)chatServiceChatHasStartedConnecting:(QB_NONNULL QMChatService *)chatService;
+
+/**
  *  It called when chat did connect.
  *
  *  @param chatService instance

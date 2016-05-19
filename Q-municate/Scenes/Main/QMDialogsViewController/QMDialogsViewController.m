@@ -17,7 +17,11 @@
 #import "QMDialogsSearchDataProvider.h"
 #import "QMChatVC.h"
 #import "QMCore.h"
-#import "QMNotification.h"
+#import "QMTasks.h"
+#import <SVProgressHUD.h>
+
+// category
+#import "UINavigationController+QMNotification.h"
 
 @interface QMDialogsViewController ()
 
@@ -51,11 +55,6 @@ QMSearchResultsControllerDelegate
 
 #pragma mark - Life cycle
 
-+ (instancetype)dialogsViewController {
-    
-    return [[UIStoryboard storyboardWithName:kQMMainStoryboard bundle:nil] instantiateViewControllerWithIdentifier:NSStringFromClass([self class])];
-}
-
 - (void)dealloc {
     
     [self.searchController.view removeFromSuperview];
@@ -65,11 +64,6 @@ QMSearchResultsControllerDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.tableView.contentInset = UIEdgeInsetsMake(0,
-                                                   0,
-                                                   CGRectGetHeight(self.tabBarController.tabBar.frame),
-                                                   0);
     
     // Hide empty separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -86,24 +80,6 @@ QMSearchResultsControllerDelegate
     // Subscribing delegates
     [[QMCore instance].chatService addDelegate:self];
     [[QMCore instance].usersService addDelegate:self];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    if (self.searchController.isActive) {
-        
-        [self.navigationController setNavigationBarHidden:YES animated:YES];
-    }
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
-    if (self.searchController.isActive) {
-        
-        [self.navigationController setNavigationBarHidden:NO animated:NO];
-    }
 }
 
 #pragma mark - Init methods
@@ -265,6 +241,30 @@ QMSearchResultsControllerDelegate
 - (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)__unused dialogs {
     
     [self.tableView reloadData];
+}
+
+#pragma mark - QMChatConnectionDelegate
+
+- (void)chatServiceChatHasStartedConnecting:(QMChatService *)__unused chatService {
+    
+    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) duration:0];
+}
+
+- (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
+    
+    [QMTasks taskFetchAllData];
+    [self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil) duration:kQMDefaultNotificationDismissTime];
+}
+
+- (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
+    
+    [QMTasks taskFetchAllData];
+    [self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil) duration:kQMDefaultNotificationDismissTime];
+}
+
+- (void)chatService:(QMChatService *)__unused chatService chatDidNotConnectWithError:(NSError *)error {
+    
+    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription]];
 }
 
 #pragma mark - QMUsersServiceDelegate

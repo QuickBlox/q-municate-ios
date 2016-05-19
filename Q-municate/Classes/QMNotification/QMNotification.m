@@ -19,37 +19,6 @@ static const CGFloat kQMMessageNotificationIconImageSize = 32.0;
 
 @implementation QMNotification
 
-#pragma mark - Notificaiton panel
-
-+ (void)showNotificationPanelWithType:(QMNotificationPanelType)notificationType message:(NSString *)message timeUntilDismiss:(NSTimeInterval)timeUntilDismiss {
-    
-    BOOL hasActiveNotification = notificationPanel().hasActiveNotification;
-    BOOL animated = !hasActiveNotification;
-    
-    if (hasActiveNotification) {
-        
-        [notificationPanel() dismissNotificationAnimated:animated];
-    }
-    
-    notificationPanel().timeUntilDismiss = timeUntilDismiss;
-    
-    UINavigationController *navigationController = (UINavigationController *)[[UIApplication sharedApplication].windows.firstObject rootViewController];
-    
-    if (navigationController.isNavigationBarHidden) {
-        
-        [REAlertView showAlertWithMessage:message actionSuccess:notificationType == QMNotificationPanelTypeSuccess ? YES : NO];
-    }
-    else {
-        
-        [notificationPanel() showNotificationWithType:notificationType byInsertingInNavigationBar:navigationController.navigationBar message:message animated:animated];
-    }
-}
-
-+ (void)dismissNotificationPanel {
-    
-    [notificationPanel() dismissNotificationAnimated:YES];
-}
-
 #pragma mark - Message notification
 
 + (void)showMessageNotificationWithMessage:(QBChatMessage *)chatMessage buttonHandler:(MPGNotificationButtonHandler)buttonHandler {
@@ -165,20 +134,6 @@ static const CGFloat kQMMessageNotificationIconImageSize = 32.0;
 }
 
 #pragma mark - Static notifications
-
-QMNotificationPanel *notificationPanel() {
-    
-    static QMNotificationPanel *notificationPanel = nil;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        notificationPanel = [[QMNotificationPanel alloc] init];
-        notificationPanel.enableTapDismiss = NO;
-    });
-    
-    return notificationPanel;
-}
 
 QMMessageNotification *messageNotification() {
     

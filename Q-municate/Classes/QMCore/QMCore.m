@@ -11,6 +11,7 @@
 #import "QMFacebook.h"
 #import "QMNotification.h"
 #import <DigitsKit/DigitsKit.h>
+#import <SVProgressHUD.h>
 
 static NSString *const kQMLastActivityDateKey = @"last_activity_date";
 static NSString *const kQMErrorKey = @"errors";
@@ -72,21 +73,12 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     
     _internetConnection = [Reachability reachabilityForInternetConnection];
     
-    // setting reachable block
-    [_internetConnection setReachableBlock:^(Reachability __unused *reachability) {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) timeUntilDismiss:0];
-        });
-    }];
-    
     // setting unreachable block
     [_internetConnection setUnreachableBlock:^(Reachability __unused *reachability) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+            [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil)];
         });
     }];
     
@@ -165,7 +157,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         }
     }
     
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeFailed message:errorMessage timeUntilDismiss:kQMDefaultNotificationDismissTime];
+    [SVProgressHUD showErrorWithStatus:errorMessage];
 }
 
 #pragma mark - Auth methods

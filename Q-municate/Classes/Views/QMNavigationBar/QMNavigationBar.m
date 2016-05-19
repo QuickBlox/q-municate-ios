@@ -52,12 +52,7 @@
         [self sizeToFit];
         [self setTransform:CGAffineTransformMakeTranslation(0, -(CGRectGetHeight(self.notificationView.frame)))];
         
-        @weakify(self);
-        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
-            
-            @strongify(self);
-            [self.window.rootViewController.view layoutIfNeeded];
-        }];
+        [self.window.rootViewController.view layoutIfNeeded];
     }
 }
 
@@ -70,12 +65,7 @@
         [self setTransform:CGAffineTransformMakeTranslation(0, -(CGRectGetHeight(self.notificationView.frame)))];
         [self sizeToFit];
         
-        @weakify(self);
-        [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
-            
-            @strongify(self);
-            [self.window.rootViewController.view layoutIfNeeded];
-        }];
+        [self.window.rootViewController.view layoutIfNeeded];
     }
 }
 

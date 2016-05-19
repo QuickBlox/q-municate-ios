@@ -10,13 +10,13 @@
 #import "QMTableSectionHeaderView.h"
 #import "QMColors.h"
 #import "QMUpdateUserViewController.h"
-#import "QMNotification.h"
 #import "REActionSheet.h"
 #import "QMImagePicker.h"
 #import "QMTasks.h"
 #import "QMCore.h"
 #import "QMProfile.h"
 #import <QMImageView.h>
+#import "UINavigationController+QMNotification.h"
 
 typedef NS_ENUM(NSUInteger, QMSettingsSection) {
     
@@ -57,18 +57,8 @@ QMImagePickerResultHandler
 
 @implementation QMSettingsViewController
 
-+ (instancetype)settingsViewController {
-    
-    return [[UIStoryboard storyboardWithName:kQMSettingsStoryboard bundle:nil] instantiateViewControllerWithIdentifier:NSStringFromClass([self class])];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.tableView.contentInset = UIEdgeInsetsMake(0,
-                                                   0,
-                                                   CGRectGetHeight(self.tabBarController.tabBar.frame),
-                                                   0);
     
     self.avatarImageView.imageViewType = QMImageViewTypeCircle;
     // Hide empty separators
@@ -121,11 +111,12 @@ QMImagePickerResultHandler
         return;
     }
     
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     
+    __weak UINavigationController *navigationController = self.navigationController;
     BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull __unused task) {
         
-        [QMNotification dismissNotificationPanel];
+        [navigationController dismissNotificationPanel];
         
         return nil;
     };
@@ -183,11 +174,15 @@ QMImagePickerResultHandler
                 return;
             }
             
-            [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+            [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
             
+            __weak UINavigationController *navigationController = self.navigationController;
+            
+            @weakify(self);
             self.logoutTask = [[[QMCore instance] logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
                 
-                [QMNotification dismissNotificationPanel];
+                @strongify(self);
+                [navigationController dismissNotificationPanel];
                 [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
                 return nil;
             }];
@@ -265,15 +260,21 @@ QMImagePickerResultHandler
 
 - (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+    
+    __weak UINavigationController *navigationController = self.navigationController;
     
     @weakify(self);
-    [[QMTasks taskUpdateCurrentUserImage:photo progress:nil] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+    [[QMTasks taskUpdateCurrentUserImage:photo progress:nil] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         
         @strongify(self);
-        [self.avatarImageView setImage:photo withKey:task.result.avatarUrl];
         
-        [QMNotification dismissNotificationPanel];
+        [navigationController dismissNotificationPanel];
+        
+        if (!task.isFaulted) {
+            
+            [self.avatarImageView setImage:photo withKey:task.result.avatarUrl];
+        }
         
         return nil;
     }];

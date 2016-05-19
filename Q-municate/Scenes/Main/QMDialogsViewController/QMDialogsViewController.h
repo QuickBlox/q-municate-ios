@@ -10,6 +10,4 @@
 
 @interface QMDialogsViewController : UITableViewController
 
-+ (instancetype)dialogsViewController;
-
 @end

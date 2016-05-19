@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "QMNotificationPanel.h"
 #import "MPGNotification.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -17,22 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  Used as overall main notification handling class.
  */
 @interface QMNotification : NSObject
-
-/**
- *  Show notification panel with type and message.
- *
- *  @param notificationType notification type
- *  @param message          message to display in notification
- *  @param timeUntilDismiss time until notification will be dismissed
- *
- *  @see QMNotificationPanelType
- */
-+ (void)showNotificationPanelWithType:(QMNotificationPanelType)notificationType message:(nullable NSString *)message timeUntilDismiss:(NSTimeInterval)timeUntilDismiss;
-
-/**
- *  Dismiss current notification panel.
- */
-+ (void)dismissNotificationPanel;
 
 /**
  *  Show message notification for message.

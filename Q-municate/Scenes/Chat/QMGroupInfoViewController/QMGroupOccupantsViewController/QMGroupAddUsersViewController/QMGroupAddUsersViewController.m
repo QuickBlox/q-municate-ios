@@ -11,7 +11,7 @@
 #import "QMGroupAddUsersSearchDataProvider.h"
 #import "QMCore.h"
 #import "NSArray+Intersection.h"
-#import "QMNotification.h"
+#import "UINavigationController+QMNotification.h"
 
 #import "QMSelectableContactCell.h"
 #import "QMNoResultsCell.h"
@@ -114,14 +114,21 @@ UISearchResultsUpdating
         return;
     }
     
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+    
+    __weak UINavigationController *navigationController = self.navigationController;
     
     @weakify(self);
-    self.task = [[[QMCore instance].chatManager addUsers:self.dataSource.selectedUsers.allObjects toGroupChatDialog:self.chatDialog] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+    self.task = [[[QMCore instance].chatManager addUsers:self.dataSource.selectedUsers.allObjects toGroupChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         
         @strongify(self);
-        [QMNotification dismissNotificationPanel];
-        [self.navigationController popViewControllerAnimated:YES];
+        [navigationController dismissNotificationPanel];
+        
+        if (!task.isFaulted) {
+            
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+        
         return nil;
     }];
 }
