@@ -8,7 +8,7 @@
 
 #import "QMUserInfoViewController.h"
 #import "QMCore.h"
-#import "QMNotification.h"
+#import "UINavigationController+QMNotification.h"
 #import "QMPlaceholder.h"
 #import "QMChatVC.h"
 #import "REAlertView.h"
@@ -81,17 +81,23 @@ QMContactListServiceDelegate
     
     if (self.user.lastRequestAt == nil) {
         
-        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+        [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+        
+        __weak UINavigationController *navigationController = self.navigationController;
         
         // get user from server
         @weakify(self);
-        [[[QMCore instance].usersService getUserWithID:self.user.ID] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+        [[[QMCore instance].usersService getUserWithID:self.user.ID] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
             
             @strongify(self);
-            [QMNotification dismissNotificationPanel];
-            self.user = task.result;
-            [self performUpdate];
-            [self.tableView reloadData];
+            [navigationController dismissNotificationPanel];
+            
+            if (!task.isFaulted) {
+                
+                self.user = task.result;
+                [self performUpdate];
+                [self.tableView reloadData];
+            }
             
             return nil;
         }];
@@ -236,12 +242,20 @@ QMContactListServiceDelegate
             return;
         }
         
-        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
-        self.task = [[[QMCore instance].chatService createPrivateChatDialogWithOpponentID:self.user.ID] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+        [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+        
+        __weak UINavigationController *navigationController = self.navigationController;
+        
+        self.task = [[[QMCore instance].chatService createPrivateChatDialogWithOpponentID:self.user.ID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
             
             @strongify(self);
-            [QMNotification dismissNotificationPanel];
-            [self performSegueWithIdentifier:kQMSceneSegueChat sender:task.result];
+            [navigationController dismissNotificationPanel];
+            
+            if (!task.isFaulted) {
+                
+                [self performSegueWithIdentifier:kQMSceneSegueChat sender:task.result];
+            }
+            
             return nil;
         }];
     }
@@ -251,13 +265,13 @@ QMContactListServiceDelegate
     
     if (![QMCore instance].isInternetConnected) {
         
-        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+        [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
         return NO;
     }
     
     if (![QBChat instance].isConnected) {
         
-        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeFailed message:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+        [self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) duration:kQMDefaultNotificationDismissTime];
         return NO;
     }
     
@@ -295,6 +309,8 @@ QMContactListServiceDelegate
         return;
     }
     
+    __weak UINavigationController *navigationController = self.navigationController;
+    
     @weakify(self);
     [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
         
@@ -303,10 +319,10 @@ QMContactListServiceDelegate
         [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
         [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil) andActionBlock:^{
             
-            [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
-            self.task = [[[QMCore instance].contactManager removeUserFromContactList:self.user] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+            [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+            self.task = [[[QMCore instance].contactManager removeUserFromContactList:self.user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
                 
-                [QMNotification dismissNotificationPanel];
+                [navigationController dismissNotificationPanel];
                 return nil;
             }];
         }];
@@ -320,10 +336,13 @@ QMContactListServiceDelegate
         return;
     }
     
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+    
+    __weak UINavigationController *navigationController = self.navigationController;
+    
     self.task = [[[QMCore instance].contactManager addUserToContactList:self.user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         
-        [QMNotification dismissNotificationPanel];
+        [navigationController dismissNotificationPanel];
         return nil;
     }];
 }

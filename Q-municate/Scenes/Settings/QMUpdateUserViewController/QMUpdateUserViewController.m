@@ -12,7 +12,7 @@
 #import "QMColors.h"
 #import "QMShadowView.h"
 #import "QMTasks.h"
-#import "QMNotification.h"
+#import "UINavigationController+QMNotification.h"
 
 static const NSUInteger kQMFullNameFieldMinLength = 3;
 
@@ -110,14 +110,20 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
     QBUpdateUserParameters *updateUserParams = [QBUpdateUserParameters new];
     [updateUserParams setValue:self.textField.text forKeyPath:self.keyPath];
     
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+    
+    __weak UINavigationController *navigationController = self.navigationController;
     
     @weakify(self);
-    [[QMTasks taskUpdateCurrentUser:updateUserParams] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
+    [[QMTasks taskUpdateCurrentUser:updateUserParams] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
         
         @strongify(self);
-        [QMNotification dismissNotificationPanel];
-        [self.navigationController popViewControllerAnimated:YES];
+        [navigationController dismissNotificationPanel];
+        
+        if (!task.isFaulted) {
+            
+            [self.navigationController popViewControllerAnimated:YES];
+        }
         
         return nil;
     }];
@@ -136,7 +142,7 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
     if ([[self.textField.text stringByTrimmingCharactersInSet:whiteSpaceSet] length] == 0
         || (self.updateUserField == QMUpdateUserFieldFullName && self.textField.text.length < kQMFullNameFieldMinLength)) {
         
-        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+        [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) duration:kQMDefaultNotificationDismissTime];
         return NO;
     }
     

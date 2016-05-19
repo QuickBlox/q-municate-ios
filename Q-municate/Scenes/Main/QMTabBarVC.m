@@ -29,32 +29,18 @@ QMChatConnectionDelegate
 
 @implementation QMTabBarVC
 
+#pragma mark - Life cycle
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    [self performAutoLoginAndFetchData];
     
     // subscribing for delegates
     [[QMCore instance].chatService addDelegate:self];
-    self.delegate = self;
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    if (self.navigationItem.title == nil) {
-        
-        [self updateNavigationItem:self.selectedViewController.navigationItem];
-    }
-    
-    if (self.autoLoginTask == nil) {
-        
-        [self performAutoLoginAndFetchData];
-    }
 }
 
 - (void)performAutoLoginAndFetchData {
-    
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) timeUntilDismiss:0];
     
     @weakify(self);
     self.autoLoginTask = [[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
@@ -83,18 +69,6 @@ QMChatConnectionDelegate
             return [[QMCore instance].chatService connect];
         }
     }];
-}
-
-#pragma mark - Helpers
-
-- (void)updateNavigationItem:(UINavigationItem *)navigationItem {
-    
-    self.navigationItem.title = navigationItem.title;
-    self.navigationItem.titleView = navigationItem.titleView;
-    self.navigationItem.prompt = navigationItem.prompt;
-    self.navigationItem.leftBarButtonItems = navigationItem.leftBarButtonItems;
-    self.navigationItem.rightBarButtonItems = navigationItem.rightBarButtonItems;
-    self.navigationItem.backBarButtonItem = navigationItem.backBarButtonItem;
 }
 
 #pragma mark - Notification
@@ -132,13 +106,6 @@ QMChatConnectionDelegate
     }];
 }
 
-#pragma mark - QMTabBarDelegate
-
-- (void)tabBarController:(UITabBarController *)__unused tabBarController didSelectViewController:(UIViewController *)viewController {
-    
-    [self updateNavigationItem:viewController.navigationItem];
-}
-
 #pragma mark - QMPushNotificationManagerDelegate
 
 - (void)pushNotificationManager:(QMPushNotificationManager *)__unused pushNotificationManager didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
@@ -171,27 +138,6 @@ QMChatConnectionDelegate
         
         [self showNotificationForMessage:message];
     }
-}
-
-#pragma mark - QMChatConnectionDelegate
-
-- (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
-    
-    [QMTasks taskFetchAllData];
-    
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
-}
-
-- (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
-    
-    [QMTasks taskFetchAllData];
-    
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
-}
-
-- (void)chatService:(QMChatService *)__unused chatService chatDidNotConnectWithError:(NSError *)error {
-    
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeFailed message:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription] timeUntilDismiss:0];
 }
 
 @end

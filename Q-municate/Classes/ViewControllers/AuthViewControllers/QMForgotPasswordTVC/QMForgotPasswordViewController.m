@@ -8,7 +8,7 @@
 
 #import "QMForgotPasswordViewController.h"
 #import "QMTasks.h"
-#import "QMNotification.h"
+#import "UINavigationController+QMNotification.h"
 
 @interface QMForgotPasswordViewController ()
 
@@ -47,13 +47,17 @@
     }
     else {
         
-        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_EMAIL_FIELD_IS_EMPTY", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+        [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_EMAIL_FIELD_IS_EMPTY", nil) duration:kQMDefaultNotificationDismissTime];
     }
 }
 
 - (void)resetPasswordForMail:(NSString *)emailString {
 
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                                message:NSLocalizedString(@"QM_STR_LOADING", nil)
+                                               duration:0];
+    
+    __weak UINavigationController *navigationController = self.navigationController;
     
     @weakify(self);
     self.task = [[QMTasks taskResetPasswordForEmail:emailString] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
@@ -61,11 +65,11 @@
         @strongify(self);
         if (task.isFaulted) {
             
-            [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeFailed message:NSLocalizedString(@"QM_STR_USER_WITH_EMAIL_WASNT_FOUND", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+            [navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:NSLocalizedString(@"QM_STR_USER_WITH_EMAIL_WASNT_FOUND", nil) duration:kQMDefaultNotificationDismissTime];
         }
         else {
             
-            [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_MESSAGE_WAS_SENT_TO_YOUR_EMAIL", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+            [navigationController showNotificationWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_MESSAGE_WAS_SENT_TO_YOUR_EMAIL", nil) duration:kQMDefaultNotificationDismissTime];
             [self.navigationController popViewControllerAnimated:YES];
         }
         

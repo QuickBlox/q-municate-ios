@@ -16,7 +16,6 @@
 #import "QMSearchResultsController.h"
 
 #import "QMCore.h"
-#import "QMNotification.h"
 
 #import "QMContactCell.h"
 #import "QMNoContactsCell.h"
@@ -34,12 +33,13 @@ typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
 @interface QMContactsViewController ()
 
 <
-QMSearchDataProviderDelegate,
 QMSearchResultsControllerDelegate,
 
 UISearchControllerDelegate,
 UISearchResultsUpdating,
-UISearchBarDelegate
+UISearchBarDelegate,
+
+QMContactListServiceDelegate
 >
 
 @property (strong, nonatomic) UISearchController *searchController;
@@ -58,18 +58,8 @@ UISearchBarDelegate
 
 @implementation QMContactsViewController
 
-+ (instancetype)contactsViewController {
-    
-    return [[UIStoryboard storyboardWithName:kQMMainStoryboard bundle:nil] instantiateViewControllerWithIdentifier:NSStringFromClass([self class])];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.tableView.contentInset = UIEdgeInsetsMake(0,
-                                                   0,
-                                                   CGRectGetHeight(self.tabBarController.tabBar.frame),
-                                                   0);
     
     // Hide empty separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -85,6 +75,9 @@ UISearchBarDelegate
     
     // registering nibs for current VC and search results VC
     [self registerNibs];
+    
+    // subscribing for delegates
+    [[QMCore instance].contactListService addDelegate:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -267,23 +260,11 @@ UISearchBarDelegate
     [self.searchResultsController performSearch:searchController.searchBar.text];
 }
 
-#pragma mark - QMSearchDataProviderDelegate
+#pragma mark - QMContactListService
 
-- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
+- (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
     
-    if ([self.tableView.dataSource conformsToProtocol:@protocol(QMContactsSearchDataSourceProtocol)]) {
-        
-        [self.tableView reloadData];
-    }
-}
-
-- (void)searchDataProvider:(QMSearchDataProvider *)__unused searchDataProvider didUpdateData:(NSArray *)__unused data {
-    
-    if (![self.tableView.dataSource conformsToProtocol:@protocol(QMContactsSearchDataSourceProtocol)]) {
-        
-        [self updateItemsFromContactList];
-    }
-    
+    [self updateItemsFromContactList];
     [self.tableView reloadData];
 }
 

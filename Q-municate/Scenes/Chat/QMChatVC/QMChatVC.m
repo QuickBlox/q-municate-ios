@@ -8,7 +8,7 @@
 
 #import "QMChatVC.h"
 #import "QMCore.h"
-#import "QMNotification.h"
+#import "UINavigationController+QMNotification.h"
 #import "QMMessageStatusStringBuilder.h"
 #import "QMPlaceholder.h"
 #import "REAlertView+QMSuccess.h"
@@ -304,7 +304,7 @@ QMImageViewDelegate
     
     if (![QMCore instance].isInternetConnected) {
         
-        [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) timeUntilDismiss:kQMDefaultNotificationDismissTime];
+        [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
         return NO;
     }
     
@@ -765,7 +765,7 @@ QMImageViewDelegate
                 
                 if (error != nil) {
                     
-                    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion timeUntilDismiss:kQMDefaultNotificationDismissTime];
+                    [self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion duration:kQMDefaultNotificationDismissTime];
                 }
                 else if (image != nil) {
                     
@@ -1106,32 +1106,52 @@ QMImageViewDelegate
     
     QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:self.chatDialog.recipientID];
     
-    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) timeUntilDismiss:0];
+    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     
     if (accept) {
         
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:sender];
         QBChatMessage *currentMessage = [self.chatSectionManager messageForIndexPath:indexPath];
         
+        __weak UINavigationController *navigationController = self.navigationController;
+        
         @weakify(self);
-        self.contactRequestTask = [[[QMCore instance].contactManager addUserToContactList:opponentUser] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        self.contactRequestTask = [[[QMCore instance].contactManager addUserToContactList:opponentUser] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+            
             @strongify(self);
-            [QMNotification dismissNotificationPanel];
-            [self.chatSectionManager updateMessage:currentMessage];
+            [navigationController dismissNotificationPanel];
+            
+            if (!task.isFaulted) {
+                
+                [self.chatSectionManager updateMessage:currentMessage];
+            }
             
             return nil;
         }];
     }
     else {
         
+        __weak UINavigationController *navigationController = self.navigationController;
+        
         @weakify(self);
-        self.contactRequestTask = [[[[QMCore instance].contactManager rejectAddContactRequest:opponentUser] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        self.contactRequestTask = [[[[QMCore instance].contactManager rejectAddContactRequest:opponentUser] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
             
-            return [[QMCore instance].chatService deleteDialogWithID:self.chatDialog.ID];
+            if (!task.isFaulted) {
+                
+                return [[QMCore instance].chatService deleteDialogWithID:self.chatDialog.ID];
+            }
+            
+            return [BFTask cancelledTask];
+            
         }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+            
             @strongify(self);
-            [QMNotification dismissNotificationPanel];
-            [self.navigationController popViewControllerAnimated:YES];
+            [navigationController dismissNotificationPanel];
+            
+            if (!task.isCancelled && !task.isFaulted) {
+                
+                [self.navigationController popViewControllerAnimated:YES];
+            }
             
             return nil;
         }];
@@ -1236,7 +1256,7 @@ QMImageViewDelegate
                 [self.attachmentCells removeObjectForKey:message.ID];
                 if (task.isFaulted) {
                     
-                    [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeFailed message:task.error.localizedRecoverySuggestion timeUntilDismiss:kQMDefaultNotificationDismissTime];
+                    [self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:task.error.localizedRecoverySuggestion duration:kQMDefaultNotificationDismissTime];
                     
                     // perform local attachment deleting
                     [[QMCore instance].chatService deleteMessageLocally:message];

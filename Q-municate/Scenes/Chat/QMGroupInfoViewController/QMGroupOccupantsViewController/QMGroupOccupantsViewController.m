@@ -13,7 +13,7 @@
 #import "QMContactCell.h"
 #import "QMColors.h"
 #import "QMCore.h"
-#import "QMNotification.h"
+#import "UINavigationController+QMNotification.h"
 #import "QMUserInfoViewController.h"
 #import "NSArray+Intersection.h"
 #import "REAlertView.h"
@@ -144,14 +144,21 @@ QMUsersServiceDelegate
             [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
             [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil) andActionBlock:^{
                 
-                [QMNotification showNotificationPanelWithType:QMNotificationPanelTypeLoading
-                                                                        message:NSLocalizedString(@"QM_STR_LOADING", nil)
-                                                               timeUntilDismiss:0];
+                [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                                            message:NSLocalizedString(@"QM_STR_LOADING", nil)
+                                                           duration:0];
                 
-                self.leaveTask = [[[QMCore instance].chatManager leaveChatDialog:self.chatDialog] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+                __weak UINavigationController *navigationController = self.navigationController;
+                
+                self.leaveTask = [[[QMCore instance].chatManager leaveChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
                     
-                    [QMNotification dismissNotificationPanel];
-                    [self.navigationController popToRootViewControllerAnimated:YES];
+                    [navigationController dismissNotificationPanel];
+                    
+                    if (!task.isFaulted) {
+                        
+                        [self.navigationController popToRootViewControllerAnimated:YES];
+                    }
+                    
                     return nil;
                 }];
             }];
