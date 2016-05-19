@@ -201,6 +201,7 @@ UITextFieldDelegate
     
     [self.tagFieldView addTag:selectedUser.fullName tagID:selectedUser animated:YES];
     [self.tagFieldView scrollToTextField:YES];
+    [self.tagFieldView clearText];
     
     [self updateNextButtonState];
 }
@@ -227,6 +228,14 @@ UITextFieldDelegate
 - (void)tagFieldView:(QMTagFieldView *)__unused tagFieldView didChangeText:(NSString *)text {
     
     [self.groupContactListViewController performSearch:text];
+}
+
+- (void)tagFieldView:(QMTagFieldView *)__unused tagFieldView didChangeSearchStatus:(BOOL)__unused searchIsActive byClearingTextField:(BOOL)byClearingTextField {
+    
+    if (!byClearingTextField) {
+        
+        [self.groupContactListViewController performSearch:@""];
+    }
 }
 
 #pragma mark - UITextFieldDelegate
