@@ -16,13 +16,18 @@
 #import "QMCore.h"
 #import "QMContent.h"
 #import "QMTasks.h"
-
-#import "REActionSheet.h"
+#import "QMCornerButton.h"
 
 #import <DigitsKit/DigitsKit.h>
 #import "QMDigitsConfigurationFactory.h"
 
 static NSString *const kQMFacebookIDField = @"id";
+
+@interface QMWelcomeScreenViewController ()
+
+@property (weak, nonatomic) IBOutlet QMCornerButton *otherLoginMethodsButton;
+
+@end
 
 @implementation QMWelcomeScreenViewController
 
@@ -52,30 +57,39 @@ static NSString *const kQMFacebookIDField = @"id";
 
 - (IBAction)connectWithOtherMethods {
     
-    @weakify(self);
-    [REActionSheet presentActionSheetInView:self.view configuration:^(REActionSheet *actionSheet) {
-        
-        @strongify(self);
-        [actionSheet addButtonWithTitle:NSLocalizedString(@"QM_STR_LOGIN_WITH_FACEBOOK", nil) andActionBlock:^{
-            
-            [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL success) {
-                // License agreement check
-                if (success) {
-                    
-                    [self chainFacebookConnect];
-                }
-            }];
-        }];
-        
-        [actionSheet addButtonWithTitle:NSLocalizedString(@"QM_STR_LOGIN_WITH_EMAIL", nil) andActionBlock:^{
-            
-            [self performSegueWithIdentifier:kQMSceneSegueLogin sender:nil];
-        }];
-        
-        [actionSheet addCancelButtonWihtTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{
-            
-        }];
-    }];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LOGIN_WITH_FACEBOOK", nil)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                          [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL success) {
+                                                              // License agreement check
+                                                              if (success) {
+                                                                  
+                                                                  [self chainFacebookConnect];
+                                                              }
+                                                          }];
+                                                      }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LOGIN_WITH_EMAIL", nil)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                          [self performSegueWithIdentifier:kQMSceneSegueLogin sender:nil];
+                                                      }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:nil]];
+    
+    if (alertController.popoverPresentationController) {
+        // iPad support
+        alertController.popoverPresentationController.sourceView = self.otherLoginMethodsButton;
+        alertController.popoverPresentationController.sourceRect = self.otherLoginMethodsButton.bounds;
+    }
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)chainFacebookConnect {

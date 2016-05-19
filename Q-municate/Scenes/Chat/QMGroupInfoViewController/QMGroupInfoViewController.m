@@ -14,7 +14,6 @@
 
 #import "QMPlaceholder.h"
 #import "QMImagePicker.h"
-#import "REActionSheet.h"
 #import <QMImageView.h>
 
 @interface QMGroupInfoViewController ()
@@ -58,24 +57,35 @@ QMImagePickerResultHandler
 
 #pragma mark - QMGroupHeaderViewDelegate
 
-- (void)groupHeaderView:(QMGroupHeaderView *)__unused groupHeaderView didTapAvatar:(QMImageView *)__unused avatarImageView {
+- (void)groupHeaderView:(QMGroupHeaderView *)__unused groupHeaderView didTapAvatar:(QMImageView *)avatarImageView {
     
-    @weakify(self);
-    [REActionSheet presentActionSheetInView:self.view configuration:^(REActionSheet *actionSheet) {
-        
-        @strongify(self);
-        [actionSheet addButtonWithTitle:NSLocalizedString(@"QM_STR_TAKE_IMAGE", nil) andActionBlock:^{
-            [QMImagePicker takePhotoInViewController:self resultHandler:self];
-        }];
-        
-        [actionSheet addButtonWithTitle:NSLocalizedString(@"QM_STR_CHOOSE_FROM_LIBRARY", nil) andActionBlock:^{
-            [QMImagePicker choosePhotoInViewController:self resultHandler:self];
-        }];
-        
-        [actionSheet addCancelButtonWihtTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{
-            
-        }];
-    }];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_TAKE_IMAGE", nil)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                          [QMImagePicker takePhotoInViewController:self resultHandler:self];
+                                                      }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CHOOSE_FROM_LIBRARY", nil)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                          [QMImagePicker choosePhotoInViewController:self resultHandler:self];
+                                                      }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:nil]];
+    
+    if (alertController.popoverPresentationController) {
+        // iPad support
+        alertController.popoverPresentationController.sourceView = avatarImageView;
+        alertController.popoverPresentationController.sourceRect = avatarImageView.bounds;
+    }
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark - QMImagePickerResultHandler

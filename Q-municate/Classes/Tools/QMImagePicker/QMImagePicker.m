@@ -8,7 +8,6 @@
 
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "QMImagePicker.h"
-#import "REActionSheet.h"
 
 @interface QMImagePicker()
 

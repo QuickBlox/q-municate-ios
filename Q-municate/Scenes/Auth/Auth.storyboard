@@ -218,6 +218,7 @@
                     <navigationItem key="navigationItem" id="jrH-Jb-hwh"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
+                        <outlet property="otherLoginMethodsButton" destination="pcK-a3-Saj" id="TTm-Ce-i5W"/>
                         <segue destination="LAN-DZ-jv6" kind="custom" identifier="SceneSegueMain" customClass="QMRootViewControllerSegue" id="7KE-cg-4Nx"/>
                         <segue destination="HjW-ae-ZF3" kind="show" identifier="SceneSegueLogin" id="cOz-fv-4sO"/>
                     </connections>

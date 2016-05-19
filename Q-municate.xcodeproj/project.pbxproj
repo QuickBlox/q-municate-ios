@@ -22,7 +22,6 @@
 		55A8B0761965986A00B5D33B /* REAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B0691965986A00B5D33B /* REAlertView.m */; };
 		55BBA75C19730B960040DB5C /* REMessageUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 55BBA75B19730B960040DB5C /* REMessageUI.m */; };
 		55D8AD0419AC753600DAF79F /* QMImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD0319AC753600DAF79F /* QMImagePicker.m */; };
-		55D8AD0719AC756000DAF79F /* REActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD0619AC756000DAF79F /* REActionSheet.m */; };
 		55D8AD0F19AC757900DAF79F /* ABPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD0C19AC757900DAF79F /* ABPerson.m */; };
 		55D8AD1019AC757900DAF79F /* QMAddressBook.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD0E19AC757900DAF79F /* QMAddressBook.m */; };
 		55D8ADB519AC761000DAF79F /* QMForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADB419AC761000DAF79F /* QMForgotPasswordViewController.m */; };
@@ -193,8 +192,6 @@
 		55BBA75B19730B960040DB5C /* REMessageUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = REMessageUI.m; sourceTree = "<group>"; };
 		55D8AD0219AC753600DAF79F /* QMImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMImagePicker.h; sourceTree = "<group>"; };
 		55D8AD0319AC753600DAF79F /* QMImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMImagePicker.m; sourceTree = "<group>"; };
-		55D8AD0519AC756000DAF79F /* REActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = REActionSheet.h; sourceTree = "<group>"; };
-		55D8AD0619AC756000DAF79F /* REActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = REActionSheet.m; sourceTree = "<group>"; };
 		55D8AD0B19AC757900DAF79F /* ABPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABPerson.h; sourceTree = "<group>"; };
 		55D8AD0C19AC757900DAF79F /* ABPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABPerson.m; sourceTree = "<group>"; };
 		55D8AD0D19AC757900DAF79F /* QMAddressBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAddressBook.h; sourceTree = "<group>"; };
@@ -492,15 +489,6 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		5524C2CB1998B3DB007450DB /* REActionSheet */ = {
-			isa = PBXGroup;
-			children = (
-				55D8AD0519AC756000DAF79F /* REActionSheet.h */,
-				55D8AD0619AC756000DAF79F /* REActionSheet.m */,
-			);
-			path = REActionSheet;
-			sourceTree = "<group>";
-		};
 		5524C2CF1998B560007450DB /* QMImagePicker */ = {
 			isa = PBXGroup;
 			children = (
@@ -599,7 +587,6 @@
 				589B62AD1CE377330038F5E0 /* QMPermissions */,
 				55D8ADF819AC81CD00DAF79F /* QMLicenseAgreement */,
 				5524C2CF1998B560007450DB /* QMImagePicker */,
-				5524C2CB1998B3DB007450DB /* REActionSheet */,
 				55BBA75919730B960040DB5C /* REMailCompose */,
 				55A8B0501965986A00B5D33B /* AddressBook */,
 				55A8B05A1965986A00B5D33B /* QMSoundManager */,
@@ -2059,7 +2046,6 @@
 				584A6DB31C9DB7DC00B7D641 /* QMTagFieldView.m in Sources */,
 				589D4CFD1C981D44005F1E76 /* QMContactCell.m in Sources */,
 				69D57E6218ACC11C00A9900A /* main.m in Sources */,
-				55D8AD0719AC756000DAF79F /* REActionSheet.m in Sources */,
 				55495A221993BCC100B7764C /* QMAlertsFactory.m in Sources */,
 				55D8ADB519AC761000DAF79F /* QMForgotPasswordViewController.m in Sources */,
 				5868B0611CE9C67D004F9233 /* QMCallButtonsFactory.m in Sources */,

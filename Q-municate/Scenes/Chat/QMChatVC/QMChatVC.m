@@ -14,7 +14,6 @@
 #import "REAlertView+QMSuccess.h"
 #import "QMSoundManager.h"
 #import "QMImagePicker.h"
-#import "REActionSheet.h"
 #import "QMOnlineTitleView.h"
 #import "QMColors.h"
 #import "QMUserInfoViewController.h"
@@ -371,29 +370,40 @@ QMImageViewDelegate
     [self finishSendingMessageAnimated:YES];
 }
 
-- (void)didPressAccessoryButton:(UIButton *)__unused sender {
+- (void)didPressAccessoryButton:(UIButton *)sender {
     
     if (![self messageSendingAllowed]) {
         
         return;
     }
     
-    @weakify(self);
-    [REActionSheet presentActionSheetInView:self.view configuration:^(REActionSheet *actionSheet) {
-        
-        @strongify(self);
-        [actionSheet addButtonWithTitle:NSLocalizedString(@"QM_STR_TAKE_IMAGE", nil) andActionBlock:^{
-            [QMImagePicker takePhotoInViewController:self resultHandler:self];
-        }];
-        
-        [actionSheet addButtonWithTitle:NSLocalizedString(@"QM_STR_CHOOSE_FROM_LIBRARY", nil) andActionBlock:^{
-            [QMImagePicker choosePhotoInViewController:self resultHandler:self];
-        }];
-        
-        [actionSheet addCancelButtonWihtTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{
-            
-        }];
-    }];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_TAKE_IMAGE", nil)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                          [QMImagePicker takePhotoInViewController:self resultHandler:self];
+                                                      }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CHOOSE_FROM_LIBRARY", nil)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                          [QMImagePicker choosePhotoInViewController:self resultHandler:self];
+                                                      }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:nil]];
+    
+    if (alertController.popoverPresentationController) {
+        // iPad support
+        alertController.popoverPresentationController.sourceView = sender;
+        alertController.popoverPresentationController.sourceRect = sender.bounds;
+    }
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark - Cells view classes
