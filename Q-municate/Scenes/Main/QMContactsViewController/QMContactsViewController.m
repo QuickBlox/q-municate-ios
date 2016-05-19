@@ -195,16 +195,12 @@ QMContactListServiceDelegate
 - (void)willPresentSearchController:(UISearchController *)__unused searchController {
     
     [self updateDataSourceByScope:searchController.searchBar.selectedScopeButtonIndex];
-    
-    self.tabBarController.tabBar.hidden = YES;
 }
 
 - (void)willDismissSearchController:(UISearchController *)__unused searchController {
     
     self.tableView.dataSource = self.dataSource;
     [self updateItemsFromContactList];
-    
-    self.tabBarController.tabBar.hidden = NO;
 }
 
 #pragma mark - UISearchBarDelegate
