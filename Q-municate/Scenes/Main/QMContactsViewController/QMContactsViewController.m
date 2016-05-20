@@ -200,6 +200,11 @@ QMContactListServiceDelegate
     [self.searchResultsController performSearch:self.searchController.searchBar.text];
 }
 
+- (void)searchBarCancelButtonClicked:(UISearchBar *)__unused searchBar {
+    
+    [self.globalSearchDataSource.globalSearchDataProvider cancel];
+}
+
 #pragma mark - QMSearchResultsControllerDelegate
 
 - (void)searchResultsController:(QMSearchResultsController *)__unused searchResultsController willBeginScrollResults:(UIScrollView *)__unused scrollView {
@@ -218,6 +223,7 @@ QMContactListServiceDelegate
     
     if (selectedScope == QMSearchScopeButtonIndexLocal) {
         
+        [self.globalSearchDataSource.globalSearchDataProvider cancel];
         self.searchResultsController.tableView.dataSource = self.contactsSearchDataSource;
     }
     else if (selectedScope == QMSearchScopeButtonIndexGlobal) {

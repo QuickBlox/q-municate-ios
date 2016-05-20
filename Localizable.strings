@@ -5,7 +5,7 @@
   Created by Andrey Ivanov on 05.08.14.
   Copyright (c) 2014 Quickblox. All rights reserved.
 */
-"QM_STR_OK" = "Ok";
+"QM_STR_OK" = "OK";
 "QM_STR_COMING_SOON" = "Coming soon";
 "QM_STR_LOGOUT" = "Log Out";
 "QM_STR_SUCCESS" = "Success";

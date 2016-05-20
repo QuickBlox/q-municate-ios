@@ -20,8 +20,7 @@ static const NSTimeInterval kQMDialingTimeInterval = 5.0f;
 @interface QMCallManager ()
 
 <
-QBRTCClientDelegate,
-UIAlertViewDelegate
+QBRTCClientDelegate
 >
 
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
@@ -342,12 +341,8 @@ UIAlertViewDelegate
                             
                             // showing error alert with a suggestion
                             // to go to the settings
-                            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"QM_STR_CAMERA_ERROR", nil)
-                                                        message:NSLocalizedString(@"QM_STR_NO_PERMISSIONS_TO_CAMERA", nil)
-                                                       delegate:self
-                                              cancelButtonTitle:NSLocalizedString(@"QM_STR_OK", nil)
-                                              otherButtonTitles:NSLocalizedString(@"QM_STR_SETTINGS", nil), nil
-                              ] show];
+                            [self showAlertWithTitle:NSLocalizedString(@"QM_STR_CAMERA_ERROR", nil)
+                                             message:NSLocalizedString(@"QM_STR_NO_PERMISSIONS_TO_CAMERA", nil)];
                         }
                         
                         if (completion) {
@@ -364,12 +359,8 @@ UIAlertViewDelegate
             
             // showing error alert with a suggestion
             // to go to the settings
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"QM_STR_MICROPHONE_ERROR", nil)
-                                        message:NSLocalizedString(@"QM_STR_NO_PERMISSIONS_TO_MICROPHONE", nil)
-                                       delegate:self
-                              cancelButtonTitle:NSLocalizedString(@"QM_STR_OK", nil)
-                              otherButtonTitles:NSLocalizedString(@"QM_STR_SETTINGS", nil), nil
-              ] show];
+            [self showAlertWithTitle:NSLocalizedString(@"QM_STR_MICROPHONE_ERROR", nil)
+                             message:NSLocalizedString(@"QM_STR_NO_PERMISSIONS_TO_MICROPHONE", nil)];
             
             if (completion) {
                 
@@ -379,14 +370,30 @@ UIAlertViewDelegate
     }];
 }
 
-#pragma mark - UIAlertViewDelegate
+#pragma mark - Helpers
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)showAlertWithTitle:(NSString *)title message:(NSString *)message {
     
-    if (alertView.cancelButtonIndex != buttonIndex) {
-        
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-    }
+    UIAlertController *alertController = [UIAlertController
+                                          alertControllerWithTitle:title
+                                          message:message
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                      }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_SETTINGS", nil)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                          [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                                                      }]];
+    
+    UIViewController *viewController = [(UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController selectedViewController];
+    [viewController presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark - Statistic

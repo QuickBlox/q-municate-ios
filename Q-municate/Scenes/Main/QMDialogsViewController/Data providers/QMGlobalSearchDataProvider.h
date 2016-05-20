@@ -11,6 +11,7 @@
 @interface QMGlobalSearchDataProvider : QMSearchDataProvider
 
 - (void)nextPage;
+- (void)cancel;
 
 @end
 
