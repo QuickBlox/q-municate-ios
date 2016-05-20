@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "REAlertView+QMSuccess.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "QMChatVC.h"
 #import "QMCore.h"

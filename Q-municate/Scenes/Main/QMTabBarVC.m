@@ -13,6 +13,8 @@
 #import "QMChatVC.h"
 #import "QMSoundManager.h"
 
+static const NSInteger kQMUnAuthorizedErrorCode = -1011;
+
 @interface QMTabBarVC ()
 
 <
@@ -46,11 +48,7 @@ QMChatConnectionDelegate
     self.autoLoginTask = [[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         @strongify(self);
         
-        if (task.isFaulted && (task.error.code == QBResponseStatusCodeUnknown
-                               || task.error.code == QBResponseStatusCodeForbidden
-                               || task.error.code == QBResponseStatusCodeNotFound
-                               || task.error.code == QBResponseStatusCodeUnAuthorized
-                               || task.error.code == QBResponseStatusCodeValidationFailed)) {
+        if (task.isFaulted && task.error.code == kQMUnAuthorizedErrorCode) {
             [[[QMCore instance] logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
                 
                 [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];

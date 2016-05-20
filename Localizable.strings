@@ -33,9 +33,6 @@
 "QM_STR_INVITATION_WAS_POSTED_TO_WALL" = "Invitation was posted to wall.";
 "QM_STR_PLEASE_CHECK_YOUR_EMAIL_SETTINGS" = "Please check your email settings";
 "QM_STR_THANKS" = "Thanks!";
-"QM_STR_BUG" = "Bug";
-"QM_STR_IMPROVEMENT" = "Improvement";
-"QM_STR_SUGGESTION" = "Suggestion";
 "QM_STR_DEAR_FRIEND" = "Dear friend, use Q-municate application to reach me! Download it here: http://q-municate.com";
 "QM_STR_YOUR _SURRENT_SESSION_IS_NO_LONGER_VALID" = "Your current session is no longer valid. Please log in again.";
 "QM_STR_ALL_USERS" = "All users";
@@ -148,6 +145,7 @@
 // *********** Group info ***********
 "QM_STR_MEMBERS" = "MEMBERS";
 "QM_STR_CONFIRM_LEAVE" = "Do you really want to leave %@?";
+"QM_STR_LEAVE" = "Leave";
 
 // *********** Connection ***********
 "QM_STR_CONNECTING" = "Connecting";
@@ -191,3 +189,11 @@
 // *********** Welcome screen ***********
 "QM_STR_LOGIN_WITH_FACEBOOK" = "Login with Facebook";
 "QM_STR_LOGIN_WITH_EMAIL" = "Login with Email";
+
+// *********** Settings screen ***********
+"QM_STR_SHARE_TEXT" = "Check out this awesome app called Q-municate! http://q-municate.com";
+
+// *********** Feedback screen ***********
+"QM_STR_BUG" = "Bug";
+"QM_STR_IMPROVEMENT" = "Improvement";
+"QM_STR_SUGGESTION" = "Suggestion";

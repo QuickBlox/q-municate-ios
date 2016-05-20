@@ -108,7 +108,7 @@ out here.</string>
                 <viewControllerPlaceholder storyboardName="Chat" id="WAe-wf-Lqf" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pd2-6h-MLf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2960.5" y="-8833"/>
+            <point key="canvasLocation" x="-2134.5" y="-8749"/>
         </scene>
         <!--Chat-->
         <scene sceneID="zLf-RD-p3s">
@@ -116,7 +116,7 @@ out here.</string>
                 <viewControllerPlaceholder storyboardName="Chat" id="GHP-Ej-YG9" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IiI-Bc-mlG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2018.5" y="-8833"/>
+            <point key="canvasLocation" x="-1168.5" y="-8749"/>
         </scene>
         <!--New Message-->
         <scene sceneID="I2X-12-W1l">
@@ -256,7 +256,7 @@ out here.</string>
                 <viewControllerPlaceholder storyboardName="Chat" id="WRM-Jt-Awi" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="17n-WP-DTM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-161.5" y="-8398"/>
+            <point key="canvasLocation" x="-115.5" y="-8749"/>
         </scene>
         <!--Group Contact List View Controller-->
         <scene sceneID="9Sy-5M-RTY">
@@ -309,21 +309,6 @@ out here.</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8eK-Qf-eVp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-4519" y="-6988"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="i0z-RU-cDN">
-            <objects>
-                <navigationController id="1xp-Pm-DS2" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="R8z-ML-b9p" customClass="QMNavigationBar">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="IHc-v6-kRr" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-5511" y="-7989"/>
         </scene>
         <!--Contacts-->
         <scene sceneID="IGN-AR-L1g">
