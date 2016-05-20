@@ -14,7 +14,6 @@
 
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
-@property (weak, nonatomic) IBOutlet UISwitch *rememberMeSwitch;
 
 @property (weak, nonatomic) BFTask *task;
 
@@ -58,8 +57,6 @@
         QBUUser *user = [QBUUser user];
         user.email = self.emailField.text;
         user.password = self.passwordField.text;
-        
-        [QMCore instance].currentProfile.skipSync = !self.rememberMeSwitch.isOn;
         
         [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_SIGNING_IN", nil) duration:0];
         
