@@ -102,11 +102,6 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
         return;
     }
     
-    if (![self updateAllowed]) {
-        
-        return;
-    }
-    
     QBUpdateUserParameters *updateUserParams = [QBUpdateUserParameters new];
     updateUserParams.customData = [QMCore instance].currentProfile.userData.customData;
     [updateUserParams setValue:self.textField.text forKeyPath:self.keyPath];
@@ -130,9 +125,15 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
     }];
 }
 
-- (IBAction)textFieldEditingChanged:(UITextField *)sender {
+- (IBAction)textFieldEditingChanged:(UITextField *)__unused sender {
     
-    self.navigationItem.rightBarButtonItem.enabled = ![sender.text isEqualToString:self.cachedValue];
+    if (![self updateAllowed]) {
+        
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+        return;
+    }
+    
+    self.navigationItem.rightBarButtonItem.enabled = YES;
 }
 
 #pragma mark - Helpers
@@ -147,7 +148,11 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
     NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
     if ([[self.textField.text stringByTrimmingCharactersInSet:whiteSpaceSet] length] < kQMFullNameFieldMinLength) {
         
-        [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) duration:kQMDefaultNotificationDismissTime];
+        return NO;
+    }
+    
+    if ([self.textField.text isEqualToString:self.cachedValue]) {
+        
         return NO;
     }
     
