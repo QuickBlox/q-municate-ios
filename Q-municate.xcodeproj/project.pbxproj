@@ -2189,7 +2189,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				PROVISIONING_PROFILE = "4d2d54be-1dda-4e62-b9fc-e3eeb318fa7e";
+				PROVISIONING_PROFILE = "8bc56ba9-5ba5-4eba-b466-9847c3203bf3";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2293,7 +2293,7 @@
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "4d2d54be-1dda-4e62-b9fc-e3eeb318fa7e";
+				PROVISIONING_PROFILE = "8bc56ba9-5ba5-4eba-b466-9847c3203bf3";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
