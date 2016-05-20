@@ -16,18 +16,11 @@
 #import "QMCore.h"
 #import "QMContent.h"
 #import "QMTasks.h"
-#import "QMCornerButton.h"
 
 #import <DigitsKit/DigitsKit.h>
 #import "QMDigitsConfigurationFactory.h"
 
 static NSString *const kQMFacebookIDField = @"id";
-
-@interface QMWelcomeScreenViewController ()
-
-@property (weak, nonatomic) IBOutlet QMCornerButton *otherLoginMethodsButton;
-
-@end
 
 @implementation QMWelcomeScreenViewController
 
@@ -55,7 +48,7 @@ static NSString *const kQMFacebookIDField = @"id";
     }];
 }
 
-- (IBAction)connectWithOtherMethods {
+- (IBAction)loginWithEmailOrSocial:(UIButton *)sender {
     
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
@@ -85,8 +78,8 @@ static NSString *const kQMFacebookIDField = @"id";
     
     if (alertController.popoverPresentationController) {
         // iPad support
-        alertController.popoverPresentationController.sourceView = self.otherLoginMethodsButton;
-        alertController.popoverPresentationController.sourceRect = self.otherLoginMethodsButton.bounds;
+        alertController.popoverPresentationController.sourceView = sender;
+        alertController.popoverPresentationController.sourceRect = sender.bounds;
     }
     
     [self presentViewController:alertController animated:YES completion:nil];

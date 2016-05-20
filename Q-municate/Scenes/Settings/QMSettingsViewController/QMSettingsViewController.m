@@ -225,7 +225,7 @@ QMImagePickerResultHandler
     
     if (section == QMSettingsSectionStatus) {
         
-        headerView.title = @"STATUS";
+        headerView.title = [NSLocalizedString(@"QM_STR_STATUS", nil) uppercaseString];
     }
     
     return headerView;

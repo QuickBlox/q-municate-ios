@@ -43,7 +43,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <action selector="connectWithOtherMethods" destination="ncs-B4-uAJ" eventType="touchUpInside" id="G4S-Du-GMx"/>
+                                    <action selector="loginWithEmailOrSocial:" destination="ncs-B4-uAJ" eventType="touchUpInside" id="1b9-yb-1JR"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kys-2n-ThW" customClass="QMCornerButton">
@@ -115,7 +115,7 @@
                                     <constraint firstItem="942-eX-Uid" firstAttribute="centerX" secondItem="IHp-4T-p7b" secondAttribute="centerX" id="iex-Ee-nyW"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PHr-Vz-jdJ" userLabel="Spacer View">
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PHr-Vz-jdJ" userLabel="Spacer View">
                                 <rect key="frame" x="0.0" y="329" width="0.0" height="88"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="26" id="4D4-iK-Bof"/>
@@ -131,7 +131,7 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="azN-hq-Hr4" userLabel="Spacer View 2">
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="azN-hq-Hr4" userLabel="Spacer View 2">
                                 <rect key="frame" x="0.0" y="0.0" width="0.0" height="89"/>
                             </view>
                         </subviews>
@@ -218,7 +218,6 @@
                     <navigationItem key="navigationItem" id="jrH-Jb-hwh"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
-                        <outlet property="otherLoginMethodsButton" destination="pcK-a3-Saj" id="TTm-Ce-i5W"/>
                         <segue destination="LAN-DZ-jv6" kind="custom" identifier="SceneSegueMain" customClass="QMRootViewControllerSegue" id="7KE-cg-4Nx"/>
                         <segue destination="HjW-ae-ZF3" kind="show" identifier="SceneSegueLogin" id="cOz-fv-4sO"/>
                     </connections>
