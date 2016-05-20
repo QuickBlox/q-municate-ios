@@ -76,11 +76,6 @@ typedef NS_ENUM(NSInteger, QMAccountType) {
 @property (assign, nonatomic) QMAccountType accountType;
 
 /**
- *  Whether synchronize should be skipped.
- */
-@property (assign, nonatomic) BOOL skipSync;
-
-/**
  *  Whether user agreement was already accepted.
  */
 @property (assign, nonatomic) BOOL userAgreementAccepted;

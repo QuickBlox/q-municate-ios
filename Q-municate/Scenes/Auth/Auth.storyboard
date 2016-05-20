@@ -244,7 +244,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="QUW-QI-B8u">
-                            <rect key="frame" x="0.0" y="192" width="600" height="44"/>
+                            <rect key="frame" x="0.0" y="148" width="600" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </view>
@@ -297,33 +297,8 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="d7M-qy-07o">
-                                        <rect key="frame" x="0.0" y="104" width="600" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="d7M-qy-07o" id="ewX-EH-HLx">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="v6u-Kq-ldm">
-                                                    <rect key="frame" x="534" y="6" width="51" height="31"/>
-                                                </switch>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remember me" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hOt-se-Hxz">
-                                                    <rect key="frame" x="17" y="11" width="112" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="v6u-Kq-ldm" firstAttribute="centerY" secondItem="ewX-EH-HLx" secondAttribute="centerY" id="QO7-qT-Xe0"/>
-                                                <constraint firstItem="hOt-se-Hxz" firstAttribute="leading" secondItem="ewX-EH-HLx" secondAttribute="leadingMargin" constant="9" id="WGi-NI-M91"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="v6u-Kq-ldm" secondAttribute="trailing" constant="9" id="xjR-Ya-PrN"/>
-                                                <constraint firstItem="hOt-se-Hxz" firstAttribute="top" secondItem="ewX-EH-HLx" secondAttribute="topMargin" constant="3" id="y8k-BU-w3z"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="aLR-lu-ph3">
-                                        <rect key="frame" x="0.0" y="148" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="104" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="aLR-lu-ph3" id="CB2-UU-0JU">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -366,7 +341,6 @@
                     <connections>
                         <outlet property="emailField" destination="Ylu-Uf-kzC" id="9Y2-bE-1lD"/>
                         <outlet property="passwordField" destination="Y5X-mP-cj0" id="nDD-VP-0Gg"/>
-                        <outlet property="rememberMeSwitch" destination="v6u-Kq-ldm" id="reO-aq-MPT"/>
                         <segue destination="LAN-DZ-jv6" kind="custom" identifier="SceneSegueMain" customClass="QMRootViewControllerSegue" id="Mgd-KP-8Lo"/>
                     </connections>
                 </tableViewController>
@@ -530,6 +504,6 @@
         <image name="underline" width="1" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="7KE-cg-4Nx"/>
+        <segue reference="Mgd-KP-8Lo"/>
     </inferredMetricsTieBreakers>
 </document>

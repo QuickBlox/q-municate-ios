@@ -299,7 +299,7 @@ QMImageViewDelegate
     }
 }
 
-- (BOOL)messageSendingAllowed {
+- (BOOL)connectionExists {
     
     if (![QMCore instance].isInternetConnected) {
         
@@ -313,6 +313,16 @@ QMImageViewDelegate
         return NO;
     }
     
+    return YES;
+}
+
+- (BOOL)messageSendingAllowed {
+    
+    if (![self connectionExists]) {
+        
+        return NO;
+    }
+    
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
         if (![[QMCore instance].contactManager isFriendWithUserID:self.chatDialog.recipientID]) {
@@ -320,6 +330,22 @@ QMImageViewDelegate
             [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO inViewController:self];
             return NO;
         }
+    }
+    
+    return YES;
+}
+
+- (BOOL)callsAllowed {
+    
+    if (![self connectionExists]) {
+        
+        return NO;
+    }
+    
+    if (![[QMCore instance].contactManager isFriendWithUserID:self.chatDialog.recipientID]) {
+        
+        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO inViewController:self];
+        return NO;
     }
     
     return YES;
@@ -885,7 +911,7 @@ QMImageViewDelegate
 
 - (void)audioCallAction {
     
-    if (![self messageSendingAllowed]) {
+    if (![self callsAllowed]) {
         
         return;
     }
@@ -895,7 +921,7 @@ QMImageViewDelegate
 
 - (void)videoCallAction {
     
-    if (![self messageSendingAllowed]) {
+    if (![self callsAllowed]) {
         
         return;
     }
