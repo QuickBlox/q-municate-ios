@@ -181,6 +181,7 @@ QMImagePickerResultHandler
                 }
                     
                 case QMSocialGiveFeedback:
+                    [self performSegueWithIdentifier:kQMSceneSegueFeedback sender:nil];
                     break;
             }
             
