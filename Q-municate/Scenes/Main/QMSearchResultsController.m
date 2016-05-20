@@ -58,20 +58,10 @@
 
 - (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
     
-    if (self.searchDataSource.searchDataProvider != searchDataProvider) {
-        
-        return;
-    }
-    
     [self.tableView reloadData];
 }
 
 - (void)searchDataProvider:(QMSearchDataProvider *)__unused searchDataProvider didUpdateData:(NSArray *)__unused data {
-    
-    if (self.searchDataSource.searchDataProvider != searchDataProvider) {
-        
-        return;
-    }
     
     [self.tableView reloadData];
 }

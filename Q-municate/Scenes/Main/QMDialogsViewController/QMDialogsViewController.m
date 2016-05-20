@@ -82,6 +82,15 @@ QMSearchResultsControllerDelegate
     [[QMCore instance].usersService addDelegate:self];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if (self.searchController.isActive) {
+        
+        self.tabBarController.tabBar.hidden = YES;
+    }
+}
+
 #pragma mark - Init methods
 
 - (void)configureSearch {
@@ -153,6 +162,12 @@ QMSearchResultsControllerDelegate
 - (void)willPresentSearchController:(UISearchController *)__unused searchController {
     
     self.searchResultsController.tableView.dataSource = self.dialogsSearchDataSource;
+    self.tabBarController.tabBar.hidden = YES;
+}
+
+- (void)willDismissSearchController:(UISearchController *)__unused searchController {
+    
+    self.tabBarController.tabBar.hidden = NO;
 }
 
 #pragma mark - UISearchResultsUpdating

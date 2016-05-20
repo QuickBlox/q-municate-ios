@@ -80,6 +80,15 @@ QMContactListServiceDelegate
     [[QMCore instance].contactListService addDelegate:self];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if (self.searchController.isActive) {
+        
+        self.tabBarController.tabBar.hidden = YES;
+    }
+}
+
 - (void)configureSearch {
     
     self.searchResultsController = [[QMSearchResultsController alloc] init];
@@ -184,12 +193,16 @@ QMContactListServiceDelegate
     }
     
     [self updateDataSourceByScope:searchController.searchBar.selectedScopeButtonIndex];
+    
+    self.tabBarController.tabBar.hidden = YES;
 }
 
 - (void)willDismissSearchController:(UISearchController *)__unused searchController {
     
     self.tableView.dataSource = self.dataSource;
     [self updateItemsFromContactList];
+    
+    self.tabBarController.tabBar.hidden = NO;
 }
 
 #pragma mark - UISearchBarDelegate
