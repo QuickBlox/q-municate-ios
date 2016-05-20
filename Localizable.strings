@@ -17,7 +17,6 @@
 "QM_STR_ARE_YOU_SURE" = "Are you sure?";
 "QM_STR_CONTACT_LIST" = "Contact list";
 "QM_STR_FACEBOOK" = "Facebook";
-"QM_STR_WRONG_OLD_PASSWORD" = "Wrong old password";
 "QM_STR_FILL_IN_ALL_THE_FIELDS" = "Fill in all the fields";
 "QM_STR_PASSWORD_CHANGED" = "Password changed";
 "QM_STR_CHECK_INTERNET_CONNECTION" = "Please, check your internet connection";
@@ -170,6 +169,9 @@
 "QM_STR_FULLNAME_DESCRIPTION" = "Full name is text/numeric field, could contain everything except '<', '>', ';'.\n3-50 characters.\nMandatory.";
 "QM_STR_STATUS" = "Status";
 "QM_STR_STATUS_DESCRIPTION" = "Short text message that will be displayed in your profile.";
+"QM_STR_PASSWORD_DESCRIPTION" = "Text, numeric or symbolic field.\n8-50 characters.\nMandatory.";
+"QM_STR_WRONG_OLD_PASSWORD" = "Wrong old password";
+"QM_STR_PASSWORD_DONT_MATCH" = "Passwords don't match";
 
 // *********** Calls ***********
 "QM_STR_INCOMING_CALL" = "Incoming Call";
