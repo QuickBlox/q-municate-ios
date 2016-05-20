@@ -25,3 +25,4 @@ static NSString *const KQMSceneSegueGroupOccupants      = @"SceneSegueGroupOccup
 static NSString *const kQMSceneSegueGroupAddUsers       = @"SceneSegueGroupAddUsers";
 static NSString *const kQMSceneSegueUpdateUser          = @"SceneSegueUpdateUser";
 static NSString *const kQMSceneSegueFeedback            = @"SceneSegueFeedback";
+static NSString *const kQMSceneSeguePassword            = @"SceneSeguePassword";

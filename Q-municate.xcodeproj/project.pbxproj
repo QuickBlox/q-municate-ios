@@ -134,6 +134,7 @@
 		58FAAE891CEDC4720081EABA /* UINavigationController+QMNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FAAE881CEDC4720081EABA /* UINavigationController+QMNotification.m */; };
 		58FD668A1CEF058400B72425 /* QMFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FD66891CEF058400B72425 /* QMFeedbackViewController.m */; };
 		58FD668E1CEF12D500B72425 /* QMAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FD668D1CEF12D500B72425 /* QMAlert.m */; };
+		58FD66971CEF378200B72425 /* QMChangePasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58FD66961CEF378200B72425 /* QMChangePasswordViewController.m */; };
 		690A271518CA0F35003D6B80 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 690A271418CA0F35003D6B80 /* AddressBook.framework */; };
 		693DC42618FFC45900AF46D9 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42518FFC45900AF46D9 /* libsqlite3.dylib */; };
 		693DC42C18FFC58000AF46D9 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 693DC42B18FFC58000AF46D9 /* libstdc++.6.0.9.dylib */; };
@@ -400,6 +401,8 @@
 		58FD66891CEF058400B72425 /* QMFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMFeedbackViewController.m; path = "Q-municate/Scenes/Settings/QMFeedbackViewController/QMFeedbackViewController.m"; sourceTree = SOURCE_ROOT; };
 		58FD668C1CEF12D500B72425 /* QMAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMAlert.h; path = "Q-municate/Classes/Tools/QMAlert/QMAlert.h"; sourceTree = SOURCE_ROOT; };
 		58FD668D1CEF12D500B72425 /* QMAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMAlert.m; path = "Q-municate/Classes/Tools/QMAlert/QMAlert.m"; sourceTree = SOURCE_ROOT; };
+		58FD66951CEF378200B72425 /* QMChangePasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMChangePasswordViewController.h; path = "Q-municate/Scenes/Settings/QMChangePasswordViewController/QMChangePasswordViewController.h"; sourceTree = SOURCE_ROOT; };
+		58FD66961CEF378200B72425 /* QMChangePasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMChangePasswordViewController.m; path = "Q-municate/Scenes/Settings/QMChangePasswordViewController/QMChangePasswordViewController.m"; sourceTree = SOURCE_ROOT; };
 		67976AC8FFE848A4B85EB2AF /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		690A271418CA0F35003D6B80 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		693DC42518FFC45900AF46D9 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -879,6 +882,7 @@
 				58BB52601CDA3E7A00869FA9 /* QMSettingsViewController */,
 				58C261F11CDC91BB00AA9CF2 /* QMUpdateUserViewController */,
 				58FD66871CEF056500B72425 /* QMFeedbackViewController */,
+				58FD66941CEF372200B72425 /* QMChangePasswordViewController */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -1682,6 +1686,15 @@
 			path = QMSoundManager;
 			sourceTree = "<group>";
 		};
+		58FD66941CEF372200B72425 /* QMChangePasswordViewController */ = {
+			isa = PBXGroup;
+			children = (
+				58FD66951CEF378200B72425 /* QMChangePasswordViewController.h */,
+				58FD66961CEF378200B72425 /* QMChangePasswordViewController.m */,
+			);
+			name = QMChangePasswordViewController;
+			sourceTree = "<group>";
+		};
 		6943843218E42677001E08A9 /* CustomSegues */ = {
 			isa = PBXGroup;
 			children = (
@@ -2032,6 +2045,7 @@
 				55D8AD1019AC757900DAF79F /* QMAddressBook.m in Sources */,
 				58F398091CB7DE91006C1D5E /* QMChatManager.m in Sources */,
 				584A6DB31C9DB7DC00B7D641 /* QMTagFieldView.m in Sources */,
+				58FD66971CEF378200B72425 /* QMChangePasswordViewController.m in Sources */,
 				589D4CFD1C981D44005F1E76 /* QMContactCell.m in Sources */,
 				69D57E6218ACC11C00A9900A /* main.m in Sources */,
 				55D8ADB519AC761000DAF79F /* QMForgotPasswordViewController.m in Sources */,

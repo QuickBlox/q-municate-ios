@@ -58,14 +58,14 @@ QMUsersServiceDelegate
     
     @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        
         @strongify(self);
         NSPredicate *usersSearchPredicate = [NSPredicate predicateWithFormat:@"SELF.fullName CONTAINS[cd] %@", searchText];
         NSArray *friendsSearchResult = [self.friends filteredArrayUsingPredicate:usersSearchPredicate];
         
-        [self.dataSource replaceItems:friendsSearchResult];
-        
         dispatch_async(dispatch_get_main_queue(), ^{
             
+            [self.dataSource replaceItems:friendsSearchResult];
             [self.delegate searchDataProviderDidFinishDataFetching:self];
         });
     });

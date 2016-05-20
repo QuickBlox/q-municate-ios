@@ -56,6 +56,11 @@ QMContactListServiceDelegate
     return userInfoViewController;
 }
 
+- (void)dealloc {
+    
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
+
 - (void)viewDidLoad {
     
     NSAssert(self.user.ID > 0, @"Must be a valid user ID!");

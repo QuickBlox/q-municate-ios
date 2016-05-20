@@ -24,6 +24,7 @@ static NSString *const kQMFacebookIDField = @"id";
 @implementation QMWelcomeScreenViewController
 
 - (void)dealloc {
+    
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 

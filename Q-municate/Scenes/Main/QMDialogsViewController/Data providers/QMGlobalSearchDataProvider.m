@@ -9,9 +9,9 @@
 #import "QMGlobalSearchDataProvider.h"
 #import "QMCore.h"
 
-const NSTimeInterval kQMGlobalSearchTimeInterval = 0.6f;
-const NSUInteger kQMGlobalSearchCharsMin = 3;
-const NSUInteger kQMUsersPageLimit = 50;
+static const NSTimeInterval kQMGlobalSearchTimeInterval = 0.6f;
+static const NSUInteger kQMGlobalSearchCharsMin = 3;
+static const NSUInteger kQMUsersPageLimit = 50;
 
 @interface QMGlobalSearchDataProvider ()
 
@@ -56,10 +56,7 @@ const NSUInteger kQMUsersPageLimit = 50;
         return;
     }
     
-    if (self.globalSearchCancellationTokenSource) {
-        // cancel existing task if in progress
-        [self.globalSearchCancellationTokenSource cancel];
-    }
+    [self cancel];
     
     if (![searchText isEqualToString:self.cachedSearchText]) {
         
@@ -112,7 +109,7 @@ const NSUInteger kQMUsersPageLimit = 50;
     } cancellationToken:self.globalSearchCancellationTokenSource.token];
 }
 
-#pragma mark - Pagination
+#pragma mark - Methods
 
 - (void)nextPage {
     
@@ -123,10 +120,19 @@ const NSUInteger kQMUsersPageLimit = 50;
     }
 }
 
+- (void)cancel {
+    
+    if (self.globalSearchCancellationTokenSource) {
+        // cancel existing task if in progress
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        [self.globalSearchCancellationTokenSource cancel];
+    }
+}
+
 #pragma mark - Helpers
 
-- (NSArray *)sortUsersByFullname:(NSArray *)users
-{
+- (NSArray *)sortUsersByFullname:(NSArray *)users {
+    
     NSSortDescriptor *sorter = [[NSSortDescriptor alloc]
                                 initWithKey:@"fullName"
                                 ascending:YES

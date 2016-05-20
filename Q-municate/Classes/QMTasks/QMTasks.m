@@ -25,7 +25,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     
     [QBRequest updateCurrentUser:updateParameters successBlock:^(QBResponse * _Nonnull __unused response, QBUUser * _Nullable user) {
         
-        user.password = [QMCore instance].currentProfile.userData.password;
+        user.password = updateParameters.password ?: [QMCore instance].currentProfile.userData.password;
         [[QMCore instance].currentProfile synchronizeWithUserData:user];
         
         [source setResult:user];
