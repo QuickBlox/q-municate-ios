@@ -33,6 +33,12 @@ typedef NS_ENUM(NSUInteger, QMUserInfo) {
     QMUserInfoEmail
 };
 
+typedef NS_ENUM(NSUInteger, QMSocial) {
+    
+    QMSocialTellFriend,
+    QMSocialGiveFeedback
+};
+
 @interface QMSettingsViewController ()
 
 <
@@ -164,6 +170,20 @@ QMImagePickerResultHandler
             break;
             
         case QMSettingsSectionSocial:
+            
+            switch (indexPath.row) {
+                    
+                case QMSocialTellFriend: {
+                    
+                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                    [self showShareControllerInCell:cell];
+                    break;
+                }
+                    
+                case QMSocialGiveFeedback:
+                    break;
+            }
+            
             break;
             
         case QMSettingsSectionLogout:
@@ -288,6 +308,24 @@ QMImagePickerResultHandler
         
         return nil;
     }];
+}
+
+#pragma mark - Share View Controller
+
+- (void)showShareControllerInCell:(UITableViewCell *)cell {
+    
+    NSArray *items = @[NSLocalizedString(@"QM_STR_SHARE_TEXT", nil)];
+    
+    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:nil];
+    activityViewController.excludedActivityTypes = @[UIActivityTypeAirDrop, UIActivityTypeCopyToPasteboard];
+    
+    if (activityViewController.popoverPresentationController) {
+        // iPad support
+        activityViewController.popoverPresentationController.sourceView = cell;
+        activityViewController.popoverPresentationController.sourceRect = cell.bounds;
+    }
+    
+    [self presentViewController:activityViewController animated:YES completion:nil];
 }
 
 @end
