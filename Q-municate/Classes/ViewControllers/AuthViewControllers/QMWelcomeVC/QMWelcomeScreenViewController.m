@@ -101,8 +101,6 @@ static NSString *const kQMFacebookIDField = @"id";
         
     }] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         
-        [SVProgressHUD dismiss];
-        
         if (task.isFaulted) {
             
             [QMFacebook logout];
@@ -110,6 +108,7 @@ static NSString *const kQMFacebookIDField = @"id";
         else if (task.result != nil) {
             
             @strongify(self);
+            [SVProgressHUD dismiss];
             [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
             [[QMCore instance].currentProfile setAccountType:QMAccountTypeFacebook];
             [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
