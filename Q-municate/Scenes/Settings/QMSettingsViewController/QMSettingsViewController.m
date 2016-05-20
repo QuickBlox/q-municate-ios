@@ -20,23 +20,19 @@
 typedef NS_ENUM(NSUInteger, QMSettingsSection) {
     
     QMSettingsSectionFullName,
-    QMSettingsSectionUserInfo,
     QMSettingsSectionStatus,
+    QMSettingsSectionPhone,
+    QMSettingsSectionEmail,
+    QMSettingsSectionPassword,
     QMSettingsSectionExtra,
     QMSettingsSectionSocial,
     QMSettingsSectionLogout
 };
 
-typedef NS_ENUM(NSUInteger, QMUserInfo) {
+typedef NS_ENUM(NSUInteger, QMSocialSection) {
     
-    QMUserInfoPhone,
-    QMUserInfoEmail
-};
-
-typedef NS_ENUM(NSUInteger, QMSocial) {
-    
-    QMSocialTellFriend,
-    QMSocialGiveFeedback
+    QMSocialSectionTellFriend,
+    QMSocialSectionGiveFeedback
 };
 
 @interface QMSettingsViewController ()
@@ -58,6 +54,8 @@ QMImagePickerResultHandler
 @property (weak, nonatomic) BFTask *subscribeTask;
 @property (weak, nonatomic) BFTask *logoutTask;
 
+@property (strong, nonatomic) NSMutableIndexSet *hiddenSections;
+
 @end
 
 @implementation QMSettingsViewController
@@ -65,7 +63,9 @@ QMImagePickerResultHandler
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.hiddenSections = [NSMutableIndexSet indexSet];
     self.avatarImageView.imageViewType = QMImageViewTypeCircle;
+    
     // Hide empty separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
@@ -75,6 +75,12 @@ QMImagePickerResultHandler
     // configure user data
     [self configureUserData:[QMCore instance].currentProfile.userData];
     self.pushNotificationSwitch.on = [QMCore instance].currentProfile.pushNotificationsEnabled;
+    
+    // determine account type
+    if ([QMCore instance].currentProfile.accountType != QMAccountTypeEmail) {
+        
+        [self.hiddenSections addIndex:QMSettingsSectionPassword];
+    }
     
     // subscribe to delegates
     [QMCore instance].currentProfile.delegate = self;
@@ -91,7 +97,14 @@ QMImagePickerResultHandler
     
     self.fullNameLabel.text = userData.fullName;
     
-    self.phoneLabel.text = userData.phone.length > 0 ? userData.phone : NSLocalizedString(@"QM_STR_NONE", nil);
+    if (userData.phone.length > 0) {
+        
+        self.phoneLabel.text = userData.phone;
+    }
+    else {
+        
+        [self.hiddenSections addIndex:QMSettingsSectionPhone];
+    }
     
     self.emailLabel.text = userData.email.length > 0 ? userData.email : NSLocalizedString(@"QM_STR_NONE", nil);
     
@@ -136,6 +149,18 @@ QMImagePickerResultHandler
     }
 }
 
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    if ([self.hiddenSections containsIndex:section]) {
+        
+        return 0;
+    }
+    
+    return [super tableView:tableView numberOfRowsInSection:section];
+}
+
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -147,23 +172,19 @@ QMImagePickerResultHandler
             [self performSegueWithIdentifier:kQMSceneSegueUpdateUser sender:@(QMUpdateUserFieldFullName)];
             break;
             
-        case QMSettingsSectionUserInfo: {
-            
-            switch (indexPath.row) {
-                    
-                case QMUserInfoPhone:
-                    break;
-                    
-                case QMUserInfoEmail:
-                    [self performSegueWithIdentifier:kQMSceneSegueUpdateUser sender:@(QMUpdateUserFieldEmail)];
-                    break;
-            }
-            
-            break;
-        }
-            
         case QMSettingsSectionStatus:
             [self performSegueWithIdentifier:kQMSceneSegueUpdateUser sender:@(QMUpdateUserFieldStatus)];
+            break;
+            
+        case QMSettingsSectionPhone:
+            break;
+            
+        case QMSettingsSectionEmail:
+            [self performSegueWithIdentifier:kQMSceneSegueUpdateUser sender:@(QMUpdateUserFieldEmail)];
+            break;
+            
+        case QMSettingsSectionPassword:
+            [self performSegueWithIdentifier:kQMSceneSeguePassword sender:nil];
             break;
             
         case QMSettingsSectionExtra:
@@ -173,14 +194,14 @@ QMImagePickerResultHandler
             
             switch (indexPath.row) {
                     
-                case QMSocialTellFriend: {
+                case QMSocialSectionTellFriend: {
                     
                     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                     [self showShareControllerInCell:cell];
                     break;
                 }
                     
-                case QMSocialGiveFeedback:
+                case QMSocialSectionGiveFeedback:
                     [self performSegueWithIdentifier:kQMSceneSegueFeedback sender:nil];
                     break;
             }
@@ -213,7 +234,7 @@ QMImagePickerResultHandler
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     
-    if (section == QMSettingsSectionFullName) {
+    if (![self shouldHaveHeaderForSection:section]) {
         
         return [super tableView:tableView viewForHeaderInSection:section];
     }
@@ -234,7 +255,7 @@ QMImagePickerResultHandler
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     
-    if (section == QMSettingsSectionFullName) {
+    if (![self shouldHaveHeaderForSection:section]) {
         
         return [super tableView:tableView heightForHeaderInSection:section];
     }
@@ -327,6 +348,34 @@ QMImagePickerResultHandler
     }
     
     [self presentViewController:activityViewController animated:YES completion:nil];
+}
+
+#pragma mark - Helper
+
+- (BOOL)shouldHaveHeaderForSection:(NSInteger)section {
+    
+    if (section == QMSettingsSectionFullName) {
+        
+        return NO;
+    }
+    
+    if ([self.hiddenSections containsIndex:QMSettingsSectionPhone]
+        && section == QMSettingsSectionPhone) {
+        
+        return NO;
+    }
+    else if (![self.hiddenSections containsIndex:QMSettingsSectionPhone]
+             && section == QMSettingsSectionEmail) {
+        
+        return NO;
+    }
+    
+    if (section == QMSettingsSectionPassword) {
+        
+        return NO;
+    }
+    
+    return YES;
 }
 
 @end
