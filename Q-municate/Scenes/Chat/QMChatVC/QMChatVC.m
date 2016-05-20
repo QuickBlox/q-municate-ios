@@ -11,13 +11,13 @@
 #import "UINavigationController+QMNotification.h"
 #import "QMMessageStatusStringBuilder.h"
 #import "QMPlaceholder.h"
-#import "REAlertView+QMSuccess.h"
 #import "QMSoundManager.h"
 #import "QMImagePicker.h"
 #import "QMOnlineTitleView.h"
 #import "QMColors.h"
 #import "QMUserInfoViewController.h"
 #import "QMGroupInfoViewController.h"
+#import "QMAlert.h"
 
 // helpers
 #import "QMChatButtonsFactory.h"
@@ -309,7 +309,7 @@ QMImageViewDelegate
     
     if (![QBChat instance].isConnected) {
         
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:NO];
+        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:NO inViewController:self];
         return NO;
     }
     
@@ -317,7 +317,7 @@ QMImageViewDelegate
         
         if (![[QMCore instance].contactManager isFriendWithUserID:self.chatDialog.recipientID]) {
             
-            [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO];
+            [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO inViewController:self];
             return NO;
         }
     }
@@ -353,11 +353,13 @@ QMImageViewDelegate
     message.dateSent = date;
     
     // Sending message
+    @weakify(self);
     [[[QMCore instance].chatService sendMessage:message toDialog:self.chatDialog saveToHistory:YES saveToStorage:YES] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         
+        @strongify(self);
         if (task.isFaulted) {
             
-            [REAlertView showAlertWithMessage:task.error.localizedRecoverySuggestion actionSuccess:NO];
+            [QMAlert showAlertWithMessage:task.error.localizedRecoverySuggestion actionSuccess:NO inViewController:self];
         }
         else {
             

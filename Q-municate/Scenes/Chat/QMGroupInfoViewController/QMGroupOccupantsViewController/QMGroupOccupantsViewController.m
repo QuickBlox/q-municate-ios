@@ -16,7 +16,6 @@
 #import "UINavigationController+QMNotification.h"
 #import "QMUserInfoViewController.h"
 #import "NSArray+Intersection.h"
-#import "REAlertView.h"
 #import <SVProgressHUD.h>
 
 static const CGFloat kQMSectionHeaderHeight = 32.0f;
@@ -136,33 +135,41 @@ QMUsersServiceDelegate
             return;
         }
         
-        @weakify(self);
-        [REAlertView presentAlertViewWithConfiguration:^(REAlertView *alertView) {
-            
-            @strongify(self);
-            alertView.message = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_CONFIRM_LEAVE", nil), self.chatDialog.name];
-            [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) andActionBlock:^{}];
-            [alertView addButtonWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil) andActionBlock:^{
-                
-                [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
-                                                            message:NSLocalizedString(@"QM_STR_LOADING", nil)
-                                                           duration:0];
-                
-                __weak UINavigationController *navigationController = self.navigationController;
-                
-                self.leaveTask = [[[QMCore instance].chatManager leaveChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-                    
-                    [navigationController dismissNotificationPanel];
-                    
-                    if (!task.isFaulted) {
-                        
-                        [self.navigationController popToRootViewControllerAnimated:YES];
-                    }
-                    
-                    return nil;
-                }];
-            }];
-        }];
+        UIAlertController *alertController = [UIAlertController
+                                              alertControllerWithTitle:nil
+                                              message:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CONFIRM_LEAVE", nil), self.chatDialog.name]
+                                              preferredStyle:UIAlertControllerStyleAlert];
+        
+        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+                                                            style:UIAlertActionStyleCancel
+                                                          handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                              
+                                                          }]];
+        
+        __weak UINavigationController *navigationController = self.navigationController;
+        
+        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LEAVE", nil)
+                                                            style:UIAlertActionStyleDestructive
+                                                          handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                              
+                                                              [navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                                                                                          message:NSLocalizedString(@"QM_STR_LOADING", nil)
+                                                                                                         duration:0];
+                                                              
+                                                              self.leaveTask = [[[QMCore instance].chatManager leaveChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+                                                                  
+                                                                  [navigationController dismissNotificationPanel];
+                                                                  
+                                                                  if (!task.isFaulted) {
+                                                                      
+                                                                      [navigationController popToRootViewControllerAnimated:YES];
+                                                                  }
+                                                                  
+                                                                  return nil;
+                                                              }];
+                                                          }]];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
     }
     else {
         

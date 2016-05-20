@@ -39,6 +39,11 @@ typedef NS_ENUM(NSUInteger, QMFeedbackSelection) {
 
 @implementation QMFeedbackViewController
 
+- (void)dealloc {
+    
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
