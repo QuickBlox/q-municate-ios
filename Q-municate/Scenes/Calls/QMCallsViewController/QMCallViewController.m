@@ -63,6 +63,7 @@ QMCallManagerDelegate
 @property (strong, nonatomic) UIButton *muteButton;
 @property (strong, nonatomic) UIButton *cameraButton;
 @property (strong, nonatomic) UIButton *declineButton;
+@property (strong, nonatomic) UIButton *acceptButton;
 
 @end
 
@@ -297,14 +298,16 @@ QMCallManagerDelegate
             
             @weakify(self);
             
-            [self.toolbar addButton:[QMCallButtonsFactory declineButton] action:^(UIButton * _Nonnull sender) {
+            self.declineButton = [QMCallButtonsFactory declineButton];
+            [self.toolbar addButton:self.declineButton action:^(UIButton * _Nonnull sender) {
                 
                 @strongify(self);
                 sender.enabled = NO;
                 [self.session rejectCall:nil];
             }];
             
-            [self.toolbar addButton:[QMCallButtonsFactory acceptButton] action:^(UIButton * _Nonnull sender) {
+            self.acceptButton = [QMCallButtonsFactory acceptButton];
+            [self.toolbar addButton:self.acceptButton action:^(UIButton * _Nonnull sender) {
                 
                 @strongify(self);
                 sender.userInteractionEnabled = NO;
@@ -326,14 +329,16 @@ QMCallManagerDelegate
             
             @weakify(self);
             
-            [self.toolbar addButton:[QMCallButtonsFactory declineButton] action:^(UIButton * _Nonnull sender) {
+            self.declineButton = [QMCallButtonsFactory declineButton];
+            [self.toolbar addButton:self.declineButton action:^(UIButton * _Nonnull sender) {
                 
                 @strongify(self);
                 sender.enabled = NO;
                 [self.session rejectCall:nil];
             }];
             
-            [self.toolbar addButton:[QMCallButtonsFactory acceptVideoCallButton] action:^(UIButton * _Nonnull sender) {
+            self.acceptButton = [QMCallButtonsFactory acceptVideoCallButton];
+            [self.toolbar addButton:self.acceptButton action:^(UIButton * _Nonnull sender) {
                 
                 @strongify(self);
                 sender.userInteractionEnabled = NO;
@@ -661,14 +666,16 @@ QMCallManagerDelegate
 - (void)session:(QBRTCSession *)session hungUpByUser:(NSNumber *)__unused userID userInfo:(NSDictionary *)__unused userInfo {
     
     if (self.session != session) {
-        // there is a bug when user1 was calling, user2 didn't accept yet
-        // but user1 has already stopped it. In this situation session would be destroyed
-        // before this delegate method callback (WebRTC 2.1.1 bug)
-        // though we cannot validate whether callback was received by current session
-        // we can assume that next line of code will be called in this kind of situation
-        // If this callback would be called by another session during active call
-        // bottom text will be replaced correctly anyway by timer
+        
+        return;
+    }
+    
+    if (self.callState == QMCallStateIncomingAudioCall
+        || self.callState == QMCallStateIncomingVideoCall) {
+        
         self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_CALL_WAS_CANCELLED", nil);
+        self.declineButton.enabled = NO;
+        self.acceptButton.enabled = NO;
         return;
     }
     
@@ -715,30 +722,13 @@ QMCallManagerDelegate
 
 #pragma mark - QMCallManagerDelegate
 
-- (void)callManager:(QMCallManager *)__unused callManager willCloseCurrentSession:(QBRTCSession *)session {
+- (void)callManager:(QMCallManager *)__unused callManager willCloseCurrentSession:(QBRTCSession *)__unused session {
     
-    // settings sound router to speaker in order
-    // to play end of call sound in it
-    [[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    if (self.cameraCapture != nil) {
         
-        if (self.cameraCapture != nil) {
-            
-            [self.cameraCapture stopSession];
-            self.cameraCapture = nil;
-        }
-        
-        [QMSoundManager playEndOfCallSound];
-        
-        [self dismissViewControllerAnimated:YES completion:^{
-            
-            if (session.conferenceType == QBRTCConferenceTypeVideo) {
-                
-                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-            }
-        }];
-    });
+        [self.cameraCapture stopSession];
+        self.cameraCapture = nil;
+    }
 }
 
 @end

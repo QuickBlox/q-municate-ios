@@ -29,7 +29,9 @@ QBRTCClientDelegate
 @property (assign, nonatomic, readwrite) BOOL hasActiveCall;
 
 @property (strong, nonatomic) NSTimer *soundTimer;
-@property (strong, nonatomic, readonly) UINavigationController *rootViewController;
+@property (strong, nonatomic, readonly) UIViewController *rootViewController;
+
+@property (strong, nonatomic) QMCallViewController *callViewController;
 
 @end
 
@@ -83,10 +85,10 @@ QBRTCClientDelegate
         
         // instantiating view controller
         QMCallState callState = conferenceType == QBRTCConferenceTypeVideo ? QMCallStateOutgoingVideoCall : QMCallStateOutgoingAudioCall;
-        QMCallViewController *callVC = [QMCallViewController callControllerWithState:callState];
+        self.callViewController = [QMCallViewController callControllerWithState:callState];
         
-        [self.rootViewController presentViewController:callVC
-                                              animated:YES
+        [self.rootViewController presentViewController:self.callViewController
+                                              animated:NO
                                             completion:^{
                                                 
                                                 [self.session startCall:nil];
@@ -111,9 +113,9 @@ QBRTCClientDelegate
 
 #pragma mark - Getters
 
-- (UINavigationController *)rootViewController {
+- (UIViewController *)rootViewController {
     
-    return (UINavigationController *)[[UIApplication sharedApplication].windows.firstObject rootViewController];
+    return [[UIApplication sharedApplication].windows.firstObject rootViewController];
 }
 
 - (QBUUser *)opponentUser {
@@ -149,6 +151,11 @@ QBRTCClientDelegate
         [session rejectCall:nil];
     }
     
+    if (session.initiatorID.unsignedIntegerValue == self.serviceManager.currentProfile.userData.ID) {
+        // skipping call from ourselves
+        return;
+    }
+    
     [[QBRTCSoundRouter instance] initialize];
     [[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker];
     
@@ -158,10 +165,10 @@ QBRTCClientDelegate
     
     // initializing controller
     QMCallState callState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateIncomingVideoCall : QMCallStateIncomingAudioCall;
-    QMCallViewController *callVC = [QMCallViewController callControllerWithState:callState];
+    self.callViewController = [QMCallViewController callControllerWithState:callState];
     
-    [self.rootViewController presentViewController:callVC
-                                          animated:YES
+    [self.rootViewController presentViewController:self.callViewController
+                                          animated:NO
                                         completion:nil];
 }
 
@@ -232,13 +239,30 @@ QBRTCClientDelegate
         return;
     }
     
-    [self.delegate callManager:self willCloseCurrentSession:session];
-    
     [self stopAllSounds];
     
     self.hasActiveCall = NO;
     
-    self.session = nil;
+    // settings sound router to speaker in order
+    // to play end of call sound in it
+    [[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [QMSoundManager playEndOfCallSound];
+        [self.delegate callManager:self willCloseCurrentSession:session];
+        
+        [self.rootViewController dismissViewControllerAnimated:NO completion:^{
+            
+            if (session.conferenceType == QBRTCConferenceTypeVideo) {
+                
+                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+            }
+            
+            self.session = nil;
+            self.callViewController = nil;
+        }];
+    });
 }
 
 #pragma mark - ICE servers
