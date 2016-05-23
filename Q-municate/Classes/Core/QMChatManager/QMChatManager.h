@@ -53,6 +53,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (BFTask *)changeAvatar:(UIImage *)avatar forGroupChatDialog:(QBChatDialog *)chatDialog;
 
 /**
+ *  Change name for group chat dialog and send notification message.
+ *
+ *  @param name       new name for a specific group chat
+ *  @param chatDialog chat dialog to update
+ *
+ *  @return task with result
+ */
+- (BFTask *)changeName:(NSString *)name forGroupChatDialog:(QBChatDialog *)chatDialog;
+
+/**
  *  Leave group chat dialog and send notification message.
  *
  *  @param chatDialog group chat dialog to leave
