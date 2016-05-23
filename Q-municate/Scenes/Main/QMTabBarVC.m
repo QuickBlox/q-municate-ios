@@ -8,24 +8,18 @@
 
 #import "QMTabBarVC.h"
 #import "QMNotification.h"
-#import "QMTasks.h"
 #import "QMCore.h"
 #import "QMChatVC.h"
 #import "QMSoundManager.h"
-
-static const NSInteger kQMUnAuthorizedErrorCode = -1011;
 
 @interface QMTabBarVC ()
 
 <
 UITabBarControllerDelegate,
 
-QMPushNotificationManagerDelegate,
 QMChatServiceDelegate,
 QMChatConnectionDelegate
 >
-
-@property (strong, nonatomic) BFTask *autoLoginTask;
 
 @end
 
@@ -36,37 +30,8 @@ QMChatConnectionDelegate
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self performAutoLoginAndFetchData];
-    
     // subscribing for delegates
     [[QMCore instance].chatService addDelegate:self];
-}
-
-- (void)performAutoLoginAndFetchData {
-    
-    @weakify(self);
-    self.autoLoginTask = [[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
-        @strongify(self);
-        
-        if (task.isFaulted && task.error.code == kQMUnAuthorizedErrorCode) {
-            [[[QMCore instance] logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
-                
-                [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
-                return nil;
-            }];
-            
-            return nil;
-        }
-        else {
-            
-            if ([QMCore instance].pushNotificationManager.pushNotification != nil) {
-                
-                [[QMCore instance].pushNotificationManager handlePushNotificationWithDelegate:self];
-            }
-            
-            return [[QMCore instance].chatService connect];
-        }
-    }];
 }
 
 #pragma mark - Notification
@@ -99,19 +64,9 @@ QMChatConnectionDelegate
         if (buttonIndex == 1) {
             
             QMChatVC *chatVC = [QMChatVC chatViewControllerWithChatDialog:chatDialog];
-            [self.navigationController pushViewController:chatVC animated:YES];
+            [self.selectedViewController pushViewController:chatVC animated:YES];
         }
     }];
-}
-
-#pragma mark - QMPushNotificationManagerDelegate
-
-- (void)pushNotificationManager:(QMPushNotificationManager *)__unused pushNotificationManager didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
-    
-    UINavigationController *navigationController = (UINavigationController *)[[UIApplication sharedApplication].windows.firstObject rootViewController];
-    
-    QMChatVC *chatVC = [QMChatVC chatViewControllerWithChatDialog:chatDialog];
-    [navigationController pushViewController:chatVC animated:YES];
 }
 
 #pragma mark - QMChatServiceDelegate
