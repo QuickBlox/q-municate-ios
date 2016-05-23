@@ -71,7 +71,6 @@ QMSearchResultsControllerDelegate
     
     // Hide empty separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    self.tableView.backgroundView = nil;
     
     // search implementation
     [self configureSearch];
@@ -91,6 +90,7 @@ QMSearchResultsControllerDelegate
     // adding refresh control task
     if (self.refreshControl) {
         
+        self.refreshControl.backgroundColor = [UIColor whiteColor];
         [self.refreshControl addTarget:self
                                 action:@selector(updateDialogsAndEndRefreshing)
                       forControlEvents:UIControlEventValueChanged];

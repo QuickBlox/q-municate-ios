@@ -85,6 +85,7 @@ QMUsersServiceDelegate
     // adding refresh control task
     if (self.refreshControl) {
         
+        self.refreshControl.backgroundColor = [UIColor whiteColor];
         [self.refreshControl addTarget:self
                                 action:@selector(updateContactsAndEndRefreshing)
                       forControlEvents:UIControlEventValueChanged];
