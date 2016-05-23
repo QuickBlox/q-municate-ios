@@ -17,6 +17,7 @@ PODS:
     - FBSDKCoreKit
   - FBSDKShareKit (4.11.0):
     - FBSDKCoreKit
+  - FLAnimatedImage (1.0.12)
   - Flurry-iOS-SDK/FlurrySDK (7.1.1)
   - libextobjc/EXTKeyPathCoding (0.4.1):
     - libextobjc/RuntimeExtensions
@@ -24,6 +25,13 @@ PODS:
     - libextobjc/RuntimeExtensions
   - libextobjc/RuntimeExtensions (0.4.1)
   - MPGNotification (1.2.4)
+  - NYTPhotoViewer (1.1.0):
+    - NYTPhotoViewer/AnimatedGifSupport (= 1.1.0)
+    - NYTPhotoViewer/Core (= 1.1.0)
+  - NYTPhotoViewer/AnimatedGifSupport (1.1.0):
+    - FLAnimatedImage (~> 1.0.8)
+    - NYTPhotoViewer/Core
+  - NYTPhotoViewer/Core (1.1.0)
   - QMCVDevelopment (0.3.7):
     - QMCVDevelopment/Categories (= 0.3.7)
     - QMCVDevelopment/KeyboardViewController (= 0.3.7)
@@ -78,6 +86,7 @@ DEPENDENCIES:
   - libextobjc/EXTKeyPathCoding (~> 0.4.1)
   - libextobjc/EXTScope (~> 0.4.1)
   - MPGNotification (~> 1.2)
+  - NYTPhotoViewer (~> 1.1.0)
   - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`,
     branch `development`)
   - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`,
@@ -115,9 +124,11 @@ SPEC CHECKSUMS:
   FBSDKCoreKit: 686ac982723a14ec9ddb85e2f81235d7706c891b
   FBSDKLoginKit: bade9fc78277764149ccc5bfaadbf13c83175c6a
   FBSDKShareKit: 2d1746144cfc8a9dbbd24997c34ee0471be51b6a
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Flurry-iOS-SDK: 83fd4f40ae66e80d122fd2f6698f0e0c31021a63
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
+  NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
   QMCVDevelopment: bed39cce88670b3ae0264621bdfe92d41fe3f7c0
   QMServicesDevelopment: 2f71e9eb067e5da53a90cb8777fa49d7637d2566
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96

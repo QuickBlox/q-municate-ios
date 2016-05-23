@@ -14,6 +14,7 @@ pod 'TTTAttributedLabel', '~> 2.0'
 pod 'libextobjc/EXTScope', '~> 0.4.1'
 pod 'libextobjc/EXTKeyPathCoding', '~> 0.4.1'
 pod 'Flurry-iOS-SDK/FlurrySDK', '~> 7.1.0'
+pod 'NYTPhotoViewer', '~> 1.1.0'
 #pod 'QMChatViewController'
 #pod 'QMServices'
 
