@@ -98,6 +98,15 @@ QMUsersServiceDelegate
         
         self.tabBarController.tabBar.hidden = YES;
     }
+    
+    if (self.refreshControl.isRefreshing) {
+        // fix for freezing refresh control after tab bar switch
+        // if it is still active
+        CGPoint offset = self.tableView.contentOffset;
+        [self.refreshControl endRefreshing];
+        [self.refreshControl beginRefreshing];
+        self.tableView.contentOffset = offset;
+    }
 }
 
 - (void)configureSearch {
