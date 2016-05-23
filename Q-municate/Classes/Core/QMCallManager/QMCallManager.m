@@ -149,6 +149,7 @@ QBRTCClientDelegate
     if (self.session != nil) {
         // session in progress
         [session rejectCall:nil];
+        return;
     }
     
     if (session.initiatorID.unsignedIntegerValue == self.serviceManager.currentProfile.userData.ID) {
