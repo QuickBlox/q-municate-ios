@@ -23,6 +23,8 @@
 // category
 #import "UINavigationController+QMNotification.h"
 
+static const NSInteger kQMUnAuthorizedErrorCode = -1011;
+
 @interface QMDialogsViewController ()
 
 <
@@ -33,6 +35,8 @@ QMChatConnectionDelegate,
 UITableViewDelegate,
 UISearchControllerDelegate,
 UISearchResultsUpdating,
+
+QMPushNotificationManagerDelegate,
 
 QMSearchResultsControllerDelegate
 >
@@ -80,6 +84,17 @@ QMSearchResultsControllerDelegate
     // Subscribing delegates
     [[QMCore instance].chatService addDelegate:self];
     [[QMCore instance].usersService addDelegate:self];
+    
+    [self performAutoLoginAndFetchData];
+    
+    // adding refresh control task
+    if (self.refreshControl) {
+        
+        self.refreshControl.backgroundColor = [UIColor whiteColor];
+        [self.refreshControl addTarget:self
+                                action:@selector(updateDialogsAndEndRefreshing)
+                      forControlEvents:UIControlEventValueChanged];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -89,6 +104,44 @@ QMSearchResultsControllerDelegate
         
         self.tabBarController.tabBar.hidden = YES;
     }
+    
+    if (self.refreshControl.isRefreshing) {
+        // fix for freezing refresh control after tab bar switch
+        // if it is still active
+        CGPoint offset = self.tableView.contentOffset;
+        [self.refreshControl endRefreshing];
+        [self.refreshControl beginRefreshing];
+        self.tableView.contentOffset = offset;
+    }
+}
+
+- (void)performAutoLoginAndFetchData {
+    
+    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) duration:0];
+    
+    @weakify(self);
+    [[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+        @strongify(self);
+        
+        if (task.isFaulted && task.error.code == kQMUnAuthorizedErrorCode) {
+            [[[QMCore instance] logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
+                
+                [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
+                return nil;
+            }];
+            
+            return nil;
+        }
+        else {
+            
+            if ([QMCore instance].pushNotificationManager.pushNotification != nil) {
+                
+                [[QMCore instance].pushNotificationManager handlePushNotificationWithDelegate:self];
+            }
+            
+            return [[QMCore instance].chatService connect];
+        }
+    }];
 }
 
 #pragma mark - Init methods
@@ -253,6 +306,13 @@ QMSearchResultsControllerDelegate
     [self.tableView reloadData];
 }
 
+#pragma mark - QMPushNotificationManagerDelegate
+
+- (void)pushNotificationManager:(QMPushNotificationManager *)__unused pushNotificationManager didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
+    
+    [self performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
+}
+
 #pragma mark - QMChatConnectionDelegate
 
 - (void)chatServiceChatHasStartedConnecting:(QMChatService *)__unused chatService {
@@ -303,6 +363,19 @@ QMSearchResultsControllerDelegate
         
         self.tableView.dataSource = self.dialogsDataSource;
     }
+}
+
+- (void)updateDialogsAndEndRefreshing {
+    
+    @weakify(self);
+    [[QMTasks taskFetchAllData] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        
+        @strongify(self);
+        
+        [self.refreshControl endRefreshing];
+        
+        return nil;
+    }];
 }
 
 #pragma mark - Register nibs

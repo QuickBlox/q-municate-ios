@@ -9,7 +9,6 @@
 #import "QMUpdateUserViewController.h"
 #import "QMCore.h"
 #import "QMProfile.h"
-#import "QMColors.h"
 #import "QMShadowView.h"
 #import "QMTasks.h"
 #import "UINavigationController+QMNotification.h"
@@ -34,9 +33,6 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
     [super viewDidLoad];
     
     self.navigationItem.rightBarButtonItem.enabled = NO;
-    
-    // Set tableview background color
-    self.tableView.backgroundColor = QMTableViewBackgroundColor();
     
     // configure appearance
     [self configureAppearance];

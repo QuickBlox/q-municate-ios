@@ -82,6 +82,18 @@
     }];
 }
 
+- (BFTask *)changeName:(NSString *)name forGroupChatDialog:(QBChatDialog *)chatDialog {
+    NSAssert(chatDialog.type == QBChatDialogTypeGroup, @"Chat dialog must be group type!");
+    
+    @weakify(self);
+    return [[self.serviceManager.chatService changeDialogName:name forChatDialog:chatDialog] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+        
+        @strongify(self);
+        
+        return [self.serviceManager.chatService sendNotificationMessageAboutChangingDialogName:task.result withNotificationText:kQMDialogsUpdateNotificationMessage];
+    }];
+}
+
 - (BFTask *)leaveChatDialog:(QBChatDialog *)chatDialog {
     NSAssert(chatDialog.type == QBChatDialogTypeGroup, @"Chat dialog must be group type!");
     

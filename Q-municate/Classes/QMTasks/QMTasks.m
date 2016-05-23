@@ -157,4 +157,11 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     }
 }
 
++ (BFTask *)taskUpdateContacts {
+    
+    NSArray *contactsIDs = [[QMCore instance].contactListService.contactListMemoryStorage userIDsFromContactList];
+    
+    return [[QMCore instance].usersService getUsersWithIDs:contactsIDs forceLoad:YES];
+}
+
 @end

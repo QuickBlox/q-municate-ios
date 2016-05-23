@@ -9,7 +9,6 @@
 #import "QMNotificationPanel.h"
 
 static const CGFloat kQMDefaultNotificationViewHeight = 36.0f;
-static const CGFloat kQMFadeAnimationHeightShift = 10.0f;
 
 @interface QMNotificationPanel ()
 

@@ -8,6 +8,7 @@
 
 #import "QMGroupInfoViewController.h"
 #import "QMGroupOccupantsViewController.h"
+#import "QMGroupNameViewController.h"
 #import "QMGroupHeaderView.h"
 #import "QMCore.h"
 #import "UINavigationController+QMNotification.h"
@@ -20,7 +21,10 @@
 
 <
 QMGroupHeaderViewDelegate,
-QMImagePickerResultHandler
+QMImagePickerResultHandler,
+
+QMChatServiceDelegate,
+QMChatConnectionDelegate
 >
 
 @property (weak, nonatomic) QMGroupOccupantsViewController *groupOccupantsViewController;
@@ -36,6 +40,14 @@ QMImagePickerResultHandler
     [super viewDidLoad];
     
     self.headerView.delegate = self;
+    [self updateGroupHeaderView];
+    
+    // subscribing for delegates
+    [[QMCore instance].chatService addDelegate:self];
+}
+
+- (void)updateGroupHeaderView {
+    
     [self.headerView setTitle:self.chatDialog.name avatarUrl:self.chatDialog.photo placeholderID:self.chatDialog.ID.hash];
 }
 
@@ -43,7 +55,7 @@ QMImagePickerResultHandler
 
 - (IBAction)didPressGroupHeader {
     
-#warning TODO: open base viewcontroller with one field edit
+    [self performSegueWithIdentifier:kQMSceneSegueGroupName sender:self.chatDialog];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -52,6 +64,11 @@ QMImagePickerResultHandler
         
         self.groupOccupantsViewController = segue.destinationViewController;
         self.groupOccupantsViewController.chatDialog = self.chatDialog;
+    }
+    else if ([segue.identifier isEqualToString:kQMSceneSegueGroupName]) {
+        
+        QMGroupNameViewController *groupNameVC = segue.destinationViewController;
+        groupNameVC.chatDialog = sender;
     }
 }
 
@@ -106,6 +123,24 @@ QMImagePickerResultHandler
         
         return nil;
     }];
+}
+
+#pragma mark - QMChatServiceDelegate
+
+- (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
+    
+    if ([chatDialog isEqual:self.chatDialog]) {
+        
+        [self updateGroupHeaderView];
+    }
+}
+
+- (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)dialogs {
+    
+    if ([dialogs containsObject:self.chatDialog]) {
+        
+        [self updateGroupHeaderView];
+    }
 }
 
 @end

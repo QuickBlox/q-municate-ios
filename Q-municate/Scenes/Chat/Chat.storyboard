@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="eLB-De-ceb">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="eLB-De-ceb">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -147,6 +147,7 @@
                     <navigationItem key="navigationItem" title="Group info" id="LsS-tY-OPd"/>
                     <connections>
                         <outlet property="headerView" destination="F1F-NO-Qdt" id="lvH-Hq-cos"/>
+                        <segue destination="y4a-Rd-aBj" kind="show" identifier="SceneSegueGroupName" id="QzZ-jK-9d2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xju-j1-eZL" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -475,6 +476,63 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="D5L-Bm-0jb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1442" y="-6724"/>
+        </scene>
+        <!--Change group name-->
+        <scene sceneID="Pfj-fg-XOR">
+            <objects>
+                <tableViewController id="y4a-Rd-aBj" customClass="QMGroupNameViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="zsn-D1-Qou">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection id="DSa-ED-nKa">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="UV7-4e-pn7">
+                                        <rect key="frame" x="0.0" y="99" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="UV7-4e-pn7" id="e9q-gN-d4I">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZCZ-4p-aiV">
+                                                    <rect key="frame" x="19" y="11" width="562" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                    <connections>
+                                                        <action selector="groupNameFieldEditingChanged:" destination="y4a-Rd-aBj" eventType="editingChanged" id="3t8-ku-ghR"/>
+                                                    </connections>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="ZCZ-4p-aiV" firstAttribute="centerY" secondItem="e9q-gN-d4I" secondAttribute="centerY" id="9YF-js-bSS"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="ZCZ-4p-aiV" secondAttribute="trailing" constant="11" id="iYg-qr-tdK"/>
+                                                <constraint firstItem="ZCZ-4p-aiV" firstAttribute="leading" secondItem="e9q-gN-d4I" secondAttribute="leadingMargin" constant="11" id="uaO-Yu-9AY"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="y4a-Rd-aBj" id="0qV-hH-GNg"/>
+                            <outlet property="delegate" destination="y4a-Rd-aBj" id="3DQ-Ja-6jh"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Change group name" id="pJ0-1n-e1F">
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="C5b-pP-OMd">
+                            <connections>
+                                <action selector="saveButtonPressed:" destination="y4a-Rd-aBj" id="sJw-U3-tuc"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="groupNameField" destination="ZCZ-4p-aiV" id="7FJ-3Q-dAC"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fdB-Os-IVi" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-592" y="-7967"/>
         </scene>
         <!--Group Occupants View Controller-->
         <scene sceneID="xLN-ns-DIP">
