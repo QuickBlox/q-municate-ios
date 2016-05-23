@@ -61,6 +61,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (BFTask *)taskFetchAllData;
 
+/**
+ *  Update all contacts data.
+ *
+ *  @return BFTask with result
+ */
++ (BFTask *)taskUpdateContacts;
+
 @end
 
 NS_ASSUME_NONNULL_END

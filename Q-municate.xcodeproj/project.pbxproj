@@ -857,7 +857,7 @@
 				584277B81C3D401C00CDE35B /* Main.storyboard */,
 				58BB526C1CDB64EE00869FA9 /* QMTabBarVC */,
 				5868B07B1CE9E684004F9233 /* Contacts */,
-				58CA3DE71CEB1BA900334241 /* Dialogs */,
+				5877D6C71C466D9500938E5D /* QMDialogsViewController */,
 				589D4CF21C981667005F1E76 /* QMNewMessageViewController */,
 				589792AE1C9C38DD00CC6438 /* QMNewGroupViewController */,
 			);
@@ -1507,14 +1507,6 @@
 				5868B0751CE9E457004F9233 /* QMContactsViewController */,
 			);
 			name = "View Controllers";
-			sourceTree = "<group>";
-		};
-		58CA3DE71CEB1BA900334241 /* Dialogs */ = {
-			isa = PBXGroup;
-			children = (
-				5877D6C71C466D9500938E5D /* QMDialogsViewController */,
-			);
-			name = Dialogs;
 			sourceTree = "<group>";
 		};
 		58D847551C84823A000C40BA /* QMDialogsSearchDataSource */ = {

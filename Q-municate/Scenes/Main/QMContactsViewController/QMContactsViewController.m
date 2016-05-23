@@ -16,6 +16,7 @@
 #import "QMSearchResultsController.h"
 
 #import "QMCore.h"
+#import "QMTasks.h"
 
 #import "QMContactCell.h"
 #import "QMNoContactsCell.h"
@@ -39,7 +40,8 @@ UISearchControllerDelegate,
 UISearchResultsUpdating,
 UISearchBarDelegate,
 
-QMContactListServiceDelegate
+QMContactListServiceDelegate,
+QMUsersServiceDelegate
 >
 
 @property (strong, nonatomic) UISearchController *searchController;
@@ -78,6 +80,15 @@ QMContactListServiceDelegate
     
     // subscribing for delegates
     [[QMCore instance].contactListService addDelegate:self];
+    [[QMCore instance].usersService addDelegate:self];
+    
+    // adding refresh control task
+    if (self.refreshControl) {
+        
+        [self.refreshControl addTarget:self
+                                action:@selector(updateContactsAndEndRefreshing)
+                      forControlEvents:UIControlEventValueChanged];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -257,6 +268,19 @@ QMContactListServiceDelegate
     [self.navigationController pushViewController:userInfoVC animated:YES];
 }
 
+- (void)updateContactsAndEndRefreshing {
+    
+    @weakify(self);
+    [[QMTasks taskUpdateContacts] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        
+        @strongify(self);
+        
+        [self.refreshControl endRefreshing];
+        
+        return nil;
+    }];
+}
+
 #pragma mark - UISearchResultsUpdating
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
@@ -264,9 +288,29 @@ QMContactListServiceDelegate
     [self.searchResultsController performSearch:searchController.searchBar.text];
 }
 
-#pragma mark - QMContactListService
+#pragma mark - QMContactListServiceDelegate
 
 - (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
+    
+    [self updateItemsFromContactList];
+    [self.tableView reloadData];
+}
+
+#pragma mark - QMUsersServiceDelegate
+
+- (void)usersService:(QMUsersService *)__unused usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
+    
+    [self updateItemsFromContactList];
+    [self.tableView reloadData];
+}
+
+- (void)usersService:(QMUsersService *)__unused usersService didAddUsers:(NSArray<QBUUser *> *)__unused users {
+    
+    [self updateItemsFromContactList];
+    [self.tableView reloadData];
+}
+
+- (void)usersService:(QMUsersService *)__unused usersService didUpdateUsers:(NSArray<QBUUser *> *)__unused users {
     
     [self updateItemsFromContactList];
     [self.tableView reloadData];

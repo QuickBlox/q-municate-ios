@@ -87,6 +87,14 @@ QMSearchResultsControllerDelegate
     [[QMCore instance].usersService addDelegate:self];
     
     [self performAutoLoginAndFetchData];
+    
+    // adding refresh control task
+    if (self.refreshControl) {
+        
+        [self.refreshControl addTarget:self
+                                action:@selector(updateDialogsAndEndRefreshing)
+                      forControlEvents:UIControlEventValueChanged];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -346,6 +354,19 @@ QMSearchResultsControllerDelegate
         
         self.tableView.dataSource = self.dialogsDataSource;
     }
+}
+
+- (void)updateDialogsAndEndRefreshing {
+    
+    @weakify(self);
+    [[QMTasks taskFetchAllData] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        
+        @strongify(self);
+        
+        [self.refreshControl endRefreshing];
+        
+        return nil;
+    }];
 }
 
 #pragma mark - Register nibs
