@@ -26,6 +26,8 @@
 
 // external
 #import "AGEmojiKeyBoardView.h"
+#import <NYTPhotoViewer/NYTPhotosViewController.h>
+#import "QMPhoto.h"
 
 static const NSInteger kQMEmojiButtonTag = 100;
 static const CGFloat kQMEmojiButtonSize = 45.0f;
@@ -51,7 +53,9 @@ QMImagePickerResultHandler,
 AGEmojiKeyboardViewDataSource,
 AGEmojiKeyboardViewDelegate,
 
-QMImageViewDelegate
+QMImageViewDelegate,
+
+NYTPhotosViewControllerDelegate
 >
 
 /**
@@ -103,6 +107,8 @@ QMImageViewDelegate
  *  Group avatar image view
  */
 @property (strong, nonatomic) QMImageView *groupAvatarImageView;
+
+@property (weak, nonatomic) UIView *photoReferenceView;
 
 @end
 
@@ -1200,21 +1206,33 @@ QMImageViewDelegate
 
 - (void)chatCellDidTapContainer:(QMChatCell *)cell {
     
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    QBChatMessage *currentMessage = [self.chatSectionManager messageForIndexPath:indexPath];
+    
     if ([cell conformsToProtocol:@protocol(QMChatAttachmentCell)]) {
         
         UIImage *attachmentImage = [(QMChatAttachmentIncomingCell *)cell attachmentImageView].image;
         
         if (attachmentImage != nil) {
-#warning need to implement self photo browser
-            //            IDMPhoto *photo = [IDMPhoto photoWithImage:attachmentImage];
-            //            IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:@[photo]];
-            //            [self presentViewController:browser animated:YES completion:nil];
+            
+            QBUUser *sender = [[QMCore instance].usersService.usersMemoryStorage userWithID:currentMessage.senderID];
+            
+            QMPhoto *photo = [[QMPhoto alloc] init];
+            photo.image = attachmentImage;
+            
+            NSString *title = sender.fullName ?: [NSString stringWithFormat:@"%tu", sender.ID];
+            photo.attributedCaptionTitle = [[NSAttributedString alloc] initWithString:title attributes:@{NSForegroundColorAttributeName: [UIColor whiteColor], NSFontAttributeName: [UIFont preferredFontForTextStyle:UIFontTextStyleBody]}];
+            
+            photo.attributedCaptionSummary = [[NSAttributedString alloc] initWithString:[QMDateUtils formatDateForTimeRange:currentMessage.dateSent] attributes:@{NSForegroundColorAttributeName: [UIColor lightGrayColor], NSFontAttributeName: [UIFont preferredFontForTextStyle:UIFontTextStyleBody]}];
+            
+            self.photoReferenceView = [(QMChatAttachmentIncomingCell *)cell attachmentImageView];
+            
+            NYTPhotosViewController *photosViewController = [[NYTPhotosViewController alloc] initWithPhotos:@[photo]];
+            photosViewController.delegate = self;
+            [self presentViewController:photosViewController animated:YES completion:nil];
         }
     }
     else if ([cell isKindOfClass:[QMChatOutgoingCell class]] || [cell isKindOfClass:[QMChatIncomingCell class]]) {
-        
-        NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-        QBChatMessage *currentMessage = [self.chatSectionManager messageForIndexPath:indexPath];
         
         if ([self.detailedCells containsObject:currentMessage.ID]) {
             
@@ -1249,6 +1267,13 @@ QMImageViewDelegate
 }
 
 - (void)__unused chatCell:(QMChatCell *)__unused cell didPerformAction:(SEL)__unused action withSender:(id)__unused sender {
+}
+
+#pragma mark - NYTPhotosViewControllerDelegate
+
+- (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
+    
+    return self.photoReferenceView;
 }
 
 #pragma mark - UITextViewDelegate

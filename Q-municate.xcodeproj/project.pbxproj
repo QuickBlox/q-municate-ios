@@ -126,6 +126,7 @@
 		58D847931C89A9FE000C40BA /* QMNoResultsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D847921C89A9FE000C40BA /* QMNoResultsCell.m */; };
 		58D847951C89AA39000C40BA /* QMNoResultsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58D847941C89AA38000C40BA /* QMNoResultsCell.xib */; };
 		58D952301CEE078F001C43F7 /* QMImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D9522F1CEE078F001C43F7 /* QMImages.m */; };
+		58D952381CEE2345001C43F7 /* QMPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D952371CEE2345001C43F7 /* QMPhoto.m */; };
 		58E398B01CAE943F0053BA4D /* QMNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 58E398AF1CAE943F0053BA4D /* QMNavigationBar.m */; };
 		58EC00221CF30C380052A06A /* QMGroupNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58EC00211CF30C380052A06A /* QMGroupNameViewController.m */; };
 		58F398091CB7DE91006C1D5E /* QMChatManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F398081CB7DE91006C1D5E /* QMChatManager.m */; };
@@ -386,6 +387,8 @@
 		58D847941C89AA38000C40BA /* QMNoResultsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = QMNoResultsCell.xib; path = "Q-municate/Scenes/Main/QMDialogsViewController/Cells/QMNoResultsCell/QMNoResultsCell.xib"; sourceTree = SOURCE_ROOT; };
 		58D9522E1CEE078F001C43F7 /* QMImages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMImages.h; path = QMImages/QMImages.h; sourceTree = "<group>"; };
 		58D9522F1CEE078F001C43F7 /* QMImages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMImages.m; path = QMImages/QMImages.m; sourceTree = "<group>"; };
+		58D952361CEE2345001C43F7 /* QMPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMPhoto.h; path = Classes/QMPhoto/QMPhoto.h; sourceTree = "<group>"; };
+		58D952371CEE2345001C43F7 /* QMPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMPhoto.m; path = Classes/QMPhoto/QMPhoto.m; sourceTree = "<group>"; };
 		58E398AE1CAE943F0053BA4D /* QMNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMNavigationBar.h; path = QMNavigationBar/QMNavigationBar.h; sourceTree = "<group>"; };
 		58E398AF1CAE943F0053BA4D /* QMNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMNavigationBar.m; path = QMNavigationBar/QMNavigationBar.m; sourceTree = "<group>"; };
 		58EC00201CF30C380052A06A /* QMGroupNameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMGroupNameViewController.h; path = "Q-municate/Scenes/Chat/QMGroupNameViewController/QMGroupNameViewController.h"; sourceTree = SOURCE_ROOT; };
@@ -1614,6 +1617,15 @@
 			name = QMImages;
 			sourceTree = "<group>";
 		};
+		58D952351CEE2332001C43F7 /* QMPhoto */ = {
+			isa = PBXGroup;
+			children = (
+				58D952361CEE2345001C43F7 /* QMPhoto.h */,
+				58D952371CEE2345001C43F7 /* QMPhoto.m */,
+			);
+			name = QMPhoto;
+			sourceTree = "<group>";
+		};
 		58E398B11CAE94450053BA4D /* QMNavigationBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -1746,6 +1758,7 @@
 				584277DD1C3FECF400CDE35B /* QMContent */,
 				584277D21C3FCFA100CDE35B /* QMFacebook */,
 				584277CE1C3FBCF500CDE35B /* QMProfile */,
+				58D952351CEE2332001C43F7 /* QMPhoto */,
 				6943843218E42677001E08A9 /* CustomSegues */,
 				55495A1D1993BCC100B7764C /* Factories */,
 				55A8B04F1965986A00B5D33B /* Tools */,
@@ -2094,6 +2107,7 @@
 				58D847581C848272000C40BA /* QMDialogsSearchDataSource.m in Sources */,
 				55D8ADFB19AC833300DAF79F /* QMLicenseAgreement.m in Sources */,
 				58D847681C85A1DB000C40BA /* QMGlobalSearchDataSource.m in Sources */,
+				58D952381CEE2345001C43F7 /* QMPhoto.m in Sources */,
 				589D4CF91C981888005F1E76 /* QMContactsDataSource.m in Sources */,
 				5868B05B1CE9C647004F9233 /* QMCallViewController.m in Sources */,
 				580FEBF61CC50423000AED72 /* QMMessagesFactory.m in Sources */,
