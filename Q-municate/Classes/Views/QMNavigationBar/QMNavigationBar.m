@@ -40,7 +40,6 @@
 }
 
 - (void)didAddSubview:(UIView *)subview {
-    [super didAddSubview:subview];
     
     if (subview.tag == kQMNotificationPanelTag) {
         self.notificationView = subview;
@@ -57,7 +56,6 @@
 }
 
 - (void)willRemoveSubview:(UIView *)subview {
-    [super willRemoveSubview:subview];
     
     if (subview.tag == kQMNotificationPanelTag) {
         self.notificationView = nil;
