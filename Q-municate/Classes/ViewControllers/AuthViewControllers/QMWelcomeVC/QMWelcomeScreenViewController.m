@@ -154,26 +154,35 @@ static NSString *const kQMFacebookIDField = @"id";
                 return;
             }
             
-            [[[QMCore instance].authService loginWithTwitterDigitsAuthHeaders:authHeaders] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+            [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+            
+            [[[QMCore instance].authService loginWithTwitterDigitsAuthHeaders:authHeaders] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
                 
-                [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
+                [SVProgressHUD dismiss];
                 
-                [[QMCore instance].currentProfile setAccountType:QMAccountTypeDigits];
-                
-                QBUUser *user = task.result;
-                if (user.fullName.length == 0) {
-                    // setting phone as user full name
-                    user.fullName = user.phone;
+                if (!task.isFaulted) {
                     
-                    QBUpdateUserParameters *updateUserParams = [QBUpdateUserParameters new];
-                    updateUserParams.fullName = user.fullName;
+                    [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
                     
-                    return [QMTasks taskUpdateCurrentUser:updateUserParams];
+                    [[QMCore instance].currentProfile setAccountType:QMAccountTypeDigits];
+                    
+                    QBUUser *user = task.result;
+                    if (user.fullName.length == 0) {
+                        // setting phone as user full name
+                        user.fullName = user.phone;
+                        
+                        QBUpdateUserParameters *updateUserParams = [QBUpdateUserParameters new];
+                        updateUserParams.fullName = user.fullName;
+                        
+                        return [QMTasks taskUpdateCurrentUser:updateUserParams];
+                    }
+                    
+                    [[QMCore instance].currentProfile synchronizeWithUserData:user];
+                    
+                    return [[QMCore instance].pushNotificationManager subscribeForPushNotifications];
                 }
                 
-                [[QMCore instance].currentProfile synchronizeWithUserData:user];
-                
-                return [[QMCore instance].pushNotificationManager subscribeForPushNotifications];
+                return nil;
             }];
         }
     }];
