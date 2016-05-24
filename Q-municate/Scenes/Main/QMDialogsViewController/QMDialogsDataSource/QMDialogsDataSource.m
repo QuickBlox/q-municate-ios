@@ -88,11 +88,11 @@
                                                               if (chatDialog.type == QBChatDialogTypeGroup) {
                                                                   
                                                                   chatDialog.occupantIDs = [[QMCore instance].contactManager occupantsWithoutCurrentUser:chatDialog.occupantIDs];
-                                                                  [[[QMCore instance].chatManager leaveChatDialog:chatDialog] continueWithBlock:completionBlock];
+                                                                  [[[QMCore instance].chatManager leaveChatDialog:chatDialog] continueWithSuccessBlock:completionBlock];
                                                               }
                                                               else {
                                                                   // private and public group chats
-                                                                  [[[QMCore instance].chatService deleteDialogWithID:chatDialog.ID] continueWithBlock:completionBlock];
+                                                                  [[[QMCore instance].chatService deleteDialogWithID:chatDialog.ID] continueWithSuccessBlock:completionBlock];
                                                               }
                                                           }]];
         

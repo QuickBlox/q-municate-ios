@@ -42,12 +42,12 @@
     else {
         
         @weakify(self);
-        return [[[self.serviceManager.contactListService addUserToContactListRequest:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        return [[[self.serviceManager.contactListService addUserToContactListRequest:user] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             
             @strongify(self);
             return [self.serviceManager.chatService createPrivateChatDialogWithOpponent:user];
             
-        }] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+        }] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
             
             @strongify(self);
             QBChatMessage *chatMessage = [QMMessagesFactory contactRequestNotificationForUser:user];
@@ -60,7 +60,9 @@
             
             NSString *notificationMessage = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", nil), self.serviceManager.currentProfile.userData.fullName];
             
-            return [QMNotification sendPushNotificationToUser:user withText:notificationMessage];
+            [QMNotification sendPushNotificationToUser:user withText:notificationMessage];
+            
+            return nil;
         }];
     }
 }
@@ -68,7 +70,7 @@
 - (BFTask *)confirmAddContactRequest:(QBUUser *)user {
     
     @weakify(self);
-    return [[self.serviceManager.contactListService acceptContactRequest:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+    return [[self.serviceManager.contactListService acceptContactRequest:user.ID] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         @strongify(self);
         return [self.serviceManager.chatService sendMessageAboutAcceptingContactRequest:YES toOpponentID:user.ID];
     }];
@@ -77,7 +79,7 @@
 - (BFTask *)rejectAddContactRequest:(QBUUser *)user {
     
     @weakify(self);
-    return [[self.serviceManager.contactListService rejectContactRequest:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+    return [[self.serviceManager.contactListService rejectContactRequest:user.ID] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         @strongify(self);
         return [self.serviceManager.chatService sendMessageAboutAcceptingContactRequest:NO toOpponentID:user.ID];
     }];
@@ -86,7 +88,7 @@
 - (BFTask *)removeUserFromContactList:(QBUUser *)user {
     
     @weakify(self);
-    return [[self.serviceManager.contactListService removeUserFromContactListWithUserID:user.ID] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+    return [[self.serviceManager.contactListService removeUserFromContactListWithUserID:user.ID] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         @strongify(self);
         QBChatDialog *chatDialog = [self.serviceManager.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
         QBChatMessage *notificationMessage = [QMMessagesFactory removeContactNotificationForUser:user];

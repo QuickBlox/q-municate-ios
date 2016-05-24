@@ -17,6 +17,7 @@
 
 #import "QMCore.h"
 #import "QMTasks.h"
+#import "QMAlert.h"
 
 #import "QMContactCell.h"
 #import "QMNoContactsCell.h"
@@ -164,6 +165,13 @@ QMUsersServiceDelegate
                 && [self.searchResultsController.tableView.dataSource conformsToProtocol:@protocol(QMGlobalSearchDataSourceProtocol)]) {
                 
                 [self.searchResultsController.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            }
+            else {
+                
+                if (![QBChat instance].isConnected) {
+                    
+                    [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:NO inViewController:self];
+                }
             }
             
             return nil;
