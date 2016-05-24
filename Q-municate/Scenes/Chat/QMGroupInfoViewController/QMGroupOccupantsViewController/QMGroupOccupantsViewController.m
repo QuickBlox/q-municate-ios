@@ -13,6 +13,7 @@
 #import "QMContactCell.h"
 #import "QMColors.h"
 #import "QMCore.h"
+#import "QMAlert.h"
 #import "UINavigationController+QMNotification.h"
 #import "QMUserInfoViewController.h"
 #import "NSArray+Intersection.h"
@@ -88,6 +89,13 @@ QMUsersServiceDelegate
             if (!task.isFaulted) {
                 
                 [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            }
+            else {
+                
+                if (![QBChat instance].isConnected) {
+                    
+                    [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:NO inViewController:self];
+                }
             }
             
             return nil;

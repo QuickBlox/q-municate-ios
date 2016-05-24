@@ -41,8 +41,16 @@
     QBUUser *user = self.items[indexPath.row];
     [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
     
-    BOOL isRequestRequired = ![[QMCore instance].contactManager isContactListItemExistentForUserWithID:user.ID];
-    [cell setAddButtonVisible:isRequestRequired];
+    if ([QBChat instance].isConnected) {
+        // contact list is getting erased after
+        // chat did disconnect
+        // in order to save already visible value for
+        // add button visibility, changing its state
+        // only if chat is connected
+        // default visibility value for add button is NO
+        BOOL isRequestRequired = ![[QMCore instance].contactManager isContactListItemExistentForUserWithID:user.ID];
+        [cell setAddButtonVisible:isRequestRequired];
+    }
     
     cell.didAddUserBlock = self.didAddUserBlock;
     

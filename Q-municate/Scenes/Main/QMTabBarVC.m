@@ -38,6 +38,11 @@ QMChatConnectionDelegate
 
 - (void)showNotificationForMessage:(QBChatMessage *)chatMessage {
     
+    if (chatMessage.senderID == [QMCore instance].currentProfile.userData.ID) {
+        // no need to handle notification for self message
+        return;
+    }
+    
     if (chatMessage.dialogID == nil) {
         // message missing dialog ID
         NSAssert(nil, @"Message should contain dialog ID.");
@@ -71,16 +76,12 @@ QMChatConnectionDelegate
 
 #pragma mark - QMChatServiceDelegate
 
-- (void)chatService:(QMChatService *)__unused chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)__unused dialogID {
-    
-    if (message.senderID == [QMCore instance].currentProfile.userData.ID) {
-        // no need to handle notification for self message
-        return;
-    }
+- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
     
     if (message.messageType == QMMessageTypeContactRequest) {
         
-        [[[QMCore instance].usersService getUserWithID:message.senderID] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
+        QBChatDialog *chatDialog = [chatService.dialogsMemoryStorage chatDialogWithID:dialogID];
+        [[[QMCore instance].usersService getUserWithID:chatDialog.recipientID] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
             
             [self showNotificationForMessage:message];
             

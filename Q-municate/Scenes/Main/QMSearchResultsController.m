@@ -56,12 +56,26 @@
 
 #pragma mark - QMSearchDataProviderDelegate
 
-- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
+- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)searchDataProvider {
+    
+    if ([self.tableView.dataSource isKindOfClass:[QMSearchDataSource class]]
+        && self.searchDataSource.searchDataProvider != searchDataProvider) {
+        // search data provider is not visible right now
+        // no need to reload current table view
+        return;
+    }
     
     [self.tableView reloadData];
 }
 
 - (void)searchDataProvider:(QMSearchDataProvider *)__unused searchDataProvider didUpdateData:(NSArray *)__unused data {
+    
+    if ([self.tableView.dataSource isKindOfClass:[QMSearchDataSource class]]
+        && self.searchDataSource.searchDataProvider != searchDataProvider) {
+        // search data provider is not visible right now
+        // no need to reload current table view
+        return;
+    }
     
     [self.tableView reloadData];
 }
