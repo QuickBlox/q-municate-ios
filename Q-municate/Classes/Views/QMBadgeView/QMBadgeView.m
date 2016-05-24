@@ -138,7 +138,7 @@
         
         CGRect glosRect = badgeRect;
         
-        UIBezierPath* glosPath = [UIBezierPath bezierPathWithRoundedRect:glosRect cornerRadius:self.cornerRadius];
+        UIBezierPath *glosPath = [UIBezierPath bezierPathWithRoundedRect:glosRect cornerRadius:self.cornerRadius];
         
         CGContextSaveGState(context);
         [glosPath addClip];
