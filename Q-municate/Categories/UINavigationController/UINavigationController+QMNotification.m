@@ -7,6 +7,7 @@
 //
 
 #import "UINavigationController+QMNotification.h"
+#import "QMNavigationBar.h"
 #import <objc/runtime.h>
 
 @interface UINavigationController (QMNotification_Private)
@@ -48,6 +49,7 @@
     
     self.notificationPanel.timeUntilDismiss = duration;
     
+    [(QMNavigationBar *)self.navigationBar setOwner:self];
     [self.notificationPanel showNotificationWithType:notificationType byInsertingInNavigationBar:self.navigationBar message:message animated:animated];
 }
 

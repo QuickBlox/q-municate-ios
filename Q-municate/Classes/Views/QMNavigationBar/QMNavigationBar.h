@@ -10,4 +10,6 @@
 
 @interface QMNavigationBar : UINavigationBar
 
+@property (weak, nonatomic) UIViewController *owner;
+
 @end

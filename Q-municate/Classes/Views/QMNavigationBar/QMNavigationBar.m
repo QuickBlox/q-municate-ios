@@ -12,6 +12,7 @@
 
 @interface QMNavigationBar ()
 
+
 @property (weak, nonatomic) UIView *notificationView;
 
 @end
@@ -41,7 +42,8 @@
 
 - (void)didAddSubview:(UIView *)subview {
     
-    if (subview.tag == kQMNotificationPanelTag) {
+    if (self.owner != nil
+        && subview.tag == kQMNotificationPanelTag) {
         self.notificationView = subview;
         
         CGRect frame = subview.frame;
@@ -57,7 +59,8 @@
 
 - (void)willRemoveSubview:(UIView *)subview {
     
-    if (subview.tag == kQMNotificationPanelTag) {
+    if (self.owner != nil
+        && subview.tag == kQMNotificationPanelTag) {
         self.notificationView = nil;
         
         [self setTransform:CGAffineTransformMakeTranslation(0, -(CGRectGetHeight(self.notificationView.frame)))];
@@ -68,6 +71,15 @@
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
+    
+    if (self.owner == nil
+        && self.superview == nil) {
+        // if you will try to access super method when
+        // super already released, you will receive
+        // a bad access error
+        return CGSizeZero;
+    }
+    
     CGSize sizeThatFits = [super sizeThatFits:size];
     
     if (self.notificationView) {
