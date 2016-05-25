@@ -24,8 +24,6 @@ typedef NS_ENUM(NSUInteger, QMUserInfoSection) {
     QMUserInfoSectionAddAction
 };
 
-#warning DELETE ACTION SHOULD BE SEPARATE
-
 @interface QMUserInfoViewController ()
 
 <
@@ -87,28 +85,43 @@ QMContactListServiceDelegate
         
         [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
         
-        __weak UINavigationController *navigationController = self.navigationController;
+        [self loadUser];
+    }
+    
+    // adding refresh control task
+    if (self.refreshControl) {
         
-        // get user from server
-        @weakify(self);
-        [[[QMCore instance].usersService getUserWithID:self.user.ID] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
-            
-            @strongify(self);
-            [navigationController dismissNotificationPanel];
-            
-            if (!task.isFaulted) {
-                
-                self.user = task.result;
-                [self performUpdate];
-                [self.tableView reloadData];
-            }
-            
-            return nil;
-        }];
+        self.refreshControl.backgroundColor = [UIColor whiteColor];
+        [self.refreshControl addTarget:self
+                                action:@selector(loadUser)
+                      forControlEvents:UIControlEventValueChanged];
     }
 }
 
 #pragma mark - Methods
+
+- (void)loadUser {
+    
+    __weak UINavigationController *navigationController = self.navigationController;
+    
+    // get user from server
+    @weakify(self);
+    [[[QMCore instance].usersService getUserWithID:self.user.ID forceLoad:YES] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+        
+        @strongify(self);
+        [navigationController dismissNotificationPanel];
+        [self.refreshControl endRefreshing];
+        
+        if (!task.isFaulted) {
+            
+            self.user = task.result;
+            [self performUpdate];
+            [self.tableView reloadData];
+        }
+        
+        return nil;
+    }];
+}
 
 - (void)performUpdate {
     
@@ -301,10 +314,6 @@ QMContactListServiceDelegate
     }
     
     [[QMCore instance].callManager callToUserWithID:self.user.ID conferenceType:QBRTCConferenceTypeVideo];
-}
-
-- (IBAction)deleteChatHistoryButtonPressed {
-#warning TODO: delete all chat history from server and locally
 }
 
 - (IBAction)removeContactButtonPressed {
