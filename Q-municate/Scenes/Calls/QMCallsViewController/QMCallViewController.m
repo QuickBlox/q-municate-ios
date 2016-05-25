@@ -522,11 +522,18 @@ QMCallManagerDelegate
 
 - (void)startCallTimer {
     
-    self.callTimer = [NSTimer scheduledTimerWithTimeInterval:kQMRefreshTimeInterval
-                                                      target:self
-                                                    selector:@selector(refreshCallTime)
-                                                    userInfo:nil
-                                                     repeats:YES];
+    if (self.callTimer == nil) {
+        // if timer already existent there is no need to create a new one
+        // normally this method would never be called twice per one call
+        // but there was a strengh behaviour one time
+        // where webrtc for some reason called an unexpected delegates
+        // multiple times
+        self.callTimer = [NSTimer scheduledTimerWithTimeInterval:kQMRefreshTimeInterval
+                                                          target:self
+                                                        selector:@selector(refreshCallTime)
+                                                        userInfo:nil
+                                                         repeats:YES];
+    }
 }
 
 - (void)stopCallTimer {
