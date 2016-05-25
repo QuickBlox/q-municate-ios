@@ -132,7 +132,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     
     void (^iterationBlock)(QBResponse *, NSArray *, NSSet *, BOOL *) = ^(QBResponse *__unused response, NSArray *__unused dialogObjects, NSSet *dialogsUsersIDs, BOOL *__unused stop) {
         
-        [usersLoadingTasks addObject:[[QMCore instance].usersService getUsersWithIDs:[dialogsUsersIDs allObjects]]];
+        [usersLoadingTasks addObject:[[QMCore instance].usersService getUsersWithIDs:dialogsUsersIDs.allObjects]];
     };
     
     BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull task) {

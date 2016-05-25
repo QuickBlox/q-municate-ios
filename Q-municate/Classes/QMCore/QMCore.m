@@ -10,8 +10,10 @@
 #import <Reachability.h>
 #import "QMFacebook.h"
 #import "QMNotification.h"
+#import "QMTasks.h"
 #import <DigitsKit/DigitsKit.h>
 #import <SVProgressHUD.h>
+#import <SDWebImageManager.h>
 
 static NSString *const kQMLastActivityDateKey = @"last_activity_date";
 static NSString *const kQMErrorKey = @"errors";
@@ -21,6 +23,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 @interface QMCore ()
 
 @property (strong, nonatomic) dispatch_group_t logoutGroup;
+@property (strong, nonatomic) BFTask *restLoginTask;
 
 @end
 
@@ -72,6 +75,14 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 - (void)configureReachability {
     
     _internetConnection = [Reachability reachabilityForInternetConnection];
+    
+    // setting reachable block
+    @weakify(self);
+    [_internetConnection setReachableBlock:^(Reachability __unused *reachability) {
+        
+        @strongify(self);
+        [self login];
+    }];
     
     // setting unreachable block
     [_internetConnection setUnreachableBlock:^(Reachability __unused *reachability) {
@@ -162,6 +173,60 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 
 #pragma mark - Auth methods
 
+- (BFTask *)login {
+    
+    BOOL needUpdateSessionToken = NO;
+    
+    if (self.currentProfile.accountType != QMAccountTypeEmail) {
+        // due to chat requiring token as a password for any account types
+        // but email, wee need to update session token first if it has been expired
+        // just perform any request first
+        needUpdateSessionToken = [self sessionTokenHasExpiredOrNeedCreate];
+    }
+    
+    if (self.isAuthorized
+        && ![QBChat instance].isConnected) {
+        
+        if (needUpdateSessionToken) {
+            
+            @weakify(self);
+            return [[QMTasks taskFetchAllData] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+                
+                @strongify(self);
+                return [self.chatService connect];
+            }];
+        }
+        
+        return [self.chatService connect];
+    }
+    else if (![QBChat instance].isConnected) {
+        
+        if (needUpdateSessionToken) {
+            
+            @weakify(self);
+            return [[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
+                
+                @strongify(self);
+                return [self.chatService connect];
+            }];
+        }
+        
+        // doing a parallel login
+        
+        // setting password to current session user
+        [QBSession currentSession].currentUser.password = self.currentProfile.userData.password;
+        
+        // saving rest login task cause we need to login in REST
+        // only once per app living
+        BFTask *restLoginTask = [QMTasks taskAutoLogin];
+        BFTask *chatConnectTask = [self.chatService connect];
+        
+        return [BFTask taskForCompletionOfAllTasks:@[restLoginTask, chatConnectTask]];
+    }
+    
+    return nil;
+}
+
 - (BFTask *)logout {
     
     BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
@@ -177,6 +242,9 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
             
             [[Digits sharedInstance] logOut];
         }
+        
+        [[[SDWebImageManager sharedManager] imageCache] clearMemory];
+        [[[SDWebImageManager sharedManager] imageCache] clearDisk];
         
         dispatch_group_enter(self.logoutGroup);
         [[self.pushNotificationManager unSubscribeFromPushNotifications] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
@@ -223,6 +291,21 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 - (BOOL)isInternetConnected {
     
     return self.internetConnection.isReachable;
+}
+
+- (BOOL)sessionTokenHasExpiredOrNeedCreate {
+    
+    NSDate *date = [QBSession currentSession].sessionExpirationDate;
+    
+    if (date) {
+        
+        NSDate *currentDate = [NSDate date];
+        NSTimeInterval interval = [currentDate timeIntervalSinceDate:date];
+        
+        return interval > 0;
+    }
+    
+    return YES;
 }
 
 @end

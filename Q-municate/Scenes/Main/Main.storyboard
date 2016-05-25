@@ -13,7 +13,7 @@
                 <viewControllerPlaceholder storyboardName="Auth" id="GF2-VD-d6E" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DrV-qf-tZG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4044.5" y="-8684"/>
+            <point key="canvasLocation" x="-2164.5" y="-8840"/>
         </scene>
         <!--Chats-->
         <scene sceneID="XsO-zK-SPy">
@@ -80,6 +80,7 @@ out here.</string>
                     </refreshControl>
                     <connections>
                         <segue destination="WAe-wf-Lqf" kind="show" identifier="SceneSegueChat" id="BOB-9z-0vl"/>
+                        <segue destination="GF2-VD-d6E" kind="custom" identifier="SceneSegueAuth" customClass="QMRootViewControllerSegue" id="bdb-ZN-ltF"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7lV-91-Vld" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -116,7 +117,7 @@ out here.</string>
                 <viewControllerPlaceholder storyboardName="Chat" id="WAe-wf-Lqf" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pd2-6h-MLf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2134.5" y="-8749"/>
+            <point key="canvasLocation" x="-1940.5" y="-8749"/>
         </scene>
         <!--Chat-->
         <scene sceneID="zLf-RD-p3s">
@@ -297,7 +298,6 @@ out here.</string>
                     <connections>
                         <segue destination="8Yq-BL-cvM" kind="relationship" relationship="viewControllers" id="UKH-Dz-h3s"/>
                         <segue destination="rRp-nU-Jp0" kind="relationship" relationship="viewControllers" id="Gvg-Ux-PQa"/>
-                        <segue destination="GF2-VD-d6E" kind="custom" identifier="SceneSegueAuth" customClass="QMRootViewControllerSegue" id="kwM-37-H6e"/>
                         <segue destination="W7Z-nM-mgl" kind="relationship" relationship="viewControllers" id="Hnn-tU-PjV"/>
                     </connections>
                 </tabBarController>

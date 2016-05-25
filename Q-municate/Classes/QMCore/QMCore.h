@@ -75,6 +75,7 @@ QMContactListServiceDelegate
 
 - (BOOL)isInternetConnected;
 
+- (BFTask *)login;
 - (BFTask *)logout;
 
 @end

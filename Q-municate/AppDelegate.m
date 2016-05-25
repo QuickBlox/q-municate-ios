@@ -131,10 +131,7 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 - (void)applicationWillEnterForeground:(UIApplication *)__unused application {
     
-    if ([QMCore instance].currentProfile.userData && ![QBChat instance].isConnected) {
-        
-        [[QMCore instance].chatService connect];
-    }
+    [[QMCore instance] login];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)__unused application {

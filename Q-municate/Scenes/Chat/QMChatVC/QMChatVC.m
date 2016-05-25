@@ -903,6 +903,10 @@ NYTPhotosViewControllerDelegate
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
+    // hiding keyboard due to layouting issue for iOS 8
+    // if interface orientation would change out of the controller
+    [self.view endEditing:YES];
+    
     if ([segue.identifier isEqualToString:kQMSceneSegueUserInfo]) {
         
         QMUserInfoViewController *userInfoVC = segue.destinationViewController;
@@ -1452,6 +1456,8 @@ NYTPhotosViewControllerDelegate
     NSString *textViewString = self.inputToolbar.contentView.textView.text;
     self.inputToolbar.contentView.textView.text = [textViewString stringByAppendingString:emoji];
     [self textViewDidChange:self.inputToolbar.contentView.textView];
+    
+    [self sendIsTypingStatus];
 }
 
 - (void)emojiKeyBoardViewDidPressBackSpace:(AGEmojiKeyboardView *)__unused emojiKeyBoardView {

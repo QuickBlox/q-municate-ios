@@ -120,27 +120,31 @@ QMSearchResultsControllerDelegate
     [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) duration:0];
     
     @weakify(self);
-    [[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
-        @strongify(self);
+    [[[[QMCore instance] login] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         
-        if (task.isFaulted && task.error.code == kQMUnAuthorizedErrorCode) {
-            [[[QMCore instance] logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
-                
-                [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
-                return nil;
-            }];
+        @strongify(self);
+        if (task.isFaulted
+            && task.error.code == kBFMultipleErrorsError
+            && [[task.error.userInfo[BFTaskMultipleErrorsUserInfoKey] firstObject] code] == kQMUnAuthorizedErrorCode) {
             
-            return nil;
+            return [[QMCore instance] logout];
         }
-        else {
+        
+        if ([QMCore instance].pushNotificationManager.pushNotification != nil) {
             
-            if ([QMCore instance].pushNotificationManager.pushNotification != nil) {
-                
-                [[QMCore instance].pushNotificationManager handlePushNotificationWithDelegate:self];
-            }
-            
-            return [[QMCore instance].chatService connect];
+            [[QMCore instance].pushNotificationManager handlePushNotificationWithDelegate:self];
         }
+        
+        return [BFTask cancelledTask];
+        
+    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        
+        if (!task.isCancelled) {
+            
+            [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
+        }
+        
+        return nil;
     }];
 }
 
