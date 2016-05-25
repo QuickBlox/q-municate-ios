@@ -10,6 +10,7 @@
 #import "QMDialogCell.h"
 #import "QMCore.h"
 #import <QMDateUtils.h>
+#import "QBChatDialog+OpponentID.h"
 
 #import <SVProgressHUD.h>
 
@@ -27,23 +28,27 @@
     
     if (chatDialog.type == QBChatDialogTypePrivate) {
         
-        QBUUser *recipient = [[QMCore instance].usersService.usersMemoryStorage userWithID:chatDialog.recipientID];
+        QBUUser *recipient = [[QMCore instance].usersService.usersMemoryStorage userWithID:chatDialog.opponentID];
         
         if (recipient != nil) {
             NSParameterAssert(recipient.fullName);
             
-            [cell setTitle:recipient.fullName placeholderID:chatDialog.recipientID avatarUrl:recipient.avatarUrl];
+            [cell setTitle:recipient.fullName placeholderID:chatDialog.opponentID avatarUrl:recipient.avatarUrl];
         }
         else {
             
-            [cell setTitle:NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil) placeholderID:chatDialog.recipientID avatarUrl:nil];
+            [cell setTitle:NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil) placeholderID:chatDialog.opponentID avatarUrl:nil];
         }
     } else {
         
         [cell setTitle:chatDialog.name placeholderID:chatDialog.ID.hash avatarUrl:chatDialog.photo];
     }
     
-    NSString *time = [QMDateUtils formattedShortDateString:chatDialog.updatedAt];
+    // there was a time when updated at didn't exist
+    // in order to support old dialogs, showing their date as last message date
+    NSDate *date = chatDialog.updatedAt ?: chatDialog.lastMessageDate;
+    
+    NSString *time = [QMDateUtils formattedShortDateString:date];
     [cell setTime:time];
     [cell setBody:chatDialog.lastMessageText];
     [cell setBadgeNumber:chatDialog.unreadMessagesCount];

@@ -17,16 +17,24 @@
 #import <QMImageView.h>
 #import "UINavigationController+QMNotification.h"
 
+static const CGFloat kQMDefaultSectionHeaderHeight = 24.0f;
+static const CGFloat kQMStatusSectionHeaderHeight = 40.0f;
+
 typedef NS_ENUM(NSUInteger, QMSettingsSection) {
     
     QMSettingsSectionFullName,
     QMSettingsSectionStatus,
     QMSettingsSectionPhone,
-    QMSettingsSectionEmail,
-    QMSettingsSectionPassword,
+    QMSettingsSectionEmailAccountInfo,
     QMSettingsSectionExtra,
     QMSettingsSectionSocial,
     QMSettingsSectionLogout
+};
+
+typedef NS_ENUM(NSUInteger, QMEmailAccountInfoSection) {
+    
+    QMEmailAccountInfoSectionEmail,
+    QMEmailAccountInfoSectionPassword
 };
 
 typedef NS_ENUM(NSUInteger, QMSocialSection) {
@@ -79,7 +87,7 @@ QMImagePickerResultHandler
     // determine account type
     if ([QMCore instance].currentProfile.accountType != QMAccountTypeEmail) {
         
-        [self.hiddenSections addIndex:QMSettingsSectionPassword];
+        [self.hiddenSections addIndex:QMSettingsSectionEmailAccountInfo];
     }
     
     // subscribe to delegates
@@ -179,12 +187,19 @@ QMImagePickerResultHandler
         case QMSettingsSectionPhone:
             break;
             
-        case QMSettingsSectionEmail:
-            [self performSegueWithIdentifier:kQMSceneSegueUpdateUser sender:@(QMUpdateUserFieldEmail)];
-            break;
+        case QMSettingsSectionEmailAccountInfo:
             
-        case QMSettingsSectionPassword:
-            [self performSegueWithIdentifier:kQMSceneSeguePassword sender:nil];
+            switch (indexPath.row) {
+                    
+                case QMEmailAccountInfoSectionEmail:
+                    [self performSegueWithIdentifier:kQMSceneSegueUpdateUser sender:@(QMUpdateUserFieldEmail)];
+                    break;
+                    
+                case QMEmailAccountInfoSectionPassword:
+                    [self performSegueWithIdentifier:kQMSceneSeguePassword sender:nil];
+                    break;
+            }
+            
             break;
             
         case QMSettingsSectionExtra:
@@ -234,38 +249,40 @@ QMImagePickerResultHandler
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     
-    if (![self shouldHaveHeaderForSection:section]) {
-        
-        return [super tableView:tableView viewForHeaderInSection:section];
-    }
-    
-    QMTableSectionHeaderView *headerView = [[QMTableSectionHeaderView alloc]
-                                            initWithFrame:CGRectMake(0,
-                                                                     0,
-                                                                     CGRectGetWidth(tableView.frame),
-                                                                     40.0f)];
-    
     if (section == QMSettingsSectionStatus) {
         
-        headerView.title = [NSLocalizedString(@"QM_STR_STATUS", nil) uppercaseString];
+        QMTableSectionHeaderView *headerView = [[QMTableSectionHeaderView alloc]
+                                                initWithFrame:CGRectMake(0,
+                                                                         0,
+                                                                         CGRectGetWidth(tableView.frame),
+                                                                         kQMStatusSectionHeaderHeight)];
+        headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        headerView.title = [NSLocalizedString(@"QM_STR_STATUS", nil) uppercaseString];;
+        
+        return headerView;
     }
     
-    return headerView;
+    return [super tableView:tableView viewForHeaderInSection:section];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+- (CGFloat)tableView:(UITableView *)__unused tableView heightForHeaderInSection:(NSInteger)section {
     
     if (![self shouldHaveHeaderForSection:section]) {
         
-        return [super tableView:tableView heightForHeaderInSection:section];
+        return CGFLOAT_MIN;
     }
     
     if (section == QMSettingsSectionStatus) {
         
-        return 40.0f;
+        return kQMStatusSectionHeaderHeight;
     }
     
-    return 24.0f;
+    return kQMDefaultSectionHeaderHeight;
+}
+
+- (CGFloat)tableView:(UITableView *)__unused tableView heightForFooterInSection:(NSInteger)__unused section {
+    
+    return CGFLOAT_MIN;
 }
 
 #pragma mark - QMProfileDelegate
@@ -359,18 +376,14 @@ QMImagePickerResultHandler
         return NO;
     }
     
-    if ([self.hiddenSections containsIndex:QMSettingsSectionPhone]
-        && section == QMSettingsSectionPhone) {
-        
-        return NO;
-    }
-    else if (![self.hiddenSections containsIndex:QMSettingsSectionPhone]
-             && section == QMSettingsSectionEmail) {
+    if (section == QMSettingsSectionPhone
+        && [self.hiddenSections containsIndex:QMSettingsSectionPhone]) {
         
         return NO;
     }
     
-    if (section == QMSettingsSectionPassword) {
+    if (section == QMSettingsSectionEmailAccountInfo
+        && [self.hiddenSections containsIndex:QMSettingsSectionEmailAccountInfo]) {
         
         return NO;
     }

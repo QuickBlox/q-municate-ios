@@ -119,15 +119,23 @@ QMSearchResultsControllerDelegate
     
     [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) duration:0];
     
+    __weak UINavigationController *navigationController = self.navigationController;
+    
     @weakify(self);
     [[[[QMCore instance] login] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         
         @strongify(self);
-        if (task.isFaulted
-            && task.error.code == kBFMultipleErrorsError
-            && [[task.error.userInfo[BFTaskMultipleErrorsUserInfoKey] firstObject] code] == kQMUnAuthorizedErrorCode) {
+        if (task.isFaulted) {
             
-            return [[QMCore instance] logout];
+            [navigationController dismissNotificationPanel];
+            
+            if (task.error.code == kQMUnAuthorizedErrorCode
+                || (task.error.code == kBFMultipleErrorsError
+                && ([task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][0] code] == kQMUnAuthorizedErrorCode
+                    || [task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][1] code] == kQMUnAuthorizedErrorCode))) {
+                
+                return [[QMCore instance] logout];
+            }
         }
         
         if ([QMCore instance].pushNotificationManager.pushNotification != nil) {

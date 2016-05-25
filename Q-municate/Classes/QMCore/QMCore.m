@@ -17,6 +17,7 @@
 
 static NSString *const kQMLastActivityDateKey = @"last_activity_date";
 static NSString *const kQMErrorKey = @"errors";
+static NSString *const kQMBaseErrorKey = @"base";
 
 static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 
@@ -155,7 +156,11 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
                 
                 for (NSString *key in [errorReasons allKeys]) {
                     
-                    [mutableString appendString:key];
+                    if (![key isEqualToString:kQMBaseErrorKey]) {
+                        
+                        [mutableString appendString:key];
+                    }
+                    
                     [mutableString appendString:@" "];
                     [self loopErrorArray:errorReasons[key] forMutableString:mutableString];
                     [mutableString appendString:@"\n"];

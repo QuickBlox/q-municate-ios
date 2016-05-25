@@ -11,6 +11,7 @@
 #import "QMCallViewController.h"
 #import "QMSoundManager.h"
 #import "QMPermissions.h"
+#import "QMNotification.h"
 #import <mach/mach.h>
 
 static const NSTimeInterval kQMAnswerTimeInterval = 60.0f;
@@ -86,6 +87,11 @@ QBRTCClientDelegate
         // instantiating view controller
         QMCallState callState = conferenceType == QBRTCConferenceTypeVideo ? QMCallStateOutgoingVideoCall : QMCallStateOutgoingAudioCall;
         self.callViewController = [QMCallViewController callControllerWithState:callState];
+        
+        QBUUser *opponentUser = [self.serviceManager.usersService.usersMemoryStorage userWithID:userID];
+        NSString *opponentName = opponentUser.fullName ?: [NSString stringWithFormat:@"%tu", userID];
+        NSString *pushText = [NSString stringWithFormat:@"%@ %@", opponentName, NSLocalizedString(@"QM_STR_IS_CALLING_YOU", nil)];
+        [QMNotification sendPushNotificationToUser:opponentUser withText:pushText];
         
         [self.rootViewController presentViewController:self.callViewController
                                               animated:NO

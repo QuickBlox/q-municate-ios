@@ -11,6 +11,7 @@
 #import "QMNoResultsCell.h"
 #import "QMCore.h"
 #import <QMDateUtils.h>
+#import "QBChatDialog+OpponentID.h"
 
 @implementation QMDialogsSearchDataSource
 
@@ -41,12 +42,12 @@
     
     if (chatDialog.type == QBChatDialogTypePrivate) {
         
-        QBUUser *recipient = [[QMCore instance].usersService.usersMemoryStorage userWithID:chatDialog.recipientID];
+        QBUUser *recipient = [[QMCore instance].usersService.usersMemoryStorage userWithID:chatDialog.opponentID];
         
         if (recipient != nil) {
             NSParameterAssert(recipient.fullName);
             
-            [cell setTitle:recipient.fullName placeholderID:chatDialog.recipientID avatarUrl:recipient.avatarUrl];
+            [cell setTitle:recipient.fullName placeholderID:chatDialog.opponentID avatarUrl:recipient.avatarUrl];
         }
     }
     else {
