@@ -1456,6 +1456,8 @@ NYTPhotosViewControllerDelegate
     NSString *textViewString = self.inputToolbar.contentView.textView.text;
     self.inputToolbar.contentView.textView.text = [textViewString stringByAppendingString:emoji];
     [self textViewDidChange:self.inputToolbar.contentView.textView];
+    
+    [self sendIsTypingStatus];
 }
 
 - (void)emojiKeyBoardViewDidPressBackSpace:(AGEmojiKeyboardView *)__unused emojiKeyBoardView {
