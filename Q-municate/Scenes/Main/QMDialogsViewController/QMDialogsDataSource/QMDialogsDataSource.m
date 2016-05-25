@@ -43,7 +43,11 @@
         [cell setTitle:chatDialog.name placeholderID:chatDialog.ID.hash avatarUrl:chatDialog.photo];
     }
     
-    NSString *time = [QMDateUtils formattedShortDateString:chatDialog.updatedAt];
+    // there was a time when updated at didn't exist
+    // in order to support old dialogs, showing their date as last message date
+    NSDate *date = chatDialog.updatedAt ?: chatDialog.lastMessageDate;
+    
+    NSString *time = [QMDateUtils formattedShortDateString:date];
     [cell setTime:time];
     [cell setBody:chatDialog.lastMessageText];
     [cell setBadgeNumber:chatDialog.unreadMessagesCount];

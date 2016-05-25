@@ -187,6 +187,7 @@
 "QM_STR_BAD_CONNECTION" = "Bad connection";
 "QM_STR_CALL_WAS_STOPPED" = "Call was stopped";
 "QM_STR_USER_DOESNT_ANSWER" = "User doesn't answer";
+"QM_STR_IS_CALLING_YOU" = "is calling you.";
 
 // *********** Welcome screen ***********
 "QM_STR_LOGIN_WITH_FACEBOOK" = "Login with Facebook";
