@@ -34,9 +34,14 @@
 
 + (void)takePhotoInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler {
     
+    [[self class] takePhotoInViewController:vc resultHandler:resultHandler allowsEditing:YES];
+}
+
++ (void)takePhotoInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler allowsEditing:(BOOL)allowsEditing {
+    
     QMImagePicker *imagePicker = [[QMImagePicker alloc] init];
     imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
-    imagePicker.allowsEditing = YES;
+    imagePicker.allowsEditing = allowsEditing;
     imagePicker.resultHandler = resultHandler;
     
     [vc presentViewController:imagePicker animated:YES completion:nil];
@@ -44,25 +49,44 @@
 
 + (void)choosePhotoInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler {
     
+    [[self class] choosePhotoInViewController:vc resultHandler:resultHandler allowsEditing:YES];
+}
+
++ (void)choosePhotoInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler allowsEditing:(BOOL)allowsEditing {
+    
     QMImagePicker *imagePicker = [[QMImagePicker alloc] init];
     imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    imagePicker.allowsEditing = YES;
+    imagePicker.allowsEditing = allowsEditing;
     
     imagePicker.resultHandler = resultHandler;
     
     [vc presentViewController:imagePicker animated:YES completion:nil];
 }
 
-+ (void)takePhotoOrVideoInViewController:(UIViewController *)vc maxDuration:(NSTimeInterval)maxDuration
++ (void)takePhotoOrVideoInViewController:(UIViewController *)vc
+                             maxDuration:(NSTimeInterval)maxDuration
                                  quality:(UIImagePickerControllerQualityType)quality
                            resultHandler:(id<QMImagePickerResultHandler>)resultHandler {
+    
+    [[self class] takePhotoOrVideoInViewController:vc
+                                       maxDuration:maxDuration
+                                           quality:quality
+                                     resultHandler:resultHandler
+                                     allowsEditing:YES];
+}
+
++ (void)takePhotoOrVideoInViewController:(UIViewController *)vc
+                             maxDuration:(NSTimeInterval)maxDuration
+                                 quality:(UIImagePickerControllerQualityType)quality
+                           resultHandler:(id<QMImagePickerResultHandler>)resultHandler
+                           allowsEditing:(BOOL)allowsEditing {
     
     QMImagePicker *imagePicker = [[QMImagePicker alloc] init];
     imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
     imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
     imagePicker.videoMaximumDuration = maxDuration;
     imagePicker.videoQuality = quality;
-    imagePicker.allowsEditing = YES;
+    imagePicker.allowsEditing = allowsEditing;
     
     imagePicker.resultHandler = resultHandler;
     
@@ -71,8 +95,13 @@
 
 + (void)chooseFromGaleryInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler {
     
+    [[self class] chooseFromGaleryInViewController:vc resultHandler:resultHandler allowsEditing:YES];
+}
+
++ (void)chooseFromGaleryInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler allowsEditing:(BOOL)allowsEditing {
+    
     QMImagePicker *imagePicker = [[QMImagePicker alloc] init];
-    imagePicker.allowsEditing = YES;
+    imagePicker.allowsEditing = allowsEditing;
     imagePicker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
     imagePicker.mediaTypes = @[(NSString *)kUTTypeMovie, (NSString *)kUTTypeImage];
     imagePicker.resultHandler = resultHandler;

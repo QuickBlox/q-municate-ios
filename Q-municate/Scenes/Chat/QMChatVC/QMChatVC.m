@@ -418,14 +418,14 @@ NYTPhotosViewControllerDelegate
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                           
-                                                          [QMImagePicker takePhotoInViewController:self resultHandler:self];
+                                                          [QMImagePicker takePhotoInViewController:self resultHandler:self allowsEditing:NO];
                                                       }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CHOOSE_FROM_LIBRARY", nil)
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                           
-                                                          [QMImagePicker choosePhotoInViewController:self resultHandler:self];
+                                                          [QMImagePicker choosePhotoInViewController:self resultHandler:self allowsEditing:NO];
                                                       }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
