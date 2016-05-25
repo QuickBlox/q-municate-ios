@@ -11,6 +11,7 @@
 #import "QMCore.h"
 #import "QMChatVC.h"
 #import "QMSoundManager.h"
+#import "QBChatDialog+OpponentID.h"
 
 @interface QMTabBarVC ()
 
@@ -81,7 +82,7 @@ QMChatConnectionDelegate
     if (message.messageType == QMMessageTypeContactRequest) {
         
         QBChatDialog *chatDialog = [chatService.dialogsMemoryStorage chatDialogWithID:dialogID];
-        [[[QMCore instance].usersService getUserWithID:chatDialog.recipientID] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
+        [[[QMCore instance].usersService getUserWithID:chatDialog.opponentID] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
             
             [self showNotificationForMessage:message];
             

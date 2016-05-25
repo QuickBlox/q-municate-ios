@@ -22,6 +22,7 @@
 // helpers
 #import "QMChatButtonsFactory.h"
 #import "UIImage+fixOrientation.h"
+#import "QBChatDialog+OpponentID.h"
 #import <QMDateUtils.h>
 
 // external
@@ -175,8 +176,8 @@ NYTPhotosViewControllerDelegate
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
         // set up opponent full name
-        [self.onlineTitleView setTitle:[[QMCore instance].contactManager fullNameForUserID:self.chatDialog.recipientID]];
-        BOOL isOpponentOnline = [[QMCore instance].contactManager isUserOnlineWithID:self.chatDialog.recipientID];
+        [self.onlineTitleView setTitle:[[QMCore instance].contactManager fullNameForUserID:self.chatDialog.opponentID]];
+        BOOL isOpponentOnline = [[QMCore instance].contactManager isUserOnlineWithID:self.chatDialog.opponentID];
         [self setOpponentOnlineStatus:isOpponentOnline];
         
         // configuring call buttons for opponent
@@ -201,7 +202,7 @@ NYTPhotosViewControllerDelegate
             }
             
             self.isOpponentTyping = NO;
-            BOOL isOnline = [[QMCore instance].contactManager isUserOnlineWithID:self.chatDialog.recipientID];
+            BOOL isOnline = [[QMCore instance].contactManager isUserOnlineWithID:self.chatDialog.opponentID];
             [self setOpponentOnlineStatus:isOnline];
         }];
     }
@@ -331,7 +332,7 @@ NYTPhotosViewControllerDelegate
     
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
-        if (![[QMCore instance].contactManager isFriendWithUserID:self.chatDialog.recipientID]) {
+        if (![[QMCore instance].contactManager isFriendWithUserID:self.chatDialog.opponentID]) {
             
             [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO inViewController:self];
             return NO;
@@ -348,7 +349,7 @@ NYTPhotosViewControllerDelegate
         return NO;
     }
     
-    if (![[QMCore instance].contactManager isFriendWithUserID:self.chatDialog.recipientID]) {
+    if (![[QMCore instance].contactManager isFriendWithUserID:self.chatDialog.opponentID]) {
         
         [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO inViewController:self];
         return NO;
@@ -446,7 +447,7 @@ NYTPhotosViewControllerDelegate
     
     if (item.isNotificatonMessage) {
         
-        NSUInteger opponentID = self.chatDialog.recipientID;
+        NSUInteger opponentID = self.chatDialog.opponentID;
         BOOL isFriend = [[QMCore instance].contactManager isFriendWithUserID:opponentID];
         
         if (item.messageType == QMMessageTypeContactRequest && item.senderID != self.senderID && !isFriend) {
@@ -893,7 +894,7 @@ NYTPhotosViewControllerDelegate
     
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
-        [self performInfoViewControllerForUserID:self.chatDialog.recipientID];
+        [self performInfoViewControllerForUserID:self.chatDialog.opponentID];
     }
     else {
         
@@ -926,7 +927,7 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
-    [[QMCore instance].callManager callToUserWithID:self.chatDialog.recipientID conferenceType:QBRTCConferenceTypeAudio];
+    [[QMCore instance].callManager callToUserWithID:self.chatDialog.opponentID conferenceType:QBRTCConferenceTypeAudio];
 }
 
 - (void)videoCallAction {
@@ -936,7 +937,7 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
-    [[QMCore instance].callManager callToUserWithID:self.chatDialog.recipientID conferenceType:QBRTCConferenceTypeVideo];
+    [[QMCore instance].callManager callToUserWithID:self.chatDialog.opponentID conferenceType:QBRTCConferenceTypeVideo];
 }
 
 #pragma mark - Configuring
@@ -1008,7 +1009,7 @@ NYTPhotosViewControllerDelegate
     }
     else {
         
-        QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:self.chatDialog.recipientID];
+        QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:self.chatDialog.opponentID];
         if (opponentUser && opponentUser.lastRequestAt) {
             
             status = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"QM_STR_LAST_SEEN", nil), [QMDateUtils formattedLastSeenString:opponentUser.lastRequestAt withTimePrefix:NSLocalizedString(@"QM_STR_TIME_PREFIX", nil)]];
@@ -1137,7 +1138,7 @@ NYTPhotosViewControllerDelegate
 
 - (void)contactListService:(QMContactListService *)__unused contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)__unused status {
     
-    if (self.chatDialog.type == QBChatDialogTypePrivate && self.chatDialog.recipientID == (NSInteger)userID && !self.isOpponentTyping) {
+    if (self.chatDialog.type == QBChatDialogTypePrivate && self.chatDialog.opponentID == userID && !self.isOpponentTyping) {
         
         [self setOpponentOnlineStatus:isOnline];
     }
@@ -1152,7 +1153,7 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
-    QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:self.chatDialog.recipientID];
+    QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:self.chatDialog.opponentID];
     
     [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     
@@ -1256,7 +1257,7 @@ NYTPhotosViewControllerDelegate
     
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
-        [self performInfoViewControllerForUserID:self.chatDialog.recipientID];
+        [self performInfoViewControllerForUserID:self.chatDialog.opponentID];
     }
     else {
         

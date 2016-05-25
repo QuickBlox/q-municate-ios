@@ -13,6 +13,7 @@
 #import "QMChatVC.h"
 #import <QMDateUtils.h>
 #import <QMImageView.h>
+#import "QBChatDialog+OpponentID.h"
 
 static const CGFloat kQMStatusCellMinHeight = 65.0f;
 
@@ -233,7 +234,7 @@ QMContactListServiceDelegate
         if ([obj isKindOfClass:[QMChatVC class]]) {
             
             QBChatDialog *chatDialog = [(QMChatVC *)obj chatDialog];
-            if (chatDialog.recipientID == (NSInteger)self.user.ID) {
+            if (chatDialog.opponentID == self.user.ID) {
                 
                 [self.navigationController popToViewController:obj animated:YES];
                 *stop = YES;
