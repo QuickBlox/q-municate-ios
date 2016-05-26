@@ -13,15 +13,23 @@
 @interface QMImagePicker : UIImagePickerController
 
 + (void)takePhotoInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler;
++ (void)takePhotoInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler allowsEditing:(BOOL)allowsEditing;
 
 + (void)choosePhotoInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler;
++ (void)choosePhotoInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler allowsEditing:(BOOL)allowsEditing;
 
 + (void)takePhotoOrVideoInViewController:(UIViewController *)vc
                              maxDuration:(NSTimeInterval)maxDuration
                                  quality:(UIImagePickerControllerQualityType)quality
                            resultHandler:(id<QMImagePickerResultHandler>)resultHandler;
++ (void)takePhotoOrVideoInViewController:(UIViewController *)vc
+                             maxDuration:(NSTimeInterval)maxDuration
+                                 quality:(UIImagePickerControllerQualityType)quality
+                           resultHandler:(id<QMImagePickerResultHandler>)resultHandler
+                           allowsEditing:(BOOL)allowsEditing;
 
 + (void)chooseFromGaleryInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler;
++ (void)chooseFromGaleryInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler allowsEditing:(BOOL)allowsEditing;
 
 @end
 
