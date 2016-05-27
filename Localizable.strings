@@ -7,7 +7,6 @@
 */
 "QM_STR_OK" = "OK";
 "QM_STR_COMING_SOON" = "Coming soon";
-"QM_STR_LOGOUT" = "Log Out";
 "QM_STR_SUCCESS" = "Success";
 "QM_STR_ERROR" = "Error";
 "QM_STR_ERROR_WHILE_CREATING_NEW_CHAT" = "You don't have any contacts for creating new chat.";
@@ -195,6 +194,8 @@
 
 // *********** Settings screen ***********
 "QM_STR_SHARE_TEXT" = "Check out this awesome app called Q-municate! http://q-municate.com";
+"QM_STR_LOGOUT_CONFIRMATION" = "Are you sure you want to logout?";
+"QM_STR_LOGOUT" = "Logout";
 
 // *********** Feedback screen ***********
 "QM_STR_BUG" = "Bug";

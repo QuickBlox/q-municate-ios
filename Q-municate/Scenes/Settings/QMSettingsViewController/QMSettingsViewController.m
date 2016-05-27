@@ -157,6 +157,45 @@ QMImagePickerResultHandler
     }
 }
 
+- (void)logout {
+    
+    UIAlertController *alertController = [UIAlertController
+                                          alertControllerWithTitle:nil
+                                          message:NSLocalizedString(@"QM_STR_LOGOUT_CONFIRMATION", nil)
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                      }]];
+    
+    __weak UINavigationController *navigationController = self.navigationController;
+    
+    @weakify(self);
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LOGOUT", nil)
+                                                        style:UIAlertActionStyleDestructive
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                          @strongify(self);
+                                                          if (self.logoutTask) {
+                                                              // task is in progress
+                                                              return;
+                                                          }
+                                                          
+                                                          [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+                                                          
+                                                          self.logoutTask = [[[QMCore instance] logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
+                                                              
+                                                              [navigationController dismissNotificationPanel];
+                                                              [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
+                                                              return nil;
+                                                          }];
+                                                      }]];
+    
+    UIViewController *viewController = [(UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController selectedViewController];
+    [viewController presentViewController:alertController animated:YES completion:nil];
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -225,24 +264,7 @@ QMImagePickerResultHandler
             
         case QMSettingsSectionLogout:
             
-            if (self.logoutTask) {
-                // task is in progress
-                return;
-            }
-            
-            [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
-            
-            __weak UINavigationController *navigationController = self.navigationController;
-            
-            @weakify(self);
-            self.logoutTask = [[[QMCore instance] logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
-                
-                @strongify(self);
-                [navigationController dismissNotificationPanel];
-                [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
-                return nil;
-            }];
-
+            [self logout];
             break;
     }
 }

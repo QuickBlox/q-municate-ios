@@ -1234,6 +1234,8 @@ NYTPhotosViewControllerDelegate
             
             NYTPhotosViewController *photosViewController = [[NYTPhotosViewController alloc] initWithPhotos:@[photo]];
             photosViewController.delegate = self;
+            
+            [self.view endEditing:YES]; // hiding keyboard
             [self presentViewController:photosViewController animated:YES completion:nil];
         }
     }
