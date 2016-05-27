@@ -153,10 +153,8 @@ NYTPhotosViewControllerDelegate
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // top layout inset for collection view
-    self.topContentAdditionalInset = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
-    
     // setting up chat controller
+    self.topContentAdditionalInset = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
     self.collectionView.backgroundColor = QMChatBackgroundColor();
     self.inputToolbar.contentView.textView.placeHolder = NSLocalizedString(@"QM_STR_INPUTTOOLBAR_PLACEHOLDER", nil);
     
@@ -606,14 +604,6 @@ NYTPhotosViewControllerDelegate
                                                                   withConstraints:CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), CGFLOAT_MAX)
                                                            limitedToNumberOfLines:0];
         size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), kQMAttachmentCellSize + (CGFloat)ceil(bottomLabelSize.height));
-    }
-    else if (viewClass == [QMChatNotificationCell class]) {
-        
-        NSAttributedString *attributedString = [self attributedStringForItem:item];
-        
-        size = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
-                                                withConstraints:CGSizeMake(maxWidth, CGFLOAT_MAX)
-                                         limitedToNumberOfLines:0];
     }
     else {
         
@@ -1528,9 +1518,17 @@ NYTPhotosViewControllerDelegate
 #pragma mark - Transition size
 
 - (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-    [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
     
-    [self.onlineTitleView sizeToFit];
+    @weakify(self);
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
+        
+        @strongify(self);
+        self.topContentAdditionalInset = 0;
+        [self.onlineTitleView sizeToFit];
+        
+    } completion:nil];
+    
+    [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
 }
 
 @end

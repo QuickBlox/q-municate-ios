@@ -198,6 +198,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
             return [[QMTasks taskFetchAllData] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
                 
                 @strongify(self);
+                [QBSession currentSession].currentUser.password = [QBSession currentSession].sessionDetails.token;
                 return [self.chatService connect];
             }];
         }
@@ -209,9 +210,10 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         if (needUpdateSessionToken) {
             
             @weakify(self);
-            return [[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
+            return [[QMTasks taskAutoLogin] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
                 
                 @strongify(self);
+                [QBSession currentSession].currentUser.password = [QBSession currentSession].sessionDetails.token;
                 return [self.chatService connect];
             }];
         }
@@ -243,7 +245,8 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         if (self.currentProfile.accountType == QMAccountTypeFacebook) {
             
             [QMFacebook logout];
-        } else if (self.currentProfile.accountType == QMAccountTypeDigits) {
+        }
+        else if (self.currentProfile.accountType == QMAccountTypeDigits) {
             
             [[Digits sharedInstance] logOut];
         }
