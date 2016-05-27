@@ -164,7 +164,8 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 - (void)pushNotificationManager:(QMPushNotificationManager *)__unused pushNotificationManager didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
     
-    UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
+    UITabBarController *tabBarController = (UITabBarController *)self.window.rootViewController;
+    UINavigationController *navigationController = (UINavigationController *)tabBarController.selectedViewController;
     
     NSString *activeDialogID = [QMCore instance].activeDialogID;
     if ([chatDialog.ID isEqualToString:activeDialogID]) {
