@@ -18,7 +18,7 @@
 #import <Flurry.h>
 
 
-#define DEVELOPMENT 1
+#define DEVELOPMENT 0
 
 #if DEVELOPMENT == 0
 
