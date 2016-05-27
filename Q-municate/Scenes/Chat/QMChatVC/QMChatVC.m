@@ -1059,6 +1059,7 @@ NYTPhotosViewControllerDelegate
     if (self.chatDialog.type != QBChatDialogTypePrivate && [self.chatDialog.ID isEqualToString:chatDialog.ID]) {
         
         [self.onlineTitleView setTitle:self.chatDialog.name];
+        [self updateGroupChatOnlineStatus];
         [self updateGroupAvatarImage];
     }
 }
