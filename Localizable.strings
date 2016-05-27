@@ -173,6 +173,7 @@
 "QM_STR_PASSWORD_DONT_MATCH" = "Passwords don't match";
 
 // *********** Calls ***********
+"QM_STR_CALL" = "Call";
 "QM_STR_INCOMING_CALL" = "Incoming Call";
 "QM_STR_INCOMING_VIDEO_CALL" = "Incoming Video Call";
 "QM_STR_CALLING" = "Calling";

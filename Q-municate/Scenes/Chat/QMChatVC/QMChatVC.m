@@ -30,6 +30,8 @@
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
 #import "QMPhoto.h"
 
+@import SafariServices;
+
 static const NSInteger kQMEmojiButtonTag = 100;
 static const CGFloat kQMEmojiButtonSize = 45.0f;
 static const CGFloat kQMInputToolbarTextContainerInsetRight = 25.0f;
@@ -171,6 +173,9 @@ NYTPhotosViewControllerDelegate
     [QMCore instance].chatService.chatAttachmentService.delegate = self;
     [[QMCore instance].contactListService addDelegate:self];
     self.actionsHandler = self;
+    
+    // text checking types for cells
+    self.enableTextCheckingTypes = (NSTextCheckingTypeLink | NSTextCheckingTypePhoneNumber);
     
     @weakify(self);
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
@@ -1270,10 +1275,56 @@ NYTPhotosViewControllerDelegate
     }
 }
 
-- (void)__unused chatCell:(QMChatCell *)__unused cell didTapAtPosition:(CGPoint)__unused position {
-}
-
-- (void)__unused chatCell:(QMChatCell *)__unused cell didPerformAction:(SEL)__unused action withSender:(id)__unused sender {
+- (void)chatCell:(QMChatCell *)__unused cell didTapOnTextCheckingResult:(NSTextCheckingResult *)textCheckingResult {
+    
+    switch (textCheckingResult.resultType) {
+            
+        case NSTextCheckingTypeLink: {
+            
+            if ([SFSafariViewController class] != nil) {
+                
+                SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:textCheckingResult.URL entersReaderIfAvailable:false];
+                [self presentViewController:controller animated:true completion:nil];
+            }
+            else {
+                
+                [[UIApplication sharedApplication] openURL:textCheckingResult.URL];
+            }
+            
+            break;
+        }
+            
+        case NSTextCheckingTypePhoneNumber: {
+            
+            
+            UIAlertController *alertController = [UIAlertController
+                                                  alertControllerWithTitle:nil
+                                                  message:textCheckingResult.phoneNumber
+                                                  preferredStyle:UIAlertControllerStyleAlert];
+            
+            [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+                                                                style:UIAlertActionStyleCancel
+                                                              handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                              }]];
+            
+            [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CALL", nil)
+                                                                style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                                  
+                                                                  NSString *urlString = [NSString stringWithFormat:@"tel:%@", textCheckingResult.phoneNumber];
+                                                                  NSURL *url = [NSURL URLWithString:urlString];
+                                                                  [[UIApplication sharedApplication] openURL:url];
+                                                                  
+                                                              }]];
+            
+            [self presentViewController:alertController animated:YES completion:nil];
+            
+            break;
+        }
+            
+        default:
+            break;
+    }
 }
 
 #pragma mark - NYTPhotosViewControllerDelegate
