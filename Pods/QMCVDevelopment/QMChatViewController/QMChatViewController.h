@@ -97,13 +97,9 @@
 @property (assign, nonatomic) CGFloat topContentAdditionalInset;
 
 /**
- *  Total count of messages in all sections.
- *
- *  @discussion Use this to know how many messages are displayed in chat controller.
- *
- *  @warning *Deprecated in QMChatViewController 0.3.3:* Use 'self.chatSectionManager.totalMessagesCount' instead.
+ *  Enable text checking types for cells. Must be set in view did load.
  */
-@property (assign, nonatomic, readonly) NSUInteger totalMessagesCount DEPRECATED_MSG_ATTRIBUTE("Deprecated in 0.3.3. Use 'self.chatSectionManager.totalMessagesCount' instead.");
+@property (assign, nonatomic) NSTextCheckingTypes enableTextCheckingTypes;
 
 /**
  *  Updating data source with messages without reloading of collection view.

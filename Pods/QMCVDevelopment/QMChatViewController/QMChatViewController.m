@@ -585,6 +585,7 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
     if ([cell isKindOfClass:[QMChatCell class]]) {
         
         QMChatCell *chatCell = (QMChatCell *)cell;
+        chatCell.textView.enabledTextCheckingTypes = self.enableTextCheckingTypes;
         
         QBChatMessage *messageItem = [self.chatSectionManager messageForIndexPath:indexPath];
         
@@ -1055,11 +1056,6 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
     }
     
     return [sectionsIndexSet copy];
-}
-
-- (NSUInteger)totalMessagesCount {
-    
-    return self.chatSectionManager.totalMessagesCount;
 }
 
 - (NSString *)nameForSectionWithDate:(NSDate *)date {

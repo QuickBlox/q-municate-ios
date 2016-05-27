@@ -492,7 +492,15 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
         }
         else {
             chatDialogToUpdate = [[QBChatDialog alloc] initWithDialogID:message.dialogID type:QBChatDialogTypePrivate];
-            chatDialogToUpdate.occupantIDs = @[@([self.serviceManager currentUser].ID), @(message.senderID)];
+            
+            NSUInteger opponentID = message.senderID;
+            
+            if (message.senderID == self.serviceManager.currentUser.ID) {
+                // message is carbon message
+                opponentID = message.recipientID;
+            }
+            
+            chatDialogToUpdate.occupantIDs = @[@(self.serviceManager.currentUser.ID), @(opponentID)];
             
             [self updateParamsForQBChatDialog:chatDialogToUpdate withQBChatMessage:message];
             
