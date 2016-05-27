@@ -192,8 +192,7 @@ QMImagePickerResultHandler
                                                           }];
                                                       }]];
     
-    UIViewController *viewController = [(UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController selectedViewController];
-    [viewController presentViewController:alertController animated:YES completion:nil];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark - UITableViewDataSource
