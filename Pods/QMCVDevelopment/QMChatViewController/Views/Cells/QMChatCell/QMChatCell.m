@@ -99,7 +99,7 @@ static NSMutableSet *_qmChatCellMenuActions = nil;
 #endif
     
     UITapGestureRecognizer *tap =
-    [[UITapGestureRecognizer alloc] init];
+    [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
     tap.delegate = self;
     [self addGestureRecognizer:tap];
     self.tapGestureRecognizer = tap;
@@ -217,42 +217,59 @@ static NSMutableSet *_qmChatCellMenuActions = nil;
     [self.delegate chatCellDidTapAvatar:self];
 }
 
+- (void)handleTapGesture:(UITapGestureRecognizer *)tap {
+    
+    CGPoint touchPt = [tap locationInView:self];
+    UIView *touchView = [tap.view hitTest:touchPt withEvent:nil];
+    
+    if ([touchView isKindOfClass:[TTTAttributedLabel class]]) {
+        
+        TTTAttributedLabel *label = (TTTAttributedLabel *)touchView;
+        CGPoint translatedPoint = [label convertPoint:touchPt fromView:tap.view];
+        
+        TTTAttributedLabelLink *labelLink = [label linkAtPoint:translatedPoint];
+        
+        if (labelLink.result.numberOfRanges > 0) {
+            
+            if ([self.delegate respondsToSelector:@selector(chatCell:didTapOnTextCheckingResult:)]) {
+                
+                [self.delegate chatCell:self didTapOnTextCheckingResult:labelLink.result];
+            }
+            
+            return;
+        }
+    }
+    
+    if (CGRectContainsPoint(self.containerView.frame, touchPt)) {
+        
+        [self.delegate chatCellDidTapContainer:self];
+    }
+    else if ([self.delegate respondsToSelector:@selector(chatCell:didTapAtPosition:)]) {
+        
+        [self.delegate chatCell:self didTapAtPosition:touchPt];
+    }
+}
+
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     
-    CGPoint touchPt = [touch locationInView:self];
+    CGPoint touchPt = [touch locationInView:gestureRecognizer.view];
     
     if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
         
         if ([touch.view isKindOfClass:[TTTAttributedLabel class]]) {
             
             TTTAttributedLabel *label = (TTTAttributedLabel *)touch.view;
-            CGPoint translatedPoint = [label convertPoint:touchPt fromView:self];
+            CGPoint translatedPoint = [label convertPoint:touchPt fromView:gestureRecognizer.view];
             
             TTTAttributedLabelLink *labelLink = [label linkAtPoint:translatedPoint];
             
             if (labelLink.result.numberOfRanges > 0) {
                 
-                if ([self.delegate respondsToSelector:@selector(chatCell:didTapOnTextCheckingResult:)]) {
-                    
-                    [self.delegate chatCell:self didTapOnTextCheckingResult:labelLink.result];
-                }
-                
                 return NO;
             }
-            
         }
         
-        if (CGRectContainsPoint(self.containerView.frame, touchPt)) {
-            
-            [self.delegate chatCellDidTapContainer:self];
-            return YES;
-        }
-        else if ([self.delegate respondsToSelector:@selector(chatCell:didTapAtPosition:)]) {
-            
-            [self.delegate chatCell:self didTapAtPosition:touchPt];
-        }
-        
-        return NO;
+        return CGRectContainsPoint(self.containerView.frame, touchPt);
     }
     
     return YES;

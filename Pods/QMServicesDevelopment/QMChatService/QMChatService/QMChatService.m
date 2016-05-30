@@ -17,6 +17,7 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
 
 @interface QMChatService() <QBChatDelegate>
 
+@property (assign, nonatomic, readwrite) QMChatConnectionState chatConnectionState;
 @property (strong, nonatomic) QBMulticastDelegate <QMChatServiceDelegate, QMChatConnectionDelegate> *multicastDelegate;
 @property (weak, nonatomic) id <QMChatServiceCacheDataSource> cacheDataSource;
 @property (strong, nonatomic) QMDialogsMemoryStorage *dialogsMemoryStorage;
@@ -159,12 +160,17 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
 
 - (void)chatDidConnect {
     
+    self.chatConnectionState = QMChatConnectionStateConnected;
+    
     if ([self.multicastDelegate respondsToSelector:@selector(chatServiceChatDidConnect:)]) {
+        
         [self.multicastDelegate chatServiceChatDidConnect:self];
     }
 }
 
 - (void)chatDidNotConnectWithError:(NSError *)error {
+    
+    self.chatConnectionState = QMChatConnectionStateDisconnected;
     
     if ([self.multicastDelegate respondsToSelector:@selector(chatService:chatDidNotConnectWithError:)]) {
         
@@ -174,6 +180,8 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
 
 - (void)chatDidAccidentallyDisconnect {
     
+    self.chatConnectionState = QMChatConnectionStateDisconnected;
+    
     if ([self.multicastDelegate respondsToSelector:@selector(chatServiceChatDidAccidentallyDisconnect:)]) {
         
         [self.multicastDelegate chatServiceChatDidAccidentallyDisconnect:self];
@@ -181,6 +189,8 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
 }
 
 - (void)chatDidReconnect {
+    
+    self.chatConnectionState = QMChatConnectionStateConnected;
     
     if ([self.multicastDelegate respondsToSelector:@selector(chatServiceChatDidReconnect:)]) {
         
@@ -292,6 +302,8 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
         }
         
         QBUUser *user = self.serviceManager.currentUser;
+        
+        self.chatConnectionState = QMChatConnectionStateConnecting;
         [[QBChat instance] connectWithUser:user completion:completion];
     }
 }
