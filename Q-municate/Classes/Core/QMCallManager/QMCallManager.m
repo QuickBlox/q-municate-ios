@@ -28,10 +28,9 @@ QBRTCClientDelegate
 
 @property (strong, nonatomic, readwrite) QBRTCSession *session;
 @property (assign, nonatomic, readwrite) BOOL hasActiveCall;
-
 @property (strong, nonatomic) NSTimer *soundTimer;
-@property (strong, nonatomic, readonly) UIViewController *rootViewController;
 
+@property (strong, nonatomic, readonly) UIViewController *rootViewController;
 @property (strong, nonatomic) QMCallViewController *callViewController;
 
 @end
@@ -121,7 +120,7 @@ QBRTCClientDelegate
 
 - (UIViewController *)rootViewController {
     
-    return [[UIApplication sharedApplication].windows.firstObject rootViewController];
+    return [UIApplication sharedApplication].keyWindow.rootViewController;
 }
 
 - (QBUUser *)opponentUser {
@@ -173,6 +172,12 @@ QBRTCClientDelegate
     // initializing controller
     QMCallState callState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateIncomingVideoCall : QMCallStateIncomingAudioCall;
     self.callViewController = [QMCallViewController callControllerWithState:callState];
+    
+    UIViewController *presentedViewController = self.rootViewController.presentedViewController;
+    if (presentedViewController != nil) {
+        // dismissing already presented view controller to present a call controller
+        [presentedViewController dismissViewControllerAnimated:NO completion:nil];
+    }
     
     [self.rootViewController presentViewController:self.callViewController
                                           animated:NO
@@ -259,7 +264,7 @@ QBRTCClientDelegate
         [QMSoundManager playEndOfCallSound];
         [self.delegate callManager:self willCloseCurrentSession:session];
         
-        [self.rootViewController dismissViewControllerAnimated:NO completion:^{
+        [self.callViewController dismissViewControllerAnimated:NO completion:^{
             
             if (session.conferenceType == QBRTCConferenceTypeVideo) {
                 
