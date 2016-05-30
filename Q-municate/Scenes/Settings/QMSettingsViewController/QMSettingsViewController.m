@@ -24,17 +24,17 @@ typedef NS_ENUM(NSUInteger, QMSettingsSection) {
     
     QMSettingsSectionFullName,
     QMSettingsSectionStatus,
-    QMSettingsSectionPhone,
-    QMSettingsSectionEmailAccountInfo,
+    QMSettingsSectionUserInfo,
     QMSettingsSectionExtra,
     QMSettingsSectionSocial,
     QMSettingsSectionLogout
 };
 
-typedef NS_ENUM(NSUInteger, QMEmailAccountInfoSection) {
+typedef NS_ENUM(NSUInteger, QMUserInfoSection) {
     
-    QMEmailAccountInfoSectionEmail,
-    QMEmailAccountInfoSectionPassword
+    QMUserInfoSectionPhone,
+    QMUserInfoSectionEmail,
+    QMUserInfoSectionChangePassword
 };
 
 typedef NS_ENUM(NSUInteger, QMSocialSection) {
@@ -62,7 +62,7 @@ QMImagePickerResultHandler
 @property (weak, nonatomic) BFTask *subscribeTask;
 @property (weak, nonatomic) BFTask *logoutTask;
 
-@property (strong, nonatomic) NSMutableIndexSet *hiddenSections;
+@property (strong, nonatomic) NSMutableIndexSet *hiddenUserInfoCells;
 
 @end
 
@@ -71,7 +71,7 @@ QMImagePickerResultHandler
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.hiddenSections = [NSMutableIndexSet indexSet];
+    self.hiddenUserInfoCells = [NSMutableIndexSet indexSet];
     self.avatarImageView.imageViewType = QMImageViewTypeCircle;
     
     // Hide empty separators
@@ -85,9 +85,10 @@ QMImagePickerResultHandler
     self.pushNotificationSwitch.on = [QMCore instance].currentProfile.pushNotificationsEnabled;
     
     // determine account type
-    if ([QMCore instance].currentProfile.accountType != QMAccountTypeEmail) {
+    if ([QMCore instance].currentProfile.accountType == QMAccountTypeEmail) {
         
-        [self.hiddenSections addIndex:QMSettingsSectionEmailAccountInfo];
+        [self.hiddenUserInfoCells addIndex:QMUserInfoSectionEmail];
+        [self.hiddenUserInfoCells addIndex:QMUserInfoSectionChangePassword];
     }
     
     // subscribe to delegates
@@ -111,7 +112,7 @@ QMImagePickerResultHandler
     }
     else {
         
-        [self.hiddenSections addIndex:QMSettingsSectionPhone];
+        [self.hiddenUserInfoCells addIndex:QMUserInfoSectionPhone];
     }
     
     self.emailLabel.text = userData.email.length > 0 ? userData.email : NSLocalizedString(@"QM_STR_NONE", nil);
@@ -195,19 +196,18 @@ QMImagePickerResultHandler
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-#pragma mark - UITableViewDataSource
+#pragma mark - UITableViewDelegate
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if ([self.hiddenSections containsIndex:section]) {
+    if (indexPath.section == QMSettingsSectionUserInfo
+        && [self.hiddenUserInfoCells containsIndex:indexPath.row]) {
         
-        return 0;
+        return CGFLOAT_MIN;
     }
     
-    return [super tableView:tableView numberOfRowsInSection:section];
+    return [super tableView:tableView heightForRowAtIndexPath:indexPath];
 }
-
-#pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -222,18 +222,18 @@ QMImagePickerResultHandler
             [self performSegueWithIdentifier:kQMSceneSegueUpdateUser sender:@(QMUpdateUserFieldStatus)];
             break;
             
-        case QMSettingsSectionPhone:
-            break;
-            
-        case QMSettingsSectionEmailAccountInfo:
+        case QMSettingsSectionUserInfo:
             
             switch (indexPath.row) {
                     
-                case QMEmailAccountInfoSectionEmail:
+                case QMUserInfoSectionPhone:
+                    break;
+                    
+                case QMUserInfoSectionEmail:
                     [self performSegueWithIdentifier:kQMSceneSegueUpdateUser sender:@(QMUpdateUserFieldEmail)];
                     break;
                     
-                case QMEmailAccountInfoSectionPassword:
+                case QMUserInfoSectionChangePassword:
                     [self performSegueWithIdentifier:kQMSceneSeguePassword sender:nil];
                     break;
             }
@@ -288,7 +288,7 @@ QMImagePickerResultHandler
 
 - (CGFloat)tableView:(UITableView *)__unused tableView heightForHeaderInSection:(NSInteger)section {
     
-    if (![self shouldHaveHeaderForSection:section]) {
+    if (![self shouldShowHeaderForSection:section]) {
         
         return CGFLOAT_MIN;
     }
@@ -301,7 +301,12 @@ QMImagePickerResultHandler
     return kQMDefaultSectionHeaderHeight;
 }
 
-- (CGFloat)tableView:(UITableView *)__unused tableView heightForFooterInSection:(NSInteger)__unused section {
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    
+    if (section == QMSettingsSectionLogout) {
+        
+        return [super tableView:tableView heightForFooterInSection:section];
+    }
     
     return CGFLOAT_MIN;
 }
@@ -388,23 +393,18 @@ QMImagePickerResultHandler
     [self presentViewController:activityViewController animated:YES completion:nil];
 }
 
-#pragma mark - Helper
+#pragma mark - Helpers
 
-- (BOOL)shouldHaveHeaderForSection:(NSInteger)section {
+- (BOOL)shouldShowHeaderForSection:(NSInteger)section {
     
     if (section == QMSettingsSectionFullName) {
         
         return NO;
     }
     
-    if (section == QMSettingsSectionPhone
-        && [self.hiddenSections containsIndex:QMSettingsSectionPhone]) {
-        
-        return NO;
-    }
-    
-    if (section == QMSettingsSectionEmailAccountInfo
-        && [self.hiddenSections containsIndex:QMSettingsSectionEmailAccountInfo]) {
+    if (section == QMSettingsSectionUserInfo
+        && [self.hiddenUserInfoCells containsIndex:QMUserInfoSectionPhone]
+        && [self.hiddenUserInfoCells containsIndex:QMUserInfoSectionEmail]) {
         
         return NO;
     }
