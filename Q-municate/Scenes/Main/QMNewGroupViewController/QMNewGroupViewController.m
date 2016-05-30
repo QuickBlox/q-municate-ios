@@ -121,7 +121,7 @@ UITextFieldDelegate
             chatDialog = task.result;
             [self performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
             
-            return [[QMCore instance].chatService sendSystemMessageAboutAddingToDialog:chatDialog toUsersIDs:occupantsIDs];
+            return [[QMCore instance].chatService sendSystemMessageAboutAddingToDialog:chatDialog toUsersIDs:occupantsIDs withText:kQMDialogsUpdateNotificationMessage];
             
         }
         
