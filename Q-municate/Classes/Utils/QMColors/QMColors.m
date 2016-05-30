@@ -141,3 +141,16 @@ UIColor *QMChatEmojiiKeyboardTintColor() {
     
     return color;
 }
+
+UIColor *QMChatIncomingLinkColor() {
+    
+    static UIColor *color = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        color = [UIColor colorWithRed:13.0f/255.0f green:112.0f/255.0f blue:179.0f/255.0f alpha:1.0f];
+    });
+    
+    return color;
+}

@@ -733,10 +733,14 @@ NYTPhotosViewControllerDelegate
     if ([cell isKindOfClass:[QMChatOutgoingCell class]] || [cell isKindOfClass:[QMChatAttachmentOutgoingCell class]]) {
         
         currentCell.containerView.bgColor = QMChatOutgoingCellColor();
+        currentCell.textView.linkAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor],
+                                                NSUnderlineStyleAttributeName : @(YES)};
     }
     else if ([cell isKindOfClass:[QMChatIncomingCell class]] || [cell isKindOfClass:[QMChatAttachmentIncomingCell class]]) {
         
         currentCell.containerView.bgColor = [UIColor whiteColor];
+        currentCell.textView.linkAttributes = @{NSForegroundColorAttributeName : QMChatIncomingLinkColor(),
+                                                NSUnderlineStyleAttributeName : @(YES)};
         
         /**
          *  Setting opponent avatar
