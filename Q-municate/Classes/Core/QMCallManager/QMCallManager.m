@@ -98,6 +98,9 @@ QBRTCClientDelegate
 
 - (void)prepareCallWindow {
     
+    // hiding keyboard
+    [[UIApplication sharedApplication].keyWindow endEditing:YES];
+    
     self.callWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     // displaying window under status bar
     self.callWindow.windowLevel = UIWindowLevelStatusBar - 1;
