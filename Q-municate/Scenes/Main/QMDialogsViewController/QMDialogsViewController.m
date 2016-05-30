@@ -52,6 +52,7 @@ QMSearchResultsControllerDelegate
 @property (strong, nonatomic) QMDialogsSearchDataSource *dialogsSearchDataSource;
 
 @property (weak, nonatomic) BFTask *addUserTask;
+@property (strong, nonatomic) id observerWillEnterForeground;
 
 @end
 
@@ -61,7 +62,7 @@ QMSearchResultsControllerDelegate
 
 - (void)dealloc {
     
-    [self.searchController.view removeFromSuperview];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.observerWillEnterForeground];
     
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
@@ -95,6 +96,21 @@ QMSearchResultsControllerDelegate
                                 action:@selector(updateDialogsAndEndRefreshing)
                       forControlEvents:UIControlEventValueChanged];
     }
+    
+    @weakify(self);
+    // adding notification for showing chat connection
+    self.observerWillEnterForeground = [[NSNotificationCenter defaultCenter]
+                                        addObserverForName:UIApplicationWillEnterForegroundNotification
+                                        object:nil
+                                        queue:nil
+                                        usingBlock:^(NSNotification * _Nonnull __unused note) {
+                                            
+                                            @strongify(self);
+                                            if (![QBChat instance].isConnected) {
+                                                
+                                                [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) duration:0];
+                                            }
+                                        }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -131,11 +147,11 @@ QMSearchResultsControllerDelegate
             
             if (task.error.code == kQMUnAuthorizedErrorCode
                 || (task.error.code == kBFMultipleErrorsError
-                && ([task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][0] code] == kQMUnAuthorizedErrorCode
-                    || [task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][1] code] == kQMUnAuthorizedErrorCode))) {
-                
-                return [[QMCore instance] logout];
-            }
+                    && ([task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][0] code] == kQMUnAuthorizedErrorCode
+                        || [task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][1] code] == kQMUnAuthorizedErrorCode))) {
+                        
+                        return [[QMCore instance] logout];
+                    }
         }
         
         if ([QMCore instance].pushNotificationManager.pushNotification != nil) {
@@ -331,11 +347,6 @@ QMSearchResultsControllerDelegate
 }
 
 #pragma mark - QMChatConnectionDelegate
-
-- (void)chatServiceChatHasStartedConnecting:(QMChatService *)__unused chatService {
-    
-    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) duration:0];
-}
 
 - (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
     
