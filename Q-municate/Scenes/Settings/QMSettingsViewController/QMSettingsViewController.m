@@ -16,6 +16,7 @@
 #import "QMProfile.h"
 #import <QMImageView.h>
 #import "UINavigationController+QMNotification.h"
+#import "QMSettingsFooterView.h"
 
 static const CGFloat kQMDefaultSectionHeaderHeight = 24.0f;
 static const CGFloat kQMStatusSectionHeaderHeight = 40.0f;
@@ -85,7 +86,7 @@ QMImagePickerResultHandler
     self.pushNotificationSwitch.on = [QMCore instance].currentProfile.pushNotificationsEnabled;
     
     // determine account type
-    if ([QMCore instance].currentProfile.accountType == QMAccountTypeEmail) {
+    if ([QMCore instance].currentProfile.accountType != QMAccountTypeEmail) {
         
         [self.hiddenUserInfoCells addIndex:QMUserInfoSectionEmail];
         [self.hiddenUserInfoCells addIndex:QMUserInfoSectionChangePassword];
@@ -301,11 +302,27 @@ QMImagePickerResultHandler
     return kQMDefaultSectionHeaderHeight;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     
     if (section == QMSettingsSectionLogout) {
         
-        return [super tableView:tableView heightForFooterInSection:section];
+        QMSettingsFooterView *footerView = [[QMSettingsFooterView alloc]
+                                            initWithFrame:CGRectMake(0,
+                                                                     0,
+                                                                     CGRectGetWidth(tableView.frame),
+                                                                     [QMSettingsFooterView preferredHeight])];
+        
+        return footerView;
+    }
+    
+    return [super tableView:tableView viewForFooterInSection:section];
+}
+
+- (CGFloat)tableView:(UITableView *)__unused tableView heightForFooterInSection:(NSInteger)section {
+    
+    if (section == QMSettingsSectionLogout) {
+        
+        return [QMSettingsFooterView preferredHeight];
     }
     
     return CGFLOAT_MIN;

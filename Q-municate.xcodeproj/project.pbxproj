@@ -25,6 +25,7 @@
 		55D8ADB519AC761000DAF79F /* QMForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADB419AC761000DAF79F /* QMForgotPasswordViewController.m */; };
 		55D8ADFB19AC833300DAF79F /* QMLicenseAgreement.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADFA19AC833300DAF79F /* QMLicenseAgreement.m */; };
 		580590FD1CA548130055BC2F /* QMContactManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 580590FC1CA548130055BC2F /* QMContactManager.m */; };
+		5808F1C21CFC585100F1A210 /* QMSettingsFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5808F1C11CFC585100F1A210 /* QMSettingsFooterView.m */; };
 		580B3B571C3FF89F00345081 /* QMTasks.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B3B561C3FF89F00345081 /* QMTasks.m */; };
 		580D34DF1BBFF5850034813A /* UIImage+fixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 580D34DE1BBFF5850034813A /* UIImage+fixOrientation.m */; };
 		580D34E21BC027BD0034813A /* QMSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580D34E11BC027BD0034813A /* QMSplashViewController.m */; };
@@ -201,6 +202,8 @@
 		55D8ADFA19AC833300DAF79F /* QMLicenseAgreement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLicenseAgreement.m; sourceTree = "<group>"; };
 		580590FB1CA548130055BC2F /* QMContactManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMContactManager.h; path = Classes/Core/QMContactsManager/QMContactManager.h; sourceTree = "<group>"; };
 		580590FC1CA548130055BC2F /* QMContactManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMContactManager.m; path = Classes/Core/QMContactsManager/QMContactManager.m; sourceTree = "<group>"; };
+		5808F1C01CFC585100F1A210 /* QMSettingsFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMSettingsFooterView.h; path = QMSettingsFooterView/QMSettingsFooterView.h; sourceTree = "<group>"; };
+		5808F1C11CFC585100F1A210 /* QMSettingsFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMSettingsFooterView.m; path = QMSettingsFooterView/QMSettingsFooterView.m; sourceTree = "<group>"; };
 		580B3B551C3FF89F00345081 /* QMTasks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMTasks.h; path = Classes/QMTasks/QMTasks.h; sourceTree = "<group>"; };
 		580B3B561C3FF89F00345081 /* QMTasks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMTasks.m; path = Classes/QMTasks/QMTasks.m; sourceTree = "<group>"; };
 		580D34DD1BBFF5850034813A /* UIImage+fixOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+fixOrientation.h"; sourceTree = "<group>"; };
@@ -818,6 +821,8 @@
 				584277961C3D336300CDE35B /* QMCornerButton */,
 				58E398B11CAE94450053BA4D /* QMNavigationBar */,
 				58B3C9CE1CB52C9D00B08A27 /* QMShadowView */,
+				5808F1C01CFC585100F1A210 /* QMSettingsFooterView.h */,
+				5808F1C11CFC585100F1A210 /* QMSettingsFooterView.m */,
 			);
 			name = Views;
 			path = "Q-municate/Classes/Views";
@@ -2076,6 +2081,7 @@
 				589D4CF11C98158E005F1E76 /* QMRootViewControllerSegue.m in Sources */,
 				585DE4631C46A8390068E03E /* QMPlaceholder.m in Sources */,
 				584277D11C3FBD1600CDE35B /* QMProfile.m in Sources */,
+				5808F1C21CFC585100F1A210 /* QMSettingsFooterView.m in Sources */,
 				55BBA75C19730B960040DB5C /* REMessageUI.m in Sources */,
 				58BB52631CDA3EA300869FA9 /* QMSettingsViewController.m in Sources */,
 				58B550731CC79C8500C93F93 /* QMGroupAddUsersViewController.m in Sources */,

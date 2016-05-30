@@ -197,6 +197,8 @@
 "QM_STR_SHARE_TEXT" = "Check out this awesome app called Q-municate! http://q-municate.com";
 "QM_STR_LOGOUT_CONFIRMATION" = "Are you sure you want to logout?";
 "QM_STR_LOGOUT" = "Logout";
+"QM_STR_VERSION" = "Version";
+"QM_STR_POWERED_BY_QUICKBLOX" = "Powered by QuickBlox";
 
 // *********** Feedback screen ***********
 "QM_STR_BUG" = "Bug";
