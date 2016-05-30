@@ -201,6 +201,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
             return [[QMTasks taskFetchAllData] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
                 
                 @strongify(self);
+                // updating password with new token
                 [QBSession currentSession].currentUser.password = [QBSession currentSession].sessionDetails.token;
                 return [self.chatService connect];
             }];
@@ -216,6 +217,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
             return [[QMTasks taskAutoLogin] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
                 
                 @strongify(self);
+                // updating password with new token
                 [QBSession currentSession].currentUser.password = [QBSession currentSession].sessionDetails.token;
                 return [self.chatService connect];
             }];
@@ -224,7 +226,14 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         // doing a parallel login
         
         // setting password to current session user
-        [QBSession currentSession].currentUser.password = self.currentProfile.userData.password;
+        if (self.currentProfile.accountType == QMAccountTypeEmail) {
+            
+            [QBSession currentSession].currentUser.password = self.currentProfile.userData.password;
+        }
+        else {
+            
+            [QBSession currentSession].currentUser.password = [QBSession currentSession].sessionDetails.token;
+        }
         
         // saving rest login task cause we need to login in REST
         // only once per app living
