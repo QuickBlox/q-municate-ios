@@ -155,6 +155,7 @@
 "QM_STR_SIGNING_IN" = "Signing in";
 "QM_STR_LOADING" = "Loading";
 "QM_STR_LOST_INTERNET_CONNECTION" = "Lost internet connection";
+"QM_STR_CHAT_CONNECTING" = "Your chat connection is resuming, please wait";
 
 // *********** Tab bar ***********
 "QM_STR_CHATS" = "Chats";
