@@ -82,14 +82,17 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     [_internetConnection setReachableBlock:^(Reachability __unused *reachability) {
         
         @strongify(self);
-        [self login];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // reachability block could possibly be called in background thread
+            [self login];
+        });
     }];
     
     // setting unreachable block
     [_internetConnection setUnreachableBlock:^(Reachability __unused *reachability) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            
+            // reachability block could possibly be called in background thread
             [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil)];
         });
     }];
