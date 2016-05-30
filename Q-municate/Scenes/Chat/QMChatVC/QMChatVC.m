@@ -319,9 +319,15 @@ NYTPhotosViewControllerDelegate
     
     if (![QBChat instance].isConnected) {
         
-        NSString *alertMessage = [QMCore instance].chatService.chatConnectionState == QMChatConnectionStateConnecting ? NSLocalizedString(@"QM_STR_CHAT_CONNECTING", nil) : NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil);
+        if ([QMCore instance].chatService.chatConnectionState == QMChatConnectionStateConnecting) {
+            
+            [self.navigationController shake];
+        }
+        else {
+            
+            [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:NO inViewController:self];
+        }
         
-        [QMAlert showAlertWithMessage:alertMessage actionSuccess:NO inViewController:self];
         return NO;
     }
     

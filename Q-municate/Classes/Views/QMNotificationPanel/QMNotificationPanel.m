@@ -198,4 +198,16 @@ static const CGFloat kQMDefaultNotificationViewHeight = 36.0f;
     return NO;
 }
 
+- (void)shake {
+    
+    if (self.view != nil) {
+        
+        CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform.translation.x"];
+        animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+        animation.duration = 0.8f;
+        animation.values = @[@(-20), @(20), @(-20), @(20), @(-10), @(10), @(-5), @(5), @(0)];
+        [self.view.layer addAnimation:animation forKey:@"shake"];
+    }
+}
+
 @end

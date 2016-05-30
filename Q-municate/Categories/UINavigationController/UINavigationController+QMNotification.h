@@ -15,4 +15,6 @@
 
 - (void)dismissNotificationPanel;
 
+- (void)shake;
+
 @end

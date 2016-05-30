@@ -58,4 +58,9 @@
     [self.notificationPanel dismissNotificationAnimated:YES];
 }
 
+- (void)shake {
+    
+    [self.notificationPanel shake];
+}
+
 @end

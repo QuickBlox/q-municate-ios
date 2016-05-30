@@ -128,6 +128,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)dismissNotificationAnimated:(BOOL)animated;
 
+/**
+ *  Perform shaking for notification if existent
+ */
+- (void)shake;
+
 @end
 
 NS_ASSUME_NONNULL_END
