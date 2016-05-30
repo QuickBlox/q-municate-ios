@@ -14,6 +14,7 @@
 #import <QMDateUtils.h>
 #import <QMImageView.h>
 #import "QBChatDialog+OpponentID.h"
+#import <SVProgressHUD.h>
 
 static const CGFloat kQMStatusCellMinHeight = 65.0f;
 
@@ -324,8 +325,6 @@ QMContactListServiceDelegate
         return;
     }
     
-    __weak UINavigationController *navigationController = self.navigationController;
-    
     UIAlertController *alertController = [UIAlertController
                                           alertControllerWithTitle:nil
                                           message:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CONFIRM_DELETE_CONTACT", nil), self.user.fullName]
@@ -341,10 +340,12 @@ QMContactListServiceDelegate
                                                         style:UIAlertActionStyleDestructive
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                           
-                                                          [navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+                                                          [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+                                                          
                                                           self.task = [[[QMCore instance].contactManager removeUserFromContactList:self.user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
                                                               
-                                                              [navigationController dismissNotificationPanel];
+                                                              [SVProgressHUD dismiss];
+                                                              
                                                               return nil;
                                                           }];
                                                       }]];
