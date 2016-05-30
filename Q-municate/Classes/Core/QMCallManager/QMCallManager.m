@@ -30,15 +30,13 @@ QBRTCClientDelegate
 @property (assign, nonatomic, readwrite) BOOL hasActiveCall;
 @property (strong, nonatomic) NSTimer *soundTimer;
 
-@property (strong, nonatomic, readonly) UIViewController *rootViewController;
-@property (strong, nonatomic) QMCallViewController *callViewController;
+@property (strong, nonatomic) UIWindow *callWindow;
 
 @end
 
 @implementation QMCallManager
 
 @dynamic serviceManager;
-@dynamic rootViewController;
 
 - (void)serviceWillStart {
     
@@ -85,20 +83,25 @@ QBRTCClientDelegate
         
         // instantiating view controller
         QMCallState callState = conferenceType == QBRTCConferenceTypeVideo ? QMCallStateOutgoingVideoCall : QMCallStateOutgoingAudioCall;
-        self.callViewController = [QMCallViewController callControllerWithState:callState];
         
         QBUUser *opponentUser = [self.serviceManager.usersService.usersMemoryStorage userWithID:userID];
         NSString *opponentName = opponentUser.fullName ?: [NSString stringWithFormat:@"%tu", userID];
         NSString *pushText = [NSString stringWithFormat:@"%@ %@", opponentName, NSLocalizedString(@"QM_STR_IS_CALLING_YOU", nil)];
         [QMNotification sendPushNotificationToUser:opponentUser withText:pushText];
         
-        [self.rootViewController presentViewController:self.callViewController
-                                              animated:NO
-                                            completion:^{
-                                                
-                                                [self.session startCall:nil];
-                                            }];
+        [self prepareCallWindow];
+        self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState];
+        [self.session startCall:nil];
+        self.hasActiveCall = YES;
     }];
+}
+
+- (void)prepareCallWindow {
+    
+    self.callWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    // displaying window under status bar
+    self.callWindow.windowLevel = UIWindowLevelStatusBar - 1;
+    [self.callWindow makeKeyAndVisible];
 }
 
 #pragma mark - Setters
@@ -117,11 +120,6 @@ QBRTCClientDelegate
 }
 
 #pragma mark - Getters
-
-- (UIViewController *)rootViewController {
-    
-    return [UIApplication sharedApplication].keyWindow.rootViewController;
-}
 
 - (QBUUser *)opponentUser {
     
@@ -166,22 +164,15 @@ QBRTCClientDelegate
     [[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker];
     
     self.session = session;
+    self.hasActiveCall = YES;
     
     [self startPlayingRingtoneSound];
     
     // initializing controller
     QMCallState callState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateIncomingVideoCall : QMCallStateIncomingAudioCall;
-    self.callViewController = [QMCallViewController callControllerWithState:callState];
     
-    UIViewController *presentedViewController = self.rootViewController.presentedViewController;
-    if (presentedViewController != nil) {
-        // dismissing already presented view controller to present a call controller
-        [presentedViewController dismissViewControllerAnimated:NO completion:nil];
-    }
-    
-    [self.rootViewController presentViewController:self.callViewController
-                                          animated:NO
-                                        completion:nil];
+    [self prepareCallWindow];
+    self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState];
 }
 
 - (void)session:(QBRTCSession *)session updatedStatsReport:(QBRTCStatsReport *)report forUserID:(NSNumber *)__unused userID {
@@ -263,17 +254,15 @@ QBRTCClientDelegate
         
         [QMSoundManager playEndOfCallSound];
         [self.delegate callManager:self willCloseCurrentSession:session];
+        self.callWindow.rootViewController = nil;
+        self.callWindow = nil;
         
-        [self.callViewController dismissViewControllerAnimated:NO completion:^{
+        if (session.conferenceType == QBRTCConferenceTypeVideo) {
             
-            if (session.conferenceType == QBRTCConferenceTypeVideo) {
-                
-                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-            }
-            
-            self.session = nil;
-            self.callViewController = nil;
-        }];
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+        }
+        
+        self.session = nil;
     });
 }
 
