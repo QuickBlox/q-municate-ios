@@ -110,8 +110,10 @@ UITextFieldDelegate
     
     __weak UINavigationController *navigationController = self.navigationController;
     
+    NSString *name = [self.nameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
     @weakify(self);
-    return [[[[QMCore instance].chatService createGroupChatDialogWithName:self.nameTextField.text photo:photoURL occupants:self.tagFieldView.tagIDs] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+    return [[[[QMCore instance].chatService createGroupChatDialogWithName:name photo:photoURL occupants:self.tagFieldView.tagIDs] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
         
         @strongify(self);
         [navigationController dismissNotificationPanel];
