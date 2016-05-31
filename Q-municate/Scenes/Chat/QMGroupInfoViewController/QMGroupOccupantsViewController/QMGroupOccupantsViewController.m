@@ -62,6 +62,13 @@ QMUsersServiceDelegate
     [self updateOccupants];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    // smooth rows deselection
+    [self qm_smoothlyDeselectRowsForTableView:self.tableView];
+}
+
 - (void)configureDataSource {
     
     self.dataSource = [[QMGroupOccupantsDataSource alloc] init];
@@ -129,14 +136,14 @@ QMUsersServiceDelegate
 
 #pragma mark - UITableViewDelegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+- (void)tableView:(UITableView *)__unused tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.row == self.dataSource.addMemberCellIndex) {
         
         [self performSegueWithIdentifier:kQMSceneSegueGroupAddUsers sender:self.chatDialog];
     }
     else if (indexPath.row == self.dataSource.leaveChatCellIndex) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
         
         if (self.leaveTask) {
             // task in progress
@@ -185,7 +192,7 @@ QMUsersServiceDelegate
         QBUUser *user = self.dataSource.items[userIndex];
         
         if (user.ID == [QMCore instance].currentProfile.userData.ID) {
-            
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
             return;
         }
         

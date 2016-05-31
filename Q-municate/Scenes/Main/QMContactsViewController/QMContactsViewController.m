@@ -99,6 +99,14 @@ QMUsersServiceDelegate
     if (self.searchController.isActive) {
         
         self.tabBarController.tabBar.hidden = YES;
+        
+        // smooth rows deselection
+        [self qm_smoothlyDeselectRowsForTableView:self.searchResultsController.tableView];
+    }
+    else {
+        
+        // smooth rows deselection
+        [self qm_smoothlyDeselectRowsForTableView:self.tableView];
     }
     
     if (self.refreshControl.isRefreshing) {
@@ -194,8 +202,7 @@ QMUsersServiceDelegate
     return [self.searchDataSource heightForRowAtIndexPath:indexPath];
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+- (void)tableView:(UITableView *)__unused tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     QBUUser *user = [(id <QMContactsSearchDataSourceProtocol>)self.searchDataSource userAtIndexPath:indexPath];
     

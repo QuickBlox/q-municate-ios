@@ -1284,11 +1284,14 @@ NYTPhotosViewControllerDelegate
             
         case NSTextCheckingTypeLink: {
             
-            if ([SFSafariViewController class] != nil) {
-                
-                SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:textCheckingResult.URL entersReaderIfAvailable:false];
-                [self presentViewController:controller animated:true completion:nil];
-            }
+            if ([SFSafariViewController class] != nil
+                // SFSafariViewController supporting only http and https schemes
+                && ([textCheckingResult.URL.scheme.lowercaseString isEqualToString:@"http"]
+                    || [textCheckingResult.URL.scheme.lowercaseString isEqualToString:@"https"])) {
+                    
+                    SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:textCheckingResult.URL entersReaderIfAvailable:false];
+                    [self presentViewController:controller animated:true completion:nil];
+                }
             else {
                 
                 [[UIApplication sharedApplication] openURL:textCheckingResult.URL];

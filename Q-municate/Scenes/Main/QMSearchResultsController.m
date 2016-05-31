@@ -33,8 +33,7 @@
     return [self.searchDataSource heightForRowAtIndexPath:indexPath];
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+- (void)tableView:(UITableView *)__unused tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     id obj = [self.searchDataSource objectAtIndexPath:indexPath];
     [self.delegate searchResultsController:self didSelectObject:obj];
