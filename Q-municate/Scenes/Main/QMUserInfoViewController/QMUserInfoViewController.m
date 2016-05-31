@@ -419,19 +419,6 @@ QMContactListServiceDelegate
     return [super tableView:tableView numberOfRowsInSection:section];
 }
 
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    
-//    UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
-//    
-//    if (indexPath.section == QMUserInfoSectionStatus
-//        && indexPath.row == 1) {
-//        
-//        cell.layoutMargins = UIEdgeInsetsZero;
-//    }
-//    
-//    return cell;
-//}
-
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
