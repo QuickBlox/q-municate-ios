@@ -21,9 +21,18 @@ static const CGFloat kQMStatusCellMinHeight = 65.0f;
 typedef NS_ENUM(NSUInteger, QMUserInfoSection) {
     
     QMUserInfoSectionStatus,
-    QMUserInfoSectionInfo,
+    QMUserInfoSectionInfoPhone,
+    QMUserInfoSectionInfoEmail,
     QMUserInfoSectionContactInteractions,
+    QMUserInfoSectionRemoveContact,
     QMUserInfoSectionAddAction
+};
+
+typedef NS_ENUM(NSUInteger, QMContactInteractions) {
+    
+    QMContactInteractionsSendMessage,
+    QMContactInteractionsAudioCall,
+    QMContactInteractionsVideoCall
 };
 
 @interface QMUserInfoViewController ()
@@ -177,6 +186,10 @@ QMContactListServiceDelegate
             
             [self.hiddenSections addIndex:QMUserInfoSectionAddAction];
         }
+        else {
+            
+            [self.hiddenSections addIndex:QMUserInfoSectionRemoveContact];
+        }
     }
 }
 
@@ -214,23 +227,30 @@ QMContactListServiceDelegate
 
 - (void)updateInfo {
     
-    if (self.user.email.length > 0 || self.user.phone.length > 0) {
+    // Phone
+    if (self.user.phone.length > 0) {
         
-        // Phone
         self.phoneLabel.text = self.user.phone.length > 0 ? self.user.phone : NSLocalizedString(@"QM_STR_NONE", nil);
-        // Email
+    }
+    else {
+        
+        [self.hiddenSections addIndex:QMUserInfoSectionInfoPhone];
+    }
+    
+    // Email
+    if (self.user.email.length > 0) {
+        
         self.emailLabel.text = self.user.email.length > 0 ? self.user.email : NSLocalizedString(@"QM_STR_NONE", nil);
     }
     else {
         
-        // hide section
-        [self.hiddenSections addIndex:QMUserInfoSectionInfo];
+        [self.hiddenSections addIndex:QMUserInfoSectionInfoEmail];
     }
 }
 
 #pragma mark - Actions
 
-- (IBAction)sendMessageButtonPressed {
+- (void)sendMessageAction {
     
     __block BOOL chatDialogFound = NO;
     
@@ -305,7 +325,7 @@ QMContactListServiceDelegate
     return YES;
 }
 
-- (IBAction)audioCallButtonPressed {
+- (void)audioCallAction {
     
     if (![self callAllowed]) {
         
@@ -315,7 +335,7 @@ QMContactListServiceDelegate
     [[QMCore instance].callManager callToUserWithID:self.user.ID conferenceType:QBRTCConferenceTypeAudio];
 }
 
-- (IBAction)videoCallButtonPressed {
+- (void)videoCallAction {
     
     if (![self callAllowed]) {
         
@@ -325,7 +345,7 @@ QMContactListServiceDelegate
     [[QMCore instance].callManager callToUserWithID:self.user.ID conferenceType:QBRTCConferenceTypeVideo];
 }
 
-- (IBAction)removeContactButtonPressed {
+- (void)removeContactAction {
     
     if (self.task) {
         // task in progress
@@ -360,7 +380,7 @@ QMContactListServiceDelegate
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-- (IBAction)addUserButtonPressed {
+- (void)addUserAction {
     
     if (self.task) {
         // task in progress
@@ -399,9 +419,81 @@ QMContactListServiceDelegate
     return [super tableView:tableView numberOfRowsInSection:section];
 }
 
+//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    
+//    UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
+//    
+//    if (indexPath.section == QMUserInfoSectionStatus
+//        && indexPath.row == 1) {
+//        
+//        cell.layoutMargins = UIEdgeInsetsZero;
+//    }
+//    
+//    return cell;
+//}
+
+#pragma mark - UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.section == QMUserInfoSectionContactInteractions) {
+        
+        switch (indexPath.row) {
+                
+            case QMContactInteractionsSendMessage:
+                [self sendMessageAction];
+                break;
+                
+            case QMContactInteractionsAudioCall:
+                [tableView deselectRowAtIndexPath:indexPath animated:YES];
+                [self audioCallAction];
+                break;
+                
+            case QMContactInteractionsVideoCall:
+                [tableView deselectRowAtIndexPath:indexPath animated:YES];
+                [self videoCallAction];
+                break;
+        }
+    }
+    else if (indexPath.section == QMUserInfoSectionRemoveContact) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        
+        [self removeContactAction];
+    }
+    else if (indexPath.section == QMUserInfoSectionAddAction) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        
+        [self addUserAction];
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)__unused tableView heightForHeaderInSection:(NSInteger)section {
+    
+    if (![self shouldHaveHeaderForSection:section]) {
+        
+        return CGFLOAT_MIN;
+    }
+    
+    return 24.0f;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    
+    if (![self shouldHaveHeaderForSection:section]) {
+        
+        return [super tableView:tableView viewForHeaderInSection:section];
+    }
+    
+    UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
+    view.backgroundColor = [UIColor whiteColor];
+    
+    return view;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (indexPath.section == QMUserInfoSectionStatus) {
+    if (indexPath.section == QMUserInfoSectionStatus
+        && indexPath.row == 0) {
         // due to status could be multiline, need to automatically resize it
         return UITableViewAutomaticDimension;
     }
@@ -421,6 +513,30 @@ QMContactListServiceDelegate
     
     [self performUpdate];
     [self.tableView reloadData];
+}
+
+#pragma mark - Helpers
+
+- (BOOL)shouldHaveHeaderForSection:(NSInteger)section {
+    
+    if (section == QMUserInfoSectionStatus) {
+        
+        return NO;
+    }
+    
+    if ([self.hiddenSections containsIndex:section]) {
+        
+        return NO;
+    }
+    
+    if (section == QMUserInfoSectionInfoEmail
+        && ![self.hiddenSections containsIndex:QMUserInfoSectionInfoPhone]
+        && ![self.hiddenSections containsIndex:QMUserInfoSectionInfoEmail]) {
+        
+        return NO;
+    }
+    
+    return YES;
 }
 
 @end
