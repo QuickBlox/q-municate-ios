@@ -383,6 +383,14 @@ QMSearchResultsControllerDelegate
     }
 }
 
+- (void)usersService:(QMUsersService *)__unused usersService didUpdateUsers:(NSArray<QBUUser *> *)__unused users {
+    
+    if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
+        
+        [self.tableView reloadData];
+    }
+}
+
 #pragma mark - Helpers
 
 - (void)checkIfDialogsDataSource {
