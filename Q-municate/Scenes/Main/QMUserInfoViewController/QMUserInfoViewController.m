@@ -100,6 +100,13 @@ QMContactListServiceDelegate
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    // smooth rows deselection
+    [self qm_smoothlyDeselectRowsForTableView:self.tableView];
+}
+
 #pragma mark - Methods
 
 - (void)loadUser {

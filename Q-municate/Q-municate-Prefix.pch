@@ -20,6 +20,7 @@
     #import <QuickbloxWebRTC/QuickbloxWebRTC.h>
 
     #import "QBUpdateUserParameters+CustomData.h"
+    #import "UIViewController+SmartDeselection.h"
 
     #import "SegueIdentifiers.h"
     #import "QMConstants.h"

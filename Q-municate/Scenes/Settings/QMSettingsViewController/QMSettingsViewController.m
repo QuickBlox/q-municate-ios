@@ -97,6 +97,13 @@ QMImagePickerResultHandler
     self.avatarImageView.delegate = self;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    // smooth rows deselection
+    [self qm_smoothlyDeselectRowsForTableView:self.tableView];
+}
+
 - (void)configureUserData:(QBUUser *)userData {
     
     [self.avatarImageView setImageWithURL:[NSURL URLWithString:userData.avatarUrl]
@@ -211,7 +218,6 @@ QMImagePickerResultHandler
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     switch (indexPath.section) {
             
@@ -249,6 +255,7 @@ QMImagePickerResultHandler
             switch (indexPath.row) {
                     
                 case QMSocialSectionTellFriend: {
+                    [tableView deselectRowAtIndexPath:indexPath animated:YES];
                     
                     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                     [self showShareControllerInCell:cell];
@@ -263,6 +270,7 @@ QMImagePickerResultHandler
             break;
             
         case QMSettingsSectionLogout:
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
             
             [self logout];
             break;

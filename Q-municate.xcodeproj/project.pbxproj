@@ -98,6 +98,7 @@
 		58A639261CEB3ECA00D682C4 /* QMTabBarVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A639251CEB3ECA00D682C4 /* QMTabBarVC.m */; };
 		58A639291CEB5C7200D682C4 /* QMSearchResultsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A639281CEB5C7200D682C4 /* QMSearchResultsController.m */; };
 		58A6392D1CEB78D000D682C4 /* QMLinkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A6392C1CEB78D000D682C4 /* QMLinkViewController.m */; };
+		58B072531CFDB831006F4D29 /* UIViewController+SmartDeselection.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B072521CFDB831006F4D29 /* UIViewController+SmartDeselection.m */; };
 		58B3C9B41CB3ECF700B08A27 /* QMGroupInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B3C9B31CB3ECF700B08A27 /* QMGroupInfoViewController.m */; };
 		58B3C9B81CB3ED8000B08A27 /* QMGroupOccupantsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B3C9B71CB3ED8000B08A27 /* QMGroupOccupantsViewController.m */; };
 		58B3C9BC1CB3EE8400B08A27 /* QMGroupOccupantsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B3C9BB1CB3EE8400B08A27 /* QMGroupOccupantsDataSource.m */; };
@@ -338,6 +339,8 @@
 		58A639281CEB5C7200D682C4 /* QMSearchResultsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMSearchResultsController.m; path = "Q-municate/Scenes/Main/QMSearchResultsController.m"; sourceTree = SOURCE_ROOT; };
 		58A6392B1CEB78D000D682C4 /* QMLinkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMLinkViewController.h; path = "Q-municate/Scenes/Base/QMLinkViewController/QMLinkViewController.h"; sourceTree = SOURCE_ROOT; };
 		58A6392C1CEB78D000D682C4 /* QMLinkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMLinkViewController.m; path = "Q-municate/Scenes/Base/QMLinkViewController/QMLinkViewController.m"; sourceTree = SOURCE_ROOT; };
+		58B072511CFDB831006F4D29 /* UIViewController+SmartDeselection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+SmartDeselection.h"; path = "UIViewController/UIViewController+SmartDeselection.h"; sourceTree = "<group>"; };
+		58B072521CFDB831006F4D29 /* UIViewController+SmartDeselection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+SmartDeselection.m"; path = "UIViewController/UIViewController+SmartDeselection.m"; sourceTree = "<group>"; };
 		58B3C9B21CB3ECF700B08A27 /* QMGroupInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMGroupInfoViewController.h; path = "Q-municate/Scenes/Chat/QMGroupInfoViewController/QMGroupInfoViewController.h"; sourceTree = SOURCE_ROOT; };
 		58B3C9B31CB3ECF700B08A27 /* QMGroupInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMGroupInfoViewController.m; path = "Q-municate/Scenes/Chat/QMGroupInfoViewController/QMGroupInfoViewController.m"; sourceTree = SOURCE_ROOT; };
 		58B3C9B61CB3ED8000B08A27 /* QMGroupOccupantsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMGroupOccupantsViewController.h; path = "Q-municate/Scenes/Chat/QMGroupInfoViewController/QMGroupOccupantsViewController/QMGroupOccupantsViewController.h"; sourceTree = SOURCE_ROOT; };
@@ -1389,6 +1392,15 @@
 			name = QMLinkViewController;
 			sourceTree = "<group>";
 		};
+		58B072501CFDB811006F4D29 /* UIViewController */ = {
+			isa = PBXGroup;
+			children = (
+				58B072511CFDB831006F4D29 /* UIViewController+SmartDeselection.h */,
+				58B072521CFDB831006F4D29 /* UIViewController+SmartDeselection.m */,
+			);
+			name = UIViewController;
+			sourceTree = "<group>";
+		};
 		58B3C9A91CB3DABB00B08A27 /* QMGroupInfoViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -1744,6 +1756,7 @@
 		6943848C18E42691001E08A9 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				58B072501CFDB811006F4D29 /* UIViewController */,
 				58550AB91CF5BA210024EAFC /* QBChatDialog */,
 				58FAAE861CEDC3E50081EABA /* UINavigationController */,
 				58B3C9D31CB681F400B08A27 /* NSArray */,
@@ -2117,6 +2130,7 @@
 				5868B0641CE9C68C004F9233 /* QMPermissions.m in Sources */,
 				584A6DC51C9DC80900B7D641 /* QMTagView.m in Sources */,
 				58D847581C848272000C40BA /* QMDialogsSearchDataSource.m in Sources */,
+				58B072531CFDB831006F4D29 /* UIViewController+SmartDeselection.m in Sources */,
 				55D8ADFB19AC833300DAF79F /* QMLicenseAgreement.m in Sources */,
 				58D847681C85A1DB000C40BA /* QMGlobalSearchDataSource.m in Sources */,
 				58D952381CEE2345001C43F7 /* QMPhoto.m in Sources */,
