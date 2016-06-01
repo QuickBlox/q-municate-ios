@@ -153,7 +153,8 @@ static const NSUInteger kQMStatusStringNamesLimit = 5;
     NSMutableString *mutableString = [NSMutableString new];
     
     for (QBUUser *usr in users) {
-        [mutableString appendString:usr.fullName ?: [NSString stringWithFormat:@"%tu", usr.ID]];
+        
+        [mutableString appendString:usr.fullName ?: NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil)];
         [mutableString appendString:@", "];
     }
     
