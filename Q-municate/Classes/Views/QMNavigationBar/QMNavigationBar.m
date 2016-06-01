@@ -12,7 +12,6 @@
 
 @interface QMNavigationBar ()
 
-
 @property (weak, nonatomic) UIView *notificationView;
 
 @end
