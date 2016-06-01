@@ -1065,18 +1065,19 @@ NYTPhotosViewControllerDelegate
     
     if ([self.chatDialog.ID isEqualToString:dialogID]) {
         
+        if (message.messageType == QMMessageTypeDeleteContactRequest) {
+            // check whether contact request message was sent previously
+            // in order to reload it and remove buttons for accept and deny
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
+            QBChatMessage *lastMessage = [self.chatSectionManager messageForIndexPath:indexPath];
+            if (lastMessage.messageType == QMMessageTypeContactRequest) {
+                
+                [self.chatSectionManager updateMessage:lastMessage];
+            }
+        }
+        
         // Inserting message received from XMPP or sent by self
         [self.chatSectionManager addMessage:message];
-        
-        if (message.dialogUpdateType == QMDialogUpdateTypeOccupants && message.addedOccupantsIDs.count > 0) {
-            @weakify(self);
-            [[[QMCore instance].usersService getUsersWithIDs:message.addedOccupantsIDs] continueWithBlock:^id(BFTask<NSArray<QBUUser *> *> *__unused task) {
-                @strongify(self);
-                [self.chatSectionManager updateMessage:message];
-                
-                return nil;
-            }];
-        }
     }
 }
 
