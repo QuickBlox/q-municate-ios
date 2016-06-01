@@ -62,7 +62,7 @@ _______
 ## First look into project
 ### Welcome Screen
 
-<img src="Screenshots/WelcomeScreen.png" width="568">
+<center><img src="Screenshots/WelcomeScreen.png" width="320"></center>
 
 #### Available features:
 #### Buttons:
@@ -76,7 +76,7 @@ _______
 
 ### Login with email/password page
 
-![Email Login Screen](Screenshots/EmailLoginScreen.png width=568) 
+<center><img src="Screenshots/EmailLoginScreen.png" width="320"></center>
 
 #### Available features:
 #### Fields set:
@@ -92,7 +92,7 @@ _______
 
 ### Forgot password screen
 
-![Forgot password screen](Screenshots/ForgotPasswordScreen.png width=568)
+<center><img src="Screenshots/ForgotPasswordScreen.png" width="320"></center>
 
 #### Fields set:
 
@@ -113,7 +113,7 @@ Tab bar is a main controller of the application. It is consists of such pages:
 
 ### Chat Dialogs List Screen
 
-![Dialogs list screen](Screenshots/DialogsListScreen.png width=568)
+<center><img src="Screenshots/DialogsListScreen.png" width="320"></center>
 
 #### Search
 
@@ -125,7 +125,7 @@ Search allows user to filter existing dialogs in local cache by its names.
 
 ### New Message Screen
 
-![New Message Screen](Screenshots/NewMessageScreen.png width=568)
+<center><img src="Screenshots/NewMessageScreen.png" width="320"></center>
 
 You can select contact on this page in order to start a private chat with him/her.
 
@@ -140,7 +140,7 @@ Search allows user to filter contacts by their full names
 
 ### New Group Screen
 
-![New Group Screen](Screenshots/NewGroupScreen.png width=568)
+<center><img src="Screenshots/NewGroupScreen.png" width="320"></center>
 
 #### Fields set
 
@@ -155,7 +155,7 @@ Search allows user to filter contacts by their full names
 
 ### Private Chat Screen
 
-![Private Chat Screen](Screenshots/ChatScreen.png width=568)
+<center><img src="Screenshots/ChatScreen.png" width="320"></center>
 
 #### Buttons
 
@@ -165,7 +165,7 @@ Search allows user to filter contacts by their full names
 
 ### Group Chat Screen
 
-![Group Chat Screen](Screenshots/GroupChatScreen.png width=568)
+<center><img src="Screenshots/GroupChatScreen.png" width="320"></center>
 
 #### Buttons
 
@@ -175,7 +175,7 @@ Search allows user to filter contacts by their full names
 
 ### Group Info Screen
 
-![Group Info Screen](Screenshots/GroupInfoScreen.png width=568)
+<center><img src="Screenshots/GroupInfoScreen.png" width="320"></center>
 
 #### Fields/Buttons
 
@@ -187,7 +187,7 @@ Search allows user to filter contacts by their full names
 
 ### Contacts List Screen
 
-![Contacts List Screen](Screenshots/ContactsListScreen.png width=568)
+<center><img src="Screenshots/ContactsListScreen.png" width="320"></center>
 
 #### Search
 
@@ -196,11 +196,11 @@ Search has two scopes buttons:
 * Local search - allows user to filter existing contacts by their names.
 * Global search - allows user to find users and see their profiles by full names.
 
-![Contacts search](Screenshots/ContactsSearch.png width=568)
+<center><img src="Screenshots/ContactsSearch.png" width="500"></center>
 
 ### User Info Screen
 
-![User Info Screen](Screenshots/UserInfoScreen.png width=568)
+<center><img src="Screenshots/UserInfoScreen.png" width="320"></center>
 
 #### Fields/Buttons
 
@@ -217,20 +217,20 @@ Other user actions:
 
 ### Settings Screen
 
-![Settings Screen](Screenshots/SettingsScreen.png width=568)
+<center><img src="Screenshots/SettingsScreen.png" width="320"></center>
 
 #### Fields/Buttons
 
 * Full name, status and email fields will redirect you to update field screen, where you can change your info.
 
-![Settings Update Screen](Screenshots/SettingsUpdateScreen.png width=568)
+<center><img src="Screenshots/SettingsUpdateScreen.png" width="320"></center>
 
 * By tapping on avatar action sheet will be opened. You can either take a new picture or choose it from library to update your user avatar.
 * Push notification switch - you can either subscribe or unsubscribe from push notifications.
 * Tell a friend - opens share controller where you can share this awesome app with your friends :)
 * Give feedback - feedback screen, where you can send an email to us with bugs, improvements or suggestion information in order to help us make Q-municate better!
 
-![Feedback Screen](Screenshots/FeedbackScreen.png width=568)
+<center><img src="Screenshots/FeedbackScreen.png" width="320"></center>
 
 ## Code explanation
 
