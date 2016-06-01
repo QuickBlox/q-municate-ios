@@ -1,4 +1,4 @@
-# Q-municate
+# Q-municate 2.0
 
 Q-municate is an open source code of chat application with full range of communication features on board (such as messaging, file transfer, push notifications, audio/video calls, etc.).
 
@@ -6,7 +6,7 @@ We are inspired to give you chat application out of the box. You can customise t
 
 Find the source code and more information about Q-municate, as well as installation guide, in our Developers section: https://quickblox.com/developers/q-municate
 
-## Q-municate IOS
+## Q-municate iOS
 This guide is brought to you from QuickBlox iOS team in order to explain how you can build a communication app on iOS using QuickBlox API.
 
 It is a step by step guide designed for all developer levels including beginners as we move from simple to more complex implementation. Depending on your skills and your project requirements you may choose which parts of this guide are to follow. Enjoy and if you need assistance from QuickBlox iOS team feel free to let us know by creating an [issue](https://github.com/QuickBlox/q-municate-ios/issues).
@@ -44,6 +44,7 @@ Please note all these features are available in open source code, so you can cus
 
 * [Xcode 7](https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/WhatsNewXcode/Articles/xcode_7_0.html) and later.
 * [QuickBlox iOS SDK](http://quickblox.com/developers/IOS) 2.7.3 and later.
+* [QuickBlox WebRTC SDK](http://quickblox.com/developers/Sample-webrtc-ios) 2.1.1 and later.
 * [QMServices](https://github.com/QuickBlox/q-municate-services-ios) 0.4.1 and later.
 * [QMChatViewController](https://github.com/QuickBlox/QMChatViewController-ios) 0.3.8 and later.
 * [Facebook iOS SDK](https://developers.facebook.com/docs/ios) 4.11 and later.
@@ -231,6 +232,68 @@ Other user actions:
 * Give feedback - feedback screen, where you can send an email to us with bugs, improvements or suggestion information in order to help us make Q-municate better!
 
 <center><img src="Screenshots/FeedbackScreen.png" width="320"></center>
+
+## Calls
+
+Q-municate using QuickBlox WebRTC SDK as call service. You can find more information on it [here](http://quickblox.com/developers/Sample-webrtc-ios).
+
+### Calls manager
+
+In order to manage calls we have created a [QMServices](https://github.com/QuickBlox/q-municate-services-ios) sub-service, and its name is QMCallManager. It is managing incoming and outgoing calls. See inline documentation of QMCallManager class for more information.
+
+### Calls controller
+
+To display incoming, outgoing and active calls we have created a universal interface and defined into one view controller. Its name is QMCallViewController.
+Call controller has 6 states:
+
+* Incoming audio call
+* Incoming video call
+* Outgoing audio call
+* Outgoing video call
+* Active audio call
+* Active video call
+
+Call controller is been managed by QMCallManager, basically call manager allocating it with a specific state, whether it is an incoming or outgoing call, then call controller changing its state to active one if required user accepts it.
+For more information about code realisation see inline doc of QMCallViewController.
+
+### Audio Call
+
+You can see down below Incoming, outgoing and active audio call screens.
+
+<center><img src="Screenshots/AudioCallScreens.png" width="1000"></center>
+
+#### Toolbar buttons
+
+Incoming call:
+
+* Decline - declines call and closes received session and controller
+* Accept - accepts call and changes call controller state to Active audio call
+
+Outgoing and active call:
+
+* Microphone - disables microphone for current call
+* Speaker - whether sound should be played in speaker or receiver. Default for audio calls is receiver.
+* Decline - hanging up current all and closing controller
+
+### Video Call
+
+You can see down below Incoming, outgoing and active video call screens.
+
+<center><img src="Screenshots/VideCallScreens.png" width="1000"></center>
+
+By default sound for video calls is in speakers
+
+Incoming call:
+
+* Decline - declines call and closes received session and controller
+* Accept - accepts call and changes call controller state to Active video call
+
+Outgoing and active call:
+
+* Camera - enables/disables camera for current call
+* Camera rotation - changes camera for current call (front/back)
+* Microphone - disables microphone for current call
+* Decline - hanging up current all and closing controller
 
 ## Code explanation
 
