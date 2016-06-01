@@ -10,7 +10,6 @@
 #import "QMCore.h"
 #import "QMNotification.h"
 #import "QMMessagesFactory.h"
-#import <QMChatService+AttachmentService.h>
 #import <QMDateUtils.h>
 
 @interface QMContactManager ()
@@ -87,18 +86,22 @@
 
 - (BFTask *)removeUserFromContactList:(QBUUser *)user {
     
+    __block QBChatDialog *chatDialog = nil;
+    
     @weakify(self);
-    return [[self.serviceManager.contactListService removeUserFromContactListWithUserID:user.ID] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+    return [[[self.serviceManager.contactListService removeUserFromContactListWithUserID:user.ID] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        
         @strongify(self);
-        QBChatDialog *chatDialog = [self.serviceManager.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
+        chatDialog = [self.serviceManager.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
         QBChatMessage *notificationMessage = [QMMessagesFactory removeContactNotificationForUser:user];
         
-        [self.serviceManager.chatService sendMessage:notificationMessage
-                                                type:notificationMessage.messageType
-                                            toDialog:chatDialog
-                                       saveToHistory:NO
-                                       saveToStorage:NO
-                                          completion:nil];
+        return [self.serviceManager.chatService sendMessage:notificationMessage
+                                                       type:notificationMessage.messageType
+                                                   toDialog:chatDialog
+                                              saveToHistory:YES
+                                              saveToStorage:NO];
+        
+    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         
         return [self.serviceManager.chatService deleteDialogWithID:chatDialog.ID];
     }];
