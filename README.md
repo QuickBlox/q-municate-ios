@@ -62,7 +62,7 @@ _______
 ## First look into project
 ### Welcome Screen
 
-![Welcome Screen](Screenshots/WelcomeScreen.png  width=568)
+<img src="Screenshots/WelcomeScreen.png" width="568">
 
 #### Available features:
 #### Buttons:
