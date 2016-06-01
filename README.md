@@ -1,3 +1,34 @@
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+
+- [Q-municate 2.0](#q-municate-20)
+	- [Q-municate iOS](#q-municate-ios)
+	- [Requirements](#requirements)
+	- [Software Environment](#software-environment)
+	- [First look into project](#first-look-into-project)
+		- [Welcome Screen](#welcome-screen)
+		- [Login with email/password page](#login-with-emailpassword-page)
+		- [Forgot password screen](#forgot-password-screen)
+		- [Tab Bar](#tab-bar)
+		- [Chat Dialogs List Screen](#chat-dialogs-list-screen)
+		- [New Message Screen](#new-message-screen)
+		- [New Group Screen](#new-group-screen)
+		- [Private Chat Screen](#private-chat-screen)
+		- [Group Chat Screen](#group-chat-screen)
+		- [Group Info Screen](#group-info-screen)
+		- [Contacts List Screen](#contacts-list-screen)
+		- [User Info Screen](#user-info-screen)
+		- [Settings Screen](#settings-screen)
+	- [Calls](#calls)
+		- [Calls manager](#calls-manager)
+		- [Calls controller](#calls-controller)
+		- [Audio Call](#audio-call)
+		- [Video Call](#video-call)
+	- [Code explanation](#code-explanation)
+		- [Core](#core)
+		- [Storyboards](#storyboards)
+	- [How to build your own Chat app](#how-to-build-your-own-chat-app)
+- [License](#license)
+
 # Q-municate 2.0
 
 Q-municate is an open source code of chat application with full range of communication features on board (such as messaging, file transfer, push notifications, audio/video calls, etc.).
