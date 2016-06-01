@@ -297,7 +297,24 @@ Outgoing and active call:
 
 ## Code explanation
 
+You can see basic code explanation down below. For detailed one please see our inline documentation for header files in most classes. We have tried to describe as detailed as possible the purpose of every class and its methods. If you have any questions, feel free to let us know by creating an [issue](https://github.com/QuickBlox/q-municate-ios/issues).
 
+### Core
+
+Q-municate using [QMServices](https://github.com/QuickBlox/q-municate-services-ios) as a main wrapper over QuickBlox iOS SDK. See its documentation for more information.
+
+As QMServices design required, we have created a subclass over QMServicesManager and named it QMCore. QMCore has its own managers, that adds more wrappers over methods in QMServices, chaining and performing them using [Bolts framework](https://github.com/BoltsFramework/Bolts-ObjC#bolts).
+
+### Storyboards
+
+We have separated Q-municate for modules, such as:
+
+* Auth
+* Main
+* Chat
+* Settings
+
+Each module has its own storyboard, all storyboards are linked with storyboard links (feature available since Xcode 7 and iOS 8+).
 
 ## How to build your own Chat app
 
