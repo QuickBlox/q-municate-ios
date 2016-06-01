@@ -432,37 +432,24 @@
                             </tableViewSection>
                             <tableViewSection id="uvh-WB-HPg">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="50" id="kbh-Ds-a4l">
-                                        <rect key="frame" x="0.0" y="505" width="600" height="50"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="kbh-Ds-a4l">
+                                        <rect key="frame" x="0.0" y="505" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="kbh-Ds-a4l" id="hVE-oJ-zuB">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="49"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="bottom" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ULA-6R-1nz">
-                                                    <rect key="frame" x="32" y="11" width="160" height="33"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add user to contacts" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GVn-54-Clf">
+                                                    <rect key="frame" x="32" y="11" width="160" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <state key="normal" title="Add user to contacts">
-                                                        <color key="titleColor" red="0.054901960780000002" green="0.43529411759999997" blue="0.72156862749999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="addUserButtonPressed" destination="C3X-fL-ZMz" eventType="touchUpInside" id="a3Y-xl-gLM"/>
-                                                    </connections>
-                                                </button>
+                                                    <color key="textColor" red="0.050980392159999999" green="0.43921568630000002" blue="0.70196078429999997" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="ULA-6R-1nz" firstAttribute="leading" secondItem="hVE-oJ-zuB" secondAttribute="leadingMargin" constant="24" id="1XT-ES-m5Z"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="ULA-6R-1nz" secondAttribute="bottom" constant="-3" id="Fzo-Y3-BRG"/>
+                                                <constraint firstItem="GVn-54-Clf" firstAttribute="centerY" secondItem="hVE-oJ-zuB" secondAttribute="centerY" id="Vua-w7-437"/>
+                                                <constraint firstItem="GVn-54-Clf" firstAttribute="leading" secondItem="hVE-oJ-zuB" secondAttribute="leadingMargin" constant="24" id="prI-z4-hr7"/>
                                             </constraints>
-                                        </tableViewCellContentView>
-                                        <inset key="separatorInset" minX="32" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="1" id="1Wv-Tr-pUR" userLabel="Fix separator cell">
-                                        <rect key="frame" x="0.0" y="555" width="600" height="1"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="1Wv-Tr-pUR" id="Cjy-Mt-nUD">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="0.0"/>
-                                            <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                         <inset key="separatorInset" minX="32" minY="0.0" maxX="0.0" maxY="0.0"/>
                                     </tableViewCell>
@@ -499,7 +486,7 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="zsn-D1-Qou">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                         <sections>
                             <tableViewSection id="DSa-ED-nKa">
                                 <cells>
