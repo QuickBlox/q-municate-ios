@@ -337,7 +337,9 @@ QMSearchResultsControllerDelegate
         
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         
+        [self.tableView beginUpdates];
         [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView endUpdates];
     }
 }
 
