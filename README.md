@@ -78,6 +78,7 @@ Please note all these features are available in open source code, so you can cus
 * [QuickBlox WebRTC SDK](http://quickblox.com/developers/Sample-webrtc-ios) 2.1.1 and later.
 * [QMServices](https://github.com/QuickBlox/q-municate-services-ios) 0.4.1 and later.
 * [QMChatViewController](https://github.com/QuickBlox/QMChatViewController-ios) 0.3.8 and later.
+* [Bolts](https://github.com/BoltsFramework/Bolts-ObjC#bolts) 1.5.0 and later.
 * [Facebook iOS SDK](https://developers.facebook.com/docs/ios) 4.11 and later.
 * [Twitter Digits](https://fabric.io/kits/ios/digits) 1.15 and later.
 
