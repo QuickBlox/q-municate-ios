@@ -330,17 +330,9 @@ QMSearchResultsControllerDelegate
     [self.tableView reloadData];
 }
 
-- (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
+- (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)__unused chatDialog {
     
-    NSUInteger index = [self.dialogsDataSource.items indexOfObject:chatDialog];
-    if (index != NSNotFound) {
-        
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-        
-        [self.tableView beginUpdates];
-        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-        [self.tableView endUpdates];
-    }
+    [self.tableView reloadData];
 }
 
 - (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)__unused dialogs {
