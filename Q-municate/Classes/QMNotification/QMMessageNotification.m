@@ -42,6 +42,9 @@ static const NSTimeInterval kQMMessageNotificationDuration = 2.0f;
     [self.messageNotification setButtonConfiguration:MPGNotificationButtonConfigrationOneButton withButtonTitles:@[NSLocalizedString(@"QM_STR_REPLY", nil)]];
     self.messageNotification.duration = kQMMessageNotificationDuration;
     self.messageNotification.buttonHandler = buttonHandler;
+    self.messageNotification.autoresizingMask =
+    self.messageNotification.backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.messageNotification.fullWidthMessages = YES;
     
     [self.messageNotification show];
 }
