@@ -13,7 +13,7 @@ static const NSTimeInterval kQMGlobalSearchTimeInterval = 0.6f;
 static const NSUInteger kQMGlobalSearchCharsMin = 3;
 static const NSUInteger kQMUsersPageLimit = 50;
 
-@interface QMGlobalSearchDataProvider ()
+@interface QMGlobalSearchDataProvider () <QMContactListServiceDelegate>
 
 @property (strong, nonatomic) BFCancellationTokenSource *globalSearchCancellationTokenSource;
 
@@ -34,6 +34,8 @@ static const NSUInteger kQMUsersPageLimit = 50;
     if (self) {
         
         _responsePage = [QBGeneralResponsePage responsePageWithCurrentPage:1 perPage:kQMUsersPageLimit];
+        
+        [[QMCore instance].contactListService addDelegate:self];
     }
     
     return self;
@@ -140,6 +142,13 @@ static const NSUInteger kQMUsersPageLimit = 50;
     NSArray *sortedUsers = [users sortedArrayUsingDescriptors:@[sorter]];
     
     return sortedUsers;
+}
+
+#pragma mark - QMContactListServiceDelegate
+
+- (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
+    
+    [self.delegate searchDataProviderDidFinishDataFetching:self];
 }
 
 @end
