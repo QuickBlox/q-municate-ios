@@ -118,7 +118,7 @@ static NSString *const kQMAppExists = @"QMAppExists";
     
     self.userData = nil;
     self.accountType = QMAccountTypeNone;
-    self.pushNotificationsEnabled = YES;
+    self.pushNotificationsEnabled = NO;
     self.userAgreementAccepted = NO;
     self.lastDialogsFetchingDate = nil;
     
