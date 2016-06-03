@@ -459,10 +459,8 @@ QMCallManagerDelegate
         alpha = 1.0f;
     }
     
-    @weakify(self);
     [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
         
-        @strongify(self);
         self.callInfoView.alpha =
         self.toolbar.alpha = alpha;
     }];
