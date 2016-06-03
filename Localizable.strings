@@ -166,10 +166,10 @@
 "QM_STR_EMAIL" = "Email";
 "QM_STR_EMAIL_DESCRIPTION" = "Email should look like an email address\n3-∞ characters\nMandatory";
 "QM_STR_FULLNAME" = "Full name";
-"QM_STR_FULLNAME_DESCRIPTION" = "Full name is text/numeric field, could contain everything except '<', '>', ';'.\n3-40 characters.\nMandatory.";
+"QM_STR_FULLNAME_DESCRIPTION" = "Full name is text/numeric field, could contain everything except '<', '>', ';'.\n3-50 characters.\nMandatory.";
 "QM_STR_STATUS" = "Status";
 "QM_STR_STATUS_DESCRIPTION" = "Short text message that will be displayed in your profile.";
-"QM_STR_PASSWORD_DESCRIPTION" = "Text, numeric or symbolic field.\n8-50 characters.\nMandatory.";
+"QM_STR_PASSWORD_DESCRIPTION" = "Text, numeric or symbolic field.\n8-40 characters.\nMandatory.";
 "QM_STR_WRONG_OLD_PASSWORD" = "Wrong old password";
 "QM_STR_PASSWORD_DONT_MATCH" = "Passwords don't match";
 
