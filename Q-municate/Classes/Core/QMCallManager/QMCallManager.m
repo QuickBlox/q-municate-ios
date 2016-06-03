@@ -85,8 +85,11 @@ QBRTCClientDelegate
         QMCallState callState = conferenceType == QBRTCConferenceTypeVideo ? QMCallStateOutgoingVideoCall : QMCallStateOutgoingAudioCall;
         
         QBUUser *opponentUser = [self.serviceManager.usersService.usersMemoryStorage userWithID:userID];
-        NSString *opponentName = opponentUser.fullName ?: [NSString stringWithFormat:@"%tu", userID];
-        NSString *pushText = [NSString stringWithFormat:@"%@ %@", opponentName, NSLocalizedString(@"QM_STR_IS_CALLING_YOU", nil)];
+        QBUUser *currentUser = self.serviceManager.currentProfile.userData;
+        
+        NSString *callerName = currentUser.fullName ?: [NSString stringWithFormat:@"%tu", currentUser.ID];
+        NSString *pushText = [NSString stringWithFormat:@"%@ %@", callerName, NSLocalizedString(@"QM_STR_IS_CALLING_YOU", nil)];
+        
         [QMNotification sendPushNotificationToUser:opponentUser withText:pushText];
         
         [self prepareCallWindow];
