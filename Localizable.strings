@@ -166,7 +166,7 @@
 "QM_STR_EMAIL" = "Email";
 "QM_STR_EMAIL_DESCRIPTION" = "Email should look like an email address\n3-∞ characters\nMandatory";
 "QM_STR_FULLNAME" = "Full name";
-"QM_STR_FULLNAME_DESCRIPTION" = "Full name is text/numeric field, could contain everything except '<', '>', ';'.\n3-50 characters.\nMandatory.";
+"QM_STR_FULLNAME_DESCRIPTION" = "Full name is text/numeric field, could contain everything except '<', '>', ';'.\n3-40 characters.\nMandatory.";
 "QM_STR_STATUS" = "Status";
 "QM_STR_STATUS_DESCRIPTION" = "Short text message that will be displayed in your profile.";
 "QM_STR_PASSWORD_DESCRIPTION" = "Text, numeric or symbolic field.\n8-50 characters.\nMandatory.";
@@ -186,6 +186,7 @@
 "QM_STR_CALL_WAS_CANCELLED" = "Call was cancelled";
 "QM_STR_USER_IS_BUSY" = "User is busy";
 "QM_STR_BAD_CONNECTION" = "Bad connection";
+"QM_STR_BAD_CONNECTION_TRYING_TO_RESUME" = "Bad connection, trying to resume";
 "QM_STR_CALL_WAS_STOPPED" = "Call was stopped";
 "QM_STR_USER_DOESNT_ANSWER" = "User doesn't answer";
 "QM_STR_IS_CALLING_YOU" = "is calling you.";
