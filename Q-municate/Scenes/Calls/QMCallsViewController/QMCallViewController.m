@@ -100,9 +100,6 @@ QMCallManagerDelegate
     
     if (self.isVideoCall) {
         
-        // light status bar for dark controller
-        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-        
         // configuring controller for base video call
         self.view.backgroundColor = QMVideoCallBackgroundColor();
         
@@ -768,6 +765,11 @@ QMCallManagerDelegate
         [self.cameraCapture stopSession];
         self.cameraCapture = nil;
     }
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    // light status bar for dark controller
+    return self.isVideoCall ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
 }
 
 @end

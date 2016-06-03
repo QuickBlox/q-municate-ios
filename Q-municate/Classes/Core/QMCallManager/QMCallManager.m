@@ -263,11 +263,6 @@ QBRTCClientDelegate
         self.callWindow.rootViewController = nil;
         self.callWindow = nil;
         
-        if (session.conferenceType == QBRTCConferenceTypeVideo) {
-            
-            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-        }
-        
         self.session = nil;
     });
 }
