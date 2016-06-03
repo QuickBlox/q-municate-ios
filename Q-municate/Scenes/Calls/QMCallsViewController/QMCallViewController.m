@@ -51,6 +51,7 @@ QMCallManagerDelegate
 @property (strong, nonatomic) NSTimer *callTimer;
 @property (assign, nonatomic) NSTimeInterval callDuration;
 
+@property (assign, nonatomic) BOOL disconnected;
 @property (assign, nonatomic, readonly) BOOL isVideoCall;
 @property (strong, nonatomic, readonly) QBRTCSession *session;
 @property (strong, nonatomic) QBRTCCameraCapture *cameraCapture;
@@ -449,7 +450,17 @@ QMCallManagerDelegate
 
 - (void)updateBarsVisibility {
     
+    [self updateBarsVisibilityForceShow:NO];
+}
+
+- (void)updateBarsVisibilityForceShow:(BOOL)forceShow {
+    
     CGFloat alpha = self.callInfoView.alpha > 0 || self.toolbar.alpha > 0 ? 0 : 1.0f;
+    
+    if (forceShow) {
+        
+        alpha = 1.0f;
+    }
     
     @weakify(self);
     [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
@@ -507,7 +518,11 @@ QMCallManagerDelegate
 - (void)refreshCallTime {
     
     self.callDuration += kQMRefreshTimeInterval;
-    self.callInfoView.bottomText = [self stringWithTimeDuration:_callDuration];
+    
+    if (!self.disconnected) {
+        
+        self.callInfoView.bottomText = [self stringWithTimeDuration:_callDuration];
+    }
 }
 
 - (NSString *)stringWithTimeDuration:(NSTimeInterval)timeDuration {
@@ -521,6 +536,8 @@ QMCallManagerDelegate
 }
 
 - (void)startCallTimer {
+    
+    self.disconnected = NO;
     
     if (self.callTimer == nil) {
         // if timer already existent there is no need to create a new one
@@ -703,6 +720,21 @@ QMCallManagerDelegate
     
     // starting timer
     [self startCallTimer];
+}
+
+- (void)session:(QBRTCSession *)session disconnectedFromUser:(NSNumber *)__unused userID {
+    
+    if (self.session != session) {
+        
+        return;
+    }
+    
+    self.disconnected = YES;
+    self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_BAD_CONNECTION_TRYING_TO_RESUME", nil);
+    if (self.isVideoCall) {
+        
+        [self updateBarsVisibilityForceShow:YES];
+    }
 }
 
 - (void)session:(QBRTCSession *)session disconnectedByTimeoutFromUser:(NSNumber *)__unused userID {
