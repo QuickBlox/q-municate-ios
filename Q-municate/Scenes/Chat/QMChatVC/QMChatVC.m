@@ -1374,6 +1374,12 @@ NYTPhotosViewControllerDelegate
 
 - (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
+    if (![QMCore instance].isInternetConnected) {
+        
+        [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
+        return;
+    }
+    
     QBChatMessage* message = [QBChatMessage new];
     message.senderID = self.senderID;
     message.dialogID = self.chatDialog.ID;
