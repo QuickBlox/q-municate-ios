@@ -352,6 +352,12 @@ QMContactListServiceDelegate
         return;
     }
     
+    if (![QMCore instance].isInternetConnected) {
+        
+        [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
+        return;
+    }
+    
     UIAlertController *alertController = [UIAlertController
                                           alertControllerWithTitle:nil
                                           message:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CONFIRM_DELETE_CONTACT", nil), self.user.fullName]
@@ -384,6 +390,12 @@ QMContactListServiceDelegate
     
     if (self.task) {
         // task in progress
+        return;
+    }
+    
+    if (![QMCore instance].isInternetConnected) {
+        
+        [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
         return;
     }
     
