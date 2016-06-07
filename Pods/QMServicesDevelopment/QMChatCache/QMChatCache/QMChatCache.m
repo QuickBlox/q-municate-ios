@@ -92,8 +92,7 @@ static QMChatCache *_chatCacheInstance = nil;
     }];
 }
 
-- (void)dialogsSortedBy:(NSString *)sortTerm ascending:(BOOL)ascending withPredicate:(NSPredicate *)predicate
-             completion:(void(^)(NSArray *dialogs))completion {
+- (void)dialogsSortedBy:(NSString *)sortTerm ascending:(BOOL)ascending withPredicate:(NSPredicate *)predicate completion:(void(^)(NSArray *dialogs))completion {
     
     __weak __typeof(self)weakSelf = self;
     
@@ -133,7 +132,7 @@ static QMChatCache *_chatCacheInstance = nil;
                 
                 QBChatDialog *tDialog = [cachedDialog toQBChatDialog];
                 
-                if (![dialog.updatedAt isEqual:tDialog.updatedAt] || dialog.unreadMessagesCount != tDialog.unreadMessagesCount) {
+                if (![dialog.updatedAt isEqualToDate:tDialog.updatedAt] || dialog.unreadMessagesCount != tDialog.unreadMessagesCount) {
                     
                     [toUpdate addObject:dialog];
                 }
@@ -158,8 +157,7 @@ static QMChatCache *_chatCacheInstance = nil;
             [weakSelf save:completion];
         }
         
-        NSLog(@"Dialogs to insert %lu", (unsigned long)toInsert.count);
-        NSLog(@"Dialogs to update %lu", (unsigned long)toUpdate.count);
+        NSLog(@"[%@] Dialogs to insert %tu, update %tu", NSStringFromClass([self class]), toInsert.count, toUpdate.count);
     }];
 }
 
@@ -176,7 +174,7 @@ static QMChatCache *_chatCacheInstance = nil;
     }];
 }
 
-- (void)deleteAllDialogs:(dispatch_block_t)completion {
+- (void)deleteAllDialogsWithCompletion:(dispatch_block_t)completion {
     
     __weak __typeof(self)weakSelf = self;
     [self async:^(NSManagedObjectContext *context) {
@@ -185,6 +183,10 @@ static QMChatCache *_chatCacheInstance = nil;
         
         [weakSelf save:completion];
     }];
+}
+
+- (void)deleteAllDialogs:(dispatch_block_t)completion {
+	[self deleteAllDialogsWithCompletion:completion];
 }
 
 #pragma mark Utils
@@ -245,7 +247,7 @@ static QMChatCache *_chatCacheInstance = nil;
 
 #pragma mark Fetch Messages
 
-- (void)messagesWithDialogId:(NSString *)dialogId sortedBy:(NSString *)sortTerm ascending:(BOOL)ascending completion:(void(^)(NSArray *array))completion {
+- (void)messagesWithDialogId:(NSString *)dialogId sortedBy:(NSString *)sortTerm ascending:(BOOL)ascending completion:(void(^)(NSArray *messages))completion {
     
     [self messagesWithPredicate:IS(@"dialogID", dialogId) sortedBy:sortTerm ascending:ascending completion:completion];
 }
@@ -368,8 +370,7 @@ static QMChatCache *_chatCacheInstance = nil;
             }];
         }
         
-        NSLog(@"Messages to insert %lu", (unsigned long)toInsert.count);
-        NSLog(@"Messages to update %lu", (unsigned long)toUpdate.count);
+        NSLog(@"[%@] Messages to insert %tu, update %tu", NSStringFromClass([self class]), toInsert.count, toUpdate.count);
     }];
 }
 
@@ -462,7 +463,7 @@ static QMChatCache *_chatCacheInstance = nil;
     
 }
 
-- (void)deleteAllMessages:(dispatch_block_t)completion {
+- (void)deleteAllMessagesWithCompletion:(dispatch_block_t)completion {
     
     __weak __typeof(self)weakSelf = self;
     
@@ -477,6 +478,10 @@ static QMChatCache *_chatCacheInstance = nil;
             }
         }];
     }];
+}
+
+-(void)deleteAllMessages:(dispatch_block_t)completion {
+	[self deleteAllMessagesWithCompletion:completion];
 }
 
 @end

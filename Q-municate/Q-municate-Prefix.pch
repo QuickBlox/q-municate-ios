@@ -20,12 +20,12 @@
     #import <QuickbloxWebRTC/QuickbloxWebRTC.h>
 
     #import "QBUpdateUserParameters+CustomData.h"
-    #import "QBChatMessage+TextEncoding.h"
+    #import "UIViewController+SmartDeselection.h"
 
-    #import "QMDefinitions.h"
-    #import "QMProtocols.h"
-    #import "Macro.h"
+    #import "SegueIdentifiers.h"
+    #import "QMConstants.h"
 
     #import <QMServices.h>
     #import <EXTScope.h>
+    #import <EXTKeyPathCoding.h>
 #endif

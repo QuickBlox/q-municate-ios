@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="bKY-DK-nee">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <scenes>
+        <!--Splash View Controller-->
+        <scene sceneID="coi-fO-T4a">
+            <objects>
+                <viewController modalTransitionStyle="flipHorizontal" id="bKY-DK-nee" customClass="QMSplashViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="aw5-FH-71P"/>
+                        <viewControllerLayoutGuide type="bottom" id="KRL-4V-bI6"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="BWA-Jh-VHm">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_splash" translatesAutoresizingMaskIntoConstraints="NO" id="vjz-zX-hEI">
+                                <rect key="frame" x="240" y="240" width="120" height="120"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="Dhq-RR-dRI"/>
+                                    <constraint firstAttribute="height" constant="120" id="ofq-i5-XHn"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="vjz-zX-hEI" firstAttribute="centerX" secondItem="BWA-Jh-VHm" secondAttribute="centerX" id="4jh-TJ-FGu"/>
+                            <constraint firstItem="vjz-zX-hEI" firstAttribute="centerY" secondItem="BWA-Jh-VHm" secondAttribute="centerY" id="DZg-qc-4BW"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="FNq-5Y-cZb"/>
+                    <connections>
+                        <segue destination="Td3-dH-14S" kind="custom" identifier="SceneSegueMain" customClass="QMRootViewControllerSegue" id="96H-5Z-6xM"/>
+                        <segue destination="xpX-4R-zvj" kind="custom" identifier="SceneSegueAuth" customClass="QMRootViewControllerSegue" id="scu-v2-wga"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YmA-DO-nZe" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-5245" y="-8390"/>
+        </scene>
+        <!--Auth-->
+        <scene sceneID="hb0-Nm-JxI">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Auth" id="xpX-4R-zvj" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XzZ-6k-l1l" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4655.5" y="-8549"/>
+        </scene>
+        <!--Main-->
+        <scene sceneID="g8c-1S-ghs">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Main" id="Td3-dH-14S" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZKU-Uq-Qcv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4655" y="-8233"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="logo_splash" width="120" height="120"/>
+    </resources>
+</document>

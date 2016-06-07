@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="QMDialogCell" rowHeight="76" id="BdC-gB-ZAe" customClass="QMDialogCell">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="76"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="BdC-gB-ZAe" id="sD9-JE-usY">
+                <rect key="frame" x="0.0" y="0.0" width="600" height="75"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Paul Jones, Amber Jenkins, Andrea Newman" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S0M-dx-e6l">
+                        <rect key="frame" x="83" y="15" width="431" height="21"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="99.99.99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uoo-Bb-O59">
+                        <rect key="frame" x="522" y="15" width="66" height="20"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <color key="textColor" red="0.56078431370000004" green="0.5568627451" blue="0.58039215690000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lTv-HE-qXa" customClass="QMBadgeView">
+                        <rect key="frame" x="557" y="37" width="35" height="24"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="24" id="ctM-DA-ZLK"/>
+                            <constraint firstAttribute="width" constant="35" id="ilP-y8-lL5"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <integer key="value" value="6"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="hideOnZeroValue" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sem Dolor Iceptos Purus" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hIc-GT-Dag">
+                        <rect key="frame" x="83" y="37" width="466" height="21"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.56078431370000004" green="0.5568627451" blue="0.58039215690000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Pcf-ld-aV0" customClass="QMImageView">
+                        <rect key="frame" x="12" y="8" width="59" height="59"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="59" id="Kuh-Dj-C5Q"/>
+                            <constraint firstAttribute="width" constant="59" id="L8x-Hv-UbM"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                <real key="value" value="0.0"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="Pcf-ld-aV0" firstAttribute="centerY" secondItem="sD9-JE-usY" secondAttribute="centerY" id="1yT-bX-OGA"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="lTv-HE-qXa" secondAttribute="trailing" id="6b2-Fw-huw"/>
+                    <constraint firstItem="S0M-dx-e6l" firstAttribute="top" secondItem="sD9-JE-usY" secondAttribute="topMargin" constant="7" id="81a-Ac-W8a"/>
+                    <constraint firstAttribute="trailing" secondItem="Uoo-Bb-O59" secondAttribute="trailing" constant="12" id="AUt-AH-nCq"/>
+                    <constraint firstItem="Uoo-Bb-O59" firstAttribute="top" secondItem="sD9-JE-usY" secondAttribute="topMargin" constant="7" id="SYb-ka-Y8x"/>
+                    <constraint firstItem="hIc-GT-Dag" firstAttribute="leading" secondItem="Pcf-ld-aV0" secondAttribute="trailing" constant="12" id="WFA-0V-gFb"/>
+                    <constraint firstItem="lTv-HE-qXa" firstAttribute="leading" secondItem="hIc-GT-Dag" secondAttribute="trailing" constant="8" id="Ypu-WZ-0aV"/>
+                    <constraint firstItem="Pcf-ld-aV0" firstAttribute="leading" secondItem="sD9-JE-usY" secondAttribute="leadingMargin" constant="4" id="bSo-z4-VDi"/>
+                    <constraint firstItem="Uoo-Bb-O59" firstAttribute="leading" secondItem="S0M-dx-e6l" secondAttribute="trailing" constant="8" id="brp-0T-CWl"/>
+                    <constraint firstItem="hIc-GT-Dag" firstAttribute="top" secondItem="S0M-dx-e6l" secondAttribute="bottom" constant="1" id="cj8-CS-hAI"/>
+                    <constraint firstItem="lTv-HE-qXa" firstAttribute="top" secondItem="Uoo-Bb-O59" secondAttribute="bottom" constant="2" id="rUI-Rr-Tcd"/>
+                    <constraint firstItem="S0M-dx-e6l" firstAttribute="leading" secondItem="Pcf-ld-aV0" secondAttribute="trailing" constant="12" id="vD1-48-puU"/>
+                </constraints>
+            </tableViewCellContentView>
+            <inset key="separatorInset" minX="84" minY="0.0" maxX="0.0" maxY="0.0"/>
+            <connections>
+                <outlet property="avatarImage" destination="Pcf-ld-aV0" id="KVz-35-Zn7"/>
+                <outlet property="badgeView" destination="lTv-HE-qXa" id="xKa-rT-lYa"/>
+                <outlet property="bodyLabel" destination="hIc-GT-Dag" id="Lir-3C-xD5"/>
+                <outlet property="timeLabel" destination="Uoo-Bb-O59" id="4SI-de-kOZ"/>
+                <outlet property="titleLabel" destination="S0M-dx-e6l" id="jpv-B4-Oc3"/>
+            </connections>
+            <point key="canvasLocation" x="425" y="382"/>
+        </tableViewCell>
+    </objects>
+</document>

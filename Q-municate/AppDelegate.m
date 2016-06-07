@@ -7,14 +7,20 @@
 //
 
 #import "AppDelegate.h"
-#import <Crashlytics/Crashlytics.h>
-#import "SVProgressHUD.h"
-#import "REAlertView+QMSuccess.h"
-#import "QMApi.h"
-#import "QMSettingsManager.h"
-#import "QMAVCallManager.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import "QMViewControllersFactory.h"
+#import "QMChatVC.h"
+#import "QMCore.h"
+#import "QMImages.h"
+
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+#import <DigitsKit/DigitsKit.h>
+#import <Flurry.h>
+
+
+#define DEVELOPMENT 0
+
+#if DEVELOPMENT == 0
 
 // Production
 const NSUInteger kQMApplicationID = 13318;
@@ -22,187 +28,153 @@ NSString *const kQMAuthorizationKey = @"WzrAY7vrGmbgFfP";
 NSString *const kQMAuthorizationSecret = @"xS2uerEveGHmEun";
 NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
-@interface AppDelegate () <QMNotificationHandlerDelegate>
+#else
+
+// Development
+const NSUInteger kQMApplicationID = 36125;
+NSString *const kQMAuthorizationKey = @"gOGVNO4L9cBwkPE";
+NSString *const kQMAuthorizationSecret = @"JdqsMHCjHVYkVxV";
+NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
+
+#endif
+
+@interface AppDelegate () <QMPushNotificationManagerDelegate>
 
 @end
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    UIApplication.sharedApplication.applicationIconBadgeNumber = 0;
     
-    UIApplication.sharedApplication.statusBarStyle = UIStatusBarStyleDefault;
+    application.applicationIconBadgeNumber = 0;
     
-    self.window.backgroundColor = [UIColor whiteColor];
-    
-    // QB Settings
+    // Quickblox settings
     [QBSettings setApplicationID:kQMApplicationID];
     [QBSettings setAuthKey:kQMAuthorizationKey];
     [QBSettings setAuthSecret:kQMAuthorizationSecret];
     [QBSettings setAccountKey:kQMAccountKey];
+    
+    [QBSettings setChatDNSLookupCacheEnabled:YES];
+    [QBSettings setAutoReconnectEnabled:YES];
+    [QBSettings setCarbonsEnabled:YES];
+    
+#if DEVELOPMENT == 0
+    [QBSettings setLogLevel:QBLogLevelNothing];
+    [QBSettings disableXMPPLogging];
+#else
     [QBSettings setLogLevel:QBLogLevelDebug];
     [QBSettings enableXMPPLogging];
+#endif
     
-    //QuickbloxWebRTC preferences
+    // QuickbloxWebRTC settings
     [QBRTCClient initializeRTC];
-    [QBRTCConfig setICEServers:[self quickbloxICE]];
+    [QBRTCConfig setICEServers:[[QMCore instance].callManager quickbloxICE]];
     [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecISAC;
     [QBRTCConfig setStatsReportTimeInterval:0.0f]; // set to 1.0f to enable stats report
     
-    if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-        
-        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
-        [[UIApplication sharedApplication] registerForRemoteNotifications];
-    }
-    else{
-        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
-    }
+    // Registering for remote notifications
+    [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
     
-    /*Configure app appearance*/
-    NSDictionary *normalAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:1.000 alpha:0.750]};
-    NSDictionary *disabledAttributes = @{NSForegroundColorAttributeName : [UIColor colorWithWhite:0.935 alpha:0.260]};
+    // Configuring app appearance
+    UIColor *mainTintColor = [UIColor colorWithRed:13.0f/255.0f green:112.0f/255.0f blue:179.0f/255.0f alpha:1.0f];
+    [[UINavigationBar appearance] setTintColor:mainTintColor];
+    [[UISearchBar appearance] setTintColor:mainTintColor];
+    [[UITabBar appearance] setTintColor:mainTintColor];
     
-    [[UIBarButtonItem appearance] setTitleTextAttributes:normalAttributes forState:UIControlStateNormal];
-    [[UIBarButtonItem appearance] setTitleTextAttributes:disabledAttributes forState:UIControlStateDisabled];
+    // Configuring searchbar appearance
+    [[UISearchBar appearance] setSearchBarStyle:UISearchBarStyleMinimal];
+    [[UISearchBar appearance] setBarTintColor:[UIColor whiteColor]];
+    [[UISearchBar appearance] setBackgroundImage:QMStatusBarBackgroundImage() forBarPosition:0 barMetrics:UIBarMetricsDefault];
     
-    [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateNormal];
-    [[UIBarButtonItem appearanceWhenContainedIn:[UIImagePickerController class], nil] setTitleTextAttributes:nil forState:UIControlStateDisabled];
+    // Configuring external frameworks
+    [Fabric with:@[CrashlyticsKit, DigitsKit]];
+    [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
     
-    /** Crashlytics */
-    [Crashlytics startWithAPIKey:@"7aea78439bec41a9005c7488bb6751c5e33fe270"];
-    
+    // Handling push notifications if needed
     if (launchOptions != nil) {
-        NSDictionary *notification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-        [[QMApi instance] setPushNotification:notification];
+        
+        NSDictionary *pushNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+        [QMCore instance].pushNotificationManager.pushNotification = pushNotification;
     }
-
+    
     return [[FBSDKApplicationDelegate sharedInstance] application:application
                                     didFinishLaunchingWithOptions:launchOptions];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    if ([application applicationState] == UIApplicationStateInactive) {
-        NSString *dialogID = userInfo[kPushNotificationDialogIDKey];
-        if (dialogID != nil) {
-            NSString *dialogWithIDWasEntered = [QMApi instance].settingsManager.dialogWithIDisActive;
-            if ([dialogWithIDWasEntered isEqualToString:dialogID]) return;
-            
-            [[QMApi instance] setPushNotification:userInfo];
-            
-            // calling dispatch async for push notification handling to have priority in main queue
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[QMApi instance] handlePushNotificationWithDelegate:self];
-            });
+    
+    if (application.applicationState == UIApplicationStateInactive) {
+        
+        NSString *dialogID = userInfo[kQMPushNotificationDialogIDKey];
+        NSString *activeDialogID = [QMCore instance].activeDialogID;
+        if ([dialogID isEqualToString:activeDialogID]) {
+            // dialog is already active
+            return;
         }
-        ILog(@"Push was received. User info: %@", userInfo);
+        
+        [QMCore instance].pushNotificationManager.pushNotification = userInfo;
+        
+        // calling dispatch async for push notification handling to have priority in main queue
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [[QMCore instance].pushNotificationManager handlePushNotificationWithDelegate:self];
+        });
     }
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    UIApplication.sharedApplication.applicationIconBadgeNumber = 0;
-    [[QMApi instance] applicationWillResignActive];
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
     
-    if (!QMApi.instance.isInternetConnected) {
-        [REAlertView showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO];
-        return;
-    }
-    if (!QMApi.instance.currentUser) {
-        return;
-    }
-    if (![QBChat instance].isConnected) [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-    [[QMApi instance] applicationDidBecomeActive:^(BOOL success) {}];
+    application.applicationIconBadgeNumber = 0;
+    [[QMCore instance].chatManager disconnectFromChatIfNeeded];
 }
 
-- (void)applicationWillResignActive:(UIApplication *)application {
+- (void)applicationWillEnterForeground:(UIApplication *)__unused application {
     
+    [[QMCore instance] login];
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application {
+- (void)applicationDidBecomeActive:(UIApplication *)__unused application {
     
     [FBSDKAppEvents activateApp];
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application {
-
 }
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
-
+    
     BOOL urlWasIntendedForFacebook = [[FBSDKApplicationDelegate sharedInstance] application:application
                                                                                     openURL:url
                                                                           sourceApplication:sourceApplication
-                                                                                 annotation:annotation
-                                      ];
+                                                                                 annotation:annotation];
+    
     return urlWasIntendedForFacebook;
 }
 
 
 #pragma mark - PUSH NOTIFICATIONS REGISTRATION
 
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
-{
-    if (deviceToken) {
-        [[QMApi instance] setDeviceToken:deviceToken];
-    }
+- (void)application:(UIApplication *)__unused application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    
+    [QMCore instance].pushNotificationManager.deviceToken = deviceToken;
 }
 
-#pragma mark - QMNotificationHandlerDelegate protocol
+#pragma mark - QMPushNotificationManagerDelegate protocol
 
-- (void)notificationHandlerDidSucceedFetchingDialog:(QBChatDialog *)chatDialog {
-    UITabBarController *rootController = [(UITabBarController *)self.window.rootViewController selectedViewController];
-    UINavigationController *navigationController = (UINavigationController *)rootController;
+- (void)pushNotificationManager:(QMPushNotificationManager *)__unused pushNotificationManager didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
     
-    UIViewController *chatVC = [QMViewControllersFactory chatControllerWithDialog:chatDialog];
+    UITabBarController *tabBarController = (UITabBarController *)self.window.rootViewController;
+    UINavigationController *navigationController = (UINavigationController *)tabBarController.selectedViewController;
     
-    NSString *dialogWithIDWasEntered = [QMApi instance].settingsManager.dialogWithIDisActive;
-    if (dialogWithIDWasEntered != nil) {
-        // some chat already opened, return to dialogs view controller first
-        [navigationController popViewControllerAnimated:NO];
+    NSString *activeDialogID = [QMCore instance].activeDialogID;
+    if ([chatDialog.ID isEqualToString:activeDialogID]) {
+        // dialog is already active
+        return;
     }
     
+    QMChatVC *chatVC = [QMChatVC chatViewControllerWithChatDialog:chatDialog];
     [navigationController pushViewController:chatVC animated:YES];
-}
-
-#pragma mark - ICE servers
-
-- (NSArray *)quickbloxICE {
-    
-    NSString *password = @"baccb97ba2d92d71e26eb9886da5f1e0";
-    NSString *userName = @"quickblox";
-    
-    NSArray *urls = @[
-                      @"turn.quickblox.com",            //USA
-                      @"turnsingapore.quickblox.com",   //Singapore
-                      @"turnireland.quickblox.com"      //Ireland
-                      ];
-    
-    NSMutableArray *result = [NSMutableArray arrayWithCapacity:urls.count];
-    
-    for (NSString *url in urls) {
-        
-        QBRTCICEServer *stunServer = [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"stun:%@", url]
-                                                          username:@""
-                                                          password:@""];
-        
-        
-        QBRTCICEServer *turnUDPServer = [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"turn:%@:3478?transport=udp", url]
-                                                             username:userName
-                                                             password:password];
-        
-        QBRTCICEServer *turnTCPServer = [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"turn:%@:3478?transport=tcp", url]
-                                                             username:userName
-                                                             password:password];
-        
-        [result addObjectsFromArray:@[stunServer, turnTCPServer, turnUDPServer]];
-    }
-    
-    return result;
 }
 
 @end

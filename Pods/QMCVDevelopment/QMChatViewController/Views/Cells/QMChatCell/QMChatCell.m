@@ -8,12 +8,11 @@
 
 #import "QMChatCell.h"
 #import "QMChatCellLayoutAttributes.h"
-#import "QMImageView.h"
 #import "TTTAttributedLabel.h"
 
 static NSMutableSet *_qmChatCellMenuActions = nil;
 
-@interface QMChatCell()
+@interface QMChatCell() <QMImageViewDelegate, UIGestureRecognizerDelegate>
 
 @property (weak, nonatomic) IBOutlet QMChatContainerView *containerView;
 @property (weak, nonatomic) IBOutlet UIView *messageContainer;
@@ -71,6 +70,8 @@ static NSMutableSet *_qmChatCellMenuActions = nil;
 - (void)awakeFromNib {
     [super awakeFromNib];
     
+    self.avatarView.delegate = self;
+    
     self.translatesAutoresizingMaskIntoConstraints = NO;
 	
     self.messageContainerTopInsetConstraint.constant = 0;
@@ -99,6 +100,7 @@ static NSMutableSet *_qmChatCellMenuActions = nil;
     
     UITapGestureRecognizer *tap =
     [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+    tap.delegate = self;
     [self addGestureRecognizer:tap];
     self.tapGestureRecognizer = tap;
 }
@@ -186,7 +188,11 @@ static NSMutableSet *_qmChatCellMenuActions = nil;
         
         id sender;
         [anInvocation getArgument:&sender atIndex:0];
-        [self.delegate chatCell:self didPerformAction:anInvocation.selector withSender:sender];
+        
+        if ([self.delegate respondsToSelector:@selector(chatCell:didPerformAction:withSender:)]) {
+            
+            [self.delegate chatCell:self didPerformAction:anInvocation.selector withSender:sender];
+        }
     }
     else {
         
@@ -206,32 +212,70 @@ static NSMutableSet *_qmChatCellMenuActions = nil;
 
 #pragma mark - Gesture recognizers
 
+- (void)imageViewDidTap:(QMImageView *)imageView {
+    
+    [self.delegate chatCellDidTapAvatar:self];
+}
+
 - (void)handleTapGesture:(UITapGestureRecognizer *)tap {
     
     CGPoint touchPt = [tap locationInView:self];
+    UIView *touchView = [tap.view hitTest:touchPt withEvent:nil];
     
-    if (CGRectContainsPoint(self.avatarContainerView.frame, touchPt)) {
-        [self.delegate chatCellDidTapAvatar:self];
+    if ([touchView isKindOfClass:[TTTAttributedLabel class]]) {
+        
+        TTTAttributedLabel *label = (TTTAttributedLabel *)touchView;
+        CGPoint translatedPoint = [label convertPoint:touchPt fromView:tap.view];
+        
+        TTTAttributedLabelLink *labelLink = [label linkAtPoint:translatedPoint];
+        
+        if (labelLink.result.numberOfRanges > 0) {
+            
+            if ([self.delegate respondsToSelector:@selector(chatCell:didTapOnTextCheckingResult:)]) {
+                
+                [self.delegate chatCell:self didTapOnTextCheckingResult:labelLink.result];
+            }
+            
+            return;
+        }
     }
-    else if (CGRectContainsPoint(self.containerView.frame, touchPt)) {
+    
+    if (CGRectContainsPoint(self.containerView.frame, touchPt)) {
         
         [self.delegate chatCellDidTapContainer:self];
     }
-    else {
+    else if ([self.delegate respondsToSelector:@selector(chatCell:didTapAtPosition:)]) {
+        
         [self.delegate chatCell:self didTapAtPosition:touchPt];
     }
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     
-    CGPoint touchPt = [touch locationInView:self];
+    CGPoint touchPt = [touch locationInView:gestureRecognizer.view];
     
     if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
+        
+        if ([touch.view isKindOfClass:[TTTAttributedLabel class]]) {
+            
+            TTTAttributedLabel *label = (TTTAttributedLabel *)touch.view;
+            CGPoint translatedPoint = [label convertPoint:touchPt fromView:gestureRecognizer.view];
+            
+            TTTAttributedLabelLink *labelLink = [label linkAtPoint:translatedPoint];
+            
+            if (labelLink.result.numberOfRanges > 0) {
+                
+                return NO;
+            }
+        }
+        
         return CGRectContainsPoint(self.containerView.frame, touchPt);
     }
     
     return YES;
 }
+
+#pragma mark - Layout model
 
 + (QMChatCellLayoutModel)layoutModel {
     

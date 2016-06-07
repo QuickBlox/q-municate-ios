@@ -8,15 +8,11 @@
 
 #import "QMLicenseAgreementViewController.h"
 #import <SVProgressHUD.h>
-#import "REAlertView.h"
-#import "QMApi.h"
-#import "QMSettingsManager.h"
+#import "QMCore.h"
 
 NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
-@interface QMLicenseAgreementViewController ()
-
-<UIWebViewDelegate>
+@interface QMLicenseAgreementViewController () <UIWebViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *acceptButton;
@@ -26,58 +22,60 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 @implementation QMLicenseAgreementViewController
 
 - (void)dealloc {
-    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:0.048 green:0.361 blue:0.606 alpha:1.000];
-    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-    self.navigationController.navigationBar.translucent = NO;
-    
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    
-    BOOL licenceAccepted = [[QMApi instance].settingsManager userAgreementAccepted];
+    BOOL licenceAccepted = [QMCore instance].currentProfile.userAgreementAccepted;
     if (licenceAccepted) {
+        
         self.navigationItem.rightBarButtonItem = nil;
     }
     
-    [SVProgressHUD show];
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kQMAgreementUrl]];
     [self.webView loadRequest:request];
 }
 
-- (IBAction)done:(id)sender {
+- (IBAction)done:(id)__unused sender {
+    
     [self dismissViewControllerSuccess:NO];
 }
 
 - (void)dismissViewControllerSuccess:(BOOL)success {
-    __weak __typeof(self)weakSelf = self;
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+    
+    @weakify(self);
     [self dismissViewControllerAnimated:YES completion:^{
         
-        if(weakSelf.licenceCompletionBlock) {
+        @strongify(self);
+        if (self.licenceCompletionBlock) {
             
-            weakSelf.licenceCompletionBlock(success);
-            weakSelf.licenceCompletionBlock = nil;
+            self.licenceCompletionBlock(success);
+            self.licenceCompletionBlock = nil;
         }
     }];
 }
 
-- (IBAction)acceptLicense:(id)sender {
+- (IBAction)acceptLicense:(id)__unused sender {
     
-    [[QMApi instance].settingsManager setUserAgreementAccepted:YES];
+    [[QMCore instance].currentProfile setUserAgreementAccepted:YES];
     [self dismissViewControllerSuccess:YES];
 }
 
 #pragma mark - UIWebViewDelegate
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
+- (void)webViewDidFinishLoad:(UIWebView *)__unused webView {
     
     [SVProgressHUD dismiss];
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+- (void)webView:(UIWebView *)__unused webView didFailLoadWithError:(NSError *)error {
+    
     [SVProgressHUD showErrorWithStatus:error.localizedDescription];
 }
 

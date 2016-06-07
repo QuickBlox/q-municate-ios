@@ -57,15 +57,14 @@
         
         self.editableSections = self.chatSections.mutableCopy;
         
-        NSMutableArray *itemsIndexPaths = [NSMutableArray array];
+        NSMutableArray *itemsIndexPaths = [NSMutableArray arrayWithCapacity:messages.count];
         NSMutableIndexSet *sectionsIndexSet = [NSMutableIndexSet indexSet];
         
         for (QBChatMessage *message in messages) {
             NSAssert(message.dateSent != nil, @"Message must have dateSent!");
             
             if ([self messageExists:message]) {
-                // message already exists, updating it
-                [self updateMessages:@[message]];
+                // message already exists
                 continue;
             }
             
@@ -137,9 +136,10 @@
 - (void)updateMessages:(NSArray *)messages {
     
     dispatch_async(_serialQueue, ^{
+        NSUInteger numberOfMessages = messages.count;
         
-        NSMutableArray *messagesIDs = [NSMutableArray array];
-        NSMutableArray *itemsIndexPaths = [NSMutableArray array];
+        NSMutableArray *messagesIDs = [NSMutableArray arrayWithCapacity:numberOfMessages];
+        NSMutableArray *itemsIndexPaths = [NSMutableArray arrayWithCapacity:numberOfMessages];
         
         for (QBChatMessage *message in messages) {
             NSIndexPath *indexPath = [self indexPathForMessage:message];
@@ -150,8 +150,8 @@
             if (updatedMessageIndex != indexPath.item) {
                 
                 // message will have new indexPath due to date changes
-                [self deleteMessages:@[message] animated:NO];
-                [self addMessages:@[message] animated:NO];
+                [self deleteMessages:@[message] animated:YES];
+                [self addMessages:@[message] animated:YES];
             }
             else {
                 
@@ -188,15 +188,16 @@
 
 - (void)deleteMessage:(QBChatMessage *)message animated:(BOOL)animated {
     
-    [self deleteMessages:@[message] animated:self.animationEnabled];
+    [self deleteMessages:@[message] animated:animated];
 }
 
 - (void)deleteMessages:(NSArray *)messages animated:(BOOL)animated {
     
     dispatch_async(_serialQueue, ^{
+        NSUInteger *numberOfMessages = messages.count;
         
-        NSMutableArray *messagesIDs = [NSMutableArray array];
-        NSMutableArray *itemsIndexPaths = [NSMutableArray array];
+        NSMutableArray *messagesIDs = [NSMutableArray arrayWithCapacity:numberOfMessages];
+        NSMutableArray *itemsIndexPaths = [NSMutableArray arrayWithCapacity:numberOfMessages];
         NSMutableIndexSet *sectionsIndexSet = [NSMutableIndexSet indexSet];
         
         self.editableSections = self.chatSections.mutableCopy;
@@ -248,7 +249,7 @@
     if (firstSectionDateIsNotDescending) {
         // message is older then first message of first section
         
-        if (fabs([message.dateSent timeIntervalSinceDate:firstSection.firstMessageDate]) > self.timeIntervalBetweenSections) {
+        if (fabs([message.dateSent timeIntervalSinceDate:firstSection.lastMessageDate]) > self.timeIntervalBetweenSections) {
             
             firstSection = [QMChatSection chatSection];
             [self.editableSections insertObject:firstSection atIndex:0];
@@ -258,12 +259,12 @@
     }
     
     QMChatSection *lastSection = self.editableSections.lastObject;
-    BOOL lastSectionDateIsNotAscending = [lastSection.lastMessageDate compare:message.dateSent] != NSOrderedAscending;
+    BOOL lastSectionDateIsNotAscending = [lastSection.firstMessageDate compare:message.dateSent] != NSOrderedAscending;
     
     if (lastSectionDateIsNotAscending) {
         // message is newer then last message of last section
         
-        if (fabs([message.dateSent timeIntervalSinceDate:lastSection.lastMessageDate]) > self.timeIntervalBetweenSections) {
+        if (fabs([message.dateSent timeIntervalSinceDate:lastSection.firstMessageDate]) > self.timeIntervalBetweenSections) {
             
             lastSection = [QMChatSection chatSection];
             [self.editableSections addObject:lastSection];
@@ -321,19 +322,21 @@
     return newSection;
 }
 
-static inline NSMutableIndexSet* incrementAllIndexesForIndexSet(NSMutableIndexSet *indexSet, NSInteger index) {
+static inline NSMutableIndexSet *incrementAllIndexesForIndexSet(NSMutableIndexSet *indexSet, NSInteger index) {
     
-    NSMutableIndexSet *newIndexSet = [NSMutableIndexSet new];
+    NSMutableIndexSet *newIndexSet = [NSMutableIndexSet indexSet];
+    
     [indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+        
         [newIndexSet addIndex:idx >= index ? idx + 1 : idx];
     }];
     
     return newIndexSet;
 }
 
-static inline NSMutableArray* incrementAllSectionsForIndexPaths(NSMutableArray *indexPaths, NSInteger sectionIndex) {
+static inline NSMutableArray *incrementAllSectionsForIndexPaths(NSMutableArray *indexPaths, NSInteger sectionIndex) {
     
-    NSArray *enumerateIndexPaths = [indexPaths copy];
+    NSArray *enumerateIndexPaths = indexPaths.copy;
     for (NSIndexPath *indexPath in enumerateIndexPaths) {
         
         if (indexPath.section >= sectionIndex) {
@@ -386,6 +389,7 @@ static inline NSMutableArray* incrementAllSectionsForIndexPaths(NSMutableArray *
     NSArray *chatSections = self.chatSections.copy;
     
     for (QMChatSection *chatSection in chatSections) {
+        
         totalMessagesCount += [chatSection.messages count];
     }
     
@@ -417,6 +421,18 @@ static inline NSMutableArray* incrementAllSectionsForIndexPaths(NSMutableArray *
     }
     
     return indexPath;
+}
+
+- (NSArray *)allMessages {
+    
+    NSMutableArray *mutableItems = [NSMutableArray array];
+    
+    for (QMChatSection *chatSection in self.chatSections) {
+        
+        [mutableItems addObjectsFromArray:chatSection.messages];
+    }
+    
+    return mutableItems.copy;
 }
 
 - (BOOL)messageExists:(QBChatMessage *)message {

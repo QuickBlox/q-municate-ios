@@ -20,6 +20,7 @@
     
     self = [super init];
     if (self) {
+        
         self.datasources = [NSMutableDictionary dictionary];
     }
     return self;
@@ -53,16 +54,15 @@
     [self sortMessagesForDialogID:dialogID];
 }
 
-- (void)updateMessage:(QBChatMessage *)message
-{
+- (void)updateMessage:(QBChatMessage *)message {
     NSAssert(message.dialogID, @"Message must have a dialog ID.");
     
     [self addMessage:message forDialogID:message.dialogID];
 }
 
-- (QBChatMessage *)lastMessageFromDialogID:(NSString *)dialogID
-{
-    NSArray* messages = [self messagesWithDialogID:dialogID];
+- (QBChatMessage *)lastMessageFromDialogID:(NSString *)dialogID {
+    
+    NSArray *messages = [self messagesWithDialogID:dialogID];
     
     return [messages lastObject];
 }
@@ -112,8 +112,8 @@
 }
 
 - (void)deleteMessagesWithDialogID:(NSString *)dialogID {
-	
-	[self.datasources removeObjectForKey:dialogID];
+    
+    [self.datasources removeObjectForKey:dialogID];
 }
 
 - (BOOL)isEmptyForDialogID:(NSString *)dialogID {
@@ -134,23 +134,34 @@
     
     NSMutableOrderedSet *datasource = [self dataSourceWithDialogID:dialogID];
     
-    [datasource sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"dateSent" ascending:YES]]];
+    NSSortDescriptor *dateSentDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"dateSent" ascending:YES];
+    NSSortDescriptor *idDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"ID" ascending:YES];
+    
+    [datasource sortUsingDescriptors:@[dateSentDescriptor, idDescriptor]];
 }
 
-- (QBChatMessage *)messageWithID:(NSString *)messageID fromDialogID:(NSString *)dialogID;
-{
+- (QBChatMessage *)messageWithID:(NSString *)messageID fromDialogID:(NSString *)dialogID {
     NSParameterAssert(messageID != nil);
     NSParameterAssert(dialogID != nil);
     
     NSArray* messages = [self messagesWithDialogID:dialogID];
     
     for (QBChatMessage* message in messages) {
+        
         if ([message.ID isEqualToString:messageID]) {
+            
             return message;
         }
     }
     
     return nil;
+}
+
+- (BOOL)isMessageExistent:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+    
+    NSMutableOrderedSet *messages = self.datasources[dialogID];
+    
+    return [messages containsObject:message];
 }
 
 #pragma mark - QMMemeoryStorageProtocol

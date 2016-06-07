@@ -18,7 +18,25 @@
 @protocol QMChatServiceCacheDataSource;
 @protocol QMChatConnectionDelegate;
 
-typedef void(^QMCacheCollection)(NSArray *collection);
+typedef void(^QMCacheCollection)(NSArray *QB_NULLABLE_S collection);
+
+/**
+ *  QBChat connection state.
+ */
+typedef NS_ENUM(NSUInteger, QMChatConnectionState) {
+    /**
+     *  Not connected.
+     */
+    QMChatConnectionStateDisconnected,
+    /**
+     *  Connection in progress.
+     */
+    QMChatConnectionStateConnecting,
+    /**
+     *  Connected.
+     */
+    QMChatConnectionStateConnected
+};
 
 /**
  *  Chat dialog service
@@ -26,24 +44,40 @@ typedef void(^QMCacheCollection)(NSArray *collection);
 @interface QMChatService : QMBaseService
 
 /**
+ *  Determines whether auto join for group dialogs is enabled or not.
+ *  Default value is YES.
+ *
+ *  @discussion Disable auto join if you want to handle group chat dialogs joining manually
+ *  or you are using our Enterprise feature to manage group chat dialogs without join being required.
+ *  By default QMServices will perform join to all existent group dialogs in cache after
+ *  every chat connect/reconnect and every chat dialog receive/update.
+ */
+@property (assign, nonatomic, getter=isAutoJoinEnabled) BOOL enableAutoJoin;
+
+/**
  *  Chat messages per page with messages load methods
  */
 @property (assign, nonatomic) NSUInteger chatMessagesPerPage;
 
 /**
+ *  Chat connection state
+ */
+@property (assign, nonatomic, readonly) QMChatConnectionState chatConnectionState;
+
+/**
  *  Dialogs datasoruce
  */
-@property (strong, nonatomic, readonly) QMDialogsMemoryStorage *dialogsMemoryStorage;
+@property (strong, nonatomic, readonly, QB_NONNULL) QMDialogsMemoryStorage *dialogsMemoryStorage;
 
 /**
  *  Messages datasource
  */
-@property (strong, nonatomic, readonly) QMMessagesMemoryStorage *messagesMemoryStorage;
+@property (strong, nonatomic, readonly, QB_NONNULL) QMMessagesMemoryStorage *messagesMemoryStorage;
 
 /**
  *  Attachment Service
  */
-@property (strong, nonatomic, readonly) QMChatAttachmentService *chatAttachmentService;
+@property (strong, nonatomic, readonly, QB_NONNULL) QMChatAttachmentService *chatAttachmentService;
 
 /**
  *  Init chat service
@@ -53,46 +87,48 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @return Return QMChatService instance
  */
-- (instancetype)initWithServiceManager:(id<QMServiceManagerProtocol>)serviceManager
-                       cacheDataSource:(id<QMChatServiceCacheDataSource>)cacheDataSource;
+- (QB_NULLABLE instancetype)initWithServiceManager:(QB_NONNULL id<QMServiceManagerProtocol>)serviceManager
+                                   cacheDataSource:(QB_NULLABLE id<QMChatServiceCacheDataSource>)cacheDataSource;
 /**
  *  Add delegate (Multicast)
  *
  *  @param delegate Instance confirmed QMChatServiceDelegate protocol
  */
-- (void)addDelegate:(id<QMChatServiceDelegate, QMChatConnectionDelegate>)delegate;
+- (void)addDelegate:(QB_NONNULL id<QMChatServiceDelegate, QMChatConnectionDelegate>)delegate;
 
 /**
  *  Remove delegate from observed list
  *
  *  @param delegate Instance confirmed QMChatServiceDelegate protocol
  */
-- (void)removeDelegate:(id<QMChatServiceDelegate, QMChatConnectionDelegate>)delegate;
+- (void)removeDelegate:(QB_NONNULL id<QMChatServiceDelegate, QMChatConnectionDelegate>)delegate;
 
 /**
  *  Connect to chat
  *
  *  @param completion   The block which informs whether a chat did connect or not. nil if no errors.
  */
-- (void)connectWithCompletionBlock:(QBChatCompletionBlock)completion;
+- (void)connectWithCompletionBlock:(QB_NULLABLE QBChatCompletionBlock)completion;
 
 /**
  *  Disconnect from chat
  *
  *  @param completion   The block which informs whether a chat did disconnect or not. nil if no errors.
  */
-- (void)disconnectWithCompletionBlock:(QBChatCompletionBlock)completion;
+- (void)disconnectWithCompletionBlock:(QB_NULLABLE QBChatCompletionBlock)completion;
 
 /**
  *  Automatically send chat presences when logged in
  *  Default value: YES
+ *  @warning *Deprecated in QMServices 0.3.8:*
  */
-@property (nonatomic, assign) BOOL automaticallySendPresences;
+@property (nonatomic, assign) BOOL automaticallySendPresences DEPRECATED_MSG_ATTRIBUTE("Deprecated in 0.3.8.");
 
 /**
  *  Default value: 45 seconds
+ *  @warning *Deprecated in QMServices 0.3.8:*
  */
-@property (nonatomic, assign) NSTimeInterval presenceTimerInterval;
+@property (nonatomic, assign) NSTimeInterval presenceTimerInterval DEPRECATED_MSG_ATTRIBUTE("Deprecated in 0.3.8.");
 
 #pragma mark - Group dialog join
 
@@ -102,7 +138,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param dialog       dialog to join
  *  @param completion   completion block with failure error
  */
-- (void)joinToGroupDialog:(QBChatDialog *)dialog completion:(QBChatCompletionBlock)completion;
+- (void)joinToGroupDialog:(QB_NONNULL QBChatDialog *)dialog completion:(QB_NULLABLE QBChatCompletionBlock)completion;
 
 #pragma mark - Dialog history
 
@@ -113,9 +149,9 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param completion Block with response dialogs instances
  */
 - (void)allDialogsWithPageLimit:(NSUInteger)limit
-                extendedRequest:(NSDictionary *)extendedRequest
-                 iterationBlock:(void(^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop))interationBlock
-                     completion:(void(^)(QBResponse *response))completion;
+                extendedRequest:(QB_NULLABLE NSDictionary *)extendedRequest
+                 iterationBlock:(void(^QB_NULLABLE_S )(QBResponse *QB_NONNULL_S response, NSArray QB_GENERIC(QBChatDialog *) *QB_NULLABLE_S dialogObjects, NSSet QB_GENERIC(NSNumber *) * QB_NULLABLE_S dialogsUsersIDs, BOOL * QB_NONNULL_S stop))iterationBlock
+                     completion:(void(^QB_NULLABLE_S)(QBResponse * QB_NONNULL_S response))completion;
 
 #pragma mark - Chat dialog creation
 
@@ -125,8 +161,8 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param opponent   QBUUser opponent
  *  @param completion Block with response and created chat dialog instances
  */
-- (void)createPrivateChatDialogWithOpponent:(QBUUser *)opponent
-                                 completion:(void(^)(QBResponse *response, QBChatDialog *createdDialog))completion;
+- (void)createPrivateChatDialogWithOpponent:(QB_NONNULL QBUUser *)opponent
+                                 completion:(void(^QB_NULLABLE_S)(QBResponse *QB_NONNULL_S response, QBChatDialog *QB_NULLABLE_S createdDialog))completion;
 
 /**
  *  Create group dialog
@@ -135,8 +171,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param occupants  QBUUser collection
  *  @param completion Block with response and created chat dialog instances
  */
-- (void)createGroupChatDialogWithName:(NSString *)name photo:(NSString *)photo occupants:(NSArray QB_GENERIC(QBUUser *)*)occupants
-                           completion:(void(^)(QBResponse *response, QBChatDialog *createdDialog))completion;
+- (void)createGroupChatDialogWithName:(QB_NULLABLE NSString *)name photo:(QB_NULLABLE NSString *)photo occupants:(QB_NONNULL NSArray QB_GENERIC(QBUUser *) *)occupants completion:(void(^QB_NULLABLE_S)(QBResponse *QB_NONNULL_S response, QBChatDialog *QB_NULLABLE_S createdDialog))completion;
 
 /**
  *  Create p2p dialog
@@ -145,7 +180,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param completion Block with response and created chat dialog instances
  */
 - (void)createPrivateChatDialogWithOpponentID:(NSUInteger)opponentID
-                                   completion:(void(^)(QBResponse *response, QBChatDialog *createdDialog))completion;
+                                   completion:(void(^QB_NULLABLE_S)(QBResponse *QB_NONNULL_S response, QBChatDialog *QB_NULLABLE_S createdDialog))completion;
 
 #pragma mark - Edit dialog methods
 
@@ -156,8 +191,8 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param chatDialog QBChatDialog instance
  *  @param completion Block with response and updated chat dialog instances
  */
-- (void)changeDialogName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog
-              completion:(void(^)(QBResponse *response, QBChatDialog *updatedDialog))completion;
+- (void)changeDialogName:(QB_NONNULL NSString *)dialogName forChatDialog:(QB_NONNULL QBChatDialog *)chatDialog
+              completion:(void(^QB_NULLABLE_S)(QBResponse *QB_NONNULL_S response, QBChatDialog *QB_NULLABLE_S updatedDialog))completion;
 
 /**
  *  Change dialog avatar
@@ -166,8 +201,8 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param chatDialog      QBChatDialog instance
  *  @param completion      Block with response and updated chat dialog instances
  */
-- (void)changeDialogAvatar:(NSString *)avatarPublicUrl forChatDialog:(QBChatDialog *)chatDialog
-                completion:(void(^)(QBResponse *response, QBChatDialog *updatedDialog))completion;
+- (void)changeDialogAvatar:(QB_NONNULL NSString *)avatarPublicUrl forChatDialog:(QB_NONNULL QBChatDialog *)chatDialog
+                completion:(void(^QB_NULLABLE_S)(QBResponse *QB_NONNULL_S response, QBChatDialog *QB_NULLABLE_S updatedDialog))completion;
 
 /**
  *  Join occupants
@@ -176,24 +211,24 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param chatDialog QBChatDialog instance
  *  @param completion Block with response and updated chat dialog instances
  */
-- (void)joinOccupantsWithIDs:(NSArray *)ids toChatDialog:(QBChatDialog *)chatDialog
-                  completion:(void(^)(QBResponse *response, QBChatDialog *updatedDialog))completion;
+- (void)joinOccupantsWithIDs:(QB_NONNULL NSArray QB_GENERIC(NSNumber *) *)ids toChatDialog:(QB_NONNULL QBChatDialog *)chatDialog
+                  completion:(void(^QB_NULLABLE_S)(QBResponse *QB_NONNULL_S response, QBChatDialog *QB_NULLABLE_S updatedDialog))completion;
 
 /**
  *  Delete dialog by id on server and chat cache
  *
  *  @param completion Block with response dialogs instances
  */
-- (void)deleteDialogWithID:(NSString *)dialogId
-                completion:(void(^)(QBResponse *response))completion;
+- (void)deleteDialogWithID:(QB_NONNULL NSString *)dialogId
+                completion:(void(^QB_NULLABLE_S)(QBResponse *QB_NONNULL_S response))completion;
 
 /**
- *  Loads dialogs specific to user from disc cache and puth them in memory storage. 
+ *  Loads dialogs specific to user from disc cache and puth them in memory storage.
  *  @warning This method MUST be called after the login.
  *
  *  @param completion Completion block to handle ending of operation.
  */
-- (void)loadCachedDialogsWithCompletion:(void(^)())completion;
+- (void)loadCachedDialogsWithCompletion:(QB_NULLABLE dispatch_block_t)completion;
 
 #pragma mark - System Messages
 
@@ -203,28 +238,26 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param chatDialog   created dialog we notificate about
  *  @param usersIDs     array of users id to send message
  *  @param completion   completion block with failure error
+ *
+ *  @warning *Deprecated in QMServices 0.4.1:* Use 'sendSystemMessageAboutAddingToDialog:toUsersIDs:withText:completion' instead.
  */
-- (void)sendSystemMessageAboutAddingToDialog:(QBChatDialog *)chatDialog
-                                  toUsersIDs:(NSArray *)usersIDs
-                                  completion:(QBChatCompletionBlock)completion;
+- (void)sendSystemMessageAboutAddingToDialog:(QB_NONNULL QBChatDialog *)chatDialog
+                                  toUsersIDs:(QB_NONNULL NSArray QB_GENERIC(NSNumber *) *)usersIDs
+                                  completion:(QB_NULLABLE QBChatCompletionBlock)completion DEPRECATED_MSG_ATTRIBUTE("Deprecated in 0.4.1. Use 'sendSystemMessageAboutAddingToDialog:toUsersIDs:withText:completion:' instead.");
+/**
+ *  Send system message to users about adding to dialog with dialog inside with text.
+ *
+ *  @param chatDialog   created dialog we notificate about
+ *  @param usersIDs     array of users id to send message
+ *  @param text         text to users
+ *  @param completion   completion block with failure error
+ */
+- (void)sendSystemMessageAboutAddingToDialog:(QB_NONNULL QBChatDialog *)chatDialog
+                                  toUsersIDs:(QB_NONNULL NSArray QB_GENERIC(NSNumber *) *)usersIDs
+                                    withText:(QB_NULLABLE NSString *)text
+                                  completion:(QB_NULLABLE QBChatCompletionBlock)completion;
 
 #pragma mark - Notification messages
-
-/**
- *  Send message about updated dialog with dialog inside and notification.
- *
- *  @param updatedDialog        updated dialog
- *  @param notificationText     notification text
- *  @param customParameters     {NSNumber : NSDictionary} dictionary of custom parameters
- *  @param completion           completion block with failure error
- *
- * @warning *Deprecated in QMServices 0.3.3:* Use 'sendNotificationMessageAboutAddingOccupants:toDialog:completion:', 'sendNotificationMessageAboutLeavingDialog:completion:', 'sendNotificationMessageAboutChangingDialogPhoto:completion:' or 'sendNotificationMessageAboutChangingDialogName:completion:' depending on update type instead.
- */
-- (void)sendMessageAboutUpdateDialog:(QBChatDialog *)updatedDialog
-                withNotificationText:(NSString *)notificationText
-                    customParameters:(NSDictionary *)customParameters
-                          completion:(QBChatCompletionBlock)completion
-             DEPRECATED_MSG_ATTRIBUTE("Deprecated in 0.3.3. Use 'sendNotificationMessageAboutAddingOccupants:toDialog:completion:', 'sendNotificationMessageAboutLeavingDialog:completion:', 'sendNotificationMessageAboutChangingDialogPhoto:completion:' or 'sendNotificationMessageAboutChangingDialogName:completion:' depending on update type instead.");
 
 /**
  *  Send message about accepting or rejecting contact requst.
@@ -235,7 +268,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  */
 - (void)sendMessageAboutAcceptingContactRequest:(BOOL)accept
                                    toOpponentID:(NSUInteger)opponentID
-                                     completion:(QBChatCompletionBlock)completion;
+                                     completion:(QB_NULLABLE QBChatCompletionBlock)completion;
 
 /**
  *  Sending notification message about adding occupants to specific dialog.
@@ -245,10 +278,10 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param notificationText notification message body (text)
  *  @param completion       completion block with failure error
  */
-- (void)sendNotificationMessageAboutAddingOccupants:(NSArray *)occupantsIDs
-                                           toDialog:(QBChatDialog *)chatDialog
-                               withNotificationText:(NSString *)notificationText
-                                         completion:(QBChatCompletionBlock)completion;
+- (void)sendNotificationMessageAboutAddingOccupants:(QB_NONNULL NSArray QB_GENERIC(NSNumber *)*)occupantsIDs
+                                           toDialog:(QB_NONNULL QBChatDialog *)chatDialog
+                               withNotificationText:(QB_NONNULL NSString *)notificationText
+                                         completion:(QB_NULLABLE QBChatCompletionBlock)completion;
 
 /**
  *  Sending notification message about leaving dialog.
@@ -257,9 +290,9 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param notificationText notification message body (text)
  *  @param completion       completion block with failure error
  */
-- (void)sendNotificationMessageAboutLeavingDialog:(QBChatDialog *)chatDialog
-                             withNotificationText:(NSString *)notificationText
-                                       completion:(QBChatCompletionBlock)completion;
+- (void)sendNotificationMessageAboutLeavingDialog:(QB_NONNULL QBChatDialog *)chatDialog
+                             withNotificationText:(QB_NONNULL NSString *)notificationText
+                                       completion:(QB_NULLABLE QBChatCompletionBlock)completion;
 
 /**
  *  Sending notification message about changing dialog photo.
@@ -268,9 +301,9 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param notificationText notification message body (text)
  *  @param completion       completion block with failure error
  */
-- (void)sendNotificationMessageAboutChangingDialogPhoto:(QBChatDialog *)chatDialog
-                                   withNotificationText:(NSString *)notificationText
-                                             completion:(QBChatCompletionBlock)completion;
+- (void)sendNotificationMessageAboutChangingDialogPhoto:(QB_NONNULL QBChatDialog *)chatDialog
+                                   withNotificationText:(QB_NONNULL NSString *)notificationText
+                                             completion:(QB_NULLABLE QBChatCompletionBlock)completion;
 
 /**
  *  Sending notification message about changing dialog name.
@@ -279,9 +312,9 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param notificationText notification message body (text)
  *  @param completion       completion block with failure error
  */
-- (void)sendNotificationMessageAboutChangingDialogName:(QBChatDialog *)chatDialog
-                                  withNotificationText:(NSString *)notificationText
-                                            completion:(QBChatCompletionBlock)completion;
+- (void)sendNotificationMessageAboutChangingDialogName:(QB_NONNULL QBChatDialog *)chatDialog
+                                  withNotificationText:(QB_NONNULL NSString *)notificationText
+                                            completion:(QB_NULLABLE QBChatCompletionBlock)completion;
 
 #pragma mark - Fetch messages
 
@@ -290,7 +323,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @param message message to delete
  */
-- (void)deleteMessageLocally:(QBChatMessage *)message;
+- (void)deleteMessageLocally:(QB_NONNULL QBChatMessage *)message;
 
 /**
  *  Deleting messages from cache and memory storage.
@@ -298,7 +331,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param messages messages to delete
  *  @param dialogID chat dialog identifier
  */
-- (void)deleteMessagesLocally:(NSArray *)messages forDialogID:(NSString *)dialogID;
+- (void)deleteMessagesLocally:(QB_NONNULL NSArray QB_GENERIC(QBChatMessage *) *)messages forDialogID:(QB_NONNULL NSString *)dialogID;
 
 /**
  *  Fetch messages with chat dialog id.
@@ -306,7 +339,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param chatDialogID Chat dialog id.
  *  @param completion   Block with response instance and array of chat messages if request succeded or nil if failed.
  */
-- (void)messagesWithChatDialogID:(NSString *)chatDialogID completion:(void(^)(QBResponse *response, NSArray *messages))completion;
+- (void)messagesWithChatDialogID:(QB_NONNULL NSString *)chatDialogID completion:(void(^QB_NULLABLE_S)(QBResponse *QB_NONNULL_S response, NSArray QB_GENERIC(QBChatMessage *) *QB_NULLABLE_S messages))completion;
 
 /**
  *  Loads messages that are older than oldest message in cache.
@@ -314,7 +347,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param chatDialogID Chat dialog identifier
  *  @param completion   Block with response instance and array of chat messages if request succeded or nil if failed
  */
-- (void)earlierMessagesWithChatDialogID:(NSString *)chatDialogID completion:(void(^)(QBResponse *response, NSArray *messages))completion;
+- (void)earlierMessagesWithChatDialogID:(QB_NONNULL NSString *)chatDialogID completion:(void(^QB_NULLABLE_S)(QBResponse *QB_NONNULL_S response, NSArray QB_GENERIC(QBChatMessage *) *QB_NULLABLE_S messages))completion;
 
 #pragma mark - Fetch dialogs
 
@@ -324,7 +357,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param dialogID   Dialog identifier
  *  @param completion Block with dialog if request succeded or nil if failed
  */
-- (void)fetchDialogWithID:(NSString *)dialogID completion:(void (^)(QBChatDialog *dialog))completion;
+- (void)fetchDialogWithID:(QB_NONNULL NSString *)dialogID completion:(void (^QB_NULLABLE_S)(QBChatDialog *QB_NULLABLE_S dialog))completion;
 
 /**
  *  Load dialog with dialog id from Quickblox and saving to memory storage and cache.
@@ -332,7 +365,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param dialogID   Dialog identifier
  *  @param completion Block with dialog if request succeded or nil if failed
  */
-- (void)loadDialogWithID:(NSString *)dialogID completion:(void (^)(QBChatDialog *loadedDialog))completion;
+- (void)loadDialogWithID:(QB_NONNULL NSString *)dialogID completion:(void (^QB_NULLABLE_S)(QBChatDialog *QB_NULLABLE_S loadedDialog))completion;
 
 /**
  *  Fetch dialog with last activity date from date
@@ -342,9 +375,32 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param iteration    iteration block with dialogs for pages
  *  @param completion   Block with response when fetching finished
  */
-- (void)fetchDialogsUpdatedFromDate:(NSDate *)date andPageLimit:(NSUInteger)limit iterationBlock:(void(^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop))iteration completionBlock:(void (^)(QBResponse *response))completion;
+- (void)fetchDialogsUpdatedFromDate:(QB_NONNULL NSDate *)date
+                       andPageLimit:(NSUInteger)limit
+                     iterationBlock:(void(^QB_NULLABLE_S)(QBResponse * QB_NONNULL_S response, NSArray QB_GENERIC(QBChatDialog *) *QB_NULLABLE_S dialogObjects, NSSet QB_GENERIC(NSNumber *) * QB_NULLABLE_S dialogsUsersIDs, BOOL * QB_NONNULL_S stop))iteration
+                    completionBlock:(void (^QB_NULLABLE_S)(QBResponse * QB_NONNULL_S response))completion;
 
 #pragma mark Send message
+
+/**
+ *  Send message with a specific message type to dialog with identifier.
+ *
+ *  @param message       QBChatMessage instance
+ *  @param type          QMMessageType type
+ *  @param dialog        QBChatDialog instance
+ *  @param saveToHistory if YES - saves message to chat history
+ *  @param saveToStorage if YES - saves to local storage
+ *  @param completion    completion block with failure error
+ *
+ *  @discussion The purpose of this method is to have a proper way of sending messages
+ *  with a different message type, which does not have their own methods (e.g. contact request).
+ */
+- (void)sendMessage:(QB_NONNULL QBChatMessage *)message
+               type:(QMMessageType)type
+           toDialog:(QB_NONNULL QBChatDialog *)dialog
+      saveToHistory:(BOOL)saveToHistory
+      saveToStorage:(BOOL)saveToStorage
+         completion:(QB_NULLABLE QBChatCompletionBlock)completion;
 
 /**
  *  Send message to dialog with identifier.
@@ -355,11 +411,11 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param saveToStorage    if YES - saves to local storage
  *  @param completion       completion block with failure error
  */
-- (void)sendMessage:(QBChatMessage *)message
-         toDialogID:(NSString *)dialogID
+- (void)sendMessage:(QB_NONNULL QBChatMessage *)message
+         toDialogID:(QB_NONNULL NSString *)dialogID
       saveToHistory:(BOOL)saveToHistory
       saveToStorage:(BOOL)saveToStorage
-         completion:(QBChatCompletionBlock)completion;
+         completion:(QB_NULLABLE QBChatCompletionBlock)completion;
 
 /**
  *  Send message to.
@@ -370,11 +426,11 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param saveToStorage    if YES - saves to local storage
  *  @param completion       completion block with failure error
  */
-- (void)sendMessage:(QBChatMessage *)message
-           toDialog:(QBChatDialog *)dialog
+- (void)sendMessage:(QB_NONNULL QBChatMessage *)message
+           toDialog:(QB_NONNULL QBChatDialog *)dialog
       saveToHistory:(BOOL)saveToHistory
       saveToStorage:(BOOL)saveToStorage
-         completion:(QBChatCompletionBlock)completion;
+         completion:(QB_NULLABLE QBChatCompletionBlock)completion;
 
 /**
  *  Send attachment message to dialog.
@@ -384,20 +440,20 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param image                attachment image to upload
  *  @param completion           completion block with failure error
  */
-- (void)sendAttachmentMessage:(QBChatMessage *)attachmentMessage
-                     toDialog:(QBChatDialog *)dialog
-          withAttachmentImage:(UIImage *)image
-                   completion:(QBChatCompletionBlock)completion;
+- (void)sendAttachmentMessage:(QB_NONNULL QBChatMessage *)attachmentMessage
+                     toDialog:(QB_NONNULL QBChatDialog *)dialog
+          withAttachmentImage:(QB_NONNULL UIImage *)image
+                   completion:(QB_NULLABLE QBChatCompletionBlock)completion;
 
 #pragma mark - mark as delivered
 
 /**
  *  Mark message as delivered.
- * 
+ *
  *  @param message      QBChatMessage instance to mark as delivered
  *  @param completion   completion block with failure error
  */
-- (void)markMessageAsDelivered:(QBChatMessage *)message completion:(QBChatCompletionBlock)completion;
+- (void)markMessageAsDelivered:(QB_NONNULL QBChatMessage *)message completion:(QB_NULLABLE QBChatCompletionBlock)completion;
 
 /**
  *  Mark messages as delivered.
@@ -405,7 +461,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param message      array of QBChatMessage instances to mark as delivered
  *  @param completion   completion block with failure error
  */
-- (void)markMessagesAsDelivered:(NSArray QB_GENERIC(QBChatMessage *) *)messages completion:(QBChatCompletionBlock)completion;
+- (void)markMessagesAsDelivered:(QB_NONNULL NSArray QB_GENERIC(QBChatMessage *) *)messages completion:(QB_NULLABLE QBChatCompletionBlock)completion;
 
 #pragma mark - read messages
 
@@ -415,7 +471,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param message      QBChatMessage instance to mark as read
  *  @param completion   completion block with failure error
  */
-- (void)readMessage:(QBChatMessage *)message completion:(QBChatCompletionBlock)completion;
+- (void)readMessage:(QB_NONNULL QBChatMessage *)message completion:(QB_NULLABLE QBChatCompletionBlock)completion;
 
 /**
  *  Sending read status for messages and updating unreadMessageCount for dialog in cache
@@ -424,7 +480,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param dialogID     ID of dialog to update
  *  @param completion   completion block with failure error
  */
-- (void)readMessages:(NSArray QB_GENERIC(QBChatMessage *) *)messages forDialogID:(NSString *)dialogID completion:(QBChatCompletionBlock)completion;
+- (void)readMessages:(QB_NONNULL NSArray QB_GENERIC(QBChatMessage *) *)messages forDialogID:(QB_NONNULL NSString *)dialogID completion:(QB_NULLABLE QBChatCompletionBlock)completion;
 
 @end
 
@@ -442,7 +498,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)connect;
+- (QB_NONNULL BFTask *)connect;
 
 /**
  *  Disconnect from the chat using Bolts.
@@ -451,7 +507,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)disconnect;
+- (QB_NONNULL BFTask *)disconnect;
 
 /**
  *  Join group chat dialog.
@@ -462,7 +518,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)joinToGroupDialog:(QBChatDialog *)dialog;
+- (QB_NONNULL BFTask *)joinToGroupDialog:(QB_NONNULL QBChatDialog *)dialog;
 
 /**
  *  Retrieve chat dialogs using Bolts.
@@ -474,9 +530,9 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)allDialogsWithPageLimit:(NSUInteger)limit
-                    extendedRequest:(NSDictionary *)extendedRequest
-                     iterationBlock:(void(^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop))interationBlock;
+- (QB_NONNULL BFTask *)allDialogsWithPageLimit:(NSUInteger)limit
+                               extendedRequest:(QB_NULLABLE NSDictionary *)extendedRequest
+                                iterationBlock:(void(^QB_NULLABLE_S)(QBResponse *QB_NONNULL_S response, NSArray QB_GENERIC(QBChatDialog *) * QB_NULLABLE_S dialogObjects, NSSet QB_GENERIC(NSNumber *) * QB_NULLABLE_S dialogsUsersIDs, BOOL * QB_NONNULL_S stop))iterationBlock;
 
 /**
  *  Create private dialog with user if needed using Bolts.
@@ -487,7 +543,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask QB_GENERIC(QBChatDialog *) *)createPrivateChatDialogWithOpponent:(QBUUser *)opponent;
+- (QB_NONNULL BFTask QB_GENERIC(QBChatDialog *) *)createPrivateChatDialogWithOpponent:(QB_NONNULL QBUUser *)opponent;
 
 /**
  *  Create group chat using Bolts.
@@ -500,7 +556,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask QB_GENERIC(QBChatDialog *) *)createGroupChatDialogWithName:(NSString *)name photo:(NSString *)photo occupants:(NSArray QB_GENERIC(QBUUser *) *)occupants;
+- (QB_NONNULL BFTask QB_GENERIC(QBChatDialog *) *)createGroupChatDialogWithName:(QB_NULLABLE NSString *)name photo:(QB_NULLABLE NSString *)photo occupants:(QB_NONNULL NSArray QB_GENERIC(QBUUser *) *)occupants;
 
 /**
  *  Create private dialog if needed using Bolts.
@@ -511,7 +567,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask QB_GENERIC(QBChatDialog *) *)createPrivateChatDialogWithOpponentID:(NSUInteger)opponentID;
+- (QB_NONNULL BFTask QB_GENERIC(QBChatDialog *) *)createPrivateChatDialogWithOpponentID:(NSUInteger)opponentID;
 
 /**
  *  Change dialog name using Bolts.
@@ -523,7 +579,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask QB_GENERIC(QBChatDialog *) *)changeDialogName:(NSString *)dialogName forChatDialog:(QBChatDialog *)chatDialog;
+- (QB_NONNULL BFTask QB_GENERIC(QBChatDialog *) *)changeDialogName:(QB_NONNULL NSString *)dialogName forChatDialog:(QB_NONNULL QBChatDialog *)chatDialog;
 
 /**
  *  Change dialog avatar using Bolts.
@@ -535,7 +591,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask QB_GENERIC(QBChatDialog *) *)changeDialogAvatar:(NSString *)avatarPublicUrl forChatDialog:(QBChatDialog *)chatDialog;
+- (QB_NONNULL BFTask QB_GENERIC(QBChatDialog *) *)changeDialogAvatar:(QB_NONNULL NSString *)avatarPublicUrl forChatDialog:(QB_NONNULL QBChatDialog *)chatDialog;
 
 /**
  *  Join occupants to dialog using Bolts.
@@ -547,7 +603,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask QB_GENERIC(QBChatDialog *) *)joinOccupantsWithIDs:(NSArray *)ids toChatDialog:(QBChatDialog *)chatDialog;
+- (QB_NONNULL BFTask QB_GENERIC(QBChatDialog *) *)joinOccupantsWithIDs:(QB_NONNULL NSArray QB_GENERIC(NSNumber *) *)ids toChatDialog:(QB_NONNULL QBChatDialog *)chatDialog;
 
 /**
  *  Delete dialog by id on server and chat cache using Bolts
@@ -558,7 +614,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)deleteDialogWithID:(NSString *)dialogID;
+- (QB_NONNULL BFTask *)deleteDialogWithID:(QB_NONNULL NSString *)dialogID;
 
 /**
  *  Fetch messages with chat dialog id using Bolts.
@@ -569,7 +625,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask QB_GENERIC(NSArray QB_GENERIC(QBChatMessage *) *) *)messagesWithChatDialogID:(NSString *)chatDialogID;
+- (QB_NONNULL BFTask QB_GENERIC(NSArray QB_GENERIC(QBChatMessage *) *) *)messagesWithChatDialogID:(QB_NONNULL NSString *)chatDialogID;
 
 /**
  *  Loads messages that are older than oldest message in cache.
@@ -580,7 +636,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask QB_GENERIC(NSArray QB_GENERIC(QBChatMessage *) *) *)loadEarlierMessagesWithChatDialogID:(NSString *)chatDialogID;
+- (QB_NONNULL BFTask QB_GENERIC(NSArray QB_GENERIC(QBChatMessage *) *) *)loadEarlierMessagesWithChatDialogID:(QB_NONNULL NSString *)chatDialogID;
 
 /**
  *  Fetch dialog with identifier using Bolts.
@@ -591,7 +647,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask QB_GENERIC(QBChatDialog *) *)fetchDialogWithID:(NSString *)dialogID;
+- (QB_NONNULL BFTask QB_GENERIC(QBChatDialog *) *)fetchDialogWithID:(QB_NONNULL NSString *)dialogID;
 
 /**
  *  Load dialog with dialog identifier from server and saving to memory storage and cache using Bolts.
@@ -602,7 +658,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask QB_GENERIC(QBChatDialog *) *)loadDialogWithID:(NSString *)dialogID;
+- (QB_NONNULL BFTask QB_GENERIC(QBChatDialog *) *)loadDialogWithID:(QB_NONNULL NSString *)dialogID;
 
 /**
  *  Fetch dialog with last activity date from date using Bolts.
@@ -615,9 +671,9 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)fetchDialogsUpdatedFromDate:(NSDate *)date
-                           andPageLimit:(NSUInteger)limit
-                         iterationBlock:(void(^)(QBResponse *response, NSArray *dialogObjects, NSSet *dialogsUsersIDs, BOOL *stop))iteration;
+- (QB_NONNULL BFTask *)fetchDialogsUpdatedFromDate:(QB_NONNULL NSDate *)date
+                                      andPageLimit:(NSUInteger)limit
+                                    iterationBlock:(void(^QB_NULLABLE_S)(QBResponse *QB_NONNULL_S response, NSArray QB_GENERIC(QBChatDialog *) * QB_NULLABLE_S dialogObjects, NSSet QB_GENERIC(NSNumber *) * QB_NULLABLE_S dialogsUsersIDs, BOOL * QB_NONNULL_S stop))iterationBlock;
 
 /**
  *  Send system message to users about adding to dialog with dialog inside using Bolts.
@@ -625,12 +681,29 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param chatDialog   created dialog we notificate about
  *  @param usersIDs     array of users id to send message
  *
+ *  @warning *Deprecated in QMServices 0.4.1:* Use 'sendSystemMessageAboutAddingToDialog:toUsersIDs:withText:' instead.
+ *
  *  @return BFTask with failure error
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)sendSystemMessageAboutAddingToDialog:(QBChatDialog *)chatDialog
-                                      toUsersIDs:(NSArray *)usersIDs;
+- (QB_NONNULL BFTask *)sendSystemMessageAboutAddingToDialog:(QB_NONNULL QBChatDialog *)chatDialog
+                                                 toUsersIDs:(QB_NONNULL NSArray QB_GENERIC(NSNumber *) *)usersIDs  DEPRECATED_MSG_ATTRIBUTE("Deprecated in 0.4.1. Use 'sendSystemMessageAboutAddingToDialog:toUsersIDs:withText:' instead.");
+
+/**
+ *  Send system message to users about adding to dialog with dialog inside using Bolts.
+ *
+ *  @param chatDialog   created dialog we notificate about
+ *  @param usersIDs     array of users id to send message
+ *  @param text         text to users
+ *
+ *  @return BFTask with failure error
+ *
+ *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
+ */
+- (QB_NONNULL BFTask *)sendSystemMessageAboutAddingToDialog:(QB_NONNULL QBChatDialog *)chatDialog
+                                                 toUsersIDs:(QB_NONNULL NSArray QB_GENERIC(NSNumber *) *)usersIDs
+                                                   withText:(QB_NULLABLE NSString *)text;
 
 /**
  *  Send message about accepting or rejecting contact requst using Bolts.
@@ -642,8 +715,8 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)sendMessageAboutAcceptingContactRequest:(BOOL)accept
-                                       toOpponentID:(NSUInteger)opponentID;
+- (QB_NONNULL BFTask *)sendMessageAboutAcceptingContactRequest:(BOOL)accept
+                                                  toOpponentID:(NSUInteger)opponentID;
 
 /**
  *  Sending notification message about adding occupants to specific dialog using Bolts.
@@ -656,9 +729,9 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)sendNotificationMessageAboutAddingOccupants:(NSArray *)occupantsIDs
-                                               toDialog:(QBChatDialog *)chatDialog
-                                   withNotificationText:(NSString *)notificationText;
+- (QB_NONNULL BFTask *)sendNotificationMessageAboutAddingOccupants:(QB_NONNULL NSArray QB_GENERIC(NSNumber *) *)occupantsIDs
+                                                          toDialog:(QB_NONNULL QBChatDialog *)chatDialog
+                                              withNotificationText:(QB_NONNULL NSString *)notificationText;
 
 /**
  *  Sending notification message about leaving dialog using Bolts.
@@ -670,8 +743,8 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)sendNotificationMessageAboutLeavingDialog:(QBChatDialog *)chatDialog
-                                 withNotificationText:(NSString *)notificationText;
+- (QB_NONNULL BFTask *)sendNotificationMessageAboutLeavingDialog:(QB_NONNULL QBChatDialog *)chatDialog
+                                            withNotificationText:(QB_NONNULL NSString *)notificationText;
 
 /**
  *  Sending notification message about changing dialog photo using Bolts.
@@ -683,8 +756,8 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)sendNotificationMessageAboutChangingDialogPhoto:(QBChatDialog *)chatDialog
-                                       withNotificationText:(NSString *)notificationText;
+- (QB_NONNULL BFTask *)sendNotificationMessageAboutChangingDialogPhoto:(QB_NONNULL QBChatDialog *)chatDialog
+                                                  withNotificationText:(QB_NONNULL NSString *)notificationText;
 
 /**
  *  Sending notification message about changing dialog name.
@@ -696,8 +769,31 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)sendNotificationMessageAboutChangingDialogName:(QBChatDialog *)chatDialog
-                                      withNotificationText:(NSString *)notificationText;
+- (QB_NONNULL BFTask *)sendNotificationMessageAboutChangingDialogName:(QB_NONNULL QBChatDialog *)chatDialog
+                                                 withNotificationText:(QB_NONNULL NSString *)notificationText;
+
+/**
+ *  Send message with a specific message type to dialog with identifier using Bolts.
+ *
+ *  @param message       QBChatMessage instance
+ *  @param type          QMMessageType type
+ *  @param dialog        QBChatDialog instance
+ *  @param saveToHistory if YES - saves message to chat history
+ *  @param saveToStorage if YES - saves to local storage
+ *  @param completion    completion block with failure error
+ *
+ *  @discussion The purpose of this method is to have a proper way of sending messages
+ *  with a different message type, which does not have their own methods (e.g. contact request).
+ *
+ *  @return BFTask with failure error
+ *
+ *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
+ */
+- (QB_NONNULL BFTask *)sendMessage:(QB_NONNULL QBChatMessage *)message
+                              type:(QMMessageType)type
+                          toDialog:(QB_NONNULL QBChatDialog *)dialog
+                     saveToHistory:(BOOL)saveToHistory
+                     saveToStorage:(BOOL)saveToStorage;
 
 /**
  *  Send message to dialog with identifier using Bolts.
@@ -711,10 +807,10 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)sendMessage:(QBChatMessage *)message
-             toDialogID:(NSString *)dialogID
-          saveToHistory:(BOOL)saveToHistory
-          saveToStorage:(BOOL)saveToStorage;
+- (QB_NONNULL BFTask *)sendMessage:(QB_NONNULL QBChatMessage *)message
+                        toDialogID:(QB_NONNULL NSString *)dialogID
+                     saveToHistory:(BOOL)saveToHistory
+                     saveToStorage:(BOOL)saveToStorage;
 
 /**
  *  Send message to using Bolts.
@@ -728,10 +824,10 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)sendMessage:(QBChatMessage *)message
-               toDialog:(QBChatDialog *)dialog
-          saveToHistory:(BOOL)saveToHistory
-          saveToStorage:(BOOL)saveToStorage;
+- (QB_NONNULL BFTask *)sendMessage:(QB_NONNULL QBChatMessage *)message
+                          toDialog:(QB_NONNULL QBChatDialog *)dialog
+                     saveToHistory:(BOOL)saveToHistory
+                     saveToStorage:(BOOL)saveToStorage;
 
 /**
  *  Send attachment message to dialog using Bolts.
@@ -744,9 +840,9 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)sendAttachmentMessage:(QBChatMessage *)attachmentMessage
-                         toDialog:(QBChatDialog *)dialog
-              withAttachmentImage:(UIImage *)image;
+- (QB_NONNULL BFTask *)sendAttachmentMessage:(QB_NONNULL QBChatMessage *)attachmentMessage
+                                    toDialog:(QB_NONNULL QBChatDialog *)dialog
+                         withAttachmentImage:(QB_NONNULL UIImage *)image;
 
 /**
  *  Mark message as delivered.
@@ -757,7 +853,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)markMessageAsDelivered:(QBChatMessage *)message;
+- (QB_NONNULL BFTask *)markMessageAsDelivered:(QB_NONNULL QBChatMessage *)message;
 
 /**
  *  Mark messages as delivered.
@@ -768,7 +864,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)markMessagesAsDelivered:(NSArray QB_GENERIC(QBChatMessage *) *)messages;
+- (QB_NONNULL BFTask *)markMessagesAsDelivered:(QB_NONNULL NSArray QB_GENERIC(QBChatMessage *) *)messages;
 
 /**
  *  Sending read status for message and updating unreadMessageCount for dialog in cache
@@ -779,7 +875,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)readMessage:(QBChatMessage *)message;
+- (QB_NONNULL BFTask *)readMessage:(QB_NONNULL QBChatMessage *)message;
 
 /**
  *  Sending read status for messages and updating unreadMessageCount for dialog in cache
@@ -791,27 +887,27 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *
  *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
  */
-- (BFTask *)readMessages:(NSArray QB_GENERIC(QBChatMessage *) *)messages forDialogID:(NSString *)dialogID;
+- (QB_NONNULL BFTask *)readMessages:(QB_NONNULL NSArray QB_GENERIC(QBChatMessage *) *)messages forDialogID:(QB_NONNULL NSString *)dialogID;
 
 @end
 
 @protocol QMChatServiceCacheDataSource <NSObject>
 @required
- 
+
 /**
  * Is called when chat service will start. Need to use for inserting initial data QMDialogsMemoryStorage
  *
  *  @param block Block for provide QBChatDialogs collection
  */
-- (void)cachedDialogs:(QMCacheCollection)block;
+- (void)cachedDialogs:(QB_NULLABLE QMCacheCollection)block;
 
 /**
- *  Will retrieve dialog with specific identificator from cache or nil if doesnt exists
- *  
+ *  Will return dialog with specific identificator from cache or nil if dialog doesn't exist
+ *
  *  @param dialogID   dialog identificator
  *  @param complition completion block with dialog
  */
-- (void)cachedDialogWithID:(NSString *)dialogID completion:(void (^)(QBChatDialog *dialog))completion;
+- (void)cachedDialogWithID:(QB_NONNULL NSString *)dialogID completion:(void (^QB_NULLABLE_S)(QBChatDialog *QB_NULLABLE_S dialog))completion;
 
 /**
  *  Is called when begin fetch messages. @see -messagesWithChatDialogID:completion:
@@ -820,7 +916,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param dialogID Dialog ID
  *  @param block    Block for provide QBChatMessages collection
  */
-- (void)cachedMessagesWithDialogID:(NSString *)dialogID block:(QMCacheCollection)block;
+- (void)cachedMessagesWithDialogID:(QB_NONNULL NSString *)dialogID block:(QB_NULLABLE QMCacheCollection)block;
 
 @end
 
@@ -834,7 +930,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param dialogs          array of QBChatDialogs loaded from cache
  *  @param dialogsUsersIDs  all users from all ChatDialogs
  */
-- (void)chatService:(QMChatService *)chatService didLoadChatDialogsFromCache:(NSArray QB_GENERIC(QBChatDialog *) *)dialogs withUsers:(NSSet QB_GENERIC(NSNumber *) *)dialogsUsersIDs;
+- (void)chatService:(QB_NONNULL QMChatService *)chatService didLoadChatDialogsFromCache:(QB_NONNULL NSArray QB_GENERIC(QBChatDialog *) *)dialogs withUsers:(QB_NONNULL NSSet QB_GENERIC(NSNumber *) *)dialogsUsersIDs;
 
 /**
  *  Is called when messages did load from cache for some dialog.
@@ -843,7 +939,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param messages array of QBChatMessages loaded from cache
  *  @param dialogID messages dialog ID
  */
-- (void)chatService:(QMChatService *)chatService didLoadMessagesFromCache:(NSArray QB_GENERIC(QBChatMessage *) *)messages forDialogID:(NSString *)dialogID;
+- (void)chatService:(QB_NONNULL QMChatService *)chatService didLoadMessagesFromCache:(QB_NONNULL NSArray QB_GENERIC(QBChatMessage *) *)messages forDialogID:(QB_NONNULL NSString *)dialogID;
 
 /**
  *  Is called when dialog instance did add to memmory storage.
@@ -851,7 +947,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param chatService instance
  *  @param chatDialog QBChatDialog has added to memory storage
  */
-- (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog;
+- (void)chatService:(QB_NONNULL QMChatService *)chatService didAddChatDialogToMemoryStorage:(QB_NONNULL QBChatDialog *)chatDialog;
 
 /**
  *  Is called when dialogs array did add to memmory storage.
@@ -859,7 +955,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param chatService instance
  *  @param chatDialogs QBChatDialog items has added to memory storage
  */
-- (void)chatService:(QMChatService *)chatService didAddChatDialogsToMemoryStorage:(NSArray QB_GENERIC(QBChatDialog *) *)chatDialogs;
+- (void)chatService:(QB_NONNULL QMChatService *)chatService didAddChatDialogsToMemoryStorage:(QB_NONNULL NSArray QB_GENERIC(QBChatDialog *) *)chatDialogs;
 
 /**
  *  Is called when some dialog did update in memory storage
@@ -867,7 +963,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param chatService instance
  *  @param chatDialog updated QBChatDialog
  */
-- (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog;
+- (void)chatService:(QB_NONNULL QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QB_NONNULL QBChatDialog *)chatDialog;
 
 /**
  *  Is called when some dialogs did update in memory storage
@@ -875,7 +971,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param chatService instance
  *  @param dialogs     updated array of QBChatDialog's
  */
-- (void)chatService:(QMChatService *)chatService didUpdateChatDialogsInMemoryStorage:(NSArray QB_GENERIC(QBChatDialog *) *)dialogs;
+- (void)chatService:(QB_NONNULL QMChatService *)chatService didUpdateChatDialogsInMemoryStorage:(QB_NONNULL NSArray QB_GENERIC(QBChatDialog *) *)dialogs;
 
 /**
  *  Is called when some dialog did delete from memory storage
@@ -883,7 +979,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param chatService instance
  *  @param chatDialog deleted QBChatDialog
  */
-- (void)chatService:(QMChatService *)chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)chatDialogID;
+- (void)chatService:(QB_NONNULL QMChatService *)chatService didDeleteChatDialogWithIDFromMemoryStorage:(QB_NONNULL NSString *)chatDialogID;
 
 /**
  *  Is called when message did add to memory storage for dialog with id
@@ -892,7 +988,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param message added QBChatMessage
  *  @param dialogID message dialog ID
  */
-- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID;
+- (void)chatService:(QB_NONNULL QMChatService *)chatService didAddMessageToMemoryStorage:(QB_NONNULL QBChatMessage *)message forDialogID:(QB_NONNULL NSString *)dialogID;
 
 /**
  *  Is called when message did update in memory storage for dialog with id
@@ -901,7 +997,16 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param message updated QBChatMessage
  *  @param dialogID message dialog ID
  */
-- (void)chatService:(QMChatService *)chatService didUpdateMessage:(QBChatMessage *)message forDialogID:(NSString *)dialogID;
+- (void)chatService:(QB_NONNULL QMChatService *)chatService didUpdateMessage:(QB_NONNULL QBChatMessage *)message forDialogID:(QB_NONNULL NSString *)dialogID;
+
+/**
+ *  Is called when message did update in memory storage for dialog with id
+ *
+ *  @param chatService  instance
+ *  @param messages     array of updated messages
+ *  @param dialogID     messages dialog ID
+ */
+- (void)chatService:(QB_NONNULL QMChatService *)chatService didUpdateMessages:(QB_NONNULL NSArray QB_GENERIC(QBChatMessage *) *)messages forDialogID:(QB_NONNULL NSString *)dialogID;
 
 /**
  *  Is called when messages did add to memory storage for dialog with id
@@ -910,7 +1015,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param messages array of QBChatMessage
  *  @param dialogID message dialog ID
  */
-- (void)chatService:(QMChatService *)chatService didAddMessagesToMemoryStorage:(NSArray QB_GENERIC(QBChatMessage *)*)messages forDialogID:(NSString *)dialogID;
+- (void)chatService:(QB_NONNULL QMChatService *)chatService didAddMessagesToMemoryStorage:(QB_NONNULL NSArray QB_GENERIC(QBChatMessage *)*)messages forDialogID:(QB_NONNULL NSString *)dialogID;
 
 /**
  *  Is called when message was deleted from memory storage for dialog id
@@ -919,7 +1024,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param message     message that was deleted
  *  @param dialogID    dialog identifier of deleted message
  */
-- (void)chatService:(QMChatService *)chatService didDeleteMessageFromMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID;
+- (void)chatService:(QB_NONNULL QMChatService *)chatService didDeleteMessageFromMemoryStorage:(QB_NONNULL QBChatMessage *)message forDialogID:(QB_NONNULL NSString *)dialogID;
 
 /**
  *  Is called when messages was deleted from memory storage for dialog id
@@ -928,7 +1033,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param messages    messages that were deleted
  *  @param dialogID    dialog identifier of deleted messages
  */
-- (void)chatService:(QMChatService *)chatService didDeleteMessagesFromMemoryStorage:(NSArray QB_GENERIC(QBChatMessage *)*)messages forDialogID:(NSString *)dialogID;
+- (void)chatService:(QB_NONNULL QMChatService *)chatService didDeleteMessagesFromMemoryStorage:(QB_NONNULL NSArray QB_GENERIC(QBChatMessage *)*)messages forDialogID:(QB_NONNULL NSString *)dialogID;
 
 /**
  *  Is called when chat service did receive notification message
@@ -937,7 +1042,7 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param message received notification message
  *  @param dialog QBChatDialog from notification message
  */
-- (void)chatService:(QMChatService *)chatService  didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)dialog;
+- (void)chatService:(QB_NONNULL QMChatService *)chatService didReceiveNotificationMessage:(QB_NONNULL QBChatMessage *)message createDialog:(QB_NONNULL QBChatDialog *)dialog;
 
 @end
 
@@ -949,11 +1054,18 @@ typedef void(^QMCacheCollection)(NSArray *collection);
 @optional
 
 /**
+ *  Called when chat service did start connecting to the chat.
+ *
+ *  @param chatService QMChatService instance
+ */
+- (void)chatServiceChatHasStartedConnecting:(QB_NONNULL QMChatService *)chatService;
+
+/**
  *  It called when chat did connect.
  *
  *  @param chatService instance
  */
-- (void)chatServiceChatDidConnect:(QMChatService *)chatService;
+- (void)chatServiceChatDidConnect:(QB_NONNULL QMChatService *)chatService;
 
 /**
  *  Called when chat did not connect.
@@ -961,28 +1073,27 @@ typedef void(^QMCacheCollection)(NSArray *collection);
  *  @param chatService instance
  *  @param error       connection failure error
  */
-- (void)chatService:(QMChatService *)chatService chatDidNotConnectWithError:(NSError *)error;
+- (void)chatService:(QB_NONNULL QMChatService *)chatService chatDidNotConnectWithError:(QB_NONNULL NSError *)error;
 
 /**
  *  It called when chat did accidentally disconnect
  *
  *  @param chatService instance
  */
-- (void)chatServiceChatDidAccidentallyDisconnect:(QMChatService *)chatService;
+- (void)chatServiceChatDidAccidentallyDisconnect:(QB_NONNULL QMChatService *)chatService;
 
 /**
  *  It called when chat did reconnect
  *
  *  @param chatService instance
  */
-- (void)chatServiceChatDidReconnect:(QMChatService *)chatService;
+- (void)chatServiceChatDidReconnect:(QB_NONNULL QMChatService *)chatService;
 
 /**
  *  It called when chat did catch error from chat stream
  *
  *  @param error NSError from stream
  */
-- (void)chatServiceChatDidFailWithStreamError:(NSError *)error;
+- (void)chatServiceChatDidFailWithStreamError:(QB_NONNULL NSError *)error;
 
 @end
-

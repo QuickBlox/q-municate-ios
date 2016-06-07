@@ -45,8 +45,6 @@ typedef void (^QBRequestErrorBlock)(QBResponse *QB_NONNULL_S response);
 /** Determines if NSURLSessionTask was canceled */
 @property (nonatomic, getter=isCancelled, readonly) BOOL canceled;
 
-@property (nonatomic, weak, QB_NULLABLE_PROPERTY) NSOperation *operation DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.6 due to internal architecture changes.");
-
 /** Formed NSURLSessionTask with request information */
 @property (nonatomic, weak, QB_NULLABLE_PROPERTY) NSURLSessionTask* task;
 
@@ -86,8 +84,8 @@ typedef void (^QBRequestErrorBlock)(QBResponse *QB_NONNULL_S response);
 /** Constructors */
 + (QB_NONNULL instancetype)new NS_UNAVAILABLE;
 
-- (QB_NONNULL instancetype)initWithType:(QBRequestTaskType)type completionBlock:(QB_NULLABLE QBRequestCompletionBlock)completionBlock;
-- (QB_NONNULL instancetype)initWithType:(QBRequestTaskType)type updateBlock:(QB_NULLABLE QBRequestStatusUpdateBlock)updateBlock completionBlock:(QB_NULLABLE QBRequestCompletionBlock)completionBlock;
+- (QB_NULLABLE instancetype)initWithType:(QBRequestTaskType)type completionBlock:(QB_NULLABLE QBRequestCompletionBlock)completionBlock;
+- (QB_NULLABLE instancetype)initWithType:(QBRequestTaskType)type updateBlock:(QB_NULLABLE QBRequestStatusUpdateBlock)updateBlock completionBlock:(QB_NULLABLE QBRequestCompletionBlock)completionBlock;
 
 /**
  *  Cancels NSURLSessionTask associated with request.

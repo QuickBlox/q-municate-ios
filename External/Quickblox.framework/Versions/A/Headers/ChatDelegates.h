@@ -1,5 +1,5 @@
 //
-//  Delegates.h
+//  ChatDelegates.h
 //  QBChat
 //
 //  Copyright 2012 QuickBlox team. All rights reserved.
@@ -22,27 +22,6 @@
 
 #pragma mark -
 #pragma mark Base IM
-
-/**
- *  didNotSendMessage fired when message cannot be send to user
- *
- *  @param message message passed to sendMessage method into QBChat
- *  @param error Error
- *
- *  @warning *Deprecated in QB iOS SDK 2.5.0:* Use 'onBlockedMessage' or 'setOnBlockedMessage' of QBChatDialog class instead.
- */
-- (void)chatDidNotSendMessage:(QB_NONNULL QBChatMessage *)message error:(QB_NULLABLE NSError *)error DEPRECATED_MSG_ATTRIBUTE("Use 'onBlockedMessage' or 'setOnBlockedMessage' of QBChatDialog class instead.");
-
-/**
- *  Fired when message cannot be send to the group chat.
- *
- *  @param message  QBChatMessage message.
- *  @param dialogID QBChatDialog identifier.
- *  @param error    Error.
- *
- *  @warning *Deprecated in QB iOS SDK 2.5.0:* Use 'onBlockedMessage' or 'setOnBlockedMessage' of QBChatDialog class instead.
- */
-- (void)chatDidNotSendMessage:(QB_NONNULL QBChatMessage *)message toDialogID:(QB_NONNULL NSString *)dialogID error:(QB_NULLABLE NSError *)error DEPRECATED_MSG_ATTRIBUTE("Use 'onBlockedMessage' or 'setOnBlockedMessage' of QBChatDialog class instead.");
 
 /**
  didReceiveMessage fired when new 1-1 message was received from QBChat
@@ -128,6 +107,15 @@
  */
 - (void)chatDidReceiveRejectContactRequestFromUser:(NSUInteger)userID;
 
+#pragma mark -
+#pragma mark Presence
+/**
+ *  Called in case receiving presence with status
+ *
+ *  @param status Recieved presence's status
+ *  @param userID User ID from which received presence
+ */
+- (void)chatDidReceivePresenceWithStatus:(QB_NONNULL NSString *)status fromUser:(NSInteger)userID;
 
 #pragma mark -
 #pragma mark Rooms

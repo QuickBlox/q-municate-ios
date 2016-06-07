@@ -8,12 +8,12 @@
 
 #import "QMSoundManager.h"
 
-NSString * const kSystemSoundTypeCAF = @"caf";
-NSString * const kSystemSoundTypeAIF = @"aif";
-NSString * const kSystemSoundTypeAIFF = @"aiff";
-NSString * const kystemSoundTypeWAV = @"wav";
+static NSString *const kSystemSoundTypeCAF = @"caf";
+static NSString *const kSystemSoundTypeAIF = @"aif";
+static NSString *const kSystemSoundTypeAIFF = @"aiff";
+static NSString *const kystemSoundTypeWAV = @"wav";
 
-static NSString * const kQMSoundManagerSettingKey = @"kQMSoundManagerSettingKey";
+static NSString *const kQMSoundManagerSettingKey = @"kQMSoundManagerSettingKey";
 
 @interface QMSoundManager()
 
@@ -49,7 +49,7 @@ static NSString * const kQMSoundManagerSettingKey = @"kQMSoundManagerSettingKey"
     self = [super init];
     if (self) {
         
-        self.on = YES;
+        _on = YES;
         
         _sounds = [NSMutableDictionary dictionary];
         
@@ -98,7 +98,7 @@ static NSString * const kQMSoundManagerSettingKey = @"kQMSoundManagerSettingKey"
         
         if (error) {
             
-            NSLog(@"%@",[error localizedDescription]);
+            ILog(@"%@",[error localizedDescription]);
         }
         else {
             
@@ -135,55 +135,55 @@ static NSString * const kQMSoundManagerSettingKey = @"kQMSoundManagerSettingKey"
 
 #pragma mark - Did Receive Memory Warning Notification
 
-- (void)didReceiveMemoryWarningNotification:(NSNotification *)notification {
+- (void)didReceiveMemoryWarningNotification:(NSNotification *)__unused notification {
     
     [self.sounds removeAllObjects];
 }
 
 #pragma mark - Default sounds
 
-NSString *const kQMReceivedSoundName = @"received";
-NSString *const kQMSendSoundName = @"sent";
-NSString *const kQMCallingSoundName = @"calling";
-NSString *const kQMBusySoundName = @"busy";
-NSString *const kQMEndOfCallSoundName = @"end_of_call";
-NSString *const kQMRingtoneSoundName = @"ringtone";
+static NSString *const kQMReceivedSoundName = @"received";
+static NSString *const kQMSendSoundName = @"sent";
+static NSString *const kQMCallingSoundName = @"calling";
+static NSString *const kQMBusySoundName = @"busy";
+static NSString *const kQMEndOfCallSoundName = @"end_of_call";
+static NSString *const kQMRingtoneSoundName = @"ringtone";
 
 + (void)playMessageReceivedSound {
     
-    [QMSysPlayer playSoundWithName:kQMReceivedSoundName
-                         extension:kystemSoundTypeWAV];
+    [[QMSoundManager instance] playSoundWithName:kQMReceivedSoundName
+                                       extension:kystemSoundTypeWAV];
 }
 
 + (void)playMessageSentSound {
     
-    [QMSysPlayer playSoundWithName:kQMSendSoundName
-                         extension:kystemSoundTypeWAV];
+    [[QMSoundManager instance] playSoundWithName:kQMSendSoundName
+                                       extension:kystemSoundTypeWAV];
 }
 
 + (void)playCallingSound {
     
-    [QMSysPlayer playSoundWithName:kQMCallingSoundName
-                         extension:kystemSoundTypeWAV];
+    [[QMSoundManager instance] playSoundWithName:kQMCallingSoundName
+                                       extension:kystemSoundTypeWAV];
 }
 
 + (void)playBusySound {
     
-    [QMSysPlayer playSoundWithName:kQMBusySoundName
-                         extension:kystemSoundTypeWAV];
+    [[QMSoundManager instance] playSoundWithName:kQMBusySoundName
+                                       extension:kystemSoundTypeWAV];
 }
 
 + (void)playEndOfCallSound {
     
-    [QMSysPlayer playSoundWithName:kQMEndOfCallSoundName
-                         extension:kystemSoundTypeWAV];
+    [[QMSoundManager instance] playSoundWithName:kQMEndOfCallSoundName
+                                       extension:kystemSoundTypeWAV];
 }
 
 + (void)playRingtoneSound {
     
-    [QMSysPlayer playSoundWithName:kQMRingtoneSoundName
-                         extension:kystemSoundTypeWAV];
-    [QMSysPlayer playVibrateSound];
+    [[QMSoundManager instance] playSoundWithName:kQMRingtoneSoundName
+                                       extension:kystemSoundTypeWAV];
+    [[QMSoundManager instance] playVibrateSound];
 }
 
 @end

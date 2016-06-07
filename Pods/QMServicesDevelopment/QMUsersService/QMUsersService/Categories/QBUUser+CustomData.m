@@ -15,7 +15,7 @@ NSString *const kQMIsImportKey = @"is_import";
 
 @interface QBUUser (QMAssociatedObject)
 
-@property (strong, nonatomic) NSMutableDictionary *context;
+@property (strong, nonatomic, readwrite) NSMutableDictionary *context;
 
 @end
 
@@ -59,7 +59,7 @@ NSString *const kQMIsImportKey = @"is_import";
     }
 }
 
-- (void)syncronize {
+- (void)synchronize {
     
     NSError *error = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self.context
@@ -83,7 +83,7 @@ NSString *const kQMIsImportKey = @"is_import";
 - (void)setIsImport:(BOOL)isImport {
     
     self.context[kQMIsImportKey] = @(isImport);
-    [self syncronize];
+    [self synchronize];
 }
 
 - (BOOL)isImport {
@@ -96,8 +96,8 @@ NSString *const kQMIsImportKey = @"is_import";
 
 - (void)setStatus:(NSString *)status {
     
-    self.context[kQMStatusKey] = status;
-    [self syncronize];
+    self.context[kQMStatusKey] = [status copy];
+    [self synchronize];
 }
 
 - (NSString *)status {
@@ -109,8 +109,8 @@ NSString *const kQMIsImportKey = @"is_import";
 
 - (void)setAvatarUrl:(NSString *)avatarUrl {
     
-    self.context[kQMAvatarUrlKey] = avatarUrl;
-    [self syncronize];
+    self.context[kQMAvatarUrlKey] = [avatarUrl copy];
+    [self synchronize];
 }
 
 - (NSString *)avatarUrl {

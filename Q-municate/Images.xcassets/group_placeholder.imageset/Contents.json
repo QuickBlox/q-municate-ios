@@ -2,13 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "group_placeholder.png"
+      "filename" : "group_placeholder.pdf",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "group_placeholder@2x.png"
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",

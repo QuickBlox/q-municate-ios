@@ -11,14 +11,14 @@
 
 @interface ABPerson : NSObject
 
-@property (strong, nonatomic, readonly) NSString *firstName;
-@property (strong, nonatomic, readonly) NSString *lastName;
-@property (strong, nonatomic, readonly) NSString *middleName;
-@property (strong, nonatomic, readonly) NSString *nickName;
-@property (strong, nonatomic, readonly) UIImage *image;
-@property (strong, nonatomic, readonly) NSArray *emails;
-@property (strong, nonatomic, readonly) NSString *organizationProperty;
-@property (strong, nonatomic, readonly) NSString *fullName;
+@property (copy, nonatomic, readonly) NSString *firstName;
+@property (copy, nonatomic, readonly) NSString *lastName;
+@property (copy, nonatomic, readonly) NSString *middleName;
+@property (copy, nonatomic, readonly) NSString *nickName;
+@property (copy, nonatomic, readonly) UIImage *image;
+@property (copy, nonatomic, readonly) NSArray *emails;
+@property (copy, nonatomic, readonly) NSString *organizationProperty;
+@property (copy, nonatomic, readonly) NSString *fullName;
 
 - (instancetype)initWithRecordID:(ABRecordID)recordID addressBookRef:(ABAddressBookRef)addressBookRef;
 

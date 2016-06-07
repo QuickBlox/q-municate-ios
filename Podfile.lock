@@ -1,101 +1,92 @@
 PODS:
-  - AFNetworking (2.2.4):
-    - AFNetworking/NSURLConnection (= 2.2.4)
-    - AFNetworking/NSURLSession (= 2.2.4)
-    - AFNetworking/Reachability (= 2.2.4)
-    - AFNetworking/Security (= 2.2.4)
-    - AFNetworking/Serialization (= 2.2.4)
-    - AFNetworking/UIKit (= 2.2.4)
-  - AFNetworking/NSURLConnection (2.2.4):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.2.4):
-    - AFNetworking/NSURLConnection
-  - AFNetworking/Reachability (2.2.4)
-  - AFNetworking/Security (2.2.4)
-  - AFNetworking/Serialization (2.2.4)
-  - AFNetworking/UIKit (2.2.4):
-    - AFNetworking/NSURLConnection
-    - AFNetworking/NSURLSession
   - AGEmojiKeyboard (0.1.0)
-  - Bolts (1.5.0):
-    - Bolts/AppLinks (= 1.5.0)
-    - Bolts/Tasks (= 1.5.0)
-  - Bolts/AppLinks (1.5.0):
+  - Bolts (1.7.0):
+    - Bolts/AppLinks (= 1.7.0)
+    - Bolts/Tasks (= 1.7.0)
+  - Bolts/AppLinks (1.7.0):
     - Bolts/Tasks
-  - Bolts/Tasks (1.5.0)
-  - DACircularProgress (2.3.1)
-  - FBSDKCoreKit (4.7.1):
-    - Bolts (~> 1.1)
-    - FBSDKCoreKit/arc (= 4.7.1)
-    - FBSDKCoreKit/no-arc (= 4.7.1)
-  - FBSDKCoreKit/arc (4.7.1):
-    - Bolts (~> 1.1)
-  - FBSDKCoreKit/no-arc (4.7.1):
-    - Bolts (~> 1.1)
-    - FBSDKCoreKit/arc
-  - FBSDKLoginKit (4.7.1):
+  - Bolts/Tasks (1.7.0)
+  - Crashlytics (3.7.0):
+    - Fabric (~> 1.6.3)
+  - Digits (1.15.3):
+    - TwitterCore (= 1.15.3)
+  - Fabric (1.6.7)
+  - FBSDKCoreKit (4.11.0):
+    - Bolts (~> 1.7)
+  - FBSDKLoginKit (4.11.0):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.7.1):
+  - FBSDKShareKit (4.11.0):
     - FBSDKCoreKit
-  - IDMPhotoBrowser (1.3.5):
-    - AFNetworking (~> 2.2.3)
-    - DACircularProgress (~> 2.2)
-    - SVProgressHUD (~> 1.0)
+  - FLAnimatedImage (1.0.12)
+  - Flurry-iOS-SDK/FlurrySDK (7.1.1)
+  - libextobjc/EXTKeyPathCoding (0.4.1):
+    - libextobjc/RuntimeExtensions
   - libextobjc/EXTScope (0.4.1):
     - libextobjc/RuntimeExtensions
   - libextobjc/RuntimeExtensions (0.4.1)
   - MPGNotification (1.2.4)
-  - QMCVDevelopment (0.3.4):
-    - QMCVDevelopment/Categories (= 0.3.4)
-    - QMCVDevelopment/KeyboardViewController (= 0.3.4)
-    - QMCVDevelopment/Protocols (= 0.3.4)
-    - QMCVDevelopment/QMChatSection (= 0.3.4)
-    - QMCVDevelopment/Utils (= 0.3.4)
-    - QMCVDevelopment/Views (= 0.3.4)
+  - NYTPhotoViewer (1.1.0):
+    - NYTPhotoViewer/AnimatedGifSupport (= 1.1.0)
+    - NYTPhotoViewer/Core (= 1.1.0)
+  - NYTPhotoViewer/AnimatedGifSupport (1.1.0):
+    - FLAnimatedImage (~> 1.0.8)
+    - NYTPhotoViewer/Core
+  - NYTPhotoViewer/Core (1.1.0)
+  - QMCVDevelopment (0.3.7):
+    - QMCVDevelopment/Categories (= 0.3.7)
+    - QMCVDevelopment/KeyboardViewController (= 0.3.7)
+    - QMCVDevelopment/Protocols (= 0.3.7)
+    - QMCVDevelopment/QMChatSection (= 0.3.7)
+    - QMCVDevelopment/Utils (= 0.3.7)
+    - QMCVDevelopment/Views (= 0.3.7)
     - SDWebImage (~> 3.6)
-    - TTTAttributedLabel (~> 1.13)
-  - QMCVDevelopment/Categories (0.3.4):
+    - TTTAttributedLabel (> 1.13)
+  - QMCVDevelopment/Categories (0.3.7):
     - SDWebImage (~> 3.6)
-    - TTTAttributedLabel (~> 1.13)
-  - QMCVDevelopment/KeyboardViewController (0.3.4):
+    - TTTAttributedLabel (> 1.13)
+  - QMCVDevelopment/KeyboardViewController (0.3.7):
     - SDWebImage (~> 3.6)
-    - TTTAttributedLabel (~> 1.13)
-  - QMCVDevelopment/Protocols (0.3.4):
+    - TTTAttributedLabel (> 1.13)
+  - QMCVDevelopment/Protocols (0.3.7):
     - SDWebImage (~> 3.6)
-    - TTTAttributedLabel (~> 1.13)
-  - QMCVDevelopment/QMChatSection (0.3.4):
+    - TTTAttributedLabel (> 1.13)
+  - QMCVDevelopment/QMChatSection (0.3.7):
     - SDWebImage (~> 3.6)
-    - TTTAttributedLabel (~> 1.13)
-  - QMCVDevelopment/Utils (0.3.4):
+    - TTTAttributedLabel (> 1.13)
+  - QMCVDevelopment/Utils (0.3.7):
     - SDWebImage (~> 3.6)
-    - TTTAttributedLabel (~> 1.13)
-  - QMCVDevelopment/Views (0.3.4):
+    - TTTAttributedLabel (> 1.13)
+  - QMCVDevelopment/Views (0.3.7):
     - QMCVDevelopment/Categories
     - QMCVDevelopment/Protocols
     - SDWebImage (~> 3.6)
-    - TTTAttributedLabel (~> 1.13)
-  - QMServicesDevelopment (0.3.7):
-    - Bolts (= 1.5.0)
+    - TTTAttributedLabel (> 1.13)
+  - QMServicesDevelopment (0.4):
+    - Bolts (>= 1.5.0)
   - Reachability (3.2)
-  - SDWebImage (3.7.5):
-    - SDWebImage/Core (= 3.7.5)
-  - SDWebImage/Core (3.7.5)
+  - SDWebImage (3.7.6):
+    - SDWebImage/Core (= 3.7.6)
+  - SDWebImage/Core (3.7.6)
   - SSKeychain (1.2.3)
-  - StaticDataTableViewController (2.0.5)
   - SVProgressHUD (1.1.3)
-  - TTTAttributedLabel (1.13.4)
+  - TTTAttributedLabel (2.0.0)
+  - TwitterCore (1.15.3):
+    - Fabric
   - UIDevice-Hardware (0.1.7)
 
 DEPENDENCIES:
   - AGEmojiKeyboard (~> 0.1.0)
-  - FBSDKCoreKit (~> 4.7.0)
-  - FBSDKLoginKit (~> 4.7.0)
-  - FBSDKShareKit (~> 4.7.0)
-  - IDMPhotoBrowser (~> 1.3.5)
+  - Crashlytics (~> 3.5)
+  - Digits (~> 1.15)
+  - Fabric (~> 1.6)
+  - FBSDKCoreKit (~> 4.11.0)
+  - FBSDKLoginKit (~> 4.11.0)
+  - FBSDKShareKit (~> 4.11.0)
+  - Flurry-iOS-SDK/FlurrySDK (~> 7.1.0)
+  - libextobjc/EXTKeyPathCoding (~> 0.4.1)
   - libextobjc/EXTScope (~> 0.4.1)
-  - MPGNotification (~> 1.1)
+  - MPGNotification (~> 1.2)
+  - NYTPhotoViewer (~> 1.1.0)
   - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`,
     branch `development`)
   - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`,
@@ -103,9 +94,9 @@ DEPENDENCIES:
   - Reachability (~> 3.2)
   - SDWebImage (~> 3.6)
   - SSKeychain (~> 1.2.2)
-  - StaticDataTableViewController (~> 2.0.3)
   - SVProgressHUD (~> 1.0)
-  - TTTAttributedLabel (~> 1.13)
+  - TTTAttributedLabel (~> 2.0)
+  - TwitterCore (~> 1.15)
   - UIDevice-Hardware (~> 0.1.3)
 
 EXTERNAL SOURCES:
@@ -118,31 +109,34 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
-    :commit: 8fc15b89f11fb289fb149bd1b5bec842444640fc
+    :commit: 512dceb69e993d0ed9e6354fa958af1e26d50b17
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: b35e99c08dd36dd3b74fa945bd24fa9941f348fe
+    :commit: ebc5619c52e820bdb0bfd58eac7b0744ddf723f9
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
-  AFNetworking: caca0799b310f0c3bf1fc1af45145fc96972bcab
   AGEmojiKeyboard: e19cf4168b114d2e494e53fe8dc042d8bf011cc9
-  Bolts: 722ab9a4f8b50fc4ed1b9998a5a7a2b3f16d80b4
-  DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
-  FBSDKCoreKit: 9141b70960a37930850370495fe565f4a27ac141
-  FBSDKLoginKit: c11ed3c2833472db3bb4a4aecf27af4a6f69b173
-  FBSDKShareKit: 213adf63e073f41a346b0e7a689805880dc5150e
-  IDMPhotoBrowser: 6699a8d8b6c036a60c58ba7c281b2f5761d970ac
+  Bolts: a0058fa3b331c5a1e4402d534f2dae36dbff31e4
+  Crashlytics: c3a2333dea9e2733d2777f730910321fc9e25c0d
+  Digits: 9823f8aad766c0aa824fac9b08938e22bc635fac
+  Fabric: caf7580c725e64db144f610ac65cd60956911dc7
+  FBSDKCoreKit: 686ac982723a14ec9ddb85e2f81235d7706c891b
+  FBSDKLoginKit: bade9fc78277764149ccc5bfaadbf13c83175c6a
+  FBSDKShareKit: 2d1746144cfc8a9dbbd24997c34ee0471be51b6a
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
+  Flurry-iOS-SDK: 83fd4f40ae66e80d122fd2f6698f0e0c31021a63
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
-  QMCVDevelopment: 7588e2e2b02d41f12cb2b34c4f708d698200e6cc
-  QMServicesDevelopment: 7e90fd5b370463384214b8064cce3edcc7007c2a
+  NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
+  QMCVDevelopment: bed39cce88670b3ae0264621bdfe92d41fe3f7c0
+  QMServicesDevelopment: 2f71e9eb067e5da53a90cb8777fa49d7637d2566
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
-  SDWebImage: 69c6303e3348fba97e03f65d65d4fbc26740f461
+  SDWebImage: c325cf02c30337336b95beff20a13df489ec0ec9
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
-  StaticDataTableViewController: 7ea8d7bc8c7f0a4e9255a320224462c7346c1d4a
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
-  TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
+  TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
+  TwitterCore: cce24b3c798993ccde72787ea79ea9a478b284e4
   UIDevice-Hardware: de848ac4b53de555f70ff1a32877454d221c71d1
 
-COCOAPODS: 0.38.2
+COCOAPODS: 0.39.0
