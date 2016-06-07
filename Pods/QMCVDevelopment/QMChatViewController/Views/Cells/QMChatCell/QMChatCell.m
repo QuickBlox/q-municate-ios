@@ -10,6 +10,10 @@
 #import "QMChatCellLayoutAttributes.h"
 #import "TTTAttributedLabel.h"
 
+@interface TTTAttributedLabel(PrivateAPI)
+    - (TTTAttributedLabelLink *)linkAtPoint:(CGPoint)point;
+@end
+
 static NSMutableSet *_qmChatCellMenuActions = nil;
 
 @interface QMChatCell() <QMImageViewDelegate, UIGestureRecognizerDelegate>
@@ -260,6 +264,7 @@ static NSMutableSet *_qmChatCellMenuActions = nil;
             
             TTTAttributedLabel *label = (TTTAttributedLabel *)touch.view;
             CGPoint translatedPoint = [label convertPoint:touchPt fromView:gestureRecognizer.view];
+            
             
             TTTAttributedLabelLink *labelLink = [label linkAtPoint:translatedPoint];
             
