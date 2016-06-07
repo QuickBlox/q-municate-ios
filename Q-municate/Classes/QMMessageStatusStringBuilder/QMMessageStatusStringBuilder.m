@@ -161,7 +161,7 @@ static const NSUInteger kQMStatusStringNamesLimit = 5;
     
     [mutableString deleteCharactersInRange:NSMakeRange(mutableString.length - 2, 2)];
     
-    return mutableString.copy;
+    return [mutableString copy];
 }
 
 @end

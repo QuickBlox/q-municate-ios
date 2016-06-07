@@ -159,7 +159,7 @@
 
 - (NSArray *)friendsByExcludingUsersWithIDs:(NSArray *)userIDs {
     
-    NSArray *friends = self.friends;
+    NSArray *friends = [self friends];
     NSMutableArray *mutableUsers = [friends mutableCopy];
     
     for (QBUUser *user in friends) {

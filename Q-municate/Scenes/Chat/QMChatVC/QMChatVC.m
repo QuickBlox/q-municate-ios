@@ -456,7 +456,7 @@ NYTPhotosViewControllerDelegate
 
 - (Class)viewClassForItem:(QBChatMessage *)item {
     
-    if (item.isNotificatonMessage) {
+    if ([item isNotificatonMessage]) {
         
         NSUInteger opponentID = [self.chatDialog opponentID];
         BOOL isFriend = [[QMCore instance].contactManager isFriendWithUserID:opponentID];
@@ -510,7 +510,7 @@ NYTPhotosViewControllerDelegate
     UIColor *textColor = nil;
     UIFont *font = nil;
     
-    if (messageItem.isNotificatonMessage) {
+    if ([messageItem isNotificatonMessage]) {
         
         message = [self.messageStatusStringBuilder messageTextForNotification:messageItem];
         
@@ -543,7 +543,7 @@ NYTPhotosViewControllerDelegate
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor,
                                   NSFontAttributeName:font,
                                   NSParagraphStyleAttributeName:paragraphStyle};
-    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:message != nil ? message : @"" attributes:attributes];
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:message ?: @"" attributes:attributes];
     
     return attributedString;
 }
@@ -1009,7 +1009,7 @@ NYTPhotosViewControllerDelegate
     
     // chat status string
     @weakify(self);
-    [self.chatDialog requestOnlineUsersWithCompletionBlock:^(NSMutableArray<NSNumber *> * _Nullable onlineUsers, NSError * _Nullable __unused error) {
+    [self.chatDialog requestOnlineUsersWithCompletionBlock:^(NSMutableArray<NSNumber *> * _Nullable onlineUsers, NSError * _Nullable error) {
         @strongify(self);
         
         if (error == nil) {
@@ -1215,7 +1215,7 @@ NYTPhotosViewControllerDelegate
             
             return [BFTask cancelledTask];
             
-        }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
             
             @strongify(self);
             [navigationController dismissNotificationPanel];
@@ -1501,7 +1501,7 @@ NYTPhotosViewControllerDelegate
     UIGraphicsBeginImageContextWithOptions(size , NO, 0);
     
     NSDictionary *attributes = @{NSFontAttributeName : [UIFont systemFontOfSize:27]};
-    NSString * sectionImage = self.sectionsImages[categoryImage];
+    NSString * sectionImage = [self sectionsImages][categoryImage];
     [sectionImage drawInRect:CGRectMake(0, 0, 30, 30) withAttributes:attributes];
     
     UIImage *img = UIGraphicsGetImageFromCurrentImageContext();

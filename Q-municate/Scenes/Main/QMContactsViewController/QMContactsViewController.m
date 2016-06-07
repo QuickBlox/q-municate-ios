@@ -164,7 +164,7 @@ QMUsersServiceDelegate
         NSIndexPath *indexPath = [self.searchResultsController.tableView indexPathForCell:cell];
         QBUUser *user = self.globalSearchDataSource.items[indexPath.row];
         
-        self.addUserTask = [[[QMCore instance].contactManager addUserToContactList:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        self.addUserTask = [[[QMCore instance].contactManager addUserToContactList:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
             
             [SVProgressHUD dismiss];
             
@@ -191,7 +191,7 @@ QMUsersServiceDelegate
 
 - (void)updateItemsFromContactList {
     
-    NSArray *friends = [QMCore instance].contactManager.friends;
+    NSArray *friends = [[QMCore instance].contactManager friends];
     [self.dataSource replaceItems:friends];
 }
 
@@ -218,14 +218,14 @@ QMUsersServiceDelegate
 
 #pragma mark - UISearchControllerDelegate
 
-- (void)willPresentSearchController:(UISearchController *)__unused searchController {
+- (void)willPresentSearchController:(UISearchController *)searchController {
     
-    if (self.searchController.searchBar.scopeButtonTitles.count == 0) {
+    if (searchController.searchBar.scopeButtonTitles.count == 0) {
         // there is an Apple bug when first time configuring search bar scope buttons
         // will be displayed no matter what with minimal searchbar
         // to fix this adding scope buttons right before user activates search bar
-        self.searchController.searchBar.showsScopeBar = NO;
-        self.searchController.searchBar.scopeButtonTitles = @[NSLocalizedString(@"QM_STR_LOCAL_SEARCH", nil), NSLocalizedString(@"QM_STR_GLOBAL_SEARCH", nil)];
+        searchController.searchBar.showsScopeBar = NO;
+        searchController.searchBar.scopeButtonTitles = @[NSLocalizedString(@"QM_STR_LOCAL_SEARCH", nil), NSLocalizedString(@"QM_STR_GLOBAL_SEARCH", nil)];
     }
     
     [self updateDataSourceByScope:searchController.searchBar.selectedScopeButtonIndex];

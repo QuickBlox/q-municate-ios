@@ -192,7 +192,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         needUpdateSessionToken = [self sessionTokenHasExpiredOrNeedCreate];
     }
     
-    if (self.isAuthorized
+    if ([self isAuthorized]
         && ![QBChat instance].isConnected) {
         
         if (needUpdateSessionToken) {
@@ -303,14 +303,14 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     [[QMContactListCache instance] insertOrUpdateContactListItemsWithContactList:contactList completion:nil];
     
     // load users if needed
-    [[QMCore instance].usersService getUsersWithIDs:[self.contactListService.contactListMemoryStorage userIDsFromContactList]];
+    [self.usersService getUsersWithIDs:[self.contactListService.contactListMemoryStorage userIDsFromContactList]];
 }
 
 #pragma mark - Helpers
 
 - (BOOL)isInternetConnected {
     
-    return self.internetConnection.isReachable;
+    return [self.internetConnection isReachable];
 }
 
 - (BOOL)sessionTokenHasExpiredOrNeedCreate {

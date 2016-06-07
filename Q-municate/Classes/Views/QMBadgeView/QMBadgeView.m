@@ -105,7 +105,7 @@
     [self.borderColor setStroke];
     badgePath.lineWidth = self.borderWidth;
     [badgePath stroke];
-    NSMutableParagraphStyle* badgeStyle = NSMutableParagraphStyle.defaultParagraphStyle.mutableCopy;
+    NSMutableParagraphStyle* badgeStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
     badgeStyle.alignment = NSTextAlignmentCenter;
     
     NSDictionary* badgeFontAttributes = @{

@@ -28,16 +28,16 @@
     
     if (chatDialog.type == QBChatDialogTypePrivate) {
         
-        QBUUser *recipient = [[QMCore instance].usersService.usersMemoryStorage userWithID:chatDialog.opponentID];
+        QBUUser *recipient = [[QMCore instance].usersService.usersMemoryStorage userWithID:[chatDialog opponentID]];
         
         if (recipient != nil) {
             NSParameterAssert(recipient.fullName);
             
-            [cell setTitle:recipient.fullName placeholderID:chatDialog.opponentID avatarUrl:recipient.avatarUrl];
+            [cell setTitle:recipient.fullName placeholderID:[chatDialog opponentID] avatarUrl:recipient.avatarUrl];
         }
         else {
             
-            [cell setTitle:NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil) placeholderID:chatDialog.opponentID avatarUrl:nil];
+            [cell setTitle:NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil) placeholderID:[chatDialog opponentID] avatarUrl:nil];
         }
     } else {
         

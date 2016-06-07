@@ -12,7 +12,7 @@ UIImage *QMStatusBarBackgroundImage() {
     UIGraphicsBeginImageContext(rect.size);
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGContextSetFillColorWithColor(context, [[UIColor whiteColor] CGColor]);
+    CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
     CGContextFillRect(context, rect);
     
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();

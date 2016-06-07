@@ -235,7 +235,7 @@
     
     [indexSet enumerateIndexesUsingBlock:^(NSUInteger index, __unused BOOL *stop) {
         
-        QMTagView *tagView = [self.tagsList objectAtIndex:index];
+        QMTagView *tagView = self.tagsList[index];
         if ([tagView isFirstResponder]) {
             
             [tagView resignFirstResponder];

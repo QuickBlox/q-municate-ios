@@ -28,7 +28,7 @@ NSString *const kQMIsImportUpdateKey = @"is_import";
     
     if (!context) {
         
-        context = self.jsonObject;
+        context = [self jsonObject];
         [self setContext:context];
     }
     
@@ -50,7 +50,7 @@ NSString *const kQMIsImportUpdateKey = @"is_import";
         NSDictionary *representationObject = [NSJSONSerialization JSONObjectWithData:jsonData
                                                                              options:NSJSONReadingMutableContainers
                                                                                error:&error];
-        return representationObject.mutableCopy;
+        return [representationObject mutableCopy];
     }
     else {
         

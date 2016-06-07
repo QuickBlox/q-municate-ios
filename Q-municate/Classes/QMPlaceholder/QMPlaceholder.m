@@ -19,14 +19,15 @@
 
 + (instancetype)instance {
     
-    static QMPlaceholder *_userPlaceholder = nil;
+    static QMPlaceholder *userPlaceholder = nil;
+    
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
-        _userPlaceholder = [[QMPlaceholder alloc] init];
+        userPlaceholder = [[QMPlaceholder alloc] init];
     });
     
-    return _userPlaceholder;
+    return userPlaceholder;
 }
 
 - (instancetype)init {
@@ -77,13 +78,13 @@
         [userColor setFill];
         [ovalPath fill];
         
-        NSMutableParagraphStyle *paragraphStyle = NSMutableParagraphStyle.defaultParagraphStyle.mutableCopy;
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
         paragraphStyle.alignment = NSTextAlignmentCenter;
         
         UIFont *font = [UIFont systemFontOfSize:frame.size.height / 2.0f];
         UIColor *textColor = [UIColor whiteColor];
         
-        NSString *textContent = [[title substringToIndex:1] uppercaseString];
+        NSString *textContent = [title substringToIndex:1].uppercaseString;
         
         NSDictionary *ovalFontAttributes = @{NSFontAttributeName:font ,
                                              NSForegroundColorAttributeName:textColor,

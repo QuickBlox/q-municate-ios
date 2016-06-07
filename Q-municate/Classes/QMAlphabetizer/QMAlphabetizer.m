@@ -146,7 +146,7 @@ NSString * const QMLAlphabetizerGroupDisplayNameKey = @"displayName";
         [dictionary[key][QMLAlphabetizerGroupObjectsKey] sortUsingDescriptors:@[sortDescriptor]];
     }
     
-    return [self alphabetizedDictionaryFromObjects:[dictionary allValues]
+    return [self alphabetizedDictionaryFromObjects:dictionary.allValues
                                       usingKeyPath:QMLAlphabetizerGroupSortNameKey
                           nonAlphabeticPlaceholder:placeholder];
 }

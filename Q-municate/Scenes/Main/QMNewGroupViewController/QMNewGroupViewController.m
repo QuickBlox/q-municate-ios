@@ -129,7 +129,7 @@ UITextFieldDelegate
         
         return [BFTask cancelledTask];
         
-    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         
         return task.isCancelled ? nil : [[QMCore instance].chatService sendNotificationMessageAboutAddingOccupants:occupantsIDs toDialog:chatDialog withNotificationText:kQMDialogsUpdateNotificationMessage];
     }];

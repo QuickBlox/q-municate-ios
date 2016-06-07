@@ -47,8 +47,6 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
 - (void)dismissViewControllerSuccess:(BOOL)success {
     
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-    
     @weakify(self);
     [self dismissViewControllerAnimated:YES completion:^{
         
