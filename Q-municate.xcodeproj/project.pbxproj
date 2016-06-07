@@ -2295,10 +2295,13 @@
 				WARNING_CFLAGS = (
 					"-Wall",
 					"-Wdeprecated-implementations",
+					"-Werror",
+					"-Wextra",
 					"-Wfloat-equal",
+					"-Wimplicit-retain-self",
 					"-Wshadow",
-					"-Wreturn-type",
 					"-Wsign-compare",
+					"-Wreturn-type",
 					"-Wundef",
 				);
 				WRAPPER_EXTENSION = app;
