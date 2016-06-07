@@ -162,7 +162,7 @@
 		69D57E5818ACC11C00A9900A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D57E5718ACC11C00A9900A /* CoreGraphics.framework */; };
 		69D57E5A18ACC11C00A9900A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69D57E5918ACC11C00A9900A /* UIKit.framework */; };
 		69D57E6218ACC11C00A9900A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D57E6118ACC11C00A9900A /* main.m */; };
-		69D57E6618ACC11C00A9900A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D57E6518ACC11C00A9900A /* AppDelegate.m */; };
+		69D57E6618ACC11C00A9900A /* QMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D57E6518ACC11C00A9900A /* QMAppDelegate.m */; };
 		69D57E6818ACC11C00A9900A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69D57E6718ACC11C00A9900A /* Images.xcassets */; };
 		69DB5EF518E31D6400277226 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69DB5EF418E31D6400277226 /* MessageUI.framework */; };
 		86FD874D1982512000B6FA43 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FD874C1982512000B6FA43 /* GLKit.framework */; };
@@ -446,8 +446,8 @@
 		69D57E5D18ACC11C00A9900A /* Q-municate-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Q-municate-Info.plist"; sourceTree = "<group>"; };
 		69D57E6118ACC11C00A9900A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		69D57E6318ACC11C00A9900A /* Q-municate-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Q-municate-Prefix.pch"; sourceTree = "<group>"; };
-		69D57E6418ACC11C00A9900A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		69D57E6518ACC11C00A9900A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		69D57E6418ACC11C00A9900A /* QMAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMAppDelegate.h; sourceTree = "<group>"; };
+		69D57E6518ACC11C00A9900A /* QMAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMAppDelegate.m; sourceTree = "<group>"; };
 		69D57E6718ACC11C00A9900A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		69D57E6E18ACC11C00A9900A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		69DB5EF418E31D6400277226 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -1861,8 +1861,8 @@
 			isa = PBXGroup;
 			children = (
 				584A6D931C9D9AA700B7D641 /* QMConstants.h */,
-				69D57E6418ACC11C00A9900A /* AppDelegate.h */,
-				69D57E6518ACC11C00A9900A /* AppDelegate.m */,
+				69D57E6418ACC11C00A9900A /* QMAppDelegate.h */,
+				69D57E6518ACC11C00A9900A /* QMAppDelegate.m */,
 				5877D6C51C466B2D00938E5D /* Launch Screen.storyboard */,
 				695F4B2118B60A62006C9DA5 /* Classes */,
 				6943848C18E42691001E08A9 /* Categories */,
@@ -2087,7 +2087,7 @@
 				58B550731CC79C8500C93F93 /* QMGroupAddUsersViewController.m in Sources */,
 				584A6DC91C9DEBC200B7D641 /* QMTextField.m in Sources */,
 				58C261F41CDC926000AA9CF2 /* QMUpdateUserViewController.m in Sources */,
-				69D57E6618ACC11C00A9900A /* AppDelegate.m in Sources */,
+				69D57E6618ACC11C00A9900A /* QMAppDelegate.m in Sources */,
 				5877D6CA1C466DE600938E5D /* QMDialogsViewController.m in Sources */,
 				58D847811C871469000C40BA /* QMSearchDataProvider.m in Sources */,
 				559BDFEA19618D3D000588FE /* QMWelcomeScreenViewController.m in Sources */,
