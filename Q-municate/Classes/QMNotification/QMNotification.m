@@ -61,7 +61,7 @@ static const CGFloat kQMMessageNotificationIconImageSize = 32.0;
     
     NSString *messageText = chatMessage.text;
     
-    if (chatMessage.isNotificatonMessage) {
+    if ([chatMessage isNotificatonMessage]) {
         
         QMMessageStatusStringBuilder *stringBuilder = [QMMessageStatusStringBuilder new];
         messageText = [stringBuilder messageTextForNotification:chatMessage];

@@ -84,7 +84,7 @@
     UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
                                                                         target:nil
                                                                         action:nil];
-    for (UIButton *button in self.buttons.copy) {
+    for (UIButton *button in [self.buttons copy]) {
         
         UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:button];
         
@@ -93,7 +93,7 @@
     }
     
     [items addObject:space];
-    [self setItems:items.copy];
+    [self setItems:[items copy]];
 }
 
 #pragma mark - Button handler

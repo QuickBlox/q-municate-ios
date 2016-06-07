@@ -147,7 +147,7 @@ QMCallManagerDelegate
 
 - (void)configureCallInfoView {
     
-    QBUUser *opponentUser = [QMCore instance].callManager.opponentUser;
+    QBUUser *opponentUser = [[QMCore instance].callManager opponentUser];
     
     if (self.callInfoView == nil) {
         // base call info view configuration
@@ -424,7 +424,7 @@ QMCallManagerDelegate
 - (void)configureVideoCall {
     
     // configuring local video view frame
-    UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
     self.localVideoView.frame = [QMLocalVideoView preferredFrameForInterfaceOrientation:interfaceOrientation];
     self.localVideoView.blurEffectEnabled = NO;
     self.localVideoView.autoresizingMask = UIViewAutoresizingNone;
@@ -488,7 +488,7 @@ QMCallManagerDelegate
             // after interface orientation change
             
             // updating local video view frame after interface rotation
-            UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+            UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
             self.localVideoView.frame = [QMLocalVideoView preferredFrameForInterfaceOrientation:interfaceOrientation];
             
             // Updating call info view frame with toplayout guide as a starting point

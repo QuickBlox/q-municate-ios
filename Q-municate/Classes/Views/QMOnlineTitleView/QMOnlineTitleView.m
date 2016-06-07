@@ -61,7 +61,7 @@
 - (CGSize)sizeThatFits:(CGSize)size {
     
     CGFloat width = 0.0;
-    for (UIView *view in [self subviews]) {
+    for (UIView *view in self.subviews) {
         
         if (view.frame.size.width > width) {
             

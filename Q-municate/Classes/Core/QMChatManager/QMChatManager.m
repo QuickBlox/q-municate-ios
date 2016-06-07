@@ -72,8 +72,9 @@
     return [[[QMContent uploadPNGImage:avatar progress:nil] continueWithSuccessBlock:^id _Nullable(BFTask<QBCBlob *> * _Nonnull task) {
         
         @strongify(self);
-        NSString *url = task.result.publicUrl ?: task.result.privateUrl;
+        NSString *url = task.result.isPublic ? [task.result publicUrl] : [task.result privateUrl];
         return [self.serviceManager.chatService changeDialogAvatar:url forChatDialog:chatDialog];
+        
     }] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
         
         @strongify(self);

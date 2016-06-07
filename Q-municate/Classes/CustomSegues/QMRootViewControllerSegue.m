@@ -7,13 +7,13 @@
 //
 
 #import "QMRootViewControllerSegue.h"
-#import "AppDelegate.h"
+#import "QMAppDelegate.h"
 
 @implementation QMRootViewControllerSegue
 
 - (void)perform {
     
-    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    QMAppDelegate *delegate = (QMAppDelegate *)[UIApplication sharedApplication].delegate;
     delegate.window.rootViewController = self.destinationViewController;
 }
 

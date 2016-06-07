@@ -13,7 +13,7 @@
 + (UIButton *)audioCall {
     
     UIButton *audioButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [audioButton setFrame:CGRectMake(0, 0, 30, 40)];
+    audioButton.frame = CGRectMake(0, 0, 30, 40);
     [audioButton setImage:[UIImage imageNamed:@"ic_audio_call"] forState:UIControlStateNormal];
     return audioButton;
 }
@@ -21,7 +21,7 @@
 + (UIButton *)videoCall {
     
     UIButton *videoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [videoButton setFrame:CGRectMake(0, 0, 30, 40)];
+    videoButton.frame = CGRectMake(0, 0, 30, 40);
     [videoButton setImage:[UIImage imageNamed:@"ic_video_call"] forState:UIControlStateNormal];
     return videoButton;
 }

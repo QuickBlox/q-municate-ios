@@ -35,7 +35,7 @@
     
     BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
     
-    NSString *deviceIdentifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    NSString *deviceIdentifier = [UIDevice currentDevice].identifierForVendor.UUIDString;
     
     QBMSubscription *subscription = [QBMSubscription subscription];
     subscription.notificationChannel = QBMNotificationChannelAPNS;
@@ -75,7 +75,7 @@
         [source setResult:nil];
     };
     
-    NSString *deviceIdentifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    NSString *deviceIdentifier = [UIDevice currentDevice].identifierForVendor.UUIDString;
     [QBRequest unregisterSubscriptionForUniqueDeviceIdentifier:deviceIdentifier successBlock:^(QBResponse * _Nonnull __unused response) {
         
         disablePushNotifications();

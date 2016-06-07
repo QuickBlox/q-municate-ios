@@ -110,7 +110,7 @@ static NSString *const kQMFacebookIDField = @"id";
             @strongify(self);
             [SVProgressHUD dismiss];
             [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
-            [[QMCore instance].currentProfile setAccountType:QMAccountTypeFacebook];
+            [QMCore instance].currentProfile.accountType = QMAccountTypeFacebook;
             [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
             
             if (task.result.avatarUrl.length == 0) {
@@ -164,7 +164,7 @@ static NSString *const kQMFacebookIDField = @"id";
                     
                     [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
                     
-                    [[QMCore instance].currentProfile setAccountType:QMAccountTypeDigits];
+                    [QMCore instance].currentProfile.accountType = QMAccountTypeDigits;
                     
                     QBUUser *user = task.result;
                     if (user.fullName.length == 0) {

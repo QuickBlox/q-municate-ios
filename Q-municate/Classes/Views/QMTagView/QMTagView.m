@@ -59,7 +59,7 @@ static UIImage *tokenBackgroundHighlightedImage() {
     [self setBackgroundImage:tokenBackgroundHighlightedImage() forState:UIControlStateHighlighted | UIControlStateSelected];
     
     self.titleLabel.font = [UIFont systemFontOfSize:15];
-    [self setTitleEdgeInsets:UIEdgeInsetsMake(0, 5, 0, 5)];
+    self.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, 5);
     
     [self setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self setTitleShadowColor:nil forState:UIControlStateNormal];

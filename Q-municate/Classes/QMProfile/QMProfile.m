@@ -129,7 +129,7 @@ static NSString *const kQMAppExists = @"QMAppExists";
 
 - (void)keychainQuery:(void(^)(SSKeychainQuery *query))keychainQueryBlock {
     
-    NSString *bundleIdentifier = NSBundle.mainBundle.bundleIdentifier;
+    NSString *bundleIdentifier = [NSBundle mainBundle].bundleIdentifier;
     NSString *service = [NSString stringWithFormat:@"%@.service", bundleIdentifier];
     NSString *account = [NSString stringWithFormat:@"%@.account", bundleIdentifier];
     

@@ -35,7 +35,7 @@
     _placeholderLabel.userInteractionEnabled = NO;
     _placeholderLabel.textColor = [UIColor colorWithRed:200.0f/255.0f green:200.0f/255.0f blue:205.0f/255.0f alpha:1.0f];
     
-    [self setTextAlignment:NSTextAlignmentLeft];
+    self.textAlignment = NSTextAlignmentLeft;
 }
 
 #pragma mark - Methods

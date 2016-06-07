@@ -29,6 +29,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
         [[QMCore instance].currentProfile synchronizeWithUserData:user];
         
         [source setResult:user];
+        
     } errorBlock:^(QBResponse * _Nonnull response) {
         
         [[QMCore instance] handleErrorResponse:response];
@@ -44,9 +45,9 @@ static const NSUInteger kQMDialogsPageLimit = 10;
         
         QBUpdateUserParameters *userParams = [QBUpdateUserParameters new];
         userParams.customData = [QMCore instance].currentProfile.userData.customData;
-        userParams.avatarUrl = task.result.isPublic ? task.result.publicUrl : task.result.privateUrl;
+        userParams.avatarUrl = task.result.isPublic ? [task.result publicUrl] : [task.result privateUrl];
         
-        return [QMTasks taskUpdateCurrentUser:userParams];
+        return [[self class] taskUpdateCurrentUser:userParams];
     }];
 }
 
@@ -57,6 +58,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     [QBRequest resetUserPasswordWithEmail:email successBlock:^(QBResponse * _Nonnull __unused response) {
         
         [source setResult:nil];
+        
     } errorBlock:^(QBResponse * _Nonnull response) {
         
         [source setError:response.error.error];
@@ -77,9 +79,9 @@ static const NSUInteger kQMDialogsPageLimit = 10;
         return source.task;
     }
     
-    if ([QMCore instance].isAuthorized) {
+    if ([[QMCore instance] isAuthorized]) {
         
-        [source setResult:[QMCore instance].currentUser];
+        [source setResult:[QMCore instance].currentProfile.userData];
     } else {
         
         switch ([QMCore instance].currentProfile.accountType) {
@@ -104,8 +106,9 @@ static const NSUInteger kQMDialogsPageLimit = 10;
                 // Digits login
             case QMAccountTypeDigits: {
                 
-                DGTOAuthSigning *oauthSigning = [[DGTOAuthSigning alloc] initWithAuthConfig:[Digits sharedInstance].authConfig
-                                                                                authSession:[Digits sharedInstance].session];
+                DGTOAuthSigning *oauthSigning = [[DGTOAuthSigning alloc]
+                                                 initWithAuthConfig:[Digits sharedInstance].authConfig
+                                                 authSession:[[Digits sharedInstance] session]];
                 
                 NSDictionary *authHeaders = [oauthSigning OAuthEchoHeadersToVerifyCredentials];
                 if (!authHeaders) {
@@ -137,13 +140,13 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     
     BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull task) {
         
-        if ([QMCore instance].isAuthorized && !task.isFaulted) {
+        if ([[QMCore instance] isAuthorized] && !task.isFaulted) {
             
             [QMCore instance].currentProfile.lastDialogsFetchingDate = [NSDate date];
             [[QMCore instance].currentProfile synchronize];
         }
         
-        return [BFTask taskForCompletionOfAllTasks:usersLoadingTasks.copy];
+        return [BFTask taskForCompletionOfAllTasks:[usersLoadingTasks copy]];
     };
     
     NSDate *lastDialogsFetchingDate = [QMCore instance].currentProfile.lastDialogsFetchingDate;

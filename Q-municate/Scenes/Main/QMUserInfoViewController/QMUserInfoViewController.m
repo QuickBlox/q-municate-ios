@@ -215,7 +215,7 @@ QMContactListServiceDelegate
     
     // Status
     NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
-    if ([[self.user.status stringByTrimmingCharactersInSet:whiteSpaceSet] length] > 0) {
+    if ([self.user.status stringByTrimmingCharactersInSet:whiteSpaceSet].length > 0) {
         
         self.statusLabel.text = self.user.status;
     }
@@ -262,7 +262,7 @@ QMContactListServiceDelegate
         if ([obj isKindOfClass:[QMChatVC class]]) {
             
             QBChatDialog *chatDialog = [(QMChatVC *)obj chatDialog];
-            if (chatDialog.opponentID == self.user.ID) {
+            if ([chatDialog opponentID] == self.user.ID) {
                 
                 [self.navigationController popToViewController:obj animated:YES];
                 *stop = YES;
@@ -310,7 +310,7 @@ QMContactListServiceDelegate
 
 - (BOOL)callAllowed {
     
-    if (![QMCore instance].isInternetConnected) {
+    if (![[QMCore instance] isInternetConnected]) {
         
         [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
         return NO;
@@ -352,7 +352,7 @@ QMContactListServiceDelegate
         return;
     }
     
-    if (![QMCore instance].isInternetConnected) {
+    if (![[QMCore instance] isInternetConnected]) {
         
         [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
         return;
@@ -393,7 +393,7 @@ QMContactListServiceDelegate
         return;
     }
     
-    if (![QMCore instance].isInternetConnected) {
+    if (![[QMCore instance] isInternetConnected]) {
         
         [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
         return;

@@ -62,7 +62,7 @@ static const NSUInteger kQMUsersPageLimit = 50;
     
     if (![searchText isEqualToString:self.cachedSearchText]) {
         
-        self.cachedSearchText = searchText.copy;
+        self.cachedSearchText = [searchText copy];
         self.responsePage.currentPage = 1;
     }
     
@@ -91,16 +91,16 @@ static const NSUInteger kQMUsersPageLimit = 50;
             
             self.shouldLoadMore = task.result.count >= kQMUsersPageLimit;
             
-            NSMutableArray *sortedUsers = [self sortUsersByFullname:task.result].mutableCopy;
+            NSMutableArray *sortedUsers = [[self sortUsersByFullname:task.result] mutableCopy];
             [sortedUsers removeObject:[QMCore instance].currentProfile.userData];
             
             if (self.responsePage.currentPage > 1) {
                 
-                [self.dataSource addItems:sortedUsers.copy];
+                [self.dataSource addItems:[sortedUsers copy]];
             }
             else {
                 
-                [self.dataSource replaceItems:sortedUsers.copy];
+                [self.dataSource replaceItems:[sortedUsers copy]];
             }
             
             [self.delegate searchDataProviderDidFinishDataFetching:self];
@@ -136,7 +136,7 @@ static const NSUInteger kQMUsersPageLimit = 50;
 - (NSArray *)sortUsersByFullname:(NSArray *)users {
     
     NSSortDescriptor *sorter = [[NSSortDescriptor alloc]
-                                initWithKey:@"fullName"
+                                initWithKey:@keypath(QBUUser.new, fullName)
                                 ascending:YES
                                 selector:@selector(localizedCaseInsensitiveCompare:)];
     NSArray *sortedUsers = [users sortedArrayUsingDescriptors:@[sorter]];

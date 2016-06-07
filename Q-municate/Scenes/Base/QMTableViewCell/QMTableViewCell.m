@@ -33,8 +33,8 @@
 
 + (void)registerForReuseInTableView:(UITableView *)tableView {
     
-    NSString *nibName = NSStringFromClass(self.class);
-    UINib *nib = [UINib nibWithNibName:nibName bundle:NSBundle.mainBundle];
+    NSString *nibName = NSStringFromClass([self class]);
+    UINib *nib = [UINib nibWithNibName:nibName bundle:[NSBundle mainBundle]];
     NSParameterAssert(nib);
     
     NSString *cellIdentifier = [self cellIdentifier];

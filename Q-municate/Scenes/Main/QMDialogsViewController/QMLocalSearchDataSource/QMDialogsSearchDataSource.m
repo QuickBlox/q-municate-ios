@@ -42,12 +42,12 @@
     
     if (chatDialog.type == QBChatDialogTypePrivate) {
         
-        QBUUser *recipient = [[QMCore instance].usersService.usersMemoryStorage userWithID:chatDialog.opponentID];
+        QBUUser *recipient = [[QMCore instance].usersService.usersMemoryStorage userWithID:[chatDialog opponentID]];
         
         if (recipient != nil) {
             NSParameterAssert(recipient.fullName);
             
-            [cell setTitle:recipient.fullName placeholderID:chatDialog.opponentID avatarUrl:recipient.avatarUrl];
+            [cell setTitle:recipient.fullName placeholderID:[chatDialog opponentID] avatarUrl:recipient.avatarUrl];
         }
     }
     else {

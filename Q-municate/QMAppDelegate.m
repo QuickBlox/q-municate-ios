@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import "AppDelegate.h"
+#import "QMAppDelegate.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "QMChatVC.h"
 #import "QMCore.h"
@@ -38,11 +38,11 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 #endif
 
-@interface AppDelegate () <QMPushNotificationManagerDelegate>
+@interface QMAppDelegate () <QMPushNotificationManagerDelegate>
 
 @end
 
-@implementation AppDelegate
+@implementation QMAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
