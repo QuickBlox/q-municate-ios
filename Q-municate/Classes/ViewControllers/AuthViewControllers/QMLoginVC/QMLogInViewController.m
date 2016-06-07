@@ -71,7 +71,7 @@
             if (!task.isFaulted) {
                 
                 [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
-                [[QMCore instance].currentProfile setAccountType:QMAccountTypeEmail];
+                [QMCore instance].currentProfile.accountType = QMAccountTypeEmail;
                 [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
                 
                 return [[QMCore instance].pushNotificationManager subscribeForPushNotifications];

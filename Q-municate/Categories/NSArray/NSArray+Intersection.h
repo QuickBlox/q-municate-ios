@@ -19,6 +19,6 @@
  *
  *  @return YES if at least one object in the receiving array is also present in current array, otherwise NO.
  */
-- (BOOL)containsObjectFromArray:(NSArray *)array;
+- (BOOL)qm_containsObjectFromArray:(NSArray *)array;
 
 @end

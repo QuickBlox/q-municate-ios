@@ -100,12 +100,12 @@
 
 - (void)setItems:(NSMutableArray *)items {
     
-    [self replaceItems:items.copy];
+    [self replaceItems:[items copy]];
 }
 
 - (NSMutableArray *)items {
     
-    return self.alphabetizedDictionary.allValues.mutableCopy;
+    return [self.alphabetizedDictionary.allValues mutableCopy];
 }
 
 @end

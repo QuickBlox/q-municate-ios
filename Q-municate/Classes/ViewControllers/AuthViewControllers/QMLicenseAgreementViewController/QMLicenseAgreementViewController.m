@@ -63,7 +63,7 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
 - (IBAction)acceptLicense:(id)__unused sender {
     
-    [[QMCore instance].currentProfile setUserAgreementAccepted:YES];
+    [QMCore instance].currentProfile.userAgreementAccepted = YES;
     [self dismissViewControllerSuccess:YES];
 }
 

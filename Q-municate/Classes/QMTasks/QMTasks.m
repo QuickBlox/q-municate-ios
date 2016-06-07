@@ -44,7 +44,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
         
         QBUpdateUserParameters *userParams = [QBUpdateUserParameters new];
         userParams.customData = [QMCore instance].currentProfile.userData.customData;
-        userParams.avatarUrl = task.result.isPublic ? task.result.publicUrl : task.result.privateUrl;
+        userParams.avatarUrl = task.result.isPublic ? [task.result publicUrl] : [task.result privateUrl];
         
         return [QMTasks taskUpdateCurrentUser:userParams];
     }];
@@ -79,7 +79,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     
     if ([QMCore instance].isAuthorized) {
         
-        [source setResult:[QMCore instance].currentUser];
+        [source setResult:[QMCore instance].currentProfile.userData];
     } else {
         
         switch ([QMCore instance].currentProfile.accountType) {

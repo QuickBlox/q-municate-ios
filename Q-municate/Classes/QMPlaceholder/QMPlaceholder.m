@@ -61,18 +61,19 @@
     
     NSString *key = [NSString stringWithFormat:@"%@ %@", title, NSStringFromCGSize(frame.size)];
     
-    UIImage *image = [[QMPlaceholder instance].cache objectForKey:key];
+    UIImage *image = [[[[self class] instance] cache] objectForKey:key];
     
     if (image) {
         
         return image;
-    } else {
+    }
+    else {
         
         UIGraphicsBeginImageContextWithOptions(frame.size, NO, 0.0);
         //// Oval Drawing
         UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect:frame];
         
-        UIColor *userColor = [QMPlaceholder instance].colors[ID % 10];
+        UIColor *userColor = [[[self class] instance] colors][ID % 10];
         [userColor setFill];
         [ovalPath fill];
         
@@ -100,7 +101,7 @@
         UIImage *ovalImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
-        [[QMPlaceholder instance].cache setObject:ovalImage forKey:key];
+        [[[[self class] instance] cache] setObject:ovalImage forKey:key];
         
         return ovalImage;
     }

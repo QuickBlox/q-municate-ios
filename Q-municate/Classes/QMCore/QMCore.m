@@ -138,7 +138,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     
     NSString *errorMessage = nil;
     
-    if (!self.isInternetConnected) {
+    if (![self isInternetConnected]) {
         
         errorMessage = NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil);
     }
@@ -172,7 +172,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
                 [mutableString deleteCharactersInRange:NSMakeRange(mutableString.length - 1, 1)];
             }
             
-            errorMessage = mutableString.copy;
+            errorMessage = [mutableString copy];
         }
     }
     
@@ -263,8 +263,8 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
             [[Digits sharedInstance] logOut];
         }
         
-        [[[SDWebImageManager sharedManager] imageCache] clearMemory];
-        [[[SDWebImageManager sharedManager] imageCache] clearDisk];
+        [[SDWebImageManager sharedManager].imageCache clearMemory];
+        [[SDWebImageManager sharedManager].imageCache clearDisk];
         
         dispatch_group_enter(self.logoutGroup);
         [[self.pushNotificationManager unSubscribeFromPushNotifications] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
@@ -303,7 +303,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     [[QMContactListCache instance] insertOrUpdateContactListItemsWithContactList:contactList completion:nil];
     
     // load users if needed
-    [[QMCore instance].usersService getUsersWithIDs:self.contactListService.contactListMemoryStorage.userIDsFromContactList];
+    [[QMCore instance].usersService getUsersWithIDs:[self.contactListService.contactListMemoryStorage userIDsFromContactList]];
 }
 
 #pragma mark - Helpers

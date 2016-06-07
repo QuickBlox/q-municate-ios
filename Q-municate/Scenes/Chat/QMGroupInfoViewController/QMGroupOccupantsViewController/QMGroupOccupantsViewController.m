@@ -89,7 +89,7 @@ QMUsersServiceDelegate
         NSUInteger userIndex = [self.dataSource userIndexForIndexPath:indexPath];
         QBUUser *user = self.dataSource.items[userIndex];
         
-        self.addUserTask = [[[QMCore instance].contactManager addUserToContactList:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        self.addUserTask = [[[QMCore instance].contactManager addUserToContactList:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
             
             [SVProgressHUD dismiss];
             
@@ -115,7 +115,7 @@ QMUsersServiceDelegate
 - (void)updateOccupants {
     
     NSArray *users = [[QMCore instance].usersService.usersMemoryStorage usersWithIDs:self.chatDialog.occupantIDs];
-    self.dataSource.items = users.mutableCopy;
+    self.dataSource.items = [users mutableCopy];
 }
 
 #pragma mark - Actions
@@ -136,7 +136,7 @@ QMUsersServiceDelegate
 
 #pragma mark - UITableViewDelegate
 
-- (void)tableView:(UITableView *)__unused tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.row == self.dataSource.addMemberCellIndex) {
         
@@ -171,7 +171,7 @@ QMUsersServiceDelegate
                                                                                                           message:NSLocalizedString(@"QM_STR_LOADING", nil)
                                                                                                          duration:0];
                                                               
-                                                              self.leaveTask = [[[QMCore instance].chatManager leaveChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+                                                              self.leaveTask = [[[QMCore instance].chatManager leaveChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
                                                                   
                                                                   [navigationController dismissNotificationPanel];
                                                                   
@@ -268,7 +268,7 @@ QMUsersServiceDelegate
     
     NSArray *idsOfUsers = [user valueForKeyPath:@keypath(QBUUser.new, ID)];
     
-    if ([self.chatDialog.occupantIDs containsObjectFromArray:idsOfUsers]) {
+    if ([self.chatDialog.occupantIDs qm_containsObjectFromArray:idsOfUsers]) {
         
         [self updateOccupants];
         [self.tableView reloadData];

@@ -27,8 +27,8 @@
         
         if ([classNamesToReposition containsObject:NSStringFromClass([view class])]) {
             
-            CGRect bounds = [self bounds];
-            CGRect frame = [view frame];
+            CGRect bounds = self.bounds;
+            CGRect frame = view.frame;
             
             CGFloat statusBarHeight = CGRectGetHeight([UIApplication sharedApplication].statusBarFrame);
             frame.origin.y = bounds.origin.y + CGRectGetHeight(self.notificationView.frame) - statusBarHeight;

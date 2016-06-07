@@ -118,7 +118,7 @@
     
     if (self.tagAnimations != nil) {
         
-        NSArray *enumerateTagsList = self.tagsList.copy;
+        NSArray *enumerateTagsList = [self.tagsList copy];
         for (QMTagView *tagView in enumerateTagsList) {
             
             if (tagView.tagID == nil) {
@@ -126,7 +126,7 @@
                 continue;
             }
             
-            NSNumber *nAnimation = [self.tagAnimations objectForKey:tagView.tagID];
+            NSNumber *nAnimation = self.tagAnimations[tagView.tagID];
             if (nAnimation != nil) {
                 
                 tagView.transform = CGAffineTransformMakeScale(0.1f, 0.1f);
@@ -145,7 +145,7 @@
                     continue;
                 }
                 
-                NSNumber *nAnimation = [self.tagAnimations objectForKey:tagView.tagID];
+                NSNumber *nAnimation = self.tagAnimations[tagView.tagID];
                 if (nAnimation != nil) {
                     
                     tagView.transform = CGAffineTransformIdentity;
@@ -177,7 +177,7 @@
 
 - (BOOL)hasFirstResponder {
     
-    return self.textField.isFirstResponder;
+    return [self.textField isFirstResponder];
 }
 
 - (BOOL)searchIsActive {
@@ -206,7 +206,7 @@
         
         if (tagID != nil) {
             
-            [self.tagAnimations setObject:@1 forKey:tagID];
+            self.tagAnimations[tagID] = @1;
         }
     }
     
@@ -219,7 +219,7 @@
     
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:self.tagsList.count];
     
-    NSArray *enumerateTagsList = self.tagsList.copy;
+    NSArray *enumerateTagsList = [self.tagsList copy];
     for (QMTagView *tagView in enumerateTagsList) {
         
         if (tagView.tagID != nil) {
@@ -228,7 +228,7 @@
         }
     }
     
-    return array.copy;
+    return [array copy];
 }
 
 - (void)removeTagsAtIndexes:(NSIndexSet *)indexSet {
@@ -349,11 +349,11 @@
     
     NSInteger index = -1;
     
-    NSArray *enumerateTagsList = self.tagsList.copy;
+    NSArray *enumerateTagsList = [self.tagsList copy];
     for (QMTagView *tagView in enumerateTagsList) {
         index++;
         
-        CGFloat tokenWidth = [tagView preferredWidth];
+        CGFloat tokenWidth = tagView.preferredWidth;
         
         if (width - padding - currentX - additionalPadding < MAX(tokenWidth, textFieldMinWidth) && currentX > padding + FLT_EPSILON) {
             
@@ -482,7 +482,7 @@
 
 - (void)tagViewDidBecomeFirstResponder:(QMTagView *)tagView {
     
-    NSArray *enumerateTagsList = self.tagsList.copy;
+    NSArray *enumerateTagsList = [self.tagsList copy];
     for (QMTagView *view in enumerateTagsList) {
         
         if (view != tagView &&
@@ -508,7 +508,7 @@
 - (void)tagViewDidDeleteBackwards:(QMTagView *)tagView {
     
     NSInteger index = -1;
-    NSArray *enumerateTagsList = self.tagsList.copy;
+    NSArray *enumerateTagsList = [self.tagsList copy];
     for (QMTagView *view in enumerateTagsList) {
         index++;
         
@@ -602,7 +602,7 @@
     
     if (self.tagsList.count != 0 && textField.text.length == 0) {
         
-        [[self.tagsList lastObject] becomeFirstResponder];
+        [self.tagsList.lastObject becomeFirstResponder];
     }
 }
 

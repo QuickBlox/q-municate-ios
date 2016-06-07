@@ -67,7 +67,7 @@
     [self.tableView reloadData];
 }
 
-- (void)searchDataProvider:(QMSearchDataProvider *)__unused searchDataProvider didUpdateData:(NSArray *)__unused data {
+- (void)searchDataProvider:(QMSearchDataProvider *)searchDataProvider didUpdateData:(NSArray *)__unused data {
     
     if ([self.tableView.dataSource isKindOfClass:[QMSearchDataSource class]]
         && self.searchDataSource.searchDataProvider != searchDataProvider) {

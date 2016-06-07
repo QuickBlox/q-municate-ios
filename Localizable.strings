@@ -13,9 +13,6 @@
 "QM_STR_QMUNICATE_AGREE" = "By clicking Sign Up, you agree to Q-MUNICATE User Agreement.";
 "QM_STR_EMAIL_FIELD_IS_EMPTY" = "Email field is empty";
 "QM_STR_USER_WITH_EMAIL_WASNT_FOUND" = "User with email wasn't found";
-"QM_STR_ARE_YOU_SURE" = "Are you sure?";
-"QM_STR_CONTACT_LIST" = "Contact list";
-"QM_STR_FACEBOOK" = "Facebook";
 "QM_STR_FILL_IN_ALL_THE_FIELDS" = "Fill in all the fields";
 "QM_STR_PASSWORD_CHANGED" = "Password changed";
 "QM_STR_CHECK_INTERNET_CONNECTION" = "Please, check your internet connection";
@@ -26,22 +23,16 @@
 "QM_STR_PASSWORD_IS_TOO_SHORT" = "Password must be more than %ld characters";
 "QM_STR_PASSWORD_IS_TOO_LONG" = "Password mustn’t be more than %ld characters";
 "QM_STR_USER_CREATED_GROUP_CONVERSATION" = "created a group conversation";
-"QM_STR_USER_CREATED_PRIVATE_CHAT" = "created new chat";
 "QM_STR_MESSAGE_WAS_SENT_TO_YOUR_EMAIL" = "Message was sent to your email. Check it";
 "QM_STR_INVITATION_WAS_POSTED_TO_WALL" = "Invitation was posted to wall.";
 "QM_STR_PLEASE_CHECK_YOUR_EMAIL_SETTINGS" = "Please check your email settings";
 "QM_STR_THANKS" = "Thanks!";
 "QM_STR_DEAR_FRIEND" = "Dear friend, use Q-municate application to reach me! Download it here: http://q-municate.com";
 "QM_STR_YOUR _SURRENT_SESSION_IS_NO_LONGER_VALID" = "Your current session is no longer valid. Please log in again.";
-"QM_STR_ALL_USERS" = "All users";
-"QM_STR_REQUESTS" = "REQUESTS";
 "QM_STR_TAKE_NEW_PHOTO" = "Take New Photo";
-"QM_STR_CHOOSE_FROM_LIBRARY" = "Choose from Library";
 "QM_STR_CANT_ADD_NEW_FRIEND" = "You can't add new friend, because all existing friends are added in this group chat";
 
 "QM_STR_PHONE_VERIFICATION" = "Phone verification";
-
-"QM_STR_CONFIRM_REJECT_FRIENDS_REQUEST" = "Do you really want to reject contact request from %@?";
 
 "QM_STR_MAIL_COMPOSER_ERROR_DESCRIPTION" = "We can't send your feedback due to misconfigured email account. Please go to Settings app-> Mail,Contact, Calendars and setup it.";
 
@@ -49,7 +40,6 @@
 
 "QM_STR_CANT_MAKE_CALLS" = "Sorry, you can't make a call until the invitation is accepted";
 "QM_STR_CANT_SEND_MESSAGES" = "Sorry, you can't send messages until the invitation is accepted";
-"QM_STR_NOT_AUTHORIZED_TO_USE_CAMERA" = "This app is not authorized to use Camera";
 "QM_STR_NOT_AUTHORIZED_TO_USE_MICROPHONE" = "This app is not authorized to use Microphone";
 
 //  ********** Contact requests notification text: ***************
@@ -68,7 +58,6 @@
 "QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_OPPONENT" = "%@ has deleted you from the contact list";
 
 // *********** GROUP NOTIFICATIONS *****************
-"QM_STR_ADD_USERS_TO_GROUP_CONVERSATION_TEXT" = "%@ has added %@ to the group chat.";
 "QM_STR_ADD_USERS_TO_EXIST_GROUP_CONVERSATION_TEXT" = "%@ has added %@";
 
 
@@ -109,7 +98,6 @@
 "QM_STR_CONFIRM_DELETE_DIALOG" = "Do you really want to delete \"%@\" chat?";
 
 // *********** New Message Screen ***********
-"QM_STR_NEW_MESSAGE_SCREEN" = "New Message";
 "QM_STR_NO_CONTACTS" = "You don't have any contacts.";
 
 // *********** New Group Screen ***********
@@ -151,7 +139,6 @@
 "QM_STR_CHAT_RECONNECTED" = "Reconnected";
 "QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR" = "Chat failed to connect: %@";
 "QM_STR_CHAT_FAILED_TO_CONNECT_WITH_STREAM_ERROR" = "Chat failed to connect with stream error: %@";
-"QM_STR_SIGNING_UP" = "Signing up";
 "QM_STR_SIGNING_IN" = "Signing in";
 "QM_STR_LOADING" = "Loading";
 "QM_STR_LOST_INTERNET_CONNECTION" = "Lost internet connection";
@@ -159,7 +146,6 @@
 
 // *********** Tab bar ***********
 "QM_STR_CHATS" = "Chats";
-"QM_STR_CONTACTS" = "Contacts";
 "QM_STR_SETTINGS" = "Settings";
 
 // *********** Update user ***********

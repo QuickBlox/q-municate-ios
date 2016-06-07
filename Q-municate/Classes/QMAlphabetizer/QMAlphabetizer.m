@@ -66,16 +66,16 @@ NSString * const QMLAlphabetizerGroupDisplayNameKey = @"displayName";
             result = possibleKey;
             key = possibleKey;
             
-            if (maxLength > 0 && [key length] > maxLength) {
+            if (maxLength > 0 && key.length > maxLength) {
                 
                 key = [key substringToIndex:maxLength];
             }
             
             NSString *ignorableBeginning = [self ignorableBeginningWordFromString:key];
             
-            if ([ignorableBeginning length]) {
+            if (ignorableBeginning.length) {
                 
-                key = [[key substringFromIndex:[ignorableBeginning length]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] ;
+                key = [[key substringFromIndex:ignorableBeginning.length] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] ;
                 key = [key stringByAppendingFormat:@", %@", ignorableBeginning];
             }
             
@@ -117,7 +117,7 @@ NSString * const QMLAlphabetizerGroupDisplayNameKey = @"displayName";
                       nonAlphabeticPlaceholder:(NSString *)placeholder {
     
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    NSString *nonLetterPlaceholder = [placeholder length] ? placeholder : @"#";
+    NSString *nonLetterPlaceholder = placeholder.length ? placeholder : @"#";
     
     for (id object in objects) {
         NSString *name;
@@ -128,7 +128,7 @@ NSString * const QMLAlphabetizerGroupDisplayNameKey = @"displayName";
                                   maxLength:0
                           validCharacterSet:nil];
         
-        NSMutableDictionary *keyedDictionary = [self findOrCreateDictionaryForKey:[key uppercaseString]
+        NSMutableDictionary *keyedDictionary = [self findOrCreateDictionaryForKey:key.uppercaseString
                                                                      inDictionary:dictionary];
         
         NSMutableArray *array = [self findOrCreateArrayForKey:QMLAlphabetizerGroupObjectsKey inDictionary:keyedDictionary];
@@ -156,7 +156,7 @@ NSString * const QMLAlphabetizerGroupDisplayNameKey = @"displayName";
                            nonAlphabeticPlaceholder:(NSString *)placeholder {
     
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    NSString *nonLetterPlaceholder = [placeholder length] ? placeholder : @"#";
+    NSString *nonLetterPlaceholder = placeholder.length ? placeholder : @"#";
     
     for (id object in objects) {
         
@@ -167,7 +167,7 @@ NSString * const QMLAlphabetizerGroupDisplayNameKey = @"displayName";
                                           maxLength:1
                                   validCharacterSet:[NSCharacterSet letterCharacterSet]];
         
-        firstLetter = [firstLetter uppercaseString];
+        firstLetter = firstLetter.uppercaseString;
         NSMutableArray *array = [self findOrCreateArrayForKey:firstLetter inDictionary:dictionary];
         [array addObject:object];
     }
@@ -185,7 +185,7 @@ NSString * const QMLAlphabetizerGroupDisplayNameKey = @"displayName";
 
 + (NSArray *)indexTitlesFromAlphabetizedDictionary:(NSDictionary *)alphabetizedDictionary {
     
-    return [[alphabetizedDictionary allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+    return [alphabetizedDictionary.allKeys sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
 }
 
 @end

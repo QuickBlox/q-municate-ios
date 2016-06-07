@@ -12,7 +12,7 @@
 
 + (NSError *)errorNotLoggedInREST {
     
-    return [NSError errorWithDomain:[[NSBundle mainBundle] bundleIdentifier]
+    return [NSError errorWithDomain:[NSBundle mainBundle].bundleIdentifier
                                code:-1000
                            userInfo:@{NSLocalizedRecoverySuggestionErrorKey : @"You are not authorized in REST."}];
 }

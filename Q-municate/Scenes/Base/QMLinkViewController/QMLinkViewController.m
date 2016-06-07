@@ -34,10 +34,10 @@
         
         [scene setTabBarItem:self.tabBarItem];
         
-        NSMutableArray *viewControllers = self.tabBarController.viewControllers.mutableCopy;
-        [viewControllers replaceObjectAtIndex:index withObject:scene];
+        NSMutableArray *viewControllers = [self.tabBarController.viewControllers mutableCopy];
+        viewControllers[index] = scene;
         
-        [self.tabBarController setViewControllers:viewControllers.copy];
+        self.tabBarController.viewControllers = [viewControllers copy];
     }
 }
 

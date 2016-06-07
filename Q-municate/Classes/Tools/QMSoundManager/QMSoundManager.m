@@ -128,11 +128,6 @@ static NSString *const kQMSoundManagerSettingKey = @"kQMSoundManagerSettingKey";
     [self.sounds removeAllObjects];
 }
 
-- (void)stopSoundWithFilename:(NSString *)filename {
-    
-    [self.sounds removeObjectForKey:filename];
-}
-
 #pragma mark - Did Receive Memory Warning Notification
 
 - (void)didReceiveMemoryWarningNotification:(NSNotification *)__unused notification {
@@ -151,39 +146,39 @@ static NSString *const kQMRingtoneSoundName = @"ringtone";
 
 + (void)playMessageReceivedSound {
     
-    [[QMSoundManager instance] playSoundWithName:kQMReceivedSoundName
-                                       extension:kystemSoundTypeWAV];
+    [[[self class] instance] playSoundWithName:kQMReceivedSoundName
+                                     extension:kystemSoundTypeWAV];
 }
 
 + (void)playMessageSentSound {
     
-    [[QMSoundManager instance] playSoundWithName:kQMSendSoundName
-                                       extension:kystemSoundTypeWAV];
+    [[[self class] instance] playSoundWithName:kQMSendSoundName
+                                     extension:kystemSoundTypeWAV];
 }
 
 + (void)playCallingSound {
     
-    [[QMSoundManager instance] playSoundWithName:kQMCallingSoundName
-                                       extension:kystemSoundTypeWAV];
+    [[[self class] instance] playSoundWithName:kQMCallingSoundName
+                                     extension:kystemSoundTypeWAV];
 }
 
 + (void)playBusySound {
     
-    [[QMSoundManager instance] playSoundWithName:kQMBusySoundName
-                                       extension:kystemSoundTypeWAV];
+    [[[self class] instance] playSoundWithName:kQMBusySoundName
+                                     extension:kystemSoundTypeWAV];
 }
 
 + (void)playEndOfCallSound {
     
-    [[QMSoundManager instance] playSoundWithName:kQMEndOfCallSoundName
-                                       extension:kystemSoundTypeWAV];
+    [[[self class] instance] playSoundWithName:kQMEndOfCallSoundName
+                                     extension:kystemSoundTypeWAV];
 }
 
 + (void)playRingtoneSound {
     
-    [[QMSoundManager instance] playSoundWithName:kQMRingtoneSoundName
-                                       extension:kystemSoundTypeWAV];
-    [[QMSoundManager instance] playVibrateSound];
+    [[[self class] instance] playSoundWithName:kQMRingtoneSoundName
+                                     extension:kystemSoundTypeWAV];
+    [[[self class] instance] playVibrateSound];
 }
 
 @end

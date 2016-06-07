@@ -10,7 +10,7 @@
 
 @implementation NSArray (Intersection)
 
-- (BOOL)containsObjectFromArray:(NSArray *)array {
+- (BOOL)qm_containsObjectFromArray:(NSArray *)array {
     
     NSMutableSet *baseSet = [NSMutableSet setWithArray:self];
     NSMutableSet *fromSet = [NSMutableSet setWithArray:array];

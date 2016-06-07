@@ -179,8 +179,8 @@ NYTPhotosViewControllerDelegate
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
         // set up opponent full name
-        [self.onlineTitleView setTitle:[[QMCore instance].contactManager fullNameForUserID:self.chatDialog.opponentID]];
-        BOOL isOpponentOnline = [[QMCore instance].contactManager isUserOnlineWithID:self.chatDialog.opponentID];
+        [self.onlineTitleView setTitle:[[QMCore instance].contactManager fullNameForUserID:[self.chatDialog opponentID]]];
+        BOOL isOpponentOnline = [[QMCore instance].contactManager isUserOnlineWithID:[self.chatDialog opponentID]];
         [self setOpponentOnlineStatus:isOpponentOnline];
         
         // configuring call buttons for opponent
@@ -205,7 +205,7 @@ NYTPhotosViewControllerDelegate
             }
             
             self.isOpponentTyping = NO;
-            BOOL isOnline = [[QMCore instance].contactManager isUserOnlineWithID:self.chatDialog.opponentID];
+            BOOL isOnline = [[QMCore instance].contactManager isUserOnlineWithID:[self.chatDialog opponentID]];
             [self setOpponentOnlineStatus:isOnline];
         }];
     }
@@ -311,7 +311,7 @@ NYTPhotosViewControllerDelegate
 
 - (BOOL)connectionExists {
     
-    if (![QMCore instance].isInternetConnected) {
+    if (![[QMCore instance] isInternetConnected]) {
         
         [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
         return NO;
@@ -343,7 +343,7 @@ NYTPhotosViewControllerDelegate
     
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
-        if (![[QMCore instance].contactManager isFriendWithUserID:self.chatDialog.opponentID]) {
+        if (![[QMCore instance].contactManager isFriendWithUserID:[self.chatDialog opponentID]]) {
             
             [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO inViewController:self];
             return NO;
@@ -360,7 +360,7 @@ NYTPhotosViewControllerDelegate
         return NO;
     }
     
-    if (![[QMCore instance].contactManager isFriendWithUserID:self.chatDialog.opponentID]) {
+    if (![[QMCore instance].contactManager isFriendWithUserID:[self.chatDialog opponentID]]) {
         
         [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO inViewController:self];
         return NO;
@@ -458,7 +458,7 @@ NYTPhotosViewControllerDelegate
     
     if (item.isNotificatonMessage) {
         
-        NSUInteger opponentID = self.chatDialog.opponentID;
+        NSUInteger opponentID = [self.chatDialog opponentID];
         BOOL isFriend = [[QMCore instance].contactManager isFriendWithUserID:opponentID];
         
         if (item.messageType == QMMessageTypeContactRequest && item.senderID != self.senderID && !isFriend) {
@@ -476,7 +476,7 @@ NYTPhotosViewControllerDelegate
         
         if (item.senderID != self.senderID) {
             
-            if (item.isMediaMessage && item.attachmentStatus != QMMessageAttachmentStatusError) {
+            if ([item isMediaMessage] && item.attachmentStatus != QMMessageAttachmentStatusError) {
                 
                 return [QMChatAttachmentIncomingCell class];
             }
@@ -487,7 +487,7 @@ NYTPhotosViewControllerDelegate
         }
         else {
             
-            if (item.isMediaMessage && item.attachmentStatus != QMMessageAttachmentStatusError) {
+            if ([item isMediaMessage] && item.attachmentStatus != QMMessageAttachmentStatusError) {
                 
                 return [QMChatAttachmentOutgoingCell class];
             }
@@ -558,7 +558,7 @@ NYTPhotosViewControllerDelegate
     UIFont *font = [UIFont systemFontOfSize:15.0f];
     
     QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:messageItem.senderID];
-    NSString *topLabelText = [NSString stringWithFormat:@"%@", opponentUser.fullName != nil ? opponentUser.fullName : @(messageItem.senderID)];
+    NSString *topLabelText = [NSString stringWithFormat:@"%@", opponentUser.fullName ?: @(messageItem.senderID)];
     
     // setting the paragraph style lineBreakMode to NSLineBreakByTruncatingTail
     // in order to let TTTAttributedLabel cut the line in a correct way
@@ -575,13 +575,13 @@ NYTPhotosViewControllerDelegate
 
 - (NSAttributedString *)bottomLabelAttributedStringForItem:(QBChatMessage *)messageItem {
     
-    UIColor *textColor = [messageItem senderID] == self.senderID ? QMChatOutgoingBottomLabelColor() : QMChatIncomingBottomLabelColor();
+    UIColor *textColor = messageItem.senderID == self.senderID ? QMChatOutgoingBottomLabelColor() : QMChatIncomingBottomLabelColor();
     UIFont *font = [UIFont systemFontOfSize:12.0f];
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor, NSFontAttributeName:font};
     
     NSString* text = messageItem.dateSent ? [QMDateUtils formatDateForTimeRange:messageItem.dateSent] : @"";
     
-    if ([messageItem senderID] == self.senderID) {
+    if (messageItem.senderID == self.senderID) {
         text = [NSString stringWithFormat:@"%@\n%@", text, [self.messageStatusStringBuilder statusFromMessage:messageItem forDialogType:self.chatDialog
                                                             .type]];
     }
@@ -915,7 +915,7 @@ NYTPhotosViewControllerDelegate
     
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
-        [self performInfoViewControllerForUserID:self.chatDialog.opponentID];
+        [self performInfoViewControllerForUserID:[self.chatDialog opponentID]];
     }
     else {
         
@@ -948,7 +948,7 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
-    [[QMCore instance].callManager callToUserWithID:self.chatDialog.opponentID conferenceType:QBRTCConferenceTypeAudio];
+    [[QMCore instance].callManager callToUserWithID:[self.chatDialog opponentID] conferenceType:QBRTCConferenceTypeAudio];
 }
 
 - (void)videoCallAction {
@@ -958,7 +958,7 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
-    [[QMCore instance].callManager callToUserWithID:self.chatDialog.opponentID conferenceType:QBRTCConferenceTypeVideo];
+    [[QMCore instance].callManager callToUserWithID:[self.chatDialog opponentID] conferenceType:QBRTCConferenceTypeVideo];
 }
 
 #pragma mark - Configuring
@@ -1030,7 +1030,7 @@ NYTPhotosViewControllerDelegate
     }
     else {
         
-        QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:self.chatDialog.opponentID];
+        QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:[self.chatDialog opponentID]];
         if (opponentUser && opponentUser.lastRequestAt) {
             
             status = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"QM_STR_LAST_SEEN", nil), [QMDateUtils formattedLastSeenString:opponentUser.lastRequestAt withTimePrefix:NSLocalizedString(@"QM_STR_TIME_PREFIX", nil)]];
@@ -1161,7 +1161,7 @@ NYTPhotosViewControllerDelegate
 
 - (void)contactListService:(QMContactListService *)__unused contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)__unused status {
     
-    if (self.chatDialog.type == QBChatDialogTypePrivate && self.chatDialog.opponentID == userID && !self.isOpponentTyping) {
+    if (self.chatDialog.type == QBChatDialogTypePrivate && [self.chatDialog opponentID] == userID && !self.isOpponentTyping) {
         
         [self setOpponentOnlineStatus:isOnline];
     }
@@ -1176,7 +1176,7 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
-    QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:self.chatDialog.opponentID];
+    QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:[self.chatDialog opponentID]];
     
     [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     
@@ -1282,7 +1282,7 @@ NYTPhotosViewControllerDelegate
     
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
-        [self performInfoViewControllerForUserID:self.chatDialog.opponentID];
+        [self performInfoViewControllerForUserID:[self.chatDialog opponentID]];
     }
     else {
         
@@ -1374,7 +1374,7 @@ NYTPhotosViewControllerDelegate
 
 - (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
-    if (![QMCore instance].isInternetConnected) {
+    if (![[QMCore instance] isInternetConnected]) {
         
         [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
         return;
@@ -1500,11 +1500,9 @@ NYTPhotosViewControllerDelegate
     CGSize size = CGSizeMake(30, 30);
     UIGraphicsBeginImageContextWithOptions(size , NO, 0);
     
-    NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
-    [attributes setObject:[UIFont systemFontOfSize:27] forKey:NSFontAttributeName];
+    NSDictionary *attributes = @{NSFontAttributeName : [UIFont systemFontOfSize:27]};
     NSString * sectionImage = self.sectionsImages[categoryImage];
     [sectionImage drawInRect:CGRectMake(0, 0, 30, 30) withAttributes:attributes];
-    
     
     UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();

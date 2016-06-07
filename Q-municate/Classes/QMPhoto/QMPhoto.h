@@ -12,7 +12,7 @@
 @interface QMPhoto : NSObject <NYTPhoto>
 
 @property (strong, nonatomic, readwrite) UIImage *image;
-@property (strong, nonatomic, readwrite) NSData *imageData;
+@property (nonatomic, readwrite) NSData *imageData;
 @property (strong, nonatomic, readwrite) UIImage *placeholderImage;
 @property (strong, nonatomic, readwrite) NSAttributedString *attributedCaptionTitle;
 @property (strong, nonatomic, readwrite) NSAttributedString *attributedCaptionSummary;

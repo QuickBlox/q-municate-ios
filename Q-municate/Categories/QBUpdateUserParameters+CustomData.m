@@ -54,7 +54,7 @@ NSString *const kQMIsImportUpdateKey = @"is_import";
     }
     else {
         
-        return @{}.mutableCopy;
+        return [NSMutableDictionary dictionary];
     }
 }
 

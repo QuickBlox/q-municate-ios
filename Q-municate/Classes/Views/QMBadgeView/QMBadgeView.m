@@ -28,7 +28,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    self.backgroundColor = UIColor.clearColor;
+    self.backgroundColor = [UIColor clearColor];
     self.badgeTextColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
     self.badgeBGColor = [UIColor colorWithRed:0.063f green:0.353f blue:0.639f alpha:1.0f];
     self.borderColor = [UIColor colorWithRed: 0.219f green: 0.51f blue: 0.753f alpha: 1.0f];
@@ -60,12 +60,12 @@
     
     if (self.outedShadewEnabled) {
         
-        UIColor* outerShadow = UIColor.blackColor;
+        UIColor* outerShadow = [UIColor blackColor];
         CGSize outerShadowOffset = CGSizeMake(2, 2);
         CGFloat outerShadowBlurRadius = 2;
         
         CGContextSaveGState(context);
-        CGContextSetShadowWithColor(context, outerShadowOffset, outerShadowBlurRadius, [outerShadow CGColor]);
+        CGContextSetShadowWithColor(context, outerShadowOffset, outerShadowBlurRadius, outerShadow.CGColor);
         CGContextRestoreGState(context);
     }
     
@@ -74,7 +74,7 @@
     
     if (self.innerShadowEnabled) {
         
-        UIColor* innerShadow = UIColor.blackColor;
+        UIColor* innerShadow = [UIColor blackColor];
         CGSize innerShadowOffset = CGSizeMake(2, 2);
         CGFloat innerShadowBlurRadius = 2;
         ////// badge Inner Shadow
@@ -82,12 +82,12 @@
         UIRectClip(badgePath.bounds);
         CGContextSetShadowWithColor(context, CGSizeZero, 0, NULL);
         
-        CGContextSetAlpha(context, CGColorGetAlpha([innerShadow CGColor]));
+        CGContextSetAlpha(context, CGColorGetAlpha(innerShadow.CGColor));
         
         CGContextBeginTransparencyLayer(context, NULL);
         {
             UIColor* opaqueShadow = [innerShadow colorWithAlphaComponent: 1];
-            CGContextSetShadowWithColor(context, innerShadowOffset, innerShadowBlurRadius, [opaqueShadow CGColor]);
+            CGContextSetShadowWithColor(context, innerShadowOffset, innerShadowBlurRadius, opaqueShadow.CGColor);
             CGContextSetBlendMode(context, kCGBlendModeSourceOut);
             CGContextBeginTransparencyLayer(context, NULL);
             

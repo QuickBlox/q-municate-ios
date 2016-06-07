@@ -112,7 +112,7 @@ typedef NS_ENUM(NSUInteger, QMFeedbackSelection) {
     UIDevice *device = [UIDevice currentDevice];
     NSString *modelName = [device modelName];
     
-    NSString *systemVersion = [device systemVersion];
+    NSString *systemVersion = device.systemVersion;
     NSString *buildVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:kQMBundleVersion];
     
     NSString *deviceInfo = [NSString stringWithFormat:@"\n\n\nModel: %@,\nSystem version: %@,\nBuild version: %@,\n", modelName, systemVersion, buildVersion];
