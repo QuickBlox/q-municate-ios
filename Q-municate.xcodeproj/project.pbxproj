@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		24657EB71A84E97700009F91 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 24657EB61A84E97700009F91 /* libicucore.dylib */; };
-		2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */; };
 		55286996199131B5006F92CB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55286995199131B5006F92CB /* Localizable.strings */; };
 		559BDFEA19618D3D000588FE /* QMWelcomeScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE619618D3D000588FE /* QMWelcomeScreenViewController.m */; };
 		55A8B06E1965986A00B5D33B /* QMSoundManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B05C1965986A00B5D33B /* QMSoundManager.m */; };
@@ -173,8 +172,6 @@
 /* Begin PBXFileReference section */
 		01E0EAD58B177DC530737810 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		24657EB61A84E97700009F91 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
-		2494559619A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+GTMNSStringHTMLAdditions.h"; sourceTree = "<group>"; };
-		2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+GTMNSStringHTMLAdditions.m"; sourceTree = "<group>"; };
 		55286995199131B5006F92CB /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		559327A2199216FB001C4BF8 /* Q-municate Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Q-municate Tests-Info.plist"; sourceTree = "<group>"; };
 		559327A4199216FB001C4BF8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -777,15 +774,6 @@
 				580D34DE1BBFF5850034813A /* UIImage+fixOrientation.m */,
 			);
 			name = UIImage;
-			sourceTree = "<group>";
-		};
-		5842777B1C3D332700CDE35B /* NSString */ = {
-			isa = PBXGroup;
-			children = (
-				2494559619A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.h */,
-				2494559719A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m */,
-			);
-			name = NSString;
 			sourceTree = "<group>";
 		};
 		5842777C1C3D333100CDE35B /* QBUpdateUserParameters */ = {
@@ -1774,7 +1762,6 @@
 				58FAAE861CEDC3E50081EABA /* UINavigationController */,
 				58B3C9D31CB681F400B08A27 /* NSArray */,
 				5842777A1C3D331D00CDE35B /* UIImage */,
-				5842777B1C3D332700CDE35B /* NSString */,
 				5842777C1C3D333100CDE35B /* QBUpdateUserParameters */,
 			);
 			path = Categories;
@@ -2127,7 +2114,6 @@
 				58B3C9D21CB6717200B08A27 /* QMSeparatorCell.m in Sources */,
 				58FAAE891CEDC4720081EABA /* UINavigationController+QMNotification.m in Sources */,
 				5877D6DA1C46720600938E5D /* QMTableViewCell.m in Sources */,
-				2494559819A48E7600E9352B /* NSString+GTMNSStringHTMLAdditions.m in Sources */,
 				580D34DF1BBFF5850034813A /* UIImage+fixOrientation.m in Sources */,
 				588CF1021CA6BF8200B23C00 /* QMNotificationPanelUtils.m in Sources */,
 				589792991C99941400CC6438 /* QMAlphabetizer.m in Sources */,
@@ -2303,7 +2289,7 @@
 				PROVISIONING_PROFILE = "";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "$(inherited)";
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WARNING_CFLAGS = (
