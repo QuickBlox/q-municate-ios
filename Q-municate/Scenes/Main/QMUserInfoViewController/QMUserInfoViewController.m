@@ -94,8 +94,6 @@ QMContactListServiceDelegate
     
     if (self.user.lastRequestAt == nil) {
         
-        [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
-        
         [self loadUser];
     }
     
@@ -120,14 +118,11 @@ QMContactListServiceDelegate
 
 - (void)loadUser {
     
-    __weak UINavigationController *navigationController = self.navigationController;
-    
     // get user from server
     @weakify(self);
     [[[QMCore instance].usersService getUserWithID:self.user.ID forceLoad:YES] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         
         @strongify(self);
-        [navigationController dismissNotificationPanel];
         [self.refreshControl endRefreshing];
         
         if (!task.isFaulted) {
