@@ -590,19 +590,6 @@
 			<key>runOnlyForDeploymentPostprocessing</key>
 			<string>0</string>
 		</dict>
-		<key>06D70CB6CB1FC4A9858F372D3687FB3D</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>4DAC55F4DCD7F376490E65624FB8C708</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Frameworks</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
 		<key>06D70E3ED56542E6E150732ACE707585</key>
 		<dict>
 			<key>fileRef</key>
@@ -3267,6 +3254,19 @@
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
+		<key>2408032877E640D4330C3FFF03BAD453</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>34DB99FEC2DABB7022D68909AC392A7E</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Frameworks</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
 		<key>2428F7FA8675B26BF534887D0AC4FE06</key>
 		<dict>
 			<key>fileRef</key>
@@ -5161,6 +5161,21 @@
 			<string>SSKeychain.m</string>
 			<key>path</key>
 			<string>SSKeychain/SSKeychain.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>34DB99FEC2DABB7022D68909AC392A7E</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>archive.ar</string>
+			<key>name</key>
+			<string>libFlurry_7.6.4.a</string>
+			<key>path</key>
+			<string>Flurry/libFlurry_7.6.4.a</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -7767,21 +7782,6 @@
 			<string>3EC5FD36F98F11F5504A8A0AD5710703</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
-		</dict>
-		<key>4DAC55F4DCD7F376490E65624FB8C708</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>archive.ar</string>
-			<key>name</key>
-			<string>libFlurry_7.6.3.a</string>
-			<key>path</key>
-			<string>Flurry/libFlurry_7.6.3.a</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
 		</dict>
 		<key>4DB9C859D34F673649713D305D444DF0</key>
 		<dict>
@@ -18754,7 +18754,7 @@
 			<array>
 				<string>6AAC3E24F640B4EDA92508FA77FB20A2</string>
 				<string>DEF7B7EBE11E207C2A45290DFE7D82DD</string>
-				<string>06D70CB6CB1FC4A9858F372D3687FB3D</string>
+				<string>2408032877E640D4330C3FFF03BAD453</string>
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
