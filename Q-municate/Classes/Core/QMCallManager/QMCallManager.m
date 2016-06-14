@@ -136,7 +136,7 @@ QBRTCClientDelegate
     
     NSUInteger opponentID;
     
-    NSUInteger initiatorID = [self.session.initiatorID unsignedIntegerValue];
+    NSUInteger initiatorID = self.session.initiatorID.unsignedIntegerValue;
     if (initiatorID == self.serviceManager.currentProfile.userData.ID) {
         
         opponentID = [self.session.opponentsIDs.firstObject unsignedIntegerValue];

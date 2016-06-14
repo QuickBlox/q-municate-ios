@@ -139,7 +139,7 @@
 
 - (NSArray *)friends {
     
-    NSArray *allContactListItems = self.serviceManager.contactListService.contactListMemoryStorage.allContactListItems;
+    NSArray *allContactListItems = [self.serviceManager.contactListService.contactListMemoryStorage allContactListItems];
     NSMutableArray *friends = [NSMutableArray arrayWithCapacity:allContactListItems.count];
     
     for (QBContactListItem *item in allContactListItems) {
@@ -154,13 +154,13 @@
         }
     }
     
-    return friends.copy;
+    return [friends copy];
 }
 
 - (NSArray *)friendsByExcludingUsersWithIDs:(NSArray *)userIDs {
     
-    NSArray *friends = self.friends;
-    NSMutableArray *mutableUsers = friends.mutableCopy;
+    NSArray *friends = [self friends];
+    NSMutableArray *mutableUsers = [friends mutableCopy];
     
     for (QBUUser *user in friends) {
         
@@ -170,7 +170,7 @@
         }
     }
     
-    return mutableUsers.copy;
+    return [mutableUsers copy];
 }
 
 - (NSArray *)idsOfUsers:(NSArray *)users {
@@ -182,16 +182,16 @@
         [ids addObject:@(user.ID)];
     }
     
-    return ids.copy;
+    return [ids copy];
 }
 
 - (NSArray *)occupantsWithoutCurrentUser:(NSArray *)occupantIDs {
     
-    NSMutableArray *occupantsWithoutCurrentUser = occupantIDs.mutableCopy;
+    NSMutableArray *occupantsWithoutCurrentUser = [occupantIDs mutableCopy];
     
     [occupantsWithoutCurrentUser removeObject:@(self.serviceManager.currentProfile.userData.ID)];
     
-    return occupantsWithoutCurrentUser.copy;
+    return [occupantsWithoutCurrentUser copy];
 }
 
 - (NSString *)onlineStatusForUser:(QBUUser *)user {

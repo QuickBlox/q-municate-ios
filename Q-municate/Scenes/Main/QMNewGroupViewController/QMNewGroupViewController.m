@@ -87,8 +87,8 @@ UITextFieldDelegate
             
             if (!task.isFaulted) {
                 
-                [self.avatarImageView setImage:self.avatarImageView.image withKey:task.result.publicUrl];
-                return [self createGroupChatWithPhotoURL:task.result.publicUrl];
+                [self.avatarImageView setImage:self.avatarImageView.image withKey:[task.result publicUrl]];
+                return [self createGroupChatWithPhotoURL:[task.result publicUrl]];
             }
             else {
                 
@@ -105,7 +105,7 @@ UITextFieldDelegate
 
 - (BFTask *)createGroupChatWithPhotoURL:(NSString *)photoURL {
     
-    NSArray *occupantsIDs = [[QMCore instance].contactManager idsOfUsers:self.tagFieldView.tagIDs];
+    NSArray *occupantsIDs = [[QMCore instance].contactManager idsOfUsers:[self.tagFieldView tagIDs]];
     __block QBChatDialog *chatDialog = nil;
     
     __weak UINavigationController *navigationController = self.navigationController;
@@ -113,7 +113,7 @@ UITextFieldDelegate
     NSString *name = [self.nameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
     @weakify(self);
-    return [[[[QMCore instance].chatService createGroupChatDialogWithName:name photo:photoURL occupants:self.tagFieldView.tagIDs] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+    return [[[[QMCore instance].chatService createGroupChatDialogWithName:name photo:photoURL occupants:[self.tagFieldView tagIDs]] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
         
         @strongify(self);
         [navigationController dismissNotificationPanel];
@@ -129,7 +129,7 @@ UITextFieldDelegate
         
         return [BFTask cancelledTask];
         
-    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         
         return task.isCancelled ? nil : [[QMCore instance].chatService sendNotificationMessageAboutAddingOccupants:occupantsIDs toDialog:chatDialog withNotificationText:kQMDialogsUpdateNotificationMessage];
     }];
@@ -187,7 +187,7 @@ UITextFieldDelegate
 
 - (void)updateNextButtonState {
     
-    BOOL nextAllowed = self.tagFieldView.tagIDs.count > 0 && self.nameTextField.text.length > 0;
+    BOOL nextAllowed = [self.tagFieldView tagIDs].count > 0 && self.nameTextField.text.length > 0;
     
     self.navigationItem.rightBarButtonItem.enabled = nextAllowed;
 }

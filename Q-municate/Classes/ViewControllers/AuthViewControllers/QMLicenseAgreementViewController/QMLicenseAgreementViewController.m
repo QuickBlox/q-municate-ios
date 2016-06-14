@@ -47,8 +47,6 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
 - (void)dismissViewControllerSuccess:(BOOL)success {
     
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-    
     @weakify(self);
     [self dismissViewControllerAnimated:YES completion:^{
         
@@ -63,7 +61,7 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
 - (IBAction)acceptLicense:(id)__unused sender {
     
-    [[QMCore instance].currentProfile setUserAgreementAccepted:YES];
+    [QMCore instance].currentProfile.userAgreementAccepted = YES;
     [self dismissViewControllerSuccess:YES];
 }
 

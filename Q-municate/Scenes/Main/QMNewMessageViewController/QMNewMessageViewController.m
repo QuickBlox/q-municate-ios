@@ -167,7 +167,7 @@ UISearchResultsUpdating
 
 - (void)updateItemsFromContactList {
     
-    NSArray *friends = [QMCore instance].contactManager.friends;
+    NSArray *friends = [[QMCore instance].contactManager friends];
     [self.dataSource replaceItems:friends];
     
     self.navigationItem.rightBarButtonItem.enabled = friends.count > 0;

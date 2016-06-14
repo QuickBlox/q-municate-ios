@@ -39,7 +39,7 @@
 
 + (void)takePhotoInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler allowsEditing:(BOOL)allowsEditing {
     
-    QMImagePicker *imagePicker = [[QMImagePicker alloc] init];
+    QMImagePicker *imagePicker = [[[self class] alloc] init];
     imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
     imagePicker.allowsEditing = allowsEditing;
     imagePicker.resultHandler = resultHandler;
@@ -54,7 +54,7 @@
 
 + (void)choosePhotoInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler allowsEditing:(BOOL)allowsEditing {
     
-    QMImagePicker *imagePicker = [[QMImagePicker alloc] init];
+    QMImagePicker *imagePicker = [[[self class] alloc] init];
     imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     imagePicker.allowsEditing = allowsEditing;
     
@@ -81,7 +81,7 @@
                            resultHandler:(id<QMImagePickerResultHandler>)resultHandler
                            allowsEditing:(BOOL)allowsEditing {
     
-    QMImagePicker *imagePicker = [[QMImagePicker alloc] init];
+    QMImagePicker *imagePicker = [[[self class] alloc] init];
     imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
     imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
     imagePicker.videoMaximumDuration = maxDuration;
@@ -100,7 +100,7 @@
 
 + (void)chooseFromGaleryInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler allowsEditing:(BOOL)allowsEditing {
     
-    QMImagePicker *imagePicker = [[QMImagePicker alloc] init];
+    QMImagePicker *imagePicker = [[[self class] alloc] init];
     imagePicker.allowsEditing = allowsEditing;
     imagePicker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
     imagePicker.mediaTypes = @[(NSString *)kUTTypeMovie, (NSString *)kUTTypeImage];
@@ -112,10 +112,10 @@
     
     [picker dismissViewControllerAnimated:YES completion:^{
         
-        NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
+        NSString *mediaType = info[UIImagePickerControllerMediaType];
         if (CFStringCompare ((__bridge CFStringRef) mediaType, kUTTypeMovie, 0) == kCFCompareEqualTo) {
             
-            NSURL *resultMediaUrl = [info objectForKey:UIImagePickerControllerMediaURL];
+            NSURL *resultMediaUrl = info[UIImagePickerControllerMediaURL];
             [self.resultHandler imagePicker:self didFinishPickingVideo:resultMediaUrl];
         }
         else {

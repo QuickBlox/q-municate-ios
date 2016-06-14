@@ -33,7 +33,7 @@ QMUsersServiceDelegate
         
         [[QMCore instance].contactListService addDelegate:self];
         [[QMCore instance].usersService addDelegate:self];
-        _friends = [QMCore instance].contactManager.friends;
+        _friends = [[QMCore instance].contactManager friends];
     }
     
     return self;
@@ -71,40 +71,38 @@ QMUsersServiceDelegate
     });
 }
 
-#pragma mark - QMUsersServiceDelegate
+#pragma mark - Helpers
 
-- (void)usersService:(QMUsersService *)__unused usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
+- (void)updateData {
     
-    self.friends = [QMCore instance].contactManager.friends;
+    self.friends = [[QMCore instance].contactManager friends];
     [self performSearch:self.cachedSearchText];
     
     [self.delegate searchDataProvider:self didUpdateData:self.friends];
 }
 
+#pragma mark - QMUsersServiceDelegate
+
+- (void)usersService:(QMUsersService *)__unused usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
+    
+    [self updateData];
+}
+
 - (void)usersService:(QMUsersService *)__unused usersService didAddUsers:(NSArray<QBUUser *> *)__unused user {
     
-    self.friends = [QMCore instance].contactManager.friends;
-    [self performSearch:self.cachedSearchText];
-    
-    [self.delegate searchDataProvider:self didUpdateData:self.friends];
+    [self updateData];
 }
 
 #pragma mark - QMContactListDelegate
 
 - (void)contactListServiceDidLoadCache {
     
-    self.friends = [QMCore instance].contactManager.friends;
-    [self performSearch:self.cachedSearchText];
-    
-    [self.delegate searchDataProvider:self didUpdateData:self.friends];
+    [self updateData];
 }
 
 - (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
     
-    self.friends = [QMCore instance].contactManager.friends;
-    [self performSearch:self.cachedSearchText];
-    
-    [self.delegate searchDataProvider:self didUpdateData:self.friends];
+    [self updateData];
 }
 
 @end

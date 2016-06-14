@@ -64,7 +64,7 @@
 - (IBAction)groupNameFieldEditingChanged:(UITextField *)sender {
     
     NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
-    if ([[sender.text stringByTrimmingCharactersInSet:whiteSpaceSet] length] == 0
+    if ([sender.text stringByTrimmingCharactersInSet:whiteSpaceSet].length == 0
         || [sender.text isEqualToString:self.chatDialog.name]) {
         
         self.navigationItem.rightBarButtonItem.enabled = NO;

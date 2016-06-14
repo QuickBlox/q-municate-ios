@@ -19,14 +19,15 @@
 
 + (instancetype)instance {
     
-    static QMPlaceholder *_userPlaceholder = nil;
+    static QMPlaceholder *userPlaceholder = nil;
+    
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
-        _userPlaceholder = [[QMPlaceholder alloc] init];
+        userPlaceholder = [[QMPlaceholder alloc] init];
     });
     
-    return _userPlaceholder;
+    return userPlaceholder;
 }
 
 - (instancetype)init {
@@ -61,28 +62,29 @@
     
     NSString *key = [NSString stringWithFormat:@"%@ %@", title, NSStringFromCGSize(frame.size)];
     
-    UIImage *image = [[QMPlaceholder instance].cache objectForKey:key];
+    UIImage *image = [[[[self class] instance] cache] objectForKey:key];
     
     if (image) {
         
         return image;
-    } else {
+    }
+    else {
         
         UIGraphicsBeginImageContextWithOptions(frame.size, NO, 0.0);
         //// Oval Drawing
         UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect:frame];
         
-        UIColor *userColor = [QMPlaceholder instance].colors[ID % 10];
+        UIColor *userColor = [[[self class] instance] colors][ID % 10];
         [userColor setFill];
         [ovalPath fill];
         
-        NSMutableParagraphStyle *paragraphStyle = NSMutableParagraphStyle.defaultParagraphStyle.mutableCopy;
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
         paragraphStyle.alignment = NSTextAlignmentCenter;
         
         UIFont *font = [UIFont systemFontOfSize:frame.size.height / 2.0f];
         UIColor *textColor = [UIColor whiteColor];
         
-        NSString *textContent = [[title substringToIndex:1] uppercaseString];
+        NSString *textContent = [title substringToIndex:1].uppercaseString;
         
         NSDictionary *ovalFontAttributes = @{NSFontAttributeName:font ,
                                              NSForegroundColorAttributeName:textColor,
@@ -100,7 +102,7 @@
         UIImage *ovalImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
-        [[QMPlaceholder instance].cache setObject:ovalImage forKey:key];
+        [[[[self class] instance] cache] setObject:ovalImage forKey:key];
         
         return ovalImage;
     }

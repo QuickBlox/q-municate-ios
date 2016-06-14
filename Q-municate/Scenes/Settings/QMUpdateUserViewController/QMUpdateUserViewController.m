@@ -107,7 +107,7 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
     __weak UINavigationController *navigationController = self.navigationController;
     
     @weakify(self);
-    [[QMTasks taskUpdateCurrentUser:updateUserParams] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
+    [[QMTasks taskUpdateCurrentUser:updateUserParams] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         
         @strongify(self);
         [navigationController dismissNotificationPanel];
@@ -142,7 +142,7 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
     }
     
     NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
-    if ([[self.textField.text stringByTrimmingCharactersInSet:whiteSpaceSet] length] < kQMFullNameFieldMinLength) {
+    if ([self.textField.text stringByTrimmingCharactersInSet:whiteSpaceSet].length < kQMFullNameFieldMinLength) {
         
         return NO;
     }

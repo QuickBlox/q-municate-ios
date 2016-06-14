@@ -21,20 +21,18 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    NSArray *classNamesToReposition = @[@"_UINavigationBarBackground"];
-    
-    for (UIView *view in [self subviews]) {
+    for (UIView *view in self.subviews) {
         
-        if ([classNamesToReposition containsObject:NSStringFromClass([view class])]) {
+        if ([NSStringFromClass([view class]) isEqualToString:@"_UINavigationBarBackground"]) {
             
-            CGRect bounds = [self bounds];
-            CGRect frame = [view frame];
+            CGRect bounds = self.bounds;
+            CGRect frame = view.frame;
             
             CGFloat statusBarHeight = CGRectGetHeight([UIApplication sharedApplication].statusBarFrame);
             frame.origin.y = bounds.origin.y + CGRectGetHeight(self.notificationView.frame) - statusBarHeight;
             frame.size.height = bounds.size.height + statusBarHeight;
             
-            [view setFrame:frame];
+            view.frame = frame;
         }
     }
 }
@@ -50,7 +48,7 @@
         subview.frame = frame;
         
         [self sizeToFit];
-        [self setTransform:CGAffineTransformMakeTranslation(0, -(CGRectGetHeight(self.notificationView.frame)))];
+        self.transform = CGAffineTransformMakeTranslation(0, -(CGRectGetHeight(self.notificationView.frame)));
         
         [self.window.rootViewController.view layoutIfNeeded];
     }
@@ -62,7 +60,7 @@
         && subview.tag == kQMNotificationPanelTag) {
         self.notificationView = nil;
         
-        [self setTransform:CGAffineTransformMakeTranslation(0, -(CGRectGetHeight(self.notificationView.frame)))];
+        self.transform = CGAffineTransformMakeTranslation(0, -(CGRectGetHeight(self.notificationView.frame)));
         [self sizeToFit];
         
         [self.window.rootViewController.view layoutIfNeeded];

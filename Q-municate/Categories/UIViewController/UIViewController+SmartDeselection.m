@@ -20,7 +20,7 @@
     }
     
     // Grab the transition coordinator responsible for the current transition
-    if (self.transitionCoordinator != nil) {
+    if ([self transitionCoordinator] != nil) {
         
         // Animate alongside the master view controller's view
         UIView *view = nil;
@@ -30,7 +30,7 @@
             view = self.parentViewController.view;
         }
         
-        [self.transitionCoordinator animateAlongsideTransitionInView:view animation:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        [[self transitionCoordinator] animateAlongsideTransitionInView:view animation:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
             
             // Deselect the cells, with animations enabled if this is an animated transition
             for (NSIndexPath *indexPath in selectedIndexPaths) {
