@@ -88,7 +88,7 @@ static const CGFloat kQMMessageNotificationIconImageSize = 32.0;
     // custom params
     NSDictionary  *dictPush = @{@"message" : message,
                                 @"ios_badge": @"1",
-                                @"ios_sound": @"default",
+                                @"ios_sound": @"default"
                                 };
     
     NSError *error = nil;
