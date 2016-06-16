@@ -18,7 +18,7 @@ PODS:
   - FBSDKShareKit (4.11.0):
     - FBSDKCoreKit
   - FLAnimatedImage (1.0.12)
-  - Flurry-iOS-SDK/FlurrySDK (7.6.3)
+  - Flurry-iOS-SDK/FlurrySDK (7.6.4)
   - libextobjc/EXTKeyPathCoding (0.4.1):
     - libextobjc/RuntimeExtensions
   - libextobjc/EXTScope (0.4.1):
@@ -125,7 +125,7 @@ SPEC CHECKSUMS:
   FBSDKLoginKit: bade9fc78277764149ccc5bfaadbf13c83175c6a
   FBSDKShareKit: 2d1746144cfc8a9dbbd24997c34ee0471be51b6a
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
-  Flurry-iOS-SDK: 5ea9c76a73ce16bff005d21a4f0b539d2c15d97d
+  Flurry-iOS-SDK: 9da972687d3af9f48038dcd86eae9cad3acca456
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
