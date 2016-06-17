@@ -58,6 +58,72 @@ QMTagFieldViewDelegate
         // task is in progress
         return;
     }
+    
+    NSArray *tagIDs = [self.tagFieldView tagIDs];
+    
+    if (tagIDs.count > 1) {
+        // creating group chat
+        
+        NSArray *fullNames = [tagIDs valueForKeyPath:@keypath(QBUUser.new, fullName)];
+        NSString *name = [fullNames componentsJoinedByString:@", "];
+        NSArray *occupantsIDs = [[QMCore instance].contactManager idsOfUsers:tagIDs];
+        
+        [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+        __weak UINavigationController *navigationController = self.navigationController;
+        
+        __block QBChatDialog *chatDialog = nil;
+        
+        @weakify(self);
+        self.dialogCreationTask = [[[[QMCore instance].chatService createGroupChatDialogWithName:name photo:nil occupants:tagIDs] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+            
+            @strongify(self);
+            [navigationController dismissNotificationPanel];
+            
+            if (!task.isFaulted) {
+                
+                chatDialog = task.result;
+                [self performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
+                
+                return [[QMCore instance].chatService sendSystemMessageAboutAddingToDialog:chatDialog toUsersIDs:occupantsIDs withText:kQMDialogsUpdateNotificationMessage];
+                
+            }
+
+            return [BFTask cancelledTask];
+            
+        }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+            
+            return task.isCancelled ? nil : [[QMCore instance].chatService sendNotificationMessageAboutAddingOccupants:occupantsIDs toDialog:chatDialog withNotificationText:kQMDialogsUpdateNotificationMessage];
+        }];
+    }
+    else {
+        // creating or opening private chat
+        QBUUser *user = tagIDs.firstObject;
+        QBChatDialog *privateDialog = [[QMCore instance].chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
+        
+        if (privateDialog != nil) {
+            
+            [self performSegueWithIdentifier:kQMSceneSegueChat sender:privateDialog];
+        }
+        else {
+            
+            [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+            __weak UINavigationController *navigationController = self.navigationController;
+            
+            @weakify(self);
+            self.dialogCreationTask = [[[QMCore instance].chatService createPrivateChatDialogWithOpponent:user] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+                
+                @strongify(self);
+                [navigationController dismissNotificationPanel];
+                
+                if (!task.isFaulted) {
+                    
+                    [self performSegueWithIdentifier:kQMSceneSegueChat sender:task.result];
+                }
+                
+                return nil;
+            }];
+        }
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
