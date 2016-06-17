@@ -763,6 +763,7 @@
 		5842777E1C3D335200CDE35B /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				584277B11C3D36EA00CDE35B /* SegueIdentifiers.h */,
 				584277C41C3D46AC00CDE35B /* Base */,
 				5842777F1C3D336300CDE35B /* Views */,
 				584A6DAF1C9DB38000B7D641 /* Cells */,
@@ -772,7 +773,6 @@
 				584277C11C3D449300CDE35B /* Chat */,
 				584277CB1C3D494400CDE35B /* Calls */,
 				584277C51C3D46B600CDE35B /* Settings */,
-				584277B11C3D36EA00CDE35B /* SegueIdentifiers.h */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
