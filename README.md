@@ -11,7 +11,6 @@
 		- [Tab Bar](#tab-bar)
 		- [Chat Dialogs List Screen](#chat-dialogs-list-screen)
 		- [New Message Screen](#new-message-screen)
-		- [New Group Screen](#new-group-screen)
 		- [Private Chat Screen](#private-chat-screen)
 		- [Group Chat Screen](#group-chat-screen)
 		- [Group Info Screen](#group-info-screen)
@@ -160,31 +159,16 @@ Search allows user to filter existing dialogs in local cache by its names.
 
 <center><img src="Screenshots/NewMessageScreen.png" width="320"></center>
 
-You can select contact on this page in order to start a private chat with him/her.
+If you will select only 1 contact - private chat will be opened (if existent) or created if needed. Otherwise group chat will be created.
 
 #### Search
 
-Search allows user to filter contacts by their full names
+Tag field allows you to search through contacts full names.
 
 #### Buttons
 
-* Right bar button - redirects user to group chat creation page
+* Right bar button - creates chat dialog
 * Back - return user back to chat dialogs page
-
-### New Group Screen
-
-<center><img src="Screenshots/NewGroupScreen.png" width="320"></center>
-
-#### Fields set
-
-* Group name field - group chat dialog name, mandatory
-* Tag search field - allows user to filter contacts by their full name and manage already selected ones in tag field
-
-#### Buttons
-
-* By tapping on avatar action sheet will be opened, user can either take a new photo or select an already existent one from library to set as group photo (optional)
-* Next - creates a group chat with selected users and redirects to chat view controller page
-* Back - return user back to chat dialogs screen
 
 ### Private Chat Screen
 
