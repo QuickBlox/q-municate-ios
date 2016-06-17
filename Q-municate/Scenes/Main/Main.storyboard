@@ -176,7 +176,7 @@ out here.</string>
                     <connections>
                         <outlet property="tagFieldView" destination="PV0-ej-tkc" id="KBM-Aq-bEz"/>
                         <outlet property="tagFieldViewHeightConstraint" destination="Oii-Wm-kH6" id="BWe-rQ-ggN"/>
-                        <segue destination="GHP-Ej-YG9" kind="show" identifier="SceneSegueChat" id="Yck-ZT-FfV"/>
+                        <segue destination="GHP-Ej-YG9" kind="custom" identifier="SceneSegueChat" customClass="QMReplaceViewControllerSegue" id="Yck-ZT-FfV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2lp-VE-gjm" userLabel="First Responder" sceneMemberID="firstResponder"/>
