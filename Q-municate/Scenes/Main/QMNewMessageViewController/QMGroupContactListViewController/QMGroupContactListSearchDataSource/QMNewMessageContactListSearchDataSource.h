@@ -1,5 +1,5 @@
 //
-//  QMGroupContactListSearchDataSource.h
+//  QMNewMessageContactListSearchDataSource.h
 //  Q-municate
 //
 //  Created by Vitaliy Gorbachov on 3/20/16.
@@ -14,7 +14,7 @@
  *
  *  @see QMAlphabetizedDataSource class for more information.
  */
-@interface QMGroupContactListSearchDataSource : QMContactsSearchDataSource
+@interface QMNewMessageContactListSearchDataSource : QMContactsSearchDataSource
 
 /**
  *  Set of selected users (readonly).

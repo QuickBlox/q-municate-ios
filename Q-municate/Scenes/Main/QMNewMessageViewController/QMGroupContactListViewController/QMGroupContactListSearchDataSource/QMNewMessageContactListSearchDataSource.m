@@ -1,23 +1,23 @@
 //
-//  QMGroupContactListSearchDataSource.m
+//  QMNewMessageContactListSearchDataSource.m
 //  Q-municate
 //
 //  Created by Vitaliy Gorbachov on 3/20/16.
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMGroupContactListSearchDataSource.h"
+#import "QMNewMessageContactListSearchDataSource.h"
 #import "QMNoResultsCell.h"
 #import "QMSelectableContactCell.h"
 #import "QMCore.h"
 
-@interface QMGroupContactListSearchDataSource ()
+@interface QMNewMessageContactListSearchDataSource ()
 
 @property (strong, nonatomic, readwrite) NSMutableSet *selectedUsers;
 
 @end
 
-@implementation QMGroupContactListSearchDataSource
+@implementation QMNewMessageContactListSearchDataSource
 
 #pragma mark - Construction
 

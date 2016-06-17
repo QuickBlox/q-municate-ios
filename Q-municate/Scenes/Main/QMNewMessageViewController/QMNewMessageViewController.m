@@ -7,34 +7,24 @@
 //
 
 #import "QMNewMessageViewController.h"
-#import "QMContactsDataSource.h"
-#import "QMContactsSearchDataSource.h"
+#import "QMMessageContactListViewController.h"
+
+#import "QMTagFieldView.h"
 #import "QMCore.h"
 #import "UINavigationController+QMNotification.h"
 #import "QMChatVC.h"
-#import "QMContactsSearchDataProvider.h"
-
-#import "QMContactCell.h"
-#import "QMNoContactsCell.h"
-#import "QMNoResultsCell.h"
 
 @interface QMNewMessageViewController ()
 
 <
-QMSearchProtocol,
-QMSearchDataProviderDelegate,
-
-UISearchControllerDelegate,
-UISearchResultsUpdating
+QMMessageContactListViewControllerDelegate,
+QMTagFieldViewDelegate
 >
 
-@property (strong, nonatomic) UISearchController *searchController;
+@property (weak, nonatomic) QMMessageContactListViewController *messageContactListViewController;
 
-/**
- *  Data sources
- */
-@property (strong, nonatomic) QMContactsDataSource *dataSource;
-@property (strong, nonatomic) QMContactsSearchDataSource *contactsSearchDataSource;
+@property (weak, nonatomic) IBOutlet QMTagFieldView *tagFieldView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tagFieldViewHeightConstraint;
 
 @property (weak, nonatomic) BFTask *dialogCreationTask;
 
@@ -42,9 +32,9 @@ UISearchResultsUpdating
 
 @implementation QMNewMessageViewController
 
+#pragma mark - Lifecycle
+
 - (void)dealloc {
-    
-    [self.searchController.view removeFromSuperview];
     
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
@@ -52,125 +42,88 @@ UISearchResultsUpdating
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self registerNibs];
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     
-    // Hide empty separators
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    
-    // search implementation
-    [self configureSearch];
-    
-    // setting up data source
-    [self configureDataSources];
-    
-    // filling data source
-    [self updateItemsFromContactList];
-    
-    // Back button style for next in navigation stack view controllers
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
-                                             initWithTitle:NSLocalizedString(@"QM_STR_BACK", nil)
-                                             style:UIBarButtonItemStylePlain
-                                             target:nil
-                                             action:nil];
+    // configuring tag field
+    self.tagFieldView.placeholder = NSLocalizedString(@"QM_STR_TAG_FIELD_PLACEHOLDER", nil);
+    self.tagFieldView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.tagFieldView.delegate = self;
 }
 
-- (void)configureSearch {
-    
-    self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
-    self.searchController.searchBar.placeholder = NSLocalizedString(@"QM_STR_SEARCH_BAR_PLACEHOLDER", nil);
-    self.searchController.searchResultsUpdater = self;
-    self.searchController.delegate = self;
-    self.searchController.dimsBackgroundDuringPresentation = NO;
-    self.definesPresentationContext = YES;
-    [self.searchController.searchBar sizeToFit]; // iOS8 searchbar sizing
-    self.tableView.tableHeaderView = self.searchController.searchBar;
-}
+#pragma mark - Actions
 
-- (void)configureDataSources {
-    
-    self.dataSource = [[QMContactsDataSource alloc] initWithKeyPath:@keypath(QBUUser.new, fullName)];
-    self.tableView.dataSource = self.dataSource;
-    
-    QMContactsSearchDataProvider *searchDataProvider = [[QMContactsSearchDataProvider alloc] init];
-    searchDataProvider.delegate = self;
-    
-    self.contactsSearchDataSource = [[QMContactsSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider usingKeyPath:@keypath(QBUUser.new, fullName)];
-}
-
-#pragma mark - UITableViewDelegate
-
-- (CGFloat)tableView:(UITableView *)__unused tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    return [self.searchDataSource heightForRowAtIndexPath:indexPath];
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+- (IBAction)rightBarButtonPressed:(UIBarButtonItem *)__unused sender {
     
     if (self.dialogCreationTask) {
-        // dialog creating in progress
+        // task is in progress
         return;
     }
     
-    QBUUser *user = [(id <QMContactsSearchDataSourceProtocol>)self.searchDataSource userAtIndexPath:indexPath];
+    NSArray *tagIDs = [self.tagFieldView tagIDs];
     
-    QBChatDialog *privateDialog = [[QMCore instance].chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
-    
-    if (privateDialog != nil) {
+    if (tagIDs.count > 1) {
+        // creating group chat
         
-        [self performSegueWithIdentifier:kQMSceneSegueChat sender:privateDialog];
-    }
-    else {
+        NSArray *fullNames = [tagIDs valueForKeyPath:@keypath(QBUUser.new, fullName)];
+        NSString *name = [fullNames componentsJoinedByString:@", "];
+        NSArray *occupantsIDs = [[QMCore instance].contactManager idsOfUsers:tagIDs];
         
         [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
-        
         __weak UINavigationController *navigationController = self.navigationController;
         
+        __block QBChatDialog *chatDialog = nil;
+        
         @weakify(self);
-        self.dialogCreationTask = [[[QMCore instance].chatService createPrivateChatDialogWithOpponent:user] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+        self.dialogCreationTask = [[[[QMCore instance].chatService createGroupChatDialogWithName:name photo:nil occupants:tagIDs] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
             
             @strongify(self);
             [navigationController dismissNotificationPanel];
             
             if (!task.isFaulted) {
                 
-                [self performSegueWithIdentifier:kQMSceneSegueChat sender:task.result];
+                chatDialog = task.result;
+                [self performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
+                
+                return [[QMCore instance].chatService sendSystemMessageAboutAddingToDialog:chatDialog toUsersIDs:occupantsIDs withText:kQMDialogsUpdateNotificationMessage];
+                
             }
+
+            return [BFTask cancelledTask];
             
-            return nil;
+        }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+            
+            return task.isCancelled ? nil : [[QMCore instance].chatService sendNotificationMessageAboutAddingOccupants:occupantsIDs toDialog:chatDialog withNotificationText:kQMDialogsUpdateNotificationMessage];
         }];
     }
-}
-
-#pragma mark - UISearchControllerDelegate
-
-- (void)willPresentSearchController:(UISearchController *)__unused searchController {
-    
-    self.tableView.dataSource = self.contactsSearchDataSource;
-    [self.tableView reloadData];
-}
-
-- (void)willDismissSearchController:(UISearchController *)__unused searchController {
-    
-    self.tableView.dataSource = self.dataSource;
-    [self.tableView reloadData];
-}
-
-#pragma mark - UISearchResultsUpdating
-
-- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
-    
-    [self.searchDataSource.searchDataProvider performSearch:searchController.searchBar.text];
-}
-
-#pragma mark - Helpers
-
-- (void)updateItemsFromContactList {
-    
-    NSArray *friends = [[QMCore instance].contactManager friends];
-    [self.dataSource replaceItems:friends];
-    
-    self.navigationItem.rightBarButtonItem.enabled = friends.count > 0;
+    else {
+        // creating or opening private chat
+        QBUUser *user = tagIDs.firstObject;
+        QBChatDialog *privateDialog = [[QMCore instance].chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
+        
+        if (privateDialog != nil) {
+            
+            [self performSegueWithIdentifier:kQMSceneSegueChat sender:privateDialog];
+        }
+        else {
+            
+            [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+            __weak UINavigationController *navigationController = self.navigationController;
+            
+            @weakify(self);
+            self.dialogCreationTask = [[[QMCore instance].chatService createPrivateChatDialogWithOpponent:user] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+                
+                @strongify(self);
+                [navigationController dismissNotificationPanel];
+                
+                if (!task.isFaulted) {
+                    
+                    [self performSegueWithIdentifier:kQMSceneSegueChat sender:task.result];
+                }
+                
+                return nil;
+            }];
+        }
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -180,42 +133,66 @@ UISearchResultsUpdating
         QMChatVC *chatViewController = segue.destinationViewController;
         chatViewController.chatDialog = sender;
     }
-}
-
-#pragma mark - QMSearchDataProviderDelegate
-
-- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
-    
-    if ([self.tableView.dataSource conformsToProtocol:@protocol(QMContactsSearchDataSourceProtocol)]) {
+    else if ([segue.identifier isEqualToString:kQMSceneSegueNewMessageContactList]) {
         
-        [self.tableView reloadData];
+        self.messageContactListViewController = segue.destinationViewController;
+        self.messageContactListViewController.delegate = self;
     }
 }
 
-- (void)searchDataProvider:(QMSearchDataProvider *)__unused searchDataProvider didUpdateData:(NSArray *)__unused data {
+- (void)updateNextButtonState {
     
-    if (![self.tableView.dataSource conformsToProtocol:@protocol(QMContactsSearchDataSourceProtocol)]) {
+    BOOL nextAllowed = [self.tagFieldView tagIDs].count > 0;
+    self.navigationItem.rightBarButtonItem.enabled = nextAllowed;
+}
+
+#pragma mark - QMMessageContactListViewControllerDelegate
+
+- (void)messageContactListViewController:(QMMessageContactListViewController *)__unused messageContactListViewController didDeselectUser:(QBUUser *)deselectedUser {
+    
+    [self.tagFieldView removeTagWithID:deselectedUser];
+    [self updateNextButtonState];
+}
+
+- (void)messageContactListViewController:(QMMessageContactListViewController *)__unused messageContactListViewController didSelectUser:(QBUUser *)selectedUser {
+    
+    [self.tagFieldView addTag:selectedUser.fullName tagID:selectedUser animated:YES];
+    [self.tagFieldView scrollToTextField:YES];
+    [self.tagFieldView clearText];
+    
+    [self updateNextButtonState];
+}
+
+- (void)messageContactListViewController:(QMMessageContactListViewController *)__unused messageContactListViewController didScrollContactList:(UIScrollView *)__unused scrollView {
+    
+    [self.view endEditing:YES];
+}
+
+#pragma mark - QMTagFieldViewDelegate
+
+- (void)tagFieldView:(QMTagFieldView *)__unused tagFieldView didDeleteTagWithID:(id)tagID {
+    
+    [self.messageContactListViewController deselectUser:tagID];
+    
+    [self updateNextButtonState];
+}
+
+- (void)tagFieldView:(QMTagFieldView *)__unused tagFieldView didChangeHeight:(CGFloat)height {
+    
+    self.tagFieldViewHeightConstraint.constant = height;
+}
+
+- (void)tagFieldView:(QMTagFieldView *)__unused tagFieldView didChangeText:(NSString *)text {
+    
+    [self.messageContactListViewController performSearch:text];
+}
+
+- (void)tagFieldView:(QMTagFieldView *)__unused tagFieldView didChangeSearchStatus:(BOOL)__unused searchIsActive byClearingTextField:(BOOL)byClearingTextField {
+    
+    if (!byClearingTextField) {
         
-        [self updateItemsFromContactList];
+        [self.messageContactListViewController performSearch:@""];
     }
-    
-    [self.tableView reloadData];
-}
-
-#pragma mark - QMSearchProtocol
-
-- (QMSearchDataSource *)searchDataSource {
-    
-    return (id)self.tableView.dataSource;
-}
-
-#pragma mark - Nib registration
-
-- (void)registerNibs {
-    
-    [QMContactCell registerForReuseInTableView:self.tableView];
-    [QMNoResultsCell registerForReuseInTableView:self.tableView];
-    [QMNoContactsCell registerForReuseInTableView:self.tableView];
 }
 
 @end
