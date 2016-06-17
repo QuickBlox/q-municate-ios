@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface QMNewMessageViewController : UITableViewController
+@interface QMNewMessageViewController : UIViewController
 
 @end

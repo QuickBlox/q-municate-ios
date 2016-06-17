@@ -80,7 +80,7 @@
 
 // *********** New Group Screen ***********
 "QM_STR_NAME_FIELD_PLACEHOLDER" = "Group name";
-"QM_STR_TAG_FIELD_PLACEHOLDER" = "Add people:";
+"QM_STR_TAG_FIELD_PLACEHOLDER" = "Enter contact name";
 
 // *********** Chat Screen ***********
 "QM_STR_INPUTTOOLBAR_PLACEHOLDER" = "Message";

@@ -154,7 +154,7 @@
             </objects>
             <point key="canvasLocation" x="-1442" y="-7653"/>
         </scene>
-        <!--Info-->
+        <!--Profile-->
         <scene sceneID="Gq0-Tj-nDc">
             <objects>
                 <tableViewController storyboardIdentifier="QMUserInfoViewController" hidesBottomBarWhenPushed="YES" id="C3X-fL-ZMz" customClass="QMUserInfoViewController" sceneMemberID="viewController">
@@ -425,7 +425,7 @@
                             <outlet property="delegate" destination="C3X-fL-ZMz" id="Ewd-Xe-vyl"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Info" id="FmV-W2-92C"/>
+                    <navigationItem key="navigationItem" title="Profile" id="FmV-W2-92C"/>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="UIq-2A-N2S">
                         <autoresizingMask key="autoresizingMask"/>
                     </refreshControl>

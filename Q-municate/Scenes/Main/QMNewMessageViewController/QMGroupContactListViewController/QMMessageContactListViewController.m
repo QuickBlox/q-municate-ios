@@ -1,19 +1,19 @@
 //
-//  QMGroupContactListViewController.m
+//  QMNewMessageContactListViewController.m
 //  Q-municate
 //
 //  Created by Vitaliy Gorbachov on 3/18/16.
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMGroupContactListViewController.h"
-#import "QMGroupContactListSearchDataSource.h"
+#import "QMMessageContactListViewController.h"
+#import "QMNewMessageContactListSearchDataSource.h"
 #import "QMContactsSearchDataProvider.h"
 
 #import "QMSelectableContactCell.h"
 #import "QMNoResultsCell.h"
 
-@interface QMGroupContactListViewController ()
+@interface QMMessageContactListViewController ()
 
 <
 UITableViewDelegate,
@@ -21,11 +21,11 @@ UIScrollViewDelegate,
 QMSearchDataProviderDelegate
 >
 
-@property (strong, nonatomic) QMGroupContactListSearchDataSource *dataSource;
+@property (strong, nonatomic) QMNewMessageContactListSearchDataSource *dataSource;
 
 @end
 
-@implementation QMGroupContactListViewController
+@implementation QMMessageContactListViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -44,7 +44,7 @@ QMSearchDataProviderDelegate
     QMContactsSearchDataProvider *dataProvider = [[QMContactsSearchDataProvider alloc] init];
     dataProvider.delegate = self;
     
-    self.dataSource = [[QMGroupContactListSearchDataSource alloc] initWithSearchDataProvider:dataProvider usingKeyPath:@keypath(QBUUser.new, fullName)];
+    self.dataSource = [[QMNewMessageContactListSearchDataSource alloc] initWithSearchDataProvider:dataProvider usingKeyPath:@keypath(QBUUser.new, fullName)];
     self.tableView.dataSource = self.dataSource;
     
     [self.dataSource replaceItems:dataProvider.friends];
@@ -92,17 +92,11 @@ QMSearchDataProviderDelegate
     QBUUser *user = [self.dataSource userAtIndexPath:indexPath];
     if (userSelected) {
         
-        if ([self.delegate respondsToSelector:@selector(groupContactListViewController:didDeselectUser:)]) {
-            
-            [self.delegate groupContactListViewController:self didDeselectUser:user];
-        }
+        [self.delegate messageContactListViewController:self didDeselectUser:user];
     }
     else {
         
-        if ([self.delegate respondsToSelector:@selector(groupContactListViewController:didSelectUser:)]) {
-            
-            [self.delegate groupContactListViewController:self didSelectUser:user];
-        }
+        [self.delegate messageContactListViewController:self didSelectUser:user];
     }
 }
 
@@ -115,18 +109,12 @@ QMSearchDataProviderDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     
-    if ([self.delegate respondsToSelector:@selector(groupContactListViewController:didScrollContactList:)]) {
-        
-        [self.delegate groupContactListViewController:self didScrollContactList:scrollView];
-    }
+    [self.delegate messageContactListViewController:self didScrollContactList:scrollView];
 }
 
 - (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
     
-    if ([self.delegate respondsToSelector:@selector(groupContactListViewController:didScrollContactList:)]) {
-        
-        [self.delegate groupContactListViewController:self didScrollContactList:scrollView];
-    }
+    [self.delegate messageContactListViewController:self didScrollContactList:scrollView];
 }
 
 #pragma mark - QMSearchDataProviderDelegate
@@ -148,10 +136,7 @@ QMSearchDataProviderDelegate
             
             [self.dataSource deselectUser:selectedUser];
             
-            if ([self.delegate respondsToSelector:@selector(groupContactListViewController:didDeselectUser:)]) {
-                
-                [self.delegate groupContactListViewController:self didDeselectUser:selectedUser];
-            }
+            [self.delegate messageContactListViewController:self didDeselectUser:selectedUser];
         }
     }
     

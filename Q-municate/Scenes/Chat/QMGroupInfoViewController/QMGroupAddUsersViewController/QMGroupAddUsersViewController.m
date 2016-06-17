@@ -7,7 +7,7 @@
 //
 
 #import "QMGroupAddUsersViewController.h"
-#import "QMGroupContactListSearchDataSource.h"
+#import "QMNewMessageContactListSearchDataSource.h"
 #import "QMGroupAddUsersSearchDataProvider.h"
 #import "QMCore.h"
 #import "NSArray+Intersection.h"
@@ -29,7 +29,7 @@ UISearchResultsUpdating
 
 @property (strong, nonatomic) UISearchController *searchController;
 
-@property (strong, nonatomic) QMGroupContactListSearchDataSource *dataSource;
+@property (strong, nonatomic) QMNewMessageContactListSearchDataSource *dataSource;
 @property (strong, nonatomic) QMGroupAddUsersSearchDataProvider *dataProvider;
 
 @property (copy, nonatomic) NSArray *cachedOccupantIDs;
@@ -66,7 +66,7 @@ UISearchResultsUpdating
     self.dataProvider = [[QMGroupAddUsersSearchDataProvider alloc] initWithExcludedUserIDs:self.cachedOccupantIDs];
     self.dataProvider.delegate = self;
     
-    self.dataSource = [[QMGroupContactListSearchDataSource alloc] initWithSearchDataProvider:self.dataProvider usingKeyPath:@keypath(QBUUser.new, fullName)];
+    self.dataSource = [[QMNewMessageContactListSearchDataSource alloc] initWithSearchDataProvider:self.dataProvider usingKeyPath:@keypath(QBUUser.new, fullName)];
     self.tableView.dataSource = self.dataSource;
     
     [self replaceUsers];
