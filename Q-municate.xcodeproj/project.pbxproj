@@ -1769,12 +1769,12 @@
 		69D57E4918ACC11C00A9900A = {
 			isa = PBXGroup;
 			children = (
+				55286995199131B5006F92CB /* Localizable.strings */,
 				69D57E5418ACC11C00A9900A /* Frameworks */,
 				533F8DC685AAE9904FDA11F3 /* Pods */,
 				69D57E5318ACC11C00A9900A /* Products */,
 				69D57E5B18ACC11C00A9900A /* Q-municate */,
 				559327A0199216FB001C4BF8 /* Q-municate Tests */,
-				55286995199131B5006F92CB /* Localizable.strings */,
 			);
 			sourceTree = "<group>";
 		};
