@@ -61,9 +61,11 @@ NSString *const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 #if DEVELOPMENT == 0
     [QBSettings setLogLevel:QBLogLevelNothing];
     [QBSettings disableXMPPLogging];
+    [QMServicesManager enableLogging:NO];
 #else
     [QBSettings setLogLevel:QBLogLevelDebug];
     [QBSettings enableXMPPLogging];
+    [QMServicesManager enableLogging:YES];
 #endif
     
     // QuickbloxWebRTC settings

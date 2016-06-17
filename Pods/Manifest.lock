@@ -6,7 +6,7 @@ PODS:
   - Bolts/AppLinks (1.7.0):
     - Bolts/Tasks
   - Bolts/Tasks (1.7.0)
-  - Crashlytics (3.7.0):
+  - Crashlytics (3.7.1):
     - Fabric (~> 1.6.3)
   - Digits (1.15.3):
     - TwitterCore (= 1.15.3)
@@ -112,13 +112,13 @@ CHECKOUT OPTIONS:
     :commit: ac7ae17689e75f0554706447d19f2851fc46dc54
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: cfc7607b7f94d597f1f81629910f3469f0a651ad
+    :commit: f005243cbb584acf5c743c27ccad7bb4b9951277
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
   AGEmojiKeyboard: e19cf4168b114d2e494e53fe8dc042d8bf011cc9
   Bolts: a0058fa3b331c5a1e4402d534f2dae36dbff31e4
-  Crashlytics: c3a2333dea9e2733d2777f730910321fc9e25c0d
+  Crashlytics: 3cdd4c9655be68032a0cf0379e0fb5ef6af22cad
   Digits: 9823f8aad766c0aa824fac9b08938e22bc635fac
   Fabric: caf7580c725e64db144f610ac65cd60956911dc7
   FBSDKCoreKit: 686ac982723a14ec9ddb85e2f81235d7706c891b

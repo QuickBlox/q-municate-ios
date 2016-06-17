@@ -9,6 +9,8 @@
 #import "QMChatService.h"
 #import "QBChatMessage+QMCustomParameters.h"
 
+#import "QMSLog.h"
+
 const char *kChatCacheQueue = "com.q-municate.chatCacheQueue";
 static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
 
@@ -35,7 +37,7 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
 
 - (void)dealloc {
     
-    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     
     [QBChat.instance removeDelegate:self];
 }
@@ -351,7 +353,7 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
     
     if (!message.dialogID) {
         
-        NSLog(@"Need update this case");
+        QMSLog(@"Need update this case");
         
         return;
     }

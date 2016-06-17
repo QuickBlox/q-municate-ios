@@ -8,6 +8,8 @@
 
 #import "QMContactListService.h"
 
+#import "QMSLog.h"
+
 @interface QMContactListService()
 
 <QBChatDelegate>
@@ -22,7 +24,7 @@
 
 - (void)dealloc {
     
-    NSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     [[QBChat instance] removeDelegate:self];
     self.contactListMemoryStorage = nil;
 }

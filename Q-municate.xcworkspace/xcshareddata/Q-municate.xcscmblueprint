@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "A670EF64B516360FDFADDE04B3B3446E684984BD",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "A670EF64B516360FDFADDE04B3B3446E684984BD" : 0,
+    "D160C3FE7B115E6635EB21EBE93000EBA4B81BC8" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "6ADCDC34-A445-4FE8-B60D-55F9BA645EA5",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "A670EF64B516360FDFADDE04B3B3446E684984BD" : "q-municate-ios\/",
+    "D160C3FE7B115E6635EB21EBE93000EBA4B81BC8" : "q-municate-services-ios\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Q-municate",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Q-municate.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:QuickBlox\/q-municate-ios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A670EF64B516360FDFADDE04B3B3446E684984BD"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:QuickBlox\/q-municate-services-ios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D160C3FE7B115E6635EB21EBE93000EBA4B81BC8"
+    }
+  ]
+}
