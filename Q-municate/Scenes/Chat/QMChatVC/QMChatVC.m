@@ -18,6 +18,7 @@
 #import "QMUserInfoViewController.h"
 #import "QMGroupInfoViewController.h"
 #import "QMAlert.h"
+#import "QMPhoto.h"
 
 // helpers
 #import "QMChatButtonsFactory.h"
@@ -26,15 +27,10 @@
 #import <QMDateUtils.h>
 
 // external
-#import "AGEmojiKeyBoardView.h"
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
-#import "QMPhoto.h"
 
 @import SafariServices;
 
-static const NSInteger kQMEmojiButtonTag = 100;
-static const CGFloat kQMEmojiButtonSize = 45.0f;
-static const CGFloat kQMInputToolbarTextContainerInsetRight = 25.0f;
 static const CGFloat kQMAttachmentCellSize = 200.0f;
 static const CGFloat kQMWidthPadding = 40.0f;
 static const CGFloat kQMAvatarSize = 28.0f;
@@ -52,10 +48,6 @@ QMChatActionsHandler,
 QMChatCellDelegate,
 
 QMImagePickerResultHandler,
-
-AGEmojiKeyboardViewDataSource,
-AGEmojiKeyboardViewDelegate,
-
 QMImageViewDelegate,
 
 NYTPhotosViewControllerDelegate
@@ -111,6 +103,9 @@ NYTPhotosViewControllerDelegate
  */
 @property (strong, nonatomic) QMImageView *groupAvatarImageView;
 
+/**
+ *  Reference view for attachment photo.
+ */
 @property (weak, nonatomic) UIView *photoReferenceView;
 
 @end
@@ -162,9 +157,6 @@ NYTPhotosViewControllerDelegate
     self.detailedCells = [NSMutableSet set];
     self.attachmentCells = [NSMapTable strongToWeakObjectsMapTable];
     self.messageStatusStringBuilder = [[QMMessageStatusStringBuilder alloc] init];
-    
-    // configuring emogji button
-    [self configureEmojiButton];
     
     // subscribing to delegates
     [[QMCore instance].chatService addDelegate:self];
@@ -1430,124 +1422,6 @@ NYTPhotosViewControllerDelegate
     UIGraphicsEndImageContext();
     
     return resizedImage;
-}
-
-#pragma mark - Emoji
-
-- (void)configureEmojiButton {
-    // init
-    UIButton *emojiButton = [QMChatButtonsFactory emojiButton];
-    emojiButton.tag = kQMEmojiButtonTag;
-    [emojiButton addTarget:self action:@selector(showEmojiKeyboard) forControlEvents:UIControlEventTouchUpInside];
-    
-    // appearance
-    emojiButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.inputToolbar.contentView addSubview:emojiButton];
-    
-    CGFloat emojiButtonSpacing = kQMEmojiButtonSize/3.0f;
-    
-    [self.inputToolbar.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[emojiButton(==size)]|"
-                                                                                          options:0
-                                                                                          metrics:@{@"size" : @(kQMEmojiButtonSize)}
-                                                                                            views:@{@"emojiButton" : emojiButton}]];
-    [self.inputToolbar.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[emojiButton]-spacing-[rightBarButton]"
-                                                                                          options:0
-                                                                                          metrics:@{@"spacing" : @(emojiButtonSpacing)}
-                                                                                            views:@{@"emojiButton"    : emojiButton,
-                                                                                                    @"rightBarButton" : self.inputToolbar.contentView.rightBarButtonItem}]];
-    
-    // changing textContainerInset to restrict text entering on emoji button
-    self.inputToolbar.contentView.textView.textContainerInset = UIEdgeInsetsMake(self.inputToolbar.contentView.textView.textContainerInset.top,
-                                                                                 self.inputToolbar.contentView.textView.textContainerInset.left,
-                                                                                 self.inputToolbar.contentView.textView.textContainerInset.bottom,
-                                                                                 kQMInputToolbarTextContainerInsetRight);
-}
-
-- (void)showEmojiKeyboard {
-    
-    if ([self.inputToolbar.contentView.textView.inputView isKindOfClass:[AGEmojiKeyboardView class]]) {
-        
-        UIButton *emojiButton = (UIButton *)[self.inputToolbar.contentView viewWithTag:kQMEmojiButtonTag];
-        [emojiButton setImage:[UIImage imageNamed:@"ic_smile"] forState:UIControlStateNormal];
-        
-        self.inputToolbar.contentView.textView.inputView = nil;
-        [self.inputToolbar.contentView.textView reloadInputViews];
-        
-        [self scrollToBottomAnimated:YES];
-        
-    } else {
-        
-        UIButton *emojiButton = (UIButton *)[self.inputToolbar.contentView viewWithTag:kQMEmojiButtonTag];
-        [emojiButton setImage:[UIImage imageNamed:@"keyboard_icon"] forState:UIControlStateNormal];
-        
-        AGEmojiKeyboardView *emojiKeyboardView = [[AGEmojiKeyboardView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 216) dataSource:self];
-        emojiKeyboardView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-        emojiKeyboardView.delegate = self;
-        emojiKeyboardView.tintColor = QMChatEmojiiKeyboardTintColor();
-        
-        self.inputToolbar.contentView.textView.inputView = emojiKeyboardView;
-        [self.inputToolbar.contentView.textView reloadInputViews];
-        [self.inputToolbar.contentView.textView becomeFirstResponder];
-    }
-}
-
-- (NSArray *)sectionsImages {
-    return @[@"😊", @"😊", @"🎍", @"🐶", @"🏠", @"🕘", @"Back"];
-}
-
-- (UIImage *)randomImage:(NSInteger)categoryImage {
-    
-    CGSize size = CGSizeMake(30, 30);
-    UIGraphicsBeginImageContextWithOptions(size , NO, 0);
-    
-    NSDictionary *attributes = @{NSFontAttributeName : [UIFont systemFontOfSize:27]};
-    NSString * sectionImage = [self sectionsImages][categoryImage];
-    [sectionImage drawInRect:CGRectMake(0, 0, 30, 30) withAttributes:attributes];
-    
-    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return img;
-}
-
-
-#pragma mark - Emoji Data source
-
-- (UIImage *)emojiKeyboardView:(AGEmojiKeyboardView *)__unused emojiKeyboardView imageForSelectedCategory:(AGEmojiKeyboardViewCategoryImage)category {
-    UIImage *img = [self randomImage:category];
-    
-    return [img imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-}
-
-- (UIImage *)emojiKeyboardView:(AGEmojiKeyboardView *)__unused emojiKeyboardView imageForNonSelectedCategory:(AGEmojiKeyboardViewCategoryImage)category {
-    UIImage *img = [self randomImage:category];
-    return [img imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-}
-
-- (UIImage *)backSpaceButtonImageForEmojiKeyboardView:(AGEmojiKeyboardView *)__unused emojiKeyboardView {
-    UIImage *img = [UIImage imageNamed:@"keyboard_icon"];
-    return [img imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-}
-
-#pragma mark - Emoji Delegate
-
-- (void)emojiKeyBoardView:(AGEmojiKeyboardView *)__unused emojiKeyBoardView didUseEmoji:(NSString *)emoji {
-    
-    NSString *textViewString = self.inputToolbar.contentView.textView.text;
-    self.inputToolbar.contentView.textView.text = [textViewString stringByAppendingString:emoji];
-    [self textViewDidChange:self.inputToolbar.contentView.textView];
-    
-    [self sendIsTypingStatus];
-}
-
-- (void)emojiKeyBoardViewDidPressBackSpace:(AGEmojiKeyboardView *)__unused emojiKeyBoardView {
-    
-    self.inputToolbar.contentView.textView.inputView = nil;
-    [self.inputToolbar.contentView.textView reloadInputViews];
-    
-    UIButton *emojiButton = (UIButton *)[self.inputToolbar.contentView viewWithTag:kQMEmojiButtonTag];
-    [emojiButton setImage:[UIImage imageNamed:@"ic_smile"] forState:UIControlStateNormal];
-    
-    [self scrollToBottomAnimated:YES];
 }
 
 #pragma mark - Transition size
