@@ -58,7 +58,6 @@ install_resource()
   esac
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_resource "AGEmojiKeyboard/Resources/EmojisList.plist"
   install_resource "Digits/iOS/DigitsKit.framework/Versions/A/Resources/DigitsKitResources.bundle"
   install_resource "QMCVDevelopment/QMChatViewController/en.lproj/QMChatViewController.xib"
   install_resource "QMCVDevelopment/QMChatViewController/Views/Cells/QMChatAttachmentIncomingCell/QMChatAttachmentIncomingCell.xib"
@@ -77,7 +76,6 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "${BUILT_PRODUCTS_DIR}/QMUsersCacheModel.bundle"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_resource "AGEmojiKeyboard/Resources/EmojisList.plist"
   install_resource "Digits/iOS/DigitsKit.framework/Versions/A/Resources/DigitsKitResources.bundle"
   install_resource "QMCVDevelopment/QMChatViewController/en.lproj/QMChatViewController.xib"
   install_resource "QMCVDevelopment/QMChatViewController/Views/Cells/QMChatAttachmentIncomingCell/QMChatAttachmentIncomingCell.xib"

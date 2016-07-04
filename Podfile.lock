@@ -1,5 +1,4 @@
 PODS:
-  - AGEmojiKeyboard (0.1.0)
   - Bolts (1.7.0):
     - Bolts/AppLinks (= 1.7.0)
     - Bolts/Tasks (= 1.7.0)
@@ -75,7 +74,6 @@ PODS:
   - UIDevice-Hardware (0.1.7)
 
 DEPENDENCIES:
-  - AGEmojiKeyboard (~> 0.1.0)
   - Crashlytics (~> 3.5)
   - Digits (~> 1.15)
   - Fabric (~> 1.6)
@@ -116,7 +114,6 @@ CHECKOUT OPTIONS:
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
-  AGEmojiKeyboard: e19cf4168b114d2e494e53fe8dc042d8bf011cc9
   Bolts: a0058fa3b331c5a1e4402d534f2dae36dbff31e4
   Crashlytics: 130ab943f8c78cda7a814b434f270b2e2c8a3cba
   Digits: 9823f8aad766c0aa824fac9b08938e22bc635fac
