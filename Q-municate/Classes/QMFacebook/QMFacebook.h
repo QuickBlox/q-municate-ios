@@ -15,25 +15,32 @@
  */
 @interface QMFacebook : NSObject
 
+/**
+ *  Connect to facebook.
+ *
+ *  @return facebook access tocken if succeed
+ */
++ (BFTask <NSString *> *)connect;
 
-+ (BFTask QB_GENERIC(NSString *) *)connect;
-
-
-+ (void)inviteFriendsWithDelegate:(id<FBSDKAppInviteDialogDelegate>)delegate;
-
-
-+ (void)fetchMyFriends:(void(^)(NSArray *facebookFriends))completion;
-
-
-+ (void)fetchMyFriendsIDs:(void(^)(NSArray *facebookFriendsIDs))completion;
-
-
+/**
+ *  User image url for user ID.
+ *
+ *  @param userID facebook user ID
+ *
+ *  @return user image url
+ */
 + (NSURL *)userImageUrlWithUserID:(NSString *)userID;
 
+/**
+ *  Load current user data.
+ *
+ *  @return dictionary of current facebook user data
+ */
++ (BFTask <NSDictionary *> *)loadMe;
 
-+ (BFTask QB_GENERIC(NSDictionary *) *)loadMe;
-
-
+/**
+ *  Complete logout from facebook.
+ */
 + (void)logout;
 
 @end
