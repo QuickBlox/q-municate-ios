@@ -34,6 +34,7 @@
 		581DA1D21BF373A100F75D8B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1D11BF373A100F75D8B /* VideoToolbox.framework */; };
 		5839F26E1CC531AD0055EBF8 /* QMBaseTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839F26D1CC531AD0055EBF8 /* QMBaseTitleView.m */; };
 		5839F2761CC533A30055EBF8 /* QMGroupHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839F2751CC533A30055EBF8 /* QMGroupHeaderView.m */; };
+		583E1D391D2BA57F008111DB /* QMLocationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 583E1D381D2BA57F008111DB /* QMLocationButton.m */; };
 		583E1D471D2BC505008111DB /* QMLocationPinView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583E1D461D2BC505008111DB /* QMLocationPinView.m */; };
 		584277A41C3D336300CDE35B /* QMCornerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277981C3D336300CDE35B /* QMCornerButton.m */; };
 		584277B41C3D374400CDE35B /* Auth.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 584277B31C3D374400CDE35B /* Auth.storyboard */; };
@@ -217,6 +218,8 @@
 		5839F26D1CC531AD0055EBF8 /* QMBaseTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMBaseTitleView.m; sourceTree = "<group>"; };
 		5839F2741CC533A30055EBF8 /* QMGroupHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMGroupHeaderView.h; sourceTree = "<group>"; };
 		5839F2751CC533A30055EBF8 /* QMGroupHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMGroupHeaderView.m; sourceTree = "<group>"; };
+		583E1D371D2BA57F008111DB /* QMLocationButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMLocationButton.h; path = QMLocationDetermView/QMLocationButton.h; sourceTree = "<group>"; };
+		583E1D381D2BA57F008111DB /* QMLocationButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMLocationButton.m; path = QMLocationDetermView/QMLocationButton.m; sourceTree = "<group>"; };
 		583E1D451D2BC505008111DB /* QMLocationPinView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLocationPinView.h; sourceTree = "<group>"; };
 		583E1D461D2BC505008111DB /* QMLocationPinView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLocationPinView.m; sourceTree = "<group>"; };
 		584277971C3D336300CDE35B /* QMCornerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCornerButton.h; sourceTree = "<group>"; };
@@ -774,6 +777,15 @@
 			path = QMGroupAddUsersViewController;
 			sourceTree = "<group>";
 		};
+		583E1D361D2BA564008111DB /* QMLocationButton */ = {
+			isa = PBXGroup;
+			children = (
+				583E1D371D2BA57F008111DB /* QMLocationButton.h */,
+				583E1D381D2BA57F008111DB /* QMLocationButton.m */,
+			);
+			name = QMLocationButton;
+			sourceTree = "<group>";
+		};
 		583E1D441D2BC4F3008111DB /* QMLocationPinView */ = {
 			isa = PBXGroup;
 			children = (
@@ -830,6 +842,7 @@
 			isa = PBXGroup;
 			children = (
 				583E1D441D2BC4F3008111DB /* QMLocationPinView */,
+				583E1D361D2BA564008111DB /* QMLocationButton */,
 				5806509A1D2AA0200013A5E8 /* QMMapView */,
 				5868B0581CE9B5C1004F9233 /* Calls views */,
 				5877D6E01C46759A00938E5D /* QMBadgeView */,
@@ -2149,6 +2162,7 @@
 				584277D51C3FCFBA00CDE35B /* QMFacebook.m in Sources */,
 				58C64D031C905F9800F1387B /* QMChatVC.m in Sources */,
 				58D847701C85BB36000C40BA /* QMSearchCell.m in Sources */,
+				583E1D391D2BA57F008111DB /* QMLocationButton.m in Sources */,
 				58B3C9B81CB3ED8000B08A27 /* QMGroupOccupantsViewController.m in Sources */,
 				58FD668A1CEF058400B72425 /* QMFeedbackViewController.m in Sources */,
 				5877D6CE1C46702400938E5D /* QMDialogsDataSource.m in Sources */,
