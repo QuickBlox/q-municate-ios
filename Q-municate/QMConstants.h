@@ -30,7 +30,10 @@ static NSString *const kQMDialogsUpdateNotificationMessage = @"Notification mess
 static NSString *const kQMContactRequestNotificationMessage = @"Contact request";
 
 static const CGFloat kQMBaseAnimationDuration = 0.2f;
+static const CGFloat kQMSlashAnimationDuration = 0.1f;
 static const CGFloat kQMDefaultNotificationDismissTime = 2.0f;
 static const CGFloat kQMShadowViewHeight = 0.5f;
+
+static const CLLocationDegrees MKCoordinateSpanDefaultValue = 250;
 
 #endif /* QMConstants_h */
