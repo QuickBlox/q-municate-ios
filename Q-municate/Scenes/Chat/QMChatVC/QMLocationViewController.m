@@ -224,10 +224,13 @@ static const CGFloat kQMLocationPinXShift = 3.0f;
 
 - (void)mapView:(MKMapView *)__unused mapView regionWillChangeAnimated:(BOOL)__unused animated {
     
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     [_pinView setPinRaised:YES animated:YES];
 }
 
 - (void)mapView:(MKMapView *)__unused mapView regionDidChangeAnimated:(BOOL)__unused animated {
+    
+    self.navigationItem.rightBarButtonItem.enabled = YES;
     
     if (_locationButton.loadingState) {
         
