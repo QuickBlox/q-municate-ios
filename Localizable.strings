@@ -85,6 +85,7 @@
 // *********** Chat Screen ***********
 "QM_STR_INPUTTOOLBAR_PLACEHOLDER" = "Message";
 "QM_STR_GROUP_CHAT_STATUS_STRING" = "%tu members, %tu online";
+"QM_STR_SEND" = "Send";
 
 // *********** User Status ***********
 "QM_STR_ONLINE" = "Online";
@@ -96,10 +97,15 @@
 // *********** Navigation ***********
 "QM_STR_BACK" = "Back";
 
-// *********** Image picker ***********
+// *********** Picker ***********
 "QM_STR_TAKE_IMAGE" = "Take image";
-"QM_STR_CHOOSE_FROM_LIBRARY" = "Choose from library";
+"QM_STR_CHOOSE_IMAGE" = "Choose image";
+"QM_STR_LOCATION" = "Location";
 "QM_STR_CANCEL" = "Cancel";
+
+// *********** Location ***********
+"QM_STR_LOCATION_ERROR" = "Location services error";
+"QM_STR_NO_PERMISSIONS_TO_LOCATION" = "The app doesn't have access to the location services, please go to settings and enable it";
 
 // *********** User info ***********
 "QM_STR_NONE" = "None";
@@ -139,8 +145,8 @@
 "QM_STR_VIDEO_CALLING" = "Video Calling";
 "QM_STR_MICROPHONE_ERROR" = "Microphone error";
 "QM_STR_CAMERA_ERROR" = "Camera error";
-"QM_STR_NO_PERMISSIONS_TO_MICROPHONE" = "The app doesn't have access to the microphone, please go to settings";
-"QM_STR_NO_PERMISSIONS_TO_CAMERA" = "The app doesn't have access to the camera, please go to settings";
+"QM_STR_NO_PERMISSIONS_TO_MICROPHONE" = "The app doesn't have access to the microphone, please go to settings and enable it";
+"QM_STR_NO_PERMISSIONS_TO_CAMERA" = "The app doesn't have access to the camera, please go to settings and enable it";
 "QM_STR_CALL_WAS_CANCELLED" = "Call was cancelled";
 "QM_STR_USER_IS_BUSY" = "User is busy";
 "QM_STR_BAD_CONNECTION" = "Bad connection";
