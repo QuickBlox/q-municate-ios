@@ -34,6 +34,7 @@
 		581DA1D21BF373A100F75D8B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1D11BF373A100F75D8B /* VideoToolbox.framework */; };
 		5839F26E1CC531AD0055EBF8 /* QMBaseTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839F26D1CC531AD0055EBF8 /* QMBaseTitleView.m */; };
 		5839F2761CC533A30055EBF8 /* QMGroupHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839F2751CC533A30055EBF8 /* QMGroupHeaderView.m */; };
+		583E1D471D2BC505008111DB /* QMLocationPinView.m in Sources */ = {isa = PBXBuildFile; fileRef = 583E1D461D2BC505008111DB /* QMLocationPinView.m */; };
 		584277A41C3D336300CDE35B /* QMCornerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277981C3D336300CDE35B /* QMCornerButton.m */; };
 		584277B41C3D374400CDE35B /* Auth.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 584277B31C3D374400CDE35B /* Auth.storyboard */; };
 		584277B91C3D401C00CDE35B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 584277B81C3D401C00CDE35B /* Main.storyboard */; };
@@ -216,6 +217,8 @@
 		5839F26D1CC531AD0055EBF8 /* QMBaseTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMBaseTitleView.m; sourceTree = "<group>"; };
 		5839F2741CC533A30055EBF8 /* QMGroupHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMGroupHeaderView.h; sourceTree = "<group>"; };
 		5839F2751CC533A30055EBF8 /* QMGroupHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMGroupHeaderView.m; sourceTree = "<group>"; };
+		583E1D451D2BC505008111DB /* QMLocationPinView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLocationPinView.h; sourceTree = "<group>"; };
+		583E1D461D2BC505008111DB /* QMLocationPinView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLocationPinView.m; sourceTree = "<group>"; };
 		584277971C3D336300CDE35B /* QMCornerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCornerButton.h; sourceTree = "<group>"; };
 		584277981C3D336300CDE35B /* QMCornerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMCornerButton.m; sourceTree = "<group>"; };
 		584277B11C3D36EA00CDE35B /* SegueIdentifiers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SegueIdentifiers.h; sourceTree = "<group>"; };
@@ -771,6 +774,15 @@
 			path = QMGroupAddUsersViewController;
 			sourceTree = "<group>";
 		};
+		583E1D441D2BC4F3008111DB /* QMLocationPinView */ = {
+			isa = PBXGroup;
+			children = (
+				583E1D451D2BC505008111DB /* QMLocationPinView.h */,
+				583E1D461D2BC505008111DB /* QMLocationPinView.m */,
+			);
+			name = QMLocationPinView;
+			sourceTree = "<group>";
+		};
 		584277781C3D32ED00CDE35B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -817,6 +829,7 @@
 		5842777F1C3D336300CDE35B /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				583E1D441D2BC4F3008111DB /* QMLocationPinView */,
 				5806509A1D2AA0200013A5E8 /* QMMapView */,
 				5868B0581CE9B5C1004F9233 /* Calls views */,
 				5877D6E01C46759A00938E5D /* QMBadgeView */,
@@ -2076,6 +2089,7 @@
 				55BBA75C19730B960040DB5C /* REMessageUI.m in Sources */,
 				585037591CFEE99900374A3C /* QMUserInfoCell.m in Sources */,
 				58BB52631CDA3EA300869FA9 /* QMSettingsViewController.m in Sources */,
+				583E1D471D2BC505008111DB /* QMLocationPinView.m in Sources */,
 				58B550731CC79C8500C93F93 /* QMGroupAddUsersViewController.m in Sources */,
 				584A6DC91C9DEBC200B7D641 /* QMTextField.m in Sources */,
 				58C261F41CDC926000AA9CF2 /* QMUpdateUserViewController.m in Sources */,
