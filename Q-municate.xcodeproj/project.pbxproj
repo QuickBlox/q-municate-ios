@@ -22,6 +22,7 @@
 		55D8ADB519AC761000DAF79F /* QMForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADB419AC761000DAF79F /* QMForgotPasswordViewController.m */; };
 		55D8ADFB19AC833300DAF79F /* QMLicenseAgreement.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADFA19AC833300DAF79F /* QMLicenseAgreement.m */; };
 		580590FD1CA548130055BC2F /* QMContactManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 580590FC1CA548130055BC2F /* QMContactManager.m */; };
+		5806509D1D2AA0350013A5E8 /* QMMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5806509C1D2AA0350013A5E8 /* QMMapView.m */; };
 		5808F1C21CFC585100F1A210 /* QMSettingsFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5808F1C11CFC585100F1A210 /* QMSettingsFooterView.m */; };
 		580B3B571C3FF89F00345081 /* QMTasks.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B3B561C3FF89F00345081 /* QMTasks.m */; };
 		580D34DF1BBFF5850034813A /* UIImage+fixOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 580D34DE1BBFF5850034813A /* UIImage+fixOrientation.m */; };
@@ -193,6 +194,8 @@
 		55D8ADFA19AC833300DAF79F /* QMLicenseAgreement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLicenseAgreement.m; sourceTree = "<group>"; };
 		580590FB1CA548130055BC2F /* QMContactManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMContactManager.h; sourceTree = "<group>"; };
 		580590FC1CA548130055BC2F /* QMContactManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMContactManager.m; sourceTree = "<group>"; };
+		5806509B1D2AA0350013A5E8 /* QMMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMMapView.h; path = QMMapView/QMMapView.h; sourceTree = "<group>"; };
+		5806509C1D2AA0350013A5E8 /* QMMapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMMapView.m; path = QMMapView/QMMapView.m; sourceTree = "<group>"; };
 		5808F1C01CFC585100F1A210 /* QMSettingsFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSettingsFooterView.h; sourceTree = "<group>"; };
 		5808F1C11CFC585100F1A210 /* QMSettingsFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSettingsFooterView.m; sourceTree = "<group>"; };
 		580B3B551C3FF89F00345081 /* QMTasks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMTasks.h; sourceTree = "<group>"; };
@@ -614,12 +617,13 @@
 			path = REMailCompose;
 			sourceTree = "<group>";
 		};
-		55CEAB19195DBCFA001A8ED6 /* QMChatVC */ = {
+		55CEAB19195DBCFA001A8ED6 /* Chat Controller */ = {
 			isa = PBXGroup;
 			children = (
-				58C64D011C905F9800F1387B /* QMChatVC.h */,
-				58C64D021C905F9800F1387B /* QMChatVC.m */,
+				580650881D2A86560013A5E8 /* Items */,
+				580650871D2A85EC0013A5E8 /* Controller */,
 			);
+			name = "Chat Controller";
 			path = QMChatVC;
 			sourceTree = "<group>";
 		};
@@ -648,6 +652,39 @@
 				580590FC1CA548130055BC2F /* QMContactManager.m */,
 			);
 			path = QMContactManager;
+			sourceTree = "<group>";
+		};
+		580650871D2A85EC0013A5E8 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				58C64D011C905F9800F1387B /* QMChatVC.h */,
+				58C64D021C905F9800F1387B /* QMChatVC.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		580650881D2A86560013A5E8 /* Items */ = {
+			isa = PBXGroup;
+			children = (
+				580650891D2A86B90013A5E8 /* Location */,
+			);
+			name = Items;
+			sourceTree = "<group>";
+		};
+		580650891D2A86B90013A5E8 /* Location */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Location;
+			sourceTree = "<group>";
+		};
+		5806509A1D2AA0200013A5E8 /* QMMapView */ = {
+			isa = PBXGroup;
+			children = (
+				5806509B1D2AA0350013A5E8 /* QMMapView.h */,
+				5806509C1D2AA0350013A5E8 /* QMMapView.m */,
+			);
+			name = QMMapView;
 			sourceTree = "<group>";
 		};
 		580B3B541C3FF88500345081 /* QMTasks */ = {
@@ -780,6 +817,7 @@
 		5842777F1C3D336300CDE35B /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				5806509A1D2AA0200013A5E8 /* QMMapView */,
 				5868B0581CE9B5C1004F9233 /* Calls views */,
 				5877D6E01C46759A00938E5D /* QMBadgeView */,
 				584277961C3D336300CDE35B /* QMCornerButton */,
@@ -840,7 +878,7 @@
 		584277C11C3D449300CDE35B /* Chat */ = {
 			isa = PBXGroup;
 			children = (
-				55CEAB19195DBCFA001A8ED6 /* QMChatVC */,
+				55CEAB19195DBCFA001A8ED6 /* Chat Controller */,
 				58B3C9A91CB3DABB00B08A27 /* QMGroupInfoViewController */,
 				582E68A31CF2F12400A5BF8E /* QMGroupNameViewController */,
 				58F86ED81CA2EF0600DA4758 /* QMUserInfoViewController */,
@@ -905,11 +943,11 @@
 		584277D91C3FE58900CDE35B /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				589B62981CE20E490038F5E0 /* QMCallManager */,
+				580590F91CA547EC0055BC2F /* QMCore */,
 				58F398061CB7DE41006C1D5E /* QMChatManager */,
 				580590FA1CA547F30055BC2F /* QMContactManager */,
-				580590F91CA547EC0055BC2F /* QMCore */,
 				589B628F1CE1CADC0038F5E0 /* QMPushNotificationManager */,
+				589B62981CE20E490038F5E0 /* QMCallManager */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -2052,6 +2090,7 @@
 				584A6DB31C9DB7DC00B7D641 /* QMTagFieldView.m in Sources */,
 				58FD66971CEF378200B72425 /* QMChangePasswordViewController.m in Sources */,
 				589D4CFD1C981D44005F1E76 /* QMContactCell.m in Sources */,
+				5806509D1D2AA0350013A5E8 /* QMMapView.m in Sources */,
 				69D57E6218ACC11C00A9900A /* main.m in Sources */,
 				55D8ADB519AC761000DAF79F /* QMForgotPasswordViewController.m in Sources */,
 				5868B0611CE9C67D004F9233 /* QMCallButtonsFactory.m in Sources */,
