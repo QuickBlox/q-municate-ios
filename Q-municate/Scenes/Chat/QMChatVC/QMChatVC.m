@@ -31,6 +31,8 @@
 #import "QMChatLocationOutgoingCell.h"
 #import "QMChatLocationIncomingCell.h"
 
+#import "QBChatMessage+QMChatLocation.h"
+
 // external
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
 
@@ -396,21 +398,7 @@ NYTPhotosViewControllerDelegate
     message.dateSent = date;
     
     // Sending message
-    @weakify(self);
-    [[[QMCore instance].chatService sendMessage:message toDialog:self.chatDialog saveToHistory:YES saveToStorage:YES] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-        
-        @strongify(self);
-        if (task.isFaulted) {
-            
-            [QMAlert showAlertWithMessage:task.error.localizedRecoverySuggestion actionSuccess:NO inViewController:self];
-        }
-        else {
-            
-            [QMSoundManager playMessageSentSound];
-        }
-        
-        return nil;
-    }];
+    [self _sendMessage:message];
     
     [self finishSendingMessageAnimated:YES];
 }
@@ -471,7 +459,11 @@ NYTPhotosViewControllerDelegate
 
 - (Class)viewClassForItem:(QBChatMessage *)item {
     
-    if ([item isNotificatonMessage]) {
+    if ([item isLocationMessage]) {
+        
+        return item.senderID == self.senderID ? [QMChatLocationOutgoingCell class] : [QMChatLocationIncomingCell class];
+    }
+    else if ([item isNotificatonMessage]) {
         
         NSUInteger opponentID = [self.chatDialog opponentID];
         BOOL isFriend = [[QMCore instance].contactManager isFriendWithUserID:opponentID];
@@ -810,9 +802,9 @@ NYTPhotosViewControllerDelegate
         currentCell.clipsToBounds = YES;
     }
     
+    QBChatMessage* message = [self.chatSectionManager messageForIndexPath:indexPath];
+    
     if ([cell conformsToProtocol:@protocol(QMChatAttachmentCell)]) {
-        
-        QBChatMessage* message = [self.chatSectionManager messageForIndexPath:indexPath];
         
         if (message.attachments != nil) {
             
@@ -858,7 +850,7 @@ NYTPhotosViewControllerDelegate
     }
     else if ([cell conformsToProtocol:@protocol(QMChatLocationCell)]) {
         
-        // test data
+        [(id<QMChatLocationCell>)cell setLocationCoordinate:[message locationCoordinate]];
     }
 }
 
@@ -994,9 +986,39 @@ NYTPhotosViewControllerDelegate
     [[QMCore instance].callManager callToUserWithID:[self.chatDialog opponentID] conferenceType:QBRTCConferenceTypeVideo];
 }
 
-- (void)_sendLocationMessage:(CLLocationCoordinate2D)__unused locationCoordinate {
+- (void)_sendLocationMessage:(CLLocationCoordinate2D)locationCoordinate {
     
-#warning TODO: send map message with coordinates
+    QBChatMessage *message = [QBChatMessage message];
+    message.text = @"Location";
+    message.senderID = self.senderID;
+    message.markable = YES;
+    message.deliveredIDs = @[@(self.senderID)];
+    message.readIDs = @[@(self.senderID)];
+    message.dialogID = self.chatDialog.ID;
+    message.dateSent = [NSDate date];
+    
+    [message addLocationCoordinate:locationCoordinate];
+    
+    [self _sendMessage:message];
+}
+
+- (void)_sendMessage:(QBChatMessage *)message {
+    
+    @weakify(self);
+    [[[QMCore instance].chatService sendMessage:message toDialog:self.chatDialog saveToHistory:YES saveToStorage:YES] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        
+        @strongify(self);
+        if (task.isFaulted) {
+            
+            [QMAlert showAlertWithMessage:task.error.localizedRecoverySuggestion actionSuccess:NO inViewController:self];
+        }
+        else {
+            
+            [QMSoundManager playMessageSentSound];
+        }
+        
+        return nil;
+    }];
 }
 
 #pragma mark - Configuring

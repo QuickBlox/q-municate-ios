@@ -123,7 +123,6 @@
                 <outlet property="mapView" destination="gfg-Ik-NtH" id="A6A-4z-m8O"/>
                 <outlet property="messageContainer" destination="1rv-oZ-ov9" id="RQK-Dd-jIf"/>
                 <outlet property="messageContainerBottomInsetConstraint" destination="uq1-a3-hdy" id="M9y-ZL-Eba"/>
-                <outlet property="messageContainerLeftInsetConstraint" destination="YZa-i0-kU6" id="CBh-2r-6w8"/>
                 <outlet property="textViewBottomLabelVerticalSpaceConstraint" destination="2FB-d5-w13" id="XEV-gD-UdI"/>
                 <outlet property="topLabel" destination="pgQ-H7-Y5u" id="56f-VT-nrf"/>
                 <outlet property="topLabelHeightConstraint" destination="9mx-bN-is7" id="gRI-ev-FiX"/>
