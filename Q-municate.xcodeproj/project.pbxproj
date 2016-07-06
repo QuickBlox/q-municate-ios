@@ -21,6 +21,7 @@
 		55D8AD0419AC753600DAF79F /* QMImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8AD0319AC753600DAF79F /* QMImagePicker.m */; };
 		55D8ADB519AC761000DAF79F /* QMForgotPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADB419AC761000DAF79F /* QMForgotPasswordViewController.m */; };
 		55D8ADFB19AC833300DAF79F /* QMLicenseAgreement.m in Sources */ = {isa = PBXBuildFile; fileRef = 55D8ADFA19AC833300DAF79F /* QMLicenseAgreement.m */; };
+		58043EAC1D2D104D0052CF4E /* QBChatMessage+QMChatLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 58043EAB1D2D104D0052CF4E /* QBChatMessage+QMChatLocation.m */; };
 		580590FD1CA548130055BC2F /* QMContactManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 580590FC1CA548130055BC2F /* QMContactManager.m */; };
 		580650991D2A9FD50013A5E8 /* QMLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580650981D2A9FD50013A5E8 /* QMLocationViewController.m */; };
 		5806509D1D2AA0350013A5E8 /* QMMapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5806509C1D2AA0350013A5E8 /* QMMapView.m */; };
@@ -200,6 +201,8 @@
 		55D8ADB419AC761000DAF79F /* QMForgotPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMForgotPasswordViewController.m; sourceTree = "<group>"; };
 		55D8ADF919AC833300DAF79F /* QMLicenseAgreement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLicenseAgreement.h; sourceTree = "<group>"; };
 		55D8ADFA19AC833300DAF79F /* QMLicenseAgreement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLicenseAgreement.m; sourceTree = "<group>"; };
+		58043EAA1D2D104D0052CF4E /* QBChatMessage+QMChatLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "QBChatMessage+QMChatLocation.h"; path = "QBChatMessage/QBChatMessage+QMChatLocation.h"; sourceTree = "<group>"; };
+		58043EAB1D2D104D0052CF4E /* QBChatMessage+QMChatLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "QBChatMessage+QMChatLocation.m"; path = "QBChatMessage/QBChatMessage+QMChatLocation.m"; sourceTree = "<group>"; };
 		580590FB1CA548130055BC2F /* QMContactManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMContactManager.h; sourceTree = "<group>"; };
 		580590FC1CA548130055BC2F /* QMContactManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMContactManager.m; sourceTree = "<group>"; };
 		580650971D2A9FD50013A5E8 /* QMLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLocationViewController.h; sourceTree = "<group>"; };
@@ -657,6 +660,15 @@
 				55D8ADFA19AC833300DAF79F /* QMLicenseAgreement.m */,
 			);
 			path = QMLicenseAgreement;
+			sourceTree = "<group>";
+		};
+		58043EA91D2D103A0052CF4E /* QBChatMessage */ = {
+			isa = PBXGroup;
+			children = (
+				58043EAA1D2D104D0052CF4E /* QBChatMessage+QMChatLocation.h */,
+				58043EAB1D2D104D0052CF4E /* QBChatMessage+QMChatLocation.m */,
+			);
+			name = QBChatMessage;
 			sourceTree = "<group>";
 		};
 		580590F91CA547EC0055BC2F /* QMCore */ = {
@@ -1804,6 +1816,7 @@
 		6943848C18E42691001E08A9 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				58043EA91D2D103A0052CF4E /* QBChatMessage */,
 				58B3C9D31CB681F400B08A27 /* NSArray */,
 				58550AB91CF5BA210024EAFC /* QBChatDialog */,
 				5842777C1C3D333100CDE35B /* QBUpdateUserParameters */,
@@ -2180,6 +2193,7 @@
 				58B3C9BC1CB3EE8400B08A27 /* QMGroupOccupantsDataSource.m in Sources */,
 				58B3C9D61CB6827600B08A27 /* NSArray+Intersection.m in Sources */,
 				58D8478F1C8886D8000C40BA /* QMGlobalSearchDataProvider.m in Sources */,
+				58043EAC1D2D104D0052CF4E /* QBChatMessage+QMChatLocation.m in Sources */,
 				5868B0641CE9C68C004F9233 /* QMPermissions.m in Sources */,
 				584A6DC51C9DC80900B7D641 /* QMTagView.m in Sources */,
 				58D847581C848272000C40BA /* QMDialogsSearchDataSource.m in Sources */,
