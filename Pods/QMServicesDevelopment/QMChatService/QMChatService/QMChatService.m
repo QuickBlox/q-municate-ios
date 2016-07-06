@@ -1229,14 +1229,32 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
           withAttachmentImage:(UIImage *)image
                    completion:(QBChatCompletionBlock)completion
 {
-    [self.chatAttachmentService uploadAndSendAttachmentMessage:attachmentMessage toDialog:dialog withChatService:self withAttachedImage:image completion:completion];
     
     [self.messagesMemoryStorage addMessage:attachmentMessage forDialogID:dialog.ID];
+    
     if ([self.multicastDelegate respondsToSelector:@selector(chatService:didAddMessageToMemoryStorage:forDialogID:)]) {
         
         [self.multicastDelegate chatService:self didAddMessageToMemoryStorage:attachmentMessage forDialogID:dialog.ID];
         
     }
+    
+    [self.chatAttachmentService uploadAndSendAttachmentMessage:attachmentMessage toDialog:dialog withChatService:self withAttachedImage:image completion:^(NSError* QB_NULLABLE_S error) {
+        
+        if (!error) {
+            
+            [self updateLastMessageParamsForChatDialog:dialog withMessage:attachmentMessage];
+            dialog.updatedAt = attachmentMessage.dateSent;
+            
+            if ([self.multicastDelegate respondsToSelector:@selector(chatService:didUpdateChatDialogInMemoryStorage:)]) {
+                [self.multicastDelegate chatService:self didUpdateChatDialogInMemoryStorage:dialog];
+            }
+        }
+        
+        if (completion) {
+            completion(error);
+        }
+    }];
+
 }
 
 #pragma mark - mark as delivered
