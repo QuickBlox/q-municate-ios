@@ -8,7 +8,7 @@
 
 #import "QMLocationPinView.h"
 
-const CGFloat QMLocationPinViewOriginPinCenter = 7.0f;
+const CGFloat QMLocationPinViewOriginPinCenter = 8.0f;
 
 static const CGFloat kQMLocationPinDamping = 3.5f;
 static const CGFloat kQMLocationPinRaisedOrigin = -40.0f;

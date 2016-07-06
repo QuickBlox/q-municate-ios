@@ -15,7 +15,7 @@
 static const CGFloat kQMLocationButtonSize = 44.0f;
 static const CGFloat kQMLocationButtonSpacing = 16.0f;
 
-static const CGFloat kQMLocationPinXShift = 3.0f;
+static const CGFloat kQMLocationPinXShift = 3.5f;
 
 @interface QMLocationViewController () <CLLocationManagerDelegate, MKMapViewDelegate>
 {
