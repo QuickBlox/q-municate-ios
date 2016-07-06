@@ -36,7 +36,8 @@
 
 - (BFTask *)disconnectFromChatIfNeeded {
     
-    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground && !self.serviceManager.callManager.hasActiveCall && [[QBChat instance] isConnected]) {
+    BOOL chatNeedDisconnect =  [[QBChat instance] isConnected] || [[QBChat instance] isConnecting];
+    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground && !self.serviceManager.callManager.hasActiveCall && chatNeedDisconnect) {
         
         return [self disconnectFromChat];
     }
