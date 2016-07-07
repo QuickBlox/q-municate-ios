@@ -32,6 +32,7 @@
 #import "QMChatLocationIncomingCell.h"
 
 #import "QBChatMessage+QMChatLocation.h"
+#import "UIImageView+QMLocationSnapshot.h"
 
 // external
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
@@ -850,7 +851,8 @@ NYTPhotosViewControllerDelegate
     }
     else if ([cell conformsToProtocol:@protocol(QMChatLocationCell)]) {
         
-        [(id<QMChatLocationCell>)cell setLocationCoordinate:[message locationCoordinate]];
+        [[(id<QMChatLocationCell>)cell imageView]
+         setSnapshotWithKey:message.ID locationCoordinate:[message locationCoordinate]];
     }
 }
 
@@ -1324,7 +1326,7 @@ NYTPhotosViewControllerDelegate
     }
     else if ([cell conformsToProtocol:@protocol(QMChatLocationCell)]) {
         
-        QMLocationViewController *locationVC = [[QMLocationViewController alloc] initWithState:QMLocationVCStateView locationCoordinate:[(id<QMChatLocationCell>)cell locationCoordinate]];
+        QMLocationViewController *locationVC = [[QMLocationViewController alloc] initWithState:QMLocationVCStateView locationCoordinate:[currentMessage locationCoordinate]];
         
         [self.view endEditing:YES]; // hiding keyboard
         [self.navigationController pushViewController:locationVC animated:YES];

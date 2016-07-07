@@ -33,6 +33,7 @@
 		581BAC8E1CAD8DD900E0567D /* QMColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 581BAC8D1CAD8DD900E0567D /* QMColors.m */; };
 		581DA1D01BF3732900F75D8B /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1CF1BF3732900F75D8B /* libc++.tbd */; };
 		581DA1D21BF373A100F75D8B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1D11BF373A100F75D8B /* VideoToolbox.framework */; };
+		582CAE461D2D4BF60086AC1C /* QMChatLocationSnapshotter.m in Sources */ = {isa = PBXBuildFile; fileRef = 582CAE451D2D4BF60086AC1C /* QMChatLocationSnapshotter.m */; };
 		5839F26E1CC531AD0055EBF8 /* QMBaseTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839F26D1CC531AD0055EBF8 /* QMBaseTitleView.m */; };
 		5839F2761CC533A30055EBF8 /* QMGroupHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839F2751CC533A30055EBF8 /* QMGroupHeaderView.m */; };
 		583E1D391D2BA57F008111DB /* QMLocationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 583E1D381D2BA57F008111DB /* QMLocationButton.m */; };
@@ -121,6 +122,7 @@
 		58C64D031C905F9800F1387B /* QMChatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C64D021C905F9800F1387B /* QMChatVC.m */; };
 		58C64D071C90699A00F1387B /* QMChatButtonsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C64D061C90699A00F1387B /* QMChatButtonsFactory.m */; };
 		58CCD2AE1BE778DD00E99C16 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58CCD2AD1BE778DD00E99C16 /* Quickblox.framework */; };
+		58D2CC431D2D4F7000E57862 /* UIImageView+QMLocationSnapshot.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D2CC421D2D4F7000E57862 /* UIImageView+QMLocationSnapshot.m */; };
 		58D81C231BBA86920046B550 /* QuickbloxWebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D81C221BBA86920046B550 /* QuickbloxWebRTC.framework */; };
 		58D847581C848272000C40BA /* QMDialogsSearchDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D847571C848272000C40BA /* QMDialogsSearchDataSource.m */; };
 		58D847641C85A02B000C40BA /* QMDialogCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58D847631C85A02B000C40BA /* QMDialogCell.xib */; };
@@ -218,6 +220,8 @@
 		581BAC8D1CAD8DD900E0567D /* QMColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMColors.m; sourceTree = "<group>"; };
 		581DA1CF1BF3732900F75D8B /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		581DA1D11BF373A100F75D8B /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		582CAE441D2D4BF60086AC1C /* QMChatLocationSnapshotter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatLocationSnapshotter.h; sourceTree = "<group>"; };
+		582CAE451D2D4BF60086AC1C /* QMChatLocationSnapshotter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatLocationSnapshotter.m; sourceTree = "<group>"; };
 		5839F26C1CC531AD0055EBF8 /* QMBaseTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMBaseTitleView.h; sourceTree = "<group>"; };
 		5839F26D1CC531AD0055EBF8 /* QMBaseTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMBaseTitleView.m; sourceTree = "<group>"; };
 		5839F2741CC533A30055EBF8 /* QMGroupHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMGroupHeaderView.h; sourceTree = "<group>"; };
@@ -382,6 +386,8 @@
 		58C64D051C90699A00F1387B /* QMChatButtonsFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChatButtonsFactory.h; sourceTree = "<group>"; };
 		58C64D061C90699A00F1387B /* QMChatButtonsFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChatButtonsFactory.m; sourceTree = "<group>"; };
 		58CCD2AD1BE778DD00E99C16 /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quickblox.framework; path = External/Quickblox.framework; sourceTree = "<group>"; };
+		58D2CC411D2D4F7000E57862 /* UIImageView+QMLocationSnapshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImageView+QMLocationSnapshot.h"; path = "UIImageView/UIImageView+QMLocationSnapshot.h"; sourceTree = "<group>"; };
+		58D2CC421D2D4F7000E57862 /* UIImageView+QMLocationSnapshot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+QMLocationSnapshot.m"; path = "UIImageView/UIImageView+QMLocationSnapshot.m"; sourceTree = "<group>"; };
 		58D81C221BBA86920046B550 /* QuickbloxWebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickbloxWebRTC.framework; path = External/QuickbloxWebRTC.framework; sourceTree = "<group>"; };
 		58D847561C848272000C40BA /* QMDialogsSearchDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDialogsSearchDataSource.h; sourceTree = "<group>"; };
 		58D847571C848272000C40BA /* QMDialogsSearchDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDialogsSearchDataSource.m; sourceTree = "<group>"; };
@@ -576,6 +582,7 @@
 		55A8B04F1965986A00B5D33B /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				582CAE401D2D3BF10086AC1C /* QMChatLocationSnapshotter */,
 				58FD668B1CEF12AD00B72425 /* QMAlert */,
 				581BAC8B1CAD8DCA00E0567D /* QMColors */,
 				5524C2CF1998B560007450DB /* QMImagePicker */,
@@ -746,6 +753,16 @@
 				581BAC8D1CAD8DD900E0567D /* QMColors.m */,
 			);
 			path = QMColors;
+			sourceTree = "<group>";
+		};
+		582CAE401D2D3BF10086AC1C /* QMChatLocationSnapshotter */ = {
+			isa = PBXGroup;
+			children = (
+				582CAE441D2D4BF60086AC1C /* QMChatLocationSnapshotter.h */,
+				582CAE451D2D4BF60086AC1C /* QMChatLocationSnapshotter.m */,
+			);
+			name = QMChatLocationSnapshotter;
+			path = ../../Scenes/Chat/QMChatVC;
 			sourceTree = "<group>";
 		};
 		582D72FB1D099F7F0083F22E /* QMSettingsFooterView */ = {
@@ -1579,6 +1596,15 @@
 			path = "View Controllers";
 			sourceTree = "<group>";
 		};
+		58D2CC401D2D4F5C00E57862 /* UIImageView */ = {
+			isa = PBXGroup;
+			children = (
+				58D2CC411D2D4F7000E57862 /* UIImageView+QMLocationSnapshot.h */,
+				58D2CC421D2D4F7000E57862 /* UIImageView+QMLocationSnapshot.m */,
+			);
+			name = UIImageView;
+			sourceTree = "<group>";
+		};
 		58D847551C84823A000C40BA /* QMDialogsSearchDataSource */ = {
 			isa = PBXGroup;
 			children = (
@@ -1793,6 +1819,7 @@
 		6943848C18E42691001E08A9 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				58D2CC401D2D4F5C00E57862 /* UIImageView */,
 				58043EA91D2D103A0052CF4E /* QBChatMessage */,
 				58B3C9D31CB681F400B08A27 /* NSArray */,
 				58550AB91CF5BA210024EAFC /* QBChatDialog */,
@@ -2183,6 +2210,7 @@
 				58B3C9B81CB3ED8000B08A27 /* QMGroupOccupantsViewController.m in Sources */,
 				58FD668A1CEF058400B72425 /* QMFeedbackViewController.m in Sources */,
 				5877D6CE1C46702400938E5D /* QMDialogsDataSource.m in Sources */,
+				582CAE461D2D4BF60086AC1C /* QMChatLocationSnapshotter.m in Sources */,
 				586194801D2BED32007FA393 /* QMBaseChatLocationCell.m in Sources */,
 				581BAC8E1CAD8DD900E0567D /* QMColors.m in Sources */,
 				585DE45F1C4686060068E03E /* QMErrorsFactory.m in Sources */,
@@ -2192,6 +2220,7 @@
 				585A46381CC8F16F004FBC3D /* QMGroupAddUsersSearchDataProvider.m in Sources */,
 				580650991D2A9FD50013A5E8 /* QMLocationViewController.m in Sources */,
 				5897929E1C9AA65400CC6438 /* QMContactsSearchDataSource.m in Sources */,
+				58D2CC431D2D4F7000E57862 /* UIImageView+QMLocationSnapshot.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
