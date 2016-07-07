@@ -23,7 +23,6 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 
 @interface QMCore ()
 
-@property (strong, nonatomic) dispatch_group_t logoutGroup;
 @property (strong, nonatomic) BFTask *restLoginTask;
 
 @end
@@ -65,9 +64,6 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         
         // Reachability init
         [self configureReachability];
-        
-        // other initializations
-        _logoutGroup = dispatch_group_create();
     }
     
     return self;
@@ -250,10 +246,12 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     
     BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
     
+    [self.pushNotificationManager unSubscribeFromPushNotifications];
+    
     @weakify(self);
     [super logoutWithCompletion:^{
-        @strongify(self);
         
+        @strongify(self);
         if (self.currentProfile.accountType == QMAccountTypeFacebook) {
             
             [QMFacebook logout];
@@ -266,24 +264,10 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         [[SDWebImageManager sharedManager].imageCache clearMemory];
         [[SDWebImageManager sharedManager].imageCache clearDisk];
         
-        dispatch_group_enter(self.logoutGroup);
-        [[self.pushNotificationManager unSubscribeFromPushNotifications] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-            
-            dispatch_group_leave(self.logoutGroup);
-            return nil;
-        }];
+        [[QMContactListCache instance] deleteContactList:nil];
         
-        dispatch_group_enter(self.logoutGroup);
-        [[QMContactListCache instance] deleteContactList:^{
-            
-            dispatch_group_leave(self.logoutGroup);
-        }];
-        
-        dispatch_group_notify(self.logoutGroup, dispatch_get_main_queue(), ^{
-            
-            [self.currentProfile clearProfile];
-            [source setResult:nil];
-        });
+        [self.currentProfile clearProfile];
+        [source setResult:nil];
     }];
     
     return source.task;
