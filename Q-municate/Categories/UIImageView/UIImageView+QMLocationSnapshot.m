@@ -34,10 +34,12 @@
 
 @implementation UIImageView (QMLocationSnapshot)
 
-- (void)setSnapshotWithKey:(NSString *)key locationCoordinate:(CLLocationCoordinate2D)locationCoordinate {
+- (void)setSnapshotWithLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate {
     
     self.image = nil;
     [self qm_cancelPreviousSnapshotCreation];
+    
+    NSString *key = [NSString stringWithFormat:@"%lf/%lf",locationCoordinate.latitude, locationCoordinate.longitude];
     
     self.qm_snapshotKey = key;
     

@@ -852,7 +852,7 @@ NYTPhotosViewControllerDelegate
     else if ([cell conformsToProtocol:@protocol(QMChatLocationCell)]) {
         
         [[(id<QMChatLocationCell>)cell imageView]
-         setSnapshotWithKey:message.ID locationCoordinate:[message locationCoordinate]];
+         setSnapshotWithLocationCoordinate:[message locationCoordinate]];
     }
 }
 

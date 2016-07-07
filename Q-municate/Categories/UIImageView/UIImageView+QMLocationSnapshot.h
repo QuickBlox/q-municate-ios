@@ -10,7 +10,6 @@
 
 @interface UIImageView (QMLocationSnapshot)
 
-- (void)setSnapshotWithKey:(nonnull NSString *)key
-        locationCoordinate:(CLLocationCoordinate2D)locationCoordinate;
+- (void)setSnapshotWithLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate;
 
 @end
