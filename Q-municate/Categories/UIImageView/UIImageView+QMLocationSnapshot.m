@@ -56,6 +56,8 @@
      }];
 }
 
+#pragma mark - Private
+
 - (void)qm_cancelPreviousSnapshotCreation {
     
     if (self.qm_snapshotKey != nil) {

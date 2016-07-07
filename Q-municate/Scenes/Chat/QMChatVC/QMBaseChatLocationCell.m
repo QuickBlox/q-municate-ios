@@ -14,8 +14,6 @@
 
 @end
 
-
 @implementation QMBaseChatLocationCell
-
 
 @end
