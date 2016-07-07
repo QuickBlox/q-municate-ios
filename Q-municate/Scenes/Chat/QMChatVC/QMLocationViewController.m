@@ -119,6 +119,7 @@ static const CGFloat kQMLocationPinXShift = 3.5f;
                                 CGRectGetHeight(_mapView.frame) / 2.0f - kQMLocationPinXShift,
                                 CGRectGetWidth(_pinView.frame),
                                 CGRectGetHeight(_pinView.frame));
+    _pinView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     
     [_mapView addSubview:_pinView];
 }
