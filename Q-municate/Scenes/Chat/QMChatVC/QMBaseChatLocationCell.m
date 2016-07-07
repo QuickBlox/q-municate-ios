@@ -8,39 +8,14 @@
 
 #import "QMBaseChatLocationCell.h"
 
-#import "QMMapView.h"
-
 @interface QMBaseChatLocationCell ()
-{
-    CLLocationCoordinate2D _locationCoordinate;
-}
 
-@property (weak, nonatomic) IBOutlet QMMapView *mapView;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
 @end
 
 
 @implementation QMBaseChatLocationCell
 
-#pragma mark - Life cycle
-
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    
-    [self.mapView setManipulationsEnabled:NO];
-}
-
-#pragma mark - QMChatLocationCell protocol implementation
-
-- (void)setLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate {
-    
-    _locationCoordinate = locationCoordinate;
-    [self.mapView markCoordinate:locationCoordinate animated:NO];
-}
-
-- (CLLocationCoordinate2D)locationCoordinate {
-    
-    return _locationCoordinate;
-}
 
 @end

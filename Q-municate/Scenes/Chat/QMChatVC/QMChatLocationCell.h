@@ -10,9 +10,6 @@
 
 @protocol QMChatLocationCell <NSObject>
 
-/**
- *  Location coordinate.
- */
-@property (assign, nonatomic) CLLocationCoordinate2D locationCoordinate;
+@property (readonly, weak, nonatomic) UIImageView *imageView;
 
 @end

@@ -55,9 +55,6 @@ static NSString * const kQMLocationLongitudeKey = @"lng";
     CLLocationDegrees lat = [[locationAttachment.context objectForKey:kQMLocationLatitudeKey] doubleValue];
     CLLocationDegrees lng = [[locationAttachment.context objectForKey:kQMLocationLongitudeKey] doubleValue];
     
-    NSLog(@"lat: %@, lng: %@", [locationAttachment.context objectForKey:kQMLocationLatitudeKey],
-          [locationAttachment.context objectForKey:kQMLocationLongitudeKey]);
-    
     return CLLocationCoordinate2DMake(lat, lng);
 }
 
