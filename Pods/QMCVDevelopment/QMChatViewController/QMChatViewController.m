@@ -153,6 +153,20 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
     UINib *attachmentOutgoingNib  = [QMChatAttachmentOutgoingCell nib];
     NSString *attachmentOutgoingIdentifier = [QMChatAttachmentOutgoingCell cellReuseIdentifier];
     [self.collectionView registerNib:attachmentOutgoingNib forCellWithReuseIdentifier:attachmentOutgoingIdentifier];
+    
+    /**
+     *  Location outgoing cell
+     */
+    UINib *locOutgoingNib = [QMChatLocationOutgoingCell nib];
+    NSString *locOugoingIdentifier = [QMChatLocationOutgoingCell cellReuseIdentifier];
+    [self.collectionView registerNib:locOutgoingNib forCellWithReuseIdentifier:locOugoingIdentifier];
+    
+    /**
+     *  Location incoming cell
+     */
+    UINib *locIncomingNib = [QMChatLocationIncomingCell nib];
+    NSString *locIncomingIdentifier = [QMChatLocationIncomingCell cellReuseIdentifier];
+    [self.collectionView registerNib:locIncomingNib forCellWithReuseIdentifier:locIncomingIdentifier];
 }
 
 #pragma mark - Getters

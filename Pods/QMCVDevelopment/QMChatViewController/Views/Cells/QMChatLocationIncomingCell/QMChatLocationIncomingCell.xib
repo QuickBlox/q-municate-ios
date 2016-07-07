@@ -57,22 +57,22 @@
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="gfg-Ik-NtH" customClass="QMMapView">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gU8-Rn-Gvp">
                                         <rect key="frame" x="0.0" y="21" width="148" height="152"/>
-                                    </mapView>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="4Tj-AD-mYY" firstAttribute="top" secondItem="gfg-Ik-NtH" secondAttribute="bottom" id="2FB-d5-w13"/>
-                                    <constraint firstItem="gfg-Ik-NtH" firstAttribute="top" secondItem="pgQ-H7-Y5u" secondAttribute="bottom" id="Bgw-35-kl0"/>
+                                    <constraint firstAttribute="trailing" secondItem="gU8-Rn-Gvp" secondAttribute="trailing" id="AT6-d9-E6f"/>
                                     <constraint firstItem="4Tj-AD-mYY" firstAttribute="leading" secondItem="1rv-oZ-ov9" secondAttribute="leading" id="J3O-3t-QEe"/>
                                     <constraint firstAttribute="trailing" secondItem="4Tj-AD-mYY" secondAttribute="trailing" id="JbZ-J7-TpC"/>
                                     <constraint firstAttribute="trailing" secondItem="pgQ-H7-Y5u" secondAttribute="trailing" id="MHb-21-BnI"/>
-                                    <constraint firstItem="gfg-Ik-NtH" firstAttribute="leading" secondItem="1rv-oZ-ov9" secondAttribute="leading" id="YZa-i0-kU6"/>
+                                    <constraint firstItem="gU8-Rn-Gvp" firstAttribute="leading" secondItem="1rv-oZ-ov9" secondAttribute="leading" id="Q2H-fc-QH8"/>
                                     <constraint firstAttribute="bottom" secondItem="4Tj-AD-mYY" secondAttribute="bottom" id="bxS-ng-UxW"/>
-                                    <constraint firstAttribute="trailing" secondItem="gfg-Ik-NtH" secondAttribute="trailing" id="mak-vf-vBx"/>
+                                    <constraint firstItem="gU8-Rn-Gvp" firstAttribute="top" secondItem="pgQ-H7-Y5u" secondAttribute="bottom" id="kkZ-qc-waM"/>
                                     <constraint firstItem="pgQ-H7-Y5u" firstAttribute="top" secondItem="1rv-oZ-ov9" secondAttribute="top" id="qvi-DU-nQs"/>
                                     <constraint firstItem="pgQ-H7-Y5u" firstAttribute="leading" secondItem="1rv-oZ-ov9" secondAttribute="leading" id="xDn-Pp-trQ"/>
+                                    <constraint firstItem="4Tj-AD-mYY" firstAttribute="top" secondItem="gU8-Rn-Gvp" secondAttribute="bottom" id="xon-f9-Ve3"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -120,13 +120,13 @@
                 <outlet property="bottomLabelHeightConstraint" destination="CGF-Kf-7DA" id="g0g-gT-Csq"/>
                 <outlet property="containerView" destination="X4d-J3-f3R" id="PGD-cW-pr4"/>
                 <outlet property="containerWidthConstraint" destination="q3d-xO-tGz" id="VmK-ch-bod"/>
-                <outlet property="mapView" destination="gfg-Ik-NtH" id="A6A-4z-m8O"/>
+                <outlet property="imageView" destination="gU8-Rn-Gvp" id="gyR-AR-ncu"/>
                 <outlet property="messageContainer" destination="1rv-oZ-ov9" id="RQK-Dd-jIf"/>
                 <outlet property="messageContainerBottomInsetConstraint" destination="uq1-a3-hdy" id="M9y-ZL-Eba"/>
-                <outlet property="textViewBottomLabelVerticalSpaceConstraint" destination="2FB-d5-w13" id="XEV-gD-UdI"/>
+                <outlet property="textViewBottomLabelVerticalSpaceConstraint" destination="xon-f9-Ve3" id="HPf-Ul-UiG"/>
                 <outlet property="topLabel" destination="pgQ-H7-Y5u" id="56f-VT-nrf"/>
                 <outlet property="topLabelHeightConstraint" destination="9mx-bN-is7" id="gRI-ev-FiX"/>
-                <outlet property="topLabelTextViewVerticalSpaceConstraint" destination="Bgw-35-kl0" id="vlL-H7-3oD"/>
+                <outlet property="topLabelTextViewVerticalSpaceConstraint" destination="kkZ-qc-waM" id="qPC-fY-zCA"/>
             </connections>
             <point key="canvasLocation" x="206" y="476"/>
         </collectionViewCell>

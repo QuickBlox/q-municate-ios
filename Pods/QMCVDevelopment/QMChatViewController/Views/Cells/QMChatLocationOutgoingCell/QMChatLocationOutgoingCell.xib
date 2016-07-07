@@ -37,9 +37,9 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aUM-zm-5ky" userLabel="Message Container">
                                 <rect key="frame" x="4" y="4" width="165" height="175"/>
                                 <subviews>
-                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="zua-zb-L3T" customClass="QMMapView">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="v1t-qy-7VR">
                                         <rect key="frame" x="0.0" y="21" width="165" height="133"/>
-                                    </mapView>
+                                    </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nickname" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="diF-ca-yd3" customClass="TTTAttributedLabel">
                                         <rect key="frame" x="0.0" y="0.0" width="165" height="21"/>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -65,14 +65,14 @@
                                 <constraints>
                                     <constraint firstItem="diF-ca-yd3" firstAttribute="leading" secondItem="aUM-zm-5ky" secondAttribute="leading" id="2GS-ez-PaZ"/>
                                     <constraint firstItem="diF-ca-yd3" firstAttribute="top" secondItem="aUM-zm-5ky" secondAttribute="top" id="2YG-PH-oBY"/>
-                                    <constraint firstItem="zua-zb-L3T" firstAttribute="leading" secondItem="aUM-zm-5ky" secondAttribute="leading" id="56P-Ne-NRX"/>
                                     <constraint firstAttribute="trailing" secondItem="35y-FC-UxN" secondAttribute="trailing" id="AoC-SQ-Y4a"/>
-                                    <constraint firstAttribute="trailing" secondItem="zua-zb-L3T" secondAttribute="trailing" id="KfE-cw-PJI"/>
-                                    <constraint firstItem="35y-FC-UxN" firstAttribute="top" secondItem="zua-zb-L3T" secondAttribute="bottom" id="WKq-sj-WB8"/>
+                                    <constraint firstItem="35y-FC-UxN" firstAttribute="top" secondItem="v1t-qy-7VR" secondAttribute="bottom" id="NuX-bQ-Nnj"/>
+                                    <constraint firstAttribute="trailing" secondItem="v1t-qy-7VR" secondAttribute="trailing" id="QjY-TS-GTP"/>
                                     <constraint firstItem="35y-FC-UxN" firstAttribute="leading" secondItem="aUM-zm-5ky" secondAttribute="leading" id="Xda-1O-jom"/>
-                                    <constraint firstItem="zua-zb-L3T" firstAttribute="top" secondItem="diF-ca-yd3" secondAttribute="bottom" id="gZf-4J-VK0"/>
                                     <constraint firstAttribute="bottom" secondItem="35y-FC-UxN" secondAttribute="bottom" id="qjn-WF-jgP"/>
                                     <constraint firstAttribute="trailing" secondItem="diF-ca-yd3" secondAttribute="trailing" id="sf6-RH-gfz"/>
+                                    <constraint firstItem="v1t-qy-7VR" firstAttribute="leading" secondItem="aUM-zm-5ky" secondAttribute="leading" id="vdA-gK-ogS"/>
+                                    <constraint firstItem="v1t-qy-7VR" firstAttribute="top" secondItem="diF-ca-yd3" secondAttribute="bottom" id="wEd-yx-94v"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -120,14 +120,14 @@
                 <outlet property="bottomLabelHeightConstraint" destination="mVx-dl-W2y" id="nLD-ma-XSJ"/>
                 <outlet property="containerView" destination="mlp-Ig-WT7" id="J4L-vb-Ggw"/>
                 <outlet property="containerWidthConstraint" destination="jtP-rm-saS" id="9Rs-pi-upC"/>
-                <outlet property="mapView" destination="zua-zb-L3T" id="7RC-Qo-wlT"/>
+                <outlet property="imageView" destination="v1t-qy-7VR" id="Lgp-Cb-scv"/>
                 <outlet property="messageContainer" destination="aUM-zm-5ky" id="MMI-7O-T1U"/>
                 <outlet property="messageContainerBottomInsetConstraint" destination="5Sz-rW-mKf" id="DmH-WT-ifj"/>
                 <outlet property="messageContainerTopInsetConstraint" destination="5b4-p7-Dki" id="ivg-8j-Kut"/>
-                <outlet property="textViewBottomLabelVerticalSpaceConstraint" destination="WKq-sj-WB8" id="xag-tw-fC4"/>
+                <outlet property="textViewBottomLabelVerticalSpaceConstraint" destination="NuX-bQ-Nnj" id="L0T-uW-9UC"/>
                 <outlet property="topLabel" destination="diF-ca-yd3" id="ALz-IV-YCL"/>
                 <outlet property="topLabelHeightConstraint" destination="hqg-jI-Mlo" id="AUj-9L-u18"/>
-                <outlet property="topLabelTextViewVerticalSpaceConstraint" destination="gZf-4J-VK0" id="Ijd-Kd-LaJ"/>
+                <outlet property="topLabelTextViewVerticalSpaceConstraint" destination="wEd-yx-94v" id="Hqs-wn-GtY"/>
             </connections>
             <point key="canvasLocation" x="-41.5" y="269.5"/>
         </collectionViewCell>

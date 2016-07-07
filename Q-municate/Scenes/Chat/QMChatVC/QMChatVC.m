@@ -17,6 +17,7 @@
 #import "QMColors.h"
 #import "QMUserInfoViewController.h"
 #import "QMGroupInfoViewController.h"
+#import "QMLocationViewController.h"
 #import "QMAlert.h"
 #import "QMPhoto.h"
 
@@ -25,13 +26,7 @@
 #import "UIImage+fixOrientation.h"
 #import "QBChatDialog+OpponentID.h"
 #import <QMDateUtils.h>
-
-// Location
-#import "QMLocationViewController.h"
-#import "QMChatLocationOutgoingCell.h"
-#import "QMChatLocationIncomingCell.h"
-
-#import "QBChatMessage+QMChatLocation.h"
+#import <UIImageView+QMLocationSnapshot.h>
 
 // external
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
@@ -154,8 +149,6 @@ NYTPhotosViewControllerDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self registerNibs];
     
     // setting up chat controller
     self.topContentAdditionalInset = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
@@ -850,7 +843,8 @@ NYTPhotosViewControllerDelegate
     }
     else if ([cell conformsToProtocol:@protocol(QMChatLocationCell)]) {
         
-        [(id<QMChatLocationCell>)cell setLocationCoordinate:[message locationCoordinate]];
+        [[(id<QMChatLocationCell>)cell imageView]
+         setSnapshotWithLocationCoordinate:message.locationCoordinate];
     }
 }
 
@@ -997,7 +991,7 @@ NYTPhotosViewControllerDelegate
     message.dialogID = self.chatDialog.ID;
     message.dateSent = [NSDate date];
     
-    [message addLocationCoordinate:locationCoordinate];
+    message.locationCoordinate = locationCoordinate;
     
     [self _sendMessage:message];
 }
@@ -1324,7 +1318,7 @@ NYTPhotosViewControllerDelegate
     }
     else if ([cell conformsToProtocol:@protocol(QMChatLocationCell)]) {
         
-        QMLocationViewController *locationVC = [[QMLocationViewController alloc] initWithState:QMLocationVCStateView locationCoordinate:[(id<QMChatLocationCell>)cell locationCoordinate]];
+        QMLocationViewController *locationVC = [[QMLocationViewController alloc] initWithState:QMLocationVCStateView locationCoordinate:[currentMessage locationCoordinate]];
         
         [self.view endEditing:YES]; // hiding keyboard
         [self.navigationController pushViewController:locationVC animated:YES];
@@ -1513,25 +1507,6 @@ NYTPhotosViewControllerDelegate
     } completion:nil];
     
     [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
-}
-
-#pragma mark - Nibs registration
-
-- (void)registerNibs {
-    
-    /**
-     *  Location outgoing cell
-     */
-    UINib *locOutgoingNib = [QMChatLocationOutgoingCell nib];
-    NSString *locOugoingIdentifier = [QMChatLocationOutgoingCell cellReuseIdentifier];
-    [self.collectionView registerNib:locOutgoingNib forCellWithReuseIdentifier:locOugoingIdentifier];
-    
-    /**
-     *  Location incoming cell
-     */
-    UINib *locIncomingNib = [QMChatLocationIncomingCell nib];
-    NSString *locIncomingIdentifier = [QMChatLocationIncomingCell cellReuseIdentifier];
-    [self.collectionView registerNib:locIncomingNib forCellWithReuseIdentifier:locIncomingIdentifier];
 }
 
 @end
