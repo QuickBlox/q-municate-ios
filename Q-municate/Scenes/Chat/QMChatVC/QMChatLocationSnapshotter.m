@@ -58,10 +58,15 @@ static NSString * const kQMChatLocationSnapshotCacheName = @"com.q-municate.chat
     MKMapSnapshotter *snapShotter = [[MKMapSnapshotter alloc] initWithOptions:options];
     [_snapshotOperations setObject:snapShotter forKey:key];
     
+    @weakify(self);
     [snapShotter startWithQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
               completionHandler:^(MKMapSnapshot *snapshot, NSError *error) {
+                  
+                  @strongify(self);
+                  
                   if (snapshot == nil) {
-                      NSLog(@"%s Error creating map snapshot: %@", __PRETTY_FUNCTION__, error);
+                      
+                      ILog(@"%s Error creating map snapshot: %@", __PRETTY_FUNCTION__, error);
                       completion(nil);
                       return;
                   }
