@@ -93,6 +93,13 @@
 
 - (void)chatContactListDidChange:(QBContactList *)contactList {
     
+    if (contactList == nil
+        && ![QBChat instance].isConnected) {
+        // no need to erase contact list cache due to chat
+        // disconnect triggers nil contact list change
+        return;
+    }
+    
     [self.contactListMemoryStorage updateWithContactList:contactList];
     
     if ([self.multicastDelegate respondsToSelector:@selector(contactListService:contactListDidChange:)]) {

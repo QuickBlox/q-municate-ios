@@ -40,7 +40,7 @@ end
 Don't forget to read how to track events correctly in Apple Watch Extensions  in FlurryiOSAnalyticsREADMExx.pdf  
 
 
-To enable Tubmlr in-app sharing: 
+To enable Tumblr in-app sharing: 
 ```
 pod 'Flurry-iOS-SDK/FlurrySDK'
 pod 'Flurry-iOS-SDK/FlurryAds'

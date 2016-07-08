@@ -17,7 +17,7 @@ PODS:
   - FBSDKShareKit (4.11.0):
     - FBSDKCoreKit
   - FLAnimatedImage (1.0.12)
-  - Flurry-iOS-SDK/FlurrySDK (7.6.4)
+  - Flurry-iOS-SDK/FlurrySDK (7.6.6)
   - libextobjc/EXTKeyPathCoding (0.4.1):
     - libextobjc/RuntimeExtensions
   - libextobjc/EXTScope (0.4.1):
@@ -85,10 +85,8 @@ DEPENDENCIES:
   - libextobjc/EXTScope (~> 0.4.1)
   - MPGNotification (~> 1.2)
   - NYTPhotoViewer (~> 1.1.0)
-  - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`,
-    branch `development`)
-  - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`,
-    branch `development`)
+  - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, branch `development`)
+  - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`, branch `development`)
   - Reachability (~> 3.2)
   - SDWebImage (~> 3.6)
   - SSKeychain (~> 1.2.2)
@@ -107,10 +105,10 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
-    :commit: bccdb61aec725347ec249b700652ede65a753d8b
+    :commit: bb4d8dbe6856e8220d32ac5116e252810f18a7f2
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: 74755b59fe2c4be2702db6e7bc8c8063b346b494
+    :commit: f2a9564567ece4edf6b5845f228dcf1716250a9d
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
@@ -122,7 +120,7 @@ SPEC CHECKSUMS:
   FBSDKLoginKit: bade9fc78277764149ccc5bfaadbf13c83175c6a
   FBSDKShareKit: 2d1746144cfc8a9dbbd24997c34ee0471be51b6a
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
-  Flurry-iOS-SDK: 9da972687d3af9f48038dcd86eae9cad3acca456
+  Flurry-iOS-SDK: 97bbeec09cca666c2f1772f6e161c4f8ccff611e
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
@@ -136,4 +134,6 @@ SPEC CHECKSUMS:
   TwitterCore: cce24b3c798993ccde72787ea79ea9a478b284e4
   UIDevice-Hardware: de848ac4b53de555f70ff1a32877454d221c71d1
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: 6f7ea378487ac005df8ff47e8cfdb54f152c7edc
+
+COCOAPODS: 1.0.1
