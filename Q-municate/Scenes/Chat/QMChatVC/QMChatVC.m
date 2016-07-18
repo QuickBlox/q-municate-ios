@@ -20,6 +20,7 @@
 #import "QMLocationViewController.h"
 #import "QMAlert.h"
 #import "QMPhoto.h"
+#import "QMCallNotificationItem.h"
 
 // helpers
 #import "QMChatButtonsFactory.h"
@@ -27,6 +28,7 @@
 #import "QBChatDialog+OpponentID.h"
 #import <QMDateUtils.h>
 #import <UIImageView+QMLocationSnapshot.h>
+#import "QBChatMessage+QMCallNotifications.h"
 
 // external
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
@@ -509,6 +511,7 @@ NYTPhotosViewControllerDelegate
     NSString *message = nil;
     UIColor *textColor = nil;
     UIFont *font = nil;
+    UIImage *iconImage = nil;
     
     if ([messageItem isNotificatonMessage]) {
         
@@ -531,6 +534,16 @@ NYTPhotosViewControllerDelegate
             font = [UIFont systemFontOfSize:13.0f];
         }
     }
+    else if ([messageItem isCallNotificationMessage]) {
+        
+        textColor = [UIColor whiteColor];
+        font = [UIFont systemFontOfSize:13.0f];
+        
+        QMCallNotificationItem *callNotificationItem = [[QMCallNotificationItem alloc] initWithCallNotificationMessage:messageItem];
+        
+        message = callNotificationItem.notificationText;
+        iconImage = callNotificationItem.iconImage;
+    }
     else {
         
         message = messageItem.text;
@@ -542,8 +555,22 @@ NYTPhotosViewControllerDelegate
     paragraphStyle.lineSpacing = 8.0f;
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor,
                                   NSFontAttributeName:font,
-                                  NSParagraphStyleAttributeName:paragraphStyle};
+                                  NSParagraphStyleAttributeName:paragraphStyle };
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:message ?: @"" attributes:attributes];
+    
+    if (iconImage != nil) {
+        
+        NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
+        UIImage *image = [UIImage imageNamed:@"qm-ic-video-missing"];
+        textAttachment.image = image;
+        textAttachment.bounds = CGRectMake(0, 0, 16, 16);
+        
+        NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
+        
+        NSMutableAttributedString *mutableAttrStr = [attributedString mutableCopy];
+        [mutableAttrStr insertAttributedString:attrStringWithImage atIndex:0];
+        attributedString = [mutableAttrStr copy];
+    }
     
     return attributedString;
 }
@@ -613,6 +640,12 @@ NYTPhotosViewControllerDelegate
                                                                   withConstraints:CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), CGFLOAT_MAX)
                                                            limitedToNumberOfLines:0];
         size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), kQMAttachmentCellSize + (CGFloat)ceil(bottomLabelSize.height));
+    }
+    else if (viewClass == [QMChatNotificationCell class]) {
+        
+        NSAttributedString *attributedString = [self attributedStringForItem:item];
+        
+        size = [attributedString boundingRectWithSize:CGSizeMake(maxWidth, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size;
     }
     else {
         
@@ -748,6 +781,8 @@ NYTPhotosViewControllerDelegate
     currentCell.delegate = self;
     currentCell.containerView.highlightColor = QMChatCellHighlightedColor();
     
+    QBChatMessage *message = [self.chatSectionManager messageForIndexPath:indexPath];
+    
     if ([cell isKindOfClass:[QMChatOutgoingCell class]]
         || [cell isKindOfClass:[QMChatAttachmentOutgoingCell class]]
         || [cell isKindOfClass:[QMChatLocationOutgoingCell class]]) {
@@ -767,7 +802,6 @@ NYTPhotosViewControllerDelegate
         /**
          *  Setting opponent avatar
          */
-        QBChatMessage* message = [self.chatSectionManager messageForIndexPath:indexPath];
         QBUUser *sender = [[QMCore instance].usersService.usersMemoryStorage userWithID:message.senderID];
         
         QMImageView *avatarView = [(QMChatCell *)cell avatarView];
@@ -785,8 +819,18 @@ NYTPhotosViewControllerDelegate
     }
     else if ([cell isKindOfClass:[QMChatNotificationCell class]]) {
         
-        currentCell.containerView.bgColor = QMChatNotificationCellColor();
         currentCell.userInteractionEnabled = NO;
+        
+        if ([message isCallNotificationMessage]
+            && (message.callNotificationState == QMCallNotificationStateMissedNoAnswer
+                || message.callNotificationState == QMCallNotificationStateReject)) {
+            
+            currentCell.containerView.bgColor = QMChatRedNotificationCellColor();
+        }
+        else {
+            
+            currentCell.containerView.bgColor = QMChatNotificationCellColor();
+        }
     }
     else if ([cell isKindOfClass:[QMChatContactRequestCell class]]) {
         
@@ -794,8 +838,6 @@ NYTPhotosViewControllerDelegate
         currentCell.layer.cornerRadius = 8;
         currentCell.clipsToBounds = YES;
     }
-    
-    QBChatMessage* message = [self.chatSectionManager messageForIndexPath:indexPath];
     
     if ([cell conformsToProtocol:@protocol(QMChatAttachmentCell)]) {
         
