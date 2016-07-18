@@ -768,7 +768,7 @@ NYTPhotosViewControllerDelegate
                                          limitedToNumberOfLines:0];
     }
     
-    layoutModel.bottomLabelHeight = ceil(size.height);
+    layoutModel.bottomLabelHeight = (CGFloat)ceil(size.height);
     
     return layoutModel;
 }
