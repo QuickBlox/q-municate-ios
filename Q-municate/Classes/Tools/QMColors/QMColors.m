@@ -129,6 +129,19 @@ UIColor *QMChatNotificationCellColor() {
     return color;
 }
 
+UIColor *QMChatRedNotificationCellColor() {
+    
+    static UIColor *color = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        color = [UIColor colorWithRed:160.0f/255.0f green:0 blue:0 alpha:1.0f];
+    });
+    
+    return color;
+}
+
 UIColor *QMChatEmojiiKeyboardTintColor() {
     
     static UIColor *color = nil;
