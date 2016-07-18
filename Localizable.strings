@@ -48,6 +48,21 @@
 "QM_STR_UPDATE_GROUP_AVATAR_TEXT" = "%@ has changed the chat picture.";
 "QM_STR_LEAVE_GROUP_CONVERSATION_TEXT" = "%@ has left group chat.";
 
+// *********** CALL NOTIFICATIONS *****************
+"QM_STR_OUTGOING_CALL" = "Outgoing Call";
+"QM_STR_OUTGOING_VIDEO_CALL" = "Outgoing Video Call";
+
+"QM_STR_INCOMING_CALL" = "Incoming Call";
+"QM_STR_INCOMING_VIDEO_CALL" = "Incoming Video Call";
+
+"QM_STR_MISSED_CALL" = "Missed Call";
+"QM_STR_MISSED_VIDEO_CALL" = "Missed Video Call";
+
+"QM_STR_REJECTED_CALL" = "Rejected Call";
+"QM_STR_REJECTED_VIDEO_CALL" = "Rejected Video Call";
+
+"QM_STR_NO_ANSWER" = "No Answer";
+
 // *********** Notifications ***********
 "QM_STR_REPLY" = "Reply";
 
