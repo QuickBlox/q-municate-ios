@@ -302,7 +302,7 @@ QMCallManagerDelegate
                 
                 @strongify(self);
                 sender.enabled = NO;
-                [self _rejectCall];
+                [self rejectCall];
             }];
             
             self.acceptButton = [QMCallButtonsFactory acceptButton];
@@ -333,7 +333,7 @@ QMCallManagerDelegate
                 
                 @strongify(self);
                 sender.enabled = NO;
-                [self _rejectCall];
+                [self rejectCall];
             }];
             
             self.acceptButton = [QMCallButtonsFactory acceptVideoCallButton];
@@ -513,7 +513,7 @@ QMCallManagerDelegate
 
 #pragma mark - Actions
 
-- (void)_rejectCall {
+- (void)rejectCall {
     
     [self.session rejectCall:nil];
     

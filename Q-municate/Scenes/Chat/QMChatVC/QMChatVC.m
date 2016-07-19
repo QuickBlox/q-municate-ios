@@ -21,6 +21,7 @@
 #import "QMAlert.h"
 #import "QMPhoto.h"
 #import "QMCallNotificationItem.h"
+#import "QMHelpers.h"
 
 // helpers
 #import "QMChatButtonsFactory.h"

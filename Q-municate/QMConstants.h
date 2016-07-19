@@ -19,9 +19,6 @@
 
 #endif
 
-#define CGRectOfSize(size) \
-(CGRect) {CGPointZero, size};
-
 // storyboards
 static NSString *const kQMMainStoryboard = @"Main";
 static NSString *const kQMChatStoryboard = @"Chat";

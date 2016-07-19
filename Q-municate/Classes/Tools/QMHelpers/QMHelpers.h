@@ -8,4 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
+CGRect CGRectOfSize(CGSize size);
+
 NSString *QMStringForTimeInterval(NSTimeInterval timeInterval);

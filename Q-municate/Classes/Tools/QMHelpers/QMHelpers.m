@@ -8,6 +8,11 @@
 
 #import "QMHelpers.h"
 
+CGRect CGRectOfSize(CGSize size) {
+    
+    return (CGRect) {CGPointZero, size};
+}
+
 NSString *QMStringForTimeInterval(NSTimeInterval timeInterval) {
     
     NSInteger minutes = (NSInteger)(timeInterval / 60);
