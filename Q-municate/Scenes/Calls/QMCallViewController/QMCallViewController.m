@@ -401,6 +401,12 @@ QMCallManagerDelegate
             bottomText = NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil);
         }
         
+        if (self.callState == QMCallStateOutgoingAudioCall
+            || self.callState == QMCallStateOutgoingVideoCall) {
+            
+            [[QMCore instance].callManager sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
+        }
+        
         self.callInfoView.bottomText = bottomText;
         
         [self.session hangUp:nil];
@@ -639,7 +645,7 @@ QMCallManagerDelegate
     [self.opponentVideoView setVideoTrack:videoTrack];
 }
 
-- (void)session:(QBRTCSession *)session userDidNotRespond:(NSNumber *)__unused userID {
+- (void)session:(QBRTCSession *)session userDidNotRespond:(NSNumber *)userID {
     
     if (self.session != session) {
         
@@ -650,8 +656,13 @@ QMCallManagerDelegate
     
     [[QMCore instance].callManager stopAllSounds];
     
-    [[QMCore instance].callManager sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
-    
+    if (![self.session.initiatorID isEqualToNumber:userID]) {
+        // there is QBRTC bug, when userID is always opponents iD
+        // even  for user, who did not answer, this delegate will be called
+        // with opponent user ID
+        [[QMCore instance].callManager sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
+    }
+
     self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_USER_DOESNT_ANSWER", nil);
 }
 
@@ -769,6 +780,8 @@ QMCallManagerDelegate
         self.cameraCapture = nil;
     }
 }
+
+#pragma mark - Overrides
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     // light status bar for dark controller
