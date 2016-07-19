@@ -14,6 +14,7 @@
 #import "QMLocalVideoView.h"
 #import "QMColors.h"
 #import "QMSoundManager.h"
+#import "QMHelpers.h"
 
 static UIColor *videoCallBarBackgroundColor() {
     
@@ -301,7 +302,7 @@ QMCallManagerDelegate
                 
                 @strongify(self);
                 sender.enabled = NO;
-                [self.session rejectCall:nil];
+                [self _rejectCall];
             }];
             
             self.acceptButton = [QMCallButtonsFactory acceptButton];
@@ -332,7 +333,7 @@ QMCallManagerDelegate
                 
                 @strongify(self);
                 sender.enabled = NO;
-                [self.session rejectCall:nil];
+                [self _rejectCall];
             }];
             
             self.acceptButton = [QMCallButtonsFactory acceptVideoCallButton];
@@ -387,11 +388,13 @@ QMCallManagerDelegate
         [self stopCallTimer];
         [self stopHideBarsTimer];
         
-        NSString * bottomText = nil;
+        NSString *bottomText = nil;
         if (self.callState == QMCallStateActiveAudioCall ||
             self.callState == QMCallStateActiveVideoCall) {
             
-            bottomText = [NSString stringWithFormat:@"%@ - %@", NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil) , [self stringWithTimeDuration:self.callDuration]];
+            bottomText = [NSString stringWithFormat:@"%@ - %@", NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil) , QMStringForTimeInterval(self.callDuration)];
+            
+            [[QMCore instance].callManager sendCallNotificationMessageWithState:QMCallNotificationStateHangUp duration:self.callDuration];
         }
         else {
             
@@ -399,6 +402,7 @@ QMCallManagerDelegate
         }
         
         self.callInfoView.bottomText = bottomText;
+        
         [self.session hangUp:nil];
     }];
 }
@@ -507,6 +511,15 @@ QMCallManagerDelegate
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
+#pragma mark - Actions
+
+- (void)_rejectCall {
+    
+    [self.session rejectCall:nil];
+    
+    [[QMCore instance].callManager sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
+}
+
 #pragma mark - Timers
 #pragma mark - Call Timer
 
@@ -516,18 +529,8 @@ QMCallManagerDelegate
     
     if (!self.disconnected) {
         
-        self.callInfoView.bottomText = [self stringWithTimeDuration:_callDuration];
+        self.callInfoView.bottomText = QMStringForTimeInterval(self.callDuration);
     }
-}
-
-- (NSString *)stringWithTimeDuration:(NSTimeInterval)timeDuration {
-    
-    NSInteger minutes = (NSInteger)(timeDuration / 60);
-    NSInteger seconds = (NSInteger)timeDuration % 60;
-    
-    NSString *timeStr = [NSString stringWithFormat:@"%zd:%02zd", minutes, seconds];
-    
-    return timeStr;
 }
 
 - (void)startCallTimer {
@@ -647,6 +650,8 @@ QMCallManagerDelegate
     
     [[QMCore instance].callManager stopAllSounds];
     
+    [[QMCore instance].callManager sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
+    
     self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_USER_DOESNT_ANSWER", nil);
 }
 
@@ -703,7 +708,7 @@ QMCallManagerDelegate
     [[QMCore instance].callManager stopAllSounds];
     
     [self stopCallTimer];
-    self.callInfoView.bottomText = [NSString stringWithFormat:@"%@ - %@", NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil), [self stringWithTimeDuration:self.callDuration]];
+    self.callInfoView.bottomText = [NSString stringWithFormat:@"%@ - %@", NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil), QMStringForTimeInterval(self.callDuration)];
 }
 
 - (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)__unused userID {
