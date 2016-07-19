@@ -1,10 +1,10 @@
 PODS:
-  - Bolts (1.8.0):
-    - Bolts/AppLinks (= 1.8.0)
-    - Bolts/Tasks (= 1.8.0)
-  - Bolts/AppLinks (1.8.0):
+  - Bolts (1.8.4):
+    - Bolts/AppLinks (= 1.8.4)
+    - Bolts/Tasks (= 1.8.4)
+  - Bolts/AppLinks (1.8.4):
     - Bolts/Tasks
-  - Bolts/Tasks (1.8.0)
+  - Bolts/Tasks (1.8.4)
   - Crashlytics (3.7.2):
     - Fabric (~> 1.6.3)
   - Digits (1.15.3):
@@ -31,36 +31,37 @@ PODS:
     - FLAnimatedImage (~> 1.0.8)
     - NYTPhotoViewer/Core
   - NYTPhotoViewer/Core (1.1.0)
-  - QMCVDevelopment (0.3.8):
-    - QMCVDevelopment/Categories (= 0.3.8)
-    - QMCVDevelopment/KeyboardViewController (= 0.3.8)
-    - QMCVDevelopment/Protocols (= 0.3.8)
-    - QMCVDevelopment/QMChatSection (= 0.3.8)
-    - QMCVDevelopment/Utils (= 0.3.8)
-    - QMCVDevelopment/Views (= 0.3.8)
+  - QMCVDevelopment (0.3.9):
+    - QMCVDevelopment/Categories (= 0.3.9)
+    - QMCVDevelopment/KeyboardViewController (= 0.3.9)
+    - QMCVDevelopment/Protocols (= 0.3.9)
+    - QMCVDevelopment/QMChatSection (= 0.3.9)
+    - QMCVDevelopment/Utils (= 0.3.9)
+    - QMCVDevelopment/Views (= 0.3.9)
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/Categories (0.3.8):
+  - QMCVDevelopment/Categories (0.3.9):
+    - QMCVDevelopment/Utils
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/KeyboardViewController (0.3.8):
+  - QMCVDevelopment/KeyboardViewController (0.3.9):
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/Protocols (0.3.8):
+  - QMCVDevelopment/Protocols (0.3.9):
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/QMChatSection (0.3.8):
+  - QMCVDevelopment/QMChatSection (0.3.9):
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/Utils (0.3.8):
+  - QMCVDevelopment/Utils (0.3.9):
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/Views (0.3.8):
+  - QMCVDevelopment/Views (0.3.9):
     - QMCVDevelopment/Categories
     - QMCVDevelopment/Protocols
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
-  - QMServicesDevelopment (0.4.2):
+  - QMServicesDevelopment (0.4.3):
     - Bolts (>= 1.5.0)
   - Reachability (3.2)
   - SDWebImage (3.8.1):
@@ -105,14 +106,14 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
-    :commit: bb4d8dbe6856e8220d32ac5116e252810f18a7f2
+    :commit: 48ad79fbbc072b41f0233370ea3857d5ff5aa4ac
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: f2a9564567ece4edf6b5845f228dcf1716250a9d
+    :commit: c23e6ed684e4ea66f3aff261fe4d45cf0971ff05
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
-  Bolts: 127daec4981dab569d07314c198dfcae47f4ce4c
+  Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
   Crashlytics: 130ab943f8c78cda7a814b434f270b2e2c8a3cba
   Digits: 9823f8aad766c0aa824fac9b08938e22bc635fac
   Fabric: caf7580c725e64db144f610ac65cd60956911dc7
@@ -124,8 +125,8 @@ SPEC CHECKSUMS:
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
-  QMCVDevelopment: 8db3931015dda7d773b6c8fdeedac2cc219e359a
-  QMServicesDevelopment: 4a666baa20ff2da3e5d8b538b281870cfd56b146
+  QMCVDevelopment: 77001b5c70ba38570c0e2113eaf546fa75d301fd
+  QMServicesDevelopment: e1ae5877d90dc5e713be283b788491eb19c93f9e
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 35f9627a3e44b4f292a8a8ce6a531fa488239b91
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
@@ -134,6 +135,6 @@ SPEC CHECKSUMS:
   TwitterCore: cce24b3c798993ccde72787ea79ea9a478b284e4
   UIDevice-Hardware: de848ac4b53de555f70ff1a32877454d221c71d1
 
-PODFILE CHECKSUM: 6f7ea378487ac005df8ff47e8cfdb54f152c7edc
+PODFILE CHECKSUM: a6eccb5288730558be399fa1ac7f436057173e77
 
 COCOAPODS: 1.0.1

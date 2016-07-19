@@ -131,14 +131,20 @@ static const NSUInteger kQMStatusStringNamesLimit = 5;
                 }
                     
                     break;
-                default:
+                
+                case QMDialogUpdateTypeNone:
                     break;
             }
         }
             break;
-        default:
+
+        case QMMessageTypeText:
+            break;
+            
+        case QMMessageTypeCreateGroupDialog:
             break;
     }
+    
     return messageText;
 }
 

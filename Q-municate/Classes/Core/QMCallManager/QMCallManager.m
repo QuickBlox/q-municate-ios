@@ -396,6 +396,66 @@ QBRTCClientDelegate
     }];
 }
 
+#pragma mark - Call notifications
+
+- (QBChatMessage *)_callNotificationMessageWithType:(QMCallNotificationType)type state:(QMCallNotificationState)state {
+    
+    NSUInteger senderID = self.serviceManager.currentProfile.userData.ID;
+    
+    QBChatMessage *message = [QBChatMessage message];
+    message.text = kQMCallNotificationMessage;
+    message.senderID = senderID;
+    message.markable = YES;
+    message.dateSent = [NSDate date];
+    message.callNotificationType = type;
+    message.callNotificationState = state;
+    
+    NSUInteger initiatorID = self.session.initiatorID.unsignedIntegerValue;
+    message.callerUserID = initiatorID;
+    message.calleeUserIDs = [NSIndexSet indexSetWithIndex:initiatorID == senderID ? self.opponentUser.ID : initiatorID];
+    
+    return message;
+}
+
+- (void)_sendNotificationMessage:(QBChatMessage *)message {
+    
+    QBChatDialog *chatDialog = [self.serviceManager.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:self.opponentUser.ID];
+    
+    if (chatDialog != nil) {
+        
+        message.dialogID = chatDialog.ID;
+        [self.serviceManager.chatService sendMessage:message
+                                            toDialog:chatDialog
+                                       saveToHistory:YES
+                                       saveToStorage:YES];
+    }
+    else {
+        
+        [[self.serviceManager.chatService createPrivateChatDialogWithOpponentID:self.opponentUser.ID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
+            
+            message.dialogID = t.result.ID;
+            [self.serviceManager.chatService sendMessage:message
+                                                toDialog:t.result
+                                           saveToHistory:YES
+                                           saveToStorage:YES];
+            
+            return nil;
+        }];
+    }
+}
+
+- (void)sendCallNotificationMessageWithState:(QMCallNotificationState)state duration:(NSTimeInterval)duration {
+    
+    QBChatMessage *message = [self _callNotificationMessageWithType:self.session.conferenceType == QBRTCConferenceTypeAudio ? QMCallNotificationTypeAudio : QMCallNotificationTypeVideo state:state];
+    
+    if (duration > 0) {
+        
+        message.callDuration = duration;
+    }
+    
+    [self _sendNotificationMessage:message];
+}
+
 #pragma mark - Helpers
 
 - (void)showAlertWithTitle:(NSString *)title message:(NSString *)message {

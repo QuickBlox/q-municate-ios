@@ -20,6 +20,8 @@
 #import "QMLocationViewController.h"
 #import "QMAlert.h"
 #import "QMPhoto.h"
+#import "QMCallNotificationItem.h"
+#import "QMHelpers.h"
 
 // helpers
 #import "QMChatButtonsFactory.h"
@@ -27,6 +29,7 @@
 #import "QBChatDialog+OpponentID.h"
 #import <QMDateUtils.h>
 #import <UIImageView+QMLocationSnapshot.h>
+#import "QBChatMessage+QMCallNotifications.h"
 
 // external
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
@@ -37,6 +40,8 @@ static const CGFloat kQMAttachmentCellSize = 200.0f;
 static const CGFloat kQMWidthPadding = 40.0f;
 static const CGFloat kQMAvatarSize = 28.0f;
 static const CGFloat kQMGroupAvatarSize = 30.0f;
+
+static NSString * const kQMTextAttachmentSpacing = @"  ";
 
 @interface QMChatVC ()
 
@@ -456,7 +461,7 @@ NYTPhotosViewControllerDelegate
         
         return item.senderID == self.senderID ? [QMChatLocationOutgoingCell class] : [QMChatLocationIncomingCell class];
     }
-    else if ([item isNotificatonMessage]) {
+    else if ([item isNotificatonMessage] || [item isCallNotificationMessage]) {
         
         NSUInteger opponentID = [self.chatDialog opponentID];
         BOOL isFriend = [[QMCore instance].contactManager isFriendWithUserID:opponentID];
@@ -509,6 +514,7 @@ NYTPhotosViewControllerDelegate
     NSString *message = nil;
     UIColor *textColor = nil;
     UIFont *font = nil;
+    UIImage *iconImage = nil;
     
     if ([messageItem isNotificatonMessage]) {
         
@@ -531,6 +537,16 @@ NYTPhotosViewControllerDelegate
             font = [UIFont systemFontOfSize:13.0f];
         }
     }
+    else if ([messageItem isCallNotificationMessage]) {
+        
+        textColor = [UIColor whiteColor];
+        font = [UIFont systemFontOfSize:13.0f];
+        
+        QMCallNotificationItem *callNotificationItem = [[QMCallNotificationItem alloc] initWithCallNotificationMessage:messageItem];
+        
+        message = callNotificationItem.notificationText;
+        iconImage = callNotificationItem.iconImage;
+    }
     else {
         
         message = messageItem.text;
@@ -542,8 +558,27 @@ NYTPhotosViewControllerDelegate
     paragraphStyle.lineSpacing = 8.0f;
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor,
                                   NSFontAttributeName:font,
-                                  NSParagraphStyleAttributeName:paragraphStyle};
-    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:message ?: @"" attributes:attributes];
+                                  NSParagraphStyleAttributeName:paragraphStyle };
+    
+    NSAttributedString *attributedString = nil;
+    if (iconImage != nil) {
+        
+        NSString *messageText = message.length > 0 ? [NSString stringWithFormat:@"%@%@", kQMTextAttachmentSpacing, message] : kQMTextAttachmentSpacing;
+        NSMutableAttributedString *mutableAttrStr = [[NSMutableAttributedString alloc] initWithString:messageText attributes:attributes];
+        
+        NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
+        textAttachment.image = iconImage;
+        textAttachment.bounds = CGRectOfSize(iconImage.size);
+        
+        NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
+        [mutableAttrStr insertAttributedString:attrStringWithImage atIndex:0];
+        
+        attributedString = [mutableAttrStr copy];
+    }
+    else {
+        
+        attributedString = [[NSAttributedString alloc] initWithString:message ?: @"" attributes:attributes];
+    }
     
     return attributedString;
 }
@@ -613,6 +648,12 @@ NYTPhotosViewControllerDelegate
                                                                   withConstraints:CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), CGFLOAT_MAX)
                                                            limitedToNumberOfLines:0];
         size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), kQMAttachmentCellSize + (CGFloat)ceil(bottomLabelSize.height));
+    }
+    else if (viewClass == [QMChatNotificationCell class]) {
+        
+        NSAttributedString *attributedString = [self attributedStringForItem:item];
+        
+        size = [attributedString boundingRectWithSize:CGSizeMake(maxWidth, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size;
     }
     else {
         
@@ -735,7 +776,7 @@ NYTPhotosViewControllerDelegate
                                          limitedToNumberOfLines:0];
     }
     
-    layoutModel.bottomLabelHeight = ceil(size.height);
+    layoutModel.bottomLabelHeight = (CGFloat)ceil(size.height);
     
     return layoutModel;
 }
@@ -747,6 +788,8 @@ NYTPhotosViewControllerDelegate
     
     currentCell.delegate = self;
     currentCell.containerView.highlightColor = QMChatCellHighlightedColor();
+    
+    QBChatMessage *message = [self.chatSectionManager messageForIndexPath:indexPath];
     
     if ([cell isKindOfClass:[QMChatOutgoingCell class]]
         || [cell isKindOfClass:[QMChatAttachmentOutgoingCell class]]
@@ -767,7 +810,6 @@ NYTPhotosViewControllerDelegate
         /**
          *  Setting opponent avatar
          */
-        QBChatMessage* message = [self.chatSectionManager messageForIndexPath:indexPath];
         QBUUser *sender = [[QMCore instance].usersService.usersMemoryStorage userWithID:message.senderID];
         
         QMImageView *avatarView = [(QMChatCell *)cell avatarView];
@@ -785,8 +827,16 @@ NYTPhotosViewControllerDelegate
     }
     else if ([cell isKindOfClass:[QMChatNotificationCell class]]) {
         
-        currentCell.containerView.bgColor = QMChatNotificationCellColor();
         currentCell.userInteractionEnabled = NO;
+        
+        if (message.callNotificationState == QMCallNotificationStateMissedNoAnswer) {
+            
+                currentCell.containerView.bgColor = QMChatRedNotificationCellColor();
+        }
+        else {
+            
+            currentCell.containerView.bgColor = QMChatNotificationCellColor();
+        }
     }
     else if ([cell isKindOfClass:[QMChatContactRequestCell class]]) {
         
@@ -794,8 +844,6 @@ NYTPhotosViewControllerDelegate
         currentCell.layer.cornerRadius = 8;
         currentCell.clipsToBounds = YES;
     }
-    
-    QBChatMessage* message = [self.chatSectionManager messageForIndexPath:indexPath];
     
     if ([cell conformsToProtocol:@protocol(QMChatAttachmentCell)]) {
         
@@ -983,7 +1031,7 @@ NYTPhotosViewControllerDelegate
 - (void)_sendLocationMessage:(CLLocationCoordinate2D)locationCoordinate {
     
     QBChatMessage *message = [QBChatMessage message];
-    message.text = @"Location";
+    message.text = kQMLocationNotificationMessage;
     message.senderID = self.senderID;
     message.markable = YES;
     message.deliveredIDs = @[@(self.senderID)];
