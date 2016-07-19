@@ -58,9 +58,6 @@
 "QM_STR_MISSED_CALL" = "Missed Call";
 "QM_STR_MISSED_VIDEO_CALL" = "Missed Video Call";
 
-"QM_STR_REJECTED_CALL" = "Rejected Call";
-"QM_STR_REJECTED_VIDEO_CALL" = "Rejected Video Call";
-
 "QM_STR_NO_ANSWER" = "No Answer";
 
 // *********** Notifications ***********
