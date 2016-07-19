@@ -33,6 +33,7 @@
 		581BAC8E1CAD8DD900E0567D /* QMColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 581BAC8D1CAD8DD900E0567D /* QMColors.m */; };
 		581DA1D01BF3732900F75D8B /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1CF1BF3732900F75D8B /* libc++.tbd */; };
 		581DA1D21BF373A100F75D8B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1D11BF373A100F75D8B /* VideoToolbox.framework */; };
+		581F6E221D3E3E1C0087BC7A /* QMHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 581F6E211D3E3E1C0087BC7A /* QMHelpers.m */; };
 		5838FD531D378EB900DB97BB /* QMCallNotificationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 5838FD521D378EB900DB97BB /* QMCallNotificationItem.m */; };
 		5839F26E1CC531AD0055EBF8 /* QMBaseTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839F26D1CC531AD0055EBF8 /* QMBaseTitleView.m */; };
 		5839F2761CC533A30055EBF8 /* QMGroupHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839F2751CC533A30055EBF8 /* QMGroupHeaderView.m */; };
@@ -213,6 +214,8 @@
 		581BAC8D1CAD8DD900E0567D /* QMColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMColors.m; sourceTree = "<group>"; };
 		581DA1CF1BF3732900F75D8B /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		581DA1D11BF373A100F75D8B /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		581F6E201D3E3E1C0087BC7A /* QMHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMHelpers.h; path = QMHelpers/QMHelpers.h; sourceTree = "<group>"; };
+		581F6E211D3E3E1C0087BC7A /* QMHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMHelpers.m; path = QMHelpers/QMHelpers.m; sourceTree = "<group>"; };
 		5838FD511D378EB900DB97BB /* QMCallNotificationItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMCallNotificationItem.h; path = QMCallNotificationItem/QMCallNotificationItem.h; sourceTree = "<group>"; };
 		5838FD521D378EB900DB97BB /* QMCallNotificationItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMCallNotificationItem.m; path = QMCallNotificationItem/QMCallNotificationItem.m; sourceTree = "<group>"; };
 		5839F26C1CC531AD0055EBF8 /* QMBaseTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMBaseTitleView.h; sourceTree = "<group>"; };
@@ -568,6 +571,7 @@
 		55A8B04F1965986A00B5D33B /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				581F6E1F1D3E3DF90087BC7A /* QMHelpers */,
 				58FD668B1CEF12AD00B72425 /* QMAlert */,
 				581BAC8B1CAD8DCA00E0567D /* QMColors */,
 				5524C2CF1998B560007450DB /* QMImagePicker */,
@@ -696,6 +700,15 @@
 				581BAC8D1CAD8DD900E0567D /* QMColors.m */,
 			);
 			path = QMColors;
+			sourceTree = "<group>";
+		};
+		581F6E1F1D3E3DF90087BC7A /* QMHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				581F6E201D3E3E1C0087BC7A /* QMHelpers.h */,
+				581F6E211D3E3E1C0087BC7A /* QMHelpers.m */,
+			);
+			name = QMHelpers;
 			sourceTree = "<group>";
 		};
 		582D72FB1D099F7F0083F22E /* QMSettingsFooterView */ = {
@@ -2129,6 +2142,7 @@
 				58D847931C89A9FE000C40BA /* QMNoResultsCell.m in Sources */,
 				58B3C9BC1CB3EE8400B08A27 /* QMGroupOccupantsDataSource.m in Sources */,
 				58B3C9D61CB6827600B08A27 /* NSArray+Intersection.m in Sources */,
+				581F6E221D3E3E1C0087BC7A /* QMHelpers.m in Sources */,
 				58D8478F1C8886D8000C40BA /* QMGlobalSearchDataProvider.m in Sources */,
 				5868B0641CE9C68C004F9233 /* QMPermissions.m in Sources */,
 				584A6DC51C9DC80900B7D641 /* QMTagView.m in Sources */,

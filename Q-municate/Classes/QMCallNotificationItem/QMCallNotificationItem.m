@@ -8,6 +8,7 @@
 
 #import "QMCallNotificationItem.h"
 #import "QMCore.h"
+#import "QMHelpers.h"
 
 #import "QBChatMessage+QMCallNotifications.h"
 
@@ -127,11 +128,7 @@ static UIImage *incomingVideoIcon() {
                     }
                 }
                 
-                double minutes = floor(message.callDuration/60);
-                double seconds = round(message.callDuration - minutes * 60);
-                NSString *timeStr = [NSString stringWithFormat:@"%tu:%tu", (NSUInteger)minutes, (NSUInteger)seconds];
-                
-                _notificationText = [NSString stringWithFormat:@"%@, %@", _notificationText, timeStr];
+                _notificationText = [NSString stringWithFormat:@"%@, %@", _notificationText, QMStringForTimeInterval(message.callDuration)];
                 
                 break;
             }
@@ -149,24 +146,6 @@ static UIImage *incomingVideoIcon() {
                     _iconImage = missedVideoIcon();
                     
                     _notificationText = message.callerUserID == [QMCore instance].currentProfile.userData.ID ? NSLocalizedString(@"QM_STR_NO_ANSWER", nil) : NSLocalizedString(@"QM_STR_MISSED_VIDEO_CALL", nil);
-                }
-                
-                break;
-            }
-                
-            case QMCallNotificationStateReject: {
-                
-                if (message.callNotificationType == QMCallNotificationTypeAudio) {
-                    
-                    _iconImage = missedAudioIcon();
-                    
-                    _notificationText = NSLocalizedString(@"QM_STR_REJECTED_CALL", nil);
-                }
-                else {
-                    
-                    _iconImage = missedVideoIcon();
-                    
-                    _notificationText = NSLocalizedString(@"QM_STR_REJECTED_VIDEO_CALL", nil);
                 }
                 
                 break;

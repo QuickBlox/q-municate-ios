@@ -19,8 +19,7 @@ typedef NS_ENUM(NSUInteger, QMCallNotificationState) {
     
     QMCallNotificationStateNone,
     QMCallNotificationStateHangUp,
-    QMCallNotificationStateMissedNoAnswer,
-    QMCallNotificationStateReject,
+    QMCallNotificationStateMissedNoAnswer
 };
 
 @interface QBChatMessage (QMCallNotifications)

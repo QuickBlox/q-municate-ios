@@ -40,6 +40,8 @@ static const CGFloat kQMWidthPadding = 40.0f;
 static const CGFloat kQMAvatarSize = 28.0f;
 static const CGFloat kQMGroupAvatarSize = 30.0f;
 
+static NSString * const kQMTextAttachmentSpacing = @"  ";
+
 @interface QMChatVC ()
 
 <
@@ -458,7 +460,7 @@ NYTPhotosViewControllerDelegate
         
         return item.senderID == self.senderID ? [QMChatLocationOutgoingCell class] : [QMChatLocationIncomingCell class];
     }
-    else if ([item isNotificatonMessage]) {
+    else if ([item isNotificatonMessage] || [item isCallNotificationMessage]) {
         
         NSUInteger opponentID = [self.chatDialog opponentID];
         BOOL isFriend = [[QMCore instance].contactManager isFriendWithUserID:opponentID];
@@ -556,20 +558,25 @@ NYTPhotosViewControllerDelegate
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor,
                                   NSFontAttributeName:font,
                                   NSParagraphStyleAttributeName:paragraphStyle };
-    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:message ?: @"" attributes:attributes];
     
+    NSAttributedString *attributedString = nil;
     if (iconImage != nil) {
         
+        NSString *messageText = message.length > 0 ? [NSString stringWithFormat:@"%@%@", kQMTextAttachmentSpacing, message] : kQMTextAttachmentSpacing;
+        NSMutableAttributedString *mutableAttrStr = [[NSMutableAttributedString alloc] initWithString:messageText attributes:attributes];
+        
         NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
-        UIImage *image = [UIImage imageNamed:@"qm-ic-video-missing"];
-        textAttachment.image = image;
-        textAttachment.bounds = CGRectMake(0, 0, 16, 16);
+        textAttachment.image = iconImage;
+        textAttachment.bounds = CGRectOfSize(iconImage.size);
         
         NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
-        
-        NSMutableAttributedString *mutableAttrStr = [attributedString mutableCopy];
         [mutableAttrStr insertAttributedString:attrStringWithImage atIndex:0];
+        
         attributedString = [mutableAttrStr copy];
+    }
+    else {
+        
+        attributedString = [[NSAttributedString alloc] initWithString:message ?: @"" attributes:attributes];
     }
     
     return attributedString;
@@ -821,11 +828,9 @@ NYTPhotosViewControllerDelegate
         
         currentCell.userInteractionEnabled = NO;
         
-        if ([message isCallNotificationMessage]
-            && (message.callNotificationState == QMCallNotificationStateMissedNoAnswer
-                || message.callNotificationState == QMCallNotificationStateReject)) {
+        if (message.callNotificationState == QMCallNotificationStateMissedNoAnswer) {
             
-            currentCell.containerView.bgColor = QMChatRedNotificationCellColor();
+                currentCell.containerView.bgColor = QMChatRedNotificationCellColor();
         }
         else {
             
@@ -1025,7 +1030,7 @@ NYTPhotosViewControllerDelegate
 - (void)_sendLocationMessage:(CLLocationCoordinate2D)locationCoordinate {
     
     QBChatMessage *message = [QBChatMessage message];
-    message.text = @"Location";
+    message.text = kQMLocationNotificationMessage;
     message.senderID = self.senderID;
     message.markable = YES;
     message.deliveredIDs = @[@(self.senderID)];
