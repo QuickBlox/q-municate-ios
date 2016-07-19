@@ -19,6 +19,9 @@
 
 #endif
 
+#define CGRectOfSize(size) \
+(CGRect) {CGPointZero, size};
+
 // storyboards
 static NSString *const kQMMainStoryboard = @"Main";
 static NSString *const kQMChatStoryboard = @"Chat";
@@ -28,6 +31,8 @@ static NSString *const kQMPushNotificationDialogIDKey = @"dialog_id";
 
 static NSString *const kQMDialogsUpdateNotificationMessage = @"Notification message";
 static NSString *const kQMContactRequestNotificationMessage = @"Contact request";
+static NSString *const kQMLocationNotificationMessage = @"Location";
+static NSString *const kQMCallNotificationMessage = @"Call notification";
 
 static const CGFloat kQMBaseAnimationDuration = 0.2f;
 static const CGFloat kQMSlashAnimationDuration = 0.1f;

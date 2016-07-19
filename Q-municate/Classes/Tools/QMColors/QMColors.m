@@ -136,7 +136,7 @@ UIColor *QMChatRedNotificationCellColor() {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
-        color = [UIColor colorWithRed:160.0f/255.0f green:0 blue:0 alpha:1.0f];
+        color = [UIColor colorWithRed:197.0f/255.0f green:144.0f/255.0f blue:128.0f/255.0f alpha:1.0f];
     });
     
     return color;

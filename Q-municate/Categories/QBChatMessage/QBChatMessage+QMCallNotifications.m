@@ -33,7 +33,7 @@ static NSString * const kQMCallNotificationCallDurationKey = @"callDuration";
 
 - (QMCallNotificationType)callNotificationType {
     
-    return [[self _context][kQMCallNotificationTypeKey] unsignedIntegerValue];
+    return [[self _context][kQMCallNotificationTypeKey] integerValue];
 }
 
 - (void)setCallNotificationType:(QMCallNotificationType)callNotificationType {
@@ -45,7 +45,7 @@ static NSString * const kQMCallNotificationCallDurationKey = @"callDuration";
 
 - (QMCallNotificationState)callNotificationState {
     
-    return [[self _context][kQMCallNotificationStateKey] unsignedIntegerValue];
+    return [[self _context][kQMCallNotificationStateKey] integerValue];
 }
 
 - (void)setCallNotificationState:(QMCallNotificationState)callNotificationState {
@@ -57,7 +57,7 @@ static NSString * const kQMCallNotificationCallDurationKey = @"callDuration";
 
 - (NSUInteger)callerUserID {
     
-    return [[self _context][kQMCallNotificationCallerUserIDKey] unsignedIntegerValue];
+    return [[self _context][kQMCallNotificationCallerUserIDKey] integerValue];
 }
 
 - (void)setCallerUserID:(NSUInteger)callerUserID {

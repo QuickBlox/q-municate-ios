@@ -8,6 +8,8 @@
 
 #import "QMBaseService.h"
 
+#import "QBChatMessage+QMCallNotifications.h"
+
 @class QMCallManager;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -79,6 +81,14 @@ NS_ASSUME_NONNULL_BEGIN
  *  Stop all active sounds and its timers.
  */
 - (void)stopAllSounds;
+
+/**
+ *  Send call notification message with state.
+ *
+ *  @param state    call notification state
+ *  @param duration call duration if needed
+ */
+- (void)sendCallNotificationMessageWithState:(QMCallNotificationState)state duration:(NSTimeInterval)duration;
 
 @end
 
