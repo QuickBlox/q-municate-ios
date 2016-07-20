@@ -89,6 +89,8 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [[UISearchBar appearance] setBarTintColor:[UIColor whiteColor]];
     [[UISearchBar appearance] setBackgroundImage:QMStatusBarBackgroundImage() forBarPosition:0 barMetrics:UIBarMetricsDefault];
     
+    [SVProgressHUD setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.92f]];
+    
     // Configuring external frameworks
     [Fabric with:@[CrashlyticsKit, DigitsKit]];
     [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
