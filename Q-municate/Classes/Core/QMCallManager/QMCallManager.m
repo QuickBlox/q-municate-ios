@@ -158,6 +158,9 @@ QBRTCClientDelegate
     if (self.session != nil) {
         // session in progress
         [session rejectCall:nil];
+        // sending appropriate notification
+        QBChatMessage *message = [self _callNotificationMessageForSession:session state:QMCallNotificationStateMissedNoAnswer];
+        [self _sendNotificationMessage:message];
         return;
     }
     
@@ -398,7 +401,8 @@ QBRTCClientDelegate
 
 #pragma mark - Call notifications
 
-- (QBChatMessage *)_callNotificationMessageWithType:(QMCallNotificationType)type state:(QMCallNotificationState)state {
+- (QBChatMessage *)_callNotificationMessageForSession:(QBRTCSession *)session
+                                                state:(QMCallNotificationState)state {
     
     NSUInteger senderID = self.serviceManager.currentProfile.userData.ID;
     
@@ -407,19 +411,24 @@ QBRTCClientDelegate
     message.senderID = senderID;
     message.markable = YES;
     message.dateSent = [NSDate date];
-    message.callNotificationType = type;
+    message.callNotificationType = session.conferenceType == QBRTCConferenceTypeAudio ? QMCallNotificationTypeAudio : QMCallNotificationTypeVideo;
     message.callNotificationState = state;
     
-    NSUInteger initiatorID = self.session.initiatorID.unsignedIntegerValue;
+    NSUInteger initiatorID = session.initiatorID.unsignedIntegerValue;
+    NSUInteger opponentID = [session.opponentsIDs.firstObject unsignedIntegerValue];
+    NSUInteger calleeID = initiatorID == senderID ? opponentID : initiatorID;
+    
     message.callerUserID = initiatorID;
-    message.calleeUserIDs = [NSIndexSet indexSetWithIndex:initiatorID == senderID ? self.opponentUser.ID : initiatorID];
+    message.calleeUserIDs = [NSIndexSet indexSetWithIndex:calleeID];
+    
+    message.recipientID = calleeID;
     
     return message;
 }
 
 - (void)_sendNotificationMessage:(QBChatMessage *)message {
     
-    QBChatDialog *chatDialog = [self.serviceManager.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:self.opponentUser.ID];
+    QBChatDialog *chatDialog = [self.serviceManager.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:message.recipientID];
     
     if (chatDialog != nil) {
         
@@ -431,7 +440,7 @@ QBRTCClientDelegate
     }
     else {
         
-        [[self.serviceManager.chatService createPrivateChatDialogWithOpponentID:self.opponentUser.ID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
+        [[self.serviceManager.chatService createPrivateChatDialogWithOpponentID:message.recipientID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
             
             message.dialogID = t.result.ID;
             [self.serviceManager.chatService sendMessage:message
@@ -446,7 +455,7 @@ QBRTCClientDelegate
 
 - (void)sendCallNotificationMessageWithState:(QMCallNotificationState)state duration:(NSTimeInterval)duration {
     
-    QBChatMessage *message = [self _callNotificationMessageWithType:self.session.conferenceType == QBRTCConferenceTypeAudio ? QMCallNotificationTypeAudio : QMCallNotificationTypeVideo state:state];
+    QBChatMessage *message = [self _callNotificationMessageForSession:self.session state:state];
     
     if (duration > 0) {
         

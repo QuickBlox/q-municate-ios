@@ -16,6 +16,7 @@
 #import <Crashlytics/Crashlytics.h>
 #import <DigitsKit/DigitsKit.h>
 #import <Flurry.h>
+#import <SVProgressHUD.h>
 
 
 #define DEVELOPMENT 1
