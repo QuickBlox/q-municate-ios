@@ -104,7 +104,7 @@ static NSString *const kQMBundleShortVersionString = @"CFBundleShortVersionStrin
         [self configureLabel:_copyrightLabel];
         
         // setting custom text
-        _copyrightLabel.text = NSLocalizedString(@"QM_STR_POWERED_BY_QUICKBLOX", nil);
+        _copyrightLabel.text = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"QM_STR_POWERED_BY_QUICKBLOX", nil), QuickbloxFrameworkVersion];
         [_copyrightLabel sizeToFit];
         
         // centering view and setting its y position

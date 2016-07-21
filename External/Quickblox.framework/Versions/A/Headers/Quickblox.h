@@ -1,10 +1,9 @@
 //
-// Quickblox.h
-// Quickblox
+//  Quickblox.h
+//  Quickblox
 //
-//  Copyright (c) 2012 QuickBlox. All rights reserved.
+//  Copyright (c) 2016 QuickBlox. All rights reserved.
 //
-// frameworkVersion 2.7.4
 
 #import <Quickblox/BaseServiceFramework.h>
 #import <Quickblox/ChatServiceFramework.h>
@@ -16,3 +15,6 @@
 #import <Quickblox/QBCustomObjectsHeader.h>
 #import <Quickblox/QBContentHeader.h>
 #import <Quickblox/QBChatHeader.h>
+
+//! Framework version 2.7.4
+FOUNDATION_EXPORT NSString * const QuickbloxFrameworkVersion;
