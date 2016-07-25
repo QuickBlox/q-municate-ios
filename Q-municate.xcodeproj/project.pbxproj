@@ -84,8 +84,6 @@
 		588CF1021CA6BF8200B23C00 /* QMNotificationPanelUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 588CF1011CA6BF8200B23C00 /* QMNotificationPanelUtils.m */; };
 		588CF1061CA6C01200B23C00 /* QMNotificationPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 588CF1051CA6C01200B23C00 /* QMNotificationPanelView.m */; };
 		588CF10D1CA6C83600B23C00 /* QMNotificationPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 588CF10C1CA6C83600B23C00 /* QMNotificationPanel.m */; };
-		5892FED01D4224F300A9C3C8 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58CCD2AD1BE778DD00E99C16 /* Quickblox.framework */; };
-		5892FED11D4224F300A9C3C8 /* Quickblox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 58CCD2AD1BE778DD00E99C16 /* Quickblox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		589407B41BB958DE00C1CA78 /* QBUpdateUserParameters+CustomData.m in Sources */ = {isa = PBXBuildFile; fileRef = 589407B31BB958DE00C1CA78 /* QBUpdateUserParameters+CustomData.m */; };
 		5897928D1C998C4A00CC6438 /* QMNoContactsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5897928C1C998C4A00CC6438 /* QMNoContactsCell.m */; };
 		589792991C99941400CC6438 /* QMAlphabetizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 589792981C99941400CC6438 /* QMAlphabetizer.m */; };
@@ -119,6 +117,7 @@
 		58C261F41CDC926000AA9CF2 /* QMUpdateUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C261F31CDC926000AA9CF2 /* QMUpdateUserViewController.m */; };
 		58C64D031C905F9800F1387B /* QMChatVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C64D021C905F9800F1387B /* QMChatVC.m */; };
 		58C64D071C90699A00F1387B /* QMChatButtonsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C64D061C90699A00F1387B /* QMChatButtonsFactory.m */; };
+		58CCD2AE1BE778DD00E99C16 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58CCD2AD1BE778DD00E99C16 /* Quickblox.framework */; };
 		58D81C231BBA86920046B550 /* QuickbloxWebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D81C221BBA86920046B550 /* QuickbloxWebRTC.framework */; };
 		58D847581C848272000C40BA /* QMDialogsSearchDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D847571C848272000C40BA /* QMDialogsSearchDataSource.m */; };
 		58D847641C85A02B000C40BA /* QMDialogCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58D847631C85A02B000C40BA /* QMDialogCell.xib */; };
@@ -166,20 +165,6 @@
 		69DB5EF518E31D6400277226 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69DB5EF418E31D6400277226 /* MessageUI.framework */; };
 		86FD874D1982512000B6FA43 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FD874C1982512000B6FA43 /* GLKit.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		5892FED21D4224F300A9C3C8 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				5892FED11D4224F300A9C3C8 /* Quickblox.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		269116E9D6D043D8FAC9E1D8 /* Pods-Q-municate.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Q-municate.release.xcconfig"; path = "Pods/Target Support Files/Pods-Q-municate/Pods-Q-municate.release.xcconfig"; sourceTree = "<group>"; };
@@ -473,10 +458,10 @@
 			files = (
 				581DA1D21BF373A100F75D8B /* VideoToolbox.framework in Frameworks */,
 				581DA1D01BF3732900F75D8B /* libc++.tbd in Frameworks */,
+				58CCD2AE1BE778DD00E99C16 /* Quickblox.framework in Frameworks */,
 				86FD874D1982512000B6FA43 /* GLKit.framework in Frameworks */,
 				69CF189D18AE1C6A003262EF /* CoreData.framework in Frameworks */,
 				58D81C231BBA86920046B550 /* QuickbloxWebRTC.framework in Frameworks */,
-				5892FED01D4224F300A9C3C8 /* Quickblox.framework in Frameworks */,
 				69DB5EF518E31D6400277226 /* MessageUI.framework in Frameworks */,
 				690A271518CA0F35003D6B80 /* AddressBook.framework in Frameworks */,
 				69CF18A918AE1C9F003262EF /* Security.framework in Frameworks */,
@@ -1922,7 +1907,6 @@
 				584B79C41C452A7A00356FB9 /* ShellScript */,
 				A3EB8C6F63D28CDDF9DD7F5E /* [CP] Embed Pods Frameworks */,
 				CFF0567CBCC50E2F953F149B /* [CP] Copy Pods Resources */,
-				5892FED21D4224F300A9C3C8 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2310,7 +2294,6 @@
 				);
 				INFOPLIST_FILE = "Q-municate/Supporting Files/Q-municate-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -2375,7 +2358,6 @@
 				);
 				INFOPLIST_FILE = "Q-municate/Supporting Files/Q-municate-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
