@@ -67,9 +67,17 @@
         
         QBChatDialog *chatDialog = self.items[indexPath.row];
         
+        NSString *dialogName = chatDialog.name;
+        
+        if (chatDialog.type == QBChatDialogTypePrivate) {
+            
+            QBUUser *user = [[QMCore instance].usersService.usersMemoryStorage userWithID:[chatDialog opponentID]];
+            dialogName = user.fullName;
+        }
+        
         UIAlertController *alertController = [UIAlertController
                                               alertControllerWithTitle:nil
-                                              message:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CONFIRM_DELETE_DIALOG", nil), chatDialog.name]
+                                              message:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CONFIRM_DELETE_DIALOG", nil), dialogName]
                                               preferredStyle:UIAlertControllerStyleAlert];
         
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
