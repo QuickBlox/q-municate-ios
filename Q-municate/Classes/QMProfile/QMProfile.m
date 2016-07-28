@@ -10,13 +10,14 @@
 #import "QMContent.h"
 #import "QMTasks.h"
 #import <SSKeychain.h>
+#import "QMCore.h"
 
-static NSString *const kQMUserDataKey = @"userData";
-static NSString *const kQMAccountType = @"accountType";
-static NSString *const kQMUserAgreementAcceptedKey = @"userAgreementAccepted";
-static NSString *const kQMPushNotificationsEnabled = @"pushNotificationsEnabled";
-static NSString *const kQMLastDialogsFetchingDate = @"lastDialogsFetchingDate";
-static NSString *const kQMAppExists = @"QMAppExists";
+static NSString * const kQMUserDataKey = @"userData";
+static NSString * const kQMAccountType = @"accountType";
+static NSString * const kQMUserAgreementAcceptedKey = @"userAgreementAccepted";
+static NSString * const kQMPushNotificationsEnabled = @"pushNotificationsEnabled";
+static NSString * const kQMLastDialogsFetchingDate = @"lastDialogsFetchingDate";
+static NSString * const kQMAppExists = @"QMAppExists";
 
 @interface QMProfile ()
 
@@ -74,6 +75,10 @@ static NSString *const kQMAppExists = @"QMAppExists";
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setBool:YES forKey:kQMAppExists];
+        
+        // updating user in users cache
+        [[QMCore instance].usersService.usersMemoryStorage addUser:self.userData];
+        [[QMUsersCache instance] insertOrUpdateUser:self.userData];
     }
     
     return success;
