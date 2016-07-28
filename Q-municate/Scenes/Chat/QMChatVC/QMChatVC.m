@@ -179,8 +179,7 @@ NYTPhotosViewControllerDelegate
         
         // set up opponent full name
         [self.onlineTitleView setTitle:[[QMCore instance].contactManager fullNameForUserID:[self.chatDialog opponentID]]];
-        BOOL isOpponentOnline = [[QMCore instance].contactManager isUserOnlineWithID:[self.chatDialog opponentID]];
-        [self setOpponentOnlineStatus:isOpponentOnline];
+        [self updateOpponentOnlineStatus];
         
         // configuring call buttons for opponent
         [self configureCallButtons];
@@ -204,8 +203,7 @@ NYTPhotosViewControllerDelegate
             }
             
             self.isOpponentTyping = NO;
-            BOOL isOnline = [[QMCore instance].contactManager isUserOnlineWithID:[self.chatDialog opponentID]];
-            [self setOpponentOnlineStatus:isOnline];
+            [self updateOpponentOnlineStatus];
         }];
     }
     else {
@@ -250,6 +248,7 @@ NYTPhotosViewControllerDelegate
                                                                                       
                                                                                       @strongify(self);
                                                                                       [self stopTyping];
+                                                                                      [self setOpponentOnlineStatus:NO];
                                                                                   }];
 }
 
@@ -266,6 +265,12 @@ NYTPhotosViewControllerDelegate
 }
 
 #pragma mark - Helpers & Utility
+
+- (void)updateOpponentOnlineStatus {
+    
+    BOOL isOnline = [[QMCore instance].contactManager isUserOnlineWithID:[self.chatDialog opponentID]];
+    [self setOpponentOnlineStatus:isOnline];
+}
 
 - (NSArray *)storedMessages {
     
@@ -1215,11 +1220,19 @@ NYTPhotosViewControllerDelegate
 - (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
     
     [self refreshMessages];
+    [self updateOpponentOnlineStatus];
 }
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
     
     [self refreshMessages];
+    [self updateOpponentOnlineStatus];
+}
+
+- (void)chatServiceChatDidAccidentallyDisconnect:(QMChatService *)__unused chatService {
+    
+    // chat disconnected, updating title status for user
+    [self setOpponentOnlineStatus:NO];
 }
 
 #pragma mark - QMChatAttachmentServiceDelegate
