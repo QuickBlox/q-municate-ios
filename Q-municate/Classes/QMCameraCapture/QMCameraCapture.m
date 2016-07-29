@@ -1,6 +1,6 @@
 //
-//  QBRTCCameraCapture.m
-//  QuickbloxWebRTC
+//  QMCameraCapture.m
+//  Q-municate
 //
 //  Created by Andrey Ivanov on 02.07.15.
 //  Copyright (c) 2015 QuickBlox Team. All rights reserved.
@@ -363,14 +363,6 @@ AVCaptureDevice * captureDeviceWithPosition(AVCaptureDevicePosition devicePositi
     [notificationCenter removeObserver:self];
 }
 
-+ (BOOL)isHighPerfomanceDimensions:(CMVideoDimensions)dimensions {
-    
-    int32_t width = dimensions.width;
-    int32_t height = dimensions.height;
-    
-    return (width > 640 && height > 480);
-}
-
 - (AVCaptureDeviceFormat *)bestDeviceFormatWithVideoFormat:(QBRTCVideoFormat *)videoFormat captureDevice:(AVCaptureDevice *)captureDevice {
     
     NSArray *formats = captureDevice.formats;
@@ -492,6 +484,9 @@ AVCaptureDevice * captureDeviceWithPosition(AVCaptureDevicePosition devicePositi
     CMSampleBufferGetSampleTimingInfo(sampleBuffer, 0, &info);
     
     QBRTCVideoFrame *videoFrame = [[QBRTCVideoFrame alloc] initWithPixelBuffer:pixelBuffer];
+    int64_t timestamp = (int64_t)(CMTimeGetSeconds(info.presentationTimeStamp) * NSEC_PER_SEC);
+    videoFrame.timestamp = timestamp;
+    
     [super sendVideoFrame:videoFrame];
     
     CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
