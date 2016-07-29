@@ -15,6 +15,7 @@
 #import "QMColors.h"
 #import "QMSoundManager.h"
 #import "QMHelpers.h"
+#import "QMCameraCapture.h"
 
 static UIColor *videoCallBarBackgroundColor() {
     
@@ -55,7 +56,7 @@ QMCallManagerDelegate
 @property (assign, nonatomic) BOOL disconnected;
 @property (assign, nonatomic, readonly) BOOL isVideoCall;
 @property (strong, nonatomic, readonly) QBRTCSession *session;
-@property (strong, nonatomic) QBRTCCameraCapture *cameraCapture;
+@property (strong, nonatomic) QMCameraCapture *cameraCapture;
 
 @property (strong, nonatomic) QMLocalVideoView *localVideoView;
 @property (strong, nonatomic) QBRTCRemoteVideoView *opponentVideoView;
@@ -105,7 +106,7 @@ QMCallManagerDelegate
         self.view.backgroundColor = QMVideoCallBackgroundColor();
         
         // configuring camera capture
-        self.cameraCapture = [[QBRTCCameraCapture alloc]
+        self.cameraCapture = [[QMCameraCapture alloc]
                               initWithVideoFormat:[QBRTCVideoFormat defaultFormat]
                               position:AVCaptureDevicePositionFront];
         [self.cameraCapture startSession];

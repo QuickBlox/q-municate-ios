@@ -51,6 +51,7 @@
 		584277D51C3FCFBA00CDE35B /* QMFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277D41C3FCFBA00CDE35B /* QMFacebook.m */; };
 		584277DC1C3FE5BC00CDE35B /* QMCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277DB1C3FE5BC00CDE35B /* QMCore.m */; };
 		584277E01C3FED0E00CDE35B /* QMContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 584277DF1C3FED0E00CDE35B /* QMContent.m */; };
+		5847923F1D4B63C700CD972E /* QMCameraCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = 5847923E1D4B63C700CD972E /* QMCameraCapture.m */; };
 		584A6D971C9D9D9F00B7D641 /* QMAlphabetizedDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 584A6D961C9D9D9F00B7D641 /* QMAlphabetizedDataSource.m */; };
 		584A6DB31C9DB7DC00B7D641 /* QMTagFieldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 584A6DB21C9DB7DC00B7D641 /* QMTagFieldView.m */; };
 		584A6DC51C9DC80900B7D641 /* QMTagView.m in Sources */ = {isa = PBXBuildFile; fileRef = 584A6DC41C9DC80900B7D641 /* QMTagView.m */; };
@@ -257,6 +258,8 @@
 		584277DB1C3FE5BC00CDE35B /* QMCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMCore.m; sourceTree = "<group>"; };
 		584277DE1C3FED0E00CDE35B /* QMContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMContent.h; sourceTree = "<group>"; };
 		584277DF1C3FED0E00CDE35B /* QMContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMContent.m; sourceTree = "<group>"; };
+		5847923D1D4B63C700CD972E /* QMCameraCapture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMCameraCapture.h; path = QMCameraCapture/QMCameraCapture.h; sourceTree = "<group>"; };
+		5847923E1D4B63C700CD972E /* QMCameraCapture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMCameraCapture.m; path = QMCameraCapture/QMCameraCapture.m; sourceTree = "<group>"; };
 		584A6D931C9D9AA700B7D641 /* QMConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = QMConstants.h; path = "Q-municate/QMConstants.h"; sourceTree = "<group>"; };
 		584A6D951C9D9D9F00B7D641 /* QMAlphabetizedDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAlphabetizedDataSource.h; sourceTree = "<group>"; };
 		584A6D961C9D9D9F00B7D641 /* QMAlphabetizedDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAlphabetizedDataSource.m; sourceTree = "<group>"; };
@@ -980,6 +983,15 @@
 				584277DF1C3FED0E00CDE35B /* QMContent.m */,
 			);
 			path = QMContent;
+			sourceTree = "<group>";
+		};
+		5847923C1D4B63A400CD972E /* QMCameraCapture */ = {
+			isa = PBXGroup;
+			children = (
+				5847923D1D4B63C700CD972E /* QMCameraCapture.h */,
+				5847923E1D4B63C700CD972E /* QMCameraCapture.m */,
+			);
+			name = QMCameraCapture;
 			sourceTree = "<group>";
 		};
 		584A6D941C9D9D4B00B7D641 /* QMAlphabetizedDataSource */ = {
@@ -1818,6 +1830,7 @@
 				58D8477D1C87138F000C40BA /* QMProtocols */,
 				580B3B541C3FF88500345081 /* QMTasks */,
 				58EFB83A1D378D05005F9DDF /* QMCallNotificationItem */,
+				5847923C1D4B63A400CD972E /* QMCameraCapture */,
 				55A8B04F1965986A00B5D33B /* Tools */,
 			);
 			path = Classes;
@@ -2124,6 +2137,7 @@
 				58D847811C871469000C40BA /* QMSearchDataProvider.m in Sources */,
 				559BDFEA19618D3D000588FE /* QMWelcomeScreenViewController.m in Sources */,
 				5868B06C1CE9C6ED004F9233 /* QMCallInfoView.m in Sources */,
+				5847923F1D4B63C700CD972E /* QMCameraCapture.m in Sources */,
 				58FA41671C96B21200E61586 /* QMMessageStatusStringBuilder.m in Sources */,
 				55D8AD0419AC753600DAF79F /* QMImagePicker.m in Sources */,
 				58F398091CB7DE91006C1D5E /* QMChatManager.m in Sources */,
@@ -2278,7 +2292,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				PROVISIONING_PROFILE = "8bc56ba9-5ba5-4eba-b466-9847c3203bf3";
+				PROVISIONING_PROFILE = "318e6309-600e-4347-87bc-8580aebda28d";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2387,7 +2401,7 @@
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "8bc56ba9-5ba5-4eba-b466-9847c3203bf3";
+				PROVISIONING_PROFILE = "318e6309-600e-4347-87bc-8580aebda28d";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
