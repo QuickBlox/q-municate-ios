@@ -86,8 +86,8 @@ DEPENDENCIES:
   - libextobjc/EXTScope (~> 0.4.1)
   - MPGNotification (~> 1.2)
   - NYTPhotoViewer (~> 1.1.0)
-  - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, branch `master`)
-  - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`, branch `master`)
+  - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, branch `development`)
+  - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`, branch `development`)
   - Reachability (~> 3.2)
   - SDWebImage (~> 3.6)
   - SSKeychain (~> 1.2.2)
@@ -98,18 +98,18 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   QMCVDevelopment:
-    :branch: master
+    :branch: development
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :branch: master
+    :branch: development
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
-    :commit: 48ad79fbbc072b41f0233370ea3857d5ff5aa4ac
+    :commit: 7f736eadb3879727f37091677886a62bed62562c
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: 80f9d654ab976f9b5bf2ec75f1eb7c7daefa588a
+    :commit: c083d3f20e97bec358ee29c8ebd1acfb7c2386c5
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
@@ -135,6 +135,6 @@ SPEC CHECKSUMS:
   TwitterCore: cce24b3c798993ccde72787ea79ea9a478b284e4
   UIDevice-Hardware: de848ac4b53de555f70ff1a32877454d221c71d1
 
-PODFILE CHECKSUM: 06f7985d004313be7f19f9b00270da27e6a5d158
+PODFILE CHECKSUM: a6eccb5288730558be399fa1ac7f436057173e77
 
 COCOAPODS: 1.0.1

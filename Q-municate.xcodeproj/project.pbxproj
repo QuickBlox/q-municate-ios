@@ -1936,6 +1936,7 @@
 				A3EB8C6F63D28CDDF9DD7F5E /* [CP] Embed Pods Frameworks */,
 				CFF0567CBCC50E2F953F149B /* [CP] Copy Pods Resources */,
 				581D97D31D460CF800976728 /* Embed Frameworks */,
+				5803F2BA1D4F568800AE4934 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -2023,6 +2024,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		5803F2BA1D4F568800AE4934 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quickblox.framework/strip-framework.sh\"";
+		};
 		584B79C41C452A7A00356FB9 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

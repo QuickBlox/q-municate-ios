@@ -352,7 +352,7 @@ AVCaptureDevice * captureDeviceWithPosition(AVCaptureDevicePosition devicePositi
 - (void)runtimeError:(NSNotification *)notification {
     
     NSDictionary *userInfo = notification.userInfo;
-    NSError *error = userInfo[AVCaptureSessionErrorKey];
+    __unused NSError *error = userInfo[AVCaptureSessionErrorKey];
     
     ILog(@"%@ Capture session encountered runtime error. %@", self, error);
 }
@@ -471,7 +471,7 @@ AVCaptureDevice * captureDeviceWithPosition(AVCaptureDevicePosition devicePositi
 
 #pragma mark AVCaptureVideoDataOutputSampleBufferDelegate
 
-- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
+- (void)captureOutput:(AVCaptureOutput *)__unused captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
        fromConnection:(AVCaptureConnection *)__unused connection {
     
     NSParameterAssert(captureOutput == self.videoDataOutput);

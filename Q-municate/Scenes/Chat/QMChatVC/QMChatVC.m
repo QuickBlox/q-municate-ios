@@ -376,6 +376,22 @@ NYTPhotosViewControllerDelegate
 #pragma mark - Toolbar actions
 
 - (void)didPressSendButton:(UIButton *)__unused button
+       withTextAttachments:(NSArray *)textAttachments
+                  senderId:(NSUInteger)__unused senderId
+         senderDisplayName:(NSString *)__unused senderDisplayName
+                      date:(NSDate *)__unused date {
+    
+    UIImage *attachmentImage = [(NSTextAttachment *)textAttachments.firstObject image];
+    
+    if (attachmentImage) {
+        
+        [self sendAttachmentMessageWithImage:attachmentImage];
+        [self finishSendingMessageAnimated:YES];
+    }
+    
+}
+
+- (void)didPressSendButton:(UIButton *)__unused button
            withMessageText:(NSString *)text
                   senderId:(NSUInteger)senderId
          senderDisplayName:(NSString *)__unused senderDisplayName
@@ -704,9 +720,7 @@ NYTPhotosViewControllerDelegate
     Class viewClass = [self viewClassForItem:[self.chatSectionManager messageForIndexPath:indexPath]];
     
     // disabling action performing for specific cells
-    if (viewClass == [QMChatAttachmentIncomingCell class]
-        || viewClass == [QMChatAttachmentOutgoingCell class]
-        || viewClass == [QMChatLocationIncomingCell class]
+    if (viewClass == [QMChatLocationIncomingCell class]
         || viewClass == [QMChatLocationOutgoingCell class]
         || viewClass == [QMChatNotificationCell class]
         || viewClass == [QMChatContactRequestCell class]){
@@ -717,11 +731,44 @@ NYTPhotosViewControllerDelegate
     return [super collectionView:collectionView canPerformAction:action forItemAtIndexPath:indexPath withSender:sender];
 }
 
-- (void)collectionView:(UICollectionView *)__unused collectionView performAction:(SEL)__unused action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)__unused sender {
+- (void)collectionView:(UICollectionView *)__unused collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)__unused sender {
     
-    QBChatMessage* message = [self.chatSectionManager messageForIndexPath:indexPath];
+    if (action == @selector(copy:)) {
+        
+        QBChatMessage *message = [self.chatSectionManager messageForIndexPath:indexPath];
+        
+        if ([message isMediaMessage]) {
+            
+            [[QMCore instance].chatService.chatAttachmentService localImageForAttachmentMessage:message completion:^(NSError __unused * error, UIImage *image) {
+                if (image) {
+                    
+                    [[UIPasteboard generalPasteboard] setValue:UIImageJPEGRepresentation(image, 1)
+                                             forPasteboardType:(NSString *)kUTTypeJPEG];
+                }
+            }];
+        }
+        else {
+            
+            [[UIPasteboard generalPasteboard] setString:message.text];
+        }
+    }
+}
+
+- (BOOL)placeHolderTextView:(QMPlaceHolderTextView *)__unused textView shouldPasteWithSender:(id)__unused sender {
     
-    [UIPasteboard generalPasteboard].string = message.text;
+    if ([UIPasteboard generalPasteboard].image) {
+        
+        NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
+        textAttachment.image = [UIPasteboard generalPasteboard].image;
+        textAttachment.bounds = CGRectMake(0, 0, 100, 100);
+        NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
+        [self.inputToolbar.contentView.textView setAttributedText:attrStringWithImage];
+        [self textViewDidChange:self.inputToolbar.contentView.textView];
+        
+        return NO;
+    }
+    
+    return YES;
 }
 
 #pragma mark - QMChatCollectionViewDelegate
@@ -876,7 +923,7 @@ NYTPhotosViewControllerDelegate
             
             @weakify(self);
             // Getting image from chat attachment service.
-            [[QMCore instance].chatService.chatAttachmentService getImageForAttachmentMessage:message completion:^(NSError *error, UIImage *image) {
+            [[QMCore instance].chatService.chatAttachmentService imageForAttachmentMessage:message completion:^(NSError *error, UIImage *image) {
                 @strongify(self);
                 if ([(UICollectionViewCell<QMChatAttachmentCell> *)cell attachmentID] != attachment.ID) return;
                 
@@ -1066,6 +1113,40 @@ NYTPhotosViewControllerDelegate
         
         return nil;
     }];
+}
+
+- (void)sendAttachmentMessageWithImage:(UIImage *)image {
+    
+    QBChatMessage* message = [QBChatMessage markableMessage];
+    message.senderID = self.senderID;
+    message.dialogID = self.chatDialog.ID;
+    message.dateSent = [NSDate date];
+    
+    @weakify(self);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        @strongify(self);
+        
+        UIImage *resizedImage = [self resizedImageFromImage:image];
+        
+        // Sending attachment to dialog.
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[[QMCore instance].chatService sendAttachmentMessage:message
+                                                         toDialog:self.chatDialog
+                                              withAttachmentImage:resizedImage] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+                
+                [self.attachmentCells removeObjectForKey:message.ID];
+                if (task.isFaulted) {
+                    
+                    [self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:task.error.localizedRecoverySuggestion duration:kQMDefaultNotificationDismissTime];
+                    
+                    // perform local attachment deleting
+                    [[QMCore instance].chatService deleteMessageLocally:message];
+                    [self.chatSectionManager deleteMessage:message];
+                }
+                return nil;
+            }];
+        });
+    });
 }
 
 #pragma mark - Configuring
@@ -1502,39 +1583,16 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
-    QBChatMessage* message = [QBChatMessage new];
-    message.senderID = self.senderID;
-    message.dialogID = self.chatDialog.ID;
-    message.dateSent = [NSDate date];
-    
     @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         @strongify(self);
-        UIImage* newImage = photo;
+        
+        UIImage *newImage = photo;
         if (imagePicker.sourceType == UIImagePickerControllerSourceTypeCamera) {
             newImage = [newImage fixOrientation];
         }
         
-        UIImage *resizedImage = [self resizedImageFromImage:newImage];
-        
-        // Sending attachment to dialog.
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[[QMCore instance].chatService sendAttachmentMessage:message
-                                                         toDialog:self.chatDialog
-                                              withAttachmentImage:resizedImage] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-                
-                [self.attachmentCells removeObjectForKey:message.ID];
-                if (task.isFaulted) {
-                    
-                    [self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:task.error.localizedRecoverySuggestion duration:kQMDefaultNotificationDismissTime];
-                    
-                    // perform local attachment deleting
-                    [[QMCore instance].chatService deleteMessageLocally:message];
-                    [self.chatSectionManager deleteMessage:message];
-                }
-                return nil;
-            }];
-        });
+        [self sendAttachmentMessageWithImage:newImage];
     });
 }
 
