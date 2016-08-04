@@ -79,7 +79,16 @@ static const NSUInteger kQMStatusStringNamesLimit = 5;
     switch (notification.messageType) {
         case QMMessageTypeContactRequest:
         {
-            messageText = (notification.senderID == [QMCore instance].currentProfile.userData.ID) ?  NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_ME",nil) : [NSString stringWithFormat:@"%@\n%@", sender.fullName ?: NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil), NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", nil)];
+            if (notification.senderID == [QMCore instance].currentProfile.userData.ID) {
+                
+                messageText = NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_ME",nil);
+            }
+            else {
+                
+                NSString *stringFormat = [[QMCore instance].contactManager isFriendWithUserID:notification.senderID] ? @"%@ %@" : @"%@\n%@";
+                
+                messageText = [NSString stringWithFormat:stringFormat, sender.fullName ?: NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil), NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", nil)];
+            }
         }
             break;
             
