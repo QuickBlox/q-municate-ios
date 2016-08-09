@@ -537,7 +537,12 @@ NYTPhotosViewControllerDelegate
     UIFont *font = nil;
     UIImage *iconImage = nil;
     
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = 8.0f;
+    
     if ([messageItem isNotificatonMessage]) {
+        
+        paragraphStyle.alignment = NSTextAlignmentCenter;
         
         message = [self.messageStatusStringBuilder messageTextForNotification:messageItem];
         
@@ -560,6 +565,8 @@ NYTPhotosViewControllerDelegate
     }
     else if ([messageItem isCallNotificationMessage]) {
         
+        paragraphStyle.alignment = NSTextAlignmentCenter;
+        
         textColor = [UIColor whiteColor];
         font = [UIFont systemFontOfSize:13.0f];
         
@@ -575,8 +582,6 @@ NYTPhotosViewControllerDelegate
         font = [UIFont systemFontOfSize:16.0f];
     }
     
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.lineSpacing = 8.0f;
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor,
                                   NSFontAttributeName:font,
                                   NSParagraphStyleAttributeName:paragraphStyle };
