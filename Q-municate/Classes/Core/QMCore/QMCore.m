@@ -264,7 +264,9 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         [[SDWebImageManager sharedManager].imageCache clearMemory];
         [[SDWebImageManager sharedManager].imageCache clearDisk];
         
+        // clearing contact list cache and memory storage
         [[QMContactListCache instance] deleteContactList:nil];
+        [self.contactListService.contactListMemoryStorage free];
         
         [self.currentProfile clearProfile];
         [source setResult:nil];

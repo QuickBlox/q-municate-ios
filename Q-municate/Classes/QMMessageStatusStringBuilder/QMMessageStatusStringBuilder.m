@@ -70,8 +70,8 @@ static const NSUInteger kQMStatusStringNamesLimit = 5;
     return NSLocalizedString(@"QM_STR_SENT_STATUS", nil);
 }
 
-- (NSString *)messageTextForNotification:(QBChatMessage *)notification
-{
+- (NSString *)messageTextForNotification:(QBChatMessage *)notification {
+    
     NSString *messageText = nil;
     QBUUser *sender = [[QMCore instance].usersService.usersMemoryStorage userWithID:notification.senderID];
     QBUUser *recipient = [[QMCore instance].usersService.usersMemoryStorage userWithID:notification.recipientID];
