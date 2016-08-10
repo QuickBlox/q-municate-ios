@@ -106,7 +106,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
-    :commit: 49c6ee7455b3dc5ae677a40536dcd65f6c03b385
+    :commit: 6d992cbe2242aa9d65803e5d6db28e6cab3b2a3d
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
     :commit: 7ce4cd8dbc683e8b115b1be821474120392d4592
@@ -125,7 +125,7 @@ SPEC CHECKSUMS:
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
-  QMCVDevelopment: 77001b5c70ba38570c0e2113eaf546fa75d301fd
+  QMCVDevelopment: 4e7ce616307df66e8ff20e4ce093daf4af828716
   QMServicesDevelopment: e1ae5877d90dc5e713be283b788491eb19c93f9e
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 35f9627a3e44b4f292a8a8ce6a531fa488239b91
