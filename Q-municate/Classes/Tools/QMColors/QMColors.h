@@ -19,6 +19,8 @@ UIColor *QMChatIncomingBottomLabelColor();
 UIColor *QMChatOutgoingBottomLabelColor();
 UIColor *QMChatCellHighlightedColor();
 UIColor *QMChatOutgoingCellColor();
+UIColor *QMChatOutgoingCellSendingColor();
+UIColor *QMChatOutgoingCellFailedColor();
 UIColor *QMChatNotificationCellColor();
 UIColor *QMChatRedNotificationCellColor();
 UIColor *QMChatEmojiiKeyboardTintColor();
