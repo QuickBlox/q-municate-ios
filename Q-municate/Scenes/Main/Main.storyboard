@@ -160,7 +160,7 @@ out here.</string>
                     <connections>
                         <outlet property="tagFieldView" destination="PV0-ej-tkc" id="KBM-Aq-bEz"/>
                         <outlet property="tagFieldViewHeightConstraint" destination="Oii-Wm-kH6" id="BWe-rQ-ggN"/>
-                        <segue destination="smd-oe-3SF" kind="custom" identifier="SceneSegueChat" customClass="QMReplaceViewControllerSegue" id="LJb-6W-9Cm"/>
+                        <segue destination="smd-oe-3SF" kind="showDetail" identifier="SceneSegueChat" id="LJb-6W-9Cm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2lp-VE-gjm" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -392,6 +392,6 @@ out here.</string>
         <image name="qm-tb-settings" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="iRL-ec-wtd"/>
+        <segue reference="LJb-6W-9Cm"/>
     </inferredMetricsTieBreakers>
 </document>

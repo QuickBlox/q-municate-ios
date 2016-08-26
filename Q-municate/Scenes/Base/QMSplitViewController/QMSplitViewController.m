@@ -8,6 +8,7 @@
 
 #import "QMSplitViewController.h"
 #import "QMChatVC.h"
+#import "QMHelpers.h"
 
 @interface QMSplitViewController() <UISplitViewControllerDelegate>
 
@@ -19,23 +20,10 @@
     [super awakeFromNib];
     
     self.delegate = self;
+    self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
 }
 
 #pragma mark - UISplitViewControllerDelegate
-
-static inline void addControllerToNavigationStack(UINavigationController *navC, UIViewController *vc) {
-    
-    NSMutableArray *viewControllers = [navC.viewControllers mutableCopy];
-    [viewControllers addObject:vc];
-    [navC setViewControllers:[viewControllers copy]];
-}
-
-static inline void removeControllerFromNavigationStack(UINavigationController *navC, UIViewController *vc) {
-    
-    NSMutableArray *viewControllers = [navC.viewControllers mutableCopy];
-    [viewControllers removeObject:vc];
-    [navC setViewControllers:[viewControllers copy]];
-}
 
 - (BOOL)splitViewController:(UISplitViewController *)splitViewController showDetailViewController:(UIViewController *)detailVC sender:(id)sender {
     

@@ -13,6 +13,7 @@
 #import "QMCore.h"
 #import "UINavigationController+QMNotification.h"
 #import "QMChatVC.h"
+#import "QMHelpers.h"
 
 @interface QMNewMessageViewController ()
 
@@ -83,6 +84,7 @@ QMTagFieldViewDelegate
                 
                 chatDialog = task.result;
                 [self performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
+                [self removeControllerFromStack];
                 
                 return [[QMCore instance].chatService sendSystemMessageAboutAddingToDialog:chatDialog toUsersIDs:occupantsIDs withText:kQMDialogsUpdateNotificationMessage];
                 
@@ -103,6 +105,7 @@ QMTagFieldViewDelegate
         if (privateDialog != nil) {
             
             [self performSegueWithIdentifier:kQMSceneSegueChat sender:privateDialog];
+            [self removeControllerFromStack];
         }
         else {
             
@@ -118,6 +121,7 @@ QMTagFieldViewDelegate
                 if (!task.isFaulted) {
                     
                     [self performSegueWithIdentifier:kQMSceneSegueChat sender:task.result];
+                    [self removeControllerFromStack];
                 }
                 
                 return nil;
@@ -130,7 +134,8 @@ QMTagFieldViewDelegate
     
     if ([segue.identifier isEqualToString:kQMSceneSegueChat]) {
         
-        QMChatVC *chatViewController = segue.destinationViewController;
+        UINavigationController *chatNavigationController = segue.destinationViewController;
+        QMChatVC *chatViewController = (QMChatVC *)chatNavigationController.topViewController;
         chatViewController.chatDialog = sender;
     }
     else if ([segue.identifier isEqualToString:kQMSceneSegueNewMessageContactList]) {
@@ -192,6 +197,20 @@ QMTagFieldViewDelegate
     if (!byClearingTextField) {
         
         [self.messageContactListViewController performSearch:@""];
+    }
+}
+
+#pragma mark - Helpers
+
+- (void)removeControllerFromStack {
+    
+    if (self.splitViewController.isCollapsed) {
+        
+        removeControllerFromNavigationStack(self.navigationController, self);
+    }
+    else {
+        
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 
