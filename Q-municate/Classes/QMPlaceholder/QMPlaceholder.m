@@ -102,7 +102,10 @@
         UIImage *ovalImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
-        [[[[self class] instance] cache] setObject:ovalImage forKey:key];
+        if (ovalImage != nil && key != nil) {
+            
+            [[[[self class] instance] cache] setObject:ovalImage forKey:key];
+        }
         
         return ovalImage;
     }
