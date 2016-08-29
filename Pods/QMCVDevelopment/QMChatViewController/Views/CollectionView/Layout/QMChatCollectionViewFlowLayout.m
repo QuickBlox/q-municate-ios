@@ -288,7 +288,7 @@
     
     // fix for content size changes (example: split view display mode change)
     CGRect frame = layoutAttributes.frame;
-    frame.origin.x = 0;
+    frame.origin.x = self.sectionInset.left;
     frame.size.width = [self itemWidth];
     layoutAttributes.frame = frame;
     

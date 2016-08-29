@@ -269,6 +269,7 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
     BOOL animated = YES;
     
     for (NSIndexPath  *indexPath in itemsIndexPaths) {
+        
         QBChatMessage *msg = [self.chatDataSource messageForIndexPath:indexPath];
         [self.collectionView.collectionViewLayout removeSizeFromCacheForItemID:msg.ID];
     }
@@ -497,8 +498,10 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
 }
 
 - (void)scrollToBottomAnimated:(BOOL)animated {
-    if (self.chatDataSource.messagesCount > 0) {
-        NSIndexPath* topIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    
+    if ([self.collectionView numberOfItemsInSection:0] > 0) {
+        
+        NSIndexPath *topIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
         [self.collectionView scrollToItemAtIndexPath:topIndexPath atScrollPosition:UICollectionViewScrollPositionTop animated:YES];
         _isLastCellVisible = true;
     }
@@ -753,7 +756,7 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     [picker dismissViewControllerAnimated:YES completion:NULL];
-    UIImage* image = info[UIImagePickerControllerOriginalImage];
+    UIImage *image = info[UIImagePickerControllerOriginalImage];
     
     [self didPickAttachmentImage:image];
 }
@@ -1020,7 +1023,7 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
 
 - (BOOL)shouldCancelScrollingForItemIndexPaths:(NSArray*)indexPathes {
     
-    NSSet * visibleInxexPathes= [NSSet setWithArray:self.collectionView.indexPathsForVisibleItems];
+    NSSet *visibleInxexPathes= [NSSet setWithArray:self.collectionView.indexPathsForVisibleItems];
     //Index path of the first cell - last message
     NSIndexPath *pathToLastMessage = [NSIndexPath indexPathForRow:0 inSection:0];
     
@@ -1029,29 +1032,12 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
         return NO;
     }
     
-    NSArray* sortedIndexPaths = [visibleInxexPathes.allObjects sortedArrayUsingSelector:@selector(compare:)];
-    NSIndexPath * firstVisibleIndexPath = [sortedIndexPaths firstObject];
+    NSArray *sortedIndexPaths = [visibleInxexPathes.allObjects sortedArrayUsingSelector:@selector(compare:)];
+    NSIndexPath *firstVisibleIndexPath = [sortedIndexPaths firstObject];
     
     NSComparisonResult result = [[indexPathes lastObject] compare:firstVisibleIndexPath];
     
     return result == NSOrderedAscending;
-}
-
-- (NSIndexSet *)indexSetForSectionsToInsert:(NSArray *)sectionsToInsert {
-    
-    NSMutableIndexSet *sectionsIndexSet = [NSMutableIndexSet indexSet];
-    if ([sectionsToInsert count] > 0) {
-        for (NSNumber *sectionIndex in sectionsToInsert) {
-            [sectionsIndexSet addIndex:[sectionIndex integerValue]];
-        }
-    }
-    
-    return [sectionsIndexSet copy];
-}
-
-- (NSString *)nameForSectionWithDate:(NSDate *)date {
-    
-    return [QMDateUtils formattedStringFromDate:date];
 }
 
 - (void)addObservers {
@@ -1205,17 +1191,17 @@ static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
 
 - (void)showAlertForCameraAccess {
     
-    NSString * title = NSLocalizedString(@"Camera Access Disabled", nil);
-    NSString * message = NSLocalizedString(@"You can allow access to Camera in Settings", nil);
+    NSString *title = NSLocalizedString(@"Camera Access Disabled", nil);
+    NSString *message = NSLocalizedString(@"You can allow access to Camera in Settings", nil);
     
     NSString *reqSysVer = @"8.0";
     NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
     
     BOOL isIOS8 =  ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending);
 
-    NSString * otherButtonTitle = isIOS8 ? NSLocalizedString(@"Open Settings", nil) : nil;
+    NSString *otherButtonTitle = isIOS8 ? NSLocalizedString(@"Open Settings", nil) : nil;
     
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:title
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
                                                      message:message
                                                     delegate:self
                                            cancelButtonTitle:NSLocalizedString(@"SA_STR_CANCEL", nil)

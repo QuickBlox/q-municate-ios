@@ -153,6 +153,11 @@ NYTPhotosViewControllerDelegate
 
 #pragma mark - Life cycle
 
+- (void)dealloc {
+    
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
