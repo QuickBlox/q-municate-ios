@@ -22,3 +22,17 @@ NSString *QMStringForTimeInterval(NSTimeInterval timeInterval) {
     
     return timeStr;
 }
+
+inline void addControllerToNavigationStack(UINavigationController *navC, UIViewController *vc) {
+    
+    NSMutableArray *viewControllers = [navC.viewControllers mutableCopy];
+    [viewControllers addObject:vc];
+    [navC setViewControllers:[viewControllers copy]];
+}
+
+inline void removeControllerFromNavigationStack(UINavigationController *navC, UIViewController *vc) {
+    
+    NSMutableArray *viewControllers = [navC.viewControllers mutableCopy];
+    [viewControllers removeObject:vc];
+    [navC setViewControllers:[viewControllers copy]];
+}

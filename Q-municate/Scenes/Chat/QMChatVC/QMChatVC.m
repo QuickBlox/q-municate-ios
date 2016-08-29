@@ -50,6 +50,7 @@ QMChatServiceDelegate,
 QMChatConnectionDelegate,
 QMChatAttachmentServiceDelegate,
 QMContactListServiceDelegate,
+QMDeferredQueueManagerDelegate,
 
 QMChatActionsHandler,
 QMChatCellDelegate,
@@ -125,7 +126,7 @@ NYTPhotosViewControllerDelegate
 
 + (instancetype)chatViewControllerWithChatDialog:(QBChatDialog *)chatDialog {
     
-    QMChatVC *chatVC = [[UIStoryboard storyboardWithName:kQMChatStoryboard bundle:nil] instantiateViewControllerWithIdentifier:NSStringFromClass([self class])];
+    QMChatVC *chatVC = [[UIStoryboard storyboardWithName:kQMMainStoryboard bundle:nil] instantiateViewControllerWithIdentifier:NSStringFromClass([self class])];
     chatVC.chatDialog = chatDialog;
     
     return chatVC;
@@ -155,10 +156,29 @@ NYTPhotosViewControllerDelegate
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.collectionView.backgroundColor = [UIColor clearColor];
+    
+    if (self.chatDialog == nil) {
+        
+        self.inputToolbar.hidden = YES;
+        self.onlineTitleView.hidden = YES;
+        
+        UIImage *bgImage = [UIImage imageNamed:@"qm-logo-split-view"];
+        UIImageView *bgView = [[UIImageView alloc] initWithFrame:CGRectOfSize(bgImage.size)];
+        bgView.image = bgImage;
+        self.view = bgView;
+        self.view.contentMode = UIViewContentModeCenter;
+        self.view.backgroundColor = [UIColor whiteColor];
+        return;
+    }
+    
+    self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+    self.navigationItem.leftItemsSupplementBackButton = YES;
+    
     // setting up chat controller
     self.topContentAdditionalInset = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
-    self.collectionView.backgroundColor = QMChatBackgroundColor();
     self.inputToolbar.contentView.textView.placeHolder = NSLocalizedString(@"QM_STR_INPUTTOOLBAR_PLACEHOLDER", nil);
+    self.view.backgroundColor = QMChatBackgroundColor();
     
     // setting up properties
     self.detailedCells = [NSMutableSet set];
@@ -167,8 +187,8 @@ NYTPhotosViewControllerDelegate
     
     // subscribing to delegates
     [[QMCore instance].chatService addDelegate:self];
-    [QMCore instance].chatService.chatAttachmentService.delegate = self;
     [[QMCore instance].contactListService addDelegate:self];
+    [[QMCore instance].chatService.deferredQueueManager addDelegate:self];
     self.actionsHandler = self;
     
     // text checking types for cells
@@ -226,9 +246,9 @@ NYTPhotosViewControllerDelegate
     }
     
     // inserting messages
-    if (self.storedMessages.count > 0 && self.chatSectionManager.totalMessagesCount == 0) {
+    if (self.storedMessages.count > 0 && self.chatDataSource.messagesCount == 0) {
         
-        [self.chatSectionManager addMessages:self.storedMessages];
+        [self.chatDataSource setDataSourceMessages:self.storedMessages];
     }
     
     // load messages from cache if needed and from REST
@@ -238,6 +258,12 @@ NYTPhotosViewControllerDelegate
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    if (self.chatDialog == nil) {
+        
+        return;
+    }
+    
+    [QMCore instance].chatService.chatAttachmentService.delegate = self;
     [QMCore instance].activeDialogID = self.chatDialog.ID;
     
     @weakify(self);
@@ -255,6 +281,11 @@ NYTPhotosViewControllerDelegate
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
+    if (self.chatDialog == nil) {
+        
+        return;
+    }
+    
     [QMCore instance].activeDialogID = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self.observerWillResignActive];
@@ -262,6 +293,18 @@ NYTPhotosViewControllerDelegate
     // Delete blocks.
     [self.chatDialog clearTypingStatusBlocks];
     [self.chatDialog clearDialogOccupantsStatusBlock];
+}
+
+#pragma mark - Deferred queue management
+
+- (void)deferredQueueManager:(QMDeferredQueueManager *)__unused queueManager didAddMessageLocally:(QBChatMessage *)addedMessage {
+    
+    [self.chatDataSource addMessage:addedMessage];
+}
+
+- (void)deferredQueueManager:(QMDeferredQueueManager *)__unused queueManager didUpdateMessageLocally:(QBChatMessage *)addedMessage {
+    
+    [self.chatDataSource updateMessage:addedMessage];
 }
 
 #pragma mark - Helpers & Utility
@@ -286,7 +329,7 @@ NYTPhotosViewControllerDelegate
         
         if ([task.result count] > 0) {
             
-            [self.chatSectionManager addMessages:task.result];
+            [self.chatDataSource addMessages:task.result];
         }
         
         return nil;
@@ -482,7 +525,7 @@ NYTPhotosViewControllerDelegate
         
         return item.senderID == self.senderID ? [QMChatLocationOutgoingCell class] : [QMChatLocationIncomingCell class];
     }
-    else if ([item isNotificatonMessage] || [item isCallNotificationMessage]) {
+    else if ([item isNotificatonMessage] || [item isCallNotificationMessage] || item.isDateDividerMessage) {
         
         NSUInteger opponentID = [self.chatDialog opponentID];
         BOOL isFriend = [[QMCore instance].contactManager isFriendWithUserID:opponentID];
@@ -540,7 +583,7 @@ NYTPhotosViewControllerDelegate
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = 8.0f;
     
-    if ([messageItem isNotificatonMessage]) {
+    if ([messageItem isNotificatonMessage] || messageItem.isDateDividerMessage) {
         
         paragraphStyle.alignment = NSTextAlignmentCenter;
         
@@ -656,7 +699,7 @@ NYTPhotosViewControllerDelegate
 
 - (CGSize)collectionView:(QMChatCollectionView *)__unused collectionView dynamicSizeAtIndexPath:(NSIndexPath *)indexPath maxWidth:(CGFloat)maxWidth {
     
-    QBChatMessage *item = [self.chatSectionManager messageForIndexPath:indexPath];
+    QBChatMessage *item = [self.chatDataSource messageForIndexPath:indexPath];
     Class viewClass = [self viewClassForItem:item];
     CGSize size = CGSizeZero;
     
@@ -695,7 +738,7 @@ NYTPhotosViewControllerDelegate
 
 - (CGFloat)collectionView:(QMChatCollectionView *)collectionView minWidthAtIndexPath:(NSIndexPath *)indexPath {
     
-    QBChatMessage *item = [self.chatSectionManager messageForIndexPath:indexPath];
+    QBChatMessage *item = [self.chatDataSource messageForIndexPath:indexPath];
     
     CGSize size = CGSizeZero;
     if ([self.detailedCells containsObject:item.ID]) {
@@ -722,7 +765,7 @@ NYTPhotosViewControllerDelegate
 
 - (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
     
-    Class viewClass = [self viewClassForItem:[self.chatSectionManager messageForIndexPath:indexPath]];
+    Class viewClass = [self viewClassForItem:[self.chatDataSource messageForIndexPath:indexPath]];
     
     // disabling action performing for specific cells
     if (viewClass == [QMChatLocationIncomingCell class]
@@ -740,7 +783,7 @@ NYTPhotosViewControllerDelegate
     
     if (action == @selector(copy:)) {
         
-        QBChatMessage *message = [self.chatSectionManager messageForIndexPath:indexPath];
+        QBChatMessage *message = [self.chatDataSource messageForIndexPath:indexPath];
         
         if ([message isMediaMessage]) {
             
@@ -790,7 +833,7 @@ NYTPhotosViewControllerDelegate
     layoutModel.maxWidthMarginSpace = 20.0f;
     layoutModel.spaceBetweenTextViewAndBottomLabel = 5.0f;
     
-    QBChatMessage *item = [self.chatSectionManager messageForIndexPath:indexPath];
+    QBChatMessage *item = [self.chatDataSource messageForIndexPath:indexPath];
     Class class = [self viewClassForItem:item];
     
     if (class == [QMChatOutgoingCell class] ||
@@ -846,13 +889,33 @@ NYTPhotosViewControllerDelegate
     currentCell.delegate = self;
     currentCell.containerView.highlightColor = QMChatCellHighlightedColor();
     
-    QBChatMessage *message = [self.chatSectionManager messageForIndexPath:indexPath];
+    QBChatMessage *message = [self.chatDataSource messageForIndexPath:indexPath];
     
     if ([cell isKindOfClass:[QMChatOutgoingCell class]]
         || [cell isKindOfClass:[QMChatAttachmentOutgoingCell class]]
         || [cell isKindOfClass:[QMChatLocationOutgoingCell class]]) {
         
         currentCell.containerView.bgColor = QMChatOutgoingCellColor();
+        
+        
+        QMMessageStatus status = [[QMServicesManager instance].chatService.deferredQueueManager statusForMessage:message];
+        
+        switch (status) {
+                
+            case QMMessageStatusSent:
+                currentCell.containerView.bgColor = QMChatOutgoingCellColor();
+                break;
+                
+            case QMMessageStatusSending:
+                currentCell.containerView.bgColor = QMChatOutgoingCellSendingColor();
+                break;
+                
+            case QMMessageStatusNotSent:
+                currentCell.containerView.bgColor = QMChatOutgoingCellFailedColor();
+                break;
+        }
+        
+        
         currentCell.textView.linkAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor],
                                                 NSUnderlineStyleAttributeName : @(YES)};
     }
@@ -888,7 +951,7 @@ NYTPhotosViewControllerDelegate
         
         if (message.callNotificationState == QMCallNotificationStateMissedNoAnswer) {
             
-                currentCell.containerView.bgColor = QMChatRedNotificationCellColor();
+            currentCell.containerView.bgColor = QMChatRedNotificationCellColor();
         }
         else {
             
@@ -955,8 +1018,7 @@ NYTPhotosViewControllerDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)__unused cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSInteger lastSection = [collectionView numberOfSections] - 1;
-    if (indexPath.section == lastSection && indexPath.item == [collectionView numberOfItemsInSection:lastSection] - 1) {
+    if (indexPath.item == [collectionView numberOfItemsInSection:0] - 1) {
         // the very first message
         // load more if exists
         @weakify(self);
@@ -964,7 +1026,7 @@ NYTPhotosViewControllerDelegate
         [[[QMCore instance].chatService loadEarlierMessagesWithChatDialogID:self.chatDialog.ID] continueWithBlock:^id(BFTask<NSArray<QBChatMessage *> *> *task) {
             @strongify(self);
             if (task.result.count > 0) {
-                [self.chatSectionManager addMessages:task.result];
+                [self.chatDataSource addMessages:task.result];
             }
             
             return nil;
@@ -972,7 +1034,7 @@ NYTPhotosViewControllerDelegate
     }
     
     // marking message as read if needed
-    QBChatMessage *itemMessage = [self.chatSectionManager messageForIndexPath:indexPath];
+    QBChatMessage *itemMessage = [self.chatDataSource messageForIndexPath:indexPath];
     [self readMessage:itemMessage];
     
     // getting users if needed
@@ -983,7 +1045,7 @@ NYTPhotosViewControllerDelegate
         [[[QMCore instance].usersService getUserWithID:itemMessage.senderID] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
             
             @strongify(self);
-            [self.chatSectionManager updateMessage:itemMessage];
+            [self.chatDataSource updateMessage:itemMessage];
             
             return nil;
         }];
@@ -1146,12 +1208,43 @@ NYTPhotosViewControllerDelegate
                     
                     // perform local attachment deleting
                     [[QMCore instance].chatService deleteMessageLocally:message];
-                    [self.chatSectionManager deleteMessage:message];
+                    [self.chatDataSource deleteMessage:message];
                 }
                 return nil;
             }];
         });
     });
+}
+
+- (void)handleNotSentMessage:(QBChatMessage*)notSentMessage {
+    
+    UIAlertController *alertController = [UIAlertController
+                                          alertControllerWithTitle:nil
+                                          message:NSLocalizedString(@"QM_STR_MESSAGE_DIDNT_SEND", nil)
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                      }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_TRY_AGAIN", nil)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                          [[QMCore instance].chatService.deferredQueueManager perfromDefferedActionForMessage:notSentMessage];
+                                                      }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil)
+                                                        style:UIAlertActionStyleDestructive
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                          [self.chatDataSource deleteMessage:notSentMessage];
+                                                          [[QMCore instance].chatService.deferredQueueManager removeMessage:notSentMessage];
+                                                      }]];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark - Configuring
@@ -1250,7 +1343,7 @@ NYTPhotosViewControllerDelegate
     
     if ([self.chatDialog.ID isEqualToString:dialogID]) {
         
-        [self.chatSectionManager addMessages:messages];
+        [self.chatDataSource addMessages:messages];
     }
 }
 
@@ -1262,15 +1355,22 @@ NYTPhotosViewControllerDelegate
             // check whether contact request message was sent previously
             // in order to reload it and remove buttons for accept and deny
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
-            QBChatMessage *lastMessage = [self.chatSectionManager messageForIndexPath:indexPath];
+            QBChatMessage *lastMessage = [self.chatDataSource messageForIndexPath:indexPath];
             if (lastMessage.messageType == QMMessageTypeContactRequest) {
                 
-                [self.chatSectionManager updateMessage:lastMessage];
+                [self.chatDataSource updateMessage:lastMessage];
             }
         }
         
-        // Inserting message received from XMPP or sent by self
-        [self.chatSectionManager addMessage:message];
+        // Inserting or updating message received from XMPP or sent by self
+        if ([self.chatDataSource messageExists:message]) {
+            
+            [self.chatDataSource updateMessage:message];
+        }
+        else {
+            
+            [self.chatDataSource addMessage:message];
+        }
     }
 }
 
@@ -1297,7 +1397,7 @@ NYTPhotosViewControllerDelegate
 {
     if ([self.chatDialog.ID isEqualToString:dialogID] && message.senderID == self.senderID) {
         // self-sending attachments
-        [self.chatSectionManager updateMessage:message];
+        [self.chatDataSource updateMessage:message];
     }
 }
 
@@ -1306,13 +1406,21 @@ NYTPhotosViewControllerDelegate
 - (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
     
     [self refreshMessages];
-    [self updateOpponentOnlineStatus];
+    
+    if (self.chatDialog.type == QBChatDialogTypePrivate) {
+        
+        [self updateOpponentOnlineStatus];
+    }
 }
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
     
     [self refreshMessages];
-    [self updateOpponentOnlineStatus];
+    
+    if (self.chatDialog.type == QBChatDialogTypePrivate) {
+        
+        [self updateOpponentOnlineStatus];
+    }
 }
 
 - (void)chatServiceChatDidAccidentallyDisconnect:(QMChatService *)__unused chatService {
@@ -1327,7 +1435,7 @@ NYTPhotosViewControllerDelegate
     
     if (status != QMMessageAttachmentStatusNotLoaded && [message.dialogID isEqualToString:self.chatDialog.ID]) {
         
-        [self.chatSectionManager updateMessage:message];
+        [self.chatDataSource updateMessage:message];
     }
 }
 
@@ -1347,7 +1455,7 @@ NYTPhotosViewControllerDelegate
     
     if (cell == nil && progress < 1.0f) {
         
-        NSIndexPath *indexPath = [self.chatSectionManager indexPathForMessage:message];
+        NSIndexPath *indexPath = [self.chatDataSource indexPathForMessage:message];
         cell = (UICollectionViewCell <QMChatAttachmentCell> *)[self.collectionView cellForItemAtIndexPath:indexPath];
         [self.attachmentCells setObject:cell forKey:message.ID];
     }
@@ -1384,7 +1492,7 @@ NYTPhotosViewControllerDelegate
     if (accept) {
         
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:sender];
-        QBChatMessage *currentMessage = [self.chatSectionManager messageForIndexPath:indexPath];
+        QBChatMessage *currentMessage = [self.chatDataSource messageForIndexPath:indexPath];
         
         __weak UINavigationController *navigationController = self.navigationController;
         
@@ -1396,7 +1504,7 @@ NYTPhotosViewControllerDelegate
             
             if (!task.isFaulted) {
                 
-                [self.chatSectionManager updateMessage:currentMessage];
+                [self.chatDataSource updateMessage:currentMessage];
             }
             
             return nil;
@@ -1436,7 +1544,16 @@ NYTPhotosViewControllerDelegate
 - (void)chatCellDidTapContainer:(QMChatCell *)cell {
     
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-    QBChatMessage *currentMessage = [self.chatSectionManager messageForIndexPath:indexPath];
+    QBChatMessage *currentMessage = [self.chatDataSource messageForIndexPath:indexPath];
+    
+    QMMessageStatus status = [[QMCore instance].chatService.deferredQueueManager
+                              statusForMessage:currentMessage];
+    
+    if (status == QMMessageStatusNotSent && currentMessage.senderID == self.senderID) {
+        
+        [self handleNotSentMessage:currentMessage];
+        return;
+    }
     
     if ([cell conformsToProtocol:@protocol(QMChatAttachmentCell)]) {
         
@@ -1495,7 +1612,7 @@ NYTPhotosViewControllerDelegate
     else {
         
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-        QBChatMessage *chatMessage = [self.chatSectionManager messageForIndexPath:indexPath];
+        QBChatMessage *chatMessage = [self.chatDataSource messageForIndexPath:indexPath];
         
         [self performInfoViewControllerForUserID:chatMessage.senderID];
     }

@@ -69,8 +69,7 @@ QMChatConnectionDelegate
         
         if (buttonIndex == 1) {
             
-            QMChatVC *chatVC = [QMChatVC chatViewControllerWithChatDialog:chatDialog];
-            [self.selectedViewController pushViewController:chatVC animated:YES];
+            [self performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
         }
     }];
 }
@@ -92,6 +91,17 @@ QMChatConnectionDelegate
     else {
         
         [self showNotificationForMessage:message];
+    }
+}
+
+#pragma mark - Actions
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    if ([segue.identifier isEqualToString:kQMSceneSegueChat]) {
+        
+        QMChatVC *chatViewController = segue.destinationViewController;
+        chatViewController.chatDialog = sender;
     }
 }
 

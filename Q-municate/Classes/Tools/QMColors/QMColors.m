@@ -116,6 +116,32 @@ UIColor *QMChatOutgoingCellColor() {
     return color;
 }
 
+UIColor *QMChatOutgoingCellSendingColor() {
+    
+    static UIColor *color = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        color = [UIColor colorWithRed:0.761f green:0.772f blue:0.746f alpha:1.0f];
+    });
+    
+    return color;
+}
+
+UIColor *QMChatOutgoingCellFailedColor() {
+    
+    static UIColor *color = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        color = [UIColor colorWithRed:1.0f green:0.19f blue:0.108f alpha:1.0f];
+    });
+    
+    return color;
+}
+
 UIColor *QMChatNotificationCellColor() {
     
     static UIColor *color = nil;

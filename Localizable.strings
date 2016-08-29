@@ -98,6 +98,8 @@
 "QM_STR_INPUTTOOLBAR_PLACEHOLDER" = "Message";
 "QM_STR_GROUP_CHAT_STATUS_STRING" = "%tu members, %tu online";
 "QM_STR_SEND" = "Send";
+"QM_STR_MESSAGE_DIDNT_SEND" = "Message didn't send";
+"QM_STR_TRY_AGAIN" = "Try agan";
 
 // *********** User Status ***********
 "QM_STR_ONLINE" = "Online";

@@ -239,7 +239,8 @@ QMSearchResultsControllerDelegate
     
     if ([segue.identifier isEqualToString:kQMSceneSegueChat]) {
         
-        QMChatVC *chatViewController = segue.destinationViewController;
+        UINavigationController *chatNavigationController = segue.destinationViewController;
+        QMChatVC *chatViewController = (QMChatVC *)chatNavigationController.topViewController;
         chatViewController.chatDialog = sender;
     }
 }

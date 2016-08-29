@@ -8,12 +8,12 @@
 
 #import "QMSoundManager.h"
 
-static NSString *const kSystemSoundTypeCAF = @"caf";
-static NSString *const kSystemSoundTypeAIF = @"aif";
-static NSString *const kSystemSoundTypeAIFF = @"aiff";
-static NSString *const kystemSoundTypeWAV = @"wav";
+static NSString * const kSystemSoundTypeCAF = @"caf";
+static NSString * const kSystemSoundTypeAIF = @"aif";
+static NSString * const kSystemSoundTypeAIFF = @"aiff";
+static NSString * const kystemSoundTypeWAV = @"wav";
 
-static NSString *const kQMSoundManagerSettingKey = @"kQMSoundManagerSettingKey";
+static NSString * const kQMSoundManagerSettingKey = @"kQMSoundManagerSettingKey";
 
 @interface QMSoundManager()
 

@@ -11,3 +11,6 @@
 CGRect CGRectOfSize(CGSize size);
 
 NSString *QMStringForTimeInterval(NSTimeInterval timeInterval);
+
+extern void addControllerToNavigationStack(UINavigationController *navC, UIViewController *vc);
+extern void removeControllerFromNavigationStack(UINavigationController *navC, UIViewController *vc);

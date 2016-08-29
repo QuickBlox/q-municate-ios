@@ -57,6 +57,7 @@
 		584A6DC51C9DC80900B7D641 /* QMTagView.m in Sources */ = {isa = PBXBuildFile; fileRef = 584A6DC41C9DC80900B7D641 /* QMTagView.m */; };
 		584A6DC91C9DEBC200B7D641 /* QMTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 584A6DC81C9DEBC200B7D641 /* QMTextField.m */; };
 		584A6DD61C9E222A00B7D641 /* QMNewMessageContactListSearchDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 584A6DD51C9E222A00B7D641 /* QMNewMessageContactListSearchDataSource.m */; };
+		584AF9061D6F3BBD00B6CF69 /* QMSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 584AF9051D6F3BBD00B6CF69 /* QMSplitViewController.m */; };
 		585037591CFEE99900374A3C /* QMUserInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 585037581CFEE99900374A3C /* QMUserInfoCell.m */; };
 		58550ABC1CF5BA790024EAFC /* QBChatDialog+OpponentID.m in Sources */ = {isa = PBXBuildFile; fileRef = 58550ABB1CF5BA790024EAFC /* QBChatDialog+OpponentID.m */; };
 		585A46381CC8F16F004FBC3D /* QMGroupAddUsersSearchDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 585A46371CC8F16F004FBC3D /* QMGroupAddUsersSearchDataProvider.m */; };
@@ -92,7 +93,6 @@
 		589792991C99941400CC6438 /* QMAlphabetizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 589792981C99941400CC6438 /* QMAlphabetizer.m */; };
 		5897929E1C9AA65400CC6438 /* QMContactsSearchDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 5897929D1C9AA65400CC6438 /* QMContactsSearchDataSource.m */; };
 		589792A21C9AA69B00CC6438 /* QMContactsSearchDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 589792A11C9AA69B00CC6438 /* QMContactsSearchDataProvider.m */; };
-		589792A51C9AF45A00CC6438 /* QMReplaceViewControllerSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 589792A41C9AF45A00CC6438 /* QMReplaceViewControllerSegue.m */; };
 		589792B51C9C3C1F00CC6438 /* QMMessageContactListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 589792B41C9C3C1F00CC6438 /* QMMessageContactListViewController.m */; };
 		589792BD1C9C3DEE00CC6438 /* QMSelectableContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 589792BC1C9C3DEE00CC6438 /* QMSelectableContactCell.m */; };
 		589B62921CE1CB4A0038F5E0 /* QMPushNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 589B62911CE1CB4A0038F5E0 /* QMPushNotificationManager.m */; };
@@ -271,6 +271,8 @@
 		584A6DC81C9DEBC200B7D641 /* QMTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMTextField.m; sourceTree = "<group>"; };
 		584A6DD41C9E222A00B7D641 /* QMNewMessageContactListSearchDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMNewMessageContactListSearchDataSource.h; sourceTree = "<group>"; };
 		584A6DD51C9E222A00B7D641 /* QMNewMessageContactListSearchDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMNewMessageContactListSearchDataSource.m; sourceTree = "<group>"; };
+		584AF9041D6F3BBD00B6CF69 /* QMSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMSplitViewController.h; path = QMSplitViewController/QMSplitViewController.h; sourceTree = "<group>"; };
+		584AF9051D6F3BBD00B6CF69 /* QMSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMSplitViewController.m; path = QMSplitViewController/QMSplitViewController.m; sourceTree = "<group>"; };
 		585037571CFEE99900374A3C /* QMUserInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMUserInfoCell.h; sourceTree = "<group>"; };
 		585037581CFEE99900374A3C /* QMUserInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMUserInfoCell.m; sourceTree = "<group>"; };
 		58550ABA1CF5BA790024EAFC /* QBChatDialog+OpponentID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBChatDialog+OpponentID.h"; sourceTree = "<group>"; };
@@ -337,8 +339,6 @@
 		5897929D1C9AA65400CC6438 /* QMContactsSearchDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMContactsSearchDataSource.m; sourceTree = "<group>"; };
 		589792A01C9AA69B00CC6438 /* QMContactsSearchDataProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMContactsSearchDataProvider.h; sourceTree = "<group>"; };
 		589792A11C9AA69B00CC6438 /* QMContactsSearchDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMContactsSearchDataProvider.m; sourceTree = "<group>"; };
-		589792A31C9AF45A00CC6438 /* QMReplaceViewControllerSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMReplaceViewControllerSegue.h; sourceTree = "<group>"; };
-		589792A41C9AF45A00CC6438 /* QMReplaceViewControllerSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMReplaceViewControllerSegue.m; sourceTree = "<group>"; };
 		589792B31C9C3C1F00CC6438 /* QMMessageContactListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMessageContactListViewController.h; sourceTree = "<group>"; };
 		589792B41C9C3C1F00CC6438 /* QMMessageContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMMessageContactListViewController.m; sourceTree = "<group>"; };
 		589792BB1C9C3DEE00CC6438 /* QMSelectableContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSelectableContactCell.h; sourceTree = "<group>"; };
@@ -796,6 +796,7 @@
 		584277781C3D32ED00CDE35B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5842777E1C3D335200CDE35B /* Scenes */,
 				69D57E6718ACC11C00A9900A /* Images.xcassets */,
 			);
 			path = Resources;
@@ -833,7 +834,8 @@
 				584277CB1C3D494400CDE35B /* Calls */,
 				584277C51C3D46B600CDE35B /* Settings */,
 			);
-			path = Scenes;
+			name = Scenes;
+			path = ../Scenes;
 			sourceTree = "<group>";
 		};
 		5842777F1C3D336300CDE35B /* Views */ = {
@@ -914,6 +916,7 @@
 		584277C41C3D46AC00CDE35B /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				584AF9031D6F3BA400B6CF69 /* QMSplitViewController */,
 				584A6D941C9D9D4B00B7D641 /* QMAlphabetizedDataSource */,
 				5839F26B1CC531800055EBF8 /* QMBaseTitleView */,
 				58A6392E1CEB791C00D682C4 /* QMLinkViewController */,
@@ -1056,6 +1059,15 @@
 				584A6DD51C9E222A00B7D641 /* QMNewMessageContactListSearchDataSource.m */,
 			);
 			path = QMGroupContactListSearchDataSource;
+			sourceTree = "<group>";
+		};
+		584AF9031D6F3BA400B6CF69 /* QMSplitViewController */ = {
+			isa = PBXGroup;
+			children = (
+				584AF9041D6F3BBD00B6CF69 /* QMSplitViewController.h */,
+				584AF9051D6F3BBD00B6CF69 /* QMSplitViewController.m */,
+			);
+			name = QMSplitViewController;
 			sourceTree = "<group>";
 		};
 		585037561CFEE96200374A3C /* QMUserInfoCell */ = {
@@ -1790,8 +1802,6 @@
 		6943843218E42677001E08A9 /* CustomSegues */ = {
 			isa = PBXGroup;
 			children = (
-				589792A31C9AF45A00CC6438 /* QMReplaceViewControllerSegue.h */,
-				589792A41C9AF45A00CC6438 /* QMReplaceViewControllerSegue.m */,
 				589D4CEF1C98158E005F1E76 /* QMRootViewControllerSegue.h */,
 				589D4CF01C98158E005F1E76 /* QMRootViewControllerSegue.m */,
 			);
@@ -1905,7 +1915,6 @@
 				6943848C18E42691001E08A9 /* Categories */,
 				695F4B2118B60A62006C9DA5 /* Classes */,
 				584277781C3D32ED00CDE35B /* Resources */,
-				5842777E1C3D335200CDE35B /* Scenes */,
 				69D57E5C18ACC11C00A9900A /* Supporting Files */,
 			);
 			path = "Q-municate";
@@ -2121,7 +2130,6 @@
 				589792BD1C9C3DEE00CC6438 /* QMSelectableContactCell.m in Sources */,
 				580D34E21BC027BD0034813A /* QMSplashViewController.m in Sources */,
 				589792B51C9C3C1F00CC6438 /* QMMessageContactListViewController.m in Sources */,
-				589792A51C9AF45A00CC6438 /* QMReplaceViewControllerSegue.m in Sources */,
 				55A8B06E1965986A00B5D33B /* QMSoundManager.m in Sources */,
 				58EC00221CF30C380052A06A /* QMGroupNameViewController.m in Sources */,
 				5868B05E1CE9C668004F9233 /* QMCallManager.m in Sources */,
@@ -2212,6 +2220,7 @@
 				585DE45F1C4686060068E03E /* QMErrorsFactory.m in Sources */,
 				58A6392D1CEB78D000D682C4 /* QMLinkViewController.m in Sources */,
 				5839F2761CC533A30055EBF8 /* QMGroupHeaderView.m in Sources */,
+				584AF9061D6F3BBD00B6CF69 /* QMSplitViewController.m in Sources */,
 				580B3B571C3FF89F00345081 /* QMTasks.m in Sources */,
 				585A46381CC8F16F004FBC3D /* QMGroupAddUsersSearchDataProvider.m in Sources */,
 				580650991D2A9FD50013A5E8 /* QMLocationViewController.m in Sources */,
@@ -2353,13 +2362,12 @@
 				PROVISIONING_PROFILE = "";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited)";
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WARNING_CFLAGS = (
 					"-Wall",
 					"-Wdeprecated-implementations",
-					"-Werror",
 					"-Wextra",
 					"-Wfloat-equal",
 					"-Wimplicit-retain-self",
@@ -2418,7 +2426,7 @@
 				PROVISIONING_PROFILE = "318e6309-600e-4347-87bc-8580aebda28d";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited)";
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;

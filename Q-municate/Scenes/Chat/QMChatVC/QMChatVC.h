@@ -8,8 +8,6 @@
 
 #import "QMChatViewController.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
 /**
  *  Chat view controller.
  */
@@ -30,5 +28,3 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable instancetype)chatViewControllerWithChatDialog:(QBChatDialog *)chatDialog;
 
 @end
-
-NS_ASSUME_NONNULL_END
