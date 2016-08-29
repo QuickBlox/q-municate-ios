@@ -57,6 +57,7 @@
 		584A6DC51C9DC80900B7D641 /* QMTagView.m in Sources */ = {isa = PBXBuildFile; fileRef = 584A6DC41C9DC80900B7D641 /* QMTagView.m */; };
 		584A6DC91C9DEBC200B7D641 /* QMTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 584A6DC81C9DEBC200B7D641 /* QMTextField.m */; };
 		584A6DD61C9E222A00B7D641 /* QMNewMessageContactListSearchDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 584A6DD51C9E222A00B7D641 /* QMNewMessageContactListSearchDataSource.m */; };
+		584AF9061D6F3BBD00B6CF69 /* QMSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 584AF9051D6F3BBD00B6CF69 /* QMSplitViewController.m */; };
 		585037591CFEE99900374A3C /* QMUserInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 585037581CFEE99900374A3C /* QMUserInfoCell.m */; };
 		58550ABC1CF5BA790024EAFC /* QBChatDialog+OpponentID.m in Sources */ = {isa = PBXBuildFile; fileRef = 58550ABB1CF5BA790024EAFC /* QBChatDialog+OpponentID.m */; };
 		585A46381CC8F16F004FBC3D /* QMGroupAddUsersSearchDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 585A46371CC8F16F004FBC3D /* QMGroupAddUsersSearchDataProvider.m */; };
@@ -271,6 +272,8 @@
 		584A6DC81C9DEBC200B7D641 /* QMTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMTextField.m; sourceTree = "<group>"; };
 		584A6DD41C9E222A00B7D641 /* QMNewMessageContactListSearchDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMNewMessageContactListSearchDataSource.h; sourceTree = "<group>"; };
 		584A6DD51C9E222A00B7D641 /* QMNewMessageContactListSearchDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMNewMessageContactListSearchDataSource.m; sourceTree = "<group>"; };
+		584AF9041D6F3BBD00B6CF69 /* QMSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMSplitViewController.h; path = QMSplitViewController/QMSplitViewController.h; sourceTree = "<group>"; };
+		584AF9051D6F3BBD00B6CF69 /* QMSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMSplitViewController.m; path = QMSplitViewController/QMSplitViewController.m; sourceTree = "<group>"; };
 		585037571CFEE99900374A3C /* QMUserInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMUserInfoCell.h; sourceTree = "<group>"; };
 		585037581CFEE99900374A3C /* QMUserInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMUserInfoCell.m; sourceTree = "<group>"; };
 		58550ABA1CF5BA790024EAFC /* QBChatDialog+OpponentID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBChatDialog+OpponentID.h"; sourceTree = "<group>"; };
@@ -796,6 +799,7 @@
 		584277781C3D32ED00CDE35B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5842777E1C3D335200CDE35B /* Scenes */,
 				69D57E6718ACC11C00A9900A /* Images.xcassets */,
 			);
 			path = Resources;
@@ -833,7 +837,8 @@
 				584277CB1C3D494400CDE35B /* Calls */,
 				584277C51C3D46B600CDE35B /* Settings */,
 			);
-			path = Scenes;
+			name = Scenes;
+			path = ../Scenes;
 			sourceTree = "<group>";
 		};
 		5842777F1C3D336300CDE35B /* Views */ = {
@@ -914,6 +919,7 @@
 		584277C41C3D46AC00CDE35B /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				584AF9031D6F3BA400B6CF69 /* QMSplitViewController */,
 				584A6D941C9D9D4B00B7D641 /* QMAlphabetizedDataSource */,
 				5839F26B1CC531800055EBF8 /* QMBaseTitleView */,
 				58A6392E1CEB791C00D682C4 /* QMLinkViewController */,
@@ -1056,6 +1062,15 @@
 				584A6DD51C9E222A00B7D641 /* QMNewMessageContactListSearchDataSource.m */,
 			);
 			path = QMGroupContactListSearchDataSource;
+			sourceTree = "<group>";
+		};
+		584AF9031D6F3BA400B6CF69 /* QMSplitViewController */ = {
+			isa = PBXGroup;
+			children = (
+				584AF9041D6F3BBD00B6CF69 /* QMSplitViewController.h */,
+				584AF9051D6F3BBD00B6CF69 /* QMSplitViewController.m */,
+			);
+			name = QMSplitViewController;
 			sourceTree = "<group>";
 		};
 		585037561CFEE96200374A3C /* QMUserInfoCell */ = {
@@ -1905,7 +1920,6 @@
 				6943848C18E42691001E08A9 /* Categories */,
 				695F4B2118B60A62006C9DA5 /* Classes */,
 				584277781C3D32ED00CDE35B /* Resources */,
-				5842777E1C3D335200CDE35B /* Scenes */,
 				69D57E5C18ACC11C00A9900A /* Supporting Files */,
 			);
 			path = "Q-municate";
@@ -2212,6 +2226,7 @@
 				585DE45F1C4686060068E03E /* QMErrorsFactory.m in Sources */,
 				58A6392D1CEB78D000D682C4 /* QMLinkViewController.m in Sources */,
 				5839F2761CC533A30055EBF8 /* QMGroupHeaderView.m in Sources */,
+				584AF9061D6F3BBD00B6CF69 /* QMSplitViewController.m in Sources */,
 				580B3B571C3FF89F00345081 /* QMTasks.m in Sources */,
 				585A46381CC8F16F004FBC3D /* QMGroupAddUsersSearchDataProvider.m in Sources */,
 				580650991D2A9FD50013A5E8 /* QMLocationViewController.m in Sources */,
@@ -2353,13 +2368,12 @@
 				PROVISIONING_PROFILE = "";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited)";
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WARNING_CFLAGS = (
 					"-Wall",
 					"-Wdeprecated-implementations",
-					"-Werror",
 					"-Wextra",
 					"-Wfloat-equal",
 					"-Wimplicit-retain-self",
@@ -2418,7 +2432,7 @@
 				PROVISIONING_PROFILE = "318e6309-600e-4347-87bc-8580aebda28d";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(inherited)";
 				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
