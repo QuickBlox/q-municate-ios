@@ -5,11 +5,11 @@ PODS:
   - Bolts/AppLinks (1.8.4):
     - Bolts/Tasks
   - Bolts/Tasks (1.8.4)
-  - Crashlytics (3.7.2):
+  - Crashlytics (3.7.3):
     - Fabric (~> 1.6.3)
   - Digits (1.15.3):
     - TwitterCore (= 1.15.3)
-  - Fabric (1.6.7)
+  - Fabric (1.6.8)
   - FBSDKCoreKit (4.11.0):
     - Bolts (~> 1.7)
   - FBSDKLoginKit (4.11.0):
@@ -31,37 +31,41 @@ PODS:
     - FLAnimatedImage (~> 1.0.8)
     - NYTPhotoViewer/Core
   - NYTPhotoViewer/Core (1.1.0)
-  - QMCVDevelopment (0.3.9):
-    - QMCVDevelopment/Categories (= 0.3.9)
-    - QMCVDevelopment/KeyboardViewController (= 0.3.9)
-    - QMCVDevelopment/Protocols (= 0.3.9)
-    - QMCVDevelopment/QMChatSection (= 0.3.9)
-    - QMCVDevelopment/Utils (= 0.3.9)
-    - QMCVDevelopment/Views (= 0.3.9)
+  - QMCVDevelopment (0.3.10):
+    - QMCVDevelopment/Categories (= 0.3.10)
+    - QMCVDevelopment/KeyboardViewController (= 0.3.10)
+    - QMCVDevelopment/Protocols (= 0.3.10)
+    - QMCVDevelopment/QMChatDataSource (= 0.3.10)
+    - QMCVDevelopment/QMChatSection (= 0.3.10)
+    - QMCVDevelopment/Utils (= 0.3.10)
+    - QMCVDevelopment/Views (= 0.3.10)
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/Categories (0.3.9):
+  - QMCVDevelopment/Categories (0.3.10):
     - QMCVDevelopment/Utils
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/KeyboardViewController (0.3.9):
+  - QMCVDevelopment/KeyboardViewController (0.3.10):
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/Protocols (0.3.9):
+  - QMCVDevelopment/Protocols (0.3.10):
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/QMChatSection (0.3.9):
+  - QMCVDevelopment/QMChatDataSource (0.3.10):
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/Utils (0.3.9):
+  - QMCVDevelopment/QMChatSection (0.3.10):
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/Views (0.3.9):
+  - QMCVDevelopment/Utils (0.3.10):
+    - SDWebImage (~> 3.6)
+    - TTTAttributedLabel (> 1.13)
+  - QMCVDevelopment/Views (0.3.10):
     - QMCVDevelopment/Categories
     - QMCVDevelopment/Protocols
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
-  - QMServicesDevelopment (0.4.3):
+  - QMServicesDevelopment (0.4.4):
     - Bolts (>= 1.5.0)
   - Reachability (3.2)
   - SDWebImage (3.8.1):
@@ -106,17 +110,17 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
-    :commit: 6d992cbe2242aa9d65803e5d6db28e6cab3b2a3d
+    :commit: 3342f2fa69b30239c5619f1e326828ec887eb2cb
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: 7ce4cd8dbc683e8b115b1be821474120392d4592
+    :commit: 8cd9caf0dc8bd30884d5427d8bcc98842cf346b1
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
-  Crashlytics: 130ab943f8c78cda7a814b434f270b2e2c8a3cba
+  Crashlytics: 76f6beaff70acf226139582c09c78461597c2b98
   Digits: 9823f8aad766c0aa824fac9b08938e22bc635fac
-  Fabric: caf7580c725e64db144f610ac65cd60956911dc7
+  Fabric: 5755268d0171435ab167e3d0878a28a777deaf10
   FBSDKCoreKit: 686ac982723a14ec9ddb85e2f81235d7706c891b
   FBSDKLoginKit: bade9fc78277764149ccc5bfaadbf13c83175c6a
   FBSDKShareKit: 2d1746144cfc8a9dbbd24997c34ee0471be51b6a
@@ -125,8 +129,8 @@ SPEC CHECKSUMS:
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
-  QMCVDevelopment: 4e7ce616307df66e8ff20e4ce093daf4af828716
-  QMServicesDevelopment: e1ae5877d90dc5e713be283b788491eb19c93f9e
+  QMCVDevelopment: 77830b179e3b754f275174c1efc0efc43b94a855
+  QMServicesDevelopment: 1eeb4f9aa76b64674f4d47e863f0a23b5bc9f680
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 35f9627a3e44b4f292a8a8ce6a531fa488239b91
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
