@@ -55,7 +55,8 @@ static const NSUInteger kQMStatusStringNamesLimit = 5;
             if (deliveredIDs.count > kQMStatusStringNamesLimit) {
                 
                 [statusString appendFormat:NSLocalizedString(@"QM_STR_DELIVERED_TO_AMOUNT_PEOPLE_STATUS", nil), deliveredIDs.count];
-            } else {
+            }
+            else {
                 
                 NSArray *users = [[QMCore instance].usersService.usersMemoryStorage usersWithIDs:deliveredIDs];
                 NSMutableArray *deliveredNames = [users valueForKeyPath:@keypath(QBUUser.new, fullName)];
@@ -64,10 +65,37 @@ static const NSUInteger kQMStatusStringNamesLimit = 5;
             }
         }
         
-        if (statusString.length > 0) return [statusString copy];
+        if (statusString.length > 0) {
+            
+            return [statusString copy];
+        }
     }
     
-    return NSLocalizedString(@"QM_STR_SENT_STATUS", nil);
+    QMMessageStatus status = [[QMCore instance].chatService.deferredQueueManager statusForMessage:message];
+    NSString *messageStatus = nil;
+    
+    switch (status) {
+            
+        case QMMessageStatusSent: {
+            
+            messageStatus = @"QM_STR_SENT_STATUS";
+            break;
+        }
+            
+        case QMMessageStatusSending: {
+            
+            messageStatus = @"QM_STR_SENDING_STATUS";
+            break;
+        }
+            
+        case QMMessageStatusNotSent: {
+            
+            messageStatus = @"QM_STR_NOT_SENT_STATUS";
+            break;
+        }
+    }
+    
+    return NSLocalizedString(messageStatus, nil);
 }
 
 - (NSString *)messageTextForNotification:(QBChatMessage *)notification {

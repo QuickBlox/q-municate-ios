@@ -74,6 +74,8 @@
 "QM_STR_DELIVERED_STATUS" = "Delivered";
 "QM_STR_SEEN_STATUS" = "Seen";
 "QM_STR_SENT_STATUS" = "Sent";
+"QM_STR_SENDING_STATUS" = "Sending";
+"QM_STR_NOT_SENT_STATUS" = "Not sent";
 "QM_STR_SEEN_BY_AMOUNT_PEOPLE_STATUS" = "Seen by %tu people";
 "QM_STR_READ_BY_AMOUNT_PEOPLE_STATUS" = "Read by %tu people";
 "QM_STR_SEEN_BY_NAMES_STATUS" = "Seen: %@";
