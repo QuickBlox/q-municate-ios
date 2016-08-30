@@ -196,7 +196,6 @@ out here.</string>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="smd-oe-3SF" kind="show" identifier="SceneSegueChat" id="B0O-UD-QKJ"/>
                         <segue destination="8Yq-BL-cvM" kind="relationship" relationship="viewControllers" id="bgm-y5-N5D"/>
                         <segue destination="rRp-nU-Jp0" kind="relationship" relationship="viewControllers" id="Gvg-Ux-PQa"/>
                         <segue destination="W7Z-nM-mgl" kind="relationship" relationship="viewControllers" id="Hnn-tU-PjV"/>
@@ -368,9 +367,9 @@ out here.</string>
         <!--Navigation Controller-->
         <scene sceneID="teI-65-gku">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="smd-oe-3SF" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="QMChatVCNavigation" automaticallyAdjustsScrollViewInsets="NO" id="smd-oe-3SF" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="gyT-Uq-WjS">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="gyT-Uq-WjS" customClass="QMNavigationBar">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
