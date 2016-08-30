@@ -116,6 +116,7 @@
 // *********** Picker ***********
 "QM_STR_TAKE_IMAGE" = "Take image";
 "QM_STR_CHOOSE_IMAGE" = "Choose image";
+"QM_STR_OPEN_IMAGE" = "Open image";
 "QM_STR_LOCATION" = "Location";
 "QM_STR_CANCEL" = "Cancel";
 
