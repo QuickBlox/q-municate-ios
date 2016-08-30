@@ -16,6 +16,9 @@
 #import "QBChatDialog+OpponentID.h"
 #import <SVProgressHUD.h>
 
+#import <NYTPhotoViewer/NYTPhotosViewController.h>
+#import "QMImagePreview.h"
+
 static const CGFloat kQMStatusCellMinHeight = 65.0f;
 
 typedef NS_ENUM(NSUInteger, QMUserInfoSection) {
@@ -38,7 +41,10 @@ typedef NS_ENUM(NSUInteger, QMContactInteractions) {
 @interface QMUserInfoViewController ()
 
 <
-QMContactListServiceDelegate
+QMContactListServiceDelegate,
+
+QMImageViewDelegate,
+NYTPhotosViewControllerDelegate
 >
 
 @property (weak, nonatomic) BFTask *task;
@@ -78,6 +84,7 @@ QMContactListServiceDelegate
     
     self.hiddenSections = [NSMutableIndexSet indexSet];
     self.avatarImageView.imageViewType = QMImageViewTypeCircle;
+    self.avatarImageView.delegate = self;
     
     // Hide empty separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -508,6 +515,23 @@ QMContactListServiceDelegate
     
     [self performUpdate];
     [self.tableView reloadData];
+}
+
+#pragma mark - QMImageViewDelegate
+
+- (void)imageViewDidTap:(QMImageView *)imageView {
+    
+    if (self.user.avatarUrl.length > 0) {
+        
+        [QMImagePreview previewImageView:imageView inViewController:self];
+    }
+}
+
+#pragma mark - NYTPhotosViewControllerDelegate
+
+- (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
+    
+    return self.avatarImageView;
 }
 
 #pragma mark - Helpers

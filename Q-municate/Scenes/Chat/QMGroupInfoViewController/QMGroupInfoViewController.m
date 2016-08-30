@@ -17,6 +17,9 @@
 #import "QMImagePicker.h"
 #import <QMImageView.h>
 
+#import <NYTPhotoViewer/NYTPhotosViewController.h>
+#import "QMImagePreview.h"
+
 @interface QMGroupInfoViewController ()
 
 <
@@ -24,13 +27,13 @@ QMGroupHeaderViewDelegate,
 QMImagePickerResultHandler,
 
 QMChatServiceDelegate,
-QMChatConnectionDelegate
+QMChatConnectionDelegate,
+
+NYTPhotosViewControllerDelegate
 >
 
 @property (weak, nonatomic) QMGroupOccupantsViewController *groupOccupantsViewController;
 @property (weak, nonatomic) IBOutlet QMGroupHeaderView *headerView;
-
-@property (weak, nonatomic) QMImageView *avatarImageView;
 
 @end
 
@@ -92,6 +95,16 @@ QMChatConnectionDelegate
                                                           [QMImagePicker choosePhotoInViewController:self resultHandler:self];
                                                       }]];
     
+    if (self.chatDialog.photo.length > 0) {
+        
+        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_OPEN_IMAGE", nil)
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                              
+                                                              [QMImagePreview previewImageView:self.headerView.avatarImage inViewController:self];
+                                                          }]];
+    }
+    
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
                                                         style:UIAlertActionStyleCancel
                                                       handler:nil]];
@@ -141,6 +154,13 @@ QMChatConnectionDelegate
         
         [self updateGroupHeaderView];
     }
+}
+
+#pragma mark - NYTPhotosViewControllerDelegate
+
+- (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
+    
+    return self.headerView.avatarImage;
 }
 
 @end
