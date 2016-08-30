@@ -1747,10 +1747,12 @@ NYTPhotosViewControllerDelegate
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
         
         @strongify(self);
-        self.topContentAdditionalInset = 0;
         [self.onlineTitleView sizeToFit];
         
-    } completion:nil];
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
+        
+        self.topContentAdditionalInset = 0;
+    }];
     
     [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
 }
