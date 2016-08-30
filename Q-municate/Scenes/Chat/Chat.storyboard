@@ -371,7 +371,7 @@
                         <outlet property="lastSeenLabel" destination="Lie-Yl-gML" id="UlW-L8-lzK"/>
                         <outlet property="phoneLabel" destination="7oP-Na-9dY" id="taE-lq-qQm"/>
                         <outlet property="statusLabel" destination="sdt-fA-pQb" id="kUE-79-qi1"/>
-                        <segue destination="vQY-aG-vQZ" kind="show" identifier="SceneSegueChat" id="oYP-uX-dUp"/>
+                        <segue destination="vQY-aG-vQZ" kind="showDetail" identifier="SceneSegueChat" action="showViewController:sender:" id="oYP-uX-dUp"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="D5L-Bm-0jb" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -519,10 +519,10 @@
             </objects>
             <point key="canvasLocation" x="-592" y="-7341.5"/>
         </scene>
-        <!--QMChatVC-->
+        <!--QMChatVCNavigation-->
         <scene sceneID="yeA-p5-rGm">
             <objects>
-                <viewControllerPlaceholder storyboardName="Main" referencedIdentifier="QMChatVC" id="vQY-aG-vQZ" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardName="Main" referencedIdentifier="QMChatVCNavigation" id="vQY-aG-vQZ" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Aap-YI-hfu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-830.5" y="-6743"/>
