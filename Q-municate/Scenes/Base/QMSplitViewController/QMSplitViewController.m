@@ -45,7 +45,7 @@
     
     UITabBarController *masterVC = splitViewController.viewControllers.firstObject;
     
-    UINavigationController *masterNavigationController = (UINavigationController *)masterVC.selectedViewController;
+    UINavigationController *masterNavigationController = (UINavigationController *)masterVC.viewControllers.firstObject;
     NSArray *viewControllers = [masterNavigationController viewControllers];
     BOOL shouldMoveToStack = NO;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:[[QMChatVC alloc] init]];
