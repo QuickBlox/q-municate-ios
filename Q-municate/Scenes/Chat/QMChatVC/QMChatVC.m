@@ -22,6 +22,7 @@
 #import "QMPhoto.h"
 #import "QMCallNotificationItem.h"
 #import "QMHelpers.h"
+#import "QMSplitViewController.h"
 
 // helpers
 #import "QMChatButtonsFactory.h"
@@ -1539,7 +1540,14 @@ NYTPhotosViewControllerDelegate
             
             if (!task.isCancelled && !task.isFaulted) {
                 
-                [self.navigationController popViewControllerAnimated:YES];
+                if (self.splitViewController.isCollapsed) {
+                    
+                    [self.navigationController popViewControllerAnimated:YES];
+                }
+                else {
+                    
+                    [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
+                }
             }
             
             return nil;
