@@ -61,6 +61,7 @@
 		585037591CFEE99900374A3C /* QMUserInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 585037581CFEE99900374A3C /* QMUserInfoCell.m */; };
 		58550ABC1CF5BA790024EAFC /* QBChatDialog+OpponentID.m in Sources */ = {isa = PBXBuildFile; fileRef = 58550ABB1CF5BA790024EAFC /* QBChatDialog+OpponentID.m */; };
 		585A46381CC8F16F004FBC3D /* QMGroupAddUsersSearchDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 585A46371CC8F16F004FBC3D /* QMGroupAddUsersSearchDataProvider.m */; };
+		585C82671D75D2CA0010C71E /* QMImagePreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 585C82661D75D2CA0010C71E /* QMImagePreview.m */; };
 		585DE45F1C4686060068E03E /* QMErrorsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 585DE45E1C4686060068E03E /* QMErrorsFactory.m */; };
 		585DE4631C46A8390068E03E /* QMPlaceholder.m in Sources */ = {isa = PBXBuildFile; fileRef = 585DE4621C46A8390068E03E /* QMPlaceholder.m */; };
 		5868B05B1CE9C647004F9233 /* QMCallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5868B05A1CE9C647004F9233 /* QMCallViewController.m */; };
@@ -279,6 +280,8 @@
 		58550ABB1CF5BA790024EAFC /* QBChatDialog+OpponentID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QBChatDialog+OpponentID.m"; sourceTree = "<group>"; };
 		585A46361CC8F16F004FBC3D /* QMGroupAddUsersSearchDataProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMGroupAddUsersSearchDataProvider.h; sourceTree = "<group>"; };
 		585A46371CC8F16F004FBC3D /* QMGroupAddUsersSearchDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMGroupAddUsersSearchDataProvider.m; sourceTree = "<group>"; };
+		585C82651D75D2CA0010C71E /* QMImagePreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMImagePreview.h; path = QMImagePreview/QMImagePreview.h; sourceTree = "<group>"; };
+		585C82661D75D2CA0010C71E /* QMImagePreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMImagePreview.m; path = QMImagePreview/QMImagePreview.m; sourceTree = "<group>"; };
 		585DE45D1C4686060068E03E /* QMErrorsFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMErrorsFactory.h; sourceTree = "<group>"; };
 		585DE45E1C4686060068E03E /* QMErrorsFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMErrorsFactory.m; sourceTree = "<group>"; };
 		585DE4611C46A8390068E03E /* QMPlaceholder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMPlaceholder.h; sourceTree = "<group>"; };
@@ -589,6 +592,7 @@
 		55A8B04F1965986A00B5D33B /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				585C82641D75D28A0010C71E /* QMImagePreview */,
 				581F6E1F1D3E3DF90087BC7A /* QMHelpers */,
 				58FD668B1CEF12AD00B72425 /* QMAlert */,
 				581BAC8B1CAD8DCA00E0567D /* QMColors */,
@@ -1095,6 +1099,15 @@
 				585A46371CC8F16F004FBC3D /* QMGroupAddUsersSearchDataProvider.m */,
 			);
 			path = QMGroupAddUsersSearchDataProvider;
+			sourceTree = "<group>";
+		};
+		585C82641D75D28A0010C71E /* QMImagePreview */ = {
+			isa = PBXGroup;
+			children = (
+				585C82651D75D2CA0010C71E /* QMImagePreview.h */,
+				585C82661D75D2CA0010C71E /* QMImagePreview.m */,
+			);
+			name = QMImagePreview;
 			sourceTree = "<group>";
 		};
 		585DE45C1C4685F10068E03E /* QMErrorsFactory */ = {
@@ -2140,6 +2153,7 @@
 				5877D6E31C4675B900938E5D /* QMBadgeView.m in Sources */,
 				58D952301CEE078F001C43F7 /* QMImages.m in Sources */,
 				584277E01C3FED0E00CDE35B /* QMContent.m in Sources */,
+				585C82671D75D2CA0010C71E /* QMImagePreview.m in Sources */,
 				58B3C9C41CB3FBBE00B08A27 /* QMLeaveChatCell.m in Sources */,
 				580590FD1CA548130055BC2F /* QMContactManager.m in Sources */,
 				5868B0781CE9E59E004F9233 /* QMContactsViewController.m in Sources */,
