@@ -16,7 +16,7 @@
 /**
  *  Chat dialog.
  */
-@property (strong, nonatomic) QBChatDialog *chatDialog;
+@property (strong, nonatomic, nullable) QBChatDialog *chatDialog;
 
 /**
  *  Chat view controller with chat dialog.
@@ -25,6 +25,6 @@
  *
  *  @return QMChatViewController new instance.
  */
-+ (nullable instancetype)chatViewControllerWithChatDialog:(QBChatDialog *)chatDialog;
++ (nullable instancetype)chatViewControllerWithChatDialog:(nullable QBChatDialog *)chatDialog;
 
 @end
