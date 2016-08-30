@@ -304,7 +304,10 @@ NYTPhotosViewControllerDelegate
 
 - (void)deferredQueueManager:(QMDeferredQueueManager *)__unused queueManager didAddMessageLocally:(QBChatMessage *)addedMessage {
     
-    [self.chatDataSource addMessage:addedMessage];
+    if ([addedMessage.dialogID isEqualToString:self.chatDialog.ID]) {
+        
+        [self.chatDataSource addMessage:addedMessage];
+    }
 }
 
 - (void)deferredQueueManager:(QMDeferredQueueManager *)__unused queueManager didUpdateMessageLocally:(QBChatMessage *)addedMessage {
