@@ -409,8 +409,9 @@ QMContactListServiceDelegate
     
     if ([segue.identifier isEqualToString:kQMSceneSegueChat]) {
         
-        QMChatVC *chatVC = segue.destinationViewController;
-        chatVC.chatDialog = sender;
+        UINavigationController *chatNavigationController = segue.destinationViewController;
+        QMChatVC *chatViewController = (QMChatVC *)chatNavigationController.topViewController;
+        chatViewController.chatDialog = sender;
     }
 }
 

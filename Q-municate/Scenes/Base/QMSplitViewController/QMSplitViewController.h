@@ -10,4 +10,6 @@
 
 @interface QMSplitViewController : UISplitViewController
 
+- (void)showPlaceholderDetailViewController;
+
 @end

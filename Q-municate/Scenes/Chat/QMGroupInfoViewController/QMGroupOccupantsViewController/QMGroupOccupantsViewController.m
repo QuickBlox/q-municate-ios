@@ -18,6 +18,7 @@
 #import "QMUserInfoViewController.h"
 #import "NSArray+Intersection.h"
 #import <SVProgressHUD.h>
+#import "QMSplitViewController.h"
 
 static const CGFloat kQMSectionHeaderHeight = 32.0f;
 
@@ -177,7 +178,14 @@ QMUsersServiceDelegate
                                                                   
                                                                   if (!task.isFaulted) {
                                                                       
-                                                                      [navigationController popToRootViewControllerAnimated:YES];
+                                                                      if (self.splitViewController.isCollapsed) {
+                                                                          
+                                                                          [navigationController popToRootViewControllerAnimated:YES];
+                                                                      }
+                                                                      else {
+                                                                          
+                                                                          [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
+                                                                      }
                                                                   }
                                                                   
                                                                   return nil;
