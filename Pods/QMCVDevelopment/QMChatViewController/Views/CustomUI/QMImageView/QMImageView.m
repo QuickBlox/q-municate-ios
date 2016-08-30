@@ -12,6 +12,8 @@
 #import "UIView+WebCacheOperation.h"
 #import "UIImageView+WebCache.h"
 
+static NSString * const kQMImageViewTransformedKey = @"%@/original";
+
 @interface QMImageView()
 
 <SDWebImageManagerDelegate>
@@ -176,6 +178,12 @@
 
 - (UIImage *)imageManager:(SDWebImageManager *)imageManager transformDownloadedImage:(UIImage *)image withURL:(NSURL *)imageURL {
     
+    // saving original image if needed
+    if (self.imageViewType != QMImageViewTypeNone) {
+        
+        [self.webManager.imageCache storeImage:image forKey:[NSString stringWithFormat:kQMImageViewTransformedKey, imageURL.absoluteString]];
+    }
+    
     UIImage *transformedImage = [self transformImage:image];
     return transformedImage;
 }
@@ -194,6 +202,20 @@
         
         return image;
     }
+}
+
+- (UIImage *)originalImage {
+    
+    return [self.webManager.imageCache imageFromDiskCacheForKey:[NSString stringWithFormat:kQMImageViewTransformedKey, self.url.absoluteString]];
+}
+
+- (void)removeImage {
+    
+    NSString *urlStr = self.url.absoluteString;
+    [self.webManager.imageCache removeImageForKey:urlStr];
+    [self.webManager.imageCache removeImageForKey:[NSString stringWithFormat:kQMImageViewTransformedKey, urlStr]];
+    self.image = nil;
+    self.url = nil;
 }
 
 - (void)setImage:(UIImage *)image withKey:(NSString *)key {
