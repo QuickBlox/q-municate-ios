@@ -10,6 +10,8 @@
 #import "QMChatVC.h"
 #import "QMHelpers.h"
 
+#import "QMNavigationBar.h"
+
 @interface QMSplitViewController() <UISplitViewControllerDelegate>
 
 @end
@@ -48,7 +50,7 @@
     UINavigationController *masterNavigationController = (UINavigationController *)masterVC.viewControllers.firstObject;
     NSArray *viewControllers = [masterNavigationController viewControllers];
     BOOL shouldMoveToStack = NO;
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:[[QMChatVC alloc] init]];
+    UINavigationController *navigationController = [self navigationControllerWithRootViewController:[[QMChatVC alloc] init]];
     
     for (UIViewController *obj in viewControllers) {
         
@@ -62,7 +64,7 @@
             
             shouldMoveToStack = YES;
             removeControllerFromNavigationStack(masterNavigationController, obj);
-            navigationController = [[UINavigationController alloc] initWithRootViewController:obj];
+            navigationController = [self navigationControllerWithRootViewController:obj];
         }
     }
     
@@ -91,6 +93,27 @@
     }
     
     return NO;
+}
+
+#pragma mark - Methods
+
+- (void)showPlaceholderDetailViewController {
+    
+    [self setViewControllers:@[self.viewControllers.firstObject, [self navigationControllerWithRootViewController:[[QMChatVC alloc] init]]]];
+}
+
+#pragma mark - Helpers
+
+- (UINavigationController *)navigationControllerWithRootViewController:(UIViewController *)rvc {
+    
+    UINavigationController *navVC = [[UINavigationController alloc] initWithNavigationBarClass:[QMNavigationBar class] toolbarClass:nil];
+    
+    if (rvc != nil) {
+        
+        [navVC setViewControllers:@[rvc]];
+    }
+    
+    return navVC;
 }
 
 @end
