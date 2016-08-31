@@ -20,20 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (strong, nonatomic) QBUUser *user;
 
-- (nullable instancetype)init NS_UNAVAILABLE;
-- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
-- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
-- (instancetype)initWithStyle:(UITableViewStyle)style NS_UNAVAILABLE;
-
-/**
- *  User info view controller instance with user.
- *
- *  @param user user to instantinate view controller with.
- *
- *  @return QMUserInfoViewController instantiated instance.
- */
-+ (nullable instancetype)userInfoViewControllerWithUser:(QBUUser *)user;
-
 @end
 
 NS_ASSUME_NONNULL_END

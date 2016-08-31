@@ -99,7 +99,11 @@
 
 - (void)showPlaceholderDetailViewController {
     
-    [self setViewControllers:@[self.viewControllers.firstObject, [self navigationControllerWithRootViewController:[[QMChatVC alloc] init]]]];
+    // showing placeholder chat VC as placeholder
+    [self showDetailViewController:[self navigationControllerWithRootViewController:[[QMChatVC alloc] init]] sender:nil];
+    
+    // updating display mode to not stuck on primary visible
+    self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
 }
 
 #pragma mark - Helpers

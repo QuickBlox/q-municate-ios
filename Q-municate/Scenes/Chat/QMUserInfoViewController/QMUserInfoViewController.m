@@ -63,14 +63,6 @@ NYTPhotosViewControllerDelegate
 
 @implementation QMUserInfoViewController
 
-+ (instancetype)userInfoViewControllerWithUser:(QBUUser *)user {
-    
-    QMUserInfoViewController *userInfoViewController = [[UIStoryboard storyboardWithName:kQMChatStoryboard bundle:nil] instantiateViewControllerWithIdentifier:NSStringFromClass([self class])];
-    userInfoViewController.user = user;
-    
-    return userInfoViewController;
-}
-
 - (void)dealloc {
     
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);

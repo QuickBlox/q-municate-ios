@@ -206,7 +206,7 @@ QMUsersServiceDelegate
     
     QBUUser *user = [(id <QMContactsSearchDataSourceProtocol>)self.searchDataSource userAtIndexPath:indexPath];
     
-    [self pushUserInfoViewControllerForUser:user];
+    [self performSegueWithIdentifier:kQMSceneSegueUserInfo sender:user];
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -263,7 +263,7 @@ QMUsersServiceDelegate
 
 - (void)searchResultsController:(QMSearchResultsController *)__unused searchResultsController didSelectObject:(id)object {
     
-    [self pushUserInfoViewControllerForUser:object];
+    [self performSegueWithIdentifier:kQMSceneSegueUserInfo sender:object];
 }
 
 #pragma mark - Helpers
@@ -287,12 +287,6 @@ QMUsersServiceDelegate
     [self.searchResultsController.tableView reloadData];
 }
 
-- (void)pushUserInfoViewControllerForUser:(QBUUser *)user {
-    
-    QMUserInfoViewController *userInfoVC = [QMUserInfoViewController userInfoViewControllerWithUser:user];
-    [self.navigationController pushViewController:userInfoVC animated:YES];
-}
-
 - (void)updateContactsAndEndRefreshing {
     
     @weakify(self);
@@ -304,6 +298,17 @@ QMUsersServiceDelegate
         
         return nil;
     }];
+}
+
+#pragma mark - Actions
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    if ([segue.identifier isEqualToString:kQMSceneSegueUserInfo]) {
+        
+        QMUserInfoViewController *userInfoVC = (QMUserInfoViewController *)segue.destinationViewController;
+        userInfoVC.user = sender;
+    }
 }
 
 #pragma mark - UISearchResultsUpdating
