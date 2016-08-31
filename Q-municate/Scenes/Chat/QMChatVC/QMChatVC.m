@@ -946,13 +946,12 @@ NYTPhotosViewControllerDelegate
         NSURL *userImageUrl = [NSURL URLWithString:sender.avatarUrl];
         UIImage *placeholder = [QMPlaceholder placeholderWithFrame:avatarView.bounds title:sender.fullName ID:sender.ID];
         
+        avatarView.imageViewType = QMImageViewTypeCircle;
         [avatarView setImageWithURL:userImageUrl
                         placeholder:placeholder
                             options:SDWebImageHighPriority
                            progress:nil
                      completedBlock:nil];
-        avatarView.imageViewType = QMImageViewTypeCircle;
-        
     }
     else if ([cell isKindOfClass:[QMChatNotificationCell class]]) {
         
