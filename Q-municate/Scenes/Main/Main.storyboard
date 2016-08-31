@@ -106,10 +106,21 @@ out here.</string>
                         <autoresizingMask key="autoresizingMask"/>
                         <attributedString key="attributedTitle"/>
                     </refreshControl>
+                    <connections>
+                        <segue destination="UXp-CI-mhH" kind="show" identifier="SceneSegueUserInfo" id="s1K-fW-SNs"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wvx-23-OaM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-2759" y="-6080"/>
+        </scene>
+        <!--QMUserInfoViewController-->
+        <scene sceneID="Bia-Qn-Iva">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Chat" referencedIdentifier="QMUserInfoViewController" id="UXp-CI-mhH" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tIV-Jy-7PL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2087" y="-6080"/>
         </scene>
         <!--New Message-->
         <scene sceneID="DAe-Pp-cCf">
@@ -391,6 +402,6 @@ out here.</string>
         <image name="qm-tb-settings" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="LJb-6W-9Cm"/>
+        <segue reference="SCD-ix-MHd"/>
     </inferredMetricsTieBreakers>
 </document>
