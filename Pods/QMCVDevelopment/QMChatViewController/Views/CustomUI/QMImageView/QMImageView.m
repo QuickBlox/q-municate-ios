@@ -13,6 +13,9 @@
 #import "UIImageView+WebCache.h"
 
 static NSString * const kQMImageViewTransformedKey = @"%@/original";
+static NSString * const kQMImageViewScaleKey = @"%@/%lf-%lf";
+
+static NSString * const kQMImageViewLoadOperationKey = @"UIImageViewImageLoad";
 
 @interface QMImageView()
 
@@ -104,6 +107,11 @@ static NSString * const kQMImageViewTransformedKey = @"%@/original";
     
     self.webManager = [[SDWebImageManager alloc] init];
     self.webManager.delegate = self;
+    
+    [self.webManager setCacheKeyFilter:^(NSURL *url) {
+        
+        return [NSString stringWithFormat:kQMImageViewScaleKey, url.absoluteString, CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds)];
+    }];
 }
 
 - (void)setImageWithURL:(NSURL *)url
@@ -113,6 +121,7 @@ static NSString * const kQMImageViewTransformedKey = @"%@/original";
          completedBlock:(SDWebImageCompletionBlock)completedBlock  {
     
     if ([url isEqual:self.url]) {
+        
         return;
     }
     
@@ -124,56 +133,97 @@ static NSString * const kQMImageViewTransformedKey = @"%@/original";
         self.image = placehoder;
     }
     
-    if (url) {
+    if (url == nil) {
         
-        __weak __typeof(self)weakSelf = self;
+        NSError *error =
+        [NSError errorWithDomain:@"SDWebImageErrorDomain"
+                            code:-1
+                        userInfo:@{NSLocalizedDescriptionKey : @"Trying to load a nil url"}];
         
-        id <SDWebImageOperation> operation =
-        [self.webManager downloadImageWithURL:url options:options progress:progress
-                                    completed:
-         ^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+        if (completedBlock) {
+            
+            completedBlock(nil, error, SDImageCacheTypeNone, url);
+        }
+
+    }
+    
+    NSString *key = [self.webManager cacheKeyForURL:url];
+    
+    UIImage *cachedImage = [self.webManager.imageCache imageFromMemoryCacheForKey:key];
+    if (cachedImage != nil) {
+        
+        self.image = cachedImage;
+        
+        if (completedBlock) {
+            
+            completedBlock(cachedImage, nil, SDImageCacheTypeMemory, url);
+        }
+        
+        return;
+    }
+    
+    cachedImage = [self.webManager.imageCache imageFromDiskCacheForKey:key];
+    if (cachedImage != nil) {
+        
+        self.image = cachedImage;
+        
+        if (completedBlock) {
+            
+            completedBlock(cachedImage, nil, SDImageCacheTypeDisk, url);
+        }
+        
+        return;
+    }
+    
+    cachedImage = [self originalImage];
+    if (cachedImage != nil) {
+        
+        cachedImage = [self transformImage:cachedImage];
+        self.image = cachedImage;
+        [self.webManager saveImageToCache:cachedImage forURL:url];
+        
+        if (completedBlock) {
+            
+            completedBlock(cachedImage, nil, SDImageCacheTypeNone, url);
+        }
+        
+        return;
+    }
+    
+    // loading image cause it is not existent
+    
+    __weak __typeof(self)weakSelf = self;
+    
+    id <SDWebImageOperation> operation =
+    [self.webManager downloadImageWithURL:url options:options progress:progress
+                                completed:
+     ^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+         
+         if (!weakSelf) return;
+         
+         dispatch_main_sync_safe(^{
              
-             if (!weakSelf) return;
-             
-             dispatch_main_sync_safe(^{
+             if (!error) {
                  
-                 if (!error) {
+                 weakSelf.image = image;
+                 [weakSelf setNeedsLayout];
+             }
+             else {
+                 
+                 if ((options & SDWebImageDelayPlaceholder)) {
                      
-                     weakSelf.image = image;
+                     weakSelf.image = placehoder;
                      [weakSelf setNeedsLayout];
                  }
-                 else {
-                     
-                     if ((options & SDWebImageDelayPlaceholder)) {
-                         
-                         weakSelf.image = placehoder;
-                         [weakSelf setNeedsLayout];
-                     }
-                 }
-                 
-                 if (completedBlock && finished) {
-                     completedBlock(image, error, cacheType, imageURL);
-                 }
-             });
-         }];
-        
-        [self sd_setImageLoadOperation:operation forKey:@"UIImageViewImageLoad"];
-    }
-    else {
-        
-        dispatch_main_async_safe(^{
-            
-            NSError *error =
-            [NSError errorWithDomain:@"SDWebImageErrorDomain"
-                                code:-1
-                            userInfo:@{NSLocalizedDescriptionKey : @"Trying to load a nil url"}];
-            
-            if (completedBlock) {
-                
-                completedBlock(nil, error, SDImageCacheTypeNone, url);
-            }
-        });
-    }
+             }
+             
+             if (completedBlock && finished) {
+                 completedBlock(image, error, cacheType, imageURL);
+             }
+         });
+     }];
+    
+    [self sd_setImageLoadOperation:operation forKey:kQMImageViewLoadOperationKey];
 }
 
 - (UIImage *)imageManager:(SDWebImageManager *)imageManager transformDownloadedImage:(UIImage *)image withURL:(NSURL *)imageURL {
@@ -195,6 +245,13 @@ static NSString * const kQMImageViewTransformedKey = @"%@/original";
         return [image imageByScaleAndCrop:self.frame.size];
     }
     else if (self.imageViewType == QMImageViewTypeCircle) {
+        
+        if (image.size.height > image.size.width
+            || image.size.width > image.size.height) {
+            // if image is not square it will be disorted
+            // making it a square-image first
+            image = [image imageByScaleAndCrop:self.frame.size];
+        }
         
         return [image imageByCircularScaleAndCrop:self.frame.size];
     }
