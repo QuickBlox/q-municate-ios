@@ -157,6 +157,11 @@ NYTPhotosViewControllerDelegate
 - (void)dealloc {
     
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    
+    // removing left bar button item that is responsible for split view
+    // display mode managing. Not removing it will cause item update
+    // for deallocated navigation item
+    self.navigationItem.leftBarButtonItem = nil;
 }
 
 - (void)viewDidLoad {
@@ -175,6 +180,7 @@ NYTPhotosViewControllerDelegate
         self.view = bgView;
         self.view.contentMode = UIViewContentModeCenter;
         self.view.backgroundColor = [UIColor whiteColor];
+        
         return;
     }
     
