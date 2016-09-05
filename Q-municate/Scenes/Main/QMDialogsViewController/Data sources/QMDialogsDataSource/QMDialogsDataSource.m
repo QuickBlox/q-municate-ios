@@ -61,56 +61,12 @@
     return YES;
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)__unused tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
         QBChatDialog *chatDialog = self.items[indexPath.row];
-        
-        NSString *dialogName = chatDialog.name;
-        
-        if (chatDialog.type == QBChatDialogTypePrivate) {
-            
-            QBUUser *user = [[QMCore instance].usersService.usersMemoryStorage userWithID:[chatDialog opponentID]];
-            dialogName = user.fullName;
-        }
-        
-        UIAlertController *alertController = [UIAlertController
-                                              alertControllerWithTitle:nil
-                                              message:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CONFIRM_DELETE_DIALOG", nil), dialogName]
-                                              preferredStyle:UIAlertControllerStyleAlert];
-        
-        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
-                                                            style:UIAlertActionStyleCancel
-                                                          handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                              
-                                                              [tableView setEditing:NO animated:YES];
-                                                          }]];
-        
-        [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil)
-                                                            style:UIAlertActionStyleDestructive
-                                                          handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                              
-                                                              BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull __unused task) {
-                                                                  
-                                                                  [SVProgressHUD dismiss];
-                                                                  return nil;
-                                                              };
-                                                              
-                                                              [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-                                                              if (chatDialog.type == QBChatDialogTypeGroup) {
-                                                                  
-                                                                  chatDialog.occupantIDs = [[QMCore instance].contactManager occupantsWithoutCurrentUser:chatDialog.occupantIDs];
-                                                                  [[[QMCore instance].chatManager leaveChatDialog:chatDialog] continueWithSuccessBlock:completionBlock];
-                                                              }
-                                                              else {
-                                                                  // private and public group chats
-                                                                  [[[QMCore instance].chatService deleteDialogWithID:chatDialog.ID] continueWithSuccessBlock:completionBlock];
-                                                              }
-                                                          }]];
-        
-        UIViewController *viewController = [[[(UISplitViewController *)[UIApplication sharedApplication].keyWindow.rootViewController viewControllers] firstObject] selectedViewController];
-        [viewController presentViewController:alertController animated:YES completion:nil];
+        [self.delegate dialogsDataSource:self commitDeleteDialog:chatDialog];
     }
 }
 

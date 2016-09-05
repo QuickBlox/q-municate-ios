@@ -19,6 +19,8 @@
 #import "QMCore.h"
 #import "QMTasks.h"
 #import <SVProgressHUD.h>
+#import "QBChatDialog+OpponentID.h"
+#import "QMSplitViewController.h"
 
 // category
 #import "UINavigationController+QMNotification.h"
@@ -37,7 +39,7 @@ UISearchControllerDelegate,
 UISearchResultsUpdating,
 
 QMPushNotificationManagerDelegate,
-
+QMDialogsDataSourceDelegate,
 QMSearchResultsControllerDelegate
 >
 
@@ -200,6 +202,7 @@ QMSearchResultsControllerDelegate
 - (void)configureDataSources {
     
     self.dialogsDataSource = [[QMDialogsDataSource alloc] init];
+    self.dialogsDataSource.delegate = self;
     self.placeholderDataSource  = [[QMPlaceholderDataSource alloc] init];
     
     self.tableView.dataSource = self.placeholderDataSource;
@@ -392,6 +395,60 @@ QMSearchResultsControllerDelegate
         
         [self.tableView reloadData];
     }
+}
+
+#pragma mark - QMDialogsDataSourceDelegate
+
+- (void)dialogsDataSource:(QMDialogsDataSource *)__unused dialogsDataSource commitDeleteDialog:(QBChatDialog *)chatDialog {
+    
+    NSString *dialogName = chatDialog.name;
+    
+    if (chatDialog.type == QBChatDialogTypePrivate) {
+        
+        QBUUser *user = [[QMCore instance].usersService.usersMemoryStorage userWithID:[chatDialog opponentID]];
+        dialogName = user.fullName;
+    }
+    
+    UIAlertController *alertController = [UIAlertController
+                                          alertControllerWithTitle:nil
+                                          message:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CONFIRM_DELETE_DIALOG", nil), dialogName]
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                          [self.tableView setEditing:NO animated:YES];
+                                                      }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil)
+                                                        style:UIAlertActionStyleDestructive
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                          BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull __unused task) {
+                                                              
+                                                              if ([[QMCore instance].activeDialogID isEqualToString:chatDialog.ID]) {
+                                                                  
+                                                                  [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
+                                                              }
+                                                              
+                                                              [SVProgressHUD dismiss];
+                                                              return nil;
+                                                          };
+                                                          
+                                                          [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+                                                          if (chatDialog.type == QBChatDialogTypeGroup) {
+                                                              
+                                                              chatDialog.occupantIDs = [[QMCore instance].contactManager occupantsWithoutCurrentUser:chatDialog.occupantIDs];
+                                                              [[[QMCore instance].chatManager leaveChatDialog:chatDialog] continueWithSuccessBlock:completionBlock];
+                                                          }
+                                                          else {
+                                                              // private and public group chats
+                                                              [[[QMCore instance].chatService deleteDialogWithID:chatDialog.ID] continueWithSuccessBlock:completionBlock];
+                                                          }
+                                                      }]];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark - Helpers
