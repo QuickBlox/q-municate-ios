@@ -89,10 +89,14 @@
     __block QBChatDialog *chatDialog = nil;
     
     @weakify(self);
-    return [[[self.serviceManager.contactListService removeUserFromContactListWithUserID:user.ID] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+    return [[[[self.serviceManager.contactListService removeUserFromContactListWithUserID:user.ID] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         
         @strongify(self);
-        chatDialog = [self.serviceManager.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
+        
+        return [self.serviceManager.chatService createPrivateChatDialogWithOpponent:user];
+    }] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
+        
+        chatDialog = t.result;
         QBChatMessage *notificationMessage = [QMMessagesFactory removeContactNotificationForUser:user];
         
         return [self.serviceManager.chatService sendMessage:notificationMessage
@@ -101,11 +105,10 @@
                                               saveToHistory:YES
                                               saveToStorage:NO];
         
-    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+    }] continueWithBlock:^id _Nullable(BFTask * __unused _Nonnull t) {
         
         return [self.serviceManager.chatService deleteDialogWithID:chatDialog.ID];
     }];
-    
 }
 
 #pragma mark - Users
