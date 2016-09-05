@@ -392,11 +392,6 @@ NYTPhotosViewControllerDelegate
 
 - (BOOL)messageSendingAllowed {
     
-    if (![self connectionExists]) {
-        
-        return NO;
-    }
-    
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
         if (![[QMCore instance].contactManager isFriendWithUserID:[self.chatDialog opponentID]]) {
