@@ -30,8 +30,7 @@
         
         QBUUser *recipient = [[QMCore instance].usersService.usersMemoryStorage userWithID:[chatDialog opponentID]];
         
-        if (recipient != nil) {
-            NSParameterAssert(recipient.fullName);
+        if (recipient.fullName != nil) {
             
             [cell setTitle:recipient.fullName placeholderID:[chatDialog opponentID] avatarUrl:recipient.avatarUrl];
         }
