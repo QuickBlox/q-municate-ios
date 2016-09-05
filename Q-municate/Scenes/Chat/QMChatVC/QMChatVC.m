@@ -286,7 +286,11 @@ NYTPhotosViewControllerDelegate
                                                                                       
                                                                                       @strongify(self);
                                                                                       [self stopTyping];
-                                                                                      [self setOpponentOnlineStatus:NO];
+                                                                                      
+                                                                                      if (self.chatDialog.type == QBChatDialogTypePrivate) {
+                                                                                          
+                                                                                          [self setOpponentOnlineStatus:NO];
+                                                                                      }
                                                                                   }];
 }
 

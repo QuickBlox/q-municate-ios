@@ -50,7 +50,7 @@
     UINavigationController *masterNavigationController = (UINavigationController *)masterVC.viewControllers.firstObject;
     NSArray *viewControllers = [masterNavigationController viewControllers];
     BOOL shouldMoveToStack = NO;
-    UINavigationController *navigationController = [self navigationControllerWithRootViewController:[[QMChatVC alloc] init]];
+    UINavigationController *navigationController = nil;
     
     for (UIViewController *obj in viewControllers) {
         
@@ -66,6 +66,11 @@
             removeControllerFromNavigationStack(masterNavigationController, obj);
             navigationController = [self navigationControllerWithRootViewController:obj];
         }
+    }
+    
+    if (navigationController == nil) {
+        
+        navigationController = [self navigationControllerWithRootViewController:[[QMChatVC alloc] init]];
     }
     
     return navigationController;
