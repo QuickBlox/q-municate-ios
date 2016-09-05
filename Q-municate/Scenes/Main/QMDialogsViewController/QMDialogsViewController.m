@@ -240,6 +240,7 @@ QMSearchResultsControllerDelegate
     if ([segue.identifier isEqualToString:kQMSceneSegueChat]) {
         
         UINavigationController *chatNavigationController = segue.destinationViewController;
+        
         QMChatVC *chatViewController = (QMChatVC *)chatNavigationController.topViewController;
         chatViewController.chatDialog = sender;
     }
