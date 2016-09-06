@@ -8,6 +8,8 @@
 
 #import "QMTextField.h"
 
+#import "QMHelpers.h"
+
 @implementation QMTextField
 
 @dynamic delegate;
@@ -73,7 +75,39 @@
     
     [self.delegate textFieldWillDeleteBackwards:self];
     
-    [super deleteBackward];
+    if (iosMajorVersion() > 8) {
+        
+        [super deleteBackward];
+    }
+}
+
+- (BOOL)keyboardInputShouldDelete:(UITextField *)textField {
+    
+    BOOL shouldDelete = YES;
+    
+    if ([UITextField instancesRespondToSelector:_cmd]) {
+        
+        BOOL wasEmpty = self.text.length == 0;
+        
+        BOOL (*keyboardInputShouldDelete)(id, SEL, UITextField *) = (BOOL (*)(id, SEL, UITextField *))[UITextField instanceMethodForSelector:_cmd];
+        
+        if (keyboardInputShouldDelete) {
+            
+            shouldDelete = keyboardInputShouldDelete(self, _cmd, textField);
+        }
+        
+        if (wasEmpty) {
+            
+            shouldDelete = NO;
+        }
+        
+        if (iosMajorVersion() >= 8 && wasEmpty) {
+            
+            [self deleteBackward];
+        }
+    }
+    
+    return shouldDelete;
 }
 
 #pragma mark - UIResponder
