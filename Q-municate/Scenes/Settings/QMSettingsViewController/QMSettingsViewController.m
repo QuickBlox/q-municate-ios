@@ -139,7 +139,8 @@ NYTPhotosViewControllerDelegate
     
     if ([segue.identifier isEqualToString:kQMSceneSegueUpdateUser]) {
         
-        QMUpdateUserViewController *updateUserVC = segue.destinationViewController;
+        UINavigationController *navigationController = segue.destinationViewController;
+        QMUpdateUserViewController *updateUserVC = navigationController.viewControllers.firstObject;
         updateUserVC.updateUserField = [sender unsignedIntegerValue];
     }
 }

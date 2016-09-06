@@ -70,7 +70,7 @@ out here.</string>
                     <navigationItem key="navigationItem" title="Chats" id="l23-on-5eH">
                         <barButtonItem key="rightBarButtonItem" image="ic_new" id="ekF-vr-TqV">
                             <connections>
-                                <segue destination="312-xk-x9O" kind="show" identifier="" id="WyW-bf-UgW"/>
+                                <segue destination="grf-7O-2S3" kind="showDetail" id="mN8-xr-e79"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -108,17 +108,17 @@ out here.</string>
                         <attributedString key="attributedTitle"/>
                     </refreshControl>
                     <connections>
-                        <segue destination="UXp-CI-mhH" kind="show" identifier="SceneSegueUserInfo" id="s1K-fW-SNs"/>
+                        <segue destination="UXp-CI-mhH" kind="showDetail" identifier="SceneSegueUserInfo" id="C7t-jD-f70"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wvx-23-OaM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-2759" y="-6080"/>
         </scene>
-        <!--QMUserInfoViewController-->
+        <!--QMUserInfoNavigation-->
         <scene sceneID="Bia-Qn-Iva">
             <objects>
-                <viewControllerPlaceholder storyboardName="Chat" referencedIdentifier="QMUserInfoViewController" id="UXp-CI-mhH" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardName="Chat" referencedIdentifier="QMUserInfoNavigation" id="UXp-CI-mhH" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tIV-Jy-7PL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-2087" y="-6080"/>
@@ -177,7 +177,7 @@ out here.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2lp-VE-gjm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-928" y="-8520"/>
+            <point key="canvasLocation" x="-116" y="-8520"/>
         </scene>
         <!--Message Contact List View Controller-->
         <scene sceneID="Lox-Uz-g5i">
@@ -379,7 +379,7 @@ out here.</string>
         <!--Navigation Controller-->
         <scene sceneID="teI-65-gku">
             <objects>
-                <navigationController storyboardIdentifier="QMChatVCNavigation" automaticallyAdjustsScrollViewInsets="NO" id="smd-oe-3SF" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="smd-oe-3SF" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="gyT-Uq-WjS" customClass="QMNavigationBar">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -394,6 +394,24 @@ out here.</string>
             </objects>
             <point key="canvasLocation" x="-1905" y="-7695"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="X4r-fs-KwN">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="grf-7O-2S3" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="uaF-lR-4Sh" customClass="QMNavigationBar">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="312-xk-x9O" kind="relationship" relationship="rootViewController" id="2kc-dw-KEn"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CM4-Kv-hu1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-928" y="-8520"/>
+        </scene>
     </scenes>
     <resources>
         <image name="ic_new" width="23" height="23"/>
@@ -403,6 +421,6 @@ out here.</string>
         <image name="qm-tb-settings" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="SCD-ix-MHd"/>
+        <segue reference="LJb-6W-9Cm"/>
     </inferredMetricsTieBreakers>
 </document>

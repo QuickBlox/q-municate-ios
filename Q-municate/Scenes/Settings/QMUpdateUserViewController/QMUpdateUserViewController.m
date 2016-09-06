@@ -28,11 +28,23 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
 
 @implementation QMUpdateUserViewController
 
+- (void)dealloc {
+    
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    
+    // removing left bar button item that is responsible for split view
+    // display mode managing. Not removing it will cause item update
+    // for deallocated navigation item
+    self.navigationItem.leftBarButtonItem = nil;
+}
+
 - (void)viewDidLoad {
     NSAssert(_updateUserField != QMUpdateUserFieldNone, @"Must be a valid update field.");
     [super viewDidLoad];
     
     self.navigationItem.rightBarButtonItem.enabled = NO;
+    self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+    self.navigationItem.leftItemsSupplementBackButton = YES;
     
     // configure appearance
     [self configureAppearance];

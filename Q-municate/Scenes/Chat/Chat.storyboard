@@ -88,16 +88,32 @@
             </objects>
             <point key="canvasLocation" x="-1442" y="-7653"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="T49-nt-DbX">
+            <objects>
+                <navigationController storyboardIdentifier="QMUserInfoNavigation" id="Byn-vh-EXQ" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="6Ba-eH-Tfg" customClass="QMNavigationBar">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="C3X-fL-ZMz" kind="relationship" relationship="rootViewController" id="Kbv-zx-LZs"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HAb-04-72W" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2274" y="-6726"/>
+        </scene>
         <!--Profile-->
         <scene sceneID="Gq0-Tj-nDc">
             <objects>
                 <tableViewController storyboardIdentifier="QMUserInfoViewController" hidesBottomBarWhenPushed="YES" id="C3X-fL-ZMz" customClass="QMUserInfoViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="6mx-W0-G57">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="441"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" id="rQD-y7-GiQ">
-                            <rect key="frame" x="0.0" y="44" width="600" height="95"/>
+                            <rect key="frame" x="0.0" y="64" width="600" height="95"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last seen yesterday at 12:32" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lie-Yl-gML">
@@ -136,7 +152,7 @@
                             <tableViewSection id="8gt-Sv-uQv">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="66" id="Su8-CV-Cuu" customClass="QMUserInfoCell">
-                                        <rect key="frame" x="0.0" y="139" width="600" height="66"/>
+                                        <rect key="frame" x="0.0" y="159" width="600" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Su8-CV-Cuu" id="aKZ-Nj-NB3">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="65"/>
@@ -171,7 +187,7 @@
                             <tableViewSection id="CQ5-59-zyP">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="50" id="zSl-cZ-7LM" customClass="QMUserInfoCell">
-                                        <rect key="frame" x="0.0" y="205" width="600" height="50"/>
+                                        <rect key="frame" x="0.0" y="225" width="600" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zSl-cZ-7LM" id="np5-ew-VGI">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="49"/>
@@ -205,7 +221,7 @@
                             <tableViewSection id="LcF-he-eya">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="50" id="luQ-Su-EFE" customClass="QMUserInfoCell">
-                                        <rect key="frame" x="0.0" y="255" width="600" height="50"/>
+                                        <rect key="frame" x="0.0" y="275" width="600" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="luQ-Su-EFE" id="a5D-bi-mws">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="49"/>
@@ -239,7 +255,7 @@
                             <tableViewSection id="EV3-Nn-8Uq">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="44" id="g23-qb-2g0" customClass="QMUserInfoCell">
-                                        <rect key="frame" x="0.0" y="305" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="325" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="g23-qb-2g0" id="NVv-mw-gEt">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -260,7 +276,7 @@
                                         <inset key="separatorInset" minX="32" minY="0.0" maxX="0.0" maxY="0.0"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="uGr-Ah-hiZ" customClass="QMUserInfoCell">
-                                        <rect key="frame" x="0.0" y="349" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="369" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="uGr-Ah-hiZ" id="ly4-I0-5rR">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -281,7 +297,7 @@
                                         <inset key="separatorInset" minX="32" minY="0.0" maxX="0.0" maxY="0.0"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="psG-Iw-SPL" customClass="QMUserInfoCell">
-                                        <rect key="frame" x="0.0" y="393" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="413" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="psG-Iw-SPL" id="N0t-rI-hm1">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -306,7 +322,7 @@
                             <tableViewSection id="u0r-2D-eTd">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="GtC-9F-u6x" customClass="QMUserInfoCell">
-                                        <rect key="frame" x="0.0" y="437" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="457" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="GtC-9F-u6x" id="1Cc-tD-cr0">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -331,7 +347,7 @@
                             <tableViewSection id="uvh-WB-HPg">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="kbh-Ds-a4l" customClass="QMUserInfoCell">
-                                        <rect key="frame" x="0.0" y="481" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="501" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="kbh-Ds-a4l" id="hVE-oJ-zuB">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
@@ -371,7 +387,7 @@
                         <outlet property="lastSeenLabel" destination="Lie-Yl-gML" id="UlW-L8-lzK"/>
                         <outlet property="phoneLabel" destination="7oP-Na-9dY" id="taE-lq-qQm"/>
                         <outlet property="statusLabel" destination="sdt-fA-pQb" id="kUE-79-qi1"/>
-                        <segue destination="vQY-aG-vQZ" kind="showDetail" identifier="SceneSegueChat" id="2j9-7B-s30"/>
+                        <segue destination="vQY-aG-vQZ" kind="show" identifier="SceneSegueChat" id="vfM-Vz-khV"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="D5L-Bm-0jb" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -519,10 +535,10 @@
             </objects>
             <point key="canvasLocation" x="-592" y="-7341.5"/>
         </scene>
-        <!--QMChatVCNavigation-->
+        <!--QMChatVC-->
         <scene sceneID="yeA-p5-rGm">
             <objects>
-                <viewControllerPlaceholder storyboardName="Main" referencedIdentifier="QMChatVCNavigation" id="vQY-aG-vQZ" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardName="Main" referencedIdentifier="QMChatVC" id="vQY-aG-vQZ" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Aap-YI-hfu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-848.5" y="-6726"/>
@@ -559,4 +575,7 @@
         <image name="qm-ic-disclosure" width="8" height="13"/>
         <image name="upic_avatarholder" width="73" height="72"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="Kbv-zx-LZs"/>
+    </inferredMetricsTieBreakers>
 </document>

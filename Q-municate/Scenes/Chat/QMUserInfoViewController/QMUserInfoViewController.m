@@ -67,6 +67,11 @@ NYTPhotosViewControllerDelegate
 - (void)dealloc {
     
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    
+    // removing left bar button item that is responsible for split view
+    // display mode managing. Not removing it will cause item update
+    // for deallocated navigation item
+    self.navigationItem.leftBarButtonItem = nil;
 }
 
 - (void)viewDidLoad {
@@ -74,6 +79,14 @@ NYTPhotosViewControllerDelegate
     NSAssert(self.user.ID > 0, @"Must be a valid user ID!");
     
     [super viewDidLoad];
+    
+    if (self.navigationController.viewControllers.count == 1) {
+        
+        // showing split view display mode buttons
+        // only if controller is first in stack
+        self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+        self.navigationItem.leftItemsSupplementBackButton = YES;
+    }
     
     self.hiddenSections = [NSMutableIndexSet indexSet];
     self.avatarImageView.imageViewType = QMImageViewTypeCircle;
@@ -425,8 +438,7 @@ NYTPhotosViewControllerDelegate
     
     if ([segue.identifier isEqualToString:kQMSceneSegueChat]) {
         
-        UINavigationController *chatNavigationController = segue.destinationViewController;
-        QMChatVC *chatViewController = (QMChatVC *)chatNavigationController.topViewController;
+        QMChatVC *chatViewController = segue.destinationViewController;
         chatViewController.chatDialog = sender;
     }
 }
