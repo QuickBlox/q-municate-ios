@@ -1438,8 +1438,11 @@ NYTPhotosViewControllerDelegate
 
 - (void)chatServiceChatDidAccidentallyDisconnect:(QMChatService *)__unused chatService {
     
-    // chat disconnected, updating title status for user
-    [self setOpponentOnlineStatus:NO];
+    if (self.chatDialog.type == QBChatDialogTypePrivate) {
+        // chat disconnected, updating title status for user
+        
+        [self setOpponentOnlineStatus:NO];
+    }
 }
 
 #pragma mark - QMChatAttachmentServiceDelegate
