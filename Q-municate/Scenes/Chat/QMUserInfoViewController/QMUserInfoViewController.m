@@ -15,6 +15,7 @@
 #import <QMImageView.h>
 #import "QBChatDialog+OpponentID.h"
 #import <SVProgressHUD.h>
+#import "QMSplitViewController.h"
 
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
 #import "QMImagePreview.h"
@@ -363,19 +364,35 @@ NYTPhotosViewControllerDelegate
                                                           
                                                       }]];
     
+    void (^removeAction)(UIAlertAction *action) = ^void(UIAlertAction *action) {
+        
+        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+        
+        BOOL shouldUpdateSplitView = NO;
+        
+        QBChatDialog *chatDialog = [[QMCore instance].chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:self.user.ID];
+        
+        if ([chatDialog.ID isEqualToString:[QMCore instance].activeDialogID]) {
+            
+            shouldUpdateSplitView = YES;
+        }
+        
+        self.task = [[[QMCore instance].contactManager removeUserFromContactList:self.user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+            
+            if (shouldUpdateSplitView) {
+                
+                [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
+            }
+            
+            [SVProgressHUD dismiss];
+            
+            return nil;
+        }];
+    };
+    
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil)
                                                         style:UIAlertActionStyleDestructive
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                          
-                                                          [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-                                                          
-                                                          self.task = [[[QMCore instance].contactManager removeUserFromContactList:self.user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-                                                              
-                                                              [SVProgressHUD dismiss];
-                                                              
-                                                              return nil;
-                                                          }];
-                                                      }]];
+                                                      handler:removeAction]];
     
     [self presentViewController:alertController animated:YES completion:nil];
 }
