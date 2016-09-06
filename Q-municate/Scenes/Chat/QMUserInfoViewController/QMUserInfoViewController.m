@@ -373,30 +373,22 @@ NYTPhotosViewControllerDelegate
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
                                                         style:UIAlertActionStyleCancel
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                          
-                                                      }]];
+                                                      handler:nil]];
     
-    void (^removeAction)(UIAlertAction *action) = ^void(UIAlertAction *action) {
+    void (^removeAction)(UIAlertAction *action) = ^void(UIAlertAction * __unused action) {
         
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         
-        BOOL shouldUpdateSplitView = NO;
-        
-        QBChatDialog *chatDialog = [[QMCore instance].chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:self.user.ID];
-        
-        if ([chatDialog.ID isEqualToString:[QMCore instance].activeDialogID]) {
-            
-            shouldUpdateSplitView = YES;
-        }
-        
         self.task = [[[QMCore instance].contactManager removeUserFromContactList:self.user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             
-            if (shouldUpdateSplitView) {
+            if (self.splitViewController.isCollapsed) {
+                
+                [self.navigationController popViewControllerAnimated:YES];
+            }
+            else {
                 
                 [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
             }
-            
             [SVProgressHUD dismiss];
             
             return nil;
