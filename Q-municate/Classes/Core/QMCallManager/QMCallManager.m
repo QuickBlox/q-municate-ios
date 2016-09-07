@@ -487,7 +487,7 @@ QBRTCClientDelegate
                                                           [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
                                                       }]];
     
-    UIViewController *viewController = [(UITabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController selectedViewController];
+    UIViewController *viewController = [[[(UISplitViewController *)[UIApplication sharedApplication].keyWindow.rootViewController viewControllers] firstObject] selectedViewController];
     [viewController presentViewController:alertController animated:YES completion:nil];
 }
 
