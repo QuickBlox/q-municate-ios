@@ -67,7 +67,11 @@
     else {
         
         // updating display mode to not stuck on primary visible
-        self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+        if (self.displayMode != UISplitViewControllerDisplayModeAllVisible) {
+            
+            self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+        }
+        
         navigationController = QMNavigationController(@[[[QMChatVC alloc] init]]);
     }
     
@@ -82,7 +86,6 @@
     // taking top controller from secondary one
     UINavigationController *secondaryNavigationController = (UINavigationController *)secondaryViewController;
     NSArray *detailViewControllers = [secondaryNavigationController viewControllers];
-    
     
     if ([self isPlaceholderViewController:detailViewControllers.firstObject]) {
         
@@ -106,7 +109,10 @@
     [self showDetailViewController:QMNavigationController(@[[[QMChatVC alloc] init]]) sender:nil];
     
     // updating display mode to not stuck on primary visible
-    self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+    if (self.displayMode != UISplitViewControllerDisplayModeAllVisible) {
+        
+        self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+    }
 }
 
 #pragma mark - Helpers
