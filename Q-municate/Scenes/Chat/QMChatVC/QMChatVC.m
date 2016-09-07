@@ -265,7 +265,7 @@ NYTPhotosViewControllerDelegate
     // inserting messages
     if (self.storedMessages.count > 0 && self.chatDataSource.messagesCount == 0) {
         
-        [self.chatDataSource setDataSourceMessages:self.storedMessages];
+        [self.chatDataSource addMessages:self.storedMessages];
     }
     
     // load messages from cache if needed and from REST
