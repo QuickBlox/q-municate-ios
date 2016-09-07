@@ -184,8 +184,13 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
-    self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
-    self.navigationItem.leftItemsSupplementBackButton = YES;
+    if (self.navigationController.viewControllers.count == 1) {
+        
+        // showing split view display mode buttons
+        // only if controller is first in stack
+        self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+        self.navigationItem.leftItemsSupplementBackButton = YES;
+    }
     
     // setting up chat controller
     self.topContentAdditionalInset = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
@@ -1438,8 +1443,11 @@ NYTPhotosViewControllerDelegate
 
 - (void)chatServiceChatDidAccidentallyDisconnect:(QMChatService *)__unused chatService {
     
-    // chat disconnected, updating title status for user
-    [self setOpponentOnlineStatus:NO];
+    if (self.chatDialog.type == QBChatDialogTypePrivate) {
+        // chat disconnected, updating title status for user
+        
+        [self setOpponentOnlineStatus:NO];
+    }
 }
 
 #pragma mark - QMChatAttachmentServiceDelegate

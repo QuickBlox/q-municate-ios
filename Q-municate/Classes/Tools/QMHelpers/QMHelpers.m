@@ -23,11 +23,16 @@ NSString *QMStringForTimeInterval(NSTimeInterval timeInterval) {
     return timeStr;
 }
 
-inline void addControllerToNavigationStack(UINavigationController *navC, UIViewController *vc) {
+NSInteger iosMajorVersion() {
     
-    NSMutableArray *viewControllers = [navC.viewControllers mutableCopy];
-    [viewControllers addObject:vc];
-    [navC setViewControllers:[viewControllers copy]];
+    static NSInteger version = 0;
+    
+    if (version == 0) {
+        
+        version = [UIDevice currentDevice].systemVersion.integerValue;
+    }
+    
+    return version;
 }
 
 inline void removeControllerFromNavigationStack(UINavigationController *navC, UIViewController *vc) {

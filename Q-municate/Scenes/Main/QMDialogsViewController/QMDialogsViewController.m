@@ -220,7 +220,11 @@ QMSearchResultsControllerDelegate
     if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
         
         QBChatDialog *chatDialog = self.dialogsDataSource.items[indexPath.row];
-        [self performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
+        
+        if (![chatDialog.ID isEqualToString:[QMCore instance].activeDialogID]) {
+            
+            [self performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
+        }
     }
 }
 

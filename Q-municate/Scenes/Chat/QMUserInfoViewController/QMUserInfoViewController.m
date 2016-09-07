@@ -15,6 +15,7 @@
 #import <QMImageView.h>
 #import "QBChatDialog+OpponentID.h"
 #import <SVProgressHUD.h>
+#import "QMSplitViewController.h"
 
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
 #import "QMImagePreview.h"
@@ -66,6 +67,11 @@ NYTPhotosViewControllerDelegate
 - (void)dealloc {
     
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    
+    // removing left bar button item that is responsible for split view
+    // display mode managing. Not removing it will cause item update
+    // for deallocated navigation item
+    self.navigationItem.leftBarButtonItem = nil;
 }
 
 - (void)viewDidLoad {
@@ -73,6 +79,14 @@ NYTPhotosViewControllerDelegate
     NSAssert(self.user.ID > 0, @"Must be a valid user ID!");
     
     [super viewDidLoad];
+    
+    if (self.navigationController.viewControllers.count == 1) {
+        
+        // showing split view display mode buttons
+        // only if controller is first in stack
+        self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+        self.navigationItem.leftItemsSupplementBackButton = YES;
+    }
     
     self.hiddenSections = [NSMutableIndexSet indexSet];
     self.avatarImageView.imageViewType = QMImageViewTypeCircle;
@@ -359,23 +373,31 @@ NYTPhotosViewControllerDelegate
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
                                                         style:UIAlertActionStyleCancel
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                          
-                                                      }]];
+                                                      handler:nil]];
+    
+    void (^removeAction)(UIAlertAction *action) = ^void(UIAlertAction * __unused action) {
+        
+        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+        
+        self.task = [[[QMCore instance].contactManager removeUserFromContactList:self.user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+            
+            if (self.splitViewController.isCollapsed) {
+                
+                [self.navigationController popViewControllerAnimated:YES];
+            }
+            else {
+                
+                [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
+            }
+            [SVProgressHUD dismiss];
+            
+            return nil;
+        }];
+    };
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil)
                                                         style:UIAlertActionStyleDestructive
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                          
-                                                          [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-                                                          
-                                                          self.task = [[[QMCore instance].contactManager removeUserFromContactList:self.user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-                                                              
-                                                              [SVProgressHUD dismiss];
-                                                              
-                                                              return nil;
-                                                          }];
-                                                      }]];
+                                                      handler:removeAction]];
     
     [self presentViewController:alertController animated:YES completion:nil];
 }
@@ -408,8 +430,7 @@ NYTPhotosViewControllerDelegate
     
     if ([segue.identifier isEqualToString:kQMSceneSegueChat]) {
         
-        UINavigationController *chatNavigationController = segue.destinationViewController;
-        QMChatVC *chatViewController = (QMChatVC *)chatNavigationController.topViewController;
+        QMChatVC *chatViewController = segue.destinationViewController;
         chatViewController.chatDialog = sender;
     }
 }

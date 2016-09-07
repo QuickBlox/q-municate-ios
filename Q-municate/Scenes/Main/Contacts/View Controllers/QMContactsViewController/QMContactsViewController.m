@@ -306,7 +306,8 @@ QMUsersServiceDelegate
     
     if ([segue.identifier isEqualToString:kQMSceneSegueUserInfo]) {
         
-        QMUserInfoViewController *userInfoVC = (QMUserInfoViewController *)segue.destinationViewController;
+        UINavigationController *navigationController = segue.destinationViewController;
+        QMUserInfoViewController *userInfoVC = navigationController.viewControllers.firstObject;
         userInfoVC.user = sender;
     }
 }

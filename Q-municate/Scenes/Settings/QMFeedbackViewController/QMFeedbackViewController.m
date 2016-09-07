@@ -42,10 +42,18 @@ typedef NS_ENUM(NSUInteger, QMFeedbackSelection) {
 - (void)dealloc {
     
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    
+    // removing left bar button item that is responsible for split view
+    // display mode managing. Not removing it will cause item update
+    // for deallocated navigation item
+    self.navigationItem.leftBarButtonItem = nil;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+    self.navigationItem.leftItemsSupplementBackButton = YES;
     
     // Hide empty separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
