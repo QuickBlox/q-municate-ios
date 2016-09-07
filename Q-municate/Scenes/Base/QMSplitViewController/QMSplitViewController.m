@@ -14,6 +14,8 @@
 
 @interface QMSplitViewController() <UISplitViewControllerDelegate>
 
+@property (weak, nonatomic) UIViewController *placeholderVC;
+
 @end
 
 @implementation QMSplitViewController
@@ -72,7 +74,8 @@
             self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
         }
         
-        navigationController = QMNavigationController(@[[[QMChatVC alloc] init]]);
+        navigationController = QMNavigationController(@[self.placeholderVC ?: [[QMChatVC alloc] init]]);
+        self.placeholderVC = navigationController.topViewController;
     }
     
     return navigationController;
