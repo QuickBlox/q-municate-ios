@@ -196,7 +196,6 @@ QMSearchResultsControllerDelegate
     self.searchController.dimsBackgroundDuringPresentation = NO;
     self.definesPresentationContext = YES;
     [self.searchController.searchBar sizeToFit]; // iOS8 searchbar sizing
-    self.tableView.tableHeaderView = self.searchController.searchBar;
 }
 
 - (void)configureDataSources {
@@ -313,6 +312,7 @@ QMSearchResultsControllerDelegate
     
     if (self.dialogsDataSource.items.count == 0) {
         self.tableView.dataSource = self.placeholderDataSource;
+        self.tableView.tableHeaderView = nil;
     }
     [self.tableView reloadData];
 }
@@ -321,6 +321,7 @@ QMSearchResultsControllerDelegate
     
     if (dialogs.count > 0) {
         self.tableView.dataSource = self.dialogsDataSource;
+        self.tableView.tableHeaderView = self.searchController.searchBar;
     }
     [self.tableView reloadData];
 }
@@ -462,6 +463,7 @@ QMSearchResultsControllerDelegate
     if (![self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
         
         self.tableView.dataSource = self.dialogsDataSource;
+        self.tableView.tableHeaderView = self.searchController.searchBar;
     }
 }
 
