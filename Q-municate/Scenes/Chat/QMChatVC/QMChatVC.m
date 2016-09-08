@@ -930,6 +930,7 @@ NYTPhotosViewControllerDelegate
                 break;
                 
             case QMMessageStatusNotSent:
+                [self.detailedCells addObject:message.ID];
                 currentCell.containerView.bgColor = QMChatOutgoingCellFailedColor();
                 break;
         }
@@ -1183,18 +1184,9 @@ NYTPhotosViewControllerDelegate
 
 - (void)_sendMessage:(QBChatMessage *)message {
     
-    @weakify(self);
-    [[[QMCore instance].chatService sendMessage:message toDialog:self.chatDialog saveToHistory:YES saveToStorage:YES] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+    [[[QMCore instance].chatService sendMessage:message toDialog:self.chatDialog saveToHistory:YES saveToStorage:YES] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         
-        @strongify(self);
-        if (task.isFaulted) {
-            
-            [QMAlert showAlertWithMessage:task.error.localizedRecoverySuggestion actionSuccess:NO inViewController:self];
-        }
-        else {
-            
-            [QMSoundManager playMessageSentSound];
-        }
+        [QMSoundManager playMessageSentSound];
         
         return nil;
     }];
