@@ -13,17 +13,12 @@
 #import "QMMessageStatusStringBuilder.h"
 #import "QMMessageNotification.h"
 
-static const CGFloat kQMMessageNotificationIconImageSize = 32.0;
-
 @implementation QMNotification
 
 #pragma mark - Message notification
 
-+ (void)showMessageNotificationWithMessage:(QBChatMessage *)chatMessage buttonHandler:(MPGNotificationButtonHandler)buttonHandler {
++ (void)showMessageNotificationWithMessage:(QBChatMessage *)chatMessage buttonHandler:(MPGNotificationButtonHandler)buttonHandler hostViewController:(UIViewController *)hvc {
     NSParameterAssert(chatMessage.dialogID);
-    
-    UIImage *avatarImage = nil;
-    NSString *title = nil;
     
     QBChatDialog *chatDialog = [[QMCore instance].chatService.dialogsMemoryStorage chatDialogWithID:chatMessage.dialogID];
     
@@ -33,14 +28,18 @@ static const CGFloat kQMMessageNotificationIconImageSize = 32.0;
         return;
     }
     
+    NSString *title = nil;
+    NSUInteger placeholderID = 0;
+    NSString *imageURLString = nil;
+    
     switch (chatDialog.type) {
             
         case QBChatDialogTypePrivate: {
             
             QBUUser *user = [[QMCore instance].usersService.usersMemoryStorage userWithID:chatMessage.senderID];
             
-            UIImage *placeholderImage = [QMPlaceholder placeholderWithFrame:[[self class] messageNotificationIconFrame] title:user.fullName ID:user.ID];
-            avatarImage = [self imageForKey:user.avatarUrl placeholderImage:placeholderImage];
+            placeholderID = user.ID;
+            imageURLString = user.avatarUrl;
             
             title = user.fullName ?: [NSString stringWithFormat:@"%tu", user.ID];
             
@@ -50,8 +49,9 @@ static const CGFloat kQMMessageNotificationIconImageSize = 32.0;
         case QBChatDialogTypeGroup:
         case QBChatDialogTypePublicGroup: {
             
-            UIImage *placeholderImage = [QMPlaceholder placeholderWithFrame:[[self class] messageNotificationIconFrame] title:chatDialog.name ID:chatDialog.ID.hash];
-            avatarImage = [self imageForKey:chatDialog.photo placeholderImage:placeholderImage];
+            
+            placeholderID = chatDialog.ID.hash;
+            imageURLString = chatDialog.photo;
             
             title = chatDialog.name;
             
@@ -59,6 +59,7 @@ static const CGFloat kQMMessageNotificationIconImageSize = 32.0;
         }
     }
     
+    UIImage *placeholderImage = [QMPlaceholder placeholderWithFrame:QMMessageNotificationIconRect title:title ID:placeholderID];
     NSString *messageText = chatMessage.text;
     
     if ([chatMessage isNotificatonMessage]) {
@@ -67,9 +68,11 @@ static const CGFloat kQMMessageNotificationIconImageSize = 32.0;
         messageText = [stringBuilder messageTextForNotification:chatMessage];
     }
     
+    messageNotification().hostViewController = hvc;
     [messageNotification() showNotificationWithTitle:title
                                             subTitle:messageText
-                                           iconImage:avatarImage
+                                        iconImageURL:[NSURL URLWithString:imageURLString]
+                                    placeholderImage:placeholderImage
                                        buttonHandler:buttonHandler];
 }
 
@@ -107,28 +110,6 @@ static const CGFloat kQMMessageNotificationIconImageSize = 32.0;
     }];
     
     return source.task;
-}
-
-#pragma mark - Helpers
-
-+ (UIImage *)imageForKey:(NSString *)key placeholderImage:(UIImage *)placeholderImage {
-    
-    UIImage *image = [[SDWebImageManager sharedManager].imageCache imageFromDiskCacheForKey:key];
-    
-    if (image == nil) {
-        
-        image = placeholderImage;
-    }
-    
-    return image;
-}
-
-+ (CGRect)messageNotificationIconFrame {
-    
-    return CGRectMake(0,
-                      0,
-                      kQMMessageNotificationIconImageSize,
-                      kQMMessageNotificationIconImageSize);
 }
 
 #pragma mark - Static notifications

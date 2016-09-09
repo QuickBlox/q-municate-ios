@@ -9,6 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "MPGNotification.h"
 
+/**
+ *  Icon image frame.
+ */
+extern const CGRect QMMessageNotificationIconRect;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -18,17 +23,26 @@ NS_ASSUME_NONNULL_BEGIN
 @interface QMMessageNotification : NSObject
 
 /**
+ *  Host view controller of message notification.
+ *
+ *  @note Becomes nil after the notification is automatically dismissed.
+ */
+@property (weak, nonatomic, nullable) __kindof UIViewController *hostViewController;
+
+/**
  *  Show notification.
  *
- *  @param title         notification title
- *  @param subTitle      notification subtitle
- *  @param iconImage     notification icon image
- *  @param buttonHandler button handler
+ *  @param title            notification title
+ *  @param subTitle         notification subtitle
+ *  @param iconImageURL     URL for icon image
+ *  @param placeholderImage placeholder for icon image
+ *  @param buttonHandler    button handler
  */
 - (void)showNotificationWithTitle:(NSString *)title
                          subTitle:(nullable NSString *)subTitle
-                        iconImage:(UIImage *)iconImage
-                    buttonHandler:(MPGNotificationButtonHandler)buttonHandler;
+                     iconImageURL:(nullable NSURL *)iconImageURL
+                 placeholderImage:(nullable UIImage *)placeholderImage
+                    buttonHandler:(nullable MPGNotificationButtonHandler)buttonHandler;
 
 @end
 
