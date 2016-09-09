@@ -65,15 +65,23 @@ QMChatConnectionDelegate
     
     [QMSoundManager playMessageReceivedSound];
     
-    [QMNotification showMessageNotificationWithMessage:chatMessage buttonHandler:^(MPGNotification * __unused notification, NSInteger buttonIndex) {
+    MPGNotificationButtonHandler buttonHandler = nil;
+    
+    // not showing reply button in active call
+    if (![QMCore instance].callManager.hasActiveCall) {
         
-        if (buttonIndex == 1) {
+        buttonHandler = ^void(MPGNotification * __unused notification, NSInteger buttonIndex) {
             
-            UINavigationController *navigationController = self.viewControllers.firstObject;
-            UIViewController *dialogsVC = navigationController.viewControllers.firstObject;
-            [dialogsVC performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
-        }
-    }];
+            if (buttonIndex == 1) {
+                
+                UINavigationController *navigationController = self.viewControllers.firstObject;
+                UIViewController *dialogsVC = navigationController.viewControllers.firstObject;
+                [dialogsVC performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
+            }
+        };
+    }
+    
+    [QMNotification showMessageNotificationWithMessage:chatMessage buttonHandler:buttonHandler hostViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
 }
 
 #pragma mark - QMChatServiceDelegate
