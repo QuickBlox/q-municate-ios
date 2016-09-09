@@ -66,6 +66,7 @@ QMChatConnectionDelegate
     [QMSoundManager playMessageReceivedSound];
     
     MPGNotificationButtonHandler buttonHandler = nil;
+    UIViewController *hvc = nil;
     
     // not showing reply button in active call
     if (![QMCore instance].callManager.hasActiveCall) {
@@ -80,8 +81,13 @@ QMChatConnectionDelegate
             }
         };
     }
+    else {
+        
+        // host view controller for active call
+        hvc = [UIApplication sharedApplication].keyWindow.rootViewController;
+    }
     
-    [QMNotification showMessageNotificationWithMessage:chatMessage buttonHandler:buttonHandler hostViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
+    [QMNotification showMessageNotificationWithMessage:chatMessage buttonHandler:buttonHandler hostViewController:hvc];
 }
 
 #pragma mark - QMChatServiceDelegate
