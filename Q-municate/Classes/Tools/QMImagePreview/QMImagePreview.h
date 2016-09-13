@@ -8,10 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@class QMImageView;
-
 @interface QMImagePreview : NSObject
 
-+ (void)previewImageView:(QMImageView *)imageView inViewController:(UIViewController *)ivc;
++ (void)previewImageWithURL:(NSURL *)url inViewController:(UIViewController *)ivc;
 
 @end

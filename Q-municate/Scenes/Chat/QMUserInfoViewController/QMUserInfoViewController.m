@@ -532,11 +532,12 @@ NYTPhotosViewControllerDelegate
 
 #pragma mark - QMImageViewDelegate
 
-- (void)imageViewDidTap:(QMImageView *)imageView {
+- (void)imageViewDidTap:(QMImageView *)__unused imageView {
     
-    if (self.user.avatarUrl.length > 0) {
+    NSString *avatarURL = self.user.avatarUrl;
+    if (avatarURL.length > 0) {
         
-        [QMImagePreview previewImageView:imageView inViewController:self];
+        [QMImagePreview previewImageWithURL:[NSURL URLWithString:avatarURL] inViewController:self];
     }
 }
 

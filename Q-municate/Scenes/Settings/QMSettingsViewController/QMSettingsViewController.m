@@ -369,14 +369,14 @@ NYTPhotosViewControllerDelegate
                                                           [QMImagePicker choosePhotoInViewController:self resultHandler:self];
                                                       }]];
     
-    
-    if ([QMCore instance].currentProfile.userData.avatarUrl.length > 0) {
+    NSString *avatarURL = [QMCore instance].currentProfile.userData.avatarUrl;
+    if (avatarURL.length > 0) {
         
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_OPEN_IMAGE", nil)
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction * _Nonnull __unused action) {
                                                               
-                                                              [QMImagePreview previewImageView:imageView inViewController:self];
+                                                              [QMImagePreview previewImageWithURL:[NSURL URLWithString:avatarURL] inViewController:self];
                                                           }]];
     }
     

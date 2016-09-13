@@ -20,10 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Show message notification for message.
  *
- *  @param chatMessage   chat message
- *  @param buttonHandler button handler blocks
+ *  @param chatMessage          chat message
+ *  @param buttonHandler        button handler blocks
+ *  @param hostViewController   host view controller for notification view
  */
-+ (void)showMessageNotificationWithMessage:(QBChatMessage *)chatMessage buttonHandler:(MPGNotificationButtonHandler)buttonHandler;
++ (void)showMessageNotificationWithMessage:(QBChatMessage *)chatMessage buttonHandler:(MPGNotificationButtonHandler)buttonHandler hostViewController:(UIViewController *)hvc;
 
 /**
  *  Send push notification for user with text.
