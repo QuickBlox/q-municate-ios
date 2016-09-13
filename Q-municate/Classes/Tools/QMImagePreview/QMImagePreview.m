@@ -7,33 +7,21 @@
 //
 
 #import "QMImagePreview.h"
-#import <QMImageView.h>
+#import <QMImageLoader.h>
 
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
 #import "QMPhoto.h"
 
 @implementation QMImagePreview
 
-+ (void)updateImageForImageView:(QMImageView *)imageView completion:(void(^)(UIImage *originalImage))completion {
++ (void)previewImageWithURL:(NSURL *)url inViewController:(UIViewController *)ivc {
     
-    NSURL *url = imageView.url;
-    [imageView removeImage];
-    
-    __weak QMImageView *weakImageView = imageView;
-    [imageView setImageWithURL:url
-                   placeholder:nil
-                       options:SDWebImageHighPriority
-                      progress:nil
-                completedBlock:^(UIImage * __unused image, NSError * __unused error, SDImageCacheType __unused cacheType, NSURL * __unused imageURL) {
-                    
-                    completion([weakImageView originalImage]);
-                }];
-}
-
-+ (void)previewImageView:(QMImageView *)imageView inViewController:(UIViewController *)ivc {
+    if (url == nil) {
+        
+        return;
+    }
     
     QMPhoto *photo = [[QMPhoto alloc] init];
-    photo.image = [imageView originalImage];
     
     NYTPhotosViewController *photosViewController = [[NYTPhotosViewController alloc] initWithPhotos:@[photo]];
     
@@ -44,14 +32,16 @@
     
     [ivc presentViewController:photosViewController animated:YES completion:nil];
     
-    if (photo.image == nil) {
-        
-        [self updateImageForImageView:imageView completion:^(UIImage *originalImage) {
-            
-            photo.image = originalImage;
-            [photosViewController updateImageForPhoto:photo];
-        }];
-    }
+    [QMImageLoader imageWithURL:url
+                          frame:CGRectZero
+                        options:SDWebImageHighPriority
+                       progress:nil
+                 transformImage:nil
+                      completed:^(UIImage *image, NSError * __unused error, SDImageCacheType __unused cacheType, NSURL * __unused imageURL) {
+                          
+                          photo.image = image;
+                          [photosViewController updateImageForPhoto:photo];
+                      }];
 }
 
 @end

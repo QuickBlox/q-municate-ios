@@ -7,7 +7,8 @@
 //
 
 #import "QMMessageNotification.h"
-#import <QMImageView.h>
+#import <QMImageLoader.h>
+#import "UIImage+Cropper.h"
 
 static UIColor *backgroundColor() {
     
@@ -28,7 +29,7 @@ const CGRect QMMessageNotificationIconRect = (CGRect){(CGPoint){0,0}, (CGSize){3
 @interface QMMessageNotification ()
 
 @property (strong, nonatomic) MPGNotification *messageNotification;
-@property (copy, nonatomic) NSURL *iconImageURL;
+@property (weak, nonatomic) id <SDWebImageOperation> imageOperation;
 
 @end
 
@@ -41,24 +42,29 @@ const CGRect QMMessageNotificationIconRect = (CGRect){(CGPoint){0,0}, (CGSize){3
         [self.messageNotification dismissWithAnimation:NO];
     }
     
+    [self.imageOperation cancel];
+    
     self.messageNotification = [MPGNotification notificationWithTitle:title subtitle:subTitle backgroundColor:backgroundColor() iconImage:placeholderImage];
     
     if (iconImageURL) {
         
-        self.iconImageURL = iconImageURL;
-        
-        QMImageView *imageView = [[QMImageView alloc] initWithFrame:QMMessageNotificationIconRect];
-        imageView.imageViewType = QMImageViewTypeCircle;
-        
         @weakify(self);
-        [imageView setImageWithURL:iconImageURL placeholder:placeholderImage options:SDWebImageHighPriority progress:nil completedBlock:^(UIImage *image, NSError * __unused error, SDImageCacheType __unused cacheType, NSURL * __unused imageURL) {
-            
-            @strongify(self);
-            if ([self.iconImageURL isEqual:imageURL]) {
-            
-                self.messageNotification.iconImage = image;
-            }
-        }];
+        self.imageOperation = [QMImageLoader imageWithURL:iconImageURL
+                                                    frame:QMMessageNotificationIconRect
+                                                  options:SDWebImageHighPriority
+                                                 progress:nil
+                                           transformImage:^UIImage *(UIImage *image, CGRect frame) {
+                                               
+                                               return [image imageByCircularScaleAndCrop:frame.size];
+                                               
+                                           } completed:^(UIImage *image, NSError * __unused error, SDImageCacheType __unused cacheType, NSURL * __unused imageURL) {
+                                               
+                                               @strongify(self);
+                                               if (image != nil) {
+                                                   
+                                                   self.messageNotification.iconImage = image;
+                                               }
+                                           }];
     }
     
     if (buttonHandler != nil) {
@@ -71,13 +77,6 @@ const CGRect QMMessageNotificationIconRect = (CGRect){(CGPoint){0,0}, (CGSize){3
     self.messageNotification.autoresizingMask =
     self.messageNotification.backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.messageNotification.fullWidthMessages = YES;
-    
-    @weakify(self);
-    self.messageNotification.dismissHandler = ^void(MPGNotification * __unused notification) {
-        
-        @strongify(self);
-        self.iconImageURL = nil;
-    };
     
     self.messageNotification.hostViewController = self.hostViewController;
     [self.messageNotification show];

@@ -19,7 +19,7 @@
 #import <DigitsKit/DigitsKit.h>
 #import "QMDigitsConfigurationFactory.h"
 
-static NSString *const kQMFacebookIDField = @"id";
+static NSString * const kQMFacebookIDField = @"id";
 
 @implementation QMWelcomeScreenViewController
 

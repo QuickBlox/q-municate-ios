@@ -108,7 +108,7 @@ NYTPhotosViewControllerDelegate
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction * _Nonnull __unused action) {
                                                               
-                                                              [QMImagePreview previewImageView:self.headerView.avatarImage inViewController:self];
+                                                              [QMImagePreview previewImageWithURL:[NSURL URLWithString:self.chatDialog.photo] inViewController:self];
                                                           }]];
     }
     
