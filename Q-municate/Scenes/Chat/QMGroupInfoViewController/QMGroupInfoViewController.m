@@ -92,12 +92,24 @@ NYTPhotosViewControllerDelegate
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                           
+                                                          if (![[QMCore instance] isInternetConnected]) {
+                                                              
+                                                              [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
+                                                              return;
+                                                          }
+                                                          
                                                           [QMImagePicker takePhotoInViewController:self resultHandler:self];
                                                       }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CHOOSE_IMAGE", nil)
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                          if (![[QMCore instance] isInternetConnected]) {
+                                                              
+                                                              [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
+                                                              return;
+                                                          }
                                                           
                                                           [QMImagePicker choosePhotoInViewController:self resultHandler:self];
                                                       }]];
