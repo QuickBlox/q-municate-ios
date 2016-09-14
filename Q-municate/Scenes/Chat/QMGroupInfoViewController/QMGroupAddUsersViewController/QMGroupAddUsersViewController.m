@@ -153,6 +153,9 @@ UISearchResultsUpdating
     [cell setChecked:!userSelected animated:YES];
     
     self.navigationItem.rightBarButtonItem.enabled = self.dataSource.selectedUsers.count > 0;
+    
+    // clearing text field on select
+    self.searchController.searchBar.text = nil;
 }
 
 - (CGFloat)tableView:(UITableView *)__unused tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
