@@ -801,7 +801,6 @@
 		584277781C3D32ED00CDE35B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				5842777E1C3D335200CDE35B /* Scenes */,
 				69D57E6718ACC11C00A9900A /* Images.xcassets */,
 			);
 			path = Resources;
@@ -839,8 +838,7 @@
 				584277CB1C3D494400CDE35B /* Calls */,
 				584277C51C3D46B600CDE35B /* Settings */,
 			);
-			name = Scenes;
-			path = ../Scenes;
+			path = Scenes;
 			sourceTree = "<group>";
 		};
 		5842777F1C3D336300CDE35B /* Views */ = {
@@ -1930,6 +1928,7 @@
 				6943848C18E42691001E08A9 /* Categories */,
 				695F4B2118B60A62006C9DA5 /* Classes */,
 				584277781C3D32ED00CDE35B /* Resources */,
+				5842777E1C3D335200CDE35B /* Scenes */,
 				69D57E5C18ACC11C00A9900A /* Supporting Files */,
 			);
 			path = "Q-municate";

@@ -922,6 +922,13 @@ NYTPhotosViewControllerDelegate
         switch (status) {
                 
             case QMMessageStatusSent:
+                
+                if ([self.detailedCells containsObject:message.ID]) {
+                    
+                    [self.collectionView.collectionViewLayout removeSizeFromCacheForItemID:message.ID];
+                    [self.detailedCells removeObject:message.ID];
+                }
+                
                 currentCell.containerView.bgColor = QMChatOutgoingCellColor();
                 break;
                 
@@ -934,7 +941,6 @@ NYTPhotosViewControllerDelegate
                 currentCell.containerView.bgColor = QMChatOutgoingCellFailedColor();
                 break;
         }
-        
         
         currentCell.textView.linkAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor],
                                                 NSUnderlineStyleAttributeName : @(YES)};
