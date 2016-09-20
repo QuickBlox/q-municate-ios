@@ -205,7 +205,8 @@ NYTPhotosViewControllerDelegate
     // subscribing to delegates
     [[QMCore instance].chatService addDelegate:self];
     [[QMCore instance].contactListService addDelegate:self];
-    [[QMCore instance].chatService.deferredQueueManager addDelegate:self];
+    [[self queueManager] addDelegate:self];
+    
     self.actionsHandler = self;
     
     // text checking types for cells
@@ -435,6 +436,10 @@ NYTPhotosViewControllerDelegate
     return YES;
 }
 
+- (QMDeferredQueueManager *)queueManager {
+    return [QMCore instance].chatService.deferredQueueManager;
+}
+            
 #pragma mark - Toolbar actions
 
 - (void)didPressSendButton:(UIButton *)__unused button
@@ -458,6 +463,10 @@ NYTPhotosViewControllerDelegate
                   senderId:(NSUInteger)senderId
          senderDisplayName:(NSString *)__unused senderDisplayName
                       date:(NSDate *)date {
+    
+    if (![[self queueManager] shouldSendMessagesInDialogWithID:self.chatDialog.ID]) {
+        return;
+    }
     
     if (self.typingTimer != nil) {
         
@@ -917,7 +926,7 @@ NYTPhotosViewControllerDelegate
         currentCell.containerView.bgColor = QMChatOutgoingCellColor();
         
         
-        QMMessageStatus status = [[QMServicesManager instance].chatService.deferredQueueManager statusForMessage:message];
+        QMMessageStatus status = [[self queueManager] statusForMessage:message];
         
         switch (status) {
                 
@@ -1243,7 +1252,7 @@ NYTPhotosViewControllerDelegate
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                           
-                                                          [[QMCore instance].chatService.deferredQueueManager perfromDefferedActionForMessage:notSentMessage];
+                                                          [[self queueManager] perfromDefferedActionForMessage:notSentMessage];
                                                       }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil)
@@ -1251,7 +1260,7 @@ NYTPhotosViewControllerDelegate
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                           
                                                           [self.chatDataSource deleteMessage:notSentMessage];
-                                                          [[QMCore instance].chatService.deferredQueueManager removeMessage:notSentMessage];
+                                                          [[self queueManager] removeMessage:notSentMessage];
                                                       }]];
     
     [self presentViewController:alertController animated:YES completion:nil];
@@ -1566,8 +1575,7 @@ NYTPhotosViewControllerDelegate
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
     QBChatMessage *currentMessage = [self.chatDataSource messageForIndexPath:indexPath];
     
-    QMMessageStatus status = [[QMCore instance].chatService.deferredQueueManager
-                              statusForMessage:currentMessage];
+    QMMessageStatus status = [[self queueManager] statusForMessage:currentMessage];
     
     if (status == QMMessageStatusNotSent && currentMessage.senderID == self.senderID) {
         
