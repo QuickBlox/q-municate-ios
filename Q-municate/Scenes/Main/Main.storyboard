@@ -330,7 +330,7 @@ out here.</string>
                                 <constraint firstItem="75f-La-4Cf" firstAttribute="top" secondItem="mhp-PO-7pR" secondAttribute="top" id="VVF-Wf-FpL"/>
                                 <constraint firstItem="lSJ-zE-How" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="mhp-PO-7pR" secondAttribute="leading" id="jz7-Rl-cMX"/>
                                 <constraint firstItem="lSJ-zE-How" firstAttribute="centerX" secondItem="75f-La-4Cf" secondAttribute="centerX" id="khT-j5-JpG"/>
-                                <constraint firstItem="lSJ-zE-How" firstAttribute="top" secondItem="75f-La-4Cf" secondAttribute="bottom" constant="1" id="mIQ-qm-ogp"/>
+                                <constraint firstItem="lSJ-zE-How" firstAttribute="top" secondItem="75f-La-4Cf" secondAttribute="bottom" id="mIQ-qm-ogp"/>
                                 <constraint firstItem="75f-La-4Cf" firstAttribute="centerX" secondItem="mhp-PO-7pR" secondAttribute="centerX" id="v9S-Rh-RmX"/>
                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="75f-La-4Cf" secondAttribute="trailing" id="y55-lv-tP6"/>
                             </constraints>

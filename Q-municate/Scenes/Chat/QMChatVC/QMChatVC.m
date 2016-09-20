@@ -184,13 +184,7 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
-    if (self.navigationController.viewControllers.count == 1) {
-        
-        // showing split view display mode buttons
-        // only if controller is first in stack
-        self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
-        self.navigationItem.leftItemsSupplementBackButton = YES;
-    }
+    [self updateTitleViewWidth];
     
     // setting up chat controller
     self.topContentAdditionalInset = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
@@ -1263,6 +1257,39 @@ NYTPhotosViewControllerDelegate
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
+- (void)updateTitleViewWidth {
+    
+    CGFloat navigationBarWidth = CGRectGetWidth(self.navigationController.navigationBar.frame);
+    CGRect titleViewFrame = self.navigationItem.titleView.frame;
+    titleViewFrame.size.width = navigationBarWidth;
+    self.navigationItem.titleView.frame = titleViewFrame;
+}
+
+- (void)updateGroupAvatarFrameForInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    
+    CGFloat defaultSize = 0;
+    
+    switch (interfaceOrientation) {
+            
+        case UIInterfaceOrientationPortrait:
+        case UIInterfaceOrientationPortraitUpsideDown:
+            
+            defaultSize = 36.0f;
+            break;
+            
+        case UIInterfaceOrientationLandscapeLeft:
+        case UIInterfaceOrientationLandscapeRight:
+            
+            defaultSize = 28.0f;
+            break;
+            
+        case UIInterfaceOrientationUnknown:
+            break;
+    }
+    
+    self.groupAvatarImageView.frame = CGRectMake(0, 0, defaultSize, defaultSize);
+}
+
 #pragma mark - Configuring
 
 - (void)configureCallButtons {
@@ -1282,10 +1309,8 @@ NYTPhotosViewControllerDelegate
 - (void)configureGroupChatAvatar {
     
     // chat avatar
-    self.groupAvatarImageView = [[QMImageView alloc] initWithFrame:CGRectMake(0.0f,
-                                                                              0.0f,
-                                                                              kQMGroupAvatarSize,
-                                                                              kQMGroupAvatarSize)];
+    self.groupAvatarImageView = [[QMImageView alloc] init];
+    [self updateGroupAvatarFrameForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
     self.groupAvatarImageView.imageViewType = QMImageViewTypeCircle;
     self.groupAvatarImageView.delegate = self;
     
@@ -1753,7 +1778,7 @@ NYTPhotosViewControllerDelegate
     UIGraphicsBeginImageContext(newSize);
     
     [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
-    UIImage* resizedImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIImage *resizedImage = UIGraphicsGetImageFromCurrentImageContext();
     
     UIGraphicsEndImageContext();
     
@@ -1764,18 +1789,17 @@ NYTPhotosViewControllerDelegate
 
 - (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     
-    @weakify(self);
+    [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
+    
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
         
-        @strongify(self);
-        [self.onlineTitleView sizeToFit];
+        [self updateTitleViewWidth];
+        [self updateGroupAvatarFrameForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
         
     } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
         
         self.topContentAdditionalInset = 0;
     }];
-    
-    [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
 }
 
 @end

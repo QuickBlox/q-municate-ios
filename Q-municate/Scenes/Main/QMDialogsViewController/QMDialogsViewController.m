@@ -249,6 +249,9 @@ QMSearchResultsControllerDelegate
         
         QMChatVC *chatViewController = (QMChatVC *)chatNavigationController.topViewController;
         chatViewController.chatDialog = sender;
+        
+        chatViewController.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+        chatViewController.navigationItem.leftItemsSupplementBackButton = YES;
     }
 }
 
