@@ -233,7 +233,7 @@
 		581DA1D11BF373A100F75D8B /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		581F6E201D3E3E1C0087BC7A /* QMHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMHelpers.h; path = QMHelpers/QMHelpers.h; sourceTree = "<group>"; };
 		581F6E211D3E3E1C0087BC7A /* QMHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMHelpers.m; path = QMHelpers/QMHelpers.m; sourceTree = "<group>"; };
-		5828D2651D8C12CC00CB7BE1 /* Q-municate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Q-municate.entitlements"; sourceTree = "<group>"; };
+		5828D2651D8C12CC00CB7BE1 /* Q-municate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "Q-municate.entitlements"; path = "../Q-municate.entitlements"; sourceTree = "<group>"; };
 		5838FD511D378EB900DB97BB /* QMCallNotificationItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMCallNotificationItem.h; path = QMCallNotificationItem/QMCallNotificationItem.h; sourceTree = "<group>"; };
 		5838FD521D378EB900DB97BB /* QMCallNotificationItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMCallNotificationItem.m; path = QMCallNotificationItem/QMCallNotificationItem.m; sourceTree = "<group>"; };
 		5839F26C1CC531AD0055EBF8 /* QMBaseTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMBaseTitleView.h; sourceTree = "<group>"; };
@@ -1924,7 +1924,6 @@
 		69D57E5B18ACC11C00A9900A /* Q-municate */ = {
 			isa = PBXGroup;
 			children = (
-				5828D2651D8C12CC00CB7BE1 /* Q-municate.entitlements */,
 				6943848C18E42691001E08A9 /* Categories */,
 				695F4B2118B60A62006C9DA5 /* Classes */,
 				584277781C3D32ED00CDE35B /* Resources */,
@@ -1937,6 +1936,7 @@
 		69D57E5C18ACC11C00A9900A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				5828D2651D8C12CC00CB7BE1 /* Q-municate.entitlements */,
 				69D57E5D18ACC11C00A9900A /* Q-municate-Info.plist */,
 				69D57E6318ACC11C00A9900A /* Q-municate-Prefix.pch */,
 				69D57E6118ACC11C00A9900A /* main.m */,
