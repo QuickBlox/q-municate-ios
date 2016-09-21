@@ -316,6 +316,13 @@ QMUsersServiceDelegate
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     
+    if (searchController.searchBar.selectedScopeButtonIndex == QMSearchScopeButtonIndexGlobal
+        && ![QMCore instance].isInternetConnected) {
+        
+        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil)];
+        return;
+    }
+    
     [self.searchResultsController performSearch:searchController.searchBar.text];
 }
 
