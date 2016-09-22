@@ -180,13 +180,6 @@ NYTPhotosViewControllerDelegate
         self.inputToolbar.hidden = YES;
         self.onlineTitleView.hidden = YES;
         
-        UIImage *bgImage = [UIImage imageNamed:@"qm-logo-split-view"];
-        UIImageView *bgView = [[UIImageView alloc] initWithFrame:CGRectOfSize(bgImage.size)];
-        bgView.image = bgImage;
-        self.view = bgView;
-        self.view.contentMode = UIViewContentModeCenter;
-        self.view.backgroundColor = [UIColor whiteColor];
-        
         return;
     }
     
@@ -277,6 +270,14 @@ NYTPhotosViewControllerDelegate
     [super viewWillAppear:animated];
     
     if (self.chatDialog == nil) {
+        
+        UIImage *bgImage = [UIImage imageNamed:@"qm-logo-split-view"];
+        UIImageView *bgView = [[UIImageView alloc] initWithFrame:self.view.bounds];
+        bgView.image = bgImage;
+        bgView.contentMode = UIViewContentModeCenter;
+        bgView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+        [self.view addSubview:bgView];
+        self.view.backgroundColor = [UIColor whiteColor];
         
         return;
     }
