@@ -11,10 +11,11 @@
 
 #import "QBChatMessage+QBDateDivider.h"
 
-typedef NS_ENUM(NSInteger, QMDataSourceUpdateType) {
-    QMDataSourceUpdateTypeAdd = 0,
-    QMDataSourceUpdateTypeUpdate,
-    QMDataSourceUpdateTypeRemove
+typedef NS_ENUM(NSInteger, QMDataSourceActionType) {
+
+    QMDataSourceActionTypeAdd = 0,
+    QMDataSourceActionTypeUpdate,
+    QMDataSourceActionTypeRemove
 };
 
 @class QBChatMessage;
@@ -37,7 +38,7 @@ typedef NS_ENUM(NSInteger, QMDataSourceUpdateType) {
 - (void)updateMessage:(QBChatMessage *)message;
 - (void)updateMessages:(NSArray QB_GENERIC(QBChatMessage *) *)messages;
 
-- (NSArray *)performChangesWithMessages:(NSArray *)messages updateType:(QMDataSourceUpdateType)updateType;
+- (NSArray *)performChangesWithMessages:(NSArray *)messages updateType:(QMDataSourceActionType)updateType;
 
 /**
  *  Messages count.
@@ -105,6 +106,6 @@ typedef NS_ENUM(NSInteger, QMDataSourceUpdateType) {
  */
 - (void)chatDataSource:(QMChatDataSource *)chatDataSource didDeleteMessagesAtIndexPaths:(NSArray *)itemsIndexPaths;
 
-- (void)changeDataSource:(QMChatDataSource *)dataSource withMessages:(NSArray *)messages updateType:(QMDataSourceUpdateType)updateType;
+- (void)changeDataSource:(QMChatDataSource *)dataSource withMessages:(NSArray *)messages updateType:(QMDataSourceActionType)updateType;
 
 @end

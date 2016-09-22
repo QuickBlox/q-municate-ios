@@ -33,7 +33,7 @@ target 'Q-municate' do
     #For development pods
 #    pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
 #    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
-    pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'development'
+    pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'refactoring'
     pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'development'
 
 end
