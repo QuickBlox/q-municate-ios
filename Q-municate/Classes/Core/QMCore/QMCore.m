@@ -244,32 +244,35 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 
 - (BFTask *)logout {
     
-    BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
-    
-    [self.pushNotificationManager unSubscribeFromPushNotifications];
+    BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
     
     @weakify(self);
-    [super logoutWithCompletion:^{
+    [[self.pushNotificationManager unSubscribeFromPushNotifications] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
         
-        @strongify(self);
-        if (self.currentProfile.accountType == QMAccountTypeFacebook) {
+        [super logoutWithCompletion:^{
             
-            [QMFacebook logout];
-        }
-        else if (self.currentProfile.accountType == QMAccountTypeDigits) {
+            @strongify(self);
+            if (self.currentProfile.accountType == QMAccountTypeFacebook) {
+                
+                [QMFacebook logout];
+            }
+            else if (self.currentProfile.accountType == QMAccountTypeDigits) {
+                
+                [[Digits sharedInstance] logOut];
+            }
             
-            [[Digits sharedInstance] logOut];
-        }
+            [[SDWebImageManager sharedManager].imageCache clearMemory];
+            [[SDWebImageManager sharedManager].imageCache clearDisk];
+            
+            // clearing contact list cache and memory storage
+            [[QMContactListCache instance] deleteContactList:nil];
+            [self.contactListService.contactListMemoryStorage free];
+            
+            [self.currentProfile clearProfile];
+            [source setResult:nil];
+        }];
         
-        [[SDWebImageManager sharedManager].imageCache clearMemory];
-        [[SDWebImageManager sharedManager].imageCache clearDisk];
-        
-        // clearing contact list cache and memory storage
-        [[QMContactListCache instance] deleteContactList:nil];
-        [self.contactListService.contactListMemoryStorage free];
-        
-        [self.currentProfile clearProfile];
-        [source setResult:nil];
+        return nil;
     }];
     
     return source.task;
