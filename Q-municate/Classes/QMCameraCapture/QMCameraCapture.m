@@ -463,10 +463,7 @@ AVCaptureDevice * captureDeviceWithPosition(AVCaptureDevicePosition devicePositi
         connection.videoOrientation = orientation;
     }
     
-    if (_previewLayer.connection.videoOrientation != orientation) {
-        
-        _previewLayer.connection.videoOrientation = orientation;
-    }
+    _previewLayer.connection.videoOrientation = orientation;
 }
 
 #pragma mark AVCaptureVideoDataOutputSampleBufferDelegate
