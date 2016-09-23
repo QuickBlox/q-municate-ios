@@ -931,13 +931,6 @@ NYTPhotosViewControllerDelegate
         switch (status) {
                 
             case QMMessageStatusSent:
-                
-                if ([self.detailedCells containsObject:message.ID]) {
-                    
-                    [self.collectionView.collectionViewLayout removeSizeFromCacheForItemID:message.ID];
-                    [self.detailedCells removeObject:message.ID];
-                }
-                
                 currentCell.containerView.bgColor = QMChatOutgoingCellColor();
                 break;
                 
@@ -946,7 +939,6 @@ NYTPhotosViewControllerDelegate
                 break;
                 
             case QMMessageStatusNotSent:
-                [self.detailedCells addObject:message.ID];
                 currentCell.containerView.bgColor = QMChatOutgoingCellFailedColor();
                 break;
         }
