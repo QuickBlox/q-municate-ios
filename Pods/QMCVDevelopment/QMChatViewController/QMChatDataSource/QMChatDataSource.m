@@ -51,7 +51,6 @@ static dispatch_queue_t _serialQueue = nil;
         
         _dateDividers = [NSMutableSet set];
         _messages = [NSMutableArray array];
-        
     }
     
     return self;
@@ -121,7 +120,7 @@ static dispatch_queue_t _serialQueue = nil;
                     
                     [self deleteMessage:message];
                     [self addMessage:message];
-                    return ;
+                    return;
                 }
                 else {
                     [messagesArray addObject:message];

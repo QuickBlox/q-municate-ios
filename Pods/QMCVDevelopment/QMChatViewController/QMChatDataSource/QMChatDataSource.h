@@ -80,32 +80,6 @@ typedef NS_ENUM(NSInteger, QMDataSourceActionType) {
 
 - (void)chatDataSource:(QMChatDataSource *)chatDataSource willBeChangedWithMessageIDs:(NSArray *)messagesIDs;
 
-/**
- *  QMChatDataSource delegate method about items that were inserted to data source.
- *
- *  @param chatDataSource     QMChatDataSource current instance
- *  @param itemsIndexPaths    array of items index paths
- */
-- (void)chatDataSource:(QMChatDataSource *)chatDataSource didInsertMessagesAtIndexPaths:(NSArray *)itemsIndexPaths;
-
-/**
- *  QMChatDataSource delegate method about items were updated in data source.
- *
- *  @param chatDataSource     QMChatDataSource current instance
- *  @param messagesIDs        ids of updated messages
- *  @param itemsIndexPaths    array of items index paths
- */
-- (void)chatDataSource:(QMChatDataSource *)chatDataSource didUpdateMessagesAtIndexPaths:(NSArray *)itemsIndexPaths;
-
-/**
- *  QMChatDataSource delegate method about items were deleted from data source.
- *
- *  @param chatDataSource     QMChatDataSource current instance
- *  @param messagesIDs        ids of deleted messages
- *  @param itemsIndexPaths    array of items index paths
- */
-- (void)chatDataSource:(QMChatDataSource *)chatDataSource didDeleteMessagesAtIndexPaths:(NSArray *)itemsIndexPaths;
-
 - (void)changeDataSource:(QMChatDataSource *)dataSource withMessages:(NSArray *)messages updateType:(QMDataSourceActionType)updateType;
 
 @end

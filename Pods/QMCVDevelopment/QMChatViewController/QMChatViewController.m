@@ -94,6 +94,8 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     self.chatDataSource = [[QMChatDataSource alloc] init];
     self.chatDataSource.delegate = self;
     
+    self.chatSectionManager = [[QMChatSectionManager alloc] initWithChatDataSource:self.chatDataSource];
+    
     self.inputToolbar.delegate = self;
     
     self.inputToolbar.contentView.textView.delegate = self;
@@ -222,61 +224,6 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     for (NSString *messageID in messagesIDs) {
         [self.collectionView.collectionViewLayout removeSizeFromCacheForItemID:messageID];
     }
-}
-
-- (void)chatDataSource:(QMChatDataSource *)chatDataSource didInsertMessagesAtIndexPaths:(NSArray *)itemsIndexPaths {
-    
-    
-    BOOL shouldCancelScrolling = [self shouldCancelScrollingForItemIndexPaths:itemsIndexPaths];
-    
-    __weak __typeof(self)weakSelf = self;
-    
-    dispatch_block_t performUpdate = ^{
-        
-        __typeof(weakSelf)strongSelf = weakSelf;
-        
-        if (shouldCancelScrolling) {
-            
-            [CATransaction begin];
-            [CATransaction setDisableActions:YES];
-        }
-        
-        [strongSelf.collectionView performBatchUpdates:^{
-            
-            [strongSelf.collectionView insertItemsAtIndexPaths:itemsIndexPaths];
-            
-        } completion:^(BOOL finished) {
-            
-            if (shouldCancelScrolling) {
-                [CATransaction commit];
-            }
-        }];
-    };
-    
-    performUpdate();
-}
-
-
-- (void)chatDataSource:(QMChatDataSource *)chatDataSource didUpdateMessagesAtIndexPaths:(NSArray *)itemsIndexPaths {
-    
-    [self.collectionView reloadItemsAtIndexPaths:itemsIndexPaths];
-}
-
-- (void)chatDataSource:(QMChatDataSource *)chatDataSource didDeleteMessagesAtIndexPaths:(NSArray *)itemsIndexPaths {
-    
-    __weak __typeof(self)weakSelf = self;
-    
-    dispatch_block_t performUpdate = ^{
-        
-        __typeof(weakSelf)strongSelf = weakSelf;
-        
-        [strongSelf.collectionView performBatchUpdates:^{
-            [strongSelf.collectionView deleteItemsAtIndexPaths:itemsIndexPaths];
-        } completion:nil];
-        
-    };
-    
-    performUpdate();
 }
 
 #pragma mark - View lifecycle
@@ -1226,8 +1173,6 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     [self.collectionView.collectionViewLayout invalidateLayoutWithContext:context];
 }
 
-#pragma warning Please Deprecate this mehtods
-
 - (UICollectionReusableView *)collectionView:(QMChatCollectionView *)collectionView
                     sectionHeaderAtIndexPath:(NSIndexPath *)indexPath {
     //    QMHeaderCollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter
@@ -1238,19 +1183,6 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     //    headerView.transform = self.collectionView.transform;
     //
     //    return headerView;
-    return nil;
-}
-
-- (UICollectionReusableView *)collectionView:(QMChatCollectionView *)collectionView
-           viewForSupplementaryElementOfKind:(NSString *)kind
-                                 atIndexPath:(NSIndexPath *)indexPath {
-    
-    //    if (kind == UICollectionElementKindSectionFooter) {
-    //        // due to collection view being reversed, section header is actually footer
-    //        return [self collectionView:collectionView sectionHeaderAtIndexPath:indexPath];
-    //    }
-    //
-    //    return nil;
     return nil;
 }
 
