@@ -99,8 +99,14 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Taking pictures, video calls</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Location for messaging</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Calls</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Messaging pictures, avatars</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
@@ -124,13 +130,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSCameraUsageDescription</key>
-	<string></string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string></string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>NSMicrophoneUsageDescription</key>
-	<string></string>
 </dict>
 </plist>
