@@ -82,7 +82,8 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     if ([[QMCore instance] isAuthorized]) {
         
         [source setResult:[QMCore instance].currentProfile.userData];
-    } else {
+    }
+    else {
         
         switch ([QMCore instance].currentProfile.accountType) {
                 
