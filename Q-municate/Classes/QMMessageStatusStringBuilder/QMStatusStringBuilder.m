@@ -1,23 +1,23 @@
 //
-//  QMMessageStatusStringBuilder.m
+//  QMStatusStringBuilder.m
 //  Q-municate
 //
 //  Created by Vitaliy Gorbachov on 9/26/15.
 //  Copyright © 2015 Quickblox. All rights reserved.
 //
 
-#import "QMMessageStatusStringBuilder.h"
+#import "QMStatusStringBuilder.h"
 #import "QMCore.h"
 
 static const NSUInteger kQMStatusStringNamesLimit = 5;
 
-@implementation QMMessageStatusStringBuilder
+@implementation QMStatusStringBuilder
 
-- (NSString *)statusFromMessage:(QBChatMessage *)message forDialogType:(QBChatDialogType)dialogType
-{
-    NSNumber* currentUserID = @([QMCore instance].currentProfile.userData.ID);
+- (NSString *)statusFromMessage:(QBChatMessage *)message forDialogType:(QBChatDialogType)dialogType {
     
-    NSMutableArray* readIDs = [message.readIDs mutableCopy];
+    NSNumber *currentUserID = @([QMCore instance].currentProfile.userData.ID);
+    
+    NSMutableArray *readIDs = [message.readIDs mutableCopy];
     [readIDs removeObject:currentUserID];
     
     NSMutableArray* deliveredIDs = [message.deliveredIDs mutableCopy];
@@ -25,9 +25,17 @@ static const NSUInteger kQMStatusStringNamesLimit = 5;
     
     if (dialogType == QBChatDialogTypePrivate) {
         // Private dialogs status
-        if (readIDs.count > 0) return [message isMediaMessage] ? NSLocalizedString(@"QM_STR_SEEN_STATUS", nil) : NSLocalizedString(@"QM_STR_READ_STATUS", nil);
-        if (deliveredIDs.count > 0) return NSLocalizedString(@"QM_STR_DELIVERED_STATUS", nil);
-    } else {
+        if (readIDs.count > 0) {
+            
+            return [message isMediaMessage] ? NSLocalizedString(@"QM_STR_SEEN_STATUS", nil) : NSLocalizedString(@"QM_STR_READ_STATUS", nil);
+        }
+        
+        if (deliveredIDs.count > 0) {
+            
+            return NSLocalizedString(@"QM_STR_DELIVERED_STATUS", nil);
+        }
+    }
+    else {
         // Group dialogs status
         [deliveredIDs removeObjectsInArray:readIDs];
         NSMutableString *statusString = [NSMutableString string];
@@ -38,7 +46,8 @@ static const NSUInteger kQMStatusStringNamesLimit = 5;
                 
                 NSString *localizedString = NSLocalizedString([message isMediaMessage] ? @"QM_STR_SEEN_BY_AMOUNT_PEOPLE_STATUS" : @"QM_STR_READ_BY_AMOUNT_PEOPLE_STATUS", nil);
                 [statusString appendFormat:localizedString, readIDs.count];
-            } else {
+            }
+            else {
                 
                 NSArray *users = [[QMCore instance].usersService.usersMemoryStorage usersWithIDs:readIDs];
                 NSMutableArray *readNames = [users valueForKeyPath:@keypath(QBUUser.new, fullName)];

@@ -1,5 +1,5 @@
 //
-//  QMMessageStatusStringBuilder.h
+//  QMStatusStringBuilder.h
 //  Q-municate
 //
 //  Created by Vitaliy Gorbachov on 9/26/15.
@@ -11,7 +11,7 @@
 /**
  *  Responsible for building string for message status.
  */
-@interface QMMessageStatusStringBuilder : NSObject
+@interface QMStatusStringBuilder : NSObject
 
 - (NSString *)statusFromMessage:(QBChatMessage *)message forDialogType:(QBChatDialogType)dialogType;
 - (NSString *)messageTextForNotification:(QBChatMessage *)notification;
