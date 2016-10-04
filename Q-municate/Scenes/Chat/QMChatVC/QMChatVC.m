@@ -9,7 +9,7 @@
 #import "QMChatVC.h"
 #import "QMCore.h"
 #import "UINavigationController+QMNotification.h"
-#import "QMMessageStatusStringBuilder.h"
+#import "QMStatusStringBuilder.h"
 #import "QMPlaceholder.h"
 #import "QMSoundManager.h"
 #import "QMImagePicker.h"
@@ -23,6 +23,7 @@
 #import "QMCallNotificationItem.h"
 #import "QMHelpers.h"
 #import "QMSplitViewController.h"
+#import "QMMessagesFactory.h"
 
 // helpers
 #import "QMChatButtonsFactory.h"
@@ -105,7 +106,7 @@ NYTPhotosViewControllerDelegate
 /**
  *  Message status text builder.
  */
-@property (strong, nonatomic) QMMessageStatusStringBuilder *messageStatusStringBuilder;
+@property (strong, nonatomic) QMStatusStringBuilder *statusStringBuilder;
 
 /**
  *  Contact request task.
@@ -193,7 +194,7 @@ NYTPhotosViewControllerDelegate
     // setting up properties
     self.detailedCells = [NSMutableSet set];
     self.attachmentCells = [NSMapTable strongToWeakObjectsMapTable];
-    self.messageStatusStringBuilder = [[QMMessageStatusStringBuilder alloc] init];
+    self.statusStringBuilder = [[QMStatusStringBuilder alloc] init];
     
     // subscribing to delegates
     [[QMCore instance].chatService addDelegate:self];
@@ -480,14 +481,10 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
-    QBChatMessage *message = [QBChatMessage message];
-    message.text = text;
-    message.senderID = senderId;
-    message.markable = YES;
-    message.deliveredIDs = @[@(self.senderID)];
-    message.readIDs = @[@(self.senderID)];
-    message.dialogID = self.chatDialog.ID;
-    message.dateSent = date;
+    QBChatMessage *message = [QMMessagesFactory chatMessageWithText:text
+                                                           senderID:senderId
+                                                       chatDialogID:self.chatDialog.ID
+                                                           dateSent:date];
     
     // Sending message
     [self _sendMessage:message];
@@ -617,7 +614,7 @@ NYTPhotosViewControllerDelegate
         
         paragraphStyle.alignment = NSTextAlignmentCenter;
         
-        message = [self.messageStatusStringBuilder messageTextForNotification:messageItem];
+        message = [self.statusStringBuilder messageTextForNotification:messageItem];
         
         if (message == nil) {
             // old logic support when update info was plain text
@@ -716,7 +713,7 @@ NYTPhotosViewControllerDelegate
     NSString* text = messageItem.dateSent ? [QMDateUtils formatDateForTimeRange:messageItem.dateSent] : @"";
     
     if (messageItem.senderID == self.senderID) {
-        text = [NSString stringWithFormat:@"%@\n%@", text, [self.messageStatusStringBuilder statusFromMessage:messageItem forDialogType:self.chatDialog.type]];
+        text = [NSString stringWithFormat:@"%@\n%@", text, [self.statusStringBuilder statusFromMessage:messageItem forDialogType:self.chatDialog.type]];
     }
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text
@@ -1175,14 +1172,10 @@ NYTPhotosViewControllerDelegate
 
 - (void)_sendLocationMessage:(CLLocationCoordinate2D)locationCoordinate {
     
-    QBChatMessage *message = [QBChatMessage message];
-    message.text = kQMLocationNotificationMessage;
-    message.senderID = self.senderID;
-    message.markable = YES;
-    message.deliveredIDs = @[@(self.senderID)];
-    message.readIDs = @[@(self.senderID)];
-    message.dialogID = self.chatDialog.ID;
-    message.dateSent = [NSDate date];
+    QBChatMessage *message = [QMMessagesFactory chatMessageWithText:kQMLocationNotificationMessage
+                                                           senderID:self.senderID
+                                                       chatDialogID:self.chatDialog.ID
+                                                           dateSent:[NSDate date]];
     
     message.locationCoordinate = locationCoordinate;
     
@@ -1201,10 +1194,10 @@ NYTPhotosViewControllerDelegate
 
 - (void)sendAttachmentMessageWithImage:(UIImage *)image {
     
-    QBChatMessage* message = [QBChatMessage markableMessage];
-    message.senderID = self.senderID;
-    message.dialogID = self.chatDialog.ID;
-    message.dateSent = [NSDate date];
+    QBChatMessage* message = [QMMessagesFactory chatMessageWithText:nil
+                                                           senderID:self.senderID
+                                                       chatDialogID:self.chatDialog.ID
+                                                           dateSent:[NSDate date]];
     
     @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -1233,7 +1226,7 @@ NYTPhotosViewControllerDelegate
     });
 }
 
-- (void)handleNotSentMessage:(QBChatMessage*)notSentMessage {
+- (void)handleNotSentMessage:(QBChatMessage *)notSentMessage {
     
     UIAlertController *alertController = [UIAlertController
                                           alertControllerWithTitle:nil

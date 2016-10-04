@@ -12,6 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QMMessagesFactory : NSObject
 
++ (QBChatMessage *)chatMessageWithText:(nullable NSString *)text
+                              senderID:(NSUInteger)senderID
+                          chatDialogID:(NSString *)chatDialogID
+                              dateSent:(NSDate *)dateSent;
+
 /**
  *  Contact request notification message instance.
  *

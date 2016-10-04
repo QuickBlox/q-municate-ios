@@ -12,6 +12,20 @@
 
 #pragma mark - Instances
 
++ (QBChatMessage *)chatMessageWithText:(NSString *)text senderID:(NSUInteger)senderID chatDialogID:(NSString *)chatDialogID dateSent:(NSDate *)dateSent {
+    
+    QBChatMessage *message = [QBChatMessage message];
+    message.text = text;
+    message.senderID = senderID;
+    message.markable = YES;
+    message.deliveredIDs = @[@(senderID)];
+    message.readIDs = @[@(senderID)];
+    message.dialogID = chatDialogID;
+    message.dateSent = dateSent;
+    
+    return message;
+}
+
 + (QBChatMessage *)contactRequestNotificationForUser:(QBUUser *)user {
     
     QBChatMessage *notification = notificationForUser(user);
