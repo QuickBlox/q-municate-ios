@@ -11,6 +11,8 @@
 #import "QMChatVC.h"
 #import "QMCore.h"
 #import "QMImages.h"
+#import "QBChatDialog+OpponentID.h"
+#import "QMMessagesFactory.h"
 
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
@@ -18,8 +20,12 @@
 #import <Flurry.h>
 #import <SVProgressHUD.h>
 
+@import UserNotifications;
 
-#define DEVELOPMENT 0
+static NSString * const kQMNotificationActionTextAction = @"TEXT_ACTION";
+static NSString * const kQMNotificationCategoryReply = @"TEXT_REPLY";
+
+#define DEVELOPMENT 1
 
 #if DEVELOPMENT == 0
 
@@ -39,7 +45,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 #endif
 
-@interface QMAppDelegate () <QMPushNotificationManagerDelegate>
+@interface QMAppDelegate () <QMPushNotificationManagerDelegate, UNUserNotificationCenterDelegate>
 
 @end
 
@@ -75,8 +81,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBRTCConfig setStatsReportTimeInterval:0.0f]; // set to 1.0f to enable stats report
     
     // Registering for remote notifications
-    [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
-    [[UIApplication sharedApplication] registerForRemoteNotifications];
+    [self registerForNotification];
     
     // Configuring app appearance
     UIColor *mainTintColor = [UIColor colorWithRed:13.0f/255.0f green:112.0f/255.0f blue:179.0f/255.0f alpha:1.0f];
@@ -157,11 +162,132 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 }
 
 
-#pragma mark - PUSH NOTIFICATIONS REGISTRATION
+#pragma mark - Push notification registration
+
+- (void)registerForNotification {
+    
+    if ([UNUserNotificationCenter class]) {
+        
+        // subscribing for delegate
+        [UNUserNotificationCenter currentNotificationCenter].delegate = self;
+        
+        // adding text action
+        UNTextInputNotificationAction *textAction = [UNTextInputNotificationAction actionWithIdentifier:kQMNotificationActionTextAction title:@"Reply" options:UNNotificationActionOptionNone textInputButtonTitle:@"Reply" textInputPlaceholder:NSLocalizedString(@"QM_STR_INPUTTOOLBAR_PLACEHOLDER", nil)];
+        UNNotificationCategory *notificationCategory = [UNNotificationCategory categoryWithIdentifier:kQMNotificationCategoryReply actions:@[textAction] intentIdentifiers:@[] options:UNNotificationCategoryOptionNone];
+        
+        [[UNUserNotificationCenter currentNotificationCenter] setNotificationCategories:[NSSet setWithObject:notificationCategory]];
+        [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:(UNAuthorizationOptionBadge | UNAuthorizationOptionSound | UNAuthorizationOptionAlert) completionHandler:^(BOOL __unused granted, NSError * __unused _Nullable error) {}];
+    }
+    else {
+        
+        UIMutableUserNotificationAction *textAction = [[UIMutableUserNotificationAction alloc] init];
+        textAction.identifier = kQMNotificationActionTextAction;
+        textAction.title = @"Reply";
+        textAction.activationMode = UIUserNotificationActivationModeBackground;
+        textAction.authenticationRequired = NO;
+        textAction.destructive = NO;
+        textAction.behavior = UIUserNotificationActionBehaviorTextInput;
+        
+        UIMutableUserNotificationCategory *category = [[UIMutableUserNotificationCategory alloc] init];
+        category.identifier = kQMNotificationCategoryReply;
+        [category setActions:@[textAction] forContext:UIUserNotificationActionContextDefault];
+        [category setActions:@[textAction] forContext:UIUserNotificationActionContextMinimal];
+        
+        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings
+                                                            settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge)
+                                                            categories:[NSSet setWithObject:category]];
+        [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
+    }
+    
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
+}
 
 - (void)application:(UIApplication *)__unused application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
     [QMCore instance].pushNotificationManager.deviceToken = deviceToken;
+}
+
+//- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler {
+//
+//}
+
+- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo withResponseInfo:(NSDictionary *)responseInfo completionHandler:(void (^)())completionHandler {
+    
+    if ([identifier isEqualToString:kQMNotificationActionTextAction]) {
+        
+        
+    }
+    
+    if (completionHandler) {
+        
+        completionHandler();
+    }
+}
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
+    
+    if ([response.actionIdentifier isEqualToString:kQMNotificationActionTextAction]) {
+        
+        NSString *dialogID = response.notification.request.content.userInfo[kQMPushNotificationDialogIDKey];
+        
+        UIApplication *application = [UIApplication sharedApplication];
+        __block UIBackgroundTaskIdentifier task = [application beginBackgroundTaskWithExpirationHandler:^{
+            
+            [[QMCore instance].chatService disconnect];
+            
+            [application endBackgroundTask:task];
+            task = UIBackgroundTaskInvalid;
+        }];
+        
+        //        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        // Do the work associated with the task.
+        NSLog(@"Started background task timeremaining = %f", [application backgroundTimeRemaining]);
+        
+        QBChatDialog *chatDialog = [[QMCore instance].chatService.dialogsMemoryStorage chatDialogWithID:dialogID];
+        if (chatDialog != nil) {
+            
+            if (chatDialog.type == QBChatDialogTypePrivate
+                && ![[QMCore instance].contactManager isFriendWithUserID:[chatDialog opponentID]]) {
+                
+                if (completionHandler) {
+                    
+                    completionHandler();
+                }
+                
+                return;
+            }
+            
+            [[[[[QMCore instance].chatService connect] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
+                
+                NSUInteger currentUserID = [QMCore instance].currentProfile.userData.ID;
+                
+                QBChatMessage *message = [QMMessagesFactory chatMessageWithText:[(UNTextInputNotificationResponse *)response userText]
+                                                                       senderID:currentUserID
+                                                                   chatDialogID:chatDialog.ID
+                                                                       dateSent:[NSDate date]];
+                
+                return [[QMCore instance].chatService sendMessage:message toDialog:chatDialog saveToHistory:YES saveToStorage:YES];
+                
+            }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
+                
+                return [[QMCore instance].chatService disconnect];
+                
+            }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
+                
+                [application endBackgroundTask:task];
+                task = UIBackgroundTaskInvalid;
+                
+                return nil;
+            }];
+        }
+        //        });
+    }
+    
+    if (completionHandler) {
+        
+        completionHandler();
+    }
 }
 
 #pragma mark - QMPushNotificationManagerDelegate protocol
