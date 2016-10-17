@@ -134,12 +134,12 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     
     NSMutableArray *usersLoadingTasks = [NSMutableArray array];
     
-    void (^iterationBlock)(QBResponse *, NSArray *, NSSet *, BOOL *) = ^(QBResponse *__unused response, NSArray *__unused dialogObjects, NSSet *dialogsUsersIDs, BOOL *__unused stop) {
+    __block void (^iterationBlock)(QBResponse *, NSArray *, NSSet *, BOOL *) = ^(QBResponse *__unused response, NSArray *__unused dialogObjects, NSSet *dialogsUsersIDs, BOOL *__unused stop) {
         
         [usersLoadingTasks addObject:[[QMCore instance].usersService getUsersWithIDs:dialogsUsersIDs.allObjects]];
     };
     
-    BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull task) {
+    __block BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull task) {
         
         if ([[QMCore instance] isAuthorized] && !task.isFaulted) {
             
@@ -153,11 +153,31 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     NSDate *lastDialogsFetchingDate = [QMCore instance].currentProfile.lastDialogsFetchingDate;
     if (lastDialogsFetchingDate != nil) {
         
-        return [[[QMCore instance].chatService fetchDialogsUpdatedFromDate:lastDialogsFetchingDate andPageLimit:kQMDialogsPageLimit iterationBlock:iterationBlock] continueWithBlock:completionBlock];
+        return [[[QMCore instance].chatService fetchDialogsUpdatedFromDate:lastDialogsFetchingDate andPageLimit:kQMDialogsPageLimit iterationBlock:^(QBResponse * _Nonnull response, NSArray<QBChatDialog *> * _Nullable dialogObjects, NSSet<NSNumber *> * _Nullable dialogsUsersIDs, BOOL * _Nonnull stop) {
+            
+            iterationBlock(response, dialogObjects, dialogsUsersIDs, stop);
+            
+        }] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
+            
+            completionBlock(t);
+            completionBlock = nil;
+            iterationBlock = nil;
+            return nil;
+        }];
     }
     else {
         
-        return [[[QMCore instance].chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:iterationBlock] continueWithBlock:completionBlock];
+        return [[[QMCore instance].chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:^(QBResponse * _Nonnull response, NSArray<QBChatDialog *> * _Nullable dialogObjects, NSSet<NSNumber *> * _Nullable dialogsUsersIDs, BOOL * _Nonnull stop) {
+            
+            iterationBlock(response, dialogObjects, dialogsUsersIDs, stop);
+            
+        }] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
+            
+            completionBlock(t);
+            completionBlock = nil;
+            iterationBlock = nil;
+            return nil;
+        }];
     }
 }
 
