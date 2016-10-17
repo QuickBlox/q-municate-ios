@@ -86,7 +86,7 @@ DEPENDENCIES:
   - libextobjc/EXTScope (~> 0.4.1)
   - MPGNotification (~> 1.2)
   - NYTPhotoViewer (~> 1.1.0)
-  - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, branch `development`)
+  - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, branch `feature/keyboardController`)
   - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`, branch `development`)
   - Reachability (~> 3.2)
   - SDWebImage (~> 3.6)
@@ -98,7 +98,7 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   QMCVDevelopment:
-    :branch: development
+    :branch: feature/keyboardController
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
     :branch: development
@@ -106,7 +106,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
-    :commit: f0f75a93381a6e46d1c8ce63bf2a08441fa63779
+    :commit: faea800ec13d119736d37bfba34a9b9a22f1b382
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
     :commit: a24260e66b013301cf6186ed34089a49a41a014d
@@ -135,6 +135,6 @@ SPEC CHECKSUMS:
   TwitterCore: cce24b3c798993ccde72787ea79ea9a478b284e4
   UIDevice-Hardware: ecb52d9a7b223b31f81982358e2b0769ac1a7918
 
-PODFILE CHECKSUM: a6eccb5288730558be399fa1ac7f436057173e77
+PODFILE CHECKSUM: 28caed408b75f459e391a38c7652cc7f64df45cb
 
 COCOAPODS: 1.0.1
