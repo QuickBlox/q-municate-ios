@@ -64,7 +64,7 @@
     
     UIImage *image = [[[[self class] instance] cache] objectForKey:key];
     
-    if (image) {
+    if (image != nil) {
         
         return image;
     }
@@ -72,13 +72,13 @@
         
         UIGraphicsBeginImageContextWithOptions(frame.size, NO, 0.0);
         //// Oval Drawing
-        UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect:frame];
+        UIBezierPath *ovalPath = [UIBezierPath bezierPathWithOvalInRect:frame];
         
         UIColor *userColor = [[[self class] instance] colors][ID % 10];
         [userColor setFill];
         [ovalPath fill];
         
-        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
         paragraphStyle.alignment = NSTextAlignmentCenter;
         
         UIFont *font = [UIFont systemFontOfSize:frame.size.height / 2.0f];
@@ -86,7 +86,7 @@
         
         NSString *textContent = [title substringToIndex:1].uppercaseString;
         
-        NSDictionary *ovalFontAttributes = @{NSFontAttributeName:font ,
+        NSDictionary *ovalFontAttributes = @{NSFontAttributeName:font,
                                              NSForegroundColorAttributeName:textColor,
                                              NSParagraphStyleAttributeName:paragraphStyle};
         
