@@ -501,11 +501,8 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
-    if ([self.inputToolbar.contentView.textView isFirstResponder]) {
-        [self becomeFirstResponder];
-        [self.inputToolbar.contentView.textView resignFirstResponder];
-    }
-   
+    [self.inputToolbar.contentView.textView resignFirstResponder];
+
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_TAKE_IMAGE", nil)

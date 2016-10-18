@@ -136,10 +136,10 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     self.isLastCellVisible = YES;
     
     self.systemInputToolbar = [[QMKVOView alloc] init];
-    self.systemInputToolbar.frame = CGRectMake(0, -1, 0.1, 0);
+    self.systemInputToolbar.frame = CGRectMake(0, -1, 1, 0);
     
     __weak typeof(self) weakSelf = self;
-
+    
     [self.systemInputToolbar setFrameChangedBlock:^(CGRect rect) {
         
         typeof(weakSelf) strongSelf = weakSelf;
@@ -148,13 +148,19 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
             return;
         }
         
-        CGRect convertedRect = [strongSelf.view convertRect:rect fromView:nil];
-        NSUInteger value = CGRectGetHeight(self.view.frame) - CGRectGetMinY(convertedRect);
+        CGFloat newToolbarBottomLayoutGuideConstant = 0;
+    
+        if (CGRectGetHeight(rect) > 0) {
+            CGRect convertedRect = [strongSelf.view convertRect:rect fromView:nil];
+            newToolbarBottomLayoutGuideConstant = CGRectGetHeight(strongSelf.view.frame) - CGRectGetMinY(convertedRect);
+        }
         
-        strongSelf.toolbarBottomLayoutGuide.constant = value;
-        [strongSelf.view updateConstraintsIfNeeded];
-        [strongSelf.view layoutIfNeeded];
-        [self updateCollectionViewInsets];
+        if (strongSelf.toolbarBottomLayoutGuide.constant != newToolbarBottomLayoutGuideConstant) {
+            strongSelf.toolbarBottomLayoutGuide.constant = newToolbarBottomLayoutGuideConstant;
+            [strongSelf.view updateConstraintsIfNeeded];
+            [strongSelf.view layoutIfNeeded];
+            [strongSelf updateCollectionViewInsets];
+        }
     }];
 }
 
@@ -439,10 +445,6 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
 
 - (void)didPressAccessoryButton:(UIButton *)sender {
     
-    if ([self.inputToolbar.contentView.textView isFirstResponder]) {
-        [self becomeFirstResponder];
-        [self.inputToolbar.contentView.textView resignFirstResponder];
-    }
 
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
@@ -745,8 +747,8 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     if (textView != self.inputToolbar.contentView.textView) {
         return;
     }
-    [self resignFirstResponder];
-    [self.systemInputToolbar becomeFirstResponder];
+   
+    [textView becomeFirstResponder];
     
     if (self.automaticallyScrollsToMostRecentMessage) {
         [self scrollToBottomAnimated:YES];
@@ -846,8 +848,9 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
 #pragma mark - Collection view utilities
 
 - (void)updateCollectionViewInsets {
+ 
     
-    [self setCollectionViewInsetsTopValue:self.topContentAdditionalInset
+        [self setCollectionViewInsetsTopValue:self.topContentAdditionalInset
                               bottomValue:CGRectGetHeight(self.view.frame) - CGRectGetMinY(self.inputToolbar.frame)];
 
     if ([self shouldScrollToBottom]) {
@@ -863,6 +866,7 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     if (UIEdgeInsetsEqualToEdgeInsets(self.collectionView.contentInset, insets)) {
         return;
     }
+
     self.collectionView.contentInset = insets;
     self.collectionView.scrollIndicatorInsets = insets;
 }
@@ -1020,8 +1024,15 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+
+    [self.view layoutIfNeeded];
+
+    // Resets layout and cache after the rotation animation is finished
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(coordinator.transitionDuration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self resetLayoutAndCaches];
+    });
+    
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    [self resetLayoutAndCaches];
 }
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
