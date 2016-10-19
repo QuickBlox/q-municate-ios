@@ -99,6 +99,8 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     // Configuring external frameworks
     [Fabric with:@[CrashlyticsKit, DigitsKit]];
     [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
+    [Flurry logEvent:@"connect_to_chat" withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", kQMApplicationID],
+                                                         @"chat_endpoint" : [QBSettings chatEndpoint]}];
     
     // Handling push notifications if needed
     if (launchOptions != nil) {
