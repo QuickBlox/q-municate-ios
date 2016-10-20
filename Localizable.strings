@@ -142,6 +142,7 @@
 "QM_STR_SIGNING_IN" = "Signing in";
 "QM_STR_LOADING" = "Loading";
 "QM_STR_LOST_INTERNET_CONNECTION" = "Lost internet connection";
+"QM_STR_CONNECTION_IN_PROGRESS" = "Connecting to chat service, please wait";
 
 // *********** Update user ***********
 "QM_STR_EMAIL" = "Email";
