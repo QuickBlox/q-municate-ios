@@ -1,5 +1,5 @@
 //
-//  QMMessagesFactory.h
+//  QMMessagesHelper.h
 //  Q-municate
 //
 //  Created by Vitaliy Gorbachov on 4/18/16.
@@ -10,8 +10,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface QMMessagesFactory : NSObject
+@interface QMMessagesHelper : NSObject
 
+
+/**
+ *  Base chat message.
+ *
+ *  @param text         message text
+ *  @param senderID     message sender ID
+ *  @param chatDialogID chat dialog ID
+ *  @param dateSent     message date sent
+ *
+ *  @return Base QBChatMessage instance
+ */
 + (QBChatMessage *)chatMessageWithText:(nullable NSString *)text
                               senderID:(NSUInteger)senderID
                           chatDialogID:(NSString *)chatDialogID
@@ -34,6 +45,18 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return QBChatMessage notification instance
  */
 + (QBChatMessage *)removeContactNotificationForUser:(QBUUser *)user;
+
+
+/**
+ *  Determines whether message is contact request message of any kind.
+ *
+ *  @param message chat message
+ *
+ *  @see QMMessageType
+ *
+ *  @return whether message is contact request message
+ */
++ (BOOL)isContactRequestMessage:(QBChatMessage *)message;
 
 @end
 

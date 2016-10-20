@@ -1,14 +1,14 @@
 //
-//  QMMessagesFactory.m
+//  QMMessagesHelper.m
 //  Q-municate
 //
 //  Created by Vitaliy Gorbachov on 4/18/16.
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMMessagesFactory.h"
+#import "QMMessagesHelper.h"
 
-@implementation QMMessagesFactory
+@implementation QMMessagesHelper
 
 #pragma mark - Instances
 
@@ -40,6 +40,13 @@
     notification.messageType = QMMessageTypeDeleteContactRequest;
     
     return notification;
+}
+
++ (BOOL)isContactRequestMessage:(QBChatMessage *)message {
+    
+    return message.messageType == QMMessageTypeDeleteContactRequest
+    || message.messageType == QMMessageTypeAcceptContactRequest
+    || message.messageType == QMMessageTypeRejectContactRequest;
 }
 
 #pragma mark - Helpers

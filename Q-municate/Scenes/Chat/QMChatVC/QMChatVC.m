@@ -23,7 +23,7 @@
 #import "QMCallNotificationItem.h"
 #import "QMHelpers.h"
 #import "QMSplitViewController.h"
-#import "QMMessagesFactory.h"
+#import "QMMessagesHelper.h"
 
 // helpers
 #import "QMChatButtonsFactory.h"
@@ -442,7 +442,7 @@ NYTPhotosViewControllerDelegate
     
     return YES;
 }
-            
+
 #pragma mark - Toolbar actions
 
 - (void)didPressSendButton:(UIButton *)__unused button
@@ -481,10 +481,10 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
-    QBChatMessage *message = [QMMessagesFactory chatMessageWithText:text
-                                                           senderID:senderId
-                                                       chatDialogID:self.chatDialog.ID
-                                                           dateSent:date];
+    QBChatMessage *message = [QMMessagesHelper chatMessageWithText:text
+                                                          senderID:senderId
+                                                      chatDialogID:self.chatDialog.ID
+                                                          dateSent:date];
     
     // Sending message
     [self _sendMessage:message];
@@ -1172,10 +1172,10 @@ NYTPhotosViewControllerDelegate
 
 - (void)_sendLocationMessage:(CLLocationCoordinate2D)locationCoordinate {
     
-    QBChatMessage *message = [QMMessagesFactory chatMessageWithText:kQMLocationNotificationMessage
-                                                           senderID:self.senderID
-                                                       chatDialogID:self.chatDialog.ID
-                                                           dateSent:[NSDate date]];
+    QBChatMessage *message = [QMMessagesHelper chatMessageWithText:kQMLocationNotificationMessage
+                                                          senderID:self.senderID
+                                                      chatDialogID:self.chatDialog.ID
+                                                          dateSent:[NSDate date]];
     
     message.locationCoordinate = locationCoordinate;
     
@@ -1194,10 +1194,10 @@ NYTPhotosViewControllerDelegate
 
 - (void)sendAttachmentMessageWithImage:(UIImage *)image {
     
-    QBChatMessage* message = [QMMessagesFactory chatMessageWithText:nil
-                                                           senderID:self.senderID
-                                                       chatDialogID:self.chatDialog.ID
-                                                           dateSent:[NSDate date]];
+    QBChatMessage* message = [QMMessagesHelper chatMessageWithText:nil
+                                                          senderID:self.senderID
+                                                      chatDialogID:self.chatDialog.ID
+                                                          dateSent:[NSDate date]];
     
     @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -1392,10 +1392,11 @@ NYTPhotosViewControllerDelegate
     
     if ([self.chatDialog.ID isEqualToString:dialogID]) {
         
-        if (message.messageType == QMMessageTypeDeleteContactRequest) {
+        if (self.chatDialog.type == QBChatDialogTypePrivate
+            && [QMMessagesHelper isContactRequestMessage:message]) {
             // check whether contact request message was sent previously
             // in order to reload it and remove buttons for accept and deny
-            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
             QBChatMessage *lastMessage = [self.chatDataSource messageForIndexPath:indexPath];
             if (lastMessage.messageType == QMMessageTypeContactRequest) {
                 
