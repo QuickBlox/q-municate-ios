@@ -8,21 +8,12 @@
 
 #import "QMBaseService.h"
 
-@class QMChatLocationSnapshotter;
-
 NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  This class represents basic chat managing and tasks.
  */
 @interface QMChatManager : QMBaseService
-
-/**
- *  Chat location snapshotter.
- *
- *  @discussion Chat location snapshotter will be lazy loaded when first requested.
- */
-@property (readonly, strong, nonatomic) QMChatLocationSnapshotter *chatLocationSnapshotter;
 
 /**
  *  Disconnect from QBChat.
@@ -79,6 +70,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return task with result
  */
 - (BFTask *)leaveChatDialog:(QBChatDialog *)chatDialog;
+
+- (BFTask *)sendBackgroundMessageWithText:(NSString *)text toDialog:(QBChatDialog *)chatDialog;
 
 @end
 

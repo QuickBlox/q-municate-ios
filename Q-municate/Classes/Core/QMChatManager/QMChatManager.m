@@ -9,13 +9,11 @@
 #import "QMChatManager.h"
 #import "QMCore.h"
 #import "QMContent.h"
-#import "QMChatLocationSnapshotter.h"
+#import "QMMessagesHelper.h"
 
 @interface QMChatManager ()
 
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
-
-@property (readwrite, strong, nonatomic) QMChatLocationSnapshotter *chatLocationSnapshotter;
 
 @end
 
@@ -113,18 +111,66 @@
     }];
 }
 
-#pragma mark - Getters
-
-- (QMChatLocationSnapshotter *)chatLocationSnapshotter {
+- (BFTask *)sendBackgroundMessageWithText:(NSString *)text toDialog:(QBChatDialog *)chatDialog {
     
-    if (_chatLocationSnapshotter == nil) {
-        // lazy loading location snapshotter f needed
-        // due to for some users it will not be needed at all
-        // for application life span
-        _chatLocationSnapshotter = [[QMChatLocationSnapshotter alloc] init];
+    BFContinuationBlock joinBlock = ^id _Nullable(BFTask * _Nonnull t) {
+        
+        if (!t.isFaulted
+            && chatDialog.type != QBChatDialogTypePrivate
+            && !chatDialog.isJoined) {
+            
+            return [self.serviceManager.chatService joinToGroupDialog:chatDialog];
+        }
+        
+        return nil;
+    };
+    
+    BFContinuationBlock messageBlock = ^id _Nullable(BFTask * _Nonnull t) {
+        
+        if (!t.isFaulted) {
+            
+            NSUInteger currentUserID = [QMCore instance].currentProfile.userData.ID;
+            
+            QBChatMessage *message = [QMMessagesHelper chatMessageWithText:text
+                                                                  senderID:currentUserID
+                                                              chatDialogID:chatDialog.ID
+                                                                  dateSent:[NSDate date]];
+            
+            return [[QMCore instance].chatService sendMessage:message toDialog:chatDialog saveToHistory:YES saveToStorage:YES];
+        }
+        
+        return nil;
+    };
+    
+    BFContinuationBlock disconnectBlock = ^id _Nullable(BFTask * _Nonnull __unused t) {
+        
+        [QMCore instance].chatService.enableAutoJoin = YES;
+        
+        BOOL isConnected = [QBChat instance].isConnected;
+        BOOL hasNoActiveCall = !self.serviceManager.callManager.hasActiveCall;
+        BOOL isNotActive = [UIApplication sharedApplication].applicationState != UIApplicationStateActive;
+        
+        if (isConnected
+            && hasNoActiveCall
+            && isNotActive) {
+            
+            return [[QMCore instance].chatService disconnect];
+        }
+        
+        return nil;
+    };
+    
+    if (![QBChat instance].isConnected) {
+        
+        [QMCore instance].chatService.enableAutoJoin = NO;
+        
+        return [[[[[QMCore instance].chatService connect]
+                  continueWithBlock:joinBlock]
+                 continueWithBlock:messageBlock]
+                continueWithBlock:disconnectBlock];
     }
     
-    return _chatLocationSnapshotter;
+    return nil;
 }
 
 @end

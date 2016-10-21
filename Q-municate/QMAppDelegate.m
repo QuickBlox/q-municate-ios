@@ -12,7 +12,8 @@
 #import "QMCore.h"
 #import "QMImages.h"
 #import "QBChatDialog+OpponentID.h"
-#import "QMMessagesFactory.h"
+#import "QMMessagesHelper.h"
+#import "QMHelpers.h"
 
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
@@ -163,12 +164,12 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     return urlWasIntendedForFacebook;
 }
 
-
 #pragma mark - Push notification registration
 
 - (void)registerForNotification {
     
     if ([UNUserNotificationCenter class]) {
+        // supporting iOS 10 User Notification Center
         
         // subscribing for delegate
         [UNUserNotificationCenter currentNotificationCenter].delegate = self;
@@ -182,22 +183,28 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     }
     else {
         
-        UIMutableUserNotificationAction *textAction = [[UIMutableUserNotificationAction alloc] init];
-        textAction.identifier = kQMNotificationActionTextAction;
-        textAction.title = @"Reply";
-        textAction.activationMode = UIUserNotificationActivationModeBackground;
-        textAction.authenticationRequired = NO;
-        textAction.destructive = NO;
-        textAction.behavior = UIUserNotificationActionBehaviorTextInput;
-        
-        UIMutableUserNotificationCategory *category = [[UIMutableUserNotificationCategory alloc] init];
-        category.identifier = kQMNotificationCategoryReply;
-        [category setActions:@[textAction] forContext:UIUserNotificationActionContextDefault];
-        [category setActions:@[textAction] forContext:UIUserNotificationActionContextMinimal];
+        NSSet *categories = nil;
+        if (iosMajorVersion() >= 9) {
+            // text input reply is ios 9 +
+            UIMutableUserNotificationAction *textAction = [[UIMutableUserNotificationAction alloc] init];
+            textAction.identifier = kQMNotificationActionTextAction;
+            textAction.title = @"Reply";
+            textAction.activationMode = UIUserNotificationActivationModeBackground;
+            textAction.authenticationRequired = NO;
+            textAction.destructive = NO;
+            textAction.behavior = UIUserNotificationActionBehaviorTextInput;
+            
+            UIMutableUserNotificationCategory *category = [[UIMutableUserNotificationCategory alloc] init];
+            category.identifier = kQMNotificationCategoryReply;
+            [category setActions:@[textAction] forContext:UIUserNotificationActionContextDefault];
+            [category setActions:@[textAction] forContext:UIUserNotificationActionContextMinimal];
+            
+            categories = [NSSet setWithObject:category];
+        }
         
         UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings
                                                             settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge)
-                                                            categories:[NSSet setWithObject:category]];
+                                                            categories:categories];
         [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
     }
     
@@ -226,7 +233,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     }
 }
 
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
+- (void)userNotificationCenter:(UNUserNotificationCenter *)__unused center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
     
     if ([response.actionIdentifier isEqualToString:kQMNotificationActionTextAction]) {
         
@@ -241,7 +248,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
             task = UIBackgroundTaskInvalid;
         }];
         
-        //        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         // Do the work associated with the task.
         NSLog(@"Started background task timeremaining = %f", [application backgroundTimeRemaining]);
@@ -260,22 +267,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
                 return;
             }
             
-            [[[[[QMCore instance].chatService connect] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
-                
-                NSUInteger currentUserID = [QMCore instance].currentProfile.userData.ID;
-                
-                QBChatMessage *message = [QMMessagesFactory chatMessageWithText:[(UNTextInputNotificationResponse *)response userText]
-                                                                       senderID:currentUserID
-                                                                   chatDialogID:chatDialog.ID
-                                                                       dateSent:[NSDate date]];
-                
-                return [[QMCore instance].chatService sendMessage:message toDialog:chatDialog saveToHistory:YES saveToStorage:YES];
-                
-            }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
-                
-                return [[QMCore instance].chatService disconnect];
-                
-            }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
+            [[[QMCore instance].chatManager sendBackgroundMessageWithText:[(UNTextInputNotificationResponse *)response userText] toDialog:chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
                 
                 [application endBackgroundTask:task];
                 task = UIBackgroundTaskInvalid;
@@ -283,7 +275,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
                 return nil;
             }];
         }
-        //        });
+        //                });
     }
     
     if (completionHandler) {
