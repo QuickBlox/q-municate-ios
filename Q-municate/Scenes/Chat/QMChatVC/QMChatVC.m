@@ -355,15 +355,13 @@ NYTPhotosViewControllerDelegate
     
     @weakify(self);
     // Retrieving message from Quickblox REST history and cache.
-    [[[QMCore instance].chatService messagesWithChatDialogID:self.chatDialog.ID] continueWithSuccessBlock:^id _Nullable(BFTask<NSArray<QBChatMessage *> *> * _Nonnull task) {
+    [[QMCore instance].chatService messagesWithChatDialogID:self.chatDialog.ID iterationBlock:^(QBResponse * __unused response, NSArray *messages, BOOL * __unused stop) {
+        
         @strongify(self);
-        
-        if ([task.result count] > 0) {
+        if (messages.count > 0) {
             
-            [self.chatDataSource addMessages:task.result];
+            [self.chatDataSource addMessages:messages];
         }
-        
-        return nil;
     }];
 }
 
