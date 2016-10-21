@@ -7,39 +7,47 @@
 //
 
 #import "QMChatViewController.h"
-#import "QMKeyboardController.h"
+#import "QMChatCollectionView.h"
+#import "QMToolbarContentView.h"
+#import "QMChatCollectionViewFlowLayout.h"
+#import "QMChatSection.h"
+#import "QMChatSectionManager.h"
+#import "QMDateUtils.h"
 #import "QMChatResources.h"
-
 #import "NSString+QM.h"
 #import "UIColor+QM.h"
 #import "UIImage+QM.h"
 #import "QMHeaderCollectionReusableView.h"
 #import "QMCollectionViewFlowLayoutInvalidationContext.h"
-
+#import <Photos/Photos.h>
+#import "QMKVOView.h"
 
 static void * kChatKeyValueObservingContext = &kChatKeyValueObservingContext;
 
-@interface QMChatViewController ()
-
-<QMInputToolbarDelegate, QMKeyboardControllerDelegate, UIImagePickerControllerDelegate,
+@interface QMChatViewController () <QMInputToolbarDelegate, UIImagePickerControllerDelegate,
 UINavigationControllerDelegate, UIActionSheetDelegate, UIScrollViewDelegate,
 UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate>
 
 @property (weak, nonatomic) IBOutlet QMChatCollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet QMInputToolbar *inputToolbar;
+
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolbarHeightConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolbarBottomLayoutGuide;
 
 @property (strong, nonatomic, readonly) UIImagePickerController *pickerController;
 @property (weak, nonatomic) UIView *snapshotView;
-@property (strong, nonatomic) QMKeyboardController *keyboardController;
+
 @property (strong, nonatomic) NSIndexPath *selectedIndexPathForMenu;
-@property (assign, nonatomic) BOOL isObserving;
+
+@property (nonatomic, assign) CGFloat lastContentOffset;
+
 @property (assign, nonatomic) BOOL isViewAppeared;
+@property (assign, nonatomic) BOOL isLastCellVisible;
+@property (assign, nonatomic) BOOL isScrollingToBottom;
 
-@property BOOL isScrollingToBottom;
-@property (nonatomic, assign) BOOL isLastCellVisible;
-
+@property (assign, nonatomic) BOOL isObserving;
+@property (nonatomic) CGFloat keyboardHeight;
+@property (strong, nonatomic) QMKVOView *systemInputToolbar;
 @end
 
 @implementation QMChatViewController
@@ -60,31 +68,51 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
 - (void)dealloc {
     
     [self registerForNotifications:NO];
-    [self removeObservers];
     
     self.collectionView.dataSource = nil;
     self.collectionView.delegate = nil;
-    self.collectionView = nil;
     
     self.inputToolbar.contentView.textView.delegate = nil;
     self.inputToolbar.contentView.textView.pasteDelegate = nil;
     self.inputToolbar.delegate = nil;
-    self.inputToolbar = nil;
-    
-    self.toolbarHeightConstraint = nil;
-    self.toolbarBottomLayoutGuide = nil;
     
     self.senderDisplayName = nil;
-    
-    [self.keyboardController endListeningForKeyboard];
-    self.keyboardController = nil;
 }
 
 #pragma mark - Initialization
+- (void)addObservers {
+    return;
+    if (self.isObserving) {
+        return;
+    }
+    
+    [self.inputToolbar.contentView.textView addObserver:self
+                                             forKeyPath:NSStringFromSelector(@selector(contentSize))
+                                                options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
+                                                context:kChatKeyValueObservingContext];
+    
+    self.isObserving = YES;
+}
 
-- (void)configureMessagesViewController {
+- (void)removeObservers {
+    
+    if (!self.isObserving) {
+        return;
+    }
+    
+    @try {
+        [_inputToolbar.contentView.textView removeObserver:self
+                                                forKeyPath:NSStringFromSelector(@selector(contentSize))
+                                                   context:kChatKeyValueObservingContext];
+    }
+    @catch (NSException * __unused exception) {
+        
+    }
     
     self.isObserving = NO;
+}
+
+- (void)configureMessagesViewController {
     
     self.toolbarHeightConstraint.constant = self.inputToolbar.preferredDefaultHeight;
     
@@ -99,20 +127,41 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     self.inputToolbar.delegate = self;
     
     self.inputToolbar.contentView.textView.delegate = self;
-    self.inputToolbar.contentView.textView.pasteDelegate = self;
     
     self.automaticallyScrollsToMostRecentMessage = YES;
     self.topContentAdditionalInset = 0.0f;
-    [self updateCollectionViewInsets];
-    
-    self.keyboardController =
-    [[QMKeyboardController alloc] initWithTextView:self.inputToolbar.contentView.textView
-                                       contextView:self.view
-                              panGestureRecognizer:self.collectionView.panGestureRecognizer
-                                          delegate:self];
-    
+    [self addObservers];
     [self registerCells];
-    self.isLastCellVisible = false;
+    
+    self.isLastCellVisible = YES;
+    
+    self.systemInputToolbar = [[QMKVOView alloc] init];
+    self.systemInputToolbar.frame = CGRectMake(0, -1, 1, 0);
+    
+    __weak typeof(self) weakSelf = self;
+    
+    [self.systemInputToolbar setFrameChangedBlock:^(CGRect rect) {
+        
+        typeof(weakSelf) strongSelf = weakSelf;
+        
+        if (![strongSelf.navigationController.viewControllers containsObject:strongSelf]) {
+            return;
+        }
+        
+        CGFloat newToolbarBottomLayoutGuideConstant = 0;
+    
+        if (CGRectGetHeight(rect) > 0) {
+            CGRect convertedRect = [strongSelf.view convertRect:rect fromView:nil];
+            newToolbarBottomLayoutGuideConstant = CGRectGetHeight(strongSelf.view.frame) - CGRectGetMinY(convertedRect);
+        }
+        
+        if (strongSelf.toolbarBottomLayoutGuide.constant != newToolbarBottomLayoutGuideConstant) {
+            strongSelf.toolbarBottomLayoutGuide.constant = newToolbarBottomLayoutGuideConstant;
+            [strongSelf.view updateConstraintsIfNeeded];
+            [strongSelf.view layoutIfNeeded];
+            [strongSelf updateCollectionViewInsets];
+        }
+    }];
 }
 
 - (void)registerCells {
@@ -152,6 +201,17 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     UINib *locIncomingNib = [QMChatLocationIncomingCell nib];
     NSString *locIncomingIdentifier = [QMChatLocationIncomingCell cellReuseIdentifier];
     [self.collectionView registerNib:locIncomingNib forCellWithReuseIdentifier:locIncomingIdentifier];
+    
+}
+
+- (UIView *)inputAccessoryView {
+    
+    return self.systemInputToolbar;
+}
+
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
 }
 
 #pragma mark - Getters
@@ -227,20 +287,29 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
 }
 
 #pragma mark - View lifecycle
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    
+    if (!self.presentedViewController && self.navigationController && !self.systemInputToolbar.superview) {
+        [self becomeFirstResponder];
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     [[[self class] nib] instantiateWithOwner:self options:nil];
     
     [self configureMessagesViewController];
-    [self registerForNotifications:YES];
     
     //Customize your toolbar buttons
     self.inputToolbar.contentView.leftBarButtonItem = [self accessoryButtonItem];
     self.inputToolbar.contentView.rightBarButtonItem = [self sendButtonItem];
+    
     self.collectionView.transform = CGAffineTransformMake(1, 0, 0, -1, 0, 0);
+    
     self.isViewAppeared = NO;
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -248,30 +317,31 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     NSParameterAssert(self.senderID != 0);
     NSParameterAssert(self.senderDisplayName != nil);
     
+    [self registerForNotifications:YES];
+    
     [super viewWillAppear:animated];
     
-    [self updateKeyboardTriggerPoint];
+    // Workaround for a modal dismissal causing the message toolbar to remain offscreen on iOS 8.
+    if (self.presentedViewController) {
+        [self.view becomeFirstResponder];
+    }
+    
+    self.toolbarHeightConstraint.constant = self.inputToolbar.preferredDefaultHeight;
+    [self.view layoutIfNeeded];
+    [self updateCollectionViewInsets];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
+
     self.isViewAppeared = YES;
-    [self addObservers];
-    [self addActionToInteractivePopGestureRecognizer:YES];
-    [self.keyboardController beginListeningForKeyboard];
     
-    if ([[UIDevice currentDevice].systemVersion compare:@"8.0" options:NSNumericSearch] == NSOrderedAscending) {
-        [self.snapshotView removeFromSuperview];
-    }
+    [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
-    [self addActionToInteractivePopGestureRecognizer:NO];
-    [self.keyboardController endListeningForKeyboard];
-    [self removeObservers];
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -373,16 +443,60 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
 }
 
-- (void)didPressAccessoryButton:(UIButton *)__unused sender {
+- (void)didPressAccessoryButton:(UIButton *)sender {
     
-    [self.inputToolbar.contentView.textView resignFirstResponder];
+
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
-    UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                             delegate:self
-                                                    cancelButtonTitle:@"Cancel"
-                                               destructiveButtonTitle:nil otherButtonTitles:@"Camera", @"Photo Library", nil];
-    [actionSheet showInView:self.view];
+    __weak __typeof(self) weakSelf = self;
+    
+    dispatch_block_t handler = ^{
+        
+        __weak typeof(self) weakSelf = self;
+        [self checkAuthorizationStatusWithCompletion:^(BOOL granted) {
+            
+            typeof(weakSelf) strongSelf = weakSelf;
+            
+            if (granted) {
+                [strongSelf presentViewController:self.pickerController animated:YES completion:nil];
+            }
+            else {
+                [strongSelf showAlertForAccess];
+            }
+        }];
+        
+    };
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Camera", nil)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                          self.pickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+                                                          handler();
+                                                      }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Photo Library", nil)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                          self.pickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+                                                          handler();
+                                                      }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"SA_STR_CANCEL", nil)
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:nil]];
+    
+    if (alertController.popoverPresentationController) {
+        // iPad support
+        alertController.popoverPresentationController.sourceView = sender;
+        alertController.popoverPresentationController.sourceRect = sender.bounds;
+    }
+    
+    [self presentViewController:alertController animated:YES completion:NULL];
+    
 }
+
 
 - (void)didPickAttachmentImage:(UIImage *)image {
     NSAssert(NO, @"Error! required method not implemented in subclass. Need to implement %s", __PRETTY_FUNCTION__);
@@ -424,17 +538,21 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
 }
 
 - (void)scrollToBottomAnimated:(BOOL)animated {
-    
+
     if ([self.collectionView numberOfItemsInSection:0] > 0) {
-        
         NSIndexPath *topIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-        [self.collectionView scrollToItemAtIndexPath:topIndexPath atScrollPosition:UICollectionViewScrollPositionTop animated:animated];
-        _isLastCellVisible = true;
+        [self.collectionView scrollToItemAtIndexPath:topIndexPath atScrollPosition:UICollectionViewScrollPositionBottom animated:animated];
+        _isLastCellVisible = YES;
     }
 }
 
 #pragma mark - UIScrollViewDelegate
-
+- (BOOL)shouldScrollToBottom {
+    return self.isLastCellVisible
+    && !self.collectionView.isTracking
+    && !self.collectionView.isDragging
+    && !self.collectionView.isDecelerating;
+}
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView {
     // disabling scroll to bottom when tapping status bar
     return NO;
@@ -462,6 +580,7 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     
     cell.layer.shouldRasterize = YES;
     cell.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    
     
     return cell;
 }
@@ -628,7 +747,7 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     if (textView != self.inputToolbar.contentView.textView) {
         return;
     }
-    
+   
     [textView becomeFirstResponder];
     
     if (self.automaticallyScrollsToMostRecentMessage) {
@@ -663,20 +782,6 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     }
 }
 
-#pragma mark - UIActionSheetDelegate
-
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 0 && [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-        
-        self.pickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
-        [self checkAuthorizationStatusForCamera];
-        
-    } else if (buttonIndex == 1 && [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
-        self.pickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        [self presentViewController:self.pickerController animated:YES completion:nil];
-    }
-}
-
 #pragma mark - UIImagePickerControllerDelegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
@@ -693,13 +798,6 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
 }
 
 #pragma mark - Notifications
-
-- (void)handleDidChangeStatusBarFrameNotification:(NSNotification *)notification {
-    
-    if (self.keyboardController.keyboardIsVisible) {
-        [self setToolbarBottomLayoutGuideConstant:CGRectGetHeight(self.keyboardController.currentKeyboardFrame)];
-    }
-}
 
 - (void)didReceiveMenuWillShowNotification:(NSNotification *)notification {
     
@@ -739,116 +837,6 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     self.selectedIndexPathForMenu = nil;
 }
 
-#pragma mark - Key-value observing
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    
-    if (context == kChatKeyValueObservingContext) {
-        
-        if (object == self.inputToolbar.contentView.textView
-            && [keyPath isEqualToString:NSStringFromSelector(@selector(contentSize))]) {
-            
-            CGSize oldContentSize = [change[NSKeyValueChangeOldKey] CGSizeValue];
-            CGSize newContentSize = [change[NSKeyValueChangeNewKey] CGSizeValue];
-            
-            CGFloat dy = newContentSize.height - oldContentSize.height;
-            
-            [self adjustInputToolbarForComposerTextViewContentSizeChange:dy];
-            [self updateCollectionViewInsets];
-            
-            if (self.automaticallyScrollsToMostRecentMessage) {
-                
-                [self scrollToBottomAnimated:NO];
-            }
-        }
-    }
-}
-
-#pragma mark - Keyboard controller delegate
-
-- (void)keyboardController:(QMKeyboardController *)keyboardController keyboardDidChangeFrame:(CGRect)keyboardFrame {
-    
-    if (![self.inputToolbar.contentView.textView isFirstResponder] && self.toolbarBottomLayoutGuide.constant == 0.0f) {
-        return;
-    }
-    
-    CGFloat heightFromBottom = CGRectGetMaxY(self.collectionView.frame) - CGRectGetMinY(keyboardFrame);
-    
-    heightFromBottom = MAX(0.0f, heightFromBottom);
-    
-    [self setIsLastCellVisible];
-    
-    [self setToolbarBottomLayoutGuideConstant:heightFromBottom];
-}
-
-- (void)setToolbarBottomLayoutGuideConstant:(CGFloat)constant {
-    
-    if (fabs(self.toolbarBottomLayoutGuide.constant - constant) < 0.01) {
-        return;
-    }
-    
-    self.toolbarBottomLayoutGuide.constant = constant;
-    [self.view setNeedsUpdateConstraints];
-    [self.view layoutIfNeeded];
-    
-    [self updateCollectionViewInsets];
-}
-
-- (void)updateKeyboardTriggerPoint {
-    
-    self.keyboardController.keyboardTriggerPoint = CGPointMake(0.0f, CGRectGetHeight(self.inputToolbar.bounds));
-}
-
-#pragma mark - Gesture recognizers
-
-- (void)handleInteractivePopGestureRecognizer:(UIGestureRecognizer *)gestureRecognizer {
-    
-    BOOL ios8 = [[UIDevice currentDevice].systemVersion compare:@"8.0" options:NSNumericSearch] == NSOrderedAscending;
-    
-    switch (gestureRecognizer.state) {
-            
-        case UIGestureRecognizerStateBegan: {
-            
-            if (ios8) {
-                
-                [self.snapshotView removeFromSuperview];
-            }
-            
-            [self.keyboardController endListeningForKeyboard];
-            
-            if (ios8) {
-                
-                [self.inputToolbar.contentView.textView resignFirstResponder];
-                [UIView animateWithDuration:0.0
-                                 animations:^
-                 {
-                     [self setToolbarBottomLayoutGuideConstant:0.0f];
-                 }];
-                
-                UIView *snapshot = [self.view snapshotViewAfterScreenUpdates:YES];
-                [self.view addSubview:snapshot];
-                self.snapshotView = snapshot;
-            }
-        }
-            break;
-        case UIGestureRecognizerStateChanged:
-            break;
-            
-        case UIGestureRecognizerStateCancelled:
-        case UIGestureRecognizerStateEnded:
-        case UIGestureRecognizerStateFailed:
-            [self.keyboardController beginListeningForKeyboard];
-            
-            if (ios8) {
-                [self.snapshotView removeFromSuperview];
-            }
-            
-            break;
-        default:
-            break;
-    }
-}
-
 #pragma mark - Input toolbar utilities
 
 - (BOOL)inputToolbarHasReachedMaximumHeight {
@@ -856,87 +844,31 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     return CGRectGetMinY(self.inputToolbar.frame) == (self.topLayoutGuide.length + self.topContentAdditionalInset);
 }
 
-- (void)adjustInputToolbarForComposerTextViewContentSizeChange:(CGFloat)dy {
-    
-    BOOL contentSizeIsIncreasing = (dy > 0);
-    
-    if ([self inputToolbarHasReachedMaximumHeight]) {
-        
-        BOOL contentOffsetIsPositive = (self.inputToolbar.contentView.textView.contentOffset.y > 0);
-        
-        if (contentSizeIsIncreasing || contentOffsetIsPositive) {
-            [self scrollComposerTextViewToBottomAnimated:YES];
-            
-            return;
-        }
-    }
-    
-    CGFloat toolbarOriginY = CGRectGetMinY(self.inputToolbar.frame);
-    CGFloat newToolbarOriginY = toolbarOriginY - dy;
-    
-    //  attempted to increase origin.Y above topLayoutGuide
-    if (newToolbarOriginY <= self.topLayoutGuide.length + self.topContentAdditionalInset) {
-        
-        dy = toolbarOriginY - (self.topLayoutGuide.length + self.topContentAdditionalInset);
-        [self scrollComposerTextViewToBottomAnimated:YES];
-    }
-    
-    [self adjustInputToolbarHeightConstraintByDelta:dy];
-    
-    [self updateKeyboardTriggerPoint];
-    
-    if (dy < 0) {
-        
-        [self scrollComposerTextViewToBottomAnimated:NO];
-    }
-}
-
-- (void)adjustInputToolbarHeightConstraintByDelta:(CGFloat)dy {
-    
-    self.toolbarHeightConstraint.constant += dy;
-    
-    if (self.toolbarHeightConstraint.constant < self.inputToolbar.preferredDefaultHeight) {
-        self.toolbarHeightConstraint.constant = self.inputToolbar.preferredDefaultHeight;
-    }
-    
-    [self.view setNeedsUpdateConstraints];
-    [self.view layoutIfNeeded];
-}
-
-- (void)scrollComposerTextViewToBottomAnimated:(BOOL)animated {
-    
-    UITextView *textView = self.inputToolbar.contentView.textView;
-    CGPoint contentOffsetToShowLastLine = CGPointMake(0.0f, textView.contentSize.height - CGRectGetHeight(textView.bounds));
-    
-    if (!animated) {
-        textView.contentOffset = contentOffsetToShowLastLine;
-        return;
-    }
-    
-    [UIView animateWithDuration:0.01 delay:0.01 options:UIViewAnimationOptionCurveLinear animations:^{
-        
-        textView.contentOffset = contentOffsetToShowLastLine;
-    }
-                     completion:nil];
-}
 
 #pragma mark - Collection view utilities
 
 - (void)updateCollectionViewInsets {
+ 
     
-    [self setCollectionViewInsetsTopValue:CGRectGetMaxY(self.collectionView.frame) - CGRectGetMinY(self.inputToolbar.frame)
-                              bottomValue:self.topLayoutGuide.length + self.topContentAdditionalInset];
+        [self setCollectionViewInsetsTopValue:self.topContentAdditionalInset
+                              bottomValue:CGRectGetHeight(self.view.frame) - CGRectGetMinY(self.inputToolbar.frame)];
+
+    if ([self shouldScrollToBottom]) {
+        [self scrollToBottomAnimated:NO];
+    }
+
 }
 
 - (void)setCollectionViewInsetsTopValue:(CGFloat)top bottomValue:(CGFloat)bottom {
     
-    UIEdgeInsets insets = UIEdgeInsetsMake(top, 0.0f, bottom, 0.0f);
+    UIEdgeInsets insets = UIEdgeInsetsMake(bottom, 0.0f, top , 0.0f);
+    
+    if (UIEdgeInsetsEqualToEdgeInsets(self.collectionView.contentInset, insets)) {
+        return;
+    }
+
     self.collectionView.contentInset = insets;
     self.collectionView.scrollIndicatorInsets = insets;
-    
-    if  (_isLastCellVisible) {
-        [self scrollToBottomAnimated:YES];
-    }
 }
 
 - (BOOL)isMenuVisible {
@@ -966,38 +898,6 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     return result == NSOrderedAscending;
 }
 
-- (void)addObservers {
-    
-    if (self.isObserving) {
-        return;
-    }
-    
-    [self.inputToolbar.contentView.textView addObserver:self
-                                             forKeyPath:NSStringFromSelector(@selector(contentSize))
-                                                options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
-                                                context:kChatKeyValueObservingContext];
-    
-    self.isObserving = YES;
-}
-
-- (void)removeObservers {
-    
-    if (!self.isObserving) {
-        return;
-    }
-    
-    @try {
-        [_inputToolbar.contentView.textView removeObserver:self
-                                                forKeyPath:NSStringFromSelector(@selector(contentSize))
-                                                   context:kChatKeyValueObservingContext];
-    }
-    @catch (NSException * __unused exception) {
-        
-    }
-    
-    self.isObserving = NO;
-}
-
 - (void)registerForNotifications:(BOOL)registerForNotifications {
     
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
@@ -1005,9 +905,10 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     if (registerForNotifications) {
         
         [defaultCenter addObserver:self
-                          selector:@selector(handleDidChangeStatusBarFrameNotification:)
-                              name:UIApplicationDidChangeStatusBarFrameNotification
+                          selector:@selector(inputToolbarDidChangeHeight:)
+                              name:QMPlaceholderDidChangeHeight
                             object:nil];
+
         
         [defaultCenter addObserver:self
                           selector:@selector(didReceiveMenuWillShowNotification:)
@@ -1022,10 +923,6 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     else {
         
         [defaultCenter removeObserver:self
-                                 name:UIApplicationDidChangeStatusBarFrameNotification
-                               object:nil];
-        
-        [defaultCenter removeObserver:self
                                  name:UIMenuControllerWillShowMenuNotification
                                object:nil];
         
@@ -1035,130 +932,107 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     }
 }
 
-- (void)addActionToInteractivePopGestureRecognizer:(BOOL)addAction {
-    
-    if (self.navigationController.interactivePopGestureRecognizer) {
-        
-        [self.navigationController.interactivePopGestureRecognizer removeTarget:nil
-                                                                         action:@selector(handleInteractivePopGestureRecognizer:)];
-        
-        if (addAction) {
-            
-            [self.navigationController.interactivePopGestureRecognizer addTarget:self
-                                                                          action:@selector(handleInteractivePopGestureRecognizer:)];
-        }
-    }
-}
 
-- (void)checkAuthorizationStatusForCamera {
+- (void)checkAuthorizationStatusWithCompletion:(void (^)(BOOL granted))completion {
     
-    AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-    switch (status) {
-        case AVAuthorizationStatusNotDetermined: {
-            
-            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (granted) {
-                        [self presentViewController:self.pickerController animated:YES completion:nil];
-                    }
-                    else {
-                        [self showAlertForCameraAccess];
-                    }
-                });
+    if (self.pickerController.sourceType == UIImagePickerControllerSourceTypeCamera) {
+        AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+        switch (status) {
+            case AVAuthorizationStatusNotDetermined: {
                 
-            }];
-            break;
+                [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (completion) {
+                            completion(granted);
+                        }
+                    });
+                }];
+                break;
+            }
+            case AVAuthorizationStatusRestricted: {
+                if (completion) {
+                    completion(NO);
+                }
+                break;
+            }
+            case AVAuthorizationStatusDenied: {
+                if (completion) {
+                    completion(NO);
+                }
+                break;
+            }
+            case AVAuthorizationStatusAuthorized: {
+                if (completion) {
+                    completion(YES);
+                }
+                break;
+            }
         }
-        case AVAuthorizationStatusRestricted: {
-            [self showAlertForCameraAccess];
-            break;
-        }
-        case AVAuthorizationStatusDenied: {
-            [self showAlertForCameraAccess];
-            break;
-        }
-        case AVAuthorizationStatusAuthorized: {
-            [self presentViewController:self.pickerController animated:YES completion:nil];
-            break;
+    }
+    else if (self.pickerController.sourceType == UIImagePickerControllerSourceTypePhotoLibrary) {
+        PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+        
+        switch (status)
+        {
+            case PHAuthorizationStatusAuthorized:
+                if (completion) {
+                    completion(YES);
+                }
+                break;
+            case PHAuthorizationStatusNotDetermined:
+            {
+                [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus authorizationStatus)
+                 {
+                     dispatch_async(dispatch_get_main_queue(), ^{
+                         if (completion) {
+                             completion(authorizationStatus == PHAuthorizationStatusAuthorized);
+                         }
+                     });
+                 }];
+                break;
+            }
+            default:
+                if (completion) {
+                    completion(NO);
+                }
+                break;
         }
     }
 }
 
-- (void)setIsLastCellVisible {
+- (void)showAlertForAccess {
     
-    if (self.isScrollingToBottom && _isLastCellVisible) {
-        return;
+    NSString *title;
+    NSString *message;
+    
+    if (self.pickerController.sourceType == UIImagePickerControllerSourceTypeCamera) {
+        title = NSLocalizedString(@"Camera Access Disabled", nil);
+        message = NSLocalizedString(@"You can allow access to Camera in Settings", nil);
     }
-    
-    NSSet *visibleInxexPathes= [NSSet setWithArray:self.collectionView.indexPathsForVisibleItems];
-    
-    //Index path of the first cell - last message
-    NSIndexPath *pathToLastMessage = [NSIndexPath indexPathForRow:0 inSection:0];
-    
-    if  ([visibleInxexPathes containsObject:pathToLastMessage]) {
-        
-        CGRect visibleRect = CGRectIntersection(self.collectionView.frame, self.collectionView.superview.bounds);
-        visibleRect.size.height = visibleRect.size.height - self.collectionView.contentInset.top;
-        
-        UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:pathToLastMessage];
-        CGRect cellRect = attributes.frame;
-        CGRect cellFrameInSuperview = [self.collectionView convertRect:cellRect toView:[self.collectionView superview]];
-        
-        CGRect intersect = CGRectIntersection(visibleRect, cellFrameInSuperview);
-        float visibleHeight = CGRectGetHeight(intersect);
-        
-        //Check if visible part of cell is more than half of the cell
-        _isLastCellVisible = (visibleHeight > CGRectGetHeight(cellRect) * 0.55);
+    else if (self.pickerController.sourceType == UIImagePickerControllerSourceTypePhotoLibrary) {
+        title = NSLocalizedString(@"Photos Access Disabled", nil);
+        message = NSLocalizedString(@"You can allow access to Photos in Settings", nil);
     }
-    else {
-        _isLastCellVisible = false;
-    }
-}
-
-- (void)showAlertForCameraAccess {
-    
-    NSString *title = NSLocalizedString(@"Camera Access Disabled", nil);
-    NSString *message = NSLocalizedString(@"You can allow access to Camera in Settings", nil);
-    
-    NSString *reqSysVer = @"8.0";
-    NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
-    
-    BOOL isIOS8 =  ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending);
-    
-    NSString *otherButtonTitle = isIOS8 ? NSLocalizedString(@"Open Settings", nil) : nil;
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
                                                     message:message
                                                    delegate:self
                                           cancelButtonTitle:NSLocalizedString(@"SA_STR_CANCEL", nil)
-                                          otherButtonTitles:otherButtonTitle,nil];
+                                          otherButtonTitles:NSLocalizedString(@"Open Settings", nil),nil];
     
     [alert show];
 }
-//TODO: handle scroll view to disable dragging on receiving new messages
-//#pragma mark - UIScrollView delegate methods
-//
-//- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-//    [self setIsLastCellVisible];
-//    self.isScrollingToBottom = false;
-//}
-//
-//- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-//    [self setIsLastCellVisible];
-//    self.isScrollingToBottom = false;
-//}
-//
-//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-//    if (!decelerate) {
-//        [self setIsLastCellVisible];
-//        self.isScrollingToBottom = false;
-//        
-//    }
-//}
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+
+    [self.view layoutIfNeeded];
+
+    // Resets layout and cache after the rotation animation is finished
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(coordinator.transitionDuration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self resetLayoutAndCaches];
+    });
+    
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    [self resetLayoutAndCaches];
 }
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
@@ -1184,6 +1058,91 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     //
     //    return headerView;
     return nil;
+}
+
+- (void)checkVisibilityOfCell:(UICollectionViewCell *)cell inScrollView:(UIScrollView *)scrollView {
+    
+    CGRect visibleRect = CGRectIntersection(self.collectionView.frame, self.collectionView.superview.bounds);
+    visibleRect.size.height = visibleRect.size.height - self.collectionView.contentInset.top;
+    
+    UICollectionViewLayoutAttributes *attributes = [self.collectionView layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    CGRect cellRect = attributes.frame;
+    CGRect cellFrameInSuperview = [self.collectionView convertRect:cellRect toView:[self.collectionView superview]];
+    
+    CGRect intersect = CGRectIntersection(visibleRect, cellFrameInSuperview);
+    float visibleHeight = CGRectGetHeight(intersect);
+    
+    _isLastCellVisible = (visibleHeight > 0);
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
+    if (![scrollView isKindOfClass:[QMChatCollectionView class]]) {
+        return;
+    }
+
+    [self checkDirectionForScrollView:scrollView];
+    
+    if (!self.isLastCellVisible && self.isScrollingToBottom) {
+        return;
+    }
+    
+    [self checkVisibilityForScrollView:scrollView];
+}
+
+- (void)checkDirectionForScrollView:(UIScrollView *)scrollView {
+    
+    self.isScrollingToBottom = self.lastContentOffset < scrollView.contentOffset.y;
+    
+    self.lastContentOffset = scrollView.contentOffset.y;
+}
+
+- (void)checkVisibilityForScrollView:(UIScrollView *)scrollView {
+    
+    NSArray *visibleCells = self.collectionView.visibleCells;
+    
+    NSUInteger cellCount = [visibleCells count];
+    
+    if (cellCount == 0) {
+        return;
+    }
+    
+    UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    
+    if (![visibleCells containsObject:cell]) {
+        _isLastCellVisible = NO;
+        return;
+    }
+    
+    // Check the visibility of the first cell
+    [self checkVisibilityOfCell:[visibleCells firstObject] inScrollView:scrollView];
+    
+    if (cellCount == 1) {
+        return;
+    }
+    
+    // Check the visibility of the last cell
+    [self checkVisibilityOfCell:[visibleCells lastObject] inScrollView:scrollView];
+    
+    if (cellCount == 2) {
+        return;
+    }
+    
+    // All of the rest of the cells are visible: Loop through the 2nd through n-1 cells
+    for (NSUInteger i = 1; i < cellCount - 1; i++) {
+        UICollectionViewCell *cell = visibleCells[i];
+        [self checkVisibilityOfCell:cell inScrollView:scrollView];
+    }
+}
+
+#pragma mark - Notification Handlers
+
+- (void)textViewTextDidBeginEditing:(NSNotification *)notification {
+    [self scrollToBottomAnimated:YES];
+}
+
+- (void)inputToolbarDidChangeHeight:(NSNotification *)notification {
+    [self updateCollectionViewInsets];
 }
 
 @end

@@ -1,0 +1,37 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "A670EF64B516360FDFADDE04B3B3446E684984BD",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "A670EF64B516360FDFADDE04B3B3446E684984BD" : 0,
+    "D160C3FE7B115E6635EB21EBE93000EBA4B81BC8" : 0,
+    "7685896580551A65BF391139D591B99B273195F4" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "A63A7A86-BD10-474D-BE04-0F227E696FD3",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "A670EF64B516360FDFADDE04B3B3446E684984BD" : "q-municate-ios\/",
+    "D160C3FE7B115E6635EB21EBE93000EBA4B81BC8" : "q-municate-services-ios\/",
+    "7685896580551A65BF391139D591B99B273195F4" : "QMChatViewController-ios\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Q-municate",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Q-municate.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/QuickBlox\/QMChatViewController-ios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7685896580551A65BF391139D591B99B273195F4"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/QuickBlox\/q-municate-ios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A670EF64B516360FDFADDE04B3B3446E684984BD"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/QuickBlox\/q-municate-services-ios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D160C3FE7B115E6635EB21EBE93000EBA4B81BC8"
+    }
+  ]
+}

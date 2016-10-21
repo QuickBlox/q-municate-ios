@@ -143,8 +143,7 @@ NYTPhotosViewControllerDelegate
 #pragma mark - QMChatViewController data source overrides
 
 - (NSUInteger)senderID {
-    
-    return [QMCore instance].currentProfile.userData.ID;
+      return [QMCore instance].currentProfile.userData.ID;
 }
 
 - (NSString *)senderDisplayName {
@@ -499,6 +498,8 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
+    [self.inputToolbar.contentView.textView resignFirstResponder];
+
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_TAKE_IMAGE", nil)
