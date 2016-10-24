@@ -1135,7 +1135,7 @@ NYTPhotosViewControllerDelegate
     
     // hiding keyboard due to layouting issue for iOS 8
     // if interface orientation would change out of the controller
-    [self.view endEditing:YES];
+  //  [self.view endEditing:YES];
     
     if ([segue.identifier isEqualToString:kQMSceneSegueUserInfo]) {
         
