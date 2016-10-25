@@ -1982,6 +1982,7 @@
 				TargetAttributes = {
 					69D57E5118ACC11C00A9900A = {
 						DevelopmentTeam = 8885H5G2YX;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -2379,7 +2380,7 @@
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "dd48c873-3970-43d6-b061-5058979b1454";
+				PROVISIONING_PROFILE = "b2978944-95e7-47d6-a419-daa49cbc74e2";
 				PROVISIONING_PROFILE_SPECIFIER = "Q-municate_dev";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
@@ -2409,7 +2410,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CODE_SIGN_ENTITLEMENTS = "Q-municate/Q-municate.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
 				CODE_SIGN_RESOURCE_RULES_PATH = "";
 				DEVELOPMENT_TEAM = 8885H5G2YX;
@@ -2446,7 +2447,7 @@
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "318e6309-600e-4347-87bc-8580aebda28d";
+				PROVISIONING_PROFILE = "e2df0909-130b-4ee7-b695-813ab1acfe79";
 				PROVISIONING_PROFILE_SPECIFIER = "Q-municate adHoc";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
