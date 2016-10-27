@@ -106,10 +106,10 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
-    :commit: 74537926bb5f749f431b5fbcd2c2e89ffc1ce496
+    :commit: a9ed585f22fb92c58ece43c5000e372f37a7b620
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: 800530ddeca778da957b0e1f421c9bfa162e2a70
+    :commit: ac070a8ebc1ce3ade0cf3e0fdc1437eb86f5c043
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
@@ -135,6 +135,6 @@ SPEC CHECKSUMS:
   TwitterCore: cce24b3c798993ccde72787ea79ea9a478b284e4
   UIDevice-Hardware: ecb52d9a7b223b31f81982358e2b0769ac1a7918
 
-PODFILE CHECKSUM: 28caed408b75f459e391a38c7652cc7f64df45cb
+PODFILE CHECKSUM: 7224eea35077f804f90b11c649dbd6abc5b886b6
 
 COCOAPODS: 1.0.1

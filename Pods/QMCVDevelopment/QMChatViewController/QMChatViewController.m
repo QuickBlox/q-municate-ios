@@ -22,10 +22,9 @@
 #import <Photos/Photos.h>
 #import "QMKVOView.h"
 
-#define QM_CHAT_DEBUG_ENABLED 1
+#define QM_CHAT_DEBUG_ENABLED 0
 
-#ifdef  QM_CHAT_DEBUG_ENABLED == 1
-
+#if  QM_CHAT_DEBUG_ENABLED == 1
 #define QM_CHAT_SCROLL_LOGS 1
 #define QM_CHAT_PAN_LOGS_ALL 1
 #define QM_CHAT_PAN_LOGS_STATE_CHANGED 1
@@ -226,7 +225,7 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
 - (void)setTopContentAdditionalInset:(CGFloat)topContentAdditionalInset {
     
     _topContentAdditionalInset = topContentAdditionalInset;
-    [self setTopCollectionViewInsetsValue:_topContentAdditionalInset + self.topLayoutGuide.length];
+    [self updateCollectionViewInsets];
 }
 
 
@@ -353,6 +352,8 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
     if (![self.navigationController.viewControllers containsObject:self]) {
         [self becomeFirstResponder];
     }
+    
+    [self removeObservers];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -611,7 +612,7 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
         return;
     }
     
-    if (!self.isMovingKeyboard) {
+    if (!self.isMovingKeyboard || [self scrollIsAtTop]) {
         self.lastContentOffset = scrollView.contentOffset.y;
     }
     
@@ -1178,8 +1179,6 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     
-    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    
     self.transitioning = YES;
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
@@ -1189,6 +1188,8 @@ UIAlertViewDelegate,QMPlaceHolderTextViewPasteDelegate, QMChatDataSourceDelegate
         [self resetLayoutAndCaches];
         self.transitioning = NO;
     }];
+    
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
 }
 
