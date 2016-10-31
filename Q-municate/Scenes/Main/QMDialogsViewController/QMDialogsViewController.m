@@ -364,20 +364,14 @@ QMSearchResultsControllerDelegate
 
 - (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
     
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground) {
-        // due to possible chat connection in background, do not perform extra operation
-        [QMTasks taskFetchAllData];
-        [self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil) duration:kQMDefaultNotificationDismissTime];
-    }
+    [QMTasks taskFetchAllData];
+    [self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil) duration:kQMDefaultNotificationDismissTime];
 }
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
     
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground) {
-        // due to possible chat connection in background, do not perform extra operation
-        [QMTasks taskFetchAllData];
-        [self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil) duration:kQMDefaultNotificationDismissTime];
-    }
+    [QMTasks taskFetchAllData];
+    [self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil) duration:kQMDefaultNotificationDismissTime];
 }
 
 - (void)chatService:(QMChatService *)__unused chatService chatDidNotConnectWithError:(NSError *)error {
