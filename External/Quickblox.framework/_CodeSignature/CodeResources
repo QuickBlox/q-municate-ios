@@ -86,7 +86,7 @@
 		</data>
 		<key>Headers/QBChatMessage.h</key>
 		<data>
-		Lmq81IlCzFbNk+JBq7aF/fNQFcg=
+		eewriKhHt4cEL1xL7PBg3BM6UN4=
 		</data>
 		<key>Headers/QBConnection.h</key>
 		<data>
@@ -234,7 +234,7 @@
 		</data>
 		<key>Headers/QBRequest+QBChat.h</key>
 		<data>
-		tL6To0sM31zdkHaogzkmaCFVkgc=
+		O20GzBZF8q3lg20fpZ4qynK0JEM=
 		</data>
 		<key>Headers/QBRequest+QBContent.h</key>
 		<data>
@@ -531,11 +531,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Lmq81IlCzFbNk+JBq7aF/fNQFcg=
+			eewriKhHt4cEL1xL7PBg3BM6UN4=
 			</data>
 			<key>hash2</key>
 			<data>
-			gA4RRYtZ5ynbhi5pmHj+VNWBOvDSAtvg7CyDk1RdrA8=
+			7dLt0JORSS1x4cCJeWCoJDl6zlbw7JhoPQt2yfSw4io=
 			</data>
 		</dict>
 		<key>Headers/QBConnection.h</key>
@@ -938,11 +938,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			tL6To0sM31zdkHaogzkmaCFVkgc=
+			O20GzBZF8q3lg20fpZ4qynK0JEM=
 			</data>
 			<key>hash2</key>
 			<data>
-			OsHdOnETg0NvyrCYylRk4Q1JIHcygdRCxHYaAwGP228=
+			3weENbmrcUMB0D6lO1ao0I0RkP3ZIVLxsBph9XoZWXA=
 			</data>
 		</dict>
 		<key>Headers/QBRequest+QBContent.h</key>
