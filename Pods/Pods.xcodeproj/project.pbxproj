@@ -16002,7 +16002,7 @@
 				<string>9CFAAAC99DC000DF4326F9B1E09B7E63</string>
 				<string>B86C723F4DFC7184F1D92FDA9C159B2C</string>
 				<string>8AC8558FD89BF05AE01A3E40A0A72FE6</string>
-				<string>B0AC3CF1294F281F17B66044FDA1ABE1</string>
+				<string>AAC630843F42E7486F8AD80E46C8461E</string>
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
@@ -17828,6 +17828,19 @@
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
+		<key>AAC630843F42E7486F8AD80E46C8461E</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>D5345D13FB1CA47A676341D30C985991</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Frameworks</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
 		<key>AAEDCBCF2DD4872B60D9C206B61D3A37</key>
 		<dict>
 			<key>includeInIndex</key>
@@ -18342,19 +18355,6 @@
 			<string>XCBuildConfiguration</string>
 			<key>name</key>
 			<string>Debug</string>
-		</dict>
-		<key>B0AC3CF1294F281F17B66044FDA1ABE1</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>CE1747AB15FEBA0B2E0760E0B1F790C4</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Frameworks</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
 		</dict>
 		<key>B0C44278E227D72A17D083638CA3291E</key>
 		<dict>
@@ -21064,21 +21064,6 @@
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>CE1747AB15FEBA0B2E0760E0B1F790C4</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>archive.ar</string>
-			<key>name</key>
-			<string>libFlurry_7.8.0.a</string>
-			<key>path</key>
-			<string>Flurry/libFlurry_7.8.0.a</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
 		<key>CE3A6430DAF790D645168112C49732DB</key>
 		<dict>
 			<key>children</key>
@@ -22041,6 +22026,21 @@
 					<string>Public</string>
 				</array>
 			</dict>
+		</dict>
+		<key>D5345D13FB1CA47A676341D30C985991</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>archive.ar</string>
+			<key>name</key>
+			<string>libFlurry_7.8.1.a</string>
+			<key>path</key>
+			<string>Flurry/libFlurry_7.8.1.a</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
 		</dict>
 		<key>D671BF56C2409D77B9044DD9774DBAA1</key>
 		<dict>
