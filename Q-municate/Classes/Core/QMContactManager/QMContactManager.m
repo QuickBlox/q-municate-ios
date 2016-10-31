@@ -9,7 +9,7 @@
 #import "QMContactManager.h"
 #import "QMCore.h"
 #import "QMNotification.h"
-#import "QMMessagesFactory.h"
+#import "QMMessagesHelper.h"
 #import <QMDateUtils.h>
 
 @interface QMContactManager ()
@@ -49,7 +49,7 @@
         }] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
             
             @strongify(self);
-            QBChatMessage *chatMessage = [QMMessagesFactory contactRequestNotificationForUser:user];
+            QBChatMessage *chatMessage = [QMMessagesHelper contactRequestNotificationForUser:user];
             [self.serviceManager.chatService sendMessage:chatMessage
                                                     type:chatMessage.messageType
                                                 toDialog:task.result
@@ -97,7 +97,7 @@
     }] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
         
         chatDialog = t.result;
-        QBChatMessage *notificationMessage = [QMMessagesFactory removeContactNotificationForUser:user];
+        QBChatMessage *notificationMessage = [QMMessagesHelper removeContactNotificationForUser:user];
         
         return [self.serviceManager.chatService sendMessage:notificationMessage
                                                        type:notificationMessage.messageType

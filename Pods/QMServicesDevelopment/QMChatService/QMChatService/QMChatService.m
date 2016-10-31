@@ -685,7 +685,10 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
                  cancel = YES;
              }
              
-             iterationBlock(response, dialogs, dialogsUsersIDs, &cancel);
+             if (iterationBlock != nil) {
+                 
+                 iterationBlock(response, dialogs, dialogsUsersIDs, &cancel);
+             }
              
              if (!cancel) {
                  
@@ -1047,7 +1050,10 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
                      cancel = YES;
                  }
                  
-                 iterationBlock(response, sortedMessages, &cancel);
+                 if (iterationBlock != nil) {
+                     
+                     iterationBlock(response, sortedMessages, &cancel);
+                 }
                  
                  if (!cancel) {
                      

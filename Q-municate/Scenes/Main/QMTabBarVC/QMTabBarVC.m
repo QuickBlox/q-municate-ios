@@ -12,6 +12,7 @@
 #import "QMChatVC.h"
 #import "QMSoundManager.h"
 #import "QBChatDialog+OpponentID.h"
+#import "QMHelpers.h"
 
 @interface QMTabBarVC ()
 
@@ -68,9 +69,19 @@ QMChatConnectionDelegate
     MPGNotificationButtonHandler buttonHandler = nil;
     UIViewController *hvc = nil;
     
-    // not showing reply button in active call
-    if (![QMCore instance].callManager.hasActiveCall) {
+    BOOL hasActiveCall = [QMCore instance].callManager.hasActiveCall;
+    BOOL isiOS8 = iosMajorVersion() < 9;
+    
+    if (hasActiveCall
+        || isiOS8) {
         
+        // using hvc if active call or visible keyboard on ios8 devices
+        // due to notification triggering window to be hidden
+        hvc = [UIApplication sharedApplication].keyWindow.rootViewController;
+    }
+    
+    if (!hasActiveCall) {
+        // not showing reply button in active call
         buttonHandler = ^void(MPGNotification * __unused notification, NSInteger buttonIndex) {
             
             if (buttonIndex == 1) {
@@ -80,11 +91,6 @@ QMChatConnectionDelegate
                 [dialogsVC performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
             }
         };
-    }
-    else {
-        
-        // host view controller for active call
-        hvc = [UIApplication sharedApplication].keyWindow.rootViewController;
     }
     
     [QMNotification showMessageNotificationWithMessage:chatMessage buttonHandler:buttonHandler hostViewController:hvc];

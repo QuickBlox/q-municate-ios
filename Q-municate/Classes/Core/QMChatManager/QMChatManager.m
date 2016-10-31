@@ -9,13 +9,11 @@
 #import "QMChatManager.h"
 #import "QMCore.h"
 #import "QMContent.h"
-#import "QMChatLocationSnapshotter.h"
+#import "QMMessagesHelper.h"
 
 @interface QMChatManager ()
 
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
-
-@property (readwrite, strong, nonatomic) QMChatLocationSnapshotter *chatLocationSnapshotter;
 
 @end
 
@@ -113,18 +111,27 @@
     }];
 }
 
-#pragma mark - Getters
-
-- (QMChatLocationSnapshotter *)chatLocationSnapshotter {
+- (BFTask *)sendBackgroundMessageWithText:(NSString *)text toDialog:(QBChatDialog *)chatDialog {
     
-    if (_chatLocationSnapshotter == nil) {
-        // lazy loading location snapshotter f needed
-        // due to for some users it will not be needed at all
-        // for application life span
-        _chatLocationSnapshotter = [[QMChatLocationSnapshotter alloc] init];
-    }
+    NSUInteger currentUserID = [QMCore instance].currentProfile.userData.ID;
     
-    return _chatLocationSnapshotter;
+    QBChatMessage *message = [QMMessagesHelper chatMessageWithText:text
+                                                          senderID:currentUserID
+                                                      chatDialogID:chatDialog.ID
+                                                          dateSent:[NSDate date]];
+    
+    BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
+    
+    [QBRequest sendMessage:message successBlock:^(QBResponse * __unused response, QBChatMessage *createdMessage) {
+        
+        [source setResult:createdMessage];
+        
+    } errorBlock:^(QBResponse *response) {
+        
+        [source setError:response.error.error];
+    }];
+    
+    return source.task;
 }
 
 @end

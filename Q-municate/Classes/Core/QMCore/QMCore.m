@@ -306,7 +306,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     
     NSDate *date = [QBSession currentSession].sessionExpirationDate;
     
-    if (date) {
+    if (date != nil) {
         
         NSDate *currentDate = [NSDate date];
         NSTimeInterval interval = [currentDate timeIntervalSinceDate:date];
