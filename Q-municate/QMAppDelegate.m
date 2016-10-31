@@ -254,8 +254,8 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 - (void)pushNotificationManager:(QMPushNotificationManager *)__unused pushNotificationManager didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
     
-    UITabBarController *tabBarController = (UITabBarController *)self.window.rootViewController;
-    UINavigationController *navigationController = (UINavigationController *)tabBarController.selectedViewController;
+    UITabBarController *tabBarController = [[(UISplitViewController *)self.window.rootViewController viewControllers] firstObject];
+    UIViewController *dialogsVC = [[(UINavigationController *)[[tabBarController viewControllers] firstObject] viewControllers] firstObject];
     
     NSString *activeDialogID = [QMCore instance].activeDialogID;
     if ([chatDialog.ID isEqualToString:activeDialogID]) {
@@ -263,8 +263,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
         return;
     }
     
-    QMChatVC *chatVC = [QMChatVC chatViewControllerWithChatDialog:chatDialog];
-    [navigationController pushViewController:chatVC animated:YES];
+    [dialogsVC performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
 }
 
 @end
