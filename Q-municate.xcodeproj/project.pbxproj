@@ -36,7 +36,6 @@
 		581DA1D01BF3732900F75D8B /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1CF1BF3732900F75D8B /* libc++.tbd */; };
 		581DA1D21BF373A100F75D8B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 581DA1D11BF373A100F75D8B /* VideoToolbox.framework */; };
 		581F6E221D3E3E1C0087BC7A /* QMHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 581F6E211D3E3E1C0087BC7A /* QMHelpers.m */; };
-		5835E89D1D9D303C00A7B114 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5835E89C1D9D303C00A7B114 /* UserNotifications.framework */; };
 		5838FD531D378EB900DB97BB /* QMCallNotificationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 5838FD521D378EB900DB97BB /* QMCallNotificationItem.m */; };
 		5839F26E1CC531AD0055EBF8 /* QMBaseTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839F26D1CC531AD0055EBF8 /* QMBaseTitleView.m */; };
 		5839F2761CC533A30055EBF8 /* QMGroupHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5839F2751CC533A30055EBF8 /* QMGroupHeaderView.m */; };
@@ -480,7 +479,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5835E89D1D9D303C00A7B114 /* UserNotifications.framework in Frameworks */,
 				581DA1D21BF373A100F75D8B /* VideoToolbox.framework in Frameworks */,
 				581DA1D01BF3732900F75D8B /* libc++.tbd in Frameworks */,
 				86FD874D1982512000B6FA43 /* GLKit.framework in Frameworks */,

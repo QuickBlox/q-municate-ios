@@ -113,64 +113,25 @@
 
 - (BFTask *)sendBackgroundMessageWithText:(NSString *)text toDialog:(QBChatDialog *)chatDialog {
     
-    BFContinuationBlock joinBlock = ^id _Nullable(BFTask * _Nonnull t) {
-        
-        if (!t.isFaulted
-            && chatDialog.type != QBChatDialogTypePrivate
-            && !chatDialog.isJoined) {
-            
-            return [self.serviceManager.chatService joinToGroupDialog:chatDialog];
-        }
-        
-        return nil;
-    };
+    NSUInteger currentUserID = [QMCore instance].currentProfile.userData.ID;
     
-    BFContinuationBlock messageBlock = ^id _Nullable(BFTask * _Nonnull t) {
-        
-        if (!t.isFaulted) {
-            
-            NSUInteger currentUserID = [QMCore instance].currentProfile.userData.ID;
-            
-            QBChatMessage *message = [QMMessagesHelper chatMessageWithText:text
-                                                                  senderID:currentUserID
-                                                              chatDialogID:chatDialog.ID
-                                                                  dateSent:[NSDate date]];
-            
-            return [[QMCore instance].chatService sendMessage:message toDialog:chatDialog saveToHistory:YES saveToStorage:YES];
-        }
-        
-        return nil;
-    };
+    QBChatMessage *message = [QMMessagesHelper chatMessageWithText:text
+                                                          senderID:currentUserID
+                                                      chatDialogID:chatDialog.ID
+                                                          dateSent:[NSDate date]];
     
-    BFContinuationBlock disconnectBlock = ^id _Nullable(BFTask * _Nonnull __unused t) {
-        
-        [QMCore instance].chatService.enableAutoJoin = YES;
-        
-        BOOL isConnected = [QBChat instance].isConnected;
-        BOOL hasNoActiveCall = !self.serviceManager.callManager.hasActiveCall;
-        BOOL isNotActive = [UIApplication sharedApplication].applicationState != UIApplicationStateActive;
-        
-        if (isConnected
-            && hasNoActiveCall
-            && isNotActive) {
-            
-            return [[QMCore instance].chatService disconnect];
-        }
-        
-        return nil;
-    };
+    BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
     
-    if (![QBChat instance].isConnected) {
+    [QBRequest sendMessage:message successBlock:^(QBResponse * __unused response, QBChatMessage *createdMessage) {
         
-        [QMCore instance].chatService.enableAutoJoin = NO;
+        [source setResult:createdMessage];
         
-        return [[[[[QMCore instance].chatService connect]
-                  continueWithBlock:joinBlock]
-                 continueWithBlock:messageBlock]
-                continueWithBlock:disconnectBlock];
-    }
+    } errorBlock:^(QBResponse *response) {
+        
+        [source setError:response.error.error];
+    }];
     
-    return nil;
+    return source.task;
 }
 
 @end
