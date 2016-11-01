@@ -570,6 +570,9 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
             }
         }
         else {
+            
+            [self.messagesMemoryStorage updateMessage:message];
+            
             if ([self.multicastDelegate respondsToSelector:@selector(chatService:didUpdateMessage:forDialogID:)]) {
                 
                 [self.multicastDelegate chatService:self didUpdateMessage:message forDialogID:message.dialogID];
@@ -1258,39 +1261,40 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
         
         __typeof(weakSelf)strongSelf = weakSelf;
         
-        if (error == nil && saveToStorage) {
+        if (error == nil) {
             
             [self.deferredQueueManager removeMessage:message];
             
-            // there is a case when message that was returned from server (Group dialogs)
-            // will be handled faster then this completion block been fired
-            // therefore there is no need to add local message to memory storage, while server
-            // up-to-date one is already there
-            BOOL messageExists = [strongSelf.messagesMemoryStorage isMessageExistent:message forDialogID:message.dialogID];
-            
-            if (!messageExists) {
+            if (saveToStorage) {
+                // there is a case when message that was returned from server (Group dialogs)
+                // will be handled faster then this completion block been fired
+                // therefore there is no need to add local message to memory storage, while server
+                // up-to-date one is already there
+                BOOL messageExists = [strongSelf.messagesMemoryStorage isMessageExistent:message forDialogID:message.dialogID];
                 
-                [strongSelf.messagesMemoryStorage addMessage:message forDialogID:dialog.ID];
+                if (!messageExists) {
+                    
+                    [strongSelf.messagesMemoryStorage addMessage:message forDialogID:dialog.ID];
+                    
+                    if ([strongSelf.multicastDelegate respondsToSelector:@selector(chatService:didAddMessageToMemoryStorage:forDialogID:)]) {
+                        [strongSelf.multicastDelegate chatService:strongSelf didAddMessageToMemoryStorage:message forDialogID:dialog.ID];
+                    }
+                }
+                else {
+                    if ([strongSelf.multicastDelegate respondsToSelector:@selector(chatService:didUpdateMessage:forDialogID:)]) {
+                        [strongSelf.multicastDelegate chatService:strongSelf didUpdateMessage:message forDialogID:dialog.ID];
+                    }
+                    
+                }
                 
-                if ([strongSelf.multicastDelegate respondsToSelector:@selector(chatService:didAddMessageToMemoryStorage:forDialogID:)]) {
-                    [strongSelf.multicastDelegate chatService:strongSelf didAddMessageToMemoryStorage:message forDialogID:dialog.ID];
+                [strongSelf updateLastMessageParamsForChatDialog:dialog withMessage:message];
+                dialog.updatedAt = message.dateSent;
+                
+                if ([strongSelf.multicastDelegate respondsToSelector:@selector(chatService:didUpdateChatDialogInMemoryStorage:)]) {
+                    [strongSelf.multicastDelegate chatService:strongSelf didUpdateChatDialogInMemoryStorage:dialog];
+                    
                 }
             }
-            else {
-                if ([strongSelf.multicastDelegate respondsToSelector:@selector(chatService:didUpdateMessage:forDialogID:)]) {
-                    [strongSelf.multicastDelegate chatService:strongSelf didUpdateMessage:message forDialogID:dialog.ID];
-                }
-                
-            }
-            
-            [strongSelf updateLastMessageParamsForChatDialog:dialog withMessage:message];
-            dialog.updatedAt = message.dateSent;
-            
-            if ([strongSelf.multicastDelegate respondsToSelector:@selector(chatService:didUpdateChatDialogInMemoryStorage:)]) {
-                [strongSelf.multicastDelegate chatService:strongSelf didUpdateChatDialogInMemoryStorage:dialog];
-                
-            }
-            
         }
         else if (error) {
             

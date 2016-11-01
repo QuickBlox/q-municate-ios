@@ -111,13 +111,13 @@
     }];
 }
 
-- (BFTask *)sendBackgroundMessageWithText:(NSString *)text toDialog:(QBChatDialog *)chatDialog {
+- (BFTask *)sendBackgroundMessageWithText:(NSString *)text toDialogWithID:(NSString *)chatDialogID {
     
     NSUInteger currentUserID = [QMCore instance].currentProfile.userData.ID;
     
     QBChatMessage *message = [QMMessagesHelper chatMessageWithText:text
                                                           senderID:currentUserID
-                                                      chatDialogID:chatDialog.ID
+                                                      chatDialogID:chatDialogID
                                                           dateSent:[NSDate date]];
     
     BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
