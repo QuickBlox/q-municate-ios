@@ -163,29 +163,29 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 - (void)registerForNotification {
     
-        NSSet *categories = nil;
-        if (iosMajorVersion() > 8) {
-            // text input reply is ios 9 +
-            UIMutableUserNotificationAction *textAction = [[UIMutableUserNotificationAction alloc] init];
-            textAction.identifier = kQMNotificationActionTextAction;
-            textAction.title = NSLocalizedString(@"QM_STR_REPLY", nil);
-            textAction.activationMode = UIUserNotificationActivationModeBackground;
-            textAction.authenticationRequired = NO;
-            textAction.destructive = NO;
-            textAction.behavior = UIUserNotificationActionBehaviorTextInput;
-            
-            UIMutableUserNotificationCategory *category = [[UIMutableUserNotificationCategory alloc] init];
-            category.identifier = kQMNotificationCategoryReply;
-            [category setActions:@[textAction] forContext:UIUserNotificationActionContextDefault];
-            [category setActions:@[textAction] forContext:UIUserNotificationActionContextMinimal];
-            
-            categories = [NSSet setWithObject:category];
-        }
+    NSSet *categories = nil;
+    if (iosMajorVersion() > 8) {
+        // text input reply is ios 9 +
+        UIMutableUserNotificationAction *textAction = [[UIMutableUserNotificationAction alloc] init];
+        textAction.identifier = kQMNotificationActionTextAction;
+        textAction.title = NSLocalizedString(@"QM_STR_REPLY", nil);
+        textAction.activationMode = UIUserNotificationActivationModeBackground;
+        textAction.authenticationRequired = NO;
+        textAction.destructive = NO;
+        textAction.behavior = UIUserNotificationActionBehaviorTextInput;
         
-        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings
-                                                            settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge)
-                                                            categories:categories];
-        [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
+        UIMutableUserNotificationCategory *category = [[UIMutableUserNotificationCategory alloc] init];
+        category.identifier = kQMNotificationCategoryReply;
+        [category setActions:@[textAction] forContext:UIUserNotificationActionContextDefault];
+        [category setActions:@[textAction] forContext:UIUserNotificationActionContextMinimal];
+        
+        categories = [NSSet setWithObject:category];
+    }
+    
+    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings
+                                                        settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge)
+                                                        categories:categories];
+    [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
     
     [[UIApplication sharedApplication] registerForRemoteNotifications];
 }
