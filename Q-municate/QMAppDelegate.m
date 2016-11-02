@@ -10,7 +10,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "QMCore.h"
 #import "QMImages.h"
-#import "QBChatDialog+OpponentID.h"
 #import "QMHelpers.h"
 
 #import <Fabric/Fabric.h>
