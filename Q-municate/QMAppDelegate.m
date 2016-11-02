@@ -18,9 +18,6 @@
 #import <Flurry.h>
 #import <SVProgressHUD.h>
 
-static NSString * const kQMNotificationActionTextAction = @"TEXT_ACTION";
-static NSString * const kQMNotificationCategoryReply = @"TEXT_REPLY";
-
 #define DEVELOPMENT 1
 
 #if DEVELOPMENT == 0
@@ -164,24 +161,6 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 - (void)registerForNotification {
     
     NSSet *categories = nil;
-    if (iosMajorVersion() > 8) {
-        // text input reply is ios 9 +
-        UIMutableUserNotificationAction *textAction = [[UIMutableUserNotificationAction alloc] init];
-        textAction.identifier = kQMNotificationActionTextAction;
-        textAction.title = NSLocalizedString(@"QM_STR_REPLY", nil);
-        textAction.activationMode = UIUserNotificationActivationModeBackground;
-        textAction.authenticationRequired = NO;
-        textAction.destructive = NO;
-        textAction.behavior = UIUserNotificationActionBehaviorTextInput;
-        
-        UIMutableUserNotificationCategory *category = [[UIMutableUserNotificationCategory alloc] init];
-        category.identifier = kQMNotificationCategoryReply;
-        [category setActions:@[textAction] forContext:UIUserNotificationActionContextDefault];
-        [category setActions:@[textAction] forContext:UIUserNotificationActionContextMinimal];
-        
-        categories = [NSSet setWithObject:category];
-    }
-    
     UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings
                                                         settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge)
                                                         categories:categories];
@@ -193,77 +172,6 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 - (void)application:(UIApplication *)__unused application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
     [QMCore instance].pushNotificationManager.deviceToken = deviceToken;
-}
-
-- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo withResponseInfo:(NSDictionary *)responseInfo completionHandler:(void (^)())completionHandler {
-    
-    if ([identifier isEqualToString:kQMNotificationActionTextAction]) {
-        
-        NSString *text = responseInfo[UIUserNotificationActionResponseTypedTextKey];
-        
-        NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
-        if ([text stringByTrimmingCharactersInSet:whiteSpaceSet].length == 0) {
-            // do not send message that contains only of spaces
-            if (completionHandler) {
-                
-                completionHandler();
-            }
-            
-            return;
-        }
-        
-        NSString *dialogID = userInfo[kQMPushNotificationDialogIDKey];
-        
-        __block UIBackgroundTaskIdentifier task = [application beginBackgroundTaskWithExpirationHandler:^{
-            
-            [application endBackgroundTask:task];
-            task = UIBackgroundTaskInvalid;
-        }];
-        
-        // Do the work associated with the task.
-        ILog(@"Started background task timeremaining = %f", [application backgroundTimeRemaining]);
-        
-        [[[QMCore instance].chatService fetchDialogWithID:dialogID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
-            
-            QBChatDialog *chatDialog = t.result;
-            if (chatDialog != nil) {
-                
-                NSUInteger opponentUserID = [userInfo[kQMPushNotificationUserIDKey] unsignedIntegerValue];
-                
-                if (chatDialog.type == QBChatDialogTypePrivate
-                    && ![[QMCore instance].contactManager isFriendWithUserID:opponentUserID]) {
-                    
-                    if (completionHandler) {
-                        
-                        completionHandler();
-                    }
-                    
-                    return nil;
-                }
-                
-                return [[[QMCore instance].chatManager sendBackgroundMessageWithText:text toDialogWithID:dialogID] continueWithBlock:^id _Nullable(BFTask * _Nonnull messageTask) {
-                    
-                    if (!messageTask.isFaulted
-                        && application.applicationIconBadgeNumber > 0) {
-                        
-                        application.applicationIconBadgeNumber = 0;
-                    }
-                    
-                    [application endBackgroundTask:task];
-                    task = UIBackgroundTaskInvalid;
-                    
-                    return nil;
-                }];
-            }
-            
-            return nil;
-        }];
-    }
-    
-    if (completionHandler) {
-        
-        completionHandler();
-    }
 }
 
 #pragma mark - QMPushNotificationManagerDelegate protocol

@@ -71,8 +71,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (BFTask *)leaveChatDialog:(QBChatDialog *)chatDialog;
 
-- (BFTask *)sendBackgroundMessageWithText:(NSString *)text toDialogWithID:(NSString *)chatDialogID;
-
 @end
 
 NS_ASSUME_NONNULL_END
