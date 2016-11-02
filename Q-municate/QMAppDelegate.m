@@ -19,8 +19,6 @@
 #import <Flurry.h>
 #import <SVProgressHUD.h>
 
-@import UserNotifications;
-
 static NSString * const kQMNotificationActionTextAction = @"TEXT_ACTION";
 static NSString * const kQMNotificationCategoryReply = @"TEXT_REPLY";
 
@@ -44,7 +42,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 #endif
 
-@interface QMAppDelegate () <QMPushNotificationManagerDelegate, UNUserNotificationCenterDelegate>
+@interface QMAppDelegate () <QMPushNotificationManagerDelegate>
 
 @end
 
