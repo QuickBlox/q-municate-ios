@@ -10,7 +10,7 @@
 #import "QMCore.h"
 #import <SDWebImageManager.h>
 #import "QMPlaceholder.h"
-#import "QMMessageStatusStringBuilder.h"
+#import "QMStatusStringBuilder.h"
 #import "QMMessageNotification.h"
 
 @implementation QMNotification
@@ -64,7 +64,7 @@
     
     if ([chatMessage isNotificatonMessage]) {
         
-        QMMessageStatusStringBuilder *stringBuilder = [QMMessageStatusStringBuilder new];
+        QMStatusStringBuilder *stringBuilder = [QMStatusStringBuilder new];
         messageText = [stringBuilder messageTextForNotification:chatMessage];
     }
     

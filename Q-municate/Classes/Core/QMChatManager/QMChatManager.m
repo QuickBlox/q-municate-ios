@@ -9,13 +9,11 @@
 #import "QMChatManager.h"
 #import "QMCore.h"
 #import "QMContent.h"
-#import "QMChatLocationSnapshotter.h"
+#import "QMMessagesHelper.h"
 
 @interface QMChatManager ()
 
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
-
-@property (readwrite, strong, nonatomic) QMChatLocationSnapshotter *chatLocationSnapshotter;
 
 @end
 
@@ -111,20 +109,6 @@
         @strongify(self);
         return [self.serviceManager.chatService deleteDialogWithID:chatDialog.ID];
     }];
-}
-
-#pragma mark - Getters
-
-- (QMChatLocationSnapshotter *)chatLocationSnapshotter {
-    
-    if (_chatLocationSnapshotter == nil) {
-        // lazy loading location snapshotter f needed
-        // due to for some users it will not be needed at all
-        // for application life span
-        _chatLocationSnapshotter = [[QMChatLocationSnapshotter alloc] init];
-    }
-    
-    return _chatLocationSnapshotter;
 }
 
 @end

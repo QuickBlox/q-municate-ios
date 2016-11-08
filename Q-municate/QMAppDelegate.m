@@ -8,16 +8,15 @@
 
 #import "QMAppDelegate.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import "QMChatVC.h"
 #import "QMCore.h"
 #import "QMImages.h"
+#import "QMHelpers.h"
 
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import <DigitsKit/DigitsKit.h>
 #import <Flurry.h>
 #import <SVProgressHUD.h>
-
 
 #define DEVELOPMENT 1
 
@@ -75,8 +74,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBRTCConfig setStatsReportTimeInterval:0.0f]; // set to 1.0f to enable stats report
     
     // Registering for remote notifications
-    [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
-    [[UIApplication sharedApplication] registerForRemoteNotifications];
+    [self registerForNotification];
     
     // Configuring app appearance
     UIColor *mainTintColor = [UIColor colorWithRed:13.0f/255.0f green:112.0f/255.0f blue:179.0f/255.0f alpha:1.0f];
@@ -94,6 +92,8 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     // Configuring external frameworks
     [Fabric with:@[CrashlyticsKit, DigitsKit]];
     [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
+    [Flurry logEvent:@"connect_to_chat" withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", kQMApplicationID],
+                                                         @"chat_endpoint" : [QBSettings chatEndpoint]}];
     
     // Handling push notifications if needed
     if (launchOptions != nil) {
@@ -156,8 +156,18 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     return urlWasIntendedForFacebook;
 }
 
+#pragma mark - Push notification registration
 
-#pragma mark - PUSH NOTIFICATIONS REGISTRATION
+- (void)registerForNotification {
+    
+    NSSet *categories = nil;
+    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings
+                                                        settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge)
+                                                        categories:categories];
+    [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
+    
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
+}
 
 - (void)application:(UIApplication *)__unused application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
@@ -168,8 +178,8 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 - (void)pushNotificationManager:(QMPushNotificationManager *)__unused pushNotificationManager didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
     
-    UITabBarController *tabBarController = (UITabBarController *)self.window.rootViewController;
-    UINavigationController *navigationController = (UINavigationController *)tabBarController.selectedViewController;
+    UITabBarController *tabBarController = [[(UISplitViewController *)self.window.rootViewController viewControllers] firstObject];
+    UIViewController *dialogsVC = [[(UINavigationController *)[[tabBarController viewControllers] firstObject] viewControllers] firstObject];
     
     NSString *activeDialogID = [QMCore instance].activeDialogID;
     if ([chatDialog.ID isEqualToString:activeDialogID]) {
@@ -177,8 +187,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
         return;
     }
     
-    QMChatVC *chatVC = [QMChatVC chatViewControllerWithChatDialog:chatDialog];
-    [navigationController pushViewController:chatVC animated:YES];
+    [dialogsVC performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
 }
 
 @end

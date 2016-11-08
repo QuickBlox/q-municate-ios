@@ -72,6 +72,12 @@ QMSearchResultsControllerDelegate
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+        // skip view controller setup if app was
+        // instantinated to send a message from background
+        return;
+    }
+    
     // Hide empty separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
