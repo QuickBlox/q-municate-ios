@@ -1206,6 +1206,8 @@ NYTPhotosViewControllerDelegate
         
         // Sending attachment to dialog.
         dispatch_async(dispatch_get_main_queue(), ^{
+            [self.chatDataSource addMessage:message];
+            
             [[[QMCore instance].chatService sendAttachmentMessage:message
                                                          toDialog:self.chatDialog
                                               withAttachmentImage:resizedImage] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
