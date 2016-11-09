@@ -428,7 +428,7 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
         if (message.dialogUpdateType != QMDialogUpdateTypeNone) {
             
             NSDate *updatedAt = nil;
-            if (message.deletedOccupantsIDs.count > 0) {
+            if (message.deletedOccupantsIDs.count > 0 || message.addedOccupantsIDs.count > 0) {
                 // using date sent of message due to dialogUpdatedAt being not server synchronized when user is leaving
                 updatedAt = message.dateSent;
             }
@@ -605,6 +605,9 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
     NSParameterAssert(dialog.type != QBChatDialogTypePrivate);
     
     if (dialog.isJoined) {
+        if (completion) {
+            completion(nil);
+        }
         return;
     }
     
@@ -680,7 +683,7 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
                  }
              }
              
-             BOOL cancel;
+             BOOL cancel = NO;
              page.skip += dialogs.count;
              
              if (page.totalEntries <= page.skip) {
@@ -1353,30 +1356,12 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
                    completion:(QBChatCompletionBlock)completion
 {
     
-    [self.messagesMemoryStorage addMessage:attachmentMessage forDialogID:dialog.ID];
-    
-    if ([self.multicastDelegate respondsToSelector:@selector(chatService:didAddMessageToMemoryStorage:forDialogID:)]) {
-        [self.multicastDelegate chatService:self didAddMessageToMemoryStorage:attachmentMessage forDialogID:dialog.ID];
-    }
-    
-    __weak __typeof(self)weakSelf = self;
     [self.chatAttachmentService uploadAndSendAttachmentMessage:attachmentMessage
                                                       toDialog:dialog
                                                withChatService:self
                                              withAttachedImage:image
                                                     completion:^(NSError *error)
      {
-         __typeof(weakSelf)strongSelf = weakSelf;
-         if (!error) {
-             
-             [strongSelf updateLastMessageParamsForChatDialog:dialog withMessage:attachmentMessage];
-             dialog.updatedAt = attachmentMessage.dateSent;
-             
-             if ([strongSelf.multicastDelegate respondsToSelector:@selector(chatService:didUpdateChatDialogInMemoryStorage:)]) {
-                 [strongSelf.multicastDelegate chatService:strongSelf didUpdateChatDialogInMemoryStorage:dialog];
-             }
-         }
-         
          if (completion) {
              completion(error);
          }

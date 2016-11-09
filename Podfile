@@ -35,6 +35,6 @@ target 'Q-municate' do
 #    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
 
     pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'feature/keyboardController'
-    pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'development'
+    pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :commit => '31c5e078b6e10abe203596aa4691a8fed7f8a586'
     
 end

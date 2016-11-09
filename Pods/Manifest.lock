@@ -87,7 +87,7 @@ DEPENDENCIES:
   - MPGNotification (~> 1.2)
   - NYTPhotoViewer (~> 1.1.0)
   - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, branch `feature/keyboardController`)
-  - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`, branch `development`)
+  - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`, commit `31c5e078b6e10abe203596aa4691a8fed7f8a586`)
   - Reachability (~> 3.2)
   - SDWebImage (~> 3.6)
   - SSKeychain (~> 1.2.2)
@@ -101,7 +101,7 @@ EXTERNAL SOURCES:
     :branch: feature/keyboardController
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :branch: development
+    :commit: 31c5e078b6e10abe203596aa4691a8fed7f8a586
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 CHECKOUT OPTIONS:
@@ -109,7 +109,7 @@ CHECKOUT OPTIONS:
     :commit: a9ed585f22fb92c58ece43c5000e372f37a7b620
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: bb9d7a7f713f483b305ad110ce86542410f409ef
+    :commit: 31c5e078b6e10abe203596aa4691a8fed7f8a586
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
@@ -135,6 +135,6 @@ SPEC CHECKSUMS:
   TwitterCore: cce24b3c798993ccde72787ea79ea9a478b284e4
   UIDevice-Hardware: ecb52d9a7b223b31f81982358e2b0769ac1a7918
 
-PODFILE CHECKSUM: 7224eea35077f804f90b11c649dbd6abc5b886b6
+PODFILE CHECKSUM: dd1accfbf27e9c10e30bbd4165e251a840a01d06
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.1.1
