@@ -234,7 +234,7 @@
 		</data>
 		<key>Headers/QBRequest+QBChat.h</key>
 		<data>
-		O20GzBZF8q3lg20fpZ4qynK0JEM=
+		N094bLiah/43dkEnzlBKtwi7MjQ=
 		</data>
 		<key>Headers/QBRequest+QBContent.h</key>
 		<data>
@@ -294,11 +294,11 @@
 		</data>
 		<key>Headers/Quickblox.h</key>
 		<data>
-		97R/ALEc5jEZI+QNcqoM65h0iFo=
+		Jz026iagK/T2I7IuIEi/pR+2DBQ=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		y3tREzfv/QJvBK9X7JJYFRJJIT8=
+		7DZVijAOUWAx76q0qtQUaiUrF1M=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -938,11 +938,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			O20GzBZF8q3lg20fpZ4qynK0JEM=
+			N094bLiah/43dkEnzlBKtwi7MjQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			3weENbmrcUMB0D6lO1ao0I0RkP3ZIVLxsBph9XoZWXA=
+			4gqkQYjxcfi8En+cBGdXF1CGCimkyXiqiiDG2lB/Q4M=
 			</data>
 		</dict>
 		<key>Headers/QBRequest+QBContent.h</key>
@@ -1103,11 +1103,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			97R/ALEc5jEZI+QNcqoM65h0iFo=
+			Jz026iagK/T2I7IuIEi/pR+2DBQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			qpZTBE2EJk3vDbJVhIpc22lMe406zuVuVeSWYH0uzKE=
+			P+ivillNLF7eWXklNAX0PXzhZfUvYbA2rCKbxM2+9d0=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
@@ -1139,6 +1139,11 @@
 			<true/>
 			<key>weight</key>
 			<real>1100</real>
+		</dict>
+		<key>^Base\.lproj/</key>
+		<dict>
+			<key>weight</key>
+			<real>1010</real>
 		</dict>
 		<key>^version.plist$</key>
 		<true/>
@@ -1184,6 +1189,11 @@
 			<true/>
 			<key>weight</key>
 			<real>1100</real>
+		</dict>
+		<key>^Base\.lproj/</key>
+		<dict>
+			<key>weight</key>
+			<real>1010</real>
 		</dict>
 		<key>^Info\.plist$</key>
 		<dict>
