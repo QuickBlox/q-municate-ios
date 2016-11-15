@@ -2136,12 +2136,12 @@
 					E03871D21DDB36F700554EB9 = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = 8885H5G2YX;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					E03871DC1DDB36F800554EB9 = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = 8885H5G2YX;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -2679,6 +2679,8 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMSiriExtensionUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "5ef9869d-e4ee-49ca-9e01-a38027279438";
+				PROVISIONING_PROFILE_SPECIFIER = "Universal Development Profile LTD";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -2705,6 +2707,8 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMSiriExtensionUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "f8dfca39-7802-4e37-8121-55ff9b372428";
+				PROVISIONING_PROFILE_SPECIFIER = "Universal AdHoc Profile LTD";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -2730,6 +2734,8 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMSiriExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "5ef9869d-e4ee-49ca-9e01-a38027279438";
+				PROVISIONING_PROFILE_SPECIFIER = "Universal Development Profile LTD";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -2756,6 +2762,8 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMSiriExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "f8dfca39-7802-4e37-8121-55ff9b372428";
+				PROVISIONING_PROFILE_SPECIFIER = "Universal AdHoc Profile LTD";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
