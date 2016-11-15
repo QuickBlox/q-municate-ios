@@ -17,6 +17,7 @@
 #import <DigitsKit/DigitsKit.h>
 #import <Flurry.h>
 #import <SVProgressHUD.h>
+#import <Intents/Intents.h>
 
 static NSString * const kQMNotificationActionTextAction = @"TEXT_ACTION";
 static NSString * const kQMNotificationCategoryReply = @"TEXT_REPLY";
@@ -97,6 +98,12 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
     [Flurry logEvent:@"connect_to_chat" withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", kQMApplicationID],
                                                          @"chat_endpoint" : [QBSettings chatEndpoint]}];
+    // Sirri supported in ios 10 +
+    if (iosMajorVersion() > 9) {
+        [INPreferences requestSiriAuthorization:^(INSiriAuthorizationStatus status) {
+            NSLog(@"INSiriAuthorizationStatus %ld",(long)status);
+        }];
+    }
     
     // Handling push notifications if needed
     if (launchOptions != nil) {
