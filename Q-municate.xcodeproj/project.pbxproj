@@ -171,30 +171,30 @@
 		E03871CD1DDB354700554EB9 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E03871CB1DDB354700554EB9 /* Intents.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E03871CE1DDB354700554EB9 /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E03871CC1DDB354700554EB9 /* IntentsUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E03871D71DDB36F700554EB9 /* QMIntentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = E03871D61DDB36F700554EB9 /* QMIntentHandler.m */; };
-		E03871DE1DDB36F800554EB9 /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E03871CC1DDB354700554EB9 /* IntentsUI.framework */; };
-		E03871E21DDB36F800554EB9 /* IntentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E03871E11DDB36F800554EB9 /* IntentViewController.m */; };
-		E03871E51DDB36F800554EB9 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E03871E31DDB36F800554EB9 /* MainInterface.storyboard */; };
-		E03871E91DDB36F800554EB9 /* QMSiriExtensionUI.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E03871DD1DDB36F800554EB9 /* QMSiriExtensionUI.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E03871EC1DDB36F800554EB9 /* QMSiriExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E03871D31DDB36F700554EB9 /* QMSiriExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E03871F41DDB589900554EB9 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58CCD2AD1BE778DD00E99C16 /* Quickblox.framework */; };
-		E03871FB1DDB7CE500554EB9 /* QMSiriDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = E03871FA1DDB7CE500554EB9 /* QMSiriDataProvider.m */; };
-		E0562DAA1DDC678E0086A083 /* QMSiriDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = E03871FA1DDB7CE500554EB9 /* QMSiriDataProvider.m */; };
+		E0562DD91DDCB45D0086A083 /* SiriHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = E0562DD71DDCB45D0086A083 /* SiriHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E0562DDC1DDCB45D0086A083 /* SiriHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0562DD51DDCB45D0086A083 /* SiriHelper.framework */; };
+		E0562DDD1DDCB45D0086A083 /* SiriHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E0562DD51DDCB45D0086A083 /* SiriHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E0562DE11DDCB4ED0086A083 /* SiriHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0562DD51DDCB45D0086A083 /* SiriHelper.framework */; };
+		E0562DE81DDCB92F0086A083 /* QMSiriDataProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = E0562DE61DDCB92F0086A083 /* QMSiriDataProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E0562DE91DDCB92F0086A083 /* QMSiriDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = E0562DE71DDCB92F0086A083 /* QMSiriDataProvider.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		E03871E71DDB36F800554EB9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 69D57E4A18ACC11C00A9900A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E03871DC1DDB36F800554EB9;
-			remoteInfo = QMSiriExtensionUI;
-		};
 		E03871EA1DDB36F800554EB9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 69D57E4A18ACC11C00A9900A /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = E03871D21DDB36F700554EB9;
 			remoteInfo = QMSiriExtension;
+		};
+		E0562DDA1DDCB45D0086A083 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 69D57E4A18ACC11C00A9900A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E0562DD41DDCB45D0086A083;
+			remoteInfo = SiriHelper;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -206,6 +206,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				581D97D21D460CF800976728 /* Quickblox.framework in Embed Frameworks */,
+				E0562DDD1DDCB45D0086A083 /* SiriHelper.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -216,7 +217,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				E03871E91DDB36F800554EB9 /* QMSiriExtensionUI.appex in Embed App Extensions */,
 				E03871EC1DDB36F800554EB9 /* QMSiriExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -521,15 +521,17 @@
 		E03871D51DDB36F700554EB9 /* QMIntentHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMIntentHandler.h; sourceTree = "<group>"; };
 		E03871D61DDB36F700554EB9 /* QMIntentHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMIntentHandler.m; sourceTree = "<group>"; };
 		E03871D81DDB36F700554EB9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E03871DD1DDB36F800554EB9 /* QMSiriExtensionUI.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QMSiriExtensionUI.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E03871E01DDB36F800554EB9 /* IntentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntentViewController.h; sourceTree = "<group>"; };
 		E03871E11DDB36F800554EB9 /* IntentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IntentViewController.m; sourceTree = "<group>"; };
 		E03871E41DDB36F800554EB9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		E03871E61DDB36F800554EB9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E03871F91DDB7CE500554EB9 /* QMSiriDataProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSiriDataProvider.h; sourceTree = "<group>"; };
-		E03871FA1DDB7CE500554EB9 /* QMSiriDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSiriDataProvider.m; sourceTree = "<group>"; };
 		E0562DCE1DDCA0C50086A083 /* QMSiriExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QMSiriExtension.entitlements; sourceTree = "<group>"; };
 		E0562DCF1DDCA0DF0086A083 /* QMSiriExtensionUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QMSiriExtensionUI.entitlements; sourceTree = "<group>"; };
+		E0562DD51DDCB45D0086A083 /* SiriHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SiriHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E0562DD71DDCB45D0086A083 /* SiriHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SiriHelper.h; sourceTree = "<group>"; };
+		E0562DD81DDCB45D0086A083 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E0562DE61DDCB92F0086A083 /* QMSiriDataProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSiriDataProvider.h; sourceTree = "<group>"; };
+		E0562DE71DDCB92F0086A083 /* QMSiriDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSiriDataProvider.m; sourceTree = "<group>"; };
 		F334A9F28F73239275E50842 /* Pods-Q-municate.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Q-municate.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Q-municate/Pods-Q-municate.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -538,6 +540,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E0562DDC1DDCB45D0086A083 /* SiriHelper.framework in Frameworks */,
 				E03871CD1DDB354700554EB9 /* Intents.framework in Frameworks */,
 				E03871CE1DDB354700554EB9 /* IntentsUI.framework in Frameworks */,
 				581DA1D21BF373A100F75D8B /* VideoToolbox.framework in Frameworks */,
@@ -569,16 +572,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E0562DE11DDCB4ED0086A083 /* SiriHelper.framework in Frameworks */,
 				6514B28885FCA8A73F322931 /* libPods-QMSiriExtension.a in Frameworks */,
 				E03871F41DDB589900554EB9 /* Quickblox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E03871DA1DDB36F800554EB9 /* Frameworks */ = {
+		E0562DD11DDCB45D0086A083 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E03871DE1DDB36F800554EB9 /* IntentsUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1936,8 +1939,6 @@
 				58EFB83A1D378D05005F9DDF /* QMCallNotificationItem */,
 				5847923C1D4B63A400CD972E /* QMCameraCapture */,
 				55A8B04F1965986A00B5D33B /* Tools */,
-				E03871F91DDB7CE500554EB9 /* QMSiriDataProvider.h */,
-				E03871FA1DDB7CE500554EB9 /* QMSiriDataProvider.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -1962,6 +1963,7 @@
 				69D57E5B18ACC11C00A9900A /* Q-municate */,
 				E03871D41DDB36F700554EB9 /* QMSiriExtension */,
 				E03871DF1DDB36F800554EB9 /* QMSiriExtensionUI */,
+				E0562DD61DDCB45D0086A083 /* SiriHelper */,
 				69D57E5418ACC11C00A9900A /* Frameworks */,
 				69D57E5318ACC11C00A9900A /* Products */,
 				559327A0199216FB001C4BF8 /* Q-municate Tests */,
@@ -1974,7 +1976,7 @@
 			children = (
 				69D57E5218ACC11C00A9900A /* Q-municate.app */,
 				E03871D31DDB36F700554EB9 /* QMSiriExtension.appex */,
-				E03871DD1DDB36F800554EB9 /* QMSiriExtensionUI.appex */,
+				E0562DD51DDCB45D0086A083 /* SiriHelper.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2059,7 +2061,30 @@
 			path = QMSiriExtensionUI;
 			sourceTree = "<group>";
 		};
+		E0562DD61DDCB45D0086A083 /* SiriHelper */ = {
+			isa = PBXGroup;
+			children = (
+				E0562DE61DDCB92F0086A083 /* QMSiriDataProvider.h */,
+				E0562DE71DDCB92F0086A083 /* QMSiriDataProvider.m */,
+				E0562DD71DDCB45D0086A083 /* SiriHelper.h */,
+				E0562DD81DDCB45D0086A083 /* Info.plist */,
+			);
+			path = SiriHelper;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		E0562DD21DDCB45D0086A083 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E0562DE81DDCB92F0086A083 /* QMSiriDataProvider.h in Headers */,
+				E0562DD91DDCB45D0086A083 /* SiriHelper.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		69D57E5118ACC11C00A9900A /* Q-municate */ = {
@@ -2080,8 +2105,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				E03871E81DDB36F800554EB9 /* PBXTargetDependency */,
 				E03871EB1DDB36F800554EB9 /* PBXTargetDependency */,
+				E0562DDB1DDCB45D0086A083 /* PBXTargetDependency */,
 			);
 			name = "Q-municate";
 			productName = "Q-municate";
@@ -2107,22 +2132,23 @@
 			productReference = E03871D31DDB36F700554EB9 /* QMSiriExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		E03871DC1DDB36F800554EB9 /* QMSiriExtensionUI */ = {
+		E0562DD41DDCB45D0086A083 /* SiriHelper */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E03871ED1DDB36F800554EB9 /* Build configuration list for PBXNativeTarget "QMSiriExtensionUI" */;
+			buildConfigurationList = E0562DDE1DDCB45D0086A083 /* Build configuration list for PBXNativeTarget "SiriHelper" */;
 			buildPhases = (
-				E03871D91DDB36F800554EB9 /* Sources */,
-				E03871DA1DDB36F800554EB9 /* Frameworks */,
-				E03871DB1DDB36F800554EB9 /* Resources */,
+				E0562DD01DDCB45D0086A083 /* Sources */,
+				E0562DD11DDCB45D0086A083 /* Frameworks */,
+				E0562DD21DDCB45D0086A083 /* Headers */,
+				E0562DD31DDCB45D0086A083 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = QMSiriExtensionUI;
-			productName = QMSiriExtensionUI;
-			productReference = E03871DD1DDB36F800554EB9 /* QMSiriExtensionUI.appex */;
-			productType = "com.apple.product-type.app-extension";
+			name = SiriHelper;
+			productName = SiriHelper;
+			productReference = E0562DD51DDCB45D0086A083 /* SiriHelper.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -2161,22 +2187,16 @@
 					E03871D21DDB36F700554EB9 = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = 8885H5G2YX;
-						ProvisioningStyle = Automatic;
-						SystemCapabilities = {
-							com.apple.ApplicationGroups.iOS = {
-								enabled = 1;
-							};
-						};
-					};
-					E03871DC1DDB36F800554EB9 = {
-						CreatedOnToolsVersion = 8.1;
-						DevelopmentTeam = 8885H5G2YX;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
 							};
 						};
+					};
+					E0562DD41DDCB45D0086A083 = {
+						CreatedOnToolsVersion = 8.1;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -2196,7 +2216,7 @@
 			targets = (
 				69D57E5118ACC11C00A9900A /* Q-municate */,
 				E03871D21DDB36F700554EB9 /* QMSiriExtension */,
-				E03871DC1DDB36F800554EB9 /* QMSiriExtensionUI */,
+				E0562DD41DDCB45D0086A083 /* SiriHelper */,
 			);
 		};
 /* End PBXProject section */
@@ -2238,11 +2258,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E03871DB1DDB36F800554EB9 /* Resources */ = {
+		E0562DD31DDCB45D0086A083 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E03871E51DDB36F800554EB9 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2378,7 +2397,6 @@
 				589792B51C9C3C1F00CC6438 /* QMMessageContactListViewController.m in Sources */,
 				55A8B06E1965986A00B5D33B /* QMSoundManager.m in Sources */,
 				58EC00221CF30C380052A06A /* QMGroupNameViewController.m in Sources */,
-				E03871FB1DDB7CE500554EB9 /* QMSiriDataProvider.m in Sources */,
 				5868B05E1CE9C668004F9233 /* QMCallManager.m in Sources */,
 				589D4CF51C9816E9005F1E76 /* QMNewMessageViewController.m in Sources */,
 				584277A41C3D336300CDE35B /* QMCornerButton.m in Sources */,
@@ -2481,30 +2499,29 @@
 			buildActionMask = 2147483647;
 			files = (
 				E03871D71DDB36F700554EB9 /* QMIntentHandler.m in Sources */,
-				E0562DAA1DDC678E0086A083 /* QMSiriDataProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E03871D91DDB36F800554EB9 /* Sources */ = {
+		E0562DD01DDCB45D0086A083 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E03871E21DDB36F800554EB9 /* IntentViewController.m in Sources */,
+				E0562DE91DDCB92F0086A083 /* QMSiriDataProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		E03871E81DDB36F800554EB9 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E03871DC1DDB36F800554EB9 /* QMSiriExtensionUI */;
-			targetProxy = E03871E71DDB36F800554EB9 /* PBXContainerItemProxy */;
-		};
 		E03871EB1DDB36F800554EB9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E03871D21DDB36F700554EB9 /* QMSiriExtension */;
 			targetProxy = E03871EA1DDB36F800554EB9 /* PBXContainerItemProxy */;
+		};
+		E0562DDB1DDCB45D0086A083 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E0562DD41DDCB45D0086A083 /* SiriHelper */;
+			targetProxy = E0562DDA1DDCB45D0086A083 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2725,63 +2742,6 @@
 			};
 			name = Release;
 		};
-		E03871EE1DDB36F800554EB9 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				CODE_SIGN_ENTITLEMENTS = QMSiriExtensionUI/QMSiriExtensionUI.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Taras Filatov (6AVH4TA956)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Taras Filatov (6AVH4TA956)";
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 8885H5G2YX;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = QMSiriExtensionUI/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMSiriExtensionUI;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5ef9869d-e4ee-49ca-9e01-a38027279438";
-				PROVISIONING_PROFILE_SPECIFIER = "Universal Development Profile LTD";
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		E03871EF1DDB36F800554EB9 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				CODE_SIGN_ENTITLEMENTS = QMSiriExtensionUI/QMSiriExtensionUI.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 8885H5G2YX;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = QMSiriExtensionUI/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMSiriExtensionUI;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "f8dfca39-7802-4e37-8121-55ff9b372428";
-				PROVISIONING_PROFILE_SPECIFIER = "Universal AdHoc Profile LTD";
-				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
 		E03871F11DDB36F800554EB9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AAF30F47522590E10692EA18 /* Pods-QMSiriExtension.debug.xcconfig */;
@@ -2814,8 +2774,8 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMSiriExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "54ec1e4c-3986-4482-8e63-abb766954f6a";
+				PROVISIONING_PROFILE_SPECIFIER = "Siri extension dev";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -2830,7 +2790,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_ENTITLEMENTS = QMSiriExtension/QMSiriExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8885H5G2YX;
@@ -2853,9 +2813,81 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMSiriExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "bbb82d38-a084-482d-9d85-06fc62309aa8";
+				PROVISIONING_PROFILE_SPECIFIER = "Siri extension AdHoc";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		E0562DDF1DDCB45D0086A083 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Taras Filatov (6AVH4TA956)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Taras Filatov (6AVH4TA956)";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = SiriHelper/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = quickblox.qmunicate.SiriHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		E0562DE01DDCB45D0086A083 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = SiriHelper/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = quickblox.qmunicate.SiriHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
@@ -2880,15 +2912,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E03871ED1DDB36F800554EB9 /* Build configuration list for PBXNativeTarget "QMSiriExtensionUI" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E03871EE1DDB36F800554EB9 /* Debug */,
-				E03871EF1DDB36F800554EB9 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		E03871F01DDB36F800554EB9 /* Build configuration list for PBXNativeTarget "QMSiriExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2897,6 +2920,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		E0562DDE1DDCB45D0086A083 /* Build configuration list for PBXNativeTarget "SiriHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E0562DDF1DDCB45D0086A083 /* Debug */,
+				E0562DE01DDCB45D0086A083 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
