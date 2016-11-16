@@ -203,7 +203,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 }
 
 - (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo withResponseInfo:(NSDictionary *)responseInfo completionHandler:(void (^)())completionHandler {
-    
+    return;
     if ([identifier isEqualToString:kQMNotificationActionTextAction]) {
         
         NSString *text = responseInfo[UIUserNotificationActionResponseTypedTextKey];
@@ -229,42 +229,42 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
         
         // Do the work associated with the task.
         ILog(@"Started background task timeremaining = %f", [application backgroundTimeRemaining]);
-        
-        [[[QMCore instance].chatService fetchDialogWithID:dialogID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
-            
-            QBChatDialog *chatDialog = t.result;
-            if (chatDialog != nil) {
-                
-                NSUInteger opponentUserID = [userInfo[kQMPushNotificationUserIDKey] unsignedIntegerValue];
-                
-                if (chatDialog.type == QBChatDialogTypePrivate
-                    && ![[QMCore instance].contactManager isFriendWithUserID:opponentUserID]) {
-                    
-                    if (completionHandler) {
-                        
-                        completionHandler();
-                    }
-                    
-                    return nil;
-                }
-                
-                return [[[QMCore instance].chatManager sendBackgroundMessageWithText:text toDialogWithID:dialogID] continueWithBlock:^id _Nullable(BFTask * _Nonnull messageTask) {
-                    
-                    if (!messageTask.isFaulted
-                        && application.applicationIconBadgeNumber > 0) {
-                        
-                        application.applicationIconBadgeNumber = 0;
-                    }
-                    
-                    [application endBackgroundTask:task];
-                    task = UIBackgroundTaskInvalid;
-                    
-                    return nil;
-                }];
-            }
-            
-            return nil;
-        }];
+//        
+//        [[[QMCore instance].chatService fetchDialogWithID:dialogID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
+//            
+//            QBChatDialog *chatDialog = t.result;
+//            if (chatDialog != nil) {
+//                
+//                NSUInteger opponentUserID = [userInfo[kQMPushNotificationUserIDKey] unsignedIntegerValue];
+//                
+//                if (chatDialog.type == QBChatDialogTypePrivate
+//                    && ![[QMCore instance].contactManager isFriendWithUserID:opponentUserID]) {
+//                    
+//                    if (completionHandler) {
+//                        
+//                        completionHandler();
+//                    }
+//                    
+//                    return nil;
+//                }
+//                
+//                return [[[QMCore instance].chatManager sendBackgroundMessageWithText:text toDialogWithID:dialogID] continueWithBlock:^id _Nullable(BFTask * _Nonnull messageTask) {
+//                    
+//                    if (!messageTask.isFaulted
+//                        && application.applicationIconBadgeNumber > 0) {
+//                        
+//                        application.applicationIconBadgeNumber = 0;
+//                    }
+//                    
+//                    [application endBackgroundTask:task];
+//                    task = UIBackgroundTaskInvalid;
+//                    
+//                    return nil;
+//                }];
+//            }
+//            
+//            return nil;
+//        }];
     }
     
     if (completionHandler) {

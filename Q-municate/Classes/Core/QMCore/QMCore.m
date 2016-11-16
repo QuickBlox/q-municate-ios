@@ -11,10 +11,11 @@
 #import "QMFacebook.h"
 #import "QMNotification.h"
 #import "QMTasks.h"
-#import <DigitsKit/DigitsKit.h>
+//#import <DigitsKit/DigitsKit.h>
 #import <SVProgressHUD.h>
 #import <SDWebImageManager.h>
-
+#import "QMCallManager.h"
+#import "QMCallManager.h"
 static NSString *const kQMLastActivityDateKey = @"last_activity_date";
 static NSString *const kQMErrorKey = @"errors";
 static NSString *const kQMBaseErrorKey = @"base";

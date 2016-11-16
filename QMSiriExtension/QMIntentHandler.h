@@ -8,6 +8,7 @@
 
 #import <Intents/Intents.h>
 
+
 @interface QMIntentHandler : INExtension
 
 @end

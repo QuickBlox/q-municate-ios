@@ -3,6 +3,8 @@ platform :ios, '8.1'
 xcodeproj 'Q-municate.xcodeproj'
 source 'https://github.com/CocoaPods/Specs.git'
 
+
+
 target 'Q-municate' do
     
     pod 'UIDevice-Hardware', '~> 0.1.3'
@@ -38,3 +40,5 @@ target 'Q-municate' do
     pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :commit => '2c038f614c1816a67d3ec4598fabab79259b0777'
     
 end
+
+

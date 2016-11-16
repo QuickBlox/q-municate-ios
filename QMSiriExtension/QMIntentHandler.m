@@ -7,6 +7,14 @@
 //
 
 #import "QMIntentHandler.h"
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+
+#import <Quickblox/Quickblox.h>
+#import <QuickbloxWebRTC/QuickbloxWebRTC.h>
+#import "QMSiriDataProvider.h"
+
+
 
 // As an example, this class is set up to handle Message intents.
 // You will want to replace this or add other intents as appropriate.
@@ -72,9 +80,17 @@
 
 - (void)confirmSendMessage:(INSendMessageIntent *)intent completion:(void (^)(INSendMessageIntentResponse *response))completion {
     // Verify user is authenticated and your app is ready to send a message.
-    
     NSUserActivity *userActivity = [[NSUserActivity alloc] initWithActivityType:NSStringFromClass([INSendMessageIntent class])];
-    INSendMessageIntentResponse *response = [[INSendMessageIntentResponse alloc] initWithCode:INSendMessageIntentResponseCodeReady userActivity:userActivity];
+    INSendMessageIntentResponse *response;
+    
+    if ([[QMSiriDataProvider instance] isAuthorized]) {
+        response= [[INSendMessageIntentResponse alloc] initWithCode:INSendMessageIntentResponseCodeReady userActivity:userActivity];
+    }
+    else {
+        response = [[INSendMessageIntentResponse alloc] initWithCode:INSendMessageIntentResponseCodeFailureRequiringAppLaunch userActivity:userActivity];
+        userActivity.userInfo = @{@"Error" : @"Need to login"};
+    }
+
     completion(response);
 }
 

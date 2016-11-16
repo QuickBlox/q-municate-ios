@@ -2,8 +2,8 @@
 //  QBRequest+QBChat.h
 //  Quickblox
 //
-//  Created by Anton Sokolchenko on 9/1/14.
-//  Copyright (c) 2014 QuickBlox. All rights reserved.
+//  Created by QuickBlox team on 9/1/14.
+//  Copyright (c) 2016 QuickBlox. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)dialogsWithSuccessBlock:(nullable void(^)(QBResponse *response, NSArray QB_GENERIC(QBChatDialog *) * _Nullable dialogObjects, NSSet QB_GENERIC(NSNumber *) * _Nullable dialogsUsersIDs))successBlock
++ (QBRequest *)dialogsWithSuccessBlock:(nullable void(^)(QBResponse *response, NSArray<QBChatDialog *> * _Nullable dialogObjects, NSSet<NSNumber *> * _Nullable dialogsUsersIDs))successBlock
                             errorBlock:(nullable QBRequestErrorBlock)errorBlock;
 
 /**
@@ -41,8 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
  @return An instance of QBRequest for cancel operation mainly.
  */
 + (QBRequest *)dialogsForPage:(QBResponsePage *)page
-              extendedRequest:(nullable NSDictionary QB_GENERIC(NSString *, NSString *) *)extendedRequest
-                 successBlock:(nullable void(^)(QBResponse *response, NSArray QB_GENERIC(QBChatDialog *) * _Nullable dialogObjects, NSSet QB_GENERIC(NSNumber *) * _Nullable dialogsUsersIDs, QBResponsePage * _Nullable page))successBlock
+              extendedRequest:(nullable NSDictionary<NSString *, NSString *> *)extendedRequest
+                 successBlock:(nullable void(^)(QBResponse *response, NSArray<QBChatDialog *> * _Nullable dialogObjects, NSSet<NSNumber *> * _Nullable dialogsUsersIDs, QBResponsePage * _Nullable page))successBlock
                    errorBlock:(nullable QBRequestErrorBlock)errorBlock;
 
 /**
@@ -83,9 +83,9 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)deleteDialogsWithIDs:(NSSet QB_GENERIC(NSString *) *)dialogIDs
++ (QBRequest *)deleteDialogsWithIDs:(NSSet<NSString *> *)dialogIDs
                         forAllUsers:(BOOL)forAllUsers
-                       successBlock:(nullable void(^)(QBResponse *response, NSArray QB_GENERIC(NSString *) * _Nullable deletedObjectsIDs, NSArray QB_GENERIC(NSString *) * _Nullable notFoundObjectsIDs, NSArray QB_GENERIC(NSString *) * _Nullable wrongPermissionsObjectsIDs))successBlock
+                       successBlock:(nullable void(^)(QBResponse *response, NSArray<NSString *> * _Nullable deletedObjectsIDs, NSArray<NSString *> * _Nullable notFoundObjectsIDs, NSArray<NSString *> * _Nullable wrongPermissionsObjectsIDs))successBlock
                          errorBlock:(nullable QBRequestErrorBlock)errorBlock;
 
 /**
@@ -98,7 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
  @return An instance of QBRequest for cancel operation mainly.
  */
 + (QBRequest *)messagesWithDialogID:(NSString *)dialogID
-                       successBlock:(nullable void(^)(QBResponse *response, NSArray QB_GENERIC(QBChatMessage *) * _Nullable messages))successBlock
+                       successBlock:(nullable void(^)(QBResponse *response, NSArray<QBChatMessage *> * _Nullable messages))successBlock
                          errorBlock:(nullable QBRequestErrorBlock)errorBlock;
 
 /**
@@ -119,9 +119,9 @@ NS_ASSUME_NONNULL_BEGIN
  @return An instance of QBRequest for cancel operation mainly.
  */
 + (QBRequest *)messagesWithDialogID:(NSString *)dialogID
-                    extendedRequest:(nullable NSDictionary QB_GENERIC(NSString *, NSString *) *) extendedParameters
+                    extendedRequest:(nullable NSDictionary<NSString *, NSString *> *) extendedParameters
                             forPage:(nullable QBResponsePage *)page
-                       successBlock:(nullable void (^)(QBResponse *response, NSArray QB_GENERIC(QBChatMessage *) * _Nullable messages, QBResponsePage * _Nullable page))successBlock
+                       successBlock:(nullable void (^)(QBResponse *response, NSArray<QBChatMessage *> * _Nullable messages, QBResponsePage * _Nullable page))successBlock
                          errorBlock:(nullable QBRequestErrorBlock)errorBlock;
 /**
  Create chat message.
@@ -162,7 +162,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param errorBlock Block with response instance if request failed.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-+ (QBRequest *)markMessagesAsRead:(nullable NSSet QB_GENERIC(NSString *) *)messagesIDs
++ (QBRequest *)markMessagesAsRead:(nullable NSSet<NSString *> *)messagesIDs
                          dialogID:(NSString *)dialogID
                      successBlock:(nullable void(^)(QBResponse *response))successBlock
                        errorBlock:(nullable QBRequestErrorBlock)errorBlock;
@@ -178,7 +178,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param errorBlock Block with response instance if request failed.
  @return An instance, which conforms Cancelable protocol. Use this instance to cancel the operation.
  */
-+ (QBRequest *)markMessagesAsDelivered:(nullable NSSet QB_GENERIC(NSString *) *)messagesIDs
++ (QBRequest *)markMessagesAsDelivered:(nullable NSSet<NSString *> *)messagesIDs
                               dialogID:(NSString *)dialogID
                           successBlock:(nullable void(^)(QBResponse *response))successBlock
                             errorBlock:(nullable QBRequestErrorBlock)errorBlock;
@@ -194,7 +194,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)deleteMessagesWithIDs:(NSSet QB_GENERIC(NSString *) *)messageIDs
++ (QBRequest *)deleteMessagesWithIDs:(NSSet<NSString *> *)messageIDs
                          forAllUsers:(BOOL)forAllUsers
                         successBlock:(nullable void(^)(QBResponse *response))successBlock
                           errorBlock:(nullable QBRequestErrorBlock)errorBlock;
@@ -208,7 +208,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)countOfDialogsWithExtendedRequest:(nullable NSDictionary QB_GENERIC(NSString *, NSString *) *)parameters
++ (QBRequest *)countOfDialogsWithExtendedRequest:(nullable NSDictionary<NSString *, NSString *> *)parameters
                                     successBlock:(nullable void(^)(QBResponse *response, NSUInteger count)) successBlock
                                       errorBlock:(nullable QBRequestErrorBlock)errorBlock;
 
@@ -223,7 +223,7 @@ NS_ASSUME_NONNULL_BEGIN
  @return An instance of QBRequest for cancel operation mainly.
  */
 + (QBRequest *)countOfMessagesForDialogID:(NSString *)dialogID
-                          extendedRequest:(nullable NSDictionary QB_GENERIC(NSString *, NSString *) *)parameters
+                          extendedRequest:(nullable NSDictionary<NSString *, NSString *> *)parameters
                              successBlock:(nullable void(^)(QBResponse *response, NSUInteger count)) successBlock
                                errorBlock:(nullable QBRequestErrorBlock)errorBlock;
 
@@ -236,8 +236,8 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return An instance of QBRequest for cancel operation mainly.
  */
-+ (QBRequest *)totalUnreadMessageCountForDialogsWithIDs:(NSSet QB_GENERIC(NSString *) *)dialogIDs
-                                           successBlock:(nullable void(^)(QBResponse *response, NSUInteger count, NSDictionary QB_GENERIC(NSString *, id) * _Nullable dialogs))successBlock
++ (QBRequest *)totalUnreadMessageCountForDialogsWithIDs:(NSSet <NSString *> *)dialogIDs
+                                           successBlock:(nullable void(^)(QBResponse *response, NSUInteger count, NSDictionary <NSString *, id> * _Nullable dialogs))successBlock
                                              errorBlock:(nullable QBRequestErrorBlock)errorBlock;
 
 @end
