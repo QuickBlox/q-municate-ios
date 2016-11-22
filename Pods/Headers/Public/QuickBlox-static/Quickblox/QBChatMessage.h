@@ -1,0 +1,1 @@
+../../../../QuickBlox-static/Quickblox.framework/Versions/A/Headers/QBChatMessage.h

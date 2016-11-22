@@ -3,8 +3,6 @@ platform :ios, '8.1'
 xcodeproj 'Q-municate.xcodeproj'
 source 'https://github.com/CocoaPods/Specs.git'
 
-
-
 target 'Q-municate' do
     
     pod 'UIDevice-Hardware', '~> 0.1.3'
@@ -41,4 +39,19 @@ target 'Q-municate' do
     
 end
 
+target 'QMSiriExtension' do
+    inhibit_all_warnings!
+    pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :commit => '2c038f614c1816a67d3ec4598fabab79259b0777'
+    pod 'QuickBlox-static'
+end
 
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        case target.name
+            when 'Bolts'
+            target.build_configurations.each do |config|
+                config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'NO'
+            end
+        end
+    end
+end

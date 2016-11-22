@@ -13,6 +13,10 @@
 #import <Quickblox/Quickblox.h>
 #import <QuickbloxWebRTC/QuickbloxWebRTC.h>
 
+#import <QMServices.h>
+
+static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
+
 @import SiriHelper;
 
 // As an example, this class is set up to handle Message intents.
@@ -39,8 +43,11 @@
 
 #pragma mark - INSendMessageIntentHandling
 
-// Implement resolution methods to provide additional information about your intent (optional).
+// Implement resolution methods to provide additional information about your intent (optiБЮonal).
 - (void)resolveRecipientsForSendMessage:(INSendMessageIntent *)intent withCompletion:(void (^)(NSArray<INPersonResolutionResult *> *resolutionResults))completion {
+    
+    NSLog(@"All users %@",[QMServicesManager instance].usersService.usersMemoryStorage.unsortedUsers);
+
     NSArray<INPerson *> *recipients = intent.recipients;
     // If no recipients were provided we'll need to prompt for a value.
     if (recipients.count == 0) {

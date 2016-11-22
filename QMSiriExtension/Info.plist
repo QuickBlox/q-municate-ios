@@ -29,13 +29,12 @@
 			<key>IntentsSupported</key>
 			<array>
 				<string>INSendMessageIntent</string>
-				<string>INSearchForMessagesIntent</string>
 			</array>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.intents-service</string>
 		<key>NSExtensionPrincipalClass</key>
-		<string>QMIntentHandler</string>
+		<string>IntentHandler</string>
 	</dict>
 </dict>
 </plist>

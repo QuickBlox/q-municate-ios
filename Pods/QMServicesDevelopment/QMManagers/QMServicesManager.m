@@ -217,20 +217,20 @@
 
 - (void)chatServiceChatDidConnect:(QMChatService *)chatService {
     
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+ //   [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
     [self joinAllGroupDialogsIfNeededWithCompletion:^{
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+ //       [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     }];
 }
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)chatService {
     
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+ //   [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
     [self joinAllGroupDialogsIfNeededWithCompletion:^{
         
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+  //      [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     }];
 }
 
