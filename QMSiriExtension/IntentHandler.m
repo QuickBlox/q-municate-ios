@@ -83,6 +83,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
             dispatch_group_leave(matchingContactsGroup);
         }];
     }
+    
     dispatch_group_notify(matchingContactsGroup, dispatch_get_main_queue(), ^{
         completion(resolutionResults);
     });
@@ -91,6 +92,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 - (void)resolveContentForSendMessage:(INSendMessageIntent *)intent withCompletion:(void (^)(INStringResolutionResult *resolutionResult))completion {
     NSString *text = intent.content;
+    
     if (text && ![text isEqualToString:@""]) {
         completion([INStringResolutionResult successWithResolvedString:text]);
     } else {
@@ -112,7 +114,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
         response = [[INSendMessageIntentResponse alloc] initWithCode:INSendMessageIntentResponseCodeReady userActivity:userActivity];
     }
     else {
-        userActivity.userInfo = @{@"Error":@"user should be loginned"};
+        userActivity.userInfo = @{@"Error" : @"No user"};
         response = [[INSendMessageIntentResponse alloc] initWithCode:INSendMessageIntentResponseCodeFailureRequiringAppLaunch userActivity:userActivity];
     }
     
@@ -124,17 +126,16 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 - (void)handleSendMessage:(INSendMessageIntent *)intent completion:(void (^)(INSendMessageIntentResponse *response))completion {
     // Implement your application logic to send a message here.
     
-    
     NSString *recipientID = [intent.recipients firstObject].contactIdentifier;
     
-    void(^messageSendingBlock)(NSString *) = ^(NSString *dialogID) {
+    void(^messageSendingBlock)(NSString *) = ^(NSString *dialogID){
         
         NSUserActivity *userActivity = [[NSUserActivity alloc] initWithActivityType:NSStringFromClass([INSendMessageIntent class])];
         
         if (dialogID != nil) {
             
             NSUInteger senderID = [[QBSession currentSession] currentUser].ID;
-            
+    
             QBChatMessage *message = [QBChatMessage message];
             message.text = intent.content;
             message.senderID = senderID;
