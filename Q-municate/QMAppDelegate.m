@@ -219,7 +219,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
             return;
         }
         
-        NSString *dialogID = userInfo[kQMPushNotificationDialogIDKey];
+      //  NSString *dialogID = userInfo[kQMPushNotificationDialogIDKey];
         
         __block UIBackgroundTaskIdentifier task = [application beginBackgroundTaskWithExpirationHandler:^{
             
