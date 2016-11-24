@@ -10,7 +10,7 @@
 #import "QMCDRecordLogging.h"
 
 NSString * const QMCDRecordShouldDeletePersistentStoreOnModelMismatchKey = @"QMCDRecordShouldDeletePersistentStoreOnModelMistachKey";
-
+NSString * const QMCDRecordShouldDeletePersistentStoreOnModelMismatchKey = @"QMCDRecordShouldDeletePersistentStoreOnModelMistachKey";
 @implementation NSPersistentStoreCoordinator (QMCDRecord)
 
 + (void) QM_createPathToStoreFileIfNeccessary:(NSURL *)urlForStore
