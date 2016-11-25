@@ -8,6 +8,7 @@
 
 #import <QMServices.h>
 
+@class INPerson;
 
 @interface QMSiriHelper : QMServicesManager <
 QMContactListServiceCacheDataSource,
@@ -18,12 +19,8 @@ QMContactListServiceDelegate
  */
 @property (strong, nonatomic, readonly) QMContactListService *contactListService;
 
-- (void)contactsMatchingName:(NSString *)displayName withCompletionBlock:(void (^)(NSArray *matchingContacts))completion;
-
-- (NSArray *)personsArrayFromUsersArray:(NSArray *)usersArray;
+- (void)contactsMatchingName:(NSString *)displayName withCompletionBlock:(void (^)(NSArray<INPerson*> *matchingContacts))completion;
 
 - (void)dialogIDForUserWithID:(NSInteger)userID withCompletion:(void(^)(NSString *dialogID))completion;
-
-- (void)createPrivateChatWithOpponentID:(NSUInteger)opponentID completion:(void(^)( QBChatDialog *createdDialog))completion;
 
 @end

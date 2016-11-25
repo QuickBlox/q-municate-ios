@@ -14,6 +14,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 
 @implementation QMSiriHelper
 
+//MARK: - Initialization
 + (instancetype)instance {
     
     static QMSiriHelper *siriHelperInstance = nil;
@@ -39,14 +40,14 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     return self;
 }
 
-#pragma mark QMContactListServiceCacheDelegate delegate
+//MARK: - QMContactListServiceCacheDelegate delegate
 
 - (void)cachedContactListItems:(QMCacheCollection)block {
     
     [[QMContactListCache instance] contactListItems:block];
 }
 
-#pragma mark - QMContactListServiceDelegate
+//MARK: - QMContactListServiceDelegate
 
 - (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)contactList {
     
@@ -56,39 +57,15 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     [self.usersService getUsersWithIDs:[self.contactListService.contactListMemoryStorage userIDsFromContactList]];
 }
 
-- (void)getAllUsersNamesWithCompletion:(void(^)(NSArray* results,NSError * error))completion {
-    
-    NSMutableArray *userIDs = [NSMutableArray array];
-    dispatch_group_t group = dispatch_group_create();
-    
-    dispatch_group_enter(group);
-    [[QMContactListCache instance] contactListItems:^(NSArray<QBContactListItem *> * _Nonnull contactListItems) {
-        
-        for (QBContactListItem *item in contactListItems) {
-            [userIDs addObject:@(item.userID)];
-        }
-        dispatch_group_leave(group);
-    }];
-    
-    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-        
-        [[self.usersService getUsersWithIDs:userIDs] continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
-            if (t.faulted) {
-                completion(nil,t.error);
-            }
-            else {
-                completion(t.result,nil);
-            }
-            return nil;
-        }];
-    });
-}
+//MARK: Matching contacts
 
-- (void)contactsMatchingName:(NSString *)displayName withCompletionBlock:(void (^)(NSArray *matchingContacts))completion {
+
+- (void)contactsMatchingName:(NSString *)displayName withCompletionBlock:(void (^)(NSArray<INPerson*> *matchingContacts))completion {
     
     [self getAllUsersNamesWithCompletion:^(NSArray *results, NSError *error) {
         
-        NSMutableArray *contacts = [NSMutableArray arrayWithCapacity:results.count];;
+        NSMutableArray *contacts = [NSMutableArray arrayWithCapacity:results.count];
+        
         for (QBUUser *user in results) {
             if ([user.fullName containsString:displayName]) {
                 [contacts addObject:user];
@@ -100,22 +77,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     }];
 }
 
-- (NSArray *)personsArrayFromUsersArray:(NSArray *)usersArray {
-    NSMutableArray <INPerson*> *personsArray = [NSMutableArray arrayWithCapacity:usersArray.count];
-    
-    for (QBUUser *user in usersArray) {
-        INPersonHandle *handle = [[INPersonHandle alloc] initWithValue:user.login type:INPersonHandleTypeUnknown];
-        INPerson *person = [[INPerson alloc] initWithPersonHandle:handle
-                                                   nameComponents:nil
-                                                      displayName:user.fullName
-                                                            image:nil
-                                                contactIdentifier:[NSString stringWithFormat:@"%lu",(unsigned long)user.ID]
-                                                 customIdentifier:nil];
-        [personsArray addObject:person];
-    }
-    
-    return personsArray;
-}
+//MARK: Dialog retrieving
 
 - (void)dialogIDForUserWithID:(NSInteger)userID withCompletion:(void(^)(NSString *dialogID))completion {
     
@@ -141,6 +103,58 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
             }];
         }
     }];
+}
+
+
+//MARK: - Helpers
+
+- (void)getAllUsersNamesWithCompletion:(void(^)(NSArray* results,NSError * error))completion {
+    
+    NSMutableArray *userIDs = [NSMutableArray array];
+    dispatch_group_t group = dispatch_group_create();
+    
+    dispatch_group_enter(group);
+    [[QMContactListCache instance] contactListItems:^(NSArray<QBContactListItem *> * _Nonnull contactListItems) {
+        
+        for (QBContactListItem *item in contactListItems) {
+            if (item.subscriptionState != QBPresenceSubscriptionStateNone) {
+                [userIDs addObject:@(item.userID)];
+            }
+        }
+        
+        dispatch_group_leave(group);
+    }];
+    
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        
+        [[self.usersService getUsersWithIDs:userIDs] continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
+            if (t.faulted) {
+                completion(nil,t.error);
+            }
+            else {
+                completion(t.result,nil);
+            }
+            return nil;
+        }];
+    });
+}
+
+- (NSArray *)personsArrayFromUsersArray:(NSArray *)usersArray {
+    
+    NSMutableArray<INPerson*> *personsArray = [NSMutableArray arrayWithCapacity:usersArray.count];
+    
+    for (QBUUser *user in usersArray) {
+        INPersonHandle *handle = [[INPersonHandle alloc] initWithValue:user.login type:INPersonHandleTypeUnknown];
+        INPerson *person = [[INPerson alloc] initWithPersonHandle:handle
+                                                   nameComponents:nil
+                                                      displayName:user.fullName
+                                                            image:nil
+                                                contactIdentifier:[NSString stringWithFormat:@"%lu",(unsigned long)user.ID]
+                                                 customIdentifier:nil];
+        [personsArray addObject:person];
+    }
+    
+    return personsArray;
 }
 
 - (void)createPrivateChatWithOpponentID:(NSUInteger)opponentID completion:(void(^)( QBChatDialog *createdDialog))completion {
