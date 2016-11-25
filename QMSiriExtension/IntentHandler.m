@@ -33,7 +33,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBSettings setLogLevel:QBLogLevelNothing];
     
     if ([intent isKindOfClass:[INSendMessageIntent class]]) {
-        return [QMMessageIntentHandler class];
+        return [QMMessageIntentHandler new];
     }
     return nil;
 }
