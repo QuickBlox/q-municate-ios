@@ -98,13 +98,14 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
     [Flurry logEvent:@"connect_to_chat" withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", kQMApplicationID],
                                                          @"chat_endpoint" : [QBSettings chatEndpoint]}];
+    
     // Sirri supported in ios 10 +
     if (iosMajorVersion() > 9) {
         [INPreferences requestSiriAuthorization:^(INSiriAuthorizationStatus status) {
-            NSLog(@"INSiriAuthorizationStatus %ld",(long)status);
+            ILog(@"INSiriAuthorizationStatus %ld",(long)status);
         }];
     }
-    
+
     // Handling push notifications if needed
     if (launchOptions != nil) {
         
@@ -202,33 +203,33 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QMCore instance].pushNotificationManager.deviceToken = deviceToken;
 }
 
-- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo withResponseInfo:(NSDictionary *)responseInfo completionHandler:(void (^)())completionHandler {
-    return;
-    if ([identifier isEqualToString:kQMNotificationActionTextAction]) {
-        
-        NSString *text = responseInfo[UIUserNotificationActionResponseTypedTextKey];
-        
-        NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
-        if ([text stringByTrimmingCharactersInSet:whiteSpaceSet].length == 0) {
-            // do not send message that contains only of spaces
-            if (completionHandler) {
-                
-                completionHandler();
-            }
-            
-            return;
-        }
-        
-      //  NSString *dialogID = userInfo[kQMPushNotificationDialogIDKey];
-        
-        __block UIBackgroundTaskIdentifier task = [application beginBackgroundTaskWithExpirationHandler:^{
-            
-            [application endBackgroundTask:task];
-            task = UIBackgroundTaskInvalid;
-        }];
-        
-        // Do the work associated with the task.
-        ILog(@"Started background task timeremaining = %f", [application backgroundTimeRemaining]);
+//- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo withResponseInfo:(NSDictionary *)responseInfo completionHandler:(void (^)())completionHandler {
+
+//    if ([identifier isEqualToString:kQMNotificationActionTextAction]) {
+//        
+//        NSString *text = responseInfo[UIUserNotificationActionResponseTypedTextKey];
+//        
+//        NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
+//        if ([text stringByTrimmingCharactersInSet:whiteSpaceSet].length == 0) {
+//            // do not send message that contains only of spaces
+//            if (completionHandler) {
+//                
+//                completionHandler();
+//            }
+//            
+//            return;
+//        }
+//        
+//        NSString *dialogID = userInfo[kQMPushNotificationDialogIDKey];
+//        
+//        __block UIBackgroundTaskIdentifier task = [application beginBackgroundTaskWithExpirationHandler:^{
+//            
+//            [application endBackgroundTask:task];
+//            task = UIBackgroundTaskInvalid;
+//        }];
+//        
+//        // Do the work associated with the task.
+//        ILog(@"Started background task timeremaining = %f", [application backgroundTimeRemaining]);
 //        
 //        [[[QMCore instance].chatService fetchDialogWithID:dialogID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
 //            
@@ -265,13 +266,13 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 //            
 //            return nil;
 //        }];
-    }
-    
-    if (completionHandler) {
-        
-        completionHandler();
-    }
-}
+//    }
+//    
+//    if (completionHandler) {
+//        
+//        completionHandler();
+//    }
+//}
 
 #pragma mark - QMPushNotificationManagerDelegate protocol
 
