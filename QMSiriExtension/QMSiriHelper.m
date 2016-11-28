@@ -32,7 +32,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     
     if (self) {
         // Contact list service init
-        [QMContactListCache setupDBWithStoreNamed:kQMContactListCacheNameKey];
+        [QMContactListCache setupDBWithStoreNamed:kQMContactListCacheNameKey applicationGroupIdentifier:[self appGroupIdentifier]];
         _contactListService = [[QMContactListService alloc] initWithServiceManager:self cacheDataSource:self];
         [_contactListService addDelegate:self];
         
@@ -105,6 +105,10 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     }];
 }
 
+//MARK: - QMServiceManagerProtocol
+- (NSString *)appGroupIdentifier {
+    return @"group.com.quickblox.qmunicate";
+}
 
 //MARK: - Helpers
 
