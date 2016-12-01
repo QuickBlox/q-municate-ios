@@ -1,1 +1,0 @@
-../../../../QuickBlox-static/Quickblox.framework/Versions/A/Headers/QBLocationDefinitions.h
