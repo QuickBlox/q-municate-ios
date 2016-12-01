@@ -11,6 +11,9 @@
 #import <Intents/Intents.h>
 #import <QMServices.h>
 #import "QMSiriHelper.h"
+#define kKeychainShareGroup @"8885H5G2YX.com.quickblox.qmunicate"
+
+#import "Keychain.h"
 
 
 @interface QMMessageIntentHandler() <INSendMessageIntentHandling>
@@ -24,10 +27,20 @@
 // Implementation of  resolution methods to provide additional information about your intent
 - (void)resolveRecipientsForSendMessage:(INSendMessageIntent *)intent withCompletion:(void (^)(NSArray<INPersonResolutionResult *> *resolutionResults))completion {
     
+
+    
     QBUUser *user = [[QBSession currentSession] currentUser];
     
     if (user == nil) {
-        completion(@[[INPersonResolutionResult notRequired]]);
+        INPersonHandle *handle = [[INPersonHandle alloc] initWithValue:@"no user" type:INPersonHandleTypeUnknown];
+        INPerson *person = [[INPerson alloc] initWithPersonHandle:handle
+                                                   nameComponents:nil
+                                                      displayName:@"no user"
+                                                            image:nil
+                                                contactIdentifier:[NSString stringWithFormat:@"%lu",(unsigned long)user.ID]
+                                                 customIdentifier:nil];
+
+        completion(@[[INPersonResolutionResult successWithResolvedPerson:person]]);
         return;
     }
     
