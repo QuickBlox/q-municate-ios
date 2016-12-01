@@ -13,8 +13,6 @@
 #import "QMSiriHelper.h"
 #define kKeychainShareGroup @"8885H5G2YX.com.quickblox.qmunicate"
 
-#import "Keychain.h"
-
 
 @interface QMMessageIntentHandler() <INSendMessageIntentHandling>
 
@@ -22,26 +20,44 @@
 
 @implementation QMMessageIntentHandler
 
+- (NSString *)bundleSeedID {
+    NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
+                           (__bridge NSString *)kSecClassGenericPassword, (__bridge NSString *)kSecClass,
+                           @"bundleSeedID", kSecAttrAccount,
+                           @"", kSecAttrService,
+                           (id)kCFBooleanTrue, kSecReturnAttributes,
+                           nil];
+    CFDictionaryRef result = nil;
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
+    if (status == errSecItemNotFound)
+        status = SecItemAdd((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
+    if (status != errSecSuccess)
+        return nil;
+    NSString *accessGroup = [(__bridge NSDictionary *)result objectForKey:(__bridge NSString *)kSecAttrAccessGroup];
+    CFRelease(result);
+    return accessGroup;
+}
 //MARK: - INSendMessageIntentHandling
 
 // Implementation of  resolution methods to provide additional information about your intent
 - (void)resolveRecipientsForSendMessage:(INSendMessageIntent *)intent withCompletion:(void (^)(NSArray<INPersonResolutionResult *> *resolutionResults))completion {
     
-
+    NSLog(@"SIRI: bundleSeedID = %@", [self bundleSeedID]);
     
-    QBUUser *user = [[QBSession currentSession] currentUser];
-    
+    QBUUser *user = [QMSiriHelper instance].currentUser;
+    NSLog(@"EDITED SIRI USER INFROMATION = %@",user);
     if (user == nil) {
-        INPersonHandle *handle = [[INPersonHandle alloc] initWithValue:@"no user" type:INPersonHandleTypeUnknown];
-        INPerson *person = [[INPerson alloc] initWithPersonHandle:handle
-                                                   nameComponents:nil
-                                                      displayName:@"no user"
-                                                            image:nil
-                                                contactIdentifier:[NSString stringWithFormat:@"%lu",(unsigned long)user.ID]
-                                                 customIdentifier:nil];
-
-        completion(@[[INPersonResolutionResult successWithResolvedPerson:person]]);
-        return;
+//        INPersonHandle *handle = [[INPersonHandle alloc] initWithValue:@"no user" type:INPersonHandleTypeUnknown];
+//        INPerson *person = [[INPerson alloc] initWithPersonHandle:handle
+//                                                   nameComponents:nil
+//                                                      displayName:@"no user"
+//                                                            image:nil
+//                                                contactIdentifier:[NSString stringWithFormat:@"%lu",(unsigned long)user.ID]
+//                                                 customIdentifier:nil];
+//
+//        completion(@[[INPersonResolutionResult successWithResolvedPerson:person]]);
+//        return;
+        NSLog(@"SIRI No User");
     }
     
     NSArray<INPerson *> *recipients = intent.recipients;
@@ -63,7 +79,7 @@
         dispatch_group_enter(matchingContactsGroup);
         
         [[QMSiriHelper instance] contactsMatchingName:recipient.displayName withCompletionBlock:^(NSArray *matchingContacts) {
-            
+            NSLog(@"SIRI matchingContacts = %@",matchingContacts);
             if (matchingContacts.count > 1) {
                 // We need Siri's help to ask user to pick one from the matches.
                 [resolutionResults addObject:[INPersonResolutionResult disambiguationWithPeopleToDisambiguate:matchingContacts]];

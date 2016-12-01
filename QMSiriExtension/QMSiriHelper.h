@@ -10,14 +10,11 @@
 
 @class INPerson;
 
-@interface QMSiriHelper : QMServicesManager <
-QMContactListServiceCacheDataSource,
-QMContactListServiceDelegate
->
-/**
- *  Contact list service.
- */
-@property (strong, nonatomic, readonly) QMContactListService *contactListService;
+@interface QMSiriHelper : NSObject
+
+@property (strong, nonatomic, readonly) QBUUser *currentUser;
+
++ (instancetype)instance;
 
 - (void)contactsMatchingName:(NSString *)displayName withCompletionBlock:(void (^)(NSArray<INPerson*> *matchingContacts))completion;
 

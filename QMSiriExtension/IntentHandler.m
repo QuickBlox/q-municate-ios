@@ -12,10 +12,7 @@
 
 #import "QMMessageIntentHandler.h"
 
-static const NSUInteger kQMApplicationID = 36125;
-static NSString * const kQMAuthorizationKey = @"gOGVNO4L9cBwkPE";
-static NSString * const kQMAuthorizationSecret = @"JdqsMHCjHVYkVxV";
-static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
+
 
 @interface IntentHandler ()
 
@@ -25,12 +22,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 - (id)handlerForIntent:(INIntent *)intent {
     
-    // Quickblox settings
-    [QBSettings setApplicationID:kQMApplicationID];
-    [QBSettings setAuthKey:kQMAuthorizationKey];
-    [QBSettings setAuthSecret:kQMAuthorizationSecret];
-    [QBSettings setAccountKey:kQMAccountKey];
-    [QBSettings setLogLevel:QBLogLevelNothing];
+
     
     if ([intent isKindOfClass:[INSendMessageIntent class]]) {
         return [QMMessageIntentHandler new];
