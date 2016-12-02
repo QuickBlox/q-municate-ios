@@ -21,7 +21,7 @@
 
 static NSString * const kQMNotificationActionTextAction = @"TEXT_ACTION";
 static NSString * const kQMNotificationCategoryReply = @"TEXT_REPLY";
-
+static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate";
 #define DEVELOPMENT 1
 
 #if DEVELOPMENT == 0
@@ -57,11 +57,12 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBSettings setAuthKey:kQMAuthorizationKey];
     [QBSettings setAuthSecret:kQMAuthorizationSecret];
     [QBSettings setAccountKey:kQMAccountKey];
+    [QBSettings setApplicationGroupIdentifier:kQMAppGroupIdentifier];
     
     [QBSettings setAutoReconnectEnabled:YES];
     [QBSettings setCarbonsEnabled:YES];
     
-#if DEVELOPMENT == 0
+#if DEVELOPMENT == 1
     [QBSettings setLogLevel:QBLogLevelNothing];
     [QBSettings disableXMPPLogging];
     [QMServicesManager enableLogging:NO];
