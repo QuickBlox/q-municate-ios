@@ -11,11 +11,12 @@
 #import "QMFacebook.h"
 #import "QMNotification.h"
 #import "QMTasks.h"
-//#import <DigitsKit/DigitsKit.h>
 #import <SVProgressHUD.h>
 #import <SDWebImageManager.h>
 #import "QMCallManager.h"
 #import "QMCallManager.h"
+#import <Intents/Intents.h>
+
 static NSString *const kQMLastActivityDateKey = @"last_activity_date";
 static NSString *const kQMErrorKey = @"errors";
 static NSString *const kQMBaseErrorKey = @"base";
@@ -65,6 +66,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         
         // Reachability init
         [self configureReachability];
+        [self.chatService addDelegate:self];
     }
     
     return self;
@@ -289,6 +291,31 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 - (void)cachedContactListItems:(QMCacheCollection)block {
     
     [[QMContactListCache instance] contactListItems:block];
+}
+
+#pragma mark - QMChatServiceDelegate
+
+- (void)chatService:(QMChatService *)__unused chatService didAddChatDialogsToMemoryStorage:(NSArray *)chatDialogs {
+    
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog*  _Nullable dialog, NSDictionary<NSString *,id> *__unused _Nullable bindings) {
+        return dialog.type == QBChatDialogTypeGroup && [dialog.occupantIDs containsObject:@(self.currentUser.ID)];
+    }];
+    
+    NSArray *groupDialogNames = [[chatDialogs filteredArrayUsingPredicate:predicate] valueForKey:@"name"];
+    
+    INVocabulary *vocabulary = [INVocabulary sharedVocabulary];
+    NSOrderedSet *dialogsSet = [NSOrderedSet orderedSetWithArray:groupDialogNames];
+    [vocabulary setVocabularyStrings:dialogsSet
+                              ofType:INVocabularyStringTypeContactGroupName];
+}
+
+- (void)chatService:(QMChatService *)__unused chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)__unused chatDialog {
+    
+}
+
+- (void)chatService:(QMChatService *)__unused chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)__unused chatDialogID {
+    
+    
 }
 
 #pragma mark - QMContactListServiceDelegate
