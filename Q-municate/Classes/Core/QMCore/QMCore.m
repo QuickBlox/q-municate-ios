@@ -303,6 +303,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     
     NSArray *groupDialogNames = [[chatDialogs filteredArrayUsingPredicate:predicate] valueForKey:@"name"];
     
+    //setting group dialogs' names for SIRI support
     INVocabulary *vocabulary = [INVocabulary sharedVocabulary];
     NSOrderedSet *dialogsSet = [NSOrderedSet orderedSetWithArray:groupDialogNames];
     [vocabulary setVocabularyStrings:dialogsSet
@@ -326,6 +327,13 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     
     // load users if needed
     [self.usersService getUsersWithIDs:[self.contactListService.contactListMemoryStorage userIDsFromContactList]];
+    
+    NSArray *friendNames = [[self.contactManager friends] valueForKey:@"fullName"];
+    //setting contacts names for SIRI support
+    INVocabulary *vocabulary = [INVocabulary sharedVocabulary];
+    NSOrderedSet *friendNamesSet = [NSOrderedSet orderedSetWithArray:friendNames];
+    [vocabulary setVocabularyStrings:friendNamesSet
+                              ofType:INVocabularyStringTypeContactName];
 }
 
 #pragma mark - Helpers
