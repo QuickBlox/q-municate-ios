@@ -11,8 +11,6 @@
 #import <Intents/Intents.h>
 #import <QMServices.h>
 #import "QMSiriHelper.h"
-#define kKeychainShareGroup @"8885H5G2YX.com.quickblox.qmunicate"
-
 
 @interface QMMessageIntentHandler() <INSendMessageIntentHandling>
 
@@ -20,84 +18,74 @@
 
 @implementation QMMessageIntentHandler
 
-- (NSString *)bundleSeedID {
-    NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
-                           (__bridge NSString *)kSecClassGenericPassword, (__bridge NSString *)kSecClass,
-                           @"bundleSeedID", kSecAttrAccount,
-                           @"", kSecAttrService,
-                           (id)kCFBooleanTrue, kSecReturnAttributes,
-                           nil];
-    CFDictionaryRef result = nil;
-    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
-    if (status == errSecItemNotFound)
-        status = SecItemAdd((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
-    if (status != errSecSuccess)
-        return nil;
-    NSString *accessGroup = [(__bridge NSDictionary *)result objectForKey:(__bridge NSString *)kSecAttrAccessGroup];
-    CFRelease(result);
-    return accessGroup;
-}
 //MARK: - INSendMessageIntentHandling
 
-// Implementation of  resolution methods to provide additional information about your intent
+// Implementation of resolution methods to provide additional information about the intent
 - (void)resolveRecipientsForSendMessage:(INSendMessageIntent *)intent withCompletion:(void (^)(NSArray<INPersonResolutionResult *> *resolutionResults))completion {
     
-    NSLog(@"SIRI: bundleSeedID = %@", [self bundleSeedID]);
-    
     QBUUser *user = [QMSiriHelper instance].currentUser;
-    NSLog(@"EDITED SIRI USER INFROMATION = %@",user);
+    
     if (user == nil) {
-//        INPersonHandle *handle = [[INPersonHandle alloc] initWithValue:@"no user" type:INPersonHandleTypeUnknown];
-//        INPerson *person = [[INPerson alloc] initWithPersonHandle:handle
-//                                                   nameComponents:nil
-//                                                      displayName:@"no user"
-//                                                            image:nil
-//                                                contactIdentifier:[NSString stringWithFormat:@"%lu",(unsigned long)user.ID]
-//                                                 customIdentifier:nil];
-//
-//        completion(@[[INPersonResolutionResult successWithResolvedPerson:person]]);
-//        return;
-        NSLog(@"SIRI No User");
-    }
-    
-    NSArray<INPerson *> *recipients = intent.recipients;
-    
-    // If no recipients were provided we'll need to prompt for a value.
-    
-    if (recipients.count == 0) {
-        completion(@[[INPersonResolutionResult needsValue]]);
+        completion(@[[INPersonResolutionResult unsupported]]);
         return;
     }
     
-    // Implement your contact matching logic here to create an array of matching contacts
-    
-    NSMutableArray<INPersonResolutionResult *> *resolutionResults = [NSMutableArray array];
-    dispatch_group_t matchingContactsGroup = dispatch_group_create();
-    
-    for (INPerson *recipient in recipients) {
-        
-        dispatch_group_enter(matchingContactsGroup);
-        
-        [[QMSiriHelper instance] contactsMatchingName:recipient.displayName withCompletionBlock:^(NSArray *matchingContacts) {
-            NSLog(@"SIRI matchingContacts = %@",matchingContacts);
-            if (matchingContacts.count > 1) {
-                // We need Siri's help to ask user to pick one from the matches.
-                [resolutionResults addObject:[INPersonResolutionResult disambiguationWithPeopleToDisambiguate:matchingContacts]];
-                
-            } else if (matchingContacts.count == 1) {
-                // We have exactly one matching contact
-                [resolutionResults addObject:[INPersonResolutionResult successWithResolvedPerson:matchingContacts.firstObject]];
-            } else {
-                // We have no contacts matching the description provided
-                [resolutionResults addObject:[INPersonResolutionResult unsupported]];
+    if (intent.groupName.length) {
+        [[QMSiriHelper instance] groupDialogWithName:intent.groupName completionBlock:^(QBChatDialog *dialog) {
+            
+            if (dialog != nil) {
+                completion(@[[INPersonResolutionResult notRequired]]);
+                return;
             }
-            dispatch_group_leave(matchingContactsGroup);
+            else {
+                completion(@[[INPersonResolutionResult unsupported]]);
+                return;
+            }
         }];
+        
     }
-    
-    dispatch_group_notify(matchingContactsGroup, dispatch_get_main_queue(), ^{
-        completion(resolutionResults);
-    });
+    else {
+        
+        NSArray<INPerson *> *recipients = intent.recipients;
+        // If no recipients were provided we'll need to prompt for a value.
+        if (recipients.count == 0) {
+            completion(@[[INPersonResolutionResult needsValue]]);
+            return;
+        }
+        
+        // Implementation of the contact matching logic for creating an array of matching contacts
+        
+        NSMutableArray<INPersonResolutionResult *> *resolutionResults = [NSMutableArray array];
+        
+        dispatch_group_t matchingContactsGroup = dispatch_group_create();
+        
+        for (INPerson *recipient in recipients) {
+            
+            dispatch_group_enter(matchingContactsGroup);
+            
+            [[QMSiriHelper instance] contactsMatchingName:recipient.displayName completionBlock:^(NSArray *matchingContacts) {
+                
+                if (matchingContacts.count > 1) {
+                    // We need Siri's help to ask user to pick one from the matches.
+                    [resolutionResults addObject:[INPersonResolutionResult disambiguationWithPeopleToDisambiguate:matchingContacts]];
+                    
+                }
+                else if (matchingContacts.count == 1) {
+                    // We have exactly one matching contact
+                    [resolutionResults addObject:[INPersonResolutionResult successWithResolvedPerson:matchingContacts.firstObject]];
+                }
+                else {
+                    // We have no contacts matching the description provided
+                    [resolutionResults addObject:[INPersonResolutionResult unsupported]];
+                }
+                dispatch_group_leave(matchingContactsGroup);
+            }];
+        }
+        
+        dispatch_group_notify(matchingContactsGroup, dispatch_get_main_queue(), ^{
+            completion(resolutionResults);
+        });
+    }
 }
 
 - (void)resolveContentForSendMessage:(INSendMessageIntent *)intent withCompletion:(void (^)(INStringResolutionResult *resolutionResult))completion {
@@ -112,19 +100,20 @@
 }
 
 - (void)confirmSendMessage:(INSendMessageIntent *)intent completion:(void (^)(INSendMessageIntentResponse *response))completion {
-    // Verify user is authenticated and your app is ready to send a message.
     
+    // Verify user is authenticated and the app is ready to send a message.
     NSUserActivity *userActivity = [[NSUserActivity alloc] initWithActivityType:NSStringFromClass([INSendMessageIntent class])];
-    QBUUser *user = [[QBSession currentSession] currentUser];
-    
+    QBUUser *user = [[QMSiriHelper instance] currentUser];
     INSendMessageIntentResponse *response;
     
     if (user != nil) {
-        response = [[INSendMessageIntentResponse alloc] initWithCode:INSendMessageIntentResponseCodeReady userActivity:userActivity];
+        response = [[INSendMessageIntentResponse alloc] initWithCode:INSendMessageIntentResponseCodeReady
+                                                        userActivity:userActivity];
     }
     else {
         userActivity.userInfo = @{@"Error" : @"No user"};
-        response = [[INSendMessageIntentResponse alloc] initWithCode:INSendMessageIntentResponseCodeFailureRequiringAppLaunch userActivity:userActivity];
+        response = [[INSendMessageIntentResponse alloc] initWithCode:INSendMessageIntentResponseCodeFailureRequiringAppLaunch
+                                                        userActivity:userActivity];
     }
     
     completion(response);
@@ -134,18 +123,13 @@
 
 - (void)handleSendMessage:(INSendMessageIntent *)intent completion:(void (^)(INSendMessageIntentResponse *response))completion {
     
-    // Implement your application logic to send a message here.
-    
-    NSString *recipientID = [intent.recipients firstObject].contactIdentifier;
-    
     void(^messageSendingBlock)(NSString *) = ^(NSString *dialogID){
         
         NSUserActivity *userActivity = [[NSUserActivity alloc] initWithActivityType:NSStringFromClass([INSendMessageIntent class])];
         
         if (dialogID != nil) {
             
-            NSUInteger senderID = [[QBSession currentSession] currentUser].ID;
-            
+            NSUInteger senderID = [QMSiriHelper instance].currentUser.ID;
             QBChatMessage *message = [QBChatMessage message];
             message.text = intent.content;
             message.senderID = senderID;
@@ -156,20 +140,40 @@
             message.dateSent = [NSDate date];
             
             [QBRequest sendMessage:message successBlock:^(QBResponse * _Nonnull response, QBChatMessage * _Nonnull createdMessage) {
-                INSendMessageIntentResponse *successResponse = [[INSendMessageIntentResponse alloc] initWithCode:INSendMessageIntentResponseCodeSuccess userActivity:userActivity];
+                
+                INSendMessageIntentResponse *successResponse = [[INSendMessageIntentResponse alloc] initWithCode:INSendMessageIntentResponseCodeSuccess
+                                                                                                    userActivity:userActivity];
                 completion(successResponse);
+                
             } errorBlock:^(QBResponse * _Nonnull response) {
-                INSendMessageIntentResponse *errorResponse = [[INSendMessageIntentResponse alloc] initWithCode:INSendMessageIntentResponseCodeFailure userActivity:userActivity];
+                
+                userActivity.userInfo = @{@"Error" : response.error.error.localizedDescription ?: @"Request error"};
+                INSendMessageIntentResponse *errorResponse = [[INSendMessageIntentResponse alloc] initWithCode:INSendMessageIntentResponseCodeFailure
+                                                                                                  userActivity:userActivity];
                 completion(errorResponse);
             }];
         }
         else {
-            INSendMessageIntentResponse *errorResponse = [[INSendMessageIntentResponse alloc] initWithCode:INSendMessageIntentResponseCodeFailure userActivity:userActivity];
+            userActivity.userInfo = @{@"Error" : @"No dialog"};
+            INSendMessageIntentResponse *errorResponse = [[INSendMessageIntentResponse alloc] initWithCode:INSendMessageIntentResponseCodeFailure
+                                                                                              userActivity:userActivity];
             completion(errorResponse);
         }
     };
     
-    [[QMSiriHelper instance] dialogIDForUserWithID:recipientID.integerValue withCompletion:messageSendingBlock];
+    // Implementation of the application logic for sending a message.
+    if (intent.groupName.length) {
+        [[QMSiriHelper instance] groupDialogWithName:intent.groupName completionBlock:^(QBChatDialog *dialog) {
+            if (dialog != nil) {
+                messageSendingBlock(dialog.ID);
+            }
+        }];
+    }
+    else {
+        
+        NSString *recipientID = [intent.recipients firstObject].contactIdentifier;
+        [[QMSiriHelper instance] dialogIDForUserWithID:recipientID.integerValue completionBlock:messageSendingBlock];
+    }
 }
 
 @end
