@@ -13,7 +13,9 @@
 static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 
 - (instancetype)init {
+    
     self = [super init];
+    
     if (self) {
         // Contact list service init
         [QMContactListCache setupDBWithStoreNamed:kQMContactListCacheNameKey applicationGroupIdentifier:[self appGroupIdentifier]];
@@ -24,7 +26,24 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 }
 
 //MARK: - Public Methods
-- (void)getAllUsersNamesWithCompletion:(void(^)(NSArray *results,NSError * error))completion {
+
+- (void)groupDialogWithName:(NSString *)name completionBlock:(void(^)(QBChatDialog *dialog))completion {
+    
+    [[QMChatCache instance] allDialogsWithCompletion:^(NSArray <QBChatDialog *> * _Nullable dialogs) {
+        
+        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog*  _Nullable dialog, NSDictionary<NSString *,id> * _Nullable bindings) {
+            return dialog.type == QBChatDialogTypeGroup && [dialog.name caseInsensitiveCompare:name] == NSOrderedSame;
+        }];
+        
+        QBChatDialog *dialog = [[dialogs filteredArrayUsingPredicate:predicate] firstObject];
+        
+        if (completion) {
+            completion(dialog);
+        }
+    }];
+}
+
+- (void)allContactsWithCompletionBlock:(void(^)(NSArray *results, NSError *error))completion {
     
     NSMutableArray *userIDs = [NSMutableArray array];
     dispatch_group_t group = dispatch_group_create();
@@ -37,7 +56,6 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
                 [userIDs addObject:@(item.userID)];
             }
         }
-        
         dispatch_group_leave(group);
     }];
     
@@ -55,7 +73,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     });
 }
 
-- (void)dialogIDForUserWithID:(NSInteger)userID withCompletion:(void(^)(NSString *dialogID))completion {
+- (void)dialogIDForUserWithID:(NSInteger)userID completionBlock:(void(^)(NSString *dialogID))completion {
     
     [[QMChatCache instance] allDialogsWithCompletion:^(NSArray <QBChatDialog *> * _Nullable dialogs) {
         
@@ -72,7 +90,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
             }
         }
         else {
-            [self createPrivateChatWithOpponentID:userID completion:^(QBChatDialog *createdDialog) {
+            [self createPrivateChatWithOpponentID:userID completionBlock:^(QBChatDialog *createdDialog) {
                 if (completion) {
                     completion(createdDialog.ID);
                 }
@@ -104,7 +122,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 }
 
 //MARK: - Helpers
-- (void)createPrivateChatWithOpponentID:(NSUInteger)opponentID completion:(void(^)( QBChatDialog *createdDialog))completion {
+- (void)createPrivateChatWithOpponentID:(NSUInteger)opponentID completionBlock:(void(^)(QBChatDialog *createdDialog))completion {
     [self.chatService createPrivateChatDialogWithOpponentID:opponentID completion:^(QBResponse * _Nonnull response, QBChatDialog * _Nullable createdDialog) {
         if (completion) {
             completion(createdDialog);

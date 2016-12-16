@@ -26,7 +26,6 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
     static QMSiriHelper *siriHelperInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        
         siriHelperInstance = [[self alloc] init];
     });
     
@@ -38,7 +37,6 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
     self = [super init];
     
     if (self) {
-        
         // Quickblox settings
         [QBSettings setApplicationID:kQMApplicationID];
         [QBSettings setAuthKey:kQMAuthorizationKey];
@@ -51,34 +49,40 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
     return self;
 }
 
-- (QBUUser*)currentUser {
+- (QBUUser *)currentUser {
     return [QBSession currentSession].currentUser;
 }
 
-//MARK: Matching contacts
 
-- (void)contactsMatchingName:(NSString *)displayName withCompletionBlock:(void (^)(NSArray<INPerson*> *matchingContacts))completion {
+
+- (void)groupDialogWithName:(NSString *)dialogName completionBlock:(void (^)(QBChatDialog *dialog))completion {
+    [[QMSiriServiceManager instance] groupDialogWithName:dialogName completionBlock:completion];
+}
+
+//MARK: Matching contacts
+- (void)contactsMatchingName:(NSString *)displayName completionBlock:(void (^)(NSArray<INPerson*> *matchingContacts))completion {
     
-    [[QMSiriServiceManager instance] getAllUsersNamesWithCompletion:^(NSArray *results, NSError *error) {
+    [[QMSiriServiceManager instance] allContactsWithCompletionBlock:^(NSArray *results, NSError *error) {
         
-        NSMutableArray *contacts = [NSMutableArray arrayWithCapacity:results.count];
-        
-        for (QBUUser *user in results) {
-            if ([user.fullName containsString:displayName]) {
-                [contacts addObject:user];
-            }
-        }
-        if (completion) {
-            completion([self personsArrayFromUsersArray:contacts.copy]);
-        }
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+
+            NSPredicate *usersSearchPredicate = [NSPredicate predicateWithFormat:@"SELF.fullName CONTAINS[cd] %@", displayName];
+            NSArray *contacts = [results filteredArrayUsingPredicate:usersSearchPredicate];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (completion) {
+                    completion([self personsArrayFromUsersArray:contacts.copy]);
+                }
+            });
+        });
     }];
 }
 
 //MARK: Dialog retrieving
 
-- (void)dialogIDForUserWithID:(NSInteger)userID withCompletion:(void(^)(NSString *dialogID))completion {
+- (void)dialogIDForUserWithID:(NSInteger)userID completionBlock:(void(^)(NSString *dialogID))completion {
     
-    [[QMSiriServiceManager instance] dialogIDForUserWithID:userID withCompletion:completion];
+    [[QMSiriServiceManager instance] dialogIDForUserWithID:userID completionBlock:completion];
 }
 
 

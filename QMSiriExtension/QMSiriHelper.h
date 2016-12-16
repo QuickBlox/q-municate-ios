@@ -16,8 +16,8 @@
 
 + (instancetype)instance;
 
-- (void)contactsMatchingName:(NSString *)displayName withCompletionBlock:(void (^)(NSArray<INPerson*> *matchingContacts))completion;
-
-- (void)dialogIDForUserWithID:(NSInteger)userID withCompletion:(void(^)(NSString *dialogID))completion;
+- (void)dialogIDForUserWithID:(NSInteger)userID completionBlock:(void(^)(NSString *dialogID))completion;
+- (void)groupDialogWithName:(NSString *)dialogName completionBlock:(void (^)(QBChatDialog *dialog))completion;
+- (void)contactsMatchingName:(NSString *)displayName completionBlock:(void (^)(NSArray<INPerson*> *matchingContacts))completion;
 
 @end

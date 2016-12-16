@@ -7,12 +7,7 @@
 //
 
 #import "IntentHandler.h"
-
-#import <Quickblox/Quickblox.h>
-
 #import "QMMessageIntentHandler.h"
-
-
 
 @interface IntentHandler ()
 
@@ -22,13 +17,10 @@
 
 - (id)handlerForIntent:(INIntent *)intent {
     
-
-    
     if ([intent isKindOfClass:[INSendMessageIntent class]]) {
         return [QMMessageIntentHandler new];
     }
     return nil;
 }
-
 
 @end
