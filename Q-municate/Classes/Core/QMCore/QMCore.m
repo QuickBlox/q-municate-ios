@@ -133,7 +133,6 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 }
 
 - (NSString *)appGroupIdentifier {
-    
     return @"group.com.quickblox.qmunicate";
 }
 
@@ -297,26 +296,23 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 
 - (void)chatService:(QMChatService *)__unused chatService didAddChatDialogsToMemoryStorage:(NSArray *)chatDialogs {
     
-    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog*  _Nullable dialog, NSDictionary<NSString *,id> *__unused _Nullable bindings) {
-        return dialog.type == QBChatDialogTypeGroup && [dialog.occupantIDs containsObject:@(self.currentUser.ID)];
-    }];
+    [super chatService:chatService didAddChatDialogsToMemoryStorage:chatDialogs];
     
-    NSArray *groupDialogNames = [[chatDialogs filteredArrayUsingPredicate:predicate] valueForKey:@"name"];
-    
-    //setting group dialogs' names for SIRI support
-    INVocabulary *vocabulary = [INVocabulary sharedVocabulary];
-    NSOrderedSet *dialogsSet = [NSOrderedSet orderedSetWithArray:groupDialogNames];
-    [vocabulary setVocabularyStrings:dialogsSet
-                              ofType:INVocabularyStringTypeContactGroupName];
+    [self updateVocabularyForStringType:INVocabularyStringTypeContactGroupName];
 }
 
 - (void)chatService:(QMChatService *)__unused chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)__unused chatDialog {
     
+    [super chatService:chatService didAddChatDialogToMemoryStorage:chatDialog];
+    
+    [self updateVocabularyForStringType:INVocabularyStringTypeContactGroupName];
 }
 
 - (void)chatService:(QMChatService *)__unused chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)__unused chatDialogID {
     
+    [super chatService:chatService didDeleteChatDialogWithIDFromMemoryStorage:chatDialogID];
     
+    [self updateVocabularyForStringType:INVocabularyStringTypeContactGroupName];
 }
 
 #pragma mark - QMContactListServiceDelegate
@@ -328,12 +324,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     // load users if needed
     [self.usersService getUsersWithIDs:[self.contactListService.contactListMemoryStorage userIDsFromContactList]];
     
-    NSArray *friendNames = [[self.contactManager friends] valueForKey:@"fullName"];
-    //setting contacts names for SIRI support
-    INVocabulary *vocabulary = [INVocabulary sharedVocabulary];
-    NSOrderedSet *friendNamesSet = [NSOrderedSet orderedSetWithArray:friendNames];
-    [vocabulary setVocabularyStrings:friendNamesSet
-                              ofType:INVocabularyStringTypeContactName];
+    [self updateVocabularyForStringType:INVocabularyStringTypeContactName];
 }
 
 #pragma mark - Helpers
@@ -358,4 +349,40 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     return YES;
 }
 
+- (void)updateVocabularyForStringType:(INVocabularyStringType)vocabularyStringType {
+    
+    NSOrderedSet *stringsSet = nil;
+    
+    switch (vocabularyStringType) {
+            
+        case INVocabularyStringTypeContactName: {
+            
+            NSArray *friendNames = [[self.contactManager friends] valueForKey:@"fullName"];
+            stringsSet = [NSOrderedSet orderedSetWithArray:friendNames];
+            break;
+        }
+            
+        case INVocabularyStringTypeContactGroupName: {
+            
+            NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog*  _Nullable dialog, NSDictionary<NSString *,id> *__unused _Nullable bindings) {
+                return dialog.type == QBChatDialogTypeGroup && [dialog.occupantIDs containsObject:@(self.currentUser.ID)];
+            }];
+            
+            NSArray *chatDialogs = [self.chatService.dialogsMemoryStorage dialogsSortByUpdatedAtWithAscending:YES];
+            NSArray *groupDialogNames = [[chatDialogs filteredArrayUsingPredicate:predicate] valueForKey:@"name"];
+            
+            stringsSet = [NSOrderedSet orderedSetWithArray:groupDialogNames];
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    if (stringsSet.count > 0) {
+        INVocabulary *vocabulary = [INVocabulary sharedVocabulary];
+        [vocabulary setVocabularyStrings:stringsSet.copy
+                                  ofType:vocabularyStringType];
+    }
+}
 @end
