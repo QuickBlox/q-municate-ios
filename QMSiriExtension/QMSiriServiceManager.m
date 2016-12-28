@@ -61,7 +61,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
         
-        [[self.usersService getUsersWithIDs:userIDs] continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
+        [[self.usersService getUsersWithIDs:userIDs forceLoad:YES] continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
             if (t.faulted) {
                 completion(nil,t.error);
             }
