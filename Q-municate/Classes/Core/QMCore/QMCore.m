@@ -298,17 +298,25 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     
     [super chatService:chatService didAddChatDialogsToMemoryStorage:chatDialogs];
     
-    [self updateVocabularyForStringType:INVocabularyStringTypeContactGroupName];
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog*  _Nullable dialog, NSDictionary<NSString *,id> *__unused _Nullable bindings) {
+        return dialog.type == QBChatDialogTypeGroup;
+    }];
+    
+    if ([chatDialogs filteredArrayUsingPredicate:predicate].count > 0) {
+        [self updateVocabularyForStringType:INVocabularyStringTypeContactGroupName];
+    }
 }
 
-- (void)chatService:(QMChatService *)__unused chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)__unused chatDialog {
+- (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
     
     [super chatService:chatService didAddChatDialogToMemoryStorage:chatDialog];
     
-    [self updateVocabularyForStringType:INVocabularyStringTypeContactGroupName];
+    if (chatDialog.type == QBChatDialogTypeGroup) {
+        [self updateVocabularyForStringType:INVocabularyStringTypeContactGroupName];
+    }
 }
 
-- (void)chatService:(QMChatService *)__unused chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)__unused chatDialogID {
+- (void)chatService:(QMChatService *)chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)chatDialogID {
     
     [super chatService:chatService didDeleteChatDialogWithIDFromMemoryStorage:chatDialogID];
     
