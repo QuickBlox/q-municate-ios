@@ -11,8 +11,7 @@
 #import <Intents/Intents.h>
 #import <QMServices.h>
 #import "QMSiriHelper.h"
-
-NSString *kGroupChatPrefix = @"chat";
+#import "NSString+QMSiriUtils.h"
 
 @interface QMMessageIntentHandler() <INSendMessageIntentHandling>
 
@@ -158,8 +157,8 @@ NSString *kGroupChatPrefix = @"chat";
     NSString *recipientID = [intent.recipients firstObject].customIdentifier;
     NSAssert(recipientID.length, @"recipientID should be non nil");
     
-    if ([recipientID hasPrefix:kGroupChatPrefix]) {
-        messageSendingBlock([recipientID substringFromIndex:[kGroupChatPrefix length]]);
+    if ([recipientID qm_isChatIdentifier]) {
+        messageSendingBlock([recipientID qm_toChatID]);
     }
     else {
         [[QMSiriHelper instance] dialogIDForUserWithID:recipientID.integerValue completionBlock:messageSendingBlock];

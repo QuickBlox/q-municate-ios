@@ -9,6 +9,7 @@
 #import "QBChatDialog+INPerson.h"
 #import "NSString+QMTransliterating.h"
 #import <Intents/Intents.h>
+#import "NSString+QMSiriUtils.h"
 
 @implementation QBChatDialog (INPerson)
 
@@ -30,15 +31,12 @@
         nameComponents.phoneticRepresentation = phoneticRepresentation;
     }
     
-    NSString *displayName = [NSString stringWithFormat:@"chat: %@",dialogName];
-    NSString *customIdentifier = [NSString stringWithFormat:@"chat%@",self.ID];
-    
     INPerson *person = [[INPerson alloc] initWithPersonHandle:handle
                                                nameComponents:nameComponents
-                                                  displayName:displayName
+                                                  displayName:[dialogName qm_displayNameForChat]
                                                         image:nil
                                             contactIdentifier:nil
-                                             customIdentifier:customIdentifier];
+                                             customIdentifier:[self.ID qm_toPersonCustomID]];
     return person;
 }
 
