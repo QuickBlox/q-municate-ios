@@ -63,7 +63,6 @@ PODS:
     - TTTAttributedLabel (> 1.13)
   - QMServicesDevelopment (0.4.5):
     - Bolts (>= 1.5.0)
-  - QuickBlox-static (2.9)
   - Reachability (3.2)
   - SDWebImage (3.8.2):
     - SDWebImage/Core (= 3.8.2)
@@ -89,7 +88,6 @@ DEPENDENCIES:
   - NYTPhotoViewer (~> 1.1.0)
   - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, commit `e74d174a2a8fe3a411c23747216a43c86384562f`)
   - QMServicesDevelopment (from `../q-municate-services-ios/`)
-  - QuickBlox-static
   - Reachability (~> 3.2)
   - SDWebImage (~> 3.6)
   - SSKeychain (~> 1.2.2)
@@ -125,7 +123,6 @@ SPEC CHECKSUMS:
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
   QMCVDevelopment: 212a2a5db8fc22a992daab126289e6a58baf1f75
   QMServicesDevelopment: 8cb68aafe07046e9d36f74fd04b5e5aa1642b182
-  QuickBlox-static: 4e2ce0eeeeccf5d683c719038b477a9b2ac20965
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
@@ -134,6 +131,6 @@ SPEC CHECKSUMS:
   TwitterCore: cce24b3c798993ccde72787ea79ea9a478b284e4
   UIDevice-Hardware: ecb52d9a7b223b31f81982358e2b0769ac1a7918
 
-PODFILE CHECKSUM: 30ce4cdf04dbcd3551ea320b4ba8988ebf4a1f39
+PODFILE CHECKSUM: f8d7c7703be11309917a7612230eb5e451a6f161
 
 COCOAPODS: 1.1.1

@@ -40,9 +40,8 @@ target 'Q-municate' do
 end
 
 target 'QMSiriExtension' do
-    inhibit_all_warnings!
+
     pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
-    pod 'QuickBlox-static'
 end
 
 post_install do |installer|
