@@ -16,6 +16,8 @@
 #import "QMCallManager.h"
 #import "QMCallManager.h"
 #import <Intents/Intents.h>
+#import "NSString+QMTransliterating.h"
+#import "QMHelpers.h"
 
 static NSString *const kQMLastActivityDateKey = @"last_activity_date";
 static NSString *const kQMErrorKey = @"errors";
@@ -26,6 +28,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 @interface QMCore ()
 
 @property (strong, nonatomic) BFTask *restLoginTask;
+@property (strong, nonatomic) NSMutableOrderedSet *cachedVocabularyStrings;
 
 @end
 
@@ -57,6 +60,9 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         
         // Users cache init
         [self.usersService loadFromCache];
+        
+        // Vocabulary string cache init
+        _cachedVocabularyStrings = [NSMutableOrderedSet orderedSet];
         
         // managers
         _contactManager = [[QMContactManager alloc] initWithServiceManager:self];
@@ -298,12 +304,13 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     
     [super chatService:chatService didAddChatDialogsToMemoryStorage:chatDialogs];
     
-    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog*  _Nullable dialog, NSDictionary<NSString *,id> *__unused _Nullable bindings) {
-        return dialog.type == QBChatDialogTypeGroup;
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog *_Nullable dialog, NSDictionary<NSString *,id> *__unused _Nullable bindings) {
+        return dialog.type == QBChatDialogTypeGroup && dialog.name.length;
     }];
     
     if ([chatDialogs filteredArrayUsingPredicate:predicate].count > 0) {
-        [self updateVocabularyForStringType:INVocabularyStringTypeContactGroupName];
+        [self.cachedVocabularyStrings addObjectsFromArray:[chatDialogs valueForKey:@"name"]];
+        [self updateVocabulary];
     }
 }
 
@@ -311,8 +318,9 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     
     [super chatService:chatService didAddChatDialogToMemoryStorage:chatDialog];
     
-    if (chatDialog.type == QBChatDialogTypeGroup) {
-        [self updateVocabularyForStringType:INVocabularyStringTypeContactGroupName];
+    if (chatDialog.type == QBChatDialogTypeGroup && chatDialog.name.length) {
+        [self.cachedVocabularyStrings addObject:chatDialog.name];
+        [self updateVocabulary];
     }
 }
 
@@ -320,7 +328,12 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     
     [super chatService:chatService didDeleteChatDialogWithIDFromMemoryStorage:chatDialogID];
     
-    [self updateVocabularyForStringType:INVocabularyStringTypeContactGroupName];
+    QBChatDialog *chatDialog = [self.chatService.dialogsMemoryStorage chatDialogWithID:chatDialogID];
+    
+    if (chatDialog.type == QBChatDialogTypeGroup && chatDialog.name.length) {
+        [self.cachedVocabularyStrings removeObject:chatDialog.name];
+        [self updateVocabulary];
+    }
 }
 
 #pragma mark - QMContactListServiceDelegate
@@ -332,7 +345,14 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     // load users if needed
     [self.usersService getUsersWithIDs:[self.contactListService.contactListMemoryStorage userIDsFromContactList]];
     
-    [self updateVocabularyForStringType:INVocabularyStringTypeContactName];
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBUUser * _Nullable user, NSDictionary<NSString *,id> *__unused _Nullable bindings) {
+        return user.fullName.length > 0;
+    }];
+    
+    NSArray *friendNames = [[self.contactManager.friends filteredArrayUsingPredicate:predicate] valueForKey:@"fullName"];
+    [self.cachedVocabularyStrings addObjectsFromArray:friendNames];
+    
+    [self updateVocabulary];
 }
 
 #pragma mark - Helpers
@@ -357,40 +377,33 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     return YES;
 }
 
-- (void)updateVocabularyForStringType:(INVocabularyStringType)vocabularyStringType {
+
+- (void)updateVocabulary {
     
-    NSOrderedSet *stringsSet = nil;
-    
-    switch (vocabularyStringType) {
-            
-        case INVocabularyStringTypeContactName: {
-            
-            NSArray *friendNames = [[self.contactManager friends] valueForKey:@"fullName"];
-            stringsSet = [NSOrderedSet orderedSetWithArray:friendNames];
-            break;
-        }
-            
-        case INVocabularyStringTypeContactGroupName: {
-            
-            NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog*  _Nullable dialog, NSDictionary<NSString *,id> *__unused _Nullable bindings) {
-                return dialog.type == QBChatDialogTypeGroup && [dialog.occupantIDs containsObject:@(self.currentUser.ID)];
-            }];
-            
-            NSArray *chatDialogs = [self.chatService.dialogsMemoryStorage dialogsSortByUpdatedAtWithAscending:YES];
-            NSArray *groupDialogNames = [[chatDialogs filteredArrayUsingPredicate:predicate] valueForKey:@"name"];
-            
-            stringsSet = [NSOrderedSet orderedSetWithArray:groupDialogNames];
-            break;
-        }
-            
-        default:
-            break;
+    // INVocabulary(Siri) is supported in ios 10 +
+    if (!(iosMajorVersion() < 10)) {
+        return;
     }
     
-    if (stringsSet.count > 0) {
-        INVocabulary *vocabulary = [INVocabulary sharedVocabulary];
-        [vocabulary setVocabularyStrings:stringsSet.copy
-                                  ofType:vocabularyStringType];
+    if (self.cachedVocabularyStrings.count > 0) {
+        
+        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(NSString *  _Nullable string, NSDictionary<NSString *,id> *__unused _Nullable bindings) {
+            return ![string canBeConvertedToEncoding:NSISOLatin1StringEncoding];
+        }];
+        
+        //Searching names, that have non-latin characters
+        NSOrderedSet *nonLatinNames = [self.cachedVocabularyStrings.copy filteredOrderedSetUsingPredicate:predicate];
+        
+        for (NSString *string in nonLatinNames) {
+            
+            NSString *transliteratedString = [string qm_transliteratedString];
+            //Adding transliterated names to vocabulary strings
+            [self.cachedVocabularyStrings addObject:transliteratedString];
+        }
+        
+        [[INVocabulary sharedVocabulary] setVocabularyStrings:self.cachedVocabularyStrings
+                                                       ofType:INVocabularyStringTypeContactName];
     }
 }
+
 @end
