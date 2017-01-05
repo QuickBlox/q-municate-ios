@@ -15,8 +15,9 @@ QMContactListServiceDelegate
 
 @property (strong, nonatomic, readonly) QMContactListService *contactListService;
 
-- (void)allContactsWithCompletionBlock:(void(^)(NSArray *results,NSError *error))completion;
+- (void)allGroupDialogsWithCompletionBlock:(void (^)(NSArray<QBChatDialog *> *results)) completion;
+- (void)allContactUsersWithCompletionBlock:(void(^)(NSArray<QBUUser *> *results,NSError *error))completion;
+
 - (void)dialogIDForUserWithID:(NSInteger)userID completionBlock:(void(^)(NSString *dialogID))completion;
-- (void)groupDialogWithName:(NSString *)name completionBlock:(void(^)(QBChatDialog *dialog))completion;
 
 @end

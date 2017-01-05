@@ -27,23 +27,23 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 
 //MARK: - Public Methods
 
-- (void)groupDialogWithName:(NSString *)name completionBlock:(void(^)(QBChatDialog *dialog))completion {
+- (void)allGroupDialogsWithCompletionBlock:(void (^)(NSArray<QBChatDialog *> *)) completion {
     
     [[QMChatCache instance] allDialogsWithCompletion:^(NSArray <QBChatDialog *> * _Nullable dialogs) {
         
         NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog*  _Nullable dialog, NSDictionary<NSString *,id> * _Nullable bindings) {
-            return dialog.type == QBChatDialogTypeGroup && [dialog.name caseInsensitiveCompare:name] == NSOrderedSame;
+            return dialog.type == QBChatDialogTypeGroup && dialog.name.length > 0;
         }];
         
-        QBChatDialog *dialog = [[dialogs filteredArrayUsingPredicate:predicate] firstObject];
+        NSArray *results = [dialogs filteredArrayUsingPredicate:predicate];
         
         if (completion) {
-            completion(dialog);
+            completion(results);
         }
     }];
 }
 
-- (void)allContactsWithCompletionBlock:(void(^)(NSArray *results, NSError *error))completion {
+- (void)allContactUsersWithCompletionBlock:(void(^)(NSArray<QBUUser *> *results,NSError *error))completion {
     
     NSMutableArray *userIDs = [NSMutableArray array];
     dispatch_group_t group = dispatch_group_create();
@@ -63,7 +63,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         
         [[self.usersService getUsersWithIDs:userIDs forceLoad:YES] continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
             if (t.faulted) {
-                completion(nil,t.error);
+                completion(@[],t.error);
             }
             else {
                 completion(t.result,nil);

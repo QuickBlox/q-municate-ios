@@ -10,7 +10,8 @@
 #import <Quickblox/Quickblox.h>
 #import <Intents/Intents.h>
 #import "QMSiriServiceManager.h"
-
+#import "QBUUser+INPerson.h"
+#import "QMINPersonProtocol.h"
 
 static const NSUInteger kQMApplicationID = 36125;
 static NSString * const kQMAuthorizationKey = @"gOGVNO4L9cBwkPE";
@@ -53,29 +54,52 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
     return [QBSession currentSession].currentUser;
 }
 
-
-
-- (void)groupDialogWithName:(NSString *)dialogName completionBlock:(void (^)(QBChatDialog *dialog))completion {
-    [[QMSiriServiceManager instance] groupDialogWithName:dialogName completionBlock:completion];
-}
-
 //MARK: Matching contacts
-- (void)contactsMatchingName:(NSString *)displayName completionBlock:(void (^)(NSArray<INPerson*> *matchingContacts))completion {
-    
-    [[QMSiriServiceManager instance] allContactsWithCompletionBlock:^(NSArray *results, NSError *error) {
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
 
+- (void)personsMatchingName:(NSString *)displayName completionBlock:(void (^)(NSArray<INPerson*> *matchingContacts))completion {
+    
+    dispatch_group_t group = dispatch_group_create();
+    
+    __block NSArray *contactUsers = nil;
+    __block NSArray *dialogs = nil;
+    
+    dispatch_group_enter(group);
+    [[QMSiriServiceManager instance] allContactUsersWithCompletionBlock:^(NSArray *results, NSError *error) {
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            
             NSPredicate *usersSearchPredicate = [NSPredicate predicateWithFormat:@"SELF.fullName CONTAINS[cd] %@", displayName];
-            NSArray *contacts = [results filteredArrayUsingPredicate:usersSearchPredicate];
+            NSArray *filteredUsers = [results filteredArrayUsingPredicate:usersSearchPredicate];
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (completion) {
-                    completion([self personsArrayFromUsersArray:contacts.copy]);
-                }
+                contactUsers = filteredUsers;
+                dispatch_group_leave(group);
             });
         });
     }];
+    
+    
+    dispatch_group_enter(group);
+    [[QMSiriServiceManager instance] allGroupDialogsWithCompletionBlock:^(NSArray<QBChatDialog *> *results) {
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            
+            NSPredicate *usersSearchPredicate = [NSPredicate predicateWithFormat:@"SELF.name CONTAINS[cd] %@", displayName];
+            NSArray *filteredGroupDialogs = [results filteredArrayUsingPredicate:usersSearchPredicate];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                dialogs = filteredGroupDialogs;
+                dispatch_group_leave(group);
+            });
+        });
+    }];
+    
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        if (completion) {
+            NSArray *allData = [contactUsers arrayByAddingObjectsFromArray:dialogs];
+            completion([self personsArrayFromArray:allData]);
+        }
+    });
 }
 
 //MARK: Dialog retrieving
@@ -85,25 +109,28 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
     [[QMSiriServiceManager instance] dialogIDForUserWithID:userID completionBlock:completion];
 }
 
+//MARK: Helpers
 
-- (NSArray *)personsArrayFromUsersArray:(NSArray *)usersArray {
+- (NSArray *)personsArrayFromArray:(NSArray <id<QMINPersonProtocol>> *)array {
     
-    NSMutableArray<INPerson*> *personsArray = [NSMutableArray arrayWithCapacity:usersArray.count];
+    NSMutableArray<INPerson*> *personsArray = [NSMutableArray arrayWithCapacity:array.count];
     
-    for (QBUUser *user in usersArray) {
-        INPersonHandle *handle = [[INPersonHandle alloc] initWithValue:user.login type:INPersonHandleTypeUnknown];
-        INPerson *person = [[INPerson alloc] initWithPersonHandle:handle
-                                                   nameComponents:nil
-                                                      displayName:user.fullName
-                                                            image:nil
-                                                contactIdentifier:[NSString stringWithFormat:@"%lu",(unsigned long)user.ID]
-                                                 customIdentifier:nil];
-        [personsArray addObject:person];
+    for (id object in array) {
+        if ([object conformsToProtocol:@protocol(QMINPersonProtocol)]) {
+            INPerson *person = [object qm_inPerson];
+            if (person) {
+                [personsArray addObject:person];
+            }
+        }
     }
     
     return personsArray;
 }
 
-
+NSInteger sort(id a, id b, void *p) {
+    return [[a valueForKey:(__bridge NSString*)p]
+            compare:[b valueForKey:(__bridge NSString*)p]
+            options:NSNumericSearch];
+}
 
 @end

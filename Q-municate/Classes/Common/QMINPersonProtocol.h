@@ -6,8 +6,12 @@
 //  Copyright © 2017 Quickblox. All rights reserved.
 //
 
-#ifndef QMINPersonProtocol_h
-#define QMINPersonProtocol_h
+@class INPerson;
+
+@protocol QMINPersonProtocol <NSObject>
+
+- (INPerson *)qm_inPerson;
+
+@end
 
 
-#endif /* QMINPersonProtocol_h */

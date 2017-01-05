@@ -12,9 +12,12 @@
 #import <QMServices.h>
 #import "QMSiriHelper.h"
 
+NSString *kGroupChatPrefix = @"chat";
+
 @interface QMMessageIntentHandler() <INSendMessageIntentHandling>
 
 @end
+
 
 @implementation QMMessageIntentHandler
 
@@ -26,44 +29,34 @@
     QBUUser *user = [QMSiriHelper instance].currentUser;
     
     if (user == nil) {
+        // There is no loginned in user. No needs to continue
         completion(@[[INPersonResolutionResult unsupported]]);
         return;
     }
     
-    if (intent.groupName.length) {
-        [[QMSiriHelper instance] groupDialogWithName:intent.groupName completionBlock:^(QBChatDialog *dialog) {
-            
-            if (dialog != nil) {
-                completion(@[[INPersonResolutionResult notRequired]]);
-                return;
-            }
-            else {
-                completion(@[[INPersonResolutionResult unsupported]]);
-                return;
-            }
-        }];
-        
+    NSArray<INPerson *> *recipients = intent.recipients;
+    
+    // If no recipients were provided we'll need to prompt for a value.
+    if (recipients.count == 0) {
+        completion(@[[INPersonResolutionResult needsValue]]);
+        return;
     }
-    else {
+    
+    // Implementation of the contact matching logic for creating an array of matching contacts
+    NSMutableArray<INPersonResolutionResult *> *resolutionResults = [NSMutableArray array];
+    
+    dispatch_group_t matchingContactsGroup = dispatch_group_create();
+    
+    for (INPerson *recipient in recipients) {
         
-        NSArray<INPerson *> *recipients = intent.recipients;
-        // If no recipients were provided we'll need to prompt for a value.
-        if (recipients.count == 0) {
-            completion(@[[INPersonResolutionResult needsValue]]);
-            return;
+        //Siri already knows this person
+        if (recipient.customIdentifier.length > 0) {
+            [resolutionResults addObject:[INPersonResolutionResult successWithResolvedPerson:recipient]];
         }
-        
-        // Implementation of the contact matching logic for creating an array of matching contacts
-        
-        NSMutableArray<INPersonResolutionResult *> *resolutionResults = [NSMutableArray array];
-        
-        dispatch_group_t matchingContactsGroup = dispatch_group_create();
-        
-        for (INPerson *recipient in recipients) {
-            
+        else {
             dispatch_group_enter(matchingContactsGroup);
             
-            [[QMSiriHelper instance] contactsMatchingName:recipient.displayName completionBlock:^(NSArray *matchingContacts) {
+            [[QMSiriHelper instance] personsMatchingName:recipient.displayName completionBlock:^(NSArray *matchingContacts) {
                 
                 if (matchingContacts.count > 1) {
                     // We need Siri's help to ask user to pick one from the matches.
@@ -81,16 +74,13 @@
                 dispatch_group_leave(matchingContactsGroup);
             }];
         }
-        
-        dispatch_group_notify(matchingContactsGroup, dispatch_get_main_queue(), ^{
-            completion(resolutionResults);
-        });
     }
-}
-- (void)resolveGroupNameForSendMessage:(INSendMessageIntent *)intent
-                        withCompletion:(void (^)(INStringResolutionResult *resolutionResult))completion{
     
+    dispatch_group_notify(matchingContactsGroup, dispatch_get_main_queue(), ^{
+        completion(resolutionResults);
+    });
 }
+
 - (void)resolveContentForSendMessage:(INSendMessageIntent *)intent withCompletion:(void (^)(INStringResolutionResult *resolutionResult))completion {
     
     NSString *text = intent.content;
@@ -165,16 +155,13 @@
     };
     
     // Implementation of the application logic for sending a message.
-    if (intent.groupName.length) {
-        [[QMSiriHelper instance] groupDialogWithName:intent.groupName completionBlock:^(QBChatDialog *dialog) {
-            if (dialog != nil) {
-                messageSendingBlock(dialog.ID);
-            }
-        }];
+    NSString *recipientID = [intent.recipients firstObject].customIdentifier;
+    NSAssert(recipientID.length, @"recipientID should be non nil");
+    
+    if ([recipientID hasPrefix:kGroupChatPrefix]) {
+        messageSendingBlock([recipientID substringFromIndex:[kGroupChatPrefix length]]);
     }
     else {
-        
-        NSString *recipientID = [intent.recipients firstObject].customIdentifier;
         [[QMSiriHelper instance] dialogIDForUserWithID:recipientID.integerValue completionBlock:messageSendingBlock];
     }
 }
