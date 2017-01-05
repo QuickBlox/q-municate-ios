@@ -2,6 +2,29 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>ParameterVocabularies</key>
+	<array>
+		<dict>
+			<key>ParameterNames</key>
+			<array>
+				<string></string>
+			</array>
+			<key>ParameterVocabulary</key>
+			<array>
+				<dict>
+					<key>VocabularyItemIdentifier</key>
+					<string></string>
+					<key>VocabularyItemSynonyms</key>
+					<array>
+						<dict>
+							<key>VocabularyItemPhrase</key>
+							<string></string>
+						</dict>
+					</array>
+				</dict>
+			</array>
+		</dict>
+	</array>
 	<key>IntentPhrases</key>
 	<array>
 		<dict>
@@ -9,10 +32,11 @@
 			<string>INSendMessageIntent</string>
 			<key>IntentExamples</key>
 			<array>
-				<string>Message with Q-municate</string>
-				<string>Send with Qmunicate</string>
-				<string>Chat using Qmunicate</string>
-				<string>I need a Qmunicate</string>
+				<string>Send Kate a message with Q-municate that says how are you doing today?</string>
+				<string>Siri, Message Alex using Q-municate saying hello</string>
+				<string>Send message with Q-municate</string>
+				<string>Send message using Q-municate</string>
+				<string>message Q-municate</string>
 			</array>
 		</dict>
 	</array>
