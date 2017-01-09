@@ -1,5 +1,5 @@
 //
-//  QMSiriServiceManager.h
+//  QMSiriCache.h
 //  Q-municate
 //
 //  Created by Vitaliy Gurkovsky on 12/1/16.
@@ -8,12 +8,10 @@
 
 #import <QMServices.h>
 
-@interface QMSiriServiceManager : QMServicesManager <
-QMContactListServiceCacheDataSource,
-QMContactListServiceDelegate
->
+@interface QMSiriCache : NSObject
 
-@property (strong, nonatomic, readonly) QMContactListService *contactListService;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithApplicationGroupIdentifier:(NSString *)appGroupIdentifier;
 
 - (void)allGroupDialogsWithCompletionBlock:(void (^)(NSArray<QBChatDialog *> *results)) completion;
 - (void)allContactUsersWithCompletionBlock:(void(^)(NSArray<QBUUser *> *results,NSError *error))completion;

@@ -173,7 +173,7 @@
 		E03F3D361E1C724E00A46884 /* NSString+QMTransliterating.m in Sources */ = {isa = PBXBuildFile; fileRef = E03F3D341E1C724E00A46884 /* NSString+QMTransliterating.m */; };
 		E04E45C71DE5A78700A0E0FC /* QMSiriHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E04E45C61DE5A78700A0E0FC /* QMSiriHelper.m */; };
 		E0598E181E169861009B282B /* AppIntentVocabulary.plist in Resources */ = {isa = PBXBuildFile; fileRef = E0598E171E169861009B282B /* AppIntentVocabulary.plist */; };
-		E05A2F381E0964160084735B /* QMSiriServiceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E05A2F371E0964160084735B /* QMSiriServiceManager.m */; };
+		E05A2F381E0964160084735B /* QMSiriCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E05A2F371E0964160084735B /* QMSiriCache.m */; };
 		E063556D1E1D1D4F00BE9061 /* IntentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = E063556A1E1D1D4F00BE9061 /* IntentHandler.m */; };
 		E063556E1E1D1D4F00BE9061 /* QMMessageIntentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = E063556C1E1D1D4F00BE9061 /* QMMessageIntentHandler.m */; };
 		E06355721E1D1E3300BE9061 /* QBUUser+INPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = E06355711E1D1E3300BE9061 /* QBUUser+INPerson.m */; };
@@ -522,8 +522,8 @@
 		E04E45C61DE5A78700A0E0FC /* QMSiriHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSiriHelper.m; sourceTree = "<group>"; };
 		E0562DCF1DDCA0DF0086A083 /* QMSiriExtensionUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QMSiriExtensionUI.entitlements; sourceTree = "<group>"; };
 		E0598E171E169861009B282B /* AppIntentVocabulary.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AppIntentVocabulary.plist; sourceTree = "<group>"; };
-		E05A2F361E0964160084735B /* QMSiriServiceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSiriServiceManager.h; sourceTree = "<group>"; };
-		E05A2F371E0964160084735B /* QMSiriServiceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSiriServiceManager.m; sourceTree = "<group>"; };
+		E05A2F361E0964160084735B /* QMSiriCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSiriCache.h; sourceTree = "<group>"; };
+		E05A2F371E0964160084735B /* QMSiriCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMSiriCache.m; sourceTree = "<group>"; };
 		E06355691E1D1D4F00BE9061 /* IntentHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntentHandler.h; sourceTree = "<group>"; };
 		E063556A1E1D1D4F00BE9061 /* IntentHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntentHandler.m; sourceTree = "<group>"; };
 		E063556B1E1D1D4F00BE9061 /* QMMessageIntentHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMessageIntentHandler.h; sourceTree = "<group>"; };
@@ -2081,8 +2081,8 @@
 			children = (
 				E063556F1E1D1DE100BE9061 /* Categories */,
 				E06355681E1D1D4F00BE9061 /* IntentHandler */,
-				E05A2F361E0964160084735B /* QMSiriServiceManager.h */,
-				E05A2F371E0964160084735B /* QMSiriServiceManager.m */,
+				E05A2F361E0964160084735B /* QMSiriCache.h */,
+				E05A2F371E0964160084735B /* QMSiriCache.m */,
 				E0C175731DE507AA00B5990C /* QMSiriExtension.entitlements */,
 				E07BC2241DDF5FD900B8D3B0 /* Info.plist */,
 				E04E45C51DE5A78700A0E0FC /* QMSiriHelper.h */,
@@ -2487,7 +2487,7 @@
 				E04E45C71DE5A78700A0E0FC /* QMSiriHelper.m in Sources */,
 				E063556D1E1D1D4F00BE9061 /* IntentHandler.m in Sources */,
 				E06355721E1D1E3300BE9061 /* QBUUser+INPerson.m in Sources */,
-				E05A2F381E0964160084735B /* QMSiriServiceManager.m in Sources */,
+				E05A2F381E0964160084735B /* QMSiriCache.m in Sources */,
 				E063556E1E1D1D4F00BE9061 /* QMMessageIntentHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

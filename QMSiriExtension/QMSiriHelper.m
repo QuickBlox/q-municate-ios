@@ -9,7 +9,7 @@
 #import "QMSiriHelper.h"
 #import <Quickblox/Quickblox.h>
 #import <Intents/Intents.h>
-#import "QMSiriServiceManager.h"
+#import "QMSiriCache.h"
 #import "QBUUser+INPerson.h"
 #import "QMINPersonProtocol.h"
 
@@ -18,6 +18,12 @@ static NSString * const kQMAuthorizationKey = @"gOGVNO4L9cBwkPE";
 static NSString * const kQMAuthorizationSecret = @"JdqsMHCjHVYkVxV";
 static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate";
+
+@interface QMSiriHelper()
+
+@property (strong, nonatomic) QMSiriCache *siriCache;
+
+@end
 
 @implementation QMSiriHelper
 
@@ -45,6 +51,8 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
         [QBSettings setAccountKey:kQMAccountKey];
         [QBSettings setLogLevel:QBLogLevelNothing];
         [QBSettings setApplicationGroupIdentifier:kQMAppGroupIdentifier];
+        
+        _siriCache = [[QMSiriCache alloc] initWithApplicationGroupIdentifier:kQMAppGroupIdentifier];
     }
     
     return self;
@@ -54,17 +62,17 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
     return [QBSession currentSession].currentUser;
 }
 
-//MARK: Matching contacts
+//MARK:- Matching contacts
 
 - (void)personsMatchingName:(NSString *)displayName completionBlock:(void (^)(NSArray<INPerson*> *matchingContacts))completion {
     
     dispatch_group_t group = dispatch_group_create();
     
-    __block NSArray *contactUsers = nil;
-    __block NSArray *dialogs = nil;
+    __block NSArray *contactUsers = @[];
+    __block NSArray *dialogs = @[];
     
     dispatch_group_enter(group);
-    [[QMSiriServiceManager instance] allContactUsersWithCompletionBlock:^(NSArray *results, NSError *error) {
+    [self.siriCache allContactUsersWithCompletionBlock:^(NSArray *results, NSError *error) {
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             
@@ -80,7 +88,7 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
     
     
     dispatch_group_enter(group);
-    [[QMSiriServiceManager instance] allGroupDialogsWithCompletionBlock:^(NSArray<QBChatDialog *> *results) {
+    [self.siriCache allGroupDialogsWithCompletionBlock:^(NSArray<QBChatDialog *> *results) {
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             
@@ -102,14 +110,14 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
     });
 }
 
-//MARK: Dialog retrieving
+//MARK:- Dialog retrieving
 
 - (void)dialogIDForUserWithID:(NSInteger)userID completionBlock:(void(^)(NSString *dialogID))completion {
     
-    [[QMSiriServiceManager instance] dialogIDForUserWithID:userID completionBlock:completion];
+    [self.siriCache dialogIDForUserWithID:userID completionBlock:completion];
 }
 
-//MARK: Helpers
+//MARK:- Helpers
 
 - (NSArray *)personsArrayFromArray:(NSArray <id<QMINPersonProtocol>> *)array {
     
@@ -125,12 +133,6 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
     }
     
     return personsArray;
-}
-
-NSInteger sort(id a, id b, void *p) {
-    return [[a valueForKey:(__bridge NSString*)p]
-            compare:[b valueForKey:(__bridge NSString*)p]
-            options:NSNumericSearch];
 }
 
 @end
