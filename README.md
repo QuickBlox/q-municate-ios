@@ -1,6 +1,4 @@
-[![CocoaPods](https://img.shields.io/cocoapods/v/QMServices.svg)](https://cocoapods.org/pods/QMServices)
-[![CocoaPods](https://img.shields.io/cocoapods/dm/QMServices.svg)](https://cocoapods.org/pods/QMServices)
-[![CocoaPods](https://img.shields.io/cocoapods/dt/QMServices.svg)](https://cocoapods.org/pods/QMServices)
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
 - [Q-municate 2.0](#q-municate-20)
 	- [Q-municate iOS](#q-municate-ios)
