@@ -32,6 +32,7 @@
 			<string>INSendMessageIntent</string>
 			<key>IntentExamples</key>
 			<array>
+				<string>Q-municate message</string>
 				<string>Send Kate a message with Q-municate that says how are you doing today?</string>
 				<string>Siri, Message Alex using Q-municate saying hello</string>
 				<string>Send message with Q-municate</string>
