@@ -11,9 +11,13 @@
 #import "QMFacebook.h"
 #import "QMNotification.h"
 #import "QMTasks.h"
-#import <DigitsKit/DigitsKit.h>
 #import <SVProgressHUD.h>
 #import <SDWebImageManager.h>
+#import "QMCallManager.h"
+#import "QMCallManager.h"
+#import <Intents/Intents.h>
+#import "NSString+QMTransliterating.h"
+#import "QMHelpers.h"
 
 static NSString *const kQMLastActivityDateKey = @"last_activity_date";
 static NSString *const kQMErrorKey = @"errors";
@@ -24,6 +28,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 @interface QMCore ()
 
 @property (strong, nonatomic) BFTask *restLoginTask;
+@property (strong, nonatomic) NSMutableOrderedSet *cachedVocabularyStrings;
 
 @end
 
@@ -46,7 +51,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     
     if (self) {
         // Contact list service init
-        [QMContactListCache setupDBWithStoreNamed:kQMContactListCacheNameKey];
+        [QMContactListCache setupDBWithStoreNamed:kQMContactListCacheNameKey applicationGroupIdentifier:[self appGroupIdentifier]];
         _contactListService = [[QMContactListService alloc] initWithServiceManager:self cacheDataSource:self];
         [_contactListService addDelegate:self];
         
@@ -56,6 +61,9 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         // Users cache init
         [self.usersService loadFromCache];
         
+        // Vocabulary string cache init
+        _cachedVocabularyStrings = [NSMutableOrderedSet orderedSet];
+        
         // managers
         _contactManager = [[QMContactManager alloc] initWithServiceManager:self];
         _chatManager = [[QMChatManager alloc] initWithServiceManager:self];
@@ -64,6 +72,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         
         // Reachability init
         [self configureReachability];
+        [self.chatService addDelegate:self];
     }
     
     return self;
@@ -127,6 +136,10 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     }
     
     [mutableString deleteCharactersInRange:NSMakeRange(mutableString.length - 2, 2)];
+}
+
+- (NSString *)appGroupIdentifier {
+    return @"group.com.quickblox.qmunicate";
 }
 
 - (void)handleErrorResponse:(QBResponse *)response {
@@ -285,6 +298,44 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     [[QMContactListCache instance] contactListItems:block];
 }
 
+#pragma mark - QMChatServiceDelegate
+
+- (void)chatService:(QMChatService *)__unused chatService didAddChatDialogsToMemoryStorage:(NSArray *)chatDialogs {
+    
+    [super chatService:chatService didAddChatDialogsToMemoryStorage:chatDialogs];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog *_Nullable dialog, NSDictionary<NSString *,id> *__unused _Nullable bindings) {
+        return dialog.type == QBChatDialogTypeGroup && dialog.name.length;
+    }];
+    
+    if ([chatDialogs filteredArrayUsingPredicate:predicate].count > 0) {
+        [self.cachedVocabularyStrings addObjectsFromArray:[chatDialogs valueForKey:@"name"]];
+        [self updateVocabulary];
+    }
+}
+
+- (void)chatService:(QMChatService *)chatService didAddChatDialogToMemoryStorage:(QBChatDialog *)chatDialog {
+    
+    [super chatService:chatService didAddChatDialogToMemoryStorage:chatDialog];
+    
+    if (chatDialog.type == QBChatDialogTypeGroup && chatDialog.name.length) {
+        [self.cachedVocabularyStrings addObject:chatDialog.name];
+        [self updateVocabulary];
+    }
+}
+
+- (void)chatService:(QMChatService *)chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)chatDialogID {
+    
+    [super chatService:chatService didDeleteChatDialogWithIDFromMemoryStorage:chatDialogID];
+    
+    QBChatDialog *chatDialog = [self.chatService.dialogsMemoryStorage chatDialogWithID:chatDialogID];
+    
+    if (chatDialog.type == QBChatDialogTypeGroup && chatDialog.name.length) {
+        [self.cachedVocabularyStrings removeObject:chatDialog.name];
+        [self updateVocabulary];
+    }
+}
+
 #pragma mark - QMContactListServiceDelegate
 
 - (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)contactList {
@@ -293,6 +344,15 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     
     // load users if needed
     [self.usersService getUsersWithIDs:[self.contactListService.contactListMemoryStorage userIDsFromContactList]];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBUUser * _Nullable user, NSDictionary<NSString *,id> *__unused _Nullable bindings) {
+        return user.fullName.length > 0;
+    }];
+    
+    NSArray *friendNames = [[self.contactManager.friends filteredArrayUsingPredicate:predicate] valueForKey:@"fullName"];
+    [self.cachedVocabularyStrings addObjectsFromArray:friendNames];
+    
+    [self updateVocabulary];
 }
 
 #pragma mark - Helpers
@@ -315,6 +375,35 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     }
     
     return YES;
+}
+
+
+- (void)updateVocabulary {
+    
+    // INVocabulary(Siri) is supported in ios 10 +
+    if (!(iosMajorVersion() < 10)) {
+        return;
+    }
+    
+    if (self.cachedVocabularyStrings.count > 0) {
+        
+        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(NSString *  _Nullable string, NSDictionary<NSString *,id> *__unused _Nullable bindings) {
+            return ![string canBeConvertedToEncoding:NSISOLatin1StringEncoding];
+        }];
+        
+        //Searching names, that have non-latin characters
+        NSOrderedSet *nonLatinNames = [self.cachedVocabularyStrings.copy filteredOrderedSetUsingPredicate:predicate];
+        
+        for (NSString *string in nonLatinNames) {
+            
+            NSString *transliteratedString = [string qm_transliteratedString];
+            //Adding transliterated names to vocabulary strings
+            [self.cachedVocabularyStrings addObject:transliteratedString];
+        }
+        
+        [[INVocabulary sharedVocabulary] setVocabularyStrings:self.cachedVocabularyStrings
+                                                       ofType:INVocabularyStringTypeContactName];
+    }
 }
 
 @end

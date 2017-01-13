@@ -19,6 +19,7 @@
 
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
 #import "QMImagePreview.h"
+#import "QMCallManager.h"
 
 static const CGFloat kQMStatusCellMinHeight = 65.0f;
 

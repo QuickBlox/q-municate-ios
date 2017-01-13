@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param chatMessage          chat message
  *  @param buttonHandler        button handler blocks
- *  @param hostViewController   host view controller for notification view
+ *  @param hvc   host view controller for notification view
  */
 + (void)showMessageNotificationWithMessage:(QBChatMessage *)chatMessage buttonHandler:(MPGNotificationButtonHandler)buttonHandler hostViewController:(UIViewController *)hvc;
 

@@ -114,6 +114,14 @@ typedef NS_ENUM(NSUInteger, QBConnectionZoneType) {
  */
 + (void)setAuthSecret:(NSString *)authSecret;
 
+/**
+ * Setting application group identifier
+ *
+ * @param appGroupIdentifier - NSString value of identifier.
+ */
+
++ (void)setApplicationGroupIdentifier:(NSString *)appGroupIdentifier;
+
 #pragma mark -
 #pragma mark Endpoints
 
