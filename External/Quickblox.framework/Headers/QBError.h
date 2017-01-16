@@ -7,14 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Quickblox/QBNullability.h>
-#import <Quickblox/QBGeneric.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QBError : NSObject
 
-@property (nonatomic, readonly, nullable) NSDictionary<NSString *, NSString *> *reasons;
+@property (nonatomic, readonly, nullable) NSDictionary<NSString *, id> *reasons;
 @property (nonatomic, readonly, nullable) NSError *error;
 
 + (instancetype)errorWithError:(nullable NSError *)error;

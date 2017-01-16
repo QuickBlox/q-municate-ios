@@ -308,8 +308,9 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         return dialog.type == QBChatDialogTypeGroup && dialog.name.length;
     }];
     
-    if ([chatDialogs filteredArrayUsingPredicate:predicate].count > 0) {
-        [self.cachedVocabularyStrings addObjectsFromArray:[chatDialogs valueForKey:@"name"]];
+    NSArray *filteredDialogs = [chatDialogs filteredArrayUsingPredicate:predicate];
+    if (filteredDialogs.count > 0) {
+        [self.cachedVocabularyStrings addObjectsFromArray:[filteredDialogs valueForKey:@"name"]];
         [self updateVocabulary];
     }
 }
@@ -350,9 +351,11 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     }];
     
     NSArray *friendNames = [[self.contactManager.friends filteredArrayUsingPredicate:predicate] valueForKey:@"fullName"];
-    [self.cachedVocabularyStrings addObjectsFromArray:friendNames];
     
-    [self updateVocabulary];
+    if (friendNames.count) {
+        [self.cachedVocabularyStrings addObjectsFromArray:friendNames];
+        [self updateVocabulary];
+    }
 }
 
 #pragma mark - Helpers
