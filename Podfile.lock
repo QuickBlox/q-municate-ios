@@ -17,7 +17,7 @@ PODS:
   - FBSDKShareKit (4.11.0):
     - FBSDKCoreKit
   - FLAnimatedImage (1.0.12)
-  - Flurry-iOS-SDK/FlurrySDK (7.8.1)
+  - Flurry-iOS-SDK/FlurrySDK (7.8.2)
   - libextobjc/EXTKeyPathCoding (0.4.1):
     - libextobjc/RuntimeExtensions
   - libextobjc/EXTScope (0.4.1):
@@ -87,7 +87,7 @@ DEPENDENCIES:
   - MPGNotification (~> 1.2)
   - NYTPhotoViewer (~> 1.1.0)
   - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, commit `e74d174a2a8fe3a411c23747216a43c86384562f`)
-  - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`, commit `2c038f614c1816a67d3ec4598fabab79259b0777`)
+  - QMServicesDevelopment (from `../q-municate-services-ios/`)
   - Reachability (~> 3.2)
   - SDWebImage (~> 3.6)
   - SSKeychain (~> 1.2.2)
@@ -101,16 +101,12 @@ EXTERNAL SOURCES:
     :commit: e74d174a2a8fe3a411c23747216a43c86384562f
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: 2c038f614c1816a67d3ec4598fabab79259b0777
-    :git: git@github.com:QuickBlox/q-municate-services-ios.git
+    :path: ../q-municate-services-ios/
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
     :commit: e74d174a2a8fe3a411c23747216a43c86384562f
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
-  QMServicesDevelopment:
-    :commit: 2c038f614c1816a67d3ec4598fabab79259b0777
-    :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
@@ -121,7 +117,7 @@ SPEC CHECKSUMS:
   FBSDKLoginKit: bade9fc78277764149ccc5bfaadbf13c83175c6a
   FBSDKShareKit: 2d1746144cfc8a9dbbd24997c34ee0471be51b6a
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
-  Flurry-iOS-SDK: 3d1daff95d43b8fead3bb43590d54c6e8244d410
+  Flurry-iOS-SDK: 8ed76252016d0162a893363c108a010ab97d424c
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
@@ -135,6 +131,6 @@ SPEC CHECKSUMS:
   TwitterCore: cce24b3c798993ccde72787ea79ea9a478b284e4
   UIDevice-Hardware: ecb52d9a7b223b31f81982358e2b0769ac1a7918
 
-PODFILE CHECKSUM: 352838e0439ecbda36878fa4477756483bd9e321
+PODFILE CHECKSUM: f8d7c7703be11309917a7612230eb5e451a6f161
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.1.1

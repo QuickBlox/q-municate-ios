@@ -32,9 +32,25 @@ target 'Q-municate' do
     
     #For development pods
 #    pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
-#    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
+    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
 
     pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :commit => 'e74d174a2a8fe3a411c23747216a43c86384562f'
-    pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :commit => '2c038f614c1816a67d3ec4598fabab79259b0777'
+    #  pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :commit => '2c038f614c1816a67d3ec4598fabab79259b0777'
     
+end
+
+target 'QMSiriExtension' do
+
+    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
+end
+
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        case target.name
+            when 'Bolts'
+            target.build_configurations.each do |config|
+                config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'NO'
+            end
+        end
+    end
 end

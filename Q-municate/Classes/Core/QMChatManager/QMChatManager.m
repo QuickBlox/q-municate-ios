@@ -111,4 +111,27 @@
     }];
 }
 
+- (BFTask *)sendBackgroundMessageWithText:(NSString *)text toDialogWithID:(NSString *)chatDialogID {
+    
+    NSUInteger currentUserID = [QMCore instance].currentProfile.userData.ID;
+    
+    QBChatMessage *message = [QMMessagesHelper chatMessageWithText:text
+                                                          senderID:currentUserID
+                                                      chatDialogID:chatDialogID
+                                                          dateSent:[NSDate date]];
+    
+    BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
+    
+    [QBRequest sendMessage:message successBlock:^(QBResponse * __unused response, QBChatMessage *createdMessage) {
+        
+        [source setResult:createdMessage];
+        
+    } errorBlock:^(QBResponse *response) {
+        
+        [source setError:response.error.error];
+    }];
+    
+    return source.task;
+}
+
 @end
