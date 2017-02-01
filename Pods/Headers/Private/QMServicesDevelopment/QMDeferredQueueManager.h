@@ -1,1 +1,1 @@
-../../../../../q-municate-services-ios/QMManagers/QMDeferredQueueManager.h
+../../../QMServicesDevelopment/QMManagers/QMDeferredQueueManager.h

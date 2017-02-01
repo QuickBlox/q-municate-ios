@@ -1,6 +1,6 @@
 //
 //  QMKVOView.m
-//  
+//
 //
 //  Created by Vitaliy Gurkovsky on 10/12/16.
 //
@@ -15,6 +15,7 @@ static void * kQMFrameKeyValueObservingContext = &kQMFrameKeyValueObservingConte
 @end
 
 @implementation QMKVOView
+
 #pragma mark - Life cycle
 - (void)dealloc {
     //ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
@@ -64,7 +65,7 @@ static void * kQMFrameKeyValueObservingContext = &kQMFrameKeyValueObservingConte
     if (object == self.superview && ([keyPath isEqualToString:@"frame"] ||
                                      [keyPath isEqualToString:@"center"])) {
         
-        if  (self.superFrameDidChangeBlock) {
+        if (self.superFrameDidChangeBlock) {
             self.superFrameDidChangeBlock(self.superview.frame);
         }
     }

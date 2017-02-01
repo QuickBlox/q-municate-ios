@@ -97,6 +97,21 @@ typedef enum {
  */
 - (FlurrySessionBuilder*) withShowErrorInLog:(BOOL) value;
 
+#if !TARGET_OS_WATCH
+/*!
+ *  @brief Enables implicit recording of Apple Store transactions.
+ *  @since 7.9.0
+ *
+ *  This method needs to be called before any transaction is finialized.
+ *
+ *
+ *  @param value YES to enable transaction logging with the default being NO.
+ *
+ */
+
+- (FlurrySessionBuilder*) withIAPReportingEnabled:(BOOL) value;
+#endif
+
 #if TARGET_OS_TV
 /*!
  *  @brief Sets the minimum duration (in minutes) before a partial session report is sent to Flurry.
