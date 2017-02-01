@@ -13,10 +13,26 @@
 #import "QBUUser+INPerson.h"
 #import "QMINPersonProtocol.h"
 
+#define DEVELOPMENT 1
+
+#if DEVELOPMENT == 0
+
+// Production
+static const NSUInteger kQMApplicationID = 13318;
+static NSString * const kQMAuthorizationKey = @"WzrAY7vrGmbgFfP";
+static NSString * const kQMAuthorizationSecret = @"xS2uerEveGHmEun";
+static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
+
+#else
+
+// Development
 static const NSUInteger kQMApplicationID = 36125;
 static NSString * const kQMAuthorizationKey = @"gOGVNO4L9cBwkPE";
 static NSString * const kQMAuthorizationSecret = @"JdqsMHCjHVYkVxV";
 static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
+
+#endif
+
 static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate";
 
 @interface QMSiriHelper()
@@ -120,7 +136,7 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
 //MARK:- Helpers
 
 - (NSArray *)personsArrayFromArray:(NSArray <id<QMINPersonProtocol>> *)array {
-    
+
     NSMutableArray<INPerson*> *personsArray = [NSMutableArray arrayWithCapacity:array.count];
     
     for (id object in array) {
