@@ -39,13 +39,7 @@ static NSString *const kQMUsersCacheNameKey = @"qb-users-cache";
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.dialogType == %@ AND SELF.name.length > 0", @(QBChatDialogTypeGroup)];
     
     [[QMChatCache instance] dialogsSortedBy:@"name" ascending:YES withPredicate:predicate completion:^(NSArray<QBChatDialog *> * _Nullable dialogs) {
-        NSLog(@"dialogs = %@",dialogs);
-        
-        for (QBChatDialog *dialog in dialogs) {
-            NSLog(@"dialog.name = %@",dialog.name);
-        }
-        
-        NSLog(@"SIRI_DEBUG________results.count = %@",@(dialogs.count));
+
         if (completion) {
             completion(dialogs);
         }

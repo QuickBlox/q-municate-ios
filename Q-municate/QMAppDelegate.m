@@ -23,7 +23,7 @@ static NSString * const kQMNotificationActionTextAction = @"TEXT_ACTION";
 static NSString * const kQMNotificationCategoryReply = @"TEXT_REPLY";
 static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate";
 
-#define DEVELOPMENT 1
+#define DEVELOPMENT 0
 
 #if DEVELOPMENT == 0
 
@@ -63,7 +63,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBSettings setAutoReconnectEnabled:YES];
     [QBSettings setCarbonsEnabled:YES];
     
-#if DEVELOPMENT == 1
+#if DEVELOPMENT == 0
     [QBSettings setLogLevel:QBLogLevelNothing];
     [QBSettings disableXMPPLogging];
     [QMServicesManager enableLogging:NO];
@@ -103,8 +103,8 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     
     // Sirri supported in ios 10 +
     if (iosMajorVersion() > 9) {
-        [INPreferences requestSiriAuthorization:^(INSiriAuthorizationStatus status) {
-            ILog(@"INSiriAuthorizationStatus %ld",(long)status);
+        [INPreferences requestSiriAuthorization:^(INSiriAuthorizationStatus __unused status) {
+
         }];
     }
     
