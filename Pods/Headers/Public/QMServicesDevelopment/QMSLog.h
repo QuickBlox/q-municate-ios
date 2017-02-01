@@ -1,1 +1,1 @@
-../../../../../q-municate-services-ios/QMServices/QMSLog.h
+../../../QMServicesDevelopment/QMServices/QMSLog.h

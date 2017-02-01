@@ -2714,8 +2714,8 @@
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "e6f5e006-a556-4251-9b2e-6bad96d4ce85";
-				PROVISIONING_PROFILE_SPECIFIER = "Q-municate_AppStore";
+				PROVISIONING_PROFILE = "f84765c5-8172-4aa0-801e-df50a3db610e";
+				PROVISIONING_PROFILE_SPECIFIER = "Q-municate adHoc";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2779,8 +2779,8 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMSiriExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1a707724-909a-426f-9e5b-76b36049dea9";
-				PROVISIONING_PROFILE_SPECIFIER = "Siri extension AppStore";
+				PROVISIONING_PROFILE = "bbb82d38-a084-482d-9d85-06fc62309aa8";
+				PROVISIONING_PROFILE_SPECIFIER = "Siri extension AdHoc";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

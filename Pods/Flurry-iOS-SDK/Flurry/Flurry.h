@@ -1102,12 +1102,15 @@ typedef enum {
  *  @brief Enable custom event logging.
  *  @since 2.7
  * 
+ *  @deprecated since 7.9.0.
+ *  This method will be removed in a future version of the SDK.
+ *
  *  Use this method to allow the capture of custom events. The default value is @c YES.
  *
  *  @param value YES to enable event logging, NO to stop custom logging.
  *
  */
-+ (void)setEventLoggingEnabled:(BOOL)value;
++ (void)setEventLoggingEnabled:(BOOL)value __attribute__ ((deprecated));
 
 #if !TARGET_OS_TV
 /*!
@@ -1159,6 +1162,20 @@ typedef enum {
  *
  */
 + (void) logPaymentTransaction:(SKPaymentTransaction*)transaction statusCallback:(void(^)(FlurryTransactionRecordStatus))statusCallback;
+#endif
+
+#if !TARGET_OS_WATCH
+/*!
+ *  @brief Enables implicit recording of Apple Store transactions.
+ *  @since 7.9.0
+ *
+ *  This method needs to be called before any transaction is finialized.
+ *
+ *
+ *  @param value YES to enable transaction logging, NO to stop transaction logging.
+ *
+ */
++ (void) setIAPReportingEnabled:(BOOL)value;
 #endif
 
 
