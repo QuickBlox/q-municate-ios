@@ -9,12 +9,9 @@
 			<string>INSendMessageIntent</string>
 			<key>IntentExamples</key>
 			<array>
-				<string>Q-municate message</string>
-				<string>Send Kate a message with Q-municate that says how are you doing today?</string>
-				<string>Siri, Message Alex using Q-municate saying hello</string>
-				<string>Send message with Q-municate</string>
-				<string>Send message using Q-municate</string>
-				<string>message Q-municate</string>
+				<string>Tell Alex i&apos;ll be right there with Q-municate</string>
+				<string>Send a message to Kate with Q-municate</string>
+				<string>Text Alex using Q-municate where are you?</string>
 			</array>
 		</dict>
 	</array>
