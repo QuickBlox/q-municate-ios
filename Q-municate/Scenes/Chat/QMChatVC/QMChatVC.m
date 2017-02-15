@@ -504,14 +504,17 @@ NYTPhotosViewControllerDelegate
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                           
-                                                          [QMImagePicker takePhotoInViewController:self resultHandler:self allowsEditing:NO];
+                                                          [QMImagePicker takePhotoOrVideoInViewController:self
+                                                                                              maxDuration:30
+                                                                                                  quality:UIImagePickerControllerQualityTypeIFrame1280x720
+                                                                                            resultHandler:self];
                                                       }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CHOOSE_IMAGE", nil)
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                           
-                                                          [QMImagePicker choosePhotoInViewController:self resultHandler:self allowsEditing:NO];
+                                                          [QMImagePicker chooseFromGaleryInViewController:self resultHandler:self];
                                                       }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LOCATION", nil)
@@ -547,7 +550,14 @@ NYTPhotosViewControllerDelegate
 
 - (Class)viewClassForItem:(QBChatMessage *)item {
     
-    if ([item isLocationMessage]) {
+    if ([item isVideoAttachment]) {
+        return item.senderID == self.senderID ? [QMVideoOutgoingCell class] : [QMVideoIncomingCell class];
+    }
+    else if ([item isAudioAttachment]) {
+            return item.senderID == self.senderID ? [QMVideoOutgoingCell class] : [QMVideoIncomingCell class];
+        
+    }
+    else if ([item isLocationMessage]) {
         
         return item.senderID == self.senderID ? [QMChatLocationOutgoingCell class] : [QMChatLocationIncomingCell class];
     }
@@ -813,6 +823,8 @@ NYTPhotosViewControllerDelegate
         
         if ([message isMediaMessage]) {
             
+            
+            
             [[QMCore instance].chatService.chatAttachmentService localImageForAttachmentMessage:message completion:^(NSError __unused * error, UIImage *image) {
                 if (image) {
                     
@@ -908,6 +920,7 @@ NYTPhotosViewControllerDelegate
 }
 
 - (void)collectionView:(QMChatCollectionView *)collectionView configureCell:(UICollectionViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
+    
     [super collectionView:collectionView configureCell:cell forIndexPath:indexPath];
     
     QMChatCell *currentCell = (QMChatCell *)cell;
@@ -919,7 +932,8 @@ NYTPhotosViewControllerDelegate
     
     if ([cell isKindOfClass:[QMChatOutgoingCell class]]
         || [cell isKindOfClass:[QMChatAttachmentOutgoingCell class]]
-        || [cell isKindOfClass:[QMChatLocationOutgoingCell class]]) {
+        || [cell isKindOfClass:[QMChatLocationOutgoingCell class]]
+        || [cell isKindOfClass:[QMMediaIncomingCell class]]) {
         
         currentCell.containerView.bgColor = QMChatOutgoingCellColor();
         
@@ -944,7 +958,8 @@ NYTPhotosViewControllerDelegate
     }
     else if ([cell isKindOfClass:[QMChatIncomingCell class]]
              || [cell isKindOfClass:[QMChatAttachmentIncomingCell class]]
-             || [cell isKindOfClass:[QMChatLocationIncomingCell class]]) {
+             || [cell isKindOfClass:[QMChatLocationIncomingCell class]]
+             || [cell isKindOfClass:[QMMediaIncomingCell class]]) {
         
         currentCell.containerView.bgColor = [UIColor whiteColor];
         currentCell.textView.linkAttributes = @{NSForegroundColorAttributeName : QMChatIncomingLinkColor(),
@@ -985,6 +1000,11 @@ NYTPhotosViewControllerDelegate
         currentCell.containerView.bgColor = [UIColor whiteColor];
         currentCell.layer.cornerRadius = 8;
         currentCell.clipsToBounds = YES;
+    }
+    
+    if ([cell conformsToProtocol:@protocol(QMMediaViewDelegate)]) {
+        
+    
     }
     
     if ([cell conformsToProtocol:@protocol(QMChatAttachmentCell)]) {
@@ -1769,7 +1789,32 @@ NYTPhotosViewControllerDelegate
     });
 }
 
+- (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingVideo:(NSURL *)videoUrl {
+    
+    QMMediaItem *item = [QMMediaItem videoItemWithURL:videoUrl];
+    QBChatMessage* message = [QMMessagesHelper chatMessageWithText:nil
+                                                          senderID:self.senderID
+                                                      chatDialogID:self.chatDialog.ID
+                                                          dateSent:[NSDate date]];
+    
+    [[QMCore instance].chatService sendAttachmentMessage:message toDialog:self.chatDialog withMediaItem:item completion:^(NSError * _Nullable error) {
+        if (error) {
+            
+        }
+    }];
+}
+
 - (UIImage *)resizedImageFromImage:(UIImage *)image {
+    QBChatMessage *message = [QBChatMessage message];
+    
+    [self.chatDialog sendMessage:message completionBlock:^(NSError * _Nullable error) {
+        if (!error) {
+            NSLog(@"Message with ID = %@ has been sent",message.ID);
+        }
+        else {
+            NSLog(@"Message with ID = %@ hasn't been sent",message.ID);
+        }
+    }];
     
     CGFloat largestSide = image.size.width > image.size.height ? image.size.width : image.size.height;
     CGFloat scaleCoefficient = largestSide / 560.0f;
