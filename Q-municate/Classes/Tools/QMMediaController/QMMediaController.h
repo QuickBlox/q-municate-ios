@@ -25,7 +25,7 @@
 - (void)bindAttachmentCell:(UIView<QMChatAttachmentCell> *)cell withMessage:(QBChatMessage *)message;
 - (void)unbindAttachmentCellForMessage:(QBChatMessage *)message;
 
-- (void)bindView:(id<QMMediaViewDelegate>)view withMessage:(QBChatMessage *)message;
-- (void)unbindViewWithMessage:(QBChatMessage *)message;
+- (id<QMMediaViewDelegate>)bindView:(id<QMMediaViewDelegate>)view withMessage:(QBChatMessage *)message attachmentID:(NSString *)attachmentID;
+- (void)unbindViewWithAttachment:(QBChatAttachment *)attachment;
 
 @end
