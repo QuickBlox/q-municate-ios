@@ -14,7 +14,7 @@
 @end
 
 
-@interface QMAudioPlayer()
+@interface QMAudioPlayer() <AVAudioPlayerDelegate>
 
 @property (nonatomic,strong) AVAudioPlayer *audioPlayer;
 @property (strong, nonatomic) NSTimer *progressTimer;
@@ -82,6 +82,7 @@
     self.status.playerStatus = QMPlayerStatusStopped;
     self.status.currentTime = 0;
     self.audioPlayer = nil;
+    [self.playerDelegate player:self didChangePlayingStatus:self.status];
 }
 
 - (void)_qmPlayerPlay {
@@ -91,6 +92,8 @@
     self.status.progress = 0.0;
     self.status.playerStatus = QMPlayerStatusPlaying;
     [self startProgressTimer];
+    
+    [self.playerDelegate player:self didChangePlayingStatus:self.status];
 }
 
 //MARK: - Timer
@@ -113,6 +116,13 @@
     }
 }
 
+
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {
+    
+    if (player == self.audioPlayer && flag) {
+        [self _qmPlayerStop];
+    }
+}
 - (void)startProgressTimer {
     self.progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateProgressTimer) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.progressTimer forMode:NSRunLoopCommonModes];
