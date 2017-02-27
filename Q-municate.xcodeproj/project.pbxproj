@@ -177,6 +177,7 @@
 		E063556E1E1D1D4F00BE9061 /* QMMessageIntentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = E063556C1E1D1D4F00BE9061 /* QMMessageIntentHandler.m */; };
 		E06355721E1D1E3300BE9061 /* QBUUser+INPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = E06355711E1D1E3300BE9061 /* QBUUser+INPerson.m */; };
 		E06355771E1D3CA800BE9061 /* QBChatDialog+INPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = E06355761E1D3CA800BE9061 /* QBChatDialog+INPerson.m */; };
+		E06F890B1E60FFF30017BBEC /* QMCallWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = E06F890A1E60FFF30017BBEC /* QMCallWindow.m */; };
 		E07BC2271DDF5FD900B8D3B0 /* QMSiriExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E07BC21F1DDF5FD900B8D3B0 /* QMSiriExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E08441D91E1E611D00B87D0F /* NSString+QMSiriUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = E08441D81E1E611D00B87D0F /* NSString+QMSiriUtils.m */; };
 		E08441DA1E1E611D00B87D0F /* NSString+QMSiriUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = E08441D81E1E611D00B87D0F /* NSString+QMSiriUtils.m */; };
@@ -517,6 +518,7 @@
 		E03871E01DDB36F800554EB9 /* IntentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntentViewController.h; sourceTree = "<group>"; };
 		E03871E11DDB36F800554EB9 /* IntentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IntentViewController.m; sourceTree = "<group>"; };
 		E03871E61DDB36F800554EB9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E03C83151E61F9E30039A9D0 /* QMCallViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCallViewDelegate.h; sourceTree = "<group>"; };
 		E03F3D331E1C724E00A46884 /* NSString+QMTransliterating.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+QMTransliterating.h"; sourceTree = "<group>"; };
 		E03F3D341E1C724E00A46884 /* NSString+QMTransliterating.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+QMTransliterating.m"; sourceTree = "<group>"; };
 		E04E45C51DE5A78700A0E0FC /* QMSiriHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSiriHelper.h; sourceTree = "<group>"; };
@@ -533,6 +535,8 @@
 		E06355731E1D3B7D00BE9061 /* QMINPersonProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMINPersonProtocol.h; path = "Q-municate/Classes/Common/QMINPersonProtocol.h"; sourceTree = SOURCE_ROOT; };
 		E06355751E1D3CA800BE9061 /* QBChatDialog+INPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBChatDialog+INPerson.h"; sourceTree = "<group>"; };
 		E06355761E1D3CA800BE9061 /* QBChatDialog+INPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QBChatDialog+INPerson.m"; sourceTree = "<group>"; };
+		E06F89091E60FFF30017BBEC /* QMCallWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCallWindow.h; sourceTree = "<group>"; };
+		E06F890A1E60FFF30017BBEC /* QMCallWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMCallWindow.m; sourceTree = "<group>"; };
 		E07BC21F1DDF5FD900B8D3B0 /* QMSiriExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QMSiriExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E07BC2241DDF5FD900B8D3B0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E08441D71E1E611D00B87D0F /* NSString+QMSiriUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+QMSiriUtils.h"; sourceTree = "<group>"; };
@@ -1449,6 +1453,9 @@
 			children = (
 				5868B05C1CE9C668004F9233 /* QMCallManager.h */,
 				5868B05D1CE9C668004F9233 /* QMCallManager.m */,
+				E06F89091E60FFF30017BBEC /* QMCallWindow.h */,
+				E06F890A1E60FFF30017BBEC /* QMCallWindow.m */,
+				E03C83151E61F9E30039A9D0 /* QMCallViewDelegate.h */,
 			);
 			path = QMCallManager;
 			sourceTree = "<group>";

@@ -76,7 +76,10 @@
     [self.buttons addObject:button];
     [self.actions addObject:[action copy]];
 }
-
+- (void)removeButton:(UIButton *)button {
+     NSUInteger idx = [self.buttons indexOfObject:button];
+    [self.buttons removeObjectAtIndex:idx];
+}
 - (void)updateItemsDisplay {
     
     NSMutableArray *items = [NSMutableArray arrayWithArray:self.items];

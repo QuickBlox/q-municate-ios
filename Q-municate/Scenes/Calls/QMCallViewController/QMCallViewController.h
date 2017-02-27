@@ -7,7 +7,23 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "QMCallViewDelegate.h"
 
+typedef NS_ENUM(NSUInteger, QMCallViewState) {
+    /**
+     *  Incomind audio call.
+     */
+    QMCallViewStateMaximized,
+    /**
+     *  Incoming video call.
+     */
+    QMCallViewStateMinimized,
+    /**
+     *  Outgoing audio call.
+     */
+    QMCallViewStateHidden
+
+};
 /**
  *  QMCallViewController possible states.
  */
@@ -44,6 +60,9 @@ typedef NS_ENUM(NSUInteger, QMCallState) {
  */
 @interface QMCallViewController : UIViewController
 
+@property (weak, nonatomic)  id<QMCallViewDelegate> callViewDelegate;
+@property (assign, nonatomic) QMCallViewState viewState;
+
 // Unavailable initializers
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
@@ -58,6 +77,7 @@ typedef NS_ENUM(NSUInteger, QMCallState) {
  *
  *  @return QMCallViewController with a specific state
  */
+
 + (instancetype)callControllerWithState:(QMCallState)callState;
 
 @end

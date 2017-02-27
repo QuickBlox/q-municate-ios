@@ -25,5 +25,6 @@
 + (UIButton *)speakerButton;
 + (UIButton *)cameraButton;
 + (UIButton *)cameraRotationButton;
++ (UIButton *)minimizeButton;
 
 @end
