@@ -201,7 +201,7 @@ NYTPhotosViewControllerDelegate
     self.statusStringBuilder = [[QMStatusStringBuilder alloc] init];
     
     
-    self.mediaController = [[QMMediaController alloc] init];
+    self.mediaController = [[QMMediaController alloc] initWithViewController:self];
     
     @weakify(self);
     
@@ -624,6 +624,9 @@ NYTPhotosViewControllerDelegate
                     return  [QMAudioIncomingCell class];
                     
                 }
+                else if ([item isImageAttachment]) {
+                    return  [QMImageIncomingCell class];
+                }
                 else {
                     
                     return [QMChatAttachmentIncomingCell class];
@@ -646,7 +649,9 @@ NYTPhotosViewControllerDelegate
                     return  [QMAudioOutgoingCell class];
                     
                 }
-                
+                else if ([item isImageAttachment]) {
+                    return  [QMImageOutgoingCell class];
+                }
                 return [QMChatAttachmentOutgoingCell class];
                 
             }
@@ -813,12 +818,14 @@ NYTPhotosViewControllerDelegate
         
     }
     else if (viewClass == [QMChatAttachmentIncomingCell class]
-             || viewClass == [QMChatLocationIncomingCell class]) {
+             || viewClass == [QMChatLocationIncomingCell class]
+             || viewClass == [QMImageIncomingCell class]) {
         
         size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), kQMAttachmentCellSize);
     }
     else if (viewClass == [QMChatAttachmentOutgoingCell class]
-             || viewClass == [QMChatLocationOutgoingCell class]) {
+             || viewClass == [QMChatLocationOutgoingCell class]
+             || viewClass == [QMImageOutgoingCell class]) {
         
         NSAttributedString *attributedString = [self bottomLabelAttributedStringForItem:item];
         
@@ -873,7 +880,9 @@ NYTPhotosViewControllerDelegate
 }
 
 - (CGSize)videoSizeForMessage:(QBChatMessage *)message {
+    
     QBChatAttachment *attachment = message.attachments.firstObject;
+    
     QMMediaItem *mediaItem = [[QMCore instance].chatService.chatAttachmentService.mediaService cachedMediaForMessage:message
                                                                                                         attachmentID:attachment.ID];
     
@@ -973,7 +982,8 @@ NYTPhotosViewControllerDelegate
     }
     else if (class == [QMChatAttachmentIncomingCell class] ||
              class == [QMChatLocationIncomingCell class] ||
-             class == [QMChatIncomingCell class]) {
+             class == [QMChatIncomingCell class] ||
+             class == [QMMediaIncomingCell class]) {
         
         if (self.chatDialog.type != QBChatDialogTypePrivate) {
             
@@ -1000,7 +1010,9 @@ NYTPhotosViewControllerDelegate
         || class == [QMChatLocationIncomingCell class]
         || class == [QMChatLocationOutgoingCell class]
         || class == [QMVideoIncomingCell class]
-        || class == [QMVideoOutgoingCell class]) {
+        || class == [QMVideoOutgoingCell class]
+        || class == [QMImageOutgoingCell class]
+        || class == [QMImageIncomingCell class]) {
         
         size = [TTTAttributedLabel sizeThatFitsAttributedString:[self bottomLabelAttributedStringForItem:item]
                                                 withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - kQMWidthPadding, CGFLOAT_MAX)
@@ -1109,12 +1121,6 @@ NYTPhotosViewControllerDelegate
         
     }
     
-    if ([cell conformsToProtocol:@protocol(QMChatAttachmentCell)]) {
-        
-        if (message.attachments != nil) {
-            //     [self.mediaController bindAttachmentCell:(UIView <QMChatAttachmentCell> *)cell withMessage:message];
-        }
-    }
     else if ([cell conformsToProtocol:@protocol(QMChatLocationCell)]) {
         
         [[(id<QMChatLocationCell>)cell imageView]
@@ -1722,22 +1728,10 @@ NYTPhotosViewControllerDelegate
         [self.navigationController pushViewController:locationVC animated:YES];
     }
     
-    else if ([cell isKindOfClass:[QMVideoOutgoingCell class]] || [cell isKindOfClass:[QMVideoIncomingCell class]]) {
-        QBChatAttachment *attachment = currentMessage.attachments.firstObject;
-        QMMediaItem *mediaItem = [[QMCore instance].chatService.chatAttachmentService.mediaService cachedMediaForMessage:currentMessage attachmentID:attachment.ID];
+    else if ([cell isKindOfClass:[QMBaseMediaCell class]]) {
         
-        if (mediaItem.isReady) {
-            
-            AVPlayer *player = [[AVPlayer alloc] initWithURL:mediaItem.localURL];
-            
-            AVPlayerViewController *playerVC = [AVPlayerViewController new];
-            playerVC.player = player;
-            
-            
-            [self presentViewController:playerVC animated:YES completion:^{
-                [player play];
-            }];
-        }
+        [[((QMBaseMediaCell*)cell) presenter] didTapContainer];
+
     }
     else if ([cell isKindOfClass:[QMChatOutgoingCell class]] || [cell isKindOfClass:[QMChatIncomingCell class]]) {
         
@@ -1866,8 +1860,8 @@ NYTPhotosViewControllerDelegate
         if (imagePicker.sourceType == UIImagePickerControllerSourceTypeCamera) {
             newImage = [newImage fixOrientation];
         }
-        
-        [self sendAttachmentMessageWithImage:newImage];
+        QMMediaItem *mediaItem = [QMMediaItem mediaItemWithImage:newImage];
+         [self sendAttachmentMessageWithMediaItem:mediaItem];
     });
 }
 
