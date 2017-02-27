@@ -20,10 +20,7 @@
 
 @property (copy, nonatomic) id<QMMediaViewDelegate>(^viewForMessage)(QBChatMessage *message);
 
-
-
-- (void)bindAttachmentCell:(UIView<QMChatAttachmentCell> *)cell withMessage:(QBChatMessage *)message;
-- (void)unbindAttachmentCellForMessage:(QBChatMessage *)message;
+- (instancetype)initWithViewController:(UIViewController *)controller;
 
 - (id<QMMediaViewDelegate>)bindView:(id<QMMediaViewDelegate>)view withMessage:(QBChatMessage *)message attachmentID:(NSString *)attachmentID;
 - (void)unbindViewWithAttachment:(QBChatAttachment *)attachment;
