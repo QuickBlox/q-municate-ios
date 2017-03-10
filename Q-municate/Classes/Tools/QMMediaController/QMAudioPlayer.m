@@ -76,6 +76,7 @@
 - (void)_qmPlayerStop {
     
     [self stopProgressTimer];
+    
     [self.audioPlayer stop];
     self.status.progress = 0.0;
     self.status.mediaID = nil;
@@ -86,12 +87,14 @@
 }
 
 - (void)_qmPlayerPlay {
+    [self startProgressTimer];
     
     [self.audioPlayer prepareToPlay];
     [self.audioPlayer play];
     self.status.progress = 0.0;
     self.status.playerStatus = QMPlayerStatusPlaying;
-    [self startProgressTimer];
+    
+    self.status.duration = self.audioPlayer.duration;
     
     [self.playerDelegate player:self didChangePlayingStatus:self.status];
 }
