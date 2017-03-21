@@ -61,6 +61,10 @@ static const NSTimeInterval kQMMinimalDuration = 2; // in seconds
     return self;
 }
 
+- (NSTimeInterval)duration {
+    return [self.recorder currentTime];
+}
+
 - (void)dealloc {
     
     NSLog(@"QMAudioRecorderDealloc");
@@ -106,7 +110,7 @@ static const NSTimeInterval kQMMinimalDuration = 2; // in seconds
                 
                 QMMediaItem *item = nil;
                 if (duration > kQMMinimalDuration) {
-                    item = [QMMediaItem audioItemWithURL:recorder.url];
+                    item = [QMMediaItem audioItemWithFileURL:recorder.url];
                     item.mediaDuration = duration;
                     item.data = audioData;
                 }
