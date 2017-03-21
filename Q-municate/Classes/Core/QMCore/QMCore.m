@@ -57,10 +57,6 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         
         // Profile init
         _currentProfile = [QMProfile currentProfile];
-        
-        // Users cache init
-        [self.usersService loadFromCache];
-        
         // Vocabulary string cache init
         _cachedVocabularyStrings = [NSMutableOrderedSet orderedSet];
         
