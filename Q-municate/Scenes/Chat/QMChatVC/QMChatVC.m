@@ -32,13 +32,14 @@
 #import <QMDateUtils.h>
 #import <UIImageView+QMLocationSnapshot.h>
 #import "QBChatMessage+QMCallNotifications.h"
-#import "QMMediaInteractor.h"
-
+#import "QMAudioRecorder.h"
 #import "QMMediaController.h"
-#import <AVKit/AVKit.h>
+#import "QMAudioPlayer.h"
+#import "QMPermissions.h"
 
 // external
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
+#import <AVKit/AVKit.h>
 
 @import SafariServices;
 
@@ -128,6 +129,10 @@ NYTPhotosViewControllerDelegate
 @property (weak, nonatomic) UIView *photoReferenceView;
 
 @property (strong, nonatomic) QMMediaController *mediaController;
+
+
+@property (strong, nonatomic) QMAudioRecorder *currentAudioRecorder;
+
 
 @end
 
@@ -220,6 +225,7 @@ NYTPhotosViewControllerDelegate
         @strongify(self);
         [self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion duration:kQMDefaultNotificationDismissTime];
     }];
+    
     
     [self.mediaController setViewForMessage:^id(QBChatMessage *message) {
         @strongify(self);
@@ -481,6 +487,127 @@ NYTPhotosViewControllerDelegate
 }
 
 #pragma mark - Toolbar actions
+
+//MARK: - QMInputToolbarDelegate
+
+- (BOOL)messagesInputToolbarAudioRecordingEnabled:(QMInputToolbar *)__unused toolbar {
+    
+    BOOL recordingIsEnabled = NO;
+    
+    if ([self messageSendingAllowed]) {
+        
+        if ([[AVAudioSession sharedInstance] recordPermission] == AVAudioSessionRecordPermissionGranted) {
+            recordingIsEnabled = YES;
+        }
+        else {
+            [self requestForRecordPermissions];
+        }
+    }
+    
+    return recordingIsEnabled;
+}
+
+- (void)requestForRecordPermissions {
+    
+    [QMPermissions requestPermissionToMicrophoneWithCompletion:^(BOOL granted) {
+        
+        // showing error alert with a suggestion
+        // to go to the settings
+        if (!granted) {
+            [self showAlertWithTitle:NSLocalizedString(@"QM_STR_MICROPHONE_ERROR", nil)
+                             message:NSLocalizedString(@"QM_STR_NO_PERMISSIONS_TO_MICROPHONE", nil)];
+        }
+        
+    }];
+}
+
+- (void)showAlertWithTitle:(NSString *)title message:(NSString *)message {
+    
+    UIAlertController *alertController = [UIAlertController
+                                          alertControllerWithTitle:title
+                                          message:message
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                      }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_SETTINGS", nil)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          
+                                                          [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                                                      }]];
+    
+    UIViewController *viewController = [[[(UISplitViewController *)[UIApplication sharedApplication].keyWindow.rootViewController viewControllers] firstObject] selectedViewController];
+    [viewController presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)messagesInputToolbarAudioRecordingStart:(QMInputToolbar *)__unused toolbar {
+    
+    [self startAudioRecording];
+    [toolbar audioRecordingStarted];
+    
+    [[UIApplication sharedApplication] setIdleTimerDisabled:true];
+}
+
+- (void)messagesInputToolbarAudioRecordingCancel:(QMInputToolbar *)toolbar {
+    [self stopAudioRecording];
+    [toolbar audioRecordingFinished];
+    
+    [[UIApplication sharedApplication] setIdleTimerDisabled:false];
+}
+
+- (void)messagesInputToolbarAudioRecordingComplete:(QMInputToolbar *)__unused toolbar {
+    [self finishAudioRecording];
+}
+
+- (NSTimeInterval)inputPanelAudioRecordingDuration:(QMInputToolbar *)__unused toolbar {
+    
+    if (self.currentAudioRecorder != nil) {
+        return [self.currentAudioRecorder duration];
+    }
+    
+    return 0.0;
+}
+
+- (void)startAudioRecording {
+    
+    [self stopAudioRecording];
+    [[QMAudioPlayer audioPlayer] stop];
+    
+    if (self.currentAudioRecorder == nil) {
+        self.currentAudioRecorder = [[QMAudioRecorder alloc] init];;
+        [self.currentAudioRecorder startRecording];
+    }
+}
+
+- (void)finishAudioRecording {
+    
+    if (self.currentAudioRecorder != nil)
+    {
+        @weakify(self);
+        [self.currentAudioRecorder stopRecordingWithCompletion:^(QMMediaItem *mediaItem, NSError *error) {
+            @strongify(self);
+            if (mediaItem && !error) {
+                [self sendAttachmentMessageWithMediaItem:mediaItem];
+            }
+            else {
+                [self.inputToolbar shakeControls];
+            }
+        }];
+    }
+    
+}
+- (void)stopAudioRecording {
+    
+    if (self.currentAudioRecorder != nil) {
+        [self.currentAudioRecorder cancelRecording];
+        self.currentAudioRecorder = nil;
+    }
+}
 
 - (void)didPressSendButton:(UIButton *)__unused button
        withTextAttachments:(NSArray *)textAttachments
@@ -749,7 +876,7 @@ NYTPhotosViewControllerDelegate
 
 - (NSAttributedString *)topLabelAttributedStringForItem:(QBChatMessage *)messageItem {
     
-    if (messageItem.senderID == self.senderID || self.chatDialog.type == QBChatDialogTypePrivate) {
+    if (messageItem.senderID == self.senderID || self.chatDialog.type == QBChatDialogTypePrivate || [messageItem isAudioAttachment]) {
         
         return nil;
     }
@@ -864,6 +991,8 @@ NYTPhotosViewControllerDelegate
                                          limitedToNumberOfLines:0];
     }
     
+    QMChatCell *currentCell = [collectionView cellForItemAtIndexPath:indexPath];
+    
     if (self.chatDialog.type != QBChatDialogTypePrivate) {
         
         CGSize topLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:[self topLabelAttributedStringForItem:message]
@@ -888,9 +1017,9 @@ NYTPhotosViewControllerDelegate
     
     CGSize size = CGSizeMake(270.0, 142.0); //default video size for cell
     
-    if (!CGSizeEqualToSize(mediaItem.videoSize, CGSizeZero)) {
+    if (!CGSizeEqualToSize(mediaItem.mediaSize, CGSizeZero)) {
         
-        BOOL isVerticalVideo = mediaItem.videoSize.width < mediaItem.videoSize.height;
+        BOOL isVerticalVideo = mediaItem.mediaSize.width < mediaItem.mediaSize.height;
         
         size = isVerticalVideo ? CGSizeMake(142.0, 270.0) : size;
     }
@@ -976,14 +1105,14 @@ NYTPhotosViewControllerDelegate
     if (class == [QMChatOutgoingCell class] ||
         class == [QMChatAttachmentOutgoingCell class] ||
         class == [QMChatLocationOutgoingCell class] ||
-        [class isSubclassOfClass:[QMBaseMediaCell class]]) {
+        [class isSubclassOfClass:[QMMediaOutgoingCell class]]) {
         
         layoutModel.avatarSize = CGSizeZero;
     }
     else if (class == [QMChatAttachmentIncomingCell class] ||
              class == [QMChatLocationIncomingCell class] ||
              class == [QMChatIncomingCell class] ||
-             class == [QMMediaIncomingCell class]) {
+             [class isSubclassOfClass: [QMMediaIncomingCell class]]) {
         
         if (self.chatDialog.type != QBChatDialogTypePrivate) {
             
@@ -1107,19 +1236,6 @@ NYTPhotosViewControllerDelegate
         currentCell.clipsToBounds = YES;
     }
     
-    if ([cell conformsToProtocol:@protocol(QMMediaViewDelegate)]) {
-        
-//
-//        QBChatAttachment *attachment = [message.attachments firstObject];
-//        id<QMMediaViewDelegate> mediaView = (id<QMMediaViewDelegate>)cell;
-//        [[mediaView presenter] requestForMedia];
-        
-        
-//        if (attachment.ID) {
-//            currentCell =  [self.mediaController bindView:mediaCell withMessage:message attachmentID:attachment.ID];
-//        }
-        
-    }
     
     else if ([cell conformsToProtocol:@protocol(QMChatLocationCell)]) {
         
@@ -1147,11 +1263,15 @@ NYTPhotosViewControllerDelegate
     
     // marking message as read if needed
     QBChatMessage *itemMessage = [self.chatDataSource messageForIndexPath:indexPath];
-        QBChatAttachment *attachment = [itemMessage.attachments firstObject];
     
-        if ([cell conformsToProtocol:@protocol(QMMediaViewDelegate)]) {
-            [self.mediaController bindView:(id <QMMediaViewDelegate>)cell withMessage:itemMessage attachmentID:attachment.ID];
-        }
+    if ([cell conformsToProtocol:@protocol(QMMediaViewDelegate)]) {
+        
+        QBChatAttachment *attachment = itemMessage.attachments[0];
+        [self.mediaController configureView:(id<QMMediaViewDelegate>)cell
+                                withMessage:itemMessage
+                               attachmentID:attachment.ID];
+        
+    }
     
     [self readMessage:itemMessage];
     
@@ -1170,13 +1290,6 @@ NYTPhotosViewControllerDelegate
     }
 }
 
-- (void)collectionView:(UICollectionView *)__unused collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    
-    QBChatMessage *itemMessage = [self.chatDataSource messageForIndexPath:indexPath];
-    for (QBChatAttachment *attachment in itemMessage.attachments) {
-        [self.mediaController unbindViewWithAttachment:attachment];
-    }
-}
 #pragma mark - Typing status
 
 - (void)stopTyping {
@@ -1296,7 +1409,7 @@ NYTPhotosViewControllerDelegate
 
 - (void)sendAttachmentMessageWithMediaItem:(QMMediaItem *)mediaItem {
     
-    QBChatMessage* message = [QMMessagesHelper chatMessageWithText:nil
+    QBChatMessage *message = [QMMessagesHelper chatMessageWithText:nil
                                                           senderID:self.senderID
                                                       chatDialogID:self.chatDialog.ID
                                                           dateSent:[NSDate date]];
@@ -1731,7 +1844,7 @@ NYTPhotosViewControllerDelegate
     else if ([cell isKindOfClass:[QMBaseMediaCell class]]) {
         
         [[((QMBaseMediaCell*)cell) presenter] didTapContainer];
-
+        
     }
     else if ([cell isKindOfClass:[QMChatOutgoingCell class]] || [cell isKindOfClass:[QMChatIncomingCell class]]) {
         
@@ -1861,13 +1974,13 @@ NYTPhotosViewControllerDelegate
             newImage = [newImage fixOrientation];
         }
         QMMediaItem *mediaItem = [QMMediaItem mediaItemWithImage:newImage];
-         [self sendAttachmentMessageWithMediaItem:mediaItem];
+        [self sendAttachmentMessageWithMediaItem:mediaItem];
     });
 }
 
 - (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingVideo:(NSURL *)videoUrl {
     
-    QMMediaItem *mediaItem = [QMMediaItem videoItemWithURL:videoUrl];
+    QMMediaItem *mediaItem = [QMMediaItem videoItemWithFileURL:videoUrl];
     [self sendAttachmentMessageWithMediaItem:mediaItem];
 }
 

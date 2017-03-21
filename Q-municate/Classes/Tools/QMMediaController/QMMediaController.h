@@ -10,8 +10,7 @@
 
 #import "QMMediaViewDelegate.h"
 #import "QMMediaPresenter.h"
-
-@protocol QMChatAttachmentCell;
+#import "QMChatViewController.h"
 
 @interface QMMediaController : NSObject <QMChatAttachmentServiceDelegate>
 
@@ -19,10 +18,9 @@
 @property (copy, nonatomic) void(^onError)(QBChatMessage *message, NSError *error);
 
 @property (copy, nonatomic) id<QMMediaViewDelegate>(^viewForMessage)(QBChatMessage *message);
+@property (copy, nonatomic) void(^onMessageStartUploading)(QBChatMessage *message);
 
-- (instancetype)initWithViewController:(UIViewController *)controller;
-
-- (id<QMMediaViewDelegate>)bindView:(id<QMMediaViewDelegate>)view withMessage:(QBChatMessage *)message attachmentID:(NSString *)attachmentID;
-- (void)unbindViewWithAttachment:(QBChatAttachment *)attachment;
+- (instancetype)initWithViewController:(QMChatViewController *)controller;
+- (void)configureView:(id<QMMediaViewDelegate>)view withMessage:(QBChatMessage *)message attachmentID:(NSString *)attachmentID;
 
 @end
