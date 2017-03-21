@@ -8,11 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-IB_DESIGNABLE
 @interface QMBadgeView : UIView
 
-@property (assign, nonatomic) IBInspectable CGFloat cornerRadius;
-@property (assign, nonatomic) IBInspectable CGFloat borderWidth;
 @property (assign, nonatomic) IBInspectable NSUInteger badgeNumber;
 @property (assign, nonatomic) IBInspectable BOOL hideOnZeroValue;
 
