@@ -32,7 +32,7 @@ typedef enum {
  *
  *  @note There is a maximum of 605 versions allowed for a single app.
  *
- *  @param version The custom version name.
+ *  @param value The custom version name.
  */
 - (FlurrySessionBuilder*) withAppVersion:(NSString *)value;
 
@@ -45,7 +45,7 @@ typedef enum {
  *  starting a new session upon resume.  The default value for the session timeout is 10
  *  seconds in the background.
  *
- *  @param seconds The time in seconds to set the session timeout to.
+ *  @param value The time in seconds to set the session timeout to.
  */
 - (FlurrySessionBuilder*) withSessionContinueSeconds:(NSInteger)value;
 

@@ -1,1 +1,1 @@
-../../../QMCVDevelopment/QMChatViewController/Views/QMKVOView.h
+../../../../../QMChatViewController-ios/QMChatViewController/Views/QMKVOView.h

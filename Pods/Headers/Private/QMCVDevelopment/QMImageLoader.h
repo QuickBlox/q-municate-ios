@@ -1,1 +1,1 @@
-../../../QMCVDevelopment/QMChatViewController/Utils/QMImageLoader/QMImageLoader.h
+../../../../../QMChatViewController-ios/QMChatViewController/Utils/QMImageLoader/QMImageLoader.h

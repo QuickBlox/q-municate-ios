@@ -161,7 +161,7 @@ NYTPhotosViewControllerDelegate
 #pragma mark - Life cycle
 
 - (void)dealloc {
-    
+    // -dealloc
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     
     // removing left bar button item that is responsible for split view
@@ -179,6 +179,7 @@ NYTPhotosViewControllerDelegate
         
         self.inputToolbar.hidden = YES;
         self.onlineTitleView.hidden = YES;
+        [self.view.layer setDrawsAsynchronously:YES];
         
         return;
     }
@@ -599,7 +600,19 @@ NYTPhotosViewControllerDelegate
 
 #pragma mark - Attributed strings
 
+static NSMutableDictionary *dict = nil;
+
 - (NSAttributedString *)attributedStringForItem:(QBChatMessage *)messageItem {
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dict = [NSMutableDictionary dictionary];
+    });
+    
+    if (dict[messageItem.ID]) {
+        return dict[messageItem.ID];
+    }
+
     
     NSString *message = nil;
     UIColor *textColor = nil;
@@ -607,7 +620,6 @@ NYTPhotosViewControllerDelegate
     UIImage *iconImage = nil;
     
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.lineSpacing = 8.0f;
     
     if ([messageItem isNotificatonMessage] || messageItem.isDateDividerMessage) {
         
@@ -674,6 +686,8 @@ NYTPhotosViewControllerDelegate
         
         attributedString = [[NSAttributedString alloc] initWithString:message ?: @"" attributes:attributes];
     }
+    
+    dict[messageItem.ID] = attributedString;
     
     return attributedString;
 }
@@ -874,11 +888,7 @@ NYTPhotosViewControllerDelegate
         
         if (self.chatDialog.type != QBChatDialogTypePrivate) {
             
-            NSAttributedString *topLabelString = [self topLabelAttributedStringForItem:item];
-            CGSize size = [TTTAttributedLabel sizeThatFitsAttributedString:topLabelString
-                                                           withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - kQMWidthPadding, CGFLOAT_MAX)
-                                                    limitedToNumberOfLines:1];
-            layoutModel.topLabelHeight = size.height;
+            layoutModel.topLabelHeight = 18;
         }
         
         layoutModel.spaceBetweenTopLabelAndTextView = 5.0f;
@@ -953,19 +963,14 @@ NYTPhotosViewControllerDelegate
         /**
          *  Setting opponent avatar
          */
-        QBUUser *sender = [[QMCore instance].usersService.usersMemoryStorage userWithID:message.senderID];
+        QBUUser *sender = [[QMCore instance].usersService.usersMemoryStorage
+                           userWithID:message.senderID];
         
         QMImageView *avatarView = [(QMChatCell *)cell avatarView];
         
         NSURL *userImageUrl = [NSURL URLWithString:sender.avatarUrl];
-        UIImage *placeholder = [QMPlaceholder placeholderWithFrame:avatarView.bounds title:sender.fullName ID:sender.ID];
-        
-        avatarView.imageViewType = QMImageViewTypeCircle;
-        [avatarView setImageWithURL:userImageUrl
-                        placeholder:placeholder
-                            options:SDWebImageHighPriority
-                           progress:nil
-                     completedBlock:nil];
+
+        [avatarView setImageWithURL:userImageUrl title:sender.fullName completedBlock:nil];
     }
     else if ([cell isKindOfClass:[QMChatNotificationCell class]]) {
         
