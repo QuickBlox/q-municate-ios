@@ -47,12 +47,12 @@
         if (recipient != nil) {
             NSParameterAssert(recipient.fullName);
             
-            [cell setTitle:recipient.fullName placeholderID:[chatDialog opponentID] avatarUrl:recipient.avatarUrl];
+            [cell setTitle:recipient.fullName avatarUrl:recipient.avatarUrl];
         }
     }
     else {
         
-        [cell setTitle:chatDialog.name placeholderID:chatDialog.ID.hash avatarUrl:chatDialog.photo];
+        [cell setTitle:chatDialog.name avatarUrl:chatDialog.photo];
     }
     
     NSString *time = [QMDateUtils formattedShortDateString:chatDialog.updatedAt];

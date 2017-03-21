@@ -15,11 +15,9 @@
 + (CGFloat)height;
 
 - (void)setTitle:(NSString *)title
-   placeholderID:(NSUInteger)placeholderID
        avatarUrl:(NSString *)avatarUrl;
 
 - (void)setTitle:(NSString *)title;
-
 - (void)setBody:(NSString *)body;
 
 @end

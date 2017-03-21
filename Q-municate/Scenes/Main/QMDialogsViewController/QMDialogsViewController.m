@@ -71,29 +71,17 @@ QMSearchResultsControllerDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    //Commented due to bug with reply from inactive app.
-    //    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
-    //        // skip view controller setup if app was
-    //        // instantinated to send a message from background
-    //        return;
-    //    }
-
-    // Hide empty separators
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    
-    // search implementation
-    [self configureSearch];
-    
-    // Data sources init
-    [self configureDataSources];
-    
-    // registering nibs for current VC and search results VC
-    [self registerNibs];
-    
     // Subscribing delegates
     [[QMCore instance].chatService addDelegate:self];
     [[QMCore instance].usersService addDelegate:self];
+    // Hide empty separators
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    // search implementation
+    [self configureSearch];
+    // Data sources init
+    [self configureDataSources];
+    // registering nibs for current VC and search results VC
+    [self registerNibs];
     
     [self performAutoLoginAndFetchData];
     
@@ -211,7 +199,12 @@ QMSearchResultsControllerDelegate
     self.dialogsDataSource.delegate = self;
     self.placeholderDataSource  = [[QMPlaceholderDataSource alloc] init];
     
-    self.tableView.dataSource = self.placeholderDataSource;
+    if ([QMCore instance].chatService.dialogsMemoryStorage.unsortedDialogs.count > 0) {
+        self.tableView.dataSource = self.dialogsDataSource;
+    }
+    else {
+        self.tableView.dataSource = self.placeholderDataSource;
+    }
     
     QMDialogsSearchDataProvider *searchDataProvider = [[QMDialogsSearchDataProvider alloc] init];
     searchDataProvider.delegate = self.searchResultsController;
@@ -327,14 +320,15 @@ QMSearchResultsControllerDelegate
     [self.tableView reloadData];
 }
 
-- (void)chatService:(QMChatService *)__unused chatService didLoadChatDialogsFromCache:(NSArray *)dialogs withUsers:(NSSet *)__unused dialogsUsersIDs {
-    
-    if (dialogs.count > 0) {
-        self.tableView.dataSource = self.dialogsDataSource;
-        self.tableView.tableHeaderView = self.searchController.searchBar;
-    }
-    [self.tableView reloadData];
-}
+//- (void)chatService:(QMChatService *)__unused chatService didLoadChatDialogsFromCache:(NSArray *)dialogs withUsers:(NSSet *)__unused dialogsUsersIDs {
+//    
+////    if (dialogs.count > 0) {
+////        
+////        self.tableView.dataSource = self.dialogsDataSource;
+////        self.tableView.tableHeaderView = self.searchController.searchBar;
+////    }
+////    [self.tableView reloadData];
+//}
 
 - (void)chatService:(QMChatService *)__unused chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)__unused dialog {
     
