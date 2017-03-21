@@ -45,6 +45,9 @@ typedef NS_ENUM(NSUInteger, QMPlayerStatus) {
 - (void)activateMediaAtURL:(NSURL *)url withID:(NSString *)itemID;
 - (void)activateMedia:(QMMediaItem *)item;
 
+- (void)pause;
+- (void)stop;
+
 @end
 
 @protocol QMAudioPlayerDelegate <NSObject>

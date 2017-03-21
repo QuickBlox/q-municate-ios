@@ -51,27 +51,41 @@
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
     [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
     
-    if (self.audioPlayer.playing) {
+    QMPlayerStatus status = self.status.playerStatus;
+    
+    if (status != QMPlayerStatusStopped) {
         
-        [self _qmPlayerStop];
-    }
-    else {
-        
-        NSError *error;
-        self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url fileTypeHint:AVFileTypeMPEGLayer3 error:&error];
-        
-        self.status.mediaID = itemID;
-        [self _qmPlayerPlay];
+        if ([self.status.mediaID isEqualToString:itemID]) {
+            
+            if (status == QMPlayerStatusPaused) {
+                [self _qmPlayerPlay];
+            }
+            else {
+                [self _qmPlayerPause];
+            }
+            
+            return;
+        }
+        else {
+            [self _qmPlayerStop];
+        }
     }
     
-    if (self.onStatusChanged) {
-        self.onStatusChanged(self.status.mediaID, YES);
-    }
+    
+    NSError *error;
+    self.status.mediaID = itemID;
+    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url fileTypeHint:AVFileTypeMPEGLayer3 error:&error];
+    self.audioPlayer.delegate = self;
+    [self _qmPlayerPlay];
+    
 }
 
 
 
 //MARK: - private
+- (void)stop {
+    [self _qmPlayerStop];
+}
 
 - (void)_qmPlayerStop {
     
@@ -79,10 +93,20 @@
     
     [self.audioPlayer stop];
     self.status.progress = 0.0;
-    self.status.mediaID = nil;
     self.status.playerStatus = QMPlayerStatusStopped;
     self.status.currentTime = 0;
     self.audioPlayer = nil;
+    [self.playerDelegate player:self didChangePlayingStatus:self.status];
+}
+
+- (void)_qmPlayerPause {
+    
+    [self stopProgressTimer];
+    
+    [self.audioPlayer pause];
+    self.status.playerStatus = QMPlayerStatusPaused;
+    self.status.currentTime = self.audioPlayer.currentTime;
+    self.status.duration = self.audioPlayer.duration;
     [self.playerDelegate player:self didChangePlayingStatus:self.status];
 }
 
@@ -111,8 +135,6 @@
     
     if (self.audioPlayer.playing) {
         
-        CGFloat progress = self.audioPlayer.currentTime / self.audioPlayer.duration;
-        self.status.progress = progress;
         self.status.duration = self.audioPlayer.duration;
         self.status.currentTime = self.audioPlayer.currentTime;
         [self.playerDelegate player:self didChangePlayingStatus:self.status];
