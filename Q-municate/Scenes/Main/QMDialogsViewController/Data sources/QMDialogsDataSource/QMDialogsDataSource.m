@@ -76,11 +76,7 @@ static NSMutableArray *__itmes = nil;
 
 - (NSMutableArray *)items {
     
-    if (!__itmes) {
-     
-        __itmes = [[[QMCore instance].chatService.dialogsMemoryStorage dialogsSortByLastMessageDateWithAscending:NO] mutableCopy];
-    }
-    return __itmes;
+    return [[[QMCore instance].chatService.dialogsMemoryStorage dialogsSortByLastMessageDateWithAscending:NO] mutableCopy];
 }
 
 @end
