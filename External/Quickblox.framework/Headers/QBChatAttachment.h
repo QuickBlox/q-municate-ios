@@ -13,6 +13,11 @@
 @interface QBChatAttachment : NSObject <NSCoding, NSCopying>
 
 /**
+ *  Attachment name.
+ */
+@property (nonatomic, copy, nullable ) NSString *name;
+
+/**
  *  Type of attachment.
  *
  *  @discussion Can be any type. For example: audio, video, image, location, any other
@@ -28,6 +33,27 @@
  *  ID of attached element.
  */
 @property (nonatomic, copy, nullable) NSString *ID;
+
+
+/**
+ *  Width of attachment (for video/image).
+ */
+@property (nonatomic, assign) NSUInteger width;
+
+/**
+ *  Height of attachment (for video/image).
+ */
+@property (nonatomic, assign) NSUInteger height;
+
+/**
+ *  Duration in seconds (for video/audio).
+ */
+@property (nonatomic, assign) double duration;
+
+/**
+ *  Size of attachment in bytes.
+ */
+@property (nonatomic, assign) NSUInteger size;
 
 /**
  *  Any addictional data.

@@ -16,5 +16,5 @@
 #import <Quickblox/QBContentHeader.h>
 #import <Quickblox/QBChatHeader.h>
 
-//! Framework version 2.9.1
+//! Framework version 2.9.3beta
 FOUNDATION_EXPORT NSString * const QuickbloxFrameworkVersion;
