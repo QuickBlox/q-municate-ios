@@ -20,8 +20,6 @@ static const NSTimeInterval kQMMinimalDuration = 2; // in seconds
 
 @implementation QMAudioRecorder
 
-#define DOCUMENTS_FOLDER [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"]
-
 - (instancetype)init {
     
     if (self = [super init]) {
@@ -69,6 +67,7 @@ static const NSTimeInterval kQMMinimalDuration = 2; // in seconds
     
     NSLog(@"QMAudioRecorderDealloc");
 }
+
 - (void)startRecording {
     [self.recorder record];
 }

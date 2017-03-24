@@ -167,6 +167,7 @@
 		69D57E6818ACC11C00A9900A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69D57E6718ACC11C00A9900A /* Images.xcassets */; };
 		69DB5EF518E31D6400277226 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69DB5EF418E31D6400277226 /* MessageUI.framework */; };
 		86FD874D1982512000B6FA43 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FD874C1982512000B6FA43 /* GLKit.framework */; };
+		E026A76E1E82B9A10054AD83 /* UIScreen+QMLock.m in Sources */ = {isa = PBXBuildFile; fileRef = E026A76D1E82B9A10054AD83 /* UIScreen+QMLock.m */; };
 		E03871CD1DDB354700554EB9 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E03871CB1DDB354700554EB9 /* Intents.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E03871CE1DDB354700554EB9 /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E03871CC1DDB354700554EB9 /* IntentsUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E03F3D351E1C724E00A46884 /* NSString+QMTransliterating.m in Sources */ = {isa = PBXBuildFile; fileRef = E03F3D341E1C724E00A46884 /* NSString+QMTransliterating.m */; };
@@ -515,6 +516,8 @@
 		86FD874C1982512000B6FA43 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		914D22F55FCE43364D718A2A /* Pods-QMSiriExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QMSiriExtension.release.xcconfig"; path = "Pods/Target Support Files/Pods-QMSiriExtension/Pods-QMSiriExtension.release.xcconfig"; sourceTree = "<group>"; };
 		AAF30F47522590E10692EA18 /* Pods-QMSiriExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QMSiriExtension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-QMSiriExtension/Pods-QMSiriExtension.debug.xcconfig"; sourceTree = "<group>"; };
+		E026A76C1E82B9A10054AD83 /* UIScreen+QMLock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScreen+QMLock.h"; sourceTree = "<group>"; };
+		E026A76D1E82B9A10054AD83 /* UIScreen+QMLock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScreen+QMLock.m"; sourceTree = "<group>"; };
 		E03871CB1DDB354700554EB9 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		E03871CC1DDB354700554EB9 /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
 		E03871E01DDB36F800554EB9 /* IntentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntentViewController.h; sourceTree = "<group>"; };
@@ -1927,6 +1930,7 @@
 		6943848C18E42691001E08A9 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				E026A76B1E82B98C0054AD83 /* UIScreen */,
 				E03F3D321E1C71E100A46884 /* Common */,
 				58F143481D3665D4001AB123 /* QBChatMessage */,
 				58B3C9D31CB681F400B08A27 /* NSArray */,
@@ -2054,6 +2058,15 @@
 				E0B6A3381E2A615E001125FC /* AppIntentVocabulary.plist */,
 			);
 			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E026A76B1E82B98C0054AD83 /* UIScreen */ = {
+			isa = PBXGroup;
+			children = (
+				E026A76C1E82B9A10054AD83 /* UIScreen+QMLock.h */,
+				E026A76D1E82B9A10054AD83 /* UIScreen+QMLock.m */,
+			);
+			path = UIScreen;
 			sourceTree = "<group>";
 		};
 		E03871DF1DDB36F800554EB9 /* QMSiriExtensionUI */ = {
@@ -2492,6 +2505,7 @@
 				584A6DC51C9DC80900B7D641 /* QMTagView.m in Sources */,
 				58D847581C848272000C40BA /* QMDialogsSearchDataSource.m in Sources */,
 				58B072531CFDB831006F4D29 /* UIViewController+SmartDeselection.m in Sources */,
+				E026A76E1E82B9A10054AD83 /* UIScreen+QMLock.m in Sources */,
 				E03F3D351E1C724E00A46884 /* NSString+QMTransliterating.m in Sources */,
 				55D8ADFB19AC833300DAF79F /* QMLicenseAgreement.m in Sources */,
 				58D847681C85A1DB000C40BA /* QMGlobalSearchDataSource.m in Sources */,

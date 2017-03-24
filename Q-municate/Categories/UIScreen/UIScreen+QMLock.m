@@ -32,7 +32,7 @@ static void *kAssociatedObjectKey = &kAssociatedObjectKey;
     
     self.lockedInterfaceOrientation = UIInterfaceOrientationUnknown;
     
-    if (!UIDeviceOrientationIsValidInterfaceOrientation([UIApplication sharedApplication].statusBarOrientation)) {
+    if (!UIDeviceOrientationIsValidInterfaceOrientation([[UIDevice currentDevice] orientation])) {
        [UIViewController attemptRotationToDeviceOrientation];
     }
 }

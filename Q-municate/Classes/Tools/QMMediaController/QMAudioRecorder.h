@@ -28,6 +28,8 @@ typedef NS_ENUM(NSUInteger, QBRecordState) {
 - (void)cancelRecording;
 - (void)stopRecordingWithCompletion:(QMAudioRecordCompletionBlock)completion;
 
+- (NSTimeInterval)duration;
+
 @end
 
 

@@ -36,6 +36,7 @@
 #import "QMMediaController.h"
 #import "QMAudioPlayer.h"
 #import "QMPermissions.h"
+#import "UIScreen+QMLock.h"
 
 // external
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
@@ -64,7 +65,9 @@ QMChatCellDelegate,
 QMImagePickerResultHandler,
 QMImageViewDelegate,
 
-NYTPhotosViewControllerDelegate
+NYTPhotosViewControllerDelegate,
+
+QMMediaControllerDelegate
 >
 
 /**
@@ -210,15 +213,7 @@ NYTPhotosViewControllerDelegate
     
     @weakify(self);
     
-    [self.mediaController setOnMessageStatusDidChange:^(QMMessageAttachmentStatus status, QBChatMessage *message) {
-        message.attachmentStatus = status;
-        if (status != QMMessageAttachmentStatusNotLoaded) {
-            @strongify(self);
-            if ([message.dialogID isEqualToString:self.chatDialog.ID]) {
-                [self.chatDataSource updateMessage:message];
-            }
-        }
-    }];
+    
     
     [self.mediaController setOnError:^(QBChatMessage *__unused message, NSError *error) {
         
@@ -226,20 +221,6 @@ NYTPhotosViewControllerDelegate
         [self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion duration:kQMDefaultNotificationDismissTime];
     }];
     
-    
-    [self.mediaController setViewForMessage:^id(QBChatMessage *message) {
-        @strongify(self);
-        
-        NSIndexPath *indexPath = [self.chatDataSource indexPathForMessage:message];
-        id cell = [self.collectionView cellForItemAtIndexPath:indexPath];
-        
-        if ([cell conformsToProtocol:@protocol(QMMediaViewDelegate)]) {
-            return (cell);
-        }
-        else {
-            return nil;
-        }
-    }];
     
     // subscribing to delegates
     [[QMCore instance].chatService addDelegate:self];
@@ -339,7 +320,8 @@ NYTPhotosViewControllerDelegate
                                                                                       
                                                                                       @strongify(self);
                                                                                       [self stopTyping];
-                                                                                      
+                                                                                      [self stopAudioRecording];
+                                                                                      [self.inputToolbar forceFinishRecording];
                                                                                       if (self.chatDialog.type == QBChatDialogTypePrivate) {
                                                                                           
                                                                                           [self setOpponentOnlineStatus:NO];
@@ -362,6 +344,13 @@ NYTPhotosViewControllerDelegate
     // Delete blocks.
     [self.chatDialog clearTypingStatusBlocks];
     [self.chatDialog clearDialogOccupantsStatusBlock];
+    
+    //Cancel audio recording
+    [self stopAudioRecording];
+    [self.inputToolbar forceFinishRecording];
+    //Stop player
+    
+    [[QMAudioPlayer audioPlayer] pause];
 }
 
 #pragma mark - Deferred queue management
@@ -379,6 +368,24 @@ NYTPhotosViewControllerDelegate
     [self.chatDataSource updateMessage:addedMessage];
 }
 
+- (id<QMMediaViewDelegate>)viewForMessage:(QBChatMessage *)message {
+    
+    NSIndexPath *indexPath = [self.chatDataSource indexPathForMessage:message];
+    id cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+    
+    if ([cell conformsToProtocol:@protocol(QMMediaViewDelegate)]) {
+        return cell;
+    }
+    else {
+        return nil;
+    }
+}
+- (void)didUpdateMessage:(QBChatMessage *)message {
+    
+    if ([self.chatDialog.ID isEqualToString:message.dialogID]) {
+        [self.chatDataSource updateMessage:message];
+    }
+}
 #pragma mark - Helpers & Utility
 
 - (void)updateOpponentOnlineStatus {
@@ -579,15 +586,18 @@ NYTPhotosViewControllerDelegate
     [[QMAudioPlayer audioPlayer] stop];
     
     if (self.currentAudioRecorder == nil) {
+        
         self.currentAudioRecorder = [[QMAudioRecorder alloc] init];;
         [self.currentAudioRecorder startRecording];
+        
+        [[UIScreen mainScreen] lockCurrentOrientation];
     }
 }
 
 - (void)finishAudioRecording {
     
-    if (self.currentAudioRecorder != nil)
-    {
+    if (self.currentAudioRecorder != nil) {
+        [[UIScreen mainScreen] unlockCurrentOrientation];
         @weakify(self);
         [self.currentAudioRecorder stopRecordingWithCompletion:^(QMMediaItem *mediaItem, NSError *error) {
             @strongify(self);
@@ -604,8 +614,11 @@ NYTPhotosViewControllerDelegate
 - (void)stopAudioRecording {
     
     if (self.currentAudioRecorder != nil) {
+        
         [self.currentAudioRecorder cancelRecording];
         self.currentAudioRecorder = nil;
+        
+        
     }
 }
 
@@ -982,16 +995,14 @@ NYTPhotosViewControllerDelegate
 - (CGFloat)collectionView:(QMChatCollectionView *)collectionView minWidthAtIndexPath:(NSIndexPath *)indexPath {
     
     QBChatMessage *message = [self.chatDataSource messageForIndexPath:indexPath];
-    
     CGSize size = CGSizeZero;
+    
     if ([self.detailedCells containsObject:message.ID]) {
         
         size = [TTTAttributedLabel sizeThatFitsAttributedString:[self bottomLabelAttributedStringForItem:message]
                                                 withConstraints:CGSizeMake(CGRectGetWidth(collectionView.frame) - kQMWidthPadding, CGFLOAT_MAX)
                                          limitedToNumberOfLines:0];
     }
-    
-    QMChatCell *currentCell = [collectionView cellForItemAtIndexPath:indexPath];
     
     if (self.chatDialog.type != QBChatDialogTypePrivate) {
         
@@ -1051,9 +1062,10 @@ NYTPhotosViewControllerDelegate
         
         if ([message isMediaMessage]) {
             
-            
-            
-            [[QMCore instance].chatService.chatAttachmentService localImageForAttachmentMessage:message completion:^(NSError __unused * error, UIImage *image) {
+            QBChatAttachment *attachment = message.attachments[0];
+            QMMediaItem *mediaItem = [[QMCore instance].chatService.chatAttachmentService.mediaService cachedMediaForMessage:message
+                                                                                                                attachmentID:attachment.ID];
+            [[QMCore instance].chatService.chatAttachmentService.mediaService.storeService localImageForMediaItem:mediaItem completion:^(UIImage *image) {
                 if (image) {
                     
                     [[UIPasteboard generalPasteboard] setValue:UIImageJPEGRepresentation(image, 1)
@@ -1237,7 +1249,7 @@ NYTPhotosViewControllerDelegate
     }
     
     
-    else if ([cell conformsToProtocol:@protocol(QMChatLocationCell)]) {
+    if ([cell conformsToProtocol:@protocol(QMChatLocationCell)]) {
         
         [[(id<QMChatLocationCell>)cell imageView]
          setSnapshotWithLocationCoordinate:message.locationCoordinate];

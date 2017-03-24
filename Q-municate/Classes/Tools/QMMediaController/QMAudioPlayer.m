@@ -86,6 +86,9 @@
 - (void)stop {
     [self _qmPlayerStop];
 }
+- (void)pause {
+    [self _qmPlayerPause];
+}
 
 - (void)_qmPlayerStop {
     

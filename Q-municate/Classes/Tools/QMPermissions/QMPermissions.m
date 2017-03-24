@@ -12,7 +12,9 @@
 
 + (void)requestPermissionToMicrophoneWithCompletion:(PermissionBlock)completion {
     
-    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+    AVAudioSessionRecordPermission recordPermission = [[AVAudioSession sharedInstance] recordPermission];
+    
+    PermissionBlock comletionBlock = ^(BOOL granted) {
         
         if (completion) {
             
@@ -21,7 +23,16 @@
                 completion(granted);
             });
         }
-    }];
+    };
+    
+    if (recordPermission == AVAudioSessionRecordPermissionUndetermined) {
+        
+        [[AVAudioSession sharedInstance] requestRecordPermission:comletionBlock];
+    }
+    else {
+        
+        comletionBlock(recordPermission == AVAudioSessionRecordPermissionGranted);
+    }
 }
 
 + (void)requestPermissionToCameraWithCompletion:(PermissionBlock)completion {
