@@ -1155,7 +1155,7 @@ typedef enum {
  *  @since 7.8.0
  *
  *  This method needs to be called before a transaction is finished and finalized.
- *
+ *  @note: Needs a 'required' dependency on StoreKit for this API to function correctly.
  *
  *  @param transaction an SKPaymentTransaction.
  *  @param statusCallback a callback gettign called when the status of  ID that is associated with the event
@@ -1170,7 +1170,7 @@ typedef enum {
  *  @since 7.9.0
  *
  *  This method needs to be called before any transaction is finialized.
- *
+ *  @note: Needs a 'required' dependency on StoreKit for this API to function correctly.
  *
  *  @param value YES to enable transaction logging, NO to stop transaction logging.
  *

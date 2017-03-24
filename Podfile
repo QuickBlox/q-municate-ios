@@ -31,17 +31,18 @@ target 'Q-municate' do
     pod 'TwitterCore', '~> 1.15'
     
     #For development pods
-    #pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
+    pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
     #pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
     
-    pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :commit => '737a208c04a79c47195c22f4792ddbc0cf486d26'
-    pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'development'
+#    pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :commit => '737a208c04a79c47195c22f4792ddbc0cf486d26'
+    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
     
 end
 
 target 'QMSiriExtension' do
     
-    pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'development'
+    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
+    
 end
 
 post_install do |installer|

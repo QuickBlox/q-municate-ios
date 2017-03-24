@@ -74,7 +74,7 @@ static const NSUInteger kQMNumberOfSections = 1;
         QMContactCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMContactCell cellIdentifier] forIndexPath:indexPath];
         
         QBUUser *user = self.items[indexPath.row - kQMNumberOfStaticCellsBeforeOccupantsList];
-        [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
+        [cell setTitle:user.fullName avatarUrl:user.avatarUrl];
         
         BOOL isRequestRequired = ![[QMCore instance].contactManager isContactListItemExistentForUserWithID:user.ID];
         

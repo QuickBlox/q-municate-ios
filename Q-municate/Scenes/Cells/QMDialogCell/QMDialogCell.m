@@ -15,7 +15,6 @@
 @property (weak, nonatomic) IBOutlet QMBadgeView *badgeView;
 
 @property (copy, nonatomic) NSString *time;
-@property (assign, nonatomic) NSUInteger badgeNumber;
 
 @end
 
@@ -45,11 +44,7 @@
 
 - (void)setBadgeNumber:(NSUInteger)badgeNumber {
     
-    if (_badgeNumber != badgeNumber) {
-        
-        _badgeNumber = badgeNumber;
-        self.badgeView.badgeNumber = badgeNumber;
-    }
+    self.badgeView.badgeNumber = badgeNumber;
 }
 
 @end

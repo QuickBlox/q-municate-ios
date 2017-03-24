@@ -39,7 +39,7 @@
     QMSearchCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMSearchCell cellIdentifier] forIndexPath:indexPath];
     
     QBUUser *user = self.items[indexPath.row];
-    [cell setTitle:user.fullName placeholderID:user.ID avatarUrl:user.avatarUrl];
+    [cell setTitle:user.fullName avatarUrl:user.avatarUrl];
     
     if ([QBChat instance].isConnected) {
         // contact list is getting erased after

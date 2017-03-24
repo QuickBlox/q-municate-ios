@@ -10,7 +10,7 @@
 
 @interface QMPlaceholder()
 
-@property (strong, nonatomic) NSCache *cache;
+@property (strong, nonatomic) NSMutableDictionary *cache;
 @property (strong, nonatomic) NSArray *colors;
 
 @end
@@ -35,9 +35,9 @@
     self = [super init];
     if (self) {
         
-        _cache = [[NSCache alloc] init];
-        _cache.name = @"QMUserPlaceholer.cache";
-        _cache.countLimit = 200;
+        _cache = [[NSMutableDictionary alloc] init];
+//        _cache.name = @"QMUserPlaceholer.cache";
+//        _cache.countLimit = 200;
         
         _colors =
         @[[UIColor colorWithRed:1.0f green:0.588f blue:0 alpha:1.0f],
@@ -103,7 +103,7 @@
         UIGraphicsEndImageContext();
         
         if (ovalImage != nil && key != nil) {
-            
+        
             [[[[self class] instance] cache] setObject:ovalImage forKey:key];
         }
         

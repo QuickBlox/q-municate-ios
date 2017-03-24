@@ -133,10 +133,8 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
         }
         
         [QMCore instance].pushNotificationManager.pushNotification = userInfo;
-        
         // calling dispatch async for push notification handling to have priority in main queue
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             [[QMCore instance].pushNotificationManager handlePushNotificationWithDelegate:self];
         });
     }
@@ -167,7 +165,6 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
                                                                                     openURL:url
                                                                           sourceApplication:sourceApplication
                                                                                  annotation:annotation];
-    
     return urlWasIntendedForFacebook;
 }
 
