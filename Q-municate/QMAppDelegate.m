@@ -19,6 +19,8 @@
 #import <SVProgressHUD.h>
 #import <Intents/Intents.h>
 
+#import "UIScreen+QMLock.h"
+
 static NSString * const kQMNotificationActionTextAction = @"TEXT_ACTION";
 static NSString * const kQMNotificationCategoryReply = @"TEXT_REPLY";
 static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate";
@@ -169,6 +171,12 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     return urlWasIntendedForFacebook;
 }
 
+- (UIInterfaceOrientationMask)application:(UIApplication *)__unused application supportedInterfaceOrientationsForWindow:(UIWindow *)__unused window {
+    
+   UIInterfaceOrientationMask allowed = [[UIScreen mainScreen] allowedInterfaceOrientationMask];
+    NSLog(@"allowed %d", allowed);
+    return allowed;
+}
 #pragma mark - Push notification registration
 
 - (void)registerForNotification {
