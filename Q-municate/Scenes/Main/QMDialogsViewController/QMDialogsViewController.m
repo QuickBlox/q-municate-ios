@@ -321,16 +321,6 @@ QMSearchResultsControllerDelegate
     [self.tableView reloadData];
 }
 
-//- (void)chatService:(QMChatService *)__unused chatService didLoadChatDialogsFromCache:(NSArray *)dialogs withUsers:(NSSet *)__unused dialogsUsersIDs {
-//    
-////    if (dialogs.count > 0) {
-////        
-////        self.tableView.dataSource = self.dialogsDataSource;
-////        self.tableView.tableHeaderView = self.searchController.searchBar;
-////    }
-////    [self.tableView reloadData];
-//}
-
 - (void)chatService:(QMChatService *)__unused chatService didReceiveNotificationMessage:(QBChatMessage *)message createDialog:(QBChatDialog *)__unused dialog {
     
     if (message.messageType == QMMessageTypeContactRequest) {
