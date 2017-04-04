@@ -143,7 +143,7 @@ NYTPhotosViewControllerDelegate
 #pragma mark - QMChatViewController data source overrides
 
 - (NSUInteger)senderID {
-      return [QMCore instance].currentProfile.userData.ID;
+    return [QMCore instance].currentProfile.userData.ID;
 }
 
 - (NSString *)senderDisplayName {
@@ -276,7 +276,11 @@ NYTPhotosViewControllerDelegate
         UIImageView *bgView = [[UIImageView alloc] initWithFrame:self.view.bounds];
         bgView.image = bgImage;
         bgView.contentMode = UIViewContentModeCenter;
-        bgView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+        bgView.autoresizingMask =
+        UIViewAutoresizingFlexibleLeftMargin |
+        UIViewAutoresizingFlexibleRightMargin |
+        UIViewAutoresizingFlexibleTopMargin |
+        UIViewAutoresizingFlexibleBottomMargin;
         [self.view addSubview:bgView];
         self.view.backgroundColor = [UIColor whiteColor];
         
@@ -287,19 +291,20 @@ NYTPhotosViewControllerDelegate
     [QMCore instance].activeDialogID = self.chatDialog.ID;
     
     @weakify(self);
-    self.observerWillResignActive = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillResignActiveNotification
-                                                                                      object:nil
-                                                                                       queue:nil
-                                                                                  usingBlock:^(NSNotification * _Nonnull __unused note) {
-                                                                                      
-                                                                                      @strongify(self);
-                                                                                      [self stopTyping];
-                                                                                      
-                                                                                      if (self.chatDialog.type == QBChatDialogTypePrivate) {
-                                                                                          
-                                                                                          [self setOpponentOnlineStatus:NO];
-                                                                                      }
-                                                                                  }];
+    self.observerWillResignActive =
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillResignActiveNotification
+                                                      object:nil
+                                                       queue:nil
+                                                  usingBlock:^(NSNotification * _Nonnull __unused note) {
+                                                      
+                                                      @strongify(self);
+                                                      [self stopTyping];
+                                                      
+                                                      if (self.chatDialog.type == QBChatDialogTypePrivate) {
+                                                          
+                                                          [self setOpponentOnlineStatus:NO];
+                                                      }
+                                                  }];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -356,9 +361,11 @@ NYTPhotosViewControllerDelegate
     
     @weakify(self);
     // Retrieving message from Quickblox REST history and cache.
-    [[QMCore instance].chatService messagesWithChatDialogID:self.chatDialog.ID iterationBlock:^(QBResponse * __unused response, NSArray *messages, BOOL * __unused stop) {
+    [[QMCore instance].chatService messagesWithChatDialogID:self.chatDialog.ID
+                                             iterationBlock:^(QBResponse * __unused response, NSArray *messages, BOOL * __unused stop) {
         
         @strongify(self);
+                                                 
         if (messages.count > 0) {
             
             [self.chatDataSource addMessages:messages];
@@ -483,7 +490,6 @@ NYTPhotosViewControllerDelegate
                                                           senderID:senderId
                                                       chatDialogID:self.chatDialog.ID
                                                           dateSent:date];
-    
     // Sending message
     [self _sendMessage:message];
     
@@ -498,7 +504,7 @@ NYTPhotosViewControllerDelegate
     }
     
     [self.inputToolbar.contentView.textView resignFirstResponder];
-
+    
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_TAKE_IMAGE", nil)
@@ -600,19 +606,7 @@ NYTPhotosViewControllerDelegate
 
 #pragma mark - Attributed strings
 
-static NSMutableDictionary *dict = nil;
-
 - (NSAttributedString *)attributedStringForItem:(QBChatMessage *)messageItem {
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        dict = [NSMutableDictionary dictionary];
-    });
-    
-    if (dict[messageItem.ID]) {
-        return dict[messageItem.ID];
-    }
-
     
     NSString *message = nil;
     UIColor *textColor = nil;
@@ -686,8 +680,6 @@ static NSMutableDictionary *dict = nil;
         
         attributedString = [[NSAttributedString alloc] initWithString:message ?: @"" attributes:attributes];
     }
-    
-    dict[messageItem.ID] = attributedString;
     
     return attributedString;
 }
@@ -969,7 +961,7 @@ static NSMutableDictionary *dict = nil;
         QMImageView *avatarView = [(QMChatCell *)cell avatarView];
         
         NSURL *userImageUrl = [NSURL URLWithString:sender.avatarUrl];
-
+        
         [avatarView setImageWithURL:userImageUrl title:sender.fullName completedBlock:nil];
     }
     else if ([cell isKindOfClass:[QMChatNotificationCell class]]) {
@@ -1140,7 +1132,7 @@ static NSMutableDictionary *dict = nil;
     
     // hiding keyboard due to layouting issue for iOS 8
     // if interface orientation would change out of the controller
-  //  [self.view endEditing:YES];
+    //  [self.view endEditing:YES];
     
     if ([segue.identifier isEqualToString:kQMSceneSegueUserInfo]) {
         
