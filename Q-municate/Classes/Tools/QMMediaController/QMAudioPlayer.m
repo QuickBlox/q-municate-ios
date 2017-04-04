@@ -151,6 +151,7 @@
         [self _qmPlayerStop];
     }
 }
+
 - (void)startProgressTimer {
     self.progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateProgressTimer) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.progressTimer forMode:NSRunLoopCommonModes];

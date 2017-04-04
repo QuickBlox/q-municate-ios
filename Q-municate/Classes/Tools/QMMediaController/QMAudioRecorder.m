@@ -32,7 +32,9 @@ static const NSTimeInterval kQMMinimalDuration = 2; // in seconds
         
         NSError *setCategoryError = NULL;
         
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryRecord error: &setCategoryError];
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryRecord
+                                               error: &setCategoryError];
+        
         if (setCategoryError){
             NSLog(@"Error setting category! %@", [setCategoryError localizedDescription]);
         }
@@ -52,14 +54,13 @@ static const NSTimeInterval kQMMinimalDuration = 2; // in seconds
         _recorder.delegate = self;
         _recorder.meteringEnabled = YES;
         [_recorder prepareToRecord];
-        
-        
     }
     
     return self;
 }
 
 - (NSTimeInterval)duration {
+    
     return [self.recorder currentTime];
 }
 
@@ -69,6 +70,7 @@ static const NSTimeInterval kQMMinimalDuration = 2; // in seconds
 }
 
 - (void)startRecording {
+    
     [self.recorder record];
 }
 
@@ -100,22 +102,22 @@ static const NSTimeInterval kQMMinimalDuration = 2; // in seconds
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             
-            AVURLAsset* audioAsset = [AVURLAsset URLAssetWithURL:recorder.url options:nil];
-            CMTime audioDuration = audioAsset.duration;
-            NSTimeInterval duration = CMTimeGetSeconds(audioDuration);
+            AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:recorder.url options:nil];
+            NSTimeInterval duration = CMTimeGetSeconds(audioAsset.duration);
             NSData *audioData = [NSData dataWithContentsOfURL:recorder.url];
+            
+            QBChatAttachment *attachment = nil;
+            
+            if (duration > kQMMinimalDuration) {
+                attachment = [QBChatAttachment audioAttachmentWithFileURL:recorder.url];
+                attachment[@"duration"] = [NSString stringWithFormat:@"%.2f",duration];
+                attachment.mediaData = audioData;
+            }
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                QMMediaItem *item = nil;
-                if (duration > kQMMinimalDuration) {
-                    item = [QMMediaItem audioItemWithFileURL:recorder.url];
-                    item.mediaDuration = duration;
-                    item.data = audioData;
-                }
-                
                 if (self.completion) {
-                    self.completion(item, nil);
+                    self.completion(attachment, nil);
                 }
             });
         });

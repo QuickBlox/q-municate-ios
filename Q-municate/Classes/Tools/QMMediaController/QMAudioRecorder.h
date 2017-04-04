@@ -10,7 +10,7 @@
 
 @class QMMediaItem;
 
-typedef void(^QMAudioRecordCompletionBlock)(QMMediaItem *item, NSError *error);
+typedef void(^QMAudioRecordCompletionBlock)(QBChatAttachment *attachment, NSError *error);
 
 typedef NS_ENUM(NSUInteger, QBRecordState) {
     QBRecordStateRecording,

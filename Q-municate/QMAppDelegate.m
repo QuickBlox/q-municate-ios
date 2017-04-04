@@ -171,7 +171,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 - (UIInterfaceOrientationMask)application:(UIApplication *)__unused application supportedInterfaceOrientationsForWindow:(UIWindow *)__unused window {
     
    UIInterfaceOrientationMask allowed = [[UIScreen mainScreen] allowedInterfaceOrientationMask];
-    NSLog(@"allowed %d", allowed);
+
     return allowed;
 }
 #pragma mark - Push notification registration
