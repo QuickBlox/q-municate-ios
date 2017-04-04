@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param avatarUrl     avatar url
  *  @param placeholderID placeholder ID
  */
-- (void)setTitle:(nullable NSString *)title avatarUrl:(nullable NSString *)avatarUrl placeholderID:(NSUInteger)placeholderID;
+- (void)setTitle:(nullable NSString *)title avatarUrl:(nullable NSString *)avatarUrl;
 
 @end
 

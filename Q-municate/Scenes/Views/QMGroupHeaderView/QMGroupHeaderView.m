@@ -60,20 +60,15 @@ static UIColor *highlightedColor() {
 
 #pragma mark - Methods
 
-- (void)setTitle:(NSString *)title avatarUrl:(NSString *)avatarUrl placeholderID:(NSUInteger)placeholderID {
+- (void)setTitle:(NSString *)title avatarUrl:(NSString *)avatarUrl {
     
     if (![_title isEqualToString:title]) {
-        
         _title = [title copy];
-        
         self.titleLabel.text = title;
     }
     
-    UIImage *placeholder = [QMPlaceholder placeholderWithFrame:self.avatarImage.bounds title:title ID:placeholderID];
     [self.avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl]
-                          placeholder:placeholder
-                              options:SDWebImageLowPriority
-                             progress:nil
+                                title:title
                        completedBlock:nil];
 }
 

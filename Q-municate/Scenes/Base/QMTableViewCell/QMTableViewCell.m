@@ -55,7 +55,8 @@
 
 #pragma mark - Setters
 
-- (void)setTitle:(NSString *)title avatarUrl:(NSString *)avatarUrl {
+- (void)setTitle:(NSString *)title
+       avatarUrl:(NSString *)avatarUrl {
     
     self.titleLabel.text = title;
     

@@ -58,7 +58,7 @@ NYTPhotosViewControllerDelegate
 
 - (void)updateGroupHeaderView {
     
-    [self.headerView setTitle:self.chatDialog.name avatarUrl:self.chatDialog.photo placeholderID:self.chatDialog.ID.hash];
+    [self.headerView setTitle:self.chatDialog.name avatarUrl:self.chatDialog.photo];
 }
 
 #pragma mark - Actions

@@ -112,10 +112,7 @@ NYTPhotosViewControllerDelegate
 - (void)configureUserData:(QBUUser *)userData {
     
     [self.avatarImageView setImageWithURL:[NSURL URLWithString:userData.avatarUrl]
-                              placeholder:[UIImage imageNamed:@"upic_avatarholder"]
-                                  options:SDWebImageHighPriority
-                                 progress:nil
-                           completedBlock:nil];
+                             title:userData.fullName completedBlock:nil];
     
     self.fullNameLabel.text = userData.fullName;
     

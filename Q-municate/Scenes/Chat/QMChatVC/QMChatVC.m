@@ -962,7 +962,9 @@ NYTPhotosViewControllerDelegate
         
         NSURL *userImageUrl = [NSURL URLWithString:sender.avatarUrl];
         
-        [avatarView setImageWithURL:userImageUrl title:sender.fullName completedBlock:nil];
+        [avatarView setImageWithURL:userImageUrl
+                              title:sender.fullName
+                     completedBlock:nil];
     }
     else if ([cell isKindOfClass:[QMChatNotificationCell class]]) {
         
@@ -1320,14 +1322,9 @@ NYTPhotosViewControllerDelegate
 
 - (void)updateGroupAvatarImage {
     
-    UIImage *placeholder = [QMPlaceholder placeholderWithFrame:self.groupAvatarImageView.bounds title:self.chatDialog.name ID:self.chatDialog.ID.hash];
     NSURL *avatarURL = [NSURL URLWithString:self.chatDialog.photo];
-    
     [self.groupAvatarImageView setImageWithURL:avatarURL
-                                   placeholder:placeholder
-                                       options:SDWebImageLowPriority
-                                      progress:nil
-                                completedBlock:nil];
+                                   title:self.chatDialog.name completedBlock:nil];
 }
 
 - (void)updateGroupChatOnlineStatus {

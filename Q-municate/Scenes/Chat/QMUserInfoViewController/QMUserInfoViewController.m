@@ -169,13 +169,9 @@ NYTPhotosViewControllerDelegate
 }
 
 - (void)updateAvatarImage {
-    
     // Avatar
-    UIImage *placeholder = [QMPlaceholder placeholderWithFrame:self.avatarImageView.bounds title:self.user.fullName ID:self.user.ID];
     [self.avatarImageView setImageWithURL:[NSURL URLWithString:self.user.avatarUrl]
-                              placeholder:placeholder
-                                  options:SDWebImageHighPriority
-                                 progress:nil
+                            title:self.user.fullName
                            completedBlock:nil];
 }
 
