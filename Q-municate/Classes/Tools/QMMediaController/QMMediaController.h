@@ -16,8 +16,15 @@
 @interface QMMediaController : NSObject <QMChatAttachmentServiceDelegate>
 
 @property (copy, nonatomic) void(^onError)(QBChatMessage *message, NSError *error);
+
 - (instancetype)initWithViewController:(UIViewController<QMMediaControllerDelegate> *)controller;
-- (void)configureView:(id<QMMediaViewDelegate>)view withMessage:(QBChatMessage *)message attachmentID:(NSString *)attachmentID;
+
+
+- (void)configureView:(id<QMMediaViewDelegate>)view
+          withMessage:(QBChatMessage *)message
+         attachmentID:(NSString *)attachmentID;
+
+- (void)cancelOperationsForMessage:(QBChatMessage *)message;
 
 @end
 
