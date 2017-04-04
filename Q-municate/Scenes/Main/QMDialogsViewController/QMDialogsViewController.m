@@ -201,6 +201,7 @@ QMSearchResultsControllerDelegate
     
     if ([QMCore instance].chatService.dialogsMemoryStorage.unsortedDialogs.count > 0) {
         self.tableView.dataSource = self.dialogsDataSource;
+        self.tableView.tableHeaderView = self.searchController.searchBar;
     }
     else {
         self.tableView.dataSource = self.placeholderDataSource;
@@ -490,7 +491,6 @@ QMSearchResultsControllerDelegate
     
     [QMDialogCell registerForReuseInTableView:self.tableView];
     [QMDialogCell registerForReuseInTableView:self.searchResultsController.tableView];
-    
     [QMNoResultsCell registerForReuseInTableView:self.searchResultsController.tableView];
 }
 
