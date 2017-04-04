@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+__attribute__ ((deprecated))
 @interface QMPlaceholder : NSObject
 
 + (UIImage *)placeholderWithFrame:(CGRect)frame
