@@ -16,7 +16,6 @@
 #import "QMSoundManager.h"
 #import "QMHelpers.h"
 #import "QMCameraCapture.h"
-#import "QMCallViewDelegate.h"
 
 static UIColor *videoCallBarBackgroundColor() {
     
@@ -68,7 +67,6 @@ QMCallManagerDelegate
 @property (strong, nonatomic) UIButton *cameraButton;
 @property (strong, nonatomic) UIButton *declineButton;
 @property (strong, nonatomic) UIButton *acceptButton;
-@property (strong, nonatomic) UIButton *stateButton;
 
 @end
 
@@ -94,31 +92,10 @@ QMCallManagerDelegate
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
-- (void)setViewState:(QMCallViewState)viewState {
-    _viewState = viewState;
-    [self configureToolbar];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    
-    [super viewDidAppear:animated];
-    
-     self.callViewDelegate = self.view.window;
-    if (self.callState == QMCallStateIncomingVideoCall) {
-        [self.callViewDelegate didMinimize];
-    }
-        [self configureCallController];
-//   
-//    self.view.layer.anchorPoint = CGPointApplyAffineTransform(self.view.layer.anchorPoint,  CGAffineTransformMakeTranslation(-0.5, -0.5));
-    
-}
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor whiteColor];
-   
-    
-
     
     [[QBRTCClient instance] addDelegate:self];
     [QMCore instance].callManager.delegate = self;
@@ -158,10 +135,8 @@ QMCallManagerDelegate
         [self.view addSubview:self.localVideoView];
     }
     
-
+    [self configureCallController];
 }
-
-
 
 #pragma mark - Configurations
 #pragma mark - Base configuration
@@ -239,10 +214,6 @@ QMCallManagerDelegate
     
     self.callInfoView.bottomText = bottomText;
 }
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    NSLog(@"Frame = %@", NSStringFromCGRect(self.view.frame));
-}
 
 - (void)configureToolbar {
     
@@ -254,13 +225,6 @@ QMCallManagerDelegate
             
         case QMCallStateIncomingAudioCall:
         case QMCallStateIncomingVideoCall:
-            if (self.viewState == QMCallViewStateMaximized) {
-                  toolbarHeight = kQMToolbarHeightBig;
-            }
-            else {
-                toolbarHeight = kQMToolbarHeightSmall;
-            }
-            break;
         case QMCallStateOutgoingAudioCall:
         case QMCallStateActiveAudioCall:
             toolbarHeight = kQMToolbarHeightBig;
@@ -272,15 +236,12 @@ QMCallManagerDelegate
             break;
     }
     
-    
     self.toolbar = [[QMCallToolbar alloc]
                     initWithFrame:CGRectMake(0,
-                                             CGRectGetHeight(self.view.window.frame) - toolbarHeight,
-                                             CGRectGetWidth(self.view.window.frame),
+                                             CGRectGetHeight([UIScreen mainScreen].bounds) - toolbarHeight,
+                                             CGRectGetWidth([UIScreen mainScreen].bounds),
                                              toolbarHeight)];
-    
-    
-    self.toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
+    self.toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     
     [self.view addSubview:self.toolbar];
     
@@ -307,23 +268,6 @@ QMCallManagerDelegate
             
             @weakify(self);
             
-            self.stateButton = [QMCallButtonsFactory minimizeButton];
-            
-            [self.toolbar addButton:self.stateButton action:^(UIButton * _Nonnull __unused sender) {
-                @strongify(self);
-                
-//                CGAffineTransform transform = self.view.transform;
-//                
-//                CGAffineTransformConcat(CGAffineTransformTranslate(self.view.transform, 200, 200), CGAffineTransformScale(self.view.transform, 0.5, 0.5));
-//                self.view.transform = transform;
-                self.toolbar.hidden = YES;
-                [self.callViewDelegate didMinimize];
-                
-                 [self.toolbar removeButton:self.stateButton];
-           
-            }];
-
-            
             self.cameraButton = [QMCallButtonsFactory cameraButton];
             [self.toolbar addButton:self.cameraButton action:^(UIButton * _Nonnull sender) {
                 
@@ -333,15 +277,15 @@ QMCallManagerDelegate
                 sender.selected = !sender.selected;
             }];
             
-//            [self.toolbar addButton:[QMCallButtonsFactory cameraRotationButton] action:^(UIButton * _Nonnull sender) {
-//                
-//                @strongify(self);
-//                AVCaptureDevicePosition position = [self.cameraCapture currentPosition];
-//                AVCaptureDevicePosition newPosition = position == AVCaptureDevicePositionBack ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
-//                
-//                [self.cameraCapture selectCameraPosition:newPosition];
-//                sender.selected = !sender.selected;
-//            }];
+            [self.toolbar addButton:[QMCallButtonsFactory cameraRotationButton] action:^(UIButton * _Nonnull sender) {
+                
+                @strongify(self);
+                AVCaptureDevicePosition position = [self.cameraCapture currentPosition];
+                AVCaptureDevicePosition newPosition = position == AVCaptureDevicePositionBack ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
+                
+                [self.cameraCapture selectCameraPosition:newPosition];
+                sender.selected = !sender.selected;
+            }];
             
             [self configureMuteButton];
             
@@ -392,23 +336,6 @@ QMCallManagerDelegate
                 sender.enabled = NO;
                 [self rejectCall];
             }];
-            
-            self.stateButton = [QMCallButtonsFactory minimizeButton];
-            
-            [self.toolbar addButton:self.stateButton action:^(UIButton * _Nonnull __unused sender) {
-                @strongify(self);
-                
-                //                CGAffineTransform transform = self.view.transform;
-                //
-                //                CGAffineTransformConcat(CGAffineTransformTranslate(self.view.transform, 200, 200), CGAffineTransformScale(self.view.transform, 0.5, 0.5));
-                //                self.view.transform = transform;
-                self.toolbar.hidden = YES;
-                [self.callViewDelegate didMinimize];
-                
-                [self.toolbar removeButton:self.stateButton];
-            }];
-            
-
             
             self.acceptButton = [QMCallButtonsFactory acceptVideoCallButton];
             [self.toolbar addButton:self.acceptButton action:^(UIButton * _Nonnull sender) {
@@ -736,7 +663,7 @@ QMCallManagerDelegate
         // with opponent user ID
         [[QMCore instance].callManager sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
     }
-
+    
     self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_USER_DOESNT_ANSWER", nil);
 }
 
