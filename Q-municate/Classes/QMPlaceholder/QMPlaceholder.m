@@ -36,8 +36,6 @@
     if (self) {
         
         _cache = [[NSMutableDictionary alloc] init];
-//        _cache.name = @"QMUserPlaceholer.cache";
-//        _cache.countLimit = 200;
         
         _colors =
         @[[UIColor colorWithRed:1.0f green:0.588f blue:0 alpha:1.0f],

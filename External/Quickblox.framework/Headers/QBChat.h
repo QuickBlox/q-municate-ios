@@ -6,8 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Quickblox/QBNullability.h>
-#import <Quickblox/QBGeneric.h>
 #import <AVFoundation/AVFoundation.h>
 #import "ChatEnums.h"
 

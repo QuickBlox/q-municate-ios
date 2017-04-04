@@ -7,8 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Quickblox/QBNullability.h>
-#import <Quickblox/QBGeneric.h>
 #import <CoreLocation/CoreLocation.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import "QBLocationStructs.h"

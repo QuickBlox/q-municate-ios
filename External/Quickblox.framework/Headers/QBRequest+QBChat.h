@@ -7,8 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Quickblox/QBNullability.h>
-#import <Quickblox/QBGeneric.h>
 #import "QBRequest.h"
 
 NS_ASSUME_NONNULL_BEGIN

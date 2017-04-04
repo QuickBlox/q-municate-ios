@@ -304,7 +304,11 @@ QMMediaControllerDelegate
         UIImageView *bgView = [[UIImageView alloc] initWithFrame:self.view.bounds];
         bgView.image = bgImage;
         bgView.contentMode = UIViewContentModeCenter;
-        bgView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+        bgView.autoresizingMask =
+        UIViewAutoresizingFlexibleLeftMargin |
+        UIViewAutoresizingFlexibleRightMargin |
+        UIViewAutoresizingFlexibleTopMargin |
+        UIViewAutoresizingFlexibleBottomMargin;
         [self.view addSubview:bgView];
         self.view.backgroundColor = [UIColor whiteColor];
         
@@ -409,9 +413,11 @@ QMMediaControllerDelegate
     
     @weakify(self);
     // Retrieving message from Quickblox REST history and cache.
-    [[QMCore instance].chatService messagesWithChatDialogID:self.chatDialog.ID iterationBlock:^(QBResponse * __unused response, NSArray *messages, BOOL * __unused stop) {
+    [[QMCore instance].chatService messagesWithChatDialogID:self.chatDialog.ID
+                                             iterationBlock:^(QBResponse * __unused response, NSArray *messages, BOOL * __unused stop) {
         
         @strongify(self);
+                                                 
         if (messages.count > 0) {
             
             [self.chatDataSource addMessages:messages];
@@ -665,7 +671,6 @@ QMMediaControllerDelegate
                                                           senderID:senderId
                                                       chatDialogID:self.chatDialog.ID
                                                           dateSent:date];
-    
     // Sending message
     [self _sendMessage:message];
     
@@ -849,19 +854,7 @@ QMMediaControllerDelegate
 
 #pragma mark - Attributed strings
 
-static NSMutableDictionary *dict = nil;
-
 - (NSAttributedString *)attributedStringForItem:(QBChatMessage *)messageItem {
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        dict = [NSMutableDictionary dictionary];
-    });
-    
-    if (dict[messageItem.ID]) {
-        return dict[messageItem.ID];
-    }
-    
     
     NSString *message = nil;
     UIColor *textColor = nil;
@@ -935,8 +928,6 @@ static NSMutableDictionary *dict = nil;
         
         attributedString = [[NSAttributedString alloc] initWithString:message ?: @"" attributes:attributes];
     }
-    
-    dict[messageItem.ID] = attributedString;
     
     return attributedString;
 }
@@ -1833,7 +1824,6 @@ static NSMutableDictionary *dict = nil;
             [navigationController dismissNotificationPanel];
             
             if (!task.isFaulted) {
-                [dict removeObjectForKey:currentMessage.ID];
                 [self.chatDataSource updateMessage:currentMessage];
             }
             

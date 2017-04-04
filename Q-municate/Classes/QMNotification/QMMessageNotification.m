@@ -35,16 +35,21 @@ const CGRect QMMessageNotificationIconRect = (CGRect){(CGPoint){0,0}, (CGSize){3
 
 @implementation QMMessageNotification
 
-- (void)showNotificationWithTitle:(NSString *)title subTitle:(NSString *)subTitle iconImageURL:(NSURL *)iconImageURL placeholderImage:(UIImage *)placeholderImage buttonHandler:(MPGNotificationButtonHandler)buttonHandler {
+- (void)showNotificationWithTitle:(NSString *)title
+                         subTitle:(NSString *)subTitle
+                     iconImageURL:(NSURL *)iconImageURL
+                    buttonHandler:(MPGNotificationButtonHandler)buttonHandler {
     
     if (self.messageNotification != nil) {
-        
         [self.messageNotification dismissWithAnimation:NO];
     }
     
     [self.imageOperation cancel];
     
-    self.messageNotification = [MPGNotification notificationWithTitle:title subtitle:subTitle backgroundColor:backgroundColor() iconImage:placeholderImage];
+    self.messageNotification = [MPGNotification notificationWithTitle:title
+                                                             subtitle:subTitle
+                                                      backgroundColor:backgroundColor()
+                                                            iconImage:nil];
     
     if (iconImageURL) {
         
