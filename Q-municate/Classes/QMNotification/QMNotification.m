@@ -17,10 +17,14 @@
 
 #pragma mark - Message notification
 
-+ (void)showMessageNotificationWithMessage:(QBChatMessage *)chatMessage buttonHandler:(MPGNotificationButtonHandler)buttonHandler hostViewController:(UIViewController *)hvc {
++ (void)showMessageNotificationWithMessage:(QBChatMessage *)chatMessage
+                             buttonHandler:(MPGNotificationButtonHandler)buttonHandler
+                        hostViewController:(UIViewController *)hvc {
+    
     NSParameterAssert(chatMessage.dialogID);
     
-    QBChatDialog *chatDialog = [[QMCore instance].chatService.dialogsMemoryStorage chatDialogWithID:chatMessage.dialogID];
+    QBChatDialog *chatDialog =
+    [[QMCore instance].chatService.dialogsMemoryStorage chatDialogWithID:chatMessage.dialogID];
     
     if (chatDialog == nil) {
         // for some reason chat dialog was not find
@@ -49,7 +53,6 @@
         case QBChatDialogTypeGroup:
         case QBChatDialogTypePublicGroup: {
             
-            
             placeholderID = chatDialog.ID.hash;
             imageURLString = chatDialog.photo;
             
@@ -58,8 +61,12 @@
             break;
         }
     }
-    
-    UIImage *placeholderImage = [QMPlaceholder placeholderWithFrame:QMMessageNotificationIconRect title:title ID:placeholderID];
+#warning placeholderImage logic
+//    UIImage *placeholderImage =
+//    [QMPlaceholder placeholderWithFrame:QMMessageNotificationIconRect
+//                                  title:title
+//                                     ID:placeholderID];
+//    
     NSString *messageText = chatMessage.text;
     
     if ([chatMessage isNotificatonMessage]) {
@@ -72,7 +79,6 @@
     [messageNotification() showNotificationWithTitle:title
                                             subTitle:messageText
                                         iconImageURL:[NSURL URLWithString:imageURLString]
-                                    placeholderImage:placeholderImage
                                        buttonHandler:buttonHandler];
 }
 
@@ -87,7 +93,6 @@
     event.notificationType = QBMNotificationTypePush;
     event.usersIDs = [NSString stringWithFormat:@"%zd", user.ID];
     event.type = QBMEventTypeOneShot;
-    
     // custom params
     NSDictionary  *dictPush = @{@"message" : message,
                                 @"ios_badge": @"1",

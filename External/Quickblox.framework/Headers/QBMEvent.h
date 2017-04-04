@@ -6,8 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Quickblox/QBNullability.h>
-#import <Quickblox/QBGeneric.h>
 #import "QBCEntity.h"
 #import "QBPushNotificationsEnums.h"
 
@@ -122,8 +120,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)prepareMessage;
 
-#pragma mark -
-#pragma mark Converters
+//MARK: - Converters
 
 + (QBMEventType)eventTypeFromString:(nullable NSString *)eventType;
 + (nullable NSString *)eventTypeToString:(QBMEventType)eventType;

@@ -41,7 +41,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)showNotificationWithTitle:(NSString *)title
                          subTitle:(nullable NSString *)subTitle
                      iconImageURL:(nullable NSURL *)iconImageURL
-                 placeholderImage:(nullable UIImage *)placeholderImage
                     buttonHandler:(nullable MPGNotificationButtonHandler)buttonHandler;
 
 @end

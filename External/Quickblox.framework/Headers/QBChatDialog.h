@@ -7,8 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Quickblox/QBNullability.h>
-#import <Quickblox/QBGeneric.h>
 #import "ChatEnums.h"
 
 @class QBChatMessage;
@@ -30,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @see http://quickblox.com/developers/Chat#Dialog_model
  */
 @interface QBChatDialog : NSObject <NSCoding, NSCopying>
+
 
 /**
  *  Chat dialog ID.
@@ -186,7 +185,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (instancetype)initWithDialogID:(nullable NSString *)dialogID type:(QBChatDialogType)type;
 
-#pragma mark - Send message
+//MARK: - Send message
 
 /**
  *  Send chat message with completion block.
@@ -208,7 +207,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)sendGroupChatMessageWithoutJoin:(QBChatMessage *)message completion:(nullable QBChatCompletionBlock)completion;
 
-#pragma mark - Join/leave
+//MARK: - Join/leave
 
 /**
  *  Join status of the room
@@ -238,7 +237,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)clearDialogOccupantsStatusBlock;
 
-#pragma mark - Users status
+//MARK: - Users status
 
 /**
  *  Requests users who are joined to room.
@@ -247,7 +246,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)requestOnlineUsersWithCompletionBlock:(nullable QBChatDialogRequestOnlineUsersCompletionBlock)completion;
 
-#pragma mark - Now typing
+//MARK: - Now typing
 
 /**
  *  Send is typing message to occupants.

@@ -7,8 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Quickblox/QBNullability.h>
-#import <Quickblox/QBGeneric.h>
 #import <CoreLocation/CoreLocation.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import "QBLocationStructs.h"
@@ -17,8 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QBLGeoDataFilter : NSObject
 
-#pragma mark -
-#pragma mark Filters
+//MARK: - Filters
 
 /** 
  *  Time of created instance of geodata.
@@ -50,8 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable) NSString *userName;
 
-#pragma mark -
-#pragma mark Diapazones
+//MARK: - Diapazones
 
 /** 
  *  Min value of created_at. 
@@ -79,8 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic) CGFloat radius;
 
-#pragma mark -
-#pragma mark Sorting
+//MARK: - Sorting
 
 /** 
  *  Indicates that the sorting should be by ascending. 
@@ -95,8 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic) enum QBLGeoDataSortByKind sortBy;
 
-#pragma mark -
-#pragma mark Special
+//MARK: - Special
 
 /** 
  *  The result will only include the last time data. 
@@ -121,8 +115,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Value example: 1%3B2.*/
 @property (nonatomic, assign) CLLocationCoordinate2D currentPosition;
 
-#pragma mark -
-#pragma mark Parameters
+//MARK: - Parameters
 
 /** 
  *  Converts instance to dictionary of values.

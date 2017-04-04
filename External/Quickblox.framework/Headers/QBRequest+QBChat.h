@@ -7,8 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Quickblox/QBNullability.h>
-#import <Quickblox/QBGeneric.h>
 #import "QBRequest.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -148,22 +146,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (QBRequest *)sendMessage:(QBChatMessage *)message
               successBlock:(nullable void(^)(QBResponse *response, QBChatMessage *createdMessage))successBlock
                 errorBlock:(nullable QBRequestErrorBlock)errorBlock;
-
-/**
- Update existing chat message - mark it as read.
- 
- @note Updates message "read" status only on server.
- 
- @param message Сhat message to update.
- @param successBlock Block with response instance if request succeded.
- @param errorBlock Block with response instance if request failed.
- 
- @return An instance of QBRequest for cancel operation mainly.
- */
-+ (QBRequest *)updateMessage:(QBChatMessage *)message
-                successBlock:(nullable void(^)(QBResponse *response))successBlock
-                  errorBlock:(nullable QBRequestErrorBlock)errorBlock;
-
 /**
  Mark messages as read.
  
@@ -252,6 +234,24 @@ NS_ASSUME_NONNULL_BEGIN
 + (QBRequest *)totalUnreadMessageCountForDialogsWithIDs:(NSSet <NSString *> *)dialogIDs
                                            successBlock:(nullable void(^)(QBResponse *response, NSUInteger count, NSDictionary <NSString *, id> * _Nullable dialogs))successBlock
                                              errorBlock:(nullable QBRequestErrorBlock)errorBlock;
+
+//MARK: DEPRECATED
+
+/**
+ Update existing chat message - mark it as read.
+ 
+ @note Updates message "read" status only on server.
+ 
+ @param message Сhat message to update.
+ @param successBlock Block with response instance if request succeded.
+ @param errorBlock Block with response instance if request failed.
+ 
+ @return An instance of QBRequest for cancel operation mainly.
+ */
++ (QBRequest *)updateMessage:(QBChatMessage *)message
+                successBlock:(nullable void(^)(QBResponse *response))successBlock
+                  errorBlock:(nullable QBRequestErrorBlock)errorBlock
+DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.9.4 Use 'markMessagesAsRead:dialogID:successBlock:errorBlock:'.");
 
 @end
 

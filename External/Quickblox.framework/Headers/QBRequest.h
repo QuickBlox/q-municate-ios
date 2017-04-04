@@ -4,12 +4,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Quickblox/QBNullability.h>
-#import <Quickblox/QBGeneric.h>
 
 @class QBRequest;
 @class QBResponse;
 @class QBRequestStatus;
+@class QBError;
 
 @protocol QBResponseSerializationProtocol;
 @protocol QBRequestSerialisationProtocol;
@@ -35,7 +34,7 @@ typedef NS_ENUM(NSUInteger, QBRequestTaskType) {
 /** Blocks typedef */
 typedef void (^QBRequestStatusUpdateBlock)(QBRequest *request, QBRequestStatus * _Nullable status);
 typedef void (^QBRequestCompletionBlock)(QBRequest *request, QBResponse *response, NSDictionary<NSString *, id> * _Nullable objects);
-
+typedef void (^QBErrorBlock)(QBError *error);
 typedef void (^QBRequestErrorBlock)(QBResponse *response);
 
 /** 

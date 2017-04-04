@@ -6,9 +6,6 @@
  *
  */
 
-#import <Quickblox/QBNullability.h>
-#import <Quickblox/QBGeneric.h>
-
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString * const QBMEventMessagePayloadKey;
@@ -39,6 +36,7 @@ extern NSString * const kQBMEventTypeMultiShot;
 // Notification channels
 extern NSString * const kQBMNotificationChannelsEmail;
 extern NSString * const kQBMNotificationChannelsAPNS;
+extern NSString * const kQBMNotificationChannelsAPNSVOIP;
 extern NSString * const kQBMNotificationChannelsGCM;
 extern NSString * const kQBMNotificationChannelsMPNS;
 extern NSString * const kQBMNotificationChannelsBBPS;
@@ -53,12 +51,9 @@ extern NSString * const kQBMNotificationTypePull;
 
 // Push type
 extern NSString * const kQBMPushTypeAPNS;
+extern NSString * const kQBMPushTypeAPNSVOIP;
 extern NSString * const kQBMPushTypeGCM;
 extern NSString * const kQBMPushTypeMPNS;
 extern NSString * const kQBMPushTypeBBPS;
-
-
-#define eventsElement @"events"
-#define eventElement @"event"
 
 NS_ASSUME_NONNULL_END

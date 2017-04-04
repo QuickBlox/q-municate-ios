@@ -4,8 +4,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Quickblox/QBNullability.h>
-#import <Quickblox/QBGeneric.h>
 #import "QBRequest.h"
 
 @class QBResponse;
@@ -17,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QBRequest (QBAuth)
 
-#pragma mark - App authorization
+//MARK: - App authorization
 
 /**
  Session Destroy
@@ -30,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (QBRequest *)destroySessionWithSuccessBlock:(nullable void (^)(QBResponse *response))successBlock
                                    errorBlock:(nullable QBRequestErrorBlock)errorBlock;
 
-#pragma mark - LogIn
+//MARK: - LogIn
 
 /**
  User LogIn with login
@@ -92,8 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
                                     successBlock:(nullable void (^)(QBResponse *response, QBUUser * _Nullable user))successBlock
                                       errorBlock:(nullable QBRequestErrorBlock)errorBlock;
 
-
-#pragma mark -  LogOut
+//MARK: - LogOut
 
 /**
  LogOut current user
@@ -106,7 +103,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (QBRequest *)logOutWithSuccessBlock:(nullable void (^)(QBResponse *response))successBlock
                            errorBlock:(nullable QBRequestErrorBlock)errorBlock;
 
-#pragma mark - Create User
+//MARK: - Create User
 
 /**
  User sign up
