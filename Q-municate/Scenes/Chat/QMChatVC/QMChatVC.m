@@ -554,7 +554,7 @@ QMMediaControllerDelegate
 }
 
 - (void)messagesInputToolbarAudioRecordingStart:(QMInputToolbar *)__unused toolbar {
-    
+    NSLog(@"start");
     [self startAudioRecording];
     [toolbar audioRecordingStarted];
     
@@ -600,21 +600,23 @@ QMMediaControllerDelegate
     if (self.currentAudioRecorder != nil) {
         [[UIScreen mainScreen] unlockCurrentOrientation];
         @weakify(self);
-        [self.currentAudioRecorder stopRecordingWithCompletion:^(QMMediaItem *mediaItem, NSError *error) {
+        [self.currentAudioRecorder stopRecordingWithCompletion:^(QBChatAttachment *attachment, NSError *error) {
             @strongify(self);
-            if (mediaItem && !error) {
-                [self sendAttachmentMessageWithMediaItem:mediaItem];
+            if (attachment && !error) {
+                [self sendMessageWithAttachment:attachment];
             }
             else {
                 [self.inputToolbar shakeControls];
             }
         }];
     }
-    
 }
+
 - (void)stopAudioRecording {
     
     if (self.currentAudioRecorder != nil) {
+        
+        [[UIScreen mainScreen] unlockCurrentOrientation];
         
         [self.currentAudioRecorder cancelRecording];
         self.currentAudioRecorder = nil;
@@ -776,7 +778,14 @@ QMMediaControllerDelegate
             }
             else {
                 
-                return [QMChatIncomingCell class];
+                NSURL *linkForMessage = [self linkForMessage:item];
+                
+                if (!linkForMessage) {
+                    return  [QMChatIncomingCell class];
+                }
+                else {
+                    return [QMChatIncomingLinkPreviewCell class];
+                }
             }
         }
         else {
@@ -798,13 +807,44 @@ QMMediaControllerDelegate
             }
             else {
                 
-                return [QMChatOutgoingCell class];
+                NSURL *linkForMessage = [self linkForMessage:item];
+                
+                if (!linkForMessage) {
+                    return  [QMChatOutgoingCell class];
+                }
+                else {
+                    return [QMChatOutgoingLinkPreviewCell class];
+                }
             }
         }
     }
     
     NSAssert(nil, @"Unexpected cell class");
     return nil;
+}
+
+- (NSURL *)linkForMessage:(QBChatMessage *)message {
+ 
+    NSURL *url = nil;
+   
+    NSString *text = message.text;
+    
+    if (text.length > 0) {
+        
+        NSError *error = nil;
+        NSDataDetector *detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink
+                                                                   error:&error];
+        if (error == nil) {
+            
+            NSTextCheckingResult *result = [detector firstMatchInString:text
+                                                                options:0
+                                                                  range:NSMakeRange(0, text.length)];
+            if (result.resultType == NSTextCheckingTypeLink) {
+                url = result.URL;
+            }
+        }
+    }
+    return url;
 }
 
 #pragma mark - Attributed strings
@@ -821,7 +861,7 @@ static NSMutableDictionary *dict = nil;
     if (dict[messageItem.ID]) {
         return dict[messageItem.ID];
     }
-
+    
     
     NSString *message = nil;
     UIColor *textColor = nil;
@@ -992,7 +1032,14 @@ static NSMutableDictionary *dict = nil;
         
         NSAttributedString *attributedString = [self attributedStringForItem:item];
         
-        size = [attributedString boundingRectWithSize:CGSizeMake(maxWidth, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size;
+        if ([attributedString respondsToSelector:@selector(boundingRectWithSize:options:context:)]) {
+            
+            size = [attributedString boundingRectWithSize:CGSizeMake(maxWidth, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size;
+            
+        }
+        else {
+            
+        }
     }
     else {
         
@@ -1037,14 +1084,13 @@ static NSMutableDictionary *dict = nil;
     
     QBChatAttachment *attachment = message.attachments.firstObject;
     
-    QMMediaItem *mediaItem = [[QMCore instance].chatService.chatAttachmentService.mediaService cachedMediaForMessage:message
-                                                                                                        attachmentID:attachment.ID];
+    
     
     CGSize size = CGSizeMake(270.0, 142.0); //default video size for cell
     
-    if (!CGSizeEqualToSize(mediaItem.mediaSize, CGSizeZero)) {
+    if (!CGSizeEqualToSize(CGSizeMake(attachment.width, attachment.height), CGSizeZero)) {
         
-        BOOL isVerticalVideo = mediaItem.mediaSize.width < mediaItem.mediaSize.height;
+        BOOL isVerticalVideo = attachment.width < attachment.height;
         
         size = isVerticalVideo ? CGSizeMake(142.0, 270.0) : size;
     }
@@ -1076,16 +1122,15 @@ static NSMutableDictionary *dict = nil;
         
         if ([message isMediaMessage]) {
             
-            QBChatAttachment *attachment = message.attachments[0];
-            QMMediaItem *mediaItem = [[QMCore instance].chatService.chatAttachmentService.mediaService cachedMediaForMessage:message
-                                                                                                                attachmentID:attachment.ID];
-            [[QMCore instance].chatService.chatAttachmentService.mediaService.storeService localImageForMediaItem:mediaItem completion:^(UIImage *image) {
-                if (image) {
-                    
-                    [[UIPasteboard generalPasteboard] setValue:UIImageJPEGRepresentation(image, 1)
-                                             forPasteboardType:(NSString *)kUTTypeJPEG];
-                }
-            }];
+            //            QBChatAttachment *attachment = message.attachments[0];
+            //            [[QMCore instance].chatService.chatAttachmentService.mediaService.storeService localImageAttachment:attachment
+            //                                                                                                     completion:^(UIImage *image) {
+            //                if (image) {
+            //
+            //                    [[UIPasteboard generalPasteboard] setValue:UIImageJPEGRepresentation(image, 1)
+            //                                             forPasteboardType:(NSString *)kUTTypeJPEG];
+            //                }
+            //            }];
         }
         else {
             
@@ -1230,7 +1275,7 @@ static NSMutableDictionary *dict = nil;
         QMImageView *avatarView = [(QMChatCell *)cell avatarView];
         
         NSURL *userImageUrl = [NSURL URLWithString:sender.avatarUrl];
-
+        
         [avatarView setImageWithURL:userImageUrl title:sender.fullName completedBlock:nil];
     }
     else if ([cell isKindOfClass:[QMChatNotificationCell class]]) {
@@ -1245,6 +1290,7 @@ static NSMutableDictionary *dict = nil;
             
             currentCell.containerView.bgColor = QMChatNotificationCellColor();
         }
+        
     }
     else if ([cell isKindOfClass:[QMChatContactRequestCell class]]) {
         
@@ -1252,12 +1298,33 @@ static NSMutableDictionary *dict = nil;
         currentCell.layer.cornerRadius = 8;
         currentCell.clipsToBounds = YES;
     }
-    
+    else if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
+        
+        NSURL *url = [self linkForMessage:message];
+        
+        [[QMCore instance].chatService linkPreviewForURL:url withCompletion:^(QMLinkPreview *linkPreview, NSError *error) {
+            if (!error) {
+            QMImageView *previewImageView = [(QMChatBaseLinkPreviewCell *)cell  previewImageView];
+            
+            NSURL *userImageUrl = [NSURL URLWithString:linkPreview.imageURL];
+            [previewImageView setImageWithURL:userImageUrl];
+            }
+        }];
+    }
     
     if ([cell conformsToProtocol:@protocol(QMChatLocationCell)]) {
         
         [[(id<QMChatLocationCell>)cell imageView]
          setSnapshotWithLocationCoordinate:message.locationCoordinate];
+    }
+    
+    else if ([cell conformsToProtocol:@protocol(QMMediaViewDelegate)]) {
+        
+        QBChatAttachment *attachment = message.attachments[0];
+        [self.mediaController configureView:(id<QMMediaViewDelegate>)cell
+                                withMessage:message
+                               attachmentID:attachment.ID];
+        
     }
 }
 
@@ -1281,15 +1348,6 @@ static NSMutableDictionary *dict = nil;
     // marking message as read if needed
     QBChatMessage *itemMessage = [self.chatDataSource messageForIndexPath:indexPath];
     
-    if ([cell conformsToProtocol:@protocol(QMMediaViewDelegate)]) {
-        
-        QBChatAttachment *attachment = itemMessage.attachments[0];
-        [self.mediaController configureView:(id<QMMediaViewDelegate>)cell
-                                withMessage:itemMessage
-                               attachmentID:attachment.ID];
-        
-    }
-    
     [self readMessage:itemMessage];
     
     // getting users if needed
@@ -1307,6 +1365,14 @@ static NSMutableDictionary *dict = nil;
     }
 }
 
+- (void)collectionView:(UICollectionView *)__unused collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if ([cell conformsToProtocol:@protocol(QMMediaViewDelegate)]) {
+        QBChatMessage *itemMessage = [self.chatDataSource messageForIndexPath:indexPath];
+        [self.mediaController cancelOperationsForMessage:itemMessage];
+    }
+    
+}
 #pragma mark - Typing status
 
 - (void)stopTyping {
@@ -1424,7 +1490,7 @@ static NSMutableDictionary *dict = nil;
     }];
 }
 
-- (void)sendAttachmentMessageWithMediaItem:(QMMediaItem *)mediaItem {
+- (void)sendMessageWithAttachment:(QBChatAttachment *)attachment {
     
     QBChatMessage *message = [QMMessagesHelper chatMessageWithText:nil
                                                           senderID:self.senderID
@@ -1435,7 +1501,7 @@ static NSMutableDictionary *dict = nil;
     
     [[QMCore instance].chatService sendAttachmentMessage:message
                                                 toDialog:self.chatDialog
-                                           withMediaItem:mediaItem
+                                          withAttachment:attachment
                                               completion:^(NSError * _Nullable error) {
                                                   
                                                   if (error) {
@@ -1767,7 +1833,7 @@ static NSMutableDictionary *dict = nil;
             [navigationController dismissNotificationPanel];
             
             if (!task.isFaulted) {
-                
+                [dict removeObjectForKey:currentMessage.ID];
                 [self.chatDataSource updateMessage:currentMessage];
             }
             
@@ -1990,15 +2056,15 @@ static NSMutableDictionary *dict = nil;
         if (imagePicker.sourceType == UIImagePickerControllerSourceTypeCamera) {
             newImage = [newImage fixOrientation];
         }
-        QMMediaItem *mediaItem = [QMMediaItem mediaItemWithImage:newImage];
-        [self sendAttachmentMessageWithMediaItem:mediaItem];
+        QBChatAttachment *attachment = [QBChatAttachment mediaAttachmentWithImage:newImage];
+        [self sendMessageWithAttachment:attachment];
     });
 }
 
 - (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingVideo:(NSURL *)videoUrl {
     
-    QMMediaItem *mediaItem = [QMMediaItem videoItemWithFileURL:videoUrl];
-    [self sendAttachmentMessageWithMediaItem:mediaItem];
+    QBChatAttachment *attachment = [QBChatAttachment videoAttachmentwWithFileURL:videoUrl];
+    [self sendMessageWithAttachment:attachment];
 }
 
 - (UIImage *)resizedImageFromImage:(UIImage *)image {
