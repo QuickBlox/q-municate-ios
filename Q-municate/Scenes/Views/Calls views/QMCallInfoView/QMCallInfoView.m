@@ -37,14 +37,9 @@ static NSString *const kQMVideoCallInfoXibName = @"QMVideoCallInfoView";
     callInfoView.fullNameLabel.text = user.fullName ?: [NSString stringWithFormat:@"%tu", user.ID];
     
     callInfoView.avatarImageView.imageViewType = QMImageViewTypeCircle;
-    UIImage *placeholder = [QMPlaceholder placeholderWithFrame:callInfoView.avatarImageView.bounds
-                                                         title:user.fullName
-                                                            ID:user.ID];
-    
+
     [callInfoView.avatarImageView setImageWithURL:[NSURL URLWithString:user.avatarUrl]
-                                      placeholder:placeholder
-                                          options:SDWebImageHighPriority
-                                         progress:nil
+                                            title:user.fullName
                                    completedBlock:nil];
     
     callInfoView.backgroundColor = [UIColor clearColor];
@@ -54,7 +49,10 @@ static NSString *const kQMVideoCallInfoXibName = @"QMVideoCallInfoView";
 
 + (instancetype)videoCallInfoViewWithUser:(QBUUser *)user {
     
-    QMCallInfoView *callInfoView = [[NSBundle mainBundle] loadNibNamed:kQMVideoCallInfoXibName owner:self options:nil].firstObject;
+    QMCallInfoView *callInfoView =
+    [[NSBundle mainBundle] loadNibNamed:kQMVideoCallInfoXibName
+                                  owner:self
+                                options:nil].firstObject;
     
     callInfoView.fullNameLabel.text = user.fullName ?: [NSString stringWithFormat:@"%tu", user.ID];
     
