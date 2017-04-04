@@ -37,12 +37,19 @@
     ],
     "SDWebImage": [
       "~> 3.6"
+    ],
+    "FFCircularProgressView": [
+
     ]
   },
   "subspecs": [
     {
       "name": "QMChatLocationSnapshotter",
       "source_files": "QMChatViewController/QMChatLocationSnapshotter/*.{h,m}"
+    },
+    {
+      "name": "QMMediaChatModule",
+      "source_files": "QMChatViewController/QMMediaChatModule/**/*.{h,m}"
     },
     {
       "name": "Categories",

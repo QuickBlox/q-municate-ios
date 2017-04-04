@@ -16,6 +16,7 @@ PODS:
     - FBSDKCoreKit
   - FBSDKShareKit (4.11.0):
     - FBSDKCoreKit
+  - FFCircularProgressView (0.5)
   - FLAnimatedImage (1.0.12)
   - Flurry-iOS-SDK/FlurrySDK (7.10.0)
   - libextobjc/EXTKeyPathCoding (0.4.1):
@@ -32,37 +33,50 @@ PODS:
     - NYTPhotoViewer/Core
   - NYTPhotoViewer/Core (1.1.0)
   - QMCVDevelopment (0.4.0.1):
+    - FFCircularProgressView
     - QMCVDevelopment/Categories (= 0.4.0.1)
     - QMCVDevelopment/Protocols (= 0.4.0.1)
     - QMCVDevelopment/QMChatDataSource (= 0.4.0.1)
     - QMCVDevelopment/QMChatLocationSnapshotter (= 0.4.0.1)
+    - QMCVDevelopment/QMMediaChatModule (= 0.4.0.1)
     - QMCVDevelopment/Sections (= 0.4.0.1)
     - QMCVDevelopment/Utils (= 0.4.0.1)
     - QMCVDevelopment/Views (= 0.4.0.1)
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/Categories (0.4.0.1):
+    - FFCircularProgressView
     - QMCVDevelopment/QMChatLocationSnapshotter
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/Protocols (0.4.0.1):
+    - FFCircularProgressView
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/QMChatDataSource (0.4.0.1):
+    - FFCircularProgressView
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/QMChatLocationSnapshotter (0.4.0.1):
+    - FFCircularProgressView
+    - SDWebImage (~> 3.6)
+    - TTTAttributedLabel (> 1.13)
+  - QMCVDevelopment/QMMediaChatModule (0.4.0.1):
+    - FFCircularProgressView
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/Sections (0.4.0.1):
+    - FFCircularProgressView
     - QMCVDevelopment/QMChatDataSource
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/Utils (0.4.0.1):
+    - FFCircularProgressView
     - QMCVDevelopment/Categories
     - SDWebImage (~> 3.6)
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/Views (0.4.0.1):
+    - FFCircularProgressView
     - QMCVDevelopment/Categories
     - QMCVDevelopment/Protocols
     - QMCVDevelopment/Utils
@@ -79,7 +93,7 @@ PODS:
   - TTTAttributedLabel (2.0.0)
   - TwitterCore (1.15.3):
     - Fabric
-  - UIDevice-Hardware (0.1.9)
+  - UIDevice-Hardware (0.1.10)
 
 DEPENDENCIES:
   - Crashlytics (~> 3.5)
@@ -117,12 +131,13 @@ SPEC CHECKSUMS:
   FBSDKCoreKit: 686ac982723a14ec9ddb85e2f81235d7706c891b
   FBSDKLoginKit: bade9fc78277764149ccc5bfaadbf13c83175c6a
   FBSDKShareKit: 2d1746144cfc8a9dbbd24997c34ee0471be51b6a
+  FFCircularProgressView: 683a4ab1e1bd613246a3dffa61503ffdebcde8d8
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Flurry-iOS-SDK: e6975df9e57010d582bf9bed0f6312553cf24bc2
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
-  QMCVDevelopment: dd7ebb0f983014d35aa11ab8d5ddf231dd89f2c2
+  QMCVDevelopment: b7588ed23eccb16f6f4d9cc2c0fc2b4a4bd9669f
   QMServicesDevelopment: 8cb68aafe07046e9d36f74fd04b5e5aa1642b182
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
@@ -130,8 +145,8 @@ SPEC CHECKSUMS:
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
   TwitterCore: cce24b3c798993ccde72787ea79ea9a478b284e4
-  UIDevice-Hardware: 70f06071af0b01f3b30ec5a274360254e7d3326c
+  UIDevice-Hardware: 4bb15b9bd9878762ab879ac86185baad17b6c3ff
 
-PODFILE CHECKSUM: e5e3fde9a9006100daf9d0075b7d5fd5d5caaa96
+PODFILE CHECKSUM: e9508bc1e6c183ea6aed57056fbd9d2c7d8f3d79
 
 COCOAPODS: 1.2.0

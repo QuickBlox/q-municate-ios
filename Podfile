@@ -36,7 +36,7 @@ target 'Q-municate' do
     
 #    pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :commit => '737a208c04a79c47195c22f4792ddbc0cf486d26'
     pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
-    
+
 end
 
 target 'QMSiriExtension' do

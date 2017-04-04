@@ -1,0 +1,1 @@
+../../../../../q-municate-services-ios/QMChatCache/QMChatCache/CoreData/Entries/CDPreview.h
