@@ -20,7 +20,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3bN-dr-csI" customClass="QMImageView">
-                        <rect key="frame" x="16" y="5" width="40" height="40"/>
+                        <rect key="frame" x="12" y="5" width="40" height="40"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="40" id="L7P-uQ-4Pr"/>
                             <constraint firstAttribute="width" constant="40" id="jxE-ed-3ZX"/>
@@ -32,17 +32,17 @@
                         </userDefinedRuntimeAttributes>
                     </imageView>
                     <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Adam44" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JQe-pG-MgF">
-                        <rect key="frame" x="64" y="8" width="247" height="21"/>
+                        <rect key="frame" x="64" y="6" width="247" height="21"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                        <color key="textColor" red="0.29019607843137252" green="0.29019607843137252" blue="0.29019607843137252" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last seen" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="14R-Bv-PDT">
-                        <rect key="frame" x="64" y="30" width="247" height="15"/>
+                        <rect key="frame" x="64" y="28" width="247" height="15"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                        <color key="textColor" red="0.5607843137254902" green="0.55686274509803924" blue="0.58039215686274503" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="textColor" red="0.46666666666666667" green="0.52156862745098043" blue="0.58039215686274503" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qDm-la-nIg">
@@ -58,15 +58,15 @@
                 </subviews>
                 <constraints>
                     <constraint firstItem="3bN-dr-csI" firstAttribute="centerY" secondItem="FEn-P3-JV7" secondAttribute="centerY" id="CRq-ap-IUq"/>
-                    <constraint firstItem="JQe-pG-MgF" firstAttribute="leading" secondItem="3bN-dr-csI" secondAttribute="trailing" constant="8" id="Cno-8R-qOd"/>
+                    <constraint firstItem="JQe-pG-MgF" firstAttribute="leading" secondItem="3bN-dr-csI" secondAttribute="trailing" constant="12" id="Cno-8R-qOd"/>
                     <constraint firstItem="qDm-la-nIg" firstAttribute="leading" secondItem="JQe-pG-MgF" secondAttribute="trailing" constant="8" id="DrA-6s-x2M"/>
                     <constraint firstItem="qDm-la-nIg" firstAttribute="top" secondItem="FEn-P3-JV7" secondAttribute="topMargin" constant="-8" id="IEN-Mc-NJl"/>
                     <constraint firstAttribute="trailingMargin" secondItem="qDm-la-nIg" secondAttribute="trailing" constant="-8" id="IrZ-fL-evk"/>
-                    <constraint firstItem="3bN-dr-csI" firstAttribute="leading" secondItem="FEn-P3-JV7" secondAttribute="leadingMargin" constant="8" id="JI9-k6-rpH"/>
+                    <constraint firstItem="3bN-dr-csI" firstAttribute="leading" secondItem="FEn-P3-JV7" secondAttribute="leadingMargin" constant="4" id="JI9-k6-rpH"/>
                     <constraint firstAttribute="bottomMargin" secondItem="qDm-la-nIg" secondAttribute="bottom" constant="-8" id="Tab-Jl-yte"/>
-                    <constraint firstAttribute="topMargin" secondItem="JQe-pG-MgF" secondAttribute="top" id="TuC-JE-wEU"/>
+                    <constraint firstAttribute="topMargin" secondItem="JQe-pG-MgF" secondAttribute="top" constant="2" id="TuC-JE-wEU"/>
                     <constraint firstItem="qDm-la-nIg" firstAttribute="leading" secondItem="14R-Bv-PDT" secondAttribute="trailing" constant="8" id="UXq-eh-xzs"/>
-                    <constraint firstItem="14R-Bv-PDT" firstAttribute="leading" secondItem="3bN-dr-csI" secondAttribute="trailing" constant="8" id="ZTv-pY-9a2"/>
+                    <constraint firstItem="14R-Bv-PDT" firstAttribute="leading" secondItem="3bN-dr-csI" secondAttribute="trailing" constant="12" id="ZTv-pY-9a2"/>
                     <constraint firstItem="14R-Bv-PDT" firstAttribute="top" secondItem="JQe-pG-MgF" secondAttribute="bottom" constant="1" id="aC4-E9-mq0"/>
                     <constraint firstItem="qDm-la-nIg" firstAttribute="centerY" secondItem="FEn-P3-JV7" secondAttribute="centerY" id="bSz-uj-faR"/>
                 </constraints>

@@ -34,6 +34,21 @@ QMChatConnectionDelegate
     
     // subscribing for delegates
     [[QMCore instance].chatService addDelegate:self];
+    
+    [self.viewControllers enumerateObjectsUsingBlock:^(UIViewController *vc,
+                                                       NSUInteger idx,
+                                                       BOOL *stop) {
+        vc.tabBarItem.title = nil;
+        vc.tabBarItem.imageInsets = UIEdgeInsetsMake(5, 0, -5, 0);
+    }];
+}
+
+- (void)viewWillLayoutSubviews {
+    
+    CGRect tabFrame = self.tabBar.frame; //self.TabBar is IBOutlet of your TabBar
+    tabFrame.size.height = 45;
+    tabFrame.origin.y = self.view.frame.size.height - 45;
+    self.tabBar.frame = tabFrame;
 }
 
 #pragma mark - Notification

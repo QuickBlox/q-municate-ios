@@ -45,7 +45,7 @@ UIColor *QMChatBackgroundColor() {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
-        color = [UIColor colorWithRed:237.0f/255.0f green:230.0f/255.0f blue:211.0f/255.0f alpha:1.0f];
+        color = [UIColor whiteColor];
     });
     
     return color;
@@ -103,6 +103,19 @@ UIColor *QMChatCellHighlightedColor() {
     return color;
 }
 
+UIColor *QMChatIncomingCellColor() {
+    
+    static UIColor *color = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        color = [UIColor colorWithRed:223.0f/255.0f green:227.0f/255.0f blue:229.0f/255.0f alpha:1.0f];
+    });
+    
+    return color;
+}
+
 UIColor *QMChatOutgoingCellColor() {
     
     static UIColor *color = nil;
@@ -149,7 +162,7 @@ UIColor *QMChatNotificationCellColor() {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
-        color = [UIColor colorWithRed:188.0f/255.0f green:185.0f/255.0f blue:168.0f/255.0f alpha:1.0f];
+        color = [UIColor colorWithRed:242.0f/255.0f green:244.0f/255.0f blue:245.0f/255.0f alpha:1.0f];
     });
     
     return color;

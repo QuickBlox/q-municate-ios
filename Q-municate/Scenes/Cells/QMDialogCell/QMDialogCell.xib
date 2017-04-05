@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,10 +20,10 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Paul Jones, Amber Jenkins, Andrea Newman" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S0M-dx-e6l">
-                        <rect key="frame" x="83" y="15" width="251.5" height="20.5"/>
+                        <rect key="frame" x="84" y="15" width="250.5" height="20"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                        <color key="textColor" red="0.29019607843137252" green="0.29019607843137252" blue="0.29019607843137252" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="99.99.99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uoo-Bb-O59">
@@ -34,39 +34,39 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lTv-HE-qXa" customClass="QMBadgeView">
-                        <rect key="frame" x="374" y="35" width="35" height="24"/>
+                        <rect key="frame" x="374" y="42" width="33" height="22"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="24" id="ctM-DA-ZLK"/>
-                            <constraint firstAttribute="width" constant="35" id="ilP-y8-lL5"/>
+                            <constraint firstAttribute="height" constant="22" id="ctM-DA-ZLK"/>
+                            <constraint firstAttribute="width" constant="33" id="ilP-y8-lL5"/>
                         </constraints>
                     </view>
                     <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sem Dolor Iceptos Purus" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hIc-GT-Dag">
-                        <rect key="frame" x="83" y="36.5" width="283" height="20.5"/>
+                        <rect key="frame" x="83" y="40" width="283" height="19"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" red="0.56078431370000004" green="0.5568627451" blue="0.58039215690000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <color key="textColor" red="0.46666666666666667" green="0.52156862745098043" blue="0.58039215686274503" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Pcf-ld-aV0" customClass="QMImageView">
-                        <rect key="frame" x="12" y="8.5" width="59" height="59"/>
+                        <rect key="frame" x="12" y="8" width="60" height="60"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="59" id="Kuh-Dj-C5Q"/>
-                            <constraint firstAttribute="width" constant="59" id="L8x-Hv-UbM"/>
+                            <constraint firstAttribute="height" constant="60" id="Kuh-Dj-C5Q"/>
+                            <constraint firstAttribute="width" constant="60" id="L8x-Hv-UbM"/>
                         </constraints>
                     </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="Pcf-ld-aV0" firstAttribute="centerY" secondItem="sD9-JE-usY" secondAttribute="centerY" id="1yT-bX-OGA"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="lTv-HE-qXa" secondAttribute="trailing" id="6b2-Fw-huw"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="lTv-HE-qXa" secondAttribute="trailing" constant="2" id="6b2-Fw-huw"/>
                     <constraint firstItem="S0M-dx-e6l" firstAttribute="top" secondItem="sD9-JE-usY" secondAttribute="topMargin" constant="7" id="81a-Ac-W8a"/>
                     <constraint firstAttribute="trailing" secondItem="Uoo-Bb-O59" secondAttribute="trailing" constant="12" id="AUt-AH-nCq"/>
                     <constraint firstItem="Uoo-Bb-O59" firstAttribute="top" secondItem="sD9-JE-usY" secondAttribute="topMargin" constant="7" id="SYb-ka-Y8x"/>
-                    <constraint firstItem="hIc-GT-Dag" firstAttribute="leading" secondItem="Pcf-ld-aV0" secondAttribute="trailing" constant="12" id="WFA-0V-gFb"/>
+                    <constraint firstItem="hIc-GT-Dag" firstAttribute="leading" secondItem="Pcf-ld-aV0" secondAttribute="trailing" constant="11" id="WFA-0V-gFb"/>
                     <constraint firstItem="lTv-HE-qXa" firstAttribute="leading" secondItem="hIc-GT-Dag" secondAttribute="trailing" constant="8" id="Ypu-WZ-0aV"/>
                     <constraint firstItem="Pcf-ld-aV0" firstAttribute="leading" secondItem="sD9-JE-usY" secondAttribute="leadingMargin" constant="4" id="bSo-z4-VDi"/>
                     <constraint firstItem="Uoo-Bb-O59" firstAttribute="leading" secondItem="S0M-dx-e6l" secondAttribute="trailing" constant="8" id="brp-0T-CWl"/>
-                    <constraint firstItem="hIc-GT-Dag" firstAttribute="top" secondItem="S0M-dx-e6l" secondAttribute="bottom" constant="1" id="cj8-CS-hAI"/>
-                    <constraint firstItem="lTv-HE-qXa" firstAttribute="top" secondItem="Uoo-Bb-O59" secondAttribute="bottom" constant="2" id="rUI-Rr-Tcd"/>
+                    <constraint firstItem="hIc-GT-Dag" firstAttribute="top" secondItem="S0M-dx-e6l" secondAttribute="bottom" constant="4.5" id="cj8-CS-hAI"/>
+                    <constraint firstItem="lTv-HE-qXa" firstAttribute="top" secondItem="Uoo-Bb-O59" secondAttribute="bottom" constant="9" id="rUI-Rr-Tcd"/>
                     <constraint firstItem="S0M-dx-e6l" firstAttribute="leading" secondItem="Pcf-ld-aV0" secondAttribute="trailing" constant="12" id="vD1-48-puU"/>
                 </constraints>
             </tableViewCellContentView>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FCI-lM-7qj">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FCI-lM-7qj">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -44,7 +44,7 @@
                                             <string key="text">You’re all alone
 out here.</string>
                                             <fontDescription key="fontDescription" type="system" pointSize="26"/>
-                                            <color key="textColor" red="0.2901960784" green="0.2901960784" blue="0.2901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="textColor" red="0.46666666670000001" green="0.52156862749999999" blue="0.58039215690000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="m_empty_dialogs" translatesAutoresizingMaskIntoConstraints="NO" id="mob-8S-GOu">
@@ -208,10 +208,11 @@ out here.</string>
             <objects>
                 <tabBarController id="Rsx-Bb-MAV" customClass="QMTabBarVC" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="Ag3-4N-6Na"/>
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="50y-0d-JdD">
+                    <tabBar key="tabBar" contentMode="scaleToFill" itemPositioning="centered" id="50y-0d-JdD">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="tintColor" red="0.090196078431372548" green="0.81568627450980391" blue="0.29411764705882354" alpha="1" colorSpace="calibratedRGB"/>
                     </tabBar>
                     <connections>
                         <segue destination="8Yq-BL-cvM" kind="relationship" relationship="viewControllers" id="bgm-y5-N5D"/>
@@ -236,11 +237,13 @@ out here.</string>
             </objects>
             <point key="canvasLocation" x="-4669" y="-7963"/>
         </scene>
-        <!--Settings-->
+        <!--Link View Controller-->
         <scene sceneID="7KQ-aW-jk8">
             <objects>
                 <viewController storyboardIdentifier="Settings" id="W7Z-nM-mgl" customClass="QMLinkViewController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Settings" image="qm-tb-settings" id="YBg-8g-Bau"/>
+                    <tabBarItem key="tabBarItem" title="" image="qm-tb-settings" id="YBg-8g-Bau">
+                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
+                    </tabBarItem>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="storyboardName" value="Settings"/>
                         <userDefinedRuntimeAttribute type="color" keyPath="view.backgroundColor">
@@ -252,11 +255,11 @@ out here.</string>
             </objects>
             <point key="canvasLocation" x="-4519" y="-6080"/>
         </scene>
-        <!--Contacts-->
+        <!--Navigation Controller-->
         <scene sceneID="IGN-AR-L1g">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="rRp-nU-Jp0" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Contacts" image="qm-tb-contacts" id="fYc-rl-dnk"/>
+                    <tabBarItem key="tabBarItem" title="" image="qm-tb-contacts" id="fYc-rl-dnk"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="jYx-TX-49w" customClass="QMNavigationBar">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -276,11 +279,11 @@ out here.</string>
             </objects>
             <point key="canvasLocation" x="-3479" y="-6080"/>
         </scene>
-        <!--Chats-->
+        <!--Navigation Controller-->
         <scene sceneID="ZMN-9H-H7e">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="8Yq-BL-cvM" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Chats" image="qm-tb-chats" id="l6Z-lD-4Rv"/>
+                    <tabBarItem key="tabBarItem" title="" image="qm-tb-chats" id="l6Z-lD-4Rv"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Irs-ba-SJb" customClass="QMNavigationBar">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -316,7 +319,7 @@ out here.</string>
                     <navigationItem key="navigationItem" id="WVr-hG-2uC">
                         <nil key="title"/>
                         <view key="titleView" contentMode="scaleToFill" id="mhp-PO-7pR" customClass="QMOnlineTitleView">
-                            <rect key="frame" x="8" y="6" width="359" height="33"/>
+                            <rect key="frame" x="8" y="5.5" width="359" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Quickblox main channel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="75f-La-4Cf">

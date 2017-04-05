@@ -174,6 +174,7 @@ NYTPhotosViewControllerDelegate
     [super viewDidLoad];
     
     self.collectionView.backgroundColor = [UIColor clearColor];
+    self.navigationController.navigationBar.topItem.title = @"";
     
     if (self.chatDialog == nil) {
         
@@ -634,7 +635,11 @@ NYTPhotosViewControllerDelegate
         }
         else {
             
-            textColor = [UIColor whiteColor];
+            textColor = [UIColor colorWithRed:119.f / 255
+                                        green:133.f / 255
+                                         blue:148.f /255
+                                        alpha:1];
+            
             font = [UIFont systemFontOfSize:13.0f];
         }
     }
@@ -654,7 +659,7 @@ NYTPhotosViewControllerDelegate
         
         message = messageItem.text;
         textColor = messageItem.senderID == self.senderID ? [UIColor whiteColor] : [UIColor blackColor];
-        font = [UIFont systemFontOfSize:16.0f];
+        font = [UIFont systemFontOfSize:17.0f];
     }
     
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor,
@@ -858,12 +863,16 @@ NYTPhotosViewControllerDelegate
     return 8.0f;
 }
 
-- (QMChatCellLayoutModel)collectionView:(QMChatCollectionView *)collectionView layoutModelAtIndexPath:(NSIndexPath *)indexPath {
-    QMChatCellLayoutModel layoutModel = [super collectionView:collectionView layoutModelAtIndexPath:indexPath];
+- (QMChatCellLayoutModel)collectionView:(QMChatCollectionView *)collectionView
+                 layoutModelAtIndexPath:(NSIndexPath *)indexPath {
+    
+    QMChatCellLayoutModel layoutModel =
+    [super collectionView:collectionView layoutModelAtIndexPath:indexPath];
     
     layoutModel.topLabelHeight = 0.0f;
     layoutModel.maxWidthMarginSpace = 20.0f;
-    layoutModel.spaceBetweenTextViewAndBottomLabel = 5.0f;
+    layoutModel.spaceBetweenTextViewAndBottomLabel = 0;
+    layoutModel.spaceBetweenTopLabelAndTextView = 0;
     
     QBChatMessage *item = [self.chatDataSource messageForIndexPath:indexPath];
     Class class = [self viewClassForItem:item];
@@ -873,6 +882,11 @@ NYTPhotosViewControllerDelegate
         class == [QMChatLocationOutgoingCell class]) {
         
         layoutModel.avatarSize = CGSizeZero;
+
+        if (class != [QMChatOutgoingCell class]) {
+            
+            layoutModel.spaceBetweenTextViewAndBottomLabel = 5;
+        }
     }
     else if (class == [QMChatAttachmentIncomingCell class] ||
              class == [QMChatLocationIncomingCell class] ||
@@ -883,13 +897,14 @@ NYTPhotosViewControllerDelegate
             layoutModel.topLabelHeight = 18;
         }
         
-        layoutModel.spaceBetweenTopLabelAndTextView = 5.0f;
+        if (class != [QMChatIncomingCell class]) {
+            
+            layoutModel.spaceBetweenTextViewAndBottomLabel = 5;
+            layoutModel.spaceBetweenTopLabelAndTextView = 5;
+        }
+
         layoutModel.avatarSize = CGSizeMake(kQMAvatarSize, kQMAvatarSize);
         
-    }
-    else if (class == [QMChatNotificationCell class]) {
-        
-        layoutModel.spaceBetweenTopLabelAndTextView = 5.0f;
     }
     
     CGSize size = CGSizeZero;
@@ -948,7 +963,7 @@ NYTPhotosViewControllerDelegate
              || [cell isKindOfClass:[QMChatAttachmentIncomingCell class]]
              || [cell isKindOfClass:[QMChatLocationIncomingCell class]]) {
         
-        currentCell.containerView.bgColor = [UIColor whiteColor];
+        currentCell.containerView.bgColor = QMChatIncomingCellColor();
         currentCell.textView.linkAttributes = @{NSForegroundColorAttributeName : QMChatIncomingLinkColor(),
                                                 NSUnderlineStyleAttributeName : @(YES)};
         
