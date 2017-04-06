@@ -96,18 +96,20 @@ QMSearchResultsControllerDelegate
     
     @weakify(self);
     // adding notification for showing chat connection
-    self.observerWillEnterForeground = [[NSNotificationCenter defaultCenter]
-                                        addObserverForName:UIApplicationWillEnterForegroundNotification
-                                        object:nil
-                                        queue:nil
-                                        usingBlock:^(NSNotification * _Nonnull __unused note) {
-                                            
-                                            @strongify(self);
-                                            if (![QBChat instance].isConnected) {
-                                                
-                                                [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) duration:0];
-                                            }
-                                        }];
+    self.observerWillEnterForeground =
+    [[NSNotificationCenter defaultCenter]
+     addObserverForName:UIApplicationWillEnterForegroundNotification
+     object:nil
+     queue:nil
+     usingBlock:^(NSNotification * _Nonnull __unused note) {
+         
+         @strongify(self);
+         if (![QBChat instance].isConnected) {
+             [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                                         message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
+                                                        duration:0];
+         }
+     }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -138,7 +140,9 @@ QMSearchResultsControllerDelegate
 
 - (void)performAutoLoginAndFetchData {
     
-    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_CONNECTING", nil) duration:0];
+    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                                message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
+                                               duration:0];
     
     __weak UINavigationController *navigationController = self.navigationController;
     
@@ -230,7 +234,9 @@ QMSearchResultsControllerDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    return self.dialogsDataSource.items.count > 0 ? [self.dialogsDataSource heightForRowAtIndexPath:indexPath] : CGRectGetHeight(tableView.bounds) - tableView.contentInset.top - tableView.contentInset.bottom;
+    return self.dialogsDataSource.items.count > 0 ?
+    [self.dialogsDataSource heightForRowAtIndexPath:indexPath] :
+    CGRectGetHeight(tableView.bounds) - tableView.contentInset.top - tableView.contentInset.bottom;
 }
 
 - (NSString *)tableView:(UITableView *)__unused tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
