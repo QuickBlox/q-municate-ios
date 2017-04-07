@@ -75,7 +75,7 @@ QMCallManagerDelegate
 @dynamic session;
 @dynamic isVideoCall;
 
-#pragma mark - Construction
+//MARK: - Construction
 
 + (instancetype)callControllerWithState:(QMCallState)callState {
     
@@ -85,7 +85,7 @@ QMCallManagerDelegate
     return callVC;
 }
 
-#pragma mark - Life cycle
+//MARK: - Life cycle
 
 - (void)dealloc {
     
@@ -138,8 +138,8 @@ QMCallManagerDelegate
     [self configureCallController];
 }
 
-#pragma mark - Configurations
-#pragma mark - Base configuration
+//MARK: - Configurations
+//MARK: - Base configuration
 
 - (void)configureCallController {
     
@@ -357,7 +357,7 @@ QMCallManagerDelegate
     }
 }
 
-#pragma mark - Reusable toolbar buttons
+//MARK: - Reusable toolbar buttons
 
 - (void)configureMuteButton {
     
@@ -430,7 +430,7 @@ QMCallManagerDelegate
     }];
 }
 
-#pragma mark - Video call configuration
+//MARK: - Video call configuration
 
 - (void)configureVideoCall {
     
@@ -454,7 +454,7 @@ QMCallManagerDelegate
     [self startHideBarsTimer];
 }
 
-#pragma mark - Active video call bars visibility
+//MARK: - Active video call bars visibility
 
 - (void)updateBarsVisibility {
     
@@ -486,7 +486,7 @@ QMCallManagerDelegate
     }
 }
 
-#pragma mark - UIContentContainer protocol
+//MARK: - UIContentContainer protocol
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     
@@ -518,7 +518,7 @@ QMCallManagerDelegate
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
-#pragma mark - Actions
+//MARK: - Actions
 
 - (void)rejectCall {
     
@@ -527,8 +527,8 @@ QMCallManagerDelegate
     [[QMCore instance].callManager sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
 }
 
-#pragma mark - Timers
-#pragma mark - Call Timer
+//MARK: - Timers
+//MARK: - Call Timer
 
 - (void)refreshCallTime {
     
@@ -567,7 +567,7 @@ QMCallManagerDelegate
     }
 }
 
-#pragma mark - Hide bars timer
+//MARK: - Hide bars timer
 
 - (void)startHideBarsTimer {
     
@@ -587,7 +587,7 @@ QMCallManagerDelegate
     }
 }
 
-#pragma mark - Getters
+//MARK: - Getters
 
 - (QBRTCSession *)session {
     
@@ -614,7 +614,7 @@ QMCallManagerDelegate
     return _topLayoutBackgroundView;
 }
 
-#pragma mark - QBRTCClientDelegate
+//MARK: - QBRTCClientDelegate
 
 - (void)session:(QBRTCSession *)session initializedLocalMediaStream:(QBRTCMediaStream *)mediaStream {
     
@@ -771,7 +771,7 @@ QMCallManagerDelegate
     self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_BAD_CONNECTION", nil);
 }
 
-#pragma mark - QMCallManagerDelegate
+//MARK: - QMCallManagerDelegate
 
 - (void)callManager:(QMCallManager *)__unused callManager willCloseCurrentSession:(QBRTCSession *)__unused session {
     
@@ -782,7 +782,7 @@ QMCallManagerDelegate
     }
 }
 
-#pragma mark - Overrides
+//MARK: - Overrides
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     // light status bar for dark controller

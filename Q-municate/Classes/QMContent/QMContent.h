@@ -15,7 +15,7 @@ typedef void(^QMContentProgressBlock)(float progress);
  */
 @interface QMContent : NSObject
 
-#pragma mark - Upload operations
+//MARK: - Upload operations
 
 + (BFTask QB_GENERIC(QBCBlob *) *)uploadPNGImage:(UIImage *)image
                   progress:(QMContentProgressBlock)progress;
@@ -29,7 +29,7 @@ typedef void(^QMContentProgressBlock)(float progress);
                                     isPublic:(BOOL)isPublic
                                     progress:(QMContentProgressBlock)progress;
 
-#pragma mark - Download operations
+//MARK: - Download operations
 
 + (BFTask QB_GENERIC(NSData *) *)downloadFileWithUrl:(NSURL *)url;
 

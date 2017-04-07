@@ -126,7 +126,7 @@ AVCaptureDevice * captureDeviceWithPosition(AVCaptureDevicePosition devicePositi
     return captureDeviceInput;
 }
 
-#pragma mark - Public
+//MARK: - Public
 
 - (void)startSession {
     [self startSession:nil];
@@ -323,7 +323,7 @@ AVCaptureDevice * captureDeviceWithPosition(AVCaptureDevicePosition devicePositi
     return captureDeviceWithPosition(cameraPosition) != nil;
 }
 
-#pragma mark - Private
+//MARK: - Private
 
 - (void)addObservers {
     
@@ -417,7 +417,7 @@ AVCaptureDevice * captureDeviceWithPosition(AVCaptureDevicePosition devicePositi
     return bestFormat;
 }
 
-#pragma mark - Update orientation
+//MARK: - Update orientation
 
 - (void)updateVideoCaptureOrientation {
     
@@ -466,7 +466,7 @@ AVCaptureDevice * captureDeviceWithPosition(AVCaptureDevicePosition devicePositi
     _previewLayer.connection.videoOrientation = orientation;
 }
 
-#pragma mark AVCaptureVideoDataOutputSampleBufferDelegate
+//MARK: AVCaptureVideoDataOutputSampleBufferDelegate
 
 - (void)captureOutput:(AVCaptureOutput *)__unused captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
        fromConnection:(AVCaptureConnection *)__unused connection {
@@ -489,7 +489,7 @@ AVCaptureDevice * captureDeviceWithPosition(AVCaptureDevicePosition devicePositi
     CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
 }
 
-#pragma mark - Inherited
+//MARK: - Inherited
 
 - (void)didSetToVideoTrack:(QBRTCLocalVideoTrack *)videoTrack {
     [super didSetToVideoTrack:videoTrack];

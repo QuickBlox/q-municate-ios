@@ -37,7 +37,7 @@
     [self.groupNameField becomeFirstResponder];
 }
 
-#pragma mark - Actions
+//MARK: - Actions
 
 - (IBAction)saveButtonPressed:(UIBarButtonItem *)__unused sender {
     

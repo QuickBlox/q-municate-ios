@@ -34,7 +34,7 @@ static const CGFloat kQMLocationPinXShift = 3.5f;
 
 @implementation QMLocationViewController
 
-#pragma mark - Construction
+//MARK: - Construction
 
 - (instancetype)init {
     
@@ -124,14 +124,14 @@ static const CGFloat kQMLocationPinXShift = 3.5f;
     [_mapView addSubview:_pinView];
 }
 
-#pragma mark - Setters
+//MARK: - Setters
 
 - (void)setLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate {
     
     [_mapView markCoordinate:locationCoordinate animated:NO];
 }
 
-#pragma mark - Private
+//MARK: - Private
 
 - (void)_sendAction {
     
@@ -185,7 +185,7 @@ static const CGFloat kQMLocationPinXShift = 3.5f;
     [_mapView setRegion:region animated:YES];
 }
 
-#pragma mark - CLLocationManagerDelegate
+//MARK: - CLLocationManagerDelegate
 
 - (void)locationManager:(CLLocationManager *)__unused manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
     
@@ -210,7 +210,7 @@ static const CGFloat kQMLocationPinXShift = 3.5f;
     }
 }
 
-#pragma mark - MKMapViewDelegate
+//MARK: - MKMapViewDelegate
 
 - (void)mapView:(MKMapView *)__unused mapView didUpdateUserLocation:(MKUserLocation *)__unused userLocation {
     

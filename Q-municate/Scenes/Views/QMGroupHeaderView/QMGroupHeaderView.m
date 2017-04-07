@@ -33,7 +33,7 @@ static UIColor *highlightedColor() {
 
 @implementation QMGroupHeaderView
 
-#pragma mark - Overrides
+//MARK: - Overrides
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -58,26 +58,21 @@ static UIColor *highlightedColor() {
     } completion:nil];
 }
 
-#pragma mark - Methods
+//MARK: - Methods
 
-- (void)setTitle:(NSString *)title avatarUrl:(NSString *)avatarUrl placeholderID:(NSUInteger)placeholderID {
+- (void)setTitle:(NSString *)title avatarUrl:(NSString *)avatarUrl {
     
     if (![_title isEqualToString:title]) {
-        
         _title = [title copy];
-        
         self.titleLabel.text = title;
     }
     
-    UIImage *placeholder = [QMPlaceholder placeholderWithFrame:self.avatarImage.bounds title:title ID:placeholderID];
     [self.avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl]
-                          placeholder:placeholder
-                              options:SDWebImageLowPriority
-                             progress:nil
+                                title:title
                        completedBlock:nil];
 }
 
-#pragma mark - QMImageViewDelegate
+//MARK: - QMImageViewDelegate
 
 - (void)imageViewDidTap:(QMImageView *)imageView {
     

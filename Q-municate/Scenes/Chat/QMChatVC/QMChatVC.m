@@ -139,7 +139,7 @@ QMMediaControllerDelegate
 @dynamic storedMessages;
 @dynamic deferredQueueManager;
 
-#pragma mark - Static methods
+//MARK: - Static methods
 
 + (instancetype)chatViewControllerWithChatDialog:(QBChatDialog *)chatDialog {
     
@@ -149,7 +149,7 @@ QMMediaControllerDelegate
     return chatVC;
 }
 
-#pragma mark - QMChatViewController data source overrides
+//MARK: - QMChatViewController data source overrides
 
 - (NSUInteger)senderID {
     return [QMCore instance].currentProfile.userData.ID;
@@ -167,7 +167,7 @@ QMMediaControllerDelegate
     return 40.0f;
 }
 
-#pragma mark - Life cycle
+//MARK: - Life cycle
 
 - (void)dealloc {
     // -dealloc
@@ -183,6 +183,7 @@ QMMediaControllerDelegate
     [super viewDidLoad];
     
     self.collectionView.backgroundColor = [UIColor clearColor];
+    self.navigationController.navigationBar.topItem.title = @"";
     
     if (self.chatDialog == nil) {
         
@@ -353,7 +354,7 @@ QMMediaControllerDelegate
     [[QMAudioPlayer audioPlayer] pause];
 }
 
-#pragma mark - Deferred queue management
+//MARK: - Deferred queue management
 
 - (void)deferredQueueManager:(QMDeferredQueueManager *)__unused queueManager didAddMessageLocally:(QBChatMessage *)addedMessage {
     
@@ -387,6 +388,7 @@ QMMediaControllerDelegate
     }
 }
 #pragma mark - Helpers & Utility
+//MARK: - Helpers & Utility
 
 - (void)updateOpponentOnlineStatus {
     
@@ -495,7 +497,7 @@ QMMediaControllerDelegate
     return YES;
 }
 
-#pragma mark - Toolbar actions
+//MARK: - Toolbar actions
 
 //MARK: - QMInputToolbarDelegate
 
@@ -729,7 +731,7 @@ QMMediaControllerDelegate
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-#pragma mark - Cells view classes
+//MARK: - Cells view classes
 
 - (Class)viewClassForItem:(QBChatMessage *)item {
     NSLog(@"viewClassForItem %@", item.ID);
@@ -821,7 +823,7 @@ QMMediaControllerDelegate
     return nil;
 }
 
-#pragma mark - Attributed strings
+//MARK: - Attributed strings
 
 - (NSAttributedString *)attributedStringForItem:(QBChatMessage *)messageItem {
     
@@ -851,7 +853,11 @@ QMMediaControllerDelegate
         }
         else {
             
-            textColor = [UIColor whiteColor];
+            textColor = [UIColor colorWithRed:119.f / 255
+                                        green:133.f / 255
+                                         blue:148.f /255
+                                        alpha:1];
+            
             font = [UIFont systemFontOfSize:13.0f];
         }
     }
@@ -871,7 +877,7 @@ QMMediaControllerDelegate
         
         message = messageItem.text;
         textColor = messageItem.senderID == self.senderID ? [UIColor whiteColor] : [UIColor blackColor];
-        font = [UIFont systemFontOfSize:16.0f];
+        font = [UIFont systemFontOfSize:17.0f];
     }
     
     NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor,
@@ -944,7 +950,7 @@ QMMediaControllerDelegate
     return attributedString;
 }
 
-#pragma mark - Collection View Datasource
+//MARK: - Collection View Datasource
 
 - (CGSize)collectionView:(QMChatCollectionView *)__unused collectionView dynamicSizeAtIndexPath:(NSIndexPath *)indexPath maxWidth:(CGFloat)maxWidth {
     
@@ -1120,20 +1126,23 @@ QMMediaControllerDelegate
     return YES;
 }
 
-#pragma mark - QMChatCollectionViewDelegate
+//MARK: - QMChatCollectionViewDelegate
 
 - (CGFloat)collectionView:(UICollectionView *)__unused collectionView layout:(UICollectionViewLayout *)__unused collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)__unused section {
     
     return 8.0f;
 }
 
-- (QMChatCellLayoutModel)collectionView:(QMChatCollectionView *)collectionView layoutModelAtIndexPath:(NSIndexPath *)indexPath {
+- (QMChatCellLayoutModel)collectionView:(QMChatCollectionView *)collectionView
+                 layoutModelAtIndexPath:(NSIndexPath *)indexPath {
     
-    QMChatCellLayoutModel layoutModel = [super collectionView:collectionView layoutModelAtIndexPath:indexPath];
+    QMChatCellLayoutModel layoutModel =
+    [super collectionView:collectionView layoutModelAtIndexPath:indexPath];
     
     layoutModel.topLabelHeight = 0.0f;
     layoutModel.maxWidthMarginSpace = 20.0f;
-    layoutModel.spaceBetweenTextViewAndBottomLabel = 5.0f;
+    layoutModel.spaceBetweenTextViewAndBottomLabel = 0;
+    layoutModel.spaceBetweenTopLabelAndTextView = 0;
     
     QBChatMessage *item = [self.chatDataSource messageForIndexPath:indexPath];
     Class class = [self viewClassForItem:item];
@@ -1144,6 +1153,11 @@ QMMediaControllerDelegate
         [class isSubclassOfClass:[QMMediaOutgoingCell class]]) {
         
         layoutModel.avatarSize = CGSizeZero;
+
+        if (class != [QMChatOutgoingCell class]) {
+            
+            layoutModel.spaceBetweenTextViewAndBottomLabel = 5;
+        }
     }
     else if (class == [QMChatAttachmentIncomingCell class] ||
              class == [QMChatLocationIncomingCell class] ||
@@ -1155,13 +1169,14 @@ QMMediaControllerDelegate
             layoutModel.topLabelHeight = 18;
         }
         
-        layoutModel.spaceBetweenTopLabelAndTextView = 5.0f;
+        if (class != [QMChatIncomingCell class]) {
+            
+            layoutModel.spaceBetweenTextViewAndBottomLabel = 5;
+            layoutModel.spaceBetweenTopLabelAndTextView = 5;
+        }
+
         layoutModel.avatarSize = CGSizeMake(kQMAvatarSize, kQMAvatarSize);
         
-    }
-    else if (class == [QMChatNotificationCell class]) {
-        
-        layoutModel.spaceBetweenTopLabelAndTextView = 5.0f;
     }
     
     CGSize size = CGSizeZero;
@@ -1227,7 +1242,7 @@ QMMediaControllerDelegate
              || [cell isKindOfClass:[QMChatLocationIncomingCell class]]
              || [cell isKindOfClass:[QMMediaIncomingCell class]]) {
         
-        currentCell.containerView.bgColor = [UIColor whiteColor];
+        currentCell.containerView.bgColor = QMChatIncomingCellColor();
         currentCell.textView.linkAttributes = @{NSForegroundColorAttributeName : QMChatIncomingLinkColor(),
                                                 NSUnderlineStyleAttributeName : @(YES)};
         
@@ -1241,7 +1256,9 @@ QMMediaControllerDelegate
         
         NSURL *userImageUrl = [NSURL URLWithString:sender.avatarUrl];
         
-        [avatarView setImageWithURL:userImageUrl title:sender.fullName completedBlock:nil];
+        [avatarView setImageWithURL:userImageUrl
+                              title:sender.fullName
+                     completedBlock:nil];
     }
     else if ([cell isKindOfClass:[QMChatNotificationCell class]]) {
         
@@ -1351,6 +1368,7 @@ QMMediaControllerDelegate
     
 }
 #pragma mark - Typing status
+//MARK: - Typing status
 
 - (void)stopTyping {
     
@@ -1379,7 +1397,7 @@ QMMediaControllerDelegate
     self.typingTimer = [NSTimer scheduledTimerWithTimeInterval:4.0 target:self selector:@selector(stopTyping) userInfo:nil repeats:NO];
 }
 
-#pragma mark - Actions
+//MARK: - Actions
 
 - (void)performInfoViewControllerForUserID:(NSUInteger)userID {
     
@@ -1588,7 +1606,7 @@ QMMediaControllerDelegate
     self.groupAvatarImageView.frame = CGRectMake(0, 0, defaultSize, defaultSize);
 }
 
-#pragma mark - Configuring
+//MARK: - Configuring
 
 - (void)configureCallButtons {
     
@@ -1620,14 +1638,9 @@ QMMediaControllerDelegate
 
 - (void)updateGroupAvatarImage {
     
-    UIImage *placeholder = [QMPlaceholder placeholderWithFrame:self.groupAvatarImageView.bounds title:self.chatDialog.name ID:self.chatDialog.ID.hash];
     NSURL *avatarURL = [NSURL URLWithString:self.chatDialog.photo];
-    
     [self.groupAvatarImageView setImageWithURL:avatarURL
-                                   placeholder:placeholder
-                                       options:SDWebImageLowPriority
-                                      progress:nil
-                                completedBlock:nil];
+                                   title:self.chatDialog.name completedBlock:nil];
 }
 
 - (void)updateGroupChatOnlineStatus {
@@ -1669,14 +1682,14 @@ QMMediaControllerDelegate
     [self.onlineTitleView setStatus:status];
 }
 
-#pragma mark - QMImageViewDelegate
+//MARK: - QMImageViewDelegate
 
 - (void)imageViewDidTap:(QMImageView *)__unused imageView {
     
     [self performSegueWithIdentifier:KQMSceneSegueGroupInfo sender:self.chatDialog];
 }
 
-#pragma mark - QMChatServiceDelegate
+//MARK: - QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)__unused chatService didLoadMessagesFromCache:(NSArray *)messages forDialogID:(NSString *)dialogID {
     
@@ -1741,7 +1754,7 @@ QMMediaControllerDelegate
     }
 }
 
-#pragma mark - QMChatConnectionDelegate
+//MARK: - QMChatConnectionDelegate
 
 - (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
     
@@ -1783,7 +1796,7 @@ QMMediaControllerDelegate
     }
 }
 
-#pragma mark QMChatActionsHandler protocol
+//MARK: QMChatActionsHandler protocol
 
 - (void)chatContactRequestDidAccept:(BOOL)accept sender:(id)sender {
     
@@ -1852,7 +1865,7 @@ QMMediaControllerDelegate
     }
 }
 
-#pragma mark QMChatCellDelegate
+//MARK: QMChatCellDelegate
 
 - (void)chatCellDidTapContainer:(QMChatCell *)cell {
     
@@ -2009,14 +2022,14 @@ QMMediaControllerDelegate
     }
 }
 
-#pragma mark - NYTPhotosViewControllerDelegate
+//MARK: - NYTPhotosViewControllerDelegate
 
 - (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
     
     return self.photoReferenceView;
 }
 
-#pragma mark - UITextViewDelegate
+//MARK: - UITextViewDelegate
 
 - (BOOL)textView:(UITextView *)__unused textView shouldChangeTextInRange:(NSRange)__unused range replacementText:(NSString *)__unused text {
     
@@ -2031,7 +2044,7 @@ QMMediaControllerDelegate
     [self stopTyping];
 }
 
-#pragma mark - UIImagePickerControllerDelegate
+//MARK: - UIImagePickerControllerDelegate
 
 - (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
@@ -2077,7 +2090,7 @@ QMMediaControllerDelegate
     return resizedImage;
 }
 
-#pragma mark - Transition size
+//MARK: - Transition size
 
 - (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     

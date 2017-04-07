@@ -15,7 +15,7 @@
 
 @implementation QMNotification
 
-#pragma mark - Message notification
+//MARK: - Message notification
 
 + (void)showMessageNotificationWithMessage:(QBChatMessage *)chatMessage
                              buttonHandler:(MPGNotificationButtonHandler)buttonHandler
@@ -82,7 +82,7 @@
                                        buttonHandler:buttonHandler];
 }
 
-#pragma mark - Push notification
+//MARK: - Push notification
 
 + (BFTask *)sendPushNotificationToUser:(QBUUser *)user withText:(NSString *)text {
     
@@ -117,7 +117,7 @@
     return source.task;
 }
 
-#pragma mark - Static notifications
+//MARK: - Static notifications
 
 QMMessageNotification *messageNotification() {
     

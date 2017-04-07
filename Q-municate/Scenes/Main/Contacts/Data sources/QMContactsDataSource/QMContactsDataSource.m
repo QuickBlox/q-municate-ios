@@ -13,14 +13,14 @@
 
 @implementation QMContactsDataSource
 
-#pragma mark - methods
+//MARK: - methods
 
 - (QBUUser *)userAtIndexPath:(NSIndexPath *)indexPath {
     
     return [self objectAtIndexPath:indexPath];
 }
 
-#pragma mark - UITableViewDataSource
+//MARK: - UITableViewDataSource
 
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     

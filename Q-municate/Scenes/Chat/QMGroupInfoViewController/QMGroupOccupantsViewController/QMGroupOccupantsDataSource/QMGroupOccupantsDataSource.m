@@ -26,7 +26,7 @@ static const NSUInteger kQMNumberOfSections = 1;
 
 @implementation QMGroupOccupantsDataSource
 
-#pragma mark - Getters
+//MARK: - Getters
 
 - (NSInteger)addMemberCellIndex {
     
@@ -43,14 +43,14 @@ static const NSUInteger kQMNumberOfSections = 1;
     return self.separatorCellIndex + 1;
 }
 
-#pragma mark - Methods
+//MARK: - Methods
 
 - (NSUInteger)userIndexForIndexPath:(NSIndexPath *)indexPath {
     
     return indexPath.row - kQMNumberOfStaticCellsBeforeOccupantsList;
 }
 
-#pragma mark - UITableViewDataSource
+//MARK: - UITableViewDataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     

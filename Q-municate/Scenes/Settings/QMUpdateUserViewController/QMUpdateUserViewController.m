@@ -101,7 +101,7 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
     self.bottomText = bottomText;
 }
 
-#pragma mark - Actions
+//MARK: - Actions
 
 - (IBAction)saveButtonPressed:(UIBarButtonItem *)__unused sender {
     
@@ -144,7 +144,7 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
     self.navigationItem.rightBarButtonItem.enabled = YES;
 }
 
-#pragma mark - Helpers
+//MARK: - Helpers
 
 - (BOOL)updateAllowed {
     
@@ -167,7 +167,7 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
     return YES;
 }
 
-#pragma mark - UITableViewDataSource
+//MARK: - UITableViewDataSource
 
 - (NSString *)tableView:(UITableView *)__unused tableView titleForFooterInSection:(NSInteger)__unused section {
     

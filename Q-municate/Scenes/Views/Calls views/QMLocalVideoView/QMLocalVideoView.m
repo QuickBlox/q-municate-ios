@@ -50,7 +50,7 @@ static const CGFloat preferredSizeB = 100.0f;
 
 @implementation QMLocalVideoView
 
-#pragma mark - Static
+//MARK: - Static
 
 + (CGRect)preferredFrameForInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     
@@ -76,7 +76,7 @@ static const CGFloat preferredSizeB = 100.0f;
     }
 }
 
-#pragma mark - Construction
+//MARK: - Construction
 
 - (instancetype)initWithPreviewLayer:(AVCaptureVideoPreviewLayer *)previewLayer {
     
@@ -99,7 +99,7 @@ static const CGFloat preferredSizeB = 100.0f;
     return self;
 }
 
-#pragma mark - Configurations
+//MARK: - Configurations
 
 - (void)configureImageView {
     
@@ -123,7 +123,7 @@ static const CGFloat preferredSizeB = 100.0f;
     [self addSubview:_blurView];
 }
 
-#pragma mark - Setters
+//MARK: - Setters
 
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];

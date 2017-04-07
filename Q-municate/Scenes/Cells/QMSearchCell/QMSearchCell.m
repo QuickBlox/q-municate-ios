@@ -22,14 +22,14 @@
     return 50.0f;
 }
 
-#pragma mark - setters
+//MARK: - setters
 
 - (void)setAddButtonVisible:(BOOL)visible {
     
     self.addFriendButton.hidden = !visible;
 }
  
-#pragma mark - action
+//MARK: - action
 
 - (IBAction)didTapAddButton {
     

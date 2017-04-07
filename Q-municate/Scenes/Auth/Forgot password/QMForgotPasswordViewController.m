@@ -30,7 +30,7 @@
     [self.emailTextField becomeFirstResponder];
 }
 
-#pragma mark - actions
+//MARK: - actions
 
 - (IBAction)pressResetPasswordBtn:(id)__unused sender {
     

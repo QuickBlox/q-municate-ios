@@ -17,7 +17,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
 
 @implementation QMTasks
 
-#pragma mark - User management
+//MARK: - User management
 
 + (BFTask *)taskUpdateCurrentUser:(QBUpdateUserParameters *)updateParameters {
     
@@ -67,7 +67,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     return source.task;
 }
 
-#pragma mark - Data tasks
+//MARK: - Data tasks
 
 + (BFTask *)taskAutoLogin {
     

@@ -111,7 +111,7 @@ QMUsersServiceDelegate
     };
 }
 
-#pragma mark - Methods
+//MARK: - Methods
 
 - (void)updateOccupants {
     
@@ -119,7 +119,7 @@ QMUsersServiceDelegate
     self.dataSource.items = [users mutableCopy];
 }
 
-#pragma mark - Actions
+//MARK: - Actions
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
@@ -135,7 +135,7 @@ QMUsersServiceDelegate
     }
 }
 
-#pragma mark - UITableViewDelegate
+//MARK: - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -230,7 +230,7 @@ QMUsersServiceDelegate
     return [self.dataSource heightForRowAtIndexPath:indexPath];
 }
 
-#pragma mark - QMChatServiceDelegate
+//MARK: - QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
     
@@ -250,7 +250,7 @@ QMUsersServiceDelegate
     }
 }
 
-#pragma mark - QMContactListService
+//MARK: - QMContactListService
 
 - (void)contactListServiceDidLoadCache {
     
@@ -264,7 +264,7 @@ QMUsersServiceDelegate
     [self.tableView reloadData];
 }
 
-#pragma mark - QMUsersServiceDelegate
+//MARK: - QMUsersServiceDelegate
 
 - (void)usersService:(QMUsersService *)__unused usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
@@ -283,7 +283,7 @@ QMUsersServiceDelegate
     }
 }
 
-#pragma mark - register nibs
+//MARK: - register nibs
 
 - (void)registerNibs {
     

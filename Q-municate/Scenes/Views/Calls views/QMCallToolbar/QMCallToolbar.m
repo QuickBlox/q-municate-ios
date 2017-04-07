@@ -17,7 +17,7 @@
 
 @implementation QMCallToolbar
 
-#pragma mark - Construction
+//MARK: - Construction
 
 - (instancetype)init {
     
@@ -65,7 +65,7 @@
       forToolbarPosition:UIToolbarPositionAny];
 }
 
-#pragma mark - Methods
+//MARK: - Methods
 
 - (void)addButton:(UIButton *)button action:(void (^)(UIButton *sender))action {
     
@@ -99,7 +99,7 @@
     [self setItems:[items copy]];
 }
 
-#pragma mark - Button handler
+//MARK: - Button handler
 
 - (void)pressButton:(UIButton *)button {
     

@@ -21,7 +21,7 @@
 
 @dynamic serviceManager;
 
-#pragma mark - Chat Connection
+//MARK: - Chat Connection
 
 - (BFTask *)disconnectFromChat {
     @weakify(self);
@@ -49,7 +49,7 @@
     return nil;
 }
 
-#pragma mark - Notifications
+//MARK: - Notifications
 
 - (BFTask *)addUsers:(NSArray *)users toGroupChatDialog:(QBChatDialog *)chatDialog {
     NSAssert(chatDialog.type == QBChatDialogTypeGroup, @"Chat dialog must be group type!");

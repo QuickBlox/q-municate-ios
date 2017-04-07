@@ -23,7 +23,7 @@ QMUsersServiceDelegate
 
 @implementation QMContactsSearchDataProvider
 
-#pragma mark - Construction
+//MARK: - Construction
 
 - (instancetype)init {
     
@@ -39,7 +39,7 @@ QMUsersServiceDelegate
     return self;
 }
 
-#pragma mark - Methods
+//MARK: - Methods
 
 - (void)performSearch:(NSString *)searchText {
     
@@ -71,7 +71,7 @@ QMUsersServiceDelegate
     });
 }
 
-#pragma mark - Helpers
+//MARK: - Helpers
 
 - (void)updateData {
     
@@ -81,7 +81,7 @@ QMUsersServiceDelegate
     [self.delegate searchDataProvider:self didUpdateData:self.friends];
 }
 
-#pragma mark - QMUsersServiceDelegate
+//MARK: - QMUsersServiceDelegate
 
 - (void)usersService:(QMUsersService *)__unused usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
@@ -93,7 +93,7 @@ QMUsersServiceDelegate
     [self updateData];
 }
 
-#pragma mark - QMContactListDelegate
+//MARK: - QMContactListDelegate
 
 - (void)contactListServiceDidLoadCache {
     

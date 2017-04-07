@@ -53,9 +53,10 @@
     _bodyLabel.text = nil;
 }
 
-#pragma mark - Setters
+//MARK: - Setters
 
-- (void)setTitle:(NSString *)title avatarUrl:(NSString *)avatarUrl {
+- (void)setTitle:(NSString *)title
+       avatarUrl:(NSString *)avatarUrl {
     
     self.titleLabel.text = title;
     

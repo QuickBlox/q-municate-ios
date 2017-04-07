@@ -10,7 +10,7 @@
 
 @implementation QMBaseTitleView
 
-#pragma mark - Overrides
+//MARK: - Overrides
 
 - (void)setHighlighted:(BOOL)highlighted {
     [super setHighlighted:highlighted];

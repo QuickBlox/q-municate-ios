@@ -43,7 +43,7 @@ static UIImage *_bgViewImage = nil;
     
     _hideOnZeroValue = YES;
     _badgeTextColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
-    _badgeBGColor = [UIColor colorWithRed:0.063f green:0.353f blue:0.639f alpha:1.0f];
+    _badgeBGColor = [UIColor colorWithRed:23.0f/255.0f green:208.0f/255.0f blue:75.f/255.0f alpha:1.0f];
     
     _bgView = [[UIImageView alloc] init];
     _bgView.frame = self.bounds;
@@ -73,7 +73,7 @@ static UIImage *_bgViewImage = nil;
     [super layoutSubviews];
 }
 
-#pragma mark - Setters
+//MARK: - Setters
 
 - (void)setBadgeNumber:(NSUInteger)badgeNumber {
     

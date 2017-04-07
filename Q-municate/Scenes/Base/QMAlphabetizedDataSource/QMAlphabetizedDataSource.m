@@ -20,7 +20,7 @@
 
 @implementation QMAlphabetizedDataSource
 
-#pragma mark - Construction
+//MARK: - Construction
 
 - (instancetype)initWithKeyPath:(NSString *)keyPath {
     
@@ -44,7 +44,7 @@
     return self;
 }
 
-#pragma mark - UITableViewDataSource
+//MARK: - UITableViewDataSource
 
 - (NSString *)tableView:(UITableView *)__unused tableView titleForHeaderInSection:(NSInteger)section {
     
@@ -69,7 +69,7 @@
     return contacts.count;
 }
 
-#pragma mark - methods
+//MARK: - methods
 
 - (id)objectAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -77,14 +77,14 @@
     return self.alphabetizedDictionary[sectionIndexTitle][indexPath.row];
 }
 
-#pragma mark - getters
+//MARK: - getters
 
 - (BOOL)isEmpty {
     
     return self.sectionIndexTitles.count == 0;
 }
 
-#pragma mark - setters
+//MARK: - setters
 
 - (void)addItems:(NSArray *)items {
     

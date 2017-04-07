@@ -50,7 +50,7 @@ QMSearchDataProviderDelegate
     [self.dataSource replaceItems:dataProvider.friends];
 }
 
-#pragma mark - Methods
+//MARK: - Methods
 
 - (void)deselectUser:(QBUUser *)user {
     
@@ -77,7 +77,7 @@ QMSearchDataProviderDelegate
     [self.dataSource.searchDataProvider performSearch:searchText];
 }
 
-#pragma mark - UITableViewDelegate
+//MARK: - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -105,7 +105,7 @@ QMSearchDataProviderDelegate
     return [self.dataSource heightForRowAtIndexPath:indexPath];
 }
 
-#pragma mark - UIScrollViewDelegate
+//MARK: - UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     
@@ -117,7 +117,7 @@ QMSearchDataProviderDelegate
     [self.delegate messageContactListViewController:self didScrollContactList:scrollView];
 }
 
-#pragma mark - QMSearchDataProviderDelegate
+//MARK: - QMSearchDataProviderDelegate
 
 - (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
     
@@ -143,7 +143,7 @@ QMSearchDataProviderDelegate
     [self.tableView reloadData];
 }
 
-#pragma mark - Register nibs
+//MARK: - Register nibs
 
 - (void)registerNibs {
     

@@ -79,7 +79,7 @@ static NSString * const kQMSoundManagerSettingKey = @"kQMSoundManagerSettingKey"
     }
 }
 
-#pragma mark - Playing sounds
+//MARK: - Playing sounds
 
 - (void)playSoundWithName:(NSString *)filename extension:(NSString *)extension {
     
@@ -128,14 +128,14 @@ static NSString * const kQMSoundManagerSettingKey = @"kQMSoundManagerSettingKey"
     [self.sounds removeAllObjects];
 }
 
-#pragma mark - Did Receive Memory Warning Notification
+//MARK: - Did Receive Memory Warning Notification
 
 - (void)didReceiveMemoryWarningNotification:(NSNotification *)__unused notification {
     
     [self.sounds removeAllObjects];
 }
 
-#pragma mark - Default sounds
+//MARK: - Default sounds
 
 static NSString *const kQMReceivedSoundName = @"received";
 static NSString *const kQMSendSoundName = @"sent";

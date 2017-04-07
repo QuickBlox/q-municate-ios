@@ -37,7 +37,7 @@
     [self.emailField becomeFirstResponder];
 }
 
-#pragma mark - Actions
+//MARK: - Actions
 
 - (IBAction)done:(id)__unused sender {
     

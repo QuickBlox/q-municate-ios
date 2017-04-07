@@ -46,7 +46,7 @@ static UIFont *labelFont() {
 
 @implementation QMTableSectionHeaderView
 
-#pragma mark - Construction
+//MARK: - Construction
 
 - (instancetype)initWithFrame:(CGRect)frame {
     
@@ -62,7 +62,7 @@ static UIFont *labelFont() {
     return self;
 }
 
-#pragma mark - Getters
+//MARK: - Getters
 
 - (UILabel *)titleLabel {
     
@@ -81,7 +81,7 @@ static UIFont *labelFont() {
     return _titleLabel;
 }
 
-#pragma mark - Setters
+//MARK: - Setters
 
 - (void)setTitle:(NSString *)title {
     
