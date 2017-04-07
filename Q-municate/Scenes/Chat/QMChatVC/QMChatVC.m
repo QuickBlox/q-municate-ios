@@ -75,11 +75,6 @@ QMMediaControllerDelegate
  */
 @property (strong, nonatomic) NSMutableSet *detailedCells;
 
-///**
-// *  Attachment cells.
-// */
-//@property (strong, nonatomic) NSMapTable *attachmentCells;
-
 /**
  *  Navigation bar online title.
  */
@@ -415,14 +410,14 @@ QMMediaControllerDelegate
     // Retrieving message from Quickblox REST history and cache.
     [[QMCore instance].chatService messagesWithChatDialogID:self.chatDialog.ID
                                              iterationBlock:^(QBResponse * __unused response, NSArray *messages, BOOL * __unused stop) {
-        
-        @strongify(self);
                                                  
-        if (messages.count > 0) {
-            
-            [self.chatDataSource addMessages:messages];
-        }
-    }];
+                                                 @strongify(self);
+                                                 
+                                                 if (messages.count > 0) {
+                                                     
+                                                     [self.chatDataSource addMessages:messages];
+                                                 }
+                                             }];
 }
 
 - (void)readMessage:(QBChatMessage *)message {
@@ -737,7 +732,7 @@ QMMediaControllerDelegate
 #pragma mark - Cells view classes
 
 - (Class)viewClassForItem:(QBChatMessage *)item {
-    
+    NSLog(@"viewClassForItem %@", item.ID);
     
     if ([item isLocationMessage]) {
         
@@ -783,14 +778,14 @@ QMMediaControllerDelegate
             }
             else {
                 
-                NSURL *linkForMessage = [self linkForMessage:item];
+                Class classForItem  = [QMChatIncomingCell class];
                 
-                if (!linkForMessage) {
-                    return  [QMChatIncomingCell class];
+                QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:item];
+                if (linkPreview != nil) {
+                    classForItem = [QMChatIncomingLinkPreviewCell class];
                 }
-                else {
-                    return [QMChatIncomingLinkPreviewCell class];
-                }
+                
+                return classForItem;
             }
         }
         else {
@@ -812,44 +807,18 @@ QMMediaControllerDelegate
             }
             else {
                 
-                NSURL *linkForMessage = [self linkForMessage:item];
+                QMLinkPreview *linkPreview =  [[QMCore instance].chatService linkPreviewForMessage:item];
                 
-                if (!linkForMessage) {
-                    return  [QMChatOutgoingCell class];
+                if (linkPreview != nil) {
+                    return  [QMChatOutgoingLinkPreviewCell class];
                 }
-                else {
-                    return [QMChatOutgoingLinkPreviewCell class];
-                }
+                return [QMChatOutgoingCell class];
             }
         }
     }
     
     NSAssert(nil, @"Unexpected cell class");
     return nil;
-}
-
-- (NSURL *)linkForMessage:(QBChatMessage *)message {
- 
-    NSURL *url = nil;
-   
-    NSString *text = message.text;
-    
-    if (text.length > 0) {
-        
-        NSError *error = nil;
-        NSDataDetector *detector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink
-                                                                   error:&error];
-        if (error == nil) {
-            
-            NSTextCheckingResult *result = [detector firstMatchInString:text
-                                                                options:0
-                                                                  range:NSMakeRange(0, text.length)];
-            if (result.resultType == NSTextCheckingTypeLink) {
-                url = result.URL;
-            }
-        }
-    }
-    return url;
 }
 
 #pragma mark - Attributed strings
@@ -1028,9 +997,13 @@ QMMediaControllerDelegate
             size = [attributedString boundingRectWithSize:CGSizeMake(maxWidth, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size;
             
         }
-        else {
-            
-        }
+    }
+    else if ([viewClass isSubclassOfClass:[QMChatBaseLinkPreviewCell class]]) {
+        NSAttributedString *attributedString = [self bottomLabelAttributedStringForItem:item];
+        CGSize bottomLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
+                                                                  withConstraints:CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), CGFLOAT_MAX)
+                                                           limitedToNumberOfLines:0];
+        size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), kQMAttachmentCellSize + (CGFloat)ceil(bottomLabelSize.height));
     }
     else {
         
@@ -1155,6 +1128,7 @@ QMMediaControllerDelegate
 }
 
 - (QMChatCellLayoutModel)collectionView:(QMChatCollectionView *)collectionView layoutModelAtIndexPath:(NSIndexPath *)indexPath {
+    
     QMChatCellLayoutModel layoutModel = [super collectionView:collectionView layoutModelAtIndexPath:indexPath];
     
     layoutModel.topLabelHeight = 0.0f;
@@ -1291,16 +1265,16 @@ QMMediaControllerDelegate
     }
     else if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
         
-        NSURL *url = [self linkForMessage:message];
+        QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:message];
         
-        [[QMCore instance].chatService linkPreviewForURL:url withCompletion:^(QMLinkPreview *linkPreview, NSError *error) {
-            if (!error) {
-            QMImageView *previewImageView = [(QMChatBaseLinkPreviewCell *)cell  previewImageView];
-            
+        if (linkPreview != nil) {
+            QMChatBaseLinkPreviewCell *previewCell = (QMChatBaseLinkPreviewCell *)cell;
+            QMImageView *previewImageView = [previewCell  previewImageView];
             NSURL *userImageUrl = [NSURL URLWithString:linkPreview.imageURL];
             [previewImageView setImageWithURL:userImageUrl];
-            }
-        }];
+            previewCell.titleLabel.text = linkPreview.siteTitle;
+            previewCell.siteDescriptionLabel.text = linkPreview.siteDescription;
+        }
     }
     
     if ([cell conformsToProtocol:@protocol(QMChatLocationCell)]) {
@@ -1322,7 +1296,7 @@ QMMediaControllerDelegate
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)__unused cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.item == [collectionView numberOfItemsInSection:0] - 1) {
-        // the very first message
+        // first message
         // load more if exists
         @weakify(self);
         // Getting earlier messages for chat dialog identifier.
@@ -1352,6 +1326,18 @@ QMMediaControllerDelegate
             [self.chatDataSource updateMessage:itemMessage];
             
             return nil;
+        }];
+    }
+    
+    QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:itemMessage];
+    
+    if (linkPreview == nil) {
+        
+        [[QMCore instance].chatService getLinkPreviewForMessage:itemMessage withCompletion:^(BOOL sucess) {
+            
+            if (sucess) {
+                [self.chatDataSource updateMessage:itemMessage];
+            }
         }];
     }
 }
@@ -1917,6 +1903,24 @@ QMMediaControllerDelegate
     else if ([cell isKindOfClass:[QMBaseMediaCell class]]) {
         
         [[((QMBaseMediaCell*)cell) presenter] didTapContainer];
+        
+    }
+    else if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
+        
+        QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:currentMessage];
+        NSURL *linkURL = [NSURL URLWithString:linkPreview.siteUrl];
+        if ([SFSafariViewController class] != nil
+            // SFSafariViewController supporting only http and https schemes
+            && ([linkURL.scheme.lowercaseString isEqualToString:@"http"]
+                || [linkURL.scheme.lowercaseString isEqualToString:@"https"])) {
+                
+                SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:linkURL entersReaderIfAvailable:false];
+                [self presentViewController:controller animated:true completion:nil];
+            }
+        else {
+            
+            [[UIApplication sharedApplication] openURL:linkURL];
+        }
         
     }
     else if ([cell isKindOfClass:[QMChatOutgoingCell class]] || [cell isKindOfClass:[QMChatIncomingCell class]]) {
