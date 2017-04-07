@@ -1150,7 +1150,8 @@ QMMediaControllerDelegate
     if (class == [QMChatOutgoingCell class] ||
         class == [QMChatAttachmentOutgoingCell class] ||
         class == [QMChatLocationOutgoingCell class] ||
-        [class isSubclassOfClass:[QMMediaOutgoingCell class]]) {
+        [class isSubclassOfClass:[QMMediaOutgoingCell class]] ||
+        [class isSubclassOfClass:[QMChatOutgoingLinkPreviewCell class]]) {
         
         layoutModel.avatarSize = CGSizeZero;
 
@@ -1287,7 +1288,13 @@ QMMediaControllerDelegate
         if (linkPreview != nil) {
             QMChatBaseLinkPreviewCell *previewCell = (QMChatBaseLinkPreviewCell *)cell;
             QMImageView *previewImageView = [previewCell  previewImageView];
-            NSURL *userImageUrl = [NSURL URLWithString:linkPreview.imageURL];
+            
+            NSURL *userImageUrl = [[NSURL URLWithString:linkPreview.imageURL] standardizedURL];
+            if (userImageUrl.scheme == nil) {
+                  NSString *urlString = [NSString stringWithFormat:@"http://%@",userImageUrl.absoluteString];
+                userImageUrl = [NSURL URLWithString:urlString];
+            }
+          
             [previewImageView setImageWithURL:userImageUrl];
             previewCell.titleLabel.text = linkPreview.siteTitle;
             previewCell.siteDescriptionLabel.text = linkPreview.siteDescription;
