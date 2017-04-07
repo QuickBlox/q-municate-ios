@@ -22,7 +22,7 @@
 
 @dynamic serviceManager;
 
-#pragma mark - Contacts management
+//MARK: - Contacts management
 
 - (BFTask *)addUserToContactList:(QBUUser *)user {
     
@@ -111,7 +111,7 @@
     }];
 }
 
-#pragma mark - Users
+//MARK: - Users
 
 - (NSString *)fullNameForUserID:(NSUInteger)userID {
     
@@ -221,7 +221,7 @@
     return status;
 }
 
-#pragma mark - States
+//MARK: - States
 
 - (BOOL)isFriendWithUserID:(NSUInteger)userID {
     

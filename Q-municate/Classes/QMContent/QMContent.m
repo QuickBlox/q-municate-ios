@@ -13,7 +13,7 @@ static NSString *const kQMContentImageFileName = @"image";
 
 @implementation QMContent
 
-#pragma mark - Upload operations
+//MARK: - Upload operations
 
 + (BFTask *)uploadJPEGImage:(UIImage *)image
                    progress:(QMContentProgressBlock)progress
@@ -67,7 +67,7 @@ static NSString *const kQMContentImageFileName = @"image";
     return source.task;
 }
 
-#pragma mark - Download operations
+//MARK: - Download operations
 
 + (BFTask *)downloadFileWithUrl:(NSURL *)url {
     

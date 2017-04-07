@@ -202,7 +202,7 @@ QMUsersServiceDelegate
     };
 }
 
-#pragma mark - Update items
+//MARK: - Update items
 
 - (void)updateItemsFromContactList {
     
@@ -210,7 +210,7 @@ QMUsersServiceDelegate
     [self.dataSource replaceItems:friends];
 }
 
-#pragma mark - UITableViewDelegate
+//MARK: - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)__unused tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -224,14 +224,14 @@ QMUsersServiceDelegate
     [self performSegueWithIdentifier:kQMSceneSegueUserInfo sender:user];
 }
 
-#pragma mark - UIScrollViewDelegate
+//MARK: - UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)__unused scrollView {
     
     [self.searchController.searchBar endEditing:YES];
 }
 
-#pragma mark - UISearchControllerDelegate
+//MARK: - UISearchControllerDelegate
 
 - (void)willPresentSearchController:(UISearchController *)searchController {
     
@@ -256,7 +256,7 @@ QMUsersServiceDelegate
     self.tabBarController.tabBar.hidden = NO;
 }
 
-#pragma mark - UISearchBarDelegate
+//MARK: - UISearchBarDelegate
 
 - (void)searchBar:(UISearchBar *)__unused searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
     
@@ -269,7 +269,7 @@ QMUsersServiceDelegate
     [self.globalSearchDataSource.globalSearchDataProvider cancel];
 }
 
-#pragma mark - QMSearchResultsControllerDelegate
+//MARK: - QMSearchResultsControllerDelegate
 
 - (void)searchResultsController:(QMSearchResultsController *)__unused searchResultsController willBeginScrollResults:(UIScrollView *)__unused scrollView {
     
@@ -281,7 +281,7 @@ QMUsersServiceDelegate
     [self performSegueWithIdentifier:kQMSceneSegueUserInfo sender:object];
 }
 
-#pragma mark - Helpers
+//MARK: - Helpers
 
 - (void)updateDataSourceByScope:(NSUInteger)selectedScope {
     
@@ -315,7 +315,7 @@ QMUsersServiceDelegate
     }];
 }
 
-#pragma mark - Actions
+//MARK: - Actions
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
@@ -327,7 +327,7 @@ QMUsersServiceDelegate
     }
 }
 
-#pragma mark - UISearchResultsUpdating
+//MARK: - UISearchResultsUpdating
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     
@@ -341,7 +341,7 @@ QMUsersServiceDelegate
     [self.searchResultsController performSearch:searchController.searchBar.text];
 }
 
-#pragma mark - QMContactListServiceDelegate
+//MARK: - QMContactListServiceDelegate
 
 - (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
     
@@ -349,7 +349,7 @@ QMUsersServiceDelegate
     [self.tableView reloadData];
 }
 
-#pragma mark - QMUsersServiceDelegate
+//MARK: - QMUsersServiceDelegate
 
 - (void)usersService:(QMUsersService *)__unused usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
@@ -369,14 +369,14 @@ QMUsersServiceDelegate
     [self.tableView reloadData];
 }
 
-#pragma mark - QMSearchProtocol
+//MARK: - QMSearchProtocol
 
 - (QMSearchDataSource *)searchDataSource {
     
     return (id)self.tableView.dataSource;
 }
 
-#pragma mark - Nib registration
+//MARK: - Nib registration
 
 - (void)registerNibs {
     

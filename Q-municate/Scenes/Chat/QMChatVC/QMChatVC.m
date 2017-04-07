@@ -130,7 +130,7 @@ NYTPhotosViewControllerDelegate
 @dynamic storedMessages;
 @dynamic deferredQueueManager;
 
-#pragma mark - Static methods
+//MARK: - Static methods
 
 + (instancetype)chatViewControllerWithChatDialog:(QBChatDialog *)chatDialog {
     
@@ -140,7 +140,7 @@ NYTPhotosViewControllerDelegate
     return chatVC;
 }
 
-#pragma mark - QMChatViewController data source overrides
+//MARK: - QMChatViewController data source overrides
 
 - (NSUInteger)senderID {
     return [QMCore instance].currentProfile.userData.ID;
@@ -158,7 +158,7 @@ NYTPhotosViewControllerDelegate
     return 40.0f;
 }
 
-#pragma mark - Life cycle
+//MARK: - Life cycle
 
 - (void)dealloc {
     // -dealloc
@@ -325,7 +325,7 @@ NYTPhotosViewControllerDelegate
     [self.chatDialog clearDialogOccupantsStatusBlock];
 }
 
-#pragma mark - Deferred queue management
+//MARK: - Deferred queue management
 
 - (void)deferredQueueManager:(QMDeferredQueueManager *)__unused queueManager didAddMessageLocally:(QBChatMessage *)addedMessage {
     
@@ -340,7 +340,7 @@ NYTPhotosViewControllerDelegate
     [self.chatDataSource updateMessage:addedMessage];
 }
 
-#pragma mark - Helpers & Utility
+//MARK: - Helpers & Utility
 
 - (void)updateOpponentOnlineStatus {
     
@@ -449,7 +449,7 @@ NYTPhotosViewControllerDelegate
     return YES;
 }
 
-#pragma mark - Toolbar actions
+//MARK: - Toolbar actions
 
 - (void)didPressSendButton:(UIButton *)__unused button
        withTextAttachments:(NSArray *)textAttachments
@@ -551,7 +551,7 @@ NYTPhotosViewControllerDelegate
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-#pragma mark - Cells view classes
+//MARK: - Cells view classes
 
 - (Class)viewClassForItem:(QBChatMessage *)item {
     
@@ -605,7 +605,7 @@ NYTPhotosViewControllerDelegate
     return nil;
 }
 
-#pragma mark - Attributed strings
+//MARK: - Attributed strings
 
 - (NSAttributedString *)attributedStringForItem:(QBChatMessage *)messageItem {
     
@@ -732,7 +732,7 @@ NYTPhotosViewControllerDelegate
     return attributedString;
 }
 
-#pragma mark - Collection View Datasource
+//MARK: - Collection View Datasource
 
 - (CGSize)collectionView:(QMChatCollectionView *)__unused collectionView dynamicSizeAtIndexPath:(NSIndexPath *)indexPath maxWidth:(CGFloat)maxWidth {
     
@@ -856,7 +856,7 @@ NYTPhotosViewControllerDelegate
     return YES;
 }
 
-#pragma mark - QMChatCollectionViewDelegate
+//MARK: - QMChatCollectionViewDelegate
 
 - (CGFloat)collectionView:(UICollectionView *)__unused collectionView layout:(UICollectionViewLayout *)__unused collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)__unused section {
     
@@ -1088,7 +1088,7 @@ NYTPhotosViewControllerDelegate
     }
 }
 
-#pragma mark - Typing status
+//MARK: - Typing status
 
 - (void)stopTyping {
     
@@ -1117,7 +1117,7 @@ NYTPhotosViewControllerDelegate
     self.typingTimer = [NSTimer scheduledTimerWithTimeInterval:4.0 target:self selector:@selector(stopTyping) userInfo:nil repeats:NO];
 }
 
-#pragma mark - Actions
+//MARK: - Actions
 
 - (void)performInfoViewControllerForUserID:(NSUInteger)userID {
     
@@ -1305,7 +1305,7 @@ NYTPhotosViewControllerDelegate
     self.groupAvatarImageView.frame = CGRectMake(0, 0, defaultSize, defaultSize);
 }
 
-#pragma mark - Configuring
+//MARK: - Configuring
 
 - (void)configureCallButtons {
     
@@ -1381,14 +1381,14 @@ NYTPhotosViewControllerDelegate
     [self.onlineTitleView setStatus:status];
 }
 
-#pragma mark - QMImageViewDelegate
+//MARK: - QMImageViewDelegate
 
 - (void)imageViewDidTap:(QMImageView *)__unused imageView {
     
     [self performSegueWithIdentifier:KQMSceneSegueGroupInfo sender:self.chatDialog];
 }
 
-#pragma mark - QMChatServiceDelegate
+//MARK: - QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)__unused chatService didLoadMessagesFromCache:(NSArray *)messages forDialogID:(NSString *)dialogID {
     
@@ -1453,7 +1453,7 @@ NYTPhotosViewControllerDelegate
     }
 }
 
-#pragma mark - QMChatConnectionDelegate
+//MARK: - QMChatConnectionDelegate
 
 - (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
     
@@ -1484,7 +1484,7 @@ NYTPhotosViewControllerDelegate
     }
 }
 
-#pragma mark - QMChatAttachmentServiceDelegate
+//MARK: - QMChatAttachmentServiceDelegate
 
 - (void)chatAttachmentService:(QMChatAttachmentService *)__unused chatAttachmentService didChangeAttachmentStatus:(QMMessageAttachmentStatus)status forMessage:(QBChatMessage *)message {
     
@@ -1521,7 +1521,7 @@ NYTPhotosViewControllerDelegate
     }
 }
 
-#pragma mark Contact List Serice Delegate
+//MARK: Contact List Serice Delegate
 
 - (void)contactListService:(QMContactListService *)__unused contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)__unused status {
     
@@ -1531,7 +1531,7 @@ NYTPhotosViewControllerDelegate
     }
 }
 
-#pragma mark QMChatActionsHandler protocol
+//MARK: QMChatActionsHandler protocol
 
 - (void)chatContactRequestDidAccept:(BOOL)accept sender:(id)sender {
     
@@ -1601,7 +1601,7 @@ NYTPhotosViewControllerDelegate
     }
 }
 
-#pragma mark QMChatCellDelegate
+//MARK: QMChatCellDelegate
 
 - (void)chatCellDidTapContainer:(QMChatCell *)cell {
     
@@ -1733,14 +1733,14 @@ NYTPhotosViewControllerDelegate
     }
 }
 
-#pragma mark - NYTPhotosViewControllerDelegate
+//MARK: - NYTPhotosViewControllerDelegate
 
 - (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
     
     return self.photoReferenceView;
 }
 
-#pragma mark - UITextViewDelegate
+//MARK: - UITextViewDelegate
 
 - (BOOL)textView:(UITextView *)__unused textView shouldChangeTextInRange:(NSRange)__unused range replacementText:(NSString *)__unused text {
     
@@ -1755,7 +1755,7 @@ NYTPhotosViewControllerDelegate
     [self stopTyping];
 }
 
-#pragma mark - UIImagePickerControllerDelegate
+//MARK: - UIImagePickerControllerDelegate
 
 - (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
@@ -1794,7 +1794,7 @@ NYTPhotosViewControllerDelegate
     return resizedImage;
 }
 
-#pragma mark - Transition size
+//MARK: - Transition size
 
 - (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     

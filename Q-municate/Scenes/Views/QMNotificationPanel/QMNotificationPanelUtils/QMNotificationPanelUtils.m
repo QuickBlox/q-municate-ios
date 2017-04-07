@@ -8,7 +8,7 @@
 
 #import "QMNotificationPanelUtils.h"
 
-#pragma mark - Images
+//MARK: - Images
 
 UIImage *successImage() {
     
@@ -49,7 +49,7 @@ UIImage *failImage() {
     return image;
 }
 
-#pragma mark - Colors
+//MARK: - Colors
 
 UIColor *successColor() {
     

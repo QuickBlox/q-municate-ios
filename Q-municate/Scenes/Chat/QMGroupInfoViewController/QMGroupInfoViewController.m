@@ -22,15 +22,8 @@
 
 @interface QMGroupInfoViewController ()
 
-<
-QMGroupHeaderViewDelegate,
-QMImagePickerResultHandler,
-
-QMChatServiceDelegate,
-QMChatConnectionDelegate,
-
-NYTPhotosViewControllerDelegate
->
+< QMGroupHeaderViewDelegate, QMImagePickerResultHandler, QMChatServiceDelegate,
+QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
 
 @property (weak, nonatomic) QMGroupOccupantsViewController *groupOccupantsViewController;
 @property (weak, nonatomic) IBOutlet QMGroupHeaderView *headerView;
@@ -39,7 +32,7 @@ NYTPhotosViewControllerDelegate
 
 @implementation QMGroupInfoViewController
 
-#pragma mark - Life cycle
+//MARK: - Life cycle
 
 - (void)dealloc {
     
@@ -61,7 +54,7 @@ NYTPhotosViewControllerDelegate
     [self.headerView setTitle:self.chatDialog.name avatarUrl:self.chatDialog.photo];
 }
 
-#pragma mark - Actions
+//MARK: - Actions
 
 - (IBAction)didPressGroupHeader {
     
@@ -82,7 +75,7 @@ NYTPhotosViewControllerDelegate
     }
 }
 
-#pragma mark - QMGroupHeaderViewDelegate
+//MARK: - QMGroupHeaderViewDelegate
 
 - (void)groupHeaderView:(QMGroupHeaderView *)__unused groupHeaderView didTapAvatar:(QMImageView *)avatarImageView {
     
@@ -137,7 +130,7 @@ NYTPhotosViewControllerDelegate
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-#pragma mark - QMImagePickerResultHandler
+//MARK: - QMImagePickerResultHandler
 
 - (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
@@ -157,7 +150,7 @@ NYTPhotosViewControllerDelegate
     }];
 }
 
-#pragma mark - QMChatServiceDelegate
+//MARK: - QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
     
@@ -175,7 +168,7 @@ NYTPhotosViewControllerDelegate
     }
 }
 
-#pragma mark - NYTPhotosViewControllerDelegate
+//MARK: - NYTPhotosViewControllerDelegate
 
 - (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
     

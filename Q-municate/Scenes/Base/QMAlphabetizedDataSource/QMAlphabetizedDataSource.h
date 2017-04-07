@@ -21,12 +21,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (assign, nonatomic, readonly) BOOL isEmpty;
 
-#pragma mark - Unavailable constructors
+//MARK: - Unavailable constructors
 
 - (nullable instancetype)init NS_UNAVAILABLE;
 - (nullable instancetype)initWithSearchDataProvider:(QMSearchDataProvider *)searchDataProvider NS_UNAVAILABLE;
 
-#pragma mark - Class construction
+//MARK: - Class construction
 
 /**
  *  Init QMAlphabetizedDataSource with a key path.

@@ -194,7 +194,7 @@ static const NSUInteger kQMStatusStringNamesLimit = 5;
     return messageText;
 }
 
-#pragma mark - Helpers
+//MARK: - Helpers
 
 - (NSString *)fullNamesString:(NSArray *)users {
     

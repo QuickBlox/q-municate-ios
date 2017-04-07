@@ -25,7 +25,7 @@
     return self.items.count > 0 ? [QMDialogCell height] : [QMNoResultsCell height];
 }
 
-#pragma mark - UITableViewDataSource
+//MARK: - UITableViewDataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 

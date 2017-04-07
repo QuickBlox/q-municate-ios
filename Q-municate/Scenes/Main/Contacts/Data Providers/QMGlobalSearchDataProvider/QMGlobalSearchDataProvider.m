@@ -111,7 +111,7 @@ static const NSUInteger kQMUsersPageLimit = 50;
     } cancellationToken:self.globalSearchCancellationTokenSource.token];
 }
 
-#pragma mark - Methods
+//MARK: - Methods
 
 - (void)nextPage {
     
@@ -131,7 +131,7 @@ static const NSUInteger kQMUsersPageLimit = 50;
     }
 }
 
-#pragma mark - Helpers
+//MARK: - Helpers
 
 - (NSArray *)sortUsersByFullname:(NSArray *)users {
     
@@ -144,7 +144,7 @@ static const NSUInteger kQMUsersPageLimit = 50;
     return sortedUsers;
 }
 
-#pragma mark - QMContactListServiceDelegate
+//MARK: - QMContactListServiceDelegate
 
 - (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
     

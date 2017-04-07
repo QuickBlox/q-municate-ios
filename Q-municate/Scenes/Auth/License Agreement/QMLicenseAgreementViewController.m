@@ -65,7 +65,7 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
     [self dismissViewControllerSuccess:YES];
 }
 
-#pragma mark - UIWebViewDelegate
+//MARK: - UIWebViewDelegate
 
 - (void)webViewDidFinishLoad:(UIWebView *)__unused webView {
     

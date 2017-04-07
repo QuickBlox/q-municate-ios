@@ -73,7 +73,7 @@ typedef NS_ENUM(NSUInteger, QMFeedbackSelection) {
                     NSLocalizedString(@"QM_STR_SUGGESTION", nil)];
 }
 
-#pragma mark - Methods
+//MARK: - Methods
 
 - (void)writeEmail {
     
@@ -113,7 +113,7 @@ typedef NS_ENUM(NSUInteger, QMFeedbackSelection) {
     }];
 }
 
-#pragma mark - Helpers
+//MARK: - Helpers
 
 - (NSString *)deviceInfo {
     
@@ -128,7 +128,7 @@ typedef NS_ENUM(NSUInteger, QMFeedbackSelection) {
     return deviceInfo;
 }
 
-#pragma mark - UITableViewDelegate
+//MARK: - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -162,7 +162,7 @@ typedef NS_ENUM(NSUInteger, QMFeedbackSelection) {
     }
 }
 
-#pragma mark - UITableViewDataSource
+//MARK: - UITableViewDataSource
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     

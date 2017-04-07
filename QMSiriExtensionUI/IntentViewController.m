@@ -31,7 +31,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - INUIHostedViewControlling
+//MARK: - INUIHostedViewControlling
 
 // Prepare your view controller for the interaction to handle.
 - (void)configureWithInteraction:(INInteraction *)interaction context:(INUIHostedViewContext)context completion:(void (^)(CGSize))completion {

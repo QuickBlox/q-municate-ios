@@ -8,7 +8,7 @@
 
 #import "QMColors.h"
 
-#pragma mark - Table view
+//MARK: - Table view
 
 UIColor *QMTableViewBackgroundColor() {
     
@@ -36,7 +36,7 @@ UIColor *QMVideoCallBackgroundColor() {
     return color;
 }
 
-#pragma mark - Chat colors
+//MARK: - Chat colors
 
 UIColor *QMChatBackgroundColor() {
     

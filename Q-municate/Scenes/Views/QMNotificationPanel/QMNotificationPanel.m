@@ -22,7 +22,7 @@ static const CGFloat kQMDefaultNotificationViewHeight = 36.0f;
 
 @implementation QMNotificationPanel
 
-#pragma mark - Construction
+//MARK: - Construction
 
 - (instancetype)init {
     
@@ -36,7 +36,7 @@ static const CGFloat kQMDefaultNotificationViewHeight = 36.0f;
     return self;
 }
 
-#pragma mark - Methods
+//MARK: - Methods
 
 - (void)showNotificationWithView:(UIView *)view inView:(UIView *)innerView animated:(BOOL)animated {
     
@@ -121,14 +121,14 @@ static const CGFloat kQMDefaultNotificationViewHeight = 36.0f;
     }
 }
 
-#pragma mark - Getters
+//MARK: - Getters
 
 - (BOOL)hasActiveNotification {
     
     return _view != nil;
 }
 
-#pragma mark - Actions
+//MARK: - Actions
 
 - (void)didRecognizedTap:(UITapGestureRecognizer *)recognizer {
     
@@ -143,7 +143,7 @@ static const CGFloat kQMDefaultNotificationViewHeight = 36.0f;
     }
 }
 
-#pragma mark - Helpers
+//MARK: - Helpers
 
 - (QMNotificationPanelView *)notificationPanelViewWithType:(QMNotificationPanelType)type message:(NSString *)message {
     

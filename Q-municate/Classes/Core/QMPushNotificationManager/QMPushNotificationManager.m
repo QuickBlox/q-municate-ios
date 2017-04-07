@@ -19,7 +19,7 @@
 
 @dynamic serviceManager;
 
-#pragma mark - Subscriptions
+//MARK: - Subscriptions
 
 - (BFTask *)subscribeForPushNotifications {
     
@@ -95,7 +95,7 @@
     return source.task;
 }
 
-#pragma mark - Push notification handling
+//MARK: - Push notification handling
 
 - (void)handlePushNotificationWithDelegate:(id<QMPushNotificationManagerDelegate>)delegate {
     

@@ -34,7 +34,7 @@ static NSString * const kQMFacebookIDField = @"id";
     [self.navigationController setNavigationBarHidden:YES animated:animated];
 }
 
-#pragma mark - Actions
+//MARK: - Actions
 
 - (IBAction)connectWithPhone {
     

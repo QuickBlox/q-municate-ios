@@ -38,7 +38,7 @@ static UIImage *tokenBackgroundHighlightedImage() {
 
 @implementation QMTagView
 
-#pragma mark - Constructors
+//MARK: - Constructors
 
 - (id)initWithFrame:(CGRect)frame {
     
@@ -73,14 +73,14 @@ static UIImage *tokenBackgroundHighlightedImage() {
     [self addTarget:self action:@selector(buttonPressed) forControlEvents:UIControlEventTouchDown];
 }
 
-#pragma mark - Actions
+//MARK: - Actions
 
 - (void)buttonPressed {
     
     [self becomeFirstResponder];
 }
 
-#pragma mark - Setters
+//MARK: - Setters
 
 - (void)setLabel:(NSString *)label {
     
@@ -94,14 +94,14 @@ static UIImage *tokenBackgroundHighlightedImage() {
     }
 }
 
-#pragma mark - Getters
+//MARK: - Getters
 
 - (CGFloat)preferredWidth {
     
     return MAX(_preferredWidth, 10);
 }
 
-#pragma mark - UIResponder
+//MARK: - UIResponder
 
 - (BOOL)canBecomeFirstResponder {
     
@@ -136,7 +136,7 @@ static UIImage *tokenBackgroundHighlightedImage() {
     return NO;
 }
 
-#pragma mark - UIKeyInput
+//MARK: - UIKeyInput
 
 - (void)deleteBackward {
     

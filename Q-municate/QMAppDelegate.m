@@ -169,7 +169,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     return urlWasIntendedForFacebook;
 }
 
-#pragma mark - Push notification registration
+//MARK: - Push notification registration
 
 - (void)registerForNotification {
     
@@ -276,7 +276,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     }
 }
 
-#pragma mark - QMPushNotificationManagerDelegate protocol
+//MARK: - QMPushNotificationManagerDelegate protocol
 
 - (void)pushNotificationManager:(QMPushNotificationManager *)__unused pushNotificationManager didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
     

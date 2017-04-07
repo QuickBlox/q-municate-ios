@@ -14,7 +14,7 @@ FOUNDATION_EXPORT NSString *const CGLAlphabetizerGroupDisplayNameKey;
 
 @interface QMAlphabetizer : NSObject
 
-#pragma mark - Alphabetization
+//MARK: - Alphabetization
 
 /**
  *  Accepts an arbitrary array of objects and a key path to alphabetize by,
@@ -36,7 +36,7 @@ FOUNDATION_EXPORT NSString *const CGLAlphabetizerGroupDisplayNameKey;
                                        usingKeyPath:(NSString *)keyPath
                            nonAlphabeticPlaceholder:(NSString *)placeholder;
 
-#pragma mark - Grouping
+//MARK: - Grouping
 
 /**
  *  Filters an array of objects into groups based on the response to keyPath, and then sorts those groups

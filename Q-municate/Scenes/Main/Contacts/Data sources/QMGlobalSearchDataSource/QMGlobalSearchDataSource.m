@@ -24,7 +24,7 @@
     return self.items.count > 0 ? [QMSearchCell height] : [QMNoResultsCell height];
 }
 
-#pragma mark - UITableViewDataSource
+//MARK: - UITableViewDataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -67,7 +67,7 @@
     return self.items.count > 0 ? self.items.count : 1;
 }
 
-#pragma mark - QMGlobalSearchDataProvider
+//MARK: - QMGlobalSearchDataProvider
 
 - (QMGlobalSearchDataProvider *)globalSearchDataProvider {
     

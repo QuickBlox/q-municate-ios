@@ -68,7 +68,7 @@ static const CGFloat kQMLocationButtonXShift = 2.0f;
 
 @implementation QMLocationButton
 
-#pragma mark - Construction
+//MARK: - Construction
 
 - (instancetype)init {
     
@@ -112,7 +112,7 @@ static const CGFloat kQMLocationButtonXShift = 2.0f;
     [self addSubview:_locationImageView];
 }
 
-#pragma mark - Getters
+//MARK: - Getters
 
 - (UIActivityIndicatorView *)activityIndicatorView {
     
@@ -129,7 +129,7 @@ static const CGFloat kQMLocationButtonXShift = 2.0f;
     return _activityIndicatorView;
 }
 
-#pragma mark - Methods
+//MARK: - Methods
 
 - (void)setLoadingState:(BOOL)loadingState {
     

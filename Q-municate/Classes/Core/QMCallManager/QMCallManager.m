@@ -47,7 +47,7 @@ QBRTCClientDelegate
     [[QBRTCClient instance] addDelegate:self];
 }
 
-#pragma mark - Call managing
+//MARK: - Call managing
 
 - (void)callToUserWithID:(NSUInteger)userID conferenceType:(QBRTCConferenceType)conferenceType {
     
@@ -110,7 +110,7 @@ QBRTCClientDelegate
     [self.callWindow makeKeyAndVisible];
 }
 
-#pragma mark - Setters
+//MARK: - Setters
 
 - (void)setHasActiveCall:(BOOL)hasActiveCall {
     
@@ -125,7 +125,7 @@ QBRTCClientDelegate
     }
 }
 
-#pragma mark - Getters
+//MARK: - Getters
 
 - (QBUUser *)opponentUser {
     
@@ -151,7 +151,7 @@ QBRTCClientDelegate
     return opponentUser;
 }
 
-#pragma mark - QBRTCClientDelegate
+//MARK: - QBRTCClientDelegate
 
 - (void)didReceiveNewSession:(QBRTCSession *)session userInfo:(NSDictionary *)__unused userInfo {
     
@@ -270,7 +270,7 @@ QBRTCClientDelegate
     });
 }
 
-#pragma mark - ICE servers
+//MARK: - ICE servers
 
 - (NSArray *)quickbloxICE {
     
@@ -306,7 +306,7 @@ QBRTCClientDelegate
     return result;
 }
 
-#pragma mark - Sound management
+//MARK: - Sound management
 
 - (void)startPlayingCallingSound {
     
@@ -341,7 +341,7 @@ QBRTCClientDelegate
     [[QMSoundManager instance] stopAllSounds];
 }
 
-#pragma mark - Permissions check
+//MARK: - Permissions check
 
 - (void)checkPermissionsWithConferenceType:(QBRTCConferenceType)conferenceType completion:(PermissionBlock)completion {
     
@@ -399,7 +399,7 @@ QBRTCClientDelegate
     }];
 }
 
-#pragma mark - Call notifications
+//MARK: - Call notifications
 
 - (QBChatMessage *)_callNotificationMessageForSession:(QBRTCSession *)session
                                                 state:(QMCallNotificationState)state {
@@ -465,7 +465,7 @@ QBRTCClientDelegate
     [self _sendNotificationMessage:message];
 }
 
-#pragma mark - Helpers
+//MARK: - Helpers
 
 - (void)showAlertWithTitle:(NSString *)title message:(NSString *)message {
     
@@ -491,7 +491,7 @@ QBRTCClientDelegate
     [viewController presentViewController:alertController animated:YES completion:nil];
 }
 
-#pragma mark - Statistic
+//MARK: - Statistic
 
 NSInteger QBRTCGetCpuUsagePercentage() {
     // Create an array of thread ports for the current task.

@@ -28,7 +28,7 @@ static NSString *const kQMVideoCallInfoXibName = @"QMVideoCallInfoView";
 
 @implementation QMCallInfoView
 
-#pragma mark - Construction
+//MARK: - Construction
 
 + (instancetype)callInfoViewWithUser:(QBUUser *)user {
     
@@ -59,14 +59,14 @@ static NSString *const kQMVideoCallInfoXibName = @"QMVideoCallInfoView";
     return callInfoView;
 }
 
-#pragma mark - Static
+//MARK: - Static
 
 + (CGFloat)preferredVideoInfoViewHeight {
     
     return 77.0f;
 }
 
-#pragma mark - Setters
+//MARK: - Setters
 
 - (void)setBottomText:(NSString *)bottomText {
     

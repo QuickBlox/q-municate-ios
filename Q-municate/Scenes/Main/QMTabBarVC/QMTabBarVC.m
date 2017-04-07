@@ -27,7 +27,7 @@ QMChatConnectionDelegate
 
 @implementation QMTabBarVC
 
-#pragma mark - Life cycle
+//MARK: - Life cycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -35,12 +35,11 @@ QMChatConnectionDelegate
     // subscribing for delegates
     [[QMCore instance].chatService addDelegate:self];
     
-    [self.viewControllers enumerateObjectsUsingBlock:^(UIViewController *vc,
-                                                       NSUInteger idx,
-                                                       BOOL *stop) {
+    for (UIViewController *vc in self.viewControllers) {
+
         vc.tabBarItem.title = nil;
         vc.tabBarItem.imageInsets = UIEdgeInsetsMake(5, 0, -5, 0);
-    }];
+    }
 }
 
 - (void)viewWillLayoutSubviews {
@@ -51,7 +50,7 @@ QMChatConnectionDelegate
     self.tabBar.frame = tabFrame;
 }
 
-#pragma mark - Notification
+//MARK: - Notification
 
 - (void)showNotificationForMessage:(QBChatMessage *)chatMessage {
     
@@ -108,12 +107,16 @@ QMChatConnectionDelegate
         };
     }
     
-    [QMNotification showMessageNotificationWithMessage:chatMessage buttonHandler:buttonHandler hostViewController:hvc];
+    [QMNotification showMessageNotificationWithMessage:chatMessage
+                                         buttonHandler:buttonHandler
+                                    hostViewController:hvc];
 }
 
-#pragma mark - QMChatServiceDelegate
+//MARK: - QMChatServiceDelegate
 
-- (void)chatService:(QMChatService *)chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+- (void)chatService:(QMChatService *)chatService
+didAddMessageToMemoryStorage:(QBChatMessage *)message
+        forDialogID:(NSString *)dialogID {
     
     if (message.messageType == QMMessageTypeContactRequest) {
         

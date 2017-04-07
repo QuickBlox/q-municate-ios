@@ -27,7 +27,7 @@ static const CGSize kQMLocationPinSize = { 14.0f, 36.0f };
 
 @implementation QMLocationPinView
 
-#pragma mark - Construction
+//MARK: - Construction
 
 - (instancetype)init {
     
@@ -60,7 +60,7 @@ static const CGSize kQMLocationPinSize = { 14.0f, 36.0f };
     return self;
 }
 
-#pragma mark - Setters
+//MARK: - Setters
 
 - (void)setPinRaised:(BOOL)pinRaised {
     

@@ -101,7 +101,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     [_internetConnection startNotifier];
 }
 
-#pragma mark - Error handling
+//MARK: - Error handling
 
 - (NSString *)errorStringFromResponseStatus:(QBResponseStatusCode)statusCode {
     
@@ -184,7 +184,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     [SVProgressHUD showErrorWithStatus:errorMessage];
 }
 
-#pragma mark - Auth methods
+//MARK: - Auth methods
 
 - (BFTask *)login {
     
@@ -287,14 +287,14 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     return source.task;
 }
 
-#pragma mark QMContactListServiceCacheDelegate delegate
+//MARK: QMContactListServiceCacheDelegate delegate
 
 - (void)cachedContactListItems:(QMCacheCollection)block {
     
     [[QMContactListCache instance] contactListItems:block];
 }
 
-#pragma mark - QMChatServiceDelegate
+//MARK: - QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)__unused chatService didAddChatDialogsToMemoryStorage:(NSArray *)chatDialogs {
     
@@ -333,7 +333,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     }
 }
 
-#pragma mark - QMContactListServiceDelegate
+//MARK: - QMContactListServiceDelegate
 
 - (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)contactList {
     
@@ -354,7 +354,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     }
 }
 
-#pragma mark - Helpers
+//MARK: - Helpers
 
 - (BOOL)isInternetConnected {
     

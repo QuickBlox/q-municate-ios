@@ -73,7 +73,7 @@ static UIImage *_bgViewImage = nil;
     [super layoutSubviews];
 }
 
-#pragma mark - Setters
+//MARK: - Setters
 
 - (void)setBadgeNumber:(NSUInteger)badgeNumber {
     

@@ -26,7 +26,7 @@
     [self.searchDataSource.searchDataProvider performSearch:searchText];
 }
 
-#pragma mark - UITableViewDelegate
+//MARK: - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)__unused tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -39,21 +39,21 @@
     [self.delegate searchResultsController:self didSelectObject:obj];
 }
 
-#pragma mark - UIScrollViewDelegate
+//MARK: - UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     
     [self.delegate searchResultsController:self willBeginScrollResults:scrollView];
 }
 
-#pragma mark - QMSearchProtocol
+//MARK: - QMSearchProtocol
 
 - (QMSearchDataSource *)searchDataSource {
     
     return (id)self.tableView.dataSource;
 }
 
-#pragma mark - QMSearchDataProviderDelegate
+//MARK: - QMSearchDataProviderDelegate
 
 - (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)searchDataProvider {
     

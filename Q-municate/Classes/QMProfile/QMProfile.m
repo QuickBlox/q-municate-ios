@@ -136,7 +136,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
     return success;
 }
 
-#pragma mark - Keychain
+//MARK: - Keychain
 
 - (void)keychainQuery:(void(^)(SSKeychainQuery *query))keychainQueryBlock {
     
@@ -151,7 +151,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
     keychainQueryBlock(query);
 }
 
-#pragma mark - NSCoding
+//MARK: - NSCoding
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super init];
@@ -177,7 +177,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
     [aCoder encodeObject:self.lastDialogsFetchingDate forKey:kQMLastDialogsFetchingDate];
 }
 
-#pragma mark - Account migration
+//MARK: - Account migration
 
 // old account service keys
 static NSString *const kQMAuthServiceKey = @"QMAuthServiceKey";

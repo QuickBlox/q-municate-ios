@@ -33,7 +33,7 @@ static const NSUInteger kQMPasswordMinChar = 8;
     self.navigationItem.leftBarButtonItem = nil;
 }
 
-#pragma mark - Life cycle
+//MARK: - Life cycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -54,7 +54,7 @@ static const NSUInteger kQMPasswordMinChar = 8;
     [self.passwordOldField becomeFirstResponder];
 }
 
-#pragma mark - Actions
+//MARK: - Actions
 
 - (IBAction)changeButtonPressed:(UIBarButtonItem *)__unused sender {
     
@@ -95,7 +95,7 @@ static const NSUInteger kQMPasswordMinChar = 8;
     }];
 }
 
-#pragma mark - Helpers
+//MARK: - Helpers
 
 - (IBAction)passwordOldFieldChanged {
     
@@ -126,7 +126,7 @@ static const NSUInteger kQMPasswordMinChar = 8;
     }
 }
 
-#pragma mark - UITextFieldDelegate
+//MARK: - UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     
@@ -157,7 +157,7 @@ static const NSUInteger kQMPasswordMinChar = 8;
     return YES;
 }
 
-#pragma mark - UITableViewDataSource
+//MARK: - UITableViewDataSource
 
 - (NSString *)tableView:(UITableView *)__unused tableView titleForFooterInSection:(NSInteger)__unused section {
     

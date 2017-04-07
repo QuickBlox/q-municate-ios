@@ -106,7 +106,7 @@ UISearchResultsUpdating
     [self.searchController.view removeFromSuperview];
 }
 
-#pragma mark - Actions
+//MARK: - Actions
 
 - (IBAction)doneButtonPressed:(UIBarButtonItem *)__unused sender {
     
@@ -134,14 +134,14 @@ UISearchResultsUpdating
     }];
 }
 
-#pragma mark - UISearchResultsUpdating
+//MARK: - UISearchResultsUpdating
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     
     [self.dataSource.searchDataProvider performSearch:searchController.searchBar.text];
 }
 
-#pragma mark - UITableViewDelegate
+//MARK: - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -163,7 +163,7 @@ UISearchResultsUpdating
     return [self.dataSource heightForRowAtIndexPath:indexPath];
 }
 
-#pragma mark - QMSearchDataProviderDelegate
+//MARK: - QMSearchDataProviderDelegate
 
 - (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
     
@@ -187,7 +187,7 @@ UISearchResultsUpdating
     [self.tableView reloadData];
 }
 
-#pragma mark - QMChatServiceDelegate
+//MARK: - QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
     
@@ -207,7 +207,7 @@ UISearchResultsUpdating
     }
 }
 
-#pragma mark - register nibs
+//MARK: - register nibs
 
 - (void)registerNibs {
     

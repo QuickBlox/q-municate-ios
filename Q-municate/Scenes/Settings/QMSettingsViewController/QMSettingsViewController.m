@@ -130,7 +130,7 @@ NYTPhotosViewControllerDelegate
     self.statusLabel.text = userData.status.length > 0 ? userData.status : NSLocalizedString(@"QM_STR_NONE", nil);
 }
 
-#pragma mark - Actions
+//MARK: - Actions
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
@@ -207,7 +207,7 @@ NYTPhotosViewControllerDelegate
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-#pragma mark - UITableViewDelegate
+//MARK: - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -339,14 +339,14 @@ NYTPhotosViewControllerDelegate
     return CGFLOAT_MIN;
 }
 
-#pragma mark - QMProfileDelegate
+//MARK: - QMProfileDelegate
 
 - (void)profile:(QMProfile *)__unused currentProfile didUpdateUserData:(QBUUser *)userData {
     
     [self configureUserData:userData];
 }
 
-#pragma mark - QMImageViewDelegate
+//MARK: - QMImageViewDelegate
 
 - (void)imageViewDidTap:(QMImageView *)imageView {
     
@@ -390,7 +390,7 @@ NYTPhotosViewControllerDelegate
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-#pragma mark - QMImagePickerResultHandler
+//MARK: - QMImagePickerResultHandler
 
 - (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
@@ -420,14 +420,14 @@ NYTPhotosViewControllerDelegate
     }];
 }
 
-#pragma mark - NYTPhotosViewControllerDelegate
+//MARK: - NYTPhotosViewControllerDelegate
 
 - (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
     
     return self.avatarImageView;
 }
 
-#pragma mark - Share View Controller
+//MARK: - Share View Controller
 
 - (void)showShareControllerInCell:(UITableViewCell *)cell {
     
@@ -445,7 +445,7 @@ NYTPhotosViewControllerDelegate
     [self presentViewController:activityViewController animated:YES completion:nil];
 }
 
-#pragma mark - Helpers
+//MARK: - Helpers
 
 - (BOOL)shouldShowHeaderForSection:(NSInteger)section {
     

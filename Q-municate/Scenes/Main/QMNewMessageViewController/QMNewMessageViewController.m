@@ -33,7 +33,7 @@ QMTagFieldViewDelegate
 
 @implementation QMNewMessageViewController
 
-#pragma mark - Lifecycle
+//MARK: - Lifecycle
 
 - (void)dealloc {
     
@@ -58,7 +58,7 @@ QMTagFieldViewDelegate
     self.tagFieldView.delegate = self;
 }
 
-#pragma mark - Actions
+//MARK: - Actions
 
 - (IBAction)rightBarButtonPressed:(UIBarButtonItem *)__unused sender {
     
@@ -158,7 +158,7 @@ QMTagFieldViewDelegate
     self.navigationItem.rightBarButtonItem.enabled = nextAllowed;
 }
 
-#pragma mark - QMMessageContactListViewControllerDelegate
+//MARK: - QMMessageContactListViewControllerDelegate
 
 - (void)messageContactListViewController:(QMMessageContactListViewController *)__unused messageContactListViewController didDeselectUser:(QBUUser *)deselectedUser {
     
@@ -180,7 +180,7 @@ QMTagFieldViewDelegate
     [self.view endEditing:YES];
 }
 
-#pragma mark - QMTagFieldViewDelegate
+//MARK: - QMTagFieldViewDelegate
 
 - (void)tagFieldView:(QMTagFieldView *)__unused tagFieldView didDeleteTagWithID:(id)tagID {
     
@@ -207,7 +207,7 @@ QMTagFieldViewDelegate
     }
 }
 
-#pragma mark - Helpers
+//MARK: - Helpers
 
 - (void)removeControllerFromStack {
     

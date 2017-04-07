@@ -19,7 +19,7 @@
 
 @implementation QMNewMessageContactListSearchDataSource
 
-#pragma mark - Construction
+//MARK: - Construction
 
 - (instancetype)initWithKeyPath:(NSString *)keyPath {
     
@@ -48,7 +48,7 @@
     self.selectedUsers = [NSMutableSet set];
 }
 
-#pragma mark - UITableViewDataSource
+//MARK: - UITableViewDataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -73,7 +73,7 @@
     return cell;
 }
 
-#pragma mark - Methods
+//MARK: - Methods
 
 - (BOOL)isSelectedUserAtIndexPath:(NSIndexPath *)indexPath {
     

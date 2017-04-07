@@ -27,7 +27,7 @@
     self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
 }
 
-#pragma mark - UISplitViewControllerDelegate
+//MARK: - UISplitViewControllerDelegate
 
 - (BOOL)splitViewController:(UISplitViewController *)splitViewController showDetailViewController:(UIViewController *)detailVC sender:(id)sender {
     
@@ -104,7 +104,7 @@
     return YES;
 }
 
-#pragma mark - Methods
+//MARK: - Methods
 
 - (void)showPlaceholderDetailViewController {
     
@@ -118,7 +118,7 @@
     }
 }
 
-#pragma mark - Helpers
+//MARK: - Helpers
 
 static inline UINavigationController *QMNavigationController(NSArray <__kindof UIViewController *> *vcs) {
     

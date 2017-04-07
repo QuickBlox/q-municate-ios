@@ -33,7 +33,7 @@ static UIColor *highlightedColor() {
 
 @implementation QMGroupHeaderView
 
-#pragma mark - Overrides
+//MARK: - Overrides
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -58,7 +58,7 @@ static UIColor *highlightedColor() {
     } completion:nil];
 }
 
-#pragma mark - Methods
+//MARK: - Methods
 
 - (void)setTitle:(NSString *)title avatarUrl:(NSString *)avatarUrl {
     
@@ -72,7 +72,7 @@ static UIColor *highlightedColor() {
                        completedBlock:nil];
 }
 
-#pragma mark - QMImageViewDelegate
+//MARK: - QMImageViewDelegate
 
 - (void)imageViewDidTap:(QMImageView *)imageView {
     

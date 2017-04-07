@@ -128,7 +128,7 @@ NYTPhotosViewControllerDelegate
     [self qm_smoothlyDeselectRowsForTableView:self.tableView];
 }
 
-#pragma mark - Methods
+//MARK: - Methods
 
 - (void)loadUser {
     
@@ -253,7 +253,7 @@ NYTPhotosViewControllerDelegate
     }
 }
 
-#pragma mark - Actions
+//MARK: - Actions
 
 - (void)sendMessageAction {
     
@@ -432,7 +432,7 @@ NYTPhotosViewControllerDelegate
     }
 }
 
-#pragma mark - UITableViewDataSource
+//MARK: - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
@@ -444,7 +444,7 @@ NYTPhotosViewControllerDelegate
     return [super tableView:tableView numberOfRowsInSection:section];
 }
 
-#pragma mark - UITableViewDelegate
+//MARK: - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -513,7 +513,7 @@ NYTPhotosViewControllerDelegate
     return [super tableView:tableView heightForRowAtIndexPath:indexPath];
 }
 
-#pragma mark - QMContactListServiceDelegate
+//MARK: - QMContactListServiceDelegate
 
 - (void)contactListServiceDidLoadCache {
     
@@ -527,7 +527,7 @@ NYTPhotosViewControllerDelegate
     [self.tableView reloadData];
 }
 
-#pragma mark - QMImageViewDelegate
+//MARK: - QMImageViewDelegate
 
 - (void)imageViewDidTap:(QMImageView *)__unused imageView {
     
@@ -538,14 +538,14 @@ NYTPhotosViewControllerDelegate
     }
 }
 
-#pragma mark - NYTPhotosViewControllerDelegate
+//MARK: - NYTPhotosViewControllerDelegate
 
 - (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
     
     return self.avatarImageView;
 }
 
-#pragma mark - Helpers
+//MARK: - Helpers
 
 - (BOOL)shouldHaveHeaderForSection:(NSInteger)section {
     

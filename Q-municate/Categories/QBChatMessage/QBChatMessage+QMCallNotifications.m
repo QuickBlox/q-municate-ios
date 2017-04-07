@@ -21,7 +21,7 @@ static NSString * const kQMCallNotificationCallDurationKey = @"callDuration";
 @dynamic callNotificationType;
 @dynamic callNotificationState;
 
-#pragma mark - Methods
+//MARK: - Methods
 
 - (BOOL)isCallNotificationMessage {
     
@@ -29,7 +29,7 @@ static NSString * const kQMCallNotificationCallDurationKey = @"callDuration";
             && self.callNotificationState != QMCallNotificationStateNone);
 }
 
-#pragma mark - Call notification type
+//MARK: - Call notification type
 
 - (QMCallNotificationType)callNotificationType {
     
@@ -41,7 +41,7 @@ static NSString * const kQMCallNotificationCallDurationKey = @"callDuration";
     [self _context][kQMCallNotificationTypeKey] = @(callNotificationType);
 }
 
-#pragma mark - Call notification state
+//MARK: - Call notification state
 
 - (QMCallNotificationState)callNotificationState {
     
@@ -53,7 +53,7 @@ static NSString * const kQMCallNotificationCallDurationKey = @"callDuration";
     [self _context][kQMCallNotificationStateKey] = @(callNotificationState);
 }
 
-#pragma mark - Caller user ID
+//MARK: - Caller user ID
 
 - (NSUInteger)callerUserID {
     
@@ -65,7 +65,7 @@ static NSString * const kQMCallNotificationCallDurationKey = @"callDuration";
     [self _context][kQMCallNotificationCallerUserIDKey] = @(callerUserID);
 }
 
-#pragma mark - Callee user IDs
+//MARK: - Callee user IDs
 
 - (NSIndexSet *)calleeUserIDs {
     
@@ -96,7 +96,7 @@ static NSString * const kQMCallNotificationCallDurationKey = @"callDuration";
     [self _context][kQMCallNotificationCalleeUserIDsKey] = [mutableString copy];
 }
 
-#pragma mark - Call duration
+//MARK: - Call duration
 
 - (NSTimeInterval)callDuration {
     
@@ -108,7 +108,7 @@ static NSString * const kQMCallNotificationCallDurationKey = @"callDuration";
     [self _context][kQMCallNotificationCallDurationKey] = @(callDuration);
 }
 
-#pragma mark - Private
+//MARK: - Private
 
 - (NSMutableDictionary *)_context {
     
