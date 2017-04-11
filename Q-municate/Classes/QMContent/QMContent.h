@@ -17,22 +17,22 @@ typedef void(^QMContentProgressBlock)(float progress);
 
 //MARK: - Upload operations
 
-+ (BFTask QB_GENERIC(QBCBlob *) *)uploadPNGImage:(UIImage *)image
-                  progress:(QMContentProgressBlock)progress;
++ (BFTask <QBCBlob *> *)uploadPNGImage:(UIImage *)image
+                              progress:(QMContentProgressBlock)progress;
 
-+ (BFTask QB_GENERIC(QBCBlob *) *)uploadJPEGImage:(UIImage *)image
-                                         progress:(QMContentProgressBlock)progress;
++ (BFTask <QBCBlob *> *)uploadJPEGImage:(UIImage *)image
+                               progress:(QMContentProgressBlock)progress;
 
-+ (BFTask QB_GENERIC(QBCBlob *) *)uploadData:(NSData *)data
-                                    fileName:(NSString *)fileName
-                                 contentType:(NSString *)contentType
-                                    isPublic:(BOOL)isPublic
-                                    progress:(QMContentProgressBlock)progress;
++ (BFTask <QBCBlob *> *)uploadData:(NSData *)data
+                          fileName:(NSString *)fileName
+                       contentType:(NSString *)contentType
+                          isPublic:(BOOL)isPublic
+                          progress:(QMContentProgressBlock)progress;
 
 //MARK: - Download operations
 
-+ (BFTask QB_GENERIC(NSData *) *)downloadFileWithUrl:(NSURL *)url;
++ (BFTask <NSData *> *)downloadFileWithUrl:(NSURL *)url;
 
-+ (BFTask QB_GENERIC(UIImage *) *)downloadImageWithUrl:(NSURL *)url;
++ (BFTask <UIImage *> *)downloadImageWithUrl:(NSURL *)url;
 
 @end

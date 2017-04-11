@@ -53,6 +53,11 @@ typedef void (^QBRequestErrorBlock)(QBResponse *response);
  */
 @property (nonatomic, weak, nullable) NSURLSessionTask* task;
 
+/**
+ Request / Response ID
+ */
+@property (nonatomic, assign) NSUInteger ID;
+
 /** 
  *  Formed task type.
  */
