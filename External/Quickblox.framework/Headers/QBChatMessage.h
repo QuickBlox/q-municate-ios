@@ -45,6 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable) NSString *senderResource;
 
+@property (nonatomic, assign, readonly) BOOL isCarbon;
+
 /**
  *  Message date sent.
  */
