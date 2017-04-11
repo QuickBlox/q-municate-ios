@@ -1005,11 +1005,21 @@ QMMediaControllerDelegate
         }
     }
     else if ([viewClass isSubclassOfClass:[QMChatBaseLinkPreviewCell class]]) {
+        
+        CGFloat linkPreviewHeight = 54.0;
+        
+        QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:item];
+        if (linkPreview.imageURL.length > 0) {
+            linkPreviewHeight = kQMAttachmentCellSize;
+        }
+        
         NSAttributedString *attributedString = [self bottomLabelAttributedStringForItem:item];
+        
         CGSize bottomLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
                                                                   withConstraints:CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), CGFLOAT_MAX)
                                                            limitedToNumberOfLines:0];
-        size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), kQMAttachmentCellSize + (CGFloat)ceil(bottomLabelSize.height));
+        
+        size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), linkPreviewHeight + (CGFloat)ceil(bottomLabelSize.height));
     }
     else {
         
@@ -1053,8 +1063,6 @@ QMMediaControllerDelegate
 - (CGSize)videoSizeForMessage:(QBChatMessage *)message {
     
     QBChatAttachment *attachment = message.attachments.firstObject;
-    
-    
     
     CGSize size = CGSizeMake(270.0, 142.0); //default video size for cell
     
@@ -1151,10 +1159,10 @@ QMMediaControllerDelegate
         class == [QMChatAttachmentOutgoingCell class] ||
         class == [QMChatLocationOutgoingCell class] ||
         [class isSubclassOfClass:[QMMediaOutgoingCell class]] ||
-        [class isSubclassOfClass:[QMChatOutgoingLinkPreviewCell class]]) {
+        class == [QMChatOutgoingLinkPreviewCell class]) {
         
         layoutModel.avatarSize = CGSizeZero;
-
+        
         if (class != [QMChatOutgoingCell class]) {
             
             layoutModel.spaceBetweenTextViewAndBottomLabel = 5;
@@ -1163,7 +1171,8 @@ QMMediaControllerDelegate
     else if (class == [QMChatAttachmentIncomingCell class] ||
              class == [QMChatLocationIncomingCell class] ||
              class == [QMChatIncomingCell class] ||
-             [class isSubclassOfClass: [QMMediaIncomingCell class]]) {
+             [class isSubclassOfClass: [QMMediaIncomingCell class]] ||
+             class == [QMChatIncomingLinkPreviewCell class]) {
         
         if (self.chatDialog.type != QBChatDialogTypePrivate) {
             
@@ -1175,7 +1184,7 @@ QMMediaControllerDelegate
             layoutModel.spaceBetweenTextViewAndBottomLabel = 5;
             layoutModel.spaceBetweenTopLabelAndTextView = 5;
         }
-
+        
         layoutModel.avatarSize = CGSizeMake(kQMAvatarSize, kQMAvatarSize);
         
     }
@@ -1189,7 +1198,9 @@ QMMediaControllerDelegate
         || class == [QMVideoIncomingCell class]
         || class == [QMVideoOutgoingCell class]
         || class == [QMImageOutgoingCell class]
-        || class == [QMImageIncomingCell class]) {
+        || class == [QMImageIncomingCell class]
+        || class == [QMChatIncomingLinkPreviewCell class]
+        || class == [QMChatOutgoingLinkPreviewCell class]) {
         
         size = [TTTAttributedLabel sizeThatFitsAttributedString:[self bottomLabelAttributedStringForItem:item]
                                                 withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - kQMWidthPadding, CGFLOAT_MAX)
@@ -1241,7 +1252,8 @@ QMMediaControllerDelegate
     else if ([cell isKindOfClass:[QMChatIncomingCell class]]
              || [cell isKindOfClass:[QMChatAttachmentIncomingCell class]]
              || [cell isKindOfClass:[QMChatLocationIncomingCell class]]
-             || [cell isKindOfClass:[QMMediaIncomingCell class]]) {
+             || [cell isKindOfClass:[QMMediaIncomingCell class]]
+             || [cell isKindOfClass:[QMChatIncomingLinkPreviewCell class]]) {
         
         currentCell.containerView.bgColor = QMChatIncomingCellColor();
         currentCell.textView.linkAttributes = @{NSForegroundColorAttributeName : QMChatIncomingLinkColor(),
@@ -1260,6 +1272,7 @@ QMMediaControllerDelegate
         [avatarView setImageWithURL:userImageUrl
                               title:sender.fullName
                      completedBlock:nil];
+        
     }
     else if ([cell isKindOfClass:[QMChatNotificationCell class]]) {
         
@@ -1281,23 +1294,34 @@ QMMediaControllerDelegate
         currentCell.layer.cornerRadius = 8;
         currentCell.clipsToBounds = YES;
     }
-    else if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
+    
+     if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
         
         QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:message];
         
         if (linkPreview != nil) {
-            QMChatBaseLinkPreviewCell *previewCell = (QMChatBaseLinkPreviewCell *)cell;
-            QMImageView *previewImageView = [previewCell  previewImageView];
             
-            NSURL *userImageUrl = [[NSURL URLWithString:linkPreview.imageURL] standardizedURL];
+            QMChatBaseLinkPreviewCell *previewCell = (QMChatBaseLinkPreviewCell *)cell;
+            QMImageView *previewImageView = [previewCell previewImageView];
+            
+            NSURL *userImageUrl = [[NSURL URLWithString:[linkPreview.imageURL lowercaseString]] standardizedURL];
+            
+            if (userImageUrl.host == nil) {
+                
+                NSString *urlString = [NSString stringWithFormat:@"%@%@",linkPreview.siteUrl,userImageUrl.absoluteString];
+                   userImageUrl = [NSURL URLWithString:urlString];
+            }
+            
             if (userImageUrl.scheme == nil) {
-                  NSString *urlString = [NSString stringWithFormat:@"http://%@",userImageUrl.absoluteString];
+                NSString *urlString = [NSString stringWithFormat:@"http://%@",userImageUrl.absoluteString];
                 userImageUrl = [NSURL URLWithString:urlString];
             }
-          
+            
             [previewImageView setImageWithURL:userImageUrl];
             previewCell.titleLabel.text = linkPreview.siteTitle;
-            previewCell.siteDescriptionLabel.text = linkPreview.siteDescription;
+            NSURL *siteURl = [NSURL URLWithString:linkPreview.siteUrl];
+            previewCell.siteDescriptionLabel.text = siteURl.host;
+            previewCell.linkPreviewView.backgroundColor = previewCell.containerView.bgColor;
         }
     }
     
@@ -1647,7 +1671,7 @@ QMMediaControllerDelegate
     
     NSURL *avatarURL = [NSURL URLWithString:self.chatDialog.photo];
     [self.groupAvatarImageView setImageWithURL:avatarURL
-                                   title:self.chatDialog.name completedBlock:nil];
+                                         title:self.chatDialog.name completedBlock:nil];
 }
 
 - (void)updateGroupChatOnlineStatus {
