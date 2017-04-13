@@ -180,9 +180,12 @@ QMMediaControllerDelegate
 }
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
     
+    self.collectionView.collectionViewLayout.minimumLineSpacing = 8.0f;
     self.collectionView.backgroundColor = [UIColor clearColor];
+    
     self.navigationController.navigationBar.topItem.title = @"";
     
     if (self.chatDialog == nil) {
@@ -197,7 +200,9 @@ QMMediaControllerDelegate
     [self updateTitleViewWidth];
     
     // setting up chat controller
-    self.topContentAdditionalInset = self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
+    self.topContentAdditionalInset =
+    self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
+    
     self.inputToolbar.contentView.textView.placeHolder = NSLocalizedString(@"QM_STR_INPUTTOOLBAR_PLACEHOLDER", nil);
     self.view.backgroundColor = QMChatBackgroundColor();
     
@@ -209,8 +214,6 @@ QMMediaControllerDelegate
     self.mediaController = [[QMMediaController alloc] initWithViewController:self];
     
     @weakify(self);
-    
-    
     
     [self.mediaController setOnError:^(QBChatMessage *__unused message, NSError *error) {
         
@@ -314,20 +317,22 @@ QMMediaControllerDelegate
     [QMCore instance].activeDialogID = self.chatDialog.ID;
     
     @weakify(self);
-    self.observerWillResignActive = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillResignActiveNotification
-                                                                                      object:nil
-                                                                                       queue:nil
-                                                                                  usingBlock:^(NSNotification * _Nonnull __unused note) {
-                                                                                      
-                                                                                      @strongify(self);
-                                                                                      [self stopTyping];
-                                                                                      [self stopAudioRecording];
-                                                                                      [self.inputToolbar forceFinishRecording];
-                                                                                      if (self.chatDialog.type == QBChatDialogTypePrivate) {
-                                                                                          
-                                                                                          [self setOpponentOnlineStatus:NO];
-                                                                                      }
-                                                                                  }];
+    self.observerWillResignActive =
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillResignActiveNotification
+                                                      object:nil
+                                                       queue:nil
+                                                  usingBlock:^(NSNotification * _Nonnull __unused note)
+     {
+         
+         @strongify(self);
+         [self stopTyping];
+         [self stopAudioRecording];
+         [self.inputToolbar forceFinishRecording];
+         if (self.chatDialog.type == QBChatDialogTypePrivate) {
+             
+             [self setOpponentOnlineStatus:NO];
+         }
+     }];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -364,7 +369,8 @@ QMMediaControllerDelegate
     }
 }
 
-- (void)deferredQueueManager:(QMDeferredQueueManager *)__unused queueManager didUpdateMessageLocally:(QBChatMessage *)addedMessage {
+- (void)deferredQueueManager:(QMDeferredQueueManager *)__unused queueManager
+     didUpdateMessageLocally:(QBChatMessage *)addedMessage {
     
     [self.chatDataSource updateMessage:addedMessage];
 }
@@ -411,7 +417,9 @@ QMMediaControllerDelegate
     @weakify(self);
     // Retrieving message from Quickblox REST history and cache.
     [[QMCore instance].chatService messagesWithChatDialogID:self.chatDialog.ID
-                                             iterationBlock:^(QBResponse * __unused response, NSArray *messages, BOOL * __unused stop) {
+                                             iterationBlock:^(QBResponse * __unused response,
+                                                              NSArray *messages,
+                                                              BOOL * __unused stop) {
                                                  
                                                  @strongify(self);
                                                  
@@ -446,7 +454,9 @@ QMMediaControllerDelegate
     
     if (![[QMCore instance] isInternetConnected]) {
         
-        [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
+        [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning
+                                                    message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil)
+                                                   duration:kQMDefaultNotificationDismissTime];
         return NO;
     }
     
@@ -458,7 +468,9 @@ QMMediaControllerDelegate
         }
         else {
             
-            [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:NO inViewController:self];
+            [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil)
+                            actionSuccess:NO
+                         inViewController:self];
         }
         
         return NO;
@@ -473,7 +485,9 @@ QMMediaControllerDelegate
         
         if (![[QMCore instance].contactManager isFriendWithUserID:[self.chatDialog opponentID]]) {
             
-            [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil) actionSuccess:NO inViewController:self];
+            [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil)
+                            actionSuccess:NO
+                         inViewController:self];
             return NO;
         }
     }
@@ -490,7 +504,9 @@ QMMediaControllerDelegate
     
     if (![[QMCore instance].contactManager isFriendWithUserID:[self.chatDialog opponentID]]) {
         
-        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil) actionSuccess:NO inViewController:self];
+        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil)
+                        actionSuccess:NO
+                     inViewController:self];
         return NO;
     }
     
@@ -541,9 +557,7 @@ QMMediaControllerDelegate
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
                                                         style:UIAlertActionStyleCancel
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                          
-                                                      }]];
+                                                      handler:nil]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_SETTINGS", nil)
                                                         style:UIAlertActionStyleDefault
@@ -552,12 +566,13 @@ QMMediaControllerDelegate
                                                           [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
                                                       }]];
     
-    UIViewController *viewController = [[[(UISplitViewController *)[UIApplication sharedApplication].keyWindow.rootViewController viewControllers] firstObject] selectedViewController];
+    UIViewController *viewController =
+    [[[(UISplitViewController *)[UIApplication sharedApplication].keyWindow.rootViewController viewControllers] firstObject] selectedViewController];
     [viewController presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)messagesInputToolbarAudioRecordingStart:(QMInputToolbar *)__unused toolbar {
-    NSLog(@"start");
+    
     [self startAudioRecording];
     [toolbar audioRecordingStarted];
     
@@ -565,6 +580,7 @@ QMMediaControllerDelegate
 }
 
 - (void)messagesInputToolbarAudioRecordingCancel:(QMInputToolbar *)toolbar {
+    
     [self stopAudioRecording];
     [toolbar audioRecordingFinished];
     
@@ -572,6 +588,7 @@ QMMediaControllerDelegate
 }
 
 - (void)messagesInputToolbarAudioRecordingComplete:(QMInputToolbar *)__unused toolbar {
+    
     [self finishAudioRecording];
 }
 
@@ -603,7 +620,8 @@ QMMediaControllerDelegate
     if (self.currentAudioRecorder != nil) {
         [[UIScreen mainScreen] unlockCurrentOrientation];
         @weakify(self);
-        [self.currentAudioRecorder stopRecordingWithCompletion:^(QBChatAttachment *attachment, NSError *error) {
+        [self.currentAudioRecorder stopRecordingWithCompletion:^(QBChatAttachment *attachment,
+                                                                 NSError *error) {
             @strongify(self);
             if (attachment && !error) {
                 [self sendMessageWithAttachment:attachment];
@@ -683,7 +701,10 @@ QMMediaControllerDelegate
     
     [self.inputToolbar.contentView.textView resignFirstResponder];
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alertController =
+    [UIAlertController alertControllerWithTitle:nil
+                                        message:nil
+                                 preferredStyle:UIAlertControllerStyleActionSheet];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_TAKE_IMAGE", nil)
                                                         style:UIAlertActionStyleDefault
@@ -734,7 +755,6 @@ QMMediaControllerDelegate
 //MARK: - Cells view classes
 
 - (Class)viewClassForItem:(QBChatMessage *)item {
-    NSLog(@"viewClassForItem %@", item.ID);
     
     if ([item isLocationMessage]) {
         
@@ -748,6 +768,7 @@ QMMediaControllerDelegate
         if (item.messageType == QMMessageTypeContactRequest && item.senderID != self.senderID && !isFriend) {
             
             QBChatMessage *lastMessage = [[QMCore instance].chatService.messagesMemoryStorage lastMessageFromDialogID:self.chatDialog.ID];
+            
             if ([lastMessage isEqual:item]) {
                 
                 return [QMChatContactRequestCell class];
@@ -941,7 +962,9 @@ QMMediaControllerDelegate
     NSString* text = messageItem.dateSent ? [QMDateUtils formatDateForTimeRange:messageItem.dateSent] : @"";
     
     if (messageItem.senderID == self.senderID) {
-        text = [NSString stringWithFormat:@"%@\n%@", text, [self.statusStringBuilder statusFromMessage:messageItem forDialogType:self.chatDialog.type]];
+        text =
+        [NSString stringWithFormat:@"%@\n%@", text, [self.statusStringBuilder statusFromMessage:messageItem
+                                                                                  forDialogType:self.chatDialog.type]];
     }
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:text
@@ -952,47 +975,32 @@ QMMediaControllerDelegate
 
 //MARK: - Collection View Datasource
 
-- (CGSize)collectionView:(QMChatCollectionView *)__unused collectionView dynamicSizeAtIndexPath:(NSIndexPath *)indexPath maxWidth:(CGFloat)maxWidth {
+- (CGSize)collectionView:(QMChatCollectionView *)__unused collectionView
+  dynamicSizeAtIndexPath:(NSIndexPath *)indexPath
+                maxWidth:(CGFloat)maxWidth {
     
     QBChatMessage *item = [self.chatDataSource messageForIndexPath:indexPath];
     Class viewClass = [self viewClassForItem:item];
     CGSize size = CGSizeZero;
     
-    if (viewClass == [QMAudioIncomingCell class] || viewClass == [QMAudioOutgoingCell class]) {
+    if (viewClass == [QMAudioIncomingCell class]
+        || viewClass == [QMAudioOutgoingCell class]) {
+        
         size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), 40);
     }
-    
-    else if (viewClass == [QMVideoIncomingCell class]) {
+    else if (viewClass == [QMVideoIncomingCell class]
+             || viewClass == [QMVideoOutgoingCell class]) {
+        
         size = [self videoSizeForMessage:item];
-    }
-    else if (viewClass == [QMVideoOutgoingCell class]) {
-        
-        CGSize videoSize = [self videoSizeForMessage:item];
-        NSAttributedString *attributedString = [self bottomLabelAttributedStringForItem:item];
-        
-        CGSize bottomLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
-                                                                  withConstraints:CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), CGFLOAT_MAX)
-                                                           limitedToNumberOfLines:0];
-        
-        size = CGSizeMake(MIN(videoSize.width, maxWidth), videoSize.height + (CGFloat)ceil(bottomLabelSize.height));
-        
     }
     else if (viewClass == [QMChatAttachmentIncomingCell class]
              || viewClass == [QMChatLocationIncomingCell class]
-             || viewClass == [QMImageIncomingCell class]) {
-        
-        size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), kQMAttachmentCellSize);
-    }
-    else if (viewClass == [QMChatAttachmentOutgoingCell class]
+             || viewClass == [QMImageIncomingCell class]
+             || viewClass == [QMChatAttachmentOutgoingCell class]
              || viewClass == [QMChatLocationOutgoingCell class]
              || viewClass == [QMImageOutgoingCell class]) {
         
-        NSAttributedString *attributedString = [self bottomLabelAttributedStringForItem:item];
-        
-        CGSize bottomLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
-                                                                  withConstraints:CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), CGFLOAT_MAX)
-                                                           limitedToNumberOfLines:0];
-        size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), kQMAttachmentCellSize + (CGFloat)ceil(bottomLabelSize.height));
+        size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), kQMAttachmentCellSize);
     }
     else if (viewClass == [QMChatNotificationCell class]) {
         
@@ -1000,7 +1008,10 @@ QMMediaControllerDelegate
         
         if ([attributedString respondsToSelector:@selector(boundingRectWithSize:options:context:)]) {
             
-            size = [attributedString boundingRectWithSize:CGSizeMake(maxWidth, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size;
+            size =
+            [attributedString boundingRectWithSize:CGSizeMake(maxWidth, CGFLOAT_MAX)
+                                           options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                           context:nil].size;
             
         }
     }
@@ -1009,17 +1020,19 @@ QMMediaControllerDelegate
         CGFloat linkPreviewHeight = 54.0;
         
         QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:item];
-        if (linkPreview.imageURL.length > 0) {
-            linkPreviewHeight = kQMAttachmentCellSize;
+        
+        if (linkPreview.previewImage != nil) {
+            
+            if (linkPreview.imageWidth > 0) {
+                linkPreviewHeight = linkPreview.imageHeight /(linkPreview.imageWidth / 190.0);
+            }
+            else {
+                linkPreviewHeight = kQMAttachmentCellSize;
+            }
         }
         
-        NSAttributedString *attributedString = [self bottomLabelAttributedStringForItem:item];
-        
-        CGSize bottomLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
-                                                                  withConstraints:CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), CGFLOAT_MAX)
-                                                           limitedToNumberOfLines:0];
-        
-        size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), linkPreviewHeight + (CGFloat)ceil(bottomLabelSize.height));
+        size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth),
+                          linkPreviewHeight);
     }
     else {
         
@@ -1040,16 +1053,20 @@ QMMediaControllerDelegate
     
     if ([self.detailedCells containsObject:message.ID]) {
         
-        size = [TTTAttributedLabel sizeThatFitsAttributedString:[self bottomLabelAttributedStringForItem:message]
-                                                withConstraints:CGSizeMake(CGRectGetWidth(collectionView.frame) - kQMWidthPadding, CGFLOAT_MAX)
-                                         limitedToNumberOfLines:0];
+        size =
+        [TTTAttributedLabel sizeThatFitsAttributedString:[self bottomLabelAttributedStringForItem:message]
+                                         withConstraints:CGSizeMake(CGRectGetWidth(collectionView.frame) - kQMWidthPadding,
+                                                                    CGFLOAT_MAX)
+                                  limitedToNumberOfLines:0];
     }
     
     if (self.chatDialog.type != QBChatDialogTypePrivate) {
         
-        CGSize topLabelSize = [TTTAttributedLabel sizeThatFitsAttributedString:[self topLabelAttributedStringForItem:message]
-                                                               withConstraints:CGSizeMake(CGRectGetWidth(collectionView.frame) - kQMWidthPadding, CGFLOAT_MAX)
-                                                        limitedToNumberOfLines:1];
+        CGSize topLabelSize =
+        [TTTAttributedLabel sizeThatFitsAttributedString:[self topLabelAttributedStringForItem:message]
+                                         withConstraints:CGSizeMake(CGRectGetWidth(collectionView.frame) - kQMWidthPadding,
+                                                                    CGFLOAT_MAX)
+                                  limitedToNumberOfLines:1];
         
         if (topLabelSize.width > size.width) {
             
@@ -1076,7 +1093,10 @@ QMMediaControllerDelegate
     return size;
 }
 
-- (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
+- (BOOL)collectionView:(UICollectionView *)collectionView
+      canPerformAction:(SEL)action
+    forItemAtIndexPath:(NSIndexPath *)indexPath
+            withSender:(id)sender {
     
     Class viewClass = [self viewClassForItem:[self.chatDataSource messageForIndexPath:indexPath]];
     
@@ -1089,7 +1109,10 @@ QMMediaControllerDelegate
         return NO;
     }
     
-    return [super collectionView:collectionView canPerformAction:action forItemAtIndexPath:indexPath withSender:sender];
+    return [super collectionView:collectionView
+                canPerformAction:action
+              forItemAtIndexPath:indexPath
+                      withSender:sender];
 }
 
 - (void)collectionView:(UICollectionView *)__unused collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)__unused sender {
@@ -1100,15 +1123,6 @@ QMMediaControllerDelegate
         
         if ([message isMediaMessage]) {
             
-            //            QBChatAttachment *attachment = message.attachments[0];
-            //            [[QMCore instance].chatService.chatAttachmentService.mediaService.storeService localImageAttachment:attachment
-            //                                                                                                     completion:^(UIImage *image) {
-            //                if (image) {
-            //
-            //                    [[UIPasteboard generalPasteboard] setValue:UIImageJPEGRepresentation(image, 1)
-            //                                             forPasteboardType:(NSString *)kUTTypeJPEG];
-            //                }
-            //            }];
         }
         else {
             
@@ -1135,11 +1149,6 @@ QMMediaControllerDelegate
 }
 
 //MARK: - QMChatCollectionViewDelegate
-
-- (CGFloat)collectionView:(UICollectionView *)__unused collectionView layout:(UICollectionViewLayout *)__unused collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)__unused section {
-    
-    return 8.0f;
-}
 
 - (QMChatCellLayoutModel)collectionView:(QMChatCollectionView *)collectionView
                  layoutModelAtIndexPath:(NSIndexPath *)indexPath {
@@ -1168,11 +1177,11 @@ QMMediaControllerDelegate
             layoutModel.spaceBetweenTextViewAndBottomLabel = 5;
         }
     }
-    else if (class == [QMChatAttachmentIncomingCell class] ||
-             class == [QMChatLocationIncomingCell class] ||
-             class == [QMChatIncomingCell class] ||
-             [class isSubclassOfClass: [QMMediaIncomingCell class]] ||
-             class == [QMChatIncomingLinkPreviewCell class]) {
+    else if (class == [QMChatAttachmentIncomingCell class]
+             || class == [QMChatLocationIncomingCell class]
+             || class == [QMChatIncomingCell class]
+             || [class isSubclassOfClass: [QMMediaIncomingCell class]]
+             || class == [QMChatIncomingLinkPreviewCell class]) {
         
         if (self.chatDialog.type != QBChatDialogTypePrivate) {
             
@@ -1186,10 +1195,10 @@ QMMediaControllerDelegate
         }
         
         layoutModel.avatarSize = CGSizeMake(kQMAvatarSize, kQMAvatarSize);
-        
     }
     
     CGSize size = CGSizeZero;
+    
     if ([self.detailedCells containsObject:item.ID]
         || class == [QMChatAttachmentIncomingCell class]
         || class == [QMChatAttachmentOutgoingCell class]
@@ -1295,7 +1304,7 @@ QMMediaControllerDelegate
         currentCell.clipsToBounds = YES;
     }
     
-     if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
+    if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
         
         QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:message];
         
@@ -1304,23 +1313,36 @@ QMMediaControllerDelegate
             QMChatBaseLinkPreviewCell *previewCell = (QMChatBaseLinkPreviewCell *)cell;
             QMImageView *previewImageView = [previewCell previewImageView];
             
-            NSURL *userImageUrl = [[NSURL URLWithString:[linkPreview.imageURL lowercaseString]] standardizedURL];
-            
-            if (userImageUrl.host == nil) {
+            if (linkPreview.previewImage != nil) {
+                NSURL *userImageUrl = [[NSURL URLWithString:[linkPreview.imageURL lowercaseString]] standardizedURL];
                 
-                NSString *urlString = [NSString stringWithFormat:@"%@%@",linkPreview.siteUrl,userImageUrl.absoluteString];
-                   userImageUrl = [NSURL URLWithString:urlString];
+                if (userImageUrl.host == nil) {
+                    
+                    NSString *urlString = [NSString stringWithFormat:@"%@%@",linkPreview.siteUrl,userImageUrl.absoluteString];
+                    userImageUrl = [NSURL URLWithString:urlString];
+                }
+                
+                if (userImageUrl.scheme == nil) {
+                    NSString *urlString = [NSString stringWithFormat:@"https://%@",userImageUrl.absoluteString];
+                    userImageUrl = [NSURL URLWithString:urlString];
+                }
+                [previewImageView setImageWithURL:userImageUrl];
             }
             
-            if (userImageUrl.scheme == nil) {
-                NSString *urlString = [NSString stringWithFormat:@"http://%@",userImageUrl.absoluteString];
-                userImageUrl = [NSURL URLWithString:urlString];
+            QMImageView *iconImageView = [previewCell iconImageView];
+            
+            NSURL *iconURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/favicon.ico", [NSURL URLWithString:linkPreview.siteUrl].host]];
+            
+            if (iconURL.scheme == nil) {
+                NSString *urlString = [NSString stringWithFormat:@"https://%@",iconURL.absoluteString];
+                iconURL = [NSURL URLWithString:urlString];
             }
             
-            [previewImageView setImageWithURL:userImageUrl];
+            [iconImageView setImageWithURL:iconURL];
+            
             previewCell.titleLabel.text = linkPreview.siteTitle;
-            NSURL *siteURl = [NSURL URLWithString:linkPreview.siteUrl];
-            previewCell.siteDescriptionLabel.text = siteURl.host;
+            NSURL *siteURL = [NSURL URLWithString:linkPreview.siteUrl];
+            previewCell.siteDescriptionLabel.text = siteURL.host;
             previewCell.linkPreviewView.backgroundColor = previewCell.containerView.bgColor;
         }
     }
@@ -1508,12 +1530,16 @@ QMMediaControllerDelegate
 
 - (void)_sendMessage:(QBChatMessage *)message {
     
-    [[[QMCore instance].chatService sendMessage:message toDialog:self.chatDialog saveToHistory:YES saveToStorage:YES] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        
-        [QMSoundManager playMessageSentSound];
-        
-        return nil;
-    }];
+    [[[QMCore instance].chatService sendMessage:message
+                                       toDialog:self.chatDialog
+                                  saveToHistory:YES
+                                  saveToStorage:YES]
+     continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+         
+         [QMSoundManager playMessageSentSound];
+         
+         return nil;
+     }];
 }
 
 - (void)sendMessageWithAttachment:(QBChatAttachment *)attachment {
