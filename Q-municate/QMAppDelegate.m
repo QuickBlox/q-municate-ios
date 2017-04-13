@@ -87,10 +87,10 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     // Configuring app appearance
     UIColor *green = [UIColor colorWithRed:23.0f/255.0f green:208.0f/255.0f blue:75.f/255.0f alpha:1.0f];
     UIColor *gray = [UIColor colorWithRed:119.0f/255.0f green:133.0f/255.0f blue:148.f/255.0f alpha:1.0f];
+    UIColor *darkGray = [UIColor colorWithRed:74.0f/255.0f green:74.0f/255.0f blue:74.0f/255.0f alpha:1.0f];
     
-    
-    [[UINavigationBar appearance] setTintColor:green];
-    [[UISearchBar appearance] setTintColor:green];
+    [[UINavigationBar appearance] setTintColor:darkGray];
+    [[UISearchBar appearance] setTintColor:darkGray];
     [[UITabBar appearance] setTintColor:green];
     
     // Configuring searchbar appearance
