@@ -201,19 +201,7 @@ NYTPhotosViewControllerDelegate
 - (void)updateLastSeen {
     
     // Last seen
-    BOOL isOnline = [[QMCore instance].contactManager isUserOnlineWithID:self.user.ID];
-    if (isOnline) {
-        
-        self.lastSeenLabel.text = NSLocalizedString(@"QM_STR_ONLINE", nil);
-    }
-    else if (self.user.lastRequestAt) {
-        
-        self.lastSeenLabel.text = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"QM_STR_LAST_SEEN", nil), [QMDateUtils formattedLastSeenString:self.user.lastRequestAt withTimePrefix:NSLocalizedString(@"QM_STR_TIME_PREFIX", nil)]];
-    }
-    else {
-        
-        self.lastSeenLabel.text = NSLocalizedString(@"QM_STR_OFFLINE", nil);
-    }
+    self.lastSeenLabel.text =  [[QMCore instance].contactManager onlineStatusForUser:self.user];
 }
 
 - (void)updateStatus {
