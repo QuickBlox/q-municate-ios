@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FCI-lM-7qj">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FCI-lM-7qj">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -72,7 +72,7 @@ out here.</string>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Chats" id="l23-on-5eH">
-                        <barButtonItem key="rightBarButtonItem" image="ic_new" id="ekF-vr-TqV">
+                        <barButtonItem key="rightBarButtonItem" image="qm-ic-add" id="ekF-vr-TqV">
                             <connections>
                                 <segue destination="grf-7O-2S3" kind="showDetail" id="mN8-xr-e79"/>
                             </connections>
@@ -418,13 +418,13 @@ out here.</string>
         </scene>
     </scenes>
     <resources>
-        <image name="ic_new" width="23" height="23"/>
         <image name="m_empty_dialogs" width="180" height="265"/>
+        <image name="qm-ic-add" width="32" height="32"/>
         <image name="qm-tb-chats" width="22" height="22"/>
         <image name="qm-tb-contacts" width="21" height="21"/>
         <image name="qm-tb-settings" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="LJb-6W-9Cm"/>
+        <segue reference="SCD-ix-MHd"/>
     </inferredMetricsTieBreakers>
 </document>

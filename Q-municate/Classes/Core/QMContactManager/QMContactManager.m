@@ -199,7 +199,9 @@
 
 - (NSString *)onlineStatusForUser:(QBUUser *)user {
     
-    QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
+    QBContactListItem *contactListItem =
+    [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
+    
     NSString *status = nil;
     
     if (user.ID == self.serviceManager.currentProfile.userData.ID || contactListItem.isOnline) {

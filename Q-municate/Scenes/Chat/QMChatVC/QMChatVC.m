@@ -830,7 +830,8 @@ QMMediaControllerDelegate
             }
             else {
                 
-                QMLinkPreview *linkPreview =  [[QMCore instance].chatService linkPreviewForMessage:item];
+                QMLinkPreview *linkPreview =
+                [[QMCore instance].chatService linkPreviewForMessage:item];
                 
                 if (linkPreview != nil) {
                     return  [QMChatOutgoingLinkPreviewCell class];
@@ -1021,10 +1022,10 @@ QMMediaControllerDelegate
         
         QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:item];
         
-        if (linkPreview.previewImage != nil) {
+        if (linkPreview.imageURL != nil) {
             
             if (linkPreview.imageWidth > 0) {
-                linkPreviewHeight = linkPreview.imageHeight /(linkPreview.imageWidth / 190.0);
+                linkPreviewHeight = linkPreview.imageHeight /(linkPreview.imageWidth / 190);
             }
             else {
                 linkPreviewHeight = kQMAttachmentCellSize;
@@ -1083,7 +1084,8 @@ QMMediaControllerDelegate
     
     CGSize size = CGSizeMake(270.0, 142.0); //default video size for cell
     
-    if (!CGSizeEqualToSize(CGSizeMake(attachment.width, attachment.height), CGSizeZero)) {
+    if (!CGSizeEqualToSize(CGSizeMake(attachment.width, attachment.height),
+                           CGSizeZero)) {
         
         BOOL isVerticalVideo = attachment.width < attachment.height;
         
@@ -1115,7 +1117,10 @@ QMMediaControllerDelegate
                       withSender:sender];
 }
 
-- (void)collectionView:(UICollectionView *)__unused collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)__unused sender {
+- (void)collectionView:(UICollectionView *)__unused collectionView
+         performAction:(SEL)action
+    forItemAtIndexPath:(NSIndexPath *)indexPath
+            withSender:(id)__unused sender {
     
     if (action == @selector(copy:)) {
         
@@ -1131,14 +1136,18 @@ QMMediaControllerDelegate
     }
 }
 
-- (BOOL)placeHolderTextView:(QMPlaceHolderTextView *)__unused textView shouldPasteWithSender:(id)__unused sender {
+- (BOOL)placeHolderTextView:(QMPlaceHolderTextView *)__unused textView
+      shouldPasteWithSender:(id)__unused sender {
     
     if ([UIPasteboard generalPasteboard].image) {
         
         NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
         textAttachment.image = [UIPasteboard generalPasteboard].image;
         textAttachment.bounds = CGRectMake(0, 0, 100, 100);
-        NSAttributedString *attrStringWithImage = [NSAttributedString attributedStringWithAttachment:textAttachment];
+        
+        NSAttributedString *attrStringWithImage =
+        [NSAttributedString attributedStringWithAttachment:textAttachment];
+        
         [self.inputToolbar.contentView.textView setAttributedText:attrStringWithImage];
         [self textViewDidChange:self.inputToolbar.contentView.textView];
         
@@ -1211,9 +1220,13 @@ QMMediaControllerDelegate
         || class == [QMChatIncomingLinkPreviewCell class]
         || class == [QMChatOutgoingLinkPreviewCell class]) {
         
-        size = [TTTAttributedLabel sizeThatFitsAttributedString:[self bottomLabelAttributedStringForItem:item]
-                                                withConstraints:CGSizeMake(CGRectGetWidth(self.collectionView.frame) - kQMWidthPadding, CGFLOAT_MAX)
-                                         limitedToNumberOfLines:0];
+        CGSize constraintsSize =
+        CGSizeMake(CGRectGetWidth(self.collectionView.frame) - kQMWidthPadding, CGFLOAT_MAX);
+        
+        size =
+        [TTTAttributedLabel sizeThatFitsAttributedString:[self bottomLabelAttributedStringForItem:item]
+                                         withConstraints:constraintsSize
+                                  limitedToNumberOfLines:0];
     }
     
     layoutModel.bottomLabelHeight = (CGFloat)ceil(size.height);
@@ -1313,7 +1326,7 @@ QMMediaControllerDelegate
             QMChatBaseLinkPreviewCell *previewCell = (QMChatBaseLinkPreviewCell *)cell;
             QMImageView *previewImageView = [previewCell previewImageView];
             
-            if (linkPreview.previewImage != nil) {
+            if (linkPreview.imageURL != nil) {
                 NSURL *userImageUrl = [[NSURL URLWithString:[linkPreview.imageURL lowercaseString]] standardizedURL];
                 
                 if (userImageUrl.host == nil) {
@@ -1715,6 +1728,7 @@ QMMediaControllerDelegate
 }
 
 - (void)setOpponentOnlineStatus:(BOOL)isOnline {
+    
     NSAssert(self.chatDialog.type == QBChatDialogTypePrivate, nil);
     
     NSString *status = nil;
@@ -1726,13 +1740,9 @@ QMMediaControllerDelegate
     else {
         
         QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:[self.chatDialog opponentID]];
-        if (opponentUser && opponentUser.lastRequestAt) {
-            
-            status = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"QM_STR_LAST_SEEN", nil), [QMDateUtils formattedLastSeenString:opponentUser.lastRequestAt withTimePrefix:NSLocalizedString(@"QM_STR_TIME_PREFIX", nil)]];
-        }
-        else {
-            
-            status = NSLocalizedString(@"QM_STR_OFFLINE", nil);
+        
+        if (opponentUser) {
+            status = [[QMCore instance].contactManager onlineStatusForUser:opponentUser];
         }
     }
     
@@ -1979,21 +1989,26 @@ QMMediaControllerDelegate
         
         QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:currentMessage];
         NSURL *linkURL = [NSURL URLWithString:linkPreview.siteUrl];
-        if ([SFSafariViewController class] != nil
-            // SFSafariViewController supporting only http and https schemes
-            && ([linkURL.scheme.lowercaseString isEqualToString:@"http"]
-                || [linkURL.scheme.lowercaseString isEqualToString:@"https"])) {
-                
-                SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:linkURL entersReaderIfAvailable:false];
-                [self presentViewController:controller animated:true completion:nil];
-            }
-        else {
+        
+        if ([[UIApplication sharedApplication] canOpenURL:linkURL]) {
             
-            [[UIApplication sharedApplication] openURL:linkURL];
+            if ([SFSafariViewController class] != nil
+                // SFSafariViewController supporting only http and https schemes
+                && ([linkURL.scheme.lowercaseString isEqualToString:@"http"]
+                    || [linkURL.scheme.lowercaseString isEqualToString:@"https"])) {
+                    
+                    SFSafariViewController *controller = [[SFSafariViewController alloc] initWithURL:linkURL entersReaderIfAvailable:false];
+                    [self presentViewController:controller animated:true completion:nil];
+                }
+            else {
+                
+                [[UIApplication sharedApplication] openURL:linkURL];
+            }
         }
         
     }
-    else if ([cell isKindOfClass:[QMChatOutgoingCell class]] || [cell isKindOfClass:[QMChatIncomingCell class]]) {
+    else if ([cell isKindOfClass:[QMChatOutgoingCell class]]
+             || [cell isKindOfClass:[QMChatIncomingCell class]]) {
         
         if ([self.detailedCells containsObject:currentMessage.ID]) {
             

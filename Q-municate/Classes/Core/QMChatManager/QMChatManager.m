@@ -104,6 +104,7 @@
     NSAssert(chatDialog.type == QBChatDialogTypeGroup, @"Chat dialog must be group type!");
     
     @weakify(self);
+    
     return [[self.serviceManager.chatService sendNotificationMessageAboutLeavingDialog:chatDialog withNotificationText:kQMDialogsUpdateNotificationMessage] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         
         @strongify(self);
