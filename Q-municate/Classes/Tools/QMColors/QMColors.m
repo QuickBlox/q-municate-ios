@@ -103,6 +103,51 @@ UIColor *QMChatCellHighlightedColor() {
     return color;
 }
 
+UIColor *QMChatCellOutgoingHighlightedColor() {
+    
+    static UIColor *color = nil;
+    
+    static dispatch_once_t onceToken;
+    
+    dispatch_once(&onceToken, ^{
+        
+        float h, s, b, a;
+        UIColor *outgoingCellColor = QMChatOutgoingCellColor();
+        
+        if ([outgoingCellColor getHue:&h saturation:&s brightness:&b alpha:&a]) {
+            color = [UIColor colorWithHue:h
+                               saturation:s
+                               brightness:b * (float)0.75
+                                    alpha:a];
+        }
+    });
+    
+    return color;
+}
+
+
+UIColor *QMChatCellIncomingHighlightedColor() {
+    
+    static UIColor *color = nil;
+    
+    static dispatch_once_t onceToken;
+    
+    dispatch_once(&onceToken, ^{
+        
+        float h, s, b, a;
+        UIColor *incomingCellColor = QMChatIncomingCellColor();
+        
+        if ([incomingCellColor getHue:&h saturation:&s brightness:&b alpha:&a]) {
+            color = [UIColor colorWithHue:h
+                               saturation:s
+                               brightness:b * (float)0.75
+                                    alpha:a];
+        }
+    });
+    
+    return color;
+}
+
 UIColor *QMChatIncomingCellColor() {
     
     static UIColor *color = nil;

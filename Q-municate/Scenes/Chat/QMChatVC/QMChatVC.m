@@ -907,6 +907,7 @@ QMMediaControllerDelegate
                                   NSParagraphStyleAttributeName:paragraphStyle };
     
     NSAttributedString *attributedString = nil;
+    
     if (iconImage != nil) {
         
         NSString *messageText = message.length > 0 ? [NSString stringWithFormat:@"%@%@", kQMTextAttachmentSpacing, message] : kQMTextAttachmentSpacing;
@@ -1025,7 +1026,8 @@ QMMediaControllerDelegate
         if (linkPreview.imageURL != nil) {
             
             if (linkPreview.imageWidth > 0) {
-                linkPreviewHeight = linkPreview.imageHeight /(linkPreview.imageWidth / 190);
+                CGFloat koef = linkPreview.imageWidth / (float)190.0;
+                linkPreviewHeight = linkPreview.imageHeight / koef;
             }
             else {
                 linkPreviewHeight = kQMAttachmentCellSize;
@@ -1248,9 +1250,11 @@ QMMediaControllerDelegate
     if ([cell isKindOfClass:[QMChatOutgoingCell class]]
         || [cell isKindOfClass:[QMChatAttachmentOutgoingCell class]]
         || [cell isKindOfClass:[QMChatLocationOutgoingCell class]]
-        || [cell isKindOfClass:[QMMediaOutgoingCell class]]) {
+        || [cell isKindOfClass:[QMMediaOutgoingCell class]]
+        || [cell isKindOfClass:[QMChatOutgoingLinkPreviewCell class]]) {
         
         currentCell.containerView.bgColor = QMChatOutgoingCellColor();
+        currentCell.containerView.highlightColor = QMChatCellOutgoingHighlightedColor();
         
         QMMessageStatus status = [self.deferredQueueManager statusForMessage:message];
         switch (status) {
@@ -1277,6 +1281,7 @@ QMMediaControllerDelegate
              || [cell isKindOfClass:[QMMediaIncomingCell class]]
              || [cell isKindOfClass:[QMChatIncomingLinkPreviewCell class]]) {
         
+        currentCell.containerView.highlightColor = QMChatCellIncomingHighlightedColor();
         currentCell.containerView.bgColor = QMChatIncomingCellColor();
         currentCell.textView.linkAttributes = @{NSForegroundColorAttributeName : QMChatIncomingLinkColor(),
                                                 NSUnderlineStyleAttributeName : @(YES)};
@@ -1356,7 +1361,6 @@ QMMediaControllerDelegate
             previewCell.titleLabel.text = linkPreview.siteTitle;
             NSURL *siteURL = [NSURL URLWithString:linkPreview.siteUrl];
             previewCell.siteDescriptionLabel.text = siteURL.host;
-            previewCell.linkPreviewView.backgroundColor = previewCell.containerView.bgColor;
         }
     }
     
@@ -2179,4 +2183,8 @@ QMMediaControllerDelegate
     }];
 }
 
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView {
+    
+    return NO;
+}
 @end

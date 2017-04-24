@@ -48,9 +48,7 @@
 
 - (void)cancelOperationsForMessage:(QBChatMessage *)message {
     
-    for (QBChatAttachment *att in message.attachments) {
-        
-    }
+
 }
 - (void)dealloc {
     
