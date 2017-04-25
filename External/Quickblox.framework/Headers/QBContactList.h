@@ -6,9 +6,11 @@
 //  Copyright (c) 2016 QuickBlox. All rights reserved.
 //
 
-#import "ChatEnums.h"
+#import "QBChatTypes.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+typedef void(^QBUserLastActivityCompletionBlock)(NSUInteger seconds, NSError * _Nullable error);
 
 @class QBContactListItem;
 
@@ -44,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param completion completion block with last activity in seconds and error
  */
 - (void)lastActivityForContactListItem:(QBContactListItem *)item
-                           withTimeout:(NSTimeInterval)timeOut
+                           withTimeout:(NSTimeInterval)timeout
                             completion:(QBUserLastActivityCompletionBlock)completion;
 
 @end

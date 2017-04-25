@@ -113,13 +113,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (instancetype)markableMessage;
 
-//MARK: DEPRECATED
-
-/**
- 'Read' status of a message.
- */
-@property (nonatomic, getter = isRead) BOOL read DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.8.0.1 Use 'readIDs' instead.");
-
 @end
 
 NS_ASSUME_NONNULL_END

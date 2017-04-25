@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
-#import "ChatEnums.h"
+#import "QBChatTypes.h"
 
 @protocol QBChatDelegate;
 
@@ -207,8 +207,10 @@ NS_ASSUME_NONNULL_BEGIN
  *  Set an active privacy list. QBChatDelegate's method 'didSetActivePrivacyListWithName:' will be called if success or 'didNotSetActivePrivacyListWithName:error:' if there is an error
  *
  *  @param privacyListName name of privacy list
+ *  @warning Deprecated in 2.9.3.
  */
-- (void)setActivePrivacyListWithName:(nullable NSString *)privacyListName;
+- (void)setActivePrivacyListWithName:(nullable NSString *)privacyListName
+DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.9.3. Use setDefaultPrivacyListWithName:");
 
 /**
  *  Set a default privacy list. QBChatDelegate's method 'didSetDefaultPrivacyListWithName:' will be called if success or 'didNotSetDefaultPrivacyListWithName:error:' if there is an error
