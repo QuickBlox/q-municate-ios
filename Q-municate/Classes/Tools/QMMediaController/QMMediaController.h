@@ -13,6 +13,8 @@
 
 @protocol QMMediaControllerDelegate;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface QMMediaController : NSObject <QMChatAttachmentServiceDelegate>
 
 @property (copy, nonatomic) void(^onError)(QBChatMessage *message, NSError *error);
@@ -32,10 +34,9 @@
 
 @required
 
-- (id <QMMediaViewDelegate>)viewForMessage:(QBChatMessage *)message;
+- (nullable id<QMMediaViewDelegate>)viewForMessage:(QBChatMessage *)message;
 - (void)didUpdateMessage:(QBChatMessage *)message;
 
-@optional
-
-
 @end
+
+NS_ASSUME_NONNULL_END
