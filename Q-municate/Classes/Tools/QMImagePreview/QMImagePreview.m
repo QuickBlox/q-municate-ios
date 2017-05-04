@@ -35,10 +35,17 @@
     [[QMImageLoader instance] downloadImageWithURL:url
                                            options:SDWebImageHighPriority
                                           progress:nil
-                                         completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-                                             photo.image = image;
-                                             [photosViewController updateImageForPhoto:photo];
-                                         }];
+                                         completed:^(UIImage *image,
+                                                     NSError *error,
+                                                     SDImageCacheType __unused cacheType,
+                                                     BOOL __unused finished,
+                                                     NSURL *__unused imageURL)
+     {
+         if (!error && image) {
+             photo.image = image;
+             [photosViewController updateImageForPhoto:photo];
+         }
+     }];
 }
 
 @end

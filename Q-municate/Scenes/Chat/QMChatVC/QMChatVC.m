@@ -354,8 +354,8 @@ QMMediaControllerDelegate
     //Cancel audio recording
     [self stopAudioRecording];
     [self.inputToolbar forceFinishRecording];
-    //Stop player
     
+    //Stop player
     [[QMAudioPlayer audioPlayer] pause];
 }
 
@@ -387,13 +387,16 @@ QMMediaControllerDelegate
         return nil;
     }
 }
+
 - (void)didUpdateMessage:(QBChatMessage *)message {
     
     if ([self.chatDialog.ID isEqualToString:message.dialogID]) {
+        
         [self.chatDataSource updateMessage:message];
     }
 }
-#pragma mark - Helpers & Utility
+
+
 //MARK: - Helpers & Utility
 
 - (void)updateOpponentOnlineStatus {
@@ -1020,13 +1023,22 @@ QMMediaControllerDelegate
     else if ([viewClass isSubclassOfClass:[QMChatBaseLinkPreviewCell class]]) {
         
         CGFloat linkPreviewHeight = 54.0;
+        CGFloat linkPreviewWidth = kQMAttachmentCellSize;
         
         QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:item];
         
         if (linkPreview.imageURL != nil) {
             
+            
             if (linkPreview.imageWidth > 0) {
-                CGFloat koef = linkPreview.imageWidth / (float)190.0;
+                
+                QMChatCellLayoutModel layoutModel =
+                [self collectionView:collectionView layoutModelAtIndexPath:indexPath];
+                
+                linkPreviewWidth =
+                kQMAttachmentCellSize - layoutModel.containerInsets.left - layoutModel.containerInsets.right;
+                
+                CGFloat koef = linkPreview.imageWidth / (float)linkPreviewWidth;
                 linkPreviewHeight = linkPreview.imageHeight / koef;
             }
             else {
@@ -1034,7 +1046,7 @@ QMMediaControllerDelegate
             }
         }
         
-        size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth),
+        size = CGSizeMake(MIN(linkPreviewWidth, maxWidth),
                           linkPreviewHeight);
     }
     else {
@@ -1236,7 +1248,9 @@ QMMediaControllerDelegate
     return layoutModel;
 }
 
-- (void)collectionView:(QMChatCollectionView *)collectionView configureCell:(UICollectionViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
+- (void)collectionView:(QMChatCollectionView *)collectionView
+         configureCell:(UICollectionViewCell *)cell
+          forIndexPath:(NSIndexPath *)indexPath {
     
     [super collectionView:collectionView configureCell:cell forIndexPath:indexPath];
     
@@ -1344,6 +1358,7 @@ QMMediaControllerDelegate
                     NSString *urlString = [NSString stringWithFormat:@"https://%@",userImageUrl.absoluteString];
                     userImageUrl = [NSURL URLWithString:urlString];
                 }
+                
                 [previewImageView setImageWithURL:userImageUrl];
             }
             
@@ -1420,9 +1435,9 @@ QMMediaControllerDelegate
     
     if (linkPreview == nil) {
         
-        [[QMCore instance].chatService getLinkPreviewForMessage:itemMessage withCompletion:^(BOOL sucess) {
+        [[QMCore instance].chatService getLinkPreviewForMessage:itemMessage withCompletion:^(BOOL success) {
             
-            if (sucess) {
+            if (success) {
                 [self.chatDataSource updateMessage:itemMessage];
             }
         }];
@@ -2140,7 +2155,10 @@ QMMediaControllerDelegate
             newImage = [newImage fixOrientation];
         }
         QBChatAttachment *attachment = [QBChatAttachment mediaAttachmentWithImage:newImage];
-        [self sendMessageWithAttachment:attachment];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self sendMessageWithAttachment:attachment];
+        });
     });
 }
 

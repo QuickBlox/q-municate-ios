@@ -13,7 +13,6 @@
 
 @end
 
-
 @interface QMAudioPlayer() <AVAudioPlayerDelegate>
 
 @property (nonatomic,strong) AVAudioPlayer *audioPlayer;
@@ -24,6 +23,7 @@
 @implementation QMAudioPlayer
 
 + (instancetype)audioPlayer {
+    
     static QMAudioPlayer *audioPlayer = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -36,14 +36,14 @@
     
     if (self = [super init]) {
         _status = [[QMAudioPlayerStatus alloc] init];
-        
     }
-    return self;
     
+    return self;
 }
 
-- (void)activateMedia:(QMMediaItem *)item {
-    [self activateMediaAtURL:item.localURL withID:item.mediaID];
+- (void)activateAttachment:(QBChatAttachment *)attachment {
+    
+    [self activateMediaAtURL:attachment.localURL withID:attachment.ID];
 }
 
 - (void)activateMediaAtURL:(NSURL *)url withID:(NSString *)itemID {
@@ -73,20 +73,22 @@
     
     
     NSError *error;
+    
     self.status.mediaID = itemID;
     self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url fileTypeHint:AVFileTypeMPEGLayer3 error:&error];
     self.audioPlayer.delegate = self;
     [self _qmPlayerPlay];
-    
 }
-
 
 
 //MARK: - private
+
 - (void)stop {
+    
     [self _qmPlayerStop];
 }
 - (void)pause {
+    
     [self _qmPlayerPause];
 }
 
@@ -145,7 +147,8 @@
 }
 
 
-- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player
+                       successfully:(BOOL)flag {
     
     if (player == self.audioPlayer && flag) {
         [self _qmPlayerStop];
@@ -153,7 +156,12 @@
 }
 
 - (void)startProgressTimer {
-    self.progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateProgressTimer) userInfo:nil repeats:YES];
+    self.progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
+                                                          target:self
+                                                        selector:@selector(updateProgressTimer)
+                                                        userInfo:nil
+                                                         repeats:YES];
+    
     [[NSRunLoop currentRunLoop] addTimer:self.progressTimer forMode:NSRunLoopCommonModes];
 }
 

@@ -38,12 +38,13 @@ typedef NS_ENUM(NSUInteger, QMPlayerStatus) {
 
 @property (nonatomic, copy) void (^onStatusChanged)(NSString *, BOOL);
 @property (nonatomic, strong, readonly) QMAudioPlayerStatus *status;
+
 @property (nonatomic, weak) id <QMAudioPlayerDelegate> playerDelegate;
 
 + (instancetype)audioPlayer;
 
+- (void)activateAttachment:(QBChatAttachment *)attachment;
 - (void)activateMediaAtURL:(NSURL *)url withID:(NSString *)itemID;
-- (void)activateMedia:(QMMediaItem *)item;
 
 - (void)pause;
 - (void)stop;

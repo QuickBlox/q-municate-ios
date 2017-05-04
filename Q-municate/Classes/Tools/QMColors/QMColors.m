@@ -111,7 +111,7 @@ UIColor *QMChatCellOutgoingHighlightedColor() {
     
     dispatch_once(&onceToken, ^{
         
-        float h, s, b, a;
+        CGFloat h, s, b, a;
         UIColor *outgoingCellColor = QMChatOutgoingCellColor();
         
         if ([outgoingCellColor getHue:&h saturation:&s brightness:&b alpha:&a]) {
@@ -134,7 +134,7 @@ UIColor *QMChatCellIncomingHighlightedColor() {
     
     dispatch_once(&onceToken, ^{
         
-        float h, s, b, a;
+        CGFloat h, s, b, a;
         UIColor *incomingCellColor = QMChatIncomingCellColor();
         
         if ([incomingCellColor getHue:&h saturation:&s brightness:&b alpha:&a]) {
