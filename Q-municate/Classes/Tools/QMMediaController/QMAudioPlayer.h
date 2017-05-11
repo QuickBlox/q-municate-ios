@@ -10,7 +10,7 @@
 #import <AVKit/AVKit.h>
 #import <AVFoundation/AVFoundation.h>
 
-@class QMChatMediaItem;
+
 @protocol QMAudioPlayerDelegate;
 
 typedef NS_ENUM(NSUInteger, QMPlayerStatus) {
@@ -21,13 +21,9 @@ typedef NS_ENUM(NSUInteger, QMPlayerStatus) {
 
 @interface QMAudioPlayerStatus : NSObject
 
-@property (nonatomic, assign) BOOL paused;
 @property (nonatomic, assign) CGFloat progress;
-
 @property (nonatomic, strong) NSString *mediaID;
-
 @property (nonatomic, assign) QMPlayerStatus playerStatus;
-
 @property (nonatomic, assign) NSTimeInterval currentTime;
 @property (nonatomic, assign) NSTimeInterval duration;
 
@@ -36,7 +32,6 @@ typedef NS_ENUM(NSUInteger, QMPlayerStatus) {
 
 @interface QMAudioPlayer : NSObject
 
-@property (nonatomic, copy) void (^onStatusChanged)(NSString *, BOOL);
 @property (nonatomic, strong, readonly) QMAudioPlayerStatus *status;
 
 @property (nonatomic, weak) id <QMAudioPlayerDelegate> playerDelegate;
@@ -53,6 +48,7 @@ typedef NS_ENUM(NSUInteger, QMPlayerStatus) {
 
 @protocol QMAudioPlayerDelegate <NSObject>
 
-- (void)player:(QMAudioPlayer *)player didChangePlayingStatus:(QMAudioPlayerStatus *)status;
+- (void)player:(QMAudioPlayer *)player
+didChangePlayingStatus:(QMAudioPlayerStatus *)status;
 
 @end

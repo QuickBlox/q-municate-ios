@@ -7,7 +7,6 @@
 //
 
 #import "QMAudioRecorder.h"
-#import "QMMediaItem.h"
 
 static const NSTimeInterval kQMMinimalDuration = 2; // in seconds
 

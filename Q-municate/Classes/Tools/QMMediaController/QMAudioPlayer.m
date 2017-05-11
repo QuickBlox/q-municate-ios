@@ -7,7 +7,6 @@
 //
 
 #import "QMAudioPlayer.h"
-#import "QMMediaItem.h"
 
 @implementation QMAudioPlayerStatus
 
@@ -70,7 +69,6 @@
             [self _qmPlayerStop];
         }
     }
-    
     
     NSError *error;
     

@@ -54,13 +54,21 @@ const CGRect QMMessageNotificationIconRect = (CGRect){(CGPoint){0,0}, (CGSize){3
     if (iconImageURL) {
         
         @weakify(self);
-        self.imageOperation = [[QMImageLoader instance] downloadImageWithURL:iconImageURL options:SDWebImageHighPriority progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-            @strongify(self);
-            if (image != nil) {
-                
-                self.messageNotification.iconImage = image;
-            }
-        }];
+        self.imageOperation =
+        [[QMImageLoader instance] downloadImageWithURL:iconImageURL
+                                               options:SDWebImageHighPriority
+                                              progress:nil
+                                             completed:^(UIImage *image,
+                                                         NSError *__unused error,
+                                                         SDImageCacheType __unused cacheType,
+                                                         BOOL __unused finished,
+                                                         NSURL * __unused imageURL) {
+                                                 @strongify(self);
+                                                 if (image != nil) {
+                                                     
+                                                     self.messageNotification.iconImage = image;
+                                                 }
+                                             }];
     }
     
     if (buttonHandler != nil) {

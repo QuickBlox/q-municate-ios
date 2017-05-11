@@ -8,20 +8,19 @@
 
 #import <Foundation/Foundation.h>
 
-@class QMMediaItem;
-
 typedef void(^QMAudioRecordCompletionBlock)(QBChatAttachment *attachment, NSError *error);
 
 typedef NS_ENUM(NSUInteger, QBRecordState) {
+    
+    QBRecordStateStopped,
     QBRecordStateRecording,
-    QBRecordStatePaused,
-    QBRecordStateStopped
+    QBRecordStatePaused
 };
 
 @interface QMAudioRecorder : NSObject
 
-@property (copy, nonatomic) dispatch_block_t onStart;
-@property (assign, nonatomic) QBRecordState recordState;
+@property (nonatomic ,copy) dispatch_block_t onStart;
+@property (nonatomic, assign) QBRecordState recordState;
 
 
 - (void)startRecording;
