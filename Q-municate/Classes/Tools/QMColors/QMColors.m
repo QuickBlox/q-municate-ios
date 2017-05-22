@@ -8,6 +8,32 @@
 
 #import "QMColors.h"
 
+//MARK: Application Colors
+
+UIColor *QMMainApplicationColor() {
+    static UIColor *color = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        color = [UIColor colorWithRed:23.0f/255.0f green:208.0f/255.0f blue:75.f/255.0f alpha:1.0f];
+    });
+    
+    return color;
+}
+
+UIColor *QMSecondaryApplicationColor() {
+    static UIColor *color = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        color = [UIColor colorWithRed:74.0f/255.0f green:74.0f/255.0f blue:74.0f/255.0f alpha:1.0f];
+    });
+    
+    return color;
+}
+
 //MARK: - Table view
 
 UIColor *QMTableViewBackgroundColor() {

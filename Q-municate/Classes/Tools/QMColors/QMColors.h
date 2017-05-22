@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+//Application colors
+UIColor *QMMainApplicationColor();
+UIColor *QMSecondaryApplicationColor();
+
 // Background colors
 UIColor *QMTableViewBackgroundColor();
 UIColor *QMVideoCallBackgroundColor();
@@ -28,3 +32,4 @@ UIColor *QMChatEmojiiKeyboardTintColor();
 UIColor *QMChatIncomingLinkColor();
 UIColor *QMChatCellIncomingHighlightedColor();
 UIColor *QMChatCellOutgoingHighlightedColor();
+
