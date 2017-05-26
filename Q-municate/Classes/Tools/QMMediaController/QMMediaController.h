@@ -10,6 +10,7 @@
 
 #import "QMMediaViewDelegate.h"
 #import "QMMediaPresenter.h"
+#import <QMChatViewController.h>
 
 @protocol QMMediaControllerDelegate;
 
@@ -21,12 +22,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithViewController:(UIViewController<QMMediaControllerDelegate> *)controller;
 
-
 - (void)configureView:(id<QMMediaViewDelegate>)view
           withMessage:(QBChatMessage *)message
          attachmentID:(NSString *)attachmentID;
 
 - (void)cancelOperationsForMessage:(QBChatMessage *)message;
+
+- (QMChatModel *)chatModelForMessageWithID:(NSString *)messageID;
 
 @end
 
