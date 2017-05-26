@@ -6,6 +6,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  *  The NSError domain of errors surfaced by the Twitter API.
  */
@@ -30,7 +32,12 @@ typedef NS_ENUM(NSUInteger, TWTRAPIErrorCode) {
      *  Not authorized to use this endpoint.
      */
     TWTRAPIErrorCodeNotAuthorizedForEndpoint = 37,
-
+    
+    /**
+     * Generic API error code for invalid parameter
+     */
+    TWTRAPIErrorCodeInvalidParameter = 44,
+    
     /**
      *  Corresponds with an HTTP 403 — the access token being used belongs to a suspended user and they can't complete the action you're trying to take
      */
@@ -112,10 +119,20 @@ typedef NS_ENUM(NSUInteger, TWTRAPIErrorCode) {
     TWTRAPIErrorCodeUserMustVerifyLogin = 231,
 
     /**
+     * Returned from server in digits sign-in flow if user provides wrong confirmation code
+     */
+    TWTRAPIErrorCodeChallengeCodeInvalid = 236,
+    
+    /**
      *  "Bad guest token." The token has probably expired. Try calling `-[Twitter logInGuestWithCompletion:]` again later.
      */
     TWTRAPIErrorCodeBadGuestToken = 239,
-
+    
+    /**
+     * Rate limiting case for /1/sdk/login
+     */
+    TWTRAPIErrorCodeLoginRateExceeded = 245,
+    
     /**
      *  Corresponds to a HTTP request to a retired URL.
      */
@@ -135,6 +152,17 @@ typedef NS_ENUM(NSUInteger, TWTRAPIErrorCode) {
      *  Corresponds with HTTP 403. The authenticated user account is not muting the account a call is attempting to unmute.
      */
     TWTRAPIErrorCodeCannotMuteSpecifiedUser = 272,
+    
+    /**
+     * Rate limiting case for /1.1/device/register.json endpint
+     */
+    TWTRAPIErrorCodeDeviceRegisterRateExceeded = 299,
+
+    
+    /**
+     *  Phone's carrier not suppported and we can not deliver the sms/make the voice call
+     */
+    TWTRAPIErrorCodeDeviceCarrierNotSupported = 286,
 
     /**
      *  You have already retweeted this tweet.
@@ -147,3 +175,4 @@ typedef NS_ENUM(NSUInteger, TWTRAPIErrorCode) {
     TWTRAPIErrorCodeTooManyRequests = 429
 };
 
+NS_ASSUME_NONNULL_END

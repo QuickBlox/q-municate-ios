@@ -1,1 +1,0 @@
-../../../../../QMChatViewController-ios/QMChatViewController/QMMediaChatModule/All/Interactor/QMInteractorDelegate.h

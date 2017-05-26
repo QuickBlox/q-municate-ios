@@ -1,1 +1,1 @@
-../../../../../q-municate-services-ios/QMChatService/QMChatService/QMMediaService/Services/QMMediaInfoService/QMAsynchronousOperation.h
+../../../QMServicesDevelopment/QMChatService/QMChatService/QMMediaService/Services/QMMediaInfoService/QMAsynchronousOperation.h

@@ -36,7 +36,7 @@
       "> 1.13"
     ],
     "SDWebImage": [
-      "~> 3.6"
+      "~> 3.8.2"
     ],
     "FFCircularProgressView": [
 
@@ -48,8 +48,8 @@
       "source_files": "QMChatViewController/QMChatLocationSnapshotter/*.{h,m}"
     },
     {
-      "name": "QMMediaChatModule",
-      "source_files": "QMChatViewController/QMMediaChatModule/**/*.{h,m}"
+      "name": "QMMediaPresenter",
+      "source_files": "QMChatViewController/QMMediaPresenter/**/*.{h,m}"
     },
     {
       "name": "Categories",
@@ -68,6 +68,15 @@
         ]
       },
       "source_files": "QMChatViewController/Utils/**/*.{h,m}"
+    },
+    {
+      "name": "ViewModels",
+      "dependencies": {
+        "QMCVDevelopment/Categories": [
+
+        ]
+      },
+      "source_files": "QMChatViewController/ViewModels/**/*.{h,m}"
     },
     {
       "name": "Sections",

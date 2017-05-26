@@ -47,10 +47,21 @@
 @property (nonatomic, strong) UIFont *bodyFont;
 
 /**
+ *  The font for showing secondary texts. One example is the phone number under display name in the contact
+ *  picker UI.
+ */
+@property (nonatomic, strong) UIFont *secondaryLabelFont;
+
+/**
  *  An image for the Login View header. 
  *  
  *  The image container has a max height of 100px and fit to maintain aspect ratio.
  */
 @property (nonatomic, strong) UIImage *logoImage;
+
+/**
+ *  Applying the appearance settings to be effective.
+ */
+- (void)applyUIAppearanceColors;
 
 @end

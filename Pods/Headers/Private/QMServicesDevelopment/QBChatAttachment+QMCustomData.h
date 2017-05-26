@@ -1,1 +1,1 @@
-../../../../../q-municate-services-ios/QMChatService/QMChatService/Categories/QBChatAttachment+QMCustomData.h
+../../../QMServicesDevelopment/QMChatService/QMChatService/Categories/QBChatAttachment+QMCustomData.h

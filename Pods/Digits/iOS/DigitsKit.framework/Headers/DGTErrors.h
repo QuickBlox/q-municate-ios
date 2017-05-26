@@ -40,44 +40,95 @@ typedef NS_ENUM(NSInteger, DGTErrorCode) {
      * User entered incorrect pin number too many times.
      */
     DGTErrorCodeUnableToAuthenticatePin = 4,
-    
+
     /**
      * User canceled find contacts flow.
      */
     DGTErrorCodeUserCanceledFindContacts = 5,
-    
+
     /**
      * User did not grant Digits access to their Address Book.
      */
     DGTErrorCodeUserDeniedAddressBookAccess = 6,
-    
+
     /**
      * Failure to read from the AddressBook. 
      * When ABAddressBookCreateWithOptions fails to return a proper AddressBook.
      */
     DGTErrorCodeFailedToReadAddressBook = 7,
-    
+
     /**
-     * Something went wrong while uploading contacts. One of the following might be happening:
-     *   - Rating limiting from uploading too many contacts or attempting too often. Try again in a few hours.
-     *   - The network is down. Try using another network or try again in a minute.
-     *   - An unexpected server error occurred. Try again in two minutes.
+     * Legacy catch-all error for contact upload failure.
      */
     DGTErrorCodeUnableToUploadContacts = 8,
-    
+
     /**
      * Something went wrong while deleting contacts.
      */
     DGTErrorCodeUnableToDeleteContacts = 9,
-    
+
     /**
      * Something went wrong while looking up contact matches.
      */
     DGTErrorCodeUnableToLookupContactMatches = 10,
-    
+
     /**
      * Something went wrong while attempting to save the user's email address
      */
-    DGTErrorCodeUnableToCreateEmailAddress = 11
+    DGTErrorCodeUnableToCreateEmailAddress = 11,
 
+    /**
+     * Contact upload failed due to rate limiting
+     */
+    DGTErrorCodeUnableToUploadContactsRateLimit = 12,
+
+    /**
+     * Contact upload failed due to internal server error 0
+     */
+    DGTErrorCodeUnableToUploadContactsInternalServer0 = 13,
+
+    /**
+     * Contact upload failed due to internal server error 131
+     */
+    DGTErrorCodeUnableToUploadContactsInternalServer131 = 14,
+
+    /**
+     * Contact upload failed due to the server being unavailable
+     */
+    DGTErrorCodeUnableToUploadContactsServerUnavailable = 15,
+
+    /**
+     * Contact upload failed due to request entity being too large
+     */
+    DGTErrorCodeUnableToUploadContactsEntityTooLarge = 16,
+
+    /**
+     * Contact upload failed due to bad authentication data
+     */
+    DGTErrorCodeUnableToUploadContactsBadAuthentication = 17,
+
+    /**
+     * Contact upload failed due to out of bounds timestamp
+     */
+    DGTErrorCodeUnableToUploadContactsOutOfBoundsTimestamp = 18,
+
+    /**
+     * Contact upload failed due to generic bad request
+     */
+    DGTErrorCodeUnableToUploadContactsGenericBadRequest = 19,
+
+    /**
+     *  Unable to retrieve valid invitation data
+     */
+    DGTErrorCodeUnableToRetrieveValidInvitationData = 20,
+
+    /**
+     *  Unable to detect the branch SDK
+     */
+    DGTErrorCodeUnableToDetectBranchSDK = 21,
+
+    /**
+     *  Invalid parameter sent.
+     */
+    DGTErrorCodeInvalidParameter = 22
 };

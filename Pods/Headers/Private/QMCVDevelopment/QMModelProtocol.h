@@ -1,0 +1,1 @@
+../../../QMCVDevelopment/QMChatViewController/ViewModels/QMModelProtocol.h

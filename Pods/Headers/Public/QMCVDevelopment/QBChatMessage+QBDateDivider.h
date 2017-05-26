@@ -1,1 +1,1 @@
-../../../../../QMChatViewController-ios/QMChatViewController/QMChatDataSource/QBChatMessage+QBDateDivider.h
+../../../QMCVDevelopment/QMChatViewController/QMChatDataSource/QBChatMessage+QBDateDivider.h

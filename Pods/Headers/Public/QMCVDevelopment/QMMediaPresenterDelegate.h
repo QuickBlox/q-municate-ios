@@ -1,1 +1,1 @@
-../../../../../QMChatViewController-ios/QMChatViewController/QMMediaChatModule/All/Presenter/QMMediaPresenterDelegate.h
+../../../QMCVDevelopment/QMChatViewController/QMMediaPresenter/QMMediaPresenterDelegate.h

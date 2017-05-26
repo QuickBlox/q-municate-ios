@@ -42,7 +42,7 @@
  *  @return A dictionary with the fully formed Request URL under `TWTROAuthEchoRequestURLStringKey` (`NSString`), and the `Authorization` header in `TWTROAuthEchoAuthorizationHeaderKey` (`NSString`), to be used to sign the request.
  *
  *  @see More information about OAuth Echo: https://dev.twitter.com/oauth/echo
- *  @see More information about Verify Credentials: https://dev.twitter.com/twitter-kit/ios/oauth-echo
+ *  @see More information about Verify Credentials: https://docs.fabric.io/apple/twitter/advanced-setup.html#use-oauth-echo
  */
 - (NSDictionary *)OAuthEchoHeadersToVerifyCredentialsWithParams:(NSDictionary *)params;
 
