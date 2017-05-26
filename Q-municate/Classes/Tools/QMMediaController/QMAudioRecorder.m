@@ -8,12 +8,13 @@
 
 #import "QMAudioRecorder.h"
 
-static const NSTimeInterval kQMMinimalDuration = 2; // in seconds
+static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
 
 @interface QMAudioRecorder() <AVAudioRecorderDelegate>
 
 @property (strong, nonatomic)  AVAudioRecorder *recorder;
 @property (copy, nonatomic) QMAudioRecordCompletionBlock completion;
+@property (nonatomic) BOOL pausedByInterruption;
 
 @end
 
@@ -22,11 +23,12 @@ static const NSTimeInterval kQMMinimalDuration = 2; // in seconds
 - (instancetype)init {
     
     if (self = [super init]) {
+        
         // Set the audio file
-        NSArray *pathComponents = [NSArray arrayWithObjects:
-                                   [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject],
-                                   @"tempmediaRecord.m4a",
-                                   nil];
+        NSArray *pathComponents =
+        @[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject],
+          [NSString stringWithFormat:@"%@.m4a",[[NSUUID new] UUIDString]]];
+        
         NSURL *outputFileURL = [NSURL fileURLWithPathComponents:pathComponents];
         
         NSError *setCategoryError = NULL;
@@ -36,6 +38,7 @@ static const NSTimeInterval kQMMinimalDuration = 2; // in seconds
         
         if (setCategoryError){
             NSLog(@"Error setting category! %@", [setCategoryError localizedDescription]);
+            
         }
         
         NSError *error = NULL;
@@ -53,6 +56,11 @@ static const NSTimeInterval kQMMinimalDuration = 2; // in seconds
         _recorder.delegate = self;
         _recorder.meteringEnabled = YES;
         [_recorder prepareToRecord];
+        
+//        [[NSNotificationCenter defaultCenter] addObserver:self
+//                                                 selector:@selector(audioSessionInterruptionOccured:)
+//                                                     name:AVAudioSessionInterruptionNotification
+//                                                   object:[AVAudioSession sharedInstance]];
     }
     
     return self;
@@ -65,6 +73,9 @@ static const NSTimeInterval kQMMinimalDuration = 2; // in seconds
 
 - (void)dealloc {
     
+    //    [[NSNotificationCenter defaultCenter] removeObserver:self
+    //                                                    name:AVAudioSessionInterruptionNotification
+    //                                                  object:nil];
     NSLog(@"QMAudioRecorderDealloc");
 }
 
@@ -95,7 +106,8 @@ static const NSTimeInterval kQMMinimalDuration = 2; // in seconds
 
 //MARK: -AVAudioRecorderDelegate
 
-- (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag {
+- (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder
+                           successfully:(BOOL)flag {
     
     if (flag) {
         
@@ -103,27 +115,21 @@ static const NSTimeInterval kQMMinimalDuration = 2; // in seconds
             
             AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:recorder.url options:nil];
             NSTimeInterval duration = CMTimeGetSeconds(audioAsset.duration);
-            NSData *audioData = [NSData dataWithContentsOfURL:recorder.url];
+            NSURL *fileURL = duration > kQMMinimalDuration ? recorder.url : nil;
             
-            QBChatAttachment *attachment = nil;
-            
-            if (duration > kQMMinimalDuration) {
-                attachment = [QBChatAttachment audioAttachmentWithFileURL:recorder.url];
-                attachment[@"duration"] = [NSString stringWithFormat:@"%.2f",duration];
-                attachment.mediaData = audioData;
-            }
+            __weak typeof(self) weakSelf = self;
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                
-                if (self.completion) {
-                    self.completion(attachment, nil);
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                if (strongSelf.completion) {
+                    strongSelf.completion(fileURL, duration, nil);
                 }
             });
         });
     }
     else {
         if (self.completion) {
-            self.completion(nil, nil);
+            self.completion(nil, 0, nil);
         }
     }
 }
@@ -132,9 +138,42 @@ static const NSTimeInterval kQMMinimalDuration = 2; // in seconds
                                    error:(NSError * __nullable)error {
     
     if (self.completion) {
-        self.completion(nil, error);
+        self.completion(nil, 0, error);
     }
 }
 
+//MARK: - AVAudioSessionInterruptionNotification
+
+- (void)audioSessionInterruptionOccured:(NSNotification *)notif {
+    
+    NSNumber *interruptionType = notif.userInfo[AVAudioSessionInterruptionTypeKey];
+    
+    if (!interruptionType) {
+        return;
+    }
+    
+    switch (interruptionType.unsignedIntegerValue) {
+            
+        case AVAudioSessionInterruptionTypeBegan: {
+            
+            if (self.recordState == QBRecordStateRecording) {
+                
+                self.pausedByInterruption = YES;
+            }
+            break;
+        }
+        case AVAudioSessionInterruptionTypeEnded: {
+            
+            if (self.recordState == QBRecordStatePaused && _pausedByInterruption) {
+                
+                [self.recorder record];
+                self.pausedByInterruption = NO;
+            }
+            break;
+        }
+        default:
+            break;
+    }
+}
 
 @end

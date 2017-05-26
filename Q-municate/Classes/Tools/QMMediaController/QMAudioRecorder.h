@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void(^QMAudioRecordCompletionBlock)(QBChatAttachment *attachment, NSError *error);
+typedef void(^QMAudioRecordCompletionBlock)(NSURL *fileURL, NSTimeInterval duration, NSError *error);
 
 typedef NS_ENUM(NSUInteger, QBRecordState) {
     

@@ -16,6 +16,7 @@
 
 @property (nonatomic,strong) AVAudioPlayer *audioPlayer;
 @property (strong, nonatomic) NSTimer *progressTimer;
+@property (nonatomic) BOOL pausedByInterruption;
 
 @end
 
@@ -31,32 +32,46 @@
     return audioPlayer;
 }
 
+//MARK: - NSObject
+
 - (instancetype)init {
     
     if (self = [super init]) {
+        
         _status = [[QMAudioPlayerStatus alloc] init];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(audioSessionInterruptionOccured:)
+                                                     name:AVAudioSessionInterruptionNotification
+                                                   object:[AVAudioSession sharedInstance]];
     }
     
     return self;
 }
 
+- (void)dealloc {
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVAudioSessionInterruptionNotification
+                                                  object:nil];
+}
 - (void)activateAttachment:(QBChatAttachment *)attachment {
     
-    [self activateMediaAtURL:attachment.localURL withID:attachment.ID];
+    [self activateMediaAtURL:attachment.localFileURL withID:attachment.ID];
 }
 
 - (void)activateMediaAtURL:(NSURL *)url withID:(NSString *)itemID {
     
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
     
-    QMPlayerStatus status = self.status.playerStatus;
+    QMAudioPlayerState state = self.status.playerState;
     
-    if (status != QMPlayerStatusStopped) {
+    if (state != QMAudioPlayerStateStopped) {
         
         if ([self.status.mediaID isEqualToString:itemID]) {
             
-            if (status == QMPlayerStatusPaused) {
+            if (state == QMAudioPlayerStatePaused) {
                 [self _qmPlayerPlay];
             }
             else {
@@ -96,21 +111,25 @@
     
     [self.audioPlayer stop];
     self.status.progress = 0.0;
-    self.status.playerStatus = QMPlayerStatusStopped;
+    self.status.playerState = QMAudioPlayerStateStopped;
     self.status.currentTime = 0;
     self.audioPlayer = nil;
-    [self.playerDelegate player:self didChangePlayingStatus:self.status];
+    [self.playerDelegate player:self didUpdateStatus:self.status];
 }
 
 - (void)_qmPlayerPause {
     
+    if (self.status.playerState != QMAudioPlayerStatePlaying) {
+        return;
+    }
+    
     [self stopProgressTimer];
     
     [self.audioPlayer pause];
-    self.status.playerStatus = QMPlayerStatusPaused;
+    self.status.playerState = QMAudioPlayerStatePaused;
     self.status.currentTime = self.audioPlayer.currentTime;
     self.status.duration = self.audioPlayer.duration;
-    [self.playerDelegate player:self didChangePlayingStatus:self.status];
+    [self.playerDelegate player:self didUpdateStatus:self.status];
 }
 
 - (void)_qmPlayerPlay {
@@ -119,14 +138,17 @@
     [self.audioPlayer prepareToPlay];
     [self.audioPlayer play];
     self.status.progress = 0.0;
-    self.status.playerStatus = QMPlayerStatusPlaying;
+    self.status.playerState = QMAudioPlayerStatePlaying;
     
     self.status.duration = self.audioPlayer.duration;
     
-    [self.playerDelegate player:self didChangePlayingStatus:self.status];
+    [self.playerDelegate player:self
+                didUpdateStatus:self.status];
 }
 
-//MARK: - Timer
+
+//MARK: - NSTimer
+
 - (void)stopProgressTimer {
     
     [_progressTimer invalidate];
@@ -140,7 +162,8 @@
         
         self.status.duration = self.audioPlayer.duration;
         self.status.currentTime = self.audioPlayer.currentTime;
-        [self.playerDelegate player:self didChangePlayingStatus:self.status];
+        [self.playerDelegate player:self
+                    didUpdateStatus:self.status];
     }
 }
 
@@ -154,6 +177,7 @@
 }
 
 - (void)startProgressTimer {
+    
     self.progressTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
                                                           target:self
                                                         selector:@selector(updateProgressTimer)
@@ -161,6 +185,42 @@
                                                          repeats:YES];
     
     [[NSRunLoop currentRunLoop] addTimer:self.progressTimer forMode:NSRunLoopCommonModes];
+}
+
+
+//MARK: - AVAudioSessionInterruptionNotification
+
+- (void)audioSessionInterruptionOccured:(NSNotification *)notif {
+    
+    NSNumber *interruptionType = notif.userInfo[AVAudioSessionInterruptionTypeKey];
+    
+    if (!interruptionType) {
+        return;
+    }
+    
+    switch (interruptionType.unsignedIntegerValue) {
+            
+        case AVAudioSessionInterruptionTypeBegan: {
+            
+            if (self.status.playerState == QMAudioPlayerStatePlaying) {
+                
+                [self _qmPlayerPause];
+                self.pausedByInterruption = YES;
+            }
+            break;
+        }
+        case AVAudioSessionInterruptionTypeEnded: {
+            
+            if (self.status.playerState == QMAudioPlayerStatePaused && _pausedByInterruption) {
+                
+                [self _qmPlayerPlay];
+                self.pausedByInterruption = NO;
+            }
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 @end

@@ -13,17 +13,17 @@
 
 @protocol QMAudioPlayerDelegate;
 
-typedef NS_ENUM(NSUInteger, QMPlayerStatus) {
-    QMPlayerStatusStopped = 0,
-    QMPlayerStatusPaused  = 1,
-    QMPlayerStatusPlaying = 2
+typedef NS_ENUM(NSUInteger, QMAudioPlayerState) {
+    QMAudioPlayerStateStopped = 0,
+    QMAudioPlayerStatePaused  = 1,
+    QMAudioPlayerStatePlaying = 2
 };
 
 @interface QMAudioPlayerStatus : NSObject
 
 @property (nonatomic, assign) CGFloat progress;
 @property (nonatomic, strong) NSString *mediaID;
-@property (nonatomic, assign) QMPlayerStatus playerStatus;
+@property (nonatomic, assign) QMAudioPlayerState playerState;
 @property (nonatomic, assign) NSTimeInterval currentTime;
 @property (nonatomic, assign) NSTimeInterval duration;
 
@@ -49,6 +49,6 @@ typedef NS_ENUM(NSUInteger, QMPlayerStatus) {
 @protocol QMAudioPlayerDelegate <NSObject>
 
 - (void)player:(QMAudioPlayer *)player
-didChangePlayingStatus:(QMAudioPlayerStatus *)status;
+didUpdateStatus:(QMAudioPlayerStatus *)status;
 
 @end
