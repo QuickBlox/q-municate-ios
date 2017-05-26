@@ -9,18 +9,25 @@
 #import "UIScreen+QMLock.h"
 #import <objc/runtime.h>
 
-static void *kAssociatedObjectKey = &kAssociatedObjectKey;
+static void *kQMLockedOrientationObjectKey = &kQMLockedOrientationObjectKey;
 
 @implementation UIScreen (QMLock)
 
 - (UIInterfaceOrientation)lockedInterfaceOrientation {
-    NSNumber *locationWrapper = objc_getAssociatedObject(self, kAssociatedObjectKey);
-    return [locationWrapper integerValue];
+    
+    NSNumber *lockedOrientationWrapper =
+    objc_getAssociatedObject(self, kQMLockedOrientationObjectKey);
+    
+    return [lockedOrientationWrapper integerValue];
 }
 
 - (void)setLockedInterfaceOrientation:(UIInterfaceOrientation)orientation {
-    NSNumber *locationWrapper = [NSNumber numberWithInteger:(UIInterfaceOrientation)orientation];
-    objc_setAssociatedObject(self, kAssociatedObjectKey, locationWrapper, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    NSNumber *lockedOrientationWrapper = @((UIInterfaceOrientation)orientation);
+    objc_setAssociatedObject(self,
+                             kQMLockedOrientationObjectKey,
+                             lockedOrientationWrapper,
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)lockCurrentOrientation {
@@ -33,7 +40,7 @@ static void *kAssociatedObjectKey = &kAssociatedObjectKey;
     self.lockedInterfaceOrientation = UIInterfaceOrientationUnknown;
     
     if (!UIDeviceOrientationIsValidInterfaceOrientation([[UIDevice currentDevice] orientation])) {
-       [UIViewController attemptRotationToDeviceOrientation];
+        [UIViewController attemptRotationToDeviceOrientation];
     }
 }
 

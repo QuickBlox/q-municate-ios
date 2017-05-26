@@ -11,7 +11,7 @@
 #import "QMCallViewDelegate.h"
 #import "QMCallViewController.h"
 
-@interface QMCallWindow()<QMCallViewDelegate>
+@interface QMCallWindow()
 @end
 @implementation QMCallWindow
 

@@ -124,10 +124,11 @@ QBRTCClientDelegate
         
         _hasActiveCall = hasActiveCall;
         
-        [UIDevice currentDevice].proximityMonitoringEnabled = hasActiveCall;
+        if (self.session.conferenceType == QBRTCConferenceTypeAudio) {
+            [UIDevice currentDevice].proximityMonitoringEnabled = hasActiveCall;
+        }
         
         if (!hasActiveCall) {
-            
             [self.serviceManager.chatManager disconnectFromChatIfNeeded];
         }
     }
