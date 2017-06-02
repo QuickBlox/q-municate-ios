@@ -17,7 +17,8 @@
 #import "NYTPhotosViewController.h"
 #import "QMDateUtils.h"
 #import "QMMediaPresenter+QBChatAttachment.h"
-
+#import "QMChatModel.h"
+#import "QMChatAttachmentModel.h"
 
 @interface QMMediaController() <QMAudioPlayerDelegate,
 QMPlayerService,
@@ -30,7 +31,7 @@ NYTPhotosViewControllerDelegate>
 @property (weak, nonatomic) UIViewController <QMMediaControllerDelegate> *viewController;
 @property (strong, nonatomic) QMMediaService *mediaService;
 @property (strong, nonatomic) AVPlayer *videoPlayer;
-@property (strong, nonatomic) NSMutableDictionary<NSString *, QMChatModel *> *chatModels;
+@property (strong, nonatomic) NSMutableDictionary<NSString *, id<QMChatModelProtocol>> *chatModels;
 @end
 
 @implementation QMMediaController
@@ -75,8 +76,8 @@ NYTPhotosViewControllerDelegate>
     if (presenter == nil) {
         
         presenter = [[QMMediaPresenter alloc] initWithView:view];
-        presenter.attachmentID = attachmentID;
         presenter.message = message;
+        presenter.modelID = attachmentID;
         presenter.mediaAssistant = self;
         presenter.playerService = self;
         presenter.eventHandler = self;
@@ -90,6 +91,7 @@ NYTPhotosViewControllerDelegate>
                              forKey:attachmentID];
     
     [view setPresenter:presenter];
+    
     [presenter requestForMedia];
 }
 
@@ -114,10 +116,10 @@ NYTPhotosViewControllerDelegate>
 }
 
 
-- (void)requestForMediaWithSender:(QMMediaPresenter *)sender {
+- (void)requestForMediaWithSender:(QMMediaPresenter *)presenter {
     
-    QBChatMessage *message = sender.message;
-    NSString *attachmentID = sender.attachmentID;
+    QBChatMessage *message = presenter.message;
+    NSString *attachmentID = presenter.modelID;
     
     QBChatAttachment *attachment;
     
@@ -135,12 +137,9 @@ NYTPhotosViewControllerDelegate>
     }
     
     if (attachment) {
-        QMChatModel *model = [self.chatModels objectForKey:attachmentID];
-        if (model) {
-            [sender setModel:model];
-        }
+
         
-        [self.mediaPresenters setObject:sender forKey:message.ID];
+        [self.mediaPresenters setObject:presenter forKey:message.ID];
         [self updateWithMedia:attachment
                       message:message
                  attachmentID:attachmentID];
@@ -234,10 +233,10 @@ NYTPhotosViewControllerDelegate>
     }
 }
 
-- (void)requestPlayingStatus:(id <QMMediaPresenterDelegate>)sender {
+- (void)requestPlayingStatus:(QMMediaPresenter *)sender {
     
     QBChatMessage *message = sender.message;
-    NSString *attachmentID = sender.attachmentID;
+    NSString *attachmentID = sender.modelID;
     
     QBChatAttachment *attachment;
     for (QBChatAttachment *att in message.attachments) {
@@ -252,6 +251,7 @@ NYTPhotosViewControllerDelegate>
     if (!isReady) {
         return;
     }
+    
     
     if (attachment.contentType == QMAttachmentContentTypeAudio) {
         
@@ -278,10 +278,10 @@ NYTPhotosViewControllerDelegate>
     }
 }
 
-- (void)activateMediaWithSender:(id<QMMediaPresenterDelegate>)sender {
+- (void)activateMediaWithSender:(QMMediaPresenter *)sender {
     
     QBChatMessage *message = sender.message;
-    NSString *attachmentID = sender.attachmentID;
+    NSString *attachmentID = sender.modelID;
     
     QBChatAttachment *attachment;
     for (QBChatAttachment *att in message.attachments) {
@@ -322,17 +322,17 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
                            duration:status.duration];
     
     if (status.playerState == QMAudioPlayerStateStopped) {
-        [presenter didUpdateDuration:lrint(status.duration)];
+        [presenter didUpdateDuration:status.duration];
     }
 }
 
 
 //MARK: QMEventHandler
 
-- (void)didTapContainer:(id<QMMediaPresenterDelegate>)sender {
+- (void)didTapContainer:(id<QMChatPresenterDelegate>)sender {
     
     QBChatMessage *message = sender.message;
-    NSString *attachmentID = sender.attachmentID;
+    NSString *attachmentID = sender.modelID;
     
     QBChatAttachment *attachment;
     for (QBChatAttachment *att in message.attachments) {
@@ -465,7 +465,11 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
             
             if (view) {
                 
+                QMChatModel *model =  [QMChatModel new];
+                model.message = message;
+             
                 presenter = [[QMMediaPresenter alloc] initWithView:view];
+                presenter.message = message;
                 [view setPresenter:presenter];
                 
                 [self.mediaPresenters setObject:presenter
