@@ -10,11 +10,15 @@
 
 static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
 
-@interface QMAudioRecorder() <AVAudioRecorderDelegate>
+@interface QMAudioRecorder() <AVAudioRecorderDelegate> {
+    //Private variables
+    NSString *_oldSessionCategory;
+}
 
 @property (strong, nonatomic)  AVAudioRecorder *recorder;
 @property (copy, nonatomic) QMAudioRecordCompletionBlock completion;
 @property (nonatomic) BOOL pausedByInterruption;
+@property (nonatomic, assign) BOOL isCancelled;
 
 @end
 
@@ -23,6 +27,8 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
 - (instancetype)init {
     
     if (self = [super init]) {
+        
+        _oldSessionCategory = [AVAudioSession sharedInstance].category;
         
         // Set the audio file
         NSArray *pathComponents =
@@ -33,10 +39,10 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
         
         NSError *setCategoryError = NULL;
         
-        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryRecord
-                                               error: &setCategoryError];
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord
+                                               error:&setCategoryError];
         
-        if (setCategoryError){
+        if (setCategoryError) {
             NSLog(@"Error setting category! %@", [setCategoryError localizedDescription]);
             
         }
@@ -51,16 +57,18 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
         [options setValue:@(AVAudioQualityHigh) forKey:AVEncoderAudioQualityKey]; //channels
         [options setValue:@(16) forKey:AVEncoderBitDepthHintKey]; //channels
         
+
+        
         // Initiate and prepare the recorder
         _recorder = [[AVAudioRecorder alloc] initWithURL:outputFileURL settings:options error:&error];
         _recorder.delegate = self;
         _recorder.meteringEnabled = YES;
         [_recorder prepareToRecord];
         
-//        [[NSNotificationCenter defaultCenter] addObserver:self
-//                                                 selector:@selector(audioSessionInterruptionOccured:)
-//                                                     name:AVAudioSessionInterruptionNotification
-//                                                   object:[AVAudioSession sharedInstance]];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(audioSessionInterruptionOccured:)
+                                                     name:AVAudioSessionInterruptionNotification
+                                                   object:nil];
     }
     
     return self;
@@ -73,10 +81,9 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
 
 - (void)dealloc {
     
-    //    [[NSNotificationCenter defaultCenter] removeObserver:self
-    //                                                    name:AVAudioSessionInterruptionNotification
-    //                                                  object:nil];
-    NSLog(@"QMAudioRecorderDealloc");
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:AVAudioSessionInterruptionNotification
+                                                      object:nil];
 }
 
 - (void)startRecording {
@@ -86,10 +93,7 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
 
 - (void)stopRecordingWithCompletion:(QMAudioRecordCompletionBlock)completion {
     
-    [self.recorder stop];
-    
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    [audioSession setActive:NO error:nil];
+    [_recorder stop];
     
     if (completion) {
         self.completion = [completion copy];
@@ -98,10 +102,10 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
 
 - (void)cancelRecording {
     
-    self.completion = nil;
-    self.recorder.delegate = nil;
-    [self.recorder stop];
-    [self.recorder deleteRecording];
+    self.isCancelled = YES;
+    
+    [_recorder stop];
+    [_recorder deleteRecording];
 }
 
 //MARK: -AVAudioRecorderDelegate
@@ -109,6 +113,11 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder
                            successfully:(BOOL)flag {
     
+    [[AVAudioSession sharedInstance] setCategory:_oldSessionCategory error:nil];
+    
+    if (self.isCancelled) {
+        return;
+    }
     if (flag) {
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
