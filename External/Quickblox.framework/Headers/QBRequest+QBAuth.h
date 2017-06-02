@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
+typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *tUser);
 
 @interface QBRequest (QBAuth)
 
