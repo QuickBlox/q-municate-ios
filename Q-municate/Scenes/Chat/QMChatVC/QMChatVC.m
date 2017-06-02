@@ -298,6 +298,7 @@ QMMediaControllerDelegate
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    
     [super viewWillAppear:animated];
     
     if (self.chatDialog == nil) {
@@ -331,7 +332,7 @@ QMMediaControllerDelegate
          
          [[QMAudioPlayer audioPlayer] pause];
          [self stopTyping];
-         [self stopAudioRecording];
+         [self destroyAudioRecorder];
          [self.inputToolbar forceFinishRecording];
          if (self.chatDialog.type == QBChatDialogTypePrivate) {
              
@@ -357,7 +358,7 @@ QMMediaControllerDelegate
     [self.chatDialog clearDialogOccupantsStatusBlock];
     
     //Cancel audio recording
-   // [self stopAudioRecording];
+    // [self stopAudioRecording];
     [self.inputToolbar forceFinishRecording];
     
     //Stop player
@@ -587,7 +588,7 @@ QMMediaControllerDelegate
 
 - (void)messagesInputToolbarAudioRecordingCancel:(QMInputToolbar *)toolbar {
     
-    [self stopAudioRecording];
+    [self destroyAudioRecorder];
     [toolbar audioRecordingFinished];
 }
 
@@ -606,17 +607,14 @@ QMMediaControllerDelegate
 }
 
 - (void)startAudioRecording {
-    
-    [self stopAudioRecording];
+    NSParameterAssert(!self.currentAudioRecorder);
     [[QMAudioPlayer audioPlayer] stop];
     
-    if (self.currentAudioRecorder == nil) {
-        
-        self.currentAudioRecorder = [[QMAudioRecorder alloc] init];;
-        [self.currentAudioRecorder startRecording];
-        
-        [[UIScreen mainScreen] lockCurrentOrientation];
-    }
+    
+    self.currentAudioRecorder = [[QMAudioRecorder alloc] init];;
+    [self.currentAudioRecorder startRecording];
+    
+    [[UIScreen mainScreen] lockCurrentOrientation];
 }
 
 - (void)finishAudioRecording {
@@ -625,8 +623,8 @@ QMMediaControllerDelegate
         [[UIScreen mainScreen] unlockCurrentOrientation];
         @weakify(self);
         [self.currentAudioRecorder stopRecordingWithCompletion:^(NSURL *fileURL, NSTimeInterval duration, NSError *error) {
-        
             @strongify(self);
+            
             if (fileURL && !error) {
                 QBChatAttachment *attachment = [QBChatAttachment audioAttachmentWithFileURL:fileURL];
                 attachment.duration = lround(duration);
@@ -635,21 +633,22 @@ QMMediaControllerDelegate
             else {
                 [self.inputToolbar shakeControls];
             }
+            [self destroyAudioRecorder];
         }];
     }
 }
 
-- (void)stopAudioRecording {
+- (void)destroyAudioRecorder {
     
     if (self.currentAudioRecorder != nil) {
         
         [[UIScreen mainScreen] unlockCurrentOrientation];
-        
-        [self.currentAudioRecorder cancelRecording];
         self.currentAudioRecorder = nil;
-        
-        
     }
+}
+
+- (NSUInteger)inputToolBarStartPos {
+    return 0;
 }
 
 - (void)didPressSendButton:(UIButton *)__unused button
@@ -726,7 +725,7 @@ QMMediaControllerDelegate
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                           
-                                                          [QMImagePicker chooseFromGaleryInViewController:self resultHandler:self];
+                                                          [QMImagePicker chooseFromGaleryInViewController:self maxDuration:15 resultHandler:self allowsEditing:YES];
                                                       }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LOCATION", nil)
@@ -1023,7 +1022,7 @@ QMMediaControllerDelegate
     }
     else if ([viewClass isSubclassOfClass:[QMChatBaseLinkPreviewCell class]]) {
         
-        QMChatCellLayoutModel layoutModel = [viewClass layoutModel];
+        QMChatCellLayoutModel layoutModel = [self collectionView:self.collectionView layoutModelAtIndexPath:indexPath];
         
         CGFloat linkPreviewHeight = 54.0;
         CGFloat linkPreviewWidth = kQMAttachmentCellSize;
@@ -1206,12 +1205,12 @@ QMMediaControllerDelegate
              || class == [QMChatIncomingCell class]
              || [class isSubclassOfClass: [QMMediaIncomingCell class]]
              || class == [QMChatIncomingLinkPreviewCell class]) {
+        
         BOOL isAudioCell =
         class == QMAudioOutgoingCell.class || class == QMAudioIncomingCell.class;
         
-        
         if (self.chatDialog.type != QBChatDialogTypePrivate && !isAudioCell) {
-        
+            
             layoutModel.topLabelHeight = 18;
         }
         
@@ -1935,7 +1934,8 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     }
     
     else if ([cell isKindOfClass:[QMBaseMediaCell class]]) {
-        
+       CGSize size =  [self.collectionView.collectionViewLayout containerViewSizeForItemAtIndexPath:indexPath];
+        NSLog(@"size = %@", NSStringFromCGSize(size));
         [[((QMBaseMediaCell*)cell) presenter] didTapContainer];
     }
     else if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
@@ -2130,7 +2130,7 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         
     } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
         
-        self.topContentAdditionalInset = 0;
+        //    self.topContentAdditionalInset = 0;
     }];
 }
 
