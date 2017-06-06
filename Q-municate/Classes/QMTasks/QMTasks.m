@@ -86,7 +86,7 @@ static const NSUInteger kQMDialogsPageLimit = 10;
     else {
         
         switch ([QMCore instance].currentProfile.accountType) {
-
+                
                 // Email login
             case QMAccountTypeEmail: {
                 

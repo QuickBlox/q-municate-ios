@@ -1368,14 +1368,7 @@ NYTPhotosViewControllerDelegate
     else {
         
         QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:[self.chatDialog opponentID]];
-        if (opponentUser && opponentUser.lastRequestAt) {
-            
-            status = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"QM_STR_LAST_SEEN", nil), [QMDateUtils formattedLastSeenString:opponentUser.lastRequestAt withTimePrefix:NSLocalizedString(@"QM_STR_TIME_PREFIX", nil)]];
-        }
-        else {
-            
-            status = NSLocalizedString(@"QM_STR_OFFLINE", nil);
-        }
+        status = [[QMCore instance].contactManager onlineStatusForUser:opponentUser];
     }
     
     [self.onlineTitleView setStatus:status];

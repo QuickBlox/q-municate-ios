@@ -85,8 +85,7 @@ static const NSUInteger kQMNumberOfSections = 1;
         
         [cell setAddButtonVisible:isRequestRequired];
         
-        NSString *onlineStatus = [[QMCore instance].contactManager onlineStatusForUser:user];
-        [cell setBody:onlineStatus];
+        [cell setBody:[[QMCore instance].contactManager onlineStatusForUser:user]];
         
         cell.didAddUserBlock = self.didAddUserBlock;
         
