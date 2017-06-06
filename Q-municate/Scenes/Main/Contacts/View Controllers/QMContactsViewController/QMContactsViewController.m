@@ -366,7 +366,16 @@ QMUsersServiceDelegate
 - (void)usersService:(QMUsersService *)__unused usersService didUpdateUsers:(NSArray<QBUUser *> *)__unused users {
     
     [self updateItemsFromContactList];
-    [self.tableView reloadData];
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:users.count];
+    for (QBUUser *user in users) {
+        NSIndexPath *indexPath = [self.dataSource indexPathForObject:user];
+        if (indexPath != nil) {
+            [indexPaths addObject:indexPath];
+        }
+    }
+    if (indexPaths.count > 0) {
+        [self.tableView reloadRowsAtIndexPaths:[indexPaths copy] withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
 //MARK: - QMSearchProtocol
