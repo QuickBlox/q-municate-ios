@@ -363,7 +363,7 @@ QMUsersServiceDelegate
     [self.tableView reloadData];
 }
 
-- (void)usersService:(QMUsersService *)__unused usersService didUpdateUsers:(NSArray<QBUUser *> *)__unused users {
+- (void)usersService:(QMUsersService *)__unused usersService didUpdateUsers:(NSArray<QBUUser *> *)users {
     
     [self updateItemsFromContactList];
     NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:users.count];
