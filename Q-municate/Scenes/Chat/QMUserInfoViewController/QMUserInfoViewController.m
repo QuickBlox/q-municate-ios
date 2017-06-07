@@ -200,8 +200,7 @@ NYTPhotosViewControllerDelegate
 
 - (void)updateLastSeen {
     
-    // Last seen
-    self.lastSeenLabel.text =  [[QMCore instance].contactManager onlineStatusForUser:self.user];
+    self.lastSeenLabel.text = [[QMCore instance].contactManager onlineStatusForUser:self.user];
 }
 
 - (void)updateStatus {

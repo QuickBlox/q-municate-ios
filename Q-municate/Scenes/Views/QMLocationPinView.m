@@ -35,7 +35,7 @@ static const CGSize kQMLocationPinSize = { 14.0f, 36.0f };
     
     if (self != nil) {
         
-        self.userInteractionEnabled = NO;;
+        self.userInteractionEnabled = NO;
         
         _shadowView = [[UIImageView alloc] initWithFrame:CGRectMake(kQMLocationPinShadowPinnedOrigin.x,
                                                                     kQMLocationPinShadowPinnedOrigin.y,

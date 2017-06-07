@@ -176,24 +176,20 @@ QMUsersServiceDelegate
             }
             else {
                 
-                switch ([QMCore instance].chatService.chatConnectionState) {
+                if (QBChat.instance.isConnected) {
+                    
+                    if ([[QMCore instance] isInternetConnected]) {
                         
-                    case QMChatConnectionStateDisconnected:
-                    case QMChatConnectionStateConnected:
+                        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:NO inViewController:self];
+                    }
+                    else {
                         
-                        if ([[QMCore instance] isInternetConnected]) {
-                            
-                            [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:NO inViewController:self];
-                        }
-                        else {
-                            
-                            [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO inViewController:self];
-                        }
-                        break;
-                        
-                    case QMChatConnectionStateConnecting:
-                        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CONNECTION_IN_PROGRESS", nil) actionSuccess:NO inViewController:self];
-                        break;
+                        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO inViewController:self];
+                    }
+                }
+                else if (QBChat.instance.isConnecting) {
+                    
+                    [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CONNECTION_IN_PROGRESS", nil) actionSuccess:NO inViewController:self];
                 }
             }
             
@@ -363,10 +359,19 @@ QMUsersServiceDelegate
     [self.tableView reloadData];
 }
 
-- (void)usersService:(QMUsersService *)__unused usersService didUpdateUsers:(NSArray<QBUUser *> *)__unused users {
+- (void)usersService:(QMUsersService *)__unused usersService didUpdateUsers:(NSArray<QBUUser *> *)users {
     
     [self updateItemsFromContactList];
-    [self.tableView reloadData];
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:users.count];
+    for (QBUUser *user in users) {
+        NSIndexPath *indexPath = [self.dataSource indexPathForObject:user];
+        if (indexPath != nil) {
+            [indexPaths addObject:indexPath];
+        }
+    }
+    if (indexPaths.count > 0) {
+        [self.tableView reloadRowsAtIndexPaths:[indexPaths copy] withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
 //MARK: - QMSearchProtocol

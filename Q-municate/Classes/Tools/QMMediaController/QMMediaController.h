@@ -13,9 +13,9 @@
 #import <QMChatViewController.h>
 
 @protocol QMMediaControllerDelegate;
+@class QMChatModel;
 
 NS_ASSUME_NONNULL_BEGIN
-
 @interface QMMediaController : NSObject <QMChatAttachmentServiceDelegate>
 
 @property (copy, nonatomic) void(^onError)(QBChatMessage *message, NSError *error);

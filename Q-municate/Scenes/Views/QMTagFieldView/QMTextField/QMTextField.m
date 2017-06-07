@@ -72,13 +72,8 @@
 //MARK: - UIKeyInput
 
 - (void)deleteBackward {
-    
+    [super deleteBackward];
     [self.delegate textFieldWillDeleteBackwards:self];
-    
-    if (iosMajorVersion() > 8) {
-        
-        [super deleteBackward];
-    }
 }
 
 - (BOOL)keyboardInputShouldDelete:(UITextField *)textField {
