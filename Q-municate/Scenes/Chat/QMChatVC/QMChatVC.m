@@ -471,7 +471,7 @@ QMMediaControllerDelegate
     
     if (![QBChat instance].isConnected) {
         
-        if ([QMCore instance].chatService.chatConnectionState == QMChatConnectionStateConnecting) {
+        if (QBChat.instance.isConnecting) {
             
             [self.navigationController shake];
         }
