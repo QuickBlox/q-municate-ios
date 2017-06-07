@@ -290,7 +290,7 @@ NYTPhotosViewControllerDelegate
                                                                          CGRectGetWidth(tableView.frame),
                                                                          kQMStatusSectionHeaderHeight)];
         headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        headerView.title = [NSLocalizedString(@"QM_STR_STATUS", nil) uppercaseString];;
+        headerView.title = [NSLocalizedString(@"QM_STR_STATUS", nil) uppercaseString];
         
         return headerView;
     }
@@ -403,7 +403,7 @@ NYTPhotosViewControllerDelegate
     
     [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     
-    __weak __typeof(self)weakSelf = self;;
+    __weak __typeof(self)weakSelf = self;
     [[QMTasks taskUpdateCurrentUserImage:photo progress:nil]
      continueWithBlock:^id(BFTask<QBUUser *> * task __unused) {
          

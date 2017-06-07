@@ -611,7 +611,7 @@ QMMediaControllerDelegate
     [[QMAudioPlayer audioPlayer] stop];
     
     
-    self.currentAudioRecorder = [[QMAudioRecorder alloc] init];;
+    self.currentAudioRecorder = [[QMAudioRecorder alloc] init];
     [self.currentAudioRecorder startRecording];
     
     [[UIScreen mainScreen] lockCurrentOrientation];
