@@ -50,6 +50,14 @@ static const NSUInteger kQMNumberOfSections = 1;
     return indexPath.row - kQMNumberOfStaticCellsBeforeOccupantsList;
 }
 
+- (NSIndexPath *)indexPathForObject:(id)object {
+    NSUInteger idx = [self.items indexOfObject:object];
+    if (idx == NSNotFound) {
+        return nil;
+    }
+    return [NSIndexPath indexPathForItem:idx+kQMNumberOfStaticCellsBeforeOccupantsList inSection:0];
+}
+
 //MARK: - UITableViewDataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -85,8 +93,7 @@ static const NSUInteger kQMNumberOfSections = 1;
         
         [cell setAddButtonVisible:isRequestRequired];
         
-        NSString *onlineStatus = [[QMCore instance].contactManager onlineStatusForUser:user];
-        [cell setBody:onlineStatus];
+        [cell setBody:[[QMCore instance].contactManager onlineStatusForUser:user]];
         
         cell.didAddUserBlock = self.didAddUserBlock;
         

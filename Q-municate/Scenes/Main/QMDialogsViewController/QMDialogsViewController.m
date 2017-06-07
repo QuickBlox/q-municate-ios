@@ -92,7 +92,7 @@ QMSearchResultsControllerDelegate
         
         self.refreshControl.backgroundColor = [UIColor whiteColor];
         [self.refreshControl addTarget:self
-                                action:@selector(updateDialogsAndEndRefreshing)
+                                action:@selector(updateDataAndEndRefreshing)
                       forControlEvents:UIControlEventValueChanged];
     }
     
@@ -498,11 +498,13 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     }
 }
 
-- (void)updateDialogsAndEndRefreshing {
+- (void)updateDataAndEndRefreshing {
     
     @weakify(self);
-    [[QMTasks taskFetchAllData] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        
+    
+    BFTask *fetchAllDataTask = [QMTasks taskFetchAllData];
+    BFTask *fetchContactsTask = [QMTasks taskUpdateContacts];
+    [[BFTask taskForCompletionOfAllTasks:@[fetchAllDataTask, fetchContactsTask]] continueWithBlock:^id _Nullable(BFTask * __unused _Nonnull t) {
         @strongify(self);
         
         [self.refreshControl endRefreshing];

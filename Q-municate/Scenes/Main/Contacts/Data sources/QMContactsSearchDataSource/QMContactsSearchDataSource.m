@@ -33,8 +33,7 @@
     QBUUser *user = [self userAtIndexPath:indexPath];
     [cell setTitle:user.fullName avatarUrl:user.avatarUrl];
     
-    NSString *onlineStatus = [[QMCore instance].contactManager onlineStatusForUser:user];
-    [cell setBody:onlineStatus];
+    [cell setBody:[[QMCore instance].contactManager onlineStatusForUser:user]];
     
     return cell;
 }
