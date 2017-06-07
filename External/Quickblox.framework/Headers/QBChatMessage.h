@@ -45,7 +45,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy, nullable) NSString *senderResource;
 
-@property (nonatomic, assign, readonly) BOOL isCarbon;
+/**
+ Is message carbon
+ */
+@property (nonatomic, assign, readonly) BOOL carbon;
 
 /**
  *  Message date sent.
@@ -109,13 +112,6 @@ NS_ASSUME_NONNULL_BEGIN
  @return new markable QBChatMessage instance
  */
 + (instancetype)markableMessage;
-
-//MARK: DEPRECATED
-
-/**
- 'Read' status of a message.
- */
-@property (nonatomic, getter = isRead) BOOL read DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.8.0.1 Use 'readIDs' instead.");
 
 @end
 

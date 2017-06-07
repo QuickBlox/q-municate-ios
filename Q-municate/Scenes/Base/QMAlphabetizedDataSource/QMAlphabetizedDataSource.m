@@ -77,6 +77,17 @@
     return self.alphabetizedDictionary[sectionIndexTitle][indexPath.row];
 }
 
+- (NSIndexPath *)indexPathForObject:(id)object {
+    NSArray *keys = self.sectionIndexTitles;
+    for (NSUInteger i = 0; i < keys.count; i++) {
+        NSUInteger idx = [self.alphabetizedDictionary[keys[i]] indexOfObject:object];
+        if (idx != NSNotFound) {
+            return [NSIndexPath indexPathForRow:idx inSection:i];
+        }
+    }
+    return nil;
+}
+
 //MARK: - getters
 
 - (BOOL)isEmpty {

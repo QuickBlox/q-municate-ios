@@ -106,7 +106,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param user user instance
  *
- *  @return string with online status
+ *  @return Online status string
  */
 - (NSString *)onlineStatusForUser:(QBUUser *)user;
 

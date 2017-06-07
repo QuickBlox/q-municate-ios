@@ -203,18 +203,23 @@
     NSString *status = nil;
     
     if (user.ID == self.serviceManager.currentProfile.userData.ID || contactListItem.isOnline) {
-        
         status = NSLocalizedString(@"QM_STR_ONLINE", nil);
     }
-    else {
+    else if (!contactListItem.isOnline) {
         
-        if (user.lastRequestAt) {
-            
-            status = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"QM_STR_LAST_SEEN", nil), [QMDateUtils formattedLastSeenString:user.lastRequestAt withTimePrefix:NSLocalizedString(@"QM_STR_TIME_PREFIX", nil)]];
-        }
-        else {
-            
-            status = NSLocalizedString(@"QM_STR_OFFLINE", nil);
+        status = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"QM_STR_LAST_SEEN", nil), [QMDateUtils formattedLastSeenString:user.lastRequestAt withTimePrefix:NSLocalizedString(@"QM_STR_TIME_PREFIX", nil)]];
+        
+        if (contactListItem.subscriptionState != QBPresenceSubscriptionStateNone) {
+            // requesting update on activity
+            [[QBChat instance] lastActivityForUserWithID:contactListItem.userID completion:^(NSUInteger seconds, NSError * _Nullable error) {
+                if (error == nil) {
+                    if (seconds != (NSUInteger)fabs([user.lastRequestAt timeIntervalSinceNow])) {
+                        NSDate *date = [NSDate dateWithTimeIntervalSinceNow:-(NSTimeInterval)seconds];
+                        user.lastRequestAt = date;
+                        [self.serviceManager.usersService updateUsers:@[user]];
+                    }
+                }
+            }];
         }
     }
     

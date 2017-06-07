@@ -13,12 +13,15 @@
 #import "QMSelectableContactCell.h"
 #import "QMNoResultsCell.h"
 
+#import "QMCore.h"
+
 @interface QMMessageContactListViewController ()
 
 <
 UITableViewDelegate,
 UIScrollViewDelegate,
-QMSearchDataProviderDelegate
+QMSearchDataProviderDelegate,
+QMUsersServiceDelegate
 >
 
 @property (strong, nonatomic) QMNewMessageContactListSearchDataSource *dataSource;
@@ -29,6 +32,8 @@ QMSearchDataProviderDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [[QMCore instance].usersService addDelegate:self];
     
     [self registerNibs];
     
@@ -141,6 +146,22 @@ QMSearchDataProviderDelegate
     }
     
     [self.tableView reloadData];
+}
+
+// MARK: QMUsersServiceDelegate
+
+- (void)usersService:(QMUsersService *)__unused usersService didUpdateUsers:(NSArray<QBUUser *> *)users {
+    
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:users.count];
+    for (QBUUser *user in users) {
+        NSIndexPath *indexPath = [self.dataSource indexPathForObject:user];
+        if (indexPath != nil) {
+            [indexPaths addObject:indexPath];
+        }
+    }
+    if (indexPaths.count > 0) {
+        [self.tableView reloadRowsAtIndexPaths:[indexPaths copy] withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
 //MARK: - Register nibs
