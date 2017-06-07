@@ -1,1 +1,1 @@
-../../../QMServicesDevelopment/QMChatService/QMChatService/QMMediaService/QMMediaError/QMMediaError.h
+../../../../../q-municate-services-ios/QMChatService/QMChatService/QMMediaService/QMMediaError/QMMediaError.h

@@ -1,1 +1,1 @@
-../../../QMServicesDevelopment/QMChatService/QMChatService/QMLinkPreview/QMLinkPreviewMemoryStorage.h
+../../../../../q-municate-services-ios/QMChatService/QMChatService/QMLinkPreview/QMLinkPreviewMemoryStorage.h

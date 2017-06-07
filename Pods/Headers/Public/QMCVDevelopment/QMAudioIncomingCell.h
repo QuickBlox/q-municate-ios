@@ -1,1 +1,1 @@
-../../../QMCVDevelopment/QMChatViewController/Views/Cells/QMChatMediaAttachmentCell/QMAudioIncomingCell/QMAudioIncomingCell.h
+../../../../../QMChatViewController-ios/QMChatViewController/Views/Cells/QMChatMediaAttachmentCell/QMAudioIncomingCell/QMAudioIncomingCell.h

@@ -1,1 +1,1 @@
-../../../QMCVDevelopment/QMChatViewController/ViewModels/QMChatModel.h
+../../../../../QMChatViewController-ios/QMChatViewController/ViewModels/QMChatModel.h

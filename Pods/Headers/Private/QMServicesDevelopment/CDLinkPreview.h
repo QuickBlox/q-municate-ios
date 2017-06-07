@@ -1,1 +1,1 @@
-../../../QMServicesDevelopment/QMChatCache/QMChatCache/CoreData/Entries/CDLinkPreview.h
+../../../../../q-municate-services-ios/QMChatCache/QMChatCache/CoreData/Entries/CDLinkPreview.h

@@ -1,1 +1,1 @@
-../../../QMServicesDevelopment/QMChatService/QMChatService/QMLinkPreview/QMLinkPreviewManager.h
+../../../../../q-municate-services-ios/QMChatService/QMChatService/QMLinkPreview/QMLinkPreviewManager.h

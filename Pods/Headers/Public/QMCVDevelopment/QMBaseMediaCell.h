@@ -1,1 +1,1 @@
-../../../QMCVDevelopment/QMChatViewController/Views/Cells/QMChatMediaAttachmentCell/QMBaseChatMediaAttachmentCell/QMBaseMediaCell.h
+../../../../../QMChatViewController-ios/QMChatViewController/Views/Cells/QMChatMediaAttachmentCell/QMBaseChatMediaAttachmentCell/QMBaseMediaCell.h

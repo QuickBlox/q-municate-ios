@@ -1,1 +1,1 @@
-../../../QMCVDevelopment/QMChatViewController/QMChatDataSource/NSDate+ChatDataSource.h
+../../../../../QMChatViewController-ios/QMChatViewController/QMChatDataSource/NSDate+ChatDataSource.h
