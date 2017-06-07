@@ -25,24 +25,24 @@ target 'Q-municate' do
     pod 'FBSDKLoginKit', '~> 4.11.0'
     
     #Twitter
-    pod 'Fabric'#, '~> 1.6'
-    pod 'Crashlytics', '~> 3.5'
-    pod 'Digits'#, '~> 1.15'
-    pod 'TwitterCore'#, '~> 1.15'
+    pod 'Fabric'
+    pod 'Crashlytics'
+    pod 'Digits'
+    pod 'TwitterCore'
     
     #For development pods
-    #pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
-    #pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
+    pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
+    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
     
-    pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'feature/linkPreview'
-    pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git',:branch => 'feature/QMMediaService_Backup'
+    #pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'feature/linkPreview'
+    #pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git',:branch => 'feature/QMMediaService_Backup'
 
 
 end
 
 target 'QMSiriExtension' do
     
-    pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git',:branch => 'feature/QMMediaService_Backup'
+   pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
     
 end
 
