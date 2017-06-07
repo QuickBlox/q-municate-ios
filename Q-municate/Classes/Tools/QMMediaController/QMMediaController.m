@@ -464,10 +464,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
             view = [self.viewController viewForMessage:message];
             
             if (view) {
-                
-                QMChatModel *model =  [QMChatModel new];
-                model.message = message;
-             
+
                 presenter = [[QMMediaPresenter alloc] initWithView:view];
                 presenter.message = message;
                 [view setPresenter:presenter];

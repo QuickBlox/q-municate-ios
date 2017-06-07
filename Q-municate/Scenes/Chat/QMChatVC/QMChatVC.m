@@ -56,7 +56,6 @@ static NSString * const kQMTextAttachmentSpacing = @"  ";
 <
 QMChatServiceDelegate,
 QMChatConnectionDelegate,
-QMChatAttachmentServiceDelegate,
 QMContactListServiceDelegate,
 QMDeferredQueueManagerDelegate,
 
@@ -295,6 +294,8 @@ QMMediaControllerDelegate
     
     // load messages from cache if needed and from REST
     [self refreshMessages];
+    
+    self.inputToolbar.audioRecordingIsEnabled = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -334,8 +335,8 @@ QMMediaControllerDelegate
          [self stopTyping];
          [self destroyAudioRecorder];
          [self.inputToolbar forceFinishRecording];
+         
          if (self.chatDialog.type == QBChatDialogTypePrivate) {
-             
              [self setOpponentOnlineStatus:NO];
          }
      }];
@@ -362,7 +363,7 @@ QMMediaControllerDelegate
     [self.inputToolbar forceFinishRecording];
     
     //Stop player
-    [[QMAudioPlayer audioPlayer] pause];
+    [[QMAudioPlayer audioPlayer] stop];
 }
 
 //MARK: - Deferred queue management
@@ -522,9 +523,9 @@ QMMediaControllerDelegate
     return YES;
 }
 
-//MARK: - Toolbar actions
+//MARK:- Toolbar actions
 
-//MARK: - QMInputToolbarDelegate
+//MARK: QMInputToolbarDelegate
 
 - (BOOL)messagesInputToolbarAudioRecordingEnabled:(QMInputToolbar *)__unused toolbar {
     
@@ -580,16 +581,15 @@ QMMediaControllerDelegate
     [viewController presentViewController:alertController animated:YES completion:nil];
 }
 
-- (void)messagesInputToolbarAudioRecordingStart:(QMInputToolbar *)__unused toolbar {
+- (void)messagesInputToolbarAudioRecordingStart:(QMInputToolbar *)toolbar {
     
     [self startAudioRecording];
     [toolbar audioRecordingStarted];
 }
 
-- (void)messagesInputToolbarAudioRecordingCancel:(QMInputToolbar *)toolbar {
+- (void)messagesInputToolbarAudioRecordingCancel:(QMInputToolbar *)__unused toolbar {
     
-    [self destroyAudioRecorder];
-    [toolbar audioRecordingFinished];
+    [self cancellAudioRecording];
 }
 
 - (void)messagesInputToolbarAudioRecordingComplete:(QMInputToolbar *)__unused toolbar {
@@ -597,44 +597,69 @@ QMMediaControllerDelegate
     [self finishAudioRecording];
 }
 
+- (NSTimeInterval)inputPanelAudioRecordingMaximumDuration:(QMInputToolbar *)__unused toolbar {
+    
+    return self.currentAudioRecorder.maximumDuration;
+}
+
 - (NSTimeInterval)inputPanelAudioRecordingDuration:(QMInputToolbar *)__unused toolbar {
     
     if (self.currentAudioRecorder != nil) {
-        return [self.currentAudioRecorder duration];
+        return [self.currentAudioRecorder currentTime];
     }
     
     return 0.0;
 }
 
 - (void)startAudioRecording {
+    
     NSParameterAssert(!self.currentAudioRecorder);
-    [[QMAudioPlayer audioPlayer] stop];
     
+    [[QMAudioPlayer audioPlayer] pause];
     
-    self.currentAudioRecorder = [[QMAudioRecorder alloc] init];;
-    [self.currentAudioRecorder startRecording];
+    self.currentAudioRecorder = [[QMAudioRecorder alloc] init];
+    [self.currentAudioRecorder startRecordingForDuration:10.0];
+    
+    @weakify(self);
+    
+    self.currentAudioRecorder.cancellBlock = ^{
+        @strongify(self);
+        [self destroyAudioRecorder];
+    };
+    
+    self.currentAudioRecorder.completionBlock = ^(NSURL *fileURL, NSTimeInterval duration, NSError *error) {
+        @strongify(self);
+        
+        if (fileURL && !error) {
+            QBChatAttachment *attachment = [QBChatAttachment audioAttachmentWithFileURL:fileURL];
+            attachment.duration = lround(duration);
+            [self sendMessageWithAttachment:attachment];
+        }
+        else {
+            [self.inputToolbar shakeControls];
+        }
+        
+        [self destroyAudioRecorder];
+    };
     
     [[UIScreen mainScreen] lockCurrentOrientation];
+}
+
+- (void)cancellAudioRecording {
+    
+    if (self.currentAudioRecorder != nil) {
+        
+        [[UIScreen mainScreen] unlockCurrentOrientation];
+        [self.currentAudioRecorder cancelRecording];
+    }
 }
 
 - (void)finishAudioRecording {
     
     if (self.currentAudioRecorder != nil) {
+        
         [[UIScreen mainScreen] unlockCurrentOrientation];
-        @weakify(self);
-        [self.currentAudioRecorder stopRecordingWithCompletion:^(NSURL *fileURL, NSTimeInterval duration, NSError *error) {
-            @strongify(self);
-            
-            if (fileURL && !error) {
-                QBChatAttachment *attachment = [QBChatAttachment audioAttachmentWithFileURL:fileURL];
-                attachment.duration = lround(duration);
-                [self sendMessageWithAttachment:attachment];
-            }
-            else {
-                [self.inputToolbar shakeControls];
-            }
-            [self destroyAudioRecorder];
-        }];
+        [self.currentAudioRecorder stopRecording];
     }
 }
 
@@ -890,9 +915,17 @@ QMMediaControllerDelegate
         
         paragraphStyle.alignment = NSTextAlignmentCenter;
         
-        textColor = [UIColor whiteColor];
         font = [UIFont systemFontOfSize:13.0f];
         
+        if (messageItem.callNotificationState == QMCallNotificationStateMissedNoAnswer) {
+            textColor = [UIColor whiteColor];
+        }
+        else {
+            textColor = [UIColor colorWithRed:119.f / 255
+                                        green:133.f / 255
+                                         blue:148.f /255
+                                        alpha:1];
+        }
         QMCallNotificationItem *callNotificationItem = [[QMCallNotificationItem alloc] initWithCallNotificationMessage:messageItem];
         
         message = callNotificationItem.notificationText;
@@ -1047,7 +1080,7 @@ QMMediaControllerDelegate
         }
         
         size = CGSizeMake(MIN(kQMAttachmentCellSize,maxWidth),
-                          linkPreviewHeight);
+                          MAX(linkPreviewHeight, 54.0));
     }
     else {
         
@@ -1353,8 +1386,7 @@ QMMediaControllerDelegate
                     siteDescription:linkPreview.siteDescription
                       onImageDidSet:^
              {
-                 [weakSelf.collectionView.collectionViewLayout removeSizeFromCacheForItemID:message.ID];
-                 [weakSelf.collectionView performBatchUpdates:nil completion:nil];
+                     [weakSelf.collectionView reloadItemsAtIndexPaths:@[indexPath]];
              }];
         }
     }
@@ -1934,7 +1966,7 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     }
     
     else if ([cell isKindOfClass:[QMBaseMediaCell class]]) {
-       CGSize size =  [self.collectionView.collectionViewLayout containerViewSizeForItemAtIndexPath:indexPath];
+        CGSize size =  [self.collectionView.collectionViewLayout containerViewSizeForItemAtIndexPath:indexPath];
         NSLog(@"size = %@", NSStringFromCGSize(size));
         [[((QMBaseMediaCell*)cell) presenter] didTapContainer];
     }

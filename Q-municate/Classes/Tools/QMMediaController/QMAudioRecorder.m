@@ -57,7 +57,7 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
         [options setValue:@(AVAudioQualityHigh) forKey:AVEncoderAudioQualityKey]; //channels
         [options setValue:@(16) forKey:AVEncoderBitDepthHintKey]; //channels
         
-
+        
         
         // Initiate and prepare the recorder
         _recorder = [[AVAudioRecorder alloc] initWithURL:outputFileURL settings:options error:&error];
@@ -74,16 +74,30 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
     return self;
 }
 
-- (NSTimeInterval)duration {
+- (NSTimeInterval)currentTime {
     
     return [self.recorder currentTime];
 }
 
 - (void)dealloc {
     
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:AVAudioSessionInterruptionNotification
-                                                      object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVAudioSessionInterruptionNotification
+                                                  object:nil];
+}
+
+- (void)startRecordingForDuration:(NSTimeInterval)duration {
+    
+    if (duration < kQMMinimalDuration) {
+        
+        if (self.cancellBlock) {
+            self.cancellBlock();
+        }
+        return;
+    }
+    
+    _maximumDuration = duration;
+    [self.recorder recordForDuration:duration];
 }
 
 - (void)startRecording {
@@ -91,21 +105,16 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
     [self.recorder record];
 }
 
-- (void)stopRecordingWithCompletion:(QMAudioRecordCompletionBlock)completion {
+- (void)stopRecording {
     
     [_recorder stop];
-    
-    if (completion) {
-        self.completion = [completion copy];
-    }
 }
 
 - (void)cancelRecording {
     
-    self.isCancelled = YES;
+    _isCancelled = YES;
     
-    [_recorder stop];
-    [_recorder deleteRecording];
+    [self stopRecording];
 }
 
 //MARK: -AVAudioRecorderDelegate
@@ -115,9 +124,15 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
     
     [[AVAudioSession sharedInstance] setCategory:_oldSessionCategory error:nil];
     
-    if (self.isCancelled) {
+    if (_isCancelled) {
+        
+        if (self.cancellBlock) {
+            self.cancellBlock();
+        }
+        
         return;
     }
+    
     if (flag) {
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -130,21 +145,23 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 __strong typeof(weakSelf) strongSelf = weakSelf;
-                if (strongSelf.completion) {
-                    strongSelf.completion(fileURL, duration, nil);
+                if (strongSelf.completionBlock) {
+                    strongSelf.completionBlock(fileURL, duration, nil);
                 }
             });
         });
     }
     else {
-        if (self.completion) {
-            self.completion(nil, 0, nil);
+        if (self.completionBlock) {
+            self.completionBlock(nil, 0, nil);
         }
     }
 }
 
 - (void)audioRecorderEncodeErrorDidOccur:(AVAudioRecorder *)__unused recorder
                                    error:(NSError * __nullable)error {
+    
+    [[AVAudioSession sharedInstance] setCategory:_oldSessionCategory error:nil];
     
     if (self.completion) {
         self.completion(nil, 0, error);

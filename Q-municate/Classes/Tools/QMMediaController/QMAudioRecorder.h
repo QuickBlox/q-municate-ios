@@ -11,7 +11,6 @@
 typedef void(^QMAudioRecordCompletionBlock)(NSURL *fileURL, NSTimeInterval duration, NSError *error);
 
 typedef NS_ENUM(NSUInteger, QBRecordState) {
-    
     QBRecordStateStopped,
     QBRecordStateRecording,
     QBRecordStatePaused
@@ -19,15 +18,19 @@ typedef NS_ENUM(NSUInteger, QBRecordState) {
 
 @interface QMAudioRecorder : NSObject
 
-@property (nonatomic ,copy) dispatch_block_t onStart;
-@property (nonatomic, assign) QBRecordState recordState;
+@property (nonatomic, copy) dispatch_block_t cancellBlock;
+@property (nonatomic, copy) QMAudioRecordCompletionBlock completionBlock;
 
+@property (nonatomic, assign, readonly) QBRecordState recordState;
+@property (nonatomic, assign, readonly) NSTimeInterval maximumDuration;
 
 - (void)startRecording;
-- (void)cancelRecording;
-- (void)stopRecordingWithCompletion:(QMAudioRecordCompletionBlock)completion;
+- (void)startRecordingForDuration:(NSTimeInterval)duration;
 
-- (NSTimeInterval)duration;
+- (void)cancelRecording;
+- (void)stopRecording;
+
+- (NSTimeInterval)currentTime;
 
 @end
 

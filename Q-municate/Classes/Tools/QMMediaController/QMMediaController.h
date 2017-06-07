@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)cancelOperationsForMessage:(QBChatMessage *)message;
 
-- (QMChatModel *)chatModelForMessageWithID:(NSString *)messageID;
+//- (QMChatModel *)chatModelForMessageWithID:(NSString *)messageID;
 
 @end
 
