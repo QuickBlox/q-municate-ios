@@ -25,10 +25,12 @@
 + (instancetype)audioPlayer {
     
     static QMAudioPlayer *audioPlayer = nil;
+    
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         audioPlayer = [[QMAudioPlayer alloc] init];
     });
+    
     return audioPlayer;
 }
 
@@ -88,7 +90,9 @@
     NSError *error;
     
     self.status.mediaID = itemID;
-    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url fileTypeHint:AVFileTypeMPEGLayer3 error:&error];
+    self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url
+                                                       fileTypeHint:AVFileTypeMPEGLayer3
+                                                              error:&error];
     self.audioPlayer.delegate = self;
     [self _qmPlayerPlay];
 }
@@ -106,6 +110,10 @@
 }
 
 - (void)_qmPlayerStop {
+    
+    if (self.status.playerState == QMAudioPlayerStateStopped) {
+        return;
+    }
     
     [self stopProgressTimer];
     
@@ -133,6 +141,11 @@
 }
 
 - (void)_qmPlayerPlay {
+    
+    if (self.status.playerState == QMAudioPlayerStatePlaying) {
+        return;
+    }
+    
     [self startProgressTimer];
     
     [self.audioPlayer prepareToPlay];
