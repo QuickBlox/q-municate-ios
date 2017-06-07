@@ -6,7 +6,7 @@
 //  Copyright (c) 2016 QuickBlox. All rights reserved.
 //
 
-#import "ChatEnums.h"
+#import "QBChatTypes.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,19 +33,23 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param item     QBContactListItem
  *  @param completion completion block with last activity in seconds and error
+ *  @warning Deprecated in 2.9.3.
  */
 - (void)lastActivityForContactListItem:(QBContactListItem *)item
                         withCompletion:(QBUserLastActivityCompletionBlock)completion;
+DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.9.3. Use - [QBChat lastActivityForUserID:completion:]");
 /**
  *  Get last activity
  *
  *  @param item       QBContactListItem
  *  @param timeout    timeout
  *  @param completion completion block with last activity in seconds and error
+ *  @warning Deprecated in 2.9.3.
  */
 - (void)lastActivityForContactListItem:(QBContactListItem *)item
-                           withTimeout:(NSTimeInterval)timeOut
-                            completion:(QBUserLastActivityCompletionBlock)completion;
+                           withTimeout:(NSTimeInterval)timeout
+                            completion:(QBUserLastActivityCompletionBlock)completion
+DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.9.3. Use - [QBChat lastActivityForUserID:withTimeout:completion:]");
 
 @end
 

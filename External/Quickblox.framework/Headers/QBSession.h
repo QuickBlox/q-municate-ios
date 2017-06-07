@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (QBSession *)currentSession;
 
+@property (assign, nonatomic, readonly) BOOL sessionTokenHasExpiredOrNeedCreate;
+
 /**
  *  Start session with details
  *

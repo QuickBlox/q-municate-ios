@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ChatEnums.h"
+#import "QBChatTypes.h"
 
 @class QBChatMessage;
 
