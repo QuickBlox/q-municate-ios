@@ -6,10 +6,13 @@
 
 #import <UIKit/UIKit.h>
 #import "DGTContactAccessAuthorizationStatus.h"
+#import "DGTContactsDebugConfiguration.h"
+#import "DGTInviteFlowConfiguration.h"
 
 @class DGTAppearance;
 @class DGTContactsUploadResult;
 @class DGTSession;
+@class DGTInviteFlowConfiguration;
 
 /**
  *  Block type called after the Digits upload contacts flow is complete.
@@ -35,6 +38,16 @@ typedef void (^DGTLookupContactsCompletion)(NSArray *matches, NSString *nextCurs
 typedef void (^DGTDeleteAllUploadedContactsCompletion)(NSError *error);
 
 @interface DGTContacts : NSObject
+
+/**
+ *  Configuration to override Contacts behavior. e.g. provide a list of contacts that will be used instead of making a real upload request.
+ */
+@property (nonatomic, strong) DGTContactsDebugConfiguration *uploadDebugOverrides;
+
+/**
+ *  Configuration to override Contacts behavior. e.g. provide a list of contacts that will be used instead of making a real lookup request.
+ */
+@property (nonatomic, strong) DGTContactsDebugConfiguration *lookupDebugOverrides;
 
 /**
  *  @return The user's Address Book authorization status for this app.

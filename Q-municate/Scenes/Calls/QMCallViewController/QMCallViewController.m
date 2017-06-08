@@ -663,7 +663,7 @@ QMCallManagerDelegate
         // with opponent user ID
         [[QMCore instance].callManager sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
     }
-
+    
     self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_USER_DOESNT_ANSWER", nil);
 }
 

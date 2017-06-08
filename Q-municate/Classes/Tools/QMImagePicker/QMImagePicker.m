@@ -93,19 +93,42 @@
     [vc presentViewController:imagePicker animated:NO completion:nil];
 }
 
++ (void)chooseFromGaleryInViewController:(UIViewController *)vc
+                             maxDuration:(NSTimeInterval)maxDuration
+                           resultHandler:(id<QMImagePickerResultHandler>)resultHandler
+                           allowsEditing:(BOOL)allowsEditing {
+    
+    QMImagePicker *imagePicker = [[[self class] alloc] init];
+    imagePicker.allowsEditing = allowsEditing;
+    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    imagePicker.mediaTypes = @[(NSString *)kUTTypeMovie, (NSString *)kUTTypeImage];
+    imagePicker.videoQuality = UIImagePickerControllerQualityTypeMedium;
+    
+    if (maxDuration > 0) {
+        imagePicker.videoMaximumDuration = maxDuration;
+    }
+    
+    imagePicker.resultHandler = resultHandler;
+    
+    [vc presentViewController:imagePicker
+                     animated:YES
+                   completion:nil];
+}
+
 + (void)chooseFromGaleryInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler {
     
-    [[self class] chooseFromGaleryInViewController:vc resultHandler:resultHandler allowsEditing:YES];
+    [[self class] chooseFromGaleryInViewController:vc
+                                     resultHandler:resultHandler
+                                     allowsEditing:YES];
 }
 
 + (void)chooseFromGaleryInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler allowsEditing:(BOOL)allowsEditing {
     
-    QMImagePicker *imagePicker = [[[self class] alloc] init];
-    imagePicker.allowsEditing = allowsEditing;
-    imagePicker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
-    imagePicker.mediaTypes = @[(NSString *)kUTTypeMovie, (NSString *)kUTTypeImage];
-    imagePicker.resultHandler = resultHandler;
-    [vc presentViewController:imagePicker animated:YES completion:nil];
+    [[self class] chooseFromGaleryInViewController:vc
+                                       maxDuration:0.0
+                                     resultHandler:resultHandler
+                                     allowsEditing:allowsEditing];
+
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {

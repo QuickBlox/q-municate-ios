@@ -12,8 +12,7 @@
 #import "QMNotification.h"
 #import "QMTasks.h"
 #import <SVProgressHUD.h>
-#import <SDWebImageManager.h>
-#import "QMCallManager.h"
+#import "QMImageLoader.h"
 #import "QMCallManager.h"
 #import <Intents/Intents.h>
 #import "NSString+QMTransliterating.h"
@@ -270,15 +269,18 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
                 [[Digits sharedInstance] logOut];
             }
             
-            [[SDWebImageManager sharedManager].imageCache clearMemory];
-            [[SDWebImageManager sharedManager].imageCache clearDisk];
             
             // clearing contact list cache and memory storage
             [[QMContactListCache instance] deleteContactList:nil];
             [self.contactListService.contactListMemoryStorage free];
             
             [self.currentProfile clearProfile];
-            [source setResult:nil];
+            
+            [[QMImageLoader instance].imageCache clearDiskOnCompletion:^{
+                [[QMImageLoader instance].imageCache clearMemory];
+                
+                [source setResult:nil];
+            }];
         }];
         
         return nil;

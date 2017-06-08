@@ -112,7 +112,7 @@ NYTPhotosViewControllerDelegate
 - (void)configureUserData:(QBUUser *)userData {
     
     [self.avatarImageView setImageWithURL:[NSURL URLWithString:userData.avatarUrl]
-                             title:userData.fullName completedBlock:nil];
+                                    title:userData.fullName completedBlock:nil];
     
     self.fullNameLabel.text = userData.fullName;
     
@@ -290,7 +290,7 @@ NYTPhotosViewControllerDelegate
                                                                          CGRectGetWidth(tableView.frame),
                                                                          kQMStatusSectionHeaderHeight)];
         headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        headerView.title = [NSLocalizedString(@"QM_STR_STATUS", nil) uppercaseString];;
+        headerView.title = [NSLocalizedString(@"QM_STR_STATUS", nil) uppercaseString];
         
         return headerView;
     }
@@ -371,10 +371,11 @@ NYTPhotosViewControllerDelegate
         
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_OPEN_IMAGE", nil)
                                                             style:UIAlertActionStyleDefault
-                                                          handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                              
-                                                              [QMImagePreview previewImageWithURL:[NSURL URLWithString:avatarURL] inViewController:self];
-                                                          }]];
+                                                          handler:^(UIAlertAction * _Nonnull __unused action)
+                                    {
+                                        
+                                        [QMImagePreview previewImageWithURL:[NSURL URLWithString:avatarURL] inViewController:self];
+                                    }]];
     }
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
@@ -402,22 +403,13 @@ NYTPhotosViewControllerDelegate
     
     [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     
-    __weak UINavigationController *navigationController = self.navigationController;
-    
-    @weakify(self);
-    [[QMTasks taskUpdateCurrentUserImage:photo progress:nil] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
-        
-        @strongify(self);
-        
-        [navigationController dismissNotificationPanel];
-        
-        if (!task.isFaulted) {
-            
-            [self.avatarImageView setImage:photo withKey:task.result.avatarUrl];
-        }
-        
-        return nil;
-    }];
+    __weak __typeof(self)weakSelf = self;
+    [[QMTasks taskUpdateCurrentUserImage:photo progress:nil]
+     continueWithBlock:^id(BFTask<QBUUser *> * task __unused) {
+         
+         [weakSelf.navigationController dismissNotificationPanel];
+         return nil;
+     }];
 }
 
 //MARK: - NYTPhotosViewControllerDelegate

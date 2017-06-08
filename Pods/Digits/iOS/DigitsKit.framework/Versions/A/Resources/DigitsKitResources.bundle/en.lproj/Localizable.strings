@@ -65,10 +65,10 @@
 "BUTTON_RESEND_CONF_CODE" = "Resend code";
 
 /* Footnote when creating account */
-"FOOTNOTE_CREATE_ACCOUNT" = "By tapping “Create account” above, you agree to the <a href=\"https://twitter.com/tos\">Terms of Service</a>, <a href=\"https://twitter.com/privacy\">Privacy Policy</a>, and <a href=\"https://support.twitter.com/articles/20170514\">Cookies Use</a> of <a href=\"https://www.digits.com\">Digits by Twitter</a>, to share your phone number with %@, and that other users of %@ can discover you by phone number.";
+"FOOTNOTE_CREATE_ACCOUNT" = "By tapping “Create account” above, you agree to the <a href=\"https://twitter.com/tos\">Terms of Service</a>, <a href=\"https://twitter.com/privacy\">Privacy Policy</a>, and <a href=\"https://support.twitter.com/articles/20170514\">Cookies Use</a> of <a href=\"https://www.digits.com\">Digits by Twitter</a>, to share your phone number with %@, and that other users of %@ can discover you by phone number. As part of Google's acquisition of Fabric, some information from Digits accounts is being transferred to Google for continuity of service. After September 27, 2017, you may no longer be able to delete information associated with your Digits account.";
 
 /* Footnote when logging into an existing account */
-"FOOTNOTE_LOGIN" = "By tapping “Continue” above, your <a href=\"https://www.digits.com/settings\">Digits phone number and/or email address</a> will be shared with %@ and other users of %@ can discover you by phone number and/or email.";
+"FOOTNOTE_LOGIN" = "By tapping “Continue” above, your <a href=https://www.digits.com/settings>Digits phone number and/or email address</a> will be shared with %@ and other users of %@ can discover you by phone number and/or email. As part of Google's acquisition of Fabric, some information from existing Digits accounts has been transferred to Google for continuity of service. After September 27, 2017, you may no longer be able to delete information associated with your Digits account.";
 
 /* Footnote when logging into an existing account but the terms of service have changed */
 "FOOTNOTE_TOS_UPDATE" = "By tapping “Continue” above, you agree to the updated <a href=\"https://twitter.com/tos\">Terms of Service</a>, <a href=\"https://twitter.com/privacy\">Privacy Policy</a>, and <a href=\"https://support.twitter.com/articles/20170514\">Cookies Use</a> of <a href=\"https://www.digits.com\">Digits by Twitter</a>, to share your <a href=\"https://www.digits.com/settings\">Digits phone number and/or email address</a> with %@, and that other users of %@ can discover you by phone number and/or email.";
@@ -127,7 +127,22 @@
 "FOOTNOTE_2_STEP_VERIFICATION_CODE" = "You have previously set a 2-step verification code on <a href=\"https://www.digits.com/settings\">digits.com</a>";
 
 /* Message to show developers to configure their Digits app */
-"ONBOARDING_MESSAGE" = "[Digits] Log into https://fabric.io to set your App's name which will be included in verification emails and SMS/voice authorization messages.";
+"ONBOARDING_MESSAGE" = "Log into https://fabric.io to set your App's name which will be included in verification emails and SMS/voice authorization messages.";
 
 /* Message to show developers to configure their Answers logging */
-"ONBOARDING_MESSAGE_ANSWERS" = "[Digits] Add the Answers framework to your app to enable Digits event logging automatically. Learn more at https://answers.io";
+"ONBOARDING_MESSAGE_ANSWERS" = "Add the Answers framework to your app to enable Digits event logging automatically. Learn more at https://answers.io";
+
+/* Default sms prefill text that is shown when a user asking their friend to join their app.*/
+"SMS_PREFILL_TEXT_DEFAULT" = "Hi %@. I'm using %@, join me!";
+
+/* Default sms prefil text that is shown when a user is asking their friend to join their app.*/
+"SMS_PREFILL_TEXT_DEFAULT_BRANCH" = "Hi %@. Install %@ at %@.";
+
+/* The title of the button for inviting contact entries to app */
+"INVITE_BUTTON_TITLE" = "Invite";
+
+/* The title of the button for contact entries that are already invited */
+"INVITED_BUTTON_TITLE" = "Invited";
+
+/* Default title text for the friends invite view controller */
+"DEFAULT_INVITE_VIEW_TITLE" = "Invite Friends";

@@ -29,7 +29,7 @@
  *
  *  @param configuration     Options to configure the Digits experience. The phoneNumber should be a string containing only numbers, and prefixed with an optional '+' character if the number includes a country dial code. Examples: '+15555555555' (USA, 5555555555), '+525555555555' (Mexico, 5555555555)
  *  @param authDelegate      Delegate will receive a new Challenge view controller once the authentication flow has started. The delegate is required to push or present it to continue the auth flow.
- *  @param completion        Block called after the authentication flow has ended.
+ *  @param completionBlock        Block called after the authentication flow has ended.
  */
 -(void)authenticateWithConfiguration:(DGTAuthenticationConfiguration *)configuration
                             delegate:(id<DGTAPIAuthenticationDelegate>)authDelegate

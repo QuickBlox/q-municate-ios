@@ -50,12 +50,12 @@ NSString *const kQMIsImportUpdateKey = @"is_import";
         NSDictionary *representationObject = [NSJSONSerialization JSONObjectWithData:jsonData
                                                                              options:NSJSONReadingMutableContainers
                                                                                error:&error];
-        return [representationObject mutableCopy];
+        if (!error) {
+            return [representationObject mutableCopy];
+        }
     }
-    else {
-        
-        return [NSMutableDictionary dictionary];
-    }
+    
+    return [NSMutableDictionary dictionary];
 }
 
 - (void)synchronize {

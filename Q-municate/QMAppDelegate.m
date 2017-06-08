@@ -18,6 +18,9 @@
 #import <Flurry.h>
 #import <SVProgressHUD.h>
 #import <Intents/Intents.h>
+#import "QMColors.h"
+
+#import "UIScreen+QMLock.h"
 
 static NSString * const kQMNotificationActionTextAction = @"TEXT_ACTION";
 static NSString * const kQMNotificationCategoryReply = @"TEXT_REPLY";
@@ -82,14 +85,11 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     // Registering for remote notifications
     [self registerForNotification];
     
+    
     // Configuring app appearance
-    UIColor *green = [UIColor colorWithRed:23.0f/255.0f green:208.0f/255.0f blue:75.f/255.0f alpha:1.0f];
-    UIColor *gray = [UIColor colorWithRed:119.0f/255.0f green:133.0f/255.0f blue:148.f/255.0f alpha:1.0f];
-    
-    
-    [[UINavigationBar appearance] setTintColor:gray];
-    [[UISearchBar appearance] setTintColor:gray];
-    [[UITabBar appearance] setTintColor:green];
+    [[UITabBar appearance] setTintColor:QMMainApplicationColor()];
+    [[UINavigationBar appearance] setTintColor:QMSecondaryApplicationColor()];
+    [[UISearchBar appearance] setTintColor:QMSecondaryApplicationColor()];
     
     // Configuring searchbar appearance
     [[UISearchBar appearance] setSearchBarStyle:UISearchBarStyleMinimal];
@@ -104,10 +104,10 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [Flurry logEvent:@"connect_to_chat" withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", kQMApplicationID],
                                                          @"chat_endpoint" : [QBSettings chatEndpoint]}];
     
-    // Sirri supported in ios 10 +
+    // Siri is supported in ios 10 +
     if (iosMajorVersion() > 9) {
         [INPreferences requestSiriAuthorization:^(INSiriAuthorizationStatus __unused status) {
-
+            
         }];
     }
     
@@ -169,6 +169,12 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     return urlWasIntendedForFacebook;
 }
 
+- (UIInterfaceOrientationMask)application:(UIApplication *)__unused application supportedInterfaceOrientationsForWindow:(UIWindow *)__unused window {
+    
+    return [[UIScreen mainScreen] allowedInterfaceOrientationMask];
+}
+
+#pragma mark - Push notification registration
 //MARK: - Push notification registration
 
 - (void)registerForNotification {
@@ -200,7 +206,8 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [[UIApplication sharedApplication] registerForRemoteNotifications];
 }
 
-- (void)application:(UIApplication *)__unused application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+- (void)application:(UIApplication *)__unused application
+didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
     [QMCore instance].pushNotificationManager.deviceToken = deviceToken;
 }
@@ -218,7 +225,6 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
                 
                 completionHandler();
             }
-            
             return;
         }
         

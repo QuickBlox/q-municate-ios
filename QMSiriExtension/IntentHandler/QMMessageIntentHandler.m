@@ -23,7 +23,8 @@
 //MARK: - INSendMessageIntentHandling
 
 // Implementation of resolution methods to provide additional information about the intent
-- (void)resolveRecipientsForSendMessage:(INSendMessageIntent *)intent withCompletion:(void (^)(NSArray<INPersonResolutionResult *> *resolutionResults))completion {
+- (void)resolveRecipientsForSendMessage:(INSendMessageIntent *)intent
+                         withCompletion:(void (^)(NSArray<INPersonResolutionResult *> *resolutionResults))completion {
     
     QBUUser *user = [QMSiriHelper instance].currentUser;
     
@@ -155,7 +156,7 @@
     
     // Implementation of the application logic for sending a message.
     NSString *recipientID = [intent.recipients firstObject].customIdentifier;
-    NSAssert(recipientID.length, @"recipientID should be non nil");
+    NSAssert(recipientID.length, @"recipientID shouldn't be nil");
     
     if ([recipientID qm_isChatIdentifier]) {
         messageSendingBlock([recipientID qm_toChatID]);

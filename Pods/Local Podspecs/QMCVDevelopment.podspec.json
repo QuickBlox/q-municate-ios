@@ -1,6 +1,6 @@
 {
   "name": "QMCVDevelopment",
-  "version": "0.4.0.1",
+  "version": "0.4.1.1",
   "summary": "An elegant ready-to-go chat view controller for iOS chat applications that use Quickblox communication backend.",
   "description": "* Ready-to-go chat view controller with a set of cells.\n* Automatic cell size calculation.\n* UI customisation for chat cells.\n* Flexibility in improving and extending functionality.\n* Easy to connect with Quickblox.\n* Optimised and performant.\n* Supports portrait and landscape orientations.\n* Auto Layout inside.",
   "homepage": "https://github.com/QuickBlox/QMChatViewController-ios",
@@ -18,7 +18,7 @@
   },
   "source": {
     "git": "https://github.com/QuickBlox/QMChatViewController-ios.git",
-    "tag": "0.4.0.1"
+    "tag": "0.4.1.1"
   },
   "source_files": "QMChatViewController/QMChatViewController.{h,m}",
   "resource_bundles": {
@@ -36,13 +36,23 @@
       "> 1.13"
     ],
     "SDWebImage": [
-      "~> 3.6"
+      "~> 3.8.2"
+    ],
+    "FFCircularProgressView": [
+
+    ],
+    "SexyTooltip": [
+
     ]
   },
   "subspecs": [
     {
       "name": "QMChatLocationSnapshotter",
       "source_files": "QMChatViewController/QMChatLocationSnapshotter/*.{h,m}"
+    },
+    {
+      "name": "QMMediaPresenter",
+      "source_files": "QMChatViewController/QMMediaPresenter/**/*.{h,m}"
     },
     {
       "name": "Categories",
@@ -61,6 +71,15 @@
         ]
       },
       "source_files": "QMChatViewController/Utils/**/*.{h,m}"
+    },
+    {
+      "name": "ViewModels",
+      "dependencies": {
+        "QMCVDevelopment/Categories": [
+
+        ]
+      },
+      "source_files": "QMChatViewController/ViewModels/**/*.{h,m}"
     },
     {
       "name": "Sections",

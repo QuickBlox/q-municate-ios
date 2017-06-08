@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)updateItemsDisplay;
 
+- (void)removeButton:(UIButton *)button;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

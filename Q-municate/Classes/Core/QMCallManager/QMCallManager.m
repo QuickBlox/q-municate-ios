@@ -14,6 +14,8 @@
 #import "QMNotification.h"
 #import <mach/mach.h>
 
+#import "QMCallWindow.h"
+
 static const NSTimeInterval kQMAnswerTimeInterval = 60.0f;
 static const NSTimeInterval kQMDisconnectTimeInterval = 30.0f;
 static const NSTimeInterval kQMDialingTimeInterval = 5.0f;
@@ -30,7 +32,7 @@ QBRTCClientDelegate
 @property (assign, nonatomic, readwrite) BOOL hasActiveCall;
 @property (strong, nonatomic) NSTimer *soundTimer;
 
-@property (strong, nonatomic) UIWindow *callWindow;
+@property (strong, nonatomic) QMCallWindow *callWindow;
 
 @end
 
@@ -92,8 +94,11 @@ QBRTCClientDelegate
         
         [QMNotification sendPushNotificationToUser:opponentUser withText:pushText];
         
+      
         [self prepareCallWindow];
+        
         self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState];
+        
         [self.session startCall:nil];
         self.hasActiveCall = YES;
     }];
@@ -104,7 +109,8 @@ QBRTCClientDelegate
     // hiding keyboard
     [[UIApplication sharedApplication].keyWindow endEditing:YES];
     
-    self.callWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.callWindow = [[QMCallWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+
     // displaying window under status bar
     self.callWindow.windowLevel = UIWindowLevelStatusBar - 1;
     [self.callWindow makeKeyAndVisible];
@@ -118,8 +124,11 @@ QBRTCClientDelegate
         
         _hasActiveCall = hasActiveCall;
         
+        if (self.session.conferenceType == QBRTCConferenceTypeAudio) {
+            [UIDevice currentDevice].proximityMonitoringEnabled = hasActiveCall;
+        }
+        
         if (!hasActiveCall) {
-            
             [self.serviceManager.chatManager disconnectFromChatIfNeeded];
         }
     }

@@ -138,13 +138,9 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
     
     __weak UINavigationController *navigationController = self.navigationController;
     
-    [[[QMCore instance].chatManager changeAvatar:photo forGroupChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+    [[[QMCore instance].chatManager changeAvatar:photo forGroupChatDialog:self.chatDialog] continueWithBlock:^id(BFTask *task __unused) {
         
         [navigationController dismissNotificationPanel];
-        if (!task.isFaulted) {
-            
-            [self.headerView.avatarImage setImage:photo withKey:self.chatDialog.photo];
-        }
         
         return nil;
     }];
