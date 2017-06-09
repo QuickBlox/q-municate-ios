@@ -54,21 +54,25 @@ const CGRect QMMessageNotificationIconRect = (CGRect){(CGPoint){0,0}, (CGSize){3
     if (iconImageURL) {
         
         @weakify(self);
-        self.imageOperation =
-        [[QMImageLoader instance] downloadImageWithURL:iconImageURL
+        
+        self.imageOperation = [[QMImageLoader instance] downloadImageWithURL:iconImageURL
+                                             transform:[QMImageTransform transformWithSize:CGSizeMake(30, 30) isCircle:YES]
                                                options:SDWebImageHighPriority
                                               progress:nil
-                                             completed:^(UIImage *image,
-                                                         NSError *__unused error,
+                                             completed:^(UIImage * _Nullable __unused image,
+                                                         UIImage * _Nullable transfomedImage,
+                                                         NSError * _Nullable __unused error,
                                                          SDImageCacheType __unused cacheType,
                                                          BOOL __unused finished,
-                                                         NSURL * __unused imageURL) {
-                                                 @strongify(self);
-                                                 if (image != nil) {
-                                                     
-                                                     self.messageNotification.iconImage = image;
-                                                 }
-                                             }];
+                                                         NSURL * _Nonnull __unused imageURL) {
+            @strongify(self);
+            
+            if (transfomedImage != nil) {
+                
+                self.messageNotification.iconImage = transfomedImage;
+            }
+            
+        }];
     }
     
     if (buttonHandler != nil) {
