@@ -186,6 +186,10 @@ QMMediaControllerDelegate
     self.collectionView.collectionViewLayout.minimumLineSpacing = 8.0f;
     self.collectionView.backgroundColor = [UIColor clearColor];
     
+    self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+    
+    self.navigationItem.leftItemsSupplementBackButton = YES;
+    
     [QMChatCell registerMenuAction:@selector(delete:)];
     
     self.navigationController.navigationBar.topItem.title = @"";
