@@ -45,6 +45,7 @@
 @import SafariServices;
 
 static const float kQMAttachmentCellSize = 180.0f;
+static const NSTimeInterval kQMMaxAttachmentDuration = 30.0;
 
 static const CGFloat kQMWidthPadding = 40.0f;
 static const CGFloat kQMAvatarSize = 28.0f;
@@ -610,7 +611,7 @@ QMCallManagerDelegate
     [[QMAudioPlayer audioPlayer] pause];
     
     self.currentAudioRecorder = [[QMAudioRecorder alloc] init];
-    [self.currentAudioRecorder startRecordingForDuration:30.0];
+    [self.currentAudioRecorder startRecordingForDuration:kQMMaxAttachmentDuration];
     
     @weakify(self);
     
@@ -733,7 +734,7 @@ QMCallManagerDelegate
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                           
                                                           [QMImagePicker takePhotoOrVideoInViewController:self
-                                                                                              maxDuration:30
+                                                                                              maxDuration:kQMMaxAttachmentDuration
                                                                                                   quality:UIImagePickerControllerQualityTypeMedium
                                                                                             resultHandler:self];
                                                       }]];
@@ -743,7 +744,7 @@ QMCallManagerDelegate
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                           
                                                           [QMImagePicker chooseFromGaleryInViewController:self
-                                                                                              maxDuration:30
+                                                                                              maxDuration:kQMMaxAttachmentDuration
                                                                                             resultHandler:self
                                                                                             allowsEditing:YES];
                                                       }]];
