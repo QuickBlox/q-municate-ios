@@ -97,14 +97,18 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
     }
     
     _maximumDuration = duration;
-    [self.recorder recordForDuration:duration];
+    [_recorder record];
 }
 
 - (void)startRecording {
     
-    [self.recorder record];
+    [_recorder record];
 }
 
+- (void)pauseRecording {
+    
+    [_recorder pause];
+}
 - (void)stopRecording {
     
     [_recorder stop];

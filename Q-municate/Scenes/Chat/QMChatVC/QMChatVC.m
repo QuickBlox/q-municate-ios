@@ -45,6 +45,7 @@
 @import SafariServices;
 
 static const float kQMAttachmentCellSize = 180.0f;
+static const NSTimeInterval kQMMaxAttachmentDuration = 30.0;
 
 static const CGFloat kQMWidthPadding = 40.0f;
 static const CGFloat kQMAvatarSize = 28.0f;
@@ -66,8 +67,8 @@ QMImagePickerResultHandler,
 QMImageViewDelegate,
 
 NYTPhotosViewControllerDelegate,
-
-QMMediaControllerDelegate
+QMMediaControllerDelegate,
+QMCallManagerDelegate
 >
 
 /**
@@ -225,8 +226,9 @@ QMMediaControllerDelegate
     [[QMCore instance].chatService addDelegate:self];
     [[QMCore instance].contactListService addDelegate:self];
     [[QMCore instance].chatService.chatAttachmentService addDelegate:self.mediaController];
-    
+    [[QMCore instance].callManager addDelegate:self];
     [self.deferredQueueManager addDelegate:self];
+    
     
     self.actionsHandler = self;
     
@@ -321,6 +323,7 @@ QMMediaControllerDelegate
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    
     [super viewWillDisappear:animated];
     
     if (self.chatDialog == nil) {
@@ -334,6 +337,7 @@ QMMediaControllerDelegate
     [self.chatDialog clearTypingStatusBlocks];
     [self.chatDialog clearDialogOccupantsStatusBlock];
     //Cancel audio recording
+    [self finishAudioRecording];
     [self.inputToolbar forceFinishRecording];
     //Stop player
     [[QMAudioPlayer audioPlayer] stop];
@@ -542,14 +546,13 @@ QMMediaControllerDelegate
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_SETTINGS", nil)
                                                         style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                          
-                                                          [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-                                                      }]];
+                                                      handler:^(UIAlertAction * _Nonnull __unused action)
+                                {
+                                    
+                                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                                }]];
     
-    UIViewController *viewController =
-    [[[(UISplitViewController *)[UIApplication sharedApplication].keyWindow.rootViewController viewControllers] firstObject] selectedViewController];
-    [viewController presentViewController:alertController animated:YES completion:nil];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)messagesInputToolbarAudioRecordingStart:(QMInputToolbar *)toolbar {
@@ -566,6 +569,13 @@ QMMediaControllerDelegate
 - (void)messagesInputToolbarAudioRecordingComplete:(QMInputToolbar *)__unused toolbar {
     
     [self finishAudioRecording];
+}
+
+- (void)messagesInputToolbarAudioRecordingPausedByTimeOut:(QMInputToolbar *)__unused toolbar {
+    
+    if (self.currentAudioRecorder != nil) {
+        [self.currentAudioRecorder pauseRecording];
+    }
 }
 
 - (NSTimeInterval)inputPanelAudioRecordingMaximumDuration:(QMInputToolbar *)__unused toolbar {
@@ -589,7 +599,7 @@ QMMediaControllerDelegate
     [[QMAudioPlayer audioPlayer] pause];
     
     self.currentAudioRecorder = [[QMAudioRecorder alloc] init];
-    [self.currentAudioRecorder startRecordingForDuration:10.0];
+    [self.currentAudioRecorder startRecordingForDuration:kQMMaxAttachmentDuration];
     
     @weakify(self);
     
@@ -713,7 +723,7 @@ QMMediaControllerDelegate
                                 {
                                     
                                     [QMImagePicker takePhotoOrVideoInViewController:self
-                                                                        maxDuration:15
+                                                                        maxDuration:kQMMaxAttachmentDuration
                                                                             quality:UIImagePickerControllerQualityTypeMedium
                                                                       resultHandler:self];
                                 }]];
@@ -724,7 +734,7 @@ QMMediaControllerDelegate
                                 {
                                     
                                     [QMImagePicker chooseFromGaleryInViewController:self
-                                                                        maxDuration:15
+                                                                        maxDuration:kQMMaxAttachmentDuration
                                                                       resultHandler:self
                                                                       allowsEditing:YES];
                                 }]];
@@ -734,15 +744,15 @@ QMMediaControllerDelegate
                                                       handler:^(UIAlertAction * _Nonnull __unused action)
                                 {
                                     
-                                    QMLocationViewController *locationVC = [[QMLocationViewController alloc] initWithState:QMLocationVCStateSend];
+                                    QMLocationViewController *locationVC =
+                                    [[QMLocationViewController alloc] initWithState:QMLocationVCStateSend];
                                     
                                     [locationVC setSendButtonPressed:^(CLLocationCoordinate2D centerCoordinate) {
-                                        
                                         [self _sendLocationMessage:centerCoordinate];
                                     }];
                                     
-                                    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:locationVC];
-                                    
+                                    UINavigationController *navController =
+                                    [[UINavigationController alloc] initWithRootViewController:locationVC];
                                     [self presentViewController:navController animated:YES completion:nil];
                                 }]];
     
@@ -806,7 +816,7 @@ QMMediaControllerDelegate
             }
             else {
                 
-                Class classForItem  = [QMChatIncomingCell class];
+                Class classForItem = [QMChatIncomingCell class];
                 
                 QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:item];
                 if (linkPreview != nil) {
@@ -1207,7 +1217,7 @@ QMMediaControllerDelegate
         
         if (class != [QMChatOutgoingCell class]) {
             
-            //  layoutModel.spaceBetweenTextViewAndBottomLabel = 5;
+            layoutModel.spaceBetweenTextViewAndBottomLabel = 5;
         }
     }
     else if (class == [QMChatAttachmentIncomingCell class]
@@ -1226,8 +1236,8 @@ QMMediaControllerDelegate
         
         if (class != [QMChatIncomingCell class]) {
             
-            //            layoutModel.spaceBetweenTextViewAndBottomLabel = 5;
-            //            layoutModel.spaceBetweenTopLabelAndTextView = 5;
+            layoutModel.spaceBetweenTextViewAndBottomLabel = 5;
+            layoutModel.spaceBetweenTopLabelAndTextView = 5;
         }
         
         layoutModel.avatarSize = CGSizeMake(kQMAvatarSize, kQMAvatarSize);
@@ -1355,15 +1365,15 @@ QMMediaControllerDelegate
         
         if (linkPreview) {
             
+            [self.collectionView.collectionViewLayout removeSizeFromCacheForItemID:message.ID];
             QMChatBaseLinkPreviewCell *previewCell = (QMChatBaseLinkPreviewCell *)cell;
-            __weak typeof(self) weakSelf = self;
             [previewCell setSiteURL:linkPreview.siteUrl
                            imageURL:linkPreview.imageURL
                           siteTitle:linkPreview.siteTitle
                     siteDescription:linkPreview.siteDescription
                       onImageDidSet:^
              {
-                 [weakSelf.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                 [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
              }];
         }
     }
@@ -2077,7 +2087,30 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
 - (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingVideo:(NSURL *)videoUrl {
     
     QBChatAttachment *attachment = [QBChatAttachment videoAttachmentwWithFileURL:videoUrl];
-    [self sendMessageWithAttachment:attachment];
+    
+    @weakify(self);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        @strongify(self);
+        AVURLAsset *videoAsset = [AVURLAsset URLAssetWithURL:videoUrl options:nil];
+        NSTimeInterval durationSeconds = CMTimeGetSeconds(videoAsset.duration);
+        attachment.duration = lround(durationSeconds);
+        
+        AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:videoAsset];
+        imageGenerator.appliesPreferredTrackTransform = YES;
+        
+        CMTime midpoint = CMTimeMakeWithSeconds(durationSeconds/2.0, 600);
+        NSError *error;
+        CMTime actualTime;
+        CGImageRef halfWayImage = [imageGenerator copyCGImageAtTime:midpoint actualTime:&actualTime error:&error];
+        
+        if (halfWayImage != NULL) {
+            attachment.image = [UIImage imageWithCGImage:halfWayImage];
+            CGImageRelease(halfWayImage);
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self sendMessageWithAttachment:attachment];
+        });
+    });
 }
 
 //MARK: - Helpers
@@ -2134,6 +2167,21 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)__unused scrollView {
     
     return NO;
+}
+
+//MARK: - QMCallManagerDelegate
+- (void)callManager:(QMCallManager *)__unused callManager
+willCloseCurrentSession:(QBRTCSession *)__unused session {
+    
+}
+
+- (void)callManager:(QMCallManager *)__unused callManager
+willChangeActiveCallState:(BOOL)willHaveActiveCall {
+    
+    if (willHaveActiveCall) {
+        [[QMAudioPlayer audioPlayer] pause];
+        [self cancellAudioRecording];
+    }
 }
 
 @end

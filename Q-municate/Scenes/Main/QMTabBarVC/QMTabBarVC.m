@@ -96,7 +96,7 @@ QMChatConnectionDelegate
     
     if (!hasActiveCall) {
         // not showing reply button in active call
-        buttonHandler = ^void(MPGNotification * __unused notification, NSInteger buttonIndex) {
+        buttonHandler = ^(MPGNotification * __unused notification, NSInteger buttonIndex) {
             
             if (buttonIndex == 1) {
                 
