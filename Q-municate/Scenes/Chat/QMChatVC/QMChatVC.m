@@ -183,6 +183,7 @@ QMMediaControllerDelegate
     
     [super viewDidLoad];
     
+    self.collectionView.prefetchingEnabled = NO;
     self.collectionView.collectionViewLayout.minimumLineSpacing = 8.0f;
     self.collectionView.backgroundColor = [UIColor clearColor];
     
@@ -192,8 +193,6 @@ QMMediaControllerDelegate
     
     [QMChatCell registerMenuAction:@selector(delete:)];
     
-    self.navigationController.navigationBar.topItem.title = @"";
-    
     if (self.chatDialog == nil) {
         
         self.inputToolbar.hidden = YES;
@@ -202,7 +201,6 @@ QMMediaControllerDelegate
         
         return;
     }
-    
     // setting up chat controller
     self.topContentAdditionalInset =
     self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
@@ -214,7 +212,6 @@ QMMediaControllerDelegate
     self.detailedCells = [NSMutableSet set];
     self.statusStringBuilder = [[QMStatusStringBuilder alloc] init];
     
-    
     self.mediaController = [[QMMediaController alloc] initWithViewController:self];
     
     @weakify(self);
@@ -224,8 +221,6 @@ QMMediaControllerDelegate
         @strongify(self);
         [self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion duration:kQMDefaultNotificationDismissTime];
     }];
-    
-    
     // subscribing to delegates
     [[QMCore instance].chatService addDelegate:self];
     [[QMCore instance].contactListService addDelegate:self];
@@ -243,10 +238,8 @@ QMMediaControllerDelegate
         // set up opponent full name
         [self.onlineTitleView setTitle:[[QMCore instance].contactManager fullNameForUserID:[self.chatDialog opponentID]]];
         [self updateOpponentOnlineStatus];
-        
         // configuring call buttons for opponent
         [self configureCallButtons];
-        
         // handling typing status
         [self.chatDialog setOnUserIsTyping:^(NSUInteger userID) {
             @strongify(self);
@@ -257,7 +250,6 @@ QMMediaControllerDelegate
             self.isOpponentTyping = YES;
             [self.onlineTitleView setStatus:NSLocalizedString(@"QM_STR_TYPING", nil)];
         }];
-        
         // Handling user stopped typing.
         [self.chatDialog setOnUserStoppedTyping:^(NSUInteger userID) {
             @strongify(self);
@@ -304,6 +296,8 @@ QMMediaControllerDelegate
     
     [super viewWillAppear:animated];
     
+    self.navigationController.navigationBar.topItem.title = @"";
+    
     [QMCore instance].activeDialogID = self.chatDialog.ID;
     
     @weakify(self);
@@ -313,7 +307,6 @@ QMMediaControllerDelegate
                                                        queue:nil
                                                   usingBlock:^(NSNotification * _Nonnull __unused note)
      {
-         
          @strongify(self);
          
          [[QMAudioPlayer audioPlayer] pause];
@@ -331,29 +324,25 @@ QMMediaControllerDelegate
     [super viewWillDisappear:animated];
     
     if (self.chatDialog == nil) {
-        
         return;
     }
     
     [QMCore instance].activeDialogID = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self.observerWillResignActive];
-    
     // Delete blocks.
     [self.chatDialog clearTypingStatusBlocks];
     [self.chatDialog clearDialogOccupantsStatusBlock];
-    
     //Cancel audio recording
-    // [self stopAudioRecording];
     [self.inputToolbar forceFinishRecording];
-    
     //Stop player
     [[QMAudioPlayer audioPlayer] stop];
 }
 
 //MARK: - Deferred queue management
 
-- (void)deferredQueueManager:(QMDeferredQueueManager *)__unused queueManager didAddMessageLocally:(QBChatMessage *)addedMessage {
+- (void)deferredQueueManager:(QMDeferredQueueManager *)__unused queueManager
+        didAddMessageLocally:(QBChatMessage *)addedMessage {
     
     if ([addedMessage.dialogID isEqualToString:self.chatDialog.ID]) {
         
@@ -388,7 +377,6 @@ QMMediaControllerDelegate
     }
 }
 
-
 //MARK: - Helpers & Utility
 
 - (void)updateOpponentOnlineStatus {
@@ -414,15 +402,15 @@ QMMediaControllerDelegate
     [[QMCore instance].chatService messagesWithChatDialogID:self.chatDialog.ID
                                              iterationBlock:^(QBResponse * __unused response,
                                                               NSArray *messages,
-                                                              BOOL * __unused stop) {
-                                                 
-                                                 @strongify(self);
-                                                 
-                                                 if (messages.count > 0) {
-                                                     
-                                                     [self.chatDataSource addMessages:messages];
-                                                 }
-                                             }];
+                                                              BOOL * __unused stop)
+     {
+         @strongify(self);
+         
+         if (messages.count > 0) {
+             
+             [self.chatDataSource addMessages:messages];
+         }
+     }];
 }
 
 - (void)readMessage:(QBChatMessage *)message {
@@ -532,14 +520,12 @@ QMMediaControllerDelegate
 - (void)requestForRecordPermissions {
     
     [QMPermissions requestPermissionToMicrophoneWithCompletion:^(BOOL granted) {
-        
         // showing error alert with a suggestion
         // to go to the settings
         if (!granted) {
             [self showAlertWithTitle:NSLocalizedString(@"QM_STR_MICROPHONE_ERROR", nil)
                              message:NSLocalizedString(@"QM_STR_NO_PERMISSIONS_TO_MICROPHONE", nil)];
         }
-        
     }];
 }
 
@@ -569,7 +555,7 @@ QMMediaControllerDelegate
 - (void)messagesInputToolbarAudioRecordingStart:(QMInputToolbar *)toolbar {
     
     [self startAudioRecording];
-    [toolbar audioRecordingStarted];
+    [toolbar startAudioRecording];
 }
 
 - (void)messagesInputToolbarAudioRecordingCancel:(QMInputToolbar *)__unused toolbar {
@@ -723,36 +709,42 @@ QMMediaControllerDelegate
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_TAKE_MEDIA", nil)
                                                         style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                          
-                                                          [QMImagePicker takePhotoOrVideoInViewController:self
-                                                                                              maxDuration:15
-                                                                                                  quality:UIImagePickerControllerQualityTypeMedium
-                                                                                            resultHandler:self];
-                                                      }]];
+                                                      handler:^(UIAlertAction * _Nonnull __unused action)
+                                {
+                                    
+                                    [QMImagePicker takePhotoOrVideoInViewController:self
+                                                                        maxDuration:15
+                                                                            quality:UIImagePickerControllerQualityTypeMedium
+                                                                      resultHandler:self];
+                                }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CHOOSE_MEDIA", nil)
                                                         style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                          
-                                                          [QMImagePicker chooseFromGaleryInViewController:self maxDuration:15 resultHandler:self allowsEditing:YES];
-                                                      }]];
+                                                      handler:^(UIAlertAction * _Nonnull __unused action)
+                                {
+                                    
+                                    [QMImagePicker chooseFromGaleryInViewController:self
+                                                                        maxDuration:15
+                                                                      resultHandler:self
+                                                                      allowsEditing:YES];
+                                }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LOCATION", nil)
                                                         style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                          
-                                                          QMLocationViewController *locationVC = [[QMLocationViewController alloc] initWithState:QMLocationVCStateSend];
-                                                          
-                                                          [locationVC setSendButtonPressed:^(CLLocationCoordinate2D centerCoordinate) {
-                                                              
-                                                              [self _sendLocationMessage:centerCoordinate];
-                                                          }];
-                                                          
-                                                          UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:locationVC];
-                                                          
-                                                          [self presentViewController:navController animated:YES completion:nil];
-                                                      }]];
+                                                      handler:^(UIAlertAction * _Nonnull __unused action)
+                                {
+                                    
+                                    QMLocationViewController *locationVC = [[QMLocationViewController alloc] initWithState:QMLocationVCStateSend];
+                                    
+                                    [locationVC setSendButtonPressed:^(CLLocationCoordinate2D centerCoordinate) {
+                                        
+                                        [self _sendLocationMessage:centerCoordinate];
+                                    }];
+                                    
+                                    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:locationVC];
+                                    
+                                    [self presentViewController:navController animated:YES completion:nil];
+                                }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
                                                         style:UIAlertActionStyleCancel
@@ -1371,7 +1363,7 @@ QMMediaControllerDelegate
                     siteDescription:linkPreview.siteDescription
                       onImageDidSet:^
              {
-                     [weakSelf.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                 [weakSelf.collectionView reloadItemsAtIndexPaths:@[indexPath]];
              }];
         }
     }
