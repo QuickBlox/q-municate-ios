@@ -55,6 +55,7 @@ separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)__u
     UINavigationController *navigationController = nil;
     
     NSArray *viewControllers = selectedNavigationController.viewControllers;
+
     if (viewControllers.count > 1) {
         
         NSMutableArray *mutableViewControllers = [viewControllers mutableCopy];
@@ -67,7 +68,12 @@ separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)__u
         [mutableSelectedVCs removeObjectsInArray:finalViewControllers];
         [selectedNavigationController setViewControllers:[mutableSelectedVCs copy]];
         
-        navigationController = QMNavigationController(finalViewControllers);
+        navigationController =
+        [[UINavigationController alloc] initWithNavigationBarClass:[QMNavigationBar class]
+                                                      toolbarClass:nil];
+        if (finalViewControllers.count > 0) {
+            [navigationController setViewControllers:finalViewControllers];
+        }
     }
     else {
         
@@ -76,9 +82,9 @@ separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)__u
             
             self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
         }
-//        
-//        navigationController = QMNavigationController(@[self.placeholderVC ?: [[QMChatVC alloc] init]]);
-//        self.placeholderVC = navigationController.topViewController;
+        
+        id vc = [self.storyboard instantiateViewControllerWithIdentifier:kViewControllerNoSelection];
+        navigationController = vc;
     }
     
     return navigationController;
@@ -89,7 +95,6 @@ separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)__u
     [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
-        
         self.view.backgroundColor = self.isCollapsed ? [UIColor grayColor] : [UIColor whiteColor];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
         self.view.backgroundColor = !self.isCollapsed ? [UIColor grayColor] : [UIColor whiteColor];
@@ -134,18 +139,6 @@ separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)__u
 }
 
 //MARK: - Helpers
-
-static inline UINavigationController *QMNavigationController(NSArray <__kindof UIViewController *> *vcs) {
-    
-    UINavigationController *navVC = [[UINavigationController alloc] initWithNavigationBarClass:[QMNavigationBar class] toolbarClass:nil];
-    
-    if (vcs.count > 0) {
-        
-        [navVC setViewControllers:vcs];
-    }
-    
-    return navVC;
-}
 
 - (BOOL)isPlaceholderViewController:(__kindof UIViewController *)viewController {
     
