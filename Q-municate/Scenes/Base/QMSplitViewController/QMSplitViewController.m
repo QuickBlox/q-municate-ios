@@ -62,7 +62,6 @@ separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)__u
         [mutableViewControllers removeObjectAtIndex:0];
         
         NSArray *finalViewControllers = [mutableViewControllers copy];
-        
         // removing controllers from old stack
         NSMutableArray *mutableSelectedVCs = [viewControllers mutableCopy];
         [mutableSelectedVCs removeObjectsInArray:finalViewControllers];
@@ -107,14 +106,13 @@ separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)__u
         // controller is a placeholder
         return NO;
     }
-    
     // taking navigation stack for Chats tab
-    UINavigationController *primaryNavigationController = [(UITabBarController *)primaryViewController selectedViewController];
+    UINavigationController *primaryNavigationController =
+    [(UITabBarController *)primaryViewController selectedViewController];
     
     // taking top controller from secondary one
     UINavigationController *secondaryNavigationController = (UINavigationController *)secondaryViewController;
     NSArray *detailViewControllers = [secondaryNavigationController viewControllers];
-    
     
     // pushing view controller from detail onto primary one
     NSMutableArray *viewControllers = [primaryNavigationController.viewControllers mutableCopy];
@@ -129,26 +127,14 @@ separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)__u
 - (void)showPlaceholderDetailViewController {
     
     // showing placeholder chat VC as placeholder
-//    [self showDetailViewController:QMNavigationController(@[[[QMChatVC alloc] init]]) sender:nil];
-//    
-//    // updating display mode to not stuck on primary visible
-//    if (self.displayMode != UISplitViewControllerDisplayModeAllVisible) {
-//        
-//        self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
-//    }
-}
-
-//MARK: - Helpers
-
-- (BOOL)isPlaceholderViewController:(__kindof UIViewController *)viewController {
+    id vc = [self.storyboard instantiateViewControllerWithIdentifier:kViewControllerNoSelection];
+    [self showDetailViewController:vc sender:nil];
     
-//    if ([viewController isKindOfClass:[QMChatVC class]]
-//        && [viewController chatDialog] == nil) {
-//        
-//        return YES;
-//    }
-    
-    return NO;
+    // updating display mode to not stuck on primary visible
+    if (self.displayMode != UISplitViewControllerDisplayModeAllVisible) {
+        
+        self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+    }
 }
 
 @end
