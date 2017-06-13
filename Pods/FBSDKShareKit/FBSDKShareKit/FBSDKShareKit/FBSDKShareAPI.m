@@ -22,7 +22,6 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #endif
 
-#import <FBSDKCoreKit/FBSDKAccessToken.h>
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestDataAttachment.h>
 
@@ -72,6 +71,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
 @synthesize delegate = _delegate;
 @synthesize shareContent = _shareContent;
 @synthesize shouldFailOnDataError = _shouldFailOnDataError;
+@synthesize accessToken = _accessToken;
 
 #pragma mark - Object Lifecycle
 
@@ -118,7 +118,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
     return NO;
   }
   if (![self _hasPublishActions]) {
-    NSString *message = @"Warning: [FBSDKAccessToken currentAccessToken] is missing publish_actions permissions";
+    NSString *message = @"Warning: Access token is missing publish_actions permissions";
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:message];
   }
   if (!openGraphObject) {
@@ -151,7 +151,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
     return NO;
   }
   if (![self _hasPublishActions]) {
-    NSString *message = @"Warning: [FBSDKAccessToken currentAccessToken] is missing publish_actions permissions";
+    NSString *message = @"Warning: Access token is missing publish_actions permissions";
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:message];
   }
   if (![self validateWithError:&error]) {
@@ -202,6 +202,11 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   return [FBSDKShareUtility validateShareContent:shareContent error:errorRef];
 }
 
+- (FBSDKAccessToken *)accessToken
+{
+  return _accessToken ?: [FBSDKAccessToken currentAccessToken];
+}
+
 #pragma mark - Helper Methods
 
 - (NSString *)_graphPathWithSuffix:(NSString *)suffix, ... NS_REQUIRES_NIL_TERMINATION
@@ -238,8 +243,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
 
 - (BOOL)_hasPublishActions
 {
-  FBSDKAccessToken *accessToken = [FBSDKAccessToken currentAccessToken];
-  return [accessToken.permissions containsObject:@"publish_actions"];
+  return [self.accessToken.permissions containsObject:@"publish_actions"];
 }
 
 - (BOOL)_shareLinkContent:(FBSDKShareLinkContent *)linkContent
@@ -264,12 +268,16 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   [self _addCommonParameters:parameters content:linkContent];
   [FBSDKInternalUtility dictionary:parameters setObject:self.message forKey:@"message"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentURL forKey:@"link"];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.imageURL forKey:@"picture"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentTitle forKey:@"name"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentDescription forKey:@"description"];
-
+#pragma clang diagnostic pop
   [[[FBSDKGraphRequest alloc] initWithGraphPath:[self _graphPathWithSuffix:@"feed", nil]
                                      parameters:parameters
+                                    tokenString:self.accessToken.tokenString
+                                        version:nil
                                      HTTPMethod:@"POST"] startWithCompletionHandler:completionHandler];
   return YES;
 }
@@ -310,6 +318,8 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
     NSString *graphPath = [self _graphPathWithSuffix:[FBSDKUtility URLEncode:action.actionType], nil];
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                                                    parameters:parameters
+                                                                  tokenString:self.accessToken.tokenString
+                                                                      version:nil
                                                                    HTTPMethod:@"POST"];
     [self _connection:connection addRequest:request completionHandler:requestHandler];
     [connection start];
@@ -338,6 +348,8 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
       parameters[@"picture"] = image;
       [requests addObject:[[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                                             parameters:parameters
+                                                           tokenString:self.accessToken.tokenString
+                                                               version:nil
                                                             HTTPMethod:@"POST"]];
     }
   }
@@ -358,6 +370,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
     if ([errors count]) {
       [_delegate sharer:self didFailWithError:errors[0]];
     } else if ([results count]) {
+      NSArray *individualPhotoIDs = [results valueForKeyPath:@"id"];
       // each photo upload will be merged into the same post, so grab the post_id from the first and use that
       NSMutableDictionary *shareResults = [[NSMutableDictionary alloc] init];
       [FBSDKInternalUtility dictionary:shareResults setObject:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_POST
@@ -365,6 +378,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
       NSDictionary *firstResult = [FBSDKTypeUtility dictionaryValue:results[0]];
       [FBSDKInternalUtility dictionary:shareResults setObject:[FBSDKTypeUtility stringValue:firstResult[@"post_id"]]
                                 forKey:FBSDK_SHARE_RESULT_POST_ID_KEY];
+      [FBSDKInternalUtility dictionary:shareResults setObject:individualPhotoIDs forKey:FBSDK_SHARE_RESULT_PHOTO_IDS_KEY];
       [_delegate sharer:self didCompleteWithResults:shareResults];
     }
   };
@@ -379,7 +393,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
   [self _addCommonParameters:parameters content:videoContent];
   [FBSDKInternalUtility dictionary:parameters setObject:self.message forKey:@"description"];
-  if ([[FBSDKAccessToken currentAccessToken].permissions containsObject:@"ads_management"]) {
+  if ([self.accessToken.permissions containsObject:@"ads_management"]) {
     FBSDKSharePhoto *photo = videoContent.previewPhoto;
     UIImage *image = photo.image;
     if (!image && [photo.imageURL isFileURL]) {
@@ -403,6 +417,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
                                                                             videoSize:(unsigned long)[_fileHandle seekToEndOfFile]
                                                                            parameters:parameters
                                                                              delegate:self];
+    videoUploader.graphNode = self.graphNode;
     [videoUploader start];
     return YES;
   } else if (videoURL) {
@@ -419,6 +434,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
                                                                               videoSize:size
                                                                              parameters:parameters
                                                                                delegate:self];
+      videoUploader.graphNode = self.graphNode;
       [videoUploader start];
     } failureBlock:^(NSError *error) {
       [_delegate sharer:self didFailWithError:error];
@@ -545,12 +561,11 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
       [_delegate sharer:self didFailWithError:JSONError];
       return;
     }
-    NSString *tokenString = [FBSDKAccessToken currentAccessToken].tokenString;
     NSString *graphPath = [self _graphPathWithSuffix:@"objects", type, nil];
     NSDictionary *parameters = @{ @"object": objectString };
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                                                    parameters:parameters
-                                                                  tokenString:tokenString
+                                                                  tokenString:self.accessToken.tokenString
                                                                       version:nil
                                                                    HTTPMethod:@"POST"];
     FBSDKGraphRequestHandler requestCompletionHandler = ^(FBSDKGraphRequestConnection *requestConnection,
@@ -661,6 +676,8 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
     NSDictionary *parameters = @{ @"file": photo.image };
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                                                    parameters:parameters
+                                                                  tokenString:self.accessToken.tokenString
+                                                                      version:nil
                                                                    HTTPMethod:@"POST"];
     FBSDKGraphRequestHandler completionHandler = ^(FBSDKGraphRequestConnection *requestConnection,
                                                    id result,

@@ -78,6 +78,7 @@ EOM
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "Digits/iOS/DigitsKit.framework/Versions/A/Resources/DigitsKitResources.bundle"
+  install_resource "FBSDKCoreKit/FacebookSDKStrings.bundle"
   install_resource "$PODS_CONFIGURATION_BUILD_DIR/NYTPhotoViewer/NYTPhotoViewer.bundle"
   install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMCVDevelopment/QMChatViewController.bundle"
   install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMChatCacheModel.bundle"
@@ -87,6 +88,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_resource "Digits/iOS/DigitsKit.framework/Versions/A/Resources/DigitsKitResources.bundle"
+  install_resource "FBSDKCoreKit/FacebookSDKStrings.bundle"
   install_resource "$PODS_CONFIGURATION_BUILD_DIR/NYTPhotoViewer/NYTPhotoViewer.bundle"
   install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMCVDevelopment/QMChatViewController.bundle"
   install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMChatCacheModel.bundle"
