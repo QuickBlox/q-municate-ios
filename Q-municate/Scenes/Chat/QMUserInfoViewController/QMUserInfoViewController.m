@@ -171,7 +171,7 @@ NYTPhotosViewControllerDelegate
 - (void)updateAvatarImage {
     // Avatar
     [self.avatarImageView setImageWithURL:[NSURL URLWithString:self.user.avatarUrl]
-                            title:self.user.fullName
+                                    title:self.user.fullName
                            completedBlock:nil];
 }
 
@@ -317,24 +317,24 @@ NYTPhotosViewControllerDelegate
     return YES;
 }
 
-- (void)audioCallAction {
+- (void)callActionWithConferenceType:(QBRTCConferenceType)conferenceType {
     
     if (![self callAllowed]) {
         
         return;
     }
     
-    [[QMCore instance].callManager callToUserWithID:self.user.ID conferenceType:QBRTCConferenceTypeAudio];
+    [[QMCore instance].callManager callToUserWithID:self.user.ID conferenceType:conferenceType];
+}
+
+- (void)audioCallAction {
+    
+    [self callActionWithConferenceType:QBRTCConferenceTypeAudio];
 }
 
 - (void)videoCallAction {
     
-    if (![self callAllowed]) {
-        
-        return;
-    }
-    
-    [[QMCore instance].callManager callToUserWithID:self.user.ID conferenceType:QBRTCConferenceTypeVideo];
+    [self callActionWithConferenceType:QBRTCConferenceTypeVideo];
 }
 
 - (void)removeContactAction {

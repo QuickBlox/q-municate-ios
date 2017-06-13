@@ -20,9 +20,9 @@ target 'Q-municate' do
     #    pod 'QMServices'
     
     #Facebook
-    pod 'FBSDKCoreKit', '~> 4.11.0'
-    pod 'FBSDKShareKit', '~> 4.11.0'
-    pod 'FBSDKLoginKit', '~> 4.11.0'
+    pod 'FBSDKCoreKit'
+    pod 'FBSDKShareKit'
+    pod 'FBSDKLoginKit'
     
     #Twitter
     pod 'Fabric'

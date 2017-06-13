@@ -165,6 +165,38 @@
   return YES;
 }
 
++ (void)buildAsyncWebPhotoContent:(FBSDKSharePhotoContent *)content
+                completionHandler:(void(^)(BOOL, NSString *, NSDictionary *))completion
+{
+  void(^stageImageCompletion)(NSArray<NSString *> *) = ^(NSArray<NSString *> *stagedURIs) {
+    NSString *methodName = @"share";
+    NSMutableDictionary *parameters = [[FBSDKShareUtility parametersForShareContent:content
+                                                             shouldFailOnDataError:NO] mutableCopy];
+    [parameters removeObjectForKey:@"photos"];
+
+    NSString *stagedURIJSONString = [FBSDKInternalUtility JSONStringForObject:stagedURIs
+                                                                        error:nil
+                                                         invalidObjectHandler:NULL];
+    [FBSDKInternalUtility dictionary:parameters
+                           setObject:stagedURIJSONString
+                              forKey:@"media"];
+
+    NSString *hashtagString = [self hashtagStringFromHashtag:content.hashtag];
+    if (hashtagString != nil) {
+      [FBSDKInternalUtility dictionary:parameters
+                             setObject:hashtagString
+                                forKey:@"hashtag"];
+    }
+
+    if (completion != NULL) {
+      completion(YES, methodName, [parameters copy]);
+    }
+  };
+
+  [self _stageImagesForPhotoContent:(FBSDKSharePhotoContent *)content
+              withCompletionHandler:stageImageCompletion];
+}
+
 + (id)convertOpenGraphValue:(id)value
 {
   if ([self _isOpenGraphValue:value]) {
@@ -207,16 +239,20 @@
 + (NSDictionary *)feedShareDictionaryForContent:(id<FBSDKSharingContent>)content
 {
   NSMutableDictionary *parameters = nil;
+#pragma clang diagnostic pop
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   if ([content isKindOfClass:[FBSDKShareLinkContent class]]) {
     FBSDKShareLinkContent *linkContent = (FBSDKShareLinkContent *)content;
     parameters = [[NSMutableDictionary alloc] initWithDictionary:linkContent.feedParameters];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentDescription forKey:@"description"];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentURL forKey:@"link"];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.quote forKey:@"quote"];
+    [FBSDKInternalUtility dictionary:parameters setObject:[self hashtagStringFromHashtag:linkContent.hashtag] forKey:@"hashtag"];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentTitle forKey:@"name"];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.imageURL forKey:@"picture"];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.ref forKey:@"ref"];
   }
+#pragma clang diagnostic pop
   return [parameters copy];
 }
 
@@ -232,6 +268,23 @@
                        formatString:@"Invalid hashtag: '%@'", hashtag.stringRepresentation];
     return nil;
   }
+}
+
++ (UIImage *)imageWithCircleColor:(UIColor *)color
+                       canvasSize:(CGSize)canvasSize
+                       circleSize:(CGSize)circleSize
+{
+  CGRect circleFrame = CGRectMake((canvasSize.width - circleSize.width) / 2.0,
+                                  (canvasSize.height - circleSize.height) / 2.0,
+                                  circleSize.width,
+                                  circleSize.height);
+  UIGraphicsBeginImageContextWithOptions(canvasSize, NO, 0);
+  CGContextRef context = UIGraphicsGetCurrentContext();
+  [color setFill];
+  CGContextFillEllipseInRect(context, circleFrame);
+  UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+  return image;
 }
 
 + (NSDictionary *)parametersForShareContent:(id<FBSDKSharingContent>)shareContent
@@ -506,6 +559,7 @@
       ![self _validateArray:medias minCount:1 maxCount:20 name:@"photos" error:errorRef]) {
     return NO;
   }
+  int videoCount = 0;
   for (id media in medias) {
     if ([media isKindOfClass:[FBSDKSharePhoto class]]) {
       FBSDKSharePhoto *photo = (FBSDKSharePhoto *)media;
@@ -518,10 +572,21 @@
         return NO;
       }
     } else if ([media isKindOfClass:[FBSDKShareVideo class]]) {
+      if (videoCount > 0) {
+        if (errorRef != NULL) {
+          *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"media"
+                                                              value:media
+                                                            message:@"Only 1 video is allowed"];
+          return NO;
+        }
+      }
+      videoCount++;
       FBSDKShareVideo *video = (FBSDKShareVideo *)media;
       NSURL *videoURL = video.videoURL;
-      return ([self _validateRequiredValue:video name:@"video" error:errorRef] &&
-              [self _validateRequiredValue:videoURL name:@"videoURL" error:errorRef]);
+      if (![self _validateRequiredValue:video name:@"video" error:errorRef] &&
+          [self _validateRequiredValue:videoURL name:@"videoURL" error:errorRef]) {
+        return NO;
+      }
 
     } else {
       if (errorRef != NULL) {
@@ -535,12 +600,14 @@
   return YES;
 }
 
-
 + (BOOL)validateShareLinkContent:(FBSDKShareLinkContent *)linkContent error:(NSError *__autoreleasing *)errorRef
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   return ([self _validateRequiredValue:linkContent name:@"shareContent" error:errorRef] &&
           [self _validateNetworkURL:linkContent.contentURL name:@"contentURL" error:errorRef] &&
           [self _validateNetworkURL:linkContent.imageURL name:@"imageURL" error:errorRef]);
+#pragma clang diagnostic pop
 }
 
 + (BOOL)validateShareVideoContent:(FBSDKShareVideoContent *)videoContent error:(NSError *__autoreleasing *)errorRef
@@ -612,10 +679,13 @@ forShareOpenGraphContent:(FBSDKShareOpenGraphContent *)openGraphContent
 + (void)_addToParameters:(NSMutableDictionary *)parameters
      forShareLinkContent:(FBSDKShareLinkContent *)linkContent
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentURL forKey:@"link"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentTitle forKey:@"name"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentDescription forKey:@"description"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.imageURL forKey:@"picture"];
+#pragma clang diagnostic pop
 }
 
 + (void)_addToParameters:(NSMutableDictionary *)parameters
@@ -725,6 +795,37 @@ forShareOpenGraphContent:(FBSDKShareOpenGraphContent *)openGraphContent
           [value isKindOfClass:[NSURL class]] ||
           [value isKindOfClass:[FBSDKSharePhoto class]] ||
           [value isKindOfClass:[FBSDKShareOpenGraphObject class]]);
+}
+
++ (void)_stageImagesForPhotoContent:(FBSDKSharePhotoContent *)content
+              withCompletionHandler:(void(^)(NSArray<NSString *> *))completion
+{
+  __block NSMutableArray<NSString *> *stagedURIs = [NSMutableArray array];
+  dispatch_group_t group = dispatch_group_create();
+  for (FBSDKSharePhoto *photo in content.photos) {
+    if (photo.image != nil) {
+      dispatch_group_enter(group);
+      NSDictionary *stagingParameters = @{
+                                          @"file" : photo.image,
+                                          };
+      FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/staging_resources"
+                                                                     parameters:stagingParameters
+                                                                     HTTPMethod:@"POST"];
+      [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+        NSString *photoStagedURI = result[@"uri"];
+        if (photoStagedURI != nil) {
+          [stagedURIs addObject:photoStagedURI];
+          dispatch_group_leave(group);
+        }
+      }];
+    }
+  }
+
+  dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+    if (completion != NULL) {
+      completion([stagedURIs copy]);
+    }
+  });
 }
 
 + (void)_testObject:(id)object containsMedia:(BOOL *)containsMediaRef containsPhotos:(BOOL *)containsPhotosRef containsVideos:(BOOL *)containsVideosRef
@@ -837,7 +938,7 @@ forShareOpenGraphContent:(FBSDKShareOpenGraphContent *)openGraphContent
     }
     return NO;
   }
-  // ensure that the file exists.  per the latest spec for NSFileManager, we should not be checking for file existance,
+  // ensure that the file exists.  per the latest spec for NSFileManager, we should not be checking for file existence,
   // so they have removed that option for URLs and discourage it for paths, so we just construct a mapped NSData.
   NSError *fileError;
   if (![[NSData alloc] initWithContentsOfURL:URL

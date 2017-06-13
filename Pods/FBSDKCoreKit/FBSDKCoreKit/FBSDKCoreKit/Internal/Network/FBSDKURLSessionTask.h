@@ -18,8 +18,18 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKAppLinkUtility.h>
+typedef void (^FBSDKURLSessionTaskHandler)(NSError *error,
+                                           NSURLResponse *response,
+                                           NSData *responseData);
 
-@interface FBSDKOrganicDeeplinkHelper: NSObject
-- (bool)fetchOrganicDeeplink:(FBSDKDeferredAppInviteHandler)handler;
+@interface FBSDKURLSessionTask : NSObject
+
+- (FBSDKURLSessionTask *)initWithRequest:(NSURLRequest *)request
+                             fromSession:(NSURLSession *)session
+                       completionHandler:(FBSDKURLSessionTaskHandler)handler
+NS_DESIGNATED_INITIALIZER;
+
+- (void)cancel;
+- (void)start;
+
 @end
