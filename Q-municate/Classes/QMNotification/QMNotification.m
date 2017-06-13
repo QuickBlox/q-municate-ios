@@ -61,12 +61,6 @@
             break;
         }
     }
-#warning placeholderImage logic
-//    UIImage *placeholderImage =
-//    [QMPlaceholder placeholderWithFrame:QMMessageNotificationIconRect
-//                                  title:title
-//                                     ID:placeholderID];
-//    
     NSString *messageText = chatMessage.text;
     
     if ([chatMessage isNotificatonMessage]) {

@@ -186,6 +186,12 @@ QMCallManagerDelegate
     self.collectionView.collectionViewLayout.minimumLineSpacing = 8.0f;
     self.collectionView.backgroundColor = [UIColor clearColor];
     
+    self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+    
+    self.navigationItem.leftItemsSupplementBackButton = YES;
+    
+    [QMChatCell registerMenuAction:@selector(delete:)];
+    
     self.navigationController.navigationBar.topItem.title = @"";
     
     if (self.chatDialog == nil) {
@@ -196,8 +202,6 @@ QMCallManagerDelegate
         
         return;
     }
-    
-    [self updateTitleViewWidth];
     
     // setting up chat controller
     self.topContentAdditionalInset =
@@ -300,23 +304,6 @@ QMCallManagerDelegate
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
-    
-    if (self.chatDialog == nil) {
-        
-        UIImage *bgImage = [UIImage imageNamed:@"qm-logo-split-view"];
-        UIImageView *bgView = [[UIImageView alloc] initWithFrame:self.view.bounds];
-        bgView.image = bgImage;
-        bgView.contentMode = UIViewContentModeCenter;
-        bgView.autoresizingMask =
-        UIViewAutoresizingFlexibleLeftMargin |
-        UIViewAutoresizingFlexibleRightMargin |
-        UIViewAutoresizingFlexibleTopMargin |
-        UIViewAutoresizingFlexibleBottomMargin;
-        [self.view addSubview:bgView];
-        self.view.backgroundColor = [UIColor whiteColor];
-        
-        return;
-    }
     
     [QMCore instance].activeDialogID = self.chatDialog.ID;
     
@@ -1660,14 +1647,6 @@ QMCallManagerDelegate
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-- (void)updateTitleViewWidth {
-    
-    CGFloat navigationBarWidth = CGRectGetWidth(self.navigationController.navigationBar.frame);
-    CGRect titleViewFrame = self.navigationItem.titleView.frame;
-    titleViewFrame.size.width = navigationBarWidth;
-    self.navigationItem.titleView.frame = titleViewFrame;
-}
-
 - (void)updateGroupAvatarFrameForInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     
     CGFloat defaultSize = 0;
@@ -1727,14 +1706,15 @@ QMCallManagerDelegate
     
     NSURL *avatarURL = [NSURL URLWithString:self.chatDialog.photo];
     [self.groupAvatarImageView setImageWithURL:avatarURL
-                                         title:self.chatDialog.name completedBlock:nil];
+                                         title:self.chatDialog.name
+                                completedBlock:nil];
 }
 
 - (void)updateGroupChatOnlineStatus {
     
     // chat status string
     @weakify(self);
-    [self.chatDialog requestOnlineUsersWithCompletionBlock:^(NSMutableArray<NSNumber *> * _Nullable onlineUsers, NSError * _Nullable error) {
+    [self.chatDialog requestOnlineUsersWithCompletionBlock:^(NSMutableArray<NSNumber *> *onlineUsers, NSError *error) {
         @strongify(self);
         
         if (error == nil) {
@@ -2187,14 +2167,9 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> __unused context) {
-        
-        [self updateTitleViewWidth];
         [self updateGroupAvatarFrameForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
         
-    } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
-        
-        //    self.topContentAdditionalInset = 0;
-    }];
+    } completion:nil];
 }
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)__unused scrollView {
