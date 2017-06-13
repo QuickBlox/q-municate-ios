@@ -184,7 +184,6 @@ QMCallManagerDelegate
     
     [super viewDidLoad];
     
-    self.collectionView.prefetchingEnabled = NO;
     self.collectionView.collectionViewLayout.minimumLineSpacing = 8.0f;
     self.collectionView.backgroundColor = [UIColor clearColor];
     
