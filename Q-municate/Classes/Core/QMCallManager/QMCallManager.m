@@ -27,6 +27,7 @@ QBRTCClientDelegate
 >
 
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
+@property (strong, nonatomic) QBMulticastDelegate <QMCallManagerDelegate> *multicastDelegate;
 
 @property (strong, nonatomic, readwrite) QBRTCSession *session;
 @property (assign, nonatomic, readwrite) BOOL hasActiveCall;
@@ -45,6 +46,8 @@ QBRTCClientDelegate
     [QBRTCConfig setAnswerTimeInterval:kQMAnswerTimeInterval];
     [QBRTCConfig setDisconnectTimeInterval:kQMDisconnectTimeInterval];
     [QBRTCConfig setDialingTimeInterval:kQMDialingTimeInterval];
+    
+    _multicastDelegate = (id<QMCallManagerDelegate>)[[QBMulticastDelegate alloc] init];
     
     [[QBRTCClient instance] addDelegate:self];
 }
@@ -121,6 +124,10 @@ QBRTCClientDelegate
 - (void)setHasActiveCall:(BOOL)hasActiveCall {
     
     if (_hasActiveCall != hasActiveCall) {
+        
+        if ([self.multicastDelegate respondsToSelector:@selector(callManagercallManager:willHaveActiveCallStatewillHaveActiveCallState:)]) {
+            [self.multicastDelegate callManager:self willChangeActiveCallState:hasActiveCall];
+        }
         
         _hasActiveCall = hasActiveCall;
         
@@ -272,12 +279,28 @@ QBRTCClientDelegate
         
         [QMSoundManager playEndOfCallSound];
         [self.delegate callManager:self willCloseCurrentSession:session];
+        
+        if ([self.multicastDelegate respondsToSelector:@selector(callManager:willCloseCurrentSession:)]) {
+            [self.multicastDelegate callManager:self willCloseCurrentSession:session];
+        }
+        
         self.callWindow.rootViewController = nil;
         self.callWindow = nil;
         
         self.session = nil;
     });
 }
+
+//MARK: - Multicast delegate
+
+- (void)addDelegate:(id<QMCallManagerDelegate>)delegate {
+    [self.multicastDelegate addDelegate:delegate];
+}
+
+- (void)removeDelegate:(id<QMCallManagerDelegate>)delegate {
+    [self.multicastDelegate removeDelegate:delegate];
+}
+
 
 //MARK: - ICE servers
 
@@ -499,6 +522,7 @@ QBRTCClientDelegate
     UIViewController *viewController = [[[(UISplitViewController *)[UIApplication sharedApplication].keyWindow.rootViewController viewControllers] firstObject] selectedViewController];
     [viewController presentViewController:alertController animated:YES completion:nil];
 }
+
 
 //MARK: - Statistic
 

@@ -32,6 +32,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)callManager:(QMCallManager *)callManager willCloseCurrentSession:(QBRTCSession *)session;
 
+/**
+ *  Notifies that active call state changed.
+ *
+ *  @param callManager         QMCallManager instance
+ *  @param willHaveActiveCall  active call state
+ */
+- (void)callManager:(QMCallManager *)callManager willChangeActiveCallState:(BOOL)willHaveActiveCall;
+
 @end
 
 /**
@@ -43,7 +51,21 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Delegate instance that conforms to QMCallManagerDelegate protocol.
  */
-@property (weak, nonatomic, nullable) id<QMCallManagerDelegate> delegate;
+@property (weak, nonatomic, nullable) id<QMCallManagerDelegate> delegate DEPRECATED_ATTRIBUTE;
+
+/**
+ *  Add delegate (Multicast)
+ *
+ *  @param delegate Instance confirmed QMCallManagerDelegate protocol
+ */
+- (void)addDelegate:(id<QMCallManagerDelegate>)delegate;
+
+/**
+ *  Remove delegate from observed list
+ *
+ *  @param delegate Instance confirmed QMCallManagerDelegate protocol
+ */
+- (void)removeDelegate:(id<QMCallManagerDelegate>)delegate;
 
 /**
  *  Current session.

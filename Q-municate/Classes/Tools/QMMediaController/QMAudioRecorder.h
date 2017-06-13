@@ -26,7 +26,7 @@ typedef NS_ENUM(NSUInteger, QBRecordState) {
 
 - (void)startRecording;
 - (void)startRecordingForDuration:(NSTimeInterval)duration;
-
+- (void)pauseRecording;
 - (void)cancelRecording;
 - (void)stopRecording;
 

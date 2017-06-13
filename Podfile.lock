@@ -10,11 +10,11 @@ PODS:
   - Digits (3.0.1):
     - TwitterCore
   - Fabric (1.6.11)
-  - FBSDKCoreKit (4.11.0):
+  - FBSDKCoreKit (4.23.0):
     - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.11.0):
+  - FBSDKLoginKit (4.23.0):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.11.0):
+  - FBSDKShareKit (4.23.0):
     - FBSDKCoreKit
   - FFCircularProgressView (0.5)
   - FLAnimatedImage (1.0.12)
@@ -118,9 +118,9 @@ DEPENDENCIES:
   - Crashlytics
   - Digits
   - Fabric
-  - FBSDKCoreKit (~> 4.11.0)
-  - FBSDKLoginKit (~> 4.11.0)
-  - FBSDKShareKit (~> 4.11.0)
+  - FBSDKCoreKit
+  - FBSDKLoginKit
+  - FBSDKShareKit
   - Flurry-iOS-SDK/FlurrySDK
   - libextobjc/EXTKeyPathCoding (~> 0.4.1)
   - libextobjc/EXTScope (~> 0.4.1)
@@ -147,9 +147,9 @@ SPEC CHECKSUMS:
   Crashlytics: 79e236942ca1e7fc641df1feb9a275360a78ab6a
   Digits: 5fda2e287d729e22a733fe67adaf6e92c00f2b68
   Fabric: 5911403591946b8228ab1c51d98f1d7137e863c6
-  FBSDKCoreKit: 686ac982723a14ec9ddb85e2f81235d7706c891b
-  FBSDKLoginKit: bade9fc78277764149ccc5bfaadbf13c83175c6a
-  FBSDKShareKit: 2d1746144cfc8a9dbbd24997c34ee0471be51b6a
+  FBSDKCoreKit: d7829f5a69901cd7296105328e4c3c3fc7da6518
+  FBSDKLoginKit: 6b92bd65f319d669d2b0730e49db495ef1660566
+  FBSDKShareKit: 65751c3b9937ab9d594e6c37611ecc115ceeb448
   FFCircularProgressView: 683a4ab1e1bd613246a3dffa61503ffdebcde8d8
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Flurry-iOS-SDK: 51065be4436f3e21fc8d3d7bb0b7d6869df6333d
@@ -168,6 +168,6 @@ SPEC CHECKSUMS:
   TwitterCore: e959987be23c767004d29eb7fab8d85d8585a2e5
   UIDevice-Hardware: 4bb15b9bd9878762ab879ac86185baad17b6c3ff
 
-PODFILE CHECKSUM: 385990441aa8732fa126388cab4b5ccdd2d9644e
+PODFILE CHECKSUM: e0d3ae5d60b2a43a7f434e0cff9d17bbcdd1c36f
 
 COCOAPODS: 1.2.0
