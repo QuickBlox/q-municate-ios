@@ -7,10 +7,9 @@
 //
 
 #import "QMSplitViewController.h"
-#import "QMChatVC.h"
-#import "QMHelpers.h"
-
 #import "QMNavigationBar.h"
+
+NSString *const kViewControllerNoSelection = @"ViewControllerNoSelection";
 
 @interface QMSplitViewController() <UISplitViewControllerDelegate>
 
@@ -29,13 +28,16 @@
 
 //MARK: - UISplitViewControllerDelegate
 
-- (BOOL)splitViewController:(UISplitViewController *)splitViewController showDetailViewController:(UIViewController *)detailVC sender:(id)sender {
+- (BOOL)splitViewController:(UISplitViewController *)splitViewController
+   showDetailViewController:(UIViewController *)detailVC
+                     sender:(id)sender {
     
     UITabBarController *masterVC = splitViewController.viewControllers.firstObject;
     
     if (splitViewController.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact) {
         
-        [masterVC.selectedViewController showViewController:[(UINavigationController *)detailVC topViewController] sender:sender];
+        [masterVC.selectedViewController showViewController:[(UINavigationController *)detailVC topViewController]
+                                                     sender:sender];
     }
     else {
         
@@ -45,7 +47,8 @@
     return YES;
 }
 
-- (UIViewController *)splitViewController:(UISplitViewController *)splitViewController separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)__unused primaryViewController {
+- (UIViewController *)splitViewController:(UISplitViewController *)splitViewController
+separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)__unused primaryViewController {
     
     UITabBarController *masterVC = splitViewController.viewControllers.firstObject;
     UINavigationController *selectedNavigationController = masterVC.selectedViewController;
@@ -73,15 +76,32 @@
             
             self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
         }
-        
-        navigationController = QMNavigationController(@[self.placeholderVC ?: [[QMChatVC alloc] init]]);
-        self.placeholderVC = navigationController.topViewController;
+//        
+//        navigationController = QMNavigationController(@[self.placeholderVC ?: [[QMChatVC alloc] init]]);
+//        self.placeholderVC = navigationController.topViewController;
     }
     
     return navigationController;
 }
 
+- (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection
+              withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
+        
+        self.view.backgroundColor = self.isCollapsed ? [UIColor grayColor] : [UIColor whiteColor];
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
+        self.view.backgroundColor = !self.isCollapsed ? [UIColor grayColor] : [UIColor whiteColor];
+    }];
+}
+
 - (BOOL)splitViewController:(UISplitViewController *)__unused splitViewController collapseSecondaryViewController:(UIViewController *)secondaryViewController ontoPrimaryViewController:(UIViewController *)primaryViewController {
+
+    if ([secondaryViewController.restorationIdentifier isEqualToString:kViewControllerNoSelection]) {
+        // controller is a placeholder
+        return NO;
+    }
     
     // taking navigation stack for Chats tab
     UINavigationController *primaryNavigationController = [(UITabBarController *)primaryViewController selectedViewController];
@@ -90,11 +110,6 @@
     UINavigationController *secondaryNavigationController = (UINavigationController *)secondaryViewController;
     NSArray *detailViewControllers = [secondaryNavigationController viewControllers];
     
-    if ([self isPlaceholderViewController:detailViewControllers.firstObject]) {
-        
-        // controller is a placeholder
-        return NO;
-    }
     
     // pushing view controller from detail onto primary one
     NSMutableArray *viewControllers = [primaryNavigationController.viewControllers mutableCopy];
@@ -109,13 +124,13 @@
 - (void)showPlaceholderDetailViewController {
     
     // showing placeholder chat VC as placeholder
-    [self showDetailViewController:QMNavigationController(@[[[QMChatVC alloc] init]]) sender:nil];
-    
-    // updating display mode to not stuck on primary visible
-    if (self.displayMode != UISplitViewControllerDisplayModeAllVisible) {
-        
-        self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
-    }
+//    [self showDetailViewController:QMNavigationController(@[[[QMChatVC alloc] init]]) sender:nil];
+//    
+//    // updating display mode to not stuck on primary visible
+//    if (self.displayMode != UISplitViewControllerDisplayModeAllVisible) {
+//        
+//        self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+//    }
 }
 
 //MARK: - Helpers
@@ -134,11 +149,11 @@ static inline UINavigationController *QMNavigationController(NSArray <__kindof U
 
 - (BOOL)isPlaceholderViewController:(__kindof UIViewController *)viewController {
     
-    if ([viewController isKindOfClass:[QMChatVC class]]
-        && [viewController chatDialog] == nil) {
-        
-        return YES;
-    }
+//    if ([viewController isKindOfClass:[QMChatVC class]]
+//        && [viewController chatDialog] == nil) {
+//        
+//        return YES;
+//    }
     
     return NO;
 }
