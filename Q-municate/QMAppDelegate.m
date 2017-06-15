@@ -46,7 +46,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 #endif
 
-@interface QMAppDelegate () <QMPushNotificationManagerDelegate>
+@interface QMAppDelegate () <QMPushNotificationManagerDelegate, QMAuthServiceDelegate>
 
 @end
 
@@ -76,14 +76,13 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QMServicesManager enableLogging:YES];
 #endif
     
+    [[QMCore instance].authService addDelegate:self];
+    
     // QuickbloxWebRTC settings
     [QBRTCClient initializeRTC];
     [QBRTCConfig setICEServers:[[QMCore instance].callManager quickbloxICE]];
     [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecISAC;
     [QBRTCConfig setStatsReportTimeInterval:0.0f]; // set to 1.0f to enable stats report
-    
-    // Registering for remote notifications
-    [self registerForNotification];
     
     
     // Configuring app appearance
@@ -103,13 +102,6 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
     [Flurry logEvent:@"connect_to_chat" withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", kQMApplicationID],
                                                          @"chat_endpoint" : [QBSettings chatEndpoint]}];
-    
-    // Siri is supported in ios 10 +
-    if (iosMajorVersion() > 9) {
-        [INPreferences requestSiriAuthorization:^(INSiriAuthorizationStatus __unused status) {
-            
-        }];
-    }
     
     // Handling push notifications if needed
     if (launchOptions != nil) {
@@ -296,6 +288,23 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     }
     
     [dialogsVC performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
+}
+
+
+//MARK: - QMAuthServiceDelegate
+
+- (void)authService:(QMAuthService *)__unused authService
+   didLoginWithUser:(QBUUser *)__unused user {
+    
+    // Registering for remote notifications
+    [self registerForNotification];
+    
+    // Siri is supported in ios 10 +
+    if (iosMajorVersion() > 9) {
+        [INPreferences requestSiriAuthorization:^(INSiriAuthorizationStatus __unused status) {
+            
+        }];
+    }
 }
 
 @end
