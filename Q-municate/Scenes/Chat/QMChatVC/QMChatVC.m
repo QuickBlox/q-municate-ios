@@ -45,7 +45,7 @@
 @import SafariServices;
 
 static const float kQMAttachmentCellSize = 180.0f;
-static const NSTimeInterval kQMMaxAttachmentDuration = 30.0;
+static const NSTimeInterval kQMMaxAttachmentDuration = 30.0f;
 
 static const CGFloat kQMWidthPadding = 40.0f;
 static const CGFloat kQMAvatarSize = 28.0f;
@@ -191,8 +191,7 @@ QMCallManagerDelegate
     
     self.navigationItem.leftItemsSupplementBackButton = YES;
     
-    [QMChatCell registerMenuAction:@selector(delete:)];
-    
+    [self.view.layer setDrawsAsynchronously:YES];
     if (self.chatDialog == nil) {
         
         self.inputToolbar.hidden = YES;
@@ -1388,7 +1387,7 @@ QMCallManagerDelegate
         QBChatAttachment *attachment = message.attachments[0];
         [self.mediaController configureView:(id<QMMediaViewDelegate>)cell
                                 withMessage:message
-                               attachmentID:attachment.ID];
+                                 attachment:attachment];
         
     }
 }
@@ -1682,7 +1681,7 @@ QMCallManagerDelegate
 - (void)configureGroupChatAvatar {
     
     // chat avatar
-    self.groupAvatarImageView = [[QMImageView alloc] init];
+    self.groupAvatarImageView = [[QMImageView alloc] initWithFrame:CGRectMake(0, 0, 36, 36)];
     [self updateGroupAvatarFrameForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
     self.groupAvatarImageView.imageViewType = QMImageViewTypeCircle;
     self.groupAvatarImageView.delegate = self;

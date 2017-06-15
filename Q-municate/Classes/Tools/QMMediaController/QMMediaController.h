@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)configureView:(id<QMMediaViewDelegate>)view
           withMessage:(QBChatMessage *)message
-         attachmentID:(NSString *)attachmentID;
+           attachment:(QBChatAttachment *)attachment;
 
 - (void)cancelOperationsForMessage:(QBChatMessage *)message;
 

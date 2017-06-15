@@ -9,7 +9,7 @@
 #import "QMStatusStringBuilder.h"
 #import "QMCore.h"
 
-static const NSUInteger kQMStatusStringNamesLimit = 5;
+static const NSUInteger kQMStatusStringNamesLimit = 2;
 
 @implementation QMStatusStringBuilder
 

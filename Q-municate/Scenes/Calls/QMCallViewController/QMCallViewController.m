@@ -782,6 +782,7 @@ QMCallManagerDelegate
     }
 }
 
+
 //MARK: - Overrides
 
 - (UIStatusBarStyle)preferredStatusBarStyle {

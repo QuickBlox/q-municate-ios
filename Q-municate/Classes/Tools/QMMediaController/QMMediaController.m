@@ -29,13 +29,13 @@ NYTPhotosViewControllerDelegate>
 @property (strong, nonatomic) NSMapTable *mediaPresenters;
 
 @property (weak, nonatomic) UIViewController <QMMediaControllerDelegate> *viewController;
-@property (strong, nonatomic) QMMediaService *mediaService;
+@property (strong, nonatomic) QMChatAttachmentService *attachmentsService;
 @property (strong, nonatomic) AVPlayer *videoPlayer;
 @property (strong, nonatomic) NSMutableDictionary<NSString *, id<QMChatModelProtocol>> *chatModels;
 @end
 
 @implementation QMMediaController
-@dynamic mediaService;
+@dynamic attachmentsService;
 
 //MARK: - NSObject
 
@@ -55,7 +55,7 @@ NYTPhotosViewControllerDelegate>
 - (void)cancelOperationsForMessage:(QBChatMessage *)message {
     
     for (QBChatAttachment *attachment in message.attachments) {
-        [self.mediaService cancelOperationsForAttachment:attachment];
+        [self.attachmentsService cancelOperationsForAttachment:attachment];
     }
 }
 
@@ -69,15 +69,19 @@ NYTPhotosViewControllerDelegate>
 
 - (void)configureView:(id<QMMediaViewDelegate>)view
           withMessage:(QBChatMessage *)message
-         attachmentID:(NSString *)attachmentID {
+           attachment:(QBChatAttachment *)attachment {
     
-    QMMediaPresenter *presenter = [self.mediaPresenters objectForKey:attachmentID];
+    NSParameterAssert(attachment != nil);
+    
+    NSString *presenterID = attachment.ID ?: message.ID;
+    QMMediaPresenter *presenter = [self.mediaPresenters objectForKey:presenterID];
     
     if (presenter == nil) {
         
         presenter = [[QMMediaPresenter alloc] initWithView:view];
         presenter.message = message;
-        presenter.modelID = attachmentID;
+        presenter.modelID = attachment.ID;
+        presenter.attachment = attachment;
         presenter.mediaAssistant = self;
         presenter.playerService = self;
         presenter.eventHandler = self;
@@ -88,7 +92,7 @@ NYTPhotosViewControllerDelegate>
     }
     
     [self.mediaPresenters setObject:presenter
-                             forKey:attachmentID];
+                             forKey:presenterID];
     
     [view setPresenter:presenter];
     
@@ -119,117 +123,49 @@ NYTPhotosViewControllerDelegate>
 - (void)requestForMediaWithSender:(QMMediaPresenter *)presenter {
     
     QBChatMessage *message = presenter.message;
-    NSString *attachmentID = presenter.modelID;
+    QBChatAttachment *attachment = presenter.attachment;
     
-    QBChatAttachment *attachment;
-    
-    if (!attachmentID) {
-        attachment = [self.mediaService placeholderAttachment:message.ID];
+    if (!attachment.ID) {
+        attachment = [self.attachmentsService placeholderAttachment:message.ID];
+        [self updateWithMedia:attachment
+                      message:message];
     }
     else {
+        [presenter didUpdateIsReady:NO];
         
-        for (QBChatAttachment *att in message.attachments) {
-            if ([att.ID isEqualToString:attachmentID]) {
-                attachment = att;
-                break;
-            }
-        }
+        [self.attachmentsService fetchAttachmentWithID:attachment.ID
+                                               message:message completion:^(QBChatAttachment * _Nullable attachment, NSError * _Nullable error) {
+                                                   
+                                                   if (attachment) {
+                                                       [self updateWithMedia:attachment
+                                                                     message:message];
+                                                   }
+                                               }];
     }
     
-    if (attachment) {
-
-        
-        [self.mediaPresenters setObject:presenter forKey:message.ID];
-        [self updateWithMedia:attachment
-                      message:message
-                 attachmentID:attachmentID];
-    }
+    
 }
 
 
 - (void)updateWithMedia:(QBChatAttachment *)attachment
-                message:(QBChatMessage *)message
-           attachmentID:(NSString *)attachmentID {
+                message:(QBChatMessage *)message {
     
-    if (attachmentID == nil) {
+    
+    
+    if (!attachment.ID) {
         
         QMMediaPresenter *presenter = [self presenterForMessage:message];
         
-        [presenter didUpdateIsReady:NO];
+        
         [presenter didUpdateImage:attachment.image];
         [presenter didUpdateDuration:attachment.duration];
     }
     else {
         
-        QMMediaPresenter *presenter = [self.mediaPresenters objectForKey:attachmentID];
-        
-        if (attachment.contentType == QMAttachmentContentTypeImage) {
-            
-            if (attachment.image) {
-                [presenter didUpdateIsReady:YES];
-                [presenter didUpdateThumbnailImage:attachment.image];
-            }
-            else {
-                [presenter didUpdateIsReady:NO];
-                
-                __weak typeof(self) weakSelf = self;
-                
-                [self.mediaService imageForAttachment:attachment
-                                              message:message
-                                           completion:^(UIImage *image, NSError *error) {
-                                               
-                                               QMMediaPresenter *tPresenter = [weakSelf.mediaPresenters objectForKey:attachmentID];
-                                               
-                                               if (!error) {
-                                                   [tPresenter didUpdateIsReady:YES];
-                                                   [tPresenter didUpdateThumbnailImage:image];
-                                               }
-                                               else {
-                                                   [tPresenter didOccureDownloadError:error];
-                                               }
-                                           }];
-            }
-        }
-        if (attachment.contentType == QMAttachmentContentTypeAudio) {
-            
-            __weak typeof(self) weakSelf = self;
-            
-            [self.mediaService audioDataForAttachment:attachment
-                                              message:message
-                                           completion:^(BOOL isReady,
-                                                        __unused NSError *error)
-             {
-                 QMMediaPresenter *tPresenter = [weakSelf.mediaPresenters objectForKey:attachmentID];
-                 [tPresenter didUpdateIsReady:isReady];
-             }];
-            
-            [presenter didUpdateDuration:attachment.duration];
-            
-        }
-        if (attachment.contentType == QMAttachmentContentTypeVideo) {
-            
-            [presenter didUpdateDuration:attachment.duration];
-            
-            if (attachment.image) {
-                
-                [presenter didUpdateImage:attachment.image];
-            }
-            else {
-                
-                [presenter didUpdateIsReady:NO];
-                
-                __weak typeof(self) weakSelf = self;
-                [self.mediaService imageForAttachment:attachment
-                                              message:message
-                                           completion:^(UIImage *image, NSError *error) {
-                                               if (!error) {
-                                                   QMMediaPresenter *t_presenter = [weakSelf.mediaPresenters objectForKey:attachmentID];
-                                                   [t_presenter didUpdateIsReady:YES];
-                                                   [t_presenter didUpdateImage:image];
-                                               }
-                                           }];
-            }
-        }
+        QMMediaPresenter *presenter = [self.mediaPresenters objectForKey:attachment.ID];
+        [presenter didUpdateIsReady:YES];
+        [presenter didUpdateThumbnailImage:attachment.image];
+        [presenter didUpdateDuration:attachment.duration];
     }
 }
 
@@ -246,12 +182,11 @@ NYTPhotosViewControllerDelegate>
         }
     }
     
-    BOOL isReady = [self.mediaService attachmentIsReadyToPlay:attachment
-                                                      message:message];
+    BOOL isReady = [self.attachmentsService attachmentIsReadyToPlay:attachment
+                                                            message:message];
     if (!isReady) {
         return;
     }
-    
     
     if (attachment.contentType == QMAttachmentContentTypeAudio) {
         
@@ -291,8 +226,8 @@ NYTPhotosViewControllerDelegate>
         }
     }
     
-    BOOL isReady = [self.mediaService attachmentIsReadyToPlay:attachment
-                                                      message:message];
+    BOOL isReady = [self.attachmentsService attachmentIsReadyToPlay:attachment
+                                                            message:message];
     
     if (!isReady) {
         return;
@@ -332,28 +267,18 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
 - (void)didTapContainer:(id<QMChatPresenterDelegate>)sender {
     
     QBChatMessage *message = sender.message;
-    NSString *attachmentID = sender.modelID;
+    QBChatAttachment *attachment = sender.attachment;
     
-    QBChatAttachment *attachment;
-    for (QBChatAttachment *att in message.attachments) {
-        if ([att.ID isEqualToString:attachmentID]) {
-            attachment = att;
-            break;
-        }
-    }
-    
-    if (!attachment) {
-        return;
-    }
+    NSParameterAssert(attachment);
     
     if (attachment.contentType == QMAttachmentContentTypeImage) {
         __weak typeof(self) weakSelf = self;
         
         
-        [self.mediaService.storeService cachedImageForAttachment:attachment
-                                                       messageID:message.ID
-                                                        dialogID:message.dialogID
-                                                      completion:^(UIImage *image)
+        [self.attachmentsService.storeService cachedImageForAttachment:attachment
+                                                             messageID:message.ID
+                                                              dialogID:message.dialogID
+                                                            completion:^(UIImage *image)
          {
              __strong typeof(weakSelf) strongSelf = weakSelf;
              
@@ -399,7 +324,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     
     if (attachment.contentType == QMAttachmentContentTypeAudio) {
         
-        NSURL *fileURL = [self.mediaService.storeService fileURLForAttachment:attachment messageID:message.ID dialogID:message.dialogID];
+        NSURL *fileURL = [self.attachmentsService.storeService fileURLForAttachment:attachment messageID:message.ID dialogID:message.dialogID];
         
         [[QMAudioPlayer audioPlayer] activateMediaAtURL:fileURL withID:attachment.ID];
     }
@@ -426,7 +351,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
                                           animated:YES
                                         completion:^{
                                             __strong typeof(weakSelf) strongSelf = weakSelf;
-                                
+                                            
                                             [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
                                             [strongSelf.videoPlayer play];
                                         }];
@@ -444,9 +369,9 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     }
 }
 
-- (QMMediaService *)mediaService {
+- (QMChatAttachmentService *)attachmentsService {
     
-    return [QMCore instance].chatService.chatAttachmentService.mediaService;
+    return [QMCore instance].chatService.chatAttachmentService;
 }
 
 //MARK:- Helpers
@@ -464,7 +389,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
             view = [self.viewController viewForMessage:message];
             
             if (view) {
-
+                
                 presenter = [[QMMediaPresenter alloc] initWithView:view];
                 presenter.message = message;
                 [view setPresenter:presenter];

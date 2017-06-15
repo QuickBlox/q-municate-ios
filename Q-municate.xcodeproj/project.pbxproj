@@ -690,7 +690,6 @@
 			isa = PBXGroup;
 			children = (
 				E08D52121E5AABE200918B5B /* QMMediaController */,
-				E087217A1E5611170041D346 /* QMMediaInteractor */,
 				58FA41641C96B1E300E61586 /* QMStatusStringBuilder */,
 				585C82641D75D28A0010C71E /* QMImagePreview */,
 				581F6E1F1D3E3DF90087BC7A /* QMHelpers */,
@@ -2126,13 +2125,6 @@
 			path = QMSiriExtension;
 			sourceTree = "<group>";
 		};
-		E087217A1E5611170041D346 /* QMMediaInteractor */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = QMMediaInteractor;
-			sourceTree = "<group>";
-		};
 		E08D52121E5AABE200918B5B /* QMMediaController */ = {
 			isa = PBXGroup;
 			children = (
@@ -2366,7 +2358,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		E6936DF91158CD5FF2D1E6C5 /* [CP] Check Pods Manifest.lock */ = {
@@ -2381,7 +2373,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		E911BC553233DD014AE11AC7 /* [CP] Copy Pods Resources */ = {
