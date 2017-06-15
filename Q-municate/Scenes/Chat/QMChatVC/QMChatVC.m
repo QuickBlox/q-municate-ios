@@ -193,8 +193,6 @@ QMCallManagerDelegate
     
     [QMChatCell registerMenuAction:@selector(delete:)];
     
-    self.navigationController.navigationBar.topItem.title = @"";
-    
     if (self.chatDialog == nil) {
         
         self.inputToolbar.hidden = YES;
@@ -203,7 +201,6 @@ QMCallManagerDelegate
         
         return;
     }
-    
     // setting up chat controller
     self.topContentAdditionalInset =
     self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
@@ -215,7 +212,6 @@ QMCallManagerDelegate
     self.detailedCells = [NSMutableSet set];
     self.statusStringBuilder = [[QMStatusStringBuilder alloc] init];
     
-    
     self.mediaController = [[QMMediaController alloc] initWithViewController:self];
     
     @weakify(self);
@@ -225,8 +221,6 @@ QMCallManagerDelegate
         @strongify(self);
         [self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion duration:kQMDefaultNotificationDismissTime];
     }];
-    
-    
     // subscribing to delegates
     [[QMCore instance].chatService addDelegate:self];
     [[QMCore instance].contactListService addDelegate:self];
@@ -245,10 +239,8 @@ QMCallManagerDelegate
         // set up opponent full name
         [self.onlineTitleView setTitle:[[QMCore instance].contactManager fullNameForUserID:[self.chatDialog opponentID]]];
         [self updateOpponentOnlineStatus];
-        
         // configuring call buttons for opponent
         [self configureCallButtons];
-        
         // handling typing status
         [self.chatDialog setOnUserIsTyping:^(NSUInteger userID) {
             @strongify(self);
@@ -259,7 +251,6 @@ QMCallManagerDelegate
             self.isOpponentTyping = YES;
             [self.onlineTitleView setStatus:NSLocalizedString(@"QM_STR_TYPING", nil)];
         }];
-        
         // Handling user stopped typing.
         [self.chatDialog setOnUserStoppedTyping:^(NSUInteger userID) {
             @strongify(self);
@@ -306,6 +297,8 @@ QMCallManagerDelegate
     
     [super viewWillAppear:animated];
     
+    self.navigationController.navigationBar.topItem.title = @"";
+    
     [QMCore instance].activeDialogID = self.chatDialog.ID;
     
     @weakify(self);
@@ -315,7 +308,6 @@ QMCallManagerDelegate
                                                        queue:nil
                                                   usingBlock:^(NSNotification * _Nonnull __unused note)
      {
-         
          @strongify(self);
          
          [[QMAudioPlayer audioPlayer] pause];
@@ -334,29 +326,26 @@ QMCallManagerDelegate
     [super viewWillDisappear:animated];
     
     if (self.chatDialog == nil) {
-        
         return;
     }
     
     [QMCore instance].activeDialogID = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self.observerWillResignActive];
-    
     // Delete blocks.
     [self.chatDialog clearTypingStatusBlocks];
     [self.chatDialog clearDialogOccupantsStatusBlock];
-    
     //Cancel audio recording
     [self finishAudioRecording];
     [self.inputToolbar forceFinishRecording];
-    
     //Stop player
     [[QMAudioPlayer audioPlayer] stop];
 }
 
 //MARK: - Deferred queue management
 
-- (void)deferredQueueManager:(QMDeferredQueueManager *)__unused queueManager didAddMessageLocally:(QBChatMessage *)addedMessage {
+- (void)deferredQueueManager:(QMDeferredQueueManager *)__unused queueManager
+        didAddMessageLocally:(QBChatMessage *)addedMessage {
     
     if ([addedMessage.dialogID isEqualToString:self.chatDialog.ID]) {
         
@@ -391,7 +380,6 @@ QMCallManagerDelegate
     }
 }
 
-
 //MARK: - Helpers & Utility
 
 - (void)updateOpponentOnlineStatus {
@@ -417,15 +405,15 @@ QMCallManagerDelegate
     [[QMCore instance].chatService messagesWithChatDialogID:self.chatDialog.ID
                                              iterationBlock:^(QBResponse * __unused response,
                                                               NSArray *messages,
-                                                              BOOL * __unused stop) {
-                                                 
-                                                 @strongify(self);
-                                                 
-                                                 if (messages.count > 0) {
-                                                     
-                                                     [self.chatDataSource addMessages:messages];
-                                                 }
-                                             }];
+                                                              BOOL * __unused stop)
+     {
+         @strongify(self);
+         
+         if (messages.count > 0) {
+             
+             [self.chatDataSource addMessages:messages];
+         }
+     }];
 }
 
 - (void)readMessage:(QBChatMessage *)message {
@@ -535,14 +523,12 @@ QMCallManagerDelegate
 - (void)requestForRecordPermissions {
     
     [QMPermissions requestPermissionToMicrophoneWithCompletion:^(BOOL granted) {
-        
         // showing error alert with a suggestion
         // to go to the settings
         if (!granted) {
             [self showAlertWithTitle:NSLocalizedString(@"QM_STR_MICROPHONE_ERROR", nil)
                              message:NSLocalizedString(@"QM_STR_NO_PERMISSIONS_TO_MICROPHONE", nil)];
         }
-        
     }];
 }
 
@@ -559,10 +545,11 @@ QMCallManagerDelegate
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_SETTINGS", nil)
                                                         style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                          
-                                                          [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-                                                      }]];
+                                                      handler:^(UIAlertAction * _Nonnull __unused action)
+                                {
+                                    
+                                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                                }]];
     
     [self presentViewController:alertController animated:YES completion:nil];
 }
@@ -731,39 +718,42 @@ QMCallManagerDelegate
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_TAKE_MEDIA", nil)
                                                         style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                          
-                                                          [QMImagePicker takePhotoOrVideoInViewController:self
-                                                                                              maxDuration:kQMMaxAttachmentDuration
-                                                                                                  quality:UIImagePickerControllerQualityTypeMedium
-                                                                                            resultHandler:self];
-                                                      }]];
+                                                      handler:^(UIAlertAction * _Nonnull __unused action)
+                                {
+                                    
+                                    [QMImagePicker takePhotoOrVideoInViewController:self
+                                                                        maxDuration:kQMMaxAttachmentDuration
+                                                                            quality:UIImagePickerControllerQualityTypeMedium
+                                                                      resultHandler:self];
+                                }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CHOOSE_MEDIA", nil)
                                                         style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                          
-                                                          [QMImagePicker chooseFromGaleryInViewController:self
-                                                                                              maxDuration:kQMMaxAttachmentDuration
-                                                                                            resultHandler:self
-                                                                                            allowsEditing:YES];
-                                                      }]];
+                                                      handler:^(UIAlertAction * _Nonnull __unused action)
+                                {
+                                    
+                                    [QMImagePicker chooseFromGaleryInViewController:self
+                                                                        maxDuration:kQMMaxAttachmentDuration
+                                                                      resultHandler:self
+                                                                      allowsEditing:YES];
+                                }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LOCATION", nil)
                                                         style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                          
-                                                          QMLocationViewController *locationVC = [[QMLocationViewController alloc] initWithState:QMLocationVCStateSend];
-                                                          
-                                                          [locationVC setSendButtonPressed:^(CLLocationCoordinate2D centerCoordinate) {
-                                                              
-                                                              [self _sendLocationMessage:centerCoordinate];
-                                                          }];
-                                                          
-                                                          UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:locationVC];
-                                                          
-                                                          [self presentViewController:navController animated:YES completion:nil];
-                                                      }]];
+                                                      handler:^(UIAlertAction * _Nonnull __unused action)
+                                {
+                                    
+                                    QMLocationViewController *locationVC =
+                                    [[QMLocationViewController alloc] initWithState:QMLocationVCStateSend];
+                                    
+                                    [locationVC setSendButtonPressed:^(CLLocationCoordinate2D centerCoordinate) {
+                                        [self _sendLocationMessage:centerCoordinate];
+                                    }];
+                                    
+                                    UINavigationController *navController =
+                                    [[UINavigationController alloc] initWithRootViewController:locationVC];
+                                    [self presentViewController:navController animated:YES completion:nil];
+                                }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
                                                         style:UIAlertActionStyleCancel

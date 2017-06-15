@@ -44,51 +44,51 @@ PODS:
     - QMCVDevelopment/Utils (= 0.4.1.1)
     - QMCVDevelopment/ViewModels (= 0.4.1.1)
     - QMCVDevelopment/Views (= 0.4.1.1)
-    - SDWebImage (~> 3.8.2)
+    - SDWebImage (~> 4.0.0)
     - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/Categories (0.4.1.1):
     - FFCircularProgressView
     - QMCVDevelopment/QMChatLocationSnapshotter
-    - SDWebImage (~> 3.8.2)
+    - SDWebImage (~> 4.0.0)
     - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/Protocols (0.4.1.1):
     - FFCircularProgressView
-    - SDWebImage (~> 3.8.2)
+    - SDWebImage (~> 4.0.0)
     - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/QMChatDataSource (0.4.1.1):
     - FFCircularProgressView
-    - SDWebImage (~> 3.8.2)
+    - SDWebImage (~> 4.0.0)
     - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/QMChatLocationSnapshotter (0.4.1.1):
     - FFCircularProgressView
-    - SDWebImage (~> 3.8.2)
+    - SDWebImage (~> 4.0.0)
     - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/QMMediaPresenter (0.4.1.1):
     - FFCircularProgressView
-    - SDWebImage (~> 3.8.2)
+    - SDWebImage (~> 4.0.0)
     - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/Sections (0.4.1.1):
     - FFCircularProgressView
     - QMCVDevelopment/QMChatDataSource
-    - SDWebImage (~> 3.8.2)
+    - SDWebImage (~> 4.0.0)
     - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/Utils (0.4.1.1):
     - FFCircularProgressView
     - QMCVDevelopment/Categories
-    - SDWebImage (~> 3.8.2)
+    - SDWebImage (~> 4.0.0)
     - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/ViewModels (0.4.1.1):
     - FFCircularProgressView
     - QMCVDevelopment/Categories
-    - SDWebImage (~> 3.8.2)
+    - SDWebImage (~> 4.0.0)
     - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/Views (0.4.1.1):
@@ -96,15 +96,15 @@ PODS:
     - QMCVDevelopment/Categories
     - QMCVDevelopment/Protocols
     - QMCVDevelopment/Utils
-    - SDWebImage (~> 3.8.2)
+    - SDWebImage (~> 4.0.0)
     - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMServicesDevelopment (0.4.5):
     - Bolts (>= 1.5.0)
   - Reachability (3.2)
-  - SDWebImage (3.8.2):
-    - SDWebImage/Core (= 3.8.2)
-  - SDWebImage/Core (3.8.2)
+  - SDWebImage (4.0.0):
+    - SDWebImage/Core (= 4.0.0)
+  - SDWebImage/Core (4.0.0)
   - SexyTooltip (1.2.4):
     - pop (~> 1.0)
   - SSKeychain (1.2.3)
@@ -129,7 +129,7 @@ DEPENDENCIES:
   - QMCVDevelopment (from `../QMChatViewController-ios/`)
   - QMServicesDevelopment (from `../q-municate-services-ios/`)
   - Reachability (~> 3.2)
-  - SDWebImage (~> 3.6)
+  - SDWebImage (~> 4.0.0)
   - SSKeychain (~> 1.2.2)
   - SVProgressHUD (~> 1.0)
   - TTTAttributedLabel (~> 2.0)
@@ -157,10 +157,10 @@ SPEC CHECKSUMS:
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
   pop: f667631a5108a2e60d9e8797c9b32ddaf2080bce
-  QMCVDevelopment: a5864f345eb2f30bd718394335b33eade85e8bd2
+  QMCVDevelopment: da4c29e0fe232691c7eb3a239015be97940e0288
   QMServicesDevelopment: 8cb68aafe07046e9d36f74fd04b5e5aa1642b182
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
-  SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
+  SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
   SexyTooltip: 29db17bed73347f5df0e86bf8e5d18876a64a1ce
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
@@ -168,6 +168,6 @@ SPEC CHECKSUMS:
   TwitterCore: e959987be23c767004d29eb7fab8d85d8585a2e5
   UIDevice-Hardware: 4bb15b9bd9878762ab879ac86185baad17b6c3ff
 
-PODFILE CHECKSUM: e0d3ae5d60b2a43a7f434e0cff9d17bbcdd1c36f
+PODFILE CHECKSUM: 25ea24717a2775aa1345a7e5983a8ec83d16b791
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.2.1
