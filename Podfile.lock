@@ -32,7 +32,6 @@ PODS:
     - FLAnimatedImage (~> 1.0.8)
     - NYTPhotoViewer/Core
   - NYTPhotoViewer/Core (1.1.0)
-  - pop (1.0.9)
   - QMCVDevelopment (0.4.1.1):
     - FFCircularProgressView
     - QMCVDevelopment/Categories (= 0.4.1.1)
@@ -45,51 +44,42 @@ PODS:
     - QMCVDevelopment/ViewModels (= 0.4.1.1)
     - QMCVDevelopment/Views (= 0.4.1.1)
     - SDWebImage (~> 4.0.0)
-    - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/Categories (0.4.1.1):
     - FFCircularProgressView
     - QMCVDevelopment/QMChatLocationSnapshotter
     - SDWebImage (~> 4.0.0)
-    - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/Protocols (0.4.1.1):
     - FFCircularProgressView
     - SDWebImage (~> 4.0.0)
-    - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/QMChatDataSource (0.4.1.1):
     - FFCircularProgressView
     - SDWebImage (~> 4.0.0)
-    - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/QMChatLocationSnapshotter (0.4.1.1):
     - FFCircularProgressView
     - SDWebImage (~> 4.0.0)
-    - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/QMMediaPresenter (0.4.1.1):
     - FFCircularProgressView
     - SDWebImage (~> 4.0.0)
-    - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/Sections (0.4.1.1):
     - FFCircularProgressView
     - QMCVDevelopment/QMChatDataSource
     - SDWebImage (~> 4.0.0)
-    - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/Utils (0.4.1.1):
     - FFCircularProgressView
     - QMCVDevelopment/Categories
     - SDWebImage (~> 4.0.0)
-    - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/ViewModels (0.4.1.1):
     - FFCircularProgressView
     - QMCVDevelopment/Categories
     - SDWebImage (~> 4.0.0)
-    - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMCVDevelopment/Views (0.4.1.1):
     - FFCircularProgressView
@@ -97,7 +87,6 @@ PODS:
     - QMCVDevelopment/Protocols
     - QMCVDevelopment/Utils
     - SDWebImage (~> 4.0.0)
-    - SexyTooltip
     - TTTAttributedLabel (> 1.13)
   - QMServicesDevelopment (0.4.5):
     - Bolts (>= 1.5.0)
@@ -105,8 +94,6 @@ PODS:
   - SDWebImage (4.0.0):
     - SDWebImage/Core (= 4.0.0)
   - SDWebImage/Core (4.0.0)
-  - SexyTooltip (1.2.4):
-    - pop (~> 1.0)
   - SSKeychain (1.2.3)
   - SVProgressHUD (1.1.3)
   - TTTAttributedLabel (2.0.0)
@@ -156,12 +143,10 @@ SPEC CHECKSUMS:
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
-  pop: f667631a5108a2e60d9e8797c9b32ddaf2080bce
-  QMCVDevelopment: da4c29e0fe232691c7eb3a239015be97940e0288
+  QMCVDevelopment: f55619e094d8b875fce291968fd9490eaaf09dab
   QMServicesDevelopment: 8cb68aafe07046e9d36f74fd04b5e5aa1642b182
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
-  SexyTooltip: 29db17bed73347f5df0e86bf8e5d18876a64a1ce
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
@@ -170,4 +155,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 25ea24717a2775aa1345a7e5983a8ec83d16b791
 
-COCOAPODS: 1.2.1
+COCOAPODS: 1.2.0
