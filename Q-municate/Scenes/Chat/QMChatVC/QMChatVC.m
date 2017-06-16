@@ -59,6 +59,7 @@ QMChatServiceDelegate,
 QMChatConnectionDelegate,
 QMContactListServiceDelegate,
 QMDeferredQueueManagerDelegate,
+QMUsersServiceDelegate,
 
 QMChatActionsHandler,
 QMChatCellDelegate,
@@ -224,10 +225,10 @@ QMCallManagerDelegate
     // subscribing to delegates
     [[QMCore instance].chatService addDelegate:self];
     [[QMCore instance].contactListService addDelegate:self];
+    [[QMCore instance].usersService addDelegate:self];
     [[QMCore instance].chatService.chatAttachmentService addDelegate:self.mediaController];
     [[QMCore instance].callManager addDelegate:self];
     [self.deferredQueueManager addDelegate:self];
-    
     
     self.actionsHandler = self;
     
@@ -1448,7 +1449,7 @@ QMCallManagerDelegate
     
 }
 #pragma mark - Typing status
-//MARK: - Typing status
+// MARK: - Typing status
 
 - (void)stopTyping {
     
@@ -1842,6 +1843,20 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     }
 }
 
+// MARK: - QMUsersServiceDelegate
+
+- (void)usersService:(QMUsersService *)__unused usersService didUpdateUsers:(NSArray<QBUUser *> *)users {
+    if (self.chatDialog.type != QBChatDialogTypePrivate) {
+        return;
+    }
+    
+    for (QBUUser *user in users) {
+        if (user.ID == self.chatDialog.opponentID) {
+            [self updateOpponentOnlineStatus];
+            break;
+        }
+    }
+}
 
 //MARK: - Contact List Service Delegate
 
