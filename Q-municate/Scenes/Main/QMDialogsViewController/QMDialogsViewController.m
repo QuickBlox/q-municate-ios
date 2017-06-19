@@ -266,6 +266,14 @@ titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
     }
 }
 
+// MARK: - Overrides
+
+- (void)setAdditionalNavigationBarHeight:(CGFloat)additionalNavigationBarHeight {
+    if (!self.tabBarController.tabBar.hidden) {
+        [super setAdditionalNavigationBarHeight:additionalNavigationBarHeight];
+    }
+}
+
 //MARK: - UISearchControllerDelegate
 
 - (void)willPresentSearchController:(UISearchController *)__unused searchController {
@@ -275,8 +283,8 @@ titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)willDismissSearchController:(UISearchController *)__unused searchController {
-    self.additionalNavigationBarHeight = [(QMNavigationController *)self.navigationController currentAdditionalNavigationBarHeight];
     self.tabBarController.tabBar.hidden = NO;
+    self.additionalNavigationBarHeight = [(QMNavigationController *)self.navigationController currentAdditionalNavigationBarHeight];
 }
 
 //MARK: - UISearchResultsUpdating
