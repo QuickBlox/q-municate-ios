@@ -45,6 +45,7 @@ static UIColor *highlightedColor() {
                                                                               CGRectGetHeight(self.frame) - kQMShadowViewHeight,
                                                                               CGRectGetWidth(self.frame),
                                                                               kQMShadowViewHeight)];
+    shadowView.autoresizingMask |= UIViewAutoresizingFlexibleTopMargin;
     [self addSubview:shadowView];
 }
 

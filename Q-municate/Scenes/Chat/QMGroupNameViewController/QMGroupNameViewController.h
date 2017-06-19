@@ -6,11 +6,11 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "QMTableViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface QMGroupNameViewController : UITableViewController
+@interface QMGroupNameViewController : QMTableViewController
 
 @property (strong, nonatomic) QBChatDialog *chatDialog;
 

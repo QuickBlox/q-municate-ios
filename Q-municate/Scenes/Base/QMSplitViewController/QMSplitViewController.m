@@ -8,6 +8,7 @@
 
 #import "QMSplitViewController.h"
 #import "QMNavigationBar.h"
+#import "QMNavigationController.h"
 
 NSString *const kViewControllerNoSelection = @"ViewControllerNoSelection";
 
@@ -51,8 +52,8 @@ NSString *const kViewControllerNoSelection = @"ViewControllerNoSelection";
 separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)__unused primaryViewController {
     
     UITabBarController *masterVC = splitViewController.viewControllers.firstObject;
-    UINavigationController *selectedNavigationController = masterVC.selectedViewController;
-    UINavigationController *navigationController = nil;
+    QMNavigationController *selectedNavigationController = (QMNavigationController *)masterVC.selectedViewController;
+    QMNavigationController *navigationController = nil;
     
     NSArray *viewControllers = selectedNavigationController.viewControllers;
 
@@ -68,10 +69,13 @@ separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)__u
         [selectedNavigationController setViewControllers:[mutableSelectedVCs copy]];
         
         navigationController =
-        [[UINavigationController alloc] initWithNavigationBarClass:[QMNavigationBar class]
+        [[QMNavigationController alloc] initWithNavigationBarClass:[QMNavigationBar class]
                                                       toolbarClass:nil];
         if (finalViewControllers.count > 0) {
             [navigationController setViewControllers:finalViewControllers];
+        }
+        if (selectedNavigationController.currentAdditionalNavigationBarHeight > 0) {
+            navigationController.currentAdditionalNavigationBarHeight = 0;
         }
     }
     else {
@@ -107,11 +111,12 @@ separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)__u
         return NO;
     }
     // taking navigation stack for Chats tab
-    UINavigationController *primaryNavigationController =
-    [(UITabBarController *)primaryViewController selectedViewController];
+    QMNavigationController *primaryNavigationController =
+    (QMNavigationController *)[(UITabBarController *)primaryViewController selectedViewController];
     
     // taking top controller from secondary one
-    UINavigationController *secondaryNavigationController = (UINavigationController *)secondaryViewController;
+    QMNavigationController *secondaryNavigationController = (QMNavigationController *)secondaryViewController;
+    secondaryNavigationController.currentAdditionalNavigationBarHeight = primaryNavigationController.currentAdditionalNavigationBarHeight;
     NSArray *detailViewControllers = [secondaryNavigationController viewControllers];
     
     // pushing view controller from detail onto primary one

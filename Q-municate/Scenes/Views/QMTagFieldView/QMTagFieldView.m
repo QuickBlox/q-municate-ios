@@ -72,6 +72,7 @@
     _shadowView = [[UIView alloc] init];
     _shadowView.frame = CGRectMake(0, self.frame.size.height, self.frame.size.width, 0);
     _shadowView.layer.zPosition = 1;
+    _shadowView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     [self addSubview:_shadowView];
     
     self.clipsToBounds = NO;

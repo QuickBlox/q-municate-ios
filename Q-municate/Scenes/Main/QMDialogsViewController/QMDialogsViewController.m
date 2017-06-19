@@ -21,9 +21,7 @@
 #import <SVProgressHUD.h>
 #import "QBChatDialog+OpponentID.h"
 #import "QMSplitViewController.h"
-
-// category
-#import "UINavigationController+QMNotification.h"
+#import "QMNavigationController.h"
 
 static const NSInteger kQMUnAuthorizedErrorCode = -1011;
 
@@ -76,8 +74,6 @@ QMSearchResultsControllerDelegate
     // Subscribing delegates
     [[QMCore instance].chatService addDelegate:self];
     [[QMCore instance].usersService addDelegate:self];
-    // Hide empty separators
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     // search implementation
     [self configureSearch];
     // Data sources init
@@ -107,9 +103,9 @@ QMSearchResultsControllerDelegate
          
          @strongify(self);
          if (![QBChat instance].isConnected) {
-             [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
-                                                         message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
-                                                        duration:0];
+             [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                                                                   message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
+                                                                                  duration:0];
          }
      }];
 }
@@ -144,9 +140,9 @@ QMSearchResultsControllerDelegate
 
 - (void)performAutoLoginAndFetchData {
     
-    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
-                                                message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
-                                               duration:0];
+    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                                                          message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
+                                                                         duration:0];
     
     __weak UINavigationController *navigationController = self.navigationController;
     
@@ -156,7 +152,7 @@ QMSearchResultsControllerDelegate
         @strongify(self);
         if (task.isFaulted) {
             
-            [navigationController dismissNotificationPanel];
+            [(QMNavigationController *)navigationController dismissNotificationPanel];
             
             if (task.error.code == kQMUnAuthorizedErrorCode
                 || (task.error.code == kBFMultipleErrorsError
@@ -262,7 +258,8 @@ titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if ([segue.identifier isEqualToString:kQMSceneSegueChat]) {
         
-        UINavigationController *chatNavigationController = segue.destinationViewController;
+        QMNavigationController *chatNavigationController = segue.destinationViewController;
+        chatNavigationController.currentAdditionalNavigationBarHeight = [(QMNavigationController *)self.navigationController currentAdditionalNavigationBarHeight];
         
         QMChatVC *chatViewController = (QMChatVC *)chatNavigationController.topViewController;
         chatViewController.chatDialog = sender;
@@ -272,13 +269,13 @@ titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
 //MARK: - UISearchControllerDelegate
 
 - (void)willPresentSearchController:(UISearchController *)__unused searchController {
-    
+    self.additionalNavigationBarHeight = 0;
     self.searchResultsController.tableView.dataSource = self.dialogsSearchDataSource;
     self.tabBarController.tabBar.hidden = YES;
 }
 
 - (void)willDismissSearchController:(UISearchController *)__unused searchController {
-    
+    self.additionalNavigationBarHeight = [(QMNavigationController *)self.navigationController currentAdditionalNavigationBarHeight];
     self.tabBarController.tabBar.hidden = NO;
 }
 
@@ -382,17 +379,17 @@ didReceiveNotificationMessage:(QBChatMessage *)message
 - (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
     
     [QMTasks taskFetchAllData];
-    [self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess
-                                                message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil)
-                                               duration:kQMDefaultNotificationDismissTime];
+    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess
+                                                                          message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil)
+                                                                         duration:kQMDefaultNotificationDismissTime];
 }
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
     
     [QMTasks taskFetchAllData];
-    [self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess
-                                                message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil)
-                                               duration:kQMDefaultNotificationDismissTime];
+    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess
+                                                                          message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil)
+                                                                         duration:kQMDefaultNotificationDismissTime];
 }
 
 - (void)chatService:(QMChatService *)__unused chatService

@@ -15,7 +15,7 @@
 #import "QMCore.h"
 #import "QMProfile.h"
 #import <QMImageView.h>
-#import "UINavigationController+QMNotification.h"
+#import "QMNavigationController.h"
 #import "QMSettingsFooterView.h"
 
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
@@ -79,9 +79,6 @@ NYTPhotosViewControllerDelegate
     
     self.hiddenUserInfoCells = [NSMutableIndexSet indexSet];
     self.avatarImageView.imageViewType = QMImageViewTypeCircle;
-    
-    // Hide empty separators
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     // Set tableview background color
     self.tableView.backgroundColor = QMTableViewBackgroundColor();
@@ -149,9 +146,9 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
-    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     
-    __weak UINavigationController *navigationController = self.navigationController;
+    __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
     BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull __unused task) {
         
         [navigationController dismissNotificationPanel];
@@ -181,7 +178,7 @@ NYTPhotosViewControllerDelegate
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                       }]];
     
-    __weak UINavigationController *navigationController = self.navigationController;
+    __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
     
     @weakify(self);
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LOGOUT", nil)
@@ -194,7 +191,7 @@ NYTPhotosViewControllerDelegate
                                                               return;
                                                           }
                                                           
-                                                          [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+                                                          [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
                                                           
                                                           self.logoutTask = [[[QMCore instance] logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
                                                               
@@ -397,17 +394,17 @@ NYTPhotosViewControllerDelegate
     
     if (![[QMCore instance] isInternetConnected]) {
         
-        [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
+        [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
         return;
     }
     
-    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     
     __weak __typeof(self)weakSelf = self;
     [[QMTasks taskUpdateCurrentUserImage:photo progress:nil]
      continueWithBlock:^id(BFTask<QBUUser *> * task __unused) {
          
-         [weakSelf.navigationController dismissNotificationPanel];
+         [(QMNavigationController *)weakSelf.navigationController dismissNotificationPanel];
          return nil;
      }];
 }

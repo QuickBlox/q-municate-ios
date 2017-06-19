@@ -6,14 +6,14 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "QMTableViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  User info table view controller.
  */
-@interface QMUserInfoViewController : UITableViewController
+@interface QMUserInfoViewController : QMTableViewController
 
 /**
  *  User to show info for. Must have a valid user ID.

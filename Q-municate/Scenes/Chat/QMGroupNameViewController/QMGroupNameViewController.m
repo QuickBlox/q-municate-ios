@@ -8,7 +8,7 @@
 
 #import "QMGroupNameViewController.h"
 #import "QMCore.h"
-#import "UINavigationController+QMNotification.h"
+#import "QMNavigationController.h"
 
 @interface QMGroupNameViewController ()
 
@@ -41,7 +41,7 @@
 
 - (IBAction)saveButtonPressed:(UIBarButtonItem *)__unused sender {
     
-    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     
     __weak UINavigationController *navigationController = self.navigationController;
     
@@ -50,7 +50,7 @@
         
         @strongify(self);
         
-        [navigationController dismissNotificationPanel];
+        [(QMNavigationController *)navigationController dismissNotificationPanel];
         
         if (!task.isFaulted) {
             

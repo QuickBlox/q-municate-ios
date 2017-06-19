@@ -178,6 +178,7 @@ out here.</string>
                     <connections>
                         <outlet property="tagFieldView" destination="PV0-ej-tkc" id="KBM-Aq-bEz"/>
                         <outlet property="tagFieldViewHeightConstraint" destination="Oii-Wm-kH6" id="BWe-rQ-ggN"/>
+                        <outlet property="tagFieldViewTopConstraint" destination="oaO-IX-iVo" id="jku-ms-waE"/>
                         <segue destination="smd-oe-3SF" kind="showDetail" identifier="SceneSegueChat" id="LJb-6W-9Cm"/>
                     </connections>
                 </viewController>
@@ -287,7 +288,7 @@ out here.</string>
         <!--Navigation Controller-->
         <scene sceneID="IGN-AR-L1g">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="rRp-nU-Jp0" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="rRp-nU-Jp0" customClass="QMNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="" image="qm-tb-contacts" id="fYc-rl-dnk"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="jYx-TX-49w" customClass="QMNavigationBar">
@@ -311,7 +312,7 @@ out here.</string>
         <!--Navigation Controller-->
         <scene sceneID="ZMN-9H-H7e">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="8Yq-BL-cvM" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="8Yq-BL-cvM" customClass="QMNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="" image="qm-tb-chats" id="l6Z-lD-4Rv"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Irs-ba-SJb" customClass="QMNavigationBar">
@@ -403,7 +404,7 @@ out here.</string>
         <!--Navigation Controller-->
         <scene sceneID="teI-65-gku">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="smd-oe-3SF" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="smd-oe-3SF" customClass="QMNavigationController" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="gyT-Uq-WjS" customClass="QMNavigationBar">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -421,7 +422,7 @@ out here.</string>
         <!--Navigation Controller-->
         <scene sceneID="X4r-fs-KwN">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="grf-7O-2S3" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="grf-7O-2S3" customClass="QMNavigationController" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="uaF-lR-4Sh" customClass="QMNavigationBar">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -446,6 +447,6 @@ out here.</string>
         <image name="qm-tb-settings" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="SCD-ix-MHd"/>
+        <segue reference="LJb-6W-9Cm"/>
     </inferredMetricsTieBreakers>
 </document>
