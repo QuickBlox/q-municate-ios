@@ -11,7 +11,7 @@
 
 #import "QMTagFieldView.h"
 #import "QMCore.h"
-#import "UINavigationController+QMNotification.h"
+#import "QMNavigationController.h"
 #import "QMChatVC.h"
 #import "QMHelpers.h"
 
@@ -26,6 +26,7 @@ QMTagFieldViewDelegate
 
 @property (weak, nonatomic) IBOutlet QMTagFieldView *tagFieldView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *tagFieldViewHeightConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tagFieldViewTopConstraint;
 
 @property (weak, nonatomic) BFTask *dialogCreationTask;
 
@@ -76,8 +77,8 @@ QMTagFieldViewDelegate
         NSString *name = [fullNames componentsJoinedByString:@", "];
         NSArray *occupantsIDs = [[QMCore instance].contactManager idsOfUsers:tagIDs];
         
-        [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
-        __weak UINavigationController *navigationController = self.navigationController;
+        [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+        __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
         
         __block QBChatDialog *chatDialog = nil;
         
@@ -116,8 +117,8 @@ QMTagFieldViewDelegate
         }
         else {
             
-            [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
-            __weak UINavigationController *navigationController = self.navigationController;
+            [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+            __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
             
             @weakify(self);
             self.dialogCreationTask = [[[QMCore instance].chatService createPrivateChatDialogWithOpponent:user] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
@@ -156,6 +157,15 @@ QMTagFieldViewDelegate
     
     BOOL nextAllowed = [self.tagFieldView tagIDs].count > 0;
     self.navigationItem.rightBarButtonItem.enabled = nextAllowed;
+}
+
+// MARK: - Overrides
+
+- (void)setAdditionalNavigationBarHeight:(CGFloat)additionalNavigationBarHeight {
+    CGFloat previousAdditionalNavigationBarHeight = self.additionalNavigationBarHeight;
+    [super setAdditionalNavigationBarHeight:additionalNavigationBarHeight];
+    
+    self.tagFieldViewTopConstraint.constant += additionalNavigationBarHeight - previousAdditionalNavigationBarHeight;
 }
 
 //MARK: - QMMessageContactListViewControllerDelegate

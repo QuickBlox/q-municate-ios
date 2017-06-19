@@ -13,6 +13,8 @@
  */
 @interface QMChatVC : QMChatViewController
 
+@property (nonatomic) CGFloat additionalNavigationBarHeight;
+
 /**
  *  Chat dialog.
  */

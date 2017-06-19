@@ -11,7 +11,7 @@
 #import "QMGroupNameViewController.h"
 #import "QMGroupHeaderView.h"
 #import "QMCore.h"
-#import "UINavigationController+QMNotification.h"
+#import "QMNavigationController.h"
 
 #import "QMPlaceholder.h"
 #import "QMImagePicker.h"
@@ -27,6 +27,7 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
 
 @property (weak, nonatomic) QMGroupOccupantsViewController *groupOccupantsViewController;
 @property (weak, nonatomic) IBOutlet QMGroupHeaderView *headerView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *headerViewHeightConstraint;
 
 @end
 
@@ -87,7 +88,7 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
                                                           
                                                           if (![[QMCore instance] isInternetConnected]) {
                                                               
-                                                              [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
+                                                              [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
                                                               return;
                                                           }
                                                           
@@ -100,7 +101,7 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
                                                           
                                                           if (![[QMCore instance] isInternetConnected]) {
                                                               
-                                                              [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
+                                                              [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
                                                               return;
                                                           }
                                                           
@@ -130,17 +131,26 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
+// MARK: - Overrides
+
+- (void)setAdditionalNavigationBarHeight:(CGFloat)additionalNavigationBarHeight {
+    CGFloat previousAdditionalNavigationBarHeight = self.additionalNavigationBarHeight;
+    [super setAdditionalNavigationBarHeight:additionalNavigationBarHeight];
+    
+    self.headerViewHeightConstraint.constant += additionalNavigationBarHeight - previousAdditionalNavigationBarHeight;
+}
+
 //MARK: - QMImagePickerResultHandler
 
 - (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
-    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     
     __weak UINavigationController *navigationController = self.navigationController;
     
     [[[QMCore instance].chatManager changeAvatar:photo forGroupChatDialog:self.chatDialog] continueWithBlock:^id(BFTask *task __unused) {
         
-        [navigationController dismissNotificationPanel];
+        [(QMNavigationController *)navigationController dismissNotificationPanel];
         
         return nil;
     }];

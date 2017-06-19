@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Quickblox. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "QMTableViewController.h"
 
-@interface QMForgotPasswordViewController : UITableViewController
+@interface QMForgotPasswordViewController : QMTableViewController
 
 @end

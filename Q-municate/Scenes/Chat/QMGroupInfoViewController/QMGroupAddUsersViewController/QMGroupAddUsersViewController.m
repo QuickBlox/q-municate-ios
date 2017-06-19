@@ -11,7 +11,7 @@
 #import "QMGroupAddUsersSearchDataProvider.h"
 #import "QMCore.h"
 #import "NSArray+Intersection.h"
-#import "UINavigationController+QMNotification.h"
+#import "QMNavigationController.h"
 
 #import "QMSelectableContactCell.h"
 #import "QMNoResultsCell.h"
@@ -44,9 +44,6 @@ UISearchResultsUpdating
     [super viewDidLoad];
     
     [self registerNibs];
-    
-    // Hide empty separators
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     // subscribe for delegates
     [[QMCore instance].chatService addDelegate:self];
@@ -115,7 +112,7 @@ UISearchResultsUpdating
         return;
     }
     
-    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     
     __weak UINavigationController *navigationController = self.navigationController;
     
@@ -123,7 +120,7 @@ UISearchResultsUpdating
     self.task = [[[QMCore instance].chatManager addUsers:self.dataSource.selectedUsers.allObjects toGroupChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         
         @strongify(self);
-        [navigationController dismissNotificationPanel];
+        [(QMNavigationController *)navigationController dismissNotificationPanel];
         
         if (!task.isFaulted) {
             

@@ -15,10 +15,10 @@ static const CGFloat kQMIconSize = 26.0f;
 
 @interface QMNotificationPanelView ()
 
-@property (assign, nonatomic) QMNotificationPanelType *notificationPanelType;
-
 @property (strong, nonatomic) UILabel *textLabel;
 
+@property (strong, nonatomic) UIActivityIndicatorView *activityIndicatorView;
+@property (strong, nonatomic) UIImageView *imageView;
 @property (strong, nonatomic) UIVisualEffectView *visualEffectView;
 @property (strong, nonatomic) UIView *bgColorView;
 
@@ -33,7 +33,7 @@ static const CGFloat kQMIconSize = 26.0f;
     
     self = [super initWithFrame:frame];
     if (self) {
-        
+        _notificationPanelType = notificationPanelType;
         [self configureBlurWithFrame:frame backgroundColor:color(notificationPanelType)];
         [self configureIconWithNotificationType:notificationPanelType];
         [self configureTextLabelWithFrame:frame];
@@ -59,26 +59,26 @@ static const CGFloat kQMIconSize = 26.0f;
     
     if (notificationPanelType == QMNotificationPanelTypeLoading) {
         // init activity indicator
-        UIActivityIndicatorView *activityIndicatorView =
+        _activityIndicatorView =
         [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(kQMVerticalSpace,
                                                                   kQMHorizontalSpace,
                                                                   kQMIconSize,
                                                                   kQMIconSize)];
-        activityIndicatorView.backgroundColor = [UIColor clearColor];
-        [activityIndicatorView startAnimating];
-        [self addSubview:activityIndicatorView];
+        _activityIndicatorView.backgroundColor = [UIColor clearColor];
+        [_activityIndicatorView startAnimating];
+        [self addSubview:_activityIndicatorView];
     }
     else {
         // init image view
-        UIImageView *imageView =
+        _imageView =
         [[UIImageView alloc] initWithFrame:CGRectMake(kQMVerticalSpace,
                                                       kQMHorizontalSpace,
                                                       kQMIconSize,
                                                       kQMIconSize)];
         
-        imageView.backgroundColor = [UIColor clearColor];
-        imageView.image = image(notificationPanelType);
-        [self addSubview:imageView];
+        _imageView.backgroundColor = [UIColor clearColor];
+        _imageView.image = image(notificationPanelType);
+        [self addSubview:_imageView];
     }
 }
 
@@ -97,6 +97,27 @@ static const CGFloat kQMIconSize = 26.0f;
 }
 
 //MARK: - Setters
+
+- (void)setNotificationPanelType:(QMNotificationPanelType)notificationPanelType {
+    
+    if (_notificationPanelType != notificationPanelType) {
+        _notificationPanelType = notificationPanelType;
+        [_bgColorView removeFromSuperview];
+        _bgColorView = nil;
+        [_visualEffectView removeFromSuperview];
+        _visualEffectView = nil;
+        [_activityIndicatorView removeFromSuperview];
+        _activityIndicatorView = nil;
+        [_imageView removeFromSuperview];
+        _imageView = nil;
+        [_textLabel removeFromSuperview];
+        _textLabel = nil;
+        
+        [self configureBlurWithFrame:self.frame backgroundColor:color(notificationPanelType)];
+        [self configureIconWithNotificationType:notificationPanelType];
+        [self configureTextLabelWithFrame:self.frame];
+    }
+}
 
 - (void)setMessage:(NSString *)message {
     

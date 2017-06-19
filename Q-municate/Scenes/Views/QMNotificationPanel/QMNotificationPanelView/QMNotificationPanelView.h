@@ -38,6 +38,11 @@ typedef NS_ENUM(NSUInteger, QMNotificationPanelType) {
 @interface QMNotificationPanelView : UIView
 
 /**
+ *  Notification panel type.
+ */
+@property (assign, nonatomic) QMNotificationPanelType notificationPanelType;
+
+/**
  *  Notification panel view message.
  */
 @property (copy, nonatomic, nullable) NSString *message;

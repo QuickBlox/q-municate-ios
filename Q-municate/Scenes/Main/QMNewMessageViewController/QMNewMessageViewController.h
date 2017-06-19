@@ -6,8 +6,8 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "QMViewController.h"
 
-@interface QMNewMessageViewController : UIViewController
+@interface QMNewMessageViewController : QMViewController
 
 @end

@@ -6,8 +6,8 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "QMTableViewController.h"
 
-@interface QMDialogsViewController : UITableViewController
+@interface QMDialogsViewController : QMTableViewController
 
 @end

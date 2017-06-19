@@ -8,7 +8,7 @@
 
 #import "QMChatVC.h"
 #import "QMCore.h"
-#import "UINavigationController+QMNotification.h"
+#import "QMNavigationController.h"
 #import "QMStatusStringBuilder.h"
 #import "QMPlaceholder.h"
 #import "QMSoundManager.h"
@@ -59,6 +59,7 @@ QMChatServiceDelegate,
 QMChatConnectionDelegate,
 QMContactListServiceDelegate,
 QMDeferredQueueManagerDelegate,
+QMUsersServiceDelegate,
 
 QMChatActionsHandler,
 QMChatCellDelegate,
@@ -202,8 +203,12 @@ QMCallManagerDelegate
         return;
     }
     // setting up chat controller
-    self.topContentAdditionalInset =
-    self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
+    if (self.splitViewController.isCollapsed && [self.navigationController isKindOfClass:[QMNavigationController class]]) {
+        QMNavigationController *navController = (QMNavigationController *)self.navigationController;
+        if (navController.currentAdditionalNavigationBarHeight > 0) {
+            _additionalNavigationBarHeight = navController.currentAdditionalNavigationBarHeight;
+        }
+    }
     
     self.inputToolbar.contentView.textView.placeHolder = NSLocalizedString(@"QM_STR_INPUTTOOLBAR_PLACEHOLDER", nil);
     self.view.backgroundColor = QMChatBackgroundColor();
@@ -219,15 +224,15 @@ QMCallManagerDelegate
     [self.mediaController setOnError:^(QBChatMessage *__unused message, NSError *error) {
         
         @strongify(self);
-        [self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion duration:kQMDefaultNotificationDismissTime];
+        [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion duration:kQMDefaultNotificationDismissTime];
     }];
     // subscribing to delegates
     [[QMCore instance].chatService addDelegate:self];
     [[QMCore instance].contactListService addDelegate:self];
+    [[QMCore instance].usersService addDelegate:self];
     [[QMCore instance].chatService.chatAttachmentService addDelegate:self.mediaController];
     [[QMCore instance].callManager addDelegate:self];
     [self.deferredQueueManager addDelegate:self];
-    
     
     self.actionsHandler = self;
     
@@ -291,6 +296,11 @@ QMCallManagerDelegate
     [self refreshMessages];
     
     self.inputToolbar.audioRecordingIsEnabled = YES;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(navigationBarHeightChanged)
+                                                 name:kQMNavigationBarHeightChangeNotification
+                                               object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -319,6 +329,9 @@ QMCallManagerDelegate
              [self setOpponentOnlineStatus:NO];
          }
      }];
+    
+    self.topContentAdditionalInset =
+    self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height + _additionalNavigationBarHeight;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -340,6 +353,12 @@ QMCallManagerDelegate
     [self.inputToolbar forceFinishRecording];
     //Stop player
     [[QMAudioPlayer audioPlayer] stop];
+}
+
+// MARK: - Notification
+
+- (void)navigationBarHeightChanged {
+    self.additionalNavigationBarHeight = [(QMNavigationController *)self.navigationController currentAdditionalNavigationBarHeight];
 }
 
 //MARK: - Deferred queue management
@@ -440,7 +459,7 @@ QMCallManagerDelegate
     
     if (![[QMCore instance] isInternetConnected]) {
         
-        [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning
+        [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning
                                                     message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil)
                                                    duration:kQMDefaultNotificationDismissTime];
         return NO;
@@ -450,7 +469,7 @@ QMCallManagerDelegate
         
         if (QBChat.instance.isConnecting) {
             
-            [self.navigationController shake];
+            [(QMNavigationController *)self.navigationController shake];
         }
         else {
             
@@ -1448,7 +1467,7 @@ QMCallManagerDelegate
     
 }
 #pragma mark - Typing status
-//MARK: - Typing status
+// MARK: - Typing status
 
 - (void)stopTyping {
     
@@ -1583,7 +1602,7 @@ QMCallManagerDelegate
                                               completion:^(NSError * _Nullable error) {
                                                   
                                                   if (error) {
-                                                      [self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed
+                                                      [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed
                                                                                                   message:error.localizedRecoverySuggestion
                                                                                                  duration:kQMDefaultNotificationDismissTime];
                                                       // perform local attachment deleting
@@ -1737,6 +1756,20 @@ QMCallManagerDelegate
     [self.onlineTitleView setStatus:status];
 }
 
+// MARK: - Overrides
+
+- (void)setAdditionalNavigationBarHeight:(CGFloat)additionalNavigationBarHeight {
+    _additionalNavigationBarHeight = additionalNavigationBarHeight;
+    
+    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+        self.topContentAdditionalInset =
+        self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height + additionalNavigationBarHeight;
+    }
+    else {
+        self.topContentAdditionalInset = additionalNavigationBarHeight;
+    }
+}
+
 //MARK: - QMImageViewDelegate
 
 - (void)imageViewDidTap:(QMImageView *)__unused imageView {
@@ -1842,6 +1875,20 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     }
 }
 
+// MARK: - QMUsersServiceDelegate
+
+- (void)usersService:(QMUsersService *)__unused usersService didUpdateUsers:(NSArray<QBUUser *> *)users {
+    if (self.chatDialog.type != QBChatDialogTypePrivate) {
+        return;
+    }
+    
+    for (QBUUser *user in users) {
+        if (user.ID == self.chatDialog.opponentID) {
+            [self updateOpponentOnlineStatus];
+            break;
+        }
+    }
+}
 
 //MARK: - Contact List Service Delegate
 
@@ -1864,14 +1911,14 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     
     QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:[self.chatDialog opponentID]];
     
-    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     
     if (accept) {
         
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:sender];
         QBChatMessage *currentMessage = [self.chatDataSource messageForIndexPath:indexPath];
         
-        __weak UINavigationController *navigationController = self.navigationController;
+        __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
         
         @weakify(self);
         self.contactRequestTask = [[[QMCore instance].contactManager addUserToContactList:opponentUser] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
@@ -1888,7 +1935,7 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     }
     else {
         
-        __weak UINavigationController *navigationController = self.navigationController;
+        __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
         
         @weakify(self);
         self.contactRequestTask = [[[[QMCore instance].contactManager rejectAddContactRequest:opponentUser] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
@@ -2063,7 +2110,7 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     
     if (![[QMCore instance] isInternetConnected]) {
         
-        [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
+        [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
         
         return;
     }
@@ -2158,6 +2205,14 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> __unused context) {
+        if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+            self.topContentAdditionalInset =
+            self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height + self.additionalNavigationBarHeight;
+        }
+        else {
+            self.topContentAdditionalInset = self.additionalNavigationBarHeight;
+        }
+        
         [self updateGroupAvatarFrameForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
         
     } completion:nil];
