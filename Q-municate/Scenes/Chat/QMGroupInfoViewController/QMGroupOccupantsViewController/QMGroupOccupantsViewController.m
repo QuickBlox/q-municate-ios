@@ -227,6 +227,12 @@ QMUsersServiceDelegate
     return [self.dataSource heightForRowAtIndexPath:indexPath];
 }
 
+// MARK: - Overrides
+
+- (void)setAdditionalNavigationBarHeight:(CGFloat)__unused additionalNavigationBarHeight {
+    // do not set for this controller
+}
+
 //MARK: - QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {

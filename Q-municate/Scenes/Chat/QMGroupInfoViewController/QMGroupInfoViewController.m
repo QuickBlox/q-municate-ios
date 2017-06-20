@@ -27,7 +27,7 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
 
 @property (weak, nonatomic) QMGroupOccupantsViewController *groupOccupantsViewController;
 @property (weak, nonatomic) IBOutlet QMGroupHeaderView *headerView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *headerViewHeightConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *headerViewTopConstraint;
 
 @end
 
@@ -137,7 +137,7 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
     CGFloat previousAdditionalNavigationBarHeight = self.additionalNavigationBarHeight;
     [super setAdditionalNavigationBarHeight:additionalNavigationBarHeight];
     
-    self.headerViewHeightConstraint.constant += additionalNavigationBarHeight - previousAdditionalNavigationBarHeight;
+    self.headerViewTopConstraint.constant += additionalNavigationBarHeight - previousAdditionalNavigationBarHeight;
 }
 
 //MARK: - QMImagePickerResultHandler
