@@ -28,9 +28,12 @@ NSString * const kQMNavigationBarHeightChangeNotification = @"kQMNavigationBarHe
 
 - (void)showNotificationWithType:(QMNotificationPanelType)notificationType message:(NSString *)message duration:(NSTimeInterval)duration {
     if ([self.navigationBar isKindOfClass:[QMNavigationBar class]]) {
+        
+        BOOL notify = YES;
         if (_notificationShown) {
             [_dismissTimer invalidate];
             _dismissTimer = nil;
+            notify = NO;
         }
         
         QMNavigationBar *navigationBar = (QMNavigationBar *)self.navigationBar;
@@ -47,7 +50,9 @@ NSString * const kQMNavigationBarHeightChangeNotification = @"kQMNavigationBarHe
         
         __weak __typeof(self)weakSelf = self;
         [navigationBar showNotificationPanelView:YES animation:^{
-            [weakSelf updateNotificationOnControllers];
+            if (notify) {
+                [weakSelf updateNotificationOnControllers];
+            }
         }];
     }
 }
