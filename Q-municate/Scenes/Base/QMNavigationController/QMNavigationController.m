@@ -15,6 +15,8 @@
 
 NSString * const kQMNavigationBarHeightChangeNotification = @"kQMNavigationBarHeightChangeNotification";
 
+static const CGFloat kQMNotificationPanelViewHeight = 36.0f;
+
 @interface QMNavigationController () {
     NSTimer *_dismissTimer;
     BOOL _notificationShown;
@@ -40,7 +42,7 @@ NSString * const kQMNavigationBarHeightChangeNotification = @"kQMNavigationBarHe
         navigationBar.notificationPanelType = notificationType;
         navigationBar.message = message;
         
-        _currentAdditionalNavigationBarHeight = 36.0f;
+        _currentAdditionalNavigationBarHeight = kQMNotificationPanelViewHeight;
         
         _notificationShown = YES;
         
