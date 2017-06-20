@@ -88,7 +88,7 @@
                     <navigationItem key="navigationItem" title="Group info" id="LsS-tY-OPd"/>
                     <connections>
                         <outlet property="headerView" destination="F1F-NO-Qdt" id="lvH-Hq-cos"/>
-                        <outlet property="headerViewHeightConstraint" destination="vW5-yc-0wV" id="zlG-sx-bsd"/>
+                        <outlet property="headerViewTopConstraint" destination="6Xb-4z-N95" id="d65-Aq-1ti"/>
                         <segue destination="y4a-Rd-aBj" kind="show" identifier="SceneSegueGroupName" id="QzZ-jK-9d2"/>
                     </connections>
                 </viewController>
@@ -125,7 +125,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last seen yesterday at 12:32" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lie-Yl-gML">
-                                    <rect key="frame" x="101" y="50" width="274" height="20"/>
+                                    <rect key="frame" x="101" y="50" width="266" height="20"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                     <color key="textColor" red="0.46666666666666667" green="0.52156862745098043" blue="0.58039215686274503" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
@@ -138,7 +138,7 @@
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alex Bass" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="okB-ir-EUT">
-                                    <rect key="frame" x="101" y="24" width="274" height="21"/>
+                                    <rect key="frame" x="101" y="24" width="266" height="21"/>
                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                     <color key="textColor" red="0.2901960784" green="0.2901960784" blue="0.2901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
