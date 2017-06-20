@@ -73,7 +73,7 @@
     else if (_notificationPanelView != nil) {
         _notificationPanelContainer.userInteractionEnabled = NO;
         __weak __typeof(self)weakSelf = self;
-        [UIView animateWithDuration:0.3 delay:0.0 options:7 << 16 animations:^
+        [UIView animateWithDuration:0.3f delay:0.0f options:7 << 16 animations:^
          {
              weakSelf.notificationPanelView.frame = CGRectOffset(weakSelf.notificationPanelContainer.bounds, 0.0f, -weakSelf.notificationPanelContainer.frame.size.height);
              if (animation) {
