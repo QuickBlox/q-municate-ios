@@ -84,7 +84,6 @@
 		5877D6DA1C46720600938E5D /* QMTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5877D6D91C46720600938E5D /* QMTableViewCell.m */; };
 		5877D6DE1C46728200938E5D /* QMDialogCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5877D6DC1C46728200938E5D /* QMDialogCell.m */; };
 		5877D6E31C4675B900938E5D /* QMBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5877D6E21C4675B900938E5D /* QMBadgeView.m */; };
-		5885E07D1C47F5FC0081A5E9 /* QMPlaceholderDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 5885E07C1C47F5FC0081A5E9 /* QMPlaceholderDataSource.m */; };
 		5889AAE61C43CEB400997A40 /* QMLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5889AAE51C43CEB400997A40 /* QMLogInViewController.m */; };
 		588CF1021CA6BF8200B23C00 /* QMNotificationPanelUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 588CF1011CA6BF8200B23C00 /* QMNotificationPanelUtils.m */; };
 		588CF1061CA6C01200B23C00 /* QMNotificationPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 588CF1051CA6C01200B23C00 /* QMNotificationPanelView.m */; };
@@ -367,8 +366,6 @@
 		5877D6DC1C46728200938E5D /* QMDialogCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDialogCell.m; sourceTree = "<group>"; };
 		5877D6E11C4675B900938E5D /* QMBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMBadgeView.h; sourceTree = "<group>"; };
 		5877D6E21C4675B900938E5D /* QMBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMBadgeView.m; sourceTree = "<group>"; };
-		5885E07B1C47F5FC0081A5E9 /* QMPlaceholderDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMPlaceholderDataSource.h; sourceTree = "<group>"; };
-		5885E07C1C47F5FC0081A5E9 /* QMPlaceholderDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMPlaceholderDataSource.m; sourceTree = "<group>"; };
 		5889AAE41C43CEB400997A40 /* QMLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLogInViewController.h; sourceTree = "<group>"; };
 		5889AAE51C43CEB400997A40 /* QMLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLogInViewController.m; sourceTree = "<group>"; };
 		588CF1001CA6BF8200B23C00 /* QMNotificationPanelUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMNotificationPanelUtils.h; sourceTree = "<group>"; };
@@ -1332,18 +1329,8 @@
 			children = (
 				5877D6CB1C466EBE00938E5D /* QMDialogsDataSource */,
 				58D847551C84823A000C40BA /* QMDialogsSearchDataSource */,
-				5885E07A1C47F5B70081A5E9 /* QMPlaceholderDataSource */,
 			);
 			path = "Data sources";
-			sourceTree = "<group>";
-		};
-		5885E07A1C47F5B70081A5E9 /* QMPlaceholderDataSource */ = {
-			isa = PBXGroup;
-			children = (
-				5885E07B1C47F5FC0081A5E9 /* QMPlaceholderDataSource.h */,
-				5885E07C1C47F5FC0081A5E9 /* QMPlaceholderDataSource.m */,
-			);
-			path = QMPlaceholderDataSource;
 			sourceTree = "<group>";
 		};
 		588CF0FE1CA6BF5500B23C00 /* QMNotificationPanel */ = {
@@ -2221,7 +2208,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = QM;
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = Quickblox;
 				TargetAttributes = {
 					69D57E5118ACC11C00A9900A = {
@@ -2451,7 +2438,6 @@
 				5868B05E1CE9C668004F9233 /* QMCallManager.m in Sources */,
 				589D4CF51C9816E9005F1E76 /* QMNewMessageViewController.m in Sources */,
 				584277A41C3D336300CDE35B /* QMCornerButton.m in Sources */,
-				5885E07D1C47F5FC0081A5E9 /* QMPlaceholderDataSource.m in Sources */,
 				58FD668E1CEF12D500B72425 /* QMAlert.m in Sources */,
 				E08441D91E1E611D00B87D0F /* NSString+QMSiriUtils.m in Sources */,
 				5877D6E31C4675B900938E5D /* QMBadgeView.m in Sources */,
@@ -2620,16 +2606,20 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -2662,8 +2652,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Injoit LTD (8885H5G2YX)";
@@ -2671,7 +2663,9 @@
 				CODE_SIGN_RESOURCE_RULES_PATH = "";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;

@@ -28,44 +28,6 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="QMPlaceholderCell" rowHeight="420" id="mQr-un-WzV" customClass="QMDialogCell">
-                                <rect key="frame" x="0.0" y="28" width="414" height="420"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mQr-un-WzV" id="cUp-X3-4V4">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="420"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TbN-aD-Lc2">
-                                            <rect key="frame" x="118.66666666666669" y="40.000000000000007" width="177" height="64.666666666666686"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" secondItem="TbN-aD-Lc2" secondAttribute="height" multiplier="173:63" id="y8X-CM-ILi"/>
-                                            </constraints>
-                                            <string key="text">You’re all alone
-out here.</string>
-                                            <fontDescription key="fontDescription" type="system" pointSize="26"/>
-                                            <color key="textColor" red="0.46666666670000001" green="0.52156862749999999" blue="0.58039215690000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="m_empty_dialogs" translatesAutoresizingMaskIntoConstraints="NO" id="mob-8S-GOu">
-                                            <rect key="frame" x="118" y="155.66666666666663" width="178" height="264"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" relation="lessThanOrEqual" constant="178" id="8z4-EB-ZS8"/>
-                                                <constraint firstAttribute="width" secondItem="mob-8S-GOu" secondAttribute="height" multiplier="29:43" id="KIQ-BZ-quZ"/>
-                                            </constraints>
-                                        </imageView>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="TbN-aD-Lc2" firstAttribute="centerX" secondItem="cUp-X3-4V4" secondAttribute="centerX" id="1qZ-OU-A8U"/>
-                                        <constraint firstItem="TbN-aD-Lc2" firstAttribute="top" secondItem="cUp-X3-4V4" secondAttribute="topMargin" constant="32" id="MV0-WB-5eg"/>
-                                        <constraint firstAttribute="bottomMargin" secondItem="mob-8S-GOu" secondAttribute="bottom" constant="-8" id="Q36-wI-uIm"/>
-                                        <constraint firstItem="mob-8S-GOu" firstAttribute="top" secondItem="TbN-aD-Lc2" secondAttribute="bottom" priority="751" constant="51" id="sRq-92-Pe7"/>
-                                        <constraint firstItem="mob-8S-GOu" firstAttribute="centerX" secondItem="cUp-X3-4V4" secondAttribute="centerX" id="wTR-Sx-3bE"/>
-                                    </constraints>
-                                </tableViewCellContentView>
-                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                            </tableViewCell>
-                        </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="NSU-QC-v0B" id="Vhb-5z-ade"/>
                             <outlet property="delegate" destination="NSU-QC-v0B" id="LWD-c2-p15"/>
@@ -85,11 +47,44 @@ out here.</string>
                         <attributedString key="attributedTitle"/>
                     </refreshControl>
                     <connections>
+                        <outlet property="placeholderView" destination="rdX-TC-FEa" id="KsS-IP-U8L"/>
                         <segue destination="GF2-VD-d6E" kind="custom" identifier="SceneSegueAuth" customClass="QMRootViewControllerSegue" id="bdb-ZN-ltF"/>
                         <segue destination="smd-oe-3SF" kind="showDetail" identifier="SceneSegueChat" id="SCD-ix-MHd"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7lV-91-Vld" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleToFill" id="rdX-TC-FEa">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="m_empty_dialogs" translatesAutoresizingMaskIntoConstraints="NO" id="21S-RQ-hLa">
+                            <rect key="frame" x="117" y="426" width="180" height="266"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="21S-RQ-hLa" secondAttribute="height" multiplier="90:133" id="d79-LK-KPe"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" minimumFontSize="2" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a2R-U6-Tau">
+                            <rect key="frame" x="114" y="276" width="186" height="86"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="a2R-U6-Tau" secondAttribute="height" multiplier="93:43" id="SA7-9q-a5u"/>
+                            </constraints>
+                            <string key="text">You’re all alone
+out here.</string>
+                            <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                            <color key="textColor" red="0.46666666670000001" green="0.52156862749999999" blue="0.58039215690000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="21S-RQ-hLa" firstAttribute="top" secondItem="a2R-U6-Tau" secondAttribute="bottom" constant="64" id="0xL-li-NOW"/>
+                        <constraint firstItem="21S-RQ-hLa" firstAttribute="centerX" secondItem="rdX-TC-FEa" secondAttribute="centerX" id="6S9-jy-wuR"/>
+                        <constraint firstItem="a2R-U6-Tau" firstAttribute="width" secondItem="rdX-TC-FEa" secondAttribute="height" multiplier="93:368" id="MRS-lw-BK9"/>
+                        <constraint firstAttribute="bottom" secondItem="21S-RQ-hLa" secondAttribute="bottom" constant="44" id="XXU-oa-rD5"/>
+                        <constraint firstItem="a2R-U6-Tau" firstAttribute="centerX" secondItem="rdX-TC-FEa" secondAttribute="centerX" id="k3u-Zw-RPs"/>
+                        <constraint firstItem="21S-RQ-hLa" firstAttribute="width" secondItem="rdX-TC-FEa" secondAttribute="height" multiplier="45:184" id="uJ1-Q1-L6D"/>
+                    </constraints>
+                </view>
             </objects>
             <point key="canvasLocation" x="-1727" y="-8661"/>
         </scene>
@@ -447,6 +442,6 @@ out here.</string>
         <image name="qm-tb-settings" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="LJb-6W-9Cm"/>
+        <segue reference="SCD-ix-MHd"/>
     </inferredMetricsTieBreakers>
 </document>
