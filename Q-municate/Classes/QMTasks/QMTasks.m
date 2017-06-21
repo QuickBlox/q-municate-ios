@@ -14,6 +14,7 @@
 #import <DigitsKit/DigitsKit.h>
 
 static const NSUInteger kQMDialogsPageLimit = 10;
+static const NSUInteger kQMUsersPageLimit = 100;
 
 @implementation QMTasks
 
@@ -163,9 +164,59 @@ static const NSUInteger kQMDialogsPageLimit = 10;
 
 + (BFTask *)taskUpdateContacts {
     
+    NSDate *lastUserFetchDate = [QMProfile currentProfile].lastUserFetchDate;
     NSArray *contactsIDs = [[QMCore instance].contactListService.contactListMemoryStorage userIDsFromContactList];
+    NSString *dateFilter = nil;
     
-    return [[QMCore instance].usersService getUsersWithIDs:contactsIDs forceLoad:YES];
+    if (lastUserFetchDate != nil) {
+        static NSDateFormatter *dateFormatter = nil;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ssZ";
+        });
+        dateFilter = [[NSString alloc] initWithFormat:@"date updated_at gt %@", [dateFormatter stringFromDate:lastUserFetchDate]];
+    }
+    
+    NSMutableArray *tasks = [[NSMutableArray alloc] init];
+    
+    NSRange range;
+    range.location = 0;
+    range.length = contactsIDs.count > kQMUsersPageLimit ? kQMUsersPageLimit : contactsIDs.count;
+    while (range.location < contactsIDs.count) {
+        NSArray *subArray = [contactsIDs subarrayWithRange:range];
+        BFTask *task = [[QMCore instance].usersService searchUsersWithExtendedRequest:filterForUsersFetch(subArray, dateFilter) page:[QBGeneralResponsePage responsePageWithCurrentPage:0 perPage:range.length]];
+        [tasks addObject:task];
+        
+        range.location += range.length;
+        NSUInteger diff = contactsIDs.count - range.location;
+        range.length = diff > kQMUsersPageLimit ? kQMUsersPageLimit : diff;
+    }
+    
+    BFTask *task = [[BFTask taskForCompletionOfAllTasks:[tasks copy]] continueWithSuccessBlock:^id(BFTask * __unused t) {
+        [QMCore instance].currentProfile.lastUserFetchDate = [NSDate date];
+        [[QMCore instance].currentProfile synchronize];
+        return nil;
+    }];
+    
+    return task;
+}
+
+static inline NSDictionary *filterForUsersFetch(NSArray *usersIDs, NSString *dateFilter) {
+    NSDictionary *filters = nil;
+    NSString *usersString = [usersIDs componentsJoinedByString:@", "];
+    if (dateFilter != nil) {
+        filters = @{@"filter" : @[
+                                          [NSString stringWithFormat:@"number id in %@", usersString],
+                                          [NSString stringWithFormat:@"date updated_at gt %@", dateFilter],
+                                          ]};
+    }
+    else {
+        filters = @{@"filter" : @[
+                                          [NSString stringWithFormat:@"number id in %@", usersString],
+                                          ]};
+    }
+    return filters;
 }
 
 @end

@@ -91,6 +91,11 @@ typedef NS_ENUM(NSInteger, QMAccountType) {
 @property (strong, nonatomic, nullable) NSDate *lastDialogsFetchingDate;
 
 /**
+ *  Last user fetch date with QBRequest from server.
+ */
+@property (strong, nonatomic, nullable) NSDate *lastUserFetchDate;
+
+/**
  *  Returns loaded current profile with user.
  *
  *  @return current profile
