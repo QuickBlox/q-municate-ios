@@ -844,7 +844,7 @@ QMCallManagerDelegate
             else {
                 
                 QMLinkPreview *linkPreview =
-                [[QMCore instance].chatService linkPreviewForMessage:item];
+                nil;
                 
                 if (linkPreview != nil) {
                     return  [QMChatOutgoingLinkPreviewCell class];
@@ -1384,10 +1384,8 @@ QMCallManagerDelegate
     
     else if ([cell conformsToProtocol:@protocol(QMMediaViewDelegate)]) {
         
-        QBChatAttachment *attachment = message.attachments[0];
         [self.mediaController configureView:(id<QMMediaViewDelegate>)cell
-                                withMessage:message
-                                 attachment:attachment];
+                                withMessage:message];
         
     }
 }
@@ -1424,18 +1422,6 @@ QMCallManagerDelegate
             return nil;
         }];
     }
-    
-    QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:itemMessage];
-    
-    if (linkPreview == nil) {
-        
-        [[QMCore instance].chatService getLinkPreviewForMessage:itemMessage withCompletion:^(BOOL success) {
-            
-            if (success) {
-                [self.chatDataSource updateMessage:itemMessage];
-            }
-        }];
-    }
 }
 
 - (void)collectionView:(UICollectionView *)__unused collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -1444,8 +1430,8 @@ QMCallManagerDelegate
         QBChatMessage *itemMessage = [self.chatDataSource messageForIndexPath:indexPath];
         [self.mediaController cancelOperationsForMessage:itemMessage];
     }
-    
 }
+
 #pragma mark - Typing status
 //MARK: - Typing status
 

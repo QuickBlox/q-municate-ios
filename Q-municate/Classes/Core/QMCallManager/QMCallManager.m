@@ -125,7 +125,7 @@ QBRTCClientDelegate
     
     if (_hasActiveCall != hasActiveCall) {
         
-        if ([self.multicastDelegate respondsToSelector:@selector(callManagercallManager:willHaveActiveCallStatewillHaveActiveCallState:)]) {
+        if ([self.multicastDelegate respondsToSelector:@selector(callManager:willChangeActiveCallState:)]) {
             [self.multicastDelegate callManager:self willChangeActiveCallState:hasActiveCall];
         }
         
