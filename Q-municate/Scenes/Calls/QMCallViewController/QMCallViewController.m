@@ -518,6 +518,7 @@ QMCallManagerDelegate
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
+
 //MARK: - Actions
 
 - (void)rejectCall {
@@ -782,6 +783,9 @@ QMCallManagerDelegate
     }
 }
 
+- (void)callManager:(nonnull QMCallManager *)__unused callManager willChangeActiveCallState:(BOOL)__unused willHaveActiveCall {
+    
+}
 
 //MARK: - Overrides
 
@@ -789,5 +793,6 @@ QMCallManagerDelegate
     // light status bar for dark controller
     return self.isVideoCall ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
 }
+
 
 @end
