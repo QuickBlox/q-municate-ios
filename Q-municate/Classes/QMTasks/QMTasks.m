@@ -207,14 +207,14 @@ static inline NSDictionary *filterForUsersFetch(NSArray *usersIDs, NSString *dat
     NSString *usersString = [usersIDs componentsJoinedByString:@", "];
     if (dateFilter != nil) {
         filters = @{@"filter" : @[
-                                          [NSString stringWithFormat:@"number id in %@", usersString],
-                                          [NSString stringWithFormat:@"date updated_at gt %@", dateFilter],
-                                          ]};
+                            [NSString stringWithFormat:@"number id in %@", usersString],
+                            [NSString stringWithFormat:@"date updated_at gt %@", dateFilter],
+                            ]};
     }
     else {
         filters = @{@"filter" : @[
-                                          [NSString stringWithFormat:@"number id in %@", usersString],
-                                          ]};
+                            [NSString stringWithFormat:@"number id in %@", usersString],
+                            ]};
     }
     return filters;
 }
