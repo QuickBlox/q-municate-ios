@@ -17,6 +17,7 @@ static NSString * const kQMAccountType = @"accountType";
 static NSString * const kQMUserAgreementAcceptedKey = @"userAgreementAccepted";
 static NSString * const kQMPushNotificationsEnabled = @"pushNotificationsEnabled";
 static NSString * const kQMLastDialogsFetchingDate = @"lastDialogsFetchingDate";
+static NSString * const kQMLastUserFetchDate = @"lastUserFetchDate";
 static NSString * const kQMAppExists = @"QMAppExists";
 
 @interface QMProfile ()
@@ -49,7 +50,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
         }
         else if (_userData == nil && [QBSession currentSession].currentUser != nil) {
             
-            // support for updating from old qmunicate (version less then 2.0)
+            // support for updating from old qmunicate (version less than 2.0)
             // initializing QMProfile from previous data savings
             [self _performAccountMigration];
         }
@@ -115,6 +116,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
     self.userAgreementAccepted = profile.userAgreementAccepted;
     self.userData = profile.userData;
     self.lastDialogsFetchingDate = profile.lastDialogsFetchingDate;
+    self.lastUserFetchDate = profile.lastUserFetchDate;
 }
 
 - (BOOL)clearProfile {
@@ -132,6 +134,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
     self.pushNotificationsEnabled = NO;
     self.userAgreementAccepted = NO;
     self.lastDialogsFetchingDate = nil;
+    self.lastUserFetchDate = nil;
     
     return success;
 }
@@ -163,6 +166,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
         _userAgreementAccepted = [aDecoder decodeBoolForKey:kQMUserAgreementAcceptedKey];
         _pushNotificationsEnabled = [aDecoder decodeBoolForKey:kQMPushNotificationsEnabled];
         _lastDialogsFetchingDate = [aDecoder decodeObjectForKey:kQMLastDialogsFetchingDate];
+        _lastUserFetchDate = [aDecoder decodeObjectForKey:kQMLastUserFetchDate];
     }
     
     return self;
@@ -175,6 +179,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
     [aCoder encodeBool:self.userAgreementAccepted forKey:kQMUserAgreementAcceptedKey];
     [aCoder encodeBool:self.pushNotificationsEnabled forKey:kQMPushNotificationsEnabled];
     [aCoder encodeObject:self.lastDialogsFetchingDate forKey:kQMLastDialogsFetchingDate];
+    [aCoder encodeObject:self.lastUserFetchDate forKey:kQMLastUserFetchDate];
 }
 
 //MARK: - Account migration
