@@ -390,6 +390,7 @@ didReceiveNotificationMessage:(QBChatMessage *)message
 - (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
     
     [QMTasks taskFetchAllData];
+    [QMTasks taskUpdateContacts];
     [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess
                                                                           message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil)
                                                                          duration:kQMDefaultNotificationDismissTime];
@@ -398,6 +399,7 @@ didReceiveNotificationMessage:(QBChatMessage *)message
 - (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
     
     [QMTasks taskFetchAllData];
+    [QMTasks taskUpdateContacts];
     [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess
                                                                           message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil)
                                                                          duration:kQMDefaultNotificationDismissTime];
