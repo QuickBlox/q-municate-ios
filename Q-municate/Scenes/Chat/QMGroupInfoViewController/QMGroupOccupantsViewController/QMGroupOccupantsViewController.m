@@ -14,7 +14,7 @@
 #import "QMColors.h"
 #import "QMCore.h"
 #import "QMAlert.h"
-#import "UINavigationController+QMNotification.h"
+#import "QMNavigationController.h"
 #import "QMUserInfoViewController.h"
 #import "NSArray+Intersection.h"
 #import <SVProgressHUD.h>
@@ -44,9 +44,6 @@ QMUsersServiceDelegate
     [super viewDidLoad];
     
     [self registerNibs];
-    
-    // Hide empty separators
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     // Set tableview background color
     self.tableView.backgroundColor = QMTableViewBackgroundColor();
@@ -168,13 +165,13 @@ QMUsersServiceDelegate
                                                             style:UIAlertActionStyleDestructive
                                                           handler:^(UIAlertAction * _Nonnull __unused action) {
                                                               
-                                                              [navigationController showNotificationWithType:QMNotificationPanelTypeLoading
-                                                                                                          message:NSLocalizedString(@"QM_STR_LOADING", nil)
-                                                                                                         duration:0];
+                                                              [(QMNavigationController *)navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                                                                                                               message:NSLocalizedString(@"QM_STR_LOADING", nil)
+                                                                                                                              duration:0];
                                                               
                                                               self.leaveTask = [[[QMCore instance].chatManager leaveChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
                                                                   
-                                                                  [navigationController dismissNotificationPanel];
+                                                                  [(QMNavigationController *)navigationController dismissNotificationPanel];
                                                                   
                                                                   if (!task.isFaulted) {
                                                                       
@@ -228,6 +225,12 @@ QMUsersServiceDelegate
 - (CGFloat)tableView:(UITableView *)__unused tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return [self.dataSource heightForRowAtIndexPath:indexPath];
+}
+
+// MARK: - Overrides
+
+- (void)setAdditionalNavigationBarHeight:(CGFloat)__unused additionalNavigationBarHeight {
+    // do not set for this controller
 }
 
 //MARK: - QMChatServiceDelegate

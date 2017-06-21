@@ -11,7 +11,7 @@
 #import "QMProfile.h"
 #import "QMShadowView.h"
 #import "QMTasks.h"
-#import "UINavigationController+QMNotification.h"
+#import "QMNavigationController.h"
 
 static const NSUInteger kQMFullNameFieldMinLength = 3;
 
@@ -114,9 +114,9 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
     updateUserParams.customData = [QMCore instance].currentProfile.userData.customData;
     [updateUserParams setValue:self.textField.text forKeyPath:self.keyPath];
     
-    [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     
-    __weak UINavigationController *navigationController = self.navigationController;
+    __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
     
     @weakify(self);
     [[QMTasks taskUpdateCurrentUser:updateUserParams] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {

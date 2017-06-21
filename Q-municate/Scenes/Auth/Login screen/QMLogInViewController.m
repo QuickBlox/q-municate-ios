@@ -8,7 +8,7 @@
 
 #import "QMLogInViewController.h"
 #import "QMCore.h"
-#import "UINavigationController+QMNotification.h"
+#import "QMNavigationController.h"
 
 @interface QMLogInViewController ()
 
@@ -50,7 +50,7 @@
     
     if (self.emailField.text.length == 0 || self.passwordField.text.length == 0) {
         
-        [self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) duration:kQMDefaultNotificationDismissTime];
+        [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_FILL_IN_ALL_THE_FIELDS", nil) duration:kQMDefaultNotificationDismissTime];
     }
     else {
         
@@ -58,7 +58,7 @@
         user.email = self.emailField.text;
         user.password = self.passwordField.text;
         
-        [self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_SIGNING_IN", nil) duration:0];
+        [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_SIGNING_IN", nil) duration:0];
         
         __weak UINavigationController *navigationController = self.navigationController;
         
@@ -66,7 +66,7 @@
         self.task = [[[QMCore instance].authService loginWithUser:user] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
             
             @strongify(self);
-            [navigationController dismissNotificationPanel];
+            [(QMNavigationController *)navigationController dismissNotificationPanel];
             
             if (!task.isFaulted) {
                 

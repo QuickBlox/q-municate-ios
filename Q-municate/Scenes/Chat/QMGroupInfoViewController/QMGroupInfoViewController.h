@@ -6,11 +6,11 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "QMViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface QMGroupInfoViewController : UIViewController
+@interface QMGroupInfoViewController : QMViewController
 
 @property (strong, nonatomic) QBChatDialog *chatDialog;
 
