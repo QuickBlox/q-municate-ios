@@ -65,7 +65,7 @@ static const CGFloat kQMIconSize = 26.0f;
                                                               kQMIconSize,
                                                               kQMIconSize)];
     _activityIndicatorView.backgroundColor = [UIColor clearColor];
-    [_visualEffectView addSubview:_activityIndicatorView];
+    [_bgColorView addSubview:_activityIndicatorView];
     
     // init image view
     _imageView =
@@ -75,7 +75,7 @@ static const CGFloat kQMIconSize = 26.0f;
                                                   kQMIconSize)];
     
     _imageView.backgroundColor = [UIColor clearColor];
-    [_visualEffectView addSubview:_imageView];
+    [_bgColorView addSubview:_imageView];
 }
 
 - (void)configureTextLabelWithFrame:(CGRect)frame {
@@ -89,7 +89,7 @@ static const CGFloat kQMIconSize = 26.0f;
     _textLabel.userInteractionEnabled = YES;
     _textLabel.textColor = [UIColor whiteColor];
     _textLabel.numberOfLines = 0;
-    [_visualEffectView addSubview:_textLabel];
+    [_bgColorView addSubview:_textLabel];
 }
 
 //MARK: - Setters
