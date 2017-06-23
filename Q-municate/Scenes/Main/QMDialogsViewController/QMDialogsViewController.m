@@ -329,11 +329,7 @@ didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)__unused chatDialogID {
 didReceiveNotificationMessage:(QBChatMessage *)message
        createDialog:(QBChatDialog *)__unused dialog {
     
-    if (message.messageType == QMMessageTypeContactRequest) {
-        
-        [QMCore.instance.usersService getUserWithID:message.senderID];
-    }
-    else if (message.addedOccupantsIDs.count > 0) {
+    if (message.addedOccupantsIDs.count > 0) {
         
         [QMCore.instance.usersService getUsersWithIDs:message.addedOccupantsIDs];
     }
