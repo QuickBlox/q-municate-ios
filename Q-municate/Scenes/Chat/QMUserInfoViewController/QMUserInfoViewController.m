@@ -44,6 +44,7 @@ typedef NS_ENUM(NSUInteger, QMContactInteractions) {
 
 <
 QMContactListServiceDelegate,
+QMUsersServiceListenerProtocol,
 
 QMImageViewDelegate,
 NYTPhotosViewControllerDelegate
@@ -102,6 +103,7 @@ NYTPhotosViewControllerDelegate
     
     // subscribing to delegates
     [[QMCore instance].contactListService addDelegate:self];
+    [[QMCore instance].usersService addListener:self forUser:self.user];
     
     // update info table
     [self performUpdate];
@@ -530,6 +532,14 @@ NYTPhotosViewControllerDelegate
 - (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
     
     return self.avatarImageView;
+}
+
+// MARK: - QMUsersServiceListenerProtocol
+
+- (void)usersService:(QMUsersService *)__unused usersService didUpdateUser:(QBUUser *)user {
+    self.user = user;
+    [self performUpdate];
+    [self.tableView reloadData];
 }
 
 //MARK: - Helpers

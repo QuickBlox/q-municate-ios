@@ -53,6 +53,7 @@ typedef NS_ENUM(NSUInteger, QMSocialSection) {
 QMProfileDelegate,
 QMImageViewDelegate,
 QMImagePickerResultHandler,
+QMUsersServiceListenerProtocol,
 
 NYTPhotosViewControllerDelegate
 >
@@ -77,6 +78,9 @@ NYTPhotosViewControllerDelegate
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    QMCore *core = [QMCore instance];
+    [[QMCore instance].usersService addListener:self forUser:core.currentProfile.userData];
+    
     self.hiddenUserInfoCells = [NSMutableIndexSet indexSet];
     self.avatarImageView.imageViewType = QMImageViewTypeCircle;
     
@@ -84,18 +88,18 @@ NYTPhotosViewControllerDelegate
     self.tableView.backgroundColor = QMTableViewBackgroundColor();
     
     // configure user data
-    [self configureUserData:[QMCore instance].currentProfile.userData];
-    self.pushNotificationSwitch.on = [QMCore instance].currentProfile.pushNotificationsEnabled;
+    [self configureUserData:core.currentProfile.userData];
+    self.pushNotificationSwitch.on = core.currentProfile.pushNotificationsEnabled;
     
     // determine account type
-    if ([QMCore instance].currentProfile.accountType != QMAccountTypeEmail) {
+    if (core.currentProfile.accountType != QMAccountTypeEmail) {
         
         [self.hiddenUserInfoCells addIndex:QMUserInfoSectionEmail];
         [self.hiddenUserInfoCells addIndex:QMUserInfoSectionChangePassword];
     }
     
     // subscribe to delegates
-    [QMCore instance].currentProfile.delegate = self;
+    core.currentProfile.delegate = self;
     self.avatarImageView.delegate = self;
 }
 
@@ -341,6 +345,12 @@ NYTPhotosViewControllerDelegate
 - (void)profile:(QMProfile *)__unused currentProfile didUpdateUserData:(QBUUser *)userData {
     
     [self configureUserData:userData];
+}
+
+// MARK: - QMUsersServiceListenerProtocol
+
+- (void)usersService:(QMUsersService *)__unused usersService didUpdateUser:(QBUUser *)user {
+    [[QMCore instance].currentProfile synchronizeWithUserData:user];
 }
 
 //MARK: - QMImageViewDelegate

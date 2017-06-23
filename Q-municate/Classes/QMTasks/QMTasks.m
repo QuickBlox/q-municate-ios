@@ -164,8 +164,9 @@ static const NSUInteger kQMUsersPageLimit = 100;
 
 + (BFTask *)taskUpdateContacts {
     
-    NSDate *lastUserFetchDate = [QMProfile currentProfile].lastUserFetchDate;
-    NSArray *contactsIDs = [[QMCore instance].contactListService.contactListMemoryStorage userIDsFromContactList];
+    NSDate *lastUserFetchDate = [QMCore instance].currentProfile.lastUserFetchDate;
+    NSMutableArray *contactsIDs = [[[QMCore instance].contactListService.contactListMemoryStorage userIDsFromContactList] mutableCopy];
+    [contactsIDs addObject:@([QMCore instance].currentProfile.userData.ID)];
     NSString *dateFilter = nil;
     
     if (lastUserFetchDate != nil) {
