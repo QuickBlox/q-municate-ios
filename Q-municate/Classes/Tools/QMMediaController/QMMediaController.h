@@ -13,22 +13,23 @@
 #import <QMChatViewController.h>
 
 @protocol QMMediaControllerDelegate;
-@class QMChatModel;
 
 NS_ASSUME_NONNULL_BEGIN
+
 @interface QMMediaController : NSObject <QMChatAttachmentServiceDelegate>
 
 @property (copy, nonatomic) void(^onError)(QBChatMessage *message, NSError *error);
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 - (instancetype)initWithViewController:(UIViewController<QMMediaControllerDelegate> *)controller;
 
 - (void)configureView:(id<QMMediaViewDelegate>)view
-          withMessage:(QBChatMessage *)message
-           attachment:(QBChatAttachment *)attachment;
+          withMessage:(QBChatMessage *)message;
 
 - (void)cancelOperationsForMessage:(QBChatMessage *)message;
 
-//- (QMChatModel *)chatModelForMessageWithID:(NSString *)messageID;
 
 @end
 
