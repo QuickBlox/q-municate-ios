@@ -121,7 +121,7 @@ didAddMessageToMemoryStorage:(QBChatMessage *)message
     if (message.messageType == QMMessageTypeContactRequest) {
         
         QBChatDialog *chatDialog = [chatService.dialogsMemoryStorage chatDialogWithID:dialogID];
-        [[[QMCore instance].usersService getUserWithID:[chatDialog opponentID]] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
+        [[[QMCore instance].usersService getUserWithID:[chatDialog opponentID] forceLoad:YES] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
             
             [self showNotificationForMessage:message];
             

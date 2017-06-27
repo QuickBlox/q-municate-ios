@@ -44,6 +44,7 @@ typedef NS_ENUM(NSUInteger, QMContactInteractions) {
 
 <
 QMContactListServiceDelegate,
+QMUsersServiceListenerProtocol,
 
 QMImageViewDelegate,
 NYTPhotosViewControllerDelegate
@@ -102,9 +103,11 @@ NYTPhotosViewControllerDelegate
     
     // subscribing to delegates
     [[QMCore instance].contactListService addDelegate:self];
+    [[QMCore instance].usersService addListener:self forUser:self.user];
     
     // update info table
-    [self performUpdate];
+    [self performDataUpdate];
+    [self performLastSeenUpdate];
     
     if (self.user.lastRequestAt == nil) {
         
@@ -142,7 +145,8 @@ NYTPhotosViewControllerDelegate
         if (!task.isFaulted) {
             
             self.user = task.result;
-            [self performUpdate];
+            [self performDataUpdate];
+            [self performLastSeenUpdate];
             [self.tableView reloadData];
         }
         
@@ -150,16 +154,20 @@ NYTPhotosViewControllerDelegate
     }];
 }
 
-- (void)performUpdate {
+- (void)performDataUpdate {
     
     [self.hiddenSections removeAllIndexes];
     
     [self updateFullName];
     [self updateAvatarImage];
     [self updateUserIteractions];
-    [self updateLastSeen];
     [self updateStatus];
     [self updateInfo];
+}
+
+- (void)performLastSeenUpdate {
+    
+    self.lastSeenLabel.text = [[QMCore instance].contactManager onlineStatusForUser:self.user];
 }
 
 - (void)updateFullName {
@@ -196,11 +204,6 @@ NYTPhotosViewControllerDelegate
             [self.hiddenSections addIndex:QMUserInfoSectionRemoveContact];
         }
     }
-}
-
-- (void)updateLastSeen {
-    
-    self.lastSeenLabel.text = [[QMCore instance].contactManager onlineStatusForUser:self.user];
 }
 
 - (void)updateStatus {
@@ -504,13 +507,15 @@ NYTPhotosViewControllerDelegate
 
 - (void)contactListServiceDidLoadCache {
     
-    [self performUpdate];
+    [self performDataUpdate];
+    [self performLastSeenUpdate];
     [self.tableView reloadData];
 }
 
 - (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
     
-    [self performUpdate];
+    [self performDataUpdate];
+    [self performLastSeenUpdate];
     [self.tableView reloadData];
 }
 
@@ -530,6 +535,14 @@ NYTPhotosViewControllerDelegate
 - (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
     
     return self.avatarImageView;
+}
+
+// MARK: - QMUsersServiceListenerProtocol
+
+- (void)usersService:(QMUsersService *)__unused usersService didUpdateUser:(QBUUser *)user {
+    self.user = user;
+    [self performDataUpdate];
+    [self.tableView reloadData];
 }
 
 //MARK: - Helpers

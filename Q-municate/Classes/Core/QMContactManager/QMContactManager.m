@@ -217,8 +217,11 @@
                 if (error == nil) {
                     if (seconds != (NSUInteger)fabs([user.lastRequestAt timeIntervalSinceNow])) {
                         NSDate *date = [NSDate dateWithTimeIntervalSinceNow:-(NSTimeInterval)seconds];
-                        user.lastRequestAt = date;
-                        [self.serviceManager.usersService updateUsers:@[user]];
+                        if ([user.lastRequestAt compare:date] == NSOrderedAscending) {
+                            // always should have newest date
+                            user.lastRequestAt = date;
+                            [self.serviceManager.usersService updateUsers:@[user]];
+                        }
                     }
                 }
             }];
