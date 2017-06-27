@@ -1877,6 +1877,16 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
 
 // MARK: - QMUsersServiceDelegate
 
+- (void)usersService:(QMUsersService *)__unused usersService didAddUsers:(NSArray<QBUUser *> *)users {
+    for (QBUUser *user in users) {
+        if (user.ID != [QMCore instance].currentProfile.userData.ID
+            && [self.chatDialog.occupantIDs containsObject:@(user.ID)]) {
+            [self.collectionView reloadData];
+            break;
+        }
+    }
+}
+
 - (void)usersService:(QMUsersService *)__unused usersService didUpdateUsers:(NSArray<QBUUser *> *)users {
     if (self.chatDialog.type != QBChatDialogTypePrivate) {
         return;
