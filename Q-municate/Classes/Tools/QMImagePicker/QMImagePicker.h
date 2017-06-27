@@ -47,5 +47,6 @@
 
 - (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo;
 - (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingVideo:(NSURL *)videoUrl;
+- (void)imagePickerCanBePresented:(QMImagePicker *)imagePicker withCompletion:(void(^)(BOOL granted))grantBlock;
 
 @end

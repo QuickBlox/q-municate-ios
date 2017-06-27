@@ -185,6 +185,9 @@ QMCallManagerDelegate
     
     [super viewDidLoad];
     
+    self.collectionView.dataSource = self;
+    self.collectionView.delegate = self;
+    
     self.collectionView.collectionViewLayout.minimumLineSpacing = 8.0f;
     self.collectionView.backgroundColor = [UIColor clearColor];
     
@@ -306,6 +309,9 @@ QMCallManagerDelegate
     
     [super viewWillAppear:animated];
     
+    self.collectionView.delegate = self;
+    self.collectionView.dataSource = self;
+    
     self.navigationController.navigationBar.topItem.title = @"";
     
     [QMCore instance].activeDialogID = self.chatDialog.ID;
@@ -352,6 +358,14 @@ QMCallManagerDelegate
     [self.inputToolbar forceFinishRecording];
     //Stop player
     [[QMAudioPlayer audioPlayer] stop];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    
+    [super viewDidDisappear:animated];
+    
+    self.collectionView.dataSource = nil;
+    self.collectionView.delegate = nil;
 }
 
 // MARK: - Notification
@@ -1443,14 +1457,6 @@ QMCallManagerDelegate
     }
 }
 
-- (void)collectionView:(UICollectionView *)__unused collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if ([cell conformsToProtocol:@protocol(QMMediaViewDelegate)]) {
-        QBChatMessage *itemMessage = [self.chatDataSource messageForIndexPath:indexPath];
-        [self.mediaController cancelOperationsForMessage:itemMessage];
-    }
-}
-
 #pragma mark - Typing status
 // MARK: - Typing status
 
@@ -2091,6 +2097,17 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
 
 //MARK: - UIImagePickerControllerDelegate
 
+- (void)imagePickerCanBePresented:(QMImagePicker *)imagePicker
+                   withCompletion:(void (^)(BOOL))grantBlock {
+    
+    [QMPermissions requestPermissionToCameraWithCompletion:^(BOOL granted) {
+        if (!granted) {
+            [self showAlertForAccess:imagePicker];
+        }
+        grantBlock(granted);
+    }];
+}
+
 - (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
     if (![[QMCore instance] isInternetConnected]) {
@@ -2144,7 +2161,31 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     });
 }
 
+
 //MARK: - Helpers
+
+- (void)showAlertForAccess:(QMImagePicker *)picker {
+    
+    NSString *title;
+    NSString *message;
+    
+    if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
+        title = NSLocalizedString(@"Camera Access Disabled", nil);
+        message = NSLocalizedString(@"You can allow access to Camera in Settings", nil);
+    }
+    else if (picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary) {
+        title = NSLocalizedString(@"Photos Access Disabled", nil);
+        message = NSLocalizedString(@"You can allow access to Photos in Settings", nil);
+    }
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:message
+                                                   delegate:self
+                                          cancelButtonTitle:NSLocalizedString(@"SA_STR_CANCEL", nil)
+                                          otherButtonTitles:NSLocalizedString(@"Open Settings", nil),nil];
+    
+    [alert show];
+}
 
 - (void)openURL:(NSURL *)url {
     

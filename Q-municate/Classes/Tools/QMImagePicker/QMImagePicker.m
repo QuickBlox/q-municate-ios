@@ -90,7 +90,24 @@
     
     imagePicker.resultHandler = resultHandler;
     
-    [vc presentViewController:imagePicker animated:NO completion:nil];
+    dispatch_block_t presentBlock = ^{
+        [vc presentViewController:imagePicker
+                         animated:YES
+                       completion:nil];
+    };
+    
+    
+    if ([resultHandler respondsToSelector:@selector(imagePickerCanBePresented:withCompletion:)]) {
+        
+        [resultHandler imagePickerCanBePresented:imagePicker withCompletion:^(BOOL granted) {
+            if (granted) {
+                presentBlock();
+            }
+        }];
+    }
+    else {
+        presentBlock();
+    }
 }
 
 + (void)chooseFromGaleryInViewController:(UIViewController *)vc
@@ -110,9 +127,23 @@
     
     imagePicker.resultHandler = resultHandler;
     
-    [vc presentViewController:imagePicker
-                     animated:YES
-                   completion:nil];
+    dispatch_block_t presentBlock = ^{
+        [vc presentViewController:imagePicker
+                         animated:YES
+                       completion:nil];
+    };
+    
+    if ([resultHandler respondsToSelector:@selector(imagePickerCanBePresented:withCompletion:)]) {
+        
+        [resultHandler imagePickerCanBePresented:imagePicker withCompletion:^(BOOL granted) {
+            if (granted) {
+                presentBlock();
+            }
+        }];
+    }
+    else {
+        presentBlock();
+    }
 }
 
 + (void)chooseFromGaleryInViewController:(UIViewController *)vc resultHandler:(id<QMImagePickerResultHandler>)resultHandler {
@@ -128,7 +159,7 @@
                                        maxDuration:0.0
                                      resultHandler:resultHandler
                                      allowsEditing:allowsEditing];
-
+    
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
