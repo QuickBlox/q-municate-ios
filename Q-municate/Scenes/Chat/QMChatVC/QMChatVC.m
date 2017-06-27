@@ -473,8 +473,8 @@ QMCallManagerDelegate
     if (![[QMCore instance] isInternetConnected]) {
         
         [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning
-                                                    message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil)
-                                                   duration:kQMDefaultNotificationDismissTime];
+                                                                              message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil)
+                                                                             duration:kQMDefaultNotificationDismissTime];
         return NO;
     }
     
@@ -806,7 +806,7 @@ QMCallManagerDelegate
     
     if ([item isLocationMessage]) {
         
-        return item.senderID == self.senderID ? [QMChatLocationOutgoingCell class] : [QMChatLocationIncomingCell class];
+        return item.senderID == self.senderID ? QMChatLocationOutgoingCell.class : QMChatLocationIncomingCell.class;
     }
     else if ([item isNotificatonMessage] || [item isCallNotificationMessage] || item.isDateDividerMessage) {
         
@@ -819,71 +819,34 @@ QMCallManagerDelegate
             
             if ([lastMessage isEqual:item]) {
                 
-                return [QMChatContactRequestCell class];
+                return QMChatContactRequestCell.class;
             }
         }
         
-        return [QMChatNotificationCell class];
+        return QMChatNotificationCell.class;
     }
     else {
         
-        if (item.senderID != self.senderID) {
+        BOOL isIncomingMessage = item.senderID != self.senderID;
+        
+        if ([item isMediaMessage]) {
             
-            if ([item isMediaMessage] && item.attachmentStatus != QMMessageAttachmentStatusError) {
+            if ([item isVideoAttachment]) {
+                return  isIncomingMessage ? QMVideoIncomingCell.class : QMVideoOutgoingCell.class;
+            }
+            else if ([item isAudioAttachment]) {
+                return  isIncomingMessage ? QMAudioIncomingCell.class : QMAudioOutgoingCell.class;
                 
-                if ([item isVideoAttachment]) {
-                    return  [QMVideoIncomingCell class];
-                }
-                else if ([item isAudioAttachment]) {
-                    return  [QMAudioIncomingCell class];
-                    
-                }
-                else if ([item isImageAttachment]) {
-                    return  [QMImageIncomingCell class];
-                }
-                else {
-                    return [QMChatAttachmentIncomingCell class];
-                }
+            }
+            else if ([item isImageAttachment]) {
+                return  isIncomingMessage ? QMImageIncomingCell.class : QMImageOutgoingCell.class;
             }
             else {
-                
-                Class classForItem = [QMChatIncomingCell class];
-                
-                QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:item];
-                if (linkPreview != nil) {
-                    classForItem = [QMChatIncomingLinkPreviewCell class];
-                }
-                
-                return classForItem;
+                return isIncomingMessage ? QMChatAttachmentIncomingCell.class : QMChatAttachmentOutgoingCell.class;
             }
         }
         else {
-            
-            if ([item isMediaMessage] && item.attachmentStatus != QMMessageAttachmentStatusError) {
-                
-                if ([item isVideoAttachment]) {
-                    return  [QMVideoOutgoingCell class];
-                }
-                else if ([item isAudioAttachment]) {
-                    return  [QMAudioOutgoingCell class];
-                    
-                }
-                else if ([item isImageAttachment]) {
-                    return  [QMImageOutgoingCell class];
-                }
-                return [QMChatAttachmentOutgoingCell class];
-                
-            }
-            else {
-                
-                QMLinkPreview *linkPreview =
-                nil;
-                
-                if (linkPreview != nil) {
-                    return  [QMChatOutgoingLinkPreviewCell class];
-                }
-                return [QMChatOutgoingCell class];
-            }
+            return isIncomingMessage ? QMChatIncomingCell.class : QMChatOutgoingCell.class;
         }
     }
     
@@ -1594,8 +1557,8 @@ QMCallManagerDelegate
                                                   
                                                   if (error) {
                                                       [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed
-                                                                                                  message:error.localizedRecoverySuggestion
-                                                                                                 duration:kQMDefaultNotificationDismissTime];
+                                                                                                                            message:error.localizedRecoverySuggestion
+                                                                                                                           duration:kQMDefaultNotificationDismissTime];
                                                       // perform local attachment deleting
                                                       [[QMCore instance].chatService deleteMessageLocally:message];
                                                       [self.chatDataSource deleteMessage:message];
