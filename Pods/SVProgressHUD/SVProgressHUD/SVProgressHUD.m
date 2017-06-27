@@ -254,13 +254,13 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
         
         SVProgressHUDBackgroundColor = [UIColor whiteColor];
         SVProgressHUDForegroundColor = [UIColor blackColor];
-        if ([UIFont respondsToSelector:@selector(preferredFontForTextStyle:)]) {
-            SVProgressHUDFont = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
-        } else {
+//        if ([UIFont respondsToSelector:@selector(preferredFontForTextStyle:)]) {
+//            SVProgressHUDFont = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
+//        } else {
             SVProgressHUDFont = [UIFont systemFontOfSize:14.0f];
             SVProgressHUDBackgroundColor = [UIColor colorWithWhite:0.0f alpha:0.8f];
             SVProgressHUDForegroundColor = [UIColor whiteColor];
-        }
+//        }
         
         NSBundle *bundle = [NSBundle bundleForClass:self.class];
         NSURL *url = [bundle URLForResource:@"SVProgressHUD" withExtension:@"bundle"];

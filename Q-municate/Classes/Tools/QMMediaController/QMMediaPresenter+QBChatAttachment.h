@@ -10,6 +10,7 @@
 
 @interface QMMediaPresenter (QBChatAttachment)
 
-@property (strong, nonatomic) QBChatAttachment *attachment;
+- (void)updateWithAttachment:(QBChatAttachment *)attachment;
+
 
 @end

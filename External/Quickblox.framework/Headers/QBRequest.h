@@ -17,13 +17,15 @@ typedef void(^QBErrorBlock)(QBError *error);
 typedef void(^qb_response_status_block_t)(QBRequest *request, QBRequestStatus *status);
 typedef void(^qb_response_block_t)(QBResponse *response);
 
-/** 
+/**
  *  QBRequest class interface.
  *  This class represents all requests to Quickblox API.
  */
 @interface QBRequest : NSObject
 
-/** 
+@property (nonatomic, readonly) NSURLSessionTask *task;
+
+/**
  *  Determines if NSURLSessionTask was canceled.
  */
 @property (nonatomic, getter=isCancelled, readonly) BOOL canceled;
