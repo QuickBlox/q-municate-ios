@@ -307,7 +307,6 @@ QMCallManagerDelegate
     
     [super viewWillAppear:animated];
     
-    self.navigationController.navigationBar.topItem.title = @"";
     
     [QMCore instance].activeDialogID = self.chatDialog.ID;
     
