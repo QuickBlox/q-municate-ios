@@ -106,7 +106,8 @@ NYTPhotosViewControllerDelegate
     [[QMCore instance].usersService addListener:self forUser:self.user];
     
     // update info table
-    [self performUpdate];
+    [self performDataUpdate];
+    [self performLastSeenUpdate];
     
     if (self.user.lastRequestAt == nil) {
         
@@ -144,7 +145,8 @@ NYTPhotosViewControllerDelegate
         if (!task.isFaulted) {
             
             self.user = task.result;
-            [self performUpdate];
+            [self performDataUpdate];
+            [self performLastSeenUpdate];
             [self.tableView reloadData];
         }
         
@@ -152,16 +154,20 @@ NYTPhotosViewControllerDelegate
     }];
 }
 
-- (void)performUpdate {
+- (void)performDataUpdate {
     
     [self.hiddenSections removeAllIndexes];
     
     [self updateFullName];
     [self updateAvatarImage];
     [self updateUserIteractions];
-    [self updateLastSeen];
     [self updateStatus];
     [self updateInfo];
+}
+
+- (void)performLastSeenUpdate {
+    
+    self.lastSeenLabel.text = [[QMCore instance].contactManager onlineStatusForUser:self.user];
 }
 
 - (void)updateFullName {
@@ -198,11 +204,6 @@ NYTPhotosViewControllerDelegate
             [self.hiddenSections addIndex:QMUserInfoSectionRemoveContact];
         }
     }
-}
-
-- (void)updateLastSeen {
-    
-    self.lastSeenLabel.text = [[QMCore instance].contactManager onlineStatusForUser:self.user];
 }
 
 - (void)updateStatus {
@@ -506,13 +507,15 @@ NYTPhotosViewControllerDelegate
 
 - (void)contactListServiceDidLoadCache {
     
-    [self performUpdate];
+    [self performDataUpdate];
+    [self performLastSeenUpdate];
     [self.tableView reloadData];
 }
 
 - (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
     
-    [self performUpdate];
+    [self performDataUpdate];
+    [self performLastSeenUpdate];
     [self.tableView reloadData];
 }
 
@@ -538,7 +541,7 @@ NYTPhotosViewControllerDelegate
 
 - (void)usersService:(QMUsersService *)__unused usersService didUpdateUser:(QBUUser *)user {
     self.user = user;
-    [self performUpdate];
+    [self performDataUpdate];
     [self.tableView reloadData];
 }
 
