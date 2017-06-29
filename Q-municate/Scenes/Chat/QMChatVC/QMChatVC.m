@@ -404,6 +404,10 @@ QMCallManagerDelegate
     }
 }
 
+- (NSString *)dialogID {
+    return self.chatDialog.ID;
+}
+
 - (void)didUpdateMessage:(QBChatMessage *)message {
     
     if ([self.chatDialog.ID isEqualToString:message.dialogID]) {
@@ -1045,9 +1049,9 @@ QMCallManagerDelegate
         
         if (linkPreview.imageURL != nil) {
             
-            UIImage *image =
-            [QMChatBaseLinkPreviewCell imageForURLKey:linkPreview.imageURL];
-            
+            UIImage *image;
+//            [QMChatBaseLinkPreviewCell imageForURLKey:linkPreview.imageURL];
+//
             if (image) {
                 
                 linkPreviewWidth =
@@ -1355,21 +1359,21 @@ QMCallManagerDelegate
     
     if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
         
-        QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:message];
-        
-        if (linkPreview) {
-            
-            [self.collectionView.collectionViewLayout removeSizeFromCacheForItemID:message.ID];
-            QMChatBaseLinkPreviewCell *previewCell = (QMChatBaseLinkPreviewCell *)cell;
-            [previewCell setSiteURL:linkPreview.siteUrl
-                           imageURL:linkPreview.imageURL
-                          siteTitle:linkPreview.siteTitle
-                    siteDescription:linkPreview.siteDescription
-                      onImageDidSet:^
-             {
-                 [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
-             }];
-        }
+//        QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:message];
+//        
+//        if (linkPreview) {
+//            
+//            [self.collectionView.collectionViewLayout removeSizeFromCacheForItemID:message.ID];
+//            QMChatBaseLinkPreviewCell *previewCell = (QMChatBaseLinkPreviewCell *)cell;
+//            [previewCell setSiteURL:linkPreview.siteUrl
+//                           imageURL:linkPreview.imageURL
+//                          siteTitle:linkPreview.siteTitle
+//                    siteDescription:linkPreview.siteDescription
+//                      onImageDidSet:^
+//             {
+//                 [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+//             }];
+//        }
     }
     
     if ([cell conformsToProtocol:@protocol(QMChatLocationCell)]) {
@@ -1958,7 +1962,8 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     else if ([cell isKindOfClass:[QMBaseMediaCell class]]) {
         CGSize size =  [self.collectionView.collectionViewLayout containerViewSizeForItemAtIndexPath:indexPath];
         NSLog(@"size = %@", NSStringFromCGSize(size));
-        [[((QMBaseMediaCell*)cell) presenter] didTapContainer];
+        NSLog(@"messageID = %@", currentMessage.ID);
+        [[((QMBaseMediaCell*)cell) mediaHandler] didTapContainer:cell];
     }
     else if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
         

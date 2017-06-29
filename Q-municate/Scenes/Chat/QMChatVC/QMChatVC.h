@@ -30,3 +30,4 @@
 + (nullable instancetype)chatViewControllerWithChatDialog:(nullable QBChatDialog *)chatDialog;
 
 @end
+
