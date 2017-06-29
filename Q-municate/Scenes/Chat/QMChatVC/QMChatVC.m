@@ -296,7 +296,7 @@ QMOpenGraphServiceDelegate>
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
-   
+    
     QMCore.instance.activeDialogID = self.chatDialog.ID;
     
     @weakify(self);
@@ -1046,7 +1046,7 @@ QMOpenGraphServiceDelegate>
     else if ([viewClass isSubclassOfClass:[QMChatBaseLinkPreviewCell class]]) {
         
         QMChatCellLayoutModel layoutModel = [self collectionView:self.collectionView layoutModelAtIndexPath:indexPath];
-    
+        
         CGFloat linkPreviewHeight = 0;
         CGFloat linkPreviewWidth = kQMAttachmentCellSize;
         
@@ -1325,20 +1325,16 @@ QMOpenGraphServiceDelegate>
         currentCell.containerView.bgColor = QMChatIncomingCellColor();
         currentCell.textView.linkAttributes = @{NSForegroundColorAttributeName : QMChatIncomingLinkColor(),
                                                 NSUnderlineStyleAttributeName : @(YES)};
-        /**
-         *  Setting opponent avatar
-         */
+        //Setting opponent avatar
         QBUUser *sender = [QMCore.instance.usersService.usersMemoryStorage
                            userWithID:message.senderID];
         
         QMImageView *avatarView = [(QMChatCell *)cell avatarView];
-        
         NSURL *userImageUrl = [NSURL URLWithString:sender.avatarUrl];
         
         [avatarView setImageWithURL:userImageUrl
                               title:sender.fullName
                      completedBlock:nil];
-        
     }
     else if ([cell isKindOfClass:[QMChatNotificationCell class]]) {
         
@@ -1759,6 +1755,9 @@ QMOpenGraphServiceDelegate>
     
     if ([self.chatDialog.ID isEqualToString:dialogID]) {
         
+        for (QBChatMessage *message in messages) {
+            [QMCore.instance.openGraphService preloadGraphItemForText:message.text ID:message.ID];
+        }
         [self.chatDataSource addMessages:messages];
     }
 }
@@ -2187,10 +2186,12 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     return resizedImage;
 }
 
-- (void)openGraphSerivce:(QMOpenGraphService *)openGraphSerivce
+- (void)openGraphSerivce:(QMOpenGraphService *)__unused openGraphSerivce
         didLoadFromCache:(QMOpenGraphItem *)openGraph {
     
-    QBChatMessage *message = [QMCore.instance.chatService.messagesMemoryStorage messageWithID:openGraph.ID fromDialogID:self.chatDialog.ID];
+    QBChatMessage *message =
+    [QMCore.instance.chatService.messagesMemoryStorage messageWithID:openGraph.ID
+                                                        fromDialogID:self.chatDialog.ID];
     if (message) {
         [self.chatDataSource updateMessage:message];
     }
@@ -2198,7 +2199,10 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
 
 - (void)openGraphSerivce:(QMOpenGraphService *) __unused openGraphSerivce
 didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
-    QBChatMessage *message = [QMCore.instance.chatService.messagesMemoryStorage messageWithID:openGraphItem.ID fromDialogID:self.chatDialog.ID];
+    
+    QBChatMessage *message =
+    [QMCore.instance.chatService.messagesMemoryStorage messageWithID:openGraphItem.ID
+                                                        fromDialogID:self.chatDialog.ID];
     if (message) {
         [self.chatDataSource updateMessage:message];
     }
