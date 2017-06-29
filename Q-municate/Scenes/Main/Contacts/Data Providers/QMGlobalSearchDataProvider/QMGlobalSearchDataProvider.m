@@ -35,7 +35,7 @@ static const NSUInteger kQMUsersPageLimit = 50;
         
         _responsePage = [QBGeneralResponsePage responsePageWithCurrentPage:1 perPage:kQMUsersPageLimit];
         
-        [[QMCore instance].contactListService addDelegate:self];
+        [QMCore.instance.contactListService addDelegate:self];
     }
     
     return self;
@@ -80,7 +80,7 @@ static const NSUInteger kQMUsersPageLimit = 50;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
     @weakify(self);
-    [[[QMCore instance].usersService searchUsersWithFullName:self.cachedSearchText page:self.responsePage] continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull task) {
+    [[QMCore.instance.usersService searchUsersWithFullName:self.cachedSearchText page:self.responsePage] continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull task) {
         
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         
@@ -92,7 +92,7 @@ static const NSUInteger kQMUsersPageLimit = 50;
             self.shouldLoadMore = task.result.count >= kQMUsersPageLimit;
             
             NSMutableArray *sortedUsers = [[self sortUsersByFullname:task.result] mutableCopy];
-            [sortedUsers removeObject:[QMCore instance].currentProfile.userData];
+            [sortedUsers removeObject:QMCore.instance.currentProfile.userData];
             
             if (self.responsePage.currentPage > 1) {
                 

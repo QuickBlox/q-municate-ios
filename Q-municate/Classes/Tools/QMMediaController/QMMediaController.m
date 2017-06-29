@@ -386,7 +386,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
             return;
         }
              QBUUser *user =
-             [[QMCore instance].usersService.usersMemoryStorage userWithID:message.senderID];
+             [QMCore.instance.usersService.usersMemoryStorage userWithID:message.senderID];
              
              QMPhoto *photo = [[QMPhoto alloc] init];
              
@@ -464,7 +464,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
 
 - (QMChatAttachmentService *)attachmentsService {
     
-    return [QMCore instance].chatService.chatAttachmentService;
+    return QMCore.instance.chatService.chatAttachmentService;
 }
 
 

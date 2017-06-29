@@ -46,7 +46,7 @@ UISearchResultsUpdating
     [self registerNibs];
     
     // subscribe for delegates
-    [[QMCore instance].chatService addDelegate:self];
+    [QMCore.instance.chatService addDelegate:self];
     
     // caching occupant IDs
     self.cachedOccupantIDs = self.chatDialog.occupantIDs;
@@ -117,7 +117,7 @@ UISearchResultsUpdating
     __weak UINavigationController *navigationController = self.navigationController;
     
     @weakify(self);
-    self.task = [[[QMCore instance].chatManager addUsers:self.dataSource.selectedUsers.allObjects toGroupChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+    self.task = [[QMCore.instance.chatManager addUsers:self.dataSource.selectedUsers.allObjects toGroupChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         
         @strongify(self);
         [(QMNavigationController *)navigationController dismissNotificationPanel];

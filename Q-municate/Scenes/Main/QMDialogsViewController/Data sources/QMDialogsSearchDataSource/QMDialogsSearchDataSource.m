@@ -42,7 +42,7 @@
     
     if (chatDialog.type == QBChatDialogTypePrivate) {
         
-        QBUUser *recipient = [[QMCore instance].usersService.usersMemoryStorage userWithID:[chatDialog opponentID]];
+        QBUUser *recipient = [QMCore.instance.usersService.usersMemoryStorage userWithID:[chatDialog opponentID]];
         
         if (recipient != nil) {
             NSParameterAssert(recipient.fullName);

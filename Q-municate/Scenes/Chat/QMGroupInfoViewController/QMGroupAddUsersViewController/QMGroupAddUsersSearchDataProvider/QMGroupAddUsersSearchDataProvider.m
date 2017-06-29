@@ -49,8 +49,8 @@ QMUsersServiceDelegate
 
 - (void)commonInit {
     
-    [[QMCore instance].contactListService addDelegate:self];
-    [[QMCore instance].usersService addDelegate:self];
+    [QMCore.instance.contactListService addDelegate:self];
+    [QMCore.instance.usersService addDelegate:self];
     
     [self updateUsersAndCallDelegate:NO];
 }
@@ -103,7 +103,7 @@ QMUsersServiceDelegate
 
 - (void)updateUsersAndCallDelegate:(BOOL)callDelegate {
     
-    _users = [[QMCore instance].contactManager friendsByExcludingUsersWithIDs:_excludedUserIDs];
+    _users = [QMCore.instance.contactManager friendsByExcludingUsersWithIDs:_excludedUserIDs];
     
     if (callDelegate) {
         

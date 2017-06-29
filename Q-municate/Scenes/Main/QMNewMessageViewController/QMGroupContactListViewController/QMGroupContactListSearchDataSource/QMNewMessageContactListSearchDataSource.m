@@ -65,7 +65,7 @@
     QBUUser *user = [self userAtIndexPath:indexPath];
     [cell setTitle:user.fullName avatarUrl:user.avatarUrl];
     
-    [cell setBody:[[QMCore instance].contactManager onlineStatusForUser:user]];
+    [cell setBody:[QMCore.instance.contactManager onlineStatusForUser:user]];
     
     cell.checked = [self.selectedUsers containsObject:user];
     

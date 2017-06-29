@@ -15,7 +15,7 @@ static const NSUInteger kQMStatusStringNamesLimit = 2;
 
 - (NSString *)statusFromMessage:(QBChatMessage *)message forDialogType:(QBChatDialogType)dialogType {
     
-    NSNumber *currentUserID = @([QMCore instance].currentProfile.userData.ID);
+    NSNumber *currentUserID = @(QMCore.instance.currentProfile.userData.ID);
     
     NSMutableArray *readIDs = [message.readIDs mutableCopy];
     [readIDs removeObject:currentUserID];
@@ -49,7 +49,7 @@ static const NSUInteger kQMStatusStringNamesLimit = 2;
             }
             else {
                 
-                NSArray *users = [[QMCore instance].usersService.usersMemoryStorage usersWithIDs:readIDs];
+                NSArray *users = [QMCore.instance.usersService.usersMemoryStorage usersWithIDs:readIDs];
                 NSMutableArray *readNames = [users valueForKeyPath:@keypath(QBUUser.new, fullName)];
                 
                 NSString *localizedString = NSLocalizedString([message isMediaMessage] ? @"QM_STR_SEEN_BY_NAMES_STATUS" : @"QM_STR_READ_BY_NAMES_STATUS", nil);
@@ -67,7 +67,7 @@ static const NSUInteger kQMStatusStringNamesLimit = 2;
             }
             else {
                 
-                NSArray *users = [[QMCore instance].usersService.usersMemoryStorage usersWithIDs:deliveredIDs];
+                NSArray *users = [QMCore.instance.usersService.usersMemoryStorage usersWithIDs:deliveredIDs];
                 NSMutableArray *deliveredNames = [users valueForKeyPath:@keypath(QBUUser.new, fullName)];
                 
                 [statusString appendFormat:NSLocalizedString(@"QM_STR_DELIVERED_TO_NAMES_STATUS", nil), [deliveredNames componentsJoinedByString:@", "]];
@@ -80,7 +80,7 @@ static const NSUInteger kQMStatusStringNamesLimit = 2;
         }
     }
     
-    QMMessageStatus status = [[QMCore instance].chatService.deferredQueueManager statusForMessage:message];
+    QMMessageStatus status = [QMCore.instance.chatService.deferredQueueManager statusForMessage:message];
     NSString *messageStatus = nil;
     
     switch (status) {
@@ -110,19 +110,19 @@ static const NSUInteger kQMStatusStringNamesLimit = 2;
 - (NSString *)messageTextForNotification:(QBChatMessage *)notification {
     
     NSString *messageText = nil;
-    QBUUser *sender = [[QMCore instance].usersService.usersMemoryStorage userWithID:notification.senderID];
-    QBUUser *recipient = [[QMCore instance].usersService.usersMemoryStorage userWithID:notification.recipientID];
+    QBUUser *sender = [QMCore.instance.usersService.usersMemoryStorage userWithID:notification.senderID];
+    QBUUser *recipient = [QMCore.instance.usersService.usersMemoryStorage userWithID:notification.recipientID];
     
     switch (notification.messageType) {
         case QMMessageTypeContactRequest:
         {
-            if (notification.senderID == [QMCore instance].currentProfile.userData.ID) {
+            if (notification.senderID == QMCore.instance.currentProfile.userData.ID) {
                 
                 messageText = NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_ME",nil);
             }
             else {
                 
-                NSString *stringFormat = [[QMCore instance].contactManager isFriendWithUserID:notification.senderID] ? @"%@ %@" : @"%@\n%@";
+                NSString *stringFormat = [QMCore.instance.contactManager isFriendWithUserID:notification.senderID] ? @"%@ %@" : @"%@\n%@";
                 
                 messageText = [NSString stringWithFormat:stringFormat, sender.fullName ?: NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil), NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", nil)];
             }
@@ -131,19 +131,19 @@ static const NSUInteger kQMStatusStringNamesLimit = 2;
             
         case QMMessageTypeAcceptContactRequest:
         {
-            messageText = (notification.senderID == [QMCore instance].currentProfile.userData.ID) ? NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_CONFIRM_FOR_ME", nil) : NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_CONFIRM_FOR_OPPONENT", nil);
+            messageText = (notification.senderID == QMCore.instance.currentProfile.userData.ID) ? NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_CONFIRM_FOR_ME", nil) : NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_CONFIRM_FOR_OPPONENT", nil);
         }
             break;
             
         case QMMessageTypeRejectContactRequest:
         {
-            messageText = (notification.senderID == [QMCore instance].currentProfile.userData.ID) ? NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_REJECT_FOR_ME",nil) : NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_REJECT_FOR_OPPONENT", nil);
+            messageText = (notification.senderID == QMCore.instance.currentProfile.userData.ID) ? NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_REJECT_FOR_ME",nil) : NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_REJECT_FOR_OPPONENT", nil);
         }
             break;
             
         case QMMessageTypeDeleteContactRequest:
         {
-            messageText = (notification.senderID == [QMCore instance].currentProfile.userData.ID) ?
+            messageText = (notification.senderID == QMCore.instance.currentProfile.userData.ID) ?
             [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_ME", @"{FullName}"), recipient.fullName] :
             [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_DELETE_FOR_OPPONENT", @"{FullName}"), sender.fullName];
         }
@@ -164,13 +164,13 @@ static const NSUInteger kQMStatusStringNamesLimit = 2;
                 {
                     if (notification.addedOccupantsIDs.count > 0) {
                         
-                        NSArray *users = [[QMCore instance].usersService.usersMemoryStorage usersWithIDs:notification.addedOccupantsIDs];
+                        NSArray *users = [QMCore.instance.usersService.usersMemoryStorage usersWithIDs:notification.addedOccupantsIDs];
                         NSString *fullNameString = [self fullNamesString:users];
                         messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_ADD_USERS_TO_EXIST_GROUP_CONVERSATION_TEXT", nil), sender.fullName ?: NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil), fullNameString];
                     }
                     else if (notification.deletedOccupantsIDs.count > 0) {
                         
-                        QBUUser *leavedUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:[[notification.deletedOccupantsIDs firstObject] integerValue]];
+                        QBUUser *leavedUser = [QMCore.instance.usersService.usersMemoryStorage userWithID:[[notification.deletedOccupantsIDs firstObject] integerValue]];
                         
                         messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT", nil), leavedUser.fullName ?: NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil)];
                     }

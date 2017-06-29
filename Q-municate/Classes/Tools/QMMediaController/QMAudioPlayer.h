@@ -21,7 +21,6 @@ typedef NS_ENUM(NSUInteger, QMAudioPlayerState) {
 
 @interface QMAudioPlayerStatus : NSObject
 
-@property (nonatomic, assign) CGFloat progress;
 @property (nonatomic, strong) NSString *mediaID;
 @property (nonatomic, assign) QMAudioPlayerState playerState;
 @property (nonatomic, assign) NSTimeInterval currentTime;

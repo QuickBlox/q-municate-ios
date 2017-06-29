@@ -19,7 +19,7 @@
     
     [super viewDidLoad];
     
-    [self performSegueWithIdentifier:[QMCore instance].currentProfile.userData != nil ? kQMSceneSegueMain : kQMSceneSegueAuth
+    [self performSegueWithIdentifier:QMCore.instance.currentProfile.userData != nil ? kQMSceneSegueMain : kQMSceneSegueAuth
                               sender:nil];
 }
 

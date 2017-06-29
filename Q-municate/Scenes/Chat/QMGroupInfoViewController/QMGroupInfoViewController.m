@@ -12,11 +12,8 @@
 #import "QMGroupHeaderView.h"
 #import "QMCore.h"
 #import "QMNavigationController.h"
-
-#import "QMPlaceholder.h"
 #import "QMImagePicker.h"
 #import <QMImageView.h>
-
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
 #import "QMImagePreview.h"
 
@@ -47,7 +44,7 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
     [self updateGroupHeaderView];
     
     // subscribing for delegates
-    [[QMCore instance].chatService addDelegate:self];
+    [QMCore.instance.chatService addDelegate:self];
 }
 
 - (void)updateGroupHeaderView {
@@ -86,7 +83,7 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                           
-                                                          if (![[QMCore instance] isInternetConnected]) {
+                                                          if (![QMCore.instance isInternetConnected]) {
                                                               
                                                               [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
                                                               return;
@@ -99,7 +96,7 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                           
-                                                          if (![[QMCore instance] isInternetConnected]) {
+                                                          if (![QMCore.instance isInternetConnected]) {
                                                               
                                                               [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
                                                               return;
@@ -148,7 +145,7 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
     
     __weak UINavigationController *navigationController = self.navigationController;
     
-    [[[QMCore instance].chatManager changeAvatar:photo forGroupChatDialog:self.chatDialog] continueWithBlock:^id(BFTask *task __unused) {
+    [[QMCore.instance.chatManager changeAvatar:photo forGroupChatDialog:self.chatDialog] continueWithBlock:^id(BFTask *task __unused) {
         
         [(QMNavigationController *)navigationController dismissNotificationPanel];
         

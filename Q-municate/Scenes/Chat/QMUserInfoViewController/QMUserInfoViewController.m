@@ -9,7 +9,6 @@
 #import "QMUserInfoViewController.h"
 #import "QMCore.h"
 #import "QMNavigationController.h"
-#import "QMPlaceholder.h"
 #import "QMChatVC.h"
 #import <QMDateUtils.h>
 #import <QMImageView.h>
@@ -96,7 +95,6 @@ NYTPhotosViewControllerDelegate
     
     // Hide empty separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    
     // automatic self-sizing cells (used for status cell, due to status label could be multiline)
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = kQMStatusCellMinHeight;
@@ -104,7 +102,6 @@ NYTPhotosViewControllerDelegate
     // subscribing to delegates
     [[QMCore instance].contactListService addDelegate:self];
     [[QMCore instance].usersService addListener:self forUser:self.user];
-    
     // update info table
     [self performDataUpdate];
     [self performLastSeenUpdate];
@@ -137,7 +134,7 @@ NYTPhotosViewControllerDelegate
     
     // get user from server
     @weakify(self);
-    [[[QMCore instance].usersService getUserWithID:self.user.ID forceLoad:YES] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+    [[QMCore.instance.usersService getUserWithID:self.user.ID forceLoad:YES] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         
         @strongify(self);
         [self.refreshControl endRefreshing];
@@ -185,7 +182,7 @@ NYTPhotosViewControllerDelegate
 
 - (void)updateUserIteractions {
     
-    BOOL isFriend = [[QMCore instance].contactManager isFriendWithUserID:self.user.ID];
+    BOOL isFriend = [QMCore.instance.contactManager isFriendWithUserID:self.user.ID];
     if (isFriend) {
         
         [self.hiddenSections addIndex:QMUserInfoSectionAddAction];
@@ -194,7 +191,7 @@ NYTPhotosViewControllerDelegate
         
         [self.hiddenSections addIndex:QMUserInfoSectionContactInteractions];
         
-        BOOL isAwaitingForApproval = [[QMCore instance].contactManager isContactListItemExistentForUserWithID:self.user.ID];
+        BOOL isAwaitingForApproval = [QMCore.instance.contactManager isContactListItemExistentForUserWithID:self.user.ID];
         if (isAwaitingForApproval) {
             
             [self.hiddenSections addIndex:QMUserInfoSectionAddAction];
@@ -207,7 +204,6 @@ NYTPhotosViewControllerDelegate
 }
 
 - (void)updateStatus {
-    
     // Status
     NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
     if ([self.user.status stringByTrimmingCharactersInSet:whiteSpaceSet].length > 0) {
@@ -271,7 +267,7 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
-    QBChatDialog *privateChatDialog = [[QMCore instance].chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:self.user.ID];
+    QBChatDialog *privateChatDialog = [QMCore.instance.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:self.user.ID];
     
     if (privateChatDialog) {
         
@@ -288,7 +284,7 @@ NYTPhotosViewControllerDelegate
         
         __weak UINavigationController *navigationController = self.navigationController;
         
-        self.task = [[[QMCore instance].chatService createPrivateChatDialogWithOpponentID:self.user.ID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+        self.task = [[QMCore.instance.chatService createPrivateChatDialogWithOpponentID:self.user.ID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
             
             @strongify(self);
             [(QMNavigationController *)navigationController dismissNotificationPanel];
@@ -305,7 +301,7 @@ NYTPhotosViewControllerDelegate
 
 - (BOOL)callAllowed {
     
-    if (![[QMCore instance] isInternetConnected]) {
+    if (![QMCore.instance isInternetConnected]) {
         
         [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
         return NO;
@@ -327,7 +323,7 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
-    [[QMCore instance].callManager callToUserWithID:self.user.ID conferenceType:conferenceType];
+    [QMCore.instance.callManager callToUserWithID:self.user.ID conferenceType:conferenceType];
 }
 
 - (void)audioCallAction {
@@ -347,7 +343,7 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
-    if (![[QMCore instance] isInternetConnected]) {
+    if (![QMCore.instance isInternetConnected]) {
         
         [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
         return;
@@ -366,7 +362,7 @@ NYTPhotosViewControllerDelegate
         
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         
-        self.task = [[[QMCore instance].contactManager removeUserFromContactList:self.user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+        self.task = [[QMCore.instance.contactManager removeUserFromContactList:self.user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
             
             if (self.splitViewController.isCollapsed) {
                 
@@ -396,7 +392,7 @@ NYTPhotosViewControllerDelegate
         return;
     }
     
-    if (![[QMCore instance] isInternetConnected]) {
+    if (![QMCore.instance isInternetConnected]) {
         
         [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
         return;
@@ -406,7 +402,7 @@ NYTPhotosViewControllerDelegate
     
     __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
     
-    self.task = [[[QMCore instance].contactManager addUserToContactList:self.user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+    self.task = [[QMCore.instance.contactManager addUserToContactList:self.user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         
         [navigationController dismissNotificationPanel];
         return nil;

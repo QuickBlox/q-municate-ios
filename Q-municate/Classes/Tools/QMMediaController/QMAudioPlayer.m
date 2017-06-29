@@ -118,7 +118,6 @@
     [self stopProgressTimer];
     
     [self.audioPlayer stop];
-    self.status.progress = 0.0;
     self.status.playerState = QMAudioPlayerStateStopped;
     self.status.currentTime = 0;
     self.audioPlayer = nil;
@@ -150,7 +149,7 @@
     
     [self.audioPlayer prepareToPlay];
     [self.audioPlayer play];
-    self.status.progress = 0.0;
+
     self.status.playerState = QMAudioPlayerStatePlaying;
     
     self.status.duration = self.audioPlayer.duration;

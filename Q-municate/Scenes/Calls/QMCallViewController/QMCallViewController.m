@@ -98,7 +98,7 @@ QMCallManagerDelegate
     self.view.backgroundColor = [UIColor whiteColor];
     
     [[QBRTCClient instance] addDelegate:self];
-    [QMCore instance].callManager.delegate = self;
+    QMCore.instance.callManager.delegate = self;
     
     if (self.isVideoCall) {
         
@@ -149,7 +149,7 @@ QMCallManagerDelegate
 
 - (void)configureCallInfoView {
     
-    QBUUser *opponentUser = [[QMCore instance].callManager opponentUser];
+    QBUUser *opponentUser = [QMCore.instance.callManager opponentUser];
     
     if (self.callInfoView == nil) {
         // base call info view configuration
@@ -311,7 +311,7 @@ QMCallManagerDelegate
                 
                 @strongify(self);
                 sender.userInteractionEnabled = NO;
-                [[QMCore instance].callManager stopAllSounds];
+                [QMCore.instance.callManager stopAllSounds];
                 
                 QBRTCSoundRoute soundRoute = self.session.conferenceType == QBRTCConferenceTypeVideo ? QBRTCSoundRouteSpeaker : QBRTCSoundRouteReceiver;
                 [[QBRTCSoundRouter instance] setCurrentSoundRoute:soundRoute];
@@ -342,7 +342,7 @@ QMCallManagerDelegate
                 
                 @strongify(self);
                 sender.userInteractionEnabled = NO;
-                [[QMCore instance].callManager stopAllSounds];
+                [QMCore.instance.callManager stopAllSounds];
                 
                 self.callState = QMCallStateActiveVideoCall;
                 [self configureCallController];
@@ -393,9 +393,11 @@ QMCallManagerDelegate
         if (self.callState == QMCallStateActiveAudioCall ||
             self.callState == QMCallStateActiveVideoCall) {
             
-            bottomText = [NSString stringWithFormat:@"%@ - %@", NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil) , QMStringForTimeInterval(self.callDuration)];
+            bottomText = [NSString stringWithFormat:@"%@ - %@", NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil) ,
+                          QMStringForTimeInterval(self.callDuration)];
             
-            [[QMCore instance].callManager sendCallNotificationMessageWithState:QMCallNotificationStateHangUp duration:self.callDuration];
+            [QMCore.instance.callManager sendCallNotificationMessageWithState:QMCallNotificationStateHangUp
+                                                                     duration:self.callDuration];
         }
         else {
             
@@ -405,7 +407,7 @@ QMCallManagerDelegate
         if (self.callState == QMCallStateOutgoingAudioCall
             || self.callState == QMCallStateOutgoingVideoCall) {
             
-            [[QMCore instance].callManager sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
+            [QMCore.instance.callManager sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
         }
         
         self.callInfoView.bottomText = bottomText;
@@ -525,7 +527,7 @@ QMCallManagerDelegate
     
     [self.session rejectCall:nil];
     
-    [[QMCore instance].callManager sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
+    [QMCore.instance.callManager sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
 }
 
 //MARK: - Timers
@@ -592,12 +594,12 @@ QMCallManagerDelegate
 
 - (QBRTCSession *)session {
     
-    return [QMCore instance].callManager.session;
+    return QMCore.instance.callManager.session;
 }
 
 - (BOOL)isVideoCall {
     
-    return [QMCore instance].callManager.session.conferenceType == QBRTCConferenceTypeVideo;
+    return QMCore.instance.callManager.session.conferenceType == QBRTCConferenceTypeVideo;
 }
 
 - (UIView *)topLayoutBackgroundView {
@@ -656,13 +658,13 @@ QMCallManagerDelegate
     
     self.declineButton.enabled = NO;
     
-    [[QMCore instance].callManager stopAllSounds];
+    [QMCore.instance.callManager stopAllSounds];
     
     if (![self.session.initiatorID isEqualToNumber:userID]) {
         // there is QBRTC bug, when userID is always opponents iD
         // even  for user, who did not answer, this delegate will be called
         // with opponent user ID
-        [[QMCore instance].callManager sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
+        [QMCore.instance.callManager sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
     }
     
     self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_USER_DOESNT_ANSWER", nil);
@@ -677,7 +679,7 @@ QMCallManagerDelegate
     
     self.declineButton.enabled = NO;
     
-    [[QMCore instance].callManager stopAllSounds];
+    [QMCore.instance.callManager stopAllSounds];
     
     self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_USER_IS_BUSY", nil);
 }
@@ -689,7 +691,7 @@ QMCallManagerDelegate
         return;
     }
     
-    [[QMCore instance].callManager stopAllSounds];
+    [QMCore.instance.callManager stopAllSounds];
     
     self.callState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateActiveVideoCall : QMCallStateActiveAudioCall;
     [self configureCallController];
@@ -718,7 +720,7 @@ QMCallManagerDelegate
     
     self.declineButton.enabled = NO;
     
-    [[QMCore instance].callManager stopAllSounds];
+    [QMCore.instance.callManager stopAllSounds];
     
     [self stopCallTimer];
     self.callInfoView.bottomText = [NSString stringWithFormat:@"%@ - %@", NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil), QMStringForTimeInterval(self.callDuration)];

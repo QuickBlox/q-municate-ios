@@ -97,7 +97,7 @@ static NSString * const kQMFacebookIDField = @"id";
         
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         
-        return [[QMCore instance].authService loginWithFacebookSessionToken:task.result];
+        return [QMCore.instance.authService loginWithFacebookSessionToken:task.result];
         
     }] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         
@@ -110,8 +110,8 @@ static NSString * const kQMFacebookIDField = @"id";
             @strongify(self);
             [SVProgressHUD dismiss];
             [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
-            [QMCore instance].currentProfile.accountType = QMAccountTypeFacebook;
-            [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
+            QMCore.instance.currentProfile.accountType = QMAccountTypeFacebook;
+            [QMCore.instance.currentProfile synchronizeWithUserData:task.result];
             
             if (task.result.avatarUrl.length == 0) {
                 
@@ -126,7 +126,7 @@ static NSString * const kQMFacebookIDField = @"id";
                 }];
             }
             
-            return [[QMCore instance].pushNotificationManager subscribeForPushNotifications];
+            return [QMCore.instance.pushNotificationManager subscribeForPushNotifications];
         }
         
         return nil;
@@ -156,7 +156,7 @@ static NSString * const kQMFacebookIDField = @"id";
             
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
             
-            [[[QMCore instance].authService loginWithTwitterDigitsAuthHeaders:authHeaders] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+            [[QMCore.instance.authService loginWithTwitterDigitsAuthHeaders:authHeaders] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
                 
                 [SVProgressHUD dismiss];
                 
@@ -164,7 +164,7 @@ static NSString * const kQMFacebookIDField = @"id";
                     
                     [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
                     
-                    [QMCore instance].currentProfile.accountType = QMAccountTypeDigits;
+                    QMCore.instance.currentProfile.accountType = QMAccountTypeDigits;
                     
                     QBUUser *user = task.result;
                     if (user.fullName.length == 0) {
@@ -177,9 +177,9 @@ static NSString * const kQMFacebookIDField = @"id";
                         return [QMTasks taskUpdateCurrentUser:updateUserParams];
                     }
                     
-                    [[QMCore instance].currentProfile synchronizeWithUserData:user];
+                    [QMCore.instance.currentProfile synchronizeWithUserData:user];
                     
-                    return [[QMCore instance].pushNotificationManager subscribeForPushNotifications];
+                    return [QMCore.instance.pushNotificationManager subscribeForPushNotifications];
                 }
                 
                 return nil;

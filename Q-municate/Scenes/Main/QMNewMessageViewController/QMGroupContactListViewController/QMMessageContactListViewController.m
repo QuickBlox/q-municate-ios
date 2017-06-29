@@ -33,7 +33,7 @@ QMUsersServiceDelegate
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [[QMCore instance].usersService addDelegate:self];
+    [QMCore.instance.usersService addDelegate:self];
     
     [self registerNibs];
     

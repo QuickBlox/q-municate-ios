@@ -101,7 +101,7 @@ static UIImage *incomingVideoIcon() {
             
             case QMCallNotificationStateHangUp: {
                 
-                if (message.callerUserID == [QMCore instance].currentProfile.userData.ID) {
+                if (message.callerUserID == QMCore.instance.currentProfile.userData.ID) {
                     
                     if (message.callNotificationType == QMCallNotificationTypeAudio) {
                         
@@ -139,13 +139,13 @@ static UIImage *incomingVideoIcon() {
                     
                     _iconImage = missedAudioIcon();
                     
-                    _notificationText = message.callerUserID == [QMCore instance].currentProfile.userData.ID ? NSLocalizedString(@"QM_STR_NO_ANSWER", nil) : NSLocalizedString(@"QM_STR_MISSED_CALL", nil);
+                    _notificationText = message.callerUserID == QMCore.instance.currentProfile.userData.ID ? NSLocalizedString(@"QM_STR_NO_ANSWER", nil) : NSLocalizedString(@"QM_STR_MISSED_CALL", nil);
                 }
                 else {
                     
                     _iconImage = missedVideoIcon();
                     
-                    _notificationText = message.callerUserID == [QMCore instance].currentProfile.userData.ID ? NSLocalizedString(@"QM_STR_NO_ANSWER", nil) : NSLocalizedString(@"QM_STR_MISSED_VIDEO_CALL", nil);
+                    _notificationText = message.callerUserID == QMCore.instance.currentProfile.userData.ID ? NSLocalizedString(@"QM_STR_NO_ANSWER", nil) : NSLocalizedString(@"QM_STR_MISSED_VIDEO_CALL", nil);
                 }
                 
                 break;

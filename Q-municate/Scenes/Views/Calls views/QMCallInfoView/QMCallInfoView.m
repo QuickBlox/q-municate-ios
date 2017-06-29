@@ -7,7 +7,6 @@
 //
 
 #import "QMCallInfoView.h"
-#import "QMPlaceholder.h"
 #import <QMImageView.h>
 
 /**

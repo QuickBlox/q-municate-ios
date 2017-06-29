@@ -58,7 +58,7 @@ static const NSUInteger kQMPasswordMinChar = 8;
 
 - (IBAction)changeButtonPressed:(UIBarButtonItem *)__unused sender {
     
-    if (![self.passwordOldField.text isEqualToString:[QMCore instance].currentProfile.userData.password]) {
+    if (![self.passwordOldField.text isEqualToString:QMCore.instance.currentProfile.userData.password]) {
         
         [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_WRONG_OLD_PASSWORD", nil) duration:kQMDefaultNotificationDismissTime];
         

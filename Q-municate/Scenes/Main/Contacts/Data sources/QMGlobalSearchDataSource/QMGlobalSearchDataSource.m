@@ -48,7 +48,7 @@
         // add button visibility, changing its state
         // only if chat is connected
         // default visibility value for add button is NO
-        BOOL isRequestRequired = ![[QMCore instance].contactManager isContactListItemExistentForUserWithID:user.ID];
+        BOOL isRequestRequired = ![QMCore.instance.contactManager isContactListItemExistentForUserWithID:user.ID];
         [cell setAddButtonVisible:isRequestRequired];
     }
     

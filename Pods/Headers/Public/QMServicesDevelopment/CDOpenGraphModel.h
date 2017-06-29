@@ -1,0 +1,1 @@
+../../../../../q-municate-services-ios/QMOpenGraphCache/QMOpenGraphCache/CoreData/Entries/CDOpenGraphModel.h

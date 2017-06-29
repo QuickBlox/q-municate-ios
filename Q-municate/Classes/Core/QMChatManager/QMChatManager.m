@@ -114,7 +114,7 @@
 
 - (BFTask *)sendBackgroundMessageWithText:(NSString *)text toDialogWithID:(NSString *)chatDialogID {
     
-    NSUInteger currentUserID = [QMCore instance].currentProfile.userData.ID;
+    NSUInteger currentUserID = QMCore.instance.currentProfile.userData.ID;
     
     QBChatMessage *message = [QMMessagesHelper chatMessageWithText:text
                                                           senderID:currentUserID

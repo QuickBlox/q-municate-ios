@@ -105,7 +105,6 @@ NYTPhotosViewControllerDelegate
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
     // smooth rows deselection
     [self qm_smoothlyDeselectRowsForTableView:self.tableView];
 }
@@ -162,11 +161,11 @@ NYTPhotosViewControllerDelegate
     
     if (sender.isOn) {
         
-        self.subscribeTask = [[[QMCore instance].pushNotificationManager subscribeForPushNotifications] continueWithBlock:completionBlock];
+        self.subscribeTask = [[QMCore.instance.pushNotificationManager subscribeForPushNotifications] continueWithBlock:completionBlock];
     }
     else {
         
-        self.subscribeTask = [[[QMCore instance].pushNotificationManager unSubscribeFromPushNotifications] continueWithBlock:completionBlock];
+        self.subscribeTask = [[QMCore.instance.pushNotificationManager unSubscribeFromPushNotifications] continueWithBlock:completionBlock];
     }
 }
 
@@ -197,7 +196,7 @@ NYTPhotosViewControllerDelegate
                                                           
                                                           [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
                                                           
-                                                          self.logoutTask = [[[QMCore instance] logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
+                                                          self.logoutTask = [[QMCore.instance logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
                                                               
                                                               [navigationController dismissNotificationPanel];
                                                               [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
@@ -373,7 +372,7 @@ NYTPhotosViewControllerDelegate
                                                           [QMImagePicker choosePhotoInViewController:self resultHandler:self];
                                                       }]];
     
-    NSString *avatarURL = [QMCore instance].currentProfile.userData.avatarUrl;
+    NSString *avatarURL = QMCore.instance.currentProfile.userData.avatarUrl;
     if (avatarURL.length > 0) {
         
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_OPEN_IMAGE", nil)
@@ -402,7 +401,7 @@ NYTPhotosViewControllerDelegate
 
 - (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
-    if (![[QMCore instance] isInternetConnected]) {
+    if (![QMCore.instance isInternetConnected]) {
         
         [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
         return;

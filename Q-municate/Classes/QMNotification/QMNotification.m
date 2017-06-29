@@ -9,7 +9,6 @@
 #import "QMNotification.h"
 #import "QMCore.h"
 #import <SDWebImageManager.h>
-#import "QMPlaceholder.h"
 #import "QMStatusStringBuilder.h"
 #import "QMMessageNotification.h"
 
@@ -24,7 +23,7 @@
     NSParameterAssert(chatMessage.dialogID);
     
     QBChatDialog *chatDialog =
-    [[QMCore instance].chatService.dialogsMemoryStorage chatDialogWithID:chatMessage.dialogID];
+    [QMCore.instance.chatService.dialogsMemoryStorage chatDialogWithID:chatMessage.dialogID];
     
     if (chatDialog == nil) {
         // for some reason chat dialog was not find
@@ -40,7 +39,7 @@
             
         case QBChatDialogTypePrivate: {
             
-            QBUUser *user = [[QMCore instance].usersService.usersMemoryStorage userWithID:chatMessage.senderID];
+            QBUUser *user = [QMCore.instance.usersService.usersMemoryStorage userWithID:chatMessage.senderID];
             
             placeholderID = user.ID;
             imageURLString = user.avatarUrl;
