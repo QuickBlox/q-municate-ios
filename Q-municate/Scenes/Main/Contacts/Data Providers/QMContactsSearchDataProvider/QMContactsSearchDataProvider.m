@@ -31,9 +31,9 @@ QMUsersServiceDelegate
     
     if (self) {
         
-        [[QMCore instance].contactListService addDelegate:self];
-        [[QMCore instance].usersService addDelegate:self];
-        _friends = [[QMCore instance].contactManager friends];
+        [QMCore.instance.contactListService addDelegate:self];
+        [QMCore.instance.usersService addDelegate:self];
+        _friends = [QMCore.instance.contactManager friends];
     }
     
     return self;
@@ -75,7 +75,7 @@ QMUsersServiceDelegate
 
 - (void)updateData {
     
-    self.friends = [[QMCore instance].contactManager friends];
+    self.friends = [QMCore.instance.contactManager friends];
     [self performSearch:self.cachedSearchText];
     
     [self.delegate searchDataProvider:self didUpdateData:self.friends];

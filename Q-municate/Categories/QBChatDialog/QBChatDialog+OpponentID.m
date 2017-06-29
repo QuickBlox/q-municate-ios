@@ -18,12 +18,12 @@
         return NSNotFound;
     }
     
-    NSParameterAssert([QMCore instance].currentProfile.userData);
+    NSParameterAssert(QMCore.instance.currentProfile.userData);
     
     for (NSNumber *userID in self.occupantIDs) {
         
         NSUInteger userIntID = userID.unsignedIntegerValue;
-        if (userIntID != [QMCore instance].currentProfile.userData.ID) {
+        if (userIntID != QMCore.instance.currentProfile.userData.ID) {
             
             return userIntID;
         }

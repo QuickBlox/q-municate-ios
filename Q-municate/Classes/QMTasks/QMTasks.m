@@ -26,14 +26,14 @@ static const NSUInteger kQMUsersPageLimit = 100;
     
     [QBRequest updateCurrentUser:updateParameters successBlock:^(QBResponse * _Nonnull __unused response, QBUUser * _Nullable user) {
         
-        user.password = updateParameters.password ?: [QMCore instance].currentProfile.userData.password;
-        [[QMCore instance].currentProfile synchronizeWithUserData:user];
+        user.password = updateParameters.password ?: QMCore.instance.currentProfile.userData.password;
+        [QMCore.instance.currentProfile synchronizeWithUserData:user];
         
         [source setResult:user];
         
     } errorBlock:^(QBResponse * _Nonnull response) {
         
-        [[QMCore instance] handleErrorResponse:response];
+        [QMCore.instance handleErrorResponse:response];
         [source setError:response.error.error];
     }];
     
@@ -45,7 +45,7 @@ static const NSUInteger kQMUsersPageLimit = 100;
     return [[QMContent uploadJPEGImage:userImage progress:progress] continueWithSuccessBlock:^id _Nullable(BFTask<QBCBlob *> * _Nonnull task) {
         
         QBUpdateUserParameters *userParams = [QBUpdateUserParameters new];
-        userParams.customData = [QMCore instance].currentProfile.userData.customData;
+        userParams.customData = QMCore.instance.currentProfile.userData.customData;
         userParams.avatarUrl = task.result.isPublic ? [task.result publicUrl] : [task.result privateUrl];
         
         return [[self class] taskUpdateCurrentUser:userParams];
@@ -74,24 +74,24 @@ static const NSUInteger kQMUsersPageLimit = 100;
     
     BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
     
-    if ([QMCore instance].currentProfile.userData == nil) {
+    if (QMCore.instance.currentProfile.userData == nil) {
         [source setError:[QMErrorsFactory errorNotLoggedInREST]];
         
         return source.task;
     }
     
-    if ([[QMCore instance] isAuthorized]) {
+    if ([QMCore.instance isAuthorized]) {
         
-        [source setResult:[QMCore instance].currentProfile.userData];
+        [source setResult:QMCore.instance.currentProfile.userData];
     }
     else {
         
-        switch ([QMCore instance].currentProfile.accountType) {
+        switch (QMCore.instance.currentProfile.accountType) {
                 
                 // Email login
             case QMAccountTypeEmail: {
                 
-                return [[QMCore instance].authService loginWithUser:[QMCore instance].currentProfile.userData];
+                return [QMCore.instance.authService loginWithUser:QMCore.instance.currentProfile.userData];
             }
                 break;
                 
@@ -100,7 +100,7 @@ static const NSUInteger kQMUsersPageLimit = 100;
                 
                 return [[QMFacebook connect] continueWithBlock:^id _Nullable(BFTask<NSString *> * _Nonnull task) {
                     
-                    return task.result != nil ? [[QMCore instance].authService loginWithFacebookSessionToken:task.result] : nil;
+                    return task.result != nil ? [QMCore.instance.authService loginWithFacebookSessionToken:task.result] : nil;
                 }];
             }
                 break;
@@ -118,7 +118,7 @@ static const NSUInteger kQMUsersPageLimit = 100;
                     break;
                 }
                 
-                return [[QMCore instance].authService loginWithTwitterDigitsAuthHeaders:authHeaders];
+                return [QMCore.instance.authService loginWithTwitterDigitsAuthHeaders:authHeaders];
             }
                 break;
                 
@@ -137,28 +137,28 @@ static const NSUInteger kQMUsersPageLimit = 100;
     
     void (^iterationBlock)(QBResponse *, NSArray *, NSSet *, BOOL *) = ^(QBResponse *__unused response, NSArray *__unused dialogObjects, NSSet *dialogsUsersIDs, BOOL *__unused stop) {
         
-        [usersLoadingTasks addObject:[[QMCore instance].usersService getUsersWithIDs:dialogsUsersIDs.allObjects]];
+        [usersLoadingTasks addObject:[QMCore.instance.usersService getUsersWithIDs:dialogsUsersIDs.allObjects]];
     };
     
     BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull task) {
         
-        if ([[QMCore instance] isAuthorized] && !task.isFaulted) {
+        if ([QMCore.instance isAuthorized] && !task.isFaulted) {
             
-            [QMCore instance].currentProfile.lastDialogsFetchingDate = [NSDate date];
-            [[QMCore instance].currentProfile synchronize];
+            QMCore.instance.currentProfile.lastDialogsFetchingDate = [NSDate date];
+            [QMCore.instance.currentProfile synchronize];
         }
         
         return [BFTask taskForCompletionOfAllTasks:[usersLoadingTasks copy]];
     };
     
-    NSDate *lastDialogsFetchingDate = [QMCore instance].currentProfile.lastDialogsFetchingDate;
+    NSDate *lastDialogsFetchingDate = QMCore.instance.currentProfile.lastDialogsFetchingDate;
     if (lastDialogsFetchingDate != nil) {
         
-        return [[[QMCore instance].chatService fetchDialogsUpdatedFromDate:lastDialogsFetchingDate andPageLimit:kQMDialogsPageLimit iterationBlock:iterationBlock] continueWithBlock:completionBlock];
+        return [[QMCore.instance.chatService fetchDialogsUpdatedFromDate:lastDialogsFetchingDate andPageLimit:kQMDialogsPageLimit iterationBlock:iterationBlock] continueWithBlock:completionBlock];
     }
     else {
         
-        return [[[QMCore instance].chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:iterationBlock] continueWithBlock:completionBlock];
+        return [[QMCore.instance.chatService allDialogsWithPageLimit:kQMDialogsPageLimit extendedRequest:nil iterationBlock:iterationBlock] continueWithBlock:completionBlock];
     }
 }
 

@@ -63,7 +63,6 @@
 		585A46381CC8F16F004FBC3D /* QMGroupAddUsersSearchDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 585A46371CC8F16F004FBC3D /* QMGroupAddUsersSearchDataProvider.m */; };
 		585C82671D75D2CA0010C71E /* QMImagePreview.m in Sources */ = {isa = PBXBuildFile; fileRef = 585C82661D75D2CA0010C71E /* QMImagePreview.m */; };
 		585DE45F1C4686060068E03E /* QMErrorsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 585DE45E1C4686060068E03E /* QMErrorsFactory.m */; };
-		585DE4631C46A8390068E03E /* QMPlaceholder.m in Sources */ = {isa = PBXBuildFile; fileRef = 585DE4621C46A8390068E03E /* QMPlaceholder.m */; };
 		5868B05B1CE9C647004F9233 /* QMCallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5868B05A1CE9C647004F9233 /* QMCallViewController.m */; };
 		5868B05E1CE9C668004F9233 /* QMCallManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5868B05D1CE9C668004F9233 /* QMCallManager.m */; };
 		5868B0611CE9C67D004F9233 /* QMCallButtonsFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 5868B0601CE9C67D004F9233 /* QMCallButtonsFactory.m */; };
@@ -328,8 +327,6 @@
 		585C82661D75D2CA0010C71E /* QMImagePreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMImagePreview.m; path = QMImagePreview/QMImagePreview.m; sourceTree = "<group>"; };
 		585DE45D1C4686060068E03E /* QMErrorsFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMErrorsFactory.h; sourceTree = "<group>"; };
 		585DE45E1C4686060068E03E /* QMErrorsFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMErrorsFactory.m; sourceTree = "<group>"; };
-		585DE4611C46A8390068E03E /* QMPlaceholder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMPlaceholder.h; sourceTree = "<group>"; };
-		585DE4621C46A8390068E03E /* QMPlaceholder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMPlaceholder.m; sourceTree = "<group>"; };
 		5868B0591CE9C647004F9233 /* QMCallViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCallViewController.h; sourceTree = "<group>"; };
 		5868B05A1CE9C647004F9233 /* QMCallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMCallViewController.m; sourceTree = "<group>"; };
 		5868B05C1CE9C668004F9233 /* QMCallManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCallManager.h; sourceTree = "<group>"; };
@@ -1220,15 +1217,6 @@
 			path = QMErrorsFactory;
 			sourceTree = "<group>";
 		};
-		585DE4601C46A8170068E03E /* QMPlaceholder */ = {
-			isa = PBXGroup;
-			children = (
-				585DE4611C46A8390068E03E /* QMPlaceholder.h */,
-				585DE4621C46A8390068E03E /* QMPlaceholder.m */,
-			);
-			path = QMPlaceholder;
-			sourceTree = "<group>";
-		};
 		5868B0581CE9B5C1004F9233 /* Calls views */ = {
 			isa = PBXGroup;
 			children = (
@@ -1933,7 +1921,6 @@
 				584277D21C3FCFA100CDE35B /* QMFacebook */,
 				580FEBE41CC4EF16000AED72 /* QMNotification */,
 				58D952351CEE2332001C43F7 /* QMPhoto */,
-				585DE4601C46A8170068E03E /* QMPlaceholder */,
 				584277CE1C3FBCF500CDE35B /* QMProfile */,
 				58D8477D1C87138F000C40BA /* QMProtocols */,
 				580B3B541C3FF88500345081 /* QMTasks */,
@@ -2374,7 +2361,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		E6936DF91158CD5FF2D1E6C5 /* [CP] Check Pods Manifest.lock */ = {
@@ -2389,7 +2376,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		E911BC553233DD014AE11AC7 /* [CP] Copy Pods Resources */ = {
@@ -2448,7 +2435,6 @@
 				580590FD1CA548130055BC2F /* QMContactManager.m in Sources */,
 				5868B0781CE9E59E004F9233 /* QMContactsViewController.m in Sources */,
 				589D4CF11C98158E005F1E76 /* QMRootViewControllerSegue.m in Sources */,
-				585DE4631C46A8390068E03E /* QMPlaceholder.m in Sources */,
 				584277D11C3FBD1600CDE35B /* QMProfile.m in Sources */,
 				5808F1C21CFC585100F1A210 /* QMSettingsFooterView.m in Sources */,
 				55BBA75C19730B960040DB5C /* REMessageUI.m in Sources */,

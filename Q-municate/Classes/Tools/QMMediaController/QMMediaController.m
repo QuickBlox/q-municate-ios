@@ -358,7 +358,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
              __strong typeof(weakSelf) strongSelf = weakSelf;
              
              QBUUser *user =
-             [[QMCore instance].usersService.usersMemoryStorage userWithID:sender.message.senderID];
+             [QMCore.instance.usersService.usersMemoryStorage userWithID:sender.message.senderID];
              
              QMPhoto *photo = [[QMPhoto alloc] init];
              
@@ -446,7 +446,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
 
 - (QMMediaService *)mediaService {
     
-    return [QMCore instance].chatService.chatAttachmentService.mediaService;
+    return QMCore.instance.chatService.chatAttachmentService.mediaService;
 }
 
 //MARK:- Helpers

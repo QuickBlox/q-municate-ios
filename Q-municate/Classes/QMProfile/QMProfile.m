@@ -78,7 +78,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
         [defaults setBool:YES forKey:kQMAppExists];
         
         // updating user in users cache
-        [[QMCore instance].usersService.usersMemoryStorage addUser:self.userData];
+        [QMCore.instance.usersService.usersMemoryStorage addUser:self.userData];
         [[QMUsersCache instance] insertOrUpdateUser:self.userData];
     }
     
@@ -219,8 +219,8 @@ static NSString *const kQMLicenceAcceptedKey = @"licence_accepted";
         if (self.accountType == QMAccountTypeEmail) {
             
             NSString *account = [QBSession currentSession].currentUser.email;
-            [QBSession currentSession].currentUser.password = [SSKeychain passwordForService:kQMAuthServiceKey account:account];
-            
+            [QBSession currentSession].currentUser.password =
+            [SSKeychain passwordForService:kQMAuthServiceKey account:account];
             // clearing old account data
             [SSKeychain deletePasswordForService:kQMAuthServiceKey account:account];
         }

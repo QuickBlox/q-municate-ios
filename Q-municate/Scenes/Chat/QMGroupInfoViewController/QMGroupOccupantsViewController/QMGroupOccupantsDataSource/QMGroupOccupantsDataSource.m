@@ -84,16 +84,16 @@ static const NSUInteger kQMNumberOfSections = 1;
         QBUUser *user = self.items[indexPath.row - kQMNumberOfStaticCellsBeforeOccupantsList];
         [cell setTitle:user.fullName avatarUrl:user.avatarUrl];
         
-        BOOL isRequestRequired = ![[QMCore instance].contactManager isContactListItemExistentForUserWithID:user.ID];
+        BOOL isRequestRequired = ![QMCore.instance.contactManager isContactListItemExistentForUserWithID:user.ID];
         
-        if ([QMCore instance].currentProfile.userData.ID == user.ID) {
+        if (QMCore.instance.currentProfile.userData.ID == user.ID) {
             
             isRequestRequired = NO;
         }
         
         [cell setAddButtonVisible:isRequestRequired];
         
-        [cell setBody:[[QMCore instance].contactManager onlineStatusForUser:user]];
+        [cell setBody:[QMCore.instance.contactManager onlineStatusForUser:user]];
         
         cell.didAddUserBlock = self.didAddUserBlock;
         

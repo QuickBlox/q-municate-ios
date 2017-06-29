@@ -8,7 +8,6 @@
 
 #import "QMGroupHeaderView.h"
 #import "QMShadowView.h"
-#import "QMPlaceholder.h"
 
 static UIColor *highlightedColor() {
     

@@ -13,25 +13,29 @@
 #import "QMContactManager.h"
 #import "QMChatManager.h"
 #import "QMPushNotificationManager.h"
-
+#import "QMOpenGraphService.h"
 #import "QMCallManager.h"
 
 @class Reachability;
+
+NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  This class represents basic control on QMServices.
  */
 @interface QMCore : QMServicesManager
-
-<
-QMContactListServiceCacheDataSource,
-QMContactListServiceDelegate
->
+<QMContactListServiceCacheDataSource, QMContactListServiceDelegate,
+QMOpenGraphCacheDataSource, QMOpenGraphServiceDelegate>
 
 /**
  *  Contact list service.
  */
 @property (strong, nonatomic, readonly) QMContactListService *contactListService;
+
+/**
+ Open Graph serice
+ */
+@property (strong, nonatomic, nonnull) QMOpenGraphService *openGraphService;
 
 /**
  *  Contact manager.
@@ -65,14 +69,18 @@ QMContactListServiceDelegate
  */
 @property (strong, nonatomic, readonly) QMProfile *currentProfile;
 
-@property (copy, nonatomic) NSString *activeDialogID;
+/**
+ Active dialog ID
+ */
+@property (copy, nonatomic, nullable) NSString *activeDialogID;
 
 /**
  *  QMCore shared instance.
  *
  *  @return QMCore singleton
  */
-+ (instancetype)instance;
+
+@property (class, readonly) QMCore *instance;
 
 - (BOOL)isInternetConnected;
 
@@ -80,3 +88,5 @@ QMContactListServiceDelegate
 - (BFTask *)logout;
 
 @end
+
+NS_ASSUME_NONNULL_END

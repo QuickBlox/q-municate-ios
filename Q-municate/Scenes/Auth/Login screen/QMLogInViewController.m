@@ -63,7 +63,7 @@
         __weak UINavigationController *navigationController = self.navigationController;
         
         @weakify(self);
-        self.task = [[[QMCore instance].authService loginWithUser:user] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+        self.task = [[QMCore.instance.authService loginWithUser:user] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
             
             @strongify(self);
             [(QMNavigationController *)navigationController dismissNotificationPanel];
@@ -71,10 +71,10 @@
             if (!task.isFaulted) {
                 
                 [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
-                [QMCore instance].currentProfile.accountType = QMAccountTypeEmail;
-                [[QMCore instance].currentProfile synchronizeWithUserData:task.result];
+                QMCore.instance.currentProfile.accountType = QMAccountTypeEmail;
+                [QMCore.instance.currentProfile synchronizeWithUserData:task.result];
                 
-                return [[QMCore instance].pushNotificationManager subscribeForPushNotifications];
+                return [QMCore.instance.pushNotificationManager subscribeForPushNotifications];
             }
             
             return nil;

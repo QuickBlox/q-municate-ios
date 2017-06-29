@@ -80,8 +80,8 @@ QMUsersServiceDelegate
     [self registerNibs];
     
     // subscribing for delegates
-    [[QMCore instance].contactListService addDelegate:self];
-    [[QMCore instance].usersService addDelegate:self];
+    [QMCore.instance.contactListService addDelegate:self];
+    [QMCore.instance.usersService addDelegate:self];
     
     // adding refresh control task
     if (self.refreshControl) {
@@ -164,7 +164,7 @@ QMUsersServiceDelegate
         NSIndexPath *indexPath = [self.searchResultsController.tableView indexPathForCell:cell];
         QBUUser *user = self.globalSearchDataSource.items[indexPath.row];
         
-        self.addUserTask = [[[QMCore instance].contactManager addUserToContactList:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        self.addUserTask = [[QMCore.instance.contactManager addUserToContactList:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
             
             [SVProgressHUD dismiss];
             
@@ -178,7 +178,7 @@ QMUsersServiceDelegate
                 
                 if (QBChat.instance.isConnected) {
                     
-                    if ([[QMCore instance] isInternetConnected]) {
+                    if ([QMCore.instance isInternetConnected]) {
                         
                         [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:NO inViewController:self];
                     }
@@ -202,7 +202,7 @@ QMUsersServiceDelegate
 
 - (void)updateItemsFromContactList {
     
-    NSArray *friends = [[QMCore instance].contactManager friends];
+    NSArray *friends = [QMCore.instance.contactManager friends];
     [self.dataSource replaceItems:friends];
 }
 
@@ -328,7 +328,7 @@ QMUsersServiceDelegate
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     
     if (searchController.searchBar.selectedScopeButtonIndex == QMSearchScopeButtonIndexGlobal
-        && ![QMCore instance].isInternetConnected) {
+        && !QMCore.instance.isInternetConnected) {
         
         [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil)];
         return;

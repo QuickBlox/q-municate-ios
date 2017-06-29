@@ -52,9 +52,9 @@ QMUsersServiceDelegate
     [self configureDataSource];
     
     // subscribe for delegates
-    [[QMCore instance].chatService addDelegate:self];
-    [[QMCore instance].contactListService addDelegate:self];
-    [[QMCore instance].usersService addDelegate:self];
+    [QMCore.instance.chatService addDelegate:self];
+    [QMCore.instance.contactListService addDelegate:self];
+    [QMCore.instance.usersService addDelegate:self];
     
     // configure data
     [self updateOccupants];
@@ -87,7 +87,7 @@ QMUsersServiceDelegate
         NSUInteger userIndex = [self.dataSource userIndexForIndexPath:indexPath];
         QBUUser *user = self.dataSource.items[userIndex];
         
-        self.addUserTask = [[[QMCore instance].contactManager addUserToContactList:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        self.addUserTask = [[QMCore.instance.contactManager addUserToContactList:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
             
             [SVProgressHUD dismiss];
             
@@ -112,7 +112,7 @@ QMUsersServiceDelegate
 
 - (void)updateOccupants {
     
-    NSArray *users = [[QMCore instance].usersService.usersMemoryStorage usersWithIDs:self.chatDialog.occupantIDs];
+    NSArray *users = [QMCore.instance.usersService.usersMemoryStorage usersWithIDs:self.chatDialog.occupantIDs];
     self.dataSource.items = [users mutableCopy];
 }
 
@@ -169,7 +169,7 @@ QMUsersServiceDelegate
                                                                                                                                message:NSLocalizedString(@"QM_STR_LOADING", nil)
                                                                                                                               duration:0];
                                                               
-                                                              self.leaveTask = [[[QMCore instance].chatManager leaveChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+                                                              self.leaveTask = [[QMCore.instance.chatManager leaveChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
                                                                   
                                                                   [(QMNavigationController *)navigationController dismissNotificationPanel];
                                                                   
@@ -196,7 +196,7 @@ QMUsersServiceDelegate
         NSUInteger userIndex = [self.dataSource userIndexForIndexPath:indexPath];
         QBUUser *user = self.dataSource.items[userIndex];
         
-        if (user.ID == [QMCore instance].currentProfile.userData.ID) {
+        if (user.ID == QMCore.instance.currentProfile.userData.ID) {
             [tableView deselectRowAtIndexPath:indexPath animated:YES];
             return;
         }

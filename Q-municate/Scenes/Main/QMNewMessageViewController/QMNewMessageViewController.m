@@ -75,7 +75,7 @@ QMTagFieldViewDelegate
         
         NSArray *fullNames = [tagIDs valueForKeyPath:@keypath(QBUUser.new, fullName)];
         NSString *name = [fullNames componentsJoinedByString:@", "];
-        NSArray *occupantsIDs = [[QMCore instance].contactManager idsOfUsers:tagIDs];
+        NSArray *occupantsIDs = [QMCore.instance.contactManager idsOfUsers:tagIDs];
         
         [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
         __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
@@ -83,7 +83,7 @@ QMTagFieldViewDelegate
         __block QBChatDialog *chatDialog = nil;
         
         @weakify(self);
-        self.dialogCreationTask = [[[[QMCore instance].chatService createGroupChatDialogWithName:name photo:nil occupants:tagIDs] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+        self.dialogCreationTask = [[[QMCore.instance.chatService createGroupChatDialogWithName:name photo:nil occupants:tagIDs] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
             
             @strongify(self);
             [navigationController dismissNotificationPanel];
@@ -94,7 +94,7 @@ QMTagFieldViewDelegate
                 [self performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
                 [self removeControllerFromStack];
                 
-                return [[QMCore instance].chatService sendSystemMessageAboutAddingToDialog:chatDialog toUsersIDs:occupantsIDs withText:kQMDialogsUpdateNotificationMessage];
+                return [QMCore.instance.chatService sendSystemMessageAboutAddingToDialog:chatDialog toUsersIDs:occupantsIDs withText:kQMDialogsUpdateNotificationMessage];
                 
             }
 
@@ -102,13 +102,13 @@ QMTagFieldViewDelegate
             
         }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
             
-            return task.isCancelled ? nil : [[QMCore instance].chatService sendNotificationMessageAboutAddingOccupants:occupantsIDs toDialog:chatDialog withNotificationText:kQMDialogsUpdateNotificationMessage];
+            return task.isCancelled ? nil : [QMCore.instance.chatService sendNotificationMessageAboutAddingOccupants:occupantsIDs toDialog:chatDialog withNotificationText:kQMDialogsUpdateNotificationMessage];
         }];
     }
     else {
         // creating or opening private chat
         QBUUser *user = tagIDs.firstObject;
-        QBChatDialog *privateDialog = [[QMCore instance].chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
+        QBChatDialog *privateDialog = [QMCore.instance.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
         
         if (privateDialog != nil) {
             
@@ -121,7 +121,7 @@ QMTagFieldViewDelegate
             __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
             
             @weakify(self);
-            self.dialogCreationTask = [[[QMCore instance].chatService createPrivateChatDialogWithOpponent:user] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+            self.dialogCreationTask = [[QMCore.instance.chatService createPrivateChatDialogWithOpponent:user] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
                 
                 @strongify(self);
                 [navigationController dismissNotificationPanel];

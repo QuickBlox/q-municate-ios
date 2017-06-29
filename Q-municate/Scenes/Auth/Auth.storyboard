@@ -119,7 +119,7 @@
                                     <constraint firstItem="942-eX-Uid" firstAttribute="centerX" secondItem="IHp-4T-p7b" secondAttribute="centerX" id="iex-Ee-nyW"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PHr-Vz-jdJ" userLabel="Spacer View">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PHr-Vz-jdJ" userLabel="Spacer View">
                                 <rect key="frame" x="260.5" y="283" width="20.5" height="43"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="26" id="4D4-iK-Bof"/>
@@ -135,7 +135,7 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="azN-hq-Hr4" userLabel="Spacer View 2">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="azN-hq-Hr4" userLabel="Spacer View 2">
                                 <rect key="frame" x="0.0" y="0.0" width="20.5" height="43"/>
                             </view>
                         </subviews>

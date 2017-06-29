@@ -14,7 +14,7 @@
 
 + (void)checkAcceptedUserAgreementInViewController:(UIViewController *)vc completion:(void(^)(BOOL success))completion {
     
-    BOOL licenceAccepted = [QMCore instance].currentProfile.userAgreementAccepted;
+    BOOL licenceAccepted = QMCore.instance.currentProfile.userAgreementAccepted;
     
     if (licenceAccepted) {
         

@@ -23,6 +23,7 @@ static NSString *const kQMErrorKey = @"errors";
 static NSString *const kQMBaseErrorKey = @"base";
 
 static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
+static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 
 @interface QMCore ()
 
@@ -45,14 +46,27 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     return core;
 }
 
++ (QMContactListService *)contactListService {
+    return QMCore.instance.contactListService;
+}
+
 - (instancetype)init {
     self = [super init];
     
     if (self) {
         // Contact list service init
-        [QMContactListCache setupDBWithStoreNamed:kQMContactListCacheNameKey applicationGroupIdentifier:[self appGroupIdentifier]];
-        _contactListService = [[QMContactListService alloc] initWithServiceManager:self cacheDataSource:self];
+        [QMContactListCache setupDBWithStoreNamed:kQMContactListCacheNameKey
+                       applicationGroupIdentifier:[self appGroupIdentifier]];
+    
+        _contactListService = [[QMContactListService alloc] initWithServiceManager:self
+                                                                   cacheDataSource:self];
         [_contactListService addDelegate:self];
+        //Open Graph Service init
+        [QMOpenGraphCache setupDBWithStoreNamed:kQMOpenGraphCacheNameKey
+                     applicationGroupIdentifier:[self appGroupIdentifier]];
+        
+        _openGraphService = [[QMOpenGraphService alloc] initWithCacheDataSource:self];
+        [_openGraphService addDelegate:self];
         
         // Profile init
         _currentProfile = [QMProfile currentProfile];
@@ -268,8 +282,7 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
                 
                 [[Digits sharedInstance] logOut];
             }
-            
-            
+
             // clearing contact list cache and memory storage
             [[QMContactListCache instance] deleteContactList:nil];
             [self.contactListService.contactListMemoryStorage free];
@@ -337,14 +350,16 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 
 //MARK: - QMContactListServiceDelegate
 
-- (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)contactList {
+- (void)contactListService:(QMContactListService *)__unused contactListService
+      contactListDidChange:(QBContactList *)contactList {
     
     [[QMContactListCache instance] insertOrUpdateContactListItemsWithContactList:contactList completion:nil];
     
     // load users if needed
     [self.usersService getUsersWithIDs:[self.contactListService.contactListMemoryStorage userIDsFromContactList]];
     
-    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBUUser * _Nullable user, NSDictionary<NSString *,id> *__unused _Nullable bindings) {
+    NSPredicate *predicate =
+    [NSPredicate predicateWithBlock:^BOOL(QBUUser *user, NSDictionary<NSString *,id> *__unused bindings) {
         return user.fullName.length > 0;
     }];
     
@@ -354,6 +369,22 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
         [self.cachedVocabularyStrings addObjectsFromArray:friendNames];
         [self updateVocabulary];
     }
+}
+
+//MARK: QMOpenGraphCacheDataSource
+
+- (nullable QMOpenGraphItem *)cachedOpenGraphItemWithID:(NSString *)ID {
+    
+    return [QMOpenGraphCache.instance openGrapItemWithID:ID];
+}
+
+//MARK:QMOpenGraphServiceDelegate
+
+- (void)openGraphSerivce:(QMOpenGraphService *) __unused openGraphSerivce
+didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
+    
+    [QMOpenGraphCache.instance insertOrUpdateOpenGraphItem:openGraphItem
+                                                completion:nil];
 }
 
 //MARK: - Helpers
@@ -377,7 +408,6 @@ static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
     
     return YES;
 }
-
 
 - (void)updateVocabulary {
     

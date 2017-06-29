@@ -97,8 +97,6 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    self.navigationController.navigationBar.topItem.title = @"Chats";
-    
     if (self.searchController.isActive) {
         
         self.tabBarController.tabBar.hidden = YES;

@@ -33,7 +33,7 @@ QMChatConnectionDelegate
     [super viewDidLoad];
     
     // subscribing for delegates
-    [[QMCore instance].chatService addDelegate:self];
+    [QMCore.instance.chatService addDelegate:self];
     
     for (UIViewController *vc in self.viewControllers) {
 
@@ -54,7 +54,7 @@ QMChatConnectionDelegate
 
 - (void)showNotificationForMessage:(QBChatMessage *)chatMessage {
     
-    if (chatMessage.senderID == [QMCore instance].currentProfile.userData.ID) {
+    if (chatMessage.senderID == QMCore.instance.currentProfile.userData.ID) {
         // no need to handle notification for self message
         return;
     }
@@ -65,12 +65,12 @@ QMChatConnectionDelegate
         return;
     }
     
-    if ([[QMCore instance].activeDialogID isEqualToString:chatMessage.dialogID]) {
+    if ([QMCore.instance.activeDialogID isEqualToString:chatMessage.dialogID]) {
         // dialog is already on screen
         return;
     }
     
-    QBChatDialog *chatDialog = [[QMCore instance].chatService.dialogsMemoryStorage chatDialogWithID:chatMessage.dialogID];
+    QBChatDialog *chatDialog = [QMCore.instance.chatService.dialogsMemoryStorage chatDialogWithID:chatMessage.dialogID];
     
     if (chatMessage.delayed && chatDialog.type == QBChatDialogTypePrivate) {
         // no reason to display private delayed messages
@@ -83,7 +83,7 @@ QMChatConnectionDelegate
     MPGNotificationButtonHandler buttonHandler = nil;
     UIViewController *hvc = nil;
     
-    BOOL hasActiveCall = [QMCore instance].callManager.hasActiveCall;
+    BOOL hasActiveCall = QMCore.instance.callManager.hasActiveCall;
     BOOL isiOS8 = iosMajorVersion() < 9;
     
     if (hasActiveCall
@@ -121,7 +121,7 @@ didAddMessageToMemoryStorage:(QBChatMessage *)message
     if (message.messageType == QMMessageTypeContactRequest) {
         
         QBChatDialog *chatDialog = [chatService.dialogsMemoryStorage chatDialogWithID:dialogID];
-        [[[QMCore instance].usersService getUserWithID:[chatDialog opponentID] forceLoad:YES] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
+        [[QMCore.instance.usersService getUserWithID:[chatDialog opponentID]] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
             
             [self showNotificationForMessage:message];
             

@@ -29,7 +29,7 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    BOOL licenceAccepted = [QMCore instance].currentProfile.userAgreementAccepted;
+    BOOL licenceAccepted = QMCore.instance.currentProfile.userAgreementAccepted;
     if (licenceAccepted) {
         
         self.navigationItem.rightBarButtonItem = nil;
@@ -61,7 +61,7 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
 - (IBAction)acceptLicense:(id)__unused sender {
     
-    [QMCore instance].currentProfile.userAgreementAccepted = YES;
+    QMCore.instance.currentProfile.userAgreementAccepted = YES;
     [self dismissViewControllerSuccess:YES];
 }
 

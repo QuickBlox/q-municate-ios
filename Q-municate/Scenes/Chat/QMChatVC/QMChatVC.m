@@ -10,7 +10,6 @@
 #import "QMCore.h"
 #import "QMNavigationController.h"
 #import "QMStatusStringBuilder.h"
-#import "QMPlaceholder.h"
 #import "QMSoundManager.h"
 #import "QMImagePicker.h"
 #import "QMOnlineTitleView.h"
@@ -44,33 +43,18 @@
 
 @import SafariServices;
 
-static const float kQMAttachmentCellSize = 180.0f;
+static const float kQMAttachmentCellSize = 200.0f;
 static const NSTimeInterval kQMMaxAttachmentDuration = 30.0;
-
 static const CGFloat kQMWidthPadding = 40.0f;
 static const CGFloat kQMAvatarSize = 28.0f;
 
 static NSString * const kQMTextAttachmentSpacing = @"  ";
 
-@interface QMChatVC ()
-
-<
-QMChatServiceDelegate,
-QMChatConnectionDelegate,
-QMContactListServiceDelegate,
-QMDeferredQueueManagerDelegate,
-QMUsersServiceDelegate,
-
-QMChatActionsHandler,
-QMChatCellDelegate,
-
-QMImagePickerResultHandler,
-QMImageViewDelegate,
-
-NYTPhotosViewControllerDelegate,
-QMMediaControllerDelegate,
-QMCallManagerDelegate
->
+@interface QMChatVC ()<QMChatServiceDelegate, QMChatConnectionDelegate,
+QMContactListServiceDelegate, QMDeferredQueueManagerDelegate, QMChatActionsHandler,
+QMChatCellDelegate, QMImagePickerResultHandler, QMImageViewDelegate,
+NYTPhotosViewControllerDelegate, QMMediaControllerDelegate, QMCallManagerDelegate,
+QMOpenGraphServiceDelegate>
 
 /**
  *  Detailed cells set.
@@ -129,10 +113,7 @@ QMCallManagerDelegate
 @property (weak, nonatomic) UIView *photoReferenceView;
 
 @property (strong, nonatomic) QMMediaController *mediaController;
-
-
 @property (strong, nonatomic) QMAudioRecorder *currentAudioRecorder;
-
 
 @end
 
@@ -145,7 +126,12 @@ QMCallManagerDelegate
 
 + (instancetype)chatViewControllerWithChatDialog:(QBChatDialog *)chatDialog {
     
-    QMChatVC *chatVC = [[UIStoryboard storyboardWithName:kQMMainStoryboard bundle:nil] instantiateViewControllerWithIdentifier:NSStringFromClass([self class])];
+    UIStoryboard *storyboard =
+    [UIStoryboard storyboardWithName:kQMMainStoryboard bundle:nil];
+    
+    QMChatVC *chatVC =
+    [storyboard instantiateViewControllerWithIdentifier:NSStringFromClass([self class])];
+    
     chatVC.chatDialog = chatDialog;
     
     return chatVC;
@@ -154,12 +140,12 @@ QMCallManagerDelegate
 //MARK: - QMChatViewController data source overrides
 
 - (NSUInteger)senderID {
-    return [QMCore instance].currentProfile.userData.ID;
+    return QMCore.instance.currentProfile.userData.ID;
 }
 
 - (NSString *)senderDisplayName {
     
-    QBUUser *currentUser = [QMCore instance].currentProfile.userData;
+    QBUUser *currentUser = QMCore.instance.currentProfile.userData;
     
     return currentUser.fullName ?: [NSString stringWithFormat:@"%tu", currentUser.ID];
 }
@@ -172,6 +158,8 @@ QMCallManagerDelegate
 //MARK: - Life cycle
 
 - (void)dealloc {
+    
+    [QMCore.instance.openGraphService cancelAllloads];
     // -dealloc
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     
@@ -227,11 +215,11 @@ QMCallManagerDelegate
         [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion duration:kQMDefaultNotificationDismissTime];
     }];
     // subscribing to delegates
-    [[QMCore instance].chatService addDelegate:self];
-    [[QMCore instance].contactListService addDelegate:self];
-    [[QMCore instance].usersService addDelegate:self];
-    [[QMCore instance].chatService.chatAttachmentService addDelegate:self.mediaController];
-    [[QMCore instance].callManager addDelegate:self];
+    [QMCore.instance.chatService addDelegate:self];
+    [QMCore.instance.contactListService addDelegate:self];
+    [QMCore.instance.chatService.chatAttachmentService addDelegate:self.mediaController];
+    [QMCore.instance.openGraphService addDelegate:self];
+    [QMCore.instance.callManager addDelegate:self];
     [self.deferredQueueManager addDelegate:self];
     
     self.actionsHandler = self;
@@ -242,7 +230,7 @@ QMCallManagerDelegate
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
         // set up opponent full name
-        [self.onlineTitleView setTitle:[[QMCore instance].contactManager fullNameForUserID:[self.chatDialog opponentID]]];
+        [self.onlineTitleView setTitle:[QMCore.instance.contactManager fullNameForUserID:[self.chatDialog opponentID]]];
         [self updateOpponentOnlineStatus];
         // configuring call buttons for opponent
         [self configureCallButtons];
@@ -293,6 +281,8 @@ QMCallManagerDelegate
     }
     
     // load messages from cache if needed and from REST
+    
+    
     [self refreshMessages];
     
     self.inputToolbar.audioRecordingIsEnabled = YES;
@@ -306,9 +296,8 @@ QMCallManagerDelegate
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
-    
-    
-    [QMCore instance].activeDialogID = self.chatDialog.ID;
+   
+    QMCore.instance.activeDialogID = self.chatDialog.ID;
     
     @weakify(self);
     self.observerWillResignActive =
@@ -330,7 +319,8 @@ QMCallManagerDelegate
      }];
     
     self.topContentAdditionalInset =
-    self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height + _additionalNavigationBarHeight;
+    self.navigationController.navigationBar.frame.size.height +
+    [UIApplication sharedApplication].statusBarFrame.size.height + _additionalNavigationBarHeight;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -341,7 +331,7 @@ QMCallManagerDelegate
         return;
     }
     
-    [QMCore instance].activeDialogID = nil;
+    QMCore.instance.activeDialogID = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self.observerWillResignActive];
     // Delete blocks.
@@ -393,7 +383,6 @@ QMCallManagerDelegate
 - (void)didUpdateMessage:(QBChatMessage *)message {
     
     if ([self.chatDialog.ID isEqualToString:message.dialogID]) {
-        
         [self.chatDataSource updateMessage:message];
     }
 }
@@ -402,28 +391,28 @@ QMCallManagerDelegate
 
 - (void)updateOpponentOnlineStatus {
     
-    BOOL isOnline = [[QMCore instance].contactManager isUserOnlineWithID:[self.chatDialog opponentID]];
+    BOOL isOnline = [QMCore.instance.contactManager isUserOnlineWithID:[self.chatDialog opponentID]];
     [self setOpponentOnlineStatus:isOnline];
 }
 
 - (NSArray *)storedMessages {
     
-    return [[QMCore instance].chatService.messagesMemoryStorage messagesWithDialogID:self.chatDialog.ID];
+    return [QMCore.instance.chatService.messagesMemoryStorage messagesWithDialogID:self.chatDialog.ID];
 }
 
 - (QMDeferredQueueManager *)deferredQueueManager {
     
-    return [QMCore instance].chatService.deferredQueueManager;
+    return QMCore.instance.chatService.deferredQueueManager;
 }
 
 - (void)refreshMessages {
     
     @weakify(self);
     // Retrieving message from Quickblox REST history and cache.
-    [[QMCore instance].chatService messagesWithChatDialogID:self.chatDialog.ID
-                                             iterationBlock:^(QBResponse * __unused response,
-                                                              NSArray *messages,
-                                                              BOOL * __unused stop)
+    [QMCore.instance.chatService messagesWithChatDialogID:self.chatDialog.ID
+                                           iterationBlock:^(QBResponse * __unused response,
+                                                            NSArray *messages,
+                                                            BOOL * __unused stop)
      {
          @strongify(self);
          
@@ -438,7 +427,7 @@ QMCallManagerDelegate
     
     if (message.senderID != self.senderID && ![message.readIDs containsObject:@(self.senderID)]) {
         
-        [[[QMCore instance].chatService readMessage:message] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        [[QMCore.instance.chatService readMessage:message] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
             
             if (task.isFaulted) {
                 
@@ -456,11 +445,11 @@ QMCallManagerDelegate
 
 - (BOOL)connectionExists {
     
-    if (![[QMCore instance] isInternetConnected]) {
+    if (![QMCore.instance isInternetConnected]) {
         
         [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning
-                                                    message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil)
-                                                   duration:kQMDefaultNotificationDismissTime];
+                                                                              message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil)
+                                                                             duration:kQMDefaultNotificationDismissTime];
         return NO;
     }
     
@@ -487,7 +476,7 @@ QMCallManagerDelegate
     
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
-        if (![[QMCore instance].contactManager isFriendWithUserID:[self.chatDialog opponentID]]) {
+        if (![QMCore.instance.contactManager isFriendWithUserID:[self.chatDialog opponentID]]) {
             
             [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil)
                             actionSuccess:NO
@@ -506,7 +495,7 @@ QMCallManagerDelegate
         return NO;
     }
     
-    if (![[QMCore instance].contactManager isFriendWithUserID:[self.chatDialog opponentID]]) {
+    if (![QMCore.instance.contactManager isFriendWithUserID:[self.chatDialog opponentID]]) {
         
         [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_MAKE_CALLS", nil)
                         actionSuccess:NO
@@ -797,11 +786,11 @@ QMCallManagerDelegate
     else if ([item isNotificatonMessage] || [item isCallNotificationMessage] || item.isDateDividerMessage) {
         
         NSUInteger opponentID = [self.chatDialog opponentID];
-        BOOL isFriend = [[QMCore instance].contactManager isFriendWithUserID:opponentID];
+        BOOL isFriend = [QMCore.instance.contactManager isFriendWithUserID:opponentID];
         
         if (item.messageType == QMMessageTypeContactRequest && item.senderID != self.senderID && !isFriend) {
             
-            QBChatMessage *lastMessage = [[QMCore instance].chatService.messagesMemoryStorage lastMessageFromDialogID:self.chatDialog.ID];
+            QBChatMessage *lastMessage = [QMCore.instance.chatService.messagesMemoryStorage lastMessageFromDialogID:self.chatDialog.ID];
             
             if ([lastMessage isEqual:item]) {
                 
@@ -818,14 +807,14 @@ QMCallManagerDelegate
             if ([item isMediaMessage] && item.attachmentStatus != QMMessageAttachmentStatusError) {
                 
                 if ([item isVideoAttachment]) {
-                    return  [QMVideoIncomingCell class];
+                    return [QMVideoIncomingCell class];
                 }
                 else if ([item isAudioAttachment]) {
-                    return  [QMAudioIncomingCell class];
+                    return [QMAudioIncomingCell class];
                     
                 }
                 else if ([item isImageAttachment]) {
-                    return  [QMImageIncomingCell class];
+                    return [QMImageIncomingCell class];
                 }
                 else {
                     return [QMChatAttachmentIncomingCell class];
@@ -835,8 +824,8 @@ QMCallManagerDelegate
                 
                 Class classForItem = [QMChatIncomingCell class];
                 
-                QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:item];
-                if (linkPreview != nil) {
+                
+                if (QMCore.instance.openGraphService.memoryStorage[item.ID]) {
                     classForItem = [QMChatIncomingLinkPreviewCell class];
                 }
                 
@@ -862,11 +851,8 @@ QMCallManagerDelegate
             }
             else {
                 
-                QMLinkPreview *linkPreview =
-                [[QMCore instance].chatService linkPreviewForMessage:item];
-                
-                if (linkPreview != nil) {
-                    return  [QMChatOutgoingLinkPreviewCell class];
+                if (QMCore.instance.openGraphService.memoryStorage[item.ID]) {
+                    return [QMChatOutgoingLinkPreviewCell class];
                 }
                 return [QMChatOutgoingCell class];
             }
@@ -979,7 +965,7 @@ QMCallManagerDelegate
     
     UIFont *font = [UIFont systemFontOfSize:15.0f];
     
-    QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:messageItem.senderID];
+    QBUUser *opponentUser = [QMCore.instance.usersService.usersMemoryStorage userWithID:messageItem.senderID];
     NSString *topLabelText = [NSString stringWithFormat:@"%@", opponentUser.fullName ?: @(messageItem.senderID)];
     
     // setting the paragraph style lineBreakMode to NSLineBreakByTruncatingTail
@@ -1060,16 +1046,16 @@ QMCallManagerDelegate
     else if ([viewClass isSubclassOfClass:[QMChatBaseLinkPreviewCell class]]) {
         
         QMChatCellLayoutModel layoutModel = [self collectionView:self.collectionView layoutModelAtIndexPath:indexPath];
-        
-        CGFloat linkPreviewHeight = 54.0;
+    
+        CGFloat linkPreviewHeight = 0;
         CGFloat linkPreviewWidth = kQMAttachmentCellSize;
         
-        QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:item];
+        QMOpenGraphItem *og = QMCore.instance.openGraphService.memoryStorage[item.ID];
         
-        if (linkPreview.imageURL != nil) {
+        if (og) {
             
             UIImage *image =
-            [QMChatBaseLinkPreviewCell imageForURLKey:linkPreview.imageURL];
+            [QMImageLoader.instance.imageCache imageFromCacheForKey:og.imageURL];
             
             if (image) {
                 
@@ -1079,12 +1065,12 @@ QMCallManagerDelegate
                 CGFloat oldWidth = image.size.width;
                 CGFloat scaleFactor = linkPreviewWidth / oldWidth;
                 
-                linkPreviewHeight = image.size.height * scaleFactor;
+                linkPreviewHeight = image.size.height * scaleFactor + 18;
             }
         }
         
-        size = CGSizeMake(MIN(kQMAttachmentCellSize,maxWidth),
-                          MAX(linkPreviewHeight, 54.0));
+        size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth),
+                          MAX(linkPreviewHeight, 32));
     }
     else {
         
@@ -1339,11 +1325,10 @@ QMCallManagerDelegate
         currentCell.containerView.bgColor = QMChatIncomingCellColor();
         currentCell.textView.linkAttributes = @{NSForegroundColorAttributeName : QMChatIncomingLinkColor(),
                                                 NSUnderlineStyleAttributeName : @(YES)};
-        
         /**
          *  Setting opponent avatar
          */
-        QBUUser *sender = [[QMCore instance].usersService.usersMemoryStorage
+        QBUUser *sender = [QMCore.instance.usersService.usersMemoryStorage
                            userWithID:message.senderID];
         
         QMImageView *avatarView = [(QMChatCell *)cell avatarView];
@@ -1378,21 +1363,16 @@ QMCallManagerDelegate
     
     if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
         
-        QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:message];
+        QMOpenGraphItem *og = QMCore.instance.openGraphService.memoryStorage[message.ID];
         
-        if (linkPreview) {
-            
-            [self.collectionView.collectionViewLayout removeSizeFromCacheForItemID:message.ID];
-            QMChatBaseLinkPreviewCell *previewCell = (QMChatBaseLinkPreviewCell *)cell;
-            [previewCell setSiteURL:linkPreview.siteUrl
-                           imageURL:linkPreview.imageURL
-                          siteTitle:linkPreview.siteTitle
-                    siteDescription:linkPreview.siteDescription
-                      onImageDidSet:^
-             {
-                 [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
-             }];
-        }
+        QMChatBaseLinkPreviewCell *previewCell = (QMChatBaseLinkPreviewCell *)cell;
+        
+        UIImage *preview = [QMImageLoader.instance.imageCache imageFromCacheForKey:og.imageURL];
+        UIImage *favicon = [QMImageLoader.instance.imageCache imageFromCacheForKey:og.faviconUrl];
+        
+        [previewCell setSiteURL:og.baseUrl
+                   previewImage:preview
+                        favicon:favicon];
     }
     
     if ([cell conformsToProtocol:@protocol(QMChatLocationCell)]) {
@@ -1400,73 +1380,70 @@ QMCallManagerDelegate
         [[(id<QMChatLocationCell>)cell imageView]
          setSnapshotWithLocationCoordinate:message.locationCoordinate];
     }
-    
     else if ([cell conformsToProtocol:@protocol(QMMediaViewDelegate)]) {
         
         QBChatAttachment *attachment = message.attachments[0];
         [self.mediaController configureView:(id<QMMediaViewDelegate>)cell
                                 withMessage:message
                                attachmentID:attachment.ID];
+    }
+    
+    if ([cell isKindOfClass:[QMChatIncomingCell class]] ||
+        [cell isKindOfClass:[QMChatOutgoingCell class]]) {
         
+        [QMCore.instance.openGraphService preloadGraphItemForText:message.text ID:message.ID];
     }
 }
 
-- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)__unused cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+- (void)collectionView:(UICollectionView *)collectionView
+       willDisplayCell:(UICollectionViewCell *)__unused cell
+    forItemAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.item == [collectionView numberOfItemsInSection:0] - 1) {
         // first message
         // load more if exists
         // Getting earlier messages for chat dialog identifier.
-        [[[QMCore instance].chatService loadEarlierMessagesWithChatDialogID:self.chatDialog.ID] continueWithBlock:^id(BFTask<NSArray<QBChatMessage *> *> *task) {
-            
-            if (task.result.count > 0) {
-                [self.chatDataSource addMessages:task.result];
-            }
-            
-            return nil;
-        }];
+        [[QMCore.instance.chatService loadEarlierMessagesWithChatDialogID:self.chatDialog.ID]
+         continueWithBlock:^id(BFTask<NSArray<QBChatMessage *> *> *task) {
+             
+             if (task.result.count > 0) {
+                 [self.chatDataSource addMessages:task.result];
+             }
+             
+             return nil;
+         }];
     }
     
     // marking message as read if needed
-    QBChatMessage *itemMessage = [self.chatDataSource messageForIndexPath:indexPath];
+    QBChatMessage *message = [self.chatDataSource messageForIndexPath:indexPath];
     
-    [self readMessage:itemMessage];
+    [self readMessage:message];
     
     // getting users if needed
-    QBUUser *sender = [[QMCore instance].usersService.usersMemoryStorage userWithID:itemMessage.senderID];
+    QBUUser *sender = [QMCore.instance.usersService.usersMemoryStorage userWithID:message.senderID];
     if (sender == nil) {
         
-        [[[QMCore instance].usersService getUserWithID:itemMessage.senderID] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
-            
-            [self.chatDataSource updateMessage:itemMessage];
-            
-            return nil;
-        }];
-    }
-    
-    QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:itemMessage];
-    
-    if (linkPreview == nil) {
-        
-        [[QMCore instance].chatService getLinkPreviewForMessage:itemMessage withCompletion:^(BOOL success) {
-            
-            if (success) {
-                [self.chatDataSource updateMessage:itemMessage];
-            }
-        }];
+        [[QMCore.instance.usersService getUserWithID:message.senderID]
+         continueWithSuccessBlock:^id(BFTask<QBUUser *> * __unused task) {
+             
+             [self.chatDataSource updateMessage:message];
+             
+             return nil;
+         }];
     }
 }
 
-- (void)collectionView:(UICollectionView *)__unused collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+- (void)collectionView:(UICollectionView *)__unused collectionView
+  didEndDisplayingCell:(UICollectionViewCell *)cell
+    forItemAtIndexPath:(NSIndexPath *)indexPath {
     
     if ([cell conformsToProtocol:@protocol(QMMediaViewDelegate)]) {
         QBChatMessage *itemMessage = [self.chatDataSource messageForIndexPath:indexPath];
         [self.mediaController cancelOperationsForMessage:itemMessage];
     }
-    
 }
-#pragma mark - Typing status
-// MARK: - Typing status
+
+//MARK: - Typing status
 
 - (void)stopTyping {
     
@@ -1499,7 +1476,7 @@ QMCallManagerDelegate
 
 - (void)performInfoViewControllerForUserID:(NSUInteger)userID {
     
-    QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:userID];
+    QBUUser *opponentUser = [QMCore.instance.usersService.usersMemoryStorage userWithID:userID];
     
     if (opponentUser == nil) {
         
@@ -1548,7 +1525,7 @@ QMCallManagerDelegate
         return;
     }
     
-    [[QMCore instance].callManager callToUserWithID:[self.chatDialog opponentID] conferenceType:QBRTCConferenceTypeAudio];
+    [QMCore.instance.callManager callToUserWithID:[self.chatDialog opponentID] conferenceType:QBRTCConferenceTypeAudio];
 }
 
 - (void)videoCallAction {
@@ -1558,7 +1535,7 @@ QMCallManagerDelegate
         return;
     }
     
-    [[QMCore instance].callManager callToUserWithID:[self.chatDialog opponentID] conferenceType:QBRTCConferenceTypeVideo];
+    [QMCore.instance.callManager callToUserWithID:[self.chatDialog opponentID] conferenceType:QBRTCConferenceTypeVideo];
 }
 
 - (void)_sendLocationMessage:(CLLocationCoordinate2D)locationCoordinate {
@@ -1575,10 +1552,10 @@ QMCallManagerDelegate
 
 - (void)_sendMessage:(QBChatMessage *)message {
     
-    [[[QMCore instance].chatService sendMessage:message
-                                       toDialog:self.chatDialog
-                                  saveToHistory:YES
-                                  saveToStorage:YES]
+    [[QMCore.instance.chatService sendMessage:message
+                                     toDialog:self.chatDialog
+                                saveToHistory:YES
+                                saveToStorage:YES]
      continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
          
          [QMSoundManager playMessageSentSound];
@@ -1595,20 +1572,20 @@ QMCallManagerDelegate
                                                           dateSent:[NSDate date]];
     [self.chatDataSource addMessage:message];
     
-    [[QMCore instance].chatService sendAttachmentMessage:message
-                                                toDialog:self.chatDialog
-                                          withAttachment:attachment
-                                              completion:^(NSError * _Nullable error) {
-                                                  
-                                                  if (error) {
-                                                      [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed
-                                                                                                  message:error.localizedRecoverySuggestion
-                                                                                                 duration:kQMDefaultNotificationDismissTime];
-                                                      // perform local attachment deleting
-                                                      [[QMCore instance].chatService deleteMessageLocally:message];
-                                                      [self.chatDataSource deleteMessage:message];
-                                                  }
-                                              }];
+    [QMCore.instance.chatService sendAttachmentMessage:message
+                                              toDialog:self.chatDialog
+                                        withAttachment:attachment
+                                            completion:^(NSError * _Nullable error) {
+                                                
+                                                if (error) {
+                                                    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed
+                                                                                                                          message:error.localizedRecoverySuggestion
+                                                                                                                         duration:kQMDefaultNotificationDismissTime];
+                                                    // perform local attachment deleting
+                                                    [QMCore.instance.chatService deleteMessageLocally:message];
+                                                    [self.chatDataSource deleteMessage:message];
+                                                }
+                                            }];
 }
 
 - (void)sendAttachmentMessageWithImage:(UIImage *)image {
@@ -1745,10 +1722,10 @@ QMCallManagerDelegate
     }
     else {
         
-        QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:[self.chatDialog opponentID]];
+        QBUUser *opponentUser = [QMCore.instance.usersService.usersMemoryStorage userWithID:[self.chatDialog opponentID]];
         
         if (opponentUser) {
-            status = [[QMCore instance].contactManager onlineStatusForUser:opponentUser];
+            status = [QMCore.instance.contactManager onlineStatusForUser:opponentUser];
         }
     }
     
@@ -1918,7 +1895,7 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         return;
     }
     
-    QBUUser *opponentUser = [[QMCore instance].usersService.usersMemoryStorage userWithID:[self.chatDialog opponentID]];
+    QBUUser *opponentUser = [QMCore.instance.usersService.usersMemoryStorage userWithID:[self.chatDialog opponentID]];
     
     [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     
@@ -1930,7 +1907,7 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
         
         @weakify(self);
-        self.contactRequestTask = [[[QMCore instance].contactManager addUserToContactList:opponentUser] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        self.contactRequestTask = [[QMCore.instance.contactManager addUserToContactList:opponentUser] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
             
             @strongify(self);
             [navigationController dismissNotificationPanel];
@@ -1947,11 +1924,11 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
         
         @weakify(self);
-        self.contactRequestTask = [[[[QMCore instance].contactManager rejectAddContactRequest:opponentUser] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        self.contactRequestTask = [[[QMCore.instance.contactManager rejectAddContactRequest:opponentUser] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
             
             if (!task.isFaulted) {
                 
-                return [[QMCore instance].chatService deleteDialogWithID:self.chatDialog.ID];
+                return [QMCore.instance.chatService deleteDialogWithID:self.chatDialog.ID];
             }
             
             return [BFTask cancelledTask];
@@ -1983,24 +1960,27 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
 - (void)chatCellDidTapContainer:(QMChatCell *)cell {
     
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-    QBChatMessage *currentMessage = [self.chatDataSource messageForIndexPath:indexPath];
+    QBChatMessage *message = [self.chatDataSource messageForIndexPath:indexPath];
     
-    QMMessageStatus status = [self.deferredQueueManager statusForMessage:currentMessage];
+    QMMessageStatus status = [self.deferredQueueManager statusForMessage:message];
     
-    if (status == QMMessageStatusNotSent && currentMessage.senderID == self.senderID) {
+    if (status == QMMessageStatusNotSent && message.senderID == self.senderID) {
         
-        [self handleNotSentMessage:currentMessage];
+        [self handleNotSentMessage:message];
         return;
     }
     else if ([cell conformsToProtocol:@protocol(QMChatLocationCell)]) {
         
-        QMLocationViewController *locationVC = [[QMLocationViewController alloc] initWithState:QMLocationVCStateView locationCoordinate:[currentMessage locationCoordinate]];
+        QMLocationViewController *locationVC =
+        [[QMLocationViewController alloc] initWithState:QMLocationVCStateView
+                                     locationCoordinate:[message locationCoordinate]];
         
         [self.view endEditing:YES]; // hiding keyboard
         [self.navigationController pushViewController:locationVC animated:YES];
     }
     
     else if ([cell isKindOfClass:[QMBaseMediaCell class]]) {
+        
         CGSize size =  [self.collectionView.collectionViewLayout containerViewSizeForItemAtIndexPath:indexPath];
         NSLog(@"size = %@", NSStringFromCGSize(size));
         [[((QMBaseMediaCell*)cell) presenter] didTapContainer];
@@ -2010,24 +1990,25 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         CGSize cellSize = [self.collectionView.collectionViewLayout containerViewSizeForItemAtIndexPath:indexPath];
         NSLog(@"cell size = %@", NSStringFromCGSize(cellSize));
         
-        QMLinkPreview *linkPreview = [[QMCore instance].chatService linkPreviewForMessage:currentMessage];
-        NSURL *linkURL = [NSURL URLWithString:linkPreview.siteUrl];
+        QMOpenGraphItem *og = QMCore.instance.openGraphService.memoryStorage[message.ID];
+        NSParameterAssert(og);
         
+        NSURL *linkURL = [NSURL URLWithString:og.baseUrl];
         [self openURL:linkURL];
     }
     else if ([cell isKindOfClass:[QMChatOutgoingCell class]]
              || [cell isKindOfClass:[QMChatIncomingCell class]]) {
         
-        if ([self.detailedCells containsObject:currentMessage.ID]) {
+        if ([self.detailedCells containsObject:message.ID]) {
             
-            [self.detailedCells removeObject:currentMessage.ID];
+            [self.detailedCells removeObject:message.ID];
         }
         else {
             
-            [self.detailedCells addObject:currentMessage.ID];
+            [self.detailedCells addObject:message.ID];
         }
         
-        [self.collectionView.collectionViewLayout removeSizeFromCacheForItemID:currentMessage.ID];
+        [self.collectionView.collectionViewLayout removeSizeFromCacheForItemID:message.ID];
         [self.collectionView performBatchUpdates:nil completion:nil];
     }
 }
@@ -2117,7 +2098,7 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
 
 - (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
-    if (![[QMCore instance] isInternetConnected]) {
+    if (![QMCore.instance isInternetConnected]) {
         
         [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
         
@@ -2204,6 +2185,43 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     UIGraphicsEndImageContext();
     
     return resizedImage;
+}
+
+- (void)openGraphSerivce:(QMOpenGraphService *)openGraphSerivce
+        didLoadFromCache:(QMOpenGraphItem *)openGraph {
+    
+    QBChatMessage *message = [QMCore.instance.chatService.messagesMemoryStorage messageWithID:openGraph.ID fromDialogID:self.chatDialog.ID];
+    if (message) {
+        [self.chatDataSource updateMessage:message];
+    }
+}
+
+- (void)openGraphSerivce:(QMOpenGraphService *) __unused openGraphSerivce
+didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
+    QBChatMessage *message = [QMCore.instance.chatService.messagesMemoryStorage messageWithID:openGraphItem.ID fromDialogID:self.chatDialog.ID];
+    if (message) {
+        [self.chatDataSource updateMessage:message];
+    }
+}
+
+- (void)openGraphSerivce:(QMOpenGraphService *)__unused openGraphSerivce
+          didLoadFavicon:(UIImage *)fiveIcon
+                  forURL:(NSURL *)url {
+    
+    [QMImageLoader.instance.imageCache storeImage:fiveIcon
+                                           forKey:url.absoluteString
+                                           toDisk:YES
+                                       completion:nil];
+}
+
+- (void)openGraphSerivce:(QMOpenGraphService *)__unused openGraphSerivce
+     didLoadPreviewImage:(UIImage *)previewImage
+                  forURL:(NSURL *)url {
+    
+    [QMImageLoader.instance.imageCache storeImage:previewImage
+                                           forKey:url.absoluteString
+                                           toDisk:YES
+                                       completion:nil];
 }
 
 //MARK: - Transition size

@@ -38,7 +38,7 @@ static NSString *const kQMUsersCacheNameKey = @"qb-users-cache";
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.dialogType == %@ AND SELF.name.length > 0", @(QBChatDialogTypeGroup)];
     
-    [[QMChatCache instance] dialogsSortedBy:@"name" ascending:YES withPredicate:predicate completion:^(NSArray<QBChatDialog *> * _Nullable dialogs) {
+    [QMChatCache.instance dialogsSortedBy:@"name" ascending:YES withPredicate:predicate completion:^(NSArray<QBChatDialog *> * _Nullable dialogs) {
 
         if (completion) {
             completion(dialogs);
@@ -82,7 +82,7 @@ static NSString *const kQMUsersCacheNameKey = @"qb-users-cache";
 
 - (void)dialogIDForUserWithID:(NSInteger)userID completionBlock:(void(^)(NSString *dialogID))completion {
     
-    [[QMChatCache instance] allDialogsWithCompletion:^(NSArray <QBChatDialog *> * _Nullable dialogs) {
+    [QMChatCache.instance allDialogsWithCompletion:^(NSArray <QBChatDialog *> * _Nullable dialogs) {
         
         NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog*  _Nullable dialog, NSDictionary<NSString *,id> * _Nullable bindings) {
             return dialog.type == QBChatDialogTypePrivate && [dialog.occupantIDs containsObject:@(userID)];
