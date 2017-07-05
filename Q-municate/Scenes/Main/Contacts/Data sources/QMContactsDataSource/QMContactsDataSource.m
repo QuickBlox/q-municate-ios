@@ -41,7 +41,7 @@
     QMContactCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMContactCell cellIdentifier] forIndexPath:indexPath];
     
     QBUUser *user = [self userAtIndexPath:indexPath];
-    [cell setTitle:user.fullName  avatarUrl:user.avatarUrl];
+    [cell setTitle:user.fullName avatarUrl:user.avatarUrl];
     
     [cell setBody:[QMCore.instance.contactManager onlineStatusForUser:user]];
     
