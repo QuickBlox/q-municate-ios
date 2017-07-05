@@ -57,7 +57,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
         // Contact list service init
         [QMContactListCache setupDBWithStoreNamed:kQMContactListCacheNameKey
                        applicationGroupIdentifier:[self appGroupIdentifier]];
-    
+        
         _contactListService = [[QMContactListService alloc] initWithServiceManager:self
                                                                    cacheDataSource:self];
         [_contactListService addDelegate:self];
@@ -194,7 +194,9 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
         }
     }
     
-    [SVProgressHUD showErrorWithStatus:errorMessage];
+    if (errorMessage.length > 0) {
+        [SVProgressHUD showErrorWithStatus:errorMessage];
+    }
 }
 
 //MARK: - Auth methods
