@@ -284,7 +284,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
                 
                 [[Digits sharedInstance] logOut];
             }
-
+            
             // clearing contact list cache and memory storage
             [[QMContactListCache instance] deleteContactList:nil];
             [self.contactListService.contactListMemoryStorage free];
@@ -387,6 +387,46 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
     
     [QMOpenGraphCache.instance insertOrUpdateOpenGraphItem:openGraphItem
                                                 completion:nil];
+}
+
+- (void)openGraphSerivce:(QMOpenGraphService *) __unused openGraphSerivce
+           hasFaviconURL:(NSURL *)url
+              completion:(dispatch_block_t)completion {
+    
+    [QMImageLoader.instance downloadImageWithURL:url
+                                       transform:nil
+                                         options:SDWebImageHighPriority
+                                        progress:nil
+                                       completed:^(UIImage * __unused image,
+                                                   UIImage * __unused transfomedImage,
+                                                   NSError * __unused error,
+                                                   SDImageCacheType __unused cacheType,
+                                                   BOOL __unused finished,
+                                                   NSURL * __unused imageURL)
+     {
+         completion();
+     }];
+}
+
+- (void)openGraphSerivce:(QMOpenGraphService *)__unused openGraphSerivce
+             hasImageURL:(NSURL *)url
+              completion:(dispatch_block_t)completion {
+    
+//    QMImageTransform *transform = [QMImageTransform spec:@"180x"];
+    #warning add tranform
+    [QMImageLoader.instance downloadImageWithURL:url
+                                       transform:nil
+                                         options:SDWebImageHighPriority
+                                        progress:nil
+                                       completed:^(UIImage * __unused image,
+                                                   UIImage * __unused transfomedImage,
+                                                   NSError * __unused error,
+                                                   SDImageCacheType __unused cacheType,
+                                                   BOOL __unused finished,
+                                                   NSURL * __unused imageURL)
+     {
+         completion();
+     }];
 }
 
 //MARK: - Helpers

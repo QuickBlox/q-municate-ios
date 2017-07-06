@@ -25,6 +25,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface QBChat : NSObject
 
 /**
+ *  Get QBChat singleton
+ *
+ *  @return QBChat Chat service singleton
+ */
+@property (nonatomic, readonly, class) QBChat *instance;
+
+/**
  *  Determines whether chat is connected. Returns YES if the connection is open,
  *  and the stream has been properly established.
  *
@@ -49,13 +56,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly, copy, nullable) QBUUser *currentUser;
 
-
 /**
  Current resource
  */
 @property (nonatomic, readonly, copy, nullable) NSString *currentResource;
 
 - (id)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 //MARK: - Multicast Delegate
 
@@ -92,13 +99,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)forceReconnect;
 
 //MARK: - Base Messaging
-
-/**
- *  Get QBChat singleton
- *
- *  @return QBChat Chat service singleton
- */
-+ (instancetype)instance;
 
 /**
  *  Connect to QuickBlox Chat with completion.

@@ -58,7 +58,7 @@ const CGRect QMMessageNotificationIconRect = (CGRect){(CGPoint){0,0}, (CGSize){3
         self.imageOperation =
         [[QMImageLoader instance]
          downloadImageWithURL:iconImageURL
-         transform:[QMImageTransform transformWithSize:CGSizeMake(30, 30) isCircle:YES]
+         transform:[QMImageTransform transformWithType:QMImageTransformTypeCircle size:CGSizeMake(30, 30)]
          options:SDWebImageHighPriority
          progress:nil
          completed:^(UIImage * _Nullable __unused image,
