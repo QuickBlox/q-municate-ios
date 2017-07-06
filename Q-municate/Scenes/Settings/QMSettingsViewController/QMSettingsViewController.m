@@ -349,7 +349,9 @@ NYTPhotosViewControllerDelegate
 // MARK: - QMUsersServiceListenerProtocol
 
 - (void)usersService:(QMUsersService *)__unused usersService didUpdateUser:(QBUUser *)user {
-    [[QMCore instance].currentProfile synchronizeWithUserData:user];
+    
+    user.password = QMCore.instance.currentProfile.userData.password;
+    [QMCore.instance.currentProfile synchronizeWithUserData:user];
 }
 
 //MARK: - QMImageViewDelegate

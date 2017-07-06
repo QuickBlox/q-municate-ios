@@ -12,8 +12,6 @@
 #import <QMDateUtils.h>
 #import "QBChatDialog+OpponentID.h"
 
-#import <SVProgressHUD.h>
-
 @implementation QMDialogsDataSource
 
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {

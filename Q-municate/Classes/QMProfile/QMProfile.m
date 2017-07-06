@@ -63,12 +63,13 @@ static NSString * const kQMAppExists = @"QMAppExists";
     NSParameterAssert(self.userData);
     
     __block BOOL success = NO;
+    __block NSError *error = nil;
     
     @weakify(self);
     [self keychainQuery:^(SSKeychainQuery *query) {
         @strongify(self);
+        NSCParameterAssert(self.userData.password);
         query.passwordObject = self;
-        NSError *error = nil;
         success = [query save:&error];
     }];
     
@@ -81,11 +82,18 @@ static NSString * const kQMAppExists = @"QMAppExists";
         [QMCore.instance.usersService.usersMemoryStorage addUser:self.userData];
         [[QMUsersCache instance] insertOrUpdateUser:self.userData];
     }
+    else {
+        NSLog(@"QMProfile error %@", error);
+    }
     
     return success;
 }
 
 - (BOOL)synchronizeWithUserData:(QBUUser *)userData {
+    
+    if (self.accountType == QMAccountTypeEmail) {
+        NSParameterAssert(userData.password);
+    }
     
     self.userData = userData;
     BOOL success = [self synchronize];
@@ -227,6 +235,38 @@ static NSString *const kQMLicenceAcceptedKey = @"licence_accepted";
         
         _userData = [QBSession currentSession].currentUser;
         [self synchronize];
+    }
+}
+
+//MARK: - description
+
+- (NSString *)description {
+    
+    NSMutableString *description = [NSMutableString stringWithString:[super description]];
+    [description appendFormat:
+     @"\rAccount type: %@"
+     "\rPush Notifications Enabled: %s"
+     "\rLast Dialogs Fetching Date: %@"
+     "\rlastUserFetchDate: %@"
+     "\rUserData: %@",
+     [self stringForAccountType:_accountType],
+     _pushNotificationsEnabled ? "YES" : "NO",
+     _lastDialogsFetchingDate,
+     _lastUserFetchDate,
+     _userData];
+    
+    return [description copy];
+}
+
+- (NSString *)stringForAccountType:(QMAccountType)type {
+    
+    switch (type) {
+        case QMAccountTypeNone: return @"None";
+        case QMAccountTypeEmail: return @"Email";
+        case QMAccountTypeDigits: return @"Digits";
+        case QMAccountTypeFacebook: return @"Facebook";
+        default:
+            break;
     }
 }
 

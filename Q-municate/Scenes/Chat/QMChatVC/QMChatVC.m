@@ -55,8 +55,7 @@ static NSString * const kQMTextAttachmentSpacing = @"  ";
 QMContactListServiceDelegate, QMDeferredQueueManagerDelegate, QMChatActionsHandler,
 QMChatCellDelegate, QMImagePickerResultHandler, QMImageViewDelegate,
 NYTPhotosViewControllerDelegate, QMMediaControllerDelegate, QMCallManagerDelegate,
-QMOpenGraphServiceDelegate>
-
+QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
 /**
  *  Detailed cells set.
  */
@@ -182,20 +181,11 @@ QMOpenGraphServiceDelegate>
     self.collectionView.backgroundColor = [UIColor clearColor];
     
     self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
-    
     self.navigationItem.leftItemsSupplementBackButton = YES;
-    
-    [self.view.layer setDrawsAsynchronously:YES];
-    if (self.chatDialog == nil) {
-        
-        self.inputToolbar.hidden = YES;
-        self.onlineTitleView.hidden = YES;
-        [self.view.layer setDrawsAsynchronously:YES];
-        
-        return;
-    }
     // setting up chat controller
-    if (self.splitViewController.isCollapsed && [self.navigationController isKindOfClass:[QMNavigationController class]]) {
+    if (self.splitViewController.isCollapsed &&
+        [self.navigationController isKindOfClass:[QMNavigationController class]]) {
+        
         QMNavigationController *navController = (QMNavigationController *)self.navigationController;
         if (navController.currentAdditionalNavigationBarHeight > 0) {
             _additionalNavigationBarHeight = navController.currentAdditionalNavigationBarHeight;
@@ -224,10 +214,11 @@ QMOpenGraphServiceDelegate>
     [QMCore.instance.chatService.chatAttachmentService addDelegate:self.mediaController];
     [QMCore.instance.openGraphService addDelegate:self];
     [QMCore.instance.callManager addDelegate:self];
+    [QMCore.instance.usersService addDelegate:self];
+    
     [self.deferredQueueManager addDelegate:self];
     
     self.actionsHandler = self;
-    
     // text checking types for cells
     self.enableTextCheckingTypes = (NSTextCheckingTypeLink | NSTextCheckingTypePhoneNumber);
     
@@ -285,7 +276,6 @@ QMOpenGraphServiceDelegate>
     }
     
     // load messages from cache if needed and from REST
-    
     [self refreshMessages];
     
     self.inputToolbar.audioRecordingIsEnabled = YES;
@@ -294,6 +284,10 @@ QMOpenGraphServiceDelegate>
                                              selector:@selector(navigationBarHeightChanged)
                                                  name:kQMNavigationBarHeightChangeNotification
                                                object:nil];
+    
+    self.topContentAdditionalInset =
+    self.navigationController.navigationBar.frame.size.height +
+    [UIApplication sharedApplication].statusBarFrame.size.height + _additionalNavigationBarHeight;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -323,10 +317,6 @@ QMOpenGraphServiceDelegate>
              [self setOpponentOnlineStatus:NO];
          }
      }];
-    
-    self.topContentAdditionalInset =
-    self.navigationController.navigationBar.frame.size.height +
-    [UIApplication sharedApplication].statusBarFrame.size.height + _additionalNavigationBarHeight;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
