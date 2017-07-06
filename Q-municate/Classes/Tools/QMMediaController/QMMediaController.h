@@ -30,7 +30,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)cancelOperationsForMessage:(QBChatMessage *)message;
 
-
 @end
 
 @protocol QMMediaControllerDelegate <NSObject>

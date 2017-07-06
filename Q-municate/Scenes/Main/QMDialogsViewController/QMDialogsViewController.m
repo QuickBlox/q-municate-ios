@@ -57,6 +57,7 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
     
     [super viewDidLoad];
     
+    
     // Subscribing delegates
     [QMCore.instance.chatService addDelegate:self];
     [QMCore.instance.usersService addDelegate:self];
@@ -95,8 +96,9 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
     
+    [super viewWillAppear:animated];
+
     if (self.searchController.isActive) {
         
         self.tabBarController.tabBar.hidden = YES;
