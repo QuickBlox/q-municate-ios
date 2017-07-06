@@ -174,8 +174,9 @@ QMOpenGraphServiceDelegate>
     
     [super viewDidLoad];
     
-    self.collectionView.dataSource = self;
-    self.collectionView.delegate = self;
+    if (iosMajorVersion() >= 10) {
+        self.collectionView.prefetchingEnabled = NO;
+    }
     
     self.collectionView.collectionViewLayout.minimumLineSpacing = 8.0f;
     self.collectionView.backgroundColor = [UIColor clearColor];
@@ -285,7 +286,6 @@ QMOpenGraphServiceDelegate>
     
     // load messages from cache if needed and from REST
     
-    
     [self refreshMessages];
     
     self.inputToolbar.audioRecordingIsEnabled = YES;
@@ -302,7 +302,7 @@ QMOpenGraphServiceDelegate>
     
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
-
+    
     QMCore.instance.activeDialogID = self.chatDialog.ID;
     
     @weakify(self);
@@ -384,17 +384,19 @@ QMOpenGraphServiceDelegate>
 - (id<QMMediaViewDelegate>)viewForMessage:(QBChatMessage *)message {
     
     NSIndexPath *indexPath = [self.chatDataSource indexPathForMessage:message];
+    NSArray *visibleIndexPathes = [self.collectionView indexPathsForVisibleItems];
+    BOOL hasPath = [visibleIndexPathes containsObject:indexPath];
     id cell = [self.collectionView cellForItemAtIndexPath:indexPath];
     
-    if ([cell conformsToProtocol:@protocol(QMMediaViewDelegate)]) {
-        return cell;
+    if (!cell && hasPath) {
+    NSParameterAssert(NO);
     }
-    else {
-        return nil;
-    }
+    
+    return cell;
 }
 
 - (NSString *)dialogID {
+    
     return self.chatDialog.ID;
 }
 
@@ -972,7 +974,7 @@ QMOpenGraphServiceDelegate>
     
     UIColor *textColor = messageItem.senderID == self.senderID ? QMChatOutgoingBottomLabelColor() : QMChatIncomingBottomLabelColor();
     UIFont *font = [UIFont systemFontOfSize:12.0f];
-    NSDictionary *attributes = @{ NSForegroundColorAttributeName:textColor, NSFontAttributeName:font};
+    NSDictionary *attributes = @{NSForegroundColorAttributeName:textColor, NSFontAttributeName:font};
     
     NSString* text = messageItem.dateSent ? [QMDateUtils formatDateForTimeRange:messageItem.dateSent] : @"";
     
@@ -1265,6 +1267,10 @@ QMOpenGraphServiceDelegate>
          configureCell:(UICollectionViewCell *)cell
           forIndexPath:(NSIndexPath *)indexPath {
     
+    if (self.isBeingDismissed) {
+        return;
+    }
+    
     [super collectionView:collectionView configureCell:cell forIndexPath:indexPath];
     
     QMChatCell *currentCell = (QMChatCell *)cell;
@@ -1544,20 +1550,21 @@ QMOpenGraphServiceDelegate>
                                                           senderID:self.senderID
                                                       chatDialogID:self.chatDialog.ID
                                                           dateSent:[NSDate date]];
-    [self.chatDataSource addMessage:message];
+    [self.deferredQueueManager addOrUpdateMessage:message];
     
     [QMCore.instance.chatService sendAttachmentMessage:message
                                               toDialog:self.chatDialog
                                         withAttachment:attachment
                                             completion:^(NSError * _Nullable error) {
                                                 
-                                                if (error) {
-                                                    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed
-                                                                                                                          message:error.localizedRecoverySuggestion
-                                                                                                                         duration:kQMDefaultNotificationDismissTime];
-                                                    // perform local attachment deleting
-                                                    [QMCore.instance.chatService deleteMessageLocally:message];
-                                                    [self.chatDataSource deleteMessage:message];
+                                                if (!error) {
+                                                     [self finishSendingMessageAnimated:YES];
+//                                                    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed
+//                                                                                                                          message:error.localizedRecoverySuggestion
+//                                                                                                                         duration:kQMDefaultNotificationDismissTime];
+//                                                    // perform local attachment deleting
+//                                                    [QMCore.instance.chatService deleteMessageLocally:message];
+//                                                    [self.chatDataSource deleteMessage:message];
                                                 }
                                             }];
 }
@@ -2088,7 +2095,6 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
 - (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
     if (![QMCore.instance isInternetConnected]) {
-        
         [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
         
         return;

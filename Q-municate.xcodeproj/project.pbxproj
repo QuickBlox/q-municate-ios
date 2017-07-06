@@ -170,6 +170,7 @@
 		E03F3D361E1C724E00A46884 /* NSString+QMTransliterating.m in Sources */ = {isa = PBXBuildFile; fileRef = E03F3D341E1C724E00A46884 /* NSString+QMTransliterating.m */; };
 		E04878211E8006C60008F497 /* QMAudioRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = E048781F1E8006C60008F497 /* QMAudioRecorder.m */; };
 		E04E45C71DE5A78700A0E0FC /* QMSiriHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E04E45C61DE5A78700A0E0FC /* QMSiriHelper.m */; };
+		E05329F21F0A883200A9D067 /* QMImageLoader+QBChatAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = E0D258BC1F0A84390046D2FA /* QMImageLoader+QBChatAttachment.m */; };
 		E05A2F381E0964160084735B /* QMSiriCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E05A2F371E0964160084735B /* QMSiriCache.m */; };
 		E063556D1E1D1D4F00BE9061 /* IntentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = E063556A1E1D1D4F00BE9061 /* IntentHandler.m */; };
 		E063556E1E1D1D4F00BE9061 /* QMMessageIntentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = E063556C1E1D1D4F00BE9061 /* QMMessageIntentHandler.m */; };
@@ -545,6 +546,8 @@
 		E0B6A3351E2A614B001125FC /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		E0B6A3371E2A615E001125FC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = en; path = en.lproj/AppIntentVocabulary.plist; sourceTree = "<group>"; };
 		E0C175731DE507AA00B5990C /* QMSiriExtension.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = QMSiriExtension.entitlements; sourceTree = "<group>"; };
+		E0D258BB1F0A84390046D2FA /* QMImageLoader+QBChatAttachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QMImageLoader+QBChatAttachment.h"; sourceTree = "<group>"; };
+		E0D258BC1F0A84390046D2FA /* QMImageLoader+QBChatAttachment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "QMImageLoader+QBChatAttachment.m"; sourceTree = "<group>"; };
 		E3D2EEA21EF7C693002DC44E /* QMTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMTableViewController.h; path = QMTableViewController/QMTableViewController.h; sourceTree = "<group>"; };
 		E3D2EEA31EF7C693002DC44E /* QMTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMTableViewController.m; path = QMTableViewController/QMTableViewController.m; sourceTree = "<group>"; };
 		E3D2EEA61EF7E71C002DC44E /* QMViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMViewController.h; path = QMViewController/QMViewController.h; sourceTree = "<group>"; };
@@ -1896,6 +1899,7 @@
 		6943848C18E42691001E08A9 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				E0D258BA1F0A84390046D2FA /* QMImageLoader */,
 				E026A76B1E82B98C0054AD83 /* UIScreen */,
 				E03F3D321E1C71E100A46884 /* Common */,
 				58F143481D3665D4001AB123 /* QBChatMessage */,
@@ -2104,6 +2108,15 @@
 				E08D52141E5AABF700918B5B /* QMMediaController.m */,
 			);
 			path = QMMediaController;
+			sourceTree = "<group>";
+		};
+		E0D258BA1F0A84390046D2FA /* QMImageLoader */ = {
+			isa = PBXGroup;
+			children = (
+				E0D258BB1F0A84390046D2FA /* QMImageLoader+QBChatAttachment.h */,
+				E0D258BC1F0A84390046D2FA /* QMImageLoader+QBChatAttachment.m */,
+			);
+			path = QMImageLoader;
 			sourceTree = "<group>";
 		};
 		E3D2EE9D1EF42D7C002DC44E /* QMNavigationController */ = {
@@ -2501,6 +2514,7 @@
 				58D847701C85BB36000C40BA /* QMSearchCell.m in Sources */,
 				583E1D391D2BA57F008111DB /* QMLocationButton.m in Sources */,
 				58B3C9B81CB3ED8000B08A27 /* QMGroupOccupantsViewController.m in Sources */,
+				E05329F21F0A883200A9D067 /* QMImageLoader+QBChatAttachment.m in Sources */,
 				58FD668A1CEF058400B72425 /* QMFeedbackViewController.m in Sources */,
 				5877D6CE1C46702400938E5D /* QMDialogsDataSource.m in Sources */,
 				E08D52151E5AABF700918B5B /* QMMediaController.m in Sources */,
