@@ -173,6 +173,9 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     
     [super viewDidLoad];
     
+    self.collectionView.delegate = self;
+    self.collectionView.dataSource = self;
+    
     if (iosMajorVersion() >= 10) {
         self.collectionView.prefetchingEnabled = NO;
     }
@@ -294,9 +297,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     
     [super viewWillAppear:animated];
     
-    self.collectionView.delegate = self;
-    self.collectionView.dataSource = self;
-    
     QMCore.instance.activeDialogID = self.chatDialog.ID;
     
     @weakify(self);
@@ -338,14 +338,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     [self.inputToolbar forceFinishRecording];
     //Stop player
     [[QMAudioPlayer audioPlayer] stop];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    
-    [super viewDidDisappear:animated];
-    
-    self.collectionView.dataSource = nil;
-    self.collectionView.delegate = nil;
 }
 
 // MARK: - Notification
@@ -425,9 +417,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
                                                             BOOL * __unused stop)
      {
          @strongify(self);
-         
          if (messages.count > 0) {
-             
              [self.chatDataSource addMessages:messages];
          }
      }];
@@ -981,6 +971,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
 }
 
 //MARK: - Collection View Datasource
+
 
 - (CGSize)collectionView:(QMChatCollectionView *)__unused collectionView
   dynamicSizeAtIndexPath:(NSIndexPath *)indexPath
@@ -1855,16 +1846,11 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
 
 //MARK: - Contact List Service Delegate
 
-- (void)contactListService:(QMContactListService *)__unused contactListService
-didReceiveContactItemActivity:(NSUInteger)userID
-                  isOnline:(BOOL)isOnline
-                    status:(NSString *)__unused status {
+- (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
     
-    if (self.chatDialog.type == QBChatDialogTypePrivate &&
-        [self.chatDialog opponentID] == userID
+    if (self.chatDialog.type == QBChatDialogTypePrivate
         && !self.isOpponentTyping) {
-        
-        [self setOpponentOnlineStatus:isOnline];
+        [self updateOpponentOnlineStatus];
     }
 }
 
