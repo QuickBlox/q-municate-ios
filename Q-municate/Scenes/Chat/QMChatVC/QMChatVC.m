@@ -972,7 +972,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
 
 //MARK: - Collection View Datasource
 
-
 - (CGSize)collectionView:(QMChatCollectionView *)__unused collectionView
   dynamicSizeAtIndexPath:(NSIndexPath *)indexPath
                 maxWidth:(CGFloat)maxWidth {
@@ -1249,10 +1248,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
          configureCell:(UICollectionViewCell *)cell
           forIndexPath:(NSIndexPath *)indexPath {
     
-    if (self.isBeingDismissed) {
-        return;
-    }
-    
     [super collectionView:collectionView configureCell:cell forIndexPath:indexPath];
     
     QMChatCell *currentCell = (QMChatCell *)cell;
@@ -1404,9 +1399,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     }
 }
 
-#pragma mark - Typing status
-// MARK: - Typing status
-
 //MARK: - Typing status
 
 - (void)stopTyping {
@@ -1544,12 +1536,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
                                                 
                                                 if (!error) {
                                                      [self finishSendingMessageAnimated:YES];
-//                                                    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed
-//                                                                                                                          message:error.localizedRecoverySuggestion
-//                                                                                                                         duration:kQMDefaultNotificationDismissTime];
-//                                                    // perform local attachment deleting
-//                                                    [QMCore.instance.chatService deleteMessageLocally:message];
-//                                                    [self.chatDataSource deleteMessage:message];
                                                 }
                                             }];
 }
@@ -1700,14 +1686,18 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
 // MARK: - Overrides
 
 - (void)setAdditionalNavigationBarHeight:(CGFloat)additionalNavigationBarHeight {
-    _additionalNavigationBarHeight = additionalNavigationBarHeight;
     
-    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
-        self.topContentAdditionalInset =
-        self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height + additionalNavigationBarHeight;
-    }
-    else {
-        self.topContentAdditionalInset = additionalNavigationBarHeight;
+    if ((int)_additionalNavigationBarHeight != (int)additionalNavigationBarHeight) {
+        
+        _additionalNavigationBarHeight = additionalNavigationBarHeight;
+        
+        if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+            self.topContentAdditionalInset =
+            self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height + additionalNavigationBarHeight;
+        }
+        else {
+            self.topContentAdditionalInset = additionalNavigationBarHeight;
+        }
     }
 }
 
@@ -1966,8 +1956,8 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         NSURL *linkURL = [NSURL URLWithString:og.baseUrl];
         [self openURL:linkURL];
     }
-    else if ([cell isKindOfClass:[QMChatOutgoingCell class]]
-             || [cell isKindOfClass:[QMChatIncomingCell class]]) {
+    else if ([cell isKindOfClass:[QMChatOutgoingCell class]] ||
+             [cell isKindOfClass:[QMChatIncomingCell class]]) {
         
         if ([self.detailedCells containsObject:message.ID]) {
             
@@ -2220,6 +2210,7 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
     
     [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
     
+    
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> __unused context) {
         
         if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
@@ -2236,6 +2227,7 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
         [self updateGroupAvatarFrameForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
         
     } completion:nil];
+    
 }
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)__unused scrollView {
