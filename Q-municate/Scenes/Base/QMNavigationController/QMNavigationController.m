@@ -60,6 +60,7 @@ static const CGFloat kQMNotificationPanelViewHeight = 36.0f;
 }
 
 - (void)dismissNotificationPanel {
+    
     if (_notificationShown) {
         _currentAdditionalNavigationBarHeight = 0;
         QMNavigationBar *navigationBar = (QMNavigationBar *)self.navigationBar;

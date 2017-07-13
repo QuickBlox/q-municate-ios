@@ -371,7 +371,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     id cell = [self.collectionView cellForItemAtIndexPath:indexPath];
     
     if (!cell && hasPath) {
-    NSParameterAssert(NO);
+        NSParameterAssert(NO);
     }
     
     return cell;
@@ -1009,38 +1009,43 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
             [attributedString boundingRectWithSize:CGSizeMake(maxWidth, CGFLOAT_MAX)
                                            options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                            context:nil].size;
-            
         }
     }
     else if ([viewClass isSubclassOfClass:[QMChatBaseLinkPreviewCell class]]) {
         
-        QMChatCellLayoutModel layoutModel = [self collectionView:self.collectionView layoutModelAtIndexPath:indexPath];
-        
-        CGFloat linkPreviewHeight = 0;
-        CGFloat linkPreviewWidth = kQMAttachmentCellSize;
-        
         QMOpenGraphItem *og = QMCore.instance.openGraphService.memoryStorage[item.ID];
         
-        if (og) {
+        
+        CGFloat linkPreviewHeight = 0;
+        
+        NSAttributedString *attributedString = [self attributedStringForItem:item];
+        
+        CGSize textSize = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
+                                                           withConstraints:CGSizeMake(maxWidth, CGFLOAT_MAX)
+                                                    limitedToNumberOfLines:0];
+        
+        CGSize urlDescriptionSize =
+        [og.siteDescription boundingRectWithSize:CGSizeMake(maxWidth, CGFLOAT_MAX)
+                                         options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                      attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13]}
+                                         context:nil].size;
+        
+        textSize.width = MAX(textSize.width, urlDescriptionSize.width);
+        
+        UIImage *image =
+        [QMImageLoader.instance.imageCache imageFromCacheForKey:og.imageURL];
+        
+        if (image) {
             
-#warning add transform
-            UIImage *image =
-            [QMImageLoader.instance.imageCache imageFromCacheForKey:og.imageURL];
+            CGFloat oldWidth = image.size.width;
             
-            if (image) {
-                
-                linkPreviewWidth =
-                kQMAttachmentCellSize - layoutModel.containerInsets.left - layoutModel.containerInsets.right;
-                
-                CGFloat oldWidth = image.size.width;
-                CGFloat scaleFactor = linkPreviewWidth / oldWidth;
-                
-                linkPreviewHeight = image.size.height * scaleFactor + 18;
-            }
+            CGFloat scaleFactor = textSize.width / oldWidth;
+            linkPreviewHeight = MIN(image.size.height * scaleFactor, image.size.height);
+            
         }
         
-        size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth),
-                          MAX(linkPreviewHeight, 32));
+        textSize.height += (urlDescriptionSize.height + linkPreviewHeight + 23) ;
+        size = textSize;
     }
     else {
         
@@ -1332,13 +1337,14 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
         QMOpenGraphItem *og = QMCore.instance.openGraphService.memoryStorage[message.ID];
         
         QMChatBaseLinkPreviewCell *previewCell = (QMChatBaseLinkPreviewCell *)cell;
-//        QMImageTransform *transform = [QMImageTransform spec:@"180x"];
+        //        QMImageTransform *transform = [QMImageTransform spec:@"180x"];
 #warning add transform
         
         UIImage *preview = [QMImageLoader.instance.imageCache imageFromCacheForKey:og.imageURL];
         UIImage *favicon = [QMImageLoader.instance.imageCache imageFromCacheForKey:og.faviconUrl];
         
         [previewCell setSiteURL:og.baseUrl
+                 urlDescription:og.siteDescription
                    previewImage:preview
                         favicon:favicon];
     }
@@ -1535,7 +1541,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
                                             completion:^(NSError * _Nullable error) {
                                                 
                                                 if (!error) {
-                                                     [self finishSendingMessageAnimated:YES];
+                                                    [self finishSendingMessageAnimated:YES];
                                                 }
                                             }];
 }
@@ -1867,16 +1873,16 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         @weakify(self);
         self.contactRequestTask = [[QMCore.instance.contactManager addUserToContactList:opponentUser]
                                    continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-            
-            @strongify(self);
-            [navigationController dismissNotificationPanel];
-            
-            if (!task.isFaulted) {
-                [self.chatDataSource updateMessage:currentMessage];
-            }
-            
-            return nil;
-        }];
+                                       
+                                       @strongify(self);
+                                       [navigationController dismissNotificationPanel];
+                                       
+                                       if (!task.isFaulted) {
+                                           [self.chatDataSource updateMessage:currentMessage];
+                                       }
+                                       
+                                       return nil;
+                                   }];
     }
     else {
         
