@@ -1529,11 +1529,15 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
 
 - (void)sendMessageWithAttachment:(QBChatAttachment *)attachment {
     
-    QBChatMessage *message = [QMMessagesHelper chatMessageWithText:nil
+    NSString *messageText =
+    [NSString stringWithFormat:@"%@ attachment",
+     [[attachment stringContentType] capitalizedString]];
+    
+    QBChatMessage *message = [QMMessagesHelper chatMessageWithText:messageText
+                                                        attachment:attachment
                                                           senderID:self.senderID
                                                       chatDialogID:self.chatDialog.ID
                                                           dateSent:[NSDate date]];
-    [self.deferredQueueManager addOrUpdateMessage:message];
     
     [QMCore.instance.chatService sendAttachmentMessage:message
                                               toDialog:self.chatDialog
@@ -1544,6 +1548,13 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
                                                     [self finishSendingMessageAnimated:YES];
                                                 }
                                             }];
+}
+
+- (void)chatService:(QMChatService *)__unused chatService didDeleteMessagesFromMemoryStorage:(nonnull NSArray<QBChatMessage *> *)messages forDialogID:(nonnull NSString *)dialogID {
+    
+    if ([self.chatDialog.ID isEqualToString:dialogID]) {
+        [self.chatDataSource deleteMessages:messages];
+    }
 }
 
 - (void)sendAttachmentMessageWithImage:(UIImage *)image {

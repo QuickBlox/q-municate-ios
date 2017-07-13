@@ -171,4 +171,12 @@
     }];
 }
 
+- (void)setDeviceToken:(NSData *)deviceToken {
+    
+    if (_deviceToken != deviceToken) {
+        _deviceToken = deviceToken;
+        [self subscribeForPushNotifications];
+    }
+}
+
 @end
