@@ -11,8 +11,8 @@
 @implementation QMMessagesHelper
 
 //MARK: - Instances
-
 + (QBChatMessage *)chatMessageWithText:(NSString *)text
+                            attachment:(QBChatAttachment *)attachment
                               senderID:(NSUInteger)senderID
                           chatDialogID:(NSString *)chatDialogID
                               dateSent:(NSDate *)dateSent {
@@ -25,8 +25,22 @@
     message.readIDs = @[@(senderID)];
     message.dialogID = chatDialogID;
     message.dateSent = dateSent;
-    
+    if (attachment) {
+        message.attachments = @[attachment];
+    }
     return message;
+}
+
++ (QBChatMessage *)chatMessageWithText:(NSString *)text
+                              senderID:(NSUInteger)senderID
+                          chatDialogID:(NSString *)chatDialogID
+                              dateSent:(NSDate *)dateSent {
+    
+    return [self chatMessageWithText:text
+                          attachment:nil
+                            senderID:senderID
+                        chatDialogID:chatDialogID
+                            dateSent:dateSent];
 }
 
 + (QBChatMessage *)contactRequestNotificationForUser:(QBUUser *)user {

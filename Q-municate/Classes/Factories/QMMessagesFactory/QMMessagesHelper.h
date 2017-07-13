@@ -14,6 +14,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
+ *  Chat message with attachment.
+ *
+ *  @param text         message text
+ *  @param senderID     message sender ID
+ *  @param chatDialogID chat dialog ID
+ *  @param dateSent     message date sent
+ *  @param attachment   QBChatAttachment instance
+ *
+ *  @return Base QBChatMessage instance
+ */
++ (QBChatMessage *)chatMessageWithText:(nullable NSString *)text
+                            attachment:(nullable QBChatAttachment *)attachment
+                              senderID:(NSUInteger)senderID
+                          chatDialogID:(NSString *)chatDialogID
+                              dateSent:(NSDate *)dateSent;
+/**
  *  Base chat message.
  *
  *  @param text         message text
