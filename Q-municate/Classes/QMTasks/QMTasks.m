@@ -184,9 +184,12 @@ static const NSUInteger kQMUsersPageLimit = 100;
     NSRange range;
     range.location = 0;
     range.length = contactsIDs.count > kQMUsersPageLimit ? kQMUsersPageLimit : contactsIDs.count;
+    
     while (range.location < contactsIDs.count) {
         NSArray *subArray = [contactsIDs subarrayWithRange:range];
-        BFTask *task = [[QMCore instance].usersService searchUsersWithExtendedRequest:filterForUsersFetch(subArray, dateFilter) page:[QBGeneralResponsePage responsePageWithCurrentPage:0 perPage:range.length]];
+        BFTask *task = [[QMCore instance].usersService searchUsersWithExtendedRequest:filterForUsersFetch(subArray, dateFilter)
+                                                                                 page:[QBGeneralResponsePage responsePageWithCurrentPage:0
+                                                                                                                                 perPage:range.length]];
         [tasks addObject:task];
         
         range.location += range.length;

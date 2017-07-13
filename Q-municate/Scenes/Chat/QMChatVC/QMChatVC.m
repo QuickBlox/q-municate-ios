@@ -173,6 +173,9 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     
     [super viewDidLoad];
     
+    self.collectionView.delegate = self;
+    self.collectionView.dataSource = self;
+    
     if (iosMajorVersion() >= 10) {
         self.collectionView.prefetchingEnabled = NO;
     }
@@ -294,9 +297,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     
     [super viewWillAppear:animated];
     
-    self.collectionView.delegate = self;
-    self.collectionView.dataSource = self;
-    
     QMCore.instance.activeDialogID = self.chatDialog.ID;
     
     @weakify(self);
@@ -338,14 +338,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     [self.inputToolbar forceFinishRecording];
     //Stop player
     [[QMAudioPlayer audioPlayer] stop];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    
-    [super viewDidDisappear:animated];
-    
-    self.collectionView.dataSource = nil;
-    self.collectionView.delegate = nil;
 }
 
 // MARK: - Notification
@@ -425,9 +417,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
                                                             BOOL * __unused stop)
      {
          @strongify(self);
-         
          if (messages.count > 0) {
-             
              [self.chatDataSource addMessages:messages];
          }
      }];
@@ -1033,6 +1023,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
         
         if (og) {
             
+#warning add transform
             UIImage *image =
             [QMImageLoader.instance.imageCache imageFromCacheForKey:og.imageURL];
             
@@ -1257,10 +1248,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
          configureCell:(UICollectionViewCell *)cell
           forIndexPath:(NSIndexPath *)indexPath {
     
-    if (self.isBeingDismissed) {
-        return;
-    }
-    
     [super collectionView:collectionView configureCell:cell forIndexPath:indexPath];
     
     QMChatCell *currentCell = (QMChatCell *)cell;
@@ -1345,6 +1332,8 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
         QMOpenGraphItem *og = QMCore.instance.openGraphService.memoryStorage[message.ID];
         
         QMChatBaseLinkPreviewCell *previewCell = (QMChatBaseLinkPreviewCell *)cell;
+//        QMImageTransform *transform = [QMImageTransform spec:@"180x"];
+#warning add transform
         
         UIImage *preview = [QMImageLoader.instance.imageCache imageFromCacheForKey:og.imageURL];
         UIImage *favicon = [QMImageLoader.instance.imageCache imageFromCacheForKey:og.faviconUrl];
@@ -1409,9 +1398,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
          }];
     }
 }
-
-#pragma mark - Typing status
-// MARK: - Typing status
 
 //MARK: - Typing status
 
@@ -1495,7 +1481,8 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
         return;
     }
     
-    [QMCore.instance.callManager callToUserWithID:[self.chatDialog opponentID] conferenceType:QBRTCConferenceTypeAudio];
+    [QMCore.instance.callManager callToUserWithID:[self.chatDialog opponentID]
+                                   conferenceType:QBRTCConferenceTypeAudio];
 }
 
 - (void)videoCallAction {
@@ -1505,7 +1492,8 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
         return;
     }
     
-    [QMCore.instance.callManager callToUserWithID:[self.chatDialog opponentID] conferenceType:QBRTCConferenceTypeVideo];
+    [QMCore.instance.callManager callToUserWithID:[self.chatDialog opponentID]
+                                   conferenceType:QBRTCConferenceTypeVideo];
 }
 
 - (void)_sendLocationMessage:(CLLocationCoordinate2D)locationCoordinate {
@@ -1529,7 +1517,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
      continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
          
          [QMSoundManager playMessageSentSound];
-         
          return nil;
      }];
 }
@@ -1552,7 +1539,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
                                             completion:^(NSError * _Nullable error) {
                                                 
                                                 if (!error) {
-                                                    [self finishSendingMessageAnimated:YES];
+                                                     [self finishSendingMessageAnimated:YES];
                                                 }
                                             }];
 }
@@ -1673,7 +1660,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
 }
 
 - (void)updateGroupChatOnlineStatus {
-    
     // chat status string
     @weakify(self);
     [self.chatDialog requestOnlineUsersWithCompletionBlock:^(NSMutableArray<NSNumber *> *onlineUsers, NSError *error) {
@@ -1711,14 +1697,18 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
 // MARK: - Overrides
 
 - (void)setAdditionalNavigationBarHeight:(CGFloat)additionalNavigationBarHeight {
-    _additionalNavigationBarHeight = additionalNavigationBarHeight;
     
-    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
-        self.topContentAdditionalInset =
-        self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height + additionalNavigationBarHeight;
-    }
-    else {
-        self.topContentAdditionalInset = additionalNavigationBarHeight;
+    if ((int)_additionalNavigationBarHeight != (int)additionalNavigationBarHeight) {
+        
+        _additionalNavigationBarHeight = additionalNavigationBarHeight;
+        
+        if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+            self.topContentAdditionalInset =
+            self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height + additionalNavigationBarHeight;
+        }
+        else {
+            self.topContentAdditionalInset = additionalNavigationBarHeight;
+        }
     }
 }
 
@@ -1791,8 +1781,8 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     }
 }
 
-- (void)chatService:(QMChatService *)__unused chatService didUpdateMessage:(QBChatMessage *)message forDialogID:(NSString *)dialogID
-{
+- (void)chatService:(QMChatService *)__unused chatService didUpdateMessage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+    
     if ([self.chatDialog.ID isEqualToString:dialogID] && message.senderID == self.senderID) {
         // self-sending attachments
         [self.chatDataSource updateMessage:message];
@@ -1857,11 +1847,11 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
 
 //MARK: - Contact List Service Delegate
 
-- (void)contactListService:(QMContactListService *)__unused contactListService didReceiveContactItemActivity:(NSUInteger)userID isOnline:(BOOL)isOnline status:(NSString *)__unused status {
+- (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
     
-    if (self.chatDialog.type == QBChatDialogTypePrivate && [self.chatDialog opponentID] == userID && !self.isOpponentTyping) {
-        
-        [self setOpponentOnlineStatus:isOnline];
+    if (self.chatDialog.type == QBChatDialogTypePrivate
+        && !self.isOpponentTyping) {
+        [self updateOpponentOnlineStatus];
     }
 }
 
@@ -1886,7 +1876,8 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
         
         @weakify(self);
-        self.contactRequestTask = [[QMCore.instance.contactManager addUserToContactList:opponentUser] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        self.contactRequestTask = [[QMCore.instance.contactManager addUserToContactList:opponentUser]
+                                   continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
             
             @strongify(self);
             [navigationController dismissNotificationPanel];
@@ -1976,8 +1967,8 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         NSURL *linkURL = [NSURL URLWithString:og.baseUrl];
         [self openURL:linkURL];
     }
-    else if ([cell isKindOfClass:[QMChatOutgoingCell class]]
-             || [cell isKindOfClass:[QMChatIncomingCell class]]) {
+    else if ([cell isKindOfClass:[QMChatOutgoingCell class]] ||
+             [cell isKindOfClass:[QMChatIncomingCell class]]) {
         
         if ([self.detailedCells containsObject:message.ID]) {
             
@@ -2223,26 +2214,6 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
     }
 }
 
-- (void)openGraphSerivce:(QMOpenGraphService *)__unused openGraphSerivce
-          didLoadFavicon:(UIImage *)fiveIcon
-                  forURL:(NSURL *)url {
-    
-    [QMImageLoader.instance.imageCache storeImage:fiveIcon
-                                           forKey:url.absoluteString
-                                           toDisk:YES
-                                       completion:nil];
-}
-
-- (void)openGraphSerivce:(QMOpenGraphService *)__unused openGraphSerivce
-     didLoadPreviewImage:(UIImage *)previewImage
-                  forURL:(NSURL *)url {
-    
-    [QMImageLoader.instance.imageCache storeImage:previewImage
-                                           forKey:url.absoluteString
-                                           toDisk:YES
-                                       completion:nil];
-}
-
 //MARK: - Transition size
 
 - (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection
@@ -2250,10 +2221,15 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
     
     [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
     
+    
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> __unused context) {
+        
         if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+            
             self.topContentAdditionalInset =
-            self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height + self.additionalNavigationBarHeight;
+            self.navigationController.navigationBar.frame.size.height +
+            [UIApplication sharedApplication].statusBarFrame.size.height +
+            self.additionalNavigationBarHeight;
         }
         else {
             self.topContentAdditionalInset = self.additionalNavigationBarHeight;
@@ -2262,6 +2238,7 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
         [self updateGroupAvatarFrameForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
         
     } completion:nil];
+    
 }
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)__unused scrollView {
@@ -2272,7 +2249,6 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
 //MARK: - QMCallManagerDelegate
 - (void)callManager:(QMCallManager *)__unused callManager
 willCloseCurrentSession:(QBRTCSession *)__unused session {
-    
 }
 
 - (void)callManager:(QMCallManager *)__unused callManager

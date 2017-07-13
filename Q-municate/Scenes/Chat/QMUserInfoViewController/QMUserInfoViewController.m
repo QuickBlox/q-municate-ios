@@ -217,7 +217,6 @@ NYTPhotosViewControllerDelegate
 }
 
 - (void)updateInfo {
-    
     // Phone
     if (self.user.phone.length > 0) {
         
@@ -362,20 +361,19 @@ NYTPhotosViewControllerDelegate
         
         [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
         
-        self.task = [[QMCore.instance.contactManager removeUserFromContactList:self.user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-            
-            if (self.splitViewController.isCollapsed) {
-                
-                [self.navigationController popViewControllerAnimated:YES];
-            }
-            else {
-                
-                [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
-            }
-            [SVProgressHUD dismiss];
-            
-            return nil;
-        }];
+        self.task = [[QMCore.instance.contactManager removeUserFromContactList:self.user]
+                     continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task)
+                     {
+                         if (self.splitViewController.isCollapsed) {
+                             [self.navigationController popViewControllerAnimated:YES];
+                         }
+                         else {
+                             [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
+                         }
+                         [SVProgressHUD dismiss];
+                         
+                         return nil;
+                     }];
     };
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil)

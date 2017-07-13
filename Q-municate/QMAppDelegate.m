@@ -21,6 +21,7 @@
 #import "QMColors.h"
 
 #import "UIScreen+QMLock.h"
+#import "UIImage+Cropper.h"
 
 static NSString * const kQMNotificationActionTextAction = @"TEXT_ACTION";
 static NSString * const kQMNotificationCategoryReply = @"TEXT_REPLY";
