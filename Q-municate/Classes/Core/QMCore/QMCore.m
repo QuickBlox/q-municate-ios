@@ -293,7 +293,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
             
             [[QMImageLoader instance].imageCache clearDiskOnCompletion:^{
                 [[QMImageLoader instance].imageCache clearMemory];
-                
+                [self.chatService.chatAttachmentService removeAllMediaFiles];
                 [source setResult:nil];
             }];
         }];

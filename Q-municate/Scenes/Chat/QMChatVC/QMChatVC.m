@@ -379,7 +379,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     id cell = [self.collectionView cellForItemAtIndexPath:indexPath];
     
     if (!cell && hasPath) {
-    NSParameterAssert(NO);
+        NSParameterAssert(NO);
     }
     
     return cell;
@@ -1536,11 +1536,15 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
 
 - (void)sendMessageWithAttachment:(QBChatAttachment *)attachment {
     
-    QBChatMessage *message = [QMMessagesHelper chatMessageWithText:nil
+    NSString *messageText =
+    [NSString stringWithFormat:@"%@ attachment",
+     [[attachment stringContentType] capitalizedString]];
+    
+    QBChatMessage *message = [QMMessagesHelper chatMessageWithText:messageText
+                                                        attachment:attachment
                                                           senderID:self.senderID
                                                       chatDialogID:self.chatDialog.ID
                                                           dateSent:[NSDate date]];
-    [self.deferredQueueManager addOrUpdateMessage:message];
     
     [QMCore.instance.chatService sendAttachmentMessage:message
                                               toDialog:self.chatDialog
@@ -1548,15 +1552,16 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
                                             completion:^(NSError * _Nullable error) {
                                                 
                                                 if (!error) {
-                                                     [self finishSendingMessageAnimated:YES];
-//                                                    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed
-//                                                                                                                          message:error.localizedRecoverySuggestion
-//                                                                                                                         duration:kQMDefaultNotificationDismissTime];
-//                                                    // perform local attachment deleting
-//                                                    [QMCore.instance.chatService deleteMessageLocally:message];
-//                                                    [self.chatDataSource deleteMessage:message];
+                                                    [self finishSendingMessageAnimated:YES];
                                                 }
                                             }];
+}
+
+- (void)chatService:(QMChatService *)__unused chatService didDeleteMessagesFromMemoryStorage:(nonnull NSArray<QBChatMessage *> *)messages forDialogID:(nonnull NSString *)dialogID {
+    
+    if ([self.chatDialog.ID isEqualToString:dialogID]) {
+        [self.chatDataSource deleteMessages:messages];
+    }
 }
 
 - (void)sendAttachmentMessageWithImage:(UIImage *)image {
