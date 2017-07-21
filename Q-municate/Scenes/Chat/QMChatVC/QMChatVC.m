@@ -288,9 +288,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
                                                  name:kQMNavigationBarHeightChangeNotification
                                                object:nil];
     
-    self.topContentAdditionalInset =
-    self.navigationController.navigationBar.frame.size.height +
-    [UIApplication sharedApplication].statusBarFrame.size.height + _additionalNavigationBarHeight;
+    self.topContentAdditionalInset = _additionalNavigationBarHeight;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -1703,19 +1701,8 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
 // MARK: - Overrides
 
 - (void)setAdditionalNavigationBarHeight:(CGFloat)additionalNavigationBarHeight {
-    
-    if ((int)_additionalNavigationBarHeight != (int)additionalNavigationBarHeight) {
-        
-        _additionalNavigationBarHeight = additionalNavigationBarHeight;
-        
-        if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
-            self.topContentAdditionalInset =
-            self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height + additionalNavigationBarHeight;
-        }
-        else {
-            self.topContentAdditionalInset = additionalNavigationBarHeight;
-        }
-    }
+    _additionalNavigationBarHeight = additionalNavigationBarHeight;
+    self.topContentAdditionalInset = additionalNavigationBarHeight;
 }
 
 //MARK: - QMImageViewDelegate
@@ -2222,29 +2209,13 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
 
 //MARK: - Transition size
 
-- (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection
-              withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-    
-    [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
-    
-    
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> __unused context) {
-        
-        if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
-            
-            self.topContentAdditionalInset =
-            self.navigationController.navigationBar.frame.size.height +
-            [UIApplication sharedApplication].statusBarFrame.size.height +
-            self.additionalNavigationBarHeight;
-        }
-        else {
-            self.topContentAdditionalInset = self.additionalNavigationBarHeight;
-        }
         
         [self updateGroupAvatarFrameForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
         
     } completion:nil];
-    
 }
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)__unused scrollView {
