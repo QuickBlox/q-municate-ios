@@ -86,8 +86,8 @@
     imagePicker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
     imagePicker.videoMaximumDuration = maxDuration;
     imagePicker.videoQuality = quality;
-    imagePicker.allowsEditing = allowsEditing;
     
+    imagePicker.allowsEditing = allowsEditing;
     imagePicker.resultHandler = resultHandler;
     
     dispatch_block_t presentBlock = ^{
@@ -116,7 +116,10 @@
                            allowsEditing:(BOOL)allowsEditing {
     
     QMImagePicker *imagePicker = [[[self class] alloc] init];
-    imagePicker.allowsEditing = allowsEditing;
+    
+    imagePicker.allowsEditing =
+    (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? NO : allowsEditing;
+    
     imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     imagePicker.mediaTypes = @[(NSString *)kUTTypeMovie, (NSString *)kUTTypeImage];
     imagePicker.videoQuality = UIImagePickerControllerQualityTypeMedium;

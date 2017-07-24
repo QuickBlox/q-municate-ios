@@ -38,6 +38,7 @@
 #import "UIScreen+QMLock.h"
 
 // external
+#import <MobileCoreServices/UTCoreTypes.h>
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
 #import <AVKit/AVKit.h>
 
@@ -50,6 +51,25 @@ static const CGFloat kQMWidthPadding = 40.0f;
 static const CGFloat kQMAvatarSize = 28.0f;
 
 static NSString * const kQMTextAttachmentSpacing = @"  ";
+
+@interface UIView(QMShake)
+
+- (void)qm_shake;
+
+@end
+
+@implementation UIView(QMShake)
+
+- (void)qm_shake {
+    
+    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform.translation.x"];
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    animation.duration = 0.3f;
+    animation.values = @[@(-10), @(10), @(-5), @(5), @(0)];
+    [self.layer addAnimation:animation forKey:@"shake"];
+}
+
+@end
 
 @interface QMChatVC ()<QMChatServiceDelegate, QMChatConnectionDelegate,
 QMContactListServiceDelegate, QMDeferredQueueManagerDelegate, QMChatActionsHandler,
@@ -356,9 +376,9 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
 }
 
 - (void)deferredQueueManager:(QMDeferredQueueManager *)__unused queueManager
-     didUpdateMessageLocally:(QBChatMessage *)addedMessage {
+     didUpdateMessageLocally:(QBChatMessage *)updatedMessage {
     
-    [self.chatDataSource updateMessage:addedMessage];
+    [self.chatDataSource updateMessage:updatedMessage];
 }
 
 - (id<QMMediaViewDelegate>)viewForMessage:(QBChatMessage *)message {
@@ -483,7 +503,8 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
         }
     }
     
-    return YES;
+    
+    return [self.deferredQueueManager shouldSendMessagesInDialogWithID:self.chatDialog.ID];
 }
 
 - (BOOL)callsAllowed {
@@ -559,10 +580,10 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-- (void)messagesInputToolbarAudioRecordingStart:(QMInputToolbar *)toolbar {
+- (void)messagesInputToolbarAudioRecordingStart:(QMInputToolbar *)__unused toolbar {
     
     [self startAudioRecording];
-    [toolbar startAudioRecording];
+ //   [toolbar startAudioRecording];
 }
 
 - (void)messagesInputToolbarAudioRecordingCancel:(QMInputToolbar *)__unused toolbar {
@@ -677,23 +698,18 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     
 }
 
-- (void)didPressSendButton:(UIButton *)__unused button
+- (void)didPressSendButton:(UIButton *)button
            withMessageText:(NSString *)text
                   senderId:(NSUInteger)senderId
          senderDisplayName:(NSString *)__unused senderDisplayName
                       date:(NSDate *)date {
     
-    if (![self.deferredQueueManager shouldSendMessagesInDialogWithID:self.chatDialog.ID]) {
-        return;
-    }
-    
     if (self.typingTimer != nil) {
-        
         [self stopTyping];
     }
     
     if (![self messageSendingAllowed]) {
-        
+         [button qm_shake];
         return;
     }
     
@@ -710,7 +726,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
 - (void)didPressAccessoryButton:(UIButton *)sender {
     
     if (![self messageSendingAllowed]) {
-        
+        [sender qm_shake];
         return;
     }
     
@@ -1092,14 +1108,14 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     
     QBChatAttachment *attachment = message.attachments.firstObject;
     
-    CGSize size = CGSizeMake(270.0, 142.0); //default video size for cell
+    CGSize size = CGSizeMake(180.0, 95.0); //default video size for cell
     
     if (!CGSizeEqualToSize(CGSizeMake(attachment.width, attachment.height),
                            CGSizeZero)) {
         
         BOOL isVerticalVideo = attachment.width < attachment.height;
         
-        size = isVerticalVideo ? CGSizeMake(142.0, 270.0) : size;
+        size = isVerticalVideo ? CGSizeMake(95.0, 180.0) : size;
     }
     
     return size;
@@ -1111,13 +1127,16 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
             withSender:(id)sender {
     
     Class viewClass = [self viewClassForItem:[self.chatDataSource messageForIndexPath:indexPath]];
-    
+    QBChatMessage *message = [self.chatDataSource messageForIndexPath:indexPath];
+    //allow action performing only for image attachments
+    if (message.isMediaMessage) {
+        return message.isImageAttachment;
+    }
     // disabling action performing for specific cells
     if (viewClass == [QMChatLocationIncomingCell class]
         || viewClass == [QMChatLocationOutgoingCell class]
         || viewClass == [QMChatNotificationCell class]
         || viewClass == [QMChatContactRequestCell class]) {
-        
         return NO;
     }
     
@@ -1136,8 +1155,13 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
         
         QBChatMessage *message = [self.chatDataSource messageForIndexPath:indexPath];
         
-        if ([message isMediaMessage]) {
-            
+        if ([message isImageAttachment]) {
+            QBChatAttachment *attachment = message.attachments.firstObject;
+            UIImage *image = [QMImageLoader.instance originalImageWithURL:[attachment remoteURLWithToken:NO]];
+            if (image) {
+                [[UIPasteboard generalPasteboard] setValue:UIImageJPEGRepresentation(image, 1)
+                                         forPasteboardType:(NSString *)kUTTypeJPEG];
+            }
         }
         else {
             
@@ -1536,7 +1560,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
                                                           senderID:self.senderID
                                                       chatDialogID:self.chatDialog.ID
                                                           dateSent:[NSDate date]];
-    
+    [self.chatDataSource addMessage:message];
     [QMCore.instance.chatService sendAttachmentMessage:message
                                               toDialog:self.chatDialog
                                         withAttachment:attachment
@@ -1546,6 +1570,10 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
                                                     [self finishSendingMessageAnimated:YES];
                                                 }
                                             }];
+    
+    if (self.automaticallyScrollsToMostRecentMessage) {
+        [self scrollToBottomAnimated:YES];
+    }
 }
 
 - (void)chatService:(QMChatService *)__unused chatService didDeleteMessagesFromMemoryStorage:(nonnull NSArray<QBChatMessage *> *)messages forDialogID:(nonnull NSString *)dialogID {
@@ -2073,11 +2101,11 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
 
 - (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
-    if (![QMCore.instance isInternetConnected]) {
-        [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
-        
-        return;
-    }
+//    if (![QMCore.instance isInternetConnected]) {
+//        [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
+//
+//        return;
+//    }
     
     @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -2104,7 +2132,11 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         AVURLAsset *videoAsset = [AVURLAsset URLAssetWithURL:videoUrl options:nil];
         NSTimeInterval durationSeconds = CMTimeGetSeconds(videoAsset.duration);
         attachment.duration = lround(durationSeconds);
-        
+        NSAssert([videoAsset tracksWithMediaType:AVMediaTypeVideo].count, @"Video asset should have video tracks");
+        AVAssetTrack *videoTrack = [[videoAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+        CGSize videoSize = CGSizeApplyAffineTransform(videoTrack.naturalSize, videoTrack.preferredTransform);
+        attachment.width = lround(videoSize.width);
+        attachment.height = lround(videoSize.height);
         AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:videoAsset];
         imageGenerator.appliesPreferredTrackTransform = YES;
         

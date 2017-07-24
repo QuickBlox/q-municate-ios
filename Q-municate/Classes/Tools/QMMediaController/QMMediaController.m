@@ -23,13 +23,13 @@
 NYTPhotosViewControllerDelegate,
 QMMediaHandler>
 
-@property (strong, nonatomic) NSMutableDictionary *mediaPresenters;
 @property (weak, nonatomic) UIViewController <QMMediaControllerDelegate> *viewController;
 @property (strong, nonatomic) QMChatAttachmentService *attachmentsService;
 @property (strong, nonatomic) AVPlayer *videoPlayer;
 @end
 
 @implementation QMMediaController
+
 @dynamic attachmentsService;
 
 //MARK: - NSObject
@@ -38,10 +38,8 @@ QMMediaHandler>
     
     if (self = [super init]) {
         
-        _mediaPresenters = [NSMutableDictionary dictionary];
         _viewController = viewController;
         [QMAudioPlayer audioPlayer].playerDelegate = self;
-        
     }
     
     return  self;
@@ -50,12 +48,10 @@ QMMediaHandler>
 - (void)dealloc {
     
     [QMAudioPlayer audioPlayer].playerDelegate = nil;
-    [self.mediaPresenters removeAllObjects];
+    
     [self.attachmentsService.infoService cancellAllOperations];
     [self.attachmentsService.webService cancellAllOperations];
     [self.attachmentsService removeDelegate:self];
-    
-    //  NSLog(@"mediapresenters  = %@", self.mediaPresenters);
 }
 
 //MARK: - Interface
@@ -93,13 +89,12 @@ QMMediaHandler>
     NSString *attStatus = [self.attachmentsService statusForMessage:message];
     
     if (attStatus == QMAttachmentStatus.notLoaded) {
-        
         view.isReady = NO;
         view.isLoading = NO;
         view.progress = 0;
         view.viewState = QMMediaViewStateNotReady;
     }
-    else if (attStatus == QMAttachmentStatus.loading) {
+    else if (attStatus == QMAttachmentStatus.downloading || attStatus == QMAttachmentStatus.uploading) {
         view.viewState = QMMediaViewStateLoading;
         view.isReady = NO;
         view.isLoading = YES;
@@ -115,32 +110,34 @@ QMMediaHandler>
         view.viewState = QMMediaViewStateReady;
         view.isReady = YES;
         view.isLoading = NO;
-        
     }
     else if (attStatus == QMAttachmentStatus.loaded) {
         view.viewState = QMMediaViewStateReady;
     }
-    
+    else if  (attStatus == QMAttachmentStatus.error) {
+        view.isReady = NO;
+        view.isLoading = NO;
+        return;
+    }
     if (attachment.contentType == QMAttachmentContentTypeImage) {
         
-        NSURL *url = [attachment remoteURLWithToken:NO];
         CGSize targetSize  = ((QMBaseMediaCell*)view).previewImageView.bounds.size;
         QMImageTransform *transform = [QMImageTransform transformWithSize:targetSize
                                                      customTransformBlock:^UIImage * _Nullable(NSURL * _Nonnull __unused imageURL, UIImage * _Nonnull originalImage) {
-                                                         return  [originalImage imageWithCornerRadius:4 targetSize:targetSize];
+                                                         return [originalImage imageWithCornerRadius:4 targetSize:targetSize];
                                                      }];
         
-        UIImage *image = [QMImageLoader.instance.imageCache imageFromCacheForKey:[transform keyWithURL:url]];
         
-        if (image) {
-            view.isReady = YES;
-            view.viewState = QMMediaViewStateReady;
-            view.image = image;
-        }
-        else if (!attachment.ID) {
+        NSURL *url = [attachment remoteURLWithToken:NO];
+        
+        if (!url) {
             
-            if (attachment.image) {
+             if (attachment.image) {
+                
                 UIImage *transformedImage = [transform applyTransformForImage:attachment.image];
+                [QMImageLoader.instance.imageCache storeImage:attachment.image
+                                                       forKey:message.ID
+                                                   completion:nil];
                 view.image = transformedImage;
             }
             
@@ -149,25 +146,38 @@ QMMediaHandler>
             view.viewState = QMMediaViewStateLoading;
         }
         else {
-            if (attachment.image) {
-                UIImage *transformedImage = [transform applyTransformForImage:attachment.image];
-                //                NSString *cacheKey = [QMImageLoader.instance cacheKeyForURL:url];
-                [QMImageLoader.instance.imageCache storeImage:attachment.image forKey:url.absoluteString completion:nil];
-                [QMImageLoader.instance.imageCache storeImage:transformedImage forKey:[transform keyWithURL:url] completion:nil];
+            
+            UIImage *cachedImage = [QMImageLoader.instance.imageCache imageFromCacheForKey:[transform keyWithURL:url]];
+            UIImage *tempImage = [QMImageLoader.instance.imageCache imageFromCacheForKey:message.ID];
+            if (cachedImage) {
                 view.isReady = YES;
                 view.viewState = QMMediaViewStateReady;
+                view.image = cachedImage;
+            }
+            else if (tempImage) {
+                view.isReady = YES;
+                view.viewState = QMMediaViewStateReady;
+                UIImage *transformedImage = [transform applyTransformForImage:tempImage];
+                [QMImageLoader.instance.imageCache storeImage:transformedImage
+                                                       forKey:[transform keyWithURL:url]
+                                                   completion:nil];
                 view.image = transformedImage;
+                [QMImageLoader.instance.imageCache storeImage:tempImage
+                                                       forKey:url.absoluteString
+                                                   completion:nil];
             }
             else {
                 view.isReady = NO;
                 view.isLoading = YES;
                 view.viewState = QMMediaViewStateLoading;
+                
                 [[QMImageLoader instance] downloadImageWithURL:url
                                                          token:[QBSession currentSession].sessionDetails.token
                                                      transform:transform
-                                                       options:SDWebImageHighPriority | SDWebImageContinueInBackground | SDWebImageAllowInvalidSSLCertificates progress:^(NSInteger receivedSize,
-                                                                                                                                                                          NSInteger expectedSize,
-                                                                                                                                                                          NSURL * _Nullable __unused targetURL)
+                                                       options:SDWebImageHighPriority | SDWebImageContinueInBackground | SDWebImageAllowInvalidSSLCertificates
+                                                      progress:^(NSInteger receivedSize,
+                                                                 NSInteger expectedSize,
+                                                                 NSURL * _Nullable __unused targetURL)
                  {
                      if ([view.messageID isEqualToString:message.ID]) {
                          CGFloat progress = receivedSize/(float)expectedSize;
@@ -175,16 +185,28 @@ QMMediaHandler>
                              view.progress = progress;
                          });
                      }
-                 } completed:^(UIImage * _Nullable image, UIImage * _Nullable transfomedImage, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nonnull imageURL) {
+                 } completed:^(UIImage * _Nullable __unused image,
+                               UIImage * _Nullable transfomedImage,
+                               NSError * _Nullable error,
+                               SDImageCacheType __unused cacheType,
+                               BOOL __unused finished,
+                               NSURL * _Nonnull __unused imageURL) {
                      
                      if ([view.messageID isEqualToString:message.ID]) {
                          view.isLoading = NO;
+                         
                          if (transfomedImage) {
+                             NSLog(@"_IMAGE has transform messageID:%@",message.ID);
                              view.isReady = YES;
                              view.viewState = QMMediaViewStateReady;
                              view.image = transfomedImage;
                          }
-                         else if (error) {
+                         else {
+                             NSLog(@"_IMAGE hasn't transform messageID:%@",message.ID);
+                         }
+                         
+                         if (error) {
+                             NSLog(@"_IMAGE error %@ messageID:%@",error, message.ID);
                              [view showLoadingError:error];
                          }
                      }
@@ -192,11 +214,11 @@ QMMediaHandler>
                  }];
             }
         }
+        
+        
+        
     }
     else if (attachment.contentType == QMAttachmentContentTypeVideo) {
-        
-        
-        view.duration = attachment.duration;
         
         UIImage *image = attachment.image;
         
@@ -211,17 +233,23 @@ QMMediaHandler>
                 view.image = image;
             }
             else {
+                
                 view.viewState = QMMediaViewStateLoading;
                 view.isLoading = YES;
                 [self.attachmentsService prepareAttachment:attachment
                                                  messageID:message.ID
-                                                completion:^(UIImage * _Nullable thumbnailImage, Float64 durationSeconds, CGSize size, NSError * _Nullable error, NSString * _Nonnull messageID, BOOL cancelled)
+                                                completion:^(UIImage * _Nullable thumbnailImage,
+                                                             Float64 durationSeconds,
+                                                             CGSize size,
+                                                             NSError * _Nullable error,
+                                                             NSString * _Nonnull messageID,
+                                                             BOOL cancelled)
                  {
                      if (cancelled) {
                          return;
                      }
                      else if (error) {
-                         
+                         view.isLoading = NO;
                      }
                      else {
                          attachment.image = image;
@@ -242,11 +270,9 @@ QMMediaHandler>
                              }
                              view.viewState = QMMediaViewStateReady;
                              view.isLoading = NO;
-                             // view.isReady = error == nil;
                              
                          }
                      }
-                     
                  }];
             }
         }
@@ -321,9 +347,8 @@ QMMediaHandler>
     
     QBChatAttachment *attachemnt = [message.attachments firstObject];
     [QMImageLoader.instance cancelOperationWithURL:[attachemnt remoteURLWithToken:NO]];
-    if (attachemnt.ID) {
-        [self.attachmentsService cancelOperationsForAttachment:attachemnt messageID:message.ID];
-    }
+    
+    [self.attachmentsService.infoService cancellOperationWithID:message.ID];
 }
 
 - (void)player:(QMAudioPlayer * __unused)player
@@ -362,17 +387,6 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
 
 //MARK: QMEventHandler
 
-- (void)shouldCancelOperation:(id<QMMediaViewDelegate>)view {
-    
-    NSString *messageID = view.messageID;
-    NSParameterAssert(messageID);
-    QBChatMessage *message = [[QMCore instance].chatService.messagesMemoryStorage messageWithID:messageID
-                                                                                   fromDialogID:self.viewController.dialogID];
-    
-    [self cancelOperationsForMessage:message];
-}
-
-
 - (void)didTapContainer:(id<QMMediaViewDelegate>)view {
     
     NSParameterAssert([view conformsToProtocol:@protocol(QMMediaViewDelegate)]);
@@ -397,6 +411,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
         [QMCore.instance.usersService.usersMemoryStorage userWithID:message.senderID];
         
         QMPhoto *photo = [[QMPhoto alloc] init];
+        
         if (attachment.ID) {
             photo.image = [QMImageLoader.instance originalImageWithURL:[attachment remoteURLWithToken:NO]];
         }
@@ -434,7 +449,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
         
         NSString *status = [self.attachmentsService statusForMessage:message];
         
-        if (status == QMAttachmentStatus.loading) {
+        if (status == QMAttachmentStatus.downloading) {
             view.isLoading = NO;
             view.viewState = QMMediaViewStateNotReady;
             [self.attachmentsService cancelOperationsForAttachment:attachment messageID:messageID];
@@ -445,32 +460,35 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
             }
             view.isLoading = YES;
             view.viewState = QMMediaViewStateLoading;
-            [self.attachmentsService  attachmentWithID:attachment.ID message:message progressBlock:^(float progress) {
-                if ([view.messageID isEqualToString:message.ID]) {
-                    view.progress = progress;
-                }
-            } completion:^(QMAttachmentOperation * _Nonnull op) {
-                if (op.isCancelled) {
-                    return;
-                }
-                if (![view.messageID isEqualToString:message.ID]) {
-                    return;
-                }
-                
-                if (!op.error) {
-                    
-                    view.duration = attachment.duration;
-                    view.viewState = QMMediaViewStateReady;
-                    view.isReady = YES;
-                }
-            }];
+            
+            [self.attachmentsService  attachmentWithID:attachment.ID
+                                               message:message
+                                         progressBlock:^(float progress)
+             {
+                 if ([view.messageID isEqualToString:message.ID]) {
+                     view.progress = progress;
+                 }
+             } completion:^(QMAttachmentOperation * _Nonnull op) {
+                 if (op.isCancelled) {
+                     return;
+                 }
+                 if (![view.messageID isEqualToString:message.ID]) {
+                     return;
+                 }
+                 
+                 if (!op.error) {
+                     
+                     view.duration = attachment.duration;
+                     view.viewState = QMMediaViewStateReady;
+                     view.isReady = YES;
+                 }
+             }];
             
         }
         else if (status == QMAttachmentStatus.loaded || status == QMAttachmentStatus.prepared) {
             [self playAttachment:attachment forMessage:message];
         }
     }
-    
 }
 
 - (void)playAttachment:(QBChatAttachment *)attachment
@@ -487,18 +505,21 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     
     if (attachment.contentType == QMAttachmentContentTypeVideo) {
         
-        AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:[attachment remoteURL]];
+        AVPlayerItem *playerItem = [self.attachmentsService.infoService playerItemForAtatchment:attachment messageID:message.ID];
         
         if (self.videoPlayer != nil) {
+            
             [self.videoPlayer replaceCurrentItemWithPlayerItem:nil];
             [self.videoPlayer replaceCurrentItemWithPlayerItem:playerItem];
         }
         else {
+            
             self.videoPlayer = [[AVPlayer alloc] initWithPlayerItem:playerItem];
         }
         
         AVPlayerViewController *playerVC = [AVPlayerViewController new];
         playerVC.player = self.videoPlayer;
+        
         
         __weak typeof(self) weakSelf = self;
         
@@ -538,12 +559,13 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     }
 }
 
-- (void)chatAttachmentService:(QMChatAttachmentService *)chatAttachmentService
-    didChangeAttachmentStatus:(NSString *)status
+- (void)chatAttachmentService:(QMChatAttachmentService *)__unused chatAttachmentService
+    didChangeAttachmentStatus:(NSString *)__unused status
                  forMessageID:(NSString *)messageID {
     
     id <QMMediaViewDelegate> view = nil;
     QBChatMessage *message = [QMCore.instance.chatService.messagesMemoryStorage messageWithID:messageID fromDialogID:self.viewController.dialogID];
+
     if ([self.viewController respondsToSelector:@selector(viewForMessage:)]) {
         
         view = [self.viewController viewForMessage:message];
