@@ -2170,11 +2170,12 @@
 				69D57E4E18ACC11C00A9900A /* Sources */,
 				69D57E4F18ACC11C00A9900A /* Frameworks */,
 				69D57E5018ACC11C00A9900A /* Resources */,
-				584B79C41C452A7A00356FB9 /* ShellScript */,
+				584B79C41C452A7A00356FB9 /* Run Script */,
 				A3EB8C6F63D28CDDF9DD7F5E /* [CP] Embed Pods Frameworks */,
 				CFF0567CBCC50E2F953F149B /* [CP] Copy Pods Resources */,
 				581D97D31D460CF800976728 /* Embed Frameworks */,
 				5803F2BA1D4F568800AE4934 /* ShellScript */,
+				E37EE59C1F2790BE00B1E538 /* ShellScript */,
 				E03871F31DDB36F800554EB9 /* Embed App Extensions */,
 			);
 			buildRules = (
@@ -2324,13 +2325,14 @@
 			shellPath = /bin/sh;
 			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quickblox.framework/strip-framework.sh\"";
 		};
-		584B79C41C452A7A00356FB9 /* ShellScript */ = {
+		584B79C41C452A7A00356FB9 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Run Script";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2366,6 +2368,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Q-municate/Pods-Q-municate-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		E37EE59C1F2790BE00B1E538 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/QuickbloxWebRTC.framework/strip-framework.sh\"";
 		};
 		E38D9249A28F87BADEA652EE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
