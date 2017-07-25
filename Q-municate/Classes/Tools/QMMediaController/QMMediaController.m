@@ -26,6 +26,7 @@ QMMediaHandler>
 @property (weak, nonatomic) UIViewController <QMMediaControllerDelegate> *viewController;
 @property (strong, nonatomic) QMChatAttachmentService *attachmentsService;
 @property (strong, nonatomic) AVPlayer *videoPlayer;
+@property (weak, nonatomic) UIView *photoReferenceView;
 @end
 
 @implementation QMMediaController
@@ -435,6 +436,8 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
         NYTPhotosViewController *photosViewController =
         [[NYTPhotosViewController alloc] initWithPhotos:@[photo]];
         
+        self.photoReferenceView = ((QMBaseMediaCell *)view).previewImageView;
+        photosViewController.delegate = self;
         [self.viewController.view endEditing:YES]; // hiding keyboard
         [self.viewController presentViewController:photosViewController
                                           animated:YES
@@ -579,4 +582,10 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     }
 }
 
+//MARK: - NYTPhotosViewControllerDelegate
+
+- (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
+    
+    return self.photoReferenceView;
+}
 @end

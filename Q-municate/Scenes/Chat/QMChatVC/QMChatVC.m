@@ -126,12 +126,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
  *  Group avatar image view.
  */
 @property (strong, nonatomic) QMImageView *groupAvatarImageView;
-
-/**
- *  Reference view for attachment photo.
- */
-@property (weak, nonatomic) UIView *photoReferenceView;
-
 @property (strong, nonatomic) QMMediaController *mediaController;
 @property (strong, nonatomic) QMAudioRecorder *currentAudioRecorder;
 
@@ -2064,12 +2058,6 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     }
 }
 
-//MARK: - NYTPhotosViewControllerDelegate
-
-- (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
-    
-    return self.photoReferenceView;
-}
 
 //MARK: - UITextViewDelegate
 
