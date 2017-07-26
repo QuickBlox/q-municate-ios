@@ -9,6 +9,7 @@
 #import "QMBaseMediaCell+QMMediaController.h"
 #import "QMCore.h"
 #import "QMServices.h"
+#import "QMChatResources.h"
 
 @implementation QMBaseMediaCell (QMMediaController)
 

@@ -205,27 +205,16 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     
     BOOL needUpdateSessionToken = NO;
     
+    
     if (self.currentProfile.accountType != QMAccountTypeEmail) {
         // due to chat requiring token as a password for any account types
         // but email, wee need to update session token first if it has been expired
         // just perform any request first
-        needUpdateSessionToken = [self sessionTokenHasExpiredOrNeedCreate];
+        needUpdateSessionToken = [QBSession currentSession].sessionTokenHasExpiredOrNeedCreate;
     }
     
-    if ([self isAuthorized]
+    if (([self isAuthorized] && !needUpdateSessionToken )
         && ![QBChat instance].isConnected) {
-        
-        if (needUpdateSessionToken) {
-            
-            @weakify(self);
-            return [[QMTasks taskFetchAllData] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-                
-                @strongify(self);
-                // updating password with new token
-                [QBSession currentSession].currentUser.password = [QBSession currentSession].sessionDetails.token;
-                return [self.chatService connect];
-            }];
-        }
         
         return [self.chatService connect];
     }
@@ -434,21 +423,6 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
 - (BOOL)isInternetConnected {
     
     return [self.internetConnection isReachable];
-}
-
-- (BOOL)sessionTokenHasExpiredOrNeedCreate {
-    
-    NSDate *date = [QBSession currentSession].sessionExpirationDate;
-    
-    if (date != nil) {
-        
-        NSDate *currentDate = [NSDate date];
-        NSTimeInterval interval = [currentDate timeIntervalSinceDate:date];
-        
-        return interval > 0;
-    }
-    
-    return YES;
 }
 
 - (void)updateVocabulary {
