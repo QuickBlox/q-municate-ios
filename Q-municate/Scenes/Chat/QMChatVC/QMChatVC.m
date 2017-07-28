@@ -187,9 +187,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     
     [super viewDidLoad];
     
-    self.collectionView.delegate = self;
-    self.collectionView.dataSource = self;
-    
     if (iosMajorVersion() >= 10) {
         self.collectionView.prefetchingEnabled = NO;
     }
