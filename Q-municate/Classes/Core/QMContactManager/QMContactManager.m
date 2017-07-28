@@ -209,7 +209,12 @@
     }
     else if (!contactListItem.isOnline) {
         
-        status = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"QM_STR_LAST_SEEN", nil), [QMDateUtils formattedLastSeenString:user.lastRequestAt withTimePrefix:NSLocalizedString(@"QM_STR_TIME_PREFIX", nil)]];
+        NSDate *statusDate = user.lastRequestAt;
+        if (statusDate == nil) {
+            statusDate = user.createdAt;
+        }
+        
+        status = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"QM_STR_LAST_SEEN", nil), [QMDateUtils formattedLastSeenString:statusDate withTimePrefix:NSLocalizedString(@"QM_STR_TIME_PREFIX", nil)]];
         
         if (contactListItem.subscriptionState != QBPresenceSubscriptionStateNone) {
             // requesting update on activity
