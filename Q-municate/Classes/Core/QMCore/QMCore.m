@@ -65,7 +65,8 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
         [QMOpenGraphCache setupDBWithStoreNamed:kQMOpenGraphCacheNameKey
                      applicationGroupIdentifier:[self appGroupIdentifier]];
         
-        _openGraphService = [[QMOpenGraphService alloc] initWithCacheDataSource:self];
+        _openGraphService = [[QMOpenGraphService alloc] initWithServiceManager:self
+                                                               cacheDataSource:self];
         [_openGraphService addDelegate:self];
         
         // Profile init
@@ -277,6 +278,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
             // clearing contact list cache and memory storage
             [[QMContactListCache instance] deleteContactList:nil];
             [self.contactListService.contactListMemoryStorage free];
+            [self.openGraphService.memoryStorage free];
             
             [self.currentProfile clearProfile];
             
