@@ -225,6 +225,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
         @strongify(self);
         [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion duration:kQMDefaultNotificationDismissTime];
     }];
+    
     // subscribing to delegates
     [QMCore.instance.chatService addDelegate:self];
     [QMCore.instance.contactListService addDelegate:self];
@@ -577,7 +578,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
 - (void)messagesInputToolbarAudioRecordingStart:(QMInputToolbar *)__unused toolbar {
     
     [self startAudioRecording];
- //   [toolbar startAudioRecording];
 }
 
 - (void)messagesInputToolbarAudioRecordingCancel:(QMInputToolbar *)__unused toolbar {
@@ -1608,7 +1608,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                           
-                                                          [self.deferredQueueManager perfromDefferedActionForMessage:notSentMessage];
+                                                          [self.deferredQueueManager perfromDefferedActionForMessage:notSentMessage withCompletion:nil];
                                                       }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil)
@@ -1969,6 +1969,23 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         CGSize size =  [self.collectionView.collectionViewLayout containerViewSizeForItemAtIndexPath:indexPath];
         NSLog(@"size = %@", NSStringFromCGSize(size));
         NSLog(@"messageID = %@", message.ID);
+        
+        if (message.senderID == self.senderID) {
+            
+            NSString *attStatus = [QMCore.instance.chatService.chatAttachmentService statusForMessage:message];
+            
+            if (attStatus == QMAttachmentStatus.notLoaded) {
+                [QMCore.instance.chatService deleteMessageLocally:message];
+                return;
+            }
+            
+            if (attStatus == QMAttachmentStatus.uploading) {
+                
+                [QMCore.instance.chatService.chatAttachmentService cancelOperationsForAttachment:nil messageID:message.ID];
+                return;
+            }
+        }
+        
         [[((QMBaseMediaCell*)cell) mediaHandler] didTapContainer:cell];
     }
     else if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
