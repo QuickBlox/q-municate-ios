@@ -214,7 +214,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
         session.currentUser.password = session.sessionDetails.token;
     }
     
-    if (session.tokenHasExpired) {
+    if (!self.isAuthorized) {
         
         return [[QMTasks taskAutoLogin] continueWithSuccessBlock:^id(BFTask<QBUUser *> *__unused task) {
             // updating password with new token for Facebook and Digits
