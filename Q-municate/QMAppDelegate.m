@@ -40,15 +40,10 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 #else
 
 // Development
-//static const NSUInteger kQMApplicationID = 36125;
-//static NSString * const kQMAuthorizationKey = @"gOGVNO4L9cBwkPE";
-//static NSString * const kQMAuthorizationSecret = @"JdqsMHCjHVYkVxV";
-//static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
-
-static const NSUInteger kQMApplicationID = 40770;
-static NSString * const kQMAuthorizationKey = @"EL4V-7MrXCHcG-u";
-static NSString * const kQMAuthorizationSecret = @"CstExKwhHbZskVW";
-static NSString * const kQMAccountKey = @"MM9hXnSm6pxSzzLGumtk";
+static const NSUInteger kQMApplicationID = 36125;
+static NSString * const kQMAuthorizationKey = @"gOGVNO4L9cBwkPE";
+static NSString * const kQMAuthorizationSecret = @"JdqsMHCjHVYkVxV";
+static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 #endif
 
@@ -81,8 +76,7 @@ static NSString * const kQMAccountKey = @"MM9hXnSm6pxSzzLGumtk";
     [QBSettings enableXMPPLogging];
     [QMServicesManager enableLogging:YES];
 #endif
-//    [QBSettings setApiEndpoint:@"https://apirc.quickblox.com" chatEndpoint:@"chatrc.quickblox.com" forServiceZone:QBConnectionZoneTypeDevelopment];
-//    [QBSettings setServiceZone:QBConnectionZoneTypeDevelopment];
+
     [[QMCore instance].authService addDelegate:self];
     // QuickbloxWebRTC settings
     [QBRTCClient initializeRTC];
