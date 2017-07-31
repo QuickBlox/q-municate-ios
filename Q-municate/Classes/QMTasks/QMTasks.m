@@ -72,107 +72,98 @@ static const NSUInteger kQMUsersPageLimit = 100;
 
 + (BFTask *)taskAutoLogin {
     
-    BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
+    QMCore *core = QMCore.instance;
+    QBUUser *user = core.currentProfile.userData;
     
-    if (QMCore.instance.currentProfile.userData == nil) {
-        [source setError:[QMErrorsFactory errorNotLoggedInREST]];
+    if (user == nil) {
         
-        return source.task;
+        NSError *error = [QMErrorsFactory errorNotLoggedInREST];
+        return [BFTask taskWithError:error];
     }
     
-    if ([QMCore.instance isAuthorized]) {
+    const QMAccountType type = core.currentProfile.accountType;
+    
+    if (type == QMAccountTypeEmail) {
         
-        [source setResult:QMCore.instance.currentProfile.userData];
+        if (core.isAuthorized) {
+            return [BFTask taskWithResult:user];
+        }
+        return [core.authService loginWithUser:user];
+    }
+    else if (type == QMAccountTypeFacebook) {
+        
+        return [[QMFacebook connect] continueWithBlock:^id(BFTask<NSString *> *task) {
+            return task.result ? [core.authService loginWithFacebookSessionToken:task.result] : nil;
+        }];
+    }
+    else if (type == QMAccountTypeDigits) {
+        
+        Digits *digits = [Digits sharedInstance];
+        DGTOAuthSigning *oauthSigning =
+        [[DGTOAuthSigning alloc] initWithAuthConfig:digits.authConfig
+                                        authSession:[digits session]];
+        
+        NSDictionary *authHeaders = [oauthSigning OAuthEchoHeadersToVerifyCredentials];
+        if (!authHeaders) {
+            NSError *error = [QMErrorsFactory errorNotLoggedInREST];
+            return [BFTask taskWithError:error];
+        }
+        
+        return [QMCore.instance.authService loginWithTwitterDigitsAuthHeaders:authHeaders];
     }
     else {
         
-        switch (QMCore.instance.currentProfile.accountType) {
-                
-                // Email login
-            case QMAccountTypeEmail: {
-                
-                return [QMCore.instance.authService loginWithUser:QMCore.instance.currentProfile.userData];
-            }
-                break;
-                
-                // Facebook login
-            case QMAccountTypeFacebook: {
-                
-                return [[QMFacebook connect] continueWithBlock:^id _Nullable(BFTask<NSString *> * _Nonnull task) {
-                    
-                    return task.result != nil ? [QMCore.instance.authService loginWithFacebookSessionToken:task.result] : nil;
-                }];
-            }
-                break;
-                
-                // Digits login
-            case QMAccountTypeDigits: {
-                
-                DGTOAuthSigning *oauthSigning = [[DGTOAuthSigning alloc]
-                                                 initWithAuthConfig:[Digits sharedInstance].authConfig
-                                                 authSession:[[Digits sharedInstance] session]];
-                
-                NSDictionary *authHeaders = [oauthSigning OAuthEchoHeadersToVerifyCredentials];
-                if (!authHeaders) {
-                    [source setError:[QMErrorsFactory errorNotLoggedInREST]];
-                    break;
-                }
-                
-                return [QMCore.instance.authService loginWithTwitterDigitsAuthHeaders:authHeaders];
-            }
-                break;
-                
-            default:
-                [source setError:[QMErrorsFactory errorNotLoggedInREST]];
-                break;
-        }
+        NSError *error = [QMErrorsFactory errorNotLoggedInREST];
+        return [BFTask taskWithError:error];
     }
-    
-    return source.task;
 }
 
 + (BFTask *)taskFetchAllData {
     
     NSMutableArray *usersLoadingTasks = [NSMutableArray array];
     
-    void (^iterationBlock)(QBResponse *, NSArray *, NSSet *, BOOL *) = ^(QBResponse *__unused response, NSArray *__unused dialogObjects, NSSet *dialogsUsersIDs, BOOL *__unused stop) {
+    QMCore *core = QMCore.instance;
+    
+    void (^iterationBlock)(QBResponse *, NSArray *, NSSet *, BOOL *) =
+    ^(QBResponse *__unused response, NSArray *__unused dialogObjects, NSSet *dialogsUsersIDs, BOOL *__unused stop) {
         
-        [usersLoadingTasks addObject:[QMCore.instance.usersService getUsersWithIDs:dialogsUsersIDs.allObjects]];
+        [usersLoadingTasks addObject:[core.usersService getUsersWithIDs:dialogsUsersIDs.allObjects]];
     };
     
-    BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull task) {
-        
-        if ([QMCore.instance isAuthorized] && !task.isFaulted) {
+    BFContinuationBlock completionBlock = ^id _Nullable(BFTask *task) {
+        if (core.isAuthorized && !task.isFaulted) {
             
-            QMCore.instance.currentProfile.lastDialogsFetchingDate = [NSDate date];
-            [QMCore.instance.currentProfile synchronize];
+            core.currentProfile.lastDialogsFetchingDate = [NSDate date];
+            [core.currentProfile synchronize];
         }
         
         return [BFTask taskForCompletionOfAllTasks:[usersLoadingTasks copy]];
     };
     
-    NSDate *lastDialogsFetchingDate = QMCore.instance.currentProfile.lastDialogsFetchingDate;
-    if (lastDialogsFetchingDate != nil) {
+    NSDate *date = core.currentProfile.lastDialogsFetchingDate;
+    if (date) {
         
-        return [[QMCore.instance.chatService fetchDialogsUpdatedFromDate:lastDialogsFetchingDate
-                                                            andPageLimit:kQMDialogsPageLimit
-                                                          iterationBlock:iterationBlock]
-                continueWithBlock:completionBlock];
+        return [[core.chatService
+                 fetchDialogsUpdatedFromDate:date
+                 andPageLimit:kQMDialogsPageLimit
+                 iterationBlock:iterationBlock] continueWithBlock:completionBlock];
     }
     else {
         
-        return [[QMCore.instance.chatService allDialogsWithPageLimit:kQMDialogsPageLimit
-                                                     extendedRequest:nil
-                                                      iterationBlock:iterationBlock]
-                continueWithBlock:completionBlock];
+        return [[core.chatService
+                 allDialogsWithPageLimit:kQMDialogsPageLimit
+                 extendedRequest:nil
+                 iterationBlock:iterationBlock] continueWithBlock:completionBlock];
     }
 }
 
 + (BFTask *)taskUpdateContacts {
     
-    NSDate *lastUserFetchDate = [QMCore instance].currentProfile.lastUserFetchDate;
-    NSMutableArray *contactsIDs = [[[QMCore instance].contactListService.contactListMemoryStorage userIDsFromContactList] mutableCopy];
-    [contactsIDs addObject:@([QMCore instance].currentProfile.userData.ID)];
+    QMCore *core = QMCore.instance;
+    
+    NSDate *lastUserFetchDate = core.currentProfile.lastUserFetchDate;
+    NSMutableArray *contactsIDs = [[core.contactListService.contactListMemoryStorage userIDsFromContactList] mutableCopy];
+    [contactsIDs addObject:@(core.currentProfile.userData.ID)];
     NSString *dateFilter = nil;
     
     if (lastUserFetchDate != nil) {
@@ -192,10 +183,13 @@ static const NSUInteger kQMUsersPageLimit = 100;
     range.length = contactsIDs.count > kQMUsersPageLimit ? kQMUsersPageLimit : contactsIDs.count;
     
     while (range.location < contactsIDs.count) {
+        
         NSArray *subArray = [contactsIDs subarrayWithRange:range];
-        BFTask *task = [[QMCore instance].usersService searchUsersWithExtendedRequest:filterForUsersFetch(subArray, dateFilter)
-                                                                                 page:[QBGeneralResponsePage responsePageWithCurrentPage:0
-                                                                                                                                 perPage:range.length]];
+        QBGeneralResponsePage *page =
+        [QBGeneralResponsePage responsePageWithCurrentPage:0 perPage:range.length];
+        
+        BFTask *task = [core.usersService searchUsersWithExtendedRequest:filterForUsersFetch(subArray, dateFilter)
+                                                                    page:page];
         [tasks addObject:task];
         
         range.location += range.length;
@@ -204,8 +198,8 @@ static const NSUInteger kQMUsersPageLimit = 100;
     }
     
     BFTask *task = [[BFTask taskForCompletionOfAllTasks:[tasks copy]] continueWithSuccessBlock:^id(BFTask * __unused t) {
-        [QMCore instance].currentProfile.lastUserFetchDate = [NSDate date];
-        [[QMCore instance].currentProfile synchronize];
+        core.currentProfile.lastUserFetchDate = [NSDate date];
+        [core.currentProfile synchronize];
         return nil;
     }];
     

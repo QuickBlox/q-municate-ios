@@ -204,56 +204,25 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 
 - (BFTask *)login {
     
-    BOOL needUpdateSessionToken = NO;
+    QBSession *session = QBSession.currentSession;
     
-    
-    if (self.currentProfile.accountType != QMAccountTypeEmail) {
-        // due to chat requiring token as a password for any account types
-        // but email, wee need to update session token first if it has been expired
-        // just perform any request first
-        needUpdateSessionToken = [QBSession currentSession].sessionTokenHasExpiredOrNeedCreate;
+    if (self.currentProfile.accountType == QMAccountTypeEmail) {
+        
+        session.currentUser.password = self.currentProfile.userData.password;
+    }
+    else {
+        session.currentUser.password = session.sessionDetails.token;
     }
     
-    if (([self isAuthorized] && !needUpdateSessionToken )
-        && ![QBChat instance].isConnected) {
+    if (!self.isAuthorized) {
         
-        return [self.chatService connect];
-    }
-    else if (![QBChat instance].isConnected) {
-        
-        if (needUpdateSessionToken) {
-            
-            @weakify(self);
-            return [[QMTasks taskAutoLogin] continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
-                
-                @strongify(self);
-                // updating password with new token
-                [QBSession currentSession].currentUser.password = [QBSession currentSession].sessionDetails.token;
-                return [self.chatService connect];
-            }];
-        }
-        
-        // doing a parallel login
-        
-        // setting password to current session user
-        if (self.currentProfile.accountType == QMAccountTypeEmail) {
-            
-            [QBSession currentSession].currentUser.password = self.currentProfile.userData.password;
-        }
-        else {
-            
-            [QBSession currentSession].currentUser.password = [QBSession currentSession].sessionDetails.token;
-        }
-        
-        // saving rest login task cause we need to login in REST
-        // only once per app living
-        BFTask *restLoginTask = [QMTasks taskAutoLogin];
-        BFTask *chatConnectTask = [self.chatService connect];
-        
-        return [BFTask taskForCompletionOfAllTasks:@[restLoginTask, chatConnectTask]];
+        return [[QMTasks taskAutoLogin] continueWithSuccessBlock:^id(BFTask<QBUUser *> *__unused task) {
+            // updating password with new token for Facebook and Digits
+            return [self.chatService connect];
+        }];
     }
     
-    return nil;
+    return [self.chatService connect];
 }
 
 - (BFTask *)logout {
@@ -274,7 +243,6 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
                 
                 [[Digits sharedInstance] logOut];
             }
-            
             // clearing contact list cache and memory storage
             [[QMContactListCache instance] deleteContactList:nil];
             [self.contactListService.contactListMemoryStorage free];
@@ -403,8 +371,8 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
              hasImageURL:(NSURL *)url
               completion:(dispatch_block_t)completion {
     
-//    QMImageTransform *transform = [QMImageTransform spec:@"180x"];
-    #warning add tranform
+    //    QMImageTransform *transform = [QMImageTransform spec:@"180x"];
+#warning add tranform
     [QMImageLoader.instance downloadImageWithURL:url
                                        transform:nil
                                          options:SDWebImageHighPriority

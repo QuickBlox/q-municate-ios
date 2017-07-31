@@ -119,6 +119,8 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
         [self.refreshControl beginRefreshing];
         self.tableView.contentOffset = offset;
     }
+    
+    [self.tableView reloadData];
 }
 
 - (void)performAutoLoginAndFetchData {
@@ -180,21 +182,19 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
     
     self.dialogsDataSource = [[QMDialogsDataSource alloc] init];
     self.dialogsDataSource.delegate = self;
-    
-    self.tableView.backgroundView = self.placeholderView;
-    
-    if (QMCore.instance.chatService.dialogsMemoryStorage.unsortedDialogs.count > 0) {
-        
-        self.tableView.backgroundView = nil;
-        self.tableView.dataSource = self.dialogsDataSource;
-        self.tableView.tableHeaderView = self.searchController.searchBar;
-    }
+    self.tableView.dataSource = self.dialogsDataSource;
     
     QMDialogsSearchDataProvider *searchDataProvider = [[QMDialogsSearchDataProvider alloc] init];
     searchDataProvider.delegate = self.searchResultsController;
     
     self.dialogsSearchDataSource =
     [[QMDialogsSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider];
+    
+    self.tableView.backgroundView = self.placeholderView;
+    
+    if (QMCore.instance.chatService.dialogsMemoryStorage.unsortedDialogs.count > 0) {
+        [self removePlaceholder];
+    }
 }
 
 //MARK: - UITableViewDelegate
@@ -289,14 +289,14 @@ titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)chatService:(QMChatService *)__unused chatService
 didAddChatDialogsToMemoryStorage:(NSArray *)__unused chatDialogs {
     
-    [self checkIfDialogsDataSource];
+    [self removePlaceholder];
     [self.tableView reloadData];
 }
 
 - (void)chatService:(QMChatService *)__unused chatService
 didAddChatDialogToMemoryStorage:(QBChatDialog *)__unused chatDialog {
     
-    [self checkIfDialogsDataSource];
+    [self removePlaceholder];
     [self.tableView reloadData];
 }
 
@@ -468,12 +468,10 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
 
 //MARK: - Helpers
 
-- (void)checkIfDialogsDataSource {
+- (void)removePlaceholder {
     
     if (self.tableView.backgroundView) {
-        
         self.tableView.backgroundView = nil;
-        self.tableView.dataSource = self.dialogsDataSource;
         self.tableView.tableHeaderView = self.searchController.searchBar;
     }
 }
