@@ -169,6 +169,7 @@
 		E03871CE1DDB354700554EB9 /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E03871CC1DDB354700554EB9 /* IntentsUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E03F3D351E1C724E00A46884 /* NSString+QMTransliterating.m in Sources */ = {isa = PBXBuildFile; fileRef = E03F3D341E1C724E00A46884 /* NSString+QMTransliterating.m */; };
 		E03F3D361E1C724E00A46884 /* NSString+QMTransliterating.m in Sources */ = {isa = PBXBuildFile; fileRef = E03F3D341E1C724E00A46884 /* NSString+QMTransliterating.m */; };
+		E043459C1F29545F0066851D /* QMAttachmentController.m in Sources */ = {isa = PBXBuildFile; fileRef = E043459B1F29545F0066851D /* QMAttachmentController.m */; };
 		E04871791F1CD43D00F752B5 /* QMBaseMediaCell+QMMediaController.m in Sources */ = {isa = PBXBuildFile; fileRef = E04871781F1CD43D00F752B5 /* QMBaseMediaCell+QMMediaController.m */; };
 		E04878211E8006C60008F497 /* QMAudioRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = E048781F1E8006C60008F497 /* QMAudioRecorder.m */; };
 		E04E45C71DE5A78700A0E0FC /* QMSiriHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E04E45C61DE5A78700A0E0FC /* QMSiriHelper.m */; };
@@ -518,6 +519,8 @@
 		E03C83151E61F9E30039A9D0 /* QMCallViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCallViewDelegate.h; sourceTree = "<group>"; };
 		E03F3D331E1C724E00A46884 /* NSString+QMTransliterating.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+QMTransliterating.h"; sourceTree = "<group>"; };
 		E03F3D341E1C724E00A46884 /* NSString+QMTransliterating.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+QMTransliterating.m"; sourceTree = "<group>"; };
+		E043459A1F29545F0066851D /* QMAttachmentController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMAttachmentController.h; sourceTree = "<group>"; };
+		E043459B1F29545F0066851D /* QMAttachmentController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMAttachmentController.m; sourceTree = "<group>"; };
 		E04871771F1CD43D00F752B5 /* QMBaseMediaCell+QMMediaController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QMBaseMediaCell+QMMediaController.h"; sourceTree = "<group>"; };
 		E04871781F1CD43D00F752B5 /* QMBaseMediaCell+QMMediaController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "QMBaseMediaCell+QMMediaController.m"; sourceTree = "<group>"; };
 		E048781F1E8006C60008F497 /* QMAudioRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAudioRecorder.m; sourceTree = "<group>"; };
@@ -2119,6 +2122,8 @@
 				E09FCA661E60A9270013E3EB /* QMAudioPlayer.m */,
 				E08D52131E5AABF700918B5B /* QMMediaController.h */,
 				E08D52141E5AABF700918B5B /* QMMediaController.m */,
+				E043459A1F29545F0066851D /* QMAttachmentController.h */,
+				E043459B1F29545F0066851D /* QMAttachmentController.m */,
 			);
 			path = QMMediaController;
 			sourceTree = "<group>";
@@ -2521,6 +2526,7 @@
 				580FEBF61CC50423000AED72 /* QMMessagesHelper.m in Sources */,
 				584A6D971C9D9D9F00B7D641 /* QMAlphabetizedDataSource.m in Sources */,
 				5877D6C41C45470400938E5D /* QMDigitsConfigurationFactory.m in Sources */,
+				E043459C1F29545F0066851D /* QMAttachmentController.m in Sources */,
 				589B62921CE1CB4A0038F5E0 /* QMPushNotificationManager.m in Sources */,
 				584277D51C3FCFBA00CDE35B /* QMFacebook.m in Sources */,
 				E09FCA671E60A9270013E3EB /* QMAudioPlayer.m in Sources */,
@@ -2818,6 +2824,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 8885H5G2YX;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -2849,6 +2856,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8885H5G2YX;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;

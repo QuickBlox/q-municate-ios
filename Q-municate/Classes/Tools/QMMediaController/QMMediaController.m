@@ -18,6 +18,29 @@
 #import "QMChatModel.h"
 #import "QMChatAttachmentModel.h"
 #import "QMImageLoader+QBChatAttachment.h"
+/*
+@interface QMChatAttachmentModelModel : NSObject <QMChatAttachmentModelProtocol>
+
++ (instancetype)initWithAttachment:(QBChatAttachment *)attachment;
+- (void)updateWithAttachment:(QBChatAttachment *)attachment;
+
+@end
+
+@interface QMChatAttachmentModelModel()
+
+@property (nonatomic, assign) NSTimeInterval currentTime;
+
+@property (nonatomic, assign) CGFloat progress;
+@property (nonatomic, strong) UIImage *thumbnailImage;
+@property (nonatomic, strong) UIImage *image;
+@end
+
+@implementation QMChatAttachmentModelModel
+
+@end
+
+
+*/
 
 @interface QMMediaController() <QMAudioPlayerDelegate,
 NYTPhotosViewControllerDelegate,
@@ -51,7 +74,7 @@ QMMediaHandler>
     [QMAudioPlayer audioPlayer].playerDelegate = nil;
     
     [self.attachmentsService.infoService cancellAllOperations];
-    [self.attachmentsService.webService cancellAllOperations];
+    [self.attachmentsService.webService cancelDownloadOperations];
     [self.attachmentsService removeDelegate:self];
 }
 
@@ -89,6 +112,7 @@ QMMediaHandler>
     
     NSString *attStatus = [self.attachmentsService statusForMessage:message];
     
+
     if (attStatus == QMAttachmentStatus.notLoaded) {
         view.isReady = NO;
         view.isLoading = NO;
@@ -318,6 +342,29 @@ QMMediaHandler>
 
 - (void)didTapPlayButton:(id<QMMediaViewDelegate>)view {
     
+    NSParameterAssert([view conformsToProtocol:@protocol(QMMediaViewDelegate)]);
+    
+    NSString *messageID = view.messageID;
+    NSParameterAssert(messageID);
+    
+    QBChatMessage *message = [[QMCore instance].chatService.messagesMemoryStorage messageWithID:messageID
+                                                                                   fromDialogID:self.viewController.dialogID];
+    
+    QBChatAttachment *attachment = [message.attachments firstObject];
+    
+    NSParameterAssert(attachment);
+    NSString *status = [self.attachmentsService statusForMessage:message];
+    
+    if (status == QMAttachmentStatus.notLoaded) {
+        [QMCore.instance.chatService deleteMessageLocally:message];
+        return;
+    }
+    if (status == QMAttachmentStatus.uploading) {
+        
+        [self.attachmentsService cancelOperationsWithMessageID:messageID];
+     
+        return;
+    }
     [self didTapContainer:view];
 }
 
@@ -401,7 +448,18 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     QBChatAttachment *attachment = [message.attachments firstObject];
     
     NSParameterAssert(attachment);
+            NSString *status = [self.attachmentsService statusForMessage:message];
     
+    if (status == QMAttachmentStatus.notLoaded) {
+        [QMCore.instance.chatService deleteMessageLocally:message];
+        return;
+    }
+    
+    if (status == QMAttachmentStatus.uploading) {
+        
+        [self.attachmentsService cancelOperationsWithMessageID:messageID];
+        return;
+    }
     if (attachment.contentType == QMAttachmentContentTypeImage) {
         
         if (!view.isReady) {
@@ -450,12 +508,12 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     }
     else if (attachment.contentType == QMAttachmentContentTypeAudio) {
         
-        NSString *status = [self.attachmentsService statusForMessage:message];
+
         
         if (status == QMAttachmentStatus.downloading) {
             view.isLoading = NO;
             view.viewState = QMMediaViewStateNotReady;
-            [self.attachmentsService cancelOperationsForAttachment:attachment messageID:messageID];
+            [self.attachmentsService cancelOperationsWithMessageID:messageID];
         }
         else if (status == QMAttachmentStatus.notLoaded) {
             if (!attachment.ID) {
@@ -507,8 +565,11 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     }
     
     if (attachment.contentType == QMAttachmentContentTypeVideo) {
+        NSURL *fileURL = [self.attachmentsService.storeService fileURLForAttachment:attachment
+                                                                          messageID:message.ID
+                                                                           dialogID:message.dialogID];
+        AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:attachment.remoteURL];
         
-        AVPlayerItem *playerItem = [self.attachmentsService.infoService playerItemForAtatchment:attachment messageID:message.ID];
         
         if (self.videoPlayer != nil) {
             
