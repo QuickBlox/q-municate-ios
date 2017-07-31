@@ -28,7 +28,7 @@
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        audioPlayer = [[QMAudioPlayer alloc] init];
+        audioPlayer = [[self alloc] init];
     });
     
     return audioPlayer;

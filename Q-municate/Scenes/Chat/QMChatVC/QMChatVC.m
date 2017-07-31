@@ -639,14 +639,14 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
         [self destroyAudioRecorder];
     };
     
-    [[UIScreen mainScreen] lockCurrentOrientation];
+    [[UIScreen mainScreen] qm_lockCurrentOrientation];
 }
 
 - (void)cancellAudioRecording {
     
     if (self.currentAudioRecorder != nil) {
         
-        [[UIScreen mainScreen] unlockCurrentOrientation];
+        [[UIScreen mainScreen] qm_unlockCurrentOrientation];
         [self.currentAudioRecorder cancelRecording];
     }
 }
@@ -655,7 +655,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     
     if (self.currentAudioRecorder != nil) {
         
-        [[UIScreen mainScreen] unlockCurrentOrientation];
+        [[UIScreen mainScreen] qm_unlockCurrentOrientation];
         [self.currentAudioRecorder stopRecording];
     }
 }
@@ -664,7 +664,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     
     if (self.currentAudioRecorder != nil) {
         
-        [[UIScreen mainScreen] unlockCurrentOrientation];
+        [[UIScreen mainScreen] qm_unlockCurrentOrientation];
         self.currentAudioRecorder = nil;
     }
 }
@@ -1972,13 +1972,14 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
             NSString *attStatus = [QMCore.instance.chatService.chatAttachmentService statusForMessage:message];
             
             if (attStatus == QMAttachmentStatus.notLoaded) {
+                
                 [QMCore.instance.chatService deleteMessageLocally:message];
                 return;
             }
             
             if (attStatus == QMAttachmentStatus.uploading) {
-                
-                [QMCore.instance.chatService.chatAttachmentService cancelOperationsForAttachment:nil messageID:message.ID];
+    
+                [QMCore.instance.chatService.chatAttachmentService cancelOperationsWithMessageID:message.ID];
                 return;
             }
         }
