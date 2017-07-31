@@ -193,9 +193,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     
     [super viewDidLoad];
     
-    self.collectionView.delegate = self;
-    self.collectionView.dataSource = self;
-    
     if (iosMajorVersion() >= 10) {
         self.collectionView.prefetchingEnabled = NO;
     }
@@ -2244,9 +2241,7 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> __unused context) {
-        
         [self updateGroupAvatarFrameForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
-        
     } completion:nil];
 }
 
