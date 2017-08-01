@@ -27,7 +27,6 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 
 @interface QMCore ()
 
-@property (strong, nonatomic) BFTask *restLoginTask;
 @property (strong, nonatomic) NSMutableOrderedSet *cachedVocabularyStrings;
 
 @end
@@ -361,18 +360,15 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
                                                    NSError * __unused error,
                                                    SDImageCacheType __unused cacheType,
                                                    BOOL __unused finished,
-                                                   NSURL * __unused imageURL)
-     {
-         completion();
-     }];
+                                                   NSURL * __unused imageURL) {
+                                           completion();
+                                       }];
 }
 
 - (void)openGraphSerivce:(QMOpenGraphService *)__unused openGraphSerivce
              hasImageURL:(NSURL *)url
               completion:(dispatch_block_t)completion {
     
-    //    QMImageTransform *transform = [QMImageTransform spec:@"180x"];
-#warning add tranform
     [QMImageLoader.instance downloadImageWithURL:url
                                        transform:nil
                                          options:SDWebImageHighPriority
@@ -382,10 +378,9 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
                                                    NSError * __unused error,
                                                    SDImageCacheType __unused cacheType,
                                                    BOOL __unused finished,
-                                                   NSURL * __unused imageURL)
-     {
-         completion();
-     }];
+                                                   NSURL * __unused imageURL) {
+                                           completion();
+                                       }];
 }
 
 //MARK: - Helpers

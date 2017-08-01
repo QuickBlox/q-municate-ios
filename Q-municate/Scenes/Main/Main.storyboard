@@ -225,7 +225,7 @@ out here.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Che-ZV-Qcq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3391" y="-9356"/>
+            <point key="canvasLocation" x="-3391" y="-9520"/>
         </scene>
         <!--Tab BarVC-->
         <scene sceneID="ZVl-Pg-Gvu">
@@ -246,7 +246,7 @@ out here.</string>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vu5-LM-YXf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3391" y="-8661"/>
+            <point key="canvasLocation" x="-3386" y="-8661"/>
         </scene>
         <!--Master-->
         <scene sceneID="REi-kC-PjP">
@@ -377,7 +377,7 @@ out here.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="psa-WZ-rXV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1207.2463768115942" y="-7791.847826086957"/>
+            <point key="canvasLocation" x="-1208" y="-7749"/>
         </scene>
         <!--QMGroupInfoViewController-->
         <scene sceneID="FWW-zu-fkx">
