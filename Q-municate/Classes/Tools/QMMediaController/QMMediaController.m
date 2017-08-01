@@ -351,11 +351,6 @@ QMMediaHandler>
     [self didTapContainer:view];
 }
 
-- (void)shouldCancelOperation:(id<QMMediaViewDelegate>)view {
-    <#code#>
-}
-
-
 //MARK: - QMChatAttachmentService Delegate
 
 - (void)chatAttachmentService:(QMChatAttachmentService *)__unused chatAttachmentService
