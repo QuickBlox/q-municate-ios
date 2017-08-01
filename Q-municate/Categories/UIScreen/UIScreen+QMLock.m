@@ -13,7 +13,8 @@ static void *kQMLockedOrientationObjectKey = &kQMLockedOrientationObjectKey;
 
 @implementation UIScreen (QMLock)
 
-- (UIInterfaceOrientation)lockedInterfaceOrientation {
+
+- (UIInterfaceOrientation)qm_lockedInterfaceOrientation {
     
     NSNumber *lockedOrientationWrapper =
     objc_getAssociatedObject(self, kQMLockedOrientationObjectKey);
@@ -21,33 +22,33 @@ static void *kQMLockedOrientationObjectKey = &kQMLockedOrientationObjectKey;
     return [lockedOrientationWrapper integerValue];
 }
 
-- (void)setLockedInterfaceOrientation:(UIInterfaceOrientation)orientation {
+- (void)setQm_lockedInterfaceOrientation:(UIInterfaceOrientation)qm_lockedInterfaceOrientation {
     
-    NSNumber *lockedOrientationWrapper = @((UIInterfaceOrientation)orientation);
+    NSNumber *lockedOrientationWrapper = @((UIInterfaceOrientation)qm_lockedInterfaceOrientation);
     objc_setAssociatedObject(self,
                              kQMLockedOrientationObjectKey,
                              lockedOrientationWrapper,
                              OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)lockCurrentOrientation {
+- (void)qm_lockCurrentOrientation {
     
-    self.lockedInterfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+    self.qm_lockedInterfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
 }
 
-- (void)unlockCurrentOrientation {
+- (void)qm_unlockCurrentOrientation {
     
-    self.lockedInterfaceOrientation = UIInterfaceOrientationUnknown;
+    self.qm_lockedInterfaceOrientation = UIInterfaceOrientationUnknown;
     
     if (!UIDeviceOrientationIsValidInterfaceOrientation([[UIDevice currentDevice] orientation])) {
         [UIViewController attemptRotationToDeviceOrientation];
     }
 }
 
-- (UIInterfaceOrientationMask)allowedInterfaceOrientationMask {
+- (UIInterfaceOrientationMask)qm_allowedInterfaceOrientationMask {
     
-    if (self.lockedInterfaceOrientation != UIInterfaceOrientationUnknown) {
-        return 1 << self.lockedInterfaceOrientation;
+    if (self.qm_lockedInterfaceOrientation != UIInterfaceOrientationUnknown) {
+        return 1 << self.qm_lockedInterfaceOrientation;
     }
     else {
         return UIInterfaceOrientationMaskAll;

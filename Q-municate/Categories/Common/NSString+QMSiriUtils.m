@@ -23,7 +23,7 @@ static NSString * const kGroupChatPrefix = @"chat: ";
 - (NSString *)qm_toChatID {
     
     if ([self qm_isChatIdentifier]) {
-        return [self substringFromIndex:[kGroupChatPrefix length]];
+        return [self substringFromIndex:kGroupChatPrefix.length];
     }
     return nil;
 }
