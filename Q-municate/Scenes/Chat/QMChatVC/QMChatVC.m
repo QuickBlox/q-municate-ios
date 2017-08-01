@@ -700,7 +700,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     }
     
     if (![self messageSendingAllowed]) {
-         [button qm_shake];
+        [button qm_shake];
         return;
     }
     
@@ -1967,24 +1967,7 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         NSLog(@"size = %@", NSStringFromCGSize(size));
         NSLog(@"messageID = %@", message.ID);
         
-        if (message.senderID == self.senderID) {
-            
-            NSString *attStatus = [QMCore.instance.chatService.chatAttachmentService statusForMessage:message];
-            
-            if (attStatus == QMAttachmentStatus.notLoaded) {
-                
-                [QMCore.instance.chatService deleteMessageLocally:message];
-                return;
-            }
-            
-            if (attStatus == QMAttachmentStatus.uploading) {
-    
-                [QMCore.instance.chatService.chatAttachmentService cancelOperationsWithMessageID:message.ID];
-                return;
-            }
-        }
-        
-        [[((QMBaseMediaCell*)cell) mediaHandler] didTapContainer:cell];
+        [self.mediaController didTapContainer:(id<QMMediaViewDelegate>)cell];
     }
     else if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
         
@@ -2102,13 +2085,8 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     }];
 }
 
+
 - (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo {
-    
-//    if (![QMCore.instance isInternetConnected]) {
-//        [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
-//
-//        return;
-//    }
     
     @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -2257,8 +2235,10 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
 }
 
 //MARK: - QMCallManagerDelegate
+
 - (void)callManager:(QMCallManager *)__unused callManager
 willCloseCurrentSession:(QBRTCSession *)__unused session {
+    
 }
 
 - (void)callManager:(QMCallManager *)__unused callManager

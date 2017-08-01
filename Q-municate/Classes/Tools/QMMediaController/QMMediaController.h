@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)cancelOperationsForMessage:(QBChatMessage *)message;
 
+- (void)didTapContainer:(id<QMMediaViewDelegate>)view;
+
 @end
 
 @protocol QMMediaControllerDelegate <NSObject>
