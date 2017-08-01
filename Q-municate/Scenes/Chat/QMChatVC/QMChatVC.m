@@ -1913,7 +1913,7 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         
         @weakify(self);
         self.contactRequestTask = [[[QMCore.instance.contactManager rejectAddContactRequest:opponentUser] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-            
+            @strongify(self);
             if (!task.isFaulted) {
                 
                 return [QMCore.instance.chatService deleteDialogWithID:self.chatDialog.ID];

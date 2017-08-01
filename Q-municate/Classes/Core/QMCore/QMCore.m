@@ -27,7 +27,6 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 
 @interface QMCore ()
 
-@property (strong, nonatomic) BFTask *restLoginTask;
 @property (strong, nonatomic) NSMutableOrderedSet *cachedVocabularyStrings;
 
 @end
