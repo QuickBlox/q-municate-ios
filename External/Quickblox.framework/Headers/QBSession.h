@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Session user
  */
-@property (nonatomic, readonly, nullable) QBUUser *currentUser;
+@property (nonatomic, readonly, copy, nullable) QBUUser *currentUser;
 
 /**
  *  Session details
