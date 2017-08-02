@@ -48,12 +48,6 @@ static NSString * const kQMAppExists = @"QMAppExists";
             
             [self clearProfile];
         }
-        else if (_userData == nil && [QBSession currentSession].currentUser != nil) {
-            
-            // support for updating from old qmunicate (version less than 2.0)
-            // initializing QMProfile from previous data savings
-            [self _performAccountMigration];
-        }
     }
     
     return self;
@@ -200,43 +194,6 @@ static NSString *const kQMSettingsLoginKey = @"loginKey";
 static NSString *const kQMSettingsRememberMeKey = @"rememberMeKey";
 static NSString *const kQMSettingsUserStatusKey = @"userStatusKey";
 static NSString *const kQMLicenceAcceptedKey = @"licence_accepted";
-
-- (void)_performAccountMigration {
-    
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    self.accountType = [userDefaults integerForKey:kQMAccountType];
-    
-    if (self.accountType != QMAccountTypeNone) {
-        
-        // last dialogs fetching date
-        self.lastDialogsFetchingDate = [userDefaults objectForKey:kQMLastActivityDateKey];
-        // push notifications enabled
-        self.pushNotificationsEnabled = [userDefaults boolForKey:kQMSettingsPushNotificationEnabled];
-        
-        // clearing all old account information
-        [userDefaults removeObjectForKey:kQMAccountType];
-        [userDefaults removeObjectForKey:kQMLastActivityDateKey];
-        [userDefaults removeObjectForKey:kQMSettingsPushNotificationEnabled];
-        [userDefaults removeObjectForKey:kQMSettingsLoginKey];
-        [userDefaults removeObjectForKey:kQMSettingsRememberMeKey];
-        [userDefaults removeObjectForKey:kQMSettingsUserStatusKey];
-        [userDefaults removeObjectForKey:kQMLicenceAcceptedKey];
-        
-        [userDefaults synchronize];
-        
-        if (self.accountType == QMAccountTypeEmail) {
-            
-            NSString *account = [QBSession currentSession].currentUser.email;
-            [QBSession currentSession].currentUser.password =
-            [SSKeychain passwordForService:kQMAuthServiceKey account:account];
-            // clearing old account data
-            [SSKeychain deletePasswordForService:kQMAuthServiceKey account:account];
-        }
-        
-        _userData = [QBSession currentSession].currentUser;
-        [self synchronize];
-    }
-}
 
 //MARK: - description
 
