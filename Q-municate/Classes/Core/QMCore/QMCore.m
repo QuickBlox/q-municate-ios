@@ -203,25 +203,9 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 
 - (BFTask *)login {
     
-    QBSession *session = QBSession.currentSession;
-    
-    if (self.currentProfile.accountType == QMAccountTypeEmail) {
-        
-        session.currentUser.password = self.currentProfile.userData.password;
-    }
-    else {
-        session.currentUser.password = session.sessionDetails.token;
-    }
-    
-    if (!self.isAuthorized) {
-        
-        return [[QMTasks taskAutoLogin] continueWithSuccessBlock:^id(BFTask<QBUUser *> *__unused task) {
-            // updating password with new token for Facebook and Digits
-            return [self.chatService connect];
-        }];
-    }
-    
-    return [self.chatService connect];
+    return [[QMTasks taskAutoLogin] continueWithSuccessBlock:^id(BFTask<QBUUser *> *__unused task) {
+        return [self.chatService connectWithUserID:task.result.ID password:task.result.password];
+    }];
 }
 
 - (BFTask *)logout {

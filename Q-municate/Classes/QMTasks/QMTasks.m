@@ -73,9 +73,9 @@ static const NSUInteger kQMUsersPageLimit = 100;
 + (BFTask *)taskAutoLogin {
     
     QMCore *core = QMCore.instance;
-    QBUUser *user = core.currentProfile.userData;
+    QBUUser *currentProfile = [core.currentProfile.userData copy];
     
-    if (user == nil) {
+    if (currentProfile == nil) {
         
         NSError *error = [QMErrorsFactory errorNotLoggedInREST];
         return [BFTask taskWithError:error];
@@ -83,12 +83,21 @@ static const NSUInteger kQMUsersPageLimit = 100;
     
     const QMAccountType type = core.currentProfile.accountType;
     
+    if (core.isAuthorized) {
+        
+        if (type == QMAccountTypeEmail) {
+            return [BFTask taskWithResult:currentProfile];
+        }
+        else if(type > QMAccountTypeEmail) {
+            //Use token as password
+            currentProfile.password = QBSession.currentSession.sessionDetails.token;
+            return [BFTask taskWithResult:currentProfile];
+        }
+    }
+    
     if (type == QMAccountTypeEmail) {
         
-        if (core.isAuthorized) {
-            return [BFTask taskWithResult:user];
-        }
-        return [core.authService loginWithUser:user];
+        return [core.authService loginWithUser:currentProfile];
     }
     else if (type == QMAccountTypeFacebook) {
         
