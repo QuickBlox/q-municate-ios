@@ -49,11 +49,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface QMCallManager : QMBaseService
 
 /**
- *  Delegate instance that conforms to QMCallManagerDelegate protocol.
- */
-@property (weak, nonatomic, nullable) id<QMCallManagerDelegate> delegate DEPRECATED_ATTRIBUTE;
-
-/**
  *  Add delegate (Multicast)
  *
  *  @param delegate Instance confirmed QMCallManagerDelegate protocol
@@ -91,13 +86,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return Current opponent user if session exists
  */
 - (nullable QBUUser *)opponentUser;
-
-/**
- *  List of quickblox ICE servers.
- *
- *  @return Array of quickblox ICE servers
- */
-- (NSArray *)quickbloxICE;
 
 /**
  *  Stop all active sounds and its timers.
