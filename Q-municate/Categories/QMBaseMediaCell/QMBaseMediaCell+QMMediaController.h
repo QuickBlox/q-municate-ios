@@ -10,8 +10,4 @@
 
 @interface QMBaseMediaCell (QMMediaController)
 
-- (void)updateWithAttachment:(QBChatAttachment *)attachment
-                   messageID:(NSString *)messageID
-                    dialogID:(NSString *)dialopgID;
-
 @end
