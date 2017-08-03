@@ -374,12 +374,13 @@ didReceiveNotificationMessage:(QBChatMessage *)message
                                                                           message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil)
                                                                          duration:kQMDefaultNotificationDismissTime];
 }
-
+/*
 - (void)chatService:(QMChatService *)__unused chatService
 chatDidNotConnectWithError:(NSError *)error {
     
     [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription]];
 }
+*/
 
 //MARK: - QMUsersServiceDelegate
 
