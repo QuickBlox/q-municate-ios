@@ -1350,9 +1350,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
         QMOpenGraphItem *og = QMCore.instance.openGraphService.memoryStorage[message.ID];
         
         QMChatBaseLinkPreviewCell *previewCell = (QMChatBaseLinkPreviewCell *)cell;
-        //        QMImageTransform *transform = [QMImageTransform spec:@"180x"];
-#warning add transform
-        
+        //TODO: add transform
         UIImage *preview = [QMImageLoader.instance.imageCache imageFromCacheForKey:og.imageURL];
         UIImage *favicon = [QMImageLoader.instance.imageCache imageFromCacheForKey:og.faviconUrl];
         
