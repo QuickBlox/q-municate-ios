@@ -206,6 +206,35 @@ NS_ASSUME_NONNULL_BEGIN
 + (QBRequest *)totalUnreadMessageCountForDialogsWithIDs:(NSSet <NSString *> *)dialogIDs
                                            successBlock:(nullable qb_unread_messages_block_t)successBlock
                                              errorBlock:(nullable qb_response_block_t)errorBlock;
+//MARK: Notifications settings
+
+/**
+ Get the notifications settings status.
+
+ @param dialogID Dialog ID
+ @param successBlock Block with current status of notifications settings.
+ @param errorBlock errorBlock Block with response instance if request failed.
+ @return An instance of QBRequest for cancel operation mainly.
+ */
++ (QBRequest *)notificationsSettingsForDialogID:(NSString *)dialogID
+                                   successBlock:(nullable void(^)(BOOL enabled))successBlock
+                                     errorBlock:(nullable qb_response_block_t)errorBlock;
+
+/**
+ User can turn YES/NO push notifications for offline messages in a dialog. Default value is YES.
+ By default when a user is offline and other user sent a message to him then he will receive a push
+ notification. It is possible to disable this feature.
+ 
+ @param dialogID Dialog ID
+ @param enable YES / NO
+ @param successBlock Block with current status of notifications settings.
+ @param errorBlock errorBlock Block with response instance if request failed.
+ @return An instance of QBRequest for cancel operation mainly.
+ */
++ (QBRequest *)updateNotificationsSettingsForDialogID:(NSString *)dialogID
+                                               enable:(BOOL)enable
+                                         successBlock:(nullable void(^)(BOOL enabled))successBlock
+                                           errorBlock:(nullable qb_response_block_t)errorBlock;
 
 //MARK: DEPRECATED
 
