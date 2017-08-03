@@ -1791,10 +1791,12 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     }
 }
 
-- (void)chatService:(QMChatService *)__unused chatService didUpdateMessage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+- (void)chatService:(QMChatService *)__unused chatService
+   didUpdateMessage:(QBChatMessage *)message
+        forDialogID:(NSString *)dialogID {
     
     if ([self.chatDialog.ID isEqualToString:dialogID] && message.senderID == self.senderID) {
-        // self-sending attachments
+       
         [self.chatDataSource updateMessage:message];
     }
 }
