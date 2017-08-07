@@ -1020,33 +1020,34 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
         
         QMOpenGraphItem *og = QMCore.instance.openGraphService.memoryStorage[item.ID];
         
-        
         CGFloat linkPreviewHeight = 0;
         
         NSAttributedString *attributedString = [self attributedStringForItem:item];
-        
         CGSize textSize = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
                                                            withConstraints:CGSizeMake(maxWidth, CGFLOAT_MAX)
                                                     limitedToNumberOfLines:0];
         
         CGSize urlDescriptionSize =
-        [og.siteDescription boundingRectWithSize:CGSizeMake(maxWidth, CGFLOAT_MAX)
+        [og.siteDescription boundingRectWithSize:CGSizeMake(MAX(textSize.width, 200) , CGFLOAT_MAX)
                                          options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                       attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13]}
                                          context:nil].size;
         
         textSize.width = MAX(textSize.width, urlDescriptionSize.width);
         
-        UIImage *image =
-        [QMImageLoader.instance.imageCache imageFromCacheForKey:og.imageURL];
+        UIImage *image = [QMImageLoader.instance.imageCache imageFromCacheForKey:og.imageURL];
         
         if (image) {
             
-            CGFloat oldWidth = image.size.width;
+            const CGFloat oldWidth = image.size.width;
+            const CGFloat scaleFactor = textSize.width / oldWidth;
             
-            CGFloat scaleFactor = textSize.width / oldWidth;
-            linkPreviewHeight = MIN(image.size.height * scaleFactor, image.size.height);
-            
+            if (scaleFactor < 1) {
+                linkPreviewHeight = MIN(image.size.height * scaleFactor, 200);
+            }
+            else {
+                linkPreviewHeight = MIN(image.size.height, 200);
+            }
         }
         
         textSize.height += (urlDescriptionSize.height + linkPreviewHeight + 23) ;
@@ -1796,7 +1797,7 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         forDialogID:(NSString *)dialogID {
     
     if ([self.chatDialog.ID isEqualToString:dialogID] && message.senderID == self.senderID) {
-       
+        
         [self.chatDataSource updateMessage:message];
     }
 }
@@ -2216,6 +2217,7 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
     [QMCore.instance.chatService.messagesMemoryStorage messageWithID:openGraphItem.ID
                                                         fromDialogID:self.chatDialog.ID];
     if (message) {
+        
         [self.chatDataSource updateMessage:message];
     }
 }
