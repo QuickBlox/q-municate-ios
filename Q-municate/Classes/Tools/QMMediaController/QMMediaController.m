@@ -52,7 +52,7 @@ QMMediaHandler>
     
     [[QMImageLoader instance] cancelAll];
     [self.attachmentsService.infoService cancellAllOperations];
-    [self.attachmentsService.contentService cancelDownloadOperations];
+    [self.attachmentsService.webService cancelDownloadOperations];
     [self.attachmentsService removeDelegate:self];
 }
 
@@ -98,11 +98,11 @@ QMMediaHandler>
     }
     else if (attStatus == QMAttachmentStatus.downloading) {
         view.viewState = QMMediaViewStateLoading;
-        view.progress = [self.attachmentsService.contentService progressForMessageWithID:message.ID];
+        view.progress = [self.attachmentsService.webService progressForMessageWithID:message.ID];
     }
     else if (attStatus == QMAttachmentStatus.uploading) {
         view.viewState = QMMediaViewStateLoading;
-        view.progress = [self.attachmentsService.contentService progressForMessageWithID:message.ID];
+        view.progress = [self.attachmentsService.webService progressForMessageWithID:message.ID];
     }
     else if (attStatus == QMAttachmentStatus.preparing) {
         view.viewState = QMMediaViewStateLoading;
@@ -225,6 +225,7 @@ QMMediaHandler>
         
         if (image) {
             view.image = image;
+            view.viewState = QMMediaViewStateReady;
             [QMImageLoader.instance.imageCache storeImage:image forKey:message.ID completion:nil];
         }
         else {
@@ -232,6 +233,7 @@ QMMediaHandler>
             
             if (image) {
                 view.image = image;
+                view.viewState = QMMediaViewStateReady;
             }
             else {
                 
