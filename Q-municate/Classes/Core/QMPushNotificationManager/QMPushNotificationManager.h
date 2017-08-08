@@ -8,6 +8,7 @@
 
 #import "QMBaseService.h"
 
+
 @class QMPushNotificationManager;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -96,6 +97,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)handlePushNotificationWithDelegate:(id<QMPushNotificationManagerDelegate>)delegate;
 
+- (void)registerForPushNotifications;
+
+- (void)handleActionWithIdentifier:(NSString *)identifier
+                remoteNotification:(NSDictionary *)userInfo
+                      responseInfo:(NSDictionary *)responseInfo
+                 completionHandler:(void(^)())completionHandler;
 @end
 
 NS_ASSUME_NONNULL_END
