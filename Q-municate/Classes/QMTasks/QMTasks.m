@@ -186,7 +186,7 @@ static const NSUInteger kQMUsersPageLimit = 100;
         
         NSArray *subArray = [contactsIDs subarrayWithRange:range];
         QBGeneralResponsePage *page =
-        [QBGeneralResponsePage responsePageWithCurrentPage:0 perPage:range.length];
+        [QBGeneralResponsePage responsePageWithCurrentPage:1 perPage:range.length];
         
         BFTask *task = [core.usersService searchUsersWithExtendedRequest:filterForUsersFetch(subArray, dateFilter)
                                                                     page:page];
