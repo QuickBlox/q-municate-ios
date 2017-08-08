@@ -987,8 +987,8 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     
     if (viewClass == [QMAudioIncomingCell class]
         || viewClass == [QMAudioOutgoingCell class]) {
-        
-        size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), 45);
+
+        size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), 35);
     }
     else if (viewClass == [QMVideoIncomingCell class]
              || viewClass == [QMVideoOutgoingCell class]) {
