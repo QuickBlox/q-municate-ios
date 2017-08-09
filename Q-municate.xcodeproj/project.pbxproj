@@ -170,7 +170,6 @@
 		E03F3D351E1C724E00A46884 /* NSString+QMTransliterating.m in Sources */ = {isa = PBXBuildFile; fileRef = E03F3D341E1C724E00A46884 /* NSString+QMTransliterating.m */; };
 		E03F3D361E1C724E00A46884 /* NSString+QMTransliterating.m in Sources */ = {isa = PBXBuildFile; fileRef = E03F3D341E1C724E00A46884 /* NSString+QMTransliterating.m */; };
 		E043459C1F29545F0066851D /* QMAttachmentController.m in Sources */ = {isa = PBXBuildFile; fileRef = E043459B1F29545F0066851D /* QMAttachmentController.m */; };
-		E04871791F1CD43D00F752B5 /* QMBaseMediaCell+QMMediaController.m in Sources */ = {isa = PBXBuildFile; fileRef = E04871781F1CD43D00F752B5 /* QMBaseMediaCell+QMMediaController.m */; };
 		E04878211E8006C60008F497 /* QMAudioRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = E048781F1E8006C60008F497 /* QMAudioRecorder.m */; };
 		E04E45C71DE5A78700A0E0FC /* QMSiriHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E04E45C61DE5A78700A0E0FC /* QMSiriHelper.m */; };
 		E05329F21F0A883200A9D067 /* QMImageLoader+QBChatAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = E0D258BC1F0A84390046D2FA /* QMImageLoader+QBChatAttachment.m */; };
@@ -521,8 +520,6 @@
 		E03F3D341E1C724E00A46884 /* NSString+QMTransliterating.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+QMTransliterating.m"; sourceTree = "<group>"; };
 		E043459A1F29545F0066851D /* QMAttachmentController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMAttachmentController.h; sourceTree = "<group>"; };
 		E043459B1F29545F0066851D /* QMAttachmentController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMAttachmentController.m; sourceTree = "<group>"; };
-		E04871771F1CD43D00F752B5 /* QMBaseMediaCell+QMMediaController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QMBaseMediaCell+QMMediaController.h"; sourceTree = "<group>"; };
-		E04871781F1CD43D00F752B5 /* QMBaseMediaCell+QMMediaController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "QMBaseMediaCell+QMMediaController.m"; sourceTree = "<group>"; };
 		E048781F1E8006C60008F497 /* QMAudioRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAudioRecorder.m; sourceTree = "<group>"; };
 		E04878201E8006C60008F497 /* QMAudioRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAudioRecorder.h; sourceTree = "<group>"; };
 		E04E45C51DE5A78700A0E0FC /* QMSiriHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMSiriHelper.h; sourceTree = "<group>"; };
@@ -1905,7 +1902,6 @@
 		6943848C18E42691001E08A9 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				E04871761F1CD41E00F752B5 /* QMBaseMediaCell */,
 				E0D258BA1F0A84390046D2FA /* QMImageLoader */,
 				E026A76B1E82B98C0054AD83 /* UIScreen */,
 				E03F3D321E1C71E100A46884 /* Common */,
@@ -2065,15 +2061,6 @@
 				E08441D81E1E611D00B87D0F /* NSString+QMSiriUtils.m */,
 			);
 			path = Common;
-			sourceTree = "<group>";
-		};
-		E04871761F1CD41E00F752B5 /* QMBaseMediaCell */ = {
-			isa = PBXGroup;
-			children = (
-				E04871771F1CD43D00F752B5 /* QMBaseMediaCell+QMMediaController.h */,
-				E04871781F1CD43D00F752B5 /* QMBaseMediaCell+QMMediaController.m */,
-			);
-			path = QMBaseMediaCell;
 			sourceTree = "<group>";
 		};
 		E06355681E1D1D4F00BE9061 /* IntentHandler */ = {
@@ -2498,7 +2485,6 @@
 				58B3C9D21CB6717200B08A27 /* QMSeparatorCell.m in Sources */,
 				5877D6DA1C46720600938E5D /* QMTableViewCell.m in Sources */,
 				580D34DF1BBFF5850034813A /* UIImage+fixOrientation.m in Sources */,
-				E04871791F1CD43D00F752B5 /* QMBaseMediaCell+QMMediaController.m in Sources */,
 				588CF1021CA6BF8200B23C00 /* QMNotificationPanelUtils.m in Sources */,
 				589792991C99941400CC6438 /* QMAlphabetizer.m in Sources */,
 				5868B0741CE9DF5E004F9233 /* QMMessageNotification.m in Sources */,
