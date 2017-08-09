@@ -9,6 +9,9 @@
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "QMImagePicker.h"
 
+
+static NSString * const kQMImagePickerErrorDomain = @"com.qmunicate.imagepicker";
+
 @interface QMImagePicker()
 
 <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
@@ -170,10 +173,38 @@
     [picker dismissViewControllerAnimated:YES completion:^{
         
         NSString *mediaType = info[UIImagePickerControllerMediaType];
+        
         if (CFStringCompare ((__bridge CFStringRef) mediaType, kUTTypeMovie, 0) == kCFCompareEqualTo) {
             
             NSURL *resultMediaUrl = info[UIImagePickerControllerMediaURL];
-            [self.resultHandler imagePicker:self didFinishPickingVideo:resultMediaUrl];
+            
+            CGFloat startTime = [info[@"_UIImagePickerControllerVideoEditingStart"] floatValue];
+            CGFloat endTime = [info[@"_UIImagePickerControllerVideoEditingEnd"] floatValue];
+            BOOL wasEdited = endTime > 0;
+            
+            //In case we record video and edit it the result video wil be not trimmed
+            if (picker.allowsEditing
+                && picker.sourceType == UIImagePickerControllerSourceTypeCamera
+                && wasEdited) {
+                
+                __weak typeof(self) weakSelf = self;
+                
+                [self trimVideoFileAtUrl:resultMediaUrl
+                           withStartTime:startTime
+                                 endTime:endTime
+                              completion:^(NSURL *outputFileURL, NSError *error) {
+                                  __strong typeof(weakSelf) strongSelf = weakSelf;
+                                  if (!error) {
+                                      [strongSelf.resultHandler imagePicker:self didFinishPickingVideo:outputFileURL];
+                                  }
+                                  else {
+                                      [strongSelf.resultHandler imagePicker:self didFinishPickingWithError:error];
+                                  }
+                              }];
+            }
+            else {
+                [self.resultHandler imagePicker:self didFinishPickingVideo:resultMediaUrl];
+            }
         }
         else {
             
@@ -188,6 +219,57 @@
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     
     [picker dismissViewControllerAnimated:YES completion:^{}];
+}
+
+-(void)trimVideoFileAtUrl:(NSURL *)videoFileURL
+            withStartTime:(CGFloat)startVideoTime
+                  endTime:(CGFloat)endVideoTime
+               completion:(void(^)(NSURL *outputFileURL, NSError *error))completion {
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd_HH-mm-ss"];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *cacheDirectory = [paths objectAtIndex:0];
+    
+    NSString *outputFilePath = [cacheDirectory stringByAppendingFormat:@"/output_%@.mov", [dateFormatter stringFromDate:[NSDate date]]];
+    NSURL *videoFileOutput = [NSURL fileURLWithPath:outputFilePath];
+    NSURL *videoFileInput = videoFileURL;
+    
+    AVAsset *asset = [AVAsset assetWithURL:videoFileInput];
+    
+    AVAssetExportSession *exportSession = [AVAssetExportSession exportSessionWithAsset:asset
+                                                                            presetName:AVAssetExportPresetMediumQuality];
+    if (exportSession == nil) {
+        NSError *error = [NSError errorWithDomain:kQMImagePickerErrorDomain code:0 userInfo:nil];
+        completion(nil, error);
+    }
+    
+    CMTime startTime = CMTimeMake((int)(floor(startVideoTime * 100)), 100);
+    CMTime endTime = CMTimeMake((int)(ceil(endVideoTime * 100)), 100);
+    CMTimeRange exportTimeRange = CMTimeRangeFromTimeToTime(startTime, endTime);
+    
+    exportSession.outputURL = videoFileOutput;
+    exportSession.timeRange = exportTimeRange;
+    exportSession.shouldOptimizeForNetworkUse = YES;
+    exportSession.outputFileType = AVFileTypeQuickTimeMovie;
+    
+    [exportSession exportAsynchronouslyWithCompletionHandler:^
+     {
+         switch (exportSession.status) {
+                 
+             case AVAssetExportSessionStatusCompleted:
+                 completion(videoFileOutput, nil);
+                 break;
+                 
+             case AVAssetExportSessionStatusFailed:
+             case AVAssetExportSessionStatusCancelled:
+                 completion(nil, exportSession.error);
+                 break;
+             default:
+                 NSAssert(NO, @"Not handled state for export session");
+                 break;
+         }
+     }];
 }
 
 @end
