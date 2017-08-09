@@ -28,11 +28,6 @@ static NSString * const kQMNotificationCategoryReply = @"TEXT_REPLY";
 
 - (BFTask *)subscribeForPushNotifications {
     
-    if (self.serviceManager.currentProfile.pushNotificationsEnabled) {
-        // push notifications already enabled
-        return nil;
-    }
-    
     if (self.deviceToken == nil) {
         // device token should exist
         [self registerForPushNotifications];
@@ -48,12 +43,11 @@ static NSString * const kQMNotificationCategoryReply = @"TEXT_REPLY";
     subscription.deviceUDID = deviceIdentifier;
     subscription.deviceToken = self.deviceToken;
     
-    self.serviceManager.currentProfile.pushNotificationsEnabled = YES;
-    
     @weakify(self);
     [QBRequest createSubscription:subscription successBlock:^(QBResponse * _Nonnull __unused response, NSArray<QBMSubscription *> * _Nullable __unused objects) {
         
         @strongify(self);
+        self.serviceManager.currentProfile.pushNotificationsEnabled = YES;
         [self.serviceManager.currentProfile synchronize];
         
         [source setResult:nil];
@@ -62,6 +56,7 @@ static NSString * const kQMNotificationCategoryReply = @"TEXT_REPLY";
         
         @strongify(self);
         self.serviceManager.currentProfile.pushNotificationsEnabled = NO;
+        [self.serviceManager.currentProfile synchronize];
         [source setError:response.error.error];
     }];
     
@@ -180,7 +175,10 @@ static NSString * const kQMNotificationCategoryReply = @"TEXT_REPLY";
 - (void)setDeviceToken:(NSData *)deviceToken {
     
     _deviceToken = deviceToken;
-    [self subscribeForPushNotifications];
+    
+    if (self.serviceManager.currentProfile.pushNotificationsEnabled) {
+        [self subscribeForPushNotifications];
+    }
 }
 
 - (void)registerForPushNotifications {
