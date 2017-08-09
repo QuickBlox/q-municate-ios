@@ -182,7 +182,7 @@ static NSString * const kQMImagePickerErrorDomain = @"com.qmunicate.imagepicker"
             CGFloat endTime = [info[@"_UIImagePickerControllerVideoEditingEnd"] floatValue];
             BOOL wasEdited = endTime > 0;
             
-            //In case we record video and edit it the result video wil be not trimmed
+            //In case we record video and edit it the result video will be not trimmed
             if (picker.allowsEditing
                 && picker.sourceType == UIImagePickerControllerSourceTypeCamera
                 && wasEdited) {
@@ -221,7 +221,7 @@ static NSString * const kQMImagePickerErrorDomain = @"com.qmunicate.imagepicker"
     [picker dismissViewControllerAnimated:YES completion:^{}];
 }
 
--(void)trimVideoFileAtUrl:(NSURL *)videoFileURL
+- (void)trimVideoFileAtUrl:(NSURL *)videoFileURL
             withStartTime:(CGFloat)startVideoTime
                   endTime:(CGFloat)endVideoTime
                completion:(void(^)(NSURL *outputFileURL, NSError *error))completion {
