@@ -74,7 +74,7 @@
                 QMCore.instance.currentProfile.accountType = QMAccountTypeEmail;
                 [QMCore.instance.currentProfile synchronizeWithUserData:task.result];
                 
-                return [QMCore.instance.pushNotificationManager subscribeForPushNotifications];
+                [QMCore.instance.pushNotificationManager registerForPushNotifications];
             }
             
             return nil;

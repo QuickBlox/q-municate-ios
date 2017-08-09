@@ -126,7 +126,7 @@ static NSString * const kQMFacebookIDField = @"id";
                 }];
             }
             
-            return [QMCore.instance.pushNotificationManager subscribeForPushNotifications];
+             [QMCore.instance.pushNotificationManager registerForPushNotifications];
         }
         
         return nil;
@@ -179,7 +179,7 @@ static NSString * const kQMFacebookIDField = @"id";
                     
                     [QMCore.instance.currentProfile synchronizeWithUserData:user];
                     
-                    return [QMCore.instance.pushNotificationManager subscribeForPushNotifications];
+                     [QMCore.instance.pushNotificationManager registerForPushNotifications];
                 }
                 
                 return nil;
