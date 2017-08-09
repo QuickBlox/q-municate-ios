@@ -44,9 +44,10 @@ static NSString * const kQMAppExists = @"QMAppExists";
         
         BOOL exist = [defaults boolForKey:kQMAppExists];
         
-        if (_userData != nil && !exist) {
+        if (!exist) {
             
             [self clearProfile];
+            
         }
     }
     
@@ -103,7 +104,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
 - (void)loadProfile {
     
     __block QMProfile *profile = nil;
-
+    
     [self keychainQuery:^(SSKeychainQuery *query) {
         NSError *error = nil;
         BOOL success = [query fetch:&error];
@@ -133,7 +134,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
     
     self.userData = nil;
     self.accountType = QMAccountTypeNone;
-    self.pushNotificationsEnabled = NO;
+    self.pushNotificationsEnabled = YES;
     self.userAgreementAccepted = NO;
     self.lastDialogsFetchingDate = nil;
     self.lastUserFetchDate = nil;
