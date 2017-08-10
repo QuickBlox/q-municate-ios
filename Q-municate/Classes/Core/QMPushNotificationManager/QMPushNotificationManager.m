@@ -386,6 +386,14 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:token];
     [[NSUserDefaults standardUserDefaults] setObject:data forKey:kQMDeviceTokenKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    QBMSubscription *subscription = self.currentSubscription;
+    if (subscription) {
+        if (![subscription.deviceToken isEqualToData:self.deviceToken]) {
+            self.currentSubscription = nil;
+            [self subscribeForPushNotifications];;
+        }
+    }
 }
 
 - (void)handleToken:(NSData *)token {
