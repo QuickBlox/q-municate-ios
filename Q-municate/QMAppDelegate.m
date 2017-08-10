@@ -97,15 +97,6 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [Flurry logEvent:@"connect_to_chat" withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", kQMApplicationID],
                                                          @"chat_endpoint" : [QBSettings chatEndpoint]}];
     
-    
-    if (QMCore.instance.isAuthorized) {
-        
-        [[QMCore.instance.pushNotificationManager registerAndSubscribeForPushNotifications] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
-            NSLog(@"QMCore.instance.isAuthorized) = %@",t);
-            return nil;
-        }];
-    }
-    
     // Handling push notifications if needed
     if (launchOptions != nil) {
         NSDictionary *pushNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];

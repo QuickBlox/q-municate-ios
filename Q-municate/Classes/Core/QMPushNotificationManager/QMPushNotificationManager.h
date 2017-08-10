@@ -69,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Current device token. Used for registering for push notifications.
  */
-@property (copy, nonatomic, nullable) NSData *deviceToken; //deprecate
+@property (copy, nonatomic, nullable, readonly) NSData *deviceToken;
 
 
 /**

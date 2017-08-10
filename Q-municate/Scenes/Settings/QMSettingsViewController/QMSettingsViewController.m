@@ -170,8 +170,7 @@ NYTPhotosViewControllerDelegate
     };
     
     if (sender.isOn) {
-        
-        self.subscribeTask = [[QMCore.instance.pushNotificationManager subscribeForPushNotifications] continueWithBlock:completionBlock];
+        self.subscribeTask = [[QMCore.instance.pushNotificationManager registerAndSubscribeForPushNotifications] continueWithBlock:completionBlock];
     }
     else {
         
