@@ -60,7 +60,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     [self registerForPushNotifications];
 }
 
-
 //MARK: - Subscriptions
 - (BFTask *)getDeviceToken {
     
@@ -93,19 +92,18 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
     
     NSString *deviceIdentifier = [UIDevice currentDevice].identifierForVendor.UUIDString;
-    NSLog(@"<QMPushNotificationManager> 3. Subscribe with token:%@", self.deviceToken);
+    
     QBMSubscription *subscription = [QBMSubscription subscription];
     subscription.notificationChannel = QBMNotificationChannelAPNS;
     subscription.deviceUDID = deviceIdentifier;
     subscription.deviceToken = self.deviceToken;
     
     [QBRequest createSubscription:subscription successBlock:^(QBResponse * _Nonnull __unused response, NSArray<QBMSubscription *> * _Nullable __unused objects) {
-        NSLog(@"<QMPushNotificationManager> 3. Subscribe with token result:%@", subscription);
+     
         subscription.deviceToken = self.deviceToken;
         [source setResult:subscription];
         
     } errorBlock:^(QBResponse * _Nonnull response) {
-        NSLog(@"<QMPushNotificationManager> 3. Subscribe with token error:%@", response.error.error);
         [source setError:response.error.error];
     }];
     
@@ -231,7 +229,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     
     [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
     
-    [[UIApplication sharedApplication] registerForRemoteNotifications];
 }
 
 
@@ -241,7 +238,7 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
                  completionHandler:(void(^)())completionHandler {
     
     if ([identifier isEqualToString:kQMNotificationActionTextAction]) {
-        //  [QMCore instance].pushNotificationManager
+   
         NSString *text = responseInfo[UIUserNotificationActionResponseTypedTextKey];
         
         NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
@@ -310,7 +307,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     }
 }
 
-
 - (void)updateToken:(NSData *)token {
     
     self.deviceToken = token;
@@ -327,12 +323,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
         _tokenCompletionBlock(nil, error);
         _tokenCompletionBlock = nil;
     }
-}
-
-- (BOOL)isRegistered {
-    BOOL registered = [UIApplication.sharedApplication isRegisteredForRemoteNotifications];
-    NSLog(@"<QMPushNotificationManager> isRegistered = %@", registered ? @"YES":@"NO");
-    return registered;
 }
 
 @end

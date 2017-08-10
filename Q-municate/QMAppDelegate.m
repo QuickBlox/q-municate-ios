@@ -74,7 +74,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBSettings enableXMPPLogging];
     [QMServicesManager enableLogging:YES];
 #endif
-
+    
     [[QMCore instance].authService addDelegate:self];
     // QuickbloxWebRTC settings
     [QBRTCClient initializeRTC];
@@ -159,6 +159,11 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     return [[UIScreen mainScreen] qm_allowedInterfaceOrientationMask];
 }
 
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)__unused notificationSettings {
+    
+    [application registerForRemoteNotifications];
+}
+
 - (void)application:(UIApplication *)__unused application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     [[QMCore instance].pushNotificationManager updateToken:deviceToken];
@@ -166,7 +171,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
 - (void)application:(UIApplication *)__unused application
 didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-     [[QMCore instance].pushNotificationManager handleError:error];
+    [[QMCore instance].pushNotificationManager handleError:error];
 }
 
 - (void)application:(UIApplication *)__unused application
@@ -196,4 +201,5 @@ forRemoteNotification:(NSDictionary *)userInfo
     
     [dialogsVC performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
 }
+
 @end
