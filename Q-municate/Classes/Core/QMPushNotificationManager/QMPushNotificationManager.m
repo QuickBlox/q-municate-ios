@@ -96,6 +96,9 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     return [[self getSubscription] continueWithBlock:^id _Nullable(BFTask * _Nonnull getSubscriptionTask) {
         
         if (getSubscriptionTask.result != nil) {
+            if (![self isRegistered]) {
+                [self registerForPushNotifications];
+            }
             return [BFTask taskWithResult:getSubscriptionTask.result];
         }
         else if (getSubscriptionTask.error) {
@@ -407,9 +410,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     
     NSLog(@"<QMPushNotificationManager> 1. Get subscriptions");
     if (self.currentSubscription) {
-        if (![self isRegistered]) {
-            [self registerForPushNotifications];
-        }
         NSLog(@"<QMPushNotificationManager> 1. Has subscriptions");
         return [BFTask taskWithResult:self.currentSubscription];
     }
