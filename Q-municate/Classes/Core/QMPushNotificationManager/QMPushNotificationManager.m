@@ -60,8 +60,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     [self registerForPushNotifications];
 }
 
-
-
 //MARK: - Subscriptions
 - (BFTask *)getDeviceToken {
     
@@ -231,7 +229,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     
     [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
     
-    [[UIApplication sharedApplication] registerForRemoteNotifications];
 }
 
 
