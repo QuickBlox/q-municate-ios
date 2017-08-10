@@ -102,8 +102,9 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param delegate delegate instance that conforms to QMPushNotificationManagerDelegate protocol
  */
-
 - (void)handlePushNotificationWithDelegate:(id<QMPushNotificationManagerDelegate>)delegate;
+
+
 
 - (BFTask *)registerAndSubscribeForPushNotifications;
 - (BFTask *)unregisterFromPushNotificationsAndUnsubscribe:(BOOL)shouldUnsubscribe;
