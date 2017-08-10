@@ -12,8 +12,6 @@
 
 static NSString * const kQMNotificationActionTextAction = @"TEXT_ACTION";
 static NSString * const kQMNotificationCategoryReply = @"TEXT_REPLY";
-static NSString * const kQMSubscriptionKey = @"SUBSCRIPTION_KEY";
-static NSString * const kQMDeviceTokenKey = @"DEVICE_TOKEN_KEY";
 
 typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
 
@@ -22,14 +20,11 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
 @property (copy, nonatomic) QBTokenCompletionBlock tokenCompletionBlock;
 @property (copy, nonatomic, nullable, readwrite) NSData *deviceToken;
-@property (strong, nonatomic, readwrite) QBMSubscription *currentSubscription;
-
 @end
 
 @implementation QMPushNotificationManager
 
 @dynamic serviceManager;
-
 
 - (BFTask *)unregisterFromPushNotificationsAndUnsubscribe:(BOOL)shouldUnsubscribe {
     
@@ -38,10 +33,7 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     if (shouldUnsubscribe) {
         [[self unSubscribeFromPushNotifications] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
             
-            if (t.isCancelled) {
-                [source trySetCancelled];
-            }
-            else if (t.error) {
+            if (t.error) {
                 [source setError:t.error];
             }
             else {
@@ -63,11 +55,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
 }
 
 - (void)getDeviceTokenWithCompletion:(QBTokenCompletionBlock)tokenCompletionBlock {
-    
-    if (self.deviceToken.length) {
-        tokenCompletionBlock(self.deviceToken, nil);
-        return;
-    }
     
     _tokenCompletionBlock = [tokenCompletionBlock copy];
     [self registerForPushNotifications];
@@ -93,66 +80,12 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
 
 - (BFTask *)registerAndSubscribeForPushNotifications {
     
-    return [[self getSubscription] continueWithBlock:^id _Nullable(BFTask * _Nonnull getSubscriptionTask) {
-        
-        if (getSubscriptionTask.result != nil) {
-            if (![self isRegistered]) {
-                [self registerForPushNotifications];
-            }
-            return [BFTask taskWithResult:getSubscriptionTask.result];
+    return [[self getDeviceToken] continueWithBlock:^id _Nullable(BFTask * _Nonnull getDeviceTokenTask) {
+        if (getDeviceTokenTask.error) {
+            return [BFTask taskWithError:getDeviceTokenTask.error];
         }
-        else if (getSubscriptionTask.error) {
-            return [BFTask taskWithError:getSubscriptionTask.error];
-        }
-        
-        return [[self getDeviceToken] continueWithBlock:^id _Nullable(BFTask * _Nonnull getDeviceTokenTask) {
-            if (getDeviceTokenTask.error) {
-                return [BFTask taskWithError:getDeviceTokenTask.error];
-            }
-            return [self subscribeForPushNotifications];
-        }];
+        return [self subscribeForPushNotifications];
     }];
-    
-}
-
-- (void)updateSubscription:(QBMSubscription *)subscription {
-    
-    self.currentSubscription = subscription;
-
-    if (subscription.deviceToken == nil) {
-        NSParameterAssert(NO);
-    }
-    
-    NSLog(@"<QMPushNotificationManager> SET subscription :%@", self.currentSubscription);
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.currentSubscription];
-    [NSUserDefaults.standardUserDefaults setObject:data forKey:kQMSubscriptionKey];
-    [NSUserDefaults.standardUserDefaults synchronize];
-}
-
-- (QBMSubscription *)currentSubscription {
-    
-    NSLog(@"<QMPushNotificationManager>GET subscription :%@", _currentSubscription);
-    
-    if (_currentSubscription) {
-        return _currentSubscription;
-    }
-    
-    NSData *data = [NSUserDefaults.standardUserDefaults objectForKey:kQMSubscriptionKey];
-    _currentSubscription = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    NSLog(@"<QMPushNotificationManager>GET DATA  subscription :%@", _currentSubscription);
-    return _currentSubscription;
-}
-
-- (NSData *)deviceToken {
-    
-    if (_deviceToken.length) {
-        return _deviceToken;
-    }
-    
-    NSData *data = [NSUserDefaults.standardUserDefaults objectForKey:kQMDeviceTokenKey];
-    _deviceToken = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    
-    return _deviceToken;
 }
 
 - (BFTask *)subscribeForPushNotifications {
@@ -168,9 +101,7 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     
     [QBRequest createSubscription:subscription successBlock:^(QBResponse * _Nonnull __unused response, NSArray<QBMSubscription *> * _Nullable __unused objects) {
         NSLog(@"<QMPushNotificationManager> 3. Subscribe with token result:%@", subscription);
-   
         subscription.deviceToken = self.deviceToken;
-        [self updateSubscription:subscription];
         [source setResult:subscription];
         
     } errorBlock:^(QBResponse * _Nonnull response) {
@@ -186,14 +117,13 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
     
     NSString *deviceIdentifier = [UIDevice currentDevice].identifierForVendor.UUIDString;
-    [QBRequest unregisterSubscriptionForUniqueDeviceIdentifier:deviceIdentifier successBlock:^(QBResponse * _Nonnull __unused response) {
-        self.currentSubscription = nil;
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kQMSubscriptionKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        [source setResult:nil];
-    } errorBlock:^(QBError * _Nullable error) {
-        [source setError:error.error];
-    }];
+    [QBRequest unregisterSubscriptionForUniqueDeviceIdentifier:deviceIdentifier
+                                                  successBlock:^(QBResponse * _Nonnull __unused response)
+     {
+         [source setResult:nil];
+     } errorBlock:^(QBError * _Nullable error) {
+         [source setError:error.error];
+     }];
     
     return source.task;
 }
@@ -380,25 +310,10 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     }
 }
 
+
 - (void)updateToken:(NSData *)token {
     
     self.deviceToken = token;
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:token];
-    [[NSUserDefaults standardUserDefaults] setObject:data forKey:kQMDeviceTokenKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    QBMSubscription *subscription = self.currentSubscription;
-    if (subscription) {
-        if (![subscription.deviceToken isEqualToData:self.deviceToken]) {
-            self.currentSubscription = nil;
-            [self subscribeForPushNotifications];;
-        }
-    }
-}
-
-- (void)handleToken:(NSData *)token {
-    
-    [self updateToken:token];
     
     if (_tokenCompletionBlock) {
         _tokenCompletionBlock(token, nil);
@@ -411,20 +326,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     if (_tokenCompletionBlock) {
         _tokenCompletionBlock(nil, error);
         _tokenCompletionBlock = nil;
-    }
-}
-
-- (BFTask *)getSubscription {
-    
-    NSLog(@"<QMPushNotificationManager> 1. Get subscriptions");
-    if (self.currentSubscription) {
-        NSLog(@"<QMPushNotificationManager> 1. Has subscriptions");
-        return [BFTask taskWithResult:self.currentSubscription];
-    }
-    else {
-        //TODO : ADD REST METHOD; nil for now
-        NSLog(@"<QMPushNotificationManager> 1. Hasn't subscriptions");
-        return [BFTask taskWithResult:nil];
     }
 }
 
