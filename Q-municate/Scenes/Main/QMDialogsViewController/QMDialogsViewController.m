@@ -98,7 +98,7 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
-
+    
     if (self.searchController.isActive) {
         
         self.tabBarController.tabBar.hidden = YES;
@@ -149,7 +149,9 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
             [QMCore.instance.pushNotificationManager handlePushNotificationWithDelegate:self];
         }
         
-        [QMCore.instance.pushNotificationManager registerAndSubscribeForPushNotifications];
+        if (QMCore.instance.currentProfile.pushNotificationsEnabled) {
+            [QMCore.instance.pushNotificationManager registerAndSubscribeForPushNotifications];
+        }
         
         return [BFTask cancelledTask];
         
@@ -377,12 +379,12 @@ didReceiveNotificationMessage:(QBChatMessage *)message
                                                                          duration:kQMDefaultNotificationDismissTime];
 }
 /*
-- (void)chatService:(QMChatService *)__unused chatService
-chatDidNotConnectWithError:(NSError *)error {
-    
-    [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription]];
-}
-*/
+ - (void)chatService:(QMChatService *)__unused chatService
+ chatDidNotConnectWithError:(NSError *)error {
+ 
+ [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription]];
+ }
+ */
 
 //MARK: - QMUsersServiceDelegate
 

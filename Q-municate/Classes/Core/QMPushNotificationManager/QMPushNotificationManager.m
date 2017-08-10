@@ -96,6 +96,9 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     return [[self getSubscription] continueWithBlock:^id _Nullable(BFTask * _Nonnull getSubscriptionTask) {
         
         if (getSubscriptionTask.result != nil) {
+            if (![self isRegistered]) {
+                [self registerForPushNotifications];
+            }
             return [BFTask taskWithResult:getSubscriptionTask.result];
         }
         else if (getSubscriptionTask.error) {
@@ -383,6 +386,14 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:token];
     [[NSUserDefaults standardUserDefaults] setObject:data forKey:kQMDeviceTokenKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    QBMSubscription *subscription = self.currentSubscription;
+    if (subscription) {
+        if (![subscription.deviceToken isEqualToData:self.deviceToken]) {
+            self.currentSubscription = nil;
+            [self subscribeForPushNotifications];;
+        }
+    }
 }
 
 - (void)handleToken:(NSData *)token {
@@ -407,9 +418,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     
     NSLog(@"<QMPushNotificationManager> 1. Get subscriptions");
     if (self.currentSubscription) {
-        if (![self isRegistered]) {
-            [self registerForPushNotifications];
-        }
         NSLog(@"<QMPushNotificationManager> 1. Has subscriptions");
         return [BFTask taskWithResult:self.currentSubscription];
     }
