@@ -25,7 +25,7 @@ static NSString *const kQMBaseErrorKey = @"base";
 static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 
-@interface QMCore ()
+@interface QMCore () <QMAuthServiceDelegate>
 
 @property (strong, nonatomic) NSMutableOrderedSet *cachedVocabularyStrings;
 
@@ -79,6 +79,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
         _pushNotificationManager = [[QMPushNotificationManager alloc] initWithServiceManager:self];
         _callManager = [[QMCallManager alloc] initWithServiceManager:self];
         
+        [self.authService addDelegate:self];
         // Reachability init
         [self configureReachability];
         [self.chatService addDelegate:self];
@@ -402,4 +403,26 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
     }
 }
 
+- (void)authServiceDidLogOut:(QMAuthService *)__unused authService {
+     NSLog(@"<PushNotificationManager> didLogout");
+    NSLog(@"<PushNotificationManager> enabled %@", self.currentProfile.pushNotificationsEnabled ? @"YES" : @"NO");
+    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:YES] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
+        
+        return nil;
+    }];
+}
+
+//- (void)authService:(QMAuthService *)__unused authService
+//   didLoginWithUser:(QBUUser *)__unused user {
+//    
+//    NSLog(@"<PushNotificationManager> didLogin");
+//    NSLog(@"<PushNotificationManager> enabled %@", self.currentProfile.pushNotificationsEnabled ? @"YES" : @"NO");
+//    if (self.currentProfile.pushNotificationsEnabled) {
+//        [[self.pushNotificationManager registerAndSubscribeForPushNotifications] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t ) {
+//            NSLog(@"<PushNotificationManager> task = %@", t);
+//            return  nil;
+//        }];
+//    }
+//    
+//}
 @end

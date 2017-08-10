@@ -149,6 +149,8 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
             [QMCore.instance.pushNotificationManager handlePushNotificationWithDelegate:self];
         }
         
+        [QMCore.instance.pushNotificationManager registerAndSubscribeForPushNotifications];
+        
         return [BFTask cancelledTask];
         
     }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {

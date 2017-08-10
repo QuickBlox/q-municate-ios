@@ -100,14 +100,12 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     
     if (QMCore.instance.isAuthorized) {
         
-        [QMCore.instance.pushNotificationManager registerForPushNotifications];
-        // Siri is supported in ios 10 +
-        if (iosMajorVersion() > 9) {
-            [INPreferences requestSiriAuthorization:^(INSiriAuthorizationStatus __unused status) {
-                
-            }];
-        }
+        [[QMCore.instance.pushNotificationManager registerAndSubscribeForPushNotifications] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
+            NSLog(@"QMCore.instance.isAuthorized) = %@",t);
+            return nil;
+        }];
     }
+    
     // Handling push notifications if needed
     if (launchOptions != nil) {
         NSDictionary *pushNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
@@ -172,8 +170,12 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 - (void)application:(UIApplication *)__unused application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    
-    [QMCore instance].pushNotificationManager.deviceToken = deviceToken;
+    [[QMCore instance].pushNotificationManager handleToken:deviceToken];
+}
+
+- (void)application:(UIApplication *)__unused application
+didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+     [[QMCore instance].pushNotificationManager handleError:error];
 }
 
 - (void)application:(UIApplication *)__unused application
