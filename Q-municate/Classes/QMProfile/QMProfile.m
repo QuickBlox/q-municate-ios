@@ -36,18 +36,17 @@ static NSString * const kQMAppExists = @"QMAppExists";
 - (instancetype)init {
     
     self = [super init];
+    
     if (self) {
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        
+
         [self loadProfile];
         
         BOOL exist = [defaults boolForKey:kQMAppExists];
         
         if (!exist) {
-            
             [self clearProfile];
-            
         }
     }
     
@@ -55,6 +54,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
 }
 
 - (BOOL)synchronize {
+    
     NSParameterAssert(self.userData);
     
     __block BOOL success = NO;
@@ -69,10 +69,9 @@ static NSString * const kQMAppExists = @"QMAppExists";
     }];
     
     if (success) {
-        
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setBool:YES forKey:kQMAppExists];
-        
+        [defaults synchronize];
         // updating user in users cache
         [QMCore.instance.usersService.usersMemoryStorage addUser:self.userData];
         [[QMUsersCache instance] insertOrUpdateUser:self.userData];
@@ -138,6 +137,10 @@ static NSString * const kQMAppExists = @"QMAppExists";
     self.userAgreementAccepted = NO;
     self.lastDialogsFetchingDate = nil;
     self.lastUserFetchDate = nil;
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setBool:NO forKey:kQMAppExists];
+    [defaults synchronize];
     
     return success;
 }

@@ -153,20 +153,27 @@ NYTPhotosViewControllerDelegate
     [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     
     __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
+    
     BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull __unused task) {
+        if (task.faulted) {
+            [navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:task.result duration:3];
+        }
+        else {
+            [QMCore instance].currentProfile.pushNotificationsEnabled ^= YES;
+            [QMCore.instance.currentProfile synchronize];
+        }
         
+        self.pushNotificationSwitch.on = [QMCore instance].currentProfile.pushNotificationsEnabled;
         [navigationController dismissNotificationPanel];
-        
+       
         return nil;
     };
     
     if (sender.isOn) {
-        
-        self.subscribeTask = [[QMCore.instance.pushNotificationManager subscribeForPushNotifications] continueWithBlock:completionBlock];
+        self.subscribeTask = [[QMCore.instance.pushNotificationManager registerAndSubscribeForPushNotifications] continueWithBlock:completionBlock];
     }
     else {
-        
-        self.subscribeTask = [[QMCore.instance.pushNotificationManager unSubscribeFromPushNotifications] continueWithBlock:completionBlock];
+        self.subscribeTask = [[QMCore.instance.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:NO] continueWithBlock:completionBlock];
     }
 }
 

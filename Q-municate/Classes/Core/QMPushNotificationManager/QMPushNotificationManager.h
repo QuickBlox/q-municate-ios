@@ -67,9 +67,16 @@ NS_ASSUME_NONNULL_BEGIN
 @interface QMPushNotificationManager : QMBaseService
 
 /**
- *  Current device token. Used for subscribing for push notifications.
+ *  Current device token. Used for registering for push notifications.
  */
-@property (copy, nonatomic, nullable) NSData *deviceToken;
+@property (copy, nonatomic, nullable, readonly) NSData *deviceToken;
+
+
+/**
+ *  Current device subscription. Used for subscribing for push notifications.
+ */
+
+@property (strong, nonatomic, readonly) QBMSubscription *currentSubscription;
 
 /**
  *  Push notification User info dictionary.
@@ -95,14 +102,20 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param delegate delegate instance that conforms to QMPushNotificationManagerDelegate protocol
  */
+
 - (void)handlePushNotificationWithDelegate:(id<QMPushNotificationManagerDelegate>)delegate;
 
-- (void)registerForPushNotifications;
+- (BFTask *)registerAndSubscribeForPushNotifications;
+- (BFTask *)unregisterFromPushNotificationsAndUnsubscribe:(BOOL)shouldUnsubscribe;
 
 - (void)handleActionWithIdentifier:(NSString *)identifier
                 remoteNotification:(NSDictionary *)userInfo
                       responseInfo:(NSDictionary *)responseInfo
                  completionHandler:(void(^)())completionHandler;
+
+- (void)updateToken:(nullable NSData *)token;
+- (void)handleError:(nullable NSError *)error;
+
 @end
 
 NS_ASSUME_NONNULL_END

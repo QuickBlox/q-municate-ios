@@ -97,17 +97,6 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [Flurry logEvent:@"connect_to_chat" withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", kQMApplicationID],
                                                          @"chat_endpoint" : [QBSettings chatEndpoint]}];
     
-    
-    if (QMCore.instance.isAuthorized) {
-        
-        [QMCore.instance.pushNotificationManager registerForPushNotifications];
-        // Siri is supported in ios 10 +
-        if (iosMajorVersion() > 9) {
-            [INPreferences requestSiriAuthorization:^(INSiriAuthorizationStatus __unused status) {
-                
-            }];
-        }
-    }
     // Handling push notifications if needed
     if (launchOptions != nil) {
         NSDictionary *pushNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
@@ -172,8 +161,12 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 - (void)application:(UIApplication *)__unused application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    
-    [QMCore instance].pushNotificationManager.deviceToken = deviceToken;
+    [[QMCore instance].pushNotificationManager updateToken:deviceToken];
+}
+
+- (void)application:(UIApplication *)__unused application
+didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+     [[QMCore instance].pushNotificationManager handleError:error];
 }
 
 - (void)application:(UIApplication *)__unused application
