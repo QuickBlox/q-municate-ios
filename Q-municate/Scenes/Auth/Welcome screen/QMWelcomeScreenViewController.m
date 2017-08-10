@@ -125,8 +125,6 @@ static NSString * const kQMFacebookIDField = @"id";
                     return [QMTasks taskUpdateCurrentUserImage:imageTask.result progress:nil];
                 }];
             }
-            
-           //  [QMCore.instance.pushNotificationManager registerForPushNotifications];
         }
         
         return nil;
@@ -178,8 +176,6 @@ static NSString * const kQMFacebookIDField = @"id";
                     }
                     
                     [QMCore.instance.currentProfile synchronizeWithUserData:user];
-                    
-                    // [QMCore.instance.pushNotificationManager registerForPushNotifications];
                 }
                 
                 return nil;

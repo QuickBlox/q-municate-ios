@@ -161,7 +161,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 - (void)application:(UIApplication *)__unused application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    [[QMCore instance].pushNotificationManager handleToken:deviceToken];
+    [[QMCore instance].pushNotificationManager updateToken:deviceToken];
 }
 
 - (void)application:(UIApplication *)__unused application

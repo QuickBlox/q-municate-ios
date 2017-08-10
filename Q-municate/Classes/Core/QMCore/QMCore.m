@@ -404,25 +404,28 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
 }
 
 - (void)authServiceDidLogOut:(QMAuthService *)__unused authService {
-     NSLog(@"<PushNotificationManager> didLogout");
-    NSLog(@"<PushNotificationManager> enabled %@", self.currentProfile.pushNotificationsEnabled ? @"YES" : @"NO");
+
     [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:YES] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
         
         return nil;
     }];
 }
 
-//- (void)authService:(QMAuthService *)__unused authService
-//   didLoginWithUser:(QBUUser *)__unused user {
-//    
-//    NSLog(@"<PushNotificationManager> didLogin");
-//    NSLog(@"<PushNotificationManager> enabled %@", self.currentProfile.pushNotificationsEnabled ? @"YES" : @"NO");
-//    if (self.currentProfile.pushNotificationsEnabled) {
-//        [[self.pushNotificationManager registerAndSubscribeForPushNotifications] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t ) {
-//            NSLog(@"<PushNotificationManager> task = %@", t);
-//            return  nil;
-//        }];
-//    }
-//    
-//}
+- (void)authService:(QMAuthService *)__unused authService
+   didLoginWithUser:(QBUUser *)__unused user {
+    
+    if (self.currentProfile.pushNotificationsEnabled) {
+        [[self.pushNotificationManager registerAndSubscribeForPushNotifications] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t ) {
+            NSLog(@"<PushNotificationManager> task = %@", t);
+            return  nil;
+        }];
+    }
+    if (iosMajorVersion() > 9) {
+        [INPreferences requestSiriAuthorization:^(INSiriAuthorizationStatus __unused status) {
+            
+        }];
+    }
+
+    
+}
 @end

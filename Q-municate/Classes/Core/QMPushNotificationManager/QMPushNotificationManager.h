@@ -76,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Current device subscription. Used for subscribing for push notifications.
  */
 
-@property (copy, nonatomic, nullable, readonly) QBMSubscription *subscription;
+@property (strong, nonatomic, readonly) QBMSubscription *currentSubscription;
 
 /**
  *  Push notification User info dictionary.
@@ -113,9 +113,7 @@ NS_ASSUME_NONNULL_BEGIN
                       responseInfo:(NSDictionary *)responseInfo
                  completionHandler:(void(^)())completionHandler;
 
-- (void)setSubscription:(QBMSubscription *)subscription;
-
-- (void)handleToken:(nullable NSData *)token;
+- (void)updateToken:(nullable NSData *)token;
 - (void)handleError:(nullable NSError *)error;
 
 @end

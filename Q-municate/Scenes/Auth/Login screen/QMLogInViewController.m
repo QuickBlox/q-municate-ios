@@ -73,10 +73,7 @@
                 [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
                 QMCore.instance.currentProfile.accountType = QMAccountTypeEmail;
                 [QMCore.instance.currentProfile synchronizeWithUserData:task.result];
-                
-              //  [QMCore.instance.pushNotificationManager registerForPushNotifications];
             }
-            
             return nil;
         }];
     }

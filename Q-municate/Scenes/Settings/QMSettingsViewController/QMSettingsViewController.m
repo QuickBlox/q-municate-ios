@@ -159,7 +159,7 @@ NYTPhotosViewControllerDelegate
             [navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:task.result duration:3];
         }
         else {
-            [QMCore instance].currentProfile.pushNotificationsEnabled = ![QMCore instance].currentProfile.pushNotificationsEnabled;
+            [QMCore instance].currentProfile.pushNotificationsEnabled ^= YES;
             [QMCore.instance.currentProfile synchronize];
         }
         
@@ -173,7 +173,6 @@ NYTPhotosViewControllerDelegate
         self.subscribeTask = [[QMCore.instance.pushNotificationManager registerAndSubscribeForPushNotifications] continueWithBlock:completionBlock];
     }
     else {
-        
         self.subscribeTask = [[QMCore.instance.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:NO] continueWithBlock:completionBlock];
     }
 }
