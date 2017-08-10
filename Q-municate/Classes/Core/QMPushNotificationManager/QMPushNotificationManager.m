@@ -114,6 +114,8 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
 
 - (void)updateSubscription:(QBMSubscription *)subscription {
     
+    self.currentSubscription = subscription;
+
     if (subscription.deviceToken == nil) {
         NSParameterAssert(NO);
     }
