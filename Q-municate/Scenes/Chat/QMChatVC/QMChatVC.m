@@ -126,12 +126,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
  *  Group avatar image view.
  */
 @property (strong, nonatomic) QMImageView *groupAvatarImageView;
-
-/**
- *  Reference view for attachment photo.
- */
-@property (weak, nonatomic) UIView *photoReferenceView;
-
 @property (strong, nonatomic) QMMediaController *mediaController;
 @property (strong, nonatomic) QMAudioRecorder *currentAudioRecorder;
 
@@ -228,6 +222,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
         @strongify(self);
         [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion duration:kQMDefaultNotificationDismissTime];
     }];
+    
     // subscribing to delegates
     [QMCore.instance.chatService addDelegate:self];
     [QMCore.instance.contactListService addDelegate:self];
@@ -580,7 +575,6 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
 - (void)messagesInputToolbarAudioRecordingStart:(QMInputToolbar *)__unused toolbar {
     
     [self startAudioRecording];
- //   [toolbar startAudioRecording];
 }
 
 - (void)messagesInputToolbarAudioRecordingCancel:(QMInputToolbar *)__unused toolbar {
@@ -645,14 +639,14 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
         [self destroyAudioRecorder];
     };
     
-    [[UIScreen mainScreen] lockCurrentOrientation];
+    [[UIScreen mainScreen] qm_lockCurrentOrientation];
 }
 
 - (void)cancellAudioRecording {
     
     if (self.currentAudioRecorder != nil) {
         
-        [[UIScreen mainScreen] unlockCurrentOrientation];
+        [[UIScreen mainScreen] qm_unlockCurrentOrientation];
         [self.currentAudioRecorder cancelRecording];
     }
 }
@@ -661,7 +655,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     
     if (self.currentAudioRecorder != nil) {
         
-        [[UIScreen mainScreen] unlockCurrentOrientation];
+        [[UIScreen mainScreen] qm_unlockCurrentOrientation];
         [self.currentAudioRecorder stopRecording];
     }
 }
@@ -670,7 +664,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     
     if (self.currentAudioRecorder != nil) {
         
-        [[UIScreen mainScreen] unlockCurrentOrientation];
+        [[UIScreen mainScreen] qm_unlockCurrentOrientation];
         self.currentAudioRecorder = nil;
     }
 }
@@ -706,7 +700,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     }
     
     if (![self messageSendingAllowed]) {
-         [button qm_shake];
+        [button qm_shake];
         return;
     }
     
@@ -993,8 +987,8 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     
     if (viewClass == [QMAudioIncomingCell class]
         || viewClass == [QMAudioOutgoingCell class]) {
-        
-        size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), 45);
+
+        size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), 35);
     }
     else if (viewClass == [QMVideoIncomingCell class]
              || viewClass == [QMVideoOutgoingCell class]) {
@@ -1026,33 +1020,34 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
         
         QMOpenGraphItem *og = QMCore.instance.openGraphService.memoryStorage[item.ID];
         
-        
         CGFloat linkPreviewHeight = 0;
         
         NSAttributedString *attributedString = [self attributedStringForItem:item];
-        
         CGSize textSize = [TTTAttributedLabel sizeThatFitsAttributedString:attributedString
                                                            withConstraints:CGSizeMake(maxWidth, CGFLOAT_MAX)
                                                     limitedToNumberOfLines:0];
         
         CGSize urlDescriptionSize =
-        [og.siteDescription boundingRectWithSize:CGSizeMake(maxWidth, CGFLOAT_MAX)
+        [og.siteDescription boundingRectWithSize:CGSizeMake(MAX(textSize.width, 200) , CGFLOAT_MAX)
                                          options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                       attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13]}
                                          context:nil].size;
         
         textSize.width = MAX(textSize.width, urlDescriptionSize.width);
         
-        UIImage *image =
-        [QMImageLoader.instance.imageCache imageFromCacheForKey:og.imageURL];
+        UIImage *image = [QMImageLoader.instance.imageCache imageFromCacheForKey:og.imageURL];
         
         if (image) {
             
-            CGFloat oldWidth = image.size.width;
+            const CGFloat oldWidth = image.size.width;
+            const CGFloat scaleFactor = textSize.width / oldWidth;
             
-            CGFloat scaleFactor = textSize.width / oldWidth;
-            linkPreviewHeight = MIN(image.size.height * scaleFactor, image.size.height);
-            
+            if (scaleFactor < 1) {
+                linkPreviewHeight = MIN(image.size.height * scaleFactor, 200);
+            }
+            else {
+                linkPreviewHeight = MIN(image.size.height, 200);
+            }
         }
         
         textSize.height += (urlDescriptionSize.height + linkPreviewHeight + 23) ;
@@ -1356,9 +1351,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
         QMOpenGraphItem *og = QMCore.instance.openGraphService.memoryStorage[message.ID];
         
         QMChatBaseLinkPreviewCell *previewCell = (QMChatBaseLinkPreviewCell *)cell;
-        //        QMImageTransform *transform = [QMImageTransform spec:@"180x"];
-#warning add transform
-        
+        //TODO: add transform
         UIImage *preview = [QMImageLoader.instance.imageCache imageFromCacheForKey:og.imageURL];
         UIImage *favicon = [QMImageLoader.instance.imageCache imageFromCacheForKey:og.faviconUrl];
         
@@ -1611,7 +1604,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                           
-                                                          [self.deferredQueueManager perfromDefferedActionForMessage:notSentMessage];
+                                                          [self.deferredQueueManager perfromDefferedActionForMessage:notSentMessage withCompletion:nil];
                                                       }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_DELETE", nil)
@@ -1799,10 +1792,12 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     }
 }
 
-- (void)chatService:(QMChatService *)__unused chatService didUpdateMessage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+- (void)chatService:(QMChatService *)__unused chatService
+   didUpdateMessage:(QBChatMessage *)message
+        forDialogID:(NSString *)dialogID {
     
     if ([self.chatDialog.ID isEqualToString:dialogID] && message.senderID == self.senderID) {
-        // self-sending attachments
+        
         [self.chatDataSource updateMessage:message];
     }
 }
@@ -1913,7 +1908,7 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         
         @weakify(self);
         self.contactRequestTask = [[[QMCore.instance.contactManager rejectAddContactRequest:opponentUser] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-            
+            @strongify(self);
             if (!task.isFaulted) {
                 
                 return [QMCore.instance.chatService deleteDialogWithID:self.chatDialog.ID];
@@ -1972,7 +1967,8 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         CGSize size =  [self.collectionView.collectionViewLayout containerViewSizeForItemAtIndexPath:indexPath];
         NSLog(@"size = %@", NSStringFromCGSize(size));
         NSLog(@"messageID = %@", message.ID);
-        [[((QMBaseMediaCell*)cell) mediaHandler] didTapContainer:cell];
+        
+        [self.mediaController didTapContainer:(id<QMMediaViewDelegate>)cell];
     }
     else if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
         
@@ -2061,12 +2057,6 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     }
 }
 
-//MARK: - NYTPhotosViewControllerDelegate
-
-- (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
-    
-    return self.photoReferenceView;
-}
 
 //MARK: - UITextViewDelegate
 
@@ -2096,13 +2086,8 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     }];
 }
 
+
 - (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo {
-    
-//    if (![QMCore.instance isInternetConnected]) {
-//        [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) duration:kQMDefaultNotificationDismissTime];
-//
-//        return;
-//    }
     
     @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -2232,6 +2217,7 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
     [QMCore.instance.chatService.messagesMemoryStorage messageWithID:openGraphItem.ID
                                                         fromDialogID:self.chatDialog.ID];
     if (message) {
+        
         [self.chatDataSource updateMessage:message];
     }
 }
@@ -2251,8 +2237,10 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
 }
 
 //MARK: - QMCallManagerDelegate
+
 - (void)callManager:(QMCallManager *)__unused callManager
 willCloseCurrentSession:(QBRTCSession *)__unused session {
+    
 }
 
 - (void)callManager:(QMCallManager *)__unused callManager

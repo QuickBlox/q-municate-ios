@@ -10,10 +10,10 @@
 
 @interface UIScreen (QMLock)
 
-@property (assign, readonly) UIInterfaceOrientation lockedInterfaceOrientation;
+@property (assign, readonly, nonatomic) UIInterfaceOrientation qm_lockedInterfaceOrientation;
 
-- (void)lockCurrentOrientation;
-- (void)unlockCurrentOrientation;
-- (UIInterfaceOrientationMask)allowedInterfaceOrientationMask;
+- (void)qm_lockCurrentOrientation;
+- (void)qm_unlockCurrentOrientation;
+- (UIInterfaceOrientationMask)qm_allowedInterfaceOrientationMask;
 
 @end

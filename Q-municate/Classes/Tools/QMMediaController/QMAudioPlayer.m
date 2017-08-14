@@ -28,7 +28,7 @@
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        audioPlayer = [[QMAudioPlayer alloc] init];
+        audioPlayer = [[self alloc] init];
     });
     
     return audioPlayer;
@@ -43,7 +43,7 @@
         _status = [[QMAudioPlayerStatus alloc] init];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(audioSessionInterruptionOccured:)
+                                                 selector:@selector(audioSessionInterruptionOccurred:)
                                                      name:AVAudioSessionInterruptionNotification
                                                    object:[AVAudioSession sharedInstance]];
     }
@@ -149,7 +149,7 @@
     
     [self.audioPlayer prepareToPlay];
     [self.audioPlayer play];
-
+    
     self.status.playerState = QMAudioPlayerStatePlaying;
     
     self.status.duration = self.audioPlayer.duration;
@@ -202,7 +202,7 @@
 
 //MARK: - AVAudioSessionInterruptionNotification
 
-- (void)audioSessionInterruptionOccured:(NSNotification *)notif {
+- (void)audioSessionInterruptionOccurred:(NSNotification *)notif {
     
     NSNumber *interruptionType = notif.userInfo[AVAudioSessionInterruptionTypeKey];
     

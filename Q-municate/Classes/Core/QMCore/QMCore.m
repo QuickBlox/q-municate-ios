@@ -25,9 +25,8 @@ static NSString *const kQMBaseErrorKey = @"base";
 static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 
-@interface QMCore ()
+@interface QMCore () <QMAuthServiceDelegate>
 
-@property (strong, nonatomic) BFTask *restLoginTask;
 @property (strong, nonatomic) NSMutableOrderedSet *cachedVocabularyStrings;
 
 @end
@@ -80,6 +79,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
         _pushNotificationManager = [[QMPushNotificationManager alloc] initWithServiceManager:self];
         _callManager = [[QMCallManager alloc] initWithServiceManager:self];
         
+        [self.authService addDelegate:self];
         // Reachability init
         [self configureReachability];
         [self.chatService addDelegate:self];
@@ -204,25 +204,9 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 
 - (BFTask *)login {
     
-    QBSession *session = QBSession.currentSession;
-    
-    if (self.currentProfile.accountType == QMAccountTypeEmail) {
-        
-        session.currentUser.password = self.currentProfile.userData.password;
-    }
-    else {
-        session.currentUser.password = session.sessionDetails.token;
-    }
-    
-    if (!self.isAuthorized) {
-        
-        return [[QMTasks taskAutoLogin] continueWithSuccessBlock:^id(BFTask<QBUUser *> *__unused task) {
-            // updating password with new token for Facebook and Digits
-            return [self.chatService connect];
-        }];
-    }
-    
-    return [self.chatService connect];
+    return [[QMTasks taskAutoLogin] continueWithSuccessBlock:^id(BFTask<QBUUser *> *__unused task) {
+        return [self.chatService connectWithUserID:task.result.ID password:task.result.password];
+    }];
 }
 
 - (BFTask *)logout {
@@ -361,18 +345,15 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
                                                    NSError * __unused error,
                                                    SDImageCacheType __unused cacheType,
                                                    BOOL __unused finished,
-                                                   NSURL * __unused imageURL)
-     {
-         completion();
-     }];
+                                                   NSURL * __unused imageURL) {
+                                           completion();
+                                       }];
 }
 
 - (void)openGraphSerivce:(QMOpenGraphService *)__unused openGraphSerivce
              hasImageURL:(NSURL *)url
               completion:(dispatch_block_t)completion {
     
-    //    QMImageTransform *transform = [QMImageTransform spec:@"180x"];
-#warning add tranform
     [QMImageLoader.instance downloadImageWithURL:url
                                        transform:nil
                                          options:SDWebImageHighPriority
@@ -382,10 +363,9 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
                                                    NSError * __unused error,
                                                    SDImageCacheType __unused cacheType,
                                                    BOOL __unused finished,
-                                                   NSURL * __unused imageURL)
-     {
-         completion();
-     }];
+                                                   NSURL * __unused imageURL) {
+                                           completion();
+                                       }];
 }
 
 //MARK: - Helpers
@@ -420,6 +400,24 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
         
         [[INVocabulary sharedVocabulary] setVocabularyStrings:self.cachedVocabularyStrings
                                                        ofType:INVocabularyStringTypeContactName];
+    }
+}
+
+- (void)authServiceDidLogOut:(QMAuthService *)__unused authService {
+
+    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:YES] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
+        
+        return nil;
+    }];
+}
+
+- (void)authService:(QMAuthService *)__unused authService
+   didLoginWithUser:(QBUUser *)__unused user {
+    
+    if (iosMajorVersion() > 9) {
+        [INPreferences requestSiriAuthorization:^(INSiriAuthorizationStatus __unused status) {
+            
+        }];
     }
 }
 

@@ -36,23 +36,17 @@ static NSString * const kQMAppExists = @"QMAppExists";
 - (instancetype)init {
     
     self = [super init];
+    
     if (self) {
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        
+
         [self loadProfile];
         
         BOOL exist = [defaults boolForKey:kQMAppExists];
         
-        if (_userData != nil && !exist) {
-            
+        if (!exist) {
             [self clearProfile];
-        }
-        else if (_userData == nil && [QBSession currentSession].currentUser != nil) {
-            
-            // support for updating from old qmunicate (version less than 2.0)
-            // initializing QMProfile from previous data savings
-            [self _performAccountMigration];
         }
     }
     
@@ -60,6 +54,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
 }
 
 - (BOOL)synchronize {
+    
     NSParameterAssert(self.userData);
     
     __block BOOL success = NO;
@@ -74,10 +69,9 @@ static NSString * const kQMAppExists = @"QMAppExists";
     }];
     
     if (success) {
-        
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setBool:YES forKey:kQMAppExists];
-        
+        [defaults synchronize];
         // updating user in users cache
         [QMCore.instance.usersService.usersMemoryStorage addUser:self.userData];
         [[QMUsersCache instance] insertOrUpdateUser:self.userData];
@@ -109,7 +103,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
 - (void)loadProfile {
     
     __block QMProfile *profile = nil;
-
+    
     [self keychainQuery:^(SSKeychainQuery *query) {
         NSError *error = nil;
         BOOL success = [query fetch:&error];
@@ -139,10 +133,14 @@ static NSString * const kQMAppExists = @"QMAppExists";
     
     self.userData = nil;
     self.accountType = QMAccountTypeNone;
-    self.pushNotificationsEnabled = NO;
+    self.pushNotificationsEnabled = YES;
     self.userAgreementAccepted = NO;
     self.lastDialogsFetchingDate = nil;
     self.lastUserFetchDate = nil;
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setBool:NO forKey:kQMAppExists];
+    [defaults synchronize];
     
     return success;
 }
@@ -200,43 +198,6 @@ static NSString *const kQMSettingsLoginKey = @"loginKey";
 static NSString *const kQMSettingsRememberMeKey = @"rememberMeKey";
 static NSString *const kQMSettingsUserStatusKey = @"userStatusKey";
 static NSString *const kQMLicenceAcceptedKey = @"licence_accepted";
-
-- (void)_performAccountMigration {
-    
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    self.accountType = [userDefaults integerForKey:kQMAccountType];
-    
-    if (self.accountType != QMAccountTypeNone) {
-        
-        // last dialogs fetching date
-        self.lastDialogsFetchingDate = [userDefaults objectForKey:kQMLastActivityDateKey];
-        // push notifications enabled
-        self.pushNotificationsEnabled = [userDefaults boolForKey:kQMSettingsPushNotificationEnabled];
-        
-        // clearing all old account information
-        [userDefaults removeObjectForKey:kQMAccountType];
-        [userDefaults removeObjectForKey:kQMLastActivityDateKey];
-        [userDefaults removeObjectForKey:kQMSettingsPushNotificationEnabled];
-        [userDefaults removeObjectForKey:kQMSettingsLoginKey];
-        [userDefaults removeObjectForKey:kQMSettingsRememberMeKey];
-        [userDefaults removeObjectForKey:kQMSettingsUserStatusKey];
-        [userDefaults removeObjectForKey:kQMLicenceAcceptedKey];
-        
-        [userDefaults synchronize];
-        
-        if (self.accountType == QMAccountTypeEmail) {
-            
-            NSString *account = [QBSession currentSession].currentUser.email;
-            [QBSession currentSession].currentUser.password =
-            [SSKeychain passwordForService:kQMAuthServiceKey account:account];
-            // clearing old account data
-            [SSKeychain deletePasswordForService:kQMAuthServiceKey account:account];
-        }
-        
-        _userData = [QBSession currentSession].currentUser;
-        [self synchronize];
-    }
-}
 
 //MARK: - description
 

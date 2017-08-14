@@ -24,7 +24,7 @@ static NSString * const kFBGraphGetPictureFormat = @"https://graph.facebook.com/
 
 + (BFTask *)connect {
     
-    BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
+    BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
     
     FBSDKAccessToken *session = [FBSDKAccessToken currentAccessToken];
     
