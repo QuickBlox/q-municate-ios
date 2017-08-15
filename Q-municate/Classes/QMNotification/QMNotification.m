@@ -62,7 +62,7 @@
     }
     NSString *messageText = chatMessage.text;
     
-    if ([chatMessage isNotificatonMessage]) {
+    if ([chatMessage isNotificationMessage]) {
         
         QMStatusStringBuilder *stringBuilder = [QMStatusStringBuilder new];
         messageText = [stringBuilder messageTextForNotification:chatMessage];

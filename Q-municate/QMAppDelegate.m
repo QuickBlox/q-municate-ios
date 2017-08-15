@@ -69,11 +69,13 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBSettings setLogLevel:QBLogLevelNothing];
     [QBSettings disableXMPPLogging];
     [QMServicesManager enableLogging:NO];
+    
     QMLogSetEnabled(NO);
 #else
     [QBSettings setLogLevel:QBLogLevelDebug];
     [QBSettings enableXMPPLogging];
     [QMServicesManager enableLogging:YES];
+    
     QMLogSetEnabled(YES);
 #endif
     
