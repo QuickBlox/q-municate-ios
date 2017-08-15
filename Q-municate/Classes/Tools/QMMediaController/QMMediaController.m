@@ -85,14 +85,14 @@ QMMediaHandler>
     withAttachment:(QBChatAttachment *)attachment
            message:(QBChatMessage *)message {
     NSString *status = [self.attachmentsService statusForMessage:message];
-    NSLog(@"Status = %@ %@",status, message.ID);
+    QMLog(@"Status = %@ %@",status, message.ID);
     view.messageID = message.ID;
     view.duration = attachment.duration;
     view.playable = attachment.contentType == QMAttachmentContentTypeAudio ||  attachment.contentType == QMAttachmentContentTypeVideo;
     view.cancellable = attachment.contentType == QMAttachmentContentTypeAudio || attachment.ID == nil;
     
     NSString *attStatus = [self.attachmentsService statusForMessage:message];
-    NSLog(@"attStatus = %@ messageID:%@", attStatus, message.ID);
+    QMLog(@"attStatus = %@ messageID:%@", attStatus, message.ID);
     if (attStatus == QMAttachmentStatus.notLoaded) {
         view.viewState = QMMediaViewStateNotReady;
     }
@@ -201,16 +201,16 @@ QMMediaHandler>
                      
                      if ([view.messageID isEqualToString:message.ID]) {
                          if (transfomedImage) {
-                             NSLog(@"_IMAGE has transform messageID:%@",message.ID);
+                             QMLog(@"_IMAGE has transform messageID:%@",message.ID);
                              view.viewState = QMMediaViewStateReady;
                              view.image = transfomedImage;
                          }
                          else {
-                             NSLog(@"_IMAGE hasn't transform messageID:%@",message.ID);
+                             QMLog(@"_IMAGE hasn't transform messageID:%@",message.ID);
                          }
                          
                          if (error) {
-                             NSLog(@"_IMAGE error %@ messageID:%@",error, message.ID);
+                             QMLog(@"_IMAGE error %@ messageID:%@",error, message.ID);
                              [view showLoadingError:error];
                          }
                      }

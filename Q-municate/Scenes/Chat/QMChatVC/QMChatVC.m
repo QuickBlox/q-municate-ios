@@ -1965,15 +1965,15 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     else if ([cell isKindOfClass:[QMBaseMediaCell class]]) {
         
         CGSize size =  [self.collectionView.collectionViewLayout containerViewSizeForItemAtIndexPath:indexPath];
-        NSLog(@"size = %@", NSStringFromCGSize(size));
-        NSLog(@"messageID = %@", message.ID);
+        QMLog(@"size = %@", NSStringFromCGSize(size));
+        QMLog(@"messageID = %@", message.ID);
         
         [self.mediaController didTapContainer:(id<QMMediaViewDelegate>)cell];
     }
     else if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
         
         CGSize cellSize = [self.collectionView.collectionViewLayout containerViewSizeForItemAtIndexPath:indexPath];
-        NSLog(@"cell size = %@", NSStringFromCGSize(cellSize));
+        QMLog(@"cell size = %@", NSStringFromCGSize(cellSize));
         
         QMOpenGraphItem *og = QMCore.instance.openGraphService.memoryStorage[message.ID];
         NSParameterAssert(og);

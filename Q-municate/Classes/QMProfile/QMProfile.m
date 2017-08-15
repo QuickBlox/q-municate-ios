@@ -77,7 +77,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
         [[QMUsersCache instance] insertOrUpdateUser:self.userData];
     }
     else {
-        NSLog(@"QMProfile error %@", error);
+        QMLog(@"QMProfile error %@", error);
     }
     
     return success;
