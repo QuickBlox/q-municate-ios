@@ -788,7 +788,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
         
         return message.senderID == self.senderID ? QMChatLocationOutgoingCell.class : QMChatLocationIncomingCell.class;
     }
-    else if ([message isNotificatonMessage] || [message isCallNotificationMessage] || message.isDateDividerMessage) {
+    else if ([message isNotificationMessage] || [message isCallNotificationMessage] || message.isDateDividerMessage) {
         
         NSUInteger opponentID = [self.chatDialog opponentID];
         BOOL isFriend = [QMCore.instance.contactManager isFriendWithUserID:opponentID];
@@ -848,7 +848,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     
-    if ([messageItem isNotificatonMessage] || messageItem.isDateDividerMessage) {
+    if ([messageItem isNotificationMessage] || messageItem.isDateDividerMessage) {
         
         paragraphStyle.alignment = NSTextAlignmentCenter;
         
@@ -2106,7 +2106,7 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
 
 - (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingVideo:(NSURL *)videoUrl {
     
-    QBChatAttachment *attachment = [QBChatAttachment videoAttachmentwWithFileURL:videoUrl];
+    QBChatAttachment *attachment = [QBChatAttachment videoAttachmentWithFileURL:videoUrl];
     
     @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
