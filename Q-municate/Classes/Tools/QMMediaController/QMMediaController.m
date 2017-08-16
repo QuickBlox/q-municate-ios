@@ -594,8 +594,8 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     }
 }
 
--(void)chatAttachmentService:(QMChatAttachmentService *)chatAttachmentService
-    didChangeAttachmentState:(QMChatAttachmentState)attachmentState
+- (void)chatAttachmentService:(QMChatAttachmentService *)__unused chatAttachmentService
+    didChangeAttachmentState:(QMChatAttachmentState)__unused attachmentState
                forAttachment:(QBChatAttachment *)attachment
                withMessageID:(NSString *)messageID {
     

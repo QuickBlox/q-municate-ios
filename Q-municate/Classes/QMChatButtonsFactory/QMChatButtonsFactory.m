@@ -26,18 +26,4 @@
     return videoButton;
 }
 
-+ (UIButton *)emojiButton {
-    
-    UIImage *buttonImage = [UIImage imageNamed:@"ic_smile"];
-    
-    UIButton *emojiButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    
-    [emojiButton setImage:buttonImage forState:UIControlStateNormal];
-    emojiButton.contentMode = UIViewContentModeScaleAspectFit;
-    emojiButton.backgroundColor = [UIColor clearColor];
-    emojiButton.tintColor = [UIColor lightGrayColor];
-    
-    return emojiButton;
-}
-
 @end
