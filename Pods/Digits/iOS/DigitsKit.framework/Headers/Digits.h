@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The `Digits` class contains the main methods to implement the Digits authentication flow.
  */
+__deprecated_msg("Heads up! As announced at Google I/O, Digits is being replaced with Firebase phone authentication. To continue authenticating users, you need to upgrade to Firebase by September 30, 2017. After this date, your users will be unable to authenticate their device if they try to sign in with Digits. In addition, app backends will not be able to verify existing user tokens using Digits’ /sdk/account endpoint. Please see our migration guide: https://docs.fabric.io/apple/digits/apple-migration.html")
 @interface Digits : NSObject
 
 /**

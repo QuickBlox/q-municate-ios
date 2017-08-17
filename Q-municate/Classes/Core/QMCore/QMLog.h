@@ -15,7 +15,6 @@ extern "C" {
     void QMLogSetEnabled(BOOL enabled);
     BOOL QMLogEnabled();
     void QMLog(NSString *format, ...);
-    void QMLogv(NSString *format, va_list args);
     
 #ifdef __cplusplus
 }
