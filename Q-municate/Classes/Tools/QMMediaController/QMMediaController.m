@@ -91,7 +91,8 @@ QMMediaHandler>
     
     QMChatAttachmentState attachmentState = [self.attachmentsService attachmentStateForMessage:message];
 
-    QMLog(@"attStatus = %@ messageID:%@", attachmentState, message.ID);
+    QMLog(@"attStatus = %d messageID:%@", attachmentState, message.ID);
+    
     if (attachmentState == QMChatAttachmentStateNotLoaded) {
         view.viewState = QMMediaViewStateNotReady;
     }
