@@ -522,7 +522,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
                  }
              }];
         }
-        else if (attachmentState == QMMessageAttachmentStatusLoaded) {
+        else if (attachmentState == QMChatAttachmentStateLoaded) {
             [self playAttachment:attachment forMessage:message];
         }
     }
