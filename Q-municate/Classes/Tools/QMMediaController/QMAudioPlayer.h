@@ -38,7 +38,7 @@ typedef NS_ENUM(NSUInteger, QMAudioPlayerState) {
 + (instancetype)audioPlayer;
 
 - (void)activateAttachment:(QBChatAttachment *)attachment;
-- (void)activateMediaAtURL:(NSURL *)url withID:(NSString *)itemID;
+- (void)playMediaAtURL:(NSURL *)url withID:(NSString *)itemID;
 
 - (void)pause;
 - (void)stop;

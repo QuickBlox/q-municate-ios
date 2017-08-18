@@ -59,10 +59,10 @@
 }
 - (void)activateAttachment:(QBChatAttachment *)attachment {
     
-    [self activateMediaAtURL:attachment.localFileURL withID:attachment.ID];
+    [self playMediaAtURL:attachment.localFileURL withID:attachment.ID];
 }
 
-- (void)activateMediaAtURL:(NSURL *)url withID:(NSString *)itemID {
+- (void)playMediaAtURL:(NSURL *)url withID:(NSString *)itemID {
     
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
