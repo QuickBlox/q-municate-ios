@@ -89,28 +89,28 @@ QMMediaHandler>
     view.playable = attachment.contentType == QMAttachmentContentTypeAudio ||  attachment.contentType == QMAttachmentContentTypeVideo;
     view.cancellable = attachment.contentType == QMAttachmentContentTypeAudio || attachment.ID == nil;
     
-    QMChatAttachmentState attachmentState = [self.attachmentsService attachmentStateForMessage:message];
+    QMMessageAttachmentStatus attachmentStatus = [self.attachmentsService attachmentStatusForMessage:message];
 
-    QMLog(@"attStatus = %d messageID:%@", attachmentState, message.ID);
+    QMLog(@"attStatus = %d messageID:%@", attachmentStatus, message.ID);
     
-    if (attachmentState == QMChatAttachmentStateNotLoaded) {
+    if (attachmentStatus == QMMessageAttachmentStatusNotLoaded) {
         view.viewState = QMMediaViewStateNotReady;
     }
-    else if (attachmentState == QMChatAttachmentStateDownloading) {
+    else if (attachmentStatus == QMMessageAttachmentStatusLoading) {
         view.viewState = QMMediaViewStateLoading;
         view.progress = [self.attachmentsService.contentService progressForMessageWithID:message.ID];
     }
-    else if (attachmentState == QMChatAttachmentStateUploading) {
+    else if (attachmentStatus == QMMessageAttachmentStatusUploading) {
         view.viewState = QMMediaViewStateLoading;
         view.progress = [self.attachmentsService.contentService progressForMessageWithID:message.ID];
     }
-    else if (attachmentState == QMChatAttachmentStatePreparing) {
+    else if (attachmentStatus == QMMessageAttachmentStatusPreparing) {
         view.viewState = QMMediaViewStateLoading;
     }
-    else if (attachmentState == QMChatAttachmentStateLoaded) {
+    else if (attachmentStatus == QMMessageAttachmentStatusLoaded) {
         view.viewState = QMMediaViewStateReady;
     }
-    else if (attachmentState == QMChatAttachmentStateError) {
+    else if (attachmentStatus == QMMessageAttachmentStatusError) {
         view.viewState = QMMediaViewStateError;
         return;
     }
@@ -236,7 +236,7 @@ QMMediaHandler>
                 
                 view.viewState = QMMediaViewStateLoading;
                 [self.attachmentsService prepareAttachment:attachment
-                                                 messageID:message.ID
+                                                 message:message
                                                 completion:^(UIImage * _Nullable thumbnailImage,
                                                              Float64 durationSeconds,
                                                              CGSize size,
@@ -274,6 +274,7 @@ QMMediaHandler>
         }
     }
     if (attachment.contentType == QMAttachmentContentTypeAudio) {
+        
         [self.attachmentsService attachmentWithID:attachment.ID message:message progressBlock:^(float progress) {
             if ([view.messageID isEqualToString:message.ID]) {
                 view.progress = progress;
@@ -290,6 +291,9 @@ QMMediaHandler>
                 
                 view.duration = attachment.duration;
                 view.viewState = QMMediaViewStateReady;
+            }
+            else {
+                view.viewState = QMMediaViewStateError;
             }
         }];
     }
@@ -339,20 +343,20 @@ QMMediaHandler>
     
     NSParameterAssert(attachment);
     
-    QMChatAttachmentState attachmentState = [self.attachmentsService attachmentStateForMessage:message];
+    QMMessageAttachmentStatus attachmentStatus = [self.attachmentsService attachmentStatusForMessage:message];
     
-    if (attachmentState == QMChatAttachmentStateNotLoaded) {
+    if (attachmentStatus == QMMessageAttachmentStatusNotLoaded) {
         if (!attachment.ID) {
             [QMCore.instance.chatService deleteMessageLocally:message];
             return;
         }
     }
-    else if (attachmentState == QMChatAttachmentStateUploading) {
+    else if (attachmentStatus == QMMessageAttachmentStatusUploading) {
         [self.attachmentsService cancelOperationsWithMessageID:messageID];
         [QMCore.instance.chatService deleteMessageLocally:message];
         return;
     }
-    else if (attachmentState == QMChatAttachmentStateError) {
+    else if (attachmentStatus == QMMessageAttachmentStatusError) {
         if (!attachment.ID) {
             [QMCore.instance.chatService.deferredQueueManager perfromDefferedActionForMessage:message withCompletion:nil];
             return;
@@ -372,7 +376,7 @@ QMMediaHandler>
 
 - (void)chatAttachmentService:(QMChatAttachmentService *)__unused chatAttachmentService
      didChangeLoadingProgress:(CGFloat)progress
-                   forMessage:(QBChatMessage *)__unused message
+                   forMessage:(QBChatMessage *)message
                    attachment:(QBChatAttachment *)__unused attachment {
     
     id <QMMediaViewDelegate> view = [self.viewController viewForMessage:message];
@@ -447,7 +451,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     QBChatAttachment *attachment = [message.attachments firstObject];
     
     NSParameterAssert(attachment);
-    QMChatAttachmentState attachmentState = [self.attachmentsService attachmentStateForMessage:message];
+    QMMessageAttachmentStatus attachmentStatus = [self.attachmentsService attachmentStatusForMessage:message];
     
     if (attachment.contentType == QMAttachmentContentTypeImage) {
         
@@ -482,18 +486,18 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     }
     else if (attachment.contentType == QMAttachmentContentTypeVideo) {
         
-        if (attachmentState == QMChatAttachmentStatePreparing || attachmentState == QMChatAttachmentStateError) {
+        if (attachmentStatus == QMMessageAttachmentStatusPreparing || attachmentStatus == QMMessageAttachmentStatusError) {
             return;
         }
         [self playAttachment:attachment forMessage:message];
     }
     else if (attachment.contentType == QMAttachmentContentTypeAudio) {
         
-        if (attachmentState == QMChatAttachmentStateDownloading) {
+        if (attachmentStatus == QMMessageAttachmentStatusLoading) {
             view.viewState = QMMediaViewStateNotReady;
             [self.attachmentsService cancelOperationsWithMessageID:messageID];
         }
-        else if (attachmentState == QMChatAttachmentStateNotLoaded) {
+        else if (attachmentStatus == QMMessageAttachmentStatusNotLoaded) {
             if (!attachment.ID) {
                 return;
             }
@@ -520,9 +524,12 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
                      view.duration = attachment.duration;
                      view.viewState = QMMediaViewStateReady;
                  }
+                 else {
+                     view.viewState = QMMediaViewStateNotReady;
+                 }
              }];
         }
-        else if (attachmentState == QMChatAttachmentStateLoaded) {
+        else if (attachmentStatus == QMMessageAttachmentStatusLoaded) {
             [self playAttachment:attachment forMessage:message];
         }
     }
@@ -537,7 +544,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
                                                                           messageID:message.ID
                                                                            dialogID:message.dialogID];
         
-        [[QMAudioPlayer audioPlayer] activateMediaAtURL:fileURL withID:message.ID];
+        [[QMAudioPlayer audioPlayer] playMediaAtURL:fileURL withID:message.ID];
     }
     
     if (attachment.contentType == QMAttachmentContentTypeVideo) {
@@ -595,18 +602,15 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     }
 }
 
-- (void)chatAttachmentService:(QMChatAttachmentService *)__unused chatAttachmentService
-    didChangeAttachmentState:(QMChatAttachmentState)__unused attachmentState
-               forAttachment:(QBChatAttachment *)attachment
-               withMessageID:(NSString *)messageID {
+- (void)chatAttachmentService:(QMChatAttachmentService *)chatAttachmentService
+    didChangeAttachmentStatus:(QMMessageAttachmentStatus)status
+                   forMessage:(QBChatMessage *)message {
     
-    id <QMMediaViewDelegate> view = nil;
-    QBChatMessage *message = [QMCore.instance.chatService.messagesMemoryStorage messageWithID:messageID
-                                                                                 fromDialogID:self.viewController.dialogID];
+    QBChatAttachment *attachment = message.attachments.firstObject;
     
     if ([self.viewController respondsToSelector:@selector(viewForMessage:)]) {
         
-        view = [self.viewController viewForMessage:message];
+        id <QMMediaViewDelegate> view = [self.viewController viewForMessage:message];
         
         if (view) {
             [self updateView:view
