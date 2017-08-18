@@ -1,1 +1,1 @@
-../../../../../QMChatViewController-ios/QMChatViewController/Views/Cells/QMLinkPreviewCell/QMLinkPreviewDelegate.h
+../../../QMCVDevelopment/QMChatViewController/Views/Cells/QMLinkPreviewCell/QMLinkPreviewDelegate.h

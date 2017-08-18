@@ -1,1 +1,1 @@
-../../../../../QMChatViewController-ios/QMChatViewController/QMChatLocationSnapshotter/QMChatLocationSnapshotter.h
+../../../QMCVDevelopment/QMChatViewController/QMChatLocationSnapshotter/QMChatLocationSnapshotter.h

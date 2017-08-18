@@ -33,63 +33,58 @@ PODS:
     - FLAnimatedImage (~> 1.0.8)
     - NYTPhotoViewer/Core
   - NYTPhotoViewer/Core (1.1.0)
-  - QMCVDevelopment (0.4.1.1):
+  - QMCVDevelopment (0.5):
     - FFCircularProgressView
-    - QMCVDevelopment/Categories (= 0.4.1.1)
-    - QMCVDevelopment/Protocols (= 0.4.1.1)
-    - QMCVDevelopment/QMChatDataSource (= 0.4.1.1)
-    - QMCVDevelopment/QMChatLocationSnapshotter (= 0.4.1.1)
-    - QMCVDevelopment/QMMediaPresenter (= 0.4.1.1)
-    - QMCVDevelopment/Sections (= 0.4.1.1)
-    - QMCVDevelopment/Utils (= 0.4.1.1)
-    - QMCVDevelopment/ViewModels (= 0.4.1.1)
-    - QMCVDevelopment/Views (= 0.4.1.1)
+    - QMCVDevelopment/Categories (= 0.5)
+    - QMCVDevelopment/Protocols (= 0.5)
+    - QMCVDevelopment/QMChatDataSource (= 0.5)
+    - QMCVDevelopment/QMChatLocationSnapshotter (= 0.5)
+    - QMCVDevelopment/Sections (= 0.5)
+    - QMCVDevelopment/Utils (= 0.5)
+    - QMCVDevelopment/ViewModels (= 0.5)
+    - QMCVDevelopment/Views (= 0.5)
     - SDWebImage (~> 4.0.0)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/Categories (0.4.1.1):
+  - QMCVDevelopment/Categories (0.5):
     - FFCircularProgressView
     - QMCVDevelopment/QMChatLocationSnapshotter
     - SDWebImage (~> 4.0.0)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/Protocols (0.4.1.1):
+  - QMCVDevelopment/Protocols (0.5):
     - FFCircularProgressView
     - SDWebImage (~> 4.0.0)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/QMChatDataSource (0.4.1.1):
+  - QMCVDevelopment/QMChatDataSource (0.5):
     - FFCircularProgressView
     - SDWebImage (~> 4.0.0)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/QMChatLocationSnapshotter (0.4.1.1):
+  - QMCVDevelopment/QMChatLocationSnapshotter (0.5):
     - FFCircularProgressView
     - SDWebImage (~> 4.0.0)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/QMMediaPresenter (0.4.1.1):
-    - FFCircularProgressView
-    - SDWebImage (~> 4.0.0)
-    - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/Sections (0.4.1.1):
+  - QMCVDevelopment/Sections (0.5):
     - FFCircularProgressView
     - QMCVDevelopment/QMChatDataSource
     - SDWebImage (~> 4.0.0)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/Utils (0.4.1.1):
+  - QMCVDevelopment/Utils (0.5):
     - FFCircularProgressView
     - QMCVDevelopment/Categories
     - SDWebImage (~> 4.0.0)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/ViewModels (0.4.1.1):
+  - QMCVDevelopment/ViewModels (0.5):
     - FFCircularProgressView
     - QMCVDevelopment/Categories
     - SDWebImage (~> 4.0.0)
     - TTTAttributedLabel (> 1.13)
-  - QMCVDevelopment/Views (0.4.1.1):
+  - QMCVDevelopment/Views (0.5):
     - FFCircularProgressView
     - QMCVDevelopment/Categories
     - QMCVDevelopment/Protocols
     - QMCVDevelopment/Utils
     - SDWebImage (~> 4.0.0)
     - TTTAttributedLabel (> 1.13)
-  - QMServicesDevelopment (0.4.5):
+  - QMServicesDevelopment (0.5):
     - Bolts (>= 1.5.0)
   - Reachability (3.2)
   - SDWebImage (4.0.0):
@@ -114,8 +109,8 @@ DEPENDENCIES:
   - libextobjc/EXTScope (~> 0.4.1)
   - MPGNotification (~> 1.2)
   - NYTPhotoViewer (~> 1.1.0)
-  - QMCVDevelopment (from `../QMChatViewController-ios/`)
-  - QMServicesDevelopment (from `../q-municate-services-ios/`)
+  - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, tag `0.5`)
+  - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`, tag `0.5`)
   - Reachability (~> 3.2)
   - SDWebImage (~> 4.0.0)
   - SSKeychain (~> 1.2.2)
@@ -126,9 +121,19 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   QMCVDevelopment:
-    :path: ../QMChatViewController-ios/
+    :git: git@github.com:QuickBlox/QMChatViewController-ios.git
+    :tag: 0.5
   QMServicesDevelopment:
-    :path: ../q-municate-services-ios/
+    :git: git@github.com:QuickBlox/q-municate-services-ios.git
+    :tag: 0.5
+
+CHECKOUT OPTIONS:
+  QMCVDevelopment:
+    :git: git@github.com:QuickBlox/QMChatViewController-ios.git
+    :tag: 0.5
+  QMServicesDevelopment:
+    :git: git@github.com:QuickBlox/q-municate-services-ios.git
+    :tag: 0.5
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
@@ -144,8 +149,8 @@ SPEC CHECKSUMS:
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
-  QMCVDevelopment: 490d61f649a0b6a26f62503c34b51ea081b8adb5
-  QMServicesDevelopment: 8baac4019ec14532850c4437814f49fc9ba12b55
+  QMCVDevelopment: 06e12ea9060e58fea15b9251962bd96d9a3e1092
+  QMServicesDevelopment: fecbf448be17e2d4bfdd87159b4231b586a0c194
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
@@ -154,6 +159,6 @@ SPEC CHECKSUMS:
   TwitterCore: e959987be23c767004d29eb7fab8d85d8585a2e5
   UIDevice-Hardware: 4bb15b9bd9878762ab879ac86185baad17b6c3ff
 
-PODFILE CHECKSUM: 25ea24717a2775aa1345a7e5983a8ec83d16b791
+PODFILE CHECKSUM: 5634bb8490af5a5392000b199a6473c677bd10f0
 
-COCOAPODS: 1.2.1
+COCOAPODS: 1.3.1
