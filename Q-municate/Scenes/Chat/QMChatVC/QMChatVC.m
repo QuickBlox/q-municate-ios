@@ -293,7 +293,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     // load messages from cache if needed and from REST
     [self refreshMessages];
     
-    self.inputToolbar.audioRecordingIsEnabled = YES;
+    self.inputToolbar.audioRecordingEnabled = YES;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(navigationBarHeightChanged)
@@ -321,7 +321,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
          [[QMAudioPlayer audioPlayer] pause];
          [self stopTyping];
          [self destroyAudioRecorder];
-         [self.inputToolbar forceFinishRecording];
+         [self.inputToolbar cancelAudioRecording];
          
          if (self.chatDialog.type == QBChatDialogTypePrivate) {
              [self setOpponentOnlineStatus:NO];
@@ -345,7 +345,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     [self.chatDialog clearDialogOccupantsStatusBlock];
     //Cancel audio recording
     [self finishAudioRecording];
-    [self.inputToolbar forceFinishRecording];
+    [self.inputToolbar cancelAudioRecording];
     //Stop player
     [[QMAudioPlayer audioPlayer] stop];
 }
@@ -521,7 +521,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
 
 //MARK: QMInputToolbarDelegate
 
-- (BOOL)messagesInputToolbarAudioRecordingEnabled:(QMInputToolbar *)__unused toolbar {
+- (BOOL)messagesInputToolbarAudioRecordingShouldStart:(QMInputToolbar *)__unused toolbar {
     
     BOOL recordingIsEnabled = NO;
     
