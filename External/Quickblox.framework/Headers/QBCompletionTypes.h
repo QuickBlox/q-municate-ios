@@ -2,7 +2,7 @@
 //  QBCompletionTypes.h
 //  Pods
 //
-//  Created by Andrey Ivanov on 20/04/2017.
+//  Created by Quickblox team on 20/04/2017.
 //
 //
 #import <Foundation/Foundation.h>

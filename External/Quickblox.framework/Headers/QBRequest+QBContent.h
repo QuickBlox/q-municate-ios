@@ -249,7 +249,7 @@ typedef void(^qb_response_blob_block_t)(QBResponse *response, QBCBlob *tBlob);
  */
 + (QBRequest *)blobsWithSuccessBlock:(nullable void(^)(QBResponse *response, QBGeneralResponsePage * _Nullable page, NSArray<QBCBlob *> * _Nullable blobs))successBlock
                           errorBlock:(nullable qb_response_block_t)errorBlock
-DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.9.3 Use 'blobsForPage:successBlock:errorBlock:'.");
+DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.10 Use 'blobsForPage:successBlock:errorBlock:'.");
 
 
 /**
@@ -262,7 +262,7 @@ DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.9.3 Use 'blobsForPage:successBlock:err
  */
 + (QBRequest *)taggedBlobsWithSuccessBlock:(nullable void(^)(QBResponse *response, QBGeneralResponsePage *page, NSArray<QBCBlob *> * _Nullable blobs))successBlock
                                 errorBlock:(nullable qb_response_block_t)errorBlock
-DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.9.3 Use 'taggedBlobsForPage:successBlock:errorBlock:'.");
+DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.10 Use 'taggedBlobsForPage:successBlock:errorBlock:'.");
 
 //MARK: - Get list of tagged blobs for the current user
 
