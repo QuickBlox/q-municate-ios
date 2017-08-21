@@ -14,8 +14,6 @@
 #import "QMPhoto.h"
 #import "NYTPhotosViewController.h"
 #import "QMDateUtils.h"
-#import "QMChatModel.h"
-#import "QMChatAttachmentModel.h"
 #import "QMImageLoader+QBChatAttachment.h"
 
 @interface QMMediaController() <QMAudioPlayerDelegate,
