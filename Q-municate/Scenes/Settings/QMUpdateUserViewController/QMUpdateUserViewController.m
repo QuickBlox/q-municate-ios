@@ -14,16 +14,18 @@
 #import "QMNavigationController.h"
 
 static const NSUInteger kQMFullNameFieldMinLength = 3;
+static NSString *const kQMNotAcceptableCharacters = @"<>;";
 
-@interface QMUpdateUserViewController ()
+@interface QMUpdateUserViewController () <UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *textField;
+
 
 @property (copy, nonatomic) NSString *keyPath;
 @property (copy, nonatomic) NSString *cachedValue;
 @property (copy, nonatomic) NSString *bottomText;
 @property (weak, nonatomic) BFTask *task;
-
+@property (assign, nonatomic) BOOL shouldShowValidationError;
 @end
 
 @implementation QMUpdateUserViewController
@@ -39,6 +41,7 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
 }
 
 - (void)viewDidLoad {
+    
     NSAssert(_updateUserField != QMUpdateUserFieldNone, @"Must be a valid update field.");
     [super viewDidLoad];
     
@@ -46,13 +49,19 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
     self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
     self.navigationItem.leftItemsSupplementBackButton = YES;
     
+    self.tableView.estimatedRowHeight = 44.0f;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    
+    self.textField.delegate = self;
+    self.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    
     // configure appearance
     [self configureAppearance];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
+
     [self.textField becomeFirstResponder];
 }
 
@@ -66,7 +75,7 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
             [self configureWithKeyPath:@keypath(QBUUser.new, fullName)
                                  title:NSLocalizedString(@"QM_STR_FULLNAME", nil)
                                   text:currentUser.fullName
-                            bottomText:NSLocalizedString(@"QM_STR_FULLNAME_DESCRIPTION", nil)];
+                            bottomText:nil];
             break;
             
         case QMUpdateUserFieldEmail:
@@ -135,25 +144,48 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
 
 - (IBAction)textFieldEditingChanged:(UITextField *)__unused sender {
     
-    if (![self updateAllowed]) {
-        
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-        return;
-    }
-    
-    self.navigationItem.rightBarButtonItem.enabled = YES;
+    BOOL allowed = [self updateAllowed];
+    self.textField.textColor = allowed ? [UIColor blackColor] : [UIColor redColor];
+    self.navigationItem.rightBarButtonItem.enabled = allowed;
+    allowed ? [self hideValidationError] : [self showValidationErrorWithText:@"dfsdfsdf"];
 }
 
-//MARK: - Helpers
 
+- (BOOL)textField:(UITextField *)__unused textField
+shouldChangeCharactersInRange:(NSRange)__unused range
+replacementString:(NSString *)string  {
+    
+    NSCharacterSet *notAcceptableCharactersSet = [NSCharacterSet characterSetWithCharactersInString:kQMNotAcceptableCharacters];
+    NSString *filtered = [[string componentsSeparatedByCharactersInSet:notAcceptableCharactersSet] componentsJoinedByString:@""];
+    
+    if ([filtered isEqualToString:string]) {
+        return YES;
+    }
+    else {
+        [self showValidationErrorWithText:@"Symbols not allowed"];
+        return NO;
+    }
+ }
+//MARK: - Helpers
+- (void)showValidationErrorWithText:(NSString *)text {
+    self.shouldShowValidationError = YES;
+    [self.tableView beginUpdates];
+    [self.tableView endUpdates];
+}
+
+- (void)hideValidationError {
+    self.shouldShowValidationError = NO;
+    [self.tableView beginUpdates];
+    [self.tableView endUpdates];
+}
 - (BOOL)updateAllowed {
     
     if (self.updateUserField == QMUpdateUserFieldStatus) {
-        
         return YES;
     }
     
     NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
+    
     if ([self.textField.text stringByTrimmingCharactersInSet:whiteSpaceSet].length < kQMFullNameFieldMinLength) {
         
         return NO;
@@ -172,6 +204,14 @@ static const NSUInteger kQMFullNameFieldMinLength = 3;
 - (NSString *)tableView:(UITableView *)__unused tableView titleForFooterInSection:(NSInteger)__unused section {
     
     return self.bottomText;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == 1) {
+        if (!self.shouldShowValidationError) {
+             return 0;
+        }
+    }
+    return [super tableView:tableView heightForRowAtIndexPath:indexPath];
 }
 
 @end
