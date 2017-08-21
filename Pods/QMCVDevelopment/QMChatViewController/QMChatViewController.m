@@ -9,7 +9,6 @@
 #import "QMChatViewController.h"
 #import "QMChatCollectionView.h"
 #import "QMChatCollectionViewFlowLayout.h"
-#import "QMChatSection.h"
 #import "QMDateUtils.h"
 #import "QMChatResources.h"
 #import "NSString+QM.h"
@@ -79,7 +78,6 @@ UIAlertViewDelegate, QMChatDataSourceDelegate>
     [[[self class] nib] instantiateWithOwner:self options:nil];
     
     [super viewDidLoad];
-    
     
     [self configureMessagesViewController];
     

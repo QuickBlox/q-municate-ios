@@ -7,7 +7,7 @@
 //
 
 #import "QMChatCell.h"
-#import "FFCircularProgressView.h"
+#import <FFCircularProgressView/FFCircularProgressView.h>
 #import "QMChatResources.h"
 #import "QMMediaViewDelegate.h"
 
