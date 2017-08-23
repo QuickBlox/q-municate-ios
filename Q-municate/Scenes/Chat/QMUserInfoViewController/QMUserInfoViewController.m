@@ -16,9 +16,14 @@
 #import <SVProgressHUD.h>
 #import "QMSplitViewController.h"
 
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <CoreTelephony/CTCarrier.h>
+
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
+
 #import "QMImagePreview.h"
 #import "QMCallManager.h"
+#import "REMessageUI.h"
 
 static const CGFloat kQMStatusCellMinHeight = 65.0f;
 
@@ -318,7 +323,6 @@ NYTPhotosViewControllerDelegate
 - (void)callActionWithConferenceType:(QBRTCConferenceType)conferenceType {
     
     if (![self callAllowed]) {
-        
         return;
     }
     
@@ -333,6 +337,43 @@ NYTPhotosViewControllerDelegate
 - (void)videoCallAction {
     
     [self callActionWithConferenceType:QBRTCConferenceTypeVideo];
+}
+
+- (void)cellularCallAction {
+    
+    NSParameterAssert(self.user.phone.length > 0);
+    
+    UIAlertController *alertController = [UIAlertController
+                                          alertControllerWithTitle:nil
+                                          message:self.user.phone
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:nil]];
+    
+    void (^makeCallAction)(UIAlertAction *action) = ^void(UIAlertAction * __unused action) {
+        
+        NSError *error = nil;
+        
+        if (![self canMakeAPhoneCall:&error]) {
+            
+            [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning
+                                                                                  message:error.localizedDescription
+                                                                                 duration:kQMDefaultNotificationDismissTime];
+        }
+        else {
+            NSString *cleanedPhoneNumber = [self formatPhoneUrl:self.user.phone];
+            NSURL *telURL = [NSURL URLWithString:[NSString stringWithFormat:@"tel:%@", cleanedPhoneNumber]];
+            [UIApplication.sharedApplication openURL:telURL];
+        }
+    };
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CALL", nil)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:makeCallAction]];
+    [self presentViewController:alertController animated:YES completion:nil];
+    
 }
 
 - (void)removeContactAction {
@@ -431,8 +472,15 @@ NYTPhotosViewControllerDelegate
 //MARK: - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (indexPath.section == QMUserInfoSectionContactInteractions) {
+    if (indexPath.section == QMUserInfoSectionInfoPhone) {
+        
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        [self cellularCallAction];
+    }
+    else if (indexPath.section == QMUserInfoSectionInfoEmail) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
+    else if (indexPath.section == QMUserInfoSectionContactInteractions) {
         
         switch (indexPath.row) {
                 
@@ -496,6 +544,45 @@ NYTPhotosViewControllerDelegate
     
     return [super tableView:tableView heightForRowAtIndexPath:indexPath];
 }
+
+
+- (void) tableView:(UITableView *)__unused tableView
+     performAction:(SEL)action
+ forRowAtIndexPath:(NSIndexPath *)indexPath
+        withSender:(id)__unused sender{
+    
+    if (action == @selector(copy:)) {
+        
+        NSString *textToCopy = nil;
+        if (indexPath.section == QMUserInfoSectionInfoEmail) {
+            textToCopy = self.user.email;
+        }
+        else if (indexPath.section == QMUserInfoSectionInfoPhone) {
+            textToCopy = self.user.phone;
+        }
+        if (textToCopy) {
+            UIPasteboard.generalPasteboard.string = textToCopy;
+        }
+    }
+}
+
+- (BOOL)tableView:(UITableView *)__unused tableView
+shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    return indexPath.section == QMUserInfoSectionInfoEmail
+    || indexPath.section == QMUserInfoSectionInfoPhone;
+    
+}
+
+- (BOOL) tableView:(UITableView *)__unused tableView
+  canPerformAction:(SEL)action
+ forRowAtIndexPath:(NSIndexPath *)__unused indexPath
+        withSender:(id)__unused sender{
+    
+    return action == @selector(copy:);
+}
+
+
 
 //MARK: - QMContactListServiceDelegate
 
@@ -563,4 +650,46 @@ NYTPhotosViewControllerDelegate
     return YES;
 }
 
+
+//MARK:- Helpers
+
+- (BOOL)canMakeAPhoneCall:(NSError **)error {
+    
+    // Check if the device can place a phone call
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tel://"]]) {
+        // Device supports phone calls
+        CTTelephonyNetworkInfo *netInfo = [[CTTelephonyNetworkInfo alloc] init];
+        CTCarrier *carrier = [netInfo subscriberCellularProvider];
+        NSString *mnc = [carrier mobileNetworkCode];
+        
+        if (([mnc length] == 0) || ([mnc isEqualToString:@"65535"])) {
+            // The device can't place a call at this time.  SIM might be removed.
+            *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey : @"The device can't place a call at this time"}];
+            return NO;
+        }
+        else {
+            // Device can place a phone call
+            return YES;
+        }
+    } else {
+        // Device does not support phone calls
+        *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey : @"The device doesn't support phone calls"}];
+        return  NO;
+    }
+}
+
+- (NSString *)formatPhoneUrl:(NSString *)phone {
+    
+    unichar cleanPhone[phone.length];
+    int cleanPhoneLength = 0;
+    
+    int length = (int)phone.length;
+    for (int i = 0; i < length; i++) {
+        unichar c = [phone characterAtIndex:i];
+        if (!(c == ' ' || c == '(' || c == ')' || c == '-'))
+            cleanPhone[cleanPhoneLength++] = c;
+    }
+    
+    return [[NSString alloc] initWithCharacters:cleanPhone length:cleanPhoneLength];
+}
 @end
