@@ -56,7 +56,9 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:AVAudioSessionInterruptionNotification
                                                   object:nil];
+    _audioPlayer.delegate = nil;
 }
+
 - (void)activateAttachment:(QBChatAttachment *)attachment {
     
     [self playMediaAtURL:attachment.localFileURL withID:attachment.ID];
