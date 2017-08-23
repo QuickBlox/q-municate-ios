@@ -85,14 +85,20 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBRTCConfig setICEServers:[[QMCore instance].callManager quickbloxICE]];
     [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecISAC;
     [QBRTCConfig setStatsReportTimeInterval:0.0f]; // set to 1.0f to enable stats report
+    
     // Configuring app appearance
     [[UITabBar appearance] setTintColor:QMMainApplicationColor()];
     [[UINavigationBar appearance] setTintColor:QMSecondaryApplicationColor()];
-    [[UISearchBar appearance] setTintColor:QMSecondaryApplicationColor()];
+
     // Configuring searchbar appearance
+    [UISearchBar appearance].keyboardAppearance = UIKeyboardAppearanceDark;
+    [[UISearchBar appearance] setTintColor:QMSecondaryApplicationColor()];
     [[UISearchBar appearance] setSearchBarStyle:UISearchBarStyleMinimal];
     [[UISearchBar appearance] setBarTintColor:[UIColor whiteColor]];
     [[UISearchBar appearance] setBackgroundImage:QMStatusBarBackgroundImage() forBarPosition:0 barMetrics:UIBarMetricsDefault];
+    
+    [[UITextField appearance] setTintColor:QMSecondaryApplicationColor()];
+    [UITextField appearance].keyboardAppearance = UIKeyboardAppearanceDark;
     
     [SVProgressHUD setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.92f]];
     // Configuring external frameworks

@@ -12,20 +12,68 @@
 #import "QMShadowView.h"
 #import "QMTasks.h"
 #import "QMNavigationController.h"
+#import "QMTimeOut.h"
 
 static const NSUInteger kQMFullNameFieldMinLength = 3;
-static NSString *const kQMNotAcceptableCharacters = @"<>;";
+static const NSUInteger kQMFullNameFieldMaxLength = 50;
 
-@interface QMUpdateUserViewController () <UITextFieldDelegate>
+static NSString *const kQMNotAcceptableCharacters = @"<>;";
+static NSString *const kQMEmailRegex = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+
+@interface NSString(QMValidation)
+
+- (BOOL)validateForNotAcceptableCharacters:(NSString *)notAcceptableCharacters
+                                     error:(NSError **)error;
+
+@end
+
+@implementation NSString(QMValidation)
+
+- (BOOL)validateForNotAcceptableCharacters:(NSString *)notAcceptableCharacters
+                                     error:(NSError **)error {
+    
+    NSCharacterSet *notAcceptableCharactersSet = [NSCharacterSet characterSetWithCharactersInString:notAcceptableCharacters];
+    NSString *filtered = [[self componentsSeparatedByCharactersInSet:notAcceptableCharactersSet] componentsJoinedByString:@""];
+    
+    if (![filtered isEqualToString:self]) {
+        
+        NSMutableString *result = [NSMutableString new];
+        
+        for (NSUInteger i = 0; i < notAcceptableCharacters.length; i++) {
+            
+            unichar c = [notAcceptableCharacters characterAtIndex:i];
+            if (i == 0) {
+                [result appendFormat:@"%C",c];
+            }
+            else {
+                [result appendFormat:@" %C",c];
+            }
+        }
+        
+        NSString *errorDescription = [NSString stringWithFormat:@"\"%@\" symbols are not allowed", result.copy];
+        *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: errorDescription}];
+        
+        return NO;
+    }
+    
+    return YES;
+}
+
+@end
+
+@interface QMUpdateUserViewController () <UITextFieldDelegate> {
+    QMTimeOut *_dismissTimeOut;
+}
 
 @property (weak, nonatomic) IBOutlet UITextField *textField;
+@property (weak, nonatomic) IBOutlet UILabel *validationLabel;
 
 
 @property (copy, nonatomic) NSString *keyPath;
 @property (copy, nonatomic) NSString *cachedValue;
 @property (copy, nonatomic) NSString *bottomText;
 @property (weak, nonatomic) BFTask *task;
-@property (assign, nonatomic) BOOL shouldShowValidationError;
+@property (assign, nonatomic) BOOL validationErrorIsShown;
 @end
 
 @implementation QMUpdateUserViewController
@@ -49,19 +97,17 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
     self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
     self.navigationItem.leftItemsSupplementBackButton = YES;
     
-    self.tableView.estimatedRowHeight = 44.0f;
-    self.tableView.rowHeight = UITableViewAutomaticDimension;
-    
     self.textField.delegate = self;
     self.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     
+    self.validationLabel.alpha = 0.0;
     // configure appearance
     [self configureAppearance];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-
+    
     [self.textField becomeFirstResponder];
 }
 
@@ -76,6 +122,8 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
                                  title:NSLocalizedString(@"QM_STR_FULLNAME", nil)
                                   text:currentUser.fullName
                             bottomText:nil];
+            
+            self.textField.keyboardType = UIKeyboardTypeAlphabet;
             break;
             
         case QMUpdateUserFieldEmail:
@@ -83,6 +131,7 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
                                  title:NSLocalizedString(@"QM_STR_EMAIL", nil)
                                   text:currentUser.email
                             bottomText:NSLocalizedString(@"QM_STR_EMAIL_DESCRIPTION", nil)];
+            self.textField.keyboardType = UIKeyboardTypeEmailAddress;
             break;
             
         case QMUpdateUserFieldStatus:
@@ -90,6 +139,7 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
                                  title:NSLocalizedString(@"QM_STR_STATUS", nil)
                                   text:currentUser.status
                             bottomText:NSLocalizedString(@"QM_STR_STATUS_DESCRIPTION", nil)];
+            self.textField.keyboardType = UIKeyboardTypeAlphabet;
             break;
             
         case QMUpdateUserFieldNone:
@@ -123,7 +173,9 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
     updateUserParams.customData = QMCore.instance.currentProfile.userData.customData;
     [updateUserParams setValue:self.textField.text forKeyPath:self.keyPath];
     
-    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                                                          message:NSLocalizedString(@"QM_STR_LOADING", nil)
+                                                                         duration:0];
     
     __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
     
@@ -142,58 +194,132 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
     }];
 }
 
-- (IBAction)textFieldEditingChanged:(UITextField *)__unused sender {
+- (IBAction)textFieldEditingChanged:(UITextField *)sender {
     
-    BOOL allowed = [self updateAllowed];
-    self.textField.textColor = allowed ? [UIColor blackColor] : [UIColor redColor];
-    self.navigationItem.rightBarButtonItem.enabled = allowed;
-    allowed ? [self hideValidationError] : [self showValidationErrorWithText:@"dfsdfsdf"];
+    NSString *text = sender.text;
+
+    if ([text isEqualToString:self.cachedValue]) {
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+        [self hideValidationError];
+    }
+    else {
+        
+        NSError *validationError = nil;
+        BOOL textIsValid = [self validateText:text error:&validationError];
+        
+        if (textIsValid) {
+            [self showValidationErrorWithText:validationError.localizedDescription
+                                     duration:0];
+        }
+        else {
+            [self hideValidationError];
+        }
+        
+        self.navigationItem.rightBarButtonItem.enabled = textIsValid;
+    }
 }
 
+//MARK: - UITextFieldDelegate
 
 - (BOOL)textField:(UITextField *)__unused textField
 shouldChangeCharactersInRange:(NSRange)__unused range
 replacementString:(NSString *)string  {
     
-    NSCharacterSet *notAcceptableCharactersSet = [NSCharacterSet characterSetWithCharactersInString:kQMNotAcceptableCharacters];
-    NSString *filtered = [[string componentsSeparatedByCharactersInSet:notAcceptableCharactersSet] componentsJoinedByString:@""];
-    
-    if ([filtered isEqualToString:string]) {
-        return YES;
+    if (self.updateUserField == QMUpdateUserFieldFullName) {
+        NSError *validationError = nil;
+        BOOL textIsValid = [string validateForNotAcceptableCharacters:kQMNotAcceptableCharacters
+                                                                error:&validationError];
+        if (!textIsValid) {
+            [self showValidationErrorWithText:validationError.localizedDescription
+                                     duration:1.5];
+            return NO;
+        }
     }
-    else {
-        [self showValidationErrorWithText:@"Symbols not allowed"];
-        return NO;
-    }
- }
+    return YES;
+}
+
 //MARK: - Helpers
-- (void)showValidationErrorWithText:(NSString *)text {
-    self.shouldShowValidationError = YES;
-    [self.tableView beginUpdates];
-    [self.tableView endUpdates];
+
+- (void)showValidationErrorWithText:(NSString *)text
+                           duration:(NSTimeInterval)duration {
+    
+    if (self.validationErrorIsShown) {
+        if (_dismissTimeOut) {
+            [_dismissTimeOut cancelTimeout];
+        }
+    }
+    if (duration > 0) {
+        _dismissTimeOut = [[QMTimeOut alloc] initWithTimeInterval:duration
+                                                            queue:dispatch_get_main_queue()];
+        __weak typeof(self) weakSelf = self;
+        [_dismissTimeOut startWithFireBlock:^{
+            [weakSelf hideValidationError];
+        }];
+    }
+    
+    self.validationLabel.text = text;
+    [self setShowValidationErrorCell:YES];
 }
 
 - (void)hideValidationError {
-    self.shouldShowValidationError = NO;
-    [self.tableView beginUpdates];
-    [self.tableView endUpdates];
+    
+    if (!self.validationErrorIsShown) {
+        return;
+    }
+    
+    if (_dismissTimeOut) {
+        [_dismissTimeOut cancelTimeout];
+    }
+    [self setShowValidationErrorCell:NO];
 }
-- (BOOL)updateAllowed {
+
+- (void)setShowValidationErrorCell:(BOOL)show {
     
-    if (self.updateUserField == QMUpdateUserFieldStatus) {
-        return YES;
-    }
+    self.validationErrorIsShown = show;
     
-    NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
+    UITableViewCell *validationCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
     
-    if ([self.textField.text stringByTrimmingCharactersInSet:whiteSpaceSet].length < kQMFullNameFieldMinLength) {
+    [UIView animateWithDuration:0.3 animations:^{
+
+        self.validationLabel.alpha = show ? 1.0 : 0.0;
+        [self.tableView beginUpdates];
+        [self.tableView endUpdates];
+        [validationCell layoutIfNeeded];
+    }];
+}
+
+
+- (BOOL)validateText:(NSString *)text
+               error:(NSError **)error {
+    
+    if (self.updateUserField == QMUpdateUserFieldFullName) {
         
-        return NO;
-    }
-    
-    if ([self.textField.text isEqualToString:self.cachedValue]) {
+        NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
+        NSUInteger textLength = [text stringByTrimmingCharactersInSet:whiteSpaceSet].length;
         
-        return NO;
+        if (textLength < kQMFullNameFieldMinLength) {
+            *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Minimum symbols should be 3"}];
+            return NO;
+        }
+        if (textLength > kQMFullNameFieldMaxLength) {
+            *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Maximum symbols should be 50"}];
+            return NO;
+        }
+    }
+    else if (self.updateUserField == QMUpdateUserFieldEmail) {
+        
+        NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
+        NSUInteger textLength = [text stringByTrimmingCharactersInSet:whiteSpaceSet].length;
+        if (textLength < kQMFullNameFieldMinLength) {
+            *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Minimum symbols should be 3"}];
+            return NO;
+        }
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", kQMEmailRegex];
+        if (![predicate evaluateWithObject:text]) {
+            *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Email format is incorrect"}];
+            return NO;
+        }
     }
     
     return YES;
@@ -201,17 +327,19 @@ replacementString:(NSString *)string  {
 
 //MARK: - UITableViewDataSource
 
-- (NSString *)tableView:(UITableView *)__unused tableView titleForFooterInSection:(NSInteger)__unused section {
-    
+- (NSString *)tableView:(UITableView *)__unused tableView
+titleForFooterInSection:(NSInteger)__unused section {
     return self.bottomText;
 }
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+- (CGFloat)tableView:(UITableView *)__unused tableView
+heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     if (indexPath.row == 1) {
-        if (!self.shouldShowValidationError) {
-             return 0;
-        }
+        return self.validationErrorIsShown ? 30.0 : 0;
     }
-    return [super tableView:tableView heightForRowAtIndexPath:indexPath];
+    
+    return 44.0;
 }
+
 
 @end

@@ -579,24 +579,24 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="9YR-Ww-o2j">
-                                        <rect key="frame" x="0.0" y="79" width="375" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="30" id="9YR-Ww-o2j">
+                                        <rect key="frame" x="0.0" y="79" width="375" height="30"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9YR-Ww-o2j" id="eLJ-rr-4E7">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="30"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Validation Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZeA-gF-gJe">
-                                                    <rect key="frame" x="19" y="11" width="337" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
+                                                <label opaque="NO" clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="740" text="Validation Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZeA-gF-gJe">
+                                                    <rect key="frame" x="19" y="6" width="337" height="18"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <color key="textColor" red="1" green="0.28695267820669934" blue="0.24959916258169931" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="ZeA-gF-gJe" firstAttribute="centerY" secondItem="eLJ-rr-4E7" secondAttribute="centerY" id="dC5-Pz-76b"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="ZeA-gF-gJe" secondAttribute="trailing" constant="11" id="dln-XA-Dc2"/>
-                                                <constraint firstItem="ZeA-gF-gJe" firstAttribute="leading" secondItem="eLJ-rr-4E7" secondAttribute="leadingMargin" constant="11" id="eNI-F2-pU5"/>
+                                                <constraint firstItem="ZeA-gF-gJe" firstAttribute="centerX" secondItem="eLJ-rr-4E7" secondAttribute="centerX" id="FVM-QT-mbK"/>
+                                                <constraint firstItem="ZeA-gF-gJe" firstAttribute="leading" secondItem="eLJ-rr-4E7" secondAttribute="leadingMargin" constant="11" id="lMj-G3-Id3"/>
+                                                <constraint firstItem="ZeA-gF-gJe" firstAttribute="centerY" secondItem="eLJ-rr-4E7" secondAttribute="centerY" id="xaW-SF-2at"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -619,6 +619,7 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="textField" destination="7Vn-Js-Fhp" id="554-Qg-x1X"/>
+                        <outlet property="validationLabel" destination="ZeA-gF-gJe" id="Gy7-lV-7Ry"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WC8-eT-jKd" userLabel="First Responder" sceneMemberID="firstResponder"/>
