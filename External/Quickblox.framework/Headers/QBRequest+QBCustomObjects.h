@@ -327,7 +327,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (QBRequest *)objectsWithClassName:(NSString *)className
                        successBlock:(nullable void (^)(QBResponse *response, NSArray * _Nullable objects))successBlock
                          errorBlock:(nullable qb_response_block_t)errorBlock
-DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.9.3 Use 'objectsWithClassName:extendedRequest:successBlock:errorBlock:'.");
+DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.10 Use 'objectsWithClassName:extendedRequest:successBlock:errorBlock:'.");
 
 @end
 

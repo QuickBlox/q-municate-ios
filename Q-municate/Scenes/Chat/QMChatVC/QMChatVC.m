@@ -293,7 +293,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     // load messages from cache if needed and from REST
     [self refreshMessages];
     
-    self.inputToolbar.audioRecordingIsEnabled = YES;
+    self.inputToolbar.audioRecordingEnabled = YES;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(navigationBarHeightChanged)
@@ -321,7 +321,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
          [[QMAudioPlayer audioPlayer] pause];
          [self stopTyping];
          [self destroyAudioRecorder];
-         [self.inputToolbar forceFinishRecording];
+         [self.inputToolbar cancelAudioRecording];
          
          if (self.chatDialog.type == QBChatDialogTypePrivate) {
              [self setOpponentOnlineStatus:NO];
@@ -345,7 +345,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     [self.chatDialog clearDialogOccupantsStatusBlock];
     //Cancel audio recording
     [self finishAudioRecording];
-    [self.inputToolbar forceFinishRecording];
+    [self.inputToolbar cancelAudioRecording];
     //Stop player
     [[QMAudioPlayer audioPlayer] stop];
 }
@@ -521,7 +521,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
 
 //MARK: QMInputToolbarDelegate
 
-- (BOOL)messagesInputToolbarAudioRecordingEnabled:(QMInputToolbar *)__unused toolbar {
+- (BOOL)messagesInputToolbarAudioRecordingShouldStart:(QMInputToolbar *)__unused toolbar {
     
     BOOL recordingIsEnabled = NO;
     
@@ -788,7 +788,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
         
         return message.senderID == self.senderID ? QMChatLocationOutgoingCell.class : QMChatLocationIncomingCell.class;
     }
-    else if ([message isNotificatonMessage] || [message isCallNotificationMessage] || message.isDateDividerMessage) {
+    else if ([message isNotificationMessage] || [message isCallNotificationMessage] || message.isDateDividerMessage) {
         
         NSUInteger opponentID = [self.chatDialog opponentID];
         BOOL isFriend = [QMCore.instance.contactManager isFriendWithUserID:opponentID];
@@ -848,7 +848,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
     
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     
-    if ([messageItem isNotificatonMessage] || messageItem.isDateDividerMessage) {
+    if ([messageItem isNotificationMessage] || messageItem.isDateDividerMessage) {
         
         paragraphStyle.alignment = NSTextAlignmentCenter;
         
@@ -1965,15 +1965,15 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     else if ([cell isKindOfClass:[QMBaseMediaCell class]]) {
         
         CGSize size =  [self.collectionView.collectionViewLayout containerViewSizeForItemAtIndexPath:indexPath];
-        NSLog(@"size = %@", NSStringFromCGSize(size));
-        NSLog(@"messageID = %@", message.ID);
+        QMLog(@"size = %@", NSStringFromCGSize(size));
+        QMLog(@"messageID = %@", message.ID);
         
         [self.mediaController didTapContainer:(id<QMMediaViewDelegate>)cell];
     }
     else if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
         
         CGSize cellSize = [self.collectionView.collectionViewLayout containerViewSizeForItemAtIndexPath:indexPath];
-        NSLog(@"cell size = %@", NSStringFromCGSize(cellSize));
+        QMLog(@"cell size = %@", NSStringFromCGSize(cellSize));
         
         QMOpenGraphItem *og = QMCore.instance.openGraphService.memoryStorage[message.ID];
         NSParameterAssert(og);
@@ -2106,7 +2106,7 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
 
 - (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingVideo:(NSURL *)videoUrl {
     
-    QBChatAttachment *attachment = [QBChatAttachment videoAttachmentwWithFileURL:videoUrl];
+    QBChatAttachment *attachment = [QBChatAttachment videoAttachmentWithFileURL:videoUrl];
     
     @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

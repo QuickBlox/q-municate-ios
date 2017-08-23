@@ -23,14 +23,13 @@ typedef void(^qb_response_block_t)(QBResponse *response);
  */
 @interface QBRequest : NSObject
 
+/// The NSURLSessionTask class is the base class for tasks in a URL session.
 @property (nonatomic, readonly) NSURLSessionTask *task;
 
-/**
- *  Determines if NSURLSessionTask was canceled.
- */
+/// Determines if NSURLSessionTask was canceled.
 @property (nonatomic, getter=isCancelled, readonly) BOOL canceled;
 
-/** Constructors */
+/** Unavailable Constructors */
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
 

@@ -2,7 +2,7 @@
 //  QBHTTPClient.h
 //  Pods
 //
-//  Created by Andrey Ivanov on 16/06/2017.
+//  Created by Quickblox team on 16/06/2017.
 //
 //
 
@@ -52,7 +52,7 @@ typedef void(^qb_task_progress_block)(NSProgress *downloadProgress);
            sessionConfiguration:(nullable NSURLSessionConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
 
 /**
- Creates and runs an `NSURLSessionDataTask` with a `GET` request.
+ Creates and runs an `QBRequest` with a `GET` request.
  
  @param URLString The URL string used to create the request URL.
  @param parameters The parameters to be encoded according to the client request serializer.
@@ -67,7 +67,7 @@ typedef void(^qb_task_progress_block)(NSProgress *downloadProgress);
            failure:(nullable qb_task_error_block)failure;
 
 /**
- Creates and runs an `NSURLSessionDataTask` with a `HEAD` request.
+ Creates and runs an `QBRequest` with a `HEAD` request.
  
  @param URLString The URL string used to create the request URL.
  @param parameters The parameters to be encoded according to the client request serializer.
@@ -80,7 +80,7 @@ typedef void(^qb_task_progress_block)(NSProgress *downloadProgress);
             failure:(nullable qb_task_error_block)failure;
 
 /**
- Creates and runs an `NSURLSessionDataTask` with a `POST` request.
+ Creates and runs an `QBRequest` with a `POST` request.
  
  @param URLString The URL string used to create the request URL.
  @param parameters The parameters to be encoded according to the client request serializer.
@@ -95,7 +95,7 @@ typedef void(^qb_task_progress_block)(NSProgress *downloadProgress);
             failure:(nullable qb_task_error_block)failure;
 
 /**
- Creates and runs an `NSURLSessionDataTask` with a `PUT` request.
+ Creates and runs an `QBRequest` with a `PUT` request.
  
  @param URLString The URL string used to create the request URL.
  @param parameters The parameters to be encoded according to the client request serializer.
@@ -108,7 +108,7 @@ typedef void(^qb_task_progress_block)(NSProgress *downloadProgress);
            failure:(nullable qb_task_error_block)failure;
 
 /**
- Creates and runs an `NSURLSessionDataTask` with a `PATCH` request.
+ Creates and runs an `QBRequest` with a `PATCH` request.
  
  @param URLString The URL string used to create the request URL.
  @param parameters The parameters to be encoded according to the client request serializer.
@@ -121,7 +121,7 @@ typedef void(^qb_task_progress_block)(NSProgress *downloadProgress);
              failure:(nullable qb_task_error_block)failure;
 
 /**
- Creates and runs an `NSURLSessionDataTask` with a `DELETE` request.
+ Creates and runs an `QBRequest` with a `DELETE` request.
  
  @param URLString The URL string used to create the request URL.
  @param parameters The parameters to be encoded according to the client request serializer.

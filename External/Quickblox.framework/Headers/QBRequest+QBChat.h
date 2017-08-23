@@ -246,13 +246,13 @@ NS_ASSUME_NONNULL_BEGIN
  @param message Сhat message to update.
  @param successBlock Block with response instance if request succeded.
  @param errorBlock Block with response instance if request failed.
- @warning Deprecated in 2.9.3 Use 'markMessagesAsRead:dialogID:successBlock:errorBlock:'.
+ @warning Deprecated in 2.10 Use 'markMessagesAsRead:dialogID:successBlock:errorBlock:'.
  @return An instance of QBRequest for cancel operation mainly.
  */
 + (QBRequest *)updateMessage:(QBChatMessage *)message
                 successBlock:(nullable qb_response_block_t)successBlock
                   errorBlock:(nullable qb_response_block_t)errorBlock
-DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.9.3 Use 'markMessagesAsRead:dialogID:successBlock:errorBlock:'.");
+DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.10 Use 'markMessagesAsRead:dialogID:successBlock:errorBlock:'.");
 
 /**
  Retrieve chat dialogs
@@ -264,7 +264,7 @@ DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.9.3 Use 'markMessagesAsRead:dialogID:s
  */
 + (QBRequest *)dialogsWithSuccessBlock:(nullable void(^)(QBResponse *response, NSArray<QBChatDialog *> *dialogObjects, NSSet<NSNumber *> *dialogsUsersIDs))successBlock
                             errorBlock:(nullable qb_response_block_t)errorBlock
-DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.9.3 Use 'dialogsForPage:dialogID:extendedRequest:successBlock:errorBlock:'.");
+DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.10 Use 'dialogsForPage:dialogID:extendedRequest:successBlock:errorBlock:'.");
 
 /**
  Retrieve first 100 chat messages within particular dialog
@@ -278,7 +278,7 @@ DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.9.3 Use 'dialogsForPage:dialogID:exten
 + (QBRequest *)messagesWithDialogID:(NSString *)dialogID
                        successBlock:(nullable void(^)(QBResponse *response, NSArray<QBChatMessage *> *messages))successBlock
                          errorBlock:(nullable qb_response_block_t)errorBlock
-DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.9.3 Use 'messagesWithDialogID:extendedRequest:successBlock:errorBlock:'.");
+DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.10 Use 'messagesWithDialogID:extendedRequest:successBlock:errorBlock:'.");
 
 @end
 

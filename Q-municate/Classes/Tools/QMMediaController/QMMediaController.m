@@ -11,12 +11,9 @@
 #import "QMChatAttachmentCell.h"
 #import "QMCore.h"
 #import "QMAudioPlayer.h"
-#import "QMMediaInfoService.h"
 #import "QMPhoto.h"
 #import "NYTPhotosViewController.h"
 #import "QMDateUtils.h"
-#import "QMChatModel.h"
-#import "QMChatAttachmentModel.h"
 #import "QMImageLoader+QBChatAttachment.h"
 
 @interface QMMediaController() <QMAudioPlayerDelegate,
@@ -51,8 +48,8 @@ QMMediaHandler>
     [QMAudioPlayer audioPlayer].playerDelegate = nil;
     
     [[QMImageLoader instance] cancelAll];
-    [self.attachmentsService.infoService cancellAllOperations];
-    [self.attachmentsService.webService cancelDownloadOperations];
+    [self.attachmentsService.assetService cancelAllOperations];
+    [self.attachmentsService.contentService cancelDownloadOperations];
     [self.attachmentsService removeDelegate:self];
 }
 
@@ -84,36 +81,34 @@ QMMediaHandler>
 - (void)updateView:(id<QMMediaViewDelegate>)view
     withAttachment:(QBChatAttachment *)attachment
            message:(QBChatMessage *)message {
-    NSString *status = [self.attachmentsService statusForMessage:message];
-    NSLog(@"Status = %@ %@",status, message.ID);
+
     view.messageID = message.ID;
     view.duration = attachment.duration;
     view.playable = attachment.contentType == QMAttachmentContentTypeAudio ||  attachment.contentType == QMAttachmentContentTypeVideo;
     view.cancellable = attachment.contentType == QMAttachmentContentTypeAudio || attachment.ID == nil;
     
-    NSString *attStatus = [self.attachmentsService statusForMessage:message];
-    NSLog(@"attStatus = %@ messageID:%@", attStatus, message.ID);
-    if (attStatus == QMAttachmentStatus.notLoaded) {
+    QMMessageAttachmentStatus attachmentStatus = [self.attachmentsService attachmentStatusForMessage:message];
+
+    QMLog(@"attStatus = %d messageID:%@", attachmentStatus, message.ID);
+    
+    if (attachmentStatus == QMMessageAttachmentStatusNotLoaded) {
         view.viewState = QMMediaViewStateNotReady;
     }
-    else if (attStatus == QMAttachmentStatus.downloading) {
+    else if (attachmentStatus == QMMessageAttachmentStatusLoading) {
         view.viewState = QMMediaViewStateLoading;
-        view.progress = [self.attachmentsService.webService progressForMessageWithID:message.ID];
+        view.progress = [self.attachmentsService.contentService progressForMessageWithID:message.ID];
     }
-    else if (attStatus == QMAttachmentStatus.uploading) {
+    else if (attachmentStatus == QMMessageAttachmentStatusUploading) {
         view.viewState = QMMediaViewStateLoading;
-        view.progress = [self.attachmentsService.webService progressForMessageWithID:message.ID];
+        view.progress = [self.attachmentsService.contentService progressForMessageWithID:message.ID];
     }
-    else if (attStatus == QMAttachmentStatus.preparing) {
+    else if (attachmentStatus == QMMessageAttachmentStatusPreparing) {
         view.viewState = QMMediaViewStateLoading;
     }
-    else if (attStatus == QMAttachmentStatus.prepared) {
+    else if (attachmentStatus == QMMessageAttachmentStatusLoaded) {
         view.viewState = QMMediaViewStateReady;
     }
-    else if (attStatus == QMAttachmentStatus.loaded) {
-        view.viewState = QMMediaViewStateReady;
-    }
-    else if (attStatus == QMAttachmentStatus.error) {
+    else if (attachmentStatus == QMMessageAttachmentStatusError) {
         view.viewState = QMMediaViewStateError;
         return;
     }
@@ -201,16 +196,16 @@ QMMediaHandler>
                      
                      if ([view.messageID isEqualToString:message.ID]) {
                          if (transfomedImage) {
-                             NSLog(@"_IMAGE has transform messageID:%@",message.ID);
+                             QMLog(@"_IMAGE has transform messageID:%@",message.ID);
                              view.viewState = QMMediaViewStateReady;
                              view.image = transfomedImage;
                          }
                          else {
-                             NSLog(@"_IMAGE hasn't transform messageID:%@",message.ID);
+                             QMLog(@"_IMAGE hasn't transform messageID:%@",message.ID);
                          }
                          
                          if (error) {
-                             NSLog(@"_IMAGE error %@ messageID:%@",error, message.ID);
+                             QMLog(@"_IMAGE error %@ messageID:%@",error, message.ID);
                              [view showLoadingError:error];
                          }
                      }
@@ -239,7 +234,7 @@ QMMediaHandler>
                 
                 view.viewState = QMMediaViewStateLoading;
                 [self.attachmentsService prepareAttachment:attachment
-                                                 messageID:message.ID
+                                                 message:message
                                                 completion:^(UIImage * _Nullable thumbnailImage,
                                                              Float64 durationSeconds,
                                                              CGSize size,
@@ -277,6 +272,7 @@ QMMediaHandler>
         }
     }
     if (attachment.contentType == QMAttachmentContentTypeAudio) {
+        
         [self.attachmentsService attachmentWithID:attachment.ID message:message progressBlock:^(float progress) {
             if ([view.messageID isEqualToString:message.ID]) {
                 view.progress = progress;
@@ -293,6 +289,9 @@ QMMediaHandler>
                 
                 view.duration = attachment.duration;
                 view.viewState = QMMediaViewStateReady;
+            }
+            else {
+                view.viewState = QMMediaViewStateError;
             }
         }];
     }
@@ -341,21 +340,21 @@ QMMediaHandler>
     QBChatAttachment *attachment = [message.attachments firstObject];
     
     NSParameterAssert(attachment);
-    NSString *status = [self.attachmentsService statusForMessage:message];
     
-    if (status == QMAttachmentStatus.notLoaded) {
+    QMMessageAttachmentStatus attachmentStatus = [self.attachmentsService attachmentStatusForMessage:message];
+    
+    if (attachmentStatus == QMMessageAttachmentStatusNotLoaded) {
         if (!attachment.ID) {
             [QMCore.instance.chatService deleteMessageLocally:message];
             return;
         }
     }
-    if (status == QMAttachmentStatus.uploading) {
-        
+    else if (attachmentStatus == QMMessageAttachmentStatusUploading) {
         [self.attachmentsService cancelOperationsWithMessageID:messageID];
         [QMCore.instance.chatService deleteMessageLocally:message];
         return;
     }
-    if (status == QMAttachmentStatus.error) {
+    else if (attachmentStatus == QMMessageAttachmentStatusError) {
         if (!attachment.ID) {
             [QMCore.instance.chatService.deferredQueueManager perfromDefferedActionForMessage:message withCompletion:nil];
             return;
@@ -375,7 +374,7 @@ QMMediaHandler>
 
 - (void)chatAttachmentService:(QMChatAttachmentService *)__unused chatAttachmentService
      didChangeLoadingProgress:(CGFloat)progress
-                   forMessage:(QBChatMessage *)__unused message
+                   forMessage:(QBChatMessage *)message
                    attachment:(QBChatAttachment *)__unused attachment {
     
     id <QMMediaViewDelegate> view = [self.viewController viewForMessage:message];
@@ -399,7 +398,7 @@ QMMediaHandler>
     QBChatAttachment *attachemnt = [message.attachments firstObject];
     [QMImageLoader.instance cancelOperationWithURL:[attachemnt remoteURLWithToken:NO]];
     
-    [self.attachmentsService.infoService cancellOperationWithID:message.ID];
+    [self.attachmentsService.assetService cancelOperationWithID:message.ID];
 }
 
 - (void)player:(QMAudioPlayer * __unused)player
@@ -450,7 +449,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     QBChatAttachment *attachment = [message.attachments firstObject];
     
     NSParameterAssert(attachment);
-    NSString *status = [self.attachmentsService statusForMessage:message];
+    QMMessageAttachmentStatus attachmentStatus = [self.attachmentsService attachmentStatusForMessage:message];
     
     if (attachment.contentType == QMAttachmentContentTypeImage) {
         
@@ -485,18 +484,18 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     }
     else if (attachment.contentType == QMAttachmentContentTypeVideo) {
         
-        if (status == QMAttachmentStatus.preparing || status == QMAttachmentStatus.error) {
+        if (attachmentStatus == QMMessageAttachmentStatusPreparing || attachmentStatus == QMMessageAttachmentStatusError) {
             return;
         }
         [self playAttachment:attachment forMessage:message];
     }
     else if (attachment.contentType == QMAttachmentContentTypeAudio) {
         
-        if (status == QMAttachmentStatus.downloading) {
+        if (attachmentStatus == QMMessageAttachmentStatusLoading) {
             view.viewState = QMMediaViewStateNotReady;
             [self.attachmentsService cancelOperationsWithMessageID:messageID];
         }
-        else if (status == QMAttachmentStatus.notLoaded) {
+        else if (attachmentStatus == QMMessageAttachmentStatusNotLoaded) {
             if (!attachment.ID) {
                 return;
             }
@@ -523,10 +522,12 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
                      view.duration = attachment.duration;
                      view.viewState = QMMediaViewStateReady;
                  }
+                 else {
+                     view.viewState = QMMediaViewStateNotReady;
+                 }
              }];
-            
         }
-        else if (status == QMAttachmentStatus.loaded || status == QMAttachmentStatus.prepared) {
+        else if (attachmentStatus == QMMessageAttachmentStatusLoaded) {
             [self playAttachment:attachment forMessage:message];
         }
     }
@@ -541,7 +542,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
                                                                           messageID:message.ID
                                                                            dialogID:message.dialogID];
         
-        [[QMAudioPlayer audioPlayer] activateMediaAtURL:fileURL withID:message.ID];
+        [[QMAudioPlayer audioPlayer] playMediaAtURL:fileURL withID:message.ID];
     }
     
     if (attachment.contentType == QMAttachmentContentTypeVideo) {
@@ -555,7 +556,6 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
             [self.videoPlayer replaceCurrentItemWithPlayerItem:playerItem];
         }
         else {
-            
             self.videoPlayer = [[AVPlayer alloc] initWithPlayerItem:playerItem];
         }
         
@@ -600,26 +600,23 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     }
 }
 
-- (void)chatAttachmentService:(QMChatAttachmentService *)__unused chatAttachmentService
-    didChangeAttachmentStatus:(NSString *)__unused status
-                 forMessageID:(NSString *)messageID {
+- (void)chatAttachmentService:(QMChatAttachmentService *)chatAttachmentService
+    didChangeAttachmentStatus:(QMMessageAttachmentStatus)status
+                   forMessage:(QBChatMessage *)message {
     
-    id <QMMediaViewDelegate> view = nil;
-    QBChatMessage *message = [QMCore.instance.chatService.messagesMemoryStorage messageWithID:messageID fromDialogID:self.viewController.dialogID];
+    QBChatAttachment *attachment = message.attachments.firstObject;
     
     if ([self.viewController respondsToSelector:@selector(viewForMessage:)]) {
         
-        view = [self.viewController viewForMessage:message];
+        id <QMMediaViewDelegate> view = [self.viewController viewForMessage:message];
         
         if (view) {
-            QBChatAttachment *att = message.attachments.firstObject;
             [self updateView:view
-              withAttachment:att
+              withAttachment:attachment
                      message:message];
         }
     }
 }
-
 
 - (void)presentViewControllerWithPhoto:(QMPhoto *)photo {
     
@@ -636,7 +633,6 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
 //MARK: - NYTPhotosViewControllerDelegate
 
 - (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
-    
     return self.photoReferenceView;
 }
 

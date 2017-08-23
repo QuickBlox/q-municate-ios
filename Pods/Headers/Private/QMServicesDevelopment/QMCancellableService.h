@@ -1,1 +1,1 @@
-../../../../../q-municate-services-ios/QMChatService/QMChatService/QMAttachmentService/QMCancellableService.h
+../../../QMServicesDevelopment/QMBaseService/QMBaseService/QMCancellableService.h
