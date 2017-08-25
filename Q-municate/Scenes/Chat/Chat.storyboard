@@ -159,7 +159,7 @@
                         <sections>
                             <tableViewSection id="8gt-Sv-uQv">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="66" id="Su8-CV-Cuu" customClass="QMUserInfoCell">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="66" id="Su8-CV-Cuu" customClass="QMUserInfoCell">
                                         <rect key="frame" x="0.0" y="95" width="375" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Su8-CV-Cuu" id="aKZ-Nj-NB3">
@@ -228,7 +228,7 @@
                             </tableViewSection>
                             <tableViewSection id="LcF-he-eya">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="50" id="luQ-Su-EFE" customClass="QMUserInfoCell">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="50" id="luQ-Su-EFE" customClass="QMUserInfoCell">
                                         <rect key="frame" x="0.0" y="211" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="luQ-Su-EFE" id="a5D-bi-mws">

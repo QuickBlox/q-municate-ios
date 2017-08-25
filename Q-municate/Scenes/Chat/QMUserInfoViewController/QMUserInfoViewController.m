@@ -66,6 +66,8 @@ NYTPhotosViewControllerDelegate
 
 @property (strong, nonatomic) NSMutableIndexSet *hiddenSections;
 
+@property (strong, nonatomic) NSIndexPath *selectedIndexPathForMenu;
+
 @end
 
 @implementation QMUserInfoViewController
@@ -78,6 +80,13 @@ NYTPhotosViewControllerDelegate
     // display mode managing. Not removing it will cause item update
     // for deallocated navigation item
     self.navigationItem.leftBarButtonItem = nil;
+    
+    [NSNotificationCenter.defaultCenter removeObserver:self
+                                                  name:UIMenuControllerWillShowMenuNotification
+                                                object:nil];
+    [NSNotificationCenter.defaultCenter removeObserver:self
+                                                  name:UIMenuControllerWillHideMenuNotification
+                                                object:nil];
 }
 
 - (void)viewDidLoad {
@@ -85,6 +94,17 @@ NYTPhotosViewControllerDelegate
     NSAssert(self.user.ID > 0, @"Must be a valid user ID!");
     
     [super viewDidLoad];
+    
+    
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(didReceiveMenuWillShowNotification:)
+                                               name:UIMenuControllerWillShowMenuNotification
+                                             object:nil];
+    
+    [NSNotificationCenter.defaultCenter  addObserver:self
+                                            selector:@selector(didReceiveMenuWillHideNotification:)
+                                                name:UIMenuControllerWillHideMenuNotification
+                                              object:nil];
     
     if (self.navigationController.viewControllers.count == 1) {
         
@@ -138,10 +158,9 @@ NYTPhotosViewControllerDelegate
 - (void)loadUser {
     
     // get user from server
-    @weakify(self);
+    
     [[QMCore.instance.usersService getUserWithID:self.user.ID forceLoad:YES] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         
-        @strongify(self);
         [self.refreshControl endRefreshing];
         
         if (!task.isFaulted) {
@@ -225,7 +244,7 @@ NYTPhotosViewControllerDelegate
     // Phone
     if (self.user.phone.length > 0) {
         
-        self.phoneLabel.text = self.user.phone.length > 0 ? self.user.phone : NSLocalizedString(@"QM_STR_NONE", nil);
+        self.phoneLabel.text = self.user.phone;
     }
     else {
         
@@ -235,7 +254,7 @@ NYTPhotosViewControllerDelegate
     // Email
     if (self.user.email.length > 0) {
         
-        self.emailLabel.text = self.user.email.length > 0 ? self.user.email : NSLocalizedString(@"QM_STR_NONE", nil);
+        self.emailLabel.text = self.user.email;
     }
     else {
         
@@ -546,10 +565,10 @@ NYTPhotosViewControllerDelegate
 }
 
 
-- (void) tableView:(UITableView *)__unused tableView
-     performAction:(SEL)action
- forRowAtIndexPath:(NSIndexPath *)indexPath
-        withSender:(id)__unused sender{
+- (void)tableView:(UITableView *)__unused tableView
+    performAction:(SEL)action
+forRowAtIndexPath:(NSIndexPath *)indexPath
+       withSender:(id)__unused sender{
     
     if (action == @selector(copy:)) {
         
@@ -560,6 +579,10 @@ NYTPhotosViewControllerDelegate
         else if (indexPath.section == QMUserInfoSectionInfoPhone) {
             textToCopy = self.user.phone;
         }
+        else if (indexPath.section == QMUserInfoSectionStatus) {
+            textToCopy = self.user.status;
+        }
+        
         if (textToCopy) {
             UIPasteboard.generalPasteboard.string = textToCopy;
         }
@@ -567,10 +590,13 @@ NYTPhotosViewControllerDelegate
 }
 
 - (BOOL)tableView:(UITableView *)__unused tableView
-shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath{
+shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    self.selectedIndexPathForMenu = indexPath;
     
     return indexPath.section == QMUserInfoSectionInfoEmail
-    || indexPath.section == QMUserInfoSectionInfoPhone;
+    || indexPath.section == QMUserInfoSectionInfoPhone
+    || indexPath.section == QMUserInfoSectionStatus;
     
 }
 
@@ -692,4 +718,52 @@ shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     return [[NSString alloc] initWithCharacters:cleanPhone length:cleanPhoneLength];
 }
+
+
+
+- (void)didReceiveMenuWillShowNotification:(NSNotification *)notification {
+    
+    if (!self.selectedIndexPathForMenu) {
+        return;
+    }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIMenuControllerWillShowMenuNotification
+                                                  object:nil];
+    
+    UIMenuController *menu = [notification object];
+    [menu setMenuVisible:NO animated:NO];
+    
+    NSInteger section = self.selectedIndexPathForMenu.section;
+    
+    UILabel *targetLabel;
+    
+    if (section == QMUserInfoSectionStatus) {
+        targetLabel = self.statusLabel;
+    }
+    else if (section == QMUserInfoSectionInfoEmail) {
+        targetLabel = self.emailLabel;
+    }
+    else if (section == QMUserInfoSectionInfoPhone) {
+        targetLabel = self.phoneLabel;
+    }
+    
+    NSParameterAssert(targetLabel);
+    
+    CGRect selectedCellFrame = CGRectZero;
+    selectedCellFrame.origin.x = targetLabel.intrinsicContentSize.width/2;
+    
+    [menu setTargetRect:selectedCellFrame inView:targetLabel];
+    [menu setMenuVisible:YES animated:YES];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveMenuWillShowNotification:)
+                                                 name:UIMenuControllerWillShowMenuNotification
+                                               object:nil];
+}
+
+- (void)didReceiveMenuWillHideNotification:(NSNotification *)__unused notification {
+    self.selectedIndexPathForMenu = nil;
+}
+
 @end
