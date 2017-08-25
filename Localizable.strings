@@ -69,6 +69,17 @@
 "QM_STR_INCORRECT_USER_DATA_ERROR" = "Incorrect Username or Password";
 "QM_STR_UNKNOWN_ERROR" = "Something went wrong. Please try again";
 
+//Validation Errors
+"QM_STR_VALIDATION_ERROR_EMAIL" = "Email format is invalid";
+"QM_STR_VALIDATION_ERROR_NOT_ALLOWED_CHARACTER_SINGLE" = "\"%@\" is not allowed";
+"QM_STR_VALIDATION_ERROR_NOT_ALLOWED_CHARACTER_PLURAL" = "\"%@\" are not allowed";
+"QM_STR_VALIDATION_ERROR_LENGTH_MIN" = "Minimum length for this field is %ld symbol(s)";
+"QM_STR_VALIDATION_ERROR_LENGTH_MAX" = "Maximum length for this field is %ld symbols";
+//Cellular call errors
+"QM_STR_CELLULAR_ERROR_CAN_NOT_MAKE_CALL" = "The device can't place a call at this time";
+"QM_STR_CELLULAR_ERROR_NOT_SUPPORTED" = "The device doesn't support phone calls";
+
+
 // *********** Message Status String Builder ***********
 "QM_STR_READ_STATUS" = "Read";
 "QM_STR_DELIVERED_STATUS" = "Delivered";

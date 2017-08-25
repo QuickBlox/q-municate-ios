@@ -13,53 +13,12 @@
 #import "QMTasks.h"
 #import "QMNavigationController.h"
 #import "QMTimeOut.h"
+#import "NSString+QMValidation.h"
 
 static const NSUInteger kQMFullNameFieldMinLength = 3;
 static const NSUInteger kQMFullNameFieldMaxLength = 50;
 
 static NSString *const kQMNotAcceptableCharacters = @"<>;";
-static NSString *const kQMEmailRegex = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
-
-@interface NSString(QMValidation)
-
-- (BOOL)validateForNotAcceptableCharacters:(NSString *)notAcceptableCharacters
-                                     error:(NSError **)error;
-
-@end
-
-@implementation NSString(QMValidation)
-
-- (BOOL)validateForNotAcceptableCharacters:(NSString *)notAcceptableCharacters
-                                     error:(NSError **)error {
-    
-    NSCharacterSet *notAcceptableCharactersSet = [NSCharacterSet characterSetWithCharactersInString:notAcceptableCharacters];
-    NSString *filtered = [[self componentsSeparatedByCharactersInSet:notAcceptableCharactersSet] componentsJoinedByString:@""];
-    
-    if (![filtered isEqualToString:self]) {
-        
-        NSMutableString *result = [NSMutableString new];
-        
-        for (NSUInteger i = 0; i < notAcceptableCharacters.length; i++) {
-            
-            unichar c = [notAcceptableCharacters characterAtIndex:i];
-            if (i == 0) {
-                [result appendFormat:@"%C",c];
-            }
-            else {
-                [result appendFormat:@" %C",c];
-            }
-        }
-        
-        NSString *errorDescription = [NSString stringWithFormat:@"\"%@\" symbols are not allowed", result.copy];
-        *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: errorDescription}];
-        
-        return NO;
-    }
-    
-    return YES;
-}
-
-@end
 
 @interface QMUpdateUserViewController () <UITextFieldDelegate> {
     QMTimeOut *_dismissTimeOut;
@@ -68,12 +27,12 @@ static NSString *const kQMEmailRegex = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property (weak, nonatomic) IBOutlet UILabel *validationLabel;
 
-
 @property (copy, nonatomic) NSString *keyPath;
 @property (copy, nonatomic) NSString *cachedValue;
 @property (copy, nonatomic) NSString *bottomText;
 @property (weak, nonatomic) BFTask *task;
 @property (assign, nonatomic) BOOL validationErrorIsShown;
+
 @end
 
 @implementation QMUpdateUserViewController
@@ -197,17 +156,19 @@ static NSString *const kQMEmailRegex = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0
 - (IBAction)textFieldEditingChanged:(UITextField *)sender {
     
     NSString *text = sender.text;
-
+    
     if ([text isEqualToString:self.cachedValue]) {
+        
         self.navigationItem.rightBarButtonItem.enabled = NO;
         [self hideValidationError];
     }
     else {
         
         NSError *validationError = nil;
-        BOOL textIsValid = [self validateText:text error:&validationError];
+        BOOL textIsValid = [self validateText:text
+                                        error:&validationError];
         
-        if (textIsValid) {
+        if (!textIsValid) {
             [self showValidationErrorWithText:validationError.localizedDescription
                                      duration:0];
         }
@@ -227,14 +188,15 @@ replacementString:(NSString *)string  {
     
     if (self.updateUserField == QMUpdateUserFieldFullName) {
         NSError *validationError = nil;
-        BOOL textIsValid = [string validateForNotAcceptableCharacters:kQMNotAcceptableCharacters
-                                                                error:&validationError];
+        BOOL textIsValid = [string qm_validateForNotAcceptableCharacters:kQMNotAcceptableCharacters
+                                                                   error:&validationError];
         if (!textIsValid) {
             [self showValidationErrorWithText:validationError.localizedDescription
                                      duration:1.5];
             return NO;
         }
     }
+    
     return YES;
 }
 
@@ -280,7 +242,7 @@ replacementString:(NSString *)string  {
     UITableViewCell *validationCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
     
     [UIView animateWithDuration:0.3 animations:^{
-
+        
         self.validationLabel.alpha = show ? 1.0 : 0.0;
         [self.tableView beginUpdates];
         [self.tableView endUpdates];
@@ -294,32 +256,13 @@ replacementString:(NSString *)string  {
     
     if (self.updateUserField == QMUpdateUserFieldFullName) {
         
-        NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
-        NSUInteger textLength = [text stringByTrimmingCharactersInSet:whiteSpaceSet].length;
-        
-        if (textLength < kQMFullNameFieldMinLength) {
-            *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Minimum symbols should be 3"}];
-            return NO;
-        }
-        if (textLength > kQMFullNameFieldMaxLength) {
-            *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Maximum symbols should be 50"}];
-            return NO;
-        }
+        return [text qm_validateForCharactersCountWithMinLength:kQMFullNameFieldMinLength
+                                                      maxLength:kQMFullNameFieldMaxLength
+                                                          error:error];
     }
     else if (self.updateUserField == QMUpdateUserFieldEmail) {
         
-        NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
-        NSUInteger textLength = [text stringByTrimmingCharactersInSet:whiteSpaceSet].length;
-        if (textLength < kQMFullNameFieldMinLength) {
-            *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Minimum symbols should be 3"}];
-            return NO;
-        }
-        
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", kQMEmailRegex];
-        if (![predicate evaluateWithObject:text]) {
-            *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Email format is incorrect"}];
-            return NO;
-        }
+        return [text qm_validateForEmailFormat:error];
     }
     
     return YES;
@@ -335,7 +278,7 @@ titleForFooterInSection:(NSInteger)__unused section {
 - (CGFloat)tableView:(UITableView *)__unused tableView
 heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     if (indexPath.row == 1) {
-        return self.validationErrorIsShown ? 30.0 : 0;
+        return self.validationErrorIsShown ? UITableViewAutomaticDimension : 0;
     }
     
     return 44.0;
