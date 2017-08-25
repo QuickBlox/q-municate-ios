@@ -491,6 +491,7 @@ NYTPhotosViewControllerDelegate
 //MARK: - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     if (indexPath.section == QMUserInfoSectionInfoPhone) {
         
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -676,9 +677,6 @@ shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
 }
 
-
-//MARK:- Helpers
-
 - (BOOL)canMakeAPhoneCall:(NSError **)error {
     
     // Check if the device can place a phone call
@@ -690,7 +688,9 @@ shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
         
         if (([mnc length] == 0) || ([mnc isEqualToString:@"65535"])) {
             // The device can't place a call at this time.  SIM might be removed.
-            *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey : @"The device can't place a call at this time"}];
+            *error =
+            [self errorWithLocalizedDescription:NSLocalizedString(@"QM_STR_CELLULAR_ERROR_CAN_NOT_MAKE_CALL", nil)];
+            
             return NO;
         }
         else {
@@ -699,7 +699,9 @@ shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
         }
     } else {
         // Device does not support phone calls
-        *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey : @"The device doesn't support phone calls"}];
+        *error =
+        [self errorWithLocalizedDescription:NSLocalizedString(@"QM_STR_CELLULAR_ERROR_NOT_SUPPORTED",nil)];
+        
         return  NO;
     }
 }
@@ -719,7 +721,14 @@ shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
     return [[NSString alloc] initWithCharacters:cleanPhone length:cleanPhoneLength];
 }
 
+- (NSError *)errorWithLocalizedDescription:(NSString *)localizedDescription {
+    
+    return [NSError errorWithDomain:@""
+                               code:0
+                           userInfo:@{NSLocalizedDescriptionKey : localizedDescription}];
+}
 
+//MARK:- Notifications
 
 - (void)didReceiveMenuWillShowNotification:(NSNotification *)notification {
     
