@@ -82,15 +82,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (QBRTCConnectionState)connectionStateForUser:(NSNumber *)userID;
 
-/**
- *  Limit self media bitrate in current session.
- *
- *  @param bitrate bitrate value
- *
- *  @note Any newly established connection in this session will not be limited.
- */
-- (void)setBitrate:(NSUInteger)bitrate;
-
 @end
 
 NS_ASSUME_NONNULL_END

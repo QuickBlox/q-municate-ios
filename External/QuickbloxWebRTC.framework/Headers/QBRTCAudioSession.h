@@ -84,17 +84,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  Called when AVAudioSession ends an interruption event.
  *
  *  @param session QBRTCAudioSession instance
- *  @param shouldResumeSession whether session should resume
  */
 - (void)audioSessionDidEndInterruption:(QBRTCAudioSession *)session shouldResumeSession:(BOOL)shouldResumeSession;
-
-/**
- *  Called when the AVAudioSession output volume value changes.
- *
- *  @param audioSession QBRTCAudioSession instance
- *  @param outputVolume output volume value
- */
-- (void)audioSession:(QBRTCAudioSession *)audioSession didChangeOutputVolume:(float)outputVolume;
 
 @end
 

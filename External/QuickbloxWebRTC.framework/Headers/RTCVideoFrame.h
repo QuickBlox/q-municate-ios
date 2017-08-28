@@ -12,8 +12,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol RTCVideoFrameBuffer;
-
 // RTCVideoFrame is an ObjectiveC version of webrtc::VideoFrame.
 __attribute__((visibility("default")))
 @interface RTCVideoFrame : NSObject
@@ -28,38 +26,27 @@ __attribute__((visibility("default")))
  *  is null. It is always possible to get such a frame by calling
  *  newI420VideoFrame.
  */
-@property(nonatomic, readonly, nullable)
-const uint8_t *dataY DEPRECATED_MSG_ATTRIBUTE("use [buffer toI420]");
-@property(nonatomic, readonly, nullable)
-const uint8_t *dataU DEPRECATED_MSG_ATTRIBUTE("use [buffer toI420]");
-@property(nonatomic, readonly, nullable)
-const uint8_t *dataV DEPRECATED_MSG_ATTRIBUTE("use [buffer toI420]");
-@property(nonatomic, readonly) int strideY DEPRECATED_MSG_ATTRIBUTE("use [buffer toI420]");
-@property(nonatomic, readonly) int strideU DEPRECATED_MSG_ATTRIBUTE("use [buffer toI420]");
-@property(nonatomic, readonly) int strideV DEPRECATED_MSG_ATTRIBUTE("use [buffer toI420]");
+@property(nonatomic, readonly, nullable) const uint8_t *dataY;
+@property(nonatomic, readonly, nullable) const uint8_t *dataU;
+@property(nonatomic, readonly, nullable) const uint8_t *dataV;
+@property(nonatomic, readonly) int strideY;
+@property(nonatomic, readonly) int strideU;
+@property(nonatomic, readonly) int strideV;
 
 /** Timestamp in nanoseconds. */
 @property(nonatomic, readonly) int64_t timeStampNs;
 
-/** Timestamp 90 kHz. */
-@property(nonatomic, assign) int32_t timeStamp;
-
 /** The native handle should be a pixel buffer on iOS. */
-@property(nonatomic, readonly)
-CVPixelBufferRef nativeHandle DEPRECATED_MSG_ATTRIBUTE("use buffer instead");
-
-@property(nonatomic, readonly) id<RTCVideoFrameBuffer> buffer;
+@property(nonatomic, readonly) CVPixelBufferRef nativeHandle;
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)new NS_UNAVAILABLE;
 
 /** Initialize an RTCVideoFrame from a pixel buffer, rotation, and timestamp.
- *  Deprecated - initialize with a RTCCVPixelBuffer instead
  */
 - (instancetype)initWithPixelBuffer:(CVPixelBufferRef)pixelBuffer
                            rotation:(QBRTCVideoRotation)rotation
-                        timeStampNs:(int64_t)timeStampNs
-DEPRECATED_MSG_ATTRIBUTE("use initWithBuffer instead");
+                        timeStampNs:(int64_t)timeStampNs;
 
 /** Initialize an RTCVideoFrame from a pixel buffer combined with cropping and
  *  scaling. Cropping will be applied first on the pixel buffer, followed by
@@ -73,14 +60,7 @@ DEPRECATED_MSG_ATTRIBUTE("use initWithBuffer instead");
                               cropX:(int)cropX
                               cropY:(int)cropY
                            rotation:(QBRTCVideoRotation)rotation
-                        timeStampNs:(int64_t)timeStampNs
-DEPRECATED_MSG_ATTRIBUTE("use initWithBuffer instead");
-
-/** Initialize an RTCVideoFrame from a frame buffer, rotation, and timestamp.
- */
-- (instancetype)initWithBuffer:(id<RTCVideoFrameBuffer>)frameBuffer
-                      rotation:(QBRTCVideoRotation)rotation
-                   timeStampNs:(int64_t)timeStampNs;
+                        timeStampNs:(int64_t)timeStampNs;
 
 /** Return a frame that is guaranteed to be I420, i.e. it is possible to access
  *  the YUV data on it.

@@ -82,14 +82,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)hangUp:(nullable NSDictionary <NSString *, NSString *> *)userInfo;
 
-/**
- *  Limit self media bitrate for particular connection with user (if existent).
- *
- *  @param bitrate bitrate value
- *  @param userID user id to limit bitrate for
- */
-- (void)setBitrate:(NSUInteger)bitrate forUserID:(NSNumber *)userID;
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -7,7 +7,6 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
-
 #import "RTCVideoRenderer.h"
 
 NS_ASSUME_NONNULL_BEGIN
