@@ -17,7 +17,7 @@
 
 static const NSUInteger kQMFullNameFieldMinLength = 3;
 static const NSUInteger kQMFullNameFieldMaxLength = 50;
-
+static const NSUInteger kQMCellMinHeight = 44;
 static NSString *const kQMNotAcceptableCharacters = @"<>;";
 
 @interface QMUpdateUserViewController () <UITextFieldDelegate> {
@@ -51,6 +51,10 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
     
     NSAssert(_updateUserField != QMUpdateUserFieldNone, @"Must be a valid update field.");
     [super viewDidLoad];
+    
+    // automatic self-sizing cells
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.estimatedRowHeight = kQMCellMinHeight;
     
     self.navigationItem.rightBarButtonItem.enabled = NO;
     self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
@@ -238,15 +242,11 @@ replacementString:(NSString *)string  {
 - (void)setShowValidationErrorCell:(BOOL)show {
     
     self.validationErrorIsShown = show;
-    
-    UITableViewCell *validationCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
-    
+
     [UIView animateWithDuration:0.3 animations:^{
-        
         self.validationLabel.alpha = show ? 1.0 : 0.0;
         [self.tableView beginUpdates];
         [self.tableView endUpdates];
-        [validationCell layoutIfNeeded];
     }];
 }
 
@@ -278,10 +278,10 @@ titleForFooterInSection:(NSInteger)__unused section {
 - (CGFloat)tableView:(UITableView *)__unused tableView
 heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     if (indexPath.row == 1) {
-        return self.validationErrorIsShown ? UITableViewAutomaticDimension : 0;
+        return self.validationErrorIsShown ? UITableViewAutomaticDimension : FLT_MIN;
     }
     
-    return 44.0;
+    return UITableViewAutomaticDimension;
 }
 
 
