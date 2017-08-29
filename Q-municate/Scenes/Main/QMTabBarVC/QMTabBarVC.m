@@ -36,7 +36,7 @@ QMChatConnectionDelegate
     [QMCore.instance.chatService addDelegate:self];
     
     for (UIViewController *vc in self.viewControllers) {
-
+        
         vc.tabBarItem.title = nil;
         vc.tabBarItem.imageInsets = UIEdgeInsetsMake(5, 0, -5, 0);
     }
@@ -87,6 +87,14 @@ QMChatConnectionDelegate
     BOOL isiOS8 = iosMajorVersion() < 9;
     
     if (hasActiveCall
+        && chatMessage.callNotificationState != QMCallNotificationStateNone
+        && chatMessage.callerUserID == QMCore.instance.callManager.opponentUser.ID) {
+        //no need to handle the notification with the call state
+        //from the opponent user if the call is still active with this user
+        return;
+    }
+    
+    if (hasActiveCall
         || isiOS8) {
         
         // using hvc if active call or visible keyboard on ios8 devices
@@ -123,11 +131,11 @@ didAddMessageToMemoryStorage:(QBChatMessage *)message
         QBChatDialog *chatDialog = [chatService.dialogsMemoryStorage chatDialogWithID:dialogID];
         [[[QMCore instance].usersService getUserWithID:[chatDialog opponentID] forceLoad:YES]
          continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
-            
-            [self showNotificationForMessage:message];
-            
-            return nil;
-        }];
+             
+             [self showNotificationForMessage:message];
+             
+             return nil;
+         }];
     }
     else {
         
