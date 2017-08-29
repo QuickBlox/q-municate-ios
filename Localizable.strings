@@ -134,6 +134,7 @@
 "QM_STR_NONE" = "None";
 "QM_STR_CONFIRM_DELETE_CONTACT" = "Do you really want to delete %@ from your contact list?";
 "QM_STR_DELETE" = "Delete";
+"QM_STR_NO_STATUS_MESSAGE" = "Your status will be here";
 
 // *********** Group info ***********
 "QM_STR_MEMBERS" = "MEMBERS";

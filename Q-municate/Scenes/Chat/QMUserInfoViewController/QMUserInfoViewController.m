@@ -220,7 +220,7 @@ NYTPhotosViewControllerDelegate
     // Phone
     if (self.user.phone.length > 0) {
         
-        self.phoneLabel.text = self.user.phone.length > 0 ? self.user.phone : NSLocalizedString(@"QM_STR_NONE", nil);
+        self.phoneLabel.text = self.user.phone;
     }
     else {
         
@@ -230,7 +230,7 @@ NYTPhotosViewControllerDelegate
     // Email
     if (self.user.email.length > 0) {
         
-        self.emailLabel.text = self.user.email.length > 0 ? self.user.email : NSLocalizedString(@"QM_STR_NONE", nil);
+        self.emailLabel.text = self.user.email;
     }
     else {
         
