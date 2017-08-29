@@ -12,26 +12,25 @@
 #import "QMShadowView.h"
 #import "QMTasks.h"
 #import "QMNavigationController.h"
-#import "QMTimeOut.h"
 #import "NSString+QMValidation.h"
+#import "QMValidationCell.h"
 
 static const NSUInteger kQMFullNameFieldMinLength = 3;
 static const NSUInteger kQMFullNameFieldMaxLength = 50;
 static const NSUInteger kQMCellMinHeight = 44;
+
 static NSString *const kQMNotAcceptableCharacters = @"<>;";
 
-@interface QMUpdateUserViewController () <UITextFieldDelegate> {
-    QMTimeOut *_dismissTimeOut;
-}
+@interface QMUpdateUserViewController () <UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *textField;
-@property (weak, nonatomic) IBOutlet UILabel *validationLabel;
 
 @property (copy, nonatomic) NSString *keyPath;
 @property (copy, nonatomic) NSString *cachedValue;
 @property (copy, nonatomic) NSString *bottomText;
 @property (weak, nonatomic) BFTask *task;
-@property (assign, nonatomic) BOOL validationErrorIsShown;
+
+@property (copy, nonatomic) NSString *validationErrorText;
 
 @end
 
@@ -63,7 +62,7 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
     self.textField.delegate = self;
     self.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     
-    self.validationLabel.alpha = 0.0;
+    [QMValidationCell registerForReuseInTableView:self.tableView];
     // configure appearance
     [self configureAppearance];
 }
@@ -209,47 +208,28 @@ replacementString:(NSString *)string  {
 - (void)showValidationErrorWithText:(NSString *)text
                            duration:(NSTimeInterval)duration {
     
-    if (self.validationErrorIsShown) {
-        if (_dismissTimeOut) {
-            [_dismissTimeOut cancelTimeout];
-        }
-    }
-    if (duration > 0) {
-        _dismissTimeOut = [[QMTimeOut alloc] initWithTimeInterval:duration
-                                                            queue:dispatch_get_main_queue()];
-        __weak typeof(self) weakSelf = self;
-        [_dismissTimeOut startWithFireBlock:^{
-            [weakSelf hideValidationError];
-        }];
-    }
+    self.validationErrorText = text;
     
-    self.validationLabel.text = text;
-    [self setShowValidationErrorCell:YES];
+    NSIndexPath *cellIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    BOOL alreadyExpanded = [self numberOfExpandedRowsForSection:0] > 0;
+    
+    if (alreadyExpanded) {
+        [self reloadExpandedCellForIndexPath:cellIndexPath
+                                    duration:duration
+                            withRowAnimation:UITableViewRowAnimationNone];
+    }
+    else {
+        [self expandCellForIndexPath:cellIndexPath
+                            duration:duration
+                    withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
 }
 
 - (void)hideValidationError {
     
-    if (!self.validationErrorIsShown) {
-        return;
-    }
-    
-    if (_dismissTimeOut) {
-        [_dismissTimeOut cancelTimeout];
-    }
-    [self setShowValidationErrorCell:NO];
+    [self hideCellForIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+    self.validationErrorText = nil;
 }
-
-- (void)setShowValidationErrorCell:(BOOL)show {
-    
-    self.validationErrorIsShown = show;
-
-    [UIView animateWithDuration:0.3 animations:^{
-        self.validationLabel.alpha = show ? 1.0 : 0.0;
-        [self.tableView beginUpdates];
-        [self.tableView endUpdates];
-    }];
-}
-
 
 - (BOOL)validateText:(NSString *)text
                error:(NSError **)error {
@@ -275,12 +255,33 @@ titleForFooterInSection:(NSInteger)__unused section {
     return self.bottomText;
 }
 
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if ([self isExpandedCell:indexPath]) {
+        
+        QMValidationCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMValidationCell cellIdentifier]
+                                                                 forIndexPath:indexPath];
+        [cell setValidationErrorText:self.validationErrorText];
+        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        
+        return cell;
+    }
+    else {
+        return [super tableView:tableView cellForRowAtIndexPath:indexPath];
+    }
+}
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    NSInteger numberOfRows =
+    [super tableView:tableView numberOfRowsInSection:section] + [self numberOfExpandedRowsForSection:section];
+    
+    return numberOfRows;
+}
+
 - (CGFloat)tableView:(UITableView *)__unused tableView
 heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
-    if (indexPath.row == 1) {
-        return self.validationErrorIsShown ? UITableViewAutomaticDimension : FLT_MIN;
-    }
-    
     return UITableViewAutomaticDimension;
 }
 

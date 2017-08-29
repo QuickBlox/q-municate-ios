@@ -168,6 +168,9 @@
 		E026A76E1E82B9A10054AD83 /* UIScreen+QMLock.m in Sources */ = {isa = PBXBuildFile; fileRef = E026A76D1E82B9A10054AD83 /* UIScreen+QMLock.m */; };
 		E03871CD1DDB354700554EB9 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E03871CB1DDB354700554EB9 /* Intents.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E03871CE1DDB354700554EB9 /* IntentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E03871CC1DDB354700554EB9 /* IntentsUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		E03AD8EE1F556D7500F411CE /* QMExpandableTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E03AD8ED1F556D7500F411CE /* QMExpandableTableViewController.m */; };
+		E03AD8F31F55703400F411CE /* QMValidationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E03AD8F11F55703300F411CE /* QMValidationCell.m */; };
+		E03AD8F41F55703400F411CE /* QMValidationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E03AD8F21F55703300F411CE /* QMValidationCell.xib */; };
 		E03F3D351E1C724E00A46884 /* NSString+QMTransliterating.m in Sources */ = {isa = PBXBuildFile; fileRef = E03F3D341E1C724E00A46884 /* NSString+QMTransliterating.m */; };
 		E03F3D361E1C724E00A46884 /* NSString+QMTransliterating.m in Sources */ = {isa = PBXBuildFile; fileRef = E03F3D341E1C724E00A46884 /* NSString+QMTransliterating.m */; };
 		E043459C1F29545F0066851D /* QMAttachmentController.m in Sources */ = {isa = PBXBuildFile; fileRef = E043459B1F29545F0066851D /* QMAttachmentController.m */; };
@@ -519,6 +522,11 @@
 		E03871E01DDB36F800554EB9 /* IntentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntentViewController.h; sourceTree = "<group>"; };
 		E03871E11DDB36F800554EB9 /* IntentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IntentViewController.m; sourceTree = "<group>"; };
 		E03871E61DDB36F800554EB9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E03AD8EC1F556D7500F411CE /* QMExpandableTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMExpandableTableViewController.h; sourceTree = "<group>"; };
+		E03AD8ED1F556D7500F411CE /* QMExpandableTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMExpandableTableViewController.m; sourceTree = "<group>"; };
+		E03AD8F01F55703300F411CE /* QMValidationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMValidationCell.h; sourceTree = "<group>"; };
+		E03AD8F11F55703300F411CE /* QMValidationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMValidationCell.m; sourceTree = "<group>"; };
+		E03AD8F21F55703300F411CE /* QMValidationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QMValidationCell.xib; sourceTree = "<group>"; };
 		E03C83151E61F9E30039A9D0 /* QMCallViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCallViewDelegate.h; sourceTree = "<group>"; };
 		E03F3D331E1C724E00A46884 /* NSString+QMTransliterating.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+QMTransliterating.h"; sourceTree = "<group>"; };
 		E03F3D341E1C724E00A46884 /* NSString+QMTransliterating.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+QMTransliterating.m"; sourceTree = "<group>"; };
@@ -1124,6 +1132,7 @@
 		584A6DAF1C9DB38000B7D641 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				E03AD8EF1F55703300F411CE /* QMValidationCell */,
 				58B3C9BD1CB3F7AE00B08A27 /* QMAddMemberCell */,
 				589D4CFA1C981BD6005F1E76 /* QMContactCell */,
 				5877D6D61C46713300938E5D /* QMDialogCell */,
@@ -1927,6 +1936,7 @@
 		695F4B2118B60A62006C9DA5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				E03AD8EB1F556D6100F411CE /* QMExpandableTableViewController */,
 				584277D91C3FE58900CDE35B /* Core */,
 				6943843218E42677001E08A9 /* CustomSegues */,
 				55495A1D1993BCC100B7764C /* Factories */,
@@ -2068,6 +2078,25 @@
 				E03871E61DDB36F800554EB9 /* Info.plist */,
 			);
 			path = QMSiriExtensionUI;
+			sourceTree = "<group>";
+		};
+		E03AD8EB1F556D6100F411CE /* QMExpandableTableViewController */ = {
+			isa = PBXGroup;
+			children = (
+				E03AD8EC1F556D7500F411CE /* QMExpandableTableViewController.h */,
+				E03AD8ED1F556D7500F411CE /* QMExpandableTableViewController.m */,
+			);
+			path = QMExpandableTableViewController;
+			sourceTree = "<group>";
+		};
+		E03AD8EF1F55703300F411CE /* QMValidationCell */ = {
+			isa = PBXGroup;
+			children = (
+				E03AD8F01F55703300F411CE /* QMValidationCell.h */,
+				E03AD8F11F55703300F411CE /* QMValidationCell.m */,
+				E03AD8F21F55703300F411CE /* QMValidationCell.xib */,
+			);
+			path = QMValidationCell;
 			sourceTree = "<group>";
 		};
 		E03F3D321E1C71E100A46884 /* Common */ = {
@@ -2299,6 +2328,7 @@
 				584277C31C3D44AB00CDE35B /* Chat.storyboard in Resources */,
 				58B550751CC7BFBA00C93F93 /* QMSelectableContactCell.xib in Resources */,
 				584277B41C3D374400CDE35B /* Auth.storyboard in Resources */,
+				E03AD8F41F55703400F411CE /* QMValidationCell.xib in Resources */,
 				55A8B0711965986A00B5D33B /* end_of_call.wav in Resources */,
 				5877D6C61C466B2D00938E5D /* Launch Screen.storyboard in Resources */,
 				69D57E6818ACC11C00A9900A /* Images.xcassets in Resources */,
@@ -2454,6 +2484,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58F86EDB1CA2EF6C00DA4758 /* QMUserInfoViewController.m in Sources */,
+				E03AD8F31F55703400F411CE /* QMValidationCell.m in Sources */,
 				58D8478C1C873F58000C40BA /* QMSearchDataSource.m in Sources */,
 				580FEBEA1CC4EF8E000AED72 /* QMNotification.m in Sources */,
 				5838FD531D378EB900DB97BB /* QMCallNotificationItem.m in Sources */,
@@ -2472,6 +2503,7 @@
 				589792BD1C9C3DEE00CC6438 /* QMSelectableContactCell.m in Sources */,
 				580D34E21BC027BD0034813A /* QMSplashViewController.m in Sources */,
 				589792B51C9C3C1F00CC6438 /* QMMessageContactListViewController.m in Sources */,
+				E03AD8EE1F556D7500F411CE /* QMExpandableTableViewController.m in Sources */,
 				55A8B06E1965986A00B5D33B /* QMSoundManager.m in Sources */,
 				58EC00221CF30C380052A06A /* QMGroupNameViewController.m in Sources */,
 				5868B05E1CE9C668004F9233 /* QMCallManager.m in Sources */,
