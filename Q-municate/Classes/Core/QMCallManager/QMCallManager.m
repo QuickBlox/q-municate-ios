@@ -12,7 +12,6 @@
 #import "QMSoundManager.h"
 #import "QMPermissions.h"
 #import "QMNotification.h"
-#import <mach/mach.h>
 
 static const NSTimeInterval kQMAnswerTimeInterval = 60.0f;
 static const NSTimeInterval kQMDialingTimeInterval = 5.0f;
