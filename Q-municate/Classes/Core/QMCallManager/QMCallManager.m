@@ -12,13 +12,10 @@
 #import "QMSoundManager.h"
 #import "QMPermissions.h"
 #import "QMNotification.h"
-#import <mach/mach.h>
-
-#import "QMCallWindow.h"
 
 static const NSTimeInterval kQMAnswerTimeInterval = 60.0f;
-static const NSTimeInterval kQMDisconnectTimeInterval = 30.0f;
 static const NSTimeInterval kQMDialingTimeInterval = 5.0f;
+static const NSTimeInterval kQMCallViewControllerEndScreenDelay = 1.0f;
 
 @interface QMCallManager ()
 
@@ -33,7 +30,7 @@ QBRTCClientDelegate
 @property (assign, nonatomic, readwrite) BOOL hasActiveCall;
 @property (strong, nonatomic) NSTimer *soundTimer;
 
-@property (strong, nonatomic) QMCallWindow *callWindow;
+@property (strong, nonatomic) UIWindow *callWindow;
 
 @end
 
@@ -44,7 +41,6 @@ QBRTCClientDelegate
 - (void)serviceWillStart {
     
     [QBRTCConfig setAnswerTimeInterval:kQMAnswerTimeInterval];
-    [QBRTCConfig setDisconnectTimeInterval:kQMDisconnectTimeInterval];
     [QBRTCConfig setDialingTimeInterval:kQMDialingTimeInterval];
     
     _multicastDelegate = (id<QMCallManagerDelegate>)[[QBMulticastDelegate alloc] init];
@@ -79,11 +75,6 @@ QBRTCClientDelegate
             return;
         }
         
-        [[QBRTCSoundRouter instance] initialize];
-        
-        QBRTCSoundRoute soundRoute = conferenceType == QBRTCConferenceTypeVideo ? QBRTCSoundRouteSpeaker : QBRTCSoundRouteReceiver;
-        [[QBRTCSoundRouter instance] setCurrentSoundRoute:soundRoute];
-        
         [self startPlayingCallingSound];
         
         // instantiating view controller
@@ -97,7 +88,7 @@ QBRTCClientDelegate
         
         [QMNotification sendPushNotificationToUser:opponentUser withText:pushText];
         
-      
+        
         [self prepareCallWindow];
         
         self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState];
@@ -112,8 +103,8 @@ QBRTCClientDelegate
     // hiding keyboard
     [[UIApplication sharedApplication].keyWindow endEditing:YES];
     
-    self.callWindow = [[QMCallWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-
+    self.callWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    
     // displaying window under status bar
     self.callWindow.windowLevel = UIWindowLevelStatusBar - 1;
     [self.callWindow makeKeyAndVisible];
@@ -125,9 +116,7 @@ QBRTCClientDelegate
     
     if (_hasActiveCall != hasActiveCall) {
         
-        if ([self.multicastDelegate respondsToSelector:@selector(callManager:willChangeActiveCallState:)]) {
-            [self.multicastDelegate callManager:self willChangeActiveCallState:hasActiveCall];
-        }
+        [self.multicastDelegate callManager:self willChangeActiveCallState:hasActiveCall];
         
         _hasActiveCall = hasActiveCall;
         
@@ -185,9 +174,6 @@ QBRTCClientDelegate
         return;
     }
     
-    [[QBRTCSoundRouter instance] initialize];
-    [[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker];
-    
     self.session = session;
     self.hasActiveCall = YES;
     
@@ -200,55 +186,9 @@ QBRTCClientDelegate
     self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState];
 }
 
-- (void)session:(QBRTCSession *)session updatedStatsReport:(QBRTCStatsReport *)report forUserID:(NSNumber *)__unused userID {
+- (void)session:(QBRTCSession *)__unused session updatedStatsReport:(QBRTCStatsReport *)report forUserID:(NSNumber *)userID {
     
-    NSMutableString *result = [NSMutableString string];
-    NSString *systemStatsFormat = @"(cpu)%ld%%\n";
-    [result appendString:[NSString stringWithFormat:systemStatsFormat,
-                          (long)QBRTCGetCpuUsagePercentage()]];
-    
-    // Connection stats.
-    NSString *connStatsFormat = @"CN %@ms | %@->%@/%@ | (s)%@ | (r)%@\n";
-    [result appendString:[NSString stringWithFormat:connStatsFormat,
-                          report.connectionRoundTripTime,
-                          report.localCandidateType, report.remoteCandidateType, report.transportType,
-                          report.connectionSendBitrate, report.connectionReceivedBitrate]];
-    
-    if (session.conferenceType == QBRTCConferenceTypeVideo) {
-        
-        // Video send stats.
-        NSString *videoSendFormat = @"VS (input) %@x%@@%@fps | (sent) %@x%@@%@fps\n"
-        "VS (enc) %@/%@ | (sent) %@/%@ | %@ms | %@\n";
-        [result appendString:[NSString stringWithFormat:videoSendFormat,
-                              report.videoSendInputWidth, report.videoSendInputHeight, report.videoSendInputFps,
-                              report.videoSendWidth, report.videoSendHeight, report.videoSendFps,
-                              report.actualEncodingBitrate, report.targetEncodingBitrate,
-                              report.videoSendBitrate, report.availableSendBandwidth,
-                              report.videoSendEncodeMs,
-                              report.videoSendCodec]];
-        
-        // Video receive stats.
-        NSString *videoReceiveFormat =
-        @"VR (recv) %@x%@@%@fps | (decoded)%@ | (output)%@fps | %@/%@ | %@ms\n";
-        [result appendString:[NSString stringWithFormat:videoReceiveFormat,
-                              report.videoReceivedWidth, report.videoReceivedHeight, report.videoReceivedFps,
-                              report.videoReceivedDecodedFps,
-                              report.videoReceivedOutputFps,
-                              report.videoReceivedBitrate, report.availableReceiveBandwidth,
-                              report.videoReceivedDecodeMs]];
-    }
-    // Audio send stats.
-    NSString *audioSendFormat = @"AS %@ | %@\n";
-    [result appendString:[NSString stringWithFormat:audioSendFormat,
-                          report.audioSendBitrate, report.audioSendCodec]];
-    
-    // Audio receive stats.
-    NSString *audioReceiveFormat = @"AR %@ | %@ | %@ms | (expandrate)%@";
-    [result appendString:[NSString stringWithFormat:audioReceiveFormat,
-                          report.audioReceivedBitrate, report.audioReceivedCodec, report.audioReceivedCurrentDelay,
-                          report.audioReceivedExpandRate]];
-    
-    ILog(@"%@", result);
+    ILog(@"Stats report for userID: %@\n%@", userID, [report statsString]);
 }
 
 - (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)__unused userID {
@@ -267,22 +207,13 @@ QBRTCClientDelegate
         return;
     }
     
-    [self stopAllSounds];
-    
     self.hasActiveCall = NO;
     
-    // settings sound router to speaker in order
-    // to play end of call sound in it
-    [[QBRTCSoundRouter instance] setCurrentSoundRoute:QBRTCSoundRouteSpeaker];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kQMCallViewControllerEndScreenDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         [QMSoundManager playEndOfCallSound];
-        [self.delegate callManager:self willCloseCurrentSession:session];
         
-        if ([self.multicastDelegate respondsToSelector:@selector(callManager:willCloseCurrentSession:)]) {
-            [self.multicastDelegate callManager:self willCloseCurrentSession:session];
-        }
+        [self.multicastDelegate callManager:self willCloseCurrentSession:session];
         
         self.callWindow.rootViewController = nil;
         self.callWindow = nil;
@@ -301,43 +232,6 @@ QBRTCClientDelegate
     [self.multicastDelegate removeDelegate:delegate];
 }
 
-
-//MARK: - ICE servers
-
-- (NSArray *)quickbloxICE {
-    
-    NSString *password = @"baccb97ba2d92d71e26eb9886da5f1e0";
-    NSString *userName = @"quickblox";
-    
-    NSArray *urls = @[
-                      @"turn.quickblox.com",            //USA
-                      @"turnsingapore.quickblox.com",   //Singapore
-                      @"turnireland.quickblox.com"      //Ireland
-                      ];
-    
-    NSMutableArray *result = [NSMutableArray arrayWithCapacity:urls.count];
-    
-    for (NSString *url in urls) {
-        
-        QBRTCICEServer *stunServer = [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"stun:%@", url]
-                                                          username:@""
-                                                          password:@""];
-        
-        
-        QBRTCICEServer *turnUDPServer = [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"turn:%@:3478?transport=udp", url]
-                                                             username:userName
-                                                             password:password];
-        
-        QBRTCICEServer *turnTCPServer = [QBRTCICEServer serverWithURL:[NSString stringWithFormat:@"turn:%@:3478?transport=tcp", url]
-                                                             username:userName
-                                                             password:password];
-        
-        [result addObjectsFromArray:@[stunServer, turnTCPServer, turnUDPServer]];
-    }
-    
-    return result;
-}
-
 //MARK: - Sound management
 
 - (void)startPlayingCallingSound {
@@ -354,6 +248,7 @@ QBRTCClientDelegate
 - (void)startPlayingRingtoneSound {
     
     [self stopAllSounds];
+    
     [QMSoundManager playRingtoneSound];
     self.soundTimer = [NSTimer scheduledTimerWithTimeInterval:[QBRTCConfig dialingTimeInterval]
                                                        target:[QMSoundManager class]
@@ -521,40 +416,6 @@ QBRTCClientDelegate
     
     UIViewController *viewController = [[[(UISplitViewController *)[UIApplication sharedApplication].keyWindow.rootViewController viewControllers] firstObject] selectedViewController];
     [viewController presentViewController:alertController animated:YES completion:nil];
-}
-
-
-//MARK: - Statistic
-
-NSInteger QBRTCGetCpuUsagePercentage() {
-    // Create an array of thread ports for the current task.
-    const task_t task = mach_task_self();
-    thread_act_array_t thread_array;
-    mach_msg_type_number_t thread_count;
-    if (task_threads(task, &thread_array, &thread_count) != KERN_SUCCESS) {
-        return -1;
-    }
-    
-    // Sum cpu usage from all threads.
-    float cpu_usage_percentage = 0;
-    thread_basic_info_data_t thread_info_data = {};
-    mach_msg_type_number_t thread_info_count;
-    for (size_t i = 0; i < thread_count; ++i) {
-        thread_info_count = THREAD_BASIC_INFO_COUNT;
-        kern_return_t ret = thread_info(thread_array[i],
-                                        THREAD_BASIC_INFO,
-                                        (thread_info_t)&thread_info_data,
-                                        &thread_info_count);
-        if (ret == KERN_SUCCESS) {
-            cpu_usage_percentage +=
-            100.f * (float)thread_info_data.cpu_usage / TH_USAGE_SCALE;
-        }
-    }
-    
-    // Dealloc the created array.
-    vm_deallocate(task, (vm_address_t)thread_array,
-                  sizeof(thread_act_t) * thread_count);
-    return lroundf(cpu_usage_percentage);
 }
 
 @end

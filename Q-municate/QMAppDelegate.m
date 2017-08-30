@@ -82,7 +82,6 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [[QMCore instance].authService addDelegate:self];
     // QuickbloxWebRTC settings
     [QBRTCClient initializeRTC];
-    [QBRTCConfig setICEServers:[[QMCore instance].callManager quickbloxICE]];
     [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecISAC;
     [QBRTCConfig setStatsReportTimeInterval:0.0f]; // set to 1.0f to enable stats report
     // Configuring app appearance

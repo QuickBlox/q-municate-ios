@@ -174,7 +174,7 @@
 "QM_STR_CALL_WAS_CANCELLED" = "Call was cancelled";
 "QM_STR_USER_IS_BUSY" = "User is busy";
 "QM_STR_BAD_CONNECTION" = "Bad connection";
-"QM_STR_BAD_CONNECTION_TRYING_TO_RESUME" = "Bad connection, trying to resume";
+"QM_STR_LOST_CONNECTION_TRYING_TO_RESUME" = "Lost connection, trying to resume";
 "QM_STR_CALL_WAS_STOPPED" = "Call was stopped";
 "QM_STR_USER_DOESNT_ANSWER" = "User doesn't answer";
 "QM_STR_IS_CALLING_YOU" = "is calling you.";
