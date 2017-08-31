@@ -22,6 +22,11 @@
     
     NSParameterAssert(chatMessage.dialogID);
     
+    if ([QMCore instance].callManager.hasActiveCall) {
+        // do not show message notifications while call is active
+        return;
+    }
+    
     QBChatDialog *chatDialog =
     [QMCore.instance.chatService.dialogsMemoryStorage chatDialogWithID:chatMessage.dialogID];
     

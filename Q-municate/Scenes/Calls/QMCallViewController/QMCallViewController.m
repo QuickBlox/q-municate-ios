@@ -15,7 +15,6 @@
 #import "QMColors.h"
 #import "QMSoundManager.h"
 #import "QMHelpers.h"
-#import "QMCameraCapture.h"
 
 static UIColor *videoCallBarBackgroundColor() {
     
@@ -32,6 +31,7 @@ static UIColor *videoCallBarBackgroundColor() {
 
 static const NSTimeInterval kQMRefreshTimeInterval = 1.0f;
 static const NSTimeInterval kQMHideBarsAfterTime = 5.0f;
+static const NSTimeInterval kQMBadConnectionTimeOut = 1.5f;
 
 static const CGFloat kQMToolbarHeightSmall = 78.0f;
 static const CGFloat kQMToolbarHeightBig = 226.0f;
@@ -40,7 +40,8 @@ static const CGFloat kQMToolbarHeightBig = 226.0f;
 
 <
 QBRTCClientDelegate,
-QMCallManagerDelegate
+QMCallManagerDelegate,
+QBRTCAudioSessionDelegate
 >
 
 @property (assign, nonatomic) QMCallState callState;
@@ -53,10 +54,12 @@ QMCallManagerDelegate
 @property (strong, nonatomic) NSTimer *callTimer;
 @property (assign, nonatomic) NSTimeInterval callDuration;
 
+@property (strong, nonatomic) NSTimer *badConnectionTimer;
+
 @property (assign, nonatomic) BOOL disconnected;
 @property (assign, nonatomic, readonly) BOOL isVideoCall;
 @property (strong, nonatomic, readonly) QBRTCSession *session;
-@property (strong, nonatomic) QMCameraCapture *cameraCapture;
+@property (strong, nonatomic) QBRTCCameraCapture *cameraCapture;
 
 @property (strong, nonatomic) QMLocalVideoView *localVideoView;
 @property (strong, nonatomic) QBRTCRemoteVideoView *opponentVideoView;
@@ -67,6 +70,7 @@ QMCallManagerDelegate
 @property (strong, nonatomic) UIButton *cameraButton;
 @property (strong, nonatomic) UIButton *declineButton;
 @property (strong, nonatomic) UIButton *acceptButton;
+@property (strong, nonatomic) UIButton *speakerButton;
 
 @end
 
@@ -98,7 +102,8 @@ QMCallManagerDelegate
     self.view.backgroundColor = [UIColor whiteColor];
     
     [[QBRTCClient instance] addDelegate:self];
-    QMCore.instance.callManager.delegate = self;
+    [[QMCore instance].callManager addDelegate:self];
+    [[QBRTCAudioSession instance] addDelegate:self];
     
     if (self.isVideoCall) {
         
@@ -106,16 +111,14 @@ QMCallManagerDelegate
         self.view.backgroundColor = QMVideoCallBackgroundColor();
         
         // configuring camera capture
-        self.cameraCapture = [[QMCameraCapture alloc]
+        self.cameraCapture = [[QBRTCCameraCapture alloc]
                               initWithVideoFormat:[QBRTCVideoFormat defaultFormat]
                               position:AVCaptureDevicePositionFront];
-        [self.cameraCapture startSession];
+        [self.cameraCapture startSession:nil];
         
         // Aspect fill for preview layer
         self.cameraCapture.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-        
-        //        self.cameraCapture.previewLayer.connection.videoOrientation =
-        //        [self.cameraCapture.captureSession.inputs.firstObject videoOrientation];
+        self.session.localMediaStream.videoTrack.videoCapture = self.cameraCapture;
         
         // configuring opponents video view
         self.opponentVideoView = [[QBRTCRemoteVideoView alloc]
@@ -124,6 +127,7 @@ QMCallManagerDelegate
                                                            CGRectGetWidth([UIScreen mainScreen].bounds),
                                                            CGRectGetHeight([UIScreen mainScreen].bounds))];
         self.opponentVideoView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+        self.opponentVideoView.videoGravity = AVLayerVideoGravityResizeAspectFill;
         
         [self.view addSubview:self.opponentVideoView];
         
@@ -199,15 +203,18 @@ QMCallManagerDelegate
             break;
             
         case QMCallStateOutgoingAudioCall:
+            [self initializeAudioSessionIfNeeded];
             bottomText = NSLocalizedString(@"QM_STR_CALLING", nil);
             break;
             
         case QMCallStateOutgoingVideoCall:
+            [self initializeAudioSessionIfNeeded];
             bottomText = NSLocalizedString(@"QM_STR_VIDEO_CALLING", nil);
             break;
             
         case QMCallStateActiveAudioCall:
         case QMCallStateActiveVideoCall:
+            [self initializeAudioSessionIfNeeded];
             bottomText = NSLocalizedString(@"QM_STR_CONNECTING", nil);
             break;
     }
@@ -280,10 +287,10 @@ QMCallManagerDelegate
             [self.toolbar addButton:[QMCallButtonsFactory cameraRotationButton] action:^(UIButton * _Nonnull sender) {
                 
                 @strongify(self);
-                AVCaptureDevicePosition position = [self.cameraCapture currentPosition];
-                AVCaptureDevicePosition newPosition = position == AVCaptureDevicePositionBack ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
+                AVCaptureDevicePosition previousPosition = self.cameraCapture.position;
+                AVCaptureDevicePosition position = previousPosition == AVCaptureDevicePositionBack ? AVCaptureDevicePositionFront : AVCaptureDevicePositionBack;
+                self.cameraCapture.position = position;
                 
-                [self.cameraCapture selectCameraPosition:newPosition];
                 sender.selected = !sender.selected;
             }];
             
@@ -312,9 +319,6 @@ QMCallManagerDelegate
                 @strongify(self);
                 sender.userInteractionEnabled = NO;
                 [QMCore.instance.callManager stopAllSounds];
-                
-                QBRTCSoundRoute soundRoute = self.session.conferenceType == QBRTCConferenceTypeVideo ? QBRTCSoundRouteSpeaker : QBRTCSoundRouteReceiver;
-                [[QBRTCSoundRouter instance] setCurrentSoundRoute:soundRoute];
                 
                 self.callState = QMCallStateActiveAudioCall;
                 [self configureCallController];
@@ -418,17 +422,17 @@ QMCallManagerDelegate
 
 - (void)configureSpeakerButton {
     
-    UIButton *speakerButton = [QMCallButtonsFactory speakerButton];
+    self.speakerButton = [QMCallButtonsFactory speakerButton];
     
-    QBRTCSoundRouter *router = [QBRTCSoundRouter instance];
-    speakerButton.selected = router.currentSoundRoute == QBRTCSoundRouteSpeaker;
+    QBRTCAudioSession *audioSession = [QBRTCAudioSession instance];
+    self.speakerButton.selected = audioSession.currentAudioDevice == QBRTCAudioDeviceSpeaker;
     
-    [self.toolbar addButton:speakerButton action:^(UIButton * _Nonnull sender) {
+    [self.toolbar addButton:self.speakerButton action:^(UIButton * _Nonnull sender) {
         
-        QBRTCSoundRoute newRoute = router.currentSoundRoute == QBRTCSoundRouteSpeaker ? QBRTCSoundRouteReceiver : QBRTCSoundRouteSpeaker;
-        router.currentSoundRoute = newRoute;
+        QBRTCAudioDevice audioDevice = audioSession.currentAudioDevice == QBRTCAudioDeviceSpeaker ? QBRTCAudioDeviceReceiver : QBRTCAudioDeviceSpeaker;
+        audioSession.currentAudioDevice = audioDevice;
         
-        sender.selected = newRoute == QBRTCSoundRouteSpeaker;
+        sender.selected = audioDevice == QBRTCAudioDeviceSpeaker;
     }];
 }
 
@@ -523,6 +527,23 @@ QMCallManagerDelegate
 
 //MARK: - Actions
 
+- (void)initializeAudioSessionIfNeeded {
+    QBRTCAudioSession *audioSession = [QBRTCAudioSession instance];
+    if (!audioSession.isInitialized) {
+        [audioSession initialize];
+    }
+}
+
+- (void)showBadConnectionInformation {
+    self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_LOST_CONNECTION_TRYING_TO_RESUME", nil);
+    if (self.isVideoCall) {
+        
+        [self updateBarsVisibilityForceShow:YES];
+    }
+    [self.badConnectionTimer invalidate];
+    self.badConnectionTimer = nil;
+}
+
 - (void)rejectCall {
     
     [self.session rejectCall:nil];
@@ -535,10 +556,8 @@ QMCallManagerDelegate
 
 - (void)refreshCallTime {
     
-    self.callDuration += kQMRefreshTimeInterval;
-    
     if (!self.disconnected) {
-        
+        self.callDuration += kQMRefreshTimeInterval;
         self.callInfoView.bottomText = QMStringForTimeInterval(self.callDuration);
     }
 }
@@ -619,26 +638,6 @@ QMCallManagerDelegate
 
 //MARK: - QBRTCClientDelegate
 
-- (void)session:(QBRTCSession *)session initializedLocalMediaStream:(QBRTCMediaStream *)mediaStream {
-    
-    if (self.session != session) {
-        
-        return;
-    }
-    
-    // user is being able to interact with buttons before local media stream
-    // would initialize. Therefore we are capturing user decision on track been enabled
-    mediaStream.audioTrack.enabled = !self.muteButton.selected;
-    
-    if (self.isVideoCall) {
-        // capturing user desicion on video track been enabled
-        mediaStream.videoTrack.enabled = !self.cameraButton.selected;
-        
-        // setting current video capture
-        mediaStream.videoTrack.videoCapture = self.cameraCapture;
-    }
-}
-
 - (void)session:(QBRTCSession *)session receivedRemoteVideoTrack:(QBRTCVideoTrack *)videoTrack fromUser:(NSNumber *)__unused userID {
     
     if (self.session != session) {
@@ -691,7 +690,7 @@ QMCallManagerDelegate
         return;
     }
     
-    [QMCore.instance.callManager stopAllSounds];
+    [[QMCore instance].callManager stopAllSounds];
     
     self.callState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateActiveVideoCall : QMCallStateActiveAudioCall;
     [self configureCallController];
@@ -709,21 +708,18 @@ QMCallManagerDelegate
         return;
     }
     
+    [self.badConnectionTimer invalidate];
+    self.badConnectionTimer = nil;
+    
     if (self.callState == QMCallStateIncomingAudioCall
         || self.callState == QMCallStateIncomingVideoCall) {
         
         self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_CALL_WAS_CANCELLED", nil);
-        self.declineButton.enabled = NO;
-        self.acceptButton.enabled = NO;
-        return;
     }
-    
-    self.declineButton.enabled = NO;
-    
-    [QMCore.instance.callManager stopAllSounds];
-    
-    [self stopCallTimer];
-    self.callInfoView.bottomText = [NSString stringWithFormat:@"%@ - %@", NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil), QMStringForTimeInterval(self.callDuration)];
+    else {
+        
+        self.callInfoView.bottomText = [NSString stringWithFormat:@"%@ - %@", NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil), QMStringForTimeInterval(self.callDuration)];
+    }
 }
 
 - (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)__unused userID {
@@ -745,22 +741,11 @@ QMCallManagerDelegate
     }
     
     self.disconnected = YES;
-    self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_BAD_CONNECTION_TRYING_TO_RESUME", nil);
-    if (self.isVideoCall) {
-        
-        [self updateBarsVisibilityForceShow:YES];
-    }
-}
-
-- (void)session:(QBRTCSession *)session disconnectedByTimeoutFromUser:(NSNumber *)__unused userID {
-    
-    if (self.session != session) {
-        
-        return;
-    }
-    
-    [self stopCallTimer];
-    self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_BAD_CONNECTION", nil);
+    self.badConnectionTimer = [NSTimer scheduledTimerWithTimeInterval:kQMBadConnectionTimeOut
+                                                               target:self
+                                                             selector:@selector(showBadConnectionInformation)
+                                                             userInfo:nil
+                                                              repeats:NO];
 }
 
 - (void)session:(QBRTCSession *)session connectionFailedForUser:(NSNumber *)__unused userID {
@@ -770,8 +755,27 @@ QMCallManagerDelegate
         return;
     }
     
-    [self stopCallTimer];
     self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_BAD_CONNECTION", nil);
+}
+
+- (void)sessionDidClose:(QBRTCSession *)session {
+    if (self.session != session) {
+        return;
+    }
+    
+    self.acceptButton.enabled = NO;
+    self.declineButton.enabled = NO;
+    
+    [[QMCore instance].callManager stopAllSounds];
+    
+    [[QBRTCAudioSession instance] deinitialize];
+    
+    if (self.isVideoCall) {
+        
+        [self updateBarsVisibilityForceShow:YES];
+    }
+    
+    [self stopCallTimer];
 }
 
 //MARK: - QMCallManagerDelegate
@@ -780,7 +784,7 @@ QMCallManagerDelegate
     
     if (self.cameraCapture != nil) {
         
-        [self.cameraCapture stopSession];
+        [self.cameraCapture stopSession:nil];
         self.cameraCapture = nil;
     }
 }
@@ -789,12 +793,22 @@ QMCallManagerDelegate
     
 }
 
+// MARK: - QBRTCAudioSessionDelegate
+
+- (void)audioSession:(QBRTCAudioSession *)__unused audioSession didChangeCurrentAudioDevice:(QBRTCAudioDevice)updatedAudioDevice {
+    
+    BOOL isSpeaker = updatedAudioDevice == QBRTCAudioDeviceSpeaker;
+    if (self.speakerButton.selected != isSpeaker) {
+        
+        self.speakerButton.selected = isSpeaker;
+    }
+}
+
 //MARK: - Overrides
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     // light status bar for dark controller
     return self.isVideoCall ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
 }
-
 
 @end
