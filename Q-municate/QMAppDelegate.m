@@ -90,8 +90,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [[UINavigationBar appearance] setTintColor:QMSecondaryApplicationColor()];
 
     // Configuring searchbar appearance
-    [UISearchBar appearance].keyboardAppearance = UIKeyboardAppearanceDark;
-    [[UISearchBar appearance] setTintColor:QMSecondaryApplicationColor()];
+
     [[UISearchBar appearance] setSearchBarStyle:UISearchBarStyleMinimal];
     [[UISearchBar appearance] setBarTintColor:[UIColor whiteColor]];
     [[UISearchBar appearance] setBackgroundImage:QMStatusBarBackgroundImage() forBarPosition:0 barMetrics:UIBarMetricsDefault];
