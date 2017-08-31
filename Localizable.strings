@@ -6,6 +6,7 @@
   Copyright (c) 2014 Quickblox. All rights reserved.
 */
 "QM_STR_OK" = "OK";
+"QM_STR_DONE" = "Done";
 "QM_STR_SUCCESS" = "Success";
 "QM_STR_ERROR" = "Error";
 "QM_STR_EMAIL_FIELD_IS_EMPTY" = "Email field is empty";

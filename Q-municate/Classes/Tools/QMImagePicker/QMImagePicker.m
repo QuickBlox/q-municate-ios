@@ -9,7 +9,6 @@
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "QMImagePicker.h"
 
-
 static NSString * const kQMImagePickerErrorDomain = @"com.qmunicate.imagepicker";
 
 @interface QMImagePicker()
@@ -98,7 +97,6 @@ static NSString * const kQMImagePickerErrorDomain = @"com.qmunicate.imagepicker"
                          animated:YES
                        completion:nil];
     };
-    
     
     if ([resultHandler respondsToSelector:@selector(imagePickerCanBePresented:withCompletion:)]) {
         
