@@ -648,7 +648,9 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
 - (void)presentViewControllerWithPhoto:(QMPhoto *)photo rightBarButtonItem:(UIBarButtonItem *)rightBarButtonItem {
     NYTPhotosViewController *photosViewController =
     [[NYTPhotosViewController alloc] initWithPhotos:@[photo]];
-    photosViewController.rightBarButtonItem = rightBarButtonItem;
+    if (rightBarButtonItem != nil) {
+        photosViewController.rightBarButtonItem = rightBarButtonItem;
+    }
     photosViewController.delegate = self;
     
     [self.viewController.view endEditing:YES]; // hiding keyboard
