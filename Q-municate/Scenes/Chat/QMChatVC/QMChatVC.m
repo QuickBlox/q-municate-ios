@@ -39,7 +39,6 @@
 
 // external
 #import <MobileCoreServices/UTCoreTypes.h>
-#import <NYTPhotoViewer/NYTPhotosViewController.h>
 #import <AVKit/AVKit.h>
 
 @import SafariServices;
@@ -71,11 +70,21 @@ static NSString * const kQMTextAttachmentSpacing = @"  ";
 
 @end
 
-@interface QMChatVC ()<QMChatServiceDelegate, QMChatConnectionDelegate,
-QMContactListServiceDelegate, QMDeferredQueueManagerDelegate, QMChatActionsHandler,
-QMChatCellDelegate, QMImagePickerResultHandler, QMImageViewDelegate,
-NYTPhotosViewControllerDelegate, QMMediaControllerDelegate, QMCallManagerDelegate,
-QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
+@interface QMChatVC ()
+<
+QMChatServiceDelegate,
+QMChatConnectionDelegate,
+QMContactListServiceDelegate,
+QMDeferredQueueManagerDelegate,
+QMChatActionsHandler,
+QMChatCellDelegate,
+QMImagePickerResultHandler,
+QMImageViewDelegate,
+QMMediaControllerDelegate,
+QMCallManagerDelegate,
+QMOpenGraphServiceDelegate,
+QMUsersServiceDelegate
+>
 /**
  *  Detailed cells set.
  */
@@ -126,6 +135,7 @@ QMOpenGraphServiceDelegate, QMUsersServiceDelegate>
  *  Group avatar image view.
  */
 @property (strong, nonatomic) QMImageView *groupAvatarImageView;
+
 @property (strong, nonatomic) QMMediaController *mediaController;
 @property (strong, nonatomic) QMAudioRecorder *currentAudioRecorder;
 
@@ -2056,7 +2066,6 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
             break;
     }
 }
-
 
 //MARK: - UITextViewDelegate
 

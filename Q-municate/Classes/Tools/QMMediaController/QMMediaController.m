@@ -30,7 +30,18 @@ QMMediaHandler>
 
 @dynamic attachmentsService;
 
-//MARK: - NSObject
+// MARK: - NSObject
+
+- (void)dealloc {
+    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    
+    [QMAudioPlayer audioPlayer].playerDelegate = nil;
+    
+    [[QMImageLoader instance] cancelAll];
+    [self.attachmentsService.assetService cancelAllOperations];
+    [self.attachmentsService.contentService cancelDownloadOperations];
+    [self.attachmentsService removeDelegate:self];
+}
 
 - (instancetype)initWithViewController:(UIViewController <QMMediaControllerDelegate> *)viewController {
     
@@ -41,16 +52,6 @@ QMMediaHandler>
     }
     
     return self;
-}
-
-- (void)dealloc {
-    
-    [QMAudioPlayer audioPlayer].playerDelegate = nil;
-    
-    [[QMImageLoader instance] cancelAll];
-    [self.attachmentsService.assetService cancelAllOperations];
-    [self.attachmentsService.contentService cancelDownloadOperations];
-    [self.attachmentsService removeDelegate:self];
 }
 
 //MARK: - Interface
@@ -478,7 +479,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
                                         attributes:@{NSForegroundColorAttributeName: [UIColor lightGrayColor],
                                                      NSFontAttributeName:font }];
         
-        self.photoReferenceView = ((QMBaseMediaCell *)view).previewImageView;
+        self.photoReferenceView = [(QMBaseMediaCell *)view previewImageView];
         
         [self presentViewControllerWithPhoto:photo];
     }
@@ -600,8 +601,8 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     }
 }
 
-- (void)chatAttachmentService:(QMChatAttachmentService *)chatAttachmentService
-    didChangeAttachmentStatus:(QMMessageAttachmentStatus)status
+- (void)chatAttachmentService:(QMChatAttachmentService *)__unused chatAttachmentService
+    didChangeAttachmentStatus:(QMMessageAttachmentStatus)__unused status
                    forMessage:(QBChatMessage *)message {
     
     QBChatAttachment *attachment = message.attachments.firstObject;
@@ -622,6 +623,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     
     NYTPhotosViewController *photosViewController =
     [[NYTPhotosViewController alloc] initWithPhotos:@[photo]];
+    photosViewController.delegate = self;
     
     [self.viewController.view endEditing:YES]; // hiding keyboard
     [self.viewController presentViewController:photosViewController
