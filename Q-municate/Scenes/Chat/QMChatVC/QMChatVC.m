@@ -746,7 +746,8 @@ QMUsersServiceDelegate
                                     [QMImagePicker takePhotoOrVideoInViewController:self
                                                                         maxDuration:kQMMaxAttachmentDuration
                                                                             quality:UIImagePickerControllerQualityTypeMedium
-                                                                      resultHandler:self];
+                                                                      resultHandler:self
+                                                                      allowsEditing:NO];
                                 }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CHOOSE_MEDIA", nil)
@@ -757,7 +758,7 @@ QMUsersServiceDelegate
                                     [QMImagePicker chooseFromGaleryInViewController:self
                                                                         maxDuration:kQMMaxAttachmentDuration
                                                                       resultHandler:self
-                                                                      allowsEditing:YES];
+                                                                      allowsEditing:NO];
                                 }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LOCATION", nil)
@@ -2096,20 +2097,23 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
 }
 
 
-- (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo {
+- (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
     @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         @strongify(self);
         
-        UIImage *newImage = photo;
         if (imagePicker.sourceType == UIImagePickerControllerSourceTypeCamera) {
-            newImage = [newImage fixOrientation];
+            UIImage *newImage = [photo fixOrientation];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self sendAttachmentMessageWithImage:newImage];
+            });
         }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self sendAttachmentMessageWithImage:newImage];
-        });
+        else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.mediaController didFinishPickingPhoto:photo];
+            });
+        }
     });
 }
 

@@ -24,6 +24,7 @@ QMMediaHandler>
 @property (strong, nonatomic) QMChatAttachmentService *attachmentsService;
 @property (strong, nonatomic) AVPlayer *videoPlayer;
 @property (weak, nonatomic) UIView *photoReferenceView;
+@property (weak, nonatomic) __kindof UIViewController *presentedViewController;
 @end
 
 @implementation QMMediaController
@@ -577,6 +578,27 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     }
 }
 
+- (void)didFinishPickingPhoto:(UIImage *)pickedPhoto {
+    
+    // clearing previous reference view
+    self.photoReferenceView = nil;
+    
+    QMPhoto *photo = [[QMPhoto alloc] init];
+    photo.image = pickedPhoto;
+    
+    UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"QM_STR_DONE", nil)
+                                                                      style:UIBarButtonItemStyleDone
+                                                                     target:self
+                                                                     action:@selector(notifyAboutAcceptingPickedImage)];
+    
+    [self presentViewControllerWithPhoto:photo rightBarButtonItem:barButtonItem];
+}
+
+- (void)notifyAboutAcceptingPickedImage {
+    NYTPhotosViewController *photosViewController = (NYTPhotosViewController *)_presentedViewController;
+    [_viewController sendAttachmentMessageWithImage:photosViewController.currentlyDisplayedPhoto.image];
+    [_presentedViewController dismissViewControllerAnimated:YES completion:nil];
+}
 
 - (QMChatAttachmentService *)attachmentsService {
     
@@ -620,17 +642,21 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
 }
 
 - (void)presentViewControllerWithPhoto:(QMPhoto *)photo {
-    
+    [self presentViewControllerWithPhoto:photo rightBarButtonItem:nil];
+}
+
+- (void)presentViewControllerWithPhoto:(QMPhoto *)photo rightBarButtonItem:(UIBarButtonItem *)rightBarButtonItem {
     NYTPhotosViewController *photosViewController =
     [[NYTPhotosViewController alloc] initWithPhotos:@[photo]];
+    photosViewController.rightBarButtonItem = rightBarButtonItem;
     photosViewController.delegate = self;
     
     [self.viewController.view endEditing:YES]; // hiding keyboard
     [self.viewController presentViewController:photosViewController
                                       animated:YES
                                     completion:nil];
+    _presentedViewController = photosViewController;
 }
-
 
 //MARK: - NYTPhotosViewControllerDelegate
 
