@@ -24,6 +24,7 @@ QMMediaHandler>
 @property (strong, nonatomic) QMChatAttachmentService *attachmentsService;
 @property (strong, nonatomic) AVPlayer *videoPlayer;
 @property (weak, nonatomic) UIView *photoReferenceView;
+@property (weak, nonatomic) __kindof UIViewController *presentedViewController;
 @end
 
 @implementation QMMediaController
@@ -482,7 +483,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
                                         attributes:@{NSForegroundColorAttributeName: [UIColor lightGrayColor],
                                                      NSFontAttributeName:font }];
         
-        self.photoReferenceView = ((QMBaseMediaCell *)view).previewImageView;
+        self.photoReferenceView = [(QMBaseMediaCell *)view previewImageView];
         
         [self presentViewControllerWithPhoto:photo];
     }
@@ -491,8 +492,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
         if (attachmentStatus == QMMessageAttachmentStatusPreparing || attachmentStatus == QMMessageAttachmentStatusError) {
             return;
         }
-        [self playAttachment:attachment
-                  forMessage:message];
+        [self playAttachment:attachment forMessage:message];
     }
     else if (attachment.contentType == QMAttachmentContentTypeAudio) {
         
@@ -586,14 +586,35 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     }
 }
 
+- (void)didFinishPickingPhoto:(UIImage *)pickedPhoto {
+    
+    // clearing previous reference view
+    self.photoReferenceView = nil;
+    
+    QMPhoto *photo = [[QMPhoto alloc] init];
+    photo.image = pickedPhoto;
+    
+    UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"QM_STR_DONE", nil)
+                                                                      style:UIBarButtonItemStyleDone
+                                                                     target:self
+                                                                     action:@selector(notifyAboutAcceptingPickedImage)];
+    
+    [self presentViewControllerWithPhoto:photo rightBarButtonItem:barButtonItem];
+}
+
+- (void)notifyAboutAcceptingPickedImage {
+    NYTPhotosViewController *photosViewController = (NYTPhotosViewController *)_presentedViewController;
+    [_viewController sendAttachmentMessageWithImage:photosViewController.currentlyDisplayedPhoto.image];
+    [_presentedViewController dismissViewControllerAnimated:YES completion:nil];
+}
 
 - (QMChatAttachmentService *)attachmentsService {
     
     return QMCore.instance.chatService.chatAttachmentService;
 }
 
-- (void)chatAttachmentService:(QMChatAttachmentService *)chatAttachmentService
-    didChangeAttachmentStatus:(QMMessageAttachmentStatus)status
+- (void)chatAttachmentService:(QMChatAttachmentService *)__unused chatAttachmentService
+    didChangeAttachmentStatus:(QMMessageAttachmentStatus)__unused status
                    forMessage:(QBChatMessage *)message {
     
     QBChatAttachment *attachment = message.attachments.firstObject;
@@ -611,16 +632,23 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
 }
 
 - (void)presentViewControllerWithPhoto:(QMPhoto *)photo {
-    
+    [self presentViewControllerWithPhoto:photo rightBarButtonItem:nil];
+}
+
+- (void)presentViewControllerWithPhoto:(QMPhoto *)photo rightBarButtonItem:(UIBarButtonItem *)rightBarButtonItem {
     NYTPhotosViewController *photosViewController =
     [[NYTPhotosViewController alloc] initWithPhotos:@[photo]];
+    if (rightBarButtonItem != nil) {
+        photosViewController.rightBarButtonItem = rightBarButtonItem;
+    }
+    photosViewController.delegate = self;
     
     [self.viewController.view endEditing:YES]; // hiding keyboard
     [self.viewController presentViewController:photosViewController
                                       animated:YES
                                     completion:nil];
+    _presentedViewController = photosViewController;
 }
-
 
 //MARK: - NYTPhotosViewControllerDelegate
 
@@ -629,3 +657,4 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
 }
 
 @end
+
