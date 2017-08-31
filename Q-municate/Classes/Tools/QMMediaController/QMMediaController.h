@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
           withMessage:(QBChatMessage *)message;
 
 - (void)cancelOperationsForMessage:(QBChatMessage *)message;
-
+- (void)didFinishPickingPhoto:(UIImage *)pickedPhoto;
 - (void)didTapContainer:(id<QMMediaViewDelegate>)view;
 
 @end
@@ -40,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable id<QMMediaViewDelegate>)viewForMessage:(QBChatMessage *)message;
 - (void)didUpdateMessage:(QBChatMessage *)message;
 - (NSString *)dialogID;
+- (void)sendAttachmentMessageWithImage:(UIImage *)image;
 
 @end
 
