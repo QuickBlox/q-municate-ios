@@ -1565,12 +1565,7 @@ QMUsersServiceDelegate
     [QMCore.instance.chatService sendAttachmentMessage:message
                                               toDialog:self.chatDialog
                                         withAttachment:attachment
-                                            completion:^(NSError * _Nullable error) {
-                                                
-                                                if (!error) {
-                                                    [self finishSendingMessageAnimated:YES];
-                                                }
-                                            }];
+                                            completion:nil];
     
     if (self.automaticallyScrollsToMostRecentMessage) {
         [self scrollToBottomAnimated:YES];

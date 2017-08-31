@@ -74,13 +74,9 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
     return self;
 }
 
-- (NSTimeInterval)currentTime {
-    
-    return [self.recorder currentTime];
-}
-
 - (void)dealloc {
     
+    _recorder.delegate = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:AVAudioSessionInterruptionNotification
                                                   object:nil];
@@ -101,24 +97,25 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
 }
 
 - (void)startRecording {
-    
     [_recorder record];
 }
 
 - (void)pauseRecording {
-    
     [_recorder pause];
 }
+
 - (void)stopRecording {
-    
     [_recorder stop];
 }
 
 - (void)cancelRecording {
     
     _isCancelled = YES;
-    
     [self stopRecording];
+}
+
+- (NSTimeInterval)currentTime {
+    return [self.recorder currentTime];
 }
 
 //MARK: -AVAudioRecorderDelegate

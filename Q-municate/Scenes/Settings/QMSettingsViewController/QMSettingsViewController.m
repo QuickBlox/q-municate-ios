@@ -128,7 +128,14 @@ NYTPhotosViewControllerDelegate
     
     self.emailLabel.text = userData.email.length > 0 ? userData.email : NSLocalizedString(@"QM_STR_NONE", nil);
     
-    self.statusLabel.text = userData.status.length > 0 ? userData.status : NSLocalizedString(@"QM_STR_NONE", nil);
+    BOOL hasStatus = userData.status.length > 0;
+    
+    self.statusLabel.text =
+    hasStatus ? userData.status : NSLocalizedString(@"QM_STR_NO_STATUS_MESSAGE", nil);
+    
+    self.statusLabel.textColor =
+    hasStatus ? [UIColor darkGrayColor] : [UIColor lightGrayColor];
+    
 }
 
 //MARK: - Actions

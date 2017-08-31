@@ -17,4 +17,11 @@
                            userInfo:@{NSLocalizedRecoverySuggestionErrorKey : @"You are not authorized in REST."}];
 }
 
++ (NSError *)validationErrorWithLocalizedDescription:(NSString *)localizedDescription {
+    
+    return [NSError errorWithDomain:[NSBundle mainBundle].bundleIdentifier
+                              code:0
+                          userInfo:@{NSLocalizedDescriptionKey : localizedDescription}];
+}
+
 @end

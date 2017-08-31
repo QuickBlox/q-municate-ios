@@ -16,9 +16,14 @@
 #import <SVProgressHUD.h>
 #import "QMSplitViewController.h"
 
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <CoreTelephony/CTCarrier.h>
+
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
+
 #import "QMImagePreview.h"
 #import "QMCallManager.h"
+#import "REMessageUI.h"
 
 static const CGFloat kQMStatusCellMinHeight = 65.0f;
 
@@ -61,6 +66,8 @@ NYTPhotosViewControllerDelegate
 
 @property (strong, nonatomic) NSMutableIndexSet *hiddenSections;
 
+@property (strong, nonatomic) NSIndexPath *selectedIndexPathForMenu;
+
 @end
 
 @implementation QMUserInfoViewController
@@ -73,6 +80,13 @@ NYTPhotosViewControllerDelegate
     // display mode managing. Not removing it will cause item update
     // for deallocated navigation item
     self.navigationItem.leftBarButtonItem = nil;
+    
+    [NSNotificationCenter.defaultCenter removeObserver:self
+                                                  name:UIMenuControllerWillShowMenuNotification
+                                                object:nil];
+    [NSNotificationCenter.defaultCenter removeObserver:self
+                                                  name:UIMenuControllerWillHideMenuNotification
+                                                object:nil];
 }
 
 - (void)viewDidLoad {
@@ -80,6 +94,17 @@ NYTPhotosViewControllerDelegate
     NSAssert(self.user.ID > 0, @"Must be a valid user ID!");
     
     [super viewDidLoad];
+    
+    
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(didReceiveMenuWillShowNotification:)
+                                               name:UIMenuControllerWillShowMenuNotification
+                                             object:nil];
+    
+    [NSNotificationCenter.defaultCenter  addObserver:self
+                                            selector:@selector(didReceiveMenuWillHideNotification:)
+                                                name:UIMenuControllerWillHideMenuNotification
+                                              object:nil];
     
     if (self.navigationController.viewControllers.count == 1) {
         
@@ -133,10 +158,9 @@ NYTPhotosViewControllerDelegate
 - (void)loadUser {
     
     // get user from server
-    @weakify(self);
+    
     [[QMCore.instance.usersService getUserWithID:self.user.ID forceLoad:YES] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
         
-        @strongify(self);
         [self.refreshControl endRefreshing];
         
         if (!task.isFaulted) {
@@ -220,7 +244,7 @@ NYTPhotosViewControllerDelegate
     // Phone
     if (self.user.phone.length > 0) {
         
-        self.phoneLabel.text = self.user.phone.length > 0 ? self.user.phone : NSLocalizedString(@"QM_STR_NONE", nil);
+        self.phoneLabel.text = self.user.phone;
     }
     else {
         
@@ -230,7 +254,7 @@ NYTPhotosViewControllerDelegate
     // Email
     if (self.user.email.length > 0) {
         
-        self.emailLabel.text = self.user.email.length > 0 ? self.user.email : NSLocalizedString(@"QM_STR_NONE", nil);
+        self.emailLabel.text = self.user.email;
     }
     else {
         
@@ -318,7 +342,6 @@ NYTPhotosViewControllerDelegate
 - (void)callActionWithConferenceType:(QBRTCConferenceType)conferenceType {
     
     if (![self callAllowed]) {
-        
         return;
     }
     
@@ -333,6 +356,43 @@ NYTPhotosViewControllerDelegate
 - (void)videoCallAction {
     
     [self callActionWithConferenceType:QBRTCConferenceTypeVideo];
+}
+
+- (void)cellularCallAction {
+    
+    NSParameterAssert(self.user.phone.length > 0);
+    
+    UIAlertController *alertController = [UIAlertController
+                                          alertControllerWithTitle:nil
+                                          message:self.user.phone
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:nil]];
+    
+    void (^makeCallAction)(UIAlertAction *action) = ^void(UIAlertAction * __unused action) {
+        
+        NSError *error = nil;
+        
+        if (![self canMakeAPhoneCall:&error]) {
+            
+            [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning
+                                                                                  message:error.localizedDescription
+                                                                                 duration:kQMDefaultNotificationDismissTime];
+        }
+        else {
+            NSString *cleanedPhoneNumber = [self formatPhoneUrl:self.user.phone];
+            NSURL *telURL = [NSURL URLWithString:[NSString stringWithFormat:@"tel:%@", cleanedPhoneNumber]];
+            [UIApplication.sharedApplication openURL:telURL];
+        }
+    };
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CALL", nil)
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:makeCallAction]];
+    [self presentViewController:alertController animated:YES completion:nil];
+    
 }
 
 - (void)removeContactAction {
@@ -432,7 +492,15 @@ NYTPhotosViewControllerDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (indexPath.section == QMUserInfoSectionContactInteractions) {
+    if (indexPath.section == QMUserInfoSectionInfoPhone) {
+        
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        [self cellularCallAction];
+    }
+    else if (indexPath.section == QMUserInfoSectionInfoEmail) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
+    else if (indexPath.section == QMUserInfoSectionContactInteractions) {
         
         switch (indexPath.row) {
                 
@@ -496,6 +564,52 @@ NYTPhotosViewControllerDelegate
     
     return [super tableView:tableView heightForRowAtIndexPath:indexPath];
 }
+
+
+- (void)tableView:(UITableView *)__unused tableView
+    performAction:(SEL)action
+forRowAtIndexPath:(NSIndexPath *)indexPath
+       withSender:(id)__unused sender{
+    
+    if (action == @selector(copy:)) {
+        
+        NSString *textToCopy = nil;
+        if (indexPath.section == QMUserInfoSectionInfoEmail) {
+            textToCopy = self.user.email;
+        }
+        else if (indexPath.section == QMUserInfoSectionInfoPhone) {
+            textToCopy = self.user.phone;
+        }
+        else if (indexPath.section == QMUserInfoSectionStatus) {
+            textToCopy = self.user.status;
+        }
+        
+        if (textToCopy) {
+            UIPasteboard.generalPasteboard.string = textToCopy;
+        }
+    }
+}
+
+- (BOOL)tableView:(UITableView *)__unused tableView
+shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    self.selectedIndexPathForMenu = indexPath;
+    
+    return indexPath.section == QMUserInfoSectionInfoEmail
+    || indexPath.section == QMUserInfoSectionInfoPhone
+    || indexPath.section == QMUserInfoSectionStatus;
+    
+}
+
+- (BOOL) tableView:(UITableView *)__unused tableView
+  canPerformAction:(SEL)action
+ forRowAtIndexPath:(NSIndexPath *)__unused indexPath
+        withSender:(id)__unused sender{
+    
+    return action == @selector(copy:);
+}
+
+
 
 //MARK: - QMContactListServiceDelegate
 
@@ -561,6 +675,104 @@ NYTPhotosViewControllerDelegate
     }
     
     return YES;
+}
+
+- (BOOL)canMakeAPhoneCall:(NSError **)error {
+    
+    // Check if the device can place a phone call
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tel://"]]) {
+        // Device supports phone calls
+        CTTelephonyNetworkInfo *netInfo = [[CTTelephonyNetworkInfo alloc] init];
+        CTCarrier *carrier = [netInfo subscriberCellularProvider];
+        NSString *mnc = [carrier mobileNetworkCode];
+        
+        if (([mnc length] == 0) || ([mnc isEqualToString:@"65535"])) {
+            // The device can't place a call at this time.  SIM might be removed.
+            *error =
+            [self errorWithLocalizedDescription:NSLocalizedString(@"QM_STR_CELLULAR_ERROR_CAN_NOT_MAKE_CALL", nil)];
+            
+            return NO;
+        }
+        else {
+            // Device can place a phone call
+            return YES;
+        }
+    } else {
+        // Device does not support phone calls
+        *error =
+        [self errorWithLocalizedDescription:NSLocalizedString(@"QM_STR_CELLULAR_ERROR_NOT_SUPPORTED",nil)];
+        
+        return  NO;
+    }
+}
+
+- (NSString *)formatPhoneUrl:(NSString *)phone {
+    
+    unichar cleanPhone[phone.length];
+    int cleanPhoneLength = 0;
+    
+    int length = (int)phone.length;
+    for (int i = 0; i < length; i++) {
+        unichar c = [phone characterAtIndex:i];
+        if (!(c == ' ' || c == '(' || c == ')' || c == '-'))
+            cleanPhone[cleanPhoneLength++] = c;
+    }
+    
+    return [[NSString alloc] initWithCharacters:cleanPhone length:cleanPhoneLength];
+}
+
+- (NSError *)errorWithLocalizedDescription:(NSString *)localizedDescription {
+    
+    return [NSError errorWithDomain:@""
+                               code:0
+                           userInfo:@{NSLocalizedDescriptionKey : localizedDescription}];
+}
+
+//MARK:- Notifications
+
+- (void)didReceiveMenuWillShowNotification:(NSNotification *)notification {
+    
+    if (!self.selectedIndexPathForMenu) {
+        return;
+    }
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIMenuControllerWillShowMenuNotification
+                                                  object:nil];
+    
+    UIMenuController *menu = [notification object];
+    [menu setMenuVisible:NO animated:NO];
+    
+    NSInteger section = self.selectedIndexPathForMenu.section;
+    
+    UILabel *targetLabel;
+    
+    if (section == QMUserInfoSectionStatus) {
+        targetLabel = self.statusLabel;
+    }
+    else if (section == QMUserInfoSectionInfoEmail) {
+        targetLabel = self.emailLabel;
+    }
+    else if (section == QMUserInfoSectionInfoPhone) {
+        targetLabel = self.phoneLabel;
+    }
+    
+    NSParameterAssert(targetLabel);
+    
+    CGRect selectedCellFrame = CGRectZero;
+    selectedCellFrame.origin.x = targetLabel.intrinsicContentSize.width/2;
+    
+    [menu setTargetRect:selectedCellFrame inView:targetLabel];
+    [menu setMenuVisible:YES animated:YES];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveMenuWillShowNotification:)
+                                                 name:UIMenuControllerWillShowMenuNotification
+                                               object:nil];
+}
+
+- (void)didReceiveMenuWillHideNotification:(NSNotification *)__unused notification {
+    self.selectedIndexPathForMenu = nil;
 }
 
 @end
