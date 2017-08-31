@@ -86,17 +86,7 @@ QMChatConnectionDelegate
     BOOL hasActiveCall = QMCore.instance.callManager.hasActiveCall;
     BOOL isiOS8 = iosMajorVersion() < 9;
     
-    if (hasActiveCall
-        && chatMessage.callNotificationState != QMCallNotificationStateNone
-        && chatMessage.callerUserID == QMCore.instance.callManager.opponentUser.ID) {
-        //no need to handle the notification with the call state
-        //from the opponent user if the call is still active with this user
-        return;
-    }
-    
-    if (hasActiveCall
-        || isiOS8) {
-        
+    if (hasActiveCall || isiOS8) {
         // using hvc if active call or visible keyboard on ios8 devices
         // due to notification triggering window to be hidden
         hvc = [UIApplication sharedApplication].keyWindow.rootViewController;
