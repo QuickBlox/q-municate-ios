@@ -16,7 +16,7 @@
             <rect key="frame" x="0.0" y="0.0" width="332" height="40"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HgX-Rb-5wT" id="HuS-RQ-EqB">
-                <rect key="frame" x="0.0" y="0.0" width="332" height="40"/>
+                <rect key="frame" x="0.0" y="0.0" width="332" height="39.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NfP-Px-8Dg">
@@ -26,13 +26,13 @@
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
+                <color key="backgroundColor" red="1" green="0.28627450980000002" blue="0.25098039220000001" alpha="0.7775042808" colorSpace="calibratedRGB"/>
                 <constraints>
                     <constraint firstItem="NfP-Px-8Dg" firstAttribute="centerY" secondItem="HuS-RQ-EqB" secondAttribute="centerY" id="Kz8-ot-NdL"/>
                     <constraint firstAttribute="trailingMargin" secondItem="NfP-Px-8Dg" secondAttribute="trailing" constant="10" id="Qam-3K-qJF"/>
                     <constraint firstItem="NfP-Px-8Dg" firstAttribute="leading" secondItem="HuS-RQ-EqB" secondAttribute="leadingMargin" constant="10" id="l4d-aj-ZbH"/>
                 </constraints>
             </tableViewCellContentView>
-            <color key="backgroundColor" red="1" green="0.28627450980000002" blue="0.25098039220000001" alpha="0.7775042808" colorSpace="calibratedRGB"/>
             <connections>
                 <outlet property="validationLabel" destination="NfP-Px-8Dg" id="y0T-Ll-yQh"/>
             </connections>

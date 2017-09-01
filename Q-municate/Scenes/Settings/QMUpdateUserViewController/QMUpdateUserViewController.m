@@ -262,8 +262,6 @@ titleForFooterInSection:(NSInteger)__unused section {
         QMValidationCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMValidationCell cellIdentifier]
                                                                  forIndexPath:indexPath];
         [cell setValidationErrorText:self.validationErrorText];
-        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        
         return cell;
     }
     else {
