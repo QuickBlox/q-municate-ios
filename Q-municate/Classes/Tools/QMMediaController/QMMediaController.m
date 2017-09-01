@@ -95,11 +95,8 @@ QMMediaHandler>
     if (attachmentStatus == QMMessageAttachmentStatusNotLoaded) {
         view.viewState = QMMediaViewStateNotReady;
     }
-    else if (attachmentStatus == QMMessageAttachmentStatusLoading) {
-        view.viewState = QMMediaViewStateLoading;
-        view.progress = [self.attachmentsService.contentService progressForMessageWithID:message.ID];
-    }
-    else if (attachmentStatus == QMMessageAttachmentStatusUploading) {
+    else if (attachmentStatus == QMMessageAttachmentStatusLoading
+             || attachmentStatus == QMMessageAttachmentStatusUploading) {
         view.viewState = QMMediaViewStateLoading;
         view.progress = [self.attachmentsService.contentService progressForMessageWithID:message.ID];
     }
@@ -273,6 +270,7 @@ QMMediaHandler>
         }
     }
     if (attachment.contentType == QMAttachmentContentTypeAudio) {
+        
         __weak typeof(self) weakSelf = self;
         [self.attachmentsService attachmentWithID:attachment.ID message:message progressBlock:^(float progress) {
             if ([view.messageID isEqualToString:message.ID]) {
@@ -289,10 +287,12 @@ QMMediaHandler>
             if (!op.error) {
                 
                 view.duration = attachment.duration;
-                view.viewState = QMMediaViewStateReady;
                 
                 if ([QMAudioPlayer audioPlayer].status.playerState != QMAudioPlayerStatePlaying) {
                     [weakSelf playAttachment:attachment forMessage:message];
+                }
+                else {
+                    view.viewState = QMMediaViewStateReady;
                 }
             }
             else {
@@ -428,7 +428,6 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     NSTimeInterval currentTime =
     status.playerState == QMAudioPlayerStateStopped ? 0.0 : status.currentTime;
     
-    
     view.viewState = isActive ? QMMediaViewStateActive : QMMediaViewStateReady;
     
     view.duration = status.duration;
@@ -477,7 +476,6 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
         [[NSAttributedString alloc] initWithString:title
                                         attributes:@{NSForegroundColorAttributeName: [UIColor whiteColor],
                                                      NSFontAttributeName: font}];
-        
         photo.attributedCaptionSummary =
         [[NSAttributedString alloc] initWithString:[QMDateUtils formatDateForTimeRange:message.dateSent]
                                         attributes:@{NSForegroundColorAttributeName: [UIColor lightGrayColor],
@@ -526,10 +524,12 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
                  if (!op.error) {
                      
                      view.duration = attachment.duration;
-                     view.viewState = QMMediaViewStateReady;
                      
                      if ([QMAudioPlayer audioPlayer].status.playerState != QMAudioPlayerStatePlaying) {
                          [weakSelf playAttachment:attachment forMessage:message];
+                     }
+                     else {
+                         view.viewState = QMMediaViewStateReady;
                      }
                  }
                  else {
@@ -579,9 +579,8 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
                                           animated:YES
                                         completion:^{
                                             
-                                            __strong typeof(weakSelf) strongSelf = weakSelf;
                                             [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-                                            [strongSelf.videoPlayer play];
+                                            [weakSelf.videoPlayer play];
                                         }];
     }
 }
