@@ -530,7 +530,19 @@ QBRTCAudioSessionDelegate
 - (void)initializeAudioSessionIfNeeded {
     QBRTCAudioSession *audioSession = [QBRTCAudioSession instance];
     if (!audioSession.isInitialized) {
-        [audioSession initialize];
+        [audioSession initializeWithConfigurationBlock:^(QBRTCAudioSessionConfiguration *configuration) {
+            // adding blutetooth support
+            configuration.categoryOptions |= AVAudioSessionCategoryOptionAllowBluetooth;
+            configuration.categoryOptions |= AVAudioSessionCategoryOptionAllowBluetoothA2DP;
+            
+            // adding airplay support
+            configuration.categoryOptions |= AVAudioSessionCategoryOptionAllowAirPlay;
+            
+            if (self.session.conferenceType == QBRTCConferenceTypeVideo) {
+                // setting mode to video chat to enable airplay audio and speaker only
+                configuration.mode = AVAudioSessionModeVideoChat;
+            }
+        }];
     }
 }
 
