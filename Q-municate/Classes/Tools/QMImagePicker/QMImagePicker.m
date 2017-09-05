@@ -8,8 +8,13 @@
 
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "QMImagePicker.h"
+#import <AVFoundation/AVComposition.h>
+#import <AVFoundation/AVCompositionTrack.h>
+#import <AVFoundation/AVCompositionTrackSegment.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 
 static NSString * const kQMImagePickerErrorDomain = @"com.qmunicate.imagepicker";
+static const NSUInteger kQMMaxFileSize = 100; //in MBs
 
 @interface QMImagePicker()
 
@@ -166,7 +171,8 @@ static NSString * const kQMImagePickerErrorDomain = @"com.qmunicate.imagepicker"
     
 }
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+- (void)imagePickerController:(UIImagePickerController *)picker
+didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
     [picker dismissViewControllerAnimated:YES completion:^{
         
@@ -176,33 +182,36 @@ static NSString * const kQMImagePickerErrorDomain = @"com.qmunicate.imagepicker"
             
             NSURL *resultMediaUrl = info[UIImagePickerControllerMediaURL];
             
-            CGFloat startTime = [info[@"_UIImagePickerControllerVideoEditingStart"] floatValue];
-            CGFloat endTime = [info[@"_UIImagePickerControllerVideoEditingEnd"] floatValue];
-            BOOL wasEdited = endTime > 0;
+            NSError *attributesError = nil;
+            NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:resultMediaUrl.path
+                                                                                            error:&attributesError];
+            if (attributesError) {
+                QMLog(@"Error occurred while getting file attributes = %@", attributesError);
+                return;
+            }
             
-            //In case we record video and edit it the result video wil not be trimmed
-            if (picker.allowsEditing
-                && picker.sourceType == UIImagePickerControllerSourceTypeCamera
-                && wasEdited) {
+            NSNumber *fileSizeNumber = fileAttributes[NSFileSize];
+            CGFloat fileSize = fileSizeNumber.longLongValue/1024.0f/1024.0f;
+            
+            if (fileSize > kQMMaxFileSize) {
                 
-                __weak typeof(self) weakSelf = self;
-                
-                [self trimVideoFileAtUrl:resultMediaUrl
-                           withStartTime:startTime
-                                 endTime:endTime
-                              completion:^(NSURL *outputFileURL, NSError *error) {
-                                  __strong typeof(weakSelf) strongSelf = weakSelf;
-                                  if (!error) {
-                                      [strongSelf.resultHandler imagePicker:self didFinishPickingVideo:outputFileURL];
-                                  }
-                                  else {
-                                      [strongSelf.resultHandler imagePicker:self didFinishPickingWithError:error];
-                                  }
-                              }];
+                NSString *localizedDescription =
+                [NSString stringWithFormat:NSLocalizedString(@"QM_STR_MAXIMUM_FILE_SIZE", nil),kQMMaxFileSize];
+                [self.resultHandler imagePicker:self didFinishPickingWithError:[NSError errorWithDomain:[NSBundle mainBundle].bundleIdentifier
+                                                                                                   code:0
+                                                                                               userInfo:@{NSLocalizedDescriptionKey : localizedDescription}]];
+                return;
             }
-            else {
-                [self.resultHandler imagePicker:self didFinishPickingVideo:resultMediaUrl];
-            }
+            
+            __weak typeof(self) weakSelf = self;
+            [self convertVideoFileToMpegFormatAtUrl:resultMediaUrl
+                                         completion:^(NSURL *outputFileURL, NSError *error) {
+                                             __strong typeof(weakSelf) strongSelf = weakSelf;
+                                             
+                                             error ?
+                                             [strongSelf.resultHandler imagePicker:strongSelf didFinishPickingWithError:error] :
+                                             [strongSelf.resultHandler imagePicker:strongSelf didFinishPickingVideo:outputFileURL];
+                                         }];
         }
         else {
             
@@ -215,14 +224,59 @@ static NSString * const kQMImagePickerErrorDomain = @"com.qmunicate.imagepicker"
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    
     [picker dismissViewControllerAnimated:YES completion:^{}];
 }
 
--(void)trimVideoFileAtUrl:(NSURL *)videoFileURL
-            withStartTime:(CGFloat)startVideoTime
-                  endTime:(CGFloat)endVideoTime
-               completion:(void(^)(NSURL *outputFileURL, NSError *error))completion {
+
+- (void)convertVideoFileToMpegFormatAtUrl:(NSURL *)videoFileURL
+                               completion:(void(^)(NSURL *outputFileURL, NSError *error))completion {
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd_HH-mm-ss"];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *cacheDirectory = [paths objectAtIndex:0];
+    
+    NSString *outputFilePath =
+    [cacheDirectory stringByAppendingFormat:@"/output_%@.mp4", [dateFormatter stringFromDate:[NSDate date]]];
+    NSURL *videoFileOutput = [NSURL fileURLWithPath:outputFilePath];
+    NSURL *videoFileInput = videoFileURL;
+    
+    AVAsset *asset = [AVAsset assetWithURL:videoFileInput];
+    AVAssetExportSession *exportSession = [AVAssetExportSession exportSessionWithAsset:asset
+                                                                            presetName:AVAssetExportPresetMediumQuality];
+    if (exportSession == nil) {
+        NSError *error = [NSError errorWithDomain:kQMImagePickerErrorDomain code:0 userInfo:nil];
+        completion(nil, error);
+    }
+    
+    exportSession.outputURL = videoFileOutput;
+    exportSession.shouldOptimizeForNetworkUse = YES;
+    exportSession.outputFileType = AVFileTypeMPEG4;
+    
+    [exportSession exportAsynchronouslyWithCompletionHandler:^
+     {
+         switch (exportSession.status) {
+                 
+             case AVAssetExportSessionStatusCompleted:
+                 completion(videoFileOutput, nil);
+                 break;
+                 
+             case AVAssetExportSessionStatusFailed:
+             case AVAssetExportSessionStatusCancelled:
+                 completion(nil, exportSession.error);
+                 break;
+             default:
+                 NSAssert(NO, @"Not handled state for export session");
+                 break;
+         }
+     }];
+    
+}
+
+- (void)trimVideoFileAtUrl:(NSURL *)videoFileURL
+             withStartTime:(CGFloat)startVideoTime
+                   endTime:(CGFloat)endVideoTime
+                completion:(void(^)(NSURL *outputFileURL, NSError *error))completion {
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd_HH-mm-ss"];

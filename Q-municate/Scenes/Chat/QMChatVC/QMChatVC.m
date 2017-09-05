@@ -2113,8 +2113,18 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     }];
 }
 
+- (void)imagePicker:(QMImagePicker *)__unused imagePicker
+didFinishPickingWithError:(NSError *)error {
 
-- (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingPhoto:(UIImage *)photo {
+    NSString *errorMessage =
+    error.localizedDescription ?: NSLocalizedString(@"QM_STR_UNKNOWN_ERROR", nil);
+    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning
+                                                                          message:errorMessage
+                                                                         duration:kQMDefaultNotificationDismissTime];
+}
+
+- (void)imagePicker:(QMImagePicker *)__unused imagePicker
+didFinishPickingPhoto:(UIImage *)photo {
     
     @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -2134,7 +2144,8 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     });
 }
 
-- (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingVideo:(NSURL *)videoUrl {
+- (void)imagePicker:(QMImagePicker *)__unused imagePicker
+didFinishPickingVideo:(NSURL *)videoUrl {
     
     QBChatAttachment *attachment = [QBChatAttachment videoAttachmentWithFileURL:videoUrl];
     
