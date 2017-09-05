@@ -139,6 +139,8 @@ QMUsersServiceDelegate
 @property (strong, nonatomic) QMMediaController *mediaController;
 @property (strong, nonatomic) QMAudioRecorder *currentAudioRecorder;
 
+@property (strong, nonatomic) NSMutableSet *messagesToRead;
+
 @end
 
 @implementation QMChatVC
@@ -311,6 +313,8 @@ QMUsersServiceDelegate
                                                object:nil];
     
     self.topContentAdditionalInset = _additionalNavigationBarHeight;
+    
+    self.messagesToRead = [NSMutableSet set];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -447,19 +451,28 @@ QMUsersServiceDelegate
     
     if (message.senderID != self.senderID && ![message.readIDs containsObject:@(self.senderID)]) {
         
-        [[QMCore.instance.chatService readMessage:message] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        //Message could be read only if the chat is connected
+        if (QBChat.instance.isConnected) {
             
-            if (task.isFaulted) {
+            [[QMCore.instance.chatService readMessage:message] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
                 
-                ILog(@"Problems while marking message as read! Error: %@", task.error);
-            }
-            else if ([UIApplication sharedApplication].applicationIconBadgeNumber > 0) {
-                
-                [UIApplication sharedApplication].applicationIconBadgeNumber--;
-            }
-            
-            return nil;
-        }];
+                if (task.isFaulted) {
+                    ILog(@"Problems while marking message as read! Error: %@", task.error);
+                }
+                else if (task.isCompleted) {
+                    
+                    [self.messagesToRead removeObject:message];
+                    
+                    if ([UIApplication sharedApplication].applicationIconBadgeNumber > 0) {
+                        [UIApplication sharedApplication].applicationIconBadgeNumber--;
+                    }
+                }
+                return nil;
+            }];
+        }
+        else {
+            [self.messagesToRead addObject:message];
+        }
     }
 }
 
@@ -998,7 +1011,7 @@ QMUsersServiceDelegate
     
     if (viewClass == [QMAudioIncomingCell class]
         || viewClass == [QMAudioOutgoingCell class]) {
-
+        
         size = CGSizeMake(MIN(kQMAttachmentCellSize, maxWidth), 35);
     }
     else if (viewClass == [QMVideoIncomingCell class]
@@ -1802,7 +1815,8 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
    didUpdateMessage:(QBChatMessage *)message
         forDialogID:(NSString *)dialogID {
     
-    if ([self.chatDialog.ID isEqualToString:dialogID] && message.senderID == self.senderID) {
+    if ([self.chatDialog.ID isEqualToString:dialogID]
+        && message.senderID == self.senderID) {
         
         [self.chatDataSource updateMessage:message];
     }
@@ -1818,6 +1832,10 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         
         [self updateOpponentOnlineStatus];
     }
+    
+    for (QBChatMessage *msg in self.messagesToRead) {
+        [self readMessage:msg];
+    }
 }
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
@@ -1827,6 +1845,10 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         
         [self updateOpponentOnlineStatus];
+    }
+    
+    for (QBChatMessage *msg in self.messagesToRead) {
+        [self readMessage:msg];
     }
 }
 
