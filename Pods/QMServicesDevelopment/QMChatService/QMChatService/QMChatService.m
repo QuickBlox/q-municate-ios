@@ -31,7 +31,10 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
 
 @property (strong, nonatomic) NSMutableDictionary *loadedAllMessages;
 @property (strong, nonatomic) NSMutableDictionary *lastMessagesLoadDate;
-@property (strong, nonatomic) NSMutableSet *messagesToRead;
+
+@property (strong, nonatomic) NSMutableSet *readableMessages;
+
+
 @property (weak, nonatomic) BFTask* loadEarlierMessagesTask;
 
 @end
@@ -57,7 +60,7 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
         _cacheDataSource = cacheDataSource;
         _loadedAllMessages = [NSMutableDictionary dictionary];
         _lastMessagesLoadDate = [NSMutableDictionary dictionary];
-        _messagesToRead = [NSMutableSet set];
+        _readableMessages = [NSMutableSet set];
         
         if (self.serviceManager.currentUser != nil) {
             [self loadCachedDialogsWithCompletion:nil];
@@ -1252,7 +1255,7 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
                     completionBlock:(void (^)(QBResponse *response))completion
 {
     NSTimeInterval timeInterval = [date timeIntervalSince1970];
-    NSMutableDictionary *extendedRequest = @{@"updated_at[gte]":@(timeInterval)}.mutableCopy;
+    NSMutableDictionary *extendedRequest = @{@"updated_at[gt]":@(timeInterval)}.mutableCopy;
     
     [self allDialogsWithPageLimit:limit
                   extendedRequest:extendedRequest
@@ -1510,7 +1513,9 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
     [self readMessages:@[message] forDialogID:message.dialogID completion:completion];
 }
 
-- (void)readMessages:(NSArray *)messages forDialogID:(NSString *)dialogID completion:(QBChatCompletionBlock)completion {
+- (void)readMessages:(NSArray *)messages
+         forDialogID:(NSString *)dialogID
+          completion:(QBChatCompletionBlock)completion {
     
     NSAssert(dialogID != nil, @"dialogID can't be nil");
     
@@ -1518,26 +1523,21 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
     
     NSAssert(chatDialogToUpdate != nil, @"Dialog wasn't found in memory storage!");
     
-    NSMutableArray<QBChatMessage *> * unreadedMessages = [NSMutableArray array];
+    NSMutableArray<QBChatMessage *>*unreadedMessages = [NSMutableArray arrayWithCapacity:messages.count];
     
-    for (QBChatMessage * message in messages) {
+    for (QBChatMessage *message in messages) {
         
-        if ([message.readIDs containsObject:@(self.serviceManager.currentUser.ID)] || [self.messagesToRead containsObject:message.ID]) {
+        if ([message.readIDs containsObject:@(self.serviceManager.currentUser.ID)]
+            || [self.readableMessages containsObject:message.ID]) {
             
             continue;
         }
         else {
-            
             [unreadedMessages addObject:message];
         }
     }
     
     if (unreadedMessages.count == 0) {
-        
-        if (completion) {
-            completion(nil);
-        }
-        
         return;
     }
     
@@ -1551,7 +1551,7 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
         
         NSAssert([message.dialogID isEqualToString:dialogID], @"Message is from incorrect dialog.");
         
-        [self.messagesToRead addObject:message.ID];
+        [self.readableMessages addObject:message.ID];
         
         message.markable = YES;
         
@@ -1568,12 +1568,11 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
                 }
                 
                 // updating dialog in cache
-                if (chatDialogToUpdate != nil) {
-                    
-                    if ([strongSelf.multicastDelegate respondsToSelector:@selector(chatService:didUpdateChatDialogInMemoryStorage:)]) {
-                        [strongSelf.multicastDelegate chatService:strongSelf
-                               didUpdateChatDialogInMemoryStorage:chatDialogToUpdate];
-                    }
+                
+                chatDialogToUpdate.updatedAt = [NSDate date];
+                if ([strongSelf.multicastDelegate respondsToSelector:@selector(chatService:didUpdateChatDialogInMemoryStorage:)]) {
+                    [strongSelf.multicastDelegate chatService:strongSelf
+                           didUpdateChatDialogInMemoryStorage:chatDialogToUpdate];
                 }
                 
                 // updating message in memory storage
@@ -1582,7 +1581,7 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
                 [updatedMessages addObject:message];
             }
             
-            [strongSelf.messagesToRead removeObject:message.ID];
+            [strongSelf.readableMessages removeObject:message.ID];
             
             dispatch_group_leave(readGroup);
         }];
@@ -1615,7 +1614,8 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
     [self.lastMessagesLoadDate removeAllObjects];
     [self.messagesMemoryStorage free];
     [self.dialogsMemoryStorage free];
-    [self.messagesToRead removeAllObjects];
+    [self.readableMessages removeAllObjects];
+    
     [self.deferredQueueManager free];
     //    [self.linkPreviewManager free];
 }
@@ -1870,7 +1870,5 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
         }
     }
 }
-
-
 
 @end

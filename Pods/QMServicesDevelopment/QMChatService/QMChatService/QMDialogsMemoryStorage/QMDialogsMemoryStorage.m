@@ -38,17 +38,19 @@
 static inline void
 updateDialog(QBChatDialog *src, QBChatDialog *res) {
     
-    src.createdAt = res.createdAt;
-    src.updatedAt = res.updatedAt;
-    src.name = res.name;
-    src.photo = res.photo;
-    src.lastMessageDate = res.lastMessageDate;
-    src.lastMessageUserID = res.lastMessageUserID;
-    src.lastMessageText = res.lastMessageText;
-    src.unreadMessagesCount = res.unreadMessagesCount;
-    src.occupantIDs = res.occupantIDs;
-    src.data = res.data;
-    src.userID = res.userID;
+    if ([src.updatedAt compare:res.updatedAt] == NSOrderedAscending) {
+        src.createdAt = res.createdAt;
+        src.updatedAt = res.updatedAt;
+        src.name = res.name;
+        src.photo = res.photo;
+        src.lastMessageDate = res.lastMessageDate;
+        src.lastMessageUserID = res.lastMessageUserID;
+        src.lastMessageText = res.lastMessageText;
+        src.unreadMessagesCount = res.unreadMessagesCount;
+        src.occupantIDs = res.occupantIDs;
+        src.data = res.data;
+        src.userID = res.userID;
+    }
 }
 
 - (void)addChatDialog:(QBChatDialog *)chatDialog

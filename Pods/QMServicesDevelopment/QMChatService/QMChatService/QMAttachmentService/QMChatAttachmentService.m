@@ -287,7 +287,7 @@
                        withChatService:(QMChatService *)chatService
                             attachment:(QBChatAttachment *)attachment
                             completion:(QBChatCompletionBlock)completion {
-
+    
     [chatService.deferredQueueManager addOrUpdateMessage:message];
     
     [self uploadAttachmentMessage:message
@@ -296,7 +296,9 @@
                        completion:^(NSError *error, BOOL cancelled) {
                            if (cancelled) {
                                [chatService deleteMessageLocally:message];
-                               completion(nil);
+                               if (completion) {
+                                   completion(nil);
+                               }
                                return;
                            }
                            if (!error) {
@@ -308,7 +310,9 @@
                            }
                            else {
                                [chatService.deferredQueueManager addOrUpdateMessage:message];
-                               completion(error);
+                               if (completion) {
+                                   completion(error);
+                               }
                            }
                        }];
 }
@@ -434,7 +438,7 @@
                                               cacheType:QMAttachmentCacheTypeDisc|QMAttachmentCacheTypeMemory messageID:message.ID
                                                dialogID:message.dialogID
                                              completion:^{
-
+                                                 
                                                  if (strongOperation && !strongOperation.isCancelled) {
                                                      [self changeMessageAttachmentStatus:QMMessageAttachmentStatusLoaded
                                                                               forMessage:message];
@@ -483,7 +487,7 @@
     
     QMAttachmentOperation *attachmentOperation = [QMAttachmentOperation new];
     attachmentOperation.identifier = message.ID;
-   
+    
     @synchronized (self.runningOperations) {
         self.runningOperations[message.ID] = attachmentOperation;
     }
@@ -508,14 +512,14 @@
              __strong typeof(weakSelf) strongSelf = weakSelf;
              
              if (attachmentOperation.isCancelled) {
-         
+                 
                  __strong __typeof(weakOperation) strongOperation = weakOperation;
                  [strongSelf safelyRemoveOperationFromRunning:strongOperation];
                  return;
              }
              
              if (fileURL) {
-                
+                 
                  [self changeMessageAttachmentStatus:QMMessageAttachmentStatusLoaded
                                           forMessage:message];
                  if (attachment.contentType == QMAttachmentContentTypeImage) {

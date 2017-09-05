@@ -110,7 +110,7 @@ typedef enum {
 
 /*!
  *  @brief Enables opting out of background sessions being counted towards total sessions.
- *  @since 8.0.1-rc.1
+ *  @since 8.1.0-rc.1
  *
  *  @note This method must be called prior to invoking #startSession:.
  *

@@ -1366,6 +1366,7 @@
 		60DE893C2A0839719CA51450428101A6 /* FFCircularProgressView-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "FFCircularProgressView-dummy.m"; sourceTree = "<group>"; };
 		612F9FA36EDB1C2DDA6C13BB51B7D184 /* QMContactListMemoryStorage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = QMContactListMemoryStorage.h; path = QMContactListService/QMContactListService/QMContactListMemoryStorage/QMContactListMemoryStorage.h; sourceTree = "<group>"; };
 		6135FF85365E1CFD9508F963DACC9D1B /* QBUUser+CustomData.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "QBUUser+CustomData.h"; path = "QMUsersService/QMUsersService/Categories/QBUUser+CustomData.h"; sourceTree = "<group>"; };
+		614134EABEBE2F338BC1EBCB14D3BB16 /* libFlurry_8.2.0.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = libFlurry_8.2.0.a; path = Flurry/libFlurry_8.2.0.a; sourceTree = "<group>"; };
 		61A392752D96C57E7235267718F4D43B /* QBChatAttachment+QMFactory.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "QBChatAttachment+QMFactory.h"; path = "QMChatService/QMChatService/Categories/QBChatAttachment+QMFactory.h"; sourceTree = "<group>"; };
 		61A44558A4E0B4A8D228CB0CC80500E0 /* QMProgressView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = QMProgressView.h; path = QMChatViewController/Views/CustomUI/QMProgressView/QMProgressView.h; sourceTree = "<group>"; };
 		61B48D18EAC4D443448F1EB7D3E170A5 /* QMChatCollectionViewDelegateFlowLayout.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = QMChatCollectionViewDelegateFlowLayout.h; path = QMChatViewController/Protocols/QMChatCollectionViewDelegateFlowLayout.h; sourceTree = "<group>"; };
@@ -1425,7 +1426,6 @@
 		709E3E3EB2996FBC40A218957909198C /* FBSDKMaleSilhouetteIcon.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FBSDKMaleSilhouetteIcon.h; path = FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.h; sourceTree = "<group>"; };
 		70B486702263E1C632EFD00BEA18396A /* UIImageView+HighlightedWebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+HighlightedWebCache.m"; path = "SDWebImage/UIImageView+HighlightedWebCache.m"; sourceTree = "<group>"; };
 		715FBF60F199F5268081FF3551A0BB92 /* UIDevice-Hardware.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "UIDevice-Hardware.m"; sourceTree = "<group>"; };
-		719444D37B4B1A786858F944DFE851B7 /* libFlurry_8.1.0.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = libFlurry_8.1.0.a; path = Flurry/libFlurry_8.1.0.a; sourceTree = "<group>"; };
 		727A4A92E90EBC644B23532C3F7E0FCE /* FBSDKBase64.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FBSDKBase64.m; path = FBSDKCoreKit/FBSDKCoreKit/Internal/Base64/FBSDKBase64.m; sourceTree = "<group>"; };
 		72869882EE724AB5C4F1802B5E92C835 /* QMChatService.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = QMChatService.m; path = QMChatService/QMChatService/QMChatService.m; sourceTree = "<group>"; };
 		729ACA4CFAB27FB467CEA4AF9B5491BF /* UIButton+WebCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIButton+WebCache.h"; path = "SDWebImage/UIButton+WebCache.h"; sourceTree = "<group>"; };
@@ -2194,18 +2194,18 @@
 			path = "Target Support Files/Pods-Q-municate";
 			sourceTree = "<group>";
 		};
-		0AFE38AE8560C57D5AC2558ED6C40BD0 /* Frameworks */ = {
+		08B016CC432054BC8B76F656CF1E4DD3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A8113EE2942845D4EF74170CB8A8CE2C /* TwitterCore.framework */,
+				614134EABEBE2F338BC1EBCB14D3BB16 /* libFlurry_8.2.0.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		0B9254154EBBF95A20FA9EEEBE009CB6 /* Frameworks */ = {
+		0AFE38AE8560C57D5AC2558ED6C40BD0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				719444D37B4B1A786858F944DFE851B7 /* libFlurry_8.1.0.a */,
+				A8113EE2942845D4EF74170CB8A8CE2C /* TwitterCore.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2227,7 +2227,7 @@
 				C843BC65DB9249D4D84158A1BE1786DA /* Flurry.h */,
 				ECD9353BFA3EC194C888343F06032514 /* FlurryEmpty.m */,
 				915EFBED923EE462F2A56C6682E99F2D /* FlurrySessionBuilder.h */,
-				0B9254154EBBF95A20FA9EEEBE009CB6 /* Frameworks */,
+				08B016CC432054BC8B76F656CF1E4DD3 /* Frameworks */,
 			);
 			name = FlurrySDK;
 			sourceTree = "<group>";
