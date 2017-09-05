@@ -104,7 +104,19 @@ QMMediaHandler>
         view.viewState = QMMediaViewStateLoading;
     }
     else if (attachmentStatus == QMMessageAttachmentStatusLoaded) {
-        view.viewState = QMMediaViewStateReady;
+    
+        if (attachment.contentType == QMAttachmentContentTypeAudio) {
+            
+            QMAudioPlayerStatus *status = [QMAudioPlayer audioPlayer].status;
+            
+            if ([status.mediaID isEqualToString:message.ID] && status.playerState != QMAudioPlayerStateStopped) {
+                
+                [self updateView:view withPlayerStatus:status];
+            }
+            else {
+                view.viewState = QMMediaViewStateReady;
+            }
+        }
     }
     else if (attachmentStatus == QMMessageAttachmentStatusError) {
         view.viewState = QMMediaViewStateError;
