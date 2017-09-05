@@ -34,13 +34,13 @@ target 'Q-municate' do
 #    pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
 #    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
 #    
-    pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :tag => '0.5'
-    pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5'
+    pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'development'
+    pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'development'
     
 end
 
 target 'QMSiriExtension' do
-    pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5'
+    pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'development'
 #    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
     
 end

@@ -84,7 +84,7 @@ PODS:
     - QMCVDevelopment/Utils
     - SDWebImage (~> 4.0.0)
     - TTTAttributedLabel (> 1.13)
-  - QMServicesDevelopment (0.5):
+  - QMServicesDevelopment (0.4.5):
     - Bolts (>= 1.5.0)
   - Reachability (3.2)
   - SDWebImage (4.0.0):
@@ -109,8 +109,8 @@ DEPENDENCIES:
   - libextobjc/EXTScope (~> 0.4.1)
   - MPGNotification (~> 1.2)
   - NYTPhotoViewer (~> 1.1.0)
-  - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, tag `0.5`)
-  - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`, tag `0.5`)
+  - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, branch `development`)
+  - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`, branch `development`)
   - Reachability (~> 3.2)
   - SDWebImage (~> 4.0.0)
   - SSKeychain (~> 1.2.2)
@@ -121,19 +121,19 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   QMCVDevelopment:
+    :branch: development
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
-    :tag: 0.5
   QMServicesDevelopment:
+    :branch: development
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
-    :tag: 0.5
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
+    :commit: cd33bd47c4c8c1ad5f8f43a9970904452a4b9f92
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
-    :tag: 0.5
   QMServicesDevelopment:
+    :commit: 3ef998d16a9ed566b73d05575af6a480b106e75b
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
-    :tag: 0.5
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
@@ -150,7 +150,7 @@ SPEC CHECKSUMS:
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
   QMCVDevelopment: 06e12ea9060e58fea15b9251962bd96d9a3e1092
-  QMServicesDevelopment: fecbf448be17e2d4bfdd87159b4231b586a0c194
+  QMServicesDevelopment: 8baac4019ec14532850c4437814f49fc9ba12b55
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
@@ -159,6 +159,6 @@ SPEC CHECKSUMS:
   TwitterCore: e959987be23c767004d29eb7fab8d85d8585a2e5
   UIDevice-Hardware: 4bb15b9bd9878762ab879ac86185baad17b6c3ff
 
-PODFILE CHECKSUM: 5634bb8490af5a5392000b199a6473c677bd10f0
+PODFILE CHECKSUM: af67cbd184582ea664a3c116cf6e9fd25c724d1f
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.2.0
