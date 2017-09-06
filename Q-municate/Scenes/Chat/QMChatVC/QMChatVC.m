@@ -1514,6 +1514,10 @@ QMUsersServiceDelegate
         QMGroupInfoViewController *groupInfoVC = segue.destinationViewController;
         groupInfoVC.chatDialog = sender;
     }
+    
+    if (self.inputToolbar.contentView.textView.isFirstResponder) {
+        [self.inputToolbar.contentView.textView resignFirstResponder];
+    }
 }
 
 - (void)audioCallAction {
