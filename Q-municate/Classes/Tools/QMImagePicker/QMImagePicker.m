@@ -14,7 +14,9 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 
 static NSString * const kQMImagePickerErrorDomain = @"com.qmunicate.imagepicker";
-static const NSUInteger kQMMaxFileSize = 100; //in MBs
+
+#warning Test value. Should be changed to 100
+static const NSUInteger kQMMaxFileSize = 3; //in MBs
 
 @interface QMImagePicker()
 
