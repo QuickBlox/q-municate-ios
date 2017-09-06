@@ -69,6 +69,7 @@
 "QM_STR_CONNECTION_NETWORK_ERROR" = "Connection network error, please try again";
 "QM_STR_INCORRECT_USER_DATA_ERROR" = "Incorrect Username or Password";
 "QM_STR_UNKNOWN_ERROR" = "Something went wrong. Please try again";
+"QM_STR_MAXIMUM_FILE_SIZE" = "The maximum file size is %ld MB";
 //Cellular call errors
 "QM_STR_CELLULAR_ERROR_CAN_NOT_MAKE_CALL" = "The device can't place a call at this time";
 "QM_STR_CELLULAR_ERROR_NOT_SUPPORTED" = "The device doesn't support phone calls";
