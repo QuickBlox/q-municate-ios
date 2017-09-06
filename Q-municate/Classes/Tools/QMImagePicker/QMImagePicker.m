@@ -8,10 +8,6 @@
 
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "QMImagePicker.h"
-#import <AVFoundation/AVComposition.h>
-#import <AVFoundation/AVCompositionTrack.h>
-#import <AVFoundation/AVCompositionTrackSegment.h>
-#import <AssetsLibrary/AssetsLibrary.h>
 
 static NSString * const kQMImagePickerErrorDomain = @"com.qmunicate.imagepicker";
 
@@ -233,17 +229,22 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 - (void)convertVideoFileToMpegFormatAtUrl:(NSURL *)videoFileURL
                                completion:(void(^)(NSURL *outputFileURL, NSError *error))completion {
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd_HH-mm-ss"];
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-    NSString *cacheDirectory = [paths objectAtIndex:0];
+    [self convertVideoFileToMpegFormatAtUrl:videoFileURL
+                              withStartTime:0
+                                    endTime:0
+                                 completion:completion];
+}
+
+- (void)convertVideoFileToMpegFormatAtUrl:(NSURL *)videoFileURL
+                            withStartTime:(CGFloat)startVideoTime
+                                  endTime:(CGFloat)endVideoTime
+                               completion:(void(^)(NSURL *outputFileURL, NSError *error))completion {
     
-    NSString *outputFilePath =
-    [cacheDirectory stringByAppendingFormat:@"/output_%@.mp4", [dateFormatter stringFromDate:[NSDate date]]];
-    NSURL *videoFileOutput = [NSURL fileURLWithPath:outputFilePath];
+    NSURL *videoFileOutput = uniqueOutputFileURL();
     NSURL *videoFileInput = videoFileURL;
     
     AVAsset *asset = [AVAsset assetWithURL:videoFileInput];
+    
     AVAssetExportSession *exportSession = [AVAssetExportSession exportSessionWithAsset:asset
                                                                             presetName:AVAssetExportPresetMediumQuality];
     if (exportSession == nil) {
@@ -251,7 +252,18 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         completion(nil, error);
     }
     
+    //Trim video if needed
+    if (endVideoTime > 0 && startVideoTime < endVideoTime) {
+        
+        CMTime startTime = CMTimeMake((int)(floor(startVideoTime * 100)), 100);
+        CMTime endTime = CMTimeMake((int)(ceil(endVideoTime * 100)), 100);
+        
+        CMTimeRange exportTimeRange = CMTimeRangeFromTimeToTime(startTime, endTime);
+        exportSession.timeRange = exportTimeRange;
+    }
+    
     exportSession.outputURL = videoFileOutput;
+    
     exportSession.shouldOptimizeForNetworkUse = YES;
     exportSession.outputFileType = AVFileTypeMPEG4;
     
@@ -272,58 +284,18 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                  break;
          }
      }];
-    
 }
 
-- (void)trimVideoFileAtUrl:(NSURL *)videoFileURL
-             withStartTime:(CGFloat)startVideoTime
-                   endTime:(CGFloat)endVideoTime
-                completion:(void(^)(NSURL *outputFileURL, NSError *error))completion {
+static inline NSURL *uniqueOutputFileURL() {
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd_HH-mm-ss"];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *cacheDirectory = [paths objectAtIndex:0];
     
-    NSString *outputFilePath = [cacheDirectory stringByAppendingFormat:@"/output_%@.mov", [dateFormatter stringFromDate:[NSDate date]]];
-    NSURL *videoFileOutput = [NSURL fileURLWithPath:outputFilePath];
-    NSURL *videoFileInput = videoFileURL;
+    NSString *uniqueFileName = [[NSUUID UUID] UUIDString];
+    NSString *outputFilePath =
+    [cacheDirectory stringByAppendingFormat:@"/output_%@.mp4", uniqueFileName];
     
-    AVAsset *asset = [AVAsset assetWithURL:videoFileInput];
-    
-    AVAssetExportSession *exportSession = [AVAssetExportSession exportSessionWithAsset:asset
-                                                                            presetName:AVAssetExportPresetMediumQuality];
-    if (exportSession == nil) {
-        NSError *error = [NSError errorWithDomain:kQMImagePickerErrorDomain code:0 userInfo:nil];
-        completion(nil, error);
-    }
-    
-    CMTime startTime = CMTimeMake((int)(floor(startVideoTime * 100)), 100);
-    CMTime endTime = CMTimeMake((int)(ceil(endVideoTime * 100)), 100);
-    CMTimeRange exportTimeRange = CMTimeRangeFromTimeToTime(startTime, endTime);
-    
-    exportSession.outputURL = videoFileOutput;
-    exportSession.timeRange = exportTimeRange;
-    exportSession.shouldOptimizeForNetworkUse = YES;
-    exportSession.outputFileType = AVFileTypeQuickTimeMovie;
-    
-    [exportSession exportAsynchronouslyWithCompletionHandler:^
-     {
-         switch (exportSession.status) {
-                 
-             case AVAssetExportSessionStatusCompleted:
-                 completion(videoFileOutput, nil);
-                 break;
-                 
-             case AVAssetExportSessionStatusFailed:
-             case AVAssetExportSessionStatusCancelled:
-                 completion(nil, exportSession.error);
-                 break;
-             default:
-                 NSAssert(NO, @"Not handled state for export session");
-                 break;
-         }
-     }];
+    return [NSURL fileURLWithPath:outputFilePath];
 }
 
 @end
