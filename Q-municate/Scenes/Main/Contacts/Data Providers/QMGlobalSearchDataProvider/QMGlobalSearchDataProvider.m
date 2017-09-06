@@ -11,7 +11,7 @@
 
 static const NSTimeInterval kQMGlobalSearchTimeInterval = 0.6f;
 static const NSUInteger kQMGlobalSearchCharsMin = 3;
-static const NSUInteger kQMUsersPageLimit = 10;
+static const NSUInteger kQMUsersPageLimit = 50;
 
 @interface QMGlobalSearchDataProvider () <QMContactListServiceDelegate>
 
