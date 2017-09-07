@@ -19,6 +19,7 @@ static const NSUInteger kQMMaxFileSize = 3; //in MBs
 <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @property (weak, nonatomic) id<QMImagePickerResultHandler> resultHandler;
+@property (strong, nonatomic) AVAssetExportSession *exportSession;
 
 @end
 
@@ -171,7 +172,6 @@ static const NSUInteger kQMMaxFileSize = 3; //in MBs
 
 - (void)imagePickerController:(UIImagePickerController *)picker
 didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    
     [picker dismissViewControllerAnimated:YES completion:^{
         
         NSString *mediaType = info[UIImagePickerControllerMediaType];
@@ -192,7 +192,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
             CGFloat fileSize = fileSizeNumber.longLongValue/1024.0f/1024.0f;
             
             if (fileSize > kQMMaxFileSize) {
-                
+          
                 NSString *localizedDescription =
                 [NSString stringWithFormat:NSLocalizedString(@"QM_STR_MAXIMUM_FILE_SIZE", nil),kQMMaxFileSize];
                 [self.resultHandler imagePicker:self didFinishPickingWithError:[NSError errorWithDomain:[NSBundle mainBundle].bundleIdentifier
@@ -201,21 +201,19 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                 return;
             }
             
-            __weak typeof(self) weakSelf = self;
             [self convertVideoFileToMpegFormatAtUrl:resultMediaUrl
                                          completion:^(NSURL *outputFileURL, NSError *error) {
-                                             __strong typeof(weakSelf) strongSelf = weakSelf;
                                              
                                              error ?
-                                             [strongSelf.resultHandler imagePicker:strongSelf didFinishPickingWithError:error] :
-                                             [strongSelf.resultHandler imagePicker:strongSelf didFinishPickingVideo:outputFileURL];
+                                             [self.resultHandler imagePicker:self didFinishPickingWithError:error] :
+                                             [self.resultHandler imagePicker:self didFinishPickingVideo:outputFileURL];
                                          }];
         }
         else {
             
-            NSString *key = picker.allowsEditing ? UIImagePickerControllerEditedImage: UIImagePickerControllerOriginalImage;
-            UIImage *resultImage = info[key];
+            NSString *key = picker.allowsEditing ? UIImagePickerControllerEditedImage : UIImagePickerControllerOriginalImage;
             
+            UIImage *resultImage = info[key];
             [self.resultHandler imagePicker:self didFinishPickingPhoto:resultImage];
         }
     }];
@@ -245,9 +243,9 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
     AVAsset *asset = [AVAsset assetWithURL:videoFileInput];
     
-    AVAssetExportSession *exportSession = [AVAssetExportSession exportSessionWithAsset:asset
-                                                                            presetName:AVAssetExportPresetMediumQuality];
-    if (exportSession == nil) {
+    self.exportSession = [AVAssetExportSession exportSessionWithAsset:asset
+                                                           presetName:AVAssetExportPresetMediumQuality];
+    if (self.exportSession == nil) {
         NSError *error = [NSError errorWithDomain:kQMImagePickerErrorDomain code:0 userInfo:nil];
         completion(nil, error);
     }
@@ -259,17 +257,21 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         CMTime endTime = CMTimeMake((int)(ceil(endVideoTime * 100)), 100);
         
         CMTimeRange exportTimeRange = CMTimeRangeFromTimeToTime(startTime, endTime);
-        exportSession.timeRange = exportTimeRange;
+        self.exportSession.timeRange = exportTimeRange;
     }
     
-    exportSession.outputURL = videoFileOutput;
+    self.exportSession.outputURL = videoFileOutput;
     
-    exportSession.shouldOptimizeForNetworkUse = YES;
-    exportSession.outputFileType = AVFileTypeMPEG4;
+    self.exportSession.shouldOptimizeForNetworkUse = YES;
+    self.exportSession.outputFileType = AVFileTypeMPEG4;
     
-    [exportSession exportAsynchronouslyWithCompletionHandler:^
+    __weak typeof(self) weakSelf = self;
+    
+    [self.exportSession exportAsynchronouslyWithCompletionHandler:^
      {
-         switch (exportSession.status) {
+         __strong typeof(weakSelf) strongSelf = weakSelf;
+         
+         switch (strongSelf.exportSession.status) {
                  
              case AVAssetExportSessionStatusCompleted:
                  completion(videoFileOutput, nil);
@@ -277,7 +279,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                  
              case AVAssetExportSessionStatusFailed:
              case AVAssetExportSessionStatusCancelled:
-                 completion(nil, exportSession.error);
+                 completion(nil, self.exportSession.error);
                  break;
              default:
                  NSAssert(NO, @"Not handled state for export session");

@@ -62,7 +62,7 @@ void systemServicesSoundCompletion(SystemSoundID  soundID, void *__unused data) 
     self = [super init];
     if (self) {
         
-        self.on = YES;
+        [self setOn:YES];
         
         _sounds = [NSMutableDictionary dictionary];
         _completionBlocks = [NSMutableDictionary dictionary];
