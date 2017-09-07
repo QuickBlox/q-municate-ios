@@ -21,7 +21,9 @@ static const NSUInteger kQMUsersPageLimit = 50;
 
 @property (strong, nonatomic) QBGeneralResponsePage *responsePage;
 @property (assign, nonatomic) BOOL shouldLoadMore;
+
 @property (copy, nonatomic) NSString *cachedSearchText;
+@property (assign, nonatomic) NSUInteger cachedSearchPage;
 
 @end
 
@@ -65,6 +67,13 @@ static const NSUInteger kQMUsersPageLimit = 50;
         self.cachedSearchText = [searchText copy];
         self.responsePage.currentPage = 1;
     }
+    else {
+        
+        //There is no need to perform the search for the same page and text
+        if (self.cachedSearchPage == self.responsePage.currentPage) {
+            return;
+        }
+    }
     
     self.timer = [NSTimer scheduledTimerWithTimeInterval:kQMGlobalSearchTimeInterval
                                                   target:self
@@ -87,13 +96,15 @@ static const NSUInteger kQMUsersPageLimit = 50;
         @strongify(self);
         if (task.isCompleted) {
             
+            self.cachedSearchPage = self.responsePage.currentPage;
+            
             self.globalSearchCancellationTokenSource = nil;
             
             self.shouldLoadMore = task.result.count >= kQMUsersPageLimit;
             
             NSMutableArray *sortedUsers = [[self sortUsersByFullname:task.result] mutableCopy];
             [sortedUsers removeObject:QMCore.instance.currentProfile.userData];
-            
+    
             if (self.responsePage.currentPage > 1) {
                 
                 [self.dataSource addItems:[sortedUsers copy]];
