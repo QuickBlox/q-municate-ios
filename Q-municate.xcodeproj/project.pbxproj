@@ -2251,7 +2251,7 @@
 				TargetAttributes = {
 					69D57E5118ACC11C00A9900A = {
 						DevelopmentTeam = 8885H5G2YX;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -2276,7 +2276,7 @@
 					E07BC21E1DDF5FD900B8D3B0 = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = 8885H5G2YX;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Keychain = {
 								enabled = 1;
@@ -2799,8 +2799,7 @@
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "948b7b67-324e-459f-94ae-5cc2ae57acff";
-				PROVISIONING_PROFILE_SPECIFIER = "Q-municate_dev";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2829,7 +2828,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CODE_SIGN_ENTITLEMENTS = "Q-municate/Q-municate.entitlements";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "";
 				DEVELOPMENT_TEAM = 8885H5G2YX;
 				ENABLE_BITCODE = YES;
@@ -2866,8 +2865,7 @@
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "9b7fd9c3-b6c1-4475-b54c-660f171c4eb0";
-				PROVISIONING_PROFILE_SPECIFIER = "Q-municate adHoc";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2900,8 +2898,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMSiriExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9fe6dfc3-2aea-47d2-8611-6b293513bd90";
-				PROVISIONING_PROFILE_SPECIFIER = "Siri extension dev";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2917,7 +2914,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_ENTITLEMENTS = QMSiriExtension/QMSiriExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8885H5G2YX;
@@ -2932,8 +2929,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMSiriExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c8d218ec-8063-42e9-b712-55b0b7df4095";
-				PROVISIONING_PROFILE_SPECIFIER = "Siri extension AdHoc";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
