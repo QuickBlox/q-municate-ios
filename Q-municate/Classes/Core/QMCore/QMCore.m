@@ -233,8 +233,6 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
             [self.contactListService.contactListMemoryStorage free];
             [self.openGraphService.memoryStorage free];
             
-            [self.currentProfile clearProfile];
-            
             dispatch_group_t logoutGroup = dispatch_group_create();
             
             dispatch_group_enter(logoutGroup);
@@ -253,6 +251,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
             }];
             
             dispatch_group_notify(logoutGroup, dispatch_get_main_queue(), ^{
+                [self.currentProfile clearProfile];
                 [source setResult:nil];
             });
         }];

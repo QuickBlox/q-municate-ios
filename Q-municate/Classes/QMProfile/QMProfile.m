@@ -55,32 +55,35 @@ static NSString * const kQMAppExists = @"QMAppExists";
 
 - (BOOL)synchronize {
     
-    NSParameterAssert(self.userData);
-    
-    __block BOOL success = NO;
-    __block NSError *error = nil;
-    
-    @weakify(self);
-    [self keychainQuery:^(SSKeychainQuery *query) {
-        @strongify(self);
-        NSCParameterAssert(self.userData.password);
-        query.passwordObject = self;
-        success = [query save:&error];
-    }];
-    
-    if (success) {
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setBool:YES forKey:kQMAppExists];
-        [defaults synchronize];
-        // updating user in users cache
-        [QMCore.instance.usersService.usersMemoryStorage addUser:self.userData];
-        [[QMUsersCache instance] insertOrUpdateUser:self.userData];
+    if (self.userData) {
+        
+        __block BOOL success = NO;
+        __block NSError *error = nil;
+        
+        @weakify(self);
+        [self keychainQuery:^(SSKeychainQuery *query) {
+            @strongify(self);
+            NSCParameterAssert(self.userData.password);
+            query.passwordObject = self;
+            success = [query save:&error];
+        }];
+        
+        if (success) {
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            [defaults setBool:YES forKey:kQMAppExists];
+            [defaults synchronize];
+            // updating user in users cache
+            [QMCore.instance.usersService.usersMemoryStorage addUser:self.userData];
+            [[QMUsersCache instance] insertOrUpdateUser:self.userData];
+        }
+        else {
+            QMLog(@"QMProfile error %@", error);
+        }
+        
+        return success;
     }
-    else {
-        QMLog(@"QMProfile error %@", error);
-    }
-    
-    return success;
+ 
+    return NO;
 }
 
 - (BOOL)synchronizeWithUserData:(QBUUser *)userData {
