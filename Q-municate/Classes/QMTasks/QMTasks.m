@@ -140,10 +140,13 @@ static const NSUInteger kQMUsersPageLimit = 100;
     };
     
     BFContinuationBlock completionBlock = ^id _Nullable(BFTask *task) {
-        if (core.isAuthorized && !task.isFaulted) {
+        if (core.currentProfile.userData && !task.isFaulted) {
             
             core.currentProfile.lastDialogsFetchingDate = [NSDate date];
             [core.currentProfile synchronize];
+        }
+        else {
+            return nil;
         }
         
         return [BFTask taskForCompletionOfAllTasks:[usersLoadingTasks copy]];
