@@ -98,6 +98,7 @@ QMChatConnectionDelegate
             
             if (buttonIndex == 1) {
                 
+                [[UIApplication sharedApplication] sendAction:@selector(resignFirstResponder) to:nil from:nil forEvent:nil];
                 UINavigationController *navigationController = self.viewControllers.firstObject;
                 UIViewController *dialogsVC = navigationController.viewControllers.firstObject;
                 [dialogsVC performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
