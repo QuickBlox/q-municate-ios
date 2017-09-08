@@ -112,8 +112,10 @@ QMUsersServiceDelegate
 
 - (void)updateOccupants {
     
-    NSArray *users = [QMCore.instance.usersService.usersMemoryStorage usersWithIDs:self.chatDialog.occupantIDs];
-    self.dataSource.items = [users mutableCopy];
+    NSArray<QBUUser *> *users = [QMCore.instance.usersService.usersMemoryStorage usersWithIDs:self.chatDialog.occupantIDs];
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"fullName" ascending:NO];
+    NSArray *sortedUsers = [users sortedArrayUsingDescriptors:@[sort]];
+    self.dataSource.items = [sortedUsers mutableCopy];
 }
 
 //MARK: - Actions
