@@ -20,8 +20,8 @@ NSString *const kViewControllerNoSelection = @"ViewControllerNoSelection";
 
 @implementation QMSplitViewController
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
+- (void)viewDidLoad {
+    [super viewDidLoad];
     
     self.delegate = self;
     self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
