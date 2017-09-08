@@ -214,8 +214,9 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
     
     @weakify(self);
-    [[self.pushNotificationManager unSubscribeFromPushNotifications] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
-        
+    
+    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:YES] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
+    
         [super logoutWithCompletion:^{
             
             @strongify(self);
@@ -254,7 +255,6 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
             dispatch_group_notify(logoutGroup, dispatch_get_main_queue(), ^{
                 [source setResult:nil];
             });
-            
         }];
         
         return nil;
@@ -421,10 +421,6 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
 
 - (void)authServiceDidLogOut:(QMAuthService *)__unused authService {
 
-    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:YES] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
-        
-        return nil;
-    }];
 }
 
 - (void)authService:(QMAuthService *)__unused authService
