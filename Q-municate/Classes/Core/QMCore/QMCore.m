@@ -234,11 +234,27 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
             
             [self.currentProfile clearProfile];
             
+            dispatch_group_t logoutGroup = dispatch_group_create();
+            
+            dispatch_group_enter(logoutGroup);
             [[QMImageLoader instance].imageCache clearDiskOnCompletion:^{
                 [[QMImageLoader instance].imageCache clearMemory];
-                [self.chatService.chatAttachmentService removeAllMediaFiles];
-                [source setResult:nil];
+                dispatch_group_leave(logoutGroup);
             }];
+            
+            [self.chatService.chatAttachmentService removeAllMediaFiles];
+            
+            dispatch_group_enter(logoutGroup);
+            
+            [QMOpenGraphCache.instance deleteAllOpenGraphItemsWithCompletion:^{
+                
+                dispatch_group_leave(logoutGroup);
+            }];
+            
+            dispatch_group_notify(logoutGroup, dispatch_get_main_queue(), ^{
+                [source setResult:nil];
+            });
+            
         }];
         
         return nil;
