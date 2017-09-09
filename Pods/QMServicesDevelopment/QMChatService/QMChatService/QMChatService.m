@@ -443,46 +443,39 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
                 updatedAt = message.dialogUpdatedAt;
             }
             
-            if ([chatDialogToUpdate.updatedAt compare:updatedAt] != NSOrderedDescending) {
-                
-                switch (message.dialogUpdateType) {
+            switch (message.dialogUpdateType) {
+                    
+                case QMDialogUpdateTypeName:
+                    chatDialogToUpdate.name = message.dialogName;
+                    break;
+                    
+                case QMDialogUpdateTypePhoto:
+                    chatDialogToUpdate.photo = message.dialogPhoto;
+                    break;
+                    
+                case QMDialogUpdateTypeOccupants: {
+                    
+                    NSMutableSet *occupantsSet = [NSMutableSet setWithArray:chatDialogToUpdate.occupantIDs];
+                    
+                    if (message.addedOccupantsIDs.count > 0) {
                         
-                    case QMDialogUpdateTypeName:
-                        chatDialogToUpdate.name = message.dialogName;
-                        break;
-                        
-                    case QMDialogUpdateTypePhoto:
-                        chatDialogToUpdate.photo = message.dialogPhoto;
-                        break;
-                        
-                    case QMDialogUpdateTypeOccupants: {
-                        
-                        NSMutableSet *occupantsSet = [NSMutableSet setWithArray:chatDialogToUpdate.occupantIDs];
-                        
-                        if (message.addedOccupantsIDs.count > 0) {
-                            
-                            [occupantsSet addObjectsFromArray:message.addedOccupantsIDs];
-                        }
-                        else if (message.deletedOccupantsIDs.count > 0) {
-                            
-                            [occupantsSet minusSet:[NSSet setWithArray:message.deletedOccupantsIDs]];
-                        }
-                        
-                        chatDialogToUpdate.occupantIDs = [occupantsSet allObjects];
-                        
-                        break;
+                        [occupantsSet addObjectsFromArray:message.addedOccupantsIDs];
                     }
+                    else if (message.deletedOccupantsIDs.count > 0) {
                         
-                    case QMDialogUpdateTypeNone:
-                        break;
+                        [occupantsSet minusSet:[NSSet setWithArray:message.deletedOccupantsIDs]];
+                    }
+                    
+                    chatDialogToUpdate.occupantIDs = [occupantsSet allObjects];
+                    
+                    break;
                 }
-                
-                chatDialogToUpdate.updatedAt = updatedAt;
+                    
+                case QMDialogUpdateTypeNone:
+                    break;
             }
-            else {
-                
-                chatDialogToUpdate.updatedAt = message.dateSent;
-            }
+            
+            chatDialogToUpdate.updatedAt = updatedAt;
         }
         // old custom parameters handling
         else if (message.dialog != nil) {
@@ -1255,7 +1248,7 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
                     completionBlock:(void (^)(QBResponse *response))completion
 {
     NSTimeInterval timeInterval = [date timeIntervalSince1970];
-    NSMutableDictionary *extendedRequest = @{@"updated_at[gt]":@(timeInterval)}.mutableCopy;
+    NSMutableDictionary *extendedRequest = @{@"updated_at[gte]":@(timeInterval)}.mutableCopy;
     
     [self allDialogsWithPageLimit:limit
                   extendedRequest:extendedRequest

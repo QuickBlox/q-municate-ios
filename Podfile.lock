@@ -5,12 +5,12 @@ PODS:
   - Bolts/AppLinks (1.8.4):
     - Bolts/Tasks
   - Bolts/Tasks (1.8.4)
-  - Crashlytics (3.8.5):
+  - Crashlytics (3.8.6):
     - Fabric (~> 1.6.3)
   - Digits (3.0.2):
     - Fabric
     - TwitterCore
-  - Fabric (1.6.12)
+  - Fabric (1.6.13)
   - FBSDKCoreKit (4.26.0):
     - Bolts (~> 1.7)
   - FBSDKLoginKit (4.26.0):
@@ -84,7 +84,7 @@ PODS:
     - QMCVDevelopment/Utils
     - SDWebImage (~> 4.0.0)
     - TTTAttributedLabel (> 1.13)
-  - QMServicesDevelopment (0.4.5):
+  - QMServicesDevelopment (0.5.1):
     - Bolts (>= 1.5.0)
   - Reachability (3.2)
   - SDWebImage (4.0.0):
@@ -132,14 +132,14 @@ CHECKOUT OPTIONS:
     :commit: cd33bd47c4c8c1ad5f8f43a9970904452a4b9f92
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: 1a33a57fefcfc110eb3e43e71cc5194d016d7d33
+    :commit: 6fd0112c4b906136f6200dcd3102da52b90b1bf0
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
-  Crashlytics: dfbae35ef22ca189240d230ad501feea4ee85d2d
+  Crashlytics: 95d05f4e4c19a771250c4bd9ce344d996de32bbf
   Digits: b081fcf5c6d281f5e42830b428412a3ef8fc6c68
-  Fabric: f050464eac45a2ce5a8e6e6a07e977c0df32fe28
+  Fabric: 2fb5676bc811af011a04513451f463dac6803206
   FBSDKCoreKit: c8b8582311ec11b145451d8b9717dc6cc2ae5a76
   FBSDKLoginKit: f3f03b94c21eb834af243c0a881d48641f47ca60
   FBSDKShareKit: 320712d8293fde6392872c91eb80ef0da5d73cc3
@@ -150,7 +150,7 @@ SPEC CHECKSUMS:
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
   QMCVDevelopment: 06e12ea9060e58fea15b9251962bd96d9a3e1092
-  QMServicesDevelopment: 8baac4019ec14532850c4437814f49fc9ba12b55
+  QMServicesDevelopment: bfe42b54bff806f8b3b759d6219d19b2508603e2
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
@@ -159,6 +159,6 @@ SPEC CHECKSUMS:
   TwitterCore: e959987be23c767004d29eb7fab8d85d8585a2e5
   UIDevice-Hardware: 4bb15b9bd9878762ab879ac86185baad17b6c3ff
 
-PODFILE CHECKSUM: af67cbd184582ea664a3c116cf6e9fd25c724d1f
+PODFILE CHECKSUM: f3e8296d484f83b2f438f55940d9a9088d5dff6a
 
 COCOAPODS: 1.2.0

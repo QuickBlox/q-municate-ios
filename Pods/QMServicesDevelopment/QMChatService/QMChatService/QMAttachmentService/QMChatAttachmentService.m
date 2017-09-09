@@ -97,7 +97,7 @@
              if (cancelled) {
                  status = QMMessageAttachmentStatusNotLoaded;
              }
-             if (error) {
+             else if (error) {
                  status = QMMessageAttachmentStatusError;
              }
              else {
@@ -203,7 +203,6 @@
     [self.storeService clearCacheForDialogWithID:dialogID
                                        cacheType:QMAttachmentCacheTypeMemory|QMAttachmentCacheTypeDisc
                                       completion:nil];
-    
 }
 
 - (void)removeMediaFilesForMessagesWithID:(NSArray<NSString *> *)messagesIDs

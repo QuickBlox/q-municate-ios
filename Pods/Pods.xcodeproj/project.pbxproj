@@ -5510,30 +5510,6 @@
 			};
 			name = Debug;
 		};
-		054A65CEB14095C430DE7015006AAD89 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3CB26B3F1F03A86470D6026C212DA8E8 /* QMServicesDevelopment.xcconfig */;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/QMServicesDevelopment/QMServicesDevelopment-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
 		0C971D01671C53DC8B9384A1AB354B33 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E5F513A174356C80C59F8C19F9D68833 /* Pods-Q-municate.debug.xcconfig */;
@@ -5594,6 +5570,23 @@
 				PUBLIC_HEADERS_FOLDER_PATH = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		131D2467CC0B2493C460EEE588D35F01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3CB26B3F1F03A86470D6026C212DA8E8 /* QMServicesDevelopment.xcconfig */;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/QMServicesDevelopment";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = "Target Support Files/QMServicesDevelopment/ResourceBundle-QMUsersCacheModel-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_NAME = QMUsersCacheModel;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
 			};
 			name = Debug;
 		};
@@ -5712,23 +5705,6 @@
 			};
 			name = Debug;
 		};
-		3250818D0F163572409D2E21C51804F6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3CB26B3F1F03A86470D6026C212DA8E8 /* QMServicesDevelopment.xcconfig */;
-			buildSettings = {
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/QMServicesDevelopment";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Target Support Files/QMServicesDevelopment/ResourceBundle-QMChatCacheModel-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = QMChatCacheModel;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Debug;
-		};
 		32B4138AE3ED94E61B10DE01E3E8F3D8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 33F1B5DB6A3D2FF97775AA75E93FB73E /* QMCVDevelopment.xcconfig */;
@@ -5749,6 +5725,23 @@
 				PUBLIC_HEADERS_FOLDER_PATH = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		3494FAEE632D4CEEE2E9AA872A89D332 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3CB26B3F1F03A86470D6026C212DA8E8 /* QMServicesDevelopment.xcconfig */;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/QMServicesDevelopment";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = "Target Support Files/QMServicesDevelopment/ResourceBundle-QMOpenGraphCacheModel-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_NAME = QMOpenGraphCacheModel;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
 			};
 			name = Debug;
 		};
@@ -5797,6 +5790,23 @@
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
+		};
+		427A69D9BDDA9FFD5A8F38A6359F96B6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3CB26B3F1F03A86470D6026C212DA8E8 /* QMServicesDevelopment.xcconfig */;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/QMServicesDevelopment";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = "Target Support Files/QMServicesDevelopment/ResourceBundle-QMChatCacheModel-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_NAME = QMChatCacheModel;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
 		};
 		46BA866C29AC5A0DF9CC1C15A81A2942 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -5861,6 +5871,30 @@
 			};
 			name = Debug;
 		};
+		4DFAFF30E762110910D00C255AF9D9A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3CB26B3F1F03A86470D6026C212DA8E8 /* QMServicesDevelopment.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/QMServicesDevelopment/QMServicesDevelopment-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
 		515494B267E8A813691163FEBF4BE4A0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EC80F703B25021B33DB8AAA9C3378C6D /* FBSDKLoginKit.xcconfig */;
@@ -5904,23 +5938,6 @@
 				PUBLIC_HEADERS_FOLDER_PATH = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		56E85C6D553E4D52683A40750C028D87 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3CB26B3F1F03A86470D6026C212DA8E8 /* QMServicesDevelopment.xcconfig */;
-			buildSettings = {
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/QMServicesDevelopment";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Target Support Files/QMServicesDevelopment/ResourceBundle-QMUsersCacheModel-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = QMUsersCacheModel;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
 			};
 			name = Debug;
 		};
@@ -5971,17 +5988,18 @@
 			};
 			name = Release;
 		};
-		60155B477C19CC086D0D7AA4BB6415B1 /* Release */ = {
+		5BCE7F8167BB9EE3F5D5A2560F25A111 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C57B2299C814982D47D6CF505990D235 /* Flurry-iOS-SDK.xcconfig */;
+			baseConfigurationReference = 3CB26B3F1F03A86470D6026C212DA8E8 /* QMServicesDevelopment.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/Flurry-iOS-SDK/Flurry-iOS-SDK-prefix.pch";
+				GCC_PREFIX_HEADER = "Target Support Files/QMServicesDevelopment/QMServicesDevelopment-prefix.pch";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "";
@@ -5994,19 +6012,18 @@
 			};
 			name = Release;
 		};
-		67D3EEE39F600BA30F3F3834C3CFC244 /* Release */ = {
+		60155B477C19CC086D0D7AA4BB6415B1 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3CB26B3F1F03A86470D6026C212DA8E8 /* QMServicesDevelopment.xcconfig */;
+			baseConfigurationReference = C57B2299C814982D47D6CF505990D235 /* Flurry-iOS-SDK.xcconfig */;
 			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/QMServicesDevelopment/QMServicesDevelopment-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				GCC_PREFIX_HEADER = "Target Support Files/Flurry-iOS-SDK/Flurry-iOS-SDK-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
@@ -6064,16 +6081,16 @@
 			};
 			name = Release;
 		};
-		7B7B463C87BDAC27A0DE09F566F29A15 /* Release */ = {
+		7C040073362E098BE5CDAE65429FA999 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3CB26B3F1F03A86470D6026C212DA8E8 /* QMServicesDevelopment.xcconfig */;
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/QMServicesDevelopment";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Target Support Files/QMServicesDevelopment/ResourceBundle-QMOpenGraphCacheModel-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = QMOpenGraphCacheModel;
+				INFOPLIST_FILE = "Target Support Files/QMServicesDevelopment/ResourceBundle-QMChatCacheModel-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_NAME = QMChatCacheModel;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6191,6 +6208,23 @@
 			};
 			name = Debug;
 		};
+		9027684ECBB71E1FAE7EFF2225CC1022 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3CB26B3F1F03A86470D6026C212DA8E8 /* QMServicesDevelopment.xcconfig */;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/QMServicesDevelopment";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = "Target Support Files/QMServicesDevelopment/ResourceBundle-QMContactListCacheModel-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_NAME = QMContactListCacheModel;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
 		9737482C999B2C9B85E01FAE76A9244A /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C4B622C13229E730280D05BAD985B4A9 /* FBSDKShareKit.xcconfig */;
@@ -6213,23 +6247,6 @@
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
-		};
-		9C19F352935DD6E909502D453E4A4473 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3CB26B3F1F03A86470D6026C212DA8E8 /* QMServicesDevelopment.xcconfig */;
-			buildSettings = {
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/QMServicesDevelopment";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Target Support Files/QMServicesDevelopment/ResourceBundle-QMOpenGraphCacheModel-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = QMOpenGraphCacheModel;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Debug;
 		};
 		A01DA8321D71E34981701404F8542C3D /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -6298,7 +6315,7 @@
 			};
 			name = Debug;
 		};
-		A84413291DD1D1FEF435C100F47A3F94 /* Debug */ = {
+		AAAB86AA9BBF17D2043F325E36B1F0A8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3CB26B3F1F03A86470D6026C212DA8E8 /* QMServicesDevelopment.xcconfig */;
 			buildSettings = {
@@ -6306,14 +6323,14 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Target Support Files/QMServicesDevelopment/ResourceBundle-QMContactListCacheModel-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_NAME = QMContactListCacheModel;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = bundle;
 			};
-			name = Debug;
+			name = Release;
 		};
 		AED41EAFA33E6D5609F4E3F1AF1451A8 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -6385,16 +6402,16 @@
 			};
 			name = Release;
 		};
-		C1936B2580E7CC552367830EDA9D425A /* Release */ = {
+		B1939498A87AEBB5F97193037C4B6588 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3CB26B3F1F03A86470D6026C212DA8E8 /* QMServicesDevelopment.xcconfig */;
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/QMServicesDevelopment";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Target Support Files/QMServicesDevelopment/ResourceBundle-QMUsersCacheModel-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = QMUsersCacheModel;
+				INFOPLIST_FILE = "Target Support Files/QMServicesDevelopment/ResourceBundle-QMOpenGraphCacheModel-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_NAME = QMOpenGraphCacheModel;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6517,16 +6534,16 @@
 			};
 			name = Release;
 		};
-		DC61DD0154E7939B831B830240F1CC12 /* Release */ = {
+		DCC8E404A228A31228BAD338D8D4F87B /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3CB26B3F1F03A86470D6026C212DA8E8 /* QMServicesDevelopment.xcconfig */;
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/QMServicesDevelopment";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Target Support Files/QMServicesDevelopment/ResourceBundle-QMChatCacheModel-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = QMChatCacheModel;
+				INFOPLIST_FILE = "Target Support Files/QMServicesDevelopment/ResourceBundle-QMUsersCacheModel-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_NAME = QMUsersCacheModel;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6577,23 +6594,6 @@
 				PUBLIC_HEADERS_FOLDER_PATH = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
-		E52FB46D7DF047AB4B6AC3E77BAA5434 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3CB26B3F1F03A86470D6026C212DA8E8 /* QMServicesDevelopment.xcconfig */;
-			buildSettings = {
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/QMServicesDevelopment";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Target Support Files/QMServicesDevelopment/ResourceBundle-QMContactListCacheModel-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = QMContactListCacheModel;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = bundle;
 			};
 			name = Release;
 		};
@@ -6717,8 +6717,8 @@
 		1E30AA0146F0CD89E8894FA5D5098260 /* Build configuration list for PBXNativeTarget "QMServicesDevelopment-QMOpenGraphCacheModel" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				9C19F352935DD6E909502D453E4A4473 /* Debug */,
-				7B7B463C87BDAC27A0DE09F566F29A15 /* Release */,
+				3494FAEE632D4CEEE2E9AA872A89D332 /* Debug */,
+				B1939498A87AEBB5F97193037C4B6588 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -6816,8 +6816,8 @@
 		6B293F5E5C1D25673A2F53CB16EA3B43 /* Build configuration list for PBXNativeTarget "QMServicesDevelopment" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				054A65CEB14095C430DE7015006AAD89 /* Debug */,
-				67D3EEE39F600BA30F3F3834C3CFC244 /* Release */,
+				4DFAFF30E762110910D00C255AF9D9A7 /* Debug */,
+				5BCE7F8167BB9EE3F5D5A2560F25A111 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -6843,8 +6843,8 @@
 		78D7C78C34E582CAA00C0C9CC6EFB3BA /* Build configuration list for PBXNativeTarget "QMServicesDevelopment-QMUsersCacheModel" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				56E85C6D553E4D52683A40750C028D87 /* Debug */,
-				C1936B2580E7CC552367830EDA9D425A /* Release */,
+				131D2467CC0B2493C460EEE588D35F01 /* Debug */,
+				DCC8E404A228A31228BAD338D8D4F87B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -6888,8 +6888,8 @@
 		93858D61879A946C2613944A32049586 /* Build configuration list for PBXNativeTarget "QMServicesDevelopment-QMContactListCacheModel" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A84413291DD1D1FEF435C100F47A3F94 /* Debug */,
-				E52FB46D7DF047AB4B6AC3E77BAA5434 /* Release */,
+				9027684ECBB71E1FAE7EFF2225CC1022 /* Debug */,
+				AAAB86AA9BBF17D2043F325E36B1F0A8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -6915,8 +6915,8 @@
 		BABB961174B485BDF31531E216818DD9 /* Build configuration list for PBXNativeTarget "QMServicesDevelopment-QMChatCacheModel" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3250818D0F163572409D2E21C51804F6 /* Debug */,
-				DC61DD0154E7939B831B830240F1CC12 /* Release */,
+				427A69D9BDDA9FFD5A8F38A6359F96B6 /* Debug */,
+				7C040073362E098BE5CDAE65429FA999 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

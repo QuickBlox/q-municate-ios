@@ -77,47 +77,31 @@
 
 - (void)logoutWithCompletion:(dispatch_block_t)completion {
     
-    if ([QBSession currentSession].currentUser != nil) {
+    __weak typeof(self)weakSelf = self;
+    [self.authService logOut:^(QBResponse *response) {
         
-        __weak typeof(self)weakSelf = self;
-        [self.authService logOut:^(QBResponse *response) {
-            
-            dispatch_group_t logoutGroup = dispatch_group_create();
-            
-            dispatch_group_enter(logoutGroup);
-            
-            [weakSelf.chatService disconnectWithCompletionBlock:^(NSError *error) {
-                [weakSelf.chatService free];
-                [weakSelf.chatService.chatAttachmentService removeAllMediaFiles];
-                dispatch_group_leave(logoutGroup);
-            }];
+        dispatch_group_t logoutGroup = dispatch_group_create();
         
-            dispatch_group_enter(logoutGroup);
-            [QMChatCache.instance truncateAll:^{
-                dispatch_group_leave(logoutGroup);
-            }];
+        dispatch_group_enter(logoutGroup);
         
-            dispatch_group_enter(logoutGroup);
-            [QMOpenGraphCache.instance deleteAllOpenGraphItemsWithCompletion:^{
-                
-                dispatch_group_leave(logoutGroup);
-            }];
-            
-            dispatch_group_notify(logoutGroup, dispatch_get_main_queue(), ^{
-                
-                if (completion) {
-                    completion();
-                }
-            });
+        [weakSelf.chatService disconnectWithCompletionBlock:^(NSError *error) {
+            [weakSelf.chatService free];
+            [weakSelf.chatService.chatAttachmentService removeAllMediaFiles];
+            dispatch_group_leave(logoutGroup);
         }];
-    }
-    else {
         
-        if (completion) {
+        dispatch_group_enter(logoutGroup);
+        [QMChatCache.instance truncateAll:^{
+            dispatch_group_leave(logoutGroup);
+        }];
+        
+        dispatch_group_notify(logoutGroup, dispatch_get_main_queue(), ^{
             
-            completion();
-        }
-    }
+            if (completion) {
+                completion();
+            }
+        });
+    }];
 }
 
 - (void)logInWithUser:(QBUUser *)user
